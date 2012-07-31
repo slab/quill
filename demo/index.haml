@@ -2,13 +2,21 @@
 %html
   %head
     %title Stypi Editor Demo
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'src/styles/style.css'}
 
 %body
   #content-container
-    #format-container
-      Format
-    #editor-continer
-      Editor
+    #formatting-container
+      .format-group
+        .format-button.first<>
+          .format.bold
+        .format-button<>
+          .format.italic
+        .format-button<>
+          .format.underline
+        .format-button.last<>
+          .format.strikethrough
+    #editor-container
 
   %script{:type => 'text/javascript', :src => 'src/editor.js'}
