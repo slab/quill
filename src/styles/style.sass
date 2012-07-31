@@ -1,2 +1,61 @@
-body
-  font-size: 14px
+#content-container
+  border: 1px solid #aaa
+  box-shadow: 0 0 2px 2px #ddd
+  margin: auto
+  width: 960px
+
+#formatting-container
+  background-color: #f5f5f5
+  border-bottom: 1px solid #ccc
+  height: 36px
+  line-height: 34px
+  padding: 0px 5px
+
+  .font-family, .font-size
+    display: inline-block
+    height: 20px
+    line-height: 20px
+    vertical-align: middle
+  .format-group
+    @include border-radius(2px)
+    border: 1px solid #b3b3b3
+    display: inline-block
+    height: 24px
+    line-height: 24px
+    margin: 0px 5px
+  .format-button
+    border-right: 1px solid #b3b3b3
+    background-image: url(<%= asset_data_uri 'tandem/format-unselected-bg.png' %>)
+    background-repeat: repeat-x
+    display: inline-block
+  .format-button:hover
+    background-image: url(<%= asset_data_uri 'tandem/format-hover-bg.png' %>)
+  .format-button:active
+    background-image: url(<%= asset_data_uri 'tandem/format-click-bg.png' %>)
+  .format-button.active
+    background-image: url(<%= asset_data_uri 'tandem/format-selected-bg.png' %>)
+  .format-button.first
+    @include border-radius-corner('top-left', 2px)
+    @include border-radius-corner('bottom-left', 2px)
+  .format-button.last
+    @include border-radius-corner('top-right', 2px)
+    @include border-radius-corner('bottom-right', 2px)
+    border-right: 0px
+  .format
+    background-position: center center
+    background-repeat: no-repeat
+    cursor: pointer
+    display: inline-block
+    height: 16px
+    padding: 4px
+    vertical-align: middle
+    width: 16px
+
+  .bold
+    background-image: url( 'fugue/edit-bold.png' )
+  .italic
+    background-image: url(<%= asset_data_uri 'fugue/edit-italic.png' %>)
+  .underline
+    background-image: url(<%= asset_data_uri 'fugue/edit-underline.png' %>)
+  .strikethrough
+    background-image: url(<%= asset_data_uri 'fugue/edit-strike.png' %>)
