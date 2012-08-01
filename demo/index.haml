@@ -19,4 +19,7 @@
           .format.strikethrough
     #editor-container
 
+  %script{:type => 'text/javascript', :src => 'lib/underscore.js'}
   %script{:type => 'text/javascript', :src => 'src/editor.js'}
+  :javascript
+    editor = new Tandem.Editor('editor-container')
