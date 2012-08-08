@@ -7,7 +7,6 @@ class Toolbar
     @editor.applyAttribute(@editor.getSelection(), { bold: true })
 
   italic: ->
-    selection = @editor.getSelection()
     @editor.applyAttribute(@editor.getSelection(), { italic: true })
 
   strike: ->

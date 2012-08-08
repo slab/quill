@@ -1,11 +1,16 @@
 #= require underscore
 #= require document
+#= require selection
 
 class Editor
   constructor: (@container) ->
     @container = document.getElementById(@container) if _.isString(@container)
-    @frameBody = this._createIframe(@container)
-    @doc = new Tandem.Document(@frameBody)
+    @iframe = this._createIframe(@container)
+    @iframeDoc = @iframe.contentWindow.document
+    @doc = new Tandem.Document(@iframeDoc.body)
+    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce((event) ->
+      console.log 'DOMSubtreeModified', event
+    , 100))
 
   _appendStyles: (document) ->
     head = document.getElementsByTagName('head')[0]
@@ -42,8 +47,7 @@ class Editor
     this._appendStyles(doc)
     doc.body.setAttribute('contenteditable', true)
     doc.body.innerHTML = html
-    console.log doc.body.childNodes
-    return doc
+    return iframe
 
   insertAt: (startIndex, text, attributes = {}) ->
     # 1. Save selection
@@ -75,8 +79,31 @@ class Editor
     # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
 
   getSelection: ->
-    # 1. Ask rangy
-    # 2. Create new selection object
+    rangySelection = rangy.getIframeSelection(@iframe)
+    start = new rangy.dom.DomPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
+    end = new rangy.dom.DomPosition(rangySelection.focusNode, rangySelection.focusOffset)
+    if rangy.dom.comparePoints(start.node, start.offset, end.node, end.offset) > 0
+      start = new rangy.dom.DomPosition(rangySelection.focusNode, rangySelection.focusOffset)
+      end = new rangy.dom.DomPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
+
+    [start, end] = _.map([start, end], (position) ->
+      # Guarantee nodes are leaf nodes
+      return position if position.node.childNodes.length == 0
+      node = position.node
+      offset = position.offset
+      while node.childNodes.length > 0
+        node = node.firstChild
+        while offset > node.length
+          offset -= node.length
+          node = node.nextSibling
+      return new rangy.dom.DomPosition(node, offset)
+    )
+
+    range = rangy.createRangyRange(@iframe)
+    range.setStart(start.node, start.offset)
+    range.setEnd(end.node, end.offset)
+    rangySelection.setSingleRange(range)
+    return rangySelection
 
   applyAttribute: (startIndex, length, attribute) ->
     if !_.isNumber(startIndex)
