@@ -1,6 +1,7 @@
 #= require underscore
 #= require document
 #= require selection
+#= require rangy-core
 
 class Editor
   constructor: (@container) ->
@@ -87,12 +88,10 @@ class Editor
     #  selection = this.getSelection()
     #  startIndex = selection.getStartIndex()
     #  length = selection.getEndIndex() - startIndex
-
     range.splitEnds()
-    return
-    _.each(range.groupNodesByLine(), (elems) ->
+    _.each(range.groupNodesByLine(), (elems) =>
       return if elems.length == 0
-      container = @frameDoc.createElement('b')
+      container = @iframeDoc.createElement('b')
       elems[0].parentNode.insertBefore(container, elems[0])
       _.each(elems, (elem) ->
         container.appendChild(elem)

@@ -1,51 +1,67 @@
+#= underscore
 #= require rangy/rangy-core
+
+class Position
+  constructor: (@node, @offset) ->
+    while @node.childNodes.length > 0
+      @node = @node.firstChild
+      while @offset > @node.length
+        @offset -= @node.length
+        @node = @node.nextSibling
+    @node = @node.parentNode
+
 
 class SelectionRange
   @getCurrent: (iframe) ->
     rangySelection = rangy.getIframeSelection(iframe)
     if !rangySelection.isBackwards()
-      start = new rangy.dom.DomPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
-      end = new rangy.dom.DomPosition(rangySelection.focusNode, rangySelection.focusOffset)
+      start = new Position(rangySelection.anchorNode, rangySelection.anchorOffset)
+      end = new Position(rangySelection.focusNode, rangySelection.focusOffset)
     else
-      start = new rangy.dom.DomPosition(rangySelection.focusNode, rangySelection.focusOffset)
-      end = new rangy.dom.DomPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
-
-    [start, end] = _.map([start, end], (position) ->
-      # Guarantee nodes are text leaf nodes
-      return position if position.node.childNodes.length == 0
-      node = position.node
-      offset = position.offset
-      while node.childNodes.length > 0
-        node = node.firstChild
-        while offset > node.length
-          offset -= node.length
-          node = node.nextSibling
-      return new rangy.dom.DomPosition(node, offset)
-    )
-
+      start = new Position(rangySelection.focusNode, rangySelection.focusOffset)
+      end = new Position(rangySelection.anchorNode, rangySelection.anchorOffset)
     return new SelectionRange(iframe, start, end)
 
   # constructor: (@iframe, Number startIndex, Number endIndex) ->
   # constructor: (@iframe, Object start, Object end) ->
   constructor: (@iframe, @start, @end) ->
+    # TODO initialize with index
     #if _.isNumber(@end)
-      # TODO initialize with index
 
     @iframeDoc = @iframe.contentWindow.document
 
+  groupNodesByLine: ->
+    range = rangy.createRangyRange(@iframe)
+    range.setStart(@start.node.firstChild, @start.offset)
+    range.setEnd(@end.node.firstChild, @end.offset)
+    textNodes = _.map(range.getNodes([3]), (node) -> return node.parentNode)
+    currentAncestor = 0
+    arr = _.reduce(textNodes, (memo, node) ->
+      ancestor = node.parentNode
+      while ancestor.className != "line"
+        ancestor = ancestor.parentNode
+      if currentAncestor == ancestor
+        memo[memo.length - 1].push(node)
+      else
+        memo.push([node])
+        currentAncestor = ancestor
+      return memo
+    , [])
+    return arr
+
   split: (position, before = true) ->
-    node = position.node.parentNode
-    newNode = @iframeDoc.createElement(node.tagName)
-    beforeText = node.innerText.substring(0, position.offset)
-    afterText = node.innerText.substring(position.offset)
+    newNode = @iframeDoc.createElement(position.node.tagName)
+    beforeText = position.node.innerText.substring(0, position.offset)
+    afterText = position.node.innerText.substring(position.offset)
+    return if beforeText == '' || afterText == ''
     if before
       newNode.innerText = beforeText
-      node.innerText = afterText
-      node.parentNode.insertBefore(newNode, node)
+      position.node.innerText = afterText
+      position.node.parentNode.insertBefore(newNode, position.node)
     else
-      node.innerText = beforeText
+      position.node.innerText = beforeText
       newNode.innerText = afterText
-      node.parentNode.insertBefore(newNode, node.nextSibling)
+      position.node.parentNode.insertBefore(newNode, position.node.nextSibling)
 
   splitBefore: ->
     this.split(@start, true)
@@ -58,16 +74,6 @@ class SelectionRange
   splitEnds: ->
     this.splitBefore()
     this.splitAfter()
-
-  getText: ->
-
-  getNodes: ->
-
-  getStartIndex: ->
-
-  getEndIndex: ->
-
-  getRange: ->
 
 
 window.Tandem ||= {}
