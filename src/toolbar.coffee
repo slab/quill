@@ -4,16 +4,16 @@ class Toolbar
   constructor: (@editor) ->
 
   bold: ->
-    @editor.applyAttribute(@editor.getSelection(), { bold: true })
+    @editor.applyAttribute(@editor.getSelectionRange(), { bold: true })
 
   italic: ->
-    @editor.applyAttribute(@editor.getSelection(), { italic: true })
+    @editor.applyAttribute(@editor.getSelectionRange(), { italic: true })
 
   strike: ->
-    @editor.applyAttribute(@editor.getSelection(), { strike: true })
+    @editor.applyAttribute(@editor.getSelectionRange(), { strike: true })
 
   underline: ->
-    @editor.applyAttribute(@editor.getSelection(), { underline: true })
+    @editor.applyAttribute(@editor.getSelectionRange(), { underline: true })
 
 
 window.Tandem ||= {}

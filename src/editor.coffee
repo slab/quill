@@ -78,38 +78,30 @@ class Editor
     # - Helper to get nodes in given index range
     # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
 
-  getSelection: ->
-    rangySelection = rangy.getIframeSelection(@iframe)
-    start = new rangy.dom.DomPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
-    end = new rangy.dom.DomPosition(rangySelection.focusNode, rangySelection.focusOffset)
-    if rangy.dom.comparePoints(start.node, start.offset, end.node, end.offset) > 0
-      start = new rangy.dom.DomPosition(rangySelection.focusNode, rangySelection.focusOffset)
-      end = new rangy.dom.DomPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
+  getSelectionRange: ->
+    return Tandem.Range.getCurrent(@iframe)
 
-    [start, end] = _.map([start, end], (position) ->
-      # Guarantee nodes are leaf nodes
-      return position if position.node.childNodes.length == 0
-      node = position.node
-      offset = position.offset
-      while node.childNodes.length > 0
-        node = node.firstChild
-        while offset > node.length
-          offset -= node.length
-          node = node.nextSibling
-      return new rangy.dom.DomPosition(node, offset)
+  #applyAttribute: (startIndex, length, attribute) ->
+  applyAttribute: (range, attribute) ->
+    #if !_.isNumber(startIndex)
+    #  selection = this.getSelection()
+    #  startIndex = selection.getStartIndex()
+    #  length = selection.getEndIndex() - startIndex
+
+    range.splitEnds()
+    return
+    _.each(range.groupNodesByLine(), (elems) ->
+      return if elems.length == 0
+      container = @frameDoc.createElement('b')
+      elems[0].parentNode.insertBefore(container, elems[0])
+      _.each(elems, (elem) ->
+        container.appendChild(elem)
+      )
     )
 
-    range = rangy.createRangyRange(@iframe)
-    range.setStart(start.node, start.offset)
-    range.setEnd(end.node, end.offset)
-    rangySelection.setSingleRange(range)
-    return rangySelection
-
-  applyAttribute: (startIndex, length, attribute) ->
-    if !_.isNumber(startIndex)
-      selection = this.getSelection()
-      startIndex = selection.getStartIndex()
-      length = selection.getEndIndex() - startIndex
+    # Determine overloading...
+    # Split nodes
+    # For each line, surround common with tag
 
   on: (event, callback) ->
     # Text
