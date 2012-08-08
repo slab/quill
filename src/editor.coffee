@@ -13,9 +13,9 @@ class TandemEditor
       console.log 'DOMSubtreeModified', event
     , 100))
 
-  _appendStyles: (document) ->
-    head = document.getElementsByTagName('head')[0]
-    style = document.createElement('style')
+  _appendStyles: (doc) ->
+    head = doc.getElementsByTagName('head')[0]
+    style = doc.createElement('style')
     style.type = 'text/css'
     css = "
       body { 
@@ -33,7 +33,7 @@ class TandemEditor
     if style.styleSheet?
       style.styleSheet.cssText = css
     else
-      style.appendChild(document.createTextNode(css))
+      style.appendChild(doc.createTextNode(css))
     head.appendChild(style)
 
   _createIframe: (parent) ->
@@ -41,6 +41,7 @@ class TandemEditor
     parent.innerHTML = ''
     iframe = document.createElement('iframe')
     iframe.frameborder = 0
+    iframe.src = 'javascript:;'
     iframe.height = '100%'
     iframe.width = '100%'
     parent.appendChild(iframe)

@@ -51,16 +51,16 @@ class TandemRange
 
   split: (position, before = true) ->
     newNode = @iframeDoc.createElement(position.node.tagName)
-    beforeText = position.node.innerText.substring(0, position.offset)
-    afterText = position.node.innerText.substring(position.offset)
+    beforeText = position.node.textContent.substring(0, position.offset)
+    afterText = position.node.textContent.substring(position.offset)
     return if beforeText == '' || afterText == ''
     if before
-      newNode.innerText = beforeText
-      position.node.innerText = afterText
+      newNode.textContent = beforeText
+      position.node.textContent = afterText
       position.node.parentNode.insertBefore(newNode, position.node)
     else
-      position.node.innerText = beforeText
-      newNode.innerText = afterText
+      position.node.textContent = beforeText
+      newNode.textContent = afterText
       position.node.parentNode.insertBefore(newNode, position.node.nextSibling)
 
   splitBefore: ->
