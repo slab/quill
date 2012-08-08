@@ -1,6 +1,6 @@
 #= require editor
 
-class Toolbar
+class TandemToolbar
   constructor: (@editor) ->
 
   bold: ->
@@ -17,4 +17,4 @@ class Toolbar
 
 
 window.Tandem ||= {}
-window.Tandem.Toolbar = Toolbar
+window.Tandem.Toolbar = TandemToolbar

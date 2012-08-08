@@ -1,7 +1,7 @@
 #= underscore
 #= require rangy/rangy-core
 
-class Position
+class TandemPosition
   constructor: (@node, @offset) ->
     while @node.childNodes.length > 0
       @node = @node.firstChild
@@ -11,16 +11,16 @@ class Position
     @node = @node.parentNode
 
 
-class SelectionRange
+class TandemRange
   @getCurrent: (iframe) ->
     rangySelection = rangy.getIframeSelection(iframe)
     if !rangySelection.isBackwards()
-      start = new Position(rangySelection.anchorNode, rangySelection.anchorOffset)
-      end = new Position(rangySelection.focusNode, rangySelection.focusOffset)
+      start = new TandemPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
+      end = new TandemPosition(rangySelection.focusNode, rangySelection.focusOffset)
     else
-      start = new Position(rangySelection.focusNode, rangySelection.focusOffset)
-      end = new Position(rangySelection.anchorNode, rangySelection.anchorOffset)
-    return new SelectionRange(iframe, start, end)
+      start = new TandemPosition(rangySelection.focusNode, rangySelection.focusOffset)
+      end = new TandemPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
+    return new TandemRange(iframe, start, end)
 
   # constructor: (@iframe, Number startIndex, Number endIndex) ->
   # constructor: (@iframe, Object start, Object end) ->
@@ -77,4 +77,4 @@ class SelectionRange
 
 
 window.Tandem ||= {}
-window.Tandem.Range = SelectionRange
+window.Tandem.Range = TandemRange

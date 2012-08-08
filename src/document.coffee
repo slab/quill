@@ -5,7 +5,7 @@ CLASS_NAME  = 'line'
 BLOCK_TAGS  = ['ADDRESS', 'BLOCKQUOTE', 'DIV', 'DL', 'FIELDSET', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL']
 INLINE_TAGS = []
 
-class Document
+class TandemDocument
   constructor: (@root, @doc = document) ->
     @idCounter = 0
     lines = []
@@ -47,4 +47,4 @@ class Document
 
 
 window.Tandem ||= {}
-window.Tandem.Document = Document
+window.Tandem.Document = TandemDocument

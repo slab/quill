@@ -3,7 +3,7 @@
 #= require selection
 #= require rangy-core
 
-class Editor
+class TandemEditor
   constructor: (@container) ->
     @container = document.getElementById(@container) if _.isString(@container)
     @iframe = this._createIframe(@container)
@@ -120,4 +120,4 @@ class Editor
 
 
 window.Tandem ||= {}
-window.Tandem.Editor = Editor
+window.Tandem.Editor = TandemEditor
