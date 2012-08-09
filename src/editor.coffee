@@ -2,6 +2,7 @@
 #= require document
 #= require selection
 #= require rangy-core
+#= require eventemitter2
 
 class TandemEditor
   constructor: (@container) ->
