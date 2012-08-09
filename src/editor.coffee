@@ -15,7 +15,7 @@ class TandemEditor extends EventEmitter2
     @container = document.getElementById(@container) if _.isString(@container)
     @iframe = this._createIframe(@container)
     @iframeDoc = @iframe.contentWindow.document
-    @doc = new Tandem.Document(@iframeDoc.body)
+    @doc = new Tandem.Document(this, @iframeDoc.body)
     @ignoreDomChanges = false
     rangy.init()
     @currentSelection = this.getSelectionRange()
@@ -126,7 +126,13 @@ class TandemEditor extends EventEmitter2
   # applyAttribute: (Number startIndex, Number length, attribute) ->
   applyAttribute: (startIndex, length, attribute) ->
     @ignoreDomChanges = true
-    range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
+    if _.isNumber(startIndex)
+      range = Tandem.Range(this, startIndex, startIndex + length)
+    else
+      [range, attribute] = [startIndex, length]
+      startIndex = range.start.getIndex()
+      length = range.end.getIndex() - startIndex
+
     this.preserveSelection(range, 0, =>
       range.splitEnds()
       _.each(range.groupNodesByLine(), (elems) =>
@@ -138,6 +144,13 @@ class TandemEditor extends EventEmitter2
         )
       )
     )
+    docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+    deltas = []
+    deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+    deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
+    deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
+    delta = new JetDelta(docLength, docLength, deltas)
+    this.emit(this.events.API_TEXT_CHANGE, delta)
     @ignoreDomChanges = false
     
   preserveSelection: (modificationRange, charAdditions, fn) ->

@@ -2,8 +2,10 @@
 
 class TandemToolbar
   constructor: (@editor) ->
-    @editor.on(@editor.events.USER_SELECTION_CHANGE, (event) ->
-      console.log 'selection change'
+    @editor.on(@editor.events.USER_SELECTION_CHANGE, (selection) ->
+      console.log 'selection change', selection
+    ).on(@editor.events.API_TEXT_CHANGE, (delta) ->
+      console.log 'api text change', delta
     )
 
   bold: ->

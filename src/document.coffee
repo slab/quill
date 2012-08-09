@@ -6,7 +6,7 @@ BLOCK_TAGS  = ['ADDRESS', 'BLOCKQUOTE', 'DIV', 'DL', 'FIELDSET', 'FORM', 'H1', '
 INLINE_TAGS = []
 
 class TandemDocument
-  constructor: (@root, @doc = document) ->
+  constructor: (@editor, @root) ->
     @idCounter = 0
     lines = []
     lineMap = {}
