@@ -4,20 +4,22 @@
 #= require rangy-core
 #= require eventemitter2
 
-class TandemEditor
+class TandemEditor extends EventEmitter2
+  events: 
+    API_TEXT_CHANGE       : 'api-text-change'
+    USER_SELECTION_CHANGE : 'user-selection-change'
+    USER_TEXT_CHANGE      : 'user-text-change'
+
   constructor: (@container) ->
     @container = document.getElementById(@container) if _.isString(@container)
     @iframe = this._createIframe(@container)
     @iframeDoc = @iframe.contentWindow.document
     @doc = new Tandem.Document(@iframeDoc.body)
     @ignoreDomChanges = false
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce( ->
-      return if @ignoreDomChanges
-      # Normalize
-      # Detect changes
-      # Callback
-      console.log 'DOMSubtreeModified'
-    , 100))
+    rangy.init()
+    @currentSelection = this.getSelectionRange()
+    # Normalize html
+    this.initListeners()
 
   _appendStyles: (doc) ->
     head = doc.getElementsByTagName('head')[0]
@@ -56,6 +58,24 @@ class TandemEditor
     doc.body.setAttribute('contenteditable', true)
     doc.body.innerHTML = html
     return iframe
+
+  initListeners: ->
+    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce( ->
+      return if @ignoreDomChanges
+      # Normalize
+      # Detect changes
+      # Callback
+      console.log 'DOMSubtreeModified'
+    , 100))
+    checkSelectionChange = _.debounce( =>
+      selection = this.getSelectionRange()
+      if selection != @currentSelection && !selection.equals(@currentSelection)
+        this.emit(this.events.USER_SELECTION_CHANGE, selection)
+        @currentSelection = selection
+    , 100)
+    @iframeDoc.body.addEventListener('keyup', checkSelectionChange)
+    @iframeDoc.body.addEventListener('click', checkSelectionChange)
+
 
   insertAt: (startIndex, text, attributes = {}) ->
     @ignoreDomChanges = true
@@ -131,22 +151,6 @@ class TandemEditor
       rangySel.setSingleRange(range)
     else
       fn()
-
-  on: (event, callback) ->
-    # Text
-    # - Every 500ms
-    #     - normalizeHTML
-    #     - Get changes from document
-    #     - If any, trigger callback
-
-    # Cursor
-    # - Notifies of explicit change (typing does move the cursor but we are not going to fire?)
-    # - Poll every 200ms (or 500ms?)
-    # - Every click event, event key motion event (or every key event?), check
-    #     - How do we know if cursor changed cuz of typing or left arrow? 
-    #  #        - Both will move the cursor but we are only interested in latter
-
-  off: (event, callback) ->
 
 
 window.Tandem ||= {}

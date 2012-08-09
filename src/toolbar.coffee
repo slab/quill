@@ -2,6 +2,9 @@
 
 class TandemToolbar
   constructor: (@editor) ->
+    @editor.on(@editor.events.USER_SELECTION_CHANGE, (event) ->
+      console.log 'selection change'
+    )
 
   bold: ->
     selection = @editor.getSelectionRange()

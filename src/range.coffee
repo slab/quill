@@ -51,6 +51,10 @@ class TandemRange
     # TODO initialize with index
     @start = new TandemPosition(@editor, @start) if _.isNumber(@start) 
     @end = new TandemPosition(@editor, @end) if _.isNumber(@end)
+
+  equals: (range) ->
+    return false if range == null
+    return range.start.node == @start.node && range.end.node == @end.node && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe)
