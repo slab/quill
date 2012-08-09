@@ -1,39 +1,65 @@
 #= underscore
 #= require rangy/rangy-core
 
+
+# Class giving 
 class TandemPosition
-  constructor: (@node, @offset) ->
+  # constructor: (TandemEditor editor, Object node, Number offset) ->
+  # constructor: (TandemEditor editor, Number index) -> 
+  constructor: (@editor, @node, @offset) ->
+    if _.isNumber(@node)
+      @index = @node
+      @offset = @node
+      @node = @editor.iframeDoc.body
     while @node.childNodes.length > 0
       @node = @node.firstChild
-      while @offset > @node.length
-        @offset -= @node.length
+      newline = if @node.className == 'line' then 1 else 0      # Account for newline char
+      while @offset > @node.textContent.length + newline
+        @offset -= @node.textContent.length + newline
         @node = @node.nextSibling
+        throw Error('TandemPosition index greater than editor size') if @node == null
     @node = @node.parentNode
+    @text = @node.textContent
+
+  getIndex: ->
+    return @index if @index?
+    @index = @offset
+    node = @node
+    while node.tagName != 'BODY'
+      while node.previousSibling?
+        node = node.previousSibling
+        @index += node.textContent.length + (if node.className == 'line' then 1 else 0) # Account for newline char
+      node = node.parentNode
+    return @index
 
 
 class TandemRange
-  @getCurrent: (iframe) ->
-    rangySelection = rangy.getIframeSelection(iframe)
+  @getCurrent: (editor) ->
+    rangySelection = rangy.getIframeSelection(editor.iframe)
+    return null unless rangySelection.anchorNode? && rangySelection.focusNode?
     if !rangySelection.isBackwards()
-      start = new TandemPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
-      end = new TandemPosition(rangySelection.focusNode, rangySelection.focusOffset)
+      start = new TandemPosition(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+      end = new TandemPosition(editor, rangySelection.focusNode, rangySelection.focusOffset)
     else
-      start = new TandemPosition(rangySelection.focusNode, rangySelection.focusOffset)
-      end = new TandemPosition(rangySelection.anchorNode, rangySelection.anchorOffset)
-    return new TandemRange(iframe, start, end)
+      start = new TandemPosition(editor, rangySelection.focusNode, rangySelection.focusOffset)
+      end = new TandemPosition(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+    return new TandemRange(editor, start, end)
 
-  # constructor: (@iframe, Number startIndex, Number endIndex) ->
-  # constructor: (@iframe, Object start, Object end) ->
-  constructor: (@iframe, @start, @end) ->
+  # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
+  # constructor: (TandemEditor editor, Object start, Object end) ->
+  constructor: (@editor, @start, @end) ->
     # TODO initialize with index
-    #if _.isNumber(@end)
-
-    @iframeDoc = @iframe.contentWindow.document
-
-  groupNodesByLine: ->
-    range = rangy.createRangyRange(@iframe)
+    @start = new TandemPosition(@editor, @start) if _.isNumber(@start) 
+    @end = new TandemPosition(@editor, @end) if _.isNumber(@end)
+      
+  getRangy: ->
+    range = rangy.createRangyRange(@editor.iframe)
     range.setStart(@start.node.firstChild, @start.offset)
     range.setEnd(@end.node.firstChild, @end.offset)
+    return range
+
+  groupNodesByLine: ->
+    range = this.getRangy()
     textNodes = _.map(range.getNodes([3]), (node) -> return node.parentNode)
     currentAncestor = 0
     arr = _.reduce(textNodes, (memo, node) ->
@@ -50,7 +76,7 @@ class TandemRange
     return arr
 
   split: (position, before = true) ->
-    newNode = @iframeDoc.createElement(position.node.tagName)
+    newNode = @editor.iframeDoc.createElement(position.node.tagName)
     beforeText = position.node.textContent.substring(0, position.offset)
     afterText = position.node.textContent.substring(position.offset)
     return if beforeText == '' || afterText == ''

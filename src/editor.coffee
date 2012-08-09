@@ -52,6 +52,9 @@ class TandemEditor
     return iframe
 
   insertAt: (startIndex, text, attributes = {}) ->
+    this.preserveSelection(range, text.length, ->
+
+    )
     # 1. Save selection
     # 2. Split text into lines
     # 3. Find node where it starts
@@ -61,7 +64,10 @@ class TandemEditor
     # - Apply attributes if applicable
     # 6. Restore selection
 
-  deleteAt: (startIndex, length) ->    
+  deleteAt: (startIndex, length) ->  
+    this.preserveSelection(range, 0 - length, ->
+
+    )  
     # 1. Save selection
     # 2. Find nodes in range
     # 3. For first and last node, delete text
@@ -81,27 +87,40 @@ class TandemEditor
     # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
 
   getSelectionRange: ->
-    return Tandem.Range.getCurrent(@iframe)
+    return Tandem.Range.getCurrent(this)
 
-  #applyAttribute: (startIndex, length, attribute) ->
+  # applyAttribute: (TandemRange range, Object attribute) ->
+  # applyAttribute: (Number startIndex, Number length, attribute) ->
   applyAttribute: (range, attribute) ->
     #if !_.isNumber(startIndex)
     #  selection = this.getSelection()
     #  startIndex = selection.getStartIndex()
     #  length = selection.getEndIndex() - startIndex
-    range.splitEnds()
-    _.each(range.groupNodesByLine(), (elems) =>
-      return if elems.length == 0
-      container = @iframeDoc.createElement('b')
-      elems[0].parentNode.insertBefore(container, elems[0])
-      _.each(elems, (elem) ->
-        container.appendChild(elem)
+
+    this.preserveSelection(range, 0, =>
+      range.splitEnds()
+      _.each(range.groupNodesByLine(), (elems) =>
+        return if elems.length == 0
+        container = @iframeDoc.createElement('b')
+        elems[0].parentNode.insertBefore(container, elems[0])
+        _.each(elems, (elem) ->
+          container.appendChild(elem)
+        )
       )
     )
-
-    # Determine overloading...
-    # Split nodes
-    # For each line, surround common with tag
+    
+  preserveSelection: (modificationRange, charAdditions, fn) ->
+    currentSelection = this.getSelectionRange()
+    if currentSelection?
+      selectionStartIndex = currentSelection.start.getIndex()
+      selectionEndIndex = currentSelection.end.getIndex()
+      fn()
+      savedSelectionRange = new Tandem.Range(currentSelection.editor, selectionStartIndex, selectionEndIndex)
+      rangySel = rangy.getIframeSelection(@iframe)
+      range = savedSelectionRange.getRangy()
+      rangySel.setSingleRange(range)
+    else
+      fn()
 
   on: (event, callback) ->
     # Text

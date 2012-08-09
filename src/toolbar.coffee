@@ -4,7 +4,11 @@ class TandemToolbar
   constructor: (@editor) ->
 
   bold: ->
-    @editor.applyAttribute(@editor.getSelectionRange(), { bold: true })
+    selection = @editor.getSelectionRange()
+    if selection?
+      @editor.applyAttribute(selection, { bold: true })
+    else
+      console.warn "Bold called with no selection"
 
   italic: ->
     @editor.applyAttribute(@editor.getSelectionRange(), { italic: true })
@@ -14,6 +18,7 @@ class TandemToolbar
 
   underline: ->
     @editor.applyAttribute(@editor.getSelectionRange(), { underline: true })
+
 
 
 window.Tandem ||= {}
