@@ -9,8 +9,13 @@ class TandemEditor
     @iframe = this._createIframe(@container)
     @iframeDoc = @iframe.contentWindow.document
     @doc = new Tandem.Document(@iframeDoc.body)
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce((event) ->
-      console.log 'DOMSubtreeModified', event
+    @ignoreDomChanges = false
+    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce( ->
+      return if @ignoreDomChanges
+      # Normalize
+      # Detect changes
+      # Callback
+      console.log 'DOMSubtreeModified'
     , 100))
 
   _appendStyles: (doc) ->
@@ -52,9 +57,12 @@ class TandemEditor
     return iframe
 
   insertAt: (startIndex, text, attributes = {}) ->
+    @ignoreDomChanges = true
+    range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex) else startIndex
     this.preserveSelection(range, text.length, ->
 
     )
+    @ignoreDomChanges = false
     # 1. Save selection
     # 2. Split text into lines
     # 3. Find node where it starts
@@ -65,9 +73,12 @@ class TandemEditor
     # 6. Restore selection
 
   deleteAt: (startIndex, length) ->  
+    @ignoreDomChanges = true
+    range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
     this.preserveSelection(range, 0 - length, ->
 
-    )  
+    )
+    @ignoreDomChanges = false
     # 1. Save selection
     # 2. Find nodes in range
     # 3. For first and last node, delete text
@@ -91,12 +102,9 @@ class TandemEditor
 
   # applyAttribute: (TandemRange range, Object attribute) ->
   # applyAttribute: (Number startIndex, Number length, attribute) ->
-  applyAttribute: (range, attribute) ->
-    #if !_.isNumber(startIndex)
-    #  selection = this.getSelection()
-    #  startIndex = selection.getStartIndex()
-    #  length = selection.getEndIndex() - startIndex
-
+  applyAttribute: (startIndex, length, attribute) ->
+    @ignoreDomChanges = true
+    range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
     this.preserveSelection(range, 0, =>
       range.splitEnds()
       _.each(range.groupNodesByLine(), (elems) =>
@@ -108,6 +116,7 @@ class TandemEditor
         )
       )
     )
+    @ignoreDomChanges = false
     
   preserveSelection: (modificationRange, charAdditions, fn) ->
     currentSelection = this.getSelectionRange()
