@@ -4,11 +4,12 @@
     %title Stypi Editor Demo
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/dual.css'}
 
 %body
   #content-container
-    .editor-wrapper
-      #formatting-container.formatting-container
+    .editor-wrapper.first
+      #formatting-container1.formatting-container
         .format-group
           .format-button.first<>
             .format.bold
@@ -18,19 +19,31 @@
             .format.underline
           .format-button.last<>
             .format.strike
-      #editor-container.editor-container
+      #editor-container1.editor-container
         .line<>
           %span<> Line 1
           %span<> Word1
         .line<>
           %span<> Line 2
           %span<> Word2
+    .editor-wrapper
+      #formatting-container2.formatting-container
+        .format-group
+          .format-button.first<>
+            .format.bold
+          .format-button<>
+            .format.italic
+          .format-button<>
+            .format.underline
+          .format-button.last<>
+            .format.strike
+      #editor-container2.editor-container
         .line<>
-          %span<> Line 3
-          %span<> Word3
+          %span<> Line 1
+          %span<> Word1
         .line<>
-          %span<> Line 4
-          %span<> Word4
+          %span<> Line 2
+          %span<> Word2
 
   %script{:type => 'text/javascript', :src => 'lib/jquery.js'}
   %script{:type => 'text/javascript', :src => 'lib/underscore.js'}
@@ -42,10 +55,12 @@
   %script{:type => 'text/javascript', :src => 'src/editor.js'}
   %script{:type => 'text/javascript', :src => 'src/toolbar.js'}
   :javascript
-    editor = new Tandem.Editor('editor-container');
-    toolbar = new Tandem.Toolbar(editor)
+    _.each([1, 2], function(num) {
+      editor = new Tandem.Editor('editor-container' + num);
+      toolbar = new Tandem.Toolbar(editor);
+      $('#formatting-container' + num + ' .bold').click(function() { toolbar.bold(); console.log(num); });
+      $('#formatting-container' + num + ' .italic').click(function() { toolbar.italic(); });
+      $('#formatting-container' + num + ' .strike').click(function() { toolbar.strike(); });
+      $('#formatting-container' + num + ' .underline').click(function() { toolbar.underline(); });
+    });
 
-    $('.bold').click(function() { toolbar.bold() });
-    $('.italic').click(function() { toolbar.italic() })
-    $('.strike').click(function() { toolbar.strike() })
-    $('.underline').click(function() { toolbar.underline() })
