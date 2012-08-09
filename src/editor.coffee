@@ -3,6 +3,7 @@
 #= require selection
 #= require rangy-core
 #= require eventemitter2
+#= require jetsync
 
 class TandemEditor extends EventEmitter2
   events: 
