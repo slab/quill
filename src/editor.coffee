@@ -75,7 +75,7 @@ class TandemEditor extends EventEmitter2
         @currentSelection = selection
     , 100)
     @iframeDoc.body.addEventListener('keyup', checkSelectionChange)
-    @iframeDoc.body.addEventListener('click', checkSelectionChange)
+    @iframeDoc.body.addEventListener('mouseup', checkSelectionChange)
 
 
   insertAt: (startIndex, text, attributes = {}) ->
