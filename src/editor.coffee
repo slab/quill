@@ -124,15 +124,14 @@ class TandemEditor extends EventEmitter2
 
   # applyAttribute: (TandemRange range, Object attribute) ->
   # applyAttribute: (Number startIndex, Number length, attribute) ->
-  applyAttribute: (startIndex, length, attribute) ->
+  applyAttribute: (startIndex, length, attribute, emitEvent = true) ->
     @ignoreDomChanges = true
     if _.isNumber(startIndex)
-      range = Tandem.Range(this, startIndex, startIndex + length)
+      range = new Tandem.Range(this, startIndex, startIndex + length)
     else
       [range, attribute] = [startIndex, length]
       startIndex = range.start.getIndex()
       length = range.end.getIndex() - startIndex
-
     this.preserveSelection(range, 0, =>
       range.splitEnds()
       _.each(range.groupNodesByLine(), (elems) =>
@@ -144,13 +143,14 @@ class TandemEditor extends EventEmitter2
         )
       )
     )
-    docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-    deltas = []
-    deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-    deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
-    deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
-    delta = new JetDelta(docLength, docLength, deltas)
-    this.emit(this.events.API_TEXT_CHANGE, delta)
+    if emitEvent
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
+      deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
+      delta = new JetDelta(docLength, docLength, deltas)
+      this.emit(this.events.API_TEXT_CHANGE, delta)
     @ignoreDomChanges = false
     
   preserveSelection: (modificationRange, charAdditions, fn) ->

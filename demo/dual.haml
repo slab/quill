@@ -1,7 +1,7 @@
 !!! 5
 %html
   %head
-    %title Stypi Editor Demo
+    %title Stypi Dual Editor Demo
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/dual.css'}
@@ -54,13 +54,5 @@
   %script{:type => 'text/javascript', :src => 'src/document.js'}
   %script{:type => 'text/javascript', :src => 'src/editor.js'}
   %script{:type => 'text/javascript', :src => 'src/toolbar.js'}
-  :javascript
-    _.each([1, 2], function(num) {
-      editor = new Tandem.Editor('editor-container' + num);
-      toolbar = new Tandem.Toolbar(editor);
-      $('#formatting-container' + num + ' .bold').click(function() { toolbar.bold(); console.log(num); });
-      $('#formatting-container' + num + ' .italic').click(function() { toolbar.italic(); });
-      $('#formatting-container' + num + ' .strike').click(function() { toolbar.strike(); });
-      $('#formatting-container' + num + ' .underline').click(function() { toolbar.underline(); });
-    });
+  %script{:type => 'text/javascript', :src => 'scripts/dual.js'}
 
