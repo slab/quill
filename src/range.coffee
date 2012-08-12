@@ -34,6 +34,26 @@ class TandemPosition
 
     [@node, @offset] = TandemPosition.adjustOffset(@node, @offset)
     @text = @node.textContent   # For testing convenience
+
+  getAncestorNodes: (includeSelf = false) ->
+    ancestors = []
+    node = @node
+    ancestors.push(node) if includeSelf && node.className != 'line'
+    while node.className != 'line'
+      ancestors.push(node)
+      node = node.parentNode
+    ancestors.push(node)
+    return ancestors
+
+  getAttributes: ->
+    return _.reduce(this.getAncestorNodes(), (attributes, node) ->
+      switch node.tagName
+        when 'B' then attributes['bold'] = true
+        when 'I' then attributes['italic'] = true
+        when 'S' then attributes['strike'] = true
+        when 'U' then attributes['underline'] = true
+      return attributes
+    , {})
     
   getIndex: ->
     return @index if @index?
@@ -47,10 +67,8 @@ class TandemPosition
     return @index
 
   getLine: ->
-    line = @node
-    while @node.className != 'line'
-      line = @node.parentNode
-    return line
+    ancestors = this.getAncestorNodes()
+    return ancestors[ancestors.length - 1]
 
 
 class TandemRange
@@ -78,16 +96,8 @@ class TandemRange
       
   getAttributeIntersection: ->
     attributes = null
-    console.log 'leaf', this.getLeafNodes()
-    _.all(this.getLeafNodes(), (node) ->
-      leafAttributes = []
-      while node.className != 'line'
-        switch node.tagName
-          when 'B' then leafAttributes['bold'] = true
-          when 'I' then leafAttributes['italic'] = true
-          when 'S' then leafAttributes['strike'] = true
-          when 'U' then leafAttributes['underline'] = true
-        node = node.parentNode
+    _.all(this.getLeafPositions(), (position) ->
+      leafAttributes = position.getAttributes()
       if attributes
         _.each(attributes, (value, key) ->
           if leafAttributes[key] != true
@@ -95,6 +105,9 @@ class TandemRange
         )
       else
         attributes = leafAttributes
+      for key,value of attributes when value == true
+        return true
+      return false
     )
 
     return attributes || {}
@@ -110,22 +123,26 @@ class TandemRange
     if range.collapsed
       return [@start.node]
     else
-      return _.map(range.getNodes([3]), (node) -> return node.parentNode)
+      return _.map(range.getNodes([3]), (node) -> 
+        return node.parentNode
+      )
+
+  getLeafPositions: ->
+    return _.map(this.getLeafNodes(), (node) =>
+      return new TandemPosition(@editor, node, 0)
+    )
 
   groupNodesByLine: ->
-    currentAncestor = 0
-    arr = _.reduce(this.getLeafNodes(), (memo, node) ->
-      ancestor = node.parentNode
-      while ancestor.className != "line"
-        ancestor = ancestor.parentNode
-      if currentAncestor == ancestor
-        memo[memo.length - 1].push(node)
+    currentLine = 0
+    return _.reduce(this.getLeafPositions(), (lines, position) ->
+      line = position.getLine()
+      if currentLine == line
+        lines[lines.length - 1].push(position.node)
       else
-        memo.push([node])
-        currentAncestor = ancestor
-      return memo
+        lines.push([position.node])
+        currentLine = line
+      return lines
     , [])
-    return arr
 
   split: (position, before = true) ->
     newNode = @editor.iframeDoc.createElement(position.node.tagName)
