@@ -17,6 +17,11 @@ editors = _.map([1, 2], (num) ->
   $('#formatting-container' + num + ' .italic').click( -> toolbar.italic() )
   $('#formatting-container' + num + ' .strike').click( -> toolbar.strike() )
   $('#formatting-container' + num + ' .underline').click( -> toolbar.underline() )
+  toolbar.on('update', (attributes) ->
+    $("#formatting-container#{num} .format-button").removeClass('active')
+    for key,value of attributes when value == true
+      $("#formatting-container#{num} .#{key}").parent().addClass('active')
+  )
   return editor
 )
 

@@ -1,28 +1,36 @@
 #= require editor
+#= require eventemitter2
 
-class TandemToolbar
+class TandemToolbar extends EventEmitter2
   constructor: (@editor) ->
-    @editor.on(@editor.events.USER_SELECTION_CHANGE, (selection) ->
+    @editor.on(@editor.events.USER_SELECTION_CHANGE, (selection) =>
       console.log 'selection change', selection
+      this.emit('update', selection.getAttributeIntersection())
     ).on(@editor.events.API_TEXT_CHANGE, (delta) ->
       console.log 'api text change', delta
     )
 
-  bold: ->
+  applyAttribute: (name, value) ->
     selection = @editor.getSelectionRange()
     if selection?
-      @editor.applyAttribute(selection, { bold: true })
+      attribute = {}
+      attribute[name] = value
+      @editor.applyAttribute(selection, attribute)
+      this.emit('update', selection.getAttributeIntersection())
     else
-      console.warn "Bold called with no selection"
+      console.warn "#{name} called with no selection"
+
+  bold: ->
+    this.applyAttribute('bold', true)
 
   italic: ->
-    @editor.applyAttribute(@editor.getSelectionRange(), { italic: true })
+    this.applyAttribute('italic', true)
 
   strike: ->
-    @editor.applyAttribute(@editor.getSelectionRange(), { strike: true })
+    this.applyAttribute('strike', true)
 
   underline: ->
-    @editor.applyAttribute(@editor.getSelectionRange(), { underline: true })
+    this.applyAttribute('underline', true)
 
 
 

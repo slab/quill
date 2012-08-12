@@ -46,6 +46,12 @@ class TandemPosition
       node = node.parentNode
     return @index
 
+  getLine: ->
+    line = @node
+    while @node.className != 'line'
+      line = @node.parentNode
+    return line
+
 
 class TandemRange
   @getCurrent: (editor) ->
@@ -70,17 +76,45 @@ class TandemRange
     return false if range == null
     return range.start.node == @start.node && range.end.node == @end.node && range.start.offset == @start.offset && range.end.offset == @end.offset
       
+  getAttributeIntersection: ->
+    attributes = null
+    console.log 'leaf', this.getLeafNodes()
+    _.all(this.getLeafNodes(), (node) ->
+      leafAttributes = []
+      while node.className != 'line'
+        switch node.tagName
+          when 'B' then leafAttributes['bold'] = true
+          when 'I' then leafAttributes['italic'] = true
+          when 'S' then leafAttributes['strike'] = true
+          when 'U' then leafAttributes['underline'] = true
+        node = node.parentNode
+      if attributes
+        _.each(attributes, (value, key) ->
+          if leafAttributes[key] != true
+            delete attributes[key]
+        )
+      else
+        attributes = leafAttributes
+    )
+
+    return attributes || {}
+
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe)
     range.setStart(@start.node.firstChild, @start.offset)
     range.setEnd(@end.node.firstChild, @end.offset)
     return range
 
-  groupNodesByLine: ->
+  getLeafNodes: ->
     range = this.getRangy()
-    textNodes = _.map(range.getNodes([3]), (node) -> return node.parentNode)
+    if range.collapsed
+      return [@start.node]
+    else
+      return _.map(range.getNodes([3]), (node) -> return node.parentNode)
+
+  groupNodesByLine: ->
     currentAncestor = 0
-    arr = _.reduce(textNodes, (memo, node) ->
+    arr = _.reduce(this.getLeafNodes(), (memo, node) ->
       ancestor = node.parentNode
       while ancestor.className != "line"
         ancestor = ancestor.parentNode
