@@ -80,6 +80,7 @@ class TandemRange
         )
       else
         attributes = leafAttributes
+
       for key,value of attributes when value == true
         return true
       return false
@@ -100,11 +101,8 @@ class TandemRange
       nodes = _.map(range.getNodes([3]), (node) -> 
         return node.parentNode
       )
-      length = @end.getIndex() - @start.getIndex()
-      return _.filter(nodes, (node) ->
-        length -= node.textContent.length
-        return length >= 0
-      )
+      nodes.pop() if nodes[nodes.length - 1] != @end.node || @end.offset == 0
+      return nodes
 
   getLeafPositions: ->
     return _.map(this.getLeafNodes(), (node) =>

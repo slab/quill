@@ -159,7 +159,7 @@ class TandemEditor extends EventEmitter2
             if rootStartIndex < startIndex
               this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attribute, false)
             if startIndex + length < rootEndIndex
-              this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length, attribute, false)
+              this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length + 1, attribute, false)
         )
     )
     if emitEvent
