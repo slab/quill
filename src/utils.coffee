@@ -67,7 +67,7 @@ TandemUtils =
       return node.className == 'line'
 
     removeKeepingChildren: (doc, node) ->
-      children = _.clone(node.children)
+      children = _.clone(node.childNodes)
       if _.all(children, (child) -> child.firstChild == null)
         span = doc.createElement('span')
         _.each(children, (child) ->
