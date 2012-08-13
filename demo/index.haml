@@ -2,7 +2,7 @@
 %html
   %head
     %title Stypi Editor Demo
-    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'lib/reset.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
 
 %body
@@ -32,16 +32,16 @@
           %span<> Line 4
           %span<> Word4
 
-  %script{:type => 'text/javascript', :src => 'lib/jquery.js'}
-  %script{:type => 'text/javascript', :src => 'lib/underscore.js'}
-  %script{:type => 'text/javascript', :src => 'lib/eventemitter2.js'}
-  %script{:type => 'text/javascript', :src => 'lib/rangy/rangy-core.js'}
-  %script{:type => 'text/javascript', :src => 'lib/jetsync.js'}
-  %script{:type => 'text/javascript', :src => 'src/utils.js'}
-  %script{:type => 'text/javascript', :src => 'src/range.js'}
-  %script{:type => 'text/javascript', :src => 'src/document.js'}
-  %script{:type => 'text/javascript', :src => 'src/editor.js'}
-  %script{:type => 'text/javascript', :src => 'src/toolbar.js'}
+  %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+  %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+  %script{:type => 'text/javascript', :src => '../src/utils.js'}
+  %script{:type => 'text/javascript', :src => '../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../src/document.js'}
+  %script{:type => 'text/javascript', :src => '../src/editor.js'}
+  %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
   :javascript
     editor = new Tandem.Editor('editor-container');
     toolbar = new Tandem.Toolbar(editor)
