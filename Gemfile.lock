@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/manufaktor/guard-haml.git
+  revision: ee19e704c5afface900d18ba7f9ad90993712d02
+  branch: development
+  specs:
+    guard-haml (0.4)
+      guard (>= 1.1)
+      haml (>= 3.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -14,13 +23,10 @@ GEM
     guard-coffeescript (1.2.0)
       coffee-script (>= 2.2.0)
       guard (>= 1.1.0)
-    guard-haml (0.4)
-      guard (>= 1.1)
-      haml (>= 3.0)
     guard-sass (1.0.0)
       guard (>= 1.1.0)
       sass (>= 3.1)
-    haml (3.1.6)
+    haml (3.1.7)
     listen (0.4.7)
       rb-fchange (~> 0.0.5)
       rb-fsevent (~> 0.9.1)
@@ -40,5 +46,5 @@ PLATFORMS
 DEPENDENCIES
   guard
   guard-coffeescript
-  guard-haml
+  guard-haml!
   guard-sass
