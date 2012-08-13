@@ -31,29 +31,8 @@ class TandemPosition
     if _.isNumber(@node)
       @offset = @node
       @node = @editor.iframeDoc.body.firstChild
-
     [@node, @offset] = TandemPosition.adjustOffset(@node, @offset)
     @text = @node.textContent   # For testing convenience
-
-  getAncestorNodes: (includeSelf = false) ->
-    ancestors = []
-    node = @node
-    ancestors.push(node) if includeSelf && node.className != 'line'
-    while node.className != 'line'
-      ancestors.push(node)
-      node = node.parentNode
-    ancestors.push(node)
-    return ancestors
-
-  getAttributes: ->
-    return _.reduce(this.getAncestorNodes(), (attributes, node) ->
-      switch node.tagName
-        when 'B' then attributes['bold'] = true
-        when 'I' then attributes['italic'] = true
-        when 'S' then attributes['strike'] = true
-        when 'U' then attributes['underline'] = true
-      return attributes
-    , {})
     
   getIndex: ->
     return @index if @index?
@@ -65,10 +44,6 @@ class TandemPosition
         @index += node.textContent.length + (if node.className == 'line' then 1 else 0) # Account for newline char
       node = node.parentNode
     return @index
-
-  getLine: ->
-    ancestors = this.getAncestorNodes()
-    return ancestors[ancestors.length - 1]
 
 
 class TandemRange
@@ -97,7 +72,7 @@ class TandemRange
   getAttributeIntersection: ->
     attributes = null
     _.all(this.getLeafPositions(), (position) ->
-      leafAttributes = position.getAttributes()
+      leafAttributes = Tandem.Utils.Node.getAttributes(position.node)
       if attributes
         _.each(attributes, (value, key) ->
           if leafAttributes[key] != true
@@ -109,7 +84,6 @@ class TandemRange
         return true
       return false
     )
-
     return attributes || {}
 
   getRangy: ->
@@ -123,8 +97,13 @@ class TandemRange
     if range.collapsed
       return [@start.node]
     else
-      return _.map(range.getNodes([3]), (node) -> 
+      nodes = _.map(range.getNodes([3]), (node) -> 
         return node.parentNode
+      )
+      length = @end.getIndex() - @start.getIndex()
+      return _.filter(nodes, (node) ->
+        length -= node.textContent.length
+        return length >= 0
       )
 
   getLeafPositions: ->
@@ -135,7 +114,7 @@ class TandemRange
   groupNodesByLine: ->
     currentLine = 0
     return _.reduce(this.getLeafPositions(), (lines, position) ->
-      line = position.getLine()
+      line = Tandem.Utils.Node.getLine(position.node)
       if currentLine == line
         lines[lines.length - 1].push(position.node)
       else

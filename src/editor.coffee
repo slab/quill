@@ -123,7 +123,7 @@ class TandemEditor extends EventEmitter2
     return Tandem.Range.getCurrent(this)
 
   # applyAttribute: (TandemRange range, Object attribute) ->
-  # applyAttribute: (Number startIndex, Number length, attribute) ->
+  # applyAttribute: (Number startIndex, Number length, Object attribute) ->
   applyAttribute: (startIndex, length, attributes, emitEvent = true) ->
     @ignoreDomChanges = true
     if !_.isNumber(startIndex)
@@ -134,18 +134,32 @@ class TandemEditor extends EventEmitter2
       for attr,value of attributes
         range = new Tandem.Range(this, startIndex, startIndex + length) unless range?
         range.splitEnds()
-        _.each(range.groupNodesByLine(), (elems) =>
-          return if elems.length == 0
-          switch (attr)
-            when 'bold'       then container = @iframeDoc.createElement('b')
-            when 'italic'     then container = @iframeDoc.createElement('i')
-            when 'strike'     then container = @iframeDoc.createElement('s')
-            when 'underline'  then container = @iframeDoc.createElement('u')
-            else return
-          elems[0].parentNode.insertBefore(container, elems[0])
-          _.each(elems, (elem) ->
-            container.appendChild(elem)
-          )
+        _.each(range.groupNodesByLine(), (nodes) =>
+          return if nodes.length == 0
+          if value
+            _.each(nodes, (node) =>
+              container = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
+              Tandem.Utils.Node.wrap(container, node)
+            )
+          else
+            tagName = Tandem.Utils.Attribute.getTagName(attr)
+            roots = _.compact(_.uniq(_.map(nodes, (node) ->
+              return Tandem.Utils.Node.getAncestorAttribute(node, attr, true)
+            )))
+            return if roots.length == 0
+            rootStartPosition = new Tandem.Position(@editor, roots[0], 0)
+            rootEndPosition = new Tandem.Position(@editor, roots[roots.length - 1], roots[roots.length - 1].textContent.length - 1)
+            rootStartIndex = rootStartPosition.getIndex()
+            rootEndIndex = rootEndPosition.getIndex()
+            _.each(roots, (root) =>
+              Tandem.Utils.Node.removeKeepingChildren(@iframeDoc, root)
+            )
+            attribute = {}
+            attribute[attr] = true
+            if rootStartIndex < startIndex
+              this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attribute, false)
+            if startIndex + length < rootEndIndex
+              this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length, attribute, false)
         )
     )
     if emitEvent

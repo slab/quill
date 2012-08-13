@@ -13,10 +13,11 @@ listenEditor = (source, target) ->
 editors = _.map([1, 2], (num) ->
   editor = new Tandem.Editor('editor-container' + num)
   toolbar = new Tandem.Toolbar(editor)
-  $('#formatting-container' + num + ' .bold').click( -> toolbar.bold() )
-  $('#formatting-container' + num + ' .italic').click( -> toolbar.italic() )
-  $('#formatting-container' + num + ' .strike').click( -> toolbar.strike() )
-  $('#formatting-container' + num + ' .underline').click( -> toolbar.underline() )
+  _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
+    $("#formatting-container#{num} .#{format}").click( -> 
+      toolbar[format].call(toolbar, !$(this).parent().hasClass('active'))
+    )
+  )
   toolbar.on('update', (attributes) ->
     $("#formatting-container#{num} .format-button").removeClass('active')
     for key,value of attributes when value == true
