@@ -9,6 +9,9 @@ listenEditor = (source, target) ->
         attr[key] = val
         target.applyAttribute(delta.start, delta.end - delta.start, attr, false)
   )
+  source.on(source.events.USER_TEXT_CHANGE, (deltas) ->
+    console.log 'USER_TEXT_CHANGE', deltas
+  )
 
 editors = _.map([1, 2], (num) ->
   editor = new Tandem.Editor('editor-container' + num)

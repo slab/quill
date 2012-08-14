@@ -3,6 +3,7 @@
 #= require selection
 #= require rangy-core
 #= require eventemitter2
+#= require diff_match_patch
 #= require jetsync
 
 class TandemEditor extends EventEmitter2
@@ -62,13 +63,41 @@ class TandemEditor extends EventEmitter2
     return iframe
 
   initListeners: ->
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce((event) ->
+    @iframeDoc.body.addEventListener('keydown', (event) =>
+      return if @ignoreDomChanges || event.which != 13
+      selection = this.getSelectionRange()
+      startIndex = selection.start.getIndex()
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      deltas.push(new JetInsert("\n"))
+      deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
+      delta = new JetDelta(docLength, docLength + 1, deltas)
+      this.emit(this.events.USER_TEXT_CHANGE, delta)
+    )
+    @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
       return if @ignoreDomChanges
-      # Normalize
-      # Detect changes
-      # Callback
-      console.log 'DOMSubtreeModified'
-    , 100))
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      deltas = []
+      position = new Tandem.Position(this, event.srcElement.parentNode, 0)
+      startIndex = position.getIndex()
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      insertedLength = 0
+      dmpRetainedLength = 0
+      dmp = new diff_match_patch()
+      diffs = dmp.diff_main(event.prevValue, event.newValue)
+      _.each(diffs, (diff) ->
+        if diff[0] == DIFF_EQUAL
+          deltas.push(new JetRetain(startIndex + dmpRetainedLength, startIndex + dmpRetainedLength + diff[1].length))
+          dmpRetainedLength += diff[1].length
+        if diff[0] == DIFF_INSERT
+          deltas.push(new JetInsert(diff[1]))
+          insertedLength += diff[1].length
+      )
+      deltas.push(new JetRetain(startIndex + event.srcElement.textContent.length - insertedLength, docLength - insertedLength)) if startIndex < docLength
+      delta = new JetDelta(docLength - insertedLength, docLength, deltas)
+      this.emit(this.events.USER_TEXT_CHANGE, delta)
+    )
     checkSelectionChange = _.debounce( =>
       selection = this.getSelectionRange()
       if selection != @currentSelection && !selection.equals(@currentSelection)
