@@ -11,6 +11,16 @@ TandemUtils =
         else return 'SPAN'
 
   Node:
+    cloneNodeWithAncestors: (doc, node) ->
+      newNode = null
+      while !TandemUtils.Node.isLine(node)
+        node = node.parentNode
+        container = doc.createElement(node.tagName)
+        container.appendChild(newNode) if newNode?
+        newNode = container
+      container.className = 'line'
+      return container
+
     combineLines: (line1, line2) ->
       children = _.clone(line2.childNodes)
       _.each(children, (child) ->

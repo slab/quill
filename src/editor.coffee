@@ -107,22 +107,32 @@ class TandemEditor extends EventEmitter2
     @iframeDoc.body.addEventListener('keyup', checkSelectionChange)
     @iframeDoc.body.addEventListener('mouseup', checkSelectionChange)
 
-
   insertAt: (startIndex, text, attributes = {}) ->
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex) else startIndex
-    this.preserveSelection(range, text.length, ->
-
+    this.preserveSelection(range, text.length, =>
+      lines = text.split("\n")
+      _.each(lines, (line, lineIndex) =>
+        range = new Tandem.Range(this, startIndex, startIndex) unless range?
+        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset) + line + range.start.node.textContent.substr(range.start.offset)
+        startIndex += line.length
+        this.insertNewlineAt(startIndex) if lineIndex < lines.length - 1
+        startIndex += 1
+        range = null
+      )
     )
     @ignoreDomChanges = false
-    # 1. Save selection
-    # 2. Split text into lines
-    # 3. Find node where it starts
-    # 4. Insert text of first line
-    # 5. Append <div> wrapped text for remaining lines
-    # - Update local data structures?
-    # - Apply attributes if applicable
-    # 6. Restore selection
+
+  insertNewlineAt: (startIndex) ->
+    range = new Tandem.Range(this, startIndex, startIndex)
+    range.splitAfter()
+    div = Tandem.Utils.Node.cloneNodeWithAncestors(@iframeDoc, range.start.node)
+    @iframeDoc.body.insertBefore(div, Tandem.Utils.Node.getLine(range.end.node).nextSibling)
+    node = range.end.node.nextSibling
+    while node?
+      nextSibling = node.nextSibling
+      div.appendChild(node)
+      node = nextSibling
 
   deleteAt: (startIndex, length) ->  
     @ignoreDomChanges = true

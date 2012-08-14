@@ -5,6 +5,50 @@
 #= require underscore
 
 describe('Editor', ->
+  describe('insertAt', ->
+    reset = ->
+      $('#editor-container').html('<div class="line"><b>123</b><i>456</i></div>')
+      return new Tandem.Editor('editor-container')
+      
+    it('should insert simple text', ->
+      editor = reset()
+      editor.insertAt(1, 'A')
+      expect(editor.iframeDoc.body.firstChild.textContent).to.equal('1A23456')
+      expect(editor.iframeDoc.body.childNodes.length).to.equal(1)
+    )
+
+    it('should insert newline character', ->
+      editor = reset()
+      editor.insertAt(1, "\n")
+      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1</b></div><div class="line"><b>23</b><i>456</i></div>')
+      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
+    )
+
+    it('should insert text with newline', ->
+      editor = reset()
+      editor.insertAt(1, "A\nB")
+      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1A</b></div><div class="line"><b>B23</b><i>456</i></div>')
+      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
+    )
+
+    it('should insert multiple newline text', ->
+      editor = reset()
+      editor.insertAt(1, "A\nB\nC")
+      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1A</b></div><div class="line"><b>B</b></div><div class="line"><b>C23</b><i>456</i></div>')
+      expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
+    )
+
+    ###
+    it('should insert mutliple newline in a row text', ->
+      editor = reset()
+      editor.insertAt(1, "A\n\nC")
+      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1A</></div><div class="line"><b></b></div><div class="line"><b>C23</b><i>456</i></div>')
+      expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
+    )
+    ###
+  )
+  return
+
   describe('deleteAt', ->
     reset = ->
       $('#editor-container').html('<div class="line"><b>123</b><i>456</i></div><div class="line"><s>7</s><u>8</u><s>9</s><u>0</u></div><div class="line"><b>abcdefg</b></div>')
