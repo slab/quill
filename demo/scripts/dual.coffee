@@ -1,6 +1,28 @@
 #= require underscore
 #= require jquery
 
+applyDelta = (newDelta, insertFn, deleteFn, retainFn, context = null) ->
+  index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
+  offset = 0      # Tracks how many characters inserted to correctly offset new text
+  for delta in newDelta.deltas
+    authorId = if delta.attributes? then delta.attributes.authorId else 1
+    if JetDelta.isInsert(delta)
+      insertFn.call(context || insertFn, index + offset, delta.text, authorId)
+      offset += delta.length
+    else if JetDelta.isRetain(delta)
+      console.assert(delta.start >= index, "Somehow delta.start became smaller than index")
+      if delta.start > index
+        deleteFn.call(context || deleteFn, index + offset, delta.start + offset, authorId)
+        offset -= (delta.start - index)
+      index = delta.end
+    else
+      console.assert(false, "Unrecognized type in delta", delta)
+
+  # If end of text was deleted
+  if newDelta.endLength < newDelta.startLength + offset
+    deleteFn.call(context || deleteFn, newDelta.endLength, newDelta.startLength + offset)
+  return
+
 listenEditor = (source, target) ->
   source.on(source.events.API_TEXT_CHANGE, (delta) ->
     for delta in delta.deltas
@@ -9,8 +31,13 @@ listenEditor = (source, target) ->
         attr[key] = val
         target.applyAttribute(delta.start, delta.end - delta.start, attr, false)
   )
-  source.on(source.events.USER_TEXT_CHANGE, (deltas) ->
-    console.log 'USER_TEXT_CHANGE', deltas
+  source.on(source.events.USER_TEXT_CHANGE, (delta) ->
+    console.log 'text change', delta
+    applyDelta(delta, (index, text) ->
+      target.insertAt(index, text)
+    , (start, end) ->
+      target.deleteAt(start, end - start)
+    )
   )
 
 editors = _.map([1, 2], (num) ->

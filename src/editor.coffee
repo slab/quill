@@ -65,6 +65,7 @@ class TandemEditor extends EventEmitter2
   initListeners: ->
     @iframeDoc.body.addEventListener('keydown', (event) =>
       return if @ignoreDomChanges || event.which != 13
+      @ignoreDomChanges = true
       selection = this.getSelectionRange()
       startIndex = selection.start.getIndex()
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
@@ -74,28 +75,34 @@ class TandemEditor extends EventEmitter2
       deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
       delta = new JetDelta(docLength, docLength + 1, deltas)
       this.emit(this.events.USER_TEXT_CHANGE, delta)
+      setTimeout(=>
+        @ignoreDomChanges = false
+      , 1)
     )
     @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
       return if @ignoreDomChanges
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
       deltas = []
       position = new Tandem.Position(this, event.srcElement.parentNode, 0)
       startIndex = position.getIndex()
       deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
       insertedLength = 0
-      dmpRetainedLength = 0
+      offsetLength = 0
       dmp = new diff_match_patch()
       diffs = dmp.diff_main(event.prevValue, event.newValue)
       _.each(diffs, (diff) ->
         if diff[0] == DIFF_EQUAL
-          deltas.push(new JetRetain(startIndex + dmpRetainedLength, startIndex + dmpRetainedLength + diff[1].length))
-          dmpRetainedLength += diff[1].length
+          deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
+          offsetLength += diff[1].length
         if diff[0] == DIFF_INSERT
           deltas.push(new JetInsert(diff[1]))
           insertedLength += diff[1].length
+        if diff[0] == DIFF_DELETE
+          offsetLength += diff[1].length
       )
-      deltas.push(new JetRetain(startIndex + event.srcElement.textContent.length - insertedLength, docLength - insertedLength)) if startIndex < docLength
-      delta = new JetDelta(docLength - insertedLength, docLength, deltas)
+      deltas.push(new JetRetain(startIndex + offsetLength, originalDocLength)) if startIndex < docLength
+      delta = new JetDelta(originalDocLength, docLength, deltas)
       this.emit(this.events.USER_TEXT_CHANGE, delta)
     )
     checkSelectionChange = _.debounce( =>
