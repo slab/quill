@@ -3,6 +3,7 @@
 #= require selection
 #= require rangy-core
 #= require eventemitter2
+#= require diff_match_patch
 #= require jetsync
 
 class TandemEditor extends EventEmitter2
@@ -33,11 +34,12 @@ class TandemEditor extends EventEmitter2
         margin: 0px; 
         padding: 0px; 
       }
-      a { text-decoration: underline }
-      b { font-weight: bold }
-      i { font-style: italic }
-      s { text-decoration: line-through }
-      u { text-decoration: underline }
+      .line { min-height: 15px; }
+      a { text-decoration: underline; }
+      b { font-weight: bold; }
+      i { font-style: italic; }
+      s { text-decoration: line-through; }
+      u { text-decoration: underline; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css
@@ -61,13 +63,48 @@ class TandemEditor extends EventEmitter2
     return iframe
 
   initListeners: ->
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce( ->
+    @iframeDoc.body.addEventListener('keydown', (event) =>
+      return if @ignoreDomChanges || event.which != 13
+      @ignoreDomChanges = true
+      selection = this.getSelectionRange()
+      startIndex = selection.start.getIndex()
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      deltas.push(new JetInsert("\n"))
+      deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
+      delta = new JetDelta(docLength, docLength + 1, deltas)
+      this.emit(this.events.USER_TEXT_CHANGE, delta)
+      setTimeout(=>
+        @ignoreDomChanges = false
+      , 1)
+    )
+    @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
       return if @ignoreDomChanges
-      # Normalize
-      # Detect changes
-      # Callback
-      console.log 'DOMSubtreeModified'
-    , 100))
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
+      deltas = []
+      position = new Tandem.Position(this, event.srcElement.parentNode, 0)
+      startIndex = position.getIndex()
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      insertedLength = 0
+      offsetLength = 0
+      dmp = new diff_match_patch()
+      diffs = dmp.diff_main(event.prevValue, event.newValue)
+      _.each(diffs, (diff) ->
+        if diff[0] == DIFF_EQUAL
+          deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
+          offsetLength += diff[1].length
+        if diff[0] == DIFF_INSERT
+          deltas.push(new JetInsert(diff[1]))
+          insertedLength += diff[1].length
+        if diff[0] == DIFF_DELETE
+          offsetLength += diff[1].length
+      )
+      deltas.push(new JetRetain(startIndex + offsetLength, originalDocLength)) if startIndex < docLength
+      delta = new JetDelta(originalDocLength, docLength, deltas)
+      this.emit(this.events.USER_TEXT_CHANGE, delta)
+    )
     checkSelectionChange = _.debounce( =>
       selection = this.getSelectionRange()
       if selection != @currentSelection && !selection.equals(@currentSelection)
@@ -77,39 +114,64 @@ class TandemEditor extends EventEmitter2
     @iframeDoc.body.addEventListener('keyup', checkSelectionChange)
     @iframeDoc.body.addEventListener('mouseup', checkSelectionChange)
 
-
   insertAt: (startIndex, text, attributes = {}) ->
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex) else startIndex
-    this.preserveSelection(range, text.length, ->
-
+    this.preserveSelection(range, text.length, =>
+      lines = text.split("\n")
+      _.each(lines, (line, lineIndex) =>
+        range = new Tandem.Range(this, startIndex, startIndex) unless range?
+        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset) + line + range.start.node.textContent.substr(range.start.offset)
+        startIndex += line.length
+        this.insertNewlineAt(startIndex) if lineIndex < lines.length - 1
+        startIndex += 1
+        range = null
+      )
     )
     @ignoreDomChanges = false
-    # 1. Save selection
-    # 2. Split text into lines
-    # 3. Find node where it starts
-    # 4. Insert text of first line
-    # 5. Append <div> wrapped text for remaining lines
-    # - Update local data structures?
-    # - Apply attributes if applicable
-    # 6. Restore selection
+
+  insertNewlineAt: (startIndex) ->
+    range = new Tandem.Range(this, startIndex, startIndex)
+    range.splitAfter()
+    div = Tandem.Utils.Node.cloneNodeWithAncestors(@iframeDoc, range.start.node)
+    @iframeDoc.body.insertBefore(div, Tandem.Utils.Node.getLine(range.end.node).nextSibling)
+    node = range.end.node.nextSibling
+    while node?
+      nextSibling = node.nextSibling
+      div.appendChild(node)
+      node = nextSibling
 
   deleteAt: (startIndex, length) ->  
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
-    this.preserveSelection(range, 0 - length, ->
-
+    this.preserveSelection(range, 0 - length, =>
+      lineGroups = range.groupNodesByLine()
+      lines = _.compact(_.map(lineGroups, (lineGroup) ->
+        return if lineGroup.length != 0 then Tandem.Utils.Node.getLine(lineGroup[0]) else null
+      ))
+      lines.unshift(Tandem.Utils.Node.getLine(range.start.node))
+      lines.push(Tandem.Utils.Node.getLine(range.end.node))
+      lines = _.uniq(lines)
+      return if lines.length == 0
+      if lines.length > 2
+        toDelete = lines.splice(0, lines.length - 2)
+        _.each(toDelete, (line) ->
+          line.parentNode.removeChild(line)
+        )
+      if range.start.node == range.end.node
+        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset) + range.end.node.textContent.substr(range.end.offset)
+      else
+        nodes = _.flatten(lineGroups)
+        _.each(nodes, (node) ->
+          if node != range.start.node && node != range.end.node
+            node.parentNode.removeChild(node)
+        )
+        range.end.node.textContent = range.end.node.textContent.substr(range.end.offset)
+        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset)
+      if lines.length == 2
+        Tandem.Utils.Node.combineLines(lines[0], lines[1])
     )
     @ignoreDomChanges = false
-    # 1. Save selection
-    # 2. Find nodes in range
-    # 3. For first and last node, delete text
-    # 4. For remaining nodes, remove node
-    # 5. For first and last node
-    #     - If node is empty and selection is not on that node
-    #         - Delete node, recursively for each parent
-    #         - Might have helper that clears empty nodes
-    # 6. Restore selection
 
   getAt: (startIndex, length) ->
     # - Returns array of {text: "", attr: {}}
