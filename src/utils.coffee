@@ -11,6 +11,13 @@ TandemUtils =
         else return 'SPAN'
 
   Node:
+    combineLines: (line1, line2) ->
+      children = _.clone(line2.childNodes)
+      _.each(children, (child) ->
+        line1.appendChild(child)
+      )
+      line2.parentNode.removeChild(line2)
+
     createContainerForAttribute: (doc, attribute) ->
       switch (attribute)
         when 'bold'       then return doc.createElement('b')

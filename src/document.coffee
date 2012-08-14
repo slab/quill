@@ -30,6 +30,13 @@ class TandemDocument
       div.id = ID_PREFIX + @idCounter
       @idCounter += 1
 
+    # Remove empty lines
+    lines = _.clone(@editor.iframeDoc.body.childNodes)
+    _.each(lines, (line) ->
+      if line.textContent == '' && !_.any(line.childNodes, (node) -> return node.tagName == 'BR')
+        line.parentNode.removeChild(line)
+    )
+
     # Flatten block elements
     # Make all block elements div
     # Normalize all inline block tags

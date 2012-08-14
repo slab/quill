@@ -33,11 +33,12 @@ class TandemEditor extends EventEmitter2
         margin: 0px; 
         padding: 0px; 
       }
-      a { text-decoration: underline }
-      b { font-weight: bold }
-      i { font-style: italic }
-      s { text-decoration: line-through }
-      u { text-decoration: underline }
+      .line { min-height: 15px; }
+      a { text-decoration: underline; }
+      b { font-weight: bold; }
+      i { font-style: italic; }
+      s { text-decoration: line-through; }
+      u { text-decoration: underline; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css
@@ -61,7 +62,7 @@ class TandemEditor extends EventEmitter2
     return iframe
 
   initListeners: ->
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce( ->
+    @iframeDoc.body.addEventListener('DOMSubtreeModified', _.debounce((event) ->
       return if @ignoreDomChanges
       # Normalize
       # Detect changes
@@ -97,19 +98,34 @@ class TandemEditor extends EventEmitter2
   deleteAt: (startIndex, length) ->  
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
-    this.preserveSelection(range, 0 - length, ->
-
+    this.preserveSelection(range, 0 - length, =>
+      lineGroups = range.groupNodesByLine()
+      lines = _.compact(_.map(lineGroups, (lineGroup) ->
+        return if lineGroup.length != 0 then Tandem.Utils.Node.getLine(lineGroup[0]) else null
+      ))
+      lines.unshift(Tandem.Utils.Node.getLine(range.start.node))
+      lines.push(Tandem.Utils.Node.getLine(range.end.node))
+      lines = _.uniq(lines)
+      return if lines.length == 0
+      if lines.length > 2
+        toDelete = lines.splice(0, lines.length - 2)
+        _.each(toDelete, (line) ->
+          line.parentNode.removeChild(line)
+        )
+      if range.start.node == range.end.node
+        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset) + range.end.node.textContent.substr(range.end.offset)
+      else
+        nodes = _.flatten(lineGroups)
+        _.each(nodes, (node) ->
+          if node != range.start.node && node != range.end.node
+            node.parentNode.removeChild(node)
+        )
+        range.end.node.textContent = range.end.node.textContent.substr(range.end.offset)
+        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset)
+      if lines.length == 2
+        Tandem.Utils.Node.combineLines(lines[0], lines[1])
     )
     @ignoreDomChanges = false
-    # 1. Save selection
-    # 2. Find nodes in range
-    # 3. For first and last node, delete text
-    # 4. For remaining nodes, remove node
-    # 5. For first and last node
-    #     - If node is empty and selection is not on that node
-    #         - Delete node, recursively for each parent
-    #         - Might have helper that clears empty nodes
-    # 6. Restore selection
 
   getAt: (startIndex, length) ->
     # - Returns array of {text: "", attr: {}}
