@@ -12,18 +12,28 @@ class TandemEditor extends EventEmitter2
     USER_SELECTION_CHANGE : 'user-selection-change'
     USER_TEXT_CHANGE      : 'user-text-change'
 
+  options:
+    POLL_INTERVAL: 500
+
   constructor: (@container) ->
     @container = document.getElementById(@container) if _.isString(@container)
-    @iframe = this._createIframe(@container)
+    @iframe = this.createIframe(@container)
     @iframeDoc = @iframe.contentWindow.document
     @doc = new Tandem.Document(this, @iframeDoc.body)
     @ignoreDomChanges = false
-    rangy.init()
-    @currentSelection = this.getSelectionRange()
-    # Normalize html
-    this.initListeners()
+    @currentSelection = null
+    this.initContentListeners()
+    this.initSelectionListeners()
 
-  _appendStyles: (doc) ->
+  createIframe: (parent) ->
+    html = parent.innerHTML
+    parent.innerHTML = ''
+    iframe = document.createElement('iframe')
+    iframe.frameborder = 0
+    iframe.src = 'javascript:;'
+    iframe.height = iframe.width = '100%'
+    parent.appendChild(iframe)
+    doc = iframe.contentWindow.document
     head = doc.getElementsByTagName('head')[0]
     style = doc.createElement('style')
     style.type = 'text/css'
@@ -46,39 +56,12 @@ class TandemEditor extends EventEmitter2
     else
       style.appendChild(doc.createTextNode(css))
     head.appendChild(style)
-
-  _createIframe: (parent) ->
-    html = parent.innerHTML
-    parent.innerHTML = ''
-    iframe = document.createElement('iframe')
-    iframe.frameborder = 0
-    iframe.src = 'javascript:;'
-    iframe.height = '100%'
-    iframe.width = '100%'
-    parent.appendChild(iframe)
-    doc = iframe.contentWindow.document
-    this._appendStyles(doc)
     doc.body.setAttribute('contenteditable', true)
     doc.body.innerHTML = html
     return iframe
 
-  initListeners: ->
-    @iframeDoc.body.addEventListener('keydown', (event) =>
-      return if @ignoreDomChanges || event.which != 13
-      @ignoreDomChanges = true
-      selection = this.getSelectionRange()
-      startIndex = selection.start.getIndex()
-      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-      deltas = []
-      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-      deltas.push(new JetInsert("\n"))
-      deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
-      delta = new JetDelta(docLength, docLength + 1, deltas)
-      this.emit(this.events.USER_TEXT_CHANGE, delta)
-      setTimeout(=>
-        @ignoreDomChanges = false
-      , 1)
-    )
+  initContentListeners: ->
+
     @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
       return if @ignoreDomChanges
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
@@ -105,14 +88,32 @@ class TandemEditor extends EventEmitter2
       delta = new JetDelta(originalDocLength, docLength, deltas)
       this.emit(this.events.USER_TEXT_CHANGE, delta)
     )
-    checkSelectionChange = _.debounce( =>
+    @iframeDoc.body.addEventListener('keydown', (event) =>
+      return if @ignoreDomChanges || event.which != 13
+      @ignoreDomChanges = true
+      selection = this.getSelectionRange()
+      startIndex = selection.start.getIndex()
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      deltas.push(new JetInsert("\n"))
+      deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
+      delta = new JetDelta(docLength, docLength + 1, deltas)
+      this.emit(this.events.USER_TEXT_CHANGE, delta)
+      setTimeout(=>
+        @ignoreDomChanges = false
+      , 1)
+    )
+
+  initSelectionListeners: ->
+    checkSelectionChange = setInterval( =>
       selection = this.getSelectionRange()
       if selection != @currentSelection && !selection.equals(@currentSelection)
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
-    , 100)
-    @iframeDoc.body.addEventListener('keyup', checkSelectionChange)
-    @iframeDoc.body.addEventListener('mouseup', checkSelectionChange)
+    , this.options.POLL_INTERVAL)
+    @iframeDoc.body.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
+    @iframeDoc.body.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
 
   insertAt: (startIndex, text, attributes = {}) ->
     @ignoreDomChanges = true
