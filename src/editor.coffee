@@ -112,7 +112,7 @@ class TandemEditor extends EventEmitter2
       if selection != @currentSelection && !selection.equals(@currentSelection)
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
-        
+
     @iframeDoc.body.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
     @iframeDoc.body.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
@@ -120,7 +120,7 @@ class TandemEditor extends EventEmitter2
   insertAt: (startIndex, text, attributes = {}) ->
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex) else startIndex
-    this.preserveSelection(range, text.length, =>
+    this.preserveSelection(range.start, text.length, =>
       lines = text.split("\n")
       _.each(lines, (line, lineIndex) =>
         range = new Tandem.Range(this, startIndex, startIndex) unless range?
@@ -147,7 +147,7 @@ class TandemEditor extends EventEmitter2
   deleteAt: (startIndex, length) ->  
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
-    this.preserveSelection(range, 0 - length, =>
+    this.preserveSelection(range.start, 0 - length, =>
       lineGroups = range.groupNodesByLine()
       lines = _.compact(_.map(lineGroups, (lineGroup) ->
         return if lineGroup.length != 0 then Tandem.Utils.Node.getLine(lineGroup[0]) else null
@@ -195,7 +195,7 @@ class TandemEditor extends EventEmitter2
       [range, attributes] = [startIndex, length]
       startIndex = range.start.getIndex()
       length = range.end.getIndex() - startIndex
-    this.preserveSelection(range, 0, =>
+    this.preserveSelection(range.start, 0, =>
       for attr,value of attributes
         range = new Tandem.Range(this, startIndex, startIndex + length) unless range?
         range.splitEnds()
@@ -237,18 +237,25 @@ class TandemEditor extends EventEmitter2
       this.emit(this.events.API_TEXT_CHANGE, delta)
     @ignoreDomChanges = false
     
-  preserveSelection: (modificationRange, charAdditions, fn) ->
+  preserveSelection: (modificationStart, charAdditions, fn) ->
     currentSelection = this.getSelection()
     if currentSelection?
-      selectionStartIndex = currentSelection.start.getIndex()
-      selectionEndIndex = currentSelection.end.getIndex()
+      [selStart, selEnd] = this.transformSelection(modificationStart, currentSelection, charAdditions)
       fn()
-      savedSelectionRange = new Tandem.Range(currentSelection.editor, selectionStartIndex, selectionEndIndex)
+      savedSelectionRange = new Tandem.Range(currentSelection.editor, selStart, selEnd)
       rangySel = rangy.getIframeSelection(@iframe)
       range = savedSelectionRange.getRangy()
       rangySel.setSingleRange(range)
     else
       fn()
+
+  transformSelection: (modificationStart, selectionRange, charAdditions) ->
+    modPos = modificationStart.getIndex()
+    selStart = selectionRange.start.getIndex()
+    selEnd = selectionRange.end.getIndex()
+    selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
+    selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
+    return [selStart, selEnd]
 
 
 window.Tandem ||= {}

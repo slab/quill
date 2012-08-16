@@ -62,7 +62,7 @@ class TandemRange
   # constructor: (TandemEditor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->
     # TODO initialize with index
-    @start = new TandemPosition(@editor, @start) if _.isNumber(@start) 
+    @start = new TandemPosition(@editor, @start) if _.isNumber(@start)
     @end = new TandemPosition(@editor, @end) if _.isNumber(@end)
 
   equals: (range) ->
