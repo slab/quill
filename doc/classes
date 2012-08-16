@@ -1,0 +1,34 @@
+
+
+
+Editor
+---
+
+
+Position
+---
+Removes ambiguity in DOM positions. 
+Ex: <b>Te</b><i>ing</i>
+The 'i' can either be (<b>, 2) or (<i>, 0)
+
+Postion will always choose the deepest node.
+
+
+Range
+---
+Wrapper for rangy's range, using Positions. Has many useful functions for operations or analysis of the range.
+
+
+Toolbar 
+---
+Interface for 3rd parties implementing toolbar. Just 
+
+
+Utils
+---
+
+
+Document
+---
+
+

@@ -16,6 +16,37 @@ Undo Manager
 
 
 
+Considerations: <div><br /></div> in editor operations...
+
+
+
+HTML Normalization
+---
+
+ Cleanup Rules (Our editor will still work with this but will be inefficient)
+    - Text nodes cannot have siblings, if they do wrap the text node in a span
+    - No node can have two inclusive ancestors with the same tagName (redundant), spans are an exception
+    - Adjacent nodes of the same tagName should be merged
+    - No elements can be empty (have no text), if so it should be deleted
+    - Nodes have no styles
+    - Only lines and spans can have classes
+
+Requirements (will probably break if not met)
+    - No node can contain the newline character
+    - No divs can exist other than line divs
+    - Only line divs can be children of the editor
+    - Only acceptable tags are:
+        b - bold
+        i - italic
+        s - strike
+        u - underline
+        a - link
+        span - text
+        br - newline* only programmatically inserted
+
+
+
+
 Editor Operations
 ---
 Apply Attribute
@@ -178,7 +209,6 @@ Insert Text
 
 
 
-
 Delete Text
 
 1. Delete characters in node
@@ -198,24 +228,43 @@ Delete Text
 
 
 
-Normalization Rules
-    Cleanup (Our editor will still work with this but will be inefficient)
-    - Text nodes cannot have siblings, if they do wrap the text node in a span
-    - No node can have two inclusive ancestors with the same tagName (redundant), spans are an exception
-    - Adjacent nodes of the same tagName should be merged
-    - No elements can be empty (have no text), if so it should be deleted
-    - Nodes have no styles
-    - Only lines and spans can have classes
+Preserving selection
 
-    Requirements (will probably break something if not met)
-    - No node can contain the newline character
-    - No divs can exist other than line divs
-    - Only line divs can be children of the editor
-    - Only acceptable tags are:
-        b - bold
-        i - italic
-        s - strike
-        u - underline
-        a - link
-        span - text
-        br - newline* only we insert this
+1. Apply attribute
+    Plan A
+    - Save start and end leaves and offset
+    - Set selection to those nodes
+    Need to test: Are leaf nodes guaranteed to be around?
+    Plan B
+    - Save index into document where selection range is
+    - Restore based on index
+    Note: Plan A is certainly more optimal but far more complex; it may be best to just do Plan B even if A works
+
+2. Insert text
+    - If insertion point is the selection's start node or end node
+        Split and set selection node to the beginning of the right split node
+    - Rest similar strategy to #1
+
+3. Delete text
+    - Rest similar to strategy
+    - If selection start or end node was deleted, set to deletion point
+
+
+
+
+Editor Events
+---
+
+Selection Change
+
+This is deliberate changes unrelated to content changes. So typing does not cause this event to be triggered, even though techically the selection is changing.
+
+Checking for changes occur very often so we must do this very quickly.
+
+
+
+Content Change
+
+
+
+

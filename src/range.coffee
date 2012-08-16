@@ -10,7 +10,7 @@ class TandemPosition
   # Finds the HTML node and offset where offset will be within node's boundaries
   # Ex. <b>Te</b><i>ing</i>
   #     The 'i' can either be (<b>, 2) or or (<i>, 0)
-  #     Dive will pick the latter
+  #     adjustOffset will pick the latter
   @adjustOffset: (node, offset) ->
     if offset <= node.textContent.length    # We are at right subtree, dive deeper
       if node.firstChild?
