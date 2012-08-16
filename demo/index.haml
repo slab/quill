@@ -31,6 +31,9 @@
         .line<>
           %span<> Line 4
           %span<> Word4
+    #output-container.output-container
+      .selection
+      %pre.editor
 
   %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
@@ -38,6 +41,7 @@
   %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
   %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
   %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+  %script{:type => 'text/javascript', :src => '../lib/jquery-clean.js'}
   %script{:type => 'text/javascript', :src => '../src/utils.js'}
   %script{:type => 'text/javascript', :src => '../src/range.js'}
   %script{:type => 'text/javascript', :src => '../src/document.js'}
@@ -47,7 +51,18 @@
     editor = new Tandem.Editor('editor-container');
     toolbar = new Tandem.Toolbar(editor)
 
-    $('.bold').click(function() { toolbar.bold() });
-    $('.italic').click(function() { toolbar.italic() })
-    $('.strike').click(function() { toolbar.strike() })
-    $('.underline').click(function() { toolbar.underline() })
+    updateOutput = function() {
+      $('#output-container .editor').text($.htmlClean(editor.iframeDoc.body.innerHTML, {
+        allowedClasses: ['line'],
+        format: true
+      }));
+    };
+
+    editor.on(editor.events.API_TEXT_CHANGE, updateOutput)
+          .on(editor.events.USER_TEXT_CHANGE, updateOutput);
+    updateOutput()
+
+    $('.bold').click(function() { toolbar.bold(); });
+    $('.italic').click(function() { toolbar.italic(); });
+    $('.strike').click(function() { toolbar.strike(); });
+    $('.underline').click(function() { toolbar.underline(); });
