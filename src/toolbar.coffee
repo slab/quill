@@ -12,12 +12,12 @@ class TandemToolbar extends EventEmitter2
     )
 
   applyAttribute: (name, value) ->
-    selection = @editor.getSelectionRange()
+    selection = @editor.getSelection()
     if selection?
       attribute = {}
       attribute[name] = value
       @editor.applyAttribute(selection, attribute)
-      this.emit('update', @editor.getSelectionRange().getAttributeIntersection())
+      this.emit('update', @editor.getSelection().getAttributeIntersection())
     else
       console.warn "#{name} called with no selection"
 

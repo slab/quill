@@ -61,8 +61,8 @@ class TandemEditor extends EventEmitter2
     return iframe
 
   initContentListeners: ->
-
     @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
+      @currentSelection = this.getSelection()
       return if @ignoreDomChanges
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
       originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
@@ -90,8 +90,9 @@ class TandemEditor extends EventEmitter2
     )
     @iframeDoc.body.addEventListener('keydown', (event) =>
       return if @ignoreDomChanges || event.which != 13
+      @currentSelection = this.getSelection()
       @ignoreDomChanges = true
-      selection = this.getSelectionRange()
+      selection = this.getSelection()
       startIndex = selection.start.getIndex()
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
       deltas = []
@@ -106,14 +107,15 @@ class TandemEditor extends EventEmitter2
     )
 
   initSelectionListeners: ->
-    checkSelectionChange = setInterval( =>
-      selection = this.getSelectionRange()
+    checkSelectionChange = =>
+      selection = this.getSelection()
       if selection != @currentSelection && !selection.equals(@currentSelection)
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
-    , this.options.POLL_INTERVAL)
+        
     @iframeDoc.body.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
     @iframeDoc.body.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
+    setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
 
   insertAt: (startIndex, text, attributes = {}) ->
     @ignoreDomChanges = true
@@ -182,8 +184,8 @@ class TandemEditor extends EventEmitter2
     # - Helper to get nodes in given index range
     # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
 
-  getSelectionRange: ->
-    return Tandem.Range.getCurrent(this)
+  getSelection: ->
+    return Tandem.Range.getSelection(this)
 
   # applyAttribute: (TandemRange range, Object attribute) ->
   # applyAttribute: (Number startIndex, Number length, Object attribute) ->
@@ -236,7 +238,7 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = false
     
   preserveSelection: (modificationRange, charAdditions, fn) ->
-    currentSelection = this.getSelectionRange()
+    currentSelection = this.getSelection()
     if currentSelection?
       selectionStartIndex = currentSelection.start.getIndex()
       selectionEndIndex = currentSelection.end.getIndex()
