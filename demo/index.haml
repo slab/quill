@@ -20,17 +20,31 @@
             .format.strike
       #editor-container.editor-container
         .line<>
-          %span<> Line 1
-          %span<> Word1
+          %span<> Welcome to Stypi
         .line<>
-          %span<> Line 2
-          %span<> Word2
+          %b<> Bold
+          %span<> &nbsp;
+          %i<> Italic
+          %span<> &nbsp;
+          %s<> Strike
+          %span<> &nbsp;
+          %u<> Underline
         .line<>
-          %span<> Line 3
-          %span<> Word3
+          %span<> a
+          %span<> b
+          %span<> c
+          %span<> d
+          %span<> e
+          %span<> f
+          %span<> g
         .line<>
-          %span<> Line 4
-          %span<> Word4
+          %br<>
+        .line<>
+          %br<>
+        .line<>
+          %span<> Goodbye
+        .line<>
+          %br<>
     #output-container.output-container
       .selection
       %pre.editor
@@ -44,6 +58,9 @@
   %script{:type => 'text/javascript', :src => '../lib/jquery-clean.js'}
   %script{:type => 'text/javascript', :src => '../src/utils.js'}
   %script{:type => 'text/javascript', :src => '../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../src/position.js'}
+  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+  %script{:type => 'text/javascript', :src => '../src/line.js'}
   %script{:type => 'text/javascript', :src => '../src/document.js'}
   %script{:type => 'text/javascript', :src => '../src/editor.js'}
   %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
@@ -53,7 +70,7 @@
 
     updateOutput = function() {
       $('#output-container .editor').text($.htmlClean(editor.iframeDoc.body.innerHTML, {
-        allowedClasses: ['line'],
+        allowedClasses: [['line']],
         format: true
       }));
     };

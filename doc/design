@@ -44,6 +44,14 @@ Requirements (will probably break if not met)
         span - text
         br - newline* only programmatically inserted
 
+Algorithm...
+    Normalizing lines
+    - If no nodes, add <div><br /></div> and be done
+    - For each line node, make sure it is div with line class
+        - If div and no class, add class
+        - Otherwise if block tag, wrap with div
+        - If not block tag, advance until you find another block tag, insert all those into a wrapped div
+        
 
 
 

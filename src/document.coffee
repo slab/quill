@@ -2,12 +2,10 @@
 
 ID_PREFIX   = 'tandem-'
 CLASS_NAME  = 'line'
-BLOCK_TAGS  = ['ADDRESS', 'BLOCKQUOTE', 'DIV', 'DL', 'FIELDSET', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL']
-INLINE_TAGS = []
 
 class TandemDocument
   constructor: (@editor, @root) ->
-    @idCounter = 0
+    @lineIdCounter = 0
     lines = []
     lineMap = {}
     this.normalizeHtml()
@@ -28,7 +26,7 @@ class TandemDocument
       div.appendChild(@doc.createElement('br'))
       @root.appendChild(div)
       div.id = ID_PREFIX + @idCounter
-      @idCounter += 1
+      @lineIdCounter += 1
 
     # Remove empty lines
     lines = _.clone(@editor.iframeDoc.body.childNodes)
@@ -48,6 +46,13 @@ class TandemDocument
     # Go through HTML (which should be normalized)
     # Make sure non are different from their innerHTML, if so record change
     # Returns changes made
+
+
+class TandemLine
+
+
+
+class TandemLeaf
 
 
 

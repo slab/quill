@@ -2,68 +2,24 @@
 #= require rangy/rangy-core
 
 
-# Class giving 
-class TandemPosition
-  # constructor: (TandemEditor editor, Object node, Number offset) ->
-  # constructor: (TandemEditor editor, Number index) -> 
-
-  # Finds the HTML node and offset where offset will be within node's boundaries
-  # Ex. <b>Te</b><i>ing</i>
-  #     The 'i' can either be (<b>, 2) or or (<i>, 0)
-  #     adjustOffset will pick the latter
-  @adjustOffset: (node, offset) ->
-    if offset <= node.textContent.length    # We are at right subtree, dive deeper
-      if node.firstChild?
-        TandemPosition.adjustOffset(node.firstChild, offset)
-      else
-        node = node.parentNode
-        if offset == node.textContent.length && node.nextSibling?
-          TandemPosition.adjustOffset(node.nextSibling, 0)
-        else
-          return [node, offset]
-    else if node.nextSibling?               # Not at right subtree, advance to sibling
-      offset -= 1 if node.className == 'line'
-      TandemPosition.adjustOffset(node.nextSibling, offset - node.textContent.length)
-    else
-      throw Error('Diving exceeded offset')
-
-  constructor: (@editor, @node, @offset) ->
-    if _.isNumber(@node)
-      @offset = @node
-      @node = @editor.iframeDoc.body.firstChild
-    [@node, @offset] = TandemPosition.adjustOffset(@node, @offset)
-    @text = @node.textContent   # For testing convenience
-    
-  getIndex: ->
-    return @index if @index?
-    @index = @offset
-    node = @node
-    while node.tagName != 'BODY'
-      while node.previousSibling?
-        node = node.previousSibling
-        @index += node.textContent.length + (if node.className == 'line' then 1 else 0) # Account for newline char
-      node = node.parentNode
-    return @index
-
-
 class TandemRange
   @getSelection: (editor) ->
     rangySelection = rangy.getIframeSelection(editor.iframe)
     return null unless rangySelection.anchorNode? && rangySelection.focusNode?
     if !rangySelection.isBackwards()
-      start = new TandemPosition(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
-      end = new TandemPosition(editor, rangySelection.focusNode, rangySelection.focusOffset)
+      start = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+      end = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
     else
-      start = new TandemPosition(editor, rangySelection.focusNode, rangySelection.focusOffset)
-      end = new TandemPosition(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+      start = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
+      end = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
     return new TandemRange(editor, start, end)
 
   # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
   # constructor: (TandemEditor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->
     # TODO initialize with index
-    @start = new TandemPosition(@editor, @start) if _.isNumber(@start)
-    @end = new TandemPosition(@editor, @end) if _.isNumber(@end)
+    @start = new Tandem.Position(@editor, @start) if _.isNumber(@start)
+    @end = new Tandem.Position(@editor, @end) if _.isNumber(@end)
 
   equals: (range) ->
     return false if range == null
@@ -106,7 +62,7 @@ class TandemRange
 
   getLeafPositions: ->
     return _.map(this.getLeafNodes(), (node) =>
-      return new TandemPosition(@editor, node, 0)
+      return new Tandem.Position(@editor, node, 0)
     )
 
   groupNodesByLine: ->
@@ -149,5 +105,4 @@ class TandemRange
 
 
 window.Tandem ||= {}
-window.Tandem.Position = TandemPosition
 window.Tandem.Range = TandemRange

@@ -3,20 +3,58 @@
 
 Editor
 ---
+applyAttribute()
+insertAt()
+deleteAt()
+
+Selection.current
+Selection.getCurrent()
+Selection.setCurrent()
+
+
+Document
+---
+Storage for editor. Differences in storage data and DOM indicates change.
+
+
+
+
+
+
+
 
 
 Position
 ---
 Removes ambiguity in DOM positions. 
-Ex: <b>Te</b><i>ing</i>
-The 'i' can either be (<b>, 2) or (<i>, 0)
 
-Postion will always choose the deepest node.
+Node node
+Number offset
 
 
 Range
 ---
 Wrapper for rangy's range, using Positions. Has many useful functions for operations or analysis of the range.
+
+Position start
+Position end
+equals()
+getRangy()
+getLeaves(inclusive = true)
+
+
+Line
+---
+
+
+
+Leaf
+---
+
+Leaf.groupByLine()
+split(offset)
+
+
 
 
 Toolbar 
@@ -25,10 +63,6 @@ Interface for 3rd parties implementing toolbar. Just
 
 
 Utils
----
-
-
-Document
 ---
 
 
