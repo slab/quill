@@ -3,6 +3,8 @@
 ID_PREFIX   = 'tandem-'
 CLASS_NAME  = 'line'
 
+window.Tandem
+
 class TandemDocument
   constructor: (@editor, @root) ->
     @lineIdCounter = 0

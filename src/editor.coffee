@@ -7,6 +7,8 @@
 #= require jetsync
 
 class TandemEditor extends EventEmitter2
+  @editors: []
+
   events: 
     API_TEXT_CHANGE       : 'api-text-change'
     USER_SELECTION_CHANGE : 'user-selection-change'
@@ -24,6 +26,7 @@ class TandemEditor extends EventEmitter2
     @currentSelection = null
     this.initContentListeners()
     this.initSelectionListeners()
+    TandemEditor.editors.push(this)
 
   createIframe: (parent) ->
     html = parent.innerHTML
