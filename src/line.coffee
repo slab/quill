@@ -3,11 +3,13 @@
 class TandemLine
   @CLASS_NAME: 'line'
 
-  constructor: (@node, @id, @index) ->
+
+  constructor: (@doc, @node, @id, @index) ->
     @leaves = []
     @numLeaves = 0
+    @attributes = {}
     this.normalizeHTML()
-    this.buildLeaves(@node, {})
+    this.buildLeaves(@node, @attributes)
     @length = @node.textContent.length
     @innerHTML = @node.innerHTML
 
@@ -17,11 +19,17 @@ class TandemLine
       [attr, value] = Tandem.Leaf.getAttribute(node)
       nodeAttributes[attr] = value if attr?
       if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
-        @leaves.push(new Tandem.Leaf(node, nodeAttributes, @numLeaves))
+        @leaves.push(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
         @numLeaves += 1
       else
         this.buildLeaves(node, nodeAttributes)
     )
+
+  getNextLine: ->
+    return @doc.lines[@index + 1]
+
+  getPrevLine: ->
+    return @doc.lines[@index - 1]
 
   normalizeHTML: ->
 

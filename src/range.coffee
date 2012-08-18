@@ -77,6 +77,9 @@ class TandemRange
       return lines
     , [])
 
+  isCollapsed: ->
+    return @start.node == @end.node && @start.offset == @end.offset
+
   split: (position, before = true) ->
     newNode = @editor.iframeDoc.createElement(position.node.tagName)
     beforeText = position.node.textContent.substring(0, position.offset)

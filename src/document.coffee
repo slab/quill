@@ -14,7 +14,7 @@ class TandemDocument
 
   buildLines: ->
     @lines = _.map(@root.childNodes, (lineNode, index) =>
-      line = new Tandem.Line(lineNode, @lineIdCounter, index)
+      line = new Tandem.Line(this, lineNode, @lineIdCounter, index)
       @lineMap[@lineIdCounter] = line
       @lineIdCounter += 1
       return line

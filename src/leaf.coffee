@@ -16,8 +16,15 @@ class TandemLeaf
       lines[leaf.line.id].push(leaf)
     , {})
 
-  constructor: (@node, @attributes, @index) ->
+
+  constructor: (@line, @node, @attributes, @index) ->
     @length = @node.textContent.length
+
+  getNextLeaf: ->
+    return @line.leaves[@index + 1]
+
+  getPrevLeaf: ->
+    return @line.leaves[@index - 1]
 
 
 
