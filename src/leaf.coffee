@@ -8,7 +8,8 @@ class TandemLeaf
       lines[leaf.line.id].push(leaf)
     , {})
 
-  constructor: ->
+  constructor: (@node) ->
+    @length = @node.textContent.length
 
 
 

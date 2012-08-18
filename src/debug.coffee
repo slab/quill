@@ -1,9 +1,15 @@
 window.Tandem ||= {}
 
 window.Tandem.Debug = 
+  getEditor: (editor) ->
+    editor ||= Tandem.Editor.editors[0]
+    return if _.isNumber(editor) then Tandem.Editor.editors[editor] else editor
+
   getHtml: (editor) ->
-    editor || = Tandem.Editor.editors[0]
-    if _.isNumber(editor)
-      return Tandem.Editor.editors[editor].iframeDoc.body
-    else
-      return editor.iframeDoc.body
+    editor = this.getEditor(editor)
+    return editor.iframeDoc.body
+
+  getDocument: (editor) -> 
+    editor = this.getEditor(editor)
+    return editor.doc
+

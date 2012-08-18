@@ -1,17 +1,24 @@
 #= require underscore
+#= require line
 
 ID_PREFIX   = 'tandem-'
-CLASS_NAME  = 'line'
 
-window.Tandem
 
 class TandemDocument
   constructor: (@editor, @root) ->
     @lineIdCounter = 0
-    lines = []
-    lineMap = {}
+    @lines = []
+    @lineMap = {}
     this.normalizeHtml()
-    this.detectChange()
+    this.buildLines()
+
+  buildLines: ->
+    @lines = _.map(@root.childNodes, (lineNode, index) =>
+      line = new Tandem.Line(lineNode, @lineIdCounter, index)
+      @lineMap[@lineIdCounter] = line
+      @lineIdCounter += 1
+      return line
+    )
 
   normalizeHtml: ->
     ### Rules:
