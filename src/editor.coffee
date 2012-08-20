@@ -121,6 +121,7 @@ class TandemEditor extends EventEmitter2
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
 
   insertAt: (startIndex, text, attributes = {}) ->
+    oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex) else startIndex
     this.preserveSelection(range.start, text.length, =>
@@ -134,7 +135,7 @@ class TandemEditor extends EventEmitter2
         range = null
       )
     )
-    @ignoreDomChanges = false
+    @ignoreDomChanges = oldIgnoreDomChange
 
   insertNewlineAt: (startIndex) ->
     range = new Tandem.Range(this, startIndex, startIndex)
@@ -147,7 +148,8 @@ class TandemEditor extends EventEmitter2
       div.appendChild(node)
       node = nextSibling
 
-  deleteAt: (startIndex, length) ->  
+  deleteAt: (startIndex, length) ->
+    oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
     this.preserveSelection(range.start, 0 - length, =>
@@ -177,7 +179,7 @@ class TandemEditor extends EventEmitter2
       if lines.length == 2
         Tandem.Utils.Node.combineLines(lines[0], lines[1])
     )
-    @ignoreDomChanges = false
+    @ignoreDomChanges = oldIgnoreDomChange
 
   getAt: (startIndex, length) ->
     # - Returns array of {text: "", attr: {}}
@@ -193,14 +195,16 @@ class TandemEditor extends EventEmitter2
   # applyAttribute: (TandemRange range, Object attribute) ->
   # applyAttribute: (Number startIndex, Number length, Object attribute) ->
   applyAttribute: (startIndex, length, attributes, emitEvent = true) ->
+    oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     if !_.isNumber(startIndex)
       [range, attributes] = [startIndex, length]
       startIndex = range.start.getIndex()
       length = range.end.getIndex() - startIndex
+    else
+      range = new Tandem.Range(this, startIndex, startIndex + length)
     this.preserveSelection(range.start, 0, =>
       for attr,value of attributes
-        range = new Tandem.Range(this, startIndex, startIndex + length) unless range?
         range.splitEnds()
         _.each(range.groupNodesByLine(), (nodes) =>
           return if nodes.length == 0
@@ -238,7 +242,7 @@ class TandemEditor extends EventEmitter2
       deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
       delta = new JetDelta(docLength, docLength, deltas)
       this.emit(this.events.API_TEXT_CHANGE, delta)
-    @ignoreDomChanges = false
+    @ignoreDomChanges = oldIgnoreDomChange
     
   preserveSelection: (modificationStart, charAdditions, fn) ->
     currentSelection = this.getSelection()
