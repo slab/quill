@@ -90,29 +90,35 @@ Apply Attribute
 
     A more complex example (boundaries marked by |):
     <div>
-        <u>Zero</u>
-        <i>|One</i>
+        <u>Neg</u>
+        <s>
+            <b>Zero</b>
+            <i>|One</i>
+        </s>
         <u>Two</u>
         <i>
-            <b>Three</b>
+            <u>Three</u>
             <s>Four|</s>
-            <i>Five</i>
+            <u>Five</u>
         </i>
     </div>
     Should produce:
     <div>
-        <u>Zero</u>
+        <u>Neg</u>
+        <s>
+            <b>Zero</b>
+        </s>
         <b>
-            <i>One</i>
+            <s>
+                <i>One</i>
+            </s>
             <u>Two</u>
-        </b>
-        <span>
-            <b>
+            <i>
                 <u>Three</u>
                 <s>Four</s>
-            </b>
-            <i>Five</i>
-        </span>
+            </i>
+        </b>
+        <u>Five</u>
     </div>
 
     If we assume these nodes are in sequence, then we can produce a more optimal algorithm with the general idea being:
