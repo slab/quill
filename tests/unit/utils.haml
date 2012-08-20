@@ -1,0 +1,39 @@
+!!! 5
+%html
+  %head
+    %title Stypi Editor Range Test
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../../lib/mocha.css'}
+
+%body
+  #mocha
+  #test-container
+    #test-base<>
+      %b<> Bold
+    #test-text<>
+      %b<> Bold
+    #test-node
+      %b<>
+        %i<> Italic
+        %s<> Strike
+    #test-both
+      %b<>
+        %i<> Italic
+    #test-complex
+      %b<>
+        %i<>
+          %s<>
+            %u<> One
+            %u<> Two
+          %s<> Three
+
+  %script{:type => 'text/javascript', :src => '../../../lib/jquery.js'}
+  %script{:type => 'text/javascript', :src => '../../../lib/underscore.js'}
+  %script{:type => 'text/javascript', :src => '../../src/utils.js'}
+  %script{:type => 'text/javascript', :src => '../../../lib/mocha.js'}
+  %script{:type => 'text/javascript', :src => '../../../lib/chai.js'}
+  :javascript
+    mocha.setup('bdd');
+    expect = chai.expect;
+  %script{:type => 'text/javascript', :src => 'scripts/utils.js'}
+  :javascript
+    mocha.run();

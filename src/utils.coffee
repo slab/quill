@@ -62,6 +62,13 @@ TandemUtils =
         return attributes
       , {})
 
+    getChildAtOffset: (node, offset) ->
+      child = node.firstChild
+      while offset > child.textContent.length
+        offset -= child.textContent.length
+        child = child.nextSibling
+      return [child, offset]
+
     getLine: (node) ->
       ancestors = TandemUtils.Node.getAncestorNodes(node)
       return if ancestors.length > 0 then ancestors[ancestors.length - 1] else null
@@ -83,6 +90,9 @@ TandemUtils =
     isLine: (node) ->
       return node.className == 'line'
 
+    isTextNodeParent: (node) ->
+      return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
+
     removeKeepingChildren: (doc, node) ->
       children = _.clone(node.childNodes)
       if _.all(children, (child) -> child.firstChild == null)
@@ -96,9 +106,42 @@ TandemUtils =
       )
       node.parentNode.removeChild(node)
 
+    split: (node, offset) ->
+      if offset > node.textContent.length
+        throw new Error('Splitting at offset greater than node length')
+
+      # Check if split necessary
+      if offset == 0
+        return [node.previousSibling, node]
+      if offset == node.textContent.length
+        return [node, node.nextSibling]
+
+      left = node
+      right = node.cloneNode(false)
+      node.parentNode.insertBefore(right, left.nextSibling)
+
+      if TandemUtils.Node.isTextNodeParent(node)
+        # Text split
+        beforeText = node.textContent.substring(0, offset)
+        afterText = node.textContent.substring(offset)
+        left.textContent = beforeText
+        right.textContent = afterText
+        return [left, right]
+      else
+        # Node split
+        [child, offset] = TandemUtils.Node.getChildAtOffset(node, offset)
+        console.log child, offset
+        [childLeft, childRight] = TandemUtils.Node.split(child, offset)
+        while childRight != null
+          nextRight = childRight.nextSibling
+          right.appendChild(childRight)
+          childRight = nextRight
+        return [left, right]
+
     wrap: (wrapper, node) ->
       node.parentNode.insertBefore(wrapper, node)
       wrapper.appendChild(node)
+
 
 
 window.Tandem ||= {}

@@ -22,7 +22,7 @@ class TandemPosition
       offset -= 1 if node.className == 'line'
       TandemPosition.adjustOffset(node.nextSibling, offset - node.textContent.length)
     else
-      throw Error('Diving exceeded offset')
+      throw new Error('Diving exceeded offset')
 
   constructor: (@editor, @node, @offset) ->
     if _.isNumber(@node)

@@ -129,6 +129,19 @@ describe('Editor', ->
   )
 
 
+  #describe('applyAttribute', ->
+  #  it('should apply attribute to single node')
+
+  #  it('should wrap multiple nodes')
+
+  #  it('should apply to part of node')
+
+  #  it('should apply to nodes spanning multiple lines')
+
+
+  #)
+
+
   describe('insertAt', ->
     reset = ->
       $('#editor-container').html('<div class="line"><b>123</b><i>456</i></div>')
