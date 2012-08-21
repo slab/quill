@@ -10,6 +10,19 @@ TandemUtils =
         when 'underline'  then return 'U'
         else return 'SPAN'
 
+  Input:
+    normalizeRange: (editor, index) ->
+      if _.isNumber(index)
+        position = new Tandem.Position(editor, index)
+      else if index instanceof Tandem.Range
+        position = index.start
+        index = position.getIndex()
+      else
+        position = index
+        index = position.getIndex()
+      return [position, index]
+
+
   Node:
     cloneNodeWithAncestors: (doc, node) ->
       newNode = null
@@ -66,6 +79,7 @@ TandemUtils =
       child = node.firstChild
       while offset > child.textContent.length
         offset -= child.textContent.length
+        offset -= 1 if child.className == 'line'
         child = child.nextSibling
       return [child, offset]
 
@@ -106,15 +120,16 @@ TandemUtils =
       )
       node.parentNode.removeChild(node)
 
-    split: (node, offset) ->
+    split: (node, offset, force = false) ->
       if offset > node.textContent.length
         throw new Error('Splitting at offset greater than node length')
 
       # Check if split necessary
-      if offset == 0
-        return [node.previousSibling, node]
-      if offset == node.textContent.length
-        return [node, node.nextSibling]
+      if !force
+        if offset == 0
+          return [node.previousSibling, node]
+        if offset == node.textContent.length
+          return [node, node.nextSibling]
 
       left = node
       right = node.cloneNode(false)
@@ -130,7 +145,6 @@ TandemUtils =
       else
         # Node split
         [child, offset] = TandemUtils.Node.getChildAtOffset(node, offset)
-        console.log child, offset
         [childLeft, childRight] = TandemUtils.Node.split(child, offset)
         while childRight != null
           nextRight = childRight.nextSibling

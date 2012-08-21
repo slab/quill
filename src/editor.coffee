@@ -123,30 +123,30 @@ class TandemEditor extends EventEmitter2
   insertAt: (startIndex, text, attributes = {}) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex) else startIndex
-    this.preserveSelection(range.start, text.length, =>
+    [position, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+
+    this.preserveSelection(position, text.length, =>
       lines = text.split("\n")
       _.each(lines, (line, lineIndex) =>
-        range = new Tandem.Range(this, startIndex, startIndex) unless range?
-        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset) + line + range.start.node.textContent.substr(range.start.offset)
+        position = new Tandem.Position(this, startIndex) unless position?
+        this.insertTextAt(position, line)
         startIndex += line.length
-        this.insertNewlineAt(startIndex) if lineIndex < lines.length - 1
-        startIndex += 1
-        range = null
+        if lineIndex < lines.length - 1
+          this.insertNewlineAt(startIndex)
+          startIndex += 1
+        position = null
       )
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
   insertNewlineAt: (startIndex) ->
-    range = new Tandem.Range(this, startIndex, startIndex)
-    range.splitAfter()
-    div = Tandem.Utils.Node.cloneNodeWithAncestors(@iframeDoc, range.start.node)
-    @iframeDoc.body.insertBefore(div, Tandem.Utils.Node.getLine(range.end.node).nextSibling)
-    node = range.end.node.nextSibling
-    while node?
-      nextSibling = node.nextSibling
-      div.appendChild(node)
-      node = nextSibling
+    [position, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+    [line, offset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
+    Tandem.Utils.Node.split(line, offset, true)
+
+  insertTextAt: (startIndex, text) ->
+    [position, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+    position.node.textContent = position.node.textContent.substr(0, position.offset) + text + position.node.textContent.substr(position.offset)
 
   deleteAt: (startIndex, length) ->
     oldIgnoreDomChange = @ignoreDomChanges

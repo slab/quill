@@ -6,7 +6,7 @@
 
 describe('Utils', ->
   describe('split', ->
-    it('should correctly not split if not necessary', ->
+    it('should not split if not necessary', ->
       container = document.getElementById('test-base')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 0)
       expect(left).to.equal(null)
@@ -17,7 +17,7 @@ describe('Utils', ->
       expect(right).to.equal(null)
     )
 
-    it('should correctly split text node', ->
+    it('should split text node', ->
       container = document.getElementById('test-text')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
       expect(left.textContent).to.equal("Bo")
@@ -25,22 +25,28 @@ describe('Utils', ->
       expect(container.innerHTML).to.equal('<b>Bo</b><b>ld</b>')
     )
 
-    it('should correctly split child nodes', ->
+    it('should split child nodes', ->
       container = document.getElementById('test-node')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 6)
       expect(container.innerHTML).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
     )
 
-    it('should correctly split child nodes and text', ->
+    it('should split child nodes and text', ->
       container = document.getElementById('test-both')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
       expect(container.innerHTML).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
     )
 
-    it('should correctly split deep nodes', ->
+    it('should split deep nodes', ->
       container = document.getElementById('test-complex')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
       expect(container.innerHTML).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
+    )
+
+    it('should split lines', ->
+      container = document.getElementById('test-lines')
+      [left, right] = Tandem.Utils.Node.split(container.firstChild, 1)
+      expect(container.innerHTML).to.equal('<div class="line"><b>1</b></div><div class="line"><b>23</b><i>456</i></div>')
     )
   )
 )
