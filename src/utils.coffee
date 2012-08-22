@@ -1,6 +1,9 @@
 #= underscore
 
 TandemUtils = 
+  removeHtmlWhitespace: (html) ->
+    html.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/>\s\s+</gi, '><')
+
   Attribute:
     getTagName: (attribute) ->
       switch (attribute)
@@ -48,6 +51,25 @@ TandemUtils =
         when 'strike'     then return doc.createElement('s')
         when 'underline'  then return doc.createElement('u')
         else                   return doc.createElement('span')
+
+    extract: (editor, startIndex, endIndex) ->
+      [startLine, startOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, startIndex)
+      [endLine, endOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, endIndex)
+      [leftStart, rightStart] = Tandem.Utils.Node.split(startLine, startOffset, true)
+      if startLine == endLine
+        endLine = rightStart
+        endOffset -= leftStart.textContent.length if leftStart? && startLine != rightStart
+      [leftEnd, rightEnd] = Tandem.Utils.Node.split(endLine, endOffset, true)
+    
+      fragment = editor.iframeDoc.createDocumentFragment()
+      while rightStart != rightEnd
+        next = rightStart.nextSibling
+        fragment.appendChild(rightStart)
+        rightStart = next    
+
+      Tandem.Utils.Node.combineLines(leftStart, rightEnd) if leftStart? && rightEnd?
+
+      return fragment
 
     getAncestorAttribute: (node, attribute, includeSelf = true) ->
       tagName = TandemUtils.Attribute.getTagName(attribute)

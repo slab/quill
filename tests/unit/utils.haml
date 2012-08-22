@@ -7,25 +7,25 @@
 %body
   #mocha
   #test-container
-    #test-base<>
+    #split-test-base<>
       %b<> Bold
-    #test-text<>
+    #split-test-text<>
       %b<> Bold
-    #test-node
+    #split-test-node
       %b<>
         %i<> Italic
         %s<> Strike
-    #test-both
+    #split-test-both
       %b<>
         %i<> Italic
-    #test-complex
+    #split-test-complex
       %b<>
         %i<>
           %s<>
             %u<> One
             %u<> Two
           %s<> Three
-    #test-lines
+    #split-test-lines
       .line<>
         %b<> 123
         %i<> 456
@@ -33,7 +33,15 @@
 
   %script{:type => 'text/javascript', :src => '../../../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../../../lib/underscore.js'}
+  %script{:type => 'text/javascript', :src => '../../../lib/eventemitter2.js'}
+  %script{:type => 'text/javascript', :src => '../../../lib/rangy/rangy-core.js'}
   %script{:type => 'text/javascript', :src => '../../src/utils.js'}
+  %script{:type => 'text/javascript', :src => '../../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../../src/position.js'}
+  %script{:type => 'text/javascript', :src => '../../src/leaf.js'}
+  %script{:type => 'text/javascript', :src => '../../src/line.js'}
+  %script{:type => 'text/javascript', :src => '../../src/document.js'}
+  %script{:type => 'text/javascript', :src => '../../src/editor.js'}
   %script{:type => 'text/javascript', :src => '../../../lib/mocha.js'}
   %script{:type => 'text/javascript', :src => '../../../lib/chai.js'}
   :javascript

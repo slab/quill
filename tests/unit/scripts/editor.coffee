@@ -141,7 +141,7 @@ describe('Editor', ->
 
   #)
 
-  
+
   describe('insertAt', ->
     reset = ->
       $('#editor-container').html('<div class="line"><b>123</b><i>456</i></div>')
@@ -193,7 +193,21 @@ describe('Editor', ->
   
   describe('deleteAt', ->
     reset = ->
-      $('#editor-container').html('<div class="line"><b>123</b><i>456</i></div><div class="line"><s>7</s><u>8</u><s>9</s><u>0</u></div><div class="line"><b>abcdefg</b></div>')
+      $('#editor-container').html(Tandem.Utils.removeHtmlWhitespace('
+        <div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>
+      '))
       return new Tandem.Editor('editor-container')
 
     it('should delete a node', ->

@@ -151,33 +151,11 @@ class TandemEditor extends EventEmitter2
   deleteAt: (startIndex, length) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    range = if _.isNumber(startIndex) then new Tandem.Range(this, startIndex, startIndex + length) else startIndex
-    this.preserveSelection(range.start, 0 - length, =>
-      lineGroups = range.groupNodesByLine()
-      lines = _.compact(_.map(lineGroups, (lineGroup) ->
-        return if lineGroup.length != 0 then Tandem.Utils.Node.getLine(lineGroup[0]) else null
-      ))
-      lines.unshift(Tandem.Utils.Node.getLine(range.start.node))
-      lines.push(Tandem.Utils.Node.getLine(range.end.node))
-      lines = _.uniq(lines)
-      return if lines.length == 0
-      if lines.length > 2
-        toDelete = lines.splice(0, lines.length - 2)
-        _.each(toDelete, (line) ->
-          line.parentNode.removeChild(line)
-        )
-      if range.start.node == range.end.node
-        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset) + range.end.node.textContent.substr(range.end.offset)
-      else
-        nodes = _.flatten(lineGroups)
-        _.each(nodes, (node) ->
-          if node != range.start.node && node != range.end.node
-            node.parentNode.removeChild(node)
-        )
-        range.end.node.textContent = range.end.node.textContent.substr(range.end.offset)
-        range.start.node.textContent = range.start.node.textContent.substr(0, range.start.offset)
-      if lines.length == 2
-        Tandem.Utils.Node.combineLines(lines[0], lines[1])
+    [startPos, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+    [endPos, endIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex + length)
+
+    this.preserveSelection(startPos, 0 - length, =>
+      fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
