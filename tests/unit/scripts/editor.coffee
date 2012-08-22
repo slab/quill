@@ -128,25 +128,222 @@ describe('Editor', ->
     )
   )
 
-  ###
+  
   describe('applyAttribute', ->
-    it('should apply attribute to single node', ->
+    reset = ->
+      $('#editor-container').html(Tandem.Utils.removeHtmlWhitespace('
+        <div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>
+      '))
+      return new Tandem.Editor('editor-container')
 
-    )
+    tests = [{
+      name: 'should apply attribute to single node'
+      start: 9
+      end: 10
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <s>7</s>
+          <b>
+            <u>8</u>
+          </b>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should wrap multiple nodes'
+      start: 9
+      end: 11
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <s>7</s>
+          <b>
+            <u>8</u>
+            <s>9</s>
+          </b>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to part of node'
+      start: 3
+      end: 5
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <b>
+            <i>45</i>
+          </b>
+          <i>6</i>
+        </div>
+        <div class="line">
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to inside of node'
+      start: 4
+      end: 5
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>4</i>
+          <b>
+            <i>5</i>
+          </b>
+          <i>6</i>
+        </div>
+        <div class="line">
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to nodes spanning multiple lines'
+      start: 3
+      end: 9
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <b>
+            <i>456</i>
+          </b>
+        </div>
+        <div class="line">
+          <b>
+            <s>7</s>
+            <u>8</u>
+          </b>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to entire line'
+      start: 7
+      end: 11
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <b>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </b>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to entire line with trailing newline'
+      start: 7
+      end: 12
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <b>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </b>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to entire line with preceding newline'
+      start: 6
+      end: 11
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <b>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </b>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'should apply to entire line with preceding and trailing newline'
+      start: 6
+      end: 12
+      expected:
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div class="line">
+          <b>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </b>
+        </div>
+        <div class="line">
+          <b>abcdefg</b>
+        </div>'
+    }]
 
-    it('should wrap multiple nodes', ->
-
-    )
-
-    it('should apply to part of node', ->
-
-    )
-
-    it('should apply to nodes spanning multiple lines', ->
-
+    _.each(tests, (test) ->
+      it(test.name, ->
+        editor = reset()
+        editor.applyAttribute(test.start, test.end, { bold: true })
+        expect(editor.iframeDoc.body.innerHTML).to.equal(Tandem.Utils.removeHtmlWhitespace(test.expected))
+      )
     )
   )
-  ###
+  
 
   describe('insertAt', ->
     reset = ->
