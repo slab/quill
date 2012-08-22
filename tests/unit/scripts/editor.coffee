@@ -128,65 +128,117 @@ describe('Editor', ->
     )
   )
 
+  ###
+  describe('applyAttribute', ->
+    it('should apply attribute to single node', ->
 
-  #describe('applyAttribute', ->
-  #  it('should apply attribute to single node')
+    )
 
-  #  it('should wrap multiple nodes')
+    it('should wrap multiple nodes', ->
 
-  #  it('should apply to part of node')
+    )
 
-  #  it('should apply to nodes spanning multiple lines')
+    it('should apply to part of node', ->
 
+    )
 
-  #)
+    it('should apply to nodes spanning multiple lines', ->
 
+    )
+  )
+  ###
 
   describe('insertAt', ->
     reset = ->
-      $('#editor-container').html('<div class="line"><b>123</b><i>456</i></div>')
+      $('#editor-container').html(Tandem.Utils.removeHtmlWhitespace(
+        '<div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>'
+      ))
       return new Tandem.Editor('editor-container')
-    
-    it('should insert simple text', ->
-      editor = reset()
-      editor.insertAt(1, 'A')
-      expect(editor.iframeDoc.body.firstChild.textContent).to.equal('1A23456')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(1)
-    )
 
-    it('should insert newline character', ->
-      editor = reset()
-      editor.insertAt(1, "\n")
-      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1</b></div><div class="line"><b>23</b><i>456</i></div>')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
-    )
+    tests = [{
+      name: 'should insert simple text'
+      index: 1
+      text: 'A'
+      expected: 
+        '<div class="line">
+          <b>1A23</b>
+          <i>456</i>
+        </div>'
+    }, {
+      name: 'should insert newline character'
+      index: 1
+      text: "\n"
+      expected: 
+        '<div class="line">
+          <b>1</b>
+        </div>
+        <div class="line">
+          <b>23</b>
+          <i>456</i>
+        </div>'
+    }, {
+      name: 'should insert text with newline'
+      index: 1
+      text: "A\nB"
+      expected: 
+        '<div class="line">
+          <b>1A</b>
+        </div>
+        <div class="line">
+          <b>B23</b>
+          <i>456</i>
+        </div>'
+    }, {
+      name: 'should insert multiple newline text'
+      index: 1
+      text: "A\nB\nC"
+      expected: 
+        '<div class="line">
+          <b>1A</b>
+        </div>
+        <div class="line">
+          <b>B</b>
+        </div>
+        <div class="line">
+          <b>C23</b>
+          <i>456</i>
+        </div>'
+    }, {
+      name: 'should add newline at boundary'
+      index: 0
+      text: "\n"
+      expected: 
+        '<div class="line">
+        </div>
+        <div class="line">
+          <b>123</b>
+          <i>456</i>
+        </div>'
+    }, {
+      name: 'should insert mutliple newline in a row text'
+      index: 1
+      text: "A\n\nC"
+      expected: 
+        '<div class="line">
+          <b>1A</b>
+        </div>
+        <div class="line">
+        </div>
+        <div class="line">
+          <b>C23</b>
+          <i>456</i>
+        </div>'
+    }]
 
-    it('should insert text with newline', ->
-      editor = reset()
-      editor.insertAt(1, "A\nB")
-      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1A</b></div><div class="line"><b>B23</b><i>456</i></div>')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
-    )
-
-    it('should insert multiple newline text', ->
-      editor = reset()
-      editor.insertAt(1, "A\nB\nC")
-      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1A</b></div><div class="line"><b>B</b></div><div class="line"><b>C23</b><i>456</i></div>')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
-    )
-
-    it('should add newline at boundary', ->
-      editor = reset()
-      editor.insertAt(0, "\n")
-      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"></div><div class="line"><b>123</b><i>456</i></div>')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
-    )
-    
-    it('should insert mutliple newline in a row text', ->
-      editor = reset()
-      editor.insertAt(1, "A\n\nC")
-      expect(editor.iframeDoc.body.innerHTML).to.equal('<div class="line"><b>1A</b></div><div class="line"></div><div class="line"><b>C23</b><i>456</i></div>')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
+    _.each(tests, (test) ->
+      it(test.name, ->
+        editor = reset()
+        editor.insertAt(test.index, test.text)
+        expect(editor.iframeDoc.body.innerHTML).to.equal(Tandem.Utils.removeHtmlWhitespace(test.expected))
+      )
     )
   )
 
