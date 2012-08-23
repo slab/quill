@@ -170,8 +170,8 @@ class TandemEditor extends EventEmitter2
   getSelection: ->
     return Tandem.Range.getSelection(this)
 
-  applyAttributeToLine: (line, startOffset, endOffset, attributes) ->
-    return if startOffset == endOffset || _.keys(attributes).length == 0
+  applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
+    return if startOffset == endOffset
     [startNode, startNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, startOffset)
     [prevNode, startNode] = Tandem.Utils.Node.split(startNode, startNodeOffset)
     [endNode, endNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, endOffset)
@@ -182,65 +182,62 @@ class TandemEditor extends EventEmitter2
       fragment.appendChild(startNode)
       break if startNode == endNode
       startNode = nextSibling
-    for attr, value of attributes
-      attrNode = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
-      attrNode.appendChild(fragment)
-      fragment = attrNode
+    attrNode = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
+    attrNode.appendChild(fragment)
     line.insertBefore(attrNode, nextNode)
 
- # applyAttribute: (TandemRange range, Object attribute) ->
-  # applyAttribute: (Number startIndex, Number length, Object attribute) ->
-  applyAttribute: (startIndex, length, attributes, emitEvent = true) ->
+ # applyAttribute: (TandemRange range, String attr, Mixed value) ->
+  # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
+  applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     if !_.isNumber(startIndex)
-      [range, attributes] = [startIndex, length]
+      [range, attr, value] = [startIndex, length, attr]
       startIndex = range.start.getIndex()
       length = range.end.getIndex() - startIndex
     else
       range = new Tandem.Range(this, startIndex, startIndex + length)
 
     this.preserveSelection(range.start, 0, =>
-      for attr, value of attributes
-        if value == true
-          [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
-          [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
-          if startLine == endLine
-            this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attributes)
-          else
-            this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attributes)
-            this.applyAttributeToLine(endLine, 0, endLineOffset, attributes)
-            curLine = startLine.nextSibling
-            while curLine? && curLine != endLine
-              this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attributes)
-              curLine = curLine.nextSibling
+      if value == true
+        [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
+        [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
+        if startLine == endLine
+          this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
         else
-          range.splitEnds()
-          tagName = Tandem.Utils.Attribute.getTagName(attr)
-          roots = _.compact(_.uniq(_.map(nodes, (node) ->
-            return Tandem.Utils.Node.getAncestorAttribute(node, attr, true)
-          )))
-          return if roots.length == 0
-          rootStartPosition = new Tandem.Position(@editor, roots[0], 0)
-          rootEndPosition = new Tandem.Position(@editor, roots[roots.length - 1], roots[roots.length - 1].textContent.length - 1)
-          rootStartIndex = rootStartPosition.getIndex()
-          rootEndIndex = rootEndPosition.getIndex()
-          _.each(roots, (root) =>
-            Tandem.Utils.Node.removeKeepingChildren(@iframeDoc, root)
-          )
-          attribute = {}
-          attribute[attr] = true
-          if rootStartIndex < startIndex
-            this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attribute, false)
-          if startIndex + length < rootEndIndex
-            this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length + 1, attribute, false)
+          this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
+          this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
+          curLine = startLine.nextSibling
+          while curLine? && curLine != endLine
+            this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
+            curLine = curLine.nextSibling
+      else
+        range.splitEnds()
+        nodes = range.getLeafNodes()
+        tagName = Tandem.Utils.Attribute.getTagName(attr)
+        roots = _.compact(_.uniq(_.map(nodes, (node) ->
+          return Tandem.Utils.Node.getAncestorAttribute(node, attr, true)
+        )))
+        return if roots.length == 0
+        rootStartPosition = new Tandem.Position(@editor, roots[0], 0)
+        rootEndPosition = new Tandem.Position(@editor, roots[roots.length - 1], roots[roots.length - 1].textContent.length - 1)
+        rootStartIndex = rootStartPosition.getIndex()
+        rootEndIndex = rootEndPosition.getIndex()
+        _.each(roots, (root) =>
+          Tandem.Utils.Node.removeKeepingChildren(@iframeDoc, root)
         )
+        if rootStartIndex < startIndex
+          this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attr, true, false)
+        if startIndex + length < rootEndIndex
+          this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length + 1, attr, true, false)
     )
     if emitEvent
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
       deltas = []
       deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-      deltas.push(new JetRetain(startIndex, startIndex + length, attributes))
+      attribute = {}
+      attribute[attr] = value
+      deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
       deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
       delta = new JetDelta(docLength, docLength, deltas)
       this.emit(this.events.API_TEXT_CHANGE, delta)

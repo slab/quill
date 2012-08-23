@@ -338,7 +338,7 @@ describe('Editor', ->
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        editor.applyAttribute(test.start, test.length, { bold: true })
+        editor.applyAttribute(test.start, test.length, 'bold', true)
         expect(editor.iframeDoc.body.innerHTML).to.equal(Tandem.Utils.removeHtmlWhitespace(test.expected))
       )
     )

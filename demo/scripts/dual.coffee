@@ -45,7 +45,7 @@ editors = _.map([1, 2], (num) ->
   toolbar = new Tandem.Toolbar(editor)
   _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
     $("#formatting-container#{num} .#{format}").click( -> 
-      toolbar[format].call(toolbar, !$(this).parent().hasClass('active'))
+      toolbar.applyAttribute(format, !$(this).parent().hasClass('active'))
     )
   )
   toolbar.on('update', (attributes) ->
