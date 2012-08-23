@@ -150,8 +150,8 @@ describe('Editor', ->
 
     tests = [{
       name: 'should apply attribute to single node'
-      start: 9
-      end: 10
+      start: 8
+      length: 1
       expected:
         '<div class="line">
           <b>123</b>
@@ -170,8 +170,8 @@ describe('Editor', ->
         </div>'
     }, {
       name: 'should wrap multiple nodes'
-      start: 9
-      end: 11
+      start: 8
+      length: 2
       expected:
         '<div class="line">
           <b>123</b>
@@ -191,7 +191,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to part of node'
       start: 3
-      end: 5
+      length: 2
       expected:
         '<div class="line">
           <b>123</b>
@@ -212,7 +212,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to inside of node'
       start: 4
-      end: 5
+      length: 1
       expected:
         '<div class="line">
           <b>123</b>
@@ -234,7 +234,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to nodes spanning multiple lines'
       start: 3
-      end: 9
+      length: 6
       expected:
         '<div class="line">
           <b>123</b>
@@ -256,7 +256,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to entire line'
       start: 7
-      end: 11
+      length: 4
       expected:
         '<div class="line">
           <b>123</b>
@@ -276,7 +276,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to entire line with trailing newline'
       start: 7
-      end: 12
+      length: 5
       expected:
         '<div class="line">
           <b>123</b>
@@ -296,7 +296,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to entire line with preceding newline'
       start: 6
-      end: 11
+      length: 5
       expected:
         '<div class="line">
           <b>123</b>
@@ -316,7 +316,7 @@ describe('Editor', ->
     }, {
       name: 'should apply to entire line with preceding and trailing newline'
       start: 6
-      end: 12
+      length: 6
       expected:
         '<div class="line">
           <b>123</b>
@@ -338,7 +338,7 @@ describe('Editor', ->
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        editor.applyAttribute(test.start, test.end, { bold: true })
+        editor.applyAttribute(test.start, test.length, { bold: true })
         expect(editor.iframeDoc.body.innerHTML).to.equal(Tandem.Utils.removeHtmlWhitespace(test.expected))
       )
     )

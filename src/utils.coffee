@@ -14,7 +14,7 @@ TandemUtils =
         else return 'SPAN'
 
   Input:
-    normalizeRange: (editor, index) ->
+    normalizePosition: (editor, index) ->
       if _.isNumber(index)
         position = new Tandem.Position(editor, index)
       else if index instanceof Tandem.Range

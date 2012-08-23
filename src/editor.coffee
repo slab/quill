@@ -123,7 +123,7 @@ class TandemEditor extends EventEmitter2
   insertAt: (startIndex, text, attributes = {}) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    [position, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+    [position, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
 
     this.preserveSelection(position, text.length, =>
       lines = text.split("\n")
@@ -140,19 +140,19 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   insertNewlineAt: (startIndex) ->
-    [position, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+    [position, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
     [line, offset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
     Tandem.Utils.Node.split(line, offset, true)
 
   insertTextAt: (startIndex, text) ->
-    [position, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
+    [position, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
     position.node.textContent = position.node.textContent.substr(0, position.offset) + text + position.node.textContent.substr(position.offset)
 
   deleteAt: (startIndex, length) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    [startPos, startIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex)
-    [endPos, endIndex] = Tandem.Utils.Input.normalizeRange(this, startIndex + length)
+    [startPos, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
+    [endPos, endIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex + length)
 
     this.preserveSelection(startPos, 0 - length, =>
       fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
@@ -170,7 +170,25 @@ class TandemEditor extends EventEmitter2
   getSelection: ->
     return Tandem.Range.getSelection(this)
 
-  # applyAttribute: (TandemRange range, Object attribute) ->
+  applyAttributeToLine: (line, startOffset, endOffset, attributes) ->
+    return if startOffset == endOffset || _.keys(attributes).length == 0
+    [startNode, startNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, startOffset)
+    [prevNode, startNode] = Tandem.Utils.Node.split(startNode, startNodeOffset)
+    [endNode, endNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, endOffset)
+    [endNode, nextNode] = Tandem.Utils.Node.split(endNode, endNodeOffset)
+    fragment = @iframeDoc.createDocumentFragment()
+    while startNode?
+      nextSibling = startNode.nextSibling
+      fragment.appendChild(startNode)
+      break if startNode == endNode
+      startNode = nextSibling
+    for attr, value of attributes
+      attrNode = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
+      attrNode.appendChild(fragment)
+      fragment = attrNode
+    line.insertBefore(attrNode, nextNode)
+
+ # applyAttribute: (TandemRange range, Object attribute) ->
   # applyAttribute: (Number startIndex, Number length, Object attribute) ->
   applyAttribute: (startIndex, length, attributes, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -181,35 +199,41 @@ class TandemEditor extends EventEmitter2
       length = range.end.getIndex() - startIndex
     else
       range = new Tandem.Range(this, startIndex, startIndex + length)
+
     this.preserveSelection(range.start, 0, =>
-      for attr,value of attributes
-        range.splitEnds()
-        _.each(range.groupNodesByLine(), (nodes) =>
-          return if nodes.length == 0
-          if value
-            _.each(nodes, (node) =>
-              container = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
-              Tandem.Utils.Node.wrap(container, node)
-            )
+      for attr, value of attributes
+        if value == true
+          [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
+          [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
+          if startLine == endLine
+            this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attributes)
           else
-            tagName = Tandem.Utils.Attribute.getTagName(attr)
-            roots = _.compact(_.uniq(_.map(nodes, (node) ->
-              return Tandem.Utils.Node.getAncestorAttribute(node, attr, true)
-            )))
-            return if roots.length == 0
-            rootStartPosition = new Tandem.Position(@editor, roots[0], 0)
-            rootEndPosition = new Tandem.Position(@editor, roots[roots.length - 1], roots[roots.length - 1].textContent.length - 1)
-            rootStartIndex = rootStartPosition.getIndex()
-            rootEndIndex = rootEndPosition.getIndex()
-            _.each(roots, (root) =>
-              Tandem.Utils.Node.removeKeepingChildren(@iframeDoc, root)
-            )
-            attribute = {}
-            attribute[attr] = true
-            if rootStartIndex < startIndex
-              this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attribute, false)
-            if startIndex + length < rootEndIndex
-              this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length + 1, attribute, false)
+            this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attributes)
+            this.applyAttributeToLine(endLine, 0, endLineOffset, attributes)
+            curLine = startLine.nextSibling
+            while curLine? && curLine != endLine
+              this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attributes)
+              curLine = curLine.nextSibling
+        else
+          range.splitEnds()
+          tagName = Tandem.Utils.Attribute.getTagName(attr)
+          roots = _.compact(_.uniq(_.map(nodes, (node) ->
+            return Tandem.Utils.Node.getAncestorAttribute(node, attr, true)
+          )))
+          return if roots.length == 0
+          rootStartPosition = new Tandem.Position(@editor, roots[0], 0)
+          rootEndPosition = new Tandem.Position(@editor, roots[roots.length - 1], roots[roots.length - 1].textContent.length - 1)
+          rootStartIndex = rootStartPosition.getIndex()
+          rootEndIndex = rootEndPosition.getIndex()
+          _.each(roots, (root) =>
+            Tandem.Utils.Node.removeKeepingChildren(@iframeDoc, root)
+          )
+          attribute = {}
+          attribute[attr] = true
+          if rootStartIndex < startIndex
+            this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attribute, false)
+          if startIndex + length < rootEndIndex
+            this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length + 1, attribute, false)
         )
     )
     if emitEvent
