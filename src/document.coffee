@@ -7,24 +7,23 @@ class TandemDocument
   constructor: (@editor) ->
     @doc = @editor.iframeDoc
     @root = @doc.body
-    @lineIdCounter = 1
-    @lines = []
-    @lineMap = {}
-    this.normalizeHtml()
-    this.buildLines()
+    this.rebuildLines()
+
+  addLine: (lineNode, row) ->
+    line = new Tandem.Line(this, lineNode, row)
+    @lines.splice(row, 0, line)
+    @lineMap[line.id] = line
+    return line
 
   buildLines: ->
-    @lines = _.map(@root.childNodes, (lineNode, index) =>
-      line = new Tandem.Line(this, lineNode, @lineIdCounter, index)
-      lineNode.id = Tandem.Line.ID_PREFIX + @lineIdCounter
-      lineNode.className = Tandem.Line.CLASS_NAME
-      @lineMap[lineNode.id] = line
-      @lineIdCounter += 1
-      return line
+    _.each(@root.childNodes, (node, index) =>
+      this.addLine(node, index)
     )
 
-  findLine: (node) ->
-    return @lineMap[node.id]
+  detectChange: ->
+    # Go through HTML (which should be normalized)
+    # Make sure non are different from their innerHTML, if so record change
+    # Returns changes made
 
   findLeaf: (node) ->
     lineNode = node.parentNode
@@ -32,6 +31,9 @@ class TandemDocument
       lineNode = lineNode.parentNode
     line = this.findLine(lineNode)
     return line.findLeaf(node)
+
+  findLine: (node) ->
+    return @lineMap[node.id]
 
   normalizeHtml: ->
     ### Rules:
@@ -63,11 +65,11 @@ class TandemDocument
 
   normalizeNodeHtml: (node) ->
 
-
-  detectChange: ->
-    # Go through HTML (which should be normalized)
-    # Make sure non are different from their innerHTML, if so record change
-    # Returns changes made
+  rebuildLines: ->
+    @lines = []
+    @lineMap = {}
+    this.normalizeHtml()
+    this.buildLines()
 
 
 

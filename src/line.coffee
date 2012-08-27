@@ -3,25 +3,23 @@
 class TandemLine
   @CLASS_NAME : 'tandem-line'
   @ID_PREFIX  : 'tandem-line-'
+  @counter    : 0
 
   @isLineNode: (node) ->
-    return node.className == TandemLine.CLASS_NAME
+    return node.classList.contains(TandemLine.CLASS_NAME)
 
 
-  constructor: (@doc, @node, @id, @index) ->
-    @leaves = []
-    @numLeaves = 0
-    @attributes = {}
-    this.normalizeHTML()
-    this.buildLeaves(@node, @attributes)
-    @length = @node.textContent.length
-    @innerHTML = @node.innerHTML
+  constructor: (@doc, @node, @index) ->
+    @node.id = @id = TandemLine.ID_PREFIX + TandemLine.counter
+    @node.classList.add(TandemLine.CLASS_NAME)
+    TandemLine.counter += 1
+    this.rebuild()
 
   buildLeaves: (node, attributes) ->
     _.each(node.childNodes, (node) =>
       nodeAttributes = _.clone(attributes)
-      [attr, value] = Tandem.Leaf.getAttribute(node)
-      nodeAttributes[attr] = value if attr?
+      attr = Tandem.Utils.getAttributeForContainer(node)
+      nodeAttributes[attr] = true if attr?
       if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
         @leaves.push(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
         @numLeaves += 1
@@ -40,7 +38,16 @@ class TandemLine
   getPrevLine: ->
     return @doc.lines[@index - 1]
 
-  normalizeHTML: ->
+  normalizeHtml: ->
+
+  rebuild: ->
+    @leaves = []
+    @numLeaves = 0
+    @attributes = {}
+    this.normalizeHtml()
+    this.buildLeaves(@node, @attributes)
+    @length = @node.textContent.length
+    @innerHTML = @node.innerHTML
 
 
 
