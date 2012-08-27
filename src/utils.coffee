@@ -1,9 +1,13 @@
 #= underscore
 
 TandemUtils = 
-  removeHtmlWhitespace: (html) ->
-    html.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/>\s\s+</gi, '><')
-
+  cleanHtml: (html) ->
+    # Remove leading and tailing whitespace
+    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+    # Remove whitespace between tags
+    html = html.replace(/>\s\s+</gi, '><')
+    # Remove id or class classname
+    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
 
   createContainerForAttribute: (doc, attribute) ->
     switch (attribute)
@@ -65,7 +69,7 @@ TandemUtils =
       , includeSelf)
       return if ancestors.length > 0 then ancestors[ancestors.length - 1] else null
 
-    getAncestorNodes: (node, atRoot = TandemUtils.Node.isLine, includeSelf = true) ->
+    getAncestorNodes: (node, atRoot = Tandem.Line.isLineNode, includeSelf = true) ->
       ancestors = []
       ancestors.push(node) if includeSelf && atRoot(node)
       while node? && !atRoot(node)
@@ -88,30 +92,13 @@ TandemUtils =
       child = node.firstChild
       while offset > child.textContent.length
         offset -= child.textContent.length
-        offset -= 1 if child.className == 'line'
+        offset -= 1 if Tandem.Line.isLineNode(child)
         child = child.nextSibling
       return [child, offset]
 
     getLine: (node) ->
       ancestors = TandemUtils.Node.getAncestorNodes(node)
       return if ancestors.length > 0 then ancestors[ancestors.length - 1] else null
-
-    getSiblings: (node, previous = true) ->
-      sibling = if previous 'previousSibling' else 'nextSibling'
-      siblings = []
-      while node[sibling]?
-        node = node[sibling]
-        siblings.push(node)
-      return siblings
-
-    getPreviousSiblings: (node) ->
-      return TandemUtils.Node.getSiblings(node, true)
-
-    getNextSiblings: (node) ->
-      return TandemUtils.Node.getSiblings(node, true)
-      
-    isLine: (node) ->
-      return node.className == 'line'
 
     isTextNodeParent: (node) ->
       return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE

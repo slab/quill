@@ -23,12 +23,12 @@ class TandemRange
 
   equals: (range) ->
     return false if range == null
-    return range.start.node == @start.node && range.end.node == @end.node && range.start.offset == @start.offset && range.end.offset == @end.offset
+    return range.start.leaf == @start.leaf && range.end.leaf == @end.leaf && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getAttributeIntersection: ->
     attributes = null
     _.all(this.getLeafPositions(), (position) ->
-      leafAttributes = Tandem.Utils.Node.getAttributes(position.node)
+      leafAttributes = Tandem.Utils.Node.getAttributes(position.leaf.node)
       if attributes
         _.each(attributes, (value, key) ->
           if leafAttributes[key] != true
@@ -45,19 +45,19 @@ class TandemRange
 
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe)
-    range.setStart(@start.node.firstChild, @start.offset)
-    range.setEnd(@end.node.firstChild, @end.offset)
+    range.setStart(@start.leaf.node.firstChild, @start.offset)
+    range.setEnd(@end.leaf.node.firstChild, @end.offset)
     return range
 
   getLeafNodes: ->
     range = this.getRangy()
     if range.collapsed
-      return [@start.node]
+      return [@start.leaf.node]
     else
       nodes = _.map(range.getNodes([3]), (node) -> 
         return node.parentNode
       )
-      nodes.pop() if nodes[nodes.length - 1] != @end.node || @end.offset == 0
+      nodes.pop() if nodes[nodes.length - 1] != @end.leaf.node || @end.offset == 0
       return nodes
 
   getLeafPositions: ->
@@ -68,43 +68,17 @@ class TandemRange
   groupNodesByLine: ->
     currentLine = 0
     return _.reduce(this.getLeafPositions(), (lines, position) ->
-      line = Tandem.Utils.Node.getLine(position.node)
+      line = Tandem.Utils.Node.getLine(position.leaf.node)
       if currentLine == line
-        lines[lines.length - 1].push(position.node)
+        lines[lines.length - 1].push(position.leaf.node)
       else
-        lines.push([position.node])
+        lines.push([position.leaf.node])
         currentLine = line
       return lines
     , [])
 
   isCollapsed: ->
-    return @start.node == @end.node && @start.offset == @end.offset
-
-  split: (position, before = true) ->
-    newNode = @editor.iframeDoc.createElement(position.node.tagName)
-    beforeText = position.node.textContent.substring(0, position.offset)
-    afterText = position.node.textContent.substring(position.offset)
-    return if beforeText == '' || afterText == ''
-    if before
-      newNode.textContent = beforeText
-      position.node.textContent = afterText
-      position.node.parentNode.insertBefore(newNode, position.node)
-    else
-      position.node.textContent = beforeText
-      newNode.textContent = afterText
-      position.node.parentNode.insertBefore(newNode, position.node.nextSibling)
-
-  splitBefore: ->
-    this.split(@start, true)
-    @end.offset -= @start.offset if @end.node == @start.node
-    @start.offset -= @start.offset
-
-  splitAfter: ->
-    this.split(@end, false)
-
-  splitEnds: ->
-    this.splitBefore()
-    this.splitAfter()
+    return @start.leaf == @end.leaf && @start.offset == @end.offset
 
 
 window.Tandem ||= {}

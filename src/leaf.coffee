@@ -18,13 +18,17 @@ class TandemLeaf
 
 
   constructor: (@line, @node, @attributes, @index) ->
-    @length = @node.textContent.length
+    @text = @node.textContent
+    @length = @text.length
 
   getNextLeaf: ->
     return @line.leaves[@index + 1]
 
   getPrevLeaf: ->
     return @line.leaves[@index - 1]
+
+  setText: (@text) ->
+    @node.textContent = @text
 
 
 

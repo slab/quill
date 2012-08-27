@@ -22,49 +22,49 @@ describe('Utils', ->
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
       expect(left.textContent).to.equal("Bo")
       expect(right.textContent).to.equal("ld")
-      expect(container.innerHTML).to.equal('<b>Bo</b><b>ld</b>')
+      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b>Bo</b><b>ld</b>')
     )
 
     it('should split child nodes', ->
       container = document.getElementById('split-test-node')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 6)
-      expect(container.innerHTML).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
+      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
     )
 
     it('should split child nodes and text', ->
       container = document.getElementById('split-test-both')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
-      expect(container.innerHTML).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
+      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
     )
 
     it('should split deep nodes', ->
       container = document.getElementById('split-test-complex')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
-      expect(container.innerHTML).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
+      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
     )
 
     it('should split lines', ->
       container = document.getElementById('split-test-lines')
       [left, right] = Tandem.Utils.Node.split(container.firstChild, 1)
-      expect(container.innerHTML).to.equal('<div class="line"><b>1</b></div><div class="line"><b>23</b><i>456</i></div>')
+      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<div><b>1</b></div><div><b>23</b><i>456</i></div>')
     )
   )
 
 
   describe('extract', ->
     reset = ->
-      $('#test-container').html(Tandem.Utils.removeHtmlWhitespace('
-        <div class="line">
+      $('#test-container').html(Tandem.Utils.cleanHtml('
+        <div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>
@@ -77,20 +77,20 @@ describe('Utils', ->
       start: 0
       end: 4
       fragment: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -99,21 +99,21 @@ describe('Utils', ->
       start: 0
       end: 2
       fragment:
-        '<div class="line">
+        '<div>
           <b>Bo</b>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>ld</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -122,20 +122,20 @@ describe('Utils', ->
       start: 12
       end: 14
       fragment:
-        '<div class="line">
+        '<div>
           <i>b</i>
           <s>c</s>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -144,22 +144,22 @@ describe('Utils', ->
       start: 2
       end: 8
       fragment:
-        '<div class="line">
+        '<div>
           <b>ld</b>
           <i>Ital</i>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bo</b>
           <i>ic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -168,21 +168,21 @@ describe('Utils', ->
       start: 8
       end: 13
       fragment:
-        '<div class="line">
+        '<div>
           <i>ic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Ital</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -191,20 +191,20 @@ describe('Utils', ->
       start: 11
       end: 15
       fragment:
-        '<div class="line">
+        '<div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -213,20 +213,20 @@ describe('Utils', ->
       start: 11
       end: 16
       fragment:
-        '<div class="line">
+        '<div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -235,20 +235,20 @@ describe('Utils', ->
       start: 10
       end: 15
       fragment:
-        '<div class="line">
+        '<div>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -258,18 +258,18 @@ describe('Utils', ->
       end: 16
       fragment:
         '
-        <div class="line">
+        <div>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
           <b>Bold2</b>
@@ -280,20 +280,20 @@ describe('Utils', ->
       start: 0
       end: 15
       fragment:
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
         </div>
-        <div class="line">
+        <div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
@@ -302,28 +302,28 @@ describe('Utils', ->
       start: 0
       end: 16
       fragment:
-        '<div class="line">
+        '<div>
           <b>Bold</b>
           <i>Italic</i>
         </div>
-        <div class="line">
+        <div>
           <b>a</b>
           <i>b</i>
           <s>c</s>
           <u>d</u>
         </div>
-        <div class="line">
+        <div>
         </div>'
       remains: 
-        '<div class="line">
+        '<div>
           <b>Bold2</b>
           <i>Italic2</i>
         </div>'
     }]
 
     _.each(tests, (test) ->
-      test.fragment = Tandem.Utils.removeHtmlWhitespace(test.fragment)
-      test.remains = Tandem.Utils.removeHtmlWhitespace(test.remains) 
+      test.fragment = Tandem.Utils.cleanHtml(test.fragment)
+      test.remains = Tandem.Utils.cleanHtml(test.remains) 
     )
 
     _.each(tests, (test) ->
@@ -332,8 +332,8 @@ describe('Utils', ->
         extraction = Tandem.Utils.Node.extract(editor, test.start, test.end)
         target = document.createElement('div')
         target.appendChild(extraction)
-        expect("Fragment " + target.innerHTML).to.equal("Fragment " + test.fragment)
-        expect("Remains " + editor.iframeDoc.body.innerHTML).to.equal("Remains " + test.remains)
+        expect("Fragment " + Tandem.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
+        expect("Remains " + Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal("Remains " + test.remains)
       )
     )
   )

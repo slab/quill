@@ -1,12 +1,13 @@
 #= require underscore
-#= require line
-
-ID_PREFIX   = 'tandem-'
+#= require tandem/line
 
 
 class TandemDocument
-  constructor: (@editor, @root) ->
-    @lineIdCounter = 0
+
+  constructor: (@editor) ->
+    @doc = @editor.iframeDoc
+    @root = @doc.body
+    @lineIdCounter = 1
     @lines = []
     @lineMap = {}
     this.normalizeHtml()
@@ -15,10 +16,22 @@ class TandemDocument
   buildLines: ->
     @lines = _.map(@root.childNodes, (lineNode, index) =>
       line = new Tandem.Line(this, lineNode, @lineIdCounter, index)
-      @lineMap[@lineIdCounter] = line
+      lineNode.id = Tandem.Line.ID_PREFIX + @lineIdCounter
+      lineNode.className = Tandem.Line.CLASS_NAME
+      @lineMap[lineNode.id] = line
       @lineIdCounter += 1
       return line
     )
+
+  findLine: (node) ->
+    return @lineMap[node.id]
+
+  findLeaf: (node) ->
+    lineNode = node.parentNode
+    while lineNode? && !Tandem.Line.isLineNode(lineNode)
+      lineNode = lineNode.parentNode
+    line = this.findLine(lineNode)
+    return line.findLeaf(node)
 
   normalizeHtml: ->
     ### Rules:
@@ -34,7 +47,7 @@ class TandemDocument
       div = @doc.createElement('div')
       div.appendChild(@doc.createElement('br'))
       @root.appendChild(div)
-      div.id = ID_PREFIX + @idCounter
+      div.id = Tandem.Line.ID_PREFIX + @idCounter
       @lineIdCounter += 1
 
     # Remove empty lines
@@ -55,15 +68,6 @@ class TandemDocument
     # Go through HTML (which should be normalized)
     # Make sure non are different from their innerHTML, if so record change
     # Returns changes made
-
-
-class TandemLine
-
-
-
-class TandemLeaf
-
-
 
 
 

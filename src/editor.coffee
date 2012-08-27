@@ -1,10 +1,10 @@
 #= require underscore
-#= require document
-#= require selection
 #= require rangy-core
-#= require eventemitter2
 #= require diff_match_patch
+#= require eventemitter2
 #= require jetsync
+#= require tandem/document
+#= require tandem/selection
 
 class TandemEditor extends EventEmitter2
   @editors: []
@@ -21,7 +21,7 @@ class TandemEditor extends EventEmitter2
     @container = document.getElementById(@container) if _.isString(@container)
     @iframe = this.createIframe(@container)
     @iframeDoc = @iframe.contentWindow.document
-    @doc = new Tandem.Document(this, @iframeDoc.body)
+    @doc = new Tandem.Document(this)
     @ignoreDomChanges = false
     @currentSelection = null
     this.initContentListeners()
@@ -149,7 +149,7 @@ class TandemEditor extends EventEmitter2
   insertTextAt: (startIndex, text) ->
     position = Tandem.Position.makePosition(this, startIndex)
     startIndex = position.getIndex()
-    position.node.textContent = position.node.textContent.substr(0, position.offset) + text + position.node.textContent.substr(position.offset)
+    position.leaf.setText(position.leaf.text.substr(0, position.offset) + text + position.leaf.text.substr(position.offset))
 
   deleteAt: (startIndex, length) ->
     oldIgnoreDomChange = @ignoreDomChanges

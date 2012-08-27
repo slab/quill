@@ -1,7 +1,11 @@
 #= require underscore
 
 class TandemLine
-  @CLASS_NAME: 'line'
+  @CLASS_NAME : 'tandem-line'
+  @ID_PREFIX  : 'tandem-line-'
+
+  @isLineNode: (node) ->
+    return node.className == TandemLine.CLASS_NAME
 
 
   constructor: (@doc, @node, @id, @index) ->
@@ -25,6 +29,11 @@ class TandemLine
         this.buildLeaves(node, nodeAttributes)
     )
 
+  findLeaf: (leafNode) ->
+    for leaf in @leaves when leaf.node == leafNode
+      return leaf
+    return null
+
   getNextLine: ->
     return @doc.lines[@index + 1]
 
@@ -32,7 +41,6 @@ class TandemLine
     return @doc.lines[@index - 1]
 
   normalizeHTML: ->
-
 
 
 
