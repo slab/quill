@@ -176,17 +176,21 @@ class TandemEditor extends EventEmitter2
     [prevNode, startNode] = Tandem.Utils.Node.split(startNode, startNodeOffset)
     [endNode, endNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, endOffset)
     [endNode, nextNode] = Tandem.Utils.Node.split(endNode, endNodeOffset)
-    fragment = @iframeDoc.createDocumentFragment()
-    while startNode?
-      nextSibling = startNode.nextSibling
-      fragment.appendChild(startNode)
-      break if startNode == endNode
-      startNode = nextSibling
-    attrNode = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
-    attrNode.appendChild(fragment)
-    line.insertBefore(attrNode, nextNode)
+    if value == true
+      fragment = @iframeDoc.createDocumentFragment()
+      Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
+        fragment.appendChild(node)
+      )
+      attrNode = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
+      attrNode.appendChild(fragment)
+      line.insertBefore(attrNode, nextNode)
+    else
+      tagName = Tandem.Utils.Attribute.getTagName(attr)
+      Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
+        Tandem.Utils.Node.removeTagFromSubtree(node, tagName)
+      )
 
- # applyAttribute: (TandemRange range, String attr, Mixed value) ->
+  # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
   applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -199,37 +203,17 @@ class TandemEditor extends EventEmitter2
       range = new Tandem.Range(this, startIndex, startIndex + length)
 
     this.preserveSelection(range.start, 0, =>
-      if value == true
-        [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
-        [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
-        if startLine == endLine
-          this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
-        else
-          this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
-          this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
-          curLine = startLine.nextSibling
-          while curLine? && curLine != endLine
-            this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
-            curLine = curLine.nextSibling
+      [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
+      [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
+      if startLine == endLine
+        this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
       else
-        range.splitEnds()
-        nodes = range.getLeafNodes()
-        tagName = Tandem.Utils.Attribute.getTagName(attr)
-        roots = _.compact(_.uniq(_.map(nodes, (node) ->
-          return Tandem.Utils.Node.getAncestorAttribute(node, attr, true)
-        )))
-        return if roots.length == 0
-        rootStartPosition = new Tandem.Position(@editor, roots[0], 0)
-        rootEndPosition = new Tandem.Position(@editor, roots[roots.length - 1], roots[roots.length - 1].textContent.length - 1)
-        rootStartIndex = rootStartPosition.getIndex()
-        rootEndIndex = rootEndPosition.getIndex()
-        _.each(roots, (root) =>
-          Tandem.Utils.Node.removeKeepingChildren(@iframeDoc, root)
-        )
-        if rootStartIndex < startIndex
-          this.applyAttribute(rootStartIndex, startIndex - rootStartIndex, attr, true, false)
-        if startIndex + length < rootEndIndex
-          this.applyAttribute(startIndex + length, rootEndIndex - startIndex - length + 1, attr, true, false)
+        this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
+        this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
+        curLine = startLine.nextSibling
+        while curLine? && curLine != endLine
+          this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
+          curLine = curLine.nextSibling
     )
     if emitEvent
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1

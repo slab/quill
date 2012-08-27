@@ -132,6 +132,14 @@ TandemUtils =
       )
       node.parentNode.removeChild(node)
 
+    removeTagFromSubtree: (subtree, tagName) ->
+      children = _.clone(subtree.childNodes)
+      if subtree.tagName == tagName
+        Tandem.Utils.Node.removeKeepingChildren(subtree.ownerDocument, subtree)
+      _.each(children, (child) ->
+        Tandem.Utils.Node.removeTagFromSubtree(child, tagName)
+      )
+
     split: (node, offset, force = false) ->
       if offset > node.textContent.length
         throw new Error('Splitting at offset greater than node length')
@@ -163,6 +171,13 @@ TandemUtils =
           right.appendChild(childRight)
           childRight = nextRight
         return [left, right]
+
+    traverseSiblings: (startNode, endNode, fn) ->
+      while startNode?
+        nextSibling = startNode.nextSibling
+        fn(startNode)
+        break if startNode == endNode
+        startNode = nextSibling
 
     wrap: (wrapper, node) ->
       node.parentNode.insertBefore(wrapper, node)
