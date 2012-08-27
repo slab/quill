@@ -130,26 +130,28 @@ describe('Editor', ->
 
   
   describe('applyAttribute', ->
-    reset = ->
-      $('#editor-container').html(Tandem.Utils.removeHtmlWhitespace('
-        <div class="line">
-          <b>123</b>
-          <i>456</i>
-        </div>
-        <div class="line">
-          <s>7</s>
-          <u>8</u>
-          <s>9</s>
-          <u>0</u>
-        </div>
-        <div class="line">
-          <b>abcdefg</b>
-        </div>
-      '))
+    originalHtml = Tandem.Utils.removeHtmlWhitespace('
+      <div class="line">
+        <b>123</b>
+        <i>456</i>
+      </div>
+      <div class="line">
+        <s>7</s>
+        <u>8</u>
+        <s>9</s>
+        <u>0</u>
+      </div>
+      <div class="line">
+        <b>abcdefg</b>
+      </div>
+    ')
+
+    reset = (html = originalHtml) ->
+      $('#editor-container').html(Tandem.Utils.removeHtmlWhitespace(html))
       return new Tandem.Editor('editor-container')
 
     tests = [{
-      name: 'should apply attribute to single node'
+      target: 'single node'
       start: 8
       length: 1
       expected:
@@ -169,7 +171,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should wrap multiple nodes'
+      target: 'multiple nodes'
       start: 8
       length: 2
       expected:
@@ -189,7 +191,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to part of node'
+      target: 'part of node'
       start: 3
       length: 2
       expected:
@@ -210,7 +212,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to inside of node'
+      target: 'inside of node'
       start: 4
       length: 1
       expected:
@@ -232,7 +234,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to nodes spanning multiple lines'
+      target: 'nodes spanning multiple lines'
       start: 3
       length: 6
       expected:
@@ -254,7 +256,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to entire line'
+      target: 'entire line'
       start: 7
       length: 4
       expected:
@@ -274,7 +276,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to entire line with trailing newline'
+      target: 'entire line with trailing newline'
       start: 7
       length: 5
       expected:
@@ -294,7 +296,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to entire line with preceding newline'
+      target: 'entire line with preceding newline'
       start: 6
       length: 5
       expected:
@@ -314,7 +316,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>'
     }, {
-      name: 'should apply to entire line with preceding and trailing newline'
+      target: 'entire line with preceding and trailing newline'
       start: 6
       length: 6
       expected:
@@ -336,14 +338,22 @@ describe('Editor', ->
     }]
 
     _.each(tests, (test) ->
-      it(test.name, ->
+      it('should apply to ' + test.target, ->
         editor = reset()
         editor.applyAttribute(test.start, test.length, 'bold', true)
         expect(editor.iframeDoc.body.innerHTML).to.equal(Tandem.Utils.removeHtmlWhitespace(test.expected))
       )
     )
+
+    _.each(tests, (test) ->
+      it('should remove from ' + test.target, ->
+        editor = reset(test.expected)
+        editor.applyAttribute(test.start, test.length, 'bold', false)
+        expect(editor.iframeDoc.body.innerHTML).to.equal(originalHtml)
+      )
+    )
   )
-  
+
 
   describe('insertAt', ->
     reset = ->
