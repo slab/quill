@@ -4,6 +4,24 @@ TandemUtils =
   removeHtmlWhitespace: (html) ->
     html.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/>\s\s+</gi, '><')
 
+
+  createContainerForAttribute: (doc, attribute) ->
+    switch (attribute)
+      when 'bold'       then return doc.createElement('b')
+      when 'italic'     then return doc.createElement('i')
+      when 'strike'     then return doc.createElement('s')
+      when 'underline'  then return doc.createElement('u')
+      else                   return doc.createElement('span')
+
+  getAttributeForContainer: (container) ->
+    switch container.tagName
+      when 'B' then return 'bold'
+      when 'I' then return 'italic'
+      when 'S' then return 'strike'
+      when 'U' then return 'underline'
+      else          return ''
+
+
   Attribute:
     getTagName: (attribute) ->
       switch (attribute)
@@ -13,19 +31,6 @@ TandemUtils =
         when 'underline'  then return 'U'
         else return 'SPAN'
 
-  Input:
-    normalizePosition: (editor, index) ->
-      if _.isNumber(index)
-        position = new Tandem.Position(editor, index)
-      else if index instanceof Tandem.Range
-        position = index.start
-        index = position.getIndex()
-      else
-        position = index
-        index = position.getIndex()
-      return [position, index]
-
-
   Node:
     combineLines: (line1, line2) ->
       children = _.clone(line2.childNodes)
@@ -33,14 +38,6 @@ TandemUtils =
         line1.appendChild(child)
       )
       line2.parentNode.removeChild(line2)
-
-    createContainerForAttribute: (doc, attribute) ->
-      switch (attribute)
-        when 'bold'       then return doc.createElement('b')
-        when 'italic'     then return doc.createElement('i')
-        when 'strike'     then return doc.createElement('s')
-        when 'underline'  then return doc.createElement('u')
-        else                   return doc.createElement('span')
 
     extract: (editor, startIndex, endIndex) ->
       [startLine, startOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, startIndex)
@@ -132,12 +129,12 @@ TandemUtils =
       )
       node.parentNode.removeChild(node)
 
-    removeTagFromSubtree: (subtree, tagName) ->
+    removeAttributeFromSubtree: (subtree, attribute) ->
       children = _.clone(subtree.childNodes)
-      if subtree.tagName == tagName
+      if Tandem.Utils.getAttributeForContainer(subtree) == attribute
         Tandem.Utils.Node.removeKeepingChildren(subtree.ownerDocument, subtree)
       _.each(children, (child) ->
-        Tandem.Utils.Node.removeTagFromSubtree(child, tagName)
+        Tandem.Utils.Node.removeAttributeFromSubtree(child, attribute)
       )
 
     split: (node, offset, force = false) ->

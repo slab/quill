@@ -120,10 +120,11 @@ class TandemEditor extends EventEmitter2
     @iframeDoc.body.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
 
-  insertAt: (startIndex, text, attributes = {}) ->
+  insertAt: (startIndex, text) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    [position, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
+    position = Tandem.Position.makePosition(this, startIndex)
+    startIndex = position.getIndex()
 
     this.preserveSelection(position, text.length, =>
       lines = text.split("\n")
@@ -140,19 +141,23 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   insertNewlineAt: (startIndex) ->
-    [position, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
+    position = Tandem.Position.makePosition(this, startIndex)
+    startIndex = position.getIndex()
     [line, offset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
     Tandem.Utils.Node.split(line, offset, true)
 
   insertTextAt: (startIndex, text) ->
-    [position, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
+    position = Tandem.Position.makePosition(this, startIndex)
+    startIndex = position.getIndex()
     position.node.textContent = position.node.textContent.substr(0, position.offset) + text + position.node.textContent.substr(position.offset)
 
   deleteAt: (startIndex, length) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    [startPos, startIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex)
-    [endPos, endIndex] = Tandem.Utils.Input.normalizePosition(this, startIndex + length)
+    startPos = Tandem.Position.makePosition(this, startIndex)
+    startIndex = startPos.getIndex()
+    endPos = Tandem.Position.makePosition(this, startIndex + length)
+    endIndex = endPos.getIndex()
 
     this.preserveSelection(startPos, 0 - length, =>
       fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
@@ -181,13 +186,12 @@ class TandemEditor extends EventEmitter2
       Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
         fragment.appendChild(node)
       )
-      attrNode = Tandem.Utils.Node.createContainerForAttribute(@iframeDoc, attr)
+      attrNode = Tandem.Utils.createContainerForAttribute(@iframeDoc, attr)
       attrNode.appendChild(fragment)
       line.insertBefore(attrNode, nextNode)
     else
-      tagName = Tandem.Utils.Attribute.getTagName(attr)
       Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
-        Tandem.Utils.Node.removeTagFromSubtree(node, tagName)
+        Tandem.Utils.Node.removeAttributeFromSubtree(node, attr)
       )
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->

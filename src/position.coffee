@@ -24,6 +24,18 @@ class TandemPosition
     else
       throw new Error('Diving exceeded offset')
 
+  @makePosition: (editor, index) ->
+    if _.isNumber(index)
+      position = new Tandem.Position(editor, index)
+    else if index instanceof Tandem.Range
+      position = index.start
+      index = position.getIndex()
+    else
+      position = index
+      index = position.getIndex()
+    return position
+
+
   constructor: (@editor, @node, @offset) ->
     if _.isNumber(@node)
       @offset = @node
