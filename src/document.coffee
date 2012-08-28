@@ -1,5 +1,6 @@
 #= require underscore
 #= require linked_list
+#= require jetsync
 #= require tandem/line
 
 
@@ -69,12 +70,28 @@ class TandemDocument
     this.buildLines()
 
   splitLine: (line, offset) ->
-   [lineNode1, lineNode2] = Tandem.Utils.Node.split(line.node, offset, true)
-   line.node = lineNode1
-   line.rebuild()
-   newLine = new Tandem.Line(this, lineNode2)
-   @lines.insertAfter(line, newLine)
-   @lineMap[newLine.id] = newLine
+    [lineNode1, lineNode2] = Tandem.Utils.Node.split(line.node, offset, true)
+    line.node = lineNode1
+    line.rebuild()
+    newLine = new Tandem.Line(this, lineNode2)
+    @lines.insertAfter(line, newLine)
+    @lineMap[newLine.id] = newLine
+
+  toDelta: ->
+    lines = @lines.toArray()
+    length = 0
+    deltas = _.each(lines.length, (line, index) ->
+      deltas = line.delta.deltas
+      length += line.delta.endLength
+      if index < lines.length - 1
+        deltas.push(new JetInsert("\n"))
+        length += 1
+      return deltas
+    )
+    deltas = _.flatten(deltas, true)
+    delta = new JetDelta(0, length, deltas)
+    delta.compact()
+    return delta
 
 
 

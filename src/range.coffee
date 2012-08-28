@@ -44,7 +44,7 @@ class TandemRange
     return attributes || {}
 
   getRangy: ->
-    range = rangy.createRangyRange(@editor.iframe)
+    range = rangy.createRangyRange(@editor.iframe.contentWindow)
     range.setStart(@start.leaf.node.firstChild, @start.offset)
     range.setEnd(@end.leaf.node.firstChild, @end.offset)
     return range

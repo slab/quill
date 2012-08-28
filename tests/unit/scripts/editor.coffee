@@ -128,7 +128,7 @@ describe('Editor', ->
     )
   )
 
-  
+
   describe('applyAttribute', ->
     originalHtml = Tandem.Utils.cleanHtml('
       <div>
@@ -338,18 +338,15 @@ describe('Editor', ->
     }]
 
     _.each(tests, (test) ->
-      it('should apply to ' + test.target, ->
-        editor = reset()
-        editor.applyAttribute(test.start, test.length, 'bold', true)
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
-      )
-    )
-
-    _.each(tests, (test) ->
-      it('should remove from ' + test.target, ->
-        editor = reset(test.expected)
-        editor.applyAttribute(test.start, test.length, 'bold', false)
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(originalHtml)
+      _.each({apply: true, remove: false}, (name, truth) ->
+        it("should #{name} to #{test.target}", ->
+          editor = reset()
+          editor.applyAttribute(test.start, test.length, 'bold', truth)
+          delta = editor.doc.toDelta()
+          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
+          editor.doc.rebuildLines()
+          expect(delta).to.deep.equal(editor.doc.toDelta())
+        )
       )
     )
   )
@@ -440,13 +437,15 @@ describe('Editor', ->
         </div>'
     }]
 
-    tests = [tests[1]]
 
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
         editor.insertAt(test.index, test.text)
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
+        delta = editor.doc.toDelta()
+        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
+        editor.doc.rebuildLines()
+        expect(delta).to.deep.equal(editor.doc.toDelta())
       )
     )
   )

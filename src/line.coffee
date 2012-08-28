@@ -1,5 +1,6 @@
 #= require underscore
 #= require linked_list
+#= require jetsync
 
 class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'tandem-line'
@@ -39,6 +40,15 @@ class TandemLine extends LinkedList.Node
     this.wrapText()
     # Combine adjacent nodes with same tagname
 
+  toDelta: ->
+    deltas = _.map(@leaves, (leaf) ->
+      return new JetInsert(leaf.text, leaf.attributes)
+    )
+    delta = new JetDelta(0, @length, deltas)
+    delta.compact()
+    return delta
+
+
   rebuild: ->
     @leaves = []
     @numLeaves = 0
@@ -50,6 +60,7 @@ class TandemLine extends LinkedList.Node
   resetContent: ->
     @length = @node.textContent.length
     @innerHTML = @node.innerHTML
+    @delta = this.toDelta()
 
 
   mergeAdjacent: (node = @node.firstChild) ->
@@ -65,6 +76,7 @@ class TandemLine extends LinkedList.Node
 
   wrapText: ->
     Tandem.Utils.Node.traverseDeep(@node, (node) ->
+      node.normalize()
       if node.nodeType == node.TEXT_NODE && node.nextSibling?
         Tandem.Utils.Node.wrap(node.ownerDocument.createElement('span'), node)
     )
