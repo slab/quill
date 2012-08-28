@@ -27,9 +27,7 @@ listenEditor = (source, target) ->
   source.on(source.events.API_TEXT_CHANGE, (delta) ->
     for delta in delta.deltas
       for key,val of delta.attributes
-        attr = {}
-        attr[key] = val
-        target.applyAttribute(delta.start, delta.end - delta.start, attr, false)
+        target.applyAttribute(delta.start, delta.end - delta.start, key, val, false)
   )
   source.on(source.events.USER_TEXT_CHANGE, (delta) ->
     console.log 'text change', delta
