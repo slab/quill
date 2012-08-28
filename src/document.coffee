@@ -1,23 +1,23 @@
 #= require underscore
+#= require linked_list
 #= require tandem/line
 
 
 class TandemDocument
-
   constructor: (@editor) ->
     @doc = @editor.iframeDoc
     @root = @doc.body
     this.rebuildLines()
 
-  addLine: (lineNode, row) ->
-    line = new Tandem.Line(this, lineNode, row)
-    @lines.splice(row, 0, line)
+  appendLine: (lineNode) ->
+    line = new Tandem.Line(this, lineNode)
+    @lines.append(line)
     @lineMap[line.id] = line
     return line
 
   buildLines: ->
-    _.each(@root.childNodes, (node, index) =>
-      this.addLine(node, index)
+    _.each(@root.childNodes, (node) =>
+      this.appendLine(node)
     )
 
   detectChange: ->
@@ -35,6 +35,11 @@ class TandemDocument
   findLine: (node) ->
     return @lineMap[node.id]
 
+  findLineAtOffset: (index) ->
+    [lineNode, offset] = Tandem.Utils.Node.getChildAtOffset(@root, index)
+    line = this.findLine(lineNode)
+    return [line, offset]
+
   normalizeHtml: ->
     ### Rules:
     - All direct children are divs with class line and an id in the form "tandem-#{counter}"
@@ -49,15 +54,7 @@ class TandemDocument
       div = @doc.createElement('div')
       div.appendChild(@doc.createElement('br'))
       @root.appendChild(div)
-      div.id = Tandem.Line.ID_PREFIX + @idCounter
-      @lineIdCounter += 1
-
-    # Remove empty lines
-    lines = _.clone(@editor.iframeDoc.body.childNodes)
-    _.each(lines, (line) ->
-      if line.textContent == '' && !_.any(line.childNodes, (node) -> return node.tagName == 'BR')
-        line.parentNode.removeChild(line)
-    )
+      this.appendLine(div, 0)
 
     # Flatten block elements
     # Make all block elements div
@@ -66,10 +63,18 @@ class TandemDocument
   normalizeNodeHtml: (node) ->
 
   rebuildLines: ->
-    @lines = []
+    @lines = new LinkedList()
     @lineMap = {}
     this.normalizeHtml()
     this.buildLines()
+
+  splitLine: (line, offset) ->
+   [lineNode1, lineNode2] = Tandem.Utils.Node.split(line.node, offset, true)
+   line.node = lineNode1
+   line.rebuild()
+   newLine = new Tandem.Line(this, lineNode2)
+   @lines.insertAfter(line, newLine)
+   @lineMap[newLine.id] = newLine
 
 
 

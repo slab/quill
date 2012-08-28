@@ -137,18 +137,16 @@ class TandemEditor extends EventEmitter2
           startIndex += 1
         position = null
       )
+      @doc.rebuildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
   insertNewlineAt: (startIndex) ->
-    position = Tandem.Position.makePosition(this, startIndex)
-    startIndex = position.getIndex()
-    [line, offset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
-    Tandem.Utils.Node.split(line, offset, true)
+    [line, offset] = @doc.findLineAtOffset(startIndex)
+    @doc.splitLine(line, offset)
 
   insertTextAt: (startIndex, text) ->
     position = Tandem.Position.makePosition(this, startIndex)
-    startIndex = position.getIndex()
     position.leaf.setText(position.leaf.text.substr(0, position.offset) + text + position.leaf.text.substr(position.offset))
 
   deleteAt: (startIndex, length) ->
@@ -161,6 +159,7 @@ class TandemEditor extends EventEmitter2
 
     this.preserveSelection(startPos, 0 - length, =>
       fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
+      @doc.rebuildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -218,6 +217,7 @@ class TandemEditor extends EventEmitter2
         while curLine? && curLine != endLine
           this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
           curLine = curLine.nextSibling
+      @doc.rebuildLines()
     )
     if emitEvent
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1

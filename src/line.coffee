@@ -1,6 +1,7 @@
 #= require underscore
+#= require linked_list
 
-class TandemLine
+class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'tandem-line'
   @ID_PREFIX  : 'tandem-line-'
   @counter    : 0
@@ -9,11 +10,12 @@ class TandemLine
     return node.classList.contains(TandemLine.CLASS_NAME)
 
 
-  constructor: (@doc, @node, @index) ->
+  constructor: (@doc, @node) ->
     @node.id = @id = TandemLine.ID_PREFIX + TandemLine.counter
     @node.classList.add(TandemLine.CLASS_NAME)
     TandemLine.counter += 1
     this.rebuild()
+    super(@node)
 
   buildLeaves: (node, attributes) ->
     _.each(node.childNodes, (node) =>
@@ -32,12 +34,6 @@ class TandemLine
       return leaf
     return null
 
-  getNextLine: ->
-    return @doc.lines[@index + 1]
-
-  getPrevLine: ->
-    return @doc.lines[@index - 1]
-
   normalizeHtml: ->
 
   rebuild: ->
@@ -46,6 +42,9 @@ class TandemLine
     @attributes = {}
     this.normalizeHtml()
     this.buildLeaves(@node, @attributes)
+    this.resetContent()
+
+  resetContent: ->
     @length = @node.textContent.length
     @innerHTML = @node.innerHTML
 

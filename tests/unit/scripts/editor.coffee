@@ -5,7 +5,6 @@
 #= require underscore
 
 describe('Editor', ->
-  ###
   describe('transformSelection', ->
     reset = ->
       $('#editor-container').html('<div><b>01234567890</b></div>')
@@ -354,7 +353,7 @@ describe('Editor', ->
       )
     )
   )
-  ###
+
 
   describe('insertAt', ->
     reset = ->
@@ -452,7 +451,7 @@ describe('Editor', ->
     )
   )
 
-  return
+
   describe('deleteAt', ->
     reset = ->
       $('#editor-container').html(Tandem.Utils.cleanHtml('
