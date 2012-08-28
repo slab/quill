@@ -36,12 +36,12 @@ TandemUtils =
         else return 'SPAN'
 
   Node:
-    combineLines: (line1, line2) ->
-      children = _.clone(line2.childNodes)
+    combineNodes: (node1, node2) ->
+      children = _.clone(node2.childNodes)
       _.each(children, (child) ->
-        line1.appendChild(child)
+        node1.appendChild(child)
       )
-      line2.parentNode.removeChild(line2)
+      node2.parentNode.removeChild(node2)
 
     extract: (editor, startIndex, endIndex) ->
       [startLine, startOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, startIndex)
@@ -58,7 +58,7 @@ TandemUtils =
         fragment.appendChild(rightStart)
         rightStart = next    
 
-      Tandem.Utils.Node.combineLines(leftStart, rightEnd) if leftStart? && rightEnd?
+      Tandem.Utils.Node.combineNodes(leftStart, rightEnd) if leftStart? && rightEnd?
 
       return fragment
 
