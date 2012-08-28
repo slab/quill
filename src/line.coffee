@@ -35,6 +35,9 @@ class TandemLine extends LinkedList.Node
     return null
 
   normalizeHtml: ->
+    this.mergeAdjacent()
+    this.wrapText()
+    # Combine adjacent nodes with same tagname
 
   rebuild: ->
     @leaves = []
@@ -47,6 +50,24 @@ class TandemLine extends LinkedList.Node
   resetContent: ->
     @length = @node.textContent.length
     @innerHTML = @node.innerHTML
+
+
+  mergeAdjacent: (node = @node.firstChild) ->
+    while node? && node.nextSibling?
+      next = node.nextSibling
+      if Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
+        node = Tandem.Utils.Node.mergeNodes(node, next)
+      else
+        node = next
+        _.each(_.clone(node.childNodes), (childNode) =>
+          this.mergeAdjacent(node)
+        )
+
+  wrapText: ->
+    Tandem.Utils.Node.traverseDeep(@node, (node) ->
+      if node.nodeType == node.TEXT_NODE && node.nextSibling?
+        Tandem.Utils.Node.wrap(node.ownerDocument.createElement('span'), node)
+    )
 
 
 
