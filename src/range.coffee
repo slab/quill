@@ -23,7 +23,7 @@ class TandemRange
     @end = new Tandem.Position(@editor, @end) if _.isNumber(@end)
 
   equals: (range) ->
-    return false if range == null
+    return false unless range?
     return range.start.leaf == @start.leaf && range.end.leaf == @end.leaf && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getAttributeIntersection: ->

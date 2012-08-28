@@ -95,7 +95,7 @@ class TandemEditor extends EventEmitter2
       return if @ignoreDomChanges || event.which != 13
       @currentSelection = this.getSelection()
       @ignoreDomChanges = true
-      selection = this.getSelection()
+      selection = @currentSelection
       startIndex = selection.start.getIndex()
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
       deltas = []
@@ -105,6 +105,7 @@ class TandemEditor extends EventEmitter2
       delta = new JetDelta(docLength, docLength + 1, deltas)
       this.emit(this.events.USER_TEXT_CHANGE, delta)
       setTimeout(=>
+        @doc.rebuildLines()
         @ignoreDomChanges = false
       , 1)
     )
@@ -112,7 +113,7 @@ class TandemEditor extends EventEmitter2
   initSelectionListeners: ->
     checkSelectionChange = =>
       selection = this.getSelection()
-      if selection != @currentSelection && !selection.equals(@currentSelection)
+      if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
 
