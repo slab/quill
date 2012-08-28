@@ -8,7 +8,7 @@ class TandemLine extends LinkedList.Node
   @counter    : 0
 
   @isLineNode: (node) ->
-    return node.classList.contains(TandemLine.CLASS_NAME)
+    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
 
 
   constructor: (@doc, @node) ->

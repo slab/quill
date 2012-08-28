@@ -38,10 +38,6 @@ class TandemPosition
       node = @editor.iframeDoc.body.firstChild
     [leafNode, @offset] = TandemPosition.findLeafNode(node, @offset)
     @leaf = @editor.doc.findLeaf(leafNode)
-    if !@leaf?
-      error = new Error('Position made for non-leaf')
-      error.node = leafNode
-      throw error
       
   getIndex: ->
     return @index if @index?

@@ -30,6 +30,7 @@ class TandemDocument
     lineNode = node.parentNode
     while lineNode? && !Tandem.Line.isLineNode(lineNode)
       lineNode = lineNode.parentNode
+    return null if !lineNode?
     line = this.findLine(lineNode)
     return line.findLeaf(node)
 

@@ -12,6 +12,7 @@ class TandemRange
     else
       start = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
       end = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+    return null if !start.leaf? || !end.leaf?
     return new TandemRange(editor, start, end)
 
   # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
