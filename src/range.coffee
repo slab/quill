@@ -4,7 +4,7 @@
 
 class TandemRange
   @getSelection: (editor) ->
-    rangySelection = rangy.getIframeSelection(editor.iframe)
+    rangySelection = rangy.getSelection(editor.iframe.contentWindow)
     return null unless rangySelection.anchorNode? && rangySelection.focusNode?
     if !rangySelection.isBackwards()
       start = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
