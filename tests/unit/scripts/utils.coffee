@@ -337,4 +337,33 @@ describe('Utils', ->
       )
     )
   )
+
+
+  describe('traversePostorder', ->
+    it('should traverse in postorder', -> 
+      $('#test-container').html(Tandem.Utils.cleanHtml('
+        <div>
+          <div>
+            <span>One</span>
+            <span>Two</span>
+          </div>
+          <div>
+            <span>Three</span>
+            <span>Four</span>
+          </div>
+        </div>
+      ')) 
+      expectedTexts = ['One', 'Two', 'OneTwo', 'Three', 'Four', 'ThreeFour', 'OneTwoThreeFour']
+      index = 0
+      Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        expect(node.textContent).to.equal(expectedTexts[index])
+        index += 1
+        return node
+      )
+    )
+
+    it('should handle rename', -> )
+
+    it('should handle unwrap', -> )
+  )
 )

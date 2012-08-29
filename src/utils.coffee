@@ -25,6 +25,16 @@ TandemUtils =
       when 'U' then return 'underline'
       else          return ''
 
+  traversePostorder: (root, offset, fn, context = fn, args...) ->
+    return root if root.nodeType == root.TEXT_NODE
+    cur = root.firstChild
+    originalOffset = offset
+    while cur?
+      cur = TandemUtils.traversePostorder.apply(TandemUtils.depthFirstSearch, [cur, offset, fn, context].concat(args))
+      offset += cur.textContent
+      cur = cur.nextSibling
+    return fn.apply(context, [root, originalOffset].concat(args))
+
 
   Attribute:
     getTagName: (attribute) ->

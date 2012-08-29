@@ -6,7 +6,7 @@
 
 
 describe('Normalize', ->
-  describe('document', ->
+  describe('block', ->
     editor = new Tandem.Editor('editor-container')
     tests = [{
       name: 'initialize empty document'
@@ -74,18 +74,46 @@ describe('Normalize', ->
         <div>
           <span>Three</span>
         </div>'
+    }, {
+      name: 'split block level tags within elements'
+      before:
+        '<div>
+          <b>
+            <i>What</i>
+            <div>
+              <s>Strike</s>
+            </div>
+            <u>Underline</u>
+          </b>
+        </div>'
+      after:
+        '<div>
+          <b>
+            <i>What</i>
+          </b>
+        </div>
+        <div>
+          <b>
+            <s>Strike</s>
+          </b>
+        </div>
+        <div>
+          <b>
+            <u>Underline</u>
+          </b>
+        </div>'  
     }]
 
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
         editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
-        editor.doc.rebuildLines()
+        editor.doc.buildLines()
         expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
   )
 
-  describe('line', ->
+  describe('elements', ->
     editor = new Tandem.Editor('editor-container')
     tests = [{
       name: 'tranform equivalent styles'
@@ -172,7 +200,7 @@ describe('Normalize', ->
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
         editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
-        editor.doc.rebuildLines()
+        editor.doc.buildLines()
         expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
