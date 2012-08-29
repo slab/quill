@@ -5,14 +5,89 @@
 #= require tandem/editor
 
 
-describe('Document', ->
-  describe('.normalize()', ->
+describe('Normalize', ->
+  describe('document', ->
     editor = new Tandem.Editor('editor-container')
     tests = [{
       name: 'initialize empty document'
       before: ''
       expected: '<div><br></div>'
     }, {
+      name: 'remove redundant block elements'
+      before:
+        '<div>
+          <div>
+            <span>Hey</span>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <div>
+                <span>What</span>
+              </div>
+            </div>
+          </div>
+        </div>'
+      expected:
+        '<div>
+          <span>Hey</span>
+        </div>
+        <div>
+          <span>What</span>
+        </div>'
+    }, {
+      name: 'break block elements'
+      before: 
+        '<div>
+          <div>
+            <span>Hey</span>
+          </div>
+          <h1>
+            <span>What</span>
+          </h1>
+        </div>'
+      expected: 
+        '<div>
+          <span>Hey</span>
+        </div>
+        <div>
+          <span>What</span>
+        </div>'
+    }, {
+      name: 'break list elements'
+      before: 
+        '<div>
+          <ul>
+            <li>One</li>
+            <li>Two</li>
+            <li>Three</li>
+          </ul>
+        </div>'
+      expected:
+        '<div>
+          <span>One</span>
+        </div>
+        <div>
+          <span>Two</span>
+        </div>
+        <div>
+          <span>Three</span>
+        </div>'
+    }]
+
+    _.each(tests, (test) ->
+      it('shoud ' + test.name, ->
+        editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
+        editor.doc.rebuildLines()
+        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
+      )
+    )
+  )
+
+  describe('line', ->
+    editor = new Tandem.Editor('editor-container')
+    tests = [{
       name: 'tranform equivalent styles'
       before:
         '<div>
@@ -84,47 +159,13 @@ describe('Document', ->
           <span>Span</span>
         </div>'
     }, {
-      name: 'remove redundant block elements'
-      before:
-        '<div>
-          <div>
-            <span>Hey</span>
-          </div>
-        </div>
-        <div>
-          <div>
-            <div>
-              <div>
-                <span>What</span>
-              </div>
-            </div>
-          </div>
-        </div>'
+      name: 'wrap text nodes'
+      before: 
+        '<div>Hey</div>'
       expected:
         '<div>
           <span>Hey</span>
-        </div>
-        <div>
-          <span>What</span>
-        </div>'
-    }, {
-      name: 'break block elements'
-      before: 
-        '<div>
-          <div>
-            <span>Hey</span>
-          </div>
-          <h1>
-            <span>What</span>
-          </h1>
-        </div>'
-      expected: 
-        '<div>
-          <span>Hey</span>
-        </div>
-        <div>
-          <span>What</span>
-        </div>'
+        </div>'  
     }]
     # TODO test disallowed tags
 
@@ -132,7 +173,7 @@ describe('Document', ->
       it('shoud ' + test.name, ->
         editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
         editor.doc.rebuildLines()
-        expect(editor.iframeDoc.body.innerHTML).to.equal(Tandem.Utils.cleanHtml(test.expected))
+        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
   )
