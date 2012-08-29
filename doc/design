@@ -51,6 +51,37 @@ Algorithm...
         - If div and no class, add class
         - Otherwise if block tag, wrap with div
         - If not block tag, advance until you find another block tag, insert all those into a wrapped div
+
+1. Handle block tags
+    - All block tags -> div?
+    - All inner divs:
+        - break and unwrap div
+        - will always be:
+            <parent>
+                <before></before>
+                <block>
+                    <children>
+                </bock>
+                <after></after>
+            </parent>
+
+            Into
+
+            <parent>
+                <before></before>
+            </parent>
+            <parent>
+                <children></children>
+            </parent>
+            <parent>
+                <after><after>
+            </parent>
+
+2. Handle easy case substitution/wrapping
+3. Handle optimizations
+    - Merge neighbors
+    - Remove redundant tags
+4. Wrap text nodes
         
 
 
