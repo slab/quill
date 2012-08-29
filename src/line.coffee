@@ -23,7 +23,7 @@ class TandemLine extends LinkedList.Node
       nodeAttributes = _.clone(attributes)
       attr = Tandem.Utils.getAttributeForContainer(node)
       nodeAttributes[attr] = true if attr?
-      if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
+      if Tandem.Leaf.isLeafNode(node)
         @leaves.push(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
         @numLeaves += 1
       else
@@ -36,9 +36,12 @@ class TandemLine extends LinkedList.Node
     return null
 
   normalizeHtml: ->
+    this.renameEquivalent()
     this.mergeAdjacent()
+    this.removeRedundant()
     this.wrapText()
-    # Combine adjacent nodes with same tagname
+
+
 
   toDelta: ->
     deltas = _.map(@leaves, (leaf) ->
@@ -66,13 +69,24 @@ class TandemLine extends LinkedList.Node
   mergeAdjacent: (node = @node.firstChild) ->
     while node? && node.nextSibling?
       next = node.nextSibling
-      if Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
+      if node.tagName == next.tagName && Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
         node = Tandem.Utils.Node.mergeNodes(node, next)
       else
         node = next
         _.each(_.clone(node.childNodes), (childNode) =>
           this.mergeAdjacent(node)
         )
+
+  removeRedundant: ->
+    Tandem.Utils.Node.traverseDeep(@node, (node) ->
+      if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType != child.TEXT_NODE))
+        Tandem.Utils.Node.unwrap(node)
+    )
+
+  renameEquivalent: ->
+    Tandem.Utils.Node.traverseDeep(@node, (node) ->
+
+    )
 
   wrapText: ->
     Tandem.Utils.Node.traverseDeep(@node, (node) ->

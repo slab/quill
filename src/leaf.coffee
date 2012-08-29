@@ -8,6 +8,9 @@ class TandemLeaf
       lines[leaf.line.id].push(leaf)
     , {})
 
+  @isLeafNode: (node) ->
+    return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE || node.tagName == 'BR'
+
 
   constructor: (@line, @node, @attributes) ->
     @text = @node.textContent

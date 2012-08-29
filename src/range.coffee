@@ -44,12 +44,6 @@ class TandemRange
     )
     return attributes || {}
 
-  getRangy: ->
-    range = rangy.createRangyRange(@editor.iframe.contentWindow)
-    range.setStart(@start.leaf.node.firstChild, @start.offset)
-    range.setEnd(@end.leaf.node.firstChild, @end.offset)
-    return range
-
   getLeafNodes: ->
     range = this.getRangy()
     if range.collapsed
@@ -65,6 +59,12 @@ class TandemRange
     return _.map(this.getLeafNodes(), (node) =>
       return new Tandem.Position(@editor, node, 0)
     )
+
+  getRangy: ->
+    range = rangy.createRangyRange(@editor.iframe.contentWindow)
+    range.setStart(@start.leaf.node.firstChild, @start.offset)
+    range.setEnd(@end.leaf.node.firstChild, @end.offset)
+    return range
 
   groupNodesByLine: ->
     currentLine = 0

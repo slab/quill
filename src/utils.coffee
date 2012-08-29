@@ -104,23 +104,10 @@ TandemUtils =
     isTextNodeParent: (node) ->
       return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 
-    removeKeepingChildren: (doc, node) ->
-      children = _.clone(node.childNodes)
-      if _.all(children, (child) -> child.firstChild == null)
-        span = doc.createElement('span')
-        _.each(children, (child) ->
-          span.appendChild(child)
-        )
-        children = [span]
-      _.each(children, (child) ->
-        node.parentNode.insertBefore(child, node)
-      )
-      node.parentNode.removeChild(node)
-
     removeAttributeFromSubtree: (subtree, attribute) ->
       children = _.clone(subtree.childNodes)
       if Tandem.Utils.getAttributeForContainer(subtree) == attribute
-        Tandem.Utils.Node.removeKeepingChildren(subtree.ownerDocument, subtree)
+        Tandem.Utils.Node.unwrap(subtree)
       _.each(children, (child) ->
         Tandem.Utils.Node.removeAttributeFromSubtree(child, attribute)
       )
@@ -169,6 +156,12 @@ TandemUtils =
         fn(startNode)
         break if startNode == endNode
         startNode = nextSibling
+
+    unwrap: (node) ->
+      _.each(_.clone(node.childNodes), (child) ->
+        node.parentNode.insertBefore(child, node)
+      )
+      node.parentNode.removeChild(node)
 
     wrap: (wrapper, node) ->
       node.parentNode.insertBefore(wrapper, node)
