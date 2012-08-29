@@ -105,7 +105,7 @@ class TandemEditor extends EventEmitter2
       delta = new JetDelta(docLength, docLength + 1, deltas)
       this.emit(this.events.USER_TEXT_CHANGE, delta)
       setTimeout(=>
-        @doc.rebuildLines()
+        @doc.buildLines()
         @ignoreDomChanges = false
       , 1)
     )
@@ -138,7 +138,7 @@ class TandemEditor extends EventEmitter2
           startIndex += 1
         position = null
       )
-      @doc.rebuildLines()
+      @doc.buildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -160,7 +160,7 @@ class TandemEditor extends EventEmitter2
 
     this.preserveSelection(startPos, 0 - length, =>
       fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
-      @doc.rebuildLines()
+      @doc.buildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -218,7 +218,7 @@ class TandemEditor extends EventEmitter2
         while curLine? && curLine != endLine
           this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
           curLine = curLine.nextSibling
-      @doc.rebuildLines()
+      @doc.buildLines()
     )
     if emitEvent
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1

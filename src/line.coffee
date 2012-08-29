@@ -30,12 +30,16 @@ class TandemLine extends LinkedList.Node
         this.buildLeaves(node, nodeAttributes)
     )
 
+  breakBlocks: ->
+
+
   findLeaf: (leafNode) ->
     for leaf in @leaves when leaf.node == leafNode
       return leaf
     return null
 
   normalizeHtml: ->
+    this.breakBlocks()
     this.renameEquivalent()
     this.mergeAdjacent()
     this.removeRedundant()
