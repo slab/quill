@@ -12,28 +12,13 @@ class TandemToolbar extends EventEmitter2
     )
 
   applyAttribute: (name, value) ->
-    selection = @editor.getSelectionRange()
+    selection = @editor.getSelection()
     if selection?
-      attribute = {}
-      attribute[name] = value
-      @editor.applyAttribute(selection, attribute)
-      this.emit('update', @editor.getSelectionRange().getAttributeIntersection())
+      @editor.applyAttribute(selection, name, value)
+      this.emit('update', @editor.getSelection().getAttributeIntersection())
     else
       console.warn "#{name} called with no selection"
-
-  bold: (value = true) ->
-    this.applyAttribute('bold', value)
-
-  italic: (value = true) ->
-    this.applyAttribute('italic', value)
-
-  strike: (value = true) ->
-    this.applyAttribute('strike', value)
-
-  underline: (value = true) ->
-    this.applyAttribute('underline', value)
-
-
+      
 
 window.Tandem ||= {}
 window.Tandem.Toolbar = TandemToolbar

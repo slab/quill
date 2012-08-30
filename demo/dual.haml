@@ -21,15 +21,7 @@
             .format.strike
       #editor-container1.editor-container
         .line<>
-          %span<> Line 1
-          %span<> Word1
-        .line<>
-          %span<> 1
-          %span<> 2
-          %span<> 3
-          %span<> 4
-          %span<> 5
-          %span<> 6
+          %span<> Welcome to Stypi!
     .editor-wrapper
       #formatting-container2.formatting-container
         .format-group
@@ -43,25 +35,23 @@
             .format.strike
       #editor-container2.editor-container
         .line<>
-          %span<> Line 1
-          %span<> Word1
-        .line<>
-          %span<> 1
-          %span<> 2
-          %span<> 3
-          %span<> 4
-          %span<> 5
-          %span<> 6
+          %span<> Welcome to Stypi!
 
   %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
   %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
   %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
   %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
   %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+  %script{:type => 'text/javascript', :src => '../src/line.js'}
   %script{:type => 'text/javascript', :src => '../src/document.js'}
+  %script{:type => 'text/javascript', :src => '../src/position.js'}
+  %script{:type => 'text/javascript', :src => '../src/range.js'}
   %script{:type => 'text/javascript', :src => '../src/editor.js'}
   %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+  %script{:type => 'text/javascript', :src => '../src/debug.js'}
   %script{:type => 'text/javascript', :src => 'scripts/dual.js'}
 

@@ -1,0 +1,284 @@
+Topics
+
+HTML Normalization
+
+Editor Operations
+    Apply Attribute
+    Insert Text
+    Delete Text
+    Preserving Selection
+
+Editor Events
+    Selection Change
+    Content Change
+
+Undo Manager
+
+
+
+Considerations: <div><br /></div> in editor operations...
+
+
+
+HTML Normalization
+---
+
+ Cleanup Rules (Our editor will still work with this but will be inefficient)
+    - Text nodes cannot have siblings, if they do wrap the text node in a span
+    - No node can have two inclusive ancestors with the same tagName (redundant), spans are an exception
+    - Adjacent nodes of the same tagName should be merged
+    - No elements can be empty (have no text), if so it should be deleted
+    - Nodes have no styles
+    - Only lines and spans can have classes
+
+Requirements (will probably break if not met)
+    - No node can contain the newline character
+    - No divs can exist other than line divs
+    - Only line divs can be children of the editor
+    - Only acceptable tags are:
+        b - bold
+        i - italic
+        s - strike
+        u - underline
+        a - link
+        span - text
+        br - newline* only programmatically inserted
+
+Algorithm...
+    Normalizing lines
+    - If no nodes, add <div><br /></div> and be done
+    - For each line node, make sure it is div with line class
+        - If div and no class, add class
+        - Otherwise if block tag, wrap with div
+        - If not block tag, advance until you find another block tag, insert all those into a wrapped div
+        
+
+
+
+Editor Operations
+---
+Apply Attribute
+
+1. Apply attribute to node
+    a. Check if node has attribute already
+        i.  If so, return
+        ii. If not,  wrap node with appropriate tag
+
+2. Applying attribute to multiple nodes
+    The simple algorithm is to apply #1 to each node, however this will cause some inefficiencies:
+    Bolding "Test" in the following:
+    <div>
+        <i>Te</i>
+        <u>st</u>
+    </div>
+    Will yield
+    <div>
+        <i>
+            <b>Te</b>
+        </i>
+        <u>
+            <b>st</b>
+        </u>
+    </div>
+    When a more optimial outcome is:
+    <div>
+        <b>
+            <i>Te</i>
+            <u>st</u>
+        </b>
+    </div>
+
+    A more complex example (boundaries marked by |):
+    <div>
+        <u>Neg</u>
+        <s>
+            <b>Zero</b>
+            <i>|One</i>
+        </s>
+        <u>Two</u>
+        <i>
+            <u>Three</u>
+            <s>Four|</s>
+            <u>Five</u>
+        </i>
+    </div>
+    Should produce:
+    <div>
+        <u>Neg</u>
+        <s>
+            <b>Zero</b>
+        </s>
+        <b>
+            <s>
+                <i>One</i>
+            </s>
+            <u>Two</u>
+            <i>
+                <u>Three</u>
+                <s>Four</s>
+            </i>
+        </b>
+        <u>Five</u>
+    </div>
+
+    If we assume these nodes are in sequence, then we can produce a more optimal algorithm with the general idea being:
+    - If siblings are about to be bolded, bold all siblings by wrapping them with a common parent
+    - If all of a node's children are to be bolded, bold the node, not the children individually
+        Note this should be recursive ex.
+        <div>
+            <u>|Zero</u>
+            <i>
+                <s>Test|</s>
+            </i>
+        </div>
+
+        Should become
+        <div>
+            <b>
+                <u>|Zero</u>
+                <i>
+                    <s>Test|</s>
+                </i>
+            </b>
+        </div>
+
+        And not (without considering recursion)
+        <div>
+            <b>
+                <u>|Zero</u>
+            </b>
+            <i>
+                <b>
+                    <s>Test|</s>
+                </b>
+            </i>
+        </div>
+
+3. Applying attribute to portion of a node
+    Split the nodes at the range boundaries and apply #1 and/or #2.
+    To split:  
+        a. Duplicate the current node
+        b. Insert as next sibling
+        c. Change nodes' textContents
+
+
+
+Insert Text
+
+1. Inserting text characters
+    Simply find the node and insert.
+
+2. Inserting newline
+    Visually illustrating we need to turn:
+    <div>
+        <i>
+            <b>Hey</b>
+            <u>Now</u>
+        </i>
+        <s>What</s>
+    </div>
+
+    Into:
+    <div>
+        <i>
+            <b>H</b>
+            <b>ey</b>
+            <u>Now</u>
+        </i>
+        <s>What</s>
+    </div>
+
+    And turn it into:
+    <div>
+        <i>
+            <b>H</b>
+        </i>
+    </div>
+    <div>
+        <i>
+            <b>ey</b>
+            <u>Now</u>
+        </i>
+        <s>What</s>
+    </div> 
+
+    Then general idea is this:
+    - Split nodes at range boundary so we are dealing with just an array of sequential leaf nodes
+    - Using a similar approach to the optimial algorithm of Apply Attribute's #2,
+        - Group siblings together
+        - If all children of a parent are in the sibling group, add the parent instead
+        - If not, clone the parent and move group to this new parent
+            - This new parent is now the new group's only element
+            - We now consider this parent's nextSibling not the node's
+    - Create new line
+    - Add group to new line
+
+3. Inserting string of text (with characters)
+    lines = text.split("\n")
+    for each line except the last one
+        apply #1
+        apply #2
+    for the last line (which can be empty string if text ended with \n)
+        apply #1
+
+
+
+Delete Text
+
+1. Delete characters in node
+    - Treat deleting all characters in a node as deleting the node
+    - Otherwise, straightforward modification of node's textContent
+2. Delete node
+    a. Remove node from DOM
+    b. If parent has no children, remove parent
+    c. Recursiving apply b to parentNode
+3. Delete multiple nodes
+    - Split node at boundaries and apply #1 if applicable
+    - Now we are dealing with just nodes
+    - Similar approach to apply attribute's grouping technique except instead of wrapping the nodes, we delete them
+3. Delete newline
+    - For each child of the line in the second line, append them to the first line
+    - Apply HTML normalization
+
+
+
+Preserving selection
+
+1. Apply attribute
+    Plan A
+    - Save start and end leaves and offset
+    - Set selection to those nodes
+    Need to test: Are leaf nodes guaranteed to be around?
+    Plan B
+    - Save index into document where selection range is
+    - Restore based on index
+    Note: Plan A is certainly more optimal but far more complex; it may be best to just do Plan B even if A works
+
+2. Insert text
+    - If insertion point is the selection's start node or end node
+        Split and set selection node to the beginning of the right split node
+    - Rest similar strategy to #1
+
+3. Delete text
+    - Rest similar to strategy
+    - If selection start or end node was deleted, set to deletion point
+
+
+
+
+Editor Events
+---
+
+Selection Change
+
+This is deliberate changes unrelated to content changes. So typing does not cause this event to be triggered, even though techically the selection is changing.
+
+Checking for changes occur very often so we must do this very quickly.
+
+
+
+Content Change
+
+
+
+

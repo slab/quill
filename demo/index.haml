@@ -20,33 +20,67 @@
             .format.strike
       #editor-container.editor-container
         .line<>
-          %span<> Line 1
-          %span<> Word1
+          %span<> Welcome to Stypi
         .line<>
-          %span<> Line 2
-          %span<> Word2
+          %b<> Bold
+          %span<> &nbsp;
+          %i<> Italic
+          %span<> &nbsp;
+          %s<> Strike
+          %span<> &nbsp;
+          %u<> Underline
         .line<>
-          %span<> Line 3
-          %span<> Word3
+          %u<> Zero
+          %i<> One
+          %u<> Two
+          %i<>
+            %b<> Three
+            %s<> Four
+            %i<> Five
         .line<>
-          %span<> Line 4
-          %span<> Word4
+          %i<>
+            %b<> Hey
+            %u<> Now
+          %s<> What
+        .line<>
+          %span<> a
+          %span<> b
+          %span<> c
+          %span<> d
+          %span<> e
+          %span<> f
+          %span<> g
+        .line<>
+          %br<>
+        .line<>
+          %br<>
+        .line<>
+          %span<> Goodbye
+        .line<>
+          %br<>
 
   %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
   %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
   %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
   %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
   %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+  %script{:type => 'text/javascript', :src => '../src/line.js'}
   %script{:type => 'text/javascript', :src => '../src/document.js'}
+  %script{:type => 'text/javascript', :src => '../src/position.js'}
+  %script{:type => 'text/javascript', :src => '../src/range.js'}
   %script{:type => 'text/javascript', :src => '../src/editor.js'}
   %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+  %script{:type => 'text/javascript', :src => '../src/debug.js'}
   :javascript
     editor = new Tandem.Editor('editor-container');
-    toolbar = new Tandem.Toolbar(editor)
+    toolbar = new Tandem.Toolbar(editor);
 
-    $('.bold').click(function() { toolbar.bold() });
-    $('.italic').click(function() { toolbar.italic() })
-    $('.strike').click(function() { toolbar.strike() })
-    $('.underline').click(function() { toolbar.underline() })
+    _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
+      $('#formatting-container .' + format).click(function() {
+        toolbar.applyAttribute(format, !$(this).parent().hasClass('active'));
+      });
+    });

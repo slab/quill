@@ -1,17 +1,45 @@
 #= require underscore
+#= require linked_list
+#= require jetsync
+#= require tandem/line
 
-ID_PREFIX   = 'tandem-'
-CLASS_NAME  = 'line'
-BLOCK_TAGS  = ['ADDRESS', 'BLOCKQUOTE', 'DIV', 'DL', 'FIELDSET', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'OL', 'P', 'PRE', 'TABLE', 'UL']
-INLINE_TAGS = []
 
 class TandemDocument
-  constructor: (@editor, @root) ->
-    @idCounter = 0
-    lines = []
-    lineMap = {}
-    this.normalizeHtml()
-    this.detectChange()
+  constructor: (@editor) ->
+    @doc = @editor.iframeDoc
+    @root = @doc.body
+    this.rebuildLines()
+
+  appendLine: (lineNode) ->
+    line = new Tandem.Line(this, lineNode)
+    @lines.append(line)
+    @lineMap[line.id] = line
+    return line
+
+  buildLines: ->
+    _.each(@root.childNodes, (node) =>
+      this.appendLine(node)
+    )
+
+  detectChange: ->
+    # Go through HTML (which should be normalized)
+    # Make sure non are different from their innerHTML, if so record change
+    # Returns changes made
+
+  findLeaf: (node) ->
+    lineNode = node.parentNode
+    while lineNode? && !Tandem.Line.isLineNode(lineNode)
+      lineNode = lineNode.parentNode
+    line = this.findLine(lineNode)
+    return line.findLeaf(node)
+
+  findLine: (node) ->
+    return @lineMap[node.id]
+
+  findLineAtOffset: (index) ->
+    [lineNode, offset] = Tandem.Utils.Node.getChildAtOffset(@root, index)
+    line = this.findLine(lineNode)
+    return [line, offset]
 
   normalizeHtml: ->
     ### Rules:
@@ -27,8 +55,7 @@ class TandemDocument
       div = @doc.createElement('div')
       div.appendChild(@doc.createElement('br'))
       @root.appendChild(div)
-      div.id = ID_PREFIX + @idCounter
-      @idCounter += 1
+      this.appendLine(div, 0)
 
     # Flatten block elements
     # Make all block elements div
@@ -36,13 +63,35 @@ class TandemDocument
 
   normalizeNodeHtml: (node) ->
 
+  rebuildLines: ->
+    @lines = new LinkedList()
+    @lineMap = {}
+    this.normalizeHtml()
+    this.buildLines()
 
-  detectChange: ->
-    # Go through HTML (which should be normalized)
-    # Make sure non are different from their innerHTML, if so record change
-    # Returns changes made
+  splitLine: (line, offset) ->
+    [lineNode1, lineNode2] = Tandem.Utils.Node.split(line.node, offset, true)
+    line.node = lineNode1
+    line.rebuild()
+    newLine = new Tandem.Line(this, lineNode2)
+    @lines.insertAfter(line, newLine)
+    @lineMap[newLine.id] = newLine
 
-
+  toDelta: ->
+    lines = @lines.toArray()
+    length = 0
+    deltas = _.each(lines.length, (line, index) ->
+      deltas = line.delta.deltas
+      length += line.delta.endLength
+      if index < lines.length - 1
+        deltas.push(new JetInsert("\n"))
+        length += 1
+      return deltas
+    )
+    deltas = _.flatten(deltas, true)
+    delta = new JetDelta(0, length, deltas)
+    delta.compact()
+    return delta
 
 
 

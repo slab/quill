@@ -1,12 +1,35 @@
 !!! 5
 %html
   %head
-    %title Stypi Editor Normalize Test
+    %title Stypi Editor Utils Test
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../../lib/mocha.css'}
 
 %body
   #mocha
-  #editor-container
+  #test-container
+    #split-test-base<>
+      %b<> Bold
+    #split-test-text<>
+      %b<> Bold
+    #split-test-node
+      %b<>
+        %i<> Italic
+        %s<> Strike
+    #split-test-both
+      %b<>
+        %i<> Italic
+    #split-test-complex
+      %b<>
+        %i<>
+          %s<>
+            %u<> One
+            %u<> Two
+          %s<> Three
+    #split-test-lines
+      .line<>
+        %b<> 123
+        %i<> 456
+
 
   %script{:type => 'text/javascript', :src => '../../../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../../../lib/underscore.js'}
@@ -25,7 +48,7 @@
   %script{:type => 'text/javascript', :src => '../../../lib/chai.js'}
   :javascript
     mocha.setup('bdd');
-    expect = chai.expect
-  %script{:type => 'text/javascript', :src => 'scripts/normalize.js'}
+    expect = chai.expect;
+  %script{:type => 'text/javascript', :src => 'scripts/utils.js'}
   :javascript
     mocha.run();

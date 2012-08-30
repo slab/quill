@@ -1,7 +1,7 @@
 !!! 5
 %html
   %head
-    %title Stypi Editor Normalize Test
+    %title Stypi Editor Test
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../../lib/mocha.css'}
 
 %body
@@ -26,6 +26,6 @@
   :javascript
     mocha.setup('bdd');
     expect = chai.expect
-  %script{:type => 'text/javascript', :src => 'scripts/normalize.js'}
+  %script{:type => 'text/javascript', :src => 'scripts/editor.js'}
   :javascript
     mocha.run();
