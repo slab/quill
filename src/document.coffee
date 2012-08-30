@@ -41,7 +41,7 @@ class TandemDocument
     return @lineMap[node.id]
 
   findLineAtOffset: (index) ->
-    [lineNode, offset] = Tandem.Utils.Node.getChildAtOffset(@root, index)
+    [lineNode, offset] = Tandem.Utils.getChildAtOffset(@root, index)
     line = this.findLine(lineNode)
     return [line, offset]
 

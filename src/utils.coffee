@@ -18,8 +18,8 @@ TandemUtils =
       else                   return doc.createElement('span')
 
   extractNodes: (editor, startIndex, endIndex) ->
-    [startLine, startOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, startIndex)
-    [endLine, endOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, endIndex)
+    [startLine, startOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, startIndex)
+    [endLine, endOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, endIndex)
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLine, startOffset, true)
     if startLine == endLine
       endLine = rightStart
@@ -43,6 +43,14 @@ TandemUtils =
       when 'S' then return 'strike'
       when 'U' then return 'underline'
       else          return null
+
+  getChildAtOffset: (node, offset) ->
+    child = node.firstChild
+    while offset > child.textContent.length
+      offset -= child.textContent.length
+      offset -= 1 if Tandem.Line.isLineNode(child)
+      child = child.nextSibling
+    return [child, offset]
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
@@ -71,7 +79,7 @@ TandemUtils =
       return [left, right]
     else
       # Node split
-      [child, offset] = TandemUtils.Node.getChildAtOffset(node, offset)
+      [child, offset] = TandemUtils.getChildAtOffset(node, offset)
       [childLeft, childRight] = TandemUtils.splitNode(child, offset)
       while childRight != null
         nextRight = childRight.nextSibling
@@ -87,6 +95,23 @@ TandemUtils =
     node2.parentNode.removeChild(node2)
     return node1
 
+  removeAttributeFromSubtree: (subtree, attribute) ->
+    children = _.clone(subtree.childNodes)
+    if Tandem.Utils.getAttributeForContainer(subtree) == attribute
+      Tandem.Utils.unwrap(subtree)
+    _.each(children, (child) ->
+      Tandem.Utils.removeAttributeFromSubtree(child, attribute)
+    )
+
+  switchTag: (node, newTag) ->
+    return if node.tagName == newTag
+    newNode = node.ownerDocument.createElement(newTag)
+    _.each(_.clone(node.childNodes), (child) ->
+      newNode.appendChild(child)
+    )
+    node.parentNode.replaceChild(newNode, node)
+    return newNode
+
   traversePreorder: (root, offset, fn, context = fn, args...) ->
     return root if root.nodeType == root.TEXT_NODE
     root = fn.apply(context, [root, offset].concat(args))
@@ -100,6 +125,13 @@ TandemUtils =
         offset = nextOffset
     return root
 
+  traverseSiblings: (startNode, endNode, fn) ->
+    while startNode?
+      nextSibling = startNode.nextSibling
+      fn(startNode)
+      break if startNode == endNode
+      startNode = nextSibling
+
   unwrap: (node) ->
     next = node.firstChild
     _.each(_.clone(node.childNodes), (child) ->
@@ -111,59 +143,6 @@ TandemUtils =
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node)
     wrapper.appendChild(node)
-
-
-  Node:
-    getAncestorNodes: (node, atRoot = Tandem.Line.isLineNode, includeSelf = true) ->
-      ancestors = []
-      ancestors.push(node) if includeSelf && atRoot(node)
-      while node? && !atRoot(node)
-        ancestors.push(node)
-        node = node.parentNode
-      ancestors.push(node)
-      return if node? then ancestors else []
-
-    getAttributes: (node) ->
-      return _.reduce(TandemUtils.Node.getAncestorNodes(node), (attributes, ancestor) ->
-        switch ancestor.tagName
-          when 'B' then attributes['bold'] = true
-          when 'I' then attributes['italic'] = true
-          when 'S' then attributes['strike'] = true
-          when 'U' then attributes['underline'] = true
-        return attributes
-      , {})
-
-    getChildAtOffset: (node, offset) ->
-      child = node.firstChild
-      while offset > child.textContent.length
-        offset -= child.textContent.length
-        offset -= 1 if Tandem.Line.isLineNode(child)
-        child = child.nextSibling
-      return [child, offset]
-
-    removeAttributeFromSubtree: (subtree, attribute) ->
-      children = _.clone(subtree.childNodes)
-      if Tandem.Utils.getAttributeForContainer(subtree) == attribute
-        Tandem.Utils.unwrap(subtree)
-      _.each(children, (child) ->
-        Tandem.Utils.Node.removeAttributeFromSubtree(child, attribute)
-      )
-
-    switchTag: (node, newTag) ->
-      return if node.tagName == newTag
-      newNode = node.ownerDocument.createElement(newTag)
-      _.each(_.clone(node.childNodes), (child) ->
-        newNode.appendChild(child)
-      )
-      node.parentNode.replaceChild(newNode, node)
-      return newNode
-
-    traverseSiblings: (startNode, endNode, fn) ->
-      while startNode?
-        nextSibling = startNode.nextSibling
-        fn(startNode)
-        break if startNode == endNode
-        startNode = nextSibling
 
 
 

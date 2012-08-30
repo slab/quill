@@ -177,21 +177,21 @@ class TandemEditor extends EventEmitter2
 
   applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
     return if startOffset == endOffset
-    [startNode, startNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, startOffset)
+    [startNode, startNodeOffset] = Tandem.Utils.getChildAtOffset(line, startOffset)
     [prevNode, startNode] = Tandem.Utils.splitNode(startNode, startNodeOffset)
-    [endNode, endNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, endOffset)
+    [endNode, endNodeOffset] = Tandem.Utils.getChildAtOffset(line, endOffset)
     [endNode, nextNode] = Tandem.Utils.splitNode(endNode, endNodeOffset)
     if value == true
       fragment = @iframeDoc.createDocumentFragment()
-      Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
         fragment.appendChild(node)
       )
       attrNode = Tandem.Utils.createContainerForAttribute(@iframeDoc, attr)
       attrNode.appendChild(fragment)
       line.insertBefore(attrNode, nextNode)
     else
-      Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
-        Tandem.Utils.Node.removeAttributeFromSubtree(node, attr)
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+        Tandem.Utils.removeAttributeFromSubtree(node, attr)
       )
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
@@ -207,8 +207,8 @@ class TandemEditor extends EventEmitter2
       range = new Tandem.Range(this, startIndex, startIndex + length)
 
     this.preserveSelection(range.start, 0, =>
-      [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
-      [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
+      [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex)
+      [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex + length)
       if startLine == endLine
         this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
       else

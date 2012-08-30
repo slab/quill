@@ -338,7 +338,7 @@ describe('Editor', ->
     }]
 
     _.each(tests, (test) ->
-      _.each({apply: true, remove: false}, (name, truth) ->
+      _.each({apply: true, remove: false}, (truth, name) ->
         it("should #{name} to #{test.target}", ->
           editor = reset()
           editor.applyAttribute(test.start, test.length, 'bold', truth)
@@ -532,7 +532,6 @@ describe('Editor', ->
       expect(editor.iframeDoc.body.childNodes.length).to.equal(1)
     )
   )
-  
 )
 
 

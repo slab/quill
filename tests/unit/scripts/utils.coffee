@@ -390,7 +390,7 @@ describe('Utils', ->
         expect(node.textContent).to.equal(defaultTexts[index])
         expect(offset).to.equal(defaultIndexes[index])
         index += 1
-        return Tandem.Utils.Node.switchTag(node, 'SPAN')
+        return Tandem.Utils.switchTag(node, 'SPAN')
       )
       expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
         <span>

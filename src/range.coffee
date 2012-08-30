@@ -59,28 +59,11 @@ class TandemRange
       nodes.pop() if nodes[nodes.length - 1] != @end.leaf.node || @end.offset == 0
       return nodes
 
-  getLeafPositions: ->
-    return _.map(this.getLeafNodes(), (node) =>
-      return new Tandem.Position(@editor, node, 0)
-    )
-
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe.contentWindow)
     range.setStart(@start.leaf.node.firstChild, @start.offset)
     range.setEnd(@end.leaf.node.firstChild, @end.offset)
     return range
-
-  groupNodesByLine: ->
-    currentLine = 0
-    return _.reduce(this.getLeafPositions(), (lines, position) ->
-      line = @editor.doc.findLine(position.leaf.node)
-      if currentLine == line
-        lines[lines.length - 1].push(position.leaf.node)
-      else
-        lines.push([position.leaf.node])
-        currentLine = line
-      return lines
-    , [])
 
   isCollapsed: ->
     return @start.leaf == @end.leaf && @start.offset == @end.offset
