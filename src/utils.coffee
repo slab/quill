@@ -113,10 +113,9 @@ TandemUtils =
     return newNode
 
   traversePreorder: (root, offset, fn, context = fn, args...) ->
-    return root if root.nodeType == root.TEXT_NODE
     root = fn.apply(context, [root, offset].concat(args))
     cur = root.firstChild
-    while cur? && cur.nodeType != cur.TEXT_NODE
+    while cur?
       nextOffset = offset + cur.textContent.length
       nextSibling = cur.nextSibling
       cur = TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))

@@ -363,12 +363,13 @@ describe('Utils', ->
     # OneTwoThreeFourFiveSix
     defaultIndexes = [0, 0, 0, 3, 6, 6, 11, 15, 15, 19]
 
-    it('should traverse in postorder', -> 
+    it('should traverse in preorder', -> 
       reset()
       index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        expect(node.textContent).to.equal(defaultTexts[index])
-        index += 1
+        if node.nodeType != node.TEXT_NODE
+          expect(node.textContent).to.equal(defaultTexts[index])
+          index += 1
         return node
       )
     )
@@ -377,8 +378,9 @@ describe('Utils', ->
       reset()
       index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        expect(offset).to.equal(defaultIndexes[index])
-        index += 1
+        if node.nodeType != node.TEXT_NODE
+          expect(offset).to.equal(defaultIndexes[index])
+          index += 1
         return node
       )
     )
@@ -387,10 +389,12 @@ describe('Utils', ->
       reset()
       index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        expect(node.textContent).to.equal(defaultTexts[index])
-        expect(offset).to.equal(defaultIndexes[index])
-        index += 1
-        return Tandem.Utils.switchTag(node, 'SPAN')
+        if node.nodeType != node.TEXT_NODE
+          expect(node.textContent).to.equal(defaultTexts[index])
+          expect(offset).to.equal(defaultIndexes[index])
+          index += 1
+          node = Tandem.Utils.switchTag(node, 'SPAN')
+        return node
       )
       expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
         <span>
@@ -413,13 +417,13 @@ describe('Utils', ->
     it('should handle unwrap', -> 
       reset()
       index = 0
-
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        expect(node.textContent).to.equal(defaultTexts[index])
-        expect(offset).to.equal(defaultIndexes[index])
-        index += 1
-        if node.tagName == 'H2'
-          node = Tandem.Utils.unwrap(node)
+        if node.nodeType != node.TEXT_NODE
+          expect(node.textContent).to.equal(defaultTexts[index])
+          expect(offset).to.equal(defaultIndexes[index])
+          index += 1
+          if node.tagName == 'H2'
+            node = Tandem.Utils.unwrap(node)
         return node
       )
       expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
