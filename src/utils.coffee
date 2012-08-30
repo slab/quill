@@ -32,6 +32,7 @@ TandemUtils =
     while cur?
       cur = TandemUtils.traversePostorder.apply(TandemUtils.depthFirstSearch, [cur, offset, fn, context].concat(args))
       offset += cur.textContent
+      break unless cur?
       cur = cur.nextSibling
     return fn.apply(context, [root, originalOffset].concat(args))
 
@@ -154,6 +155,15 @@ TandemUtils =
           childRight = nextRight
         return [left, right]
 
+    switchTag: (node, newTag) ->
+      return if node.tagName == newTag
+      newNode = node.ownerDocument.createElement(newTag)
+      _.each(_.clone(node.childNodes), (child) ->
+        newNode.appendChild(child)
+      )
+      node.parentNode.replaceChild(newNode, node)
+      return newNode
+
     traverseDeep: (startNode, fn) ->
       fn(startNode)
       TandemUtils.Node.traverseSiblings(startNode.firstChild, null, (node) ->
@@ -171,7 +181,9 @@ TandemUtils =
       _.each(_.clone(node.childNodes), (child) ->
         node.parentNode.insertBefore(child, node)
       )
+      next = node.nextSibling
       node.parentNode.removeChild(node)
+      return next
 
     wrap: (wrapper, node) ->
       node.parentNode.insertBefore(wrapper, node)

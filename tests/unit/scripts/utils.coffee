@@ -340,20 +340,27 @@ describe('Utils', ->
 
 
   describe('traversePostorder', ->
-    it('should traverse in postorder', -> 
+    reset = ->
       $('#test-container').html(Tandem.Utils.cleanHtml('
         <div>
-          <div>
-            <span>One</span>
-            <span>Two</span>
-          </div>
-          <div>
-            <span>Three</span>
-            <span>Four</span>
-          </div>
+          <h1>
+            <b>One</b>
+            <i>Two</i>
+          </h1>
+          <h2>
+            <s>Three</s>
+            <u>Four</u>
+          </h2>
+          <h3>
+            <b>Five</b>
+            <i>Six</i>
+          </h3>
         </div>
-      ')) 
-      expectedTexts = ['One', 'Two', 'OneTwo', 'Three', 'Four', 'ThreeFour', 'OneTwoThreeFour']
+      '))
+
+    it('should traverse in postorder', -> 
+      reset()
+      expectedTexts = ['One', 'Two', 'OneTwo', 'Three', 'Four', 'ThreeFour', 'Five', 'Six', 'FiveSix', 'OneTwoThreeFourFiveSix']
       index = 0
       Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
         expect(node.textContent).to.equal(expectedTexts[index])
@@ -362,8 +369,50 @@ describe('Utils', ->
       )
     )
 
-    it('should handle rename', -> )
+    it('should handle rename', -> 
+      reset()
+      Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        return Tandem.Utils.Node.switchTag(node, 'SPAN')
+      )
+      expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
+        <span>
+          <span>
+            <span>One</span>
+            <span>Two</span>
+          </span>
+          <span>
+            <span>Three</span>
+            <span>Four</span>
+          </span>
+          <span>
+            <span>Five</span>
+            <span>Six</span>
+          </span>
+        </span>
+      ')) 
+    )
 
-    it('should handle unwrap', -> )
+    it('should handle unwrap', -> 
+      reset()
+      Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        if node.tagName == 'H2'
+          node = Tandem.Utils.Node.unwrap(node)
+        return node
+      )
+      expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
+        <div>
+          <h1>
+            <b>One</b>
+            <i>Two</i>
+          </h1>
+          <s>Three</s>
+          <u>Four</u>
+          <h3>
+            <b>Five</b>
+            <i>Six</i>
+          </h3>
+        </div>
+      '))
+    )
   )
 )
