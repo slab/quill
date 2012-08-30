@@ -59,7 +59,7 @@ class TandemDocument
 
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Tandem.Utils.Node.split(line.node, offset, true)
+    [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     line.rebuild()
     newLine = new Tandem.Line(this, lineNode2)

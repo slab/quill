@@ -159,7 +159,7 @@ class TandemEditor extends EventEmitter2
     endIndex = endPos.getIndex()
 
     this.preserveSelection(startPos, 0 - length, =>
-      fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
+      fragment = Tandem.Utils.extractNodes(this, startIndex, endIndex)
       @doc.buildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
@@ -178,9 +178,9 @@ class TandemEditor extends EventEmitter2
   applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
     return if startOffset == endOffset
     [startNode, startNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, startOffset)
-    [prevNode, startNode] = Tandem.Utils.Node.split(startNode, startNodeOffset)
+    [prevNode, startNode] = Tandem.Utils.splitNode(startNode, startNodeOffset)
     [endNode, endNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, endOffset)
-    [endNode, nextNode] = Tandem.Utils.Node.split(endNode, endNodeOffset)
+    [endNode, nextNode] = Tandem.Utils.splitNode(endNode, endNodeOffset)
     if value == true
       fragment = @iframeDoc.createDocumentFragment()
       Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->

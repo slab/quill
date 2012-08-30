@@ -8,18 +8,18 @@ describe('Utils', ->
   describe('split', ->
     it('should not split if not necessary', ->
       container = document.getElementById('split-test-base')
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 0)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 0)
       expect(left).to.equal(null)
       expect(right).to.equal(container.firstChild)
 
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 4)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 4)
       expect(left).to.equal(container.firstChild)
       expect(right).to.equal(null)
     )
 
     it('should split text node', ->
       container = document.getElementById('split-test-text')
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 2)
       expect(left.textContent).to.equal("Bo")
       expect(right.textContent).to.equal("ld")
       expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b>Bo</b><b>ld</b>')
@@ -27,25 +27,25 @@ describe('Utils', ->
 
     it('should split child nodes', ->
       container = document.getElementById('split-test-node')
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 6)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 6)
       expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
     )
 
     it('should split child nodes and text', ->
       container = document.getElementById('split-test-both')
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 2)
       expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
     )
 
     it('should split deep nodes', ->
       container = document.getElementById('split-test-complex')
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 2)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 2)
       expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
     )
 
     it('should split lines', ->
       container = document.getElementById('split-test-lines')
-      [left, right] = Tandem.Utils.Node.split(container.firstChild, 1)
+      [left, right] = Tandem.Utils.splitNode(container.firstChild, 1)
       expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<div><b>1</b></div><div><b>23</b><i>456</i></div>')
     )
   )
@@ -329,7 +329,7 @@ describe('Utils', ->
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        extraction = Tandem.Utils.Node.extract(editor, test.start, test.end)
+        extraction = Tandem.Utils.extractNodes(editor, test.start, test.end)
         target = document.createElement('div')
         target.appendChild(extraction)
         expect("Fragment " + Tandem.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
@@ -419,7 +419,7 @@ describe('Utils', ->
         expect(offset).to.equal(defaultIndexes[index])
         index += 1
         if node.tagName == 'H2'
-          node = Tandem.Utils.Node.unwrap(node)
+          node = Tandem.Utils.unwrap(node)
         return node
       )
       expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('

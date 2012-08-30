@@ -74,7 +74,7 @@ class TandemLine extends LinkedList.Node
     while node? && node.nextSibling?
       next = node.nextSibling
       if node.tagName == next.tagName && Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
-        node = Tandem.Utils.Node.mergeNodes(node, next)
+        node = Tandem.Utils.mergeNodes(node, next)
       else
         node = next
         _.each(_.clone(node.childNodes), (childNode) =>
@@ -82,21 +82,22 @@ class TandemLine extends LinkedList.Node
         )
 
   removeRedundant: ->
-    Tandem.Utils.Node.traverseDeep(@node, (node) ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) ->
       if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType != child.TEXT_NODE))
-        Tandem.Utils.Node.unwrap(node)
+        node = Tandem.Utils.unwrap(node)
+      return node
     )
 
   renameEquivalent: ->
-    Tandem.Utils.Node.traverseDeep(@node, (node) ->
-
-    )
 
   wrapText: ->
-    Tandem.Utils.Node.traverseDeep(@node, (node) ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) ->
       node.normalize()
       if node.nodeType == node.TEXT_NODE && node.nextSibling?
-        Tandem.Utils.Node.wrap(node.ownerDocument.createElement('span'), node)
+        span = node.ownerDocument.createElement('span')
+        Tandem.Utils.wrap(span, node)
+        node = span
+      return node
     )
 
 

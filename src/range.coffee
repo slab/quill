@@ -69,7 +69,7 @@ class TandemRange
   groupNodesByLine: ->
     currentLine = 0
     return _.reduce(this.getLeafPositions(), (lines, position) ->
-      line = Tandem.Utils.Node.getLine(position.leaf.node)
+      line = @editor.doc.findLine(position.leaf.node)
       if currentLine == line
         lines[lines.length - 1].push(position.leaf.node)
       else
