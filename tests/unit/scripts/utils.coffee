@@ -339,7 +339,7 @@ describe('Utils', ->
   )
 
 
-  describe('traversePostorder', ->
+  describe('traversePreorder', ->
     reset = ->
       $('#test-container').html(Tandem.Utils.cleanHtml('
         <div>
@@ -358,12 +358,26 @@ describe('Utils', ->
         </div>
       '))
 
+    defaultTexts = ['OneTwoThreeFourFiveSix', 'OneTwo', 'One', 'Two', 'ThreeFour', 'Three', 'Four', 'FiveSix', 'Five', 'Six']
+    # 0  3  6    1   5   9  
+    # OneTwoThreeFourFiveSix
+    defaultIndexes = [0, 0, 0, 3, 6, 6, 11, 15, 15, 19]
+
     it('should traverse in postorder', -> 
       reset()
-      expectedTexts = ['One', 'Two', 'OneTwo', 'Three', 'Four', 'ThreeFour', 'Five', 'Six', 'FiveSix', 'OneTwoThreeFourFiveSix']
       index = 0
-      Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        expect(node.textContent).to.equal(expectedTexts[index])
+      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        expect(node.textContent).to.equal(defaultTexts[index])
+        index += 1
+        return node
+      )
+    )
+
+    it('should traverse with correct index', -> 
+      reset()
+      index = 0
+      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        expect(offset).to.equal(defaultIndexes[index])
         index += 1
         return node
       )
@@ -371,7 +385,11 @@ describe('Utils', ->
 
     it('should handle rename', -> 
       reset()
-      Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+      index = 0
+      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        expect(node.textContent).to.equal(defaultTexts[index])
+        expect(offset).to.equal(defaultIndexes[index])
+        index += 1
         return Tandem.Utils.Node.switchTag(node, 'SPAN')
       )
       expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
@@ -394,7 +412,12 @@ describe('Utils', ->
 
     it('should handle unwrap', -> 
       reset()
-      Tandem.Utils.traversePostorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+      index = 0
+
+      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+        expect(node.textContent).to.equal(defaultTexts[index])
+        expect(offset).to.equal(defaultIndexes[index])
+        index += 1
         if node.tagName == 'H2'
           node = Tandem.Utils.Node.unwrap(node)
         return node

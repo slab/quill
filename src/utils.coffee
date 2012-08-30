@@ -25,16 +25,18 @@ TandemUtils =
       when 'U' then return 'underline'
       else          return ''
 
-  traversePostorder: (root, offset, fn, context = fn, args...) ->
+  traversePreorder: (root, offset, fn, context = fn, args...) ->
     return root if root.nodeType == root.TEXT_NODE
+    root = fn.apply(context, [root, offset].concat(args))
     cur = root.firstChild
-    originalOffset = offset
-    while cur?
-      cur = TandemUtils.traversePostorder.apply(TandemUtils.depthFirstSearch, [cur, offset, fn, context].concat(args))
-      offset += cur.textContent
-      break unless cur?
-      cur = cur.nextSibling
-    return fn.apply(context, [root, originalOffset].concat(args))
+    while cur? && cur.nodeType != cur.TEXT_NODE
+      nextOffset = offset + cur.textContent.length
+      nextSibling = cur.nextSibling
+      cur = TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))
+      if cur? && cur.nextSibling == nextSibling
+        cur = nextSibling
+        offset = nextOffset
+    return root
 
 
   Attribute:
@@ -178,10 +180,10 @@ TandemUtils =
         startNode = nextSibling
 
     unwrap: (node) ->
+      next = node.firstChild
       _.each(_.clone(node.childNodes), (child) ->
         node.parentNode.insertBefore(child, node)
       )
-      next = node.nextSibling
       node.parentNode.removeChild(node)
       return next
 
