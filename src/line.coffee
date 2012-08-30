@@ -24,7 +24,7 @@ class TandemLine extends LinkedList.Node
       attr = Tandem.Utils.getAttributeForContainer(node)
       nodeAttributes[attr] = true if attr?
       if Tandem.Leaf.isLeafNode(node)
-        @leaves.push(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
+        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
         @numLeaves += 1
       else
         this.buildLeaves(node, nodeAttributes)
@@ -34,8 +34,10 @@ class TandemLine extends LinkedList.Node
 
 
   findLeaf: (leafNode) ->
-    for leaf in @leaves when leaf.node == leafNode
-      return leaf
+    curLeaf = @leaves.first
+    while curLeaf?
+      return curLeaf if curLeaf.node == leafNode
+      curLeaf = curLeaf.next
     return null
 
   normalizeHtml: ->
@@ -48,7 +50,7 @@ class TandemLine extends LinkedList.Node
 
 
   toDelta: ->
-    deltas = _.map(@leaves, (leaf) ->
+    deltas = _.map(@leaves.toArray(), (leaf) ->
       return new JetInsert(leaf.text, leaf.attributes)
     )
     delta = new JetDelta(0, @length, deltas)
@@ -57,11 +59,10 @@ class TandemLine extends LinkedList.Node
 
 
   rebuild: ->
-    @leaves = []
+    @leaves = new LinkedList()
     @numLeaves = 0
-    @attributes = {}
     this.normalizeHtml()
-    this.buildLeaves(@node, @attributes)
+    this.buildLeaves(@node, {})
     this.resetContent()
 
   resetContent: ->

@@ -28,21 +28,25 @@ class TandemRange
       
   getAttributeIntersection: ->
     attributes = null
-    _.all(this.getLeafPositions(), (position) ->
-      leafAttributes = Tandem.Utils.Node.getAttributes(position.leaf.node)
+    _.all(this.getLeaves(), (leaf) ->
       if attributes
         _.each(attributes, (value, key) ->
-          if leafAttributes[key] != true
+          if leaf.attributes[key] != true
             delete attributes[key]
         )
       else
-        attributes = leafAttributes
+        attributes = leaf.attributes
 
       for key,value of attributes when value == true
         return true
       return false
     )
     return attributes || {}
+
+  getLeaves: ->
+    itr = new Tandem.LeafIterator(@start.leaf, @end.leaf)
+    arr = itr.toArray()
+    return arr
 
   getLeafNodes: ->
     range = this.getRangy()

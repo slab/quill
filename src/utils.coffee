@@ -42,7 +42,7 @@ TandemUtils =
       when 'I' then return 'italic'
       when 'S' then return 'strike'
       when 'U' then return 'underline'
-      else          return ''
+      else          return null
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
