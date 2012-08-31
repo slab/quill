@@ -31,11 +31,9 @@ listenEditor = (source, target) ->
   )
   source.on(source.events.USER_TEXT_CHANGE, (delta) ->
     console.log 'text change', delta
-    applyDelta(delta, (index, text) ->
-      target.insertAt(index, text)
-    , (start, end) ->
-      target.deleteAt(start, end - start)
-    )
+    for d in delta.deltas
+      d.attributes = {bold: true} if JetDelta.isRetain(d)
+    target.applyDelta(delta)
   )
 
 editors = _.map([1, 2], (num) ->

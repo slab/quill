@@ -47,7 +47,9 @@ class TandemLine extends LinkedList.Node
     this.removeRedundant()
     this.wrapText()
 
-
+  splitContents: (offset) ->
+    [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
+    return Tandem.Utils.splitNode(node, offset)
 
   toDelta: ->
     deltas = _.map(@leaves.toArray(), (leaf) ->
@@ -59,6 +61,7 @@ class TandemLine extends LinkedList.Node
 
 
   rebuild: ->
+    # TODO memory leak issue?
     @leaves = new LinkedList()
     @numLeaves = 0
     this.normalizeHtml()
