@@ -82,7 +82,7 @@ class TandemEditor extends EventEmitter2
           deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
           offsetLength += diff[1].length
         if diff[0] == DIFF_INSERT
-          deltas.push(new JetInsert(diff[1]))
+          deltas.push(new JetInsert(diff[1], position.leaf.attributes))
           insertedLength += diff[1].length
         if diff[0] == DIFF_DELETE
           offsetLength += diff[1].length

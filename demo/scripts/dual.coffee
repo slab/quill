@@ -31,8 +31,6 @@ listenEditor = (source, target) ->
   )
   source.on(source.events.USER_TEXT_CHANGE, (delta) ->
     console.log 'text change', delta
-    for d in delta.deltas
-      d.attributes = {bold: true} if JetDelta.isRetain(d)
     target.applyDelta(delta)
   )
 
