@@ -229,6 +229,9 @@ class TandemEditor extends EventEmitter2
     # - Helper to get nodes in given index range
     # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
 
+  getDelta: ->
+    return @doc.toDelta()
+
   getSelection: ->
     return Tandem.Range.getSelection(this)
 
