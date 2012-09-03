@@ -1,6 +1,7 @@
 #= require underscore
 #= require linked_list
 #= require jetsync
+#= require tandem/tags
 
 class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'tandem-line'
@@ -30,8 +31,20 @@ class TandemLine extends LinkedList.Node
         this.buildLeaves(node, nodeAttributes)
     )
 
-  breakBlocks: ->
-
+  applyRules: ->
+    Tandem.Utils.traversePreorder(@node, 0, (node, index) =>
+      if node.nodeType == node.ELEMENT_NODE
+        rules = Tandem.Tags.LINE_RULES[node.tagName]
+        if rules?
+          _.each(rules, (data, rule) ->
+            switch rule
+              when 'rename' then node = Tandem.Utils.switchTag(node, data)
+              else return
+          )
+        else
+          node = Tandem.Utils.unwrap(node)
+      return node
+    )
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -41,11 +54,12 @@ class TandemLine extends LinkedList.Node
     return null
 
   normalizeHtml: ->
-    this.breakBlocks()
-    this.renameEquivalent()
-    this.mergeAdjacent()
+    return if @node.childNodes.length == 1 && @node.firstChild.tagName == 'BR'
+    this.applyRules()
     this.removeRedundant()
+    this.mergeAdjacent()
     this.wrapText()
+    @node.appendChild(@node.ownerDocument.createElement('br')) if @node.firstChild == null
 
   splitContents: (offset) ->
     [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
@@ -87,7 +101,7 @@ class TandemLine extends LinkedList.Node
 
   removeRedundant: ->
     Tandem.Utils.traversePreorder(@node, 0, (node) ->
-      if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType != child.TEXT_NODE))
+      if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType == child.ELEMENT_NODE))
         node = Tandem.Utils.unwrap(node)
       return node
     )
@@ -95,9 +109,9 @@ class TandemLine extends LinkedList.Node
   renameEquivalent: ->
 
   wrapText: ->
-    Tandem.Utils.traversePreorder(@node, 0, (node) ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) =>
       node.normalize()
-      if node.nodeType == node.TEXT_NODE && node.nextSibling?
+      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == @node)
         span = node.ownerDocument.createElement('span')
         Tandem.Utils.wrap(span, node)
         node = span

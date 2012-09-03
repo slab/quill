@@ -337,7 +337,7 @@ describe('Utils', ->
       )
     )
   )
-
+  
 
   describe('traversePreorder', ->
     reset = ->
@@ -353,51 +353,51 @@ describe('Utils', ->
           </h2>
           <h3>
             <b>Five</b>
-            <i>Six</i>
           </h3>
         </div>
       '))
 
-    defaultTexts = ['OneTwoThreeFourFiveSix', 'OneTwo', 'One', 'Two', 'ThreeFour', 'Three', 'Four', 'FiveSix', 'Five', 'Six']
     # 0  3  6    1   5   9  
     # OneTwoThreeFourFiveSix
-    defaultIndexes = [0, 0, 0, 3, 6, 6, 11, 15, 15, 19]
+    expected = {
+      'OneTwo'     : 0
+      'One'        : 0
+      'Two'        : 3
+      'ThreeFour'  : 6
+      'Three'      : 6
+      'Four'       : 11
+      'Five'       : 15
+    }
 
     it('should traverse in preorder', -> 
       reset()
-      index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType != node.TEXT_NODE
-          expect(node.textContent).to.equal(defaultTexts[index])
-          index += 1
+        if node.nodeType == node.ELEMENT_NODE
+          expect(offset).to.equal(expected[node.textContent])
         return node
       )
     )
 
     it('should traverse with correct index', -> 
       reset()
-      index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType != node.TEXT_NODE
-          expect(offset).to.equal(defaultIndexes[index])
-          index += 1
+        if node.nodeType == node.ELEMENT_NODE
+          expect(offset).to.equal(expected[node.textContent])
         return node
       )
     )
 
     it('should handle rename', -> 
       reset()
-      index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType != node.TEXT_NODE
-          expect(node.textContent).to.equal(defaultTexts[index])
-          expect(offset).to.equal(defaultIndexes[index])
-          index += 1
-          node = Tandem.Utils.switchTag(node, 'SPAN')
+        if node.nodeType == node.ELEMENT_NODE
+          expect(offset).to.equal(expected[node.textContent])
+          if node.tagName != 'SPAN'
+            node = Tandem.Utils.switchTag(node, 'SPAN')
         return node
       )
       expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
-        <span>
+        <div>
           <span>
             <span>One</span>
             <span>Two</span>
@@ -408,9 +408,8 @@ describe('Utils', ->
           </span>
           <span>
             <span>Five</span>
-            <span>Six</span>
           </span>
-        </span>
+        </div>
       ')) 
     )
 
@@ -418,10 +417,8 @@ describe('Utils', ->
       reset()
       index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType != node.TEXT_NODE
-          expect(node.textContent).to.equal(defaultTexts[index])
-          expect(offset).to.equal(defaultIndexes[index])
-          index += 1
+        if node.nodeType == node.ELEMENT_NODE
+          expect(offset).to.equal(expected[node.textContent])
           if node.tagName == 'H2'
             node = Tandem.Utils.unwrap(node)
         return node
@@ -436,7 +433,6 @@ describe('Utils', ->
           <u>Four</u>
           <h3>
             <b>Five</b>
-            <i>Six</i>
           </h3>
         </div>
       '))

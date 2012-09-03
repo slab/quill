@@ -13,6 +13,41 @@ describe('Normalize', ->
       before: ''
       expected: '<div><br></div>'
     }, {
+      name: 'remove br from non-empty lines'
+      before: 
+        '<div>
+          <br>
+        </div>
+        <div>
+          <span>Text</span>
+          <br />
+        </div>'
+      expected: 
+        '<div>
+          <br>
+        </div>
+        <div>
+          <span>Text</span>
+        </div>'
+    }, {
+      name: 'break block elements'
+      before: 
+        '<div>
+          <div>
+            <span>Hey</span>
+          </div>
+          <h1>
+            <span>What</span>
+          </h1>
+        </div>'
+      expected: 
+        '<div>
+          <span>Hey</span>
+        </div>
+        <div>
+          <span>What</span>
+        </div>'
+    }, {
       name: 'remove redundant block elements'
       before:
         '<div>
@@ -30,24 +65,6 @@ describe('Normalize', ->
           </div>
         </div>'
       expected:
-        '<div>
-          <span>Hey</span>
-        </div>
-        <div>
-          <span>What</span>
-        </div>'
-    }, {
-      name: 'break block elements'
-      before: 
-        '<div>
-          <div>
-            <span>Hey</span>
-          </div>
-          <h1>
-            <span>What</span>
-          </h1>
-        </div>'
-      expected: 
         '<div>
           <span>Hey</span>
         </div>
@@ -86,7 +103,7 @@ describe('Normalize', ->
             <u>Underline</u>
           </b>
         </div>'
-      after:
+      expected:
         '<div>
           <b>
             <i>What</i>
@@ -103,7 +120,6 @@ describe('Normalize', ->
           </b>
         </div>'  
     }]
-
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
         editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
@@ -112,7 +128,7 @@ describe('Normalize', ->
       )
     )
   )
-
+  return
   describe('elements', ->
     editor = new Tandem.Editor('editor-container')
     tests = [{

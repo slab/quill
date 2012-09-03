@@ -48,14 +48,16 @@ class TandemDocument
   normalizeHtml: ->
     if @root.childNodes.length == 0
       div = @doc.createElement('div')
-      div.appendChild(@doc.createElement('br'))
       @root.appendChild(div)
       this.appendLine(div)
     else
       _.each(_.clone(@root.childNodes), (child) ->
-        if child.nodeType == child.TEXT_NODE
+        if child.nodeType != child.ELEMENT_NODE
           child.parentNode.removeChild(child)
+        else
+          Tandem.Utils.breakBlocks(child)
       )
+
 
 
   splitLine: (line, offset) ->
