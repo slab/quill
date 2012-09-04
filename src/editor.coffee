@@ -65,31 +65,33 @@ class TandemEditor extends EventEmitter2
 
   initContentListeners: ->
     @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
-      @currentSelection = this.getSelection()
-      return if @ignoreDomChanges
-      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-      originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
-      deltas = []
-      position = new Tandem.Position(this, event.srcElement.parentNode, 0)
-      startIndex = position.getIndex()
-      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-      insertedLength = 0
-      offsetLength = 0
-      dmp = new diff_match_patch()
-      diffs = dmp.diff_main(event.prevValue, event.newValue)
-      _.each(diffs, (diff) ->
-        if diff[0] == DIFF_EQUAL
-          deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
-          offsetLength += diff[1].length
-        if diff[0] == DIFF_INSERT
-          deltas.push(new JetInsert(diff[1], position.leaf.attributes))
-          insertedLength += diff[1].length
-        if diff[0] == DIFF_DELETE
-          offsetLength += diff[1].length
+      _.defer( =>
+        @currentSelection = this.getSelection()
+        return if @ignoreDomChanges
+        docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+        originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
+        deltas = []
+        position = new Tandem.Position(this, event.srcElement.parentNode, 0)
+        startIndex = position.getIndex()
+        deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+        insertedLength = 0
+        offsetLength = 0
+        dmp = new diff_match_patch()
+        diffs = dmp.diff_main(event.prevValue, event.newValue)
+        _.each(diffs, (diff) ->
+          if diff[0] == DIFF_EQUAL
+            deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
+            offsetLength += diff[1].length
+          if diff[0] == DIFF_INSERT
+            deltas.push(new JetInsert(diff[1], position.leaf.attributes))
+            insertedLength += diff[1].length
+          if diff[0] == DIFF_DELETE
+            offsetLength += diff[1].length
+        )
+        deltas.push(new JetRetain(startIndex + offsetLength, originalDocLength)) if startIndex < docLength
+        delta = new JetDelta(originalDocLength, docLength, deltas)
+        this.emit(this.events.USER_TEXT_CHANGE, delta)
       )
-      deltas.push(new JetRetain(startIndex + offsetLength, originalDocLength)) if startIndex < docLength
-      delta = new JetDelta(originalDocLength, docLength, deltas)
-      this.emit(this.events.USER_TEXT_CHANGE, delta)
     )
     @iframeDoc.body.addEventListener('keydown', (event) =>
       return if @ignoreDomChanges || event.which != 13

@@ -120,6 +120,7 @@ describe('Normalize', ->
           </b>
         </div>'  
     }]
+
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
         editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
@@ -128,7 +129,8 @@ describe('Normalize', ->
       )
     )
   )
-  return
+  
+  
   describe('elements', ->
     editor = new Tandem.Editor('editor-container')
     tests = [{
@@ -136,9 +138,9 @@ describe('Normalize', ->
       before:
         '<div>
           <strong>Strong</strong>
+          <del>Deleted</del>
           <em>Emphasis</em>
           <strike>Strike</strike>
-          <del>Deleted</del>
           <b>Bold</b>
           <i>Italic</i>
           <s>Strike</s>
@@ -147,8 +149,8 @@ describe('Normalize', ->
       expected:
         '<div>
           <b>Strong</b>
-          <i>Emphasis</i>
           <s>Deleted</s>
+          <i>Emphasis</i>
           <s>Strike</s>
           <b>Bold</b>
           <i>Italic</i>
@@ -211,7 +213,7 @@ describe('Normalize', ->
           <span>Hey</span>
         </div>'  
     }]
-    # TODO test disallowed tags
+
 
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->

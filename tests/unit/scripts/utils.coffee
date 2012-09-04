@@ -337,7 +337,7 @@ describe('Utils', ->
       )
     )
   )
-  
+
 
   describe('traversePreorder', ->
     reset = ->
@@ -415,7 +415,6 @@ describe('Utils', ->
 
     it('should handle unwrap', -> 
       reset()
-      index = 0
       Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
         if node.nodeType == node.ELEMENT_NODE
           expect(offset).to.equal(expected[node.textContent])

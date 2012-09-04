@@ -4,9 +4,6 @@
 TandemUtils = 
   # All block nodes inside nodes are moved out
   breakBlocks: (root) ->
-    BLOCK_TAGS = 
-    mother = root.parentNode
-  
     this.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE && _.indexOf(Tandem.Tags.BLOCK_TAGS, node.tagName, true) > -1
         toBreak = []
