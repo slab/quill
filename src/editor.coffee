@@ -71,6 +71,7 @@ class TandemEditor extends EventEmitter2
         docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
         originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
         deltas = []
+        @doc.buildLines()
         position = new Tandem.Position(this, event.srcElement.parentNode, 0)
         startIndex = position.getIndex()
         deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
@@ -91,12 +92,12 @@ class TandemEditor extends EventEmitter2
         deltas.push(new JetRetain(startIndex + offsetLength, originalDocLength)) if startIndex < docLength
         delta = new JetDelta(originalDocLength, docLength, deltas)
         this.emit(this.events.USER_TEXT_CHANGE, delta)
+        @currentSelection = this.getSelection()
       )
     )
     @iframeDoc.body.addEventListener('keydown', (event) =>
       _.defer( =>
         return if @ignoreDomChanges || event.which != 13
-        @currentSelection = this.getSelection()
         @ignoreDomChanges = true
         selection = @currentSelection
         startIndex = selection.start.getIndex()
@@ -107,6 +108,7 @@ class TandemEditor extends EventEmitter2
         deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
         delta = new JetDelta(docLength, docLength + 1, deltas)
         this.emit(this.events.USER_TEXT_CHANGE, delta)
+        @currentSelection = this.getSelection()
         _.defer( =>
           @doc.buildLines()
           @ignoreDomChanges = false
@@ -116,6 +118,7 @@ class TandemEditor extends EventEmitter2
 
   initSelectionListeners: ->
     checkSelectionChange = =>
+      return if @ignoreDomChanges
       selection = this.getSelection()
       if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
         this.emit(this.events.USER_SELECTION_CHANGE, selection)

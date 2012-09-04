@@ -9,6 +9,8 @@ class TandemToolbar extends EventEmitter2
       this.emit('update', attributes)
     ).on(@editor.events.API_TEXT_CHANGE, (delta) ->
       console.log 'api text change', delta
+    ).on(@editor.events.USER_TEXT_CHANGE, (delta) ->
+      console.log 'user text change', delta
     )
 
   applyAttribute: (name, value) ->
