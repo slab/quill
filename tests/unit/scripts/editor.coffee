@@ -148,7 +148,9 @@ describe('Editor', ->
 
     reset = (html = originalHtml) ->
       $('#editor-container').html(Tandem.Utils.cleanHtml(html))
-      return new Tandem.Editor('editor-container')
+      editor = new Tandem.Editor('editor-container')
+      editor.ignoreDomChanges = true
+      return editor
 
     tests = [{
       target: 'single node'

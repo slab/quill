@@ -66,8 +66,8 @@ class TandemEditor extends EventEmitter2
   initContentListeners: ->
     @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
       _.defer( =>
-        @currentSelection = this.getSelection()
         return if @ignoreDomChanges
+        @currentSelection = this.getSelection()
         docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
         originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
         deltas = []
@@ -94,22 +94,24 @@ class TandemEditor extends EventEmitter2
       )
     )
     @iframeDoc.body.addEventListener('keydown', (event) =>
-      return if @ignoreDomChanges || event.which != 13
-      @currentSelection = this.getSelection()
-      @ignoreDomChanges = true
-      selection = @currentSelection
-      startIndex = selection.start.getIndex()
-      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-      deltas = []
-      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-      deltas.push(new JetInsert("\n"))
-      deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
-      delta = new JetDelta(docLength, docLength + 1, deltas)
-      this.emit(this.events.USER_TEXT_CHANGE, delta)
-      setTimeout(=>
-        @doc.buildLines()
-        @ignoreDomChanges = false
-      , 1)
+      _.defer( =>
+        return if @ignoreDomChanges || event.which != 13
+        @currentSelection = this.getSelection()
+        @ignoreDomChanges = true
+        selection = @currentSelection
+        startIndex = selection.start.getIndex()
+        docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+        deltas = []
+        deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+        deltas.push(new JetInsert("\n"))
+        deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
+        delta = new JetDelta(docLength, docLength + 1, deltas)
+        this.emit(this.events.USER_TEXT_CHANGE, delta)
+        _.defer( =>
+          @doc.buildLines()
+          @ignoreDomChanges = false
+        )
+      )
     )
 
   initSelectionListeners: ->
