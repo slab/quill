@@ -38,7 +38,6 @@ class TandemPosition
       @index = @leafNode
       @leafNode = @editor.iframeDoc.body.firstChild
     [@leafNode, @offset] = TandemPosition.findLeafNode(@leafNode, @offset)
-    @leaf = @editor.doc.findLeaf(@leafNode)
       
   getIndex: ->
     return @index if @index?
@@ -50,6 +49,11 @@ class TandemPosition
         @index += node.textContent.length + (if Tandem.Line.isLineNode(node) then 1 else 0) # Account for newline char
       node = node.parentNode
     return @index
+
+  getLeaf: ->
+    return @leaf if @leaf?
+    @leaf = @editor.doc.findLeaf(@leafNode)
+    return @leaf
 
 
 

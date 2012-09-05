@@ -15,34 +15,34 @@ describe('Range', ->
         return new Tandem.Position(editor, i)
       )
 
-      expect(positions[0].leaf.text).to.equal('12')
+      expect(positions[0].leafNode.textContent).to.equal('12')
       expect(positions[0].offset).to.equal(0)
 
-      expect(positions[1].leaf.text).to.equal('12')
+      expect(positions[1].leafNode.textContent).to.equal('12')
       expect(positions[1].offset).to.equal(1)
 
-      expect(positions[2].leaf.text).to.equal('34')
+      expect(positions[2].leafNode.textContent).to.equal('34')
       expect(positions[2].offset).to.equal(0)
 
-      expect(positions[3].leaf.text).to.equal('34')
+      expect(positions[3].leafNode.textContent).to.equal('34')
       expect(positions[3].offset).to.equal(1)
 
-      expect(positions[4].leaf.text).to.equal('34')
+      expect(positions[4].leafNode.textContent).to.equal('34')
       expect(positions[4].offset).to.equal(2)
 
-      expect(positions[5].leaf.text).to.equal('56')
+      expect(positions[5].leafNode.textContent).to.equal('56')
       expect(positions[5].offset).to.equal(0)
 
-      expect(positions[6].leaf.text).to.equal('56')
+      expect(positions[6].leafNode.textContent).to.equal('56')
       expect(positions[6].offset).to.equal(1)
 
-      expect(positions[7].leaf.text).to.equal('78')
+      expect(positions[7].leafNode.textContent).to.equal('78')
       expect(positions[7].offset).to.equal(0)
 
-      expect(positions[8].leaf.text).to.equal('78')
+      expect(positions[8].leafNode.textContent).to.equal('78')
       expect(positions[8].offset).to.equal(1)
 
-      expect(positions[9].leaf.text).to.equal('78')
+      expect(positions[9].leafNode.textContent).to.equal('78')
       expect(positions[9].offset).to.equal(2)
     )
   )

@@ -64,6 +64,18 @@ class TandemEditor extends EventEmitter2
     return iframe
 
   initContentListeners: ->
+    @iframeDoc.body.addEventListener('DOMSubtreeModified', (event) ->
+      # Get selection even though the document is messed up
+      # Avoid position needing a leaf...
+
+      # Find line selection is on, add to list of lines.
+      # Add first and last line to list of lines
+
+      # Check for changes on/around line
+      # Normalize changed lines
+    )
+
+    ###
     @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
       _.defer( =>
         return if @ignoreDomChanges
@@ -115,6 +127,7 @@ class TandemEditor extends EventEmitter2
         )
       )
     )
+    ###
 
   initSelectionListeners: ->
     checkSelectionChange = =>
@@ -267,10 +280,13 @@ class TandemEditor extends EventEmitter2
     [line, offset] = @doc.findLineAtOffset(startIndex)
     @doc.splitLine(line, offset)
 
+  # insertTextAt: (Number startIndex, String text) ->
+  # insertTextAt: (TandemRange startIndex, String text) ->
   insertTextAt: (startIndex, text) ->
     position = Tandem.Position.makePosition(this, startIndex)
     startIndex = position.getIndex()
-    if _.keys(position.leaf.attributes).length > 0
+    leaf = position.getLeaf()
+    if _.keys(leaf.attributes).length > 0
       [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex)
       line = @doc.findLine(lineNode)
       [beforeNode, afterNode] = line.splitContents(lineOffset)
@@ -278,7 +294,7 @@ class TandemEditor extends EventEmitter2
       span.textContent = text
       lineNode.insertBefore(span, afterNode)
     else
-      position.leaf.setText(position.leaf.text.substr(0, position.offset) + text + position.leaf.text.substr(position.offset))
+      leaf.setText(leaf.text.substr(0, position.offset) + text + leaf.text.substr(position.offset))
     
   normalize: ->
     this.preserveSelection(null, 0, =>

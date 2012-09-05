@@ -12,7 +12,6 @@ class TandemRange
     else
       start = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
       end = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
-    return null if !start.leaf? || !end.leaf?
     return new TandemRange(editor, start, end)
 
   # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
@@ -24,7 +23,7 @@ class TandemRange
 
   equals: (range) ->
     return false unless range?
-    return range.start.leaf == @start.leaf && range.end.leaf == @end.leaf && range.start.offset == @start.offset && range.end.offset == @end.offset
+    return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getAttributeIntersection: ->
     attributes = null
@@ -44,29 +43,29 @@ class TandemRange
     return attributes || {}
 
   getLeaves: ->
-    itr = new Tandem.LeafIterator(@start.leaf, @end.leaf)
+    itr = new Tandem.LeafIterator(@start.getLeaf(), @start.getLeaf())
     arr = itr.toArray()
     return arr
 
   getLeafNodes: ->
     range = this.getRangy()
     if range.collapsed
-      return [@start.leaf.node]
+      return [@start.leafNode]
     else
       nodes = _.map(range.getNodes([3]), (node) -> 
         return node.parentNode
       )
-      nodes.pop() if nodes[nodes.length - 1] != @end.leaf.node || @end.offset == 0
+      nodes.pop() if nodes[nodes.length - 1] != @end.leafNode || @end.offset == 0
       return nodes
 
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe.contentWindow)
-    range.setStart(@start.leaf.node.firstChild, @start.offset)
-    range.setEnd(@end.leaf.node.firstChild, @end.offset)
+    range.setStart(@start.leafNode.firstChild, @start.offset)
+    range.setEnd(@end.leafNode.firstChild, @end.offset)
     return range
 
   isCollapsed: ->
-    return @start.leaf == @end.leaf && @start.offset == @end.offset
+    return @start.leafNode == @end.leafNode && @start.offset == @end.offset
 
 
 window.Tandem ||= {}
