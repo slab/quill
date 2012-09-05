@@ -71,7 +71,7 @@ class TandemEditor extends EventEmitter2
         docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
         originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
         deltas = []
-        @doc.buildLines()
+        this.normalize()
         position = new Tandem.Position(this, event.srcElement.parentNode, 0)
         startIndex = position.getIndex()
         deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
@@ -110,7 +110,7 @@ class TandemEditor extends EventEmitter2
         this.emit(this.events.USER_TEXT_CHANGE, delta)
         @currentSelection = this.getSelection()
         _.defer( =>
-          @doc.buildLines()
+          this.normalize()
           @ignoreDomChanges = false
         )
       )
@@ -153,7 +153,7 @@ class TandemEditor extends EventEmitter2
         while curLine? && curLine != endLine
           this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
           curLine = curLine.nextSibling
-      @doc.buildLines()
+      this.normalize()
     )
     if emitEvent
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
@@ -224,7 +224,7 @@ class TandemEditor extends EventEmitter2
 
     this.preserveSelection(startPos, 0 - length, =>
       fragment = Tandem.Utils.extractNodes(this, startIndex, endIndex)
-      @doc.buildLines()
+      this.normalize()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -259,7 +259,7 @@ class TandemEditor extends EventEmitter2
           startIndex += 1
         position = null
       )
-      @doc.buildLines()
+      this.normalize()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -280,8 +280,13 @@ class TandemEditor extends EventEmitter2
     else
       position.leaf.setText(position.leaf.text.substr(0, position.offset) + text + position.leaf.text.substr(position.offset))
     
+  normalize: ->
+    this.preserveSelection(null, 0, =>
+      @doc.buildLines()
+    )
+
   preserveSelection: (modificationStart, charAdditions, fn) ->
-    currentSelection = this.getSelection()
+    @currentSelection = this.getSelection()
     if currentSelection?
       [selStart, selEnd] = this.transformSelection(modificationStart, currentSelection, charAdditions)
       fn()
@@ -293,7 +298,7 @@ class TandemEditor extends EventEmitter2
       fn()
 
   transformSelection: (modificationStart, selectionRange, charAdditions) ->
-    modPos = modificationStart.getIndex()
+    modPos = if modificationStart? then modificationStart.getIndex() else 0
     selStart = selectionRange.start.getIndex()
     selEnd = selectionRange.end.getIndex()
     selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart

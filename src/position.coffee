@@ -32,13 +32,13 @@ class TandemPosition
 
   # constructor: (TandemEditor editor, Object node, Number offset) ->
   # constructor: (TandemEditor editor, Number index) -> 
-  constructor: (@editor, node, @offset) ->
-    if _.isNumber(node)
-      @offset = node
-      @index = node
-      node = @editor.iframeDoc.body.firstChild
-    [leafNode, @offset] = TandemPosition.findLeafNode(node, @offset)
-    @leaf = @editor.doc.findLeaf(leafNode)
+  constructor: (@editor, @leafNode, @offset) ->
+    if _.isNumber(@leafNode)
+      @offset = @leafNode
+      @index = @leafNode
+      @leafNode = @editor.iframeDoc.body.firstChild
+    [@leafNode, @offset] = TandemPosition.findLeafNode(@leafNode, @offset)
+    @leaf = @editor.doc.findLeaf(@leafNode)
       
   getIndex: ->
     return @index if @index?
