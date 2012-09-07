@@ -11,7 +11,7 @@
     .editor-wrapper
       #editor-container.editor-container
         .line<>
-          %span<> Line 1
+          %span<> iPhone DEMO
           %span<> Word1
         .line<>
           %span<> Line 2
@@ -46,7 +46,11 @@
 
     editor.on(editor.events.USER_SELECTION_CHANGE, function(s){
       attributes = s.getAttributeIntersection()
-      $('#ios-bridge').attr('src', 'ios-message://'+JSON.stringify(attributes))
-    });
 
-  %iframe{:display => 'none', :id => 'ios-bridge'}
+      var data = {hello: 'there'};
+
+      $.post('/ios-message', {json: JSON.stringify(data)}, function(data) {
+        alert('got response: ' + data); 
+      });
+
+    });
