@@ -5,7 +5,6 @@
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
     %meta{:name=> 'viewport', :content => 'initial-scale=1.0, width=device-width, user-scalable=no'}
-    %script{:type => 'text/javascript', :src => 'http://localhost:8080/target/target-script-min.js'}
 
 %body
   #content-container
@@ -28,12 +27,19 @@
   %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
   %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
   %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
   %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
   %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+  %script{:type => 'text/javascript', :src => '../src/line.js'}
   %script{:type => 'text/javascript', :src => '../src/document.js'}
+  %script{:type => 'text/javascript', :src => '../src/position.js'}
+  %script{:type => 'text/javascript', :src => '../src/range.js'}
   %script{:type => 'text/javascript', :src => '../src/editor.js'}
   %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+  %script{:type => 'text/javascript', :src => '../src/debug.js'}
+
   :javascript
     editor = new Tandem.Editor('editor-container');
     toolbar = new Tandem.Toolbar(editor)
