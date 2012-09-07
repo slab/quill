@@ -17,162 +17,131 @@ TandemUtils =
       when 'underline'  then return doc.createElement('u')
       else                   return doc.createElement('span')
 
+  extractNodes: (editor, startIndex, endIndex) ->
+    [startLine, startOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, startIndex)
+    [endLine, endOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, endIndex)
+    [leftStart, rightStart] = Tandem.Utils.splitNode(startLine, startOffset, true)
+    if startLine == endLine
+      endLine = rightStart
+      endOffset -= leftStart.textContent.length if leftStart? && startLine != rightStart
+    [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLine, endOffset, true)
+  
+    fragment = editor.iframeDoc.createDocumentFragment()
+    while rightStart != rightEnd
+      next = rightStart.nextSibling
+      fragment.appendChild(rightStart)
+      rightStart = next    
+
+    Tandem.Utils.mergeNodes(leftStart, rightEnd) if leftStart? && rightEnd?
+
+    return fragment
+
   getAttributeForContainer: (container) ->
     switch container.tagName
       when 'B' then return 'bold'
       when 'I' then return 'italic'
       when 'S' then return 'strike'
       when 'U' then return 'underline'
-      else          return ''
+      else          return null
 
+  getChildAtOffset: (node, offset) ->
+    child = node.firstChild
+    while offset > child.textContent.length
+      offset -= child.textContent.length
+      offset -= 1 if Tandem.Line.isLineNode(child)
+      child = child.nextSibling
+    return [child, offset]
 
-  Attribute:
-    getTagName: (attribute) ->
-      switch (attribute)
-        when 'bold'       then return 'B'
-        when 'italic'     then return 'I'
-        when 'strike'     then return 'S'
-        when 'underline'  then return 'U'
-        else return 'SPAN'
+  isTextNodeParent: (node) ->
+    return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 
-  Node:
-    mergeNodes: (node1, node2) ->
-      children = _.clone(node2.childNodes)
-      _.each(children, (child) ->
-        node1.appendChild(child)
-      )
-      node2.parentNode.removeChild(node2)
-      return node1
+  splitNode: (node, offset, force = false) ->
+    if offset > node.textContent.length
+      throw new Error('Splitting at offset greater than node length')
 
-    extract: (editor, startIndex, endIndex) ->
-      [startLine, startOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, startIndex)
-      [endLine, endOffset] = Tandem.Utils.Node.getChildAtOffset(editor.iframeDoc.body, endIndex)
-      [leftStart, rightStart] = Tandem.Utils.Node.split(startLine, startOffset, true)
-      if startLine == endLine
-        endLine = rightStart
-        endOffset -= leftStart.textContent.length if leftStart? && startLine != rightStart
-      [leftEnd, rightEnd] = Tandem.Utils.Node.split(endLine, endOffset, true)
-    
-      fragment = editor.iframeDoc.createDocumentFragment()
-      while rightStart != rightEnd
-        next = rightStart.nextSibling
-        fragment.appendChild(rightStart)
-        rightStart = next    
+    # Check if split necessary
+    if !force
+      if offset == 0
+        return [node.previousSibling, node]
+      if offset == node.textContent.length
+        return [node, node.nextSibling]
 
-      Tandem.Utils.Node.mergeNodes(leftStart, rightEnd) if leftStart? && rightEnd?
+    left = node
+    right = node.cloneNode(false)
+    node.parentNode.insertBefore(right, left.nextSibling)
 
-      return fragment
+    if TandemUtils.isTextNodeParent(node)
+      # Text split
+      beforeText = node.textContent.substring(0, offset)
+      afterText = node.textContent.substring(offset)
+      left.textContent = beforeText
+      right.textContent = afterText
+      return [left, right]
+    else
+      # Node split
+      [child, offset] = TandemUtils.getChildAtOffset(node, offset)
+      [childLeft, childRight] = TandemUtils.splitNode(child, offset)
+      while childRight != null
+        nextRight = childRight.nextSibling
+        right.appendChild(childRight)
+        childRight = nextRight
+      return [left, right]
 
-    getAncestorAttribute: (node, attribute, includeSelf = true) ->
-      tagName = TandemUtils.Attribute.getTagName(attribute)
-      ancestors = Tandem.Utils.Node.getAncestorNodes(node, (node) -> 
-        return node.tagName == tagName
-      , includeSelf)
-      return if ancestors.length > 0 then ancestors[ancestors.length - 1] else null
+  mergeNodes: (node1, node2) ->
+    children = _.clone(node2.childNodes)
+    _.each(children, (child) ->
+      node1.appendChild(child)
+    )
+    node2.parentNode.removeChild(node2)
+    return node1
 
-    getAncestorNodes: (node, atRoot = Tandem.Line.isLineNode, includeSelf = true) ->
-      ancestors = []
-      ancestors.push(node) if includeSelf && atRoot(node)
-      while node? && !atRoot(node)
-        ancestors.push(node)
-        node = node.parentNode
-      ancestors.push(node)
-      return if node? then ancestors else []
+  removeAttributeFromSubtree: (subtree, attribute) ->
+    children = _.clone(subtree.childNodes)
+    if Tandem.Utils.getAttributeForContainer(subtree) == attribute
+      Tandem.Utils.unwrap(subtree)
+    _.each(children, (child) ->
+      Tandem.Utils.removeAttributeFromSubtree(child, attribute)
+    )
 
-    getAttributes: (node) ->
-      return _.reduce(TandemUtils.Node.getAncestorNodes(node), (attributes, ancestor) ->
-        switch ancestor.tagName
-          when 'B' then attributes['bold'] = true
-          when 'I' then attributes['italic'] = true
-          when 'S' then attributes['strike'] = true
-          when 'U' then attributes['underline'] = true
-        return attributes
-      , {})
+  switchTag: (node, newTag) ->
+    return if node.tagName == newTag
+    newNode = node.ownerDocument.createElement(newTag)
+    _.each(_.clone(node.childNodes), (child) ->
+      newNode.appendChild(child)
+    )
+    node.parentNode.replaceChild(newNode, node)
+    return newNode
 
-    getChildAtOffset: (node, offset) ->
-      child = node.firstChild
-      while offset > child.textContent.length
-        offset -= child.textContent.length
-        offset -= 1 if Tandem.Line.isLineNode(child)
-        child = child.nextSibling
-      return [child, offset]
+  traversePreorder: (root, offset, fn, context = fn, args...) ->
+    root = fn.apply(context, [root, offset].concat(args))
+    cur = root.firstChild
+    while cur?
+      nextOffset = offset + cur.textContent.length
+      nextSibling = cur.nextSibling
+      cur = TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))
+      if cur? && cur.nextSibling == nextSibling
+        cur = nextSibling
+        offset = nextOffset
+    return root
 
-    getLine: (node) ->
-      ancestors = TandemUtils.Node.getAncestorNodes(node)
-      return if ancestors.length > 0 then ancestors[ancestors.length - 1] else null
-
-    isTextNodeParent: (node) ->
-      return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
-
-    removeKeepingChildren: (doc, node) ->
-      children = _.clone(node.childNodes)
-      if _.all(children, (child) -> child.firstChild == null)
-        span = doc.createElement('span')
-        _.each(children, (child) ->
-          span.appendChild(child)
-        )
-        children = [span]
-      _.each(children, (child) ->
-        node.parentNode.insertBefore(child, node)
-      )
-      node.parentNode.removeChild(node)
-
-    removeAttributeFromSubtree: (subtree, attribute) ->
-      children = _.clone(subtree.childNodes)
-      if Tandem.Utils.getAttributeForContainer(subtree) == attribute
-        Tandem.Utils.Node.removeKeepingChildren(subtree.ownerDocument, subtree)
-      _.each(children, (child) ->
-        Tandem.Utils.Node.removeAttributeFromSubtree(child, attribute)
-      )
-
-    split: (node, offset, force = false) ->
-      if offset > node.textContent.length
-        throw new Error('Splitting at offset greater than node length')
-
-      # Check if split necessary
-      if !force
-        if offset == 0
-          return [node.previousSibling, node]
-        if offset == node.textContent.length
-          return [node, node.nextSibling]
-
-      left = node
-      right = node.cloneNode(false)
-      node.parentNode.insertBefore(right, left.nextSibling)
-
-      if TandemUtils.Node.isTextNodeParent(node)
-        # Text split
-        beforeText = node.textContent.substring(0, offset)
-        afterText = node.textContent.substring(offset)
-        left.textContent = beforeText
-        right.textContent = afterText
-        return [left, right]
-      else
-        # Node split
-        [child, offset] = TandemUtils.Node.getChildAtOffset(node, offset)
-        [childLeft, childRight] = TandemUtils.Node.split(child, offset)
-        while childRight != null
-          nextRight = childRight.nextSibling
-          right.appendChild(childRight)
-          childRight = nextRight
-        return [left, right]
-
-    traverseDeep: (startNode, fn) ->
+  traverseSiblings: (startNode, endNode, fn) ->
+    while startNode?
+      nextSibling = startNode.nextSibling
       fn(startNode)
-      TandemUtils.Node.traverseSiblings(startNode.firstChild, null, (node) ->
-        TandemUtils.Node.traverseDeep(node, fn)
-      )
+      break if startNode == endNode
+      startNode = nextSibling
 
-    traverseSiblings: (startNode, endNode, fn) ->
-      while startNode?
-        nextSibling = startNode.nextSibling
-        fn(startNode)
-        break if startNode == endNode
-        startNode = nextSibling
+  unwrap: (node) ->
+    next = node.firstChild
+    _.each(_.clone(node.childNodes), (child) ->
+      node.parentNode.insertBefore(child, node)
+    )
+    node.parentNode.removeChild(node)
+    return next
 
-    wrap: (wrapper, node) ->
-      node.parentNode.insertBefore(wrapper, node)
-      wrapper.appendChild(node)
+  wrap: (wrapper, node) ->
+    node.parentNode.insertBefore(wrapper, node)
+    wrapper.appendChild(node)
 
 
 

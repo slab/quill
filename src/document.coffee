@@ -8,7 +8,7 @@ class TandemDocument
   constructor: (@editor) ->
     @doc = @editor.iframeDoc
     @root = @doc.body
-    this.rebuildLines()
+    this.buildLines()
 
   appendLine: (lineNode) ->
     line = new Tandem.Line(this, lineNode)
@@ -17,6 +17,9 @@ class TandemDocument
     return line
 
   buildLines: ->
+    @lines = new LinkedList()
+    @lineMap = {}
+    this.normalizeHtml()
     _.each(@root.childNodes, (node) =>
       this.appendLine(node)
     )
@@ -30,6 +33,7 @@ class TandemDocument
     lineNode = node.parentNode
     while lineNode? && !Tandem.Line.isLineNode(lineNode)
       lineNode = lineNode.parentNode
+    return null if !lineNode?
     line = this.findLine(lineNode)
     return line.findLeaf(node)
 
@@ -37,40 +41,25 @@ class TandemDocument
     return @lineMap[node.id]
 
   findLineAtOffset: (index) ->
-    [lineNode, offset] = Tandem.Utils.Node.getChildAtOffset(@root, index)
+    [lineNode, offset] = Tandem.Utils.getChildAtOffset(@root, index)
     line = this.findLine(lineNode)
     return [line, offset]
 
   normalizeHtml: ->
-    ### Rules:
-    - All direct children are divs with class line and an id in the form "tandem-#{counter}"
-    - Newline are represented by <div> only. For newline only lines, it's <div><br /><div>
-    - An empty document still have one <div> container
-    - Only allowed sub-nodes are <b>, <i>, <s>, <u>, <span>, <br />, Otherwise tags are stripped
-      - Exception: Equivalent tags are converted: <strong> -> <b>
-    - No HTML text nodes allowed, unformatted text are wrapped in spans
-    ### 
-    
     if @root.childNodes.length == 0
       div = @doc.createElement('div')
       div.appendChild(@doc.createElement('br'))
       @root.appendChild(div)
-      this.appendLine(div, 0)
+      this.appendLine(div)
+    else
+      _.each(_.clone(@root.childNodes), (child) ->
+        if child.nodeType == child.TEXT_NODE
+          child.parentNode.removeChild(child)
+      )
 
-    # Flatten block elements
-    # Make all block elements div
-    # Normalize all inline block tags
-
-  normalizeNodeHtml: (node) ->
-
-  rebuildLines: ->
-    @lines = new LinkedList()
-    @lineMap = {}
-    this.normalizeHtml()
-    this.buildLines()
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Tandem.Utils.Node.split(line.node, offset, true)
+    [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     line.rebuild()
     newLine = new Tandem.Line(this, lineNode2)

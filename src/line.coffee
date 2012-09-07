@@ -8,7 +8,7 @@ class TandemLine extends LinkedList.Node
   @counter    : 0
 
   @isLineNode: (node) ->
-    return node.classList.contains(TandemLine.CLASS_NAME)
+    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
 
 
   constructor: (@doc, @node) ->
@@ -23,25 +23,36 @@ class TandemLine extends LinkedList.Node
       nodeAttributes = _.clone(attributes)
       attr = Tandem.Utils.getAttributeForContainer(node)
       nodeAttributes[attr] = true if attr?
-      if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
-        @leaves.push(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
+      if Tandem.Leaf.isLeafNode(node)
+        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
         @numLeaves += 1
       else
         this.buildLeaves(node, nodeAttributes)
     )
 
+  breakBlocks: ->
+
+
   findLeaf: (leafNode) ->
-    for leaf in @leaves when leaf.node == leafNode
-      return leaf
+    curLeaf = @leaves.first
+    while curLeaf?
+      return curLeaf if curLeaf.node == leafNode
+      curLeaf = curLeaf.next
     return null
 
   normalizeHtml: ->
+    this.breakBlocks()
+    this.renameEquivalent()
     this.mergeAdjacent()
+    this.removeRedundant()
     this.wrapText()
-    # Combine adjacent nodes with same tagname
+
+  splitContents: (offset) ->
+    [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
+    return Tandem.Utils.splitNode(node, offset)
 
   toDelta: ->
-    deltas = _.map(@leaves, (leaf) ->
+    deltas = _.map(@leaves.toArray(), (leaf) ->
       return new JetInsert(leaf.text, leaf.attributes)
     )
     delta = new JetDelta(0, @length, deltas)
@@ -50,11 +61,11 @@ class TandemLine extends LinkedList.Node
 
 
   rebuild: ->
-    @leaves = []
+    # TODO memory leak issue?
+    @leaves = new LinkedList()
     @numLeaves = 0
-    @attributes = {}
     this.normalizeHtml()
-    this.buildLeaves(@node, @attributes)
+    this.buildLeaves(@node, {})
     this.resetContent()
 
   resetContent: ->
@@ -66,19 +77,31 @@ class TandemLine extends LinkedList.Node
   mergeAdjacent: (node = @node.firstChild) ->
     while node? && node.nextSibling?
       next = node.nextSibling
-      if Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
-        node = Tandem.Utils.Node.mergeNodes(node, next)
+      if node.tagName == next.tagName && Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
+        node = Tandem.Utils.mergeNodes(node, next)
       else
         node = next
         _.each(_.clone(node.childNodes), (childNode) =>
           this.mergeAdjacent(node)
         )
 
+  removeRedundant: ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) ->
+      if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType != child.TEXT_NODE))
+        node = Tandem.Utils.unwrap(node)
+      return node
+    )
+
+  renameEquivalent: ->
+
   wrapText: ->
-    Tandem.Utils.Node.traverseDeep(@node, (node) ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) ->
       node.normalize()
       if node.nodeType == node.TEXT_NODE && node.nextSibling?
-        Tandem.Utils.Node.wrap(node.ownerDocument.createElement('span'), node)
+        span = node.ownerDocument.createElement('span')
+        Tandem.Utils.wrap(span, node)
+        node = span
+      return node
     )
 
 

@@ -338,13 +338,13 @@ describe('Editor', ->
     }]
 
     _.each(tests, (test) ->
-      _.each({apply: true, remove: false}, (name, truth) ->
+      _.each({apply: true, remove: false}, (truth, name) ->
         it("should #{name} to #{test.target}", ->
           editor = reset()
           editor.applyAttribute(test.start, test.length, 'bold', truth)
           delta = editor.doc.toDelta()
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
-          editor.doc.rebuildLines()
+          editor.doc.buildLines()
           expect(delta).to.deep.equal(editor.doc.toDelta())
         )
       )
@@ -356,7 +356,7 @@ describe('Editor', ->
     reset = ->
       $('#editor-container').html(Tandem.Utils.cleanHtml(
         '<div>
-          <b>123</b>
+          <span>123</span>
           <i>456</i>
         </div>'
       ))
@@ -368,8 +368,19 @@ describe('Editor', ->
       text: 'A'
       expected: 
         '<div>
-          <b>1A23</b>
+          <span>1A23</span>
           <i>456</i>
+        </div>'
+    }, {
+      name: 'should insert text inside formatted tags'
+      index: 6
+      text: 'A'
+      expected: 
+        '<div>
+          <span>123</span>
+          <i>4</i>
+          <span>A</span>
+          <i>56</i>
         </div>'
     }, {
       name: 'should insert newline character'
@@ -377,10 +388,10 @@ describe('Editor', ->
       text: "\n"
       expected: 
         '<div>
-          <b>1</b>
+          <span>1</span>
         </div>
         <div>
-          <b>23</b>
+          <span>23</span>
           <i>456</i>
         </div>'
     }, {
@@ -389,10 +400,10 @@ describe('Editor', ->
       text: "A\nB"
       expected: 
         '<div>
-          <b>1A</b>
+          <span>1A</span>
         </div>
         <div>
-          <b>B23</b>
+          <span>B23</span>
           <i>456</i>
         </div>'
     }, {
@@ -401,13 +412,13 @@ describe('Editor', ->
       text: "A\nB\nC"
       expected: 
         '<div>
-          <b>1A</b>
+          <span>1A</span>
         </div>
         <div>
-          <b>B</b>
+          <span>B</span>
         </div>
         <div>
-          <b>C23</b>
+          <span>C23</span>
           <i>456</i>
         </div>'
     }, {
@@ -418,7 +429,7 @@ describe('Editor', ->
         '<div>
         </div>
         <div>
-          <b>123</b>
+          <span>123</span>
           <i>456</i>
         </div>'
     }, {
@@ -427,12 +438,12 @@ describe('Editor', ->
       text: "A\n\nC"
       expected: 
         '<div>
-          <b>1A</b>
+          <span>1A</span>
         </div>
         <div>
         </div>
         <div>
-          <b>C23</b>
+          <span>C23</span>
           <i>456</i>
         </div>'
     }]
@@ -444,7 +455,7 @@ describe('Editor', ->
         editor.insertAt(test.index, test.text)
         delta = editor.doc.toDelta()
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
-        editor.doc.rebuildLines()
+        editor.doc.buildLines()
         expect(delta).to.deep.equal(editor.doc.toDelta())
       )
     )
@@ -532,7 +543,6 @@ describe('Editor', ->
       expect(editor.iframeDoc.body.childNodes.length).to.equal(1)
     )
   )
-  
 )
 
 

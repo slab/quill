@@ -82,7 +82,7 @@ class TandemEditor extends EventEmitter2
           deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
           offsetLength += diff[1].length
         if diff[0] == DIFF_INSERT
-          deltas.push(new JetInsert(diff[1]))
+          deltas.push(new JetInsert(diff[1], position.leaf.attributes))
           insertedLength += diff[1].length
         if diff[0] == DIFF_DELETE
           offsetLength += diff[1].length
@@ -95,7 +95,7 @@ class TandemEditor extends EventEmitter2
       return if @ignoreDomChanges || event.which != 13
       @currentSelection = this.getSelection()
       @ignoreDomChanges = true
-      selection = this.getSelection()
+      selection = @currentSelection
       startIndex = selection.start.getIndex()
       docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
       deltas = []
@@ -105,6 +105,7 @@ class TandemEditor extends EventEmitter2
       delta = new JetDelta(docLength, docLength + 1, deltas)
       this.emit(this.events.USER_TEXT_CHANGE, delta)
       setTimeout(=>
+        @doc.buildLines()
         @ignoreDomChanges = false
       , 1)
     )
@@ -112,13 +113,127 @@ class TandemEditor extends EventEmitter2
   initSelectionListeners: ->
     checkSelectionChange = =>
       selection = this.getSelection()
-      if selection != @currentSelection && !selection.equals(@currentSelection)
+      if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
 
     @iframeDoc.body.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
     @iframeDoc.body.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
+
+
+  # applyAttribute: (TandemRange range, String attr, Mixed value) ->
+  # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
+  applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
+    oldIgnoreDomChange = @ignoreDomChanges
+    @ignoreDomChanges = true
+    if !_.isNumber(startIndex)
+      [range, attr, value] = [startIndex, length, attr]
+      startIndex = range.start.getIndex()
+      length = range.end.getIndex() - startIndex
+    else
+      range = new Tandem.Range(this, startIndex, startIndex + length)
+
+    this.preserveSelection(range.start, 0, =>
+      [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex)
+      [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex + length)
+      if startLine == endLine
+        this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
+      else
+        this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
+        this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
+        curLine = startLine.nextSibling
+        while curLine? && curLine != endLine
+          this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
+          curLine = curLine.nextSibling
+      @doc.buildLines()
+    )
+    if emitEvent
+      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
+      attribute = {}
+      attribute[attr] = value
+      deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
+      deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
+      delta = new JetDelta(docLength, docLength, deltas)
+      this.emit(this.events.API_TEXT_CHANGE, delta)
+    @ignoreDomChanges = oldIgnoreDomChange
+
+  applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
+    return if startOffset == endOffset
+    line = @doc.findLine(lineNode)
+    [prevNode, startNode] = line.splitContents(startOffset)
+    [endNode, nextNode] = line.splitContents(endOffset)
+
+    if value == true
+      fragment = @iframeDoc.createDocumentFragment()
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+        fragment.appendChild(node)
+      )
+      attrNode = Tandem.Utils.createContainerForAttribute(@iframeDoc, attr)
+      attrNode.appendChild(fragment)
+      lineNode.insertBefore(attrNode, nextNode)
+      line.rebuild()
+    else
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+        Tandem.Utils.removeAttributeFromSubtree(node, attr)
+      )
+
+  applyDelta: (delta) ->
+    index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
+    offset = 0      # Tracks how many characters inserted to correctly offset new text
+    _.each(delta.deltas, (delta) =>
+      if JetDelta.isInsert(delta)
+        this.insertAt(index + offset, delta.text, false)
+        _.each(delta.attributes, (value, attr) =>
+          this.applyAttribute(index + offset, delta.text.length, attr, value, false)
+        )
+        offset += delta.length
+      else if JetDelta.isRetain(delta)
+        if delta.start > index
+          this.deleteAt(index + offset, delta.start - index, false)
+          offset -= (delta.start - index)
+        else
+          _.each(delta.attributes, (value, attr) =>
+            if delta.end - delta.start > 0
+              this.applyAttribute(index + offset, delta.end - delta.start, attr, value, false)
+          )
+        index = delta.end
+      else
+        console.warn('Unrecognized type in delta', delta)
+    )
+    # If end of text was deleted
+    if delta.endLength < delta.startLength + offset
+      this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength)
+
+  deleteAt: (startIndex, length) ->
+    oldIgnoreDomChange = @ignoreDomChanges
+    @ignoreDomChanges = true
+    startPos = Tandem.Position.makePosition(this, startIndex)
+    startIndex = startPos.getIndex()
+    endPos = Tandem.Position.makePosition(this, startIndex + length)
+    endIndex = endPos.getIndex()
+
+    this.preserveSelection(startPos, 0 - length, =>
+      fragment = Tandem.Utils.extractNodes(this, startIndex, endIndex)
+      @doc.buildLines()
+    )
+    @ignoreDomChanges = oldIgnoreDomChange
+
+  getAt: (startIndex, length) ->
+    # - Returns array of {text: "", attr: {}}
+    # 1. Get all nodes in the range
+    # 2. For first and last, change the text
+    # 3. Return array
+    # - Helper to get nodes in given index range
+    # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
+
+  getDelta: ->
+    return @doc.toDelta()
+
+  getSelection: ->
+    return Tandem.Range.getSelection(this)
 
   insertAt: (startIndex, text) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -137,7 +252,7 @@ class TandemEditor extends EventEmitter2
           startIndex += 1
         position = null
       )
-      @doc.rebuildLines()
+      @doc.buildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -147,89 +262,16 @@ class TandemEditor extends EventEmitter2
 
   insertTextAt: (startIndex, text) ->
     position = Tandem.Position.makePosition(this, startIndex)
-    position.leaf.setText(position.leaf.text.substr(0, position.offset) + text + position.leaf.text.substr(position.offset))
-
-  deleteAt: (startIndex, length) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    startPos = Tandem.Position.makePosition(this, startIndex)
-    startIndex = startPos.getIndex()
-    endPos = Tandem.Position.makePosition(this, startIndex + length)
-    endIndex = endPos.getIndex()
-
-    this.preserveSelection(startPos, 0 - length, =>
-      fragment = Tandem.Utils.Node.extract(this, startIndex, endIndex)
-      @doc.rebuildLines()
-    )
-    @ignoreDomChanges = oldIgnoreDomChange
-
-  getAt: (startIndex, length) ->
-    # - Returns array of {text: "", attr: {}}
-    # 1. Get all nodes in the range
-    # 2. For first and last, change the text
-    # 3. Return array
-    # - Helper to get nodes in given index range
-    # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
-
-  getSelection: ->
-    return Tandem.Range.getSelection(this)
-
-  applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
-    return if startOffset == endOffset
-    [startNode, startNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, startOffset)
-    [prevNode, startNode] = Tandem.Utils.Node.split(startNode, startNodeOffset)
-    [endNode, endNodeOffset] = Tandem.Utils.Node.getChildAtOffset(line, endOffset)
-    [endNode, nextNode] = Tandem.Utils.Node.split(endNode, endNodeOffset)
-    if value == true
-      fragment = @iframeDoc.createDocumentFragment()
-      Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
-        fragment.appendChild(node)
-      )
-      attrNode = Tandem.Utils.createContainerForAttribute(@iframeDoc, attr)
-      attrNode.appendChild(fragment)
-      line.insertBefore(attrNode, nextNode)
+    startIndex = position.getIndex()
+    if _.keys(position.leaf.attributes).length > 0
+      [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex)
+      line = @doc.findLine(lineNode)
+      [beforeNode, afterNode] = line.splitContents(lineOffset)
+      span = lineNode.ownerDocument.createElement('span')
+      span.textContent = text
+      lineNode.insertBefore(span, afterNode)
     else
-      Tandem.Utils.Node.traverseSiblings(startNode, endNode, (node) ->
-        Tandem.Utils.Node.removeAttributeFromSubtree(node, attr)
-      )
-
-  # applyAttribute: (TandemRange range, String attr, Mixed value) ->
-  # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
-  applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    if !_.isNumber(startIndex)
-      [range, attr, value] = [startIndex, length, attr]
-      startIndex = range.start.getIndex()
-      length = range.end.getIndex() - startIndex
-    else
-      range = new Tandem.Range(this, startIndex, startIndex + length)
-
-    this.preserveSelection(range.start, 0, =>
-      [startLine, startLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex)
-      [endLine, endLineOffset] = Tandem.Utils.Node.getChildAtOffset(@iframeDoc.body, startIndex + length)
-      if startLine == endLine
-        this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
-      else
-        this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
-        this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
-        curLine = startLine.nextSibling
-        while curLine? && curLine != endLine
-          this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
-          curLine = curLine.nextSibling
-      @doc.rebuildLines()
-    )
-    if emitEvent
-      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-      deltas = []
-      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-      attribute = {}
-      attribute[attr] = value
-      deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
-      deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
-      delta = new JetDelta(docLength, docLength, deltas)
-      this.emit(this.events.API_TEXT_CHANGE, delta)
-    @ignoreDomChanges = oldIgnoreDomChange
+      position.leaf.setText(position.leaf.text.substr(0, position.offset) + text + position.leaf.text.substr(position.offset))
     
   preserveSelection: (modificationStart, charAdditions, fn) ->
     currentSelection = this.getSelection()
