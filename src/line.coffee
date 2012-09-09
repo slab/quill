@@ -131,6 +131,5 @@ class TandemLine extends LinkedList.Node
     )
 
 
-
 window.Tandem ||= {}
 window.Tandem.Line = TandemLine

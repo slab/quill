@@ -58,6 +58,18 @@ class TandemRange
       nodes.pop() if nodes[nodes.length - 1] != @end.leafNode || @end.offset == 0
       return nodes
 
+  getLineNodes: ->
+    startLine = @editor.doc.findLineNode(@start.leafNode)
+    endLine = @editor.doc.findLineNode(@end.leafNode)
+    if startLine == endLine
+      return [startLine]
+    lines = []
+    while startLine != endLine
+      lines.push(startLine)
+      startLine = startLine.nextSibling
+    lines.push(endLine)
+    return lines
+
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe.contentWindow)
     range.setStart(@start.leafNode.firstChild, @start.offset)

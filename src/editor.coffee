@@ -63,16 +63,35 @@ class TandemEditor extends EventEmitter2
     doc.body.innerHTML = html
     return iframe
 
+  update: ->
+    lines = @doc.lines.toArray()
+    lineNode = @doc.root.firstChild
+    _.each(lines, (line, index) =>
+      while line.node != lineNode
+        if line.node.parentNode == @doc.root
+          newLine = @doc.insertLineBefore(lineNode, line)
+          lineNode = lineNode.nextSibling
+        else
+          @doc.removeLine(line)
+          return
+
+      if line.innerHTML != lineNode.innerHTML
+        line.rebuild()
+      lineNode = lineNode.nextSibling
+    )
+    while lineNode != null
+      newLine = @doc.appendLine(lineNode)
+      lineNode = lineNode.nextSibling
+
   initContentListeners: ->
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', (event) ->
-      # Get selection even though the document is messed up
-      # Avoid position needing a leaf...
+    onEdit = _.debounce( =>
+      console.log 'DOMSubtreeModified'
+      this.update()
+    , 100)
 
-      # Find line selection is on, add to list of lines.
-      # Add first and last line to list of lines
-
-      # Check for changes on/around line
-      # Normalize changed lines
+    @iframeDoc.body.addEventListener('DOMSubtreeModified', =>
+      return if @ignoreDomChanges
+      onEdit()
     )
 
     ###
@@ -298,7 +317,10 @@ class TandemEditor extends EventEmitter2
     
   normalize: ->
     this.preserveSelection(null, 0, =>
-      @doc.buildLines()
+      @doc.normalizeHtml()
+      _.each(@doc.lines.toArray(), (line) ->
+        line.normalizeHtml()
+      )
     )
 
   preserveSelection: (modificationStart, charAdditions, fn) ->

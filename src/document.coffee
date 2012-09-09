@@ -45,6 +45,17 @@ class TandemDocument
     line = this.findLine(lineNode)
     return [line, offset]
 
+  findLineNode: (node) ->
+    while node? && !Tandem.Line.isLineNode(node)
+      node = node.parentNode
+    return node
+
+  insertLineBefore: (newLineNode, refLine) ->
+    line = new Tandem.Line(this, newLineNode)
+    @lines.insertAfter(refLine.prev, line)
+    @lineMap[line.id] = line
+    return line
+
   normalizeHtml: ->
     if @root.childNodes.length == 0
       div = @doc.createElement('div')
@@ -58,7 +69,9 @@ class TandemDocument
           Tandem.Utils.breakBlocks(child)
       )
 
-
+  removeLine: (line) ->
+    delete @lineMap[line.id]
+    @lines.remove(line)
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
