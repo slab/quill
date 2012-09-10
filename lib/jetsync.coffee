@@ -312,7 +312,7 @@ JetSync =
     indexes =
       doc:   0 # Index into document after deltaA was applied
       elemA: 0 # Index into the elemA deltas list
-      elemC: 0 # Index into the elemB deltas list
+      elemC: 0 # Index into the elemC deltas list
     while indexes.elemC < deltaC.deltas.length and indexes.elemA < deltaA.deltas.length
       elemA = deltaA.deltas[indexes.elemA]
       elemC = deltaC.deltas[indexes.elemC]
@@ -328,10 +328,13 @@ JetSync =
           indexes.doc += lookAhead
           decomposed = decomposed.concat(new JetRetain(indexes.doc, indexes.doc + commonPrefixLength, decomposeAttributes(elemA, elemC)))
           indexes.doc += commonPrefixLength
-          advance(elemA, indexes, commonPrefixLength, "A")
+          advance(elemA, indexes, lookAhead + commonPrefixLength, "A")
           advance(elemC, indexes, commonPrefixLength, "C")
         else
+          # Take as much as we can while still leaving enough to cover the
+          # remainder of deltaA
           take = elemC.length - (deltaA.endLength - indexes.doc)
+          # If deltaA is longer than elemC, take all of elemC.
           if take <= 0 then take = elemC.length
           decomposed = decomposed.concat(new JetInsert(elemC.text.substr(0, take), decomposeAttributes(elemA, elemC)))
           advance(elemC, indexes, take, "C")
