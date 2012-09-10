@@ -102,6 +102,8 @@ class TandemLine extends LinkedList.Node
   removeRedundant: ->
     @node._tandemAttributes = {}
     Tandem.Utils.traversePreorder(@node, 0, (node) ->
+      if node.nodeType == node.ELEMENT_NODE && node.textContent.length == 0
+        return Tandem.Utils.unwrap(node)
       if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType == child.ELEMENT_NODE))
         return Tandem.Utils.unwrap(node)
       attribute = Tandem.Utils.getAttributeForContainer(node)
