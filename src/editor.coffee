@@ -67,22 +67,25 @@ class TandemEditor extends EventEmitter2
     lines = @doc.lines.toArray()
     lineNode = @doc.root.firstChild
     oldDelta = @doc.toDelta()
-    _.each(lines, (line) =>
-      while line.node != lineNode
-        if line.node.parentNode == @doc.root
-          newLine = @doc.insertLineBefore(lineNode, line)
-          lineNode = lineNode.nextSibling
-        else
-          @doc.removeLine(line)
-          return
-      if line.innerHTML != lineNode.innerHTML
-        oldDelta = line.toDelta()
-        @doc.updateLine(line)
-      lineNode = lineNode.nextSibling
+
+    this.preserveSelection(null, 0, =>
+      _.each(lines, (line) =>
+        while line.node != lineNode
+          if line.node.parentNode == @doc.root
+            newLine = @doc.insertLineBefore(lineNode, line)
+            lineNode = lineNode.nextSibling
+          else
+            @doc.removeLine(line)
+            return
+        if line.innerHTML != lineNode.innerHTML
+          oldDelta = line.toDelta()
+          @doc.updateLine(line)
+        lineNode = lineNode.nextSibling
+      )
+      while lineNode != null
+        newLine = @doc.appendLine(lineNode)
+        lineNode = lineNode.nextSibling
     )
-    while lineNode != null
-      newLine = @doc.appendLine(lineNode)
-      lineNode = lineNode.nextSibling
     newDelta = @doc.toDelta()
     return JetSync.decompose(oldDelta, newDelta)
 
@@ -276,10 +279,10 @@ class TandemEditor extends EventEmitter2
 
   preserveSelection: (modificationStart, charAdditions, fn) ->
     @currentSelection = this.getSelection()
-    if currentSelection?
-      [selStart, selEnd] = this.transformSelection(modificationStart, currentSelection, charAdditions)
+    if @currentSelection?
+      [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
       fn()
-      savedSelectionRange = new Tandem.Range(currentSelection.editor, selStart, selEnd)
+      savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd)
       rangySel = rangy.getSelection(@iframe.contentWindow)
       range = savedSelectionRange.getRangy()
       rangySel.setSingleRange(range)

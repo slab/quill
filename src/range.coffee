@@ -72,8 +72,14 @@ class TandemRange
 
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe.contentWindow)
-    range.setStart(@start.leafNode.firstChild, @start.offset)
-    range.setEnd(@end.leafNode.firstChild, @end.offset)
+    if @start.leafNode.nodeName != 'BR'
+      range.setStart(@start.leafNode.firstChild, @start.offset)
+    else
+      range.setStart(@start.leafNode, 0)
+    if @end.leafNode.nodeName != 'BR'
+      range.setEnd(@end.leafNode.firstChild, @end.offset)
+    else
+      range.setEnd(@end.leafNode, 0)
     return range
 
   isCollapsed: ->

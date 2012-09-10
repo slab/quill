@@ -42,7 +42,7 @@ class TandemPosition
   getIndex: ->
     return @index if @index?
     @index = @offset
-    node = @leaf.node
+    node = @leafNode
     while node.tagName != 'BODY'
       while node.previousSibling?
         node = node.previousSibling
