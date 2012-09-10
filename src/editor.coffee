@@ -63,39 +63,9 @@ class TandemEditor extends EventEmitter2
     doc.body.innerHTML = html
     return iframe
 
-  update: ->
-    lines = @doc.lines.toArray()
-    lineNode = @doc.root.firstChild
-    oldDelta = @doc.toDelta()
-
-    this.preserveSelection(null, 0, =>
-      this.normalize()
-      _.each(lines, (line) =>
-        while line.node != lineNode
-          if line.node.parentNode == @doc.root
-            newLine = @doc.insertLineBefore(lineNode, line)
-            lineNode = lineNode.nextSibling
-          else
-            @doc.removeLine(line)
-            return
-        if line.innerHTML != lineNode.innerHTML
-          oldDelta = line.toDelta()
-          @doc.updateLine(line)
-        lineNode = lineNode.nextSibling
-      )
-      while lineNode != null
-        newLine = @doc.appendLine(lineNode)
-        lineNode = lineNode.nextSibling
-    )
-    newDelta = @doc.toDelta()
-    return
-    return JetSync.decompose(oldDelta, newDelta)
-
   initContentListeners: ->
     onEdit = _.debounce( =>
-      console.log 'DOMSubtreeModified'
       delta = this.update()
-      return
       if delta.deltas.length > 1 || !JetRetain.isRetain(delta.deltas[0])
         this.emit(this.events.USER_TEXT_CHANGE, delta)
     , 100)
@@ -300,6 +270,33 @@ class TandemEditor extends EventEmitter2
     selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
     selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
     return [selStart, selEnd]
+
+  update: ->
+    lines = @doc.lines.toArray()
+    lineNode = @doc.root.firstChild
+    oldDelta = @doc.toDelta()
+
+    this.preserveSelection(null, 0, =>
+      this.normalize()
+      _.each(lines, (line) =>
+        while line.node != lineNode
+          if line.node.parentNode == @doc.root
+            newLine = @doc.insertLineBefore(lineNode, line)
+            lineNode = lineNode.nextSibling
+          else
+            @doc.removeLine(line)
+            return
+        if line.innerHTML != lineNode.innerHTML
+          oldDelta = line.toDelta()
+          @doc.updateLine(line)
+        lineNode = lineNode.nextSibling
+      )
+      while lineNode != null
+        newLine = @doc.appendLine(lineNode)
+        lineNode = lineNode.nextSibling
+    )
+    newDelta = @doc.toDelta()
+    return JetSync.decompose(oldDelta, newDelta)
 
 
 window.Tandem ||= {}
