@@ -75,8 +75,10 @@ class TandemDocument
       )
 
   printLines: ->
-    _.each(@lines.toArray(), (line) ->
-      console.info line.node.textContent
+    lines = @lines.toArray() 
+    console.info lines.length
+    _.each(lines, (line) ->
+      console.info line.id, line.node.textContent
     )
 
   removeLine: (line) ->

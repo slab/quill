@@ -287,7 +287,6 @@ class TandemEditor extends EventEmitter2
             @doc.removeLine(line)
             return
         if line.innerHTML != lineNode.innerHTML
-          oldDelta = line.toDelta()
           @doc.updateLine(line)
         lineNode = lineNode.nextSibling
       )
@@ -296,6 +295,9 @@ class TandemEditor extends EventEmitter2
         lineNode = lineNode.nextSibling
     )
     newDelta = @doc.toDelta()
+    decompose = JetSync.decompose(oldDelta, newDelta)
+    compose = JetSync.compose(oldDelta, decompose)
+    console.assert(compose.isEqual(newDelta))
     return JetSync.decompose(oldDelta, newDelta)
 
 
