@@ -7,9 +7,8 @@
 describe('Range', ->
   describe('Position', ->
     it('should correctly initialize position from index', ->
-      $('#editor-container').html('<div><b>12</b><i>34</i></div><div><s>56</s><u>78</u>')
+      $('#editor-container').html('<div><b>12</b><i>34</i></div><div><s>56</s><u>78</u></div><div><br></div>')
       editor = new Tandem.Editor('editor-container')
-      positions = []
       numPositions = editor.iframeDoc.body.textContent.length + editor.iframeDoc.body.childNodes.length - 1
       positions = _.map([0..numPositions], (i) ->
         return new Tandem.Position(editor, i)
@@ -44,6 +43,9 @@ describe('Range', ->
 
       expect(positions[9].leafNode.textContent).to.equal('78')
       expect(positions[9].offset).to.equal(2)
+
+      expect(positions[10].leafNode.nodeName).to.equal('BR')
+      expect(positions[10].offset).to.equal(0)
     )
   )
 

@@ -7,7 +7,7 @@ class TandemPosition
       if node.firstChild?
         TandemPosition.findLeafNode(node.firstChild, offset)
       else
-        node = node.parentNode
+        node = node.parentNode if node.nodeType == node.TEXT_NODE
         if offset == node.textContent.length && node.nextSibling?
           TandemPosition.findLeafNode(node.nextSibling, 0)
         else
