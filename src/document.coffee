@@ -14,11 +14,13 @@ class TandemDocument
     line = new Tandem.Line(this, lineNode)
     @lines.append(line)
     @lineMap[line.id] = line
+    @length += line.length + 1
     return line
 
   buildLines: ->
     @lines = new LinkedList()
     @lineMap = {}
+    @length = 0
     this.normalizeHtml()
     _.each(@root.childNodes, (node) =>
       this.appendLine(node)
@@ -54,6 +56,7 @@ class TandemDocument
     line = new Tandem.Line(this, newLineNode)
     @lines.insertAfter(refLine.prev, line)
     @lineMap[line.id] = line
+    @length += newLineNode.textContent.length + 1
     return line
 
   normalizeHtml: ->
@@ -72,6 +75,7 @@ class TandemDocument
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
+    @length -= line.length + 1
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
@@ -96,6 +100,11 @@ class TandemDocument
     delta = new JetDelta(0, length, deltas)
     delta.compact()
     return delta
+
+  updateLine: (line) ->
+    @length -= line.length
+    line.rebuild()
+    @length += line.length
 
 
 

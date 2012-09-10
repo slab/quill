@@ -66,27 +66,47 @@ class TandemEditor extends EventEmitter2
   update: ->
     lines = @doc.lines.toArray()
     lineNode = @doc.root.firstChild
-    _.each(lines, (line, index) =>
+    offset = 0
+    oldLength = @doc.length
+    deltas = []
+    _.each(lines, (line) =>
       while line.node != lineNode
         if line.node.parentNode == @doc.root
           newLine = @doc.insertLineBefore(lineNode, line)
+          deltas = deltas.concat(newLine.toDelta().deltas)
+          deltas.push(new JetInsert("\n"))
           lineNode = lineNode.nextSibling
         else
+          offset += line.length + 1
           @doc.removeLine(line)
           return
-
-      if line.innerHTML != lineNode.innerHTML
-        line.rebuild()
+      offset += line.length + 1
+      if line.innerHTML == lineNode.innerHTML
+        deltas.push(new JetRetain(offset - line.length - 1, offset))
+      else
+        oldDelta = line.toDelta()
+        @doc.updateLine(line)
+        delta = JetSync.decompose(oldDelta, line.toDelta())
+        deltas = deltas.concat(delta.deltas)
+        deltas.push(new JetRetain(offset - 1, offset))    # Keep the trailing newline (which should always be the next character)
       lineNode = lineNode.nextSibling
     )
     while lineNode != null
       newLine = @doc.appendLine(lineNode)
+      deltas = deltas.concat(newLine.toDelta().deltas)
+      deltas.push(new JetInsert("\n"))
       lineNode = lineNode.nextSibling
+
+    delta = new JetDelta(oldLength, @doc.length, deltas)
+    delta.compact()
+    return delta
 
   initContentListeners: ->
     onEdit = _.debounce( =>
       console.log 'DOMSubtreeModified'
-      this.update()
+      delta = this.update()
+      if delta.deltas.length > 1 || !JetRetain.isRetain(delta.deltas[0])
+        this.emit(this.events.USER_TEXT_CHANGE, delta)
     , 100)
 
     @iframeDoc.body.addEventListener('DOMSubtreeModified', =>
