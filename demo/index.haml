@@ -48,3 +48,11 @@
         toolbar.applyAttribute(format, !$(this).parent().hasClass('active'));
       });
     });
+    toolbar.on('update', function(attributes) {
+      $("#formatting-container .format-button").removeClass('active');
+      for (key in attributes) {
+        if (attributes[key] == true) {
+          $("#formatting-container ." + key).parent().addClass('active');
+        }
+      }
+    });

@@ -87,12 +87,14 @@ class TandemEditor extends EventEmitter2
         lineNode = lineNode.nextSibling
     )
     newDelta = @doc.toDelta()
+    return
     return JetSync.decompose(oldDelta, newDelta)
 
   initContentListeners: ->
     onEdit = _.debounce( =>
       console.log 'DOMSubtreeModified'
       delta = this.update()
+      return
       if delta.deltas.length > 1 || !JetRetain.isRetain(delta.deltas[0])
         this.emit(this.events.USER_TEXT_CHANGE, delta)
     , 100)

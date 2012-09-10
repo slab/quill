@@ -43,7 +43,7 @@ class TandemRange
     return attributes || {}
 
   getLeaves: ->
-    itr = new Tandem.LeafIterator(@start.getLeaf(), @start.getLeaf())
+    itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())
     arr = itr.toArray()
     return arr
 
