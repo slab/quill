@@ -14,7 +14,8 @@ class TandemDocument
     line = new Tandem.Line(this, lineNode)
     @lines.append(line)
     @lineMap[line.id] = line
-    @length += line.length + 1
+    @length += line.length
+    @length += 1 if @lines.length > 1
     return line
 
   buildLines: ->
@@ -56,7 +57,8 @@ class TandemDocument
     line = new Tandem.Line(this, newLineNode)
     @lines.insertAfter(refLine.prev, line)
     @lineMap[line.id] = line
-    @length += newLineNode.textContent.length + 1
+    @length += line.length
+    @length += 1 if @lines.length > 1
     return line
 
   normalizeHtml: ->
@@ -71,6 +73,11 @@ class TandemDocument
         else
           Tandem.Utils.breakBlocks(child)
       )
+
+  printLines: ->
+    _.each(@lines.toArray(), (line) ->
+      console.info line.node.textContent
+    )
 
   removeLine: (line) ->
     delete @lineMap[line.id]
@@ -87,17 +94,13 @@ class TandemDocument
 
   toDelta: ->
     lines = @lines.toArray()
-    length = 0
-    deltas = _.each(lines.length, (line, index) ->
-      deltas = line.delta.deltas
-      length += line.delta.endLength
+    deltas = _.flatten(_.map(lines, (line, index) ->
+      lineDeltas = JetDelta.copy(line.delta).deltas
       if index < lines.length - 1
-        deltas.push(new JetInsert("\n"))
-        length += 1
-      return deltas
-    )
-    deltas = _.flatten(deltas, true)
-    delta = new JetDelta(0, length, deltas)
+        lineDeltas.push(new JetInsert("\n"))
+      return lineDeltas
+    ), true)
+    delta = new JetDelta(0, @length, deltas)
     delta.compact()
     return delta
 

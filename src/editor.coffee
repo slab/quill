@@ -66,40 +66,25 @@ class TandemEditor extends EventEmitter2
   update: ->
     lines = @doc.lines.toArray()
     lineNode = @doc.root.firstChild
-    offset = 0
-    oldLength = @doc.length
-    deltas = []
+    oldDelta = @doc.toDelta()
     _.each(lines, (line) =>
       while line.node != lineNode
         if line.node.parentNode == @doc.root
           newLine = @doc.insertLineBefore(lineNode, line)
-          deltas = deltas.concat(newLine.toDelta().deltas)
-          deltas.push(new JetInsert("\n"))
           lineNode = lineNode.nextSibling
         else
-          offset += line.length + 1
           @doc.removeLine(line)
           return
-      offset += line.length + 1
-      if line.innerHTML == lineNode.innerHTML
-        deltas.push(new JetRetain(offset - line.length - 1, offset))
-      else
+      if line.innerHTML != lineNode.innerHTML
         oldDelta = line.toDelta()
         @doc.updateLine(line)
-        delta = JetSync.decompose(oldDelta, line.toDelta())
-        deltas = deltas.concat(delta.deltas)
-        deltas.push(new JetRetain(offset - 1, offset))    # Keep the trailing newline (which should always be the next character)
       lineNode = lineNode.nextSibling
     )
     while lineNode != null
       newLine = @doc.appendLine(lineNode)
-      deltas = deltas.concat(newLine.toDelta().deltas)
-      deltas.push(new JetInsert("\n"))
       lineNode = lineNode.nextSibling
-
-    delta = new JetDelta(oldLength, @doc.length, deltas)
-    delta.compact()
-    return delta
+    newDelta = @doc.toDelta()
+    return JetSync.decompose(oldDelta, newDelta)
 
   initContentListeners: ->
     onEdit = _.debounce( =>
@@ -113,60 +98,6 @@ class TandemEditor extends EventEmitter2
       return if @ignoreDomChanges
       onEdit()
     )
-
-    ###
-    @iframeDoc.body.addEventListener('DOMCharacterDataModified', (event) =>
-      _.defer( =>
-        return if @ignoreDomChanges
-        @currentSelection = this.getSelection()
-        docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-        originalDocLength = docLength - (event.newValue.length - event.prevValue.length)
-        deltas = []
-        this.normalize()
-        position = new Tandem.Position(this, event.srcElement.parentNode, 0)
-        startIndex = position.getIndex()
-        deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-        insertedLength = 0
-        offsetLength = 0
-        dmp = new diff_match_patch()
-        diffs = dmp.diff_main(event.prevValue, event.newValue)
-        _.each(diffs, (diff) ->
-          if diff[0] == DIFF_EQUAL
-            deltas.push(new JetRetain(startIndex + offsetLength, startIndex + offsetLength + diff[1].length))
-            offsetLength += diff[1].length
-          if diff[0] == DIFF_INSERT
-            deltas.push(new JetInsert(diff[1], position.leaf.attributes))
-            insertedLength += diff[1].length
-          if diff[0] == DIFF_DELETE
-            offsetLength += diff[1].length
-        )
-        deltas.push(new JetRetain(startIndex + offsetLength, originalDocLength)) if startIndex < docLength
-        delta = new JetDelta(originalDocLength, docLength, deltas)
-        this.emit(this.events.USER_TEXT_CHANGE, delta)
-        @currentSelection = this.getSelection()
-      )
-    )
-    @iframeDoc.body.addEventListener('keydown', (event) =>
-      _.defer( =>
-        return if @ignoreDomChanges || event.which != 13
-        @ignoreDomChanges = true
-        selection = @currentSelection
-        startIndex = selection.start.getIndex()
-        docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
-        deltas = []
-        deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-        deltas.push(new JetInsert("\n"))
-        deltas.push(new JetRetain(startIndex, docLength)) if startIndex < docLength
-        delta = new JetDelta(docLength, docLength + 1, deltas)
-        this.emit(this.events.USER_TEXT_CHANGE, delta)
-        @currentSelection = this.getSelection()
-        _.defer( =>
-          this.normalize()
-          @ignoreDomChanges = false
-        )
-      )
-    )
-    ###
 
   initSelectionListeners: ->
     checkSelectionChange = =>
