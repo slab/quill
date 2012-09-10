@@ -91,6 +91,7 @@ class TandemDocument
     newLine = new Tandem.Line(this, lineNode2)
     @lines.insertAfter(line, newLine)
     @lineMap[newLine.id] = newLine
+    @length += 1
 
   toDelta: ->
     lines = @lines.toArray()

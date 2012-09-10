@@ -174,7 +174,7 @@ class TandemEditor extends EventEmitter2
       Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
         Tandem.Utils.removeAttributeFromSubtree(node, attr)
       )
-    line.rebuild()
+    @doc.updateLine(line)
 
   applyDelta: (delta) ->
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
@@ -271,6 +271,7 @@ class TandemEditor extends EventEmitter2
       lineNode.insertBefore(span, afterNode)
     else
       leaf.setText(leaf.text.substr(0, position.offset) + text + leaf.text.substr(position.offset))
+    @doc.updateLine(leaf.line)
     
   normalize: ->
     this.preserveSelection(null, 0, =>

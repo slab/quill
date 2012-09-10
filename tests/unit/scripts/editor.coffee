@@ -355,6 +355,7 @@ describe('Editor', ->
   )
 
 
+
   describe('insertAt', ->
     reset = ->
       $('#editor-container').html(Tandem.Utils.cleanHtml(
@@ -376,7 +377,7 @@ describe('Editor', ->
         </div>'
     }, {
       name: 'should insert text inside formatted tags'
-      index: 6
+      index: 4
       text: 'A'
       expected: 
         '<div>
@@ -463,6 +464,7 @@ describe('Editor', ->
       )
     )
   )
+
 
 
   describe('deleteAt', ->

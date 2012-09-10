@@ -20,7 +20,6 @@ class TandemLeaf extends LinkedList.Node
   setText: (@text) ->
     @node.textContent = @text
     @length = @text.length
-    @line.resetContent()
 
 
 class TandemLeafIterator
