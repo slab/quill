@@ -69,6 +69,7 @@ class TandemEditor extends EventEmitter2
     oldDelta = @doc.toDelta()
 
     this.preserveSelection(null, 0, =>
+      this.normalize()
       _.each(lines, (line) =>
         while line.node != lineNode
           if line.node.parentNode == @doc.root
@@ -169,11 +170,11 @@ class TandemEditor extends EventEmitter2
       attrNode = Tandem.Utils.createContainerForAttribute(@iframeDoc, attr)
       attrNode.appendChild(fragment)
       lineNode.insertBefore(attrNode, nextNode)
-      line.rebuild()
     else
       Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
         Tandem.Utils.removeAttributeFromSubtree(node, attr)
       )
+    line.rebuild()
 
   applyDelta: (delta) ->
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete

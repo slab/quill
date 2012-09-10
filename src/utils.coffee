@@ -97,6 +97,9 @@ TandemUtils =
     if offset > node.textContent.length
       throw new Error('Splitting at offset greater than node length')
 
+    if node.nodeType == node.TEXT_NODE
+      node = this.wrap(node.ownerDocument.createElement('span'), node)
+
     # Check if split necessary
     if !force
       if offset == 0
@@ -162,6 +165,7 @@ TandemUtils =
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node)
     wrapper.appendChild(node)
+    return wrapper
 
 
 

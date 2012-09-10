@@ -342,10 +342,11 @@ describe('Editor', ->
     _.each(tests, (test) ->
       _.each({apply: true, remove: false}, (truth, name) ->
         it("should #{name} to #{test.target}", ->
-          editor = reset()
+          [startHtml, endHtml] = if truth then [originalHtml, test.expected] else [test.expected, originalHtml]
+          editor = reset(startHtml)
           editor.applyAttribute(test.start, test.length, 'bold', truth)
           delta = editor.doc.toDelta()
-          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
+          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml)
           editor.doc.buildLines()
           expect(delta).to.deep.equal(editor.doc.toDelta())
         )
