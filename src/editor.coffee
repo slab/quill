@@ -247,7 +247,7 @@ class TandemEditor extends EventEmitter2
         leaf.setText(text)
         parent.appendChild(leaf.node)
       else
-        leaf.setText(leaf.text.substr(0, position.offset) + text + leaf.text.substr(position.offset))
+        leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
     @doc.updateLine(leaf.line)
     
   normalize: ->
