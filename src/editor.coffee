@@ -1,10 +1,10 @@
 #= require underscore
-#= require rangy-core
+#= require rangy/rangy-core
 #= require diff_match_patch
 #= require eventemitter2
 #= require jetsync
 #= require tandem/document
-#= require tandem/selection
+#= require tandem/range
 
 class TandemEditor extends EventEmitter2
   @editors: []
@@ -44,6 +44,7 @@ class TandemEditor extends EventEmitter2
       body { 
         font-family: 'Helvetica', 'Arial', san-serif;
         font-size: 13px;
+        line-height: 15px;
         margin: 0px; 
         padding: 0px; 
       }
@@ -66,8 +67,7 @@ class TandemEditor extends EventEmitter2
   initContentListeners: ->
     onEdit = _.debounce( =>
       delta = this.update()
-      if delta.deltas.length > 1 || !JetRetain.isRetain(delta.deltas[0])
-        this.emit(this.events.USER_TEXT_CHANGE, delta)
+      this.emit(this.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
     , 100)
 
     @iframeDoc.body.addEventListener('DOMSubtreeModified', =>
@@ -247,7 +247,7 @@ class TandemEditor extends EventEmitter2
         leaf.setText(text)
         parent.appendChild(leaf.node)
       else
-        leaf.setText(leaf.text.substr(0, position.offset) + text + leaf.text.substr(position.offset))
+        leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
     @doc.updateLine(leaf.line)
     
   normalize: ->
