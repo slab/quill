@@ -63,7 +63,6 @@ class TandemDocument
 
   normalizeHtml: ->
     if @root.childNodes.length == 0
-      console.log 'init hul'
       div = @doc.createElement('div')
       @root.appendChild(div)
       this.appendLine(div)
