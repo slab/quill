@@ -14,39 +14,25 @@
   :javascript
     var Stypi = {
       configs: {
-        "nodeHost": "devnode.stypi.com",
-        "registered": true,
-        "auth": ["3KlnRVvfkdzSmB3Rbw47hQ==","ZJgz9SoxUrDJzyG+wb492DI4RNKpfzLCxAB+kuZYwd5qbqQ9wnj2gOAxjEEU\nGVL0"],
-        "docId": "4eaf69293b8cc4225400000d",
-        "head": {
-          "startLength": 0,
-          "endLength": 142,
-          "deltas": [
-            "\u003Chtml\u003E\n    \u003Chead\u003E\n        \u003Ctitle\u003EKeegan is awesome\u003C/title\u003E\n    \u003C/head\u003E\n    \u003Cbody\u003E\n        \u003Cmarquee\u003Eblargtron3000\u003C/marquee\u003E\n    \u003C/body\u003E\n\u003C/html\u003E"
+        "nodeHost":"devnode.stypi.com",
+        "registered":true,
+        "auth":[
+          "qkoZTxi6bxkpik/e41OaBw==","YKbacWmDmOtF75SkzcHy6scSLyYBsiFoXanWt9Dvbm9OrFDA6JY0fYsl092c\nU2JG"
+        ],
+        "docId":"504eff8611b88f8443000002",
+        "head":{
+          "startLength":0,
+          "endLength":17,
+          "deltas":[
+            {"text":"keegan is so cool","attributes":{"authorId":"4ea73d5b3b8cc43e2300008a"},"length":17}
           ]
         },
-        "sessionId": "BpG3wTgTK80AcSui",
-        "userId": "4ea73d5b3b8cc43e2300008a",
-        "version": 137,
-        "username": "lordkeeganus"
-      }
+        "sessionId":"LmNzPOaFeMV5IuqI",
+        "userId":"4ea73d5b3b8cc43e2300008a",
+        "version":16,
+        "username":"lordkeeganus"
+      }  
     };
-
-    /*
-    editor = new Tandem.Editor('editor-container');
-    toolbar = new Tandem.Toolbar(editor)
-
-    editor.on(editor.events.USER_SELECTION_CHANGE, function(s){
-      attributes = s.getAttributeIntersection()
-
-      var data = {hello: 'there'};
-
-      $.post('/ios-message', {json: JSON.stringify(data)}, function(data) {
-        //alert('got response: ' + data); 
-      });
-
-    });
-    */
 
   %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
@@ -72,4 +58,4 @@
   %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetclient.js'}
   %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetstate.js'}
 
-  %script{:type => 'text/javascript', :src => 'scripts/ot.js'}
+  %script{:type => 'text/javascript', :src => 'scripts/iphone-ot.js'}
