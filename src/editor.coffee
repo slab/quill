@@ -272,22 +272,27 @@ class TandemEditor extends EventEmitter2
     return [selStart, selEnd]
 
   update: ->
-    lines = @doc.lines.toArray()
-    lineNode = @doc.root.firstChild
     oldDelta = @doc.toDelta()
-
     this.preserveSelection(null, 0, =>
       this.normalize()
-      _.each(lines, (line) =>
+      lines = @doc.lines.toArray()
+      console.log lines
+      lineNode = @doc.root.firstChild
+      console.log @doc.root.innerHTML
+      _.each(lines, (line, index) =>
+        console.log 'considering', line.node.outerHTML, index, lineNode
         while line.node != lineNode
           if line.node.parentNode == @doc.root
+            #console.log 'inserting', lineNode, line.node
             newLine = @doc.insertLineBefore(lineNode, line)
             lineNode = lineNode.nextSibling
           else
             @doc.removeLine(line)
             return
         if line.innerHTML != lineNode.innerHTML
+          #console.log 'update', line.innerHTML, lineNode.innerHTML
           @doc.updateLine(line)
+        #console.log 'advance'
         lineNode = lineNode.nextSibling
       )
       while lineNode != null
@@ -298,6 +303,7 @@ class TandemEditor extends EventEmitter2
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
     console.assert(compose.isEqual(newDelta))
+    console.log @doc.root.innerHTML
     return JetSync.decompose(oldDelta, newDelta)
 
 

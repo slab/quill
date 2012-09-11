@@ -13,7 +13,8 @@ class TandemLine extends LinkedList.Node
 
 
   constructor: (@doc, @node) ->
-    @node.id = @id = TandemLine.ID_PREFIX + TandemLine.counter
+    @id = TandemLine.ID_PREFIX + TandemLine.counter
+    @node.id = @id
     @node.classList.add(TandemLine.CLASS_NAME)
     TandemLine.counter += 1
     this.rebuild()
