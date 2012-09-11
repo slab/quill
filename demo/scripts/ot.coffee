@@ -41,8 +41,8 @@ $(document).ready( ->
   }
 
   editor.on(editor.events.API_TEXT_CHANGE, (delta) ->
-    console.log 'send to remote'
-    # Send to remote
+    textState.localUpdate(delta)
+    jetClient.checkRunwayReady()
   )
   editor.on(editor.events.USER_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)

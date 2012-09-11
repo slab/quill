@@ -19,10 +19,10 @@ class TandemDocument
     return line
 
   buildLines: ->
+    this.normalizeHtml()
     @lines = new LinkedList()
     @lineMap = {}
     @length = 0
-    this.normalizeHtml()
     _.each(@root.childNodes, (node) =>
       this.appendLine(node)
     )
@@ -65,7 +65,6 @@ class TandemDocument
     if @root.childNodes.length == 0
       div = @doc.createElement('div')
       @root.appendChild(div)
-      this.appendLine(div)
     else
       _.each(_.clone(@root.childNodes), (child) ->
         if child.nodeType != child.ELEMENT_NODE

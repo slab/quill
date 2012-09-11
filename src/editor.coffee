@@ -287,16 +287,13 @@ class TandemEditor extends EventEmitter2
       _.each(lines, (line, index) =>
         while line.node != lineNode
           if line.node.parentNode == @doc.root
-            #console.log 'inserting', lineNode, line.node
             newLine = @doc.insertLineBefore(lineNode, line)
             lineNode = lineNode.nextSibling
           else
             @doc.removeLine(line)
             return
         if line.innerHTML != lineNode.innerHTML
-          #console.log 'update', line.innerHTML, lineNode.innerHTML
           @doc.updateLine(line)
-        #console.log 'advance'
         lineNode = lineNode.nextSibling
       )
       while lineNode != null
