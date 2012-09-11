@@ -28,6 +28,9 @@ class JetDeltaItem
       else
         delete @attributes[key]
 
+  numAttributes: () ->
+    (key for key of @attributes).length
+
   toString: ->
     attr_str = ""
     for key,value of @attributes
@@ -102,8 +105,15 @@ class JetDelta
     if @startLength == @endLength
       if @deltas.length == 0
         return true
-      if @deltas.length == 1 && JetRetain.isRetain(@deltas[0]) && @deltas[0].start == 0 && @deltas[0].end == @endLength
-        return true
+      index = 0
+      for delta in @deltas
+        if !JetRetain.isRetain(delta) then return false
+        if delta.start != index then return false
+        if !(delta.numAttributes() == 0 || (delta.numAttributes() == 1 && 'authorId' of delta.attributes))
+          return false
+        index = delta.end
+      if index != @endLength then return false
+      return true
     return false
 
   normalizeChanges: ->
@@ -153,10 +163,10 @@ class JetDelta
         end = Math.min(index + length, range.end)
         if JetDelta.isInsert(delta)
           changes.push(new JetInsert(delta.text.substring(start - index, end -
-            index), delta.attributes))
+            index), JetDeltaItem.copyAttributes(delta)))
         else
           changes.push(new JetRetain(start - index + delta.start, end - index +
-            delta.start, delta.attributes))
+            delta.start, JetDeltaItem.copyAttributes(delta)))
         range.start = end
       index += length
     return changes
