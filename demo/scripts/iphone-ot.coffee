@@ -37,13 +37,9 @@ $(document).ready( ->
   editor.on(editor.events.API_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
-
-    alert 'asdf1'
   )
   editor.on(editor.events.USER_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
-
-    alert 'asdf2'
   )
 )

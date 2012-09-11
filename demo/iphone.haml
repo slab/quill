@@ -3,40 +3,13 @@
   %head
     %title Stypi iPhone Editor Demo
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
-    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/iphone-style.css'}
     %meta{:name=> 'viewport', :content => 'initial-scale=1.0, width=device-width, user-scalable=no'}
 
 %body
   #content-container
     .editor-wrapper
       #editor-container.editor-container
-
-  :javascript
-    var Stypi = {
-      configs: {
-        "nodeHost":"devnode.stypi.com",
-        "registered":true,
-        "auth":[
-          "qkoZTxi6bxkpik/e41OaBw==","YKbacWmDmOtF75SkzcHy6scSLyYBsiFoXanWt9Dvbm9OrFDA6JY0fYsl092c\nU2JG"
-        ],
-        "docId":"504eff8611b88f8443000002",
-        "head":{
-          "startLength":0,
-          "endLength":17,
-          "deltas":[
-            {
-              "text":"keegan is so cool",
-              "attributes": {"authorId":"4ea73d5b3b8cc43e2300008a"},
-              "length":17
-            }
-          ]
-        },
-        "sessionId":"LmNzPOaFeMV5IuqI",
-        "userId":"4ea73d5b3b8cc43e2300008a",
-        "version":16,
-        "username":"lordkeeganus"
-      }  
-    };
 
   %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
   %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
