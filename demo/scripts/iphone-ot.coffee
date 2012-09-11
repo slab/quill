@@ -1,16 +1,10 @@
 $(document).ready( ->
-  editor = new Tandem.Editor('editor-container')
-  toolbar = new Tandem.Toolbar(editor)
-  _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
-    $("#formatting-container .#{format}").click( -> 
-      toolbar.applyAttribute(format, !$(this).parent().hasClass('active'))
-    )
-  )
-  toolbar.on('update', (attributes) ->
-    $("#formatting-container .format-button").removeClass('active')
-    for key,value of attributes when value == true
-      $("#formatting-container .#{key}").parent().addClass('active')
-  )
+  window.editor = editor = new Tandem.Editor('editor-container')
+  window.toolbar = toolbar = new Tandem.Toolbar(editor)
+  
+  toolbar.on 'update', (attributes) ->
+    $.post('/ios-message', {json: JSON.stringify(attributes)})
+    #alert 'hey there'
 
   rangy.init()
 
@@ -31,7 +25,7 @@ $(document).ready( ->
   jetClient.addState(textState)
   jetClient.addState(cursorState)
   jetClient.addState(chatState)
-  jetClient.connect(Stypi.configs.docId, Stypi.configs.version)
+  jetClient.connect(Stypi.configs.docId, 0)
 
   textState.applyDeltaToText = (delta, authorId) ->   # Hacky overwrite
     editor.applyDelta(delta)
@@ -43,9 +37,13 @@ $(document).ready( ->
   editor.on(editor.events.API_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
+
+    alert 'asdf1'
   )
   editor.on(editor.events.USER_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
+
+    alert 'asdf2'
   )
 )
