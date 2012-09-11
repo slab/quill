@@ -240,7 +240,14 @@ class TandemEditor extends EventEmitter2
       span.textContent = text
       lineNode.insertBefore(span, afterNode)
     else
-      leaf.setText(leaf.text.substr(0, position.offset) + text + leaf.text.substr(position.offset))
+      if leaf.node.nodeName == 'BR'
+        parent = leaf.node.parentNode
+        parent.removeChild(leaf.node)
+        leaf.node = parent.ownerDocument.createElement('span')
+        leaf.setText(text)
+        parent.appendChild(leaf.node)
+      else
+        leaf.setText(leaf.text.substr(0, position.offset) + text + leaf.text.substr(position.offset))
     @doc.updateLine(leaf.line)
     
   normalize: ->
@@ -276,23 +283,17 @@ class TandemEditor extends EventEmitter2
     this.preserveSelection(null, 0, =>
       this.normalize()
       lines = @doc.lines.toArray()
-      console.log lines
       lineNode = @doc.root.firstChild
-      console.log @doc.root.innerHTML
       _.each(lines, (line, index) =>
-        console.log 'considering', line.node.outerHTML, index, lineNode
         while line.node != lineNode
           if line.node.parentNode == @doc.root
-            #console.log 'inserting', lineNode, line.node
             newLine = @doc.insertLineBefore(lineNode, line)
             lineNode = lineNode.nextSibling
           else
             @doc.removeLine(line)
             return
         if line.innerHTML != lineNode.innerHTML
-          #console.log 'update', line.innerHTML, lineNode.innerHTML
           @doc.updateLine(line)
-        #console.log 'advance'
         lineNode = lineNode.nextSibling
       )
       while lineNode != null
@@ -303,7 +304,6 @@ class TandemEditor extends EventEmitter2
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
     console.assert(compose.isEqual(newDelta))
-    console.log @doc.root.innerHTML
     return JetSync.decompose(oldDelta, newDelta)
 
 

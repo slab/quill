@@ -14,12 +14,23 @@ $(document).ready( ->
 
   rangy.init()
 
-  editor.setText = (text) ->
+  editor.getText = -> ""
+  editor.setText = ->
+  editor.setCursor = ->
+  editor.clearCursors = ->
+  editor.clearMessages = ->
+  editor.addMessage = ->
+  editor.updateComposing = ->
+
 
   delegate = new Object()
   jetClient = new JetClient({delegate: delegate})
-  textState = new JetTextState(editor, jetClient, "Welcome to Stypi", Stypi.configs.sessionId)
+  textState = new JetTextState(editor, jetClient, "", Stypi.configs.sessionId)
+  chatState = new JetChatState(editor, jetClient, [], Stypi.configs.sessionId)
+  cursorState = new JetCursorState(editor, jetClient, {}, Stypi.configs.sessionId)
   jetClient.addState(textState)
+  jetClient.addState(cursorState)
+  jetClient.addState(chatState)
   jetClient.connect(Stypi.configs.docId, Stypi.configs.version)
 
   textState.applyDeltaToText = (delta, authorId) ->   # Hacky overwrite
@@ -30,8 +41,8 @@ $(document).ready( ->
   }
 
   editor.on(editor.events.API_TEXT_CHANGE, (delta) ->
-    console.log 'send to remote'
-    # Send to remote
+    textState.localUpdate(delta)
+    jetClient.checkRunwayReady()
   )
   editor.on(editor.events.USER_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
