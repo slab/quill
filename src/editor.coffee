@@ -90,6 +90,7 @@ class TandemEditor extends EventEmitter2
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
   applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
+    return console.log startIndex, length, 'exceeds boundaries' unless this.isInsideBoundaries(startIndex, length)
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     if !_.isNumber(startIndex)
@@ -114,14 +115,13 @@ class TandemEditor extends EventEmitter2
       this.normalize()
     )
     if emitEvent
-      docLength = @doc.root.textContent.length + @doc.root.childNodes.length - 1
       deltas = []
       deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
       attribute = {}
       attribute[attr] = value
       deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
-      deltas.push(new JetRetain(startIndex + length, docLength)) if startIndex + length < docLength
-      delta = new JetDelta(docLength, docLength, deltas)
+      deltas.push(new JetRetain(startIndex + length, @doc.length)) if startIndex + length < @doc.length
+      delta = new JetDelta(@doc.length, @doc.length, deltas)
       this.emit(this.events.API_TEXT_CHANGE, delta)
     @ignoreDomChanges = oldIgnoreDomChange
 
@@ -172,9 +172,11 @@ class TandemEditor extends EventEmitter2
     if delta.endLength < delta.startLength + offset
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength)
 
-  deleteAt: (startIndex, length) ->
+  deleteAt: (startIndex, length, emitEvent = true) ->
+    return console.log startIndex, length, 'exceeds boundaries' unless this.isInsideBoundaries(startIndex, length)
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
+    originalDocLength = @doc.length
     startPos = Tandem.Position.makePosition(this, startIndex)
     startIndex = startPos.getIndex()
     endPos = Tandem.Position.makePosition(this, startIndex + length)
@@ -184,6 +186,12 @@ class TandemEditor extends EventEmitter2
       this.normalize()
       @doc.buildLines()
     )
+    if emitEvent
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if 0 < startIndex
+      deltas.push(new JetRetain(startIndex + length, originalDocLength)) if startIndex + length < originalDocLength
+      delta = new JetDelta(originalDocLength, @doc.length, deltas)
+      this.emit(this.events.API_TEXT_CHANGE, delta)
     @ignoreDomChanges = oldIgnoreDomChange
 
   getAt: (startIndex, length) ->
@@ -200,25 +208,35 @@ class TandemEditor extends EventEmitter2
   getSelection: ->
     return Tandem.Range.getSelection(this)
 
-  insertAt: (startIndex, text) ->
+  insertAt: (startIndex, text, emitEvent = true) ->
+    return console.log startIndex, length, 'exceeds boundaries' unless this.isInsideBoundaries(startIndex)
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
+    originalDocLength = @doc.length
     position = Tandem.Position.makePosition(this, startIndex)
     startIndex = position.getIndex()
 
     this.preserveSelection(position, text.length, =>
       lines = text.split("\n")
+      index = startIndex
       _.each(lines, (line, lineIndex) =>
-        position = new Tandem.Position(this, startIndex) unless position?
+        position = new Tandem.Position(this, index) unless position?
         this.insertTextAt(position, line)
-        startIndex += line.length
+        index += line.length
         if lineIndex < lines.length - 1
-          this.insertNewlineAt(startIndex)
-          startIndex += 1
+          this.insertNewlineAt(index)
+          index += 1
         position = null
       )
       this.normalize()
     )
+    if emitEvent
+      deltas = []
+      deltas.push(new JetRetain(0, startIndex)) if 0 < startIndex
+      deltas.push(new JetInsert(text))
+      deltas.push(new JetRetain(startIndex, originalDocLength)) if startIndex < originalDocLength
+      delta = new JetDelta(originalDocLength, @doc.length, deltas)
+      this.emit(this.events.API_TEXT_CHANGE, delta)
     @ignoreDomChanges = oldIgnoreDomChange
 
   insertNewlineAt: (startIndex) ->
@@ -248,6 +266,9 @@ class TandemEditor extends EventEmitter2
       else
         leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
     @doc.updateLine(leaf.line)
+
+  isInsideBoundaries: (index, length = 0) ->
+    return 0 <= index && 0 <= length && index <= @doc.length && index + length <= @doc.length
     
   normalize: ->
     this.preserveSelection(null, 0, =>

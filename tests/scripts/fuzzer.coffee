@@ -1,0 +1,52 @@
+alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"))
+
+getRandomLength = ->
+  rand = Math.random()
+  if rand < 0.5
+    return Math.floor(Math.random() * 10)
+  else if rand < 0.7
+    return Math.floor(Math.random() * 25)
+  else if rand < 0.9
+    return Math.floor(Math.random() * 50)
+  else
+    return Math.floor(Math.random() * 100)
+
+getRandomOperation = (editor) ->
+  index = Math.floor(Math.random() * (editor.doc.length + 1))
+  length = getRandomLength() + 1
+  rand = Math.random()
+  if rand < 0.5
+    return {op: 'insertAt', args: [index, getRandomString(length)]}
+  length = Math.min(length, editor.doc.length - index)
+  return null if length <= 0
+  if rand < 0.75
+    return {op: 'deleteAt', args: [index, length]}
+  else
+    attributes = ['bold', 'italic', 'strike', 'underline']
+    attribute = attributes[Math.floor(Math.random() * attributes.length)]
+    return {op: 'applyAttribute', args: [index, length, attribute, (Math.random() < 0.8)]}
+
+getRandomString = (length) ->
+  return _.map([0..(length - 1)], ->
+    return alphabet[Math.floor(Math.random()*length)]
+  ).join('')
+
+
+$(document).ready( ->
+  rangy.init()
+  $editors = $('.editor-container')
+  writer = new Tandem.Editor($editors.get(0))
+  reader = new Tandem.Editor($editors.get(1))
+
+  writer.on(writer.events.API_TEXT_CHANGE, (delta) ->
+    reader.applyDelta(delta)
+  )
+
+  _.each([1..100], ->
+    _.defer( ->
+      operation = getRandomOperation(writer)
+      if operation?
+        writer[operation.op].apply(writer, operation.args)
+    )
+  )
+)

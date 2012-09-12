@@ -5,57 +5,57 @@
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
 
-%body
-  #content-container
-    .editor-wrapper.first
-      #formatting-container.formatting-container
-        .format-group
-          .format-button.first<>
-            .format.bold
-          .format-button<>
-            .format.italic
-          .format-button<>
-            .format.underline
-          .format-button.last<>
-            .format.strike
-      #editor-container.editor-container
+  %body
+    #content-container
+      .editor-wrapper.first
+        #formatting-container.formatting-container
+          .format-group
+            .format-button.first<>
+              .format.bold
+            .format-button<>
+              .format.italic
+            .format-button<>
+              .format.underline
+            .format-button.last<>
+              .format.strike
+        #editor-container.editor-container
 
-  :javascript
-    var Stypi = {
-      configs: {
-        "nodeHost": "devnode.stypi.com",
-        "registered": null,
-        "auth": ["6W9E9Rup+pRGNexIrf5zPw==","Q27mpDHvVoe7OEIcvgMtXjSbhzb5ZRrGIcY2pD0gXe5LSO2w/FUm6z65fo1A\nAdZd"],
-        "docId": "504e6d488fc60a5212000003",
-        "sessionId": "81mxY8NDl3Wm1Hu6",
-        "userId": "504e6d478fc60a5212000001",
-        "version": 0,
-        "environment":"development"
-      }
-    };
-  %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
-  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
-  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
-  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
-  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
-  %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
-  %script{:type => 'text/javascript', :src => '../src/tags.js'}
-  %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
-  %script{:type => 'text/javascript', :src => '../src/line.js'}
-  %script{:type => 'text/javascript', :src => '../src/document.js'}
-  %script{:type => 'text/javascript', :src => '../src/position.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
-  %script{:type => 'text/javascript', :src => '../src/editor.js'}
-  %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
-  %script{:type => 'text/javascript', :src => '../src/debug.js'}
+    :javascript
+      var Stypi = {
+        configs: {
+          "nodeHost": "devnode.stypi.com",
+          "registered": null,
+          "auth": ["6W9E9Rup+pRGNexIrf5zPw==","Q27mpDHvVoe7OEIcvgMtXjSbhzb5ZRrGIcY2pD0gXe5LSO2w/FUm6z65fo1A\nAdZd"],
+          "docId": "504e6d488fc60a5212000003",
+          "sessionId": "81mxY8NDl3Wm1Hu6",
+          "userId": "504e6d478fc60a5212000001",
+          "version": 0,
+          "environment":"development"
+        }
+      };
+    %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+    %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+    %script{:type => 'text/javascript', :src => '../src/tags.js'}
+    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+    %script{:type => 'text/javascript', :src => '../src/line.js'}
+    %script{:type => 'text/javascript', :src => '../src/document.js'}
+    %script{:type => 'text/javascript', :src => '../src/position.js'}
+    %script{:type => 'text/javascript', :src => '../src/range.js'}
+    %script{:type => 'text/javascript', :src => '../src/editor.js'}
+    %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+    %script{:type => 'text/javascript', :src => '../src/debug.js'}
 
-  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
-  %script{:type => 'text/javascript', :src => '../lib/async.js'}
-  %script{:type => 'text/javascript', :src => '../lib/socket.io.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/stypi/network.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetclient.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetstate.js'}
+    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+    %script{:type => 'text/javascript', :src => '../lib/async.js'}
+    %script{:type => 'text/javascript', :src => '../lib/socket.io.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/stypi/network.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetclient.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetstate.js'}
 
-  %script{:type => 'text/javascript', :src => 'scripts/ot.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/ot.js'}
 

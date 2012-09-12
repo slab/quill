@@ -5,91 +5,91 @@
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
 
-%body
-  #content-container
-    .editor-wrapper
-      #formatting-container.formatting-container
-        .format-group
-          .format-button.first<>
-            .format.bold
-          .format-button<>
-            .format.italic
-          .format-button<>
-            .format.underline
-          .format-button.last<>
-            .format.strike
-      #editor-container.editor-container
-        %div<>
-          %span<> Welcome to Stypi
-        %div<>
-          %b<> Bold
-          %span<> &nbsp;
-          %i<> Italic
-          %span<> &nbsp;
-          %s<> Strike
-          %span<> &nbsp;
-          %u<> Underline
-        %div<>
-          %u<> Zero
-          %i<> One
-          %u<> Two
-          %i<>
-            %b<> Three
-            %s<> Four
-            %i<> Five
-        %div<>
-          %i<>
-            %b<> Hey
-            %u<> Now
-          %s<> What
-        %div<>
-          %b<> a
-          %i<> b
-          %b<> c
-          %i<> d
-          %b<> e
-          %i<> f
-          %b<> g
-        %div<>
-          %br<>
-        %div<>
-          %br<>
-        %div<>
-          %span<> Goodbye
-        %div<>
-          %br<>
+  %body
+    #content-container
+      .editor-wrapper
+        #formatting-container.formatting-container
+          .format-group
+            .format-button.first<>
+              .format.bold
+            .format-button<>
+              .format.italic
+            .format-button<>
+              .format.underline
+            .format-button.last<>
+              .format.strike
+        #editor-container.editor-container
+          %div<>
+            %span<> Welcome to Stypi
+          %div<>
+            %b<> Bold
+            %span<> &nbsp;
+            %i<> Italic
+            %span<> &nbsp;
+            %s<> Strike
+            %span<> &nbsp;
+            %u<> Underline
+          %div<>
+            %u<> Zero
+            %i<> One
+            %u<> Two
+            %i<>
+              %b<> Three
+              %s<> Four
+              %i<> Five
+          %div<>
+            %i<>
+              %b<> Hey
+              %u<> Now
+            %s<> What
+          %div<>
+            %b<> a
+            %i<> b
+            %b<> c
+            %i<> d
+            %b<> e
+            %i<> f
+            %b<> g
+          %div<>
+            %br<>
+          %div<>
+            %br<>
+          %div<>
+            %span<> Goodbye
+          %div<>
+            %br<>
 
-  %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
-  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
-  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
-  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
-  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
-  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
-  %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
-  %script{:type => 'text/javascript', :src => '../src/tags.js'}
-  %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
-  %script{:type => 'text/javascript', :src => '../src/line.js'}
-  %script{:type => 'text/javascript', :src => '../src/document.js'}
-  %script{:type => 'text/javascript', :src => '../src/position.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
-  %script{:type => 'text/javascript', :src => '../src/editor.js'}
-  %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
-  %script{:type => 'text/javascript', :src => '../src/debug.js'}
-  :javascript
-    editor = new Tandem.Editor('editor-container');
-    toolbar = new Tandem.Toolbar(editor);
+    %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+    %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+    %script{:type => 'text/javascript', :src => '../src/tags.js'}
+    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+    %script{:type => 'text/javascript', :src => '../src/line.js'}
+    %script{:type => 'text/javascript', :src => '../src/document.js'}
+    %script{:type => 'text/javascript', :src => '../src/position.js'}
+    %script{:type => 'text/javascript', :src => '../src/range.js'}
+    %script{:type => 'text/javascript', :src => '../src/editor.js'}
+    %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+    %script{:type => 'text/javascript', :src => '../src/debug.js'}
+    :javascript
+      editor = new Tandem.Editor('editor-container');
+      toolbar = new Tandem.Toolbar(editor);
 
-    _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
-      $('#formatting-container .' + format).click(function() {
-        toolbar.applyAttribute(format, !$(this).parent().hasClass('active'));
+      _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
+        $('#formatting-container .' + format).click(function() {
+          toolbar.applyAttribute(format, !$(this).parent().hasClass('active'));
+        });
       });
-    });
-    toolbar.on('update', function(attributes) {
-      $("#formatting-container .format-button").removeClass('active');
-      for (key in attributes) {
-        if (attributes[key] == true) {
-          $("#formatting-container ." + key).parent().addClass('active');
+      toolbar.on('update', function(attributes) {
+        $("#formatting-container .format-button").removeClass('active');
+        for (key in attributes) {
+          if (attributes[key] == true) {
+            $("#formatting-container ." + key).parent().addClass('active');
+          }
         }
-      }
-    });
+      });

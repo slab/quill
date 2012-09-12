@@ -3,9 +3,7 @@
 
 listenEditor = (source, target) ->
   source.on(source.events.API_TEXT_CHANGE, (delta) ->
-    for delta in delta.deltas
-      for key,val of delta.attributes
-        target.applyAttribute(delta.start, delta.end - delta.start, key, val, false)
+    target.applyDelta(delta)
   )
   source.on(source.events.USER_TEXT_CHANGE, (delta) ->
     target.applyDelta(delta)

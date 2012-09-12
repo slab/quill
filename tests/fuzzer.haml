@@ -1,20 +1,23 @@
 !!! 5
 %html
   %head
-    %title Stypi iPhone Editor Demo
+    %title Stypi Editor Fuzzer Test
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
-    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/iphone-style.css'}
-    %meta{:name=> 'viewport', :content => 'initial-scale=1.0, width=device-width, user-scalable=no'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../demo/styles/style.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../demo/styles/dual.css'}
 
   %body
     #content-container
+      .editor-wrapper.first
+        .editor-container
       .editor-wrapper
-        #editor-container.editor-container
+        .editor-container
 
     %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
     %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
     %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
     %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
     %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
     %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
     %script{:type => 'text/javascript', :src => '../src/tags.js'}
@@ -27,12 +30,4 @@
     %script{:type => 'text/javascript', :src => '../src/editor.js'}
     %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
     %script{:type => 'text/javascript', :src => '../src/debug.js'}
-
-    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
-    %script{:type => 'text/javascript', :src => '../lib/async.js'}
-    %script{:type => 'text/javascript', :src => '../lib/socket.io.js'}
-    %script{:type => 'text/javascript', :src => 'scripts/stypi/network.js'}
-    %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetclient.js'}
-    %script{:type => 'text/javascript', :src => 'scripts/stypi/ot/jetstate.js'}
-
-    %script{:type => 'text/javascript', :src => 'scripts/iphone-ot.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/fuzzer.js'}

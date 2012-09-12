@@ -1,7 +1,6 @@
 #= underscore
 #= require rangy/rangy-core
 
-
 class TandemRange
   @getSelection: (editor) ->
     rangySelection = rangy.getSelection(editor.iframe.contentWindow)
