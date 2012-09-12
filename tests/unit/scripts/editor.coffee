@@ -460,11 +460,11 @@ describe('Editor', ->
       it(test.name, ->
         editor = reset()
         editor.insertAt(test.index, test.text)
+        expect(editor.doc.checkConsistency(true)).to.be.true
         delta = editor.doc.toDelta()
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
         editor.doc.buildLines()
-        expect(delta).to.deep.equal(editor.doc.toDelta())
-        expect(editor.doc.checkConsistency(true)).to.be.true
+        expect(editor.doc.toDelta()).to.deep.equal(delta)
       )
     )
   )
@@ -490,66 +490,198 @@ describe('Editor', ->
       '))
       return new Tandem.Editor('editor-container')
 
-    it('should delete a node', ->
-      editor = reset()
-      editor.deleteAt(0, 3)
-      expect(editor.doc.root.firstChild.textContent).to.equal('456')
-      expect(editor.doc.root.childNodes.length).to.equal(3)
-    )
+    tests = [{
+      name: 'a node'
+      start: 0
+      length: 3
+      expected:
+        '<div>
+          <i>456</i>
+        </div>
+        <div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'part of a node'
+      start: [0..2]
+      length: 1
+      expected: (index) ->
+        char = (index + 1).toString()
+        html = "
+          <div>
+            <b>123</b>
+            <i>456</i>
+          </div>
+          <div>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </div>
+          <div>
+            <b>abcdefg</b>
+          </div>"
+        return html.replace(char.toString(), '')
+    }, {
+      name: 'multiple nodes'
+      start: 0
+      length: 6
+      expected:
+        '<div>
+          <br>
+        </div>
+        <div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'across multiple nodes'
+      start: [0..2]
+      length: 4
+      expected: (index) ->
+        fragments = [
+          "<div><i>56</i></div>"
+          "<div><b>1</b><i>6</i></div>"
+          "<div><b>12</b></div>"
+        ]
+        return fragments[index] + "
+          <div>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </div>
+          <div>
+            <b>abcdefg</b>
+          </div>"
+    }, {
+      name: 'the first line'
+      start: 0
+      length: 7
+      expected:
+        '<div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'the last line'
+      start: 11
+      length: 8
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>'
+    }, {
+      name: 'a middle line + newline'
+      start: 7
+      length: 5
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'newline + next line'
+      start: 6
+      length: 5
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'a newline character'
+      start: 6
+      length: 1
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'entire line and more'
+      start: 5
+      length: 8
+      expected:
+        '<div>
+          <b>123</b>
+          <i>45</i>
+          <b>bcdefg</b>
+        </div>'
+    }, {
+      name: 'across multiple lines'
+      start: [2..4]
+      length: 6
+      expected: (index) ->
+        fragments = [
+          '<div><b>12</b><u>8</u><s>9</s><u>0</u></div>'
+          '<div><b>123</b><s>9</s><u>0</u></div>'
+          '<div><b>123</b><i>4</i><u>0</u></div>'
+        ]
+        return fragments[index] + '
+          <div>
+            <b>abcdefg</b>
+          </div>'
+    }]
 
-    _.each([0..2], (i) ->
-      it('should delete part of a node ' + i, ->
-        editor = reset()
-        editor.deleteAt(i, 1)
-        expect(editor.doc.root.firstChild.textContent).to.equal('123456'.substr(0, i) + '123456'.substr(i + 1))
-        expect(editor.doc.root.childNodes.length).to.equal(3)
+
+    _.each(tests, (test) ->
+      starts = if _.isNumber(test.start) then [test.start] else test.start
+      _.each(starts, (start, index) ->
+        name = 'should delete ' + test.name
+        name += ' ' + index if starts.length > 1
+        it(name, ->
+          editor = reset()
+          editor.deleteAt(start, test.length)
+          expect(editor.doc.checkConsistency(true)).to.be.true
+          delta = editor.doc.toDelta()
+          if _.isString(test.expected)
+            expected = test.expected
+          else if _.isArray(test.expected)
+            expected = test[index]
+          else
+            expected = test.expected(index)
+          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(expected)
+          editor.doc.buildLines()
+          expect(editor.doc.toDelta()).to.deep.equal(delta)
+        )
       )
-    )
-
-    it('should delete multiple nodes', ->
-      editor = reset()
-      editor.deleteAt(0, 6)
-      expect(editor.doc.root.firstChild.textContent).to.equal('')
-      expect(editor.doc.root.childNodes.length).to.equal(3)
-    )
-
-    _.each([0..2], (i) ->
-      it('should delete across multiple nodes ' + i, ->
-        charsToDelete = 4
-        editor = reset()
-        editor.deleteAt(i, charsToDelete)
-        expect(editor.doc.root.firstChild.textContent).to.equal('123456'.substr(0, i) + '123456'.substr(i + charsToDelete))
-        expect(editor.doc.root.childNodes.length).to.equal(3)
-      )
-    )
-
-    it('should delete exactly one line', ->
-      editor = reset()
-      editor.deleteAt(0, 7)
-      expect(editor.doc.root.firstChild.textContent).to.equal('7890')
-      expect(editor.doc.root.childNodes.length).to.equal(2)
-    )
-
-    _.each([2..4], (i) ->
-      it('should delete across multiple lines ' + i, ->
-        charsToDelete = 6
-        editor = reset()
-        editor.deleteAt(i, charsToDelete)
-        expect(editor.doc.root.firstChild.textContent).to.equal('1234567890'.substr(0, i) + '1234567890'.substr(i + charsToDelete - 1))
-        expect(editor.doc.root.childNodes.length).to.equal(2)
-      )
-    )
-
-    it('should delete a newline character', ->
-      editor = reset()
-      editor.deleteAt(6, 1)
-      expect(editor.doc.root.childNodes.length).to.equal(2)
-    )
-
-    it('should delete entire line and more', ->
-      editor = reset()
-      editor.deleteAt(5, 8)
-      expect(editor.doc.root.childNodes.length).to.equal(1)
     )
   )
 )

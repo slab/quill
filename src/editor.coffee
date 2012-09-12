@@ -182,6 +182,7 @@ class TandemEditor extends EventEmitter2
     this.preserveSelection(startPos, 0 - length, =>
       fragment = Tandem.Utils.extractNodes(@doc.root, startIndex, endIndex)
       this.normalize()
+      @doc.buildLines()
     )
     @ignoreDomChanges = oldIgnoreDomChange
 
