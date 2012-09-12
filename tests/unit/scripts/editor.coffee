@@ -490,7 +490,7 @@ describe('Editor', ->
       editor = reset()
       editor.deleteAt(0, 3)
       expect(editor.doc.root.firstChild.textContent).to.equal('456')
-      expect(editor.doc.root.body.childNodes.length).to.equal(3)
+      expect(editor.doc.root.childNodes.length).to.equal(3)
     )
 
     _.each([0..2], (i) ->
