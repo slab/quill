@@ -25,6 +25,39 @@ class TandemDocument
       this.appendLine(node)
     )
 
+  # Makes sure our data structures are consistent
+  checkConsistency: (output = false) ->
+    nodesByLine = _.map(@root.childNodes, (lineNode) ->
+      nodes = lineNode.querySelectorAll('*')
+      return _.filter(nodes, (node) ->
+        return node.nodeType == node.ELEMENT_NODE && (node.nodeName == 'BR' || node.firstChild.nodeType == node.TEXT_NODE)
+      )
+    )
+    lines = @lines.toArray()
+
+    isConsistent = ->
+      # @lines and @lineMap should match
+      return false if lines.length != _.values(@lineMap).length
+      return false if _.any(lines, (line) =>
+        return !line? || @lineMap[line.id] != line
+      )
+      # @lines should match nodesByLine
+      return false if lines.length != nodesByLine.length
+      return false if _.any(lines, (line, index) =>
+        leafNodes = _.map(line.leaves.toArray(), (leaf) -> return leaf.node)
+        return _.isEqual(leafNodes, nodesByLine[index])
+      )
+
+    if isConsistent()
+      return true
+    else
+      if output
+        console.error @root
+        console.error nodesByLine 
+        console.error lines
+        console.error @lineMap
+      return false
+
   detectChange: ->
     # Go through HTML (which should be normalized)
     # Make sure non are different from their innerHTML, if so record change
