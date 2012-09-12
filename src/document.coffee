@@ -35,18 +35,32 @@ class TandemDocument
     )
     lines = @lines.toArray()
 
-    isConsistent = ->
+    isConsistent = =>
       # @lines and @lineMap should match
-      return false if lines.length != _.values(@lineMap).length
+      if lines.length != _.values(@lineMap).length
+        console.error "@lines and @lineMap differ in length", lines.length, _.values(@lineMap).length
+        return false
       return false if _.any(lines, (line) =>
-        return !line? || @lineMap[line.id] != line
+        if !line? || @lineMap[line.id] != line
+          if line?
+            console.error line, "does not match", @lineMap[line.id]
+          else
+            console.error "null line"
+          return true
+        return false
       )
       # @lines should match nodesByLine
-      return false if lines.length != nodesByLine.length
+      if lines.length != nodesByLine.length
+        console.error "@lines and nodesByLine differ in length"
+        return false
       return false if _.any(lines, (line, index) =>
         leafNodes = _.map(line.leaves.toArray(), (leaf) -> return leaf.node)
-        return _.isEqual(leafNodes, nodesByLine[index])
+        if !_.isEqual(leafNodes, nodesByLine[index])
+          console.error leafNodes, 'differs from', nodesByLine[index]
+          return true
+        return false
       )
+      return true
 
     if isConsistent()
       return true
