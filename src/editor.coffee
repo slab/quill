@@ -20,8 +20,7 @@ class TandemEditor extends EventEmitter2
   constructor: (@container) ->
     @container = document.getElementById(@container) if _.isString(@container)
     @iframe = this.createIframe(@container)
-    @iframeDoc = @iframe.contentWindow.document
-    @doc = new Tandem.Document(this)
+    @doc = new Tandem.Document(this, @iframe.contentWindow.document.body)
     @ignoreDomChanges = false
     @currentSelection = null
     this.initContentListeners()
@@ -70,7 +69,7 @@ class TandemEditor extends EventEmitter2
       this.emit(this.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
     , 100)
 
-    @iframeDoc.body.addEventListener('DOMSubtreeModified', =>
+    @doc.root.addEventListener('DOMSubtreeModified', =>
       return if @ignoreDomChanges
       onEdit()
     )
@@ -83,8 +82,8 @@ class TandemEditor extends EventEmitter2
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
 
-    @iframeDoc.body.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
-    @iframeDoc.body.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
+    @doc.root.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
+    @doc.root.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
 
 
@@ -101,8 +100,8 @@ class TandemEditor extends EventEmitter2
       range = new Tandem.Range(this, startIndex, startIndex + length)
 
     this.preserveSelection(range.start, 0, =>
-      [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex)
-      [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex + length)
+      [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
+      [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex + length)
       if startLine == endLine
         this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
       else
@@ -115,7 +114,7 @@ class TandemEditor extends EventEmitter2
       this.normalize()
     )
     if emitEvent
-      docLength = @iframeDoc.body.textContent.length + @iframeDoc.body.childNodes.length - 1
+      docLength = @doc.root.textContent.length + @doc.root.childNodes.length - 1
       deltas = []
       deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
       attribute = {}
@@ -133,11 +132,11 @@ class TandemEditor extends EventEmitter2
     [endNode, nextNode] = line.splitContents(endOffset)
 
     if value == true
-      fragment = @iframeDoc.createDocumentFragment()
+      fragment = @doc.root.ownerDocument.createDocumentFragment()
       Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
         fragment.appendChild(node)
       )
-      attrNode = Tandem.Utils.createContainerForAttribute(@iframeDoc, attr)
+      attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr)
       attrNode.appendChild(fragment)
       lineNode.insertBefore(attrNode, nextNode)
     else
@@ -180,9 +179,8 @@ class TandemEditor extends EventEmitter2
     startIndex = startPos.getIndex()
     endPos = Tandem.Position.makePosition(this, startIndex + length)
     endIndex = endPos.getIndex()
-
     this.preserveSelection(startPos, 0 - length, =>
-      fragment = Tandem.Utils.extractNodes(this, startIndex, endIndex)
+      fragment = Tandem.Utils.extractNodes(@doc.root, startIndex, endIndex)
       this.normalize()
     )
     @ignoreDomChanges = oldIgnoreDomChange
@@ -233,7 +231,7 @@ class TandemEditor extends EventEmitter2
     startIndex = position.getIndex()
     leaf = position.getLeaf()
     if _.keys(leaf.attributes).length > 0
-      [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@iframeDoc.body, startIndex)
+      [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
       line = @doc.findLine(lineNode)
       [beforeNode, afterNode] = line.splitContents(lineOffset)
       span = lineNode.ownerDocument.createElement('span')

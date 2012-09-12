@@ -36,7 +36,7 @@ class TandemPosition
     if _.isNumber(@leafNode)
       @offset = @leafNode
       @index = @leafNode
-      @leafNode = @editor.iframeDoc.body.firstChild
+      @leafNode = @editor.doc.root.firstChild
     [@leafNode, @offset] = TandemPosition.findLeafNode(@leafNode, @offset)
       
   getIndex: ->

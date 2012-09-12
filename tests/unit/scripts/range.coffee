@@ -9,7 +9,7 @@ describe('Range', ->
     it('should correctly initialize position from index', ->
       $('#editor-container').html('<div><b>12</b><i>34</i></div><div><s>56</s><u>78</u></div><div><br></div>')
       editor = new Tandem.Editor('editor-container')
-      numPositions = editor.iframeDoc.body.textContent.length + editor.iframeDoc.body.childNodes.length - 1
+      numPositions = editor.doc.root.textContent.length + editor.doc.root.childNodes.length - 1
       positions = _.map([0..numPositions], (i) ->
         return new Tandem.Position(editor, i)
       )
@@ -52,9 +52,9 @@ describe('Range', ->
   describe('getLeafNodes', ->
     $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
     editor = new Tandem.Editor('editor-container')
-    body = editor.iframeDoc.body
-    line1 = body.firstChild
-    line2 = body.lastChild
+    container = editor.doc.root
+    line1 = container.firstChild
+    line2 = container.lastChild
 
     it('should select a single node at boundaries', ->
       range = new Tandem.Range(editor, 0, 3)

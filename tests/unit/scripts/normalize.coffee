@@ -123,9 +123,9 @@ describe('Normalize', ->
 
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
-        editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
+        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before)
         editor.doc.buildLines()
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
+        expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
   )
@@ -217,9 +217,9 @@ describe('Normalize', ->
 
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
-        editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
+        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before)
         editor.doc.buildLines()
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
+        expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
   )

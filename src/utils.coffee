@@ -37,16 +37,16 @@ TandemUtils =
       when 'underline'  then return doc.createElement('u')
       else                   return doc.createElement('span')
 
-  extractNodes: (editor, startIndex, endIndex) ->
-    [startLine, startOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, startIndex)
-    [endLine, endOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, endIndex)
+  extractNodes: (container, startIndex, endIndex) ->
+    [startLine, startOffset] = Tandem.Utils.getChildAtOffset(container, startIndex)
+    [endLine, endOffset] = Tandem.Utils.getChildAtOffset(container, endIndex)
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLine, startOffset, true)
     if startLine == endLine
       endLine = rightStart
       endOffset -= leftStart.textContent.length if leftStart? && startLine != rightStart
     [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLine, endOffset, true)
   
-    fragment = editor.iframeDoc.createDocumentFragment()
+    fragment = container.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)

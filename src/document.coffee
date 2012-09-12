@@ -5,9 +5,7 @@
 
 
 class TandemDocument
-  constructor: (@editor) ->
-    @doc = @editor.iframeDoc
-    @root = @doc.body
+  constructor: (@editor, @root) ->
     this.buildLines()
 
   appendLine: (lineNode) ->
@@ -63,7 +61,7 @@ class TandemDocument
 
   normalizeHtml: ->
     if @root.childNodes.length == 0
-      div = @doc.createElement('div')
+      div = @root.ownerDocument.createElement('div')
       @root.appendChild(div)
     else
       _.each(_.clone(@root.childNodes), (child) ->
