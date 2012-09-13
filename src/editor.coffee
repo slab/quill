@@ -90,7 +90,6 @@ class TandemEditor extends EventEmitter2
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
   applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
-    return console.log startIndex, length, 'exceeds boundaries' unless this.isInsideBoundaries(startIndex, length)
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     if !_.isNumber(startIndex)
@@ -173,7 +172,6 @@ class TandemEditor extends EventEmitter2
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength)
 
   deleteAt: (startIndex, length, emitEvent = true) ->
-    return console.log startIndex, length, 'exceeds boundaries' unless this.isInsideBoundaries(startIndex, length)
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     originalDocLength = @doc.length
@@ -209,7 +207,6 @@ class TandemEditor extends EventEmitter2
     return Tandem.Range.getSelection(this)
 
   insertAt: (startIndex, text, emitEvent = true) ->
-    return console.log startIndex, length, 'exceeds boundaries' unless this.isInsideBoundaries(startIndex)
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     originalDocLength = @doc.length
@@ -267,9 +264,6 @@ class TandemEditor extends EventEmitter2
         leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
     @doc.updateLine(leaf.line)
 
-  isInsideBoundaries: (index, length = 0) ->
-    return 0 <= index && 0 <= length && index <= @doc.length && index + length <= @doc.length
-    
   normalize: ->
     this.preserveSelection(null, 0, =>
       @doc.normalizeHtml()

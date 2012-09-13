@@ -35,7 +35,7 @@ class TandemLeafIterator
     else if @cur.next?
       @cur = @cur.next
     else
-      line = @cur.line
+      line = @cur.line.next
       while line? && line.leaves.length == 0
         line = line.next
       @cur = if line? then line.leaves.first else null
