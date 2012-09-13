@@ -89,39 +89,41 @@ class TandemLine extends LinkedList.Node
     @delta = this.toDelta()
 
 
-  mergeAdjacent: (node = @node.firstChild) ->
-    while node? && node.nextSibling?
-      next = node.nextSibling
-      if node.tagName == next.tagName && Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
-        node = Tandem.Utils.mergeNodes(node, next)
-      else
-        node = next
-        _.each(_.clone(node.childNodes), (childNode) =>
-          this.mergeAdjacent(node)
-        )
+  mergeAdjacent: ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) ->
+      if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node)
+        next = node.nextSibling
+        if next? && node.tagName == next.tagName && node.className == next.className
+          node = Tandem.Utils.mergeNodes(node, next)
+      return node
+    )
 
   removeRedundant: ->
     key = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
     @node[key] = {}
-    Tandem.Utils.traversePreorder(@node, 0, (node) =>
+
+    isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE && node.textContent.length == 0
-        return Tandem.Utils.unwrap(node)
+        return true
       if node.tagName == 'SPAN'
         # Check if children need us
         if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
-          return Tandem.Utils.unwrap(node)
+          return true
         # Check if parent needs us
         else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
-          return Tandem.Utils.unwrap(node)
+          return true
       attribute = Tandem.Utils.getAttributeForContainer(node)
-      if attribute?
-        if !node.parentNode[key]?
-          console.error node, node.parentNode
-          debugger
-        if node.parentNode[key]? && node.parentNode[key][attribute] == true
-          return Tandem.Utils.unwrap(node)
+      if attribute? && node.parentNode[key]? && node.parentNode[key][attribute] == true
+        return true
+      return false
+
+    Tandem.Utils.traversePreorder(@node, 0, (node) =>
+      if isRedudant(node)
+        node = Tandem.Utils.unwrap(node)
+      if node?
         node[key] = _.clone(node.parentNode[key])
-        node[key][attribute] = true
+        attribute = Tandem.Utils.getAttributeForContainer(node)
+        node[key][attribute] = true if attribute?
       return node
     )
     delete @node[key]
@@ -129,8 +131,6 @@ class TandemLine extends LinkedList.Node
       delete node[key]
       return node
     )
-
-  renameEquivalent: ->
 
   wrapText: ->
     Tandem.Utils.traversePreorder(@node, 0, (node) =>

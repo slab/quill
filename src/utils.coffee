@@ -140,10 +140,10 @@ TandemUtils =
     cur = root.firstChild
     while cur?
       nextOffset = offset + cur.textContent.length
-      oldCur = cur
+      curHtml = cur.innerHTML
       cur = fn.apply(context, [cur, offset].concat(args))
       TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))
-      if cur? && oldCur == cur
+      if cur? && cur.innerHTML == curHtml
         cur = cur.nextSibling
         offset = nextOffset
 
