@@ -1,4 +1,5 @@
-alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"))
+ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"))
+NUM_OPERATIONS = 100
 
 getRandomLength = ->
   rand = Math.random()
@@ -28,7 +29,7 @@ getRandomOperation = (editor) ->
 
 getRandomString = (length) ->
   return _.map([0..(length - 1)], ->
-    return alphabet[Math.floor(Math.random()*length)]
+    return ALPHABET[Math.floor(Math.random()*length)]
   ).join('')
 
 
@@ -42,19 +43,21 @@ $(document).ready( ->
     reader.applyDelta(delta)
   )
 
-  finishedFuzzing = _.after(100, ->
-    writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
-    readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
-    writerDelta = writer.getDelta()
-    readerDelta = reader.getDelta()
+  finishedFuzzing = _.after(NUM_OPERATIONS, ->
+    _.defer( ->
+      writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
+      readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
+      writerDelta = writer.getDelta()
+      readerDelta = reader.getDelta()
 
-    if writerHtml == readerHtml && _.isEqual(writerDelta, readerDelta)
-      console.log "Fuzzing passed"
-    else
-      console.error "Fuzzing failed", writer, reader
+      if writerHtml == readerHtml && _.isEqual(writerDelta, readerDelta)
+        console.log "Fuzzing passed"
+      else
+        console.error "Fuzzing failed", writer, reader
+    )
   )
 
-  _.each([1..100], ->
+  _.each([1..NUM_OPERATIONS], ->
     _.defer( ->
       operation = getRandomOperation(writer)
       if operation?
