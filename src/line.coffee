@@ -103,11 +103,16 @@ class TandemLine extends LinkedList.Node
   removeRedundant: ->
     key = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
     @node[key] = {}
-    Tandem.Utils.traversePreorder(@node, 0, (node) ->
+    Tandem.Utils.traversePreorder(@node, 0, (node) =>
       if node.nodeType == node.ELEMENT_NODE && node.textContent.length == 0
         return Tandem.Utils.unwrap(node)
-      if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType == child.ELEMENT_NODE))
-        return Tandem.Utils.unwrap(node)
+      if node.tagName == 'SPAN'
+        # Check if children need us
+        if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+          return Tandem.Utils.unwrap(node)
+        # Check if parent needs us
+        else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+          return Tandem.Utils.unwrap(node)
       attribute = Tandem.Utils.getAttributeForContainer(node)
       if attribute?
         if node.parentNode[key][attribute] == true
