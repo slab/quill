@@ -13,7 +13,13 @@ getRandomLength = ->
     return Math.floor(Math.random() * 100)
 
 getRandomOperation = (editor) ->
-  index = Math.floor(Math.random() * (editor.doc.length + 1))
+  rand = Math.random()
+  if rand < 0.2
+    index = 0
+  else if rand < 0.4
+    index = editor.doc.length
+  else
+    index = Math.floor(Math.random() * editor.doc.length)
   length = getRandomLength() + 1
   rand = Math.random()
   if rand < 0.5
@@ -38,6 +44,7 @@ $(document).ready( ->
   $editors = $('.editor-container')
   writer = new Tandem.Editor($editors.get(0))
   reader = new Tandem.Editor($editors.get(1))
+  start = new Date()
 
   writer.on(writer.events.API_TEXT_CHANGE, (delta) ->
     reader.applyDelta(delta)
@@ -51,7 +58,10 @@ $(document).ready( ->
       readerDelta = reader.getDelta()
 
       if writerHtml == readerHtml && _.isEqual(writerDelta, readerDelta)
-        console.log "Fuzzing passed"
+        time = (new Date() - start) / 1000
+        console.info "Fuzzing passed"
+        console.info time, 'seconds'
+        console.info (NUM_OPERATIONS / time).toPrecision(2), 'ops/sec'
       else
         console.error "Fuzzing failed", writer, reader
     )

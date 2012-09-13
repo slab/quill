@@ -115,7 +115,10 @@ class TandemLine extends LinkedList.Node
           return Tandem.Utils.unwrap(node)
       attribute = Tandem.Utils.getAttributeForContainer(node)
       if attribute?
-        if node.parentNode[key][attribute] == true
+        if !node.parentNode[key]?
+          console.error node, node.parentNode
+          debugger
+        if node.parentNode[key]? && node.parentNode[key][attribute] == true
           return Tandem.Utils.unwrap(node)
         node[key] = _.clone(node.parentNode[key])
         node[key][attribute] = true
