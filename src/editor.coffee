@@ -47,7 +47,6 @@ class TandemEditor extends EventEmitter2
         margin: 0px; 
         padding: 10px; 
       }
-      .line { min-height: 15px; }
       a { text-decoration: underline; }
       b { font-weight: bold; }
       i { font-style: italic; }
