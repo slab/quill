@@ -323,7 +323,12 @@ class TandemEditor extends EventEmitter2
     newDelta = @doc.toDelta()
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
-    console.assert(compose.isEqual(newDelta))
+    if !compose.isEqual(newDelta)
+      console.info(JSON.stringify(oldDelta))
+      console.info(JSON.stringify(newDelta))
+      console.info(JSON.stringify(decompose))
+      console.info(JSON.stringify(compose))
+      console.assert(false, oldDelta, newDelta, decompose, compose)
     return JetSync.decompose(oldDelta, newDelta)
 
 

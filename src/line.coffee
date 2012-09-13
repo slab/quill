@@ -101,7 +101,8 @@ class TandemLine extends LinkedList.Node
         )
 
   removeRedundant: ->
-    @node._tandemAttributes = {}
+    key = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
+    @node[key] = {}
     Tandem.Utils.traversePreorder(@node, 0, (node) ->
       if node.nodeType == node.ELEMENT_NODE && node.textContent.length == 0
         return Tandem.Utils.unwrap(node)
@@ -109,15 +110,15 @@ class TandemLine extends LinkedList.Node
         return Tandem.Utils.unwrap(node)
       attribute = Tandem.Utils.getAttributeForContainer(node)
       if attribute?
-        if node.parentNode._tandemAttributes[attribute] == true
+        if node.parentNode[key][attribute] == true
           return Tandem.Utils.unwrap(node)
-        node._tandemAttributes = _.clone(node.parentNode._tandemAttributes)
-        node._tandemAttributes[attribute] = true
+        node[key] = _.clone(node.parentNode[key])
+        node[key][attribute] = true
       return node
     )
-    delete @node._tandemAttributes
+    delete @node[key]
     Tandem.Utils.traversePreorder(@node, 0, (node) ->
-      delete node._tandemAttributes
+      delete node[key]
       return node
     )
 
