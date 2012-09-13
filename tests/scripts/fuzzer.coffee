@@ -42,11 +42,24 @@ $(document).ready( ->
     reader.applyDelta(delta)
   )
 
+  finishedFuzzing = _.after(100, ->
+    writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
+    readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
+    writerDelta = writer.getDelta()
+    readerDelta = reader.getDelta()
+
+    if writerHtml == readerHtml && _.isEqual(writerDelta, readerDelta)
+      console.log "Fuzzing passed"
+    else
+      console.error "Fuzzing failed", writer, reader
+  )
+
   _.each([1..100], ->
     _.defer( ->
       operation = getRandomOperation(writer)
       if operation?
         writer[operation.op].apply(writer, operation.args)
+      finishedFuzzing()
     )
   )
 )
