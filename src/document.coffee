@@ -17,13 +17,9 @@ class TandemDocument
     return line
 
   buildLines: ->
+    this.reset()
     this.normalizeHtml()
-    @lines = new LinkedList()
-    @lineMap = {}
-    @length = 0
-    _.each(@root.childNodes, (node) =>
-      this.appendLine(node)
-    )
+    this.rebuild()
 
   # Makes sure our data structures are consistent
   checkConsistency: (output = false) ->
@@ -117,10 +113,7 @@ class TandemDocument
         else
           Tandem.Utils.breakBlocks(child)
       )
-    _.each(@root.getElementsByClassName(Tandem.Line.DIRTY_CLASS), (lineNode) =>
-      line = this.findLine(lineNode)
-      line.rebuild() if line?
-    )
+    this.rebuildDirty()
 
   printLines: ->
     lines = @lines.toArray() 
@@ -129,10 +122,29 @@ class TandemDocument
       console.info line.id, line.node.textContent
     )
 
+  rebuild: ->
+    this.reset()
+    _.each(@root.childNodes, (node) =>
+      this.appendLine(node)
+    )
+
+  rebuildDirty: ->
+    dirtyNodes = @root.getElementsByClassName(Tandem.Line.DIRTY_CLASS)
+    _.each(_.clone(dirtyNodes), (lineNode) =>
+      lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
+      line = this.findLine(lineNode)
+      line.rebuild() if line?
+    )
+
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
     @length -= line.length + 1
+
+  reset: ->
+    @lines = new LinkedList()
+    @lineMap = {}
+    @length = 0
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)

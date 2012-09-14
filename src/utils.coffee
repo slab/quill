@@ -23,11 +23,11 @@ TandemUtils =
             root.classList.add(Tandem.Line.DIRTY_CLASS)
             toBreak = [left, right]
             node = next
-          _.each(toBreak, (line) =>
-            if line? && line != root
-              line.classList.add(Tandem.Line.DIRTY_CLASS)
-              this.breakBlocks(line)
-          )
+        _.each(toBreak, (line) =>
+          if line? && line != root
+            line.classList.add(Tandem.Line.DIRTY_CLASS)
+            this.breakBlocks(line)
+        )
       return node
     )
 

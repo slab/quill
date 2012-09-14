@@ -142,7 +142,7 @@ describe('Normalize', ->
     }]
 
     _.each(tests, (test) ->
-      it('shoud ' + test.name, ->
+      it('should ' + test.name, ->
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before)
         editor.doc.buildLines()
         expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
