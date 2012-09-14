@@ -117,6 +117,10 @@ class TandemDocument
         else
           Tandem.Utils.breakBlocks(child)
       )
+    _.each(@root.getElementsByClassName(Tandem.Line.DIRTY_CLASS), (lineNode) =>
+      line = this.findLine(lineNode)
+      line.rebuild() if line?
+    )
 
   printLines: ->
     lines = @lines.toArray() 

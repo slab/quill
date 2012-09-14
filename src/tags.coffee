@@ -20,6 +20,11 @@ TandemTags =
     'UL'
   ]
 
+  BREAK_TAGS: [
+    'BR'
+    'HR'
+  ]
+
   # Missing rule implied removal
   LINE_RULES: {
     'A'         : {rename: 'span'}

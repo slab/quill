@@ -20,7 +20,7 @@ describe('Normalize', ->
         </div>
         <div>
           <span>Text</span>
-          <br />
+          <br>
         </div>'
       expected: 
         '<div>
@@ -46,6 +46,26 @@ describe('Normalize', ->
         </div>
         <div>
           <span>What</span>
+        </div>'
+    }, {
+      name: 'break on br tags'
+      before: 
+        '<div>
+          <span>Text</span>
+          <br />
+          <b>Bold</b>
+          <br />
+          <i>Italic</i>
+        </div>'
+      expected: 
+        '<div>
+          <span>Text</span>
+        </div>
+        <div>
+          <b>Bold</b>
+        </div>
+        <div>
+          <i>Italic</i>
         </div>'
     }, {
       name: 'remove redundant block elements'
@@ -129,6 +149,7 @@ describe('Normalize', ->
       )
     )
   )
+
   
   
   describe('elements', ->

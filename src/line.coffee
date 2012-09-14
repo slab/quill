@@ -5,6 +5,7 @@
 
 class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'tandem-line'
+  @DIRTY_CLASS: 'tandem-dirty'
   @ID_PREFIX  : 'tandem-line-'
   @counter    : 0
 

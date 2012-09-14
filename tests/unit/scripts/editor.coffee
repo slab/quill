@@ -434,6 +434,7 @@ describe('Editor', ->
       text: "\n"
       expected: 
         '<div>
+          <br>
         </div>
         <div>
           <span>123</span>
@@ -448,13 +449,14 @@ describe('Editor', ->
           <span>1A</span>
         </div>
         <div>
+          <br>
         </div>
         <div>
           <span>C23</span>
           <i>456</i>
         </div>'
     }]
-
+    tests = [tests[5]]
 
     _.each(tests, (test) ->
       it(test.name, ->

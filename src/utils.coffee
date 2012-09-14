@@ -5,19 +5,29 @@ TandemUtils =
   # All block nodes inside nodes are moved out
   breakBlocks: (root) ->
     this.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE && _.indexOf(Tandem.Tags.BLOCK_TAGS, node.tagName, true) > -1
+      if node.nodeType == node.ELEMENT_NODE
         toBreak = []
-        [left1, left2, didLeftSplit] = this.splitNode(root, index)
-        if !didLeftSplit
-          [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
-          toBreak = toBreak.concat([right1, right2]) if didRightSplit
-        else
-          toBreak = toBreak.concat([left1, left2])
-        toBreak = toBreak.concat([left1, left2]) if didLeftSplit
-        _.each(toBreak, (line) =>
-          this.breakBlocks(line) if line? && line != root
-        )
-        return node
+        if _.indexOf(Tandem.Tags.BLOCK_TAGS, node.tagName, true) > -1
+          [left1, left2, didLeftSplit] = this.splitNode(root, index)
+          if !didLeftSplit
+            [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
+            toBreak = toBreak.concat([right1, right2]) if didRightSplit
+          else
+            toBreak = toBreak.concat([left1, left2])
+          toBreak = toBreak.concat([left1, left2]) if didLeftSplit
+        else if _.indexOf(Tandem.Tags.BREAK_TAGS, node.tagName, true) > -1
+          [left, right, didSplit] = this.splitNode(root, index)
+          if didSplit?
+            next = node.nextSibling
+            node.parentNode.removeChild(node)
+            root.classList.add(Tandem.Line.DIRTY_CLASS)
+            toBreak = [left, right]
+            node = next
+          _.each(toBreak, (line) =>
+            if line? && line != root
+              line.classList.add(Tandem.Line.DIRTY_CLASS)
+              this.breakBlocks(line)
+          )
       return node
     )
 
