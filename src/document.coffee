@@ -5,6 +5,23 @@
 
 
 class TandemDocument
+  @normalizeHtml: (root, options = {}) ->
+    if root.childNodes.length == 0
+      div = root.ownerDocument.createElement('div')
+      return root.appendChild(div)
+
+    _.each(_.clone(root.childNodes), (child) =>
+      if child.nodeType != child.ELEMENT_NODE
+        child.parentNode.removeChild(child)
+      else
+        if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS)
+          lineNodes = Tandem.Utils.breakBlocks(child)
+          _.each(lineNodes, (lineNode) ->
+            Tandem.Line.normalizeHtml(lineNode)
+          )
+    )
+
+
   constructor: (@editor, @root) ->
     this.buildLines()
 
@@ -18,7 +35,7 @@ class TandemDocument
 
   buildLines: ->
     this.reset()
-    this.normalizeHtml()
+    TandemDocument.normalizeHtml(@root, {ignoreDirty: true})
     this.rebuild()
 
   # Makes sure our data structures are consistent
@@ -101,21 +118,6 @@ class TandemDocument
     @length += line.length
     @length += 1 if @lines.length > 1
     return line
-
-  normalizeHtml: ->
-    if @root.childNodes.length == 0
-      div = @root.ownerDocument.createElement('div')
-      @root.appendChild(div)
-    else
-      _.each(_.clone(@root.childNodes), (child) =>
-        if child.nodeType != child.ELEMENT_NODE
-          child.parentNode.removeChild(child)
-        else
-          line = this.findLine(child)
-          if !line? || line.node.innerHTML != line.innerHTML
-            Tandem.Utils.breakBlocks(child)
-      )
-      this.rebuildDirty()
 
   printLines: ->
     lines = @lines.toArray() 

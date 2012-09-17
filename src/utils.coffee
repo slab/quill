@@ -4,6 +4,7 @@
 TandemUtils = 
   # All block nodes inside nodes are moved out
   breakBlocks: (root) ->
+    lineNodes = []
     this.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
         toBreak = []
@@ -20,16 +21,17 @@ TandemUtils =
           if didSplit?
             next = node.nextSibling
             node.parentNode.removeChild(node)
-            root.classList.add(Tandem.Line.DIRTY_CLASS)
             toBreak = [left, right]
             node = next
         _.each(toBreak, (line) =>
           if line? && line != root
-            line.classList.add(Tandem.Line.DIRTY_CLASS)
-            this.breakBlocks(line)
+            newLineNodes = this.breakBlocks(line)
+            lineNodes.push(line)
+            lineNodes = _.uniq(lineNodes.concat(newLineNodes))
         )
       return node
     )
+    return lineNodes
 
   cleanHtml: (html) ->
     # Remove leading and tailing whitespace

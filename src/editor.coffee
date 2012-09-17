@@ -265,10 +265,7 @@ class TandemEditor extends EventEmitter2
 
   normalize: ->
     this.preserveSelection(null, 0, =>
-      @doc.normalizeHtml()
-      _.each(@doc.lines.toArray(), (line) ->
-        line.normalizeHtml()
-      )
+      Tandem.Document.normalizeHtml(@doc.root)
     )
 
   preserveSelection: (modificationStart, charAdditions, fn) ->
@@ -294,7 +291,7 @@ class TandemEditor extends EventEmitter2
   update: ->
     oldDelta = @doc.toDelta()
     this.preserveSelection(null, 0, =>
-      this.normalize()
+      Tandem.Document.normalizeHtml(@doc.root)
       lines = @doc.lines.toArray()
       lineNode = @doc.root.firstChild
       _.each(lines, (line, index) =>
