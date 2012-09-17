@@ -107,13 +107,15 @@ class TandemDocument
       div = @root.ownerDocument.createElement('div')
       @root.appendChild(div)
     else
-      _.each(_.clone(@root.childNodes), (child) ->
+      _.each(_.clone(@root.childNodes), (child) =>
         if child.nodeType != child.ELEMENT_NODE
           child.parentNode.removeChild(child)
         else
-          Tandem.Utils.breakBlocks(child)
+          line = this.findLine(child)
+          if !line? || line.node.innerHTML != line.innerHTML
+            Tandem.Utils.breakBlocks(child)
       )
-    this.rebuildDirty()
+      this.rebuildDirty()
 
   printLines: ->
     lines = @lines.toArray() 
