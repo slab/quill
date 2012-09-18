@@ -29,6 +29,7 @@ class TandemDocument
     line = new Tandem.Line(this, lineNode)
     @lines.append(line)
     @lineMap[line.id] = line
+    @length += line.length
     @length += 1 if @lines.length > 1
     return line
 
@@ -66,7 +67,17 @@ class TandemDocument
         console.error "@lines and nodesByLine differ in length"
         return false
       return false if _.any(lines, (line, index) =>
-        leafNodes = _.map(line.leaves.toArray(), (leaf) -> return leaf.node)
+        if line.length != line.node.textContent.length
+          console.error line, line.length, line.node.textContent.length, 'differ in length'
+          return true
+        leaves = line.leaves.toArray()
+        return true if _.any(leaves, (leaf) ->
+          if leaf.length != leaf.node.textContent.length
+            console.error leaf, leaf.length, leaf.node.textContent.length, 'differ in length'
+            return true
+          return false
+        )
+        leafNodes = _.map(leaves, (leaf) -> return leaf.node)
         if !_.isEqual(leafNodes, nodesByLine[index])
           console.error leafNodes, 'differs from', nodesByLine[index]
           return true
@@ -114,6 +125,7 @@ class TandemDocument
     line = new Tandem.Line(this, newLineNode)
     @lines.insertAfter(refLine.prev, line)
     @lineMap[line.id] = line
+    @length += line.length
     @length += 1 if @lines.length > 1
     return line
 
@@ -135,7 +147,7 @@ class TandemDocument
     _.each(_.clone(dirtyNodes), (lineNode) =>
       lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
       line = this.findLine(lineNode)
-      line.rebuild() if line?
+      this.updateLine(line) if line?
     )
 
   removeLine: (line) ->
@@ -151,7 +163,7 @@ class TandemDocument
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
-    line.rebuild()
+    this.updateLine(line)
     newLine = new Tandem.Line(this, lineNode2)
     @lines.insertAfter(line, newLine)
     @lineMap[newLine.id] = newLine

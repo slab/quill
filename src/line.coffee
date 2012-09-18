@@ -104,8 +104,7 @@ class TandemLine extends LinkedList.Node
       attr = Tandem.Utils.getAttributeForContainer(node)
       nodeAttributes[attr] = true if attr?
       if Tandem.Leaf.isLeafNode(node)
-        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
-        @numLeaves += 1
+        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes))
       else
         this.buildLeaves(node, nodeAttributes)
     )
@@ -131,16 +130,13 @@ class TandemLine extends LinkedList.Node
     return delta
 
   rebuild: ->
-    # TODO memory leak issue?
     if @node.parentNode == @doc.root
+      while @leaves? && @leaves.length > 0
+        @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
-      @numLeaves = 0
       TandemLine.normalizeHtml(@node)
       this.buildLeaves(@node, {})
-      @length ||= 0
-      @doc.length -= @length
       this.resetContent()
-      @doc.length += @length
     else
       @doc.removeLine(this)
 

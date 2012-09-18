@@ -144,6 +144,7 @@ class TandemEditor extends EventEmitter2
     @doc.updateLine(line)
 
   applyDelta: (delta) ->
+    console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     _.each(delta.deltas, (delta) =>
@@ -168,7 +169,7 @@ class TandemEditor extends EventEmitter2
     )
     # If end of text was deleted
     if delta.endLength < delta.startLength + offset
-      this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength)
+      this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
 
   deleteAt: (startIndex, length, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -185,7 +186,7 @@ class TandemEditor extends EventEmitter2
       lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
       _.each(lineNodes, (lineNode) =>
         line = @doc.findLine(lineNode)
-        line.rebuild(line) if line?
+        @doc.updateLine(line) if line?
       )
     )
     if emitEvent
