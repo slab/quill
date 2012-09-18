@@ -49,22 +49,19 @@ TandemUtils =
       when 'underline'  then return doc.createElement('u')
       else                   return doc.createElement('span')
 
-  extractNodes: (container, startIndex, endIndex) ->
-    [startLine, startOffset] = Tandem.Utils.getChildAtOffset(container, startIndex)
-    [endLine, endOffset] = Tandem.Utils.getChildAtOffset(container, endIndex)
-    [leftStart, rightStart] = Tandem.Utils.splitNode(startLine, startOffset, true)
-    if startLine == endLine
-      endLine = rightStart
-      endOffset -= leftStart.textContent.length if leftStart? && startLine != rightStart
-    [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLine, endOffset, true)
+  extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
+    [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
+    if startLineNode == endLineNode
+      endLineNode = rightStart
+      endOffset -= leftStart.textContent.length if leftStart? && startLineNode != rightStart
+    [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
   
-    fragment = container.ownerDocument.createDocumentFragment()
+    fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
-      rightStart = next    
-
-    Tandem.Utils.mergeNodes(leftStart, rightEnd) if leftStart? && rightEnd?
+      rightStart = next
+    Tandem.Utils.mergeNodes(leftStart, rightEnd)
 
     return fragment
 
@@ -88,6 +85,8 @@ TandemUtils =
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 
   mergeNodes: (node1, node2) ->
+    return node2 if !node1?
+    return node1 if !node2?
     this.moveChildren(node1, node2)
     node2.parentNode.removeChild(node2)
     return node1

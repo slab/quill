@@ -110,7 +110,7 @@ class TandemEditor extends EventEmitter2
         while curLine? && curLine != endLine
           this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
           curLine = curLine.nextSibling
-      this.normalize()
+      @doc.rebuildDirty()
     )
     if emitEvent
       deltas = []
@@ -179,9 +179,14 @@ class TandemEditor extends EventEmitter2
     endPos = Tandem.Position.makePosition(this, startIndex + length)
     endIndex = endPos.getIndex()
     this.preserveSelection(startPos, 0 - length, =>
-      fragment = Tandem.Utils.extractNodes(@doc.root, startIndex, endIndex)
-      this.normalize()
-      @doc.buildLines()
+      [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
+      [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
+      fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
+      lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
+      _.each(lineNodes, (lineNode) =>
+        line = @doc.findLine(lineNode)
+        line.rebuild(line) if line?
+      )
     )
     if emitEvent
       deltas = []
@@ -224,7 +229,6 @@ class TandemEditor extends EventEmitter2
           index += 1
         position = null
       )
-      this.normalize()
     )
     if emitEvent
       deltas = []

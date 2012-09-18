@@ -132,11 +132,17 @@ class TandemLine extends LinkedList.Node
 
   rebuild: ->
     # TODO memory leak issue?
-    @leaves = new LinkedList()
-    @numLeaves = 0
-    TandemLine.normalizeHtml(@node)
-    this.buildLeaves(@node, {})
-    this.resetContent()
+    if @node.parentNode == @doc.root
+      @leaves = new LinkedList()
+      @numLeaves = 0
+      TandemLine.normalizeHtml(@node)
+      this.buildLeaves(@node, {})
+      @length ||= 0
+      @doc.length -= @length
+      this.resetContent()
+      @doc.length += @length
+    else
+      @doc.removeLine(this)
 
   resetContent: ->
     @length = @node.textContent.length

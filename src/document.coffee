@@ -29,7 +29,6 @@ class TandemDocument
     line = new Tandem.Line(this, lineNode)
     @lines.append(line)
     @lineMap[line.id] = line
-    @length += line.length
     @length += 1 if @lines.length > 1
     return line
 
@@ -115,7 +114,6 @@ class TandemDocument
     line = new Tandem.Line(this, newLineNode)
     @lines.insertAfter(refLine.prev, line)
     @lineMap[line.id] = line
-    @length += line.length
     @length += 1 if @lines.length > 1
     return line
 

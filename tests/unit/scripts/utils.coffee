@@ -329,7 +329,9 @@ describe('Utils', ->
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        extraction = Tandem.Utils.extractNodes(editor.doc.root, test.start, test.end)
+        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(editor.doc.root, test.start)
+        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(editor.doc.root, test.end)
+        extraction = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
         target = document.createElement('div')
         target.appendChild(extraction)
         expect("Fragment " + Tandem.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
