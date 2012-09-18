@@ -26,12 +26,7 @@ class TandemDocument
     this.buildLines()
 
   appendLine: (lineNode) ->
-    line = new Tandem.Line(this, lineNode)
-    @lines.append(line)
-    @lineMap[line.id] = line
-    @length += line.length
-    @length += 1 if @lines.length > 1
-    return line
+    return this.insertLineBefore(lineNode, null)
 
   buildLines: ->
     this.reset()
@@ -123,7 +118,10 @@ class TandemDocument
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Tandem.Line(this, newLineNode)
-    @lines.insertAfter(refLine.prev, line)
+    if refLine != null
+      @lines.insertAfter(refLine.prev, line)
+    else
+      @lines.append(line)
     @lineMap[line.id] = line
     @length += line.length
     @length += 1 if @lines.length > 1
@@ -164,10 +162,7 @@ class TandemDocument
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
-    newLine = new Tandem.Line(this, lineNode2)
-    @lines.insertAfter(line, newLine)
-    @lineMap[newLine.id] = newLine
-    @length += 1
+    this.insertLineBefore(lineNode2, line.next)
 
   toDelta: ->
     lines = @lines.toArray()
