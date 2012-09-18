@@ -70,6 +70,7 @@ describe('Utils', ->
         </div>
       '))
       editor = new Tandem.Editor('test-container')
+      editor.ignoreDomChanges = true
       return editor
 
     tests = [{
