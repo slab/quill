@@ -3,13 +3,13 @@ $(document).ready( ->
   toolbar = new Tandem.Toolbar(editor)
   _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
     $("#formatting-container .#{format}").click( -> 
-      toolbar.applyAttribute(format, !$(this).parent().hasClass('active'))
+      toolbar.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
   toolbar.on('update', (attributes) ->
     $("#formatting-container .format-button").removeClass('active')
     for key,value of attributes when value == true
-      $("#formatting-container .#{key}").parent().addClass('active')
+      $("#formatting-container .#{key}").addClass('active')
   )
 
   rangy.init()

@@ -10,29 +10,37 @@
     #content-container
       .editor-wrapper.first
         #formatting-container1.formatting-container
-          .format-group
-            .format-button.first<>
-              .format.bold
-            .format-button<>
-              .format.italic
-            .format-button<>
-              .format.underline
-            .format-button.last<>
-              .format.strike
+          %select.font-family
+            %option San Serif
+            %option Serif
+            %option Monospace
+          %select.font-size
+            %option Small
+            %option Normal
+            %option Large
+            %option Huge
+          %button.format-button.bold B
+          %button.format-button.italic I
+          %button.format-button.underline U
+          %button.format-button.strike S
         #editor-container1.editor-container
           %div<>
             %span<> Welcome to Stypi!
       .editor-wrapper
         #formatting-container2.formatting-container
-          .format-group
-            .format-button.first<>
-              .format.bold
-            .format-button<>
-              .format.italic
-            .format-button<>
-              .format.underline
-            .format-button.last<>
-              .format.strike
+          %select.font-family
+            %option San Serif
+            %option Serif
+            %option Monospace
+          %select.font-size
+            %option Small
+            %option Normal
+            %option Large
+            %option Huge
+          %button.format-button.bold B
+          %button.format-button.italic I
+          %button.format-button.underline U
+          %button.format-button.strike S
         #editor-container2.editor-container
           .line<>
             %span<> Welcome to Stypi!

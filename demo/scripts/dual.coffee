@@ -14,13 +14,13 @@ editors = _.map([1, 2], (num) ->
   toolbar = new Tandem.Toolbar(editor)
   _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
     $("#formatting-container#{num} .#{format}").click( -> 
-      toolbar.applyAttribute(format, !$(this).parent().hasClass('active'))
+      toolbar.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
   toolbar.on('update', (attributes) ->
     $("#formatting-container#{num} .format-button").removeClass('active')
     for key,value of attributes when value == true
-      $("#formatting-container#{num} .#{key}").parent().addClass('active')
+      $("#formatting-container#{num} .#{key}").addClass('active')
   )
   return editor
 )

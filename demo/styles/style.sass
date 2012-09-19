@@ -10,55 +10,11 @@ body
 .formatting-container
   background-color: #f5f5f5
   border-bottom: 1px solid #ccc
-  height: 36px
+  height: 32px
   line-height: 32px
   padding: 0px 5px
-  .format-group
-    border-radius: 2px
-    border: 1px solid #b3b3b3
-    display: inline-block
-    height: 24px
-    line-height: 24px
-    margin: 0px 5px
-    vertical-align: middle
-  .format-button
-    border-right: 1px solid #b3b3b3
-    background-image: url('../../lib/images/format-unselected-bg.png')
-    background-repeat: repeat-x
-    display: inline-block
-    height: 24px
-  .format-button:hover
-    background-image: url('../../lib/images/format-hover-bg.png')
-  .format-button:active
-    background-image: url('../../lib/images/format-click-bg.png')
-  .format-button.active
-    background-image: url('../../lib/images/format-selected-bg.png')
-  .format-button.first
-    border-bottom-left-radius: 2px
-    border-top-left-radius: 2px
-  .format-button.last
-    border-bottom-right-radius: 2px
-    border-top-right-radius: 2px
-    border-right: 0px
-  .format
-    background-position: center center
-    background-repeat: no-repeat
-    cursor: pointer
-    display: inline-block
-    height: 16px
-    margin-top: -2px
-    padding: 4px
-    vertical-align: middle
-    width: 16px
-
-  .bold
-    background-image: url('../../lib/fugue/edit-bold.png')
-  .italic
-    background-image: url('../../lib/fugue/edit-italic.png')
-  .strike
-    background-image: url('../../lib/fugue/edit-strike.png')
-  .underline
-    background-image: url('../../lib/fugue/edit-underline.png')
+  .active
+    font-weight: bold
 
 .editor-container
   height: 600px

@@ -9,15 +9,37 @@
     #content-container
       .editor-wrapper
         #formatting-container.formatting-container
-          .format-group
-            .format-button.first<>
-              .format.bold
-            .format-button<>
-              .format.italic
-            .format-button<>
-              .format.underline
-            .format-button.last<>
-              .format.strike
+          %select.font-family
+            %option San Serif
+            %option Serif
+            %option Monospace
+          %select.font-size
+            %option Small
+            %option Normal
+            %option Large
+            %option Huge
+          %select.font-color
+            %option Black
+            %option White
+            %option Red
+            %option Orange
+            %option Yellow
+            %option Green
+            %option Blue
+            %option Purple
+          %select.font-background
+            %option White
+            %option Black
+            %option Red
+            %option Orange
+            %option Yellow
+            %option Green
+            %option Blue
+            %option Purple
+          %button.format-button.bold Bold
+          %button.format-button.italic Italic
+          %button.format-button.underline Underline
+          %button.format-button.strike Strike
         #editor-container.editor-container
           %div<>
             %span<> Welcome to Stypi
@@ -82,14 +104,14 @@
 
       _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
         $('#formatting-container .' + format).click(function() {
-          toolbar.applyAttribute(format, !$(this).parent().hasClass('active'));
+          toolbar.applyAttribute(format, !$(this).hasClass('active'));
         });
       });
       toolbar.on('update', function(attributes) {
         $("#formatting-container .format-button").removeClass('active');
         for (key in attributes) {
           if (attributes[key] == true) {
-            $("#formatting-container ." + key).parent().addClass('active');
+            $("#formatting-container ." + key).addClass('active');
           }
         }
       });

@@ -291,6 +291,7 @@ class TandemEditor extends EventEmitter2
   update: ->
     oldDelta = @doc.toDelta()
     this.preserveSelection(null, 0, =>
+      # TODO this is incorrect, we need to search for dirty lines and mark them, normalize only operates on dirty lines
       Tandem.Document.normalizeHtml(@doc.root)
       lines = @doc.lines.toArray()
       lineNode = @doc.root.firstChild
