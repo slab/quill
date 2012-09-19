@@ -129,6 +129,7 @@ describe('Editor', ->
   )
 
 
+
   describe('applyAttribute', ->
     originalHtml = Tandem.Utils.cleanHtml('
       <div>
@@ -342,7 +343,6 @@ describe('Editor', ->
 
     _.each(tests, (test) ->
       _.each({apply: true, remove: false}, (truth, name) ->
-        return if truth == true
         it("should #{name} to #{test.target}", ->
           [startHtml, endHtml] = if truth then [originalHtml, test.expected] else [test.expected, originalHtml]
           editor = reset(startHtml)
@@ -356,7 +356,6 @@ describe('Editor', ->
       )
     )
   )
-
 
 
   describe('insertAt', ->
