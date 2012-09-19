@@ -268,11 +268,6 @@ class TandemEditor extends EventEmitter2
         leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
     @doc.updateLine(leaf.line)
 
-  normalize: ->
-    this.preserveSelection(null, 0, =>
-      Tandem.Document.normalizeHtml(@doc.root)
-    )
-
   preserveSelection: (modificationStart, charAdditions, fn) ->
     @currentSelection = this.getSelection()
     if @currentSelection?
