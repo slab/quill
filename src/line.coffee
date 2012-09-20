@@ -1,7 +1,7 @@
 #= require underscore
 #= require linked_list
 #= require jetsync
-#= require tandem/tags
+#= require tandem/constants
 
 class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'line'

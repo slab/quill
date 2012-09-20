@@ -1,5 +1,5 @@
 #= underscore
-#= tandem/tags
+#= tandem/constants
 
 TandemUtils = 
   # All block nodes inside nodes are moved out

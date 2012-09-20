@@ -1,4 +1,4 @@
-TandemTags =
+TandemConstants =
   BLOCK_TAGS: [
     'ADDRESS'
     'BLOCKQUOTE'
@@ -66,7 +66,6 @@ TandemTags =
     'color-blue'
     'color-green'
     'color-orange'
-    'color-purple'
     'color-red'
     'color-white'
     'color-yellow'
@@ -77,7 +76,7 @@ TandemTags =
     'serif'
   ]
 
-  FONT_SIZES: [
+  FONT_SIZE: [
     'huge'
     'large'
     'small'
@@ -86,5 +85,5 @@ TandemTags =
 
 
 window.Tandem ||= {}
-window.Tandem.Tags = TandemTags
+window.Tandem.Constants = TandemConstants
 
