@@ -13,7 +13,8 @@ class TandemLeaf extends LinkedList.Node
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE || node.tagName == 'BR'
 
 
-  constructor: (@line, @node, @attributes) ->
+  constructor: (@line, @node, attributes) ->
+    @attributes = _.clone(attributes)
     @text = @node.textContent
     @length = @text.length
 
