@@ -41,13 +41,21 @@ TandemUtils =
     # Remove id or class classname
     html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
 
-  createContainerForAttribute: (doc, attribute) ->
+  createContainerForAttribute: (doc, attribute, value) ->
     switch (attribute)
       when 'bold'       then return doc.createElement('b')
       when 'italic'     then return doc.createElement('i')
       when 'strike'     then return doc.createElement('s')
       when 'underline'  then return doc.createElement('u')
-      else                   return doc.createElement('span')
+      else                   
+        span = doc.createElement('span')
+        if attribute == 'font-family' || attribute == 'font-size'
+          span.classList.add("font-#{value}")
+        else if attribute == 'font-color'
+          span.classList.add("color-#{value}")
+        else if attribute == 'font-background'
+          span.classList.add("bg-#{value}")  
+        return span
 
   extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
@@ -71,7 +79,20 @@ TandemUtils =
       when 'I' then return 'italic'
       when 'S' then return 'strike'
       when 'U' then return 'underline'
-      else          return null
+      when 'SPAN'
+        attribute = null
+        _.each(container.classList, (cssClass) ->
+          if _.indexOf(Tandem.Tags.FONT_BACKGROUNDS, cssClass, true) > -1
+            attribute = 'font-background'
+          else if _.indexOf(Tandem.Tags.FONT_COLORS, cssClass, true) > -1
+            attribute = 'font-color'
+          else if _.indexOf(Tandem.Tags.FONT_FAMILIES, cssClass, true) > -1
+            attribute = 'font-family'
+          else if _.indexOf(Tandem.Tags.FONT_SIZES, cssClass, true) > -1
+            attribute = 'font-size'
+        )
+        return attribute
+        
 
   getChildAtOffset: (node, offset) ->
     child = node.firstChild

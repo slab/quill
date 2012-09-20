@@ -49,6 +49,42 @@ TandemTags =
     'U'         : {}
   }
 
+  # FONT arrays must be alphabetized
+  FONT_BACKGROUNDS: [
+    'bg-black'
+    'bg-blue'
+    'bg-green'
+    'bg-orange'
+    'bg-purple'
+    'bg-red'
+    'bg-white'
+    'bg-yellow'
+  ]
+
+  FONT_COLORS: [
+    'color-black'
+    'color-blue'
+    'color-green'
+    'color-orange'
+    'color-purple'
+    'color-red'
+    'color-white'
+    'color-yellow'
+  ]
+
+  FONT_FAMILIES: [
+    'monospace'
+    'serif'
+  ]
+
+  FONT_SIZES: [
+    'huge'
+    'large'
+    'small'
+  ]
+
+
+
 window.Tandem ||= {}
 window.Tandem.Tags = TandemTags
 

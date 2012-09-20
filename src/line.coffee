@@ -49,18 +49,19 @@ class TandemLine extends LinkedList.Node
     root[key] = {}
 
     isRedudant = (node) ->
-      if node.nodeType == node.ELEMENT_NODE && node.textContent.length == 0
-        return true
-      if node.tagName == 'SPAN'
-        # Check if children need us
-        if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+      if node.nodeType == node.ELEMENT_NODE
+        if node.textContent.length == 0
           return true
-        # Check if parent needs us
-        else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+        attribute = Tandem.Utils.getAttributeForContainer(node)
+        if attribute? && node.parentNode[key]? && node.parentNode[key][attribute] == true
           return true
-      attribute = Tandem.Utils.getAttributeForContainer(node)
-      if attribute? && node.parentNode[key]? && node.parentNode[key][attribute] == true
-        return true
+        if node.tagName == 'SPAN'
+          # Check if children need us
+          if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+            return true
+          # Check if parent needs us
+          else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+            return true
       return false
 
     Tandem.Utils.traversePreorder(root, 0, (node) =>
