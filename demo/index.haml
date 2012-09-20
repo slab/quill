@@ -19,23 +19,23 @@
             %option{:value => 'large'}  Large
             %option{:value => 'huge'}   Huge
           %select.font-color
-            %option Black
-            %option White
-            %option Red
-            %option Orange
-            %option Yellow
-            %option Green
-            %option Blue
-            %option Purple
+            %option{:value => 'white'}  White
+            %option{:value => 'black', :selected => true}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
           %select.font-background
-            %option White
-            %option Black
-            %option Red
-            %option Orange
-            %option Yellow
-            %option Green
-            %option Blue
-            %option Purple
+            %option{:value => 'white', :selected => true}  White
+            %option{:value => 'black'}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
           %button.format-button.bold Bold
           %button.format-button.italic Italic
           %button.format-button.underline Underline
@@ -85,6 +85,22 @@
           %div<>
             %span.font-serif<> Serif
             %span.font-monospace<> Monospace
+          %div<>
+            %span.color-white.bg-black<> white
+            %span.color-red<> red
+            %span.color-orange<> orange
+            %span.color-yellow<> yellow
+            %span.color-green<> green
+            %span.color-blue<> blue
+            %span.color-purple<> purple
+          %div<>
+            %span.bg-black.color-white<> black
+            %span.bg-red<> red
+            %span.bg-orange<> orange
+            %span.bg-yellow<> yellow
+            %span.bg-green<> green
+            %span.bg-blue<> blue
+            %span.bg-purple<> purple
           %div<>
             %br<>
           %div<>

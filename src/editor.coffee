@@ -52,6 +52,20 @@ class TandemEditor extends EventEmitter2
       i { font-style: italic; }
       s { text-decoration: line-through; }
       u { text-decoration: underline; }
+      .bg-black       { background-color: black; }
+      .bg-red         { background-color: red; }
+      .bg-orange      { background-color: orange; }
+      .bg-yellow      { background-color: yellow; }
+      .bg-green       { background-color: green; }
+      .bg-blue        { background-color: blue; }
+      .bg-purple      { background-color: purple; }
+      .color-white    { color: white; }
+      .color-red      { color: red; }
+      .color-orange   { color: orange; }
+      .color-yellow   { color: yellow; }
+      .color-green    { color: green; }
+      .color-blue     { color: blue; }
+      .color-purple   { color: purple; }
       .font-monospace  { font-family: 'Courier New', monospace; }
       .font-serif      { font-family: 'Times New Roman', serif; }
       .font-huge       { font-size: 32px; line-height: 36px; }
