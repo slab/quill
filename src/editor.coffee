@@ -153,7 +153,7 @@ class TandemEditor extends EventEmitter2
         _.each(delta.attributes, (value, attr) =>
           this.applyAttribute(index + offset, delta.text.length, attr, value, false)
         )
-        offset += delta.length
+        offset += delta.length()
       else if JetDelta.isRetain(delta)
         if delta.start > index
           this.deleteAt(index + offset, delta.start - index, false)
@@ -314,7 +314,7 @@ class TandemEditor extends EventEmitter2
     newDelta = @doc.toDelta()
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
-    if !compose.isEqual(newDelta)
+    if !_.isEqual(compose, newDelta)
       console.info(JSON.stringify(oldDelta))
       console.info(JSON.stringify(newDelta))
       console.info(JSON.stringify(decompose))

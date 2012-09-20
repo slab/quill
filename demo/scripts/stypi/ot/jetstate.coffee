@@ -40,7 +40,7 @@ class JetState
       authorId = if delta.attributes? then delta.attributes.authorId else 1
       if JetDelta.isInsert(delta)
         insertFn.call(context || insertFn, index + offset, delta.text, authorId)
-        offset += delta.length
+        offset += delta.length()
       else if JetDelta.isRetain(delta)
         console.assert(delta.start >= index, "Somehow delta.start became smaller than index")
         if delta.start > index
