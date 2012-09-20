@@ -8,7 +8,7 @@ TandemUtils =
     this.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
         toBreak = []
-        if _.indexOf(Tandem.Tags.BLOCK_TAGS, node.tagName, true) > -1
+        if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
           [left1, left2, didLeftSplit] = this.splitNode(root, index)
           if !didLeftSplit
             [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
@@ -16,7 +16,7 @@ TandemUtils =
           else
             toBreak = toBreak.concat([left1, left2])
           toBreak = toBreak.concat([left1, left2]) if didLeftSplit
-        else if _.indexOf(Tandem.Tags.BREAK_TAGS, node.tagName, true) > -1
+        else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
           [left, right, didSplit] = this.splitNode(root, index)
           if didSplit?
             next = node.nextSibling
@@ -82,13 +82,13 @@ TandemUtils =
       when 'SPAN'
         attribute = null
         _.each(container.classList, (cssClass) ->
-          if _.indexOf(Tandem.Tags.FONT_BACKGROUNDS, cssClass, true) > -1
+          if _.indexOf(Tandem.Constants.FONT_BACKGROUNDS, cssClass, true) > -1
             attribute = 'font-background'
-          else if _.indexOf(Tandem.Tags.FONT_COLORS, cssClass, true) > -1
+          else if _.indexOf(Tandem.Constants.FONT_COLORS, cssClass, true) > -1
             attribute = 'font-color'
-          else if _.indexOf(Tandem.Tags.FONT_FAMILIES, cssClass, true) > -1
+          else if _.indexOf(Tandem.Constants.FONT_FAMILIES, cssClass, true) > -1
             attribute = 'font-family'
-          else if _.indexOf(Tandem.Tags.FONT_SIZES, cssClass, true) > -1
+          else if _.indexOf(Tandem.Constants.FONT_SIZES, cssClass, true) > -1
             attribute = 'font-size'
         )
         return attribute

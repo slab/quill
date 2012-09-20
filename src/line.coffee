@@ -12,7 +12,7 @@ class TandemLine extends LinkedList.Node
   @applyRules: (root) ->
     Tandem.Utils.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
-        rules = Tandem.Tags.LINE_RULES[node.tagName]
+        rules = Tandem.Constants.LINE_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
