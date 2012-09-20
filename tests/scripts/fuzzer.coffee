@@ -6,11 +6,14 @@ getRandomLength = ->
   if rand < 0.1
     return 1
   else if rand < 0.6
-    return Math.floor(Math.random() * 10)
+    return Math.floor(Math.random() * 3)
   else if rand < 0.8
-    return Math.floor(Math.random() * 25)
+    return Math.floor(Math.random() * 5)
   else if rand < 0.9
+    return Math.floor(Math.random() * 10)
+  else
     return Math.floor(Math.random() * 50)
+
 
 getRandomOperation = (editor) ->
   rand = Math.random()
