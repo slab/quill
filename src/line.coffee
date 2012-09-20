@@ -31,8 +31,12 @@ class TandemLine extends LinkedList.Node
     Tandem.Utils.traversePreorder(root, 0, (node) ->
       if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node)
         next = node.nextSibling
-        if next? && node.tagName == next.tagName && node.className == next.className
-          node = Tandem.Utils.mergeNodes(node, next)
+        if next? && node.tagName == next.tagName
+          if _.union(node.classList, next.classList) >= Math.min(node.classList.length, node.classList.length)
+            if node.classList.length > next.classList.length
+              node = Tandem.Utils.mergeNodes(node, next)
+            else
+              node = Tandem.Utils.mergeNodes(next, node)
       return node
     )
 
@@ -53,9 +57,10 @@ class TandemLine extends LinkedList.Node
         if node.textContent.length == 0
           return true
         attribute = Tandem.Utils.getAttributeForContainer(node)
-        if attribute? && node.parentNode[key]? && node.parentNode[key][attribute] == true
-          return true
-        if node.tagName == 'SPAN'
+        if attribute? 
+          if node.parentNode[key]? && node.parentNode[key][attribute] == true
+            return true
+        else if node.tagName == 'SPAN'
           # Check if children need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
