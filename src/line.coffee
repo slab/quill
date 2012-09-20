@@ -4,9 +4,9 @@
 #= require tandem/tags
 
 class TandemLine extends LinkedList.Node
-  @CLASS_NAME : 'tandem-line'
-  @DIRTY_CLASS: 'tandem-dirty'
-  @ID_PREFIX  : 'tandem-line-'
+  @CLASS_NAME : 'line'
+  @DIRTY_CLASS: 'dirty'
+  @ID_PREFIX  : 'line-'
   @counter    : 0
 
   @applyRules: (root) ->

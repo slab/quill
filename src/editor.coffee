@@ -52,6 +52,11 @@ class TandemEditor extends EventEmitter2
       i { font-style: italic; }
       s { text-decoration: line-through; }
       u { text-decoration: underline; }
+      .font-monospace  { font-family: 'Courier New', monospace; }
+      .font-serif      { font-family: 'Times New Roman', serif; }
+      .font-huge       { font-size: 32px; line-height: 36px; }
+      .font-large      { font-size: 18px; line-height: 22px; }
+      .font-small      { font-size: 10px; line-height: 12px; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css

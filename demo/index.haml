@@ -10,14 +10,14 @@
       .editor-wrapper
         #formatting-container.formatting-container
           %select.font-family
-            %option San Serif
-            %option Serif
-            %option Monospace
+            %option{:value => 'san-serif', :selected => true}  San Serif
+            %option{:value => 'serif'}      Serif
+            %option{:value => 'monospace'}  Monospace
           %select.font-size
-            %option Small
-            %option Normal
-            %option Large
-            %option Huge
+            %option{:value => 'small'}  Small
+            %option{:value => 'normal', :selected => true} Normal
+            %option{:value => 'large'}  Large
+            %option{:value => 'huge'}   Huge
           %select.font-color
             %option Black
             %option White
@@ -73,6 +73,19 @@
             %i<> f
             %b<> g
           %div<>
+            %span.font-huge<> Huge
+            %span.font-large<> Large
+            %span.font-small<> Small
+          %div<>
+            %span.font-huge<> Huge
+          %div<>
+            %span.font-large<> Large
+          %div<>
+            %span.font-small<> Small
+          %div<>
+            %span.font-serif<> Serif
+            %span.font-monospace<> Monospace
+          %div<>
             %br<>
           %div<>
             %br<>
@@ -105,6 +118,11 @@
       _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
         $('#formatting-container .' + format).click(function() {
           toolbar.applyAttribute(format, !$(this).hasClass('active'));
+        });
+      });
+      _.each(['font-family', 'font-size'], function(format) {
+        $('#formatting-container .' + format).change(function() {
+          toolbar.applyAttribute(format, $(this).val());
         });
       });
       toolbar.on('update', function(attributes) {
