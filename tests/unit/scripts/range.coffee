@@ -49,6 +49,58 @@ describe('Range', ->
     )
   )
 
+
+  describe('getAttributeIntersection', ->
+    tests = [{
+      name: 'inside of node'
+      start: 1
+      end: 2
+      attributes: { bold: true }
+    }, {
+      name: 'start of node'
+      start: 0
+      end: 1
+      attributes: { bold: true }
+    }, {
+      name: 'end of node'
+      start: 2
+      end: 3
+      attributes: { bold: true }
+    }, {
+      name: 'entire node'
+      start: 0
+      end: 3
+      attributes: { bold: true }
+    }, {
+      name: 'cursor inside of node'
+      start: 1
+      end: 1
+      attributes: { bold: true }
+    }, {
+      name: 'cursor at start of node'
+      start: 0
+      end: 0
+      attributes: { bold: true }
+    }, {
+      name: 'cursor at end of node'
+      start: 3
+      end: 3
+      attributes: { italic: true }
+    }]
+
+    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
+    editor = new Tandem.Editor('editor-container')
+
+    _.each(tests, (test) ->
+      it(test.name, ->
+        range = new Tandem.Range(editor, test.start, test.end)
+        attributes = range.getAttributeIntersection()
+        expect(attributes).to.eql(test.attributes)
+      )
+    )
+  )
+
+
   describe('getLeafNodes', ->
     $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
     editor = new Tandem.Editor('editor-container')
