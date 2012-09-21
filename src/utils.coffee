@@ -83,20 +83,32 @@ TandemUtils =
       when 'SPAN'
         attributes = {}
         _.each(container.classList, (cssClass) ->
-          if _.indexOf(Tandem.Constants.FONT_BACKGROUNDS, cssClass, true) > -1
-            attributes['font-background'] = cssClass
-          if _.indexOf(Tandem.Constants.FONT_COLORS, cssClass, true) > -1
-            attributes['font-color'] = cssClass
-          if _.indexOf(Tandem.Constants.FONT_FAMILIES, cssClass, true) > -1
-            attributes['font-family'] = cssClass
-          if _.indexOf(Tandem.Constants.FONT_SIZES, cssClass, true) > -1
-            attributes['font-size'] = cssClass
+          fonts = [{
+            cssPrefix: 'bg-'
+            list: Tandem.Constants.FONT_BACKGROUNDS
+            name: 'font-background'
+          }, {
+            cssPrefix: 'color-'
+            list: Tandem.Constants.FONT_COLORS
+            name: 'font-color'
+          }, {
+            cssPrefix: 'font-'
+            list: Tandem.Constants.FONT_FAMILIES
+            name: 'font-family'
+          }, {
+            cssPrefix: 'font-'
+            list: Tandem.Constants.FONT_SIZES
+            name: 'font-size'
+          }]
+          _.each(fonts, (font) ->
+            index = _.indexOf(font.list, cssClass.substring(font.cssPrefix.length), true)
+            attributes[font.name] = font.list[index] if index > -1
+          )
         )
         return attributes
       else
         return {}
         
-
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
     while offset > child.textContent.length

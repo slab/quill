@@ -52,42 +52,42 @@ TandemConstants =
   }
 
   FONT_BACKGROUNDS: [
-    'bg-black'
-    'bg-blue'
-    'bg-green'
-    'bg-orange'
-    'bg-purple'
-    'bg-red'
-    'bg-white'
-    'bg-yellow'
+    'black'
+    'blue'
+    'green'
+    'orange'
+    'purple'
+    'red'
+    'white'
+    'yellow'
   ]
 
   FONT_COLORS: [
-    'color-black'
-    'color-blue'
-    'color-green'
-    'color-orange'
-    'color-red'
-    'color-white'
-    'color-yellow'
+    'black'
+    'blue'
+    'green'
+    'orange'
+    'red'
+    'white'
+    'yellow'
   ]
 
   FONT_FAMILIES: [
-    'font-monospace'
-    'font-serif'
+    'monospace'
+    'serif'
   ]
 
   FONT_SIZES: [
-    'font-huge'
-    'font-large'
-    'font-small'
+    'huge'
+    'large'
+    'small'
   ]
 
   SPAN_ATTRIBUTES: [
-    'font-background'
-    'font-color'
-    'font-family'
-    'font-size'
+    'background'
+    'color'
+    'family'
+    'size'
   ]
 
 

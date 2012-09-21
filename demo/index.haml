@@ -10,15 +10,18 @@
       .editor-wrapper
         #formatting-container.formatting-container
           %select.font-family
+            %option{:value => ''}
             %option{:value => 'san-serif', :selected => true}  San Serif
             %option{:value => 'serif'}      Serif
             %option{:value => 'monospace'}  Monospace
           %select.font-size
+            %option{:value => ''}
             %option{:value => 'small'}  Small
             %option{:value => 'normal', :selected => true} Normal
             %option{:value => 'large'}  Large
             %option{:value => 'huge'}   Huge
           %select.font-color
+            %option{:value => ''}
             %option{:value => 'white'}  White
             %option{:value => 'black', :selected => true}  Black
             %option{:value => 'red'}    Red
@@ -28,6 +31,7 @@
             %option{:value => 'blue'}   Blue
             %option{:value => 'purple'} Purple
           %select.font-background
+            %option{:value => ''}
             %option{:value => 'white', :selected => true}  White
             %option{:value => 'black'}  Black
             %option{:value => 'red'}    Red
