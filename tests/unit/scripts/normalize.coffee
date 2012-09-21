@@ -149,8 +149,8 @@ describe('Normalize', ->
       )
     )
   )
+ 
 
-  
   
   describe('elements', ->
     editor = new Tandem.Editor('editor-container')
@@ -234,7 +234,6 @@ describe('Normalize', ->
           <span>Hey</span>
         </div>'  
     }]
-
 
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->

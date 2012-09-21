@@ -32,7 +32,9 @@ class TandemLine extends LinkedList.Node
       if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node)
         next = node.nextSibling
         if next? && node.tagName == next.tagName
-          if _.union(node.classList, next.classList) >= Math.min(node.classList.length, node.classList.length)
+          if node.tagName != 'SPAN'
+            node = Tandem.Utils.mergeNodes(node, next)
+          else if _.union(node.classList, next.classList) >= Math.min(node.classList.length, node.classList.length)
             if node.classList.length > next.classList.length
               node = Tandem.Utils.mergeNodes(node, next)
             else
