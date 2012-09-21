@@ -73,14 +73,14 @@ TandemConstants =
   ]
 
   FONT_FAMILIES: [
-    'monospace'
-    'serif'
+    'font-monospace'
+    'font-serif'
   ]
 
-  FONT_SIZE: [
-    'huge'
-    'large'
-    'small'
+  FONT_SIZES: [
+    'font-huge'
+    'font-large'
+    'font-small'
   ]
 
   SPAN_ATTRIBUTES: [

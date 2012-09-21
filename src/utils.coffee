@@ -85,11 +85,11 @@ TandemUtils =
         _.each(container.classList, (cssClass) ->
           if _.indexOf(Tandem.Constants.FONT_BACKGROUNDS, cssClass, true) > -1
             attributes['font-background'] = cssClass
-          else if _.indexOf(Tandem.Constants.FONT_COLORS, cssClass, true) > -1
+          if _.indexOf(Tandem.Constants.FONT_COLORS, cssClass, true) > -1
             attributes['font-color'] = cssClass
-          else if _.indexOf(Tandem.Constants.FONT_FAMILIES, cssClass, true) > -1
+          if _.indexOf(Tandem.Constants.FONT_FAMILIES, cssClass, true) > -1
             attributes['font-family'] = cssClass
-          else if _.indexOf(Tandem.Constants.FONT_SIZES, cssClass, true) > -1
+          if _.indexOf(Tandem.Constants.FONT_SIZES, cssClass, true) > -1
             attributes['font-size'] = cssClass
         )
         return attributes
