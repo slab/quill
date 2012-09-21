@@ -127,7 +127,7 @@ class TandemLine extends LinkedList.Node
 
   toDelta: ->
     deltas = _.map(@leaves.toArray(), (leaf) ->
-      return new JetInsert(leaf.text, leaf.attributes)
+      return new JetInsert(leaf.text, _.clone(leaf.attributes))
     )
     delta = new JetDelta(0, @length, deltas)
     delta.compact()
