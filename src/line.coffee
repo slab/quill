@@ -7,7 +7,6 @@ class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'line'
   @DIRTY_CLASS: 'dirty'
   @ID_PREFIX  : 'line-'
-  @counter    : 0
 
   @applyRules: (root) ->
     Tandem.Utils.traversePreorder(root, 0, (node, index) =>
@@ -56,14 +55,16 @@ class TandemLine extends LinkedList.Node
         if node.textContent.length == 0
           return true
         attributes = Tandem.Utils.getAttributeForContainer(node)
-        if _.keys(attributes).length > 0 && _.all(attributes, (value, key) -> node.parentNode[tandemKey][key] == value)
-          return true
-        else if node.tagName == 'SPAN'
-          # Check if children need us
-          if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
-            return true
-          # Check if parent needs us
-          else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+        if _.keys(attributes).length == 0
+          if node.tagName == 'SPAN' && attributes.length == 0
+            # Check if children need us
+            if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+              return true
+            # Check if parent needs us
+            else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+              return true
+        else 
+          if _.keys(attributes).length > 0 && _.all(attributes, (value, key) -> node.parentNode[tandemKey][key] == value)
             return true
       return false
 
@@ -95,10 +96,9 @@ class TandemLine extends LinkedList.Node
 
 
   constructor: (@doc, @node) ->
-    @id = TandemLine.ID_PREFIX + TandemLine.counter
+    @id = _.uniqueId(Tandem.Line.ID_PREFIX)
     @node.id = @id
     @node.classList.add(TandemLine.CLASS_NAME)
-    TandemLine.counter += 1
     this.rebuild()
     super(@node)
 
@@ -119,19 +119,6 @@ class TandemLine extends LinkedList.Node
       return curLeaf if curLeaf.node == leafNode
       curLeaf = curLeaf.next
     return null
-
-  splitContents: (offset) ->
-    this.setDirty()
-    [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
-    return Tandem.Utils.splitNode(node, offset)
-
-  toDelta: ->
-    deltas = _.map(@leaves.toArray(), (leaf) ->
-      return new JetInsert(leaf.text, _.clone(leaf.attributes))
-    )
-    delta = new JetDelta(0, @length, deltas)
-    delta.compact()
-    return delta
 
   rebuild: ->
     if @node.parentNode == @doc.root
@@ -155,6 +142,19 @@ class TandemLine extends LinkedList.Node
       @node.classList.add(TandemLine.DIRTY_CLASS)
     else
       @node.classList.remove(TandemLine.DIRTY_CLASS)
+
+  splitContents: (offset) ->
+    this.setDirty()
+    [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
+    return Tandem.Utils.splitNode(node, offset)
+
+  toDelta: ->
+    deltas = _.map(@leaves.toArray(), (leaf) ->
+      return new JetInsert(leaf.text, _.clone(leaf.attributes))
+    )
+    delta = new JetDelta(0, @length, deltas)
+    delta.compact()
+    return delta
 
 
 

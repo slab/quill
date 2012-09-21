@@ -25,23 +25,16 @@ class TandemRange
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getAttributeIntersection: ->
-    attributes = null
     leaves = this.getLeaves()
     leaves.pop() if leaves.length > 0 && !this.isCollapsed() && @end.offset == 0
+    attributes = if leaves.length > 0 then _.clone(leaves[0].attributes) else {}
     _.all(leaves, (leaf) ->
-      if attributes
-        _.each(attributes, (value, key) ->
-          if leaf.attributes[key] != true
-            delete attributes[key]
-        )
-      else
-        attributes = leaf.attributes
-
-      for key,value of attributes when value == true
-        return true
-      return false
+      _.each(attributes, (value, key) ->
+        delete attributes[key] if leaf.attributes[key] != value
+      )
+      return _.keys(attributes).length > 0
     )
-    return attributes || {}
+    return attributes
 
   getLeaves: ->
     itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())

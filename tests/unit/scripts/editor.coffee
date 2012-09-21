@@ -367,7 +367,7 @@ describe('Editor', ->
       tagName: 'span'
       value: 'serif'
     }]
-    
+
     _.each(tests, (test) ->
       _.each(attributeTests, (attrTest) ->
         it("should set #{attrTest.attribute} to #{attrTest.value} on #{test.target}", ->

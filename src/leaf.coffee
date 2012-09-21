@@ -2,6 +2,8 @@
 #= require linked_list
 
 class TandemLeaf extends LinkedList.Node
+  @ID_PREFIX: 'leaf-'
+
   @groupByLine: (leaves) ->
     return _.reduce(leaves, (lines, leaf) ->
       if !lines[leaf.line.id]?
@@ -17,6 +19,7 @@ class TandemLeaf extends LinkedList.Node
     @attributes = _.clone(attributes)
     @text = @node.textContent
     @length = @text.length
+    @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
 
   setText: (@text) ->
     @node.textContent = @text
