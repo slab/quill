@@ -127,13 +127,13 @@ describe('Editor', ->
       expect(selEnd).to.equal(2)
     )
   )
-  
+
 
 
   describe('applyAttribute', ->
     originalHtml = Tandem.Utils.cleanHtml('
       <div>
-        <b>123</b>
+        <#>123</#>
         <i>456</i>
       </div>
       <div>
@@ -148,7 +148,7 @@ describe('Editor', ->
     ')
 
     reset = (html = originalHtml) ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml(html))
+      $('#editor-container').html(Tandem.Utils.cleanHtml(html, true))
       editor = new Tandem.Editor('editor-container')
       editor.ignoreDomChanges = true
       return editor
@@ -159,14 +159,14 @@ describe('Editor', ->
       length: 1
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
           <s>7</s>
-          <b>
+          <#>
             <u>8</u>
-          </b>
+          </#>
           <s>9</s>
           <u>0</u>
         </div>
@@ -179,15 +179,15 @@ describe('Editor', ->
       length: 2
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
           <s>7</s>
-          <b>
+          <#>
             <u>8</u>
             <s>9</s>
-          </b>
+          </#>
           <u>0</u>
         </div>
         <div>
@@ -199,10 +199,10 @@ describe('Editor', ->
       length: 2
       expected:
         '<div>
-          <b>123</b>
-          <b>
+          <#>123</#>
+          <#>
             <i>45</i>
-          </b>
+          </#>
           <i>6</i>
         </div>
         <div>
@@ -220,11 +220,11 @@ describe('Editor', ->
       length: 1
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>4</i>
-          <b>
+          <#>
             <i>5</i>
-          </b>
+          </#>
           <i>6</i>
         </div>
         <div>
@@ -242,16 +242,16 @@ describe('Editor', ->
       length: 6
       expected:
         '<div>
-          <b>123</b>
-          <b>
+          <#>123</#>
+          <#>
             <i>456</i>
-          </b>
+          </#>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
-          </b>
+          </#>
           <s>9</s>
           <u>0</u>
         </div>
@@ -264,16 +264,16 @@ describe('Editor', ->
       length: 4
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
@@ -284,16 +284,16 @@ describe('Editor', ->
       length: 5
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
@@ -304,16 +304,16 @@ describe('Editor', ->
       length: 5
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
@@ -324,31 +324,67 @@ describe('Editor', ->
       length: 6
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
         </div>'
     }]
 
-
+    attributeTests = [{
+      apply: true
+      attribute: 'bold'
+      tagName: 'b'
+      value: true
+    }, {
+      apply: false
+      attribute: 'bold'
+      tagName: 'b'
+      value: false
+    }, {
+      apply: true
+      attribute: 'font-family'
+      cssClass: 'font-serif'
+      tagName: 'span'
+      value: 'serif'
+    }, {
+      apply: false
+      attribute: 'font-family'
+      tagName: 'span'
+      value: false
+    }, {
+      apply: false
+      attribute: 'font-family'
+      tagName: 'span'
+      value: 'serif'
+    }]
+    
     _.each(tests, (test) ->
-      _.each({apply: true, remove: false}, (truth, name) ->
-        it("should #{name} to #{test.target}", ->
-          [startHtml, endHtml] = if truth then [originalHtml, test.expected] else [test.expected, originalHtml]
+      _.each(attributeTests, (attrTest) ->
+        it("should set #{attrTest.attribute} to #{attrTest.value} on #{test.target}", ->
+          openTag = if attrTest.cssClass? then "#{attrTest.tagName} class=\"#{attrTest.cssClass}\"" else attrTest.tagName
+          expected = test.expected.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
+          original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
+          [startHtml, endHtml] = if attrTest.apply then [original, expected] else [expected, original]
           editor = reset(startHtml)
-          editor.applyAttribute(test.start, test.length, 'bold', truth)
+          editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
+          range = new Tandem.Range(editor, test.start, test.start + test.length)
+          attributes = range.getAttributeIntersection()
+          if attrTest.value != false
+            expect(attributes[attrTest.attribute]).to.equal(attrTest.value)
+          else
+            expect(attributes[attrTest.attribute]).to.be.undefined
           delta = editor.doc.toDelta()
-          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml)
+          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml, true)
           editor.doc.buildLines()
           expect(delta).to.deep.equal(editor.doc.toDelta())
           expect(editor.doc.checkConsistency(true)).to.be.true
