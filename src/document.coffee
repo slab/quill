@@ -68,7 +68,7 @@ class TandemDocument
         leaves = line.leaves.toArray()
         leafNodes = _.map(leaves, (leaf) -> return leaf.node)
         if !_.isEqual(leafNodes, nodesByLine[index])
-          console.error leafNodes, 'differ from', nodesByLine[index]
+          console.error leafNodes, 'nodes differ from', nodesByLine[index]
           return true
         leaves = _.map(leaves, (leaf) -> 
           return _.pick(leaf, 'attributes', 'length', 'line', 'node', 'text')
@@ -78,7 +78,7 @@ class TandemDocument
           return _.pick(leaf, 'attributes', 'length', 'line', 'node', 'text')
         )
         if !_.isEqual(leaves, rebuiltLeaves)
-          console.error leaves, 'differ from', rebuiltLeaves
+          console.error leaves, 'leaves differ from', rebuiltLeaves
           return true
         return false
       )

@@ -1,3 +1,5 @@
+# Arrays must be alphabetized, so we can use binary search
+
 TandemConstants =
   BLOCK_TAGS: [
     'ADDRESS'
@@ -49,7 +51,6 @@ TandemConstants =
     'U'         : {}
   }
 
-  # FONT arrays must be alphabetized
   FONT_BACKGROUNDS: [
     'bg-black'
     'bg-blue'
@@ -80,6 +81,13 @@ TandemConstants =
     'huge'
     'large'
     'small'
+  ]
+
+  SPAN_ATTRIBUTES: [
+    'font-background'
+    'font-color'
+    'font-family'
+    'font-size'
   ]
 
 

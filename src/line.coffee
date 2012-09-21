@@ -32,13 +32,10 @@ class TandemLine extends LinkedList.Node
       if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node)
         next = node.nextSibling
         if next? && node.tagName == next.tagName
-          if node.tagName != 'SPAN'
+          nodeAttr = Tandem.Utils.getAttributeForContainer(node)
+          nextAttr = Tandem.Utils.getAttributeForContainer(next)
+          if _.isEqual(nodeAttr, nextAttr)
             node = Tandem.Utils.mergeNodes(node, next)
-          else if _.union(node.classList, next.classList) >= Math.min(node.classList.length, node.classList.length)
-            if node.classList.length > next.classList.length
-              node = Tandem.Utils.mergeNodes(node, next)
-            else
-              node = Tandem.Utils.mergeNodes(next, node)
       return node
     )
 
@@ -51,17 +48,16 @@ class TandemLine extends LinkedList.Node
     root.appendChild(root.ownerDocument.createElement('br')) if root.firstChild == null
 
   @removeRedundant: (root) ->
-    key = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
-    root[key] = {}
+    tandemKey = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
+    root[tandemKey] = {}
 
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE
         if node.textContent.length == 0
           return true
-        attribute = Tandem.Utils.getAttributeForContainer(node)
-        if attribute? 
-          if node.parentNode[key]? && node.parentNode[key][attribute] == true
-            return true
+        attributes = Tandem.Utils.getAttributeForContainer(node)
+        if _.keys(attributes).length > 0 && _.all(attributes, (value, key) -> node.parentNode[tandemKey][key] == value)
+          return true
         else if node.tagName == 'SPAN'
           # Check if children need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
@@ -75,14 +71,14 @@ class TandemLine extends LinkedList.Node
       if isRedudant(node)
         node = Tandem.Utils.unwrap(node)
       if node?
-        node[key] = _.clone(node.parentNode[key])
-        attribute = Tandem.Utils.getAttributeForContainer(node)
-        node[key][attribute] = true if attribute?
+        node[tandemKey] = _.clone(node.parentNode[tandemKey])
+        attributes = Tandem.Utils.getAttributeForContainer(node)
+        node[tandemKey] = _.extend(node[tandemKey], attributes)
       return node
     )
-    delete root[key]
+    delete root[tandemKey]
     Tandem.Utils.traversePreorder(root, 0, (node) ->
-      delete node[key]
+      delete node[tandemKey]
       return node
     )
     
@@ -110,7 +106,7 @@ class TandemLine extends LinkedList.Node
     _.each(node.childNodes, (node) =>
       nodeAttributes = _.clone(attributes)
       attr = Tandem.Utils.getAttributeForContainer(node)
-      nodeAttributes[attr] = true if attr?
+      nodeAttributes = _.extend(nodeAttributes, attr)
       if Tandem.Leaf.isLeafNode(node)
         @leaves.append(new Tandem.Leaf(this, node, nodeAttributes))
       else

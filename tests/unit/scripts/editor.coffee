@@ -127,7 +127,7 @@ describe('Editor', ->
       expect(selEnd).to.equal(2)
     )
   )
-
+  
 
 
   describe('applyAttribute', ->
@@ -358,6 +358,7 @@ describe('Editor', ->
   )
 
 
+
   describe('insertAt', ->
     reset = ->
       $('#editor-container').html(Tandem.Utils.cleanHtml(
@@ -455,7 +456,6 @@ describe('Editor', ->
           <i>456</i>
         </div>'
     }]
-    tests = [tests[5]]
 
     _.each(tests, (test) ->
       it(test.name, ->

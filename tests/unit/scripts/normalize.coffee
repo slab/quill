@@ -149,7 +149,7 @@ describe('Normalize', ->
       )
     )
   )
- 
+  
 
   
   describe('elements', ->
@@ -188,6 +188,17 @@ describe('Normalize', ->
       expected:
         '<div>
           <b>Bold1Bold2</b>
+        </div>'
+    }, {
+      name: 'merge adjacent equal spans'
+      before:
+        '<div>
+          <span class="color-red bg-blue">Red1</span>
+          <span class=" bg-blue color-red">Red2</span>
+        </div>'
+      expected:
+        '<div>
+          <span class="color-red bg-blue">Red1Red2</span>
         </div>'
     }, {
       name: 'remove redundant attribute elements'
@@ -237,7 +248,7 @@ describe('Normalize', ->
 
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
-        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before)
+        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before, true)
         editor.doc.buildLines()
         expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )

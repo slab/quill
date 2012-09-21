@@ -33,13 +33,14 @@ TandemUtils =
     )
     return lineNodes
 
-  cleanHtml: (html) ->
+  cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
     # Remove whitespace between tags
     html = html.replace(/>\s\s+</gi, '><')
     # Remove id or class classname
-    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
+    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '') unless keepIdClass == true
+    return html
 
   createContainerForAttribute: (doc, attribute, value) ->
     switch (attribute)
@@ -75,23 +76,25 @@ TandemUtils =
 
   getAttributeForContainer: (container) ->
     switch container.tagName
-      when 'B' then return 'bold'
-      when 'I' then return 'italic'
-      when 'S' then return 'strike'
-      when 'U' then return 'underline'
+      when 'B' then return { 'bold'     : true }
+      when 'I' then return { 'italic'   : true }
+      when 'S' then return { 'strike'   : true }
+      when 'U' then return { 'underline': true }
       when 'SPAN'
-        attribute = null
+        attributes = {}
         _.each(container.classList, (cssClass) ->
           if _.indexOf(Tandem.Constants.FONT_BACKGROUNDS, cssClass, true) > -1
-            attribute = 'font-background'
+            attributes['font-background'] = cssClass
           else if _.indexOf(Tandem.Constants.FONT_COLORS, cssClass, true) > -1
-            attribute = 'font-color'
+            attributes['font-color'] = cssClass
           else if _.indexOf(Tandem.Constants.FONT_FAMILIES, cssClass, true) > -1
-            attribute = 'font-family'
+            attributes['font-family'] = cssClass
           else if _.indexOf(Tandem.Constants.FONT_SIZES, cssClass, true) > -1
-            attribute = 'font-size'
+            attributes['font-size'] = cssClass
         )
-        return attribute
+        return attributes
+      else
+        return {}
         
 
   getChildAtOffset: (node, offset) ->
@@ -119,8 +122,12 @@ TandemUtils =
 
   removeAttributeFromSubtree: (subtree, attribute) ->
     children = _.clone(subtree.childNodes)
-    if Tandem.Utils.getAttributeForContainer(subtree) == attribute
-      Tandem.Utils.unwrap(subtree)
+    attributes = Tandem.Utils.getAttributeForContainer(subtree)
+    if attributes[attribute]?
+      if _.indexOf(Tandem.Constants.SPAN_ATTRIBUTES, attribute) > -1
+        subtree.classList.remove(attribute)
+      else
+        Tandem.Utils.unwrap(subtree)
     _.each(children, (child) ->
       Tandem.Utils.removeAttributeFromSubtree(child, attribute)
     )
