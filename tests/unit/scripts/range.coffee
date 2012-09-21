@@ -86,6 +86,16 @@ describe('Range', ->
       start: 3
       end: 3
       attributes: { italic: true }
+    }, {
+      name: 'node at end of document'
+      start: 10
+      end: 11
+      attributes: { underline: true }
+    }, {
+      name: 'cursor at end of document'
+      start: 11
+      end: 11
+      attributes: { underline: true }
     }]
 
     $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
