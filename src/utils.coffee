@@ -74,6 +74,18 @@ TandemUtils =
 
     return fragment
 
+  getAttributeDefault: (attribute) ->
+    switch attribute
+      when 'bold'             then return false
+      when 'italic'           then return false
+      when 'strike'           then return false
+      when 'underline'        then return false
+      when 'font-background'  then return 'white'
+      when 'font-color'       then return 'black'
+      when 'font-family'      then return 'san-serif'
+      when 'font-size'        then return 'normal'
+      else                         return false
+
   getAttributeForContainer: (container) ->
     switch container.tagName
       when 'B' then return { 'bold'     : true }

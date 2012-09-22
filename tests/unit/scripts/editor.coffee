@@ -341,31 +341,26 @@ describe('Editor', ->
     }]
 
     attributeTests = [{
-      apply: true
       attribute: 'bold'
       tagName: 'b'
       value: true
     }, {
-      apply: false
       attribute: 'bold'
       tagName: 'b'
       value: false
     }, {
-      apply: true
       attribute: 'font-family'
       cssClass: 'font-serif'
       tagName: 'span'
       value: 'serif'
     }, {
-      apply: false
       attribute: 'font-family'
       tagName: 'span'
       value: false
     }, {
-      apply: false
       attribute: 'font-family'
       tagName: 'span'
-      value: 'serif'
+      value: 'san-serif'
     }]
 
     _.each(tests, (test) ->
@@ -374,12 +369,13 @@ describe('Editor', ->
           openTag = if attrTest.cssClass? then "#{attrTest.tagName} class=\"#{attrTest.cssClass}\"" else attrTest.tagName
           expected = test.expected.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
-          [startHtml, endHtml] = if attrTest.apply then [original, expected] else [expected, original]
+          apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
+          [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
           editor = reset(startHtml)
           editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
           range = new Tandem.Range(editor, test.start, test.start + test.length)
           attributes = range.getAttributeIntersection()
-          if attrTest.value != false
+          if apply
             expect(attributes[attrTest.attribute]).to.equal(attrTest.value)
           else
             expect(attributes[attrTest.attribute]).to.be.undefined
