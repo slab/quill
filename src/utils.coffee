@@ -48,6 +48,10 @@ TandemUtils =
       when 'italic'     then return doc.createElement('i')
       when 'strike'     then return doc.createElement('s')
       when 'underline'  then return doc.createElement('u')
+      when 'link'
+        link = doc.createElement('a')
+        link.setAttribute('href', value)
+        return link
       else
         span = doc.createElement('span')
         span.classList.add(attribute)
@@ -84,6 +88,7 @@ TandemUtils =
 
   getAttributeForContainer: (container) ->
     switch container.tagName
+      when 'A' then return ['link', container.getAttribute('href')]
       when 'B' then return ['bold', true]
       when 'I' then return ['italic', true]
       when 'S' then return ['strike', true]

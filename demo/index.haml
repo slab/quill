@@ -44,6 +44,7 @@
           %button.format-button.italic Italic
           %button.format-button.underline Underline
           %button.format-button.strike Strike
+          %button.format-button.link Link
         #editor-container.editor-container
           %div<>
             %span<> Welcome to Stypi
@@ -55,6 +56,8 @@
             %s<> Strike
             %span<> &nbsp;
             %u<> Underline
+            %span<> &nbsp;
+            %a{:href => 'http://www.google.com'}<> Link
           %div<>
             %u<> Zero
             %i<> One
@@ -146,6 +149,12 @@
         $('#formatting-container .' + format).change(function() {
           toolbar.applyAttribute(format, $(this).val());
         });
+      });
+      $('#formatting-container .link').click(function() {
+        if ($(this).hasClass('active'))
+          toolbar.applyAttribute('link', false);
+        else
+          toolbar.applyAttribute('link', 'http://www.google.com');
       });
       toolbar.on('update', function(attributes) {
         $("#formatting-container .format-button").removeClass('active');

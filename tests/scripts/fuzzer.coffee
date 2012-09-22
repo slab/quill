@@ -36,6 +36,8 @@ getRandomOperation = (editor) ->
   else
     attr = attributeKeys[Math.floor(Math.random() * attributeKeys.length)]
     value = attributes[attr][Math.floor(Math.random() * attributes[attr].length)]
+    if attr == 'link' && value == true
+      value = 'http://www.google.com'
     return {op: 'applyAttribute', args: [index, length, attr, value]}
 
 getRandomString = (length) ->

@@ -31,7 +31,7 @@ TandemConstants =
 
   # Missing rule implied removal
   LINE_RULES: {
-    'A'         : {rename: 'span'}
+    'A'         : {}
     'B'         : {}
     'BIG'       : {rename: 'span'}
     'CENTER'    : {rename: 'span'}
@@ -91,9 +91,11 @@ TandemConstants.SPAN_ATTRIBUTES =
   'font-family'     : TandemConstants.FONT_FAMILIES
   'font-size'       : TandemConstants.FONT_SIZES
 
+# Array of possbile values mostly for consistency with SPAN_ATTRIBUTES, not actually used in codebase
 TandemConstants.TAG_ATTRIBUTES =
   'bold'      : [true, false]
   'italic'    : [true, false]
+  'link'      : [true, false]     # Link value could actually also be any string representing the href
   'strike'    : [true, false]
   'underline' : [true, false]
 
