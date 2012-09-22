@@ -148,8 +148,12 @@
       toolbar.on('update', function(attributes) {
         $("#formatting-container .format-button").removeClass('active');
         for (key in attributes) {
-          if (attributes[key] == true) {
-            $("#formatting-container ." + key).addClass('active');
+          if (attributes[key]) {
+            container = $("#formatting-container ." + key)
+            if (container.is('button'))
+              container.addClass('active')
+            else if (container.is('select'))
+              container.val(attributes[key])
           }
         }
       });
