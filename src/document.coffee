@@ -135,7 +135,7 @@ class TandemDocument
     lines = @lines.toArray() 
     console.info lines.length
     _.each(lines, (line) ->
-      console.info line.id, line.node.textContent
+      console.info line, line.id, line.node.textContent
     )
 
   rebuild: ->

@@ -48,14 +48,10 @@ TandemUtils =
       when 'italic'     then return doc.createElement('i')
       when 'strike'     then return doc.createElement('s')
       when 'underline'  then return doc.createElement('u')
-      else                   
+      else
         span = doc.createElement('span')
-        if attribute == 'font-family' || attribute == 'font-size'
-          span.classList.add("font-#{value}")
-        else if attribute == 'font-color'
-          span.classList.add("color-#{value}")
-        else if attribute == 'font-background'
-          span.classList.add("bg-#{value}")  
+        span.classList.add(attribute)
+        span.classList.add(value)
         return span
 
   extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
@@ -88,38 +84,25 @@ TandemUtils =
 
   getAttributeForContainer: (container) ->
     switch container.tagName
-      when 'B' then return { 'bold'     : true }
-      when 'I' then return { 'italic'   : true }
-      when 'S' then return { 'strike'   : true }
-      when 'U' then return { 'underline': true }
+      when 'B' then return ['bold', true]
+      when 'I' then return ['italic', true]
+      when 'S' then return ['strike', true]
+      when 'U' then return ['underline', true]
       when 'SPAN'
-        attributes = {}
-        _.each(container.classList, (cssClass) ->
-          fonts = [{
-            cssPrefix: 'bg-'
-            list: Tandem.Constants.FONT_BACKGROUNDS
-            name: 'font-background'
-          }, {
-            cssPrefix: 'color-'
-            list: Tandem.Constants.FONT_COLORS
-            name: 'font-color'
-          }, {
-            cssPrefix: 'font-'
-            list: Tandem.Constants.FONT_FAMILIES
-            name: 'font-family'
-          }, {
-            cssPrefix: 'font-'
-            list: Tandem.Constants.FONT_SIZES
-            name: 'font-size'
-          }]
-          _.each(fonts, (font) ->
-            index = _.indexOf(font.list, cssClass.substring(font.cssPrefix.length), true)
-            attributes[font.name] = font.list[index] if index > -1
-          )
+        attribute = []
+        _.all(Tandem.Constants.SPAN_ATTRIBUTES, (list, attrName) ->
+          if container.classList.contains(attrName)
+            return _.all(container.classList, (css) ->
+              if _.indexOf(list, css) > -1
+                attribute = [attrName, css]
+                return false
+              return true
+            )
+          return true
         )
-        return attributes
+        return attribute
       else
-        return {}
+        return []
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
@@ -147,13 +130,9 @@ TandemUtils =
   removeAttributeFromSubtree: (subtree, attribute) ->
     children = _.clone(subtree.childNodes)
     attributes = Tandem.Utils.getAttributeForContainer(subtree)
-    if attributes[attribute]?
-      if Tandem.Constants.SPAN_ATTRIBUTE_CLASSES[attribute]?
-        _.each(Tandem.Constants.SPAN_ATTRIBUTE_CLASSES[attribute], (attrClass) ->
-          subtree.classList.remove(attrClass)
-        )
-      else
-        Tandem.Utils.unwrap(subtree)
+    [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(subtree)
+    if attrName == attribute
+      Tandem.Utils.unwrap(subtree)
     _.each(children, (child) ->
       Tandem.Utils.removeAttributeFromSubtree(child, attribute)
     )

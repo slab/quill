@@ -1,5 +1,7 @@
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"))
 NUM_OPERATIONS = 1000
+attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES)
+attributeKeys = _.keys(attributes)
 
 getRandomLength = ->
   rand = Math.random()
@@ -32,9 +34,9 @@ getRandomOperation = (editor) ->
   if rand < 0.75
     return {op: 'deleteAt', args: [index, length]}
   else
-    attributes = ['bold', 'italic', 'strike', 'underline']
-    attribute = attributes[Math.floor(Math.random() * attributes.length)]
-    return {op: 'applyAttribute', args: [index, length, attribute, (Math.random() < 0.8)]}
+    attr = attributeKeys[Math.floor(Math.random() * attributeKeys.length)]
+    value = attributes[attr][Math.floor(Math.random() * attributes[attr].length)]
+    return {op: 'applyAttribute', args: [index, length, attr, value]}
 
 getRandomString = (length) ->
   return _.map([0..(length - 1)], ->

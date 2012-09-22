@@ -52,25 +52,25 @@ class TandemEditor extends EventEmitter2
       i { font-style: italic; }
       s { text-decoration: line-through; }
       u { text-decoration: underline; }
-      .bg-black       { background-color: black; }
-      .bg-red         { background-color: red; }
-      .bg-orange      { background-color: orange; }
-      .bg-yellow      { background-color: yellow; }
-      .bg-green       { background-color: green; }
-      .bg-blue        { background-color: blue; }
-      .bg-purple      { background-color: purple; }
-      .color-white    { color: white; }
-      .color-red      { color: red; }
-      .color-orange   { color: orange; }
-      .color-yellow   { color: yellow; }
-      .color-green    { color: green; }
-      .color-blue     { color: blue; }
-      .color-purple   { color: purple; }
-      .font-monospace  { font-family: 'Courier New', monospace; }
-      .font-serif      { font-family: 'Times New Roman', serif; }
-      .font-huge       { font-size: 32px; line-height: 36px; }
-      .font-large      { font-size: 18px; line-height: 22px; }
-      .font-small      { font-size: 10px; line-height: 12px; }
+      .font-background.black  { background-color: black; }
+      .font-background.red    { background-color: red; }
+      .font-background.orange { background-color: orange; }
+      .font-background.yellow { background-color: yellow; }
+      .font-background.green  { background-color: green; }
+      .font-background.blue   { background-color: blue; }
+      .font-background.purple { background-color: purple; }
+      .font-color.white       { color: white; }
+      .font-color.red         { color: red; }
+      .font-color.orange      { color: orange; }
+      .font-color.yellow      { color: yellow; }
+      .font-color.green       { color: green; }
+      .font-color.blue        { color: blue; }
+      .font-color.purple      { color: purple; }
+      .font-family.monospace  { font-family: 'Courier New', monospace; }
+      .font-family.serif      { font-family: 'Times New Roman', serif; }
+      .font-size.huge         { font-size: 32px; line-height: 36px; }
+      .font-size.large        { font-size: 18px; line-height: 22px; }
+      .font-size.small        { font-size: 10px; line-height: 12px; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css
@@ -147,14 +147,6 @@ class TandemEditor extends EventEmitter2
     line = @doc.findLine(lineNode)
     [prevNode, startNode] = line.splitContents(startOffset)
     [endNode, nextNode] = line.splitContents(endOffset)
-
-    Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-      Tandem.Utils.removeAttributeFromSubtree(node, attr)
-    )
-    @doc.updateLine(line)
-    [startNode, startOffset] = Tandem.Utils.getChildAtOffset(lineNode, startOffset)
-    [endNode, endOffset] = Tandem.Utils.getChildAtOffset(lineNode, endOffset)
-
     if value && Tandem.Utils.getAttributeDefault(attr) != value
       fragment = @doc.root.ownerDocument.createDocumentFragment()
       Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
@@ -163,7 +155,11 @@ class TandemEditor extends EventEmitter2
       attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
       attrNode.appendChild(fragment)
       lineNode.insertBefore(attrNode, nextNode)
-      @doc.updateLine(line)
+    else
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+        Tandem.Utils.removeAttributeFromSubtree(node, attr)
+      )
+    @doc.updateLine(line)
 
   applyDelta: (delta) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)

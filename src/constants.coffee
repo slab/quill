@@ -85,11 +85,17 @@ TandemConstants =
     'small'
   ]
 
-TandemConstants.SPAN_ATTRIBUTE_CLASSES = 
-  'font-background' : _.map(TandemConstants.FONT_BACKGROUNDS, (css) -> "bg-#{css}")
-  'font-color'      : _.map(TandemConstants.FONT_COLORS,      (css) -> "color-#{css}")
-  'font-family'     : _.map(TandemConstants.FONT_FAMILIES,    (css) -> "font-#{css}")
-  'font-size'       : _.map(TandemConstants.FONT_SIZES,       (css) -> "font-#{css}")
+TandemConstants.SPAN_ATTRIBUTES =
+  'font-background' : TandemConstants.FONT_BACKGROUNDS
+  'font-color'      : TandemConstants.FONT_COLORS
+  'font-family'     : TandemConstants.FONT_FAMILIES
+  'font-size'       : TandemConstants.FONT_SIZES
+
+TandemConstants.TAG_ATTRIBUTES =
+  'bold'      : [true, false]
+  'italic'    : [true, false]
+  'strike'    : [true, false]
+  'underline' : [true, false]
 
 
 

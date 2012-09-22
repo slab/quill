@@ -350,7 +350,6 @@ describe('Editor', ->
       value: false
     }, {
       attribute: 'font-family'
-      cssClass: 'font-serif'
       tagName: 'span'
       value: 'serif'
     }, {
@@ -366,7 +365,7 @@ describe('Editor', ->
     _.each(tests, (test) ->
       _.each(attributeTests, (attrTest) ->
         it("should set #{attrTest.attribute} to #{attrTest.value} on #{test.target}", ->
-          openTag = if attrTest.cssClass? then "#{attrTest.tagName} class=\"#{attrTest.cssClass}\"" else attrTest.tagName
+          openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute} #{attrTest.value}\"" else attrTest.tagName
           expected = test.expected.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value

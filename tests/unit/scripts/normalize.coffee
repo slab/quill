@@ -193,24 +193,30 @@ describe('Normalize', ->
       name: 'merge adjacent equal spans'
       before:
         '<div>
-          <span class="color-red bg-blue">Red1</span>
-          <span class="bg-blue color-red">Red2</span>
+          <span class="font-color red">
+            <span class="font-background blue">Red1</span>
+          </span>
+          <span class="font-color red">
+            <span class="font-background blue">Red2</span>
+          </span>
         </div>'
       expected:
         '<div>
-          <span class="color-red bg-blue">Red1Red2</span>
+          <span class="font-color red">
+            <span class="font-background blue">Red1Red2</span>
+          </span>
         </div>'
     }, {
       name: 'do not merge adjacent unequal spans'
       before:
         '<div>
-          <span class="font-huge">Huge</span>
-          <span class="font-large">Large</span>
+          <span class="font-size huge">Huge</span>
+          <span class="font-size large">Large</span>
         </div>'
       expected:
         '<div>
-          <span class="font-huge">Huge</span>
-          <span class="font-large">Large</span>
+          <span class="font-size huge">Huge</span>
+          <span class="font-size large">Large</span>
         </div>'
     }, {
       name: 'remove redundant attribute elements'
@@ -257,7 +263,7 @@ describe('Normalize', ->
           <span>Hey</span>
         </div>'  
     }]
-
+    
     _.each(tests, (test) ->
       it('shoud ' + test.name, ->
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before, true)
