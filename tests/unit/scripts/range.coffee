@@ -50,69 +50,166 @@ describe('Range', ->
   )
 
 
+
+  describe('getText', ->
+    $('#editor-container').html(Tandem.Utils.cleanHtml('
+      <div>
+        <b>123</b>
+        <i>456</i>
+      </div>
+      <div>
+        <b>
+          <s>78</s>
+        </b>
+        <b>
+          <i>90</i>
+          <u>12</u>
+        </b>
+        <b>
+          <s>34</s>
+        </b>
+      <div>
+        <s>5</s>
+        <u>6</u>
+        <s>7</s>
+        <u>8</u>
+      </div>'))
+    editor = new Tandem.Editor('editor-container')
+    text = "123456\n78901234\n5678"
+
+    it('should identifiy single node', ->
+      _.each(text.split(''), (char, index) ->
+        range = new Tandem.Range(editor, index, index + 1)
+        expect(range.getText()).to.equal(char)
+      )
+    )
+
+    it('should identifiy entire document', ->
+      range = new Tandem.Range(editor, 0, text.length)
+      expect(range.getText()).to.equal(text)
+    )
+  )
+
+
+
   describe('getAttributeIntersection', ->
     tests = [{
       name: 'inside of node'
       start: 1
       end: 2
+      text: '2'
       attributes: { bold: true }
     }, {
       name: 'start of node'
       start: 0
       end: 1
+      text: '1'
       attributes: { bold: true }
     }, {
       name: 'end of node'
       start: 2
       end: 3
+      text: '3'
       attributes: { bold: true }
     }, {
       name: 'entire node'
       start: 0
       end: 3
+      text: '123'
       attributes: { bold: true }
     }, {
       name: 'cursor inside of node'
       start: 1
       end: 1
+      text: ''
       attributes: { bold: true }
     }, {
       name: 'cursor at start of node'
       start: 0
       end: 0
+      text: ''
       attributes: { bold: true }
     }, {
       name: 'cursor at end of node'
       start: 3
       end: 3
+      text: ''
       attributes: { italic: true }
     }, {
       name: 'node at end of document'
-      start: 10
-      end: 11
+      start: 19
+      end: 20
+      text: '8'
       attributes: { underline: true }
     }, {
       name: 'cursor at end of document'
-      start: 11
-      end: 11
+      start: 20
+      end: 20
+      text: ''
       attributes: { underline: true }
+    }, {
+      name: 'part of two nodes'
+      start: 8
+      end: 10
+      text: "89"
+      attributes: { bold: true }
+    }, {
+      name: 'node with preceding newline'
+      start: 6
+      end: 9
+      text: "\n78"
+      attributes: { bold: true, strike: true }
+    }, {
+      name: 'node with trailing newline'
+      start: 13
+      end: 16
+      text: "34\n"
+      attributes: { bold: true, strike: true }
+    }, {
+      name: 'line with preceding and trailing newline'
+      start: 6
+      end: 16
+      text: "\n78901234\n"
+      attributes: { bold: true }
     }]
 
-    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
+    $('#editor-container').html(Tandem.Utils.cleanHtml('
+      <div>
+        <b>123</b>
+        <i>456</i>
+      </div>
+      <div>
+        <b>
+          <s>78</s>
+        </b>
+        <b>
+          <i>90</i>
+          <u>12</u>
+        </b>
+        <b>
+          <s>34</s>
+        </b>
+      <div>
+        <s>5</s>
+        <u>6</u>
+        <s>7</s>
+        <u>8</u>
+      </div>'))
     editor = new Tandem.Editor('editor-container')
 
     _.each(tests, (test) ->
       it(test.name, ->
         range = new Tandem.Range(editor, test.start, test.end)
-        attributes = range.getAttributeIntersection()
-        expect(attributes).to.eql(test.attributes)
+        expect(range.getText()).to.equal(test.text)
+        expect(range.getAttributeIntersection()).to.eql(test.attributes)
       )
     )
   )
 
 
+
   describe('getLeafNodes', ->
-    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
+    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
     editor = new Tandem.Editor('editor-container')
     container = editor.doc.root
     line1 = container.firstChild

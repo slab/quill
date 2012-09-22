@@ -25,8 +25,12 @@ class TandemRange
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getAttributeIntersection: ->
+    if this.isCollapsed()
+      return this.start.getLeaf().attributes
+
     leaves = this.getLeaves()
-    leaves.pop() if leaves.length > 0 && !this.isCollapsed() && @end.offset == 0
+    leaves.pop() if leaves.length > 0 && @end.offset == 0
+    leaves.splice(0, 1) if leaves.length > 0 && @start.offset == leaves[0].text.length
     attributes = if leaves.length > 0 then _.clone(leaves[0].attributes) else {}
     _.all(leaves, (leaf) ->
       _.each(attributes, (value, key) ->
@@ -35,11 +39,6 @@ class TandemRange
       return _.keys(attributes).length > 0
     )
     return attributes
-
-  getLeaves: ->
-    itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())
-    arr = itr.toArray()
-    return arr
 
   getLeafNodes: ->
     range = this.getRangy()
@@ -51,6 +50,11 @@ class TandemRange
       )
       nodes.pop() if nodes[nodes.length - 1] != @end.leafNode || @end.offset == 0
       return nodes
+
+  getLeaves: ->
+    itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())
+    arr = itr.toArray()
+    return arr
 
   getLineNodes: ->
     startLine = @editor.doc.findLineNode(@start.leafNode)
@@ -76,8 +80,25 @@ class TandemRange
       range.setEnd(@end.leafNode, 0)
     return range
 
+  getText: ->
+    leaves = this.getLeaves()
+    return "" if leaves.length == 0
+    line = leaves[0].line
+    return _.map(leaves, (leaf) =>
+      part = leaf.text
+      if leaf == @end.getLeaf()
+        part = part.substring(0, @end.offset)
+      if leaf == @start.getLeaf()
+        part = part.substring(@start.offset)
+      if line != leaf.line
+        part = "\n" + part
+        line = leaf.line
+      return part
+    ).join('')
+
   isCollapsed: ->
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset
+
 
 
 window.Tandem ||= {}
