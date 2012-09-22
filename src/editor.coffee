@@ -171,7 +171,7 @@ class TandemEditor extends EventEmitter2
         _.each(delta.attributes, (value, attr) =>
           this.applyAttribute(index + offset, delta.text.length, attr, value, false)
         )
-        offset += delta.length()
+        offset += delta.getLength()
       else if JetDelta.isRetain(delta)
         if delta.start > index
           this.deleteAt(index + offset, delta.start - index, false)
