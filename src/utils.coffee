@@ -148,8 +148,10 @@ TandemUtils =
     children = _.clone(subtree.childNodes)
     attributes = Tandem.Utils.getAttributeForContainer(subtree)
     if attributes[attribute]?
-      if _.indexOf(Tandem.Constants.SPAN_ATTRIBUTES, attribute) > -1
-        subtree.classList.remove(attribute)
+      if Tandem.Constants.SPAN_ATTRIBUTE_CLASSES[attribute]?
+        _.each(Tandem.Constants.SPAN_ATTRIBUTE_CLASSES[attribute], (attrClass) ->
+          subtree.classList.remove(attrClass)
+        )
       else
         Tandem.Utils.unwrap(subtree)
     _.each(children, (child) ->

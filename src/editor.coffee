@@ -148,6 +148,13 @@ class TandemEditor extends EventEmitter2
     [prevNode, startNode] = line.splitContents(startOffset)
     [endNode, nextNode] = line.splitContents(endOffset)
 
+    Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+      Tandem.Utils.removeAttributeFromSubtree(node, attr)
+    )
+    @doc.updateLine(line)
+    [startNode, startOffset] = Tandem.Utils.getChildAtOffset(lineNode, startOffset)
+    [endNode, endOffset] = Tandem.Utils.getChildAtOffset(lineNode, endOffset)
+
     if value && Tandem.Utils.getAttributeDefault(attr) != value
       fragment = @doc.root.ownerDocument.createDocumentFragment()
       Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
@@ -156,11 +163,7 @@ class TandemEditor extends EventEmitter2
       attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
       attrNode.appendChild(fragment)
       lineNode.insertBefore(attrNode, nextNode)
-    else
-      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-        Tandem.Utils.removeAttributeFromSubtree(node, attr)
-      )
-    @doc.updateLine(line)
+      @doc.updateLine(line)
 
   applyDelta: (delta) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)

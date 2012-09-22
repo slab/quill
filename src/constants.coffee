@@ -1,3 +1,5 @@
+#= require underscore
+
 # Arrays must be alphabetized, so we can use binary search
 
 TandemConstants =
@@ -83,12 +85,11 @@ TandemConstants =
     'small'
   ]
 
-  SPAN_ATTRIBUTES: [
-    'background'
-    'color'
-    'family'
-    'size'
-  ]
+TandemConstants.SPAN_ATTRIBUTE_CLASSES = 
+  'font-background' : _.map(TandemConstants.FONT_BACKGROUNDS, (css) -> "bg-#{css}")
+  'font-color'      : _.map(TandemConstants.FONT_COLORS,      (css) -> "color-#{css}")
+  'font-family'     : _.map(TandemConstants.FONT_FAMILIES,    (css) -> "font-#{css}")
+  'font-size'       : _.map(TandemConstants.FONT_SIZES,       (css) -> "font-#{css}")
 
 
 
