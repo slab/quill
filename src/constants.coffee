@@ -10,7 +10,6 @@ TandemConstants =
     'DIV'
     'DL'
     'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
-    'LI'
     'OL'
     'P'
     'PRE'
@@ -45,13 +44,21 @@ TandemConstants =
     'H6'        : {rename: 'span'}
     'I'         : {}
     'INS'       : {rename: 'span'}
+    'LI'        : {}
+    'OL'        : {}
     'S'         : {}
     'SMALL'     : {rename: 'span'}
     'SPAN'      : {}
     'STRIKE'    : {rename: 's'}
     'STRONG'    : {rename: 'b'}
     'U'         : {}
+    'UL'        : {}
   }
+
+  LIST_TAGS: [
+    'OL'
+    'UL'
+  ]
 
   FONT_BACKGROUNDS: [
     'black'

@@ -30,7 +30,7 @@ class TandemLine extends LinkedList.Node
     Tandem.Utils.traversePreorder(root, 0, (node) ->
       if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node)
         next = node.nextSibling
-        if next? && node.tagName == next.tagName
+        if next?.tagName == node.tagName && node.tagName != 'LI'
           [nodeAttr, nodeValue] = Tandem.Utils.getAttributeForContainer(node)
           [nextAttr, nextValue] = Tandem.Utils.getAttributeForContainer(next)
           if nodeAttr == nextAttr && nodeValue == nextValue
@@ -58,12 +58,12 @@ class TandemLine extends LinkedList.Node
         if attrName?
           return node.parentNode[tandemKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
         else if node.tagName == 'SPAN'
-            # Check if children need us
-            if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
-              return true
-            # Check if parent needs us
-            else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
-              return true
+          # Check if children need us
+          if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+            return true
+          # Check if parent needs us
+          else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+            return true
       return false
 
     Tandem.Utils.traversePreorder(root, 0, (node) =>
