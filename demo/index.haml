@@ -84,33 +84,40 @@
             %b<> e
             %i<> f
             %b<> g
-          %ol<>
+          %ol.indent-1<>
             %li<> 
               %span<> One
+          %ol.indent-1<>
             %li<>
               %span<> Two
-              %ol<>
-                %li<> 
-                  %span<> Alpha
-                  %ol<>
-                    %li
-                      %span<> Roman I
-                    %li
-                      %span<> Roman II
-                %li<>
-                  %span<> Beta
+          %ol.indent-2<>
+            %li<> 
+              %span<> Alpha
+          %ol.indent-3<>
+            %li
+              %span<> Roman I
+          %ol.indent-3<>
+            %li
+              %span<> Roman II
+          %ol.indent-2<>
+            %li<>
+              %span<> Beta
+          %ol.indent-1<>
             %li<> 
               %span<> Three
-              %ol<>
-                %li<>
-                  %span<> Alpha
+          %ol.indent-2<>
+            %li<>
+              %span<> Alpha
+          %ol.indent-1<>
             %li<>
               %span<> Four
-          %ul
+          %ul.indent-1
             %li<>
               %span<> One
+          %ul.indent-1
             %li<>
               %span<> Two
+          %ul.indent-1
             %li<>
               %span<> Three
           %div.indent-1<>

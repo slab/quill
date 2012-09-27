@@ -54,7 +54,7 @@ class TandemEditor extends EventEmitter2
       s { text-decoration: line-through; }
       u { text-decoration: underline; }
 
-      ol, ul { margin: 0px; }
+      ol, ul { margin: 0px; padding: 0px; }
       ul { list-style-type: disc; }
 
       ol.indent-1, ol.indent-4, ol.indent-7 { list-style-type: decimal; }
@@ -81,15 +81,15 @@ class TandemEditor extends EventEmitter2
       .font-size.large        { font-size: 18px; line-height: 22px; }
       .font-size.small        { font-size: 10px; line-height: 12px; }
 
-      .indent-1 { margin-left: 2em; }
-      .indent-2 { margin-left: 4em; }
-      .indent-3 { margin-left: 6em; }
-      .indent-4 { margin-left: 8em; }
-      .indent-5 { margin-left: 10em; }
-      .indent-6 { margin-left: 12em; }
-      .indent-7 { margin-left: 14em; }
-      .indent-8 { margin-left: 16em; }
-      .indent-9 { margin-left: 18em; }
+      .indent-1 { margin-left: 3em; }
+      .indent-2 { margin-left: 5em; }
+      .indent-3 { margin-left: 7em; }
+      .indent-4 { margin-left: 9em; }
+      .indent-5 { margin-left: 11em; }
+      .indent-6 { margin-left: 13em; }
+      .indent-7 { margin-left: 15em; }
+      .indent-8 { margin-left: 17em; }
+      .indent-9 { margin-left: 19em; }
       
       .tab { display: inline-block; width: 2em; }
     "
