@@ -141,6 +141,11 @@ TandemUtils =
     )
     return indent
 
+  isIgnoreNode: (node) ->
+    return _.any(Tandem.Constants.IGNORE_CLASSES, (cssClass) -> 
+      return node.classList.contains(cssClass)
+    )
+
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 
