@@ -164,6 +164,7 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
+    console.log lineNode, startOffset, endOffset, attr, value
     return if startOffset == endOffset
     line = @doc.findLine(lineNode)
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
@@ -214,7 +215,20 @@ class TandemEditor extends EventEmitter2
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
 
   applyLineAttribute: (line, attr, value) ->
-    console.log line, attr, value
+    # Handle:
+      # 1. Removal of bulleted items
+      # 2. Adding alignment
+      # 3. Removing alignment
+      # 4. Adding indent
+      # 5. Removing indent
+    if _.indexOf(Tandem.Constants.LIST_ATTRIBUTES, attr, true) > -1
+      tagName = if attr == 'list' then 'ol' else 'ul'
+      lineNode = line.node
+      ol = lineNode.ownerDocument.createElement(tagName)
+      line.node = Tandem.Utils.wrap(ol, lineNode)
+      Tandem.Utils.switchTag(lineNode, 'LI')
+      line.node.className = lineNode.className
+      line.node.id = lineNode.id
 
   deleteAt: (startIndex, length, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges

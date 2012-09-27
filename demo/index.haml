@@ -84,29 +84,28 @@
             %b<> e
             %i<> f
             %b<> g
-          %div<>
-            %ol<>
-              %li<> 
-                %span<> One
-              %li<>
-                %span<> Two
-                %ol<>
-                  %li<> 
-                    %span<> Alpha
-                    %ol<>
-                      %li
-                        %span<> Roman I
-                      %li
-                        %span<> Roman II
-                  %li<>
-                    %span<> Beta
-              %li<> 
-                %span<> Three
-                %ol<>
-                  %li<>
-                    %span<> Alpha
-              %li<>
-                %span<> Four
+          %ol<>
+            %li<> 
+              %span<> One
+            %li<>
+              %span<> Two
+              %ol<>
+                %li<> 
+                  %span<> Alpha
+                  %ol<>
+                    %li
+                      %span<> Roman I
+                    %li
+                      %span<> Roman II
+                %li<>
+                  %span<> Beta
+            %li<> 
+              %span<> Three
+              %ol<>
+                %li<>
+                  %span<> Alpha
+            %li<>
+              %span<> Four
           %ul
             %li<>
               %span<> One
@@ -182,7 +181,7 @@
       editor = new Tandem.Editor('editor-container');
       toolbar = new Tandem.Toolbar(editor);
 
-      _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
+      _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list'], function(format) {
         $('#formatting-container .' + format).click(function() {
           toolbar.applyAttribute(format, !$(this).hasClass('active'));
         });

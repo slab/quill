@@ -3,6 +3,13 @@
 # Arrays must be alphabetized, so we can use binary search
 
 TandemConstants =
+  ALIGN_ATTRIBUTES: [
+    'center'
+    'justify'
+    'left'
+    'right'
+  ]
+
   BLOCK_TAGS: [
     'ADDRESS'
     'BLOCKQUOTE'
@@ -26,48 +33,6 @@ TandemConstants =
   BREAK_TAGS: [
     'BR'
     'HR'
-  ]
-
-  IGNORE_CLASSES: [
-    'tab'
-  ]
-
-  # Missing rule implied removal
-  LINE_RULES: {
-    'A'         : {}
-    'B'         : {}
-    'BIG'       : {rename: 'span'}
-    'CENTER'    : {rename: 'span'}
-    'DEL'       : {rename: 's'}
-    'EM'        : {rename: 'i'}
-    'H1'        : {rename: 'span'}
-    'H2'        : {rename: 'span'}
-    'H3'        : {rename: 'span'}
-    'H4'        : {rename: 'span'}
-    'H5'        : {rename: 'span'}
-    'H6'        : {rename: 'span'}
-    'I'         : {}
-    'INS'       : {rename: 'span'}
-    'LI'        : {}
-    'OL'        : {}
-    'S'         : {}
-    'SMALL'     : {rename: 'span'}
-    'SPAN'      : {}
-    'STRIKE'    : {rename: 's'}
-    'STRONG'    : {rename: 'b'}
-    'U'         : {}
-    'UL'        : {}
-  }
-
-  LIST_TAGS: [
-    'OL'
-    'UL'
-  ]
-
-  LIST_ATTRIBUTES: [
-    'bullet'
-    'indent'
-    'list'
   ]
 
   FONT_BACKGROUNDS: [
@@ -101,6 +66,51 @@ TandemConstants =
     'large'
     'small'
   ]
+
+  IGNORE_CLASSES: [
+    'tab'
+  ]
+
+  # Missing rule implied removal
+  LINE_RULES: {
+    'A'         : {}
+    'B'         : {}
+    'BIG'       : {rename: 'span'}
+    'CENTER'    : {rename: 'span'}
+    'DEL'       : {rename: 's'}
+    'EM'        : {rename: 'i'}
+    'H1'        : {rename: 'span'}
+    'H2'        : {rename: 'span'}
+    'H3'        : {rename: 'span'}
+    'H4'        : {rename: 'span'}
+    'H5'        : {rename: 'span'}
+    'H6'        : {rename: 'span'}
+    'I'         : {}
+    'INS'       : {rename: 'span'}
+    'LI'        : {}
+    'OL'        : {}
+    'S'         : {}
+    'SMALL'     : {rename: 'span'}
+    'SPAN'      : {}
+    'STRIKE'    : {rename: 's'}
+    'STRONG'    : {rename: 'b'}
+    'U'         : {}
+    'UL'        : {}
+  }
+
+  LIST_ATTRIBUTES: [
+    'bullet'
+    'indent'
+    'list'
+  ]
+
+  LIST_TAGS: [
+    'OL'
+    'UL'
+  ]
+
+
+TandemConstants.LINE_ATTRIBUTES = [].concat(TandemConstants.LIST_ATTRIBUTES, TandemConstants.ALIGN_ATTRIBUTES).sort()
 
 TandemConstants.SPAN_ATTRIBUTES =
   'font-background' : TandemConstants.FONT_BACKGROUNDS
