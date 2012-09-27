@@ -67,22 +67,24 @@ TandemUtils =
       endLineNode = rightStart
       endOffset -= leftStart.textContent.length if leftStart? && startLineNode != rightStart
     [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
-  
     fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
       rightStart = next
     Tandem.Utils.mergeNodes(leftStart, rightEnd)
-
     return fragment
+
+  getAncestorCount: (container, tagName) ->
+    count = 0
+    while container.parentNode?
+      if container.parentNode.tagName == tagName
+        count += 1
+      container = container.parentNode
+    return count
 
   getAttributeDefault: (attribute) ->
     switch attribute
-      when 'bold'             then return false
-      when 'italic'           then return false
-      when 'strike'           then return false
-      when 'underline'        then return false
       when 'font-background'  then return 'white'
       when 'font-color'       then return 'black'
       when 'font-family'      then return 'san-serif'
@@ -96,6 +98,15 @@ TandemUtils =
       when 'I' then return ['italic', true]
       when 'S' then return ['strike', true]
       when 'U' then return ['underline', true]
+      when 'LI'
+        if container.parentNode.tagName == 'OL'
+          return ['list', Tandem.Utils.getAncestorCount(container, 'OL')]
+        else if container.parentNode.tagName == 'UL'
+          tagCount = Tandem.Utils.getAncestorCount(container, 'UL')
+          return if container.parentNode.classList.contains('indent') then ['indent', tagCount] else ['bullet', tagCount]
+        else
+          console.error('Invalid parent for list item', container, container.parentNode)
+          return []
       when 'SPAN'
         attribute = []
         _.all(Tandem.Constants.SPAN_ATTRIBUTES, (list, attrName) ->

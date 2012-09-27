@@ -28,6 +28,10 @@ TandemConstants =
     'HR'
   ]
 
+  IGNORE_CLASSES: [
+    'tab'
+  ]
+
   # Missing rule implied removal
   LINE_RULES: {
     'A'         : {}
@@ -58,6 +62,12 @@ TandemConstants =
   LIST_TAGS: [
     'OL'
     'UL'
+  ]
+
+  LIST_ATTRIBUTES: [
+    'bullet'
+    'indent'
+    'list'
   ]
 
   FONT_BACKGROUNDS: [

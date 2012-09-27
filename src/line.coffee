@@ -58,11 +58,13 @@ class TandemLine extends LinkedList.Node
         if attrName?
           return node.parentNode[tandemKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
         else if node.tagName == 'SPAN'
+          if _.any(Tandem.Constants.IGNORE_CLASSES, (cssClass) -> return node.classList.contains(cssClass))
+            return false
           # Check if children need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
           # Check if parent needs us
-          else if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+          if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
             return true
       return false
 

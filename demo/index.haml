@@ -45,6 +45,11 @@
           %button.format-button.underline Underline
           %button.format-button.strike Strike
           %button.format-button.link Link
+          %button.format-button.list 1.
+          %button.format-button.bullet -
+          %button.format-button.outdent <-
+          %button.format-button.indent ->
+
         #editor-container.editor-container
           %div<>
             %span<> Welcome to Stypi
@@ -79,18 +84,43 @@
             %b<> e
             %i<> f
             %b<> g
-          %ol<>
-            %li<> One
-            %li<> Two
+          %div<>
+            %ol<>
+              %li<> 
+                %span<> One
+              %li<>
+                %span<> Two
+                %ol<>
+                  %li<> 
+                    %span<> Alpha
+                    %ol<>
+                      %li
+                        %span<> Roman I
+                      %li
+                        %span<> Roman II
+                  %li<>
+                    %span<> Beta
+              %li<> 
+                %span<> Three
+                %ol<>
+                  %li<>
+                    %span<> Alpha
+              %li<>
+                %span<> Four
+          %ul
             %li<>
-              %ol<>
-                %li<> Alpha
-                %li<> Beta
-            %li<> Three
+              %span<> One
             %li<>
-              %ol<>
-                %li<> Alpha
-            %li<> Four
+              %span<> Two
+            %li<>
+              %span<> Three
+          %div.indent-1<>
+            %span<> Indent 1
+          %div.indent-2<>
+            %span<> Indent 2
+          %div<>
+            %span.tab<> &#09;
+            %span<> I look like an indent but actually I'm not cuz I'm a tab.
           %div<>
             %span.font-size.huge<> Huge
             %span.font-size.large<> Large

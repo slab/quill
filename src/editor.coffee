@@ -47,11 +47,20 @@ class TandemEditor extends EventEmitter2
         margin: 0px; 
         padding: 10px; 
       }
+      
       a { text-decoration: underline; }
       b { font-weight: bold; }
       i { font-style: italic; }
       s { text-decoration: line-through; }
       u { text-decoration: underline; }
+
+      ol, ul { margin: 0px; }
+      ul { list-style-type: disc; }
+
+      ol.indent-1, ol.indent-4, ol.indent-7 { list-style-type: decimal; }
+      ol.indent-2, ol.indent-5, ol.indent-8 { list-style-type: lower-alpha; }
+      ol.indent-3, ol.indent-6, ol.indent-9 { list-style-type: lower-roman; }
+
       .font-background.black  { background-color: black; }
       .font-background.red    { background-color: red; }
       .font-background.orange { background-color: orange; }
@@ -71,6 +80,18 @@ class TandemEditor extends EventEmitter2
       .font-size.huge         { font-size: 32px; line-height: 36px; }
       .font-size.large        { font-size: 18px; line-height: 22px; }
       .font-size.small        { font-size: 10px; line-height: 12px; }
+
+      .indent-1 { margin-left: 2em; }
+      .indent-2 { margin-left: 4em; }
+      .indent-3 { margin-left: 6em; }
+      .indent-4 { margin-left: 8em; }
+      .indent-5 { margin-left: 10em; }
+      .indent-6 { margin-left: 12em; }
+      .indent-7 { margin-left: 14em; }
+      .indent-8 { margin-left: 16em; }
+      .indent-9 { margin-left: 18em; }
+      
+      .tab { display: inline-block; width: 2em; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css
@@ -145,20 +166,23 @@ class TandemEditor extends EventEmitter2
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
     return if startOffset == endOffset
     line = @doc.findLine(lineNode)
-    [prevNode, startNode] = line.splitContents(startOffset)
-    [endNode, nextNode] = line.splitContents(endOffset)
-    if value && Tandem.Utils.getAttributeDefault(attr) != value
-      fragment = @doc.root.ownerDocument.createDocumentFragment()
-      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-        fragment.appendChild(node)
-      )
-      attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
-      attrNode.appendChild(fragment)
-      lineNode.insertBefore(attrNode, nextNode)
+    if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
+      this.applyLineAttribute(line, attr, value)
     else
-      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-        Tandem.Utils.removeAttributeFromSubtree(node, attr)
-      )
+      [prevNode, startNode] = line.splitContents(startOffset)
+      [endNode, nextNode] = line.splitContents(endOffset)
+      if value && Tandem.Utils.getAttributeDefault(attr) != value
+        fragment = @doc.root.ownerDocument.createDocumentFragment()
+        Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+          fragment.appendChild(node)
+        )
+        attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
+        attrNode.appendChild(fragment)
+        lineNode.insertBefore(attrNode, nextNode)
+      else
+        Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+          Tandem.Utils.removeAttributeFromSubtree(node, attr)
+        )
     @doc.updateLine(line)
 
   applyDelta: (delta) ->
@@ -188,6 +212,9 @@ class TandemEditor extends EventEmitter2
     # If end of text was deleted
     if delta.endLength < delta.startLength + offset
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
+
+  applyLineAttribute: (line, attr, value) ->
+    console.log line, attr, value
 
   deleteAt: (startIndex, length, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
