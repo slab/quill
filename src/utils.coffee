@@ -131,6 +131,16 @@ TandemUtils =
       child = child.nextSibling
     return [child, offset]
 
+  getListIndent: (list) ->
+    indent = 0
+    _.any(list.classList, (css) ->
+      if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
+        indent = parseInt(css.substring(Tandem.Document.INDENT_PREFIX.length))
+        return true
+      return false
+    )
+    return indent
+
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 

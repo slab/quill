@@ -5,6 +5,27 @@
 
 
 class TandemDocument
+  @INDENT_PREFIX: 'indent-'
+
+
+  @fixListNumbering: (root) ->
+    ols = root.querySelectorAll('ol')
+    _.each(ols, (ol) ->
+      indent = Tandem.Utils.getListIndent(ol)
+      previous = ol.previousSibling
+      while true
+        if !previous? || previous.tagName != 'OL'
+          return ol.setAttribute('start', 1)
+        else
+          prevIndent = Tandem.Utils.getListIndent(previous)
+          if prevIndent < indent
+            return ol.setAttribute('start', 1)
+          else if prevIndent == indent
+            return ol.setAttribute('start', parseInt(previous.getAttribute('start')) + 1)
+          else
+            previous = previous.previousSibling
+    )
+
   @normalizeHtml: (root, options = {}) ->
     if root.childNodes.length == 0
       div = root.ownerDocument.createElement('div')
@@ -20,6 +41,7 @@ class TandemDocument
             Tandem.Line.normalizeHtml(lineNode)
           )
     )
+    TandemDocument.fixListNumbering(root)
 
 
   constructor: (@editor, @root) ->
