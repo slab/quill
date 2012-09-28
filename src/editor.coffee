@@ -216,21 +216,15 @@ class TandemEditor extends EventEmitter2
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
 
   applyLineAttribute: (line, attr, value) ->
-    # Handle:
-      # 1. Removal of bulleted items
-      # 2. Adding alignment
-      # 3. Removing alignment
-      # 4. Adding indent
-      # 5. Removing indent
     value = 1 if value == true
     if _.indexOf(Tandem.Constants.LIST_ATTRIBUTES, attr, true) > -1
       lineNode = line.node
       expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
       if lineNode.tagName != expectedTag
-        if value
+        if value && lineNode.firstChild.tagName != 'LI'
           li = lineNode.ownerDocument.createElement('li')
           Tandem.Utils.wrapChildren(li, lineNode)
-        else if lineNode.firstChild.tagName == 'LI'
+        else if !value && lineNode.firstChild.tagName == 'LI'
           Tandem.Utils.unwrap(lineNode.firstChild)
         line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
       Tandem.Utils.setIndent(line.node, value)
