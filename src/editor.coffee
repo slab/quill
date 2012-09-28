@@ -144,12 +144,14 @@ class TandemEditor extends EventEmitter2
       if startLine == endLine
         this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
       else
-        this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
-        this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
         curLine = startLine.nextSibling
         while curLine? && curLine != endLine
+          nextSibling = curLine.nextSibling
           this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
-          curLine = curLine.nextSibling
+          curLine = nextSibling
+        this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
+        this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
+      Tandem.Document.fixListNumbering(@doc.root) if attr == 'list'
       @doc.rebuildDirty()
     )
     if emitEvent
@@ -164,7 +166,6 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
-    console.log lineNode, startOffset, endOffset, attr, value
     return if startOffset == endOffset
     line = @doc.findLine(lineNode)
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
@@ -221,14 +222,20 @@ class TandemEditor extends EventEmitter2
       # 3. Removing alignment
       # 4. Adding indent
       # 5. Removing indent
+    value = 1 if value == true
     if _.indexOf(Tandem.Constants.LIST_ATTRIBUTES, attr, true) > -1
-      tagName = if attr == 'list' then 'ol' else 'ul'
       lineNode = line.node
-      ol = lineNode.ownerDocument.createElement(tagName)
-      line.node = Tandem.Utils.wrap(ol, lineNode)
-      Tandem.Utils.switchTag(lineNode, 'LI')
-      line.node.className = lineNode.className
-      line.node.id = lineNode.id
+      expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
+      if lineNode.tagName != expectedTag
+        if value
+          li = lineNode.ownerDocument.createElement('li')
+          Tandem.Utils.wrapChildren(li, lineNode)
+        else if lineNode.firstChild.tagName == 'LI'
+          Tandem.Utils.unwrap(lineNode.firstChild)
+        line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
+      Tandem.Utils.setIndent(line.node, value)
+    if attr == 'indent'
+      Tandem.Utils.setIndent(line.node, value)
 
   deleteAt: (startIndex, length, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges

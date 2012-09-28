@@ -171,6 +171,13 @@ TandemUtils =
       Tandem.Utils.removeAttributeFromSubtree(child, attribute)
     )
 
+  setIndent: (list, indent) ->
+    _.each(_.clone(list.classList), (css) ->
+      if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
+        list.classList.remove(css)
+    )
+    list.classList.add(Tandem.Document.INDENT_PREFIX + indent) if indent
+
   splitNode: (node, offset, force = false) ->
     if offset > node.textContent.length
       throw new Error('Splitting at offset greater than node length')
@@ -211,6 +218,8 @@ TandemUtils =
     newNode = node.ownerDocument.createElement(newTag)
     this.moveChildren(newNode, node)
     node.parentNode.replaceChild(newNode, node)
+    newNode.className = node.className
+    newNode.id = node.id
     return newNode
 
   traversePreorder: (root, offset, fn, context = fn, args...) ->
@@ -243,6 +252,11 @@ TandemUtils =
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node)
     wrapper.appendChild(node)
+    return wrapper
+
+  wrapChildren: (wrapper, node) ->
+    Tandem.Utils.moveChildren(wrapper, node)
+    node.appendChild(wrapper)
     return wrapper
 
 

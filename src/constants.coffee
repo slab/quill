@@ -100,7 +100,6 @@ TandemConstants =
 
   LIST_ATTRIBUTES: [
     'bullet'
-    'indent'
     'list'
   ]
 
@@ -110,7 +109,7 @@ TandemConstants =
   ]
 
 
-TandemConstants.LINE_ATTRIBUTES = [].concat(TandemConstants.LIST_ATTRIBUTES, TandemConstants.ALIGN_ATTRIBUTES).sort()
+TandemConstants.LINE_ATTRIBUTES = [].concat(TandemConstants.LIST_ATTRIBUTES, TandemConstants.ALIGN_ATTRIBUTES, ['indent']).sort()
 
 TandemConstants.SPAN_ATTRIBUTES =
   'font-background' : TandemConstants.FONT_BACKGROUNDS

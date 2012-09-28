@@ -64,7 +64,7 @@ class TandemLine extends LinkedList.Node
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
           # Check if parent needs us
-          if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode)
+          if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
             return true
       return false
 
