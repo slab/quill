@@ -217,8 +217,8 @@ TandemUtils =
     newNode = node.ownerDocument.createElement(newTag)
     this.moveChildren(newNode, node)
     node.parentNode.replaceChild(newNode, node)
-    newNode.className = node.className
-    newNode.id = node.id
+    newNode.className = node.className if node.className
+    newNode.id = node.id if node.id
     return newNode
 
   traversePreorder: (root, offset, fn, context = fn, args...) ->
