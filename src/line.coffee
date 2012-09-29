@@ -86,7 +86,7 @@ class TandemLine extends LinkedList.Node
   @wrapText: (root) ->
     Tandem.Utils.traversePreorder(root, 0, (node) =>
       node.normalize()
-      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root)
+      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root || node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
         Tandem.Utils.wrap(span, node)
         node = span

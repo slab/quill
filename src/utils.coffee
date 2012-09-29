@@ -9,9 +9,6 @@ TandemUtils =
       if node.nodeType == node.ELEMENT_NODE
         toBreak = []
         if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-          if _.indexOf(Tandem.Constants.LIST_TAGS, node.tagName, true) > -1 && node.parentNode?.tagName == 'LI'
-            # Make exception for nested lists
-            return
           [left1, left2, didLeftSplit] = this.splitNode(root, index)
           if !didLeftSplit
             [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)

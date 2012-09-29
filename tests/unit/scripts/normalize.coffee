@@ -94,23 +94,27 @@ describe('Normalize', ->
     }, {
       name: 'break list elements'
       before: 
-        '<div>
-          <ul>
-            <li>One</li>
-            <li>Two</li>
-            <li>Three</li>
-          </ul>
-        </div>'
+        '<ul>
+          <li>One</li>
+          <li>Two</li>
+          <li>Three</li>
+        </ul>'
       expected:
-        '<div>
-          <span>One</span>
-        </div>
-        <div>
-          <span>Two</span>
-        </div>
-        <div>
-          <span>Three</span>
-        </div>'
+        '<ul>
+          <li>
+            <span>One</span>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <span>Two</span>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <span>Three</span>
+          </li>
+        </ul>'
     }, {
       name: 'split block level tags within elements'
       before:
@@ -265,7 +269,7 @@ describe('Normalize', ->
     }]
     
     _.each(tests, (test) ->
-      it('shoud ' + test.name, ->
+      it('should ' + test.name, ->
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before, true)
         editor.doc.buildLines()
         expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
