@@ -26,12 +26,12 @@ class TandemRange
       
   getAttributeIntersection: ->
     if this.isCollapsed()
-      return this.start.getLeaf().attributes
+      return this.start.getLeaf().getAttributes()
 
     leaves = this.getLeaves()
     leaves.pop() if leaves.length > 0 && @end.offset == 0
     leaves.splice(0, 1) if leaves.length > 0 && @start.offset == leaves[0].text.length
-    attributes = if leaves.length > 0 then _.clone(leaves[0].attributes) else {}
+    attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
     _.all(leaves, (leaf) ->
       _.each(attributes, (value, key) ->
         delete attributes[key] if leaf.attributes[key] != value

@@ -134,6 +134,9 @@ class TandemLine extends LinkedList.Node
   resetContent: ->
     @length = @node.textContent.length
     @innerHTML = @node.innerHTML
+    @attributes = {}
+    [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
+    @attributes[attrName] = attrVal if attrName?
     @delta = this.toDelta()
     this.setDirty(false)
 
@@ -150,7 +153,7 @@ class TandemLine extends LinkedList.Node
 
   toDelta: ->
     deltas = _.map(@leaves.toArray(), (leaf) ->
-      return new JetInsert(leaf.text, _.clone(leaf.attributes))
+      return new JetInsert(leaf.text, leaf.getAttributes())
     )
     delta = new JetDelta(0, @length, deltas)
     delta.compact()

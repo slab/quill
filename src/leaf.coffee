@@ -14,6 +14,9 @@ class TandemLeaf extends LinkedList.Node
     @length = @text.length
     @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
 
+  getAttributes: ->
+    return _.extend({}, @attributes, @line.attributes)
+
   setText: (@text) ->
     @node.textContent = @text
     @length = @text.length

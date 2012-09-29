@@ -93,19 +93,18 @@ TandemUtils =
 
   getAttributeForContainer: (container) ->
     switch container.tagName
-      when 'A' then return ['link', container.getAttribute('href')]
-      when 'B' then return ['bold', true]
-      when 'I' then return ['italic', true]
-      when 'S' then return ['strike', true]
-      when 'U' then return ['underline', true]
-      when 'LI'
-        if container.parentNode.tagName == 'OL'
-          return ['list', Tandem.Utils.getAncestorCount(container, 'OL')]
-        else if container.parentNode.tagName == 'UL'
-          tagCount = Tandem.Utils.getAncestorCount(container, 'UL')
-          return if container.parentNode.classList.contains('indent') then ['indent', tagCount] else ['bullet', tagCount]
+      when 'A'  then return ['link', container.getAttribute('href')]
+      when 'B'  then return ['bold', true]
+      when 'I'  then return ['italic', true]
+      when 'S'  then return ['strike', true]
+      when 'U'  then return ['underline', true]
+      when 'OL' then return ['list', Tandem.Utils.getIndent(container)]
+      when 'UL' then return ['bullet', Tandem.Utils.getIndent(container)]
+      when 'DIV'
+        indent = Tandem.Utils.getIndent(container)
+        if indent > 0
+          return ['indent', Tandem.Utils.getIndent(container)]
         else
-          console.error('Invalid parent for list item', container, container.parentNode)
           return []
       when 'SPAN'
         attribute = []
@@ -131,7 +130,7 @@ TandemUtils =
       child = child.nextSibling
     return [child, offset]
 
-  getListIndent: (list) ->
+  getIndent: (list) ->
     indent = 0
     _.any(list.classList, (css) ->
       if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX

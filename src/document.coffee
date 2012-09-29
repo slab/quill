@@ -11,13 +11,13 @@ class TandemDocument
   @fixListNumbering: (root) ->
     ols = root.querySelectorAll('ol')
     _.each(ols, (ol) ->
-      indent = Tandem.Utils.getListIndent(ol)
+      indent = Tandem.Utils.getIndent(ol)
       previous = ol.previousSibling
       while true
         if !previous? || previous.tagName != 'OL'
           return ol.setAttribute('start', 1)
         else
-          prevIndent = Tandem.Utils.getListIndent(previous)
+          prevIndent = Tandem.Utils.getIndent(previous)
           if prevIndent < indent
             return ol.setAttribute('start', 1)
           else if prevIndent == indent
