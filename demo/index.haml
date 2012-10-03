@@ -190,8 +190,8 @@
     %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
     %script{:type => 'text/javascript', :src => '../src/debug.js'}
     :javascript
-      editor = new Tandem.Editor('editor-container');
-      toolbar = new Tandem.Toolbar(editor);
+      var editor = new Tandem.Editor('editor-container');
+      var toolbar = new Tandem.Toolbar(editor);
 
       _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
         $('#formatting-container .' + format).click(function() {

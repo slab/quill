@@ -122,6 +122,7 @@ class TandemEditor extends EventEmitter2
       if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
+
     @doc.root.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
     @doc.root.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
@@ -289,8 +290,14 @@ class TandemEditor extends EventEmitter2
     this.preserveSelection(position, text.length, =>
       lines = text.split("\n")
       _.each(lines, (line, lineIndex) =>
-        this.insertTextAt(index, line)
-        index += line.length
+        strings = line.split("\t")
+        _.each(strings, (str, strIndex) =>
+          this.insertTextAt(index, str)
+          index += str.length
+          if strIndex < strings.length - 1
+            this.insertTabAt(index)
+            index += 1
+        )
         if lineIndex < lines.length - 1
           this.insertNewlineAt(index)
           index += 1
@@ -303,11 +310,20 @@ class TandemEditor extends EventEmitter2
       deltas.push(new JetRetain(startIndex, originalDocLength)) if startIndex < originalDocLength
       delta = new JetDelta(originalDocLength, @doc.length, deltas)
       this.emit(this.events.API_TEXT_CHANGE, delta)
-    @ignoreDomChanges = oldIgnoreDomChange
+    @ignoreDomChanges = oldIgnoreDomChange 
 
   insertNewlineAt: (startIndex) ->
     [line, offset] = @doc.findLineAtOffset(startIndex)
     @doc.splitLine(line, offset)
+
+  insertTabAt: (startIndex) ->
+    [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
+    startLine = @doc.findLine(startLineNode)
+    [prevNode, startNode] = startLine.splitContents(startLineOffset)
+    tab = startLineNode.ownerDocument.createElement('span')
+    tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
+    startLineNode.insertBefore(tab, startNode)
+    @doc.updateLine(startLine)
 
   # insertTextAt: (Number startIndex, String text) ->
   # insertTextAt: (TandemRange startIndex, String text) ->

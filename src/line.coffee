@@ -120,6 +120,7 @@ class TandemLine extends LinkedList.Node
 
   rebuild: ->
     if @node.parentNode == @doc.root
+      return if @innerHTML == @node.innerHTML
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()

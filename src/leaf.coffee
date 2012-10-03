@@ -3,16 +3,26 @@
 
 class TandemLeaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
+  @TAB_NODE_CLASS: 'tab'
 
   @isLeafNode: (node) ->
-    return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE || node.tagName == 'BR'
+    return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
+    return true if node.tagName == 'BR'
+    return true if node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
 
 
   constructor: (@line, @node, attributes) ->
     @attributes = _.clone(attributes)
-    @text = @node.textContent
-    @length = @text.length
     @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
+    if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
+      @text = @node.textContent
+      @length = @text.length
+    else
+      @length = 1
+      @text = "\t"
+      @node.textContent = "\t"
+      @node.setAttribute('contenteditable', false)
+
 
   getAttributes: ->
     return _.extend({}, @attributes, @line.attributes)
