@@ -9,8 +9,6 @@ class TandemKeyboard
     @root = editor.doc.root
     @root.addEventListener('keydown', (event) ->
       event ||= window.event
-      # If tab and inside an indent, apply indent + 1
-      # Otherwise, insert "\t", set cursor to + 1
       switch event.which
         when TandemKeyboard.KEYS.tab
           selection = editor.getSelection()

@@ -120,7 +120,7 @@ class TandemLine extends LinkedList.Node
 
   rebuild: ->
     if @node.parentNode == @doc.root
-      return if @innerHTML == @node.innerHTML
+      return if @outerHTML == @node.outerHTML
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
@@ -132,7 +132,7 @@ class TandemLine extends LinkedList.Node
 
   resetContent: ->
     @length = @node.textContent.length
-    @innerHTML = @node.innerHTML
+    @outerHTML = @node.outerHTML
     @attributes = {}
     [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
     @attributes[attrName] = attrVal if attrName?

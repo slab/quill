@@ -100,7 +100,7 @@ TandemUtils =
       when 'DIV'
         indent = Tandem.Utils.getIndent(container)
         if indent > 0
-          return ['indent', Tandem.Utils.getIndent(container)]
+          return ['indent', indent]
         else
           return []
       when 'SPAN'
