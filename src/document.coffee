@@ -30,7 +30,6 @@ class TandemDocument
     if root.childNodes.length == 0
       div = root.ownerDocument.createElement('div')
       return root.appendChild(div)
-
     _.each(_.clone(root.childNodes), (child) =>
       if child.nodeType != child.ELEMENT_NODE
         child.parentNode.removeChild(child)

@@ -126,6 +126,15 @@ describe('Editor', ->
       expect(selStart).to.equal(2)
       expect(selEnd).to.equal(2)
     )
+
+    it('should insert at selection', ->
+      editor = reset()
+      sel = new Tandem.Range(editor, 3, 3)      # 012|3456|789
+      mod = new Tandem.Position(editor, 3)
+      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      expect(selStart).to.equal(4)
+      expect(selEnd).to.equal(4)
+    )
   )
 
 

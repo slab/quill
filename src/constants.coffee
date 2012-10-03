@@ -72,7 +72,7 @@ TandemConstants =
     'tab'
   ]
 
-  # Missing rule implied removal
+  # Missing rule implies removal
   LINE_RULES: {
     'A'         : {}
     'B'         : {}

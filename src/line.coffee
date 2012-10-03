@@ -51,15 +51,13 @@ class TandemLine extends LinkedList.Node
     root[tandemKey] = {}
 
     isRedudant = (node) ->
-      if node.nodeType == node.ELEMENT_NODE
+      if node.nodeType == node.ELEMENT_NODE && !Tandem.Utils.isIgnoreNode(node)
         if node.textContent.length == 0
           return true
         [attrName, attrValue] = Tandem.Utils.getAttributeForContainer(node)
         if attrName?
           return node.parentNode[tandemKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
         else if node.tagName == 'SPAN'
-          if Tandem.Utils.isIgnoreNode(node)
-            return false
           # Check if children need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true

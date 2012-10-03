@@ -5,6 +5,7 @@
 #= require jetsync
 #= require tandem/document
 #= require tandem/range
+#= require tandem/keyboard
 
 class TandemEditor extends EventEmitter2
   @editors: []
@@ -23,6 +24,7 @@ class TandemEditor extends EventEmitter2
     @doc = new Tandem.Document(this, @iframe.contentWindow.document.body)
     @ignoreDomChanges = false
     @currentSelection = null
+    @keyboard = new Tandem.Keyboard(this)
     this.initContentListeners()
     this.initSelectionListeners()
     TandemEditor.editors.push(this)
@@ -91,7 +93,7 @@ class TandemEditor extends EventEmitter2
       .indent-8 { margin-left: 16em; }
       .indent-9 { margin-left: 18em; }
       
-      .tab { display: inline-block; width: 2em; }
+      .tab { display: inline-block; margin: 0px; width: 2em; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css
@@ -120,7 +122,6 @@ class TandemEditor extends EventEmitter2
       if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
         this.emit(this.events.USER_SELECTION_CHANGE, selection)
         @currentSelection = selection
-
     @doc.root.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
     @doc.root.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
     setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
@@ -166,11 +167,11 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
-    return if startOffset == endOffset
     line = @doc.findLine(lineNode)
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
       this.applyLineAttribute(line, attr, value)
     else
+      return if startOffset == endOffset
       [prevNode, startNode] = line.splitContents(startOffset)
       [endNode, nextNode] = line.splitContents(endOffset)
       if value && Tandem.Utils.getAttributeDefault(attr) != value
@@ -235,9 +236,16 @@ class TandemEditor extends EventEmitter2
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     originalDocLength = @doc.length
-    startPos = Tandem.Position.makePosition(this, startIndex)
+    if !_.isNumber(startIndex)
+      range = startIndex
+      startPos = range.start
+      endPos = range.end
+      startIndex = range.start.getIndex()
+      length = range.end.getIndex() - startIndex
+    else
+      startPos = Tandem.Position.makePosition(this, startIndex)
+      endPos = Tandem.Position.makePosition(this, startIndex + length)
     startIndex = startPos.getIndex()
-    endPos = Tandem.Position.makePosition(this, startIndex + length)
     endIndex = endPos.getIndex()
     this.preserveSelection(startPos, 0 - length, =>
       [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
@@ -269,26 +277,23 @@ class TandemEditor extends EventEmitter2
     return @doc.toDelta()
 
   getSelection: ->
-    return Tandem.Range.getSelection(this)
+    @currentSelection = Tandem.Range.getSelection(this)
+    return @currentSelection
 
   insertAt: (startIndex, text, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     originalDocLength = @doc.length
     position = Tandem.Position.makePosition(this, startIndex)
-    startIndex = position.getIndex()
-
+    index = startIndex = position.getIndex()
     this.preserveSelection(position, text.length, =>
       lines = text.split("\n")
-      index = startIndex
       _.each(lines, (line, lineIndex) =>
-        position = new Tandem.Position(this, index) unless position?
-        this.insertTextAt(position, line)
+        this.insertTextAt(index, line)
         index += line.length
         if lineIndex < lines.length - 1
           this.insertNewlineAt(index)
           index += 1
-        position = null
       )
     )
     if emitEvent
@@ -307,6 +312,7 @@ class TandemEditor extends EventEmitter2
   # insertTextAt: (Number startIndex, String text) ->
   # insertTextAt: (TandemRange startIndex, String text) ->
   insertTextAt: (startIndex, text) ->
+    return if text.length <= 0
     position = Tandem.Position.makePosition(this, startIndex)
     startIndex = position.getIndex()
     leaf = position.getLeaf()
@@ -346,6 +352,7 @@ class TandemEditor extends EventEmitter2
     selEnd = selectionRange.end.getIndex()
     selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
     selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
+    selEnd = Math.max(selStart, selEnd)
     return [selStart, selEnd]
 
   update: ->

@@ -6,7 +6,7 @@ TandemUtils =
   breakBlocks: (root) ->
     lineNodes = []
     this.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE
+      if node.nodeType == node.ELEMENT_NODE && !Tandem.Utils.isIgnoreNode(node)
         toBreak = []
         if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
           [left1, left2, didLeftSplit] = this.splitNode(root, index)
