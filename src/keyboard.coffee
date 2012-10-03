@@ -12,12 +12,12 @@ class TandemKeyboard
       switch event.which
         when TandemKeyboard.KEYS.tab
           selection = editor.getSelection()
-          intersection = selection.getAttributeIntersection()
+          intersection = selection.getAttributeIntersection(true)
           if intersection.bullet? || intersection.indent? || intersection.list?
             addition = if event.shiftKey == true then -1 else 1
-            editor.applyAttribute(selection, 'indent', intersection.bullet + addition) if intersection.bullet?
-            editor.applyAttribute(selection, 'indent', intersection.indent + addition) if intersection.indent?
-            editor.applyAttribute(selection, 'indent', intersection.list + addition)   if intersection.list?
+            editor.applyAttribute(selection, 'bullet', addition) if intersection.bullet?
+            editor.applyAttribute(selection, 'indent', addition) if intersection.indent?
+            editor.applyAttribute(selection, 'list', addition) if intersection.list?
           else
             editor.deleteAt(selection)
             selection = editor.getSelection()

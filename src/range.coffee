@@ -24,7 +24,7 @@ class TandemRange
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
-  getAttributeIntersection: ->
+  getAttributeIntersection: (ignoreValue = false) ->
     if this.isCollapsed()
       return this.start.getLeaf().getAttributes()
 
@@ -34,7 +34,7 @@ class TandemRange
     attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
     _.all(leaves, (leaf) ->
       _.each(attributes, (value, key) ->
-        delete attributes[key] if leaf.attributes[key] != value
+        delete attributes[key] if leaf.attributes[key] != value && !ignoreValue
       )
       return _.keys(attributes).length > 0
     )
@@ -67,6 +67,11 @@ class TandemRange
       startLine = startLine.nextSibling
     lines.push(endLine)
     return lines
+
+  getLines: ->
+    return _.map(this.getLineNodes(), (lineNode) ->
+      return @editor.doc.findLine(lineNode)
+    )
 
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe.contentWindow)

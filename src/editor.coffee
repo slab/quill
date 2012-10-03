@@ -219,6 +219,7 @@ class TandemEditor extends EventEmitter2
 
   applyLineAttribute: (line, attr, value) ->
     value = 1 if value == true
+    curIndent = if line.attributes[attr]? then line.attributes[attr] else 0
     if _.indexOf(Tandem.Constants.LIST_ATTRIBUTES, attr, true) > -1
       lineNode = line.node
       expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
@@ -229,9 +230,9 @@ class TandemEditor extends EventEmitter2
         else if !value && lineNode.firstChild.tagName == 'LI'
           Tandem.Utils.unwrap(lineNode.firstChild)
         line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
-      Tandem.Utils.setIndent(line.node, value)
+      Tandem.Utils.setIndent(line.node, curIndent + value)
     if attr == 'indent'
-      Tandem.Utils.setIndent(line.node, value)
+      Tandem.Utils.setIndent(line.node, curIndent + value)
 
   deleteAt: (startIndex, length, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
