@@ -202,8 +202,7 @@ class TandemEditor extends EventEmitter2
           offset -= (delta.start - index)
         else
           _.each(delta.attributes, (value, attr) =>
-            if delta.end - delta.start > 0
-              this.applyAttribute(index + offset, delta.end - delta.start, attr, value, false)
+            this.applyAttribute(index + offset, delta.end - delta.start, attr, value, false)
           )
         index = delta.end
       else
@@ -214,8 +213,8 @@ class TandemEditor extends EventEmitter2
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
 
   applyLineAttribute: (line, attr, value) ->
-    value = 1 if value == true
     curIndent = if line.attributes[attr]? then line.attributes[attr] else 0
+    nextIndent = if _.isNumber(value) then value else (if value then 1 else 0)
     if _.indexOf(Tandem.Constants.LIST_ATTRIBUTES, attr, true) > -1
       lineNode = line.node
       expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
