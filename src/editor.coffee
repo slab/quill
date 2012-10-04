@@ -116,16 +116,12 @@ class TandemEditor extends EventEmitter2
     )
 
   initSelectionListeners: ->
-    checkSelectionChange = =>
-      return if @ignoreDomChanges
-      selection = this.getSelection()
-      if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
-        this.emit(this.events.USER_SELECTION_CHANGE, selection)
-        @currentSelection = selection
-
-    @doc.root.addEventListener('keyup', _.debounce(checkSelectionChange, 100))
-    @doc.root.addEventListener('mouseup', _.debounce(checkSelectionChange, 100))
-    setInterval(checkSelectionChange, this.options.POLL_INTERVAL)
+    debounceCheckSelectionChange = _.debounce( =>
+      this.checkSelectionChange()
+    , 100)
+    @doc.root.addEventListener('keyup', debounceCheckSelectionChange)
+    @doc.root.addEventListener('mouseup', debounceCheckSelectionChange)
+    setInterval((=> this.checkSelectionChange()), this.options.POLL_INTERVAL)
 
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
@@ -234,6 +230,13 @@ class TandemEditor extends EventEmitter2
     if attr == 'indent'
       Tandem.Utils.setIndent(line.node, curIndent + value)
 
+  checkSelectionChange: ->
+    return if @ignoreDomChanges
+    selection = this.getSelection()
+    if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
+      this.emit(this.events.USER_SELECTION_CHANGE, selection)
+      @currentSelection = selection
+
   deleteAt: (startIndex, length, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
@@ -279,8 +282,7 @@ class TandemEditor extends EventEmitter2
     return @doc.toDelta()
 
   getSelection: ->
-    @currentSelection = Tandem.Range.getSelection(this)
-    return @currentSelection
+    return Tandem.Range.getSelection(this)
 
   insertAt: (startIndex, text, emitEvent = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -352,7 +354,6 @@ class TandemEditor extends EventEmitter2
     @doc.updateLine(leaf.line)
 
   preserveSelection: (modificationStart, charAdditions, fn) ->
-    @currentSelection = this.getSelection()
     if @currentSelection?
       [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
       fn()
@@ -374,27 +375,26 @@ class TandemEditor extends EventEmitter2
 
   update: ->
     oldDelta = @doc.toDelta()
-    this.preserveSelection(null, 0, =>
-      # TODO this is incorrect, we need to search for dirty lines and mark them, normalize only operates on dirty lines
-      Tandem.Document.normalizeHtml(@doc.root)
-      lines = @doc.lines.toArray()
-      lineNode = @doc.root.firstChild
-      _.each(lines, (line, index) =>
-        while line.node != lineNode
-          if line.node.parentNode == @doc.root
-            newLine = @doc.insertLineBefore(lineNode, line)
-            lineNode = lineNode.nextSibling
-          else
-            @doc.removeLine(line)
-            return
-        if line.innerHTML != lineNode.innerHTML
-          @doc.updateLine(line)
-        lineNode = lineNode.nextSibling
-      )
-      while lineNode != null
-        newLine = @doc.appendLine(lineNode)
-        lineNode = lineNode.nextSibling
+    #this.preserveSelection(null, 0, =>
+    # TODO this is incorrect, we need to search for dirty lines and mark them, normalize only operates on dirty lines
+    Tandem.Document.normalizeHtml(@doc.root)
+    lines = @doc.lines.toArray()
+    lineNode = @doc.root.firstChild
+    _.each(lines, (line, index) =>
+      while line.node != lineNode
+        if line.node.parentNode == @doc.root
+          newLine = @doc.insertLineBefore(lineNode, line)
+          lineNode = lineNode.nextSibling
+        else
+          @doc.removeLine(line)
+          return
+      @doc.updateLine(line)
+      lineNode = lineNode.nextSibling
     )
+    while lineNode != null
+      newLine = @doc.appendLine(lineNode)
+      lineNode = lineNode.nextSibling
+    #)
     newDelta = @doc.toDelta()
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)

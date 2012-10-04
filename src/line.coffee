@@ -42,8 +42,8 @@ class TandemLine extends LinkedList.Node
     return if root.childNodes.length == 1 && root.firstChild.tagName == 'BR'
     this.applyRules(root)
     this.removeRedundant(root)
-    this.mergeAdjacent(root)
     this.wrapText(root)
+    this.mergeAdjacent(root)
     root.appendChild(root.ownerDocument.createElement('br')) if root.firstChild == null
 
   @removeRedundant: (root) ->
@@ -101,7 +101,8 @@ class TandemLine extends LinkedList.Node
     super(@node)
 
   buildLeaves: (node, attributes) ->
-    _.each(node.childNodes, (node) =>
+    _.each(_.clone(node.childNodes), (node) =>
+      node.normalize()
       nodeAttributes = _.clone(attributes)
       [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(node)
       nodeAttributes[attrName] = attrVal if attrName?

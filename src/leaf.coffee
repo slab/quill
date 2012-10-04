@@ -6,9 +6,11 @@ class TandemLeaf extends LinkedList.Node
   @TAB_NODE_CLASS: 'tab'
 
   @isLeafNode: (node) ->
+    return false if !node?
     return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
     return true if node.tagName == 'BR'
-    return true if node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
+    return true if node.classList?.contains(Tandem.Leaf.TAB_NODE_CLASS)
+    return false
 
 
   constructor: (@line, @node, attributes) ->

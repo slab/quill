@@ -4,7 +4,7 @@
 TandemUtils = 
   # All block nodes inside nodes are moved out
   breakBlocks: (root) ->
-    lineNodes = []
+    lineNodes = [root]
     this.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE && !Tandem.Utils.isIgnoreNode(node)
         toBreak = []
