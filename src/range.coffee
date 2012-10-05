@@ -3,15 +3,22 @@
 
 class TandemRange
   @getSelection: (editor) ->
-    rangySelection = rangy.getSelection(editor.iframe.contentWindow)
-    return null unless rangySelection.anchorNode? && rangySelection.focusNode?
-    if !rangySelection.isBackwards()
-      start = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
-      end = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
+    rangySel = rangy.getSelection(editor.iframe.contentWindow)
+    return null unless rangySel.anchorNode? && rangySel.focusNode?
+    if !rangySel.isBackwards()
+      [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
     else
-      start = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
-      end = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+      [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
+    start = new Tandem.Position(editor, rangySel.anchorNode, rangySel.anchorOffset)
+    end = new Tandem.Position(editor, rangySel.focusNode, rangySel.focusOffset)
     return new TandemRange(editor, start, end)
+
+  @setSelection: (editor, range) ->
+    rangySel = rangy.getSelection(editor.iframe.contentWindow)
+    rangySelRange = range.getRangy()
+    rangySel.setSingleRange(rangySelRange)
+
+
 
   # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
   # constructor: (TandemEditor editor, Object start, Object end) ->

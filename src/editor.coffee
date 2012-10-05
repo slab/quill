@@ -360,9 +360,7 @@ class TandemEditor extends EventEmitter2
       [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
       fn()
       savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd)
-      rangySel = rangy.getSelection(@iframe.contentWindow)
-      range = savedSelectionRange.getRangy()
-      rangySel.setSingleRange(range)
+      Tandem.Range.setSelection(savedSelectionRange)
     else
       fn()
 
