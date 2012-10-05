@@ -79,6 +79,20 @@ class TandemDocument
           return true
         return false
       )
+      # All leaves should still be in the DOM
+      orphanedLeaf = orphanedLine = null
+      if _.any(lines, (line) ->
+        return _.any(line.leaves.toArray(), (leaf) ->
+          if leaf.node.parentNode == null
+            orphanedLeaf = leaf
+            orphanedLine = line
+            return true
+          return false
+        )
+      )
+        console.error 'Missing from DOM', orphanedLine, orphanedLeaf
+        return false
+
       # @lines should match nodesByLine
       if lines.length != nodesByLine.length
         console.error "@lines and nodesByLine differ in length"
