@@ -225,9 +225,9 @@ class TandemEditor extends EventEmitter2
         else if !value && lineNode.firstChild.tagName == 'LI'
           Tandem.Utils.unwrap(lineNode.firstChild)
         line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
-      Tandem.Utils.setIndent(line.node, curIndent + value)
+      Tandem.Utils.setIndent(line.node, nextIndent)
     if attr == 'indent'
-      Tandem.Utils.setIndent(line.node, curIndent + value)
+      Tandem.Utils.setIndent(line.node, nextIndent)
 
   checkSelectionChange: ->
     return if @ignoreDomChanges
@@ -303,6 +303,9 @@ class TandemEditor extends EventEmitter2
         if lineIndex < lines.length - 1
           this.insertNewlineAt(index)
           index += 1
+        else
+          # TODO could be more clever about if we need to call this
+          Tandem.Document.fixListNumbering(@doc.root)
       )
     )
     if emitEvent
@@ -375,7 +378,6 @@ class TandemEditor extends EventEmitter2
   update: ->
     oldDelta = @doc.toDelta()
     #this.preserveSelection(null, 0, =>
-    # TODO this is incorrect, we need to search for dirty lines and mark them, normalize only operates on dirty lines
     Tandem.Document.normalizeHtml(@doc.root)
     lines = @doc.lines.toArray()
     lineNode = @doc.root.firstChild

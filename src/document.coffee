@@ -34,7 +34,8 @@ class TandemDocument
       if child.nodeType != child.ELEMENT_NODE
         child.parentNode.removeChild(child)
       else
-        if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS)
+        # TODO editor.update should mark dirty lines
+        if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
           lineNodes = Tandem.Utils.breakBlocks(child)
           _.each(lineNodes, (lineNode) ->
             Tandem.Line.normalizeHtml(lineNode)
