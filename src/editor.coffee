@@ -360,7 +360,7 @@ class TandemEditor extends EventEmitter2
       [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
       fn()
       savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd)
-      Tandem.Range.setSelection(savedSelectionRange)
+      Tandem.Range.setSelection(this, savedSelectionRange)
     else
       fn()
 

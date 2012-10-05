@@ -259,13 +259,22 @@ describe('Normalize', ->
           <span>Span</span>
         </div>'
     }, {
-      name: 'wrap text nodes'
+      name: 'wrap text node'
       before: 
         '<div>Hey</div>'
       expected:
         '<div>
           <span>Hey</span>
-        </div>'  
+        </div>'
+    }, {
+      name: 'wrap text node next to element node'
+      before: 
+        '<div>Hey<b>Bold</b></div>'
+      expected:
+        '<div>
+          <span>Hey</span>
+          <b>Bold</b>
+        </div>'
     }]
     
     _.each(tests, (test) ->

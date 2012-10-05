@@ -42,8 +42,12 @@ class TandemLine extends LinkedList.Node
     return if root.childNodes.length == 1 && root.firstChild.tagName == 'BR'
     this.applyRules(root)
     this.removeRedundant(root)
+    # TODO need wrapText before and after for these cases:
+    # Before: <b>Test<span>What</span></b> -> <b><span>Test</span><span>What</span></b>
+    # After: <b>Bold</b><b><i>Test</i></b> -> <b>Bold<i>Test</i></b>
     this.wrapText(root)
     this.mergeAdjacent(root)
+    this.wrapText(root)
     root.appendChild(root.ownerDocument.createElement('br')) if root.firstChild == null
 
   @removeRedundant: (root) ->
@@ -137,8 +141,8 @@ class TandemLine extends LinkedList.Node
     @attributes = {}
     [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
     @attributes[attrName] = attrVal if attrName?
-    @delta = this.toDelta()
     this.setDirty(false)
+    @delta = this.toDelta()
 
   setDirty: (isDirty = true) ->
     if isDirty
