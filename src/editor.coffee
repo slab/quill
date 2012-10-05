@@ -215,7 +215,9 @@ class TandemEditor extends EventEmitter2
   applyLineAttribute: (line, attr, value) ->
     curIndent = if line.attributes[attr]? then line.attributes[attr] else 0
     nextIndent = if _.isNumber(value) then value else (if value then 1 else 0)
-    if _.indexOf(Tandem.Constants.LIST_ATTRIBUTES, attr, true) > -1
+    if attr == 'indent'
+      Tandem.Utils.setIndent(line.node, nextIndent)
+    else if Tandem.Constants.INDENT_ATTRIBUTES[attr]?
       lineNode = line.node
       expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
       if lineNode.tagName != expectedTag
@@ -225,8 +227,6 @@ class TandemEditor extends EventEmitter2
         else if !value && lineNode.firstChild.tagName == 'LI'
           Tandem.Utils.unwrap(lineNode.firstChild)
         line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
-      Tandem.Utils.setIndent(line.node, nextIndent)
-    if attr == 'indent'
       Tandem.Utils.setIndent(line.node, nextIndent)
 
   checkSelectionChange: ->

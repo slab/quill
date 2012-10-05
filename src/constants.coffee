@@ -99,10 +99,10 @@ TandemConstants =
     'UL'        : {}
   }
 
-  LIST_ATTRIBUTES: [
-    'bullet'
-    'list'
-  ]
+  INDENT_ATTRIBUTES:
+    'bullet'  : [0..8]
+    'indent'  : [0..8]
+    'list'    : [0..8]
 
   LIST_TAGS: [
     'OL'
@@ -110,7 +110,7 @@ TandemConstants =
   ]
 
 
-TandemConstants.LINE_ATTRIBUTES = [].concat(TandemConstants.LIST_ATTRIBUTES, TandemConstants.ALIGN_ATTRIBUTES, ['indent']).sort()
+TandemConstants.LINE_ATTRIBUTES = [].concat(_.keys(TandemConstants.INDENT_ATTRIBUTES), TandemConstants.ALIGN_ATTRIBUTES).sort()
 
 TandemConstants.SPAN_ATTRIBUTES =
   'font-background' : TandemConstants.FONT_BACKGROUNDS
