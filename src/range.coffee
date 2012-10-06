@@ -32,10 +32,12 @@ class TandemRange
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
   getAttributeIntersection: (ignoreValue = false) ->
+    startLeaf = this.start.getLeaf()
+    endLeaf = this.end.getLeaf()
+    # TODO Fix race condition that makes check necessary... should always be able to return attribute intersection
+    return {} if !startLeaf? || !endLeaf?
     if this.isCollapsed()
-      leaf = this.start.getLeaf() || this.end.getLeaf()
-      console.error 'Invalid leaf for range', this unless leaf?
-      return leaf.getAttributes()
+      return startLeaf.getAttributes()
     leaves = this.getLeaves()
     leaves.pop() if leaves.length > 0 && @end.offset == 0
     leaves.splice(0, 1) if leaves.length > 0 && @start.offset == leaves[0].text.length

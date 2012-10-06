@@ -107,7 +107,10 @@ class TandemEditor extends EventEmitter2
   initContentListeners: ->
     onEdit = _.debounce( =>
       delta = this.update()
-      this.emit(this.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
+      if !delta.isIdentity()
+        this.checkSelectionChange()
+        Tandem.Range.setSelection(this, @currentSelection)
+        this.emit(this.events.USER_TEXT_CHANGE, delta)
     , 100)
 
     @doc.root.addEventListener('DOMSubtreeModified', =>
@@ -403,7 +406,7 @@ class TandemEditor extends EventEmitter2
       console.info(JSON.stringify(decompose))
       console.info(JSON.stringify(compose))
       console.assert(false, oldDelta, newDelta, decompose, compose)
-    return JetSync.decompose(oldDelta, newDelta)
+    return decompose
 
 
 window.Tandem ||= {}
