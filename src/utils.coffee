@@ -18,7 +18,7 @@ TandemUtils =
           toBreak = toBreak.concat([left1, left2]) if didLeftSplit
         else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
           [left, right, didSplit] = this.splitNode(root, index)
-          if didSplit?
+          if didSplit
             next = node.nextSibling
             node.parentNode.removeChild(node)
             toBreak = [left, right]
