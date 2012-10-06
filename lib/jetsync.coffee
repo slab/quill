@@ -249,12 +249,15 @@ JetSync =
       return count
 
     advance = (elem, advanceBy, whichElem) ->
-      console.assert JetDelta.isInsert(elem), "advance expected insert but got retain: #{elem}"
       if advanceBy == elem.getLength()
         deltaA.deltas.shift() if whichElem == "A"
         deltaC.deltas.shift() if whichElem == "C"
       else
-        elem.text = elem.text.substring(advanceBy)
+        if JetDelta.isInsert(elem)
+          elem.text = elem.text.substring(advanceBy)
+        else
+          console.assert JetDelta.isRetain(elem)
+          elem.start += advanceBy
 
     # XXX: Define this on JetDelta?
     decomposeAttributes = (elemA, elemC) ->
@@ -289,13 +292,29 @@ JetSync =
           advance(elemA, lookAhead + commonPrefixLength, "A")
           advance(elemC, commonPrefixLength, "C")
         else
-          # Take as much as we can while still leaving enough to cover the
-          # remainder of deltaA
-          deltaARemaining = deltaA.endLength - docIndex
-          if deltaARemaining >= elemC.getLength()
-            take = elemC.getLength()
+          take = 1
+          if JetDelta.isInsert(elemA)
+            index = 1
+            while index < elemC.text.length
+              commonPrefixLength = 0
+              lookAhead = 0
+              while lookAhead < elemA.getLength()
+                commonPrefixLength = getCommonPrefixLength(elemA.text.substring(lookAhead), elemC.text.substring(index))
+                if commonPrefixLength != 0 then break
+                lookAhead += 1
+              if commonPrefixLength == 0
+                take++
+                index++
+              else
+                break
           else
-            take = elemC.getLength() - deltaARemaining
+            # Take as much as we can while still leaving enough to cover the
+            # remainder of deltaA
+            deltaARemaining = deltaA.endLength - docIndex
+            if deltaARemaining >= elemC.getLength()
+              take = elemC.getLength()
+            else
+              take = elemC.getLength() - deltaARemaining
           decomposed = decomposed.concat(new JetInsert(elemC.text.substr(0, take), _.clone(elemC.attributes)))
           advance(elemC, take, "C")
       else
@@ -305,20 +324,18 @@ JetSync =
           if JetInsert.isInsert(elem)
             docIndex += elem.getLength()
           else
-            if elem.start <= elemC.start && elem.end >= elemC.end # If this retain contains elemC retain
+            if elem.start <= elemC.start && elem.end > elemC.start
+              take = Math.min(elemC.getLength(), elem.getLength())
               docIndex += elemC.start - elem.start
+              decomposed = decomposed.concat(new JetRetain(docIndex, docIndex + take, decomposeAttributes(elem, elemC)))
+              docIndex += take
+              deltaA.deltas.splice(0, deltasSeen)
+              advance(elem, elemC.start - elem.start + take, "A")
+              advance(elemC, take, "C")
               break
             else
               docIndex += elem.getLength()
-          deltasSeen += 1
-        decomposed = decomposed.concat(new JetRetain(docIndex, docIndex + elemC.getLength(), decomposeAttributes(elemA, elemC)))
-        docIndex += elemC.getLength()
-        deltaC.deltas.shift()
-        deltaA.deltas.splice(0, deltasSeen)
-        if _.first(deltaA.deltas).end == elemC.end
-          deltaA.deltas.shift()
-        else
-          _.first(deltaA.deltas).start = elemC.end
+          deltasSeen++
     while (deltaC.deltas.length > 0)
       elemC = _.first(deltaC.deltas)
       console.assert(JetDelta.isInsert(elemC), "Received Retain when expecting insert: #{elemC}")
