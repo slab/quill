@@ -10,12 +10,11 @@ TandemUtils =
         toBreak = []
         if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
           [left1, left2, didLeftSplit] = this.splitNode(root, index)
-          if !didLeftSplit
+          if didLeftSplit
+            toBreak = toBreak.concat([left1, left2])
+          else
             [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
             toBreak = toBreak.concat([right1, right2]) if didRightSplit
-          else
-            toBreak = toBreak.concat([left1, left2])
-          toBreak = toBreak.concat([left1, left2]) if didLeftSplit
         else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
           [left, right, didSplit] = this.splitNode(root, index)
           if didSplit
