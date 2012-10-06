@@ -17,7 +17,7 @@ class TandemLeaf extends LinkedList.Node
     @attributes = _.clone(attributes)
     @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
     if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
-      @text = @node.textContent
+      @text = if @node.tagName == 'BR' then "" else @node.textContent
       @length = @text.length
     else
       @length = 1

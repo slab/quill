@@ -16,11 +16,14 @@ TandemUtils =
             [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
             toBreak = toBreak.concat([right1, right2]) if didRightSplit
         else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
-          [left, right, didSplit] = this.splitNode(root, index)
-          if didSplit
-            next = node.nextSibling
+          next = node.nextSibling
+          if node.previousSibling && node.nextSibling
+            [left, right, didSplit] = this.splitNode(root, index, true)
             node.parentNode.removeChild(node)
             toBreak = [left, right]
+            node = next
+          else if node.previousSibling || node.nextSibling
+            node.parentNode.removeChild(node)
             node = next
         _.each(toBreak, (line) =>
           if line? && line != root
@@ -39,6 +42,8 @@ TandemUtils =
     html = html.replace(/>\s\s+</gi, '><')
     # Remove id or class classname
     html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '') unless keepIdClass == true
+    # Standardize br
+    html = html.replace(/<br><\/br>/, '<br>')
     return html
 
   createContainerForAttribute: (doc, attribute, value) ->

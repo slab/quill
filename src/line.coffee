@@ -136,7 +136,7 @@ class TandemLine extends LinkedList.Node
       @doc.removeLine(this)
 
   resetContent: ->
-    @length = @node.textContent.length
+    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
     @attributes = {}
     [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
