@@ -360,10 +360,12 @@ class TandemEditor extends EventEmitter2
 
   preserveSelection: (modificationStart, charAdditions, fn) ->
     if @currentSelection?
-      [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
+      nativeSel = Tandem.Range.getNativeSelection(@currentSelection.editor)
       fn()
-      savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd)
-      Tandem.Range.setSelection(this, savedSelectionRange)
+      startPos = new Tandem.Position(this, nativeSel.anchorNode, nativeSel.anchorOffset)
+      endPos = new Tandem.Position(this, nativeSel.focusNode, nativeSel.focusOffset)
+      range = new Tandem.Range(this, startPos, endPos)
+      Tandem.Range.setSelection(this, range)
     else
       fn()
 
@@ -377,26 +379,30 @@ class TandemEditor extends EventEmitter2
     return [selStart, selEnd]
 
   update: ->
+    oldIgnoreDomChange = @ignoreDomChanges
+    @ignoreDomChanges = true
     oldDelta = @doc.toDelta()
-    #this.preserveSelection(null, 0, =>
-    Tandem.Document.normalizeHtml(@doc.root)
-    lines = @doc.lines.toArray()
-    lineNode = @doc.root.firstChild
-    _.each(lines, (line, index) =>
-      while line.node != lineNode
-        if line.node.parentNode == @doc.root
-          newLine = @doc.insertLineBefore(lineNode, line)
-          lineNode = lineNode.nextSibling
-        else
-          @doc.removeLine(line)
-          return
-      @doc.updateLine(line)
-      lineNode = lineNode.nextSibling
+    this.preserveSelection(null, 0, =>
+      Tandem.Document.normalizeHtml(@doc.root)
+      lines = @doc.lines.toArray()
+      lineNode = @doc.root.firstChild
+      _.each(lines, (line, index) =>
+        while line.node != lineNode
+          if line.node.parentNode == @doc.root
+            newLine = @doc.insertLineBefore(lineNode, line)
+            lineNode = lineNode.nextSibling
+          else
+            @doc.removeLine(line)
+            return
+        @doc.updateLine(line)
+        lineNode = lineNode.nextSibling
+      )
+      while lineNode != null
+        newLine = @doc.appendLine(lineNode)
+        lineNode = lineNode.nextSibling
     )
-    while lineNode != null
-      newLine = @doc.appendLine(lineNode)
-      lineNode = lineNode.nextSibling
-    #)
+    @ignoreDomChanges = oldIgnoreDomChange 
+    
     newDelta = @doc.toDelta()
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)

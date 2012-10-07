@@ -2,15 +2,25 @@
 #= require rangy/rangy-core
 
 class TandemRange
-  @getSelection: (editor) ->
+  @getNativeSelection: (editor) ->
     rangySel = rangy.getSelection(editor.iframe.contentWindow)
     return null unless rangySel.anchorNode? && rangySel.focusNode?
     if !rangySel.isBackwards()
       [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
     else
       [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    start = new Tandem.Position(editor, rangySel.anchorNode, rangySel.anchorOffset)
-    end = new Tandem.Position(editor, rangySel.focusNode, rangySel.focusOffset)
+    return {
+      anchorNode    : anchorNode
+      focusNode     : focusNode
+      anchorOffset  : anchorOffset
+      focusOffset   : focusOffset
+    }
+
+  @getSelection: (editor) ->
+    nativeSel = TandemRange.getNativeSelection(editor)
+    return null unless nativeSel?
+    start = new Tandem.Position(editor, nativeSel.anchorNode, nativeSel.anchorOffset)
+    end = new Tandem.Position(editor, nativeSel.focusNode, nativeSel.focusOffset)
     return new TandemRange(editor, start, end)
 
   @setSelection: (editor, range) ->
