@@ -93,7 +93,7 @@ class TandemEditor extends EventEmitter2
       .indent-8 { margin-left: 16em; }
       .indent-9 { margin-left: 18em; }
       
-      .tab { display: inline-block; margin: 0px; width: 2em; }
+      .tab { display: inline-block; margin: 0px; white-space: pre; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css

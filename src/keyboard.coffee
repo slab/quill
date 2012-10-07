@@ -17,7 +17,7 @@ class TandemKeyboard
             increment = if event.shiftKey == true then -1 else 1
             this.indent(increment)
           else
-            @editor.deleteAt(selection)
+            @editor.deleteAt(selection) if !selection.isCollapsed()
             selection = editor.getSelection()
             @editor.insertAt(selection, "\t")
         else

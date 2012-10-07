@@ -18,12 +18,9 @@ class TandemLeaf extends LinkedList.Node
     @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
     if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
       @text = if @node.tagName == 'BR' then "" else @node.textContent
-      @length = @text.length
     else
-      @length = 1
-      @text = "\t"
-      @node.textContent = "\t"
-      @node.setAttribute('contenteditable', false)
+      @node.textContent = @text = "\t"
+    @length = @text.length
 
 
   getAttributes: ->
