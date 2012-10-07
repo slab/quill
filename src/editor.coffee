@@ -331,7 +331,8 @@ class TandemEditor extends EventEmitter2
     [prevNode, startNode] = startLine.splitContents(startLineOffset)
     tab = startLineNode.ownerDocument.createElement('span')
     tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
-    startLineNode.insertBefore(tab, startNode)
+    parentNode = prevNode?.parentNode || startNode?.parentNode
+    parentNode.insertBefore(tab, startNode)
     @doc.updateLine(startLine)
 
   # insertTextAt: (Number startIndex, String text) ->
@@ -345,9 +346,10 @@ class TandemEditor extends EventEmitter2
       [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
       line = @doc.findLine(lineNode)
       [beforeNode, afterNode] = line.splitContents(lineOffset)
+      parentNode = beforeNode?.parentNode || afterNode?.parentNode
       span = lineNode.ownerDocument.createElement('span')
       span.textContent = text
-      lineNode.insertBefore(span, afterNode)
+      parentNode.insertBefore(span, afterNode)
     else
       if leaf.node.nodeName == 'BR'
         parent = leaf.node.parentNode

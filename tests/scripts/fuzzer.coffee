@@ -1,4 +1,4 @@
-ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"), _.map([0..5], -> return "\t"))
+ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"))
 NUM_OPERATIONS = 1000
 attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES, Tandem.Constants.INDENT_ATTRIBUTES)
 attributeKeys = _.keys(attributes)

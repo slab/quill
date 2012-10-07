@@ -125,7 +125,9 @@ TandemUtils =
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
-    while offset > child.textContent.length
+    while child? && offset > child.textContent.length
+      if offset == child.textContent.length
+        return [child, offset]
       offset -= child.textContent.length
       offset -= 1 if Tandem.Line.isLineNode(child)
       child = child.nextSibling

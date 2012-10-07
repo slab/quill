@@ -2,19 +2,23 @@
 #= require tandem/line
 
 class TandemPosition
-  @findLeafNode: (node, offset) ->
+  @findLeafNode: (editor, node, offset) ->
     if offset <= node.textContent.length    # We are at right subtree, dive deeper
       if node.firstChild?
-        TandemPosition.findLeafNode(node.firstChild, offset)
+        TandemPosition.findLeafNode(editor, node.firstChild, offset)
       else
         node = node.parentNode if node.nodeType == node.TEXT_NODE
         if offset == node.textContent.length && node.nextSibling?
-          TandemPosition.findLeafNode(node.nextSibling, 0)
+          TandemPosition.findLeafNode(editor, node.nextSibling, 0)
         else
           return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
-      offset -= 1 if Tandem.Line.isLineNode(node)
-      TandemPosition.findLeafNode(node.nextSibling, offset - node.textContent.length)
+      if Tandem.Line.isLineNode(node)
+        line = editor.doc.findLine(node)
+        offset -= (line.length + 1)
+      else
+        offset -= node.textContent.length
+      TandemPosition.findLeafNode(editor, node.nextSibling, offset)
     else
       throw new Error('Diving exceeded offset')
 
@@ -37,7 +41,7 @@ class TandemPosition
       @offset = @leafNode
       @index = @leafNode
       @leafNode = @editor.doc.root.firstChild
-    [@leafNode, @offset] = TandemPosition.findLeafNode(@leafNode, @offset)
+    [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset)
       
   getIndex: ->
     return @index if @index?
