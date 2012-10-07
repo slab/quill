@@ -361,11 +361,15 @@ class TandemEditor extends EventEmitter2
   preserveSelection: (modificationStart, charAdditions, fn) ->
     if @currentSelection?
       nativeSel = Tandem.Range.getNativeSelection(@currentSelection.editor)
+      anchorNode = if nativeSel.anchorNode.parentNode? then nativeSel.anchorNode else nativeSel.anchorParent
+      focusNode = if nativeSel.focusNode.parentNode? then nativeSel.focusNode else nativeSel.focusParent
       fn()
-      startPos = new Tandem.Position(this, nativeSel.anchorNode, nativeSel.anchorOffset)
-      endPos = new Tandem.Position(this, nativeSel.focusNode, nativeSel.focusOffset)
+      startPos = new Tandem.Position(this, anchorNode, nativeSel.anchorOffset)
+      endPos = new Tandem.Position(this, focusNode, nativeSel.focusOffset)
       range = new Tandem.Range(this, startPos, endPos)
-      Tandem.Range.setSelection(this, range)
+      [selStart, selEnd] = this.transformSelection(modificationStart, range, charAdditions)
+      savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd)
+      Tandem.Range.setSelection(this, savedSelectionRange)
     else
       fn()
 

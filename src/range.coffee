@@ -11,8 +11,10 @@ class TandemRange
       [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
     return {
       anchorNode    : anchorNode
-      focusNode     : focusNode
+      anchorParent  : anchorNode.parentNode
       anchorOffset  : anchorOffset
+      focusNode     : focusNode
+      focusParent   : focusNode.parentNode
       focusOffset   : focusOffset
     }
 
