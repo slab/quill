@@ -152,7 +152,8 @@ class TandemLine extends LinkedList.Node
 
   splitContents: (offset) ->
     this.setDirty()
-    [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
+    splitNode = if @node.tagName == 'OL' || @node.tagName == 'UL' then @node.firstChild else @node
+    [node, offset] = Tandem.Utils.getChildAtOffset(splitNode, offset)
     return Tandem.Utils.splitNode(node, offset)
 
   toDelta: ->

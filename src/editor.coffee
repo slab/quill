@@ -174,6 +174,7 @@ class TandemEditor extends EventEmitter2
       return if startOffset == endOffset
       [prevNode, startNode] = line.splitContents(startOffset)
       [endNode, nextNode] = line.splitContents(endOffset)
+      parentNode = startNode.parentNode
       if value && Tandem.Utils.getAttributeDefault(attr) != value
         fragment = @doc.root.ownerDocument.createDocumentFragment()
         Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
@@ -181,7 +182,7 @@ class TandemEditor extends EventEmitter2
         )
         attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
         attrNode.appendChild(fragment)
-        lineNode.insertBefore(attrNode, nextNode)
+        parentNode.insertBefore(attrNode, nextNode)
       else
         Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
           Tandem.Utils.removeAttributeFromSubtree(node, attr)
