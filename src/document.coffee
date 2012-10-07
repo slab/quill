@@ -99,6 +99,24 @@ class TandemDocument
         console.error 'Missing from DOM', orphanedLine, orphanedLeaf
         return false
 
+      # All line lengths should be correct
+      if _.any(lines, (line) ->
+        lineLength = _.reduce(line.leaves.toArray(), (count, leaf) ->
+          return leaf.length + count
+        , 0)
+        if lineLength != line.length
+          console.error 'incorrect line length', lineLength, line.length
+      )
+        return false
+
+      # Document length should be correct
+      docLength = _.reduce(lines, (count, line) ->
+        return line.length + count
+      , lines.length - 1)
+      if docLength != @length
+        console.error "incorrect document length", docLength, @length
+        return false
+
       # @lines should match nodesByLine
       if lines.length != nodesByLine.length
         console.error "@lines and nodesByLine differ in length"
