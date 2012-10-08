@@ -218,7 +218,7 @@ class TandemEditor extends EventEmitter2
 
   applyLineAttribute: (line, attr, value) ->
     curIndent = if line.attributes[attr]? then line.attributes[attr] else 0
-    nextIndent = if _.isNumber(value) then value else (if value then 1 else 0)
+    nextIndent = if _.isNumber(value) then curIndent + value else (if value then 1 else 0)
     if attr == 'indent'
       Tandem.Utils.setIndent(line.node, nextIndent)
     else if Tandem.Constants.INDENT_ATTRIBUTES[attr]?
@@ -369,9 +369,9 @@ class TandemEditor extends EventEmitter2
         fn()
       else
         nativeSel = Tandem.Range.getNativeSelection(@currentSelection.editor)
+        fn()
         anchorNode = if nativeSel.anchorNode.parentNode? then nativeSel.anchorNode else nativeSel.anchorParent
         focusNode = if nativeSel.focusNode.parentNode? then nativeSel.focusNode else nativeSel.focusParent
-        fn()
         startPos = new Tandem.Position(this, anchorNode, nativeSel.anchorOffset)
         endPos = new Tandem.Position(this, focusNode, nativeSel.focusOffset)
         range = new Tandem.Range(this, startPos, endPos)
