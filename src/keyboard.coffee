@@ -1,5 +1,3 @@
-#= require tandem/editor
-
 class TandemKeyboard
   @KEYS:
     tab: 9

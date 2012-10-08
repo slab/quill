@@ -2,7 +2,6 @@
 #= require rangy/rangy-core
 #= require diff_match_patch
 #= require eventemitter2
-#= require jetsync
 #= require tandem/document
 #= require tandem/range
 #= require tandem/keyboard

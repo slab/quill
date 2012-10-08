@@ -1,6 +1,5 @@
 #= require underscore
 #= require linked_list
-#= require jetsync
 #= require tandem/line
 
 

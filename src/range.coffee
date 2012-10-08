@@ -1,5 +1,6 @@
 #= underscore
 #= require rangy/rangy-core
+#= require tandem/position
 
 class TandemRange
   @getNativeSelection: (editor) ->

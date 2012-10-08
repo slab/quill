@@ -1,4 +1,3 @@
-#= require editor
 #= require eventemitter2
 
 class TandemToolbar extends EventEmitter2
