@@ -17,8 +17,14 @@ class TandemEditor extends EventEmitter2
   options:
     POLL_INTERVAL: 500
 
-  constructor: (@container) ->
+  constructor: (@container, enabled = true) ->
     @container = document.getElementById(@container) if _.isString(@container)
+    this.reset()
+    this.enable() if enabled
+
+  reset: ->
+    @ignoreDomChanges = true
+    @container.innerHTML = ""
     @iframe = this.createIframe(@container)
     @doc = new Tandem.Document(this, @iframe.contentWindow.document.body)
     @ignoreDomChanges = false
@@ -99,9 +105,14 @@ class TandemEditor extends EventEmitter2
     else
       style.appendChild(doc.createTextNode(css))
     head.appendChild(style)
-    doc.body.setAttribute('contenteditable', true)
     doc.body.innerHTML = html
     return iframe
+
+  disable: ->
+    @doc.root.setAttribute('contenteditable', false)
+
+  enable: ->
+    @doc.root.setAttribute('contenteditable', true)
 
   initContentListeners: ->
     onEdit = _.debounce( =>
