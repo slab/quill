@@ -143,6 +143,18 @@ describe('Normalize', ->
             <u>Underline</u>
           </b>
         </div>'  
+    }, {
+      name: 'should correctly break inner br tag'
+      before:
+        '<div>
+          <span>
+            <br>
+          </span>
+        </div>'
+      expected:
+        '<div>
+          <br>
+        </div>'  
     }]
 
     _.each(tests, (test) ->

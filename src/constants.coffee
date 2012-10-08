@@ -76,6 +76,7 @@ TandemConstants =
   LINE_RULES: {
     'A'         : {}
     'B'         : {}
+    'BR'        : {}
     'BIG'       : {rename: 'span'}
     'CENTER'    : {rename: 'span'}
     'DEL'       : {rename: 's'}
