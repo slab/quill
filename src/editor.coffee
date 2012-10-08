@@ -391,9 +391,10 @@ class TandemEditor extends EventEmitter2
     return [selStart, selEnd]
 
   update: ->
+    oldDelta = @doc.toDelta()
+    this.checkSelectionChange()
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    oldDelta = @doc.toDelta()
     this.preserveSelection(null, 0, =>
       Tandem.Document.normalizeHtml(@doc.root)
       lines = @doc.lines.toArray()

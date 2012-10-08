@@ -50,7 +50,8 @@ class TandemPosition
     while node.tagName != 'BODY'
       while node.previousSibling?
         node = node.previousSibling
-        @index += node.textContent.length + (if Tandem.Line.isLineNode(node) then 1 else 0) # Account for newline char
+        length = if node.tagName != 'BR' then node.textContent.length else 0
+        @index += length + (if Tandem.Line.isLineNode(node) then 1 else 0) # Account for newline char
       node = node.parentNode
     return @index
 
