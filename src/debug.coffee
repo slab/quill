@@ -6,8 +6,8 @@ window.Tandem.Debug =
     return if _.isNumber(editor) then Tandem.Editor.editors[editor] else editor
 
   getHtml: (editor) ->
-    editor = this.getEditor(editor)
-    return editor.iframeDoc.body
+    doc = this.getDocument(editor)
+    return doc.root
 
   getDocument: (editor) -> 
     editor = this.getEditor(editor)

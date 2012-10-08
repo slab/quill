@@ -9,7 +9,7 @@ describe('Range', ->
     it('should correctly initialize position from index', ->
       $('#editor-container').html('<div><b>12</b><i>34</i></div><div><s>56</s><u>78</u></div><div><br></div>')
       editor = new Tandem.Editor('editor-container')
-      numPositions = editor.iframeDoc.body.textContent.length + editor.iframeDoc.body.childNodes.length - 1
+      numPositions = editor.doc.root.textContent.length + editor.doc.root.childNodes.length - 1
       positions = _.map([0..numPositions], (i) ->
         return new Tandem.Position(editor, i)
       )
@@ -49,12 +49,171 @@ describe('Range', ->
     )
   )
 
-  describe('getLeafNodes', ->
-    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u>')
+
+
+  describe('getText', ->
+    $('#editor-container').html(Tandem.Utils.cleanHtml('
+      <div>
+        <b>123</b>
+        <i>456</i>
+      </div>
+      <div>
+        <b>
+          <s>78</s>
+        </b>
+        <b>
+          <i>90</i>
+          <u>12</u>
+        </b>
+        <b>
+          <s>34</s>
+        </b>
+      <div>
+        <s>5</s>
+        <u>6</u>
+        <s>7</s>
+        <u>8</u>
+      </div>'))
     editor = new Tandem.Editor('editor-container')
-    body = editor.iframeDoc.body
-    line1 = body.firstChild
-    line2 = body.lastChild
+    text = "123456\n78901234\n5678"
+
+    it('should identifiy single node', ->
+      _.each(text.split(''), (char, index) ->
+        range = new Tandem.Range(editor, index, index + 1)
+        expect(range.getText()).to.equal(char)
+      )
+    )
+
+    it('should identifiy entire document', ->
+      range = new Tandem.Range(editor, 0, text.length)
+      expect(range.getText()).to.equal(text)
+    )
+  )
+
+
+
+  describe('getAttributeIntersection', ->
+    tests = [{
+      name: 'inside of node'
+      start: 1
+      end: 2
+      text: '2'
+      attributes: { bold: true }
+    }, {
+      name: 'start of node'
+      start: 0
+      end: 1
+      text: '1'
+      attributes: { bold: true }
+    }, {
+      name: 'end of node'
+      start: 2
+      end: 3
+      text: '3'
+      attributes: { bold: true }
+    }, {
+      name: 'entire node'
+      start: 0
+      end: 3
+      text: '123'
+      attributes: { bold: true }
+    }, {
+      name: 'cursor inside of node'
+      start: 1
+      end: 1
+      text: ''
+      attributes: { bold: true }
+    }, {
+      name: 'cursor at start of node'
+      start: 0
+      end: 0
+      text: ''
+      attributes: { bold: true }
+    }, {
+      name: 'cursor at end of node'
+      start: 3
+      end: 3
+      text: ''
+      attributes: { italic: true }
+    }, {
+      name: 'node at end of document'
+      start: 19
+      end: 20
+      text: '8'
+      attributes: { underline: true }
+    }, {
+      name: 'cursor at end of document'
+      start: 20
+      end: 20
+      text: ''
+      attributes: { underline: true }
+    }, {
+      name: 'part of two nodes'
+      start: 8
+      end: 10
+      text: "89"
+      attributes: { bold: true }
+    }, {
+      name: 'node with preceding newline'
+      start: 6
+      end: 9
+      text: "\n78"
+      attributes: { bold: true, strike: true }
+    }, {
+      name: 'node with trailing newline'
+      start: 13
+      end: 16
+      text: "34\n"
+      attributes: { bold: true, strike: true }
+    }, {
+      name: 'line with preceding and trailing newline'
+      start: 6
+      end: 16
+      text: "\n78901234\n"
+      attributes: { bold: true }
+    }]
+
+    $('#editor-container').html(Tandem.Utils.cleanHtml('
+      <div>
+        <b>123</b>
+        <i>456</i>
+      </div>
+      <div>
+        <b>
+          <s>78</s>
+        </b>
+        <b>
+          <i>90</i>
+          <u>12</u>
+        </b>
+        <b>
+          <s>34</s>
+        </b>
+      <div>
+        <s>5</s>
+        <u>6</u>
+        <s>7</s>
+        <u>8</u>
+      </div>'))
+    editor = new Tandem.Editor('editor-container')
+
+    _.each(tests, (test) ->
+      it(test.name, ->
+        range = new Tandem.Range(editor, test.start, test.end)
+        expect(range.getText()).to.equal(test.text)
+        expect(range.getAttributeIntersection()).to.eql(test.attributes)
+      )
+    )
+  )
+
+
+
+  describe('getLeafNodes', ->
+    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
+    editor = new Tandem.Editor('editor-container')
+    container = editor.doc.root
+    line1 = container.firstChild
+    line2 = container.lastChild
 
     it('should select a single node at boundaries', ->
       range = new Tandem.Range(editor, 0, 3)

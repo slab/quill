@@ -126,13 +126,23 @@ describe('Editor', ->
       expect(selStart).to.equal(2)
       expect(selEnd).to.equal(2)
     )
+
+    it('should insert at selection', ->
+      editor = reset()
+      sel = new Tandem.Range(editor, 3, 3)      # 012|3456|789
+      mod = new Tandem.Position(editor, 3)
+      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      expect(selStart).to.equal(4)
+      expect(selEnd).to.equal(4)
+    )
   )
+
 
 
   describe('applyAttribute', ->
     originalHtml = Tandem.Utils.cleanHtml('
       <div>
-        <b>123</b>
+        <#>123</#>
         <i>456</i>
       </div>
       <div>
@@ -147,7 +157,7 @@ describe('Editor', ->
     ')
 
     reset = (html = originalHtml) ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml(html))
+      $('#editor-container').html(Tandem.Utils.cleanHtml(html, true))
       editor = new Tandem.Editor('editor-container')
       editor.ignoreDomChanges = true
       return editor
@@ -158,14 +168,14 @@ describe('Editor', ->
       length: 1
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
           <s>7</s>
-          <b>
+          <#>
             <u>8</u>
-          </b>
+          </#>
           <s>9</s>
           <u>0</u>
         </div>
@@ -178,15 +188,15 @@ describe('Editor', ->
       length: 2
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
           <s>7</s>
-          <b>
+          <#>
             <u>8</u>
             <s>9</s>
-          </b>
+          </#>
           <u>0</u>
         </div>
         <div>
@@ -198,10 +208,10 @@ describe('Editor', ->
       length: 2
       expected:
         '<div>
-          <b>123</b>
-          <b>
+          <#>123</#>
+          <#>
             <i>45</i>
-          </b>
+          </#>
           <i>6</i>
         </div>
         <div>
@@ -219,11 +229,11 @@ describe('Editor', ->
       length: 1
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>4</i>
-          <b>
+          <#>
             <i>5</i>
-          </b>
+          </#>
           <i>6</i>
         </div>
         <div>
@@ -241,16 +251,16 @@ describe('Editor', ->
       length: 6
       expected:
         '<div>
-          <b>123</b>
-          <b>
+          <#>123</#>
+          <#>
             <i>456</i>
-          </b>
+          </#>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
-          </b>
+          </#>
           <s>9</s>
           <u>0</u>
         </div>
@@ -263,16 +273,16 @@ describe('Editor', ->
       length: 4
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
@@ -283,16 +293,16 @@ describe('Editor', ->
       length: 5
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
@@ -303,16 +313,16 @@ describe('Editor', ->
       length: 5
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
@@ -323,32 +333,65 @@ describe('Editor', ->
       length: 6
       expected:
         '<div>
-          <b>123</b>
+          <#>123</#>
           <i>456</i>
         </div>
         <div>
-          <b>
+          <#>
             <s>7</s>
             <u>8</u>
             <s>9</s>
             <u>0</u>
-          </b>
+          </#>
         </div>
         <div>
           <b>abcdefg</b>
         </div>'
     }]
 
+    attributeTests = [{
+      attribute: 'bold'
+      tagName: 'b'
+      value: true
+    }, {
+      attribute: 'bold'
+      tagName: 'b'
+      value: false
+    }, {
+      attribute: 'font-family'
+      tagName: 'span'
+      value: 'serif'
+    }, {
+      attribute: 'font-family'
+      tagName: 'span'
+      value: false
+    }, {
+      attribute: 'font-family'
+      tagName: 'span'
+      value: 'san-serif'
+    }]
+
     _.each(tests, (test) ->
-      _.each({apply: true, remove: false}, (truth, name) ->
-        it("should #{name} to #{test.target}", ->
-          [startHtml, endHtml] = if truth then [originalHtml, test.expected] else [test.expected, originalHtml]
+      _.each(attributeTests, (attrTest) ->
+        it("should set #{attrTest.attribute} to #{attrTest.value} on #{test.target}", ->
+          openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute} #{attrTest.value}\"" else attrTest.tagName
+          expected = test.expected.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
+          original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
+          apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
+          [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
           editor = reset(startHtml)
-          editor.applyAttribute(test.start, test.length, 'bold', truth)
+          editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
+          range = new Tandem.Range(editor, test.start, test.start + test.length)
+          attributes = range.getAttributeIntersection()
+          if apply
+            expect(attributes[attrTest.attribute]).to.equal(attrTest.value)
+          else
+            expect(attributes[attrTest.attribute]).to.be.undefined
           delta = editor.doc.toDelta()
-          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml)
+          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml, true)
           editor.doc.buildLines()
           expect(delta).to.deep.equal(editor.doc.toDelta())
+          expect(editor.doc.checkConsistency(true)).to.be.true
         )
       )
     )
@@ -431,6 +474,7 @@ describe('Editor', ->
       text: "\n"
       expected: 
         '<div>
+          <br>
         </div>
         <div>
           <span>123</span>
@@ -445,6 +489,7 @@ describe('Editor', ->
           <span>1A</span>
         </div>
         <div>
+          <br>
         </div>
         <div>
           <span>C23</span>
@@ -452,15 +497,15 @@ describe('Editor', ->
         </div>'
     }]
 
-
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
         editor.insertAt(test.index, test.text)
+        expect(editor.doc.checkConsistency(true)).to.be.true
         delta = editor.doc.toDelta()
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
         editor.doc.buildLines()
-        expect(delta).to.deep.equal(editor.doc.toDelta())
+        expect(editor.doc.toDelta()).to.deep.equal(delta)
       )
     )
   )
@@ -486,66 +531,198 @@ describe('Editor', ->
       '))
       return new Tandem.Editor('editor-container')
 
-    it('should delete a node', ->
-      editor = reset()
-      editor.deleteAt(0, 3)
-      expect(editor.iframeDoc.body.firstChild.textContent).to.equal('456')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
-    )
+    tests = [{
+      name: 'a node'
+      start: 0
+      length: 3
+      expected:
+        '<div>
+          <i>456</i>
+        </div>
+        <div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'part of a node'
+      start: [0..2]
+      length: 1
+      expected: (index) ->
+        char = (index + 1).toString()
+        html = "
+          <div>
+            <b>123</b>
+            <i>456</i>
+          </div>
+          <div>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </div>
+          <div>
+            <b>abcdefg</b>
+          </div>"
+        return html.replace(char.toString(), '')
+    }, {
+      name: 'multiple nodes'
+      start: 0
+      length: 6
+      expected:
+        '<div>
+          <br>
+        </div>
+        <div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'across multiple nodes'
+      start: [0..2]
+      length: 4
+      expected: (index) ->
+        fragments = [
+          "<div><i>56</i></div>"
+          "<div><b>1</b><i>6</i></div>"
+          "<div><b>12</b></div>"
+        ]
+        return fragments[index] + "
+          <div>
+            <s>7</s>
+            <u>8</u>
+            <s>9</s>
+            <u>0</u>
+          </div>
+          <div>
+            <b>abcdefg</b>
+          </div>"
+    }, {
+      name: 'the first line'
+      start: 0
+      length: 7
+      expected:
+        '<div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'the last line'
+      start: 11
+      length: 8
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>'
+    }, {
+      name: 'a middle line + newline'
+      start: 7
+      length: 5
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'newline + next line'
+      start: 6
+      length: 5
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'a newline character'
+      start: 6
+      length: 1
+      expected:
+        '<div>
+          <b>123</b>
+          <i>456</i>
+          <s>7</s>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
+      name: 'entire line and more'
+      start: 5
+      length: 8
+      expected:
+        '<div>
+          <b>123</b>
+          <i>45</i>
+          <b>bcdefg</b>
+        </div>'
+    }, {
+      name: 'across multiple lines'
+      start: [2..4]
+      length: 6
+      expected: (index) ->
+        fragments = [
+          '<div><b>12</b><u>8</u><s>9</s><u>0</u></div>'
+          '<div><b>123</b><s>9</s><u>0</u></div>'
+          '<div><b>123</b><i>4</i><u>0</u></div>'
+        ]
+        return fragments[index] + '
+          <div>
+            <b>abcdefg</b>
+          </div>'
+    }]
 
-    _.each([0..2], (i) ->
-      it('should delete part of a node ' + i, ->
-        editor = reset()
-        editor.deleteAt(i, 1)
-        expect(editor.iframeDoc.body.firstChild.textContent).to.equal('123456'.substr(0, i) + '123456'.substr(i + 1))
-        expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
+
+    _.each(tests, (test) ->
+      starts = if _.isNumber(test.start) then [test.start] else test.start
+      _.each(starts, (start, index) ->
+        name = 'should delete ' + test.name
+        name += ' ' + index if starts.length > 1
+        it(name, ->
+          editor = reset()
+          editor.deleteAt(start, test.length)
+          expect(editor.doc.checkConsistency(true)).to.be.true
+          delta = editor.doc.toDelta()
+          if _.isString(test.expected)
+            expected = test.expected
+          else if _.isArray(test.expected)
+            expected = test[index]
+          else
+            expected = test.expected(index)
+          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(expected)
+          editor.doc.buildLines()
+          expect(editor.doc.toDelta()).to.deep.equal(delta)
+        )
       )
-    )
-
-    it('should delete multiple nodes', ->
-      editor = reset()
-      editor.deleteAt(0, 6)
-      expect(editor.iframeDoc.body.firstChild.textContent).to.equal('')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
-    )
-
-    _.each([0..2], (i) ->
-      it('should delete across multiple nodes ' + i, ->
-        charsToDelete = 4
-        editor = reset()
-        editor.deleteAt(i, charsToDelete)
-        expect(editor.iframeDoc.body.firstChild.textContent).to.equal('123456'.substr(0, i) + '123456'.substr(i + charsToDelete))
-        expect(editor.iframeDoc.body.childNodes.length).to.equal(3)
-      )
-    )
-
-    it('should delete exactly one line', ->
-      editor = reset()
-      editor.deleteAt(0, 7)
-      expect(editor.iframeDoc.body.firstChild.textContent).to.equal('7890')
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
-    )
-
-    _.each([2..4], (i) ->
-      it('should delete across multiple lines ' + i, ->
-        charsToDelete = 6
-        editor = reset()
-        editor.deleteAt(i, charsToDelete)
-        expect(editor.iframeDoc.body.firstChild.textContent).to.equal('1234567890'.substr(0, i) + '1234567890'.substr(i + charsToDelete - 1))
-        expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
-      )
-    )
-
-    it('should delete a newline character', ->
-      editor = reset()
-      editor.deleteAt(6, 1)
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(2)
-    )
-
-    it('should delete entire line and more', ->
-      editor = reset()
-      editor.deleteAt(5, 8)
-      expect(editor.iframeDoc.body.childNodes.length).to.equal(1)
     )
   )
 )

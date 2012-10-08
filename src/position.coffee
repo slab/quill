@@ -2,19 +2,23 @@
 #= require tandem/line
 
 class TandemPosition
-  @findLeafNode: (node, offset) ->
+  @findLeafNode: (editor, node, offset) ->
     if offset <= node.textContent.length    # We are at right subtree, dive deeper
       if node.firstChild?
-        TandemPosition.findLeafNode(node.firstChild, offset)
+        TandemPosition.findLeafNode(editor, node.firstChild, offset)
       else
         node = node.parentNode if node.nodeType == node.TEXT_NODE
         if offset == node.textContent.length && node.nextSibling?
-          TandemPosition.findLeafNode(node.nextSibling, 0)
+          TandemPosition.findLeafNode(editor, node.nextSibling, 0)
         else
           return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
-      offset -= 1 if Tandem.Line.isLineNode(node)
-      TandemPosition.findLeafNode(node.nextSibling, offset - node.textContent.length)
+      if Tandem.Line.isLineNode(node)
+        line = editor.doc.findLine(node)
+        offset -= (line.length + 1)
+      else
+        offset -= node.textContent.length
+      TandemPosition.findLeafNode(editor, node.nextSibling, offset)
     else
       throw new Error('Diving exceeded offset')
 
@@ -36,8 +40,8 @@ class TandemPosition
     if _.isNumber(@leafNode)
       @offset = @leafNode
       @index = @leafNode
-      @leafNode = @editor.iframeDoc.body.firstChild
-    [@leafNode, @offset] = TandemPosition.findLeafNode(@leafNode, @offset)
+      @leafNode = @editor.doc.root.firstChild
+    [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset)
       
   getIndex: ->
     return @index if @index?
@@ -46,7 +50,8 @@ class TandemPosition
     while node.tagName != 'BODY'
       while node.previousSibling?
         node = node.previousSibling
-        @index += node.textContent.length + (if Tandem.Line.isLineNode(node) then 1 else 0) # Account for newline char
+        length = if node.tagName != 'BR' then node.textContent.length else 0
+        @index += length + (if Tandem.Line.isLineNode(node) then 1 else 0) # Account for newline char
       node = node.parentNode
     return @index
 

@@ -1,81 +1,159 @@
 #= underscore
-#= tandem/tags
+#= tandem/constants
 
 TandemUtils = 
   # All block nodes inside nodes are moved out
   breakBlocks: (root) ->
+    lineNodes = [root]
     this.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE && _.indexOf(Tandem.Tags.BLOCK_TAGS, node.tagName, true) > -1
+      if node.nodeType == node.ELEMENT_NODE && !Tandem.Utils.isIgnoreNode(node)
         toBreak = []
-        [left1, left2, didLeftSplit] = this.splitNode(root, index)
-        if !didLeftSplit
-          [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
-          toBreak = toBreak.concat([right1, right2]) if didRightSplit
-        else
-          toBreak = toBreak.concat([left1, left2])
-        toBreak = toBreak.concat([left1, left2]) if didLeftSplit
+        if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
+          [left1, left2, didLeftSplit] = this.splitNode(root, index)
+          if didLeftSplit
+            toBreak = toBreak.concat([left1, left2])
+          else
+            [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
+            toBreak = toBreak.concat([right1, right2]) if didRightSplit
+        else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
+          next = node.nextSibling
+          if node.previousSibling && node.nextSibling
+            [left, right, didSplit] = this.splitNode(root, index, true)
+            node.parentNode.removeChild(node)
+            toBreak = [left, right]
+            node = next
+          else if node.previousSibling || node.nextSibling
+            node.parentNode.removeChild(node)
+            node = next
         _.each(toBreak, (line) =>
-          this.breakBlocks(line) if line? && line != root
+          if line? && line != root
+            newLineNodes = this.breakBlocks(line)
+            lineNodes.push(line)
+            lineNodes = _.uniq(lineNodes.concat(newLineNodes))
         )
-        return node
       return node
     )
+    return lineNodes
 
-  cleanHtml: (html) ->
+  cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
     # Remove whitespace between tags
     html = html.replace(/>\s\s+</gi, '><')
     # Remove id or class classname
-    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
+    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '') unless keepIdClass == true
+    # Standardize br
+    html = html.replace(/<br><\/br>/, '<br>')
+    return html
 
-  createContainerForAttribute: (doc, attribute) ->
+  createContainerForAttribute: (doc, attribute, value) ->
     switch (attribute)
       when 'bold'       then return doc.createElement('b')
       when 'italic'     then return doc.createElement('i')
       when 'strike'     then return doc.createElement('s')
       when 'underline'  then return doc.createElement('u')
-      else                   return doc.createElement('span')
+      when 'link'
+        link = doc.createElement('a')
+        link.setAttribute('href', value)
+        return link
+      else
+        span = doc.createElement('span')
+        span.classList.add(attribute)
+        span.classList.add(value)
+        return span
 
-  extractNodes: (editor, startIndex, endIndex) ->
-    [startLine, startOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, startIndex)
-    [endLine, endOffset] = Tandem.Utils.getChildAtOffset(editor.iframeDoc.body, endIndex)
-    [leftStart, rightStart] = Tandem.Utils.splitNode(startLine, startOffset, true)
-    if startLine == endLine
-      endLine = rightStart
-      endOffset -= leftStart.textContent.length if leftStart? && startLine != rightStart
-    [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLine, endOffset, true)
-  
-    fragment = editor.iframeDoc.createDocumentFragment()
+  extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
+    [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
+    if startLineNode == endLineNode
+      endLineNode = rightStart
+      endOffset -= leftStart.textContent.length if leftStart? && startLineNode != rightStart
+    [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
+    fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
-      rightStart = next    
-
-    Tandem.Utils.mergeNodes(leftStart, rightEnd) if leftStart? && rightEnd?
-
+      rightStart = next
+    Tandem.Utils.mergeNodes(leftStart, rightEnd)
     return fragment
+
+  getAncestorCount: (container, tagName) ->
+    count = 0
+    while container.parentNode?
+      if container.parentNode.tagName == tagName
+        count += 1
+      container = container.parentNode
+    return count
+
+  getAttributeDefault: (attribute) ->
+    switch attribute
+      when 'font-background'  then return 'white'
+      when 'font-color'       then return 'black'
+      when 'font-family'      then return 'san-serif'
+      when 'font-size'        then return 'normal'
+      else                         return false
 
   getAttributeForContainer: (container) ->
     switch container.tagName
-      when 'B' then return 'bold'
-      when 'I' then return 'italic'
-      when 'S' then return 'strike'
-      when 'U' then return 'underline'
-      else          return null
-
+      when 'A'  then return ['link', container.getAttribute('href')]
+      when 'B'  then return ['bold', true]
+      when 'I'  then return ['italic', true]
+      when 'S'  then return ['strike', true]
+      when 'U'  then return ['underline', true]
+      when 'OL' then return ['list', Tandem.Utils.getIndent(container)]
+      when 'UL' then return ['bullet', Tandem.Utils.getIndent(container)]
+      when 'DIV'
+        indent = Tandem.Utils.getIndent(container)
+        if indent > 0
+          return ['indent', indent]
+        else
+          return []
+      when 'SPAN'
+        attribute = []
+        _.all(Tandem.Constants.SPAN_ATTRIBUTES, (list, attrName) ->
+          if container.classList.contains(attrName)
+            return _.all(container.classList, (css) ->
+              if _.indexOf(list, css) > -1
+                attribute = [attrName, css]
+                return false
+              return true
+            )
+          return true
+        )
+        return attribute
+      else
+        return []
+        
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
-    while offset > child.textContent.length
+    while child? && offset > child.textContent.length
+      if offset == child.textContent.length
+        return [child, offset]
       offset -= child.textContent.length
       offset -= 1 if Tandem.Line.isLineNode(child)
       child = child.nextSibling
     return [child, offset]
 
+  getIndent: (list) ->
+    indent = 0
+    _.any(list.classList, (css) ->
+      if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
+        indent = parseInt(css.substring(Tandem.Document.INDENT_PREFIX.length))
+        return true
+      return false
+    )
+    return indent
+
+  isIgnoreNode: (node) ->
+    return _.any(Tandem.Constants.IGNORE_CLASSES, (cssClass) -> 
+      return node.classList.contains(cssClass)
+    )
+
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 
   mergeNodes: (node1, node2) ->
+    return node2 if !node1?
+    return node1 if !node2?
     this.moveChildren(node1, node2)
     node2.parentNode.removeChild(node2)
     return node1
@@ -87,11 +165,20 @@ TandemUtils =
 
   removeAttributeFromSubtree: (subtree, attribute) ->
     children = _.clone(subtree.childNodes)
-    if Tandem.Utils.getAttributeForContainer(subtree) == attribute
+    attributes = Tandem.Utils.getAttributeForContainer(subtree)
+    [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(subtree)
+    if attrName == attribute
       Tandem.Utils.unwrap(subtree)
     _.each(children, (child) ->
       Tandem.Utils.removeAttributeFromSubtree(child, attribute)
     )
+
+  setIndent: (list, indent) ->
+    _.each(_.clone(list.classList), (css) ->
+      if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
+        list.classList.remove(css)
+    )
+    list.classList.add(Tandem.Document.INDENT_PREFIX + indent) if indent
 
   splitNode: (node, offset, force = false) ->
     if offset > node.textContent.length
@@ -133,6 +220,8 @@ TandemUtils =
     newNode = node.ownerDocument.createElement(newTag)
     this.moveChildren(newNode, node)
     node.parentNode.replaceChild(newNode, node)
+    newNode.className = node.className if node.className
+    newNode.id = node.id if node.id
     return newNode
 
   traversePreorder: (root, offset, fn, context = fn, args...) ->
@@ -140,10 +229,10 @@ TandemUtils =
     cur = root.firstChild
     while cur?
       nextOffset = offset + cur.textContent.length
-      oldCur = cur
+      curHtml = cur.innerHTML
       cur = fn.apply(context, [cur, offset].concat(args))
       TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))
-      if cur? && oldCur == cur
+      if cur? && cur.innerHTML == curHtml
         cur = cur.nextSibling
         offset = nextOffset
 
@@ -165,6 +254,11 @@ TandemUtils =
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node)
     wrapper.appendChild(node)
+    return wrapper
+
+  wrapChildren: (wrapper, node) ->
+    Tandem.Utils.moveChildren(wrapper, node)
+    node.appendChild(wrapper)
     return wrapper
 
 

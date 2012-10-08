@@ -6,53 +6,70 @@
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/dual.css'}
 
-%body
-  #content-container
-    .editor-wrapper.first
-      #formatting-container1.formatting-container
-        .format-group
-          .format-button.first<>
-            .format.bold
-          .format-button<>
-            .format.italic
-          .format-button<>
-            .format.underline
-          .format-button.last<>
-            .format.strike
-      #editor-container1.editor-container
-        %div<>
-          %span<> Welcome to Stypi!
-    .editor-wrapper
-      #formatting-container2.formatting-container
-        .format-group
-          .format-button.first<>
-            .format.bold
-          .format-button<>
-            .format.italic
-          .format-button<>
-            .format.underline
-          .format-button.last<>
-            .format.strike
-      #editor-container2.editor-container
-        .line<>
-          %span<> Welcome to Stypi!
+  %body
+    #content-container
+      .editor-wrapper.first
+        #formatting-container1.formatting-container
+          %select.font-family
+            %option San Serif
+            %option Serif
+            %option Monospace
+          %select.font-size
+            %option Small
+            %option Normal
+            %option Large
+            %option Huge
+          %button.format-button.bold B
+          %button.format-button.italic I
+          %button.format-button.underline U
+          %button.format-button.link L
+          %button.format-button.list 1.
+          %button.format-button.bullet -
+          %button.format-button.indent <-
+          %button.format-button.outdent ->
+        #editor-container1.editor-container
+          %div<>
+            %span<> Welcome to Stypi!
+      .editor-wrapper
+        #formatting-container2.formatting-container
+          %select.font-family
+            %option San Serif
+            %option Serif
+            %option Monospace
+          %select.font-size
+            %option Small
+            %option Normal
+            %option Large
+            %option Huge
+          %button.format-button.bold B
+          %button.format-button.italic I
+          %button.format-button.underline U
+          %button.format-button.link L
+          %button.format-button.list 1.
+          %button.format-button.bullet -
+          %button.format-button.outdent <-
+          %button.format-button.indent ->
+        #editor-container2.editor-container
+          .line<>
+            %span<> Welcome to Stypi!
 
-  %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
-  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
-  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
-  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
-  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
-  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
-  %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
-  %script{:type => 'text/javascript', :src => '../src/tags.js'}
-  %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
-  %script{:type => 'text/javascript', :src => '../src/line.js'}
-  %script{:type => 'text/javascript', :src => '../src/document.js'}
-  %script{:type => 'text/javascript', :src => '../src/position.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
-  %script{:type => 'text/javascript', :src => '../src/editor.js'}
-  %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
-  %script{:type => 'text/javascript', :src => '../src/debug.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/dual.js'}
+    %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+    %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+    %script{:type => 'text/javascript', :src => '../src/constants.js'}
+    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+    %script{:type => 'text/javascript', :src => '../src/line.js'}
+    %script{:type => 'text/javascript', :src => '../src/document.js'}
+    %script{:type => 'text/javascript', :src => '../src/position.js'}
+    %script{:type => 'text/javascript', :src => '../src/range.js'}
+    %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
+    %script{:type => 'text/javascript', :src => '../src/editor.js'}
+    %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+    %script{:type => 'text/javascript', :src => '../src/debug.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/dual.js'}
 

@@ -5,91 +5,219 @@
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/style.css'}
 
-%body
-  #content-container
-    .editor-wrapper
-      #formatting-container.formatting-container
-        .format-group
-          .format-button.first<>
-            .format.bold
-          .format-button<>
-            .format.italic
-          .format-button<>
-            .format.underline
-          .format-button.last<>
-            .format.strike
-      #editor-container.editor-container
-        %div<>
-          %span<> Welcome to Stypi
-        %div<>
-          %b<> Bold
-          %span<> &nbsp;
-          %i<> Italic
-          %span<> &nbsp;
-          %s<> Strike
-          %span<> &nbsp;
-          %u<> Underline
-        %div<>
-          %u<> Zero
-          %i<> One
-          %u<> Two
-          %i<>
-            %b<> Three
-            %s<> Four
-            %i<> Five
-        %div<>
-          %i<>
-            %b<> Hey
-            %u<> Now
-          %s<> What
-        %div<>
-          %b<> a
-          %i<> b
-          %b<> c
-          %i<> d
-          %b<> e
-          %i<> f
-          %b<> g
-        %div<>
-          %br<>
-        %div<>
-          %br<>
-        %div<>
-          %span<> Goodbye
-        %div<>
-          %br<>
+  %body
+    #content-container
+      .editor-wrapper
+        #formatting-container.formatting-container
+          %select.font-family
+            %option{:value => ''}
+            %option{:value => 'san-serif', :selected => true}  San Serif
+            %option{:value => 'serif'}      Serif
+            %option{:value => 'monospace'}  Monospace
+          %select.font-size
+            %option{:value => ''}
+            %option{:value => 'small'}  Small
+            %option{:value => 'normal', :selected => true} Normal
+            %option{:value => 'large'}  Large
+            %option{:value => 'huge'}   Huge
+          %select.font-color
+            %option{:value => ''}
+            %option{:value => 'white'}  White
+            %option{:value => 'black', :selected => true}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
+          %select.font-background
+            %option{:value => ''}
+            %option{:value => 'white', :selected => true}  White
+            %option{:value => 'black'}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
+          %button.format-button.bold Bold
+          %button.format-button.italic Italic
+          %button.format-button.underline Under
+          %button.format-button.strike Strike
+          %button.format-button.link Link
+          %button.format-button.list 1.
+          %button.format-button.bullet -
+          %button.format-button.outdent <-
+          %button.format-button.indent ->
+          %button.format-button.left Left
+          %button.format-button.center Center
+          %button.format-button.right Right
+          %button.format-button.justify Just
 
-  %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
-  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
-  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
-  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
-  %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
-  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
-  %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
-  %script{:type => 'text/javascript', :src => '../src/tags.js'}
-  %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
-  %script{:type => 'text/javascript', :src => '../src/line.js'}
-  %script{:type => 'text/javascript', :src => '../src/document.js'}
-  %script{:type => 'text/javascript', :src => '../src/position.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
-  %script{:type => 'text/javascript', :src => '../src/editor.js'}
-  %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
-  %script{:type => 'text/javascript', :src => '../src/debug.js'}
-  :javascript
-    editor = new Tandem.Editor('editor-container');
-    toolbar = new Tandem.Toolbar(editor);
+        #editor-container.editor-container
+          %div<>
+            %span<> Welcome to Stypi
+          %div<>
+            %b<> Bold
+            %span<> &nbsp;
+            %i<> Italic
+            %span<> &nbsp;
+            %s<> Strike
+            %span<> &nbsp;
+            %u<> Underline
+            %span<> &nbsp;
+            %a{:href => 'http://www.google.com'}<> Link
+          %div<>
+            %u<> Zero
+            %i<> One
+            %u<> Two
+            %i<>
+              %b<> Three
+              %s<> Four
+              %i<> Five
+          %div<>
+            %i<>
+              %b<> Hey
+              %u<> Now
+            %s<> What
+          %div<>
+            %b<> a
+            %i<> b
+            %b<> c
+            %i<> d
+            %b<> e
+            %i<> f
+            %b<> g
+          %ol.indent-1<>
+            %li<> 
+              %span<> One
+          %ol.indent-1<>
+            %li<>
+              %span<> Two
+          %ol.indent-2<>
+            %li<> 
+              %span<> Alpha
+          %ol.indent-3<>
+            %li
+              %span<> Roman I
+          %ol.indent-3<>
+            %li
+              %span<> Roman II
+          %ol.indent-2<>
+            %li<>
+              %span<> Beta
+          %ol.indent-1<>
+            %li<> 
+              %span<> Three
+          %ol.indent-2<>
+            %li<>
+              %span<> Alpha
+          %ol.indent-1<>
+            %li<>
+              %span<> Four
+          %ul.indent-1
+            %li<>
+              %span<> One
+          %ul.indent-1
+            %li<>
+              %span<> Two
+          %ul.indent-1
+            %li<>
+              %span<> Three
+          %div.indent-1<>
+            %span<> Indent 1
+          %div.indent-2<>
+            %span<> Indent 2
+          %div<>
+            %span.tab<> &#09;
+            %span<> I look like an indent but actually I'm not cuz I'm a tab.
+          %div<>
+            %span.font-size.huge<> Huge
+            %span.font-size.large<> Large
+            %span.font-size.small<> Small
+          %div<>
+            %span.font-size.huge<> Huge
+          %div<>
+            %span.font-size.large<> Large
+          %div<>
+            %span.font-size.small<> Small
+          %div<>
+            %span.font-family.serif<> Serif
+            %span.font-family.monospace<> Monospace
+          %div<>
+            %span.font-color.white<>
+              %span.font-background.black<> white
+            %span.font-color.red<> red
+            %span.font-color.orange<> orange
+            %span.font-color.yellow<> yellow
+            %span.font-color.green<> green
+            %span.font-color.blue<> blue
+            %span.font-color.purple<> purple
+          %div<>
+            %span.font-background.black<>
+              %span.font-color.white<> black
+            %span.font-background.red<> red
+            %span.font-background.orange<> orange
+            %span.font-background.yellow<> yellow
+            %span.font-background.green<> green
+            %span.font-background.blue<> blue
+            %span.font-background.purple<> purple
+          %div<>
+            %br<>
+          %div<>
+            %br<>
+          %div<>
+            %span<> Goodbye
+          %div<>
+            %br<>
 
-    _.each(['bold', 'italic', 'strike', 'underline'], function(format) {
-      $('#formatting-container .' + format).click(function() {
-        toolbar.applyAttribute(format, !$(this).parent().hasClass('active'));
+    %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+    %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+    %script{:type => 'text/javascript', :src => '../src/constants.js'}
+    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+    %script{:type => 'text/javascript', :src => '../src/line.js'}
+    %script{:type => 'text/javascript', :src => '../src/document.js'}
+    %script{:type => 'text/javascript', :src => '../src/position.js'}
+    %script{:type => 'text/javascript', :src => '../src/range.js'}
+    %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
+    %script{:type => 'text/javascript', :src => '../src/editor.js'}
+    %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+    %script{:type => 'text/javascript', :src => '../src/debug.js'}
+    :javascript
+      var editor = new Tandem.Editor('editor-container');
+      var toolbar = new Tandem.Toolbar(editor);
+
+      _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
+        $('#formatting-container .' + format).click(function() {
+          toolbar.applyAttribute(format, !$(this).hasClass('active'));
+        });
       });
-    });
-    toolbar.on('update', function(attributes) {
-      $("#formatting-container .format-button").removeClass('active');
-      for (key in attributes) {
-        if (attributes[key] == true) {
-          $("#formatting-container ." + key).parent().addClass('active');
+      _.each(['font-background', 'font-color', 'font-family', 'font-size'], function(format) {
+        $('#formatting-container .' + format).change(function() {
+          toolbar.applyAttribute(format, $(this).val());
+        });
+      });
+      $('#formatting-container .link').click(function() {
+        if ($(this).hasClass('active'))
+          toolbar.applyAttribute('link', false);
+        else
+          toolbar.applyAttribute('link', 'http://www.google.com');
+      });
+      toolbar.on('update', function(attributes) {
+        $("#formatting-container .format-button").removeClass('active');
+        for (key in attributes) {
+          if (attributes[key]) {
+            container = $("#formatting-container ." + key)
+            if (container.is('button'))
+              container.addClass('active')
+            else if (container.is('select'))
+              container.val(attributes[key])
+          }
         }
-      }
-    });
+      });

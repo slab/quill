@@ -2,20 +2,29 @@
 #= require linked_list
 
 class TandemLeaf extends LinkedList.Node
-  @groupByLine: (leaves) ->
-    return _.reduce(leaves, (lines, leaf) ->
-      if !lines[leaf.line.id]?
-        lines[leaf.line.id] = []
-      lines[leaf.line.id].push(leaf)
-    , {})
+  @ID_PREFIX: 'leaf-'
+  @TAB_NODE_CLASS: 'tab'
 
   @isLeafNode: (node) ->
-    return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE || node.tagName == 'BR'
+    return false if !node?
+    return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
+    return true if node.tagName == 'BR'
+    return true if node.classList?.contains(Tandem.Leaf.TAB_NODE_CLASS)
+    return false
 
 
-  constructor: (@line, @node, @attributes) ->
-    @text = @node.textContent
+  constructor: (@line, @node, attributes) ->
+    @attributes = _.clone(attributes)
+    @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
+    if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
+      @text = if @node.tagName == 'BR' then "" else @node.textContent
+    else
+      @node.textContent = @text = "\t"
     @length = @text.length
+
+
+  getAttributes: ->
+    return _.extend({}, @attributes, @line.attributes)
 
   setText: (@text) ->
     @node.textContent = @text
@@ -35,7 +44,7 @@ class TandemLeafIterator
     else if @cur.next?
       @cur = @cur.next
     else
-      line = @cur.line
+      line = @cur.line.next
       while line? && line.leaves.length == 0
         line = line.next
       @cur = if line? then line.leaves.first else null

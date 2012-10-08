@@ -12,13 +12,7 @@ class JetDeltaItem
 
   attributesMatch: (other) ->
     otherAttributes = other.attributes || {}
-    for attribute, value of @attributes
-      if otherAttributes[attribute] != value
-        return false
-    for attribute, value of otherAttributes
-      if @attributes[attribute] != value
-        return false
-    return true
+    return _.isEqual(@attributes, otherAttributes)
 
   composeAttributes: (attributes) ->
     return if !attributes?
@@ -28,18 +22,14 @@ class JetDeltaItem
       else
         delete @attributes[key]
 
+  numAttributes: () ->
+    _.keys(@attributes).length
+
   toString: ->
     attr_str = ""
     for key,value of @attributes
       attr_str += "#{key}: #{value}, "
     return "{#{attr_str}}"
-
-  @copyAttributes: (deltaItem) ->
-    attributes = {}
-    for attribute, value of deltaItem.attributes
-      attributes[attribute] = value
-    return attributes
-
 
 # Used to represent retains in the delta. [inclusive, exclusive)
 class JetRetain extends JetDeltaItem
@@ -49,14 +39,11 @@ class JetRetain extends JetDeltaItem
 
   @copy: (subject) ->
     console.assert(JetRetain.isRetain(subject), "Copy called on non-retain", subject)
-    attributes = JetDeltaItem.copyAttributes(subject)
+    attributes = _.clone(subject.attributes)
     return new JetRetain(subject.start, subject.end, attributes)
 
-  isEqual: (other)->
-    if !other
-      return false
-    return @start == other.start and @end == other.end and
-      this.attributesMatch(other)
+  getLength: ->
+    return @end - @start
 
   toString: ->
     return "{{#{@start} - #{@end}), #{super()}}"
@@ -68,22 +55,19 @@ class JetRetain extends JetDeltaItem
 class JetInsert extends JetDeltaItem
   constructor: (@text, @attributes = {}) ->
     # console.assert(@text.length > 0)
-    @length = @text.length
 
   @copy: (subject) ->
-    attributes = JetDeltaItem.copyAttributes(subject)
+    attributes = _.clone(subject.attributes)
     return new JetInsert(subject.text, attributes)
 
-  isEqual: (other) ->
-    if !other
-      return false
-    return @text == other.text and this.attributesMatch(other)
+  getLength: ->
+    return @text.length
 
   toString: ->
     return "{#{@text}, #{super()}}"
 
   @isInsert: (i) ->
-    return i? && typeof i.text == "string" && typeof i.length == "number"
+    return i? && typeof i.text == "string"
 
 
 class JetDelta
@@ -92,18 +76,22 @@ class JetDelta
       this.normalizeChanges()
       length = 0
       for delta in @deltas
-        if JetDelta.isRetain(delta)
-          length += delta.end - delta.start
-        else
-          length += delta.length
+        length += delta.getLength()
       console.assert(length == @endLength, "Given end length is incorrect", this)
 
   isIdentity: ->
     if @startLength == @endLength
       if @deltas.length == 0
         return true
-      if @deltas.length == 1 && JetRetain.isRetain(@deltas[0]) && @deltas[0].start == 0 && @deltas[0].end == @endLength
-        return true
+      index = 0
+      for delta in @deltas
+        if !JetRetain.isRetain(delta) then return false
+        if delta.start != index then return false
+        if !(delta.numAttributes() == 0 || (delta.numAttributes() == 1 && _.has(delta.attributes, 'authorId')))
+          return false
+        index = delta.end
+      if index != @endLength then return false
+      return true
     return false
 
   normalizeChanges: ->
@@ -112,6 +100,11 @@ class JetDelta
       switch typeof @deltas[i]
         when 'string' then @deltas[i] = new JetInsert(@deltas[i])
         when 'number' then @deltas[i] = new JetRetain(@deltas[i], @deltas[i] + 1)
+        when 'object'
+          if @deltas[i].text?
+            @deltas[i] = new JetInsert(@deltas[i].text, @deltas[i].attributes)
+          else if @deltas[i].start? && @deltas[i].end?
+            @deltas[i] = new JetRetain(@deltas[i].start, @deltas[i].end, @deltas[i].attributes)
       @deltas[i].attributes = {} unless @deltas[i].attributes?
 
   compact: ->
@@ -123,11 +116,10 @@ class JetDelta
       else
         if JetRetain.isRetain(delta) && delta.start == delta.end
           continue
-        last = compacted[compacted.length - 1]
+        last = _.last(compacted)
         if JetDelta.isInsert(last) && JetDelta.isInsert(delta) && last.attributesMatch(delta)
           # If two neighboring inserts, combine
           last.text = last.text + delta.text
-          last.length = last.text.length
         else if JetRetain.isRetain(last) && JetRetain.isRetain(delta) && last.end == delta.start && last.attributesMatch(delta)
           # If two neighboring ranges first's end + 1 == second's start, combine
           last.end = delta.end
@@ -139,24 +131,23 @@ class JetDelta
   getDeltasAt: (range) ->
     changes = []
     index = 0
-    if range.start == range.end
-      return []
     if typeof range == 'number'
       range = new JetRetain(range, range + 1)
     else
       range = JetRetain.copy(range)
     for delta in @deltas
+      if range.start == range.end then break
       console.assert(JetDelta.isRetain(delta) || JetDelta.isInsert(delta), "Invalid change in delta", this)
-      length = if JetDelta.isInsert(delta) then delta.length else delta.end - delta.start
+      length = delta.getLength()
       if index <= range.start && range.start < index + length
         start = Math.max(index, range.start)
         end = Math.min(index + length, range.end)
         if JetDelta.isInsert(delta)
           changes.push(new JetInsert(delta.text.substring(start - index, end -
-            index), delta.attributes))
+            index), _.clone(delta.attributes)))
         else
           changes.push(new JetRetain(start - index + delta.start, end - index +
-            delta.start, delta.attributes))
+            delta.start, _.clone(delta.attributes)))
         range.start = end
       index += length
     return changes
@@ -188,34 +179,6 @@ class JetDelta
 
   @makeDelta: (obj, skipNormalizing = false) ->
     return new JetDelta(obj.startLength, obj.endLength, obj.deltas, skipNormalizing)
-
-
-  isEqual: (other) ->
-    # TODO: Check for existence of properties before checking their values
-    if @startLength != other.startLength or @endLength != other.endLength
-      console.warn("Start/end Len mismatch!")
-      return false
-
-    if @deltas.length != other.deltas.length
-      console.warn("Array len mismatch: " + @deltas.join("/") + other.deltas.join(", "))
-      return false
-
-    if @deltas.length == 0
-      return true
-
-    for i in [0..@deltas.length - 1]
-      if typeof(@deltas[i]) != "object"
-        console.warn("Delta is not an object: #{@delta[i]}")
-        return false
-
-      if typeof(other.deltas[i]) != "object"
-        console.warn("Other delta is not an object: #{@delta[i]}")
-        return false
-
-      if !@deltas[i].isEqual(other.deltas[i])
-        console.warn("Mismatch!" + other.deltas.join(", "))
-        return false
-    return true
 
   @isInsert: (change) ->
     return JetInsert.isInsert(change)
@@ -285,13 +248,16 @@ JetSync =
         count += 1
       return count
 
-    advance = (elem, indexes, advanceBy, whichElem) ->
-      console.assert JetDelta.isInsert(elem), "advance expected insert but got retain: #{elem}"
-      if advanceBy == elem.length
-        indexes["elem#{whichElem}"] += 1
+    advance = (elem, advanceBy, whichElem) ->
+      if advanceBy == elem.getLength()
+        deltaA.deltas.shift() if whichElem == "A"
+        deltaC.deltas.shift() if whichElem == "C"
       else
-        elem.text = elem.text.substring(advanceBy)
-        elem.length = elem.text.length
+        if JetDelta.isInsert(elem)
+          elem.text = elem.text.substring(advanceBy)
+        else
+          console.assert JetDelta.isRetain(elem)
+          elem.start += advanceBy
 
     # XXX: Define this on JetDelta?
     decomposeAttributes = (elemA, elemC) ->
@@ -300,54 +266,81 @@ JetSync =
       for key, value of elemC.attributes
         if attributes[key] == undefined or attributes[key] != value
           decomposedAttributes[key] = value
-
       attributes = elemC.attributes
       for key, value of elemA.attributes
         if attributes[key] == undefined
           decomposedAttributes[key] = null
-
       return decomposedAttributes
 
     decomposed = []
-    indexes =
-      doc:   0 # Index into document after deltaA was applied
-      elemA: 0 # Index into the elemA deltas list
-      elemC: 0 # Index into the elemB deltas list
-    while indexes.elemC < deltaC.deltas.length and indexes.elemA < deltaA.deltas.length
-      elemA = deltaA.deltas[indexes.elemA]
-      elemC = deltaC.deltas[indexes.elemC]
+    docIndex = 0 # Character based index into deltaA
+    while deltaC.deltas.length > 0 and deltaA.deltas.length > 0
+      elemA = _.first(deltaA.deltas)
+      elemC = _.first(deltaC.deltas)
       if JetDelta.isInsert(elemC)
         commonPrefixLength = 0
         lookAhead = 0
         if JetDelta.isInsert(elemA)
-          while lookAhead < elemA.text.length
+          while lookAhead < elemA.getLength()
             commonPrefixLength = getCommonPrefixLength(elemC.text, elemA.text.substring(lookAhead))
             if commonPrefixLength != 0 then break
             lookAhead += 1
         if commonPrefixLength > 0
-          indexes.doc += lookAhead
-          decomposed = decomposed.concat(new JetRetain(indexes.doc, indexes.doc + commonPrefixLength, decomposeAttributes(elemA, elemC)))
-          indexes.doc += commonPrefixLength
-          advance(elemA, indexes, commonPrefixLength, "A")
-          advance(elemC, indexes, commonPrefixLength, "C")
+          docIndex += lookAhead
+          decomposed = decomposed.concat(new JetRetain(docIndex, docIndex + commonPrefixLength, decomposeAttributes(elemA, elemC)))
+          docIndex += commonPrefixLength
+          advance(elemA, lookAhead + commonPrefixLength, "A")
+          advance(elemC, commonPrefixLength, "C")
         else
-          take = elemC.length - (deltaA.endLength - indexes.doc)
-          if take <= 0 then take = elemC.length
-          decomposed = decomposed.concat(new JetInsert(elemC.text.substr(0, take), decomposeAttributes(elemA, elemC)))
-          advance(elemC, indexes, take, "C")
+          take = 1
+          if JetDelta.isInsert(elemA)
+            index = 1
+            while index < elemC.text.length
+              commonPrefixLength = 0
+              lookAhead = 0
+              while lookAhead < elemA.getLength()
+                commonPrefixLength = getCommonPrefixLength(elemA.text.substring(lookAhead), elemC.text.substring(index))
+                if commonPrefixLength != 0 then break
+                lookAhead += 1
+              if commonPrefixLength == 0
+                take++
+                index++
+              else
+                break
+          else
+            # Take as much as we can while still leaving enough to cover the
+            # remainder of deltaA
+            deltaARemaining = deltaA.endLength - docIndex
+            if deltaARemaining >= elemC.getLength()
+              take = elemC.getLength()
+            else
+              take = elemC.getLength() - deltaARemaining
+          decomposed = decomposed.concat(new JetInsert(elemC.text.substr(0, take), _.clone(elemC.attributes)))
+          advance(elemC, take, "C")
       else
-        decomposed = decomposed.concat(new JetRetain(indexes.doc, indexes.doc + elemC.end - elemC.start, decomposeAttributes(elemA, elemC)))
-        indexes.doc += (elemC.end - elemC.start)
-        indexes.elemC += 1
-        if elemC.end - elemC.start == elemA.end - elemA.start
-          indexes.elemA += 1
-        else
-          elemA.start += elemC.end - elemC.start
-    while (indexes.elemC < deltaC.deltas.length)
-      elemC = deltaC.deltas[indexes.elemC]
+        # Search for the retain in deltaA that matches the retain elemC
+        deltasSeen = 0
+        for elem in deltaA.deltas
+          if JetInsert.isInsert(elem)
+            docIndex += elem.getLength()
+          else
+            if elem.start <= elemC.start && elem.end > elemC.start
+              take = Math.min(elemC.getLength(), elem.getLength())
+              docIndex += elemC.start - elem.start
+              decomposed = decomposed.concat(new JetRetain(docIndex, docIndex + take, decomposeAttributes(elem, elemC)))
+              docIndex += take
+              deltaA.deltas.splice(0, deltasSeen)
+              advance(elem, elemC.start - elem.start + take, "A")
+              advance(elemC, take, "C")
+              break
+            else
+              docIndex += elem.getLength()
+          deltasSeen++
+    while (deltaC.deltas.length > 0)
+      elemC = _.first(deltaC.deltas)
       console.assert(JetDelta.isInsert(elemC), "Received Retain when expecting insert: #{elemC}")
       decomposed = decomposed.concat(elemC)
-      indexes.elemC += 1
+      deltaC.deltas.shift()
     deltaB = new JetDelta(deltaA.endLength, deltaC.endLength, decomposed)
     deltaB.compact()
     console.assert(JetDelta.isDelta(deltaB), "Decomposed returning invalid JetDelta", deltaB)
@@ -376,19 +369,19 @@ JetSync =
       elemB = deltaB.deltas[elemIndexB]
 
       if JetDelta.isInsert(elemA) and JetDelta.isInsert(elemB)
-        length = Math.min(elemA.length, elemB.length)
+        length = Math.min(elemA.getLength(), elemB.getLength())
         if aIsRemote
           followSet.push(new JetRetain(indexA, indexA + length))
           indexA += length
-          if length == elemA.length
+          if length == elemA.getLength()
             elemIndexA++
           else
-            console.assert(length < elemA.length)
+            console.assert(length < elemA.getLength())
             deltaA.deltas[elemIndexA] = new JetInsert(elemA.text.substring(length), elemA.attributes)
         else
           followSet.push(new JetInsert(elemB.text.substring(0, length), elemB.attributes))
           indexB += length
-          if length == elemB.length
+          if length == elemB.getLength()
             elemIndexB++
           else
             deltaB.deltas[elemIndexB] = new JetInsert(elemB.text.substring(length), elemB.attributes)
@@ -396,11 +389,11 @@ JetSync =
       else if JetDelta.isRetain(elemA) and JetDelta.isRetain(elemB)
         if elemA.end < elemB.start
           # Not a match, can't save. Throw away lower and adv.
-          indexA += elemA.end - elemA.start
+          indexA += elemA.getLength()
           elemIndexA++
         else if elemB.end < elemA.start
           # Not a match, can't save. Throw away lower and adv.
-          indexB += elemB.end - elemB.start
+          indexB += elemB.getLength()
           elemIndexB++
         else
           # A subrange or the entire range matches
@@ -429,12 +422,12 @@ JetSync =
             elemIndexB++
 
       else if JetDelta.isInsert(elemA) and JetDelta.isRetain(elemB)
-        followSet.push(new JetRetain(indexA, indexA + elemA.length))
-        indexA += elemA.length
+        followSet.push(new JetRetain(indexA, indexA + elemA.getLength()))
+        indexA += elemA.getLength()
         elemIndexA++
       else if JetDelta.isRetain(elemA) and JetDelta.isInsert(elemB)
         followSet.push(elemB)
-        indexB += elemB.length
+        indexB += elemB.getLength()
         elemIndexB++
       else
         console.warn("Mismatch. elemA is: " + typeof(elemA) + ", elemB is:  " + typeof(elemB))
@@ -443,22 +436,19 @@ JetSync =
     # accepted
     while elemIndexA < deltaA.deltas.length
       elemA = deltaA.deltas[elemIndexA]
-      followSet.push(new JetRetain(indexA, indexA + elemA.length)) if JetDelta.isInsert(elemA) # retain elemA
-      if JetDelta.isInsert(elemA) then indexA += elemA.length else indexA += elemA.end - elemA.start
+      followSet.push(new JetRetain(indexA, indexA + elemA.getLength())) if JetDelta.isInsert(elemA) # retain elemA
+      indexA += elemA.getLength()
       elemIndexA++
 
     while elemIndexB < deltaB.deltas.length
       elemB = deltaB.deltas[elemIndexB]
       followSet.push(elemB) if JetDelta.isInsert(elemB) # insert elemB
-      if JetDelta.isInsert(elemB) then indexB += elemB.length else indexB += elemB.end - elemB.start
+      indexB += elemB.getLength()
       elemIndexB++
 
     followEndLength = 0
     for elem in followSet
-      if JetDelta.isInsert(elem)
-        followEndLength += elem.length
-      else
-        followEndLength += elem.end - elem.start
+      followEndLength += elem.getLength()
 
     follow = new JetDelta(followStartLength, followEndLength, followSet, true)
     follow.compact()

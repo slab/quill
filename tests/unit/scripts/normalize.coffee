@@ -20,7 +20,7 @@ describe('Normalize', ->
         </div>
         <div>
           <span>Text</span>
-          <br />
+          <br>
         </div>'
       expected: 
         '<div>
@@ -46,6 +46,26 @@ describe('Normalize', ->
         </div>
         <div>
           <span>What</span>
+        </div>'
+    }, {
+      name: 'break on br tags'
+      before: 
+        '<div>
+          <span>Text</span>
+          <br />
+          <b>Bold</b>
+          <br />
+          <i>Italic</i>
+        </div>'
+      expected: 
+        '<div>
+          <span>Text</span>
+        </div>
+        <div>
+          <b>Bold</b>
+        </div>
+        <div>
+          <i>Italic</i>
         </div>'
     }, {
       name: 'remove redundant block elements'
@@ -74,23 +94,27 @@ describe('Normalize', ->
     }, {
       name: 'break list elements'
       before: 
-        '<div>
-          <ul>
-            <li>One</li>
-            <li>Two</li>
-            <li>Three</li>
-          </ul>
-        </div>'
+        '<ul>
+          <li>One</li>
+          <li>Two</li>
+          <li>Three</li>
+        </ul>'
       expected:
-        '<div>
-          <span>One</span>
-        </div>
-        <div>
-          <span>Two</span>
-        </div>
-        <div>
-          <span>Three</span>
-        </div>'
+        '<ul>
+          <li>
+            <span>One</span>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <span>Two</span>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <span>Three</span>
+          </li>
+        </ul>'
     }, {
       name: 'split block level tags within elements'
       before:
@@ -119,17 +143,30 @@ describe('Normalize', ->
             <u>Underline</u>
           </b>
         </div>'  
+    }, {
+      name: 'should correctly break inner br tag'
+      before:
+        '<div>
+          <span>
+            <br>
+          </span>
+        </div>'
+      expected:
+        '<div>
+          <br>
+        </div>'  
     }]
 
     _.each(tests, (test) ->
-      it('shoud ' + test.name, ->
-        editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
+      it('should ' + test.name, ->
+        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before)
         editor.doc.buildLines()
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
+        expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
   )
-  
+
+
   
   describe('elements', ->
     editor = new Tandem.Editor('editor-container')
@@ -169,6 +206,35 @@ describe('Normalize', ->
           <b>Bold1Bold2</b>
         </div>'
     }, {
+      name: 'merge adjacent equal spans'
+      before:
+        '<div>
+          <span class="font-color red">
+            <span class="font-background blue">Red1</span>
+          </span>
+          <span class="font-color red">
+            <span class="font-background blue">Red2</span>
+          </span>
+        </div>'
+      expected:
+        '<div>
+          <span class="font-color red">
+            <span class="font-background blue">Red1Red2</span>
+          </span>
+        </div>'
+    }, {
+      name: 'do not merge adjacent unequal spans'
+      before:
+        '<div>
+          <span class="font-size huge">Huge</span>
+          <span class="font-size large">Large</span>
+        </div>'
+      expected:
+        '<div>
+          <span class="font-size huge">Huge</span>
+          <span class="font-size large">Large</span>
+        </div>'
+    }, {
       name: 'remove redundant attribute elements'
       before: 
         '<div>
@@ -205,21 +271,29 @@ describe('Normalize', ->
           <span>Span</span>
         </div>'
     }, {
-      name: 'wrap text nodes'
+      name: 'wrap text node'
       before: 
         '<div>Hey</div>'
       expected:
         '<div>
           <span>Hey</span>
-        </div>'  
+        </div>'
+    }, {
+      name: 'wrap text node next to element node'
+      before: 
+        '<div>Hey<b>Bold</b></div>'
+      expected:
+        '<div>
+          <span>Hey</span>
+          <b>Bold</b>
+        </div>'
     }]
-
-
+    
     _.each(tests, (test) ->
-      it('shoud ' + test.name, ->
-        editor.iframeDoc.body.innerHTML = Tandem.Utils.cleanHtml(test.before)
+      it('should ' + test.name, ->
+        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.before, true)
         editor.doc.buildLines()
-        expect(Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
+        expect(Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal(Tandem.Utils.cleanHtml(test.expected))
       )
     )
   )

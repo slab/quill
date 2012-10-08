@@ -1,18 +1,36 @@
 #= underscore
 #= require rangy/rangy-core
 
-
 class TandemRange
-  @getSelection: (editor) ->
-    rangySelection = rangy.getSelection(editor.iframe.contentWindow)
-    return null unless rangySelection.anchorNode? && rangySelection.focusNode?
-    if !rangySelection.isBackwards()
-      start = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
-      end = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
+  @getNativeSelection: (editor) ->
+    rangySel = rangy.getSelection(editor.iframe.contentWindow)
+    return null unless rangySel.anchorNode? && rangySel.focusNode?
+    if !rangySel.isBackwards()
+      [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
     else
-      start = new Tandem.Position(editor, rangySelection.focusNode, rangySelection.focusOffset)
-      end = new Tandem.Position(editor, rangySelection.anchorNode, rangySelection.anchorOffset)
+      [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
+    return {
+      anchorNode    : anchorNode
+      anchorParent  : anchorNode.parentNode
+      anchorOffset  : anchorOffset
+      focusNode     : focusNode
+      focusParent   : focusNode.parentNode
+      focusOffset   : focusOffset
+    }
+
+  @getSelection: (editor) ->
+    nativeSel = TandemRange.getNativeSelection(editor)
+    return null unless nativeSel?
+    start = new Tandem.Position(editor, nativeSel.anchorNode, nativeSel.anchorOffset)
+    end = new Tandem.Position(editor, nativeSel.focusNode, nativeSel.focusOffset)
     return new TandemRange(editor, start, end)
+
+  @setSelection: (editor, range) ->
+    rangySel = rangy.getSelection(editor.iframe.contentWindow)
+    rangySelRange = range.getRangy()
+    rangySel.setSingleRange(rangySelRange)
+
+
 
   # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
   # constructor: (TandemEditor editor, Object start, Object end) ->
@@ -25,27 +43,24 @@ class TandemRange
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
-  getAttributeIntersection: ->
-    attributes = null
-    _.all(this.getLeaves(), (leaf) ->
-      if attributes
-        _.each(attributes, (value, key) ->
-          if leaf.attributes[key] != true
-            delete attributes[key]
-        )
-      else
-        attributes = leaf.attributes
-
-      for key,value of attributes when value == true
-        return true
-      return false
+  getAttributeIntersection: (ignoreValue = false) ->
+    startLeaf = this.start.getLeaf()
+    endLeaf = this.end.getLeaf()
+    # TODO Fix race condition that makes check necessary... should always be able to return attribute intersection
+    return {} if !startLeaf? || !endLeaf?
+    if this.isCollapsed()
+      return startLeaf.getAttributes()
+    leaves = this.getLeaves()
+    leaves.pop() if leaves.length > 0 && @end.offset == 0
+    leaves.splice(0, 1) if leaves.length > 0 && @start.offset == leaves[0].text.length
+    attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
+    _.all(leaves, (leaf) ->
+      _.each(attributes, (value, key) ->
+        delete attributes[key] if leaf.attributes[key] != value && !ignoreValue
+      )
+      return _.keys(attributes).length > 0
     )
-    return attributes || {}
-
-  getLeaves: ->
-    itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())
-    arr = itr.toArray()
-    return arr
+    return attributes
 
   getLeafNodes: ->
     range = this.getRangy()
@@ -57,6 +72,11 @@ class TandemRange
       )
       nodes.pop() if nodes[nodes.length - 1] != @end.leafNode || @end.offset == 0
       return nodes
+
+  getLeaves: ->
+    itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())
+    arr = itr.toArray()
+    return arr
 
   getLineNodes: ->
     startLine = @editor.doc.findLineNode(@start.leafNode)
@@ -70,6 +90,11 @@ class TandemRange
     lines.push(endLine)
     return lines
 
+  getLines: ->
+    return _.map(this.getLineNodes(), (lineNode) ->
+      return @editor.doc.findLine(lineNode)
+    )
+
   getRangy: ->
     range = rangy.createRangyRange(@editor.iframe.contentWindow)
     if @start.leafNode.nodeName != 'BR'
@@ -82,8 +107,25 @@ class TandemRange
       range.setEnd(@end.leafNode, 0)
     return range
 
+  getText: ->
+    leaves = this.getLeaves()
+    return "" if leaves.length == 0
+    line = leaves[0].line
+    return _.map(leaves, (leaf) =>
+      part = leaf.text
+      if leaf == @end.getLeaf()
+        part = part.substring(0, @end.offset)
+      if leaf == @start.getLeaf()
+        part = part.substring(@start.offset)
+      if line != leaf.line
+        part = "\n" + part
+        line = leaf.line
+      return part
+    ).join('')
+
   isCollapsed: ->
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset
+
 
 
 window.Tandem ||= {}

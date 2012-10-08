@@ -1,40 +1,17 @@
 #= require underscore
 #= require linked_list
 #= require jetsync
-#= require tandem/tags
+#= require tandem/constants
 
 class TandemLine extends LinkedList.Node
-  @CLASS_NAME : 'tandem-line'
-  @ID_PREFIX  : 'tandem-line-'
-  @counter    : 0
+  @CLASS_NAME : 'line'
+  @DIRTY_CLASS: 'dirty'
+  @ID_PREFIX  : 'line-'
 
-  @isLineNode: (node) ->
-    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
-
-
-  constructor: (@doc, @node) ->
-    @node.id = @id = TandemLine.ID_PREFIX + TandemLine.counter
-    @node.classList.add(TandemLine.CLASS_NAME)
-    TandemLine.counter += 1
-    this.rebuild()
-    super(@node)
-
-  buildLeaves: (node, attributes) ->
-    _.each(node.childNodes, (node) =>
-      nodeAttributes = _.clone(attributes)
-      attr = Tandem.Utils.getAttributeForContainer(node)
-      nodeAttributes[attr] = true if attr?
-      if Tandem.Leaf.isLeafNode(node)
-        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes, @numLeaves))
-        @numLeaves += 1
-      else
-        this.buildLeaves(node, nodeAttributes)
-    )
-
-  applyRules: ->
-    Tandem.Utils.traversePreorder(@node, 0, (node, index) =>
+  @applyRules: (root) ->
+    Tandem.Utils.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
-        rules = Tandem.Tags.LINE_RULES[node.tagName]
+        rules = Tandem.Constants.LINE_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
@@ -46,6 +23,99 @@ class TandemLine extends LinkedList.Node
       return node
     )
 
+  @isLineNode: (node) ->
+    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
+
+  @mergeAdjacent: (root) ->
+    Tandem.Utils.traversePreorder(root, 0, (node) ->
+      if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node)
+        next = node.nextSibling
+        if next?.tagName == node.tagName && node.tagName != 'LI' && !Tandem.Utils.isIgnoreNode(node) && !Tandem.Utils.isIgnoreNode(next)
+          [nodeAttr, nodeValue] = Tandem.Utils.getAttributeForContainer(node)
+          [nextAttr, nextValue] = Tandem.Utils.getAttributeForContainer(next)
+          if nodeAttr == nextAttr && nodeValue == nextValue
+            node = Tandem.Utils.mergeNodes(node, next)
+      return node
+    )
+
+  @normalizeHtml: (root) ->
+    return if root.childNodes.length == 1 && root.firstChild.tagName == 'BR'
+    this.applyRules(root)
+    this.removeRedundant(root)
+    # TODO need wrapText before and after for these cases:
+    # Before: <b>Test<span>What</span></b> -> <b><span>Test</span><span>What</span></b>
+    # After: <b>Bold</b><b><i>Test</i></b> -> <b>Bold<i>Test</i></b>
+    this.wrapText(root)
+    this.mergeAdjacent(root)
+    this.wrapText(root)
+    root.appendChild(root.ownerDocument.createElement('br')) if root.firstChild == null
+
+  @removeRedundant: (root) ->
+    tandemKey = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
+    root[tandemKey] = {}
+
+    isRedudant = (node) ->
+      if node.nodeType == node.ELEMENT_NODE && !Tandem.Utils.isIgnoreNode(node)
+        if node.textContent.length == 0
+          return true
+        [attrName, attrValue] = Tandem.Utils.getAttributeForContainer(node)
+        if attrName?
+          return node.parentNode[tandemKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
+        else if node.tagName == 'SPAN'
+          # Check if children need us
+          if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+            return true
+          # Check if parent needs us
+          if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
+            return true
+      return false
+
+    Tandem.Utils.traversePreorder(root, 0, (node) =>
+      if isRedudant(node)
+        node = Tandem.Utils.unwrap(node)
+      if node?
+        node[tandemKey] = _.clone(node.parentNode[tandemKey])
+        [attrName, attrValue] = Tandem.Utils.getAttributeForContainer(node)
+        node[tandemKey][attrName] = attrValue if attrName?
+      return node
+    )
+    delete root[tandemKey]
+    Tandem.Utils.traversePreorder(root, 0, (node) ->
+      delete node[tandemKey]
+      return node
+    )
+    
+  @wrapText: (root) ->
+    Tandem.Utils.traversePreorder(root, 0, (node) =>
+      node.normalize()
+      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root || node.parentNode.tagName == 'LI')
+        span = node.ownerDocument.createElement('span')
+        Tandem.Utils.wrap(span, node)
+        node = span
+      return node
+    )
+
+
+
+  constructor: (@doc, @node) ->
+    @id = _.uniqueId(Tandem.Line.ID_PREFIX)
+    @node.id = @id
+    @node.classList.add(TandemLine.CLASS_NAME)
+    this.rebuild()
+    super(@node)
+
+  buildLeaves: (node, attributes) ->
+    _.each(_.clone(node.childNodes), (node) =>
+      node.normalize()
+      nodeAttributes = _.clone(attributes)
+      [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(node)
+      nodeAttributes[attrName] = attrVal if attrName?
+      if Tandem.Leaf.isLeafNode(node)
+        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes))
+      else
+        this.buildLeaves(node, nodeAttributes)
+    )
+
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
     while curLeaf?
@@ -53,84 +123,48 @@ class TandemLine extends LinkedList.Node
       curLeaf = curLeaf.next
     return null
 
-  normalizeHtml: ->
-    return if @node.childNodes.length == 1 && @node.firstChild.tagName == 'BR'
-    this.applyRules()
-    this.removeRedundant()
-    this.mergeAdjacent()
-    this.wrapText()
-    @node.appendChild(@node.ownerDocument.createElement('br')) if @node.firstChild == null
+  rebuild: ->
+    if @node.parentNode == @doc.root
+      return if @outerHTML == @node.outerHTML
+      while @leaves? && @leaves.length > 0
+        @leaves.remove(@leaves.first)
+      @leaves = new LinkedList()
+      TandemLine.normalizeHtml(@node)
+      this.buildLeaves(@node, {})
+      this.resetContent()
+    else
+      @doc.removeLine(this)
+
+  resetContent: ->
+    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
+    @outerHTML = @node.outerHTML
+    @attributes = {}
+    [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
+    @attributes[attrName] = attrVal if attrName?
+    this.setDirty(false)
+    @delta = this.toDelta()
+
+  setDirty: (isDirty = true) ->
+    if isDirty
+      @node.classList.add(TandemLine.DIRTY_CLASS)
+    else
+      @node.classList.remove(TandemLine.DIRTY_CLASS)
 
   splitContents: (offset) ->
+    this.setDirty()
     [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
+    if @node.tagName == 'OL' || @node.tagName == 'UL'
+      [node, offset] = Tandem.Utils.getChildAtOffset(node, offset)
     return Tandem.Utils.splitNode(node, offset)
 
   toDelta: ->
     deltas = _.map(@leaves.toArray(), (leaf) ->
-      return new JetInsert(leaf.text, leaf.attributes)
+      return new JetInsert(leaf.text, leaf.getAttributes())
     )
     delta = new JetDelta(0, @length, deltas)
     delta.compact()
     return delta
 
-
-  rebuild: ->
-    # TODO memory leak issue?
-    @leaves = new LinkedList()
-    @numLeaves = 0
-    this.normalizeHtml()
-    this.buildLeaves(@node, {})
-    this.resetContent()
-
-  resetContent: ->
-    @length = @node.textContent.length
-    @innerHTML = @node.innerHTML
-    @delta = this.toDelta()
-
-
-  mergeAdjacent: (node = @node.firstChild) ->
-    while node? && node.nextSibling?
-      next = node.nextSibling
-      if node.tagName == next.tagName && Tandem.Utils.getAttributeForContainer(node) == Tandem.Utils.getAttributeForContainer(next)
-        node = Tandem.Utils.mergeNodes(node, next)
-      else
-        node = next
-        _.each(_.clone(node.childNodes), (childNode) =>
-          this.mergeAdjacent(node)
-        )
-
-  removeRedundant: ->
-    @node._tandemAttributes = {}
-    Tandem.Utils.traversePreorder(@node, 0, (node) ->
-      if node.nodeType == node.ELEMENT_NODE && node.textContent.length == 0
-        return Tandem.Utils.unwrap(node)
-      if node.tagName == 'SPAN' && (node.childNodes.length == 0 || _.any(node.childNodes, (child) -> child.nodeType == child.ELEMENT_NODE))
-        return Tandem.Utils.unwrap(node)
-      attribute = Tandem.Utils.getAttributeForContainer(node)
-      if attribute?
-        if node.parentNode._tandemAttributes[attribute] == true
-          return Tandem.Utils.unwrap(node)
-        node._tandemAttributes = _.clone(node.parentNode._tandemAttributes)
-        node._tandemAttributes[attribute] = true
-      return node
-    )
-    delete @node._tandemAttributes
-    Tandem.Utils.traversePreorder(@node, 0, (node) ->
-      delete node._tandemAttributes
-      return node
-    )
-
-  renameEquivalent: ->
-
-  wrapText: ->
-    Tandem.Utils.traversePreorder(@node, 0, (node) =>
-      node.normalize()
-      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == @node)
-        span = node.ownerDocument.createElement('span')
-        Tandem.Utils.wrap(span, node)
-        node = span
-      return node
-    )
 
 
 window.Tandem ||= {}

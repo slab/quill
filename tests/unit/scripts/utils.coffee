@@ -70,6 +70,7 @@ describe('Utils', ->
         </div>
       '))
       editor = new Tandem.Editor('test-container')
+      editor.ignoreDomChanges = true
       return editor
 
     tests = [{
@@ -329,11 +330,13 @@ describe('Utils', ->
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        extraction = Tandem.Utils.extractNodes(editor, test.start, test.end)
+        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(editor.doc.root, test.start)
+        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(editor.doc.root, test.end)
+        extraction = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
         target = document.createElement('div')
         target.appendChild(extraction)
         expect("Fragment " + Tandem.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
-        expect("Remains " + Tandem.Utils.cleanHtml(editor.iframeDoc.body.innerHTML)).to.equal("Remains " + test.remains)
+        expect("Remains " + Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal("Remains " + test.remains)
       )
     )
   )

@@ -4,6 +4,7 @@ HTML Normalization
 
 Editor Operations
     Apply Attribute
+    Apply Line Attribute
     Insert Text
     Delete Text
     Preserving Selection
@@ -89,6 +90,18 @@ Algorithm...
 Editor Operations
 ---
 Apply Attribute
+
+Representation
+All attributes are represented by one tag. For span tags, two class will determine the attribute: one for the attribute type, the other for value. Ex.
+<span class='font-family monospace'>Monospace</span>
+
+The span should not have more than one class to denote more than one attribute. Thus:
+<span class='font-family monospace font-size huge'>Huge monospace</span>
+should be:
+<span class='font-family monospace'>
+    <span class='font-size huge'>Huge monospace</span>
+</span>
+
 
 1. Apply attribute to node
     a. Check if node has attribute already
@@ -191,6 +204,11 @@ Apply Attribute
         a. Duplicate the current node
         b. Insert as next sibling
         c. Change nodes' textContents
+
+
+
+Apply Line Attribute
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 
 
 
