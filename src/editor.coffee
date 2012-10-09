@@ -51,8 +51,8 @@ class TandemEditor extends EventEmitter2
         font-family: 'Helvetica', 'Arial', san-serif;
         font-size: 13px;
         line-height: 15px;
-        margin: 0px; 
-        padding: 10px; 
+        margin: 0px;
+        padding: 10px 15px; 
       }
       
       a { text-decoration: underline; }
