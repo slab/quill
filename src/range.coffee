@@ -57,7 +57,7 @@ class TandemRange
     attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
     _.all(leaves, (leaf) ->
       _.each(attributes, (value, key) ->
-        delete attributes[key] if leaf.attributes[key] != value && !ignoreValue
+        attributes[key] = 'mixed' if leaf.attributes[key] != value && !ignoreValue
       )
       return _.keys(attributes).length > 0
     )
