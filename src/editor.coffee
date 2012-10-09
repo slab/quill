@@ -22,16 +22,15 @@ class TandemEditor extends EventEmitter2
     this.reset()
     this.enable() if enabled
 
-  reset: ->
+  reset: (keepHTML = false) ->
     @ignoreDomChanges = true
-    @container.innerHTML = ""
     @iframe = this.createIframe(@container)
     @doc = new Tandem.Document(this, @iframe.contentWindow.document.body)
-    @ignoreDomChanges = false
     @currentSelection = null
     @keyboard = new Tandem.Keyboard(this)
     this.initContentListeners()
     this.initSelectionListeners()
+    @ignoreDomChanges = false
     TandemEditor.editors.push(this)
 
   createIframe: (parent) ->
