@@ -112,6 +112,10 @@ class TandemEditor extends EventEmitter2
 
   enable: ->
     @doc.root.setAttribute('contenteditable', true)
+    @doc.root.focus()
+    position = Tandem.Position.makePosition(this, 0)
+    start = new Tandem.Range(this, position, position)
+    Tandem.Range.setSelection(this, start)
 
   initContentListeners: ->
     onEdit = _.debounce( =>
