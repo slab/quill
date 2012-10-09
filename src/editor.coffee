@@ -372,28 +372,17 @@ class TandemEditor extends EventEmitter2
 
   preserveSelection: (modificationStart, charAdditions, fn) ->
     if @currentSelection?
-      startLeaf = @currentSelection.start.getLeaf()
-      if startLeaf?
-        [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
-        fn()
-      else
-        nativeSel = Tandem.Range.getNativeSelection(@currentSelection.editor)
-        fn()
-        anchorNode = if nativeSel.anchorNode.parentNode? then nativeSel.anchorNode else nativeSel.anchorParent
-        focusNode = if nativeSel.focusNode.parentNode? then nativeSel.focusNode else nativeSel.focusParent
-        startPos = new Tandem.Position(this, anchorNode, nativeSel.anchorOffset)
-        endPos = new Tandem.Position(this, focusNode, nativeSel.focusOffset)
-        range = new Tandem.Range(this, startPos, endPos)
-        [selStart, selEnd] = this.transformSelection(modificationStart, range, charAdditions)
-      savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd)
+      [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
+      fn()
+      savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd, true)
       Tandem.Range.setSelection(this, savedSelectionRange)
     else
       fn()
 
   transformSelection: (modificationStart, selectionRange, charAdditions) ->
     modPos = if modificationStart? then modificationStart.getIndex() else 0
-    selStart = selectionRange.start.getIndex()
-    selEnd = selectionRange.end.getIndex()
+    selStart = selectionRange.start.getIndex(true)
+    selEnd = selectionRange.end.getIndex(true)
     selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
     selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
     selEnd = Math.max(selStart, selEnd)
@@ -424,7 +413,6 @@ class TandemEditor extends EventEmitter2
         lineNode = lineNode.nextSibling
     )
     @ignoreDomChanges = oldIgnoreDomChange 
-    
     newDelta = @doc.toDelta()
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
