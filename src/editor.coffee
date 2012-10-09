@@ -384,6 +384,7 @@ class TandemEditor extends EventEmitter2
       endPos = new Tandem.Position(this, selEnd, true)
       savedSelectionRange = new Tandem.Range(this, startPos, endPos)
       Tandem.Range.setSelection(this, savedSelectionRange)
+      this.checkSelectionChange()
     else
       fn()
 

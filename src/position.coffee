@@ -34,7 +34,6 @@ class TandemPosition
       node = node.parentNode
     return index
 
-
   @makePosition: (editor, index) ->
     if _.isNumber(index)
       position = new Tandem.Position(editor, index)
