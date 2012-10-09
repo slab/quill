@@ -7,11 +7,23 @@
 describe('Range', ->
   describe('Position', ->
     it('should correctly initialize position from index', ->
-      $('#editor-container').html('<div><b>12</b><i>34</i></div><div><s>56</s><u>78</u></div><div><br></div>')
+      $('#editor-container').html(Tandem.Utils.cleanHtml('
+        <div>
+          <b>12</b>
+          <i>34</i>
+        </div>
+        <div>
+          <s>56</s>
+          <u>78</u>
+        </div>
+        <div>
+          <br>
+        </div>'))
       editor = new Tandem.Editor('editor-container')
-      numPositions = editor.doc.root.textContent.length + editor.doc.root.childNodes.length - 1
+      numPositions = 10
       positions = _.map([0..numPositions], (i) ->
-        return new Tandem.Position(editor, i)
+        position = new Tandem.Position(editor, i)
+        return position
       )
 
       expect(positions[0].leafNode.textContent).to.equal('12')
