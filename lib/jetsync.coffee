@@ -106,6 +106,7 @@ class JetDelta
           else if @deltas[i].start? && @deltas[i].end?
             @deltas[i] = new JetRetain(@deltas[i].start, @deltas[i].end, @deltas[i].attributes)
       @deltas[i].attributes = {} unless @deltas[i].attributes?
+    @deltas = _.reject(@deltas, (delta) -> delta.getLength() == 0)
 
   compact: ->
     this.normalizeChanges()
@@ -292,13 +293,29 @@ JetSync =
           advance(elemA, lookAhead + commonPrefixLength, "A")
           advance(elemC, commonPrefixLength, "C")
         else
-          # Take as much as we can while still leaving enough to cover the
-          # remainder of deltaA
-          deltaARemaining = deltaA.endLength - docIndex
-          if deltaARemaining >= elemC.getLength()
-            take = elemC.getLength()
+          take = 1
+          if JetDelta.isInsert(elemA)
+            index = 1
+            while index < elemC.text.length
+              commonPrefixLength = 0
+              lookAhead = 0
+              while lookAhead < elemA.getLength()
+                commonPrefixLength = getCommonPrefixLength(elemA.text.substring(lookAhead), elemC.text.substring(index))
+                if commonPrefixLength != 0 then break
+                lookAhead += 1
+              if commonPrefixLength == 0
+                take++
+                index++
+              else
+                break
           else
-            take = elemC.getLength() - deltaARemaining
+            # Take as much as we can while still leaving enough to cover the
+            # remainder of deltaA
+            deltaARemaining = deltaA.endLength - docIndex
+            if deltaARemaining >= elemC.getLength()
+              take = elemC.getLength()
+            else
+              take = elemC.getLength() - deltaARemaining
           decomposed = decomposed.concat(new JetInsert(elemC.text.substr(0, take), _.clone(elemC.attributes)))
           advance(elemC, take, "C")
       else
