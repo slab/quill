@@ -28,8 +28,11 @@ class TandemRange
 
   @setSelection: (editor, range) ->
     rangySel = rangy.getSelection(editor.iframe.contentWindow)
-    rangySelRange = range.getRangy()
-    rangySel.setSingleRange(rangySelRange)
+    if range?
+      rangySelRange = range.getRangy()
+      rangySel.setSingleRange(rangySelRange)
+    else
+      rangySel.removeAllRanges()
 
 
 
@@ -44,7 +47,7 @@ class TandemRange
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
       
-  getAttributeIntersection: (ignoreValue = false) ->
+  getAttributeIntersection: ->
     startLeaf = this.start.getLeaf()
     endLeaf = this.end.getLeaf()
     # TODO Fix race condition that makes check necessary... should always be able to return attribute intersection
@@ -56,10 +59,19 @@ class TandemRange
     leaves.splice(0, 1) if leaves.length > 0 && @start.offset == leaves[0].text.length
     attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
     _.all(leaves, (leaf) ->
+      leafAttributes =  leaf.getAttributes()
       _.each(attributes, (value, key) ->
-        attributes[key] = 'mixed' if leaf.attributes[key] != value && !ignoreValue
+        if !leafAttributes[key]
+          delete attributes[key]
+        else if leafAttributes[key] != value
+          if !_.isArray(value)
+            attributes[key] = [value]
+          attributes[key].push(leafAttributes[key])
       )
       return _.keys(attributes).length > 0
+    )
+    _.each(attributes, (value, key) ->
+      attributes[key] = _.uniq(value) if _.isArray(value)
     )
     return attributes
 

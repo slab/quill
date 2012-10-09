@@ -36,6 +36,12 @@ TandemConstants =
     'HR'
   ]
 
+  DEFAULT_LEAF_ATTRIBUTES:
+    'font-background' : 'white'
+    'font-color'      : 'black'
+    'font-family'     : 'san-serif'
+    'font-size'       : 'normal'
+
   FONT_BACKGROUNDS: [
     'black'
     'blue'
