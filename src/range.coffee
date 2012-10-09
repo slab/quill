@@ -2,6 +2,8 @@
 #= require rangy/rangy-core
 #= require tandem/position
 
+rangy.init()
+
 class TandemRange
   @getNativeSelection: (editor) ->
     rangySel = rangy.getSelection(editor.iframe.contentWindow)

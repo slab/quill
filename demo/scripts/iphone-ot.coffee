@@ -4,9 +4,7 @@ $(document).ready( ->
   
   toolbar.on 'update', (attributes) ->
     $.post('/ios-message', {json: JSON.stringify(attributes)})
-    #alert 'hey there'
 
-  rangy.init()
 
   editor.getText = -> ""
   editor.setText = ->

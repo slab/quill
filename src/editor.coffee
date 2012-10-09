@@ -125,7 +125,6 @@ class TandemEditor extends EventEmitter2
         Tandem.Range.setSelection(this, @currentSelection)
         this.emit(this.events.USER_TEXT_CHANGE, delta)
     , 100)
-
     @doc.root.addEventListener('DOMSubtreeModified', =>
       return if @ignoreDomChanges
       onEdit()

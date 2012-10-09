@@ -12,8 +12,6 @@ $(document).ready( ->
       $("#formatting-container .#{key}").addClass('active')
   )
 
-  rangy.init()
-
   editor.getText = -> ""
   editor.setText = ->
   editor.setCursor = ->
