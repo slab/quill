@@ -14,7 +14,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 1)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), 1)
       expect(selStart).to.equal(4)
       expect(selEnd).to.equal(8)
     )
@@ -23,7 +23,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 8)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), 1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(7)
     )
@@ -32,7 +32,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 5)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), 1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(8)
     )
@@ -41,7 +41,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 3)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), 1)
       expect(selStart).to.equal(4)
       expect(selEnd).to.equal(8)
     )
@@ -50,7 +50,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 7)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), 1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(7)
     )
@@ -59,7 +59,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 2)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -1)
       expect(selStart).to.equal(2)
       expect(selEnd).to.equal(6)
     )
@@ -68,7 +68,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 8)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(7)
     )
@@ -77,7 +77,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 5)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(6)
     )
@@ -86,7 +86,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 3)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(6)
     )
@@ -95,7 +95,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 7)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -1)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(7)
     )
@@ -104,7 +104,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 2)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -3)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -3)
       expect(selStart).to.equal(2)
       expect(selEnd).to.equal(4)
     )
@@ -113,7 +113,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 5)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -3)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -3)
       expect(selStart).to.equal(3)
       expect(selEnd).to.equal(5)
     )
@@ -122,7 +122,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 7)      # 012|3456|789
       mod = new Tandem.Position(editor, 2)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, -6)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), -6)
       expect(selStart).to.equal(2)
       expect(selEnd).to.equal(2)
     )
@@ -131,7 +131,7 @@ describe('Editor', ->
       editor = reset()
       sel = new Tandem.Range(editor, 3, 3)      # 012|3456|789
       mod = new Tandem.Position(editor, 3)
-      [selStart, selEnd] = editor.transformSelection(mod, sel, 1)
+      [selStart, selEnd] = editor.transformSelection(mod, sel.start.getIndex(), sel.end.getIndex(), 1)
       expect(selStart).to.equal(4)
       expect(selEnd).to.equal(4)
     )

@@ -374,18 +374,21 @@ class TandemEditor extends EventEmitter2
     @doc.updateLine(leaf.line)
 
   preserveSelection: (modificationStart, charAdditions, fn) ->
-    if @currentSelection?
-      [selStart, selEnd] = this.transformSelection(modificationStart, @currentSelection, charAdditions)
+    nativeSel = Tandem.Range.getNativeSelection(this)
+    if nativeSel?
+      startIndex = Tandem.Position.getIndex(nativeSel.anchorNode, nativeSel.anchorOffset, true)
+      endIndex = Tandem.Position.getIndex(nativeSel.focusNode, nativeSel.focusOffset, true)
+      [selStart, selEnd] = this.transformSelection(modificationStart, startIndex, endIndex, charAdditions)
       fn()
-      savedSelectionRange = new Tandem.Range(@currentSelection.editor, selStart, selEnd, true)
+      startPos = new Tandem.Position(this, selStart, true)
+      endPos = new Tandem.Position(this, selEnd, true)
+      savedSelectionRange = new Tandem.Range(this, startPos, endPos)
       Tandem.Range.setSelection(this, savedSelectionRange)
     else
       fn()
 
-  transformSelection: (modificationStart, selectionRange, charAdditions) ->
+  transformSelection: (modificationStart, selStart, selEnd, charAdditions) ->
     modPos = if modificationStart? then modificationStart.getIndex() else 0
-    selStart = selectionRange.start.getIndex(true)
-    selEnd = selectionRange.end.getIndex(true)
     selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
     selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
     selEnd = Math.max(selStart, selEnd)

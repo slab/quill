@@ -25,6 +25,16 @@ class TandemPosition
     else
       throw new Error('Diving exceeded offset')
 
+  @getIndex: (node, index, ignoreNewline = false) ->
+    while node.tagName != 'BODY'
+      while node.previousSibling?
+        node = node.previousSibling
+        length = if node.tagName != 'BR' then node.textContent.length else 0
+        index += length + (if ignoreNewline || !Tandem.Line.isLineNode(node) then 0 else 1)
+      node = node.parentNode
+    return index
+
+
   @makePosition: (editor, index) ->
     if _.isNumber(index)
       position = new Tandem.Position(editor, index)
@@ -46,16 +56,9 @@ class TandemPosition
       @leafNode = @editor.doc.root.firstChild
     [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset, ignoreNewline)
       
-  getIndex: (ignoreNewline = false) ->
-    index = @offset
-    node = @leafNode
-    while node.tagName != 'BODY'
-      while node.previousSibling?
-        node = node.previousSibling
-        length = if node.tagName != 'BR' then node.textContent.length else 0
-        index += length + (if ignoreNewline || !Tandem.Line.isLineNode(node) then 0 else 1)
-      node = node.parentNode
-    return index
+  getIndex: ->
+    @index = TandemPosition.getIndex(@leafNode, @offset) if !@index?
+    return @index
 
   getLeaf: ->
     return @leaf if @leaf?
