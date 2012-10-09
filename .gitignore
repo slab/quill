@@ -1,3 +1,4 @@
 bin/
 .DS_Store
 lib/jetsync.js
+node_modules/

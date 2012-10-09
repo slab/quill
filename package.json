@@ -1,0 +1,10 @@
+{
+  "name": "stypi-editor",
+  "version": "0.0.1",
+  "dependencies": {
+    "weinre": "*"
+  },
+  "engine": {
+    "node": ">=0.8"
+  }
+}
