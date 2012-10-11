@@ -57,13 +57,41 @@ $(document).ready( ->
     reader.applyDelta(delta)
   )
 
-  finishedFuzzing = _.after(NUM_OPERATIONS, ->
+  operationsLeft = NUM_OPERATIONS
+  async.whilst( ->
+    return operationsLeft > 0
+  , (callback) ->
+    operationsLeft -= 1
     _.defer( ->
+      curHtml = writer.doc.root.innerHTML
+      operation = getRandomOperation(writer)
+      if operation?
+        try
+          writer[operation.op].apply(writer, operation.args)
+        catch e
+          console.error operation, curHtml
+          callback(e)
+          return
+        writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
+        readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
+        if writerHtml == readerHtml
+          callback(null)
+        else
+          console.error operation, curHtml
+          callback('Editor html diversion')
+      else
+        callback(null)
+    )
+  , (err) ->
+    if err?
+      console.error err
+      console.error err.message
+      console.error err.stack
+    else
       writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
       readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
       writerDelta = writer.getDelta()
       readerDelta = reader.getDelta()
-
       if writerHtml == readerHtml && _.isEqual(writerDelta, readerDelta)
         time = (new Date() - start) / 1000
         console.info "Fuzzing passed"
@@ -71,15 +99,5 @@ $(document).ready( ->
         console.info (NUM_OPERATIONS / time).toPrecision(2), 'ops/sec'
       else
         console.error "Fuzzing failed", writer, reader
-    )
-  )
-
-  _.each([1..NUM_OPERATIONS], ->
-    _.defer( ->
-      operation = getRandomOperation(writer)
-      if operation?
-        writer[operation.op].apply(writer, operation.args)
-      finishedFuzzing()
-    )
   )
 )
