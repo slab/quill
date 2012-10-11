@@ -3,14 +3,13 @@
 
 class TandemPosition
   @findLeafNode: (editor, node, offset, ignoreNewline = false) ->
-    textLength = if node.tagName == 'BR' then 0 else node.textContent.length
-    if offset <= textLength    # We are at right subtree, dive deeper
+    if offset <= node.textContent.length    # We are at right subtree, dive deeper
       if node.firstChild?
         TandemPosition.findLeafNode(editor, node.firstChild, offset, ignoreNewline)
       else
         # TODO potential bug if double text node has sibling text node
         node = node.parentNode if node.nodeType == node.TEXT_NODE
-        if offset == textLength && node.nextSibling?
+        if offset == node.textContent.length && node.nextSibling?
           TandemPosition.findLeafNode(editor, node.nextSibling, 0, ignoreNewline)
         else
           return [node, offset]
@@ -20,7 +19,7 @@ class TandemPosition
         length = line.length + (if ignoreNewline then 0 else 1)
         offset -= length
       else
-        offset -= textLength
+        offset -= node.textContent.length
       TandemPosition.findLeafNode(editor, node.nextSibling, offset, ignoreNewline)
     else
       throw new Error('Diving exceeded offset')
@@ -29,8 +28,7 @@ class TandemPosition
     while node.tagName != 'BODY'
       while node.previousSibling?
         node = node.previousSibling
-        length = if node.tagName != 'BR' then node.textContent.length else 0
-        index += length + (if ignoreNewline || !Tandem.Line.isLineNode(node) then 0 else 1)
+        index += node.textContent.length + (if ignoreNewline || !Tandem.Line.isLineNode(node) then 0 else 1)
       node = node.parentNode
     return index
 

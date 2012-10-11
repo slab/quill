@@ -17,11 +17,11 @@ class TandemLeaf extends LinkedList.Node
     @attributes = _.clone(attributes)
     @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
     if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
-      @text = if @node.tagName == 'BR' then "" else @node.textContent
+      @node.textContent = "" if @node.tagName == 'BR'
     else
-      @node.textContent = @text = "\t"
+      @node.textContent = "\t"
+    @text = @node.textContent
     @length = @text.length
-
 
   getAttributes: ->
     return _.extend({}, Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES, @attributes, @line.attributes)
@@ -29,6 +29,7 @@ class TandemLeaf extends LinkedList.Node
   setText: (@text) ->
     @node.textContent = @text
     @length = @text.length
+
 
 
 class TandemLeafIterator
@@ -56,6 +57,8 @@ class TandemLeafIterator
     while next = itr.next()
       arr.push(next)
     return arr
+
+
 
 window.Tandem ||= {}
 window.Tandem.Leaf = TandemLeaf
