@@ -10,7 +10,7 @@ class TandemKeyboard
       switch event.which
         when TandemKeyboard.KEYS.tab
           selection = @editor.getSelection()
-          intersection = selection.getAttributeIntersection(true)
+          intersection = selection.getAttributes()
           if intersection.bullet? || intersection.indent? || intersection.list?
             increment = if event.shiftKey == true then -1 else 1
             this.indent(increment)

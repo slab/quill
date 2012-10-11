@@ -45,7 +45,7 @@
     toolbar = new Tandem.Toolbar(editor)
 
     editor.on(editor.events.USER_SELECTION_CHANGE, function(s){
-      attributes = s.getAttributeIntersection()
+      attributes = s.getAttributes()
 
       var data = {hello: 'there'};
 

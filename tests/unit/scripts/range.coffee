@@ -104,7 +104,7 @@ describe('Range', ->
 
 
 
-  describe('getAttributeIntersection', ->
+  describe('getAttributes', ->
     tests = [{
       name: 'inside of node'
       start: 1
@@ -213,7 +213,7 @@ describe('Range', ->
       it(test.name, ->
         range = new Tandem.Range(editor, test.start, test.end)
         expect(range.getText()).to.equal(test.text)
-        expect(range.getAttributeIntersection()).to.eql(test.attributes)
+        expect(range.getAttributes()).to.eql(_.extend({}, Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES, test.attributes))
       )
     )
   )

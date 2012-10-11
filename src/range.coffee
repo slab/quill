@@ -48,8 +48,19 @@ class TandemRange
   equals: (range) ->
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
-      
-  getAttributeIntersection: ->
+  
+  # TODO implement the following:    
+  # Return object representing intersection of attributes of leaves in range
+  # Values can be number or string representing value all leaves in range have, or an array of values if mixed (falsy values removed)
+  # If all leaves have same attribute, the default, it is omitted
+  # Ex.
+  # <span>Normal</span>             -> {}
+  # <b>Bold</b>                     -> {bold: true}
+  # <b>Bold</b><span>Normal</span>  -> {bold: [true]}
+  # <span class='font-size.huge'>Huge</span><span class='font-size.small'>Small</span>                    -> {font-size: ['huge', 'small']}
+  # <span class='font-size.huge'>Huge</span><span>Normal</span>                                           -> {font-size: ['huge']}
+  # <span class='font-size.huge'>Huge</span><span>Normal</span><span class='font-size.small'>Small</span> -> {font-size: ['huge', 'normal', 'small']}
+  getAttributes: ->
     startLeaf = this.start.getLeaf()
     endLeaf = this.end.getLeaf()
     # TODO Fix race condition that makes check necessary... should always be able to return attribute intersection

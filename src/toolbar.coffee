@@ -3,7 +3,7 @@
 class TandemToolbar extends EventEmitter2
   constructor: (@editor) ->
     @editor.on(@editor.events.USER_SELECTION_CHANGE, (selection) =>
-      attributes = if selection then selection.getAttributeIntersection() else null
+      attributes = if selection then selection.getAttributes() else null
       console.log 'selection change', selection, attributes
       this.emit('update', attributes)
     ).on(@editor.events.API_TEXT_CHANGE, (delta) ->
@@ -20,7 +20,7 @@ class TandemToolbar extends EventEmitter2
       else
         increment = if name == 'outdent' then -1 else 1
         @editor.keyboard.indent(increment)
-      this.emit('update', @editor.getSelection().getAttributeIntersection())
+      this.emit('update', @editor.getSelection().getAttributes())
     else
       console.warn "#{name} called with no selection"
       

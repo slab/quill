@@ -382,11 +382,14 @@ describe('Editor', ->
           editor = reset(startHtml)
           editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
           range = new Tandem.Range(editor, test.start, test.start + test.length)
-          attributes = range.getAttributeIntersection()
+          attributes = range.getAttributes()
           if apply
             expect(attributes[attrTest.attribute]).to.equal(attrTest.value)
           else
-            expect(attributes[attrTest.attribute]).to.be.undefined
+            if attrTest.attribute == 'bold'
+              expect(attributes[attrTest.attribute]).to.be.undefined
+            else if attrTest.attribute == 'font-family'
+              expect(attributes[attrTest.attribute]).to.equal('san-serif')
           delta = editor.doc.toDelta()
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml, true)
           editor.doc.buildLines()
