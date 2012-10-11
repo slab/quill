@@ -4,9 +4,15 @@
 listenEditor = (source, target) ->
   source.on(source.events.API_TEXT_CHANGE, (delta) ->
     target.applyDelta(delta)
+    sourceHtml = Tandem.Utils.cleanHtml(source.doc.root.innerHTML)
+    targetHtml = Tandem.Utils.cleanHtml(target.doc.root.innerHTML)
+    console.assert(sourceHtml == targetHtml, "Editor diversion!", source, target)
   )
   source.on(source.events.USER_TEXT_CHANGE, (delta) ->
     target.applyDelta(delta)
+    sourceHtml = Tandem.Utils.cleanHtml(source.doc.root.innerHTML)
+    targetHtml = Tandem.Utils.cleanHtml(target.doc.root.innerHTML)
+    console.assert(sourceHtml == targetHtml, "Editor diversion!", source, target)
   )
 
 editors = _.map([1, 2], (num) ->
