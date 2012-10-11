@@ -377,16 +377,27 @@ class TandemEditor extends EventEmitter2
     nativeSel = Tandem.Range.getNativeSelection(this)
     if nativeSel?
       isBodyChild = (node) -> return node.parentNode?.tagName == 'BODY'
-      startLine = Tandem.Utils.findAncestor(nativeSel.anchorNode, isBodyChild)
-      endLine = Tandem.Utils.findAncestor(nativeSel.focusNode, isBodyChild)
-      startOffset = Tandem.Position.getIndex(nativeSel.anchorNode, nativeSel.anchorOffset, startLine)
-      endOffset = Tandem.Position.getIndex(nativeSel.focusNode, nativeSel.focusOffset, endLine)
+      isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
+      startBlock = Tandem.Utils.findAncestor(nativeSel.anchorNode, isBlockTag)
+      endBlock = Tandem.Utils.findAncestor(nativeSel.focusNode, isBlockTag)
+      startLine = Tandem.Utils.findAncestor(startBlock, isBodyChild)
+      endLine = Tandem.Utils.findAncestor(endBlock, isBodyChild)
+      startBlockOffset = Tandem.Position.getIndex(nativeSel.anchorNode, nativeSel.anchorOffset, startBlock)
+      endBlockOffset = Tandem.Position.getIndex(nativeSel.anchorNode, nativeSel.anchorOffset, endBlock)
+      startLineOffset = Tandem.Position.getIndex(startBlock, 0, startLine) + startBlockOffset
+      endLineOffset = Tandem.Position.getIndex(endBlock, 0, endLine) + endBlockOffset
       #[selStart, selEnd] = this.transformSelection(modificationStart, startIndex, endIndex, charAdditions)
       fn()
-      startLine = startLine.ownerDocument.getElementById(startLine.id) if startLine.parentNode == null
-      endLine = endLine.ownerDocument.getElementById(endLine.id) if endLine.parentNode == null
-      startPos = new Tandem.Position(this, startLine, startOffset)
-      endPos = new Tandem.Position(this, endLine, endOffset)
+      if startBlock.parentNode?
+        startPos = new Tandem.Position(this, startBlock, startBlockOffset)
+      else
+        startLine = startLine.ownerDocument.getElementById(startLine.id) if startLine.parentNode == null
+        startPos = new Tandem.Position(this, startLine, startLineOffset)
+      if endBlock.parentNode?
+        endPos = new Tandem.Position(this, startBlock, startBlockOffset)
+      else
+        endLine = endLine.ownerDocument.getElementById(endLine.id) if endLine.parentNode == null
+        endPos = new Tandem.Position(this, endLine, endLineOffset)
       savedSelectionRange = new Tandem.Range(this, startPos, endPos)
       Tandem.Range.setSelection(this, savedSelectionRange)
       this.checkSelectionChange()
