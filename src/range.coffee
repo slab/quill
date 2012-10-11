@@ -106,7 +106,7 @@ class TandemRange
     return lines
 
   getLines: ->
-    return _.map(this.getLineNodes(), (lineNode) ->
+    return _.map(this.getLineNodes(), (lineNode) =>
       return @editor.doc.findLine(lineNode)
     )
 

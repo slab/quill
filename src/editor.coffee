@@ -164,7 +164,6 @@ class TandemEditor extends EventEmitter2
           curLine = nextSibling
         this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
         this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
-      Tandem.Document.fixListNumbering(@doc.root) if attr == 'list'
       @doc.rebuildDirty()
     )
     if emitEvent
@@ -200,6 +199,7 @@ class TandemEditor extends EventEmitter2
           Tandem.Utils.removeAttributeFromSubtree(node, attr)
         )
     @doc.updateLine(line)
+    Tandem.Document.fixListNumbering(@doc.root) if attr == 'list'
 
   applyDelta: (delta) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
@@ -229,10 +229,9 @@ class TandemEditor extends EventEmitter2
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
 
   applyLineAttribute: (line, attr, value) ->
-    curIndent = if line.attributes[attr]? then line.attributes[attr] else 0
-    nextIndent = if _.isNumber(value) then curIndent + value else (if value then 1 else 0)
+    indent = if _.isNumber(value) then value else (if value then 1 else 0)
     if attr == 'indent'
-      Tandem.Utils.setIndent(line.node, nextIndent)
+      Tandem.Utils.setIndent(line.node, indent)
     else if Tandem.Constants.INDENT_ATTRIBUTES[attr]?
       lineNode = line.node
       expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
@@ -243,7 +242,8 @@ class TandemEditor extends EventEmitter2
         else if !value && lineNode.firstChild.tagName == 'LI'
           Tandem.Utils.unwrap(lineNode.firstChild)
         line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
-      Tandem.Utils.setIndent(line.node, nextIndent)
+      Tandem.Utils.setIndent(line.node, indent)
+    line.setDirty()
 
   checkSelectionChange: ->
     return if @ignoreDomChanges
@@ -430,6 +430,7 @@ class TandemEditor extends EventEmitter2
       console.info(JSON.stringify(compose))
       console.assert(false, oldDelta, newDelta, decompose, compose)
     return decompose
+
 
 
 window.Tandem ||= {}

@@ -239,6 +239,17 @@ class TandemDocument
     delta.compact()
     return delta
 
+  updateDirty: ->
+    dirtyNodes = @root.ownerDocument.getElementsByClassName(Tandem.Line.DIRTY_CLASS)
+    fixLines = false
+    _.each(dirtyNodes, (dirtyNode) =>
+      line = this.findLine(dirtyNode)
+      if line?
+        this.updateLine(line)
+        fixLines = true if line.attributes['list']?
+    )
+    TandemDocument.fixListNumbering(@root) if fixLines
+
   updateLine: (line) ->
     @length -= line.length
     line.rebuild()

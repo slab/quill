@@ -26,10 +26,23 @@ class TandemKeyboard
 
   indent: (increment) ->
     selection = @editor.getSelection()
-    intersection = selection.getAttributeIntersection(true)
-    @editor.applyAttribute(selection, 'bullet', increment) if intersection.bullet?
-    @editor.applyAttribute(selection, 'indent', increment) if intersection.indent?
-    @editor.applyAttribute(selection, 'list', increment) if intersection.list?
+    lines = selection.getLines()
+    applyIndent = (line, attr) =>
+      indent = if _.isNumber(line.attributes[attr]) then line.attributes[attr] else (if line.attributes[attr] then 1 else 0)
+      indent += increment
+      indent = Math.min(Math.max(indent, Tandem.Constants.MIN_INDENT), Tandem.Constants.MAX_INDENT)
+      index = Tandem.Position.getIndex(line.node, 0)
+      @editor.applyAttribute(index, 0, attr, indent)
+
+    _.each(lines, (line) =>
+      if line.attributes.bullet?
+        applyIndent(line, 'bullet')
+      else if line.attributes.list?
+        applyIndent(line, 'list')
+      else
+        applyIndent(line, 'indent')
+      @editor.doc.updateDirty()
+    )
 
 
 

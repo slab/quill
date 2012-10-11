@@ -116,6 +116,9 @@ TandemConstants =
     'UL'
   ]
 
+  MAX_INDENT: 9
+  MIN_INDENT: 1     # Smallest besides not having an indent at all
+  
 
 TandemConstants.LINE_ATTRIBUTES = [].concat(_.keys(TandemConstants.INDENT_ATTRIBUTES), TandemConstants.ALIGN_ATTRIBUTES).sort()
 
