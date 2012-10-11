@@ -16,7 +16,7 @@ class TandemPosition
     else if node.nextSibling?               # Not at right subtree, advance to sibling
       if Tandem.Line.isLineNode(node)
         line = editor.doc.findLine(node)
-        offset -= line.length
+        offset -= line.length + 1
       else
         offset -= node.textContent.length
       TandemPosition.findLeafNode(editor, node.nextSibling, offset)

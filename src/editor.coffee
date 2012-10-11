@@ -378,12 +378,15 @@ class TandemEditor extends EventEmitter2
     if nativeSel?
       isBodyChild = (node) -> return node.parentNode?.tagName == 'BODY'
       isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-      startBlock = Tandem.Utils.findAncestor(nativeSel.anchorNode, isBlockTag)
-      endBlock = Tandem.Utils.findAncestor(nativeSel.focusNode, isBlockTag)
+      [anchorNode, anchorOffset] = Tandem.Position.findLeafNode(this, nativeSel.anchorNode, nativeSel.anchorOffset)
+      [focusNode, focusOffset] = Tandem.Position.findLeafNode(this, nativeSel.focusNode, nativeSel.focusOffset)
+      startBlock = Tandem.Utils.findAncestor(anchorNode, isBlockTag)
+      endBlock = Tandem.Utils.findAncestor(focusNode, isBlockTag)
+      return fn() if !startBlock? || !endBlock?
       startLine = Tandem.Utils.findAncestor(startBlock, isBodyChild)
       endLine = Tandem.Utils.findAncestor(endBlock, isBodyChild)
-      startBlockOffset = Tandem.Position.getIndex(nativeSel.anchorNode, nativeSel.anchorOffset, startBlock)
-      endBlockOffset = Tandem.Position.getIndex(nativeSel.anchorNode, nativeSel.anchorOffset, endBlock)
+      startBlockOffset = Tandem.Position.getIndex(anchorNode, anchorOffset, startBlock)
+      endBlockOffset = Tandem.Position.getIndex(focusNode, focusOffset, endBlock)
       startLineOffset = Tandem.Position.getIndex(startBlock, 0, startLine) + startBlockOffset
       endLineOffset = Tandem.Position.getIndex(endBlock, 0, endLine) + endBlockOffset
       #[selStart, selEnd] = this.transformSelection(modificationStart, startIndex, endIndex, charAdditions)
