@@ -383,6 +383,8 @@ class TandemEditor extends EventEmitter2
       endOffset = Tandem.Position.getIndex(nativeSel.focusNode, nativeSel.focusOffset, endLine)
       #[selStart, selEnd] = this.transformSelection(modificationStart, startIndex, endIndex, charAdditions)
       fn()
+      startLine = startLine.ownerDocument.getElementById(startLine.id) if startLine.parentNode == null
+      endLine = endLine.ownerDocument.getElementById(endLine.id) if endLine.parentNode == null
       startPos = new Tandem.Position(this, startLine, startOffset)
       endPos = new Tandem.Position(this, endLine, endOffset)
       savedSelectionRange = new Tandem.Range(this, startPos, endPos)
