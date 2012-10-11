@@ -76,13 +76,10 @@ TandemUtils =
     Tandem.Utils.mergeNodes(leftStart, rightEnd)
     return fragment
 
-  getAncestorCount: (container, tagName) ->
-    count = 0
-    while container.parentNode?
-      if container.parentNode.tagName == tagName
-        count += 1
-      container = container.parentNode
-    return count
+  findAncestor: (node, checkFn) ->
+    while node? && !checkFn(node)
+      node = node.parentNode
+    return node
 
   getAttributeDefault: (attribute) ->
     switch attribute

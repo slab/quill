@@ -2,33 +2,33 @@
 #= require tandem/line
 
 class TandemPosition
-  @findLeafNode: (editor, node, offset, ignoreNewline = false) ->
+  @findLeafNode: (editor, node, offset) ->
     if offset <= node.textContent.length    # We are at right subtree, dive deeper
       if node.firstChild?
-        TandemPosition.findLeafNode(editor, node.firstChild, offset, ignoreNewline)
+        TandemPosition.findLeafNode(editor, node.firstChild, offset)
       else
         # TODO potential bug if double text node has sibling text node
         node = node.parentNode if node.nodeType == node.TEXT_NODE
         if offset == node.textContent.length && node.nextSibling?
-          TandemPosition.findLeafNode(editor, node.nextSibling, 0, ignoreNewline)
+          TandemPosition.findLeafNode(editor, node.nextSibling, 0)
         else
           return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
       if Tandem.Line.isLineNode(node)
         line = editor.doc.findLine(node)
-        length = line.length + (if ignoreNewline then 0 else 1)
-        offset -= length
+        offset -= line.length
       else
         offset -= node.textContent.length
-      TandemPosition.findLeafNode(editor, node.nextSibling, offset, ignoreNewline)
+      TandemPosition.findLeafNode(editor, node.nextSibling, offset)
     else
+      console.error node, offset, editor.doc.root
       throw new Error('Diving exceeded offset')
-
-  @getIndex: (node, index, ignoreNewline = false) ->
-    while node.tagName != 'BODY'
+  
+  @getIndex: (node, index, offsetNode = null) ->
+    while node? && node != offsetNode && node.tagName != 'BODY'
       while node.previousSibling?
         node = node.previousSibling
-        index += node.textContent.length + (if ignoreNewline || !Tandem.Line.isLineNode(node) then 0 else 1)
+        index += node.textContent.length + (if Tandem.Line.isLineNode(node) then 1 else 0)
       node = node.parentNode
     return index
 
@@ -46,12 +46,12 @@ class TandemPosition
 
   # constructor: (TandemEditor editor, Object node, Number offset) ->
   # constructor: (TandemEditor editor, Number index) -> 
-  constructor: (@editor, @leafNode, @offset, ignoreNewline = false) ->
+  constructor: (@editor, @leafNode, @offset) ->
     if _.isNumber(@leafNode)
       @offset = @leafNode
       @index = @leafNode
       @leafNode = @editor.doc.root.firstChild
-    [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset, ignoreNewline)
+    [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset)
       
   getIndex: ->
     @index = TandemPosition.getIndex(@leafNode, @offset) if !@index?
