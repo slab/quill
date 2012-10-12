@@ -354,7 +354,7 @@ class TandemEditor extends EventEmitter2
     position = Tandem.Position.makePosition(this, startIndex)
     startIndex = position.getIndex()
     leaf = position.getLeaf()
-    if _.keys(leaf.attributes).length > 0
+    if _.keys(leaf.attributes).length > 0 || Tandem.Utils.isIgnoreNode(leaf.node)
       [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
       line = @doc.findLine(lineNode)
       [beforeNode, afterNode] = line.splitContents(lineOffset)
