@@ -2,15 +2,13 @@
 #= require tandem/line
 
 class TandemPosition
-  @findLeafNode: (editor, node, offset) ->
+  @findDeepestNode: (editor, node, offset) ->
     if offset <= node.textContent.length    # We are at right subtree, dive deeper
-      if node.firstChild?
-        TandemPosition.findLeafNode(editor, node.firstChild, offset)
+      if node.firstChild? && node.firstChild.nodeType != node.TEXT_NODE
+        TandemPosition.findDeepestNode(editor, node.firstChild, offset)
       else
-        # TODO potential bug if double text node has sibling text node
-        node = node.parentNode if node.nodeType == node.TEXT_NODE
         if offset == node.textContent.length && node.nextSibling?
-          TandemPosition.findLeafNode(editor, node.nextSibling, 0)
+          TandemPosition.findDeepestNode(editor, node.nextSibling, 0)
         else
           return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
@@ -19,10 +17,16 @@ class TandemPosition
         offset -= line.length + 1
       else
         offset -= node.textContent.length
-      TandemPosition.findLeafNode(editor, node.nextSibling, offset)
+      TandemPosition.findDeepestNode(editor, node.nextSibling, offset)
     else
       console.error node, offset, editor.doc.root
       throw new Error('Diving exceeded offset')
+
+  @findLeafNode: (editor, node, offset) ->
+    [node, offset] = TandemPosition.findDeepestNode(editor, node, offset)
+    # TODO potential bug if double text node has sibling text node
+    node = node.parentNode if node.nodeType == node.TEXT_NODE
+    return [node, offset]
   
   @getIndex: (node, index, offsetNode = null) ->
     while node? && node != offsetNode && node.tagName != 'BODY'

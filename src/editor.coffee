@@ -378,8 +378,8 @@ class TandemEditor extends EventEmitter2
     if nativeSel?
       isBodyChild = (node) -> return node.parentNode?.tagName == 'BODY'
       isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-      [anchorNode, anchorOffset] = Tandem.Position.findLeafNode(this, nativeSel.anchorNode, nativeSel.anchorOffset)
-      [focusNode, focusOffset] = Tandem.Position.findLeafNode(this, nativeSel.focusNode, nativeSel.focusOffset)
+      [anchorNode, anchorOffset] = Tandem.Position.findDeepestNode(this, nativeSel.anchorNode, nativeSel.anchorOffset)
+      [focusNode, focusOffset] = Tandem.Position.findDeepestNode(this, nativeSel.focusNode, nativeSel.focusOffset)
       startBlock = Tandem.Utils.findAncestor(anchorNode, isBlockTag)
       endBlock = Tandem.Utils.findAncestor(focusNode, isBlockTag)
       return fn() if !startBlock? || !endBlock?
