@@ -19,7 +19,7 @@ class TandemKeyboard
             selection = @editor.getSelection()
             @editor.insertAt(selection, "\t")
         when TandemKeyboard.KEYS.BACKSPACE
-          if selection.isCollapsed() && this.onIndentLine(selection)
+          if selection.isCollapsed() && this.onIndentLine(selection) && selection.start.offset == 0
             attrs = selection.getAttributes()
             if (attrs.list? && attrs.list > 1) || (attrs.bullet? && attrs.bullet > 1) || (attrs.indent? && attrs.indent > 1)
               this.indent(selection, -1)
