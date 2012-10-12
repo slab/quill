@@ -138,44 +138,33 @@ class TandemEditor extends EventEmitter2
     @doc.root.addEventListener('mouseup', debounceCheckSelectionChange)
     setInterval((=> this.checkSelectionChange()), this.options.POLL_INTERVAL)
 
-
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
   applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    if !_.isNumber(startIndex)
-      [range, attr, value] = [startIndex, length, attr]
-      startIndex = range.start.getIndex()
-      length = range.end.getIndex() - startIndex
-    else
-      range = new Tandem.Range(this, startIndex, startIndex + length)
-
-    this.preserveSelection(range.start, 0, =>
-      [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-      [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex + length)
-      if startLine == endLine
-        this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
+    delta = this.trackDelta( =>
+      if !_.isNumber(startIndex)
+        [range, attr, value] = [startIndex, length, attr]
+        startIndex = range.start.getIndex()
+        length = range.end.getIndex() - startIndex
       else
-        curLine = startLine.nextSibling
-        while curLine? && curLine != endLine
-          nextSibling = curLine.nextSibling
-          this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
-          curLine = nextSibling
-        this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
-        this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
-      @doc.rebuildDirty()
-    )
-    if emitEvent
-      deltas = []
-      deltas.push(new JetRetain(0, startIndex)) if startIndex > 0
-      attribute = {}
-      attribute[attr] = value
-      deltas.push(new JetRetain(startIndex, startIndex + length, attribute))
-      deltas.push(new JetRetain(startIndex + length, @doc.length)) if startIndex + length < @doc.length
-      delta = new JetDelta(@doc.length, @doc.length, deltas)
-      this.emit(this.events.API_TEXT_CHANGE, delta)
-    @ignoreDomChanges = oldIgnoreDomChange
+        range = new Tandem.Range(this, startIndex, startIndex + length)
+      this.preserveSelection(range.start, 0, =>
+        [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
+        [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex + length)
+        if startLine == endLine
+          this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
+        else
+          curLine = startLine.nextSibling
+          while curLine? && curLine != endLine
+            nextSibling = curLine.nextSibling
+            this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
+            curLine = nextSibling
+          this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
+          this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
+        @doc.rebuildDirty()
+      )
+    , emitEvent)
+    this.emit(this.events.API_TEXT_CHANGE, delta) if emitEvent
 
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
     line = @doc.findLine(lineNode)
@@ -253,37 +242,30 @@ class TandemEditor extends EventEmitter2
       @currentSelection = selection
 
   deleteAt: (startIndex, length, emitEvent = true) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    originalDocLength = @doc.length
-    if !_.isNumber(startIndex)
-      range = startIndex
-      startPos = range.start
-      endPos = range.end
-      startIndex = range.start.getIndex()
-      length = range.end.getIndex() - startIndex
-    else
-      startPos = Tandem.Position.makePosition(this, startIndex)
-      endPos = Tandem.Position.makePosition(this, startIndex + length)
-    startIndex = startPos.getIndex()
-    endIndex = endPos.getIndex()
-    this.preserveSelection(startPos, 0 - length, =>
-      [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-      [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
-      fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
-      lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
-      _.each(lineNodes, (lineNode) =>
-        line = @doc.findLine(lineNode)
-        @doc.updateLine(line) if line?
+    delta = this.trackDelta( =>
+      if !_.isNumber(startIndex)
+        range = startIndex
+        startPos = range.start
+        endPos = range.end
+        startIndex = range.start.getIndex()
+        length = range.end.getIndex() - startIndex
+      else
+        startPos = Tandem.Position.makePosition(this, startIndex)
+        endPos = Tandem.Position.makePosition(this, startIndex + length)
+      startIndex = startPos.getIndex()
+      endIndex = endPos.getIndex()
+      this.preserveSelection(startPos, 0 - length, =>
+        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
+        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
+        fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
+        lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
+        _.each(lineNodes, (lineNode) =>
+          line = @doc.findLine(lineNode)
+          @doc.updateLine(line) if line?
+        )
       )
-    )
-    if emitEvent
-      deltas = []
-      deltas.push(new JetRetain(0, startIndex)) if 0 < startIndex
-      deltas.push(new JetRetain(startIndex + length, originalDocLength)) if startIndex + length < originalDocLength
-      delta = new JetDelta(originalDocLength, @doc.length, deltas)
-      this.emit(this.events.API_TEXT_CHANGE, delta)
-    @ignoreDomChanges = oldIgnoreDomChange
+    , emitEvent)
+    this.emit(this.events.API_TEXT_CHANGE, delta) if emitEvent
 
   getAt: (startIndex, length) ->
     # - Returns array of {text: "", attr: {}}
@@ -300,38 +282,32 @@ class TandemEditor extends EventEmitter2
     return Tandem.Range.getSelection(this)
 
   insertAt: (startIndex, text, emitEvent = true) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    originalDocLength = @doc.length
-    position = Tandem.Position.makePosition(this, startIndex)
-    index = startIndex = position.getIndex()
-    this.preserveSelection(position, text.length, =>
-      lines = text.split("\n")
-      _.each(lines, (line, lineIndex) =>
-        strings = line.split("\t")
-        _.each(strings, (str, strIndex) =>
-          this.insertTextAt(index, str)
-          index += str.length
-          if strIndex < strings.length - 1
-            this.insertTabAt(index)
+    delta = this.trackDelta( =>
+      position = Tandem.Position.makePosition(this, startIndex)
+      index = startIndex = position.getIndex()
+      startLine = @doc.findLineAtOffset(index)
+      attr = if startLineNode? then startLine.attributes else {}
+      this.preserveSelection(position, text.length, =>
+        lines = text.split("\n")
+        _.each(lines, (line, lineIndex) =>
+          strings = line.split("\t")
+          _.each(strings, (str, strIndex) =>
+            this.insertTextAt(index, str)
+            index += str.length
+            if strIndex < strings.length - 1
+              this.insertTabAt(index)
+              index += 1
+          )
+          if lineIndex < lines.length - 1
+            this.insertNewlineAt(index)
             index += 1
+          else
+            # TODO could be more clever about if we need to call this
+            Tandem.Document.fixListNumbering(@doc.root)
         )
-        if lineIndex < lines.length - 1
-          this.insertNewlineAt(index)
-          index += 1
-        else
-          # TODO could be more clever about if we need to call this
-          Tandem.Document.fixListNumbering(@doc.root)
       )
-    )
-    if emitEvent
-      deltas = []
-      deltas.push(new JetRetain(0, startIndex)) if 0 < startIndex
-      deltas.push(new JetInsert(text))
-      deltas.push(new JetRetain(startIndex, originalDocLength)) if startIndex < originalDocLength
-      delta = new JetDelta(originalDocLength, @doc.length, deltas)
-      this.emit(this.events.API_TEXT_CHANGE, delta)
-    @ignoreDomChanges = oldIgnoreDomChange 
+    , emitEvent)
+    this.emit(this.events.API_TEXT_CHANGE, delta) if emitEvent
 
   insertNewlineAt: (startIndex) ->
     [line, offset] = @doc.findLineAtOffset(startIndex)
@@ -417,41 +393,51 @@ class TandemEditor extends EventEmitter2
     selEnd = Math.max(selStart, selEnd)
     return [selStart, selEnd]
 
-  update: ->
-    oldDelta = @doc.toDelta()
-    this.checkSelectionChange()
+  trackDelta: (fn, track = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
-    this.preserveSelection(null, 0, =>
-      Tandem.Document.normalizeHtml(@doc.root)
-      lines = @doc.lines.toArray()
-      lineNode = @doc.root.firstChild
-      _.each(lines, (line, index) =>
-        while line.node != lineNode
-          if line.node.parentNode == @doc.root
-            newLine = @doc.insertLineBefore(lineNode, line)
-            lineNode = lineNode.nextSibling
-          else
-            @doc.removeLine(line)
-            return
-        @doc.updateLine(line)
-        lineNode = lineNode.nextSibling
+    delta = null
+    if track
+      oldDelta = @doc.toDelta()
+      fn()
+      newDelta = @doc.toDelta()
+      decompose = JetSync.decompose(oldDelta, newDelta)
+      compose = JetSync.compose(oldDelta, decompose)
+      if !_.isEqual(compose, newDelta)
+        console.info(JSON.stringify(oldDelta))
+        console.info(JSON.stringify(newDelta))
+        console.info(JSON.stringify(decompose))
+        console.info(JSON.stringify(compose))
+        console.assert(false, oldDelta, newDelta, decompose, compose)
+      delta = decompose
+    else
+      fn()
+    @ignoreDomChanges = oldIgnoreDomChange
+    return delta
+
+  update: ->
+    return this.trackDelta( =>
+      this.preserveSelection(null, 0, =>
+        Tandem.Document.normalizeHtml(@doc.root)
+        lines = @doc.lines.toArray()
+        lineNode = @doc.root.firstChild
+        _.each(lines, (line, index) =>
+          while line.node != lineNode
+            if line.node.parentNode == @doc.root
+              newLine = @doc.insertLineBefore(lineNode, line)
+              lineNode = lineNode.nextSibling
+            else
+              @doc.removeLine(line)
+              return
+          @doc.updateLine(line)
+          lineNode = lineNode.nextSibling
+        )
+        while lineNode != null
+          newLine = @doc.appendLine(lineNode)
+          lineNode = lineNode.nextSibling
       )
-      while lineNode != null
-        newLine = @doc.appendLine(lineNode)
-        lineNode = lineNode.nextSibling
-    )
-    @ignoreDomChanges = oldIgnoreDomChange 
-    newDelta = @doc.toDelta()
-    decompose = JetSync.decompose(oldDelta, newDelta)
-    compose = JetSync.compose(oldDelta, decompose)
-    if !_.isEqual(compose, newDelta)
-      console.info(JSON.stringify(oldDelta))
-      console.info(JSON.stringify(newDelta))
-      console.info(JSON.stringify(decompose))
-      console.info(JSON.stringify(compose))
-      console.assert(false, oldDelta, newDelta, decompose, compose)
-    return decompose
+    , true)
+    return
 
 
 
