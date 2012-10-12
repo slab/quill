@@ -13,7 +13,7 @@ class TandemKeyboard
           intersection = selection.getAttributes()
           if intersection.bullet? || intersection.indent? || intersection.list?
             increment = if event.shiftKey == true then -1 else 1
-            this.indent(increment)
+            this.indent(selection, increment)
           else
             @editor.deleteAt(selection) if !selection.isCollapsed()
             selection = @editor.getSelection()
@@ -24,8 +24,7 @@ class TandemKeyboard
       return false
     )
 
-  indent: (increment) ->
-    selection = @editor.getSelection()
+  indent: (selection, increment) ->
     lines = selection.getLines()
     applyIndent = (line, attr) =>
       indent = if _.isNumber(line.attributes[attr]) then line.attributes[attr] else (if line.attributes[attr] then 1 else 0)

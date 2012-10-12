@@ -15,12 +15,17 @@ class TandemToolbar extends EventEmitter2
   applyAttribute: (name, value) ->
     selection = @editor.getSelection()
     if selection?
+      startIndex = selection.start.getIndex()
+      endIndex = selection.end.getIndex()
       if name != 'indent' && name != 'outdent'
-        @editor.applyAttribute(selection, name, value)
+        @editor.applyAttribute(startIndex, endIndex - startIndex, name, value)
       else
         increment = if name == 'outdent' then -1 else 1
-        @editor.keyboard.indent(increment)
-      this.emit('update', @editor.getSelection().getAttributes())
+        @editor.keyboard.indent(selection, increment)
+      selection = @editor.getSelection()
+      this.emit('update', selection.getAttributes())
+      @editor.doc.root.focus()
+      @editor.setSelection(new Tandem.Range(@editor, startIndex, endIndex))
     else
       console.warn "#{name} called with no selection"
       

@@ -115,14 +115,14 @@ class TandemEditor extends EventEmitter2
     @doc.root.focus()
     position = Tandem.Position.makePosition(this, 0)
     start = new Tandem.Range(this, position, position)
-    Tandem.Range.setSelection(this, start)
+    this.setSelection(start)
 
   initContentListeners: ->
     onEdit = _.debounce( =>
       delta = this.update()
       if !delta.isIdentity()
         this.checkSelectionChange()
-        Tandem.Range.setSelection(this, @currentSelection)
+        this.setSelection(@currentSelection)
         this.emit(this.events.USER_TEXT_CHANGE, delta)
     , 100)
     @doc.root.addEventListener('DOMSubtreeModified', =>
@@ -402,10 +402,13 @@ class TandemEditor extends EventEmitter2
         endLine = endLine.ownerDocument.getElementById(endLine.id) if endLine.parentNode == null
         endPos = new Tandem.Position(this, endLine, endLineOffset)
       savedSelectionRange = new Tandem.Range(this, startPos, endPos)
-      Tandem.Range.setSelection(this, savedSelectionRange)
+      this.setSelection(savedSelectionRange)
       this.checkSelectionChange()
     else
       fn()
+
+  setSelection: (range) ->
+    Tandem.Range.setSelection(this, range)
 
   transformSelection: (modificationStart, selStart, selEnd, charAdditions) ->
     modPos = if modificationStart? then modificationStart.getIndex() else 0
