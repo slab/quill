@@ -166,11 +166,13 @@ TandemUtils =
     children = _.clone(subtree.childNodes)
     attributes = Tandem.Utils.getAttributeForContainer(subtree)
     [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(subtree)
+    ret = subtree
     if attrName == attribute
-      Tandem.Utils.unwrap(subtree)
+      ret = Tandem.Utils.unwrap(subtree)
     _.each(children, (child) ->
       Tandem.Utils.removeAttributeFromSubtree(child, attribute)
     )
+    return ret
 
   setIndent: (list, indent) ->
     _.each(_.clone(list.classList), (css) ->

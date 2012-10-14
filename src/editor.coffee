@@ -185,6 +185,7 @@ class TandemEditor extends EventEmitter2
       if value && Tandem.Utils.getAttributeDefault(attr) != value
         fragment = @doc.root.ownerDocument.createDocumentFragment()
         Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+          node = Tandem.Utils.removeAttributeFromSubtree(node, attr)
           fragment.appendChild(node)
         )
         attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
