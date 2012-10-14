@@ -38,11 +38,11 @@ $(document).ready( ->
     setUsers: ->
   }
 
-  editor.on(editor.events.API_TEXT_CHANGE, (delta) ->
+  editor.on(Tandem.Editor.events.API_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
   )
-  editor.on(editor.events.USER_TEXT_CHANGE, (delta) ->
+  editor.on(Tandem.Editor.events.USER_TEXT_CHANGE, (delta) ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
   )

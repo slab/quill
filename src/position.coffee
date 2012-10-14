@@ -29,7 +29,7 @@ class TandemPosition
     return [node, offset]
   
   @getIndex: (node, index, offsetNode = null) ->
-    while node? && node != offsetNode && node.tagName != 'BODY'
+    while node != offsetNode && node?.id != Tandem.Editor.CONTAINER_ID
       while node.previousSibling?
         node = node.previousSibling
         index += node.textContent.length + (if Tandem.Line.isLineNode(node) then 1 else 0)

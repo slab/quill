@@ -2,13 +2,13 @@
 
 class TandemToolbar extends EventEmitter2
   constructor: (@editor) ->
-    @editor.on(@editor.events.USER_SELECTION_CHANGE, (selection) =>
+    @editor.on(Tandem.Editor.events.USER_SELECTION_CHANGE, (selection) =>
       attributes = if selection then selection.getAttributes() else null
       console.log 'selection change', selection, attributes
       this.emit('update', attributes)
-    ).on(@editor.events.API_TEXT_CHANGE, (delta) ->
+    ).on(Tandem.Editor.events.API_TEXT_CHANGE, (delta) ->
       console.log 'api text change', delta
-    ).on(@editor.events.USER_TEXT_CHANGE, (delta) ->
+    ).on(Tandem.Editor.events.USER_TEXT_CHANGE, (delta) ->
       console.log 'user text change', delta
     )
 

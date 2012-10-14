@@ -53,7 +53,7 @@ $(document).ready( ->
   reader = new Tandem.Editor($editors.get(1))
   start = new Date()
 
-  writer.on(writer.events.API_TEXT_CHANGE, (delta) ->
+  writer.on(Tandem.Editor.events.API_TEXT_CHANGE, (delta) ->
     reader.applyDelta(delta)
   )
 

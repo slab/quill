@@ -9,7 +9,9 @@
 class TandemEditor extends EventEmitter2
   @editors: []
 
-  events: 
+  @CONTAINER_ID: 'tandem-container'
+
+  @events: 
     API_TEXT_CHANGE       : 'api-text-change'
     USER_SELECTION_CHANGE : 'user-selection-change'
     USER_TEXT_CHANGE      : 'user-text-change'
@@ -25,7 +27,7 @@ class TandemEditor extends EventEmitter2
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
     @iframe = this.createIframe(@container)
-    @doc = new Tandem.Document(this, @iframe.contentWindow.document.body)
+    @doc = new Tandem.Document(this, @iframe.contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
     @currentSelection = null
     @keyboard = new Tandem.Keyboard(this)
     this.initContentListeners()
@@ -53,6 +55,8 @@ class TandemEditor extends EventEmitter2
         margin: 0px;
         padding: 10px 15px; 
       }
+
+      ##{TandemEditor.CONTAINER_ID} { outline: none; }
       
       a { text-decoration: underline; }
       b { font-weight: bold; }
@@ -104,7 +108,10 @@ class TandemEditor extends EventEmitter2
     else
       style.appendChild(doc.createTextNode(css))
     head.appendChild(style)
-    doc.body.innerHTML = html
+    contentContainer = doc.createElement('div')
+    contentContainer.id = Tandem.Editor.CONTAINER_ID
+    doc.body.appendChild(contentContainer)
+    contentContainer.innerHTML = html
     return iframe
 
   disable: ->
@@ -123,7 +130,7 @@ class TandemEditor extends EventEmitter2
       if !delta.isIdentity()
         this.checkSelectionChange()
         this.setSelection(@currentSelection)
-        this.emit(this.events.USER_TEXT_CHANGE, delta)
+        this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta)
     , 100)
     @doc.root.addEventListener('DOMSubtreeModified', =>
       return if @ignoreDomChanges
@@ -164,7 +171,7 @@ class TandemEditor extends EventEmitter2
         @doc.rebuildDirty()
       )
     , emitEvent)
-    this.emit(this.events.API_TEXT_CHANGE, delta) if emitEvent
+    this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
     line = @doc.findLine(lineNode)
@@ -238,7 +245,7 @@ class TandemEditor extends EventEmitter2
     return if @ignoreDomChanges
     selection = this.getSelection()
     if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
-      this.emit(this.events.USER_SELECTION_CHANGE, selection)
+      this.emit(TandemEditor.events.USER_SELECTION_CHANGE, selection)
       @currentSelection = selection
 
   deleteAt: (startIndex, length, emitEvent = true) ->
@@ -265,7 +272,7 @@ class TandemEditor extends EventEmitter2
         )
       )
     , emitEvent)
-    this.emit(this.events.API_TEXT_CHANGE, delta) if emitEvent
+    this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
   getAt: (startIndex, length) ->
     # - Returns array of {text: "", attr: {}}
@@ -307,7 +314,7 @@ class TandemEditor extends EventEmitter2
         )
       )
     , emitEvent)
-    this.emit(this.events.API_TEXT_CHANGE, delta) if emitEvent
+    this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
   insertNewlineAt: (startIndex) ->
     [line, offset] = @doc.findLineAtOffset(startIndex)
@@ -352,7 +359,7 @@ class TandemEditor extends EventEmitter2
   preserveSelection: (modPosition, charAdditions, fn) ->
     selection = Tandem.Range.getSelection(this)
     if selection?
-      isBodyChild = (node) -> return node.parentNode?.tagName == 'BODY'
+      isBodyChild = (node) -> return node.parentNode?.id == TandemEditor.CONTAINER_ID
       isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
       startBlock = Tandem.Utils.findAncestor(selection.start.leafNode, isBlockTag)
       endBlock = Tandem.Utils.findAncestor(selection.end.leafNode, isBlockTag)
