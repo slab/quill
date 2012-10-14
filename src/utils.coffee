@@ -153,6 +153,8 @@ TandemUtils =
     return node1 if !node2?
     this.moveChildren(node1, node2)
     node2.parentNode.removeChild(node2)
+    if (node1.tagName == 'OL' || node1.tagName == 'UL') && node1.childNodes.length == 2
+      TandemUtils.mergeNodes(node1.firstChild, node1.lastChild)
     return node1
 
   moveChildren: (newParent, oldParent) ->
