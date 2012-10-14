@@ -1,4 +1,4 @@
-ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('').concat(_.map([0..15], -> return "\n"))
+ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n     ".split('')
 NUM_OPERATIONS = 1000
 attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES, Tandem.Constants.INDENT_ATTRIBUTES)
 attributeKeys = _.keys(attributes)
@@ -15,7 +15,6 @@ getRandomLength = ->
     return Math.floor(Math.random() * 10)
   else
     return Math.floor(Math.random() * 50)
-
 
 getRandomOperation = (editor) ->
   rand = Math.random()
@@ -72,23 +71,23 @@ $(document).ready( ->
           console.error operation, curHtml
           callback(e)
           return
-        writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
-        readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
-        if writerHtml == readerHtml
+        writerDelta = writer.doc.toDelta()
+        readerDelta = reader.doc.toDelta()
+        if _.isEqual(writerDelta, readerDelta)
           callback(null)
         else
           console.error operation, curHtml
-          console.error 'writer', writerHtml
-          console.error 'reader', readerHtml
-          callback('Editor html diversion')
+          console.error 'writer', writerDelta
+          console.error 'reader', readerDelta
+          callback('Editor diversion')
       else
         callback(null)
     )
   , (err) ->
     if err?
       console.error err
-      console.error err.message
-      console.error err.stack
+      console.error err.message if err.message?
+      console.error err.stack if err.stack?
     else
       writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
       readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
