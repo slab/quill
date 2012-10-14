@@ -349,23 +349,20 @@ class TandemEditor extends EventEmitter2
         leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
     @doc.updateLine(leaf.line)
 
-  preserveSelection: (modificationStart, charAdditions, fn) ->
-    nativeSel = Tandem.Range.getNativeSelection(this)
-    if nativeSel?
+  preserveSelection: (modPosition, charAdditions, fn) ->
+    selection = Tandem.Range.getSelection(this)
+    if selection?
       isBodyChild = (node) -> return node.parentNode?.tagName == 'BODY'
       isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-      [anchorNode, anchorOffset] = Tandem.Position.findDeepestNode(this, nativeSel.anchorNode, nativeSel.anchorOffset)
-      [focusNode, focusOffset] = Tandem.Position.findDeepestNode(this, nativeSel.focusNode, nativeSel.focusOffset)
-      startBlock = Tandem.Utils.findAncestor(anchorNode, isBlockTag)
-      endBlock = Tandem.Utils.findAncestor(focusNode, isBlockTag)
+      startBlock = Tandem.Utils.findAncestor(selection.start.leafNode, isBlockTag)
+      endBlock = Tandem.Utils.findAncestor(selection.end.leafNode, isBlockTag)
       return fn() if !startBlock? || !endBlock?
       startLine = Tandem.Utils.findAncestor(startBlock, isBodyChild)
       endLine = Tandem.Utils.findAncestor(endBlock, isBodyChild)
-      startBlockOffset = Tandem.Position.getIndex(anchorNode, anchorOffset, startBlock)
-      endBlockOffset = Tandem.Position.getIndex(focusNode, focusOffset, endBlock)
+      startBlockOffset = Tandem.Position.getIndex(selection.start.leafNode, selection.start.offset, startBlock)
+      endBlockOffset = Tandem.Position.getIndex(selection.end.leafNode, selection.end.offset, endBlock)
       startLineOffset = Tandem.Position.getIndex(startBlock, 0, startLine) + startBlockOffset
       endLineOffset = Tandem.Position.getIndex(endBlock, 0, endLine) + endBlockOffset
-      #[selStart, selEnd] = this.transformSelection(modificationStart, startIndex, endIndex, charAdditions)
       fn()
       if startBlock.parentNode?
         startPos = new Tandem.Position(this, startBlock, startBlockOffset)
@@ -378,6 +375,8 @@ class TandemEditor extends EventEmitter2
         endLine = endLine.ownerDocument.getElementById(endLine.id) if endLine.parentNode == null
         endPos = new Tandem.Position(this, endLine, endLineOffset)
       savedSelectionRange = new Tandem.Range(this, startPos, endPos)
+      [selStart, selEnd] = this.transformSelection(modPosition, savedSelectionRange, charAdditions)
+      savedSelectionRange = new Tandem.Range(this, Tandem.Position.makePosition(this, selStart), Tandem.Position.makePosition(this, selEnd))
       this.setSelection(savedSelectionRange)
       this.checkSelectionChange()
     else
@@ -386,8 +385,11 @@ class TandemEditor extends EventEmitter2
   setSelection: (range) ->
     Tandem.Range.setSelection(this, range)
 
-  transformSelection: (modificationStart, selStart, selEnd, charAdditions) ->
-    modPos = if modificationStart? then modificationStart.getIndex() else 0
+  # TODO use node.compareDocumentPosition for efficiency
+  transformSelection: (modPosition, selectionRange, charAdditions) ->
+    modPos = if modPosition? then modPosition.getIndex() else 0
+    selStart = selectionRange.start.getIndex()
+    selEnd = selectionRange.end.getIndex()
     selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
     selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
     selEnd = Math.max(selStart, selEnd)
