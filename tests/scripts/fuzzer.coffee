@@ -78,6 +78,8 @@ $(document).ready( ->
           callback(null)
         else
           console.error operation, curHtml
+          console.error 'writer', writerHtml
+          console.error 'reader', readerHtml
           callback('Editor html diversion')
       else
         callback(null)
