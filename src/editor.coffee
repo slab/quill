@@ -21,12 +21,12 @@ class TandemEditor extends EventEmitter2
 
   constructor: (@container, enabled = true) ->
     @container = document.getElementById(@container) if _.isString(@container)
-    this.reset()
+    this.reset(true)
     this.enable() if enabled
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
-    @iframe = this.createIframe(@container)
+    @iframe = this.createIframe(@container, keepHTML)
     @doc = new Tandem.Document(this, @iframe.contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
     @currentSelection = null
     @keyboard = new Tandem.Keyboard(this)
@@ -35,7 +35,7 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
 
-  createIframe: (parent) ->
+  createIframe: (parent, keepHTML) ->
     html = parent.innerHTML
     parent.innerHTML = ''
     iframe = document.createElement('iframe')
@@ -54,6 +54,7 @@ class TandemEditor extends EventEmitter2
         line-height: 15px;
         margin: 0px;
         padding: 10px 15px; 
+        white-space: pre;
       }
 
       ##{TandemEditor.CONTAINER_ID} { outline: none; }
@@ -101,7 +102,7 @@ class TandemEditor extends EventEmitter2
       .indent-8 { margin-left: 16em; }
       .indent-9 { margin-left: 18em; }
       
-      .tab { display: inline-block; margin: 0px; white-space: pre; }
+      .tab { display: inline-block; margin: 0px; }
     "
     if style.styleSheet?
       style.styleSheet.cssText = css
@@ -111,7 +112,7 @@ class TandemEditor extends EventEmitter2
     contentContainer = doc.createElement('div')
     contentContainer.id = Tandem.Editor.CONTAINER_ID
     doc.body.appendChild(contentContainer)
-    contentContainer.innerHTML = html
+    contentContainer.innerHTML = html if keepHTML
     return iframe
 
   disable: ->
