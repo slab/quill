@@ -319,7 +319,11 @@ class TandemEditor extends EventEmitter2
 
   insertNewlineAt: (startIndex) ->
     [line, offset] = @doc.findLineAtOffset(startIndex)
-    @doc.splitLine(line, offset)
+    newLine = @doc.splitLine(line, offset)
+    # TODO we need to do this for each line attribute... find more elegant solution
+    this.applyLineAttribute(newLine, 'list', false) if line.attributes.list
+    this.applyLineAttribute(newLine, 'bullet', false) if line.attributes.bullet
+    this.applyLineAttribute(newLine, 'indent', false) if line.attributes.indent
 
   insertTabAt: (startIndex) ->
     [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)

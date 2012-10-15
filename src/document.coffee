@@ -226,7 +226,7 @@ class TandemDocument
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
-    this.insertLineBefore(lineNode2, line.next)
+    return this.insertLineBefore(lineNode2, line.next)
 
   toDelta: ->
     lines = @lines.toArray()
