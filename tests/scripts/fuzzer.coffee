@@ -3,6 +3,12 @@ NUM_OPERATIONS = 1000
 attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES, Tandem.Constants.INDENT_ATTRIBUTES)
 attributeKeys = _.keys(attributes)
 
+seed = Math.random()
+#seed = 
+console.log seed
+Math.seedrandom(seed.toString())
+
+
 getRandomLength = ->
   rand = Math.random()
   if rand < 0.1
