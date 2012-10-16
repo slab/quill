@@ -59,7 +59,7 @@ class TandemEditor extends EventEmitter2
 
       ##{TandemEditor.CONTAINER_ID} { outline: none; }
       
-      a { text-decoration: underline; }
+      a { cursor: pointer; text-decoration: underline; }
       b { font-weight: bold; }
       i { font-style: italic; }
       s { text-decoration: line-through; }
