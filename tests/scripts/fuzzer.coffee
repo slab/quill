@@ -4,7 +4,7 @@ attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG
 attributeKeys = _.keys(attributes)
 
 seed = Math.random()
-#seed = 
+#seed = ""
 console.log seed
 Math.seedrandom(seed.toString())
 

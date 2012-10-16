@@ -10,6 +10,7 @@ class TandemEditor extends EventEmitter2
   @editors: []
 
   @CONTAINER_ID: 'tandem-container'
+  @ID_PREFIX: 'editor-'
 
   @events: 
     API_TEXT_CHANGE       : 'api-text-change'
@@ -20,6 +21,7 @@ class TandemEditor extends EventEmitter2
     POLL_INTERVAL: 500
 
   constructor: (@container, enabled = true) ->
+    @id = _.uniqueId(TandemEditor.ID_PREFIX)
     @container = document.getElementById(@container) if _.isString(@container)
     this.reset(true)
     this.enable() if enabled
@@ -119,11 +121,12 @@ class TandemEditor extends EventEmitter2
     @doc.root.setAttribute('contenteditable', false)
 
   enable: ->
-    @doc.root.setAttribute('contenteditable', true)
-    @doc.root.focus()
-    position = Tandem.Position.makePosition(this, 0)
-    start = new Tandem.Range(this, position, position)
-    this.setSelection(start)
+    if !@doc.root.getAttribute('contenteditable')
+      @doc.root.setAttribute('contenteditable', true)
+      @doc.root.focus()
+      position = Tandem.Position.makePosition(this, 0)
+      start = new Tandem.Range(this, position, position)
+      this.setSelection(start)
 
   initContentListeners: ->
     onEdit = _.debounce( =>
@@ -203,6 +206,9 @@ class TandemEditor extends EventEmitter2
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
+    oldDelta = @doc.toDelta()
+    currentDeltas = JetDelta.copy(oldDelta).deltas
+    curDeltaOffset = 0
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
         this.insertAt(index + offset, delta.text, false)
@@ -212,12 +218,29 @@ class TandemEditor extends EventEmitter2
         offset += delta.getLength()
       else if JetDelta.isRetain(delta)
         if delta.start > index
-          this.deleteAt(index + offset, delta.start - index, false)
+          length = delta.start - index
+          this.deleteAt(index + offset, length, false)
           offset -= (delta.start - index)
+          while length >= currentDeltas[0].text.length - curDeltaOffset
+            length -= (currentDeltas[0].text.length - curDeltaOffset)
+            currentDeltas.splice(0, 1)
+            curDeltaOffset = 0
         else
-          _.each(delta.attributes, (value, attr) =>
-            this.applyAttribute(index + offset, delta.end - delta.start, attr, value, false)
-          )
+          start = index + offset
+          length = delta.end - delta.start
+          while length > 0
+            attributes = _.extend({}, currentDeltas[0].attributes, delta.attributes)
+            deltaLength = currentDeltas[0].text.length - curDeltaOffset
+            if deltaLength <= length
+              currentDeltas.splice(0, 1)
+              curDeltaOffset = 0
+            else
+              curDeltaOffset += length
+            _.each(attributes, (value, attr) =>
+              this.applyAttribute(start, Math.min(deltaLength, length), attr, value, false)
+            )
+            start += deltaLength
+            length -= deltaLength
         index = delta.end
       else
         console.warn('Unrecognized type in delta', delta)
@@ -225,6 +248,10 @@ class TandemEditor extends EventEmitter2
     # If end of text was deleted
     if delta.endLength < delta.startLength + offset
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
+    newDelta = @doc.toDelta()
+    composed = JetSync.compose(oldDelta, delta)
+    composed.compact()
+    console.assert(_.isEqual(composed, newDelta), oldDelta, delta, newDelta, composed)
 
   applyLineAttribute: (line, attr, value) ->
     indent = if _.isNumber(value) then value else (if value then 1 else 0)
@@ -345,8 +372,7 @@ class TandemEditor extends EventEmitter2
     leaf = position.getLeaf()
     if _.keys(leaf.attributes).length > 0 || Tandem.Utils.isIgnoreNode(leaf.node)
       [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-      line = @doc.findLine(lineNode)
-      [beforeNode, afterNode] = line.splitContents(lineOffset)
+      [beforeNode, afterNode] = leaf.line.splitContents(lineOffset)
       parentNode = beforeNode?.parentNode || afterNode?.parentNode
       span = lineNode.ownerDocument.createElement('span')
       span.textContent = text
@@ -418,12 +444,7 @@ class TandemEditor extends EventEmitter2
       newDelta = @doc.toDelta()
       decompose = JetSync.decompose(oldDelta, newDelta)
       compose = JetSync.compose(oldDelta, decompose)
-      if !_.isEqual(compose, newDelta)
-        console.info(JSON.stringify(oldDelta))
-        console.info(JSON.stringify(newDelta))
-        console.info(JSON.stringify(decompose))
-        console.info(JSON.stringify(compose))
-        console.assert(false, oldDelta, newDelta, decompose, compose)
+      console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
       delta = decompose
     else
       fn()
