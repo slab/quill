@@ -23,8 +23,9 @@ class TandemLeaf extends LinkedList.Node
     @text = @node.textContent
     @length = @text.length
 
-  getAttributes: ->
-    return _.extend({}, Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES, @attributes, @line.attributes)
+  getAttributes: (excludeDefault = false) ->
+    attributes = if excludeDefault then {} else _.clone(Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES)
+    return _.extend(attributes, @attributes, @line.attributes)
 
   setText: (@text) ->
     @node.textContent = @text
