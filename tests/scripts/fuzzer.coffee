@@ -47,7 +47,7 @@ getRandomOperation = (editor) ->
 
 getRandomString = (length) ->
   return _.map([0..(length - 1)], ->
-    return ALPHABET[Math.floor(Math.random()*length)]
+    return ALPHABET[Math.floor(Math.random()*ALPHABET.length)]
   ).join('')
 
 
