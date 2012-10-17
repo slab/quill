@@ -153,6 +153,13 @@ class TandemDocument
         console.error @lineMap
       return false
 
+  cleanNode: (lineNode) ->
+    lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
+    line = this.findLine(lineNode)
+    if line?
+      return this.updateLine(line)
+    return false
+
   detectChange: ->
     # Go through HTML (which should be normalized)
     # Make sure non are different from their innerHTML, if so record change
@@ -205,11 +212,20 @@ class TandemDocument
     )
 
   rebuildDirty: ->
-    dirtyNodes = @root.getElementsByClassName(Tandem.Line.DIRTY_CLASS)
-    _.each(_.clone(dirtyNodes), (lineNode) =>
-      lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
-      line = this.findLine(lineNode)
-      this.updateLine(line) if line?
+    # First and last nodes are always dirty to handle edge cases
+    @root.firstChild.classList.add(Tandem.Line.DIRTY_CLASS)
+    @root.lastChild.classList.add(Tandem.Line.DIRTY_CLASS)
+    dirtyNodes = _.clone(@root.getElementsByClassName(Tandem.Line.DIRTY_CLASS))
+    _.each((dirtyNodes), (lineNode, index) =>
+      this.cleanNode(lineNode)
+      prevNode = lineNode.previousSibling
+      nextNode = lineNode.nextSibling
+      while prevNode? && prevNode != dirtyNodes[index - 1]
+        this.cleanNode(prevNode)
+        prevNode = prevNode.previousSibling
+      while nextNode? && nextNode != dirtyNodes[index + 1]
+        this.cleanNode(nextNode)
+        nextNode = nextNode.nextSibling
     )
 
   removeLine: (line) ->
@@ -253,8 +269,9 @@ class TandemDocument
 
   updateLine: (line) ->
     @length -= line.length
-    line.rebuild()
+    didRebuild = line.rebuild()
     @length += line.length
+    return didRebuild
 
 
 

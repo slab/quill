@@ -126,7 +126,7 @@ class TandemLine extends LinkedList.Node
 
   rebuild: ->
     if @node.parentNode == @doc.root
-      return if @outerHTML == @node.outerHTML
+      return false if @outerHTML == @node.outerHTML
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
@@ -135,6 +135,7 @@ class TandemLine extends LinkedList.Node
       this.resetContent()
     else
       @doc.removeLine(this)
+    return true
 
   resetContent: ->
     @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
