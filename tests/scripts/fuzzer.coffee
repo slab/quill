@@ -1,4 +1,4 @@
-ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n     ".split('')
+ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n   ".split('')
 NUM_OPERATIONS = 1000
 attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES, Tandem.Constants.INDENT_ATTRIBUTES)
 attributeKeys = _.keys(attributes)
@@ -85,7 +85,7 @@ $(document).ready( ->
           console.error operation, curHtml
           console.error 'writer', writerDelta
           console.error 'reader', readerDelta
-          callback('Editor diversion')
+          callback("Editor diversion after #{NUM_OPERATIONS - operationsLeft} operations")
       else
         callback(null)
     )
@@ -95,11 +95,9 @@ $(document).ready( ->
       console.error err.message if err.message?
       console.error err.stack if err.stack?
     else
-      writerHtml = Tandem.Utils.cleanHtml(writer.doc.root.innerHTML)
-      readerHtml = Tandem.Utils.cleanHtml(reader.doc.root.innerHTML)
       writerDelta = writer.getDelta()
       readerDelta = reader.getDelta()
-      if writerHtml == readerHtml && _.isEqual(writerDelta, readerDelta)
+      if _.isEqual(writerDelta, readerDelta)
         time = (new Date() - start) / 1000
         console.info "Fuzzing passed"
         console.info time, 'seconds'
