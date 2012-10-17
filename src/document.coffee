@@ -154,10 +154,10 @@ class TandemDocument
       return false
 
   cleanNode: (lineNode) ->
-    lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
     line = this.findLine(lineNode)
-    if line?
-      return this.updateLine(line)
+    if line? && this.updateLine(line)
+      lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
+      return true
     return false
 
   detectChange: ->

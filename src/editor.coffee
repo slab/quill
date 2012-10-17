@@ -285,6 +285,7 @@ class TandemEditor extends EventEmitter2
           line = @doc.findLine(lineNode)
           @doc.updateLine(line) if line?
         )
+        @doc.rebuildDirty()
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
@@ -327,6 +328,7 @@ class TandemEditor extends EventEmitter2
             # TODO could be more clever about if we need to call this
             Tandem.Document.fixListNumbering(@doc.root)
         )
+        @doc.rebuildDirty()
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
