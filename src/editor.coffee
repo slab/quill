@@ -207,8 +207,6 @@ class TandemEditor extends EventEmitter2
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
-    currentDeltas = JetDelta.copy(oldDelta).deltas
-    curDeltaOffset = 0
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
         this.insertAt(index + offset, delta.text, false)
@@ -218,29 +216,17 @@ class TandemEditor extends EventEmitter2
         offset += delta.getLength()
       else if JetDelta.isRetain(delta)
         if delta.start > index
-          length = delta.start - index
-          this.deleteAt(index + offset, length, false)
+          this.deleteAt(index + offset, delta.start - index, false)
           offset -= (delta.start - index)
-          while length >= currentDeltas[0].text.length - curDeltaOffset
-            length -= (currentDeltas[0].text.length - curDeltaOffset)
-            currentDeltas.splice(0, 1)
-            curDeltaOffset = 0
-        else
-          start = index + offset
-          length = delta.end - delta.start
-          while length > 0
-            attributes = _.extend({}, currentDeltas[0].attributes, delta.attributes)
-            deltaLength = currentDeltas[0].text.length - curDeltaOffset
-            if deltaLength <= length
-              currentDeltas.splice(0, 1)
-              curDeltaOffset = 0
-            else
-              curDeltaOffset += length
-            _.each(attributes, (value, attr) =>
-              this.applyAttribute(start, Math.min(deltaLength, length), attr, value, false)
-            )
-            start += deltaLength
-            length -= deltaLength
+        deltasInRange = oldDelta.getDeltasAt(delta)
+        deltaOffset = 0
+        _.each(deltasInRange, (deltaInRange) =>
+          attributes = _.extend({}, deltaInRange.attributes, delta.attributes)
+          _.each(attributes, (value, attr) =>
+            this.applyAttribute(delta.start + offset + deltaOffset, deltaInRange.text.length, attr, value, false)
+          )
+          deltaOffset += deltaInRange.text.length
+        )
         index = delta.end
       else
         console.warn('Unrecognized type in delta', delta)
@@ -251,7 +237,7 @@ class TandemEditor extends EventEmitter2
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
-    console.assert(_.isEqual(composed, newDelta), oldDelta, delta, newDelta, composed)
+    console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
 
   applyLineAttribute: (line, attr, value) ->
     indent = if _.isNumber(value) then value else (if value then 1 else 0)
