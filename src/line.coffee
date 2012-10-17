@@ -49,7 +49,11 @@ class TandemLine extends LinkedList.Node
     this.wrapText(root)
     this.mergeAdjacent(root)
     this.wrapText(root)
-    root.appendChild(root.ownerDocument.createElement('br')) if root.firstChild == null
+    if root.firstChild == null
+      if root.tagName == 'OL' || root.tagName == 'UL'
+        root.appendChild(root.ownerDocument.createElement('li'))
+        root = root.firstChild
+      root.appendChild(root.ownerDocument.createElement('br'))
 
   @removeRedundant: (root) ->
     tandemKey = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
