@@ -59,7 +59,7 @@ class TandemEditor extends EventEmitter2
         white-space: pre;
       }
 
-      ##{TandemEditor.CONTAINER_ID} { outline: none; }
+      ##{TandemEditor.CONTAINER_ID} { min-height: 100%; outline: none; }
       
       a { cursor: pointer; text-decoration: underline; }
       b { font-weight: bold; }
