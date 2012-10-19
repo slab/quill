@@ -7,7 +7,7 @@
 describe('Selection', ->
   describe('preserve', ->
     tests = 
-      insertTests:
+      'insert tests':
         'insert before':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(1, "A")
@@ -53,7 +53,7 @@ describe('Selection', ->
           fn: (editor) -> editor.insertAt(10, "\n")
           expected: [0, '<ol><li><span><br></span></li></ol>', 1]
 
-      deleteTests:
+      'delete tests':
         'delete before':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(1, 2)
@@ -104,7 +104,7 @@ describe('Selection', ->
           fn: (editor) -> editor.deleteAt(2, 6)
           expected: ['<div><span>01||89</span></div>']
 
-      applyAttributeTests:
+      'apply attribute tests':
         'apply leaf attribute before': 
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.applyAttribute(1, 2, 'bold', true)
@@ -150,7 +150,7 @@ describe('Selection', ->
           fn: (editor) -> editor.applyAttribute(1, 2, 'list', 1)
           expected: ['<ol><li><span>0123|45|6789</span></li></ol>']
 
-      removeAttributeTests:
+      'remove attribute tests':
         'remove leaf attribute before': 
           lines: ['<div><span>0</span><b>12</b><span>3|45|6789</span></div>']
           fn: (editor) -> editor.applyAttribute(1, 2, 'bold', false)
@@ -201,12 +201,59 @@ describe('Selection', ->
           fn: (editor) -> editor.applyAttribute(1, 2, 'list', false)
           expected: ['<div><span>0123|45|6789</span></div>']
 
+    findIndexes = (html) ->
+      $('#editor-container').html(html)
+      editor = new Tandem.Editor('editor-container')
+      lines = editor.doc.lines.toArray()
+      lineIndex = 0
+      return _.reduce(lines, (indexes, line) ->
+        offset = 0
+        while line.node.textContent.indexOf("|", offset) > -1
+          index = line.node.textContent.indexOf("|", offset)
+          indexes.push(lineIndex + index - indexes.length)
+          offset = index + 1
+        lineIndex += line.node.textContent.length + 1
+        return indexes
+      , [])
+
+    describe('findIndexes', (html) ->
+      it('should find simple indexes', ->
+        indexes = findIndexes('<div><span>01|23|4</span></div>')
+        expect(indexes).to.deep.equal([2,4])
+      )
+
+      it('should find multiline indexes', ->
+        indexes = findIndexes('<div><span>01|234</span></div><div><span>67|89</span></div>')
+        expect(indexes).to.deep.equal([2,8])
+      )
+
+      it('should find collapsed indexes', ->
+        indexes = findIndexes('<div><span>012||34</span></div>')
+        expect(indexes).to.deep.equal([3,3])
+      )
+    )
 
     _.each(tests, (testGroup, groupName) ->
       describe(groupName, ->
         _.each(testGroup, (test, name) ->
           it(name, ->
-            expect(1).to.equal(1)
+            html = Tandem.Utils.cleanHtml(test.lines.join(''))
+            expectedHtml = _.map(test.expected, (line) ->
+              return if _.isNumber(line) then test.lines[line] else line
+            ).join('')
+            [start, end] = findIndexes(html)
+            expectedIndexes = findIndexes(expectedHtml)
+            html = html.replace('|', '')
+            expectedHtml = expectedHtml.replace('|', '')
+            $('#editor-container').html(html)
+            editor = new Tandem.Editor('editor-container')
+            editor.setSelection(new Tandem.Range(editor, start, end))
+            sel = editor.getSelection()
+            expect([sel.start.getIndex(), sel.end.getIndex()]).to.deep.equal([start, end])
+            test.fn(editor)
+            sel = editor.getSelection()
+            expect(sel).to.exist
+            expect([sel.start.getIndex(), sel.end.getIndex()]).to.deep.equal(expectedIndexes)
           )
         )
       )
