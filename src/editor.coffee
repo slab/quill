@@ -50,17 +50,17 @@ class TandemEditor extends EventEmitter2
     style = doc.createElement('style')
     style.type = 'text/css'
     css = "
-      body { 
+      ##{TandemEditor.CONTAINER_ID} {
         font-family: 'Helvetica', 'Arial', san-serif;
         font-size: 13px;
         line-height: 15px;
-        margin: 0px;
-        padding: 10px 15px; 
-        white-space: pre;
+        min-height: 100%; 
+        outline: none;
+        tab-size: 4;
+        white-space: pre-wrap;
       }
-
-      ##{TandemEditor.CONTAINER_ID} { min-height: 100%; outline: none; }
       
+      body { margin: 0px; padding: 10px 15px; }
       a { cursor: pointer; text-decoration: underline; }
       b { font-weight: bold; }
       i { font-style: italic; }
