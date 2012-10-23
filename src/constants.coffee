@@ -74,10 +74,6 @@ TandemConstants =
     'small'
   ]
 
-  IGNORE_CLASSES: [
-    'tab'
-  ]
-
   # Missing rule implies removal
   LINE_RULES: {
     'A'         : {}
@@ -118,6 +114,10 @@ TandemConstants =
 
   MAX_INDENT: 9
   MIN_INDENT: 1     # Smallest besides not having an indent at all
+
+  SPECIAL_CLASSES:
+    ATOMIC: 'atom'
+    EXTERNAL: 'ext'
   
 
 TandemConstants.LINE_ATTRIBUTES = [].concat(_.keys(TandemConstants.INDENT_ATTRIBUTES), TandemConstants.ALIGN_ATTRIBUTES).sort()

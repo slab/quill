@@ -6,7 +6,7 @@ TandemUtils =
   breakBlocks: (root) ->
     lineNodes = [root]
     this.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE && !Tandem.Utils.isIgnoreNode(node)
+      if node.nodeType == node.ELEMENT_NODE && Tandem.Utils.canModify(node)
         toBreak = []
         if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
           [left1, left2, didLeftSplit] = this.splitNode(root, index)
@@ -34,6 +34,12 @@ TandemUtils =
       return node
     )
     return lineNodes
+
+  canModify: (node) ->
+    return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+
+  canRemove: (node) ->
+    return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
 
   cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
@@ -146,11 +152,6 @@ TandemUtils =
       return false
     )
     return indent
-
-  isIgnoreNode: (node) ->
-    return _.any(Tandem.Constants.IGNORE_CLASSES, (cssClass) -> 
-      return node.classList.contains(cssClass)
-    )
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE

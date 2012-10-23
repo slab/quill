@@ -358,7 +358,7 @@ class TandemEditor extends EventEmitter2
     position = Tandem.Position.makePosition(this, startIndex)
     startIndex = position.getIndex()
     leaf = position.getLeaf()
-    if _.keys(leaf.attributes).length > 0 || Tandem.Utils.isIgnoreNode(leaf.node)
+    if _.keys(leaf.attributes).length > 0 || !Tandem.Utils.canModify(leaf.node)
       [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
       [beforeNode, afterNode] = leaf.line.splitContents(lineOffset)
       parentNode = beforeNode?.parentNode || afterNode?.parentNode
@@ -389,8 +389,10 @@ class TandemEditor extends EventEmitter2
       if selection
         startMarker = @doc.root.ownerDocument.createElement('span')
         startMarker.classList.add('sel-marker')
+        startMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
         endMarker = @doc.root.ownerDocument.createElement('span')
         endMarker.classList.add('sel-marker')
+        endMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
         startOffset = selection.start.offset
         endOffset = selection.end.offset
         if selection.start.leafNode == selection.end.leafNode
@@ -410,10 +412,11 @@ class TandemEditor extends EventEmitter2
         endParent = endMarker.parentNode
         startOffset = Tandem.Position.getIndex(startMarker, 0, startParent)
         endOffset = Tandem.Position.getIndex(endMarker, 0, endParent)
-        removeSelectionMarkers(root)
+        removeSelectionMarkers()
         startParent.normalize()
         endParent.normalize() if endParent != startParent
-        Tandem.Range.setSelection(new Tandem.Position(this, startParent, startOffset), new Tandem.Position(this, startParent, startOffset))
+        range = new Tandem.Range(this, new Tandem.Position(this, startParent, startOffset), new Tandem.Position(this, startParent, startOffset))
+        this.setSelection(range)
       else
         console.warn "Not enough markers", startMarker, endMarker
         removeSelectionMarkers()

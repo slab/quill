@@ -7,6 +7,7 @@ class TandemLeaf extends LinkedList.Node
 
   @isLeafNode: (node) ->
     return false if !node?
+    return false if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
     return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
     return true if node.tagName == 'BR'
     return true if node.classList?.contains(Tandem.Leaf.TAB_NODE_CLASS)
@@ -19,6 +20,7 @@ class TandemLeaf extends LinkedList.Node
     if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
       @node.textContent = "" if @node.tagName == 'BR'
     else
+      @node.classList.add(Tandem.Constants.ATOMIC_CLASS)
       @node.textContent = "\t"
     @text = @node.textContent
     @length = @text.length
