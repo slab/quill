@@ -370,10 +370,10 @@ class TandemEditor extends EventEmitter2
         parent = leaf.node.parentNode
         parent.removeChild(leaf.node)
         leaf.node = parent.ownerDocument.createElement('span')
-        leaf.setText(text)
+        leaf.node.textContent = text
         parent.appendChild(leaf.node)
       else
-        leaf.setText(leaf.node.textContent.substr(0, position.offset) + text + leaf.node.textContent.substr(position.offset))
+        leaf.insertText(position.offset, text)
     @doc.updateLine(leaf.line)
 
   preserveSelection: (modPosition, charAdditions, fn) ->
@@ -401,7 +401,6 @@ class TandemEditor extends EventEmitter2
         selection.start.leafNode.insertBefore(startMarker, selection.start.leafNode.lastChild)
         selection.end.leafNode.lastChild.splitText(endOffset)
         selection.end.leafNode.insertBefore(endMarker, selection.end.leafNode.lastChild)
-      console.log @id, @doc.root.innerHTML
 
     restoreSelectionMarkers = =>
       markers = @doc.root.getElementsByClassName('sel-marker')
@@ -410,12 +409,12 @@ class TandemEditor extends EventEmitter2
       if startMarker && endMarker
         startParent = startMarker.parentNode
         endParent = endMarker.parentNode
+        startParent.normalize()
+        endParent.normalize() if endParent != startParent
         startOffset = Tandem.Position.getIndex(startMarker, 0, startParent)
         endOffset = Tandem.Position.getIndex(endMarker, 0, endParent)
         removeSelectionMarkers()
-        startParent.normalize()
-        endParent.normalize() if endParent != startParent
-        range = new Tandem.Range(this, new Tandem.Position(this, startParent, startOffset), new Tandem.Position(this, startParent, startOffset))
+        range = new Tandem.Range(this, new Tandem.Position(this, startParent, startOffset), new Tandem.Position(this, endParent, endOffset))
         this.setSelection(range)
       else
         console.warn "Not enough markers", startMarker, endMarker
@@ -424,7 +423,6 @@ class TandemEditor extends EventEmitter2
 
     selection = Tandem.Range.getSelection(this)
     if selection?
-      console.log 'preserving!'
       insertSelectionMarkers()
       fn()
       restoreSelectionMarkers()

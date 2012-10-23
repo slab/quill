@@ -4,7 +4,7 @@
 class TandemPosition
   @findDeepestNode: (editor, node, offset) ->
     if offset <= node.textContent.length    # We are at right subtree, dive deeper
-      if node.firstChild? && node.firstChild.nodeType != node.TEXT_NODE
+      if node.firstChild?
         TandemPosition.findDeepestNode(editor, node.firstChild, offset)
       else
         if offset == node.textContent.length && node.nextSibling?
@@ -24,8 +24,9 @@ class TandemPosition
 
   @findLeafNode: (editor, node, offset) ->
     [node, offset] = TandemPosition.findDeepestNode(editor, node, offset)
-    # TODO potential bug if double text node has sibling text node
-    node = node.parentNode if node.nodeType == node.TEXT_NODE
+    if node.nodeType == node.TEXT_NODE
+      offset = Tandem.Position.getIndex(node, offset, node.parentNode)
+      node = node.parentNode
     return [node, offset]
   
   @getIndex: (node, index, offsetNode = null) ->
