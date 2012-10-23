@@ -377,8 +377,71 @@ class TandemEditor extends EventEmitter2
     @doc.updateLine(leaf.line)
 
   preserveSelection: (modPosition, charAdditions, fn) ->
+    removeSelectionMarkers = =>
+      markers = @doc.root.getElementsByClassName('sel-marker')
+      _.each(_.clone(markers), (marker) ->
+        marker.parentNode.removeChild(marker)
+      )
+
+    insertSelectionMarkers = =>
+      removeSelectionMarkers()
+      selection = this.getSelection()
+      if selection
+        startMarker = @doc.root.ownerDocument.createElement('span')
+        startMarker.classList.add('sel-marker')
+        endMarker = @doc.root.ownerDocument.createElement('span')
+        endMarker.classList.add('sel-marker')
+        startOffset = selection.start.offset
+        endOffset = selection.end.offset
+        if selection.start.leafNode == selection.end.leafNode
+          endOffset -= startOffset
+        selection.start.leafNode.lastChild.splitText(startOffset)
+        selection.start.leafNode.insertBefore(startMarker, selection.start.leafNode.lastChild)
+        selection.end.leafNode.lastChild.splitText(endOffset)
+        selection.end.leafNode.insertBefore(endMarker, selection.end.leafNode.lastChild)
+      console.log @id, @doc.root.innerHTML
+
+    restoreSelectionMarkers = =>
+      markers = @doc.root.getElementsByClassName('sel-marker')
+      startMarker = markers[0]
+      endMarker = markers[1]
+      if startMarker && endMarker
+        startParent = startMarker.parentNode
+        endParent = endMarker.parentNode
+        startOffset = Tandem.Position.getIndex(startMarker, 0, startParent)
+        endOffset = Tandem.Position.getIndex(endMarker, 0, endParent)
+        removeSelectionMarkers(root)
+        startParent.normalize()
+        endParent.normalize() if endParent != startParent
+        Tandem.Range.setSelection(new Tandem.Position(this, startParent, startOffset), new Tandem.Position(this, startParent, startOffset))
+      else
+        console.warn "Not enough markers", startMarker, endMarker
+        removeSelectionMarkers()
+
+
     selection = Tandem.Range.getSelection(this)
     if selection?
+      console.log 'preserving!'
+      insertSelectionMarkers()
+      fn()
+      restoreSelectionMarkers()
+      return
+      # Find text node of start
+      # Split text node with splitText(offset)
+      # Insert an invisible span to hold selection
+      # Repeat for end node
+      # Ignore invisible span everywhere
+        # Guarantee it will not be removed!!!
+      # We need to survive normalization...
+
+      # Do function
+      
+      # Find invisible nodes, note position in parent
+      # Remvoe node, normalize() parent
+      # Place cursor in noted position in parent
+      # IMPORTANT: Do we place before or after the invisible node?
+
+
       isBodyChild = (node) -> return node.parentNode?.id == TandemEditor.CONTAINER_ID
       isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
       startBlock = Tandem.Utils.findAncestor(selection.start.leafNode, isBlockTag)
