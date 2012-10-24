@@ -21,12 +21,12 @@ describe('Selection', ->
         'insert at beginning of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "A")
-          expected: ['<div><span>0123A|45|6789</span></div>']
+          expected: ['<div><span>0123|A45|6789</span></div>']
 
         'insert at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "A")
-          expected: ['<div><span>0123|45|A6789</span></div>']
+          expected: ['<div><span>0123|45|6789</span></div>']
 
         'insert in middle of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
@@ -41,7 +41,7 @@ describe('Selection', ->
         'insert newline at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "\n")
-          expected: ['<div><span>0123|45|</span></div>', '<div><span>6789</span></div>']
+          expected: ['<div><span>0123|45</span></div>', '<div><span>|6789</span></div>']
 
         'insert newline at middle of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
@@ -57,7 +57,7 @@ describe('Selection', ->
         'delete before':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(1, 2)
-          expected: ['<div><span>0123|45|6789</span></div>']
+          expected: ['<div><span>03|45|6789</span></div>']
 
         'delete after':
           lines: ['<div><span>0123|45|6789</span></div>']
@@ -81,7 +81,7 @@ describe('Selection', ->
 
         'delete selection':
           lines: ['<div><span>012|3456|789</span></div>']
-          fn: (editor) -> editor.deleteAt(4, 2)
+          fn: (editor) -> editor.deleteAt(3, 4)
           expected: ['<div><span>012||789</span></div>']
 
         'delete containing selection': 
@@ -243,8 +243,8 @@ describe('Selection', ->
             ).join('')
             [start, end] = findIndexes(html)
             expectedIndexes = findIndexes(expectedHtml)
-            html = html.replace('|', '')
-            expectedHtml = expectedHtml.replace('|', '')
+            html = html.replace(/\|/g, '')
+            expectedHtml = expectedHtml.replace(/\|/g, '')
             $('#editor-container').html(html)
             editor = new Tandem.Editor('editor-container')
             editor.setSelection(new Tandem.Range(editor, start, end))
