@@ -3,7 +3,9 @@
 
 class TandemPosition
   @findDeepestNode: (editor, node, offset) ->
-    if offset <= node.textContent.length    # We are at right subtree, dive deeper
+    # We are at right subtree, dive deeper
+    isLineNode = Tandem.Line.isLineNode(node)
+    if offset < node.textContent.length || (offset == node.textContent.length && (!node.nextSibling? || isLineNode))
       if node.firstChild?
         TandemPosition.findDeepestNode(editor, node.firstChild, offset)
       else
@@ -12,7 +14,7 @@ class TandemPosition
         else
           return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
-      if Tandem.Line.isLineNode(node)
+      if isLineNode
         line = editor.doc.findLine(node)
         offset -= line.length + 1
       else

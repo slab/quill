@@ -222,7 +222,7 @@ describe('Range', ->
 
   describe('getLeafNodes', ->
     $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
-    editor = new Tandem.Editor('editor-container')
+    editor = new Tandem.Editor('editor-container', false)
     container = editor.doc.root
     line1 = container.firstChild
     line2 = container.lastChild

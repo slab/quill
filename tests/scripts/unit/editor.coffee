@@ -703,7 +703,7 @@ describe('Editor', ->
             <b>abcdefg</b>
           </div>'
     }]
-
+    
 
     _.each(tests, (test) ->
       starts = if _.isNumber(test.start) then [test.start] else test.start

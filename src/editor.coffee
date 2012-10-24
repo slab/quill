@@ -407,14 +407,17 @@ class TandemEditor extends EventEmitter2
       startMarker = markers[0]
       endMarker = markers[1]
       if startMarker && endMarker
-        startParent = startMarker.parentNode
-        endParent = endMarker.parentNode
-        startParent.normalize()
-        endParent.normalize() if endParent != startParent
-        startOffset = Tandem.Position.getIndex(startMarker, 0, startParent)
-        endOffset = Tandem.Position.getIndex(endMarker, 0, endParent)
+        startLineNode = @doc.findLineNode(startMarker)
+        endLineNode = @doc.findLineNode(endMarker)
+        startOffset = Tandem.Position.getIndex(startMarker, 0, startLineNode)
+        endOffset = Tandem.Position.getIndex(endMarker, 0, endLineNode)
         removeSelectionMarkers()
-        range = new Tandem.Range(this, new Tandem.Position(this, startParent, startOffset), new Tandem.Position(this, endParent, endOffset))
+        startLine = @doc.findLine(startLineNode)
+        startLine.rebuild()
+        if startLineNode != endLineNode
+          endLine = @doc.findLine(endLineNode)
+          endLine.rebuild()
+        range = new Tandem.Range(this, new Tandem.Position(this, startLineNode, startOffset), new Tandem.Position(this, endLineNode, endOffset))
         this.setSelection(range)
       else
         console.warn "Not enough markers", startMarker, endMarker
@@ -426,6 +429,7 @@ class TandemEditor extends EventEmitter2
       insertSelectionMarkers()
       fn()
       restoreSelectionMarkers()
+      this.checkSelectionChange()
       return
       # Find text node of start
       # Split text node with splitText(offset)

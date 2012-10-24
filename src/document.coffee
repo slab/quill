@@ -174,6 +174,7 @@ class TandemDocument
     return line.findLeaf(node)
 
   findLine: (node) ->
+    node = this.findLineNode(node)
     return @lineMap[node.id]
 
   findLineAtOffset: (index) ->
