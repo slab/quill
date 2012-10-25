@@ -49,7 +49,7 @@ class TandemLine extends LinkedList.Node
     this.wrapText(root)
     this.mergeAdjacent(root)
     this.wrapText(root)
-    if root.firstChild == null
+    if root.childNodes.length <= root.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}").length
       if root.tagName == 'OL' || root.tagName == 'UL'
         root.appendChild(root.ownerDocument.createElement('li'))
         root = root.firstChild
