@@ -1,6 +1,5 @@
 #= require diff_match_patch
 #= require coffee/ot/jetsync
-#= require coffee/editor/attribution
 
 DIFF_DELETE = -1
 DIFF_INSERT = 1
@@ -58,16 +57,17 @@ class JetState
 
 
 class JetTextState extends JetState
-  constructor: (@editor, @client, shadow, @sessionId) ->
+  constructor: (@editor, @client, delta, @sessionId) ->
     @type = JetState.TEXT
     @userId = @client.settings.userId
-    this.reset(shadow)
+    this.reset(delta)
 
-  reset: (shadow) ->
-    @editor.setText(shadow)
-    @arrived = JetDelta.getInitial(shadow)
-    @inFlight = JetDelta.getIdentity(shadow.length)
-    @inLine = JetDelta.getIdentity(shadow.length)
+  reset: (delta) ->
+    delta = JetDelta.getInitial(delta) if _.isString(delta)
+    @editor.applyDelta(delta)
+    @arrived = delta
+    @inFlight = JetDelta.getIdentity(@arrived.endLength)
+    @inLine = JetDelta.getIdentity(@arrived.endLength)
 
   localUpdate: (delta) ->
     this.applyDeltaToCursors(delta, @userId)
