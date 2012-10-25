@@ -23,7 +23,7 @@ $(document).ready( ->
 
   delegate = new Object()
   jetClient = new JetClient({delegate: delegate})
-  textState = new JetTextState(editor, jetClient, "", Stypi.configs.sessionId)
+  textState = new JetTextState(editor, jetClient, JetDelta.makeDelta(Stypi.configs.head), Stypi.configs.sessionId)
   chatState = new JetChatState(editor, jetClient, [], Stypi.configs.sessionId)
   cursorState = new JetCursorState(editor, jetClient, {}, Stypi.configs.sessionId)
   jetClient.addState(textState)
