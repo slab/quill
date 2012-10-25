@@ -218,14 +218,13 @@ class TandemEditor extends EventEmitter2
         if delta.start > index
           this.deleteAt(index + offset, delta.start - index, false)
           offset -= (delta.start - index)
-        deltasInRange = oldDelta.getDeltasAt(delta)
-        deltaOffset = 0
-        _.each(deltasInRange, (deltaInRange) =>
-          attributes = _.extend({}, deltaInRange.attributes, delta.attributes)
-          _.each(attributes, (value, attr) =>
-            this.applyAttribute(delta.start + offset + deltaOffset, deltaInRange.text.length, attr, value, false)
-          )
-          deltaOffset += deltaInRange.text.length
+        attributes = _.clone(delta.attributes)
+        # TODO fix need to have special case
+        if attributes.indent == null
+          this.applyAttribute(delta.start + offset, delta.end - delta.start, 'indent', null, false)
+          delete attributes['indent']
+        _.each(attributes, (value, attr) =>
+          this.applyAttribute(delta.start + offset, delta.end - delta.start, attr, value, false)
         )
         index = delta.end
       else
@@ -430,7 +429,6 @@ class TandemEditor extends EventEmitter2
       else
         console.warn "Not enough markers", startMarker, endMarker
         removeSelectionMarkers()
-
 
     selection = Tandem.Range.getSelection(this)
     if selection?

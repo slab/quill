@@ -4,7 +4,7 @@ attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG
 attributeKeys = _.keys(attributes)
 
 seed = Math.random()
-#seed = ""
+seed = "0.32156493584625423"
 console.log seed
 Math.seedrandom(seed.toString())
 
@@ -68,7 +68,8 @@ $(document).ready( ->
   , (callback) ->
     operationsLeft -= 1
     _.defer( ->
-      curHtml = writer.doc.root.innerHTML
+      writerHTML = writer.doc.root.innerHTML
+      readerHTML = reader.doc.root.innerHTML
       operation = getRandomOperation(writer)
       if operation?
         try
@@ -82,7 +83,9 @@ $(document).ready( ->
         if _.isEqual(writerDelta, readerDelta)
           callback(null)
         else
-          console.error operation, curHtml
+          console.error operation
+          console.error writerHTML
+          console.error readerHTML
           console.error 'writer', writerDelta
           console.error 'reader', readerDelta
           callback("Editor diversion after #{NUM_OPERATIONS - operationsLeft} operations")
