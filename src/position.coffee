@@ -14,11 +14,7 @@ class TandemPosition
         else
           return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
-      if isLineNode
-        line = editor.doc.findLine(node)
-        offset -= line.length + 1
-      else
-        offset -= node.textContent.length
+      offset -= node.textContent.length + (if isLineNode then 1 else 0)
       TandemPosition.findDeepestNode(editor, node.nextSibling, offset)
     else
       console.error node, offset, editor.doc.root

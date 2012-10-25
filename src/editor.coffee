@@ -218,13 +218,12 @@ class TandemEditor extends EventEmitter2
         if delta.start > index
           this.deleteAt(index + offset, delta.start - index, false)
           offset -= (delta.start - index)
-        attributes = _.clone(delta.attributes)
-        # TODO fix need to have special case
-        if attributes.indent == null
-          this.applyAttribute(delta.start + offset, delta.end - delta.start, 'indent', null, false)
-          delete attributes['indent']
-        _.each(attributes, (value, attr) =>
-          this.applyAttribute(delta.start + offset, delta.end - delta.start, attr, value, false)
+        # TODO fix need to have special case of applying removals first
+        _.each(delta.attributes, (value, attr) =>
+          this.applyAttribute(delta.start + offset, delta.end - delta.start, attr, value, false) if value == null
+        )
+        _.each(delta.attributes, (value, attr) =>
+          this.applyAttribute(delta.start + offset, delta.end - delta.start, attr, value, false) if value?
         )
         index = delta.end
       else
@@ -278,11 +277,29 @@ class TandemEditor extends EventEmitter2
       this.preserveSelection(startPos, 0 - length, =>
         [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
         [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
-        fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
+        [fragment, leftLineNode, rightLineNode] = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
+        externalNodes = _.clone(fragment.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+        if leftLineNode.textContent.length == 0
+          _.each(externalNodes, (node) ->
+            rightLineNode.insertBefore(node, rightLineNode.firstChild)
+          )
+          _.each(_.clone(leftLineNode.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}")), (node) ->
+            rightLineNode.insertBefore(node, rightLineNode.firstChild)
+          )
+          leftLineNode.parentNode.removeChild(leftLineNode)
+        else
+          _.each(externalNodes, (node) ->
+            leftLineNode.appendChild(node)
+          )
+          Tandem.Utils.mergeNodes(leftLineNode, rightLineNode)
         lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
         _.each(lineNodes, (lineNode) =>
           line = @doc.findLine(lineNode)
-          @doc.updateLine(line) if line?
+          if line?
+            if @doc.root.ownerDocument.getElementById(lineNode.id)
+              @doc.updateLine(line)
+            else
+              @doc.removeLine(line)
         )
         @doc.rebuildDirty()
       )
@@ -335,10 +352,6 @@ class TandemEditor extends EventEmitter2
   insertNewlineAt: (startIndex) ->
     [line, offset] = @doc.findLineAtOffset(startIndex)
     newLine = @doc.splitLine(line, offset)
-    # TODO we need to do this for each line attribute... find more elegant solution
-    this.applyLineAttribute(newLine, 'list', false) if line.attributes.list
-    this.applyLineAttribute(newLine, 'bullet', false) if line.attributes.bullet
-    this.applyLineAttribute(newLine, 'indent', false) if line.attributes.indent
 
   insertTabAt: (startIndex) ->
     [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
@@ -470,7 +483,7 @@ class TandemEditor extends EventEmitter2
     return delta
 
   update: ->
-    return this.trackDelta( =>
+    delta = this.trackDelta( =>
       this.preserveSelection(null, 0, =>
         Tandem.Document.normalizeHtml(@doc.root)
         lines = @doc.lines.toArray()
@@ -491,7 +504,7 @@ class TandemEditor extends EventEmitter2
           lineNode = lineNode.nextSibling
       )
     , true)
-    return
+    return delta
 
 
 

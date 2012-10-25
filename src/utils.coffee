@@ -86,12 +86,7 @@ TandemUtils =
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
       rightStart = next
-    externalNodes = _.clone(fragment.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
-    _.each(externalNodes, (node) ->
-      leftStart.appendChild(node)
-    )
-    Tandem.Utils.mergeNodes(leftStart, rightEnd)
-    return fragment
+    return [fragment, leftStart, rightEnd]
 
   findAncestor: (node, checkFn) ->
     while node? && !checkFn(node)

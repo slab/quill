@@ -4,7 +4,7 @@ attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG
 attributeKeys = _.keys(attributes)
 
 seed = Math.random()
-seed = "0.32156493584625423"
+#seed = ""
 console.log seed
 Math.seedrandom(seed.toString())
 
@@ -75,7 +75,9 @@ $(document).ready( ->
         try
           writer[operation.op].apply(writer, operation.args)
         catch e
-          console.error operation, curHtml
+          console.error operation
+          console.error writerHTML
+          console.error readerHTML
           callback(e)
           return
         writerDelta = writer.doc.toDelta()
