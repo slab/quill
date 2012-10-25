@@ -7,6 +7,40 @@
 describe('Selection', ->
   describe('preserve', ->
     tests = 
+      'basic preservation':
+        'inside a node':
+          lines: ['<div><span>0123|45|6789</span></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0]
+        'entire node':
+          lines: ['<div><span>0123|45|6789</span></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0]
+        'multiple nodes':
+          lines: ['<div><b>0123|4</b><i>5|6789</i></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0]
+        'multiple lines':
+          lines: ['<div><span>0123|4</span></div>', '<div><span>5|6789</span></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0, 1]
+        'entire line':
+          lines: ['<div><span>0123</span></div>', '<div><span>|45|</span></div>', '<div><span>6789</span></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0, 1, 2]
+        'entire document':
+          lines: ['<div><span>|01|</span></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0]
+        'empty document before':
+          lines: ['<div>||<br></div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0]
+        'empty document after':
+          lines: ['<div><br>||</div>']
+          fn: (editor) -> editor.insertAt(0, '')
+          expected: [0]
+
       'insert tests':
         'insert before':
           lines: ['<div><span>0123|45|6789</span></div>']

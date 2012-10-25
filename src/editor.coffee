@@ -397,10 +397,18 @@ class TandemEditor extends EventEmitter2
         endOffset = selection.end.offset
         if selection.start.leafNode == selection.end.leafNode
           endOffset -= startOffset
-        selection.start.leafNode.lastChild.splitText(startOffset)
-        selection.start.leafNode.insertBefore(startMarker, selection.start.leafNode.lastChild)
-        selection.end.leafNode.lastChild.splitText(endOffset)
-        selection.end.leafNode.insertBefore(endMarker, selection.end.leafNode.lastChild)
+        if selection.start.leafNode.lastChild?
+          selection.start.leafNode.lastChild.splitText(startOffset)
+          selection.start.leafNode.insertBefore(startMarker, selection.start.leafNode.lastChild)
+        else
+          console.warn('startOffset is not 0', startOffset) if startOffset != 0
+          selection.start.leafNode.parentNode.insertBefore(startMarker, selection.start.leafNode)
+        if selection.end.leafNode.lastChild?
+          selection.end.leafNode.lastChild.splitText(endOffset)
+          selection.end.leafNode.insertBefore(endMarker, selection.end.leafNode.lastChild)
+        else
+          console.warn('endOffset is not 0', endOffset) if endOffset != 0
+          selection.end.leafNode.parentNode.insertBefore(endMarker, selection.end.leafNode)
 
     restoreSelectionMarkers = =>
       markers = @doc.root.getElementsByClassName('sel-marker')
@@ -429,50 +437,6 @@ class TandemEditor extends EventEmitter2
       insertSelectionMarkers()
       fn()
       restoreSelectionMarkers()
-      this.checkSelectionChange()
-      return
-      # Find text node of start
-      # Split text node with splitText(offset)
-      # Insert an invisible span to hold selection
-      # Repeat for end node
-      # Ignore invisible span everywhere
-        # Guarantee it will not be removed!!!
-      # We need to survive normalization...
-
-      # Do function
-      
-      # Find invisible nodes, note position in parent
-      # Remvoe node, normalize() parent
-      # Place cursor in noted position in parent
-      # IMPORTANT: Do we place before or after the invisible node?
-
-
-      isBodyChild = (node) -> return node.parentNode?.id == TandemEditor.CONTAINER_ID
-      isBlockTag = (node) -> return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-      startBlock = Tandem.Utils.findAncestor(selection.start.leafNode, isBlockTag)
-      endBlock = Tandem.Utils.findAncestor(selection.end.leafNode, isBlockTag)
-      return fn() if !startBlock? || !endBlock?
-      startLine = Tandem.Utils.findAncestor(startBlock, isBodyChild)
-      endLine = Tandem.Utils.findAncestor(endBlock, isBodyChild)
-      startBlockOffset = Tandem.Position.getIndex(selection.start.leafNode, selection.start.offset, startBlock)
-      endBlockOffset = Tandem.Position.getIndex(selection.end.leafNode, selection.end.offset, endBlock)
-      startLineOffset = Tandem.Position.getIndex(startBlock, 0, startLine) + startBlockOffset
-      endLineOffset = Tandem.Position.getIndex(endBlock, 0, endLine) + endBlockOffset
-      fn()
-      if startBlock.parentNode?
-        startPos = new Tandem.Position(this, startBlock, startBlockOffset)
-      else
-        startLine = startLine.ownerDocument.getElementById(startLine.id) if startLine.parentNode == null
-        startPos = new Tandem.Position(this, startLine, startLineOffset)
-      if endBlock.parentNode?
-        endPos = new Tandem.Position(this, startBlock, startBlockOffset)
-      else
-        endLine = endLine.ownerDocument.getElementById(endLine.id) if endLine.parentNode == null
-        endPos = new Tandem.Position(this, endLine, endLineOffset)
-      savedSelectionRange = new Tandem.Range(this, startPos, endPos)
-      [selStart, selEnd] = this.transformSelection(modPosition, savedSelectionRange, charAdditions)
-      savedSelectionRange = new Tandem.Range(this, Tandem.Position.makePosition(this, selStart), Tandem.Position.makePosition(this, selEnd))
-      this.setSelection(savedSelectionRange)
       this.checkSelectionChange()
     else
       fn()
