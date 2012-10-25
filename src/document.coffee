@@ -248,13 +248,8 @@ class TandemDocument
   toDelta: ->
     lines = @lines.toArray()
     deltas = _.flatten(_.map(lines, (line, index) ->
-      lineDeltas = []
-      if index > 0 && line.delta.endLength > 0
-        lineDeltas.push(new JetInsert("\n"))
-      if line.delta.endLength > 0
-        lineDeltas = lineDeltas.concat(JetDelta.copy(line.delta).deltas)
-      else
-        lineDeltas.push(new JetInsert("\n", line.attributes))
+      lineDeltas = JetDelta.copy(line.delta).deltas
+      lineDeltas.push(new JetInsert("\n")) if index < lines.length - 1
       return lineDeltas
     ), true)
     delta = new JetDelta(0, @length, deltas)

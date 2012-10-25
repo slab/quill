@@ -277,29 +277,11 @@ class TandemEditor extends EventEmitter2
       this.preserveSelection(startPos, 0 - length, =>
         [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
         [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
-        [fragment, leftLineNode, rightLineNode] = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
-        externalNodes = _.clone(fragment.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
-        if leftLineNode.textContent.length == 0
-          _.each(externalNodes, (node) ->
-            rightLineNode.insertBefore(node, rightLineNode.firstChild)
-          )
-          _.each(_.clone(leftLineNode.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}")), (node) ->
-            rightLineNode.insertBefore(node, rightLineNode.firstChild)
-          )
-          leftLineNode.parentNode.removeChild(leftLineNode)
-        else
-          _.each(externalNodes, (node) ->
-            leftLineNode.appendChild(node)
-          )
-          Tandem.Utils.mergeNodes(leftLineNode, rightLineNode)
+        fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
         lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
         _.each(lineNodes, (lineNode) =>
           line = @doc.findLine(lineNode)
-          if line?
-            if @doc.root.ownerDocument.getElementById(lineNode.id)
-              @doc.updateLine(line)
-            else
-              @doc.removeLine(line)
+          @doc.updateLine(line) if line?
         )
         @doc.rebuildDirty()
       )
