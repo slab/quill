@@ -1,6 +1,6 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n   ".split('')
 NUM_OPERATIONS = 1000
-attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES, Tandem.Constants.INDENT_ATTRIBUTES)
+attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES)
 attributeKeys = _.keys(attributes)
 
 seed = Math.random()

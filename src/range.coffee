@@ -2,40 +2,9 @@
 #= require rangy/rangy-core
 #= require tandem/position
 
-rangy.init()
+rangy.init()  # getRangy
 
 class TandemRange
-  @getNativeSelection: (editor) ->
-    rangySel = rangy.getSelection(editor.iframe.contentWindow)
-    return null unless rangySel.anchorNode? && rangySel.focusNode?
-    if !rangySel.isBackwards()
-      [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    else
-      [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    return {
-      anchorNode    : anchorNode
-      anchorOffset  : anchorOffset
-      focusNode     : focusNode
-      focusOffset   : focusOffset
-    }
-
-  @getSelection: (editor) ->
-    nativeSel = TandemRange.getNativeSelection(editor)
-    return null unless nativeSel?
-    start = new Tandem.Position(editor, nativeSel.anchorNode, nativeSel.anchorOffset)
-    end = new Tandem.Position(editor, nativeSel.focusNode, nativeSel.focusOffset)
-    return new TandemRange(editor, start, end)
-
-  @setSelection: (editor, range) ->
-    rangySel = rangy.getSelection(editor.iframe.contentWindow)
-    if range?
-      rangySelRange = range.getRangy()
-      rangySel.setSingleRange(rangySelRange)
-    else
-      rangySel.removeAllRanges()
-
-
-
   # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
   # constructor: (TandemEditor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->

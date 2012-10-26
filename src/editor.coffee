@@ -5,6 +5,7 @@
 #= require tandem/document
 #= require tandem/range
 #= require tandem/keyboard
+#= require tandem/selection
 
 class TandemEditor extends EventEmitter2
   @editors: []
@@ -17,9 +18,6 @@ class TandemEditor extends EventEmitter2
     USER_SELECTION_CHANGE : 'user-selection-change'
     USER_TEXT_CHANGE      : 'user-text-change'
 
-  options:
-    POLL_INTERVAL: 500
-
   constructor: (@container, enabled = true) ->
     @id = _.uniqueId(TandemEditor.ID_PREFIX)
     @container = document.getElementById(@container) if _.isString(@container)
@@ -30,10 +28,9 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = true
     @iframe = this.createIframe(@container, keepHTML)
     @doc = new Tandem.Document(this, @iframe.contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
-    @currentSelection = null
+    @selection = new Tandem.Selection(this)
     @keyboard = new Tandem.Keyboard(this)
     this.initContentListeners()
-    this.initSelectionListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
 
@@ -122,7 +119,9 @@ class TandemEditor extends EventEmitter2
 
   enable: ->
     if !@doc.root.getAttribute('contenteditable')
-      @doc.root.setAttribute('contenteditable', true)
+      this.trackDelta( =>
+        @doc.root.setAttribute('contenteditable', true)
+      , false)
       @doc.root.focus()
       position = Tandem.Position.makePosition(this, 0)
       start = new Tandem.Range(this, position, position)
@@ -130,24 +129,17 @@ class TandemEditor extends EventEmitter2
 
   initContentListeners: ->
     onEdit = _.debounce( =>
+      return if @ignoreDomChanges
       delta = this.update()
       if !delta.isIdentity()
-        this.checkSelectionChange()
-        this.setSelection(@currentSelection)
+        #this.checkSelectionChange()
+        #this.setSelection(@currentSelection)
         this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta)
     , 100)
     @doc.root.addEventListener('DOMSubtreeModified', =>
       return if @ignoreDomChanges
       onEdit()
     )
-
-  initSelectionListeners: ->
-    debounceCheckSelectionChange = _.debounce( =>
-      this.checkSelectionChange()
-    , 100)
-    @doc.root.addEventListener('keyup', debounceCheckSelectionChange)
-    @doc.root.addEventListener('mouseup', debounceCheckSelectionChange)
-    setInterval((=> this.checkSelectionChange()), this.options.POLL_INTERVAL)
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
@@ -159,7 +151,7 @@ class TandemEditor extends EventEmitter2
         length = range.end.getIndex() - startIndex
       else
         range = new Tandem.Range(this, startIndex, startIndex + length)
-      this.preserveSelection(range.start, 0, =>
+      @selection.preserve( =>
         [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
         [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex + length)
         if startLine == endLine
@@ -254,13 +246,6 @@ class TandemEditor extends EventEmitter2
       Tandem.Utils.setIndent(line.node, indent)
     line.setDirty()
 
-  checkSelectionChange: ->
-    return if @ignoreDomChanges
-    selection = this.getSelection()
-    if selection != @currentSelection && ((selection? && !selection.equals(@currentSelection)) || !@currentSelection.equals(selection))
-      this.emit(TandemEditor.events.USER_SELECTION_CHANGE, selection)
-      @currentSelection = selection
-
   deleteAt: (startIndex, length, emitEvent = true) ->
     delta = this.trackDelta( =>
       if !_.isNumber(startIndex)
@@ -274,7 +259,7 @@ class TandemEditor extends EventEmitter2
         endPos = Tandem.Position.makePosition(this, startIndex + length)
       startIndex = startPos.getIndex()
       endIndex = endPos.getIndex()
-      this.preserveSelection(startPos, 0 - length, =>
+      @selection.preserve( =>
         [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
         [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
         fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
@@ -300,7 +285,7 @@ class TandemEditor extends EventEmitter2
     return @doc.toDelta()
 
   getSelection: ->
-    return Tandem.Range.getSelection(this)
+    return @selection.getRange()
 
   insertAt: (startIndex, text, emitEvent = true) ->
     delta = this.trackDelta( =>
@@ -308,7 +293,7 @@ class TandemEditor extends EventEmitter2
       index = startIndex = position.getIndex()
       startLine = @doc.findLineAtOffset(index)
       attr = if startLineNode? then startLine.attributes else {}
-      this.preserveSelection(position, text.length, =>
+      @selection.preserve( =>
         lines = text.split("\n")
         _.each(lines, (line, lineIndex) =>
           strings = line.split("\t")
@@ -370,72 +355,8 @@ class TandemEditor extends EventEmitter2
         leaf.insertText(position.offset, text)
     @doc.updateLine(leaf.line)
 
-  preserveSelection: (modPosition, charAdditions, fn) ->
-    removeSelectionMarkers = =>
-      markers = @doc.root.getElementsByClassName('sel-marker')
-      _.each(_.clone(markers), (marker) ->
-        marker.parentNode.removeChild(marker)
-      )
-
-    insertSelectionMarkers = =>
-      removeSelectionMarkers()
-      selection = this.getSelection()
-      if selection
-        startMarker = @doc.root.ownerDocument.createElement('span')
-        startMarker.classList.add('sel-marker')
-        startMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-        endMarker = @doc.root.ownerDocument.createElement('span')
-        endMarker.classList.add('sel-marker')
-        endMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-        startOffset = selection.start.offset
-        endOffset = selection.end.offset
-        if selection.start.leafNode == selection.end.leafNode
-          endOffset -= startOffset
-        if selection.start.leafNode.lastChild?
-          selection.start.leafNode.lastChild.splitText(startOffset)
-          selection.start.leafNode.insertBefore(startMarker, selection.start.leafNode.lastChild)
-        else
-          console.warn('startOffset is not 0', startOffset) if startOffset != 0
-          selection.start.leafNode.parentNode.insertBefore(startMarker, selection.start.leafNode)
-        if selection.end.leafNode.lastChild?
-          selection.end.leafNode.lastChild.splitText(endOffset)
-          selection.end.leafNode.insertBefore(endMarker, selection.end.leafNode.lastChild)
-        else
-          console.warn('endOffset is not 0', endOffset) if endOffset != 0
-          selection.end.leafNode.parentNode.insertBefore(endMarker, selection.end.leafNode)
-
-    restoreSelectionMarkers = =>
-      markers = @doc.root.getElementsByClassName('sel-marker')
-      startMarker = markers[0]
-      endMarker = markers[1]
-      if startMarker && endMarker
-        startLineNode = @doc.findLineNode(startMarker)
-        endLineNode = @doc.findLineNode(endMarker)
-        startOffset = Tandem.Position.getIndex(startMarker, 0, startLineNode)
-        endOffset = Tandem.Position.getIndex(endMarker, 0, endLineNode)
-        removeSelectionMarkers()
-        startLine = @doc.findLine(startLineNode)
-        startLine.rebuild()
-        if startLineNode != endLineNode
-          endLine = @doc.findLine(endLineNode)
-          endLine.rebuild()
-        range = new Tandem.Range(this, new Tandem.Position(this, startLineNode, startOffset), new Tandem.Position(this, endLineNode, endOffset))
-        this.setSelection(range)
-      else
-        console.warn "Not enough markers", startMarker, endMarker
-        removeSelectionMarkers()
-
-    selection = Tandem.Range.getSelection(this)
-    if selection?
-      insertSelectionMarkers()
-      fn()
-      restoreSelectionMarkers()
-      this.checkSelectionChange()
-    else
-      fn()
-
   setSelection: (range) ->
-    Tandem.Range.setSelection(this, range)
+    @selection.setRange(range)
 
   trackDelta: (fn, track = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -456,7 +377,7 @@ class TandemEditor extends EventEmitter2
 
   update: ->
     delta = this.trackDelta( =>
-      this.preserveSelection(null, 0, =>
+      @selection.preserve( =>
         Tandem.Document.normalizeHtml(@doc.root)
         lines = @doc.lines.toArray()
         lineNode = @doc.root.firstChild

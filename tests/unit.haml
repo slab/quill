@@ -31,31 +31,32 @@
         %b<> 123
         %i<> 456
 
-  %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
-  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
-  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
-  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
-  %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
-  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
-  %script{:type => 'text/javascript', :src => '../src/debug.js'}
-  %script{:type => 'text/javascript', :src => '../src/constants.js'}
-  %script{:type => 'text/javascript', :src => '../src/utils.js'}
-  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
-  %script{:type => 'text/javascript', :src => '../src/line.js'}
-  %script{:type => 'text/javascript', :src => '../src/document.js'}
-  %script{:type => 'text/javascript', :src => '../src/position.js'}
-  %script{:type => 'text/javascript', :src => '../src/range.js'}
-  %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
-  %script{:type => 'text/javascript', :src => '../src/editor.js'}
-  %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
-  %script{:type => 'text/javascript', :src => '../lib/chai.js'}
-  :javascript
-    mocha.setup('bdd');
-    expect = chai.expect
-  %script{:type => 'text/javascript', :src => 'scripts/unit/editor.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/unit/normalize.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/unit/range.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/unit/selection.js'}
-  %script{:type => 'text/javascript', :src => 'scripts/unit/utils.js'}
-  :javascript
-    mocha.run();
+    %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/jetsync.js'}
+    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+    %script{:type => 'text/javascript', :src => '../src/debug.js'}
+    %script{:type => 'text/javascript', :src => '../src/constants.js'}
+    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+    %script{:type => 'text/javascript', :src => '../src/line.js'}
+    %script{:type => 'text/javascript', :src => '../src/document.js'}
+    %script{:type => 'text/javascript', :src => '../src/position.js'}
+    %script{:type => 'text/javascript', :src => '../src/range.js'}
+    %script{:type => 'text/javascript', :src => '../src/selection.js'}
+    %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
+    %script{:type => 'text/javascript', :src => '../src/editor.js'}
+    %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
+    %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+    :javascript
+      mocha.setup('bdd');
+      expect = chai.expect
+    %script{:type => 'text/javascript', :src => 'scripts/unit/editor.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/unit/normalize.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/unit/range.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/unit/selection.js'}
+    %script{:type => 'text/javascript', :src => 'scripts/unit/utils.js'}
+    :javascript
+      mocha.run();
