@@ -89,7 +89,7 @@ class TandemRange
     )
 
   getRangy: ->
-    range = rangy.createRangyRange(@editor.iframe.contentWindow)
+    range = rangy.createRangyRange(@editor.contentWindow)
     if @start.leafNode.nodeName != 'BR'
       range.setStart(@start.leafNode.firstChild, @start.offset)
     else

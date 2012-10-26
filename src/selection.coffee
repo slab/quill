@@ -20,7 +20,7 @@ class TandemSelection
 
 
   getNative: ->
-    rangySel = rangy.getSelection(@editor.iframe.contentWindow)
+    rangySel = rangy.getSelection(@editor.contentWindow)
     return null unless rangySel.anchorNode? && rangySel.focusNode?
     if !rangySel.isBackwards()
       [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
@@ -108,7 +108,7 @@ class TandemSelection
       @editor.ignoreDomChanges = oldIgnoreDomChange
 
   setRange: (@range) ->
-    rangySel = rangy.getSelection(@editor.iframe.contentWindow)
+    rangySel = rangy.getSelection(@editor.contentWindow)
     if @range?
       rangySelRange = @range.getRangy()
       rangySel.setSingleRange(rangySelRange)
