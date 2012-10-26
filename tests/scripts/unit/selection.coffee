@@ -5,6 +5,38 @@
 #= require underscore
 
 describe('Selection', ->
+  findIndexes = (html) ->
+    $('#editor-container').html(html)
+    editor = new Tandem.Editor('editor-container')
+    lines = editor.doc.lines.toArray()
+    lineIndex = 0
+    return _.reduce(lines, (indexes, line) ->
+      offset = 0
+      while line.node.textContent.indexOf("|", offset) > -1
+        index = line.node.textContent.indexOf("|", offset)
+        indexes.push(lineIndex + index - indexes.length)
+        offset = index + 1
+      lineIndex += line.node.textContent.length + 1
+      return indexes
+    , [])
+
+  describe('findIndexes', (html) ->
+    it('should find simple indexes', ->
+      indexes = findIndexes('<div><span>01|23|4</span></div>')
+      expect(indexes).to.deep.equal([2,4])
+    )
+
+    it('should find multiline indexes', ->
+      indexes = findIndexes('<div><span>01|234</span></div><div><span>67|89</span></div>')
+      expect(indexes).to.deep.equal([2,8])
+    )
+
+    it('should find collapsed indexes', ->
+      indexes = findIndexes('<div><span>012||34</span></div>')
+      expect(indexes).to.deep.equal([3,3])
+    )
+  )
+  
   describe('preserve', ->
     tests = 
       'basic preservation':
@@ -234,38 +266,6 @@ describe('Selection', ->
           lines: ['<ol><li><span>0123|45|6789</span></li></ol>']
           fn: (editor) -> editor.applyAttribute(1, 2, 'list', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-
-    findIndexes = (html) ->
-      $('#editor-container').html(html)
-      editor = new Tandem.Editor('editor-container')
-      lines = editor.doc.lines.toArray()
-      lineIndex = 0
-      return _.reduce(lines, (indexes, line) ->
-        offset = 0
-        while line.node.textContent.indexOf("|", offset) > -1
-          index = line.node.textContent.indexOf("|", offset)
-          indexes.push(lineIndex + index - indexes.length)
-          offset = index + 1
-        lineIndex += line.node.textContent.length + 1
-        return indexes
-      , [])
-
-    describe('findIndexes', (html) ->
-      it('should find simple indexes', ->
-        indexes = findIndexes('<div><span>01|23|4</span></div>')
-        expect(indexes).to.deep.equal([2,4])
-      )
-
-      it('should find multiline indexes', ->
-        indexes = findIndexes('<div><span>01|234</span></div><div><span>67|89</span></div>')
-        expect(indexes).to.deep.equal([2,8])
-      )
-
-      it('should find collapsed indexes', ->
-        indexes = findIndexes('<div><span>012||34</span></div>')
-        expect(indexes).to.deep.equal([3,3])
-      )
-    )
 
     _.each(tests, (testGroup, groupName) ->
       describe(groupName, ->
