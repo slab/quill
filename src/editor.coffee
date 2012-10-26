@@ -437,16 +437,6 @@ class TandemEditor extends EventEmitter2
   setSelection: (range) ->
     Tandem.Range.setSelection(this, range)
 
-  # TODO use node.compareDocumentPosition for efficiency
-  transformSelection: (modPosition, selectionRange, charAdditions) ->
-    modPos = if modPosition? then modPosition.getIndex() else 0
-    selStart = selectionRange.start.getIndex()
-    selEnd = selectionRange.end.getIndex()
-    selStart = Math.max(selStart + charAdditions, modPos) if modPos <= selStart
-    selEnd = Math.max(selEnd + charAdditions, modPos) if modPos < selEnd
-    selEnd = Math.max(selStart, selEnd)
-    return [selStart, selEnd]
-
   trackDelta: (fn, track = true) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
