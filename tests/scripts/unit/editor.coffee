@@ -259,9 +259,8 @@ describe('Editor', ->
           delta = editor.doc.toDelta()
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml, true)
           editor.doc.buildLines()
-          consistency = editor.doc.checkConsistency(true)
-          expect(editor.doc.toDelta()).to.deep.equal(newDelta)
-          expect(consistency).to.be.true
+          expect(delta).to.deep.equal(editor.doc.toDelta())
+          expect(Tandem.Debug.checkDocumentConsistency(editor.doc, true)).to.be.true
           editor.destroy()
         )
       )
@@ -372,11 +371,11 @@ describe('Editor', ->
       it(test.name, ->
         editor = reset()
         editor.insertAt(test.index, test.text)
-        expect(editor.doc.checkConsistency(true)).to.be.true
+        expect(Tandem.Debug.checkDocumentConsistency(editor.doc, true)).to.be.true
         delta = editor.doc.toDelta()
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
         editor.doc.buildLines()
-        expect(editor.doc.toDelta()).to.deep.equal(delta)
+        expect(delta).to.deep.equal(editor.doc.toDelta())
         editor.destroy()
       )
     )
@@ -582,7 +581,7 @@ describe('Editor', ->
         it(name, ->
           editor = reset()
           editor.deleteAt(start, test.length)
-          expect(editor.doc.checkConsistency(true)).to.be.true
+          expect(Tandem.Debug.checkDocumentConsistency(editor.doc, true)).to.be.true
           delta = editor.doc.toDelta()
           if _.isString(test.expected)
             expected = test.expected
@@ -592,7 +591,7 @@ describe('Editor', ->
             expected = test.expected(index)
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(expected)
           editor.doc.buildLines()
-          expect(editor.doc.toDelta()).to.deep.equal(delta)
+          expect(delta).to.deep.equal(editor.doc.toDelta())
           editor.destroy()
         )
       )
