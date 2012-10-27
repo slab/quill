@@ -5,6 +5,79 @@
 #= require underscore
 
 describe('Editor', ->
+  describe('applyDelta', ->
+    tests =
+      'append character':
+        lines: ['<div><span>0123</span></div>']
+        deltas: [new JetRetain(0,4), new JetInsert('4')]
+        expected: ['<div><span>01234</span></div>']
+      'prepend character':
+        lines: ['<div><span>0123</span></div>']
+        deltas: [new JetInsert('4'), new JetRetain(0,4)]
+        expected: ['<div><span>40123</span></div>']
+      'append formatted character':
+        lines: ['<div><span>0123</span></div>']
+        deltas: [new JetRetain(0,4), new JetInsert('4', {bold: true})]
+        expected: ['<div><span>0123</span><b>4</b></div>']
+      'insert newline in middle of text':
+        lines: ['<div><span>0123</span></div>']
+        deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,4)]
+        expected: ['<div><span>01</span></div>', '<div><span>23</span></div>']
+      'insert newline before line with just newline':
+        lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
+        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
+        expected: [0, 1, 1, 2]
+      'insert newline after line with just newline':
+        lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
+        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
+        expected: [0, 1, 1, 2]
+      'insert newline before list with just newline':
+        lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
+        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
+        expected: [0, '<div><br></div>', 1, 2]
+      'insert newline after list with just newline':
+        lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
+        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
+        expected: [0, 1, '<div><br></div>', 2]
+      'retain entire text':
+        lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
+        deltas: [new JetRetain(0,7)]
+        expected: [0, 1, 2]
+      'retain entire text with format':
+        lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
+        deltas: [new JetRetain(0,7,{bold:true})]
+        expected: ['<div><b>01</b></div>', '<ul><li><b></b></li></ul>', '<div><b>23</b></div>']
+      'retain nothing':
+        lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
+        deltas: []
+        expected: ['<div><br></div>']
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        html = Tandem.Utils.cleanHtml(test.lines.join(''))
+        $('#editor-container').html(html)
+        editor = new Tandem.Editor('editor-container')
+        oldDelta = editor.doc.toDelta()
+        startLength = oldDelta.endLength
+        endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
+        delta = new JetDelta(startLength, endLength, test.deltas)
+        expectedHtml = _.map(test.expected, (line) ->
+          return if _.isNumber(line) then test.lines[line] else line
+        ).join('')
+        editor.applyDelta(delta)
+        newDelta = editor.doc.toDelta()
+        editor.destroy()
+        $('#editor-container').html(expectedHtml)
+        editor = new Tandem.Editor('editor-container')
+        expectedDelta = editor.doc.toDelta()
+        editor.destroy()
+        expect(newDelta).to.deep.equal(expectedDelta)
+      )
+    )
+  )
+
+
+
   describe('applyAttribute', ->
     originalHtml = Tandem.Utils.cleanHtml('
       <div>
