@@ -7,16 +7,29 @@ class TandemSelection
 
 
   constructor: (@editor) ->
-    this.initListeners()
+    @destructors = []
     @range = null
+    this.initListeners()
+
+  destroy: ->
+    _.each(@destructors, (fn) =>
+      fn.call(this)
+    )
+    @destructors = null
 
   initListeners: ->
     debouncedUpdate = _.debounce( =>
+      return if !@destructors?
       this.update()
     , 100)
     @editor.doc.root.addEventListener('keyup', debouncedUpdate)
     @editor.doc.root.addEventListener('mouseup', debouncedUpdate)
-    setInterval((=> this.update()), TandemSelection.POLL_INTERVAL)
+    updateInterval = setInterval(debouncedUpdate, TandemSelection.POLL_INTERVAL)
+    @destructors.push( =>
+      clearInterval(updateInterval)
+      @editor.doc.root.removeEventListener('keyup', debouncedUpdate)
+      @editor.doc.root.removeEventListener('mouseup', debouncedUpdate)
+    )
 
 
   getNative: ->

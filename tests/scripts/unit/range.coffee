@@ -58,47 +58,55 @@ describe('Range', ->
 
       expect(positions[10].leafNode.nodeName).to.equal('BR')
       expect(positions[10].offset).to.equal(0)
+      editor.destroy()
     )
   )
 
 
 
   describe('getText', ->
-    $('#editor-container').html(Tandem.Utils.cleanHtml('
-      <div>
-        <b>123</b>
-        <i>456</i>
-      </div>
-      <div>
-        <b>
-          <s>78</s>
-        </b>
-        <b>
-          <i>90</i>
-          <u>12</u>
-        </b>
-        <b>
-          <s>34</s>
-        </b>
-      <div>
-        <s>5</s>
-        <u>6</u>
-        <s>7</s>
-        <u>8</u>
-      </div>'))
-    editor = new Tandem.Editor('editor-container')
+    reset = ->
+      $('#editor-container').html(Tandem.Utils.cleanHtml('
+        <div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <b>
+            <s>78</s>
+          </b>
+          <b>
+            <i>90</i>
+            <u>12</u>
+          </b>
+          <b>
+            <s>34</s>
+          </b>
+        <div>
+          <s>5</s>
+          <u>6</u>
+          <s>7</s>
+          <u>8</u>
+        </div>'))
+      editor = new Tandem.Editor('editor-container')
+      return editor
+
     text = "123456\n78901234\n5678"
 
     it('should identifiy single node', ->
+      editor = reset()
       _.each(text.split(''), (char, index) ->
         range = new Tandem.Range(editor, index, index + 1)
         expect(range.getText()).to.equal(char)
       )
+      editor.destroy()
     )
 
     it('should identifiy entire document', ->
+      editor = reset()
       range = new Tandem.Range(editor, 0, text.length)
       expect(range.getText()).to.equal(text)
+      editor.destroy()
     )
   )
 
@@ -185,35 +193,39 @@ describe('Range', ->
       attributes: { bold: true }
     }]
 
-    $('#editor-container').html(Tandem.Utils.cleanHtml('
-      <div>
-        <b>123</b>
-        <i>456</i>
-      </div>
-      <div>
-        <b>
-          <s>78</s>
-        </b>
-        <b>
-          <i>90</i>
-          <u>12</u>
-        </b>
-        <b>
-          <s>34</s>
-        </b>
-      <div>
-        <s>5</s>
-        <u>6</u>
-        <s>7</s>
-        <u>8</u>
-      </div>'))
-    editor = new Tandem.Editor('editor-container')
+    reset = ->
+      $('#editor-container').html(Tandem.Utils.cleanHtml('
+        <div>
+          <b>123</b>
+          <i>456</i>
+        </div>
+        <div>
+          <b>
+            <s>78</s>
+          </b>
+          <b>
+            <i>90</i>
+            <u>12</u>
+          </b>
+          <b>
+            <s>34</s>
+          </b>
+        <div>
+          <s>5</s>
+          <u>6</u>
+          <s>7</s>
+          <u>8</u>
+        </div>'))
+      editor = new Tandem.Editor('editor-container')
+      return editor
 
     _.each(tests, (test) ->
       it(test.name, ->
+        editor = reset()
         range = new Tandem.Range(editor, test.start, test.end)
         expect(range.getText()).to.equal(test.text)
         expect(range.getAttributes()).to.eql(_.extend({}, Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES, test.attributes))
+        editor.destroy()
       )
     )
   )
@@ -221,60 +233,76 @@ describe('Range', ->
 
 
   describe('getLeafNodes', ->
-    $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
-    editor = new Tandem.Editor('editor-container', false)
-    container = editor.doc.root
-    line1 = container.firstChild
-    line2 = container.lastChild
+    reset = ->
+      $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
+      editor = new Tandem.Editor('editor-container', false)
+      container = editor.doc.root
+      line1 = container.firstChild
+      line2 = container.lastChild
+      return [editor, container, line1, line2]
 
     it('should select a single node at boundaries', ->
+      [editor, container, line1, line2] = reset()
       range = new Tandem.Range(editor, 0, 3)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(1)
       expect(nodes[0]).to.equal(line1.firstChild)
+      editor.destroy()
     )
     it('should select multiple nodes at boundaries', ->
+      [editor, container, line1, line2] = reset()
       range = new Tandem.Range(editor, 0, 6)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.childNodes[0])
       expect(nodes[1]).to.equal(line1.childNodes[1])
+      editor.destroy()
     )
     it('should select a single node inside boundaries', ->
+      [editor, container, line1, line2] = reset()
       for i in [0..2]
         range = new Tandem.Range(editor, i, i+1)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(line1.firstChild)
+      editor.destroy()
     )
     it('should select multipe nodes inside boundaries', ->
+      [editor, container, line1, line2] = reset()
       for i in [0..2]
         range = new Tandem.Range(editor, i, i+4)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(line1.childNodes[0])
         expect(nodes[1]).to.equal(line1.childNodes[1])
+      editor.destroy()
     )
     it('should select multiple nodes across lines within boundaries', ->
+      [editor, container, line1, line2] = reset()
       range = new Tandem.Range(editor, 0, 6)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.childNodes[0])
       expect(nodes[1]).to.equal(line1.childNodes[1])
+      editor.destroy()
     )
     it('should select multiple nodes across lines outside boundaries', ->
+      [editor, container, line1, line2] = reset()
       range = new Tandem.Range(editor, 5, 8)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.lastChild)
       expect(nodes[1]).to.equal(line2.firstChild)
+      editor.destroy()
     )
     it('should select node collapsed', ->
+      [editor, container, line1, line2] = reset()
       for i in [0..2]
         range = new Tandem.Range(editor, i, i)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(line1.firstChild)
+      editor.destroy()
     )
   )
 )

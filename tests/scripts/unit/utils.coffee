@@ -337,6 +337,7 @@ describe('Utils', ->
         target.appendChild(extraction)
         expect("Fragment " + Tandem.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
         expect("Remains " + Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal("Remains " + test.remains)
+        editor.destroy()
       )
     )
   )

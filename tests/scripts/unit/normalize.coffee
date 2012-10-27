@@ -116,10 +116,12 @@ describe('Normalize', ->
           expectedHtml = _.map(test.expected, (line) ->
             return if _.isNumber(line) then test.lines[line] else line
           ).join('')
+          editor.destroy()
           $('#editor-container').html(Tandem.Utils.cleanHtml(expectedHtml))
           editor = new Tandem.Editor('editor-container')
           expectedDelta = editor.doc.toDelta()
           expect(delta).to.deep.equal(expectedDelta)
+          editor.destroy()
         )
       )
     )

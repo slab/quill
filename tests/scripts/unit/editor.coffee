@@ -259,8 +259,10 @@ describe('Editor', ->
           delta = editor.doc.toDelta()
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml, true)
           editor.doc.buildLines()
-          expect(delta).to.deep.equal(editor.doc.toDelta())
-          expect(editor.doc.checkConsistency(true)).to.be.true
+          consistency = editor.doc.checkConsistency(true)
+          expect(editor.doc.toDelta()).to.deep.equal(newDelta)
+          expect(consistency).to.be.true
+          editor.destroy()
         )
       )
     )
@@ -375,6 +377,7 @@ describe('Editor', ->
         editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
         editor.doc.buildLines()
         expect(editor.doc.toDelta()).to.deep.equal(delta)
+        editor.destroy()
       )
     )
   )
@@ -590,6 +593,7 @@ describe('Editor', ->
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(expected)
           editor.doc.buildLines()
           expect(editor.doc.toDelta()).to.deep.equal(delta)
+          editor.destroy()
         )
       )
     )

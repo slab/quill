@@ -10,7 +10,7 @@ describe('Selection', ->
     editor = new Tandem.Editor('editor-container')
     lines = editor.doc.lines.toArray()
     lineIndex = 0
-    return _.reduce(lines, (indexes, line) ->
+    ret = _.reduce(lines, (indexes, line) ->
       offset = 0
       while line.node.textContent.indexOf("|", offset) > -1
         index = line.node.textContent.indexOf("|", offset)
@@ -19,6 +19,8 @@ describe('Selection', ->
       lineIndex += line.node.textContent.length + 1
       return indexes
     , [])
+    editor.destroy()
+    return ret
 
   describe('findIndexes', (html) ->
     it('should find simple indexes', ->
@@ -288,6 +290,7 @@ describe('Selection', ->
             sel = editor.getSelection()
             expect(sel).to.exist
             expect([sel.start.getIndex(), sel.end.getIndex()]).to.deep.equal(expectedIndexes)
+            editor.destroy()
           )
         )
       )

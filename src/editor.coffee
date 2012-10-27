@@ -27,8 +27,18 @@ class TandemEditor extends EventEmitter2
     @options = _.extend(Tandem.Editor.DEFAULTS, options)
     @id = _.uniqueId(TandemEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
+    @destructors = []
     this.reset(true)
     this.enable() if @options.enabled
+
+  destroy: ->
+    this.disable()
+    @renderer.destroy()
+    @selection.destroy()
+    _.each(@destructors, (fn) =>
+      fn.call(this)
+    )
+    @destructors = null
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
@@ -39,12 +49,14 @@ class TandemEditor extends EventEmitter2
     @doc = new Tandem.Document(this, @contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
     @selection = new Tandem.Selection(this)
     @keyboard = new Tandem.Keyboard(this)
-    this.initContentListeners()
+    this.initListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
 
   disable: ->
-    @doc.root.setAttribute('contenteditable', false)
+    this.trackDelta( =>
+      @doc.root.setAttribute('contenteditable', false)
+    , false)
 
   enable: ->
     if !@doc.root.getAttribute('contenteditable')
@@ -56,15 +68,15 @@ class TandemEditor extends EventEmitter2
       start = new Tandem.Range(this, position, position)
       this.setSelection(start)
 
-  initContentListeners: ->
-    onEdit = _.debounce( =>
-      return if @ignoreDomChanges
+  initListeners: ->
+    deboundedEdit = _.debounce( =>
+      return if @ignoreDomChanges or !@destructors?
       delta = this.update()
       this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
     , 100)
-    @doc.root.addEventListener('DOMSubtreeModified', =>
-      return if @ignoreDomChanges
-      onEdit()
+    @doc.root.addEventListener('DOMSubtreeModified', deboundedEdit)
+    @destructors.push( ->
+      @doc.root.removeEventListener('DOMSubtreeModified', deboundedEdit)
     )
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
