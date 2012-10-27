@@ -25,27 +25,27 @@ describe('Editor', ->
         expected: ['<div><span>01</span></div>', '<div><span>23</span></div>']
       'insert newline before line with just newline':
         lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
+        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,6)]
         expected: [0, 1, 1, 2]
       'insert newline after line with just newline':
         lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
+        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,6)]
         expected: [0, 1, 1, 2]
       'insert newline before list with just newline':
         lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
+        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,6)]
         expected: [0, '<div><br></div>', 1, 2]
       'insert newline after list with just newline':
         lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
+        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,6)]
         expected: [0, 1, '<div><br></div>', 2]
       'retain entire text':
         lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,7)]
+        deltas: [new JetRetain(0,6)]
         expected: [0, 1, 2]
       'retain entire text with format':
         lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,7,{bold:true})]
+        deltas: [new JetRetain(0,6,{bold:true})]
         expected: ['<div><b>01</b></div>', '<ul><li><b></b></li></ul>', '<div><b>23</b></div>']
       'retain nothing':
         lines: ['<div><span>01</span></div>', '<ul><li><br></li></ul>', '<div><span>23</span></div>']

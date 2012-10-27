@@ -101,7 +101,7 @@ class TandemEditor extends EventEmitter2
             this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
             curLine = nextSibling
           this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
-          this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value)
+          this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value) if endLine?
         @doc.rebuildDirty()
       )
     , emitEvent)
