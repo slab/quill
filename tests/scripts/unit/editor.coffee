@@ -78,215 +78,44 @@ describe('Editor', ->
 
 
 
-  describe('applyAttribute', ->
-    originalHtml = Tandem.Utils.cleanHtml('
-      <div>
-        <#>123</#>
-        <i>456</i>
-      </div>
-      <div>
-        <s>7</s>
-        <u>8</u>
-        <s>9</s>
-        <u>0</u>
-      </div>
-      <div>
-        <b>abcdefg</b>
-      </div>
-    ')
-
-    reset = (html = originalHtml) ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml(html, true))
-      editor = new Tandem.Editor('editor-container')
-      editor.ignoreDomChanges = true
-      return editor
-
-    tests = [{
-      target: 'single node'
-      start: 8
-      length: 1
-      expected:
-        '<div>
-          <#>123</#>
-          <i>456</i>
-        </div>
-        <div>
-          <s>7</s>
-          <#>
-            <u>8</u>
-          </#>
-          <s>9</s>
-          <u>0</u>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'multiple nodes'
-      start: 8
-      length: 2
-      expected:
-        '<div>
-          <#>123</#>
-          <i>456</i>
-        </div>
-        <div>
-          <s>7</s>
-          <#>
-            <u>8</u>
-            <s>9</s>
-          </#>
-          <u>0</u>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'part of node'
-      start: 3
-      length: 2
-      expected:
-        '<div>
-          <#>123</#>
-          <#>
-            <i>45</i>
-          </#>
-          <i>6</i>
-        </div>
-        <div>
-          <s>7</s>
-          <u>8</u>
-          <s>9</s>
-          <u>0</u>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'inside of node'
-      start: 4
-      length: 1
-      expected:
-        '<div>
-          <#>123</#>
-          <i>4</i>
-          <#>
-            <i>5</i>
-          </#>
-          <i>6</i>
-        </div>
-        <div>
-          <s>7</s>
-          <u>8</u>
-          <s>9</s>
-          <u>0</u>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'nodes spanning multiple lines'
-      start: 3
-      length: 6
-      expected:
-        '<div>
-          <#>123</#>
-          <#>
-            <i>456</i>
-          </#>
-        </div>
-        <div>
-          <#>
-            <s>7</s>
-            <u>8</u>
-          </#>
-          <s>9</s>
-          <u>0</u>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'entire line'
-      start: 7
-      length: 4
-      expected:
-        '<div>
-          <#>123</#>
-          <i>456</i>
-        </div>
-        <div>
-          <#>
-            <s>7</s>
-            <u>8</u>
-            <s>9</s>
-            <u>0</u>
-          </#>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'entire line with trailing newline'
-      start: 7
-      length: 5
-      expected:
-        '<div>
-          <#>123</#>
-          <i>456</i>
-        </div>
-        <div>
-          <#>
-            <s>7</s>
-            <u>8</u>
-            <s>9</s>
-            <u>0</u>
-          </#>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'entire line with preceding newline'
-      start: 6
-      length: 5
-      expected:
-        '<div>
-          <#>123</#>
-          <i>456</i>
-        </div>
-        <div>
-          <#>
-            <s>7</s>
-            <u>8</u>
-            <s>9</s>
-            <u>0</u>
-          </#>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }, {
-      target: 'entire line with preceding and trailing newline'
-      start: 6
-      length: 6
-      expected:
-        '<div>
-          <#>123</#>
-          <i>456</i>
-        </div>
-        <div>
-          <#>
-            <s>7</s>
-            <u>8</u>
-            <s>9</s>
-            <u>0</u>
-          </#>
-        </div>
-        <div>
-          <b>abcdefg</b>
-        </div>'
-    }]
+  describe('Apply Leaf Attribute', ->
+    tests = 
+      'single node':
+        lines: ['<div><s>0</s><u>1</u><s>2</s></div>']
+        start: 1, length: 1
+        expected: ['<div><s>0</s><#><u>1</u></#><s>2</s></div>']
+      'multiple nodes':
+        lines: ['<div><s>0</s><u>1</u><s>2</s><u>3</u></div>']
+        start: 1, length: 2
+        expected: ['<div><s>0</s><#><u>1</u><s>2</s></#><u>3</u></div>']
+      'part of node':
+        lines: ['<div><#>012</#><i>345</i></div>']
+        start: 3, length: 2
+        expected: ['<div><#>012</#><#><i>34</i></#><i>5</i></div>']
+      'inside of node':
+        lines: ['<div><#>012</#><i>345</i></div>']
+        start: 4, length: 1
+        expected: ['<div><#>012</#><i>3</i><#><i>4</i></#><i>5</i></div>']
+      'nodes spanning multiple lines':
+        lines: ['<div><#>012</#><i>345</i></div>', '<div><s>7</s><u>8</u></div>']
+        start: 3, length: 5
+        expected: ['<div><#>012</#><#><i>345</i></#></div>', '<div><#><s>7</s></#><u>8</u></div>']
+      'entire line':
+        lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 5, length: 2
+        expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
+      'entire line with trailing newline':
+        lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 5, length: 3
+        expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
+      'entire line with preceding newline':
+        lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 4, length: 3
+        expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
+      'entire line with preceding and trailing newline':
+        lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 4, length: 4
+        expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
 
     attributeTests = [{
       attribute: 'bold'
@@ -310,15 +139,20 @@ describe('Editor', ->
       value: 'san-serif'
     }]
 
-    _.each(tests, (test) ->
+    _.each(tests, (test, name) ->
+      originalHtml = test.lines.join('')
+      expectedHtml = _.map(test.expected, (line) ->
+        return if _.isNumber(line) then test.lines[line] else line
+      ).join('')
       _.each(attributeTests, (attrTest) ->
-        it("should set #{attrTest.attribute} to #{attrTest.value} on #{test.target}", ->
+        it("should set #{attrTest.attribute} to #{attrTest.value} on #{name}", ->
           openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute} #{attrTest.value}\"" else attrTest.tagName
-          expected = test.expected.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
+          expected = expectedHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
           [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
-          editor = reset(startHtml)
+          $('#editor-container').html(original)
+          editor = new Tandem.Editor('editor-container')
           editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
           range = new Tandem.Range(editor, test.start, test.start + test.length)
           attributes = range.getAttributes()
@@ -330,11 +164,14 @@ describe('Editor', ->
             else if attrTest.attribute == 'font-family'
               expect(attributes[attrTest.attribute]).to.equal('san-serif')
           delta = editor.doc.toDelta()
-          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(endHtml, true)
-          editor.doc.buildLines()
-          expect(delta).to.deep.equal(editor.doc.toDelta())
-          expect(Tandem.Debug.checkDocumentConsistency(editor.doc, true)).to.be.true
           editor.destroy()
+          $('#editor-container').html(endHtml)
+          editor = new Tandem.Editor('editor-container')
+          expectedDelta = editor.doc.toDelta()
+          consistent = Tandem.Debug.checkDocumentConsistency(editor.doc, true)
+          editor.destroy()
+          expect(delta).to.deep.equal(expectedDelta)
+          expect(consistent).to.be.true
         )
       )
     )
