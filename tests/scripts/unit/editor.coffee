@@ -151,7 +151,7 @@ describe('Editor', ->
           original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
           [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
-          $('#editor-container').html(original)
+          $('#editor-container').html(startHtml)
           editor = new Tandem.Editor('editor-container')
           editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
           range = new Tandem.Range(editor, test.start, test.start + test.length)
@@ -163,6 +163,63 @@ describe('Editor', ->
               expect(attributes[attrTest.attribute]).to.be.undefined
             else if attrTest.attribute == 'font-family'
               expect(attributes[attrTest.attribute]).to.equal('san-serif')
+          delta = editor.doc.toDelta()
+          editor.destroy()
+          $('#editor-container').html(endHtml)
+          editor = new Tandem.Editor('editor-container')
+          expectedDelta = editor.doc.toDelta()
+          consistent = Tandem.Debug.checkDocumentConsistency(editor.doc, true)
+          editor.destroy()
+          expect(delta).to.deep.equal(expectedDelta)
+          expect(consistent).to.be.true
+        )
+      )
+    )
+  )
+
+
+
+  describe('Apply Line Attribute', ->
+    tests = 
+      'entire line':
+        lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 5, length: 2
+        expected: [0, '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
+      'multiple lines':
+        lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 0, length: 7
+        expected: ['<ul class="indent-2"><li><b>01</b><i>23</i></li></ul>', '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
+      'entire line with trailing newline':
+        lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 5, length: 3
+        expected: [0, '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
+      'entire line with preceding newline':
+        lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 4, length: 3
+        expected: [0, '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
+      'entire line with preceding and trailing newline':
+        lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
+        start: 4, length: 4
+        expected: [0, '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
+
+    _.each(tests, (test, name) ->
+      originalHtml = test.lines.join('')
+      expectedHtml = _.map(test.expected, (line) ->
+        return if _.isNumber(line) then test.lines[line] else line
+      ).join('')
+      _.each([2, false], (val) ->
+        it("should set list to #{val} on #{name}", ->
+          apply = val != false
+          [startHtml, endHtml] = if apply then [originalHtml, expectedHtml] else [expectedHtml, originalHtml]
+          $('#editor-container').html(startHtml)
+          editor = new Tandem.Editor('editor-container')
+          editor.applyAttribute(test.start, test.length, 'bullet', val)
+          range = new Tandem.Range(editor, test.start, test.start + test.length)
+          attributes = range.getAttributes()
+          if apply
+            expect(attributes['bullet']).to.equal(val)
+          else
+            expect(attributes['bullet']).to.be.undefined
           delta = editor.doc.toDelta()
           editor.destroy()
           $('#editor-container').html(endHtml)
