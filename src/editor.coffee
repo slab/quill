@@ -108,6 +108,7 @@ class TandemEditor extends EventEmitter2
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
   applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
+    return if endOffset == startOffset
     line = @doc.findLine(lineNode)
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
       this.applyLineAttribute(line, attr, value)
