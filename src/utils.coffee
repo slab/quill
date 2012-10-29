@@ -145,6 +145,9 @@ TandemUtils =
       offset -= child.textContent.length
       offset -= 1 if Tandem.Line.isLineNode(child)
       child = child.nextSibling
+    unless child?
+      child = node.lastChild
+      offset = child.textContent.length
     return [child, offset]
 
   getIndent: (list) ->

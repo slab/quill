@@ -20,7 +20,7 @@ class TandemLeaf extends LinkedList.Node
     if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
       @node.textContent = "" if @node.tagName == 'BR'
     else
-      @node.classList.add(Tandem.Constants.ATOMIC_CLASS)
+      @node.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
       @node.textContent = "\t"
     @text = @node.textContent
     @length = @text.length

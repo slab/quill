@@ -271,6 +271,7 @@ class TandemEditor extends EventEmitter2
     [prevNode, startNode] = startLine.splitContents(startLineOffset)
     tab = startLineNode.ownerDocument.createElement('span')
     tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
+    tab.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
     parentNode = prevNode?.parentNode || startNode?.parentNode
     parentNode.insertBefore(tab, startNode)
     @doc.updateLine(startLine)
