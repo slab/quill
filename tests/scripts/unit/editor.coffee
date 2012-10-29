@@ -7,6 +7,16 @@
 describe('Editor', ->
   describe('applyDelta', ->
     tests =
+      'fuzzer':
+        lines: ['<div><span>d ur a</span></div>', '<ol class="indent-1"><li><span>nbmjcbxlp</span></li></ol>', '<div><br></div>']
+        deltas: [new JetRetain(0,2), new JetRetain(6,7), new JetInsert("\nur a\n"), new JetRetain(7,17)]
+        expected: ['<div><span>d </span></div>', '<div><br></div>', '<div><span>ur a</span></div>', '<ol class="indent-1"><li><span>nbmjcbxlp</span></li></ol>', '<div><br></div>']
+      'append after list':
+        lines: ['<ol class="indent-1"><li><span>01</span></li></ol>']
+        deltas: [new JetInsert("\n23\n"), new JetRetain(0,2)]
+        expected: ['<div><br></div>', '<div><span>23</span></div>', '<ol class="indent-1"><li><span>01</span></li></ol>']
+      
+      ###
       'append character':
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert('4')]
@@ -67,10 +77,11 @@ describe('Editor', ->
         lines: ['<div><br></div>']
         deltas: [new JetInsert('01', {bullet:1}), new JetInsert("\n"), new JetInsert('23', {bold:true})]
         expected: ['<ul class="indent-1"><li><span>01</span></li></ul>', '<div><b>23</b></div>']
+      ###
 
     _.each(tests, (test, name) ->
       it(name, ->
-        html = Tandem.Utils.cleanHtml(test.lines.join(''))
+        html = test.lines.join('')
         $('#editor-container').html(html)
         editor = new Tandem.Editor('editor-container')
         oldDelta = editor.doc.toDelta()
@@ -87,6 +98,7 @@ describe('Editor', ->
         editor = new Tandem.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
         editor.destroy()
+        console.log newDelta, expectedDelta
         expect(newDelta).to.deep.equal(expectedDelta)
       )
     )

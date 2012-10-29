@@ -64,9 +64,9 @@ class TandemEditor extends EventEmitter2
         @doc.root.setAttribute('contenteditable', true)
       , false)
       @doc.root.focus()
-      position = Tandem.Position.makePosition(this, @options.cursor)
-      start = new Tandem.Range(this, position, position)
-      this.setSelection(start)
+      #position = Tandem.Position.makePosition(this, @options.cursor)
+      #start = new Tandem.Range(this, position, position)
+      #this.setSelection(start)
 
   initListeners: ->
     deboundedEdit = _.debounce( =>
@@ -231,75 +231,108 @@ class TandemEditor extends EventEmitter2
       position = Tandem.Position.makePosition(this, startIndex)
       index = startIndex = position.getIndex()
       startLine = @doc.findLineAtOffset(index)
-      attr = if startLineNode? then startLine.attributes else {}
+      [line, lineOffset] = @doc.findLineAtOffset(index)
       @selection.preserve( =>
         lines = text.split("\n")
-        _.each(lines, (line, lineIndex) =>
-          strings = line.split("\t")
-          _.each(strings, (str, strIndex) =>
-            this.insertTextAt(index, str)
-            index += str.length
-            if strIndex < strings.length - 1
-              this.insertTabAt(index)
-              index += 1
-          )
-          if lineIndex < lines.length - 1
-            this.insertNewlineAt(index)
-            index += 1
-          else
-            # TODO could be more clever about if we need to call this
-            Tandem.Document.fixListNumbering(@doc.root)
-        )
+        if lines.length == 1
+          contents = this.makeLineContents(text)
+          this.insertContentsAt(line, lineOffset, contents)
+        else
+          console.log @doc.root.innerHTML
+          [line1, line2] = this.insertNewlineAt(line, lineOffset)
+          console.log @doc.root.innerHTML
+          contents = this.makeLineContents(lines[0])
+          this.insertContentsAt(line1, lineOffset, contents)
+          console.log @doc.root.innerHTML
+          contents = this.makeLineContents(lines[lines.length - 1])
+          this.insertContentsAt(line2, 0, contents)
+          console.log @doc.root.innerHTML
+          if lines.length > 2
+            _.each(lines.slice(1, -1), (lineText) =>
+              lineNode = this.makeLine(lineText)
+              @doc.root.insertBefore(lineNode, line2.node)
+              @doc.insertLineBefore(lineNode, line2)
+              console.log @doc.root.innerHTML
+            )
+        # TODO could be more clever about if we need to call this
+        Tandem.Document.fixListNumbering(@doc.root) if lines.length > 1
         @doc.rebuildDirty()
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
-  insertNewlineAt: (startIndex) ->
-    [line, offset] = @doc.findLineAtOffset(startIndex)
-    if offset == 0 or offset == line.length
-      refLine = if offset == 0 then line else line.next
-      div = @doc.root.ownerDocument.createElement('div')
-      @doc.root.insertBefore(div, if refLine? then refLine.node else null)
-      @doc.insertLineBefore(div, refLine)
+  makeLine: (text) ->
+    lineNode = @doc.root.ownerDocument.createElement('div')
+    lineNode.classList.add(Tandem.Line.CLASS_NAME)
+    contents = this.makeLineContents(text)
+    _.each(contents, (content) ->
+      lineNode.appendChild(content)
+    )
+    return lineNode
+
+  makeLineContents: (text) ->
+    strings = text.split("\t")
+    contents = []
+    _.each(strings, (str, strIndex) =>
+      contents.push(this.makeText(str))
+      if strIndex < strings.length - 1
+        contents.push(this.makeTab())
+    )
+    return contents
+
+  makeTab: ->
+    tab = @doc.root.ownerDocument.createElement('span')
+    tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
+    tab.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
+    tab.textContent = "\t"
+    return tab
+
+  makeText: (text) ->
+    node = @doc.root.ownerDocument.createElement('span')
+    node.textContent = text
+    return node
+
+  # insertContentsAt: (Number startIndex, String text) ->
+  # insertContentsAt: (TandemRange startIndex, String text) ->
+  insertContentsAt: (line, offset, contents) ->
+    return if contents.length == 0
+    [leaf, leafOffset] = line.findLeafAtOffset(offset)
+    if leaf.node.nodeName != 'BR'
+      [beforeNode, afterNode] = line.splitContents(offset)
+      parentNode = beforeNode?.parentNode || afterNode?.parentNode
+      _.each(contents, (content) ->
+        parentNode.insertBefore(content, afterNode)
+      )
     else
-      newLine = @doc.splitLine(line, offset)
+      line.node.removeChild(leaf.node)
+      _.each(contents, (content) ->
+        line.node.appendChild(content)
+      )
+    @doc.updateLine(line)
+
+  insertNewlineAt: (line, offset) ->
+    if offset == 0 or offset == line.length
+      div = @doc.root.ownerDocument.createElement('div')
+      if offset == 0
+        @doc.root.insertBefore(div, line)
+        newLine = @doc.insertLineBefore(div, line)
+        return [newLine, line]
+      else
+        refLine = line.next
+        @doc.root.insertBefore(div, if refLine? then refLine.node else null)
+        newLine = @doc.insertLineBefore(div, refLine)
+        return [line, newLine]
+    else
+      return [line, newLine] = @doc.splitLine(line, offset)
 
   insertTabAt: (startIndex) ->
     [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
     startLine = @doc.findLine(startLineNode)
     [prevNode, startNode] = startLine.splitContents(startLineOffset)
-    tab = startLineNode.ownerDocument.createElement('span')
-    tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
-    tab.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
+    tab = this.makeTab()
     parentNode = prevNode?.parentNode || startNode?.parentNode
     parentNode.insertBefore(tab, startNode)
     @doc.updateLine(startLine)
-
-  # insertTextAt: (Number startIndex, String text) ->
-  # insertTextAt: (TandemRange startIndex, String text) ->
-  insertTextAt: (startIndex, text) ->
-    return if text.length <= 0
-    position = Tandem.Position.makePosition(this, startIndex)
-    startIndex = position.getIndex()
-    leaf = position.getLeaf()
-    if _.keys(leaf.attributes).length > 0 || !Tandem.Utils.canModify(leaf.node)
-      [lineNode, lineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-      [beforeNode, afterNode] = leaf.line.splitContents(lineOffset)
-      parentNode = beforeNode?.parentNode || afterNode?.parentNode
-      span = lineNode.ownerDocument.createElement('span')
-      span.textContent = text
-      parentNode.insertBefore(span, afterNode)
-    else
-      if leaf.node.nodeName == 'BR'
-        parent = leaf.node.parentNode
-        parent.removeChild(leaf.node)
-        leaf.node = parent.ownerDocument.createElement('span')
-        leaf.node.textContent = text
-        parent.appendChild(leaf.node)
-      else
-        leaf.insertText(position.offset, text)
-    @doc.updateLine(leaf.line)
 
   setSelection: (range) ->
     @selection.setRange(range)

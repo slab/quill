@@ -128,6 +128,18 @@ class TandemLine extends LinkedList.Node
       curLeaf = curLeaf.next
     return null
 
+  findLeafAtOffset: (offset) ->
+    retLeaf = @leaves.first
+    _.all(@leaves.toArray(), (leaf) ->
+      retLeaf = leaf
+      if offset > leaf.length && leaf.next?
+        offset -= leaf.length
+        return true
+      else
+        return false
+    )
+    return [retLeaf, offset]
+
   rebuild: ->
     if @node.parentNode == @doc.root
       return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(TandemLine.DIRTY_CLASS)
