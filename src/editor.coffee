@@ -257,7 +257,13 @@ class TandemEditor extends EventEmitter2
 
   insertNewlineAt: (startIndex) ->
     [line, offset] = @doc.findLineAtOffset(startIndex)
-    newLine = @doc.splitLine(line, offset)
+    if offset == 0 or offset == line.length
+      refLine = if offset == 0 then line else line.next
+      div = @doc.root.ownerDocument.createElement('div')
+      @doc.root.insertBefore(div, if refLine? then refLine.node else null)
+      @doc.insertLineBefore(div, refLine)
+    else
+      newLine = @doc.splitLine(line, offset)
 
   insertTabAt: (startIndex) ->
     [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
