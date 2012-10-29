@@ -74,9 +74,12 @@ class TandemEditor extends EventEmitter2
       delta = this.update()
       this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
     , 100)
-    @doc.root.addEventListener('DOMSubtreeModified', deboundedEdit)
+    onEdit = =>
+      return if @ignoreDomChanges or !@destructors?
+      deboundedEdit()
+    @doc.root.addEventListener('DOMSubtreeModified', onEdit)
     @destructors.push( ->
-      @doc.root.removeEventListener('DOMSubtreeModified', deboundedEdit)
+      @doc.root.removeEventListener('DOMSubtreeModified', onEdit)
     )
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
@@ -269,7 +272,7 @@ class TandemEditor extends EventEmitter2
     strings = text.split("\t")
     contents = []
     _.each(strings, (str, strIndex) =>
-      contents.push(this.makeText(str))
+      contents.push(this.makeText(str)) if str.length > 0
       if strIndex < strings.length - 1
         contents.push(this.makeTab())
     )

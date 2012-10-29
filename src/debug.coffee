@@ -17,7 +17,7 @@ window.Tandem.Debug =
     nodesByLine = _.map(doc.root.childNodes, (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
-        return node.nodeType == node.ELEMENT_NODE && (node.nodeName == 'BR' || node.firstChild.nodeType == node.TEXT_NODE)
+        return node.nodeType == node.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
       )
     )
     lines = doc.lines.toArray()
@@ -79,7 +79,7 @@ window.Tandem.Debug =
         leaves = line.leaves.toArray()
         leafNodes = _.map(leaves, (leaf) -> return leaf.node)
         if !_.isEqual(leafNodes, nodesByLine[index])
-          console.error leafNodes, 'nodes differ from', nodesByLine[index]
+          console.error line, leafNodes, 'nodes differ from', nodesByLine[index]
           return true
         leaves = _.map(leaves, (leaf) -> 
           return _.pick(leaf, 'attributes', 'length', 'line', 'node', 'text')
