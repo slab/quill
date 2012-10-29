@@ -84,21 +84,17 @@ class TandemDocument
     node = this.findLineNode(node)
     return @lineMap[node.id]
 
-  findLineAtOffset: (index) ->
-    [lineNode, offset] = Tandem.Utils.getChildAtOffset(@root, index)
-    line = this.findLine(lineNode)
-    console.warn "No line found at", index, this if !line?
-    return [line, offset]
-    #retLine = @lines.first
-    #_.all(@lines.toArray(), (line) ->
-    #  retLine = line
-    #  if offset > line.length && line.next?
-    #    offset -= line.length + 1
-    #    return true
-    #  else
-    #    return false
-    #)
-    #return [refLine, offset]
+  findLineAtOffset: (offset) ->
+    retLine = @lines.first
+    _.all(@lines.toArray(), (line) ->
+      retLine = line
+      if offset > line.length
+        offset -= line.length + 1
+        return true
+      else
+        return false
+    )
+    return [retLine, offset]
 
   findLineNode: (node) ->
     while node? && !Tandem.Line.isLineNode(node)

@@ -93,30 +93,28 @@ class TandemEditor extends EventEmitter2
       else
         range = new Tandem.Range(this, startIndex, startIndex + length)
       @selection.preserve( =>
-        [startLine, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-        [endLine, endLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex + length)
+        [startLine, startLineOffset] = @doc.findLineAtOffset(startIndex)
+        [endLine, endLineOffset] = @doc.findLineAtOffset(startIndex + length)
         if startLine == endLine
           this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
         else
-          curLine = startLine.nextSibling
+          curLine = startLine.next
           while curLine? && curLine != endLine
-            nextSibling = curLine.nextSibling
-            this.applyAttributeToLine(curLine, 0, curLine.textContent.length, attr, value)
-            curLine = nextSibling
-          this.applyAttributeToLine(startLine, startLineOffset, startLine.textContent.length, attr, value)
+            next = curLine.next
+            this.applyAttributeToLine(curLine, 0, curLine.length + 1, attr, value)
+            curLine = next
+          this.applyAttributeToLine(startLine, startLineOffset, startLine.length + 1, attr, value)
           this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value) if endLine?
         @doc.rebuildDirty()
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
-  applyAttributeToLine: (lineNode, startOffset, endOffset, attr, value) ->
-    return if endOffset == startOffset
-    line = @doc.findLine(lineNode)
+  applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
+    return if startOffset == endOffset
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
       this.applyLineAttribute(line, attr, value)
     else
-      return if startOffset == endOffset
       [prevNode, startNode] = line.splitContents(startOffset)
       [endNode, nextNode] = line.splitContents(endOffset)
       parentNode = startNode?.parentNode || prevNode?.parentNode
@@ -128,7 +126,10 @@ class TandemEditor extends EventEmitter2
         )
         attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
         attrNode.appendChild(fragment)
-        parentNode.insertBefore(attrNode, nextNode)
+        if nextNode? && (parentNode.compareDocumentPosition(nextNode) & parentNode.DOCUMENT_POSITION_CONTAINED_BY) == parentNode.DOCUMENT_POSITION_CONTAINED_BY
+          parentNode.insertBefore(attrNode, nextNode)
+        else
+          parentNode.appendChild(attrNode)
       else
         Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
           Tandem.Utils.removeAttributeFromSubtree(node, attr)

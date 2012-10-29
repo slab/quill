@@ -35,8 +35,8 @@ class TandemRange
     if this.isCollapsed()
       return startLeaf.getAttributes()
     leaves = this.getLeaves()
-    leaves.pop() if leaves.length > 0 && @end.offset == 0
-    leaves.splice(0, 1) if leaves.length > 0 && @start.offset == leaves[0].text.length
+    leaves.pop() if leaves.length > 1 && @end.offset == 0
+    leaves.splice(0, 1) if leaves.length > 1 && @start.offset == leaves[0].length
     attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
     _.all(leaves, (leaf) ->
       leafAttributes =  leaf.getAttributes()
