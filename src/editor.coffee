@@ -233,29 +233,24 @@ class TandemEditor extends EventEmitter2
       startLine = @doc.findLineAtOffset(index)
       [line, lineOffset] = @doc.findLineAtOffset(index)
       @selection.preserve( =>
-        lines = text.split("\n")
-        if lines.length == 1
+        textLines = text.split("\n")
+        if textLines.length == 1
           contents = this.makeLineContents(text)
           this.insertContentsAt(line, lineOffset, contents)
         else
-          console.log @doc.root.innerHTML
           [line1, line2] = this.insertNewlineAt(line, lineOffset)
-          console.log @doc.root.innerHTML
-          contents = this.makeLineContents(lines[0])
+          contents = this.makeLineContents(textLines[0])
           this.insertContentsAt(line1, lineOffset, contents)
-          console.log @doc.root.innerHTML
-          contents = this.makeLineContents(lines[lines.length - 1])
+          contents = this.makeLineContents(textLines[textLines.length - 1])
           this.insertContentsAt(line2, 0, contents)
-          console.log @doc.root.innerHTML
-          if lines.length > 2
-            _.each(lines.slice(1, -1), (lineText) =>
+          if textLines.length > 2
+            _.each(textLines.slice(1, -1), (lineText) =>
               lineNode = this.makeLine(lineText)
               @doc.root.insertBefore(lineNode, line2.node)
               @doc.insertLineBefore(lineNode, line2)
-              console.log @doc.root.innerHTML
             )
         # TODO could be more clever about if we need to call this
-        Tandem.Document.fixListNumbering(@doc.root) if lines.length > 1
+        Tandem.Document.fixListNumbering(@doc.root) if textLines.length > 1
         @doc.rebuildDirty()
       )
     , emitEvent)
@@ -304,7 +299,7 @@ class TandemEditor extends EventEmitter2
         parentNode.insertBefore(content, afterNode)
       )
     else
-      line.node.removeChild(leaf.node)
+      leaf.node.parentNode.removeChild(leaf.node)
       _.each(contents, (content) ->
         line.node.appendChild(content)
       )
@@ -314,16 +309,18 @@ class TandemEditor extends EventEmitter2
     if offset == 0 or offset == line.length
       div = @doc.root.ownerDocument.createElement('div')
       if offset == 0
-        @doc.root.insertBefore(div, line)
+        @doc.root.insertBefore(div, line.node)
         newLine = @doc.insertLineBefore(div, line)
         return [newLine, line]
       else
         refLine = line.next
-        @doc.root.insertBefore(div, if refLine? then refLine.node else null)
+        refLineNode = if refLine? then refLine.node else null
+        @doc.root.insertBefore(div, refLineNode)
         newLine = @doc.insertLineBefore(div, refLine)
         return [line, newLine]
     else
-      return [line, newLine] = @doc.splitLine(line, offset)
+      newLine = @doc.splitLine(line, offset)
+      return [line, newLine]
 
   insertTabAt: (startIndex) ->
     [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
