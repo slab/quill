@@ -111,7 +111,6 @@ class TandemEditor extends EventEmitter2
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
   applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
-    return if startOffset == endOffset
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
       if startOffset == 0 && endOffset >= line.length
         this.applyLineAttribute(line, attr, value)
@@ -143,24 +142,17 @@ class TandemEditor extends EventEmitter2
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
+    retains = []
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
         this.insertAt(index + offset, delta.text, false)
-        _.each(delta.attributes, (value, attr) =>
-          this.applyAttribute(index + offset, delta.text.length, attr, value, false)
-        )
+        retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
         offset += delta.getLength()
       else if JetDelta.isRetain(delta)
         if delta.start > index
           this.deleteAt(index + offset, delta.start - index, false)
           offset -= (delta.start - index)
-        # TODO fix need to have special case of applying removals first
-        _.each(delta.attributes, (value, attr) =>
-          this.applyAttribute(delta.start + offset, delta.end - delta.start, attr, value, false) if value == null
-        )
-        _.each(delta.attributes, (value, attr) =>
-          this.applyAttribute(delta.start + offset, delta.end - delta.start, attr, value, false) if value?
-        )
+        retains.push(new JetRetain(delta.start + offset, delta.end + offset, delta.attributes))
         index = delta.end
       else
         console.warn('Unrecognized type in delta', delta)
@@ -168,6 +160,18 @@ class TandemEditor extends EventEmitter2
     # If end of text was deleted
     if delta.endLength < delta.startLength + offset
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
+
+    retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
+    retainDelta.compact()
+    _.each(retainDelta.deltas, (delta) =>
+      _.each(delta.attributes, (value, attr) =>
+        this.applyAttribute(delta.start, delta.end - delta.start, attr, value, false) if value == null
+      )
+      _.each(delta.attributes, (value, attr) =>
+        this.applyAttribute(delta.start, delta.end - delta.start, attr, value, false) if value?
+      )
+    )
+
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
@@ -304,9 +308,10 @@ class TandemEditor extends EventEmitter2
         parentNode.insertBefore(content, afterNode)
       )
     else
-      leaf.node.parentNode.removeChild(leaf.node)
+      parentNode = leaf.node.parentNode
+      parentNode.removeChild(leaf.node)
       _.each(contents, (content) ->
-        line.node.appendChild(content)
+        parentNode.appendChild(content)
       )
     @doc.updateLine(line)
 

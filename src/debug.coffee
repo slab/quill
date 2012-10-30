@@ -57,6 +57,17 @@ window.Tandem.Debug =
         , 0)
         if lineLength != line.length
           console.error 'incorrect line length', lineLength, line.length
+          return true
+        return false
+      )
+        return false
+
+      # All lists should have li tag
+      if _.any(lines, (line) ->
+        if (line.node.tagName == 'OL' || line.node.tagName == 'UL') && line.node.firstChild.tagName != 'LI'
+          console.error 'inconsistent bullet/list', line
+          return true
+        return false
       )
         return false
 

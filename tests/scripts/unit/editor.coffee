@@ -19,6 +19,10 @@ describe('Editor', ->
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert('4', {bold: true})]
         expected: ['<div><span>0123</span><b>4</b></div>']
+      'append character to empty list':
+        lines: ['<ul class="indent-1"><li><br></li></ul>']
+        deltas: [new JetInsert("a", {bullet: 1})]
+        expected: ['<ul class="indent-1"><li><span>a</span></li></ul>']
       'insert newline in middle of text':
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,4)]
@@ -85,12 +89,15 @@ describe('Editor', ->
           return if _.isNumber(line) then test.lines[line] else line
         ).join('')
         editor.applyDelta(delta)
+        consistent = Tandem.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
         editor.destroy()
         $('#editor-container').html(expectedHtml)
         editor = new Tandem.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
         editor.destroy()
+        console.log newDelta, expectedDelta
+        expect(consistent).to.be.true
         expect(newDelta).to.deep.equal(expectedDelta)
       )
     )
