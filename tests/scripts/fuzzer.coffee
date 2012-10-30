@@ -1,10 +1,9 @@
-ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n   ".split('')
+ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
 NUM_OPERATIONS = 100
-attributes = _.extend({}, Tandem.Constants.INDENT_ATTRIBUTES)
+attributes = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES)
 attributeKeys = _.keys(attributes)
 
 seed = Math.random()
-seed = "0.3199978759512305"
 console.info seed
 Math.seedrandom(seed.toString())
 
