@@ -87,7 +87,7 @@ class TandemSelection
       this.setRange(range)
     else
       # TODO this should never happen...
-      console.warn "Not enough markers", startMarker, endMarker
+      console.warn "Not enough markers", startMarker, endMarker, @editor.id
       this.removeMarkers()
 
   save: ->

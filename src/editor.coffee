@@ -64,9 +64,9 @@ class TandemEditor extends EventEmitter2
         @doc.root.setAttribute('contenteditable', true)
       , false)
       @doc.root.focus()
-      #position = Tandem.Position.makePosition(this, @options.cursor)
-      #start = new Tandem.Range(this, position, position)
-      #this.setSelection(start)
+      position = Tandem.Position.makePosition(this, @options.cursor)
+      start = new Tandem.Range(this, position, position)
+      this.setSelection(start)
 
   initListeners: ->
     deboundedEdit = _.debounce( =>
@@ -113,7 +113,8 @@ class TandemEditor extends EventEmitter2
   applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
     return if startOffset == endOffset
     if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
-      this.applyLineAttribute(line, attr, value)
+      if startOffset == 0 && endOffset >= line.length
+        this.applyLineAttribute(line, attr, value)
     else
       [prevNode, startNode] = line.splitContents(startOffset)
       [endNode, nextNode] = line.splitContents(endOffset)
@@ -325,15 +326,6 @@ class TandemEditor extends EventEmitter2
     else
       newLine = @doc.splitLine(line, offset)
       return [line, newLine]
-
-  insertTabAt: (startIndex) ->
-    [startLineNode, startLineOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-    startLine = @doc.findLine(startLineNode)
-    [prevNode, startNode] = startLine.splitContents(startLineOffset)
-    tab = this.makeTab()
-    parentNode = prevNode?.parentNode || startNode?.parentNode
-    parentNode.insertBefore(tab, startNode)
-    @doc.updateLine(startLine)
 
   setSelection: (range) ->
     @selection.setRange(range)

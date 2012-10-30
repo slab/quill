@@ -89,7 +89,7 @@ describe('Selection', ->
         'insert at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "A")
-          expected: ['<div><span>0123|45A|6789</span></div>']
+          expected: ['<div><span>0123|45A|6789</span></div>'] # TODO the desired behavior is |45|A
         'insert in middle of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(5, "A")
@@ -110,7 +110,6 @@ describe('Selection', ->
           lines: ['<ol><li><span>0123456789</span></li></ol>', '<span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(10, "\n")
           expected: [0, '<ol><li><span><br></span></li></ol>', 1]
-
       'delete tests':
         'delete before':
           lines: ['<div><span>0123|45|6789</span></div>']

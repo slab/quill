@@ -5,7 +5,7 @@ attributeKeys = _.keys(attributes)
 
 seed = Math.random()
 seed = "0.3199978759512305"
-console.log seed
+console.info seed
 Math.seedrandom(seed.toString())
 
 

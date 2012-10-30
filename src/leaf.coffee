@@ -17,11 +17,7 @@ class TandemLeaf extends LinkedList.Node
   constructor: (@line, @node, attributes) ->
     @attributes = _.clone(attributes)
     @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
-    if !@node.classList.contains(Tandem.Leaf.TAB_NODE_CLASS)
-      @node.textContent = "" if @node.tagName == 'BR'
-    else
-      @node.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
-      @node.textContent = "\t"
+    @node.textContent = "" if @node.tagName == 'BR'
     @text = @node.textContent
     @length = @text.length
 

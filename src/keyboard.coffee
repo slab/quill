@@ -17,7 +17,10 @@ class TandemKeyboard
           else
             @editor.deleteAt(selection) if !selection.isCollapsed()
             selection = @editor.getSelection()
+            index = selection.start.getIndex()
             @editor.insertAt(selection, "\t")
+            range = new Tandem.Range(@editor, index + 1, index + 1)
+            @editor.setSelection(range)
         when TandemKeyboard.KEYS.BACKSPACE
           if selection.isCollapsed() && this.onIndentLine(selection) && selection.start.offset == 0
             attrs = selection.getAttributes()
