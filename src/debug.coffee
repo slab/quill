@@ -116,5 +116,48 @@ window.Tandem.Debug =
         console.error doc.lineMap
       return false
 
+  Test:
+    getRandomLength: ->
+      rand = Math.random()
+      if rand < 0.1
+        return 1
+      else if rand < 0.6
+        return Math.floor(Math.random() * 3)
+      else if rand < 0.8
+        return Math.floor(Math.random() * 5)
+      else if rand < 0.9
+        return Math.floor(Math.random() * 10)
+      else
+        return Math.floor(Math.random() * 50)
+
+    getRandomOperation: (editor, alphabet, attributes) ->
+      attributeKeys = _.keys(attributes)
+      rand = Math.random()
+      if rand < 0.2
+        index = 0
+      else if rand < 0.4
+        index = editor.doc.length
+      else
+        index = Math.floor(Math.random() * editor.doc.length)
+      length = Tandem.Debug.Test.getRandomLength() + 1
+      rand = Math.random()
+      if rand < 0.5
+        return {op: 'insertAt', args: [index, Tandem.Debug.Test.getRandomString(alphabet, length)]}
+      length = Math.min(length, editor.doc.length - index)
+      return null if length <= 0
+      if rand < 0.75
+        return {op: 'deleteAt', args: [index, length]}
+      else
+        attr = attributeKeys[Math.floor(Math.random() * attributeKeys.length)]
+        value = attributes[attr][Math.floor(Math.random() * attributes[attr].length)]
+        if attr == 'link' && value == true
+          value = 'http://www.google.com'
+        return {op: 'applyAttribute', args: [index, length, attr, value]}
+
+    getRandomString: (alphabet, length) ->
+      return _.map([0..(length - 1)], ->
+        return alphabet[Math.floor(Math.random()*alphabet.length)]
+      ).join('')
+
 
 
