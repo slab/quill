@@ -86,12 +86,7 @@ class TandemEditor extends EventEmitter2
   # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
   applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
     delta = this.trackDelta( =>
-      if !_.isNumber(startIndex)
-        [range, attr, value] = [startIndex, length, attr]
-        startIndex = range.start.getIndex()
-        length = range.end.getIndex() - startIndex
-      else
-        range = new Tandem.Range(this, startIndex, startIndex + length)
+      range = new Tandem.Range(this, startIndex, startIndex + length)
       @selection.preserve( =>
         [startLine, startLineOffset] = @doc.findLineAtOffset(startIndex)
         [endLine, endLineOffset] = @doc.findLineAtOffset(startIndex + length)
@@ -194,22 +189,13 @@ class TandemEditor extends EventEmitter2
       Tandem.Utils.setIndent(line.node, indent)
     line.setDirty()
 
-  deleteAt: (startIndex, length, emitEvent = true) ->
+  deleteAt: (index, length, emitEvent = true) ->
     delta = this.trackDelta( =>
-      if !_.isNumber(startIndex)
-        range = startIndex
-        startPos = range.start
-        endPos = range.end
-        startIndex = range.start.getIndex()
-        length = range.end.getIndex() - startIndex
-      else
-        startPos = Tandem.Position.makePosition(this, startIndex)
-        endPos = Tandem.Position.makePosition(this, startIndex + length)
-      startIndex = startPos.getIndex()
-      endIndex = endPos.getIndex()
+      startPos = Tandem.Position.makePosition(this, index)
+      endPos = Tandem.Position.makePosition(this, index + length)
       @selection.preserve( =>
-        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
+        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, index)
+        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, index + length)
         fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
         lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
         _.each(lineNodes, (lineNode) =>
@@ -221,7 +207,7 @@ class TandemEditor extends EventEmitter2
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
-  getAt: (startIndex, length) ->
+  getAt: (index, length) ->
     # - Returns array of {text: "", attr: {}}
     # 1. Get all nodes in the range
     # 2. For first and last, change the text
@@ -235,10 +221,9 @@ class TandemEditor extends EventEmitter2
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (startIndex, text, emitEvent = true) ->
+  insertAt: (index, text, emitEvent = true) ->
     delta = this.trackDelta( =>
-      position = Tandem.Position.makePosition(this, startIndex)
-      index = startIndex = position.getIndex()
+      position = Tandem.Position.makePosition(this, index)
       startLine = @doc.findLineAtOffset(index)
       [line, lineOffset] = @doc.findLineAtOffset(index)
       @selection.preserve( =>

@@ -96,7 +96,6 @@ describe('Editor', ->
         editor = new Tandem.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
         editor.destroy()
-        console.log newDelta, expectedDelta
         expect(consistent).to.be.true
         expect(newDelta).to.deep.equal(expectedDelta)
       )
