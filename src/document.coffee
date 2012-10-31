@@ -89,7 +89,7 @@ class TandemDocument
     _.all(@lines.toArray(), (line) ->
       retLine = line
       if offset > line.length
-        offset -= line.length + 1
+        offset -= line.length
         return true
       else
         return false
@@ -109,7 +109,6 @@ class TandemDocument
       @lines.append(line)
     @lineMap[line.id] = line
     @length += line.length
-    @length += 1 if @lines.length > 1
     return line
 
   printLines: ->
@@ -145,7 +144,7 @@ class TandemDocument
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
-    @length -= line.length + 1
+    @length -= line.length
 
   reset: ->
     @lines = new LinkedList()
@@ -161,9 +160,7 @@ class TandemDocument
   toDelta: ->
     lines = @lines.toArray()
     deltas = _.flatten(_.map(lines, (line, index) ->
-      lineDeltas = JetDelta.copy(line.delta).deltas
-      lineDeltas.push(new JetInsert("\n", line.attributes)) if index < lines.length - 1
-      return lineDeltas
+      return JetDelta.copy(line.delta).deltas
     ), true)
     delta = new JetDelta(0, @length, deltas)
     delta.compact()

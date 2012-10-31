@@ -16,7 +16,7 @@ describe('Selection', ->
         index = line.node.textContent.indexOf("|", offset)
         indexes.push(lineIndex + index - indexes.length)
         offset = index + 1
-      lineIndex += line.node.textContent.length + 1
+      lineIndex += line.length
       return indexes
     , [])
     editor.destroy()

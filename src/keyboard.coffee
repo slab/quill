@@ -19,6 +19,7 @@ class TandemKeyboard
             selection = @editor.getSelection()
             index = selection.start.getIndex()
             @editor.insertAt(selection, "\t")
+            # Make sure selection is after our new tab character
             range = new Tandem.Range(@editor, index + 1, index + 1)
             @editor.setSelection(range)
         when TandemKeyboard.KEYS.BACKSPACE

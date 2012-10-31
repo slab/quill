@@ -1,6 +1,7 @@
 #= require underscore
 #= require tandem/line
 
+# TODO fix this entire file, esp findDeepestNode
 class TandemPosition
   @findDeepestNode: (editor, node, offset) ->
     # We are at right subtree, dive deeper
