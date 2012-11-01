@@ -226,7 +226,7 @@ class TandemEditor extends EventEmitter2
       startLine = @doc.findLineAtOffset(index)
       [line, lineOffset] = @doc.findLineAtOffset(index)
       @selection.preserve( =>
-        textLines = text.split("\n")
+        textLines = text.split("\n") 
         if textLines.length == 1
           contents = this.makeLineContents(text)
           this.insertContentsAt(line, lineOffset, contents)
@@ -235,15 +235,15 @@ class TandemEditor extends EventEmitter2
           contents = this.makeLineContents(textLines[0])
           this.insertContentsAt(line1, lineOffset, contents)
           contents = this.makeLineContents(textLines[textLines.length - 1])
-          this.insertContentsAt(line2, 0, contents)
+          this.insertContentsAt(line2, 0, contents) 
           if textLines.length > 2
             _.each(textLines.slice(1, -1), (lineText) =>
               lineNode = this.makeLine(lineText)
               @doc.root.insertBefore(lineNode, line2.node)
               @doc.insertLineBefore(lineNode, line2)
-            )
+            ) 
         # TODO could be more clever about if we need to call this
-        Tandem.Document.fixListNumbering(@doc.root) if textLines.length > 1
+        #Tandem.Document.fixListNumbering(@doc.root) if textLines.length > 1
         @doc.rebuildDirty()
       )
     , emitEvent)

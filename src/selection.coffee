@@ -109,7 +109,7 @@ class TandemSelection
       if selection.start.leafNode == selection.end.leafNode
         endOffset -= startOffset
       if startNode.lastChild?
-        if startNode.nodeType == startNode.TEXT_NODE
+        if startNode.lastChild.nodeType == startNode.TEXT_NODE
           startNode.lastChild.splitText(startOffset)
           startNode.insertBefore(startMarker, startNode.lastChild)
         else
@@ -118,7 +118,7 @@ class TandemSelection
         console.warn('startOffset is not 0', startOffset) if startOffset != 0
         startNode.parentNode.insertBefore(startMarker, startNode)
       if endNode.lastChild?
-        if endNode.nodeType == endNode.TEXT_NODE
+        if endNode.lastChild.nodeType == endNode.TEXT_NODE
           endNode.lastChild.splitText(endOffset)
           endNode.insertBefore(endMarker, endNode.lastChild)
         else
