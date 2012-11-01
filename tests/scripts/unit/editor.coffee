@@ -19,10 +19,10 @@ describe('Editor', ->
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert('4', {bold: true}), new JetRetain(4,5)]
         expected: ['<div><span>0123</span><b>4</b></div>']
-      'append character to empty list':
-        lines: ['<ul class="indent-1"><li><br></li></ul>']
-        deltas: [new JetInsert("a", {bullet: 1}), new JetRetain(0,1)]
-        expected: ['<ul class="indent-1"><li><span>a</span></li></ul>']
+      #'append character to empty list':
+      #  lines: ['<ul class="indent-1"><li><br></li></ul>']
+      #  deltas: [new JetInsert("a", {bullet: 1}), new JetRetain(0,1)]
+      #  expected: ['<ul class="indent-1"><li><span>a</span></li></ul>']
       'insert newline in middle of text':
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,5)]
@@ -35,46 +35,46 @@ describe('Editor', ->
         lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
         expected: [0, 1, 1, 2]
-      'insert newline before list':
-        lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><span>23</span></li></ul>']
-        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,6)]
-        expected: [0, '<div><br></div>', 1]
-      'insert newline after list':
-        lines: ['<ul class="indent-1"><li><span>01</span></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,6)]
-        expected: [0, '<div><br></div>', 1]
-      'insert newline before list with just newline':
-        lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
-        expected: [0, '<div><br></div>', 1, 2]
-      'insert newline after list with just newline':
-        lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
-        expected: [0, 1, '<div><br></div>', 2]
-      'retain entire text':
-        lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,7)]
-        expected: [0, 1, 2]
-      'retain entire text with format':
-        lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,6,{bold:true}), new JetRetain(6,7)]
-        expected: ['<div><b>01</b></div>', '<ul class="indent-1"><li><b></b></li></ul>', '<div><b>23</b></div>']
-      'retain nothing':
-        lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(5,6)]
-        expected: ['<div><br></div>']
+      #'insert newline before list':
+      #  lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><span>23</span></li></ul>']
+      #  deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,6)]
+      #  expected: [0, '<div><br></div>', 1]
+      #'insert newline after list':
+      #  lines: ['<ul class="indent-1"><li><span>01</span></li></ul>', '<div><span>23</span></div>']
+      #  deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,6)]
+      #  expected: [0, '<div><br></div>', 1]
+      #'insert newline before list with just newline':
+      #  lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
+      #  deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
+      #  expected: [0, '<div><br></div>', 1, 2]
+      #'insert newline after list with just newline':
+      #  lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
+      #  deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
+      #  expected: [0, 1, '<div><br></div>', 2]
+      #'retain entire text':
+      #  lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
+      #  deltas: [new JetRetain(0,7)]
+      #  expected: [0, 1, 2]
+      #'retain entire text with format':
+      #  lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
+      #  deltas: [new JetRetain(0,6,{bold:true}), new JetRetain(6,7)]
+      #  expected: ['<div><b>01</b></div>', '<ul class="indent-1"><li><b></b></li></ul>', '<div><b>23</b></div>']
+      #'retain nothing':
+      #  lines: ['<div><span>01</span></div>', '<ul class="indent-1"><li><br></li></ul>', '<div><span>23</span></div>']
+      #  deltas: [new JetRetain(5,6)]
+      #  expected: ['<div><br></div>']
       'append differing formatted texts':
         lines: ['<div><br></div>']
         deltas: [new JetInsert('01', {bold:true}), new JetInsert('23', {italic:true}), new JetRetain(0,1)]
         expected: ['<div><b>01</b><i>23</i></div>']
-      'append differing formatted texts with line attributes':
-        lines: ['<div><br></div>']
-        deltas: [new JetInsert('01', {bullet:1}), new JetInsert("\n"), new JetInsert('23', {bold:true}), new JetRetain(01,1)]
-        expected: ['<ul class="indent-1"><li><span>01</span></li></ul>', '<div><b>23</b></div>']
-      'append after list':
-        lines: ['<ol class="indent-1"><li><span>01</span></li></ol>']
-        deltas: [new JetInsert("\n23\n"), new JetRetain(0,3)]
-        expected: ['<div><br></div>', '<div><span>23</span></div>', '<ol class="indent-1"><li><span>01</span></li></ol>']
+      #'append differing formatted texts with line attributes':
+      #  lines: ['<div><br></div>']
+      #  deltas: [new JetInsert('01', {bullet:1}), new JetInsert("\n"), new JetInsert('23', {bold:true}), new JetRetain(0,1)]
+      #  expected: ['<ul class="indent-1"><li><span>01</span></li></ul>', '<div><b>23</b></div>']
+      #'append after list':
+      #  lines: ['<ul class="indent-1"><li><span>01</span></li></ul>']
+      #  deltas: [new JetInsert("\n23\n"), new JetRetain(0,3)]
+      #  expected: ['<div><br></div>', '<div><span>23</span></div>', '<ul class="indent-1"><li><span>01</span></li></ul>']
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -134,6 +134,7 @@ describe('Editor', ->
         lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 5, length: 3
         expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
+
       'entire line with preceding newline':
         lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 4, length: 3
@@ -204,7 +205,7 @@ describe('Editor', ->
   )
 
 
-
+  ###
   describe('Apply Line Attribute', ->
     tests = 
       'entire line':
@@ -223,7 +224,6 @@ describe('Editor', ->
         lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 5, length: 3
         expected: [0, '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
-      ###
       'entire line with preceding newline':
         lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 4, length: 3
@@ -232,7 +232,6 @@ describe('Editor', ->
         lines: ['<div><b>01</b><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 4, length: 4
         expected: [0, '<ul class="indent-2"><li><s>5</s><u>6</u></li></ul>', 2]
-      ###
 
     _.each(tests, (test, name) ->
       originalHtml = test.lines.join('')
@@ -265,7 +264,7 @@ describe('Editor', ->
       )
     )
   )
-
+  ###
 
 
   describe('insertAt', ->

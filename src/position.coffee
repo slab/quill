@@ -17,6 +17,8 @@ class TandemPosition
     else if node.nextSibling?               # Not at right subtree, advance to sibling
       offset -= nodeLength
       TandemPosition.findDeepestNode(editor, node.nextSibling, offset)
+    else if node.lastChild?
+      return TandemPosition.findDeepestNode(editor, node.lastChild, offset)
     else
       return [node, offset]
 

@@ -110,6 +110,7 @@ class TandemEditor extends EventEmitter2
       if startOffset == 0 && endOffset >= line.length
         this.applyLineAttribute(line, attr, value)
     else
+      return if startOffset == endOffset
       [prevNode, startNode] = line.splitContents(startOffset)
       [endNode, nextNode] = line.splitContents(endOffset)
       parentNode = startNode?.parentNode || prevNode?.parentNode
