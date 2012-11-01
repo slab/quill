@@ -13,7 +13,7 @@ TandemUtils =
           if didLeftSplit
             toBreak = toBreak.concat([left1, left2])
           else
-            [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
+            [right1, right2, didRightSplit] = this.splitNode(root, Tandem.Utils.getNodeLength(node))
             toBreak = toBreak.concat([right1, right2]) if didRightSplit
         else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
           next = node.nextSibling
@@ -79,7 +79,7 @@ TandemUtils =
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
     if startLineNode == endLineNode
       endLineNode = rightStart
-      endOffset -= leftStart.textContent.length if leftStart? && startLineNode != rightStart
+      endOffset -= Tandem.Utils.getNodeLength(leftStart) if leftStart? && startLineNode != rightStart
     [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
     fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
@@ -139,15 +139,17 @@ TandemUtils =
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
-    while child? && offset > child.textContent.length
-      if offset == child.textContent.length
+    length = Tandem.Utils.getNodeLength(child)
+    while child?
+      break if offset <= length
+      if offset == length
         return [child, offset]
-      offset -= child.textContent.length
-      offset -= 1 if Tandem.Line.isLineNode(child)
+      offset -= length
       child = child.nextSibling
+      length = Tandem.Utils.getNodeLength(child)
     unless child?
       child = node.lastChild
-      offset = child.textContent.length
+      offset = Tandem.Utils.getNodeLength(child)
     return [child, offset]
 
   getIndent: (list) ->
@@ -159,6 +161,21 @@ TandemUtils =
       return false
     )
     return indent
+
+  getNodeLength: (node) ->
+    return 0 unless node?
+    if node.nodeType == node.ELEMENT_NODE
+      if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+        return 0
+      externalNodes = node.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}")
+      length = _.reduce(externalNodes, (length, node) ->
+        return length - node.textContent.length
+      , node.textContent.length)
+      return length + (if Tandem.Line.isLineNode(node) then 1 else 0)
+    else if node.nodeType == node.TEXT_NODE
+      return node.textContent.length
+    else
+      return 0
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
@@ -197,7 +214,7 @@ TandemUtils =
     list.classList.add(Tandem.Document.INDENT_PREFIX + indent) if indent
 
   splitNode: (node, offset, force = false) ->
-    if offset > node.textContent.length
+    if offset > Tandem.Utils.getNodeLength(node)
       throw new Error('Splitting at offset greater than node length')
 
     if node.nodeType == node.TEXT_NODE
@@ -207,7 +224,7 @@ TandemUtils =
     if !force
       if offset == 0
         return [node.previousSibling, node, false]
-      if offset == node.textContent.length
+      if offset == Tandem.Utils.getNodeLength(node)
         return [node, node.nextSibling, false]
 
     left = node
@@ -244,7 +261,7 @@ TandemUtils =
     return unless root?
     cur = root.firstChild
     while cur?
-      nextOffset = offset + cur.textContent.length
+      nextOffset = offset + Tandem.Utils.getNodeLength(cur)
       curHtml = cur.innerHTML
       cur = fn.apply(context, [cur, offset].concat(args))
       TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))

@@ -83,13 +83,13 @@ class TandemEditor extends EventEmitter2
     )
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
-  # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
-  applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
+  # applyAttribute: (Number index, Number length, String attr, Mixed value) ->
+  applyAttribute: (index, length, attr, value, emitEvent = true) ->
     delta = this.trackDelta( =>
-      range = new Tandem.Range(this, startIndex, startIndex + length)
+      range = new Tandem.Range(this, index, index + length)
       @selection.preserve( =>
-        [startLine, startLineOffset] = @doc.findLineAtOffset(startIndex)
-        [endLine, endLineOffset] = @doc.findLineAtOffset(startIndex + length)
+        [startLine, startLineOffset] = @doc.findLineAtOffset(index)
+        [endLine, endLineOffset] = @doc.findLineAtOffset(index + length)
         if startLine == endLine
           this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
         else

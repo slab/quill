@@ -25,7 +25,7 @@ class TandemLine extends LinkedList.Node
     )
 
   @isLineNode: (node) ->
-    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
+    return node?.classList?.contains(TandemLine.CLASS_NAME)
 
   @mergeAdjacent: (root) ->
     Tandem.Utils.traversePreorder(root, 0, (node) ->
@@ -61,7 +61,7 @@ class TandemLine extends LinkedList.Node
 
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE && Tandem.Utils.canModify(node)
-        if node.textContent.length == 0
+        if Tandem.Utils.getNodeLength(node) == 0
           return true
         [attrName, attrValue] = Tandem.Utils.getAttributeForContainer(node)
         if attrName?

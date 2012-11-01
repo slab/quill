@@ -35,12 +35,6 @@ class TandemDocument
       else
         # TODO editor.update should mark dirty lines
         if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
-          _.each(Tandem.Constants.BREAK_TAGS, (tagName) ->
-            tags = child.querySelectorAll(tagName)
-            _.each(tags, (tag) ->
-              tag.textContent = "\n"
-            )
-          )
           lineNodes = Tandem.Utils.breakBlocks(child)
           _.each(lineNodes, (lineNode) ->
             Tandem.Line.normalizeHtml(lineNode)
@@ -88,11 +82,11 @@ class TandemDocument
     retLine = @lines.first
     _.all(@lines.toArray(), (line) ->
       retLine = line
-      if offset > line.length
+      if offset < line.length
+        return false
+      else
         offset -= line.length
         return true
-      else
-        return false
     )
     return [retLine, offset]
 
