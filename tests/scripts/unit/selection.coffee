@@ -85,11 +85,11 @@ describe('Selection', ->
         'insert at beginning of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "A")
-          expected: ['<div><span>0123A|45|6789</span></div>']
+          expected: ['<div><span>0123|A45|6789</span></div>']
         'insert at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "A")
-          expected: ['<div><span>0123|45A|6789</span></div>'] # TODO the desired behavior is |45|A
+          expected: ['<div><span>0123|45|A6789</span></div>']
         'insert in middle of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(5, "A")
@@ -97,11 +97,11 @@ describe('Selection', ->
         'insert newline at beginning of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "\n")
-          expected: ['<div><span>0123</span></div>', '<div><span>|45|6789</span></div>']
+          expected: ['<div><span>0123|</span></div>', '<div><span>45|6789</span></div>']
         'insert newline at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "\n")
-          expected: ['<div><span>0123|45</span></div>', '<div><span>|6789</span></div>']
+          expected: ['<div><span>0123|45|</span></div>', '<div><span>6789</span></div>']
         'insert newline at middle of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(5, "\n")
@@ -110,6 +110,7 @@ describe('Selection', ->
           lines: ['<ol><li><span>0123456789</span></li></ol>', '<span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(10, "\n")
           expected: [0, '<ol><li><span><br></span></li></ol>', 1]
+          
       'delete tests':
         'delete before':
           lines: ['<div><span>0123|45|6789</span></div>']
