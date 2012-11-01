@@ -79,7 +79,7 @@ TandemUtils =
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
     if startLineNode == endLineNode
       endLineNode = rightStart
-      endOffset -= Tandem.Utils.getNodeLength(leftStart) if leftStart? && startLineNode != rightStart
+      endOffset -= startOffset if leftStart? && startLineNode != rightStart
     [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
     fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
@@ -141,9 +141,7 @@ TandemUtils =
     child = node.firstChild
     length = Tandem.Utils.getNodeLength(child)
     while child?
-      break if offset <= length
-      if offset == length
-        return [child, offset]
+      break if offset < length
       offset -= length
       child = child.nextSibling
       length = Tandem.Utils.getNodeLength(child)

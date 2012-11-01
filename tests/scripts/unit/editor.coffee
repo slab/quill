@@ -569,7 +569,6 @@ describe('Editor', ->
             <b>abcdefg</b>
           </div>'
     }]
-    
 
     _.each(tests, (test) ->
       starts = if _.isNumber(test.start) then [test.start] else test.start
@@ -589,8 +588,9 @@ describe('Editor', ->
             expected = test.expected(index)
           editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(expected)
           editor.doc.buildLines()
-          expect(delta).to.deep.equal(editor.doc.toDelta())
+          expectedDelta = editor.doc.toDelta()
           editor.destroy()
+          expect(delta).to.deep.equal(expectedDelta)
         )
       )
     )

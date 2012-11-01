@@ -156,7 +156,6 @@ class TandemEditor extends EventEmitter2
     # If end of text was deleted
     if delta.endLength < delta.startLength + offset
       this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
-
     retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
     retainDelta.compact()
     _.each(retainDelta.deltas, (delta) =>
@@ -167,7 +166,6 @@ class TandemEditor extends EventEmitter2
         this.applyAttribute(delta.start, delta.end - delta.start, attr, value, false) if value?
       )
     )
-
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
