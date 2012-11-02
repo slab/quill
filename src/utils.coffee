@@ -53,10 +53,7 @@ TandemUtils =
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
       rightStart = next
-    externalNodes = _.clone(fragment.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
-    _.each(externalNodes, (node) ->
-      leftStart.appendChild(node)
-    )
+    Tandem.Utils.moveExternal(fragment, leftStart, null)
     Tandem.Utils.mergeNodes(leftStart, rightEnd)
     return fragment
 
@@ -159,6 +156,12 @@ TandemUtils =
       newParent.appendChild(child)
     )
 
+  moveExternal: (source, destParent, destRef) ->
+    externalNodes = _.clone(source.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    _.each(externalNodes, (node) ->
+      destParent.insertBefore(node, destRef)
+    )
+
   removeAttributeFromSubtree: (subtree, attribute) ->
     children = _.clone(subtree.childNodes)
     attributes = Tandem.Utils.getAttributeForContainer(subtree)
@@ -170,6 +173,10 @@ TandemUtils =
       Tandem.Utils.removeAttributeFromSubtree(child, attribute)
     )
     return ret
+
+  removeNode: (node) ->
+    Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+    node.parentNode.removeChild(node)
 
   setIndent: (list, indent) ->
     _.each(_.clone(list.classList), (css) ->

@@ -13,7 +13,7 @@ class TandemDocument
       return root.appendChild(div)
     _.each(_.clone(root.childNodes), (child) =>
       if child.nodeType != child.ELEMENT_NODE
-        child.parentNode.removeChild(child)
+        Tandem.Utils.removeNode(child)
       else if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
         # TODO editor.update should mark dirty lines
         Tandem.Line.normalizeHtml(child)
@@ -104,7 +104,7 @@ class TandemDocument
   forceTrailingNewline: ->
     unless @trailingNewline
       if @lines.length > 1 && @lines.last.length == 0
-        @root.removeChild(@lines.last.node)
+        Tandem.Utils.removeNode(@lines.last.node)
         this.removeLine(@lines.last)
       @trailingNewline = true
       @length += 1
@@ -195,7 +195,7 @@ class TandemDocument
       )
     else
       parentNode = leaf.node.parentNode
-      parentNode.removeChild(leaf.node)
+      Tandem.Utils.removeNode(leaf.node)
       _.each(contents, (content) ->
         parentNode.appendChild(content)
       )
