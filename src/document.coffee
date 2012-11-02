@@ -123,7 +123,7 @@ class TandemDocument
   insertText: (index, text) ->
     [line, lineOffset] = this.findLineAtOffset(index)
     textLines = text.split("\n")
-    if index == @length
+    if index == @length && @trailingNewline
       @trailingNewline = false
       @length -= 1    # Doc did not get shorter but _.each loop compensates
       _.each(textLines, (textLine) =>
