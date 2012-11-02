@@ -35,10 +35,11 @@ class TandemDocument
       else
         # TODO editor.update should mark dirty lines
         if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
-          lineNodes = Tandem.Utils.breakBlocks(child)
-          _.each(lineNodes, (lineNode) ->
-            Tandem.Line.normalizeHtml(lineNode)
-          )
+          #lineNodes = Tandem.Utils.breakBlocks(child)
+          #_.each(lineNodes, (lineNode) ->
+          #  Tandem.Line.normalizeHtml(lineNode)
+          #)
+          Tandem.Line.normalizeHtml(child)
     )
     TandemDocument.fixListNumbering(root)
 
@@ -79,15 +80,17 @@ class TandemDocument
     return @lineMap[node.id]
 
   findLineAtOffset: (offset) ->
+    console.log offset, @root.innerHTML
     retLine = @lines.first
-    _.all(@lines.toArray(), (line) ->
+    _.all(@lines.toArray(), (line, index) =>
       retLine = line
       if offset < line.length
         return false
       else
-        offset -= line.length
+        offset -= line.length if index < @lines.length - 1
         return true
     )
+    console.log retLine, offset
     return [retLine, offset]
 
   findLineNode: (node) ->

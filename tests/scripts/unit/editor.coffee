@@ -268,113 +268,66 @@ describe('Editor', ->
 
 
   describe('insertAt', ->
-    reset = ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml(
-        '<div>
-          <span>123</span>
-          <i>456</i>
-        </div>'
-      ))
-      return new Tandem.Editor('editor-container')
+    tests = 
+      ###
+      'should insert simple text':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(1, 'A')
+        expected: ['<div><span>1A23</span><i>456</i></div>']
+      'should insert text inside formatted tags':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(4, 'A')
+        expected: ['<div><span>1A23</span><i>4</i><span>A</span><i>56</i></div>']
+      'should insert newline character':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(1, "\n")
+        expected: ['<div><span>1</span></div>', '<div><span>23</span><i>456</i></div>']
+      'should insert text with newline':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(1, "A\nB")
+        expected: ['<div><span>1A</span></div>', '<div><span>B23</span><i>456</i></div>']
+      'should insert multiple newline text':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(1, "A\nB\nC")
+        expected: ['<div><span>1A</span></div>', '<div><span>B</span></div>', '<div><span>C23</span><i>456</i></div>']
+      'should add preceding newline':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(0, "\n")
+        expected: ['<div><br></div>', 0]
+      'should add trailing newline':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(6, "\n")
+        expected: [0, '<div><br></div>']
+      ###
+      'should add trailing text and newline':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(7, "89\n")
+        expected: [0, '<div><span>89</span></div>']
+      ###
+      'should insert mutliple newline in a row text':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(1, "A\n\nC")
+        expected: ['<div><span>1A</span></div>', '<div><br></div>', '<div><span>C23</span><i>456</i></div>']
+      ###
 
-    tests = [{
-      name: 'should insert simple text'
-      index: 1
-      text: 'A'
-      expected: 
-        '<div>
-          <span>1A23</span>
-          <i>456</i>
-        </div>'
-    }, {
-      name: 'should insert text inside formatted tags'
-      index: 4
-      text: 'A'
-      expected: 
-        '<div>
-          <span>123</span>
-          <i>4</i>
-          <span>A</span>
-          <i>56</i>
-        </div>'
-    }, {
-      name: 'should insert newline character'
-      index: 1
-      text: "\n"
-      expected: 
-        '<div>
-          <span>1</span>
-        </div>
-        <div>
-          <span>23</span>
-          <i>456</i>
-        </div>'
-    }, {
-      name: 'should insert text with newline'
-      index: 1
-      text: "A\nB"
-      expected: 
-        '<div>
-          <span>1A</span>
-        </div>
-        <div>
-          <span>B23</span>
-          <i>456</i>
-        </div>'
-    }, {
-      name: 'should insert multiple newline text'
-      index: 1
-      text: "A\nB\nC"
-      expected: 
-        '<div>
-          <span>1A</span>
-        </div>
-        <div>
-          <span>B</span>
-        </div>
-        <div>
-          <span>C23</span>
-          <i>456</i>
-        </div>'
-    }, {
-      name: 'should add newline at boundary'
-      index: 0
-      text: "\n"
-      expected: 
-        '<div>
-          <br>
-        </div>
-        <div>
-          <span>123</span>
-          <i>456</i>
-        </div>'
-    }, {
-      name: 'should insert mutliple newline in a row text'
-      index: 1
-      text: "A\n\nC"
-      expected: 
-        '<div>
-          <span>1A</span>
-        </div>
-        <div>
-          <br>
-        </div>
-        <div>
-          <span>C23</span>
-          <i>456</i>
-        </div>'
-    }]
-
-    _.each(tests, (test) ->
-      it(test.name, ->
-        editor = reset()
-        editor.insertAt(test.index, test.text)
-        expect(Tandem.Debug.checkDocumentConsistency(editor.doc, true)).to.be.true
-        delta = editor.doc.toDelta()
-        editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(test.expected)
-        editor.doc.buildLines()
-        expect(delta).to.deep.equal(editor.doc.toDelta())
+    _.each(tests, (test, name) ->
+      it(name, ->
+        html = test.lines.join('')
+        expectedHtml = _.map(test.expected, (line) ->
+          return if _.isNumber(line) then test.lines[line] else line
+        ).join('')
+        $('#editor-container').html(html)
+        editor = new Tandem.Editor('editor-container')
+        test.fn(editor)
+        consistent = Tandem.Debug.checkDocumentConsistency(editor.doc)
+        newDelta = editor.doc.toDelta()
         editor.destroy()
+        $('#editor-container').html(expectedHtml)
+        editor = new Tandem.Editor('editor-container')
+        expectedDelta = editor.doc.toDelta()
+        editor.destroy()
+        expect(consistent).to.be.true
+        expect(newDelta).to.deep.equal(expectedDelta)
       )
     )
   )

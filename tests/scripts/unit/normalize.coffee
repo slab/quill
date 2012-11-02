@@ -7,6 +7,7 @@
 
 describe('Normalize', ->
   tests = 
+    ###
     'block':
       'initialize empty document':
         lines: ['']
@@ -32,6 +33,7 @@ describe('Normalize', ->
       'should correctly break inner br tag':
         lines: ['<div><span><br></span></div>']
         expected: ['<div><br></div>']
+    ###
 
     'elements':
       'tranform equivalent styles':

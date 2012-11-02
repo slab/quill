@@ -222,12 +222,20 @@ class TandemEditor extends EventEmitter2
 
   insertAt: (index, text, emitEvent = true) ->
     delta = this.trackDelta( =>
-      position = Tandem.Position.makePosition(this, index)
-      startLine = @doc.findLineAtOffset(index)
-      [line, lineOffset] = @doc.findLineAtOffset(index)
       @selection.preserve( =>
-        textLines = text.split("\n") 
-        if textLines.length == 1
+        [line, lineOffset] = @doc.findLineAtOffset(index)
+        textLines = text.split("\n")
+        if index == @doc.length
+          _.each(textLines, (textLine) =>
+            contents = this.makeLineContents(textLine)
+            div = @doc.root.ownerDocument.createElement('div')
+            _.each(contents, (content) ->
+              div.appendChild(content)
+            )
+            @doc.root.appendChild(div)
+            @doc.appendLine(div)
+          )
+        else if textLines.length == 1
           contents = this.makeLineContents(text)
           this.insertContentsAt(line, lineOffset, contents)
         else
