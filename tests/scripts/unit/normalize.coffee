@@ -7,34 +7,6 @@
 
 describe('Normalize', ->
   tests = 
-    ###
-    'block':
-      'initialize empty document':
-        lines: ['']
-        expected: ['<div><br></div>']
-      'remove br from non-empty lines':
-        lines: ['<div><br></div>', '<div><span>Text</span><br></div>']
-        expected: [0, '<div><span>Text</span></div>']
-      'break block elements':
-        lines: ['<div><div><span>Hey</span></div><h1><span>What</span></h1></div>']
-        expected: ['<div><span>Hey</span></div>', '<div><span>What</span></div>']
-      'break on br tags':
-        lines: ['<div><span>Text</span><br><b>Bold</b><br><i>Italic</i></div>']
-        expected: ['<div><span>Text</span></div>', '<div><b>Bold</b></div>', '<div><i>Italic</i></div>']
-      'remove redundant block elements':
-        lines: ['<div><div><span>Hey</span></div></div><div><div><div><div><span>What</span></div></div></div></div>']
-        expected: ['<div><span>Hey</span></div>', '<div><span>What</span></div>']
-      'break list elements':
-        lines: ['<ul><li>One</li><li>Two</li><li>Three</li></ul>']
-        expected: ['<ul><li><span>One</span></li></ul>', '<ul><li><span>Two</span></li></ul>' ,'<ul><li><span>Three</span></li></ul>']
-      'split block level tags within elements':
-        lines: ['<div><b><i>What</i><div><s>Strike</s></div><u>Underline</u></b></div>']
-        expected: ['<div><b><i>What</i></b></div>', '<div><b><s>Strike</s></b></div>', '<div><b><u>Underline</u></b></div>']
-      'should correctly break inner br tag':
-        lines: ['<div><span><br></span></div>']
-        expected: ['<div><br></div>']
-    ###
-
     'elements':
       'tranform equivalent styles':
         lines: [

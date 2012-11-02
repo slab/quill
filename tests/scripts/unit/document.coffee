@@ -29,24 +29,15 @@ describe('Document', ->
       'format':
         lines: ['<div><b>0123</b></div>']
         deltas: [new JetInsert('0123', {bold:true}), new JetInsert("\n")]
-      #'line format':
-      #  lines: ['<ul class="indent-1"><li>0123</li></ul>']
-      #  deltas: [new JetInsert('0123', {bullet:1})]
       'empty':
         lines: ['']
         deltas: [new JetInsert("\n")]
       'empty 2':
         lines: ['<div><br></div>']
         deltas: [new JetInsert("\n")]
-      #'empty 3':
-      #  lines: ['<div><ul><li><br></li></ul></div>']
-      #  deltas: []
       'newline':
         lines: ['<div><br></div>', '<div><br></div>']
         deltas: [new JetInsert("\n\n")]
-      #'newline with line format':
-      #  lines: ['<ul class="indent-1"><li><br></li></ul>', '<div><br></div>']
-      #  deltas: [new JetInsert("\n", {bullet:1})]
       'text + newline':
         lines: ['<div><span>0</span></div>', '<div><br></div>']
         deltas: [new JetInsert("0\n\n")]

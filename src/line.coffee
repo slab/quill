@@ -121,6 +121,29 @@ class TandemLine extends LinkedList.Node
         this.buildLeaves(node, nodeAttributes)
     )
 
+  applyAttribute: (startOffset, endOffset, attr, value) ->
+    return if startOffset == endOffset
+    [prevNode, startNode] = this.splitContents(startOffset)
+    [endNode, nextNode] = this.splitContents(endOffset)
+    parentNode = startNode?.parentNode || prevNode?.parentNode
+    if value && Tandem.Utils.getAttributeDefault(attr) != value
+      fragment = @doc.root.ownerDocument.createDocumentFragment()
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+        node = Tandem.Utils.removeAttributeFromSubtree(node, attr)
+        fragment.appendChild(node)
+      )
+      attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
+      attrNode.appendChild(fragment)
+      if nextNode? && (parentNode.compareDocumentPosition(nextNode) & parentNode.DOCUMENT_POSITION_CONTAINED_BY) == parentNode.DOCUMENT_POSITION_CONTAINED_BY
+        parentNode.insertBefore(attrNode, nextNode)
+      else
+        parentNode.appendChild(attrNode)
+    else
+      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+        Tandem.Utils.removeAttributeFromSubtree(node, attr)
+      )
+    @doc.updateLine(this)
+
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
     while curLeaf?

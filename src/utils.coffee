@@ -2,39 +2,6 @@
 #= tandem/constants
 
 TandemUtils = 
-  # All block nodes inside nodes are moved out
-  breakBlocks: (root) ->
-    lineNodes = [root]
-    this.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE && Tandem.Utils.canModify(node)
-        toBreak = []
-        if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-          [left1, left2, didLeftSplit] = this.splitNode(root, index)
-          if didLeftSplit
-            toBreak = toBreak.concat([left1, left2])
-          else
-            [right1, right2, didRightSplit] = this.splitNode(root, Tandem.Utils.getNodeLength(node))
-            toBreak = toBreak.concat([right1, right2]) if didRightSplit
-        else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
-          next = node.nextSibling
-          if node.previousSibling && node.nextSibling
-            [left, right, didSplit] = this.splitNode(root, index, true)
-            node.parentNode.removeChild(node)
-            toBreak = [left, right]
-            node = next
-          else if node.previousSibling || node.nextSibling
-            node.parentNode.removeChild(node)
-            node = next
-        _.each(toBreak, (line) =>
-          if line? && line != root
-            newLineNodes = this.breakBlocks(line)
-            lineNodes.push(line)
-            lineNodes = _.uniq(lineNodes.concat(newLineNodes))
-        )
-      return node
-    )
-    return lineNodes
-
   canModify: (node) ->
     return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
 
