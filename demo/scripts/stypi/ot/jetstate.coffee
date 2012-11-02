@@ -70,7 +70,6 @@ class JetTextState extends JetState
     @inLine = JetDelta.getIdentity(@arrived.endLength)
 
   localUpdate: (delta) ->
-    this.applyDeltaToCursors(delta, @userId)
     @inLine = JetSync.compose(@inLine, delta)
 
   remoteUpdate: (delta, authorId) ->
@@ -82,8 +81,7 @@ class JetTextState extends JetState
     @inFlight = JetSync.follows(delta, @inFlight, true)
     @inLine = JetSync.follows(flightDeltaFollows, @inLine, true)
 
-    # TODO use apply library function in JetSync
-    this.applyDeltaToText(textFollows, authorId)
+    @editor.applyDelta(textFollows)
 
   takeoff: ->
     console.assert(@inFlight?, "inFlight is", @inFlight, "at takeoff")
@@ -97,68 +95,6 @@ class JetTextState extends JetState
   land: ->
     @arrived = JetSync.compose(@arrived, @inFlight)
     @inFlight = JetDelta.getIdentity(@arrived.endLength)
-
-  applyDeltaToCursors: (delta, authorId) ->
-    JetState.applyDelta(delta, ((index, text, authorId) =>
-      @editor.shiftCursors(index, text.length, authorId)
-    ), ((start, end, authorId) =>
-      @editor.shiftCursors(start, start-end, authorId)
-    ))
-
-  applyDeltaToText: (delta, authorId) ->
-    if @client.states[JetClient.CURSOR]? && authorId != 1 && @editor.cursors[authorId] == undefined
-      @editor.setCursor(authorId, 0)
-    console.assert(delta.startLength == @editor.getText().length, "Delta startLength #{delta.startLength} and target string length #{@editor.getText().length} mismatch", delta)
-    JetState.applyDelta(delta, @editor.insertTextAt, @editor.deleteTextAt, @editor)
-    console.assert(delta.endLength == @editor.getText().length, "Delta endLength #{delta.endLength} and target string length #{@editor.getText().length} mismatch", delta)
-
-
-
-class JetCursorState extends JetState
-  constructor: (@editor, @client, @cursors, @sessionId) ->
-    @type = JetState.CURSOR
-    @userId = @client.settings.userId
-    this.reset(@cursors)
-
-  reset: (@cursors) ->
-    @editor.clearCursors()
-    @inFlight = @inLine = null
-    for id,cursor of cursors when id != @userId     # Ignore our own cursor
-      index = this.getCursorIndex(cursor)
-      @editor.setCursor(cursor.userId, Math.max(index, 0))
-
-  getCursorIndex: (cursor) ->
-    # TODO for efficiency, check if text has changed, otherwise we can use cursor.index
-    # TODO transform against inLine and inFlight... so we don't have to do match
-    # Need to match since the cursor may have changed since last time...
-    index = JetState.dmp.match_main(@editor.getText(), cursor.before+cursor.after, cursor.index) + cursor.before.length
-    return Math.max(index, 0)
-
-  localUpdate: (cursor) ->
-    console.assert(JetCursorState.isCursor(cursor), "Non-cursor passed into JetCursorState's localUpdate")
-    cursor.userId = @userId
-    @inLine = cursor
-
-  remoteUpdate: (cursor, authorId) ->
-    index = this.getCursorIndex(cursor)
-    @editor.setCursor(authorId, index)
-
-  land: ->
-    @inFlight = null
-
-  takeoff: ->
-    if @inFlight == null && @inLine != null
-      @inFlight = @inLine
-      @inLine = null
-      return { change: @inFlight }
-    return false
-
-  @areCursorsEqual: (a, b) ->
-    console.assert(JetCursorState.isCursor(a) && JetCursorState.isCursor(b), "comparing apples and oranges")
-    return a.index == b.index && a.before == b.before && a.after == b.after
-
-  @isCursor: (cursor) ->
-    return typeof cursor.index == 'number' && typeof cursor.before == 'string' && typeof cursor.after == 'string'
 
 
 
@@ -208,5 +144,4 @@ class JetChatState extends JetState
 # So other files can actually use this library
 window.JetState = JetState if window?
 window.JetTextState = JetTextState if window?
-window.JetCursorState = JetCursorState if window?
 window.JetChatState = JetChatState if window?

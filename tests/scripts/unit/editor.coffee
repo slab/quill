@@ -7,6 +7,10 @@
 describe('Editor', ->
   describe('applyDelta', ->
     tests =
+      'apply to empty':
+        lines: []
+        deltas: [new JetInsert("0123\n")]
+        expected: ['<div><span>0123</span></div>']
       'append character':
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert('4'), new JetRetain(4,5)]
