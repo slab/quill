@@ -64,8 +64,12 @@ class TandemSelection
 
   removeMarkers: ->
     markers = @editor.doc.root.getElementsByClassName('sel-marker')
-    _.each(_.clone(markers), (marker) ->
-      marker.parentNode.removeChild(marker)
+    _.each(_.clone(markers), (marker) =>
+      parent = marker.parentNode
+      parent.removeChild(marker)
+      parent.normalize()
+      line = @editor.doc.findLine(parent)
+      line.rebuild() if line?
     )
 
   restore: ->
@@ -73,17 +77,10 @@ class TandemSelection
     startMarker = markers[0]
     endMarker = markers[1]
     if startMarker && endMarker
-      startLineNode = @editor.doc.findLineNode(startMarker)
-      endLineNode = @editor.doc.findLineNode(endMarker)
-      startOffset = Tandem.Position.getIndex(startMarker, 0, startLineNode)
-      endOffset = Tandem.Position.getIndex(endMarker, 0, endLineNode)
+      startOffset = Tandem.Position.getIndex(startMarker, 0, @editor.doc.root)
+      endOffset = Tandem.Position.getIndex(endMarker, 0, @editor.doc.root)
       this.removeMarkers()
-      startLine = @editor.doc.findLine(startLineNode)
-      startLine.rebuild()
-      if startLineNode != endLineNode
-        endLine = @editor.doc.findLine(endLineNode)
-        endLine.rebuild()
-      range = new Tandem.Range(@editor, new Tandem.Position(@editor, startLineNode, startOffset), new Tandem.Position(@editor, endLineNode, endOffset))
+      range = new Tandem.Range(@editor, new Tandem.Position(@editor, @editor.doc.root, startOffset), new Tandem.Position(@editor, @editor.doc.root, endOffset))
       this.setRange(range)
     else
       # TODO this should never happen...

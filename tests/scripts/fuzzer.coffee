@@ -1,6 +1,6 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
 ATTRIBUTES = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES)
-NUM_OPERATIONS = 100
+NUM_OPERATIONS = 500
 
 seed = Math.random()
 console.info seed

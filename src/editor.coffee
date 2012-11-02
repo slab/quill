@@ -66,7 +66,7 @@ class TandemEditor extends EventEmitter2
       @doc.root.focus()
       position = Tandem.Position.makePosition(this, @options.cursor)
       start = new Tandem.Range(this, position, position)
-      this.setSelection(start)
+      #this.setSelection(start)
 
   initListeners: ->
     deboundedEdit = _.debounce( =>

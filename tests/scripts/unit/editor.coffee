@@ -102,7 +102,6 @@ describe('Editor', ->
         lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 5, length: 3
         expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
-
       'entire line with preceding newline':
         lines: ['<div><#>01</#><i>23</i></div>', '<div><s>5</s><u>6</u></div>', '<div><b>89</b></div>']
         start: 4, length: 3
@@ -411,6 +410,19 @@ describe('Editor', ->
           <b>bcdefg</b>
         </div>'
     }, {
+      name: 'entire line and more 2'
+      start: 0
+      length: 8
+      expected:
+        '<div>
+          <u>8</u>
+          <s>9</s>
+          <u>0</u>
+        </div>
+        <div>
+          <b>abcdefg</b>
+        </div>'
+    }, {
       name: 'across multiple lines'
       start: [2..4]
       length: 6
@@ -434,7 +446,7 @@ describe('Editor', ->
         it(name, ->
           editor = reset()
           editor.deleteAt(start, test.length)
-          expect(Tandem.Debug.checkDocumentConsistency(editor.doc, true)).to.be.true
+          consistent = Tandem.Debug.checkDocumentConsistency(editor.doc, true)
           delta = editor.doc.toDelta()
           if _.isString(test.expected)
             expected = test.expected
@@ -446,6 +458,7 @@ describe('Editor', ->
           editor.doc.buildLines()
           expectedDelta = editor.doc.toDelta()
           editor.destroy()
+          expect(consistent).to.be.true
           expect(delta).to.deep.equal(expectedDelta)
         )
       )

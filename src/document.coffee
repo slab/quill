@@ -27,18 +27,10 @@ class TandemDocument
     return this.insertLineBefore(lineNode, null)
 
   applyAttribute: (index, length, attr, value) ->
-    [startLine, startLineOffset] = this.findLineAtOffset(index)
-    [endLine, endLineOffset] = this.findLineAtOffset(index + length)
-    if startLine == endLine
-      startLine.applyAttribute(startLineOffset, endLineOffset, attr, value)
-    else
-      curLine = startLine.next
-      while curLine? && curLine != endLine
-        next = curLine.next
-        curLine.applyAttribute(0, curLine.length, attr, value)
-        curLine = next
-      startLine.applyAttribute(startLineOffset, startLine.length, attr, value)
-      endLine.applyAttribute(0, endLineOffset, attr, value) if endLine?
+    this.applyToLines(index, length, (line, offset, length) =>
+      line.applyAttribute(offset, length, attr, value)
+      this.updateLine(line)
+    )
 
   buildLines: ->
     this.reset()
@@ -46,11 +38,26 @@ class TandemDocument
     this.rebuild()
 
   cleanNode: (lineNode) ->
+    return if lineNode.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
     line = this.findLine(lineNode)
     if line? && this.updateLine(line)
       lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
       return true
     return false
+
+  applyToLines: (index, length, fn) ->
+    [startLine, startOffset] = this.findLineAtOffset(index)
+    [endLine, endOffset] = this.findLineAtOffset(index + length)
+    if startLine == endLine
+      fn(startLine, startOffset, endOffset - startOffset)
+    else
+      curLine = startLine.next
+      fn(startLine, startOffset, startLine.length + 1 - startOffset)
+      while curLine? && curLine != endLine
+        next = curLine.next
+        fn(curLine, 0, curLine.length + 1)
+        curLine = next
+      fn(endLine, 0, endOffset)
 
   deleteText: (index, length) ->
     if index + length == @length
@@ -58,14 +65,20 @@ class TandemDocument
       @length -= 1
       length -= 1
     return if length <= 0
-    [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@root, index)
-    [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@root, index + length)
-    fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
-    lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
-    _.each(lineNodes, (lineNode) =>
-      line = this.findLine(lineNode)
-      this.updateLine(line) if line?
+    firstLine = lastLine = null
+    this.applyToLines(index, length, (line, offset, length) =>
+      firstLine = line unless firstLine?
+      lastLine = line
+      if offset == 0 && length == line.length + 1
+        Tandem.Utils.removeNode(line.node)
+      else
+        line.deleteText(offset, length)
+      this.updateLine(line)
     )
+    if firstLine != lastLine and this.findLine(firstLine.node) and this.findLine(lastLine.node)
+      Tandem.Utils.mergeNodes(firstLine.node, lastLine.node)
+      this.updateLine(firstLine)
+      this.removeLine(lastLine)
 
   detectChange: ->
     # Go through HTML (which should be normalized)
@@ -82,7 +95,10 @@ class TandemDocument
 
   findLine: (node) ->
     node = this.findLineNode(node)
-    return @lineMap[node.id]
+    if node?
+      return @lineMap[node.id]
+    else
+      return null
 
   findLineAtOffset: (offset) ->
     retLine = @lines.first
