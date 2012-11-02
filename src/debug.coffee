@@ -54,7 +54,7 @@ window.Tandem.Debug =
       if _.any(lines, (line) ->
         lineLength = _.reduce(line.leaves.toArray(), (count, leaf) ->
           return leaf.length + count
-        , 1)
+        , 0)
         if lineLength != line.length
           console.error 'incorrect line length', lineLength, line.length
           return true
@@ -74,9 +74,13 @@ window.Tandem.Debug =
       # Document length should be correct
       docLength = _.reduce(lines, (count, line) ->
         return line.length + count
-      , 0)
+      , lines.length)
       if docLength != doc.length
         console.error "incorrect document length", docLength, doc.length
+        return false
+
+      unless doc.trailingNewline
+        console.error "trailingNewline is false"
         return false
 
       # doc.lines should match nodesByLine
@@ -84,7 +88,7 @@ window.Tandem.Debug =
         console.error "doc.lines and nodesByLine differ in length"
         return false
       return false if _.any(lines, (line, index) =>
-        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Tandem.Utils.getNodeLength(node) + length), 1)
+        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Tandem.Utils.getNodeLength(node) + length), 0)
         if line.length != calculatedLength
           console.error line, line.length, calculatedLength, 'differ in length'
           return true

@@ -85,6 +85,7 @@ class TandemEditor extends EventEmitter2
   keepNormalized: (fn) ->
     fn.call(this)
     @doc.rebuildDirty()
+    @doc.forceTrailingNewline()
 
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number index, Number length, String attr, Mixed value) ->
@@ -131,6 +132,7 @@ class TandemEditor extends EventEmitter2
         @doc.applyAttribute(delta.start, delta.end - delta.start, attr, value) if value?
       )
     )
+    @doc.forceTrailingNewline()
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()

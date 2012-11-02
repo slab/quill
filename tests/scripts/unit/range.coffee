@@ -82,6 +82,7 @@ describe('Range', ->
           <b>
             <s>34</s>
           </b>
+        </div>
         <div>
           <s>5</s>
           <u>6</u>
@@ -213,6 +214,7 @@ describe('Range', ->
           <b>
             <s>34</s>
           </b>
+        </div>
         <div>
           <s>5</s>
           <u>6</u>

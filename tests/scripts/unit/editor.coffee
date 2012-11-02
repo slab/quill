@@ -19,6 +19,10 @@ describe('Editor', ->
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert('4', {bold: true}), new JetRetain(4,5)]
         expected: ['<div><span>0123</span><b>4</b></div>']
+      'append newline':
+        lines: ['<div><span>0123</span></div>']
+        deltas: [new JetRetain(0,5), new JetInsert("\n")]
+        expected: ['<div><span>0123</span></div>', '<div><br></div>']
       'insert newline in middle of text':
         lines: ['<div><span>0123</span></div>']
         deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,5)]
@@ -168,7 +172,6 @@ describe('Editor', ->
 
   describe('insertAt', ->
     tests = 
-      ###
       'should insert simple text':
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(1, 'A')
@@ -176,7 +179,7 @@ describe('Editor', ->
       'should insert text inside formatted tags':
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(4, 'A')
-        expected: ['<div><span>1A23</span><i>4</i><span>A</span><i>56</i></div>']
+        expected: ['<div><span>123</span><i>4</i><span>A</span><i>56</i></div>']
       'should insert newline character':
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(1, "\n")
@@ -197,17 +200,14 @@ describe('Editor', ->
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(6, "\n")
         expected: [0, '<div><br></div>']
-      ###
       'should add trailing text and newline':
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(7, "89\n")
         expected: [0, '<div><span>89</span></div>']
-      ###
       'should insert mutliple newline in a row text':
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(1, "A\n\nC")
         expected: ['<div><span>1A</span></div>', '<div><br></div>', '<div><span>C23</span><i>456</i></div>']
-      ###
 
     _.each(tests, (test, name) ->
       it(name, ->

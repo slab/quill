@@ -53,6 +53,11 @@ class TandemDocument
     return false
 
   deleteText: (index, length) ->
+    if index + length == @length
+      @trailingNewline = false
+      @length -= 1
+      length -= 1
+    return if length <= 0
     [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@root, index)
     [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@root, index + length)
     fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
@@ -83,10 +88,10 @@ class TandemDocument
     retLine = @lines.first
     _.all(@lines.toArray(), (line, index) =>
       retLine = line
-      if offset < line.length
+      if offset < line.length + 1
         return false
       else
-        offset -= line.length if index < @lines.length - 1
+        offset -= (line.length + 1) if index < @lines.length - 1
         return true
     )
     return [retLine, offset]
@@ -96,6 +101,14 @@ class TandemDocument
       node = node.parentNode
     return node
 
+  forceTrailingNewline: ->
+    unless @trailingNewline
+      if @lines.length > 1 && @lines.last.length == 0
+        @root.removeChild(@lines.last.node)
+        this.removeLine(@lines.last)
+      @trailingNewline = true
+      @length += 1
+
   insertLineBefore: (newLineNode, refLine) ->
     line = new Tandem.Line(this, newLineNode)
     if refLine != null
@@ -104,12 +117,15 @@ class TandemDocument
       @lines.append(line)
     @lineMap[line.id] = line
     @length += line.length
+    @length += 1 if @lines.length > 1
     return line
 
   insertText: (index, text) ->
     [line, lineOffset] = this.findLineAtOffset(index)
     textLines = text.split("\n")
     if index == @length
+      @trailingNewline = false
+      @length -= 1    # Doc did not get shorter but _.each loop compensates
       _.each(textLines, (textLine) =>
         contents = this.makeLineContents(textLine)
         div = @root.ownerDocument.createElement('div')
@@ -195,7 +211,7 @@ class TandemDocument
       else
         refLine = line.next
         refLineNode = if refLine? then refLine.node else null
-        this.insertBefore(div, refLineNode)
+        @root.insertBefore(div, refLineNode)
         newLine = this.insertLineBefore(div, refLine)
         return [line, newLine]
     else
@@ -229,11 +245,13 @@ class TandemDocument
     delete @lineMap[line.id]
     @lines.remove(line)
     @length -= line.length
+    @length -= 1 if @lines.length >= 1
 
   reset: ->
     @lines = new LinkedList()
     @lineMap = {}
-    @length = 0
+    @length = 1
+    @trailingNewline = true
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
@@ -244,8 +262,12 @@ class TandemDocument
   toDelta: ->
     lines = @lines.toArray()
     deltas = _.flatten(_.map(lines, (line, index) ->
-      return JetDelta.copy(line.delta).deltas
+      deltas = JetDelta.copy(line.delta).deltas
+      deltas.push(new JetInsert("\n", line.attributes)) if index < lines.length - 1
+      return deltas
     ), true)
+    attributes = if @lines.last? then @lines.last.attributes else {}
+    deltas.push(new JetInsert("\n", attributes)) if @trailingNewline
     delta = new JetDelta(0, @length, deltas)
     delta.compact()
     return delta

@@ -18,7 +18,7 @@ class TandemPosition
       offset -= nodeLength
       TandemPosition.findDeepestNode(editor, node.nextSibling, offset)
     else if node.lastChild?
-      return TandemPosition.findDeepestNode(editor, node.lastChild, offset)
+      return TandemPosition.findDeepestNode(editor, node.lastChild, Tandem.Utils.getNodeLength(node.lastChild))
     else
       return [node, offset]
 

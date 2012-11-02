@@ -25,7 +25,7 @@ class TandemLine extends LinkedList.Node
     )
 
   @isLineNode: (node) ->
-    return node?.classList?.contains(TandemLine.CLASS_NAME)
+    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
 
   @mergeAdjacent: (root) ->
     Tandem.Utils.traversePreorder(root, 0, (node) ->
@@ -177,7 +177,7 @@ class TandemLine extends LinkedList.Node
     return true
 
   resetContent: ->
-    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 1)   # Initial length 1 due to newline
+    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
     @attributes = {}
     [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
@@ -202,7 +202,6 @@ class TandemLine extends LinkedList.Node
     deltas = _.map(@leaves.toArray(), (leaf) ->
       return new JetInsert(leaf.text, leaf.getAttributes(true))
     )
-    deltas.push(new JetInsert("\n", @attributes))
     delta = new JetDelta(0, @length, deltas)
     delta.compact()
     return delta
