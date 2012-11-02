@@ -3,7 +3,7 @@ $(document).ready( ->
   window.toolbar = toolbar = new Tandem.Toolbar(editor)
   
   toolbar.on 'update', (attributes) ->
-    $.post('/ios-message', {json: JSON.stringify(attributes)})
+    $.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
 
 
   editor.getText = -> ""
@@ -27,6 +27,10 @@ $(document).ready( ->
 
   textState.applyDeltaToText = (delta, authorId) ->   # Hacky overwrite
     editor.applyDelta(delta)
+    data =
+      docId: Stypi.configs.docId
+    #$.post('/ios-message/text-init', {json: JSON.stringify(data)});
+
   textState.applyDeltaToCursors = ->
   Stypi.Presence = {
     setUsers: ->
@@ -40,4 +44,13 @@ $(document).ready( ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
   )
+
+  window.docText = ->
+    _($('iframe').contents().find('body').find('.line'))
+      .map( (line) -> 
+        $(line).text()
+      )
+      .join(' ')
+      .replace(/\s+/g,' ')
 )
+
