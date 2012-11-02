@@ -35,6 +35,10 @@ describe('Editor', ->
         lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
         deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
         expected: [0, 1, 1, 2]
+      'double insert':
+        lines: ['<div><span>0123</span></div>']
+        deltas: [new JetRetain(0,2), new JetInsert('a'), new JetInsert('b'), new JetRetain(2,5)]
+        expected: ['<div><span>01ab23</span></div>']
       'append differing formatted texts':
         lines: ['<div><br></div>']
         deltas: [new JetInsert('01', {bold:true}), new JetInsert('23', {italic:true}), new JetRetain(0,1)]
