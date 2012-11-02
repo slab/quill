@@ -49,7 +49,7 @@ class TandemLine extends LinkedList.Node
     this.wrapText(root)
     this.mergeAdjacent(root)
     this.wrapText(root)
-    if root.childNodes.length <= root.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}").length
+    if 0 == _.reduce(root.childNodes, ((count, node) -> return count + (if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) then 0 else 1)), 0)
       if root.tagName == 'OL' || root.tagName == 'UL'
         root.appendChild(root.ownerDocument.createElement('li'))
         root = root.firstChild
@@ -117,32 +117,39 @@ class TandemLine extends LinkedList.Node
       nodeAttributes[attrName] = attrVal if attrName?
       if Tandem.Leaf.isLeafNode(node)
         @leaves.append(new Tandem.Leaf(this, node, nodeAttributes))
-      else
+      if Tandem.Leaf.isLeafParent(node)
         this.buildLeaves(node, nodeAttributes)
     )
 
-  applyAttribute: (startOffset, endOffset, attr, value) ->
-    return if startOffset == endOffset
-    [prevNode, startNode] = this.splitContents(startOffset)
-    [endNode, nextNode] = this.splitContents(endOffset)
+  applyToContents: (offset, length, fn) ->
+    return if length <= 0
+    [prevNode, startNode] = this.splitContents(offset)
+    [endNode, nextNode] = this.splitContents(offset + length)
+    Tandem.Utils.traverseSiblings(startNode, endNode, fn)
+
+  applyAttribute: (offset, length, attr, value) ->
+    return if length <= 0
+    [prevNode, startNode] = this.splitContents(offset)
+    [endNode, nextNode] = this.splitContents(offset + length)
     parentNode = startNode?.parentNode || prevNode?.parentNode
     if value && Tandem.Utils.getAttributeDefault(attr) != value
-      fragment = @doc.root.ownerDocument.createDocumentFragment()
-      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-        node = Tandem.Utils.removeAttributeFromSubtree(node, attr)
-        fragment.appendChild(node)
-      )
+      refNode = null
       attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
-      attrNode.appendChild(fragment)
-      if nextNode? && (parentNode.compareDocumentPosition(nextNode) & parentNode.DOCUMENT_POSITION_CONTAINED_BY) == parentNode.DOCUMENT_POSITION_CONTAINED_BY
-        parentNode.insertBefore(attrNode, nextNode)
-      else
-        parentNode.appendChild(attrNode)
+      this.applyToContents(offset, length, (node) =>
+        refNode = node.nextSibling
+        node = Tandem.Utils.removeAttributeFromSubtree(node, attr)
+        attrNode.appendChild(node)
+      )
+      @node.insertBefore(attrNode, refNode)
     else
-      Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
+      this.applyToContents(offset, length, (node) ->
         Tandem.Utils.removeAttributeFromSubtree(node, attr)
       )
-    @doc.updateLine(this)
+
+  deleteText: (offset, length) ->
+    this.applyToContents(offset, length, (node) ->
+      Tandem.Utils.removeNode(node)
+    )
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first

@@ -8,10 +8,17 @@ class TandemLeaf extends LinkedList.Node
   @isLeafNode: (node) ->
     return false if !node? || node.nodeType != node.ELEMENT_NODE ||  !node.classList?
     return false if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-    return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
     return true if node.tagName == 'BR'
     return true if node.classList?.contains(Tandem.Leaf.TAB_NODE_CLASS)
+    return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
     return false
+
+  @isLeafParent: (node) ->
+    return false if !node? || node.nodeType != node.ELEMENT_NODE ||  !node.classList?
+    return false if Tandem.Leaf.isLeafNode(node)
+    return false if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return false if node.childNodes.length == 0
+    return node.childNodes.length > 1 or node.firstChild.nodeType != node.TEXT_NODE
 
 
   constructor: (@line, @node, attributes) ->

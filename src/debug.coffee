@@ -17,7 +17,7 @@ window.Tandem.Debug =
     nodesByLine = _.map(doc.root.childNodes, (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
-        return node.nodeType == node.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
+        return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
       )
     )
     lines = doc.lines.toArray()
