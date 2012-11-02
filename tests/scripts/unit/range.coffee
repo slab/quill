@@ -25,7 +25,8 @@ describe('Range', ->
         position = new Tandem.Position(editor, i)
         return position
       )
-
+      editor.destroy()
+      
       expect(positions[0].leafNode.textContent).to.equal('12')
       expect(positions[0].offset).to.equal(0)
 
@@ -58,7 +59,6 @@ describe('Range', ->
 
       expect(positions[10].leafNode.nodeName).to.equal('BR')
       expect(positions[10].offset).to.equal(0)
-      editor.destroy()
     )
   )
 
@@ -82,6 +82,7 @@ describe('Range', ->
           <b>
             <s>34</s>
           </b>
+        </div>
         <div>
           <s>5</s>
           <u>6</u>
@@ -95,18 +96,21 @@ describe('Range', ->
 
     it('should identifiy single node', ->
       editor = reset()
-      _.each(text.split(''), (char, index) ->
-        range = new Tandem.Range(editor, index, index + 1)
-        expect(range.getText()).to.equal(char)
+      ranges = _.map(text.split(''), (char, index) ->
+        return new Tandem.Range(editor, index, index + 1)
       )
       editor.destroy()
+      _.each(text.split(''), (char, index) ->
+        range = ranges[index]
+        expect(range.getText()).to.equal(char)
+      )
     )
 
     it('should identifiy entire document', ->
       editor = reset()
       range = new Tandem.Range(editor, 0, text.length)
-      expect(range.getText()).to.equal(text)
       editor.destroy()
+      expect(range.getText()).to.equal(text)
     )
   )
 
@@ -210,6 +214,7 @@ describe('Range', ->
           <b>
             <s>34</s>
           </b>
+        </div>
         <div>
           <s>5</s>
           <u>6</u>
@@ -223,9 +228,9 @@ describe('Range', ->
       it(test.name, ->
         editor = reset()
         range = new Tandem.Range(editor, test.start, test.end)
+        editor.destroy()
         expect(range.getText()).to.equal(test.text)
         expect(range.getAttributes()).to.eql(_.extend({}, Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES, test.attributes))
-        editor.destroy()
       )
     )
   )

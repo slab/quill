@@ -82,60 +82,22 @@ class TandemEditor extends EventEmitter2
       @doc.root.removeEventListener('DOMSubtreeModified', onEdit)
     )
 
+  keepNormalized: (fn) ->
+    fn.call(this)
+    @doc.rebuildDirty()
+    @doc.forceTrailingNewline()
+
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
-  # applyAttribute: (Number startIndex, Number length, String attr, Mixed value) ->
-  applyAttribute: (startIndex, length, attr, value, emitEvent = true) ->
+  # applyAttribute: (Number index, Number length, String attr, Mixed value) ->
+  applyAttribute: (index, length, attr, value, emitEvent = true) ->
     delta = this.trackDelta( =>
-      if !_.isNumber(startIndex)
-        [range, attr, value] = [startIndex, length, attr]
-        startIndex = range.start.getIndex()
-        length = range.end.getIndex() - startIndex
-      else
-        range = new Tandem.Range(this, startIndex, startIndex + length)
       @selection.preserve( =>
-        [startLine, startLineOffset] = @doc.findLineAtOffset(startIndex)
-        [endLine, endLineOffset] = @doc.findLineAtOffset(startIndex + length)
-        if startLine == endLine
-          this.applyAttributeToLine(startLine, startLineOffset, endLineOffset, attr, value)
-        else
-          curLine = startLine.next
-          while curLine? && curLine != endLine
-            next = curLine.next
-            this.applyAttributeToLine(curLine, 0, curLine.length + 1, attr, value)
-            curLine = next
-          this.applyAttributeToLine(startLine, startLineOffset, startLine.length + 1, attr, value)
-          this.applyAttributeToLine(endLine, 0, endLineOffset, attr, value) if endLine?
-        @doc.rebuildDirty()
+        this.keepNormalized( =>
+          @doc.applyAttribute(index, length, attr, value)
+        )
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
-
-  applyAttributeToLine: (line, startOffset, endOffset, attr, value) ->
-    if _.indexOf(Tandem.Constants.LINE_ATTRIBUTES, attr, true) > -1
-      if startOffset == 0 && endOffset >= line.length
-        this.applyLineAttribute(line, attr, value)
-    else
-      [prevNode, startNode] = line.splitContents(startOffset)
-      [endNode, nextNode] = line.splitContents(endOffset)
-      parentNode = startNode?.parentNode || prevNode?.parentNode
-      if value && Tandem.Utils.getAttributeDefault(attr) != value
-        fragment = @doc.root.ownerDocument.createDocumentFragment()
-        Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-          node = Tandem.Utils.removeAttributeFromSubtree(node, attr)
-          fragment.appendChild(node)
-        )
-        attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
-        attrNode.appendChild(fragment)
-        if nextNode? && (parentNode.compareDocumentPosition(nextNode) & parentNode.DOCUMENT_POSITION_CONTAINED_BY) == parentNode.DOCUMENT_POSITION_CONTAINED_BY
-          parentNode.insertBefore(attrNode, nextNode)
-        else
-          parentNode.appendChild(attrNode)
-      else
-        Tandem.Utils.traverseSiblings(startNode, endNode, (node) ->
-          Tandem.Utils.removeAttributeFromSubtree(node, attr)
-        )
-    @doc.updateLine(line)
-    Tandem.Document.fixListNumbering(@doc.root) if attr == 'list'
 
   applyDelta: (delta) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
@@ -145,12 +107,12 @@ class TandemEditor extends EventEmitter2
     retains = []
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
-        this.insertAt(index + offset, delta.text, false)
+        @doc.insertText(index + offset, delta.text)
         retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
         offset += delta.getLength()
       else if JetDelta.isRetain(delta)
         if delta.start > index
-          this.deleteAt(index + offset, delta.start - index, false)
+          @doc.deleteText(index + offset, delta.start - index)
           offset -= (delta.start - index)
         retains.push(new JetRetain(delta.start + offset, delta.end + offset, delta.attributes))
         index = delta.end
@@ -159,69 +121,34 @@ class TandemEditor extends EventEmitter2
     )
     # If end of text was deleted
     if delta.endLength < delta.startLength + offset
-      this.deleteAt(delta.endLength, delta.startLength + offset - delta.endLength, false)
-
+      @doc.deleteText(delta.endLength, delta.startLength + offset - delta.endLength)
     retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
     retainDelta.compact()
     _.each(retainDelta.deltas, (delta) =>
       _.each(delta.attributes, (value, attr) =>
-        this.applyAttribute(delta.start, delta.end - delta.start, attr, value, false) if value == null
+        @doc.applyAttribute(delta.start, delta.end - delta.start, attr, value) if value == null
       )
       _.each(delta.attributes, (value, attr) =>
-        this.applyAttribute(delta.start, delta.end - delta.start, attr, value, false) if value?
+        @doc.applyAttribute(delta.start, delta.end - delta.start, attr, value) if value?
       )
     )
-
+    @doc.forceTrailingNewline()
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
     console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
 
-  applyLineAttribute: (line, attr, value) ->
-    indent = if _.isNumber(value) then value else (if value then 1 else 0)
-    if attr == 'indent'
-      Tandem.Utils.setIndent(line.node, indent)
-    else if Tandem.Constants.INDENT_ATTRIBUTES[attr]?
-      lineNode = line.node
-      expectedTag = if value then (if attr == 'list' then 'OL' else 'UL') else 'DIV'
-      if lineNode.tagName != expectedTag
-        if value && lineNode.firstChild.tagName != 'LI'
-          li = lineNode.ownerDocument.createElement('li')
-          Tandem.Utils.wrapChildren(li, lineNode)
-        else if !value && lineNode.firstChild.tagName == 'LI'
-          Tandem.Utils.unwrap(lineNode.firstChild)
-        line.node = Tandem.Utils.switchTag(lineNode, expectedTag)
-      Tandem.Utils.setIndent(line.node, indent)
-    line.setDirty()
-
-  deleteAt: (startIndex, length, emitEvent = true) ->
+  deleteAt: (index, length, emitEvent = true) ->
     delta = this.trackDelta( =>
-      if !_.isNumber(startIndex)
-        range = startIndex
-        startPos = range.start
-        endPos = range.end
-        startIndex = range.start.getIndex()
-        length = range.end.getIndex() - startIndex
-      else
-        startPos = Tandem.Position.makePosition(this, startIndex)
-        endPos = Tandem.Position.makePosition(this, startIndex + length)
-      startIndex = startPos.getIndex()
-      endIndex = endPos.getIndex()
       @selection.preserve( =>
-        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(@doc.root, startIndex)
-        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(@doc.root, endIndex)
-        fragment = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
-        lineNodes = _.values(fragment.childNodes).concat(_.uniq([startLineNode, endLineNode]))
-        _.each(lineNodes, (lineNode) =>
-          line = @doc.findLine(lineNode)
-          @doc.updateLine(line) if line?
+        this.keepNormalized( =>
+          @doc.deleteText(index, length)
         )
-        @doc.rebuildDirty()
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
 
-  getAt: (startIndex, length) ->
+  getAt: (index, length) ->
     # - Returns array of {text: "", attr: {}}
     # 1. Get all nodes in the range
     # 2. For first and last, change the text
@@ -235,102 +162,15 @@ class TandemEditor extends EventEmitter2
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (startIndex, text, emitEvent = true) ->
+  insertAt: (index, text, emitEvent = true) ->
     delta = this.trackDelta( =>
-      position = Tandem.Position.makePosition(this, startIndex)
-      index = startIndex = position.getIndex()
-      startLine = @doc.findLineAtOffset(index)
-      [line, lineOffset] = @doc.findLineAtOffset(index)
       @selection.preserve( =>
-        textLines = text.split("\n")
-        if textLines.length == 1
-          contents = this.makeLineContents(text)
-          this.insertContentsAt(line, lineOffset, contents)
-        else
-          [line1, line2] = this.insertNewlineAt(line, lineOffset)
-          contents = this.makeLineContents(textLines[0])
-          this.insertContentsAt(line1, lineOffset, contents)
-          contents = this.makeLineContents(textLines[textLines.length - 1])
-          this.insertContentsAt(line2, 0, contents)
-          if textLines.length > 2
-            _.each(textLines.slice(1, -1), (lineText) =>
-              lineNode = this.makeLine(lineText)
-              @doc.root.insertBefore(lineNode, line2.node)
-              @doc.insertLineBefore(lineNode, line2)
-            )
-        # TODO could be more clever about if we need to call this
-        Tandem.Document.fixListNumbering(@doc.root) if textLines.length > 1
-        @doc.rebuildDirty()
+        this.keepNormalized( =>
+          @doc.insertText(index, text)
+        )
       )
     , emitEvent)
     this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
-
-  makeLine: (text) ->
-    lineNode = @doc.root.ownerDocument.createElement('div')
-    lineNode.classList.add(Tandem.Line.CLASS_NAME)
-    contents = this.makeLineContents(text)
-    _.each(contents, (content) ->
-      lineNode.appendChild(content)
-    )
-    return lineNode
-
-  makeLineContents: (text) ->
-    strings = text.split("\t")
-    contents = []
-    _.each(strings, (str, strIndex) =>
-      contents.push(this.makeText(str)) if str.length > 0
-      if strIndex < strings.length - 1
-        contents.push(this.makeTab())
-    )
-    return contents
-
-  makeTab: ->
-    tab = @doc.root.ownerDocument.createElement('span')
-    tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
-    tab.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
-    tab.textContent = "\t"
-    return tab
-
-  makeText: (text) ->
-    node = @doc.root.ownerDocument.createElement('span')
-    node.textContent = text
-    return node
-
-  # insertContentsAt: (Number startIndex, String text) ->
-  # insertContentsAt: (TandemRange startIndex, String text) ->
-  insertContentsAt: (line, offset, contents) ->
-    return if contents.length == 0
-    [leaf, leafOffset] = line.findLeafAtOffset(offset)
-    if leaf.node.nodeName != 'BR'
-      [beforeNode, afterNode] = line.splitContents(offset)
-      parentNode = beforeNode?.parentNode || afterNode?.parentNode
-      _.each(contents, (content) ->
-        parentNode.insertBefore(content, afterNode)
-      )
-    else
-      parentNode = leaf.node.parentNode
-      parentNode.removeChild(leaf.node)
-      _.each(contents, (content) ->
-        parentNode.appendChild(content)
-      )
-    @doc.updateLine(line)
-
-  insertNewlineAt: (line, offset) ->
-    if offset == 0 or offset == line.length
-      div = @doc.root.ownerDocument.createElement('div')
-      if offset == 0
-        @doc.root.insertBefore(div, line.node)
-        newLine = @doc.insertLineBefore(div, line)
-        return [newLine, line]
-      else
-        refLine = line.next
-        refLineNode = if refLine? then refLine.node else null
-        @doc.root.insertBefore(div, refLineNode)
-        newLine = @doc.insertLineBefore(div, refLine)
-        return [line, newLine]
-    else
-      newLine = @doc.splitLine(line, offset)
-      return [line, newLine]
 
   setSelection: (range) ->
     @selection.setRange(range)

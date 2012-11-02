@@ -2,39 +2,6 @@
 #= tandem/constants
 
 TandemUtils = 
-  # All block nodes inside nodes are moved out
-  breakBlocks: (root) ->
-    lineNodes = [root]
-    this.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE && Tandem.Utils.canModify(node)
-        toBreak = []
-        if _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName, true) > -1
-          [left1, left2, didLeftSplit] = this.splitNode(root, index)
-          if didLeftSplit
-            toBreak = toBreak.concat([left1, left2])
-          else
-            [right1, right2, didRightSplit] = this.splitNode(root, node.textContent.length)
-            toBreak = toBreak.concat([right1, right2]) if didRightSplit
-        else if _.indexOf(Tandem.Constants.BREAK_TAGS, node.tagName, true) > -1
-          next = node.nextSibling
-          if node.previousSibling && node.nextSibling
-            [left, right, didSplit] = this.splitNode(root, index, true)
-            node.parentNode.removeChild(node)
-            toBreak = [left, right]
-            node = next
-          else if node.previousSibling || node.nextSibling
-            node.parentNode.removeChild(node)
-            node = next
-        _.each(toBreak, (line) =>
-          if line? && line != root
-            newLineNodes = this.breakBlocks(line)
-            lineNodes.push(line)
-            lineNodes = _.uniq(lineNodes.concat(newLineNodes))
-        )
-      return node
-    )
-    return lineNodes
-
   canModify: (node) ->
     return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
 
@@ -79,17 +46,14 @@ TandemUtils =
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
     if startLineNode == endLineNode
       endLineNode = rightStart
-      endOffset -= leftStart.textContent.length if leftStart? && startLineNode != rightStart
+      endOffset -= startOffset if leftStart? && startLineNode != rightStart
     [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
     fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
       rightStart = next
-    externalNodes = _.clone(fragment.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
-    _.each(externalNodes, (node) ->
-      leftStart.appendChild(node)
-    )
+    Tandem.Utils.moveExternal(fragment, leftStart, null)
     Tandem.Utils.mergeNodes(leftStart, rightEnd)
     return fragment
 
@@ -139,15 +103,15 @@ TandemUtils =
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
-    while child? && offset > child.textContent.length
-      if offset == child.textContent.length
-        return [child, offset]
-      offset -= child.textContent.length
-      offset -= 1 if Tandem.Line.isLineNode(child)
+    length = Tandem.Utils.getNodeLength(child)
+    while child?
+      break if offset < length
+      offset -= length
       child = child.nextSibling
+      length = Tandem.Utils.getNodeLength(child)
     unless child?
       child = node.lastChild
-      offset = child.textContent.length
+      offset = Tandem.Utils.getNodeLength(child)
     return [child, offset]
 
   getIndent: (list) ->
@@ -159,6 +123,21 @@ TandemUtils =
       return false
     )
     return indent
+
+  getNodeLength: (node) ->
+    return 0 unless node?
+    if node.nodeType == node.ELEMENT_NODE
+      if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+        return 0
+      externalNodes = node.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}")
+      length = _.reduce(externalNodes, (length, node) ->
+        return length - node.textContent.length
+      , node.textContent.length)
+      return length + (if Tandem.Line.isLineNode(node) then 1 else 0)
+    else if node.nodeType == node.TEXT_NODE
+      return node.textContent.length
+    else
+      return 0
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
@@ -177,6 +156,12 @@ TandemUtils =
       newParent.appendChild(child)
     )
 
+  moveExternal: (source, destParent, destRef) ->
+    externalNodes = _.clone(source.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    _.each(externalNodes, (node) ->
+      destParent.insertBefore(node, destRef)
+    )
+
   removeAttributeFromSubtree: (subtree, attribute) ->
     children = _.clone(subtree.childNodes)
     attributes = Tandem.Utils.getAttributeForContainer(subtree)
@@ -189,6 +174,10 @@ TandemUtils =
     )
     return ret
 
+  removeNode: (node) ->
+    Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+    node.parentNode.removeChild(node)
+
   setIndent: (list, indent) ->
     _.each(_.clone(list.classList), (css) ->
       if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
@@ -197,7 +186,7 @@ TandemUtils =
     list.classList.add(Tandem.Document.INDENT_PREFIX + indent) if indent
 
   splitNode: (node, offset, force = false) ->
-    if offset > node.textContent.length
+    if offset > Tandem.Utils.getNodeLength(node)
       throw new Error('Splitting at offset greater than node length')
 
     if node.nodeType == node.TEXT_NODE
@@ -207,7 +196,7 @@ TandemUtils =
     if !force
       if offset == 0
         return [node.previousSibling, node, false]
-      if offset == node.textContent.length
+      if offset == Tandem.Utils.getNodeLength(node)
         return [node, node.nextSibling, false]
 
     left = node
@@ -244,7 +233,7 @@ TandemUtils =
     return unless root?
     cur = root.firstChild
     while cur?
-      nextOffset = offset + cur.textContent.length
+      nextOffset = offset + Tandem.Utils.getNodeLength(cur)
       curHtml = cur.innerHTML
       cur = fn.apply(context, [cur, offset].concat(args))
       TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))

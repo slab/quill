@@ -74,6 +74,11 @@ TandemConstants =
     'small'
   ]
 
+  INDENT_ATTRIBUTES:
+    'bullet'  : [0..8]
+    'indent'  : [0..8]
+    'list'    : [0..8]
+
   # Missing rule implies removal
   LINE_RULES: {
     'A'         : {}
@@ -101,11 +106,6 @@ TandemConstants =
     'U'         : {}
     'UL'        : {}
   }
-
-  INDENT_ATTRIBUTES:
-    'bullet'  : [0..8]
-    'indent'  : [0..8]
-    'list'    : [0..8]
 
   LIST_TAGS: [
     'OL'

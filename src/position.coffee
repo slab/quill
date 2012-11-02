@@ -1,24 +1,26 @@
 #= require underscore
 #= require tandem/line
 
+# TODO fix this entire file, esp findDeepestNode
 class TandemPosition
   @findDeepestNode: (editor, node, offset) ->
     # We are at right subtree, dive deeper
     isLineNode = Tandem.Line.isLineNode(node)
-    if (offset < node.textContent.length) || (offset == node.textContent.length && (!node.nextSibling? || isLineNode)) || (offset == node.textContent.length + 1 && isLineNode && !node.nextSibling?)
+    nodeLength = Tandem.Utils.getNodeLength(node)
+    if isLineNode && offset < nodeLength
+      TandemPosition.findDeepestNode(editor, node.firstChild, Math.min(offset, nodeLength))
+    else if offset < nodeLength
       if node.firstChild?
-        TandemPosition.findDeepestNode(editor, node.firstChild, if offset == node.textContent.length + 1 then offset - 1 else offset)
+        TandemPosition.findDeepestNode(editor, node.firstChild, offset)
       else
-        if offset == node.textContent.length && node.nextSibling?
-          TandemPosition.findDeepestNode(editor, node.nextSibling, 0)
-        else
-          return [node, offset]
+        return [node, offset]
     else if node.nextSibling?               # Not at right subtree, advance to sibling
-      offset -= node.textContent.length + (if isLineNode then 1 else 0)
+      offset -= nodeLength
       TandemPosition.findDeepestNode(editor, node.nextSibling, offset)
+    else if node.lastChild?
+      return TandemPosition.findDeepestNode(editor, node.lastChild, Tandem.Utils.getNodeLength(node.lastChild))
     else
-      console.error node, offset, editor.doc.root
-      throw new Error('Diving exceeded offset')
+      return [node, offset]
 
   @findLeafNode: (editor, node, offset) ->
     [node, offset] = TandemPosition.findDeepestNode(editor, node, offset)
@@ -31,7 +33,7 @@ class TandemPosition
     while node != offsetNode && node?.id != Tandem.Editor.CONTAINER_ID
       while node.previousSibling?
         node = node.previousSibling
-        index += node.textContent.length + (if Tandem.Line.isLineNode(node) then 1 else 0)
+        index += Tandem.Utils.getNodeLength(node)
       node = node.parentNode
     return index
 
@@ -51,8 +53,7 @@ class TandemPosition
   # constructor: (TandemEditor editor, Number index) -> 
   constructor: (@editor, @leafNode, @offset) ->
     if _.isNumber(@leafNode)
-      @offset = @leafNode
-      @index = @leafNode
+      @offset = @index = @leafNode
       @leafNode = @editor.doc.root.firstChild
     [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset)
       

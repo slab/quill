@@ -3,9 +3,25 @@
 
 Editor
 ---
-applyAttribute()
-insertAt()
-deleteAt()
+applyDelta(delta)
+  
+
+format(index, length, formatting, value)
+
+
+insert(index, text)
+  texts = text.split("\n")
+  [line, offset] = @doc.findLineAtOffset(index)
+  _.each(texts, (text, i) ->
+    line.insertText(text)
+    if i < texts.length - 1
+      newline = line.split(offset + text.length)
+      line = newLine
+      offset = 0
+  )
+
+delete(index, length)
+
 
 Selection.current
 Selection.getCurrent()

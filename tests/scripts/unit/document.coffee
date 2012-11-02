@@ -25,37 +25,25 @@ describe('Document', ->
     tests = 
       'basic':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetInsert('0123')]
+        deltas: [new JetInsert("0123\n")]
       'format':
         lines: ['<div><b>0123</b></div>']
-        deltas: [new JetInsert('0123', {bold:true})]
-      'line format':
-        lines: ['<ul class="indent-1"><li>0123</li></ul>']
-        deltas: [new JetInsert('0123', {bullet:1})]
+        deltas: [new JetInsert('0123', {bold:true}), new JetInsert("\n")]
       'empty':
-        lines: ['<div><br></div>']
-        deltas: []
+        lines: ['']
+        deltas: [new JetInsert("\n")]
       'empty 2':
-        lines: ['<div><ul><li><br></li></ul></div>']
-        deltas: []
+        lines: ['<div><br></div>']
+        deltas: [new JetInsert("\n")]
       'newline':
         lines: ['<div><br></div>', '<div><br></div>']
-        deltas: [new JetInsert("\n")]
-      'newline 2':
-        lines: ['<div><br></div>', '<div><b></b></div>']
-        deltas: [new JetInsert("\n")]
-      'newline with format':
-        lines: ['<div><b></b></div>', '<div><br></div>']
-        deltas: [new JetInsert("\n", {bold:true})]
-      'newline with line format':
-        lines: ['<ul class="indent-1"><li><br></li></ul>', '<div><br></div>']
-        deltas: [new JetInsert("\n", {bullet:1})]
+        deltas: [new JetInsert("\n\n")]
       'text + newline':
         lines: ['<div><span>0</span></div>', '<div><br></div>']
-        deltas: [new JetInsert("0\n")]
+        deltas: [new JetInsert("0\n\n")]
       'newline + text':
         lines: ['<div><br></div>', '<div><span>0</span></div>']
-        deltas: [new JetInsert("\n0")]
+        deltas: [new JetInsert("\n0\n")]
 
     _.each(tests, (test, name) ->
       it(name, ->
