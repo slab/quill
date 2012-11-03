@@ -63,10 +63,10 @@ class TandemEditor extends EventEmitter2
       this.trackDelta( =>
         @doc.root.setAttribute('contenteditable', true)
       , false)
-      @doc.root.focus()
-      position = Tandem.Position.makePosition(this, @options.cursor)
-      start = new Tandem.Range(this, position, position)
-      this.setSelection(start)
+      #@doc.root.focus()
+      #position = Tandem.Position.makePosition(this, @options.cursor)
+      #start = new Tandem.Range(this, position, position)
+      #this.setSelection(start)
 
   initListeners: ->
     deboundedEdit = _.debounce( =>
