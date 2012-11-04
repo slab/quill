@@ -32,10 +32,12 @@ class TandemEditor extends EventEmitter2
     this.reset(true)
     this.enable() if @options.enabled
 
-  addCursor: (index, name) ->
+  setCursor: (userId, index, name, color) ->
+    this.removeCursor(userId)
     cursor = @doc.root.ownerDocument.createElement('span')
     cursor.classList.add('cursor')
     cursor.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    cursor.id = TandemEditor.CURSOR_PREFIX + userId
     inner = @doc.root.ownerDocument.createElement('span')
     inner.classList.add('cursor-inner')
     inner.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
@@ -43,17 +45,21 @@ class TandemEditor extends EventEmitter2
     nameNode.classList.add('cursor-name')
     nameNode.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
     nameNode.textContent = name
+    inner.style['background-color'] = nameNode.style['background-color'] = color
     cursor.appendChild(nameNode)
     cursor.appendChild(inner)
-    cursor.id = _.uniqueId(TandemEditor.CURSOR_PREFIX)
-    this.moveCursor(cursor, index)
-    return cursor.id
-
-  moveCursor: (cursor, index) ->
-    cursor = @doc.root.ownerDocument.getElementById(cursor) if _.isString(cursor)
     Tandem.Utils.insertExternal(new Tandem.Position(this, index), cursor)
     line = @doc.findLine(cursor)
     line.rebuild() if line?
+
+  clearCursors: ->
+    _.each(@doc.root.querySelectorAll('.cursor'), (cursor) ->
+      cursor.parentNode.removeChild(cursor)
+    )
+
+  removeCursor: (userId) ->
+    cursor = @doc.root.ownerDocument.getElementById(TandemEditor.CURSOR_PREFIX + userId)
+    cursor.parentNode.removeChild(cursor) if cursor?
 
   destroy: ->
     this.disable()
