@@ -46,7 +46,6 @@ class TandemLine extends LinkedList.Node
     # TODO need wrapText before and after for these cases:
     # Before: <b>Test<span>What</span></b> -> <b><span>Test</span><span>What</span></b>
     # After: <b>Bold</b><b><i>Test</i></b> -> <b>Bold<i>Test</i></b>
-    this.wrapText(root)
     this.mergeAdjacent(root)
     this.wrapText(root)
     if 0 == _.reduce(root.childNodes, ((count, node) -> return count + (if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) then 0 else 1)), 0)
