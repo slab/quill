@@ -64,18 +64,6 @@ class TandemRenderer
     '.cursor': { 'display': 'inline-block', 'height': '0px', 'width': '0px' }
     '.cursor-name': { 'color': 'white', 'display': 'inline-block', 'position': 'relative', 'padding': '2px 8px', 'left': '-1px', 'top': '-31px' }
     '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'relative', 'height': '15px', 'left': '-1px', 'top': '-31px' }
-    '.author-0': { 'color': "#33cc33" }
-    '.author-1': { 'color': "#0099ff" }
-    '.author-2': { 'color': "#ff00ff" }
-    '.author-3': { 'color': "#ff9933" }
-    '.author-4': { 'color': "#00ff99" }
-    '.author-5': { 'color': "#3366ff" }
-    '.author-6': { 'color': "#ff3399" }
-    '.author-7': { 'color': "#ffff00" }
-    '.author-8': { 'color': "#33cccc" }
-    '.author-9': { 'color': "#9966ff" }
-    '.author-10': { 'color': "#ff5050" }
-    '.author-11': { 'color': "#99ff33" }
 
 
   @objToCss: (obj) ->
@@ -100,25 +88,29 @@ class TandemRenderer
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
     doc = @iframe.contentWindow.document
-    head = doc.getElementsByTagName('head')[0]
-    style = doc.createElement('style')
-    style.type = 'text/css'
     styles = _.map(@options.styles, (value, key) ->
       obj = Tandem.Renderer.DEFAULT_STYLES[key] or {}
       return _.extend(obj, value)
     )
     styles = _.extend(Tandem.Renderer.DEFAULT_STYLES, styles)
+    this.addStyles(styles)
+    contentContainer = doc.createElement('div')
+    contentContainer.id = Tandem.Editor.CONTAINER_ID
+    contentContainer.classList.add('editor')
+    doc.body.appendChild(contentContainer)
+    contentContainer.innerHTML = html if @options.keepHTML
+
+  addStyles: (styles) ->
+    doc = @iframe.contentWindow.document
+    head = doc.getElementsByTagName('head')[0]
+    style = doc.createElement('style')
+    style.type = 'text/css'
     css = Tandem.Renderer.objToCss(styles)
     if style.styleSheet?
       style.styleSheet.cssText = css
     else
       style.appendChild(doc.createTextNode(css))
     head.appendChild(style)
-    contentContainer = doc.createElement('div')
-    contentContainer.id = Tandem.Editor.CONTAINER_ID
-    contentContainer.classList.add('editor')
-    doc.body.appendChild(contentContainer)
-    contentContainer.innerHTML = html if @options.keepHTML
 
 
 

@@ -11,19 +11,7 @@ TandemConstants =
   ]
 
   AUTHOR_COLORS: [
-    'author-0'
-    'author-1'
-    'author-2'
-    'author-3'
-    'author-4'
-    'author-5'
-    'author-6'
-    'author-7'
-    'author-8'
-    'author-9'
-    'author-10'
-    'author-11'
-    'author-anon'
+    'anonymous'
   ]
 
   BLOCK_TAGS: [
@@ -53,7 +41,7 @@ TandemConstants =
   ]
 
   DEFAULT_LEAF_ATTRIBUTES:
-    'author'          : 'author-anon'
+    'author'          : 'anonymous'
     'font-background' : 'white'
     'font-color'      : 'black'
     'font-family'     : 'san-serif'
