@@ -29,6 +29,7 @@ class TandemEditor extends EventEmitter2
     @id = _.uniqueId(TandemEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     @destructors = []
+    @cursors = {}
     this.reset(true)
     this.enable() if @options.enabled
 
@@ -48,9 +49,18 @@ class TandemEditor extends EventEmitter2
     inner.style['background-color'] = nameNode.style['background-color'] = color
     cursor.appendChild(nameNode)
     cursor.appendChild(inner)
+    @cursors[userId] = {
+      index: index
+      name: name
+      color: color
+    }
     Tandem.Utils.insertExternal(new Tandem.Position(this, index), cursor)
     line = @doc.findLine(cursor)
     line.rebuild() if line?
+
+  moveCursor: (userId, index) ->
+    if @cursors[userId]
+      this.setCursor(userId, index, @cursors[userId].name, @cursors[userId].color)
 
   clearCursors: ->
     _.each(@doc.root.querySelectorAll('.cursor'), (cursor) ->
@@ -135,9 +145,11 @@ class TandemEditor extends EventEmitter2
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
     retains = []
+    cursors = {}
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
         @doc.insertText(index + offset, delta.text)
+        cursors[delta.attributes['author']] = index + offset + delta.text.length if delta.attributes['author']?
         retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
         offset += delta.getLength()
       else if JetDelta.isRetain(delta)
@@ -163,6 +175,9 @@ class TandemEditor extends EventEmitter2
       )
     )
     @doc.forceTrailingNewline()
+    _.each(cursors, (index, userId) =>
+      this.moveCursor(userId, index)
+    )
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
