@@ -22,13 +22,18 @@ class TandemSelection
       return if !@destructors?
       this.update()
     , 100)
-    @editor.doc.root.addEventListener('keyup', debouncedUpdate)
+    keyUpdate = (event) =>
+      debouncedUpdate() if 37 <= event.which and event.which <= 40
+
+    @editor.doc.root.addEventListener('keyup', keyUpdate)
     @editor.doc.root.addEventListener('mouseup', debouncedUpdate)
-    updateInterval = setInterval(debouncedUpdate, TandemSelection.POLL_INTERVAL)
+    @editor.doc.root.addEventListener('mousedown', debouncedUpdate)
+    #updateInterval = setInterval(debouncedUpdate, TandemSelection.POLL_INTERVAL)
     @destructors.push( =>
-      clearInterval(updateInterval)
-      @editor.doc.root.removeEventListener('keyup', debouncedUpdate)
+      #clearInterval(updateInterval)
+      @editor.doc.root.removeEventListener('keyup', keyUpdate)
       @editor.doc.root.removeEventListener('mouseup', debouncedUpdate)
+      @editor.doc.root.removeEventListener('mousedown', debouncedUpdate)
     )
 
 
@@ -113,10 +118,10 @@ class TandemSelection
     else
       rangySel.removeAllRanges()
 
-  update: ->
+  update: (silent = false) ->
     range = this.getRange()
     unless (range == @range) || (@range?.equals(range))
-      @editor.emit(Tandem.Editor.events.USER_SELECTION_CHANGE, range)
+      @editor.emit(Tandem.Editor.events.USER_SELECTION_CHANGE, range) unless silent
       @range = range
 
 

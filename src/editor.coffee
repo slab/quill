@@ -243,6 +243,7 @@ class TandemEditor extends EventEmitter2
           newLine = @doc.appendLine(lineNode)
           lineNode = lineNode.nextSibling
       )
+      @selection.update(true)
     , true)
     return delta
 
