@@ -64,6 +64,18 @@ class TandemRenderer
     '.cursor': { 'display': 'inline-block', 'height': '0px', 'width': '0px' }
     '.cursor-name': { 'color': 'white', 'display': 'inline-block', 'position': 'relative', 'padding': '2px 8px', 'left': '-1px', 'top': '-31px' }
     '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'relative', 'height': '15px', 'left': '-1px', 'top': '-31px' }
+    '.author-0': { 'color': "#33cc33" }
+    '.author-1': { 'color': "#0099ff" }
+    '.author-2': { 'color': "#ff00ff" }
+    '.author-3': { 'color': "#ff9933" }
+    '.author-4': { 'color': "#00ff99" }
+    '.author-5': { 'color': "#3366ff" }
+    '.author-6': { 'color': "#ff3399" }
+    '.author-7': { 'color': "#ffff00" }
+    '.author-8': { 'color': "#33cccc" }
+    '.author-9': { 'color': "#9966ff" }
+    '.author-10': { 'color': "#ff5050" }
+    '.author-11': { 'color': "#99ff33" }
 
 
   @objToCss: (obj) ->

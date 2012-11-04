@@ -63,12 +63,10 @@ TandemUtils =
     return node
 
   getAttributeDefault: (attribute) ->
-    switch attribute
-      when 'font-background'  then return 'white'
-      when 'font-color'       then return 'black'
-      when 'font-family'      then return 'san-serif'
-      when 'font-size'        then return 'normal'
-      else                         return false
+    if Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]?
+      return Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]
+    else
+      return false
 
   getAttributeForContainer: (container) ->
     switch container.tagName
@@ -186,6 +184,7 @@ TandemUtils =
     return ret
 
   removeNode: (node) ->
+    return unless node.parentNode?
     if Tandem.Line.isLineNode(node)
       prev = node.previousSibling
       next = node.nextSibling
