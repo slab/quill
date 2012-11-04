@@ -61,6 +61,9 @@ class TandemRenderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
     '.tab' : { 'display': 'inline-block', 'margin': '0px' }
+    '.cursor': { 'display': 'inline-block', 'height': '0px', 'width': '0px' }
+    '.cursor-name': { 'color': 'white', 'display': 'inline-block', 'position': 'relative', 'background-color': 'blue', 'padding': '2px 8px', 'left': '-1px', 'top': '-31px' }
+    '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'relative', 'background-color': 'blue', 'height': '15px', 'left': '-1px', 'top': '-31px' }
 
 
   @objToCss: (obj) ->

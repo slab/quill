@@ -85,7 +85,7 @@ window.Tandem.Debug =
 
       # doc.lines should match nodesByLine
       if lines.length != nodesByLine.length
-        console.error "doc.lines and nodesByLine differ in length"
+        console.error "doc.lines and nodesByLine differ in length", lines, nodesByLine
         return false
       return false if _.any(lines, (line, index) =>
         calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Tandem.Utils.getNodeLength(node) + length), 0)

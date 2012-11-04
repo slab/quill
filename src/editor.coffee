@@ -32,17 +32,28 @@ class TandemEditor extends EventEmitter2
     this.reset(true)
     this.enable() if @options.enabled
 
-  addCursor: (index) ->
+  addCursor: (index, name) ->
     cursor = @doc.root.ownerDocument.createElement('span')
     cursor.classList.add('cursor')
     cursor.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    inner = @doc.root.ownerDocument.createElement('span')
+    inner.classList.add('cursor-inner')
+    inner.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    nameNode = @doc.root.ownerDocument.createElement('span')
+    nameNode.classList.add('cursor-name')
+    nameNode.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    nameNode.textContent = name
+    cursor.appendChild(nameNode)
+    cursor.appendChild(inner)
     cursor.id = _.uniqueId(TandemEditor.CURSOR_PREFIX)
-    this.moveCursor(cursor)
+    this.moveCursor(cursor, index)
     return cursor.id
 
-  moveCursor: (cursor) ->
+  moveCursor: (cursor, index) ->
     cursor = @doc.root.ownerDocument.getElementById(cursor) if _.isString(cursor)
     Tandem.Utils.insertExternal(new Tandem.Position(this, index), cursor)
+    line = @doc.findLine(cursor)
+    line.rebuild() if line?
 
   destroy: ->
     this.disable()
