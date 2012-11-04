@@ -9,18 +9,18 @@
     #content-container
       .editor-wrapper
         #formatting-container.formatting-container
-          %select.font-family
+          %select.family
             %option{:value => ''}
             %option{:value => 'san-serif', :selected => true}  San Serif
             %option{:value => 'serif'}      Serif
             %option{:value => 'monospace'}  Monospace
-          %select.font-size
+          %select.size
             %option{:value => ''}
             %option{:value => 'small'}  Small
             %option{:value => 'normal', :selected => true} Normal
             %option{:value => 'large'}  Large
             %option{:value => 'huge'}   Huge
-          %select.font-color
+          %select.color
             %option{:value => ''}
             %option{:value => 'white'}  White
             %option{:value => 'black', :selected => true}  Black
@@ -30,7 +30,7 @@
             %option{:value => 'green'}  Green
             %option{:value => 'blue'}   Blue
             %option{:value => 'purple'} Purple
-          %select.font-background
+          %select.background
             %option{:value => ''}
             %option{:value => 'white', :selected => true}  White
             %option{:value => 'black'}  Black
@@ -132,36 +132,36 @@
             %span.tab<> &#09;
             %span<> I look like an indent but actually I'm not cuz I'm a tab.
           %div<>
-            %span.font-size.huge<> Huge
-            %span.font-size.large<> Large
-            %span.font-size.small<> Small
+            %span.size-huge<> Huge
+            %span.size-large<> Large
+            %span.size-small<> Small
           %div<>
-            %span.font-size.huge<> Huge
+            %span.size-huge<> Huge
           %div<>
-            %span.font-size.large<> Large
+            %span.size-large<> Large
           %div<>
-            %span.font-size.small<> Small
+            %span.size-small<> Small
           %div<>
-            %span.font-family.serif<> Serif
-            %span.font-family.monospace<> Monospace
+            %span.family-serif<> Serif
+            %span.family-monospace<> Monospace
           %div<>
-            %span.font-color.white<>
-              %span.font-background.black<> white
-            %span.font-color.red<> red
-            %span.font-color.orange<> orange
-            %span.font-color.yellow<> yellow
-            %span.font-color.green<> green
-            %span.font-color.blue<> blue
-            %span.font-color.purple<> purple
+            %span.color-white<>
+              %span.background-black<> white
+            %span.color-red<> red
+            %span.color-orange<> orange
+            %span.color-yellow<> yellow
+            %span.color-green<> green
+            %span.color-blue<> blue
+            %span.color-purple<> purple
           %div<>
-            %span.font-background.black<>
-              %span.font-color.white<> black
-            %span.font-background.red<> red
-            %span.font-background.orange<> orange
-            %span.font-background.yellow<> yellow
-            %span.font-background.green<> green
-            %span.font-background.blue<> blue
-            %span.font-background.purple<> purple
+            %span.background-black<>
+              %span.color-white<> black
+            %span.background-red<> red
+            %span.background-orange<> orange
+            %span.background-yellow<> yellow
+            %span.background-green<> green
+            %span.background-blue<> blue
+            %span.background-purple<> purple
           %div<>
             %br<>
           %div<>
@@ -200,7 +200,7 @@
           toolbar.applyAttribute(format, !$(this).hasClass('active'));
         });
       });
-      _.each(['font-background', 'font-color', 'font-family', 'font-size'], function(format) {
+      _.each(['backgrounad', 'color', 'family', 'size'], function(format) {
         $('#formatting-container .' + format).change(function() {
           toolbar.applyAttribute(format, $(this).val());
         });

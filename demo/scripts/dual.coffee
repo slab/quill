@@ -23,7 +23,7 @@ editors = _.map([1, 2], (num) ->
       toolbar.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
-  _.each(['font-family', 'font-size'], (format) ->
+  _.each(['family', 'size'], (format) ->
     $("#formatting-container#{num} .#{format}").change( ->
       toolbar.applyAttribute(format, $(this).val())
     )
