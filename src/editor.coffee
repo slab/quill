@@ -13,6 +13,7 @@ class TandemEditor extends EventEmitter2
 
   @CONTAINER_ID: 'tandem-container'
   @ID_PREFIX: 'editor-'
+  @CURSOR_PREFIX: 'cursor-'
   @DEFAULTS:
     cursor: 0
     enabled: true
@@ -30,6 +31,19 @@ class TandemEditor extends EventEmitter2
     @destructors = []
     this.reset(true)
     this.enable() if @options.enabled
+
+  makeCursor: ->
+    span = @doc.root.ownerDocument.createElement('span')
+    span.classList.add('cursor')
+    span.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+
+  addCursor: (index) ->
+    cursor = this.makeCursor()
+    cursor.id = _.uniqueId(TandemEditor.CURSOR_PREFIX)
+    return cursor.id
+
+  moveCursor: (id) ->
+    cursor = @doc.root.ownerDocument.getElementById(id)
 
   destroy: ->
     this.disable()
