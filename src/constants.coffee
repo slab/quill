@@ -41,11 +41,11 @@ TandemConstants =
   ]
 
   DEFAULT_LEAF_ATTRIBUTES:
-    'author'          : 'anonymous'
-    'font-background' : 'white'
-    'font-color'      : 'black'
-    'font-family'     : 'san-serif'
-    'font-size'       : 'normal'
+    'author'     : 'anonymous'
+    'background' : 'white'
+    'color'      : 'black'
+    'family'     : 'san-serif'
+    'size'       : 'normal'
 
   FONT_BACKGROUNDS: [
     'black'
@@ -129,10 +129,10 @@ TandemConstants.LINE_ATTRIBUTES = [].concat(_.keys(TandemConstants.INDENT_ATTRIB
 
 TandemConstants.SPAN_ATTRIBUTES =
   'author'          : TandemConstants.AUTHOR_COLORS
-  'font-background' : TandemConstants.FONT_BACKGROUNDS
-  'font-color'      : TandemConstants.FONT_COLORS
-  'font-family'     : TandemConstants.FONT_FAMILIES
-  'font-size'       : TandemConstants.FONT_SIZES
+  'background' : TandemConstants.FONT_BACKGROUNDS
+  'color'      : TandemConstants.FONT_COLORS
+  'family'     : TandemConstants.FONT_FAMILIES
+  'size'       : TandemConstants.FONT_SIZES
 
 # Array of possbile values mostly for consistency with SPAN_ATTRIBUTES, not actually used in codebase
 TandemConstants.TAG_ATTRIBUTES =

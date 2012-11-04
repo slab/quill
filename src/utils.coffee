@@ -38,8 +38,7 @@ TandemUtils =
         return link
       else
         span = doc.createElement('span')
-        span.classList.add(attribute)
-        span.classList.add(value)
+        span.classList.add("#{attribute}-#{value}")
         return span
 
   extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
@@ -85,15 +84,15 @@ TandemUtils =
           return []
       when 'SPAN'
         attribute = []
-        _.all(Tandem.Constants.SPAN_ATTRIBUTES, (list, attrName) ->
-          if container.classList.contains(attrName)
-            return _.all(container.classList, (css) ->
-              if _.indexOf(list, css) > -1
-                attribute = [attrName, css]
-                return false
+        _.any(container.classList, (css) ->
+          parts = css.split('-')
+          if parts.length > 1
+            key = parts[0]
+            value = parts.slice(1).join('-')
+            if Tandem.Constants.SPAN_ATTRIBUTES[key]?
+              attribute = [key, value]
               return true
-            )
-          return true
+          return false
         )
         return attribute
       else
