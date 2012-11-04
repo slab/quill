@@ -142,6 +142,17 @@ TandemUtils =
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 
+  insertExternal: (position, extNode) ->
+    if position.leafNode.lastChild?
+      if position.leafNode.lastChild.nodeType == position.leafNode.TEXT_NODE
+        position.leafNode.lastChild.splitText(position.offset)
+        position.leafNode.insertBefore(extNode, position.leafNode.lastChild)
+      else
+        position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
+    else
+      console.warn('offset is not 0', position.offset) if position.offset != 0
+      position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
+
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
     return node1 if !node2?

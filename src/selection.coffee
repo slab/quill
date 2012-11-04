@@ -99,30 +99,10 @@ class TandemSelection
       endMarker = @editor.doc.root.ownerDocument.createElement('span')
       endMarker.classList.add('sel-marker')
       endMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      startNode = selection.start.leafNode
-      endNode = selection.end.leafNode
-      startOffset = selection.start.offset
-      endOffset = selection.end.offset
       if selection.start.leafNode == selection.end.leafNode
-        endOffset -= startOffset
-      if startNode.lastChild?
-        if startNode.lastChild.nodeType == startNode.TEXT_NODE
-          startNode.lastChild.splitText(startOffset)
-          startNode.insertBefore(startMarker, startNode.lastChild)
-        else
-          startNode.parentNode.insertBefore(startMarker, startNode)
-      else
-        console.warn('startOffset is not 0', startOffset) if startOffset != 0
-        startNode.parentNode.insertBefore(startMarker, startNode)
-      if endNode.lastChild?
-        if endNode.lastChild.nodeType == endNode.TEXT_NODE
-          endNode.lastChild.splitText(endOffset)
-          endNode.insertBefore(endMarker, endNode.lastChild)
-        else
-          endNode.parentNode.insertBefore(endMarker, endNode)
-      else
-        console.warn('endOffset is not 0', endOffset) if endOffset != 0
-        endNode.parentNode.insertBefore(endMarker, endNode)
+        selection.end.offset -= selection.start.offset
+      Tandem.Utils.insertExternal(selection.start, startMarker)
+      Tandem.Utils.insertExternal(selection.end, endMarker)
       @editor.ignoreDomChanges = oldIgnoreDomChange
 
   setRange: (@range) ->
