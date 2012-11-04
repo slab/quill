@@ -62,7 +62,17 @@ class TandemRenderer
     '.indent-9' : { 'margin-left': '18em' }
     '.tab' : { 'display': 'inline-block', 'margin': '0px' }
     '.cursor': { 'display': 'inline-block', 'height': '0px', 'width': '0px' }
-    '.cursor-name': { 'color': 'white', 'display': 'inline-block', 'position': 'relative', 'padding': '2px 8px', 'left': '-1px', 'top': '-31px' }
+    '.cursor-name': { 
+      'border-bottom-right-radius': '3px'
+      'border-top-left-radius': '3px'
+      'border-top-right-radius': '3px'
+      'color': 'white'
+      'display': 'inline-block'
+      'left': '-1px'
+      'padding': '2px 8px'
+      'position': 'relative'
+      'top': '-31px' 
+    }
     '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'relative', 'height': '15px', 'left': '-1px', 'top': '-31px' }
 
 
