@@ -186,7 +186,24 @@ TandemUtils =
     return ret
 
   removeNode: (node) ->
-    Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+    if Tandem.Line.isLineNode(node)
+      prev = node.previousSibling
+      next = node.nextSibling
+      while true
+        if Tandem.Line.isLineNode(prev)
+          Tandem.Utils.moveExternal(node, prev, null)
+          break
+        else if Tandem.Line.isLineNode(next)
+          Tandem.Utils.moveExternal(node, next, next.firstChild)
+          break
+        else if !prev? and !next?
+          console.warn('External nodes might have no where to go!')
+          Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+        else
+          prev = prev.previousSibling if prev?
+          next = next.nextSibling if next?
+    else
+      Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
     node.parentNode.removeChild(node)
 
   setIndent: (list, indent) ->
