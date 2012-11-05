@@ -8,6 +8,22 @@
 #= require tandem/selection
 #= require tandem/renderer
 
+stripNewlineAttributes = (delta) ->
+  deltas = []
+  _.each(delta.deltas, (delta) ->
+    if delta.text?
+      texts = delta.text.split("\n")
+      _.each(texts, (text, index) ->
+        deltas.push(new JetInsert(text, _.clone(delta.attributes)))
+        deltas.push(new JetInsert("\n")) if index < texts.length - 1
+      )
+    else
+      deltas.push(delta)
+  )
+  delta = new JetDelta(delta.startLength, delta.endLength, deltas)
+  delta.compact()
+  return delta
+
 class TandemEditor extends EventEmitter2
   @editors: []
 
@@ -34,6 +50,7 @@ class TandemEditor extends EventEmitter2
     this.enable() if @options.enabled
 
   setCursor: (userId, index, name, color) ->
+    return
     this.removeCursor(userId)
     cursor = @doc.root.ownerDocument.createElement('span')
     cursor.classList.add('cursor')
@@ -59,6 +76,7 @@ class TandemEditor extends EventEmitter2
     line.rebuild() if line?
 
   moveCursor: (userId, index) ->
+    return
     if @cursors[userId]
       this.setCursor(userId, index, @cursors[userId].name, @cursors[userId].color)
 
@@ -153,7 +171,7 @@ class TandemEditor extends EventEmitter2
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
-
+    delta = stripNewlineAttributes(delta)
     cursors = {}
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
@@ -256,7 +274,7 @@ class TandemEditor extends EventEmitter2
       decompose = JetSync.decompose(oldDelta, newDelta)
       compose = JetSync.compose(oldDelta, decompose)
       console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
-      delta = decompose
+      delta = stripNewlineAttributes(decompose)
     else
       fn()
     @ignoreDomChanges = oldIgnoreDomChange
