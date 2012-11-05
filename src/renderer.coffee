@@ -62,8 +62,8 @@ class TandemRenderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
     '.tab' : { 'display': 'inline-block', 'margin': '0px' }
-    '.cursor': { 'display': 'inline-block', 'height': '0px', 'width': '0px' }
-    '.cursor-name': { 
+    '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'relative', 'width': '0px' }
+    '.cursor-name': {
       'border-bottom-right-radius': '3px'
       'border-top-left-radius': '3px'
       'border-top-right-radius': '3px'
@@ -71,11 +71,11 @@ class TandemRenderer
       'display': 'inline-block'
       'left': '-1px'
       'padding': '2px 8px'
-      'position': 'relative'
-      'top': '-31px' 
+      'position': 'absolute'
+      'top': '-18px' 
     }
-    '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'relative', 'height': '15px', 'left': '-1px', 'top': '-31px' }
-    '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '2px' }
+    '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
+    '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
