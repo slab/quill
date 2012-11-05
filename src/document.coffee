@@ -17,10 +17,7 @@ class TandemDocument
       else if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
         # TODO editor.update should mark dirty lines
         Tandem.Line.wrapText(child)
-        lineNodes = Tandem.Utils.breakBlocks(child)
-        _.each(lineNodes, (lineNode) ->
-          Tandem.Line.normalizeHtml(lineNode)
-        )
+        Tandem.Line.normalizeHtml(child)
     )
 
 
