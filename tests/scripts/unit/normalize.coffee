@@ -39,32 +39,32 @@ describe('Normalize', ->
       'merge adjacent equal spans':
         lines: [
           '<div>
-            <span class="font-color red">
-              <span class="font-background blue">Red1</span>
+            <span class="color-red">
+              <span class="background-blue">Red1</span>
             </span>
-            <span class="font-color red">
-              <span class="font-background blue">Red2</span>
+            <span class="color-red">
+              <span class="background-blue">Red2</span>
             </span>
           </div>'
         ]
         expected: [
           '<div>
-            <span class="font-color red">
-              <span class="font-background blue">Red1Red2</span>
+            <span class="color-red">
+              <span class="background-blue">Red1Red2</span>
             </span>
           </div>'
         ]
       'do not merge adjacent unequal spans':
         lines: [
           '<div>
-            <span class="font-size huge">Huge</span>
-            <span class="font-size large">Large</span>
+            <span class="size-huge">Huge</span>
+            <span class="size-large">Large</span>
           </div>'
         ]
         expected: [
           '<div>
-            <span class="font-size huge">Huge</span>
-            <span class="font-size large">Large</span>
+            <span class="size-huge">Huge</span>
+            <span class="size-large">Large</span>
           </div>'
         ]
       'remove redundant attribute elements':

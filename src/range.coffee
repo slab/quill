@@ -24,9 +24,9 @@ class TandemRange
   # <span>Normal</span>             -> {}
   # <b>Bold</b>                     -> {bold: true}
   # <b>Bold</b><span>Normal</span>  -> {bold: [true]}
-  # <span class='font-size.huge'>Huge</span><span class='font-size.small'>Small</span>                    -> {font-size: ['huge', 'small']}
-  # <span class='font-size.huge'>Huge</span><span>Normal</span>                                           -> {font-size: ['huge']}
-  # <span class='font-size.huge'>Huge</span><span>Normal</span><span class='font-size.small'>Small</span> -> {font-size: ['huge', 'normal', 'small']}
+  # <span class='size.huge'>Huge</span><span class='size.small'>Small</span>                    -> {size: ['huge', 'small']}
+  # <span class='size.huge'>Huge</span><span>Normal</span>                                           -> {size: ['huge']}
+  # <span class='size.huge'>Huge</span><span>Normal</span><span class='size.small'>Small</span> -> {size: ['huge', 'normal', 'small']}
   getAttributes: ->
     startLeaf = this.start.getLeaf()
     endLeaf = this.end.getLeaf()

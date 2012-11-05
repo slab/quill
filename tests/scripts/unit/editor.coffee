@@ -124,15 +124,15 @@ describe('Editor', ->
       tagName: 'b'
       value: false
     }, {
-      attribute: 'font-family'
+      attribute: 'family'
       tagName: 'span'
       value: 'serif'
     }, {
-      attribute: 'font-family'
+      attribute: 'family'
       tagName: 'span'
       value: false
     }, {
-      attribute: 'font-family'
+      attribute: 'family'
       tagName: 'span'
       value: 'san-serif'
     }]
@@ -144,7 +144,7 @@ describe('Editor', ->
       ).join('')
       _.each(attributeTests, (attrTest) ->
         it("should set #{attrTest.attribute} to #{attrTest.value} on #{name}", ->
-          openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute} #{attrTest.value}\"" else attrTest.tagName
+          openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute}-#{attrTest.value}\"" else attrTest.tagName
           expected = expectedHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
@@ -166,7 +166,7 @@ describe('Editor', ->
           else
             if attrTest.attribute == 'bold'
               expect(attributes[attrTest.attribute]).to.be.undefined
-            else if attrTest.attribute == 'font-family'
+            else if attrTest.attribute == 'family'
               expect(attributes[attrTest.attribute]).to.equal('san-serif')
           expect(delta).to.deep.equal(expectedDelta)
           expect(consistent).to.be.true
