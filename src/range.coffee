@@ -90,11 +90,11 @@ class TandemRange
 
   getRangy: ->
     range = rangy.createRangyRange(@editor.contentWindow)
-    if @start.leafNode.nodeName != 'BR'
+    if @start.leafNode.nodeName != 'BR' and @start.leafNode.firstChild?
       range.setStart(@start.leafNode.firstChild, @start.offset)
     else
       range.setStart(@start.leafNode, 0)
-    if @end.leafNode.nodeName != 'BR'
+    if @end.leafNode.nodeName != 'BR' and @end.leafNode.firstChild?
       range.setEnd(@end.leafNode.firstChild, @end.offset)
     else
       range.setEnd(@end.leafNode, 0)
