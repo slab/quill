@@ -15,6 +15,7 @@ class TandemRenderer
       'tab-size': '4'
       'white-space': 'pre-wrap'
     }
+    '.line': { 'min-height': '15px' }
     'body' : { 'margin': '0px', 'padding': '0px' }
     'a'    : { 'cursor': 'pointer', 'text-decoration': 'underline' }
     'b'    : { 'font-weight': 'bold' }
@@ -74,7 +75,7 @@ class TandemRenderer
       'top': '-31px' 
     }
     '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'relative', 'height': '15px', 'left': '-1px', 'top': '-31px' }
-
+    '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '2px' }
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
