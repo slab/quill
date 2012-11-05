@@ -109,17 +109,26 @@ class TandemEditor extends EventEmitter2
       #this.setSelection(start)
 
   initListeners: ->
-    deboundedEdit = _.debounce( =>
-      return if @ignoreDomChanges or !@destructors?
+    modified = false
+
+    deboundedEdit = =>
+      return if @ignoreDomChanges or !@destructors? or !modified
       delta = this.update()
       this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
-    , 100)
+      modified = false
+
     onEdit = =>
       return if @ignoreDomChanges or !@destructors?
       deboundedEdit()
-    @doc.root.addEventListener('DOMSubtreeModified', onEdit)
+    onSubtreeModified = _.debounce( =>
+      modified = true
+    , 100)
+
+    interval = setInterval(onEdit, 500)
+    @doc.root.addEventListener('DOMSubtreeModified', onSubtreeModified)
     @destructors.push( ->
-      @doc.root.removeEventListener('DOMSubtreeModified', onEdit)
+      @doc.root.removeEventListener('DOMSubtreeModified', onSubtreeModified)
+      clearInterval(interval)
     )
 
   keepNormalized: (fn) ->
@@ -144,12 +153,28 @@ class TandemEditor extends EventEmitter2
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
-    retains = []
+
     cursors = {}
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
-        @doc.insertText(index + offset, delta.text)
         cursors[delta.attributes['author']] = index + offset + delta.text.length if delta.attributes['author']?
+        offset += delta.getLength()
+      else if JetDelta.isRetain(delta)
+        if delta.start > index
+          offset -= (delta.start - index)
+        index = delta.end
+      else
+        console.warn('Unrecognized type in delta', delta)
+    )
+    _.each(cursors, (index, userId) =>
+      this.removeCursor(userId)
+    )
+
+    index = offset = 0
+    retains = []
+    _.each(delta.deltas, (delta) =>
+      if JetDelta.isInsert(delta)
+        @doc.insertText(index + offset, delta.text)
         retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
         offset += delta.getLength()
       else if JetDelta.isRetain(delta)
