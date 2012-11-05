@@ -1,5 +1,7 @@
 #= require underscore
 
+Stypi.events ||= {}
+
 _.extend(Stypi.events,
   CLIENT_JOIN   : 'presence-client-join'
   CLIENT_LEAVE  : 'presence-client-leave'

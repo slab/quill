@@ -11,7 +11,7 @@ class TandemRenderer
       'line-height': '15px'
       'min-height': '100%'
       'outline': 'none'
-      'padding': '10px 15px'
+      'padding': '30px 15px'
       'tab-size': '4'
       'white-space': 'pre-wrap'
     }
