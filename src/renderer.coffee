@@ -61,7 +61,12 @@ class TandemRenderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
     '.tab' : { 'display': 'inline-block', 'margin': '0px' }
-    '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'relative', 'width': '0px' }
+    '#cursor-container': {
+      'font-family': "'Helvetica', 'Arial', san-serif"
+      'font-size': '13px'
+      'line-height': '15px'
+    }
+    '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
     '.cursor-name': {
       'border-bottom-right-radius': '3px'
       'border-top-left-radius': '3px'
@@ -107,6 +112,9 @@ class TandemRenderer
     contentContainer = doc.createElement('div')
     contentContainer.id = Tandem.Editor.CONTAINER_ID
     contentContainer.classList.add('editor')
+    cursorContainer = doc.createElement('div')
+    cursorContainer.id = 'cursor-container'
+    doc.body.appendChild(cursorContainer)
     doc.body.appendChild(contentContainer)
     contentContainer.innerHTML = html if @options.keepHTML
 

@@ -24,6 +24,7 @@ stripNewlineAttributes = (delta) ->
   delta.compact()
   return delta
 
+
 class TandemEditor extends EventEmitter2
   @editors: []
 
@@ -47,36 +48,69 @@ class TandemEditor extends EventEmitter2
     @destructors = []
     @cursors = {}
     this.reset(true)
+    @cursorContainer = @doc.root.ownerDocument.getElementById('cursor-container')
     this.enable() if @options.enabled
 
+
+  applyDeltaToCursors: (delta) ->
+    JetState.applyDelta(delta, ((index, text) =>
+      this.shiftCursors(index, text.length)
+    ), ((start, end) =>
+      this.shiftCursors(start, start-end)
+    ))
+
+  shiftCursors: (index, length) ->
+    for id,cursor of @cursors
+      if cursor == undefined || cursor.index < index
+        continue
+      if (cursor.index > index)
+        if length > 0
+          this.setCursor(cursor.userId, cursor.index + length, cursor.name, cursor.color)   # Insert
+        else
+          # Delete needs to handle special case: start|cursor|end vs normal case: start|end|cursor
+          this.setCursor(cursor.userId, cursor.index + Math.max(length, index - cursor.index), cursor.name, cursor.color)
+
   setCursor: (userId, index, name, color) ->
-    return
-    this.removeCursor(userId)
-    cursor = @doc.root.ownerDocument.createElement('span')
-    cursor.classList.add('cursor')
-    cursor.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-    cursor.id = TandemEditor.CURSOR_PREFIX + userId
-    inner = @doc.root.ownerDocument.createElement('span')
-    inner.classList.add('cursor-inner')
-    inner.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-    nameNode = @doc.root.ownerDocument.createElement('span')
-    nameNode.classList.add('cursor-name')
-    nameNode.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-    nameNode.textContent = name
-    inner.style['background-color'] = nameNode.style['background-color'] = color
-    cursor.appendChild(nameNode)
-    cursor.appendChild(inner)
+    cursor = @doc.root.ownerDocument.getElementById(TandemEditor.CURSOR_PREFIX + userId)
+    unless cursor?
+      cursor = @doc.root.ownerDocument.createElement('span')
+      cursor.classList.add('cursor')
+      cursor.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+      cursor.id = TandemEditor.CURSOR_PREFIX + userId
+      inner = @doc.root.ownerDocument.createElement('span')
+      inner.classList.add('cursor-inner')
+      inner.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+      nameNode = @doc.root.ownerDocument.createElement('span')
+      nameNode.classList.add('cursor-name')
+      nameNode.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+      nameNode.textContent = name
+      inner.style['background-color'] = nameNode.style['background-color'] = color
+      cursor.appendChild(nameNode)
+      cursor.appendChild(inner)
+      @cursorContainer.appendChild(cursor)
     @cursors[userId] = {
       index: index
       name: name
       color: color
+      userId: userId
     }
-    Tandem.Utils.insertExternal(new Tandem.Position(this, index), cursor)
-    line = @doc.findLine(cursor)
-    line.rebuild() if line?
+    position = new Tandem.Position(this, index)
+    [left, right] = Tandem.Utils.splitNode(position.leafNode, position.offset)
+    if right?
+      cursor.style.top = right.offsetTop
+      cursor.style.left = right.offsetLeft
+      Tandem.Utils.mergeNodes(left, right)
+    else if left?
+      span = left.ownerDocument.createElement('span')
+      left.parentNode.appendChild(span)
+      cursor.style.top = span.offsetTop
+      cursor.style.left = span.offsetLeft
+      span.parentNode.removeChild(span)
+    else
+      console.warn "Could not set cursor"
+
 
   moveCursor: (userId, index) ->
-    return
     if @cursors[userId]
       this.setCursor(userId, index, @cursors[userId].name, @cursors[userId].color)
 
@@ -129,18 +163,20 @@ class TandemEditor extends EventEmitter2
   initListeners: ->
     modified = false
 
-    deboundedEdit = =>
-      return if @ignoreDomChanges or !@destructors? or !modified
-      delta = this.update()
-      this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta) if !delta.isIdentity()
+    debouncedEdit = =>
+      return unless modified
       modified = false
+      return if @ignoreDomChanges or !@destructors?
+      delta = this.update()
+      this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta) unless delta.isIdentity()
 
     onEdit = =>
       return if @ignoreDomChanges or !@destructors?
-      deboundedEdit()
-    onSubtreeModified = _.debounce( =>
+      debouncedEdit()
+
+    onSubtreeModified = =>
+      return if @ignoreDomChanges or !@destructors?
       modified = true
-    , 100)
 
     interval = setInterval(onEdit, 500)
     @doc.root.addEventListener('DOMSubtreeModified', onSubtreeModified)
@@ -218,6 +254,7 @@ class TandemEditor extends EventEmitter2
       )
     )
     @doc.forceTrailingNewline()
+    this.applyDeltaToCursors(delta)
     _.each(cursors, (index, userId) =>
       this.moveCursor(userId, index)
     )
@@ -275,6 +312,7 @@ class TandemEditor extends EventEmitter2
       compose = JetSync.compose(oldDelta, decompose)
       console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
       delta = stripNewlineAttributes(decompose)
+      this.applyDeltaToCursors(delta)
     else
       fn()
     @ignoreDomChanges = oldIgnoreDomChange
