@@ -1,6 +1,6 @@
 $(document).ready( ->
   window.editor = editor = new Tandem.Editor('editor-container')
-  window.toolbar = toolbar = new Tandem.Toolbar(editor)
+  window.toolbar = toolbar = new Tandem.Toolbar(editor, { keepHTML: false })
   
   toolbar.on 'update', (attributes) ->
     $.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
