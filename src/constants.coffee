@@ -10,10 +10,6 @@ TandemConstants =
     'right'
   ]
 
-  AUTHOR_COLORS: [
-    'anonymous'
-  ]
-
   BLOCK_TAGS: [
     'ADDRESS'
     'BLOCKQUOTE'
@@ -41,7 +37,6 @@ TandemConstants =
   ]
 
   DEFAULT_LEAF_ATTRIBUTES:
-    'author'     : 'anonymous'
     'background' : 'white'
     'color'      : 'black'
     'family'     : 'san-serif'
@@ -128,7 +123,6 @@ TandemConstants =
 TandemConstants.LINE_ATTRIBUTES = [].concat(_.keys(TandemConstants.INDENT_ATTRIBUTES), TandemConstants.ALIGN_ATTRIBUTES).sort()
 
 TandemConstants.SPAN_ATTRIBUTES =
-  'author'          : TandemConstants.AUTHOR_COLORS
   'background' : TandemConstants.FONT_BACKGROUNDS
   'color'      : TandemConstants.FONT_COLORS
   'family'     : TandemConstants.FONT_FAMILIES
