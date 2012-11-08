@@ -160,7 +160,8 @@ class TandemEditor extends EventEmitter2
     }
     position = new Tandem.Position(this, index)
     [left, right, didSplit] = Tandem.Utils.splitNode(position.leafNode, position.offset)
-    if right?
+    if right? && (right.offsetTop != 0 || right.offsetLeft != 0)
+      cursor.style.top = right.parentNode
       cursor.style.top = right.offsetTop
       cursor.style.left = right.offsetLeft
       Tandem.Utils.mergeNodes(left, right) if didSplit
@@ -170,6 +171,9 @@ class TandemEditor extends EventEmitter2
       cursor.style.top = span.offsetTop
       cursor.style.left = span.offsetLeft
       span.parentNode.removeChild(span)
+    else if right?
+      cursor.style.top = right.parentNode.offsetTop
+      cursor.style.left = right.parentNode.offsetLeft
     else
       console.warn "Could not set cursor"
 
