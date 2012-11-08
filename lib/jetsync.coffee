@@ -1,4 +1,8 @@
 # This library contains the synchronization code for clients' edits.
+dmp = new diff_match_patch
+diff_match_patch.DIFF_DELETE = -1
+diff_match_patch.DIFF_INSERT = 1
+diff_match_patch.DIFF_EQUAL = 0
 
 class JetDeltaItem
   constructor: (@attributes = {})
@@ -17,10 +21,10 @@ class JetDeltaItem
   composeAttributes: (attributes) ->
     return if !attributes?
     for key, value of attributes
-      if value?
-        @attributes[key] = value
-      else
+      if JetDelta.isInsert(this) && value == null
         delete @attributes[key]
+      else if typeof value != 'undefined'
+        @attributes[key] = value
 
   numAttributes: () ->
     _.keys(@attributes).length
@@ -133,13 +137,16 @@ class JetDelta
           compacted.push(delta)
     @deltas = compacted
 
-  getDeltasAt: (range) ->
+  getDeltasAt: (start, length) ->
     changes = []
     index = 0
-    if typeof range == 'number'
-      range = new JetRetain(range, range + 1)
+    if typeof length == 'undefined'
+      if typeof start == 'number'
+        range = new JetRetain(start, start + 1)
+      else
+        range = JetRetain.copy(start)
     else
-      range = JetRetain.copy(range)
+      range = new JetRetain(start, start + length)
     for delta in @deltas
       if range.start == range.end then break
       console.assert(JetDelta.isRetain(delta) || JetDelta.isInsert(delta), "Invalid change in delta", this)
@@ -255,208 +262,90 @@ JetSync =
     console.assert(JetDelta.isDelta(deltaA), "Decompose2 called when deltaA is not a JetDelta, type: " + typeof deltaA)
     console.assert(JetDelta.isDelta(deltaC), "Decompose2 called when deltaC is not a JetDelta, type: " + typeof deltaC)
     console.assert(deltaA.startLength == deltaC.startLength, "startLength #{deltaA.startLength} / startLength #{deltaC.startLength} mismatch")
+    console.assert(_.all(deltaA.deltas, ((delta) -> return delta.text?)), "DeltA has retain in decompose")
+    console.assert(_.all(deltaC.deltas, ((delta) -> return delta.text?)), "DeltC has retain in decompose")
 
-    # Temporary lcs solution, lifted from
-    # http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring
-    # This is also not the most optimal solution. This dp approach is O(n*m), but
-    # using a suffix tree is O(n + m).
-    # Returns the lcs, its length, and the offset into _str1_ that the lcs can
-    # be found.
-    longestCommonSubstring = `function (str1, str2) {
-      if (!str1 || !str2) {
-        return {
-          length: 0,
-          sequence: "",
-          offset: 0
-        };
-      }
 
-      var sequence = "",
-          str1Length = str1.length,
-          str2Length = str2.length,
-          num = new Array(str1Length),
-          maxlen = 0,
-          lastSubsBegin = 0;
-
-      for (var i = 0; i < str1Length; i++) {
-              var subArray = new Array(str2Length);
-              for (var j = 0; j < str2Length; j++)
-                      subArray[j] = 0;
-              num[i] = subArray;
-      }
-
-      for (var i = 0; i < str1Length; i++)
-      {
-              for (var j = 0; j < str2Length; j++)
-              {
-                      if (str1[i] !== str2[j])
-                              num[i][j] = 0;
-                      else
-                      {
-                              if ((i === 0) || (j === 0))
-                                      num[i][j] = 1;
-                              else
-                                      num[i][j] = 1 + num[i - 1][j - 1];
-
-                              if (num[i][j] > maxlen)
-                              {
-                                      maxlen = num[i][j];
-                                      var thisSubsBegin = i - num[i][j] + 1;
-                                      if (lastSubsBegin === thisSubsBegin)
-                                      {//if the current LCS is the same as the last time this block ran
-                                              sequence += str1[i];
-                                      }
-                                      else //this block resets the string builder if a different LCS is found
-                                      {
-                                              lastSubsBegin = thisSubsBegin;
-                                              sequence= ""; //clear it
-                                              sequence += str1.substr(lastSubsBegin, (i + 1) - lastSubsBegin);
-                                      }
-                              }
-                      }
-              }
-      }
-      return {
-              length: maxlen,
-              sequence: sequence,
-              offset: thisSubsBegin
-      };
-      }`
-
-    # Returns hash with keys _offsetA_, _offsetC_, _sequence_, _length_
-    getBestMatch = (strA, strC) ->
-      meta = longestCommonSubstring(strA, strC)
-      # Clean up the output of longestCommonSubstring for our purposes
-      meta['offsetA'] = meta.offset
-      meta['offsetC'] = strC.indexOf(meta.sequence)
-      delete meta.offset
-      return meta
-
-    deltaA = JetDelta.copy(deltaA)
-    deltaC = JetDelta.copy(deltaC)
-    deltaA.normalizeChanges()
-    deltaC.normalizeChanges()
-
-    decomposeAttributes = (elemA, elemC) ->
+    decomposeAttributes = (attrA, attrC) ->
       decomposedAttributes = {}
-      attributes = elemA.attributes
-      for key, value of elemC.attributes
-        if attributes[key] == undefined or attributes[key] != value
+      for key, value of attrC
+        if attrA[key] == undefined or attrA[key] != value
           decomposedAttributes[key] = value
-      attributes = elemC.attributes
-      for key, value of elemA.attributes
-        if attributes[key] == undefined
+      for key, value of attrA
+        if attrC[key] == undefined
           decomposedAttributes[key] = null
       return decomposedAttributes
 
-    retains = []
-    findRetain = (deltas, retain) ->
-      index = 0
-      docIndex = 0
-      for elem in deltas
-        if elem.start <= retain.start and elem.end > retain.start
-          docIndex += retain.start - elem.start
-          return {docIndex: docIndex, elemIndex: index}
+    deltaToText = (delta) ->
+      return _.map(delta.deltas, (delta) ->
+        return if delta.text? then delta.text else ""
+      ).join('')
+
+    diffTexts = (oldText, newText) ->
+      diff = dmp.diff_main(oldText, newText)
+      if (diff.length > 2)
+        dmp.diff_cleanupSemantic(diff)
+        dmp.diff_cleanupEfficiency(diff)
+      return diff
+
+    diffToDelta = (diff) ->
+      console.assert(diff.length > 0, "diffToDelta called with diff with length <= 0")
+      originalLength = 0
+      finalLength = 0
+      deltas = []
+      # For each difference apply them separately so we do not disrupt the cursor
+      for [operation, value] in diff
+        switch operation
+          when diff_match_patch.DIFF_DELETE
+            # Deletes implied
+            originalLength += value.length
+          when diff_match_patch.DIFF_INSERT
+            deltas.push(new JetInsert(value))
+            finalLength += value.length
+          when diff_match_patch.DIFF_EQUAL
+            deltas.push(new JetRetain(originalLength, originalLength + value.length))
+            originalLength += value.length
+            finalLength += value.length
+      return new JetDelta(originalLength, finalLength, deltas)
+
+    textA = deltaToText(deltaA)
+    textC = deltaToText(deltaC)
+    unless textA == '' and textC == ''
+      diff = diffTexts(textA, textC)
+      insertDelta = diffToDelta(diff)
+    else
+      insertDelta = new JetDelta(0, 0, [])
+    deltas = []
+    offset = 0
+    _.each(insertDelta.deltas, (delta) ->
+      deltasInC = deltaC.getDeltasAt(offset, delta.getLength())
+      offsetC = 0
+      _.each(deltasInC, (deltaInC) ->
+        if JetDelta.isInsert(delta)
+          d = new JetInsert(delta.text.substring(offsetC, deltaInC.getLength()), deltaInC.attributes)
+          deltas.push(d)
+        else if JetDelta.isRetain(delta)
+          deltasInA = deltaA.getDeltasAt(delta.start + offsetC, deltaInC.getLength())
+          offsetA = 0
+          _.each(deltasInA, (deltaInA) ->
+            attributes = decomposeAttributes(deltaInA.attributes, deltaInC.attributes)
+            start = delta.start + offsetA + offsetC
+            e = new JetRetain(start, start + deltaInA.getLength(), attributes)
+            deltas.push(e)
+            offsetA += deltaInA.getLength()
+          )
         else
-          docIndex += elem.getLength()
-          index += 1
-      console.assert false, "Retain #{retain} is in deltaC but not deltaA"
-    JetSync.findRetain = findRetain
-    for elem in deltaC.deltas
-      if JetDelta.isRetain(elem)
-        retains.push(findRetain(deltaA.deltas, elem))
+          console.error("Invalid delta in deltaB when composing", deltaB)
+        offsetC += deltaInC.getLength()
+      )
+      offset += delta.getLength()
+    )
 
-    leftSearchBound = 0 # docIndex we may start our search for a match at
-    decomposeInserts = (deltas, insert, docOffset = 0) ->
-      decomposed = []
-      if insert.getLength() == 0
-        return decomposed
-      else if deltas.length == 0
-        decomposed.push(insert)
-        return decomposed
-
-      bestElemIndex = bestDocIndex = bestMarker = undefined
-      index = docIndex = 0
-      # Find the best match for _insert_ across all _deltas_
-      for elem in deltas
-        if JetDelta.isInsert(elem)
-          marker = getBestMatch(elem.text, insert.text)
-          if marker.sequence != ""
-            if bestMarker == undefined or marker.length > bestMarker.length
-              bestMarker = marker
-              bestElemIndex = index
-              bestDocIndex = docIndex
-              if docOffset + docIndex + marker.offsetA + marker.length > leftSearchBound
-                leftSearchBound = docOffset + docIndex + marker.offsetA + marker.length
-        index += 1
-        docIndex += elem.getLength()
-      # If a match was found
-      if bestElemIndex != undefined
-        leftSlice = deltas.slice(0, bestElemIndex)
-        if deltas[bestElemIndex].text.substring(0, bestMarker.offsetA).length > 0
-          leftSlice.push(new JetInsert(deltas[bestElemIndex].text.substring(0, bestMarker.offsetA), deltas[bestElemIndex].attributes))
-        leftInsert = new JetInsert(insert.text.substring(0, bestMarker.offsetC), insert.attributes)
-        decomposed = decomposed.concat(decomposeInserts(leftSlice, leftInsert, docOffset))
-
-        start = docOffset + bestDocIndex + bestMarker.offsetA
-        decomposed.push(new JetRetain(start, start + bestMarker.length, decomposeAttributes(deltas[bestElemIndex], insert)))
-
-        rightSlice = deltas.slice(bestElemIndex + 1)
-        if deltas[bestElemIndex].text.substring(bestMarker.offsetA + bestMarker.length).length > 0
-          rightSlice.unshift(new
-          JetInsert(deltas[bestElemIndex].text.substring(bestMarker.offsetA + bestMarker.length), deltas[bestElemIndex].attributes))
-        rightInsert = new JetInsert(insert.text.substring(bestMarker.offsetC + bestMarker.length), insert.attributes)
-        decomposed = decomposed.concat(decomposeInserts(rightSlice, rightInsert, start + bestMarker.length))
-      else
-        decomposed.push(insert)
-      return decomposed
-    JetSync.decomposeInserts = decomposeInserts
-
-    decomposed = []
-    for elem in deltaC.deltas
-      if JetDelta.isInsert(elem)
-        rightSearchBound = if retains.length > 0 then _.first(retains).elemIndex else deltaA.deltas.length
-        if leftSearchBound >= deltaA.endLength
-          decomposed.push(new JetInsert(elem.text, elem.attributes))
-          continue
-        [leftElem, offset] = deltaA.getElemIndexAndOffset(leftSearchBound)
-        deltasToSearch = deltaA.deltas.slice(leftElem + 1, rightSearchBound)
-        if JetDelta.isInsert(deltaA.deltas[leftElem])
-          origInsert = deltaA.deltas[leftElem]
-          deltasToSearch.unshift(new JetInsert(origInsert.text.substring(offset), origInsert.attributes))
-        else
-          origRetain = deltaA.deltas[leftElem]
-          deltasToSearch.unshift(new JetRetain(origRetain.start + offset, origRetain.end, origRetain.attributes))
-        decomposed = decomposed.concat(decomposeInserts(deltasToSearch, elem, leftSearchBound))
-      else
-        console.assert JetDelta.isRetain(elem), "Expecting retain but got #{typeof elem}"
-        console.assert retains.length > 0, "Shifting from the empty list"
-
-        matchingRetains = []
-        length = 0
-        indexes = retains.shift()
-        while length < elem.getLength()
-          retain = deltaA.deltas[indexes.elemIndex]
-          [elemIndex, offset] = deltaA.getElemIndexAndOffset(indexes.docIndex)
-          console.assert elemIndex == indexes.elemIndex, "Inconsistent indexes when matching retains. Got #{elemIndex} but expected #{indexes.elemIndex}"
-          retain = new JetRetain(retain.start + offset, retain.end, retain.attributes)
-          if length + retain.getLength() <= elem.getLength()
-            matchingRetains.push(new JetRetain(indexes.docIndex, indexes.docIndex + retain.getLength(), decomposeAttributes(retain, elem)))
-            length += retain.getLength()
-            indexes.docIndex += retain.getLength()
-          else
-            trim = length + retain.getLength() - elem.getLength()
-            matchingRetains.push(new JetRetain(indexes.docIndex, indexes.docIndex + retain.getLength() - trim, decomposeAttributes(retain, elem)))
-            length += retain.getLength() - trim
-            indexes.docIndex += retain.getLength() - trim
-          indexes.elemIndex += 1
-        leftSearchBound = indexes.docIndex
-        decomposed = decomposed.concat(matchingRetains)
-
-    deltaB = new JetDelta(deltaA.endLength, deltaC.endLength, decomposed)
+    deltaB = new JetDelta(insertDelta.startLength, insertDelta.endLength, deltas)
     deltaB.compact()
-    console.assert(JetDelta.isDelta(deltaB), "Decomposed returning invalid JetDelta", deltaB)
     return deltaB
+
+
 
   # We compute the follow according to the following rules:
   # 1. Insertions in deltaA become retained characters in the follow set
