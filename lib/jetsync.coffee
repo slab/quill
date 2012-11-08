@@ -322,7 +322,7 @@ JetSync =
       offsetC = 0
       _.each(deltasInC, (deltaInC) ->
         if JetDelta.isInsert(delta)
-          d = new JetInsert(delta.text.substring(offsetC, deltaInC.getLength()), deltaInC.attributes)
+          d = new JetInsert(delta.text.substring(offsetC, offsetC + deltaInC.getLength()), deltaInC.attributes)
           deltas.push(d)
         else if JetDelta.isRetain(delta)
           deltasInA = deltaA.getDeltasAt(delta.start + offsetC, deltaInC.getLength())
