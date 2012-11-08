@@ -61,25 +61,6 @@ class TandemRenderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
     '.tab' : { 'display': 'inline-block', 'margin': '0px' }
-    '#cursor-container': {
-      'font-family': "'Helvetica', 'Arial', san-serif"
-      'font-size': '13px'
-      'line-height': '15px'
-    }
-    '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
-    '.cursor-name': {
-      'border-bottom-right-radius': '3px'
-      'border-top-left-radius': '3px'
-      'border-top-right-radius': '3px'
-      'color': 'white'
-      'display': 'inline-block'
-      'left': '-1px'
-      'padding': '2px 8px'
-      'position': 'absolute'
-      'top': '-18px' 
-    }
-    '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
-    '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -92,7 +73,17 @@ class TandemRenderer
     @options = _.extend(Tandem.Renderer.DEFAULTS, options)
     this.createFrame()
 
-  destroy: ->
+  addStyles: (styles) ->
+    doc = @iframe.contentWindow.document
+    head = doc.getElementsByTagName('head')[0]
+    style = doc.createElement('style')
+    style.type = 'text/css'
+    css = Tandem.Renderer.objToCss(styles)
+    if style.styleSheet?
+      style.styleSheet.cssText = css
+    else
+      style.appendChild(doc.createTextNode(css))
+    head.appendChild(style)
 
   createFrame: ->
     html = @container.innerHTML
@@ -112,23 +103,10 @@ class TandemRenderer
     contentContainer = doc.createElement('div')
     contentContainer.id = Tandem.Editor.CONTAINER_ID
     contentContainer.classList.add('editor')
-    cursorContainer = doc.createElement('div')
-    cursorContainer.id = 'cursor-container'
-    doc.body.appendChild(cursorContainer)
     doc.body.appendChild(contentContainer)
     contentContainer.innerHTML = html if @options.keepHTML
 
-  addStyles: (styles) ->
-    doc = @iframe.contentWindow.document
-    head = doc.getElementsByTagName('head')[0]
-    style = doc.createElement('style')
-    style.type = 'text/css'
-    css = Tandem.Renderer.objToCss(styles)
-    if style.styleSheet?
-      style.styleSheet.cssText = css
-    else
-      style.appendChild(doc.createTextNode(css))
-    head.appendChild(style)
+  destroy: ->
 
 
 

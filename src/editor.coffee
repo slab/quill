@@ -30,109 +30,8 @@ class TandemEditor extends EventEmitter2
     @id = _.uniqueId(TandemEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     @destructors = []
-    @cursors = {}
     this.reset(true)
-    @cursorContainer = @doc.root.ownerDocument.getElementById('cursor-container')
     this.enable() if @options.enabled
-
-
-
-  jetSyncApplyDelta: (newDelta, insertFn, deleteFn, context = null) ->
-    index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
-    offset = 0      # Tracks how many characters inserted to correctly offset new text
-    for delta in newDelta.deltas
-      authorId = if delta.attributes? then delta.attributes.authorId else 1
-      if JetDelta.isInsert(delta)
-        insertFn.call(context || insertFn, index + offset, delta.text, authorId)
-        offset += delta.getLength()
-      else if JetDelta.isRetain(delta)
-        console.assert(delta.start >= index, "Somehow delta.start became smaller than index")
-        if delta.start > index
-          deleteFn.call(context || deleteFn, index + offset, delta.start + offset, authorId)
-          offset -= (delta.start - index)
-        index = delta.end
-      else
-        console.assert(false, "Unrecognized type in delta", delta)
-
-    # If end of text was deleted
-    if newDelta.endLength < newDelta.startLength + offset
-      deleteFn.call(context || deleteFn, newDelta.endLength, newDelta.startLength + offset)
-    return
-
-  applyDeltaToCursors: (delta) ->
-    this.jetSyncApplyDelta(delta, ((index, text) =>
-      this.shiftCursors(index, text.length)
-    ), ((start, end) =>
-      this.shiftCursors(start, start-end)
-    ))
-
-  shiftCursors: (index, length) ->
-    for id,cursor of @cursors
-      if cursor == undefined || cursor.index < index
-        continue
-      if (cursor.index > index)
-        if length > 0
-          this.setCursor(cursor.userId, cursor.index + length, cursor.name, cursor.color)   # Insert
-        else
-          # Delete needs to handle special case: start|cursor|end vs normal case: start|end|cursor
-          this.setCursor(cursor.userId, cursor.index + Math.max(length, index - cursor.index), cursor.name, cursor.color)
-
-  setCursor: (userId, index, name, color) ->
-    cursor = @doc.root.ownerDocument.getElementById(TandemEditor.CURSOR_PREFIX + userId)
-    unless cursor?
-      cursor = @doc.root.ownerDocument.createElement('span')
-      cursor.classList.add('cursor')
-      cursor.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      cursor.id = TandemEditor.CURSOR_PREFIX + userId
-      inner = @doc.root.ownerDocument.createElement('span')
-      inner.classList.add('cursor-inner')
-      inner.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      nameNode = @doc.root.ownerDocument.createElement('span')
-      nameNode.classList.add('cursor-name')
-      nameNode.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      nameNode.textContent = name
-      inner.style['background-color'] = nameNode.style['background-color'] = color
-      cursor.appendChild(nameNode)
-      cursor.appendChild(inner)
-      @cursorContainer.appendChild(cursor)
-    @cursors[userId] = {
-      index: index
-      name: name
-      color: color
-      userId: userId
-    }
-    position = new Tandem.Position(this, index)
-    [left, right, didSplit] = Tandem.Utils.splitNode(position.leafNode, position.offset)
-    if right? && (right.offsetTop != 0 || right.offsetLeft != 0)
-      cursor.style.top = right.parentNode
-      cursor.style.top = right.offsetTop
-      cursor.style.left = right.offsetLeft
-      Tandem.Utils.mergeNodes(left, right) if didSplit
-    else if left?
-      span = left.ownerDocument.createElement('span')
-      left.parentNode.appendChild(span)
-      cursor.style.top = span.offsetTop
-      cursor.style.left = span.offsetLeft
-      span.parentNode.removeChild(span)
-    else if right?
-      cursor.style.top = right.parentNode.offsetTop
-      cursor.style.left = right.parentNode.offsetLeft
-    else
-      console.warn "Could not set cursor"
-
-
-  moveCursor: (userId, index) ->
-    if @cursors[userId]
-      this.setCursor(userId, index, @cursors[userId].name, @cursors[userId].color)
-
-  clearCursors: ->
-    _.each(@doc.root.querySelectorAll('.cursor'), (cursor) ->
-      cursor.parentNode.removeChild(cursor)
-    )
-
-  removeCursor: (userId) ->
-    cursor = @doc.root.ownerDocument.getElementById(TandemEditor.CURSOR_PREFIX + userId)
-    cursor.parentNode.removeChild(cursor) if cursor?
 
   destroy: ->
     this.disable()
@@ -218,23 +117,6 @@ class TandemEditor extends EventEmitter2
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
-    cursors = {}
-    _.each(delta.deltas, (delta) =>
-      if JetDelta.isInsert(delta)
-        cursors[delta.attributes['author']] = index + offset + delta.text.length if delta.attributes['author']?
-        offset += delta.getLength()
-      else if JetDelta.isRetain(delta)
-        if delta.start > index
-          offset -= (delta.start - index)
-        index = delta.end
-      else
-        console.warn('Unrecognized type in delta', delta)
-    )
-    _.each(cursors, (index, userId) =>
-      this.removeCursor(userId)
-    )
-
-    index = offset = 0
     retains = []
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
@@ -264,10 +146,6 @@ class TandemEditor extends EventEmitter2
       )
     )
     @doc.forceTrailingNewline()
-    this.applyDeltaToCursors(delta)
-    _.each(cursors, (index, userId) =>
-      this.moveCursor(userId, index)
-    )
     newDelta = @doc.toDelta()
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
@@ -316,7 +194,6 @@ class TandemEditor extends EventEmitter2
     delta = null
     if track
       oldDelta = @doc.toDelta()
-      oldText = deltaToText(oldDelta)
       fn()
       newDelta = @doc.toDelta()
       decompose = JetSync.decompose(oldDelta, newDelta)

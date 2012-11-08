@@ -59,7 +59,7 @@ class TandemSelection
     return new Tandem.Range(@editor, start, end)
 
   preserve: (fn, context = fn) ->
-    if @range? && false
+    if @range?
       this.save()
       fn.call(context)
       this.restore()
