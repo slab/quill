@@ -23,14 +23,12 @@ class TandemSelection
       this.update()
     , 100)
     keyUpdate = (event) =>
-      debouncedUpdate() if 37 <= event.which and event.which <= 40
+      debouncedUpdate() if Tandem.Keyboard.LEFT <= event.which and event.which <= Tandem.Keyboard.DOWN
 
     @editor.doc.root.addEventListener('keyup', keyUpdate)
     @editor.doc.root.addEventListener('mouseup', debouncedUpdate)
     @editor.doc.root.addEventListener('mousedown', debouncedUpdate)
-    #updateInterval = setInterval(debouncedUpdate, TandemSelection.POLL_INTERVAL)
     @destructors.push( =>
-      #clearInterval(updateInterval)
       @editor.doc.root.removeEventListener('keyup', keyUpdate)
       @editor.doc.root.removeEventListener('mouseup', debouncedUpdate)
       @editor.doc.root.removeEventListener('mousedown', debouncedUpdate)
