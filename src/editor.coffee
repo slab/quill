@@ -8,63 +8,6 @@
 #= require tandem/selection
 #= require tandem/renderer
 
-DIFF_DELETE = -1
-DIFF_INSERT = 1
-DIFF_EQUAL = 0
-
-dmp = new diff_match_patch
-
-stripNewlineAttributes = (delta) ->
-  deltas = []
-  _.each(delta.deltas, (delta) ->
-    if delta.text?
-      texts = delta.text.split("\n")
-      _.each(texts, (text, index) ->
-        deltas.push(new JetInsert(text, _.clone(delta.attributes)))
-        deltas.push(new JetInsert("\n")) if index < texts.length - 1
-      )
-    else
-      deltas.push(delta)
-  )
-  delta = new JetDelta(delta.startLength, delta.endLength, deltas)
-  delta.compact()
-  return delta
-
-diffToDelta = (diff) ->
-  console.assert(diff.length > 0, "diffToDelta called with diff with length <= 0")
-  originalLength = 0
-  finalLength = 0
-  deltas = []
-  # For each difference apply them separately so we do not disrupt the cursor
-  for [operation, value] in diff
-    switch operation
-      when DIFF_DELETE
-        # Deletes implied
-        originalLength += value.length
-      when DIFF_INSERT
-        deltas.push(new JetInsert(value))
-        finalLength += value.length
-      when DIFF_EQUAL
-        deltas.push(new JetRetain(originalLength, originalLength + value.length))
-        originalLength += value.length
-        finalLength += value.length
-  return new JetDelta(originalLength, finalLength, deltas)
-
-getEfficientDiff = (oldText, newText) ->
-  diff = dmp.diff_main(oldText, newText)
-  if (diff.length > 2)
-    dmp.diff_cleanupSemantic(diff)
-    dmp.diff_cleanupEfficiency(diff)
-  return diff
-
-mergeDiffs = (diff1, diff2) ->
-  return diff1.concat(diff2)
-
-deltaToText = (delta) ->
-  return _.map(delta.deltas, (delta) ->
-    return if delta.text? then delta.text else ""
-  ).join('')
-
 
 class TandemEditor extends EventEmitter2
   @editors: []
@@ -275,7 +218,6 @@ class TandemEditor extends EventEmitter2
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
-    delta = stripNewlineAttributes(delta)
     cursors = {}
     _.each(delta.deltas, (delta) =>
       if JetDelta.isInsert(delta)
