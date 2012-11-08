@@ -8,6 +8,12 @@
 #= require tandem/selection
 #= require tandem/renderer
 
+DIFF_DELETE = -1
+DIFF_INSERT = 1
+DIFF_EQUAL = 0
+
+dmp = new diff_match_patch
+
 stripNewlineAttributes = (delta) ->
   deltas = []
   _.each(delta.deltas, (delta) ->
@@ -23,6 +29,41 @@ stripNewlineAttributes = (delta) ->
   delta = new JetDelta(delta.startLength, delta.endLength, deltas)
   delta.compact()
   return delta
+
+diffToDelta = (diff) ->
+  console.assert(diff.length > 0, "diffToDelta called with diff with length <= 0")
+  originalLength = 0
+  finalLength = 0
+  deltas = []
+  # For each difference apply them separately so we do not disrupt the cursor
+  for [operation, value] in diff
+    switch operation
+      when DIFF_DELETE
+        # Deletes implied
+        originalLength += value.length
+      when DIFF_INSERT
+        deltas.push(new JetInsert(value))
+        finalLength += value.length
+      when DIFF_EQUAL
+        deltas.push(new JetRetain(originalLength, originalLength + value.length))
+        originalLength += value.length
+        finalLength += value.length
+  return new JetDelta(originalLength, finalLength, deltas)
+
+getEfficientDiff = (oldText, newText) ->
+  diff = dmp.diff_main(oldText, newText)
+  if (diff.length > 2)
+    dmp.diff_cleanupSemantic(diff)
+    dmp.diff_cleanupEfficiency(diff)
+  return diff
+
+mergeDiffs = (diff1, diff2) ->
+  return diff1.concat(diff2)
+
+deltaToText = (delta) ->
+  return _.map(delta.deltas, (delta) ->
+    return if delta.text? then delta.text else ""
+  ).join('')
 
 
 class TandemEditor extends EventEmitter2
@@ -52,8 +93,31 @@ class TandemEditor extends EventEmitter2
     this.enable() if @options.enabled
 
 
+
+  jetSyncApplyDelta: (newDelta, insertFn, deleteFn, context = null) ->
+    index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
+    offset = 0      # Tracks how many characters inserted to correctly offset new text
+    for delta in newDelta.deltas
+      authorId = if delta.attributes? then delta.attributes.authorId else 1
+      if JetDelta.isInsert(delta)
+        insertFn.call(context || insertFn, index + offset, delta.text, authorId)
+        offset += delta.getLength()
+      else if JetDelta.isRetain(delta)
+        console.assert(delta.start >= index, "Somehow delta.start became smaller than index")
+        if delta.start > index
+          deleteFn.call(context || deleteFn, index + offset, delta.start + offset, authorId)
+          offset -= (delta.start - index)
+        index = delta.end
+      else
+        console.assert(false, "Unrecognized type in delta", delta)
+
+    # If end of text was deleted
+    if newDelta.endLength < newDelta.startLength + offset
+      deleteFn.call(context || deleteFn, newDelta.endLength, newDelta.startLength + offset)
+    return
+
   applyDeltaToCursors: (delta) ->
-    JetState.applyDelta(delta, ((index, text) =>
+    this.jetSyncApplyDelta(delta, ((index, text) =>
       this.shiftCursors(index, text.length)
     ), ((start, end) =>
       this.shiftCursors(start, start-end)
@@ -95,11 +159,11 @@ class TandemEditor extends EventEmitter2
       userId: userId
     }
     position = new Tandem.Position(this, index)
-    [left, right] = Tandem.Utils.splitNode(position.leafNode, position.offset)
+    [left, right, didSplit] = Tandem.Utils.splitNode(position.leafNode, position.offset)
     if right?
       cursor.style.top = right.offsetTop
       cursor.style.left = right.offsetLeft
-      Tandem.Utils.mergeNodes(left, right)
+      Tandem.Utils.mergeNodes(left, right) if didSplit
     else if left?
       span = left.ownerDocument.createElement('span')
       left.parentNode.appendChild(span)
@@ -306,13 +370,13 @@ class TandemEditor extends EventEmitter2
     delta = null
     if track
       oldDelta = @doc.toDelta()
+      oldText = deltaToText(oldDelta)
       fn()
       newDelta = @doc.toDelta()
       decompose = JetSync.decompose(oldDelta, newDelta)
       compose = JetSync.compose(oldDelta, decompose)
       console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
-      delta = stripNewlineAttributes(decompose)
-      this.applyDeltaToCursors(delta)
+      delta = decompose
     else
       fn()
     @ignoreDomChanges = oldIgnoreDomChange
