@@ -60,55 +60,18 @@ class TandemSelection
 
   preserve: (fn, context = fn) ->
     if @range?
-      this.save()
+      savedSel = rangy.saveSelection(@editor.contentWindow)
+      _.each(savedSel.rangeInfos, (rangeInfo) ->
+        _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
+          marker = rangeInfo.document.getElementById(markerId)
+          marker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
+        )
+      )
       fn.call(context)
-      this.restore()
+      rangy.restoreSelection(savedSel, false)
       this.update()
     else
       fn.call(context)
-
-  removeMarkers: ->
-    markers = @editor.doc.root.getElementsByClassName('sel-marker')
-    _.each(_.clone(markers), (marker) =>
-      parent = marker.parentNode
-      parent.removeChild(marker)
-      parent.normalize()
-      line = @editor.doc.findLine(parent)
-      line.rebuild() if line?
-    )
-
-  restore: ->
-    markers = @editor.doc.root.getElementsByClassName('sel-marker')
-    startMarker = markers[0]
-    endMarker = markers[1]
-    if startMarker && endMarker
-      startOffset = Tandem.Position.getIndex(startMarker, 0, @editor.doc.root)
-      endOffset = Tandem.Position.getIndex(endMarker, 0, @editor.doc.root)
-      this.removeMarkers()
-      range = new Tandem.Range(@editor, new Tandem.Position(@editor, @editor.doc.root, startOffset), new Tandem.Position(@editor, @editor.doc.root, endOffset))
-      this.setRange(range)
-    else
-      # TODO this should never happen...
-      console.warn "Not enough markers", startMarker, endMarker, @editor.id
-      this.removeMarkers()
-
-  save: ->
-    this.removeMarkers()
-    selection = this.getRange()
-    if selection
-      oldIgnoreDomChange = @editor.ignoreDomChanges
-      @editor.ignoreDomChanges = true
-      startMarker = @editor.doc.root.ownerDocument.createElement('span')
-      startMarker.classList.add('sel-marker')
-      startMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      endMarker = @editor.doc.root.ownerDocument.createElement('span')
-      endMarker.classList.add('sel-marker')
-      endMarker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      if selection.start.leafNode == selection.end.leafNode
-        selection.end.offset -= selection.start.offset
-      Tandem.Utils.insertExternal(selection.start, startMarker)
-      Tandem.Utils.insertExternal(selection.end, endMarker)
-      @editor.ignoreDomChanges = oldIgnoreDomChange
 
   setRange: (@range) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
