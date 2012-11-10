@@ -56,19 +56,15 @@ class TandemEditor extends EventEmitter2
     TandemEditor.editors.push(this)
 
   disable: ->
-    this.trackDelta( =>
+    this.doSilently( =>
       @doc.root.setAttribute('contenteditable', false)
-    , false)
+    )
 
   enable: ->
     if !@doc.root.getAttribute('contenteditable')
-      this.trackDelta( =>
+      this.doSilently( =>
         @doc.root.setAttribute('contenteditable', true)
-      , false)
-      #@doc.root.focus()
-      #position = Tandem.Position.makePosition(this, @options.cursor)
-      #start = new Tandem.Range(this, position, position)
-      #this.setSelection(start)
+      )
 
   initListeners: ->
     modified = false
@@ -103,13 +99,15 @@ class TandemEditor extends EventEmitter2
   # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number index, Number length, String attr, Mixed value) ->
   applyAttribute: (index, length, attr, value, emitEvent = true) ->
-    delta = this.trackDelta( =>
-      @selection.preserve( =>
-        this.keepNormalized( =>
-          @doc.applyAttribute(index, length, attr, value)
+    this.doSilently( =>
+      delta = this.trackDelta( =>
+        @selection.preserve( =>
+          this.keepNormalized( =>
+            @doc.applyAttribute(index, length, attr, value)
+          )
         )
-      )
-    , emitEvent)
+      , emitEvent)
+    )
     this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   applyDelta: (delta) ->
@@ -152,14 +150,22 @@ class TandemEditor extends EventEmitter2
     console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
 
   deleteAt: (index, length, emitEvent = true) ->
-    delta = this.trackDelta( =>
-      @selection.preserve( =>
-        this.keepNormalized( =>
-          @doc.deleteText(index, length)
+    this.doSilently( =>
+      delta = this.trackDelta( =>
+        @selection.preserve( =>
+          this.keepNormalized( =>
+            @doc.deleteText(index, length)
+          )
         )
-      )
-    , emitEvent)
+      , emitEvent)
+    )
     this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
+
+  doSilently: (fn) ->
+    oldIgnoreDomChange = @ignoreDomChanges
+    @ignoreDomChanges = true
+    fn()
+    @ignoreDomChanges = oldIgnoreDomChange
 
   getAt: (index, length) ->
     # - Returns array of {text: "", attr: {}}
@@ -176,58 +182,54 @@ class TandemEditor extends EventEmitter2
     return @selection.getRange()
 
   insertAt: (index, text, emitEvent = true) ->
-    delta = this.trackDelta( =>
-      @selection.preserve( =>
-        this.keepNormalized( =>
-          @doc.insertText(index, text)
+    this.doSilently( =>
+      delta = this.trackDelta( =>
+        @selection.preserve( =>
+          this.keepNormalized( =>
+            @doc.insertText(index, text)
+          )
         )
-      )
-    , emitEvent)
+      , emitEvent)
+    )
     this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   setSelection: (range) ->
     @selection.setRange(range)
 
-  trackDelta: (fn, track = true) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    delta = null
-    if track
-      oldDelta = @doc.toDelta()
-      fn()
-      newDelta = @doc.toDelta()
-      decompose = JetSync.decompose(oldDelta, newDelta)
-      compose = JetSync.compose(oldDelta, decompose)
-      console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
-      delta = decompose
-    else
-      fn()
-    @ignoreDomChanges = oldIgnoreDomChange
+  trackDelta: (fn) ->
+    oldDelta = @doc.toDelta()
+    fn()
+    newDelta = @doc.toDelta()
+    decompose = JetSync.decompose(oldDelta, newDelta)
+    compose = JetSync.compose(oldDelta, decompose)
+    console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
     return delta
 
   update: ->
-    delta = this.trackDelta( =>
-      @selection.preserve( =>
-        Tandem.Document.normalizeHtml(@doc.root)
-        lines = @doc.lines.toArray()
-        lineNode = @doc.root.firstChild
-        _.each(lines, (line, index) =>
-          while line.node != lineNode
-            if line.node.parentNode == @doc.root
-              newLine = @doc.insertLineBefore(lineNode, line)
-              lineNode = lineNode.nextSibling
-            else
-              @doc.removeLine(line)
-              return
-          @doc.updateLine(line)
-          lineNode = lineNode.nextSibling
+    this.doSilently( =>
+      delta = this.trackDelta( =>
+        @selection.preserve( =>
+          Tandem.Document.normalizeHtml(@doc.root)
+          lines = @doc.lines.toArray()
+          lineNode = @doc.root.firstChild
+          _.each(lines, (line, index) =>
+            while line.node != lineNode
+              if line.node.parentNode == @doc.root
+                newLine = @doc.insertLineBefore(lineNode, line)
+                lineNode = lineNode.nextSibling
+              else
+                @doc.removeLine(line)
+                return
+            @doc.updateLine(line)
+            lineNode = lineNode.nextSibling
+          )
+          while lineNode != null
+            newLine = @doc.appendLine(lineNode)
+            lineNode = lineNode.nextSibling
         )
-        while lineNode != null
-          newLine = @doc.appendLine(lineNode)
-          lineNode = lineNode.nextSibling
-      )
-      @selection.update(true)
-    , true)
+        @selection.update(true)
+      , true)
+    )
     return delta
 
 
