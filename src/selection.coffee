@@ -82,7 +82,7 @@ class TandemSelection
   update: (silent = false) ->
     range = this.getRange()
     unless (range == @range) || (@range?.equals(range))
-      @editor.emit(Tandem.Editor.events.USER_SELECTION_CHANGE, range) unless silent
+      @editor.emit(Tandem.Editor.events.SELECTION_CHANGE, range) unless silent
       @range = range
 
 

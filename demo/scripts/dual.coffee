@@ -2,13 +2,7 @@
 #= require jquery
 
 listenEditor = (source, target) ->
-  source.on(Tandem.Editor.events.API_TEXT_CHANGE, (delta) ->
-    target.applyDelta(delta)
-    sourceDelta = source.doc.toDelta()
-    targetDelta = target.doc.toDelta()
-    console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", source, target)
-  )
-  source.on(Tandem.Editor.events.USER_TEXT_CHANGE, (delta) ->
+  source.on(Tandem.Editor.events.TEXT_CHANGE, (delta) ->
     target.applyDelta(delta)
     sourceDelta = source.doc.toDelta()
     targetDelta = target.doc.toDelta()

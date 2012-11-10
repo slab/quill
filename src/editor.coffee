@@ -19,11 +19,9 @@ class TandemEditor extends EventEmitter2
     cursor: 0
     enabled: true
     styles: {}
-
   @events: 
-    API_TEXT_CHANGE       : 'api-text-change'
-    USER_SELECTION_CHANGE : 'user-selection-change'
-    USER_TEXT_CHANGE      : 'user-text-change'
+    TEXT_CHANGE      : 'text-change'
+    SELECTION_CHANGE : 'selection-change'
 
   constructor: (@iframeContainer, options) ->
     @options = _.extend(Tandem.Editor.DEFAULTS, options)
@@ -78,7 +76,7 @@ class TandemEditor extends EventEmitter2
       modified = false
       return if @ignoreDomChanges or !@destructors?
       delta = this.update()
-      this.emit(TandemEditor.events.USER_TEXT_CHANGE, delta) unless delta.isIdentity()
+      this.emit(TandemEditor.events.TEXT_CHANGE, delta) unless delta.isIdentity()
 
     onEdit = =>
       return if @ignoreDomChanges or !@destructors?
@@ -110,7 +108,7 @@ class TandemEditor extends EventEmitter2
         )
       )
     , emitEvent)
-    this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
+    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   applyDelta: (delta) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
@@ -159,7 +157,7 @@ class TandemEditor extends EventEmitter2
         )
       )
     , emitEvent)
-    this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
+    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   getAt: (index, length) ->
     # - Returns array of {text: "", attr: {}}
@@ -183,7 +181,7 @@ class TandemEditor extends EventEmitter2
         )
       )
     , emitEvent)
-    this.emit(TandemEditor.events.API_TEXT_CHANGE, delta) if emitEvent
+    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   setSelection: (range) ->
     @selection.setRange(range)

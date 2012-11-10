@@ -43,7 +43,7 @@
     editor = new Tandem.Editor('editor-container');
     toolbar = new Tandem.Toolbar(editor)
 
-    editor.on(editor.events.USER_SELECTION_CHANGE, function(s){
+    editor.on(editor.events.SELECTION_CHANGE, function(s){
       attributes = s.getAttributes()
 
       var data = {hello: 'there'};

@@ -1,5 +1,6 @@
 #= underscore
 #= require rangy/rangy-core
+#= require rangy/rangy-selectionsaverestore
 #= require tandem/position
 
 rangy.init()  # getRangy

@@ -40,17 +40,15 @@ $(document).ready( ->
   jetClient.addState(cursorState)
   jetClient.connect(Stypi.configs.docId, Stypi.configs.version)
 
-  onTextChange = (delta) =>
+  editor.on(Tandem.Editor.events.TEXT_CHANGE, (delta) =>
     if Stypi.configs.userId
       _.each(delta.deltas, (delta, index) ->
         delta.attributes['author'] = Stypi.configs.userId if delta.text?
       )
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
-
-  editor.on(Tandem.Editor.events.API_TEXT_CHANGE, onTextChange)
-  editor.on(Tandem.Editor.events.USER_TEXT_CHANGE, onTextChange)
-  editor.on(Tandem.Editor.events.USER_SELECTION_CHANGE, (selection) =>
+  )
+  editor.on(Tandem.Editor.events.SELECTION_CHANGE, (selection) =>
     index = selection.start.getIndex()
     cursor = {index: index}
     cursorState.localUpdate(cursor)
