@@ -1,9 +1,3 @@
-#= require mocha
-#= require chai
-#= require range
-#= require jquery
-#= require underscore
-
 describe('Range', ->
   describe('Position', ->
     it('should correctly initialize position from index', ->

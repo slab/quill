@@ -1,9 +1,3 @@
-#= require mocha
-#= require chai
-#= require utils
-#= require jquery
-#= require underscore
-
 describe('Utils', ->
   describe('split', ->
     it('should not split if not necessary', ->

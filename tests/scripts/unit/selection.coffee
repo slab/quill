@@ -1,9 +1,3 @@
-#= require mocha
-#= require chai
-#= require range
-#= require jquery
-#= require underscore
-
 describe('Selection', ->
   findIndexes = (html) ->
     $('#editor-container').html(html)

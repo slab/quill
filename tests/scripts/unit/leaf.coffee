@@ -1,9 +1,3 @@
-#= require mocha
-#= require chai
-#= require range
-#= require jquery
-#= require underscore
-
 describe('Leaf', ->
   it('Leaf Iterator', ->
     lines = ['<div><br></div>', '<div><span>12</span></div>', '<div><b>45</b></div>', '<div><br></div>', '<div><br></div>', '<ul><li><span>78</span></li></ul>', '<ul><li><br></li></ul>']

@@ -1,9 +1,3 @@
-#= require mocha
-#= require chai
-#= require range
-#= require jquery
-#= require underscore
-
 describe('Editor', ->
   describe('applyDelta', ->
     tests =

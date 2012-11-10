@@ -1,9 +1,3 @@
-#= require mocha
-#= require chai
-#= require range
-#= require jquery
-#= require underscore
-
 describe('Document', ->
   describe('findLineAtOffset', ->
     it('should find correct offset in line', ->

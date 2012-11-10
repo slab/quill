@@ -1,10 +1,3 @@
-#= require mocha
-#= require chai
-#= require jquery
-#= require underscore
-#= require tandem/editor
-
-
 describe('Normalize', ->
   tests = 
     'elements':
