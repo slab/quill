@@ -207,6 +207,7 @@ class TandemEditor extends EventEmitter2
     return decompose
 
   update: ->
+    delta = null
     this.doSilently( =>
       delta = this.trackDelta( =>
         @selection.preserve( =>

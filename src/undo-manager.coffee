@@ -22,6 +22,22 @@ class TandemUndoManager
       deltas = deltas.concat(deletedDelta)
     return new JetDelta(changeDelta.endLength, changeDelta.startLength, deltas)
 
+  @getLastChangeIndex: (delta) ->
+    lastChangeIndex = index = offset = 0
+    _.each(delta.deltas, (delta) ->
+      if JetDelta.isInsert(delta)
+        offset += delta.getLength()
+        lastChangeIndex = index + offset
+      else if JetDelta.isRetain(delta)
+        if delta.start > index
+          lastChangeIndex = index + offset
+          offset -= (delta.start - index)
+        index = delta.end
+    )
+    if delta.endLength < delta.startLength + offset
+      lastChangeIndex = delta.endLength
+    return lastChangeIndex
+
 
   constructor: (@editor) ->
     @destructors = []
@@ -50,28 +66,31 @@ class TandemUndoManager
     )
 
   record: (changeDelta, oldDelta) ->
-    console.log 'record'
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
-    undoDelta = this.computeUndo(changeDelta, oldDelta)
+    undoDelta = TandemUndoManager.computeUndo(changeDelta, oldDelta)
     @undoStack.push({
-      undo: undoDelta
-      redo: changeDelta  
+      undo:
+        cursor: TandemUndoManager.getLastChangeIndex(undoDelta)
+        delta: undoDelta
+      redo:
+        cursor: TandemUndoManager.getLastChangeIndex(changeDelta)
+        delta: changeDelta  
     })
 
   redo: ->
     if @redoStack.length > 0
-      delta = @redoStack.pop()
-      console.log 'redo', delta
-      @editor.applyDelta(delta.redo)
-      @undoStack.push(delta)
+      change = @redoStack.pop()
+      @editor.applyDelta(change.redo.delta)
+      @editor.setSelection(new Tandem.Range(@editor, change.redo.cursor, change.redo.cursor))
+      @undoStack.push(change)
 
   undo: ->
     if @undoStack.length > 0
-      delta = @undoStack.pop()
-      console.log 'undo', delta
-      @editor.applyDelta(delta.undo)
-      @redoStack.push(delta)
+      change = @undoStack.pop()
+      @editor.applyDelta(change.undo.delta)
+      @editor.setSelection(new Tandem.Range(@editor, change.undo.cursor, change.undo.cursor))
+      @redoStack.push(change)
 
 
 
