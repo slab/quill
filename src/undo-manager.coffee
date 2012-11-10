@@ -1,4 +1,7 @@
 class TandemUndoManager
+  @DEFAULTS:
+    delay: 1000
+
   @computeUndo: (changeDelta, originalDelta) ->
     index = offset = 0
     deltas = []
@@ -39,10 +42,12 @@ class TandemUndoManager
     return lastChangeIndex
 
 
-  constructor: (@editor) ->
+  constructor: (@editor, options = {}) ->
     @destructors = []
     @undoStack = []
     @redoStack = []
+    @options = _.extend(TandemUndoManager.DEFAULTS, options)
+    @lastRecorded = 0
     this.initListeners()
 
   destroy: ->
@@ -69,6 +74,13 @@ class TandemUndoManager
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
     undoDelta = TandemUndoManager.computeUndo(changeDelta, oldDelta)
+    timestamp = new Date().getTime()
+    if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
+      change = @undoStack.pop()
+      undoDelta = JetSync.compose(undoDelta, change.undo.delta)
+      changeDelta = JetSync.compose(change.redo.delta, changeDelta)
+    else
+      @lastRecorded = timestamp
     @undoStack.push({
       undo:
         cursor: TandemUndoManager.getLastChangeIndex(undoDelta)
