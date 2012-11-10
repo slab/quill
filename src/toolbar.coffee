@@ -1,5 +1,3 @@
-#= require eventemitter2
-
 class TandemToolbar extends EventEmitter2
   constructor: (@editor) ->
     @editor.on(Tandem.Editor.events.SELECTION_CHANGE, (selection) =>

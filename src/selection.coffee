@@ -1,7 +1,3 @@
-#= require underscore
-#= require rangy/rangy-core
-#= require tandem/range
-
 class TandemSelection
   @POLL_INTERVAL: 500
 
@@ -33,7 +29,6 @@ class TandemSelection
       @editor.doc.root.removeEventListener('mouseup', debouncedUpdate)
       @editor.doc.root.removeEventListener('mousedown', debouncedUpdate)
     )
-
 
   getNative: ->
     rangySel = rangy.getSelection(@editor.contentWindow)

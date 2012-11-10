@@ -1,6 +1,3 @@
-#= require underscore
-#= require tandem/line
-
 # TODO fix this entire file, esp findDeepestNode
 class TandemPosition
   @findDeepestNode: (editor, node, offset) ->

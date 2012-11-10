@@ -1,5 +1,3 @@
-#= require underscore
-
 # Arrays must be alphabetized, so we can use binary search
 
 TandemConstants =

@@ -1,8 +1,3 @@
-#= require underscore
-#= require linked_list
-#= require tandem/line
-
-
 class TandemDocument
   @INDENT_PREFIX: 'indent-'
 

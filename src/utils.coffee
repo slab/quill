@@ -1,6 +1,3 @@
-#= underscore
-#= tandem/constants
-
 TandemUtils =
   canModify: (node) ->
     return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)

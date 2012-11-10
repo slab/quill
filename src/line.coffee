@@ -1,9 +1,3 @@
-#= require underscore
-#= require linked_list
-#= require tandem/constants
-#= require tandem/leaf
-#= require tandem/utils
-
 class TandemLine extends LinkedList.Node
   @CLASS_NAME : 'line'
   @DIRTY_CLASS: 'dirty'

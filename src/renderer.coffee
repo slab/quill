@@ -1,5 +1,3 @@
-#= require underscore
-
 class TandemRenderer
   @DEFAULTS:
     keepHTML: false

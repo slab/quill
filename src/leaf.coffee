@@ -1,6 +1,3 @@
-#= require underscore
-#= require linked_list
-
 class TandemLeaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
   @TAB_NODE_CLASS: 'tab'
