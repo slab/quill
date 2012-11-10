@@ -35,6 +35,7 @@ class TandemEditor extends EventEmitter2
     this.disable()
     @renderer.destroy()
     @selection.destroy()
+    @undoManager.destroy()
     _.each(@destructors, (fn) =>
       fn.call(this)
     )
@@ -49,6 +50,7 @@ class TandemEditor extends EventEmitter2
     @doc = new Tandem.Document(this, @contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
     @selection = new Tandem.Selection(this)
     @keyboard = new Tandem.Keyboard(this)
+    @undoManger = new Tandem.UndoManager(this)
     this.initListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)

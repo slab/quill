@@ -7,6 +7,7 @@ class TandemKeyboard
     UP: 38
     RIGHT: 39
     DOWN: 40
+    Z: 90
 
   constructor: (@editor) ->
     @root = @editor.doc.root

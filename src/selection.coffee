@@ -84,4 +84,3 @@ class TandemSelection
 
 window.Tandem ||= {}
 window.Tandem.Selection = TandemSelection
-
