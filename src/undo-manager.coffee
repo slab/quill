@@ -1,6 +1,12 @@
 class TandemUndoManager
+  @computeUndo: (changeDelta, originalDelta) ->
+    
+
+
   constructor: (@editor) ->
     @destructors = []
+    @undoStack = []
+    @redoStack = []
     this.initListeners()
 
   destroy: ->
@@ -23,14 +29,26 @@ class TandemUndoManager
       @editor.doc.root.removeEventListener('keydown', onKey)
     )
 
-  record: (delta, oldDelta) ->
+  record: (changeDelta, oldDelta) ->
     console.log 'record'
+    return if changeDelta.isIdentity(changeDelta)
+    @redoStack = []
+    undoDelta = this.computeUndo(changeDelta, oldDelta)
+    @undoStack.push(undoDelta)
 
   redo: ->
-    console.log 'redo'
+    if @redoStack.length > 0
+      delta = @redoStack.pop()
+      console.log 'redo', delta
+      @editor.applyDelta(delta)
+      @undoStack.push(delta)
 
   undo: ->
-    console.log 'undo'
+    if @undoStack.length > 0
+      delta = @undoStack.pop()
+      console.log 'undo', delta
+      @editor.applyDelta(delta)
+      @redoStack.push(delta)
 
 
 

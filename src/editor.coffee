@@ -203,7 +203,8 @@ class TandemEditor extends EventEmitter2
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
     console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
-    return delta
+    @undoManger.record(decompose, oldDelta)
+    return decompose
 
   update: ->
     this.doSilently( =>
