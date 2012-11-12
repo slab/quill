@@ -25,11 +25,6 @@ TandemUtils =
       when 'link'
         link = doc.createElement('a')
         link.href = value
-        link.addEventListener('click', (e) ->
-          if link.href != 'about:blank'
-            window.open(link.href)
-            e.preventDefault()
-        )
         link.href = 'about:blank' if (link.protocol != 'http:' && link.protocol != 'https:')
         link.title = link.href
         return link

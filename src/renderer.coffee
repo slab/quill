@@ -14,7 +14,7 @@ class TandemRenderer
       'white-space': 'pre-wrap'
     }
     'body' : { 'margin': '0px', 'padding': '0px' }
-    'a'    : { 'cursor': 'pointer', 'text-decoration': 'underline' }
+    'a'    : { 'text-decoration': 'underline' }
     'b'    : { 'font-weight': 'bold' }
     'i'    : { 'font-style': 'italic' }
     's'    : { 'text-decoration': 'line-through' }
