@@ -97,55 +97,6 @@ class JetTextState extends JetState
     @inFlight = JetDelta.getIdentity(@arrived.endLength)
 
 
-class JetCursorState extends JetState
-  constructor: (@editor, @client, @cursors, @sessionId) ->
-    @type = JetState.CURSOR
-    @userId = @client.settings.userId
-    this.reset(@cursors)
-
-  reset: (@cursors) ->
-    @editor.clearCursors()
-    @inFlight = @inLine = null
-    for id,cursor of cursors when id != @userId     # Ignore our own cursor
-      index = this.getCursorIndex(cursor)
-      @editor.setCursor(cursor.userId, Math.max(index, 0))
-
-  getCursorIndex: (cursor) ->
-    # TODO for efficiency, check if text has changed, otherwise we can use cursor.index
-    # TODO transform against inLine and inFlight... so we don't have to do match
-    # Need to match since the cursor may have changed since last time...
-    #index = JetState.dmp.match_main(@editor.getText(), cursor.before+cursor.after, cursor.index) + cursor.before.length
-    return Math.max(cursor.index, 0)
-
-  localUpdate: (cursor) ->
-    console.assert(JetCursorState.isCursor(cursor), "Non-cursor passed into JetCursorState's localUpdate")
-    cursor.userId = @userId
-    @inLine = cursor
-
-  remoteUpdate: (cursor, authorId) ->
-    index = this.getCursorIndex(cursor)
-    name = Stypi.Presence.getUserName(authorId).split(' ')[0]
-    color = Stypi.Presence.getColorForUser(authorId)
-    @editor.setCursor(authorId, index, name, color)
-
-  land: ->
-    @inFlight = null
-
-  takeoff: ->
-    if @inFlight == null && @inLine != null
-      @inFlight = @inLine
-      @inLine = null
-      return { change: @inFlight }
-    return false
-
-  @areCursorsEqual: (a, b) ->
-    console.assert(JetCursorState.isCursor(a) && JetCursorState.isCursor(b), "comparing apples and oranges")
-    return a.index == b.index #&& a.before == b.before && a.after == b.after
-
-  @isCursor: (cursor) ->
-    return typeof cursor.index == 'number' #&& typeof cursor.before == 'string' && typeof cursor.after == 'string'
-
-
 
 class JetChatState extends JetState
   @COMPOSITION: "composition"
@@ -194,4 +145,3 @@ class JetChatState extends JetState
 window.JetState = JetState if window?
 window.JetTextState = JetTextState if window?
 window.JetChatState = JetChatState if window?
-window.JetCursorState = JetCursorState if window?

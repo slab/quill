@@ -50,7 +50,7 @@ class TandemEditor extends EventEmitter2
     @doc = new Tandem.Document(this, @contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
     @selection = new Tandem.Selection(this)
     @keyboard = new Tandem.Keyboard(this)
-    @undoManger = new Tandem.UndoManager(this)
+    @undoManager = new Tandem.UndoManager(this)
     this.initListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
@@ -73,8 +73,7 @@ class TandemEditor extends EventEmitter2
       return unless modified
       modified = false
       return if @ignoreDomChanges or !@destructors?
-      delta = this.update()
-      this.emit(TandemEditor.events.TEXT_CHANGE, delta) unless delta.isIdentity()
+      this.update()
 
     onEdit = =>
       return if @ignoreDomChanges or !@destructors?
@@ -106,9 +105,9 @@ class TandemEditor extends EventEmitter2
             @doc.applyAttribute(index, length, attr, value)
           )
         )
-      , emitEvent)
+      )
+      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
-    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   applyDelta: (delta) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
@@ -157,9 +156,9 @@ class TandemEditor extends EventEmitter2
             @doc.deleteText(index, length)
           )
         )
-      , emitEvent)
+      )
+      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
-    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -189,10 +188,10 @@ class TandemEditor extends EventEmitter2
             @doc.insertText(index, text)
           )
         )
-      , emitEvent)
+      )
+      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
-    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
-
+    
   setSelection: (range) ->
     @selection.setRange(range)
 
@@ -203,11 +202,10 @@ class TandemEditor extends EventEmitter2
     decompose = JetSync.decompose(oldDelta, newDelta)
     compose = JetSync.compose(oldDelta, decompose)
     console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
-    @undoManger.record(decompose, oldDelta)
+    @undoManager.record(decompose, oldDelta)
     return decompose
 
-  update: ->
-    delta = null
+  update: (emitEvent = true) ->
     this.doSilently( =>
       delta = this.trackDelta( =>
         @selection.preserve( =>
@@ -230,9 +228,9 @@ class TandemEditor extends EventEmitter2
             lineNode = lineNode.nextSibling
         )
         @selection.update(true)
-      , true)
+      )
+      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent and !delta.isIdentity()
     )
-    return delta
 
 
 

@@ -24,6 +24,7 @@ TandemUtils =
       when 'underline'  then return doc.createElement('u')
       when 'link'
         link = doc.createElement('a')
+        value = 'https://' + value unless value.match(/http[s]{0,1}:\/\//)
         link.href = value
         link.href = 'about:blank' if (link.protocol != 'http:' && link.protocol != 'https:')
         link.title = link.href

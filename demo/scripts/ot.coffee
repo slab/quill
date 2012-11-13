@@ -35,9 +35,7 @@ $(document).ready( ->
   delta = JetDelta.makeDelta(Stypi.configs.head)
   delta.startLength = editor.doc.length
   textState = new JetTextState(editor, jetClient, delta, Stypi.configs.sessionId)
-  cursorState = new JetCursorState(editor, jetClient, {}, Stypi.configs.sessionId)
   jetClient.addState(textState)
-  jetClient.addState(cursorState)
   jetClient.connect(Stypi.configs.docId, Stypi.configs.version)
 
   editor.on(Tandem.Editor.events.TEXT_CHANGE, (delta) =>
@@ -46,12 +44,6 @@ $(document).ready( ->
         delta.attributes['author'] = Stypi.configs.userId if delta.text?
       )
     textState.localUpdate(delta)
-    jetClient.checkRunwayReady()
-  )
-  editor.on(Tandem.Editor.events.SELECTION_CHANGE, (selection) =>
-    index = selection.start.getIndex()
-    cursor = {index: index}
-    cursorState.localUpdate(cursor)
     jetClient.checkRunwayReady()
   )
 )
