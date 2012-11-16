@@ -1,11 +1,8 @@
 class TandemPasteManager
   constructor: (@editor) ->
-    this.initListeners()
-
-  initListeners: ->
-    pasteDiv = @editor.doc.root.ownerDocument.createElement('div')
-    pasteDiv.id = 'paste-container'
-    pasteDiv.setAttribute('contenteditable', true)
+    @container = @editor.doc.root.ownerDocument.createElement('div')
+    @container.id = 'paste-container'
+    @container.setAttribute('contenteditable', true)
     @editor.renderer.addStyles({
       '#paste-container': {
         'left': '-10000px'
@@ -13,16 +10,24 @@ class TandemPasteManager
         'top': '50%'
       }  
     })
-    @editor.doc.root.parentNode.appendChild(pasteDiv)
+    @editor.doc.root.parentNode.appendChild(@container)
+    this.initListeners()
+
+  initListeners: ->
     @editor.doc.root.addEventListener('paste', =>
       @editor.selection.update()
       savedSelection = @editor.selection.save()
-      pasteDiv.focus()
+      @container.innerHTML = ""
+      @container.focus()
       _.defer( =>
         if savedSelection
           @editor.doc.root.focus()
           @editor.selection.restore(savedSelection)
-          console.log pasteDiv
+          extNodes = _.clone(@container.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+          _.each(extNodes, (node) ->
+            node.parentNode.removeChild(node) if node.parentNode?
+          )
+          console.log @container.innerHTML
       )
     )
 
