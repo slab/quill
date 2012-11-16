@@ -20,7 +20,6 @@ class TandemSelection
     , 100)
     keyUpdate = (event) =>
       debouncedUpdate() if Tandem.Keyboard.LEFT <= event.which and event.which <= Tandem.Keyboard.DOWN
-
     @editor.doc.root.addEventListener('keyup', keyUpdate)
     @editor.doc.root.addEventListener('mouseup', debouncedUpdate)
     @editor.doc.root.addEventListener('mousedown', debouncedUpdate)
@@ -51,20 +50,27 @@ class TandemSelection
     end = new Tandem.Position(@editor, nativeSel.focusNode, nativeSel.focusOffset)
     return new Tandem.Range(@editor, start, end)
 
-  preserve: (fn, context = fn) ->
+  preserve: (fn) ->
     if @range?
-      savedSel = rangy.saveSelection(@editor.contentWindow)
-      _.each(savedSel.rangeInfos, (rangeInfo) ->
-        _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
-          marker = rangeInfo.document.getElementById(markerId)
-          marker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
-        )
-      )
-      fn.call(context)
-      rangy.restoreSelection(savedSel, false)
-      this.update()
+      savedSel = this.save()
+      fn.call(null)
+      this.restore(savedSel)
     else
-      fn.call(context)
+      fn.call(null)
+
+  restore: (savedSel) ->
+    rangy.restoreSelection(savedSel, false)
+    this.update()
+
+  save: ->
+    savedSel = rangy.saveSelection(@editor.contentWindow)
+    _.each(savedSel.rangeInfos, (rangeInfo) ->
+      _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
+        marker = rangeInfo.document.getElementById(markerId)
+        marker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
+      )
+    )
+    return savedSel
 
   setRange: (@range) ->
     rangySel = rangy.getSelection(@editor.contentWindow)

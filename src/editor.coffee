@@ -51,6 +51,7 @@ class TandemEditor extends EventEmitter2
     @selection = new Tandem.Selection(this)
     @keyboard = new Tandem.Keyboard(this)
     @undoManager = new Tandem.UndoManager(this)
+    @pasteManager = new Tandem.PasteManager(this)
     this.initListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
@@ -67,22 +68,13 @@ class TandemEditor extends EventEmitter2
       )
 
   initListeners: ->
-    modified = false
-
-    debouncedEdit = =>
-      return unless modified
-      modified = false
-      return if @ignoreDomChanges or !@destructors?
-      this.update()
-
     onEdit = =>
-      return if @ignoreDomChanges or !@destructors?
-      debouncedEdit()
-
+      return if @ignoreDomChanges or !@destructors? or !modified
+      modified = false
+      this.update()
     onSubtreeModified = =>
       return if @ignoreDomChanges or !@destructors?
       modified = true
-
     interval = setInterval(onEdit, 500)
     @doc.root.addEventListener('DOMSubtreeModified', onSubtreeModified)
     @destructors.push( ->
