@@ -27,9 +27,17 @@ class TandemPasteManager
           _.each(extNodes, (node) ->
             node.parentNode.removeChild(node) if node.parentNode?
           )
+          removeStyles = (walker) ->
+            walker.firstChild()
+            walker.currentNode.removeAttribute('style')
+            while walker.nextNode()
+              walker.currentNode.removeAttribute('style')
+          walker = @container.ownerDocument.createTreeWalker(@container, NodeFilter.SHOW_ELEMENT, null, false)
+          removeStyles(walker)
           console.log @container.innerHTML
       )
     )
+
 
 
 
