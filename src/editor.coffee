@@ -47,7 +47,7 @@ class TandemEditor extends EventEmitter2
     options.keepHTML = keepHTML
     @renderer = new Tandem.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
-    @doc = new Tandem.Document(this, @contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
+    @doc = new Tandem.Document(@contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
     @selection = new Tandem.Selection(this)
     @keyboard = new Tandem.Keyboard(this)
     @undoManager = new Tandem.UndoManager(this)
@@ -68,6 +68,7 @@ class TandemEditor extends EventEmitter2
       )
 
   initListeners: ->
+    modified = false
     onEdit = =>
       return if @ignoreDomChanges or !@destructors? or !modified
       modified = false

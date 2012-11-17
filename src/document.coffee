@@ -16,7 +16,7 @@ class TandemDocument
     )
 
 
-  constructor: (@editor, @root) ->
+  constructor: (@root) ->
     this.buildLines()
 
   appendLine: (lineNode) ->

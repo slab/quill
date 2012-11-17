@@ -72,13 +72,21 @@ class TandemSelection
     )
     return savedSel
 
-  setRange: (@range) ->
+  setRange: (@range, silent = false) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
     if @range?
       rangySelRange = @range.getRangy()
       rangySel.setSingleRange(rangySelRange)
     else
       rangySel.removeAllRanges()
+    @editor.emit(Tandem.Editor.events.SELECTION_CHANGE, @range) unless silent
+
+  setRangeNative: (nativeSel) ->
+    rangySel = rangy.getSelection(@editor.contentWindow)
+    range = rangy.createRangyRange(@editor.contentWindow)
+    range.setStart(nativeSel.anchorNode, nativeSel.anchorOffset)
+    range.setEnd(nativeSel.focusNode, nativeSel.focusOffset)
+    rangySel.setSingleRange(range)
 
   update: (silent = false) ->
     range = this.getRange()
