@@ -175,6 +175,12 @@ TandemUtils =
     )
     return ret
 
+  removeExternal: (root) ->
+    extNodes = _.clone(root.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    _.each(extNodes, (node) ->
+      node.parentNode.removeChild(node) if node.parentNode?
+    )
+
   removeNode: (node) ->
     return unless node.parentNode?
     if Tandem.Line.isLineNode(node)
@@ -196,6 +202,13 @@ TandemUtils =
     else
       Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
     node.parentNode.removeChild(node)
+
+  removeStyles: (root) ->
+    walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, null, false)
+    walker.firstChild()
+    walker.currentNode.removeAttribute('style')
+    while walker.nextNode()
+      walker.currentNode.removeAttribute('style')
 
   setIndent: (list, indent) ->
     _.each(_.clone(list.classList), (css) ->

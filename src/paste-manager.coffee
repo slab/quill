@@ -30,17 +30,8 @@ class TandemPasteManager
       @editor.selection.setRangeNative(nativeSel)
       @container.focus()
       _.defer( =>
-        extNodes = _.clone(@container.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
-        _.each(extNodes, (node) ->
-          node.parentNode.removeChild(node) if node.parentNode?
-        )
-        removeStyles = (walker) ->
-          walker.firstChild()
-          walker.currentNode.removeAttribute('style')
-          while walker.nextNode()
-            walker.currentNode.removeAttribute('style')
-        walker = @container.ownerDocument.createTreeWalker(@container, NodeFilter.SHOW_ELEMENT, null, false)
-        removeStyles(walker)
+        Tandem.Utils.removeExternal(@container)
+        Tandem.Utils.removeStyles(@container)
         pastedLineNodes = _.clone(@container.childNodes)
         _.each(pastedLineNodes, (node) =>
           @editor.doc.root.insertBefore(node, nextLineNode)
