@@ -3,7 +3,20 @@ $(document).ready( ->
   window.toolbar = toolbar = new Tandem.Toolbar(editor, { keepHTML: false })
   
   toolbar.on 'update', (attributes) ->
-    $.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
+    GAJavaScript.performSelector 'attributesUpdated:', JSON.stringify(attributes)
+    #$.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
+
+  window.docText = ->
+    _($('iframe').contents().find('body').find('.line'))
+      .map( (line) -> 
+        $(line).text()
+      )
+      .join(' ')
+      .replace(/\s+/g,' ')
+
+  GAJavaScript.performSelector 'editorDocumentReady'
+
+  #below is copied directly from ot.coffee
 
   editor.setText = ->
   editor.clearMessages = ->
@@ -39,13 +52,4 @@ $(document).ready( ->
     textState.localUpdate(delta)
     jetClient.checkRunwayReady()
   )
-
-  window.docText = ->
-    _($('iframe').contents().find('body').find('.line'))
-      .map( (line) -> 
-        $(line).text()
-      )
-      .join(' ')
-      .replace(/\s+/g,' ')
 )
-
