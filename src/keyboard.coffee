@@ -20,13 +20,9 @@ class TandemKeyboard
             increment = if event.shiftKey == true then -1 else 1
             this.indent(selection, increment)
           else
-            @editor.deleteAt(selection) if !selection.isCollapsed()
-            selection = @editor.getSelection()
-            index = selection.start.getIndex()
-            @editor.insertAt(index, "\t")
-            # Make sure selection is after our new tab character
-            range = new Tandem.Range(@editor, index + 1, index + 1)
-            @editor.setSelection(range)
+            this.insertText("\t")
+        when TandemKeyboard.KEYS.ENTER
+          this.insertText("\n")
         when TandemKeyboard.KEYS.BACKSPACE
           if selection.isCollapsed() && this.onIndentLine(selection) && selection.start.offset == 0
             attrs = selection.getAttributes()
@@ -69,6 +65,16 @@ class TandemKeyboard
     intersection = selection.getAttributes()
     return intersection.bullet? || intersection.indent? || intersection.list?
 
+  insertText: (text) ->
+    selection = @editor.getSelection()
+    index = selection.start.getIndex()
+    unless selection.isCollapsed()
+      end = selection.end.getIndex()
+      @editor.deleteAt(index, end - index) if end?
+    @editor.insertAt(index, text)
+    # Make sure selection is after our text
+    range = new Tandem.Range(@editor, index + text.length, index + text.length)
+    @editor.setSelection(range)
 
 
 window.Tandem ||= {}
