@@ -18,20 +18,25 @@ class TandemKeyboard
 
   constructor: (@editor) ->
     @root = @editor.doc.root
+    @hotkeys = {}
+    this.initListeners()
+    this.initHotkeys()
+
+  initListeners: ->
     @root.addEventListener('keydown', (event) =>
       event ||= window.event
       if @hotkeys[event.which]?
         _.each(@hotkeys[event.which], (hotkey) ->
           return if hotkey.meta? and event.metaKey != hotkey.meta
           return if hotkey.shift? and event.shiftKey != hotkey.shift
-          hotkey.callback.call(null)
+          selection = @editor.getSelection()
+          return unless selection?
+          hotkey.callback.call(null, selection)
         )
         event.preventDefault()
         return false
       return true
     )
-    @hotkeys = {}
-    this.initHotkeys()
 
   initHotkeys: ->
     this.addHotkey(TandemKeyboard.KEYS.TAB, =>
@@ -42,17 +47,24 @@ class TandemKeyboard
       @editor.selection.deleteRange()
       this.insertText("\n")
     )
-    this.addHotkey(TandemKeyboard.KEYS.BACKSPACE, =>
-      selection = @editor.getSelection()
-      unless @editor.selection.deleteRange() or !selection?
+    this.addHotkey(TandemKeyboard.KEYS.BACKSPACE, (selection) =>
+      unless @editor.selection.deleteRange()
         index = selection.start.getIndex()
         @editor.deleteAt(index - 1, 1) if index? && index > 0
     )
-    this.addHotkey(TandemKeyboard.KEYS.DELETE, =>
-      selection = @editor.getSelection()
-      unless @editor.selection.deleteRange() or !selection?
+    this.addHotkey(TandemKeyboard.KEYS.DELETE, (selection) =>
+      unless @editor.selection.deleteRange()
         index = selection.start.getIndex()
         @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
+    )
+    this.addHotkey(Tandem.Keyboard.HOTKEYS.BOLD, (selection) =>
+      this.toggleAttribute(selection, 'bold')
+    )
+    this.addHotkey(Tandem.Keyboard.HOTKEYS.ITALIC, (selection) =>
+      this.toggleAttribute(selection, 'italic')
+    )
+    this.addHotkey(Tandem.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
+      this.toggleAttribute(selection, 'underline')
     )
 
   addHotkey: (hotkey, callback) ->
@@ -97,6 +109,13 @@ class TandemKeyboard
       # Make sure selection is after our text
       range = new Tandem.Range(@editor, index + text.length, index + text.length)
       @editor.setSelection(range)
+
+  toggleAttribute: (selection, attribute) ->
+    attributes = selection.getAttributes()
+    start = selection.start.getIndex()
+    end = selection.end.getIndex()
+    @editor.applyAttribute(start, end - start, attribute, !attributes[attribute]) if start? and end?
+
 
 
 window.Tandem ||= {}
