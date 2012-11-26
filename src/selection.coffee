@@ -1,7 +1,4 @@
 class TandemSelection
-  @POLL_INTERVAL: 500
-
-
   constructor: (@editor) ->
     @destructors = []
     @range = null
@@ -14,19 +11,16 @@ class TandemSelection
     @destructors = null
 
   initListeners: ->
-    debouncedUpdate = _.debounce( =>
+    checkUpdate = =>
       return if !@destructors?
       this.update()
-    , 100)
     keyUpdate = (event) =>
-      debouncedUpdate() if Tandem.Keyboard.KEYS.LEFT <= event.which and event.which <= Tandem.Keyboard.KEYS.DOWN
+      checkUpdate() if Tandem.Keyboard.KEYS.LEFT <= event.which and event.which <= Tandem.Keyboard.KEYS.DOWN
     @editor.doc.root.addEventListener('keyup', keyUpdate)
-    @editor.doc.root.addEventListener('mouseup', debouncedUpdate)
-    @editor.doc.root.addEventListener('mousedown', debouncedUpdate)
+    @editor.doc.root.addEventListener('mouseup', checkUpdate)
     @destructors.push( =>
       @editor.doc.root.removeEventListener('keyup', keyUpdate)
-      @editor.doc.root.removeEventListener('mouseup', debouncedUpdate)
-      @editor.doc.root.removeEventListener('mousedown', debouncedUpdate)
+      @editor.doc.root.removeEventListener('mouseup', checkUpdate)
     )
 
   deleteRange: ->
