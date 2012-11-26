@@ -69,7 +69,7 @@ class TandemSelection
 
   restore: (savedSel) ->
     rangy.restoreSelection(savedSel, false)
-    this.update()
+    this.update(true)
 
   save: ->
     savedSel = rangy.saveSelection(@editor.contentWindow)

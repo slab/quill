@@ -156,25 +156,24 @@
     %script{:type => 'text/javascript', :src => '../src/debug.js'}
     :javascript
       var editor = new Tandem.Editor('editor-container');
-      var toolbar = new Tandem.Toolbar(editor);
 
       _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
         $('#formatting-container .' + format).click(function() {
-          toolbar.applyAttribute(format, !$(this).hasClass('active'));
+          editor.toolbar.applyAttribute(format, !$(this).hasClass('active'));
         });
       });
-      _.each(['backgrounad', 'color', 'family', 'size'], function(format) {
+      _.each(['background', 'color', 'family', 'size'], function(format) {
         $('#formatting-container .' + format).change(function() {
-          toolbar.applyAttribute(format, $(this).val());
+          editor.toolbar.applyAttribute(format, $(this).val());
         });
       });
       $('#formatting-container .link').click(function() {
         if ($(this).hasClass('active'))
-          toolbar.applyAttribute('link', false);
+          editor.toolbar.applyAttribute('link', false);
         else
-          toolbar.applyAttribute('link', 'http://www.google.com');
+          editor.toolbar.applyAttribute('link', 'http://www.google.com');
       });
-      toolbar.on('update', function(attributes) {
+      editor.toolbar.on('update', function(attributes) {
         $("#formatting-container .format-button").removeClass('active');
         for (key in attributes) {
           if (attributes[key]) {

@@ -1,8 +1,8 @@
 $(document).ready( ->
   window.editor = editor = new Tandem.Editor('editor-container')
-  window.toolbar = toolbar = new Tandem.Toolbar(editor, { keepHTML: false })
+  window.toolbar = editor.toolbar
   
-  toolbar.on 'update', (attributes) ->
+  editor.toolbar.on 'update', (attributes) ->
     GAJavaScript.performSelector 'attributesUpdated:', JSON.stringify(attributes)
     #$.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
 

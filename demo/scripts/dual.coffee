@@ -11,24 +11,23 @@ listenEditor = (source, target) ->
 
 editors = _.map([1, 2], (num) ->
   editor = new Tandem.Editor('editor-container' + num)
-  toolbar = new Tandem.Toolbar(editor)
   _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], (format) ->
     $("#formatting-container#{num} .#{format}").click( -> 
-      toolbar.applyAttribute(format, !$(this).hasClass('active'))
+      editor.toolbar.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
   _.each(['family', 'size'], (format) ->
     $("#formatting-container#{num} .#{format}").change( ->
-      toolbar.applyAttribute(format, $(this).val())
+      editor.toolbar.applyAttribute(format, $(this).val())
     )
   )
   $("#formatting-container#{num} .link").click( ->
     if ($(this).hasClass('active'))
-      toolbar.applyAttribute('link', false)
+      editor.toolbar.applyAttribute('link', false)
     else
-      toolbar.applyAttribute('link', 'http://www.google.com')
+      editor.toolbar.applyAttribute('link', 'http://www.google.com')
   )
-  toolbar.on('update', (attributes) ->
+  editor.toolbar.on('update', (attributes) ->
     $("#formatting-container#{num} .format-button").removeClass('active')
     for key,value of attributes when value
       container = $("#formatting-container#{num} .#{key}") 

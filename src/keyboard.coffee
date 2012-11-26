@@ -26,16 +26,17 @@ class TandemKeyboard
     @root.addEventListener('keydown', (event) =>
       event ||= window.event
       if @hotkeys[event.which]?
+        prevent = false
         _.each(@hotkeys[event.which], (hotkey) ->
           return if hotkey.meta? and event.metaKey != hotkey.meta
           return if hotkey.shift? and event.shiftKey != hotkey.shift
           selection = @editor.getSelection()
           return unless selection?
+          prevent = true
           hotkey.callback.call(null, selection)
         )
-        event.preventDefault()
-        return false
-      return true
+      event.preventDefault() if prevent
+      return !prevent
     )
 
   initHotkeys: ->
@@ -112,9 +113,7 @@ class TandemKeyboard
 
   toggleAttribute: (selection, attribute) ->
     attributes = selection.getAttributes()
-    start = selection.start.getIndex()
-    end = selection.end.getIndex()
-    @editor.applyAttribute(start, end - start, attribute, !attributes[attribute]) if start? and end?
+    @editor.toolbar.applyAttribute(attribute, !attributes[attribute])
 
 
 

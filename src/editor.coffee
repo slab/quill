@@ -52,6 +52,7 @@ class TandemEditor extends EventEmitter2
     @keyboard = new Tandem.Keyboard(this)
     @undoManager = new Tandem.UndoManager(this)
     @pasteManager = new Tandem.PasteManager(this)
+    @toolbar = new Tandem.Toolbar(this)
     this.initListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
