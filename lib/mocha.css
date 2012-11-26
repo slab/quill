@@ -37,6 +37,10 @@ body {
   font-size: .8em;
 }
 
+.hidden {
+  display: none;
+}
+
 #mocha h2 {
   font-size: 12px;
   font-weight: normal;
@@ -49,16 +53,6 @@ body {
 
 #mocha .test {
   margin-left: 15px;
-}
-
-#mocha .test:hover h2::after {
-  position: relative;
-  top: 0;
-  right: -10px;
-  content: '(view source)';
-  font-size: 12px;
-  font-family: arial;
-  color: #888;
 }
 
 #mocha .test.pending:hover h2::after {
@@ -130,6 +124,8 @@ body {
 
 #mocha .test pre.error {
   color: #c00;
+  max-height: 300px;
+  overflow: auto;
 }
 
 #mocha .test pre {
@@ -141,24 +137,56 @@ body {
   border-bottom-color: #ddd;
   -webkit-border-radius: 3px;
   -webkit-box-shadow: 0 1px 3px #eee;
+  -moz-border-radius: 3px;
+  -moz-box-shadow: 0 1px 3px #eee;
 }
 
-#report.pass .test.fail {
+#mocha .test h2 {
+  position: relative;
+}
+
+#mocha .test a.replay {
+  position: absolute;
+  top: 3px;
+  right: -20px;
+  text-decoration: none;
+  vertical-align: middle;
+  display: block;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+  background: #eee;
+  font-size: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  -webkit-transition: opacity 200ms;
+  -moz-transition: opacity 200ms;
+  transition: opacity 200ms;
+  opacity: 0.2;
+  color: #888;
+}
+
+#mocha .test:hover a.replay {
+  opacity: 1;
+}
+
+#mocha-report.pass .test.fail {
   display: none;
 }
 
-#report.fail .test.pass {
+#mocha-report.fail .test.pass {
   display: none;
 }
 
-#error {
+#mocha-error {
   color: #c00;
   font-size: 1.5  em;
   font-weight: 100;
   letter-spacing: 1px;
 }
 
-#stats {
+#mocha-stats {
   position: fixed;
   top: 15px;
   right: 10px;
@@ -167,25 +195,25 @@ body {
   color: #888;
 }
 
-#stats .progress {
+#mocha-stats .progress {
   float: right;
   padding-top: 0;
 }
 
-#stats em {
+#mocha-stats em {
   color: black;
 }
 
-#stats a {
+#mocha-stats a {
   text-decoration: none;
   color: inherit;
 }
 
-#stats a:hover {
+#mocha-stats a:hover {
   border-bottom: 1px solid #eee;
 }
 
-#stats li {
+#mocha-stats li {
   display: inline-block;
   margin: 0 5px;
   list-style: none;

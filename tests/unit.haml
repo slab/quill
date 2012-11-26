@@ -57,6 +57,7 @@
     %script{:type => 'text/javascript', :src => '../lib/chai.js'}
     :javascript
       mocha.setup('bdd');
+      mocha.ignoreLeaks();
       expect = chai.expect
     %script{:type => 'text/javascript', :src => 'scripts/unit/editor.js'}
     %script{:type => 'text/javascript', :src => 'scripts/unit/document.js'}
