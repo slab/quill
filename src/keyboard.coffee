@@ -1,13 +1,14 @@
 class TandemKeyboard
   @KEYS:
-    BACKSPACE: 8
-    TAB: 9
-    ENTER: 13
-    LEFT: 37
-    UP: 38
-    RIGHT: 39
-    DOWN: 40
-    Z: 90
+    BACKSPACE : 8
+    TAB       : 9
+    ENTER     : 13
+    LEFT      : 37
+    UP        : 38
+    RIGHT     : 39
+    DOWN      : 40
+    DELETE    : 46
+    Z         : 90
 
   constructor: (@editor) ->
     @root = @editor.doc.root
@@ -16,22 +17,19 @@ class TandemKeyboard
       selection = @editor.getSelection()
       switch event.which
         when TandemKeyboard.KEYS.TAB
-          if this.onIndentLine(selection)
-            increment = if event.shiftKey == true then -1 else 1
-            this.indent(selection, increment)
-          else
-            this.insertText("\t")
+          @editor.selection.deleteRange()
+          this.insertText("\t")
         when TandemKeyboard.KEYS.ENTER
+          @editor.selection.deleteRange()
           this.insertText("\n")
         when TandemKeyboard.KEYS.BACKSPACE
-          if selection.isCollapsed() && this.onIndentLine(selection) && selection.start.offset == 0
-            attrs = selection.getAttributes()
-            if (attrs.list? && attrs.list > 1) || (attrs.bullet? && attrs.bullet > 1) || (attrs.indent? && attrs.indent > 1)
-              this.indent(selection, -1)
-            else
-              this.indent(selection, false)
-          else
-            return true
+          unless @editor.selection.deleteRange()
+            index = selection.start.getIndex()
+            @editor.deleteAt(index - 1, 1) if index? && index > 0
+        when TandemKeyboard.KEYS.DELETE
+          unless @editor.selection.deleteRange()
+            index = selection.start.getIndex()
+            @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
         else
           return true
       event.preventDefault()
@@ -68,13 +66,11 @@ class TandemKeyboard
   insertText: (text) ->
     selection = @editor.getSelection()
     index = selection.start.getIndex()
-    unless selection.isCollapsed()
-      end = selection.end.getIndex()
-      @editor.deleteAt(index, end - index) if end?
-    @editor.insertAt(index, text)
-    # Make sure selection is after our text
-    range = new Tandem.Range(@editor, index + text.length, index + text.length)
-    @editor.setSelection(range)
+    if index?
+      @editor.insertAt(index, text)
+      # Make sure selection is after our text
+      range = new Tandem.Range(@editor, index + text.length, index + text.length)
+      @editor.setSelection(range)
 
 
 window.Tandem ||= {}

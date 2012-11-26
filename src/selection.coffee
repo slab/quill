@@ -19,7 +19,7 @@ class TandemSelection
       this.update()
     , 100)
     keyUpdate = (event) =>
-      debouncedUpdate() if Tandem.Keyboard.LEFT <= event.which and event.which <= Tandem.Keyboard.DOWN
+      debouncedUpdate() if Tandem.Keyboard.KEYS.LEFT <= event.which and event.which <= Tandem.Keyboard.KEYS.DOWN
     @editor.doc.root.addEventListener('keyup', keyUpdate)
     @editor.doc.root.addEventListener('mouseup', debouncedUpdate)
     @editor.doc.root.addEventListener('mousedown', debouncedUpdate)
@@ -28,6 +28,14 @@ class TandemSelection
       @editor.doc.root.removeEventListener('mouseup', debouncedUpdate)
       @editor.doc.root.removeEventListener('mousedown', debouncedUpdate)
     )
+
+  deleteRange: ->
+    return false if @range.isCollapsed()
+    index = @range.start.getIndex()
+    end = @range.end.getIndex()
+    @editor.deleteAt(index, end - index) if index? && end?
+    this.update()
+    return @range
 
   getNative: ->
     rangySel = rangy.getSelection(@editor.contentWindow)

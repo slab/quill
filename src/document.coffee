@@ -56,6 +56,8 @@ class TandemDocument
       fn(endLine, 0, endOffset)
 
   deleteText: (index, length) ->
+    index = Math.max(0, index)
+    length = Math.min(@length - index, length)
     if index + length == @length
       @trailingNewline = false
       @length -= 1
