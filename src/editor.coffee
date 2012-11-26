@@ -68,19 +68,21 @@ class TandemEditor extends EventEmitter2
       )
 
   initListeners: ->
-    modified = false
+    onEditOnce = =>
     onEdit = =>
-      return if @ignoreDomChanges or !@destructors? or !modified
-      modified = false
+      onEditOnce = _.once(onEdit)
+      return if @ignoreDomChanges or !@destructors?
       this.update()
     onSubtreeModified = =>
       return if @ignoreDomChanges or !@destructors?
-      modified = true
-    interval = setInterval(onEdit, 500)
+      toCall = onEditOnce
+      _.defer( =>
+        toCall.call(null)
+      )
+    onEditOnce = _.once(onEdit)
     @doc.root.addEventListener('DOMSubtreeModified', onSubtreeModified)
     @destructors.push( ->
       @doc.root.removeEventListener('DOMSubtreeModified', onSubtreeModified)
-      clearInterval(interval)
     )
 
   keepNormalized: (fn) ->

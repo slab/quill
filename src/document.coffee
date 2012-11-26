@@ -56,8 +56,6 @@ class TandemDocument
       fn(endLine, 0, endOffset)
 
   deleteText: (index, length) ->
-    index = Math.max(0, index)
-    length = Math.min(@length - index, length)
     if index + length == @length
       @trailingNewline = false
       @length -= 1
@@ -77,11 +75,6 @@ class TandemDocument
       Tandem.Utils.mergeNodes(firstLine.node, lastLine.node)
       this.updateLine(firstLine)
       this.removeLine(lastLine)
-
-  detectChange: ->
-    # Go through HTML (which should be normalized)
-    # Make sure non are different from their innerHTML, if so record change
-    # Returns changes made
 
   findLeaf: (node) ->
     lineNode = node.parentNode
