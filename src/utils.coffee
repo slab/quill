@@ -129,6 +129,23 @@ TandemUtils =
     else
       return 0
 
+  groupBlocks: (root) ->
+    cur = root.firstChild
+    lastNewBlock = null
+    while cur?
+      next = cur.nextSibling
+      if Tandem.Utils.isBlock(cur)
+        lastNewBlock = null if lastNewBlock?
+      else
+        unless lastNewBlock?
+          lastNewBlock = root.ownerDocument.createElement('div')
+          cur.parentNode.insertBefore(lastNewBlock, cur)
+        lastNewBlock.appendChild(cur)
+      cur = next
+
+  isBlock: (node) ->
+    return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName) > -1
+
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
 

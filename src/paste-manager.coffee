@@ -25,15 +25,17 @@ class TandemPasteManager
       _.defer( =>
         Tandem.Utils.removeExternal(@container)
         Tandem.Utils.removeStyles(@container)
-        console.log @container.outerHTML
         doc = new Tandem.Document(@container)
+        doc.trailingNewline = false
+        doc.length -= 1
         delta = doc.toDelta()
         delta.deltas.unshift(new JetRetain(0, index)) if index > 0
         delta.deltas.push(new JetRetain(index, docLength)) if index < docLength
         delta.endLength += docLength
         delta.startLength = docLength
-        console.log 'pasted', delta
+        oldDelta = @editor.doc.toDelta()
         @editor.applyDelta(delta)
+        @editor.undoManager.record(delta, oldDelta)
         @editor.doc.root.focus()
         lengthAdded = Math.max(0, @editor.doc.length - docLength)
         @editor.setSelection(new Tandem.Range(@editor, index + lengthAdded, index + lengthAdded))
