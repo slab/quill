@@ -3,7 +3,7 @@
 
 listenEditor = (source, target) ->
   source.on(Tandem.Editor.events.TEXT_CHANGE, (delta) ->
-    target.applyDelta(delta)
+    target.applyDelta(delta, false)
     sourceDelta = source.doc.toDelta()
     targetDelta = target.doc.toDelta()
     console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", source, target)

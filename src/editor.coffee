@@ -102,7 +102,7 @@ class TandemEditor extends EventEmitter2
       this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
 
-  applyDelta: (delta) ->
+  applyDelta: (delta, emitEvent = true) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
@@ -140,6 +140,7 @@ class TandemEditor extends EventEmitter2
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
     console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
+    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   deleteAt: (index, length, emitEvent = true) ->
     this.doSilently( =>

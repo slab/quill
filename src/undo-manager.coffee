@@ -57,17 +57,11 @@ class TandemUndoManager
     @destructors = null
 
   initListeners: ->
-    onKey = (event) =>
-      if event.which == Tandem.Keyboard.KEYS.Z && event.metaKey
-        if event.shiftKey
-          this.redo()
-        else
-          this.undo()
-        event.preventDefault()
-        return false
-    @editor.doc.root.addEventListener('keydown', onKey)
-    @destructors.push( =>
-      @editor.doc.root.removeEventListener('keydown', onKey)
+    @editor.keyboard.addHotkey(Tandem.Keyboard.HOTKEYS.UNDO, =>
+      this.undo()
+    )
+    @editor.keyboard.addHotkey(Tandem.Keyboard.HOTKEYS.REDO, =>
+      this.redo()
     )
 
   record: (changeDelta, oldDelta) ->

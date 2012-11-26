@@ -8,33 +8,57 @@ class TandemKeyboard
     RIGHT     : 39
     DOWN      : 40
     DELETE    : 46
-    Z         : 90
+
+  @HOTKEYS:
+    BOLD:       { key: 'B', meta: true }
+    ITALIC:     { key: 'I', meta: true }
+    UNDERLINE:  { key: 'U', meta: true }
+    UNDO:       { key: 'Z', meta: true, shift: false }
+    REDO:       { key: 'Z', meta: true, shift: true }
 
   constructor: (@editor) ->
     @root = @editor.doc.root
     @root.addEventListener('keydown', (event) =>
       event ||= window.event
-      selection = @editor.getSelection()
-      switch event.which
-        when TandemKeyboard.KEYS.TAB
-          @editor.selection.deleteRange()
-          this.insertText("\t")
-        when TandemKeyboard.KEYS.ENTER
-          @editor.selection.deleteRange()
-          this.insertText("\n")
-        when TandemKeyboard.KEYS.BACKSPACE
-          unless @editor.selection.deleteRange()
-            index = selection.start.getIndex()
-            @editor.deleteAt(index - 1, 1) if index? && index > 0
-        when TandemKeyboard.KEYS.DELETE
-          unless @editor.selection.deleteRange()
-            index = selection.start.getIndex()
-            @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
-        else
-          return true
-      event.preventDefault()
-      return false
+      if @hotkeys[event.which]?
+        _.each(@hotkeys[event.which], (hotkey) ->
+          return if hotkey.meta? and event.metaKey != hotkey.meta
+          return if hotkey.shift? and event.shiftKey != hotkey.shift
+          hotkey.callback.call(null)
+        )
+        event.preventDefault()
+        return false
+      return true
     )
+    @hotkeys = {}
+    this.initHotkeys()
+
+  initHotkeys: ->
+    this.addHotkey(TandemKeyboard.KEYS.TAB, =>
+      @editor.selection.deleteRange()
+      this.insertText("\t")
+    )
+    this.addHotkey(TandemKeyboard.KEYS.ENTER, =>
+      @editor.selection.deleteRange()
+      this.insertText("\n")
+    )
+    this.addHotkey(TandemKeyboard.KEYS.BACKSPACE, =>
+      unless @editor.selection.deleteRange()
+        index = selection.start.getIndex()
+        @editor.deleteAt(index - 1, 1) if index? && index > 0
+    )
+    this.addHotkey(TandemKeyboard.KEYS.DELETE, =>
+      unless @editor.selection.deleteRange()
+        index = selection.start.getIndex()
+        @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
+    )
+
+  addHotkey: (hotkey, callback) ->
+    hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
+    hotkey.key = hotkey.key.toUpperCase().charCodeAt(0) if _.isString(hotkey.key)
+    hotkey.callback = callback
+    @hotkeys[hotkey.key] = [] unless @hotkeys[hotkey.key]?
+    @hotkeys[hotkey.key].push(hotkey)
 
   indent: (selection, increment) ->
     lines = selection.getLines()

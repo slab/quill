@@ -15,7 +15,7 @@ $(document).ready( ->
   start = new Date()
 
   writer.on(Tandem.Editor.events.TEXT_CHANGE, (delta) ->
-    reader.applyDelta(delta)
+    reader.applyDelta(delta, false)
   )
 
   operationsLeft = NUM_OPERATIONS
