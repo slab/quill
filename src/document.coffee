@@ -10,7 +10,6 @@ class TandemDocument
       if child.nodeType != child.ELEMENT_NODE
         Tandem.Utils.removeNode(child)
       else if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
-        # TODO editor.update should mark dirty lines
         Tandem.Line.wrapText(child)
         Tandem.Line.normalizeHtml(child)
     )

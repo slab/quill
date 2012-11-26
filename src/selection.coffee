@@ -30,6 +30,7 @@ class TandemSelection
     )
 
   deleteRange: ->
+    this.update()
     return false if @range.isCollapsed()
     index = @range.start.getIndex()
     end = @range.end.getIndex()

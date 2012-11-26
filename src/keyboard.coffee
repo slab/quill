@@ -43,12 +43,14 @@ class TandemKeyboard
       this.insertText("\n")
     )
     this.addHotkey(TandemKeyboard.KEYS.BACKSPACE, =>
-      unless @editor.selection.deleteRange()
+      selection = @editor.getSelection()
+      unless @editor.selection.deleteRange() or !selection?
         index = selection.start.getIndex()
         @editor.deleteAt(index - 1, 1) if index? && index > 0
     )
     this.addHotkey(TandemKeyboard.KEYS.DELETE, =>
-      unless @editor.selection.deleteRange()
+      selection = @editor.getSelection()
+      unless @editor.selection.deleteRange() or !selection?
         index = selection.start.getIndex()
         @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
     )
