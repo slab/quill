@@ -2,10 +2,11 @@ $(document).ready( ->
   editor = new Tandem.Editor('editor-container')
   _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
     $("#formatting-container .#{format}").click( -> 
-      editor.toolbar.applyAttribute(format, !$(this).hasClass('active'))
+      editor.selection.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
-  editor.toolbar.on('update', (attributes) ->
+  editor.on(Tandem.Editor.events.SELECTION_CHANGE, (selection) ->
+    attributes = selection.getAttributes()
     $("#formatting-container .format-button").removeClass('active')
     for key,value of attributes when value == true
       $("#formatting-container .#{key}").addClass('active')

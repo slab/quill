@@ -13,21 +13,22 @@ editors = _.map([1, 2], (num) ->
   editor = new Tandem.Editor('editor-container' + num)
   _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], (format) ->
     $("#formatting-container#{num} .#{format}").click( -> 
-      editor.toolbar.applyAttribute(format, !$(this).hasClass('active'))
+      editor.selection.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
   _.each(['family', 'size'], (format) ->
     $("#formatting-container#{num} .#{format}").change( ->
-      editor.toolbar.applyAttribute(format, $(this).val())
+      editor.selection.applyAttribute(format, $(this).val())
     )
   )
   $("#formatting-container#{num} .link").click( ->
     if ($(this).hasClass('active'))
-      editor.toolbar.applyAttribute('link', false)
+      editor.selection.applyAttribute('link', false)
     else
-      editor.toolbar.applyAttribute('link', 'http://www.google.com')
+      editor.selection.applyAttribute('link', 'http://www.google.com')
   )
-  editor.toolbar.on('update', (attributes) ->
+  editor.on(Tandem.Editor.events.SELECTION_CHANGE, (selection) ->
+    attributes = selection.getAttributes()
     $("#formatting-container#{num} .format-button").removeClass('active')
     for key,value of attributes when value
       container = $("#formatting-container#{num} .#{key}") 

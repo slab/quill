@@ -23,6 +23,16 @@ class TandemSelection
       @editor.doc.root.removeEventListener('mouseup', checkUpdate)
     )
 
+  applyAttribute: (attribute, value) ->
+    return unless @range
+    start = @range.start.getIndex()
+    end = @range.end.getIndex()
+    return unless start? and end?
+    if end > start
+      @editor.applyAttribute(start, end - start, attribute, value)
+    else
+      test = true
+
   deleteRange: ->
     this.update()
     return false if @range.isCollapsed()

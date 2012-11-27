@@ -52,7 +52,6 @@ class TandemEditor extends EventEmitter2
     @keyboard = new Tandem.Keyboard(this)
     @undoManager = new Tandem.UndoManager(this)
     @pasteManager = new Tandem.PasteManager(this)
-    @toolbar = new Tandem.Toolbar(this)
     this.initListeners()
     @ignoreDomChanges = false
     TandemEditor.editors.push(this)
@@ -91,7 +90,6 @@ class TandemEditor extends EventEmitter2
     @doc.rebuildDirty()
     @doc.forceTrailingNewline()
 
-  # applyAttribute: (TandemRange range, String attr, Mixed value) ->
   # applyAttribute: (Number index, Number length, String attr, Mixed value) ->
   applyAttribute: (index, length, attr, value, emitEvent = true) ->
     this.doSilently( =>

@@ -152,28 +152,28 @@
     %script{:type => 'text/javascript', :src => '../src/undo-manager.js'}
     %script{:type => 'text/javascript', :src => '../src/paste-manager.js'}
     %script{:type => 'text/javascript', :src => '../src/editor.js'}
-    %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
     %script{:type => 'text/javascript', :src => '../src/debug.js'}
     :javascript
       var editor = new Tandem.Editor('editor-container');
 
       _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
         $('#formatting-container .' + format).click(function() {
-          editor.toolbar.applyAttribute(format, !$(this).hasClass('active'));
+          editor.selection.applyAttribute(format, !$(this).hasClass('active'));
         });
       });
       _.each(['background', 'color', 'family', 'size'], function(format) {
         $('#formatting-container .' + format).change(function() {
-          editor.toolbar.applyAttribute(format, $(this).val());
+          editor.selection.applyAttribute(format, $(this).val());
         });
       });
       $('#formatting-container .link').click(function() {
         if ($(this).hasClass('active'))
-          editor.toolbar.applyAttribute('link', false);
+          editor.selection.applyAttribute('link', false);
         else
-          editor.toolbar.applyAttribute('link', 'http://www.google.com');
+          editor.selection.applyAttribute('link', 'http://www.google.com');
       });
-      editor.toolbar.on('update', function(attributes) {
+      editor.on(Tandem.Editor.events.SELECTION_CHANGE, function(selection) {
+        attributes = selection.getAttributes()
         $("#formatting-container .format-button").removeClass('active');
         for (key in attributes) {
           if (attributes[key]) {
