@@ -1,4 +1,4 @@
-class TandemPasteManager
+class ScribePasteManager
   constructor: (@editor) ->
     @container = @editor.doc.root.ownerDocument.createElement('div')
     @container.id = 'paste-container'
@@ -23,9 +23,9 @@ class TandemPasteManager
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
-        Tandem.Utils.removeExternal(@container)
-        Tandem.Utils.removeStyles(@container)
-        doc = new Tandem.Document(@container)
+        Scribe.Utils.removeExternal(@container)
+        Scribe.Utils.removeStyles(@container)
+        doc = new Scribe.Document(@container)
         doc.trailingNewline = false
         doc.length -= 1
         delta = doc.toDelta()
@@ -38,11 +38,11 @@ class TandemPasteManager
         @editor.undoManager.record(delta, oldDelta)
         @editor.doc.root.focus()
         lengthAdded = Math.max(0, @editor.doc.length - docLength)
-        @editor.setSelection(new Tandem.Range(@editor, index + lengthAdded, index + lengthAdded))
+        @editor.setSelection(new Scribe.Range(@editor, index + lengthAdded, index + lengthAdded))
       )
     )
 
 
 
-window.Tandem ||= {}
-window.Tandem.PasteManager = TandemPasteManager
+window.Scribe ||= {}
+window.Scribe.PasteManager = ScribePasteManager

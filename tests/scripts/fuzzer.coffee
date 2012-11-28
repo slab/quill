@@ -1,5 +1,5 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
-ATTRIBUTES = _.extend({}, Tandem.Constants.SPAN_ATTRIBUTES, Tandem.Constants.TAG_ATTRIBUTES)
+ATTRIBUTES = _.extend({}, Scribe.Constants.SPAN_ATTRIBUTES, Scribe.Constants.TAG_ATTRIBUTES)
 NUM_OPERATIONS = 500
 
 seed = Math.random()
@@ -10,11 +10,11 @@ Math.seedrandom(seed.toString())
 $(document).ready( ->
   rangy.init()
   $editors = $('.editor-container')
-  writer = new Tandem.Editor($editors.get(0))
-  reader = new Tandem.Editor($editors.get(1))
+  writer = new Scribe.Editor($editors.get(0))
+  reader = new Scribe.Editor($editors.get(1))
   start = new Date()
 
-  writer.on(Tandem.Editor.events.TEXT_CHANGE, (delta) ->
+  writer.on(Scribe.Editor.events.TEXT_CHANGE, (delta) ->
     reader.applyDelta(delta, false)
   )
 
@@ -26,7 +26,7 @@ $(document).ready( ->
     _.defer( ->
       writerHTML = writer.doc.root.innerHTML
       readerHTML = reader.doc.root.innerHTML
-      operation = Tandem.Debug.Test.getRandomOperation(writer, ALPHABET, ATTRIBUTES)
+      operation = Scribe.Debug.Test.getRandomOperation(writer, ALPHABET, ATTRIBUTES)
       if operation?
         try
           writer[operation.op].apply(writer, operation.args)

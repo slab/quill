@@ -1,18 +1,7 @@
-#= require underscore
-#= require rangy/rangy-core
-#= require diff_match_patch
-#= require eventemitter2
-#= require tandem/document
-#= require tandem/range
-#= require tandem/keyboard
-#= require tandem/selection
-#= require tandem/renderer
-
-
-class TandemEditor extends EventEmitter2
+class ScribeEditor extends EventEmitter2
   @editors: []
 
-  @CONTAINER_ID: 'tandem-container'
+  @CONTAINER_ID: 'Scribe-container'
   @ID_PREFIX: 'editor-'
   @CURSOR_PREFIX: 'cursor-'
   @DEFAULTS:
@@ -24,8 +13,8 @@ class TandemEditor extends EventEmitter2
     SELECTION_CHANGE : 'selection-change'
 
   constructor: (@iframeContainer, options) ->
-    @options = _.extend(Tandem.Editor.DEFAULTS, options)
-    @id = _.uniqueId(TandemEditor.ID_PREFIX)
+    @options = _.extend(Scribe.Editor.DEFAULTS, options)
+    @id = _.uniqueId(ScribeEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     @destructors = []
     this.reset(true)
@@ -45,16 +34,16 @@ class TandemEditor extends EventEmitter2
     @ignoreDomChanges = true
     options = _.clone(@options)
     options.keepHTML = keepHTML
-    @renderer = new Tandem.Renderer(@iframeContainer, options)
+    @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
-    @doc = new Tandem.Document(@contentWindow.document.getElementById(TandemEditor.CONTAINER_ID))
-    @selection = new Tandem.Selection(this)
-    @keyboard = new Tandem.Keyboard(this)
-    @undoManager = new Tandem.UndoManager(this)
-    @pasteManager = new Tandem.PasteManager(this)
+    @doc = new Scribe.Document(@contentWindow.document.getElementById(ScribeEditor.CONTAINER_ID))
+    @selection = new Scribe.Selection(this)
+    @keyboard = new Scribe.Keyboard(this)
+    @undoManager = new Scribe.UndoManager(this)
+    @pasteManager = new Scribe.PasteManager(this)
     this.initListeners()
     @ignoreDomChanges = false
-    TandemEditor.editors.push(this)
+    ScribeEditor.editors.push(this)
 
   disable: ->
     this.doSilently( =>
@@ -100,7 +89,7 @@ class TandemEditor extends EventEmitter2
           )
         )
       )
-      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
+      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
 
   applyDelta: (delta, emitEvent = true) ->
@@ -141,7 +130,7 @@ class TandemEditor extends EventEmitter2
     composed = JetSync.compose(oldDelta, delta)
     composed.compact()
     console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
-    this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
+    this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
 
   deleteAt: (index, length, emitEvent = true) ->
     this.doSilently( =>
@@ -152,7 +141,7 @@ class TandemEditor extends EventEmitter2
           )
         )
       )
-      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
+      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
 
   doSilently: (fn) ->
@@ -184,7 +173,7 @@ class TandemEditor extends EventEmitter2
           )
         )
       )
-      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent
+      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
     
   setSelection: (range) ->
@@ -204,7 +193,7 @@ class TandemEditor extends EventEmitter2
     this.doSilently( =>
       delta = this.trackDelta( =>
         @selection.preserve( =>
-          Tandem.Document.normalizeHtml(@doc.root)
+          Scribe.Document.normalizeHtml(@doc.root)
           lines = @doc.lines.toArray()
           lineNode = @doc.root.firstChild
           _.each(lines, (line, index) =>
@@ -224,10 +213,10 @@ class TandemEditor extends EventEmitter2
         )
         @selection.update(true)
       )
-      this.emit(TandemEditor.events.TEXT_CHANGE, delta) if emitEvent and !delta.isIdentity()
+      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent and !delta.isIdentity()
     )
 
 
 
-window.Tandem ||= {}
-window.Tandem.Editor = TandemEditor
+window.Scribe ||= {}
+window.Scribe.Editor = ScribeEditor

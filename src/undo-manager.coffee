@@ -1,4 +1,4 @@
-class TandemUndoManager
+class ScribeUndoManager
   @DEFAULTS:
     delay: 1000
 
@@ -46,7 +46,7 @@ class TandemUndoManager
     @destructors = []
     @undoStack = []
     @redoStack = []
-    @options = _.extend(TandemUndoManager.DEFAULTS, options)
+    @options = _.extend(ScribeUndoManager.DEFAULTS, options)
     @lastRecorded = 0
     this.initListeners()
 
@@ -57,17 +57,17 @@ class TandemUndoManager
     @destructors = null
 
   initListeners: ->
-    @editor.keyboard.addHotkey(Tandem.Keyboard.HOTKEYS.UNDO, =>
+    @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.UNDO, =>
       this.undo()
     )
-    @editor.keyboard.addHotkey(Tandem.Keyboard.HOTKEYS.REDO, =>
+    @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.REDO, =>
       this.redo()
     )
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
-    undoDelta = TandemUndoManager.computeUndo(changeDelta, oldDelta)
+    undoDelta = ScribeUndoManager.computeUndo(changeDelta, oldDelta)
     timestamp = new Date().getTime()
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
       change = @undoStack.pop()
@@ -77,10 +77,10 @@ class TandemUndoManager
       @lastRecorded = timestamp
     @undoStack.push({
       undo:
-        cursor: TandemUndoManager.getLastChangeIndex(undoDelta)
+        cursor: ScribeUndoManager.getLastChangeIndex(undoDelta)
         delta: undoDelta
       redo:
-        cursor: TandemUndoManager.getLastChangeIndex(changeDelta)
+        cursor: ScribeUndoManager.getLastChangeIndex(changeDelta)
         delta: changeDelta  
     })
 
@@ -88,17 +88,17 @@ class TandemUndoManager
     if @redoStack.length > 0
       change = @redoStack.pop()
       @editor.applyDelta(change.redo.delta)
-      @editor.setSelection(new Tandem.Range(@editor, change.redo.cursor, change.redo.cursor))
+      @editor.setSelection(new Scribe.Range(@editor, change.redo.cursor, change.redo.cursor))
       @undoStack.push(change)
 
   undo: ->
     if @undoStack.length > 0
       change = @undoStack.pop()
       @editor.applyDelta(change.undo.delta)
-      @editor.setSelection(new Tandem.Range(@editor, change.undo.cursor, change.undo.cursor))
+      @editor.setSelection(new Scribe.Range(@editor, change.undo.cursor, change.undo.cursor))
       @redoStack.push(change)
 
 
 
-window.Tandem ||= {}
-window.Tandem.UndoManager = TandemUndoManager
+window.Scribe ||= {}
+window.Scribe.UndoManager = ScribeUndoManager

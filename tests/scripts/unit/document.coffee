@@ -3,7 +3,7 @@ describe('Document', ->
     it('should find correct offset in line', ->
       lines = ['<div><br></div>', '<div><span>12</span></div>', '<div><b>45</b></div>', '<div><br></div>', '<div><br></div>', '<ul><li><span>78</span></li></ul>', '<ul><li><br></li></ul>']
       $('#editor-container').html(lines.join(''))
-      editor = new Tandem.Editor('editor-container')
+      editor = new Scribe.Editor('editor-container')
       lines = editor.doc.lines.toArray()
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
@@ -45,7 +45,7 @@ describe('Document', ->
         $('#editor-container').html(html)
         endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
         delta = new JetDelta(0, endLength, test.deltas)
-        editor = new Tandem.Editor('editor-container')
+        editor = new Scribe.Editor('editor-container')
         editorDelta = editor.doc.toDelta()
         editor.destroy()
         expect(editorDelta).to.deep.equal(delta)

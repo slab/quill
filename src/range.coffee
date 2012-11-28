@@ -1,12 +1,12 @@
 rangy.init()  # getRangy
 
-class TandemRange
-  # constructor: (TandemEditor editor, Number startIndex, Number endIndex) ->
-  # constructor: (TandemEditor editor, Object start, Object end) ->
+class ScribeRange
+  # constructor: (ScribeEditor editor, Number startIndex, Number endIndex) ->
+  # constructor: (ScribeEditor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->
     # TODO initialize with index
-    @start = new Tandem.Position(@editor, @start) if _.isNumber(@start)
-    @end = new Tandem.Position(@editor, @end) if _.isNumber(@end)
+    @start = new Scribe.Position(@editor, @start) if _.isNumber(@start)
+    @end = new Scribe.Position(@editor, @end) if _.isNumber(@end)
 
   equals: (range) ->
     return false unless range?
@@ -65,7 +65,7 @@ class TandemRange
       return nodes
 
   getLeaves: ->
-    itr = new Tandem.LeafIterator(@start.getLeaf(), @end.getLeaf())
+    itr = new Scribe.LeafIterator(@start.getLeaf(), @end.getLeaf())
     arr = itr.toArray()
     return arr
 
@@ -119,5 +119,5 @@ class TandemRange
 
 
 
-window.Tandem ||= {}
-window.Tandem.Range = TandemRange
+window.Scribe ||= {}
+window.Scribe.Range = ScribeRange

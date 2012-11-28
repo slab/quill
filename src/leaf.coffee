@@ -1,46 +1,46 @@
-class TandemLeaf extends LinkedList.Node
+class ScribeLeaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
   @TAB_NODE_CLASS: 'tab'
 
   @isLeafNode: (node) ->
     return false if !node? || node.nodeType != node.ELEMENT_NODE ||  !node.classList?
-    return false if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return false if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
     return true if node.tagName == 'BR'
-    return true if node.classList?.contains(Tandem.Leaf.TAB_NODE_CLASS)
+    return true if node.classList?.contains(Scribe.Leaf.TAB_NODE_CLASS)
     return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
     return false
 
   @isLeafParent: (node) ->
     return false if !node? || node.nodeType != node.ELEMENT_NODE ||  !node.classList?
-    return false if Tandem.Leaf.isLeafNode(node)
-    return false if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return false if Scribe.Leaf.isLeafNode(node)
+    return false if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
     return false if node.childNodes.length == 0
     return node.childNodes.length > 1 or node.firstChild.nodeType != node.TEXT_NODE
 
 
   constructor: (@line, @node, attributes) ->
     @attributes = _.clone(attributes)
-    @id = _.uniqueId(Tandem.Leaf.ID_PREFIX)
+    @id = _.uniqueId(Scribe.Leaf.ID_PREFIX)
     @node.textContent = "" if @node.tagName == 'BR'
     @text = @node.textContent
     @length = @text.length
 
   getAttributes: (excludeDefault = false) ->
-    attributes = if excludeDefault then {} else _.clone(Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES)
+    attributes = if excludeDefault then {} else _.clone(Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES)
     return _.extend(attributes, @attributes, @line.attributes)
 
   getLineOffset: ->
-    return Tandem.Position.getIndex(@node, 0, @line.node)
+    return Scribe.Position.getIndex(@node, 0, @line.node)
 
   insertText: (offset, text) ->
     @text = @text.substring(0, offset) + text + @text.substring(offset)
-    [node, offset] = Tandem.Position.findDeepestNode(@line.doc.editor, @node, offset)
+    [node, offset] = Scribe.Position.findDeepestNode(@line.doc.editor, @node, offset)
     node.textContent = node.textContent.substring(0, offset) + text + node.textContent.substring(offset)
     @length = @text.length
 
 
 
-class TandemLeafIterator
+class ScribeLeafIterator
   # Start and end are both inclusive
   # Otherwise if end is inclusive, we cannot express end of line unambiguously
   constructor: (@start, @end) ->
@@ -61,13 +61,13 @@ class TandemLeafIterator
 
   toArray: ->
     arr = []
-    itr = new TandemLeafIterator(@start, @end)
+    itr = new ScribeLeafIterator(@start, @end)
     while next = itr.next()
       arr.push(next)
     return arr
 
 
 
-window.Tandem ||= {}
-window.Tandem.Leaf = TandemLeaf
-window.Tandem.LeafIterator = TandemLeafIterator
+window.Scribe ||= {}
+window.Scribe.Leaf = ScribeLeaf
+window.Scribe.LeafIterator = ScribeLeafIterator

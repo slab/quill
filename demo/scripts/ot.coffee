@@ -1,11 +1,11 @@
 $(document).ready( ->
-  editor = new Tandem.Editor('editor-container')
+  editor = new Scribe.Editor('editor-container')
   _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
     $("#formatting-container .#{format}").click( -> 
       editor.selection.applyAttribute(format, !$(this).hasClass('active'))
     )
   )
-  editor.on(Tandem.Editor.events.SELECTION_CHANGE, (selection) ->
+  editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
     attributes = selection.getAttributes()
     $("#formatting-container .format-button").removeClass('active')
     for key,value of attributes when value == true
@@ -38,7 +38,7 @@ $(document).ready( ->
   jetClient.addState(textState)
   jetClient.connect(Stypi.configs.docId, Stypi.configs.version)
 
-  editor.on(Tandem.Editor.events.TEXT_CHANGE, (delta) =>
+  editor.on(Scribe.Editor.events.TEXT_CHANGE, (delta) =>
     if Stypi.configs.userId
       _.each(delta.deltas, (delta, index) ->
         delta.attributes['author'] = Stypi.configs.userId if delta.text?

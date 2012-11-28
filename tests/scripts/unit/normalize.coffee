@@ -77,15 +77,15 @@ describe('Normalize', ->
     describe(groupName, ->
       _.each(testGroup, (test, name) ->
         it(name, ->
-          $('#editor-container').html(Tandem.Utils.cleanHtml(test.lines.join('')))
-          editor = new Tandem.Editor('editor-container')
+          $('#editor-container').html(Scribe.Utils.cleanHtml(test.lines.join('')))
+          editor = new Scribe.Editor('editor-container')
           delta = editor.doc.toDelta()
           expectedHtml = _.map(test.expected, (line) ->
             return if _.isNumber(line) then test.lines[line] else line
           ).join('')
           editor.destroy()
-          $('#editor-container').html(Tandem.Utils.cleanHtml(expectedHtml))
-          editor = new Tandem.Editor('editor-container')
+          $('#editor-container').html(Scribe.Utils.cleanHtml(expectedHtml))
+          editor = new Scribe.Editor('editor-container')
           expectedDelta = editor.doc.toDelta()
           expect(delta).to.deep.equal(expectedDelta)
           editor.destroy()

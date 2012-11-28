@@ -1,4 +1,4 @@
-class TandemSelection
+class ScribeSelection
   constructor: (@editor) ->
     @destructors = []
     @range = null
@@ -15,7 +15,7 @@ class TandemSelection
       return if !@destructors?
       this.update()
     keyUpdate = (event) =>
-      checkUpdate() if Tandem.Keyboard.KEYS.LEFT <= event.which and event.which <= Tandem.Keyboard.KEYS.DOWN
+      checkUpdate() if Scribe.Keyboard.KEYS.LEFT <= event.which and event.which <= Scribe.Keyboard.KEYS.DOWN
     @editor.doc.root.addEventListener('keyup', keyUpdate)
     @editor.doc.root.addEventListener('mouseup', checkUpdate)
     @destructors.push( =>
@@ -37,20 +37,20 @@ class TandemSelection
       @editor.doSilently( =>
         leafNode = @range.end.leafNode
         line = @editor.doc.findLine(leafNode)
-        clone = Tandem.Utils.cloneAncestors(leafNode, line.node)
-        lineOffset = Tandem.Position.getIndex(leafNode, 0, line.node) + @range.end.offset
+        clone = Scribe.Utils.cloneAncestors(leafNode, line.node)
+        lineOffset = Scribe.Position.getIndex(leafNode, 0, line.node) + @range.end.offset
         [left, right] = line.splitContents(lineOffset)
         line.node.insertBefore(clone, right)
-        clone = Tandem.Utils.removeAttributeFromSubtree(clone, attribute)
+        clone = Scribe.Utils.removeAttributeFromSubtree(clone, attribute)
         if clone == null
           clone = line.node.ownerDocument.createElement('span')
           line.node.insertBefore(clone, right)
-        if value and Tandem.Utils.getAttributeDefault(attribute) != value
-          attrNode = Tandem.Utils.createContainerForAttribute(clone.ownerDocument, attribute, value)
-          clone = Tandem.Utils.wrap(attrNode, clone)
+        if value and Scribe.Utils.getAttributeDefault(attribute) != value
+          attrNode = Scribe.Utils.createContainerForAttribute(clone.ownerDocument, attribute, value)
+          clone = Scribe.Utils.wrap(attrNode, clone)
         while clone.firstChild?
           clone = clone.firstChild
-        clone.innerHTML = Tandem.Constants.NOBREAK_SPACE
+        clone.innerHTML = Scribe.Constants.NOBREAK_SPACE
         this.setRangeNative(
           anchorNode    : clone
           anchorOffset  : 1
@@ -60,7 +60,7 @@ class TandemSelection
       )
     attributes[attribute] = value
     @range.attributes = attributes
-    @editor.emit(Tandem.Editor.events.SELECTION_CHANGE, @range)
+    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
 
   deleteRange: ->
     this.update()
@@ -73,6 +73,7 @@ class TandemSelection
 
   getNative: ->
     rangySel = rangy.getSelection(@editor.contentWindow)
+    selection = window.getSelection()
     return null unless rangySel.anchorNode? && rangySel.focusNode?
     if !rangySel.isBackwards()
       [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
@@ -88,9 +89,9 @@ class TandemSelection
   getRange: ->
     nativeSel = this.getNative()
     return null unless nativeSel?
-    start = new Tandem.Position(@editor, nativeSel.anchorNode, nativeSel.anchorOffset)
-    end = new Tandem.Position(@editor, nativeSel.focusNode, nativeSel.focusOffset)
-    return new Tandem.Range(@editor, start, end)
+    start = new Scribe.Position(@editor, nativeSel.anchorNode, nativeSel.anchorOffset)
+    end = new Scribe.Position(@editor, nativeSel.focusNode, nativeSel.focusOffset)
+    return new Scribe.Range(@editor, start, end)
 
   preserve: (fn) ->
     if @range?
@@ -111,7 +112,7 @@ class TandemSelection
       rangySel.setSingleRange(rangySelRange)
     else
       rangySel.removeAllRanges()
-    @editor.emit(Tandem.Editor.events.SELECTION_CHANGE, @range) unless silent
+    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
 
   setRangeNative: (nativeSel) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
@@ -125,7 +126,7 @@ class TandemSelection
     _.each(savedSel.rangeInfos, (rangeInfo) ->
       _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
         marker = rangeInfo.document.getElementById(markerId)
-        marker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
+        marker.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
       )
     )
     return savedSel
@@ -133,10 +134,10 @@ class TandemSelection
   update: (silent = false) ->
     range = this.getRange()
     unless (range == @range) || (@range?.equals(range))
-      @editor.emit(Tandem.Editor.events.SELECTION_CHANGE, range) unless silent
+      @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent
       @range = range
 
 
 
-window.Tandem ||= {}
-window.Tandem.Selection = TandemSelection
+window.Scribe ||= {}
+window.Scribe.Selection = ScribeSelection

@@ -155,7 +155,7 @@
     %script{:type => 'text/javascript', :src => '../src/editor.js'}
     %script{:type => 'text/javascript', :src => '../src/debug.js'}
     :javascript
-      var editor = new Tandem.Editor('editor-container');
+      var editor = new Scribe.Editor('editor-container');
 
       _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
         $('#formatting-container .' + format).click(function() {
@@ -173,7 +173,7 @@
         else
           editor.selection.applyAttribute('link', 'http://www.google.com');
       });
-      editor.on(Tandem.Editor.events.SELECTION_CHANGE, function(selection) {
+      editor.on(Scribe.Editor.events.SELECTION_CHANGE, function(selection) {
         attributes = selection.getAttributes()
         $("#formatting-container .format-button").removeClass('active');
         for (key in attributes) {

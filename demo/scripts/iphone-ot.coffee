@@ -1,7 +1,7 @@
 $(document).ready( ->
-  window.editor = editor = new Tandem.Editor('editor-container')
+  window.editor = editor = new Scribe.Editor('editor-container')
   
-  editor.on Tandem.Editor.events.SELECTION_CHANGE, (selection) ->
+  editor.on Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
     attributes = selection.getAttributes()
     GAJavaScript.performSelector 'attributesUpdated:', JSON.stringify(attributes)
     #$.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
@@ -44,7 +44,7 @@ $(document).ready( ->
   jetClient.addState(textState)
   jetClient.connect(Stypi.configs.docId, Stypi.configs.version)
   
-  editor.on(Tandem.Editor.events.TEXT_CHANGE, (delta) =>
+  editor.on(Scribe.Editor.events.TEXT_CHANGE, (delta) =>
     if Stypi.configs.userId
       _.each(delta.deltas, (delta, index) ->
         delta.attributes['author'] = Stypi.configs.userId if delta.text?

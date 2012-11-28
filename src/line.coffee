@@ -1,35 +1,35 @@
-class TandemLine extends LinkedList.Node
+class ScribeLine extends LinkedList.Node
   @CLASS_NAME : 'line'
   @DIRTY_CLASS: 'dirty'
   @ID_PREFIX  : 'line-'
 
   @applyRules: (root) ->
-    Tandem.Utils.traversePreorder(root, 0, (node, index) =>
+    Scribe.Utils.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
-        rules = Tandem.Constants.LINE_RULES[node.tagName]
+        rules = Scribe.Constants.LINE_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
-              when 'rename' then node = Tandem.Utils.switchTag(node, data)
+              when 'rename' then node = Scribe.Utils.switchTag(node, data)
               else return
           )
         else
-          node = Tandem.Utils.unwrap(node)
+          node = Scribe.Utils.unwrap(node)
       return node
     )
 
   @isLineNode: (node) ->
-    return node? && node.classList? && node.classList.contains(TandemLine.CLASS_NAME)
+    return node? && node.classList? && node.classList.contains(ScribeLine.CLASS_NAME)
 
   @mergeAdjacent: (root) ->
-    Tandem.Utils.traversePreorder(root, 0, (node) ->
-      if node.nodeType == node.ELEMENT_NODE && !TandemLine.isLineNode(node) && Tandem.Utils.canModify(node)
+    Scribe.Utils.traversePreorder(root, 0, (node) ->
+      if node.nodeType == node.ELEMENT_NODE && !ScribeLine.isLineNode(node) && Scribe.Utils.canModify(node)
         next = node.nextSibling
-        if next?.tagName == node.tagName && node.tagName != 'LI' && Tandem.Utils.canModify(next)
-          [nodeAttr, nodeValue] = Tandem.Utils.getAttributeForContainer(node)
-          [nextAttr, nextValue] = Tandem.Utils.getAttributeForContainer(next)
+        if next?.tagName == node.tagName && node.tagName != 'LI' && Scribe.Utils.canModify(next)
+          [nodeAttr, nodeValue] = Scribe.Utils.getAttributeForContainer(node)
+          [nextAttr, nextValue] = Scribe.Utils.getAttributeForContainer(next)
           if nodeAttr == nextAttr && nodeValue == nextValue
-            node = Tandem.Utils.mergeNodes(node, next)
+            node = Scribe.Utils.mergeNodes(node, next)
       return node
     )
 
@@ -43,58 +43,58 @@ class TandemLine extends LinkedList.Node
     # After: <b>Bold</b><b><i>Test</i></b> -> <b>Bold<i>Test</i></b>
     this.mergeAdjacent(root)
     this.wrapText(root)
-    if 0 == _.reduce(root.childNodes, ((count, node) -> return count + (if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) then 0 else 1)), 0)
+    if 0 == _.reduce(root.childNodes, ((count, node) -> return count + (if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) then 0 else 1)), 0)
       if root.tagName == 'OL' || root.tagName == 'UL'
         root.appendChild(root.ownerDocument.createElement('li'))
         root = root.firstChild
       root.appendChild(root.ownerDocument.createElement('br'))
 
   @removeNoBreak: (root) ->
-    Tandem.Utils.traversePreorder(root, 0, (node) =>
+    Scribe.Utils.traversePreorder(root, 0, (node) =>
       if node.nodeType == node.TEXT_NODE
-        node.textContent = node.textContent.split(Tandem.Constants.NOBREAK_SPACE).join('')
+        node.textContent = node.textContent.split(Scribe.Constants.NOBREAK_SPACE).join('')
       return node
     )
 
   @removeRedundant: (root) ->
-    tandemKey = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
-    root[tandemKey] = {}
+    ScribeKey = '_ScribeAttributes' + Math.floor(Math.random() * 100000000)
+    root[ScribeKey] = {}
     isRedudant = (node) ->
-      if node.nodeType == node.ELEMENT_NODE && Tandem.Utils.canModify(node)
-        if Tandem.Utils.getNodeLength(node) == 0
+      if node.nodeType == node.ELEMENT_NODE && Scribe.Utils.canModify(node)
+        if Scribe.Utils.getNodeLength(node) == 0
           return true
-        [attrName, attrValue] = Tandem.Utils.getAttributeForContainer(node)
+        [attrName, attrValue] = Scribe.Utils.getAttributeForContainer(node)
         if attrName?
-          return node.parentNode[tandemKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
+          return node.parentNode[ScribeKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
         else if node.tagName == 'SPAN'
           # Check if children need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
           # Check if parent needs us
-          if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
+          if node.previousSibling == null && node.nextSibling == null && !ScribeLine.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
             return true
       return false
-    Tandem.Utils.traversePreorder(root, 0, (node) =>
+    Scribe.Utils.traversePreorder(root, 0, (node) =>
       if isRedudant(node)
-        node = Tandem.Utils.unwrap(node)
+        node = Scribe.Utils.unwrap(node)
       if node?
-        node[tandemKey] = _.clone(node.parentNode[tandemKey])
-        [attrName, attrValue] = Tandem.Utils.getAttributeForContainer(node)
-        node[tandemKey][attrName] = attrValue if attrName?
+        node[ScribeKey] = _.clone(node.parentNode[ScribeKey])
+        [attrName, attrValue] = Scribe.Utils.getAttributeForContainer(node)
+        node[ScribeKey][attrName] = attrValue if attrName?
       return node
     )
-    delete root[tandemKey]
-    Tandem.Utils.traversePreorder(root, 0, (node) ->
-      delete node[tandemKey]
+    delete root[ScribeKey]
+    Scribe.Utils.traversePreorder(root, 0, (node) ->
+      delete node[ScribeKey]
       return node
     )
     
   @wrapText: (root) ->
-    Tandem.Utils.traversePreorder(root, 0, (node) =>
+    Scribe.Utils.traversePreorder(root, 0, (node) =>
       node.normalize()
       if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root || node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
-        Tandem.Utils.wrap(span, node)
+        Scribe.Utils.wrap(span, node)
         node = span
       return node
     )
@@ -102,9 +102,9 @@ class TandemLine extends LinkedList.Node
 
 
   constructor: (@doc, @node) ->
-    @id = _.uniqueId(Tandem.Line.ID_PREFIX)
+    @id = _.uniqueId(Scribe.Line.ID_PREFIX)
     @node.id = @id
-    @node.classList.add(TandemLine.CLASS_NAME)
+    @node.classList.add(ScribeLine.CLASS_NAME)
     this.rebuild()
     super(@node)
 
@@ -112,11 +112,11 @@ class TandemLine extends LinkedList.Node
     _.each(_.clone(node.childNodes), (node) =>
       node.normalize()
       nodeAttributes = _.clone(attributes)
-      [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(node)
+      [attrName, attrVal] = Scribe.Utils.getAttributeForContainer(node)
       nodeAttributes[attrName] = attrVal if attrName?
-      if Tandem.Leaf.isLeafNode(node)
-        @leaves.append(new Tandem.Leaf(this, node, nodeAttributes))
-      if Tandem.Leaf.isLeafParent(node)
+      if Scribe.Leaf.isLeafNode(node)
+        @leaves.append(new Scribe.Leaf(this, node, nodeAttributes))
+      if Scribe.Leaf.isLeafParent(node)
         this.buildLeaves(node, nodeAttributes)
     )
 
@@ -124,30 +124,30 @@ class TandemLine extends LinkedList.Node
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)
-    Tandem.Utils.traverseSiblings(startNode, endNode, fn)
+    Scribe.Utils.traverseSiblings(startNode, endNode, fn)
 
   applyAttribute: (offset, length, attr, value) ->
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)
     parentNode = startNode?.parentNode || prevNode?.parentNode
-    if value && Tandem.Utils.getAttributeDefault(attr) != value
+    if value && Scribe.Utils.getAttributeDefault(attr) != value
       refNode = null
-      attrNode = Tandem.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
+      attrNode = Scribe.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
       this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
-        node = Tandem.Utils.removeAttributeFromSubtree(node, attr)
+        node = Scribe.Utils.removeAttributeFromSubtree(node, attr)
         attrNode.appendChild(node)
       )
       @node.insertBefore(attrNode, refNode)
     else
       this.applyToContents(offset, length, (node) ->
-        Tandem.Utils.removeAttributeFromSubtree(node, attr)
+        Scribe.Utils.removeAttributeFromSubtree(node, attr)
       )
 
   deleteText: (offset, length) ->
     this.applyToContents(offset, length, (node) ->
-      Tandem.Utils.removeNode(node)
+      Scribe.Utils.removeNode(node)
     )
 
   findLeaf: (leafNode) ->
@@ -171,11 +171,11 @@ class TandemLine extends LinkedList.Node
 
   rebuild: ->
     if @node.parentNode == @doc.root
-      return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(TandemLine.DIRTY_CLASS)
+      return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(ScribeLine.DIRTY_CLASS)
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
-      TandemLine.normalizeHtml(@node)
+      ScribeLine.normalizeHtml(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
     else
@@ -186,23 +186,23 @@ class TandemLine extends LinkedList.Node
     @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
     @attributes = {}
-    [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(@node)
+    [attrName, attrVal] = Scribe.Utils.getAttributeForContainer(@node)
     @attributes[attrName] = attrVal if attrName?
     this.setDirty(false)
     @delta = this.toDelta()
 
   setDirty: (isDirty = true) ->
     if isDirty
-      @node.classList.add(TandemLine.DIRTY_CLASS)
+      @node.classList.add(ScribeLine.DIRTY_CLASS)
     else
-      @node.classList.remove(TandemLine.DIRTY_CLASS)
+      @node.classList.remove(ScribeLine.DIRTY_CLASS)
 
   splitContents: (offset) ->
     this.setDirty()
-    [node, offset] = Tandem.Utils.getChildAtOffset(@node, offset)
+    [node, offset] = Scribe.Utils.getChildAtOffset(@node, offset)
     if @node.tagName == 'OL' || @node.tagName == 'UL'
-      [node, offset] = Tandem.Utils.getChildAtOffset(node, offset)
-    return Tandem.Utils.splitNode(node, offset)
+      [node, offset] = Scribe.Utils.getChildAtOffset(node, offset)
+    return Scribe.Utils.splitNode(node, offset)
 
   toDelta: ->
     deltas = _.map(@leaves.toArray(), (leaf) ->
@@ -214,5 +214,5 @@ class TandemLine extends LinkedList.Node
 
 
 
-window.Tandem ||= {}
-window.Tandem.Line = TandemLine
+window.Scribe ||= {}
+window.Scribe.Line = ScribeLine

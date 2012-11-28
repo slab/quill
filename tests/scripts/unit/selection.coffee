@@ -1,7 +1,7 @@
 describe('Selection', ->
   findIndexes = (html) ->
     $('#editor-container').html(html)
-    editor = new Tandem.Editor('editor-container')
+    editor = new Scribe.Editor('editor-container')
     lines = editor.doc.lines.toArray()
     lineIndex = 0
     ret = _.reduce(lines, (indexes, line) ->
@@ -231,7 +231,7 @@ describe('Selection', ->
       describe(groupName, ->
         _.each(testGroup, (test, name) ->
           it(name, ->
-            html = Tandem.Utils.cleanHtml(test.lines.join(''))
+            html = Scribe.Utils.cleanHtml(test.lines.join(''))
             expectedHtml = _.map(test.expected, (line) ->
               return if _.isNumber(line) then test.lines[line] else line
             ).join('')
@@ -240,8 +240,8 @@ describe('Selection', ->
             html = html.replace(/\|/g, '')
             expectedHtml = expectedHtml.replace(/\|/g, '')
             $('#editor-container').html(html)
-            editor = new Tandem.Editor('editor-container')
-            editor.setSelection(new Tandem.Range(editor, start, end))
+            editor = new Scribe.Editor('editor-container')
+            editor.setSelection(new Scribe.Range(editor, start, end))
             sel = editor.getSelection()
             expect([sel.start.getIndex(), sel.end.getIndex()]).to.deep.equal([start, end])
             test.fn(editor)

@@ -46,7 +46,7 @@ describe('Editor', ->
       it(name, ->
         html = test.lines.join('')
         $('#editor-container').html(html)
-        editor = new Tandem.Editor('editor-container')
+        editor = new Scribe.Editor('editor-container')
         oldDelta = editor.doc.toDelta()
         startLength = oldDelta.endLength
         endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
@@ -55,11 +55,11 @@ describe('Editor', ->
           return if _.isNumber(line) then test.lines[line] else line
         ).join('')
         editor.applyDelta(delta)
-        consistent = Tandem.Debug.checkDocumentConsistency(editor.doc)
+        consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
         editor.destroy()
         $('#editor-container').html(expectedHtml)
-        editor = new Tandem.Editor('editor-container')
+        editor = new Scribe.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
         editor.destroy()
         expect(consistent).to.be.true
@@ -141,19 +141,19 @@ describe('Editor', ->
           openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute}-#{attrTest.value}\"" else attrTest.tagName
           expected = expectedHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
           original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
-          apply = attrTest.value && Tandem.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
+          apply = attrTest.value && Scribe.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
           [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
           $('#editor-container').html(startHtml)
-          editor = new Tandem.Editor('editor-container')
+          editor = new Scribe.Editor('editor-container')
           editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
-          range = new Tandem.Range(editor, test.start, test.start + test.length)
+          range = new Scribe.Range(editor, test.start, test.start + test.length)
           attributes = _.clone(range.getAttributes())
           delta = editor.doc.toDelta()
           editor.destroy()
           $('#editor-container').html(endHtml)
-          editor = new Tandem.Editor('editor-container')
+          editor = new Scribe.Editor('editor-container')
           expectedDelta = editor.doc.toDelta()
-          consistent = Tandem.Debug.checkDocumentConsistency(editor.doc, true)
+          consistent = Scribe.Debug.checkDocumentConsistency(editor.doc, true)
           editor.destroy()
           if apply
             expect(attributes[attrTest.attribute]).to.equal(attrTest.value)
@@ -217,13 +217,13 @@ describe('Editor', ->
           return if _.isNumber(line) then test.lines[line] else line
         ).join('')
         $('#editor-container').html(html)
-        editor = new Tandem.Editor('editor-container')
+        editor = new Scribe.Editor('editor-container')
         test.fn(editor)
-        consistent = Tandem.Debug.checkDocumentConsistency(editor.doc)
+        consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
         editor.destroy()
         $('#editor-container').html(expectedHtml)
-        editor = new Tandem.Editor('editor-container')
+        editor = new Scribe.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
         editor.destroy()
         expect(consistent).to.be.true
@@ -236,7 +236,7 @@ describe('Editor', ->
 
   describe('deleteAt', ->
     reset = ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml('
+      $('#editor-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>123</b>
           <i>456</i>
@@ -251,7 +251,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>
       '))
-      return new Tandem.Editor('editor-container')
+      return new Scribe.Editor('editor-container')
 
     tests = [{
       name: 'a node'
@@ -444,7 +444,7 @@ describe('Editor', ->
         it(name, ->
           editor = reset()
           editor.deleteAt(start, test.length)
-          consistent = Tandem.Debug.checkDocumentConsistency(editor.doc, true)
+          consistent = Scribe.Debug.checkDocumentConsistency(editor.doc, true)
           delta = editor.doc.toDelta()
           if _.isString(test.expected)
             expected = test.expected
@@ -452,7 +452,7 @@ describe('Editor', ->
             expected = test[index]
           else
             expected = test.expected(index)
-          editor.doc.root.innerHTML = Tandem.Utils.cleanHtml(expected)
+          editor.doc.root.innerHTML = Scribe.Utils.cleanHtml(expected)
           editor.doc.buildLines()
           expectedDelta = editor.doc.toDelta()
           editor.destroy()

@@ -16,7 +16,7 @@ describe('Undo manager', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        undoDelta = Tandem.UndoManager.computeUndo(test.change, test.original)
+        undoDelta = Scribe.UndoManager.computeUndo(test.change, test.original)
         expect(undoDelta).to.deep.equal(test.expected)
       )
     )

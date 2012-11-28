@@ -1,4 +1,4 @@
-class TandemKeyboard
+class ScribeKeyboard
   @KEYS:
     BACKSPACE : 8
     TAB       : 9
@@ -15,6 +15,8 @@ class TandemKeyboard
     UNDERLINE:  { key: 'U', meta: true }
     UNDO:       { key: 'Z', meta: true, shift: false }
     REDO:       { key: 'Z', meta: true, shift: true }
+
+  @PRINTABLE
 
   constructor: (@editor) ->
     @root = @editor.doc.root
@@ -41,31 +43,31 @@ class TandemKeyboard
     )
 
   initHotkeys: ->
-    this.addHotkey(TandemKeyboard.KEYS.TAB, =>
+    this.addHotkey(ScribeKeyboard.KEYS.TAB, =>
       @editor.selection.deleteRange()
       this.insertText("\t")
     )
-    this.addHotkey(TandemKeyboard.KEYS.ENTER, =>
+    this.addHotkey(ScribeKeyboard.KEYS.ENTER, =>
       @editor.selection.deleteRange()
       this.insertText("\n")
     )
-    this.addHotkey(TandemKeyboard.KEYS.BACKSPACE, (selection) =>
+    this.addHotkey(ScribeKeyboard.KEYS.BACKSPACE, (selection) =>
       unless @editor.selection.deleteRange()
         index = selection.start.getIndex()
         @editor.deleteAt(index - 1, 1) if index? && index > 0
     )
-    this.addHotkey(TandemKeyboard.KEYS.DELETE, (selection) =>
+    this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
       unless @editor.selection.deleteRange()
         index = selection.start.getIndex()
         @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
     )
-    this.addHotkey(Tandem.Keyboard.HOTKEYS.BOLD, (selection) =>
+    this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
       this.toggleAttribute(selection, 'bold')
     )
-    this.addHotkey(Tandem.Keyboard.HOTKEYS.ITALIC, (selection) =>
+    this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (selection) =>
       this.toggleAttribute(selection, 'italic')
     )
-    this.addHotkey(Tandem.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
+    this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
       this.toggleAttribute(selection, 'underline')
     )
 
@@ -82,10 +84,10 @@ class TandemKeyboard
       if increment
         indent = if _.isNumber(line.attributes[attr]) then line.attributes[attr] else (if line.attributes[attr] then 1 else 0)
         indent += increment
-        indent = Math.min(Math.max(indent, Tandem.Constants.MIN_INDENT), Tandem.Constants.MAX_INDENT)
+        indent = Math.min(Math.max(indent, Scribe.Constants.MIN_INDENT), Scribe.Constants.MAX_INDENT)
       else
         indent = false
-      index = Tandem.Position.getIndex(line.node, 0)
+      index = Scribe.Position.getIndex(line.node, 0)
       @editor.applyAttribute(index, 0, attr, indent)
 
     _.each(lines, (line) =>
@@ -109,7 +111,7 @@ class TandemKeyboard
     if index?
       @editor.insertAt(index, text)
       # Make sure selection is after our text
-      range = new Tandem.Range(@editor, index + text.length, index + text.length)
+      range = new Scribe.Range(@editor, index + text.length, index + text.length)
       @editor.setSelection(range)
 
   toggleAttribute: (selection, attribute) ->
@@ -118,5 +120,5 @@ class TandemKeyboard
 
 
 
-window.Tandem ||= {}
-window.Tandem.Keyboard = TandemKeyboard
+window.Scribe ||= {}
+window.Scribe.Keyboard = ScribeKeyboard

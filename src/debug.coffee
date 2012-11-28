@@ -1,9 +1,9 @@
-window.Tandem ||= {}
+window.Scribe ||= {}
 
-window.Tandem.Debug = 
+window.Scribe.Debug = 
   getEditor: (editor) ->
-    editor ||= Tandem.Editor.editors[0]
-    return if _.isNumber(editor) then Tandem.Editor.editors[editor] else editor
+    editor ||= Scribe.Editor.editors[0]
+    return if _.isNumber(editor) then Scribe.Editor.editors[editor] else editor
 
   getHtml: (editor) ->
     doc = this.getDocument(editor)
@@ -17,7 +17,7 @@ window.Tandem.Debug =
     nodesByLine = _.map(doc.root.childNodes, (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
-        return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
+        return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
       )
     )
     lines = doc.lines.toArray()
@@ -88,7 +88,7 @@ window.Tandem.Debug =
         console.error "doc.lines and nodesByLine differ in length", lines, nodesByLine
         return false
       return false if _.any(lines, (line, index) =>
-        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Tandem.Utils.getNodeLength(node) + length), 0)
+        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Scribe.Utils.getNodeLength(node) + length), 0)
         if line.length != calculatedLength
           console.error line, line.length, calculatedLength, 'differ in length'
           return true
@@ -144,10 +144,10 @@ window.Tandem.Debug =
         index = editor.doc.length
       else
         index = Math.floor(Math.random() * editor.doc.length)
-      length = Tandem.Debug.Test.getRandomLength() + 1
+      length = Scribe.Debug.Test.getRandomLength() + 1
       rand = Math.random()
       if rand < 0.5
-        return {op: 'insertAt', args: [index, Tandem.Debug.Test.getRandomString(alphabet, length)]}
+        return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length)]}
       length = Math.min(length, editor.doc.length - index)
       return null if length <= 0
       if rand < 0.75

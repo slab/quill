@@ -1,9 +1,9 @@
-TandemUtils =
+ScribeUtils =
   canModify: (node) ->
-    return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
   canRemove: (node) ->
-    return !node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
   cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
@@ -45,18 +45,18 @@ TandemUtils =
     return clone
 
   extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
-    [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
+    [leftStart, rightStart] = Scribe.Utils.splitNode(startLineNode, startOffset, true)
     if startLineNode == endLineNode
       endLineNode = rightStart
       endOffset -= startOffset if leftStart? && startLineNode != rightStart
-    [leftEnd, rightEnd] = Tandem.Utils.splitNode(endLineNode, endOffset, true)
+    [leftEnd, rightEnd] = Scribe.Utils.splitNode(endLineNode, endOffset, true)
     fragment = startLineNode.ownerDocument.createDocumentFragment()
     while rightStart != rightEnd
       next = rightStart.nextSibling
       fragment.appendChild(rightStart)
       rightStart = next
-    Tandem.Utils.moveExternal(fragment, leftStart, null)
-    Tandem.Utils.mergeNodes(leftStart, rightEnd)
+    Scribe.Utils.moveExternal(fragment, leftStart, null)
+    Scribe.Utils.mergeNodes(leftStart, rightEnd)
     return fragment
 
   findAncestor: (node, checkFn) ->
@@ -65,8 +65,8 @@ TandemUtils =
     return node
 
   getAttributeDefault: (attribute) ->
-    if Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]?
-      return Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]
+    if Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]?
+      return Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]
     else
       return false
 
@@ -77,10 +77,10 @@ TandemUtils =
       when 'I'  then return ['italic', true]
       when 'S'  then return ['strike', true]
       when 'U'  then return ['underline', true]
-      when 'OL' then return ['list', Tandem.Utils.getIndent(container)]
-      when 'UL' then return ['bullet', Tandem.Utils.getIndent(container)]
+      when 'OL' then return ['list', Scribe.Utils.getIndent(container)]
+      when 'UL' then return ['bullet', Scribe.Utils.getIndent(container)]
       when 'DIV'
-        indent = Tandem.Utils.getIndent(container)
+        indent = Scribe.Utils.getIndent(container)
         if indent > 0
           return ['indent', indent]
         else
@@ -92,7 +92,7 @@ TandemUtils =
           if parts.length > 1
             key = parts[0]
             value = parts.slice(1).join('-')
-            if Tandem.Constants.SPAN_ATTRIBUTES[key]?
+            if Scribe.Constants.SPAN_ATTRIBUTES[key]?
               attribute = [key, value]
               return true
           return false
@@ -103,22 +103,22 @@ TandemUtils =
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
-    length = Tandem.Utils.getNodeLength(child)
+    length = Scribe.Utils.getNodeLength(child)
     while child?
       break if offset < length
       offset -= length
       child = child.nextSibling
-      length = Tandem.Utils.getNodeLength(child)
+      length = Scribe.Utils.getNodeLength(child)
     unless child?
       child = node.lastChild
-      offset = Tandem.Utils.getNodeLength(child)
+      offset = Scribe.Utils.getNodeLength(child)
     return [child, offset]
 
   getIndent: (list) ->
     indent = 0
     _.any(list.classList, (css) ->
-      if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
-        indent = parseInt(css.substring(Tandem.Document.INDENT_PREFIX.length))
+      if css.substring(0, Scribe.Document.INDENT_PREFIX.length) == Scribe.Document.INDENT_PREFIX
+        indent = parseInt(css.substring(Scribe.Document.INDENT_PREFIX.length))
         return true
       return false
     )
@@ -127,13 +127,13 @@ TandemUtils =
   getNodeLength: (node) ->
     return 0 unless node?
     if node.nodeType == node.ELEMENT_NODE
-      if node.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+      if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
         return 0
-      externalNodes = node.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}")
+      externalNodes = node.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}")
       length = _.reduce(externalNodes, (length, node) ->
         return length - node.textContent.length
       , node.textContent.length)
-      return length + (if Tandem.Line.isLineNode(node) then 1 else 0)
+      return length + (if Scribe.Line.isLineNode(node) then 1 else 0)
     else if node.nodeType == node.TEXT_NODE
       return node.textContent.length
     else
@@ -144,7 +144,7 @@ TandemUtils =
     lastNewBlock = null
     while cur?
       next = cur.nextSibling
-      if Tandem.Utils.isBlock(cur)
+      if Scribe.Utils.isBlock(cur)
         lastNewBlock = null if lastNewBlock?
       else
         unless lastNewBlock?
@@ -154,7 +154,7 @@ TandemUtils =
       cur = next
 
   isBlock: (node) ->
-    return _.indexOf(Tandem.Constants.BLOCK_TAGS, node.tagName) > -1
+    return _.indexOf(Scribe.Constants.BLOCK_TAGS, node.tagName) > -1
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
@@ -176,7 +176,7 @@ TandemUtils =
     this.moveChildren(node1, node2)
     node2.parentNode.removeChild(node2)
     if (node1.tagName == 'OL' || node1.tagName == 'UL') && node1.childNodes.length == 2
-      TandemUtils.mergeNodes(node1.firstChild, node1.lastChild)
+      ScribeUtils.mergeNodes(node1.firstChild, node1.lastChild)
     return node1
 
   moveChildren: (newParent, oldParent) ->
@@ -185,49 +185,49 @@ TandemUtils =
     )
 
   moveExternal: (source, destParent, destRef) ->
-    externalNodes = _.clone(source.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    externalNodes = _.clone(source.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
     _.each(externalNodes, (node) ->
       destParent.insertBefore(node, destRef)
     )
 
   removeAttributeFromSubtree: (subtree, attribute) ->
     children = _.clone(subtree.childNodes)
-    attributes = Tandem.Utils.getAttributeForContainer(subtree)
-    [attrName, attrVal] = Tandem.Utils.getAttributeForContainer(subtree)
+    attributes = Scribe.Utils.getAttributeForContainer(subtree)
+    [attrName, attrVal] = Scribe.Utils.getAttributeForContainer(subtree)
     ret = subtree
     if attrName == attribute
-      ret = Tandem.Utils.unwrap(subtree)
+      ret = Scribe.Utils.unwrap(subtree)
     _.each(children, (child) ->
-      Tandem.Utils.removeAttributeFromSubtree(child, attribute)
+      Scribe.Utils.removeAttributeFromSubtree(child, attribute)
     )
     return ret
 
   removeExternal: (root) ->
-    extNodes = _.clone(root.querySelectorAll(".#{Tandem.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    extNodes = _.clone(root.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
     _.each(extNodes, (node) ->
       node.parentNode.removeChild(node) if node.parentNode?
     )
 
   removeNode: (node) ->
     return unless node.parentNode?
-    if Tandem.Line.isLineNode(node)
+    if Scribe.Line.isLineNode(node)
       prev = node.previousSibling
       next = node.nextSibling
       while true
-        if Tandem.Line.isLineNode(prev)
-          Tandem.Utils.moveExternal(node, prev, null)
+        if Scribe.Line.isLineNode(prev)
+          Scribe.Utils.moveExternal(node, prev, null)
           break
-        else if Tandem.Line.isLineNode(next)
-          Tandem.Utils.moveExternal(node, next, next.firstChild)
+        else if Scribe.Line.isLineNode(next)
+          Scribe.Utils.moveExternal(node, next, next.firstChild)
           break
         else if !prev? and !next?
           console.warn('External nodes might have no where to go!')
-          Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+          Scribe.Utils.moveExternal(node, node.parentNode, node.nextSibling)
         else
           prev = prev.previousSibling if prev?
           next = next.nextSibling if next?
     else
-      Tandem.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+      Scribe.Utils.moveExternal(node, node.parentNode, node.nextSibling)
     node.parentNode.removeChild(node)
 
   removeStyles: (root) ->
@@ -239,13 +239,13 @@ TandemUtils =
 
   setIndent: (list, indent) ->
     _.each(_.clone(list.classList), (css) ->
-      if css.substring(0, Tandem.Document.INDENT_PREFIX.length) == Tandem.Document.INDENT_PREFIX
+      if css.substring(0, Scribe.Document.INDENT_PREFIX.length) == Scribe.Document.INDENT_PREFIX
         list.classList.remove(css)
     )
-    list.classList.add(Tandem.Document.INDENT_PREFIX + indent) if indent
+    list.classList.add(Scribe.Document.INDENT_PREFIX + indent) if indent
 
   splitNode: (node, offset, force = false) ->
-    if offset > Tandem.Utils.getNodeLength(node)
+    if offset > Scribe.Utils.getNodeLength(node)
       throw new Error('Splitting at offset greater than node length')
 
     if node.nodeType == node.TEXT_NODE
@@ -255,14 +255,14 @@ TandemUtils =
     if !force
       if offset == 0
         return [node.previousSibling, node, false]
-      if offset == Tandem.Utils.getNodeLength(node)
+      if offset == Scribe.Utils.getNodeLength(node)
         return [node, node.nextSibling, false]
 
     left = node
     right = node.cloneNode(false)
     node.parentNode.insertBefore(right, left.nextSibling)
 
-    if TandemUtils.isTextNodeParent(node)
+    if ScribeUtils.isTextNodeParent(node)
       # Text split
       beforeText = node.textContent.substring(0, offset)
       afterText = node.textContent.substring(offset)
@@ -271,8 +271,8 @@ TandemUtils =
       return [left, right, true]
     else
       # Node split
-      [child, offset] = TandemUtils.getChildAtOffset(node, offset)
-      [childLeft, childRight] = TandemUtils.splitNode(child, offset)
+      [child, offset] = ScribeUtils.getChildAtOffset(node, offset)
+      [childLeft, childRight] = ScribeUtils.splitNode(child, offset)
       while childRight != null
         nextRight = childRight.nextSibling
         right.appendChild(childRight)
@@ -292,10 +292,10 @@ TandemUtils =
     return unless root?
     cur = root.firstChild
     while cur?
-      nextOffset = offset + Tandem.Utils.getNodeLength(cur)
+      nextOffset = offset + Scribe.Utils.getNodeLength(cur)
       curHtml = cur.innerHTML
       cur = fn.apply(context, [cur, offset].concat(args))
-      TandemUtils.traversePreorder.apply(TandemUtils.traversePreorder, [cur, offset, fn, context].concat(args))
+      ScribeUtils.traversePreorder.apply(ScribeUtils.traversePreorder, [cur, offset, fn, context].concat(args))
       if cur? && cur.innerHTML == curHtml
         cur = cur.nextSibling
         offset = nextOffset
@@ -321,11 +321,11 @@ TandemUtils =
     return wrapper
 
   wrapChildren: (wrapper, node) ->
-    Tandem.Utils.moveChildren(wrapper, node)
+    Scribe.Utils.moveChildren(wrapper, node)
     node.appendChild(wrapper)
     return wrapper
 
 
 
-window.Tandem ||= {}
-window.Tandem.Utils = TandemUtils
+window.Scribe ||= {}
+window.Scribe.Utils = ScribeUtils

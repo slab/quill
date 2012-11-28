@@ -1,7 +1,7 @@
 describe('Range', ->
   describe('Position', ->
     it('should correctly initialize position from index', ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml('
+      $('#editor-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>12</b>
           <i>34</i>
@@ -13,10 +13,10 @@ describe('Range', ->
         <div>
           <br>
         </div>'))
-      editor = new Tandem.Editor('editor-container')
+      editor = new Scribe.Editor('editor-container')
       numPositions = 10
       positions = _.map([0..numPositions], (i) ->
-        position = new Tandem.Position(editor, i)
+        position = new Scribe.Position(editor, i)
         return position
       )
       editor.destroy()
@@ -60,7 +60,7 @@ describe('Range', ->
 
   describe('getText', ->
     reset = ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml('
+      $('#editor-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>123</b>
           <i>456</i>
@@ -83,7 +83,7 @@ describe('Range', ->
           <s>7</s>
           <u>8</u>
         </div>'))
-      editor = new Tandem.Editor('editor-container')
+      editor = new Scribe.Editor('editor-container')
       return editor
 
     text = "123456\n78901234\n5678"
@@ -91,7 +91,7 @@ describe('Range', ->
     it('should identifiy single node', ->
       editor = reset()
       ranges = _.map(text.split(''), (char, index) ->
-        return new Tandem.Range(editor, index, index + 1)
+        return new Scribe.Range(editor, index, index + 1)
       )
       editor.destroy()
       _.each(text.split(''), (char, index) ->
@@ -102,7 +102,7 @@ describe('Range', ->
 
     it('should identifiy entire document', ->
       editor = reset()
-      range = new Tandem.Range(editor, 0, text.length)
+      range = new Scribe.Range(editor, 0, text.length)
       editor.destroy()
       expect(range.getText()).to.equal(text)
     )
@@ -192,7 +192,7 @@ describe('Range', ->
     }]
 
     reset = ->
-      $('#editor-container').html(Tandem.Utils.cleanHtml('
+      $('#editor-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>123</b>
           <i>456</i>
@@ -215,16 +215,16 @@ describe('Range', ->
           <s>7</s>
           <u>8</u>
         </div>'))
-      editor = new Tandem.Editor('editor-container')
+      editor = new Scribe.Editor('editor-container')
       return editor
 
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        range = new Tandem.Range(editor, test.start, test.end)
+        range = new Scribe.Range(editor, test.start, test.end)
         editor.destroy()
         expect(range.getText()).to.equal(test.text)
-        expect(range.getAttributes()).to.eql(_.extend({}, Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES, test.attributes))
+        expect(range.getAttributes()).to.eql(_.extend({}, Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES, test.attributes))
       )
     )
   )
@@ -234,7 +234,7 @@ describe('Range', ->
   describe('getLeafNodes', ->
     reset = ->
       $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
-      editor = new Tandem.Editor('editor-container', false)
+      editor = new Scribe.Editor('editor-container', false)
       container = editor.doc.root
       line1 = container.firstChild
       line2 = container.lastChild
@@ -242,7 +242,7 @@ describe('Range', ->
 
     it('should select a single node at boundaries', ->
       [editor, container, line1, line2] = reset()
-      range = new Tandem.Range(editor, 0, 3)
+      range = new Scribe.Range(editor, 0, 3)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(1)
       expect(nodes[0]).to.equal(line1.firstChild)
@@ -250,7 +250,7 @@ describe('Range', ->
     )
     it('should select multiple nodes at boundaries', ->
       [editor, container, line1, line2] = reset()
-      range = new Tandem.Range(editor, 0, 6)
+      range = new Scribe.Range(editor, 0, 6)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.childNodes[0])
@@ -260,7 +260,7 @@ describe('Range', ->
     it('should select a single node inside boundaries', ->
       [editor, container, line1, line2] = reset()
       for i in [0..2]
-        range = new Tandem.Range(editor, i, i+1)
+        range = new Scribe.Range(editor, i, i+1)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(line1.firstChild)
@@ -269,7 +269,7 @@ describe('Range', ->
     it('should select multipe nodes inside boundaries', ->
       [editor, container, line1, line2] = reset()
       for i in [0..2]
-        range = new Tandem.Range(editor, i, i+4)
+        range = new Scribe.Range(editor, i, i+4)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(line1.childNodes[0])
@@ -278,7 +278,7 @@ describe('Range', ->
     )
     it('should select multiple nodes across lines within boundaries', ->
       [editor, container, line1, line2] = reset()
-      range = new Tandem.Range(editor, 0, 6)
+      range = new Scribe.Range(editor, 0, 6)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.childNodes[0])
@@ -287,7 +287,7 @@ describe('Range', ->
     )
     it('should select multiple nodes across lines outside boundaries', ->
       [editor, container, line1, line2] = reset()
-      range = new Tandem.Range(editor, 5, 8)
+      range = new Scribe.Range(editor, 5, 8)
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.lastChild)
@@ -297,7 +297,7 @@ describe('Range', ->
     it('should select node collapsed', ->
       [editor, container, line1, line2] = reset()
       for i in [0..2]
-        range = new Tandem.Range(editor, i, i)
+        range = new Scribe.Range(editor, i, i)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(line1.firstChild)

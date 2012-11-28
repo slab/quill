@@ -1,6 +1,6 @@
 # Arrays must be alphabetized, so we can use binary search
 
-TandemConstants =
+ScribeConstants =
   ALIGN_ATTRIBUTES: [
     'center'
     'justify'
@@ -120,16 +120,16 @@ TandemConstants =
     EXTERNAL: 'ext'
   
 
-TandemConstants.LINE_ATTRIBUTES = [].concat(_.keys(TandemConstants.INDENT_ATTRIBUTES), TandemConstants.ALIGN_ATTRIBUTES).sort()
+ScribeConstants.LINE_ATTRIBUTES = [].concat(_.keys(ScribeConstants.INDENT_ATTRIBUTES), ScribeConstants.ALIGN_ATTRIBUTES).sort()
 
-TandemConstants.SPAN_ATTRIBUTES =
-  'background' : TandemConstants.FONT_BACKGROUNDS
-  'color'      : TandemConstants.FONT_COLORS
-  'family'     : TandemConstants.FONT_FAMILIES
-  'size'       : TandemConstants.FONT_SIZES
+ScribeConstants.SPAN_ATTRIBUTES =
+  'background' : ScribeConstants.FONT_BACKGROUNDS
+  'color'      : ScribeConstants.FONT_COLORS
+  'family'     : ScribeConstants.FONT_FAMILIES
+  'size'       : ScribeConstants.FONT_SIZES
 
 # Array of possbile values mostly for consistency with SPAN_ATTRIBUTES, not actually used in codebase
-TandemConstants.TAG_ATTRIBUTES =
+ScribeConstants.TAG_ATTRIBUTES =
   'bold'      : [true, false]
   'italic'    : [true, false]
   'link'      : [true, false]     # Link value could actually also be any string representing the href
@@ -138,6 +138,6 @@ TandemConstants.TAG_ATTRIBUTES =
 
 
 
-window.Tandem ||= {}
-window.Tandem.Constants = TandemConstants
+window.Scribe ||= {}
+window.Scribe.Constants = ScribeConstants
 

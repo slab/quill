@@ -42,18 +42,18 @@ class MultiCursorManager
           this.setCursor(cursor.userId, cursor.index + Math.max(length, index - cursor.index), cursor.name, cursor.color)
 
   setCursor: (userId, index, name, color) ->
-    cursor = @doc.root.ownerDocument.getElementById(TandemEditor.CURSOR_PREFIX + userId)
+    cursor = @doc.root.ownerDocument.getElementById(ScribeEditor.CURSOR_PREFIX + userId)
     unless cursor?
       cursor = @doc.root.ownerDocument.createElement('span')
       cursor.classList.add('cursor')
-      cursor.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
-      cursor.id = TandemEditor.CURSOR_PREFIX + userId
+      cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+      cursor.id = ScribeEditor.CURSOR_PREFIX + userId
       inner = @doc.root.ownerDocument.createElement('span')
       inner.classList.add('cursor-inner')
-      inner.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+      inner.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
       nameNode = @doc.root.ownerDocument.createElement('span')
       nameNode.classList.add('cursor-name')
-      nameNode.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+      nameNode.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
       nameNode.textContent = name
       inner.style['background-color'] = nameNode.style['background-color'] = color
       cursor.appendChild(nameNode)
@@ -65,13 +65,13 @@ class MultiCursorManager
       color: color
       userId: userId
     }
-    position = new Tandem.Position(this, index)
-    [left, right, didSplit] = Tandem.Utils.splitNode(position.leafNode, position.offset)
+    position = new Scribe.Position(this, index)
+    [left, right, didSplit] = Scribe.Utils.splitNode(position.leafNode, position.offset)
     if right? && (right.offsetTop != 0 || right.offsetLeft != 0)
       cursor.style.top = right.parentNode
       cursor.style.top = right.offsetTop
       cursor.style.left = right.offsetLeft
-      Tandem.Utils.mergeNodes(left, right) if didSplit
+      Scribe.Utils.mergeNodes(left, right) if didSplit
     else if left?
       span = left.ownerDocument.createElement('span')
       left.parentNode.appendChild(span)
@@ -95,5 +95,5 @@ class MultiCursorManager
     )
 
   removeCursor: (userId) ->
-    cursor = @doc.root.ownerDocument.getElementById(TandemEditor.CURSOR_PREFIX + userId)
+    cursor = @doc.root.ownerDocument.getElementById(ScribeEditor.CURSOR_PREFIX + userId)
     cursor.parentNode.removeChild(cursor) if cursor?

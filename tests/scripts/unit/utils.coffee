@@ -2,52 +2,52 @@ describe('Utils', ->
   describe('split', ->
     it('should not split if not necessary', ->
       container = document.getElementById('split-test-base')
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 0)
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 0)
       expect(left).to.equal(null)
       expect(right).to.equal(container.firstChild)
 
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 4)
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 4)
       expect(left).to.equal(container.firstChild)
       expect(right).to.equal(null)
     )
 
     it('should split text node', ->
       container = document.getElementById('split-test-text')
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 2)
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 2)
       expect(left.textContent).to.equal("Bo")
       expect(right.textContent).to.equal("ld")
-      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b>Bo</b><b>ld</b>')
+      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b>Bo</b><b>ld</b>')
     )
 
     it('should split child nodes', ->
       container = document.getElementById('split-test-node')
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 6)
-      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 6)
+      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
     )
 
     it('should split child nodes and text', ->
       container = document.getElementById('split-test-both')
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 2)
-      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 2)
+      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
     )
 
     it('should split deep nodes', ->
       container = document.getElementById('split-test-complex')
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 2)
-      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 2)
+      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
     )
 
     it('should split lines', ->
       container = document.getElementById('split-test-lines')
-      [left, right] = Tandem.Utils.splitNode(container.firstChild, 1)
-      expect(Tandem.Utils.cleanHtml(container.innerHTML)).to.equal('<div><b>1</b></div><div><b>23</b><i>456</i></div>')
+      [left, right] = Scribe.Utils.splitNode(container.firstChild, 1)
+      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<div><b>1</b></div><div><b>23</b><i>456</i></div>')
     )
   )
 
 
   describe('extract', ->
     reset = ->
-      $('#test-container').html(Tandem.Utils.cleanHtml('
+      $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>Bold</b>
           <i>Italic</i>
@@ -63,7 +63,7 @@ describe('Utils', ->
           <i>Italic2</i>
         </div>
       '))
-      editor = new Tandem.Editor('test-container')
+      editor = new Scribe.Editor('test-container')
       editor.ignoreDomChanges = true
       return editor
 
@@ -317,20 +317,20 @@ describe('Utils', ->
     }]
 
     _.each(tests, (test) ->
-      test.fragment = Tandem.Utils.cleanHtml(test.fragment)
-      test.remains = Tandem.Utils.cleanHtml(test.remains) 
+      test.fragment = Scribe.Utils.cleanHtml(test.fragment)
+      test.remains = Scribe.Utils.cleanHtml(test.remains) 
     )
 
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        [startLineNode, startOffset] = Tandem.Utils.getChildAtOffset(editor.doc.root, test.start)
-        [endLineNode, endOffset] = Tandem.Utils.getChildAtOffset(editor.doc.root, test.end)
-        extraction = Tandem.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
+        [startLineNode, startOffset] = Scribe.Utils.getChildAtOffset(editor.doc.root, test.start)
+        [endLineNode, endOffset] = Scribe.Utils.getChildAtOffset(editor.doc.root, test.end)
+        extraction = Scribe.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
         target = document.createElement('div')
         target.appendChild(extraction)
-        expect("Fragment " + Tandem.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
-        expect("Remains " + Tandem.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal("Remains " + test.remains)
+        expect("Fragment " + Scribe.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
+        expect("Remains " + Scribe.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal("Remains " + test.remains)
         editor.destroy()
       )
     )
@@ -339,7 +339,7 @@ describe('Utils', ->
 
   describe('traversePreorder', ->
     reset = ->
-      $('#test-container').html(Tandem.Utils.cleanHtml('
+      $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
           <h1>
             <b>One</b>
@@ -369,7 +369,7 @@ describe('Utils', ->
 
     it('should traverse in preorder', -> 
       reset()
-      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+      Scribe.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
         if node.nodeType == node.ELEMENT_NODE
           expect(offset).to.equal(expected[node.textContent])
         return node
@@ -378,7 +378,7 @@ describe('Utils', ->
 
     it('should traverse with correct index', -> 
       reset()
-      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+      Scribe.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
         if node.nodeType == node.ELEMENT_NODE
           expect(offset).to.equal(expected[node.textContent])
         return node
@@ -387,14 +387,14 @@ describe('Utils', ->
 
     it('should handle rename', -> 
       reset()
-      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+      Scribe.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
         if node.nodeType == node.ELEMENT_NODE
           expect(offset).to.equal(expected[node.textContent])
           if node.tagName != 'SPAN'
-            node = Tandem.Utils.switchTag(node, 'SPAN')
+            node = Scribe.Utils.switchTag(node, 'SPAN')
         return node
       )
-      expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
+      expect(Scribe.Utils.cleanHtml($('#test-container').html())).to.equal(Scribe.Utils.cleanHtml('
         <div>
           <span>
             <span>One</span>
@@ -413,14 +413,14 @@ describe('Utils', ->
 
     it('should handle unwrap', -> 
       reset()
-      Tandem.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
+      Scribe.Utils.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
         if node.nodeType == node.ELEMENT_NODE
           expect(offset).to.equal(expected[node.textContent])
           if node.tagName == 'H2'
-            node = Tandem.Utils.unwrap(node)
+            node = Scribe.Utils.unwrap(node)
         return node
       )
-      expect(Tandem.Utils.cleanHtml($('#test-container').html())).to.equal(Tandem.Utils.cleanHtml('
+      expect(Scribe.Utils.cleanHtml($('#test-container').html())).to.equal(Scribe.Utils.cleanHtml('
         <div>
           <h1>
             <b>One</b>

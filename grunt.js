@@ -14,13 +14,13 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: ['<banner:meta.banner>', 'bin/src/*.js'],
-        dest: 'build/tandem.js'
+        dest: 'build/scribe.js'
       }
     },
     min: {
       dist: {
         src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-        dest: 'build/tandem.min.js'
+        dest: 'build/scribe.min.js'
       }
     },
     uglify: {}

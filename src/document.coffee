@@ -1,4 +1,4 @@
-class TandemDocument
+class ScribeDocument
   @INDENT_PREFIX: 'indent-'
 
 
@@ -6,13 +6,13 @@ class TandemDocument
     if root.childNodes.length == 0
       div = root.ownerDocument.createElement('div')
       return root.appendChild(div)
-    Tandem.Utils.groupBlocks(root)
+    Scribe.Utils.groupBlocks(root)
     _.each(_.clone(root.childNodes), (child) =>
       if child.nodeType != child.ELEMENT_NODE
-        Tandem.Utils.removeNode(child)
-      else if options.ignoreDirty || child.classList.contains(Tandem.Line.DIRTY_CLASS) || true
-        Tandem.Line.wrapText(child)
-        Tandem.Line.normalizeHtml(child)
+        Scribe.Utils.removeNode(child)
+      else if options.ignoreDirty || child.classList.contains(Scribe.Line.DIRTY_CLASS) || true
+        Scribe.Line.wrapText(child)
+        Scribe.Line.normalizeHtml(child)
     )
 
 
@@ -30,14 +30,14 @@ class TandemDocument
 
   buildLines: ->
     this.reset()
-    TandemDocument.normalizeHtml(@root, {ignoreDirty: true})
+    ScribeDocument.normalizeHtml(@root, {ignoreDirty: true})
     this.rebuild()
 
   cleanNode: (lineNode) ->
-    return if lineNode.classList.contains(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return if lineNode.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
     line = this.findLine(lineNode)
     if line? && this.updateLine(line)
-      lineNode.classList.remove(Tandem.Line.DIRTY_CLASS)
+      lineNode.classList.remove(Scribe.Line.DIRTY_CLASS)
       return true
     return false
 
@@ -66,19 +66,19 @@ class TandemDocument
       firstLine = line unless firstLine?
       lastLine = line
       if offset == 0 && length == line.length + 1
-        Tandem.Utils.removeNode(line.node)
+        Scribe.Utils.removeNode(line.node)
       else
         line.deleteText(offset, length)
       this.updateLine(line)
     )
     if firstLine != lastLine and this.findLine(firstLine.node) and this.findLine(lastLine.node)
-      Tandem.Utils.mergeNodes(firstLine.node, lastLine.node)
+      Scribe.Utils.mergeNodes(firstLine.node, lastLine.node)
       this.updateLine(firstLine)
       this.removeLine(lastLine)
 
   findLeaf: (node) ->
     lineNode = node.parentNode
-    while lineNode? && !Tandem.Line.isLineNode(lineNode)
+    while lineNode? && !Scribe.Line.isLineNode(lineNode)
       lineNode = lineNode.parentNode
     return null if !lineNode?
     line = this.findLine(lineNode)
@@ -104,20 +104,20 @@ class TandemDocument
     return [retLine, offset]
 
   findLineNode: (node) ->
-    while node? && !Tandem.Line.isLineNode(node)
+    while node? && !Scribe.Line.isLineNode(node)
       node = node.parentNode
     return node
 
   forceTrailingNewline: ->
     unless @trailingNewline
       if @lines.length > 1 && @lines.last.length == 0
-        Tandem.Utils.removeNode(@lines.last.node)
+        Scribe.Utils.removeNode(@lines.last.node)
         this.removeLine(@lines.last)
       @trailingNewline = true
       @length += 1
 
   insertLineBefore: (newLineNode, refLine) ->
-    line = new Tandem.Line(this, newLineNode)
+    line = new Scribe.Line(this, newLineNode)
     if refLine != null
       @lines.insertAfter(refLine.prev, line)
     else
@@ -160,7 +160,7 @@ class TandemDocument
 
   makeLine: (text) ->
     lineNode = @root.ownerDocument.createElement('div')
-    lineNode.classList.add(Tandem.Line.CLASS_NAME)
+    lineNode.classList.add(Scribe.Line.CLASS_NAME)
     contents = this.makeLineContents(text)
     _.each(contents, (content) ->
       lineNode.appendChild(content)
@@ -179,8 +179,8 @@ class TandemDocument
 
   makeTab: ->
     tab = @root.ownerDocument.createElement('span')
-    tab.classList.add(Tandem.Leaf.TAB_NODE_CLASS)
-    tab.classList.add(Tandem.Constants.SPECIAL_CLASSES.ATOMIC)
+    tab.classList.add(Scribe.Leaf.TAB_NODE_CLASS)
+    tab.classList.add(Scribe.Constants.SPECIAL_CLASSES.ATOMIC)
     tab.textContent = "\t"
     return tab
 
@@ -190,7 +190,7 @@ class TandemDocument
     return node
 
   # insertContentsAt: (Number startIndex, String text) ->
-  # insertContentsAt: (TandemRange startIndex, String text) ->
+  # insertContentsAt: (ScribeRange startIndex, String text) ->
   insertContentsAt: (line, offset, contents) ->
     return if contents.length == 0
     [leaf, leafOffset] = line.findLeafAtOffset(offset)
@@ -202,7 +202,7 @@ class TandemDocument
       )
     else
       parentNode = leaf.node.parentNode
-      Tandem.Utils.removeNode(leaf.node)
+      Scribe.Utils.removeNode(leaf.node)
       _.each(contents, (content) ->
         parentNode.appendChild(content)
       )
@@ -233,9 +233,9 @@ class TandemDocument
 
   rebuildDirty: ->
     # First and last nodes are always dirty to handle edge cases
-    @root.firstChild.classList.add(Tandem.Line.DIRTY_CLASS)
-    @root.lastChild.classList.add(Tandem.Line.DIRTY_CLASS)
-    dirtyNodes = _.clone(@root.getElementsByClassName(Tandem.Line.DIRTY_CLASS))
+    @root.firstChild.classList.add(Scribe.Line.DIRTY_CLASS)
+    @root.lastChild.classList.add(Scribe.Line.DIRTY_CLASS)
+    dirtyNodes = _.clone(@root.getElementsByClassName(Scribe.Line.DIRTY_CLASS))
     _.each((dirtyNodes), (lineNode, index) =>
       this.cleanNode(lineNode)
       prevNode = lineNode.previousSibling
@@ -261,7 +261,7 @@ class TandemDocument
     @trailingNewline = true
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Tandem.Utils.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
     return this.insertLineBefore(lineNode2, line.next)
@@ -280,7 +280,7 @@ class TandemDocument
     return delta
 
   updateDirty: ->
-    dirtyNodes = @root.ownerDocument.getElementsByClassName(Tandem.Line.DIRTY_CLASS)
+    dirtyNodes = @root.ownerDocument.getElementsByClassName(Scribe.Line.DIRTY_CLASS)
     fixLines = false
     _.each(dirtyNodes, (dirtyNode) =>
       line = this.findLine(dirtyNode)
@@ -297,5 +297,5 @@ class TandemDocument
 
 
 
-window.Tandem ||= {}
-window.Tandem.Document = TandemDocument
+window.Scribe ||= {}
+window.Scribe.Document = ScribeDocument

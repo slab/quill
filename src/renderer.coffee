@@ -1,4 +1,4 @@
-class TandemRenderer
+class ScribeRenderer
   @DEFAULTS:
     keepHTML: false
 
@@ -70,7 +70,7 @@ class TandemRenderer
 
 
   constructor: (@container, options) ->
-    @options = _.extend(Tandem.Renderer.DEFAULTS, options)
+    @options = _.extend(Scribe.Renderer.DEFAULTS, options)
     this.createFrame()
 
   addStyles: (styles) ->
@@ -78,7 +78,7 @@ class TandemRenderer
     head = doc.getElementsByTagName('head')[0]
     style = doc.createElement('style')
     style.type = 'text/css'
-    css = Tandem.Renderer.objToCss(styles)
+    css = Scribe.Renderer.objToCss(styles)
     if style.styleSheet?
       style.styleSheet.cssText = css
     else
@@ -95,13 +95,13 @@ class TandemRenderer
     @container.appendChild(@iframe)
     doc = @iframe.contentWindow.document
     styles = _.map(@options.styles, (value, key) ->
-      obj = Tandem.Renderer.DEFAULT_STYLES[key] or {}
+      obj = Scribe.Renderer.DEFAULT_STYLES[key] or {}
       return _.extend(obj, value)
     )
-    styles = _.extend(Tandem.Renderer.DEFAULT_STYLES, styles)
+    styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
     this.addStyles(styles)
     contentContainer = doc.createElement('div')
-    contentContainer.id = Tandem.Editor.CONTAINER_ID
+    contentContainer.id = Scribe.Editor.CONTAINER_ID
     contentContainer.classList.add('editor')
     doc.body.appendChild(contentContainer)
     contentContainer.innerHTML = html if @options.keepHTML
@@ -110,5 +110,5 @@ class TandemRenderer
 
 
 
-window.Tandem ||= {}
-window.Tandem.Renderer = TandemRenderer
+window.Scribe ||= {}
+window.Scribe.Renderer = ScribeRenderer
