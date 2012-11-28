@@ -30,8 +30,31 @@ class TandemSelection
     return unless start? and end?
     if end > start
       @editor.applyAttribute(start, end - start, attribute, value)
-    else
-      test = true
+    else if end == start
+      # TODO can we remove DOM manipulation here? Could cause issues with rest of app
+      # Split content, then copy it
+      @editor.doSilently( =>
+        leaf = @range.end.getLeaf()
+        clone = Tandem.Utils.cloneAncestors(leaf.node, leaf.line.node)
+        [left, right] = leaf.line.splitContents(leaf.getLineOffset() + @range.end.offset)
+        leaf.line.node.insertBefore(clone, right)
+        clone = Tandem.Utils.removeAttributeFromSubtree(clone, attribute)
+        if clone == null
+          clone = leaf.node.ownerDocument.createElement('span')
+          leaf.line.node.insertBefore(clone, right)
+        if value and Tandem.Utils.getAttributeDefault(attribute) != value
+          attrNode = Tandem.Utils.createContainerForAttribute(clone.ownerDocument, attribute, value)
+          clone = Tandem.Utils.wrap(attrNode, clone)
+        while clone.firstChild?
+          clone = clone.firstChild
+        clone.innerHTML = Tandem.Constants.NOBREAK_SPACE
+        this.setRangeNative(
+          anchorNode    : clone
+          anchorOffset  : 1
+          focusNode     : clone
+          focusOffset   : 1
+        )
+      )
 
   deleteRange: ->
     this.update()
@@ -96,7 +119,7 @@ class TandemSelection
 
   setRangeNative: (nativeSel) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
-    range = rangy.createRangyRange(@editor.contentWindow)
+    range = rangy.createRange(@editor.contentWindow)
     range.setStart(nativeSel.anchorNode, nativeSel.anchorOffset)
     range.setEnd(nativeSel.focusNode, nativeSel.focusOffset)
     rangySel.setSingleRange(range)

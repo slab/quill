@@ -34,6 +34,16 @@ TandemUtils =
         span.classList.add("#{attribute}-#{value}")
         return span
 
+  cloneAncestors: (node, limitingAncestor) ->
+    clone = node.cloneNode()
+    node = node.parentNode
+    while node? and node != limitingAncestor
+      parentClone = node.cloneNode()
+      parentClone.appendChild(clone)
+      clone = parentClone
+      node = node.parentNode
+    return clone
+
   extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
     [leftStart, rightStart] = Tandem.Utils.splitNode(startLineNode, startOffset, true)
     if startLineNode == endLineNode

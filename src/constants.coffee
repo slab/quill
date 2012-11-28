@@ -113,6 +113,8 @@ TandemConstants =
   MAX_INDENT: 9
   MIN_INDENT: 1     # Smallest besides not having an indent at all
 
+  NOBREAK_SPACE: "\uFEFF"
+
   SPECIAL_CLASSES:
     ATOMIC: 'atom'
     EXTERNAL: 'ext'

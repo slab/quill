@@ -29,6 +29,9 @@ class TandemLeaf extends LinkedList.Node
     attributes = if excludeDefault then {} else _.clone(Tandem.Constants.DEFAULT_LEAF_ATTRIBUTES)
     return _.extend(attributes, @attributes, @line.attributes)
 
+  getLineOffset: ->
+    return Tandem.Position.getIndex(@node, 0, @line.node)
+
   insertText: (offset, text) ->
     @text = @text.substring(0, offset) + text + @text.substring(offset)
     [node, offset] = Tandem.Position.findDeepestNode(@line.doc.editor, @node, offset)
