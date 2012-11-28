@@ -35,10 +35,10 @@ TandemUtils =
         return span
 
   cloneAncestors: (node, limitingAncestor) ->
-    clone = node.cloneNode()
+    clone = node.cloneNode(false)
     node = node.parentNode
     while node? and node != limitingAncestor
-      parentClone = node.cloneNode()
+      parentClone = node.cloneNode(false)
       parentClone.appendChild(clone)
       clone = parentClone
       node = node.parentNode
