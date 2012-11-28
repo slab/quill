@@ -53,7 +53,7 @@ class TandemPosition
       @offset = @index = @leafNode
       @leafNode = @editor.doc.root.firstChild
     [@leafNode, @offset] = TandemPosition.findLeafNode(@editor, @leafNode, @offset)
-      
+
   getIndex: ->
     @index = TandemPosition.getIndex(@leafNode, @offset) if !@index?
     return @index

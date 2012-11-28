@@ -4,6 +4,7 @@ class TandemRenderer
 
   @DEFAULT_STYLES:
     '.editor': {
+      'cursor': 'text'
       'font-family': "'Helvetica', 'Arial', san-serif"
       'font-size': '13px'
       'line-height': '15px'
@@ -13,7 +14,8 @@ class TandemRenderer
       'tab-size': '4'
       'white-space': 'pre-wrap'
     }
-    'body' : { 'margin': '0px', 'padding': '0px' }
+    'html' : { 'height': '100%' }
+    'body' : { 'height': '100%', 'margin': '0px', 'padding': '0px' }
     'a'    : { 'text-decoration': 'underline' }
     'b'    : { 'font-weight': 'bold' }
     'i'    : { 'font-style': 'italic' }

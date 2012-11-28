@@ -30,6 +30,7 @@ class TandemKeyboard
         _.each(@hotkeys[event.which], (hotkey) =>
           return if hotkey.meta? and event.metaKey != hotkey.meta
           return if hotkey.shift? and event.shiftKey != hotkey.shift
+          @editor.selection.update(true)
           selection = @editor.getSelection()
           return unless selection?
           prevent = true
