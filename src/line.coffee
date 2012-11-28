@@ -26,9 +26,9 @@ class ScribeLine extends LinkedList.Node
       if node.nodeType == node.ELEMENT_NODE && !ScribeLine.isLineNode(node) && Scribe.Utils.canModify(node)
         next = node.nextSibling
         if next?.tagName == node.tagName && node.tagName != 'LI' && Scribe.Utils.canModify(next)
-          [nodeAttr, nodeValue] = Scribe.Utils.getAttributeForContainer(node)
-          [nextAttr, nextValue] = Scribe.Utils.getAttributeForContainer(next)
-          if nodeAttr == nextAttr && nodeValue == nextValue
+          [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
+          [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
+          if nodeFormat == nextFormat && nodeValue == nextValue
             node = Scribe.Utils.mergeNodes(node, next)
       return node
     )
@@ -57,15 +57,15 @@ class ScribeLine extends LinkedList.Node
     )
 
   @removeRedundant: (root) ->
-    ScribeKey = '_ScribeAttributes' + Math.floor(Math.random() * 100000000)
-    root[ScribeKey] = {}
+    scribeKey = _.uniqueId('_scribeFormats')
+    root[scribeKey] = {}
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE && Scribe.Utils.canModify(node)
         if Scribe.Utils.getNodeLength(node) == 0
           return true
-        [attrName, attrValue] = Scribe.Utils.getAttributeForContainer(node)
-        if attrName?
-          return node.parentNode[ScribeKey][attrName]?     # Parent attribute value will overwrite child's so no need to check attrValue
+        [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
+        if formatName?
+          return node.parentNode[scribeKey][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
           # Check if children need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
@@ -78,14 +78,14 @@ class ScribeLine extends LinkedList.Node
       if isRedudant(node)
         node = Scribe.Utils.unwrap(node)
       if node?
-        node[ScribeKey] = _.clone(node.parentNode[ScribeKey])
-        [attrName, attrValue] = Scribe.Utils.getAttributeForContainer(node)
-        node[ScribeKey][attrName] = attrValue if attrName?
+        node[scribeKey] = _.clone(node.parentNode[scribeKey])
+        [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
+        node[scribeKey][formatName] = formatValue if formatName?
       return node
     )
-    delete root[ScribeKey]
+    delete root[scribeKey]
     Scribe.Utils.traversePreorder(root, 0, (node) ->
-      delete node[ScribeKey]
+      delete node[scribeKey]
       return node
     )
     
@@ -108,16 +108,16 @@ class ScribeLine extends LinkedList.Node
     this.rebuild()
     super(@node)
 
-  buildLeaves: (node, attributes) ->
+  buildLeaves: (node, formats) ->
     _.each(_.clone(node.childNodes), (node) =>
       node.normalize()
-      nodeAttributes = _.clone(attributes)
-      [attrName, attrVal] = Scribe.Utils.getAttributeForContainer(node)
-      nodeAttributes[attrName] = attrVal if attrName?
+      nodeFormats = _.clone(formats)
+      [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
+      nodeFormats[formatName] = formatValue if formatName?
       if Scribe.Leaf.isLeafNode(node)
-        @leaves.append(new Scribe.Leaf(this, node, nodeAttributes))
+        @leaves.append(new Scribe.Leaf(this, node, nodeFormats))
       if Scribe.Leaf.isLeafParent(node)
-        this.buildLeaves(node, nodeAttributes)
+        this.buildLeaves(node, nodeFormats)
     )
 
   applyToContents: (offset, length, fn) ->
@@ -125,25 +125,6 @@ class ScribeLine extends LinkedList.Node
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)
     Scribe.Utils.traverseSiblings(startNode, endNode, fn)
-
-  applyAttribute: (offset, length, attr, value) ->
-    return if length <= 0
-    [prevNode, startNode] = this.splitContents(offset)
-    [endNode, nextNode] = this.splitContents(offset + length)
-    parentNode = startNode?.parentNode || prevNode?.parentNode
-    if value && Scribe.Utils.getAttributeDefault(attr) != value
-      refNode = null
-      attrNode = Scribe.Utils.createContainerForAttribute(@doc.root.ownerDocument, attr, value)
-      this.applyToContents(offset, length, (node) =>
-        refNode = node.nextSibling
-        node = Scribe.Utils.removeAttributeFromSubtree(node, attr)
-        attrNode.appendChild(node)
-      )
-      @node.insertBefore(attrNode, refNode)
-    else
-      this.applyToContents(offset, length, (node) ->
-        Scribe.Utils.removeAttributeFromSubtree(node, attr)
-      )
 
   deleteText: (offset, length) ->
     this.applyToContents(offset, length, (node) ->
@@ -169,6 +150,25 @@ class ScribeLine extends LinkedList.Node
     )
     return [retLeaf, offset]
 
+  format: (offset, length, name, value) ->
+    return if length <= 0
+    [prevNode, startNode] = this.splitContents(offset)
+    [endNode, nextNode] = this.splitContents(offset + length)
+    parentNode = startNode?.parentNode || prevNode?.parentNode
+    if value && Scribe.Utils.getFormatDefault(name) != value
+      refNode = null
+      formatNode = Scribe.Utils.createContainerForFormat(@doc.root.ownerDocument, name, value)
+      this.applyToContents(offset, length, (node) =>
+        refNode = node.nextSibling
+        node = Scribe.Utils.removeFormatFromSubtree(node, name)
+        formatNode.appendChild(node)
+      )
+      @node.insertBefore(formatNode, refNode)
+    else
+      this.applyToContents(offset, length, (node) ->
+        Scribe.Utils.removeFormatFromSubtree(node, name)
+      )
+
   rebuild: ->
     if @node.parentNode == @doc.root
       return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(ScribeLine.DIRTY_CLASS)
@@ -185,9 +185,9 @@ class ScribeLine extends LinkedList.Node
   resetContent: ->
     @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
-    @attributes = {}
-    [attrName, attrVal] = Scribe.Utils.getAttributeForContainer(@node)
-    @attributes[attrName] = attrVal if attrName?
+    @formats = {}
+    [formatName, formatValue] = Scribe.Utils.getFormatForContainer(@node)
+    @formats[formatName] = formatValue if formatName?
     this.setDirty(false)
     @delta = this.toDelta()
 
@@ -206,7 +206,7 @@ class ScribeLine extends LinkedList.Node
 
   toDelta: ->
     deltas = _.map(@leaves.toArray(), (leaf) ->
-      return new JetInsert(leaf.text, leaf.getAttributes(true))
+      return new JetInsert(leaf.text, leaf.getFormats(true))
     )
     delta = new JetDelta(0, @length, deltas)
     delta.compact()

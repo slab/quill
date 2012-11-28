@@ -1,5 +1,5 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
-ATTRIBUTES = _.extend({}, Scribe.Constants.SPAN_ATTRIBUTES, Scribe.Constants.TAG_ATTRIBUTES)
+FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
 NUM_OPERATIONS = 500
 
 seed = Math.random()
@@ -26,7 +26,7 @@ $(document).ready( ->
     _.defer( ->
       writerHTML = writer.doc.root.innerHTML
       readerHTML = reader.doc.root.innerHTML
-      operation = Scribe.Debug.Test.getRandomOperation(writer, ALPHABET, ATTRIBUTES)
+      operation = Scribe.Debug.Test.getRandomOperation(writer, ALPHABET, FORMATS)
       if operation?
         try
           writer[operation.op].apply(writer, operation.args)

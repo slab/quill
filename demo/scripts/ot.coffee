@@ -2,13 +2,13 @@ $(document).ready( ->
   editor = new Scribe.Editor('editor-container')
   _.each(['bold', 'italic', 'strike', 'underline'], (format) ->
     $("#formatting-container .#{format}").click( -> 
-      editor.selection.applyAttribute(format, !$(this).hasClass('active'))
+      editor.selection.format(format, !$(this).hasClass('active'))
     )
   )
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    attributes = selection.getAttributes()
+    formats = selection.getFormats()
     $("#formatting-container .format-button").removeClass('active')
-    for key,value of attributes when value == true
+    for key,value of formats when value == true
       $("#formatting-container .#{key}").addClass('active')
   )
 

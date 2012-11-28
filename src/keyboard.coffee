@@ -62,13 +62,13 @@ class ScribeKeyboard
         @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
     )
     this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
-      this.toggleAttribute(selection, 'bold')
+      this.toggleFormat(selection, 'bold')
     )
     this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (selection) =>
-      this.toggleAttribute(selection, 'italic')
+      this.toggleFormat(selection, 'italic')
     )
     this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
-      this.toggleAttribute(selection, 'underline')
+      this.toggleFormat(selection, 'underline')
     )
 
   addHotkey: (hotkey, callback) ->
@@ -80,20 +80,20 @@ class ScribeKeyboard
 
   indent: (selection, increment) ->
     lines = selection.getLines()
-    applyIndent = (line, attr) =>
+    applyIndent = (line, format) =>
       if increment
-        indent = if _.isNumber(line.attributes[attr]) then line.attributes[attr] else (if line.attributes[attr] then 1 else 0)
+        indent = if _.isNumber(line.formats[format]) then line.formats[format] else (if line.formats[format] then 1 else 0)
         indent += increment
         indent = Math.min(Math.max(indent, Scribe.Constants.MIN_INDENT), Scribe.Constants.MAX_INDENT)
       else
         indent = false
       index = Scribe.Position.getIndex(line.node, 0)
-      @editor.applyAttribute(index, 0, attr, indent)
+      @editor.format(index, 0, format, indent)
 
     _.each(lines, (line) =>
-      if line.attributes.bullet?
+      if line.formats.bullet?
         applyIndent(line, 'bullet')
-      else if line.attributes.list?
+      else if line.formats.list?
         applyIndent(line, 'list')
       else
         applyIndent(line, 'indent')
@@ -102,7 +102,7 @@ class ScribeKeyboard
 
   onIndentLine: (selection) ->
     return false if !selection?
-    intersection = selection.getAttributes()
+    intersection = selection.getFormats()
     return intersection.bullet? || intersection.indent? || intersection.list?
 
   insertText: (text) ->
@@ -114,9 +114,9 @@ class ScribeKeyboard
       range = new Scribe.Range(@editor, index + text.length, index + text.length)
       @editor.setSelection(range)
 
-  toggleAttribute: (selection, attribute) ->
-    attributes = selection.getAttributes()
-    @editor.selection.applyAttribute(attribute, !attributes[attribute])
+  toggleFormat: (selection, format) ->
+    formats = selection.getFormats()
+    @editor.selection.format(format, !formats[format])
 
 
 

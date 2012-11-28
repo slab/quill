@@ -13,9 +13,9 @@ class ScribeRange
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
   
   # TODO implement the following:    
-  # Return object representing intersection of attributes of leaves in range
+  # Return object representing intersection of formats of leaves in range
   # Values can be number or string representing value all leaves in range have, or an array of values if mixed (falsy values removed)
-  # If all leaves have same attribute, the default, it is omitted
+  # If all leaves have same format, the default, it is omitted
   # Ex.
   # <span>Normal</span>             -> {}
   # <b>Bold</b>                     -> {bold: true}
@@ -23,35 +23,35 @@ class ScribeRange
   # <span class='size.huge'>Huge</span><span class='size.small'>Small</span>                    -> {size: ['huge', 'small']}
   # <span class='size.huge'>Huge</span><span>Normal</span>                                           -> {size: ['huge']}
   # <span class='size.huge'>Huge</span><span>Normal</span><span class='size.small'>Small</span> -> {size: ['huge', 'normal', 'small']}
-  getAttributes: ->
-    return @attributes if @attributes?
+  getFormats: ->
+    return @formats if @formats?
     startLeaf = this.start.getLeaf()
     endLeaf = this.end.getLeaf()
-    # TODO Fix race condition that makes check necessary... should always be able to return attribute intersection
+    # TODO Fix race condition that makes check necessary... should always be able to return format intersection
     return {} if !startLeaf? || !endLeaf?
     if this.isCollapsed()
-      return startLeaf.getAttributes()
+      return startLeaf.getFormats()
     leaves = this.getLeaves()
     leaves.pop() if leaves.length > 1 && @end.offset == 0
     leaves.splice(0, 1) if leaves.length > 1 && @start.offset == leaves[0].length
-    attributes = if leaves.length > 0 then leaves[0].getAttributes() else {}
+    formats = if leaves.length > 0 then leaves[0].getFormats() else {}
     _.all(leaves, (leaf) ->
-      leafAttributes =  leaf.getAttributes()
-      _.each(attributes, (value, key) ->
-        if !leafAttributes[key]
-          delete attributes[key]
-        else if leafAttributes[key] != value
+      leafFormats =  leaf.getFormats()
+      _.each(formats, (value, key) ->
+        if !leafFormats[key]
+          delete formats[key]
+        else if leafFormats[key] != value
           if !_.isArray(value)
-            attributes[key] = [value]
-          attributes[key].push(leafAttributes[key])
+            formats[key] = [value]
+          formats[key].push(leafFormats[key])
       )
-      return _.keys(attributes).length > 0
+      return _.keys(formats).length > 0
     )
-    _.each(attributes, (value, key) ->
-      attributes[key] = _.uniq(value) if _.isArray(value)
+    _.each(formats, (value, key) ->
+      formats[key] = _.uniq(value) if _.isArray(value)
     )
-    @attributes = attributes
-    return attributes
+    @formats = formats
+    return formats
 
   getLeafNodes: ->
     range = this.getRangy()

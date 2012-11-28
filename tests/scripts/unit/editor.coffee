@@ -70,7 +70,7 @@ describe('Editor', ->
 
 
 
-  describe('Apply Leaf Attribute', ->
+  describe('Format Leaf', ->
     tests = 
       'single node':
         lines: ['<div><s>0</s><u>1</u><s>2</s></div>']
@@ -109,24 +109,24 @@ describe('Editor', ->
         start: 4, length: 4
         expected: [0, '<div><#><s>5</s><u>6</u></#></div>', 2]
 
-    attributeTests = [{
-      attribute: 'bold'
+    formatTests = [{
+      format: 'bold'
       tagName: 'b'
       value: true
     }, {
-      attribute: 'bold'
+      format: 'bold'
       tagName: 'b'
       value: false
     }, {
-      attribute: 'family'
+      format: 'family'
       tagName: 'span'
       value: 'serif'
     }, {
-      attribute: 'family'
+      format: 'family'
       tagName: 'span'
       value: false
     }, {
-      attribute: 'family'
+      format: 'family'
       tagName: 'span'
       value: 'san-serif'
     }]
@@ -136,18 +136,18 @@ describe('Editor', ->
       expectedHtml = _.map(test.expected, (line) ->
         return if _.isNumber(line) then test.lines[line] else line
       ).join('')
-      _.each(attributeTests, (attrTest) ->
-        it("should set #{attrTest.attribute} to #{attrTest.value} on #{name}", ->
-          openTag = if attrTest.tagName == 'span' then "#{attrTest.tagName} class=\"#{attrTest.attribute}-#{attrTest.value}\"" else attrTest.tagName
-          expected = expectedHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
-          original = originalHtml.replace(/\/#/g, "/#{attrTest.tagName}").replace(/#/g, openTag)
-          apply = attrTest.value && Scribe.Utils.getAttributeDefault(attrTest.attribute) != attrTest.value
+      _.each(formatTests, (formatTest) ->
+        it("should set #{formatTest.format} to #{formatTest.value} on #{name}", ->
+          openTag = if formatTest.tagName == 'span' then "#{formatTest.tagName} class=\"#{formatTest.format}-#{formatTest.value}\"" else formatTest.tagName
+          expected = expectedHtml.replace(/\/#/g, "/#{formatTest.tagName}").replace(/#/g, openTag)
+          original = originalHtml.replace(/\/#/g, "/#{formatTest.tagName}").replace(/#/g, openTag)
+          apply = formatTest.value && Scribe.Utils.getFormatDefault(formatTest.format) != formatTest.value
           [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
           $('#editor-container').html(startHtml)
           editor = new Scribe.Editor('editor-container')
-          editor.applyAttribute(test.start, test.length, attrTest.attribute, attrTest.value)
+          editor.format(test.start, test.length, formatTest.format, formatTest.value)
           range = new Scribe.Range(editor, test.start, test.start + test.length)
-          attributes = _.clone(range.getAttributes())
+          formats = _.clone(range.getFormats())
           delta = editor.doc.toDelta()
           editor.destroy()
           $('#editor-container').html(endHtml)
@@ -156,12 +156,12 @@ describe('Editor', ->
           consistent = Scribe.Debug.checkDocumentConsistency(editor.doc, true)
           editor.destroy()
           if apply
-            expect(attributes[attrTest.attribute]).to.equal(attrTest.value)
+            expect(formats[formatTest.format]).to.equal(formatTest.value)
           else
-            if attrTest.attribute == 'bold'
-              expect(attributes[attrTest.attribute]).to.be.undefined
-            else if attrTest.attribute == 'family'
-              expect(attributes[attrTest.attribute]).to.equal('san-serif')
+            if formatTest.format == 'bold'
+              expect(formats[formatTest.format]).to.be.undefined
+            else if formatTest.format == 'family'
+              expect(formats[formatTest.format]).to.equal('san-serif')
           expect(delta).to.deep.equal(expectedDelta)
           expect(consistent).to.be.true
         )

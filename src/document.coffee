@@ -22,25 +22,6 @@ class ScribeDocument
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
 
-  applyAttribute: (index, length, attr, value) ->
-    this.applyToLines(index, length, (line, offset, length) =>
-      line.applyAttribute(offset, length, attr, value)
-      this.updateLine(line)
-    )
-
-  buildLines: ->
-    this.reset()
-    ScribeDocument.normalizeHtml(@root, {ignoreDirty: true})
-    this.rebuild()
-
-  cleanNode: (lineNode) ->
-    return if lineNode.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-    line = this.findLine(lineNode)
-    if line? && this.updateLine(line)
-      lineNode.classList.remove(Scribe.Line.DIRTY_CLASS)
-      return true
-    return false
-
   applyToLines: (index, length, fn) ->
     [startLine, startOffset] = this.findLineAtOffset(index)
     [endLine, endOffset] = this.findLineAtOffset(index + length)
@@ -54,6 +35,19 @@ class ScribeDocument
         fn(curLine, 0, curLine.length + 1)
         curLine = next
       fn(endLine, 0, endOffset)
+
+  buildLines: ->
+    this.reset()
+    ScribeDocument.normalizeHtml(@root, {ignoreDirty: true})
+    this.rebuild()
+
+  cleanNode: (lineNode) ->
+    return if lineNode.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+    line = this.findLine(lineNode)
+    if line? && this.updateLine(line)
+      lineNode.classList.remove(Scribe.Line.DIRTY_CLASS)
+      return true
+    return false
 
   deleteText: (index, length) ->
     if index + length == @length
@@ -115,6 +109,12 @@ class ScribeDocument
         this.removeLine(@lines.last)
       @trailingNewline = true
       @length += 1
+
+  format: (index, length, name, value) ->
+    this.applyToLines(index, length, (line, offset, length) =>
+      line.format(offset, length, name, value)
+      this.updateLine(line)
+    )
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Scribe.Line(this, newLineNode)
@@ -270,11 +270,11 @@ class ScribeDocument
     lines = @lines.toArray()
     deltas = _.flatten(_.map(lines, (line, index) ->
       deltas = JetDelta.copy(line.delta).deltas
-      deltas.push(new JetInsert("\n", line.attributes)) if index < lines.length - 1
+      deltas.push(new JetInsert("\n", line.formats)) if index < lines.length - 1
       return deltas
     ), true)
-    attributes = if @lines.last? then @lines.last.attributes else {}
-    deltas.push(new JetInsert("\n", attributes)) if @trailingNewline
+    formats = if @lines.last? then @lines.last.formats else {}
+    deltas.push(new JetInsert("\n", formats)) if @trailingNewline
     delta = new JetDelta(0, @length, deltas)
     delta.compact()
     return delta
@@ -286,7 +286,7 @@ class ScribeDocument
       line = this.findLine(dirtyNode)
       if line?
         this.updateLine(line)
-        fixLines = true if line.attributes['list']?
+        fixLines = true if line.formats['list']?
     )
 
   updateLine: (line) ->

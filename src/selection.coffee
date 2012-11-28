@@ -23,15 +23,15 @@ class ScribeSelection
       @editor.doc.root.removeEventListener('mouseup', checkUpdate)
     )
 
-  applyAttribute: (attribute, value) ->
+  format: (name, value) ->
     this.update()
     return unless @range
     start = @range.start.getIndex()
     end = @range.end.getIndex()
-    attributes = @range.getAttributes()
+    formats = @range.getFormats()
     return unless start? and end?
     if end > start
-      @editor.applyAttribute(start, end - start, attribute, value)
+      @editor.format(start, end - start, name, value)
     else if end == start
       # TODO can we remove DOM manipulation here? Could cause issues with rest of app
       @editor.doSilently( =>
@@ -41,13 +41,13 @@ class ScribeSelection
         lineOffset = Scribe.Position.getIndex(leafNode, 0, line.node) + @range.end.offset
         [left, right] = line.splitContents(lineOffset)
         line.node.insertBefore(clone, right)
-        clone = Scribe.Utils.removeAttributeFromSubtree(clone, attribute)
+        clone = Scribe.Utils.removeFormatFromSubtree(clone, name)
         if clone == null
           clone = line.node.ownerDocument.createElement('span')
           line.node.insertBefore(clone, right)
-        if value and Scribe.Utils.getAttributeDefault(attribute) != value
-          attrNode = Scribe.Utils.createContainerForAttribute(clone.ownerDocument, attribute, value)
-          clone = Scribe.Utils.wrap(attrNode, clone)
+        if value and Scribe.Utils.getFormatDefault(name) != value
+          formatNode = Scribe.Utils.createContainerForFormat(clone.ownerDocument, name, value)
+          clone = Scribe.Utils.wrap(formatNode, clone)
         while clone.firstChild?
           clone = clone.firstChild
         clone.innerHTML = Scribe.Constants.NOBREAK_SPACE
@@ -58,8 +58,8 @@ class ScribeSelection
           focusOffset   : 1
         )
       )
-    attributes[attribute] = value
-    @range.attributes = attributes
+    formats[name] = value
+    @range.formats = formats
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
 
   deleteRange: ->

@@ -60,7 +60,7 @@ describe('Normalize', ->
             <span class="size-large">Large</span>
           </div>'
         ]
-      'remove redundant attribute elements':
+      'remove redundant format elements':
         lines: ['<div><b><i><b>Bolder</b></i></b></div>']
         expected: ['<div><b><i>Bolder</i></b></div>']
       'remove redundant elements':

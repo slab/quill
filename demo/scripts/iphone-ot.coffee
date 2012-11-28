@@ -2,9 +2,9 @@ $(document).ready( ->
   window.editor = editor = new Scribe.Editor('editor-container')
   
   editor.on Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    attributes = selection.getAttributes()
-    GAJavaScript.performSelector 'attributesUpdated:', JSON.stringify(attributes)
-    #$.post('/ios-message/format-change', {json: JSON.stringify(attributes)})
+    formats = selection.getFormats()
+    GAJavaScript.performSelector 'attributesUpdated:', JSON.stringify(formats)
+    #$.post('/ios-message/format-change', {json: JSON.stringify(formats)})
 
   window.docText = ->
     _($('iframe').contents().find('body').find('.line'))

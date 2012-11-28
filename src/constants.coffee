@@ -1,7 +1,7 @@
 # Arrays must be alphabetized, so we can use binary search
 
 ScribeConstants =
-  ALIGN_ATTRIBUTES: [
+  ALIGN_FORMATS: [
     'center'
     'justify'
     'left'
@@ -34,7 +34,7 @@ ScribeConstants =
     'HR'
   ]
 
-  DEFAULT_LEAF_ATTRIBUTES:
+  DEFAULT_LEAF_FORMATS:
     'background' : 'white'
     'color'      : 'black'
     'family'     : 'san-serif'
@@ -72,7 +72,7 @@ ScribeConstants =
     'small'
   ]
 
-  INDENT_ATTRIBUTES:
+  INDENT_FORMATS:
     'bullet'  : [0..8]
     'indent'  : [0..8]
     'list'    : [0..8]
@@ -120,16 +120,16 @@ ScribeConstants =
     EXTERNAL: 'ext'
   
 
-ScribeConstants.LINE_ATTRIBUTES = [].concat(_.keys(ScribeConstants.INDENT_ATTRIBUTES), ScribeConstants.ALIGN_ATTRIBUTES).sort()
+ScribeConstants.LINE_FORMATS = [].concat(_.keys(ScribeConstants.INDENT_FORMATS), ScribeConstants.ALIGN_FORMATS).sort()
 
-ScribeConstants.SPAN_ATTRIBUTES =
+ScribeConstants.SPAN_FORMATS =
   'background' : ScribeConstants.FONT_BACKGROUNDS
   'color'      : ScribeConstants.FONT_COLORS
   'family'     : ScribeConstants.FONT_FAMILIES
   'size'       : ScribeConstants.FONT_SIZES
 
-# Array of possbile values mostly for consistency with SPAN_ATTRIBUTES, not actually used in codebase
-ScribeConstants.TAG_ATTRIBUTES =
+# Array of possbile values mostly for consistency with SPAN_FORMATS, not actually used in codebase
+ScribeConstants.TAG_FORMATS =
   'bold'      : [true, false]
   'italic'    : [true, false]
   'link'      : [true, false]     # Link value could actually also be any string representing the href

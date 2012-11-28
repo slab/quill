@@ -18,16 +18,16 @@ class ScribeLeaf extends LinkedList.Node
     return node.childNodes.length > 1 or node.firstChild.nodeType != node.TEXT_NODE
 
 
-  constructor: (@line, @node, attributes) ->
-    @attributes = _.clone(attributes)
+  constructor: (@line, @node, formats) ->
+    @formats = _.clone(formats)
     @id = _.uniqueId(Scribe.Leaf.ID_PREFIX)
     @node.textContent = "" if @node.tagName == 'BR'
     @text = @node.textContent
     @length = @text.length
 
-  getAttributes: (excludeDefault = false) ->
-    attributes = if excludeDefault then {} else _.clone(Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES)
-    return _.extend(attributes, @attributes, @line.attributes)
+  getFormats: (excludeDefault = false) ->
+    formats = if excludeDefault then {} else _.clone(Scribe.Constants.DEFAULT_LEAF_FORMATS)
+    return _.extend(formats, @formats, @line.formats)
 
   getLineOffset: ->
     return Scribe.Position.getIndex(@node, 0, @line.node)

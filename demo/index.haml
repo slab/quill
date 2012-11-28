@@ -159,30 +159,30 @@
 
       _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
         $('#formatting-container .' + format).click(function() {
-          editor.selection.applyAttribute(format, !$(this).hasClass('active'));
+          editor.selection.format(format, !$(this).hasClass('active'));
         });
       });
       _.each(['background', 'color', 'family', 'size'], function(format) {
         $('#formatting-container .' + format).change(function() {
-          editor.selection.applyAttribute(format, $(this).val());
+          editor.selection.format(format, $(this).val());
         });
       });
       $('#formatting-container .link').click(function() {
         if ($(this).hasClass('active'))
-          editor.selection.applyAttribute('link', false);
+          editor.selection.format('link', false);
         else
-          editor.selection.applyAttribute('link', 'http://www.google.com');
+          editor.selection.format('link', 'http://www.google.com');
       });
       editor.on(Scribe.Editor.events.SELECTION_CHANGE, function(selection) {
-        attributes = selection.getAttributes()
+        formats = selection.getFormats()
         $("#formatting-container .format-button").removeClass('active');
-        for (key in attributes) {
-          if (attributes[key]) {
+        for (key in formats) {
+          if (formats[key]) {
             container = $("#formatting-container ." + key)
             if (container.is('button'))
               container.addClass('active')
             else if (container.is('select'))
-              container.val(attributes[key])
+              container.val(formats[key])
           }
         }
       });

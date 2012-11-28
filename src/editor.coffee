@@ -79,19 +79,6 @@ class ScribeEditor extends EventEmitter2
     @doc.rebuildDirty()
     @doc.forceTrailingNewline()
 
-  # applyAttribute: (Number index, Number length, String attr, Mixed value) ->
-  applyAttribute: (index, length, attr, value, emitEvent = true) ->
-    this.doSilently( =>
-      delta = this.trackDelta( =>
-        @selection.preserve( =>
-          this.keepNormalized( =>
-            @doc.applyAttribute(index, length, attr, value)
-          )
-        )
-      )
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
-    )
-
   applyDelta: (delta, emitEvent = true) ->
     console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
@@ -118,11 +105,11 @@ class ScribeEditor extends EventEmitter2
     retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
     retainDelta.compact()
     _.each(retainDelta.deltas, (delta) =>
-      _.each(delta.attributes, (value, attr) =>
-        @doc.applyAttribute(delta.start, delta.end - delta.start, attr, value) if value == null
+      _.each(delta.attributes, (value, format) =>
+        @doc.format(delta.start, delta.end - delta.start, format, value) if value == null
       )
-      _.each(delta.attributes, (value, attr) =>
-        @doc.applyAttribute(delta.start, delta.end - delta.start, attr, value) if value?
+      _.each(delta.attributes, (value, format) =>
+        @doc.format(delta.start, delta.end - delta.start, format, value) if value?
       )
     )
     @doc.forceTrailingNewline()
@@ -150,13 +137,18 @@ class ScribeEditor extends EventEmitter2
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
 
-  getAt: (index, length) ->
-    # - Returns array of {text: "", attr: {}}
-    # 1. Get all nodes in the range
-    # 2. For first and last, change the text
-    # 3. Return array
-    # - Helper to get nodes in given index range
-    # - In the case of 0 lenght, text will always be "", but attributes should be properly applied
+  # format: (Number index, Number length, String name, Mixed value) ->
+  format: (index, length, name, value, emitEvent = true) ->
+    this.doSilently( =>
+      delta = this.trackDelta( =>
+        @selection.preserve( =>
+          this.keepNormalized( =>
+            @doc.format(index, length, name, value)
+          )
+        )
+      )
+      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
+    )
 
   getDelta: ->
     return @doc.toDelta()

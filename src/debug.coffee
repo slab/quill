@@ -98,11 +98,11 @@ window.Scribe.Debug =
           console.error line, leafNodes, 'nodes differ from', nodesByLine[index]
           return true
         leaves = _.map(leaves, (leaf) -> 
-          return _.pick(leaf, 'attributes', 'length', 'line', 'node', 'text')
+          return _.pick(leaf, 'formats', 'length', 'line', 'node', 'text')
         )
         line.rebuild()
         rebuiltLeaves = _.map(line.leaves.toArray(), (leaf) -> 
-          return _.pick(leaf, 'attributes', 'length', 'line', 'node', 'text')
+          return _.pick(leaf, 'formats', 'length', 'line', 'node', 'text')
         )
         if !_.isEqual(leaves, rebuiltLeaves)
           console.error leaves, 'leaves differ from', rebuiltLeaves
@@ -135,8 +135,8 @@ window.Scribe.Debug =
       else
         return Math.floor(Math.random() * 50)
 
-    getRandomOperation: (editor, alphabet, attributes) ->
-      attributeKeys = _.keys(attributes)
+    getRandomOperation: (editor, alphabet, formats) ->
+      formatKeys = _.keys(formats)
       rand = Math.random()
       if rand < 0.2
         index = 0
@@ -153,11 +153,11 @@ window.Scribe.Debug =
       if rand < 0.75
         return {op: 'deleteAt', args: [index, length]}
       else
-        attr = attributeKeys[Math.floor(Math.random() * attributeKeys.length)]
-        value = attributes[attr][Math.floor(Math.random() * attributes[attr].length)]
-        if attr == 'link' && value == true
+        format = formatKeys[Math.floor(Math.random() * formatKeys.length)]
+        value = formats[format][Math.floor(Math.random() * formats[format].length)]
+        if format == 'link' && value == true
           value = 'http://www.google.com'
-        return {op: 'applyAttribute', args: [index, length, attr, value]}
+        return {op: 'format', args: [index, length, format, value]}
 
     getRandomString: (alphabet, length) ->
       return _.map([0..(length - 1)], ->

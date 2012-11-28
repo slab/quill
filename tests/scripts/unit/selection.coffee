@@ -100,7 +100,7 @@ describe('Selection', ->
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(5, "\n")
           expected: ['<div><span>0123|4</span></div>', '<div><span>5|6789</span></div>']
-        'insert newline to previous line attribute':
+        'insert newline to previous line format':
           lines: ['<ol><li><span>0123456789</span></li></ol>', '<span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(10, "\n")
           expected: [0, '<ol><li><span><br></span></li></ol>', 1]
@@ -147,84 +147,84 @@ describe('Selection', ->
           fn: (editor) -> editor.deleteAt(2, 6)
           expected: ['<div><span>01||89</span></div>']
 
-      'apply attribute tests':
-        'apply leaf attribute before': 
+      'format tests':
+        'apply leaf format before': 
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(1, 2, 'bold', true)
+          fn: (editor) -> editor.format(1, 2, 'bold', true)
           expected: ['<div><span>0</span><b>12</b><span>3|45|6789</span></div>']
-        'apply leaf attribute after':
+        'apply leaf format after':
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(7, 2, 'bold', true)
+          fn: (editor) -> editor.format(7, 2, 'bold', true)
           expected: ['<div><span>0123|45|6</span><b>78</b><span>9</span></div>']
-        'apply leaf attribute in middle':
+        'apply leaf format in middle':
           lines: ['<div><span>012|3456|789</span></div>']
-          fn: (editor) -> editor.applyAttribute(4, 2, 'bold', true)
+          fn: (editor) -> editor.format(4, 2, 'bold', true)
           expected: ['<div><span>012|3</span><b>45</b><span>6|789</span></div>']
-        'apply leaf attribute overlapping beginning':
+        'apply leaf format overlapping beginning':
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(3, 2, 'bold', true)
+          fn: (editor) -> editor.format(3, 2, 'bold', true)
           expected: ['<div><span>012</span><b>3|4</b><span>5|6789</span></div>']
-        'apply leaf attribute overlapping end':
+        'apply leaf format overlapping end':
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(5, 2, 'bold', true)
+          fn: (editor) -> editor.format(5, 2, 'bold', true)
           expected: ['<div><span>0123|4</span><b>5|6</b><span>789</span></div>']
-        'apply leaf attribute overlapping beginning and end':
+        'apply leaf format overlapping beginning and end':
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(3, 4, 'bold', true)
+          fn: (editor) -> editor.format(3, 4, 'bold', true)
           expected: ['<div><span>012</span><b>3|45|6</b><span>789</span></div>']
-        'apply leaf attribute to entire node':
+        'apply leaf format to entire node':
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(0, 10, 'bold', true)
+          fn: (editor) -> editor.format(0, 10, 'bold', true)
           expected: ['<div><b>0123|45|6789</b></div>']
-        'apply leaf attribute to entire node 2':
+        'apply leaf format to entire node 2':
           lines: ['<div><b>0123|45|6789</b></div>']
-          fn: (editor) -> editor.applyAttribute(0, 10, 'italic', true)
+          fn: (editor) -> editor.format(0, 10, 'italic', true)
           expected: ['<div><i><b>0123|45|6789</b></i></div>']
-        'apply line attribute':
+        'apply line format':
           lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(1, 2, 'list', 1)
+          fn: (editor) -> editor.format(1, 2, 'list', 1)
           expected: ['<ol><li><span>0123|45|6789</span></li></ol>']
 
-      'remove attribute tests':
-        'remove leaf attribute before': 
+      'remove format tests':
+        'remove leaf format before': 
           lines: ['<div><span>0</span><b>12</b><span>3|45|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(1, 2, 'bold', false)
+          fn: (editor) -> editor.format(1, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-        'remove leaf attribute after':
+        'remove leaf format after':
           lines: ['<div><span>0123|45|6</span><b>78</b><span>9</span></div>']
-          fn: (editor) -> editor.applyAttribute(7, 2, 'bold', false)
+          fn: (editor) -> editor.format(7, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-        'remove leaf attribute in middle':
+        'remove leaf format in middle':
           lines: ['<div><span>012|3</span><b>45</b><span>6|789</span></div>']
-          fn: (editor) -> editor.applyAttribute(4, 2, 'bold', false)
+          fn: (editor) -> editor.format(4, 2, 'bold', false)
           expected: ['<div><span>012|3456|789</span></div>']
-        'remove leaf attribute overlapping beginning':
+        'remove leaf format overlapping beginning':
           lines: ['<div><span>012</span><b>3|4</b><span>5|6789</span></div>']
-          fn: (editor) -> editor.applyAttribute(3, 2, 'bold', false)
+          fn: (editor) -> editor.format(3, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-        'remove leaf attribute overlapping end':
+        'remove leaf format overlapping end':
           lines: ['<div><span>0123|4</span><b>5|6</b><span>789</span></div>']
-          fn: (editor) -> editor.applyAttribute(5, 2, 'bold', false)
+          fn: (editor) -> editor.format(5, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-        'remove leaf attribute overlapping beginning and end':
+        'remove leaf format overlapping beginning and end':
           lines: ['<div><span>012</span><b>3|45|6</b><span>789</span></div>']
-          fn: (editor) -> editor.applyAttribute(3, 4, 'bold', false)
+          fn: (editor) -> editor.format(3, 4, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-        'remove leaf attribute from entire node':
+        'remove leaf format from entire node':
           lines: ['<div><b>0123|45|6789</b></div>']
-          fn: (editor) -> editor.applyAttribute(0, 10, 'bold', false)
+          fn: (editor) -> editor.format(0, 10, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
-        'remove leaf attribute from entire node 2':
+        'remove leaf format from entire node 2':
           lines: ['<div><i><b>0123|45|6789</b></i></div>']
-          fn: (editor) -> editor.applyAttribute(0, 10, 'bold', false)
+          fn: (editor) -> editor.format(0, 10, 'bold', false)
           expected: ['<div><i>0123|45|6789</i></div>']
-        'remove leaf attribute from entire node 3':
+        'remove leaf format from entire node 3':
           lines: ['<div><i><b>0123|45|6789</b></i></div>']
-          fn: (editor) -> editor.applyAttribute(0, 10, 'italic', false)
+          fn: (editor) -> editor.format(0, 10, 'italic', false)
           expected: ['<div><b>0123|45|6789</b></div>']
-        'remove line attribute':
+        'remove line format':
           lines: ['<ol><li><span>0123|45|6789</span></li></ol>']
-          fn: (editor) -> editor.applyAttribute(1, 2, 'list', false)
+          fn: (editor) -> editor.format(1, 2, 'list', false)
           expected: ['<div><span>0123|45|6789</span></div>']
 
     _.each(tests, (testGroup, groupName) ->

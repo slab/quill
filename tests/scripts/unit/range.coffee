@@ -110,85 +110,85 @@ describe('Range', ->
 
 
 
-  describe('getAttributes', ->
+  describe('getFormats', ->
     tests = [{
       name: 'inside of node'
       start: 1
       end: 2
       text: '2'
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'start of node'
       start: 0
       end: 1
       text: '1'
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'end of node'
       start: 2
       end: 3
       text: '3'
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'entire node'
       start: 0
       end: 3
       text: '123'
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'cursor inside of node'
       start: 1
       end: 1
       text: ''
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'cursor at start of node'
       start: 0
       end: 0
       text: ''
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'cursor at end of node'
       start: 3
       end: 3
       text: ''
-      attributes: { italic: true }
+      formats: { italic: true }
     }, {
       name: 'node at end of document'
       start: 19
       end: 20
       text: '8'
-      attributes: { underline: true }
+      formats: { underline: true }
     }, {
       name: 'cursor at end of document'
       start: 20
       end: 20
       text: ''
-      attributes: { underline: true }
+      formats: { underline: true }
     }, {
       name: 'part of two nodes'
       start: 8
       end: 10
       text: "89"
-      attributes: { bold: true }
+      formats: { bold: true }
     }, {
       name: 'node with preceding newline'
       start: 6
       end: 9
       text: "\n78"
-      attributes: { bold: true, strike: true }
+      formats: { bold: true, strike: true }
     }, {
       name: 'node with trailing newline'
       start: 13
       end: 16
       text: "34\n"
-      attributes: { bold: true, strike: true }
+      formats: { bold: true, strike: true }
     }, {
       name: 'line with preceding and trailing newline'
       start: 6
       end: 16
       text: "\n78901234\n"
-      attributes: { bold: true }
+      formats: { bold: true }
     }]
 
     reset = ->
@@ -224,7 +224,7 @@ describe('Range', ->
         range = new Scribe.Range(editor, test.start, test.end)
         editor.destroy()
         expect(range.getText()).to.equal(test.text)
-        expect(range.getAttributes()).to.eql(_.extend({}, Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES, test.attributes))
+        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Constants.DEFAULT_LEAF_FORMATS, test.formats))
       )
     )
   )

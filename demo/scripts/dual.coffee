@@ -13,24 +13,24 @@ editors = _.map([1, 2], (num) ->
   editor = new Scribe.Editor('editor-container' + num)
   _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], (format) ->
     $("#formatting-container#{num} .#{format}").click( -> 
-      editor.selection.applyAttribute(format, !$(this).hasClass('active'))
+      editor.selection.format(format, !$(this).hasClass('active'))
     )
   )
   _.each(['family', 'size'], (format) ->
     $("#formatting-container#{num} .#{format}").change( ->
-      editor.selection.applyAttribute(format, $(this).val())
+      editor.selection.format(format, $(this).val())
     )
   )
   $("#formatting-container#{num} .link").click( ->
     if ($(this).hasClass('active'))
-      editor.selection.applyAttribute('link', false)
+      editor.selection.format('link', false)
     else
-      editor.selection.applyAttribute('link', 'http://www.google.com')
+      editor.selection.format('link', 'http://www.google.com')
   )
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    attributes = selection.getAttributes()
+    formats = selection.getFormats()
     $("#formatting-container#{num} .format-button").removeClass('active')
-    for key,value of attributes when value
+    for key,value of formats when value
       container = $("#formatting-container#{num} .#{key}") 
       if container.is('button')
         container.addClass('active')

@@ -16,8 +16,8 @@ ScribeUtils =
     html = html.replace(/<br><\/br>/, '<br>')
     return html
 
-  createContainerForAttribute: (doc, attribute, value) ->
-    switch (attribute)
+  createContainerForFormat: (doc, name, value) ->
+    switch (name)
       when 'bold'       then return doc.createElement('b')
       when 'italic'     then return doc.createElement('i')
       when 'strike'     then return doc.createElement('s')
@@ -31,7 +31,7 @@ ScribeUtils =
         return link
       else
         span = doc.createElement('span')
-        span.classList.add("#{attribute}-#{value}")
+        span.classList.add("#{name}-#{value}")
         return span
 
   cloneAncestors: (node, limitingAncestor) ->
@@ -64,13 +64,10 @@ ScribeUtils =
       node = node.parentNode
     return node
 
-  getAttributeDefault: (attribute) ->
-    if Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]?
-      return Scribe.Constants.DEFAULT_LEAF_ATTRIBUTES[attribute]
-    else
-      return false
+  getFormatDefault: (name) ->
+    return Scribe.Constants.DEFAULT_LEAF_FORMATS[name] or false
 
-  getAttributeForContainer: (container) ->
+  getFormatForContainer: (container) ->
     switch container.tagName
       when 'A'  then return ['link', container.getAttribute('href')]
       when 'B'  then return ['bold', true]
@@ -81,23 +78,20 @@ ScribeUtils =
       when 'UL' then return ['bullet', Scribe.Utils.getIndent(container)]
       when 'DIV'
         indent = Scribe.Utils.getIndent(container)
-        if indent > 0
-          return ['indent', indent]
-        else
-          return []
+        return if indent > 0 then ['indent', indent] else []
       when 'SPAN'
-        attribute = []
+        format = []
         _.any(container.classList, (css) ->
           parts = css.split('-')
           if parts.length > 1
             key = parts[0]
             value = parts.slice(1).join('-')
-            if Scribe.Constants.SPAN_ATTRIBUTES[key]?
-              attribute = [key, value]
+            if Scribe.Constants.SPAN_FORMATS[key]?
+              format = [key, value]
               return true
           return false
         )
-        return attribute
+        return format
       else
         return []
         
@@ -190,15 +184,15 @@ ScribeUtils =
       destParent.insertBefore(node, destRef)
     )
 
-  removeAttributeFromSubtree: (subtree, attribute) ->
+  removeFormatFromSubtree: (subtree, format) ->
     children = _.clone(subtree.childNodes)
-    attributes = Scribe.Utils.getAttributeForContainer(subtree)
-    [attrName, attrVal] = Scribe.Utils.getAttributeForContainer(subtree)
+    formats = Scribe.Utils.getFormatForContainer(subtree)
+    [name, value] = Scribe.Utils.getFormatForContainer(subtree)
     ret = subtree
-    if attrName == attribute
+    if name == format
       ret = Scribe.Utils.unwrap(subtree)
     _.each(children, (child) ->
-      Scribe.Utils.removeAttributeFromSubtree(child, attribute)
+      Scribe.Utils.removeFormatFromSubtree(child, format)
     )
     return ret
 
