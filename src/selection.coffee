@@ -35,14 +35,16 @@ class TandemSelection
     else if end == start
       # TODO can we remove DOM manipulation here? Could cause issues with rest of app
       @editor.doSilently( =>
-        leaf = @range.end.getLeaf()
-        clone = Tandem.Utils.cloneAncestors(leaf.node, leaf.line.node)
-        [left, right] = leaf.line.splitContents(leaf.getLineOffset() + @range.end.offset)
-        leaf.line.node.insertBefore(clone, right)
+        leafNode = @range.end.leafNode
+        line = @editor.doc.findLine(leafNode)
+        clone = Tandem.Utils.cloneAncestors(leafNode, line.node)
+        lineOffset = Tandem.Position.getIndex(leafNode, 0, line.node) + @range.end.offset
+        [left, right] = line.splitContents(lineOffset)
+        line.node.insertBefore(clone, right)
         clone = Tandem.Utils.removeAttributeFromSubtree(clone, attribute)
         if clone == null
-          clone = leaf.node.ownerDocument.createElement('span')
-          leaf.line.node.insertBefore(clone, right)
+          clone = line.node.ownerDocument.createElement('span')
+          line.node.insertBefore(clone, right)
         if value and Tandem.Utils.getAttributeDefault(attribute) != value
           attrNode = Tandem.Utils.createContainerForAttribute(clone.ownerDocument, attribute, value)
           clone = Tandem.Utils.wrap(attrNode, clone)
@@ -102,16 +104,6 @@ class TandemSelection
     rangy.restoreSelection(savedSel, false)
     this.update(true)
 
-  save: ->
-    savedSel = rangy.saveSelection(@editor.contentWindow)
-    _.each(savedSel.rangeInfos, (rangeInfo) ->
-      _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
-        marker = rangeInfo.document.getElementById(markerId)
-        marker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
-      )
-    )
-    return savedSel
-
   setRange: (@range, silent = false) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
     if @range?
@@ -127,6 +119,16 @@ class TandemSelection
     range.setStart(nativeSel.anchorNode, nativeSel.anchorOffset)
     range.setEnd(nativeSel.focusNode, nativeSel.focusOffset)
     rangySel.setSingleRange(range)
+
+  save: ->
+    savedSel = rangy.saveSelection(@editor.contentWindow)
+    _.each(savedSel.rangeInfos, (rangeInfo) ->
+      _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
+        marker = rangeInfo.document.getElementById(markerId)
+        marker.classList.add(Tandem.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
+      )
+    )
+    return savedSel
 
   update: (silent = false) ->
     range = this.getRange()
