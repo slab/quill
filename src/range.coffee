@@ -24,6 +24,7 @@ class TandemRange
   # <span class='size.huge'>Huge</span><span>Normal</span>                                           -> {size: ['huge']}
   # <span class='size.huge'>Huge</span><span>Normal</span><span class='size.small'>Small</span> -> {size: ['huge', 'normal', 'small']}
   getAttributes: ->
+    return @attributes if @attributes?
     startLeaf = this.start.getLeaf()
     endLeaf = this.end.getLeaf()
     # TODO Fix race condition that makes check necessary... should always be able to return attribute intersection
@@ -49,6 +50,7 @@ class TandemRange
     _.each(attributes, (value, key) ->
       attributes[key] = _.uniq(value) if _.isArray(value)
     )
+    @attributes = attributes
     return attributes
 
   getLeafNodes: ->

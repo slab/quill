@@ -24,15 +24,16 @@ class TandemSelection
     )
 
   applyAttribute: (attribute, value) ->
+    this.update()
     return unless @range
     start = @range.start.getIndex()
     end = @range.end.getIndex()
+    attributes = @range.getAttributes()
     return unless start? and end?
     if end > start
       @editor.applyAttribute(start, end - start, attribute, value)
     else if end == start
       # TODO can we remove DOM manipulation here? Could cause issues with rest of app
-      # Split content, then copy it
       @editor.doSilently( =>
         leaf = @range.end.getLeaf()
         clone = Tandem.Utils.cloneAncestors(leaf.node, leaf.line.node)
@@ -55,6 +56,9 @@ class TandemSelection
           focusOffset   : 1
         )
       )
+    attributes[attribute] = value
+    @range.attributes = attributes
+    @editor.emit(Tandem.Editor.events.SELECTION_CHANGE, @range)
 
   deleteRange: ->
     this.update()
