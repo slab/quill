@@ -36,6 +36,7 @@ class TandemLine extends LinkedList.Node
   @normalizeHtml: (root) ->
     return if root.childNodes.length == 1 && root.firstChild.tagName == 'BR'
     this.applyRules(root)
+    this.removeNoBreak(root)
     this.removeRedundant(root)
     # TODO need wrapText before and after for these cases:
     # Before: <b>Test<span>What</span></b> -> <b><span>Test</span><span>What</span></b>
@@ -48,10 +49,16 @@ class TandemLine extends LinkedList.Node
         root = root.firstChild
       root.appendChild(root.ownerDocument.createElement('br'))
 
+  @removeNoBreak: (root) ->
+    Tandem.Utils.traversePreorder(root, 0, (node) =>
+      if node.nodeType == node.TEXT_NODE
+        node.textContent = node.textContent.split(Tandem.Constants.NOBREAK_SPACE).join('')
+      return node
+    )
+
   @removeRedundant: (root) ->
     tandemKey = '_tandemAttributes' + Math.floor(Math.random() * 100000000)
     root[tandemKey] = {}
-
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE && Tandem.Utils.canModify(node)
         if Tandem.Utils.getNodeLength(node) == 0
@@ -67,7 +74,6 @@ class TandemLine extends LinkedList.Node
           if node.previousSibling == null && node.nextSibling == null && !TandemLine.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
             return true
       return false
-
     Tandem.Utils.traversePreorder(root, 0, (node) =>
       if isRedudant(node)
         node = Tandem.Utils.unwrap(node)
