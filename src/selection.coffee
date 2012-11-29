@@ -83,13 +83,14 @@ class ScribeSelection
       [start, end] = this.save()
       delta = fn.call(null)
       start = JetSync.follows(delta, start, true)
-      end = JetSync.follows(delta, end, false)
+      end = JetSync.follows(delta, end, false) if end?
       this.restore(start, end)
     else
       fn.call(null)
 
   restore: (start, end) ->
     [startIndex, endIndex] = _.map([start, end], (delta) ->
+      return null unless delta?
       index = 0
       _.all(delta.deltas, (delta) ->
         unless delta.text?
@@ -99,12 +100,15 @@ class ScribeSelection
       )
       return index
     )
+    endIndex = startIndex unless endIndex?
     range = new Scribe.Range(@editor, startIndex, endIndex)
     this.setRange(range)
 
   save: ->
     return null unless @range?
-    return _.map([@range.start.index, @range.end.index], (index) =>
+    indexes = [@range.start.index]
+    indexes.push(@range.end.index) unless @range.isCollapsed()
+    return _.map(indexes, (index) =>
       deltas = [new JetInsert('|')]
       deltas.unshift(new JetRetain(0, index)) if index > 0
       deltas.push(new JetRetain(index, @editor.doc.length)) if index < @editor.doc.length
