@@ -452,7 +452,7 @@ describe('Editor', ->
             expected = test[index]
           else
             expected = test.expected(index)
-          editor.doc.root.innerHTML = Scribe.Utils.cleanHtml(expected)
+          editor.root.innerHTML = Scribe.Utils.cleanHtml(expected)
           editor.doc.buildLines()
           expectedDelta = editor.doc.toDelta()
           editor.destroy()

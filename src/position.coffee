@@ -51,7 +51,7 @@ class ScribePosition
   constructor: (@editor, @leafNode, @offset) ->
     if _.isNumber(@leafNode)
       @offset = @index = @leafNode
-      @leafNode = @editor.doc.root.firstChild
+      @leafNode = @editor.root.firstChild
     [@leafNode, @offset] = ScribePosition.findLeafNode(@editor, @leafNode, @offset)
 
   getIndex: ->

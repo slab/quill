@@ -235,10 +235,9 @@ describe('Range', ->
     reset = ->
       $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
       editor = new Scribe.Editor('editor-container', false)
-      container = editor.doc.root
-      line1 = container.firstChild
-      line2 = container.lastChild
-      return [editor, container, line1, line2]
+      line1 = editor.root.firstChild
+      line2 = editor.root.lastChild
+      return [editor, editor.root, line1, line2]
 
     it('should select a single node at boundaries', ->
       [editor, container, line1, line2] = reset()

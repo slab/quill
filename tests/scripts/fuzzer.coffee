@@ -24,8 +24,8 @@ $(document).ready( ->
   , (callback) ->
     operationsLeft -= 1
     _.defer( ->
-      writerHTML = writer.doc.root.innerHTML
-      readerHTML = reader.doc.root.innerHTML
+      writerHTML = writer.root.innerHTML
+      readerHTML = reader.root.innerHTML
       operation = Scribe.Debug.Test.getRandomOperation(writer, ALPHABET, FORMATS)
       if operation?
         try

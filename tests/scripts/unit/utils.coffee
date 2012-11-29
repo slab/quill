@@ -324,13 +324,13 @@ describe('Utils', ->
     _.each(tests, (test) ->
       it(test.name, ->
         editor = reset()
-        [startLineNode, startOffset] = Scribe.Utils.getChildAtOffset(editor.doc.root, test.start)
-        [endLineNode, endOffset] = Scribe.Utils.getChildAtOffset(editor.doc.root, test.end)
+        [startLineNode, startOffset] = Scribe.Utils.getChildAtOffset(editor.root, test.start)
+        [endLineNode, endOffset] = Scribe.Utils.getChildAtOffset(editor.root, test.end)
         extraction = Scribe.Utils.extractNodes(startLineNode, startOffset, endLineNode, endOffset)
         target = document.createElement('div')
         target.appendChild(extraction)
         expect("Fragment " + Scribe.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
-        expect("Remains " + Scribe.Utils.cleanHtml(editor.doc.root.innerHTML)).to.equal("Remains " + test.remains)
+        expect("Remains " + Scribe.Utils.cleanHtml(editor.root.innerHTML)).to.equal("Remains " + test.remains)
         editor.destroy()
       )
     )

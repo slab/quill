@@ -16,11 +16,11 @@ class ScribeSelection
       this.update()
     keyUpdate = (event) =>
       checkUpdate() if Scribe.Keyboard.KEYS.LEFT <= event.which and event.which <= Scribe.Keyboard.KEYS.DOWN
-    @editor.doc.root.addEventListener('keyup', keyUpdate)
-    @editor.doc.root.addEventListener('mouseup', checkUpdate)
+    @editor.root.addEventListener('keyup', keyUpdate)
+    @editor.root.addEventListener('mouseup', checkUpdate)
     @destructors.push( =>
-      @editor.doc.root.removeEventListener('keyup', keyUpdate)
-      @editor.doc.root.removeEventListener('mouseup', checkUpdate)
+      @editor.root.removeEventListener('keyup', keyUpdate)
+      @editor.root.removeEventListener('mouseup', checkUpdate)
     )
 
   format: (name, value) ->

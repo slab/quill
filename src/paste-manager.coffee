@@ -1,6 +1,6 @@
 class ScribePasteManager
   constructor: (@editor) ->
-    @container = @editor.doc.root.ownerDocument.createElement('div')
+    @container = @editor.root.ownerDocument.createElement('div')
     @container.id = 'paste-container'
     @container.setAttribute('contenteditable', true)
     @editor.renderer.addStyles(
@@ -9,11 +9,11 @@ class ScribePasteManager
         'position': 'fixed'
         'top': '50%'
     )
-    @editor.doc.root.parentNode.appendChild(@container)
+    @editor.root.parentNode.appendChild(@container)
     this.initListeners()
 
   initListeners: ->
-    @editor.doc.root.addEventListener('paste', =>
+    @editor.root.addEventListener('paste', =>
       @editor.selection.deleteRange()
       selection = @editor.getSelection()
       return unless selection?
@@ -36,7 +36,7 @@ class ScribePasteManager
         oldDelta = @editor.doc.toDelta()
         @editor.applyDelta(delta)
         @editor.undoManager.record(delta, oldDelta)
-        @editor.doc.root.focus()
+        @editor.root.focus()
         lengthAdded = Math.max(0, @editor.doc.length - docLength)
         @editor.setSelection(new Scribe.Range(@editor, index + lengthAdded, index + lengthAdded))
       )

@@ -36,7 +36,8 @@ class ScribeEditor extends EventEmitter2
     options.keepHTML = keepHTML
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
-    @doc = new Scribe.Document(@contentWindow.document.getElementById(ScribeEditor.CONTAINER_ID))
+    @root = @contentWindow.document.getElementById(ScribeEditor.CONTAINER_ID)
+    @doc = new Scribe.Document(@root)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)
@@ -47,13 +48,13 @@ class ScribeEditor extends EventEmitter2
 
   disable: ->
     this.doSilently( =>
-      @doc.root.setAttribute('contenteditable', false)
+      @root.setAttribute('contenteditable', false)
     )
 
   enable: ->
-    if !@doc.root.getAttribute('contenteditable')
+    if !@root.getAttribute('contenteditable')
       this.doSilently( =>
-        @doc.root.setAttribute('contenteditable', true)
+        @root.setAttribute('contenteditable', true)
       )
 
   initListeners: ->
@@ -69,9 +70,9 @@ class ScribeEditor extends EventEmitter2
         toCall.call(null)
       )
     onEditOnce = _.once(onEdit)
-    @doc.root.addEventListener('DOMSubtreeModified', onSubtreeModified)
+    @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
     @destructors.push( ->
-      @doc.root.removeEventListener('DOMSubtreeModified', onSubtreeModified)
+      @root.removeEventListener('DOMSubtreeModified', onSubtreeModified)
     )
 
   keepNormalized: (fn) ->
@@ -80,7 +81,7 @@ class ScribeEditor extends EventEmitter2
     @doc.forceTrailingNewline()
 
   applyDelta: (delta, emitEvent = true) ->
-    console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @doc.root)
+    console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
     oldDelta = @doc.toDelta()
@@ -185,12 +186,12 @@ class ScribeEditor extends EventEmitter2
     this.doSilently( =>
       delta = this.trackDelta( =>
         @selection.preserve( =>
-          Scribe.Document.normalizeHtml(@doc.root)
+          Scribe.Document.normalizeHtml(@root)
           lines = @doc.lines.toArray()
-          lineNode = @doc.root.firstChild
+          lineNode = @root.firstChild
           _.each(lines, (line, index) =>
             while line.node != lineNode
-              if line.node.parentNode == @doc.root
+              if line.node.parentNode == @root
                 newLine = @doc.insertLineBefore(lineNode, line)
                 lineNode = lineNode.nextSibling
               else

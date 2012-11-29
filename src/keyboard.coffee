@@ -19,13 +19,12 @@ class ScribeKeyboard
   @PRINTABLE
 
   constructor: (@editor) ->
-    @root = @editor.doc.root
     @hotkeys = {}
     this.initListeners()
     this.initHotkeys()
 
   initListeners: ->
-    @root.addEventListener('keydown', (event) =>
+    @editor.root.addEventListener('keydown', (event) =>
       event ||= window.event
       if @hotkeys[event.which]?
         prevent = false
