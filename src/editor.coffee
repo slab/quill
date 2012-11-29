@@ -38,7 +38,7 @@ class ScribeEditor extends EventEmitter2
     @contentWindow = @renderer.iframe.contentWindow
     @root = @contentWindow.document.getElementById(ScribeEditor.CONTAINER_ID)
     @doc = new Scribe.Document(@root)
-    @selection = new Scribe.Selection(this)
+    @selection = new Scribe.Selection(this, options.cursor)
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)
     @pasteManager = new Scribe.PasteManager(this)
