@@ -122,14 +122,15 @@ class ScribeEditor extends EventEmitter2
 
   deleteAt: (index, length, emitEvent = true) ->
     this.doSilently( =>
-      delta = this.trackDelta( =>
-        @selection.preserve( =>
+      @selection.preserve( =>
+        delta = this.trackDelta( =>
           this.keepNormalized( =>
             @doc.deleteText(index, length)
           )
         )
+        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
+        return delta
       )
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
 
   doSilently: (fn) ->
@@ -141,14 +142,15 @@ class ScribeEditor extends EventEmitter2
   # format: (Number index, Number length, String name, Mixed value) ->
   format: (index, length, name, value, emitEvent = true) ->
     this.doSilently( =>
-      delta = this.trackDelta( =>
-        @selection.preserve( =>
+      @selection.preserve( =>
+        delta = this.trackDelta( =>
           this.keepNormalized( =>
             @doc.format(index, length, name, value)
           )
         )
+        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
+        return delta
       )
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
 
   getDelta: ->
@@ -159,14 +161,15 @@ class ScribeEditor extends EventEmitter2
 
   insertAt: (index, text, emitEvent = true) ->
     this.doSilently( =>
-      delta = this.trackDelta( =>
-        @selection.preserve( =>
+      @selection.preserve( =>
+        delta = this.trackDelta( =>
           this.keepNormalized( =>
             @doc.insertText(index, text)
           )
         )
+        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
+        return delta
       )
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
     )
     
   setSelection: (range) ->
@@ -184,8 +187,8 @@ class ScribeEditor extends EventEmitter2
 
   update: (emitEvent = true) ->
     this.doSilently( =>
-      delta = this.trackDelta( =>
-        @selection.preserve( =>
+      @selection.preserve( =>
+        delta = this.trackDelta( =>
           Scribe.Document.normalizeHtml(@root)
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
@@ -204,9 +207,9 @@ class ScribeEditor extends EventEmitter2
             newLine = @doc.appendLine(lineNode)
             lineNode = lineNode.nextSibling
         )
-        @selection.update(true)
+        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent and !delta.isIdentity()
+        return delta
       )
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent and !delta.isIdentity()
     )
 
 
