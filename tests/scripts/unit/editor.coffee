@@ -57,11 +57,9 @@ describe('Editor', ->
         editor.applyDelta(delta)
         consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
-        editor.destroy()
         $('#editor-container').html(expectedHtml)
         editor = new Scribe.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
-        editor.destroy()
         expect(consistent).to.be.true
         expect(newDelta).to.deep.equal(expectedDelta)
       )
@@ -149,12 +147,10 @@ describe('Editor', ->
           range = new Scribe.Range(editor, test.start, test.start + test.length)
           formats = _.clone(range.getFormats())
           delta = editor.doc.toDelta()
-          editor.destroy()
           $('#editor-container').html(endHtml)
           editor = new Scribe.Editor('editor-container')
           expectedDelta = editor.doc.toDelta()
           consistent = Scribe.Debug.checkDocumentConsistency(editor.doc, true)
-          editor.destroy()
           if apply
             expect(formats[formatTest.format]).to.equal(formatTest.value)
           else
@@ -221,11 +217,9 @@ describe('Editor', ->
         test.fn(editor)
         consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
-        editor.destroy()
         $('#editor-container').html(expectedHtml)
         editor = new Scribe.Editor('editor-container')
         expectedDelta = editor.doc.toDelta()
-        editor.destroy()
         expect(consistent).to.be.true
         expect(newDelta).to.deep.equal(expectedDelta)
       )
@@ -455,7 +449,6 @@ describe('Editor', ->
           editor.root.innerHTML = Scribe.Utils.cleanHtml(expected)
           editor.doc.buildLines()
           expectedDelta = editor.doc.toDelta()
-          editor.destroy()
           expect(consistent).to.be.true
           expect(delta).to.deep.equal(expectedDelta)
         )

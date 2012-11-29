@@ -106,8 +106,6 @@ class ScribeRenderer
     doc.body.appendChild(contentContainer)
     contentContainer.innerHTML = html if @options.keepHTML
 
-  destroy: ->
-
 
 
 window.Scribe ||= {}

@@ -19,7 +19,6 @@ describe('Range', ->
         position = new Scribe.Position(editor, i)
         return position
       )
-      editor.destroy()
       
       expect(positions[0].leafNode.textContent).to.equal('12')
       expect(positions[0].offset).to.equal(0)
@@ -93,7 +92,6 @@ describe('Range', ->
       ranges = _.map(text.split(''), (char, index) ->
         return new Scribe.Range(editor, index, index + 1)
       )
-      editor.destroy()
       _.each(text.split(''), (char, index) ->
         range = ranges[index]
         expect(range.getText()).to.equal(char)
@@ -103,7 +101,6 @@ describe('Range', ->
     it('should identifiy entire document', ->
       editor = reset()
       range = new Scribe.Range(editor, 0, text.length)
-      editor.destroy()
       expect(range.getText()).to.equal(text)
     )
   )
@@ -222,7 +219,6 @@ describe('Range', ->
       it(test.name, ->
         editor = reset()
         range = new Scribe.Range(editor, test.start, test.end)
-        editor.destroy()
         expect(range.getText()).to.equal(test.text)
         expect(range.getFormats()).to.eql(_.extend({}, Scribe.Constants.DEFAULT_LEAF_FORMATS, test.formats))
       )
@@ -245,7 +241,6 @@ describe('Range', ->
       nodes = range.getLeafNodes()
       expect(nodes.length).to.equal(1)
       expect(nodes[0]).to.equal(line1.firstChild)
-      editor.destroy()
     )
     it('should select multiple nodes at boundaries', ->
       [editor, container, line1, line2] = reset()
@@ -254,7 +249,6 @@ describe('Range', ->
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.childNodes[0])
       expect(nodes[1]).to.equal(line1.childNodes[1])
-      editor.destroy()
     )
     it('should select a single node inside boundaries', ->
       [editor, container, line1, line2] = reset()
@@ -263,7 +257,6 @@ describe('Range', ->
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(line1.firstChild)
-      editor.destroy()
     )
     it('should select multipe nodes inside boundaries', ->
       [editor, container, line1, line2] = reset()
@@ -273,7 +266,6 @@ describe('Range', ->
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(line1.childNodes[0])
         expect(nodes[1]).to.equal(line1.childNodes[1])
-      editor.destroy()
     )
     it('should select multiple nodes across lines within boundaries', ->
       [editor, container, line1, line2] = reset()
@@ -282,7 +274,6 @@ describe('Range', ->
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.childNodes[0])
       expect(nodes[1]).to.equal(line1.childNodes[1])
-      editor.destroy()
     )
     it('should select multiple nodes across lines outside boundaries', ->
       [editor, container, line1, line2] = reset()
@@ -291,7 +282,6 @@ describe('Range', ->
       expect(nodes.length).to.equal(2)
       expect(nodes[0]).to.equal(line1.lastChild)
       expect(nodes[1]).to.equal(line2.firstChild)
-      editor.destroy()
     )
     it('should select node collapsed', ->
       [editor, container, line1, line2] = reset()
@@ -300,7 +290,6 @@ describe('Range', ->
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(line1.firstChild)
-      editor.destroy()
     )
   )
 )

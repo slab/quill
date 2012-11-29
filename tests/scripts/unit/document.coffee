@@ -11,7 +11,6 @@ describe('Document', ->
           expect([line.id, offset]).to.deep.equal([lines[lineIndex].id, indexIndex])
         )
       )
-      editor.destroy()
     )
   )
 
@@ -47,7 +46,6 @@ describe('Document', ->
         delta = new JetDelta(0, endLength, test.deltas)
         editor = new Scribe.Editor('editor-container')
         editorDelta = editor.doc.toDelta()
-        editor.destroy()
         expect(editorDelta).to.deep.equal(delta)
       )
     )

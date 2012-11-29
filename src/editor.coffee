@@ -16,19 +16,8 @@ class ScribeEditor extends EventEmitter2
     @options = _.extend(Scribe.Editor.DEFAULTS, options)
     @id = _.uniqueId(ScribeEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
-    @destructors = []
     this.reset(true)
     this.enable() if @options.enabled
-
-  destroy: ->
-    this.disable()
-    @renderer.destroy()
-    @selection.destroy()
-    @undoManager.destroy()
-    _.each(@destructors, (fn) =>
-      fn.call(this)
-    )
-    @destructors = null
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
@@ -61,19 +50,16 @@ class ScribeEditor extends EventEmitter2
     onEditOnce = =>
     onEdit = =>
       onEditOnce = _.once(onEdit)
-      return if @ignoreDomChanges or !@destructors?
+      return if @ignoreDomChanges
       this.update()
     onSubtreeModified = =>
-      return if @ignoreDomChanges or !@destructors?
+      return if @ignoreDomChanges
       toCall = onEditOnce
       _.defer( =>
         toCall.call(null)
       )
     onEditOnce = _.once(onEdit)
     @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
-    @destructors.push( ->
-      @root.removeEventListener('DOMSubtreeModified', onSubtreeModified)
-    )
 
   keepNormalized: (fn) ->
     fn.call(this)

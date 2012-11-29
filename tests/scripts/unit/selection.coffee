@@ -13,7 +13,6 @@ describe('Selection', ->
       lineIndex += line.length + 1
       return indexes
     , [])
-    editor.destroy()
     return ret
 
   describe('findIndexes', (html) ->
@@ -246,7 +245,6 @@ describe('Selection', ->
             expect([sel.start.index, sel.end.index]).to.deep.equal([start, end])
             test.fn(editor)
             sel = editor.getSelection()
-            editor.destroy()
             expect(sel).to.exist
             expect([sel.start.index, sel.end.index]).to.deep.equal(expectedIndexes)
           )

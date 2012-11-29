@@ -331,7 +331,6 @@ describe('Utils', ->
         target.appendChild(extraction)
         expect("Fragment " + Scribe.Utils.cleanHtml(target.innerHTML)).to.equal("Fragment " + test.fragment)
         expect("Remains " + Scribe.Utils.cleanHtml(editor.root.innerHTML)).to.equal("Remains " + test.remains)
-        editor.destroy()
       )
     )
   )

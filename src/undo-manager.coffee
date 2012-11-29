@@ -43,18 +43,11 @@ class ScribeUndoManager
 
 
   constructor: (@editor, options = {}) ->
-    @destructors = []
     @undoStack = []
     @redoStack = []
     @options = _.extend(ScribeUndoManager.DEFAULTS, options)
     @lastRecorded = 0
     this.initListeners()
-
-  destroy: ->
-    _.each(@destructors, (fn) =>
-      fn.call(this)
-    )
-    @destructors = null
 
   initListeners: ->
     @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.UNDO, =>

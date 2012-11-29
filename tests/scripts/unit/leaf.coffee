@@ -15,7 +15,6 @@ describe('Leaf', ->
     arr = _.map(leafIterator.toArray(), (leaf) ->
       return leaf.id
     )
-    editor.destroy()
     expect(arr).to.deep.equal(leaves)
   )
 )

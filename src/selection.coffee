@@ -1,27 +1,15 @@
 class ScribeSelection
   constructor: (@editor) ->
-    @destructors = []
     @range = null
     this.initListeners()
 
-  destroy: ->
-    _.each(@destructors, (fn) =>
-      fn.call(this)
-    )
-    @destructors = null
-
   initListeners: ->
     checkUpdate = =>
-      return if !@destructors?
       this.update()
     keyUpdate = (event) =>
       checkUpdate() if Scribe.Keyboard.KEYS.LEFT <= event.which and event.which <= Scribe.Keyboard.KEYS.DOWN
     @editor.root.addEventListener('keyup', keyUpdate)
     @editor.root.addEventListener('mouseup', checkUpdate)
-    @destructors.push( =>
-      @editor.root.removeEventListener('keyup', keyUpdate)
-      @editor.root.removeEventListener('mouseup', checkUpdate)
-    )
 
   format: (name, value) ->
     this.update()
