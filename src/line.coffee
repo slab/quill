@@ -150,7 +150,7 @@ class ScribeLine extends LinkedList.Node
     )
     return [retLeaf, offset]
 
-  format: (offset, length, name, value) ->
+  formatText: (offset, length, name, value) ->
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)

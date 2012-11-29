@@ -31,7 +31,7 @@ class ScribeSelection
     formats = @range.getFormats()
     return unless start? and end?
     if end > start
-      @editor.format(start, end - start, name, value)
+      @editor.formatAt(start, end - start, name, value)
     else if end == start
       # TODO can we remove DOM manipulation here? Could cause issues with rest of app
       @editor.doSilently( =>

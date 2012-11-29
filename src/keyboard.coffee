@@ -87,7 +87,7 @@ class ScribeKeyboard
       else
         indent = false
       index = Scribe.Position.getIndex(line.node, 0)
-      @editor.format(index, 0, format, indent)
+      @editor.formatAt(index, 0, format, indent)
 
     _.each(lines, (line) =>
       if line.formats.bullet?

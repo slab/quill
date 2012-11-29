@@ -110,9 +110,9 @@ class ScribeDocument
       @trailingNewline = true
       @length += 1
 
-  format: (index, length, name, value) ->
+  formatText: (index, length, name, value) ->
     this.applyToLines(index, length, (line, offset, length) =>
-      line.format(offset, length, name, value)
+      line.formatText(offset, length, name, value)
       this.updateLine(line)
     )
 

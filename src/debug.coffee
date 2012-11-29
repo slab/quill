@@ -157,7 +157,7 @@ window.Scribe.Debug =
         value = formats[format][Math.floor(Math.random() * formats[format].length)]
         if format == 'link' && value == true
           value = 'http://www.google.com'
-        return {op: 'format', args: [index, length, format, value]}
+        return {op: 'formatAt', args: [index, length, format, value]}
 
     getRandomString: (alphabet, length) ->
       return _.map([0..(length - 1)], ->

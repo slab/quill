@@ -145,7 +145,7 @@ describe('Editor', ->
           [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
           $('#editor-container').html(startHtml)
           editor = new Scribe.Editor('editor-container')
-          editor.format(test.start, test.length, formatTest.format, formatTest.value)
+          editor.formatAt(test.start, test.length, formatTest.format, formatTest.value)
           range = new Scribe.Range(editor, test.start, test.start + test.length)
           formats = _.clone(range.getFormats())
           delta = editor.doc.toDelta()

@@ -107,10 +107,10 @@ class ScribeEditor extends EventEmitter2
     retainDelta.compact()
     _.each(retainDelta.deltas, (delta) =>
       _.each(delta.attributes, (value, format) =>
-        @doc.format(delta.start, delta.end - delta.start, format, value) if value == null
+        @doc.formatText(delta.start, delta.end - delta.start, format, value) if value == null
       )
       _.each(delta.attributes, (value, format) =>
-        @doc.format(delta.start, delta.end - delta.start, format, value) if value?
+        @doc.formatText(delta.start, delta.end - delta.start, format, value) if value?
       )
     )
     @doc.forceTrailingNewline()
@@ -139,13 +139,13 @@ class ScribeEditor extends EventEmitter2
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
 
-  # format: (Number index, Number length, String name, Mixed value) ->
-  format: (index, length, name, value, emitEvent = true) ->
+  # formatAt: (Number index, Number length, String name, Mixed value) ->
+  formatAt: (index, length, name, value, emitEvent = true) ->
     this.doSilently( =>
       @selection.preserve( =>
         delta = this.trackDelta( =>
           this.keepNormalized( =>
-            @doc.format(index, length, name, value)
+            @doc.formatText(index, length, name, value)
           )
         )
         this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
