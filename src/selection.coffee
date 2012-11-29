@@ -1,9 +1,8 @@
 class ScribeSelection
-  constructor: (@editor, cursorIndex) ->
+  constructor: (@editor) ->
     @destructors = []
     @range = null
     this.initListeners()
-    @startIndex = @endIndex = cursorIndex
 
   destroy: ->
     _.each(@destructors, (fn) =>
@@ -27,10 +26,9 @@ class ScribeSelection
   format: (name, value) ->
     this.update()
     return unless @range
-    start = @range.start.getIndex()
-    end = @range.end.getIndex()
+    start = @range.start.index
+    end = @range.end.index
     formats = @range.getFormats()
-    return unless start? and end?
     if end > start
       @editor.formatAt(start, end - start, name, value)
     else if end == start
@@ -66,9 +64,7 @@ class ScribeSelection
   deleteRange: ->
     this.update()
     return false if @range.isCollapsed()
-    index = @range.start.getIndex()
-    end = @range.end.getIndex()
-    @editor.deleteAt(index, end - index) if index? && end?
+    @editor.deleteAt(@range.start.index, @range.end.index - @range.start.index)
     this.update()
     return @range
 
@@ -94,22 +90,6 @@ class ScribeSelection
     end = new Scribe.Position(@editor, nativeSel.focusNode, nativeSel.focusOffset)
     return new Scribe.Range(@editor, start, end)
 
-  makeDelta: (index) ->
-    deltas = [new JetInsert('|')]
-    deltas.unshift(new JetRetain(0, index)) if index > 0
-    deltas.push(new JetRetain(index, @editor.doc.length)) if index < @editor.doc.length
-    return new JetDelta(@editor.doc.length, @editor.doc.length + 1, deltas)
-
-  getInsertionPoint: (delta) ->
-    index = 0
-    _.all(delta.deltas, (delta) ->
-      unless delta.text?
-        index += (delta.end - delta.start)
-        return true
-      return false
-    )
-    return index
-
   preserve: (fn) ->
     if @range?
       [start, end] = this.save()
@@ -121,21 +101,35 @@ class ScribeSelection
       fn.call(null)
 
   restore: (start, end) ->
-    @startIndex = this.getInsertionPoint(start)
-    @endIndex = this.getInsertionPoint(end)
-    range = new Scribe.Range(@editor, @startIndex, @endIndex)
+    [startIndex, endIndex] = _.map([start, end], (delta) ->
+      index = 0
+      _.all(delta.deltas, (delta) ->
+        unless delta.text?
+          index += (delta.end - delta.start)
+          return true
+        return false
+      )
+      return index
+    )
+    range = new Scribe.Range(@editor, startIndex, endIndex)
     this.setRange(range)
+
+  save: ->
+    return null unless @range?
+    return _.map([@range.start.index, @range.end.index], (index) =>
+      deltas = [new JetInsert('|')]
+      deltas.unshift(new JetRetain(0, index)) if index > 0
+      deltas.push(new JetRetain(index, @editor.doc.length)) if index < @editor.doc.length
+      return new JetDelta(@editor.doc.length, @editor.doc.length + 1, deltas)
+    )
 
   setRange: (@range, silent = false) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
     if @range?
       rangySelRange = @range.getRangy()
       rangySel.setSingleRange(rangySelRange)
-      @startIndex = range.start.getIndex()
-      @endIndex = range.end.getIndex()
     else
       rangySel.removeAllRanges()
-      @startIndex = @endIndex = null
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
 
   setRangeNative: (nativeSel) ->
@@ -145,18 +139,11 @@ class ScribeSelection
     range.setEnd(nativeSel.focusNode, nativeSel.focusOffset)
     rangySel.setSingleRange(range)
 
-  save: ->
-    startDelta = this.makeDelta(@startIndex)
-    endDelta = this.makeDelta(@endIndex)
-    return [startDelta, endDelta]
-
   update: (silent = false) ->
     range = this.getRange()
     unless (range == @range) || (@range?.equals(range))
       @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent
       @range = range
-      @startIndex = range.start.getIndex()
-      @endIndex = range.end.getIndex()
 
 
 

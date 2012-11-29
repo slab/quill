@@ -34,17 +34,6 @@ class ScribePosition
       node = node.parentNode
     return index
 
-  @makePosition: (editor, index) ->
-    if _.isNumber(index)
-      position = new Scribe.Position(editor, index)
-    else if index instanceof Scribe.Range
-      position = index.start
-      index = position.getIndex()
-    else
-      position = index
-      index = position.getIndex()
-    return position
-
 
   # constructor: (ScribeEditor editor, Object node, Number offset) ->
   # constructor: (ScribeEditor editor, Number index) -> 
@@ -52,11 +41,9 @@ class ScribePosition
     if _.isNumber(@leafNode)
       @offset = @index = @leafNode
       @leafNode = @editor.root.firstChild
+    else
+      @index = ScribePosition.getIndex(@leafNode, @offset)
     [@leafNode, @offset] = ScribePosition.findLeafNode(@editor, @leafNode, @offset)
-
-  getIndex: ->
-    @index = ScribePosition.getIndex(@leafNode, @offset) if !@index?
-    return @index
 
   getLeaf: ->
     return @leaf if @leaf?

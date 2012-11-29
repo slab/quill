@@ -17,8 +17,6 @@ class ScribePasteManager
       @editor.selection.deleteRange()
       selection = @editor.getSelection()
       return unless selection?
-      index = selection.start.getIndex()
-      return unless index?
       docLength = @editor.doc.length
       @container.innerHTML = ""
       @container.focus()
@@ -29,8 +27,8 @@ class ScribePasteManager
         doc.trailingNewline = false
         doc.length -= 1
         delta = doc.toDelta()
-        delta.deltas.unshift(new JetRetain(0, index)) if index > 0
-        delta.deltas.push(new JetRetain(index, docLength)) if index < docLength
+        delta.deltas.unshift(new JetRetain(0, selection.start.index)) if selection.start.index > 0
+        delta.deltas.push(new JetRetain(selection.start.index, docLength)) if selection.start.index < docLength
         delta.endLength += docLength
         delta.startLength = docLength
         oldDelta = @editor.doc.toDelta()
@@ -38,7 +36,7 @@ class ScribePasteManager
         @editor.undoManager.record(delta, oldDelta)
         @editor.root.focus()
         lengthAdded = Math.max(0, @editor.doc.length - docLength)
-        @editor.setSelection(new Scribe.Range(@editor, index + lengthAdded, index + lengthAdded))
+        @editor.setSelection(new Scribe.Range(@editor, selection.start.index + lengthAdded, selection.start.index + lengthAdded))
       )
     )
 

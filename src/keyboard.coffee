@@ -52,13 +52,11 @@ class ScribeKeyboard
     )
     this.addHotkey(ScribeKeyboard.KEYS.BACKSPACE, (selection) =>
       unless @editor.selection.deleteRange()
-        index = selection.start.getIndex()
-        @editor.deleteAt(index - 1, 1) if index? && index > 0
+        @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
     )
     this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
       unless @editor.selection.deleteRange()
-        index = selection.start.getIndex()
-        @editor.deleteAt(index, 1) if index? && index < @editor.doc.length - 1
+        @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.doc.length - 1
     )
     this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
       this.toggleFormat(selection, 'bold')
@@ -106,12 +104,10 @@ class ScribeKeyboard
 
   insertText: (text) ->
     selection = @editor.getSelection()
-    index = selection.start.getIndex()
-    if index?
-      @editor.insertAt(index, text)
-      # Make sure selection is after our text
-      range = new Scribe.Range(@editor, index + text.length, index + text.length)
-      @editor.setSelection(range)
+    @editor.insertAt(selection.start.index, text)
+    # Make sure selection is after our text
+    range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
+    @editor.setSelection(range)
 
   toggleFormat: (selection, format) ->
     formats = selection.getFormats()
