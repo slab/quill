@@ -22,6 +22,7 @@ class ScribeSelection
     formats[name] = value
     @range.formats = formats
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
+    this.setRange(new Scribe.Range(@editor, start, end))
 
   deleteRange: ->
     this.update()
@@ -53,7 +54,7 @@ class ScribeSelection
     return new Scribe.Range(@editor, start, end)
 
   preserve: (fn) ->
-    if @range?
+    if @range? && false
       [start, end] = this.save()
       delta = fn.call(null)
       start = JetSync.follows(delta, start, true)
