@@ -19,32 +19,6 @@ class ScribeSelection
     formats = @range.getFormats()
     if end > start
       @editor.formatAt(start, end - start, name, value)
-    else if end == start
-      # TODO can we remove DOM manipulation here? Could cause issues with rest of app
-      @editor.doSilently( =>
-        leafNode = @range.end.leafNode
-        line = @editor.doc.findLine(leafNode)
-        clone = Scribe.Utils.cloneAncestors(leafNode, line.node)
-        lineOffset = Scribe.Position.getIndex(leafNode, 0, line.node) + @range.end.offset
-        [left, right] = line.splitContents(lineOffset)
-        line.node.insertBefore(clone, right)
-        clone = Scribe.Utils.removeFormatFromSubtree(clone, name)
-        if clone == null
-          clone = line.node.ownerDocument.createElement('span')
-          line.node.insertBefore(clone, right)
-        if value and Scribe.Utils.getFormatDefault(name) != value
-          formatNode = Scribe.Utils.createContainerForFormat(clone.ownerDocument, name, value)
-          clone = Scribe.Utils.wrap(formatNode, clone)
-        while clone.firstChild?
-          clone = clone.firstChild
-        clone.innerHTML = Scribe.Constants.NOBREAK_SPACE
-        this.setRangeNative(
-          anchorNode    : clone
-          anchorOffset  : 1
-          focusNode     : clone
-          focusOffset   : 1
-        )
-      )
     formats[name] = value
     @range.formats = formats
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
