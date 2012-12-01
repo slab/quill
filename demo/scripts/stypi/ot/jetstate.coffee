@@ -64,7 +64,7 @@ class JetTextState extends JetState
 
   reset: (delta) ->
     delta = JetDelta.getInitial(delta) if _.isString(delta)
-    @editor.applyDelta(delta, false)
+    @editor.applyDelta(delta)
     @arrived = delta
     @inFlight = JetDelta.getIdentity(@arrived.endLength)
     @inLine = JetDelta.getIdentity(@arrived.endLength)
@@ -81,7 +81,7 @@ class JetTextState extends JetState
     @inFlight = JetSync.follows(delta, @inFlight, true)
     @inLine = JetSync.follows(flightDeltaFollows, @inLine, true)
 
-    @editor.applyDelta(textFollows, false)
+    @editor.applyDelta(textFollows)
 
   takeoff: ->
     console.assert(@inFlight?, "inFlight is", @inFlight, "at takeoff")

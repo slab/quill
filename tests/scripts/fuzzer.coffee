@@ -1,6 +1,6 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
 FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
-NUM_OPERATIONS = 500
+NUM_OPERATIONS = 100
 
 seed = Math.random()
 console.info seed

@@ -66,56 +66,60 @@ class ScribeEditor extends EventEmitter2
     @doc.rebuildDirty()
     @doc.forceTrailingNewline()
 
-  applyDelta: (delta, emitEvent = true) ->
-    console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
-    index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
-    offset = 0      # Tracks how many characters inserted to correctly offset new text
-    oldDelta = @doc.toDelta()
-    retains = []
-    _.each(delta.deltas, (delta) =>
-      if JetDelta.isInsert(delta)
-        @doc.insertText(index + offset, delta.text)
-        retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
-        offset += delta.getLength()
-      else if JetDelta.isRetain(delta)
-        if delta.start > index
-          @doc.deleteText(index + offset, delta.start - index)
-          offset -= (delta.start - index)
-        retains.push(new JetRetain(delta.start + offset, delta.end + offset, delta.attributes))
-        index = delta.end
-      else
-        console.warn('Unrecognized type in delta', delta)
-    )
-    # If end of text was deleted
-    if delta.endLength < delta.startLength + offset
-      @doc.deleteText(delta.endLength, delta.startLength + offset - delta.endLength)
-    retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
-    retainDelta.compact()
-    _.each(retainDelta.deltas, (delta) =>
-      _.each(delta.attributes, (value, format) =>
-        @doc.formatText(delta.start, delta.end - delta.start, format, value) if value == null
-      )
-      _.each(delta.attributes, (value, format) =>
-        @doc.formatText(delta.start, delta.end - delta.start, format, value) if value?
-      )
-    )
-    @doc.forceTrailingNewline()
-    newDelta = @doc.toDelta()
-    composed = JetSync.compose(oldDelta, delta)
-    composed.compact()
-    console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
-    this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
-
-  deleteAt: (index, length, emitEvent = true) ->
+  applyDelta: (delta, external = true) ->
     this.doSilently( =>
       @selection.preserve( =>
-        delta = this.trackDelta( =>
+        console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
+        index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
+        offset = 0      # Tracks how many characters inserted to correctly offset new text
+        oldDelta = @doc.toDelta()
+        retains = []
+        _.each(delta.deltas, (delta) =>
+          if JetDelta.isInsert(delta)
+            @doc.insertText(index + offset, delta.text)
+            retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
+            offset += delta.getLength()
+          else if JetDelta.isRetain(delta)
+            if delta.start > index
+              @doc.deleteText(index + offset, delta.start - index)
+              offset -= (delta.start - index)
+            retains.push(new JetRetain(delta.start + offset, delta.end + offset, delta.attributes))
+            index = delta.end
+          else
+            console.warn('Unrecognized type in delta', delta)
+        )
+        # If end of text was deleted
+        if delta.endLength < delta.startLength + offset
+          @doc.deleteText(delta.endLength, delta.startLength + offset - delta.endLength)
+        retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
+        retainDelta.compact()
+        _.each(retainDelta.deltas, (delta) =>
+          _.each(delta.attributes, (value, format) =>
+            @doc.formatText(delta.start, delta.end - delta.start, format, value) if value == null
+          )
+          _.each(delta.attributes, (value, format) =>
+            @doc.formatText(delta.start, delta.end - delta.start, format, value) if value?
+          )
+        )
+        @doc.forceTrailingNewline()
+        newDelta = @doc.toDelta()
+        composed = JetSync.compose(oldDelta, delta)
+        composed.compact()
+        console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
+        unless external
+          @undoManager.record(delta, oldDelta)
+          this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
+      )
+    )
+
+  deleteAt: (index, length) ->
+    this.doSilently( =>
+      @selection.preserve( =>
+        return this.trackDelta( =>
           this.keepNormalized( =>
             @doc.deleteText(index, length)
           )
         )
-        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
-        return delta
       )
     )
 
@@ -126,16 +130,14 @@ class ScribeEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   # formatAt: (Number index, Number length, String name, Mixed value) ->
-  formatAt: (index, length, name, value, emitEvent = true) ->
+  formatAt: (index, length, name, value) ->
     this.doSilently( =>
       @selection.preserve( =>
-        delta = this.trackDelta( =>
+        return this.trackDelta( =>
           this.keepNormalized( =>
             @doc.formatText(index, length, name, value)
           )
         )
-        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
-        return delta
       )
     )
 
@@ -145,16 +147,14 @@ class ScribeEditor extends EventEmitter2
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (index, text, emitEvent = true) ->
+  insertAt: (index, text) ->
     this.doSilently( =>
       @selection.preserve( =>
-        delta = this.trackDelta( =>
+        return this.trackDelta( =>
           this.keepNormalized( =>
             @doc.insertText(index, text)
           )
         )
-        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent
-        return delta
       )
     )
     
@@ -169,12 +169,13 @@ class ScribeEditor extends EventEmitter2
     compose = JetSync.compose(oldDelta, decompose)
     console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
     @undoManager.record(decompose, oldDelta)
+    this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless  decompose.isIdentity()
     return decompose
 
-  update: (emitEvent = true) ->
+  update: ->
     this.doSilently( =>
       @selection.preserve( =>
-        delta = this.trackDelta( =>
+        return this.trackDelta( =>
           Scribe.Document.normalizeHtml(@root)
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
@@ -193,8 +194,6 @@ class ScribeEditor extends EventEmitter2
             newLine = @doc.appendLine(lineNode)
             lineNode = lineNode.nextSibling
         )
-        this.emit(ScribeEditor.events.TEXT_CHANGE, delta) if emitEvent and !delta.isIdentity()
-        return delta
       )
     )
 
