@@ -54,41 +54,26 @@ class ScribeSelection
     return new Scribe.Range(@editor, start, end)
 
   preserve: (fn) ->
-    if @range? && false
-      [start, end] = this.save()
-      delta = fn.call(null)
-      start = JetSync.follows(delta, start, true)
-      end = JetSync.follows(delta, end, false) if end?
-      this.restore(start, end)
+    if @range?
+      savedSel = this.save()
+      fn.call(null)
+      this.restore(savedSel)
     else
       fn.call(null)
 
-  restore: (start, end) ->
-    [startIndex, endIndex] = _.map([start, end], (delta) ->
-      return null unless delta?
-      index = 0
-      _.all(delta.deltas, (delta) ->
-        unless delta.text?
-          index += (delta.end - delta.start)
-          return true
-        return false
-      )
-      return index
-    )
-    endIndex = startIndex unless endIndex?
-    range = new Scribe.Range(@editor, startIndex, endIndex)
-    this.setRange(range)
+  restore: (savedSel) ->
+    rangy.restoreSelection(savedSel, false)
+    this.update(true)
 
   save: ->
-    return null unless @range?
-    indexes = [@range.start.index]
-    indexes.push(@range.end.index) unless @range.isCollapsed()
-    return _.map(indexes, (index) =>
-      deltas = [new JetInsert('|')]
-      deltas.unshift(new JetRetain(0, index)) if index > 0
-      deltas.push(new JetRetain(index, @editor.doc.length)) if index < @editor.doc.length
-      return new JetDelta(@editor.doc.length, @editor.doc.length + 1, deltas)
+    savedSel = rangy.saveSelection(@editor.contentWindow)
+    _.each(savedSel.rangeInfos, (rangeInfo) ->
+      _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
+        marker = rangeInfo.document.getElementById(markerId)
+        marker.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
+      )
     )
+    return savedSel
 
   setRange: (@range, silent = false) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
