@@ -50,7 +50,7 @@ class ScribeDocument
     return false
 
   deleteText: (index, length) ->
-    if index + length == @length
+    if index + length == @length and @trailingNewline
       @trailingNewline = false
       @length -= 1
       length -= 1

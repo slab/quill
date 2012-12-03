@@ -102,10 +102,6 @@ class ScribeEditor extends EventEmitter2
           )
         )
         @doc.forceTrailingNewline()
-        newDelta = @doc.toDelta()
-        composed = JetSync.compose(oldDelta, delta)
-        composed.compact()
-        console.assert(_.isEqual(composed, newDelta), oldDelta, delta, composed, newDelta)
         unless external
           @undoManager.record(delta, oldDelta)
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
