@@ -67,6 +67,7 @@ class ScribeEditor extends EventEmitter2
     @doc.forceTrailingNewline()
 
   applyDelta: (delta, external = true) ->
+    return if delta.isIdentity()
     this.doSilently( =>
       @selection.preserve( =>
         console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
@@ -102,8 +103,8 @@ class ScribeEditor extends EventEmitter2
           )
         )
         @doc.forceTrailingNewline()
+        @undoManager.record(delta, oldDelta)
         unless external
-          @undoManager.record(delta, oldDelta)
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
       )
     )

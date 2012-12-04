@@ -21,7 +21,7 @@ class ScribeUndoManager
         console.error("Unrecognized type in delta", delta)
     )
     if changeDelta.endLength < changeDelta.startLength + offset
-      deletedDelta = originalDelta.getDeltasAt(changeDelta.endLength, changeDelta.startLength - changeDelta.endLength + offset)
+      deletedDelta = originalDelta.getDeltasAt(changeDelta.endLength - offset, changeDelta.startLength - changeDelta.endLength + offset)
       deltas = deltas.concat(deletedDelta)
     return new JetDelta(changeDelta.endLength, changeDelta.startLength, deltas)
 
