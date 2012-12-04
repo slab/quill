@@ -127,13 +127,13 @@ window.Scribe.Debug =
       if rand < 0.1
         return 1
       else if rand < 0.6
-        return Math.floor(Math.random() * 3)
+        return _.random(0, 2)
       else if rand < 0.8
-        return Math.floor(Math.random() * 5)
+        return _.random(3, 4)
       else if rand < 0.9
-        return Math.floor(Math.random() * 10)
+        return _.random(5, 9)
       else
-        return Math.floor(Math.random() * 50)
+        return _.random(10, 50)
 
     getRandomOperation: (editor, alphabet, formats) ->
       formatKeys = _.keys(formats)
@@ -143,7 +143,7 @@ window.Scribe.Debug =
       else if rand < 0.4
         index = editor.doc.length
       else
-        index = Math.floor(Math.random() * editor.doc.length)
+        index = _.random(0, editor.doc.length)
       length = Scribe.Debug.Test.getRandomLength() + 1
       rand = Math.random()
       if rand < 0.5
@@ -153,15 +153,15 @@ window.Scribe.Debug =
       if rand < 0.75
         return {op: 'deleteAt', args: [index, length]}
       else
-        format = formatKeys[Math.floor(Math.random() * formatKeys.length)]
-        value = formats[format][Math.floor(Math.random() * formats[format].length)]
+        format = formatKeys[_.random(0, formatKeys.length - 1)]
+        value = formats[format][_.random(0, formats[format].length - 1)]
         if format == 'link' && value == true
           value = 'http://www.google.com'
         return {op: 'formatAt', args: [index, length, format, value]}
 
     getRandomString: (alphabet, length) ->
       return _.map([0..(length - 1)], ->
-        return alphabet[Math.floor(Math.random()*alphabet.length)]
+        return alphabet[_.random(0, alphabet.length - 1)]
       ).join('')
 
 
