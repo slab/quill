@@ -33,7 +33,6 @@ class ScribePasteManager
         delta.startLength = docLength
         oldDelta = @editor.doc.toDelta()
         @editor.applyDelta(delta)
-        @editor.undoManager.record(delta, oldDelta)
         @editor.root.focus()
         lengthAdded = Math.max(0, @editor.doc.length - docLength)
         @editor.setSelection(new Scribe.Range(@editor, selection.start.index + lengthAdded, selection.start.index + lengthAdded))
