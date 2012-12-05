@@ -15,7 +15,7 @@ class ScribeUndoManager
           deletedOps = originalDelta.getOpsAt(index, length)
           ops = ops.concat(deletedOps)
           offset -= length
-        ops.push(new Tandem.RetainOp(start, start + op.getLength(), _.clone(op.attributes)))
+        ops.push(new Tandem.RetainOp(start, start + op.getLength(), op.attributes))
         index = op.end
       else
         console.error("Unrecognized type in op", op)

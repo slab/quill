@@ -55,13 +55,13 @@ class Op
     return _.reject(normalizedOps, (op) -> !op? || op.getLength() == 0)
 
 
-  constructor: (@attributes = {}) ->
+  constructor: (attributes = {}) ->
+    @attributes = _.clone(attributes)
 
   addAttributes: (attributes) ->
     addedAttributes = {}
-    for key, value of attributes
-      if @attributes[key] == undefined
-        addedAttributes[key] = value
+    for key, value of attributes when @attributes[key] == undefined
+      addedAttributes[key] = value
     return addedAttributes
 
   attributesMatch: (other) ->
@@ -104,15 +104,15 @@ class Op
 class RetainOp extends Op
   @copy: (subject) ->
     console.assert(RetainOp.isRetain(subject), "Copy called on non-retain", subject)
-    attributes = _.clone(subject.attributes)
-    return new RetainOp(subject.start, subject.end, attributes)
+    return new RetainOp(subject.start, subject.end, subject.attributes)
 
   @isRetain: (r) ->
     return r? && typeof r.start == "number" && typeof r.end == "number"
 
-  constructor: (@start, @end, @attributes = {}) ->
+  constructor: (@start, @end, attributes = {}) ->
     console.assert(@start >= 0, "RetainOp start cannot be negative!", @start)
     console.assert(@end >= @start, "RetainOp end must be >= start!", @start, @end)
+    @attributes = _.clone(attributes)
 
   getLength: ->
     return @end - @start
@@ -129,16 +129,16 @@ class RetainOp extends Op
 
 class InsertOp extends Op
   @copy: (subject) ->
-    attributes = _.clone(subject.attributes)
-    return new InsertOp(subject.value, attributes)
+    return new InsertOp(subject.value, subject.attributes)
 
   @isInsert: (i) ->
     return i? && typeof i.value == "string"
 
-  constructor: (@value, @attributes = {}) ->
+  constructor: (@value, attributes = {}) ->
+    @attributes = _.clone(attributes)
 
   getAt: (start, length) ->
-    return new InsertOp(@value.substring(start, length), op.attributes)
+    return new InsertOp(@value.substring(start, length), _.clone(op.attributes))
 
   getLength: ->
     return @value.length
