@@ -205,11 +205,10 @@ class ScribeLine extends LinkedList.Node
     return Scribe.Utils.splitNode(node, offset)
 
   toDelta: ->
-    deltas = _.map(@leaves.toArray(), (leaf) ->
-      return new JetInsert(leaf.text, leaf.getFormats(true))
+    ops = _.map(@leaves.toArray(), (leaf) ->
+      return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
     )
-    delta = new JetDelta(0, @length, deltas)
-    delta.compact()
+    delta = new Tandem.Delta(0, @length, ops)
     return delta
 
 

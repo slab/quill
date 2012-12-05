@@ -4,38 +4,38 @@ class ScribeUndoManager
 
   @computeUndo: (changeDelta, originalDelta) ->
     index = offset = 0
-    deltas = []
-    _.each(changeDelta.deltas, (delta) ->
-      if JetDelta.isInsert(delta)
-        offset += delta.getLength()
-      else if JetDelta.isRetain(delta)
+    ops = []
+    _.each(changeDelta.ops, (op) ->
+      if Tandem.Delta.isInsert(op)
+        offset += op.getLength()
+      else if Tandem.Delta.isRetain(op)
         start = index + offset
-        if delta.start > index
-          length = delta.start - index
-          deletedDelta = originalDelta.getDeltasAt(index, length)
-          deltas = deltas.concat(deletedDelta)
+        if op.start > index
+          length = op.start - index
+          deletedOps = originalDelta.getOpsAt(index, length)
+          ops = ops.concat(deletedOps)
           offset -= length
-        deltas.push(new JetRetain(start, start + delta.getLength(), _.clone(delta.attributes)))
-        index = delta.end
+        ops.push(new Tandem.RetainOp(start, start + op.getLength(), _.clone(op.attributes)))
+        index = op.end
       else
-        console.error("Unrecognized type in delta", delta)
+        console.error("Unrecognized type in op", op)
     )
     if changeDelta.endLength < changeDelta.startLength + offset
-      deletedDelta = originalDelta.getDeltasAt(changeDelta.endLength - offset, changeDelta.startLength - changeDelta.endLength + offset)
-      deltas = deltas.concat(deletedDelta)
-    return new JetDelta(changeDelta.endLength, changeDelta.startLength, deltas)
+      deletedDeltas = originalDelta.getOpsAt(changeDelta.endLength - offset, changeDelta.startLength - changeDelta.endLength + offset)
+      ops = ops.concat(deletedDeltas)
+    return new Tandem.Delta(changeDelta.endLength, changeDelta.startLength, ops)
 
   @getLastChangeIndex: (delta) ->
     lastChangeIndex = index = offset = 0
-    _.each(delta.deltas, (delta) ->
-      if JetDelta.isInsert(delta)
-        offset += delta.getLength()
+    _.each(delta.ops, (op) ->
+      if Tandem.Delta.isInsert(op)
+        offset += op.getLength()
         lastChangeIndex = index + offset
-      else if JetDelta.isRetain(delta)
-        if delta.start > index
+      else if Tandem.Delta.isRetain(op)
+        if op.start > index
           lastChangeIndex = index + offset
-          offset -= (delta.start - index)
-        index = delta.end
+          offset -= (op.start - index)
+        index = op.end
     )
     if delta.endLength < delta.startLength + offset
       lastChangeIndex = delta.endLength
@@ -64,8 +64,8 @@ class ScribeUndoManager
     timestamp = new Date().getTime()
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
       change = @undoStack.pop()
-      undoDelta = JetSync.compose(undoDelta, change.undo.delta)
-      changeDelta = JetSync.compose(change.redo.delta, changeDelta)
+      undoDelta = undoDelta.compose(change.undo.delta)
+      changeDelta = change.redo.delta.compose(changeDelta)
     else
       @lastRecorded = timestamp
     @undoStack.push({

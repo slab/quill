@@ -27,8 +27,8 @@ class ScribePasteManager
         doc.trailingNewline = false
         doc.length -= 1
         delta = doc.toDelta()
-        delta.deltas.unshift(new JetRetain(0, selection.start.index)) if selection.start.index > 0
-        delta.deltas.push(new JetRetain(selection.start.index, docLength)) if selection.start.index < docLength
+        delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0
+        delta.ops.push(new Tandem.RetainOp(selection.start.index, docLength)) if selection.start.index < docLength
         delta.endLength += docLength
         delta.startLength = docLength
         oldDelta = @editor.doc.toDelta()

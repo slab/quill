@@ -3,6 +3,7 @@
 
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.TEXT_CHANGE, (delta) ->
+    console.info 'text change', delta
     target.applyDelta(delta)
     sourceDelta = source.doc.toDelta()
     targetDelta = target.doc.toDelta()

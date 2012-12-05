@@ -75,31 +75,30 @@ class ScribeEditor extends EventEmitter2
         offset = 0      # Tracks how many characters inserted to correctly offset new text
         oldDelta = @doc.toDelta()
         retains = []
-        _.each(delta.deltas, (delta) =>
-          if JetDelta.isInsert(delta)
-            @doc.insertText(index + offset, delta.text)
-            retains.push(new JetRetain(index + offset, index + offset + delta.text.length, delta.attributes))
-            offset += delta.getLength()
-          else if JetDelta.isRetain(delta)
-            if delta.start > index
-              @doc.deleteText(index + offset, delta.start - index)
-              offset -= (delta.start - index)
-            retains.push(new JetRetain(delta.start + offset, delta.end + offset, delta.attributes))
-            index = delta.end
+        _.each(delta.ops, (op) =>
+          if Tandem.Delta.isInsert(op)
+            @doc.insertText(index + offset, op.value)
+            retains.push(new Tandem.RetainOp(index + offset, index + offset + op.getLength(), op.attributes))
+            offset += op.getLength()
+          else if Tandem.Delta.isRetain(op)
+            if op.start > index
+              @doc.deleteText(index + offset, op.start - index)
+              offset -= (op.start - index)
+            retains.push(new Tandem.RetainOp(op.start + offset, op.end + offset, op.attributes))
+            index = op.end
           else
-            console.warn('Unrecognized type in delta', delta)
+            console.warn('Unrecognized type in delta', op)
         )
         # If end of text was deleted
         if delta.endLength < delta.startLength + offset
           @doc.deleteText(delta.endLength, delta.startLength + offset - delta.endLength)
-        retainDelta = new JetDelta(delta.endLength, delta.endLength, retains)
-        retainDelta.compact()
-        _.each(retainDelta.deltas, (delta) =>
-          _.each(delta.attributes, (value, format) =>
-            @doc.formatText(delta.start, delta.end - delta.start, format, value) if value == null
+        retainDelta = new Tandem.Delta(delta.endLength, delta.endLength, retains)
+        _.each(retainDelta.ops, (op) =>
+          _.each(op.attributes, (value, format) =>
+            @doc.formatText(op.start, op.end - op.start, format, value) if value == null
           )
-          _.each(delta.attributes, (value, format) =>
-            @doc.formatText(delta.start, delta.end - delta.start, format, value) if value?
+          _.each(op.attributes, (value, format) =>
+            @doc.formatText(op.start, op.end - op.start, format, value) if value?
           )
         )
         @doc.forceTrailingNewline()
@@ -162,8 +161,8 @@ class ScribeEditor extends EventEmitter2
     oldDelta = @doc.toDelta()
     fn()
     newDelta = @doc.toDelta()
-    decompose = JetSync.decompose(oldDelta, newDelta)
-    compose = JetSync.compose(oldDelta, decompose)
+    decompose = newDelta.decompose(oldDelta)
+    compose = oldDelta.compose(decompose)
     console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
     @undoManager.record(decompose, oldDelta)
     this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless  decompose.isIdentity()

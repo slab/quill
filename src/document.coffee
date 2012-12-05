@@ -268,15 +268,14 @@ class ScribeDocument
 
   toDelta: ->
     lines = @lines.toArray()
-    deltas = _.flatten(_.map(lines, (line, index) ->
-      deltas = JetDelta.copy(line.delta).deltas
-      deltas.push(new JetInsert("\n", line.formats)) if index < lines.length - 1
-      return deltas
+    ops = _.flatten(_.map(lines, (line, index) ->
+      ops = Tandem.Delta.copy(line.delta).ops
+      ops.push(new Tandem.InsertOp("\n", line.formats)) if index < lines.length - 1
+      return ops
     ), true)
     formats = if @lines.last? then @lines.last.formats else {}
-    deltas.push(new JetInsert("\n", formats)) if @trailingNewline
-    delta = new JetDelta(0, @length, deltas)
-    delta.compact()
+    ops.push(new Tandem.InsertOp("\n", formats)) if @trailingNewline
+    delta = new Tandem.Delta(0, @length, ops)
     return delta
 
   updateDirty: ->
