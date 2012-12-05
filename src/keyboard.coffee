@@ -50,14 +50,14 @@ class ScribeKeyboard
       @editor.selection.deleteRange()
       this.insertText("\n")
     )
-    this.addHotkey(ScribeKeyboard.KEYS.BACKSPACE, (selection) =>
-      unless @editor.selection.deleteRange()
-        @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
-    )
-    this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
-      unless @editor.selection.deleteRange()
-        @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.doc.length - 1
-    )
+    #this.addHotkey(ScribeKeyboard.KEYS.BACKSPACE, (selection) =>
+    #  unless @editor.selection.deleteRange()
+    #    @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
+    #)
+    #this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
+    #  unless @editor.selection.deleteRange()
+    #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.doc.length - 1
+    #)
     this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
       this.toggleFormat(selection, 'bold')
     )
