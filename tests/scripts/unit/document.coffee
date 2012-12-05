@@ -18,32 +18,32 @@ describe('Document', ->
     tests = 
       'basic':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetInsert("0123\n")]
+        deltas: [new Tandem.InsertOp("0123\n")]
       'format':
         lines: ['<div><b>0123</b></div>']
-        deltas: [new JetInsert('0123', {bold:true}), new JetInsert("\n")]
+        deltas: [new Tandem.InsertOp('0123', {bold:true}), new Tandem.InsertOp("\n")]
       'empty':
         lines: ['']
-        deltas: [new JetInsert("\n")]
+        deltas: [new Tandem.InsertOp("\n")]
       'empty 2':
         lines: ['<div><br></div>']
-        deltas: [new JetInsert("\n")]
+        deltas: [new Tandem.InsertOp("\n")]
       'newline':
         lines: ['<div><br></div>', '<div><br></div>']
-        deltas: [new JetInsert("\n\n")]
+        deltas: [new Tandem.InsertOp("\n\n")]
       'text + newline':
         lines: ['<div><span>0</span></div>', '<div><br></div>']
-        deltas: [new JetInsert("0\n\n")]
+        deltas: [new Tandem.InsertOp("0\n\n")]
       'newline + text':
         lines: ['<div><br></div>', '<div><span>0</span></div>']
-        deltas: [new JetInsert("\n0\n")]
+        deltas: [new Tandem.InsertOp("\n0\n")]
 
     _.each(tests, (test, name) ->
       it(name, ->
         html = test.lines.join('')
         $('#editor-container').html(html)
         endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
-        delta = new JetDelta(0, endLength, test.deltas)
+        delta = new Tandem.Delta(0, endLength, test.deltas)
         editor = new Scribe.Editor('editor-container')
         editorDelta = editor.doc.toDelta()
         expect(editorDelta).to.deep.equal(delta)

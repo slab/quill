@@ -3,43 +3,43 @@ describe('Editor', ->
     tests =
       'apply to empty':
         lines: []
-        deltas: [new JetInsert("0123\n")]
+        deltas: [new Tandem.InsertOp("0123\n")]
         expected: ['<div><span>0123</span></div>']
       'append character':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetRetain(0,4), new JetInsert('4'), new JetRetain(4,5)]
+        deltas: [new Tandem.RetainOp(0,4), new Tandem.InsertOp('4'), new Tandem.RetainOp(4,5)]
         expected: ['<div><span>01234</span></div>']
       'prepend character':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetInsert('4'), new JetRetain(0,5)]
+        deltas: [new Tandem.InsertOp('4'), new Tandem.RetainOp(0,5)]
         expected: ['<div><span>40123</span></div>']
       'append formatted character':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetRetain(0,4), new JetInsert('4', {bold: true}), new JetRetain(4,5)]
+        deltas: [new Tandem.RetainOp(0,4), new Tandem.InsertOp('4', {bold: true}), new Tandem.RetainOp(4,5)]
         expected: ['<div><span>0123</span><b>4</b></div>']
       'append newline':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetRetain(0,5), new JetInsert("\n")]
+        deltas: [new Tandem.RetainOp(0,5), new Tandem.InsertOp("\n")]
         expected: ['<div><span>0123</span></div>', '<div><br></div>']
       'insert newline in middle of text':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetRetain(0,2), new JetInsert("\n"), new JetRetain(2,5)]
+        deltas: [new Tandem.RetainOp(0,2), new Tandem.InsertOp("\n"), new Tandem.RetainOp(2,5)]
         expected: ['<div><span>01</span></div>', '<div><span>23</span></div>']
       'insert newline before line with just newline':
         lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,3), new JetInsert("\n"), new JetRetain(3,7)]
+        deltas: [new Tandem.RetainOp(0,3), new Tandem.InsertOp("\n"), new Tandem.RetainOp(3,7)]
         expected: [0, 1, 1, 2]
       'insert newline after line with just newline':
         lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
-        deltas: [new JetRetain(0,4), new JetInsert("\n"), new JetRetain(4,7)]
+        deltas: [new Tandem.RetainOp(0,4), new Tandem.InsertOp("\n"), new Tandem.RetainOp(4,7)]
         expected: [0, 1, 1, 2]
       'double insert':
         lines: ['<div><span>0123</span></div>']
-        deltas: [new JetRetain(0,2), new JetInsert('a'), new JetInsert('b'), new JetRetain(2,5)]
+        deltas: [new Tandem.RetainOp(0,2), new Tandem.InsertOp('a'), new Tandem.InsertOp('b'), new Tandem.RetainOp(2,5)]
         expected: ['<div><span>01ab23</span></div>']
       'append differing formatted texts':
         lines: ['<div><br></div>']
-        deltas: [new JetInsert('01', {bold:true}), new JetInsert('23', {italic:true}), new JetRetain(0,1)]
+        deltas: [new Tandem.InsertOp('01', {bold:true}), new Tandem.InsertOp('23', {italic:true}), new Tandem.RetainOp(0,1)]
         expected: ['<div><b>01</b><i>23</i></div>']
 
     _.each(tests, (test, name) ->
@@ -50,7 +50,7 @@ describe('Editor', ->
         oldDelta = editor.doc.toDelta()
         startLength = oldDelta.endLength
         endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
-        delta = new JetDelta(startLength, endLength, test.deltas)
+        delta = new Tandem.Delta(startLength, endLength, test.deltas)
         expectedHtml = _.map(test.expected, (line) ->
           return if _.isNumber(line) then test.lines[line] else line
         ).join('')

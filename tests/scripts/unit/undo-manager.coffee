@@ -2,29 +2,29 @@ describe('Undo manager', ->
   describe('computeUndo', ->
     tests = 
       'insert':
-        original: new JetDelta(0, 12, [new JetInsert("The lazy fox")])
-        change: new JetDelta(12, 18, [new JetRetain(0, 9), new JetInsert('hairy '), new JetRetain(9, 12)])
-        expected: new JetDelta(18, 12, [new JetRetain(0, 9), new JetRetain(15, 18)])
+        original: new Tandem.Delta(0, 12, [new Tandem.InsertOp("The lazy fox")])
+        change: new Tandem.Delta(12, 18, [new Tandem.RetainOp(0, 9), new Tandem.InsertOp('hairy '), new Tandem.RetainOp(9, 12)])
+        expected: new Tandem.Delta(18, 12, [new Tandem.RetainOp(0, 9), new Tandem.RetainOp(15, 18)])
       'delete':
-        original: new JetDelta(0, 12, [new JetInsert("The lazy fox")])
-        change: new JetDelta(12, 7, [new JetRetain(0, 4), new JetRetain(9, 12)])
-        expected: new JetDelta(7, 12, [new JetRetain(0, 4), new JetInsert('lazy '), new JetRetain(4, 7)])
+        original: new Tandem.Delta(0, 12, [new Tandem.InsertOp("The lazy fox")])
+        change: new Tandem.Delta(12, 7, [new Tandem.RetainOp(0, 4), new Tandem.RetainOp(9, 12)])
+        expected: new Tandem.Delta(7, 12, [new Tandem.RetainOp(0, 4), new Tandem.InsertOp('lazy '), new Tandem.RetainOp(4, 7)])
       'insert and delete':
-        original: new JetDelta(0, 12, [new JetInsert("The lazy fox")])
-        change: new JetDelta(12, 13, [new JetRetain(0, 4), new JetInsert('hairy '), new JetRetain(9, 12)])
-        expected: new JetDelta(13, 12, [new JetRetain(0, 4), new JetInsert('lazy '), new JetRetain(10, 13)])
+        original: new Tandem.Delta(0, 12, [new Tandem.InsertOp("The lazy fox")])
+        change: new Tandem.Delta(12, 13, [new Tandem.RetainOp(0, 4), new Tandem.InsertOp('hairy '), new Tandem.RetainOp(9, 12)])
+        expected: new Tandem.Delta(13, 12, [new Tandem.RetainOp(0, 4), new Tandem.InsertOp('lazy '), new Tandem.RetainOp(10, 13)])
       'delete at end':
-        original: new JetDelta(0, 12, [new JetInsert("The lazy fox")])
-        change: new JetDelta(12, 9, [new JetRetain(0, 9)])
-        expected: new JetDelta(9, 12, [new JetRetain(0, 9), new JetInsert('fox')])
+        original: new Tandem.Delta(0, 12, [new Tandem.InsertOp("The lazy fox")])
+        change: new Tandem.Delta(12, 9, [new Tandem.RetainOp(0, 9)])
+        expected: new Tandem.Delta(9, 12, [new Tandem.RetainOp(0, 9), new Tandem.InsertOp('fox')])
       'append':
-        original: new JetDelta(0, 8, [new JetInsert("The lazy")])
-        change: new JetDelta(8, 12, [new JetRetain(0, 8), new JetInsert(' fox')])
-        expected: new JetDelta(12, 8, [new JetRetain(0, 8)])
+        original: new Tandem.Delta(0, 8, [new Tandem.InsertOp("The lazy")])
+        change: new Tandem.Delta(8, 12, [new Tandem.RetainOp(0, 8), new Tandem.InsertOp(' fox')])
+        expected: new Tandem.Delta(12, 8, [new Tandem.RetainOp(0, 8)])
       'replace':
-        original: new JetDelta(0, 3, [new JetInsert("fox")])
-        change: new JetDelta(3, 4, [new JetInsert("lazy")])
-        expected: new JetDelta(4, 3, [new JetInsert("fox")])
+        original: new Tandem.Delta(0, 3, [new Tandem.InsertOp("fox")])
+        change: new Tandem.Delta(3, 4, [new Tandem.InsertOp("lazy")])
+        expected: new Tandem.Delta(4, 3, [new Tandem.InsertOp("fox")])
 
 
     _.each(tests, (test, name) ->
