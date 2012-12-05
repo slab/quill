@@ -3,3 +3,4 @@ build/
 .DS_Store
 lib/jetsync.js
 node_modules/
+lib/tandem.js
