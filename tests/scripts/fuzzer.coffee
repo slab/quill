@@ -1,6 +1,6 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
 FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
-NUM_OPERATIONS = 100
+NUM_OPERATIONS = 500
 
 seed = Math.random()
 console.info seed
@@ -38,6 +38,8 @@ $(document).ready( ->
           return
         writerDelta = writer.doc.toDelta()
         readerDelta = reader.doc.toDelta()
+        writerDelta.clearOpsCache()
+        readerDelta.clearOpsCache()
         if _.isEqual(writerDelta, readerDelta)
           callback(null)
         else
@@ -58,6 +60,8 @@ $(document).ready( ->
     else
       writerDelta = writer.getDelta()
       readerDelta = reader.getDelta()
+      writerDelta.clearOpsCache()
+      readerDelta.clearOpsCache()
       if _.isEqual(writerDelta, readerDelta)
         time = (new Date() - start) / 1000
         console.info "Fuzzing passed"

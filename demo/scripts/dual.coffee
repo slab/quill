@@ -7,6 +7,8 @@ listenEditor = (source, target) ->
     target.applyDelta(delta)
     sourceDelta = source.doc.toDelta()
     targetDelta = target.doc.toDelta()
+    sourceDelta.clearOpsCache()
+    targetDelta.clearOpsCache()
     console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", source, target)
   )
 

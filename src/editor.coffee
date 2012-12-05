@@ -163,6 +163,8 @@ class ScribeEditor extends EventEmitter2
     newDelta = @doc.toDelta()
     decompose = newDelta.decompose(oldDelta)
     compose = oldDelta.compose(decompose)
+    newDelta.clearOpsCache()
+    compose.clearOpsCache()
     console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
     @undoManager.record(decompose, oldDelta)
     this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless  decompose.isIdentity()
