@@ -17,16 +17,10 @@ module.exports = function(grunt) {
         dest: 'build/scribe.js'
       }
     },
-    min: {
-      dist: {
-        src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-        dest: 'build/scribe.min.js'
-      }
-    },
     uglify: {}
   });
 
   // Default task.
-  grunt.registerTask('default', 'concat min');
+  grunt.registerTask('default', 'concat');
 
 };
