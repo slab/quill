@@ -140,6 +140,9 @@ class ScribeEditor extends EventEmitter2
   getDelta: ->
     return @doc.toDelta()
 
+  getLength: ->
+    return @doc.length
+
   getSelection: ->
     return @selection.getRange()
 
