@@ -155,7 +155,7 @@ class JetClient
   syncCallback: (response) ->
     if !response.error? || response.error.length == 0
       if @states[JetState.TEXT]?
-        @states[JetState.TEXT].reset("") if @version == 0
+        @states[JetState.TEXT].reset("\n") if @version == 0
         for delta in response.deltas
           @states[JetState.TEXT].remoteUpdate(delta)
       Stypi.Presence.setUsers(response.users)

@@ -1,5 +1,5 @@
 #= require diff_match_patch
-#= require coffee/ot/jetsync
+#= require tandem
 
 DIFF_DELETE = -1
 DIFF_INSERT = 1
@@ -35,19 +35,19 @@ class JetState
   @applyDelta: (newDelta, insertFn, deleteFn, context = null) ->
     index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
     offset = 0      # Tracks how many characters inserted to correctly offset new text
-    for delta in newDelta.deltas
-      authorId = if delta.attributes? then delta.attributes.authorId else 1
-      if JetDelta.isInsert(delta)
-        insertFn.call(context || insertFn, index + offset, delta.text, authorId)
-        offset += delta.getLength()
-      else if JetDelta.isRetain(delta)
-        console.assert(delta.start >= index, "Somehow delta.start became smaller than index")
-        if delta.start > index
-          deleteFn.call(context || deleteFn, index + offset, delta.start + offset, authorId)
-          offset -= (delta.start - index)
-        index = delta.end
+    for op in newDelta.ops
+      authorId = if op.attributes? then op.attributes.authorId else 1
+      if Tandem.Delta.isInsert(op)
+        insertFn.call(context || insertFn, index + offset, op.value, authorId)
+        offset += op.getLength()
+      else if Tandem.Delta.isRetain(op)
+        console.assert(op.start >= index, "Somehow op.start became smaller than index")
+        if op.start > index
+          deleteFn.call(context || deleteFn, index + offset, op.start + offset, authorId)
+          offset -= (op.start - index)
+        index = op.end
       else
-        console.assert(false, "Unrecognized type in delta", delta)
+        console.assert(false, "Unrecognized type in op", op)
 
     # If end of text was deleted
     if newDelta.endLength < newDelta.startLength + offset
@@ -55,32 +55,32 @@ class JetState
     return
 
 
-
 class JetTextState extends JetState
   constructor: (@editor, @client, delta, @sessionId) ->
+    delta.startLength = @editor.getLength()
     @type = JetState.TEXT
     @userId = @client.settings.userId
     this.reset(delta)
 
   reset: (delta) ->
-    delta = JetDelta.getInitial(delta) if _.isString(delta)
+    delta = if _.isString(delta) then Tandem.Delta.getInitial(delta) else Tandem.Delta.makeDelta(delta)
+    delta.startLength = 1 if delta.startLength == 0
     @editor.applyDelta(delta)
     @arrived = delta
-    @inFlight = JetDelta.getIdentity(@arrived.endLength)
-    @inLine = JetDelta.getIdentity(@arrived.endLength)
+    @inFlight = Tandem.Delta.getIdentity(@arrived.endLength)
+    @inLine = Tandem.Delta.getIdentity(@arrived.endLength)
 
   localUpdate: (delta) ->
-    @inLine = JetSync.compose(@inLine, delta)
+    @inLine = @inLine.compose(delta)
 
   remoteUpdate: (delta, authorId) ->
-    delta = JetDelta.makeDelta(delta)
-    flightDeltaFollows = JetSync.follows(@inFlight, delta, false)
-    textFollows = JetSync.follows(@inLine, flightDeltaFollows, false)
-
-    @arrived = JetSync.compose(@arrived, delta)
-    @inFlight = JetSync.follows(delta, @inFlight, true)
-    @inLine = JetSync.follows(flightDeltaFollows, @inLine, true)
-
+    delta = Tandem.Delta.makeDelta(delta)
+    delta.startLength = 1 if delta.startLength == 0
+    flightDeltaFollows = delta.follows(@inFlight, false)
+    textFollows = flightDeltaFollows.follows(@inLine, false)
+    @arrived = @arrived.compose(delta)
+    @inFlight = @inFlight.follows(delta, true)
+    @inLine = @inLine.follows(flightDeltaFollows, true)
     @editor.applyDelta(textFollows)
 
   takeoff: ->
@@ -88,13 +88,13 @@ class JetTextState extends JetState
     console.assert(@inLine?, "inLine is", @inLine, "at takeoff")
     if (@inFlight.isIdentity() && !@inLine.isIdentity())
       @inFlight = @inLine
-      @inLine = JetDelta.getIdentity(@inFlight.endLength)
+      @inLine = Tandem.Delta.getIdentity(@inFlight.endLength)
       return { change: @inFlight }
     return false
 
   land: ->
-    @arrived = JetSync.compose(@arrived, @inFlight)
-    @inFlight = JetDelta.getIdentity(@arrived.endLength)
+    @arrived = @arrived.compose(@inFlight)
+    @inFlight = Tandem.Delta.getIdentity(@arrived.endLength)
 
 
 
