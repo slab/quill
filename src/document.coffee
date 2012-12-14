@@ -103,12 +103,16 @@ class ScribeDocument
     return node
 
   forceTrailingNewline: ->
+    added = false
     unless @trailingNewline
       if @lines.length > 1 && @lines.last.length == 0
         Scribe.Utils.removeNode(@lines.last.node)
         this.removeLine(@lines.last)
+      else
+        added = true
       @trailingNewline = true
       @length += 1
+    return added
 
   formatText: (index, length, name, value) ->
     this.applyToLines(index, length, (line, offset, length) =>

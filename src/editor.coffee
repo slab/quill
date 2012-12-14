@@ -101,10 +101,18 @@ class ScribeEditor extends EventEmitter2
             @doc.formatText(op.start, op.end - op.start, format, value) if value?
           )
         )
-        @doc.forceTrailingNewline()
+        # If we had to force newline, pretend user added it
+        if @doc.forceTrailingNewline()
+          addNewlineDelta = new Tandem.Delta(delta.endLength, [
+            new Tandem.RetainOp(0, delta.endLength)
+            new Tandem.InsertOp("\n")
+          ])
+          this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
+          delta = delta.compose(addNewlineDelta)
         @undoManager.record(delta, oldDelta)
         unless external
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
+        console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       )
     )
 
@@ -170,7 +178,7 @@ class ScribeEditor extends EventEmitter2
     compose.clearOpsCache()
     console.assert(_.isEqual(compose, newDelta), oldDelta, newDelta, decompose, compose)
     @undoManager.record(decompose, oldDelta)
-    this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless  decompose.isIdentity()
+    this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
     return decompose
 
   update: ->
