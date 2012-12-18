@@ -1,7 +1,7 @@
 class ScribeEditor extends EventEmitter2
   @editors: []
 
-  @CONTAINER_ID: 'Scribe-container'
+  @CONTAINER_ID: 'scribe-container'
   @ID_PREFIX: 'editor-'
   @CURSOR_PREFIX: 'cursor-'
   @DEFAULTS:
