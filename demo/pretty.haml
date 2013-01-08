@@ -1,0 +1,167 @@
+!!! 5
+%html
+  %head
+    %title Stypi Editor Demo
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/reset.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/dropkick/dropkick.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => 'styles/pretty.css'}
+    %meta{:charset => 'utf-8'}
+
+  %body
+    #content-container
+      .editor-wrapper
+        #formatting-container.formatting-container
+          .format-group
+            // Dropkick screws up without id
+            %select.format-dropdown.family#font-family
+              %option.default{:value => 'san-serif', :selected => true} San Serif
+              %option{:value => 'serif'} Serif
+              %option{:value => 'monospace'} Monospace
+          .format-group
+            %select.format-dropdown.size#font-size
+              %option{:value => 'small'} Small
+              %option.default{:value => 'normal', :selected => true} Normal
+              %option{:value => 'large'} Large
+              %option{:value => 'huge'} Huge
+          .format-group
+            .format-button<>
+              .format.bold
+            .format-button<>
+              .format.italic
+            .format-button<>
+              .format.underline
+            .format-button<>
+              .format.strike.last
+
+        #editor-container.editor-container
+          %div<>
+            %span<> Welcome to Stypi
+          %div<>
+            %b<> Bold
+            %span<> &nbsp;
+            %i<> Italic
+            %span<> &nbsp;
+            %s<> Strike
+            %span<> &nbsp;
+            %u<> Underline
+            %span<> &nbsp;
+            %a{:href => 'http://www.google.com'}<> Link
+          %div<>
+            %u<> Zero
+            %i<> One
+            %u<> Two
+            %i<>
+              %b<> Three
+              %s<> Four
+              %i<> Five
+          %div<>
+            %i<>
+              %b<> Hey
+              %u<> Now
+            %s<> What
+          %div<>
+            %b<> a
+            %i<> b
+            %b<> c
+            %i<> d
+            %b<> e
+            %i<> f
+            %b<> g
+          %div<>
+            %span.tab<> &#09;
+            %span<> I look like an indent but actually I'm not cuz I'm a tab.
+          %div<>
+            %span.size-huge<> Huge
+            %span.size-large<> Large
+            %span.size-small<> Small
+          %div<>
+            %span.size-huge<> Huge
+          %div<>
+            %span.size-large<> Large
+          %div<>
+            %span.size-small<> Small
+          %div<>
+            %span.family-serif<> Serif
+            %span.family-monospace<> Monospace
+          %div<>
+            %span.color-white<>
+              %span.background-black<> white
+            %span.color-red<> red
+            %span.color-orange<> orange
+            %span.color-yellow<> yellow
+            %span.color-green<> green
+            %span.color-blue<> blue
+            %span.color-purple<> purple
+          %div<>
+            %span.background-black<>
+              %span.color-white<> black
+            %span.background-red<> red
+            %span.background-orange<> orange
+            %span.background-yellow<> yellow
+            %span.background-green<> green
+            %span.background-blue<> blue
+            %span.background-purple<> purple
+          %div<>
+            %br<>
+          %div<>
+            %br<>
+          %div<>
+            %span<> Goodbye
+          %div<>
+            %br<>
+
+    %script{:type => 'text/javascript', :src => '../lib/jquery.js'}
+    %script{:type => 'text/javascript', :src => '../lib/dropkick/dropkick.js'}
+    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-selectionsaverestore.js'}
+    %script{:type => 'text/javascript', :src => '../lib/diff_match_patch.js'}
+    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+    %script{:type => 'text/javascript', :src => '../lib/tandem.js'}
+    %script{:type => 'text/javascript', :src => '../src/constants.js'}
+    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+    %script{:type => 'text/javascript', :src => '../src/line.js'}
+    %script{:type => 'text/javascript', :src => '../src/document.js'}
+    %script{:type => 'text/javascript', :src => '../src/position.js'}
+    %script{:type => 'text/javascript', :src => '../src/range.js'}
+    %script{:type => 'text/javascript', :src => '../src/selection.js'}
+    %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
+    %script{:type => 'text/javascript', :src => '../src/renderer.js'}
+    %script{:type => 'text/javascript', :src => '../src/undo-manager.js'}
+    %script{:type => 'text/javascript', :src => '../src/paste-manager.js'}
+    %script{:type => 'text/javascript', :src => '../src/editor.js'}
+    %script{:type => 'text/javascript', :src => '../src/debug.js'}
+    :javascript
+      var editor = new Scribe.Editor('editor-container');
+
+      _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
+        $('#formatting-container .' + format).click(function() {
+          editor.selection.format(format, !$(this).hasClass('active'));
+        });
+      });
+      _.each(['background', 'color', 'family', 'size'], function(format) {
+        $('#formatting-container .' + format).change(function() {
+          editor.selection.format(format, $(this).val());
+        });
+      });
+      $('#formatting-container .link').click(function() {
+        if ($(this).hasClass('active'))
+          editor.selection.format('link', false);
+        else
+          editor.selection.format('link', 'http://www.google.com');
+      });
+      editor.on(Scribe.Editor.events.SELECTION_CHANGE, function(selection) {
+        formats = selection.getFormats()
+        $("#formatting-container .format-button").removeClass('active');
+        for (key in formats) {
+          if (formats[key]) {
+            container = $("#formatting-container ." + key)
+            if (container.is('button'))
+              container.addClass('active')
+            else if (container.is('select'))
+              container.val(formats[key])
+          }
+        }
+      });
