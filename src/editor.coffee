@@ -164,6 +164,13 @@ class ScribeEditor extends EventEmitter2
         )
       )
     )
+
+  setDelta: (delta) ->
+    this.reset()
+    oldLength = delta.startLength
+    delta.startLength = @doc.length
+    this.applyDelta(delta)
+    delta.startLength = oldLength
     
   setSelection: (range) ->
     @selection.setRange(range)
