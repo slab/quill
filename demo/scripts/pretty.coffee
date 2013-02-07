@@ -41,7 +41,7 @@ initLinkEditor = (editor) ->
       'display': 'inline'
   )
   linkTooltip = $('.link-tooltip').appendTo(editor.doc.root.parentNode)
-  $('a', editor.doc.root).live('click', (event) ->
+  $('a', editor.doc.root).on('click', (event) ->
     showLinkEditor(editor, this)
   )
   $('.url-editor', linkTooltip).keyup((event) ->

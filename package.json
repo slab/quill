@@ -2,7 +2,11 @@
   "name": "stypi-editor",
   "version": "0.0.1",
   "dependencies": {
-    "weinre": "*"
+    "underscore": "1.4.x"
+  },
+  "devDependencies": {
+    "grunt-contrib-coffee": "0.3.x",
+    "grunt-contrib-copy": "0.3.x"
   },
   "engine": {
     "node": ">=0.8"
