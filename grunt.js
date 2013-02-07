@@ -43,7 +43,8 @@ module.exports = function(grunt) {
     },
     copy: {
       'bin/demo/scripts/dropkick.js': 'demo/scripts/dropkick.js',
-      'bin/demo/images/': 'demo/images/*.png'
+      'bin/demo/images/': 'demo/images/*.png',
+      'bin/tests/lib/': 'tests/lib/*'
     }
   });
 
