@@ -261,8 +261,8 @@ class ScribeDocument
   reset: ->
     @lines = new LinkedList()
     @lineMap = {}
-    @length = 1
-    @trailingNewline = true
+    @length = 0
+    @trailingNewline = false
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)

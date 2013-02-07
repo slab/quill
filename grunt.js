@@ -8,11 +8,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     meta: {
       version: '0.0.2',
-      banner: '/*! Stypi Editor - v<%= meta.version %> - ' +
-        '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        '* https://www.stypi.com/\n' +
-        '* Copyright (c) <%= grunt.template.today("yyyy") %> ' +
-        'Jason Chen, Salesforce.com */'
+      banner: 
+        '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' *  https://www.stypi.com/\n' +
+        ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
+        ' *  Jason Chen, Salesforce.com\n' +
+        ' */'
     },
     coffee: {
       'bin/demo/scripts/dual.js': 'demo/scripts/dual.coffee',
