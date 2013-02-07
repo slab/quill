@@ -38,9 +38,7 @@ $(document).ready( ->
           return
         writerDelta = writer.doc.toDelta()
         readerDelta = reader.doc.toDelta()
-        writerDelta.clearOpsCache()
-        readerDelta.clearOpsCache()
-        if _.isEqual(writerDelta, readerDelta)
+        if writerDelta.isEqual(readerDelta)
           callback(null)
         else
           console.error operation
@@ -60,9 +58,7 @@ $(document).ready( ->
     else
       writerDelta = writer.getDelta()
       readerDelta = reader.getDelta()
-      writerDelta.clearOpsCache()
-      readerDelta.clearOpsCache()
-      if _.isEqual(writerDelta, readerDelta)
+      if writerDelta.isEqual(readerDelta)
         time = (new Date() - start) / 1000
         console.info "Fuzzing passed"
         console.info time, 'seconds'
