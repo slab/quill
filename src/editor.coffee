@@ -67,11 +67,12 @@ class ScribeEditor extends EventEmitter2
     @doc.forceTrailingNewline()
 
   applyDelta: (delta, external = true) ->
+    # Make exception for systems that assume editors start with empty text
+    if delta.startLength == 0 and @doc.length == 1 and @doc.trailingNewline
+      return this.setDelta(delta)
     return if delta.isIdentity()
     this.doSilently( =>
       @selection.preserve( =>
-        if delta.startLength == 0 and @doc.length == 1 and @doc.trailingNewline
-          return this.setDelta(delta)
         console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
         offset = 0      # Tracks how many characters inserted to correctly offset new text
@@ -168,7 +169,6 @@ class ScribeEditor extends EventEmitter2
     )
 
   setDelta: (delta) ->
-    this.reset()
     oldLength = delta.startLength
     delta.startLength = @doc.length
     this.applyDelta(delta)

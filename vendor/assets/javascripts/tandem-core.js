@@ -1,8 +1,8 @@
-/*! Tandem Realtime Coauthoring Engine - v0.3.4 - 2013-02-06
- * https://www.stypi.com/
- * Copyright (c) 2013
- * Byron Milligan, Salesforce.com
- * Jason Chen, Salesforce.com
+/*! Tandem Realtime Coauthoring Engine - v0.3.4 - 2013-02-07
+ *  https://www.stypi.com/
+ *  Copyright (c) 2013
+ *  Jason Chen, Salesforce.com
+ *  Byron Milligan, Salesforce.com
  */
 
 (function(){
@@ -482,8 +482,8 @@ require.define("/src/core/delta.coffee",function(require,module,exports,__dirnam
       this.startLength = startLength;
       this.endLength = endLength;
       this.ops = ops;
-      if (ops == null) {
-        ops = this.endLength;
+      if (this.ops == null) {
+        this.ops = this.endLength;
         this.endLength = null;
       }
       this.compact();
