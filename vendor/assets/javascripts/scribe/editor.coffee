@@ -117,36 +117,8 @@ class ScribeEditor extends EventEmitter2
     doSilently.call(this, =>
       @selection.preserve( =>
         console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
-        index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
-        offset = 0      # Tracks how many characters inserted to correctly offset new text
         oldDelta = @doc.toDelta()
-        retains = []
-        _.each(delta.ops, (op) =>
-          if Tandem.Delta.isInsert(op)
-            @doc.insertText(index + offset, op.value)
-            retains.push(new Tandem.RetainOp(index + offset, index + offset + op.getLength(), op.attributes))
-            offset += op.getLength()
-          else if Tandem.Delta.isRetain(op)
-            if op.start > index
-              @doc.deleteText(index + offset, op.start - index)
-              offset -= (op.start - index)
-            retains.push(new Tandem.RetainOp(op.start + offset, op.end + offset, op.attributes))
-            index = op.end
-          else
-            console.warn('Unrecognized type in delta', op)
-        )
-        # If end of text was deleted
-        if delta.endLength < delta.startLength + offset
-          @doc.deleteText(delta.endLength, delta.startLength + offset - delta.endLength)
-        retainDelta = new Tandem.Delta(delta.endLength, delta.endLength, retains)
-        _.each(retainDelta.ops, (op) =>
-          _.each(op.attributes, (value, format) =>
-            @doc.formatText(op.start, op.end - op.start, format, value) if value == null
-          )
-          _.each(op.attributes, (value, format) =>
-            @doc.formatText(op.start, op.end - op.start, format, value) if value?
-          )
-        )
+        delta.apply(@doc.insertText, @doc.deleteText, @doc.formatText, @doc)
         # If we had to force newline, pretend user added it
         if @doc.forceTrailingNewline()
           addNewlineDelta = new Tandem.Delta(delta.endLength, [
