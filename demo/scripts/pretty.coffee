@@ -1,6 +1,6 @@
 curLink = linkTooltip = null
 
-showLinkEditor = (editor, link, change = false) ->
+showLinkEditor = (editor, link) ->
   curLink = link
   url = $(link).attr('href')
   $('.url', linkTooltip).text(url).attr('href', url)
@@ -41,7 +41,7 @@ initLinkEditor = (editor) ->
       'display': 'inline'
   )
   linkTooltip = $('.link-tooltip').appendTo(editor.doc.root.parentNode)
-  $('a', editor.doc.root).on('click', (event) ->
+  $(editor.doc.root).on('click', 'a', (event) ->
     showLinkEditor(editor, this)
   )
   $('.url-editor', linkTooltip).keyup((event) ->
@@ -91,6 +91,10 @@ initToolbar = (editor) ->
   toolbar.on(Scribe.Toolbar.events.FORMAT, (format, value) ->
     if _.indexOf(dropkickFormats, format) > -1
       $("#formatting-container .#{format}").dropkick('set', ' ')
+    else if format == 'link'
+      selection = editor.getSelection()
+      node = selection.start.leafNode or selection.end.leafNode
+      $(node).click() if node?
   )
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
     formats = selection.getFormats()
@@ -101,26 +105,6 @@ initToolbar = (editor) ->
         else
           $("#formatting-container .#{key}").val(value).change()
     )
-  )
-  $(".formatting-container .link").click( ->
-    selection = editor.getSelection()
-    link = if $(this).parent().hasClass('active') then false else selection.getText()
-    editor.selection.format('link', link)
-    selection = editor.getSelection()
-    boundries = [selection.start.leafNode, selection.end.leafNode]
-    _.each(boundries, (node, index) ->
-      while node.parentNode?.childNodes.length == 1
-        boundries[index] = node.parentNode
-        node = node.parentNode
-    )
-    unless _.any(boundries, (node) ->
-      if node.tagName == 'A'
-        showLinkEditor(editor, node)
-        return true
-      return false
-    )
-      $link = $('a', boundries[0]).first() or $('a', boundries[0]).first()
-      showLinkEditor(editor, $link.get(0)) if $link
   )
 
 
