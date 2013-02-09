@@ -136,33 +136,11 @@
     %script{:type => 'text/javascript', :src => '../src/scribe.all.js'}
     :javascript
       var editor = new Scribe.Editor('editor-container');
+      var toolbar = new Scribe.Toolbar(document.getElementById('formatting-container'), editor)
 
-      _.each(['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent'], function(format) {
-        $('#formatting-container .' + format).click(function() {
-          editor.selection.format(format, !$(this).hasClass('active'));
-        });
-      });
-      _.each(['background', 'color', 'family', 'size'], function(format) {
-        $('#formatting-container .' + format).change(function() {
-          editor.selection.format(format, $(this).val());
-        });
-      });
       $('#formatting-container .link').click(function() {
         if ($(this).hasClass('active'))
           editor.selection.format('link', false);
         else
           editor.selection.format('link', 'http://www.google.com');
-      });
-      editor.on(Scribe.Editor.events.SELECTION_CHANGE, function(selection) {
-        formats = selection.getFormats()
-        $("#formatting-container .format-button").removeClass('active');
-        for (key in formats) {
-          if (formats[key]) {
-            container = $("#formatting-container ." + key)
-            if (container.is('button'))
-              container.addClass('active')
-            else if (container.is('select'))
-              container.val(formats[key])
-          }
-        }
       });
