@@ -9,8 +9,7 @@ listenEditor = (source, target) ->
 
 editors = _.map([1, 2], (num) ->
   editor = new Scribe.Editor('editor-container' + num)
-  toolbarContainer = document.getElementById("formatting-container#{num}")
-  toolbar = new Scribe.Toolbar(toolbarContainer, editor)
+  toolbar = new Scribe.Toolbar("formatting-container#{num}", editor)
   return editor
 )
 

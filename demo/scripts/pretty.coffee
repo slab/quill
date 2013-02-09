@@ -74,22 +74,32 @@ initLinkEditor = (editor) ->
   )
 
 initToolbar = (editor) ->
-  _.each(['family', 'size'], (format) ->
-    $(".formatting-container .#{format}").dropkick({
-      change: (value) ->
-        editor.selection.format(format, $(this).val())
-      width: 75
-    })
-  )
+  toolbar = new Scribe.Toolbar('formatting-container', editor)
+  dropkickFormats = ['family', 'size']
   $('.dk_container').click( ->
     that = this
     $('.dk_container.dk_open').each( ->
       $(this).removeClass('dk_open') if that != this
     )
   )
-  _.each(['bold', 'italic', 'strike', 'underline', 'list', 'bullet', 'outdent', 'indent'], (format) ->
-    $(".formatting-container .#{format}").click( ->
-      editor.selection.format(format, !$(this).parent().hasClass('active'))
+  _.each(dropkickFormats, (format) ->
+    $(".formatting-container .#{format}").dropkick({
+      change: (value) -> editor.selection.format(format, value)
+      width: 75
+    })
+  )
+  toolbar.on(Scribe.Toolbar.events.FORMAT, (format, value) ->
+    if _.indexOf(dropkickFormats, format) > -1
+      $("#formatting-container .#{format}").dropkick('set', ' ')
+  )
+  editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
+    formats = selection.getFormats()
+    _.each(formats, (value, key) =>
+      if _.indexOf(dropkickFormats, key) > -1
+        if _.isArray(value)
+          $("#formatting-container .#{key}").dropkick('set', ' ')
+        else
+          $("#formatting-container .#{key}").val(value).change()
     )
   )
   $(".formatting-container .link").click( ->
@@ -112,22 +122,6 @@ initToolbar = (editor) ->
       $link = $('a', boundries[0]).first() or $('a', boundries[0]).first()
       showLinkEditor(editor, $link.get(0)) if $link
   )
-  editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    formats = selection.getFormats()
-    $(".formatting-container .format-button").removeClass('active')
-    $(".formatting-container .format-dropdown .default").each(->
-      $(this).parent().val($(this).val()).change()
-    )
-    for key,value of formats
-      container = $(".formatting-container .#{key}")
-      if container.is('select')
-        if !_.isArray(value)
-          container.val(value).change()
-        else
-          $(".formatting-container .#{key}").dropkick('set', ' ')
-      else
-        container.parent().addClass('active')
-  )
 
 
 $(document).ready( ->
@@ -137,7 +131,7 @@ $(document).ready( ->
       '.editor': { 'min-height': '95%' }
     }
   })
-  
+
   initToolbar(editor)
   initLinkEditor(editor)
 )
