@@ -1,3 +1,14 @@
+doAt = (fn) ->
+  doSilently.call(this, =>
+    @selection.preserve( =>
+      return trackDelta.call(this, =>
+        keepNormalized.call(this, =>
+          fn.call(this)
+        )
+      )
+    )
+  )
+
 doSilently = (fn) ->
   oldIgnoreDomChange = @ignoreDomChanges
   @ignoreDomChanges = true
@@ -82,6 +93,17 @@ class ScribeEditor extends EventEmitter2
     this.reset(true)
     this.enable() if @options.enabled
 
+  disable: ->
+    doSilently.call(this, =>
+      @root.setAttribute('contenteditable', false)
+    )
+
+  enable: ->
+    if !@root.getAttribute('contenteditable')
+      doSilently.call(this, =>
+        @root.setAttribute('contenteditable', true)
+      )
+
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
     options = _.clone(@options)
@@ -97,17 +119,6 @@ class ScribeEditor extends EventEmitter2
     initListeners.call(this)
     @ignoreDomChanges = false
     ScribeEditor.editors.push(this)
-
-  disable: ->
-    doSilently.call(this, =>
-      @root.setAttribute('contenteditable', false)
-    )
-
-  enable: ->
-    if !@root.getAttribute('contenteditable')
-      doSilently.call(this, =>
-        @root.setAttribute('contenteditable', true)
-      )
 
   applyDelta: (delta, external = true) ->
     # Make exception for systems that assume editors start with empty text
@@ -135,26 +146,14 @@ class ScribeEditor extends EventEmitter2
     )
 
   deleteAt: (index, length) ->
-    doSilently.call(this, =>
-      @selection.preserve( =>
-        return trackDelta.call(this, =>
-          keepNormalized.call(this, =>
-            @doc.deleteText(index, length)
-          )
-        )
-      )
+    doAt.call(this, =>
+      @doc.deleteText(index, length)
     )
 
   # formatAt: (Number index, Number length, String name, Mixed value) ->
   formatAt: (index, length, name, value) ->
-    doSilently.call(this, =>
-      @selection.preserve( =>
-        return trackDelta.call(this, =>
-          keepNormalized.call(this, =>
-            @doc.formatText(index, length, name, value)
-          )
-        )
-      )
+    doAt.call(this, =>
+      @doc.formatText(index, length, name, value)
     )
 
   getDelta: ->
@@ -167,14 +166,8 @@ class ScribeEditor extends EventEmitter2
     return @selection.getRange()
 
   insertAt: (index, text) ->
-    doSilently.call(this, =>
-      @selection.preserve( =>
-        return trackDelta.call(this, =>
-          keepNormalized.call(this, =>
-            @doc.insertText(index, text)
-          )
-        )
-      )
+    doAt.call(this, =>
+      @doc.insertText(index, text)
     )
 
   setDelta: (delta) ->
