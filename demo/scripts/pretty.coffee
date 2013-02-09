@@ -40,7 +40,7 @@ initLinkEditor = (editor) ->
     '.link-tooltip.editing .url-editor':
       'display': 'inline'
   )
-  linkTooltip = $('.link-tooltip').appendTo(editor.doc.root.parentNode)
+  linkTooltip = $('.link-tooltip')
   $(editor.doc.root).on('click', 'a', (event) ->
     showLinkEditor(editor, this)
   )
@@ -71,6 +71,9 @@ initLinkEditor = (editor) ->
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
     formats = selection.getFormats()
     linkTooltip.hide() unless formats['link']?
+  )
+  _.defer( ->
+    linkTooltip.appendTo(editor.doc.root.parentNode)
   )
 
 initToolbar = (editor) ->
