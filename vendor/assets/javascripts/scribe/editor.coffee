@@ -1,3 +1,66 @@
+doSilently = (fn) ->
+  oldIgnoreDomChange = @ignoreDomChanges
+  @ignoreDomChanges = true
+  fn()
+  @ignoreDomChanges = oldIgnoreDomChange
+
+initListeners = ->
+  onEditOnce = =>
+  onEdit = =>
+    onEditOnce = _.once(onEdit)
+    return if @ignoreDomChanges
+    update.call(this)
+  onSubtreeModified = =>
+    return if @ignoreDomChanges
+    toCall = onEditOnce
+    _.defer( =>
+      toCall.call(null)
+    )
+  onEditOnce = _.once(onEdit)
+  @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
+
+keepNormalized = (fn) ->
+  fn.call(this)
+  @doc.rebuildDirty()
+  @doc.forceTrailingNewline()
+
+trackDelta = (fn) ->
+  oldDelta = @doc.toDelta()
+  fn()
+  newDelta = @doc.toDelta()
+  decompose = newDelta.decompose(oldDelta)
+  compose = oldDelta.compose(decompose)
+  console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
+  @undoManager.record(decompose, oldDelta)
+  this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
+  return decompose
+
+update = ->
+  doSilently.call(this, =>
+    @selection.preserve( =>
+      return trackDelta.call(this, =>
+        Scribe.Document.normalizeHtml(@root)
+        lines = @doc.lines.toArray()
+        lineNode = @root.firstChild
+        _.each(lines, (line, index) =>
+          while line.node != lineNode
+            if line.node.parentNode == @root
+              newLine = @doc.insertLineBefore(lineNode, line)
+              lineNode = lineNode.nextSibling
+            else
+              @doc.removeLine(line)
+              return
+          @doc.updateLine(line)
+          lineNode = lineNode.nextSibling
+        )
+        while lineNode != null
+          newLine = @doc.appendLine(lineNode)
+          lineNode = lineNode.nextSibling
+      )
+    )
+  )
+
+
 class ScribeEditor extends EventEmitter2
   @editors: []
 
@@ -31,47 +94,27 @@ class ScribeEditor extends EventEmitter2
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)
     @pasteManager = new Scribe.PasteManager(this)
-    this.initListeners()
+    initListeners.call(this)
     @ignoreDomChanges = false
     ScribeEditor.editors.push(this)
 
   disable: ->
-    this.doSilently( =>
+    doSilently.call(this, =>
       @root.setAttribute('contenteditable', false)
     )
 
   enable: ->
     if !@root.getAttribute('contenteditable')
-      this.doSilently( =>
+      doSilently.call(this, =>
         @root.setAttribute('contenteditable', true)
       )
-
-  initListeners: ->
-    onEditOnce = =>
-    onEdit = =>
-      onEditOnce = _.once(onEdit)
-      return if @ignoreDomChanges
-      this.update()
-    onSubtreeModified = =>
-      return if @ignoreDomChanges
-      toCall = onEditOnce
-      _.defer( =>
-        toCall.call(null)
-      )
-    onEditOnce = _.once(onEdit)
-    @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
-
-  keepNormalized: (fn) ->
-    fn.call(this)
-    @doc.rebuildDirty()
-    @doc.forceTrailingNewline()
 
   applyDelta: (delta, external = true) ->
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and @doc.length == 1 and @doc.trailingNewline
       return this.setDelta(delta)
     return if delta.isIdentity()
-    this.doSilently( =>
+    doSilently.call(this, =>
       @selection.preserve( =>
         console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         index = 0       # Stores where the last retain end was, so if we see another one, we know to delete
@@ -120,28 +163,22 @@ class ScribeEditor extends EventEmitter2
     )
 
   deleteAt: (index, length) ->
-    this.doSilently( =>
+    doSilently.call(this, =>
       @selection.preserve( =>
-        return this.trackDelta( =>
-          this.keepNormalized( =>
+        return trackDelta.call(this, =>
+          keepNormalized.call(this, =>
             @doc.deleteText(index, length)
           )
         )
       )
     )
 
-  doSilently: (fn) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    fn()
-    @ignoreDomChanges = oldIgnoreDomChange
-
   # formatAt: (Number index, Number length, String name, Mixed value) ->
   formatAt: (index, length, name, value) ->
-    this.doSilently( =>
+    doSilently.call(this, =>
       @selection.preserve( =>
-        return this.trackDelta( =>
-          this.keepNormalized( =>
+        return trackDelta.call(this, =>
+          keepNormalized.call(this, =>
             @doc.formatText(index, length, name, value)
           )
         )
@@ -158,10 +195,10 @@ class ScribeEditor extends EventEmitter2
     return @selection.getRange()
 
   insertAt: (index, text) ->
-    this.doSilently( =>
+    doSilently.call(this, =>
       @selection.preserve( =>
-        return this.trackDelta( =>
-          this.keepNormalized( =>
+        return trackDelta.call(this, =>
+          keepNormalized.call(this, =>
             @doc.insertText(index, text)
           )
         )
@@ -176,42 +213,6 @@ class ScribeEditor extends EventEmitter2
     
   setSelection: (range) ->
     @selection.setRange(range)
-
-  trackDelta: (fn) ->
-    oldDelta = @doc.toDelta()
-    fn()
-    newDelta = @doc.toDelta()
-    decompose = newDelta.decompose(oldDelta)
-    compose = oldDelta.compose(decompose)
-    console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-    @undoManager.record(decompose, oldDelta)
-    this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
-    return decompose
-
-  update: ->
-    this.doSilently( =>
-      @selection.preserve( =>
-        return this.trackDelta( =>
-          Scribe.Document.normalizeHtml(@root)
-          lines = @doc.lines.toArray()
-          lineNode = @root.firstChild
-          _.each(lines, (line, index) =>
-            while line.node != lineNode
-              if line.node.parentNode == @root
-                newLine = @doc.insertLineBefore(lineNode, line)
-                lineNode = lineNode.nextSibling
-              else
-                @doc.removeLine(line)
-                return
-            @doc.updateLine(line)
-            lineNode = lineNode.nextSibling
-          )
-          while lineNode != null
-            newLine = @doc.appendLine(lineNode)
-            lineNode = lineNode.nextSibling
-        )
-      )
-    )
 
 
 
