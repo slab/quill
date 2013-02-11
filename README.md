@@ -4,6 +4,68 @@ Scribe Rich Text Editor
 Cross platform rich text editor built with coauthoring in mind.
 
 
+How to Use
+---
+
+```javascript
+var editor = new Scribe.Editor('editor')      // 'editor' is id of dom container
+```
+
+
+Editor API
+---
+
+### Modifying Text
+
+- editor.insertAt(index, text) - insert text (unformatted) at index
+- editor.deleteAt(index, length) - delete length characters starting from index
+- editor.formatAt(index, length, name, value) - apply formatting to length characters starting at index
+
+### Delta operations
+
+See (Tandem)[https://github.com/stypi/tandem] for details on deltas.
+
+- editor.applyDelta(delta) - applies delta to editor
+- editor.getDelta() - returns delta that describes contents of editor
+- editor.setDelta(delta) - sets editor to delta, assuming delta contains only insert operations
+
+### Events
+
+Events names are accessible through Scribe.Editor.events
+
+- editor.on('text-change', function(delta))
+- editor.on('selection-change', function(range)) - range is the new range of the selection
+
+
+Toolbar API
+---
+
+You can create a toolbar to assist in formatting the editor.
+
+```javascript
+var toolbar = new Scribe.Toolbar('toolbar', editor)   // 'toolbar' is the id of dom container
+```
+
+Any DOM node with the following classes that is clicked will trigger the corresponding format change:
+
+- bold
+- italic
+- strike
+- underline
+- link
+
+Toolbar will listen to selection changes and will add/remove the 'active' class to the corresponding DOM node.
+
+Any DOM node with the following classes that is changed (change DOM event, ex. <select>) will trigger the corresponding format change:
+
+- background - background color
+- color - text color
+- family - font family
+- size - font size
+
+Toolbar will listen to selection changes and will set the corresponding DOM node value to the selected text value.
+
+
 Local Development
 ---
 
