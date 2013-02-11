@@ -45,10 +45,14 @@ module.exports = function(grunt) {
       'bin/demo/scripts/dropkick.js': 'demo/scripts/dropkick.js',
       'bin/demo/images/': 'demo/images/*.png',
       'bin/tests/lib/': 'tests/lib/*'
+    },
+    min: {
+      'build/scribe.min.js': 'bin/src/scribe.js',
+      'build/scribe.all.min.js': 'bin/src/scribe.all.js'
     }
   });
 
   // Default task.
-  grunt.registerTask('default', 'coffee concat copy');
+  grunt.registerTask('default', 'coffee concat copy min');
 
 };
