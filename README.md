@@ -23,7 +23,7 @@ Editor API
 
 ### Delta operations
 
-See (Tandem)[https://github.com/stypi/tandem] for details on deltas.
+See [Tandem](https://github.com/stypi/tandem) for details on deltas.
 
 - editor.applyDelta(delta) - applies delta to editor
 - editor.getDelta() - returns delta that describes contents of editor
