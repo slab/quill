@@ -115,7 +115,6 @@ $(document).ready( ->
   editor = new Scribe.Editor("editor-container", {
     styles: {
       'a': { 'color': '#06c' }
-      '.editor': { 'min-height': '95%' }
     }
   })
 
