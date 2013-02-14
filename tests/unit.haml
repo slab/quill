@@ -1,7 +1,7 @@
 !!! 5
 %html
   %head
-    %title Stypi Editor Test
+    %title Stypi Editor Unit Tests
     %link{:rel => 'stylesheet', :type => 'text/css', :href => 'lib/mocha.css'}
 
 %body
@@ -39,7 +39,12 @@
     :javascript
       mocha.setup('bdd');
       mocha.ignoreLeaks();
-      expect = chai.expect
+      expect = chai.expect;
     %script{:type => 'text/javascript', :src => 'scripts/unit.js'}
     :javascript
-      mocha.run();
+      if (window.mochaPhantomJS) {
+        mochaPhantomJS.run();
+      } else {
+        mocha.run();
+      }
+      
