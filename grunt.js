@@ -44,7 +44,10 @@ module.exports = function(grunt) {
     copy: {
       'bin/demo/scripts/dropkick.js': 'demo/scripts/dropkick.js',
       'bin/demo/images/': 'demo/images/*.png',
-      'bin/tests/lib/': 'tests/lib/*'
+      'bin/lib/chai.js': 'node_modules/chai/chai.js',
+      'bin/lib/mocha.css': 'node_modules/mocha/mocha.css',
+      'bin/lib/mocha.js': 'node_modules/mocha/mocha.js',
+      'bin/lib/underscore.js': 'node_modules/underscore/underscore.js'
     },
     min: {
       'build/scribe.min.js': 'bin/src/scribe.js',

@@ -1,11 +1,17 @@
 REPORTER = list
 
 coverage:
-	@rm -rf src-js src-js-cov
-	@./node_modules/.bin/coffee -c -o src-js src
-	@jscoverage src-js src-js-cov
-	@TANDEM_COV=1 $(MAKE) test REPORTER=html-cov > coverage.html
-	@rm -rf src-js src-js-cov
+	grunt
+	rm -rf tmp
+	mkdir tmp
+	mv bin/src/* tmp/
+	jscoverage tmp/ bin/src/
+	./node_modules/.bin/mocha-phantomjs bin/tests/unit.html --reporter json-cov > coverage.json
+	echo "HEY"
+	rm bin/src/*
+	mv tmp/* bin/src/
+	rm -rf tmp
+	echo "HEY"
 
 test: unit
 
