@@ -138,23 +138,19 @@ class ScribeDocument
       @trailingNewline = false
       @length -= 1    # Doc did not get shorter but _.each loop compensates
       _.each(textLines, (textLine) =>
-        contents = this.makeLineContents(textLine)
-        div = @root.ownerDocument.createElement('div')
-        _.each(contents, (content) ->
-          div.appendChild(content)
-        )
+        div = this.makeLine(textLine)
         @root.appendChild(div)
         this.appendLine(div)
       )
     else if textLines.length == 1
-      contents = this.makeLineContents(text)
-      this.insertContentsAt(line, lineOffset, contents)
+      textNode = this.makeText(text)
+      this.insertNodeAt(line, lineOffset, textNode)
     else
       [line1, line2] = this.insertNewlineAt(line, lineOffset)
-      contents = this.makeLineContents(textLines[0])
-      this.insertContentsAt(line1, lineOffset, contents)
-      contents = this.makeLineContents(textLines[textLines.length - 1])
-      this.insertContentsAt(line2, 0, contents) 
+      textNode = this.makeText(textLines[0])
+      this.insertNodeAt(line1, lineOffset, textNode)
+      textNode = this.makeText(textLines[textLines.length-1])
+      this.insertNodeAt(line2, 0, textNode)
       if textLines.length > 2
         _.each(textLines.slice(1, -1), (lineText) =>
           lineNode = this.makeLine(lineText)
@@ -165,51 +161,25 @@ class ScribeDocument
   makeLine: (text) ->
     lineNode = @root.ownerDocument.createElement('div')
     lineNode.classList.add(Scribe.Line.CLASS_NAME)
-    contents = this.makeLineContents(text)
-    _.each(contents, (content) ->
-      lineNode.appendChild(content)
-    )
+    textNode = this.makeText(text)
+    lineNode.appendChild(textNode)
     return lineNode
-
-  makeLineContents: (text) ->
-    strings = text.split("\t")
-    contents = []
-    _.each(strings, (str, strIndex) =>
-      contents.push(this.makeText(str)) if str.length > 0
-      if strIndex < strings.length - 1
-        contents.push(this.makeTab())
-    )
-    return contents
-
-  makeTab: ->
-    tab = @root.ownerDocument.createElement('span')
-    tab.classList.add(Scribe.Leaf.TAB_NODE_CLASS)
-    tab.classList.add(Scribe.Constants.SPECIAL_CLASSES.ATOMIC)
-    tab.textContent = "\t"
-    return tab
 
   makeText: (text) ->
     node = @root.ownerDocument.createElement('span')
     node.textContent = text
     return node
 
-  # insertContentsAt: (Number startIndex, String text) ->
-  # insertContentsAt: (ScribeRange startIndex, String text) ->
-  insertContentsAt: (line, offset, contents) ->
-    return if contents.length == 0
+  insertNodeAt: (line, offset, node) ->
     [leaf, leafOffset] = line.findLeafAtOffset(offset)
     if leaf.node.nodeName != 'BR'
       [beforeNode, afterNode] = line.splitContents(offset)
       parentNode = beforeNode?.parentNode || afterNode?.parentNode
-      _.each(contents, (content) ->
-        parentNode.insertBefore(content, afterNode)
-      )
+      parentNode.insertBefore(node, afterNode)
     else
       parentNode = leaf.node.parentNode
       Scribe.Utils.removeNode(leaf.node)
-      _.each(contents, (content) ->
-        parentNode.appendChild(content)
-      )
+      parentNode.appendChild(node)
     this.updateLine(line)
 
   insertNewlineAt: (line, offset) ->

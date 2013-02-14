@@ -89,6 +89,8 @@ guard will compile haml and sass on file save. grunt needs to be run manually ev
 Testing
 ---
 
+To run some of the tests you will need [phantomjs](http://phantomjs.org/).
+
 ### Unit tests
 
 Visit bin/tests/unit.html to run unit tests or run:
@@ -97,7 +99,7 @@ Visit bin/tests/unit.html to run unit tests or run:
 
 ### Code Coverage
 
-Install https://github.com/visionmedia/node-jscoverage and run
+Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and run
 
     make coverage
 

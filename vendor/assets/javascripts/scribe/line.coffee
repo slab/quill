@@ -23,9 +23,9 @@ class ScribeLine extends LinkedList.Node
 
   @mergeAdjacent: (root) ->
     Scribe.Utils.traversePreorder(root, 0, (node) ->
-      if node.nodeType == node.ELEMENT_NODE && !ScribeLine.isLineNode(node) && Scribe.Utils.canModify(node)
+      if node.nodeType == node.ELEMENT_NODE and !ScribeLine.isLineNode(node) and Scribe.Utils.canModify(node)
         next = node.nextSibling
-        if next?.tagName == node.tagName && node.tagName != 'LI' && Scribe.Utils.canModify(next)
+        if next?.tagName == node.tagName and node.tagName != 'LI'and Scribe.Utils.canModify(node) and Scribe.Utils.canModify(next)
           [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
           [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
           if nodeFormat == nextFormat && nodeValue == nextValue

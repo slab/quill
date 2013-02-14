@@ -49,7 +49,8 @@ module.exports = function(grunt) {
       'bin/lib/mocha.js': 'node_modules/mocha/mocha.js',
       'bin/lib/underscore.js': 'node_modules/underscore/underscore.js',
       'bin/lib/rangy/': 'vendor/assets/javascripts/rangy/*.js',
-      'bin/lib/': 'vendor/assets/javascripts/*.js'
+      'bin/lib/': 'vendor/assets/javascripts/*.js',
+      'bin/tests/lib/': 'tests/lib/*.js'
     },
     min: {
       'build/scribe.min.js': 'bin/src/scribe.js',

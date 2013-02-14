@@ -63,7 +63,6 @@ class ScribeRenderer
     '.indent-7' : { 'margin-left': '14em' }
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
-    '.tab' : { 'display': 'inline-block', 'margin': '0px' }
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->

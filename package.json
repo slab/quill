@@ -7,6 +7,7 @@
   "devDependencies": {
     "chai": "1.5.x",
     "coffee-script": "1.4.x",
+    "commander": "1.1.x",
     "grunt-contrib-coffee": "0.3.x",
     "grunt-contrib-copy": "0.3.x",
     "jade": "0.28.x",
