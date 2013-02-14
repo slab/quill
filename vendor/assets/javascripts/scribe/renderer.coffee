@@ -4,17 +4,21 @@ class ScribeRenderer
 
   @DEFAULT_STYLES:
     '.editor': {
-      'cursor': 'text'
+      'bottom': '10px'
       'font-family': "'Helvetica', 'Arial', san-serif"
       'font-size': '13px'
+      'left': '15px'
       'line-height': '15px'
-      'min-height': '100%'
       'outline': 'none'
+      'position': 'absolute'
+      'right': '15px'
       'tab-size': '4'
+      'top': '10px'
       'white-space': 'pre-wrap'
     }
     'html' : { 'height': '100%' }
-    'body' : { 'height': '100%', 'margin': '0px', 'padding': '0px' }
+    'body' : { 'cursor': 'text', 'height': '100%', 'margin': '0px', 'padding': '0px'}
+    '.line:last-child': { 'padding-bottom': '10px' }
     'a'    : { 'text-decoration': 'underline' }
     'b'    : { 'font-weight': 'bold' }
     'i'    : { 'font-style': 'italic' }
