@@ -91,7 +91,15 @@ Testing
 
 ### Unit tests
 
-Visit bin/tests/unit.html to run unit tests
+Visit bin/tests/unit.html to run unit tests or run:
+    
+    make unit
+
+### Code Coverage
+
+Install https://github.com/visionmedia/node-jscoverage and run
+
+    make coverage
 
 ### Fuzzer
 
