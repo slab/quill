@@ -9,8 +9,10 @@
     "coffee-script": "1.4.x",
     "grunt-contrib-coffee": "0.3.x",
     "grunt-contrib-copy": "0.3.x",
+    "jade": "0.28.x",
     "mocha": "1.8.x",
-    "mocha-phantomjs": "2.0.x"
+    "mocha-phantomjs": "2.0.x",
+    "path": "0.4.x"
   },
   "engine": {
     "node": ">=0.8"

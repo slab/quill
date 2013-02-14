@@ -1,22 +1,17 @@
-REPORTER = list
-
 coverage:
-	grunt
-	rm -rf tmp
-	mkdir tmp
-	mv bin/src/* tmp/
-	jscoverage tmp/ bin/src/
-	./node_modules/.bin/mocha-phantomjs bin/tests/unit.html --reporter json-cov > coverage.json
-	echo "HEY"
-	rm bin/src/*
-	mv tmp/* bin/src/
-	rm -rf tmp
-	echo "HEY"
+	@rm -rf tmp
+	@mkdir tmp
+	@mv bin/src/* tmp/
+	@jscoverage tmp/ bin/src/
+	@./node_modules/.bin/mocha-phantomjs bin/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
+	@rm bin/src/*
+	@mv tmp/* bin/src/
+	@rm -rf tmp
 
 test: unit
 
 unit:
-	@./node_modules/.bin/mocha-phantomjs bin/tests/unit.html --reporter $(REPORTER)
+	@./node_modules/.bin/mocha-phantomjs bin/tests/unit.html
 	
 
 .PHONY: test
