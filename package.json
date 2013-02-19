@@ -1,6 +1,6 @@
 {
   "name": "stypi-editor",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "dependencies": {
     "underscore": "1.4.x"
   },
