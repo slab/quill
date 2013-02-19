@@ -3,5 +3,5 @@
 #= require linked_list
 #= require rangy/rangy-core
 #= require rangy/rangy-selectionsaverestore
-#= require tandem-core
+#= require tandem
 #= require_tree ./scribe

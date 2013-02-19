@@ -26,9 +26,7 @@ module.exports = function(grunt) {
       'bin/src/scribe.js': [
         '<banner:meta.banner>',
         'vendor/assets/javascripts/rangy/*.js',
-        'vendor/assets/javascripts/eventemitter2.js',
         'vendor/assets/javascripts/linked_list.js',
-        'vendor/assets/javascripts/tandem-core.js',
         'bin/src/scribe.js'
       ],
       'bin/src/scribe.all.js': [
@@ -60,5 +58,5 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', 'coffee concat copy min');
-
+  grunt.registerTask('dev', 'coffee concat copy')
 };
