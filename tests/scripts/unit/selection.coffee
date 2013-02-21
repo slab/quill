@@ -78,7 +78,7 @@ describe('Selection', ->
         'insert at beginning of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "A")
-          expected: ['<div><span>0123A|45|6789</span></div>']
+          expected: ['<div><span>0123|A45|6789</span></div>']
         'insert at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "A")
@@ -90,7 +90,7 @@ describe('Selection', ->
         'insert newline at beginning of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "\n")
-          expected: ['<div><span>0123</span></div>', '<div><span>|45|6789</span></div>']
+          expected: ['<div><span>0123|</span></div>', '<div><span>45|6789</span></div>']
         'insert newline at end of selection':
           lines: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "\n")
