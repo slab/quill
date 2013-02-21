@@ -82,7 +82,7 @@ Install guard and grunt
 
 guard will compile haml and sass on file save. grunt needs to be run manually every time coffeescript changes
 
-    bundle exec guard -G guardfile
+    bundle exec guard
     grunt
 
 
