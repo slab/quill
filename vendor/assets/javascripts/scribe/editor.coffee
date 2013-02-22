@@ -33,7 +33,6 @@ initListeners = ->
 keepNormalized = (fn) ->
   fn.call(this)
   @doc.rebuildDirty()
-  @doc.forceTrailingNewline()
 
 trackDelta = (fn) ->
   oldDelta = @doc.toDelta()
@@ -129,16 +128,9 @@ class ScribeEditor extends EventEmitter2
       @selection.preserve( =>
         console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         oldDelta = @doc.toDelta()
-        delta.apply(@doc.insertText, @doc.deleteText, @doc.formatText, @doc)
-        # If we had to force newline, pretend user added it
-        if @doc.forceTrailingNewline()
-          addNewlineDelta = new Tandem.Delta(delta.endLength, [
-            new Tandem.RetainOp(0, delta.endLength)
-            new Tandem.InsertOp("\n")
-          ])
-          this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
-          delta = delta.compose(addNewlineDelta)
-        @undoManager.record(delta, oldDelta)
+        delta.apply((index, text, formatting) =>
+          this.insertAt(index, text, formatting)
+        , @doc.deleteText, @doc.formatText, @doc)
         unless external
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
         console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
@@ -150,6 +142,7 @@ class ScribeEditor extends EventEmitter2
       @doc.deleteText(index, length)
     )
 
+
   # formatAt: (Number index, Number length, String name, Mixed value) ->
   formatAt: (index, length, name, value) ->
     doAt.call(this, =>
@@ -160,14 +153,36 @@ class ScribeEditor extends EventEmitter2
     return @doc.toDelta()
 
   getLength: ->
-    return @doc.length
+    return @doc.toDelta().endLength
 
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (index, text) ->
+  insertAt: (index, text, formatting = {}) ->
     doAt.call(this, =>
-      @doc.insertText(index, text)
+      text = text.replace(/\r\n/g, '\n')
+      text = text.replace(/\r/g, '\n')
+      lineTexts = text.split('\n')
+      if index == this.getLength()
+        if lineTexts[lineTexts.length - 1] == ''
+          lineTexts.pop()
+        else
+          # TODO fix this in the case of being called from applyDelta
+          addNewlineDelta = new Tandem.Delta(this.getLength(), [
+            new Tandem.RetainOp(0, this.getLength())
+            new Tandem.InsertOp("\n")
+          ])
+          this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
+        line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
+        offset = 0
+      else
+        [line, offset] = @doc.findLineAtOffset(index)
+      _.each(lineTexts, (lineText, i) =>
+        line.insertText(offset, lineText, formatting)
+        if i < lineTexts.length - 1
+          line = @doc.splitLine(line, offset + lineText.length)
+        offset = 0
+      )
     )
 
   setDelta: (delta) ->

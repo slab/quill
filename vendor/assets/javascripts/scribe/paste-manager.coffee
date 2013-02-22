@@ -24,7 +24,6 @@ class ScribePasteManager
         Scribe.Utils.removeExternal(@container)
         Scribe.Utils.removeStyles(@container)
         doc = new Scribe.Document(@container)
-        doc.trailingNewline = false
         doc.length -= 1
         delta = doc.toDelta()
         delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0

@@ -169,6 +169,21 @@ class ScribeLine extends LinkedList.Node
         Scribe.Utils.removeFormatFromSubtree(node, name)
       )
 
+  insertText: (offset, text, formatting = {}) ->
+    [leaf, leafOffset] = this.findLeafAtOffset(offset)
+    if _.isEqual(leaf.formatting, formatting)
+      leaf.insertText(leafOffset, text)
+      @doc.length += text.length
+    else
+      [prevNode, nextNode] = this.splitContents(offset)
+      span = @node.ownerDocument.createElement('span')
+      span.textContent = text
+      parentNode = prevNode?.parentNode or nextNode?.parentNode
+      parentNode.insertBefore(span, nextNode)
+      _.each(formatting, (value, name) =>
+        this.formatText(offset, text.length, name, value)
+      )
+
   rebuild: ->
     if @node.parentNode == @doc.root
       return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(ScribeLine.DIRTY_CLASS)

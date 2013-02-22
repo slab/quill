@@ -50,10 +50,6 @@ class ScribeDocument
     return false
 
   deleteText: (index, length) ->
-    if index + length == @length and @trailingNewline
-      @trailingNewline = false
-      @length -= 1
-      length -= 1
     return if length <= 0
     firstLine = lastLine = null
     this.applyToLines(index, length, (line, offset, length) =>
@@ -102,18 +98,6 @@ class ScribeDocument
       node = node.parentNode
     return node
 
-  forceTrailingNewline: ->
-    added = false
-    unless @trailingNewline
-      if @lines.length > 1 && @lines.last.length == 0
-        Scribe.Utils.removeNode(@lines.last.node)
-        this.removeLine(@lines.last)
-      else
-        added = true
-      @trailingNewline = true
-      @length += 1
-    return added
-
   formatText: (index, length, name, value) ->
     this.applyToLines(index, length, (line, offset, length) =>
       line.formatText(offset, length, name, value)
@@ -130,33 +114,6 @@ class ScribeDocument
     @length += line.length
     @length += 1 if @lines.length > 1
     return line
-
-  insertText: (index, text) ->
-    [line, lineOffset] = this.findLineAtOffset(index)
-    textLines = text.split("\n")
-    if index == @length && @trailingNewline
-      @trailingNewline = false
-      @length -= 1    # Doc did not get shorter but _.each loop compensates
-      _.each(textLines, (textLine) =>
-        div = this.makeLine(textLine)
-        @root.appendChild(div)
-        this.appendLine(div)
-      )
-    else if textLines.length == 1
-      textNode = this.makeText(text)
-      this.insertNodeAt(line, lineOffset, textNode)
-    else
-      [line1, line2] = this.insertNewlineAt(line, lineOffset)
-      textNode = this.makeText(textLines[0])
-      this.insertNodeAt(line1, lineOffset, textNode)
-      textNode = this.makeText(textLines[textLines.length-1])
-      this.insertNodeAt(line2, 0, textNode)
-      if textLines.length > 2
-        _.each(textLines.slice(1, -1), (lineText) =>
-          lineNode = this.makeLine(lineText)
-          @root.insertBefore(lineNode, line2.node)
-          this.insertLineBefore(lineNode, line2)
-        ) 
 
   makeLine: (text) ->
     lineNode = @root.ownerDocument.createElement('div')
@@ -232,7 +189,6 @@ class ScribeDocument
     @lines = new LinkedList()
     @lineMap = {}
     @length = 1
-    @trailingNewline = true
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
@@ -244,11 +200,9 @@ class ScribeDocument
     lines = @lines.toArray()
     ops = _.flatten(_.map(lines, (line, index) ->
       ops = Tandem.Delta.copy(line.delta).ops
-      ops.push(new Tandem.InsertOp("\n", line.formats)) if index < lines.length - 1
+      ops.push(new Tandem.InsertOp("\n", line.formats))
       return ops
     ), true)
-    formats = if @lines.last? then @lines.last.formats else {}
-    ops.push(new Tandem.InsertOp("\n", formats)) if @trailingNewline
     delta = new Tandem.Delta(0, @length, ops)
     return delta
 

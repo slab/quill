@@ -79,10 +79,6 @@ window.Scribe.Debug =
         console.error "incorrect document length", docLength, doc.length
         return false
 
-      unless doc.trailingNewline
-        console.error "trailingNewline is false"
-        return false
-
       # doc.lines should match nodesByLine
       if lines.length != nodesByLine.length
         console.error "doc.lines and nodesByLine differ in length", lines, nodesByLine
