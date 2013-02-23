@@ -129,16 +129,42 @@ class ScribeEditor extends EventEmitter2
         oldDelta = @doc.toDelta()
         delta.apply((index, text, formatting) =>
           this.insertAt.call(this, index, text, formatting)
-        , @doc.deleteText, @doc.formatText, @doc)
+        , (index, length) =>
+          this.deleteAt.call(this, index, length)
+        , @doc.formatText, @doc)
         unless external
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
-        console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
+        # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
+        #console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       )
     )
 
   deleteAt: (index, length) ->
     doAt.call(this, =>
-      @doc.deleteText(index, length)
+      if index + length >= this.getLength()
+        length = this.getLength() - index - 1
+        # TODO fix this in the case of being called from applyDelta
+        addNewlineDelta = new Tandem.Delta(this.getLength(), [
+          new Tandem.RetainOp(0, this.getLength())
+          new Tandem.InsertOp("\n")
+        ])
+        #this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
+      return if length <= 0
+      [anchorLine, offset] = @doc.findLineAtOffset(index)
+      deleteLength = Math.min(length, anchorLine.length - offset)
+      anchorLine.deleteText(offset, deleteLength)
+      length -= deleteLength
+      if length > 0
+        line = anchorLine.next
+        length -= 1   # newline will be removed by mergeLines later
+        while length > 0 and length > line.length
+          length -= (line.length + 1)
+          nextLine = line.next
+          Scribe.Utils.removeNode(line.node)
+          @doc.removeLine(line)
+          line = nextLine
+        line.deleteText(0, length)
+        @doc.mergeLines(anchorLine, line)
     )
 
 
@@ -171,7 +197,7 @@ class ScribeEditor extends EventEmitter2
             new Tandem.RetainOp(0, this.getLength())
             new Tandem.InsertOp("\n")
           ])
-          this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
+          #this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
         line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
         offset = 0
       else

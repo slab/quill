@@ -3,7 +3,7 @@ describe('Editor', ->
     tests =
       'apply to empty':
         lines: []
-        deltas: [new Tandem.InsertOp("0123\n")]
+        deltas: [new Tandem.InsertOp("0123")]
         expected: ['<div><span>0123</span></div>']
       'append character':
         lines: ['<div><span>0123</span></div>']

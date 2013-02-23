@@ -125,6 +125,14 @@ class ScribeDocument
     node.textContent = text
     return node
 
+  mergeLines: (line, lineToMerge) ->
+    _.each(_.clone(lineToMerge.node.childNodes), (child) ->
+      line.node.appendChild(child)
+    )
+    Scribe.Utils.removeNode(lineToMerge.node)
+    this.removeLine(lineToMerge)
+    line.rebuild()
+
   insertNodeAt: (line, offset, node) ->
     [leaf, leafOffset] = line.findLeafAtOffset(offset)
     if leaf.node.nodeName != 'BR'

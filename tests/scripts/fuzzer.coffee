@@ -4,6 +4,7 @@ NUM_OPERATIONS = 500
 
 seed = Math.random()
 console.info seed
+seed = '0.5413067403715104'
 Math.seedrandom(seed.toString())
 
 
@@ -24,29 +25,27 @@ $(document).ready( ->
   , (callback) ->
     operationsLeft -= 1
     _.defer( ->
-      writerHTML = writer.root.innerHTML
-      readerHTML = reader.root.innerHTML
+      priorHTML = writer.root.innerHTML
+      priorDelta = writer.getDelta()
       operation = Scribe.Debug.Test.getRandomOperation(writer, ALPHABET, FORMATS)
       if operation?
         try
           writer[operation.op].apply(writer, operation.args)
+          writerDelta = writer.getDelta()
+          readerDelta = reader.getDelta()
+          if writerDelta.isEqual(readerDelta)
+            callback(null)
+          else
+            throw "Editor diversion after #{NUM_OPERATIONS - operationsLeft} operations"
         catch e
           console.error operation
-          console.error writerHTML
-          console.error readerHTML
+          console.error 'Prior ', priorHTML
+          console.error 'Writer', writer.root.innerHTML
+          console.error 'Reader', reader.root.innerHTML
+          console.error 'Prior ', priorDelta
+          console.error 'Writer', writerDelta
+          console.error 'Reader', readerDelta
           callback(e)
-          return
-        writerDelta = writer.doc.toDelta()
-        readerDelta = reader.doc.toDelta()
-        if writerDelta.isEqual(readerDelta)
-          callback(null)
-        else
-          console.error operation
-          console.error writerHTML
-          console.error readerHTML
-          console.error 'writer', writerDelta
-          console.error 'reader', readerDelta
-          callback("Editor diversion after #{NUM_OPERATIONS - operationsLeft} operations")
       else
         callback(null)
     )

@@ -14,7 +14,7 @@ window.Scribe.Debug =
     return editor.doc
 
   checkDocumentConsistency: (doc, output = false) ->
-    nodesByLine = _.map(doc.root.childNodes, (lineNode) ->
+    nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
         return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
