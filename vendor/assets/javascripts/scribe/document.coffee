@@ -111,8 +111,6 @@ class ScribeDocument
     else
       @lines.append(line)
     @lineMap[line.id] = line
-    @length += line.length
-    @length += 1 if @lines.length > 1
     return line
 
   makeLine: (text) ->
@@ -182,13 +180,10 @@ class ScribeDocument
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
-    @length -= line.length
-    @length -= 1 if @lines.length >= 1
 
   reset: ->
     @lines = new LinkedList()
     @lineMap = {}
-    @length = 1
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
@@ -203,7 +198,7 @@ class ScribeDocument
       ops.push(new Tandem.InsertOp("\n", line.formats))
       return ops
     ), true)
-    delta = new Tandem.Delta(0, @length, ops)
+    delta = new Tandem.Delta(0, ops)
     return delta
 
   updateDirty: ->
@@ -217,10 +212,7 @@ class ScribeDocument
     )
 
   updateLine: (line) ->
-    @length -= line.length
-    didRebuild = line.rebuild()
-    @length += line.length
-    return didRebuild
+    return line.rebuild()
 
 
 

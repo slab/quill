@@ -56,7 +56,7 @@ class ScribeKeyboard
     #)
     #this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
     #  unless @editor.selection.deleteRange()
-    #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.doc.length - 1
+    #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.getLength() - 1
     #)
     this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
       this.toggleFormat(selection, 'bold')

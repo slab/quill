@@ -17,14 +17,13 @@ class ScribePasteManager
       @editor.selection.deleteRange()
       selection = @editor.getSelection()
       return unless selection?
-      docLength = @editor.doc.length
+      docLength = @editor.getLength()
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
         Scribe.Utils.removeExternal(@container)
         Scribe.Utils.removeStyles(@container)
         doc = new Scribe.Document(@container)
-        doc.length -= 1
         delta = doc.toDelta()
         delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0
         delta.ops.push(new Tandem.RetainOp(selection.start.index, docLength)) if selection.start.index < docLength
@@ -33,7 +32,7 @@ class ScribePasteManager
         oldDelta = @editor.doc.toDelta()
         @editor.applyDelta(delta, false)
         @editor.root.focus()
-        lengthAdded = Math.max(0, @editor.doc.length - docLength)
+        lengthAdded = Math.max(0, @editor.getLength() - docLength)
         @editor.setSelection(new Scribe.Range(@editor, selection.start.index + lengthAdded, selection.start.index + lengthAdded))
       )
     )

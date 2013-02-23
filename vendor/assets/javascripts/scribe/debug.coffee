@@ -71,14 +71,6 @@ window.Scribe.Debug =
       )
         return false
 
-      # Document length should be correct
-      docLength = _.reduce(lines, (count, line) ->
-        return line.length + count
-      , lines.length)
-      if docLength != doc.length
-        console.error "incorrect document length", docLength, doc.length
-        return false
-
       # doc.lines should match nodesByLine
       if lines.length != nodesByLine.length
         console.error "doc.lines and nodesByLine differ in length", lines, nodesByLine
@@ -134,17 +126,18 @@ window.Scribe.Debug =
     getRandomOperation: (editor, alphabet, formats) ->
       formatKeys = _.keys(formats)
       rand = Math.random()
+      lengthLimit = editor.getLength() - 1
       if rand < 0.2
         index = 0
       else if rand < 0.4
-        index = editor.doc.length - 1
+        index = lengthLimit
       else
-        index = _.random(0, editor.doc.length - 1)
+        index = _.random(0, lengthLimit)
       length = Scribe.Debug.Test.getRandomLength() + 1
       rand = Math.random()
       if rand < 0.5
         return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length)]}
-      length = Math.min(length, editor.doc.length - index)
+      length = Math.min(length, lengthLimit)
       return null if length <= 0
       if rand < 0.75
         return {op: 'deleteAt', args: [index, length - 1]}

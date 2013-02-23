@@ -120,12 +120,12 @@ class ScribeEditor extends EventEmitter2
 
   applyDelta: (delta, external = true) ->
     # Make exception for systems that assume editors start with empty text
-    if delta.startLength == 0 and @doc.length == 1
+    if delta.startLength == 0 and this.getLength() == 1
       return this.setDelta(delta)
     return if delta.isIdentity()
     doSilently.call(this, =>
       @selection.preserve( =>
-        console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
+        console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         oldDelta = @doc.toDelta()
         delta.apply((index, text, formatting) =>
           this.insertAt.call(this, index, text, formatting)
@@ -186,7 +186,7 @@ class ScribeEditor extends EventEmitter2
 
   setDelta: (delta) ->
     oldLength = delta.startLength
-    delta.startLength = @doc.length
+    delta.startLength = this.getLength()
     this.applyDelta(delta)
     delta.startLength = oldLength
     

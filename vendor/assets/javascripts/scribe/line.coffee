@@ -173,7 +173,6 @@ class ScribeLine extends LinkedList.Node
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
     if _.isEqual(leaf.formatting, formatting)
       leaf.insertText(leafOffset, text)
-      @doc.length += text.length
     else
       [prevNode, nextNode] = this.splitContents(offset)
       span = @node.ownerDocument.createElement('span')
