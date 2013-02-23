@@ -137,9 +137,9 @@ window.Scribe.Debug =
       if rand < 0.2
         index = 0
       else if rand < 0.4
-        index = editor.doc.length
+        index = editor.doc.length - 1
       else
-        index = _.random(0, editor.doc.length)
+        index = _.random(0, editor.doc.length - 1)
       length = Scribe.Debug.Test.getRandomLength() + 1
       rand = Math.random()
       if rand < 0.5
@@ -147,7 +147,7 @@ window.Scribe.Debug =
       length = Math.min(length, editor.doc.length - index)
       return null if length <= 0
       if rand < 0.75
-        return {op: 'deleteAt', args: [index, length]}
+        return {op: 'deleteAt', args: [index, length - 1]}
       else
         format = formatKeys[_.random(0, formatKeys.length - 1)]
         value = formats[format][_.random(0, formats[format].length - 1)]

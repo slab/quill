@@ -217,6 +217,7 @@ ScribeUtils =
         else if !prev? and !next?
           console.warn('External nodes might have no where to go!')
           Scribe.Utils.moveExternal(node, node.parentNode, node.nextSibling)
+          break
         else
           prev = prev.previousSibling if prev?
           next = next.nextSibling if next?

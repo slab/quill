@@ -164,8 +164,8 @@ class ScribeDocument
 
   rebuildDirty: ->
     # First and last nodes are always dirty to handle edge cases
-    @root.firstChild.classList.add(Scribe.Line.DIRTY_CLASS)
-    @root.lastChild.classList.add(Scribe.Line.DIRTY_CLASS)
+    @root.firstChild.classList.add(Scribe.Line.DIRTY_CLASS) if @root.firstChild?
+    @root.lastChild.classList.add(Scribe.Line.DIRTY_CLASS)  if @root.lastChild?
     dirtyNodes = _.clone(@root.getElementsByClassName(Scribe.Line.DIRTY_CLASS))
     _.each((dirtyNodes), (lineNode, index) =>
       this.cleanNode(lineNode)

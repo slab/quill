@@ -41,7 +41,6 @@ trackDelta = (fn) ->
   decompose = newDelta.decompose(oldDelta)
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  @undoManager.record(decompose, oldDelta)
   this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
   return decompose
 
@@ -121,7 +120,7 @@ class ScribeEditor extends EventEmitter2
 
   applyDelta: (delta, external = true) ->
     # Make exception for systems that assume editors start with empty text
-    if delta.startLength == 0 and @doc.length == 1 and @doc.trailingNewline
+    if delta.startLength == 0 and @doc.length == 1
       return this.setDelta(delta)
     return if delta.isIdentity()
     doSilently.call(this, =>
@@ -129,7 +128,7 @@ class ScribeEditor extends EventEmitter2
         console.assert(delta.startLength == @doc.length, "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         oldDelta = @doc.toDelta()
         delta.apply((index, text, formatting) =>
-          this.insertAt(index, text, formatting)
+          this.insertAt.call(this, index, text, formatting)
         , @doc.deleteText, @doc.formatText, @doc)
         unless external
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
@@ -166,7 +165,7 @@ class ScribeEditor extends EventEmitter2
       if index == this.getLength()
         if lineTexts[lineTexts.length - 1] == ''
           lineTexts.pop()
-        else
+        else if false
           # TODO fix this in the case of being called from applyDelta
           addNewlineDelta = new Tandem.Delta(this.getLength(), [
             new Tandem.RetainOp(0, this.getLength())
