@@ -49,23 +49,6 @@ class ScribeDocument
       return true
     return false
 
-  deleteText: (index, length) ->
-    return if length <= 0
-    firstLine = lastLine = null
-    this.applyToLines(index, length, (line, offset, length) =>
-      firstLine = line unless firstLine?
-      lastLine = line
-      if offset == 0 && length == line.length + 1
-        Scribe.Utils.removeNode(line.node)
-      else
-        line.deleteText(offset, length)
-      this.updateLine(line)
-    )
-    if firstLine != lastLine and this.findLine(firstLine.node) and this.findLine(lastLine.node)
-      Scribe.Utils.mergeNodes(firstLine.node, lastLine.node)
-      this.updateLine(firstLine)
-      this.removeLine(lastLine)
-
   findLeaf: (node) ->
     lineNode = node.parentNode
     while lineNode? && !Scribe.Line.isLineNode(lineNode)
@@ -113,18 +96,6 @@ class ScribeDocument
     @lineMap[line.id] = line
     return line
 
-  makeLine: (text) ->
-    lineNode = @root.ownerDocument.createElement('div')
-    lineNode.classList.add(Scribe.Line.CLASS_NAME)
-    textNode = this.makeText(text)
-    lineNode.appendChild(textNode)
-    return lineNode
-
-  makeText: (text) ->
-    node = @root.ownerDocument.createElement('span')
-    node.textContent = text
-    return node
-
   mergeLines: (line, lineToMerge) ->
     _.each(_.clone(lineToMerge.node.childNodes), (child) ->
       line.node.appendChild(child)
@@ -132,35 +103,6 @@ class ScribeDocument
     Scribe.Utils.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
     line.rebuild()
-
-  insertNodeAt: (line, offset, node) ->
-    [leaf, leafOffset] = line.findLeafAtOffset(offset)
-    if leaf.node.nodeName != 'BR'
-      [beforeNode, afterNode] = line.splitContents(offset)
-      parentNode = beforeNode?.parentNode || afterNode?.parentNode
-      parentNode.insertBefore(node, afterNode)
-    else
-      parentNode = leaf.node.parentNode
-      Scribe.Utils.removeNode(leaf.node)
-      parentNode.appendChild(node)
-    this.updateLine(line)
-
-  insertNewlineAt: (line, offset) ->
-    if offset == 0 or offset == line.length
-      div = @root.ownerDocument.createElement('div')
-      if offset == 0
-        @root.insertBefore(div, line.node)
-        newLine = this.insertLineBefore(div, line)
-        return [newLine, line]
-      else
-        refLine = line.next
-        refLineNode = if refLine? then refLine.node else null
-        @root.insertBefore(div, refLineNode)
-        newLine = this.insertLineBefore(div, refLine)
-        return [line, newLine]
-    else
-      newLine = this.splitLine(line, offset)
-      return [line, newLine]
 
   rebuild: ->
     this.reset()
@@ -208,16 +150,6 @@ class ScribeDocument
     ), true)
     delta = new Tandem.Delta(0, ops)
     return delta
-
-  updateDirty: ->
-    dirtyNodes = @root.ownerDocument.getElementsByClassName(Scribe.Line.DIRTY_CLASS)
-    fixLines = false
-    _.each(dirtyNodes, (dirtyNode) =>
-      line = this.findLine(dirtyNode)
-      if line?
-        this.updateLine(line)
-        fixLines = true if line.formats['list']?
-    )
 
   updateLine: (line) ->
     return line.rebuild()

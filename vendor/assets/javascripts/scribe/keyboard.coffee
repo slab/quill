@@ -94,7 +94,7 @@ class ScribeKeyboard
         applyIndent(line, 'list')
       else
         applyIndent(line, 'indent')
-      @editor.doc.updateDirty()
+      @editor.doc.rebuildDirty()
     )
 
   onIndentLine: (selection) ->
