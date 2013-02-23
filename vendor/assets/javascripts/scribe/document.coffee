@@ -22,20 +22,6 @@ class ScribeDocument
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
 
-  applyToLines: (index, length, fn) ->
-    [startLine, startOffset] = this.findLineAtOffset(index)
-    [endLine, endOffset] = this.findLineAtOffset(index + length)
-    if startLine == endLine
-      fn(startLine, startOffset, endOffset - startOffset)
-    else
-      curLine = startLine.next
-      fn(startLine, startOffset, startLine.length + 1 - startOffset)
-      while curLine? && curLine != endLine
-        next = curLine.next
-        fn(curLine, 0, curLine.length + 1)
-        curLine = next
-      fn(endLine, 0, endOffset)
-
   buildLines: ->
     this.reset()
     ScribeDocument.normalizeHtml(@root, {ignoreDirty: true})
@@ -80,12 +66,6 @@ class ScribeDocument
     while node? && !Scribe.Line.isLineNode(node)
       node = node.parentNode
     return node
-
-  formatText: (index, length, name, value) ->
-    this.applyToLines(index, length, (line, offset, length) =>
-      line.formatText(offset, length, name, value)
-      this.updateLine(line)
-    )
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Scribe.Line(this, newLineNode)

@@ -158,8 +158,8 @@ describe('Editor', ->
               expect(formats[formatTest.format]).to.be.undefined
             else if formatTest.format == 'family'
               expect(formats[formatTest.format]).to.equal('san-serif')
-          expect(delta).to.deep.equal(expectedDelta)
           expect(consistent).to.be.true
+          expect(delta).to.deep.equal(expectedDelta)
         )
       )
     )

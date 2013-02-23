@@ -120,7 +120,7 @@ ScribeConstants =
     EXTERNAL: 'ext'
   
 
-ScribeConstants.LINE_FORMATS = [].concat(_.keys(ScribeConstants.INDENT_FORMATS), ScribeConstants.ALIGN_FORMATS).sort()
+ScribeConstants.LINE_FORMATS = _.extend({}, ScribeConstants.INDENT_FORMATS, ScribeConstants.ALIGN_FORMATS)
 
 ScribeConstants.SPAN_FORMATS =
   'background' : ScribeConstants.FONT_BACKGROUNDS
@@ -136,6 +136,7 @@ ScribeConstants.TAG_FORMATS =
   'strike'    : [true, false]
   'underline' : [true, false]
 
+ScribeConstants.LEAF_FORMATS = _.extend({}, ScribeConstants.SPAN_FORMATS, ScribeConstants.TAG_FORMATS)
 
 
 window.Scribe ||= {}

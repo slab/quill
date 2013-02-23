@@ -127,11 +127,7 @@ class ScribeEditor extends EventEmitter2
       @selection.preserve( =>
         console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         oldDelta = @doc.toDelta()
-        delta.apply((index, text, formatting) =>
-          this.insertAt.call(this, index, text, formatting)
-        , (index, length) =>
-          this.deleteAt.call(this, index, length)
-        , @doc.formatText, @doc)
+        delta.apply(this.insertAt, this.deleteAt, this.formatAt, this)
         unless external
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
         # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
@@ -171,7 +167,22 @@ class ScribeEditor extends EventEmitter2
   # formatAt: (Number index, Number length, String name, Mixed value) ->
   formatAt: (index, length, name, value) ->
     doAt.call(this, =>
-      @doc.formatText(index, length, name, value)
+      [line, offset] = @doc.findLineAtOffset(index)
+      while line? and length > 0
+        if Scribe.Constants.LINE_FORMATS[name]?
+          # If newline character is being applied with formatting
+          if length > line.length + 1 - offset
+            line.format(name, value)
+        else if Scribe.Constants.LEAF_FORMATS[name]?
+          if line.length - offset >= length
+            line.formatText(offset, length, name, value)
+          else
+            line.formatText(offset, line.length - offset, name, value)
+        else
+          console.warn 'Unsupported format'
+        length -= (line.length - offset + 1)
+        offset = 0
+        line = line.next
     )
 
   getDelta: ->

@@ -150,6 +150,9 @@ class ScribeLine extends LinkedList.Node
     )
     return [retLeaf, offset]
 
+  format: (name, value) ->
+    console.warn "Unimplemented"
+
   formatText: (offset, length, name, value) ->
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
