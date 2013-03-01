@@ -22,7 +22,7 @@ $(document).ready( ->
   writer.getRandomOp = ->
     Scribe.Debug.Test.getRandomOperation(this, ALPHABET, FORMATS)
 
-  operationsLeft = NUM_OPERATIONS
+  # operationsLeft = NUM_OPERATIONS
   # async.whilst( ->
   #   return operationsLeft > 0
   # , (callback) ->

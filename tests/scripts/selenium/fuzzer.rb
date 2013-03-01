@@ -1,5 +1,6 @@
 require 'debugger'
 require 'selenium-webdriver'
+require_relative 'selenium_adapter'
 
 NUM_EDITS = 10
 
@@ -43,37 +44,6 @@ def js_get_random_edit(driver)
   return driver.execute_script "return parent.writer.getRandomOp();"
 end
 
-$cursor_pos = 0 # XXX: Ghetto shit. Refactor this tom.
-
-def move_cursor(index, editor)
-  if index < $cursor_pos
-    ($cursor_pos - index).times do editor.send_keys(:arrow_left) end
-  elsif index > $cursor_pos
-    ($cursor_pos - index).times do editor.send_keys(:arrow_right) end
-  end
-  $cursor_pos = index
-end
-
-def type_text(text, editor)
-  editor.send_keys(text)
-  $cursor_pos += text.length
-end
-
-def op_to_selenium(op, editor)
-  case op['op']
-  when 'insertAt'
-    index, text = op['args']
-    move_cursor(index, editor)
-    type_text(text, editor)
-  when 'deleteAt'
-    puts "Ain't nobody got time for dat"
-  when 'formatAt'
-    puts "Ain't nobody got time for dat"
-  else
-    raise "Invalid op type: #{op}"
-  end
-end
-
 ################################################################################
 # Helpers
 ################################################################################
@@ -96,21 +66,17 @@ editors = driver.find_elements(:class, "editor-container")
 writer, reader = editors
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:id, "scribe-container")
+adapter = SeleniumAdapter.new writer
 
 ################################################################################
 # Fuzzer logic
 ################################################################################
 edit = {'op' => 'insertAt', 'args' => [0, "abc"]}
-op_to_selenium(edit, writer)
+adapter.op_to_selenium(edit)
 edit = {'op' => 'insertAt', 'args' => [3, "def"]}
-op_to_selenium(edit, writer)
+adapter.op_to_selenium(edit)
 edit = {'op' => 'insertAt', 'args' => [0, "123"]}
-op_to_selenium(edit, writer)
-
-# debugger
-# writer.send_keys "abcd"
-# writer.send_keys "abcd"
-# writer.click()
+adapter.op_to_selenium(edit)
 
 # edit = js_get_random_edit(driver)
 # puts edit
