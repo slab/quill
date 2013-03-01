@@ -38,15 +38,17 @@ def get_random_edit
   end
 end
 
+def js_get_random_edit(driver)
+  return driver.execute_script "return parent.writer.getRandomOp();"
+end
+
 ################################################################################
 # Helpers
 ################################################################################
 def check_consistency(driver)
-  driver.switch_to.default_content
-  writer_delta = driver.execute_script "return writer.getDelta();"
-  reader_delta = driver.execute_script "return reader.getDelta();"
+  writer_delta = driver.execute_script "return parent.writer.getDelta();"
+  reader_delta = driver.execute_script "return parent.reader.getDelta();"
   raise "Writer: #{writer_delta}\nReader: #{reader_delta}" unless writer_delta == reader_delta
-  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
 ################################################################################
