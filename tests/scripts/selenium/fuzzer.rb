@@ -1,13 +1,14 @@
 require 'debugger'
 require 'selenium-webdriver'
 
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 NUM_EDITS = 10
 
 ################################################################################
 # Helpers for generating random edits
 # XXX: Should we just call into the editor and use the existing js for this?
 ################################################################################
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+
 def get_random_string(alphabet, length)
   chars = (0...length).to_a.map! { alphabet[Random.rand(alphabet.length - 1)] }
   return chars.join ''
@@ -42,6 +43,37 @@ def js_get_random_edit(driver)
   return driver.execute_script "return parent.writer.getRandomOp();"
 end
 
+$cursor_pos = 0 # XXX: Ghetto shit. Refactor this tom.
+
+def move_cursor(index, editor)
+  if index < $cursor_pos
+    ($cursor_pos - index).times do editor.send_keys(:arrow_left) end
+  elsif index > $cursor_pos
+    ($cursor_pos - index).times do editor.send_keys(:arrow_right) end
+  end
+  $cursor_pos = index
+end
+
+def type_text(text, editor)
+  editor.send_keys(text)
+  $cursor_pos += text.length
+end
+
+def op_to_selenium(op, editor)
+  case op['op']
+  when 'insertAt'
+    index, text = op['args']
+    move_cursor(index, editor)
+    type_text(text, editor)
+  when 'deleteAt'
+    puts "Ain't nobody got time for dat"
+  when 'formatAt'
+    puts "Ain't nobody got time for dat"
+  else
+    raise "Invalid op type: #{op}"
+  end
+end
+
 ################################################################################
 # Helpers
 ################################################################################
@@ -68,11 +100,26 @@ writer = driver.find_element(:id, "scribe-container")
 ################################################################################
 # Fuzzer logic
 ################################################################################
-NUM_EDITS.times do
-  random_edit = get_random_edit()
-  writer.send_keys random_edit
-  check_consistency(driver)
-end
+edit = {'op' => 'insertAt', 'args' => [0, "abc"]}
+op_to_selenium(edit, writer)
+edit = {'op' => 'insertAt', 'args' => [3, "def"]}
+op_to_selenium(edit, writer)
+edit = {'op' => 'insertAt', 'args' => [0, "123"]}
+op_to_selenium(edit, writer)
+
+# debugger
+# writer.send_keys "abcd"
+# writer.send_keys "abcd"
+# writer.click()
+
+# edit = js_get_random_edit(driver)
+# puts edit
+# NUM_EDITS.times do |i|
+#   puts i if i % 100 == 0
+#   random_edit = get_random_edit()
+#   writer.send_keys random_edit
+#   check_consistency(driver)
+# end
 
 ################################################################################
 # Scratch from experimenting with api
