@@ -62,14 +62,12 @@ editors = driver.find_elements(:class, "editor-container")
 writer, reader = editors
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:id, "scribe-container")
-puts "Writer is: #{writer}"
 
 ################################################################################
 # Fuzzer logic
 ################################################################################
 NUM_EDITS.times do
   random_edit = get_random_edit()
-  puts "RandomEdit is: #{random_edit}"
   writer.send_keys random_edit
   check_consistency(driver)
 end
