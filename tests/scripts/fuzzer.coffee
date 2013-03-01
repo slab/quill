@@ -19,6 +19,9 @@ $(document).ready( ->
     reader.applyDelta(delta, false)
   )
 
+  writer.getRandomOp = ->
+    Scribe.Debug.Test.getRandomOperation(this, ALPHABET, FORMATS)
+
   operationsLeft = NUM_OPERATIONS
   # async.whilst( ->
   #   return operationsLeft > 0
