@@ -22,11 +22,7 @@ class SeleniumAdapter
   private
 
   def move_cursor(to_index)
-    if to_index < @cursor_pos
-      (@cursor_pos - to_index).times do @editor.send_keys(:arrow_left) end
-    elsif to_index > @cursor_pos
-      (@cursor_pos - to_index).times do @editor.send_keys(:arrow_right) end
-    end
+    (@cursor_pos - to_index).abs.times do @editor.send_keys(:arrow_left) end
     @cursor_pos = to_index
   end
 
