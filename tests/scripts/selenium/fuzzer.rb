@@ -5,7 +5,7 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 NUM_EDITS = 10
 
 ################################################################################
-# Helpers for generating random edits.
+# Helpers for generating random edits
 # XXX: Should we just call into the editor and use the existing js for this?
 ################################################################################
 def get_random_string(alphabet, length)
@@ -38,9 +38,19 @@ def get_random_edit
   end
 end
 
+################################################################################
+# Helpers
+################################################################################
+def check_consistency(driver)
+  driver.switch_to.default_content
+  writer_delta = driver.execute_script "return writer.getDelta();"
+  reader_delta = driver.execute_script "return reader.getDelta();"
+  raise "Writer: #{writer_delta}\nReader: #{reader_delta}" unless writer_delta == reader_delta
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
+end
 
 ################################################################################
-# WebDriver setup.
+# WebDriver setup
 ################################################################################
 puts "Usage: ruby _browserdriver_ _editor_url_" unless ARGV.length == 2
 browserdriver = ARGV[0].to_sym
@@ -55,13 +65,13 @@ writer = driver.find_element(:id, "scribe-container")
 puts "Writer is: #{writer}"
 
 ################################################################################
-# Fuzzer logic.
+# Fuzzer logic
 ################################################################################
 NUM_EDITS.times do
   random_edit = get_random_edit()
   puts "RandomEdit is: #{random_edit}"
   writer.send_keys random_edit
-  # XXX: Somehow check correctness before continuing
+  check_consistency(driver)
 end
 
 ################################################################################

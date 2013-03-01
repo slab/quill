@@ -11,8 +11,8 @@ Math.seedrandom(seed.toString())
 $(document).ready( ->
   rangy.init()
   $editors = $('.editor-container')
-  writer = new Scribe.Editor($editors.get(0))
-  reader = new Scribe.Editor($editors.get(1))
+  window.writer = new Scribe.Editor($editors.get(0))
+  window.reader = new Scribe.Editor($editors.get(1))
   start = new Date()
 
   writer.on(Scribe.Editor.events.TEXT_CHANGE, (delta) ->
