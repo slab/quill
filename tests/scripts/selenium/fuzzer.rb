@@ -6,10 +6,7 @@ NUM_EDITS = 10
 
 ################################################################################
 # Helpers for generating random edits
-# XXX: Should we just call into the editor and use the existing js for this?
 ################################################################################
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
-
 def js_get_random_edit(driver)
   return driver.execute_script "return parent.writer.getRandomOp();"
 end
