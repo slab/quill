@@ -10,36 +10,6 @@ NUM_EDITS = 10
 ################################################################################
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
-def get_random_string(alphabet, length)
-  chars = (0...length).to_a.map! { alphabet[Random.rand(alphabet.length - 1)] }
-  return chars.join ''
-end
-
-def get_random_length()
-  rand = Random.rand()
-  if rand < 0.1
-    return 1
-  elsif rand < 0.6
-    return Random.rand((0..2))
-  elsif rand < 0.8
-    return Random.rand((3..4))
-  elsif rand < 0.9
-    return Random.rand((5..9))
-  else
-    return Random.rand((10..50))
-  end
-end
-
-def get_random_edit
-  length = get_random_length()
-  opChance = Random.rand()
-  if opChance < 1.0
-    return get_random_string(ALPHABET, length)
-  elsif opChance < 1.0 # TODO
-    # delete somewhere
-  end
-end
-
 def js_get_random_edit(driver)
   return driver.execute_script "return parent.writer.getRandomOp();"
 end

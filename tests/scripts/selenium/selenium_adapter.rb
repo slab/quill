@@ -30,7 +30,6 @@ class SeleniumAdapter
     @cursor_pos = to_index
   end
 
-
   def type_text(text)
     @editor.send_keys(text)
     @cursor_pos += text.length
