@@ -38,25 +38,12 @@ adapter = SeleniumAdapter.new driver, writer
 ################################################################################
 # Fuzzer logic
 ################################################################################
-edit = {'op' => 'insertAt', 'args' => [0, "abc"]}
-adapter.op_to_selenium(edit)
-edit = {'op' => 'insertAt', 'args' => [3, "def"]}
-adapter.op_to_selenium(edit)
-edit = {'op' => 'insertAt', 'args' => [0, "123"]}
-adapter.op_to_selenium(edit)
-edit = {'op' => 'deleteAt', 'args' => [0, 3]}
-adapter.op_to_selenium(edit)
-edit = {'op' => 'formatAt', 'args' => [0, 3, 'link', 'http://google.com']}
-adapter.op_to_selenium(edit)
-
-# edit = js_get_random_edit(driver)
-# puts edit
-# NUM_EDITS.times do |i|
-#   puts i if i % 100 == 0
-#   random_edit = get_random_edit()
-#   writer.send_keys random_edit
-#   check_consistency(driver)
-# end
+NUM_EDITS.times do |i|
+   puts i if i % 100 == 0
+   random_edit = js_get_random_edit(driver)
+   adapter.op_to_selenium(random_edit)
+   check_consistency(driver)
+end
 
 ################################################################################
 # Scratch from experimenting with api
