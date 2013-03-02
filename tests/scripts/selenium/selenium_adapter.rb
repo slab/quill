@@ -57,11 +57,17 @@ class SeleniumAdapter
     when 'italic'
       @driver.action.key_down(:command).send_keys('i').key_up(:command).perform
     when 'link'
-      # TODO: Add toolbar since there's no keyboard shortcut
+      @driver.switch_to.default_content
+      link_button = @driver.execute_script("return $('#editor-toolbar-writer > .link')[0]")
+      link_button.click()
+      @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     when 'strike'
-      # TODO: Add toolbar since there's no keyboard shortcut
+      @driver.switch_to.default_content
+      strike_button = @driver.execute_script("return $('#editor-toolbar-writer > .strike')[0]")
+      strike_button.click()
+      @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     when 'underline'
-      @driver.action.key_down(:command).send_keys('i').key_up(:command).perform
+      @driver.action.key_down(:command).send_keys('u').key_up(:command).perform
     end
   end
 end
