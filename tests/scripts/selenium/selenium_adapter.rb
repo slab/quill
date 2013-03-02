@@ -8,6 +8,7 @@ class SeleniumAdapter
   end
 
   def op_to_selenium(op)
+    if op.nil? then return end
     case op['op']
     when 'insertAt'
       to_index, text = op['args']
