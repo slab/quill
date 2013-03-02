@@ -33,7 +33,7 @@ editors = driver.find_elements(:class, "editor-container")
 writer, reader = editors
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:id, "scribe-container")
-adapter = SeleniumAdapter.new writer
+adapter = SeleniumAdapter.new driver, writer
 
 ################################################################################
 # Fuzzer logic
@@ -43,6 +43,8 @@ adapter.op_to_selenium(edit)
 edit = {'op' => 'insertAt', 'args' => [3, "def"]}
 adapter.op_to_selenium(edit)
 edit = {'op' => 'insertAt', 'args' => [0, "123"]}
+adapter.op_to_selenium(edit)
+edit = {'op' => 'deleteAt', 'args' => [0, 3]}
 adapter.op_to_selenium(edit)
 
 # edit = js_get_random_edit(driver)
