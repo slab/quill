@@ -13,6 +13,8 @@ $(document).ready( ->
   $editors = $('.editor-container')
   window.writer = new Scribe.Editor($editors.get(0))
   window.reader = new Scribe.Editor($editors.get(1))
+  writerToolbar = new Scribe.Toolbar('editor-toolbar-writer', writer)
+  readerToolbar = new Scribe.Toolbar('editor-toolbar-reader', reader)
   start = new Date()
 
   writer.on(Scribe.Editor.events.TEXT_CHANGE, (delta) ->

@@ -10,8 +10,20 @@
   %body
     #content-container
       .editor-wrapper.first
+        #editor-toolbar-writer.formatting-container
+          %button.format-button.bold Bold
+          %button.format-button.italic Italic
+          %button.format-button.underline Under
+          %button.format-button.strike Strike
+          %button.format-button.link Link
         .editor-container
       .editor-wrapper
+        #editor-toolbar-reader.formatting-container
+          %button.format-button.bold Bold
+          %button.format-button.italic Italic
+          %button.format-button.underline Under
+          %button.format-button.strike Strike
+          %button.format-button.link Link
         .editor-container
 
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
