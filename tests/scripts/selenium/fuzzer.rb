@@ -46,6 +46,8 @@ edit = {'op' => 'insertAt', 'args' => [0, "123"]}
 adapter.op_to_selenium(edit)
 edit = {'op' => 'deleteAt', 'args' => [0, 3]}
 adapter.op_to_selenium(edit)
+edit = {'op' => 'formatAt', 'args' => [0, 3, 'bold', true]}
+adapter.op_to_selenium(edit)
 
 # edit = js_get_random_edit(driver)
 # puts edit

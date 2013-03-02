@@ -3,6 +3,8 @@ class SeleniumAdapter
     @cursor_pos = 0
     @driver = driver
     @editor = editor
+    # TODO: Based on os, set appropriate modifier keys (i.e., command vs control
+    # on mac/windoze)
   end
 
   def op_to_selenium(op)
@@ -16,13 +18,21 @@ class SeleniumAdapter
       move_cursor(to_index)
       delete(length)
     when 'formatAt'
-      puts "Ain't nobody got time for dat"
+      to_index, length, format, value = op['args']
+      move_cursor(to_index)
+      highlight(length)
+      format(format, value)
     else
       raise "Invalid op type: #{op}"
     end
   end
 
   private
+
+  def move_cursor(to_index)
+    (@cursor_pos - to_index).abs.times do @editor.send_keys(:arrow_left) end
+    @cursor_pos = to_index
+  end
 
   def highlight(length)
     # TODO: Figure out how to support highlighting with mouse.
@@ -35,13 +45,23 @@ class SeleniumAdapter
     @editor.send_keys(:delete)
   end
 
-  def move_cursor(to_index)
-    (@cursor_pos - to_index).abs.times do @editor.send_keys(:arrow_left) end
-    @cursor_pos = to_index
-  end
-
   def type_text(text)
     @editor.send_keys(text)
     @cursor_pos += text.length
+  end
+
+  def format(format, value)
+    case format
+    when 'bold'
+      @driver.action.key_down(:command).send_keys('b').key_up(:command).perform
+    when 'italic'
+      @driver.action.key_down(:command).send_keys('i').key_up(:command).perform
+    when 'link'
+      # TODO: Add toolbar since there's no keyboard shortcut
+    when 'strike'
+      # TODO: Add toolbar since there's no keyboard shortcut
+    when 'underline'
+      @driver.action.key_down(:command).send_keys('i').key_up(:command).perform
+    end
   end
 end
