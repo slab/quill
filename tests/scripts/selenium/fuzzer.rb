@@ -2,7 +2,7 @@ require 'debugger'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
 
-NUM_EDITS = 10
+NUM_EDITS = 500
 
 ################################################################################
 # Helpers for generating random edits
@@ -39,7 +39,7 @@ adapter = SeleniumAdapter.new driver, writer
 # Fuzzer logic
 ################################################################################
 NUM_EDITS.times do |i|
-   puts i if i % 100 == 0
+   puts i if i % 10 == 0
    random_edit = js_get_random_edit(driver)
    adapter.op_to_selenium(random_edit)
    check_consistency(driver)
