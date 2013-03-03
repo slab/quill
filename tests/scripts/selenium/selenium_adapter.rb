@@ -3,8 +3,6 @@ class SeleniumAdapter
     @cursor_pos = 0
     @driver = driver
     @editor = editor
-    # TODO: Based on os, set appropriate modifier keys (i.e., command vs control
-    # on mac/windoze)
   end
 
   def op_to_selenium(op)
@@ -61,9 +59,9 @@ class SeleniumAdapter
   def format(format, value)
     case format
     when 'bold'
-      @driver.action.key_down(:command).send_keys('b').key_up(:command).perform
+      @driver.action.key_down(@@cmd_modifier).send_keys('b').key_up(@@cmd_modifier).perform
     when 'italic'
-      @driver.action.key_down(:command).send_keys('i').key_up(:command).perform
+      @driver.action.key_down(@@cmd_modifier).send_keys('i').key_up(@@cmd_modifier).perform
     when 'link'
       @driver.switch_to.default_content
       link_button = @driver.execute_script("return $('#editor-toolbar-writer > .link')[0]")
@@ -75,7 +73,7 @@ class SeleniumAdapter
       strike_button.click()
       @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     when 'underline'
-      @driver.action.key_down(:command).send_keys('u').key_up(:command).perform
+      @driver.action.key_down(@@cmd_modifier).send_keys('u').key_up(@@cmd_modifier).perform
     when 'family'
       select_from_dropdown('family', value)
     when 'size'
@@ -88,4 +86,33 @@ class SeleniumAdapter
       raise "Unknown formatting op: #{format}"
     end
   end
+
+  def self.os
+      host_os = RbConfig::CONFIG['host_os']
+      case host_os
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        return :windows
+      when /darwin|mac os/
+        return :macosx
+      when /linux/
+        return :linux
+      when /solaris|bsd/
+        return :unix
+      else
+        raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+      end
+  end
+
+  def self.os_to_modifier()
+    case self.os()
+    when :windows
+      return :control
+    when :linux
+      return :control
+    when :macosx
+      return :command
+    end
+  end
+  @@cmd_modifier = SeleniumAdapter.os_to_modifier()
+
 end
