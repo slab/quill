@@ -2,7 +2,7 @@
 # TODO's:
 # 1. Improve error handling
 # 2. Deal w/ Firefox send_keys appending a newline issue
-# 3. Randomly decide between applying formatting via hot keys vs ui
+# x Randomly decide between applying formatting via hot keys vs ui
 # 4. Improve performance
 # 5. Add logic so that if a test fails, it's easy to reproduce the failing
 #    behavior
@@ -61,6 +61,13 @@ class SeleniumAdapter
     @cursor_pos += text.length
   end
 
+  def click_button_from_toolbar(button_class)
+      @driver.switch_to.default_content
+      button = @driver.execute_script("return $('#editor-toolbar-writer > .#{button_class}')[0]")
+      button.click()
+      @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
+  end
+
   def select_from_dropdown(dropdown_class, value)
     @driver.switch_to.default_content
     dropdown = @driver.execute_script("return $('#editor-toolbar-writer > .#{dropdown_class}')[0]")
@@ -70,22 +77,16 @@ class SeleniumAdapter
 
   def format(format, value)
     case format
-    when 'bold'
-      @driver.action.key_down(@@cmd_modifier).send_keys('b').key_up(@@cmd_modifier).perform
-    when 'italic'
-      @driver.action.key_down(@@cmd_modifier).send_keys('i').key_up(@@cmd_modifier).perform
+    when /bold|italic|underline/
+      if Random.rand() < 0.5
+        @driver.action.key_down(@@cmd_modifier).send_keys(format[0]).key_up(@@cmd_modifier).perform
+      else
+        click_button_from_toolbar(format)
+      end
     when 'link'
-      @driver.switch_to.default_content
-      link_button = @driver.execute_script("return $('#editor-toolbar-writer > .link')[0]")
-      link_button.click()
-      @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
+      click_button_from_toolbar('link')
     when 'strike'
-      @driver.switch_to.default_content
-      strike_button = @driver.execute_script("return $('#editor-toolbar-writer > .strike')[0]")
-      strike_button.click()
-      @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
-    when 'underline'
-      @driver.action.key_down(@@cmd_modifier).send_keys('u').key_up(@@cmd_modifier).perform
+      click_button_from_toolbar('strike')
     when /family|size|background|color/
       select_from_dropdown(format, value)
     else
@@ -120,5 +121,4 @@ class SeleniumAdapter
     end
   end
   @@cmd_modifier = SeleniumAdapter.os_to_modifier()
-
 end
