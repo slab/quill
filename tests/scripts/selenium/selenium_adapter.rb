@@ -74,14 +74,8 @@ class SeleniumAdapter
       @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     when 'underline'
       @driver.action.key_down(@@cmd_modifier).send_keys('u').key_up(@@cmd_modifier).perform
-    when 'family'
-      select_from_dropdown('family', value)
-    when 'size'
-      select_from_dropdown('size', value)
-    when 'background'
-      select_from_dropdown('background', value)
-    when 'color'
-      select_from_dropdown('color', value)
+    when /family|size|background|color/
+      select_from_dropdown(format, value)
     else
       raise "Unknown formatting op: #{format}"
     end
