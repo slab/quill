@@ -1,3 +1,13 @@
+################################################################################
+# TODO's:
+# 1. Improve error handling
+# 2. Deal w/ Firefox send_keys appending a newline issue
+# 3. Randomly decide between applying formatting via hot keys vs ui
+# 4. Improve performance
+# 5. Add logic so that if a test fails, it's easy to reproduce the failing
+#    behavior
+# 6. Some of this code is not the Ruby way; fix that.
+################################################################################
 class SeleniumAdapter
   def initialize(driver, editor)
     @cursor_pos = 0
@@ -29,6 +39,7 @@ class SeleniumAdapter
   private
 
   def move_cursor(to_index)
+    # TODO: Deal w/ newlines that firefox adds.
     (@cursor_pos - to_index).abs.times do @editor.send_keys(:arrow_left) end
     @cursor_pos = to_index
   end
