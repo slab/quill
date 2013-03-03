@@ -11,6 +11,35 @@
     #content-container
       .editor-wrapper.first
         #editor-toolbar-writer.formatting-container
+          %select.family
+            %option{:value => 'san-serif', :selected => true}  San Serif
+            %option{:value => 'serif'}      Serif
+            %option{:value => 'monospace'}  Monospace
+          %select.size
+            %option{:value => 'small'}  Small
+            %option{:value => 'normal', :selected => true} Normal
+            %option{:value => 'large'}  Large
+            %option{:value => 'huge'}   Huge
+          %select.color
+            %option{:value => ''}
+            %option{:value => 'white'}  White
+            %option{:value => 'black', :selected => true}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
+          %select.background
+            %option{:value => ''}
+            %option{:value => 'white', :selected => true}  White
+            %option{:value => 'black'}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
           %button.format-button.bold Bold
           %button.format-button.italic Italic
           %button.format-button.underline Under
@@ -19,6 +48,35 @@
         .editor-container
       .editor-wrapper
         #editor-toolbar-reader.formatting-container
+          %select.family
+            %option{:value => 'san-serif', :selected => true}  San Serif
+            %option{:value => 'serif'}      Serif
+            %option{:value => 'monospace'}  Monospace
+          %select.size
+            %option{:value => 'small'}  Small
+            %option{:value => 'normal', :selected => true} Normal
+            %option{:value => 'large'}  Large
+            %option{:value => 'huge'}   Huge
+          %select.color
+            %option{:value => ''}
+            %option{:value => 'white'}  White
+            %option{:value => 'black', :selected => true}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
+          %select.background
+            %option{:value => ''}
+            %option{:value => 'white', :selected => true}  White
+            %option{:value => 'black'}  Black
+            %option{:value => 'red'}    Red
+            %option{:value => 'orange'} Orange
+            %option{:value => 'yellow'} Yellow
+            %option{:value => 'green'}  Green
+            %option{:value => 'blue'}   Blue
+            %option{:value => 'purple'} Purple
           %button.format-button.bold Bold
           %button.format-button.italic Italic
           %button.format-button.underline Under

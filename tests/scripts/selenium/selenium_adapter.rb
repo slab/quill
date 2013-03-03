@@ -51,6 +51,13 @@ class SeleniumAdapter
     @cursor_pos += text.length
   end
 
+  def select_from_dropdown(dropdown_class, value)
+    @driver.switch_to.default_content
+    dropdown = @driver.execute_script("return $('#editor-toolbar-writer > .#{dropdown_class}')[0]")
+    Selenium::WebDriver::Support::Select.new(dropdown).select_by(:value, value)
+    @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
+  end
+
   def format(format, value)
     case format
     when 'bold'
@@ -69,6 +76,16 @@ class SeleniumAdapter
       @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     when 'underline'
       @driver.action.key_down(:command).send_keys('u').key_up(:command).perform
+    when 'family'
+      select_from_dropdown('family', value)
+    when 'size'
+      select_from_dropdown('size', value)
+    when 'background'
+      select_from_dropdown('background', value)
+    when 'color'
+      select_from_dropdown('color', value)
+    else
+      raise "Unknown formatting op: #{format}"
     end
   end
 end
