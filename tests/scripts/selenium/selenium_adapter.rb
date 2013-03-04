@@ -1,5 +1,8 @@
 ################################################################################
 # TODO's:
+# - Port Scribe's debug modul to Ruby
+# - Generate deltas instead of custom instructions, then apply the delta via
+#   Selenium, then ensure that the delta we get via a getDelta call is consistent.
 # - Improve error handling
 # - Improve performance
 # - Add logic so that if a test fails, it's easy to reproduce the failing
