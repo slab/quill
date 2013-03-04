@@ -1,18 +1,17 @@
 ################################################################################
 # TODO's:
-# 1. Improve error handling
-# 2. Deal w/ Firefox send_keys appending a newline issue
-# x Randomly decide between applying formatting via hot keys vs ui
-# 4. Improve performance
-# 5. Add logic so that if a test fails, it's easy to reproduce the failing
-#    behavior
-# 6. Some of this code is not the Ruby way; fix that.
+# - Improve error handling
+# - Improve performance
+# - Add logic so that if a test fails, it's easy to reproduce the failing
+# - behavior
+# - Some of this code is not the Ruby way; fix that.
 ################################################################################
 class SeleniumAdapter
   def initialize(driver, editor)
     @cursor_pos = 0
     @driver = driver
     @editor = editor
+    @doc_length = 0
   end
 
   def op_to_selenium(op)
@@ -54,11 +53,20 @@ class SeleniumAdapter
   def delete(length)
     highlight(length)
     @editor.send_keys(:delete)
+    @doc_length -= length
   end
 
   def type_text(text)
-    @editor.send_keys(text)
+    if @cursor_pos == @doc_length && @driver.browser == :firefox
+      # Hack to workaround inexplicable firefox behavior in which it inserts an
+      # "invisible" newline if you append to the end of the text in a
+      # contenteditable.
+      @editor.send_keys(:arrow_left, :arrow_right, text)
+    else
+      @editor.send_keys(text)
+    end
     @cursor_pos += text.length
+    @doc_length += text.length
   end
 
   def click_button_from_toolbar(button_class)

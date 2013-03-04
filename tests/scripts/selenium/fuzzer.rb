@@ -38,6 +38,8 @@ adapter = SeleniumAdapter.new driver, writer
 ################################################################################
 # Fuzzer logic
 ################################################################################
+edit = {'op' => 'insertAt', 'args' => [3, "123"]}
+adapter.op_to_selenium(edit)
 NUM_EDITS.times do |i|
    puts i if i % 10 == 0
    random_edit = js_get_random_edit(driver)
