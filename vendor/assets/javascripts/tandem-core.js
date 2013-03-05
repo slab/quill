@@ -1,4 +1,4 @@
-/*! Tandem Realtime Coauthoring Engine - v0.3.4 - 2013-02-12
+/*! Tandem Realtime Coauthoring Engine - v0.4.3 - 2013-03-04
  *  https://www.stypi.com/
  *  Copyright (c) 2013
  *  Jason Chen, Salesforce.com
@@ -511,8 +511,7 @@ require.define("/src/core/delta.coffee",function(require,module,exports,__dirnam
       retains = [];
       _.each(this.ops, function(op) {
         if (Delta.isInsert(op)) {
-          insertFn.call(context, index + offset, op.value);
-          retains.push(new RetainOp(index + offset, index + offset + op.getLength(), op.attributes));
+          insertFn.call(context, index + offset, op.value, op.attributes);
           return offset += op.getLength();
         } else if (Delta.isRetain(op)) {
           if (op.start > index) {

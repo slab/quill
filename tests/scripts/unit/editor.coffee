@@ -177,6 +177,14 @@ describe('Editor', ->
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(4, 'A')
         expected: ['<div><span>123</span><i>4</i><span>A</span><i>56</i></div>']
+      'should insert formatted text':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(0, "A", {bold: true})
+        expected: ['<div><b>A</b><span>123</span><i>456</i></div>']
+      'should insert formatted text inside format':
+        lines: ['<div><span>123</span><i>456</i></div>']
+        fn: (editor) -> editor.insertAt(4, "A", {italic: true})
+        expected: ['<div><span>123</span><i>4A56</i></div>']
       'should insert newline character':
         lines: ['<div><span>123</span><i>456</i></div>']
         fn: (editor) -> editor.insertAt(1, "\n")
