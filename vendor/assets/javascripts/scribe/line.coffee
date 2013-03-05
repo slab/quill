@@ -130,6 +130,7 @@ class ScribeLine extends LinkedList.Node
     this.applyToContents(offset, length, (node) ->
       Scribe.Utils.removeNode(node)
     )
+    this.rebuild()
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -171,6 +172,7 @@ class ScribeLine extends LinkedList.Node
       this.applyToContents(offset, length, (node) ->
         Scribe.Utils.removeFormatFromSubtree(node, name)
       )
+    this.rebuild()
 
   insertText: (offset, text, formatting = {}) ->
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
@@ -185,6 +187,7 @@ class ScribeLine extends LinkedList.Node
       _.each(formatting, (value, name) =>
         this.formatText(offset, text.length, name, value)
       )
+    this.rebuild()
 
   rebuild: ->
     if @node.parentNode == @doc.root
