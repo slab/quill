@@ -40,7 +40,6 @@ deleteAt = (index, length) ->
     ])
     #this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
   return if length <= 0
-
   [firstLine, offset] = @doc.findLineAtOffset(index)
   curLine = firstLine
   while length > 0
@@ -54,7 +53,7 @@ deleteAt = (index, length) ->
     length -= deleteLength
     curLine = nextLine
     offset = 0
-  if !firstLine.hasNewline()
+  if !firstLine.trailingNewline
     @doc.mergeLines(firstLine, firstLine.next)
 
 # formatAt (Number index, Number length, String name, Mixed value) ->

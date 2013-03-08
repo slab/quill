@@ -83,6 +83,7 @@ class ScribeDocument
     )
     Scribe.Utils.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
+    line.trailingNewline = lineToMerge.trailingNewline
     line.rebuild()
 
   rebuild: ->

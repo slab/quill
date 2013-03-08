@@ -105,6 +105,7 @@ class ScribeLine extends LinkedList.Node
     @id = _.uniqueId(Scribe.Line.ID_PREFIX)
     @node.id = @id
     @node.classList.add(ScribeLine.CLASS_NAME)
+    @trailingNewline = true
     this.rebuild()
     super(@node)
 
@@ -130,13 +131,8 @@ class ScribeLine extends LinkedList.Node
     this.applyToContents(offset, length, (node) ->
       Scribe.Utils.removeNode(node)
     )
-    if @length == offset + length
-      # rebuild will incorrectly add back newline
-      this.rebuild()
-      @formats = null
-      @length -= 1
-    else
-      this.rebuild()
+    @trailingNewline = false if @length == offset + length
+    this.rebuild()
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -180,9 +176,6 @@ class ScribeLine extends LinkedList.Node
       )
     this.rebuild()
 
-  hasNewline: ->
-    return @formats?
-
   insertText: (offset, text, formatting = {}) ->
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
     if _.isEqual(leaf.formatting, formatting)
@@ -215,7 +208,8 @@ class ScribeLine extends LinkedList.Node
     return true
 
   resetContent: ->
-    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 1)
+    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
+    @length += 1 if @trailingNewline
     @outerHTML = @node.outerHTML
     @formats = {}
     [formatName, formatValue] = Scribe.Utils.getFormatForContainer(@node)
@@ -240,7 +234,7 @@ class ScribeLine extends LinkedList.Node
     ops = _.map(@leaves.toArray(), (leaf) ->
       return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
     )
-    ops.push(new Tandem.InsertOp("\n", @formats)) if @formats?
+    ops.push(new Tandem.InsertOp("\n", @formats)) if @trailingNewline
     delta = new Tandem.Delta(0, @length, ops)
     return delta
 
