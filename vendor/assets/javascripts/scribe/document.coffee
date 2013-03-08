@@ -77,7 +77,7 @@ class ScribeDocument
     return line
 
   mergeLines: (line, lineToMerge) ->
-    #return unless line and lineToMerge
+    return unless line? and lineToMerge?
     _.each(_.clone(lineToMerge.node.childNodes), (child) ->
       line.node.appendChild(child)
     )
