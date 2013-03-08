@@ -4,7 +4,6 @@ NUM_OPERATIONS = 500
 
 seed = Math.random()
 console.info seed
-seed = '0.5413067403715104'
 Math.seedrandom(seed.toString())
 
 

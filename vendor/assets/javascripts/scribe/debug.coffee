@@ -139,9 +139,8 @@ window.Scribe.Debug =
       rand = Math.random()
       if rand < 0.5
         return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length)]}
-      length = Math.min(length, lengthLimit)
-      return null if length <= 0
       if rand < 0.75
+        return null if index + length > lengthLimit
         return {op: 'deleteAt', args: [index, length - 1]}
       else
         format = formatKeys[_.random(0, formatKeys.length - 1)]
