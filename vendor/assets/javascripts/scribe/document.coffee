@@ -54,10 +54,10 @@ class ScribeDocument
     retLine = @lines.first
     _.all(@lines.toArray(), (line, index) =>
       retLine = line
-      if offset < line.length + 1
+      if offset < line.length
         return false
       else
-        offset -= (line.length + 1) if index < @lines.length - 1
+        offset -= line.length if index < @lines.length - 1
         return true
     )
     return [retLine, offset]
@@ -77,6 +77,7 @@ class ScribeDocument
     return line
 
   mergeLines: (line, lineToMerge) ->
+    #return unless line and lineToMerge
     _.each(_.clone(lineToMerge.node.childNodes), (child) ->
       line.node.appendChild(child)
     )
@@ -125,7 +126,6 @@ class ScribeDocument
     lines = @lines.toArray()
     ops = _.flatten(_.map(lines, (line, index) ->
       ops = Tandem.Delta.copy(line.delta).ops
-      ops.push(new Tandem.InsertOp("\n", line.formats))
       return ops
     ), true)
     delta = new Tandem.Delta(0, ops)

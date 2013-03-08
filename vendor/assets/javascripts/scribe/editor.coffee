@@ -40,22 +40,22 @@ deleteAt = (index, length) ->
     ])
     #this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
   return if length <= 0
-  [anchorLine, offset] = @doc.findLineAtOffset(index)
-  deleteLength = Math.min(length, anchorLine.length - offset)
-  anchorLine.deleteText(offset, deleteLength)
-  length -= deleteLength
-  if length > 0
-    line = anchorLine.next
-    length -= 1   # newline will be removed by mergeLines later
-    while length > 0 and length > line.length
-      length -= (line.length + 1)
-      nextLine = line.next
-      Scribe.Utils.removeNode(line.node)
-      @doc.removeLine(line)
-      line = nextLine
-    line.deleteText(0, length)
-    @doc.mergeLines(anchorLine, line)
 
+  [firstLine, offset] = @doc.findLineAtOffset(index)
+  curLine = firstLine
+  while length > 0
+    deleteLength = Math.min(length, curLine.length - offset)
+    nextLine = curLine.next
+    if curLine.length == deleteLength
+      Scribe.Utils.removeNode(curLine.node)
+      @doc.removeLine(curLine)
+    else
+      curLine.deleteText(offset, deleteLength)
+    length -= deleteLength
+    curLine = nextLine
+    offset = 0
+  if !firstLine.hasNewline()
+    @doc.mergeLines(firstLine, firstLine.next)
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
@@ -63,7 +63,7 @@ formatAt = (index, length, name, value) ->
   while line? and length > 0
     if Scribe.Constants.LINE_FORMATS[name]?
       # If newline character is being applied with formatting
-      if length > line.length + 1 - offset
+      if length > line.length - offset
         line.format(name, value)
     else if Scribe.Constants.LEAF_FORMATS[name]?
       if line.length - offset >= length
@@ -72,7 +72,7 @@ formatAt = (index, length, name, value) ->
         line.formatText(offset, line.length - offset, name, value)
     else
       console.warn 'Unsupported format'
-    length -= (line.length - offset + 1)
+    length -= (line.length - offset)
     offset = 0
     line = line.next
 

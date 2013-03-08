@@ -55,6 +55,7 @@ window.Scribe.Debug =
         lineLength = _.reduce(line.leaves.toArray(), (count, leaf) ->
           return leaf.length + count
         , 0)
+        lineLength += 1 if line.formats?
         if lineLength != line.length
           console.error 'incorrect line length', lineLength, line.length
           return true
@@ -77,6 +78,7 @@ window.Scribe.Debug =
         return false
       return false if _.any(lines, (line, index) =>
         calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Scribe.Utils.getNodeLength(node) + length), 0)
+        calculatedLength += 1 if line.formats?
         if line.length != calculatedLength
           console.error line, line.length, calculatedLength, 'differ in length'
           return true

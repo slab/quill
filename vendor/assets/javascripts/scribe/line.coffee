@@ -130,7 +130,13 @@ class ScribeLine extends LinkedList.Node
     this.applyToContents(offset, length, (node) ->
       Scribe.Utils.removeNode(node)
     )
-    this.rebuild()
+    if @length == offset + length
+      # rebuild will incorrectly add back newline
+      this.rebuild()
+      @formats = null
+      @length -= 1
+    else
+      this.rebuild()
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -174,10 +180,16 @@ class ScribeLine extends LinkedList.Node
       )
     this.rebuild()
 
+  hasNewline: ->
+    return @formats?
+
   insertText: (offset, text, formatting = {}) ->
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
     if _.isEqual(leaf.formatting, formatting)
       leaf.insertText(leafOffset, text)
+      @length += text.length
+      @outerHTML = @node.outerHTML
+      @delta = this.toDelta()
     else
       [prevNode, nextNode] = this.splitContents(offset)
       span = @node.ownerDocument.createElement('span')
@@ -187,7 +199,7 @@ class ScribeLine extends LinkedList.Node
       _.each(formatting, (value, name) =>
         this.formatText(offset, text.length, name, value)
       )
-    this.rebuild()
+      this.rebuild()
 
   rebuild: ->
     if @node.parentNode == @doc.root
@@ -203,7 +215,7 @@ class ScribeLine extends LinkedList.Node
     return true
 
   resetContent: ->
-    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
+    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 1)
     @outerHTML = @node.outerHTML
     @formats = {}
     [formatName, formatValue] = Scribe.Utils.getFormatForContainer(@node)
@@ -228,6 +240,7 @@ class ScribeLine extends LinkedList.Node
     ops = _.map(@leaves.toArray(), (leaf) ->
       return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
     )
+    ops.push(new Tandem.InsertOp("\n", @formats)) if @formats?
     delta = new Tandem.Delta(0, @length, ops)
     return delta
 
