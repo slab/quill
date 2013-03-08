@@ -34,7 +34,7 @@ deleteAt = (index, length) ->
   return if length <= 0
   [firstLine, offset] = @doc.findLineAtOffset(index)
   curLine = firstLine
-  while curline? and length > 0
+  while curLine? and length > 0
     deleteLength = Math.min(length, curLine.length - offset)
     nextLine = curLine.next
     if curLine.length == deleteLength
@@ -45,7 +45,7 @@ deleteAt = (index, length) ->
     length -= deleteLength
     curLine = nextLine
     offset = 0
-  if !firstLine?.trailingNewline
+  if firstLine? and !firstLine.trailingNewline
     @doc.mergeLines(firstLine, firstLine.next)
 
 forceTrailingNewline = ->
