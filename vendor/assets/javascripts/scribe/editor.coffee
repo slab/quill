@@ -31,18 +31,10 @@ initListeners = ->
   @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
 
 deleteAt = (index, length) ->
-  if index + length >= this.getLength()
-    length = this.getLength() - index - 1
-    # TODO fix this in the case of being called from applyDelta
-    addNewlineDelta = new Tandem.Delta(this.getLength(), [
-      new Tandem.RetainOp(0, this.getLength())
-      new Tandem.InsertOp("\n")
-    ])
-    #this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
   return if length <= 0
   [firstLine, offset] = @doc.findLineAtOffset(index)
   curLine = firstLine
-  while length > 0
+  while curLine? and length > 0
     deleteLength = Math.min(length, curLine.length - offset)
     nextLine = curLine.next
     if curLine.length == deleteLength
@@ -53,8 +45,12 @@ deleteAt = (index, length) ->
     length -= deleteLength
     curLine = nextLine
     offset = 0
-  if !firstLine.trailingNewline
+  if firstLine? and !firstLine.trailingNewline
     @doc.mergeLines(firstLine, firstLine.next)
+
+forceTrailingNewline = ->
+  unless @doc.lines.last?.trailingNewline
+    this.insertAt(this.getLength(), "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
@@ -202,13 +198,15 @@ class ScribeEditor extends EventEmitter2
         unless external
           this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
         # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
-        #console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
+        console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
+        forceTrailingNewline.call(this)
       )
     )
 
   deleteAt: (args...) ->
     doAt.call(this, =>
       deleteAt.apply(this, args)
+      forceTrailingNewline.call(this)
     )
 
   formatAt: (args...) ->
@@ -228,6 +226,7 @@ class ScribeEditor extends EventEmitter2
   insertAt: (args...) ->
     doAt.call(this, =>
       insertAt.apply(this, args)
+      forceTrailingNewline.call(this)
     )
 
   setDelta: (delta) ->
