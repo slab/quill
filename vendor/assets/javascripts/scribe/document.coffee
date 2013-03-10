@@ -2,20 +2,6 @@ class ScribeDocument
   @INDENT_PREFIX: 'indent-'
 
 
-  @normalizeHtml: (root, options = {}) ->
-    if root.childNodes.length == 0
-      div = root.ownerDocument.createElement('div')
-      return root.appendChild(div)
-    Scribe.Utils.groupBlocks(root)
-    _.each(_.clone(root.childNodes), (child) =>
-      if child.nodeType != child.ELEMENT_NODE
-        Scribe.Utils.removeNode(child)
-      else if options.ignoreDirty || child.classList.contains(Scribe.Line.DIRTY_CLASS) || true
-        Scribe.Line.wrapText(child)
-        Scribe.Line.normalizeHtml(child)
-    )
-
-
   constructor: (@root) ->
     this.buildLines()
 
@@ -24,7 +10,7 @@ class ScribeDocument
 
   buildLines: ->
     this.reset()
-    ScribeDocument.normalizeHtml(@root, {ignoreDirty: true})
+    Scribe.Normalizer.breakBlocks(@root)
     this.rebuild()
 
   cleanNode: (lineNode) ->

@@ -114,7 +114,7 @@ update = ->
   doSilently.call(this, =>
     @selection.preserve( =>
       return trackDelta.call(this, =>
-        Scribe.Document.normalizeHtml(@root)
+        Scribe.Normalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()
         lineNode = @root.firstChild
         _.each(lines, (line, index) =>
