@@ -1,5 +1,124 @@
 describe('Normalize', ->
   tests = 
+    'blocks':
+      'Inner divs':
+        lines: [
+          '<div>
+            <div><span>One</span></div>
+            <div><span>Two</span></div>
+          </div>'
+        ]
+        expected: [
+          '<div>
+            <span>One</span>
+          </div>
+          <div>
+            <span>Two</span>
+          </div>'
+        ]
+      'Nested inner divs':
+        lines: [
+          '<div>
+            <div><div><span>One</span></div></div>
+            <div><div><span>Two</span></div></div>
+          </div>'
+        ]
+        expected: [
+          '<div>
+            <span>One</span>
+          </div>
+          <div>
+            <span>Two</span>
+          </div>'
+        ]
+      'Break in middle of line':
+        lines: [
+          '<div>
+            <span>One</span>
+            <br>
+            <span>Two</span>
+          </div>'
+        ]
+        expected: [
+          '<div>
+            <span>One</span>
+          </div>
+          <div>
+            <span>Two</span>
+          </div>'
+        ]
+      'Break preceding line':
+        lines: [
+          '<div>
+            <br>
+            <span>One</span>
+          </div>'
+        ]
+        expected: [
+          '<div>
+            <br />
+          </div>
+          <div>
+            <span>One</span>
+          </div>'
+        ]
+      'Break after line ignored':
+        lines: [
+          '<div>
+            <span>One</span>
+            <br>
+          </div>'
+        ]
+        expected: [
+          '<div><span>One</span></div>'
+        ]
+      'Wrap newline':
+        lines:    ['<br />']
+        expected: ['<div><br /></div>']
+      'Wrap span':
+        lines:    ['<span>One</span>']
+        expected: ['<div><span>One</span></div>']
+      'Wrap many spans':
+        lines: [
+          '<div>
+            <span>One</span>
+          </div>
+          <span>Two</span>
+          <span>Three</span>
+          <div>
+            <span>Four</span>
+          </div>'
+        ]
+        expected: [
+          '<div>
+            <span>One</span>
+          </div>
+          <div>
+            <span>Two</span>
+            <span>Three</span>
+          </div>
+          <div>
+            <span>Four</span>
+          </div>'
+        ]
+      'Wrap break and span':
+        lines: [
+          '<br />
+          <span>One</span>'
+        ]
+        expected: [
+          '<div><br /></div>
+          <div><span>One</span></div>'
+        ]
+      'Break within span':
+        lines: [
+          '<div><span><br />One</span></div>'
+        ]
+        expected: [
+          '<div><br /></div>
+          <div><span>One</span></div>'
+        ]
+
     'elements':
       'tranform equivalent styles':
         lines: [

@@ -25,17 +25,28 @@ ScribeNormalizer =
     )
 
   breakBlocks: (root) ->
-    if root.childNodes.length == 0
-      div = root.ownerDocument.createElement('div')
-      return root.appendChild(div)
-    Scribe.Utils.groupBlocks(root)
-    _.each(_.clone(root.childNodes), (child) =>
-      if child.nodeType != child.ELEMENT_NODE
-        Scribe.Utils.removeNode(child)
+    curLine = root.firstChild
+    while curLine?
+      if Scribe.Utils.isBlock(curLine)
+        curNode = curLine.firstChild
+        while curNode?
+          if Scribe.Utils.isBlock(curNode)
+            if curNode.nextSibling?
+              line = root.ownerDocument.createElement('div')
+              root.insertBefore(line, curLine.nextSibling)
+              while curNode.nextSibling?
+                line.appendChild(curNode.nextSibling)
+            curNode = Scribe.Utils.unwrap(curNode)
+          else
+            curNode = curNode.nextSibling
+        curLine = curLine.nextSibling
       else
-        this.wrapText(child)
-        this.normalizeLine(child)
-    )
+        line = root.ownerDocument.createElement('div')
+        root.insertBefore(line, curLine)
+        while curLine? and !Scribe.Utils.isBlock(curLine)
+          nextLine = curLine.nextSibling
+          line.appendChild(curLine)
+          curLine = nextLine
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 && lineNode.firstChild.tagName == 'BR'

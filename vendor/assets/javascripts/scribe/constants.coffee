@@ -11,6 +11,7 @@ ScribeConstants =
   BLOCK_TAGS: [
     'ADDRESS'
     'BLOCKQUOTE'
+    'BR'
     'DD'
     'DIV'
     'DL'
