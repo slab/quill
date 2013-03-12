@@ -15,8 +15,8 @@ end
 # Helpers
 ################################################################################
 def check_consistency(driver)
-  writer_delta = driver.execute_script "return parent.writer.getDelta();"
-  reader_delta = driver.execute_script "return parent.reader.getDelta();"
+  writer_delta = driver.execute_script "return parent.writer.getDelta().toString();"
+  reader_delta = driver.execute_script "return parent.reader.getDelta().toString();"
   raise "Writer: #{writer_delta}\nReader: #{reader_delta}" unless writer_delta == reader_delta
 end
 
