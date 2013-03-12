@@ -1,11 +1,11 @@
 initButtonFormats = ->
-  _.each(ScribeToolbar.BUTTON_FORMATS, (format) =>
+  _.each(Scribe.Toolbar.BUTTON_FORMATS, (format) =>
     button = @container.querySelector(".#{format}")
     return unless button?
     button.addEventListener('click', =>
       value = !button.classList.contains('active')
       @editor.selection.format(format, value)
-      this.emit(ScribeToolbar.events.FORMAT, format, value)
+      this.emit(Scribe.Toolbar.events.FORMAT, format, value)
     )
   )
 
@@ -18,17 +18,17 @@ initLinkFormat = ->
       range = @editor.selection.getRange()
       value = range.getText()
     @editor.selection.format('link', value)
-    this.emit(ScribeToolbar.events.FORMAT, 'link', value)
+    this.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
   )
 
 initSelectFormats = ->
-  _.each(ScribeToolbar.SELECT_FORMATS, (format) =>
+  _.each(Scribe.Toolbar.SELECT_FORMATS, (format) =>
     select = @container.querySelector(".#{format}")
     return unless select?
     select.addEventListener('change', =>
       value = select.options[select.selectedIndex].value
       @editor.selection.format(format, value)
-      this.emit(ScribeToolbar.events.FORMAT, format, value)
+      this.emit(Scribe.Toolbar.events.FORMAT, format, value)
     )
   )
 

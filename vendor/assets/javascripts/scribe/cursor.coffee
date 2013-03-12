@@ -1,4 +1,4 @@
-class MultiCursorManager
+class ScribeMultiCursorManager
   constructor: (@editor) ->
     @cursors = {}
     @editor.renderer.addStyle({
@@ -42,12 +42,12 @@ class MultiCursorManager
           this.setCursor(cursor.userId, cursor.index + Math.max(length, index - cursor.index), cursor.name, cursor.color)
 
   setCursor: (userId, index, name, color) ->
-    cursor = @doc.root.ownerDocument.getElementById(ScribeEditor.CURSOR_PREFIX + userId)
+    cursor = @doc.root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
     unless cursor?
       cursor = @doc.root.ownerDocument.createElement('span')
       cursor.classList.add('cursor')
       cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-      cursor.id = ScribeEditor.CURSOR_PREFIX + userId
+      cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
       inner = @doc.root.ownerDocument.createElement('span')
       inner.classList.add('cursor-inner')
       inner.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
@@ -66,12 +66,12 @@ class MultiCursorManager
       userId: userId
     }
     position = new Scribe.Position(this, index)
-    [left, right, didSplit] = Scribe.Utils.splitNode(position.leafNode, position.offset)
+    [left, right, didSplit] = Scribe.DOM.splitNode(position.leafNode, position.offset)
     if right? && (right.offsetTop != 0 || right.offsetLeft != 0)
       cursor.style.top = right.parentNode
       cursor.style.top = right.offsetTop
       cursor.style.left = right.offsetLeft
-      Scribe.Utils.mergeNodes(left, right) if didSplit
+      Scribe.DOM.mergeNodes(left, right) if didSplit
     else if left?
       span = left.ownerDocument.createElement('span')
       left.parentNode.appendChild(span)
@@ -84,7 +84,6 @@ class MultiCursorManager
     else
       console.warn "Could not set cursor"
 
-
   moveCursor: (userId, index) ->
     if @cursors[userId]
       this.setCursor(userId, index, @cursors[userId].name, @cursors[userId].color)
@@ -95,5 +94,9 @@ class MultiCursorManager
     )
 
   removeCursor: (userId) ->
-    cursor = @doc.root.ownerDocument.getElementById(ScribeEditor.CURSOR_PREFIX + userId)
+    cursor = @doc.root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
     cursor.parentNode.removeChild(cursor) if cursor?
+
+
+window.Scribe or= {}
+window.Scribe.MultiCursorManager = ScribeMultiCursorManager

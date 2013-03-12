@@ -1,7 +1,6 @@
 class ScribeDocument
   @INDENT_PREFIX: 'indent-'
 
-
   constructor: (@root) ->
     this.buildLines()
 
@@ -104,7 +103,7 @@ class ScribeDocument
     @lineMap = {}
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = Scribe.DOM.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
     return this.insertLineBefore(lineNode2, line.next)
@@ -120,7 +119,6 @@ class ScribeDocument
 
   updateLine: (line) ->
     return line.rebuild()
-
 
 
 window.Scribe ||= {}

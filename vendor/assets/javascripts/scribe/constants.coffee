@@ -140,6 +140,5 @@ ScribeConstants.TAG_FORMATS =
 ScribeConstants.LEAF_FORMATS = _.extend({}, ScribeConstants.SPAN_FORMATS, ScribeConstants.TAG_FORMATS)
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Constants = ScribeConstants
-

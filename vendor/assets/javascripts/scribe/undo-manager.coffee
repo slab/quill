@@ -45,7 +45,7 @@ class ScribeUndoManager
   constructor: (@editor, options = {}) ->
     @undoStack = []
     @redoStack = []
-    @options = _.extend(ScribeUndoManager.DEFAULTS, options)
+    @options = _.extend(Scribe.UndoManager.DEFAULTS, options)
     @lastRecorded = 0
     this.initListeners()
 
@@ -60,7 +60,7 @@ class ScribeUndoManager
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
-    undoDelta = ScribeUndoManager.computeUndo(changeDelta, oldDelta)
+    undoDelta = Scribe.UndoManager.computeUndo(changeDelta, oldDelta)
     timestamp = new Date().getTime()
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
       change = @undoStack.pop()
@@ -70,10 +70,10 @@ class ScribeUndoManager
       @lastRecorded = timestamp
     @undoStack.push({
       undo:
-        cursor: ScribeUndoManager.getLastChangeIndex(undoDelta)
+        cursor: Scribe.UndoManager.getLastChangeIndex(undoDelta)
         delta: undoDelta
       redo:
-        cursor: ScribeUndoManager.getLastChangeIndex(changeDelta)
+        cursor: Scribe.UndoManager.getLastChangeIndex(changeDelta)
         delta: changeDelta  
     })
 
@@ -90,7 +90,6 @@ class ScribeUndoManager
       @editor.applyDelta(change.undo.delta)
       @editor.setSelection(new Scribe.Range(@editor, change.undo.cursor, change.undo.cursor))
       @redoStack.push(change)
-
 
 
 window.Scribe ||= {}

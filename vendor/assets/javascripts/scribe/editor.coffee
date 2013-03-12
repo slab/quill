@@ -84,7 +84,7 @@ insertAt = (index, text, formatting = {}) ->
         new Tandem.RetainOp(0, this.getLength())
         new Tandem.InsertOp("\n")
       ])
-      #this.emit(ScribeEditor.events.TEXT_CHANGE, addNewlineDelta)
+      #this.emit(Scribe.Editor.events.TEXT_CHANGE, addNewlineDelta)
     line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
     offset = 0
   else
@@ -107,7 +107,7 @@ trackDelta = (fn) ->
   decompose = newDelta.decompose(oldDelta)
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  this.emit(ScribeEditor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
+  this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
   return decompose
 
 update = ->
@@ -136,7 +136,6 @@ update = ->
   )
   
 
-
 class ScribeEditor extends EventEmitter2
   @editors: []
 
@@ -153,7 +152,7 @@ class ScribeEditor extends EventEmitter2
 
   constructor: (@iframeContainer, options) ->
     @options = _.extend(Scribe.Editor.DEFAULTS, options)
-    @id = _.uniqueId(ScribeEditor.ID_PREFIX)
+    @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     this.enable() if @options.enabled
@@ -175,7 +174,7 @@ class ScribeEditor extends EventEmitter2
     options.keepHTML = keepHTML
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
-    @root = @contentWindow.document.getElementById(ScribeEditor.CONTAINER_ID)
+    @root = @contentWindow.document.getElementById(Scribe.Editor.CONTAINER_ID)
     @doc = new Scribe.Document(@root)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
@@ -183,7 +182,7 @@ class ScribeEditor extends EventEmitter2
     @pasteManager = new Scribe.PasteManager(this)
     initListeners.call(this)
     @ignoreDomChanges = false
-    ScribeEditor.editors.push(this)
+    Scribe.Editor.editors.push(this)
 
   applyDelta: (delta, external = true) ->
     # Make exception for systems that assume editors start with empty text
@@ -196,7 +195,7 @@ class ScribeEditor extends EventEmitter2
         oldDelta = @doc.toDelta()
         delta.apply(insertAt, deleteAt, formatAt, this)
         unless external
-          this.emit(ScribeEditor.events.TEXT_CHANGE, delta)
+          this.emit(Scribe.Editor.events.TEXT_CHANGE, delta)
         # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
         console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
         forceTrailingNewline.call(this)
@@ -239,6 +238,5 @@ class ScribeEditor extends EventEmitter2
     @selection.setRange(range)
 
 
-
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Editor = ScribeEditor

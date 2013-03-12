@@ -42,19 +42,19 @@ class ScribeKeyboard
     )
 
   initHotkeys: ->
-    this.addHotkey(ScribeKeyboard.KEYS.TAB, =>
+    this.addHotkey(Scribe.Keyboard.KEYS.TAB, =>
       @editor.selection.deleteRange()
       this.insertText("\t")
     )
-    this.addHotkey(ScribeKeyboard.KEYS.ENTER, =>
+    this.addHotkey(Scribe.Keyboard.KEYS.ENTER, =>
       @editor.selection.deleteRange()
       this.insertText("\n")
     )
-    #this.addHotkey(ScribeKeyboard.KEYS.BACKSPACE, (selection) =>
+    #this.addHotkey(Scribe.Keyboard.KEYS.BACKSPACE, (selection) =>
     #  unless @editor.selection.deleteRange()
     #    @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
     #)
-    #this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
+    #this.addHotkey(Scribe.Keyboard.KEYS.DELETE, (selection) =>
     #  unless @editor.selection.deleteRange()
     #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.getLength() - 1
     #)
@@ -114,6 +114,5 @@ class ScribeKeyboard
     @editor.selection.format(format, !formats[format])
 
 
-
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Keyboard = ScribeKeyboard

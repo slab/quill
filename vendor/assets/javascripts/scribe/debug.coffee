@@ -1,6 +1,4 @@
-window.Scribe ||= {}
-
-window.Scribe.Debug = 
+ScribeDebug = 
   getEditor: (editor) ->
     editor ||= Scribe.Editor.editors[0]
     return if _.isNumber(editor) then Scribe.Editor.editors[editor] else editor
@@ -155,4 +153,5 @@ window.Scribe.Debug =
       ).join('')
 
 
-
+window.Scribe or= {}
+window.Scribe.Debug = ScribeDebug

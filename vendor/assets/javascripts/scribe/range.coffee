@@ -1,8 +1,8 @@
 rangy.init()  # getRangy
 
 class ScribeRange
-  # constructor: (ScribeEditor editor, Number startIndex, Number endIndex) ->
-  # constructor: (ScribeEditor editor, Object start, Object end) ->
+  # constructor: (Scribe.Editor editor, Number startIndex, Number endIndex) ->
+  # constructor: (Scribe.Editor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->
     # TODO initialize with index
     @start = new Scribe.Position(@editor, @start) if _.isNumber(@start)

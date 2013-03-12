@@ -98,6 +98,5 @@ class ScribeSelection
       @range = range
 
 
-
 window.Scribe ||= {}
 window.Scribe.Selection = ScribeSelection

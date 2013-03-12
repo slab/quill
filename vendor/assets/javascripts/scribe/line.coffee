@@ -4,13 +4,12 @@ class ScribeLine extends LinkedList.Node
   @ID_PREFIX  : 'line-'
 
   @isLineNode: (node) ->
-    return node? && node.classList? && node.classList.contains(ScribeLine.CLASS_NAME)
-
+    return node? && node.classList? && node.classList.contains(Scribe.Line.CLASS_NAME)
 
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Scribe.Line.ID_PREFIX)
     @node.id = @id
-    @node.classList.add(ScribeLine.CLASS_NAME)
+    @node.classList.add(Scribe.Line.CLASS_NAME)
     @trailingNewline = true
     this.rebuild()
     super(@node)
@@ -30,7 +29,7 @@ class ScribeLine extends LinkedList.Node
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)
-    Scribe.Utils.traverseSiblings(startNode, endNode, fn)
+    Scribe.DOM.traverseSiblings(startNode, endNode, fn)
 
   deleteText: (offset, length) ->
     this.applyToContents(offset, length, (node) ->
@@ -101,7 +100,7 @@ class ScribeLine extends LinkedList.Node
 
   rebuild: ->
     if @node.parentNode == @doc.root
-      return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(ScribeLine.DIRTY_CLASS)
+      return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(Scribe.Line.DIRTY_CLASS)
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
@@ -124,16 +123,16 @@ class ScribeLine extends LinkedList.Node
 
   setDirty: (isDirty = true) ->
     if isDirty
-      @node.classList.add(ScribeLine.DIRTY_CLASS)
+      @node.classList.add(Scribe.Line.DIRTY_CLASS)
     else
-      @node.classList.remove(ScribeLine.DIRTY_CLASS)
+      @node.classList.remove(Scribe.Line.DIRTY_CLASS)
 
   splitContents: (offset) ->
     this.setDirty()
     [node, offset] = Scribe.Utils.getChildAtOffset(@node, offset)
     if @node.tagName == 'OL' || @node.tagName == 'UL'
       [node, offset] = Scribe.Utils.getChildAtOffset(node, offset)
-    return Scribe.Utils.splitNode(node, offset)
+    return Scribe.DOM.splitNode(node, offset)
 
   toDelta: ->
     ops = _.map(@leaves.toArray(), (leaf) ->
@@ -142,7 +141,6 @@ class ScribeLine extends LinkedList.Node
     ops.push(new Tandem.InsertOp("\n", @formats)) if @trailingNewline
     delta = new Tandem.Delta(0, @length, ops)
     return delta
-
 
 
 window.Scribe ||= {}

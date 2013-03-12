@@ -7,20 +7,19 @@
 
 # Each node remove extraneous classes, attributes
 
-
 ScribeNormalizer =
   applyRules: (root) ->
-    Scribe.Utils.traversePreorder(root, 0, (node, index) =>
+    Scribe.DOM.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
         rules = Scribe.Constants.LINE_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
-              when 'rename' then node = Scribe.Utils.switchTag(node, data)
+              when 'rename' then node = Scribe.DOM.switchTag(node, data)
               else return
           )
         else
-          node = Scribe.Utils.unwrap(node)
+          node = Scribe.DOM.unwrap(node)
       return node
     )
 
@@ -36,7 +35,7 @@ ScribeNormalizer =
               root.insertBefore(line, curLine.nextSibling)
               while curNode.nextSibling?
                 line.appendChild(curNode.nextSibling)
-            curNode = Scribe.Utils.unwrap(curNode)
+            curNode = Scribe.DOM.unwrap(curNode)
           else
             curNode = curNode.nextSibling
         curLine = curLine.nextSibling
@@ -65,19 +64,19 @@ ScribeNormalizer =
       lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
 
   mergeAdjacent: (root) ->
-    Scribe.Utils.traversePreorder(root, 0, (node) ->
+    Scribe.DOM.traversePreorder(root, 0, (node) ->
       if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node) and Scribe.Utils.canModify(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'and Scribe.Utils.canModify(node) and Scribe.Utils.canModify(next)
           [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
           [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
           if nodeFormat == nextFormat && nodeValue == nextValue
-            node = Scribe.Utils.mergeNodes(node, next)
+            node = Scribe.DOM.mergeNodes(node, next)
       return node
     )
 
   removeNoBreak: (root) ->
-    Scribe.Utils.traversePreorder(root, 0, (node) =>
+    Scribe.DOM.traversePreorder(root, 0, (node) =>
       if node.nodeType == node.TEXT_NODE
         node.textContent = node.textContent.split(Scribe.Constants.NOBREAK_SPACE).join('')
       return node
@@ -101,9 +100,9 @@ ScribeNormalizer =
           if node.previousSibling == null && node.nextSibling == null && !Scribe.Line.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
             return true
       return false
-    Scribe.Utils.traversePreorder(root, 0, (node) =>
+    Scribe.DOM.traversePreorder(root, 0, (node) =>
       if isRedudant(node)
-        node = Scribe.Utils.unwrap(node)
+        node = Scribe.DOM.unwrap(node)
       if node?
         node[scribeKey] = _.clone(node.parentNode[scribeKey])
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
@@ -111,17 +110,17 @@ ScribeNormalizer =
       return node
     )
     delete root[scribeKey]
-    Scribe.Utils.traversePreorder(root, 0, (node) ->
+    Scribe.DOM.traversePreorder(root, 0, (node) ->
       delete node[scribeKey]
       return node
     )
     
   wrapText: (root) ->
-    Scribe.Utils.traversePreorder(root, 0, (node) =>
+    Scribe.DOM.traversePreorder(root, 0, (node) =>
       node.normalize()
       if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root || node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
-        Scribe.Utils.wrap(span, node)
+        Scribe.DOM.wrap(span, node)
         node = span
       return node
     )
@@ -132,6 +131,6 @@ ScribeNormalizer =
   normalizeTag: (node) ->
     # 
 
+
 window.Scribe ||= {}
 window.Scribe.Normalizer = ScribeNormalizer
-

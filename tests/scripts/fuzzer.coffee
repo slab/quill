@@ -8,7 +8,6 @@ Math.seedrandom(seed.toString())
 
 
 $(document).ready( ->
-  rangy.init()
   $editors = $('.editor-container')
   writer = new Scribe.Editor($editors.get(0))
   reader = new Scribe.Editor($editors.get(1))

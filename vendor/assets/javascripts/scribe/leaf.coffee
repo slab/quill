@@ -15,7 +15,6 @@ class ScribeLeaf extends LinkedList.Node
     return false if node.childNodes.length == 0
     return node.childNodes.length > 1 or node.firstChild.nodeType != node.TEXT_NODE
 
-
   constructor: (@line, @node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Scribe.Leaf.ID_PREFIX)
@@ -35,7 +34,6 @@ class ScribeLeaf extends LinkedList.Node
     [node, offset] = Scribe.Position.findDeepestNode(@line.doc.editor, @node, offset)
     node.textContent = node.textContent.substring(0, offset) + text + node.textContent.substring(offset)
     @length = @text.length
-
 
 
 class ScribeLeafIterator
@@ -59,13 +57,12 @@ class ScribeLeafIterator
 
   toArray: ->
     arr = []
-    itr = new ScribeLeafIterator(@start, @end)
+    itr = new Scribe.LeafIterator(@start, @end)
     while next = itr.next()
       arr.push(next)
     return arr
 
 
-
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Leaf = ScribeLeaf
 window.Scribe.LeafIterator = ScribeLeafIterator

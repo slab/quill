@@ -38,6 +38,5 @@ class ScribePasteManager
     )
 
 
-
 window.Scribe ||= {}
 window.Scribe.PasteManager = ScribePasteManager
