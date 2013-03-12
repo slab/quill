@@ -211,5 +211,5 @@ ScribeUtils =
     list.classList.add(Scribe.Document.INDENT_PREFIX + indent) if indent
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Utils = ScribeUtils

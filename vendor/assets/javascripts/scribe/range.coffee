@@ -118,6 +118,5 @@ class ScribeRange
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset
 
 
-
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Range = ScribeRange

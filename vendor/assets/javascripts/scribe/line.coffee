@@ -143,5 +143,5 @@ class ScribeLine extends LinkedList.Node
     return delta
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Line = ScribeLine

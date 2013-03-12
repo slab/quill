@@ -66,5 +66,5 @@ class ScribeToolbar extends EventEmitter2
     initSelectionListener.call(this)
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Toolbar = ScribeToolbar

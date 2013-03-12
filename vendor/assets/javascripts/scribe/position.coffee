@@ -51,5 +51,5 @@ class ScribePosition
     return @leaf
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Position = ScribePosition

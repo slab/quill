@@ -92,5 +92,5 @@ class ScribeUndoManager
       @redoStack.push(change)
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.UndoManager = ScribeUndoManager

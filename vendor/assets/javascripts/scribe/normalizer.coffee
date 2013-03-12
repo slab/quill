@@ -7,6 +7,7 @@
 
 # Each node remove extraneous classes, attributes
 
+
 ScribeNormalizer =
   applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
@@ -24,20 +25,35 @@ ScribeNormalizer =
     )
 
   breakBlocks: (root) ->
+    this.groupBlocks(root)
+    _.each(_.clone(root.querySelectorAll('hr')), (hr) ->
+      Scribe.DOM.switchTag(hr, 'br')
+    )
+    _.each(_.clone(root.querySelectorAll('br')), (br) ->
+      Scribe.Normalizer.normalizeBreak(br, root)
+    )
+    _.each(_.clone(root.children), (childNode) ->
+      Scribe.Normalizer.breakLine(childNode)
+    )
+
+  breakLine: (lineNode) ->
+    return if lineNode.children.length == 1 and lineNode.firstChild.tagName == 'BR'
+    Scribe.DOM.traversePostorder(lineNode, (node) ->
+      if Scribe.Utils.isBlock(node)
+        if node.nextSibling?
+          line = lineNode.ownerDocument.createElement('div')
+          lineNode.parentNode.insertBefore(line, lineNode.nextSibling)
+          while node.nextSibling?
+            line.appendChild(node.nextSibling)
+        return Scribe.DOM.unwrap(node)
+      else
+        return node
+    )
+
+  groupBlocks: (root) ->
     curLine = root.firstChild
     while curLine?
       if Scribe.Utils.isBlock(curLine)
-        curNode = curLine.firstChild
-        while curNode?
-          if Scribe.Utils.isBlock(curNode)
-            if curNode.nextSibling?
-              line = root.ownerDocument.createElement('div')
-              root.insertBefore(line, curLine.nextSibling)
-              while curNode.nextSibling?
-                line.appendChild(curNode.nextSibling)
-            curNode = Scribe.DOM.unwrap(curNode)
-          else
-            curNode = curNode.nextSibling
         curLine = curLine.nextSibling
       else
         line = root.ownerDocument.createElement('div')
@@ -46,6 +62,20 @@ ScribeNormalizer =
           nextLine = curLine.nextSibling
           line.appendChild(curLine)
           curLine = nextLine
+        curLine = line
+
+  normalizeBreak: (node, root) ->
+    return if node == root or node.parentNode == root
+    if node.previousSibling?
+      if node.nextSibling?
+        Scribe.DOM.splitAfter(node, root)
+      node.parentNode.removeChild(node)
+    else if node.nextSibling?
+      Scribe.DOM.splitAfter(node, root)
+      Scribe.Normalizer.normalizeBreak(node, root)
+    else
+      Scribe.DOM.unwrap(node.parentNode)
+      Scribe.Normalizer.normalizeBreak(node, root)
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 && lineNode.firstChild.tagName == 'BR'
@@ -132,5 +162,5 @@ ScribeNormalizer =
     # 
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Normalizer = ScribeNormalizer

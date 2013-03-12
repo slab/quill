@@ -21,10 +21,12 @@ class ScribePasteManager
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
+        console.log @container.innerHTML
         Scribe.Utils.removeExternal(@container)
         Scribe.Utils.removeStyles(@container)
         doc = new Scribe.Document(@container)
         delta = doc.toDelta()
+        console.log delta
         delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0
         delta.ops.push(new Tandem.RetainOp(selection.start.index, docLength)) if selection.start.index < docLength
         delta.endLength += docLength
@@ -38,5 +40,5 @@ class ScribePasteManager
     )
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.PasteManager = ScribePasteManager

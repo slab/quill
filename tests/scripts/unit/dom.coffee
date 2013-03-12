@@ -1,5 +1,5 @@
-describe('Utils', ->
-  describe('split', ->
+describe('DOM', ->
+  describe('splitNode', ->
     it('should not split if not necessary', ->
       container = document.getElementById('split-test-base')
       [left, right] = Scribe.DOM.splitNode(container.firstChild, 0)
@@ -44,6 +44,48 @@ describe('Utils', ->
     )
   )
 
+  describe('splitAfter', ->
+    tests = {
+      'Normal':
+        before: 
+          '<div>
+            <div>
+              <div>One</div>
+              <div>Two</div>
+            </div>
+            <div>
+              <div>Three</div>
+              <div id="target">Four</div>
+              <div>Five</div>
+            </div>
+          </div>'
+        after:
+          '<div>
+            <div>
+              <div>One</div>
+              <div>Two</div>
+            </div>
+            <div>
+              <div>Three</div>
+              <div id="target">Four</div>
+            </div>
+          </div>
+          <div>
+            <div>
+              <div>Five</div>
+            </div>
+          </div>'
+    }
+    _.each(tests, (test, name) ->
+      it(name, ->
+        root = $('#test-container').get(0)
+        $('#test-container').html(Scribe.Utils.cleanHtml(test.before, true))
+        target = $('#test-container #target').get(0)
+        Scribe.DOM.splitAfter(target, root)
+        expect(root.innerHTML).to.equal(Scribe.Utils.cleanHtml(test.after, true))
+      )
+    )
+  )
 
   describe('traversePreorder', ->
     reset = ->

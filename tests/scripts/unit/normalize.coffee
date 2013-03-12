@@ -33,44 +33,30 @@ describe('Normalize', ->
         ]
       'Break in middle of line':
         lines: [
-          '<div>
-            <span>One</span>
-            <br>
-            <span>Two</span>
-          </div>'
+          '<div><b>One<br />Two</b></div>'
         ]
         expected: [
-          '<div>
-            <span>One</span>
-          </div>
-          <div>
-            <span>Two</span>
-          </div>'
+          '<div><b>One</b></div>
+          <div><b>Two</b></div>'
         ]
       'Break preceding line':
         lines: [
-          '<div>
-            <br>
-            <span>One</span>
-          </div>'
+          '<div><b><br /><span>One</b></div>'
         ]
         expected: [
           '<div>
             <br />
           </div>
           <div>
-            <span>One</span>
+            <b>One</b>
           </div>'
         ]
       'Break after line ignored':
         lines: [
-          '<div>
-            <span>One</span>
-            <br>
-          </div>'
+          '<div><b>One<br /></b></div>'
         ]
         expected: [
-          '<div><span>One</span></div>'
+          '<div><b>One</b></div>'
         ]
       'Wrap newline':
         lines:    ['<br />']
@@ -118,6 +104,14 @@ describe('Normalize', ->
           '<div><br /></div>
           <div><span>One</span></div>'
         ]
+      'Custom':
+        lines: [
+          '<b><br /><span>One</span></b><i>Two</i>'
+        ]
+        expected: [
+          '<div><br /></div>
+          <div><b>One<b><i>Two</i></div>'
+        ]
 
     'elements':
       'tranform equivalent styles':
@@ -146,7 +140,7 @@ describe('Normalize', ->
           </div>'
         ]
       'merge adjacent equal nodes':
-        lines: ['<div><b>Bold1</b><b>Bold2</b></div>']
+        lines:    ['<div><b>Bold1</b><b>Bold2</b></div>']
         expected: ['<div><b>Bold1Bold2</b></div>']
       'merge adjacent equal spans':
         lines: [
@@ -183,7 +177,7 @@ describe('Normalize', ->
         lines: ['<div><b><i><b>Bolder</b></i></b></div>']
         expected: ['<div><b><i>Bolder</i></b></div>']
       'remove redundant elements':
-        lines: ['<div><span><br><span></div>', '<div><span><span>Span</span><span></div>']
+        lines: ['<div><span><br></span></div>', '<div><span><span>Span</span></span></div>']
         expected: ['<div><br></div>', '<div><span>Span</span></div>']
       'wrap text node':
         lines: ['<div>Hey</div>']

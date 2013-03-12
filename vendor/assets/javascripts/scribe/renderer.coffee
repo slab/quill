@@ -109,5 +109,5 @@ class ScribeRenderer
     contentContainer.innerHTML = html if @options.keepHTML
 
 
-window.Scribe ||= {}
+window.Scribe or= {}
 window.Scribe.Renderer = ScribeRenderer

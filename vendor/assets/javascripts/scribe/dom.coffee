@@ -13,6 +13,15 @@ ScribeDOM =
       newParent.appendChild(child)
     )
 
+  splitAfter: (node, root) ->
+    return if node == root or node.parentNode == root
+    parentNode = node.parentNode
+    parentClone = parentNode.cloneNode(false)
+    parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
+    while node.nextSibling?
+      parentClone.appendChild(node.nextSibling)
+    Scribe.DOM.splitAfter(parentNode, root)
+
   splitNode: (node, offset, force = false) ->
     if offset > Scribe.Utils.getNodeLength(node)
       throw new Error('Splitting at offset greater than node length')
@@ -56,6 +65,14 @@ ScribeDOM =
     newNode.className = node.className if node.className
     newNode.id = node.id if node.id
     return newNode
+
+  traversePostorder: (root, fn, context = fn) ->
+    return unless root?
+    cur = root.firstChild
+    while cur?
+      Scribe.DOM.traversePostorder.call(context, cur, fn)
+      cur = fn.call(context, cur)
+      cur = cur.nextSibling if cur?
 
   traversePreorder: (root, offset, fn, context = fn, args...) ->
     return unless root?
