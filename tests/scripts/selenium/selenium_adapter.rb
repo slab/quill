@@ -61,10 +61,9 @@ class SeleniumAdapter
 
   def type_text(text)
     if @cursor_pos == @doc_length && @driver.browser == :firefox
-      # Hack to workaround inexplicable firefox behavior in which it inserts an
-      # "invisible" newline if you append to the end of the text in a
-      # contenteditable.
-      @editor.send_keys(:arrow_left, :arrow_right, text)
+      # Hack to workaround inexplicable firefox behavior in which it appends a
+      # newline if you append to the end of the document.
+      @editor.send_keys(text, :arrow_down, :delete)
     else
       @editor.send_keys(text)
     end
