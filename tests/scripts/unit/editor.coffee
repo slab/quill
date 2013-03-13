@@ -45,8 +45,8 @@ describe('Editor', ->
     _.each(tests, (test, name) ->
       it(name, ->
         html = test.lines.join('')
-        $('#editor-container').html(html)
-        editor = new Scribe.Editor('editor-container')
+        $('#test-container').html(html)
+        editor = new Scribe.Editor('test-container')
         oldDelta = editor.doc.toDelta()
         startLength = oldDelta.endLength
         endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
@@ -57,8 +57,8 @@ describe('Editor', ->
         editor.applyDelta(delta)
         consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
-        $('#editor-container').html(expectedHtml)
-        editor = new Scribe.Editor('editor-container')
+        $('#test-container').html(expectedHtml)
+        editor = new Scribe.Editor('test-container')
         expectedDelta = editor.doc.toDelta()
         expect(consistent).to.be.true
         expect(newDelta).to.deep.equal(expectedDelta)
@@ -141,14 +141,14 @@ describe('Editor', ->
           original = originalHtml.replace(/\/#/g, "/#{formatTest.tagName}").replace(/#/g, openTag)
           apply = formatTest.value && Scribe.Utils.getFormatDefault(formatTest.format) != formatTest.value
           [startHtml, endHtml] = if apply then [original, expected] else [expected, original]
-          $('#editor-container').html(startHtml)
-          editor = new Scribe.Editor('editor-container')
+          $('#test-container').html(startHtml)
+          editor = new Scribe.Editor('test-container')
           editor.formatAt(test.start, test.length, formatTest.format, formatTest.value)
           range = new Scribe.Range(editor, test.start, test.start + test.length)
           formats = _.clone(range.getFormats())
           delta = editor.doc.toDelta()
-          $('#editor-container').html(endHtml)
-          editor = new Scribe.Editor('editor-container')
+          $('#test-container').html(endHtml)
+          editor = new Scribe.Editor('test-container')
           expectedDelta = editor.doc.toDelta()
           consistent = Scribe.Debug.checkDocumentConsistency(editor.doc, true)
           if apply
@@ -220,13 +220,13 @@ describe('Editor', ->
         expectedHtml = _.map(test.expected, (line) ->
           return if _.isNumber(line) then test.lines[line] else line
         ).join('')
-        $('#editor-container').html(html)
-        editor = new Scribe.Editor('editor-container')
+        $('#test-container').html(html)
+        editor = new Scribe.Editor('test-container')
         test.fn(editor)
         consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
         newDelta = editor.doc.toDelta()
-        $('#editor-container').html(expectedHtml)
-        editor = new Scribe.Editor('editor-container')
+        $('#test-container').html(expectedHtml)
+        editor = new Scribe.Editor('test-container')
         expectedDelta = editor.doc.toDelta()
         expect(consistent).to.be.true
         expect(newDelta).to.deep.equal(expectedDelta)
@@ -238,7 +238,7 @@ describe('Editor', ->
 
   describe('deleteAt', ->
     reset = ->
-      $('#editor-container').html(Scribe.Utils.cleanHtml('
+      $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>123</b>
           <i>456</i>
@@ -253,7 +253,7 @@ describe('Editor', ->
           <b>abcdefg</b>
         </div>
       '))
-      return new Scribe.Editor('editor-container')
+      return new Scribe.Editor('test-container')
 
     tests = [{
       name: 'a node'

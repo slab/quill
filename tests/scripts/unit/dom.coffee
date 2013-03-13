@@ -1,89 +1,86 @@
 describe('DOM', ->
   describe('splitNode', ->
-    it('should not split if not necessary', ->
-      container = document.getElementById('split-test-base')
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 0)
-      expect(left).to.equal(null)
-      expect(right).to.equal(container.firstChild)
-
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 4)
-      expect(left).to.equal(container.firstChild)
-      expect(right).to.equal(null)
+    splitTest = new Scribe.Test.LineTest((lineNode, target, offset) ->
+      Scribe.DOM.splitNode(lineNode.firstChild, offset)
     )
 
-    it('should split text node', ->
-      container = document.getElementById('split-test-text')
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 2)
-      expect(left.textContent).to.equal("Bo")
-      expect(right.textContent).to.equal("ld")
-      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b>Bo</b><b>ld</b>')
-    )
+    splitTest.run('should not split if not necessary 1',
+      '<b>Bold</b>',
+      '<b>Bold</b>'
+    , 0)
 
-    it('should split child nodes', ->
-      container = document.getElementById('split-test-node')
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 6)
-      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>Italic</i></b><b><s>Strike</s></b>')
-    )
+    splitTest.run('should not split if not necessary 2',
+      '<b>Bold</b>',
+      '<b>Bold</b>'
+    , 4)
 
-    it('should split child nodes and text', ->
-      container = document.getElementById('split-test-both')
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 2)
-      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i>It</i></b><b><i>alic</i></b>')
-    )
+    splitTest.run('should split text node',
+      '<b>Bold</b>',
+      '<b>Bo</b><b>ld</b>'
+    , 2)
 
-    it('should split deep nodes', ->
-      container = document.getElementById('split-test-complex')
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 2)
-      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<b><i><s><u>On</u></s></i></b><b><i><s><u>e</u><u>Two</u></s><s>Three</s></i></b>')
-    )
+    splitTest.run('should split child nodes',
+      '<b><i>Italic</i><s>Strike</s></b>',
+      '<b><i>Italic</i></b><b><s>Strike</s></b>'
+    , 6)
 
-    it('should split lines', ->
-      container = document.getElementById('split-test-lines')
-      [left, right] = Scribe.DOM.splitNode(container.firstChild, 1)
-      expect(Scribe.Utils.cleanHtml(container.innerHTML)).to.equal('<div><b>1</b></div><div><b>23</b><i>456</i></div>')
-    )
+    splitTest.run('should split child nodes and text',
+      '<b><i>Italic</i></b>',
+      '<b><i>It</i></b><b><i>alic</i></b>'
+    , 2)
+
+    splitTest.run('should split deep nodes',
+      '<b><i>
+        <s><u>One</u><u>Two</u></s>
+        <s>Three</s>
+      </i></b>',
+      '<b><i>
+          <s><u>On</u></s>
+      </i></b>
+      <b><i>
+        <s><u>e</u><u>Two</u></s>
+        <s>Three</s>
+      </i></b>'
+    , 2)
+
+    splitTest.run('should split lines',
+      '<div><b>123</b><i>456</i></div>',
+      '<div><b>1</b></div>
+      <div><b>23</b><i>456</i></div>'
+    , 1)
   )
 
   describe('splitAfter', ->
-    tests = {
-      'Normal':
-        before: 
-          '<div>
-            <div>
-              <div>One</div>
-              <div>Two</div>
-            </div>
-            <div>
-              <div>Three</div>
-              <div id="target">Four</div>
-              <div>Five</div>
-            </div>
-          </div>'
-        after:
-          '<div>
-            <div>
-              <div>One</div>
-              <div>Two</div>
-            </div>
-            <div>
-              <div>Three</div>
-              <div id="target">Four</div>
-            </div>
-          </div>
-          <div>
-            <div>
-              <div>Five</div>
-            </div>
-          </div>'
-    }
-    _.each(tests, (test, name) ->
-      it(name, ->
-        root = $('#test-container').get(0)
-        $('#test-container').html(Scribe.Utils.cleanHtml(test.before, true))
-        target = $('#test-container #target').get(0)
-        Scribe.DOM.splitAfter(target, root)
-        expect(root.innerHTML).to.equal(Scribe.Utils.cleanHtml(test.after, true))
-      )
+    splitTest = new Scribe.Test.HtmlTest((container, target) ->
+      Scribe.DOM.splitAfter(target, container)
+    , { target: 'target' })
+    splitTest.run('Normal',
+      '<div>
+        <div>
+          <div>One</div>
+          <div>Two</div>
+        </div>
+        <div>
+          <div>Three</div>
+          <div id="target">Four</div>
+          <div>Five</div>
+        </div>
+      </div>',
+      '<div>
+        <div>
+          <div>One</div>
+          <div>Two</div>
+        </div>
+        <div>
+          <div>Three</div>
+          <div id="target">Four</div>
+        </div>
+      </div>
+      <div>
+        <div>
+          <div>Five</div>
+        </div>
+      </div>'
     )
   )
 

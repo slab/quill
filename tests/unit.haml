@@ -3,74 +3,57 @@
   %head
     %title Stypi Editor Unit Tests
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/mocha.css'}
+    :css
+      #expected-container, #test-container {
+        float: left;
+        width: 50%;
+      }
     %meta{:charset => 'utf-8'}
 
 %body
   #mocha
-  #editor-container
   #test-container
-    #split-test-base<>
-      %b<> Bold
-    #split-test-text<>
-      %b<> Bold
-    #split-test-node
-      %b<>
-        %i<> Italic
-        %s<> Strike
-    #split-test-both
-      %b<>
-        %i<> Italic
-    #split-test-complex
-      %b<>
-        %i<>
-          %s<>
-            %u<> One
-            %u<> Two
-          %s<> Three
-    #split-test-lines
-      .line<>
-        %b<> 123
-        %i<> 456
+  #expected-container
 
-    // Need to separate files for code coverage
-    %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
-    %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
-    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
-    %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-selectionsaverestore.js'}
-    %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
-    %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
-    %script{:type => 'text/javascript', :src => '../lib/tandem-core.js'}
+  // Need to separate files for code coverage
+  %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
+  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-selectionsaverestore.js'}
+  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+  %script{:type => 'text/javascript', :src => '../lib/tandem-core.js'}
 
-    %script{:type => 'text/javascript', :src => '../src/constants.js'}
-    %script{:type => 'text/javascript', :src => '../src/cursor.js'}
-    %script{:type => 'text/javascript', :src => '../src/debug.js'}
-    %script{:type => 'text/javascript', :src => '../src/document.js'}
-    %script{:type => 'text/javascript', :src => '../src/dom.js'}
-    %script{:type => 'text/javascript', :src => '../src/editor.js'}
-    %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
-    %script{:type => 'text/javascript', :src => '../src/leaf.js'}
-    %script{:type => 'text/javascript', :src => '../src/line.js'}
-    %script{:type => 'text/javascript', :src => '../src/normalizer.js'}
-    %script{:type => 'text/javascript', :src => '../src/paste-manager.js'}
-    %script{:type => 'text/javascript', :src => '../src/position.js'}
-    %script{:type => 'text/javascript', :src => '../src/range.js'}
-    %script{:type => 'text/javascript', :src => '../src/renderer.js'}
-    %script{:type => 'text/javascript', :src => '../src/selection.js'}
-    %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
-    %script{:type => 'text/javascript', :src => '../src/undo-manager.js'}
-    %script{:type => 'text/javascript', :src => '../src/utils.js'}
+  %script{:type => 'text/javascript', :src => '../src/constants.js'}
+  %script{:type => 'text/javascript', :src => '../src/cursor.js'}
+  %script{:type => 'text/javascript', :src => '../src/debug.js'}
+  %script{:type => 'text/javascript', :src => '../src/document.js'}
+  %script{:type => 'text/javascript', :src => '../src/dom.js'}
+  %script{:type => 'text/javascript', :src => '../src/editor.js'}
+  %script{:type => 'text/javascript', :src => '../src/keyboard.js'}
+  %script{:type => 'text/javascript', :src => '../src/leaf.js'}
+  %script{:type => 'text/javascript', :src => '../src/line.js'}
+  %script{:type => 'text/javascript', :src => '../src/normalizer.js'}
+  %script{:type => 'text/javascript', :src => '../src/paste-manager.js'}
+  %script{:type => 'text/javascript', :src => '../src/position.js'}
+  %script{:type => 'text/javascript', :src => '../src/range.js'}
+  %script{:type => 'text/javascript', :src => '../src/renderer.js'}
+  %script{:type => 'text/javascript', :src => '../src/selection.js'}
+  %script{:type => 'text/javascript', :src => '../src/toolbar.js'}
+  %script{:type => 'text/javascript', :src => '../src/undo-manager.js'}
+  %script{:type => 'text/javascript', :src => '../src/utils.js'}
 
-    %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
-    %script{:type => 'text/javascript', :src => '../lib/chai.js'}
-    :javascript
-      mocha.setup('bdd');
-      mocha.ignoreLeaks();
-      expect = chai.expect;
-    %script{:type => 'text/javascript', :src => 'scripts/unit.js'}
-    :javascript
-      if (window.mochaPhantomJS) {
-        mochaPhantomJS.run();
-      } else {
-        mocha.run();
-      }
+  %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
+  %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+  :javascript
+    mocha.setup('bdd');
+    mocha.ignoreLeaks();
+    expect = chai.expect;
+  %script{:type => 'text/javascript', :src => 'scripts/unit.js'}
+  :javascript
+    if (window.mochaPhantomJS) {
+      mochaPhantomJS.run();
+    } else {
+      mocha.run();
+    }
       

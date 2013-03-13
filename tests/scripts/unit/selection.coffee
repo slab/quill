@@ -1,7 +1,7 @@
 describe('Selection', ->
   findIndexes = (html) ->
-    $('#editor-container').html(html)
-    editor = new Scribe.Editor('editor-container')
+    $('#test-container').html(html)
+    editor = new Scribe.Editor('test-container')
     lines = editor.doc.lines.toArray()
     lineIndex = 0
     ret = _.reduce(lines, (indexes, line) ->
@@ -238,8 +238,8 @@ describe('Selection', ->
             expectedIndexes = findIndexes(expectedHtml)
             html = html.replace(/\|/g, '')
             expectedHtml = expectedHtml.replace(/\|/g, '')
-            $('#editor-container').html(html)
-            editor = new Scribe.Editor('editor-container')
+            $('#test-container').html(html)
+            editor = new Scribe.Editor('test-container')
             editor.setSelection(new Scribe.Range(editor, start, end))
             sel = editor.getSelection()
             expect([sel.start.index, sel.end.index]).to.deep.equal([start, end])

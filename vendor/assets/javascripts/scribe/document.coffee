@@ -9,7 +9,7 @@ class ScribeDocument
 
   buildLines: ->
     this.reset()
-    Scribe.Normalizer.breakBlocks(@root)
+    Scribe.Normalizer.normalizeDoc(@root)
     this.rebuild()
 
   cleanNode: (lineNode) ->

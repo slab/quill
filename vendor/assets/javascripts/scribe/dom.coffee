@@ -1,4 +1,9 @@
 ScribeDOM = 
+  toNodeArray: (nodeList) ->
+    return _.map(nodeList, (node) ->
+      return node
+    )
+
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
     return node1 if !node2?
@@ -14,7 +19,7 @@ ScribeDOM =
     )
 
   splitAfter: (node, root) ->
-    return if node == root or node.parentNode == root
+    return false if node == root or node.parentNode == root
     parentNode = node.parentNode
     parentClone = parentNode.cloneNode(false)
     parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)

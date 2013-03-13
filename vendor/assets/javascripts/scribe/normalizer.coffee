@@ -26,13 +26,13 @@ ScribeNormalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(_.clone(root.querySelectorAll('hr')), (hr) ->
+    _.each(Scribe.DOM.toNodeArray(root.querySelectorAll('hr')), (hr) ->
       Scribe.DOM.switchTag(hr, 'br')
     )
-    _.each(_.clone(root.querySelectorAll('br')), (br) ->
+    _.each(Scribe.DOM.toNodeArray(root.querySelectorAll('br')), (br) ->
       Scribe.Normalizer.normalizeBreak(br, root)
     )
-    _.each(_.clone(root.children), (childNode) ->
+    _.each(Scribe.DOM.toNodeArray(root.children), (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
     )
 
@@ -45,6 +45,7 @@ ScribeNormalizer =
           lineNode.parentNode.insertBefore(line, lineNode.nextSibling)
           while node.nextSibling?
             line.appendChild(node.nextSibling)
+          Scribe.Normalizer.breakLine(line)
         return Scribe.DOM.unwrap(node)
       else
         return node
@@ -65,15 +66,16 @@ ScribeNormalizer =
         curLine = line
 
   normalizeBreak: (node, root) ->
-    return if node == root or node.parentNode == root
+    return if node == root
     if node.previousSibling?
       if node.nextSibling?
         Scribe.DOM.splitAfter(node, root)
       node.parentNode.removeChild(node)
     else if node.nextSibling?
-      Scribe.DOM.splitAfter(node, root)
-      Scribe.Normalizer.normalizeBreak(node, root)
-    else
+      if Scribe.DOM.splitAfter(node, root)
+        Scribe.Normalizer.normalizeBreak(node, root)
+    else if node.parentNode != root and node.parentNode.parentNode != root
+      # Make sure <div><br/></div> is not unintentionally unwrapped
       Scribe.DOM.unwrap(node.parentNode)
       Scribe.Normalizer.normalizeBreak(node, root)
 
@@ -92,6 +94,19 @@ ScribeNormalizer =
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
       lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
+
+  normalizeDoc: (root) ->
+    if !root.firstChild
+      div = root.ownerDocument.createElement('div')
+      br = root.ownerDocument.createElement('br')
+      root.appendChild(div)
+      div.appendChild(br)
+      return
+    else
+      Scribe.Normalizer.breakBlocks(root)
+      _.each(Scribe.DOM.toNodeArray(root.children), (child) ->
+        Scribe.Normalizer.normalizeLine(child)
+      )
 
   mergeAdjacent: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node) ->
