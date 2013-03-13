@@ -24,7 +24,9 @@ class ScribePasteManager
         Scribe.Utils.removeExternal(@container)
         Scribe.Utils.removeStyles(@container)
         doc = new Scribe.Document(@container)
-        doc.lines.last.trailingNewline = false
+        # Need to remove trailing newline so paste is inline
+        lastLine = doc.lines.last
+        lastLine.deleteText(lastLine.length - 1, 1)
         delta = doc.toDelta()
         delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0
         delta.ops.push(new Tandem.RetainOp(selection.start.index, docLength)) if selection.start.index < docLength
