@@ -85,6 +85,7 @@ describe('Normalize', ->
   describe('normalizeLine', ->
     lineTest = new Scribe.Test.LineTest((lineNode) ->
       Scribe.Normalizer.normalizeLine(lineNode)
+      Scribe.Normalizer.optimizeLine(lineNode)
     )
 
     lineTest.run('tranform equivalent styles', [
@@ -154,6 +155,17 @@ describe('Normalize', ->
     lineTest.run('wrap text node next to element node', 
       'Hey<b>Bold</b>',
       '<span>Hey</span><b>Bold</b>'
+    )
+  )
+
+  describe('optimizeLine', ->
+    lineTest = new Scribe.Test.LineTest((container) ->
+      Scribe.Normalizer.optimizeLine(container)
+    )
+
+    lineTest.run('unnecessary break', 
+      '<span>One</span><br>',
+      '<span>One</span>'
     )
   )
 

@@ -1,4 +1,9 @@
 ScribeDOM = 
+  getChildNodes: (node) ->
+    return _.filter(node.childNodes, (node) ->
+      return node.nodeType == node.TEXT_NODE or !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+    )
+
   toNodeArray: (nodeList) ->
     return _.map(nodeList, (node) ->
       return node

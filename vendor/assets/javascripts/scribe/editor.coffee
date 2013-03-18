@@ -66,7 +66,7 @@ formatAt = (index, length, name, value) ->
       else
         line.formatText(offset, line.length - offset, name, value)
     else
-      console.warn 'Unsupported format'
+      console.warn 'Unsupported format', name, value
     length -= (line.length - offset)
     offset = 0
     line = line.next

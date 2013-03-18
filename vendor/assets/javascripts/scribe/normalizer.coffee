@@ -33,12 +33,12 @@ ScribeNormalizer =
     _.each(root.querySelectorAll(Scribe.Line.BLOCK_TAGS.join(', ')), (node) ->
       node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
     )
-    _.each(root.children, (childNode) ->
+    _.each(root.childNodes, (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
     )
 
   breakLine: (lineNode) ->
-    return if lineNode.children.length == 1 and lineNode.firstChild.tagName == 'BR'
+    return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
     Scribe.DOM.traversePostorder(lineNode, (node) ->
       if Scribe.Utils.isBlock(node)
         node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
@@ -94,28 +94,28 @@ ScribeNormalizer =
       Scribe.Normalizer.normalizeBreak(node, root)
 
   normalizeDoc: (root) ->
-    if !root.firstChild
-      div = root.ownerDocument.createElement('div')
-      br = root.ownerDocument.createElement('br')
-      root.appendChild(div)
-      div.appendChild(br)
-    else
-      Scribe.Normalizer.breakBlocks(root)
-      _.each(Scribe.DOM.toNodeArray(root.children), (child) ->
-        Scribe.Normalizer.normalizeLine(child)
-      )
+    root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
+    Scribe.Normalizer.breakBlocks(root)
+    _.each(Scribe.DOM.toNodeArray(root.childNodes), (child) ->
+      Scribe.Normalizer.normalizeLine(child)
+      Scribe.Normalizer.optimizeLine(child)
+    )
 
   normalizeLine: (lineNode) ->
-    return if lineNode.childNodes.length == 1 && lineNode.firstChild.tagName == 'BR'
+    return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
     this.applyRules(lineNode)
     this.removeNoBreak(lineNode)
-    this.removeRedundant(lineNode)
-    # TODO need wrapText before and after for these cases:
-    # Before: <b>Test<span>What</span></b> -> <b><span>Test</span><span>What</span></b>
-    # After: <b>Bold</b><b><i>Test</i></b> -> <b>Bold<i>Test</i></b>
-    this.mergeAdjacent(lineNode)
+    this.requireLeaf(lineNode)
     this.wrapText(lineNode)
-    if 0 == _.reduce(lineNode.childNodes, ((count, node) -> return count + (if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) then 0 else 1)), 0)
+
+  optimizeLine: (lineNode) ->
+    return if lineNode.childNodes.length == 1and lineNode.firstChild.tagName == 'BR'
+    this.mergeAdjacent(lineNode)
+    this.removeRedundant(lineNode)
+    this.wrapText(lineNode)
+
+  requireLeaf: (lineNode) ->
+    unless Scribe.DOM.getChildNodes(lineNode).length > 1
       if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
@@ -128,25 +128,25 @@ ScribeNormalizer =
       return node
     )
 
-  removeRedundant: (root) ->
+  removeRedundant: (lineNode) ->
     scribeKey = _.uniqueId('_scribeFormats')
-    root[scribeKey] = {}
+    lineNode[scribeKey] = {}
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE && Scribe.Utils.canModify(node)
         if Scribe.Utils.getNodeLength(node) == 0
-          return true
+          return node.tagName != 'BR' or Scribe.DOM.getChildNodes(node.parentNode).length > 1
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
         if formatName?
           return node.parentNode[scribeKey][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
-          # Check if children need us
+          # Check if childNodes need us
           if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
           # Check if parent needs us
-          if node.previousSibling == null && node.nextSibling == null && !Scribe.Line.isLineNode(node.parentNode) && node.parentNode.tagName != 'LI'
+          if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
             return true
       return false
-    Scribe.DOM.traversePreorder(root, 0, (node) =>
+    Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
       if isRedudant(node)
         node = Scribe.DOM.unwrap(node)
       if node?
@@ -155,8 +155,8 @@ ScribeNormalizer =
         node[scribeKey][formatName] = formatValue if formatName?
       return node
     )
-    delete root[scribeKey]
-    Scribe.DOM.traversePreorder(root, 0, (node) ->
+    delete lineNode[scribeKey]
+    Scribe.DOM.traversePreorder(lineNode, 0, (node) ->
       delete node[scribeKey]
       return node
     )

@@ -23,7 +23,7 @@ class ScribeLine extends LinkedList.Node
     'TR'
     'UL'
   ]
-  
+
   @BREAK_TAGS: [
     'BR'
     'HR'
@@ -135,6 +135,7 @@ class ScribeLine extends LinkedList.Node
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
       Scribe.Normalizer.normalizeLine(@node)
+      Scribe.Normalizer.optimizeLine(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
     else

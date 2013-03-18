@@ -156,13 +156,13 @@ ScribeUtils =
     )
 
   removeFormatFromSubtree: (subtree, format) ->
-    children = _.clone(subtree.childNodes)
+    childNodes = _.clone(subtree.childNodes)
     formats = Scribe.Utils.getFormatForContainer(subtree)
     [name, value] = Scribe.Utils.getFormatForContainer(subtree)
     ret = subtree
     if name == format
       ret = Scribe.DOM.unwrap(subtree)
-    _.each(children, (child) ->
+    _.each(childNodes, (child) ->
       Scribe.Utils.removeFormatFromSubtree(child, format)
     )
     return ret
