@@ -209,5 +209,20 @@ describe('Normalize', ->
       '<div><b>Two</b></div>',
     ])
   )
-)
 
+  describe('normalizeTag', ->
+    tagTest = new Scribe.Test.LineTest((lineNode) ->
+      Scribe.Normalizer.normalizeLine(lineNode)
+    )
+
+    tagTest.run('strip extraneous attributes', 
+      '<span data-test="test" width="100px">One</span>'
+      '<span>One</span>'
+    )
+
+    tagTest.run('convert styles', 
+      '<span style="color:green">One</span>'
+      '<span>One</span>'
+    )
+  )
+)
