@@ -92,16 +92,13 @@ class ScribeLine extends LinkedList.Node
 
   formatText: (offset, length, name, value) ->
     return if length <= 0
-    [prevNode, startNode] = this.splitContents(offset)
-    [endNode, nextNode] = this.splitContents(offset + length)
-    parentNode = startNode?.parentNode || prevNode?.parentNode
     if value && Scribe.Utils.getFormatDefault(name) != value
       refNode = null
       formatNode = Scribe.Utils.createContainerForFormat(@doc.root.ownerDocument, name, value)
       this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
-        node = Scribe.Utils.removeFormatFromSubtree(node, name)
         formatNode.appendChild(node)
+        Scribe.Utils.removeFormatFromSubtree(node, name)
       )
       @node.insertBefore(formatNode, refNode)
     else
