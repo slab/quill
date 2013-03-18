@@ -176,6 +176,14 @@ describe('Normalize', ->
       ['<div><br></div>'], 
       ['<div><br></div>']
     )
+
+    docTest.run('break hr', [
+      '<div><b>One<br><hr>Two</b></div>'
+    ], [
+      '<div><b>One</b></div>',
+      '<div><br></div>',
+      '<div><b>Two</b></div>',
+    ])
   )
 )
 

@@ -3,6 +3,36 @@ class ScribeLine extends LinkedList.Node
   @DIRTY_CLASS: 'dirty'
   @ID_PREFIX  : 'line-'
 
+  @BLOCK_TAGS: [
+    'ADDRESS'
+    'BLOCKQUOTE'
+    'DD'
+    'DIV'
+    'DL'
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
+    'LI'
+    'OL'
+    'P'
+    'PRE'
+    'TABLE'
+    'TBODY'
+    'TD'
+    'TFOOT'
+    'TH'
+    'THEAD'
+    'TR'
+    'UL'
+  ]
+  
+  @BREAK_TAGS: [
+    'BR'
+    'HR'
+  ]
+
+  @FORMATS:
+    align: ['center', 'justify', 'left', 'right']
+
+
   @isLineNode: (node) ->
     return node? && node.classList? && node.classList.contains(Scribe.Line.CLASS_NAME)
 

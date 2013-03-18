@@ -133,7 +133,7 @@ ScribeUtils =
       cur = next
 
   isBlock: (node) ->
-    return _.indexOf(Scribe.Constants.BLOCK_TAGS, node.tagName) > -1
+    return _.indexOf(Scribe.Line.BLOCK_TAGS, node.tagName) > -1
 
   isTextNodeParent: (node) ->
     return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE

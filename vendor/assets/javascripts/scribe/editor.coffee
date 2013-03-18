@@ -56,7 +56,7 @@ forceTrailingNewline = ->
 formatAt = (index, length, name, value) ->
   [line, offset] = @doc.findLineAtOffset(index)
   while line? and length > 0
-    if Scribe.Constants.LINE_FORMATS[name]?
+    if Scribe.Line.FORMATS[name]?
       # If newline character is being applied with formatting
       if length > line.length - offset
         line.format(name, value)

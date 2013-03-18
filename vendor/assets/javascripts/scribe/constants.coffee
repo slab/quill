@@ -1,38 +1,6 @@
 # Arrays must be alphabetized, so we can use binary search
 
 ScribeConstants =
-  ALIGN_FORMATS: [
-    'center'
-    'justify'
-    'left'
-    'right'
-  ]
-
-  BLOCK_TAGS: [
-    'ADDRESS'
-    'BLOCKQUOTE'
-    'DD'
-    'DIV'
-    'DL'
-    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
-    'LI'
-    'OL'
-    'P'
-    'PRE'
-    'TABLE'
-    'TBODY'
-    'TD'
-    'TFOOT'
-    'TH'
-    'THEAD'
-    'TR'
-    'UL'
-  ]
-
-  BREAK_TAGS: [
-    'BR'
-    'HR'
-  ]
 
   DEFAULT_LEAF_FORMATS:
     'background' : 'white'
@@ -86,12 +54,12 @@ ScribeConstants =
     'CENTER'    : {rename: 'span'}
     'DEL'       : {rename: 's'}
     'EM'        : {rename: 'i'}
-    'H1'        : {rename: 'span'}
-    'H2'        : {rename: 'span'}
-    'H3'        : {rename: 'span'}
-    'H4'        : {rename: 'span'}
-    'H5'        : {rename: 'span'}
-    'H6'        : {rename: 'span'}
+    'H1'        : {rename: 'div'}
+    'H2'        : {rename: 'div'}
+    'H3'        : {rename: 'div'}
+    'H4'        : {rename: 'div'}
+    'H5'        : {rename: 'div'}
+    'H6'        : {rename: 'div'}
     'I'         : {}
     'INS'       : {rename: 'span'}
     'LI'        : {}
@@ -119,8 +87,6 @@ ScribeConstants =
     ATOMIC: 'atom'
     EXTERNAL: 'ext'
   
-
-ScribeConstants.LINE_FORMATS = _.extend({}, ScribeConstants.INDENT_FORMATS, ScribeConstants.ALIGN_FORMATS)
 
 ScribeConstants.SPAN_FORMATS =
   'background' : ScribeConstants.FONT_BACKGROUNDS

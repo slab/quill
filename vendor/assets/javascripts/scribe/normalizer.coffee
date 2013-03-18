@@ -26,11 +26,9 @@ ScribeNormalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(root.querySelectorAll('hr'), (hr) ->
-      Scribe.DOM.switchTag(hr, 'br')
-    )
-    _.each(root.querySelectorAll('br'), (br) ->
-      Scribe.Normalizer.normalizeBreak(br, root)
+    _.each(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', ')), (tag) ->
+      tag = Scribe.DOM.switchTag(tag, 'br') if tag.tagName != 'BR'
+      Scribe.Normalizer.normalizeBreak(tag, root)
     )
     _.each(root.children, (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
