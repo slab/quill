@@ -26,9 +26,12 @@ ScribeNormalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', ')), (tag) ->
-      tag = Scribe.DOM.switchTag(tag, 'br') if tag.tagName != 'BR'
-      Scribe.Normalizer.normalizeBreak(tag, root)
+    _.each(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', ')), (node) ->
+      node = Scribe.DOM.switchTag(node, 'br') if node.tagName != 'BR'
+      Scribe.Normalizer.normalizeBreak(node, root)
+    )
+    _.each(root.querySelectorAll(Scribe.Line.BLOCK_TAGS.join(', ')), (node) ->
+      node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
     )
     _.each(root.children, (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
@@ -38,6 +41,7 @@ ScribeNormalizer =
     return if lineNode.children.length == 1 and lineNode.firstChild.tagName == 'BR'
     Scribe.DOM.traversePostorder(lineNode, (node) ->
       if Scribe.Utils.isBlock(node)
+        node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
         if node.nextSibling?
           line = lineNode.ownerDocument.createElement('div')
           lineNode.parentNode.insertBefore(line, lineNode.nextSibling)
@@ -63,6 +67,18 @@ ScribeNormalizer =
           curLine = nextLine
         curLine = line
 
+  mergeAdjacent: (root) ->
+    Scribe.DOM.traversePreorder(root, 0, (node) ->
+      if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node) and Scribe.Utils.canModify(node)
+        next = node.nextSibling
+        if next?.tagName == node.tagName and node.tagName != 'LI'and Scribe.Utils.canModify(node) and Scribe.Utils.canModify(next)
+          [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
+          [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
+          if nodeFormat == nextFormat && nodeValue == nextValue
+            node = Scribe.DOM.mergeNodes(node, next)
+      return node
+    )
+
   normalizeBreak: (node, root) ->
     return if node == root
     if node.previousSibling?
@@ -76,6 +92,18 @@ ScribeNormalizer =
       # Make sure <div><br/></div> is not unintentionally unwrapped
       Scribe.DOM.unwrap(node.parentNode)
       Scribe.Normalizer.normalizeBreak(node, root)
+
+  normalizeDoc: (root) ->
+    if !root.firstChild
+      div = root.ownerDocument.createElement('div')
+      br = root.ownerDocument.createElement('br')
+      root.appendChild(div)
+      div.appendChild(br)
+    else
+      Scribe.Normalizer.breakBlocks(root)
+      _.each(Scribe.DOM.toNodeArray(root.children), (child) ->
+        Scribe.Normalizer.normalizeLine(child)
+      )
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 && lineNode.firstChild.tagName == 'BR'
@@ -92,31 +120,6 @@ ScribeNormalizer =
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
       lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
-
-  normalizeDoc: (root) ->
-    if !root.firstChild
-      div = root.ownerDocument.createElement('div')
-      br = root.ownerDocument.createElement('br')
-      root.appendChild(div)
-      div.appendChild(br)
-      return
-    else
-      Scribe.Normalizer.breakBlocks(root)
-      _.each(Scribe.DOM.toNodeArray(root.children), (child) ->
-        Scribe.Normalizer.normalizeLine(child)
-      )
-
-  mergeAdjacent: (root) ->
-    Scribe.DOM.traversePreorder(root, 0, (node) ->
-      if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node) and Scribe.Utils.canModify(node)
-        next = node.nextSibling
-        if next?.tagName == node.tagName and node.tagName != 'LI'and Scribe.Utils.canModify(node) and Scribe.Utils.canModify(next)
-          [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
-          [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
-          if nodeFormat == nextFormat && nodeValue == nextValue
-            node = Scribe.DOM.mergeNodes(node, next)
-      return node
-    )
 
   removeNoBreak: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node) =>

@@ -177,7 +177,19 @@ describe('Normalize', ->
       ['<div><br></div>']
     )
 
-    docTest.run('break hr', [
+    docTest.run('handle nonstandard block tags', [
+      '<h1>
+        <dl><dt>One</dt></dl>
+        <pre>Two</pre>
+        <p><span>Three</span></p>
+      </h1>'
+    ], [
+      '<div><span>One</span></div>'
+      '<div><span>Two</span></div>'
+      '<div><span>Three</span></div>'
+    ])
+
+    docTest.run('handle nonstandard break tags', [
       '<div><b>One<br><hr>Two</b></div>'
     ], [
       '<div><b>One</b></div>',
