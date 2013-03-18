@@ -57,12 +57,8 @@ describe('Selection', ->
           lines: ['<div><span>|01|</span></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
-        'empty document before':
+        'empty document':
           lines: ['<div>||<br></div>']
-          fn: (editor) -> editor.insertAt(0, '')
-          expected: [0]
-        'empty document after':
-          lines: ['<div><br>||</div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
 
@@ -240,7 +236,8 @@ describe('Selection', ->
             expectedHtml = expectedHtml.replace(/\|/g, '')
             $('#test-container').html(html)
             editor = new Scribe.Editor('test-container')
-            editor.setSelection(new Scribe.Range(editor, start, end))
+            range = new Scribe.Range(editor, start, end)
+            editor.setSelection(range)
             sel = editor.getSelection()
             expect([sel.start.index, sel.end.index]).to.deep.equal([start, end])
             test.fn(editor)

@@ -26,13 +26,13 @@ ScribeNormalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(Scribe.DOM.toNodeArray(root.querySelectorAll('hr')), (hr) ->
+    _.each(root.querySelectorAll('hr'), (hr) ->
       Scribe.DOM.switchTag(hr, 'br')
     )
-    _.each(Scribe.DOM.toNodeArray(root.querySelectorAll('br')), (br) ->
+    _.each(root.querySelectorAll('br'), (br) ->
       Scribe.Normalizer.normalizeBreak(br, root)
     )
-    _.each(Scribe.DOM.toNodeArray(root.children), (childNode) ->
+    _.each(root.children, (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
     )
 
@@ -169,12 +169,6 @@ ScribeNormalizer =
         node = span
       return node
     )
-
-  normalizeLineNode: (lineNode) ->
-    # Removes extraneous classes, makes sure id is correct format, remove extraneous 
-
-  normalizeTag: (node) ->
-    # 
 
 
 window.Scribe or= {}
