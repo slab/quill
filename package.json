@@ -1,6 +1,6 @@
 {
-  "name": "stypi-editor",
-  "version": "0.1.4",
+  "name": "scribe",
+  "version": "0.1.5",
   "dependencies": {
     "underscore": "1.4.x"
   },
