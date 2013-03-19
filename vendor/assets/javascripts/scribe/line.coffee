@@ -107,9 +107,9 @@ class ScribeLine extends LinkedList.Node
       )
     this.rebuild()
 
-  insertText: (offset, text, formatting = {}) ->
+  insertText: (offset, text, formats = {}) ->
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
-    if _.isEqual(leaf.formatting, formatting)
+    if _.isEqual(leaf.formats, formats) and @length > 1
       leaf.insertText(leafOffset, text)
       @length += text.length
       @outerHTML = @node.outerHTML
@@ -120,7 +120,7 @@ class ScribeLine extends LinkedList.Node
       span.textContent = text
       parentNode = prevNode?.parentNode or nextNode?.parentNode
       parentNode.insertBefore(span, nextNode)
-      _.each(formatting, (value, name) =>
+      _.each(formats, (value, name) =>
         this.formatText(offset, text.length, name, value)
       )
       this.rebuild()
