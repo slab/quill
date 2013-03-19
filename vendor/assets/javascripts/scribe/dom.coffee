@@ -1,11 +1,14 @@
 ScribeDOM = 
   canEdit: (node) ->
-    return node.nodeType == node.TEXT_NODE or !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return node.nodeType == node.TEXT_NODE or !this.isExternal(node)
 
   filterUneditable: (nodeList) ->
     return _.filter(nodeList, (node) =>
       return this.canEdit(node)
     )
+
+  isExternal: (node) ->
+    return node?.classList?.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
   isTextNodeParent: (node) ->
     childNodes = Scribe.DOM.filterUneditable(node.childNodes)

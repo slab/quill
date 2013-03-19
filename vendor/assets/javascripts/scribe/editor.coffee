@@ -1,5 +1,5 @@
 doAt = (fn) ->
-  doSilently.call(this, =>
+  this.doSilently( =>
     @selection.preserve( =>
       return trackDelta.call(this, =>
         keepNormalized.call(this, =>
@@ -8,12 +8,6 @@ doAt = (fn) ->
       )
     )
   )
-
-doSilently = (fn) ->
-  oldIgnoreDomChange = @ignoreDomChanges
-  @ignoreDomChanges = true
-  fn()
-  @ignoreDomChanges = oldIgnoreDomChange
 
 initListeners = ->
   onEditOnce = =>
@@ -111,7 +105,7 @@ trackDelta = (fn) ->
   return decompose
 
 update = ->
-  doSilently.call(this, =>
+  this.doSilently( =>
     @selection.preserve( =>
       return trackDelta.call(this, =>
         Scribe.Normalizer.breakBlocks(@root)
@@ -158,13 +152,13 @@ class ScribeEditor extends EventEmitter2
     this.enable() if @options.enabled
 
   disable: ->
-    doSilently.call(this, =>
+    this.doSilently( =>
       @root.setAttribute('contenteditable', false)
     )
 
   enable: ->
     if !@root.getAttribute('contenteditable')
-      doSilently.call(this, =>
+      this.doSilently( =>
         @root.setAttribute('contenteditable', true)
       )
 
@@ -189,7 +183,7 @@ class ScribeEditor extends EventEmitter2
     if delta.startLength == 0 and this.getLength() == 1
       return this.setDelta(delta)
     return if delta.isIdentity()
-    doSilently.call(this, =>
+    this.doSilently( =>
       @selection.preserve( =>
         console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         oldDelta = @doc.toDelta()
@@ -207,6 +201,12 @@ class ScribeEditor extends EventEmitter2
       deleteAt.apply(this, args)
       forceTrailingNewline.call(this)
     )
+
+  doSilently: (fn) ->
+    oldIgnoreDomChange = @ignoreDomChanges
+    @ignoreDomChanges = true
+    fn()
+    @ignoreDomChanges = oldIgnoreDomChange
 
   formatAt: (args...) ->
     doAt.call(this, =>

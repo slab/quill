@@ -1,14 +1,12 @@
-buildCursor = (userId, index, name, color) ->
+buildCursor = (userId, name, color) ->
   cursor = @root.ownerDocument.createElement('span')
   cursor.classList.add('cursor')
   cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
   inner = @root.ownerDocument.createElement('span')
   inner.classList.add('cursor-inner')
-  inner.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
   nameNode = @root.ownerDocument.createElement('span')
   nameNode.classList.add('cursor-name')
-  nameNode.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
   nameNode.textContent = name
   inner.style['background-color'] = nameNode.style['background-color'] = color
   cursor.appendChild(nameNode)
@@ -18,7 +16,7 @@ buildCursor = (userId, index, name, color) ->
 class ScribeMultiCursorManager
   constructor: (@editor) ->
     @cursors = {}
-    @editor.renderer.addStyle({
+    @editor.renderer.addStyles({
       '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
       '.cursor-name': {
         'font-family': "'Helvetica', 'Arial', san-serif"
@@ -32,7 +30,8 @@ class ScribeMultiCursorManager
         'line-height': '15px'
         'padding': '2px 8px'
         'position': 'absolute'
-        'top': '-18px' 
+        'top': '-18px'
+        'white-space': 'nowrap'
       }
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
       '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
@@ -51,19 +50,21 @@ class ScribeMultiCursorManager
     )
 
   setCursor: (userId, index, name, color) ->
-    @cursors[userId] = {
-      index: index
-      name: name
-      color: color
-      userId: userId
-    }
-    cursor = @root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
-    unless cursor
-      cursor = addCursor.call(this, userId, index, name, color)
-    position = new Scribe.Position(this, index)
-    parentNode = position.leafNode.parentNode
-    [left, right] = Scribe.DOM.splitNode(position.leafNode, position.offset)
-    parentNode.insertBefore(cursor, right)
+    @editor.doSilently( =>
+      @cursors[userId] = {
+        index: index
+        name: name
+        color: color
+        userId: userId
+      }
+      cursor = @root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
+      unless cursor
+        cursor = buildCursor.call(this, userId, name, color)
+      position = new Scribe.Position(this, index)
+      parentNode = position.leafNode.parentNode
+      [left, right] = Scribe.DOM.splitNode(position.leafNode, position.offset)
+      parentNode.insertBefore(cursor, right)
+    )
 
   moveCursor: (userId, index) ->
     if @cursors[userId]
