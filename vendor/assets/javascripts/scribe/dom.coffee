@@ -1,6 +1,9 @@
 ScribeDOM = 
   canEdit: (node) ->
-    return node.nodeType == node.TEXT_NODE or !this.isExternal(node)
+    ancestor = Scribe.Utils.findAncestor(node, (node) =>
+      this.isExternal(node)
+    )
+    return !ancestor?
 
   filterUneditable: (nodeList) ->
     return _.filter(nodeList, (node) =>

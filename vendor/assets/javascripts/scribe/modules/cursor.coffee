@@ -13,6 +13,7 @@ buildCursor = (userId, name, color) ->
   cursor.appendChild(inner)
   return cursor
 
+
 class ScribeMultiCursorManager
   constructor: (@editor) ->
     @cursors = {}
@@ -58,12 +59,18 @@ class ScribeMultiCursorManager
         userId: userId
       }
       cursor = @root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
-      unless cursor
+      if cursor?
+        line = @editor.doc.findLine(cursor)
+        cursor.parentNode.removeChild(cursor)
+        line.rebuild()
+      else
         cursor = buildCursor.call(this, userId, name, color)
       position = new Scribe.Position(this, index)
       parentNode = position.leafNode.parentNode
       [left, right] = Scribe.DOM.splitNode(position.leafNode, position.offset)
       parentNode.insertBefore(cursor, right)
+      line = @editor.doc.findLine(cursor)
+      line.rebuild()
     )
 
   moveCursor: (userId, index) ->
