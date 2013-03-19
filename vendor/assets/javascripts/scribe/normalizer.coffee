@@ -69,9 +69,9 @@ ScribeNormalizer =
 
   mergeAdjacent: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node) ->
-      if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node) and Scribe.Utils.canModify(node)
+      if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
-        if next?.tagName == node.tagName and node.tagName != 'LI'and Scribe.Utils.canModify(node) and Scribe.Utils.canModify(next)
+        if next?.tagName == node.tagName and node.tagName != 'LI' and Scribe.DOM.canModify(next)
           [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
           [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
           if nodeFormat == nextFormat && nodeValue == nextValue
@@ -96,7 +96,7 @@ ScribeNormalizer =
   normalizeDoc: (root) ->
     root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
     Scribe.Normalizer.breakBlocks(root)
-    _.each(Scribe.DOM.toNodeArray(root.childNodes), (child) ->
+    _.each(Scribe.DOM.filterUneditable(root.childNodes), (child) ->
       Scribe.Normalizer.normalizeLine(child)
       Scribe.Normalizer.optimizeLine(child)
     )
@@ -144,7 +144,7 @@ ScribeNormalizer =
     scribeKey = _.uniqueId('_scribeFormats')
     lineNode[scribeKey] = {}
     isRedudant = (node) ->
-      if node.nodeType == node.ELEMENT_NODE && Scribe.Utils.canModify(node)
+      if node.nodeType == node.ELEMENT_NODE
         if Scribe.Utils.getNodeLength(node) == 0
           return node.tagName != 'BR' or Scribe.DOM.filterUneditable(node.parentNode.childNodes).length > 1
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)

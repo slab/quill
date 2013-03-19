@@ -1,12 +1,10 @@
 ScribeDOM = 
-  filterUneditable: (nodeList) ->
-    return _.filter(nodeList, (node) ->
-      return node.nodeType == node.TEXT_NODE or !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-    )
+  canModify: (node) ->
+    return node.nodeType == node.TEXT_NODE or !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
-  toNodeArray: (nodeList) ->
-    return _.map(nodeList, (node) ->
-      return node
+  filterUneditable: (nodeList) ->
+    return _.filter(nodeList, (node) =>
+      return this.canModify(node)
     )
 
   mergeNodes: (node1, node2) ->
@@ -88,13 +86,16 @@ ScribeDOM =
     return unless root?
     cur = root.firstChild
     while cur?
-      nextOffset = offset + Scribe.Utils.getNodeLength(cur)
-      curHtml = cur.innerHTML
-      cur = fn.apply(context, [cur, offset].concat(args))
-      Scribe.DOM.traversePreorder.apply(Scribe.DOM.traversePreorder, [cur, offset, fn, context].concat(args))
-      if cur? && cur.innerHTML == curHtml
+      if Scribe.DOM.canModify(cur)
+        nextOffset = offset + Scribe.Utils.getNodeLength(cur)
+        curHtml = cur.innerHTML
+        cur = fn.apply(context, [cur, offset].concat(args))
+        Scribe.DOM.traversePreorder.apply(null, [cur, offset, fn, context].concat(args))
+        if cur? && cur.innerHTML == curHtml
+          cur = cur.nextSibling
+          offset = nextOffset
+      else
         cur = cur.nextSibling
-        offset = nextOffset
 
   traverseSiblings: (startNode, endNode, fn) ->
     while startNode?

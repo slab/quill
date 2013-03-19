@@ -84,7 +84,6 @@ ScribeConstants =
   NOBREAK_SPACE: "\uFEFF"
 
   SPECIAL_CLASSES:
-    ATOMIC: 'atom'
     EXTERNAL: 'ext'
   
 

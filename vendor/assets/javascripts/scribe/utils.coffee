@@ -1,10 +1,4 @@
 ScribeUtils =
-  canModify: (node) ->
-    return !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-
-  canRemove: (node) ->
-    return !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-
   cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
