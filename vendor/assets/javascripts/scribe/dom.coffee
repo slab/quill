@@ -103,12 +103,12 @@ ScribeDOM =
       else
         cur = cur.nextSibling
 
-  traverseSiblings: (startNode, endNode, fn) ->
-    while startNode?
-      nextSibling = startNode.nextSibling
-      fn(startNode)
-      break if startNode == endNode
-      startNode = nextSibling
+  traverseSiblings: (curNode, endNode, fn) ->
+    while curNode?
+      nextSibling = curNode.nextSibling
+      fn(curNode) if Scribe.DOM.canEdit(curNode)
+      break if curNode == endNode
+      curNode = nextSibling
 
   unwrap: (node) ->
     next = node.firstChild
