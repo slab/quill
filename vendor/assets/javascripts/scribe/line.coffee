@@ -105,7 +105,8 @@ class ScribeLine extends LinkedList.Node
 
   insertText: (offset, text, formats = {}) ->
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
-    if _.isEqual(leaf.formats, formats) and @length > 1
+    # offset > 0 for multicursor
+    if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
       leaf.insertText(leafOffset, text)
       @length += text.length
       @outerHTML = @node.outerHTML
