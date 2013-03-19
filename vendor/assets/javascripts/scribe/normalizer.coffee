@@ -105,8 +105,20 @@ ScribeNormalizer =
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
     this.applyRules(lineNode)
     this.removeNoBreak(lineNode)
+    this.normalizeSpan(lineNode)
     this.requireLeaf(lineNode)
     this.wrapText(lineNode)
+
+  normalizeSpan: (lineNode) ->
+    _.each(Scribe.DOM.filterUneditable(lineNode.querySelectorAll('span')), (node) ->
+      # TODO convert styles to classes
+      # TODO handle extraneous classes
+      attributes = _.map(node.attributes, (attr) -> attr.name)
+      _.each(attributes, (attrName) ->
+        return if attrName == 'class'
+        node.removeAttribute(attrName)
+      )
+    )
 
   optimizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1and lineNode.firstChild.tagName == 'BR'
@@ -115,7 +127,7 @@ ScribeNormalizer =
     this.wrapText(lineNode)
 
   requireLeaf: (lineNode) ->
-    unless Scribe.DOM.getChildNodes(lineNode).length > 1
+    unless Scribe.DOM.filterUneditable(lineNode.childNodes).length > 1
       if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
@@ -134,7 +146,7 @@ ScribeNormalizer =
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE && Scribe.Utils.canModify(node)
         if Scribe.Utils.getNodeLength(node) == 0
-          return node.tagName != 'BR' or Scribe.DOM.getChildNodes(node.parentNode).length > 1
+          return node.tagName != 'BR' or Scribe.DOM.filterUneditable(node.parentNode.childNodes).length > 1
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
         if formatName?
           return node.parentNode[scribeKey][formatName]?     # Parent format value will overwrite child's so no need to check formatValue

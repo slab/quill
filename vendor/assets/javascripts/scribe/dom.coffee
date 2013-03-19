@@ -1,6 +1,6 @@
 ScribeDOM = 
-  getChildNodes: (node) ->
-    return _.filter(node.childNodes, (node) ->
+  filterUneditable: (nodeList) ->
+    return _.filter(nodeList, (node) ->
       return node.nodeType == node.TEXT_NODE or !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
     )
 

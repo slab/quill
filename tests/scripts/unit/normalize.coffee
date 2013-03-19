@@ -211,18 +211,26 @@ describe('Normalize', ->
   )
 
   describe('normalizeTag', ->
-    tagTest = new Scribe.Test.LineTest((lineNode) ->
+    attrTest = new Scribe.Test.LineTest((lineNode) ->
+      lineNode.firstChild.setAttribute('data-test', 'test')
+      lineNode.firstChild.setAttribute('width', '100px')
       Scribe.Normalizer.normalizeLine(lineNode)
+      Scribe.Normalizer.optimizeLine(lineNode)
     )
 
-    tagTest.run('strip extraneous attributes', 
+    attrTest.run('strip extraneous attributes', 
       '<span data-test="test" width="100px">One</span>'
       '<span>One</span>'
     )
 
-    tagTest.run('convert styles', 
-      '<span style="color:green">One</span>'
-      '<span>One</span>'
-    )
+    #tagTest = new Scribe.Test.LineTest((lineNode) ->
+    #  Scribe.Normalizer.normalizeLine(lineNode)
+    #  Scribe.Normalizer.optimizeLine(lineNode)
+    #)
+
+    #tagTest.run('convert styles', 
+    #  '<span style="color:green">One</span>'
+    #  '<span class="color-green">One</span>'
+    #)
   )
 )
