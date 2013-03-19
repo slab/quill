@@ -76,16 +76,12 @@ class ScribeLine extends LinkedList.Node
     return null
 
   findLeafAtOffset: (offset) ->
-    retLeaf = @leaves.first
-    _.all(@leaves.toArray(), (leaf) ->
-      retLeaf = leaf
-      if offset > leaf.length && leaf.next?
-        offset -= leaf.length
-        return true
+    for leaf in @leaves.toArray()
+      if offset <= leaf.length
+        return [leaf, offset]
       else
-        return false
-    )
-    return [retLeaf, offset]
+        offset -= leaf.length
+    return [leaf, offset]
 
   format: (name, value) ->
     console.warn "Unimplemented"
@@ -114,12 +110,15 @@ class ScribeLine extends LinkedList.Node
       @length += text.length
       @outerHTML = @node.outerHTML
       @delta = this.toDelta()
-    else
-      [prevNode, nextNode] = this.splitContents(offset)
+    else 
       span = @node.ownerDocument.createElement('span')
       span.textContent = text
-      parentNode = prevNode?.parentNode or nextNode?.parentNode
-      parentNode.insertBefore(span, nextNode)
+      if offset == 0    # Special case for remote cursor preservation
+        @node.insertBefore(span, @node.firstChild)
+      else
+        [prevNode, nextNode] = this.splitContents(offset)
+        parentNode = prevNode?.parentNode or nextNode?.parentNode
+        parentNode.insertBefore(span, nextNode)
       _.each(formats, (value, name) =>
         this.formatText(offset, text.length, name, value)
       )

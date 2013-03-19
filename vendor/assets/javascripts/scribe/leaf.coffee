@@ -32,8 +32,8 @@ class ScribeLeaf extends LinkedList.Node
 
   insertText: (offset, text) ->
     @text = @text.substring(0, offset) + text + @text.substring(offset)
-    [node, offset] = Scribe.Position.findDeepestNode(@line.doc.editor, @node, offset)
-    node.textContent = node.textContent.substring(0, offset) + text + node.textContent.substring(offset)
+    textNode = @node.firstChild
+    textNode.textContent = textNode.textContent.substring(0, offset) + text + textNode.textContent.substring(offset)
     @length = @text.length
 
 
