@@ -18,7 +18,8 @@ module.exports = function(grunt) {
     coffee: {
       'bin/demo/scripts/*.js': 'demo/scripts/*.coffee',
       'bin/src/*.js': 'src/*.coffee',
-      'bin/src/scribe.js': 'src/*.coffee',
+      'bin/src/modules/*.js': 'src/modules/*.coffee',
+      'bin/src/scribe.js': ['src/*.coffee', 'src/modules/*.coffee'],
       'bin/tests/scripts/fuzzer.js': 'tests/scripts/fuzzer.coffee',
       'bin/tests/scripts/unit.js': 'tests/scripts/unit/*.coffee'
     },
