@@ -129,9 +129,6 @@ ScribeUtils =
   isBlock: (node) ->
     return _.indexOf(Scribe.Line.BLOCK_TAGS, node.tagName) > -1
 
-  isTextNodeParent: (node) ->
-    return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
-
   insertExternal: (position, extNode) ->
     if position.leafNode.lastChild?
       if position.leafNode.lastChild.nodeType == position.leafNode.TEXT_NODE
@@ -150,7 +147,7 @@ ScribeUtils =
     )
 
   removeFormatFromSubtree: (subtree, format) ->
-    childNodes = _.clone(subtree.childNodes)
+    childNodes = Scribe.DOM.filterUneditable(subtree.childNodes)
     formats = Scribe.Utils.getFormatForContainer(subtree)
     [name, value] = Scribe.Utils.getFormatForContainer(subtree)
     ret = subtree

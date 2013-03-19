@@ -2,18 +2,19 @@ class ScribeLeaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
 
   @isLeafNode: (node) ->
-    return false if !node? || node.nodeType != node.ELEMENT_NODE ||  !node.classList?
-    return false if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return false unless node?.nodeType == node.ELEMENT_NODE
+    return false unless Scribe.DOM.canEdit(node)
     return true if node.tagName == 'BR'
-    return true if node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
+    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
+    return true if childNodes.length == 1 && childNodes[0].nodeType == node.TEXT_NODE
     return false
 
   @isLeafParent: (node) ->
-    return false if !node? || node.nodeType != node.ELEMENT_NODE ||  !node.classList?
-    return false if Scribe.Leaf.isLeafNode(node)
-    return false if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-    return false if node.childNodes.length == 0
-    return node.childNodes.length > 1 or node.firstChild.nodeType != node.TEXT_NODE
+    return false unless node?.nodeType == node.ELEMENT_NODE
+    return false unless Scribe.DOM.canEdit(node)
+    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
+    return false if childNodes.length == 0
+    return childNodes.length > 1 or childNodes[0].nodeType != node.TEXT_NODE
 
   constructor: (@line, @node, formats) ->
     @formats = _.clone(formats)

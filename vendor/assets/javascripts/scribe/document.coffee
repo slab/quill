@@ -73,7 +73,7 @@ class ScribeDocument
 
   rebuild: ->
     this.reset()
-    _.each(@root.childNodes, (node) =>
+    _.each(Scribe.DOM.filterUneditable(@root.childNodes), (node) =>
       this.appendLine(node)
     )
 

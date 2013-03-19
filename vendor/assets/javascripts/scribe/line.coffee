@@ -45,7 +45,7 @@ class ScribeLine extends LinkedList.Node
     super(@node)
 
   buildLeaves: (node, formats) ->
-    _.each(_.clone(node.childNodes), (node) =>
+    _.each(Scribe.DOM.filterUneditable(node.childNodes), (node) =>
       nodeFormats = _.clone(formats)
       [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
       nodeFormats[formatName] = formatValue if formatName?

@@ -26,14 +26,14 @@ ScribeNormalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', ')), (node) ->
+    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', '))), (node) ->
       node = Scribe.DOM.switchTag(node, 'br') if node.tagName != 'BR'
       Scribe.Normalizer.normalizeBreak(node, root)
     )
-    _.each(root.querySelectorAll(Scribe.Line.BLOCK_TAGS.join(', ')), (node) ->
+    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll(Scribe.Line.BLOCK_TAGS.join(', '))), (node) ->
       node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
     )
-    _.each(root.childNodes, (childNode) ->
+    _.each(Scribe.DOM.filterUneditable(root.childNodes), (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
     )
 
@@ -71,7 +71,7 @@ ScribeNormalizer =
     Scribe.DOM.traversePreorder(root, 0, (node) ->
       if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
-        if next?.tagName == node.tagName and node.tagName != 'LI' and Scribe.DOM.canModify(next)
+        if next?.tagName == node.tagName and node.tagName != 'LI' and Scribe.DOM.canEdit(next)
           [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
           [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
           if nodeFormat == nextFormat && nodeValue == nextValue
@@ -102,7 +102,8 @@ ScribeNormalizer =
     )
 
   normalizeLine: (lineNode) ->
-    return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
+    childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
+    return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
     this.applyRules(lineNode)
     this.removeNoBreak(lineNode)
     this.normalizeSpan(lineNode)
@@ -121,7 +122,8 @@ ScribeNormalizer =
     )
 
   optimizeLine: (lineNode) ->
-    return if lineNode.childNodes.length == 1and lineNode.firstChild.tagName == 'BR'
+    childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
+    return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
     this.mergeAdjacent(lineNode)
     this.removeRedundant(lineNode)
     this.wrapText(lineNode)
@@ -152,7 +154,8 @@ ScribeNormalizer =
           return node.parentNode[scribeKey][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
           # Check if childNodes need us
-          if node.childNodes.length == 0 || !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+          childNodes = Scribe.DOM.filterUneditable(node.childNodes)
+          if childNodes.length == 0 or !_.any(childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
           # Check if parent needs us
           if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'

@@ -1,11 +1,15 @@
 ScribeDOM = 
-  canModify: (node) ->
+  canEdit: (node) ->
     return node.nodeType == node.TEXT_NODE or !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
   filterUneditable: (nodeList) ->
     return _.filter(nodeList, (node) =>
-      return this.canModify(node)
+      return this.canEdit(node)
     )
+
+  isTextNodeParent: (node) ->
+    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
+    return childNodes.length == 1 && childNodes[0].nodeType == node.TEXT_NODE
 
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
@@ -33,22 +37,18 @@ ScribeDOM =
   splitNode: (node, offset, force = false) ->
     if offset > Scribe.Utils.getNodeLength(node)
       throw new Error('Splitting at offset greater than node length')
-
     if node.nodeType == node.TEXT_NODE
       node = this.wrap(node.ownerDocument.createElement('span'), node)
-
     # Check if split necessary
     if !force
       if offset == 0
         return [node.previousSibling, node, false]
       if offset == Scribe.Utils.getNodeLength(node)
         return [node, node.nextSibling, false]
-
     left = node
     right = node.cloneNode(false)
     node.parentNode.insertBefore(right, left.nextSibling)
-
-    if Scribe.Utils.isTextNodeParent(node)
+    if Scribe.DOM.isTextNodeParent(node)
       # Text split
       beforeText = node.textContent.substring(0, offset)
       afterText = node.textContent.substring(offset)
@@ -86,7 +86,7 @@ ScribeDOM =
     return unless root?
     cur = root.firstChild
     while cur?
-      if Scribe.DOM.canModify(cur)
+      if Scribe.DOM.canEdit(cur)
         nextOffset = offset + Scribe.Utils.getNodeLength(cur)
         curHtml = cur.innerHTML
         cur = fn.apply(context, [cur, offset].concat(args))
