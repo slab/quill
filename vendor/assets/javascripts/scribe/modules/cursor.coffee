@@ -1,5 +1,6 @@
 buildCursor = (userId, name, color) ->
   cursor = @root.ownerDocument.createElement('span')
+  cursor.setAttribute('contenteditable', false)
   cursor.classList.add('cursor')
   cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
@@ -32,6 +33,11 @@ class ScribeMultiCursorManager
         'padding': '2px 8px'
         'position': 'absolute'
         'top': '-18px'
+        '-webkit-user-select': 'none'
+        '-khtml-user-select': 'none'
+        '-ms-user-select': 'none'
+        '-o-user-select': 'none'
+        'user-select': 'none'
         'white-space': 'nowrap'
       }
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
