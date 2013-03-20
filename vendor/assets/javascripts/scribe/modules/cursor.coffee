@@ -1,12 +1,22 @@
+applyDelta = (delta) ->
+  _.defer( =>
+    delta.apply((index, text) =>
+      this.shiftCursors(index, text.length)
+    , (index, length) =>
+      this.shiftCursors(index, -1 * length)
+    )
+  )
+
+
 buildCursor = (userId, name, color) ->
-  cursor = @root.ownerDocument.createElement('span')
+  cursor = @container.ownerDocument.createElement('span')
   cursor.setAttribute('contenteditable', false)
   cursor.classList.add('cursor')
   cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
-  inner = @root.ownerDocument.createElement('span')
+  inner = @container.ownerDocument.createElement('span')
   inner.classList.add('cursor-inner')
-  nameNode = @root.ownerDocument.createElement('span')
+  nameNode = @container.ownerDocument.createElement('span')
   nameNode.classList.add('cursor-name')
   nameNode.textContent = name
   inner.style['background-color'] = nameNode.style['background-color'] = color
@@ -18,7 +28,13 @@ buildCursor = (userId, name, color) ->
 class ScribeMultiCursorManager
   constructor: (@editor) ->
     @cursors = {}
+    @container = @editor.root.ownerDocument.createElement('div')
+    @container.id = 'cursor-container'
+    @container.style.top = @editor.root.offsetTop
+    @container.style.left = @editor.root.offsetLeft
+    @editor.root.parentNode.insertBefore(@container, @editor.root)
     @editor.renderer.addStyles({
+      '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
       '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
       '.cursor-name': {
         'font-family': "'Helvetica', 'Arial', san-serif"
@@ -33,22 +49,22 @@ class ScribeMultiCursorManager
         'padding': '2px 8px'
         'position': 'absolute'
         'top': '-18px'
-        '-webkit-user-select': 'none'
-        '-khtml-user-select': 'none'
-        '-ms-user-select': 'none'
-        '-o-user-select': 'none'
-        'user-select': 'none'
         'white-space': 'nowrap'
       }
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
       '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
     })
-    @root = @editor.root
+    @editor.on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
+      applyDelta.call(this, delta)
+    )
+    @editor.on(Scribe.Editor.events.TEXT_CHANGE, (delta) =>
+      applyDelta.call(this, delta)
+    )
 
   shiftCursors: (index, length) ->
     _.each(@cursors, (cursor, id) =>
       return if cursor == undefined || cursor.index < index
-      if (cursor.index > index)
+      if (cursor.index >= index)
         if length > 0
           this.setCursor(cursor.userId, cursor.index + length, cursor.name, cursor.color)   # Insert
         else
@@ -64,19 +80,30 @@ class ScribeMultiCursorManager
         color: color
         userId: userId
       }
-      cursor = @root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
-      if cursor?
-        line = @editor.doc.findLine(cursor)
-        cursor.parentNode.removeChild(cursor)
-        line.rebuild()
-      else
+      #consistent = Scribe.Debug.checkDocumentConsistency(@editor.doc)
+      cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
+      unless cursor?
         cursor = buildCursor.call(this, userId, name, color)
-      position = new Scribe.Position(this, index)
-      parentNode = position.leafNode.parentNode
-      [left, right] = Scribe.DOM.splitNode(position.leafNode, position.offset)
-      parentNode.insertBefore(cursor, right)
-      line = @editor.doc.findLine(cursor)
-      line.rebuild()
+        @container.appendChild(cursor)
+      position = new Scribe.Position(@editor, index)
+      if !position.leafNode.firstChild?
+        cursor.style.top = position.leafNode.parentNode.offsetTop
+        cursor.style.left = position.leafNode.parentNode.offsetLeft
+      else
+        [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
+        if rightText?
+          span = @container.ownerDocument.createElement('span')
+          Scribe.DOM.wrap(span, rightText)
+          cursor.style.top = span.offsetTop
+          cursor.style.left = span.offsetLeft
+          Scribe.DOM.unwrap(span)
+        else if leftText?
+          span = @container.ownerDocument.createElement('span')
+          leftText.parentNode.parentNode.appendChild(span)
+          cursor.style.top = span.offsetTop
+          cursor.style.left = span.offsetLeft
+          span.parentNode.removeChild(span)
+        position.leafNode.normalize() if didSplit
     )
 
   moveCursor: (userId, index) ->
@@ -84,12 +111,12 @@ class ScribeMultiCursorManager
       this.setCursor(userId, index, @cursors[userId].name, @cursors[userId].color)
 
   clearCursors: ->
-    _.each(@root.querySelectorAll('.cursor'), (cursor) ->
-      cursor.parentNode.removeChild(cursor)
-    )
+    while @container.firstChild?
+      @container.removeChild(@container.firstChild)
+    @cursors = {}
 
   removeCursor: (userId) ->
-    cursor = @root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
+    cursor = @editor.root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
     cursor.parentNode.removeChild(cursor) if cursor?
 
 

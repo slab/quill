@@ -43,16 +43,14 @@ ScribeDOM =
   splitNode: (node, offset, force = false) ->
     if offset > Scribe.Utils.getNodeLength(node)
       throw new Error('Splitting at offset greater than node length')
-    if node.nodeType == node.TEXT_NODE
-      node = this.wrap(node.ownerDocument.createElement('span'), node)
     # Check if split necessary
-    if !force
-      if offset == 0
-        return [node.previousSibling, node, false]
-      if offset == Scribe.Utils.getNodeLength(node)
-        return [node, node.nextSibling, false]
+    return [node.previousSibling, node, false] unless force or offset != 0
+    return [node, node.nextSibling, false] unless force or offset != Scribe.Utils.getNodeLength(node)
+    if node.nodeType == node.TEXT_NODE
+      after = node.splitText(offset)
+      return [node, after, true]
     left = node
-    right = node.cloneNode(false)
+    right = node.cloneNode()
     node.parentNode.insertBefore(right, left.nextSibling)
     if Scribe.DOM.isTextNodeParent(node)
       # Text split

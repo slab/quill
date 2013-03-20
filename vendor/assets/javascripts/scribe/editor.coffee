@@ -141,8 +141,9 @@ class ScribeEditor extends EventEmitter2
     enabled: true
     styles: {}
   @events: 
-    TEXT_CHANGE      : 'text-change'
+    API_TEXT_CHANGE  : 'api-text-change'
     SELECTION_CHANGE : 'selection-change'
+    TEXT_CHANGE      : 'text-change'
 
   constructor: (@iframeContainer, options) ->
     @options = _.extend(Scribe.Editor.DEFAULTS, options)
@@ -188,8 +189,8 @@ class ScribeEditor extends EventEmitter2
         console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, @doc, @root)
         oldDelta = @doc.toDelta()
         delta.apply(insertAt, deleteAt, formatAt, this)
-        unless external
-          this.emit(Scribe.Editor.events.TEXT_CHANGE, delta)
+        eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
+        this.emit(eventName, delta)
         # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
         console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
         forceTrailingNewline.call(this)
