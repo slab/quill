@@ -52,6 +52,10 @@ _setCursor = (userId, index, name, color) ->
         cursor.style.left = span.offsetLeft
         span.parentNode.removeChild(span)
       position.leafNode.normalize() if didSplit
+    if parseInt(cursor.style.top) <= 5
+      cursor.classList.add('top')
+    else
+      cursor.classList.remove('top')
   )
 
 
@@ -85,7 +89,7 @@ class ScribeMultiCursorManager
       }
       '.cursor-name.hidden': { 'display': 'none' }
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
-      '.editor > .line:first-child .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
+      '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
     })
     @editor.on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
