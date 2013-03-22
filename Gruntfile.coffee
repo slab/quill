@@ -22,16 +22,16 @@ module.exports = (grunt) ->
           { dest: 'bin/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }
         ]
 
-    coffeeify: 
+    coffeeify:
       options:
         verbose: true
         requires: ['tandem-core']
       files:
         { dest: 'bin/src/scribe.js', src: ['src/scribe.coffee'] }
-          
+
     concat:
       options:
-        banner: 
+        banner:
           '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
           ' *  https://www.stypi.com/\n' +
           ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
@@ -49,7 +49,7 @@ module.exports = (grunt) ->
         'vendor/assets/javascripts/linked_list.js',
         'bin/src/scribe.js'
       ]
-    
+
     copy:
       'bin/demo/scripts/dropkick.js': 'demo/scripts/dropkick.js'
       'bin/demo/images/': 'demo/images/*.png'
