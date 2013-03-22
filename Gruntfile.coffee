@@ -24,7 +24,6 @@ module.exports = (grunt) ->
 
     coffeeify:
       options:
-        verbose: true
         requires: ['tandem-core']
       files:
         { dest: 'bin/src/scribe.js', src: ['src/scribe.coffee'] }
