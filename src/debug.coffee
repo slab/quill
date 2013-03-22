@@ -1,4 +1,7 @@
-ScribeDebug = 
+Scribe = require('./scribe')
+
+
+Scribe.Debug = 
   getEditor: (editor) ->
     editor ||= Scribe.Editor.editors[0]
     return if _.isNumber(editor) then Scribe.Editor.editors[editor] else editor
@@ -75,7 +78,7 @@ ScribeDebug =
         console.error "doc.lines and nodesByLine differ in length", lines, nodesByLine
         return false
       return false if _.any(lines, (line, index) =>
-        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Scribe.Utils.getNodeLength(node) + length), 0)
+        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Utils.getNodeLength(node) + length), 0)
         calculatedLength += 1 if line.trailingNewline
         if line.length != calculatedLength
           console.error line, line.length, calculatedLength, 'differ in length'
@@ -153,5 +156,4 @@ ScribeDebug =
       ).join('')
 
 
-window.Scribe or= {}
-window.Scribe.Debug = ScribeDebug
+module.exports = Scribe

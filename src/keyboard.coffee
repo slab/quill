@@ -1,4 +1,7 @@
-class ScribeKeyboard
+Scribe = require('./scribe')
+
+
+class Scribe.Keyboard
   @KEYS:
     BACKSPACE : 8
     TAB       : 9
@@ -84,7 +87,7 @@ class ScribeKeyboard
         indent = Math.min(Math.max(indent, Scribe.Constants.MIN_INDENT), Scribe.Constants.MAX_INDENT)
       else
         indent = false
-      index = Scribe.Position.getIndex(line.node, 0)
+      index = Position.getIndex(line.node, 0)
       @editor.formatAt(index, 0, format, indent)
 
     _.each(lines, (line) =>
@@ -106,7 +109,7 @@ class ScribeKeyboard
     selection = @editor.getSelection()
     @editor.insertAt(selection.start.index, text)
     # Make sure selection is after our text
-    range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
+    range = new Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
     @editor.setSelection(range)
 
   toggleFormat: (selection, format) ->
@@ -114,5 +117,4 @@ class ScribeKeyboard
     @editor.selection.format(format, !formats[format])
 
 
-window.Scribe or= {}
-window.Scribe.Keyboard = ScribeKeyboard
+module.exports = Scribe

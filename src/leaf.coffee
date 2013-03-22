@@ -1,4 +1,7 @@
-class ScribeLeaf extends LinkedList.Node
+Scribe = require('./scribe')
+
+
+class Scribe.Leaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
 
   @isLeafNode: (node) ->
@@ -37,33 +40,4 @@ class ScribeLeaf extends LinkedList.Node
     @length = @text.length
 
 
-class ScribeLeafIterator
-  # Start and end are both inclusive
-  # Otherwise if end is inclusive, we cannot express end of line unambiguously
-  constructor: (@start, @end) ->
-    @cur = @start
-
-  next: -> 
-    ret = @cur
-    if @cur == @end || @cur == null
-      @cur = null
-    else if @cur.next?
-      @cur = @cur.next
-    else
-      line = @cur.line.next
-      while line? && line.leaves.length == 0
-        line = line.next
-      @cur = if line? then line.leaves.first else null
-    return ret
-
-  toArray: ->
-    arr = []
-    itr = new Scribe.LeafIterator(@start, @end)
-    while next = itr.next()
-      arr.push(next)
-    return arr
-
-
-window.Scribe or= {}
-window.Scribe.Leaf = ScribeLeaf
-window.Scribe.LeafIterator = ScribeLeafIterator
+module.exports = Scribe

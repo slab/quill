@@ -1,4 +1,7 @@
-ScribeUtils =
+Scribe = require('./scribe')
+
+
+Scribe.Utils =
   cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
@@ -202,5 +205,4 @@ ScribeUtils =
     list.classList.add(Scribe.Document.INDENT_PREFIX + indent) if indent
 
 
-window.Scribe or= {}
-window.Scribe.Utils = ScribeUtils
+module.exports = Scribe

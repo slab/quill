@@ -1,14 +1,7 @@
-# If nothing add break
-# Make sure tag is valid, if not convert or delete
-# If text node, make sure parent is valid list of tags (b, span, i, s, u), if not wrap in span
-
-# Merge adjacent
-# Remove redundant
-
-# Each node remove extraneous classes, attributes
+Scribe = require('./scribe')
 
 
-ScribeNormalizer =
+Scribe.Normalizer =
   applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
@@ -143,15 +136,15 @@ ScribeNormalizer =
     )
 
   removeRedundant: (lineNode) ->
-    scribeKey = _.uniqueId('_scribeFormats')
-    lineNode[scribeKey] = {}
+    Key = _.uniqueId('_Formats')
+    lineNode[Key] = {}
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE
         if Scribe.Utils.getNodeLength(node) == 0
           return node.tagName != 'BR' or Scribe.DOM.filterUneditable(node.parentNode.childNodes).length > 1
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
         if formatName?
-          return node.parentNode[scribeKey][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
+          return node.parentNode[Key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
           # Check if childNodes need us
           childNodes = Scribe.DOM.filterUneditable(node.childNodes)
@@ -165,14 +158,14 @@ ScribeNormalizer =
       if isRedudant(node)
         node = Scribe.DOM.unwrap(node)
       if node?
-        node[scribeKey] = _.clone(node.parentNode[scribeKey])
+        node[Key] = _.clone(node.parentNode[Key])
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
-        node[scribeKey][formatName] = formatValue if formatName?
+        node[Key][formatName] = formatValue if formatName?
       return node
     )
-    delete lineNode[scribeKey]
+    delete lineNode[Key]
     Scribe.DOM.traversePreorder(lineNode, 0, (node) ->
-      delete node[scribeKey]
+      delete node[Key]
       return node
     )
     
@@ -187,5 +180,4 @@ ScribeNormalizer =
     )
 
 
-window.Scribe or= {}
-window.Scribe.Normalizer = ScribeNormalizer
+module.exports = Scribe

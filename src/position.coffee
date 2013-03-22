@@ -1,5 +1,8 @@
+Scribe = require('./scribe')
+
+
 # TODO fix this entire file, esp findDeepestNode
-class ScribePosition
+class Scribe.Position
   @findDeepestNode: (editor, node, offset) ->
     # We are at right subtree, dive deeper
     isLineNode = Scribe.Line.isLineNode(node)
@@ -27,7 +30,7 @@ class ScribePosition
     return [node, offset]
   
   @getIndex: (node, index, offsetNode = null) ->
-    while node != offsetNode && node?.id != Scribe.Editor.CONTAINER_ID
+    while node != offsetNode and node.parentNode != node.ownerDocument.body
       while node.previousSibling?
         node = node.previousSibling
         index += Scribe.Utils.getNodeLength(node)
@@ -35,8 +38,8 @@ class ScribePosition
     return index
 
 
-  # constructor: (Scribe.Editor editor, Object node, Number offset) ->
-  # constructor: (Scribe.Editor editor, Number index) -> 
+  # constructor: (Editor editor, Object node, Number offset) ->
+  # constructor: (Editor editor, Number index) -> 
   constructor: (@editor, @leafNode, @offset) ->
     if _.isNumber(@leafNode)
       @offset = @index = @leafNode
@@ -51,5 +54,4 @@ class ScribePosition
     return @leaf
 
 
-window.Scribe or= {}
-window.Scribe.Position = ScribePosition
+module.exports = Scribe

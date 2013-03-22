@@ -1,3 +1,6 @@
+Scribe = require('../scribe')
+
+
 _applyDelta = (delta) ->
   _.defer( =>
     delta.apply((index, text) =>
@@ -27,7 +30,7 @@ _setCursor = (userId, index, name, color) ->
   @editor.doSilently( =>
     @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
     @cursors[userId].index = index
-    cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
+    cursor = @container.querySelector("##{Editor.CURSOR_PREFIX}#{userId}")
     if cursor?
       cursor.querySelector('.cursor-name').classList.remove('hidden')
     else
@@ -38,7 +41,7 @@ _setCursor = (userId, index, name, color) ->
       cursor.style.top = position.leafNode.parentNode.offsetTop
       cursor.style.left = position.leafNode.parentNode.offsetLeft
     else
-      [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
+      [leftText, rightText, didSplit] = DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         span = @container.ownerDocument.createElement('span')
         Scribe.DOM.wrap(span, rightText)
@@ -59,7 +62,7 @@ _setCursor = (userId, index, name, color) ->
   )
 
 
-class ScribeMultiCursorManager
+class Scribe.MultiCursorManager
   @CURSOR_NAME_TIMEOUT: 5000
 
   constructor: (@editor) ->
@@ -113,7 +116,7 @@ class ScribeMultiCursorManager
     _setCursor.call(this, userId, index, name, color)
     clearTimeout(@cursors[userId].timer)
     @cursors[userId].timer = setTimeout( =>
-      cursorName = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId} .cursor-name")
+      cursorName = @container.querySelector("##{Editor.CURSOR_PREFIX}#{userId} .cursor-name")
       cursorName.classList.add('hidden') if cursorName
       @cursors[userId].timer = null
     , Scribe.MultiCursorManager.CURSOR_NAME_TIMEOUT)
@@ -128,5 +131,4 @@ class ScribeMultiCursorManager
     cursor.parentNode.removeChild(cursor) if cursor?
 
 
-window.Scribe or= {}
-window.Scribe.MultiCursorManager = ScribeMultiCursorManager
+module.exports = Scribe

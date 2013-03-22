@@ -1,3 +1,6 @@
+Scribe = require('../scribe')
+
+
 initButtonFormats = ->
   _.each(Scribe.Toolbar.BUTTON_FORMATS, (format) =>
     button = @container.querySelector(".#{format}")
@@ -51,7 +54,7 @@ initSelectionListener = ->
   )
 
 
-class ScribeToolbar extends EventEmitter2
+class Scribe.Toolbar extends EventEmitter2
   @BUTTON_FORMATS: ['bold', 'italic', 'strike', 'underline', 'bullet', 'list', 'indent', 'outdent']
   @SELECT_FORMATS: ['background', 'color', 'family', 'size']
 
@@ -66,5 +69,4 @@ class ScribeToolbar extends EventEmitter2
     initSelectionListener.call(this)
 
 
-window.Scribe or= {}
-window.Scribe.Toolbar = ScribeToolbar
+module.exports = Scribe

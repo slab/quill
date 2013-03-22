@@ -1,4 +1,8 @@
-class ScribeDocument
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
+
+
+class Scribe.Document
   @INDENT_PREFIX: 'indent-'
 
   constructor: (@root) ->
@@ -121,5 +125,4 @@ class ScribeDocument
     return line.rebuild()
 
 
-window.Scribe ||= {}
-window.Scribe.Document = ScribeDocument
+module.exports = Scribe

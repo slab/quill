@@ -1,4 +1,7 @@
-ScribeDOM = 
+Scribe = require('./scribe')
+
+
+Scribe.DOM = 
   canEdit: (node) ->
     ancestor = Scribe.Utils.findAncestor(node, (node) =>
       this.isExternal(node)
@@ -122,5 +125,4 @@ ScribeDOM =
     return wrapper
 
 
-window.Scribe ||= {}
-window.Scribe.DOM = ScribeDOM
+module.exports = Scribe

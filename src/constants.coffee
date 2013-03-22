@@ -1,7 +1,7 @@
+Scribe = require('./scribe')
 # Arrays must be alphabetized, so we can use binary search
 
-ScribeConstants =
-
+Scribe.Constants =
   DEFAULT_LEAF_FORMATS:
     'background' : 'white'
     'color'      : 'black'
@@ -87,22 +87,21 @@ ScribeConstants =
     EXTERNAL: 'ext'
   
 
-ScribeConstants.SPAN_FORMATS =
-  'background' : ScribeConstants.FONT_BACKGROUNDS
-  'color'      : ScribeConstants.FONT_COLORS
-  'family'     : ScribeConstants.FONT_FAMILIES
-  'size'       : ScribeConstants.FONT_SIZES
+Scribe.Constants.SPAN_FORMATS =
+  'background' : Scribe.Constants.FONT_BACKGROUNDS
+  'color'      : Scribe.Constants.FONT_COLORS
+  'family'     : Scribe.Constants.FONT_FAMILIES
+  'size'       : Scribe.Constants.FONT_SIZES
 
 # Array of possbile values mostly for consistency with SPAN_FORMATS, not actually used in codebase
-ScribeConstants.TAG_FORMATS =
+Scribe.Constants.TAG_FORMATS =
   'bold'      : [true, false]
   'italic'    : [true, false]
   'link'      : [true, false]     # Link value could actually also be any string representing the href
   'strike'    : [true, false]
   'underline' : [true, false]
 
-ScribeConstants.LEAF_FORMATS = _.extend({}, ScribeConstants.SPAN_FORMATS, ScribeConstants.TAG_FORMATS)
+Scribe.Constants.LEAF_FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
 
 
-window.Scribe or= {}
-window.Scribe.Constants = ScribeConstants
+module.exports = Scribe

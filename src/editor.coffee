@@ -1,3 +1,7 @@
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
+
+
 doAt = (fn) ->
   this.doSilently( =>
     @selection.preserve( =>
@@ -78,7 +82,7 @@ insertAt = (index, text, formatting = {}) ->
         new Tandem.RetainOp(0, this.getLength())
         new Tandem.InsertOp("\n")
       ])
-      #this.emit(Scribe.Editor.events.TEXT_CHANGE, addNewlineDelta)
+      #this.emit(Editor.events.TEXT_CHANGE, addNewlineDelta)
     line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
     offset = 0
   else
@@ -130,10 +134,9 @@ update = ->
   )
   
 
-class ScribeEditor extends EventEmitter2
+class Scribe.Editor extends EventEmitter2
   @editors: []
 
-  @CONTAINER_ID: 'scribe-container'
   @ID_PREFIX: 'editor-'
   @CURSOR_PREFIX: 'cursor-'
   @DEFAULTS:
@@ -169,7 +172,7 @@ class ScribeEditor extends EventEmitter2
     options.keepHTML = keepHTML
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
-    @root = @contentWindow.document.getElementById(Scribe.Editor.CONTAINER_ID)
+    @root = @renderer.root
     @doc = new Scribe.Document(@root)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
@@ -239,5 +242,4 @@ class ScribeEditor extends EventEmitter2
     @selection.setRange(range)
 
 
-window.Scribe or= {}
-window.Scribe.Editor = ScribeEditor
+module.exports = Scribe

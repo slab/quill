@@ -1,4 +1,8 @@
-class ScribeLine extends LinkedList.Node
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
+
+
+class Scribe.Line extends LinkedList.Node
   @CLASS_NAME : 'line'
   @DIRTY_CLASS: 'dirty'
   @ID_PREFIX  : 'line-'
@@ -171,5 +175,4 @@ class ScribeLine extends LinkedList.Node
     return delta
 
 
-window.Scribe or= {}
-window.Scribe.Line = ScribeLine
+module.exports = Scribe

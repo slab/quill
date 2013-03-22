@@ -1,4 +1,8 @@
-class ScribeUndoManager
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
+
+
+class Scribe.UndoManager
   @DEFAULTS:
     delay: 1000
 
@@ -81,16 +85,15 @@ class ScribeUndoManager
     if @redoStack.length > 0
       change = @redoStack.pop()
       @editor.applyDelta(change.redo.delta)
-      @editor.setSelection(new Scribe.Range(@editor, change.redo.cursor, change.redo.cursor))
+      @editor.setSelection(new Range(@editor, change.redo.cursor, change.redo.cursor))
       @undoStack.push(change)
 
   undo: ->
     if @undoStack.length > 0
       change = @undoStack.pop()
       @editor.applyDelta(change.undo.delta)
-      @editor.setSelection(new Scribe.Range(@editor, change.undo.cursor, change.undo.cursor))
+      @editor.setSelection(new Range(@editor, change.undo.cursor, change.undo.cursor))
       @redoStack.push(change)
 
 
-window.Scribe or= {}
-window.Scribe.UndoManager = ScribeUndoManager
+module.exports = Scribe

@@ -1,15 +1,19 @@
 {
   "name": "scribe",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "dependencies": {
+    "tandem"    : "git+ssh://git@github.com:stypi/tandem-core.git#v0.1.2",
     "underscore": "1.4.x"
   },
   "devDependencies": {
     "chai": "1.5.x",
     "coffee-script": "1.6.x",
     "commander": "1.1.x",
-    "grunt-contrib-coffee": "0.3.x",
-    "grunt-contrib-copy": "0.3.x",
+    "grunt": "0.4.x",
+    "grunt-coffeeify": "0.1.x",
+    "grunt-contrib-coffee": "0.6.x",
+    "grunt-contrib-concat": "0.1.x",
+    "grunt-contrib-copy": "0.4.x",
     "jade": "0.28.x",
     "mocha": "1.8.x",
     "mocha-phantomjs": "2.0.x",
