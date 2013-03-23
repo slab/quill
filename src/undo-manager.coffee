@@ -1,4 +1,8 @@
-class ScribeUndoManager
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
+
+
+class Scribe.UndoManager
   @DEFAULTS:
     delay: 1000
 
@@ -45,7 +49,7 @@ class ScribeUndoManager
   constructor: (@editor, options = {}) ->
     @undoStack = []
     @redoStack = []
-    @options = _.extend(ScribeUndoManager.DEFAULTS, options)
+    @options = _.extend(Scribe.UndoManager.DEFAULTS, options)
     @lastRecorded = 0
     this.initListeners()
 
@@ -60,7 +64,7 @@ class ScribeUndoManager
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
-    undoDelta = ScribeUndoManager.computeUndo(changeDelta, oldDelta)
+    undoDelta = Scribe.UndoManager.computeUndo(changeDelta, oldDelta)
     timestamp = new Date().getTime()
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
       change = @undoStack.pop()
@@ -70,10 +74,10 @@ class ScribeUndoManager
       @lastRecorded = timestamp
     @undoStack.push({
       undo:
-        cursor: ScribeUndoManager.getLastChangeIndex(undoDelta)
+        cursor: Scribe.UndoManager.getLastChangeIndex(undoDelta)
         delta: undoDelta
       redo:
-        cursor: ScribeUndoManager.getLastChangeIndex(changeDelta)
+        cursor: Scribe.UndoManager.getLastChangeIndex(changeDelta)
         delta: changeDelta  
     })
 
@@ -81,17 +85,15 @@ class ScribeUndoManager
     if @redoStack.length > 0
       change = @redoStack.pop()
       @editor.applyDelta(change.redo.delta)
-      @editor.setSelection(new Scribe.Range(@editor, change.redo.cursor, change.redo.cursor))
+      @editor.setSelection(new Range(@editor, change.redo.cursor, change.redo.cursor))
       @undoStack.push(change)
 
   undo: ->
     if @undoStack.length > 0
       change = @undoStack.pop()
       @editor.applyDelta(change.undo.delta)
-      @editor.setSelection(new Scribe.Range(@editor, change.undo.cursor, change.undo.cursor))
+      @editor.setSelection(new Range(@editor, change.undo.cursor, change.undo.cursor))
       @redoStack.push(change)
 
 
-
-window.Scribe ||= {}
-window.Scribe.UndoManager = ScribeUndoManager
+module.exports = Scribe

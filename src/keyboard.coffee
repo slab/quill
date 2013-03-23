@@ -1,4 +1,7 @@
-class ScribeKeyboard
+Scribe = require('./scribe')
+
+
+class Scribe.Keyboard
   @KEYS:
     BACKSPACE : 8
     TAB       : 9
@@ -42,19 +45,19 @@ class ScribeKeyboard
     )
 
   initHotkeys: ->
-    this.addHotkey(ScribeKeyboard.KEYS.TAB, =>
+    this.addHotkey(Scribe.Keyboard.KEYS.TAB, =>
       @editor.selection.deleteRange()
       this.insertText("\t")
     )
-    this.addHotkey(ScribeKeyboard.KEYS.ENTER, =>
+    this.addHotkey(Scribe.Keyboard.KEYS.ENTER, =>
       @editor.selection.deleteRange()
       this.insertText("\n")
     )
-    #this.addHotkey(ScribeKeyboard.KEYS.BACKSPACE, (selection) =>
+    #this.addHotkey(Scribe.Keyboard.KEYS.BACKSPACE, (selection) =>
     #  unless @editor.selection.deleteRange()
     #    @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
     #)
-    #this.addHotkey(ScribeKeyboard.KEYS.DELETE, (selection) =>
+    #this.addHotkey(Scribe.Keyboard.KEYS.DELETE, (selection) =>
     #  unless @editor.selection.deleteRange()
     #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.getLength() - 1
     #)
@@ -84,7 +87,7 @@ class ScribeKeyboard
         indent = Math.min(Math.max(indent, Scribe.Constants.MIN_INDENT), Scribe.Constants.MAX_INDENT)
       else
         indent = false
-      index = Scribe.Position.getIndex(line.node, 0)
+      index = Position.getIndex(line.node, 0)
       @editor.formatAt(index, 0, format, indent)
 
     _.each(lines, (line) =>
@@ -106,7 +109,7 @@ class ScribeKeyboard
     selection = @editor.getSelection()
     @editor.insertAt(selection.start.index, text)
     # Make sure selection is after our text
-    range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
+    range = new Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
     @editor.setSelection(range)
 
   toggleFormat: (selection, format) ->
@@ -114,6 +117,4 @@ class ScribeKeyboard
     @editor.selection.format(format, !formats[format])
 
 
-
-window.Scribe ||= {}
-window.Scribe.Keyboard = ScribeKeyboard
+module.exports = Scribe

@@ -1,20 +1,9 @@
-class ScribeDocument
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
+
+
+class Scribe.Document
   @INDENT_PREFIX: 'indent-'
-
-
-  @normalizeHtml: (root, options = {}) ->
-    if root.childNodes.length == 0
-      div = root.ownerDocument.createElement('div')
-      return root.appendChild(div)
-    Scribe.Utils.groupBlocks(root)
-    _.each(_.clone(root.childNodes), (child) =>
-      if child.nodeType != child.ELEMENT_NODE
-        Scribe.Utils.removeNode(child)
-      else if options.ignoreDirty || child.classList.contains(Scribe.Line.DIRTY_CLASS) || true
-        Scribe.Line.wrapText(child)
-        Scribe.Line.normalizeHtml(child)
-    )
-
 
   constructor: (@root) ->
     this.buildLines()
@@ -24,7 +13,7 @@ class ScribeDocument
 
   buildLines: ->
     this.reset()
-    ScribeDocument.normalizeHtml(@root, {ignoreDirty: true})
+    Scribe.Normalizer.normalizeDoc(@root)
     this.rebuild()
 
   cleanNode: (lineNode) ->
@@ -54,10 +43,10 @@ class ScribeDocument
     retLine = @lines.first
     _.all(@lines.toArray(), (line, index) =>
       retLine = line
-      if offset < line.length + 1
+      if offset < line.length
         return false
       else
-        offset -= (line.length + 1) if index < @lines.length - 1
+        offset -= line.length if index < @lines.length - 1
         return true
     )
     return [retLine, offset]
@@ -77,16 +66,18 @@ class ScribeDocument
     return line
 
   mergeLines: (line, lineToMerge) ->
+    return unless line? and lineToMerge?
     _.each(_.clone(lineToMerge.node.childNodes), (child) ->
       line.node.appendChild(child)
     )
     Scribe.Utils.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
+    line.trailingNewline = lineToMerge.trailingNewline
     line.rebuild()
 
   rebuild: ->
     this.reset()
-    _.each(@root.childNodes, (node) =>
+    _.each(Scribe.DOM.filterUneditable(@root.childNodes), (node) =>
       this.appendLine(node)
     )
 
@@ -116,7 +107,7 @@ class ScribeDocument
     @lineMap = {}
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = Scribe.DOM.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
     return this.insertLineBefore(lineNode2, line.next)
@@ -125,7 +116,6 @@ class ScribeDocument
     lines = @lines.toArray()
     ops = _.flatten(_.map(lines, (line, index) ->
       ops = Tandem.Delta.copy(line.delta).ops
-      ops.push(new Tandem.InsertOp("\n", line.formats))
       return ops
     ), true)
     delta = new Tandem.Delta(0, ops)
@@ -135,6 +125,4 @@ class ScribeDocument
     return line.rebuild()
 
 
-
-window.Scribe ||= {}
-window.Scribe.Document = ScribeDocument
+module.exports = Scribe

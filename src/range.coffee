@@ -1,8 +1,11 @@
+Scribe = require('./scribe')
+
+
 rangy.init()  # getRangy
 
-class ScribeRange
-  # constructor: (ScribeEditor editor, Number startIndex, Number endIndex) ->
-  # constructor: (ScribeEditor editor, Object start, Object end) ->
+class Scribe.Range
+  # constructor: (Editor editor, Number startIndex, Number endIndex) ->
+  # constructor: (Editor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->
     # TODO initialize with index
     @start = new Scribe.Position(@editor, @start) if _.isNumber(@start)
@@ -65,7 +68,7 @@ class ScribeRange
       return nodes
 
   getLeaves: ->
-    itr = new Scribe.LeafIterator(@start.getLeaf(), @end.getLeaf())
+    itr = new LeafIterator(@start.getLeaf(), @end.getLeaf())
     arr = itr.toArray()
     return arr
 
@@ -118,6 +121,4 @@ class ScribeRange
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset
 
 
-
-window.Scribe ||= {}
-window.Scribe.Range = ScribeRange
+module.exports = Scribe

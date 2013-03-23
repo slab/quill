@@ -4,12 +4,10 @@ NUM_OPERATIONS = 500
 
 seed = Math.random()
 console.info seed
-seed = '0.5413067403715104'
 Math.seedrandom(seed.toString())
 
 
 $(document).ready( ->
-  rangy.init()
   $editors = $('.editor-container')
   window.writer = new Scribe.Editor($editors.get(0))
   window.reader = new Scribe.Editor($editors.get(1))

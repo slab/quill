@@ -1,39 +1,7 @@
+Scribe = require('./scribe')
 # Arrays must be alphabetized, so we can use binary search
 
-ScribeConstants =
-  ALIGN_FORMATS: [
-    'center'
-    'justify'
-    'left'
-    'right'
-  ]
-
-  BLOCK_TAGS: [
-    'ADDRESS'
-    'BLOCKQUOTE'
-    'DD'
-    'DIV'
-    'DL'
-    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
-    'LI'
-    'OL'
-    'P'
-    'PRE'
-    'TABLE'
-    'TBODY'
-    'TD'
-    'TFOOT'
-    'TH'
-    'THEAD'
-    'TR'
-    'UL'
-  ]
-
-  BREAK_TAGS: [
-    'BR'
-    'HR'
-  ]
-
+Scribe.Constants =
   DEFAULT_LEAF_FORMATS:
     'background' : 'white'
     'color'      : 'black'
@@ -86,12 +54,12 @@ ScribeConstants =
     'CENTER'    : {rename: 'span'}
     'DEL'       : {rename: 's'}
     'EM'        : {rename: 'i'}
-    'H1'        : {rename: 'span'}
-    'H2'        : {rename: 'span'}
-    'H3'        : {rename: 'span'}
-    'H4'        : {rename: 'span'}
-    'H5'        : {rename: 'span'}
-    'H6'        : {rename: 'span'}
+    'H1'        : {rename: 'div'}
+    'H2'        : {rename: 'div'}
+    'H3'        : {rename: 'div'}
+    'H4'        : {rename: 'div'}
+    'H5'        : {rename: 'div'}
+    'H6'        : {rename: 'div'}
     'I'         : {}
     'INS'       : {rename: 'span'}
     'LI'        : {}
@@ -116,29 +84,24 @@ ScribeConstants =
   NOBREAK_SPACE: "\uFEFF"
 
   SPECIAL_CLASSES:
-    ATOMIC: 'atom'
     EXTERNAL: 'ext'
   
 
-ScribeConstants.LINE_FORMATS = _.extend({}, ScribeConstants.INDENT_FORMATS, ScribeConstants.ALIGN_FORMATS)
-
-ScribeConstants.SPAN_FORMATS =
-  'background' : ScribeConstants.FONT_BACKGROUNDS
-  'color'      : ScribeConstants.FONT_COLORS
-  'family'     : ScribeConstants.FONT_FAMILIES
-  'size'       : ScribeConstants.FONT_SIZES
+Scribe.Constants.SPAN_FORMATS =
+  'background' : Scribe.Constants.FONT_BACKGROUNDS
+  'color'      : Scribe.Constants.FONT_COLORS
+  'family'     : Scribe.Constants.FONT_FAMILIES
+  'size'       : Scribe.Constants.FONT_SIZES
 
 # Array of possbile values mostly for consistency with SPAN_FORMATS, not actually used in codebase
-ScribeConstants.TAG_FORMATS =
+Scribe.Constants.TAG_FORMATS =
   'bold'      : [true, false]
   'italic'    : [true, false]
   'link'      : [true, false]     # Link value could actually also be any string representing the href
   'strike'    : [true, false]
   'underline' : [true, false]
 
-ScribeConstants.LEAF_FORMATS = _.extend({}, ScribeConstants.SPAN_FORMATS, ScribeConstants.TAG_FORMATS)
+Scribe.Constants.LEAF_FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
 
 
-window.Scribe ||= {}
-window.Scribe.Constants = ScribeConstants
-
+module.exports = Scribe

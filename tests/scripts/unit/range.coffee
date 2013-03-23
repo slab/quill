@@ -1,7 +1,7 @@
 describe('Range', ->
   describe('Position', ->
     it('should correctly initialize position from index', ->
-      $('#editor-container').html(Scribe.Utils.cleanHtml('
+      $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>12</b>
           <i>34</i>
@@ -13,7 +13,7 @@ describe('Range', ->
         <div>
           <br>
         </div>'))
-      editor = new Scribe.Editor('editor-container')
+      editor = new Scribe.Editor('test-container')
       numPositions = 10
       positions = _.map([0..numPositions], (i) ->
         position = new Scribe.Position(editor, i)
@@ -59,7 +59,7 @@ describe('Range', ->
 
   describe('getText', ->
     reset = ->
-      $('#editor-container').html(Scribe.Utils.cleanHtml('
+      $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>123</b>
           <i>456</i>
@@ -82,7 +82,7 @@ describe('Range', ->
           <s>7</s>
           <u>8</u>
         </div>'))
-      editor = new Scribe.Editor('editor-container')
+      editor = new Scribe.Editor('test-container')
       return editor
 
     text = "123456\n78901234\n5678"
@@ -189,7 +189,7 @@ describe('Range', ->
     }]
 
     reset = ->
-      $('#editor-container').html(Scribe.Utils.cleanHtml('
+      $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
           <b>123</b>
           <i>456</i>
@@ -212,7 +212,7 @@ describe('Range', ->
           <s>7</s>
           <u>8</u>
         </div>'))
-      editor = new Scribe.Editor('editor-container')
+      editor = new Scribe.Editor('test-container')
       return editor
 
     _.each(tests, (test) ->
@@ -229,8 +229,8 @@ describe('Range', ->
 
   describe('getLeafNodes', ->
     reset = ->
-      $('#editor-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
-      editor = new Scribe.Editor('editor-container', false)
+      $('#test-container').html('<div><b>123</b><i>456</i></div><div><s>7</s><u>8</u><s>9</s><u>0</u></div>')
+      editor = new Scribe.Editor('test-container', false)
       line1 = editor.root.firstChild
       line2 = editor.root.lastChild
       return [editor, editor.root, line1, line2]

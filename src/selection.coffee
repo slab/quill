@@ -1,4 +1,7 @@
-class ScribeSelection
+Scribe = require('./scribe')
+
+
+class Scribe.Selection
   constructor: (@editor) ->
     @range = null
     this.initListeners()
@@ -22,7 +25,7 @@ class ScribeSelection
     formats[name] = value
     @range.formats = formats
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
-    this.setRange(new Scribe.Range(@editor, start, end))
+    this.setScribe.Range(new Scribe.Range(@editor, start, end))
 
   deleteRange: ->
     this.update()
@@ -82,7 +85,7 @@ class ScribeSelection
       rangySel.setSingleRange(rangySelRange)
     else
       rangySel.removeAllRanges()
-    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
+    @editor.emit(Editor.events.SELECTION_CHANGE, @range) unless silent
 
   setRangeNative: (nativeSel) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
@@ -98,6 +101,4 @@ class ScribeSelection
       @range = range
 
 
-
-window.Scribe ||= {}
-window.Scribe.Selection = ScribeSelection
+module.exports = Scribe

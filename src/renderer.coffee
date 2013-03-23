@@ -1,4 +1,7 @@
-class ScribeRenderer
+Scribe = require('./scribe')
+
+
+class Scribe.Renderer
   @DEFAULTS:
     keepHTML: false
 
@@ -76,15 +79,14 @@ class ScribeRenderer
     this.createFrame()
 
   addStyles: (styles) ->
-    doc = @iframe.contentWindow.document
-    head = doc.getElementsByTagName('head')[0]
-    style = doc.createElement('style')
+    head = @root.ownerDocument.getElementsByTagName('head')[0]
+    style = @root.ownerDocument.createElement('style')
     style.type = 'text/css'
     css = Scribe.Renderer.objToCss(styles)
     if style.styleSheet?
       style.styleSheet.cssText = css
     else
-      style.appendChild(doc.createTextNode(css))
+      style.appendChild(@root.ownerDocument.createTextNode(css))
     head.appendChild(style)
 
   createFrame: ->
@@ -101,14 +103,11 @@ class ScribeRenderer
       return _.extend(obj, value)
     )
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
+    @root = doc.createElement('div')
+    @root.classList.add('editor')
+    doc.body.appendChild(@root)
     this.addStyles(styles)
-    contentContainer = doc.createElement('div')
-    contentContainer.id = Scribe.Editor.CONTAINER_ID
-    contentContainer.classList.add('editor')
-    doc.body.appendChild(contentContainer)
-    contentContainer.innerHTML = html if @options.keepHTML
+    @root.innerHTML = html if @options.keepHTML
 
 
-
-window.Scribe ||= {}
-window.Scribe.Renderer = ScribeRenderer
+module.exports = Scribe

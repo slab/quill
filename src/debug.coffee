@@ -1,6 +1,7 @@
-window.Scribe ||= {}
+Scribe = require('./scribe')
 
-window.Scribe.Debug = 
+
+Scribe.Debug = 
   getEditor: (editor) ->
     editor ||= Scribe.Editor.editors[0]
     return if _.isNumber(editor) then Scribe.Editor.editors[editor] else editor
@@ -55,6 +56,7 @@ window.Scribe.Debug =
         lineLength = _.reduce(line.leaves.toArray(), (count, leaf) ->
           return leaf.length + count
         , 0)
+        lineLength += 1 if line.trailingNewline
         if lineLength != line.length
           console.error 'incorrect line length', lineLength, line.length
           return true
@@ -76,7 +78,8 @@ window.Scribe.Debug =
         console.error "doc.lines and nodesByLine differ in length", lines, nodesByLine
         return false
       return false if _.any(lines, (line, index) =>
-        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Scribe.Utils.getNodeLength(node) + length), 0)
+        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Utils.getNodeLength(node) + length), 0)
+        calculatedLength += 1 if line.trailingNewline
         if line.length != calculatedLength
           console.error line, line.length, calculatedLength, 'differ in length'
           return true
@@ -137,9 +140,8 @@ window.Scribe.Debug =
       rand = Math.random()
       if rand < 0.5
         return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length)]}
-      length = Math.min(length, lengthLimit)
-      return null if length <= 0
       if rand < 0.75
+        return null if index + length > lengthLimit
         return {op: 'deleteAt', args: [index, length - 1]}
       else
         format = formatKeys[_.random(0, formatKeys.length - 1)]
@@ -154,4 +156,4 @@ window.Scribe.Debug =
       ).join('')
 
 
-
+module.exports = Scribe

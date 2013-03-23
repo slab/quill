@@ -3,5 +3,7 @@
 #= require linked_list
 #= require rangy/rangy-core
 #= require rangy/rangy-selectionsaverestore
-#= require tandem
+#= require tandem-core
 #= require_tree ./scribe
+
+window.Scribe = require('scribe/scribe')

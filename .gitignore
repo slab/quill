@@ -1,3 +1,4 @@
-bin/
-node_modules/
+build
+bin
+node_modules
 coverage.html

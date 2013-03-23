@@ -1,10 +1,7 @@
-ScribeUtils =
-  canModify: (node) ->
-    return !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.ATOMIC) && !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+Scribe = require('./scribe')
 
-  canRemove: (node) ->
-    return !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
+Scribe.Utils =
   cleanHtml: (html, keepIdClass = false) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
@@ -43,21 +40,6 @@ ScribeUtils =
       clone = parentClone
       node = node.parentNode
     return clone
-
-  extractNodes: (startLineNode, startOffset, endLineNode, endOffset) ->
-    [leftStart, rightStart] = Scribe.Utils.splitNode(startLineNode, startOffset, true)
-    if startLineNode == endLineNode
-      endLineNode = rightStart
-      endOffset -= startOffset if leftStart? && startLineNode != rightStart
-    [leftEnd, rightEnd] = Scribe.Utils.splitNode(endLineNode, endOffset, true)
-    fragment = startLineNode.ownerDocument.createDocumentFragment()
-    while rightStart != rightEnd
-      next = rightStart.nextSibling
-      fragment.appendChild(rightStart)
-      rightStart = next
-    Scribe.Utils.moveExternal(fragment, leftStart, null)
-    Scribe.Utils.mergeNodes(leftStart, rightEnd)
-    return fragment
 
   findAncestor: (node, checkFn) ->
     while node? && !checkFn(node)
@@ -148,10 +130,7 @@ ScribeUtils =
       cur = next
 
   isBlock: (node) ->
-    return _.indexOf(Scribe.Constants.BLOCK_TAGS, node.tagName) > -1
-
-  isTextNodeParent: (node) ->
-    return node.childNodes.length == 1 && node.firstChild.nodeType == node.TEXT_NODE
+    return _.indexOf(Scribe.Line.BLOCK_TAGS, node.tagName) > -1
 
   insertExternal: (position, extNode) ->
     if position.leafNode.lastChild?
@@ -164,20 +143,6 @@ ScribeUtils =
       console.warn('offset is not 0', position.offset) if position.offset != 0
       position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
 
-  mergeNodes: (node1, node2) ->
-    return node2 if !node1?
-    return node1 if !node2?
-    this.moveChildren(node1, node2)
-    node2.parentNode.removeChild(node2)
-    if (node1.tagName == 'OL' || node1.tagName == 'UL') && node1.childNodes.length == 2
-      ScribeUtils.mergeNodes(node1.firstChild, node1.lastChild)
-    return node1
-
-  moveChildren: (newParent, oldParent) ->
-    _.each(_.clone(oldParent.childNodes), (child) ->
-      newParent.appendChild(child)
-    )
-
   moveExternal: (source, destParent, destRef) ->
     externalNodes = _.clone(source.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
     _.each(externalNodes, (node) ->
@@ -185,13 +150,13 @@ ScribeUtils =
     )
 
   removeFormatFromSubtree: (subtree, format) ->
-    children = _.clone(subtree.childNodes)
+    childNodes = Scribe.DOM.filterUneditable(subtree.childNodes)
     formats = Scribe.Utils.getFormatForContainer(subtree)
     [name, value] = Scribe.Utils.getFormatForContainer(subtree)
     ret = subtree
     if name == format
-      ret = Scribe.Utils.unwrap(subtree)
-    _.each(children, (child) ->
+      ret = Scribe.DOM.unwrap(subtree)
+    _.each(childNodes, (child) ->
       Scribe.Utils.removeFormatFromSubtree(child, format)
     )
     return ret
@@ -239,88 +204,5 @@ ScribeUtils =
     )
     list.classList.add(Scribe.Document.INDENT_PREFIX + indent) if indent
 
-  splitNode: (node, offset, force = false) ->
-    if offset > Scribe.Utils.getNodeLength(node)
-      throw new Error('Splitting at offset greater than node length')
 
-    if node.nodeType == node.TEXT_NODE
-      node = this.wrap(node.ownerDocument.createElement('span'), node)
-
-    # Check if split necessary
-    if !force
-      if offset == 0
-        return [node.previousSibling, node, false]
-      if offset == Scribe.Utils.getNodeLength(node)
-        return [node, node.nextSibling, false]
-
-    left = node
-    right = node.cloneNode(false)
-    node.parentNode.insertBefore(right, left.nextSibling)
-
-    if ScribeUtils.isTextNodeParent(node)
-      # Text split
-      beforeText = node.textContent.substring(0, offset)
-      afterText = node.textContent.substring(offset)
-      left.textContent = beforeText
-      right.textContent = afterText
-      return [left, right, true]
-    else
-      # Node split
-      [child, offset] = ScribeUtils.getChildAtOffset(node, offset)
-      [childLeft, childRight] = ScribeUtils.splitNode(child, offset)
-      while childRight != null
-        nextRight = childRight.nextSibling
-        right.appendChild(childRight)
-        childRight = nextRight
-      return [left, right, true]
-
-  switchTag: (node, newTag) ->
-    return if node.tagName == newTag
-    newNode = node.ownerDocument.createElement(newTag)
-    this.moveChildren(newNode, node)
-    node.parentNode.replaceChild(newNode, node)
-    newNode.className = node.className if node.className
-    newNode.id = node.id if node.id
-    return newNode
-
-  traversePreorder: (root, offset, fn, context = fn, args...) ->
-    return unless root?
-    cur = root.firstChild
-    while cur?
-      nextOffset = offset + Scribe.Utils.getNodeLength(cur)
-      curHtml = cur.innerHTML
-      cur = fn.apply(context, [cur, offset].concat(args))
-      ScribeUtils.traversePreorder.apply(ScribeUtils.traversePreorder, [cur, offset, fn, context].concat(args))
-      if cur? && cur.innerHTML == curHtml
-        cur = cur.nextSibling
-        offset = nextOffset
-
-  traverseSiblings: (startNode, endNode, fn) ->
-    while startNode?
-      nextSibling = startNode.nextSibling
-      fn(startNode)
-      break if startNode == endNode
-      startNode = nextSibling
-
-  unwrap: (node) ->
-    next = node.firstChild
-    _.each(_.clone(node.childNodes), (child) ->
-      node.parentNode.insertBefore(child, node)
-    )
-    node.parentNode.removeChild(node)
-    return next
-
-  wrap: (wrapper, node) ->
-    node.parentNode.insertBefore(wrapper, node)
-    wrapper.appendChild(node)
-    return wrapper
-
-  wrapChildren: (wrapper, node) ->
-    Scribe.Utils.moveChildren(wrapper, node)
-    node.appendChild(wrapper)
-    return wrapper
-
-
-
-window.Scribe ||= {}
-window.Scribe.Utils = ScribeUtils
+module.exports = Scribe

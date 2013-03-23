@@ -1,10 +1,14 @@
-class ScribePasteManager
+Scribe    = require('./scribe')
+Tandem    = require('tandem-core')
+
+
+class Scribe.PasteManager
   constructor: (@editor) ->
     @container = @editor.root.ownerDocument.createElement('div')
-    @container.id = 'paste-container'
+    @container.classList.add('paste-container')
     @container.setAttribute('contenteditable', true)
     @editor.renderer.addStyles(
-      '#paste-container':
+      '.paste-container':
         'left': '-10000px'
         'position': 'fixed'
         'top': '50%'
@@ -23,7 +27,10 @@ class ScribePasteManager
       _.defer( =>
         Scribe.Utils.removeExternal(@container)
         Scribe.Utils.removeStyles(@container)
-        doc = new Scribe.Document(@container)
+        doc = new Document(@container)
+        # Need to remove trailing newline so paste is inline
+        lastLine = doc.lines.last
+        lastLine.deleteText(lastLine.length - 1, 1)
         delta = doc.toDelta()
         delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0
         delta.ops.push(new Tandem.RetainOp(selection.start.index, docLength)) if selection.start.index < docLength
@@ -31,13 +38,10 @@ class ScribePasteManager
         delta.startLength = docLength
         oldDelta = @editor.doc.toDelta()
         @editor.applyDelta(delta, false)
-        @editor.root.focus()
         lengthAdded = Math.max(0, @editor.getLength() - docLength)
         @editor.setSelection(new Scribe.Range(@editor, selection.start.index + lengthAdded, selection.start.index + lengthAdded))
       )
     )
 
 
-
-window.Scribe ||= {}
-window.Scribe.PasteManager = ScribePasteManager
+module.exports = Scribe
