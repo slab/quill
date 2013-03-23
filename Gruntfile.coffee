@@ -1,6 +1,7 @@
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-coffeeify'
+  grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -9,6 +10,8 @@ module.exports = (grunt) ->
   grunt.initConfig
     meta:
       version: '0.2.0'
+
+    clean: ['bin/**/*.js']
 
     coffee:
       multi:
@@ -25,22 +28,14 @@ module.exports = (grunt) ->
     coffeeify:
       options:
         requires: ['tandem-core']
-      unit:
-        expand: true, flatten: true
-        dest: 'bin/src/'
-        src: ['src/*.coffee']
-        ext: '.js'
-      unit_modules:
-        expand: true, flatten: true
-        ext: '.js'
-        dest: 'bin/src/modules/'
-        src: ['src/modules/*.coffee']
       src:
         files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
-          
+      test:
+        files: [{ dest: 'bin/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
+       
     concat:
       options:
-        banner: 
+        banner:
           '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
           ' *  https://www.stypi.com/\n' +
           ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
@@ -49,7 +44,7 @@ module.exports = (grunt) ->
       'build/scribe.js': [
         'vendor/assets/javascripts/rangy/*.js',
         'vendor/assets/javascripts/linked_list.js',
-        'bin/src/scribe.js'
+        'build/scribe.js'
       ]
       'build/scribe.all.js': [
         'node_modules/underscore/underscore.js',
@@ -58,7 +53,7 @@ module.exports = (grunt) ->
         'vendor/assets/javascripts/linked_list.js',
         'build/scribe.js'
       ]
-    
+
     copy:
       bin:
         expand: true
@@ -74,4 +69,4 @@ module.exports = (grunt) ->
         src: ['*.js', 'rangy/*.js']
 
   # Default task.
-  grunt.registerTask 'default', ['coffee', 'coffeeify', 'concat', 'copy']
+  grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy']

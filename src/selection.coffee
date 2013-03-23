@@ -85,7 +85,7 @@ class Scribe.Selection
       rangySel.setSingleRange(rangySelRange)
     else
       rangySel.removeAllRanges()
-    @editor.emit(Editor.events.SELECTION_CHANGE, @range) unless silent
+    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
 
   setRangeNative: (nativeSel) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
