@@ -14,7 +14,7 @@ module.exports = (grunt) ->
       multi:
         expand: true
         dest: 'bin/'
-        src: ['src/*.coffee', 'demo/scripts/*.coffee']
+        src: ['demo/scripts/*.coffee']
         ext: '.js'
       single:
         files: [
@@ -22,12 +22,21 @@ module.exports = (grunt) ->
           { dest: 'bin/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }
         ]
 
-    coffeeify: 
+    coffeeify:
       options:
-        verbose: true
         requires: ['tandem-core']
-      files:
-        { dest: 'bin/src/scribe.js', src: ['src/scribe.coffee'] }
+      unit:
+        expand: true, flatten: true
+        dest: 'bin/src/'
+        src: ['src/*.coffee']
+        ext: '.js'
+      unit_modules:
+        expand: true, flatten: true
+        ext: '.js'
+        dest: 'bin/src/modules/'
+        src: ['src/modules/*.coffee']
+      src:
+        files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
           
     concat:
       options:
@@ -37,29 +46,32 @@ module.exports = (grunt) ->
           ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
           ' *  Jason Chen, Salesforce.com\n' +
           ' */\n\n'
-      'bin/src/scribe.js': [
+      'build/scribe.js': [
         'vendor/assets/javascripts/rangy/*.js',
         'vendor/assets/javascripts/linked_list.js',
         'bin/src/scribe.js'
       ]
-      'bin/src/scribe.all.js': [
+      'build/scribe.all.js': [
         'node_modules/underscore/underscore.js',
         'vendor/assets/javascripts/rangy/*.js',
         'vendor/assets/javascripts/eventemitter2.js',
         'vendor/assets/javascripts/linked_list.js',
-        'bin/src/scribe.js'
+        'build/scribe.js'
       ]
     
     copy:
-      'bin/demo/scripts/dropkick.js': 'demo/scripts/dropkick.js'
-      'bin/demo/images/': 'demo/images/*.png'
-      'bin/lib/chai.js': 'node_modules/chai/chai.js'
-      'bin/lib/mocha.css': 'node_modules/mocha/mocha.css'
-      'bin/lib/mocha.js': 'node_modules/mocha/mocha.js'
-      'bin/lib/underscore.js': 'node_modules/underscore/underscore.js'
-      'bin/lib/rangy/': 'vendor/assets/javascripts/rangy/*.js'
-      'bin/lib/': 'vendor/assets/javascripts/*.js'
-      'bin/tests/lib/': 'tests/lib/*.js'
+      bin:
+        expand: true
+        dest: 'bin/'
+        src: ['build/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+      node_modules:
+        expand: true, flatten: true, cwd: 'node_modules/'
+        dest: 'bin/lib/'
+        src: ['chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
+      lib:
+        expand: true, cwd: 'vendor/assets/javascripts/'
+        dest: 'bin/lib/'
+        src: ['*.js', 'rangy/*.js']
 
   # Default task.
   grunt.registerTask 'default', ['coffee', 'coffeeify', 'concat', 'copy']
