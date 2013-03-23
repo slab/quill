@@ -23,10 +23,18 @@ module.exports = (grunt) ->
         ]
 
     coffeeify:
-      options:
-        requires: ['tandem-core']
-      files:
-        { dest: 'bin/src/scribe.js', src: ['src/scribe.coffee'] }
+      src:
+        options:
+          requires: ['tandem-core']
+        files: [
+          { dest: 'bin/src/scribe.js', src: ['src/scribe.coffee'] }
+        ]
+      test:
+        options:
+          requires: ['tandem-core']
+        files: [
+          {dest: 'bin/src/tandem-core.js', src: ['tests/scripts/selenium/tandem_wrapper.coffee']}
+        ]
 
     concat:
       options:
