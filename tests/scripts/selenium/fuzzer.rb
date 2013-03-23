@@ -1,6 +1,15 @@
 require 'debugger'
+require 'execjs'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
+
+src = File.read('../../../bin/src/tandem-core.js')
+src.prepend("window = {};")
+c = V8::Context.new
+c.eval(src)
+debugger
+puts c.eval('window.Delta')
+abort
 
 NUM_EDITS = 500
 
