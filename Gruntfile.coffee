@@ -5,6 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # Project configuration.
   grunt.initConfig
@@ -14,23 +15,22 @@ module.exports = (grunt) ->
     clean: ['bin/**/*.js']
 
     coffee:
-      multi:
+      demo:
         expand: true
         dest: 'bin/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
-      single:
-        files: [
-          { dest: 'bin/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }
-          { dest: 'bin/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }
-        ]
+      fuzzer:
+        files: [{ dest: 'bin/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }]
+      unit:
+        files: [{ dest: 'bin/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }]
 
     coffeeify:
       options:
         requires: ['tandem-core']
       src:
         files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
-      test:
+      tandem_wrapper:
         files: [{ dest: 'bin/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
        
     concat:
@@ -41,24 +41,36 @@ module.exports = (grunt) ->
           ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
           ' *  Jason Chen, Salesforce.com\n' +
           ' */\n\n'
-      'build/scribe.js': [
-        'vendor/assets/javascripts/rangy/*.js',
-        'vendor/assets/javascripts/linked_list.js',
-        'build/scribe.js'
-      ]
-      'build/scribe.all.js': [
-        'node_modules/underscore/underscore.js',
-        'vendor/assets/javascripts/rangy/*.js',
-        'vendor/assets/javascripts/eventemitter2.js',
-        'vendor/assets/javascripts/linked_list.js',
-        'build/scribe.js'
-      ]
+      scribe:
+        files: [{ 
+          dest: 'build/scribe.js'
+          src: [
+            'vendor/assets/javascripts/rangy/*.js'
+            'vendor/assets/javascripts/linked_list.js'
+            'build/scribe.js'
+          ]
+        }]
+      scribe_all:
+        files: [{ 
+          dest: 'build/scribe.all.js'
+          src: [
+            'node_modules/underscore/underscore.js',
+            'vendor/assets/javascripts/rangy/*.js',
+            'vendor/assets/javascripts/eventemitter2.js',
+            'vendor/assets/javascripts/linked_list.js',
+            'build/scribe.js'
+          ]
+        }]
 
     copy:
       bin:
         expand: true
         dest: 'bin/'
-        src: ['build/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+        src: ['tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+      build:
+        expand: true
+        dest: 'bin/'
+        src: ['build/*.js']
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'bin/lib/'
@@ -67,6 +79,20 @@ module.exports = (grunt) ->
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'bin/lib/'
         src: ['*.js', 'rangy/*.js']
+
+    watch:
+      demo:
+        files: ['demo/scripts/*.coffee']
+        tasks: ['coffee:demo']
+      fuzzer:
+        files: ['tests/scripts/fuzzer.coffee']
+        tasks: ['coffee:fuzzer']
+      src:
+        files: ['src/*.coffee', 'node_modules/tandem-core/src/*']
+        tasks: ['coffeeify:src', 'copy:build']
+      unit:
+        files: ['tests/scripts/unit/*.coffee']
+        tasks: ['coffee:unit']
 
   # Default task.
   grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy']
