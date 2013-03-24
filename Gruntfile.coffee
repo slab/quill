@@ -5,6 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # Project configuration.
@@ -79,6 +80,13 @@ module.exports = (grunt) ->
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'bin/lib/'
         src: ['*.js', 'rangy/*.js']
+
+    sass:
+      demo:
+        expand: true
+        dest: 'bin/'
+        src: ['demo/styles/*.sass']
+        ext: ['.css']
 
     watch:
       demo:
