@@ -14,18 +14,18 @@ module.exports = (grunt) ->
     meta:
       version: '0.2.0'
 
-    clean: ['bin', 'build']
+    clean: ['build']
 
     coffee:
       demo:
         expand: true
-        dest: 'bin/'
+        dest: 'build/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
       fuzzer:
-        files: [{ dest: 'bin/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }]
+        files: [{ dest: 'build/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }]
       unit:
-        files: [{ dest: 'bin/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }]
+        files: [{ dest: 'build/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }]
 
     coffeeify:
       options:
@@ -33,7 +33,7 @@ module.exports = (grunt) ->
       src:
         files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
       tandem_wrapper:
-        files: [{ dest: 'bin/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
+        files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
        
     concat:
       options:
@@ -65,39 +65,35 @@ module.exports = (grunt) ->
         }]
 
     copy:
-      bin:
-        expand: true
-        dest: 'bin/'
-        src: ['tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
       build:
         expand: true
-        dest: 'bin/'
-        src: ['build/*.js']
+        dest: 'build/'
+        src: ['tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
-        dest: 'bin/lib/'
+        dest: 'build/lib/'
         src: ['chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
       lib:
         expand: true, cwd: 'vendor/assets/javascripts/'
-        dest: 'bin/lib/'
+        dest: 'build/lib/'
         src: ['*.js', 'rangy/*.js']
 
     haml:
       demo:
         expand: true
-        dest: 'bin/'
+        dest: 'build/'
         src: ['demo/*.haml']
         ext: ['.html']
       tests:
         expand: true
-        dest: 'bin/'
+        dest: 'build/'
         src: ['tests/*.haml']
         ext: ['.html']
 
     sass:
       demo:
         expand: true
-        dest: 'bin/'
+        dest: 'build/'
         src: ['demo/styles/*.sass']
         ext: ['.css']
 
@@ -108,9 +104,12 @@ module.exports = (grunt) ->
       fuzzer:
         files: ['tests/scripts/fuzzer.coffee']
         tasks: ['coffee:fuzzer']
-      haml:
+      haml_demo:
         files: ['demo/*.haml']
         tasks: ['haml:demo']
+      haml_tests:
+        files: ['tests/*.haml']
+        tasks: ['haml:tests']
       sass:
         files: ['demo/styles/*.sass']
         tasks: ['sass:demo']
