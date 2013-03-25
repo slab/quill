@@ -8,16 +8,24 @@ src.prepend("window = {};")
 c = V8::Context.new
 c.eval(src)
 debugger
-puts c.eval('window.Delta')
+puts c.eval('window.DeltaGen.getRandomDelta')
+puts c.eval('console')
+context = ExecJS.compile(src)
+puts context.call('window.DeltaGen.getRandomDelta', {:startLength => 0, :endLength => 3, :ops => [{:value => "abc"}]}, "abc", 1)
 abort
 
 NUM_EDITS = 500
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
 ################################################################################
 # Helpers for generating random edits
 ################################################################################
 def js_get_random_edit(driver)
   return driver.execute_script "return parent.writer.getRandomOp();"
+end
+
+def js_get_random_delta(doc_delta, alphabet, num_edits)
+  return context.call('window.DocGen.getRandomDelta', doc_delta, ALPHABET, 1)
 end
 
 ################################################################################
@@ -27,6 +35,10 @@ def check_consistency(driver)
   writer_delta = driver.execute_script "return parent.writer.getDelta().toString();"
   reader_delta = driver.execute_script "return parent.reader.getDelta().toString();"
   raise "Writer: #{writer_delta}\nReader: #{reader_delta}" unless writer_delta == reader_delta
+end
+
+def get_doc_delta(driver)
+  doc_delta = driver.execute_script "return parent.writer.getDelta()"
 end
 
 ################################################################################
@@ -47,9 +59,10 @@ adapter = SeleniumAdapter.new driver, writer
 ################################################################################
 # Fuzzer logic
 ################################################################################
+doc_delta = get_doc_delta(driver)
 NUM_EDITS.times do |i|
+   delta = js_get_random_delta(doc_delta)
    puts i if i % 10 == 0
-   random_edit = js_get_random_edit(driver)
-   adapter.op_to_selenium(random_edit)
+   adapter.op_to_selenium(random_delta)
    check_consistency(driver)
 end
