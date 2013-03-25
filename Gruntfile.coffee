@@ -47,8 +47,6 @@ module.exports = (grunt) ->
         files: [{ 
           dest: 'build/scribe.js'
           src: [
-            'vendor/assets/javascripts/rangy/*.js'
-            'vendor/assets/javascripts/linked_list.js'
             'build/scribe.js'
           ]
         }]
