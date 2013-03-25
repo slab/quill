@@ -2,11 +2,6 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
 FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
 NUM_OPERATIONS = 500
 
-seed = Math.random()
-console.info seed
-Math.seedrandom(seed.toString())
-
-
 $(document).ready( ->
   $editors = $('.editor-container')
   window.writer = new Scribe.Editor($editors.get(0))
