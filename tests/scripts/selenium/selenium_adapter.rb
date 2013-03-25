@@ -19,21 +19,31 @@ class SeleniumAdapter
 
   # Assumes delta will contain only one document modifying op
   def apply_delta(delta)
-   index = 0
-   delta['ops'].each do |op|
-     if op['value']
-       move_cursor(index)
-       type_text(op['value'])
-       break
-     else
-       if op['attributes']
-         # Formatting changes need to be made
-         break
-       else
-         index += op['end'] - op['start']
-       end
-     end
-   end
+    index = 0
+    delta['ops'].each do |op|
+      if op['value']
+        move_cursor(index)
+        type_text(op['value'])
+        break
+      else
+        if op['start'] > @cursor_pos
+          move_cursor(index)
+          delete_length = op['start'] - @cursor_pos
+          delete(delete_length)
+          break
+        elsif !op['attributes'].empty?
+          length = op['end'] - op['start']
+          move_cursor(index)
+          highlight(length)
+          op['attributes'].each do |attr, val|
+            format(attr, val)
+          end
+          break
+        else
+          index += op['end'] - op['start']
+        end
+      end
+    end
   end
 
   def op_to_selenium(op)
@@ -105,6 +115,7 @@ class SeleniumAdapter
   end
 
   def format(format, value)
+    debugger
     case format
     when /bold|italic|underline/
       if Random.rand() < 0.5

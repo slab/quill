@@ -17,6 +17,24 @@ def js_get_random_delta(driver, doc_delta)
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
+def js_get_test_delta_0(driver)
+  driver.switch_to.default_content
+  test_delta = driver.execute_script(
+    "return new window.Delta(1, 2, [new window.InsertOp('a'), new window.RetainOp(0, 1)])"
+  )
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
+  return test_delta
+end
+
+def js_get_test_delta(driver)
+  driver.switch_to.default_content
+  test_delta = driver.execute_script(
+    "return new window.Delta(2, 2, [new window.RetainOp(0, 1, {bold: true}), new window.RetainOp(1, 2)])"
+  )
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
+  return test_delta
+end
+
 ################################################################################
 # Helpers
 ################################################################################
@@ -50,7 +68,10 @@ adapter = SeleniumAdapter.new driver, writer
 # Fuzzer logic
 ################################################################################
 doc_delta = js_get_doc_delta(driver)
-debugger
+first_delta = js_get_test_delta_0(driver)
+adapter.apply_delta(first_delta)
+second_delta = js_get_test_delta(driver)
+adapter.apply_delta(second_delta)
 NUM_EDITS.times do |i|
    random_delta = js_get_random_delta(driver, doc_delta)
    puts i if i % 10 == 0
