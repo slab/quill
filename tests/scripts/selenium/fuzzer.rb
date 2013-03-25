@@ -1,5 +1,4 @@
 require 'debugger'
-require 'execjs'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
 
