@@ -1,0 +1,1 @@
+../../../../src/editor.coffee

@@ -70,7 +70,7 @@ class ScribeDeltaTest extends ScribeHtmlTest
       consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
       expect(consistent).to.be.true
     )
-
+    
 
 window.Scribe or= {}
 window.Scribe.Test = 

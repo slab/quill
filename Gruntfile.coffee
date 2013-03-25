@@ -1,40 +1,39 @@
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-coffeeify'
+  grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-contrib-haml'
+  grunt.loadNpmTasks 'grunt-contrib-sass'
+  grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # Project configuration.
   grunt.initConfig
     meta:
       version: '0.2.0'
 
+    clean: ['build']
+
     coffee:
-      multi:
+      demo:
         expand: true
-        dest: 'bin/'
-        src: ['src/*.coffee', 'demo/scripts/*.coffee']
+        dest: 'build/'
+        src: ['demo/scripts/*.coffee']
         ext: '.js'
-      single:
-        files: [
-          { dest: 'bin/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }
-          { dest: 'bin/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }
-        ]
+      fuzzer:
+        files: [{ dest: 'build/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }]
+      unit:
+        files: [{ dest: 'build/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }]
 
     coffeeify:
+      options:
+        requires: ['tandem-core']
       src:
-        options:
-          requires: ['tandem-core']
-        files: [
-          { dest: 'bin/src/scribe.js', src: ['src/scribe.coffee'] }
-        ]
-      test:
-        options:
-          requires: ['tandem-core']
-        files: [
-          {dest: 'bin/src/tandem-core.js', src: ['tests/scripts/selenium/tandem_wrapper.coffee']}
-        ]
+        files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
+      tandem_wrapper:
+        files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
 
     concat:
       options:
@@ -44,29 +43,80 @@ module.exports = (grunt) ->
           ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
           ' *  Jason Chen, Salesforce.com\n' +
           ' */\n\n'
-      'bin/src/scribe.js': [
-        'vendor/assets/javascripts/rangy/*.js',
-        'vendor/assets/javascripts/linked_list.js',
-        'bin/src/scribe.js'
-      ]
-      'bin/src/scribe.all.js': [
-        'node_modules/underscore/underscore.js',
-        'vendor/assets/javascripts/rangy/*.js',
-        'vendor/assets/javascripts/eventemitter2.js',
-        'vendor/assets/javascripts/linked_list.js',
-        'bin/src/scribe.js'
-      ]
+      scribe:
+        files: [{ 
+          dest: 'build/scribe.js'
+          src: [
+            'build/scribe.js'
+          ]
+        }]
+      scribe_all:
+        files: [{ 
+          dest: 'build/scribe.all.js'
+          src: [
+            'node_modules/underscore/underscore.js',
+            'vendor/assets/javascripts/rangy/*.js',
+            'vendor/assets/javascripts/eventemitter2.js',
+            'vendor/assets/javascripts/linked_list.js',
+            'build/scribe.js'
+          ]
+        }]
 
     copy:
-      'bin/demo/scripts/dropkick.js': 'demo/scripts/dropkick.js'
-      'bin/demo/images/': 'demo/images/*.png'
-      'bin/lib/chai.js': 'node_modules/chai/chai.js'
-      'bin/lib/mocha.css': 'node_modules/mocha/mocha.css'
-      'bin/lib/mocha.js': 'node_modules/mocha/mocha.js'
-      'bin/lib/underscore.js': 'node_modules/underscore/underscore.js'
-      'bin/lib/rangy/': 'vendor/assets/javascripts/rangy/*.js'
-      'bin/lib/': 'vendor/assets/javascripts/*.js'
-      'bin/tests/lib/': 'tests/lib/*.js'
+      build:
+        expand: true
+        dest: 'build/'
+        src: ['tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+      node_modules:
+        expand: true, flatten: true, cwd: 'node_modules/'
+        dest: 'build/lib/'
+        src: ['chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
+      lib:
+        expand: true, cwd: 'vendor/assets/javascripts/'
+        dest: 'build/lib/'
+        src: ['*.js', 'rangy/*.js']
+
+    haml:
+      demo:
+        expand: true
+        dest: 'build/'
+        src: ['demo/*.haml']
+        ext: ['.html']
+      tests:
+        expand: true
+        dest: 'build/'
+        src: ['tests/*.haml']
+        ext: ['.html']
+
+    sass:
+      demo:
+        expand: true
+        dest: 'build/'
+        src: ['demo/styles/*.sass']
+        ext: ['.css']
+
+    watch:
+      demo:
+        files: ['demo/scripts/*.coffee']
+        tasks: ['coffee:demo']
+      fuzzer:
+        files: ['tests/scripts/fuzzer.coffee']
+        tasks: ['coffee:fuzzer']
+      haml_demo:
+        files: ['demo/*.haml']
+        tasks: ['haml:demo']
+      haml_tests:
+        files: ['tests/*.haml']
+        tasks: ['haml:tests']
+      sass:
+        files: ['demo/styles/*.sass']
+        tasks: ['sass:demo']
+      src:
+        files: ['src/*.coffee', 'node_modules/tandem-core/src/*']
+        tasks: ['coffeeify:src', 'copy:build']
+      unit:
+        files: ['tests/scripts/unit/*.coffee']
+        tasks: ['coffee:unit']
 
   # Default task.
-  grunt.registerTask 'default', ['coffee', 'coffeeify', 'concat', 'copy']
+  grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy', 'haml', 'sass']

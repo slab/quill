@@ -30,7 +30,7 @@ describe('Undo manager', ->
     _.each(tests, (test, name) ->
       it(name, ->
         undoDelta = Scribe.UndoManager.computeUndo(test.change, test.original)
-        expect(undoDelta).to.deep.equal(test.expected)
+        expect(undoDelta.isEqual(test.expected)).to.be.true
       )
     )
   )

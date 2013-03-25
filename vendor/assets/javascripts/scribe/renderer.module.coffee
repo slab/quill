@@ -1,0 +1,1 @@
+../../../../src/renderer.coffee

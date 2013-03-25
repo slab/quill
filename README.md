@@ -93,7 +93,7 @@ To run some of the tests you will need [phantomjs](http://phantomjs.org/).
 
 ### Unit tests
 
-Visit bin/tests/unit.html to run unit tests or run:
+Visit build/tests/unit.html to run unit tests or run:
     
     make unit
 
@@ -105,7 +105,7 @@ Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and ru
 
 ### Fuzzer
 
-Visit bin/tests/fuzzer.html to run the fuzzer. A seed is outputed on the console. Supply this in the fuzzer source to rerun with same seed.
+Visit build/tests/fuzzer.html to run the fuzzer. A seed is outputed on the console. Supply this in the fuzzer source to rerun with same seed.
 
 
 Dependencies

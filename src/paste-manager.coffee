@@ -1,5 +1,5 @@
-Scribe    = require('./scribe')
-Tandem    = require('tandem-core')
+Scribe = require('./scribe')
+Tandem = require('tandem-core')
 
 
 class Scribe.PasteManager

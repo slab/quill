@@ -82,7 +82,7 @@ insertAt = (index, text, formatting = {}) ->
         new Tandem.RetainOp(0, this.getLength())
         new Tandem.InsertOp("\n")
       ])
-      #this.emit(Editor.events.TEXT_CHANGE, addNewlineDelta)
+      #this.emit(Scribe.Editor.events.TEXT_CHANGE, addNewlineDelta)
     line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
     offset = 0
   else

@@ -68,7 +68,7 @@ class Scribe.Range
       return nodes
 
   getLeaves: ->
-    itr = new LeafIterator(@start.getLeaf(), @end.getLeaf())
+    itr = new Scribe.LeafIterator(@start.getLeaf(), @end.getLeaf())
     arr = itr.toArray()
     return arr
 
