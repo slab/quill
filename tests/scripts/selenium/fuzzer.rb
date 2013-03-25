@@ -42,7 +42,7 @@ driver.get editor_url
 editors = driver.find_elements(:class, "editor-container")
 writer, reader = editors
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
-writer = driver.find_element(:id, "scribe-container")
+writer = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, writer
 
 ################################################################################
