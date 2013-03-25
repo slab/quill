@@ -5,6 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-contrib-haml'
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
@@ -13,7 +14,7 @@ module.exports = (grunt) ->
     meta:
       version: '0.2.0'
 
-    clean: ['bin/**/*.js']
+    clean: ['bin', 'build']
 
     coffee:
       demo:
@@ -81,6 +82,18 @@ module.exports = (grunt) ->
         dest: 'bin/lib/'
         src: ['*.js', 'rangy/*.js']
 
+    haml:
+      demo:
+        expand: true
+        dest: 'bin/'
+        src: ['demo/*.haml']
+        ext: ['.html']
+      tests:
+        expand: true
+        dest: 'bin/'
+        src: ['tests/*.haml']
+        ext: ['.html']
+
     sass:
       demo:
         expand: true
@@ -95,6 +108,12 @@ module.exports = (grunt) ->
       fuzzer:
         files: ['tests/scripts/fuzzer.coffee']
         tasks: ['coffee:fuzzer']
+      haml:
+        files: ['demo/*.haml']
+        tasks: ['haml:demo']
+      sass:
+        files: ['demo/styles/*.sass']
+        tasks: ['sass:demo']
       src:
         files: ['src/*.coffee', 'node_modules/tandem-core/src/*']
         tasks: ['coffeeify:src', 'copy:build']
@@ -103,4 +122,4 @@ module.exports = (grunt) ->
         tasks: ['coffee:unit']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy']
+  grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy', 'haml', 'sass']
