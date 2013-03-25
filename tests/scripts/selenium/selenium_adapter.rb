@@ -17,6 +17,25 @@ class SeleniumAdapter
     @doc_length = 0
   end
 
+  # Assumes delta will contain only one document modifying op
+  def apply_delta(delta)
+   index = 0
+   delta['ops'].each do |op|
+     if op['value']
+       move_cursor(index)
+       type_text(op['value'])
+       break
+     else
+       if op['attributes']
+         # Formatting changes need to be made
+         break
+       else
+         index += op['end'] - op['start']
+       end
+     end
+   end
+  end
+
   def op_to_selenium(op)
     if op.nil? then return end
     case op['op']

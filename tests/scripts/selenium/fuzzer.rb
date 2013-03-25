@@ -20,10 +20,11 @@ end
 ################################################################################
 # Helpers
 ################################################################################
-def check_consistency(driver)
+def check_consistency(driver, doc_delta, random_delta)
   writer_delta = driver.execute_script "return parent.writer.getDelta().toString();"
-  reader_delta = driver.execute_script "return parent.reader.getDelta().toString();"
+  new_delta = driver.execute_script "return arguments[0].compose(arguments[1])", doc_delta, random_delta
   raise "Writer: #{writer_delta}\nReader: #{reader_delta}" unless writer_delta == reader_delta
+  doc_delta = writer_delta # XXX: Fix reference
 end
 
 def js_get_doc_delta(driver)
@@ -49,9 +50,10 @@ adapter = SeleniumAdapter.new driver, writer
 # Fuzzer logic
 ################################################################################
 doc_delta = js_get_doc_delta(driver)
+debugger
 NUM_EDITS.times do |i|
-   delta = js_get_random_delta(driver, doc_delta)
+   random_delta = js_get_random_delta(driver, doc_delta)
    puts i if i % 10 == 0
-   adapter.op_to_selenium(random_delta)
-   check_consistency(driver)
+   adapter.apply_delta(random_delta)
+   check_consistency(driver, doc_delta, random_delta)
 end
