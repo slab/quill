@@ -26,6 +26,11 @@ _buildCursor = (userId, name, color) ->
   cursor.appendChild(inner)
   return cursor
 
+_moveCursor = (cursorNode, referenceNode) ->
+  cursorNode.style.top = referenceNode.offsetTop
+  cursorNode.style.left = referenceNode.offsetLeft
+  cursorNode.querySelector('.cursor-inner').style.height = referenceNode.offsetHeight
+
 _setCursor = (userId, index, name, color) ->
   @editor.doSilently( =>
     @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
@@ -38,21 +43,18 @@ _setCursor = (userId, index, name, color) ->
       @container.appendChild(cursor)
     position = new Scribe.Position(@editor, index)
     if !position.leafNode.firstChild?
-      cursor.style.top = position.leafNode.parentNode.offsetTop
-      cursor.style.left = position.leafNode.parentNode.offsetLeft
+      _moveCursor.call(this, cursor, position.leafNode.parentNode)
     else
-      [leftText, rightText, didSplit] = DOM.splitNode(position.leafNode.firstChild, position.offset)
+      [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         span = @container.ownerDocument.createElement('span')
         Scribe.DOM.wrap(span, rightText)
-        cursor.style.top = span.offsetTop
-        cursor.style.left = span.offsetLeft
+        _moveCursor.call(this, cursor, span)
         Scribe.DOM.unwrap(span)
       else if leftText?
         span = @container.ownerDocument.createElement('span')
         leftText.parentNode.parentNode.appendChild(span)
-        cursor.style.top = span.offsetTop
-        cursor.style.left = span.offsetLeft
+        _moveCursor.call(this, cursor, span)
         span.parentNode.removeChild(span)
       position.leafNode.normalize() if didSplit
     if parseInt(cursor.style.top) <= 5

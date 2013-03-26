@@ -25,7 +25,7 @@ class Scribe.Selection
     formats[name] = value
     @range.formats = formats
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
-    this.setScribe.Range(new Scribe.Range(@editor, start, end))
+    this.setRange(new Scribe.Range(@editor, start, end))
 
   deleteRange: ->
     this.update()
