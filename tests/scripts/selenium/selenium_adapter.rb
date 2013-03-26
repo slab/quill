@@ -120,7 +120,6 @@ class SeleniumAdapter
   end
 
   def format(format, value)
-    debugger
     case format
     when /bold|italic|underline/
       if Random.rand() < 0.5
