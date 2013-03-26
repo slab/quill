@@ -48,9 +48,9 @@ _setCursor = (userId, index, name, color) ->
       [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         span = @container.ownerDocument.createElement('span')
-        Scribe.DOM.wrap(span, rightText)
+        rightText.parentNode.insertBefore(span, rightText)
         _moveCursor.call(this, cursor, span)
-        Scribe.DOM.unwrap(span)
+        span.parentNode.removeChild(span)
       else if leftText?
         span = @container.ownerDocument.createElement('span')
         leftText.parentNode.parentNode.appendChild(span)
