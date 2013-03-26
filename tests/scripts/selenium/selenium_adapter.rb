@@ -71,7 +71,12 @@ class SeleniumAdapter
 
   def move_cursor(to_index)
     # TODO: Deal w/ newlines that firefox adds.
-    (@cursor_pos - to_index).abs.times do @editor.send_keys(:arrow_left) end
+    distance = (@cursor_pos - to_index).abs
+    if @cursor_pos > to_index
+      distance.times do @editor.send_keys(:arrow_left) end
+    else
+      distance.times do @editor.send_keys(:arrow_right) end
+    end
     @cursor_pos = to_index
   end
 
