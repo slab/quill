@@ -7,6 +7,8 @@ _applyDelta = (delta) ->
       this.shiftCursors(index, text.length)
     , (index, length) =>
       this.shiftCursors(index, -1 * length)
+    , (index, length, name, value) =>
+      this.shiftCursors(index, 0)
     )
   )
 
