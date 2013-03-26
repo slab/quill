@@ -26,9 +26,9 @@ class SeleniumAdapter
         type_text(op['value'])
         break
       else
-        if op['start'] > @cursor_pos
+        if op['start'] > index
           move_cursor(index)
-          delete_length = op['start'] - @cursor_pos
+          delete_length = op['start'] - index
           delete(delete_length)
           break
         elsif !op['attributes'].empty?
