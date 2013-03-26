@@ -34,15 +34,13 @@ _moveCursor = (cursorNode, referenceNode) ->
   cursorNode.querySelector('.cursor-inner').style.height = referenceNode.offsetHeight
 
 _setCursor = (userId, index, name, color) ->
+  @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
+  @cursors[userId].index = index
+  cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
+  unless cursor?
+    cursor = _buildCursor.call(this, userId, name, color)
+    @container.appendChild(cursor)
   @editor.doSilently( =>
-    @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
-    @cursors[userId].index = index
-    cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
-    if cursor?
-      cursor.querySelector('.cursor-name').classList.remove('hidden')
-    else
-      cursor = _buildCursor.call(this, userId, name, color)
-      @container.appendChild(cursor)
     position = new Scribe.Position(@editor, index)
     if !position.leafNode.firstChild?
       _moveCursor.call(this, cursor, position.leafNode.parentNode)
@@ -64,10 +62,11 @@ _setCursor = (userId, index, name, color) ->
     else
       cursor.classList.remove('top')
   )
+  return cursor
 
 
 class Scribe.MultiCursorManager
-  @CURSOR_NAME_TIMEOUT: 5000
+  @CURSOR_NAME_TIMEOUT: 2500
 
   constructor: (@editor) ->
     @cursors = {}
@@ -94,7 +93,7 @@ class Scribe.MultiCursorManager
         'top': '-18px'
         'white-space': 'nowrap'
       }
-      '.cursor-name.hidden': { 'display': 'none' }
+      '.cursor.hidden .cursor-name': { 'display': 'none' }
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
       '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
     })
@@ -117,11 +116,11 @@ class Scribe.MultiCursorManager
     )
 
   setCursor: (userId, index, name, color) ->
-    _setCursor.call(this, userId, index, name, color)
+    cursor = _setCursor.call(this, userId, index, name, color)
+    cursor.classList.remove('hidden')
     clearTimeout(@cursors[userId].timer)
     @cursors[userId].timer = setTimeout( =>
-      cursorName = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId} .cursor-name")
-      cursorName.classList.add('hidden') if cursorName
+      cursor.classList.add('hidden')
       @cursors[userId].timer = null
     , Scribe.MultiCursorManager.CURSOR_NAME_TIMEOUT)
 
