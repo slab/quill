@@ -8,12 +8,4 @@ $(document).ready( ->
   window.reader = new Scribe.Editor($editors.get(1))
   writerToolbar = new Scribe.Toolbar('editor-toolbar-writer', writer)
   readerToolbar = new Scribe.Toolbar('editor-toolbar-reader', reader)
-  start = new Date()
-
-  writer.on(Scribe.Editor.events.TEXT_CHANGE, (delta) ->
-    reader.applyDelta(delta, false)
-  )
-
-  writer.getRandomOp = ->
-    Scribe.Debug.Test.getRandomOperation(this, ALPHABET, FORMATS)
 )
