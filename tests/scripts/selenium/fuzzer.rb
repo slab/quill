@@ -58,20 +58,12 @@ adapter = SeleniumAdapter.new driver, writer
 ################################################################################
 # Fuzzer logic
 ################################################################################
-doc_delta = js_get_doc_delta(driver)
-src = "return new window.Tandem.Delta(1, 2, [new window.Tandem.InsertOp('a'), new window.Tandem.RetainOp(0, 1)])"
-first_delta = js_get_test_delta(driver, src)
-adapter.apply_delta(first_delta)
-src = "return new window.Tandem.Delta(2, 2, [new window.Tandem.RetainOp(0, 1, {bold: true}), new window.Tandem.RetainOp(1, 2)])"
-second_delta = js_get_test_delta(driver, src)
-adapter.apply_delta(second_delta)
-src = "return new window.Tandem.Delta(2, 1, [new window.Tandem.RetainOp(1, 2)])"
-third_delta = js_get_test_delta(driver, src)
 debugger
-adapter.apply_delta(third_delta)
-# NUM_EDITS.times do |i|
-#    random_delta = js_get_random_delta(driver, doc_delta)
-#    puts i if i % 10 == 0
-#    adapter.apply_delta(random_delta)
-#    check_consistency(driver, doc_delta, random_delta)
-# end
+js_set_doc_delta(driver)
+NUM_EDITS.times do |i|
+   random_delta = js_get_random_delta(driver)
+   puts i if i % 10 == 0
+   adapter.apply_delta(random_delta)
+   check_consistency(driver)
+   js_set_doc_delta(driver)
+end
