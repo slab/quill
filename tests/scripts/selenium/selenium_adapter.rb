@@ -122,6 +122,8 @@ class SeleniumAdapter
   def format(format, value)
     case format
     when /bold|italic|underline/
+      format = /bold|italic|underline/.match(format).to_s # normalization kludge
+      puts "Format: #{format}; Value: #{value}"
       if Random.rand() < 0.5
         @driver.action.key_down(@@cmd_modifier).send_keys(format[0]).key_up(@@cmd_modifier).perform
       else
@@ -132,6 +134,8 @@ class SeleniumAdapter
     when 'strike'
       click_button_from_toolbar('strike')
     when /family|size|background|color/
+      format = /family|size|background|color/.match(format).to_s # normalization kludge
+      puts "Format: #{format}; Value: #{value}"
       select_from_dropdown(format, value)
     else
       raise "Unknown formatting op: #{format}"
