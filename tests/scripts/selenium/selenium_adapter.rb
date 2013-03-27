@@ -46,27 +46,6 @@ class SeleniumAdapter
     end
   end
 
-  def op_to_selenium(op)
-    if op.nil? then return end
-    case op['op']
-    when 'insertAt'
-      to_index, text = op['args']
-      move_cursor(to_index)
-      type_text(text)
-    when 'deleteAt'
-      to_index, length = op['args']
-      move_cursor(to_index)
-      delete(length)
-    when 'formatAt'
-      to_index, length, format, value = op['args']
-      move_cursor(to_index)
-      highlight(length)
-      format(format, value)
-    else
-      raise "Invalid op type: #{op}"
-    end
-  end
-
   private
 
   def move_cursor(to_index)
