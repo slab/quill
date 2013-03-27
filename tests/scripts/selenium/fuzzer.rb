@@ -34,8 +34,11 @@ def check_consistency(driver, doc_delta, random_delta)
   doc_delta = writer_delta # XXX: Fix reference
 end
 
-def js_get_doc_delta(driver)
-  doc_delta = driver.execute_script "return parent.writer.getDelta()"
+def js_set_doc_delta(driver)
+  driver.switch_to.default_content
+  driver.execute_script("window.docDelta = writer.getDelta()")
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
+  # doc_delta = driver.execute_script "return parent.writer.getDelta()"
 end
 
 ################################################################################
