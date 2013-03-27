@@ -7,6 +7,8 @@ _applyDelta = (delta) ->
       this.shiftCursors(index, text.length)
     , (index, length) =>
       this.shiftCursors(index, -1 * length)
+    , (index, length, name, value) =>
+      this.shiftCursors(index, 0)
     )
   )
 
@@ -26,33 +28,33 @@ _buildCursor = (userId, name, color) ->
   cursor.appendChild(inner)
   return cursor
 
+_moveCursor = (cursorNode, referenceNode) ->
+  cursorNode.style.top = referenceNode.offsetTop
+  cursorNode.style.left = referenceNode.offsetLeft
+  cursorNode.querySelector('.cursor-inner').style.height = referenceNode.offsetHeight
+
 _setCursor = (userId, index, name, color) ->
+  @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
+  @cursors[userId].index = index
+  cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
+  unless cursor?
+    cursor = _buildCursor.call(this, userId, name, color)
+    @container.appendChild(cursor)
   @editor.doSilently( =>
-    @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
-    @cursors[userId].index = index
-    cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
-    if cursor?
-      cursor.querySelector('.cursor-name').classList.remove('hidden')
-    else
-      cursor = _buildCursor.call(this, userId, name, color)
-      @container.appendChild(cursor)
     position = new Scribe.Position(@editor, index)
     if !position.leafNode.firstChild?
-      cursor.style.top = position.leafNode.parentNode.offsetTop
-      cursor.style.left = position.leafNode.parentNode.offsetLeft
+      _moveCursor.call(this, cursor, position.leafNode.parentNode)
     else
-      [leftText, rightText, didSplit] = DOM.splitNode(position.leafNode.firstChild, position.offset)
+      [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         span = @container.ownerDocument.createElement('span')
-        Scribe.DOM.wrap(span, rightText)
-        cursor.style.top = span.offsetTop
-        cursor.style.left = span.offsetLeft
-        Scribe.DOM.unwrap(span)
+        rightText.parentNode.insertBefore(span, rightText)
+        _moveCursor.call(this, cursor, span)
+        span.parentNode.removeChild(span)
       else if leftText?
         span = @container.ownerDocument.createElement('span')
         leftText.parentNode.parentNode.appendChild(span)
-        cursor.style.top = span.offsetTop
-        cursor.style.left = span.offsetLeft
+        _moveCursor.call(this, cursor, span)
         span.parentNode.removeChild(span)
       position.leafNode.normalize() if didSplit
     if parseInt(cursor.style.top) <= 5
@@ -60,10 +62,11 @@ _setCursor = (userId, index, name, color) ->
     else
       cursor.classList.remove('top')
   )
+  return cursor
 
 
 class Scribe.MultiCursorManager
-  @CURSOR_NAME_TIMEOUT: 5000
+  @CURSOR_NAME_TIMEOUT: 2500
 
   constructor: (@editor) ->
     @cursors = {}
@@ -90,7 +93,7 @@ class Scribe.MultiCursorManager
         'top': '-18px'
         'white-space': 'nowrap'
       }
-      '.cursor-name.hidden': { 'display': 'none' }
+      '.cursor.hidden .cursor-name': { 'display': 'none' }
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
       '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
     })
@@ -113,11 +116,11 @@ class Scribe.MultiCursorManager
     )
 
   setCursor: (userId, index, name, color) ->
-    _setCursor.call(this, userId, index, name, color)
+    cursor = _setCursor.call(this, userId, index, name, color)
+    cursor.classList.remove('hidden')
     clearTimeout(@cursors[userId].timer)
     @cursors[userId].timer = setTimeout( =>
-      cursorName = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId} .cursor-name")
-      cursorName.classList.add('hidden') if cursorName
+      cursor.classList.add('hidden')
       @cursors[userId].timer = null
     , Scribe.MultiCursorManager.CURSOR_NAME_TIMEOUT)
 
