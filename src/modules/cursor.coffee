@@ -42,21 +42,21 @@ _setCursor = (userId, index, name, color) ->
     @container.appendChild(cursor)
   @editor.doSilently( =>
     position = new Scribe.Position(@editor, index)
+    span = @container.ownerDocument.createElement('span')
+    span.textContent = Scribe.Constants.NOBREAK_SPACE
     if !position.leafNode.firstChild?
-      _moveCursor.call(this, cursor, position.leafNode.parentNode)
+      position.leafNode.parentNode.insertBefore(span, position.leafNode)
+      _moveCursor.call(this, cursor, span)
     else
       [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
-        span = @container.ownerDocument.createElement('span')
         rightText.parentNode.insertBefore(span, rightText)
         _moveCursor.call(this, cursor, span)
-        span.parentNode.removeChild(span)
       else if leftText?
-        span = @container.ownerDocument.createElement('span')
         leftText.parentNode.parentNode.appendChild(span)
         _moveCursor.call(this, cursor, span)
-        span.parentNode.removeChild(span)
-      position.leafNode.normalize() if didSplit
+    span.parentNode.removeChild(span)
+    position.leafNode.normalize() if didSplit
     if parseInt(cursor.style.top) <= 5
       cursor.classList.add('top')
     else
