@@ -106,7 +106,7 @@ class Scribe.MultiCursorManager
 
   shiftCursors: (index, length) ->
     _.each(@cursors, (cursor, id) =>
-      return if cursor == undefined || cursor.index < index
+      return unless cursor?
       if (cursor.index >= index)
         if length > 0
           _setCursor.call(this, cursor.userId, cursor.index + length, cursor.name, cursor.color)   # Insert
