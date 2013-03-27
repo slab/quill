@@ -248,8 +248,8 @@ class Scribe.Editor extends EventEmitter2
     this.applyDelta(delta)
     delta.startLength = oldLength
     
-  setSelection: (range) ->
-    @selection.setRange(range)
+  setSelection: (range, silent = false) ->
+    @selection.setRange(range, silent)
 
 
 module.exports = Scribe

@@ -110,7 +110,7 @@ class Scribe.Keyboard
     @editor.insertAt(selection.start.index, text)
     # Make sure selection is after our text
     range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
-    @editor.setSelection(range)
+    @editor.setSelection(range, true)
 
   toggleFormat: (selection, format) ->
     formats = selection.getFormats()
