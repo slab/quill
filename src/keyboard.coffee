@@ -49,18 +49,6 @@ class Scribe.Keyboard
       @editor.selection.deleteRange()
       this.insertText("\t")
     )
-    this.addHotkey(Scribe.Keyboard.KEYS.ENTER, =>
-      @editor.selection.deleteRange()
-      this.insertText("\n")
-    )
-    #this.addHotkey(Scribe.Keyboard.KEYS.BACKSPACE, (selection) =>
-    #  unless @editor.selection.deleteRange()
-    #    @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
-    #)
-    #this.addHotkey(Scribe.Keyboard.KEYS.DELETE, (selection) =>
-    #  unless @editor.selection.deleteRange()
-    #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.getLength() - 1
-    #)
     this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
       this.toggleFormat(selection, 'bold')
     )
@@ -107,7 +95,7 @@ class Scribe.Keyboard
 
   insertText: (text) ->
     selection = @editor.getSelection()
-    @editor.insertAt(selection.start.index, text)
+    @editor.insertAt(selection.start.index, text) if selection?
     # Make sure selection is after our text
     range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
     @editor.setSelection(range, true)
