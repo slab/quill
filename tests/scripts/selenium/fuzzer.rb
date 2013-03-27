@@ -27,11 +27,11 @@ end
 ################################################################################
 # Helpers
 ################################################################################
-def check_consistency(driver, doc_delta, random_delta)
-  writer_delta = driver.execute_script "return parent.writer.getDelta().toString();"
-  new_delta = driver.execute_script "return arguments[0].compose(arguments[1])", doc_delta, random_delta
-  raise "Writer: #{writer_delta}\nReader: #{reader_delta}" unless writer_delta == reader_delta
-  doc_delta = writer_delta # XXX: Fix reference
+def check_consistency(driver)
+  driver.switch_to.default_content
+  success = driver.execute_script "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta())"
+  raise "FAIL" unless success
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
 def js_set_doc_delta(driver)
