@@ -4,8 +4,8 @@ Tandem = require('tandem-core')
 
 doAt = (fn) ->
   this.doSilently( =>
-    @selection.preserve( =>
-      return trackDelta.call(this, =>
+    trackDelta.call(this, =>
+      @selection.preserve( =>
         keepNormalized.call(this, =>
           fn.call(this)
         )
@@ -100,18 +100,28 @@ keepNormalized = (fn) ->
 
 trackDelta = (fn) ->
   oldDelta = @doc.toDelta()
+  oldIndex = @selection.range.start.index if @selection.range?
   fn()
   newDelta = @doc.toDelta()
-  decompose = newDelta.decompose(oldDelta)
+  try
+    newRange = this.getSelection()
+    if @selection.range? and newRange?
+      newIndex = newRange.end.index
+      [oldLeftDelta, oldRightDelta] = oldDelta.split(oldIndex)
+      [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
+      decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
+      decomposeRight = newRightDelta.decompose(oldRightDelta)
+      decompose = decomposeLeft.merge(decomposeRight)
+  catch ignored
+  decompose = newDelta.decompose(oldDelta) unless decompose?
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
   this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
-  return decompose
 
 update = ->
   this.doSilently( =>
-    @selection.preserve( =>
-      return trackDelta.call(this, =>
+    trackDelta.call(this, =>
+      @selection.preserve( =>
         Scribe.Normalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()
         lineNode = @root.firstChild

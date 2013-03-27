@@ -1,6 +1,15 @@
 Scribe = require('./scribe')
 
 
+_getMarkers = (savedSel) ->
+  markers = _.map(savedSel.rangeInfos, (rangeInfo) ->
+    return _.map([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
+      return rangeInfo.document.getElementById(markerId)
+    )
+  )
+  return _.compact(_.flatten(markers))
+
+
 class Scribe.Selection
   constructor: (@editor) ->
     @range = null
@@ -65,16 +74,21 @@ class Scribe.Selection
       fn.call(null)
 
   restore: (savedSel) ->
+    markers = _getMarkers(savedSel)
+    parents = _.map(markers, (marker) ->
+      return marker.parentNode
+    )
     rangy.restoreSelection(savedSel, false)
+    _.each(parents, (parentNode) ->
+      parentNode.normalize()
+    )
     this.update(true)
 
   save: ->
     savedSel = rangy.saveSelection(@editor.contentWindow)
-    _.each(savedSel.rangeInfos, (rangeInfo) ->
-      _.each([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
-        marker = rangeInfo.document.getElementById(markerId)
-        marker.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
-      )
+    markers = _getMarkers(savedSel)
+    _.each(markers, (marker) ->
+      marker.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
     )
     return savedSel
 
@@ -96,7 +110,7 @@ class Scribe.Selection
 
   update: (silent = false) ->
     range = this.getRange()
-    unless (range == @range) || (@range?.equals(range))
+    unless range == @range or @range?.equals(range)
       @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent
       @range = range
 
