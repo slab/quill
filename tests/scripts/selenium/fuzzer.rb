@@ -8,13 +8,13 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 ################################################################################
 # Helpers for generating random edits
 ################################################################################
-def js_get_random_delta(driver, doc_delta)
+def js_get_random_delta(driver)
   driver.switch_to.default_content
-  return driver.execute_script("return window.Tandem.DeltaGen.getRandomDelta.apply(window.Tandem.DeltaGen, arguments)",
-    doc_delta,
+  random_delta = driver.execute_script("window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0], arguments[1]); return window.randomDelta;",
     ALPHABET,
     1)
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
+  return random_delta
 end
 
 def js_get_test_delta(driver, src)
