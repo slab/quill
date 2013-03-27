@@ -42,8 +42,7 @@ editor_url = ARGV[1]
 driver = Selenium::WebDriver.for browserdriver
 driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
-editors = driver.find_elements(:class, "editor-container")
-writer, reader = editors
+writer = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, writer
