@@ -17,13 +17,6 @@ def js_get_random_delta(driver)
   return random_delta
 end
 
-def js_get_test_delta(driver, src)
-  driver.switch_to.default_content
-  test_delta = driver.execute_script(src)
-  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
-  return test_delta
-end
-
 ################################################################################
 # Helpers
 ################################################################################
@@ -58,7 +51,6 @@ adapter = SeleniumAdapter.new driver, writer
 ################################################################################
 # Fuzzer logic
 ################################################################################
-debugger
 js_set_doc_delta(driver)
 NUM_EDITS.times do |i|
    random_delta = js_get_random_delta(driver)
