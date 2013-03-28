@@ -16,6 +16,10 @@ def execute_js(driver, src, args = nil)
   return result
 end
 
+def js_get_random_delta_as_str(driver)
+  return execute_js driver, "return window.randomDelta.toString();"
+end
+
 def js_get_random_delta(driver)
   return execute_js driver, "return window.randomDelta"
 end
@@ -23,6 +27,14 @@ end
 def js_set_random_delta(driver)
   src = "window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0], arguments[1]);"
   execute_js driver, src, [ALPHABET, 1]
+end
+
+def js_get_cur_doc_delta_as_str(driver)
+  return execute_js driver, "return writer.getDelta().toString();"
+end
+
+def js_get_doc_delta_as_str(driver)
+  return execute_js driver, "return window.docDelta.toString();"
 end
 
 def js_get_doc_delta(driver)
@@ -36,7 +48,7 @@ end
 def check_consistency(driver)
   driver.switch_to.default_content
   success = driver.execute_script "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta())"
-  raise "FAIL" unless success
+  raise "doc_delta: #{js_get_doc_delta_as_str(driver)}, rand_delta: #{js_get_random_delta_as_str(driver)}, actual: #{js_get_cur_doc_delta_as_str(driver)}" unless success
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
