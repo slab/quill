@@ -175,10 +175,9 @@ class Scribe.Editor extends EventEmitter2
     )
 
   enable: ->
-    if !@root.getAttribute('contenteditable')
-      this.doSilently( =>
-        @root.setAttribute('contenteditable', true)
-      )
+    this.doSilently( =>
+      @root.setAttribute('contenteditable', true)
+    )
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
