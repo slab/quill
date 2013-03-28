@@ -23,7 +23,6 @@ class SeleniumAdapter
         type_text(op['value'])
         break
       elsif op['start'] > index
-        debugger
         move_cursor(index)
         delete_length = op['start'] - index
         delete(delete_length)
@@ -64,6 +63,7 @@ class SeleniumAdapter
     highlight(length)
     @editor.send_keys(:delete)
     @doc_length -= length
+    @cursor_pos -= length
   end
 
   def type_text(text)
