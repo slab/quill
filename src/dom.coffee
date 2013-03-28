@@ -44,11 +44,12 @@ Scribe.DOM =
     Scribe.DOM.splitAfter(parentNode, root)
 
   splitNode: (node, offset, force = false) ->
-    if offset > Scribe.Utils.getNodeLength(node)
-      throw new Error('Splitting at offset greater than node length')
     # Check if split necessary
+    nodeLength = Scribe.Utils.getNodeLength(node)
+    offset = Math.max(0, offset)
+    offset = Math.min(offset, nodeLength)
     return [node.previousSibling, node, false] unless force or offset != 0
-    return [node, node.nextSibling, false] unless force or offset != Scribe.Utils.getNodeLength(node)
+    return [node, node.nextSibling, false] unless force or offset != nodeLength
     if node.nodeType == node.TEXT_NODE
       after = node.splitText(offset)
       return [node, after, true]
