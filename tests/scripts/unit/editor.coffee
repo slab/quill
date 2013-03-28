@@ -455,7 +455,7 @@ describe('Editor', ->
           else
             expected = test.expected(index)
           editor.root.innerHTML = Scribe.Utils.cleanHtml(expected)
-          editor.doc.buildLines()
+          editor.doc.rebuild()
           expectedDelta = editor.doc.toDelta()
           expect(consistent).to.be.true
           expect(delta).to.deep.equal(expectedDelta)

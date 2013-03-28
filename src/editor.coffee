@@ -36,8 +36,13 @@ deleteAt = (index, length) ->
     deleteLength = Math.min(length, curLine.length - offset)
     nextLine = curLine.next
     if curLine.length == deleteLength
-      Scribe.Utils.removeNode(curLine.node)
-      @doc.removeLine(curLine)
+      if curLine == @doc.lines.first and curLine == @doc.lines.last
+        curLine.node.innerHTML = ''
+        curLine.trailingNewline = false
+        curLine.rebuild()
+      else
+        Scribe.Utils.removeNode(curLine.node)
+        @doc.removeLine(curLine)
     else
       curLine.deleteText(offset, deleteLength)
     length -= deleteLength
@@ -73,7 +78,7 @@ insertAt = (index, text, formatting = {}) ->
   text = text.replace(/\r\n/g, '\n')
   text = text.replace(/\r/g, '\n')
   lineTexts = text.split('\n')
-  if index == this.getLength()
+  if index == this.getLength() and @doc.lines.last.trailingNewline
     if lineTexts[lineTexts.length - 1] == ''
       lineTexts.pop()
     else if false
@@ -82,7 +87,6 @@ insertAt = (index, text, formatting = {}) ->
         new Tandem.RetainOp(0, this.getLength())
         new Tandem.InsertOp("\n")
       ])
-      #this.emit(Scribe.Editor.events.TEXT_CHANGE, addNewlineDelta)
     line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
     offset = 0
   else
@@ -199,7 +203,7 @@ class Scribe.Editor extends EventEmitter2
     return if delta.isIdentity()
     this.doSilently( =>
       @selection.preserve( =>
-        console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, @doc, @root)
+        console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
         oldDelta = @doc.toDelta()
         delta.apply(insertAt, deleteAt, formatAt, this)
         eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE

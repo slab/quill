@@ -6,15 +6,10 @@ class Scribe.Document
   @INDENT_PREFIX: 'indent-'
 
   constructor: (@root) ->
-    this.buildLines()
+    this.rebuild()
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
-
-  buildLines: ->
-    this.reset()
-    Scribe.Normalizer.normalizeDoc(@root)
-    this.rebuild()
 
   cleanNode: (lineNode) ->
     return if lineNode.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
@@ -76,7 +71,9 @@ class Scribe.Document
     line.rebuild()
 
   rebuild: ->
-    this.reset()
+    @lines = new LinkedList()
+    @lineMap = {}
+    Scribe.Normalizer.normalizeDoc(@root)
     _.each(Scribe.DOM.filterUneditable(@root.childNodes), (node) =>
       this.appendLine(node)
     )
@@ -101,10 +98,6 @@ class Scribe.Document
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
-
-  reset: ->
-    @lines = new LinkedList()
-    @lineMap = {}
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Scribe.DOM.splitNode(line.node, offset, true)
