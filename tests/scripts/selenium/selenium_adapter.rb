@@ -1,8 +1,5 @@
 ################################################################################
 # TODO's:
-# - Port Scribe's debug modul to Ruby
-# - Generate deltas instead of custom instructions, then apply the delta via
-#   Selenium, then ensure that the delta we get via a getDelta call is consistent.
 # - Improve error handling
 # - Improve performance
 # - Add logic so that if a test fails, it's easy to reproduce the failing
@@ -106,10 +103,8 @@ class SeleniumAdapter
       else
         click_button_from_toolbar(format)
       end
-    when 'link'
-      click_button_from_toolbar('link')
-    when 'strike'
-      click_button_from_toolbar('strike')
+    when /link|strike/
+      click_button_from_toolbar(format)
     when /family|size|background|color/
       select_from_dropdown(format, value)
     else
