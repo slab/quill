@@ -45,19 +45,17 @@ class SeleniumAdapter
 
   private
 
-  def move_cursor(to_index)
-    # TODO: Deal w/ newlines that firefox adds.
-    distance = (@cursor_pos - to_index).abs
-    if @cursor_pos > to_index
+  def move_cursor(dest_index)
+    distance = (@cursor_pos - dest_index).abs
+    if @cursor_pos > dest_index
       distance.times do @editor.send_keys(:arrow_left) end
     else
       distance.times do @editor.send_keys(:arrow_right) end
     end
-    @cursor_pos = to_index
+    @cursor_pos = dest_index
   end
 
   def highlight(length)
-    # TODO: Figure out how to support highlighting with mouse.
     keys = (0...length).to_a.map! { :arrow_right }
     @cursor_pos += length
     @driver.action.key_down(:shift).send_keys(keys).key_up(:shift).perform
