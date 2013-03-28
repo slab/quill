@@ -22,23 +22,22 @@ class SeleniumAdapter
         move_cursor(index)
         type_text(op['value'])
         break
-      else
-        if op['start'] > index
-          move_cursor(index)
-          delete_length = op['start'] - index
-          delete(delete_length)
-          break
-        elsif !op['attributes'].empty?
-          length = op['end'] - op['start']
-          move_cursor(index)
-          highlight(length)
-          op['attributes'].each do |attr, val|
-            format(attr, val)
-          end
-          break
-        else
-          index += op['end'] - op['start']
+      elsif op['start'] > index
+        debugger
+        move_cursor(index)
+        delete_length = op['start'] - index
+        delete(delete_length)
+        break
+      elsif !op['attributes'].empty?
+        length = op['end'] - op['start']
+        move_cursor(index)
+        highlight(length)
+        op['attributes'].each do |attr, val|
+          format(attr, val)
         end
+        break
+      else
+        index += op['end'] - op['start']
       end
     end
   end
