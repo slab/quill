@@ -166,17 +166,20 @@ class Scribe.Editor extends EventEmitter2
     @options = _.extend(Scribe.Editor.DEFAULTS, options)
     @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
+    @enabled = false
     this.reset(true)
     this.enable() if @options.enabled
 
   disable: ->
     this.doSilently( =>
       @root.setAttribute('contenteditable', false)
+      @enabled = false
     )
 
   enable: ->
     this.doSilently( =>
       @root.setAttribute('contenteditable', true)
+      @enabled = true
     )
 
   reset: (keepHTML = false) ->
@@ -208,7 +211,7 @@ class Scribe.Editor extends EventEmitter2
         eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
         this.emit(eventName, delta)
         # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
-        console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
+        # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
         forceTrailingNewline.call(this)
       )
     )

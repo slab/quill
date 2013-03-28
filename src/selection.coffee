@@ -17,7 +17,7 @@ class Scribe.Selection
 
   initListeners: ->
     checkUpdate = =>
-      this.update()
+      this.update() if @editor.enabled
     keyUpdate = (event) =>
       checkUpdate() if Scribe.Keyboard.KEYS.LEFT <= event.which and event.which <= Scribe.Keyboard.KEYS.DOWN
     @editor.root.addEventListener('keyup', keyUpdate)
