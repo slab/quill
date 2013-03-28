@@ -103,13 +103,10 @@ Scribe.Utils =
   getNodeLength: (node) ->
     return 0 unless node?
     if node.nodeType == node.ELEMENT_NODE
-      if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-        return 0
-      externalNodes = node.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}")
-      length = _.reduce(externalNodes, (length, node) ->
-        return length - node.textContent.length
-      , node.textContent.length)
-      return length + (if Scribe.Line.isLineNode(node) then 1 else 0)
+      return 0 unless Scribe.DOM.canEdit(node)
+      return _.reduce(Scribe.DOM.filterUneditable(node.childNodes), (length, child) ->
+        return length + Scribe.Utils.getNodeLength(child)
+      , (if Scribe.Line.isLineNode(node) then 1 else 0))
     else if node.nodeType == node.TEXT_NODE
       return node.textContent.length
     else
