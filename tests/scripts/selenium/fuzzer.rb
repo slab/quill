@@ -5,31 +5,38 @@ require_relative 'selenium_adapter'
 NUM_EDITS = 500
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
-################################################################################
-# Helpers for generating random edits
-################################################################################
-def js_get_random_delta(driver)
-  driver.switch_to.default_content
-  random_delta = driver.execute_script("window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0], arguments[1]); return window.randomDelta;",
-    ALPHABET,
-    1)
-  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
-  return random_delta
-end
 
 ################################################################################
 # Helpers
 ################################################################################
+def execute_js(driver, src, args = nil)
+  driver.switch_to.default_content
+  result = driver.execute_script(src, *args)
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
+  return result
+end
+
+def js_get_random_delta(driver)
+  return execute_js driver, "return window.randomDelta"
+end
+
+def js_set_random_delta(driver)
+  src = "window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0], arguments[1]);"
+  execute_js driver, src, [ALPHABET, 1]
+end
+
+def js_get_doc_delta(driver)
+  return execute_js driver, "return window.docDelta"
+end
+
+def js_set_doc_delta(driver)
+  execute_js driver, "window.docDelta = writer.getDelta()"
+end
+
 def check_consistency(driver)
   driver.switch_to.default_content
   success = driver.execute_script "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta())"
   raise "FAIL" unless success
-  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
-end
-
-def js_set_doc_delta(driver)
-  driver.switch_to.default_content
-  driver.execute_script("window.docDelta = writer.getDelta()")
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
@@ -52,6 +59,7 @@ adapter = SeleniumAdapter.new driver, writer
 ################################################################################
 js_set_doc_delta(driver)
 NUM_EDITS.times do |i|
+   js_set_random_delta(driver)
    random_delta = js_get_random_delta(driver)
    puts i if i % 10 == 0
    adapter.apply_delta(random_delta)
