@@ -34,6 +34,7 @@ class SeleniumAdapter
         op['attributes'].each do |attr, val|
           format(attr, val)
         end
+        move_cursor(0) # Kludge to remove the highlighting
         break
       else
         index += op['end'] - op['start']
