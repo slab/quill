@@ -54,12 +54,15 @@ class SeleniumAdapter
 
   def remove_active_formatting
     @driver.switch_to.default_content
-    # TODO: Remove dropdown formats as well
     active_formats = @driver.execute_script("var actives = $('#editor-toolbar-writer > .active'); return _.map(actives, function(elem) { return $(elem).html().toLowerCase()});")
     @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     active_formats.each do |format|
       click_button_from_toolbar(format)
     end
+    select_from_dropdown('size', 'normal')
+    select_from_dropdown('family', 'san-serif')
+    select_from_dropdown('color', 'black')
+    select_from_dropdown('background', 'white')
   end
 
   def move_cursor(dest_index)
