@@ -70,7 +70,7 @@ module.exports = (grunt) ->
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'
-        src: ['chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
+        src: ['async/lib/async.js', 'chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
       lib:
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'build/lib/'

@@ -139,7 +139,7 @@ Scribe.Debug =
       length = Scribe.Debug.Test.getRandomLength() + 1
       rand = Math.random()
       if rand < 0.5
-        return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length)]}
+        return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length), {}]}
       if rand < 0.75
         return null if index + length > lengthLimit
         return {op: 'deleteAt', args: [index, length - 1]}

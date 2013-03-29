@@ -2,13 +2,15 @@ Scribe = require('./scribe')
 Tandem = require('tandem-core')
 
 
-doAt = (fn) ->
+doAt = (fn, external = false) ->
   this.doSilently( =>
-    @selection.preserve( =>
-      keepNormalized.call(this, =>
-        fn.call(this)
+    trackDelta.call(this, =>
+      @selection.preserve( =>
+        keepNormalized.call(this, =>
+          fn.call(this)
+        )
       )
-    )
+    , external)
   )
 
 initListeners = ->
@@ -100,7 +102,7 @@ keepNormalized = (fn) ->
   fn.call(this)
   @doc.rebuildDirty()
 
-trackDelta = (fn) ->
+trackDelta = (fn, external = false) ->
   oldDelta = @doc.toDelta()
   oldIndex = @selection.range.start.index if @selection.range?
   fn()
@@ -118,7 +120,9 @@ trackDelta = (fn) ->
   decompose = newDelta.decompose(oldDelta) unless decompose?
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose) unless decompose.isIdentity()
+  unless decompose.isIdentity()
+    eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
+    this.emit(eventName, decompose)
 
 update = ->
   this.doSilently( =>
@@ -216,11 +220,11 @@ class Scribe.Editor extends EventEmitter2
     super(Scribe.Editor.PRE_EVENT, eventName, args...)
     super(eventName, args...)
 
-  deleteAt: (args...) ->
+  deleteAt: (index, length, external = true) ->
     doAt.call(this, =>
-      deleteAt.apply(this, args)
+      deleteAt.call(this, index, length)
       forceTrailingNewline.call(this)
-    )
+    , external)
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -228,10 +232,10 @@ class Scribe.Editor extends EventEmitter2
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
 
-  formatAt: (args...) ->
+  formatAt: (index, length, name, value, external = true) ->
     doAt.call(this, =>
-      formatAt.apply(this, args)
-    )
+      formatAt.call(this, index, length, name, value)
+    , external)
     
   getDelta: ->
     return @doc.toDelta()
@@ -242,11 +246,11 @@ class Scribe.Editor extends EventEmitter2
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (args...) ->
+  insertAt: (index, text, formatting = {}, external = true) ->
     doAt.call(this, =>
-      insertAt.apply(this, args)
+      insertAt.call(this, index, text, formatting)
       forceTrailingNewline.call(this)
-    )
+    , external)
 
   setDelta: (delta) ->
     oldLength = delta.startLength

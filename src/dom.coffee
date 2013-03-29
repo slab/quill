@@ -61,16 +61,17 @@ Scribe.DOM =
     if node.nodeType == node.TEXT_NODE
       after = node.splitText(offset)
       return [node, after, true]
-    left = node
-    right = node.cloneNode(false)
-    node.parentNode.insertBefore(right, left.nextSibling)
-    [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
-    [childLeft, childRight] = Scribe.DOM.splitNode(child, offset)
-    while childRight != null
-      nextRight = childRight.nextSibling
-      right.appendChild(childRight)
-      childRight = nextRight
-    return [left, right, true]
+    else
+      left = node
+      right = node.cloneNode(false)
+      node.parentNode.insertBefore(right, left.nextSibling)
+      [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
+      [childLeft, childRight] = Scribe.DOM.splitNode(child, offset)
+      while childRight != null
+        nextRight = childRight.nextSibling
+        right.appendChild(childRight)
+        childRight = nextRight
+      return [left, right, true]
 
   switchTag: (node, newTag) ->
     return if node.tagName == newTag

@@ -10,7 +10,7 @@ class Scribe.Attribution
           op.attributes['author'] = @authorId if Tandem.InsertOp.isInsert(op)
         )
         delta.apply((index, text) =>
-          @editor.formatAt(index, text.length, 'author', @authorId)
+          @editor.formatAt(index, text.length, 'author', @authorId, false)
         )
     )
     this.addAuthor(@authorId, color)

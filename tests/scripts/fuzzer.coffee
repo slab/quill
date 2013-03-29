@@ -28,7 +28,8 @@ $(document).ready( ->
       operation = Scribe.Debug.Test.getRandomOperation(writer, ALPHABET, FORMATS)
       if operation?
         try
-          writer[operation.op].apply(writer, operation.args)
+          args = operation.args.concat([false])
+          writer[operation.op].apply(writer, args)
           writerDelta = writer.getDelta()
           readerDelta = reader.getDelta()
           if writerDelta.isEqual(readerDelta)
