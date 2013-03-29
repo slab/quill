@@ -14,7 +14,6 @@ _applyDelta = (delta) ->
 
 _buildCursor = (userId, name, color) ->
   cursor = @container.ownerDocument.createElement('span')
-  cursor.setAttribute('contenteditable', false)
   cursor.classList.add('cursor')
   cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
@@ -28,41 +27,40 @@ _buildCursor = (userId, name, color) ->
   cursor.appendChild(inner)
   return cursor
 
-_moveCursor = (cursorNode, referenceNode) ->
-  cursorNode.style.top = referenceNode.offsetTop
-  cursorNode.style.left = referenceNode.offsetLeft
-  cursorNode.querySelector('.cursor-inner').style.height = referenceNode.offsetHeight
+_moveCursor = (cursor, referenceNode) ->
+  cursor.elem.style.top = referenceNode.offsetTop
+  cursor.elem.style.left = referenceNode.offsetLeft
+  cursor.elem.querySelector('.cursor-inner').style.height = referenceNode.offsetHeight
+  if parseInt(cursor.elem.style.top) <= 5
+    cursor.elem.classList.add('top')
+  else
+    cursor.elem.classList.remove('top')
 
 _setCursor = (userId, index, name, color) ->
-  @cursors[userId] = { name: name, color: color, userId: userId } unless @cursors[userId]?
+  unless @cursors[userId]?
+    @cursors[userId] = { name: name, color: color, userId: userId }
+    @cursors[userId].elem = _buildCursor.call(this, userId, name, color)
+    @container.appendChild(@cursors[userId].elem)
   @cursors[userId].index = index
-  cursor = @container.querySelector("##{Scribe.Editor.CURSOR_PREFIX}#{userId}")
-  unless cursor?
-    cursor = _buildCursor.call(this, userId, name, color)
-    @container.appendChild(cursor)
   @editor.doSilently( =>
     position = new Scribe.Position(@editor, index)
     span = @container.ownerDocument.createElement('span')
     span.textContent = Scribe.Constants.NOBREAK_SPACE
     if !position.leafNode.firstChild?
       position.leafNode.parentNode.insertBefore(span, position.leafNode)
-      _moveCursor.call(this, cursor, span)
+      _moveCursor.call(this, @cursors[userId], span)
     else
       [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         rightText.parentNode.insertBefore(span, rightText)
-        _moveCursor.call(this, cursor, span)
+        _moveCursor.call(this, @cursors[userId], span)
       else if leftText?
         leftText.parentNode.parentNode.appendChild(span)
-        _moveCursor.call(this, cursor, span)
+        _moveCursor.call(this, @cursors[userId], span)
     span.parentNode.removeChild(span)
     position.leafNode.normalize() if didSplit
-    if parseInt(cursor.style.top) <= 5
-      cursor.classList.add('top')
-    else
-      cursor.classList.remove('top')
   )
-  return cursor
+  return @cursors[userId]
 
 
 class Scribe.MultiCursor
@@ -97,6 +95,9 @@ class Scribe.MultiCursor
       '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
       '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
     })
+    this.initListeners()
+
+  initListeners: ->
     @editor.on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
@@ -115,11 +116,11 @@ class Scribe.MultiCursor
 
   setCursor: (userId, index, name, color) ->
     cursor = _setCursor.call(this, userId, index, name, color)
-    cursor.classList.remove('hidden')
-    clearTimeout(@cursors[userId].timer)
-    @cursors[userId].timer = setTimeout( =>
-      cursor.classList.add('hidden')
-      @cursors[userId].timer = null
+    cursor.elem.classList.remove('hidden')
+    clearTimeout(cursor.timer)
+    cursor.timer = setTimeout( =>
+      cursor.elem.classList.add('hidden')
+      cursor.timer = null
     , Scribe.MultiCursor.CURSOR_NAME_TIMEOUT)
 
   clearCursors: ->
