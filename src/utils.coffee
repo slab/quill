@@ -62,18 +62,13 @@ Scribe.Utils =
         indent = Scribe.Utils.getIndent(container)
         return if indent > 0 then ['indent', indent] else []
       when 'SPAN'
-        format = []
-        _.any(container.classList, (css) ->
+        for css in container.classList
           parts = css.split('-')
           if parts.length > 1
             key = parts[0]
             value = parts.slice(1).join('-')
-            if Scribe.Constants.SPAN_FORMATS[key]?
-              format = [key, value]
-              return true
-          return false
-        )
-        return format
+            return [key, value] if Scribe.Constants.SPAN_FORMATS[key]?
+        return []
       else
         return []
         

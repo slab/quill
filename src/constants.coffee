@@ -88,6 +88,7 @@ Scribe.Constants =
   
 
 Scribe.Constants.SPAN_FORMATS =
+  'author'     : ['0', '1']
   'background' : Scribe.Constants.FONT_BACKGROUNDS
   'color'      : Scribe.Constants.FONT_COLORS
   'family'     : Scribe.Constants.FONT_FAMILIES

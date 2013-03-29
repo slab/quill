@@ -4,11 +4,9 @@ Tandem = require('tandem-core')
 
 doAt = (fn) ->
   this.doSilently( =>
-    trackDelta.call(this, =>
-      @selection.preserve( =>
-        keepNormalized.call(this, =>
-          fn.call(this)
-        )
+    @selection.preserve( =>
+      keepNormalized.call(this, =>
+        fn.call(this)
       )
     )
   )
