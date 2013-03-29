@@ -9,8 +9,10 @@ class Scribe.Attribution
         _.each(delta.ops, (op) =>
           op.attributes['author'] = @authorId if Tandem.InsertOp.isInsert(op)
         )
-        delta.apply((index, text) =>
-          @editor.formatAt(index, text.length, 'author', @authorId, false)
+        _.defer( =>
+          delta.apply((index, text) =>
+            @editor.formatAt(index, text.length, 'author', @authorId, false)
+          )
         )
     )
     this.addAuthor(@authorId, color)
