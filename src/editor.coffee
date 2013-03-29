@@ -165,20 +165,17 @@ class Scribe.Editor extends EventEmitter2
     @options = _.extend(Scribe.Editor.DEFAULTS, options)
     @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
-    @enabled = false
     this.reset(true)
     this.enable() if @options.enabled
 
   disable: ->
     this.doSilently( =>
       @root.setAttribute('contenteditable', false)
-      @enabled = false
     )
 
   enable: ->
     this.doSilently( =>
       @root.setAttribute('contenteditable', true)
-      @enabled = true
     )
 
   reset: (keepHTML = false) ->

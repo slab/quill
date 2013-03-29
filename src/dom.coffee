@@ -13,6 +13,18 @@ Scribe.DOM =
       return this.canEdit(node)
     )
 
+  findDeepestNode: (node, offset) ->
+    if node.firstChild?
+      for child in Scribe.DOM.filterUneditable(node.childNodes)
+        length = Scribe.Utils.getNodeLength(child)
+        if offset < length
+          return Scribe.DOM.findDeepestNode(child, offset)
+        else
+          offset -= length
+      return Scribe.DOM.findDeepestNode(child, offset + length)
+    else
+      return [node, offset]
+
   isExternal: (node) ->
     return node?.classList?.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
@@ -54,14 +66,12 @@ Scribe.DOM =
       after = node.splitText(offset)
       return [node, after, true]
     left = node
-    right = node.cloneNode()
+    right = node.cloneNode(false)
     node.parentNode.insertBefore(right, left.nextSibling)
     if Scribe.DOM.isTextNodeParent(node)
-      # Text split
-      beforeText = node.textContent.substring(0, offset)
-      afterText = node.textContent.substring(offset)
-      left.textContent = beforeText
-      right.textContent = afterText
+      right.textContent = node.textContent.substring(offset)
+      [leftText, textOffset] = Scribe.DOM.findDeepestNode(left, offset)
+      leftText.textContent = leftText.textContent.substring(0, textOffset)
       return [left, right, true]
     else
       # Node split

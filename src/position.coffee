@@ -3,20 +3,8 @@ Scribe = require('./scribe')
 
 # TODO fix this entire file, esp findDeepestNode
 class Scribe.Position
-  @findDeepestNode: (node, offset) ->
-    if node.firstChild?
-      for child in Scribe.DOM.filterUneditable(node.childNodes)
-        length = Scribe.Utils.getNodeLength(child)
-        if offset < length
-          return Scribe.Position.findDeepestNode(child, offset)
-        else
-          offset -= length
-      return Scribe.Position.findDeepestNode(child, offset + length)
-    else
-      return [node, offset]
-
   @findLeafNode: (editor, node, offset) ->
-    [node, offset] = Scribe.Position.findDeepestNode(node, offset)
+    [node, offset] = Scribe.DOM.findDeepestNode(node, offset)
     if node.nodeType == node.TEXT_NODE
       offset = Scribe.Position.getIndex(node, offset, node.parentNode)
       node = node.parentNode
