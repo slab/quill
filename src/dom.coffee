@@ -28,10 +28,6 @@ Scribe.DOM =
   isExternal: (node) ->
     return node?.classList?.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
 
-  isTextNodeParent: (node) ->
-    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
-    return childNodes.length == 1 && childNodes[0].nodeType == node.TEXT_NODE
-
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
     return node1 if !node2?
@@ -68,20 +64,13 @@ Scribe.DOM =
     left = node
     right = node.cloneNode(false)
     node.parentNode.insertBefore(right, left.nextSibling)
-    if Scribe.DOM.isTextNodeParent(node)
-      right.textContent = node.textContent.substring(offset)
-      [leftText, textOffset] = Scribe.DOM.findDeepestNode(left, offset)
-      leftText.textContent = leftText.textContent.substring(0, textOffset)
-      return [left, right, true]
-    else
-      # Node split
-      [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
-      [childLeft, childRight] = Scribe.DOM.splitNode(child, offset)
-      while childRight != null
-        nextRight = childRight.nextSibling
-        right.appendChild(childRight)
-        childRight = nextRight
-      return [left, right, true]
+    [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
+    [childLeft, childRight] = Scribe.DOM.splitNode(child, offset)
+    while childRight != null
+      nextRight = childRight.nextSibling
+      right.appendChild(childRight)
+      childRight = nextRight
+    return [left, right, true]
 
   switchTag: (node, newTag) ->
     return if node.tagName == newTag
