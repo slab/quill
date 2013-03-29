@@ -65,7 +65,7 @@ _setCursor = (userId, index, name, color) ->
   return cursor
 
 
-class Scribe.MultiCursorManager
+class Scribe.MultiCursor
   @CURSOR_NAME_TIMEOUT: 2500
 
   constructor: (@editor) ->
@@ -122,7 +122,7 @@ class Scribe.MultiCursorManager
     @cursors[userId].timer = setTimeout( =>
       cursor.classList.add('hidden')
       @cursors[userId].timer = null
-    , Scribe.MultiCursorManager.CURSOR_NAME_TIMEOUT)
+    , Scribe.MultiCursor.CURSOR_NAME_TIMEOUT)
 
   clearCursors: ->
     while @container.firstChild?

@@ -15,6 +15,7 @@ require('./renderer')
 require('./selection')
 require('./undo-manager')
 require('./utils')
+require('./modules/attribution')
 require('./modules/cursor')
 require('./modules/toolbar')
 

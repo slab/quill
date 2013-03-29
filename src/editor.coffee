@@ -159,6 +159,7 @@ class Scribe.Editor extends EventEmitter2
     styles: {}
   @events: 
     API_TEXT_CHANGE  : 'api-text-change'
+    PRE_EVENT        : 'pre-event'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
@@ -215,6 +216,10 @@ class Scribe.Editor extends EventEmitter2
         forceTrailingNewline.call(this)
       )
     )
+
+  emit: (eventName, args...) ->
+    super(Scribe.Editor.PRE_EVENT, eventName, args...)
+    super(eventName, args...)
 
   deleteAt: (args...) ->
     doAt.call(this, =>
