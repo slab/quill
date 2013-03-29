@@ -3,7 +3,7 @@ Tandem = require('tandem-core')
 
 
 class Scribe.Attribution
-  constructor: (@editor, @authorId, color) ->
+  constructor: (@editor, @authorId, color, enabled = false) ->
     @editor.on(Scribe.Editor.PRE_EVENT, (eventName, delta) =>
       if eventName == Scribe.Editor.events.TEXT_CHANGE
         _.each(delta.ops, (op) =>
@@ -14,10 +14,18 @@ class Scribe.Attribution
         )
     )
     this.addAuthor(@authorId, color)
+    this.enable() if enabled
 
   addAuthor: (id, color) ->
     styles = {}
-    styles[".editor .author-#{id}"] = { "background-color": "#{color}" }
+    styles[".editor.attribution .author-#{id}"] = { "background-color": "#{color}" }
     @editor.renderer.addStyles(styles)
+
+  enable: ->
+    @editor.root.classList.add('attribution')
+
+  disable: ->
+    @editor.root.classList.remove('attribution')
+
 
 module.exports = Scribe
