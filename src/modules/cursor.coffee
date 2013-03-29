@@ -3,8 +3,8 @@ Scribe = require('../scribe')
 
 _applyDelta = (delta) ->
   _.defer( =>
-    delta.apply((index, text) =>
-      this.shiftCursors(index, text.length)
+    delta.apply((index, text, formatting) =>
+      this.shiftCursors(index, text.length, formatting['author'])
     , (index, length) =>
       this.shiftCursors(index, -1 * length)
     , (index, length, name, value) =>
@@ -104,16 +104,14 @@ class Scribe.MultiCursor
       _applyDelta.call(this, delta)
     )
 
-  shiftCursors: (index, length) ->
+  shiftCursors: (index, length, authorId) ->
     _.each(@cursors, (cursor, id) =>
-      return unless cursor?
-      if (cursor.index >= index)
-        if length > 0
-          _setCursor.call(this, cursor.userId, cursor.index + length, cursor.name, cursor.color)   # Insert
-        else
-          # Delete needs to handle special case: start|cursor|end vs normal case: start|end|cursor
-          _setCursor.call(this, cursor.userId, cursor.index + Math.max(length, index - cursor.index), cursor.name, cursor.color)
+      if cursor and cursor.index > index
+        # Needs to handle special case: start|cursor|end vs normal case: start|end|cursor
+        _setCursor.call(this, cursor.userId, cursor.index + Math.max(length, index - cursor.index), cursor.name, cursor.color)
     )
+    cursor = @cursors[authorId]
+    _setCursor.call(this, cursor.userId, index + length, cursor.name, cursor.color) if cursor?
 
   setCursor: (userId, index, name, color) ->
     cursor = _setCursor.call(this, userId, index, name, color)
