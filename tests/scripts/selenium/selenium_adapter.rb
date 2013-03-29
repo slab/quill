@@ -19,16 +19,24 @@ class SeleniumAdapter
     index = 0
     delta['ops'].each do |op|
       if op['value']
+        puts "Inserting #{op['value']} at #{index}"
         move_cursor(index)
         type_text(op['value'])
+        # Remove off any prexisting formatting that Scribe applied
+        move_cursor(index)
+        highlight(op['value'].length)
+        remove_active_formatting
+        move_cursor(0) # Kludge to remove the highlighting
         break
       elsif op['start'] > index
         move_cursor(index)
         delete_length = op['start'] - index
+        puts "Deleting #{delete_length} at #{index}"
         delete(delete_length)
         break
       elsif !op['attributes'].empty?
         length = op['end'] - op['start']
+        puts "Formatting #{length} starting at #{index} with #{op['attributes']}"
         move_cursor(index)
         highlight(length)
         op['attributes'].each do |attr, val|
@@ -43,6 +51,16 @@ class SeleniumAdapter
   end
 
   private
+
+  def remove_active_formatting
+    @driver.switch_to.default_content
+    # TODO: Remove dropdown formats as well
+    active_formats = @driver.execute_script("var actives = $('#editor-toolbar-writer > .active'); _.map(actives, function(elem) { return $(elem).html().toLower()}); return actives")
+    active_formats.each do |format|
+      click_button_from_toolbar(format)
+    end
+    @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
+  end
 
   def move_cursor(dest_index)
     distance = (@cursor_pos - dest_index).abs
