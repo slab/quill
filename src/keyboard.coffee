@@ -102,7 +102,7 @@ class Scribe.Keyboard
 
   toggleFormat: (selection, format) ->
     formats = selection.getFormats()
-    @editor.selection.format(format, !formats[format])
+    @editor.selection.format(format, !formats[format], false)
 
 
 module.exports = Scribe

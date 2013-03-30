@@ -7,11 +7,14 @@ class Scribe.Attribution
     @editor.on(Scribe.Editor.PRE_EVENT, (eventName, delta) =>
       if eventName == Scribe.Editor.events.TEXT_CHANGE
         _.each(delta.ops, (op) =>
-          op.attributes['author'] = @authorId if Tandem.InsertOp.isInsert(op)
+          if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
+            op.attributes['author'] = @authorId
         )
         _.defer( =>
           delta.apply((index, text) =>
-            @editor.formatAt(index, text.length, 'author', @authorId, false)
+            @editor.formatAt(index, text.length, 'author', @authorId)
+          , (=>), (index, length, name, value) =>
+            @editor.formatAt(index, text.length, 'author', @authorId)
           )
         )
     )

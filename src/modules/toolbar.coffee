@@ -7,7 +7,7 @@ initButtonFormats = ->
     return unless button?
     button.addEventListener('click', =>
       value = !button.classList.contains('active')
-      @editor.selection.format(format, value)
+      @editor.selection.format(format, value, false)
       this.emit(Scribe.Toolbar.events.FORMAT, format, value)
     )
   )
@@ -20,7 +20,7 @@ initLinkFormat = ->
     if !linkButton.classList.contains('active')
       range = @editor.selection.getRange()
       value = range.getText()
-    @editor.selection.format('link', value)
+    @editor.selection.format('link', value, false)
     this.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
   )
 
@@ -30,7 +30,7 @@ initSelectFormats = ->
     return unless select?
     select.addEventListener('change', =>
       value = select.options[select.selectedIndex].value
-      @editor.selection.format(format, value)
+      @editor.selection.format(format, value, false)
       this.emit(Scribe.Toolbar.events.FORMAT, format, value)
     )
   )
