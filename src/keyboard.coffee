@@ -95,7 +95,7 @@ class Scribe.Keyboard
 
   insertText: (text) ->
     selection = @editor.getSelection()
-    @editor.insertAt(selection.start.index, text) if selection?
+    @editor.insertAt(selection.start.index, text, {}, false) if selection?
     # Make sure selection is after our text
     range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
     @editor.setSelection(range, true)
