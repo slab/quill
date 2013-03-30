@@ -110,7 +110,7 @@ trackDelta = (fn, external = false) ->
   try
     newRange = this.getSelection()
     if @selection.range? and newRange?
-      newIndex = newRange.end.index
+      newIndex = newRange.start.index
       [oldLeftDelta, oldRightDelta] = oldDelta.split(oldIndex)
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
       decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
