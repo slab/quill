@@ -10,12 +10,10 @@ class Scribe.Attribution
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
             op.attributes['author'] = @authorId
         )
-        _.defer( =>
-          delta.apply((index, text) =>
-            @editor.formatAt(index, text.length, 'author', @authorId)
-          , (=>), (index, length, name, value) =>
-            @editor.formatAt(index, text.length, 'author', @authorId)
-          )
+        delta.apply((index, text) =>
+          @editor.formatAt(index, text.length, 'author', @authorId)
+        , (=>), (index, length, name, value) =>
+          @editor.formatAt(index, text.length, 'author', @authorId)
         )
     )
     this.addAuthor(@authorId, color)
