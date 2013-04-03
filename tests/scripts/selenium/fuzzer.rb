@@ -45,6 +45,20 @@ def js_set_doc_delta(driver)
   execute_js driver, "window.docDelta = writer.getDelta();"
 end
 
+def read_deltas_from_file(file)
+  deltas = []
+  begin
+    File.open("fails/#{file}") do |f|
+      f.readlines.each do |line|
+        deltas << line.chomp!
+      end
+    end
+    return deltas
+  rescue
+    raise "Please provide a valid file name to replay a fuzzer run."
+  end
+end
+
 def write_deltas_to_file(doc_delta, rand_delta)
   FileUtils.mkpath('./fails') unless File.directory?('./fails')
   File.open("./fails/#{Time.now.to_i.to_s}", 'w+') do |f|
@@ -70,9 +84,12 @@ end
 ################################################################################
 # WebDriver setup
 ################################################################################
-puts "Usage: ruby _browserdriver_ _editor_url_" unless ARGV.length == 2
+unless ARGV.length == 2 or ARGV.length == 3
+  puts "Usage: ruby _browserdriver_ _editor_url_ _fuzzer_file_"
+end
 browserdriver = ARGV[0].to_sym
 editor_url = ARGV[1]
+replay = ARGV[2]
 driver = Selenium::WebDriver.for browserdriver
 driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
@@ -80,10 +97,14 @@ writer = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, writer
+debugger
 
 ################################################################################
 # Fuzzer logic
 ################################################################################
+if replay
+  doc_delta, rand_delta = read_deltas_from_file(replay)
+end
 js_set_doc_delta(driver)
 NUM_EDITS.times do |i|
    js_set_random_delta(driver)
