@@ -24,6 +24,16 @@ def js_get_random_delta(driver)
   return execute_js driver, "return window.randomDelta;"
 end
 
+def js_set_scribe_delta(driver)
+  return execute_js driver, "window.writer.setDelta(window.docDelta)"
+end
+
+def js_set_delta_replay(driver, delta, delta_ref)
+  # TODO: Fix string escaping issue
+  src = "return (function() {var d = JSON.parse(arguments[0]); window[arguments[1]] = new window.Tandem.Delta(d.startLength, d.endLength, d.ops);})()"
+  execute_js driver, src, [delta, delta_ref]
+end
+
 def js_set_random_delta(driver)
   src = "window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0], arguments[1]);"
   execute_js driver, src, [ALPHABET, 1]
@@ -71,7 +81,7 @@ def check_consistency(driver)
   driver.switch_to.default_content
   src = "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta());"
   success = driver.execute_script src
-  if not success
+  if true #not success
     doc_delta = js_get_doc_delta_as_str(driver)
     rand_delta = js_get_random_delta_as_str(driver)
     after_delta = js_get_cur_doc_delta_as_str(driver)
@@ -104,13 +114,20 @@ debugger
 ################################################################################
 if replay
   doc_delta, rand_delta = read_deltas_from_file(replay)
-end
-js_set_doc_delta(driver)
-NUM_EDITS.times do |i|
-   js_set_random_delta(driver)
-   random_delta = js_get_random_delta(driver)
-   puts i if i % 10 == 0
-   adapter.apply_delta(random_delta)
-   check_consistency(driver)
-   js_set_doc_delta(driver)
+  js_set_delta_replay(driver, doc_delta, 'docDelta')
+  js_set_delta_replay(driver, rand_delta, 'randomDelta')
+  js_set_scribe_delta(driver)
+  random_delta = js_get_random_delta(driver)
+  driver.apply_delta(random_delta)
+  check_consistency(driver)
+else
+  js_set_doc_delta(driver)
+  NUM_EDITS.times do |i|
+     js_set_random_delta(driver)
+     random_delta = js_get_random_delta(driver)
+     puts i if i % 10 == 0
+     adapter.apply_delta(random_delta)
+     check_consistency(driver)
+     js_set_doc_delta(driver)
+  end
 end
