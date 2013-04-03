@@ -47,8 +47,13 @@ end
 
 def check_consistency(driver)
   driver.switch_to.default_content
-  success = driver.execute_script "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta());"
-  raise "doc_delta: #{js_get_doc_delta_as_str(driver)}, rand_delta: #{js_get_random_delta_as_str(driver)}, actual: #{js_get_cur_doc_delta_as_str(driver)}" unless success
+  src = "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta());"
+  success = driver.execute_script src
+  if not success
+    doc_delta = js_get_doc_delta_as_str(driver)
+    rand_delta = js_get_random_delta_as_str(driver)
+    after_delta = js_get_cur_doc_delta_as_str(driver)
+    raise "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
