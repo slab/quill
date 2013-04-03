@@ -45,6 +45,14 @@ def js_set_doc_delta(driver)
   execute_js driver, "window.docDelta = writer.getDelta();"
 end
 
+def write_deltas_to_file(doc_delta, rand_delta)
+  FileUtils.mkpath('./fails') unless File.directory?('./fails')
+  File.open("./fails/#{Time.now.to_i.to_s}", 'w+') do |f|
+    f.puts doc_delta
+    f.puts rand_delta
+  end
+end
+
 def check_consistency(driver)
   driver.switch_to.default_content
   src = "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta());"
@@ -53,7 +61,9 @@ def check_consistency(driver)
     doc_delta = js_get_doc_delta_as_str(driver)
     rand_delta = js_get_random_delta_as_str(driver)
     after_delta = js_get_cur_doc_delta_as_str(driver)
+    write_deltas_to_file(doc_delta, rand_delta)
     raise "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
+  end
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
