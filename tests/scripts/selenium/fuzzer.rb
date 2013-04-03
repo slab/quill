@@ -17,7 +17,7 @@ def execute_js(driver, src, args = nil)
 end
 
 def js_get_random_delta_as_str(driver)
-  return execute_js driver, "return window.randomDelta.toString();"
+  return execute_js driver, "return JSON.stringify(window.randomDelta);"
 end
 
 def js_get_random_delta(driver)
@@ -30,11 +30,11 @@ def js_set_random_delta(driver)
 end
 
 def js_get_cur_doc_delta_as_str(driver)
-  return execute_js driver, "return writer.getDelta().toString();"
+  return execute_js driver, "return JSON.stringify(writer.getDelta());"
 end
 
 def js_get_doc_delta_as_str(driver)
-  return execute_js driver, "return window.docDelta.toString();"
+  return execute_js driver, "return JSON.stringify(window.docDelta);"
 end
 
 def js_get_doc_delta(driver)
