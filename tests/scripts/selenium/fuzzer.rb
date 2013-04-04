@@ -117,7 +117,7 @@ if replay
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
   js_set_scribe_delta(driver)
   random_delta = js_get_random_delta(driver)
-  driver.apply_delta(random_delta)
+  adapter.apply_delta(random_delta)
   check_consistency(driver)
 else
   js_set_doc_delta(driver)
