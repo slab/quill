@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.3.3'
+      version: '0.3.4'
 
     clean: ['build']
 
@@ -113,7 +113,7 @@ module.exports = (grunt) ->
         tasks: ['sass:demo']
       src:
         files: ['src/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffeeify:src', 'copy:build']
+        tasks: ['coffeeify:src', 'concat:scribe_all', 'copy:build']
       unit:
         files: ['tests/scripts/unit/*.coffee']
         tasks: ['coffee:unit']

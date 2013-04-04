@@ -3,14 +3,8 @@ Scribe = require('./scribe')
 
 Scribe.Utils =
   cleanHtml: (html, keepIdClass = false) ->
-    # Remove leading and tailing whitespace
-    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
-    # Remove whitespace between tags
-    html = html.replace(/>\s\s+</gi, '><')
-    # Remove id or class classname
+    html = Scribe.Normalizer.normalizeHtml(html)
     html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '') unless keepIdClass == true
-    # Standardize br
-    html = html.replace(/<br><\/br>/, '<br>')
     return html
 
   createContainerForFormat: (doc, name, value) ->

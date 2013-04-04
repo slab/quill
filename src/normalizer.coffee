@@ -88,11 +88,21 @@ Scribe.Normalizer =
 
   normalizeDoc: (root) ->
     root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
+    root.innerHTML = Scribe.Normalizer.normalizeHtml(root.innerHTML)
     Scribe.Normalizer.breakBlocks(root)
     _.each(Scribe.DOM.filterUneditable(root.childNodes), (child) ->
       Scribe.Normalizer.normalizeLine(child)
       Scribe.Normalizer.optimizeLine(child)
     )
+
+  normalizeHtml: (html) ->
+    # Remove leading and tailing whitespace
+    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+    # Remove whitespace between tags
+    html = html.replace(/\>\s+\</g, '><')
+    # Standardize br
+    html = html.replace(/<br><\/br>/, '<br>')
+    return html
 
   normalizeLine: (lineNode) ->
     childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
