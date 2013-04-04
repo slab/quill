@@ -76,15 +76,15 @@ def write_deltas_to_file(doc_delta, rand_delta)
   end
 end
 
-def check_consistency(driver)
+def check_consistency(driver, replaying)
   driver.switch_to.default_content
   src = "return window.docDelta.compose(window.randomDelta).isEqual(writer.getDelta());"
   success = driver.execute_script src
-  if true #not success
+  if not success
     doc_delta = js_get_doc_delta_as_str(driver)
     rand_delta = js_get_random_delta_as_str(driver)
     after_delta = js_get_cur_doc_delta_as_str(driver)
-    write_deltas_to_file(doc_delta, rand_delta)
+    write_deltas_to_file(doc_delta, rand_delta) unless replaying
     raise "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
   end
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
@@ -118,7 +118,7 @@ if replay
   js_set_scribe_delta(driver)
   random_delta = js_get_random_delta(driver)
   adapter.apply_delta(random_delta)
-  check_consistency(driver)
+  check_consistency(driver, replay)
 else
   js_set_doc_delta(driver)
   NUM_EDITS.times do |i|
@@ -126,7 +126,7 @@ else
      random_delta = js_get_random_delta(driver)
      puts i if i % 10 == 0
      adapter.apply_delta(random_delta)
-     check_consistency(driver)
+     check_consistency(driver, replay)
      js_set_doc_delta(driver)
   end
 end
