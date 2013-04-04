@@ -1,5 +1,5 @@
 ALPHABET = "abcdefghijklmnopqrstuvwxyz\n\n\n\n\n\t\t\t   ".split('')
-FORMATS = _.extend({}, Scribe.Constants.SPAN_FORMATS, Scribe.Constants.TAG_FORMATS)
+FORMATS = _.extend({}, Scribe.Leaf.SPAN_FORMATS, Scribe.Leaf.TAG_FORMATS)
 NUM_OPERATIONS = 500
 
 seed = Math.random()

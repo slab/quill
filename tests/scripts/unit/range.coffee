@@ -197,7 +197,7 @@ describe('Range', ->
         editor = reset()
         range = new Scribe.Range(editor, test.start, test.end)
         expect(range.getText()).to.equal(test.text)
-        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Constants.DEFAULT_LEAF_FORMATS, test.formats))
+        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Leaf.DEFAULT_FORMATS, test.formats))
       )
     )
   )

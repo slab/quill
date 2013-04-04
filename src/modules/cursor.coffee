@@ -15,7 +15,7 @@ _applyDelta = (delta) ->
 _buildCursor = (userId, name, color) ->
   cursor = @container.ownerDocument.createElement('span')
   cursor.classList.add('cursor')
-  cursor.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+  cursor.classList.add(Scribe.DOM.EXTERNAL_CLASS)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
   inner = @container.ownerDocument.createElement('span')
   inner.classList.add('cursor-inner')
@@ -45,7 +45,7 @@ _setCursor = (userId, index, name, color) ->
   @editor.doSilently( =>
     position = new Scribe.Position(@editor, index)
     span = @container.ownerDocument.createElement('span')
-    span.textContent = Scribe.Constants.NOBREAK_SPACE
+    span.textContent = Scribe.DOM.NOBREAK_SPACE
     if !position.leafNode.firstChild?
       position.leafNode.parentNode.insertBefore(span, position.leafNode)
       _moveCursor.call(this, @cursors[userId], span)

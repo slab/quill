@@ -72,7 +72,7 @@ class Scribe.Keyboard
       if increment
         indent = if _.isNumber(line.formats[format]) then line.formats[format] else (if line.formats[format] then 1 else 0)
         indent += increment
-        indent = Math.min(Math.max(indent, Scribe.Constants.MIN_INDENT), Scribe.Constants.MAX_INDENT)
+        indent = Math.min(Math.max(indent, Scribe.Line.MIN_INDENT), Scribe.Line.MAX_INDENT)
       else
         indent = false
       index = Position.getIndex(line.node, 0)

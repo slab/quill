@@ -41,7 +41,7 @@ Scribe.Utils =
     return node
 
   getFormatDefault: (name) ->
-    return Scribe.Constants.DEFAULT_LEAF_FORMATS[name] or false
+    return Scribe.Leaf.DEFAULT_FORMATS[name] or false
 
   getFormatForContainer: (container) ->
     switch container.tagName
@@ -61,7 +61,7 @@ Scribe.Utils =
           if parts.length > 1
             key = parts[0]
             value = parts.slice(1).join('-')
-            return [key, value] if Scribe.Constants.SPAN_FORMATS[key]?
+            return [key, value] if Scribe.Leaf.SPAN_FORMATS[key]?
         return []
       else
         return []
@@ -130,7 +130,7 @@ Scribe.Utils =
       position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
 
   moveExternal: (source, destParent, destRef) ->
-    externalNodes = _.clone(source.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    externalNodes = _.clone(source.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
     _.each(externalNodes, (node) ->
       destParent.insertBefore(node, destRef)
     )
@@ -148,7 +148,7 @@ Scribe.Utils =
     return ret
 
   removeExternal: (root) ->
-    extNodes = _.clone(root.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    extNodes = _.clone(root.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
     _.each(extNodes, (node) ->
       node.parentNode.removeChild(node) if node.parentNode?
     )

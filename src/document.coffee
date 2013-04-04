@@ -12,7 +12,7 @@ class Scribe.Document
     return this.insertLineBefore(lineNode, null)
 
   cleanNode: (lineNode) ->
-    return if lineNode.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return if lineNode.classList.contains(Scribe.DOM.EXTERNAL_CLASS)
     line = this.findLine(lineNode)
     if line? && this.updateLine(line)
       lineNode.classList.remove(Scribe.Line.DIRTY_CLASS)

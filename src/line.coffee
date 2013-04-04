@@ -36,6 +36,9 @@ class Scribe.Line extends LinkedList.Node
   @FORMATS:
     align: ['center', 'justify', 'left', 'right']
 
+  @MAX_INDENT: 9
+  @MIN_INDENT: 1    # Smallest besides not having an indent at all
+
 
   @isLineNode: (node) ->
     return node? && node.classList? && node.classList.contains(Scribe.Line.CLASS_NAME)

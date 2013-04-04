@@ -1,4 +1,3 @@
-require('./constants')
 require('./debug')
 require('./document')
 require('./dom')

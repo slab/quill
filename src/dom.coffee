@@ -2,6 +2,9 @@ Scribe = require('./scribe')
 
 
 Scribe.DOM = 
+  EXTERNAL_CLASS: "ext"
+  NOBREAK_SPACE:  "\uFEFF"
+
   canEdit: (node) ->
     ancestor = Scribe.Utils.findAncestor(node, (node) =>
       this.isExternal(node)
@@ -26,7 +29,7 @@ Scribe.DOM =
       return [node, offset]
 
   isExternal: (node) ->
-    return node?.classList?.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+    return node?.classList?.contains(Scribe.DOM.EXTERNAL_CLASS)
 
   mergeNodes: (node1, node2) ->
     return node2 if !node1?

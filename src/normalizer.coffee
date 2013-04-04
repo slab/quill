@@ -2,10 +2,38 @@ Scribe = require('./scribe')
 
 
 Scribe.Normalizer =
+  # Missing rule implies removal
+  LINE_RULES: {
+    'A'         : {}
+    'B'         : {}
+    'BR'        : {}
+    'BIG'       : {rename: 'span'}
+    'CENTER'    : {rename: 'span'}
+    'DEL'       : {rename: 's'}
+    'EM'        : {rename: 'i'}
+    'H1'        : {rename: 'div'}
+    'H2'        : {rename: 'div'}
+    'H3'        : {rename: 'div'}
+    'H4'        : {rename: 'div'}
+    'H5'        : {rename: 'div'}
+    'H6'        : {rename: 'div'}
+    'I'         : {}
+    'INS'       : {rename: 'span'}
+    'LI'        : {}
+    'OL'        : {}
+    'S'         : {}
+    'SMALL'     : {rename: 'span'}
+    'SPAN'      : {}
+    'STRIKE'    : {rename: 's'}
+    'STRONG'    : {rename: 'b'}
+    'U'         : {}
+    'UL'        : {}
+  }
+
   applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
-        rules = Scribe.Constants.LINE_RULES[node.tagName]
+        rules = Scribe.Normalizer.LINE_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
@@ -141,7 +169,7 @@ Scribe.Normalizer =
   removeNoBreak: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node) =>
       if node.nodeType == node.TEXT_NODE
-        node.textContent = node.textContent.split(Scribe.Constants.NOBREAK_SPACE).join('')
+        node.textContent = node.textContent.split(Scribe.DOM.NOBREAK_SPACE).join('')
       return node
     )
 

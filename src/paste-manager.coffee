@@ -24,6 +24,7 @@ class Scribe.PasteManager
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
+        console.log @container.innerHTML
         Scribe.Utils.removeExternal(@container)
         Scribe.Utils.removeStyles(@container)
         doc = new Scribe.Document(@container)

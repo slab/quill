@@ -87,7 +87,7 @@ class Scribe.Selection
     savedSel = rangy.saveSelection(@editor.contentWindow)
     markers = _getMarkers(savedSel)
     _.each(markers, (marker) ->
-      marker.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) 
+      marker.classList.add(Scribe.DOM.EXTERNAL_CLASS) 
     )
     return savedSel
 
