@@ -29,8 +29,7 @@ def js_set_scribe_delta(driver)
 end
 
 def js_set_delta_replay(driver, delta, delta_ref)
-  # TODO: Fix string escaping issue
-  src = "return (function() {var d = JSON.parse(arguments[0]); window[arguments[1]] = new window.Tandem.Delta(d.startLength, d.endLength, d.ops);})()"
+  src = "return (function(docDelta, deltaRef) {var d = JSON.parse(docDelta); window[deltaRef] = new window.Tandem.Delta(d.startLength, d.endLength, d.ops);})(arguments[0], arguments[1])"
   execute_js driver, src, [delta, delta_ref]
 end
 
