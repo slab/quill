@@ -70,10 +70,12 @@ end
 
 def write_deltas_to_file(doc_delta, rand_delta)
   FileUtils.mkpath('./fails') unless File.directory?('./fails')
-  File.open("./fails/#{Time.now.to_i.to_s}", 'w+') do |f|
+  file_path = "./fails/#{Time.now.to_i.to_s}"
+  File.open(file_path, 'w+') do |f|
     f.puts doc_delta
     f.puts rand_delta
   end
+  puts "Fuzzer failed. Writing state to #{file_path} for replays."
 end
 
 def check_consistency(driver, replaying)
@@ -106,7 +108,6 @@ writer = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, writer
-debugger
 
 ################################################################################
 # Fuzzer logic

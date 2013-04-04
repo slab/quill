@@ -2,8 +2,6 @@
 # TODO's:
 # - Improve error handling
 # - Improve performance
-# - Add logic so that if a test fails, it's easy to reproduce the failing
-# - behavior
 # - Some of this code is not the Ruby way; fix that.
 ################################################################################
 class SeleniumAdapter
