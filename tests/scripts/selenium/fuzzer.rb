@@ -1,4 +1,3 @@
-require 'debugger'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
 
@@ -116,8 +115,11 @@ if replay
   doc_delta, rand_delta = read_deltas_from_file(replay)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
+  doc_delta = js_get_doc_delta(driver)
   js_set_scribe_delta(driver)
+  adapter.doc_length = doc_delta['endLength']
   random_delta = js_get_random_delta(driver)
+  random_delta_str = js_get_random_delta_as_str(driver)
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay)
 else

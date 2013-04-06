@@ -5,6 +5,7 @@
 # - Some of this code is not the Ruby way; fix that.
 ################################################################################
 class SeleniumAdapter
+  attr_accessor :doc_length
   def initialize(driver, editor)
     @cursor_pos = 0
     @driver = driver
@@ -22,8 +23,14 @@ class SeleniumAdapter
         type_text(op['value'])
         # Remove off any prexisting formatting that Scribe applied
         move_cursor(index)
-        highlight(op['value'].length)
-        remove_active_formatting
+        runs = op['value'].split "\n"
+        runs.each do |run|
+          highlight(run.length)
+          remove_active_formatting
+          move_cursor(0) # Kludge to remove highlighting
+          move_cursor(index + run.length + 1) # +1 to account for \n
+          index += run.length + 1
+        end
         move_cursor(0) # Kludge to remove the highlighting
         break
       elsif op['start'] > index
