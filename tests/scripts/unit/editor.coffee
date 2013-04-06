@@ -67,6 +67,16 @@ describe('Editor', ->
   )
 
 
+  describe('setDelta', ->
+    deltaTest = new Scribe.Test.DeltaTest((editor) ->
+      editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
+    )
+
+    deltaTest.run('Empty', '<div><br></div>', '<div><span>Test</span></div>')
+
+    deltaTest.run('Different text', '<div><span>One</span></div>', '<div><span>Test</span></div>')
+  )
+
 
   describe('Format Leaf', ->
     tests = 

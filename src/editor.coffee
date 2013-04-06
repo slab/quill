@@ -81,12 +81,6 @@ insertAt = (index, text, formatting = {}) ->
   if index == this.getLength() and @doc.lines.last.trailingNewline
     if lineTexts[lineTexts.length - 1] == ''
       lineTexts.pop()
-    else if false
-      # TODO fix this in the case of being called from applyDelta
-      addNewlineDelta = new Tandem.Delta(this.getLength(), [
-        new Tandem.RetainOp(0, this.getLength())
-        new Tandem.InsertOp("\n")
-      ])
     line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
     offset = 0
   else
@@ -94,7 +88,11 @@ insertAt = (index, text, formatting = {}) ->
   _.each(lineTexts, (lineText, i) =>
     line.insertText(offset, lineText, formatting)
     if i < lineTexts.length - 1
-      line = @doc.splitLine(line, offset + lineText.length)
+      if line.trailingNewline
+        line = @doc.splitLine(line, offset + lineText.length)
+      else
+        line.trailingNewline = true
+        line.length += 1
     offset = 0
   )
 
@@ -201,7 +199,7 @@ class Scribe.Editor extends EventEmitter2
   applyDelta: (delta, external = true) ->
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
-      return this.setDelta(delta)
+      return this.setDelta(delta, external)
     return if delta.isIdentity()
     this.doSilently( =>
       @selection.preserve( =>
@@ -252,10 +250,10 @@ class Scribe.Editor extends EventEmitter2
       forceTrailingNewline.call(this)
     , external)
 
-  setDelta: (delta) ->
+  setDelta: (delta, external = true) ->
     oldLength = delta.startLength
     delta.startLength = this.getLength()
-    this.applyDelta(delta)
+    this.applyDelta(delta, external)
     delta.startLength = oldLength
     
   setSelection: (range, silent = false) ->

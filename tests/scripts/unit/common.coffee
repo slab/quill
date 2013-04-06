@@ -67,6 +67,8 @@ class ScribeDeltaTest extends ScribeHtmlTest
         expectedEditor.setDelta(expected)
       @fn.call(null, testEditor)
       expect(testEditor.getDelta()).to.deep.equal(expectedEditor.getDelta())
+      editorHtml = Scribe.Utils.cleanHtml(testEditor.root.innerHTML)
+      expect(editorHtml, expectedHtml)
       consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
       expect(consistent).to.be.true
     )
