@@ -131,19 +131,19 @@ class SeleniumAdapter
   end
 
   def self.os
-      host_os = RbConfig::CONFIG['host_os']
-      case host_os
-      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
-        return :windows
-      when /darwin|mac os/
-        return :macosx
-      when /linux/
-        return :linux
-      when /solaris|bsd/
-        return :unix
-      else
-        raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
-      end
+    host_os = RbConfig::CONFIG['host_os']
+    case host_os
+    when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+      return :windows
+    when /darwin|mac os/
+      return :macosx
+    when /linux/
+      return :linux
+    when /solaris|bsd/
+      return :unix
+    else
+      raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+    end
   end
 
   def self.os_to_modifier()
