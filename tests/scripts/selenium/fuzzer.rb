@@ -1,3 +1,4 @@
+require 'colorize'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
 
@@ -63,7 +64,7 @@ def read_deltas_from_file(file)
     end
     return deltas
   rescue
-    raise "Please provide a valid file name to replay a fuzzer run."
+    raise "Please provide a valid file name to replay a fuzzer run.".colorize(:red)
   end
 end
 
@@ -74,7 +75,7 @@ def write_deltas_to_file(doc_delta, rand_delta)
     f.puts doc_delta
     f.puts rand_delta
   end
-  puts "Fuzzer failed. Writing state to #{file_path} for replays."
+  puts "Fuzzer failed. Writing state to #{file_path} for replays.".colorize(:red)
 end
 
 def check_consistency(driver, replaying)
@@ -95,7 +96,7 @@ end
 # WebDriver setup
 ################################################################################
 unless ARGV.length == 2 or ARGV.length == 3
-  puts "Usage: ruby _browserdriver_ _editor_url_ _fuzzer_file_"
+  puts "Usage: ruby _browserdriver_ _editor_url_ _fuzzer_file_".colorize(:blue)
 end
 browserdriver = ARGV[0].to_sym
 editor_url = ARGV[1]
@@ -127,7 +128,7 @@ else
   NUM_EDITS.times do |i|
      js_set_random_delta(driver)
      random_delta = js_get_random_delta(driver)
-     puts i if i % 10 == 0
+     puts i.to_s.colorize(:green) if i % 10 == 0
      adapter.apply_delta(random_delta)
      check_consistency(driver, replay)
      js_set_doc_delta(driver)
