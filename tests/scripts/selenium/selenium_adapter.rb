@@ -5,7 +5,9 @@
 # - Some of this code is not the Ruby way; fix that.
 ################################################################################
 class SeleniumAdapter
+
   attr_accessor :doc_length
+
   def initialize(driver, editor)
     @cursor_pos = 0
     @driver = driver
@@ -25,7 +27,11 @@ class SeleniumAdapter
         move_cursor(index)
         runs = op['value'].split "\n"
         runs.each do |run|
-          highlight(run.length)
+          if run.length == 0 # Handle leading newline
+            highlight 1
+          else
+            highlight run.length
+          end
           remove_active_formatting
           move_cursor(0) # Kludge to remove highlighting
           move_cursor(index + run.length + 1) # +1 to account for \n
