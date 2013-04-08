@@ -1,3 +1,4 @@
+require 'debugger'
 require 'colorize'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
