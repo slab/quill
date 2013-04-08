@@ -21,7 +21,7 @@ class SeleniumAdapter
         puts "Inserting #{op['value']} at #{index}"
         move_cursor(index)
         type_text(op['value'])
-        # Remove off any prexisting formatting that Scribe applied
+        # Remove any prexisting formatting that Scribe applied
         move_cursor(index)
         runs = op['value'].split "\n"
         runs.each do |run|
