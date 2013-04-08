@@ -34,8 +34,8 @@ def js_set_delta_replay(driver, delta, delta_ref)
 end
 
 def js_set_random_delta(driver)
-  src = "window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0], arguments[1]);"
-  execute_js driver, src, [ALPHABET, 1]
+  src = "window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0]);"
+  execute_js driver, src, [1]
 end
 
 def js_get_cur_doc_delta_as_str(driver)
