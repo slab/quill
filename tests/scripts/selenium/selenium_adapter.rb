@@ -27,7 +27,7 @@ class SeleniumAdapter
         move_cursor(index)
         runs = op['value'].split "\n"
         runs.each do |run|
-          if run.length > 0 # Handle leading newline
+          if run.length > 0
             highlight run.length
             remove_active_formatting
           end
