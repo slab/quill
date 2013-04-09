@@ -88,26 +88,6 @@ describe('Normalize', ->
       Scribe.Normalizer.optimizeLine(lineNode)
     )
 
-    lineTest.run('tranform equivalent styles', [
-      '<strong>Strong</strong>
-        <del>Deleted</del>
-        <em>Emphasis</em>
-        <strike>Strike</strike>
-        <b>Bold</b>
-        <i>Italic</i>
-        <s>Strike</s>
-        <u>Underline</u>'
-    ], [
-      '<b>Strong</b>
-        <s>Deleted</s>
-        <i>Emphasis</i>
-        <s>Strike</s>
-        <b>Bold</b>
-        <i>Italic</i>
-        <s>Strike</s>
-        <u>Underline</u>'
-    ])
-
     lineTest.run('merge adjacent equal nodes', 
       '<b>Bold1</b><b>Bold2</b>', 
       '<b>Bold1Bold2</b></div>'
@@ -208,6 +188,29 @@ describe('Normalize', ->
       '<div><br></div>',
       '<div><b>Two</b></div>',
     ])
+
+    docTest.run('tranform equivalent styles',
+      '<div>
+        <strong>Strong</strong>
+        <del>Deleted</del>
+        <em>Emphasis</em>
+        <strike>Strike</strike>
+        <b>Bold</b>
+        <i>Italic</i>
+        <s>Strike</s>
+        <u>Underline</u>
+      </div>'
+    , '<div>
+        <b>Strong</b>
+        <s>Deleted</s>
+        <i>Emphasis</i>
+        <s>Strike</s>
+        <b>Bold</b>
+        <i>Italic</i>
+        <s>Strike</s>
+        <u>Underline</u>
+      </div>'
+    )
   )
 
   describe('normalizeTag', ->

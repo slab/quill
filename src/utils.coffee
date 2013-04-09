@@ -116,7 +116,7 @@ Scribe.Utils =
       cur = next
 
   isBlock: (node) ->
-    return _.indexOf(Scribe.Line.BLOCK_TAGS, node.tagName) > -1
+    return _.indexOf(Scribe.Normalizer.BLOCK_TAGS, node.tagName) > -1
 
   insertExternal: (position, extNode) ->
     if position.leafNode.lastChild?

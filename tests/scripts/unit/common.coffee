@@ -56,9 +56,13 @@ class ScribeDeltaTest extends ScribeHtmlTest
       if !Tandem.Delta.isDelta(initial)
         initialHtml = Scribe.Utils.cleanHtml(buildString(@settings.template, initial))
         $('#test-container').html(initialHtml)
+      else
+        $('#test-container').html('')
       if !Tandem.Delta.isDelta(expected)
         expectedHtml = Scribe.Utils.cleanHtml(buildString(@settings.template, expected))
         $('#expected-container').html(expectedHtml)
+      else
+        $('#expected-container').html('')
       testEditor = new Scribe.Editor('test-container')
       expectedEditor = new Scribe.Editor('expected-container')
       if Tandem.Delta.isDelta(initial)

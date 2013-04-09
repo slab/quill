@@ -2,14 +2,40 @@ Scribe = require('./scribe')
 
 
 Scribe.Normalizer =
+  BLOCK_TAGS: [
+    'ADDRESS'
+    'BLOCKQUOTE'
+    'DD'
+    'DIV'
+    'DL'
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
+    'LI'
+    'OL'
+    'P'
+    'PRE'
+    'TABLE'
+    'TBODY'
+    'TD'
+    'TFOOT'
+    'TH'
+    'THEAD'
+    'TR'
+    'UL'
+  ]
+
   # Missing rule implies removal
-  LINE_RULES: {
+  TAG_RULES: {
     'A'         : {}
+    'ADDRESSS'  : {rename: 'div'}
     'B'         : {}
+    'BLOCKQUOTE': {rename: 'div'}
     'BR'        : {}
     'BIG'       : {rename: 'span'}
     'CENTER'    : {rename: 'span'}
+    'DD'        : {rename: 'div'}
     'DEL'       : {rename: 's'}
+    'DIV'       : {}
+    'DL'        : {rename: 'div'}
     'EM'        : {rename: 'i'}
     'H1'        : {rename: 'div'}
     'H2'        : {rename: 'div'}
@@ -17,23 +43,33 @@ Scribe.Normalizer =
     'H4'        : {rename: 'div'}
     'H5'        : {rename: 'div'}
     'H6'        : {rename: 'div'}
+    'HR'        : {rename: 'br'}
     'I'         : {}
     'INS'       : {rename: 'span'}
-    'LI'        : {}
-    'OL'        : {}
+    'LI'        : {rename: 'div'}
+    'OL'        : {rename: 'div'}
+    'P'         : {rename: 'div'}
+    'PRE'       : {rename: 'div'}
     'S'         : {}
     'SMALL'     : {rename: 'span'}
     'SPAN'      : {}
     'STRIKE'    : {rename: 's'}
     'STRONG'    : {rename: 'b'}
+    'TABLE'     : {rename: 'div'}
+    'TBODY'     : {rename: 'div'}
+    'TD'        : {rename: 'span'}
+    'TFOOT'     : {rename: 'div'}
+    'TH'        : {rename: 'span'}
+    'THEAD'     : {rename: 'div'}
+    'TR'        : {rename: 'div'}
     'U'         : {}
-    'UL'        : {}
+    'UL'        : {rename: 'div'}
   }
 
   applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
-        rules = Scribe.Normalizer.LINE_RULES[node.tagName]
+        rules = Scribe.Normalizer.TAG_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
@@ -47,12 +83,8 @@ Scribe.Normalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', '))), (node) ->
-      node = Scribe.DOM.switchTag(node, 'br') if node.tagName != 'BR'
+    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll('br')), (node) ->
       Scribe.Normalizer.normalizeBreak(node, root)
-    )
-    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll(Scribe.Line.BLOCK_TAGS.join(', '))), (node) ->
-      node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
     )
     _.each(Scribe.DOM.filterUneditable(root.childNodes), (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
@@ -117,6 +149,7 @@ Scribe.Normalizer =
   normalizeDoc: (root) ->
     root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
     root.innerHTML = Scribe.Normalizer.normalizeHtml(root.innerHTML)
+    Scribe.Normalizer.applyRules(root)
     Scribe.Normalizer.breakBlocks(root)
     _.each(Scribe.DOM.filterUneditable(root.childNodes), (child) ->
       Scribe.Normalizer.normalizeLine(child)
@@ -135,7 +168,6 @@ Scribe.Normalizer =
   normalizeLine: (lineNode) ->
     childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
     return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
-    this.applyRules(lineNode)
     this.removeNoBreak(lineNode)
     this.normalizeSpan(lineNode)
     this.requireLeaf(lineNode)

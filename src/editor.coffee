@@ -184,6 +184,7 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = true
     options = _.clone(@options)
     options.keepHTML = keepHTML
+    @iframeContainer.innerHTML = @root.innerHTML if @root?
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
