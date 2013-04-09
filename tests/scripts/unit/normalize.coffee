@@ -1,7 +1,8 @@
 describe('Normalize', ->
   describe('breakLine', ->
-    blockTest = new Scribe.Test.HtmlTest((container) ->
-      Scribe.Normalizer.breakLine(container.firstChild, container)
+    blockTest = new Scribe.Test.HtmlTest(
+      fn: (container) ->
+        Scribe.Normalizer.breakLine(container.firstChild, container)
     )
 
     blockTest.run('Inner divs', [
@@ -26,8 +27,9 @@ describe('Normalize', ->
   )
 
   describe('normalizeBreak', ->
-    breakTest = new Scribe.Test.HtmlTest((container) ->
-      Scribe.Normalizer.normalizeBreak(container.querySelector('br'), container)
+    breakTest = new Scribe.Test.HtmlTest(
+      fn: (container) ->
+        Scribe.Normalizer.normalizeBreak(container.querySelector('br'), container)
     )
 
     breakTest.run('Break in middle of line', [
@@ -51,8 +53,9 @@ describe('Normalize', ->
   )
 
   describe('groupBlocks', ->
-    groupTest = new Scribe.Test.HtmlTest((container) ->
-      Scribe.Normalizer.groupBlocks(container)
+    groupTest = new Scribe.Test.HtmlTest(
+      fn: (container) ->
+        Scribe.Normalizer.groupBlocks(container)
     )
 
     groupTest.run('Wrap newline', 
@@ -83,9 +86,10 @@ describe('Normalize', ->
   )
 
   describe('normalizeLine', ->
-    lineTest = new Scribe.Test.LineTest((lineNode) ->
-      Scribe.Normalizer.normalizeLine(lineNode)
-      Scribe.Normalizer.optimizeLine(lineNode)
+    lineTest = new Scribe.Test.LineTest(
+      fn: (lineNode) ->
+        Scribe.Normalizer.normalizeLine(lineNode)
+        Scribe.Normalizer.optimizeLine(lineNode)
     )
 
     lineTest.run('merge adjacent equal nodes', 
@@ -149,8 +153,9 @@ describe('Normalize', ->
   )
 
   describe('optimizeLine', ->
-    lineTest = new Scribe.Test.LineTest((container) ->
-      Scribe.Normalizer.optimizeLine(container)
+    lineTest = new Scribe.Test.LineTest(
+      fn: (container) ->
+        Scribe.Normalizer.optimizeLine(container)
     )
 
     lineTest.run('unnecessary break', 
@@ -160,8 +165,9 @@ describe('Normalize', ->
   )
 
   describe('normalizeDoc', ->
-    docTest = new Scribe.Test.HtmlTest((container) ->
-      Scribe.Normalizer.normalizeDoc(container)
+    docTest = new Scribe.Test.HtmlTest(
+      fn: (container) ->
+        Scribe.Normalizer.normalizeDoc(container)
     )
 
     docTest.run('empty string', 
@@ -224,11 +230,12 @@ describe('Normalize', ->
   )
 
   describe('normalizeTag', ->
-    attrTest = new Scribe.Test.LineTest((lineNode) ->
-      lineNode.firstChild.setAttribute('data-test', 'test')
-      lineNode.firstChild.setAttribute('width', '100px')
-      Scribe.Normalizer.normalizeLine(lineNode)
-      Scribe.Normalizer.optimizeLine(lineNode)
+    attrTest = new Scribe.Test.LineTest(
+      fn: (lineNode) ->
+        lineNode.firstChild.setAttribute('data-test', 'test')
+        lineNode.firstChild.setAttribute('width', '100px')
+        Scribe.Normalizer.normalizeLine(lineNode)
+        Scribe.Normalizer.optimizeLine(lineNode)
     )
 
     attrTest.run('strip extraneous attributes', 

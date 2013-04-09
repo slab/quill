@@ -68,8 +68,9 @@ describe('Editor', ->
 
 
   describe('setDelta', ->
-    deltaTest = new Scribe.Test.DeltaTest((editor) ->
-      editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
+    deltaTest = new Scribe.Test.DeltaTest(
+      fn: (editor) ->
+        editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
     )
 
     deltaTest.run('Empty', '<div><br></div>', '<div><span>Test</span></div>')

@@ -1,7 +1,8 @@
 describe('DOM', ->
   describe('splitNode', ->
-    splitTest = new Scribe.Test.LineTest((lineNode, target, offset) ->
-      Scribe.DOM.splitNode(lineNode.firstChild, offset)
+    splitTest = new Scribe.Test.LineTest(
+      fn: (lineNode, target, offset) ->
+        Scribe.DOM.splitNode(lineNode.firstChild, offset)
     )
 
     splitTest.run('should not split if not necessary 1',
@@ -51,9 +52,10 @@ describe('DOM', ->
   )
 
   describe('splitAfter', ->
-    splitTest = new Scribe.Test.HtmlTest((container, target) ->
-      Scribe.DOM.splitAfter(target, container)
-    , { target: 'target' })
+    splitTest = new Scribe.Test.HtmlTest(
+      fn: (container, target) ->
+        Scribe.DOM.splitAfter(target, container)
+    )
     splitTest.run('Normal',
       '<div>
         <div>

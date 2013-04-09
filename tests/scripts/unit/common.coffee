@@ -1,11 +1,10 @@
-runIt = (name, initial, expected, target, fn) ->
-  fn = target unless fn?
+runHtmlTest = (name, initial, expected, fn, checker) ->
   it(name, ->
     initial = Scribe.Utils.cleanHtml(initial, true)
     expected = Scribe.Utils.cleanHtml(expected, true)
     testContainer = $('#test-container').html(initial)
     expectedContainer = $('#expected-container').html(expected)
-    targetNode = $("#test-container ##{target}").get(0) if _.isString(target)
+    targetNode = $("#test-container #target").get(0)
     fn.call(null, testContainer.get(0), targetNode)
     testHtml = Scribe.Utils.cleanHtml(testContainer.html(), true)
     expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.html(), true)
@@ -19,24 +18,24 @@ buildString = (reference, arr) ->
 
 
 class ScribeLineTest
-  # Function fn(DOMNode, DOMNode)
-  constructor: (@fn) ->
+  @DEFAULTS:
+    checker: ->
+    fn: ->
+    template: []
+
+  constructor: (options) ->
+    @settings = _.extend({}, ScribeHtmlTest.DEFAULTS, options)
 
   # String name, String initial, String expected
   run: (name, initial, expected, args...) ->
-    runIt(name, "<div>#{initial}</div>", "<div>#{expected}</div>", (container, target) =>
-      @fn.apply(null, [container.firstChild, target].concat(args))
+    runHtmlTest(name, "<div>#{initial}</div>", "<div>#{expected}</div>", (container, target) =>
+      @settings.fn.call(null, container.firstChild, target, args...)
     )
 
 
-class ScribeHtmlTest
-  @DEFAULTS:
-    target: null
-    template: []
-
-  # Function fn(DOMNode, DOMNode)
-  constructor: (@fn, options) ->
-    @settings = _.extend({}, ScribeHtmlTest.DEFAULTS, options)
+class ScribeHtmlTest extends ScribeLineTest
+  constructor: ->
+    super
 
   # String name, [String|Number] initial, [String|Number]  expected
   # Integer elements in intial are indexes into the String in @template
@@ -44,7 +43,7 @@ class ScribeHtmlTest
   run: (name, initial, expected) ->
     initialHtml = buildString(@settings.template, initial)
     expectedHtml = buildString(initial, expected)
-    runIt(name, initialHtml, expectedHtml, @settings.target, @fn)
+    runHtmlTest(name, initialHtml, expectedHtml, @settings.fn, @settings.checker)
 
 
 class ScribeDeltaTest extends ScribeHtmlTest
@@ -69,7 +68,7 @@ class ScribeDeltaTest extends ScribeHtmlTest
         testEditor.setDelta(initial)
       if Tandem.Delta.isDelta(expected)
         expectedEditor.setDelta(expected)
-      @fn.call(null, testEditor)
+      @settings.fn.call(null, testEditor)
       expect(testEditor.getDelta()).to.deep.equal(expectedEditor.getDelta())
       editorHtml = Scribe.Utils.cleanHtml(testEditor.root.innerHTML)
       expect(editorHtml, expectedHtml)

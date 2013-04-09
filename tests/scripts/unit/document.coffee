@@ -15,7 +15,7 @@ describe('Document', ->
   )
 
   describe('toDelta', ->
-    deltaTest = new Scribe.Test.DeltaTest(->)
+    deltaTest = new Scribe.Test.DeltaTest()
     deltaTest.run('basic',
       ['<div><span>0123</span></div>'],
       new Tandem.Delta(0, [new Tandem.InsertOp("0123\n")])
