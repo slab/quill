@@ -146,13 +146,13 @@ Scribe.Normalizer =
       Scribe.DOM.unwrap(node.parentNode)
       Scribe.Normalizer.normalizeBreak(node, root)
 
-  normalizeDoc: (root) ->
+  normalizeDoc: (root, renderer) ->
     root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
     root.innerHTML = Scribe.Normalizer.normalizeHtml(root.innerHTML)
     Scribe.Normalizer.applyRules(root)
     Scribe.Normalizer.breakBlocks(root)
     _.each(Scribe.DOM.filterUneditable(root.childNodes), (child) ->
-      Scribe.Normalizer.normalizeLine(child)
+      Scribe.Normalizer.normalizeLine(child, renderer)
       Scribe.Normalizer.optimizeLine(child)
     )
 
@@ -165,21 +165,37 @@ Scribe.Normalizer =
     html = html.replace(/<br><\/br>/, '<br>')
     return html
 
-  normalizeLine: (lineNode) ->
+  normalizeLine: (lineNode, renderer) ->
     childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
     return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
     this.removeNoBreak(lineNode)
-    this.normalizeSpan(lineNode)
+    this.normalizeSpan(lineNode, renderer)
     this.requireLeaf(lineNode)
     this.wrapText(lineNode)
 
-  normalizeSpan: (lineNode) ->
+  normalizeSpan: (lineNode, renderer) ->
+    rendererStyles = if renderer?.styles? then renderer.styles else Scribe.Renderer.DEFAULT_STYLES
     _.each(Scribe.DOM.filterUneditable(lineNode.querySelectorAll('span')), (node) ->
-      # TODO convert styles to classes
       # TODO handle extraneous classes
       attributes = _.map(node.attributes, (attr) -> attr.name)
       _.each(attributes, (attrName) ->
         return if attrName == 'class'
+        if attrName == 'style'
+          attrVal = node.getAttribute(attrName)
+          styles = attrVal.split(';')
+          _.each(styles, (styleStr) ->
+            [style, value] = styleStr.split(':')
+            if style? and value?
+              style = style.replace(/^\s\s*/, '').replace(/\s\s*$/, '')  # Trim
+              value = value.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+              _.any(rendererStyles, (rules, selector) ->
+                [tagName, className] = selector.split('.')
+                if tagName == 'span' and rules[style] == value
+                  node.classList.add(className)
+                  return true
+                return false
+              )
+          )
         node.removeAttribute(attrName)
       )
     )

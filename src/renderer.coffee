@@ -6,7 +6,7 @@ class Scribe.Renderer
     keepHTML: false
 
   @DEFAULT_STYLES:
-    '.editor': {
+    'div.editor': {
       'bottom': '10px'
       'font-family': "'Helvetica', 'Arial', san-serif"
       'font-size': '13px'
@@ -21,7 +21,7 @@ class Scribe.Renderer
     }
     'html' : { 'height': '100%' }
     'body' : { 'cursor': 'text', 'height': '100%', 'margin': '0px', 'padding': '0px'}
-    '.line:last-child': { 'padding-bottom': '10px' }
+    'div.line:last-child': { 'padding-bottom': '10px' }
     'a'    : { 'text-decoration': 'underline' }
     'b'    : { 'font-weight': 'bold' }
     'i'    : { 'font-style': 'italic' }
@@ -38,25 +38,25 @@ class Scribe.Renderer
     'ol.indent-7' : { 'list-style-type': 'decimal' }
     'ol.indent-8' : { 'list-style-type': 'lower-alpha' }
     'ol.indent-9' : { 'list-style-type': 'lower-roman' }
-    '.background-black'  : { 'background-color': 'black' }
-    '.background-red'    : { 'background-color': 'red' }
-    '.background-orange' : { 'background-color': 'orange' }
-    '.background-yellow' : { 'background-color': 'yellow' }
-    '.background-green'  : { 'background-color': 'green' }
-    '.background-blue'   : { 'background-color': 'blue' }
-    '.background-purple' : { 'background-color': 'purple' }
-    '.color-white'       : { 'color': 'white' }
-    '.color-red'         : { 'color': 'red' }
-    '.color-orange'      : { 'color': 'orange' }
-    '.color-yellow'      : { 'color': 'yellow' }
-    '.color-green'       : { 'color': 'green' }
-    '.color-blue'        : { 'color': 'blue' }
-    '.color-purple'      : { 'color': 'purple' }
-    '.family-monospace'  : { 'font-family': "'Courier New', monospace" }
-    '.family-serif'      : { 'font-family': "'Times New Roman', serif" }
-    '.size-huge'         : { 'font-size': '32px', 'line-height': '36px' }
-    '.size-large'        : { 'font-size': '18px', 'line-height': '22px' }
-    '.size-small'        : { 'font-size': '10px', 'line-height': '12px' }
+    'span.background-black'  : { 'background-color': 'rgb(0, 0, 0)' }
+    'span.background-red'    : { 'background-color': 'rgb(255, 0, 0)' }
+    'span.background-orange' : { 'background-color': 'rgb(255, 165, 0)' }
+    'span.background-yellow' : { 'background-color': 'rgb(255, 255, 0)' }
+    'span.background-green'  : { 'background-color': 'rgb(0, 128, 0)' }
+    'span.background-blue'   : { 'background-color': 'rgb(0, 0, 255)' }
+    'span.background-purple' : { 'background-color': 'rgb(128, 0, 128)' }
+    'span.color-white'       : { 'color': 'rgb(255, 255, 255)' }
+    'span.color-red'         : { 'color': 'rgb(255, 0, 0)' }
+    'span.color-orange'      : { 'color': 'rgb(255, 165, 0)' }
+    'span.color-yellow'      : { 'color': 'rgb(255, 255, 0)' }
+    'span.color-green'       : { 'color': 'rgb(0, 128, 0)' }
+    'span.color-blue'        : { 'color': 'rgb(0, 0, 255)' }
+    'span.color-purple'      : { 'color': 'rgb(128, 0, 128)' }
+    'span.family-monospace'  : { 'font-family': "'Courier New', monospace" }
+    'span.family-serif'      : { 'font-family': "'Times New Roman', serif" }
+    'span.size-huge'         : { 'font-size': '32px', 'line-height': '36px' }
+    'span.size-large'        : { 'font-size': '18px', 'line-height': '22px' }
+    'span.size-small'        : { 'font-size': '10px', 'line-height': '12px' }
     '.indent-1' : { 'margin-left': '2em' }
     '.indent-2' : { 'margin-left': '4em' }
     '.indent-3' : { 'margin-left': '6em' }
