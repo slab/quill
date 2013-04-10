@@ -59,7 +59,7 @@ class SeleniumAdapter
     end
   end
 
-  private
+  # private
 
   def remove_active_formatting
     @driver.switch_to.default_content
@@ -98,12 +98,29 @@ class SeleniumAdapter
   end
 
   def type_text(text)
+    keys = []
+    cur = ""
+    text.each_char { |c|
+      if c == "\n"
+        keys << cur if cur.length > 0
+        cur = ""
+        keys << :enter
+      elsif c == " "
+        keys << cur if cur.length > 0
+        cur = ""
+        keys << :space
+      else
+        cur << c
+      end
+    }
+    keys << cur if cur.length > 0
     if @cursor_pos == @doc_length && @driver.browser == :firefox
       # Hack to workaround inexplicable firefox behavior in which it appends a
       # newline if you append to the end of the document.
-      @editor.send_keys(text, :arrow_down, :delete)
+      @editor.send_keys(keys, :arrow_down, :delete)
     else
-      @editor.send_keys(text)
+      debugger
+      @editor.send_keys(keys)
     end
     @cursor_pos += text.length
     @doc_length += text.length

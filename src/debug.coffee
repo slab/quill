@@ -1,7 +1,7 @@
 Scribe = require('./scribe')
 
 
-Scribe.Debug = 
+Scribe.Debug =
   getEditor: (editor) ->
     editor ||= Scribe.Editor.editors[0]
     return if _.isNumber(editor) then Scribe.Editor.editors[editor] else editor
@@ -10,7 +10,7 @@ Scribe.Debug =
     doc = this.getDocument(editor)
     return doc.root
 
-  getDocument: (editor) -> 
+  getDocument: (editor) ->
     editor = this.getEditor(editor)
     return editor.doc
 
