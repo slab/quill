@@ -11,13 +11,15 @@ class ScribeHtmlTest
     initial  : []
     expected : []
 
-  constructor: (options) ->
+  constructor: (options = {}) ->
+    console.assert(_.isObject(options), "Invalid options passed into constructor")
     @settings = _.extend({}, ScribeHtmlTest.DEFAULTS, options)
 
   run: (name, options, args...) ->
     options = _.extend({}, @settings, options)
-    options.initial = options.initial.join('') if _.isArray(options.initial)
+    options.initial = [options.initial] if _.isString(options.initial)
     options.expected = buildString(options.initial, options.expected or @settings.expected)
+    options.initial = options.initial.join('') if _.isArray(options.initial)
     it(name, ->
       options.initial = Scribe.Utils.cleanHtml(options.initial, true)
       options.expected = Scribe.Utils.cleanHtml(options.expected, true)
@@ -33,10 +35,11 @@ class ScribeHtmlTest
 
 
 class ScribeEditorTest extends ScribeHtmlTest
-  constructor: ->
+  constructor: (options = {}) ->
     super
 
   run: (name, options, args...) ->
+    console.assert(_.isObject(options), "Invalid options passed into run")
     options = _.extend({}, @settings, options)
     savedOptions = _.clone(options)
     options.initial = '' if Tandem.Delta.isDelta(options.initial)

@@ -7,12 +7,12 @@ describe('DOM', ->
 
     splitTest.run('should not split if not necessary 1',
       initial:  '<b>Bold</b>'
-      expected: '<b>Bold</b>'
+      expected: [0]
     , 0)
 
     splitTest.run('should not split if not necessary 2',
       initial:  '<b>Bold</b>'
-      expected: '<b>Bold</b>'
+      expected: [0]
     , 4)
 
     splitTest.run('should split text node',
@@ -38,7 +38,7 @@ describe('DOM', ->
         </i></b>'
       expected: 
         '<b><i>
-            <s><u>On</u></s>
+          <s><u>On</u></s>
         </i></b>
         <b><i>
           <s><u>e</u><u>Two</u></s>
@@ -47,10 +47,13 @@ describe('DOM', ->
     , 2)
 
     splitTest.run('should split lines',
-      initial:  '<div><b>123</b><i>456</i></div>'
-      expected: 
-        '<div><b>1</b></div>
-        <div><b>23</b><i>456</i></div>'
+      initial:  [
+        '<div><b>123</b><i>456</i></div>'
+      ]
+      expected: [
+        '<div><b>1</b></div>'
+        '<div><b>23</b><i>456</i></div>'
+      ]
     , 1)
   )
 
@@ -122,7 +125,7 @@ describe('DOM', ->
     }
 
     traverseTest = new Scribe.Test.HtmlTest(
-      template:
+      initial: [
         '<div>
           <h1>
             <b>One</b>
@@ -136,40 +139,22 @@ describe('DOM', ->
             <b>Five</b>
           </h3>
         </div>'
+      ]
+      expected: [0]
     )
 
-    traverseTest.run('should traverse in preorder',
+    traverseTest.run('should traverse with correct index',
       checker: (container) ->
-        console.log 'hey', container.outerHTML
-        Scribe.DOM.traversePreorder(container, 0, (node, offset) ->
-          console.log node
+        Scribe.DOM.traversePreorder(container.firstChild, 0, (node, offset) ->
           if node.nodeType == node.ELEMENT_NODE
-            console.log offset, expected[node.textContent]
             expect(offset).to.equal(expected[node.textContent])
           return node
         )
     )
 
-    it('should traverse with correct index', -> 
-      reset()
-      Scribe.DOM.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType == node.ELEMENT_NODE
-          expect(offset).to.equal(expected[node.textContent])
-        return node
-      )
-    )
-
-    it('should handle rename', -> 
-      reset()
-      Scribe.DOM.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType == node.ELEMENT_NODE
-          expect(offset).to.equal(expected[node.textContent])
-          if node.tagName != 'SPAN'
-            node = Scribe.DOM.switchTag(node, 'SPAN')
-        return node
-      )
-      expect(Scribe.Utils.cleanHtml($('#test-container').html())).to.equal(Scribe.Utils.cleanHtml('
-        <div>
+    traverseTest.run('should handle rename',
+      expected: 
+        '<div>
           <span>
             <span>One</span>
             <span>Two</span>
@@ -181,21 +166,19 @@ describe('DOM', ->
           <span>
             <span>Five</span>
           </span>
-        </div>
-      ')) 
+        </div>'
+      fn: (container) ->
+        Scribe.DOM.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == node.ELEMENT_NODE
+            expect(offset).to.equal(expected[node.textContent])
+            node = Scribe.DOM.switchTag(node, 'SPAN') if node.tagName != 'SPAN'
+          return node
+        )
     )
 
-    it('should handle unwrap', -> 
-      reset()
-      Scribe.DOM.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType == node.ELEMENT_NODE
-          expect(offset).to.equal(expected[node.textContent])
-          if node.tagName == 'H2'
-            node = Scribe.DOM.unwrap(node)
-        return node
-      )
-      expect(Scribe.Utils.cleanHtml($('#test-container').html())).to.equal(Scribe.Utils.cleanHtml('
-        <div>
+    traverseTest.run('should handle unwrap',
+      expected: 
+        '<div>
           <h1>
             <b>One</b>
             <i>Two</i>
@@ -205,8 +188,15 @@ describe('DOM', ->
           <h3>
             <b>Five</b>
           </h3>
-        </div>
-      '))
+        </div>'
+      fn: (container) ->
+        Scribe.DOM.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == node.ELEMENT_NODE
+            expect(offset).to.equal(expected[node.textContent])
+            if node.tagName == 'H2'
+              node = Scribe.DOM.unwrap(node)
+          return node
+        )
     )
   )
 )
