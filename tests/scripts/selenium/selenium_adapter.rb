@@ -31,11 +31,11 @@ class SeleniumAdapter
             highlight run.length
             remove_active_formatting
           end
-          move_cursor(0) # Kludge to remove highlighting
+          remove_highlighting
           move_cursor(index + run.length + 1) # +1 to account for \n
           index += run.length + 1
         end
-        move_cursor(0) # Kludge to remove the highlighting
+        remove_highlighting
         break
       elsif op['start'] > index
         move_cursor(index)
@@ -51,7 +51,7 @@ class SeleniumAdapter
         op['attributes'].each do |attr, val|
           format(attr, val)
         end
-        move_cursor(0) # Kludge to remove the highlighting
+        remove_highlighting
         break
       else
         index += op['end'] - op['start']
@@ -60,6 +60,13 @@ class SeleniumAdapter
   end
 
   # private
+
+  def remove_highlighting
+    # Kludge. The only xplatform way that I've found to guarantee removing
+    # highlighted text in a content editable is to command the cursor to move to
+    # the 0th position.
+    move_cursor 0
+  end
 
   def remove_active_formatting
     @driver.switch_to.default_content
