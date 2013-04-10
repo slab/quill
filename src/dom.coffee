@@ -100,8 +100,8 @@ Scribe.DOM =
       if Scribe.DOM.canEdit(cur)
         nextOffset = offset + Scribe.Utils.getNodeLength(cur)
         curHtml = cur.innerHTML
-        cur = fn.apply(context, [cur, offset].concat(args))
-        Scribe.DOM.traversePreorder.apply(null, [cur, offset, fn, context].concat(args))
+        cur = fn.call(context, cur, offset, args...)
+        Scribe.DOM.traversePreorder.call(null, cur, offset, fn, context, args...)
         if cur? && cur.innerHTML == curHtml
           cur = cur.nextSibling
           offset = nextOffset

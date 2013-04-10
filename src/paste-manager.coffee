@@ -24,7 +24,6 @@ class Scribe.PasteManager
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
-        console.log @container.innerHTML
         Scribe.Utils.removeExternal(@container)
         doc = new Scribe.Document(@container, @editor.renderer)
         # Need to remove trailing newline so paste is inline
@@ -34,7 +33,7 @@ class Scribe.PasteManager
         lengthAdded = delta.endLength
         delta.ops.unshift(new Tandem.RetainOp(0, range.start.index)) if range.start.index > 0
         delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength)) if range.end.index < oldDocLength
-        delta.endLength += (editor.getLength() - (range.end.index - range.start.index))
+        delta.endLength += (@editor.getLength() - (range.end.index - range.start.index))
         delta.startLength = oldDocLength
         @editor.applyDelta(delta, false)
         @editor.setSelection(new Scribe.Range(@editor, range.start.index + lengthAdded, range.start.index + lengthAdded))

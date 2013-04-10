@@ -183,17 +183,22 @@ Scribe.Normalizer =
         if attrName == 'style'
           attrVal = node.getAttribute(attrName)
           styles = attrVal.split(';')
+          first = true
           _.each(styles, (styleStr) ->
             [style, value] = styleStr.split(':')
             if style? and value?
               style = style.replace(/^\s\s*/, '').replace(/\s\s*$/, '')  # Trim
               value = value.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
-              _.any(rendererStyles, (rules, selector) ->
+              _.each(rendererStyles, (rules, selector) ->
                 [tagName, className] = selector.split('.')
                 if tagName == 'span' and rules[style] == value
-                  node.classList.add(className)
-                  return true
-                return false
+                  if first
+                    node.classList.add(className)
+                    first = false
+                  else
+                    span = lineNode.ownerDocument.createElement('span')
+                    span.classList.add(className)
+                    Scribe.DOM.wrap(span, node)
               )
           )
         node.removeAttribute(attrName)

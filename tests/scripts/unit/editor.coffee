@@ -1,80 +1,71 @@
 describe('Editor', ->
   describe('applyDelta', ->
-    tests =
-      'apply to empty':
-        lines: []
-        deltas: [new Tandem.InsertOp("0123\n")]
-        expected: ['<div><span>0123</span></div>']
-      'append character':
-        lines: ['<div><span>0123</span></div>']
-        deltas: [new Tandem.RetainOp(0,4), new Tandem.InsertOp('4'), new Tandem.RetainOp(4,5)]
-        expected: ['<div><span>01234</span></div>']
-      'prepend character':
-        lines: ['<div><span>0123</span></div>']
-        deltas: [new Tandem.InsertOp('4'), new Tandem.RetainOp(0,5)]
-        expected: ['<div><span>40123</span></div>']
-      'append formatted character':
-        lines: ['<div><span>0123</span></div>']
-        deltas: [new Tandem.RetainOp(0,4), new Tandem.InsertOp('4', {bold: true}), new Tandem.RetainOp(4,5)]
-        expected: ['<div><span>0123</span><b>4</b></div>']
-      'append newline':
-        lines: ['<div><span>0123</span></div>']
-        deltas: [new Tandem.RetainOp(0,5), new Tandem.InsertOp("\n")]
-        expected: ['<div><span>0123</span></div>', '<div><br></div>']
-      'insert newline in middle of text':
-        lines: ['<div><span>0123</span></div>']
-        deltas: [new Tandem.RetainOp(0,2), new Tandem.InsertOp("\n"), new Tandem.RetainOp(2,5)]
-        expected: ['<div><span>01</span></div>', '<div><span>23</span></div>']
-      'insert newline before line with just newline':
-        lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
-        deltas: [new Tandem.RetainOp(0,3), new Tandem.InsertOp("\n"), new Tandem.RetainOp(3,7)]
-        expected: [0, 1, 1, 2]
-      'insert newline after line with just newline':
-        lines: ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
-        deltas: [new Tandem.RetainOp(0,4), new Tandem.InsertOp("\n"), new Tandem.RetainOp(4,7)]
-        expected: [0, 1, 1, 2]
-      'double insert':
-        lines: ['<div><span>0123</span></div>']
-        deltas: [new Tandem.RetainOp(0,2), new Tandem.InsertOp('a'), new Tandem.InsertOp('b'), new Tandem.RetainOp(2,5)]
-        expected: ['<div><span>01ab23</span></div>']
-      'append differing formatted texts':
-        lines: ['<div><br></div>']
-        deltas: [new Tandem.InsertOp('01', {bold:true}), new Tandem.InsertOp('23', {italic:true}), new Tandem.RetainOp(0,1)]
-        expected: ['<div><b>01</b><i>23</i></div>']
-
-    _.each(tests, (test, name) ->
-      it(name, ->
-        html = test.lines.join('')
-        $('#test-container').html(html)
-        editor = new Scribe.Editor('test-container')
-        oldDelta = editor.doc.toDelta()
-        startLength = oldDelta.endLength
-        endLength = _.reduce(test.deltas, ((count, delta) -> return count + delta.getLength()), 0)
-        delta = new Tandem.Delta(startLength, endLength, test.deltas)
-        expectedHtml = _.map(test.expected, (line) ->
-          return if _.isNumber(line) then test.lines[line] else line
-        ).join('')
-        editor.applyDelta(delta)
-        consistent = Scribe.Debug.checkDocumentConsistency(editor.doc)
-        newDelta = editor.doc.toDelta()
-        $('#test-container').html(expectedHtml)
-        editor = new Scribe.Editor('test-container')
-        expectedDelta = editor.doc.toDelta()
-        expect(consistent).to.be.true
-        expect(newDelta).to.deep.equal(expectedDelta)
-      )
+    applyTests = new Scribe.Test.EditorTest(
+      fn: (testEditor, expectedEditor, ops) ->
+        delta = new Tandem.Delta(testEditor.getLength(), ops)
+        testEditor.applyDelta(delta)
     )
+
+    applyTests.run('apply to empty',
+      initial:  []
+      expected: ['<div><span>0123</span></div>']
+    , [new Tandem.InsertOp("0123\n")])
+
+    applyTests.run('append character',
+      initial:  ['<div><span>0123</span></div>']
+      expected: ['<div><span>01234</span></div>']
+    , [new Tandem.RetainOp(0,4), new Tandem.InsertOp('4'), new Tandem.RetainOp(4,5)])
+
+    applyTests.run('prepend character',
+      initial:  ['<div><span>0123</span></div>']
+      expected: ['<div><span>40123</span></div>']
+    , [new Tandem.InsertOp('4'), new Tandem.RetainOp(0,5)])
+
+    applyTests.run('append formatted character',
+      initial:  ['<div><span>0123</span></div>']
+      expected: ['<div><span>0123</span><b>4</b></div>']
+    , [new Tandem.RetainOp(0,4), new Tandem.InsertOp('4', {bold: true}), new Tandem.RetainOp(4,5)])
+
+    applyTests.run('append newline',
+      initial:  ['<div><span>0123</span></div>']
+      expected: [0, '<div><br></div>']
+    , [new Tandem.RetainOp(0,5), new Tandem.InsertOp("\n")])
+
+    applyTests.run('insert newline in middle of text',
+      initial:  ['<div><span>0123</span></div>']
+      expected: ['<div><span>01</span></div>', '<div><span>23</span></div>']
+    , [new Tandem.RetainOp(0,2), new Tandem.InsertOp("\n"), new Tandem.RetainOp(2,5)])
+
+    applyTests.run('insert newline before line with just newline',
+      initial:  ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
+      expected: [0, 1, 1, 2]
+    , [new Tandem.RetainOp(0,3), new Tandem.InsertOp("\n"), new Tandem.RetainOp(3,7)])
+
+    applyTests.run('insert newline after line with just newline',
+      initial:  ['<div><span>01</span></div>', '<div><br></div>', '<div><span>23</span></div>']
+      expected: [0, 1, 1, 2]
+    , [new Tandem.RetainOp(0,4), new Tandem.InsertOp("\n"), new Tandem.RetainOp(4,7)])
+
+    applyTests.run('double insert',
+      initial:  ['<div><span>0123</span></div>']
+      expected: ['<div><span>01ab23</span></div>']
+    , [new Tandem.RetainOp(0,2), new Tandem.InsertOp('a'), new Tandem.InsertOp('b'), new Tandem.RetainOp(2,5)])
+
+    applyTests.run('append differing formatted texts',
+      initial:  ['<div><br></div>']
+      expected: ['<div><b>01</b><i>23</i></div>']
+    , [new Tandem.InsertOp('01', {bold:true}), new Tandem.InsertOp('23', {italic:true}), new Tandem.RetainOp(0,1)])
   )
 
 
   describe('setDelta', ->
-    deltaTest = new Scribe.Test.DeltaTest((editor) ->
-      editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
+    deltaTest = new Scribe.Test.EditorTest(
+      expected: '<div><span>Test</span></div>'
+      fn: (editor) ->
+        editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
     )
-
-    deltaTest.run('Empty', '<div><br></div>', '<div><span>Test</span></div>')
-
-    deltaTest.run('Different text', '<div><span>One</span></div>', '<div><span>Test</span></div>')
+    deltaTest.run('Empty', { initial: '<div><br></div>'} )
+    deltaTest.run('Different text', { initial: '<div><span>One</span></div>' })
   )
 
 

@@ -175,10 +175,6 @@ describe('Selection', ->
           lines: ['<div><b>0123|45|6789</b></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'italic', true)
           expected: ['<div><i><b>0123|45|6789</b></i></div>']
-        'apply line format':
-          lines: ['<div><span>0123|45|6789</span></div>']
-          fn: (editor) -> editor.formatAt(1, 2, 'list', 1)
-          expected: ['<ol><li><span>0123|45|6789</span></li></ol>']
 
       'remove format tests':
         'remove leaf format before': 
@@ -217,10 +213,6 @@ describe('Selection', ->
           lines: ['<div><i><b>0123|45|6789</b></i></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'italic', false)
           expected: ['<div><b>0123|45|6789</b></div>']
-        'remove line format':
-          lines: ['<ol><li><span>0123|45|6789</span></li></ol>']
-          fn: (editor) -> editor.formatAt(1, 2, 'list', false)
-          expected: ['<div><span>0123|45|6789</span></div>']
 
     _.each(tests, (testGroup, groupName) ->
       describe(groupName, ->
