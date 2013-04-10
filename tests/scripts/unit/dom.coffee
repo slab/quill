@@ -1,8 +1,8 @@
 describe('DOM', ->
   describe('splitNode', ->
-    splitTest = new Scribe.Test.LineTest(
-      fn: (lineNode, target, offset) ->
-        Scribe.DOM.splitNode(lineNode.firstChild, offset)
+    splitTest = new Scribe.Test.HtmlTest(
+      fn: (testContainer, expectedContainer, target, offset) ->
+        Scribe.DOM.splitNode(testContainer.firstChild, offset)
     )
 
     splitTest.run('should not split if not necessary 1',
@@ -56,8 +56,8 @@ describe('DOM', ->
 
   describe('splitAfter', ->
     splitTest = new Scribe.Test.HtmlTest(
-      fn: (container, target) ->
-        Scribe.DOM.splitAfter(target, container)
+      fn: (testContainer, expectedContainer, target) ->
+        Scribe.DOM.splitAfter(target, testContainer)
     )
     splitTest.run('Normal',
       initial: 
@@ -108,7 +108,7 @@ describe('DOM', ->
           </h3>
         </div>
       '))
-      
+
     # 0  3  6    1   5   9  
     # OneTwoThreeFourFiveSix
     expected = {
@@ -140,8 +140,11 @@ describe('DOM', ->
 
     traverseTest.run('should traverse in preorder',
       checker: (container) ->
+        console.log 'hey', container.outerHTML
         Scribe.DOM.traversePreorder(container, 0, (node, offset) ->
+          console.log node
           if node.nodeType == node.ELEMENT_NODE
+            console.log offset, expected[node.textContent]
             expect(offset).to.equal(expected[node.textContent])
           return node
         )

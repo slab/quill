@@ -1,85 +1,66 @@
-runHtmlTest = (name, initial, expected, fn, checker) ->
-  it(name, ->
-    initial = Scribe.Utils.cleanHtml(initial, true)
-    expected = Scribe.Utils.cleanHtml(expected, true)
-    testContainer = $('#test-container').html(initial)
-    expectedContainer = $('#expected-container').html(expected)
-    targetNode = $("#test-container #target").get(0)
-    fn.call(null, testContainer.get(0), targetNode)
-    testHtml = Scribe.Utils.cleanHtml(testContainer.html(), true)
-    expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.html(), true)
-    expect(testHtml).to.equal(expectedHtml)
-    checker.call(null, testContainer.get(0), targetNode) if _.isFunction(checker)
-  )
-
 buildString = (reference, arr) ->
   return _.map(arr, (elem) =>
     return if _.isNumber(elem) then reference[elem] else elem
   ).join('')
 
 
-class ScribeLineTest
+class ScribeHtmlTest
   @DEFAULTS:
-    checker: ->
-    fn: ->
-    template: []
+    checker  : ->
+    fn       : ->
+    initial  : []
+    expected : []
 
   constructor: (options) ->
     @settings = _.extend({}, ScribeHtmlTest.DEFAULTS, options)
 
-  # String name, String initial, String expected
   run: (name, options, args...) ->
-    runHtmlTest(name, "<div>#{options.initial}</div>", "<div>#{options.expected}</div>", (container, target) =>
-      @settings.fn.call(null, container.firstChild, target, args...)
+    options = _.extend({}, @settings, options)
+    options.initial = options.initial.join('') if _.isArray(options.initial)
+    options.expected = buildString(options.initial, options.expected or @settings.expected)
+    it(name, ->
+      options.initial = Scribe.Utils.cleanHtml(options.initial, true)
+      options.expected = Scribe.Utils.cleanHtml(options.expected, true)
+      testContainer = $('#test-container').html(options.initial).get(0)
+      expectedContainer = $('#expected-container').html(options.expected).get(0)
+      targetNode = $("#test-container #target").get(0)
+      options.fn.call(null, testContainer, expectedContainer, targetNode, args...)
+      testHtml = Scribe.Utils.cleanHtml(testContainer.innerHTML, true)
+      expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.innerHTML, true)
+      expect(testHtml).to.equal(expectedHtml)
+      options.checker.call(null, testContainer, expectedContainer, targetNode, args...)
     )
 
 
-class ScribeHtmlTest extends ScribeLineTest
-  constructor: ->
-    super
-
-  # String name, [String|Number] initial, [String|Number]  expected
-  # Integer elements in intial are indexes into the String in @template
-  # Integer elements in expected are indexes into the String in initial
-  run: (name, options, args...) ->
-    initialHtml = buildString(@settings.template, options.initial)
-    expectedHtml = buildString(options.initial, options.expected)
-    runHtmlTest(name, initialHtml, expectedHtml, @settings.fn, @settings.checker)
-
-
-class ScribeDeltaTest extends ScribeHtmlTest
+class ScribeEditorTest extends ScribeHtmlTest
   constructor: ->
     super
 
   run: (name, options, args...) ->
-    it(name, =>
-      if !Tandem.Delta.isDelta(options.initial)
-        initialHtml = Scribe.Utils.cleanHtml(buildString(@settings.template, options.initial))
-        $('#test-container').html(initialHtml)
-      else
-        $('#test-container').html('')
-      if !Tandem.Delta.isDelta(options.expected)
-        expectedHtml = Scribe.Utils.cleanHtml(buildString(@settings.template, options.expected))
-        $('#expected-container').html(expectedHtml)
-      else
-        $('#expected-container').html('')
-      testEditor = new Scribe.Editor('test-container')
-      expectedEditor = new Scribe.Editor('expected-container')
-      if Tandem.Delta.isDelta(options.initial)
-        testEditor.setDelta(options.initial)
-      if Tandem.Delta.isDelta(options.expected)
-        expectedEditor.setDelta(options.expected)
-      @settings.fn.call(null, testEditor)
+    options = _.extend({}, @settings, options)
+    savedOptions = _.clone(options)
+    options.initial = '' if Tandem.Delta.isDelta(options.initial)
+    options.expected = '' if Tandem.Delta.isDelta(options.expected)
+    testEditor = null
+    expectedEditor = null
+    options.fn = (testContainer, expectedContainer, target, args...) ->
+      testEditor = new Scribe.Editor(testContainer)
+      expectedEditor = new Scribe.Editor(expectedContainer)
+      testEditor.applyDelta(savedOptions.initial) if Tandem.Delta.isDelta(savedOptions.initial)
+      expectedEditor.applyDelta(savedOptions.expected) if Tandem.Delta.isDelta(savedOptions.expected)
+      savedOptions.fn.call(null, testEditor, expectedEditor, args...)
+    options.checker = (testContainer, expectedContainer, target, args...) ->
+      savedOptions.checker.call(null, testEditor, expectedEditor, args...)
+      testHtml = Scribe.Utils.cleanHtml(testEditor.root.innerHTML)
+      expectedHtml = Scribe.Utils.cleanHtml(expectedEditor.root.innerHTML)
+      expect(testHtml).to.equal(expectedHtml)
       expect(testEditor.getDelta()).to.deep.equal(expectedEditor.getDelta())
-      editorHtml = Scribe.Utils.cleanHtml(testEditor.root.innerHTML)
-      expect(editorHtml, expectedHtml)
       consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
       expect(consistent).to.be.true
-    )
+    super(name, options, args...)
     
 
 window.Scribe or= {}
 window.Scribe.Test = 
-  DeltaTest:  ScribeDeltaTest
+  DeltaTest:  ScribeEditorTest
   HtmlTest:   ScribeHtmlTest
-  LineTest:   ScribeLineTest

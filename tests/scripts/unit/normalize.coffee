@@ -101,7 +101,7 @@ describe('Normalize', ->
   )
 
   describe('normalizeLine', ->
-    lineTest = new Scribe.Test.LineTest(
+    lineTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->
         Scribe.Normalizer.normalizeLine(lineNode)
         Scribe.Normalizer.optimizeLine(lineNode)
@@ -171,7 +171,7 @@ describe('Normalize', ->
   )
 
   describe('optimizeLine', ->
-    lineTest = new Scribe.Test.LineTest(
+    lineTest = new Scribe.Test.HtmlTest(
       fn: (container) ->
         Scribe.Normalizer.optimizeLine(container)
     )
@@ -223,9 +223,9 @@ describe('Normalize', ->
         '<div><b>One<br><hr>Two</b></div>'
       ]
       expected: [
-        '<div><b>One</b></div>',
-        '<div><br></div>',
-        '<div><b>Two</b></div>',
+        '<div><b>One</b></div>'
+        '<div><br></div>'
+        '<div><b>Two</b></div>'
       ]
     )
 
@@ -258,7 +258,7 @@ describe('Normalize', ->
   )
 
   describe('normalizeTag', ->
-    attrTest = new Scribe.Test.LineTest(
+    attrTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->
         lineNode.firstChild.setAttribute('data-test', 'test')
         lineNode.firstChild.setAttribute('width', '100px')
