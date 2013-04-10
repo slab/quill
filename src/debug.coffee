@@ -18,7 +18,7 @@ Scribe.Debug =
     nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
-        return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
+        return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Scribe.DOM.EXTERNAL_CLASS) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
       )
     )
     lines = doc.lines.toArray()
@@ -139,7 +139,7 @@ Scribe.Debug =
       length = Scribe.Debug.Test.getRandomLength() + 1
       rand = Math.random()
       if rand < 0.5
-        return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length)]}
+        return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length), {}]}
       if rand < 0.75
         return null if index + length > lengthLimit
         return {op: 'deleteAt', args: [index, length - 1]}

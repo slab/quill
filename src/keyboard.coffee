@@ -49,18 +49,6 @@ class Scribe.Keyboard
       @editor.selection.deleteRange()
       this.insertText("\t")
     )
-    this.addHotkey(Scribe.Keyboard.KEYS.ENTER, =>
-      @editor.selection.deleteRange()
-      this.insertText("\n")
-    )
-    #this.addHotkey(Scribe.Keyboard.KEYS.BACKSPACE, (selection) =>
-    #  unless @editor.selection.deleteRange()
-    #    @editor.deleteAt(selection.start.index - 1, 1) if selection.start.index > 0
-    #)
-    #this.addHotkey(Scribe.Keyboard.KEYS.DELETE, (selection) =>
-    #  unless @editor.selection.deleteRange()
-    #    @editor.deleteAt(selection.start.index, 1) if selection.start.index < @editor.getLength() - 1
-    #)
     this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
       this.toggleFormat(selection, 'bold')
     )
@@ -84,7 +72,7 @@ class Scribe.Keyboard
       if increment
         indent = if _.isNumber(line.formats[format]) then line.formats[format] else (if line.formats[format] then 1 else 0)
         indent += increment
-        indent = Math.min(Math.max(indent, Scribe.Constants.MIN_INDENT), Scribe.Constants.MAX_INDENT)
+        indent = Math.min(Math.max(indent, Scribe.Line.MIN_INDENT), Scribe.Line.MAX_INDENT)
       else
         indent = false
       index = Position.getIndex(line.node, 0)
@@ -107,14 +95,14 @@ class Scribe.Keyboard
 
   insertText: (text) ->
     selection = @editor.getSelection()
-    @editor.insertAt(selection.start.index, text)
+    @editor.insertAt(selection.start.index, text, {}, false) if selection?
     # Make sure selection is after our text
     range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
-    @editor.setSelection(range)
+    @editor.setSelection(range, true)
 
   toggleFormat: (selection, format) ->
     formats = selection.getFormats()
-    @editor.selection.format(format, !formats[format])
+    @editor.selection.format(format, !formats[format], false)
 
 
 module.exports = Scribe

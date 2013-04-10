@@ -3,14 +3,8 @@ Scribe = require('./scribe')
 
 Scribe.Utils =
   cleanHtml: (html, keepIdClass = false) ->
-    # Remove leading and tailing whitespace
-    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
-    # Remove whitespace between tags
-    html = html.replace(/>\s\s+</gi, '><')
-    # Remove id or class classname
+    html = Scribe.Normalizer.normalizeHtml(html)
     html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '') unless keepIdClass == true
-    # Standardize br
-    html = html.replace(/<br><\/br>/, '<br>')
     return html
 
   createContainerForFormat: (doc, name, value) ->
@@ -47,7 +41,7 @@ Scribe.Utils =
     return node
 
   getFormatDefault: (name) ->
-    return Scribe.Constants.DEFAULT_LEAF_FORMATS[name] or false
+    return Scribe.Leaf.DEFAULT_FORMATS[name] or false
 
   getFormatForContainer: (container) ->
     switch container.tagName
@@ -62,18 +56,13 @@ Scribe.Utils =
         indent = Scribe.Utils.getIndent(container)
         return if indent > 0 then ['indent', indent] else []
       when 'SPAN'
-        format = []
-        _.any(container.classList, (css) ->
+        for css in container.classList
           parts = css.split('-')
           if parts.length > 1
             key = parts[0]
             value = parts.slice(1).join('-')
-            if Scribe.Constants.SPAN_FORMATS[key]?
-              format = [key, value]
-              return true
-          return false
-        )
-        return format
+            return [key, value] if Scribe.Leaf.SPAN_FORMATS[key]?
+        return []
       else
         return []
         
@@ -103,13 +92,10 @@ Scribe.Utils =
   getNodeLength: (node) ->
     return 0 unless node?
     if node.nodeType == node.ELEMENT_NODE
-      if node.classList.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
-        return 0
-      externalNodes = node.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}")
-      length = _.reduce(externalNodes, (length, node) ->
-        return length - node.textContent.length
-      , node.textContent.length)
-      return length + (if Scribe.Line.isLineNode(node) then 1 else 0)
+      return 0 unless Scribe.DOM.canEdit(node)
+      return _.reduce(Scribe.DOM.filterUneditable(node.childNodes), (length, child) ->
+        return length + Scribe.Utils.getNodeLength(child)
+      , (if Scribe.Line.isLineNode(node) then 1 else 0))
     else if node.nodeType == node.TEXT_NODE
       return node.textContent.length
     else
@@ -130,7 +116,7 @@ Scribe.Utils =
       cur = next
 
   isBlock: (node) ->
-    return _.indexOf(Scribe.Line.BLOCK_TAGS, node.tagName) > -1
+    return _.indexOf(Scribe.Normalizer.BLOCK_TAGS, node.tagName) > -1
 
   insertExternal: (position, extNode) ->
     if position.leafNode.lastChild?
@@ -144,7 +130,7 @@ Scribe.Utils =
       position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
 
   moveExternal: (source, destParent, destRef) ->
-    externalNodes = _.clone(source.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    externalNodes = _.clone(source.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
     _.each(externalNodes, (node) ->
       destParent.insertBefore(node, destRef)
     )
@@ -162,7 +148,7 @@ Scribe.Utils =
     return ret
 
   removeExternal: (root) ->
-    extNodes = _.clone(root.querySelectorAll(".#{Scribe.Constants.SPECIAL_CLASSES.EXTERNAL}"))
+    extNodes = _.clone(root.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
     _.each(extNodes, (node) ->
       node.parentNode.removeChild(node) if node.parentNode?
     )

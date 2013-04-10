@@ -88,26 +88,6 @@ describe('Normalize', ->
       Scribe.Normalizer.optimizeLine(lineNode)
     )
 
-    lineTest.run('tranform equivalent styles', [
-      '<strong>Strong</strong>
-        <del>Deleted</del>
-        <em>Emphasis</em>
-        <strike>Strike</strike>
-        <b>Bold</b>
-        <i>Italic</i>
-        <s>Strike</s>
-        <u>Underline</u>'
-    ], [
-      '<b>Strong</b>
-        <s>Deleted</s>
-        <i>Emphasis</i>
-        <s>Strike</s>
-        <b>Bold</b>
-        <i>Italic</i>
-        <s>Strike</s>
-        <u>Underline</u>'
-    ])
-
     lineTest.run('merge adjacent equal nodes', 
       '<b>Bold1</b><b>Bold2</b>', 
       '<b>Bold1Bold2</b></div>'
@@ -126,9 +106,19 @@ describe('Normalize', ->
     )
 
     lineTest.run('do not merge adjacent unequal spans',
+      '<span class="size-huge">Huge</span><span class="size-large">Large</span>',
+      '<span class="size-huge">Huge</span><span class="size-large">Large</span>'
+    )
+
+    lineTest.run('preserve style attributes', 
+      '<span style="font-size:32px">Huge</span>
+      <span style="color:rgb(255, 0, 0)">Red</span>
+      <span style="font-family:\'Times New Roman\', serif">Serif</span>
+      <span style="font-family: Helvetica, Arial, san-serif; font-size: 18px; line-height: 22px; white-space: pre-wrap;">Large</span>'
+
       '<span class="size-huge">Huge</span>
-      <span class="size-large">Large</span>',
-      '<span class="size-huge">Huge</span>
+      <span class="color-red">Red</span>
+      <span class="family-serif">Serif</span>
       <span class="size-large">Large</span>'
     )
 
@@ -208,6 +198,29 @@ describe('Normalize', ->
       '<div><br></div>',
       '<div><b>Two</b></div>',
     ])
+
+    docTest.run('tranform equivalent styles',
+      '<div>
+        <strong>Strong</strong>
+        <del>Deleted</del>
+        <em>Emphasis</em>
+        <strike>Strike</strike>
+        <b>Bold</b>
+        <i>Italic</i>
+        <s>Strike</s>
+        <u>Underline</u>
+      </div>'
+    , '<div>
+        <b>Strong</b>
+        <s>Deleted</s>
+        <i>Emphasis</i>
+        <s>Strike</s>
+        <b>Bold</b>
+        <i>Italic</i>
+        <s>Strike</s>
+        <u>Underline</u>
+      </div>'
+    )
   )
 
   describe('normalizeTag', ->

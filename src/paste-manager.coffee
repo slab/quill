@@ -18,28 +18,26 @@ class Scribe.PasteManager
 
   initListeners: ->
     @editor.root.addEventListener('paste', =>
-      @editor.selection.deleteRange()
-      selection = @editor.getSelection()
-      return unless selection?
-      docLength = @editor.getLength()
+      oldDocLength = @editor.getLength()
+      range = @editor.getSelection()
+      return unless range?
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
+        console.log @container.innerHTML
         Scribe.Utils.removeExternal(@container)
-        Scribe.Utils.removeStyles(@container)
-        doc = new Document(@container)
+        doc = new Scribe.Document(@container, @editor.renderer)
         # Need to remove trailing newline so paste is inline
         lastLine = doc.lines.last
         lastLine.deleteText(lastLine.length - 1, 1)
         delta = doc.toDelta()
-        delta.ops.unshift(new Tandem.RetainOp(0, selection.start.index)) if selection.start.index > 0
-        delta.ops.push(new Tandem.RetainOp(selection.start.index, docLength)) if selection.start.index < docLength
-        delta.endLength += docLength
-        delta.startLength = docLength
-        oldDelta = @editor.doc.toDelta()
+        lengthAdded = delta.endLength
+        delta.ops.unshift(new Tandem.RetainOp(0, range.start.index)) if range.start.index > 0
+        delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength)) if range.end.index < oldDocLength
+        delta.endLength += (editor.getLength() - (range.end.index - range.start.index))
+        delta.startLength = oldDocLength
         @editor.applyDelta(delta, false)
-        lengthAdded = Math.max(0, @editor.getLength() - docLength)
-        @editor.setSelection(new Scribe.Range(@editor, selection.start.index + lengthAdded, selection.start.index + lengthAdded))
+        @editor.setSelection(new Scribe.Range(@editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
       )
     )
 

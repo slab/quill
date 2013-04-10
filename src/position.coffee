@@ -3,27 +3,8 @@ Scribe = require('./scribe')
 
 # TODO fix this entire file, esp findDeepestNode
 class Scribe.Position
-  @findDeepestNode: (node, offset) ->
-    # We are at right subtree, dive deeper
-    isLineNode = Scribe.Line.isLineNode(node)
-    nodeLength = Scribe.Utils.getNodeLength(node)
-    if isLineNode && offset < nodeLength
-      Scribe.Position.findDeepestNode(node.firstChild, Math.min(offset, nodeLength))
-    else if offset < nodeLength
-      if node.firstChild?
-        Scribe.Position.findDeepestNode(node.firstChild, offset)
-      else
-        return [node, offset]
-    else if node.nextSibling?               # Not at right subtree, advance to sibling
-      offset -= nodeLength
-      Scribe.Position.findDeepestNode(node.nextSibling, offset)
-    else if node.lastChild?
-      return Scribe.Position.findDeepestNode(node.lastChild, Scribe.Utils.getNodeLength(node.lastChild))
-    else
-      return [node, offset]
-
   @findLeafNode: (editor, node, offset) ->
-    [node, offset] = Scribe.Position.findDeepestNode(node, offset)
+    [node, offset] = Scribe.DOM.findDeepestNode(node, offset)
     if node.nodeType == node.TEXT_NODE
       offset = Scribe.Position.getIndex(node, offset, node.parentNode)
       node = node.parentNode
@@ -43,7 +24,7 @@ class Scribe.Position
   constructor: (@editor, @leafNode, @offset) ->
     if _.isNumber(@leafNode)
       @offset = @index = @leafNode
-      @leafNode = @editor.root.firstChild
+      @leafNode = @editor.root
     else
       @index = Scribe.Position.getIndex(@leafNode, @offset)
     [@leafNode, @offset] = Scribe.Position.findLeafNode(@editor, @leafNode, @offset)

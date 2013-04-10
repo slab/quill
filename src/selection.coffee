@@ -4,7 +4,8 @@ Scribe = require('./scribe')
 _getMarkers = (savedSel) ->
   markers = _.map(savedSel.rangeInfos, (rangeInfo) ->
     return _.map([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
-      return rangeInfo.document.getElementById(markerId)
+      marker = rangeInfo.document.getElementById(markerId)
+      return if marker? and marker.nodeType == marker.ELEMENT_NODE then marker else null
     )
   )
   return _.compact(_.flatten(markers))
@@ -17,23 +18,21 @@ class Scribe.Selection
 
   initListeners: ->
     checkUpdate = =>
-      this.update()
+      this.update() if @editor.root.isContentEditable
     keyUpdate = (event) =>
       checkUpdate() if Scribe.Keyboard.KEYS.LEFT <= event.which and event.which <= Scribe.Keyboard.KEYS.DOWN
     @editor.root.addEventListener('keyup', keyUpdate)
     @editor.root.addEventListener('mouseup', checkUpdate)
 
-  format: (name, value) ->
+  format: (name, value, external = true) ->
     this.update()
     return unless @range
     start = @range.start.index
     end = @range.end.index
     formats = @range.getFormats()
-    if end > start
-      @editor.formatAt(start, end - start, name, value)
+    @editor.formatAt(start, end - start, name, value, external) if end > start
     formats[name] = value
     @range.formats = formats
-    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range)
     this.setRange(new Scribe.Range(@editor, start, end))
 
   deleteRange: ->
@@ -88,7 +87,7 @@ class Scribe.Selection
     savedSel = rangy.saveSelection(@editor.contentWindow)
     markers = _getMarkers(savedSel)
     _.each(markers, (marker) ->
-      marker.classList.add(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL) if marker?.classList?
+      marker.classList.add(Scribe.DOM.EXTERNAL_CLASS) 
     )
     return savedSel
 

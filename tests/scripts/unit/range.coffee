@@ -13,45 +13,25 @@ describe('Range', ->
         <div>
           <br>
         </div>'))
+      expectedResults = [
+        { text: '12', offset: 0 }
+        { text: '12', offset: 1 }
+        { text: '34', offset: 0 }
+        { text: '34', offset: 1 }
+        { text: '34', offset: 2 }
+        { text: '56', offset: 0 }
+        { text: '56', offset: 1 }
+        { text: '78', offset: 0 }
+        { text: '78', offset: 1 }
+        { text: '78', offset: 2 }
+        { text: '', offset: 0 }
+      ]
       editor = new Scribe.Editor('test-container')
-      numPositions = 10
-      positions = _.map([0..numPositions], (i) ->
+      _.each(expectedResults, (result, i) ->
         position = new Scribe.Position(editor, i)
-        return position
+        expect(position.leafNode.textContent).to.equal(result.text)
+        expect(position.offset).to.equal(result.offset)
       )
-      
-      expect(positions[0].leafNode.textContent).to.equal('12')
-      expect(positions[0].offset).to.equal(0)
-
-      expect(positions[1].leafNode.textContent).to.equal('12')
-      expect(positions[1].offset).to.equal(1)
-
-      expect(positions[2].leafNode.textContent).to.equal('34')
-      expect(positions[2].offset).to.equal(0)
-
-      expect(positions[3].leafNode.textContent).to.equal('34')
-      expect(positions[3].offset).to.equal(1)
-
-      expect(positions[4].leafNode.textContent).to.equal('34')
-      expect(positions[4].offset).to.equal(2)
-
-      expect(positions[5].leafNode.textContent).to.equal('56')
-      expect(positions[5].offset).to.equal(0)
-
-      expect(positions[6].leafNode.textContent).to.equal('56')
-      expect(positions[6].offset).to.equal(1)
-
-      expect(positions[7].leafNode.textContent).to.equal('78')
-      expect(positions[7].offset).to.equal(0)
-
-      expect(positions[8].leafNode.textContent).to.equal('78')
-      expect(positions[8].offset).to.equal(1)
-
-      expect(positions[9].leafNode.textContent).to.equal('78')
-      expect(positions[9].offset).to.equal(2)
-
-      expect(positions[10].leafNode.nodeName).to.equal('BR')
-      expect(positions[10].offset).to.equal(0)
     )
   )
 
@@ -61,39 +41,36 @@ describe('Range', ->
     reset = ->
       $('#test-container').html(Scribe.Utils.cleanHtml('
         <div>
-          <b>123</b>
-          <i>456</i>
+          <b>abc</b>
+          <i>def</i>
         </div>
         <div>
           <b>
-            <s>78</s>
+            <s>hi</s>
           </b>
           <b>
-            <i>90</i>
-            <u>12</u>
+            <i>jk</i>
+            <u>lm</u>
           </b>
           <b>
-            <s>34</s>
+            <s>no</s>
           </b>
         </div>
         <div>
-          <s>5</s>
-          <u>6</u>
-          <s>7</s>
-          <u>8</u>
+          <s>p</s>
+          <u>q</u>
+          <s>r</s>
+          <u>s</u>
         </div>'))
       editor = new Scribe.Editor('test-container')
       return editor
 
-    text = "123456\n78901234\n5678"
+    text = "abcdef\nhijklmno\npqrs"
 
     it('should identifiy single node', ->
       editor = reset()
-      ranges = _.map(text.split(''), (char, index) ->
-        return new Scribe.Range(editor, index, index + 1)
-      )
       _.each(text.split(''), (char, index) ->
-        range = ranges[index]
+        range = new Scribe.Range(editor, index, index + 1)
         expect(range.getText()).to.equal(char)
       )
     )
@@ -220,7 +197,7 @@ describe('Range', ->
         editor = reset()
         range = new Scribe.Range(editor, test.start, test.end)
         expect(range.getText()).to.equal(test.text)
-        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Constants.DEFAULT_LEAF_FORMATS, test.formats))
+        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Leaf.DEFAULT_FORMATS, test.formats))
       )
     )
   )

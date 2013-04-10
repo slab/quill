@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.2.0'
+      version: '0.3.6'
 
     clean: ['build']
 
@@ -70,7 +70,7 @@ module.exports = (grunt) ->
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'
-        src: ['chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
+        src: ['async/lib/async.js', 'chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
       lib:
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'build/lib/'
@@ -113,7 +113,7 @@ module.exports = (grunt) ->
         tasks: ['sass:demo']
       src:
         files: ['src/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffeeify:src', 'copy:build']
+        tasks: ['coffeeify:src', 'concat:scribe_all', 'copy:build']
       unit:
         files: ['tests/scripts/unit/*.coffee']
         tasks: ['coffee:unit']

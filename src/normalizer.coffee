@@ -2,10 +2,74 @@ Scribe = require('./scribe')
 
 
 Scribe.Normalizer =
+  BLOCK_TAGS: [
+    'ADDRESS'
+    'BLOCKQUOTE'
+    'DD'
+    'DIV'
+    'DL'
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
+    'LI'
+    'OL'
+    'P'
+    'PRE'
+    'TABLE'
+    'TBODY'
+    'TD'
+    'TFOOT'
+    'TH'
+    'THEAD'
+    'TR'
+    'UL'
+  ]
+
+  # Missing rule implies removal
+  TAG_RULES: {
+    'A'         : {}
+    'ADDRESSS'  : {rename: 'div'}
+    'B'         : {}
+    'BLOCKQUOTE': {rename: 'div'}
+    'BR'        : {}
+    'BIG'       : {rename: 'span'}
+    'CENTER'    : {rename: 'span'}
+    'DD'        : {rename: 'div'}
+    'DEL'       : {rename: 's'}
+    'DIV'       : {}
+    'DL'        : {rename: 'div'}
+    'EM'        : {rename: 'i'}
+    'H1'        : {rename: 'div'}
+    'H2'        : {rename: 'div'}
+    'H3'        : {rename: 'div'}
+    'H4'        : {rename: 'div'}
+    'H5'        : {rename: 'div'}
+    'H6'        : {rename: 'div'}
+    'HR'        : {rename: 'br'}
+    'I'         : {}
+    'INS'       : {rename: 'span'}
+    'LI'        : {rename: 'div'}
+    'OL'        : {rename: 'div'}
+    'P'         : {rename: 'div'}
+    'PRE'       : {rename: 'div'}
+    'S'         : {}
+    'SMALL'     : {rename: 'span'}
+    'SPAN'      : {}
+    'STRIKE'    : {rename: 's'}
+    'STRONG'    : {rename: 'b'}
+    'TABLE'     : {rename: 'div'}
+    'TBODY'     : {rename: 'div'}
+    'TD'        : {rename: 'span'}
+    'TFOOT'     : {rename: 'div'}
+    'TH'        : {rename: 'span'}
+    'THEAD'     : {rename: 'div'}
+    'TR'        : {rename: 'div'}
+    'U'         : {}
+    'UL'        : {rename: 'div'}
+  }
+
   applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == node.ELEMENT_NODE
-        rules = Scribe.Constants.LINE_RULES[node.tagName]
+        rules = Scribe.Normalizer.TAG_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
             switch rule
@@ -19,12 +83,8 @@ Scribe.Normalizer =
 
   breakBlocks: (root) ->
     this.groupBlocks(root)
-    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll(Scribe.Line.BREAK_TAGS.join(', '))), (node) ->
-      node = Scribe.DOM.switchTag(node, 'br') if node.tagName != 'BR'
+    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll('br')), (node) ->
       Scribe.Normalizer.normalizeBreak(node, root)
-    )
-    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll(Scribe.Line.BLOCK_TAGS.join(', '))), (node) ->
-      node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
     )
     _.each(Scribe.DOM.filterUneditable(root.childNodes), (childNode) ->
       Scribe.Normalizer.breakLine(childNode)
@@ -86,30 +146,56 @@ Scribe.Normalizer =
       Scribe.DOM.unwrap(node.parentNode)
       Scribe.Normalizer.normalizeBreak(node, root)
 
-  normalizeDoc: (root) ->
+  normalizeDoc: (root, renderer) ->
     root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
+    root.innerHTML = Scribe.Normalizer.normalizeHtml(root.innerHTML)
+    Scribe.Normalizer.applyRules(root)
     Scribe.Normalizer.breakBlocks(root)
     _.each(Scribe.DOM.filterUneditable(root.childNodes), (child) ->
-      Scribe.Normalizer.normalizeLine(child)
+      Scribe.Normalizer.normalizeLine(child, renderer)
       Scribe.Normalizer.optimizeLine(child)
     )
 
-  normalizeLine: (lineNode) ->
+  normalizeHtml: (html) ->
+    # Remove leading and tailing whitespace
+    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+    # Remove whitespace between tags
+    html = html.replace(/\>\s+\</g, '><')
+    # Standardize br
+    html = html.replace(/<br><\/br>/, '<br>')
+    return html
+
+  normalizeLine: (lineNode, renderer) ->
     childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
     return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
-    this.applyRules(lineNode)
     this.removeNoBreak(lineNode)
-    this.normalizeSpan(lineNode)
+    this.normalizeSpan(lineNode, renderer)
     this.requireLeaf(lineNode)
     this.wrapText(lineNode)
 
-  normalizeSpan: (lineNode) ->
+  normalizeSpan: (lineNode, renderer) ->
+    rendererStyles = if renderer?.styles? then renderer.styles else Scribe.Renderer.DEFAULT_STYLES
     _.each(Scribe.DOM.filterUneditable(lineNode.querySelectorAll('span')), (node) ->
-      # TODO convert styles to classes
       # TODO handle extraneous classes
       attributes = _.map(node.attributes, (attr) -> attr.name)
       _.each(attributes, (attrName) ->
         return if attrName == 'class'
+        if attrName == 'style'
+          attrVal = node.getAttribute(attrName)
+          styles = attrVal.split(';')
+          _.each(styles, (styleStr) ->
+            [style, value] = styleStr.split(':')
+            if style? and value?
+              style = style.replace(/^\s\s*/, '').replace(/\s\s*$/, '')  # Trim
+              value = value.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+              _.any(rendererStyles, (rules, selector) ->
+                [tagName, className] = selector.split('.')
+                if tagName == 'span' and rules[style] == value
+                  node.classList.add(className)
+                  return true
+                return false
+              )
+          )
         node.removeAttribute(attrName)
       )
     )
@@ -131,7 +217,7 @@ Scribe.Normalizer =
   removeNoBreak: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node) =>
       if node.nodeType == node.TEXT_NODE
-        node.textContent = node.textContent.split(Scribe.Constants.NOBREAK_SPACE).join('')
+        node.textContent = node.textContent.split(Scribe.DOM.NOBREAK_SPACE).join('')
       return node
     )
 

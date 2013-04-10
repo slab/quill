@@ -2,6 +2,9 @@ Scribe = require('./scribe')
 
 
 Scribe.DOM = 
+  EXTERNAL_CLASS: "ext"
+  NOBREAK_SPACE:  "\uFEFF"
+
   canEdit: (node) ->
     ancestor = Scribe.Utils.findAncestor(node, (node) =>
       this.isExternal(node)
@@ -13,12 +16,20 @@ Scribe.DOM =
       return this.canEdit(node)
     )
 
-  isExternal: (node) ->
-    return node?.classList?.contains(Scribe.Constants.SPECIAL_CLASSES.EXTERNAL)
+  findDeepestNode: (node, offset) ->
+    if node.firstChild?
+      for child in Scribe.DOM.filterUneditable(node.childNodes)
+        length = Scribe.Utils.getNodeLength(child)
+        if offset < length
+          return Scribe.DOM.findDeepestNode(child, offset)
+        else
+          offset -= length
+      return Scribe.DOM.findDeepestNode(child, offset + length)
+    else
+      return [node, offset]
 
-  isTextNodeParent: (node) ->
-    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
-    return childNodes.length == 1 && childNodes[0].nodeType == node.TEXT_NODE
+  isExternal: (node) ->
+    return node?.classList?.contains(Scribe.DOM.EXTERNAL_CLASS)
 
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
@@ -44,26 +55,19 @@ Scribe.DOM =
     Scribe.DOM.splitAfter(parentNode, root)
 
   splitNode: (node, offset, force = false) ->
-    if offset > Scribe.Utils.getNodeLength(node)
-      throw new Error('Splitting at offset greater than node length')
     # Check if split necessary
+    nodeLength = Scribe.Utils.getNodeLength(node)
+    offset = Math.max(0, offset)
+    offset = Math.min(offset, nodeLength)
     return [node.previousSibling, node, false] unless force or offset != 0
-    return [node, node.nextSibling, false] unless force or offset != Scribe.Utils.getNodeLength(node)
+    return [node, node.nextSibling, false] unless force or offset != nodeLength
     if node.nodeType == node.TEXT_NODE
       after = node.splitText(offset)
       return [node, after, true]
-    left = node
-    right = node.cloneNode()
-    node.parentNode.insertBefore(right, left.nextSibling)
-    if Scribe.DOM.isTextNodeParent(node)
-      # Text split
-      beforeText = node.textContent.substring(0, offset)
-      afterText = node.textContent.substring(offset)
-      left.textContent = beforeText
-      right.textContent = afterText
-      return [left, right, true]
     else
-      # Node split
+      left = node
+      right = node.cloneNode(false)
+      node.parentNode.insertBefore(right, left.nextSibling)
       [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
       [childLeft, childRight] = Scribe.DOM.splitNode(child, offset)
       while childRight != null
