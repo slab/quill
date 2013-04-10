@@ -65,5 +65,5 @@ class ScribeEditorTest extends ScribeHtmlTest
 
 window.Scribe or= {}
 window.Scribe.Test = 
-  DeltaTest:  ScribeEditorTest
+  EditorTest:  ScribeEditorTest
   HtmlTest:   ScribeHtmlTest

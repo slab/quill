@@ -1,6 +1,10 @@
 describe('Normalize', ->
   describe('breakLine', ->
     blockTest = new Scribe.Test.HtmlTest(
+      expected: [
+        '<div><span>One</span></div>'
+        '<div><span>Two</span></div>'
+      ]
       fn: (container) ->
         Scribe.Normalizer.breakLine(container.firstChild, container)
     )
@@ -12,10 +16,6 @@ describe('Normalize', ->
           <div><span>Two</span></div>
         </div>'
       ]
-      expected: [
-        '<div><span>One</span></div>'
-        '<div><span>Two</span></div>'
-      ]
     )
 
     blockTest.run('Nested inner divs', 
@@ -24,10 +24,6 @@ describe('Normalize', ->
           <div><div><span>One</span></div></div>
           <div><div><span>Two</span></div></div>
         </div>'
-      ]
-      expected: [
-        '<div><span>One</span></div>'
-        '<div><span>Two</span></div>'
       ]
     )
   )
@@ -88,9 +84,7 @@ describe('Normalize', ->
         '<div><span>Four</span></div>'
       ]
       expected: [
-        '<div><span>One</span></div>'
-        '<div><span>Two</span><span>Three</span></div>'
-        '<div><span>Four</span></div>'
+        0, '<div><span>Two</span><span>Three</span></div>', 3
       ]
     )
 
@@ -200,7 +194,7 @@ describe('Normalize', ->
 
     docTest.run('correct break', 
       initial:  ['<div><br></div>']
-      expected: ['<div><br></div>']
+      expected: [0]
     )
 
     docTest.run('handle nonstandard block tags', 
