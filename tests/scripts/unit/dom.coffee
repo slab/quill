@@ -6,48 +6,51 @@ describe('DOM', ->
     )
 
     splitTest.run('should not split if not necessary 1',
-      '<b>Bold</b>',
-      '<b>Bold</b>'
+      initial:  '<b>Bold</b>'
+      expected: '<b>Bold</b>'
     , 0)
 
     splitTest.run('should not split if not necessary 2',
-      '<b>Bold</b>',
-      '<b>Bold</b>'
+      initial:  '<b>Bold</b>'
+      expected: '<b>Bold</b>'
     , 4)
 
     splitTest.run('should split text node',
-      '<b>Bold</b>',
-      '<b>Bo</b><b>ld</b>'
+      initial:  '<b>Bold</b>'
+      expected: '<b>Bo</b><b>ld</b>'
     , 2)
 
     splitTest.run('should split child nodes',
-      '<b><i>Italic</i><s>Strike</s></b>',
-      '<b><i>Italic</i></b><b><s>Strike</s></b>'
+      initial:  '<b><i>Italic</i><s>Strike</s></b>'
+      expected: '<b><i>Italic</i></b><b><s>Strike</s></b>'
     , 6)
 
     splitTest.run('should split child nodes and text',
-      '<b><i>Italic</i></b>',
-      '<b><i>It</i></b><b><i>alic</i></b>'
+      initial:  '<b><i>Italic</i></b>'
+      expected: '<b><i>It</i></b><b><i>alic</i></b>'
     , 2)
 
     splitTest.run('should split deep nodes',
-      '<b><i>
-        <s><u>One</u><u>Two</u></s>
-        <s>Three</s>
-      </i></b>',
-      '<b><i>
-          <s><u>On</u></s>
-      </i></b>
-      <b><i>
-        <s><u>e</u><u>Two</u></s>
-        <s>Three</s>
-      </i></b>'
+      initial:  
+        '<b><i>
+          <s><u>One</u><u>Two</u></s>
+          <s>Three</s>
+        </i></b>'
+      expected: 
+        '<b><i>
+            <s><u>On</u></s>
+        </i></b>
+        <b><i>
+          <s><u>e</u><u>Two</u></s>
+          <s>Three</s>
+        </i></b>'
     , 2)
 
     splitTest.run('should split lines',
-      '<div><b>123</b><i>456</i></div>',
-      '<div><b>1</b></div>
-      <div><b>23</b><i>456</i></div>'
+      initial:  '<div><b>123</b><i>456</i></div>'
+      expected: 
+        '<div><b>1</b></div>
+        <div><b>23</b><i>456</i></div>'
     , 1)
   )
 
@@ -57,32 +60,34 @@ describe('DOM', ->
         Scribe.DOM.splitAfter(target, container)
     )
     splitTest.run('Normal',
-      '<div>
-        <div>
-          <div>One</div>
-          <div>Two</div>
+      initial: 
+        '<div>
+          <div>
+            <div>One</div>
+            <div>Two</div>
+          </div>
+          <div>
+            <div>Three</div>
+            <div id="target">Four</div>
+            <div>Five</div>
+          </div>
+        </div>'
+      expected:
+        '<div>
+          <div>
+            <div>One</div>
+            <div>Two</div>
+          </div>
+          <div>
+            <div>Three</div>
+            <div id="target">Four</div>
+          </div>
         </div>
         <div>
-          <div>Three</div>
-          <div id="target">Four</div>
-          <div>Five</div>
-        </div>
-      </div>',
-      '<div>
-        <div>
-          <div>One</div>
-          <div>Two</div>
-        </div>
-        <div>
-          <div>Three</div>
-          <div id="target">Four</div>
-        </div>
-      </div>
-      <div>
-        <div>
-          <div>Five</div>
-        </div>
-      </div>'
+          <div>
+            <div>Five</div>
+          </div>
+        </div>'
     )
   )
 
@@ -103,7 +108,7 @@ describe('DOM', ->
           </h3>
         </div>
       '))
-
+      
     # 0  3  6    1   5   9  
     # OneTwoThreeFourFiveSix
     expected = {
@@ -116,13 +121,30 @@ describe('DOM', ->
       'Five'       : 15
     }
 
-    it('should traverse in preorder', -> 
-      reset()
-      Scribe.DOM.traversePreorder($('#test-container').get(0).firstChild, 0, (node, offset) ->
-        if node.nodeType == node.ELEMENT_NODE
-          expect(offset).to.equal(expected[node.textContent])
-        return node
-      )
+    traverseTest = new Scribe.Test.HtmlTest(
+      template:
+        '<div>
+          <h1>
+            <b>One</b>
+            <i>Two</i>
+          </h1>
+          <h2>
+            <s>Three</s>
+            <u>Four</u>
+          </h2>
+          <h3>
+            <b>Five</b>
+          </h3>
+        </div>'
+    )
+
+    traverseTest.run('should traverse in preorder',
+      checker: (container) ->
+        Scribe.DOM.traversePreorder(container, 0, (node, offset) ->
+          if node.nodeType == node.ELEMENT_NODE
+            expect(offset).to.equal(expected[node.textContent])
+          return node
+        )
     )
 
     it('should traverse with correct index', -> 

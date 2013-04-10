@@ -73,9 +73,15 @@ describe('Editor', ->
         editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
     )
 
-    deltaTest.run('Empty', '<div><br></div>', '<div><span>Test</span></div>')
+    deltaTest.run('Empty', 
+      initial:  '<div><br></div>'
+      expected: '<div><span>Test</span></div>'
+    )
 
-    deltaTest.run('Different text', '<div><span>One</span></div>', '<div><span>Test</span></div>')
+    deltaTest.run('Different text', 
+      initial:  '<div><span>One</span></div>'
+      expected: '<div><span>Test</span></div>'
+    )
   )
 
 
