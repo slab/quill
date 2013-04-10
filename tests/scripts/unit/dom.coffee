@@ -1,7 +1,7 @@
 describe('DOM', ->
   describe('splitNode', ->
     splitTest = new Scribe.Test.HtmlTest(
-      fn: (testContainer, expectedContainer, target, offset) ->
+      fn: (testContainer, expectedContainer, offset) ->
         Scribe.DOM.splitNode(testContainer.firstChild, offset)
     )
 
@@ -61,6 +61,8 @@ describe('DOM', ->
     splitTest = new Scribe.Test.HtmlTest(
       fn: (testContainer, expectedContainer, target) ->
         Scribe.DOM.splitAfter(target, testContainer)
+      pre: (testContainer, expectedContainer) ->
+        return testContainer.querySelector('#target')
     )
     splitTest.run('Normal',
       initial: 
@@ -83,7 +85,7 @@ describe('DOM', ->
           </div>
           <div>
             <div>Three</div>
-            <div id="target">Four</div>
+            <div>Four</div>
           </div>
         </div>
         <div>
