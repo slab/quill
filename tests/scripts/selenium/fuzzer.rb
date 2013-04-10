@@ -4,8 +4,6 @@ require 'selenium-webdriver'
 require_relative 'selenium_adapter'
 
 NUM_EDITS = 500
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
-
 
 ################################################################################
 # Helpers

@@ -119,7 +119,6 @@ class SeleniumAdapter
       # newline if you append to the end of the document.
       @editor.send_keys(keys, :arrow_down, :delete)
     else
-      debugger
       @editor.send_keys(keys)
     end
     @cursor_pos += text.length
