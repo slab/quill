@@ -126,10 +126,16 @@ class SeleniumAdapter
       # newline if you append to the end of the document.
       @editor.send_keys(keys, :arrow_down, :delete)
     else
-      @editor.send_keys(keys)
+      keys.each do |key|
+        index = @cursor_pos
+        move_cursor 0
+        move_cursor index
+        @editor.send_keys(key)
+        len = key.is_a?(String) ? key.length : 1
+        @cursor_pos += len
+        @doc_length += len
+      end
     end
-    @cursor_pos += text.length
-    @doc_length += text.length
   end
 
   def click_button_from_toolbar(button_class)
