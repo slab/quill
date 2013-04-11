@@ -28,7 +28,7 @@ def js_set_scribe_delta(driver)
 end
 
 def js_set_delta_replay(driver, delta, delta_ref)
-  src = "return (function(docDelta, deltaRef) {var d = JSON.parse(docDelta); window[deltaRef] = new window.Tandem.Delta(d.startLength, d.endLength, d.ops);})(arguments[0], arguments[1])"
+  src = "return (function(docDelta, deltaRef) {var d = JSON.parse(docDelta); window[deltaRef] = new window.Tandem.Delta(d.startLength, d.endLength, d.ops); window.Fuzzer.cleanup(window[deltaRef]);})(arguments[0], arguments[1])"
   execute_js driver, src, [delta, delta_ref]
 end
 
@@ -50,7 +50,7 @@ def js_get_doc_delta(driver)
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.docDelta = writer.getDelta();"
+  execute_js driver, "window.docDelta = window.Fuzzer.cleanup(writer.getDelta());"
 end
 
 def read_deltas_from_file(file)

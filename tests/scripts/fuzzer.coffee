@@ -7,4 +7,5 @@ $(document).ready( ->
     for op in delta.ops
       if window.Tandem.Delta.isInsert op
         op.value = op.value.replace(NBSP_FILTER, " ")
+    return delta
 )
