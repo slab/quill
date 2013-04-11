@@ -3,6 +3,12 @@ $(document).ready( ->
   window.writer = new Scribe.Editor($editors.get(0))
   writerToolbar = new Scribe.Toolbar('editor-toolbar-writer', writer)
   window.Fuzzer =
+    getActiveFormats: ->
+      actives = $('#editor-toolbar-writer > .active')
+      _.map(actives, (elem) ->
+        $(elem).html().toLowerCase()
+      )
+
     cleanup: (delta) ->
       NBSP_FILTER = /\u00a0/g
       for op in delta.ops

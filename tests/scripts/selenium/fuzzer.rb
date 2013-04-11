@@ -103,7 +103,7 @@ writer = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, writer
-debugger
+
 ################################################################################
 # Fuzzer logic
 ################################################################################

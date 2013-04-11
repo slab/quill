@@ -70,7 +70,7 @@ class SeleniumAdapter
 
   def remove_active_formatting
     @driver.switch_to.default_content
-    active_formats = @driver.execute_script("var actives = $('#editor-toolbar-writer > .active'); return _.map(actives, function(elem) { return $(elem).html().toLowerCase()});")
+    active_formats = @driver.execute_script("return window.Fuzzer.getActiveFormats()")
     @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
     active_formats.each do |format|
       click_button_from_toolbar(format)
