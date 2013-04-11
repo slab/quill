@@ -15,26 +15,26 @@ def execute_js(driver, src, args = nil)
   return result
 end
 
-def js_get_random_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.randomDelta);"
+def js_get_as_str(driver, ref)
+  return execute_js driver, "return JSON.stringify(window.Fuzzer['#{ref}'])"
 end
 
-def js_get_random_delta(driver)
-  return execute_js driver, "return window.randomDelta;"
+def js_get(driver, ref)
+  return execute_js driver, "return window.Fuzzer['#{ref}']"
 end
 
 def js_set_scribe_delta(driver)
-  return execute_js driver, "window.writer.setDelta(window.docDelta)"
+  return execute_js driver, "window.Fuzzer.initializeScribe()"
 end
 
 def js_set_delta_replay(driver, delta, delta_ref)
-  src = "return (function(docDelta, deltaRef) {var d = JSON.parse(docDelta); window[deltaRef] = new window.Tandem.Delta(d.startLength, d.endLength, d.ops); window.Fuzzer.cleanup(window[deltaRef]);})(arguments[0], arguments[1])"
+  src = "return window.Fuzzer.setDeltaReplay(arguments[0], arguments[1])"
   execute_js driver, src, [delta, delta_ref]
 end
 
 def js_set_random_delta(driver)
-  src = "window.randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.docDelta, arguments[0]);"
-  execute_js driver, src, [1]
+  src = "window.Fuzzer.randomDelta = window.Fuzzer.createRandomDelta()"
+  execute_js driver, src
 end
 
 def js_get_cur_doc_delta_as_str(driver)
@@ -42,15 +42,11 @@ def js_get_cur_doc_delta_as_str(driver)
 end
 
 def js_get_doc_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.docDelta);"
-end
-
-def js_get_doc_delta(driver)
-  return execute_js driver, "return window.docDelta;"
+  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta);"
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.docDelta = window.Fuzzer.cleanup(writer.getDelta());"
+  execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(writer.getDelta());"
 end
 
 def read_deltas_from_file(file)
@@ -79,11 +75,11 @@ end
 
 def check_consistency(driver, replaying)
   driver.switch_to.default_content
-  src = "window.actual = writer.getDelta(); window.Fuzzer.cleanup(window.actual); return window.docDelta.compose(window.randomDelta).isEqual(window.actual);"
+  src = "window.actual = writer.getDelta(); window.Fuzzer.cleanup(window.actual); return window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta).isEqual(window.actual);"
   success = driver.execute_script src
   if not success
-    doc_delta = js_get_doc_delta_as_str(driver)
-    rand_delta = js_get_random_delta_as_str(driver)
+    doc_delta = js_get_as_str(driver, "docDelta")
+    rand_delta = js_get_as_str(driver, "randomDelta")
     after_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replaying
     raise "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
@@ -115,18 +111,18 @@ if replay
   doc_delta, rand_delta = read_deltas_from_file(replay)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
-  doc_delta = js_get_doc_delta(driver)
+  doc_delta = js_get(driver, "docDelta")
   js_set_scribe_delta(driver)
   adapter.doc_length = doc_delta['endLength']
-  random_delta = js_get_random_delta(driver)
-  random_delta_str = js_get_random_delta_as_str(driver)
+  random_delta = js_get(driver, "randomDelta")
+  random_delta_str = js_get_as_str(driver, "randomDelta")
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay)
 else
   js_set_doc_delta(driver)
   NUM_EDITS.times do |i|
      js_set_random_delta(driver)
-     random_delta = js_get_random_delta(driver)
+     random_delta = js_get(driver, "randomDelta")
      puts i.to_s.colorize(:green) if i % 10 == 0
      adapter.apply_delta(random_delta)
      check_consistency(driver, replay)
