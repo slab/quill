@@ -38,4 +38,8 @@ $(document).ready( ->
 
     initializeScribe: ->
       window.writer.setDelta(window.Fuzzer.docDelta)
+
+    checkConsistency: ->
+      actual = window.Fuzzer.cleanup(writer.getDelta())
+      window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta).isEqual(actual)
 )

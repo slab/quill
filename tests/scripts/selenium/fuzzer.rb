@@ -75,7 +75,7 @@ end
 
 def check_consistency(driver, replaying)
   driver.switch_to.default_content
-  src = "window.actual = writer.getDelta(); window.Fuzzer.cleanup(window.actual); return window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta).isEqual(window.actual);"
+  src = "return window.Fuzzer.checkConsistency();"
   success = driver.execute_script src
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
