@@ -84,7 +84,7 @@ def delete_fail_file(file_name)
   end
 end
 
-def check_consistency(driver, replaying)
+def check_consistency(driver, replay_file)
   driver.switch_to.default_content
   src = "return window.Fuzzer.checkConsistency();"
   success = driver.execute_script src
@@ -92,14 +92,14 @@ def check_consistency(driver, replaying)
     doc_delta = js_get_as_str(driver, "docDelta")
     rand_delta = js_get_as_str(driver, "randomDelta")
     after_delta = js_get_cur_doc_delta_as_str(driver)
-    write_deltas_to_file(doc_delta, rand_delta) unless replaying
+    write_deltas_to_file(doc_delta, rand_delta) unless replay_file
     puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
     abort
   else
-    if replaying
+    if replay_file
       highline = HighLine.new
       delete = highline.agree "Congrats, it passed! Would you like to delete the fail file? (y/n)".colorize(:green)
-      delete_fail_file(replaying) if delete
+      delete_fail_file(replay_file) if delete
     end
   end
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
@@ -113,7 +113,7 @@ unless ARGV.length == 2 or ARGV.length == 3
 end
 browserdriver = ARGV[0].to_sym
 editor_url = ARGV[1]
-replay = ARGV[2]
+replay_file = ARGV[2]
 driver = Selenium::WebDriver.for browserdriver
 driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
@@ -124,8 +124,8 @@ adapter = SeleniumAdapter.new driver, editor
 ################################################################################
 # Fuzzer logic
 ################################################################################
-if replay
-  doc_delta, rand_delta = read_deltas_from_file(replay)
+if replay_file
+  doc_delta, rand_delta = read_deltas_from_file(replay_file)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
   doc_delta = js_get(driver, "docDelta")
@@ -134,7 +134,7 @@ if replay
   random_delta = js_get(driver, "randomDelta")
   random_delta_str = js_get_as_str(driver, "randomDelta")
   adapter.apply_delta(random_delta)
-  check_consistency(driver, replay)
+  check_consistency(driver, replay_file)
 else
   js_set_doc_delta(driver)
   NUM_EDITS.times do |i|
@@ -142,7 +142,7 @@ else
      random_delta = js_get(driver, "randomDelta")
      puts i.to_s.colorize(:green) if i % 10 == 0
      adapter.apply_delta(random_delta)
-     check_consistency(driver, replay)
+     check_consistency(driver, nil)
      js_set_doc_delta(driver)
   end
 end
