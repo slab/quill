@@ -153,6 +153,11 @@ describe('Normalize', ->
       expected: '<span>Span</span>'
     )
 
+    lineTest.run('remove redundant elements 3', 
+      initial:  '<span class="color-red"><span>Span</span></span>'
+      expected: '<span>Span</span>'
+    )
+
     lineTest.run('wrap text node', 
       initial:  'Hey'
       expected: '<span>Hey</span>'
