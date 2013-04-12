@@ -71,18 +71,16 @@ Local Development
 
 ### Installation
 
-Install guard and grunt
+Install grunt and npm dependencies
 
-    bundle install
     npm install -g grunt-cli
     npm install
 
 
 ### Building
 
-guard will compile haml and sass on file save. grunt needs to be run manually every time coffeescript changes
+We use grunt to compile coffeescript, sass, and haml
 
-    bundle exec guard
     grunt
 
 

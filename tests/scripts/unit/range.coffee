@@ -81,8 +81,6 @@ describe('Range', ->
 
 
   describe('getFormats', ->
-    
-
     formatTests = new Scribe.Test.EditorTest(
       initial:
         '<div>

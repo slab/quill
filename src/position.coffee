@@ -11,7 +11,7 @@ class Scribe.Position
     return [node, offset]
   
   @getIndex: (node, index, offsetNode = null) ->
-    while node != offsetNode and node.parentNode != node.ownerDocument.body
+    while node != offsetNode and node.ownerDocument? and node.parentNode != node.ownerDocument.body
       while node.previousSibling?
         node = node.previousSibling
         index += Scribe.Utils.getNodeLength(node)

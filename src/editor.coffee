@@ -17,7 +17,7 @@ initListeners = ->
   onEditOnce = =>
   onEdit = =>
     onEditOnce = _.once(onEdit)
-    return if @ignoreDomChanges
+    return if @ignoreDomChanges or !@renderer.iframe.parentNode?    # Make sure we have not been deleted
     update.call(this)
   onSubtreeModified = =>
     return if @ignoreDomChanges
@@ -102,13 +102,12 @@ keepNormalized = (fn) ->
 
 trackDelta = (fn, external = false) ->
   oldDelta = @doc.toDelta()
-  oldIndex = @selection.range.start.index if @selection.range?
+  oldIndex = this.getSelection()?.start.index
   fn()
   newDelta = @doc.toDelta()
   try
-    newRange = this.getSelection()
-    if @selection.range? and newRange?
-      newIndex = newRange.start.index
+    newIndex = this.getSelection()?.start.index
+    if oldIndex? and newIndex? and oldIndex <= oldDelta.endLength and newIndex <= newDelta.endLength
       [oldLeftDelta, oldRightDelta] = oldDelta.split(oldIndex)
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
       decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
@@ -132,6 +131,7 @@ update = ->
         _.each(lines, (line, index) =>
           while line.node != lineNode
             if line.node.parentNode == @root
+              Scribe.Normalizer.normalizeLine(lineNode, @renderer)
               newLine = @doc.insertLineBefore(lineNode, line)
               lineNode = lineNode.nextSibling
             else
@@ -184,6 +184,7 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = true
     options = _.clone(@options)
     options.keepHTML = keepHTML
+    options.id = @id
     @iframeContainer.innerHTML = @root.innerHTML if @root?
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow

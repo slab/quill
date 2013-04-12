@@ -10,6 +10,7 @@ class ScribeHtmlTest
     fn       : ->
     initial  : []
     expected : []
+    pre      : -> []
 
   constructor: (options = {}) ->
     console.assert(_.isObject(options), "Invalid options passed into constructor")
@@ -25,12 +26,13 @@ class ScribeHtmlTest
       options.expected = Scribe.Utils.cleanHtml(options.expected, true)
       testContainer = $('#test-container').html(options.initial).get(0)
       expectedContainer = $('#expected-container').html(options.expected).get(0)
-      targetNode = $("#test-container #target").get(0)
-      options.fn.call(null, testContainer, expectedContainer, targetNode, args...)
-      testHtml = Scribe.Utils.cleanHtml(testContainer.innerHTML, true)
-      expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.innerHTML, true)
+      newArgs = options.pre.call(null, testContainer, expectedContainer)
+      newArgs = [newArgs] unless _.isArray(newArgs)
+      options.fn.call(null, testContainer, expectedContainer, newArgs..., args...)
+      testHtml = Scribe.Utils.cleanHtml(testContainer.innerHTML)
+      expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.innerHTML)
       expect(testHtml).to.equal(expectedHtml)
-      options.checker.call(null, testContainer, expectedContainer, targetNode, args...)
+      options.checker.call(null, testContainer, expectedContainer, newArgs..., args...)
     )
 
 
@@ -46,13 +48,13 @@ class ScribeEditorTest extends ScribeHtmlTest
     options.expected = '' if Tandem.Delta.isDelta(options.expected)
     testEditor = null
     expectedEditor = null
-    options.fn = (testContainer, expectedContainer, target, args...) ->
+    options.fn = (testContainer, expectedContainer, args...) ->
       testEditor = new Scribe.Editor(testContainer)
       expectedEditor = new Scribe.Editor(expectedContainer)
       testEditor.applyDelta(savedOptions.initial) if Tandem.Delta.isDelta(savedOptions.initial)
       expectedEditor.applyDelta(savedOptions.expected) if Tandem.Delta.isDelta(savedOptions.expected)
       savedOptions.fn.call(null, testEditor, expectedEditor, args...)
-    options.checker = (testContainer, expectedContainer, target, args...) ->
+    options.checker = (testContainer, expectedContainer, args...) ->
       savedOptions.checker.call(null, testEditor, expectedEditor, args...)
       testHtml = Scribe.Utils.cleanHtml(testEditor.root.innerHTML)
       expectedHtml = Scribe.Utils.cleanHtml(expectedEditor.root.innerHTML)
@@ -65,5 +67,5 @@ class ScribeEditorTest extends ScribeHtmlTest
 
 window.Scribe or= {}
 window.Scribe.Test = 
-  EditorTest:  ScribeEditorTest
+  EditorTest: ScribeEditorTest
   HtmlTest:   ScribeHtmlTest
