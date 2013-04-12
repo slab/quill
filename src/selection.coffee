@@ -67,7 +67,7 @@ class Scribe.Selection
     return new Scribe.Range(@editor, start, end)
 
   preserve: (fn) ->
-    this.update()
+    this.update(true)
     if @range?
       positionNodes = this.save()
       fn.call(null)
@@ -76,13 +76,13 @@ class Scribe.Selection
       fn.call(null)
 
   restore: (positionNodes) ->
-    indexes = _.map(positionNodes, (node) ->
-      return console.warn "Saved position deleted", node unless node?
-      index = Scribe.Position.getIndex(node, 0)
+    indexes = []
+    _.each(positionNodes, (node) ->
+      return console.warn "Saved position deleted", node unless node.parentNode?
+      indexes.push(Scribe.Position.getIndex(node, 0))
       parentNode = node.parentNode
       parentNode.removeChild(node)
       parentNode.normalize()
-      return index
     )
     return if indexes.length < 1
     indexes.push(indexes[0]) if indexes.length == 1

@@ -102,13 +102,12 @@ keepNormalized = (fn) ->
 
 trackDelta = (fn, external = false) ->
   oldDelta = @doc.toDelta()
-  oldIndex = @selection.range.start.index if @selection.range?
+  oldIndex = this.getSelection()?.start.index
   fn()
   newDelta = @doc.toDelta()
   try
-    newRange = this.getSelection()
-    if @selection.range? and newRange?
-      newIndex = newRange.start.index
+    newIndex = this.getSelection()?.start.index
+    if oldIndex? and newIndex? and oldIndex <= oldDelta.endLength and newIndex <= newDelta.endLength
       [oldLeftDelta, oldRightDelta] = oldDelta.split(oldIndex)
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
       decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
