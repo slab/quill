@@ -4,6 +4,7 @@ Scribe = require('./scribe')
 class Scribe.Renderer
   @DEFAULTS:
     keepHTML: false
+    id: 'editor'
 
   @DEFAULT_STYLES:
     'div.editor': {
@@ -105,6 +106,7 @@ class Scribe.Renderer
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
     @root = doc.createElement('div')
     @root.classList.add('editor')
+    @root.id = @options.id
     doc.body.appendChild(@root)
     this.addStyles(styles)
     @root.innerHTML = html if @options.keepHTML

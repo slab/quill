@@ -12,6 +12,8 @@ _getMarkers = (savedSel) ->
 
 
 class Scribe.Selection
+  @SAVED_CLASS = 'saved-selection'
+
   constructor: (@editor) ->
     @range = null
     this.initListeners()
@@ -65,31 +67,50 @@ class Scribe.Selection
     return new Scribe.Range(@editor, start, end)
 
   preserve: (fn) ->
+    this.update()
     if @range?
-      savedSel = this.save()
+      positionNodes = this.save()
       fn.call(null)
-      this.restore(savedSel)
+      this.restore(positionNodes)
     else
       fn.call(null)
 
-  restore: (savedSel) ->
-    markers = _getMarkers(savedSel)
-    parents = _.map(markers, (marker) ->
-      return marker.parentNode
-    )
-    rangy.restoreSelection(savedSel, false)
-    _.each(parents, (parentNode) ->
+  restore: (positionNodes) ->
+    indexes = _.map(positionNodes, (node) ->
+      return console.warn "Saved position deleted", node unless node?
+      index = Scribe.Position.getIndex(node, 0)
+      parentNode = node.parentNode
+      parentNode.removeChild(node)
       parentNode.normalize()
+      return index
     )
+    return if indexes.length < 1
+    indexes.push(indexes[0]) if indexes.length == 1
+    range = new Scribe.Range(@editor, indexes[0], indexes[1])
+    this.setRange(range, true)
     this.update(true)
 
   save: ->
-    savedSel = rangy.saveSelection(@editor.contentWindow)
-    markers = _getMarkers(savedSel)
-    _.each(markers, (marker) ->
-      marker.classList.add(Scribe.DOM.EXTERNAL_CLASS) 
+    markers = @editor.root.querySelectorAll(".#{Scribe.Selection.SAVED_CLASS}")
+    if markers.length > 0
+      console.warn "Double selection save", markers
+      _.each(markers, (marker) -> marker.parentNode.removeChild(marker))
+    return _.map([@range.start, @range.end], (position) ->
+      [textNode, offset] = Scribe.DOM.findDeepestNode(position.leafNode, position.offset)
+      span = position.leafNode.ownerDocument.createElement('span')
+      span.classList.add(Scribe.Selection.SAVED_CLASS)
+      span.classList.add(Scribe.DOM.EXTERNAL_CLASS)
+      if textNode.nodeType == textNode.TEXT_NODE
+        [left, right] = Scribe.DOM.splitNode(textNode, offset, true)
+        position.leafNode.insertBefore(span, right)
+      else
+        if offset == 0
+          position.leafNode.parentNode.insertBefore(span, textNode)
+        else
+          console.warn 'Saving selection at offset greater than line length' if offset > 1
+          position.leafNode.parentNode.insertBefore(span, textNode.nextSibling)
+      return span
     )
-    return savedSel
 
   setRange: (@range, silent = false) ->
     rangySel = rangy.getSelection(@editor.contentWindow)
