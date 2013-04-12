@@ -6,7 +6,7 @@ require_relative 'selenium_adapter'
 NUM_EDITS = 500
 
 ################################################################################
-# Helpers
+# JS Helpers
 ################################################################################
 def execute_js(driver, src, args = nil)
   driver.switch_to.default_content
@@ -103,7 +103,6 @@ writer = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 writer = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, writer
-
 ################################################################################
 # Fuzzer logic
 ################################################################################

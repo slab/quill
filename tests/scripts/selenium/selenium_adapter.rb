@@ -1,9 +1,3 @@
-################################################################################
-# TODO's:
-# - Improve error handling
-# - Improve performance
-# - Some of this code is not the Ruby way; fix that.
-################################################################################
 class SeleniumAdapter
 
   attr_accessor :doc_length
