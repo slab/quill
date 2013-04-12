@@ -1,5 +1,6 @@
 require 'debugger'
 require 'colorize'
+require 'highline'
 require 'selenium-webdriver'
 require_relative 'selenium_adapter'
 
@@ -59,7 +60,8 @@ def read_deltas_from_file(file)
     end
     return deltas
   rescue
-    raise "Please provide a valid file name to replay a fuzzer run.".colorize(:red)
+    puts "Please provide a valid file name to replay a fuzzer run.".colorize(:red)
+    abort
   end
 end
 
@@ -73,6 +75,15 @@ def write_deltas_to_file(doc_delta, rand_delta)
   puts "Fuzzer failed. Writing state to #{file_path} for replays.".colorize(:red)
 end
 
+def delete_fail_file(file_name)
+  begin
+    FileUtils.rm("./fails/#{file_name}")
+  rescue
+    puts "Failed deleting file #{file_name}. Please ensure it still exists.".colorize(:red)
+    abort
+  end
+end
+
 def check_consistency(driver, replaying)
   driver.switch_to.default_content
   src = "return window.Fuzzer.checkConsistency();"
@@ -82,7 +93,14 @@ def check_consistency(driver, replaying)
     rand_delta = js_get_as_str(driver, "randomDelta")
     after_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replaying
-    raise "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
+    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
+    abort
+  else
+    if replaying
+      highline = HighLine.new
+      delete = highline.agree "Congrats, it passed! Would you like to delete the fail file? (y/n)".colorize(:green)
+      delete_fail_file(replaying) if delete
+    end
   end
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end

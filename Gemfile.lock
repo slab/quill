@@ -5,6 +5,7 @@ GEM
       ffi (~> 1.0, >= 1.0.11)
     colorize (0.5.8)
     ffi (1.6.0)
+    highline (1.6.16)
     multi_json (1.7.2)
     rubyzip (0.9.9)
     selenium-webdriver (2.32.0)
@@ -19,4 +20,5 @@ PLATFORMS
 
 DEPENDENCIES
   colorize (~> 0.5.8)
+  highline (~> 1.6.16)
   selenium-webdriver (~> 2.32.0)
