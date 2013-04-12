@@ -38,7 +38,7 @@ def js_set_random_delta(driver)
 end
 
 def js_get_cur_doc_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(writer.getDelta());"
+  return execute_js driver, "return JSON.stringify(editor.getDelta());"
 end
 
 def js_get_doc_delta_as_str(driver)
@@ -46,7 +46,7 @@ def js_get_doc_delta_as_str(driver)
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(writer.getDelta());"
+  execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
 end
 
 def read_deltas_from_file(file)
@@ -99,10 +99,10 @@ replay = ARGV[2]
 driver = Selenium::WebDriver.for browserdriver
 driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
-writer = driver.find_element(:class, "editor-container")
+editor = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
-writer = driver.find_element(:class, "editor")
-adapter = SeleniumAdapter.new driver, writer
+editor = driver.find_element(:class, "editor")
+adapter = SeleniumAdapter.new driver, editor
 ################################################################################
 # Fuzzer logic
 ################################################################################

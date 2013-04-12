@@ -1,10 +1,10 @@
 $(document).ready( ->
   $editors = $('.editor-container')
-  window.writer = new Scribe.Editor($editors.get(0))
-  writerToolbar = new Scribe.Toolbar('editor-toolbar-writer', writer)
+  window.editor = new Scribe.Editor($editors.get(0))
+  editorToolbar = new Scribe.Toolbar('editor-toolbar', editor)
   window.Fuzzer =
     getActiveFormats: ->
-      actives = $('#editor-toolbar-writer > .active')
+      actives = $('#editor-toolbar > .active')
       _.map(actives, (elem) ->
         $(elem).html().toLowerCase()
       )
@@ -23,7 +23,7 @@ $(document).ready( ->
       JSON.stringify(obj)
 
     getEditorDelta: ->
-      window.writer.getDelta()
+      window.editor.getDelta()
 
     set: (ref, val) ->
       window.Fuzzer[ref] = val
@@ -37,9 +37,9 @@ $(document).ready( ->
       window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
 
     initializeScribe: ->
-      window.writer.setDelta(window.Fuzzer.docDelta)
+      window.editor.setDelta(window.Fuzzer.docDelta)
 
     checkConsistency: ->
-      actual = window.Fuzzer.cleanup(writer.getDelta())
+      actual = window.Fuzzer.cleanup(editor.getDelta())
       window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta).isEqual(actual)
 )

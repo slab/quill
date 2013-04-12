@@ -134,14 +134,14 @@ class SeleniumAdapter
 
   def click_button_from_toolbar(button_class)
     @driver.switch_to.default_content
-    button = @driver.execute_script("return $('#editor-toolbar-writer > .#{button_class}')[0]")
+    button = @driver.execute_script("return $('#editor-toolbar > .#{button_class}')[0]")
     button.click()
     @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
   end
 
   def select_from_dropdown(dropdown_class, value)
     @driver.switch_to.default_content
-    dropdown = @driver.execute_script("return $('#editor-toolbar-writer > .#{dropdown_class}')[0]")
+    dropdown = @driver.execute_script("return $('#editor-toolbar > .#{dropdown_class}')[0]")
     Selenium::WebDriver::Support::Select.new(dropdown).select_by(:value, value)
     @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
   end
