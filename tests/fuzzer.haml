@@ -4,48 +4,47 @@
     %title Stypi Editor Fuzzer Test
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../demo/styles/reset.css'}
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '../demo/styles/style.css'}
-    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../demo/styles/dual.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../demo/styles/fuzzer.css'}
     %meta{:charset => 'utf-8'}
 
   %body
-    #content-container
-      .editor-wrapper.first
-        #editor-toolbar-writer.formatting-container
-          %select.family
-            %option{:value => 'san-serif', :selected => true}  San Serif
-            %option{:value => 'serif'}      Serif
-            %option{:value => 'monospace'}  Monospace
-          %select.size
-            %option{:value => 'small'}  Small
-            %option{:value => 'normal', :selected => true} Normal
-            %option{:value => 'large'}  Large
-            %option{:value => 'huge'}   Huge
-          %select.color
-            %option{:value => ''}
-            %option{:value => 'white'}  White
-            %option{:value => 'black', :selected => true}  Black
-            %option{:value => 'red'}    Red
-            %option{:value => 'orange'} Orange
-            %option{:value => 'yellow'} Yellow
-            %option{:value => 'green'}  Green
-            %option{:value => 'blue'}   Blue
-            %option{:value => 'purple'} Purple
-          %select.background
-            %option{:value => ''}
-            %option{:value => 'white', :selected => true}  White
-            %option{:value => 'black'}  Black
-            %option{:value => 'red'}    Red
-            %option{:value => 'orange'} Orange
-            %option{:value => 'yellow'} Yellow
-            %option{:value => 'green'}  Green
-            %option{:value => 'blue'}   Blue
-            %option{:value => 'purple'} Purple
-          %button.format-button.bold Bold
-          %button.format-button.italic Italic
-          %button.format-button.underline Under
-          %button.format-button.strike Strike
-          %button.format-button.link Link
-        .editor-container
+    .editor-wrapper.fuzzer
+      #editor-toolbar-writer.formatting-container
+        %select.family
+          %option{:value => 'san-serif', :selected => true}  San Serif
+          %option{:value => 'serif'}      Serif
+          %option{:value => 'monospace'}  Monospace
+        %select.size
+          %option{:value => 'small'}  Small
+          %option{:value => 'normal', :selected => true} Normal
+          %option{:value => 'large'}  Large
+          %option{:value => 'huge'}   Huge
+        %select.color
+          %option{:value => ''}
+          %option{:value => 'white'}  White
+          %option{:value => 'black', :selected => true}  Black
+          %option{:value => 'red'}    Red
+          %option{:value => 'orange'} Orange
+          %option{:value => 'yellow'} Yellow
+          %option{:value => 'green'}  Green
+          %option{:value => 'blue'}   Blue
+          %option{:value => 'purple'} Purple
+        %select.background
+          %option{:value => ''}
+          %option{:value => 'white', :selected => true}  White
+          %option{:value => 'black'}  Black
+          %option{:value => 'red'}    Red
+          %option{:value => 'orange'} Orange
+          %option{:value => 'yellow'} Yellow
+          %option{:value => 'green'}  Green
+          %option{:value => 'blue'}   Blue
+          %option{:value => 'purple'} Purple
+        %button.format-button.bold Bold
+        %button.format-button.italic Italic
+        %button.format-button.underline Under
+        %button.format-button.strike Strike
+        %button.format-button.link Link
+      .editor-container
 
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
     %script{:type => 'text/javascript', :src => 'https://raw.github.com/caolan/async/v0.2.3/lib/async.js'}
