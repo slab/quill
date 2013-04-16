@@ -93,6 +93,7 @@ def check_consistency(driver, replay_file)
     rand_delta = js_get_as_str(driver, "randomDelta")
     after_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
+    puts "Inconsistent deltas:".red
     puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
     abort
   else
