@@ -49,6 +49,9 @@ class ScribeInsertTestSuite extends ScribeTestSuite
         "insert newline":
           value: '\n'
           attributes: {}
+        "insert multiline text":
+          value: 'A\nB'
+          attributes: {}
       }
       _.each(tests, (test, name) =>
         insertDelta = Tandem.Delta.makeInsertDelta(@docLength, index, test.value, test.attributes)
