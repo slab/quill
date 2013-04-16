@@ -139,11 +139,11 @@ if replay_file
 else
   js_set_doc_delta(driver)
   NUM_EDITS.times do |i|
-     js_set_random_delta(driver)
-     random_delta = js_get(driver, "randomDelta")
-     puts i.to_s.colorize(:green) if i % 10 == 0
-     adapter.apply_delta(random_delta)
-     check_consistency(driver, nil)
-     js_set_doc_delta(driver)
+    js_set_random_delta(driver)
+    random_delta = js_get(driver, "randomDelta")
+    puts i.to_s.colorize(:green) if i % 10 == 0
+    adapter.apply_delta(random_delta)
+    check_consistency(driver, nil)
+    js_set_doc_delta(driver)
   end
 end
