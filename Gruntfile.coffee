@@ -32,13 +32,13 @@ module.exports = (grunt) ->
       test:
         files: [{ 
           dest: 'build/tests/scripts/editor.js'
-          src: ['tests/scripts/unit/common.coffee', 'tests/scripts/editor.coffee']
+          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/editor.coffee']
         }, {
           dest: 'build/tests/scripts/fuzzer.js'
           src: 'tests/scripts/fuzzer.coffee'
         }, {
           dest: 'build/tests/scripts/unit.js'
-          src: 'tests/scripts/unit/*.coffee'
+          src: ['tests/scripts/test.coffee', 'tests/scripts/unit/*.coffee']
         }]
 
     coffeeify:
