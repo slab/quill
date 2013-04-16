@@ -22,15 +22,24 @@ module.exports = (grunt) ->
         dest: 'build/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
-      editor:
-        files: [{ 
-          dest: 'build/tests/scripts/editor.js', 
-          src: ['tests/scripts/unit/common.coffee', 'tests/scripts/editor.coffee']
+      src:
+        files: [{
+          expand: true
+          dest: 'build/'
+          src: ['src/**/*.coffee']
+          ext: '.js'
         }]
-      fuzzer:
-        files: [{ dest: 'build/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }]
-      unit:
-        files: [{ dest: 'build/tests/scripts/unit.js', src: 'tests/scripts/unit/*.coffee' }]
+      test:
+        files: [{ 
+          dest: 'build/tests/scripts/editor.js'
+          src: ['tests/scripts/unit/common.coffee', 'tests/scripts/editor.coffee']
+        }, {
+          dest: 'build/tests/scripts/fuzzer.js'
+          src: 'tests/scripts/fuzzer.coffee'
+        }, {
+          dest: 'build/tests/scripts/unit.js'
+          src: 'tests/scripts/unit/*.coffee'
+        }]
 
     coffeeify:
       options:
@@ -104,12 +113,6 @@ module.exports = (grunt) ->
       demo:
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
-      editor:
-        files: ['tests/scripts/editor.coffee']
-        tasks: ['coffee:editor']
-      fuzzer:
-        files: ['tests/scripts/fuzzer.coffee']
-        tasks: ['coffee:fuzzer']
       haml_demo:
         files: ['demo/*.haml']
         tasks: ['haml:demo']
@@ -120,11 +123,11 @@ module.exports = (grunt) ->
         files: ['demo/styles/*.sass']
         tasks: ['sass:demo']
       src:
-        files: ['src/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffeeify:src', 'concat:scribe_all', 'copy:build']
-      unit:
-        files: ['tests/scripts/unit/*.coffee']
-        tasks: ['coffee:unit']
+        files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
+        tasks: ['coffee:src', 'coffeeify:src', 'concat:scribe_all', 'copy:build']
+      test:
+        files: ['tests/scripts/**/*.coffee']
+        tasks: ['coffee:test']
 
   # Default task.
   grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy', 'haml', 'sass']
