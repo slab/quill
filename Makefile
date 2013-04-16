@@ -6,12 +6,15 @@ coverage:
 	@mv build/*.js tmp/backup/
 	@jscoverage tmp/backup/ tmp/coverage/
 	@mv tmp/coverage/*.js build/
-	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
+	@mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
 	@rm build/*.js
 	@mv tmp/backup/*.js build/
 	@rm -rf tmp
 
-test: unit
+editor-test: 
+	@mocha-phantomjs build/tests/editor.html
+
+test: unit editor-test
 
 unit:
-	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html
+	@mocha-phantomjs build/tests/unit.html
