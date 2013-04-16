@@ -3,12 +3,12 @@ coverage:
 	@mkdir tmp
 	@mkdir tmp/coverage
 	@mkdir tmp/backup
-	@mv build/src/*.js tmp/backup/
+	@mv build/src/* tmp/backup/
 	@jscoverage tmp/backup/ tmp/coverage/
-	@mv tmp/coverage/*.js build/
-	@mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
-	@rm build/*.js
-	@mv tmp/backup/*.js build/src/
+	@mv tmp/coverage/* build/src/
+	@mocha-phantomjs build/tests/test.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
+	@rm -rf build/src/*
+	@mv tmp/backup/* build/src/
 	@rm -rf tmp
 
 editor-test: 
