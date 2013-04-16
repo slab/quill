@@ -22,6 +22,11 @@ module.exports = (grunt) ->
         dest: 'build/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
+      editor:
+        files: [{ 
+          dest: 'build/tests/scripts/editor.js', 
+          src: ['tests/scripts/unit/common.coffee', 'tests/scripts/editor.coffee']
+        }]
       fuzzer:
         files: [{ dest: 'build/tests/scripts/fuzzer.js', src: 'tests/scripts/fuzzer.coffee' }]
       unit:
@@ -99,6 +104,9 @@ module.exports = (grunt) ->
       demo:
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
+      editor:
+        files: ['tests/scripts/editor.coffee']
+        tasks: ['coffee:editor']
       fuzzer:
         files: ['tests/scripts/fuzzer.coffee']
         tasks: ['coffee:fuzzer']

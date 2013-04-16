@@ -1,0 +1,41 @@
+!!! 5
+%html
+  %head
+    %title Stypi Editor Tests
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/mocha.css'}
+    :css
+      #expected-container, #test-container {
+        float: left;
+        width: 50%;
+      }
+    %meta{:charset => 'utf-8'}
+
+%body
+  #mocha
+  #test-container
+  #expected-container
+
+  // Need to separate files for code coverage
+  %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
+  %script{:type => 'text/javascript', :src => '../lib/underscore.js'}
+  %script{:type => 'text/javascript', :src => '../lib/rangy/rangy-core.js'}
+  %script{:type => 'text/javascript', :src => '../lib/eventemitter2.js'}
+  %script{:type => 'text/javascript', :src => '../lib/linked_list.js'}
+  %script{:type => 'text/javascript', :src => '../lib/tandem-core.js'}
+
+  %script{:type => 'text/javascript', :src => '../scribe.js'}
+
+  %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
+  %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+  :javascript
+    mocha.setup('bdd');
+    mocha.ignoreLeaks();
+    expect = chai.expect;
+  %script{:type => 'text/javascript', :src => 'scripts/editor.js'}
+  :javascript
+    if (window.mochaPhantomJS) {
+      mochaPhantomJS.run();
+    } else {
+      mocha.run();
+    }
+      
