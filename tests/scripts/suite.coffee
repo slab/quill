@@ -17,8 +17,8 @@
 
 class ScribeTestSuite
   @template: '
-    <div><b>Bold</b></div>
-    <div><span class="color-red">Red</span></div>
+    <div><b>B</b></div>
+    <div><span class="color-red">R</span></div>
   '
 
   constructor: ->
