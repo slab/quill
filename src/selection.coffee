@@ -1,16 +1,6 @@
 Scribe = require('./scribe')
 
 
-_getMarkers = (savedSel) ->
-  markers = _.map(savedSel.rangeInfos, (rangeInfo) ->
-    return _.map([rangeInfo.startMarkerId, rangeInfo.endMarkerId, rangeInfo.markerId], (markerId) ->
-      marker = rangeInfo.document.getElementById(markerId)
-      return if marker? and marker.nodeType == marker.ELEMENT_NODE then marker else null
-    )
-  )
-  return _.compact(_.flatten(markers))
-
-
 class Scribe.Selection
   @SAVED_CLASS = 'saved-selection'
 
@@ -69,15 +59,15 @@ class Scribe.Selection
   preserve: (fn) ->
     this.update(true)
     if @range?
-      positionNodes = this.save()
+      markers = this.save()
       fn.call(null)
-      this.restore(positionNodes)
+      this.restore(markers)
     else
       fn.call(null)
 
-  restore: (positionNodes) ->
+  restore: (markers) ->
     indexes = []
-    _.each(positionNodes, (node) ->
+    _.each(markers, (node) ->
       return console.warn "Saved position deleted", node unless node.parentNode?
       indexes.push(Scribe.Position.getIndex(node, 0))
       parentNode = node.parentNode

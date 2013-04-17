@@ -97,7 +97,7 @@ class ScribeFormatTestSuite extends ScribeTestSuite
             attributes[format] = value
             retainDelta = Tandem.Delta.makeRetainDelta(@docLength, index, length, attributes)
             expected = @delta.compose(retainDelta)
-            @editorTest.run("Applied #{format} #{value} to #{length} characters at #{index}",
+            @editorTest.run("Apply #{format} #{value} to #{length} characters at #{index}",
               expected: expected
               fn: (testEditor, expectedEditor) ->
                 testEditor.formatAt(index, length, format, value)
