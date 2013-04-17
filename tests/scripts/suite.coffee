@@ -17,8 +17,20 @@
 
 class ScribeTestSuite
   @template: '
-    <div><b>B</b></div>
-    <div><span class="color-red">R</span></div>
+    <div><br></div>
+    <div>
+      <i>
+        <b>ab</b>
+        <span>cd</span>
+      </i>
+      <s>ef</s>
+      <span class="color-red">gh</span>
+    </div>
+    <div><br></div>
+    <div><br></div>
+    <div><b>ij</b></div>
+    <div><span class="color-red">kl</span></div>
+    <div><br></div>
   '
 
   constructor: ->
