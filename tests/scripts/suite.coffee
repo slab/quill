@@ -16,25 +16,8 @@
 # k - number of formats
 
 class ScribeTestSuite
-  @template: '
-    <div><br></div>
-    <div>
-      <i>
-        <b>ab</b>
-        <span>cd</span>
-      </i>
-      <s>ef</s>
-      <span class="color-red">gh</span>
-    </div>
-    <div><br></div>
-    <div><br></div>
-    <div><b>ij</b></div>
-    <div><span class="color-red">kl</span></div>
-    <div><br></div>
-  '
-
-  constructor: ->
-    template = Scribe.Utils.cleanHtml(ScribeTestSuite.template, true)
+  constructor: (template) ->
+    template = Scribe.Utils.cleanHtml(template, true)
     $('#test-container').html(template)
     doc = new Scribe.Document($('#test-container').get(0))
     @delta = doc.toDelta()
@@ -43,7 +26,7 @@ class ScribeTestSuite
 
 
 class ScribeInsertTestSuite extends ScribeTestSuite
-  constructor: ->
+  constructor: (template) ->
     super
 
   run: ->
@@ -78,7 +61,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
 
 
 class ScribeDeleteTestSuite extends ScribeTestSuite
-  constructor: ->
+  constructor: (template) ->
     super
 
   run: ->
@@ -96,7 +79,7 @@ class ScribeDeleteTestSuite extends ScribeTestSuite
 
 
 class ScribeFormatTestSuite extends ScribeTestSuite
-  constructor: ->
+  constructor: (template) ->
     super
 
   run: ->
