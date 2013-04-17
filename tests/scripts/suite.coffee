@@ -32,6 +32,9 @@ class ScribeInsertTestSuite extends ScribeTestSuite
   run: ->
     _.each([0..(@docLength - 1)], (index) =>
       tests = {
+        "insert nothing":
+          value: ''
+          attributes: {}
         "insert A":
           value: 'A'
           attributes: {}
@@ -66,7 +69,7 @@ class ScribeDeleteTestSuite extends ScribeTestSuite
 
   run: ->
     _.each([0..(@docLength - 2)], (index) =>
-      _.each([1..(@docLength-index-1)], (length) =>
+      _.each([0..(@docLength-index-1)], (length) =>
         deleteDelta = Tandem.Delta.makeDeleteDelta(@docLength, index, length)
         expected = @delta.compose(deleteDelta)
         @editorTest.run("Delete #{length} characters at #{index}",
@@ -84,7 +87,7 @@ class ScribeFormatTestSuite extends ScribeTestSuite
 
   run: ->
     _.each([0..(@docLength - 2)], (index) =>
-      _.each([1..(@docLength-index-1)], (length) =>
+      _.each([0..(@docLength-index-1)], (length) =>
         formats =
           color: ['red', null]
           bold: [true, false]
