@@ -16,6 +16,11 @@ describe('Editor', ->
     <div><br></div>
   '
 
+  describe('insertAt empty', ->
+    insertSuite = new Scribe.Test.InsertTestSuite('')
+    insertSuite.run()
+  )
+
   describe('insertAt', ->
     insertSuite = new Scribe.Test.InsertTestSuite(template)
     insertSuite.run()
