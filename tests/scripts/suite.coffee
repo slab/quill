@@ -16,17 +16,17 @@
 # k - number of formats
 
 class ScribeTestSuite
-  constructor: (template) ->
-    template = Scribe.Utils.cleanHtml(template, true)
-    $('#test-container').html(template)
+  constructor: (@options) ->
+    @options.initial = Scribe.Utils.cleanHtml(@options.initial, true)
+    $('#test-container').html(options.initial)
     doc = new Scribe.Document($('#test-container').get(0))
     @delta = doc.toDelta()
     @docLength = @delta.endLength
-    @editorTest = new Scribe.Test.EditorTest({ initial: template })
+    @editorTest = new Scribe.Test.EditorTest(@options)
 
 
 class ScribeInsertTestSuite extends ScribeTestSuite
-  constructor: (template) ->
+  constructor: (options) ->
     super
 
   run: ->
@@ -67,7 +67,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
 
 
 class ScribeDeleteTestSuite extends ScribeTestSuite
-  constructor: (template) ->
+  constructor: (options) ->
     super
 
   run: ->
@@ -85,7 +85,7 @@ class ScribeDeleteTestSuite extends ScribeTestSuite
 
 
 class ScribeFormatTestSuite extends ScribeTestSuite
-  constructor: (template) ->
+  constructor: (options) ->
     super
 
   run: ->

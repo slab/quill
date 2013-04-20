@@ -49,6 +49,7 @@ class ScribeEditorTest extends ScribeHtmlTest
     options.expected = '' if Tandem.Delta.isDelta(options.expected)
     testEditor = null
     expectedEditor = null
+    ignoreExpect = options.ignoreExpect
     options.fn = (testContainer, expectedContainer, args...) ->
       testEditor = new Scribe.Editor(testContainer)
       expectedEditor = new Scribe.Editor(expectedContainer)
@@ -57,9 +58,10 @@ class ScribeEditorTest extends ScribeHtmlTest
       savedOptions.fn.call(null, testEditor, expectedEditor, args...)
     options.checker = (testContainer, expectedContainer, args...) ->
       savedOptions.checker.call(null, testEditor, expectedEditor, args...)
-      expect(testEditor.getDelta()).to.deep.equal(expectedEditor.getDelta())
-      consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
-      expect(consistent).to.be.true
+      unless ignoreExpect
+        expect(testEditor.getDelta()).to.deep.equal(expectedEditor.getDelta())
+        consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
+        expect(consistent).to.be.true
     options.ignoreExpect = true
     super(name, options, args...)
     
