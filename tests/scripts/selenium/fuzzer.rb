@@ -115,13 +115,20 @@ end
 browserdriver = ARGV[0].to_sym
 editor_url = ARGV[1]
 replay_file = ARGV[2]
-driver = Selenium::WebDriver.for browserdriver
+if browserdriver == :firefox
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  profile.native_events = true
+  driver = Selenium::WebDriver.for browserdriver, :profile => profile
+else
+  driver = Selenium::WebDriver.for browserdriver
+end
 driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
 editor = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 editor = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, editor
+
 ################################################################################
 # Fuzzer logic
 ################################################################################
