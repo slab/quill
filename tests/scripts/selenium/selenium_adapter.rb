@@ -9,43 +9,55 @@ class SeleniumAdapter
     @doc_length = 0
   end
 
+  def insert_at(index, text)
+    puts "Inserting #{text} at #{index}"
+    move_cursor(index)
+    type_text(text)
+    # Remove any prexisting formatting that Scribe applied
+    move_cursor(index)
+    runs = text.split "\n"
+    runs.each do |run|
+      if run.length > 0
+        highlight run.length
+        remove_active_formatting
+      end
+      remove_highlighting
+      move_cursor(index + run.length + 1) # +1 to account for \n
+      index += run.length + 1
+    end
+    remove_highlighting
+  end
+
+  def delete_at(index, length)
+    puts "Deleting #{length} at #{index}"
+    move_cursor(index)
+    delete(length)
+  end
+
+  def format_at(index, length, attributes)
+    puts "Formatting #{length} starting at #{index} with #{attributes}"
+    move_cursor(index)
+    highlight(length)
+    attributes.each do |attr, val|
+      format(attr, val)
+    end
+    remove_highlighting
+  end
+
   # Assumes delta will contain only one document modifying op
   def apply_delta(delta)
     index = 0
     delta['ops'].each do |op|
       if op['value']
-        puts "Inserting #{op['value']} at #{index}"
-        move_cursor(index)
-        type_text(op['value'])
-        # Remove any prexisting formatting that Scribe applied
-        move_cursor(index)
-        runs = op['value'].split "\n"
-        runs.each do |run|
-          if run.length > 0
-            highlight run.length
-            remove_active_formatting
-          end
-          remove_highlighting
-          move_cursor(index + run.length + 1) # +1 to account for \n
-          index += run.length + 1
-        end
-        remove_highlighting
+        insert_at index, op['value']
         break
       elsif op['start'] > index
-        move_cursor(index)
         delete_length = op['start'] - index
-        puts "Deleting #{delete_length} at #{index}"
-        delete(delete_length)
+        delete_at(index, delete_length)
         break
       elsif !op['attributes'].empty?
         length = op['end'] - op['start']
-        puts "Formatting #{length} starting at #{index} with #{op['attributes']}"
-        move_cursor(index)
-        highlight(length)
-        op['attributes'].each do |attr, val|
-          format(attr, val)
-        end
-        remove_highlighting
+        format_at(index, length, op['attributes'])
         break
       else
         index += op['end'] - op['start']
