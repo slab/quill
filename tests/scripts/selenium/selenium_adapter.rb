@@ -9,6 +9,29 @@ class SeleniumAdapter
     @doc_length = 0
   end
 
+  # Assumes delta will contain only one document modifying op
+  def apply_delta(delta)
+    index = 0
+    delta['ops'].each do |op|
+      if op['value']
+        insert_at index, op['value']
+        break
+      elsif op['start'] > index
+        delete_length = op['start'] - index
+        delete_at(index, delete_length)
+        break
+      elsif !op['attributes'].empty?
+        length = op['end'] - op['start']
+        format_at(index, length, op['attributes'])
+        break
+      else
+        index += op['end'] - op['start']
+      end
+    end
+  end
+
+  # private
+
   def insert_at(index, text)
     puts "Inserting #{text} at #{index}"
     move_cursor(index)
@@ -43,29 +66,6 @@ class SeleniumAdapter
     end
     remove_highlighting
   end
-
-  # Assumes delta will contain only one document modifying op
-  def apply_delta(delta)
-    index = 0
-    delta['ops'].each do |op|
-      if op['value']
-        insert_at index, op['value']
-        break
-      elsif op['start'] > index
-        delete_length = op['start'] - index
-        delete_at(index, delete_length)
-        break
-      elsif !op['attributes'].empty?
-        length = op['end'] - op['start']
-        format_at(index, length, op['attributes'])
-        break
-      else
-        index += op['end'] - op['start']
-      end
-    end
-  end
-
-  # private
 
   def remove_highlighting
     # Kludge. The only xplatform way that I've found to guarantee removing
