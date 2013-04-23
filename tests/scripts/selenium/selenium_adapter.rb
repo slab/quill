@@ -163,7 +163,11 @@ class SeleniumAdapter
     else
       raise "Unknown formatting op: #{format}"
     end
-    @editor.send_keys("") # Need to reset focus to the editor after clicking toolbar
+    self.focus # Need to reset focus to the editor after clicking toolbar
+  end
+
+  def focus
+    @editor.send_keys ""
   end
 
   def self.os

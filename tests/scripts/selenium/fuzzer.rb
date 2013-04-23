@@ -131,6 +131,7 @@ if replay_file
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
   doc_delta = js_get(driver, "docDelta")
   js_set_scribe_delta(driver)
+  adapter.focus()
   adapter.doc_length = doc_delta['endLength']
   random_delta = js_get(driver, "randomDelta")
   random_delta_str = js_get_as_str(driver, "randomDelta")
