@@ -98,7 +98,7 @@ class SeleniumAdapter
     @cursor_pos -= length
   end
 
-  def type_text(text)
+  def split_text(text)
     keys = []
     cur = ""
     text.each_char { |c|
@@ -115,20 +115,22 @@ class SeleniumAdapter
       end
     }
     keys << cur if cur.length > 0
+    return keys
+  end
+
+  def type_text(text)
+    keys = split_text(text)
     if @cursor_pos == @doc_length && @driver.browser == :firefox
       # Hack to workaround inexplicable firefox behavior in which it appends a
       # newline if you append to the end of the document.
       @editor.send_keys(keys, :arrow_down, :delete)
     else
-      keys.each do |key|
-        index = @cursor_pos
-        move_cursor 0
-        move_cursor index
-        @editor.send_keys(key)
-        len = key.is_a?(String) ? key.length : 1
-        @cursor_pos += len
-        @doc_length += len
+      @editor.send_keys keys
+      len = keys.reduce(0) do |len, elem|
+        if elem.is_a?(String) then len + elem.length else len + 1 end
       end
+      @cursor_pos += len
+      @doc_length += len
     end
   end
 
