@@ -70,7 +70,8 @@ class SeleniumAdapter
   def remove_highlighting
     # Kludge. The only xplatform way that I've found to guarantee removing
     # highlighted text in a content editable is to command the cursor to move to
-    # the 0th position.
+    # the 0th position. We need to first focus the editor, or chromedriver will
+    # (incorrectly) extend the highlighting to the beginning of the doc.
     focus
     move_cursor 0
   end
