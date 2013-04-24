@@ -71,6 +71,7 @@ class SeleniumAdapter
     # Kludge. The only xplatform way that I've found to guarantee removing
     # highlighted text in a content editable is to command the cursor to move to
     # the 0th position.
+    focus
     move_cursor 0
   end
 
