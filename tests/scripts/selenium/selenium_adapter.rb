@@ -14,38 +14,15 @@ class SeleniumAdapter
     index = 0
     delta['ops'].each do |op|
       if op['value']
-        puts "Inserting #{op['value']} at #{index}"
-        move_cursor(index)
-        type_text(op['value'])
-        # Remove any prexisting formatting that Scribe applied
-        move_cursor(index)
-        runs = op['value'].split "\n"
-        runs.each do |run|
-          if run.length > 0
-            highlight run.length
-            remove_active_formatting
-          end
-          remove_highlighting
-          move_cursor(index + run.length + 1) # +1 to account for \n
-          index += run.length + 1
-        end
-        remove_highlighting
+        insert_at index, op['value']
         break
       elsif op['start'] > index
-        move_cursor(index)
         delete_length = op['start'] - index
-        puts "Deleting #{delete_length} at #{index}"
-        delete(delete_length)
+        delete_at(index, delete_length)
         break
       elsif !op['attributes'].empty?
         length = op['end'] - op['start']
-        puts "Formatting #{length} starting at #{index} with #{op['attributes']}"
-        move_cursor(index)
-        highlight(length)
-        op['attributes'].each do |attr, val|
-          format(attr, val)
-        end
-        remove_highlighting
+        format_at(index, length, op['attributes'])
         break
       else
         index += op['end'] - op['start']
@@ -55,10 +32,47 @@ class SeleniumAdapter
 
   # private
 
+  def insert_at(index, text)
+    puts "Inserting #{text} at #{index}"
+    move_cursor(index)
+    type_text(text)
+    # Remove any prexisting formatting that Scribe applied
+    move_cursor(index)
+    runs = text.split "\n"
+    runs.each do |run|
+      if run.length > 0
+        highlight run.length
+        remove_active_formatting
+      end
+      remove_highlighting
+      move_cursor(index + run.length + 1) # +1 to account for \n
+      index += run.length + 1
+    end
+    remove_highlighting
+  end
+
+  def delete_at(index, length)
+    puts "Deleting #{length} at #{index}"
+    move_cursor(index)
+    delete(length)
+  end
+
+  def format_at(index, length, attributes)
+    puts "Formatting #{length} starting at #{index} with #{attributes}"
+    move_cursor(index)
+    highlight(length)
+    attributes.each do |attr, val|
+      format(attr, val)
+    end
+    remove_highlighting
+  end
+
   def remove_highlighting
     # Kludge. The only xplatform way that I've found to guarantee removing
     # highlighted text in a content editable is to command the cursor to move to
-    # the 0th position.
+    # the 0th position. We need to first focus the editor, or chromedriver will
+    # (incorrectly) extend the highlighting to the beginning of the doc.
+    focus
     move_cursor 0
   end
 
@@ -98,7 +112,7 @@ class SeleniumAdapter
     @cursor_pos -= length
   end
 
-  def type_text(text)
+  def split_text(text)
     keys = []
     cur = ""
     text.each_char { |c|
@@ -115,20 +129,22 @@ class SeleniumAdapter
       end
     }
     keys << cur if cur.length > 0
+    return keys
+  end
+
+  def type_text(text)
+    keys = split_text(text)
     if @cursor_pos == @doc_length && @driver.browser == :firefox
       # Hack to workaround inexplicable firefox behavior in which it appends a
       # newline if you append to the end of the document.
       @editor.send_keys(keys, :arrow_down, :delete)
     else
-      keys.each do |key|
-        index = @cursor_pos
-        move_cursor 0
-        move_cursor index
-        @editor.send_keys(key)
-        len = key.is_a?(String) ? key.length : 1
-        @cursor_pos += len
-        @doc_length += len
+      @editor.send_keys keys
+      len = keys.reduce(0) do |len, elem|
+        if elem.is_a?(String) then len + elem.length else len + 1 end
       end
+      @cursor_pos += len
+      @doc_length += len
     end
   end
 
@@ -161,7 +177,11 @@ class SeleniumAdapter
     else
       raise "Unknown formatting op: #{format}"
     end
-    @editor.send_keys("") # Need to reset focus to the editor after clicking toolbar
+    self.focus # Need to reset focus to the editor after clicking toolbar
+  end
+
+  def focus
+    @editor.send_keys ""
   end
 
   def self.os
