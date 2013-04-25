@@ -1,0 +1,2 @@
+= Haml::Engine.new(File.read('tests/mocha.haml')).render do
+  - Haml::Engine.new("%script{:type => 'text/javascript', :src => 'scripts/editor.js'}").render

@@ -1,0 +1,42 @@
+!!! 5
+%html
+  %head
+    %title Stypi Editor All Unit Tests
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/mocha.css'}
+    :css
+      #expected-container, #test-container {
+        float: left;
+        width: 50%;
+      }
+    %meta{:charset => 'utf-8'}
+
+%body
+  #mocha
+  #test-container
+  #expected-container
+
+  // Need to separate files for code coverage
+  %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
+
+  - libs = ['underscore', 'rangy/rangy-core', 'eventemitter2', 'linked_list', 'tandem-core']
+  - libs.each do |lib|
+    %script{:type => 'text/javascript', :src => "../lib/#{lib}.js"}
+
+  %script{:type => 'text/javascript', :src => '../src/ext/require.js'}
+  - srcs = ['debug', 'document', 'dom', 'editor', 'keyboard', 'leaf-iterator', 'leaf', 'line', 'normalizer', 'paste-manager', 'position', 'range', 'renderer', 'selection', 'undo-manager', 'utils', 'modules/attribution', 'modules/cursor', 'modules/toolbar']
+  - srcs.each do |src|
+    %script{:type => 'text/javascript', :src => "../src/#{src}.js"}
+
+  %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
+  %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+  :javascript
+    mocha.setup('bdd');
+    mocha.ignoreLeaks();
+    expect = chai.expect;
+  = yield
+  :javascript
+    if (window.mochaPhantomJS) {
+      mochaPhantomJS.run();
+    } else {
+      mocha.run();
+    }

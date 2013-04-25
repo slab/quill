@@ -1,5 +1,6 @@
 describe('Selection', ->
   findIndexes = (html) ->
+    oldHTML = $('#test-container').html()
     $('#test-container').html(html)
     editor = new Scribe.Editor('test-container')
     lines = editor.doc.lines.toArray()
@@ -13,6 +14,7 @@ describe('Selection', ->
       lineIndex += line.length
       return indexes
     , [])
+    $('#test-container').html(oldHTML)
     return ret
 
   describe('findIndexes', (html) ->
@@ -31,211 +33,215 @@ describe('Selection', ->
   )
   
   describe('preserve', ->
-    tests = 
+    tests =
       'basic preservation':
         'inside a node':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
         'entire node':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
         'multiple nodes':
-          lines: ['<div><b>0123|4</b><i>5|6789</i></div>']
+          initial: ['<div><b>0123|4</b><i>5|6789</i></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
         'multiple lines':
-          lines: ['<div><span>0123|4</span></div>', '<div><span>5|6789</span></div>']
+          initial: ['<div><span>0123|4</span></div>', '<div><span>5|6789</span></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0, 1]
         'entire line':
-          lines: ['<div><span>0123</span></div>', '<div><span>|45|</span></div>', '<div><span>6789</span></div>']
+          initial: ['<div><span>0123</span></div>', '<div><span>|45|</span></div>', '<div><span>6789</span></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0, 1, 2]
         'entire document':
-          lines: ['<div><span>|01|</span></div>']
+          initial: ['<div><span>|01|</span></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
         'empty document':
-          lines: ['<div>||<br></div>']
+          initial: ['<div>||<br></div>']
           fn: (editor) -> editor.insertAt(0, '')
           expected: [0]
-
       'insert tests':
         'insert before':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(1, "A")
           expected: ['<div><span>0A123|45|6789</span></div>']
         'insert after':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(7, "A")
           expected: ['<div><span>0123|45|6A789</span></div>']
         'insert at beginning of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "A")
           expected: ['<div><span>0123|A45|6789</span></div>']
         'insert at end of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "A")
           expected: ['<div><span>0123|45|A6789</span></div>']
         'insert in middle of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(5, "A")
           expected: ['<div><span>0123|4A5|6789</span></div>']
         'insert newline at beginning of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(4, "\n")
           expected: ['<div><span>0123|</span></div>', '<div><span>45|6789</span></div>']
-        'insert newline at end of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+        'initial newline at end of selection':
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(6, "\n")
           expected: ['<div><span>0123|45|</span></div>', '<div><span>6789</span></div>']
-        'insert newline at middle of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+        'initial newline at middle of selection':
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(5, "\n")
           expected: ['<div><span>0123|4</span></div>', '<div><span>5|6789</span></div>']
-        'insert newline to previous line format':
-          lines: ['<ol><li><span>0123456789</span></li></ol>', '<span>0123|45|6789</span></div>']
+        'initial newline to previous line format':
+          initial: ['<ol><li><span>0123456789</span></li></ol>', '<span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertAt(10, "\n")
           expected: [0, '<ol><li><span><br></span></li></ol>', 1]
           
       'delete tests':
         'delete before':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(1, 2)
           expected: ['<div><span>03|45|6789</span></div>']
         'delete after':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(7, 2)
           expected: ['<div><span>0123|45|69</span></div>']
         'delete at beginning of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(2, 2)
           expected: ['<div><span>01|45|6789</span></div>']
         'delete at end of selection':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(6, 2)
           expected: ['<div><span>0123|45|89</span></div>']
         'delete middle of selection':
-          lines: ['<div><span>012|3456|789</span></div>']
+          initial: ['<div><span>012|3456|789</span></div>']
           fn: (editor) -> editor.deleteAt(4, 2)
           expected: ['<div><span>012|36|789</span></div>']
         'delete selection':
-          lines: ['<div><span>012|3456|789</span></div>']
+          initial: ['<div><span>012|3456|789</span></div>']
           fn: (editor) -> editor.deleteAt(3, 4)
           expected: ['<div><span>012||789</span></div>']
         'delete containing selection': 
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.deleteAt(3, 4)
           expected: ['<div><span>012||789</span></div>']
         'delete beginning of leaf':
-          lines: ['<div><span>01</span><b>23|45|67</b><span>89</span></div>']
+          initial: ['<div><span>01</span><b>23|45|67</b><span>89</span></div>']
           fn: (editor) -> editor.deleteAt(1, 2)
           expected: ['<div><span>0</span><b>3|45|67</b><span>89</span></div>']
         'delete end of leaf':
-          lines: ['<div><span>01</span><b>23|45|67</b><span>89</span></div>']
+          initial: ['<div><span>01</span><b>23|45|67</b><span>89</span></div>']
           fn: (editor) -> editor.deleteAt(7, 2)
           expected: ['<div><span>01</span><b>23|45|6</b><span>9</span></div>']
         'delete entire leaf':
-          lines: ['<div><span>01</span><b>23|45|67</b><span>89</span></div>']
+          initial: ['<div><span>01</span><b>23|45|67</b><span>89</span></div>']
           fn: (editor) -> editor.deleteAt(2, 6)
           expected: ['<div><span>01||89</span></div>']
 
       'format tests':
         'apply leaf format before': 
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(1, 2, 'bold', true)
           expected: ['<div><span>0</span><b>12</b><span>3|45|6789</span></div>']
         'apply leaf format after':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(7, 2, 'bold', true)
           expected: ['<div><span>0123|45|6</span><b>78</b><span>9</span></div>']
         'apply leaf format in middle':
-          lines: ['<div><span>012|3456|789</span></div>']
+          initial: ['<div><span>012|3456|789</span></div>']
           fn: (editor) -> editor.formatAt(4, 2, 'bold', true)
           expected: ['<div><span>012|3</span><b>45</b><span>6|789</span></div>']
         'apply leaf format overlapping beginning':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(3, 2, 'bold', true)
           expected: ['<div><span>012</span><b>3|4</b><span>5|6789</span></div>']
         'apply leaf format overlapping end':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(5, 2, 'bold', true)
           expected: ['<div><span>0123|4</span><b>5|6</b><span>789</span></div>']
         'apply leaf format overlapping beginning and end':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(3, 4, 'bold', true)
           expected: ['<div><span>012</span><b>3|45|6</b><span>789</span></div>']
         'apply leaf format to entire node':
-          lines: ['<div><span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'bold', true)
           expected: ['<div><b>0123|45|6789</b></div>']
         'apply leaf format to entire node 2':
-          lines: ['<div><b>0123|45|6789</b></div>']
+          initial: ['<div><b>0123|45|6789</b></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'italic', true)
           expected: ['<div><i><b>0123|45|6789</b></i></div>']
 
       'remove format tests':
         'remove leaf format before': 
-          lines: ['<div><span>0</span><b>12</b><span>3|45|6789</span></div>']
+          initial: ['<div><span>0</span><b>12</b><span>3|45|6789</span></div>']
           fn: (editor) -> editor.formatAt(1, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
         'remove leaf format after':
-          lines: ['<div><span>0123|45|6</span><b>78</b><span>9</span></div>']
+          initial: ['<div><span>0123|45|6</span><b>78</b><span>9</span></div>']
           fn: (editor) -> editor.formatAt(7, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
         'remove leaf format in middle':
-          lines: ['<div><span>012|3</span><b>45</b><span>6|789</span></div>']
+          initial: ['<div><span>012|3</span><b>45</b><span>6|789</span></div>']
           fn: (editor) -> editor.formatAt(4, 2, 'bold', false)
           expected: ['<div><span>012|3456|789</span></div>']
         'remove leaf format overlapping beginning':
-          lines: ['<div><span>012</span><b>3|4</b><span>5|6789</span></div>']
+          initial: ['<div><span>012</span><b>3|4</b><span>5|6789</span></div>']
           fn: (editor) -> editor.formatAt(3, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
         'remove leaf format overlapping end':
-          lines: ['<div><span>0123|4</span><b>5|6</b><span>789</span></div>']
+          initial: ['<div><span>0123|4</span><b>5|6</b><span>789</span></div>']
           fn: (editor) -> editor.formatAt(5, 2, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
         'remove leaf format overlapping beginning and end':
-          lines: ['<div><span>012</span><b>3|45|6</b><span>789</span></div>']
+          initial: ['<div><span>012</span><b>3|45|6</b><span>789</span></div>']
           fn: (editor) -> editor.formatAt(3, 4, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
         'remove leaf format from entire node':
-          lines: ['<div><b>0123|45|6789</b></div>']
+          initial: ['<div><b>0123|45|6789</b></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'bold', false)
           expected: ['<div><span>0123|45|6789</span></div>']
         'remove leaf format from entire node 2':
-          lines: ['<div><i><b>0123|45|6789</b></i></div>']
+          initial: ['<div><i><b>0123|45|6789</b></i></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'bold', false)
           expected: ['<div><i>0123|45|6789</i></div>']
         'remove leaf format from entire node 3':
-          lines: ['<div><i><b>0123|45|6789</b></i></div>']
+          initial: ['<div><i><b>0123|45|6789</b></i></div>']
           fn: (editor) -> editor.formatAt(0, 10, 'italic', false)
           expected: ['<div><b>0123|45|6789</b></div>']
 
+    checker = (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
+      selection = testEditor.getSelection()
+      expect(selection).to.exist
+      expect(selection.start.index).to.equal(expectedStart)
+      expect(selection.end.index).to.equal(expectedEnd)
+
+    pre = (testContainer, expectedContainer) ->
+      testIndexes = findIndexes(testContainer.innerHTML)
+      expectedIndexes = findIndexes(expectedContainer.innerHTML)
+      testContainer.innerHTML = testContainer.innerHTML.replace(/\|/g, '')
+      expectedContainer.innerHTML = expectedContainer.innerHTML.replace(/\|/g, '')
+      return testIndexes.concat(expectedIndexes)
+
     _.each(tests, (testGroup, groupName) ->
       describe(groupName, ->
+        selectionTests = new Scribe.Test.EditorTest(
+          checker: checker
+          ignoreExpect: true
+          pre: pre
+        )
         _.each(testGroup, (test, name) ->
-          it(name, ->
-            html = Scribe.Utils.cleanHtml(test.lines.join(''))
-            expectedHtml = _.map(test.expected, (line) ->
-              return if _.isNumber(line) then test.lines[line] else line
-            ).join('')
-            [start, end] = findIndexes(html)
-            expectedIndexes = findIndexes(expectedHtml)
-            html = html.replace(/\|/g, '')
-            expectedHtml = expectedHtml.replace(/\|/g, '')
-            $('#test-container').html(html)
-            editor = new Scribe.Editor('test-container')
-            range = new Scribe.Range(editor, start, end)
-            editor.setSelection(range)
-            sel = editor.getSelection()
-            expect([sel.start.index, sel.end.index]).to.deep.equal([start, end])
-            test.fn(editor)
-            sel = editor.getSelection()
-            expect(sel).to.exist
-            expect([sel.start.index, sel.end.index]).to.deep.equal(expectedIndexes)
+          selectionTests.run(name,
+            initial: test.initial
+            expected: test.expected
+            fn: (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
+              testEditor.setSelection(new Scribe.Range(testEditor, testStart, testEnd))
+              test.fn.call(null, testEditor)
           )
         )
       )

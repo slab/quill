@@ -102,7 +102,7 @@ keepNormalized = (fn) ->
 
 trackDelta = (fn, external = false) ->
   oldDelta = @doc.toDelta()
-  oldIndex = this.getSelection()?.start.index
+  oldIndex = @selection.range?.start.index # We do not want new range value so we do not use getSelection
   fn()
   newDelta = @doc.toDelta()
   try

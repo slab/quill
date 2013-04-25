@@ -227,15 +227,15 @@ Scribe.Normalizer =
     )
 
   removeRedundant: (lineNode) ->
-    Key = _.uniqueId('_Formats')
-    lineNode[Key] = {}
+    key = _.uniqueId('_Formats')
+    lineNode[key] = {}
     isRedudant = (node) ->
       if node.nodeType == node.ELEMENT_NODE
         if Scribe.Utils.getNodeLength(node) == 0
           return node.tagName != 'BR' or Scribe.DOM.filterUneditable(node.parentNode.childNodes).length > 1
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
         if formatName?
-          return node.parentNode[Key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
+          return node.parentNode[key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
           # Check if childNodes need us
           childNodes = Scribe.DOM.filterUneditable(node.childNodes)
@@ -249,21 +249,21 @@ Scribe.Normalizer =
       if isRedudant(node)
         node = Scribe.DOM.unwrap(node)
       if node?
-        node[Key] = _.clone(node.parentNode[Key])
+        node[key] = _.clone(node.parentNode[key])
         [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
-        node[Key][formatName] = formatValue if formatName?
+        node[key][formatName] = formatValue if formatName?
       return node
     )
-    delete lineNode[Key]
+    delete lineNode[key]
     Scribe.DOM.traversePreorder(lineNode, 0, (node) ->
-      delete node[Key]
+      delete node[key]
       return node
     )
     
   wrapText: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node) =>
       node.normalize()
-      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root || node.parentNode.tagName == 'LI')
+      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == root or node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
         Scribe.DOM.wrap(span, node)
         node = span

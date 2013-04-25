@@ -71,9 +71,9 @@ Local Development
 
 ### Installation
 
-Install grunt and npm dependencies
+Install dependencies
 
-    npm install -g grunt-cli
+    npm install -g grunt-cli phantomjs mocha-phantomjs
     npm install
 
 
