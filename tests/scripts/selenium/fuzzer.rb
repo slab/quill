@@ -124,7 +124,6 @@ else
 end
 driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
-editor = driver.find_element(:class, "editor-container")
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 editor = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, editor
