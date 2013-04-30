@@ -37,7 +37,7 @@ class Scribe.Selection
   getNative: ->
     rangySel = rangy.getSelection(@editor.contentWindow)
     selection = window.getSelection()
-    return null unless rangySel.anchorNode? && rangySel.focusNode?
+    return null unless rangySel.anchorNode? and rangySel.focusNode? and @editor.root.contains(rangySel.anchorNode) and @editor.root.contains(rangySel.focusNode)
     if !rangySel.isBackwards()
       [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
     else
