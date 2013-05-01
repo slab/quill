@@ -140,12 +140,12 @@ class SeleniumAdapter
       @editor.send_keys(keys, :arrow_down, :delete)
     else
       @editor.send_keys keys
-      len = keys.reduce(0) do |len, elem|
-        if elem.is_a?(String) then len + elem.length else len + 1 end
-      end
-      @cursor_pos += len
-      @doc_length += len
     end
+    len = keys.reduce(0) do |len, elem|
+      if elem.is_a?(String) then len + elem.length else len + 1 end
+    end
+    @cursor_pos += len
+    @doc_length += len
   end
 
   def click_button_from_toolbar(button_class)
