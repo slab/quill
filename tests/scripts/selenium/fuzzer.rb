@@ -86,22 +86,19 @@ end
 
 def check_consistency(driver, replay_file)
   driver.switch_to.default_content
-  src = "return window.Fuzzer.checkConsistency();"
-  success = driver.execute_script src
+  success = driver.execute_script "return window.Fuzzer.checkConsistency();"
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
     rand_delta = js_get_as_str(driver, "randomDelta")
-    after_delta = js_get_cur_doc_delta_as_str(driver)
+    actual_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
     puts "Inconsistent deltas:".red
-    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{after_delta}"
+    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{actual_delta}"
     abort
-  else
-    if replay_file
-      highline = HighLine.new
-      delete = highline.agree "Congrats, it passed! Would you like to delete the fail file? (y/n)".colorize(:green)
-      delete_fail_file(replay_file) if delete
-    end
+  elsif replay_file
+    highline = HighLine.new
+    delete = highline.agree "Congrats, it passed! Would you like to delete the fail file? (y/n)".colorize(:green)
+    delete_fail_file(replay_file) if delete
   end
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
