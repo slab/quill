@@ -140,7 +140,6 @@ if replay_file
   adapter.focus()
   adapter.doc_length = doc_delta['endLength']
   random_delta = js_get(driver, "randomDelta")
-  random_delta_str = js_get_as_str(driver, "randomDelta")
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay_file)
 else
