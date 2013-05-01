@@ -127,6 +127,7 @@ driver.get editor_url
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 editor = driver.find_element(:class, "editor")
 adapter = SeleniumAdapter.new driver, editor
+adapter.focus()
 
 ################################################################################
 # Fuzzer logic
@@ -137,7 +138,6 @@ if replay_file
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
   doc_delta = js_get(driver, "docDelta")
   js_set_scribe_delta(driver)
-  adapter.focus()
   adapter.doc_length = doc_delta['endLength']
   random_delta = js_get(driver, "randomDelta")
   adapter.apply_delta(random_delta)
