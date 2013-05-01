@@ -129,13 +129,24 @@ adapter.focus()
 ################################################################################
 # Fuzzer logic
 ################################################################################
-if replay_file
+def initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
   doc_delta, rand_delta = read_deltas_from_file(replay_file)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
   js_set_delta_replay(driver, rand_delta, 'randomDelta')
   doc_delta = js_get(driver, "docDelta")
   js_set_scribe_delta(driver)
+
+  # Remove inexplicable highlighting that gets applied when setting delta and
+  # reset cursor to 0th position
+  editor.click()
+  adapter.cursor_pos = doc_delta['endLength']
+  adapter.move_cursor 0
+
   adapter.doc_length = doc_delta['endLength']
+end
+
+if replay_file
+  initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
   random_delta = js_get(driver, "randomDelta")
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay_file)
