@@ -19,9 +19,6 @@ $(document).ready( ->
     get: (ref) ->
       window.Fuzzer[ref]
 
-    toStr: (obj) ->
-      JSON.stringify(obj)
-
     getEditorDelta: ->
       window.editor.getDelta()
 
