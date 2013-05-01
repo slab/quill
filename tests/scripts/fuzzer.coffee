@@ -16,15 +16,6 @@ $(document).ready( ->
           op.value = op.value.replace(NBSP_FILTER, " ")
       return delta
 
-    get: (ref) ->
-      window.Fuzzer[ref]
-
-    getEditorDelta: ->
-      window.editor.getDelta()
-
-    set: (ref, val) ->
-      window.Fuzzer[ref] = val
-
     setDeltaReplay: (docDelta, deltaRef) ->
       d = JSON.parse(docDelta)
       window.Fuzzer[deltaRef] =
