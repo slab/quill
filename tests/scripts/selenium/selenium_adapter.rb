@@ -134,10 +134,11 @@ class SeleniumAdapter
 
   def type_text(text)
     keys = split_text(text)
-    if @cursor_pos == @doc_length && @driver.browser == :firefox
+    if @cursor_pos == 0 && @doc_length == 0 && @driver.browser == :firefox
       # Hack to workaround inexplicable firefox behavior in which it appends a
-      # newline if you append to the end of the document.
-      @editor.send_keys(keys, :arrow_down, :delete)
+      # newline if you append to the end of the empty document.
+      @editor.send_keys(keys)
+      @editor.send_keys([:arrow_down, :delete])
     else
       @editor.send_keys keys
     end
