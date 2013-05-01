@@ -1,6 +1,6 @@
 class SeleniumAdapter
 
-  attr_accessor :doc_length
+  attr_accessor :doc_length, :cursor_pos
 
   def initialize(driver, editor)
     @cursor_pos = 0
