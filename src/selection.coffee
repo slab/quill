@@ -37,7 +37,7 @@ class Scribe.Selection
   getNative: ->
     rangySel = rangy.getSelection(@editor.contentWindow)
     selection = window.getSelection()
-    return null unless rangySel.anchorNode? && rangySel.focusNode?
+    return null unless rangySel.anchorNode? and rangySel.focusNode? and @editor.root.contains(rangySel.anchorNode) and @editor.root.contains(rangySel.focusNode)
     if !rangySel.isBackwards()
       [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
     else
@@ -95,10 +95,10 @@ class Scribe.Selection
         position.leafNode.insertBefore(span, right)
       else
         if offset == 0
-          position.leafNode.parentNode.insertBefore(span, textNode)
+          textNode.parentNode.insertBefore(span, textNode)
         else
           console.warn 'Saving selection at offset greater than line length' if offset > 1
-          position.leafNode.parentNode.insertBefore(span, textNode.nextSibling)
+          textNode.parentNode.insertBefore(span, textNode.nextSibling)
       return span
     )
 

@@ -18,7 +18,7 @@ initListeners = ->
   onEdit = =>
     onEditOnce = _.once(onEdit)
     return if @ignoreDomChanges or !@renderer.iframe.parentNode?    # Make sure we have not been deleted
-    update.call(this)
+    this.update()
   onSubtreeModified = =>
     return if @ignoreDomChanges
     toCall = onEditOnce
@@ -120,32 +120,6 @@ trackDelta = (fn, external = false) ->
   unless decompose.isIdentity()
     eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
     this.emit(eventName, decompose)
-
-update = ->
-  this.doSilently( =>
-    trackDelta.call(this, =>
-      @selection.preserve( =>
-        Scribe.Normalizer.breakBlocks(@root)
-        lines = @doc.lines.toArray()
-        lineNode = @root.firstChild
-        _.each(lines, (line, index) =>
-          while line.node != lineNode
-            if line.node.parentNode == @root
-              Scribe.Normalizer.normalizeLine(lineNode, @renderer)
-              newLine = @doc.insertLineBefore(lineNode, line)
-              lineNode = lineNode.nextSibling
-            else
-              @doc.removeLine(line)
-              return
-          @doc.updateLine(line)
-          lineNode = lineNode.nextSibling
-        )
-        while lineNode != null
-          newLine = @doc.appendLine(lineNode)
-          lineNode = lineNode.nextSibling
-      )
-    )
-  )
   
 
 class Scribe.Editor extends EventEmitter2
@@ -260,6 +234,32 @@ class Scribe.Editor extends EventEmitter2
     
   setSelection: (range, silent = false) ->
     @selection.setRange(range, silent)
+
+  update: ->
+    this.doSilently( =>
+      trackDelta.call(this, =>
+        @selection.preserve( =>
+          Scribe.Normalizer.breakBlocks(@root)
+          lines = @doc.lines.toArray()
+          lineNode = @root.firstChild
+          _.each(lines, (line, index) =>
+            while line.node != lineNode
+              if line.node.parentNode == @root
+                Scribe.Normalizer.normalizeLine(lineNode, @renderer)
+                newLine = @doc.insertLineBefore(lineNode, line)
+                lineNode = lineNode.nextSibling
+              else
+                @doc.removeLine(line)
+                return
+            @doc.updateLine(line)
+            lineNode = lineNode.nextSibling
+          )
+          while lineNode != null
+            newLine = @doc.appendLine(lineNode)
+            lineNode = lineNode.nextSibling
+        )
+      )
+    )
 
 
 module.exports = Scribe
