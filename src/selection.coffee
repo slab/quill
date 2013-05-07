@@ -95,10 +95,10 @@ class Scribe.Selection
         position.leafNode.insertBefore(span, right)
       else
         if offset == 0
-          position.leafNode.parentNode.insertBefore(span, textNode)
+          textNode.parentNode.insertBefore(span, textNode)
         else
           console.warn 'Saving selection at offset greater than line length' if offset > 1
-          position.leafNode.parentNode.insertBefore(span, textNode.nextSibling)
+          textNode.parentNode.insertBefore(span, textNode.nextSibling)
       return span
     )
 
