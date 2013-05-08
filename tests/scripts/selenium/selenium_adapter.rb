@@ -6,7 +6,7 @@ class SeleniumAdapter
     @cursor_pos = 0
     @driver = driver
     @editor = editor
-    @doc_length = 0
+    @doc_length = 1 # Initial val of 1 due to Scribe's "phantom" newline
   end
 
   # Assumes delta will contain only one document modifying op
@@ -90,7 +90,9 @@ class SeleniumAdapter
   end
 
   def move_cursor(dest_index)
-    return unless dest_index <= doc_length and dest_index >= 0
+    if dest_index < 0 or dest_index > doc_length
+      raise IndexError, "Invalid dest_index #{dest_index} for doc_length #{doc_length}"
+    end
     distance = (@cursor_pos - dest_index).abs
     if @cursor_pos > dest_index
       distance.times do @editor.send_keys(:arrow_left) end
