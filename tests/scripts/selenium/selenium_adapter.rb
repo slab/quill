@@ -90,6 +90,7 @@ class SeleniumAdapter
   end
 
   def move_cursor(dest_index)
+    return unless dest_index <= doc_length and dest_index >= 0
     distance = (@cursor_pos - dest_index).abs
     if @cursor_pos > dest_index
       distance.times do @editor.send_keys(:arrow_left) end
