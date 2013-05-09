@@ -216,7 +216,7 @@ class SeleniumAdapter
     end
   end
 
-  def self.os_to_modifier()
+  def self.os_to_modifier
     case self.os()
     when :windows
       return :control
