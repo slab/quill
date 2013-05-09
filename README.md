@@ -103,7 +103,21 @@ Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and ru
 
 ### Fuzzer
 
-Visit build/tests/fuzzer.html to run the fuzzer. A seed is outputed on the console. Supply this in the fuzzer source to rerun with same seed.
+Run tests/scripts/selenium/fuzzer.rb as follows:
+
+    ruby fuzzer.rb _browserdriver_ _link_ _replay_file_
+
+Possible values for ```_browser_driver_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
+```_link_``` should be the absolute path to build/tests/fuzzer.html.
+```_replay_file_``` may be the name of any file the fuzzer creates after a failed run. You need not provide the path, the filename is sufficient.
+This file contains the final edit that caused the fuzzer to fail, so that you can replay the edit until you
+fix the bug.
+
+In order to run the fuzzer against Chrome or IE, you'll need to download [ChromeDriver](https://code.google.com/p/chromedriver/downloads/list) or [InternetExplorerDriver](https://code.google.com/p/selenium/downloads/list) and add it to your system's path.
+For Chrome, be sure to download ChromeDriver, not ChromeDriver2, which is still experimental. Support for Firefox is built in and requires no special downloads.
+
+The fuzzer currently works against IE 9 & 10, Firefox 19 - 21, and Chrome 26.
+
 
 
 Dependencies
