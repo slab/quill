@@ -106,12 +106,12 @@ end
 ################################################################################
 # WebDriver setup
 ################################################################################
-unless ARGV.length == 2 or ARGV.length == 3
-  puts "Usage: ruby _browserdriver_ _editor_url_ _fuzzer_file_".colorize(:blue)
+unless ARGV.length == 1 or ARGV.length == 2
+  puts "Usage: ruby _browserdriver_ _replay_file_".colorize(:blue)
 end
 browserdriver = ARGV[0].to_sym
-editor_url = ARGV[1]
-replay_file = ARGV[2]
+replay_file = ARGV[1]
+editor_url = "file://#{File.expand_path '../../../build/tests/fuzzer.html'}"
 if browserdriver == :firefox
   profile = Selenium::WebDriver::Firefox::Profile.new
   profile.native_events = true

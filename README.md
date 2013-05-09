@@ -105,10 +105,9 @@ Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and ru
 
 Run tests/scripts/selenium/fuzzer.rb as follows:
 
-    ruby fuzzer.rb _browserdriver_ _link_ _replay_file_
+    ruby fuzzer.rb _browserdriver_ _replay_file_
 
 Possible values for ```_browser_driver_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
-```_link_``` should be the absolute path to build/tests/fuzzer.html.
 ```_replay_file_``` may be the name of any file the fuzzer creates after a failed run.
 You need not provide the path, the filename is sufficient. This file contains the final edit that caused 
 the fuzzer to fail, so that you can replay the edit until you fix the bug.
