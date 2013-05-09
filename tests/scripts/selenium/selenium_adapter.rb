@@ -89,12 +89,24 @@ class SeleniumAdapter
     select_from_dropdown('background', 'white')
   end
 
+  def jump_to_start
+    os = SeleniumAdapter.os()
+    if os == :windows or os == :linux
+      key = :home
+    elsif os == :macosx
+      key = :arrow_up
+    end
+    @driver.action.key_down(@@cmd_modifier).send_keys(key).key_up(@@cmd_modifier).perform
+  end
+
   def move_cursor(dest_index)
     if dest_index < 0 or dest_index > doc_length
       raise IndexError, "Invalid dest_index #{dest_index} for doc_length #{doc_length}"
     end
     distance = (@cursor_pos - dest_index).abs
-    if @cursor_pos > dest_index
+    if dest_index == 0
+      jump_to_start()
+    elsif @cursor_pos > dest_index
       distance.times do @editor.send_keys(:arrow_left) end
     else
       distance.times do @editor.send_keys(:arrow_right) end
