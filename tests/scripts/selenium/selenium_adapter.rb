@@ -37,18 +37,18 @@ class SeleniumAdapter
     move_cursor(index)
     type_text(text)
     # Remove any prexisting formatting that Scribe applied
-    move_cursor(index)
     runs = text.split "\n"
+    run_index = index
     runs.each do |run|
+      move_cursor(run_index)
       if run.length > 0
         highlight run.length
         remove_active_formatting
+        remove_highlighting
       end
-      remove_highlighting
-      move_cursor(index + run.length + 1) # +1 to account for \n
-      index += run.length + 1
+      run_index += run.length + 1 # + 1 to account for \n
     end
-    remove_highlighting
+    move_cursor index + text.length
   end
 
   def delete_at(index, length)
