@@ -1,6 +1,17 @@
 Scribe = require('./scribe')
 
 
+runWhenLoaded = (fn) ->
+  return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
+  if @iframe.contentWindow.onload
+    @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
+      fn.call(this)
+      wrapper.call(this)
+    )
+  else
+    @iframe.contentWindow.onload = fn
+
+
 class Scribe.Renderer
   @DEFAULTS:
     keepHTML: false
@@ -80,36 +91,40 @@ class Scribe.Renderer
     this.createFrame()
 
   addStyles: (styles) ->
-    head = @root.ownerDocument.getElementsByTagName('head')[0]
-    style = @root.ownerDocument.createElement('style')
-    style.type = 'text/css'
-    css = Scribe.Renderer.objToCss(styles)
-    if style.styleSheet?
-      style.styleSheet.cssText = css
-    else
-      style.appendChild(@root.ownerDocument.createTextNode(css))
-    head.appendChild(style)
+    runWhenLoaded.call(this, =>
+      style = @root.ownerDocument.createElement('style')
+      style.type = 'text/css'
+      css = Scribe.Renderer.objToCss(styles)
+      if style.styleSheet?
+        style.styleSheet.cssText = css
+      else
+        style.appendChild(@root.ownerDocument.createTextNode(css))
+      @root.ownerDocument.head.appendChild(style)
+    )
 
   createFrame: ->
     html = @container.innerHTML
     @container.innerHTML = ''
     @iframe = @container.ownerDocument.createElement('iframe')
     @iframe.frameborder = 0
-    @iframe.src = 'javascript:;'
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
+    window.test = @iframe
     doc = @iframe.contentWindow.document
+    @root = doc.createElement('div')
+    @root.classList.add('editor')
+    wrapper = doc.createElement('div')
+    wrapper.appendChild(@root)
+    @root.id = @options.id
+    @root.innerHTML = html if @options.keepHTML
     styles = _.map(@options.styles, (value, key) ->
       obj = Scribe.Renderer.DEFAULT_STYLES[key] or {}
       return _.extend(obj, value)
     )
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
-    @root = doc.createElement('div')
-    @root.classList.add('editor')
-    @root.id = @options.id
-    doc.body.appendChild(@root)
     this.addStyles(styles)
-    @root.innerHTML = html if @options.keepHTML
-
+    runWhenLoaded.call(this, ->
+      doc.body.appendChild(wrapper)
+    )
 
 module.exports = Scribe
