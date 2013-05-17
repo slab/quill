@@ -13,7 +13,7 @@ class Scribe.PasteManager
         'position': 'fixed'
         'top': '50%'
     )
-    @editor.root.parentNode.appendChild(@container)
+    @editor.renderer.addContainer(@container)
     this.initListeners()
 
   initListeners: ->

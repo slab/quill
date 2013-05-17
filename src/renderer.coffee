@@ -90,6 +90,12 @@ class Scribe.Renderer
     @options = _.extend(Scribe.Renderer.DEFAULTS, options)
     this.createFrame()
 
+  addContainer: (container, before = false) ->
+    runWhenLoaded.call(this, =>
+      refNode = if before then @root else null
+      @root.parentNode.insertBefore(container, refNode)
+    )
+
   addStyles: (styles) ->
     runWhenLoaded.call(this, =>
       style = @root.ownerDocument.createElement('style')
@@ -113,8 +119,6 @@ class Scribe.Renderer
     doc = @iframe.contentWindow.document
     @root = doc.createElement('div')
     @root.classList.add('editor')
-    wrapper = doc.createElement('div')
-    wrapper.appendChild(@root)
     @root.id = @options.id
     @root.innerHTML = html if @options.keepHTML
     styles = _.map(@options.styles, (value, key) ->
@@ -124,7 +128,7 @@ class Scribe.Renderer
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
     this.addStyles(styles)
     runWhenLoaded.call(this, ->
-      doc.body.appendChild(wrapper)
+      doc.body.appendChild(@root)
     )
 
 module.exports = Scribe

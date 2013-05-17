@@ -72,7 +72,7 @@ class Scribe.MultiCursor
     @container.id = 'cursor-container'
     @container.style.top = @editor.root.offsetTop
     @container.style.left = @editor.root.offsetLeft
-    @editor.root.parentNode.insertBefore(@container, @editor.root)
+    @editor.renderer.addContainer(@container, true)
     @editor.renderer.addStyles({
       '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
       '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
