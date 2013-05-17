@@ -71,5 +71,13 @@ describe('Cursor', ->
       inner = cursor.querySelector('.cursor-inner')
       expect(inner.style.height).to.equal('21px')
     )
+
+    it('should set in end of large font', ->
+      cursorManager.setCursor('id', 17, 'Test', 'red')
+      cursor = cursorManager.container.querySelector('.cursor')
+      expect(cursor.style.left).to.equal('46px')
+      expect(cursor.style.top).to.equal('35px')
+      inner = cursor.querySelector('.cursor-inner')
+    )
   )
 )
