@@ -5,8 +5,8 @@ runWhenLoaded = (fn) ->
   return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
   if @iframe.contentWindow.onload
     @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
-      fn.call(this)
       wrapper.call(this)
+      fn.call(this)
     )
   else
     @iframe.contentWindow.onload = fn
@@ -127,8 +127,8 @@ class Scribe.Renderer
     )
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
     this.addStyles(styles)
-    runWhenLoaded.call(this, ->
-      doc.body.appendChild(@root)
+    runWhenLoaded.call(this, =>
+      @iframe.contentWindow.document.body.appendChild(@root) # Firefox does not like doc.body
     )
 
 module.exports = Scribe
