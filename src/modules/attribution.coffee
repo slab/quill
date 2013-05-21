@@ -13,7 +13,7 @@ class Scribe.Attribution
         delta.apply((index, text) =>
           @editor.formatAt(index, text.length, 'author', @authorId)
         , (=>), (index, length, name, value) =>
-          @editor.formatAt(index, text.length, 'author', @authorId)
+          @editor.formatAt(index, length, 'author', @authorId)
         )
     )
     this.addAuthor(@authorId, color)
