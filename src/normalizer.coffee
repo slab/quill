@@ -121,6 +121,7 @@ Scribe.Normalizer =
         curLine = line
 
   mergeAdjacent: (root) ->
+    return
     Scribe.DOM.traversePreorder(root, 0, (node) ->
       if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
@@ -227,6 +228,7 @@ Scribe.Normalizer =
     )
 
   removeRedundant: (lineNode) ->
+    return
     key = _.uniqueId('_Formats')
     lineNode[key] = {}
     isRedudant = (node) ->

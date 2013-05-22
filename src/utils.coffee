@@ -8,22 +8,6 @@ Scribe.Utils =
     return html
 
   createContainerForFormat: (doc, name, value) ->
-    switch (name)
-      when 'bold'       then return doc.createElement('b')
-      when 'italic'     then return doc.createElement('i')
-      when 'strike'     then return doc.createElement('s')
-      when 'underline'  then return doc.createElement('u')
-      when 'link'
-        link = doc.createElement('a')
-        value = 'https://' + value unless value.match(/https?:\/\//)
-        link.href = value
-        link.href = 'about:blank' if (link.protocol != 'http:' && link.protocol != 'https:')
-        link.title = link.href
-        return link
-      else
-        span = doc.createElement('span')
-        span.classList.add("#{name}-#{value}")
-        return span
 
   cloneAncestors: (node, limitingAncestor) ->
     clone = node.cloneNode(false)
@@ -39,32 +23,6 @@ Scribe.Utils =
     while node? && !checkFn(node)
       node = node.parentNode
     return node
-
-  getFormatDefault: (name) ->
-    return Scribe.Leaf.DEFAULT_FORMATS[name] or false
-
-  getFormatForContainer: (container) ->
-    switch container.tagName
-      when 'A'  then return ['link', container.getAttribute('href')]
-      when 'B'  then return ['bold', true]
-      when 'I'  then return ['italic', true]
-      when 'S'  then return ['strike', true]
-      when 'U'  then return ['underline', true]
-      when 'OL' then return ['list', Scribe.Utils.getIndent(container)]
-      when 'UL' then return ['bullet', Scribe.Utils.getIndent(container)]
-      when 'DIV'
-        indent = Scribe.Utils.getIndent(container)
-        return if indent > 0 then ['indent', indent] else []
-      when 'SPAN'
-        for css in container.classList
-          parts = css.split('-')
-          if parts.length > 1
-            key = parts[0]
-            value = parts.slice(1).join('-')
-            return [key, value] if Scribe.Leaf.SPAN_FORMATS[key]?
-        return []
-      else
-        return []
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild

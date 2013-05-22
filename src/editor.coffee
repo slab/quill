@@ -163,7 +163,7 @@ class Scribe.Editor extends EventEmitter2
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root)
+    @doc = new Scribe.Document(@root, @renderer)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)

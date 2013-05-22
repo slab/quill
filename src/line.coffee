@@ -28,7 +28,7 @@ class Scribe.Line extends LinkedList.Node
   buildLeaves: (node, formats) ->
     _.each(Scribe.DOM.filterUneditable(node.childNodes), (node) =>
       nodeFormats = _.clone(formats)
-      [formatName, formatValue] = Scribe.Utils.getFormatForContainer(node)
+      [formatName, formatValue] = @doc.renderer.getFormat(node)
       nodeFormats[formatName] = formatValue if formatName?
       if Scribe.Leaf.isLeafNode(node)
         @leaves.append(new Scribe.Leaf(this, node, nodeFormats))
@@ -69,7 +69,7 @@ class Scribe.Line extends LinkedList.Node
 
   formatText: (offset, length, name, value) ->
     return if length <= 0
-    if value && Scribe.Utils.getFormatDefault(name) != value
+    if value && Scribe.Leaf.getFormatDefault(name) != value
       refNode = null
       formatNode = Scribe.Utils.createContainerForFormat(@doc.root.ownerDocument, name, value)
       this.applyToContents(offset, length, (node) =>
@@ -125,7 +125,7 @@ class Scribe.Line extends LinkedList.Node
     @length += 1 if @trailingNewline
     @outerHTML = @node.outerHTML
     @formats = {}
-    [formatName, formatValue] = Scribe.Utils.getFormatForContainer(@node)
+    [formatName, formatValue] = @doc.renderer.getFormat(@node)
     @formats[formatName] = formatValue if formatName?
     this.setDirty(false)
     @delta = this.toDelta()
