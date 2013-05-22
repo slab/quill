@@ -105,7 +105,10 @@ class Scribe.Renderer
         style.styleSheet.cssText = css
       else
         style.appendChild(@root.ownerDocument.createTextNode(css))
-      @root.ownerDocument.head.appendChild(style)
+      # Firefox needs defer
+      _.defer( =>
+        @root.ownerDocument.head.appendChild(style)
+      )
     )
 
   createFrame: ->
