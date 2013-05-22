@@ -51,9 +51,10 @@ def js_set_doc_delta(driver)
 end
 
 def read_deltas_from_file(file)
+  file_path = File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails", file)
   deltas = []
   begin
-    File.open("fails/#{file}") do |f|
+    File.open(file_path) do |f|
       f.readlines.each do |line|
         deltas << line.chomp!
       end
@@ -66,8 +67,8 @@ def read_deltas_from_file(file)
 end
 
 def write_deltas_to_file(doc_delta, rand_delta)
-  FileUtils.mkpath('./fails') unless File.directory?('./fails')
-  file_path = "./fails/#{Time.now.to_i.to_s}"
+  file_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails"))
+  file_path = File.join file_path.first, "#{Time.now.to_i.to_s}"
   File.open(file_path, 'w+') do |f|
     f.puts doc_delta
     f.puts rand_delta
@@ -76,8 +77,9 @@ def write_deltas_to_file(doc_delta, rand_delta)
 end
 
 def delete_fail_file(file_name)
+  path = File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails", file_name)
   begin
-    FileUtils.rm("./fails/#{file_name}")
+    FileUtils.rm(path)
   rescue
     puts "Failed deleting file #{file_name}. Please ensure it still exists.".colorize(:red)
     abort
