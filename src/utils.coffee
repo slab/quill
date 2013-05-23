@@ -93,15 +93,14 @@ Scribe.Utils =
       destParent.insertBefore(node, destRef)
     )
 
-  removeFormatFromSubtree: (subtree, format) ->
+  removeFormatFromSubtree: (renderer, subtree, format) ->
     childNodes = Scribe.DOM.filterUneditable(subtree.childNodes)
-    formats = Scribe.Utils.getFormatForContainer(subtree)
-    [name, value] = Scribe.Utils.getFormatForContainer(subtree)
+    value = renderer.formats[format].matchContainer(subtree)
     ret = subtree
-    if name == format
+    if format == value
       ret = Scribe.DOM.unwrap(subtree)
     _.each(childNodes, (child) ->
-      Scribe.Utils.removeFormatFromSubtree(child, format)
+      Scribe.Utils.removeFormatFromSubtree(renderer, child, format)
     )
     return ret
 

@@ -1,32 +1,6 @@
 Scribe = require('./scribe')
 
 
-getStyleObject = (styleString) ->
-  return {} unless styleString?
-  return _.reduce(styleString.split(';').slice(0, -1), (styles, str) ->
-    [name, value] = str.split(':')
-    value = value.slice(1) if value[0] == ' '
-    styles[name] = value
-    return styles
-  , {})
-
-_getFormatFromClass = (classList) ->
-  for css in classList
-    parts = css.split('-')
-    return [parts[0], parts.slice(1).join('-')] if parts.length > 1
-  return false
-
-_getFormatFromStyle = (styleString) ->
-  styles = getStyleObject(styleString)
-  return false unless _.keys(styles).length > 0
-  for formatName, formatObjects of @formats
-    for formatValue, formatStyles of formatObjects
-      matches = _.all(formatStyles, (styleValue, styleName) ->
-        styles[styleName] == styleValue
-      )
-      return [formatName, formatValue] if matches
-  return false
-
 _runWhenLoaded = (fn) ->
   return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
   if @iframe.contentWindow.onload
@@ -40,6 +14,7 @@ _runWhenLoaded = (fn) ->
 
 class Scribe.Renderer
   @DEFAULTS:
+    formats: 'default'
     keepHTML: false
     id: 'editor'
 
@@ -86,6 +61,9 @@ class Scribe.Renderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
 
+  @DEFAULT_FORMATS = ['bold', 'italic', 'strike', 'underline', 'link'] # 'background', 'color', 'family', 'size']
+
+  ###
   @PFORMATS:
     'background': (value) ->
       switch (value)
@@ -119,6 +97,7 @@ class Scribe.Renderer
       'huge'   : { 'fontSize': '32px', 'lineHeight': '36px' }
       'large'  : { 'fontSize': '18px', 'lineHeight': '22px' }
       'small'  : { 'fontSize': '10px', 'lineHeight': '12px' }
+  ###
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -129,8 +108,13 @@ class Scribe.Renderer
 
   constructor: (@container, options) ->
     @options = _.extend(Scribe.Renderer.DEFAULTS, options)
-    @formats = {}
     this.createFrame()
+    @formats = {}
+    if @options.formats == 'default'
+      _.each(Scribe.Renderer.DEFAULT_FORMATS, (formatName) =>
+        className = formatName[0].toUpperCase() + formatName.slice(1)
+        this.addFormat(formatName, new Scribe.Format[className](@root))
+      )
 
   addContainer: (container, before = false) ->
     _runWhenLoaded.call(this, =>
@@ -138,9 +122,8 @@ class Scribe.Renderer
       @root.parentNode.insertBefore(container, refNode)
     )
 
-  addFormat: (name, formats) ->
-    @formats[name] ?= {}
-    @formats[name] = _.extend(@formats[name], formats)
+  addFormat: (name, format) ->
+    @formats[name] = format
 
   addStyles: (styles) ->
     _runWhenLoaded.call(this, =>
@@ -158,27 +141,10 @@ class Scribe.Renderer
     )
 
   createFormatContainer: (name, value) ->
-    switch (name)
-      when 'bold'       then return @root.ownerDocument.createElement('b')
-      when 'italic'     then return @root.ownerDocument.createElement('i')
-      when 'strike'     then return @root.ownerDocument.createElement('s')
-      when 'underline'  then return @root.ownerDocument.createElement('u')
-      when 'link'
-        link = @root.ownerDocument.createElement('a')
-        value = 'https://' + value unless value.match(/https?:\/\//)
-        link.href = value
-        link.href = 'about:blank' if (link.protocol != 'http:' && link.protocol != 'https:')
-        link.title = link.href
-        return link
-      else
-        span = @root.ownerDocument.createElement('span')
-        if @formats[name]?[value]?
-          _.each(@formats[name][value], (cssValue, cssName) ->
-            span.style[cssName] = cssValue
-          )
-        else
-          span.classList.add("#{name}-#{value}")
-        return span
+    if @formats[name]
+      return @formats[name].createContainer(value)
+    else
+      return @root.ownerDocument.createElement('SPAN')
 
   createFrame: ->
     html = @container.innerHTML
@@ -204,26 +170,10 @@ class Scribe.Renderer
     )
 
   getFormat: (container) ->
-    switch (container.tagName)
-      when 'A'  then return ['link', container.getAttribute('href')]
-      when 'B'  then return ['bold', true]
-      when 'I'  then return ['italic', true]
-      when 'S'  then return ['strike', true]
-      when 'U'  then return ['underline', true]
-      when 'SPAN'
-        return _getFormatFromStyle.call(this, container.getAttribute('style')) or 
-               _getFormatFromClass.call(this, container.classList) or 
-               []
-      else
-        return []
+    for name,format of @formats
+      value = format.matchContainer(container)
+      return value if value
+    return []
 
 
 module.exports = Scribe
-
-
-Format =
-  createContainer: (value) ->
-  
-
-
-

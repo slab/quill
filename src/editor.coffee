@@ -63,7 +63,7 @@ formatAt = (index, length, name, value) ->
       # If newline character is being applied with formatting
       if length > line.length - offset
         line.format(name, value)
-    else if Scribe.Leaf.FORMATS[name]?
+    else if @renderer.formats[name]?
       if line.length - offset >= length
         line.formatText(offset, length, name, value)
       else

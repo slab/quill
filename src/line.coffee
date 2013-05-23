@@ -69,18 +69,18 @@ class Scribe.Line extends LinkedList.Node
 
   formatText: (offset, length, name, value) ->
     return if length <= 0
-    if value && Scribe.Leaf.getFormatDefault(name) != value
+    if value
       refNode = null
-      formatNode = Scribe.Utils.createContainerForFormat(@doc.root.ownerDocument, name, value)
+      formatNode = @doc.renderer.formats[name].createContainer(value)
       this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
         formatNode.appendChild(node)
-        Scribe.Utils.removeFormatFromSubtree(node, name)
+        Scribe.Utils.removeFormatFromSubtree(@doc.renderer, node, name)
       )
       @node.insertBefore(formatNode, refNode)
     else
       this.applyToContents(offset, length, (node) ->
-        Scribe.Utils.removeFormatFromSubtree(node, name)
+        Scribe.Utils.removeFormatFromSubtree(@doc.renderer, node, name)
       )
     this.rebuild()
 
@@ -112,8 +112,8 @@ class Scribe.Line extends LinkedList.Node
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
-      Scribe.Normalizer.normalizeLine(@node)
-      Scribe.Normalizer.optimizeLine(@node)
+      @doc.normalizer.normalizeLine(@node)
+      @doc.normalizer.optimizeLine(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
     else
