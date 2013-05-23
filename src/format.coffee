@@ -56,16 +56,31 @@ class Scribe.Format.Style extends Scribe.Format.Span
       return styles
     , {})
 
-  constructor: (@root, @keyName, @styles) ->
+  @getCamelCase: (cssName) ->
+    nameArr = cssName.split('-')
+    capitalNameArr = _.map(nameArr, (name) ->
+      return name[0].toUpperCase() + name.slice(1)
+    )
+    return nameArr[0] + capitalNameArr.slice(1).join('')
+
+  constructor: (@root, @keyName, @cssName, @styles, @matchFn) ->
+    @matchFn or= (formatName, cssValue) =>
+      return @styles[formatName] == cssValue
     super
 
   createContainer: (value) ->
     container = super(value)
     return container unless @styles[value]?
-    _.each(@styles[value], (cssValue, cssName) ->
-      container.style[cssName] = cssValue
-    )
+    cssName = Scribe.Format.Style.getCamelCase(@cssName)
+    container.style[@cssName] = @styles[value] if @styles[value]
     return container
 
+  matchContainer: (container) ->
+    return false unless super(container)
+    styles = Scribe.Format.Style.getStyleObject(container)
+    if styles[@cssName]?
+      for formatName of @styles
+        return formatName if @matchFn(formatName, styles[@cssName])
+    return false
 
 module.exports = Scribe

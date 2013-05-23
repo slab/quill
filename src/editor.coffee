@@ -239,13 +239,13 @@ class Scribe.Editor extends EventEmitter2
     this.doSilently( =>
       trackDelta.call(this, =>
         @selection.preserve( =>
-          Scribe.Normalizer.breakBlocks(@root)
+          @doc.normalizer.breakBlocks()
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
           _.each(lines, (line, index) =>
             while line.node != lineNode
               if line.node.parentNode == @root
-                Scribe.Normalizer.normalizeLine(lineNode, @renderer)
+                @doc.normalizer.normalizeLine(lineNode, @renderer)
                 newLine = @doc.insertLineBefore(lineNode, line)
                 lineNode = lineNode.nextSibling
               else

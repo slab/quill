@@ -11,34 +11,32 @@
       .editor-wrapper
         #formatting-container.formatting-container
           %select.family
-            %option{:value => 'san-serif', :selected => true}  San Serif
+            %option{:value => false, :selected => true}  San Serif
             %option{:value => 'serif'}      Serif
             %option{:value => 'monospace'}  Monospace
           %select.size
-            %option{:value => 'small'}  Small
-            %option{:value => 'normal', :selected => true} Normal
-            %option{:value => 'large'}  Large
-            %option{:value => 'huge'}   Huge
+            %option{:value => 'small'}   Small
+            %option{:value => false, :selected => true} Normal
+            %option{:value => 'large'}   Large
+            %option{:value => 'huge'}    Huge
           %select.color
-            %option{:value => ''}
-            %option{:value => 'white'}  White
-            %option{:value => 'black', :selected => true}  Black
-            %option{:value => 'red'}    Red
-            %option{:value => 'orange'} Orange
-            %option{:value => 'yellow'} Yellow
-            %option{:value => 'green'}  Green
-            %option{:value => 'blue'}   Blue
-            %option{:value => 'purple'} Purple
+            %option{:value => 'white'}   White
+            %option{:value => false, :selected => true}  Black
+            %option{:value => 'red'}     Red
+            %option{:value => 'blue'}    Blue
+            %option{:value => 'lime'}    Lime
+            %option{:value => 'teal'}    Teal
+            %option{:value => 'magenta'} Magenta
+            %option{:value => 'yellow'}  Yellow
           %select.background
-            %option{:value => ''}
-            %option{:value => 'white', :selected => true}  White
-            %option{:value => 'black'}  Black
-            %option{:value => 'red'}    Red
-            %option{:value => 'orange'} Orange
-            %option{:value => 'yellow'} Yellow
-            %option{:value => 'green'}  Green
-            %option{:value => 'blue'}   Blue
-            %option{:value => 'purple'} Purple
+            %option{:value => false, :selected => true}   White
+            %option{:value => 'black'}   Black
+            %option{:value => 'red'}     Red
+            %option{:value => 'blue'}    Blue
+            %option{:value => 'lime'}    Lime
+            %option{:value => 'teal'}    Teal
+            %option{:value => 'magenta'} Magenta
+            %option{:value => 'yellow'}  Yellow
           %button.format-button.bold Bold
           %button.format-button.italic Italic
           %button.format-button.underline Under
@@ -95,23 +93,23 @@
             %span{:style => 'font-family: "Times New Roman", serif;' } Serif
             %span{:style => 'font-family: "Courier New", monospace;' } Monospace
           %div
-            %span{:style => 'color: "Courier New", monospace;' }
-              %span.background-black white
-            %span.color-red red
-            %span.color-orange orange
-            %span.color-yellow yellow
-            %span.color-green green
-            %span.color-blue blue
-            %span.color-purple purple
+            %span{:style => 'color: #FFF;' }
+              %span{:style => 'background-color: #000;'} white
+            %span{:style => 'color: #F00;' } red
+            %span{:style => 'color: #00F;' } blue
+            %span{:style => 'color: #0F0;' } lime
+            %span{:style => 'color: #0FF;' } teal
+            %span{:style => 'color: #F0F;' } magenta
+            %span{:style => 'color: #FF0;' } yellow
           %div
-            %span.background-black
-              %span.color-white black
-            %span.background-red red
-            %span.background-orange orange
-            %span.background-yellow yellow
-            %span.background-green green
-            %span.background-blue blue
-            %span.background-purple purple
+            %span{:style => 'background-color: #000;'}
+              %span{:style => 'color: #FFF;' } black
+            %span{:style => 'background-color: #F00;' } red
+            %span{:style => 'background-color: #00F;' } blue
+            %span{:style => 'background-color: #0F0;' } lime
+            %span{:style => 'background-color: #0FF;' } teal
+            %span{:style => 'background-color: #F0F;' } magenta
+            %span{:style => 'background-color: #FF0;' } yellow
           %div
             %br
           %div

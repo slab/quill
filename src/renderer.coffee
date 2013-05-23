@@ -61,43 +61,7 @@ class Scribe.Renderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
 
-  @DEFAULT_FORMATS = ['bold', 'italic', 'strike', 'underline', 'link'] # 'background', 'color', 'family', 'size']
-
-  ###
-  @PFORMATS:
-    'background': (value) ->
-      switch (value)
-        when 'white'  return { 'backgroundColor': 'rgb(255, 255, 255)' }
-        when 'red'    return { 'backgroundColor': 'rgb(255, 0, 0)' }
-        when 'orange' return { 'backgroundColor': 'rgb(255, 165, 0)' }
-        when 'yellow' return { 'backgroundColor': 'rgb(255, 255, 0)' }
-        when 'green'  return { 'backgroundColor': 'rgb(0, 128, 0)' }
-        when 'blue'   return { 'backgroundColor': 'rgb(0, 0, 255)' }
-        when 'purple' return { 'backgroundColor': 'rgb(128, 0, 128)' }
-        else return false
-    'color': (value) ->
-      switch (value)
-        when 'black'  return { 'color': 'rgb(0, 0, 0)' }
-        when 'red'    return { 'color': 'rgb(255, 0, 0)' }
-        when 'orange' return { 'color': 'rgb(255, 165, 0)' }
-        when 'yellow' return { 'color': 'rgb(255, 255, 0)' }
-        when 'green'  return { 'color': 'rgb(0, 128, 0)' }
-        when 'blue'   return { 'color': 'rgb(0, 0, 255)' }
-        when 'purple' return { 'color': 'rgb(128, 0, 128)' }
-        else return false
-    'family': (value) ->
-      if value.indexOf('monospace') >= 0
-        return { 'fontFamily': "'Courier New', monospace" }
-      else if value.indexOf('serif') >= 0
-        return { 'fontFamily': "'Times New Roman', serif" }
-      else
-        return false
-    'size': (value) ->
-      if value.
-      'huge'   : { 'fontSize': '32px', 'lineHeight': '36px' }
-      'large'  : { 'fontSize': '18px', 'lineHeight': '22px' }
-      'small'  : { 'fontSize': '10px', 'lineHeight': '12px' }
-  ###
+  @DEFAULT_FORMATS = ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -172,7 +136,7 @@ class Scribe.Renderer
   getFormat: (container) ->
     for name,format of @formats
       value = format.matchContainer(container)
-      return value if value
+      return [name, value] if value
     return []
 
 

@@ -133,14 +133,13 @@ class Scribe.Normalizer
           curLine = nextLine
         curLine = line
 
-  mergeAdjacent: ->
-    return
-    Scribe.DOM.traversePreorder(@renderer.root, 0, (node) ->
+  mergeAdjacent: (lineNode) ->
+    Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
       if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI' and Scribe.DOM.canEdit(next)
-          [nodeFormat, nodeValue] = Scribe.Utils.getFormatForContainer(node)
-          [nextFormat, nextValue] = Scribe.Utils.getFormatForContainer(next)
+          [nodeFormat, nodeValue] = @renderer.getFormat(node)
+          [nextFormat, nextValue] = @renderer.getFormat(next)
           if nodeFormat == nextFormat && nodeValue == nextValue
             node = Scribe.DOM.mergeNodes(node, next)
       return node
@@ -170,16 +169,17 @@ class Scribe.Normalizer
       this.optimizeLine(line)
     )
 
-  normalizeLine: (lineNode, renderer) ->
+  normalizeLine: (lineNode) ->
     childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
     return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
     this.removeNoBreak(lineNode)
-    this.normalizeSpan(lineNode, renderer)
+    this.normalizeTags(lineNode)
     this.requireLeaf(lineNode)
     this.wrapText(lineNode)
 
-  normalizeSpan: (lineNode, renderer) ->
-    rendererStyles = if renderer?.styles? then renderer.styles else Scribe.Renderer.DEFAULT_STYLES
+  normalizeTags: (lineNode) ->
+    return
+    rendererStyles = if @renderer?.styles? then @renderer.styles else Scribe.Renderer.DEFAULT_STYLES
     _.each(Scribe.DOM.filterUneditable(lineNode.querySelectorAll('span')), (node) ->
       # TODO handle extraneous classes
       attributes = _.map(node.attributes, (attr) -> attr.name)
