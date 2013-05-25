@@ -95,7 +95,9 @@ def check_consistency(driver, replay_file)
     actual_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
     puts "Inconsistent deltas:".red
-    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{actual_delta}"
+    puts "doc_delta: #{doc_delta}"
+    puts "rand_delta: #{rand_delta}"
+    puts "actual: #{actual_delta}"
     abort
   elsif replay_file
     highline = HighLine.new
