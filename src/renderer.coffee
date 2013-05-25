@@ -1,17 +1,6 @@
 Scribe = require('./scribe')
 
 
-_runWhenLoaded = (fn) ->
-  return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
-  if @iframe.contentWindow.onload
-    @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
-      wrapper.call(this)
-      fn.call(this)
-    )
-  else
-    @iframe.contentWindow.onload = fn
-
-
 class Scribe.Renderer
   @DEFAULTS:
     formats: 'default'
@@ -81,7 +70,7 @@ class Scribe.Renderer
       )
 
   addContainer: (container, before = false) ->
-    _runWhenLoaded.call(this, =>
+    this.runWhenLoaded( =>
       refNode = if before then @root else null
       @root.parentNode.insertBefore(container, refNode)
     )
@@ -90,7 +79,7 @@ class Scribe.Renderer
     @formats[name] = format
 
   addStyles: (styles) ->
-    _runWhenLoaded.call(this, =>
+    this.runWhenLoaded( =>
       style = @root.ownerDocument.createElement('style')
       style.type = 'text/css'
       css = Scribe.Renderer.objToCss(styles)
@@ -122,14 +111,14 @@ class Scribe.Renderer
     @root = doc.createElement('div')
     @root.classList.add('editor')
     @root.id = @options.id
-    @root.innerHTML = html if @options.keepHTML
+    @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
     styles = _.map(@options.styles, (value, key) ->
       obj = Scribe.Renderer.DEFAULT_STYLES[key] or {}
       return _.extend(obj, value)
     )
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
     this.addStyles(styles)
-    _runWhenLoaded.call(this, =>
+    this.runWhenLoaded( =>
       @iframe.contentWindow.document.body.appendChild(@root) # Firefox does not like doc.body
     )
 
@@ -138,6 +127,16 @@ class Scribe.Renderer
       value = format.matchContainer(container)
       return [name, value] if value
     return []
+
+  runWhenLoaded: (fn) ->
+    return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
+    if @iframe.contentWindow.onload
+      @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
+        wrapper.call(this)
+        fn.call(this)
+      )
+    else
+      @iframe.contentWindow.onload = fn
 
 
 module.exports = Scribe

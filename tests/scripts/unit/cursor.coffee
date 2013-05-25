@@ -3,7 +3,7 @@ describe('Cursor', ->
     initial = '
       <div><b>Bold</b><i>Italic</i></div>
       <div><br></br>
-      <div><span class="size-large">Large</span></div>
+      <div><span style="font-size:18px; line-height:22px;">Large</span></div>
     '
     $('#test-container').html(Scribe.Utils.cleanHtml(initial, true))
     editor = new Scribe.Editor('test-container')

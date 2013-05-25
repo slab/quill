@@ -19,7 +19,7 @@ initListeners = ->
     onEditOnce = _.once(onEdit)
     return if @ignoreDomChanges or !@renderer.iframe.parentNode?    # Make sure we have not been deleted
     this.update()
-  onSubtreeModified = =>
+  onSubtreeModified = (arg1, arg2) =>
     return if @ignoreDomChanges
     toCall = onEditOnce
     _.defer( =>
@@ -239,18 +239,18 @@ class Scribe.Editor extends EventEmitter2
     this.doSilently( =>
       trackDelta.call(this, =>
         @selection.preserve( =>
-          @doc.normalizer.breakBlocks()
+          #Scribe.Normalizer.breakBlocks(@root)
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
           _.each(lines, (line, index) =>
             while line.node != lineNode
+              debugger
               if line.node.parentNode == @root
-                @doc.normalizer.normalizeLine(lineNode, @renderer)
+                @doc.normalizer.normalizeLine(lineNode)
                 newLine = @doc.insertLineBefore(lineNode, line)
                 lineNode = lineNode.nextSibling
               else
-                @doc.removeLine(line)
-                return
+                return @doc.removeLine(line)
             @doc.updateLine(line)
             lineNode = lineNode.nextSibling
           )

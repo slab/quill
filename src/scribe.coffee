@@ -17,7 +17,6 @@ require('./undo-manager')
 require('./utils')
 require('./modules/attribution')
 require('./modules/cursor')
-require('./modules/default-format')
 require('./modules/toolbar')
 
 window.Scribe = require('./editor')

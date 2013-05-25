@@ -79,7 +79,7 @@ class Scribe.Line extends LinkedList.Node
       )
       @node.insertBefore(formatNode, refNode)
     else
-      this.applyToContents(offset, length, (node) ->
+      this.applyToContents(offset, length, (node) =>
         Scribe.Utils.removeFormatFromSubtree(@doc.renderer, node, name)
       )
     this.rebuild()

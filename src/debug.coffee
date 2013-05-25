@@ -15,15 +15,15 @@ Scribe.Debug =
     return editor.doc
 
   checkDocumentConsistency: (doc, output = false) ->
-    nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
-      nodes = lineNode.querySelectorAll('*')
-      return _.filter(nodes, (node) ->
-        return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Scribe.DOM.EXTERNAL_CLASS) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
-      )
-    )
-    lines = doc.lines.toArray()
-
     isConsistent = ->
+      nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
+        nodes = lineNode.querySelectorAll('*')
+        return _.filter(nodes, (node) ->
+          return node.nodeType == node.ELEMENT_NODE && !node.classList.contains(Scribe.DOM.EXTERNAL_CLASS) && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
+        )
+      )
+      lines = doc.lines.toArray()
+
       # doc.lines and doc.lineMap should match
       if lines.length != _.values(doc.lineMap).length
         console.error "doc.lines and doc.lineMap differ in length", lines.length, _.values(doc.lineMap).length
@@ -37,18 +37,21 @@ Scribe.Debug =
           return true
         return false
       )
-      # All leaves should still be in the DOM
-      orphanedLeaf = orphanedLine = null
-      if _.any(lines, (line) ->
-        return _.any(line.leaves.toArray(), (leaf) ->
-          if leaf.node.parentNode == null
-            orphanedLeaf = leaf
-            orphanedLine = line
-            return true
-          return false
-        )
+      # Line nodes and line's nodes should match
+      if _.any(doc.root.childNodes, (lineNode, index) ->
+        if lines[index].node != lineNode
+          console.error "Line and nodes do not match", lines[index].node, lineNode
+          return true
+        return false
       )
-        console.error 'Missing from DOM', orphanedLine, orphanedLeaf
+        return false
+      # All lines should still be in the DOM
+      if _.any(lines, (line) ->
+        if line.node.parentNode == null
+          console.error 'Missing line from DOM', line
+          return true
+        return false
+      )
         return false
 
       # All line lengths should be correct
@@ -71,6 +74,20 @@ Scribe.Debug =
           return true
         return false
       )
+        return false
+        
+      # All leaves should still be in the DOM
+      orphanedLeaf = orphanedLine = null
+      if _.any(lines, (line) ->
+        return _.any(line.leaves.toArray(), (leaf) ->
+          if leaf.node.parentNode == null
+            orphanedLeaf = leaf
+            orphanedLine = line
+            return true
+          return false
+        )
+      )
+        console.error 'Missing from DOM', orphanedLine, orphanedLeaf
         return false
 
       # doc.lines should match nodesByLine
