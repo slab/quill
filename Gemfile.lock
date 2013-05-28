@@ -11,14 +11,14 @@ GEM
       debugger-ruby_core_source (~> 1.2.1)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.2)
-    ffi (1.6.0)
+    ffi (1.8.1)
     haml (4.0.1)
       tilt
     highline (1.6.16)
-    multi_json (1.7.2)
+    multi_json (1.7.4)
     rubyzip (0.9.9)
     sass (3.2.7)
-    selenium-webdriver (2.32.1)
+    selenium-webdriver (2.33.0)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
       rubyzip
@@ -35,4 +35,4 @@ DEPENDENCIES
   haml (~> 4.0.1)
   highline (~> 1.6.16)
   sass (~> 3.2.7)
-  selenium-webdriver (~> 2.32.1)
+  selenium-webdriver (~> 2.33.0)
