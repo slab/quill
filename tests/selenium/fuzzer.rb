@@ -121,6 +121,10 @@ if browserdriver == :firefox
   profile = Selenium::WebDriver::Firefox::Profile.new
   profile.native_events = true
   driver = Selenium::WebDriver.for browserdriver, :profile => profile
+elsif browserdriver == :chrome
+  log_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output"))
+  log_path = log_path.first
+  driver = Selenium::WebDriver.for browserdriver, :service_log_path => log_path
 else
   driver = Selenium::WebDriver.for browserdriver
 end
