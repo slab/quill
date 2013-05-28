@@ -46,6 +46,10 @@ def js_get_doc_delta_as_str(driver)
   return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta);"
 end
 
+def js_get_expected_as_str(driver)
+  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta));"
+end
+
 def js_set_doc_delta(driver)
   execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
 end
@@ -92,10 +96,11 @@ def check_consistency(driver, replay_file)
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
     rand_delta = js_get_as_str(driver, "randomDelta")
+    expected_delta = js_get_expected_as_str(driver)
     actual_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
     puts "Inconsistent deltas:".red
-    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{actual_delta}"
+    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{actual_delta}, expected_delta: #{expected_delta}"
     abort
   elsif replay_file
     highline = HighLine.new
