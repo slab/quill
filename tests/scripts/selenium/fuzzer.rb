@@ -55,10 +55,9 @@ def js_set_doc_delta(driver)
 end
 
 def read_deltas_from_file(file)
-  file_path = File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails", file)
   deltas = []
   begin
-    File.open(file_path) do |f|
+    File.open(file) do |f|
       f.readlines.each do |line|
         deltas << line.chomp!
       end
@@ -80,12 +79,11 @@ def write_deltas_to_file(doc_delta, rand_delta)
   puts "Fuzzer failed. Writing state to #{file_path} for replays.".colorize(:red)
 end
 
-def delete_fail_file(file_name)
-  path = File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails", file_name)
+def delete_fail_file(file)
   begin
-    FileUtils.rm(path)
+    FileUtils.rm(file)
   rescue
-    puts "Failed deleting file #{file_name}. Please ensure it still exists.".colorize(:red)
+    puts "Failed deleting file #{file}. Please ensure the path is valid.".colorize(:red)
     abort
   end
 end
