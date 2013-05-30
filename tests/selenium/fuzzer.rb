@@ -2,6 +2,7 @@ require 'debugger'
 require 'colorize'
 require 'highline'
 require 'selenium-webdriver'
+require 'json'
 require_relative 'selenium_adapter'
 
 NUM_EDITS = 500
@@ -97,8 +98,14 @@ def check_consistency(driver, replay_file)
     expected_delta = js_get_expected_as_str(driver)
     actual_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
+    doc_delta = JSON.pretty_generate(JSON.parse(doc_delta))
+    rand_delta = JSON.pretty_generate(JSON.parse(rand_delta))
+    expected_delta = JSON.pretty_generate(JSON.parse(expected_delta))
     puts "Inconsistent deltas:".red
-    puts "doc_delta: #{doc_delta}, rand_delta: #{rand_delta}, actual: #{actual_delta}, expected_delta: #{expected_delta}"
+    puts "#{'doc_delta: '.light_cyan + doc_delta},"
+    puts "#{'rand_delta: '.light_cyan + rand_delta},"
+    puts "#{'expected_delta: '.light_cyan + expected_delta},"
+    puts "#{'actual: '.light_cyan + actual_delta}"
     abort
   elsif replay_file
     highline = HighLine.new
