@@ -12,9 +12,14 @@ class SeleniumAdapter
   # Assumes delta will contain only one document modifying op
   def apply_delta(delta)
     index = 0
-    delta['ops'].each do |op|
+    delta['ops'].each_with_index do |op, i|
+      puts "Op is: #{op}"
       if op['value']
         insert_at index, op['value']
+        nextOp = delta['ops'][i + 1]
+        if nextOp and nextOp['value']
+          insert_at index + op['value'].length, nextOp['value']
+        end
         break
       elsif op['start'] > index
         delete_length = op['start'] - index
@@ -37,17 +42,17 @@ class SeleniumAdapter
     move_cursor(index)
     type_text(text)
     # Remove any prexisting formatting that Scribe applied
-    runs = text.split "\n"
-    run_index = index
-    runs.each do |run|
-      move_cursor(run_index)
-      if run.length > 0
-        highlight run.length
-        remove_active_formatting
-        remove_highlighting
-      end
-      run_index += run.length + 1 # + 1 to account for \n
-    end
+    # runs = text.split "\n"
+    # run_index = index
+    # runs.each do |run|
+    #   move_cursor(run_index)
+    #   if run.length > 0
+    #     highlight run.length
+    #     remove_active_formatting
+    #     remove_highlighting
+    #   end
+    #   run_index += run.length + 1 # + 1 to account for \n
+    # end
     move_cursor index + text.length
   end
 
