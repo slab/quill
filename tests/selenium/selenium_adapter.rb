@@ -13,12 +13,12 @@ class SeleniumAdapter
   def apply_delta(delta)
     index = 0
     delta['ops'].each_with_index do |op, i|
-      puts "Op is: #{op}"
       if op['value']
-        insert_at index, op['value']
-        nextOp = delta['ops'][i + 1]
-        if nextOp and nextOp['value']
-          insert_at index + op['value'].length, nextOp['value']
+        while op and op['value']
+          insert_at index, op['value']
+          i += 1
+          index += op['value'].length
+          op = delta['ops'][i]
         end
         break
       elsif op['start'] > index
@@ -41,18 +41,6 @@ class SeleniumAdapter
     puts "Inserting #{text} at #{index}"
     move_cursor(index)
     type_text(text)
-    # Remove any prexisting formatting that Scribe applied
-    # runs = text.split "\n"
-    # run_index = index
-    # runs.each do |run|
-    #   move_cursor(run_index)
-    #   if run.length > 0
-    #     highlight run.length
-    #     remove_active_formatting
-    #     remove_highlighting
-    #   end
-    #   run_index += run.length + 1 # + 1 to account for \n
-    # end
     move_cursor index + text.length
   end
 
