@@ -35,9 +35,12 @@ class Scribe.Format.Class extends Scribe.Format.Span
   constructor: (@root, @keyName) ->
     super
 
+  clean: (node) ->
+    Scribe.DOM.removeAttributes(node, 'class')
+
   createContainer: (value) ->
     container = super(value)
-    container.classList.add("#{name}-#{value}")
+    container.classList.add("#{@keyName}-#{value}")
     return container
 
   matchContainer: (container) ->
@@ -45,7 +48,7 @@ class Scribe.Format.Class extends Scribe.Format.Span
       for css in container.classList
         parts = css.split('-')
         if parts.length > 1 and parts[0] == @keyName
-          return [@keyName, parts.slice(1).join('-')]
+          return parts.slice(1).join('-')
     return false
 
 
