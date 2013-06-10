@@ -134,6 +134,7 @@ class Scribe.Editor extends EventEmitter2
   @events: 
     API_TEXT_CHANGE  : 'api-text-change'
     PRE_EVENT        : 'pre-event'
+    POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
@@ -193,6 +194,7 @@ class Scribe.Editor extends EventEmitter2
   emit: (eventName, args...) ->
     super(Scribe.Editor.PRE_EVENT, eventName, args...)
     super(eventName, args...)
+    super(Scribe.Editor.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, external = true) ->
     doAt.call(this, =>
