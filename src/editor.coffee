@@ -53,7 +53,7 @@ deleteAt = (index, length) ->
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(this.getLength(), "\n")
+    this.insertAt(this.getLength(), "\n", {}, false)
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
