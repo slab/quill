@@ -116,9 +116,8 @@ Run tests/scripts/selenium/fuzzer.rb as follows:
     ruby fuzzer.rb _browserdriver_ _replay_file_
 
 Possible values for ```_browser_driver_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
-```_replay_file_``` may be the name of any file the fuzzer creates after a failed run.
-You need not provide the path, the filename is sufficient. This file contains the final edit that caused 
-the fuzzer to fail, so that you can replay the edit until you fix the bug.
+```_replay_file_``` must be the absolute path to the file the fuzzer creates after a failed run.
+This file contains the final edit that caused the fuzzer to fail, so that you can replay the edit until you fix the bug.
 
 In order to run the fuzzer against Chrome or IE, you'll need to download 
 [ChromeDriver](https://code.google.com/p/chromedriver/downloads/list) or

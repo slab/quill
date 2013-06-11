@@ -2,6 +2,7 @@ require 'debugger'
 require 'colorize'
 require 'highline'
 require 'selenium-webdriver'
+require 'json'
 require_relative 'selenium_adapter'
 
 NUM_EDITS = 500
@@ -46,15 +47,22 @@ def js_get_doc_delta_as_str(driver)
   return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta);"
 end
 
+def js_get_expected_as_str(driver)
+  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta));"
+end
+
 def js_set_doc_delta(driver)
   execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
 end
 
+
+################################################################################
+# Replay file helpers
+################################################################################
 def read_deltas_from_file(file)
-  file_path = File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails", file)
   deltas = []
   begin
-    File.open(file_path) do |f|
+    File.open(file) do |f|
       f.readlines.each do |line|
         deltas << line.chomp!
       end
@@ -76,12 +84,11 @@ def write_deltas_to_file(doc_delta, rand_delta)
   puts "Fuzzer failed. Writing state to #{file_path} for replays.".colorize(:red)
 end
 
-def delete_fail_file(file_name)
-  path = File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails", file_name)
+def delete_fail_file(file)
   begin
-    FileUtils.rm(path)
+    FileUtils.rm(file)
   rescue
-    puts "Failed deleting file #{file_name}. Please ensure it still exists.".colorize(:red)
+    puts "Failed deleting file #{file}. Please ensure the path is valid.".colorize(:red)
     abort
   end
 end
@@ -107,6 +114,7 @@ def check_consistency(driver, replay_file)
   driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
+
 ################################################################################
 # WebDriver setup
 ################################################################################
@@ -115,11 +123,15 @@ unless ARGV.length == 1 or ARGV.length == 2
 end
 browserdriver = ARGV[0].to_sym
 replay_file = ARGV[1]
-editor_url = "file://#{File.join(File.expand_path(__FILE__), '../../../..', 'build/tests/fuzzer.html')}"
+editor_url = "file://#{File.join(File.expand_path(__FILE__), '../../..', 'build/tests/fuzzer.html')}"
 if browserdriver == :firefox
   profile = Selenium::WebDriver::Firefox::Profile.new
   profile.native_events = true
   driver = Selenium::WebDriver.for browserdriver, :profile => profile
+elsif browserdriver == :chrome
+  log_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output"))
+  log_path = log_path.first
+  driver = Selenium::WebDriver.for browserdriver, :service_log_path => log_path
 else
   driver = Selenium::WebDriver.for browserdriver
 end
@@ -133,20 +145,30 @@ adapter.focus()
 ################################################################################
 # Fuzzer logic
 ################################################################################
-def initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
-  doc_delta, rand_delta = read_deltas_from_file(replay_file)
-  js_set_delta_replay(driver, doc_delta, 'docDelta')
-  js_set_delta_replay(driver, rand_delta, 'randomDelta')
-  doc_delta = js_get(driver, "docDelta")
-  js_set_scribe_delta(driver)
-
-  # Remove inexplicable highlighting that gets applied when setting delta and
-  # reset cursor to 0th position
-  editor.click()
-  adapter.cursor_pos = doc_delta['endLength']
-  adapter.move_cursor 0
-
-  adapter.doc_length = doc_delta['endLength']
+def check_consistency(driver, replay_file)
+  driver.switch_to.default_content
+  success = driver.execute_script "return window.Fuzzer.checkConsistency();"
+  if not success
+    doc_delta = js_get_as_str(driver, "docDelta")
+    rand_delta = js_get_as_str(driver, "randomDelta")
+    expected_delta = js_get_expected_as_str(driver)
+    actual_delta = js_get_cur_doc_delta_as_str(driver)
+    write_deltas_to_file(doc_delta, rand_delta) unless replay_file
+    doc_delta = JSON.pretty_generate(JSON.parse(doc_delta))
+    rand_delta = JSON.pretty_generate(JSON.parse(rand_delta))
+    expected_delta = JSON.pretty_generate(JSON.parse(expected_delta))
+    puts "Inconsistent deltas:".red
+    puts "#{'doc_delta: '.light_cyan + doc_delta},"
+    puts "#{'rand_delta: '.light_cyan + rand_delta},"
+    puts "#{'expected_delta: '.light_cyan + expected_delta},"
+    puts "#{'actual: '.light_cyan + actual_delta}"
+    abort
+  elsif replay_file
+    highline = HighLine.new
+    delete = highline.agree "Congrats, it passed! Would you like to delete the fail file? (y/n)".colorize(:green)
+    delete_fail_file(replay_file) if delete
+  end
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
 if replay_file
