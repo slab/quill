@@ -22,7 +22,7 @@ _buildCursor = (userId, name, color) ->
   nameNode = @container.ownerDocument.createElement('span')
   nameNode.classList.add('cursor-name')
   nameNode.textContent = name
-  inner.style['background-color'] = nameNode.style['background-color'] = color
+  inner.style.backgroundColor = nameNode.style.backgroundColor = color
   cursor.appendChild(nameNode)
   cursor.appendChild(inner)
   return cursor
