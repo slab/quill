@@ -130,14 +130,14 @@ describe('Normalize', ->
 
     lineTest.run('preserve style attributes', 
       initial: 
-        '<span style="font-size:32px;">Huge</span>
-        <span style="color:rgb(255, 0, 0);">Red</span>
-        <span style="font-family:\'Times New Roman\', serif;">Serif</span>
+        '<span style="font-size: 32px; line-height: 36px;">Huge</span>
+        <span style="color: rgb(255, 0, 0);">Red</span>
+        <span style="font-family: \'Times New Roman\', serif;">Serif</span>
         <span style="font-size: 18px; line-height: 22px;">Large</span>'
       expected:
-        '<span style="font-size:32px;">Huge</span>
-        <span style="color:rgb(255, 0, 0);">Red</span>
-        <span style="font-family:\'Times New Roman\', serif;">Serif</span>
+        '<span style="font-size: 32px; line-height: 36px;">Huge</span>
+        <span style="color: rgb(255, 0, 0);">Red</span>
+        <span style="font-family: \'Times New Roman\', serif;">Serif</span>
         <span style="font-size: 18px; line-height: 22px;">Large</span>'
     )
 
