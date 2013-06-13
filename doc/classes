@@ -50,12 +50,11 @@ Number offset
 
 Range
 ---
-Wrapper for rangy's range, using Positions. Has many useful functions for operations or analysis of the range.
+Range represented by two positions
 
 Position start
 Position end
 equals()
-getRangy()
 getLeaves(inclusive = true)
 
 
