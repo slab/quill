@@ -57,7 +57,7 @@ _setCursor = (userId, index, name, color) ->
         rightText.parentNode.insertBefore(span, rightText)
         _moveCursor.call(this, @cursors[userId], span)
       else if leftText?
-        leftText.parentNode.parentNode.appendChild(span)
+        leftText.parentNode.appendChild(span)
         _moveCursor.call(this, @cursors[userId], span)
     span.parentNode.removeChild(span)
     position.leafNode.normalize() if didSplit

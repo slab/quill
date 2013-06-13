@@ -55,8 +55,8 @@ describe('Cursor', ->
       cursorManager.setCursor('id', 17, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('46px')
-      expect(parseInt(cursor.style.top)).to.be.gte(34)
-      expect(parseInt(cursor.style.top)).to.be.lte(35)
+      expect(parseInt(cursor.style.top)).to.be.gte(29)
+      expect(parseInt(cursor.style.top)).to.be.lte(31)
     )
 
     it('should set at beginning of large font', ->
@@ -82,12 +82,10 @@ describe('Cursor', ->
     )
 
     it('should set in end of large font', ->
+      console.log 'set dat font'
       cursorManager.setCursor('id', 17, 'Test', 'red')
-      cursor = cursorManager.container.querySelector('.cursor')
-      expect(cursor.style.left).to.equal('46px')
-      expect(parseInt(cursor.style.top)).to.be.gte(34)
-      expect(parseInt(cursor.style.top)).to.be.lte(35)
-      inner = cursor.querySelector('.cursor-inner')
+      # Cursor tested by 'should set at end test'
+      inner = cursorManager.container.querySelector('.cursor-inner')
       expect(parseInt(inner.style.height)).to.be.gte(19)
       expect(parseInt(inner.style.height)).to.be.lte(21)
     )
