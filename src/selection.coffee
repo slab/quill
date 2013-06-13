@@ -6,6 +6,7 @@ class Scribe.Selection
 
   constructor: (@editor) ->
     @range = null
+    @nativeSelection = @editor.contentWindow.getSelection()
     this.initListeners()
 
   initListeners: ->
@@ -34,27 +35,15 @@ class Scribe.Selection
     this.update()
     return @range
 
-  getNative: ->
-    rangySel = rangy.getSelection(@editor.contentWindow)
-    selection = window.getSelection()
-    return null unless rangySel.anchorNode? and rangySel.focusNode? and @editor.root.contains(rangySel.anchorNode) and @editor.root.contains(rangySel.focusNode)
-    if !rangySel.isBackwards()
-      [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    else
-      [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    return {
-      anchorNode    : anchorNode
-      anchorOffset  : anchorOffset
-      focusNode     : focusNode
-      focusOffset   : focusOffset
-    }
-
   getRange: ->
-    nativeSel = this.getNative()
-    return null unless nativeSel?
-    start = new Scribe.Position(@editor, nativeSel.anchorNode, nativeSel.anchorOffset)
-    end = new Scribe.Position(@editor, nativeSel.focusNode, nativeSel.focusOffset)
-    return new Scribe.Range(@editor, start, end)
+    return null unless @nativeSelection.rangeCount > 0
+    nativeRange = @nativeSelection.getRangeAt(0)
+    start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
+    end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
+    if nativeRange.compareBoundaryPoints(Range.START_TO_END, nativeRange) < 1
+      return new Scribe.Range(@editor, start, end)
+    else
+      return new Scribe.Range(@editor, end, start)
 
   preserve: (fn) ->
     this.update(true)
@@ -103,20 +92,15 @@ class Scribe.Selection
     )
 
   setRange: (@range, silent = false) ->
-    rangySel = rangy.getSelection(@editor.contentWindow)
+    @nativeSelection.removeAllRanges()
     if @range?
-      rangySelRange = @range.getRangy()
-      rangySel.setSingleRange(rangySelRange)
-    else
-      rangySel.removeAllRanges()
+      nativeRange = @editor.root.ownerDocument.createRange()
+      [startNode, startOffset] = Scribe.DOM.findDeepestNode(@range.start.leafNode, @range.start.offset)
+      nativeRange.setStart(startNode, startOffset)
+      [endNode, endOffset] = Scribe.DOM.findDeepestNode(@range.end.leafNode, @range.end.offset)
+      nativeRange.setEnd(endNode, endOffset)
+      @nativeSelection.addRange(nativeRange)
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
-
-  setRangeNative: (nativeSel) ->
-    rangySel = rangy.getSelection(@editor.contentWindow)
-    range = rangy.createRangyRange(@editor.contentWindow)
-    range.setStart(nativeSel.anchorNode, nativeSel.anchorOffset)
-    range.setEnd(nativeSel.focusNode, nativeSel.focusOffset)
-    rangySel.setSingleRange(range)
 
   update: (silent = false) ->
     range = this.getRange()
