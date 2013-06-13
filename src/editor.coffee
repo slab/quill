@@ -136,9 +136,8 @@ trackDelta = (fn, external = false) ->
   decompose = newDelta.decompose(oldDelta) unless decompose?
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  unless decompose.isIdentity()
-    eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
-    this.emit(eventName, decompose)
+  unless decompose.isIdentity() and !external
+    this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose)
   
 
 class Scribe.Editor extends EventEmitter2
@@ -151,7 +150,6 @@ class Scribe.Editor extends EventEmitter2
     enabled: true
     styles: {}
   @events:
-    API_TEXT_CHANGE  : 'api-text-change'
     PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
@@ -198,16 +196,13 @@ class Scribe.Editor extends EventEmitter2
       return this.setDelta(delta, external)
     return if delta.isIdentity()
     this.doSilently( =>
-      @selection.preserve( =>
-        console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
-        oldDelta = @doc.toDelta()
-        delta.apply(insertAt, deleteAt, formatAt, this)
-        eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
-        this.emit(eventName, delta)
-        # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
-        # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
-        forceTrailingNewline.call(this)
-      )
+      console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
+      oldDelta = @doc.toDelta()
+      delta.apply(insertAt, deleteAt, formatAt, this)
+      this.emit(Scribe.Editor.events.TEXT_CHANGE, delta) if !external
+      # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
+      # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
+      forceTrailingNewline.call(this)
     )
 
   emit: (eventName, args...) ->
