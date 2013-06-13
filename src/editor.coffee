@@ -2,13 +2,13 @@ Scribe = require('./scribe')
 Tandem = require('tandem-core')
 
 
-doAt = (fn, external = false) ->
+doAt = (fn, options = { internal: true }) ->
   this.doSilently( =>
     trackDelta.call(this, =>
       keepNormalized.call(this, =>
         fn.call(this)
       )
-    , external)
+    , options)
   )
 
 initListeners = ->
@@ -119,7 +119,7 @@ keepNormalized = (fn) ->
   fn.call(this)
   @doc.rebuildDirty()
 
-trackDelta = (fn, external = false) ->
+trackDelta = (fn, options = { internal: true }) ->
   oldDelta = @doc.toDelta()
   oldIndex = @selection.range?.start.index # We do not want new range value so we do not use getSelection
   fn()
@@ -136,7 +136,7 @@ trackDelta = (fn, external = false) ->
   decompose = newDelta.decompose(oldDelta) unless decompose?
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  unless decompose.isIdentity() and !external
+  if !decompose.isIdentity() and options.internal
     this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose)
   
 
@@ -190,16 +190,16 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = false
     Scribe.Editor.editors.push(this)
 
-  applyDelta: (delta, external = true) ->
+  applyDelta: (delta, options = {}) ->
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
-      return this.setDelta(delta, external)
+      return this.setDelta(delta, options)
     return if delta.isIdentity()
     this.doSilently( =>
       console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
       oldDelta = @doc.toDelta()
       delta.apply(insertAt, deleteAt, formatAt, this)
-      this.emit(Scribe.Editor.events.TEXT_CHANGE, delta) if !external
+      this.emit(Scribe.Editor.events.TEXT_CHANGE, delta) if options.internal
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       forceTrailingNewline.call(this)
@@ -210,11 +210,11 @@ class Scribe.Editor extends EventEmitter2
     super(eventName, args...)
     super(Scribe.Editor.POST_EVENT, eventName, args...)
 
-  deleteAt: (index, length, external = true) ->
+  deleteAt: (index, length, options = {}) ->
     doAt.call(this, =>
       deleteAt.call(this, index, length)
       forceTrailingNewline.call(this)
-    , external)
+    , options)
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -222,10 +222,10 @@ class Scribe.Editor extends EventEmitter2
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
 
-  formatAt: (index, length, name, value, external = true) ->
+  formatAt: (index, length, name, value, options = {}) ->
     doAt.call(this, =>
       formatAt.call(this, index, length, name, value)
-    , external)
+    , options)
     
   getDelta: ->
     return @doc.toDelta()
@@ -236,16 +236,16 @@ class Scribe.Editor extends EventEmitter2
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (index, text, formatting = {}, external = true) ->
+  insertAt: (index, text, formatting = {}, options = {}) ->
     doAt.call(this, =>
       insertAt.call(this, index, text, formatting)
       forceTrailingNewline.call(this)
-    , external)
+    , options)
 
-  setDelta: (delta, external = true) ->
+  setDelta: (delta, options = {}) ->
     oldLength = delta.startLength
     delta.startLength = this.getLength()
-    this.applyDelta(delta, external)
+    this.applyDelta(delta, options)
     delta.startLength = oldLength
     
   setSelection: (range, silent = false) ->
