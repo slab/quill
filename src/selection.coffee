@@ -45,52 +45,6 @@ class Scribe.Selection
     else
       return new Scribe.Range(@editor, end, start)
 
-  preserve: (fn) ->
-    this.update(true)
-    if @range?
-      markers = this.save()
-      fn.call(null)
-      this.restore(markers)
-    else
-      fn.call(null)
-
-  restore: (markers) ->
-    indexes = []
-    _.each(markers, (node) ->
-      return console.warn "Saved position deleted", node unless node.parentNode?
-      indexes.push(Scribe.Position.getIndex(node, 0))
-      parentNode = node.parentNode
-      parentNode.removeChild(node)
-      parentNode.normalize()
-    )
-    return if indexes.length < 1
-    indexes.push(indexes[0]) if indexes.length == 1
-    range = new Scribe.Range(@editor, indexes[0], indexes[1])
-    this.setRange(range, true)
-    this.update(true)
-
-  save: ->
-    markers = @editor.root.querySelectorAll(".#{Scribe.Selection.SAVED_CLASS}")
-    if markers.length > 0
-      console.warn "Double selection save", markers
-      _.each(markers, (marker) -> marker.parentNode.removeChild(marker))
-    return _.map([@range.start, @range.end], (position) ->
-      [textNode, offset] = Scribe.DOM.findDeepestNode(position.leafNode, position.offset)
-      span = position.leafNode.ownerDocument.createElement('span')
-      span.classList.add(Scribe.Selection.SAVED_CLASS)
-      span.classList.add(Scribe.DOM.EXTERNAL_CLASS)
-      if textNode.nodeType == textNode.TEXT_NODE
-        [left, right] = Scribe.DOM.splitNode(textNode, offset, true)
-        position.leafNode.insertBefore(span, right)
-      else
-        if offset == 0
-          textNode.parentNode.insertBefore(span, textNode)
-        else
-          console.warn 'Saving selection at offset greater than line length' if offset > 1
-          textNode.parentNode.insertBefore(span, textNode.nextSibling)
-      return span
-    )
-
   setRange: (@range, silent = false) ->
     @nativeSelection.removeAllRanges()
     if @range?
