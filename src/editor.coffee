@@ -5,9 +5,7 @@ Tandem = require('tandem-core')
 doAt = (fn, options = { internal: true }) ->
   this.doSilently( =>
     trackDelta.call(this, =>
-      keepNormalized.call(this, =>
-        fn.call(this)
-      )
+      fn.call(this)
     , options)
   )
 
@@ -38,6 +36,7 @@ preserveSelection = (index, lengthAdded, fn, args...) ->
     )
     fn.apply(this, args)
     this.setSelection(new Scribe.Range(this, indexes[0], indexes[1]))
+    range = this.getSelection()
   else
     fn.apply(this, args)
 
@@ -64,6 +63,7 @@ deleteAt = (index, length) ->
       offset = 0
     if firstLine? and !firstLine.trailingNewline
       @doc.mergeLines(firstLine, firstLine.next)
+    @doc.rebuildDirty()
   )
 
 forceTrailingNewline = ->
@@ -89,6 +89,7 @@ formatAt = (index, length, name, value) ->
       length -= (line.length - offset)
       offset = 0
       line = line.next
+    @doc.rebuildDirty()
   )
 
 insertAt = (index, text, formatting = {}) ->
@@ -113,11 +114,8 @@ insertAt = (index, text, formatting = {}) ->
           line.length += 1
       offset = 0
     )
+    @doc.rebuildDirty()
   )
-
-keepNormalized = (fn) ->
-  fn.call(this)
-  @doc.rebuildDirty()
 
 trackDelta = (fn, options = { internal: true }) ->
   oldDelta = @doc.toDelta()
