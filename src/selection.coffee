@@ -40,7 +40,7 @@ class Scribe.Selection
     nativeRange = @nativeSelection.getRangeAt(0)
     start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
     end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
-    if nativeRange.compareBoundaryPoints(Range.START_TO_END, nativeRange) < 1
+    if nativeRange.compareBoundaryPoints(Range.START_TO_END, nativeRange) > -1
       return new Scribe.Range(@editor, start, end)
     else
       return new Scribe.Range(@editor, end, start)

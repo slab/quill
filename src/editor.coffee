@@ -5,10 +5,8 @@ Tandem = require('tandem-core')
 doAt = (fn, external = false) ->
   this.doSilently( =>
     trackDelta.call(this, =>
-      @selection.preserve( =>
-        keepNormalized.call(this, =>
-          fn.call(this)
-        )
+      keepNormalized.call(this, =>
+        fn.call(this)
       )
     , external)
   )
@@ -28,28 +26,45 @@ initListeners = ->
   onEditOnce = _.once(onEdit)
   @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
 
+preserveSelection = (index, lengthAdded, fn, args...) ->
+  range = this.getSelection()
+  if range?
+    indexes = _.map([range.start, range.end], (pos) ->
+      posIndex = pos.getIndex()
+      if index >= posIndex
+        return posIndex
+      else
+        return Math.max(posIndex + lengthAdded, index)
+    )
+    fn.apply(this, args)
+    this.setSelection(new Scribe.Range(this, indexes[0], indexes[1]))
+  else
+    fn.apply(this, args)
+
 deleteAt = (index, length) ->
   return if length <= 0
-  [firstLine, offset] = @doc.findLineAtOffset(index)
-  curLine = firstLine
-  while curLine? and length > 0
-    deleteLength = Math.min(length, curLine.length - offset)
-    nextLine = curLine.next
-    if curLine.length == deleteLength
-      if curLine == @doc.lines.first and curLine == @doc.lines.last
-        curLine.node.innerHTML = ''
-        curLine.trailingNewline = false
-        curLine.rebuild()
+  preserveSelection.call(this, index, -1 * length, =>
+    [firstLine, offset] = @doc.findLineAtOffset(index)
+    curLine = firstLine
+    while curLine? and length > 0
+      deleteLength = Math.min(length, curLine.length - offset)
+      nextLine = curLine.next
+      if curLine.length == deleteLength
+        if curLine == @doc.lines.first and curLine == @doc.lines.last
+          curLine.node.innerHTML = ''
+          curLine.trailingNewline = false
+          curLine.rebuild()
+        else
+          Scribe.Utils.removeNode(curLine.node)
+          @doc.removeLine(curLine)
       else
-        Scribe.Utils.removeNode(curLine.node)
-        @doc.removeLine(curLine)
-    else
-      curLine.deleteText(offset, deleteLength)
-    length -= deleteLength
-    curLine = nextLine
-    offset = 0
-  if firstLine? and !firstLine.trailingNewline
-    @doc.mergeLines(firstLine, firstLine.next)
+        curLine.deleteText(offset, deleteLength)
+      length -= deleteLength
+      curLine = nextLine
+      offset = 0
+    if firstLine? and !firstLine.trailingNewline
+      @doc.mergeLines(firstLine, firstLine.next)
+  )
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
@@ -57,43 +72,47 @@ forceTrailingNewline = ->
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
-  [line, offset] = @doc.findLineAtOffset(index)
-  while line? and length > 0
-    if Scribe.Line.FORMATS[name]?
-      # If newline character is being applied with formatting
-      if length > line.length - offset
-        line.format(name, value)
-    else if @renderer.formats[name]?
-      if line.length - offset >= length
-        line.formatText(offset, length, name, value)
+  preserveSelection.call(this, index, 0, =>
+    [line, offset] = @doc.findLineAtOffset(index)
+    while line? and length > 0
+      if Scribe.Line.FORMATS[name]?
+        # If newline character is being applied with formatting
+        if length > line.length - offset
+          line.format(name, value)
+      else if @renderer.formats[name]?
+        if line.length - offset >= length
+          line.formatText(offset, length, name, value)
+        else
+          line.formatText(offset, line.length - offset, name, value)
       else
-        line.formatText(offset, line.length - offset, name, value)
-    else
-      console.warn 'Unsupported format', name, value
-    length -= (line.length - offset)
-    offset = 0
-    line = line.next
+        console.warn 'Unsupported format', name, value
+      length -= (line.length - offset)
+      offset = 0
+      line = line.next
+  )
 
 insertAt = (index, text, formatting = {}) ->
-  text = text.replace(/\r\n/g, '\n')
-  text = text.replace(/\r/g, '\n')
-  lineTexts = text.split('\n')
-  if index == this.getLength() and @doc.lines.last.trailingNewline
-    if lineTexts[lineTexts.length - 1] == ''
-      lineTexts.pop()
-    line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
-    offset = 0
-  else
-    [line, offset] = @doc.findLineAtOffset(index)
-  _.each(lineTexts, (lineText, i) =>
-    line.insertText(offset, lineText, formatting)
-    if i < lineTexts.length - 1
-      if line.trailingNewline
-        line = @doc.splitLine(line, offset + lineText.length)
-      else
-        line.trailingNewline = true
-        line.length += 1
-    offset = 0
+  preserveSelection.call(this, index, text.length, =>
+    text = text.replace(/\r\n/g, '\n')
+    text = text.replace(/\r/g, '\n')
+    lineTexts = text.split('\n')
+    if index == this.getLength() and @doc.lines.last.trailingNewline
+      if lineTexts[lineTexts.length - 1] == ''
+        lineTexts.pop()
+      line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
+      offset = 0
+    else
+      [line, offset] = @doc.findLineAtOffset(index)
+    _.each(lineTexts, (lineText, i) =>
+      line.insertText(offset, lineText, formatting)
+      if i < lineTexts.length - 1
+        if line.trailingNewline
+          line = @doc.splitLine(line, offset + lineText.length)
+        else
+          line.trailingNewline = true
+          line.length += 1
+      offset = 0
+    )
   )
 
 keepNormalized = (fn) ->
@@ -131,7 +150,7 @@ class Scribe.Editor extends EventEmitter2
     cursor: 0
     enabled: true
     styles: {}
-  @events: 
+  @events:
     API_TEXT_CHANGE  : 'api-text-change'
     PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'

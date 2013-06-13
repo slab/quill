@@ -34,5 +34,8 @@ class Scribe.Position
     @leaf = @editor.doc.findLeaf(@leafNode)
     return @leaf
 
+  getIndex: ->
+    return Scribe.Position.getIndex(@leafNode, @offset, @editor.root)
+
 
 module.exports = Scribe

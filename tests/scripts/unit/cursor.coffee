@@ -82,7 +82,6 @@ describe('Cursor', ->
     )
 
     it('should set in end of large font', ->
-      console.log 'set dat font'
       cursorManager.setCursor('id', 17, 'Test', 'red')
       # Cursor tested by 'should set at end test'
       inner = cursorManager.container.querySelector('.cursor-inner')
