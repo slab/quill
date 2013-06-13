@@ -121,12 +121,13 @@ Scribe.DOM =
       curNode = nextSibling
 
   unwrap: (node) ->
-    next = node.firstChild
+    ret = node.firstChild
+    next = node.nextSibling
     _.each(_.clone(node.childNodes), (child) ->
-      node.parentNode.insertBefore(child, node)
+      node.parentNode.insertBefore(child, next)
     )
     node.parentNode.removeChild(node)
-    return next
+    return ret
 
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node)
