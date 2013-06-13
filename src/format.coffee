@@ -197,20 +197,9 @@ class Scribe.Format.Size extends Scribe.Format.Style
       'large' : '18px'
       'small' : '10px'
     })
-    @lineHeights = {
-      'huge'  : '36px'
-      'large' : '22px'
-      'small' : '12px'
-    }
-
-  clean: (node) ->
-    super(node)
-    value = this.matchContainer(node)
-    node.style.lineHeight = @lineHeights[value] if @lineHeights[value]?
 
   createContainer: (value) ->
     container = super(value)
-    container.style.lineHeight = @lineHeights[value] if @lineHeights[value]?
     return container
 
 

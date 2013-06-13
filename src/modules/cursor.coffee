@@ -89,7 +89,7 @@ class Scribe.MultiCursor
             'color': 'white'
             'display': 'inline-block'
             'left': '-1px'
-            'line-height': '15px'
+            'line-height': '1.154'
             'padding': '2px 8px'
             'position': 'absolute'
             'top': '-18px'

@@ -13,7 +13,7 @@ class Scribe.Renderer
       'font-family': "'Helvetica', 'Arial', san-serif"
       'font-size': '13px'
       'left': '15px'
-      'line-height': '15px'
+      'line-height': '1.154'
       'outline': 'none'
       'position': 'absolute'
       'right': '15px'
