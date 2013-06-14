@@ -95,14 +95,12 @@ Scribe.Utils =
 
   removeFormatFromSubtree: (renderer, subtree, format) ->
     childNodes = Scribe.DOM.filterUneditable(subtree.childNodes)
-    value = renderer.formats[format].matchContainer(subtree)
-    ret = subtree
-    if format == value
-      ret = Scribe.DOM.unwrap(subtree)
+    if renderer.formats[format].matchContainer(subtree)
+      subtree = Scribe.DOM.unwrap(subtree)
     _.each(childNodes, (child) ->
       Scribe.Utils.removeFormatFromSubtree(renderer, child, format)
     )
-    return ret
+    return subtree
 
   removeExternal: (root) ->
     extNodes = _.clone(root.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
