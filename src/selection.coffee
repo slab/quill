@@ -9,6 +9,7 @@ class Scribe.Selection
     this.initListeners()
     @editor.renderer.runWhenLoaded( =>
       @nativeSelection = @editor.contentWindow.getSelection()
+      this.setRange(new Scribe.Range(@editor, 0, 0))    # Range gets set to end of doc in Firefox by default
     )
 
   initListeners: ->
@@ -47,15 +48,19 @@ class Scribe.Selection
     else
       return new Scribe.Range(@editor, end, start)
 
-  setRange: (@range, silent = false) ->
+  setRange: (range, silent = false) ->
     return unless @nativeSelection?
+    this.update(true)
+    return if range == @range or @range?.equals(range)
+    @range = range
     @nativeSelection.removeAllRanges()
     if @range?
       nativeRange = @editor.root.ownerDocument.createRange()
-      [startNode, startOffset] = Scribe.DOM.findDeepestNode(@range.start.leafNode, @range.start.offset)
-      nativeRange.setStart(startNode, startOffset)
-      [endNode, endOffset] = Scribe.DOM.findDeepestNode(@range.end.leafNode, @range.end.offset)
-      nativeRange.setEnd(endNode, endOffset)
+      _.each([@range.start, @range.end], (pos, i) ->
+        [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
+        fn = if i == 0 then 'setStart' else 'setEnd'
+        nativeRange[fn].call(nativeRange, node, offset)
+      )
       @nativeSelection.addRange(nativeRange)
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
 
