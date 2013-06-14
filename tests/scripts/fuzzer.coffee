@@ -30,7 +30,7 @@ $(document).ready( ->
 
       prependingToLine = (index) ->
         op = window.Fuzzer.docDelta.getOpsAt(index - 1, 1)
-        return index = 0 or (op.length > 0 and _.first(op).value == "\n")
+        return index == 0 or (op.length > 0 and _.first(op).value == "\n")
 
       getAttrsAt = (index) ->
         attrs = {}
