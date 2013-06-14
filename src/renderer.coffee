@@ -130,13 +130,15 @@ class Scribe.Renderer
 
   runWhenLoaded: (fn) ->
     return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
-    if @iframe.contentWindow.onload
-      @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
-        wrapper.call(this)
-        fn.call(this)
-      )
+    if @callbacks?
+      @callbacks.push(fn)
     else
-      @iframe.contentWindow.onload = fn
+      @callbacks = [fn]
+      @iframe.contentWindow.onload = =>
+        _.each(@callbacks, (callback) =>
+          callback.call(this)
+        )
+        @callbacks = undefined
 
 
 module.exports = Scribe

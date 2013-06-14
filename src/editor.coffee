@@ -146,6 +146,7 @@ class Scribe.Editor extends EventEmitter2
   @DEFAULTS:
     cursor: 0
     enabled: true
+    onReady: ->
     styles: {}
   @events:
     PRE_EVENT        : 'pre-event'
@@ -184,6 +185,7 @@ class Scribe.Editor extends EventEmitter2
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)
     @pasteManager = new Scribe.PasteManager(this)
+    @renderer.runWhenLoaded(@options.onReady)
     initListeners.call(this)
     @ignoreDomChanges = false
     Scribe.Editor.editors.push(this)
