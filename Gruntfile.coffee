@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.4.4'
+      version: '0.5.0'
 
     clean: ['build']
 
@@ -62,7 +62,6 @@ module.exports = (grunt) ->
           dest: 'build/scribe.all.js'
           src: [
             'node_modules/underscore/underscore.js',
-            'vendor/assets/javascripts/rangy/*.js',
             'vendor/assets/javascripts/eventemitter2.js',
             'vendor/assets/javascripts/linked_list.js',
             'build/scribe.js'
@@ -81,7 +80,7 @@ module.exports = (grunt) ->
       lib:
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'build/lib/'
-        src: ['*.js', 'rangy/*.js']
+        src: ['*.js']
 
     haml:
       demo:

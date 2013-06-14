@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "dependencies": {
     "tandem-core" : "git+ssh://git@github.com:stypi/tandem-core.git#v0.3.2",
     "underscore"  : "1.4.x"

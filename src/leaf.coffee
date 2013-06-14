@@ -6,18 +6,14 @@ class Scribe.Leaf extends LinkedList.Node
 
   @isLeafNode: (node) ->
     return false unless node?.nodeType == node.ELEMENT_NODE
-    return false unless Scribe.DOM.canEdit(node)
     return true if node.tagName == 'BR'
-    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
-    return true if childNodes.length == 1 && childNodes[0].nodeType == node.TEXT_NODE
+    return true if node.childNodes.length == 1 && node.childNodes[0].nodeType == node.TEXT_NODE
     return false
 
   @isLeafParent: (node) ->
     return false unless node?.nodeType == node.ELEMENT_NODE
-    return false unless Scribe.DOM.canEdit(node)
-    childNodes = Scribe.DOM.filterUneditable(node.childNodes)
-    return false if childNodes.length == 0
-    return childNodes.length > 1 or childNodes[0].nodeType != node.TEXT_NODE
+    return false if node.childNodes.length == 0
+    return node.childNodes.length > 1 or node.childNodes[0].nodeType != node.TEXT_NODE
 
   constructor: (@line, @node, formats) ->
     @formats = _.clone(formats)

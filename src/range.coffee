@@ -1,8 +1,6 @@
 Scribe = require('./scribe')
 
 
-rangy.init()  # getRangy
-
 class Scribe.Range
   # constructor: (Editor editor, Number startIndex, Number endIndex) ->
   # constructor: (Editor editor, Object start, Object end) ->
@@ -84,18 +82,6 @@ class Scribe.Range
     return _.map(this.getLineNodes(), (lineNode) =>
       return @editor.doc.findLine(lineNode)
     )
-
-  getRangy: ->
-    range = rangy.createRangyRange(@editor.contentWindow)
-    if @start.leafNode.nodeName != 'BR' and @start.leafNode.firstChild?
-      range.setStart(@start.leafNode.firstChild, @start.offset)
-    else
-      range.setStart(@start.leafNode, 0)
-    if @end.leafNode.nodeName != 'BR' and @end.leafNode.firstChild?
-      range.setEnd(@end.leafNode.firstChild, @end.offset)
-    else
-      range.setEnd(@end.leafNode, 0)
-    return range
 
   getText: ->
     leaves = this.getLeaves()

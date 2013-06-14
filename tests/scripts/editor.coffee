@@ -7,17 +7,17 @@ describe('Editor', ->
         <span>cd</span>
       </i>
       <s>ef</s>
-      <span class="color-red">gh</span>
+      <span style="color: #F00;">gh</span>
     </div>
     <div><br></div>
     <div><br></div>
     <div><b>ij</b></div>
-    <div><span class="color-red">kl</span></div>
+    <div><span style="color: #F00;">kl</span></div>
     <div><br></div>
   '
 
   describe('insertAt empty', ->
-    insertSuite = new Scribe.Test.InsertTestSuite({ initial: '' })
+    insertSuite = new Scribe.Test.InsertTestSuite({ initial: '<div><br></div>' })
     insertSuite.run()
   )
 

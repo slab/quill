@@ -19,7 +19,8 @@ class ScribeTestSuite
   constructor: (@options) ->
     @options.initial = Scribe.Utils.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
-    doc = new Scribe.Document($('#test-container').get(0))
+    renderer = new Scribe.Renderer($('#extra-container').get(0))
+    doc = new Scribe.Document($('#test-container').get(0), renderer)
     @delta = doc.toDelta()
     @docLength = @delta.endLength
     @editorTest = new Scribe.Test.EditorTest(@options)
@@ -31,6 +32,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
 
   run: ->
     _.each([0..(@docLength - 1)], (index) =>
+      return unless index >= 0
       tests = {
         "insert nothing":
           value: ''
@@ -43,7 +45,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
           attributes: { bold: true }
         "insert red A":
           value: 'A'
-          attributes: { color: 'red' }
+          attributes: { color: '#f00' }
         "insert newline":
           value: '\n'
           attributes: {}
@@ -72,6 +74,7 @@ class ScribeDeleteTestSuite extends ScribeTestSuite
 
   run: ->
     _.each([0..(@docLength - 2)], (index) =>
+      return unless index >= 0
       _.each([0..(@docLength-index-1)], (length) =>
         deleteDelta = Tandem.Delta.makeDeleteDelta(@docLength, index, length)
         expected = @delta.compose(deleteDelta)
@@ -90,6 +93,7 @@ class ScribeFormatTestSuite extends ScribeTestSuite
 
   run: ->
     _.each([0..(@docLength - 2)], (index) =>
+      return unless index >= 0
       _.each([0..(@docLength-index-1)], (length) =>
         formats =
           color: ['red', null]

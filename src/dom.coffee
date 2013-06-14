@@ -2,23 +2,11 @@ Scribe = require('./scribe')
 
 
 Scribe.DOM = 
-  EXTERNAL_CLASS: "ext"
   NOBREAK_SPACE:  "\uFEFF"
-
-  canEdit: (node) ->
-    ancestor = Scribe.Utils.findAncestor(node, (node) =>
-      this.isExternal(node)
-    )
-    return !ancestor?
-
-  filterUneditable: (nodeList) ->
-    return _.filter(nodeList, (node) =>
-      return this.canEdit(node)
-    )
 
   findDeepestNode: (node, offset) ->
     if node.firstChild?
-      for child in Scribe.DOM.filterUneditable(node.childNodes)
+      for child in _.clone(node.childNodes)
         length = Scribe.Utils.getNodeLength(child)
         if offset < length
           return Scribe.DOM.findDeepestNode(child, offset)
@@ -27,9 +15,6 @@ Scribe.DOM =
       return Scribe.DOM.findDeepestNode(child, offset + length)
     else
       return [node, offset]
-
-  isExternal: (node) ->
-    return node?.classList?.contains(Scribe.DOM.EXTERNAL_CLASS)
 
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
@@ -102,31 +87,29 @@ Scribe.DOM =
     return unless root?
     cur = root.firstChild
     while cur?
-      if Scribe.DOM.canEdit(cur)
-        nextOffset = offset + Scribe.Utils.getNodeLength(cur)
-        curHtml = cur.innerHTML
-        cur = fn.call(context, cur, offset, args...)
-        Scribe.DOM.traversePreorder.call(null, cur, offset, fn, context, args...)
-        if cur? && cur.innerHTML == curHtml
-          cur = cur.nextSibling
-          offset = nextOffset
-      else
+      nextOffset = offset + Scribe.Utils.getNodeLength(cur)
+      curHtml = cur.innerHTML
+      cur = fn.call(context, cur, offset, args...)
+      Scribe.DOM.traversePreorder.call(null, cur, offset, fn, context, args...)
+      if cur? && cur.innerHTML == curHtml
         cur = cur.nextSibling
+        offset = nextOffset
 
   traverseSiblings: (curNode, endNode, fn) ->
     while curNode?
       nextSibling = curNode.nextSibling
-      fn(curNode) if Scribe.DOM.canEdit(curNode)
+      fn(curNode)
       break if curNode == endNode
       curNode = nextSibling
 
   unwrap: (node) ->
-    next = node.firstChild
+    ret = node.firstChild
+    next = node.nextSibling
     _.each(_.clone(node.childNodes), (child) ->
-      node.parentNode.insertBefore(child, node)
+      node.parentNode.insertBefore(child, next)
     )
     node.parentNode.removeChild(node)
-    return next
+    return ret
 
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node)

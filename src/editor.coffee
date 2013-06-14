@@ -2,15 +2,11 @@ Scribe = require('./scribe')
 Tandem = require('tandem-core')
 
 
-doAt = (fn, external = false) ->
+doAt = (fn, options = { internal: true }) ->
   this.doSilently( =>
     trackDelta.call(this, =>
-      @selection.preserve( =>
-        keepNormalized.call(this, =>
-          fn.call(this)
-        )
-      )
-    , external)
+      fn.call(this)
+    , options)
   )
 
 initListeners = ->
@@ -28,28 +24,45 @@ initListeners = ->
   onEditOnce = _.once(onEdit)
   @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
 
+preserveSelection = (index, lengthAdded, fn, args...) ->
+  range = this.getSelection()
+  if range?
+    indexes = _.map([range.start, range.end], (pos) ->
+      if index >= pos.index
+        return pos.index
+      else
+        return Math.max(pos.index + lengthAdded, index)
+    )
+    fn.apply(this, args)
+    this.setSelection(new Scribe.Range(this, indexes[0], indexes[1]))
+  else
+    fn.apply(this, args)
+
 deleteAt = (index, length) ->
   return if length <= 0
-  [firstLine, offset] = @doc.findLineAtOffset(index)
-  curLine = firstLine
-  while curLine? and length > 0
-    deleteLength = Math.min(length, curLine.length - offset)
-    nextLine = curLine.next
-    if curLine.length == deleteLength
-      if curLine == @doc.lines.first and curLine == @doc.lines.last
-        curLine.node.innerHTML = ''
-        curLine.trailingNewline = false
-        curLine.rebuild()
+  preserveSelection.call(this, index, -1 * length, =>
+    [firstLine, offset] = @doc.findLineAtOffset(index)
+    curLine = firstLine
+    while curLine? and length > 0
+      deleteLength = Math.min(length, curLine.length - offset)
+      nextLine = curLine.next
+      if curLine.length == deleteLength
+        if curLine == @doc.lines.first and curLine == @doc.lines.last
+          curLine.node.innerHTML = ''
+          curLine.trailingNewline = false
+          curLine.rebuild()
+        else
+          Scribe.Utils.removeNode(curLine.node)
+          @doc.removeLine(curLine)
       else
-        Scribe.Utils.removeNode(curLine.node)
-        @doc.removeLine(curLine)
-    else
-      curLine.deleteText(offset, deleteLength)
-    length -= deleteLength
-    curLine = nextLine
-    offset = 0
-  if firstLine? and !firstLine.trailingNewline
-    @doc.mergeLines(firstLine, firstLine.next)
+        curLine.deleteText(offset, deleteLength)
+      length -= deleteLength
+      curLine = nextLine
+      offset = 0
+    if firstLine? and !firstLine.trailingNewline
+      @doc.mergeLines(firstLine, firstLine.next)
+    @doc.rebuildDirty()
+  )
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
@@ -57,50 +70,52 @@ forceTrailingNewline = ->
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
-  [line, offset] = @doc.findLineAtOffset(index)
-  while line? and length > 0
-    if Scribe.Line.FORMATS[name]?
-      # If newline character is being applied with formatting
-      if length > line.length - offset
-        line.format(name, value)
-    else if @renderer.formats[name]?
-      if line.length - offset >= length
-        line.formatText(offset, length, name, value)
-      else
-        line.formatText(offset, line.length - offset, name, value)
-    else
-      console.warn 'Unsupported format', name, value
-    length -= (line.length - offset)
-    offset = 0
-    line = line.next
-
-insertAt = (index, text, formatting = {}) ->
-  text = text.replace(/\r\n/g, '\n')
-  text = text.replace(/\r/g, '\n')
-  lineTexts = text.split('\n')
-  if index == this.getLength() and @doc.lines.last.trailingNewline
-    if lineTexts[lineTexts.length - 1] == ''
-      lineTexts.pop()
-    line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
-    offset = 0
-  else
+  preserveSelection.call(this, index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
-  _.each(lineTexts, (lineText, i) =>
-    line.insertText(offset, lineText, formatting)
-    if i < lineTexts.length - 1
-      if line.trailingNewline
-        line = @doc.splitLine(line, offset + lineText.length)
+    while line? and length > 0
+      if Scribe.Line.FORMATS[name]?
+        # If newline character is being applied with formatting
+        if length > line.length - offset
+          line.format(name, value)
+      else if @renderer.formats[name]?
+        if line.length - offset >= length
+          line.formatText(offset, length, name, value)
+        else
+          line.formatText(offset, line.length - offset, name, value)
       else
-        line.trailingNewline = true
-        line.length += 1
-    offset = 0
+        console.warn 'Unsupported format', name, value
+      length -= (line.length - offset)
+      offset = 0
+      line = line.next
+    @doc.rebuildDirty()
   )
 
-keepNormalized = (fn) ->
-  fn.call(this)
-  @doc.rebuildDirty()
+insertAt = (index, text, formatting = {}) ->
+  preserveSelection.call(this, index, text.length, =>
+    text = text.replace(/\r\n/g, '\n')
+    text = text.replace(/\r/g, '\n')
+    lineTexts = text.split('\n')
+    if index == this.getLength() and @doc.lines.last.trailingNewline
+      if lineTexts[lineTexts.length - 1] == ''
+        lineTexts.pop()
+      line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
+      offset = 0
+    else
+      [line, offset] = @doc.findLineAtOffset(index)
+    _.each(lineTexts, (lineText, i) =>
+      line.insertText(offset, lineText, formatting)
+      if i < lineTexts.length - 1
+        if line.trailingNewline
+          line = @doc.splitLine(line, offset + lineText.length)
+        else
+          line.trailingNewline = true
+          line.length += 1
+      offset = 0
+    )
+    @doc.rebuildDirty()
+  )
 
-trackDelta = (fn, external = false) ->
+trackDelta = (fn, options = { internal: true }) ->
   oldDelta = @doc.toDelta()
   oldIndex = @selection.range?.start.index # We do not want new range value so we do not use getSelection
   fn()
@@ -112,14 +127,17 @@ trackDelta = (fn, external = false) ->
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
       decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
       decomposeRight = newRightDelta.decompose(oldRightDelta)
-      decompose = decomposeLeft.merge(decomposeRight)
+      decomposeA = decomposeLeft.merge(decomposeRight)
   catch ignored
-  decompose = newDelta.decompose(oldDelta) unless decompose?
+  decomposeB = newDelta.decompose(oldDelta)
+  if decomposeA and decomposeB
+    decompose = if decomposeA.ops.length < decomposeB.ops.length then decomposeA else decomposeB
+  else
+    decompose = decomposeA or decomposeB
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  unless decompose.isIdentity()
-    eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
-    this.emit(eventName, decompose)
+  if !decompose.isIdentity() and options.internal
+    this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose)
   
 
 class Scribe.Editor extends EventEmitter2
@@ -130,9 +148,9 @@ class Scribe.Editor extends EventEmitter2
   @DEFAULTS:
     cursor: 0
     enabled: true
+    onReady: ->
     styles: {}
-  @events: 
-    API_TEXT_CHANGE  : 'api-text-change'
+  @events:
     PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
@@ -169,26 +187,24 @@ class Scribe.Editor extends EventEmitter2
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)
     @pasteManager = new Scribe.PasteManager(this)
+    @renderer.runWhenLoaded(@options.onReady)
     initListeners.call(this)
     @ignoreDomChanges = false
     Scribe.Editor.editors.push(this)
 
-  applyDelta: (delta, external = true) ->
+  applyDelta: (delta, options = {}) ->
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
-      return this.setDelta(delta, external)
+      return this.setDelta(delta, options)
     return if delta.isIdentity()
     this.doSilently( =>
-      @selection.preserve( =>
-        console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
-        oldDelta = @doc.toDelta()
-        delta.apply(insertAt, deleteAt, formatAt, this)
-        eventName = if external then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.TEXT_CHANGE
-        this.emit(eventName, delta)
-        # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
-        # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
-        forceTrailingNewline.call(this)
-      )
+      console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
+      oldDelta = @doc.toDelta()
+      delta.apply(insertAt, deleteAt, formatAt, this)
+      this.emit(Scribe.Editor.events.TEXT_CHANGE, delta) if options.internal
+      # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
+      # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
+      forceTrailingNewline.call(this)
     )
 
   emit: (eventName, args...) ->
@@ -196,11 +212,11 @@ class Scribe.Editor extends EventEmitter2
     super(eventName, args...)
     super(Scribe.Editor.POST_EVENT, eventName, args...)
 
-  deleteAt: (index, length, external = true) ->
+  deleteAt: (index, length, options = {}) ->
     doAt.call(this, =>
       deleteAt.call(this, index, length)
       forceTrailingNewline.call(this)
-    , external)
+    , options)
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -208,10 +224,10 @@ class Scribe.Editor extends EventEmitter2
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
 
-  formatAt: (index, length, name, value, external = true) ->
+  formatAt: (index, length, name, value, options = {}) ->
     doAt.call(this, =>
       formatAt.call(this, index, length, name, value)
-    , external)
+    , options)
     
   getDelta: ->
     return @doc.toDelta()
@@ -222,16 +238,16 @@ class Scribe.Editor extends EventEmitter2
   getSelection: ->
     return @selection.getRange()
 
-  insertAt: (index, text, formatting = {}, external = true) ->
+  insertAt: (index, text, formatting = {}, options = {}) ->
     doAt.call(this, =>
       insertAt.call(this, index, text, formatting)
       forceTrailingNewline.call(this)
-    , external)
+    , options)
 
-  setDelta: (delta, external = true) ->
+  setDelta: (delta, options = {}) ->
     oldLength = delta.startLength
     delta.startLength = this.getLength()
-    this.applyDelta(delta, external)
+    this.applyDelta(delta, options)
     delta.startLength = oldLength
     
   setSelection: (range, silent = false) ->

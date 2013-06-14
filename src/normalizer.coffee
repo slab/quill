@@ -84,10 +84,10 @@ class Scribe.Normalizer
 
   @breakBlocks: (root) ->
     Scribe.Normalizer.groupBlocks(root)
-    _.each(Scribe.DOM.filterUneditable(root.querySelectorAll('br')), (node) =>
+    _.each(root.querySelectorAll('br'), (node) =>
       Scribe.Normalizer.normalizeBreak(node, root)
     )
-    _.each(Scribe.DOM.filterUneditable(root.childNodes), (childNode) =>
+    _.each(root.childNodes, (childNode) =>
       Scribe.Normalizer.breakLine(childNode)
     )
 
@@ -152,7 +152,7 @@ class Scribe.Normalizer
     )
 
   @requireLeaf: (lineNode) ->
-    unless Scribe.DOM.filterUneditable(lineNode.childNodes).length > 1
+    unless lineNode.childNodes.length > 1
       if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
@@ -175,7 +175,7 @@ class Scribe.Normalizer
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
       if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
-        if next?.tagName == node.tagName and node.tagName != 'LI' and Scribe.DOM.canEdit(next)
+        if next?.tagName == node.tagName and node.tagName != 'LI'
           [nodeFormat, nodeValue] = @renderer.getFormat(node)
           [nextFormat, nextValue] = @renderer.getFormat(next)
           if nodeFormat == nextFormat && nodeValue == nextValue
@@ -187,14 +187,13 @@ class Scribe.Normalizer
     @renderer.root.appendChild(@renderer.root.ownerDocument.createElement('div')) unless @renderer.root.firstChild
     Scribe.Normalizer.applyRules(@renderer.root)
     Scribe.Normalizer.breakBlocks(@renderer.root)
-    _.each(Scribe.DOM.filterUneditable(@renderer.root.childNodes), (lineNode) =>
+    _.each(@renderer.root.childNodes, (lineNode) =>
       this.normalizeLine(lineNode)
       this.optimizeLine(lineNode)
     )
 
   normalizeLine: (lineNode) ->
-    childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
-    return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
+    return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
     Scribe.Normalizer.removeNoBreak(lineNode)
     this.normalizeTags(lineNode)
     Scribe.Normalizer.requireLeaf(lineNode)
@@ -210,8 +209,7 @@ class Scribe.Normalizer
     )
 
   optimizeLine: (lineNode) ->
-    childNodes = Scribe.DOM.filterUneditable(lineNode.childNodes)
-    return if childNodes.length == 1 and childNodes[0].tagName == 'BR'
+    return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
     this.mergeAdjacent(lineNode)
     this.removeRedundant(lineNode)
     Scribe.Normalizer.wrapText(lineNode)
@@ -222,14 +220,13 @@ class Scribe.Normalizer
     isRedudant = (node) =>
       if node.nodeType == node.ELEMENT_NODE
         if Scribe.Utils.getNodeLength(node) == 0
-          return node.tagName != 'BR' or Scribe.DOM.filterUneditable(node.parentNode.childNodes).length > 1
+          return node.tagName != 'BR' or node.parentNode.childNodes.length > 1
         [formatName, formatValue] = @renderer.getFormat(node)
         if formatName?
           return node.parentNode[key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
           # Check if childNodes need us
-          childNodes = Scribe.DOM.filterUneditable(node.childNodes)
-          if childNodes.length == 0 or !_.any(childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+          if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
             return true
           # Check if parent needs us
           if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'

@@ -15,7 +15,6 @@ _applyDelta = (delta) ->
 _buildCursor = (userId, name, color) ->
   cursor = @container.ownerDocument.createElement('span')
   cursor.classList.add('cursor')
-  cursor.classList.add(Scribe.DOM.EXTERNAL_CLASS)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
   inner = @container.ownerDocument.createElement('span')
   inner.classList.add('cursor-inner')
@@ -104,10 +103,8 @@ class Scribe.MultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
-      _applyDelta.call(this, delta)
-    )
-    @editor.on(Scribe.Editor.events.TEXT_CHANGE, (delta) =>
+    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta) =>
+      applyDelta.call(@editor, delta)
       _applyDelta.call(this, delta)
     )
 

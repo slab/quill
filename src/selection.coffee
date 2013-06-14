@@ -7,6 +7,10 @@ class Scribe.Selection
   constructor: (@editor) ->
     @range = null
     this.initListeners()
+    @editor.renderer.runWhenLoaded( =>
+      @nativeSelection = @editor.contentWindow.getSelection()
+      this.setRange(new Scribe.Range(@editor, 0, 0))    # Range gets set to end of doc in Firefox by default
+    )
 
   initListeners: ->
     checkUpdate = =>
@@ -16,13 +20,13 @@ class Scribe.Selection
     @editor.root.addEventListener('keyup', keyUpdate)
     @editor.root.addEventListener('mouseup', checkUpdate)
 
-  format: (name, value, external = true) ->
+  format: (name, value, options = {}) ->
     this.update()
     return unless @range
     start = @range.start.index
     end = @range.end.index
     formats = @range.getFormats()
-    @editor.formatAt(start, end - start, name, value, external) if end > start
+    @editor.formatAt(start, end - start, name, value, options) if end > start
     formats[name] = value
     @range.formats = formats
     this.setRange(new Scribe.Range(@editor, start, end))
@@ -34,89 +38,51 @@ class Scribe.Selection
     this.update()
     return @range
 
-  getNative: ->
-    rangySel = rangy.getSelection(@editor.contentWindow)
-    selection = window.getSelection()
-    return null unless rangySel.anchorNode? and rangySel.focusNode? and @editor.root.contains(rangySel.anchorNode) and @editor.root.contains(rangySel.focusNode)
-    if !rangySel.isBackwards()
-      [anchorNode, anchorOffset, focusNode, focusOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    else
-      [focusNode, focusOffset, anchorNode, anchorOffset] = [rangySel.anchorNode, rangySel.anchorOffset, rangySel.focusNode, rangySel.focusOffset]
-    return {
-      anchorNode    : anchorNode
-      anchorOffset  : anchorOffset
-      focusNode     : focusNode
-      focusOffset   : focusOffset
-    }
+  getNativeRange: ->
+    return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
 
   getRange: ->
-    nativeSel = this.getNative()
-    return null unless nativeSel?
-    start = new Scribe.Position(@editor, nativeSel.anchorNode, nativeSel.anchorOffset)
-    end = new Scribe.Position(@editor, nativeSel.focusNode, nativeSel.focusOffset)
-    return new Scribe.Range(@editor, start, end)
+    nativeRange = this.getNativeRange()
+    return null unless nativeRange?
+    start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
+    end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
+    if nativeRange.compareBoundaryPoints(Range.START_TO_END, nativeRange) > -1
+      return new Scribe.Range(@editor, start, end)
+    else
+      return new Scribe.Range(@editor, end, start)
 
   preserve: (fn) ->
-    this.update(true)
-    if @range?
-      markers = this.save()
-      fn.call(null)
-      this.restore(markers)
+    nativeRange = this.getNativeRange()
+    if nativeRange?
+      startLineNode = Scribe.Utils.findAncestor(nativeRange.startContainer, Scribe.Line.isLineNode)
+      endLineNode = Scribe.Utils.findAncestor(nativeRange.endContainer, Scribe.Line.isLineNode)
+      startOffset = Scribe.Position.getIndex(nativeRange.startContainer, nativeRange.startOffset, startLineNode)
+      endOffset = Scribe.Position.getIndex(nativeRange.endContainer, nativeRange.endOffset, endLineNode)
+      savedNativeRange = _.clone(nativeRange)
+      fn()
+      nativeRange = this.getNativeRange()
+      if !_.isEqual(_.clone(nativeRange), savedNativeRange)
+        start = new Scribe.Position(@editor, startLineNode, startOffset)
+        end = new Scribe.Position(@editor, endLineNode, endOffset)
+        this.setRange(new Scribe.Range(@editor, start, end))
     else
-      fn.call(null)
+      fn()
 
-  restore: (markers) ->
-    indexes = []
-    _.each(markers, (node) ->
-      return console.warn "Saved position deleted", node unless node.parentNode?
-      indexes.push(Scribe.Position.getIndex(node, 0))
-      parentNode = node.parentNode
-      parentNode.removeChild(node)
-      parentNode.normalize()
-    )
-    return if indexes.length < 1
-    indexes.push(indexes[0]) if indexes.length == 1
-    range = new Scribe.Range(@editor, indexes[0], indexes[1])
-    this.setRange(range, true)
+  setRange: (range, silent = false) ->
+    return unless @nativeSelection?
     this.update(true)
-
-  save: ->
-    markers = @editor.root.querySelectorAll(".#{Scribe.Selection.SAVED_CLASS}")
-    if markers.length > 0
-      console.warn "Double selection save", markers
-      _.each(markers, (marker) -> marker.parentNode.removeChild(marker))
-    return _.map([@range.start, @range.end], (position) ->
-      [textNode, offset] = Scribe.DOM.findDeepestNode(position.leafNode, position.offset)
-      span = position.leafNode.ownerDocument.createElement('span')
-      span.classList.add(Scribe.Selection.SAVED_CLASS)
-      span.classList.add(Scribe.DOM.EXTERNAL_CLASS)
-      if textNode.nodeType == textNode.TEXT_NODE
-        [left, right] = Scribe.DOM.splitNode(textNode, offset, true)
-        position.leafNode.insertBefore(span, right)
-      else
-        if offset == 0
-          textNode.parentNode.insertBefore(span, textNode)
-        else
-          console.warn 'Saving selection at offset greater than line length' if offset > 1
-          textNode.parentNode.insertBefore(span, textNode.nextSibling)
-      return span
-    )
-
-  setRange: (@range, silent = false) ->
-    rangySel = rangy.getSelection(@editor.contentWindow)
+    return if range == @range or @range?.equals(range)
+    @range = range
+    @nativeSelection.removeAllRanges()
     if @range?
-      rangySelRange = @range.getRangy()
-      rangySel.setSingleRange(rangySelRange)
-    else
-      rangySel.removeAllRanges()
+      nativeRange = @editor.root.ownerDocument.createRange()
+      _.each([@range.start, @range.end], (pos, i) ->
+        [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
+        fn = if i == 0 then 'setStart' else 'setEnd'
+        nativeRange[fn].call(nativeRange, node, offset)
+      )
+      @nativeSelection.addRange(nativeRange)
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
-
-  setRangeNative: (nativeSel) ->
-    rangySel = rangy.getSelection(@editor.contentWindow)
-    range = rangy.createRangyRange(@editor.contentWindow)
-    range.setStart(nativeSel.anchorNode, nativeSel.anchorOffset)
-    range.setEnd(nativeSel.focusNode, nativeSel.focusOffset)
-    rangySel.setSingleRange(range)
 
   update: (silent = false) ->
     range = this.getRange()
