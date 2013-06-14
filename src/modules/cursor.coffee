@@ -103,7 +103,8 @@ class Scribe.MultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.on(Scribe.Editor.events.TEXT_CHANGE, (delta) =>
+    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta) =>
+      applyDelta.call(@editor, delta)
       _applyDelta.call(this, delta)
     )
 
