@@ -22,7 +22,7 @@ _buildCursor = (userId, name, color) ->
   nameNode = @container.ownerDocument.createElement('span')
   nameNode.classList.add('cursor-name')
   nameNode.textContent = name
-  inner.style['background-color'] = nameNode.style['background-color'] = color
+  inner.style.backgroundColor = nameNode.style.backgroundColor = color
   cursor.appendChild(nameNode)
   cursor.appendChild(inner)
   return cursor
@@ -30,7 +30,9 @@ _buildCursor = (userId, name, color) ->
 _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop
   cursor.elem.style.left = referenceNode.offsetLeft
-  cursor.elem.querySelector('.cursor-inner').style.height = referenceNode.offsetHeight
+  cursorInner = cursor.elem.querySelector('.cursor-inner')
+  cursorName = cursor.elem.querySelector('.cursor-name')
+  cursorInner.style.height = cursorName.style.top = referenceNode.offsetHeight
   if parseInt(cursor.elem.style.top) <= 5
     cursor.elem.classList.add('top')
   else
@@ -55,7 +57,7 @@ _setCursor = (userId, index, name, color) ->
         rightText.parentNode.insertBefore(span, rightText)
         _moveCursor.call(this, @cursors[userId], span)
       else if leftText?
-        leftText.parentNode.parentNode.appendChild(span)
+        leftText.parentNode.appendChild(span)
         _moveCursor.call(this, @cursors[userId], span)
     span.parentNode.removeChild(span)
     position.leafNode.normalize() if didSplit
@@ -70,31 +72,35 @@ class Scribe.MultiCursor
     @cursors = {}
     @container = @editor.root.ownerDocument.createElement('div')
     @container.id = 'cursor-container'
-    @container.style.top = @editor.root.offsetTop
-    @container.style.left = @editor.root.offsetLeft
     @editor.renderer.addContainer(@container, true)
-    @editor.renderer.addStyles({
-      '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
-      '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
-      '.cursor-name': {
-        'font-family': "'Helvetica', 'Arial', san-serif"
-        'font-size': '13px'
-        'border-bottom-right-radius': '3px'
-        'border-top-left-radius': '3px'
-        'border-top-right-radius': '3px'
-        'color': 'white'
-        'display': 'inline-block'
-        'left': '-1px'
-        'line-height': '15px'
-        'padding': '2px 8px'
-        'position': 'absolute'
-        'top': '-18px'
-        'white-space': 'nowrap'
-      }
-      '.cursor.hidden .cursor-name': { 'display': 'none' }
-      '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
-      '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
-    })
+    @editor.renderer.runWhenLoaded( =>
+      _.defer( =>
+        @container.style.top = @editor.root.offsetTop
+        @container.style.left = @editor.root.offsetLeft
+        @editor.renderer.addStyles({
+          '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
+          '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
+          '.cursor-name': {
+            'font-family': "'Helvetica', 'Arial', san-serif"
+            'font-size': '13px'
+            'border-bottom-right-radius': '3px'
+            'border-top-left-radius': '3px'
+            'border-top-right-radius': '3px'
+            'color': 'white'
+            'display': 'inline-block'
+            'left': '-1px'
+            'line-height': '1.154'
+            'padding': '2px 8px'
+            'position': 'absolute'
+            'top': '-18px'
+            'white-space': 'nowrap'
+          }
+          '.cursor.hidden .cursor-name': { 'display': 'none' }
+          '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
+          '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
+        })
+      )
+    )
     this.initListeners()
 
   initListeners: ->

@@ -93,20 +93,25 @@ def delete_fail_file(file)
   end
 end
 
-def initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
-  doc_delta, rand_delta = read_deltas_from_file(replay_file)
-  js_set_delta_replay(driver, doc_delta, 'docDelta')
-  js_set_delta_replay(driver, rand_delta, 'randomDelta')
-  doc_delta = js_get(driver, "docDelta")
-  js_set_scribe_delta(driver)
-
-  # Remove inexplicable highlighting that gets applied when setting delta and
-  # reset cursor to 0th position
-  editor.click()
-  adapter.cursor_pos = doc_delta['endLength']
-  adapter.move_cursor 0
-
-  adapter.doc_length = doc_delta['endLength']
+def check_consistency(driver, replay_file)
+  driver.switch_to.default_content
+  success = driver.execute_script "return window.Fuzzer.checkConsistency();"
+  if not success
+    doc_delta = js_get_as_str(driver, "docDelta")
+    rand_delta = js_get_as_str(driver, "randomDelta")
+    actual_delta = js_get_cur_doc_delta_as_str(driver)
+    write_deltas_to_file(doc_delta, rand_delta) unless replay_file
+    puts "Inconsistent deltas:".red
+    puts "doc_delta: #{doc_delta}"
+    puts "rand_delta: #{rand_delta}"
+    puts "actual: #{actual_delta}"
+    abort
+  elsif replay_file
+    highline = HighLine.new
+    delete = highline.agree "Congrats, it passed! Would you like to delete the fail file? (y/n)".colorize(:green)
+    delete_fail_file(replay_file) if delete
+  end
+  driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 end
 
 

@@ -1,19 +1,9 @@
 Scribe = require('./scribe')
 
 
-runWhenLoaded = (fn) ->
-  return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
-  if @iframe.contentWindow.onload
-    @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
-      wrapper.call(this)
-      fn.call(this)
-    )
-  else
-    @iframe.contentWindow.onload = fn
-
-
 class Scribe.Renderer
   @DEFAULTS:
+    formats: 'default'
     keepHTML: false
     id: 'editor'
 
@@ -23,7 +13,7 @@ class Scribe.Renderer
       'font-family': "'Helvetica', 'Arial', san-serif"
       'font-size': '13px'
       'left': '15px'
-      'line-height': '15px'
+      'line-height': '1.154'
       'outline': 'none'
       'position': 'absolute'
       'right': '15px'
@@ -50,25 +40,6 @@ class Scribe.Renderer
     'ol.indent-7' : { 'list-style-type': 'decimal' }
     'ol.indent-8' : { 'list-style-type': 'lower-alpha' }
     'ol.indent-9' : { 'list-style-type': 'lower-roman' }
-    'span.background-black'  : { 'background-color': 'rgb(0, 0, 0)' }
-    'span.background-red'    : { 'background-color': 'rgb(255, 0, 0)' }
-    'span.background-orange' : { 'background-color': 'rgb(255, 165, 0)' }
-    'span.background-yellow' : { 'background-color': 'rgb(255, 255, 0)' }
-    'span.background-green'  : { 'background-color': 'rgb(0, 128, 0)' }
-    'span.background-blue'   : { 'background-color': 'rgb(0, 0, 255)' }
-    'span.background-purple' : { 'background-color': 'rgb(128, 0, 128)' }
-    'span.color-white'       : { 'color': 'rgb(255, 255, 255)' }
-    'span.color-red'         : { 'color': 'rgb(255, 0, 0)' }
-    'span.color-orange'      : { 'color': 'rgb(255, 165, 0)' }
-    'span.color-yellow'      : { 'color': 'rgb(255, 255, 0)' }
-    'span.color-green'       : { 'color': 'rgb(0, 128, 0)' }
-    'span.color-blue'        : { 'color': 'rgb(0, 0, 255)' }
-    'span.color-purple'      : { 'color': 'rgb(128, 0, 128)' }
-    'span.family-monospace'  : { 'font-family': "'Courier New', monospace" }
-    'span.family-serif'      : { 'font-family': "'Times New Roman', serif" }
-    'span.size-huge'         : { 'font-size': '32px', 'line-height': '36px' }
-    'span.size-large'        : { 'font-size': '18px', 'line-height': '22px' }
-    'span.size-small'        : { 'font-size': '10px', 'line-height': '12px' }
     '.indent-1' : { 'margin-left': '2em' }
     '.indent-2' : { 'margin-left': '4em' }
     '.indent-3' : { 'margin-left': '6em' }
@@ -78,6 +49,8 @@ class Scribe.Renderer
     '.indent-7' : { 'margin-left': '14em' }
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
+
+  @DEFAULT_FORMATS = ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -89,15 +62,24 @@ class Scribe.Renderer
   constructor: (@container, options) ->
     @options = _.extend(Scribe.Renderer.DEFAULTS, options)
     this.createFrame()
+    @formats = {}
+    if @options.formats == 'default'
+      _.each(Scribe.Renderer.DEFAULT_FORMATS, (formatName) =>
+        className = formatName[0].toUpperCase() + formatName.slice(1)
+        this.addFormat(formatName, new Scribe.Format[className](@root))
+      )
 
   addContainer: (container, before = false) ->
-    runWhenLoaded.call(this, =>
+    this.runWhenLoaded( =>
       refNode = if before then @root else null
       @root.parentNode.insertBefore(container, refNode)
     )
 
+  addFormat: (name, format) ->
+    @formats[name] = format
+
   addStyles: (styles) ->
-    runWhenLoaded.call(this, =>
+    this.runWhenLoaded( =>
       style = @root.ownerDocument.createElement('style')
       style.type = 'text/css'
       css = Scribe.Renderer.objToCss(styles)
@@ -111,6 +93,12 @@ class Scribe.Renderer
       )
     )
 
+  createFormatContainer: (name, value) ->
+    if @formats[name]
+      return @formats[name].createContainer(value)
+    else
+      return @root.ownerDocument.createElement('SPAN')
+
   createFrame: ->
     html = @container.innerHTML
     @container.innerHTML = ''
@@ -123,15 +111,32 @@ class Scribe.Renderer
     @root = doc.createElement('div')
     @root.classList.add('editor')
     @root.id = @options.id
-    @root.innerHTML = html if @options.keepHTML
+    @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
     styles = _.map(@options.styles, (value, key) ->
       obj = Scribe.Renderer.DEFAULT_STYLES[key] or {}
       return _.extend(obj, value)
     )
     styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
     this.addStyles(styles)
-    runWhenLoaded.call(this, =>
+    this.runWhenLoaded( =>
       @iframe.contentWindow.document.body.appendChild(@root) # Firefox does not like doc.body
     )
+
+  getFormat: (container) ->
+    for name,format of @formats
+      value = format.matchContainer(container)
+      return [name, value] if value
+    return []
+
+  runWhenLoaded: (fn) ->
+    return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
+    if @iframe.contentWindow.onload
+      @iframe.contentWindow.onload = _.wrap(@iframe.contentWindow.onload, (wrapper) =>
+        wrapper.call(this)
+        fn.call(this)
+      )
+    else
+      @iframe.contentWindow.onload = fn
+
 
 module.exports = Scribe

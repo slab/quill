@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.4.3'
+      version: '0.4.4'
 
     clean: ['build']
 
@@ -58,13 +58,6 @@ module.exports = (grunt) ->
           ' *  Jason Chen, Salesforce.com\n' +
           ' */\n\n'
       scribe:
-        files: [{ 
-          dest: 'build/scribe.js'
-          src: [
-            'build/scribe.js'
-          ]
-        }]
-      scribe_all:
         files: [{ 
           dest: 'build/scribe.all.js'
           src: [
@@ -124,7 +117,7 @@ module.exports = (grunt) ->
         tasks: ['sass:demo']
       src:
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffee:src', 'coffeeify:src', 'concat:scribe_all', 'copy:build']
+        tasks: ['coffee:src', 'coffeeify:src', 'concat:scribe', 'copy:build']
       test:
         files: ['tests/scripts/**/*.coffee']
         tasks: ['coffee:test']

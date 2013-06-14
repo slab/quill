@@ -1,4 +1,27 @@
 describe('Editor', ->
+  describe('preserve trailing newline', ->
+    preserveTests = new Scribe.Test.EditorTest(
+      initial:  Tandem.Delta.getInitial('Test\n')
+      expected: Tandem.Delta.getInitial('Tes\n')
+    )
+
+    preserveTests.run('delete last chars',
+      fn: (editor) ->
+        editor.deleteAt(3, 2)
+    )
+
+    preserveTests.run('delete last chars with applyDelta',
+      fn: (editor) ->
+        editor.applyDelta(Tandem.Delta.makeDeleteDelta(5, 3, 2))
+    )
+
+    preserveTests.run('insert text after newline',
+      expected: Tandem.Delta.getInitial('Test\ns\n')
+      fn: (editor) ->
+        editor.insertAt(5, 's')
+    )
+  )
+
   describe('applyDelta', ->
     applyTests = new Scribe.Test.EditorTest(
       fn: (testEditor, expectedEditor, ops) ->

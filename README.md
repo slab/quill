@@ -75,7 +75,7 @@ Install dependencies
 
     npm install -g grunt-cli phantomjs mocha-phantomjs
     npm install
-
+    bundle install
 
 ### Building
 

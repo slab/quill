@@ -6,6 +6,7 @@ class Scribe.Document
   @INDENT_PREFIX: 'indent-'
 
   constructor: (@root, @renderer) ->
+    @normalizer = new Scribe.Normalizer(@renderer)
     this.rebuild()
 
   appendLine: (lineNode) ->
@@ -73,7 +74,7 @@ class Scribe.Document
   rebuild: ->
     @lines = new LinkedList()
     @lineMap = {}
-    Scribe.Normalizer.normalizeDoc(@root, @renderer)
+    @normalizer.normalizeDoc(@root, @renderer)
     _.each(Scribe.DOM.filterUneditable(@root.childNodes), (node) =>
       this.appendLine(node)
     )

@@ -14,13 +14,13 @@
           .format-group
             // Dropkick screws up without id
             %select.format-dropdown.family#font-family
-              %option.default{:value => 'san-serif', :selected => true} San Serif
+              %option.default{:value => false, :selected => true} San Serif
               %option{:value => 'serif'} Serif
               %option{:value => 'monospace'} Monospace
           .format-group
             %select.format-dropdown.size#font-size
               %option{:value => 'small'} Small
-              %option.default{:value => 'normal', :selected => true} Normal
+              %option.default{:value => false, :selected => true} Normal
               %option{:value => 'large'} Large
               %option{:value => 'huge'} Huge
           .format-group

@@ -1,7 +1,6 @@
 Scribe = require('../scribe')
 Tandem = require('tandem-core')
 
-
 class Scribe.Attribution
   constructor: (@editor, @authorId, color, enabled = false) ->
     @editor.on(Scribe.Editor.PRE_EVENT, (eventName, delta) =>
@@ -16,6 +15,7 @@ class Scribe.Attribution
           @editor.formatAt(index, length, 'author', @authorId)
         )
     )
+    @editor.renderer.addFormat('author', new Scribe.Format.Class(@editor.renderer.root, 'author'))
     this.addAuthor(@authorId, color)
     this.enable() if enabled
 

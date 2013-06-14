@@ -45,6 +45,11 @@ Scribe.DOM =
       newParent.appendChild(child)
     )
 
+  removeAttributes: (node, exception = null) ->
+    _.each(_.clone(node.attributes), (attrNode, value) ->
+      node.removeAttribute(attrNode.name) unless exception == attrNode.name
+    )
+
   splitAfter: (node, root) ->
     return false if node == root or node.parentNode == root
     parentNode = node.parentNode
