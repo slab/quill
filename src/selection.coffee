@@ -6,8 +6,10 @@ class Scribe.Selection
 
   constructor: (@editor) ->
     @range = null
-    @nativeSelection = @editor.contentWindow.getSelection()
     this.initListeners()
+    @editor.renderer.runWhenLoaded( =>
+      @nativeSelection = @editor.contentWindow.getSelection()
+    )
 
   initListeners: ->
     checkUpdate = =>
@@ -36,7 +38,7 @@ class Scribe.Selection
     return @range
 
   getRange: ->
-    return null unless @nativeSelection.rangeCount > 0
+    return null unless @nativeSelection?.rangeCount > 0
     nativeRange = @nativeSelection.getRangeAt(0)
     start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
     end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
@@ -46,6 +48,7 @@ class Scribe.Selection
       return new Scribe.Range(@editor, end, start)
 
   setRange: (@range, silent = false) ->
+    return unless @nativeSelection?
     @nativeSelection.removeAllRanges()
     if @range?
       nativeRange = @editor.root.ownerDocument.createRange()
