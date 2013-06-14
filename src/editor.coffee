@@ -19,7 +19,7 @@ initListeners = ->
     onEditOnce = _.once(onEdit)
     return if @ignoreDomChanges or !@renderer.iframe.parentNode?    # Make sure we have not been deleted
     this.update()
-  onSubtreeModified = =>
+  onSubtreeModified = (arg1, arg2) =>
     return if @ignoreDomChanges
     toCall = onEditOnce
     _.defer( =>
@@ -53,7 +53,7 @@ deleteAt = (index, length) ->
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(this.getLength(), "\n")
+    this.insertAt(this.getLength(), "\n", {}, false)
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
@@ -63,7 +63,7 @@ formatAt = (index, length, name, value) ->
       # If newline character is being applied with formatting
       if length > line.length - offset
         line.format(name, value)
-    else if Scribe.Leaf.FORMATS[name]?
+    else if @renderer.formats[name]?
       if line.length - offset >= length
         line.formatText(offset, length, name, value)
       else
@@ -134,6 +134,7 @@ class Scribe.Editor extends EventEmitter2
   @events: 
     API_TEXT_CHANGE  : 'api-text-change'
     PRE_EVENT        : 'pre-event'
+    POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
@@ -163,7 +164,7 @@ class Scribe.Editor extends EventEmitter2
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root)
+    @doc = new Scribe.Document(@root, @renderer)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)
@@ -193,6 +194,7 @@ class Scribe.Editor extends EventEmitter2
   emit: (eventName, args...) ->
     super(Scribe.Editor.PRE_EVENT, eventName, args...)
     super(eventName, args...)
+    super(Scribe.Editor.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, external = true) ->
     doAt.call(this, =>
@@ -245,12 +247,11 @@ class Scribe.Editor extends EventEmitter2
           _.each(lines, (line, index) =>
             while line.node != lineNode
               if line.node.parentNode == @root
-                Scribe.Normalizer.normalizeLine(lineNode, @renderer)
+                @doc.normalizer.normalizeLine(lineNode)
                 newLine = @doc.insertLineBefore(lineNode, line)
                 lineNode = lineNode.nextSibling
               else
-                @doc.removeLine(line)
-                return
+                return @doc.removeLine(line)
             @doc.updateLine(line)
             lineNode = lineNode.nextSibling
           )

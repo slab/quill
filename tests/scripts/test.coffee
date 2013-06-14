@@ -20,7 +20,7 @@ class ScribeHtmlTest
   run: (name, options, args...) ->
     options = _.extend({}, @settings, options)
     options.initial = [options.initial] if _.isString(options.initial)
-    options.expected = buildString(options.initial, options.expected or @settings.expected)
+    options.expected = buildString(options.initial, if options.expected? then options.expected else @settings.expected)
     options.initial = options.initial.join('') if _.isArray(options.initial)
     it(name, ->
       options.initial = Scribe.Utils.cleanHtml(options.initial, true)

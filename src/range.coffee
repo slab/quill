@@ -57,15 +57,11 @@ class Scribe.Range
     return formats
 
   getLeafNodes: ->
-    range = this.getRangy()
-    if range.collapsed
-      return [@start.leafNode]
-    else
-      nodes = _.map(range.getNodes([3]), (node) -> 
-        return node.parentNode
-      )
-      nodes.pop() if nodes[nodes.length - 1] != @end.leafNode || @end.offset == 0
-      return nodes
+    return [@start.leafNode] if this.isCollapsed()
+    leafIterator = new Scribe.LeafIterator(@start.getLeaf(), @end.getLeaf())
+    leafNodes = _.pluck(leafIterator.toArray(), 'node')
+    leafNodes.pop() if leafNodes[leafNodes.length - 1] != @end.leafNode || @end.offset == 0
+    return leafNodes
 
   getLeaves: ->
     itr = new Scribe.LeafIterator(@start.getLeaf(), @end.getLeaf())

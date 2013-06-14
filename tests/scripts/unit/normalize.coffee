@@ -95,10 +95,13 @@ describe('Normalize', ->
   )
 
   describe('normalizeLine', ->
+    renderer = new Scribe.Renderer($('#extra-container').get(0))
+    normalizer = new Scribe.Normalizer(renderer)
+
     lineTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->
-        Scribe.Normalizer.normalizeLine(lineNode)
-        Scribe.Normalizer.optimizeLine(lineNode)
+        normalizer.normalizeLine(lineNode)
+        normalizer.optimizeLine(lineNode)
     )
 
     lineTest.run('merge adjacent equal nodes', 
@@ -108,34 +111,34 @@ describe('Normalize', ->
 
     lineTest.run('merge adjacent equal spans',
       initial:
-        '<span class="color-red">
-          <span class="background-blue">Red1</span>
+        '<span style="color: #F00;">
+          <span style="background-color: #0FF;">Red1</span>
         </span>
-        <span class="color-red">
-          <span class="background-blue">Red2</span>
+        <span style="color: #F00;">
+          <span style="background-color: #0FF;">Red2</span>
         </span>'
       expected:
-        '<span class="color-red">
-          <span class="background-blue">Red1Red2</span>
+        '<span style="color: #F00;">
+          <span style="background-color: #0FF;">Red1Red2</span>
         </span>'
     )
 
     lineTest.run('do not merge adjacent unequal spans',
-      initial:  '<span class="size-huge">Huge</span><span class="size-large">Large</span>'
-      expected: '<span class="size-huge">Huge</span><span class="size-large">Large</span>'
+      initial:  '<span style="font-size: 32px;">Huge</span><span style="font-size: 18px;">Large</span>'
+      expected: '<span style="font-size: 32px;">Huge</span><span style="font-size: 18px;">Large</span>'
     )
 
     lineTest.run('preserve style attributes', 
       initial: 
-        '<span style="font-size:32px">Huge</span>
-        <span style="color:rgb(255, 0, 0)">Red</span>
-        <span style="font-family:\'Times New Roman\', serif">Serif</span>
-        <span style="font-family: Helvetica, Arial, san-serif; font-size: 18px; line-height: 22px; white-space: pre-wrap;">Large</span>'
+        '<span style="font-size: 32px;">Huge</span>
+        <span style="color: rgb(255, 0, 0);">Red</span>
+        <span style="font-family: \'Times New Roman\', serif;">Serif</span>
+        <span style="font-size: 18px;">Large</span>'
       expected:
-        '<span class="size-huge">Huge</span>
-        <span class="color-red">Red</span>
-        <span class="family-serif">Serif</span>
-        <span class="size-large">Large</span>'
+        '<span style="font-size: 32px;">Huge</span>
+        <span style="color: rgb(255, 0, 0);">Red</span>
+        <span style="font-family: \'Times New Roman\', serif;">Serif</span>
+        <span style="font-size: 18px;">Large</span>'
     )
 
     lineTest.run('remove redundant format elements', 
@@ -170,9 +173,12 @@ describe('Normalize', ->
   )
 
   describe('optimizeLine', ->
+    renderer = new Scribe.Renderer($('#extra-container').get(0))
+    normalizer = new Scribe.Normalizer(renderer)
+
     lineTest = new Scribe.Test.HtmlTest(
       fn: (container) ->
-        Scribe.Normalizer.optimizeLine(container)
+        normalizer.optimizeLine(container)
     )
 
     lineTest.run('unnecessary break', 
@@ -182,9 +188,9 @@ describe('Normalize', ->
   )
 
   describe('normalizeDoc', ->
-    docTest = new Scribe.Test.HtmlTest(
-      fn: (container) ->
-        Scribe.Normalizer.normalizeDoc(container)
+    docTest = new Scribe.Test.EditorTest(
+      fn: (editor) ->
+        editor.doc.normalizer.normalizeDoc()
     )
 
     docTest.run('empty string', 
@@ -257,17 +263,30 @@ describe('Normalize', ->
   )
 
   describe('normalizeTag', ->
+    renderer = new Scribe.Renderer($('#extra-container').get(0))
+    normalizer = new Scribe.Normalizer(renderer)
+
     attrTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->
         lineNode.firstChild.setAttribute('data-test', 'test')
         lineNode.firstChild.setAttribute('width', '100px')
-        Scribe.Normalizer.normalizeLine(lineNode)
-        Scribe.Normalizer.optimizeLine(lineNode)
+        normalizer.normalizeLine(lineNode)
+        normalizer.optimizeLine(lineNode)
     )
 
     attrTest.run('strip extraneous attributes', 
       initial:  '<span data-test="test" width="100px">One</span>'
       expected: '<span>One</span>'
+    )
+
+    attrTest.run('strip extraneous attributes from tag', 
+      initial:  '<b data-test="test" width="100px">Bold</b>'
+      expected: '<b>Bold</b>'
+    )
+
+    attrTest.run('strip extraneous attributes from style tag', 
+      initial:  '<span style="color:#0FF;" data-test="test" width="100px">Color</span>'
+      expected: '<span style="color:#0FF;">Color</span>'
     )
   )
 )

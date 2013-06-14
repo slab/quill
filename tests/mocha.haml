@@ -14,6 +14,7 @@
   #mocha
   #test-container
   #expected-container
+  #extra-container
 
   // Need to separate files for code coverage
   %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
@@ -23,7 +24,7 @@
     %script{:type => 'text/javascript', :src => "../lib/#{lib}.js"}
 
   %script{:type => 'text/javascript', :src => '../src/ext/require.js'}
-  - srcs = ['debug', 'document', 'dom', 'editor', 'keyboard', 'leaf-iterator', 'leaf', 'line', 'normalizer', 'paste-manager', 'position', 'range', 'renderer', 'selection', 'undo-manager', 'utils', 'modules/attribution', 'modules/cursor', 'modules/toolbar']
+  - srcs = ['debug', 'document', 'dom', 'editor', 'format', 'keyboard', 'leaf-iterator', 'leaf', 'line', 'normalizer', 'paste-manager', 'position', 'range', 'renderer', 'selection', 'undo-manager', 'utils', 'modules/attribution', 'modules/cursor', 'modules/toolbar']
   - srcs.each do |src|
     %script{:type => 'text/javascript', :src => "../src/#{src}.js"}
 
