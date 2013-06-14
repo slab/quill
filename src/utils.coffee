@@ -50,8 +50,7 @@ Scribe.Utils =
   getNodeLength: (node) ->
     return 0 unless node?
     if node.nodeType == node.ELEMENT_NODE
-      return 0 unless Scribe.DOM.canEdit(node)
-      return _.reduce(Scribe.DOM.filterUneditable(node.childNodes), (length, child) ->
+      return _.reduce(node.childNodes, (length, child) ->
         return length + Scribe.Utils.getNodeLength(child)
       , (if Scribe.Line.isLineNode(node) then 1 else 0))
     else if node.nodeType == node.TEXT_NODE
@@ -76,60 +75,16 @@ Scribe.Utils =
   isBlock: (node) ->
     return _.indexOf(Scribe.Normalizer.BLOCK_TAGS, node.tagName) > -1
 
-  insertExternal: (position, extNode) ->
-    if position.leafNode.lastChild?
-      if position.leafNode.lastChild.nodeType == position.leafNode.TEXT_NODE
-        position.leafNode.lastChild.splitText(position.offset)
-        position.leafNode.insertBefore(extNode, position.leafNode.lastChild)
-      else
-        position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
-    else
-      console.warn('offset is not 0', position.offset) if position.offset != 0
-      position.leafNode.parentNode.insertBefore(extNode, position.leafNode)
-
-  moveExternal: (source, destParent, destRef) ->
-    externalNodes = _.clone(source.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
-    _.each(externalNodes, (node) ->
-      destParent.insertBefore(node, destRef)
-    )
-
   removeFormatFromSubtree: (renderer, subtree, format) ->
-    childNodes = Scribe.DOM.filterUneditable(subtree.childNodes)
     if renderer.formats[format].matchContainer(subtree)
       subtree = Scribe.DOM.unwrap(subtree)
-    _.each(childNodes, (child) ->
+    _.each(subtree.childNodes, (child) ->
       Scribe.Utils.removeFormatFromSubtree(renderer, child, format)
     )
     return subtree
 
-  removeExternal: (root) ->
-    extNodes = _.clone(root.querySelectorAll(".#{Scribe.DOM.EXTERNAL_CLASS}"))
-    _.each(extNodes, (node) ->
-      node.parentNode.removeChild(node) if node.parentNode?
-    )
-
   removeNode: (node) ->
-    return unless node.parentNode?
-    if Scribe.Line.isLineNode(node)
-      prev = node.previousSibling
-      next = node.nextSibling
-      while true
-        if Scribe.Line.isLineNode(prev)
-          Scribe.Utils.moveExternal(node, prev, null)
-          break
-        else if Scribe.Line.isLineNode(next)
-          Scribe.Utils.moveExternal(node, next, next.firstChild)
-          break
-        else if !prev? and !next?
-          console.warn('External nodes might have no where to go!')
-          Scribe.Utils.moveExternal(node, node.parentNode, node.nextSibling)
-          break
-        else
-          prev = prev.previousSibling if prev?
-          next = next.nextSibling if next?
-    else
-      Scribe.Utils.moveExternal(node, node.parentNode, node.nextSibling)
-    node.parentNode.removeChild(node)
+    node.parentNode?.removeChild(node)
 
   removeStyles: (root) ->
     walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, null, false)

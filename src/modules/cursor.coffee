@@ -15,7 +15,6 @@ _applyDelta = (delta) ->
 _buildCursor = (userId, name, color) ->
   cursor = @container.ownerDocument.createElement('span')
   cursor.classList.add('cursor')
-  cursor.classList.add(Scribe.DOM.EXTERNAL_CLASS)
   cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
   inner = @container.ownerDocument.createElement('span')
   inner.classList.add('cursor-inner')
