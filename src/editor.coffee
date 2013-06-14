@@ -28,15 +28,13 @@ preserveSelection = (index, lengthAdded, fn, args...) ->
   range = this.getSelection()
   if range?
     indexes = _.map([range.start, range.end], (pos) ->
-      posIndex = pos.getIndex()
-      if index >= posIndex
-        return posIndex
+      if index >= pos.index
+        return pos.index
       else
-        return Math.max(posIndex + lengthAdded, index)
+        return Math.max(pos.index + lengthAdded, index)
     )
     fn.apply(this, args)
     this.setSelection(new Scribe.Range(this, indexes[0], indexes[1]))
-    range = this.getSelection()
   else
     fn.apply(this, args)
 

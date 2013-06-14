@@ -66,7 +66,7 @@ describe('Cursor', ->
       expect(parseInt(cursor.style.top)).to.be.gte(29)
       expect(parseInt(cursor.style.top)).to.be.lte(31)
       inner = cursor.querySelector('.cursor-inner')
-      expect(parseInt(inner.style.height)).to.be.gte(19)
+      expect(parseInt(inner.style.height)).to.be.gte(18)
       expect(parseInt(inner.style.height)).to.be.lte(21)
     )
 
@@ -77,7 +77,7 @@ describe('Cursor', ->
       expect(parseInt(cursor.style.top)).to.be.gte(29)
       expect(parseInt(cursor.style.top)).to.be.lte(31)
       inner = cursor.querySelector('.cursor-inner')
-      expect(parseInt(inner.style.height)).to.be.gte(19)
+      expect(parseInt(inner.style.height)).to.be.gte(18)
       expect(parseInt(inner.style.height)).to.be.lte(21)
     )
 
@@ -85,7 +85,7 @@ describe('Cursor', ->
       cursorManager.setCursor('id', 17, 'Test', 'red')
       # Cursor tested by 'should set at end test'
       inner = cursorManager.container.querySelector('.cursor-inner')
-      expect(parseInt(inner.style.height)).to.be.gte(19)
+      expect(parseInt(inner.style.height)).to.be.gte(18)
       expect(parseInt(inner.style.height)).to.be.lte(21)
     )
   )
