@@ -30,8 +30,7 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop
   cursor.elem.style.left = referenceNode.offsetLeft
   cursorInner = cursor.elem.querySelector('.cursor-inner')
-  cursorName = cursor.elem.querySelector('.cursor-name')
-  cursorInner.style.height = cursorName.style.top = referenceNode.offsetHeight
+  cursorInner.style.height = referenceNode.offsetHeight
   if parseInt(cursor.elem.style.top) <= 5
     cursor.elem.classList.add('top')
   else
