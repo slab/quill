@@ -24,23 +24,9 @@ initListeners = ->
   onEditOnce = _.once(onEdit)
   @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
 
-preserveSelection = (index, lengthAdded, fn, args...) ->
-  range = this.getSelection()
-  if range?
-    indexes = _.map([range.start, range.end], (pos) ->
-      if index >= pos.index
-        return pos.index
-      else
-        return Math.max(pos.index + lengthAdded, index)
-    )
-    fn.apply(this, args)
-    this.setSelection(new Scribe.Range(this, indexes[0], indexes[1]))
-  else
-    fn.apply(this, args)
-
 deleteAt = (index, length) ->
   return if length <= 0
-  preserveSelection.call(this, index, -1 * length, =>
+  @selection.preserve(index, -1 * length, =>
     [firstLine, offset] = @doc.findLineAtOffset(index)
     curLine = firstLine
     while curLine? and length > 0
@@ -70,7 +56,7 @@ forceTrailingNewline = ->
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
-  preserveSelection.call(this, index, 0, =>
+  @selection.preserve(index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
       if Scribe.Line.FORMATS[name]?
@@ -91,7 +77,7 @@ formatAt = (index, length, name, value) ->
   )
 
 insertAt = (index, text, formatting = {}) ->
-  preserveSelection.call(this, index, text.length, =>
+  @selection.preserve(index, text.length, =>
     text = text.replace(/\r\n/g, '\n')
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')

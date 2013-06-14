@@ -1,6 +1,40 @@
 Scribe = require('./scribe')
 
 
+_nativeRangeToRange = (nativeRange) ->
+  start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
+  end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
+  if nativeRange.compareBoundaryPoints(Range.START_TO_END, nativeRange) > -1
+    return new Scribe.Range(@editor, start, end)
+  else
+    return new Scribe.Range(@editor, end, start)
+
+_preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
+  range = _nativeRangeToRange.call(this, nativeRange)
+  indexes = _.map([range.start, range.end], (pos) ->
+    if index >= pos.index
+      return pos.index
+    else
+      return Math.max(pos.index + lengthAdded, index)
+  )
+  fn.call(null)
+  this.setRange(new Scribe.Range(@editor, indexes[0], indexes[1]))
+
+_preserveWithLine = (nativeRange, fn) ->
+  startLineNode = Scribe.Utils.findAncestor(nativeRange.startContainer, Scribe.Line.isLineNode)
+  endLineNode = Scribe.Utils.findAncestor(nativeRange.endContainer, Scribe.Line.isLineNode)
+  startOffset = Scribe.Position.getIndex(nativeRange.startContainer, nativeRange.startOffset, startLineNode)
+  endOffset = Scribe.Position.getIndex(nativeRange.endContainer, nativeRange.endOffset, endLineNode)
+  savedNativeRange = _.clone(nativeRange)
+  fn.call(null)
+  nativeRange = this.getNativeRange()
+  if !_.isEqual(_.clone(nativeRange), savedNativeRange)
+    start = new Scribe.Position(@editor, startLineNode, startOffset)
+    end = new Scribe.Position(@editor, endLineNode, endOffset)
+    this.setRange(new Scribe.Range(@editor, start, end))
+
+
+
 class Scribe.Selection
   @SAVED_CLASS = 'saved-selection'
 
@@ -43,30 +77,18 @@ class Scribe.Selection
 
   getRange: ->
     nativeRange = this.getNativeRange()
-    return null unless nativeRange?
-    start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
-    end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
-    if nativeRange.compareBoundaryPoints(Range.START_TO_END, nativeRange) > -1
-      return new Scribe.Range(@editor, start, end)
-    else
-      return new Scribe.Range(@editor, end, start)
+    return if nativeRange? then _nativeRangeToRange.call(this, nativeRange) else null
 
-  preserve: (fn) ->
+  preserve: (index, lengthAdded, fn) ->
     nativeRange = this.getNativeRange()
     if nativeRange?
-      startLineNode = Scribe.Utils.findAncestor(nativeRange.startContainer, Scribe.Line.isLineNode)
-      endLineNode = Scribe.Utils.findAncestor(nativeRange.endContainer, Scribe.Line.isLineNode)
-      startOffset = Scribe.Position.getIndex(nativeRange.startContainer, nativeRange.startOffset, startLineNode)
-      endOffset = Scribe.Position.getIndex(nativeRange.endContainer, nativeRange.endOffset, endLineNode)
-      savedNativeRange = _.clone(nativeRange)
-      fn()
-      nativeRange = this.getNativeRange()
-      if !_.isEqual(_.clone(nativeRange), savedNativeRange)
-        start = new Scribe.Position(@editor, startLineNode, startOffset)
-        end = new Scribe.Position(@editor, endLineNode, endOffset)
-        this.setRange(new Scribe.Range(@editor, start, end))
+      if _.isFunction(index)
+        fn = index
+        _preserveWithLine.call(this, nativeRange, fn)
+      else
+        _preserveWithIndex.call(this, nativeRange, index, lengthAdded, fn)
     else
-      fn()
+      fn.call(null)
 
   setRange: (range, silent = false) ->
     return unless @nativeSelection?
