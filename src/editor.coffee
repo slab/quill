@@ -127,9 +127,13 @@ trackDelta = (fn, options = { internal: true }) ->
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
       decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
       decomposeRight = newRightDelta.decompose(oldRightDelta)
-      decompose = decomposeLeft.merge(decomposeRight)
+      decomposeA = decomposeLeft.merge(decomposeRight)
   catch ignored
-  decompose = newDelta.decompose(oldDelta) unless decompose?
+  decomposeB = newDelta.decompose(oldDelta)
+  if decomposeA and decomposeB
+    decompose = if decomposeA.ops.length < decomposeB.ops.length then decomposeA else decomposeB
+  else
+    decompose = decomposeA or decomposeB
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
   if !decompose.isIdentity() and options.internal
