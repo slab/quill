@@ -97,23 +97,6 @@ describe('DOM', ->
   )
 
   describe('traversePreorder', ->
-    reset = ->
-      $('#test-container').html(Scribe.Utils.cleanHtml('
-        <div>
-          <h1>
-            <b>One</b>
-            <i>Two</i>
-          </h1>
-          <h2>
-            <s>Three</s>
-            <u>Four</u>
-          </h2>
-          <h3>
-            <b>Five</b>
-          </h3>
-        </div>
-      '))
-
     # 0  3  6    1   5   9  
     # OneTwoThreeFourFiveSix
     expected = {
