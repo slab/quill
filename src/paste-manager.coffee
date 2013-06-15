@@ -24,7 +24,7 @@ class Scribe.PasteManager
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
-        doc = new Scribe.Document(@container, @editor.renderer)
+        doc = new Scribe.Document(@container)
         # Need to remove trailing newline so paste is inline
         lastLine = doc.lines.last
         lastLine.deleteText(lastLine.length - 1, 1)

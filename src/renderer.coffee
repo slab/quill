@@ -3,7 +3,6 @@ Scribe = require('./scribe')
 
 class Scribe.Renderer
   @DEFAULTS:
-    formats: 'default'
     keepHTML: false
     id: 'editor'
 
@@ -50,7 +49,6 @@ class Scribe.Renderer
     '.indent-8' : { 'margin-left': '16em' }
     '.indent-9' : { 'margin-left': '18em' }
 
-  @DEFAULT_FORMATS = ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -63,20 +61,12 @@ class Scribe.Renderer
     @options = _.extend(Scribe.Renderer.DEFAULTS, options)
     this.createFrame()
     @formats = {}
-    if @options.formats == 'default'
-      _.each(Scribe.Renderer.DEFAULT_FORMATS, (formatName) =>
-        className = formatName[0].toUpperCase() + formatName.slice(1)
-        this.addFormat(formatName, new Scribe.Format[className](@root))
-      )
 
   addContainer: (container, before = false) ->
     this.runWhenLoaded( =>
       refNode = if before then @root else null
       @root.parentNode.insertBefore(container, refNode)
     )
-
-  addFormat: (name, format) ->
-    @formats[name] = format
 
   addStyles: (styles) ->
     this.runWhenLoaded( =>
@@ -92,12 +82,6 @@ class Scribe.Renderer
         @root.ownerDocument.head.appendChild(style)
       )
     )
-
-  createFormatContainer: (name, value) ->
-    if @formats[name]
-      return @formats[name].createContainer(value)
-    else
-      return @root.ownerDocument.createElement('SPAN')
 
   createFrame: ->
     html = @container.innerHTML
@@ -121,12 +105,6 @@ class Scribe.Renderer
     this.runWhenLoaded( =>
       @iframe.contentWindow.document.body.appendChild(@root) # Firefox does not like doc.body
     )
-
-  getFormat: (container) ->
-    for name,format of @formats
-      value = format.matchContainer(container)
-      return [name, value] if value
-    return []
 
   runWhenLoaded: (fn) ->
     return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'

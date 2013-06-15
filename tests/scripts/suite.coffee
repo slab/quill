@@ -19,8 +19,7 @@ class ScribeTestSuite
   constructor: (@options) ->
     @options.initial = Scribe.Utils.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
-    renderer = new Scribe.Renderer($('#extra-container').get(0))
-    doc = new Scribe.Document($('#test-container').get(0), renderer)
+    doc = new Scribe.Document($('#test-container').get(0))
     @delta = doc.toDelta()
     @docLength = @delta.endLength
     @editorTest = new Scribe.Test.EditorTest(@options)

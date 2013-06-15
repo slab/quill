@@ -63,7 +63,7 @@ formatAt = (index, length, name, value) ->
         # If newline character is being applied with formatting
         if length > line.length - offset
           line.format(name, value)
-      else if @renderer.formats[name]?
+      else if @doc.formatManager.formats[name]?
         if line.length - offset >= length
           line.formatText(offset, length, name, value)
         else
@@ -130,12 +130,13 @@ class Scribe.Editor extends EventEmitter2
   @editors: []
 
   @ID_PREFIX: 'editor-'
-  @CURSOR_PREFIX: 'cursor-'
+
   @DEFAULTS:
     cursor: 0
     enabled: true
     onReady: ->
     styles: {}
+
   @events:
     PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'
@@ -168,7 +169,7 @@ class Scribe.Editor extends EventEmitter2
     @renderer = new Scribe.Renderer(@iframeContainer, options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root, @renderer)
+    @doc = new Scribe.Document(@root, options)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this)

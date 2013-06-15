@@ -34,7 +34,6 @@ _preserveWithLine = (nativeRange, fn) ->
     this.setRange(new Scribe.Range(@editor, start, end))
 
 
-
 class Scribe.Selection
   @SAVED_CLASS = 'saved-selection'
 

@@ -5,8 +5,9 @@ Tandem = require('tandem-core')
 class Scribe.Document
   @INDENT_PREFIX: 'indent-'
 
-  constructor: (@root, @renderer) ->
-    @normalizer = new Scribe.Normalizer(@renderer)
+  constructor: (@root, options) ->
+    @formatManager = new Scribe.FormatManager(@root, options)
+    @normalizer = new Scribe.Normalizer(@root, @formatManager)
     this.rebuild()
 
   appendLine: (lineNode) ->
@@ -73,7 +74,7 @@ class Scribe.Document
   rebuild: ->
     @lines = new LinkedList()
     @lineMap = {}
-    @normalizer.normalizeDoc(@root, @renderer)
+    @normalizer.normalizeDoc()
     _.each(@root.childNodes, (node) =>
       this.appendLine(node)
     )
