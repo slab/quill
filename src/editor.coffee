@@ -143,8 +143,8 @@ class Scribe.Editor extends EventEmitter2
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
-  constructor: (@iframeContainer, options) ->
-    @options = _.extend(Scribe.Editor.DEFAULTS, options)
+  constructor: (@iframeContainer, options = {}) ->
+    @options = _.defaults(options, Scribe.Editor.DEFAULTS)
     @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)

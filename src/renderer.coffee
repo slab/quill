@@ -57,8 +57,8 @@ class Scribe.Renderer
     ).join("\n")
 
 
-  constructor: (@container, options) ->
-    @options = _.extend(Scribe.Renderer.DEFAULTS, options)
+  constructor: (@container, options = {}) ->
+    @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
     this.createFrame()
     @formats = {}
 

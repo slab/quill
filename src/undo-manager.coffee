@@ -49,7 +49,7 @@ class Scribe.UndoManager
   constructor: (@editor, options = {}) ->
     @undoStack = []
     @redoStack = []
-    @options = _.extend(Scribe.UndoManager.DEFAULTS, options)
+    @options = _.defaults(options, Scribe.UndoManager.DEFAULTS)
     @lastRecorded = 0
     this.initListeners()
 
