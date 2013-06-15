@@ -8,6 +8,7 @@ class Scribe.Document
   constructor: (@root, options) ->
     @formatManager = new Scribe.FormatManager(@root, options)
     @normalizer = new Scribe.Normalizer(@root, @formatManager)
+    @root.innerHTML = Scribe.Normalizer.normalizeHtml(@root.innerHTML)
     this.rebuild()
 
   appendLine: (lineNode) ->
