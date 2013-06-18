@@ -29,29 +29,6 @@ class Scribe.UndoManager
   @DEFAULTS:
     delay: 1000
 
-  @computeUndo: (changeDelta, originalDelta) ->
-    index = offset = 0
-    ops = []
-    _.each(changeDelta.ops, (op) ->
-      if Tandem.Delta.isInsert(op)
-        offset += op.getLength()
-      else if Tandem.Delta.isRetain(op)
-        start = index + offset
-        if op.start > index
-          length = op.start - index
-          deletedOps = originalDelta.getOpsAt(index, length)
-          ops = ops.concat(deletedOps)
-          offset -= length
-        ops.push(new Tandem.RetainOp(start, start + op.getLength(), op.attributes))
-        index = op.end
-      else
-        console.error("Unrecognized type in op", op)
-    )
-    if changeDelta.endLength < changeDelta.startLength + offset
-      deletedDeltas = originalDelta.getOpsAt(changeDelta.endLength - offset, changeDelta.startLength - changeDelta.endLength + offset)
-      ops = ops.concat(deletedDeltas)
-    return new Tandem.Delta(changeDelta.endLength, changeDelta.startLength, ops)
-
 
   constructor: (@editor, options = {}) ->
     @undoStack = []
@@ -72,13 +49,13 @@ class Scribe.UndoManager
     @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
       return if @ignoringChanges
       this.record(delta, oldDelta)
-      oldDelta = delta
+      oldDelta = @editor.getDelta()
     )
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
-    undoDelta = Scribe.UndoManager.computeUndo(changeDelta, oldDelta)
+    undoDelta = oldDelta.invert(changeDelta)
     timestamp = new Date().getTime()
     ###
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
@@ -107,7 +84,6 @@ class Scribe.UndoManager
     if @undoStack.length > 0
       change = @undoStack.pop()
       _ignoreChanges.call(this, =>
-        console.log 'undoing'
         @editor.applyDelta(change.undo, { source: 'user' })
         index = getLastChangeIndex(change.undo)
         @editor.setSelection(new Scribe.Range(@editor, index, index))
