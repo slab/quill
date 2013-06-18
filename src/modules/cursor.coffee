@@ -103,8 +103,8 @@ class Scribe.MultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta) =>
-      applyDelta.call(@editor, delta)
+    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta, options) =>
+      applyDelta.call(@editor, delta, options)
       _applyDelta.call(this, delta)
     )
 

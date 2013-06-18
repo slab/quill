@@ -2,6 +2,29 @@ Scribe = require('./scribe')
 Tandem = require('tandem-core')
 
 
+getLastChangeIndex = (delta) ->
+  lastChangeIndex = index = offset = 0
+  _.each(delta.ops, (op) ->
+    if Tandem.Delta.isInsert(op)
+      offset += op.getLength()
+      lastChangeIndex = index + offset
+    else if Tandem.Delta.isRetain(op)
+      if op.start > index
+        lastChangeIndex = index + offset
+        offset -= (op.start - index)
+      index = op.end
+  )
+  if delta.endLength < delta.startLength + offset
+    lastChangeIndex = delta.endLength
+  return lastChangeIndex
+
+_ignoreChanges = (fn) ->
+  oldIgnoringChanges = @ignoringChanges
+  @ignoringChanges = true
+  fn.call(this)
+  @ignoringChanges = oldIgnoringChanges
+
+
 class Scribe.UndoManager
   @DEFAULTS:
     delay: 1000
@@ -29,22 +52,6 @@ class Scribe.UndoManager
       ops = ops.concat(deletedDeltas)
     return new Tandem.Delta(changeDelta.endLength, changeDelta.startLength, ops)
 
-  @getLastChangeIndex: (delta) ->
-    lastChangeIndex = index = offset = 0
-    _.each(delta.ops, (op) ->
-      if Tandem.Delta.isInsert(op)
-        offset += op.getLength()
-        lastChangeIndex = index + offset
-      else if Tandem.Delta.isRetain(op)
-        if op.start > index
-          lastChangeIndex = index + offset
-          offset -= (op.start - index)
-        index = op.end
-    )
-    if delta.endLength < delta.startLength + offset
-      lastChangeIndex = delta.endLength
-    return lastChangeIndex
-
 
   constructor: (@editor, options = {}) ->
     @undoStack = []
@@ -60,40 +67,52 @@ class Scribe.UndoManager
     @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.REDO, =>
       this.redo()
     )
+    oldDelta = @editor.getDelta()
+    @ignoringChanges = false
+    @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
+      return if @ignoringChanges
+      this.record(delta, oldDelta)
+      oldDelta = delta
+    )
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)
     @redoStack = []
     undoDelta = Scribe.UndoManager.computeUndo(changeDelta, oldDelta)
     timestamp = new Date().getTime()
+    ###
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
       change = @undoStack.pop()
-      undoDelta = undoDelta.compose(change.undo.delta)
-      changeDelta = change.redo.delta.compose(changeDelta)
+      undoDelta = change.undo.compose(undoDelta)
+      changeDelta = change.redo.compose(changeDelta)
     else
       @lastRecorded = timestamp
+    ###
     @undoStack.push({
-      undo:
-        cursor: Scribe.UndoManager.getLastChangeIndex(undoDelta)
-        delta: undoDelta
-      redo:
-        cursor: Scribe.UndoManager.getLastChangeIndex(changeDelta)
-        delta: changeDelta  
+      redo: changeDelta
+      undo: undoDelta
     })
 
   redo: ->
     if @redoStack.length > 0
       change = @redoStack.pop()
-      @editor.applyDelta(change.redo.delta)
-      @editor.setSelection(new Range(@editor, change.redo.cursor, change.redo.cursor))
-      @undoStack.push(change)
+      _ignoreChanges.call(this, =>
+        @editor.applyDelta(change.redo, { source: 'user' })
+        index = getLastChangeIndex(change.redo)
+        @editor.setSelection(new Scribe.Range(@editor, index, index))
+      )
+      @undoStack.push(change.redo)
 
   undo: ->
     if @undoStack.length > 0
       change = @undoStack.pop()
-      @editor.applyDelta(change.undo.delta)
-      @editor.setSelection(new Range(@editor, change.undo.cursor, change.undo.cursor))
-      @redoStack.push(change)
+      _ignoreChanges.call(this, =>
+        console.log 'undoing'
+        @editor.applyDelta(change.undo, { source: 'user' })
+        index = getLastChangeIndex(change.undo)
+        @editor.setSelection(new Scribe.Range(@editor, index, index))
+      )
+      @redoStack.push(change.undo)
 
 
 module.exports = Scribe
