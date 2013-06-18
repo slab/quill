@@ -15,7 +15,7 @@ class Scribe.Attribution
           @editor.formatAt(index, length, 'author', @authorId)
         )
     )
-    @editor.renderer.addFormat('author', new Scribe.Format.Class(@editor.renderer.root, 'author'))
+    @editor.doc.formatManager.addFormat('author', new Scribe.Format.Class(@editor.renderer.root, 'author'))
     this.addAuthor(@authorId, color)
     this.enable() if enabled
 

@@ -1,53 +1,66 @@
 Scribe = require('./scribe')
 
 
+recursiveDefaults = (options, defaults) ->
+  return options unless _.isObject(defaults)
+  return _.reduce(defaults, (memo, value, key) ->
+    if options[key]?
+      if _.isObject(options[key])
+        memo[key] = recursiveDefaults(options[key], value)
+      else
+        memo[key] = options[key]
+    else
+      memo[key] = value
+    return memo
+  , {})
+
+
 class Scribe.Renderer
   @DEFAULTS:
-    keepHTML: false
     id: 'editor'
-
-  @DEFAULT_STYLES:
-    'div.editor': {
-      'bottom': '10px'
-      'font-family': "'Helvetica', 'Arial', san-serif"
-      'font-size': '13px'
-      'left': '15px'
-      'line-height': '1.154'
-      'outline': 'none'
-      'position': 'absolute'
-      'right': '15px'
-      'tab-size': '4'
-      'top': '10px'
-      'white-space': 'pre-wrap'
-    }
-    'html' : { 'height': '100%' }
-    'body' : { 'cursor': 'text', 'height': '100%', 'margin': '0px', 'padding': '0px'}
-    'div.line:last-child': { 'padding-bottom': '10px' }
-    'a'    : { 'text-decoration': 'underline' }
-    'b'    : { 'font-weight': 'bold' }
-    'i'    : { 'font-style': 'italic' }
-    's'    : { 'text-decoration': 'line-through' }
-    'u'    : { 'text-decoration': 'underline' }
-    'ol'   : { 'margin': '0px', 'padding': '0px' }
-    'ul'   : { 'list-style-type': 'disc', 'margin': '0px', 'padding': '0px' }
-    'ol.indent-1' : { 'list-style-type': 'decimal' }
-    'ol.indent-2' : { 'list-style-type': 'lower-alpha' }
-    'ol.indent-3' : { 'list-style-type': 'lower-roman' }
-    'ol.indent-4' : { 'list-style-type': 'decimal' }
-    'ol.indent-5' : { 'list-style-type': 'lower-alpha' }
-    'ol.indent-6' : { 'list-style-type': 'lower-roman' }
-    'ol.indent-7' : { 'list-style-type': 'decimal' }
-    'ol.indent-8' : { 'list-style-type': 'lower-alpha' }
-    'ol.indent-9' : { 'list-style-type': 'lower-roman' }
-    '.indent-1' : { 'margin-left': '2em' }
-    '.indent-2' : { 'margin-left': '4em' }
-    '.indent-3' : { 'margin-left': '6em' }
-    '.indent-4' : { 'margin-left': '8em' }
-    '.indent-5' : { 'margin-left': '10em' }
-    '.indent-6' : { 'margin-left': '12em' }
-    '.indent-7' : { 'margin-left': '14em' }
-    '.indent-8' : { 'margin-left': '16em' }
-    '.indent-9' : { 'margin-left': '18em' }
+    keepHTML: false
+    styles:
+      'div.editor': {
+        'bottom': '10px'
+        'font-family': "'Helvetica', 'Arial', san-serif"
+        'font-size': '13px'
+        'left': '15px'
+        'line-height': '1.154'
+        'outline': 'none'
+        'position': 'absolute'
+        'right': '15px'
+        'tab-size': '4'
+        'top': '10px'
+        'white-space': 'pre-wrap'
+      }
+      'html' : { 'height': '100%' }
+      'body' : { 'cursor': 'text', 'height': '100%', 'margin': '0px', 'padding': '0px'}
+      'div.line:last-child': { 'padding-bottom': '10px' }
+      'a'    : { 'text-decoration': 'underline' }
+      'b'    : { 'font-weight': 'bold' }
+      'i'    : { 'font-style': 'italic' }
+      's'    : { 'text-decoration': 'line-through' }
+      'u'    : { 'text-decoration': 'underline' }
+      'ol'   : { 'margin': '0px', 'padding': '0px' }
+      'ul'   : { 'list-style-type': 'disc', 'margin': '0px', 'padding': '0px' }
+      'ol.indent-1' : { 'list-style-type': 'decimal' }
+      'ol.indent-2' : { 'list-style-type': 'lower-alpha' }
+      'ol.indent-3' : { 'list-style-type': 'lower-roman' }
+      'ol.indent-4' : { 'list-style-type': 'decimal' }
+      'ol.indent-5' : { 'list-style-type': 'lower-alpha' }
+      'ol.indent-6' : { 'list-style-type': 'lower-roman' }
+      'ol.indent-7' : { 'list-style-type': 'decimal' }
+      'ol.indent-8' : { 'list-style-type': 'lower-alpha' }
+      'ol.indent-9' : { 'list-style-type': 'lower-roman' }
+      '.indent-1' : { 'margin-left': '2em' }
+      '.indent-2' : { 'margin-left': '4em' }
+      '.indent-3' : { 'margin-left': '6em' }
+      '.indent-4' : { 'margin-left': '8em' }
+      '.indent-5' : { 'margin-left': '10em' }
+      '.indent-6' : { 'margin-left': '12em' }
+      '.indent-7' : { 'margin-left': '14em' }
+      '.indent-8' : { 'margin-left': '16em' }
+      '.indent-9' : { 'margin-left': '18em' }
 
 
   @objToCss: (obj) ->
@@ -58,7 +71,7 @@ class Scribe.Renderer
 
 
   constructor: (@container, options = {}) ->
-    @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
+    @options = recursiveDefaults(options, Scribe.Renderer.DEFAULTS)
     this.createFrame()
     @formats = {}
 
@@ -96,12 +109,7 @@ class Scribe.Renderer
     @root.classList.add('editor')
     @root.id = @options.id
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
-    styles = _.map(@options.styles, (value, key) ->
-      obj = Scribe.Renderer.DEFAULT_STYLES[key] or {}
-      return _.extend(obj, value)
-    )
-    styles = _.extend(Scribe.Renderer.DEFAULT_STYLES, styles)
-    this.addStyles(styles)
+    this.addStyles(@options.styles)
     this.runWhenLoaded( =>
       @iframe.contentWindow.document.body.appendChild(@root) # Firefox does not like doc.body
     )

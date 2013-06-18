@@ -135,7 +135,10 @@ class Scribe.Editor extends EventEmitter2
     cursor: 0
     enabled: true
     onReady: ->
-    styles: {}
+
+    document: {}
+    renderer: {}
+    undoManager: {}
 
   @events:
     PRE_EVENT        : 'pre-event'
@@ -162,17 +165,15 @@ class Scribe.Editor extends EventEmitter2
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
-    options = _.clone(@options)
-    options.keepHTML = keepHTML
-    options.id = @id
+    @options.renderer.keepHTML = keepHTML
     @iframeContainer.innerHTML = @root.innerHTML if @root?
-    @renderer = new Scribe.Renderer(@iframeContainer, options)
+    @renderer = new Scribe.Renderer(@iframeContainer, @options.renderer)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root, options)
+    @doc = new Scribe.Document(@root, @options.document)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
-    @undoManager = new Scribe.UndoManager(this)
+    @undoManager = new Scribe.UndoManager(this, @options.undoManager)
     @pasteManager = new Scribe.PasteManager(this)
     @renderer.runWhenLoaded(@options.onReady)
     initListeners.call(this)
