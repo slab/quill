@@ -61,14 +61,12 @@ class Scribe.UndoManager
     @redoStack = []
     undoDelta = oldDelta.invert(changeDelta)
     timestamp = new Date().getTime()
-    ###
     if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
       change = @undoStack.pop()
-      undoDelta = change.undo.compose(undoDelta)
+      undoDelta = undoDelta.compose(change.undo)
       changeDelta = change.redo.compose(changeDelta)
     else
       @lastRecorded = timestamp
-    ###
     @undoStack.push({
       redo: changeDelta
       undo: undoDelta
