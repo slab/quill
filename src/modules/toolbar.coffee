@@ -67,6 +67,8 @@ class Scribe.Toolbar extends EventEmitter2
     initLinkFormat.call(this)
     initSelectFormats.call(this)
     initSelectionListener.call(this)
-
+    this.on(Scribe.Toolbar.events.FORMAT, =>
+      @editor.root.focus()
+    )
 
 module.exports = Scribe
