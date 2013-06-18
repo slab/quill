@@ -5,7 +5,7 @@ class Scribe.FormatManager
   @DEFAULTS:
     formats: ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
 
-  constructor: (@container, options) ->
+  constructor: (@container, options = {}) ->
     @options = _.defaults(options, Scribe.FormatManager.DEFAULTS)
     @formats = {}
     _.each(@options.formats, (formatName) =>

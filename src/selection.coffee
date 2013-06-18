@@ -53,13 +53,13 @@ class Scribe.Selection
     @editor.root.addEventListener('keyup', keyUpdate)
     @editor.root.addEventListener('mouseup', checkUpdate)
 
-  format: (name, value, options = {}) ->
+  format: (name, value) ->
     this.update()
     return unless @range
     start = @range.start.index
     end = @range.end.index
     formats = @range.getFormats()
-    @editor.formatAt(start, end - start, name, value, options) if end > start
+    @editor.formatAt(start, end - start, name, value, { source: 'user' }) if end > start
     formats[name] = value
     @range.formats = formats
     this.setRange(new Scribe.Range(@editor, start, end))

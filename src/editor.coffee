@@ -2,7 +2,10 @@ Scribe = require('./scribe')
 Tandem = require('tandem-core')
 
 
-doAt = (fn, options = { internal: true }) ->
+DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
+
+
+doAt = (fn, options) ->
   this.doSilently( =>
     trackDelta.call(this, =>
       fn.call(this)
@@ -101,7 +104,7 @@ insertAt = (index, text, formatting = {}) ->
     @doc.rebuildDirty()
   )
 
-trackDelta = (fn, options = { internal: true }) ->
+trackDelta = (fn, options) ->
   oldDelta = @doc.toDelta()
   oldIndex = @selection.range?.start.index # We do not want new range value so we do not use getSelection
   fn()
@@ -122,8 +125,9 @@ trackDelta = (fn, options = { internal: true }) ->
     decompose = decomposeA or decomposeB
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  if !decompose.isIdentity() and options.internal
-    this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose)
+  if !decompose.isIdentity() and !options.silent
+    eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
+    this.emit(eventName, decompose)
   
 
 class Scribe.Editor extends EventEmitter2
@@ -141,10 +145,11 @@ class Scribe.Editor extends EventEmitter2
     undoManager: {}
 
   @events:
+    API_TEXT_CHANGE  : 'api-text-change'
     PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
-    TEXT_CHANGE      : 'text-change'
+    USER_TEXT_CHANGE : 'user-text-change'
 
   constructor: (@iframeContainer, options = {}) ->
     @options = _.defaults(options, Scribe.Editor.DEFAULTS)
@@ -181,6 +186,7 @@ class Scribe.Editor extends EventEmitter2
     Scribe.Editor.editors.push(this)
 
   applyDelta: (delta, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
       return this.setDelta(delta, options)
@@ -189,7 +195,9 @@ class Scribe.Editor extends EventEmitter2
       console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
       oldDelta = @doc.toDelta()
       delta.apply(insertAt, deleteAt, formatAt, this)
-      this.emit(Scribe.Editor.events.TEXT_CHANGE, delta) if options.internal
+      unless options.silent
+        eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
+        this.emit(eventName, delta)
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       forceTrailingNewline.call(this)
@@ -201,6 +209,7 @@ class Scribe.Editor extends EventEmitter2
     super(Scribe.Editor.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>
       deleteAt.call(this, index, length)
       forceTrailingNewline.call(this)
@@ -213,6 +222,7 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   formatAt: (index, length, name, value, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>
       formatAt.call(this, index, length, name, value)
     , options)
@@ -227,6 +237,7 @@ class Scribe.Editor extends EventEmitter2
     return @selection.getRange()
 
   insertAt: (index, text, formatting = {}, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>
       insertAt.call(this, index, text, formatting)
       forceTrailingNewline.call(this)
@@ -263,7 +274,7 @@ class Scribe.Editor extends EventEmitter2
             newLine = @doc.appendLine(lineNode)
             lineNode = lineNode.nextSibling
         )
-      )
+      , { silent: false, source: 'user' })
     )
 
 
