@@ -52,8 +52,7 @@ class Scribe.UndoManager
     oldDelta = @editor.getDelta()
     @ignoringChanges = false
     @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
-      return if @ignoringChanges
-      this.record(delta, oldDelta)
+      this.record(delta, oldDelta) unless @ignoringChanges
       oldDelta = @editor.getDelta()
     )
 
@@ -83,7 +82,7 @@ class Scribe.UndoManager
         index = getLastChangeIndex(change.redo)
         @editor.setSelection(new Scribe.Range(@editor, index, index))
       )
-      @undoStack.push(change.redo)
+      @undoStack.push(change)
 
   undo: ->
     if @undoStack.length > 0
@@ -93,7 +92,7 @@ class Scribe.UndoManager
         index = getLastChangeIndex(change.undo)
         @editor.setSelection(new Scribe.Range(@editor, index, index))
       )
-      @redoStack.push(change.undo)
+      @redoStack.push(change)
 
 
 module.exports = Scribe
