@@ -33,6 +33,7 @@ _ignoreChanges = (fn) ->
 class Scribe.UndoManager
   @DEFAULTS:
     delay: 1000
+    maxStack: 100
 
 
   constructor: (@editor, options = {}) ->
@@ -71,6 +72,7 @@ class Scribe.UndoManager
       redo: changeDelta
       undo: undoDelta
     })
+    @undoStack.unshift() if @undoStack.length > @options.maxStack
 
   redo: ->
     if @redoStack.length > 0
