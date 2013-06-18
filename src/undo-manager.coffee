@@ -37,8 +37,7 @@ class Scribe.UndoManager
 
 
   constructor: (@editor, options = {}) ->
-    @undoStack = []
-    @redoStack = []
+    this.clear()
     @options = _.defaults(options, Scribe.UndoManager.DEFAULTS)
     @lastRecorded = 0
     this.initListeners()
@@ -56,6 +55,10 @@ class Scribe.UndoManager
       this.record(delta, oldDelta) unless @ignoringChanges
       oldDelta = @editor.getDelta()
     )
+
+  clear: ->
+    @undoStack = []
+    @redoStack = []
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)

@@ -247,6 +247,7 @@ class Scribe.Editor extends EventEmitter2
     oldLength = delta.startLength
     delta.startLength = this.getLength()
     this.applyDelta(delta, options)
+    @undoManager.clear()
     delta.startLength = oldLength
     
   setSelection: (range, silent = false) ->
