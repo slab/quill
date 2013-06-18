@@ -5,13 +5,18 @@ Tandem = require('tandem-core')
 getLastChangeIndex = (delta) ->
   lastChangeIndex = index = offset = 0
   _.each(delta.ops, (op) ->
+    # Insert
     if Tandem.Delta.isInsert(op)
       offset += op.getLength()
       lastChangeIndex = index + offset
     else if Tandem.Delta.isRetain(op)
+      # Delete
       if op.start > index
         lastChangeIndex = index + offset
         offset -= (op.start - index)
+      # Format
+      if _.keys(op.attributes).length > 0
+        lastChangeIndex = op.end + offset
       index = op.end
   )
   if delta.endLength < delta.startLength + offset
