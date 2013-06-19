@@ -53,6 +53,9 @@ class Scribe.UndoManager
     @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
       this.record(delta, @oldDelta) unless @ignoringChanges
       @oldDelta = @editor.getDelta()
+    ).on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
+      this.transformExternal(delta)
+      @oldDelta = @editor.getDelta()
     )
 
   clear: ->
@@ -61,7 +64,7 @@ class Scribe.UndoManager
     @oldDelta = @editor.getDelta()
 
   record: (changeDelta, oldDelta) ->
-    return if changeDelta.isIdentity(changeDelta)
+    return if changeDelta.isIdentity()
     @redoStack = []
     undoDelta = oldDelta.invert(changeDelta)
     timestamp = new Date().getTime()
@@ -86,6 +89,15 @@ class Scribe.UndoManager
         @editor.setSelection(new Scribe.Range(@editor, index, index))
       )
       @undoStack.push(change)
+
+  transformExternal: (delta) ->
+    return if delta.isIdentity()
+    @undoStack = _.map(@undoStack, (change) ->
+      return {
+        redo: delta.follows(change.redo, true)
+        undo: change.undo.follows(delta, true)
+      }
+    )
 
   undo: ->
     if @undoStack.length > 0
