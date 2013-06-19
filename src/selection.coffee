@@ -99,6 +99,7 @@ class Scribe.Selection
       nativeRange = @editor.root.ownerDocument.createRange()
       _.each([@range.start, @range.end], (pos, i) ->
         [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
+        offset = Math.min(node.textContent.length, offset) # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )

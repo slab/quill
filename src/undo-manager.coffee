@@ -49,16 +49,16 @@ class Scribe.UndoManager
     @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.REDO, =>
       this.redo()
     )
-    oldDelta = @editor.getDelta()
     @ignoringChanges = false
     @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
-      this.record(delta, oldDelta) unless @ignoringChanges
-      oldDelta = @editor.getDelta()
+      this.record(delta, @oldDelta) unless @ignoringChanges
+      @oldDelta = @editor.getDelta()
     )
 
   clear: ->
     @undoStack = []
     @redoStack = []
+    @oldDelta = @editor.getDelta()
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity(changeDelta)

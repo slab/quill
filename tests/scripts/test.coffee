@@ -74,8 +74,8 @@ class ScribeEditorTest extends ScribeHtmlTest
         )
       , (err, editors) ->
         [testEditor, expectedEditor] = editors
-        testEditor.applyDelta(savedOptions.initial) if Tandem.Delta.isDelta(savedOptions.initial)
-        expectedEditor.applyDelta(savedOptions.expected) if Tandem.Delta.isDelta(savedOptions.expected)
+        testEditor.setDelta(savedOptions.initial) if Tandem.Delta.isDelta(savedOptions.initial)
+        expectedEditor.setDelta(savedOptions.expected) if Tandem.Delta.isDelta(savedOptions.expected)
         savedOptions.fn.call(null, testEditor, expectedEditor, args...)
         callback()
       )

@@ -55,7 +55,7 @@ deleteAt = (index, length) ->
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(this.getLength(), "\n", {}, false)
+    this.insertAt(this.getLength(), "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
@@ -243,10 +243,10 @@ class Scribe.Editor extends EventEmitter2
       forceTrailingNewline.call(this)
     , options)
 
-  setDelta: (delta, options = {}) ->
+  setDelta: (delta) ->
     oldLength = delta.startLength
     delta.startLength = this.getLength()
-    this.applyDelta(delta, options)
+    this.applyDelta(delta, { silent: true })
     @undoManager.clear()
     delta.startLength = oldLength
     
