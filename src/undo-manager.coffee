@@ -23,6 +23,16 @@ getLastChangeIndex = (delta) ->
     lastChangeIndex = delta.endLength
   return lastChangeIndex
 
+_change = (source, dest) ->
+  if @stack[source].length > 0
+    change = @stack[source].pop()
+    _ignoreChanges.call(this, =>
+      @editor.applyDelta(change[source], { source: 'user' })
+      index = getLastChangeIndex(change[source])
+      @editor.setSelection(new Scribe.Range(@editor, index, index))
+    )
+    @stack[dest].push(change)
+
 _ignoreChanges = (fn) ->
   oldIgnoringChanges = @ignoringChanges
   @ignoringChanges = true
@@ -59,8 +69,9 @@ class Scribe.UndoManager
     )
 
   clear: ->
-    @undoStack = []
-    @redoStack = []
+    @stack =
+      undo: []
+      redo: []
     @oldDelta = @editor.getDelta()
 
   record: (changeDelta, oldDelta) ->
@@ -68,31 +79,24 @@ class Scribe.UndoManager
     @redoStack = []
     undoDelta = oldDelta.invert(changeDelta)
     timestamp = new Date().getTime()
-    if @lastRecorded + @options.delay > timestamp and @undoStack.length > 0
-      change = @undoStack.pop()
+    if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
+      change = @stack.undo.pop()
       undoDelta = undoDelta.compose(change.undo)
       changeDelta = change.redo.compose(changeDelta)
     else
       @lastRecorded = timestamp
-    @undoStack.push({
+    @stack.undo.push({
       redo: changeDelta
       undo: undoDelta
     })
-    @undoStack.unshift() if @undoStack.length > @options.maxStack
+    @stack.undo.unshift() if @stack.undo.length > @options.maxStack
 
   redo: ->
-    if @redoStack.length > 0
-      change = @redoStack.pop()
-      _ignoreChanges.call(this, =>
-        @editor.applyDelta(change.redo, { source: 'user' })
-        index = getLastChangeIndex(change.redo)
-        @editor.setSelection(new Scribe.Range(@editor, index, index))
-      )
-      @undoStack.push(change)
+    _change.call(this, 'redo', 'undo')
 
   transformExternal: (delta) ->
     return if delta.isIdentity()
-    @undoStack = _.map(@undoStack, (change) ->
+    @stack['undo'] = _.map(@stack['undo'], (change) ->
       return {
         redo: delta.follows(change.redo, true)
         undo: change.undo.follows(delta, true)
@@ -100,14 +104,7 @@ class Scribe.UndoManager
     )
 
   undo: ->
-    if @undoStack.length > 0
-      change = @undoStack.pop()
-      _ignoreChanges.call(this, =>
-        @editor.applyDelta(change.undo, { source: 'user' })
-        index = getLastChangeIndex(change.undo)
-        @editor.setSelection(new Scribe.Range(@editor, index, index))
-      )
-      @redoStack.push(change)
+    _change.call(this, 'undo', 'redo')
 
 
 module.exports = Scribe
