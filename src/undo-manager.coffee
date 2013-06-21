@@ -64,7 +64,7 @@ class Scribe.UndoManager
       this.record(delta, @oldDelta) unless @ignoringChanges
       @oldDelta = @editor.getDelta()
     ).on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
-      this.transformExternal(delta)
+      this.record(delta, @oldDelta)
       @oldDelta = @editor.getDelta()
     )
 
@@ -94,6 +94,7 @@ class Scribe.UndoManager
   redo: ->
     _change.call(this, 'redo', 'undo')
 
+  ###
   transformExternal: (delta) ->
     return if delta.isIdentity()
     @stack['undo'] = _.map(@stack['undo'], (change) ->
@@ -102,6 +103,7 @@ class Scribe.UndoManager
         undo: change.undo.follows(delta, true)
       }
     )
+  ###
 
   undo: ->
     _change.call(this, 'undo', 'redo')
