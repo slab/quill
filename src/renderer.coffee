@@ -12,7 +12,7 @@ recursiveDefaults = (options, defaults) ->
     else
       memo[key] = value
     return memo
-  , {})
+  , options)
 
 
 class Scribe.Renderer
