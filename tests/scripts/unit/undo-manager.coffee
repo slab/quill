@@ -32,7 +32,12 @@ describe('Undo manager', ->
     undoTests.run('insert attribute', {}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: true})]))
 
     newInitial = Tandem.Delta.getInitial("The lazy fox\n").compose(new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: true})]))
-    undoTests.run('remove attribute', {initial: newInitial}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13)]))
+    undoTests.run('remove attribute', {initial: newInitial}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: false})]))
+
+    undoTests.run('insert color/strike', {}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {color: 'blue', strike: true})]))
+
+    newInitial = Tandem.Delta.getInitial("The lazy fox\n").compose(new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {color: 'blue', strike: true})]))
+    undoTests.run('remove color/strike', {initial: newInitial}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {color: 'black', strike: false})]))
 
     # Multi-user
     undoTests.run('remove external insert', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
