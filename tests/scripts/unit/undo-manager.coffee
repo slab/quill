@@ -8,8 +8,12 @@ describe('Undo manager', ->
         editor.applyDelta(delta, { source: 'user' })
       checker: (editor, expectedEditor, delta) ->
         editor.undoManager.undo()
+        console.log(editor.getDelta())
+        console.log(initial)
         expect(editor.getDelta()).to.deep.equal(initial)
         editor.undoManager.redo()
+        console.log(editor.getDelta())
+        console.log(initial.compose(delta))
         expect(editor.getDelta()).to.deep.equal(initial.compose(delta))
     )
 
@@ -24,5 +28,11 @@ describe('Undo manager', ->
     ]))
 
     undoTests.run('replace all', {}, new Tandem.Delta(13, [new Tandem.InsertOp('A fast bunny\n')]))
+
+    undoTests.run('insert attribute', {}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: true})]))
+
+
+    undoTests.initial.compose(new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: true})]))
+    undoTests.run('remove attribute', {}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13)]))
   )
 )
