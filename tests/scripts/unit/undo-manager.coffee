@@ -1,20 +1,16 @@
 describe('Undo manager', ->
   describe('undo/redo', ->
-    initial = Tandem.Delta.getInitial("The lazy fox\n")
     undoTests = new Scribe.Test.EditorTest(
-      initial: initial
+      initial: Tandem.Delta.getInitial("The lazy fox\n")
       ignoreExpect: true
       fn: (editor, expectedEditor, delta) ->
         editor.applyDelta(delta, { source: 'user' })
       checker: (editor, expectedEditor, delta) ->
+        beforeDelta = editor.getDelta()
         editor.undoManager.undo()
-        console.log("initial : " + initial)
-        console.log("getDelta: " + editor.getDelta())
-        expect(editor.getDelta()).to.deep.equal(initial)
+        expect(editor.getDelta()).to.deep.equal(@options.initial)
         editor.undoManager.redo()
-        console.log("getDelta : " + editor.getDelta())
-        console.log("init+comp: " + initial.compose(delta))
-        expect(editor.getDelta()).to.deep.equal(initial.compose(delta))
+        expect(editor.getDelta()).to.deep.equal(beforeDelta)
     )
 
     undoTests.run('insert', {}, Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
@@ -29,19 +25,28 @@ describe('Undo manager', ->
 
     undoTests.run('replace all', {}, new Tandem.Delta(13, [new Tandem.InsertOp('A fast bunny\n')]))
 
-    undoTests.run('insert attribute', {}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: true})]))
+    boldDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { bold: true })
+    undoTests.run('insert attribute', {}, boldDelta)
 
-    newInitial = Tandem.Delta.getInitial("The lazy fox\n").compose(new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: true})]))
-    undoTests.run('remove attribute', {initial: newInitial}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {bold: false})]))
+    unboldDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { bold: false })
+    undoTests.run('remove attribute', { 
+      initial: Tandem.Delta.getInitial("The lazy fox\n").compose(boldDelta) 
+    }, unboldDelta)
 
-    undoTests.run('insert color/strike', {}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {color: 'blue', strike: true})]))
+    blueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: 'blue', strike: true })
+    undoTests.run('insert color/strike', {}, blueStrikeDelta)
 
-    newInitial = Tandem.Delta.getInitial("The lazy fox\n").compose(new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {color: 'blue', strike: true})]))
-    undoTests.run('remove color/strike', {initial: newInitial}, new Tandem.Delta(13, [new Tandem.RetainOp(0, 13, {color: 'black', strike: false})]))
+    undoBlueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: false, strike: false })
+    undoTests.run('remove color/strike', { 
+      initial: Tandem.Delta.getInitial("The lazy fox\n").compose(blueStrikeDelta) 
+    }, undoBlueStrikeDelta)
 
     # Multi-user
-    undoTests.run('remove external insert', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
-      Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
+    undoTests.run('remove external insert', {
+      fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})
+    }, Tandem.Delta.makeInsertDelta(13, 9, 'hairy ')
+
+    )
 
     undoTests.run('remove external delete', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
       Tandem.Delta.makeDeleteDelta(13, 4, 5))

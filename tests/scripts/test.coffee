@@ -16,7 +16,7 @@ class ScribeHtmlTest
 
   constructor: (options = {}) ->
     console.assert(_.isObject(options), "Invalid options passed into constructor")
-    @settings = _.extend({}, ScribeHtmlTest.DEFAULTS, options)
+    @settings = _.defaults(options, ScribeHtmlTest.DEFAULTS)
 
   run: (name, options, args...) ->
     it(name, (done) =>
@@ -24,7 +24,7 @@ class ScribeHtmlTest
     )
 
   runWithoutIt: (options, args..., done) ->
-    options = _.extend({}, @settings, options)
+    options = _.defaults(options, @settings)
     options.initial = [options.initial] if _.isString(options.initial)
     options.expected = buildString(options.initial, if options.expected? then options.expected else @settings.expected)
     options.initial = options.initial.join('') if _.isArray(options.initial)
@@ -32,21 +32,26 @@ class ScribeHtmlTest
     options.expected = Scribe.Utils.cleanHtml(options.expected, true)
     testContainer = $('#test-container').html(options.initial).get(0)
     expectedContainer = $('#expected-container').html(options.expected).get(0)
-    newArgs = options.pre.call(null, testContainer, expectedContainer)
+    newArgs = options.pre.call(this, testContainer, expectedContainer)
     newArgs = [newArgs] unless _.isArray(newArgs)
-    next = ->
+    next = =>
       testHtml = Scribe.Utils.cleanHtml(testContainer.innerHTML)
       expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.innerHTML)
       expect(testHtml).to.equal(expectedHtml) unless options.ignoreExpect
-      options.checker.call(null, testContainer, expectedContainer, newArgs..., args...)
+      options.checker.call(this, testContainer, expectedContainer, newArgs..., args...)
       done()
-    options.fn.call(null, testContainer, expectedContainer, newArgs..., args..., next)
+    options.fn.call(this, testContainer, expectedContainer, newArgs..., args..., next)
     next() unless options.async
 
 
 class ScribeEditorTest extends ScribeHtmlTest
+  @DEFAULTS:
+    async         : true
+    ignoreExpect  : true
+
   constructor: (options = {}) ->
-    super
+    @settings = _.defaults(options, ScribeEditorTest.DEFAULTS)
+    super(@settings)
 
   run: (name, options, args...) ->
     it(name, (done) =>
@@ -55,16 +60,13 @@ class ScribeEditorTest extends ScribeHtmlTest
 
   runWithoutIt: (options, args..., done) ->
     console.assert(_.isObject(options), "Invalid options passed into run")
-    options = _.extend({}, @settings, options)
-    savedOptions = _.clone(options)
-    options.initial = '' if Tandem.Delta.isDelta(options.initial)
-    options.expected = '' if Tandem.Delta.isDelta(options.expected)
-    options.async = true
-    testEditor = null
-    expectedEditor = null
-    ignoreExpect = options.ignoreExpect
-    options.fn = (testContainer, expectedContainer, args..., callback) ->
-      async.map([testContainer, expectedContainer], (container, callback) ->
+    @options = _.defaults(options, @settings)
+    testEditor = expectedEditor = null
+    htmlOptions = _.clone(@options)
+    htmlOptions.initial = '' if Tandem.Delta.isDelta(htmlOptions.initial)
+    htmlOptions.expected = '' if Tandem.Delta.isDelta(htmlOptions.expected)
+    htmlOptions.fn = (testContainer, expectedContainer, args..., callback) =>
+      async.map([testContainer, expectedContainer], (container, callback) =>
         editor = new Scribe.Editor(container, 
           onReady: _.once( ->
             _.defer( ->
@@ -72,24 +74,23 @@ class ScribeEditorTest extends ScribeHtmlTest
             )
           )
         )
-      , (err, editors) ->
+      , (err, editors) =>
         [testEditor, expectedEditor] = editors
-        testEditor.setDelta(savedOptions.initial) if Tandem.Delta.isDelta(savedOptions.initial)
-        expectedEditor.setDelta(savedOptions.expected) if Tandem.Delta.isDelta(savedOptions.expected)
-        savedOptions.fn.call(null, testEditor, expectedEditor, args...)
+        testEditor.setDelta(options.initial) if Tandem.Delta.isDelta(@options.initial)
+        expectedEditor.setDelta(options.expected) if Tandem.Delta.isDelta(@options.expected)
+        @options.fn.call(this, testEditor, expectedEditor, args...)
         callback()
       )
-    options.checker = (testContainer, expectedContainer, args...) ->
-      savedOptions.checker.call(null, testEditor, expectedEditor, args...)
-      unless ignoreExpect
+    htmlOptions.checker = (testContainer, expectedContainer, args...) =>
+      @options.checker.call(this, testEditor, expectedEditor, args...)
+      unless @options.ignoreExpect
         testDelta = testEditor.getDelta()
         expectedDelta = expectedEditor.getDelta()
         console.error testDelta, expectedDelta unless testDelta.isEqual(expectedDelta)
         expect(testEditor.getDelta()).to.deep.equal(expectedEditor.getDelta())
         consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
         expect(consistent).to.be.true
-    options.ignoreExpect = true
-    super(options, args..., done)
+    super(htmlOptions, args..., done)
 
     
 
