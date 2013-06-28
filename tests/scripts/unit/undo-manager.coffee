@@ -42,11 +42,8 @@ describe('Undo manager', ->
     }, undoBlueStrikeDelta)
 
     # Multi-user
-    undoTests.run('remove external insert', {
-      fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})
-    }, Tandem.Delta.makeInsertDelta(13, 9, 'hairy ')
-
-    )
+    undoTests.run('remove external insert', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
+      Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
 
     undoTests.run('remove external delete', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
       Tandem.Delta.makeDeleteDelta(13, 4, 5))

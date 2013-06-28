@@ -55,7 +55,8 @@ deleteAt = (index, length) ->
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(this.getLength(), "\n")
+    # Can't do this.insertAt since still within the doAt call, this \n will alreayd be recorded by trackDelta
+    insertAt.call(this, this.getLength(), "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
