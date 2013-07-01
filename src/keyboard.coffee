@@ -32,7 +32,7 @@ class Scribe.Keyboard
       if @hotkeys[event.which]?
         prevent = false
         _.each(@hotkeys[event.which], (hotkey) =>
-          return if hotkey.meta? and event.metaKey != hotkey.meta
+          return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
           return if hotkey.shift? and event.shiftKey != hotkey.shift
           @editor.selection.update(true)
           selection = @editor.getSelection()
