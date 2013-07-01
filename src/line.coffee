@@ -28,7 +28,7 @@ class Scribe.Line extends LinkedList.Node
   buildLeaves: (node, formats) ->
     _.each(node.childNodes, (node) =>
       nodeFormats = _.clone(formats)
-      [formatName, formatValue] = @doc.renderer.getFormat(node)
+      [formatName, formatValue] = @doc.formatManager.getFormat(node)
       nodeFormats[formatName] = formatValue if formatName?
       if Scribe.Leaf.isLeafNode(node)
         @leaves.append(new Scribe.Leaf(this, node, nodeFormats))
@@ -69,18 +69,19 @@ class Scribe.Line extends LinkedList.Node
 
   formatText: (offset, length, name, value) ->
     return if length <= 0
+    format = @doc.formatManager.formats[name]
     if value
       refNode = null
-      formatNode = @doc.renderer.formats[name].createContainer(value)
+      formatNode = @doc.formatManager.createFormatContainer(name, value)
       this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
         formatNode.appendChild(node)
-        Scribe.Utils.removeFormatFromSubtree(@doc.renderer, node, name)
+        Scribe.Utils.removeFormatFromSubtree(node, format)
       )
       @node.insertBefore(formatNode, refNode)
     else
       this.applyToContents(offset, length, (node) =>
-        Scribe.Utils.removeFormatFromSubtree(@doc.renderer, node, name)
+        Scribe.Utils.removeFormatFromSubtree(node, format)
       )
     this.rebuild()
 
@@ -125,7 +126,7 @@ class Scribe.Line extends LinkedList.Node
     @length += 1 if @trailingNewline
     @outerHTML = @node.outerHTML
     @formats = {}
-    [formatName, formatValue] = @doc.renderer.getFormat(@node)
+    [formatName, formatValue] = @doc.formatManager.getFormat(@node)
     @formats[formatName] = formatValue if formatName?
     this.setDirty(false)
     @delta = this.toDelta()

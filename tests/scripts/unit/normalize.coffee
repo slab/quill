@@ -95,8 +95,9 @@ describe('Normalize', ->
   )
 
   describe('normalizeLine', ->
-    renderer = new Scribe.Renderer($('#extra-container').get(0))
-    normalizer = new Scribe.Normalizer(renderer)
+    container = $('#test-container').get(0)
+    formatManager = new Scribe.FormatManager(container)
+    normalizer = new Scribe.Normalizer(container, formatManager)
 
     lineTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->
@@ -173,8 +174,12 @@ describe('Normalize', ->
   )
 
   describe('optimizeLine', ->
-    renderer = new Scribe.Renderer($('#extra-container').get(0))
-    normalizer = new Scribe.Normalizer(renderer)
+    normalizer = null
+    before( ->
+      container = $('#test-container').get(0)
+      formatManager = new Scribe.FormatManager(container)
+      normalizer = new Scribe.Normalizer(container, formatManager)
+    )
 
     lineTest = new Scribe.Test.HtmlTest(
       fn: (container) ->
@@ -263,8 +268,12 @@ describe('Normalize', ->
   )
 
   describe('normalizeTag', ->
-    renderer = new Scribe.Renderer($('#extra-container').get(0))
-    normalizer = new Scribe.Normalizer(renderer)
+    normalizer = null
+    before( ->
+      container = $('#test-container').get(0)
+      formatManager = new Scribe.FormatManager(container)
+      normalizer = new Scribe.Normalizer(container, formatManager)
+    )
 
     attrTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->

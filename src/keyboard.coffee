@@ -32,7 +32,7 @@ class Scribe.Keyboard
       if @hotkeys[event.which]?
         prevent = false
         _.each(@hotkeys[event.which], (hotkey) =>
-          return if hotkey.meta? and event.metaKey != hotkey.meta
+          return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
           return if hotkey.shift? and event.shiftKey != hotkey.shift
           @editor.selection.update(true)
           selection = @editor.getSelection()
@@ -63,7 +63,7 @@ class Scribe.Keyboard
     hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
     hotkey.key = hotkey.key.toUpperCase().charCodeAt(0) if _.isString(hotkey.key)
     hotkey.callback = callback
-    @hotkeys[hotkey.key] = [] unless @hotkeys[hotkey.key]?
+    @hotkeys[hotkey.key] ?= []
     @hotkeys[hotkey.key].push(hotkey)
 
   indent: (selection, increment) ->

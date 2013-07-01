@@ -1,5 +1,5 @@
 listenEditor = (source, target) ->
-  source.on(Scribe.Editor.events.TEXT_CHANGE, (delta) ->
+  source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
     console.info source.id, 'text change', delta
     target.applyDelta(delta)
     sourceDelta = source.doc.toDelta()

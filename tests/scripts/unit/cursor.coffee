@@ -1,13 +1,16 @@
 describe('Cursor', ->
   describe('basic operations', ->
-    initial = '
-      <div><b>Bold</b><i>Italic</i></div>
-      <div><br></br>
-      <div><span style="font-size:18px;">Large</span></div>
-    '
-    $('#test-container').html(Scribe.Utils.cleanHtml(initial, true))
-    editor = new Scribe.Editor('test-container')
-    cursorManager = new Scribe.MultiCursor(editor)
+    cursorManager = null
+    before( ->
+      initial = '
+        <div><b>Bold</b><i>Italic</i></div>
+        <div><br></br>
+        <div><span style="font-size:18px;">Large</span></div>
+      '
+      $('#test-container').html(Scribe.Utils.cleanHtml(initial, true))
+      editor = new Scribe.Editor('test-container')
+      cursorManager = new Scribe.MultiCursor(editor)
+    )
 
     it('should set cursor', ->
       cursorManager.setCursor('id', 2, 'Test', 'red')

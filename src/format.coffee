@@ -131,7 +131,7 @@ class Scribe.Format.Link extends Scribe.Format.Tag
 
 class Scribe.Format.Background extends Scribe.Format.Style
   constructor: (@root) ->
-    colors = _.extend({}, Scribe.Format.Color.COLORS)
+    colors = _.clone(Scribe.Format.Color.COLORS)
     delete colors['white']
     super(@root, 'background', 'background-color', colors, Scribe.Format.Color.matchColor)
 
@@ -175,7 +175,7 @@ class Scribe.Format.Color extends Scribe.Format.Style
     return _.isEqual(color1, color2)
 
   constructor: (@root) ->
-    colors = _.extend({}, Scribe.Format.Color.COLORS)
+    colors = _.clone(Scribe.Format.Color.COLORS)
     delete colors['black']
     super(@root, 'color', 'color', colors, Scribe.Format.Color.matchColor)
 

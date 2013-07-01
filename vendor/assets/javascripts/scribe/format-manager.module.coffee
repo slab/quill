@@ -1,0 +1,1 @@
+../../../../src/format-manager.coffee

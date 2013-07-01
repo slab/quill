@@ -2,7 +2,10 @@ Scribe = require('./scribe')
 Tandem = require('tandem-core')
 
 
-doAt = (fn, options = { internal: true }) ->
+DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
+
+
+doAt = (fn, options) ->
   this.doSilently( =>
     trackDelta.call(this, =>
       fn.call(this)
@@ -24,23 +27,9 @@ initListeners = ->
   onEditOnce = _.once(onEdit)
   @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
 
-preserveSelection = (index, lengthAdded, fn, args...) ->
-  range = this.getSelection()
-  if range?
-    indexes = _.map([range.start, range.end], (pos) ->
-      if index >= pos.index
-        return pos.index
-      else
-        return Math.max(pos.index + lengthAdded, index)
-    )
-    fn.apply(this, args)
-    this.setSelection(new Scribe.Range(this, indexes[0], indexes[1]))
-  else
-    fn.apply(this, args)
-
 deleteAt = (index, length) ->
   return if length <= 0
-  preserveSelection.call(this, index, -1 * length, =>
+  @selection.preserve(index, -1 * length, =>
     [firstLine, offset] = @doc.findLineAtOffset(index)
     curLine = firstLine
     while curLine? and length > 0
@@ -66,18 +55,19 @@ deleteAt = (index, length) ->
 
 forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(this.getLength(), "\n", {}, false)
+    # Can't do this.insertAt since still within the doAt call, this \n will alreayd be recorded by trackDelta
+    insertAt.call(this, this.getLength(), "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 formatAt = (index, length, name, value) ->
-  preserveSelection.call(this, index, 0, =>
+  @selection.preserve(index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
       if Scribe.Line.FORMATS[name]?
         # If newline character is being applied with formatting
         if length > line.length - offset
           line.format(name, value)
-      else if @renderer.formats[name]?
+      else if @doc.formatManager.formats[name]?
         if line.length - offset >= length
           line.formatText(offset, length, name, value)
         else
@@ -91,7 +81,7 @@ formatAt = (index, length, name, value) ->
   )
 
 insertAt = (index, text, formatting = {}) ->
-  preserveSelection.call(this, index, text.length, =>
+  @selection.preserve(index, text.length, =>
     text = text.replace(/\r\n/g, '\n')
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')
@@ -115,7 +105,7 @@ insertAt = (index, text, formatting = {}) ->
     @doc.rebuildDirty()
   )
 
-trackDelta = (fn, options = { internal: true }) ->
+trackDelta = (fn, options) ->
   oldDelta = @doc.toDelta()
   oldIndex = @selection.range?.start.index # We do not want new range value so we do not use getSelection
   fn()
@@ -136,28 +126,34 @@ trackDelta = (fn, options = { internal: true }) ->
     decompose = decomposeA or decomposeB
   compose = oldDelta.compose(decompose)
   console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
-  if !decompose.isIdentity() and options.internal
-    this.emit(Scribe.Editor.events.TEXT_CHANGE, decompose)
+  if !decompose.isIdentity() and !options.silent
+    eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
+    this.emit(eventName, decompose)
   
 
 class Scribe.Editor extends EventEmitter2
   @editors: []
 
   @ID_PREFIX: 'editor-'
-  @CURSOR_PREFIX: 'cursor-'
+
   @DEFAULTS:
     cursor: 0
     enabled: true
     onReady: ->
-    styles: {}
+
+    document: {}
+    renderer: {}
+    undoManager: {}
+
   @events:
+    API_TEXT_CHANGE  : 'api-text-change'
     PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
-    TEXT_CHANGE      : 'text-change'
+    USER_TEXT_CHANGE : 'user-text-change'
 
-  constructor: (@iframeContainer, options) ->
-    @options = _.extend(Scribe.Editor.DEFAULTS, options)
+  constructor: (@iframeContainer, options = {}) ->
+    @options = _.defaults(options, Scribe.Editor.DEFAULTS)
     @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
@@ -175,17 +171,15 @@ class Scribe.Editor extends EventEmitter2
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
-    options = _.clone(@options)
-    options.keepHTML = keepHTML
-    options.id = @id
+    @options.renderer.keepHTML = keepHTML
     @iframeContainer.innerHTML = @root.innerHTML if @root?
-    @renderer = new Scribe.Renderer(@iframeContainer, options)
+    @renderer = new Scribe.Renderer(@iframeContainer, @options.renderer)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root, @renderer)
+    @doc = new Scribe.Document(@root, @options.document)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
-    @undoManager = new Scribe.UndoManager(this)
+    @undoManager = new Scribe.UndoManager(this, @options.undoManager)
     @pasteManager = new Scribe.PasteManager(this)
     @renderer.runWhenLoaded(@options.onReady)
     initListeners.call(this)
@@ -193,6 +187,7 @@ class Scribe.Editor extends EventEmitter2
     Scribe.Editor.editors.push(this)
 
   applyDelta: (delta, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
       return this.setDelta(delta, options)
@@ -201,7 +196,9 @@ class Scribe.Editor extends EventEmitter2
       console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
       oldDelta = @doc.toDelta()
       delta.apply(insertAt, deleteAt, formatAt, this)
-      this.emit(Scribe.Editor.events.TEXT_CHANGE, delta) if options.internal
+      unless options.silent
+        eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
+        this.emit(eventName, delta)
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       forceTrailingNewline.call(this)
@@ -213,6 +210,7 @@ class Scribe.Editor extends EventEmitter2
     super(Scribe.Editor.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>
       deleteAt.call(this, index, length)
       forceTrailingNewline.call(this)
@@ -225,6 +223,7 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   formatAt: (index, length, name, value, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>
       formatAt.call(this, index, length, name, value)
     , options)
@@ -239,15 +238,17 @@ class Scribe.Editor extends EventEmitter2
     return @selection.getRange()
 
   insertAt: (index, text, formatting = {}, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>
       insertAt.call(this, index, text, formatting)
       forceTrailingNewline.call(this)
     , options)
 
-  setDelta: (delta, options = {}) ->
+  setDelta: (delta) ->
     oldLength = delta.startLength
     delta.startLength = this.getLength()
-    this.applyDelta(delta, options)
+    this.applyDelta(delta, { silent: true })
+    @undoManager.clear()
     delta.startLength = oldLength
     
   setSelection: (range, silent = false) ->
@@ -275,7 +276,7 @@ class Scribe.Editor extends EventEmitter2
             newLine = @doc.appendLine(lineNode)
             lineNode = lineNode.nextSibling
         )
-      )
+      , { silent: false, source: 'user' })
     )
 
 

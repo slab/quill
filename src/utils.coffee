@@ -75,11 +75,11 @@ Scribe.Utils =
   isBlock: (node) ->
     return _.indexOf(Scribe.Normalizer.BLOCK_TAGS, node.tagName) > -1
 
-  removeFormatFromSubtree: (renderer, subtree, format) ->
-    if renderer.formats[format].matchContainer(subtree)
+  removeFormatFromSubtree: (subtree, format) ->
+    if format.matchContainer(subtree)
       subtree = Scribe.DOM.unwrap(subtree)
     _.each(subtree.childNodes, (child) ->
-      Scribe.Utils.removeFormatFromSubtree(renderer, child, format)
+      Scribe.Utils.removeFormatFromSubtree(child, format)
     )
     return subtree
 

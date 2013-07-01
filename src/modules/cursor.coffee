@@ -15,7 +15,7 @@ _applyDelta = (delta) ->
 _buildCursor = (userId, name, color) ->
   cursor = @container.ownerDocument.createElement('span')
   cursor.classList.add('cursor')
-  cursor.id = Scribe.Editor.CURSOR_PREFIX + userId
+  cursor.id = Scribe.MultiCursor.ID_PREFIX + userId
   inner = @container.ownerDocument.createElement('span')
   inner.classList.add('cursor-inner')
   nameNode = @container.ownerDocument.createElement('span')
@@ -30,8 +30,7 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop
   cursor.elem.style.left = referenceNode.offsetLeft
   cursorInner = cursor.elem.querySelector('.cursor-inner')
-  cursorName = cursor.elem.querySelector('.cursor-name')
-  cursorInner.style.height = cursorName.style.top = referenceNode.offsetHeight
+  cursorInner.style.height = referenceNode.offsetHeight
   if parseInt(cursor.elem.style.top) <= 5
     cursor.elem.classList.add('top')
   else
@@ -66,6 +65,7 @@ _setCursor = (userId, index, name, color) ->
 
 class Scribe.MultiCursor
   @CURSOR_NAME_TIMEOUT: 2500
+  @ID_PREFIX: 'cursor-'
 
   constructor: (@editor) ->
     @cursors = {}
@@ -103,8 +103,8 @@ class Scribe.MultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta) =>
-      applyDelta.call(@editor, delta)
+    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta, options) =>
+      applyDelta.call(@editor, delta, options)
       _applyDelta.call(this, delta)
     )
 
@@ -132,7 +132,7 @@ class Scribe.MultiCursor
     @cursors = {}
 
   removeCursor: (userId) ->
-    cursor = @editor.root.ownerDocument.getElementById(Scribe.Editor.CURSOR_PREFIX + userId)
+    cursor = @editor.root.ownerDocument.getElementById(Scribe.MultiCursor.ID_PREFIX + userId)
     cursor.parentNode.removeChild(cursor) if cursor?
 
 

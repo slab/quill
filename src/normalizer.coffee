@@ -169,25 +169,25 @@ class Scribe.Normalizer
     )
 
 
-  constructor: (@renderer) ->
+  constructor: (@container, @formatManager) ->
 
   mergeAdjacent: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
       if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'
-          [nodeFormat, nodeValue] = @renderer.getFormat(node)
-          [nextFormat, nextValue] = @renderer.getFormat(next)
+          [nodeFormat, nodeValue] = @formatManager.getFormat(node)
+          [nextFormat, nextValue] = @formatManager.getFormat(next)
           if nodeFormat == nextFormat && nodeValue == nextValue
             node = Scribe.DOM.mergeNodes(node, next)
       return node
     )
 
   normalizeDoc: ->
-    @renderer.root.appendChild(@renderer.root.ownerDocument.createElement('div')) unless @renderer.root.firstChild
-    Scribe.Normalizer.applyRules(@renderer.root)
-    Scribe.Normalizer.breakBlocks(@renderer.root)
-    _.each(@renderer.root.childNodes, (lineNode) =>
+    @container.appendChild(@container.ownerDocument.createElement('div')) unless @container.firstChild
+    Scribe.Normalizer.applyRules(@container)
+    Scribe.Normalizer.breakBlocks(@container)
+    _.each(@container.childNodes, (lineNode) =>
       this.normalizeLine(lineNode)
       this.optimizeLine(lineNode)
     )
@@ -201,9 +201,9 @@ class Scribe.Normalizer
 
   normalizeTags: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
-      [nodeFormat, nodeValue] = @renderer.getFormat(node)
-      if @renderer.formats[nodeFormat]?
-        @renderer.formats[nodeFormat].clean(node)
+      [nodeFormat, nodeValue] = @formatManager.getFormat(node)
+      if @formatManager.formats[nodeFormat]?
+        @formatManager.formats[nodeFormat].clean(node)
       else
         Scribe.DOM.removeAttributes(node)
     )
@@ -221,7 +221,7 @@ class Scribe.Normalizer
       if node.nodeType == node.ELEMENT_NODE
         if Scribe.Utils.getNodeLength(node) == 0
           return node.tagName != 'BR' or node.parentNode.childNodes.length > 1
-        [formatName, formatValue] = @renderer.getFormat(node)
+        [formatName, formatValue] = @formatManager.getFormat(node)
         if formatName?
           return node.parentNode[key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
         else if node.tagName == 'SPAN'
@@ -237,7 +237,7 @@ class Scribe.Normalizer
         node = Scribe.DOM.unwrap(node)
       if node?
         node[key] = _.clone(node.parentNode[key])
-        [formatName, formatValue] = @renderer.getFormat(node)
+        [formatName, formatValue] = @formatManager.getFormat(node)
         node[key][formatName] = formatValue if formatName?
       return node
     )

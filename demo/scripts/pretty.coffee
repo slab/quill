@@ -113,9 +113,9 @@ initToolbar = (editor) ->
 
 $(document).ready( ->
   editor = new Scribe.Editor("editor-container", {
-    styles: {
-      'a': { 'color': '#06c' }
-    }
+    renderer:
+      styles:
+        'a': { 'color': '#06c' }
   })
 
   initToolbar(editor)

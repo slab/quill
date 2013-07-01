@@ -130,13 +130,6 @@ describe('Range', ->
 
 
   describe('getLeafNodes', ->
-    reset = ->
-      $('#test-container').html()
-      editor = new Scribe.Editor('test-container', false)
-      line1 = editor.root.firstChild
-      line2 = editor.root.lastChild
-      return [editor, editor.root, line1, line2]
-
     leafTests = new Scribe.Test.EditorTest(
       initial: [
         '<div><b>123</b><i>456</i></div>'
