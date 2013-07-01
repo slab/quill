@@ -26,6 +26,7 @@ getLastChangeIndex = (delta) ->
 _change = (source, dest) ->
   if @stack[source].length > 0
     change = @stack[source].pop()
+    @lastRecorded = 0
     _ignoreChanges.call(this, =>
       @editor.applyDelta(change[source], { source: 'user' })
       index = getLastChangeIndex(change[source])
