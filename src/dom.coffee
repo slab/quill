@@ -21,7 +21,7 @@ Scribe.DOM =
     if node.classList?
       return node.classList.contains(cssClass)
     else if node.className?
-      return Scribe.DOM.getClasses(node).indexOf(cssClass) > -1
+      return _.indexOf(Scribe.DOM.getClasses(node), cssClass) > -1
     return false
 
   removeClass: (node, cssClass) ->
@@ -30,7 +30,7 @@ Scribe.DOM =
       return node.classList.remove(cssClass)
     else if node.className?
       classArray = Scribe.DOM.getClasses(node)
-      classArray.splice(classArray.indexOf(cssClass), 1)
+      classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
 
   findDeepestNode: (node, offset) ->
