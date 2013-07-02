@@ -6,8 +6,10 @@
     :css
       #expected-container, #test-container {
         float: left;
-        width: 50%;
+        margin-left: 10px;
+        width: 45%;
       }
+      iframe { border: 1px solid gray; }
     %meta{:charset => 'utf-8'}
 
   %body
@@ -31,7 +33,6 @@
     %script{:type => 'text/javascript', :src => '../lib/chai.js'}
     :javascript
       mocha.setup('bdd');
-      mocha.ignoreLeaks();
       expect = chai.expect;
     = yield
     :javascript

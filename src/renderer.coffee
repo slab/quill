@@ -103,7 +103,6 @@ class Scribe.Renderer
     @iframe.frameborder = 0
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
-    window.test = @iframe
     @root = this.getDocument().createElement('div')
     Scribe.DOM.addClass(@root, 'editor')
     @root.id = @options.id
