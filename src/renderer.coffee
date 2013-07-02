@@ -104,27 +104,36 @@ class Scribe.Renderer
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
     window.test = @iframe
-    doc = @iframe.contentWindow.document
-    @root = doc.createElement('div')
+    @root = this.getDocument().createElement('div')
     Scribe.DOM.addClass(@root, 'editor')
     @root.id = @options.id
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
     this.addStyles(@options.styles)
     this.runWhenLoaded( =>
-      @iframe.contentWindow.document.body.appendChild(@root) # Firefox does not like doc.body
+      this.getDocument().body.appendChild(@root)
     )
 
+  getDocument: ->
+    # Firefox does not like us saving a reference to this result so retrieve every time
+    # IE does not have contentWindow
+    return @iframe.document or @iframe.contentWindow.document
+
   runWhenLoaded: (fn) ->
-    return fn.call(this) if @iframe.contentWindow.document.readyState == 'complete'
+    return fn.call(this) if this.getDocument().readyState == 'complete'
     if @callbacks?
       @callbacks.push(fn)
     else
       @callbacks = [fn]
-      @iframe.contentWindow.onload = =>
-        _.each(@callbacks, (callback) =>
-          callback.call(this)
-        )
-        @callbacks = undefined
+      interval = setInterval( =>
+        if this.getDocument().readyState == 'complete'
+          clearInterval(interval)
+          _.defer( =>
+            _.each(@callbacks, (callback) =>
+              callback.call(this)
+            )
+            @callbacks = []
+          )
+      , 100)
 
 
 module.exports = Scribe
