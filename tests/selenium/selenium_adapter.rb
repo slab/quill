@@ -12,9 +12,14 @@ class SeleniumAdapter
   # Assumes delta will contain only one document modifying op
   def apply_delta(delta)
     index = 0
-    delta['ops'].each do |op|
+    delta['ops'].each_with_index do |op, i|
       if op['value']
-        insert_at index, op['value']
+        while op and op['value']
+          insert_at index, op['value']
+          i += 1
+          index += op['value'].length
+          op = delta['ops'][i]
+        end
         break
       elsif op['start'] > index
         delete_length = op['start'] - index
@@ -36,18 +41,6 @@ class SeleniumAdapter
     puts "Inserting #{text} at #{index}"
     move_cursor(index)
     type_text(text)
-    # Remove any prexisting formatting that Scribe applied
-    runs = text.split "\n"
-    run_index = index
-    runs.each do |run|
-      move_cursor(run_index)
-      if run.length > 0
-        highlight run.length
-        remove_active_formatting
-        remove_highlighting
-      end
-      run_index += run.length + 1 # + 1 to account for \n
-    end
     move_cursor index + text.length
   end
 
@@ -70,19 +63,6 @@ class SeleniumAdapter
   def remove_highlighting
     @editor.send_keys [] # Workaround for an issue in Ruby bindings.
     @editor.send_keys [:arrow_right]
-  end
-
-  def remove_active_formatting
-    @driver.switch_to.default_content
-    active_formats = @driver.execute_script("return window.Fuzzer.getActiveFormats()")
-    @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
-    active_formats.each do |format|
-      click_button_from_toolbar(format)
-    end
-    select_from_dropdown('size', 'normal')
-    select_from_dropdown('family', 'san-serif')
-    select_from_dropdown('color', 'black')
-    select_from_dropdown('background', 'white')
   end
 
   def jump_to_start

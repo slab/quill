@@ -22,7 +22,50 @@ $(document).ready( ->
         new window.Tandem.Delta(d.startLength, d.endLength, d.ops)
 
     createRandomDelta: ->
-      window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
+      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
+
+      appendingToLine = (index) ->
+        op = window.Fuzzer.docDelta.getOpsAt(index, 1)
+        return op.length > 0 and _.first(op).value == "\n"
+
+      prependingToLine = (index) ->
+        op = window.Fuzzer.docDelta.getOpsAt(index - 1, 1)
+        return index == 0 or (op.length > 0 and _.first(op).value == "\n")
+
+      getAttrsAt = (index) ->
+        attrs = {}
+        op = _.first(window.Fuzzer.docDelta.getOpsAt(index, 1))
+        attrs = op.attributes if op
+        return attrs
+
+      index = 0
+      for op, opIndex in randomDelta.ops
+        if window.Tandem.Delta.isInsert op
+          precedingAttrs = followingAttrs = {}
+          if appendingToLine(index)
+            precedingAttrs = getAttrsAt(index - 1)
+          else if prependingToLine(index)
+            precedingAttrs = followingAttrs = getAttrsAt(index)
+          else
+            precedingAttrs = getAttrsAt(index - 1)
+            followingAttrs = getAttrsAt(index)
+          chunks = op.value.split("\n")
+          head = _.first(chunks)
+          tail = _.tail(chunks)
+          head = new window.Tandem.InsertOp(head, precedingAttrs)
+          tail = _.map(tail, (elem) ->
+            return new window.Tandem.InsertOp(elem, followingAttrs)
+          )
+          final = [head]
+          for elem in tail
+            final.push(new window.Tandem.InsertOp("\n"))
+            final.push(elem)
+          randomDelta.ops.splice(opIndex, 1, final...)
+          randomDelta.compact()
+          return randomDelta
+        else
+          index += op.getLength()
+      return randomDelta
 
     initializeScribe: ->
       window.editor.setDelta(window.Fuzzer.docDelta)
