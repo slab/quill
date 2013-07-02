@@ -50,7 +50,6 @@ deleteAt = (index, length) ->
       offset = 0
     if firstLine? and !firstLine.trailingNewline
       @doc.mergeLines(firstLine, firstLine.next)
-    @doc.rebuildDirty()
   )
 
 forceTrailingNewline = ->
@@ -77,7 +76,6 @@ formatAt = (index, length, name, value) ->
       length -= (line.length - offset)
       offset = 0
       line = line.next
-    @doc.rebuildDirty()
   )
 
 insertAt = (index, text, formatting = {}) ->
@@ -102,7 +100,6 @@ insertAt = (index, text, formatting = {}) ->
           line.length += 1
       offset = 0
     )
-    @doc.rebuildDirty()
   )
 
 trackDelta = (fn, options) ->

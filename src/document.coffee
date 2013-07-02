@@ -9,17 +9,15 @@ class Scribe.Document
     @formatManager = new Scribe.FormatManager(@root, options)
     @normalizer = new Scribe.Normalizer(@root, @formatManager)
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(@root.innerHTML)
-    this.rebuild()
+    @lines = new LinkedList()
+    @lineMap = {}
+    @normalizer.normalizeDoc()
+    _.each(@root.childNodes, (node) =>
+      this.appendLine(node)
+    )
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
-
-  cleanNode: (lineNode) ->
-    line = this.findLine(lineNode)
-    if line? && this.updateLine(line)
-      lineNode.classList.remove(Scribe.Line.DIRTY_CLASS)
-      return true
-    return false
 
   findLeaf: (node) ->
     lineNode = node.parentNode
@@ -71,31 +69,6 @@ class Scribe.Document
     this.removeLine(lineToMerge)
     line.trailingNewline = lineToMerge.trailingNewline
     line.rebuild()
-
-  rebuild: ->
-    @lines = new LinkedList()
-    @lineMap = {}
-    @normalizer.normalizeDoc()
-    _.each(@root.childNodes, (node) =>
-      this.appendLine(node)
-    )
-
-  rebuildDirty: ->
-    # First and last nodes are always dirty to handle edge cases
-    @root.firstChild.classList.add(Scribe.Line.DIRTY_CLASS) if @root.firstChild?
-    @root.lastChild.classList.add(Scribe.Line.DIRTY_CLASS)  if @root.lastChild?
-    dirtyNodes = _.clone(@root.getElementsByClassName(Scribe.Line.DIRTY_CLASS))
-    _.each((dirtyNodes), (lineNode, index) =>
-      this.cleanNode(lineNode)
-      prevNode = lineNode.previousSibling
-      nextNode = lineNode.nextSibling
-      while prevNode? && prevNode != dirtyNodes[index - 1]
-        this.cleanNode(prevNode)
-        prevNode = prevNode.previousSibling
-      while nextNode? && nextNode != dirtyNodes[index + 1]
-        this.cleanNode(nextNode)
-        nextNode = nextNode.nextSibling
-    )
 
   removeLine: (line) ->
     delete @lineMap[line.id]
