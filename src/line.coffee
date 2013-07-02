@@ -4,7 +4,6 @@ Tandem = require('tandem-core')
 
 class Scribe.Line extends LinkedList.Node
   @CLASS_NAME : 'line'
-  @DIRTY_CLASS: 'dirty'
   @ID_PREFIX  : 'line-'
 
   @FORMATS:
@@ -109,7 +108,7 @@ class Scribe.Line extends LinkedList.Node
 
   rebuild: ->
     if @node.parentNode == @doc.root
-      return false if @outerHTML? && @outerHTML == @node.outerHTML && !@node.classList.contains(Scribe.Line.DIRTY_CLASS)
+      return false if @outerHTML? && @outerHTML == @node.outerHTML
       while @leaves? && @leaves.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
@@ -128,17 +127,9 @@ class Scribe.Line extends LinkedList.Node
     @formats = {}
     [formatName, formatValue] = @doc.formatManager.getFormat(@node)
     @formats[formatName] = formatValue if formatName?
-    this.setDirty(false)
     @delta = this.toDelta()
 
-  setDirty: (isDirty = true) ->
-    if isDirty
-      @node.classList.add(Scribe.Line.DIRTY_CLASS)
-    else
-      @node.classList.remove(Scribe.Line.DIRTY_CLASS)
-
   splitContents: (offset) ->
-    this.setDirty()
     [node, offset] = Scribe.Utils.getChildAtOffset(@node, offset)
     if @node.tagName == 'OL' || @node.tagName == 'UL'
       [node, offset] = Scribe.Utils.getChildAtOffset(node, offset)

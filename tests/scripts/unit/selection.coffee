@@ -1,9 +1,8 @@
 describe('Selection', ->
   findIndexes = (html) ->
-    oldHTML = $('#test-container').html()
     $('#test-container').html(html)
-    editor = new Scribe.Editor('test-container')
-    lines = editor.doc.lines.toArray()
+    doc = new Scribe.Document($('#test-container').get(0))
+    lines = doc.lines.toArray()
     lineIndex = 0
     ret = _.reduce(lines, (indexes, line) ->
       offset = 0
@@ -14,7 +13,6 @@ describe('Selection', ->
       lineIndex += line.length
       return indexes
     , [])
-    $('#test-container').html(oldHTML)
     return ret
 
   describe('findIndexes', (html) ->
