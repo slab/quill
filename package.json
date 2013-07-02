@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "async": "0.2.x",
-    "chai": "1.5.x",
+    "chai": "1.7.x",
     "coffee-script": "1.6.x",
     "commander": "1.1.x",
     "grunt": "0.4.x",
@@ -20,7 +20,7 @@
     "grunt-contrib-sass": "0.2.x",
     "grunt-contrib-watch": "0.3.x",
     "jade": "0.28.x",
-    "mocha": "1.8.x",
+    "mocha": "1.12.x",
     "mocha-phantomjs": "2.0.x",
     "path": "0.4.x"
   },
