@@ -3,11 +3,11 @@ describe('Document', ->
     it('should find correct offset in line', ->
       lines = ['<div><br></div>', '<div><span>12</span></div>', '<div><b>45</b></div>', '<div><br></div>', '<div><br></div>', '<ul><li><span>78</span></li></ul>', '<ul><li><br></li></ul>']
       $('#test-container').html(lines.join(''))
-      editor = new Scribe.Editor('test-container')
-      lines = editor.doc.lines.toArray()
+      doc = new Scribe.Document($('#test-container').get(0))
+      lines = doc.lines.toArray()
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
-          [line, offset] = editor.doc.findLineAtOffset(index)
+          [line, offset] = doc.findLineAtOffset(index)
           expect([line.id, offset]).to.deep.equal([lines[lineIndex].id, indexIndex])
         )
       )
