@@ -2,11 +2,7 @@ describe('Cursor', ->
   describe('basic operations', ->
     cursorManager = null
     before( ->
-      initial = '
-        <div><b>Bold</b><i>Italic</i></div>
-        <div><br></br>
-        <div><span style="font-size:18px;">Large</span></div>
-      '
+      initial = '<div><b>Bold</b><i>Italic</i></div><div><br></br><div><span style="font-size:18px;">Large</span></div>'
       $('#test-container').html(Scribe.Utils.cleanHtml(initial, true))
       editor = new Scribe.Editor('test-container')
       cursorManager = new Scribe.MultiCursor(editor)
@@ -15,7 +11,7 @@ describe('Cursor', ->
     it('should set cursor', ->
       cursorManager.setCursor('id', 2, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
-      expect(cursor.classList.contains('top')).to.be.true
+      expect(Scribe.DOM.hasClass(cursor, 'top')).to.be.true
       inner = cursor.querySelector('.cursor-inner')
       expect(inner.style.backgroundColor).to.equal('red')
       name = cursor.querySelector('.cursor-name')

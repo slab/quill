@@ -106,7 +106,7 @@ class Scribe.Renderer
     window.test = @iframe
     doc = @iframe.contentWindow.document
     @root = doc.createElement('div')
-    @root.classList.add('editor')
+    Scribe.DOM.addClass(@root, 'editor')
     @root.id = @options.id
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
     this.addStyles(@options.styles)

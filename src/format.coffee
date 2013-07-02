@@ -40,12 +40,13 @@ class Scribe.Format.Class extends Scribe.Format.Span
 
   createContainer: (value) ->
     container = super(value)
-    container.classList.add("#{@keyName}-#{value}")
+    Scribe.DOM.addClass(container, "#{@keyName}-#{value}")
     return container
 
   matchContainer: (container) ->
     if super(container)
-      for css in container.classList
+      classList = Scribe.DOM.getClasses(container)
+      for css in classList
         parts = css.split('-')
         if parts.length > 1 and parts[0] == @keyName
           return parts.slice(1).join('-')

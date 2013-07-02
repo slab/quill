@@ -4,6 +4,35 @@ Scribe = require('./scribe')
 Scribe.DOM = 
   NOBREAK_SPACE:  "\uFEFF"
 
+  addClass: (node, cssClass) ->
+    return if Scribe.DOM.hasClass(node, cssClass)
+    if node.classList?
+      node.classList.add(cssClass)
+    else if node.className?
+      node.className += ' ' + cssClass
+
+  getClasses: (node) ->
+    if node.classList
+      return _.clone(node.classList)
+    else if node.className?
+      return node.className.split(' ')
+
+  hasClass: (node, cssClass) ->
+    if node.classList?
+      return node.classList.contains(cssClass)
+    else if node.className?
+      return Scribe.DOM.getClasses(node).indexOf(cssClass) > -1
+    return false
+
+  removeClass: (node, cssClass) ->
+    return unless Scribe.DOM.hasClass(node, cssClass)
+    if node.classList?
+      return node.classList.remove(cssClass)
+    else if node.className?
+      classArray = Scribe.DOM.getClasses(node)
+      classArray.splice(classArray.indexOf(cssClass), 1)
+      node.className = classArray.join(' ')
+
   findDeepestNode: (node, offset) ->
     if node.firstChild?
       for child in _.clone(node.childNodes)

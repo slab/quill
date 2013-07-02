@@ -25,10 +25,10 @@ class Scribe.Attribution
     @editor.renderer.addStyles(styles)
 
   enable: ->
-    @editor.root.classList.add('attribution')
+    Scribe.DOM.addClass(@editor.root, 'attribution')
 
   disable: ->
-    @editor.root.classList.remove('attribution')
+    Scribe.DOM.removeClass(@editor.root, 'attribution')
 
 
 module.exports = Scribe

@@ -14,12 +14,12 @@ _applyDelta = (delta) ->
 
 _buildCursor = (userId, name, color) ->
   cursor = @container.ownerDocument.createElement('span')
-  cursor.classList.add('cursor')
+  Scribe.DOM.addClass(cursor, 'cursor')
   cursor.id = Scribe.MultiCursor.ID_PREFIX + userId
   inner = @container.ownerDocument.createElement('span')
-  inner.classList.add('cursor-inner')
+  Scribe.DOM.addClass(inner, 'cursor-inner')
   nameNode = @container.ownerDocument.createElement('span')
-  nameNode.classList.add('cursor-name')
+  Scribe.DOM.addClass(nameNode, 'cursor-name')
   nameNode.textContent = name
   inner.style.backgroundColor = nameNode.style.backgroundColor = color
   cursor.appendChild(nameNode)
@@ -32,9 +32,9 @@ _moveCursor = (cursor, referenceNode) ->
   cursorInner = cursor.elem.querySelector('.cursor-inner')
   cursorInner.style.height = referenceNode.offsetHeight
   if parseInt(cursor.elem.style.top) <= 5
-    cursor.elem.classList.add('top')
+    Scribe.DOM.addClass(cursor.elem, 'top')
   else
-    cursor.elem.classList.remove('top')
+    Scribe.DOM.removeClass(cursor.elem, 'top')
 
 _setCursor = (userId, index, name, color) ->
   unless @cursors[userId]?
@@ -119,10 +119,10 @@ class Scribe.MultiCursor
 
   setCursor: (userId, index, name, color) ->
     cursor = _setCursor.call(this, userId, index, name, color)
-    cursor.elem.classList.remove('hidden')
+    Scribe.DOM.removeClass(cursor.elem, 'hidden')
     clearTimeout(cursor.timer)
     cursor.timer = setTimeout( =>
-      cursor.elem.classList.add('hidden')
+      Scribe.DOM.addClass(cursor.elem, 'hidden')
       cursor.timer = null
     , Scribe.MultiCursor.CURSOR_NAME_TIMEOUT)
 

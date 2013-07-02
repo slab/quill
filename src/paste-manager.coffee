@@ -5,7 +5,7 @@ Tandem = require('tandem-core')
 class Scribe.PasteManager
   constructor: (@editor) ->
     @container = @editor.root.ownerDocument.createElement('div')
-    @container.classList.add('paste-container')
+    Scribe.DOM.addClass(@container, 'paste-container')
     @container.setAttribute('contenteditable', true)
     @editor.renderer.addStyles(
       '.paste-container':

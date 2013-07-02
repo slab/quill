@@ -14,12 +14,12 @@ class Scribe.Line extends LinkedList.Node
 
 
   @isLineNode: (node) ->
-    return node? && node.classList? && node.classList.contains(Scribe.Line.CLASS_NAME)
+    return node? and Scribe.DOM.hasClass(node, Scribe.Line.CLASS_NAME)
 
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Scribe.Line.ID_PREFIX)
     @node.id = @id
-    @node.classList.add(Scribe.Line.CLASS_NAME)
+    Scribe.DOM.addClass(@node, Scribe.Line.CLASS_NAME)
     @trailingNewline = true
     this.rebuild()
     super(@node)

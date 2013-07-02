@@ -6,7 +6,7 @@ initButtonFormats = ->
     button = @container.querySelector(".#{format}")
     return unless button?
     button.addEventListener('click', =>
-      value = !button.classList.contains('active')
+      value = Scribe.DOM.hasClass(button, 'active')
       @editor.selection.format(format, value, false)
       this.emit(Scribe.Toolbar.events.FORMAT, format, value)
     )
@@ -17,7 +17,7 @@ initLinkFormat = ->
   return unless linkButton?
   linkButton.addEventListener('click', =>
     value = false
-    if !linkButton.classList.contains('active')
+    if !Scribe.DOM.hasClass(linkButton, 'active')
       range = @editor.selection.getRange()
       value = range.getText()
     @editor.selection.format('link', value, false)
@@ -39,7 +39,7 @@ initSelectionListener = ->
   @editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) =>
     formats = selection.getFormats()
     _.each(@container.querySelectorAll('.active'), (button) =>
-      button.classList.remove('active')
+      Scribe.DOM.removeClass(button, 'active')
     )
     _.each(formats, (value, key) =>
       if value?
@@ -49,7 +49,7 @@ initSelectionListener = ->
           value = '' if _.isArray(value)
           elem.value = value
         else
-          elem.classList.add('active')
+          Scribe.DOM.addClass(elem, 'active')
     )
   )
 
