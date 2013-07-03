@@ -115,16 +115,17 @@ class Scribe.Renderer
   getDocument: ->
     # Firefox does not like us saving a reference to this result so retrieve every time
     # IE does not have contentWindow
-    return @iframe.document or @iframe.contentWindow.document
+    return @iframe.document or @iframe.contentWindow?.document
 
   runWhenLoaded: (fn) ->
-    return fn.call(this) if this.getDocument().readyState == 'complete'
+    return fn.call(this) if this.getDocument()?.readyState == 'complete'
     if @callbacks?
       @callbacks.push(fn)
     else
       @callbacks = [fn]
       interval = setInterval( =>
-        if this.getDocument().readyState == 'complete'
+        doc = this.getDocument()
+        if doc?.readyState == 'complete'
           clearInterval(interval)
           _.defer( =>
             _.each(@callbacks, (callback) =>
@@ -132,6 +133,8 @@ class Scribe.Renderer
             )
             @callbacks = []
           )
+        else if !doc
+          clearInterval(interval)
       , 100)
 
 

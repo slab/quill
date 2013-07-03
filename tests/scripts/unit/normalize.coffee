@@ -95,9 +95,12 @@ describe('Normalize', ->
   )
 
   describe('normalizeLine', ->
-    container = $('#test-container').get(0)
-    formatManager = new Scribe.FormatManager(container)
-    normalizer = new Scribe.Normalizer(container, formatManager)
+    normalizer = null
+    before( ->
+      container = $('#test-container').get(0)
+      formatManager = new Scribe.FormatManager(container)
+      normalizer = new Scribe.Normalizer(container, formatManager)
+    )
 
     lineTest = new Scribe.Test.HtmlTest(
       fn: (lineNode) ->
