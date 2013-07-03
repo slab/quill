@@ -11,6 +11,18 @@ Scribe.DOM =
     else if node.className?
       node.className += ' ' + cssClass
 
+  findDeepestNode: (node, offset) ->
+    if node.firstChild?
+      for child in _.clone(node.childNodes)
+        length = Scribe.Utils.getNodeLength(child)
+        if offset < length
+          return Scribe.DOM.findDeepestNode(child, offset)
+        else
+          offset -= length
+      return Scribe.DOM.findDeepestNode(child, offset + length)
+    else
+      return [node, offset]
+
   getClasses: (node) ->
     if node.classList
       return _.clone(node.classList)
@@ -23,27 +35,6 @@ Scribe.DOM =
     else if node.className?
       return _.indexOf(Scribe.DOM.getClasses(node), cssClass) > -1
     return false
-
-  removeClass: (node, cssClass) ->
-    return unless Scribe.DOM.hasClass(node, cssClass)
-    if node.classList?
-      return node.classList.remove(cssClass)
-    else if node.className?
-      classArray = Scribe.DOM.getClasses(node)
-      classArray.splice(_.indexOf(classArray, cssClass), 1)
-      node.className = classArray.join(' ')
-
-  findDeepestNode: (node, offset) ->
-    if node.firstChild?
-      for child in _.clone(node.childNodes)
-        length = Scribe.Utils.getNodeLength(child)
-        if offset < length
-          return Scribe.DOM.findDeepestNode(child, offset)
-        else
-          offset -= length
-      return Scribe.DOM.findDeepestNode(child, offset + length)
-    else
-      return [node, offset]
 
   mergeNodes: (node1, node2) ->
     return node2 if !node1?
@@ -59,10 +50,29 @@ Scribe.DOM =
       newParent.appendChild(child)
     )
 
+  normalize: (node) ->
+    # Credit: Tim Down - http://stackoverflow.com/questions/2023255/node-normalize-crashes-in-ie6
+    child = node.firstChild
+    while (child)
+      if (child.nodeType == 3)
+        while ((nextChild = child.nextSibling) && nextChild.nodeType == 3)
+          child.appendData(nextChild.data)
+          node.removeChild(nextChild)
+      child = child.nextSibling
+
   removeAttributes: (node, exception = null) ->
     _.each(_.clone(node.attributes), (attrNode, value) ->
       node.removeAttribute(attrNode.name) unless exception == attrNode.name
     )
+
+  removeClass: (node, cssClass) ->
+    return unless Scribe.DOM.hasClass(node, cssClass)
+    if node.classList?
+      return node.classList.remove(cssClass)
+    else if node.className?
+      classArray = Scribe.DOM.getClasses(node)
+      classArray.splice(_.indexOf(classArray, cssClass), 1)
+      node.className = classArray.join(' ')
 
   splitAfter: (node, root) ->
     return false if node == root or node.parentNode == root

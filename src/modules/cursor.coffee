@@ -58,7 +58,7 @@ _setCursor = (userId, index, name, color) ->
         leftText.parentNode.appendChild(span)
         _moveCursor.call(this, @cursors[userId], span)
     span.parentNode.removeChild(span)
-    position.leafNode.normalize() if didSplit
+    Scribe.DOM.normalize(position.leafNode) if didSplit
   )
   return @cursors[userId]
 

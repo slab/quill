@@ -160,7 +160,7 @@ class Scribe.Normalizer
     
   @wrapText: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
-      node.normalize()
+      Scribe.DOM.normalize(node)
       if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == lineNode or node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
         Scribe.DOM.wrap(span, node)
