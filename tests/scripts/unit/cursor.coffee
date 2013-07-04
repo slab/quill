@@ -1,6 +1,6 @@
 describe('Cursor', ->
   describe('basic operations', ->
-    cursorManager = null
+    cursorManager = editor = null
     before((done) ->
       initial = '<div><b>Bold</b><i>Italic</i></div><div><br></br><div><span style="font-size:18px;">Large</span></div>'
       $('#test-container').html(Scribe.Utils.cleanHtml(initial, true))
@@ -89,6 +89,16 @@ describe('Cursor', ->
       inner = cursorManager.container.querySelector('.cursor-inner')
       expect(parseInt(inner.style.height)).to.be.gte(18)
       expect(parseInt(inner.style.height)).to.be.lte(21)
+    )
+
+    it('should push cursor', ->
+      cursorManager.setCursor('id', 1, 'Test', 'red')
+      cursor = cursorManager.container.querySelector('.cursor')
+      expect(cursor.style.left).to.equal('9px')
+      editor.insertAt(0, 'A', { bold: true })
+      expect(cursor.style.left).to.equal('18px')
+      expect(parseInt(cursor.style.top)).to.be.gte(0)
+      expect(parseInt(cursor.style.top)).to.be.lte(1)
     )
   )
 )

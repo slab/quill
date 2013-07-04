@@ -2,14 +2,12 @@ Scribe = require('../scribe')
 
 
 _applyDelta = (delta) ->
-  _.defer( =>
-    delta.apply((index, text, formatting) =>
-      this.shiftCursors(index, text.length, formatting['author'])
-    , (index, length) =>
-      this.shiftCursors(index, -1 * length)
-    , (index, length, name, value) =>
-      this.shiftCursors(index, 0)
-    )
+  delta.apply((index, text, formatting) =>
+    this.shiftCursors(index, text.length, formatting['author'])
+  , (index, length) =>
+    this.shiftCursors(index, -1 * length)
+  , (index, length, name, value) =>
+    this.shiftCursors(index, 0)
   )
 
 _buildCursor = (userId, name, color) ->
@@ -103,8 +101,9 @@ class Scribe.MultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.applyDelta = _.wrap(@editor.applyDelta, (applyDelta, delta, options) =>
-      applyDelta.call(@editor, delta, options)
+    @editor.on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
+      _applyDelta.call(this, delta)
+    ).on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
 
