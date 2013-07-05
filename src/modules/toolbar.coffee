@@ -37,10 +37,11 @@ initSelectFormats = ->
 
 initSelectionListener = ->
   @editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) =>
-    formats = selection.getFormats()
     _.each(@container.querySelectorAll('.active'), (button) =>
       Scribe.DOM.removeClass(button, 'active')
     )
+    return unless selection?
+    formats = selection.getFormats()
     _.each(formats, (value, key) =>
       if value?
         elem = @container.querySelector(".#{key}")
