@@ -1,13 +1,28 @@
 Scribe = require('../scribe')
 
 
+getValue = (input) ->
+  if input.tagName == 'SELECT'
+    return input.options[input.selectedIndex].value
+  else if Scribe.DOM.hasClass(input, 'link')
+    if !Scribe.DOM.hasClass(input, 'active')
+      range = @editor.selection.getRange()
+      return range.getText()
+    else
+      return false
+  else
+    return Scribe.DOM.hasClass(input, 'active')
+
 initActiveFormatListener = ->
   @editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) =>
-    formats = selection.getFormats()
     _.each(@container.querySelectorAll('.active'), (button) =>
       Scribe.DOM.removeClass(button, 'active')
     )
-    _.each(formats, (value, key) =>
+    _.each(@container.querySelectorAll('select'), (select) =>
+      select.querySelector('option[selected]').selected = true
+    )
+    return unless selection?
+    _.each(selection.getFormats(), (value, key) =>
       if value?
         elem = @container.querySelector(".#{key}")
         return unless elem?
@@ -19,18 +34,6 @@ initActiveFormatListener = ->
     )
   )
 
-initLinkFormat = ->
-  linkButton = @container.querySelector('.link')
-  return unless linkButton?
-  linkButton.addEventListener('click', =>
-    value = false
-    if !Scribe.DOM.hasClass(linkButton, 'active')
-      range = @editor.selection.getRange()
-      value = range.getText()
-    @editor.selection.format('link', value, false)
-    this.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
-  )
-
 initFormats = ->
   _.each(Scribe.Toolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
@@ -38,8 +41,7 @@ initFormats = ->
       return unless input?
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       input.addEventListener(eventName, =>
-        value = if formatGroup == 'SELECT' then input.options[input.selectedIndex].value else Scribe.DOM.hasClass(input, 'active')
-        @editor.selection.format(format, value, { source: 'user' })
+        @editor.selection.format(format, getValue(input), { source: 'user' })
         this.emit(Scribe.Toolbar.events.FORMAT, format, value)
       )
     )
@@ -48,7 +50,7 @@ initFormats = ->
 
 class Scribe.Toolbar extends EventEmitter2
   @formats:
-    BUTTON: ['bold', 'italic', 'strike', 'underline', 'bullet', 'indent', 'outdent']
+    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'bullet', 'indent', 'outdent']
     SELECT: ['background', 'color', 'family', 'size']
 
   @events:
@@ -57,7 +59,6 @@ class Scribe.Toolbar extends EventEmitter2
   constructor: (@container, @editor) ->
     @container = document.getElementById(@container) if _.isString(@container)
     initFormats.call(this)
-    initLinkFormat.call(this)
     initActiveFormatListener.call(this)
     this.on(Scribe.Toolbar.events.FORMAT, =>
       @editor.root.focus()
