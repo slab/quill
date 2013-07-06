@@ -1,6 +1,18 @@
 Scribe = require('../scribe')
 
 
+enterEditMode = (url) ->
+  url = 'https://' + url unless /^http[s]?:\/\//.test(url)
+  @tooltipInput.value = url
+  Scribe.DOM.addClass(@tooltip, 'editing')
+
+exitEditMode = ->
+  if @tooltipLink.innerText != @tooltipInput.value
+    @tooltipLink.innerText = @tooltipLink.href = @tooltipInput.value
+    @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
+    @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', @tooltipInput.value)
+  Scribe.DOM.removeClass(@tooltip, 'editing')
+
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
@@ -8,6 +20,7 @@ initListeners = ->
   @editor.root.addEventListener('click', (event) =>
     if event.target?.tagName == 'A'
       @tooltipLink.innerText = @tooltipLink.href = event.target.href
+      Scribe.DOM.removeClass(@tooltip, 'editing')
       showTooptip.call(this, event.target, @tooltip.offsetParent, @editor.root)
     else
       hideTooltip.call(this)
@@ -18,15 +31,22 @@ initListeners = ->
       value = false
     else
       range = @editor.selection.getRange()
-      text = range.getText()
-      text = 'https://' + text unless /^http[s]?:\/\//.test(text)
-      @tooltipInput.value = text
+      enterEditMode.call(this, range.getText())
       Scribe.DOM.addClass(@tooltip, 'editing')
       showTooptip.call(this, @editor.selection.getDimensions(), @tooltip.offsetParent, @editor.root)
       @tooltipInput.focus()
     if value?
-      @editor.selection.format(format, value, { source: 'user' })
-      this.emit(Scribe.Toolbar.events.FORMAT, format, value)
+      @editor.selection.format('link', value, { source: 'user' })
+      @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
+  )
+  @tooltipChange.addEventListener('click', =>
+    enterEditMode.call(this, @tooltipLink.innerText)
+  )
+  @tooltipDone.addEventListener('click', =>
+    exitEditMode.call(this)
+  )
+  @tooltipInput.addEventListener('keyup', (event) =>
+    exitEditMode.call(this) if event.which == Scribe.Keyboard.KEYS.ENTER
   )
 
 initTooltip = ->
@@ -76,7 +96,8 @@ showTooptip = (target, offset, limit, subjectDist = 5) ->
 
 
 class Scribe.LinkTooltip
-  constructor: (@button, @editor) ->
+  constructor: (@button, @toolbar) ->
+    @editor = @toolbar.editor
     initTooltip.call(this)
     initListeners.call(this)
 
