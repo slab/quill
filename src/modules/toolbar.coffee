@@ -1,18 +1,6 @@
 Scribe = require('../scribe')
 
 
-getValue = (input) ->
-  if input.tagName == 'SELECT'
-    return input.options[input.selectedIndex].value
-  else if Scribe.DOM.hasClass(input, 'link')
-    if !Scribe.DOM.hasClass(input, 'active')
-      range = @editor.selection.getRange()
-      return range.getText()
-    else
-      return false
-  else
-    return Scribe.DOM.hasClass(input, 'active')
-
 initActiveFormatListener = ->
   @editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) =>
     _.each(@container.querySelectorAll('.active'), (button) =>
@@ -39,9 +27,11 @@ initFormats = ->
     _.each(formats, (format) =>
       input = @container.querySelector(".#{format}")
       return unless input?
+      return new Scribe.LinkTooltip(input, @editor) if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       input.addEventListener(eventName, =>
-        @editor.selection.format(format, getValue(input), { source: 'user' })
+        value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else Scribe.DOM.hasClass(input, 'active')
+        @editor.selection.format(format, value, { source: 'user' })
         this.emit(Scribe.Toolbar.events.FORMAT, format, value)
       )
     )

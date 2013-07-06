@@ -20,12 +20,19 @@ class Scribe.Renderer
     id: 'editor'
     keepHTML: false
     styles:
-      'div.editor': {
-        'bottom': '10px'
+      'html' : { 'height': '100%' }
+      'body': {
+        'cursor': 'text'
         'font-family': "'Helvetica', 'Arial', san-serif"
         'font-size': '13px'
-        'left': '15px'
+        'height': '100%'
         'line-height': '1.154'
+        'margin': '0px'
+        'padding': '0px'
+      }
+      'div.editor': {
+        'bottom': '10px'
+        'left': '15px'
         'outline': 'none'
         'position': 'absolute'
         'right': '15px'
@@ -33,8 +40,6 @@ class Scribe.Renderer
         'top': '10px'
         'white-space': 'pre-wrap'
       }
-      'html' : { 'height': '100%' }
-      'body' : { 'cursor': 'text', 'height': '100%', 'margin': '0px', 'padding': '0px'}
       'div.line:last-child': { 'padding-bottom': '10px' }
       'a'    : { 'text-decoration': 'underline' }
       'b'    : { 'font-weight': 'bold' }

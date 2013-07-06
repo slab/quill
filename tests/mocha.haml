@@ -25,7 +25,7 @@
       %script{:type => 'text/javascript', :src => "../lib/#{lib}.js"}
 
     %script{:type => 'text/javascript', :src => '../src/ext/require.js'}
-    - srcs = ['debug', 'document', 'dom', 'editor', 'format', 'format-manager', 'keyboard', 'leaf-iterator', 'leaf', 'line', 'normalizer', 'paste-manager', 'position', 'range', 'renderer', 'selection', 'undo-manager', 'utils', 'modules/attribution', 'modules/cursor', 'modules/toolbar']
+    - srcs = ['debug', 'document', 'dom', 'editor', 'format', 'format-manager', 'keyboard', 'leaf-iterator', 'leaf', 'line', 'normalizer', 'paste-manager', 'position', 'range', 'renderer', 'selection', 'undo-manager', 'utils', 'modules/attribution', 'modules/cursor', 'modules/link-tooltip', 'modules/toolbar']
     - srcs.each do |src|
       %script{:type => 'text/javascript', :src => "../src/#{src}.js"}
 
