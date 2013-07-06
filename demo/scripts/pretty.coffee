@@ -69,8 +69,8 @@ initLinkEditor = (editor) ->
         editor.update()
   })
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    formats = selection.getFormats()
-    linkTooltip.hide() unless formats['link']?
+    unless selection?.getFormats()['link']?
+      linkTooltip.removeClass('editing').hide()
   )
   _.defer( ->
     linkTooltip.appendTo(editor.doc.root.parentNode)
@@ -99,14 +99,9 @@ initToolbar = (editor) ->
       node = selection.start.leafNode or selection.end.leafNode
       $(node).click() if node?
   )
-  editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    formats = selection.getFormats()
-    _.each(formats, (value, key) =>
-      if _.indexOf(dropkickFormats, key) > -1
-        if _.isArray(value)
-          $("#formatting-container .#{key}").dropkick('set', ' ')
-        else
-          $("#formatting-container .#{key}").val(value).change()
+  editor.on(Scribe.Editor.events.SELECTION_CHANGE, ->
+    $(".formatting-container .family, .formatting-container .size").each((select) ->
+      $(this).dropkick('set', $('option:selected', this).text())
     )
   )
 
