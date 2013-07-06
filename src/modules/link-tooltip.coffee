@@ -7,6 +7,7 @@ hideTooltip = ->
 initListeners = ->
   @editor.root.addEventListener('click', (event) =>
     if event.target?.tagName == 'A'
+      @tooltipLink.innerText = @tooltipLink.href = event.target.href
       showTooptip.call(this, event.target, @tooltip.offsetParent, @editor.root)
     else
       hideTooltip.call(this)
@@ -17,7 +18,10 @@ initListeners = ->
       value = false
     else
       range = @editor.selection.getRange()
-      @tooltipLink.href = @tooltipInput.value = range.getText()
+      text = range.getText()
+      text = 'https://' + text unless /^http[s]?:\/\//.test(text)
+      @tooltipInput.value = text
+      Scribe.DOM.addClass(@tooltip, 'editing')
       showTooptip.call(this, @editor.selection.getDimensions(), @tooltip.offsetParent, @editor.root)
       @tooltipInput.focus()
     if value?
@@ -30,13 +34,15 @@ initTooltip = ->
   @tooltip.id = 'link-tooltip'
   @tooltip.innerHTML =
    '<span class="title">Visit URL:</span>
-    <a class="url" target="_blank" href="about:blank"></a>
+    <a href="#" class="url" target="_blank" href="about:blank"></a>
     <input class="input" type="text">
     <span>&#45;</span>
-    <a class="action">Change</a>'
+    <a href="javascript:;" class="change">Change</a>
+    <a href="javascript:;" class="done">Done</a>'
   @tooltipLink = @tooltip.querySelector('.url')
   @tooltipInput = @tooltip.querySelector('.input')
-  @tooltipAction = @tooltip.querySelector('.action')
+  @tooltipChange = @tooltip.querySelector('.change')
+  @tooltipDone = @tooltip.querySelector('.done')
   @editor.renderer.addStyles(
     '#link-tooltip': {
       'background-color': '#fff'
@@ -48,7 +54,14 @@ initTooltip = ->
     }
     '#link-tooltip a': {
       'cursor': 'pointer'
+      'text-decoration': 'none'
     }
+    '#link-tooltip .input'          : { 'display': 'none' }
+    '#link-tooltip .done'           : { 'display': 'none' }
+    '#link-tooltip.editing .input'  : { 'display': 'inline' }
+    '#link-tooltip.editing .done'   : { 'display': 'inline' }
+    '#link-tooltip.editing .url'    : { 'display': 'none' }
+    '#link-tooltip.editing .change' : { 'display': 'none' }
   )
   @editor.renderer.addContainer(@tooltip)
 
