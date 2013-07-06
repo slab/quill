@@ -9,8 +9,10 @@ enterEditMode = (url) ->
 exitEditMode = ->
   if @tooltipLink.innerText != @tooltipInput.value
     @tooltipLink.innerText = @tooltipLink.href = @tooltipInput.value
+    @editor.setSelection(@savedRange, true)
     @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
     @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', @tooltipInput.value)
+    @editor.setSelection(null, true)
   Scribe.DOM.removeClass(@tooltip, 'editing')
 
 hideTooltip = ->
@@ -18,20 +20,26 @@ hideTooltip = ->
 
 initListeners = ->
   @editor.root.addEventListener('click', (event) =>
-    if event.target?.tagName == 'A'
-      @tooltipLink.innerText = @tooltipLink.href = event.target.href
-      Scribe.DOM.removeClass(@tooltip, 'editing')
-      showTooptip.call(this, event.target, @tooltip.offsetParent, @editor.root)
-    else
-      hideTooltip.call(this)
+    link = event.target
+    while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
+      if link.tagName == 'A'
+        start = new Scribe.Position(@editor, link, 0)
+        end = new Scribe.Position(@editor, link, link.textContent.length)
+        @savedRange = new Scribe.Range(@editor, start, end)
+        @tooltipLink.innerText = @tooltipLink.href = link.href
+        Scribe.DOM.removeClass(@tooltip, 'editing')
+        showTooptip.call(this, link, @tooltip.offsetParent, @editor.root)
+        return
+      link = link.parentNode
+    hideTooltip.call(this)
   )
   @button.addEventListener('click', =>
     value = null
     if Scribe.DOM.hasClass(@button, 'active')
       value = false
     else
-      range = @editor.selection.getRange()
-      enterEditMode.call(this, range.getText())
+      @savedRange = @editor.selection.getRange()
+      enterEditMode.call(this, @savedRange.getText())
       Scribe.DOM.addClass(@tooltip, 'editing')
       showTooptip.call(this, @editor.selection.getDimensions(), @tooltip.offsetParent, @editor.root)
       @tooltipInput.focus()
