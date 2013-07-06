@@ -73,14 +73,7 @@ class Scribe.Selection
 
   getDimensions: ->
     range = this.getNativeRange()
-    return null unless range?
-    bounds = range.getBoundingClientRect()
-    return {
-      offsetHeight: bounds.height
-      offsetLeft: bounds.left
-      offsetTop: bounds.top
-      offsetWidth: bounds.width
-    }
+    return range?.getBoundingClientRect()
     
   getNativeRange: ->
     return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null

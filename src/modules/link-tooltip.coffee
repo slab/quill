@@ -28,7 +28,7 @@ initListeners = ->
         @savedRange = new Scribe.Range(@editor, start, end)
         @tooltipLink.innerText = @tooltipLink.href = link.href
         Scribe.DOM.removeClass(@tooltip, 'editing')
-        showTooptip.call(this, link, @tooltip.offsetParent, @editor.root)
+        showTooptip.call(this, link.getBoundingClientRect())
         return
       link = link.parentNode
     hideTooltip.call(this)
@@ -45,7 +45,7 @@ initListeners = ->
       else
         enterEditMode.call(this, url)
         Scribe.DOM.addClass(@tooltip, 'editing')
-        showTooptip.call(this, @editor.selection.getDimensions(), @tooltip.offsetParent, @editor.root)
+        showTooptip.call(this, @editor.selection.getDimensions())
         @tooltipInput.focus()
     if value?
       @editor.selection.format('link', value, { source: 'user' })
@@ -97,14 +97,19 @@ initTooltip = ->
   )
   @editor.renderer.addContainer(@tooltip)
 
-showTooptip = (target, offset, limit, subjectDist = 5) ->
-  left = target.offsetLeft + offset.offsetLeft + target.offsetWidth/2 - @tooltip.offsetWidth/2
-  left = Math.min(Math.max(offset.offsetLeft, left), limit.offsetWidth + offset.offsetLeft - @tooltip.offsetWidth)
-  top = offset.offsetTop + target.offsetTop + target.offsetHeight + subjectDist
-  if top > offset.offsetHeight - @tooltip.offsetHeight
-    top = target.offsetTop + offset.offsetTop - @tooltip.offsetHeight - subjectDist
+showTooptip = (target, subjectDist = 5) ->
+  tooltip = @tooltip.getBoundingClientRect()
+  tooltipHeight = tooltip.bottom - tooltip.top
+  tooltipWidth = tooltip.right - tooltip.left
+  limit = @editor.root.getBoundingClientRect()
+  left = Math.max(limit.left, target.left + (target.right-target.left)/2 - tooltipWidth/2)
+  if left + tooltipWidth > limit.right and limit.right - tooltipWidth > limit.left
+    left = limit.right - tooltipWidth
+  top = target.bottom + subjectDist
+  if top + tooltipHeight > limit.bottom and target.top - tooltipHeight - subjectDist > limit.top
+    top = target.top - tooltipHeight - subjectDist
   @tooltip.style.left = left
-  @tooltip.style.top = top
+  @tooltip.style.top = top + (@tooltip.offsetTop-tooltip.top)
 
 
 class Scribe.LinkTooltip
