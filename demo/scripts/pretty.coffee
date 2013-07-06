@@ -1,81 +1,3 @@
-curLink = linkTooltip = null
-
-showLinkEditor = (editor, link) ->
-  curLink = link
-  url = $(link).attr('href')
-  $('.url', linkTooltip).text(url).attr('href', url)
-  $('.url-editor', linkTooltip).val(url)
-  linkTooltip.show()
-  offset = $(link).offset()
-  left = offset.left + $(link).width() / 2 - linkTooltip.width() / 2
-  left = Math.min(Math.max(10, left), $(editor.doc.root).width() - linkTooltip.width())
-  top = offset.top + $(link).height() + 5
-  if top > $('#editor-container').height() - linkTooltip.height()
-    top = offset.top - linkTooltip.height() - $(link).height() - 5
-  linkTooltip.css({ left: left, top: top })
-  $('.change', linkTooltip).click()
-
-initLinkEditor = (editor) ->
-  editor.renderer.addStyles(
-    '.link-tooltip':
-      'background-color': '#fff'
-      'border': '1px solid #ccc'
-      'box-shadow': '0px 0px 5px #ddd'
-      'color': '#222'
-      'display': 'none'
-      'font-family': 'Helvetica, Arial, san-serif'
-      'font-size': '13px'
-      'padding': '5px 10px'
-      'position': 'absolute'
-      'white-space': 'nowrap'
-    '.link-tooltip a':
-      'color': '#06c'
-      'cursor': 'pointer'
-    '.link-tooltip .title':
-      'margin-right': '5px'
-    '.link-tooltip .url-editor':
-      'display': 'none'
-    '.link-tooltip.editing .url':
-      'display': 'none'
-    '.link-tooltip.editing .url-editor':
-      'display': 'inline'
-  )
-  linkTooltip = $('.link-tooltip')
-  $(editor.doc.root).on('click', 'a', (event) ->
-    showLinkEditor(editor, this)
-  )
-  $('.url-editor', linkTooltip).keyup((event) ->
-    $('.change', linkTooltip).trigger('click') if event.which == 13
-  )
-  $('.change', linkTooltip).toggler({
-    target: linkTooltip
-    toggleClass: 'editing'
-    before: (event, hasClass) ->
-      if hasClass
-        $('.url-editor', linkTooltip).width($('.url', linkTooltip).width() + 10)
-    after: (event, hasClass) ->
-      if hasClass
-        $('.url-editor', linkTooltip).focus()
-        $('.change', linkTooltip).text('Done')
-      else
-        url = $('.url-editor', linkTooltip).val()
-        url = 'https://' + url unless url.match(/http[s]{0,1}:\/\//)
-        if curLink?
-          $(curLink).attr('href', url)
-          protocol = $(curLink).get(0).protocol
-          $(curLink).attr('about:blank') if $(curLink).get(0).protocol
-        $('.url', linkTooltip).text(url).attr('href', url)
-        $('.change', linkTooltip).text('Change')
-        editor.update()
-  })
-  editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) ->
-    unless selection?.getFormats()['link']?
-      linkTooltip.removeClass('editing').hide()
-  )
-  _.defer( ->
-    linkTooltip.appendTo(editor.doc.root.parentNode)
-  )
-
 initToolbar = (editor) ->
   toolbar = new Scribe.Toolbar('formatting-container', editor)
   dropkickFormats = ['family', 'size']
@@ -111,8 +33,13 @@ $(document).ready( ->
     renderer:
       styles:
         'a': { 'color': '#06c' }
+        '#link-tooltip':
+          'border': '1px solid #ccc'
+          'box-shadow': '0px 0px 5px #ddd'
+          'color': '#222'
+        '#link-tooltip a':
+          'color': '#06c'
   })
 
   initToolbar(editor)
-  initLinkEditor(editor)
 )

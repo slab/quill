@@ -80,6 +80,7 @@ initTooltip = ->
       'background-color': '#fff'
       'border': '1px solid #000'
       'left': '-10000px'
+      'height': '23px'
       'padding': '5px 10px'
       'position': 'absolute'
       'white-space': 'nowrap'
@@ -88,10 +89,14 @@ initTooltip = ->
       'cursor': 'pointer'
       'text-decoration': 'none'
     }
+    '#link-tooltip > a, #link-tooltip > span': {
+      'display': 'inline-block'
+      'line-height': '23px'
+    }
     '#link-tooltip .input'          : { 'display': 'none' }
     '#link-tooltip .done'           : { 'display': 'none' }
-    '#link-tooltip.editing .input'  : { 'display': 'inline' }
-    '#link-tooltip.editing .done'   : { 'display': 'inline' }
+    '#link-tooltip.editing .input'  : { 'display': 'inline-block' }
+    '#link-tooltip.editing .done'   : { 'display': 'inline-block' }
     '#link-tooltip.editing .url'    : { 'display': 'none' }
     '#link-tooltip.editing .change' : { 'display': 'none' }
   )
