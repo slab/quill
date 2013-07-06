@@ -39,10 +39,14 @@ initListeners = ->
       value = false
     else
       @savedRange = @editor.selection.getRange()
-      enterEditMode.call(this, @savedRange.getText())
-      Scribe.DOM.addClass(@tooltip, 'editing')
-      showTooptip.call(this, @editor.selection.getDimensions(), @tooltip.offsetParent, @editor.root)
-      @tooltipInput.focus()
+      url = @savedRange.getText()
+      if /\w+\.\w+/.test(url)
+        value = url
+      else
+        enterEditMode.call(this, url)
+        Scribe.DOM.addClass(@tooltip, 'editing')
+        showTooptip.call(this, @editor.selection.getDimensions(), @tooltip.offsetParent, @editor.root)
+        @tooltipInput.focus()
     if value?
       @editor.selection.format('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
