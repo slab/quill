@@ -137,8 +137,6 @@ class Scribe.Editor extends EventEmitter2
     cursor: 0
     enabled: true
     onReady: ->
-
-    document: {}
     renderer: {}
     undoManager: {}
 
@@ -173,7 +171,7 @@ class Scribe.Editor extends EventEmitter2
     @renderer = new Scribe.Renderer(@iframeContainer, @options.renderer)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root, @options.document)
+    @doc = new Scribe.Document(@root)
     @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
     @undoManager = new Scribe.UndoManager(this, @options.undoManager)

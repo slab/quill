@@ -71,6 +71,10 @@ class Scribe.Selection
     this.update()
     return @range
 
+  getDimensions: ->
+    range = this.getNativeRange()
+    return range?.getBoundingClientRect()
+    
   getNativeRange: ->
     return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
 

@@ -1,31 +1,24 @@
 Scribe = require('./scribe')
 
 
-recursiveDefaults = (options, defaults) ->
-  return options unless _.isObject(defaults)
-  return _.reduce(defaults, (memo, value, key) ->
-    if options[key]?
-      if _.isObject(options[key])
-        memo[key] = recursiveDefaults(options[key], value)
-      else
-        memo[key] = options[key]
-    else
-      memo[key] = value
-    return memo
-  , options)
-
-
 class Scribe.Renderer
   @DEFAULTS:
     id: 'editor'
     keepHTML: false
     styles:
-      'div.editor': {
-        'bottom': '10px'
+      'html' : { 'height': '100%' }
+      'body': {
+        'cursor': 'text'
         'font-family': "'Helvetica', 'Arial', san-serif"
         'font-size': '13px'
-        'left': '15px'
+        'height': '100%'
         'line-height': '1.154'
+        'margin': '0px'
+        'padding': '0px'
+      }
+      'div.editor': {
+        'bottom': '10px'
+        'left': '15px'
         'outline': 'none'
         'position': 'absolute'
         'right': '15px'
@@ -33,8 +26,6 @@ class Scribe.Renderer
         'top': '10px'
         'white-space': 'pre-wrap'
       }
-      'html' : { 'height': '100%' }
-      'body' : { 'cursor': 'text', 'height': '100%', 'margin': '0px', 'padding': '0px'}
       'div.line:last-child': { 'padding-bottom': '10px' }
       'a'    : { 'text-decoration': 'underline' }
       'b'    : { 'font-weight': 'bold' }
@@ -71,9 +62,16 @@ class Scribe.Renderer
 
 
   constructor: (@container, options = {}) ->
-    @options = recursiveDefaults(options, Scribe.Renderer.DEFAULTS)
+    @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
     this.createFrame()
     @formats = {}
+    this.addStyles(Scribe.Renderer.DEFAULTS.styles)
+    # Ensure user specified styles are added last
+    this.runWhenLoaded( =>
+      _.defer( =>
+        this.addStyles(options.styles) if options.styles?
+      )
+    )
 
   addContainer: (container, before = false) ->
     this.runWhenLoaded( =>
@@ -107,7 +105,6 @@ class Scribe.Renderer
     Scribe.DOM.addClass(@root, 'editor')
     @root.id = @options.id
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
-    this.addStyles(@options.styles)
     this.runWhenLoaded( =>
       this.getDocument().body.appendChild(@root)
     )

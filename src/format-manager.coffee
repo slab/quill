@@ -2,13 +2,11 @@ Scribe = require('./scribe')
 
 
 class Scribe.FormatManager
-  @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
+  @FORMATS: ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
 
-  constructor: (@container, options = {}) ->
-    @options = _.defaults(options, Scribe.FormatManager.DEFAULTS)
+  constructor: (@container) ->
     @formats = {}
-    _.each(@options.formats, (formatName) =>
+    _.each(Scribe.FormatManager.FORMATS, (formatName) =>
       className = formatName[0].toUpperCase() + formatName.slice(1)
       this.addFormat(formatName, new Scribe.Format[className](@container))
     )
