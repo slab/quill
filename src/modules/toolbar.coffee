@@ -6,17 +6,11 @@ initActiveFormatListener = ->
     _.each(@container.querySelectorAll('.active'), (button) =>
       Scribe.DOM.removeClass(button, 'active')
     )
-<<<<<<< HEAD
-    return unless selection?
-    formats = selection.getFormats()
-    _.each(formats, (value, key) =>
-=======
     _.each(@container.querySelectorAll('select'), (select) =>
       select.querySelector('option[selected]').selected = true
     )
     return unless selection?
     _.each(selection.getFormats(), (value, key) =>
->>>>>>> link
       if value?
         elem = @container.querySelector(".#{key}")
         return unless elem?
