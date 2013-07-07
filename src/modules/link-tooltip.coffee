@@ -93,7 +93,7 @@ initTooltip = ->
       'display': 'inline-block'
       'line-height': '23px'
     }
-    '#link-tooltip .input'          : { 'display': 'none' }
+    '#link-tooltip .input'          : { 'display': 'none', 'width': '170px' }
     '#link-tooltip .done'           : { 'display': 'none' }
     '#link-tooltip.editing .input'  : { 'display': 'inline-block' }
     '#link-tooltip.editing .done'   : { 'display': 'inline-block' }

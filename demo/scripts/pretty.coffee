@@ -39,6 +39,10 @@ $(document).ready( ->
           'color': '#222'
         '#link-tooltip a':
           'color': '#06c'
+        '#link-tooltip .input':
+          'border': '1px solid #ccc'
+          'margin': '0px'
+          'padding': '3px'
   })
 
   initToolbar(editor)
