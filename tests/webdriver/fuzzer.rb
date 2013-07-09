@@ -117,7 +117,7 @@ unless ARGV.length == 1 or ARGV.length == 2
 end
 browserdriver = ARGV[0].to_sym
 replay_file = ARGV[1]
-editor_url = "file://#{File.join(File.expand_path(__FILE__), '../../..', 'build/tests/fuzzer.html')}"
+editor_url = "file://#{File.join(File.expand_path(__FILE__), '../../..', 'build/tests/webdriver.html')}"
 if browserdriver == :firefox
   profile = Selenium::WebDriver::Firefox::Profile.new
   profile.native_events = true
