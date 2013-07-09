@@ -31,5 +31,8 @@ firefox-replay:
 test:
 	@mocha-phantomjs build/tests/test.html
 
+testem:
+	@./node_modules/.bin/testem ci
+
 unit:
 	@mocha-phantomjs build/tests/unit.html
