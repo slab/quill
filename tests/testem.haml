@@ -1,0 +1,37 @@
+!!! 5
+%html
+  %head
+    %title Stypi Editor Testem Tests
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/mocha.css'}
+    :css
+      #expected-container, #test-container {
+        float: left;
+        margin-left: 10px;
+        width: 45%;
+      }
+      iframe { border: 1px solid gray; }
+    %meta{:charset => 'utf-8'}
+
+  %body
+    #mocha
+    #test-container
+    #expected-container
+
+    // Need to separate files for code coverage
+    %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
+
+    - libs = ['async', 'underscore', 'eventemitter2', 'linked_list', 'tandem-core']
+    - libs.each do |lib|
+      %script{:type => 'text/javascript', :src => "../lib/#{lib}.js"}
+
+    %script{:type => 'text/javascript', :src => "../scribe.js"}
+
+    %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
+    %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+    %script{:type => 'text/javascript', :src => '/testem.js'}
+    :javascript
+      mocha.setup('bdd');
+      expect = chai.expect;
+    %script{:type => 'text/javascript', :src => 'scripts/unit.js'}
+    :javascript
+      mocha.run();

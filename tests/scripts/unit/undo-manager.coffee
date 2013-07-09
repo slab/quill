@@ -8,9 +8,9 @@ describe('Undo manager', ->
       checker: (editor, expectedEditor, delta) ->
         beforeDelta = editor.getDelta()
         editor.undoManager.undo()
-        expect(editor.getDelta()).to.deep.equal(@options.initial)
+        expect(editor.getDelta().isEqual(@options.initial)).to.be.true
         editor.undoManager.redo()
-        expect(editor.getDelta()).to.deep.equal(beforeDelta)
+        expect(editor.getDelta().isEqual(beforeDelta)).to.be.true
     )
 
     undoTests.run('insert', {}, Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))

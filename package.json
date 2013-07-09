@@ -22,7 +22,8 @@
     "jade": "0.28.x",
     "mocha": "1.12.x",
     "mocha-phantomjs": "2.0.x",
-    "path": "0.4.x"
+    "path": "0.4.x",
+    "testem": "0.3.x"
   },
   "engine": {
     "node": ">=0.8"
