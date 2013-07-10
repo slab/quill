@@ -2,7 +2,7 @@ Scribe = require('../scribe')
 
 
 enterEditMode = (url) ->
-  url = 'https://' + url unless /^http[s]?:\/\//.test(url)
+  url = 'http://' + url unless /^http[s]?:\/\//.test(url)
   @tooltipInput.value = url
   Scribe.DOM.addClass(@tooltip, 'editing')
 
