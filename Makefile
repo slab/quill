@@ -13,9 +13,6 @@ coverage:
 	@mv tmp/backup/* build/src/
 	@rm -rf tmp
 
-editor-test: 
-	@mocha-phantomjs build/tests/editor.html
-
 chrome:
 	@ruby tests/selenium/fuzzer.rb chrome
 
@@ -29,6 +26,12 @@ firefox-replay:
 	@ruby tests/selenium/fuzzer.rb firefox $(replay_file)
 
 test:
+	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html
+
+test-editor: 
+	@mocha-phantomjs build/tests/editor.html
+
+test-all:
 	@./node_modules/.bin/mocha-phantomjs build/tests/test.html
 
 testem:
@@ -36,6 +39,3 @@ testem:
 
 testem-remote:
 	@./node_modules/.bin/testem -f tests/testem/remote.json ci -P 4
-
-unit:
-	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html
