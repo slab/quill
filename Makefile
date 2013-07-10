@@ -8,13 +8,10 @@ coverage:
 	@mv build/src/* tmp/backup/
 	@jscoverage tmp/backup/ tmp/coverage/
 	@mv tmp/coverage/* build/src/
-	@mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
+	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
 	@rm -rf build/src/*
 	@mv tmp/backup/* build/src/
 	@rm -rf tmp
-
-editor-test: 
-	@mocha-phantomjs build/tests/editor.html
 
 chrome:
 	@ruby tests/selenium/fuzzer.rb chrome
@@ -29,7 +26,16 @@ firefox-replay:
 	@ruby tests/selenium/fuzzer.rb firefox $(replay_file)
 
 test:
-	@mocha-phantomjs build/tests/test.html
+	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html
 
-unit:
-	@mocha-phantomjs build/tests/unit.html
+test-editor: 
+	@mocha-phantomjs build/tests/editor.html
+
+test-all:
+	@./node_modules/.bin/mocha-phantomjs build/tests/test.html
+
+testem:
+	@./node_modules/.bin/testem -f tests/testem/local.json ci -P 4
+
+testem-remote:
+	@./node_modules/.bin/testem -f tests/testem/remote.json ci -P 4

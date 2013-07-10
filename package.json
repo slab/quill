@@ -1,12 +1,14 @@
 {
   "name": "scribe",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "dependencies": {
     "tandem-core" : "git+ssh://git@github.com:stypi/tandem-core.git#v0.3.3",
     "underscore"  : "1.4.x"
   },
   "devDependencies": {
     "async": "0.2.x",
+    "browserstack": "0.2.x",
+    "browserstack-cli": "git+ssh://git@github.com:stypi/browserstack-cli.git#master",
     "chai": "1.7.x",
     "coffee-script": "1.6.x",
     "commander": "1.1.x",
@@ -21,8 +23,9 @@
     "grunt-contrib-watch": "0.3.x",
     "jade": "0.28.x",
     "mocha": "1.12.x",
-    "mocha-phantomjs": "2.0.x",
-    "path": "0.4.x"
+    "mocha-phantomjs": "3.1.x",
+    "path": "0.4.x",
+    "testem": "0.3.x"
   },
   "engine": {
     "node": ">=0.8"

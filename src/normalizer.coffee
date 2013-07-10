@@ -206,6 +206,7 @@ class Scribe.Normalizer
         @formatManager.formats[nodeFormat].clean(node)
       else
         Scribe.DOM.removeAttributes(node)
+      return node
     )
 
   optimizeLine: (lineNode) ->

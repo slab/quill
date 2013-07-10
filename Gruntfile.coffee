@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.6.4'
+      version: '0.6.5'
 
     clean: ['build']
 
@@ -91,7 +91,7 @@ module.exports = (grunt) ->
       tests:
         expand: true
         dest: 'build/'
-        src: ['tests/*.haml', '!tests/mocha.haml']
+        src: ['tests/*.haml', 'tests/testem/*.haml', '!tests/mocha.haml']
         ext: ['.html']
 
     sass:

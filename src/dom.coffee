@@ -60,9 +60,10 @@ Scribe.DOM =
           node.removeChild(nextChild)
       child = child.nextSibling
 
-  removeAttributes: (node, exception = null) ->
+  removeAttributes: (node, exception = []) ->
+    exception = [exception] if _.isString(exception)
     _.each(_.clone(node.attributes), (attrNode, value) ->
-      node.removeAttribute(attrNode.name) unless exception == attrNode.name
+      node.removeAttribute(attrNode.name) unless _.indexOf(exception, attrNode.name) > -1
     )
 
   removeClass: (node, cssClass) ->
