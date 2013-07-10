@@ -34,5 +34,8 @@ test:
 testem:
 	@./node_modules/.bin/testem -f tests/testem/local.json ci -P 4
 
+testem-remote:
+	@./node_modules/.bin/testem -f tests/testem/remote.json ci -P 4
+
 unit:
 	@mocha-phantomjs build/tests/unit.html

@@ -103,6 +103,22 @@ Visit build/tests/unit.html to run unit tests or run:
     
     make unit
 
+### Browser Testing
+
+You can run the unit tests on all browsers on your machine by running:
+
+    make testem
+
+You can also test on different operating systems or browsers not installed on your computer. To set this up run:
+
+    ./node_modules/.bin/browserstack setup
+    Username: StypiAPIUser
+    Password: tandemtype
+    Tunnel private key:
+    Tunnel API key: m2LGGyTRgKd453bAQhcb
+
+To be clear the tunnel private key should be left blank.
+
 ### Code Coverage
 
 Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and run
