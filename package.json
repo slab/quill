@@ -23,7 +23,7 @@
     "grunt-contrib-watch": "0.3.x",
     "jade": "0.28.x",
     "mocha": "1.12.x",
-    "mocha-phantomjs": "2.0.x",
+    "mocha-phantomjs": "3.1.x",
     "path": "0.4.x",
     "testem": "0.3.x"
   },
