@@ -32,7 +32,7 @@ test:
 	@mocha-phantomjs build/tests/test.html
 
 testem:
-	@./node_modules/.bin/testem ci
+	@./node_modules/.bin/testem -f tests/testem/local.json ci -P 4
 
 unit:
 	@mocha-phantomjs build/tests/unit.html

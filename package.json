@@ -7,6 +7,8 @@
   },
   "devDependencies": {
     "async": "0.2.x",
+    "browserstack": "0.2.x",
+    "browserstack-cli": "0.2.x",
     "chai": "1.7.x",
     "coffee-script": "1.6.x",
     "commander": "1.1.x",

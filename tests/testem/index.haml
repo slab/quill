@@ -2,7 +2,7 @@
 %html
   %head
     %title Stypi Editor Testem Tests
-    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../lib/mocha.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../lib/mocha.css'}
     :css
       #expected-container, #test-container {
         float: left;
@@ -22,16 +22,16 @@
 
     - libs = ['async', 'underscore', 'eventemitter2', 'linked_list', 'tandem-core']
     - libs.each do |lib|
-      %script{:type => 'text/javascript', :src => "../lib/#{lib}.js"}
+      %script{:type => 'text/javascript', :src => "../../lib/#{lib}.js"}
 
-    %script{:type => 'text/javascript', :src => "../scribe.js"}
+    %script{:type => 'text/javascript', :src => "../../scribe.js"}
 
-    %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
-    %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+    %script{:type => 'text/javascript', :src => '../../lib/mocha.js'}
+    %script{:type => 'text/javascript', :src => '../../lib/chai.js'}
     %script{:type => 'text/javascript', :src => '/testem.js'}
     :javascript
       mocha.setup('bdd');
       expect = chai.expect;
-    %script{:type => 'text/javascript', :src => 'scripts/unit.js'}
+    %script{:type => 'text/javascript', :src => '../scripts/unit.js'}
     :javascript
       mocha.run();

@@ -91,7 +91,7 @@ module.exports = (grunt) ->
       tests:
         expand: true
         dest: 'build/'
-        src: ['tests/*.haml', '!tests/mocha.haml']
+        src: ['tests/*.haml', 'tests/testem/*.haml', '!tests/mocha.haml']
         ext: ['.html']
 
     sass:
