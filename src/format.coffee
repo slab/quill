@@ -118,6 +118,9 @@ class Scribe.Format.Link extends Scribe.Format.Tag
   constructor: (@root) ->
     super(@root, 'link', 'A')
 
+  clean: (node) ->
+    Scribe.DOM.removeAttributes(node, ['href', 'title'])
+
   createContainer: (value) ->
     link = super(value)
     value = 'https://' + value unless value.match(/https?:\/\//)
