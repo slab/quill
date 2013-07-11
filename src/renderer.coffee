@@ -9,7 +9,7 @@ class Scribe.Renderer
       'html' : { 'height': '100%' }
       'body': {
         'cursor': 'text'
-        'font-family': "'Helvetica', 'Arial', san-serif"
+        'font-family': "'Helvetica', 'Arial', sans-serif"
         'font-size': '13px'
         'height': '100%'
         'line-height': '1.154'
