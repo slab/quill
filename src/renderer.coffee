@@ -68,10 +68,8 @@ class Scribe.Renderer
     this.addStyles(Scribe.Renderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     this.runWhenLoaded( =>
-      _.defer( =>
-        this.addStyles(options.styles) if options.styles?
-      )
-    )
+      this.addStyles(options.styles) if options.styles?
+    , -10)
 
   addContainer: (container, before = false) ->
     this.runWhenLoaded( =>
@@ -114,21 +112,26 @@ class Scribe.Renderer
     # IE does not have contentWindow
     return @iframe.document or @iframe.contentWindow?.document
 
-  runWhenLoaded: (fn) ->
+  runWhenLoaded: (fn, priority = 0) ->
     return fn.call(this) if this.getDocument()?.readyState == 'complete'
     if @callbacks?
-      @callbacks.push(fn)
+      @callbacks[priority] ?= []
+      @callbacks[priority].push(fn)
     else
-      @callbacks = [fn]
+      @callbacks = {}
+      @callbacks[priority] = [fn]
       interval = setInterval( =>
         doc = this.getDocument()
         if doc?.readyState == 'complete'
           clearInterval(interval)
           _.defer( =>
-            _.each(@callbacks, (callback) =>
-              callback.call(this)
+            keys = _.keys(@callback).sort((a,b) -> b - a)
+            _.each(keys, (key) ->
+              _.each(@callbacks[key], (callback) =>
+                callback.call(this)
+              )
             )
-            @callbacks = []
+            @callbacks = {}
           )
         else if !doc
           clearInterval(interval)

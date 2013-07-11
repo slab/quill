@@ -70,34 +70,34 @@ class Scribe.MultiCursor
     @container = @editor.root.ownerDocument.createElement('div')
     @container.id = 'cursor-container'
     @editor.renderer.addContainer(@container, true)
+    @editor.renderer.addStyles({
+      '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
+      '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
+      '.cursor-name': {
+        'font-family': "'Helvetica', 'Arial', san-serif"
+        'font-size': '13px'
+        'border-bottom-right-radius': '3px'
+        'border-top-left-radius': '3px'
+        'border-top-right-radius': '3px'
+        'color': 'white'
+        'display': 'inline-block'
+        'left': '-1px'
+        'line-height': '1.154'
+        'padding': '2px 8px'
+        'position': 'absolute'
+        'top': '-18px'
+        'white-space': 'nowrap'
+      }
+      '.cursor.hidden .cursor-name': { 'display': 'none' }
+      '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
+      '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
+    })
     @editor.renderer.runWhenLoaded( =>
       _.defer( =>
         @container.style.top = @editor.root.offsetTop
         @container.style.left = @editor.root.offsetLeft
-        @editor.renderer.addStyles({
-          '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
-          '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
-          '.cursor-name': {
-            'font-family': "'Helvetica', 'Arial', san-serif"
-            'font-size': '13px'
-            'border-bottom-right-radius': '3px'
-            'border-top-left-radius': '3px'
-            'border-top-right-radius': '3px'
-            'color': 'white'
-            'display': 'inline-block'
-            'left': '-1px'
-            'line-height': '1.154'
-            'padding': '2px 8px'
-            'position': 'absolute'
-            'top': '-18px'
-            'white-space': 'nowrap'
-          }
-          '.cursor.hidden .cursor-name': { 'display': 'none' }
-          '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
-          '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
-        })
       )
-    )
+    , -20)
     this.initListeners()
 
   initListeners: ->
