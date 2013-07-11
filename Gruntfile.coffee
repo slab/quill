@@ -76,6 +76,7 @@ module.exports = (grunt) ->
           dest: 'build/scribe.all.js'
           src: [
             'node_modules/underscore/underscore.js'
+            'vendor/assets/javascripts/rangy-core.js'
             'vendor/assets/javascripts/eventemitter2.js'
             'vendor/assets/javascripts/linked_list.js'
             'build/src/ext/header.js'
@@ -86,7 +87,10 @@ module.exports = (grunt) ->
       scribe:
         files: [{ 
           dest: 'build/scribe.js'
-          src: ['build/scribe.js']
+          src: [
+            'vendor/assets/javascripts/rangy-core.js'
+            'build/scribe.js'
+          ]
         }]
 
     haml:
