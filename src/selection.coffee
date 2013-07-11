@@ -35,13 +35,12 @@ _preserveWithLine = (nativeRange, fn) ->
 
 
 class Scribe.Selection
-  @SAVED_CLASS = 'saved-selection'
-
   constructor: (@editor) ->
     @range = null
     this.initListeners()
     @editor.renderer.runWhenLoaded( =>
-      @nativeSelection = @editor.contentWindow.getSelection()
+      rangy.init()
+      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe)
       this.setRange(new Scribe.Range(@editor, 0, 0))    # Range gets set to end of doc in Firefox by default
     )
 
@@ -72,10 +71,11 @@ class Scribe.Selection
     return @range
 
   getDimensions: ->
-    range = this.getNativeRange()
-    return range?.getBoundingClientRect()
+    nativeRange = this.getNativeRange()
+    return nativeRange?.getBoundingClientRect()
     
   getNativeRange: ->
+    @nativeSelection.refresh()
     return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
 
   getRange: ->
@@ -98,16 +98,17 @@ class Scribe.Selection
     this.update(true)
     return if range == @range or @range?.equals(range)
     @range = range
-    @nativeSelection.removeAllRanges()
     if @range?
-      nativeRange = @editor.root.ownerDocument.createRange()
+      nativeRange = rangy.createRangyRange()
       _.each([@range.start, @range.end], (pos, i) ->
         [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
         offset = Math.min(node.textContent.length, offset) # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )
-      @nativeSelection.addRange(nativeRange)
+      @nativeSelection.setSingleRange(nativeRange)
+    else
+      @nativeSelection.removeAllRanges()
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
 
   update: (silent = false) ->
