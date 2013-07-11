@@ -43,6 +43,7 @@ module.exports = (grunt) ->
 
     coffeeify:
       options:
+        extensions: ['.js', '.coffee']
         requires: ['tandem-core']
       src:
         files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
