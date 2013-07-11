@@ -49,30 +49,11 @@ module.exports = (grunt) ->
       tandem_wrapper:
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
 
-    concat:
-      options:
-        banner:
-          '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-          ' *  https://www.stypi.com/\n' +
-          ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
-          ' *  Jason Chen, Salesforce.com\n' +
-          ' */\n\n'
-      scribe:
-        files: [{ 
-          dest: 'build/scribe.all.js'
-          src: [
-            'node_modules/underscore/underscore.js',
-            'vendor/assets/javascripts/eventemitter2.js',
-            'vendor/assets/javascripts/linked_list.js',
-            'build/scribe.js'
-          ]
-        }]
-
     copy:
       build:
         expand: true
         dest: 'build/'
-        src: ['tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+        src: ['src/ext/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'
@@ -81,6 +62,32 @@ module.exports = (grunt) ->
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'build/lib/'
         src: ['*.js']
+
+    concat:
+      options:
+        banner:
+          '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+          ' *  https://www.stypi.com/\n' +
+          ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
+          ' *  Jason Chen, Salesforce.com\n' +
+          ' */\n\n'
+      scribe_all:
+        files: [{
+          dest: 'build/scribe.all.js'
+          src: [
+            'node_modules/underscore/underscore.js'
+            'vendor/assets/javascripts/eventemitter2.js'
+            'vendor/assets/javascripts/linked_list.js'
+            'build/src/ext/header.js'
+            'build/scribe.js'
+            'build/src/ext/footer.js'
+          ]
+        }]
+      scribe:
+        files: [{ 
+          dest: 'build/scribe.js'
+          src: ['build/scribe.js']
+        }]
 
     haml:
       demo:
@@ -116,10 +123,10 @@ module.exports = (grunt) ->
         tasks: ['sass:demo']
       src:
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffee:src', 'coffeeify:src', 'concat:scribe', 'copy:build']
+        tasks: ['coffee:src', 'coffeeify:src', 'concat', 'copy:build']
       test:
         files: ['tests/scripts/**/*.coffee']
         tasks: ['coffee:test']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'coffeeify', 'concat', 'copy', 'haml', 'sass']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'coffeeify', 'concat', 'haml', 'sass']
