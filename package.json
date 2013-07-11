@@ -7,7 +7,6 @@
   },
   "devDependencies": {
     "async": "0.2.x",
-    "browserstack": "0.2.x",
     "browserstack-cli": "git+ssh://git@github.com:stypi/browserstack-cli.git#master",
     "chai": "1.7.x",
     "coffee-script": "1.6.x",
