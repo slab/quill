@@ -125,8 +125,8 @@ class Scribe.Renderer
         if doc?.readyState == 'complete'
           clearInterval(interval)
           _.defer( =>
-            keys = _.keys(@callback).sort((a,b) -> b - a)
-            _.each(keys, (key) ->
+            keys = _.keys(@callbacks).sort((a,b) -> b - a)
+            _.each(keys, (key) =>
               _.each(@callbacks[key], (callback) =>
                 callback.call(this)
               )
