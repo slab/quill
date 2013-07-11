@@ -117,7 +117,9 @@ You can also test on different operating systems or browsers not installed on yo
     Tunnel private key:
     Tunnel API key: m2LGGyTRgKd453bAQhcb
 
-To be clear the tunnel private key should be left blank.
+To be clear the tunnel private key should be left blank. Then to run on the remote browsers run:
+
+    make testem-remote
 
 ### Code Coverage
 
