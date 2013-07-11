@@ -18,7 +18,7 @@ _preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
       return Math.max(pos.index + lengthAdded, index)
   )
   fn.call(null)
-  this.setRange(new Scribe.Range(@editor, indexes[0], indexes[1]))
+  this.setRange(new Scribe.Range(@editor, indexes[0], indexes[1]), true)
 
 _preserveWithLine = (nativeRange, fn) ->
   startLineNode = Scribe.Utils.findAncestor(nativeRange.startContainer, Scribe.Line.isLineNode)
@@ -31,7 +31,7 @@ _preserveWithLine = (nativeRange, fn) ->
   if !_.isEqual(_.clone(nativeRange), savedNativeRange)
     start = new Scribe.Position(@editor, startLineNode, startOffset)
     end = new Scribe.Position(@editor, endLineNode, endOffset)
-    this.setRange(new Scribe.Range(@editor, start, end))
+    this.setRange(new Scribe.Range(@editor, start, end), true)
 
 
 class Scribe.Selection
