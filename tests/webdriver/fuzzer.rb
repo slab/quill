@@ -3,7 +3,7 @@ require 'colorize'
 require 'highline'
 require 'selenium-webdriver'
 require 'json'
-require_relative 'selenium_adapter'
+require_relative 'lib/webdriver_adapter'
 
 NUM_EDITS = 500
 

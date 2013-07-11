@@ -1,7 +1,3 @@
-# Set up webdriver
-# Set up editor
-# Make an insert test
-
 require "minitest/autorun"
 require "minitest/pride"
 require "minitest/reporters"

@@ -1,4 +1,4 @@
-class SeleniumAdapter
+class WebdriverAdapter
 
   attr_accessor :doc_length, :cursor_pos
 
@@ -66,7 +66,7 @@ class SeleniumAdapter
   end
 
   def jump_to_start
-    os = SeleniumAdapter.os()
+    os = WebdriverAdapter.os()
     if os == :windows or os == :linux
       key = :home
     elsif os == :macosx
@@ -202,5 +202,5 @@ class SeleniumAdapter
       return :command
     end
   end
-  @@cmd_modifier = SeleniumAdapter.os_to_modifier()
+  @@cmd_modifier = WebdriverAdapter.os_to_modifier()
 end
