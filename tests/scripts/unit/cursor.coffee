@@ -89,5 +89,13 @@ describe('Cursor', ->
       expect(parseInt(cursor.style.left)).to.be.within(18, 19)
       expect(parseInt(cursor.style.top)).to.be.within(0, 1)
     )
+
+    it('should append after external edit', ->
+      attributionManager = new Scribe.Attribution(editor, 'id1', 'blue')
+      editor.insertAt(10, 'Y', { author: 'id1' })
+      cursorManager.setCursor('id2', 11, 'Test', 'red')
+      editor.insertAt(11, 'Z', { author: 'id2' })
+      cursor = cursorManager.container.querySelector('.cursor')
+    )
   )
 )
