@@ -10,8 +10,16 @@ module ScribeDriver
     return result
   end
 
-  def self.js_set_doc_delta(driver)
-    self.execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+  def self.js_set_scribe_delta(driver, delta)
+    self.execute_js driver, "window.editor.setDelta(window.Fuzzer.createDelta(#{delta.to_json}));"
+  end
+
+  def self.js_set_doc_delta(driver, delta = nil)
+    if not delta.nil?
+      self.execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.createDelta(#{delta.to_json});"
+    else
+      self.execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+    end
   end
 
   def self.js_get_doc_length(driver)
@@ -22,8 +30,8 @@ module ScribeDriver
     return self.execute_js driver, "return window.Fuzzer.checkConsistency();"
   end
 
-  def self.js_create_delta(driver, delta)
-    self.execute_js driver, "window.Fuzzer.createDelta(#{delta.to_json})"
+  def self.js_set_random_delta(driver, delta)
+    return self.execute_js driver, "window.Fuzzer.randomDelta = window.Fuzzer.createDelta(#{delta.to_json})"
   end
 
   #############################################################################

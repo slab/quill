@@ -14,7 +14,12 @@ describe "Test Insert" do
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
     @adapter.focus()
-    ScribeDriver.js_set_doc_delta(@driver)
+    delta = { 'startLength' => 0,
+              'endLength' => 4,
+              'ops' => [{ 'value' => "abc\n"}]}
+    ScribeDriver.js_set_doc_delta(@driver, delta)
+    ScribeDriver.js_set_scribe_delta(@driver, delta)
+    @adapter.doc_length = 4
   end
 
   it "should prepend to document" do
@@ -22,7 +27,7 @@ describe "Test Insert" do
     delta = { 'startLength' => doc_length,
               'endLength' => doc_length + 1,
               'ops' => [{ 'value' => "0"}, {'start' => 0, 'end' => doc_length }]}
-    ScribeDriver.js_create_delta(@driver, delta)
+    ScribeDriver.js_set_random_delta(@driver, delta)
     @adapter.apply_delta(delta)
     success = ScribeDriver.js_check_consistency(@driver)
     success.must_equal true
@@ -32,8 +37,8 @@ describe "Test Insert" do
     doc_length = ScribeDriver.js_get_doc_length(@driver)
     delta = { 'startLength' => doc_length,
               'endLength' => doc_length + 1,
-              'ops' => [ { 'value' => "0"}, {'start' => 0, 'end' => doc_length, 'attributes' => {} }]}
-    ScribeDriver.js_create_delta(@driver, delta)
+              'ops' => [ {'start' => 0, 'end' => doc_length - 1, 'attributes' => {} }, { 'value' => "0"}, {'start' => doc_length - 1, 'end' => doc_length }]}
+    ScribeDriver.js_set_random_delta(@driver, delta)
     @adapter.apply_delta(delta)
     success = ScribeDriver.js_check_consistency(@driver)
     success.must_equal true
