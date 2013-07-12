@@ -58,7 +58,7 @@ _updateCursor = (cursor) ->
 
 
 class Scribe.MultiCursor
-  @CURSOR_NAME_TIMEOUT: 250000
+  @CURSOR_NAME_TIMEOUT: 2500
 
   constructor: (@editor) ->
     @cursors = {}
