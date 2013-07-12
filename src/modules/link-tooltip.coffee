@@ -13,7 +13,7 @@ exitEditMode = ->
     @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
     formats = @savedRange.getFormats()
     if formats['link']?
-      @tooltipLink.innerText = @tooltipLink.href = formats['link']
+      @tooltipLink.textContent = @tooltipLink.href = formats['link']
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', formats['link'])
     @editor.setSelection(null, true)
   Scribe.DOM.removeClass(@tooltip, 'editing')
