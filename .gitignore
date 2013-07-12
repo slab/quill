@@ -2,3 +2,4 @@ build
 node_modules
 coverage.html
 tests/selenium/fuzzer_output
+libpeerconnection.log
