@@ -71,8 +71,8 @@ class Scribe.Selection
     return @range
 
   getDimensions: ->
-    nativeRange = this.getNativeRange()
-    return nativeRange?.getBoundingClientRect()
+    rangyRange = this.getNativeRange()
+    return rangyRange?.nativeRange?.getBoundingClientRect()
     
   getNativeRange: ->
     @nativeSelection.refresh()
