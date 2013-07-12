@@ -3,8 +3,9 @@ Scribe = require('../scribe')
 
 enterEditMode = (url) ->
   url = 'http://' + url unless /^http[s]?:\/\//.test(url)
-  @tooltipInput.value = url
   Scribe.DOM.addClass(@tooltip, 'editing')
+  @tooltipInput.focus()
+  @tooltipInput.value = url
 
 exitEditMode = ->
   if @tooltipLink.innerText != @tooltipInput.value
@@ -48,7 +49,6 @@ initListeners = ->
         enterEditMode.call(this, url)
         Scribe.DOM.addClass(@tooltip, 'editing')
         showTooptip.call(this, @editor.selection.getDimensions())
-        @tooltipInput.focus()
     if value?
       @editor.selection.format('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
