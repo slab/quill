@@ -38,7 +38,7 @@ module.exports = (grunt) ->
           src: 'tests/scripts/fuzzer.coffee'
         }, {
           dest: 'build/tests/scripts/unit.js'
-          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee']
+          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee', 'tests/scrips/unit/modules/*.coffee']
         }]
 
     coffeeify:
