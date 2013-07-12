@@ -32,7 +32,7 @@ $(document).ready( ->
         else
           throw "Receive op that is not insert or retain: #{JSON.stringify(op)}"
       )
-      window.Fuzzer.currentDelta = new window.Tandem.Delta(startLength, endLength, ops)
+      window.Fuzzer.randomDelta = new window.Tandem.Delta(startLength, endLength, ops)
 
     createRandomDelta: ->
       randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
