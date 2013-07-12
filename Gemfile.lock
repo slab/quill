@@ -15,6 +15,7 @@ GEM
     haml (4.0.1)
       tilt
     highline (1.6.16)
+    minitest (5.0.6)
     multi_json (1.7.4)
     rubyzip (0.9.9)
     sass (3.2.7)
@@ -34,5 +35,6 @@ DEPENDENCIES
   debugger (~> 1.6.0)
   haml (~> 4.0.1)
   highline (~> 1.6.16)
+  minitest (~> 5.0.6)
   sass (~> 3.2.7)
   selenium-webdriver (~> 2.33.0)
