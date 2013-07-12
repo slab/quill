@@ -6,14 +6,23 @@
     :css
       #expected-container, #test-container {
         float: left;
-        margin-left: 10px;
         width: 45%;
+      }
+      #expected-container, #test-container, #format-container {
+        margin-left: 10px;
       }
       iframe { border: 1px solid gray; }
     %meta{:charset => 'utf-8'}
 
   %body
     #mocha
+    #format-container
+      %button.bold Bold
+      %select.size
+        %option{:value => 'small'}   Small
+        %option{:value => false, :selected => true} Normal
+        %option{:value => 'large'}   Large
+        %option{:value => 'huge'}    Huge
     #test-container
     #expected-container
 

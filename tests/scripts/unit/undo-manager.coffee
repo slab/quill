@@ -1,4 +1,4 @@
-describe('Undo manager', ->
+describe('Undo Manager', ->
   describe('undo/redo', ->
     undoTests = new Scribe.Test.EditorTest(
       initial: Tandem.Delta.getInitial("The lazy fox\n")

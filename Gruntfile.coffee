@@ -38,7 +38,7 @@ module.exports = (grunt) ->
           src: 'tests/scripts/fuzzer.coffee'
         }, {
           dest: 'build/tests/scripts/unit.js'
-          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee', 'tests/scrips/unit/modules/*.coffee']
+          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee', 'tests/scripts/unit/modules/*.coffee']
         }]
 
     coffeeify:
@@ -130,7 +130,7 @@ module.exports = (grunt) ->
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
         tasks: ['coffee:src', 'coffeeify:src', 'concat', 'copy:build']
       test:
-        files: ['tests/scripts/**/*.coffee']
+        files: ['tests/scripts/**/**/*.coffee']
         tasks: ['coffee:test']
 
   # Default task.
