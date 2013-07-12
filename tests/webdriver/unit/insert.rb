@@ -20,15 +20,19 @@ describe "Test Insert" do
     @adapter.doc_length = 4
   end
 
+  def apply_delta(delta)
+    ScribeDriver.js_set_random_delta(@driver, delta)
+    @adapter.apply_delta(delta)
+    success = ScribeDriver.js_check_consistency(@driver)
+    success.must_equal true
+  end
+
   it "should prepend to document" do
     doc_length = ScribeDriver.js_get_doc_length(@driver)
     delta = { 'startLength' => doc_length,
               'endLength' => doc_length + 1,
               'ops' => [{ 'value' => "0"}, {'start' => 0, 'end' => doc_length }]}
-    ScribeDriver.js_set_random_delta(@driver, delta)
-    @adapter.apply_delta(delta)
-    success = ScribeDriver.js_check_consistency(@driver)
-    success.must_equal true
+    apply_delta(delta)
   end
 
   it "should append to document" do
@@ -36,9 +40,6 @@ describe "Test Insert" do
     delta = { 'startLength' => doc_length,
               'endLength' => doc_length + 1,
               'ops' => [ {'start' => 0, 'end' => doc_length - 1, 'attributes' => {} }, { 'value' => "0"}, {'start' => doc_length - 1, 'end' => doc_length }]}
-    ScribeDriver.js_set_random_delta(@driver, delta)
-    @adapter.apply_delta(delta)
-    success = ScribeDriver.js_check_consistency(@driver)
-    success.must_equal true
+    apply_delta(delta)
   end
 end
