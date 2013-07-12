@@ -14,7 +14,11 @@ module ScribeDriver
   end
 
   def js_get_doc_length(driver)
-    execute_js driver, "return window.editor.getLength()"
+    return execute_js driver, "return window.editor.getLength();"
+  end
+
+  def js_check_consistency(driver)
+    return driver.execute_script "return window.Fuzzer.checkConsistency();"
   end
 
   #############################################################################
