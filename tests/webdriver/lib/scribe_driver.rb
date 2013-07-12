@@ -21,6 +21,10 @@ module ScribeDriver
     return driver.execute_script "return window.Fuzzer.checkConsistency();"
   end
 
+  def js_create_delta(driver, delta)
+    execute_js driver, "window.Fuzzer.create_delta(#{JSON.parse(delta)})"
+  end
+
   #############################################################################
   # WebDriver helpers
   #############################################################################

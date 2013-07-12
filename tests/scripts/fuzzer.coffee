@@ -27,7 +27,7 @@ $(document).ready( ->
       ops = _.map(template['ops'], (op) ->
         if op['value']?
           return new window.Tandem.InsertOp(op['value'], op['attributes'])
-        else if op["start"]?
+        else if op['start']?
           return new window.Tandem.RetainOp(op['start'], op['end'], op['attributes'])
         else
           throw "Receive op that is not insert or retain: #{JSON.stringify(op)}"
