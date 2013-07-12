@@ -1,10 +1,8 @@
-require "minitest/autorun"
-require "minitest/pride"
-require "minitest/reporters"
-require_relative "../lib/scribe_driver"
-require_relative "../lib/webdriver_adapter"
-MiniTest::Reporters.use!
-
+gem "minitest"
+require 'minitest/autorun'
+require 'minitest/pride'
+require_relative '../lib/scribe_driver'
+require_relative '../lib/webdriver_adapter'
 
 describe "Test Insert" do
   before do
