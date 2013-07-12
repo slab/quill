@@ -15,7 +15,14 @@ describe "Test Insert" do
     ScribeDriver.js_set_doc_delta(@driver)
   end
 
-  it "should append to document" do
-    true #raise "Error!"
+  it "should prepend to document" do
+    doc_length = ScribeDriver.js_get_doc_length(@driver)
+    delta = { 'startLength' => doc_length,
+              'endLength' => doc_length + 1,
+              'ops' => [{ 'value' => "0"}, {'start' => 0, 'end' => doc_length }]}
+    ScribeDriver.js_create_delta(@driver, delta)
+    @adapter.apply_delta(delta)
+    success = ScribeDriver.js_check_consistency(@driver)
+    success.must_equal true
   end
 end
