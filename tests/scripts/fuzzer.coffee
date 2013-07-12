@@ -21,6 +21,20 @@ $(document).ready( ->
       window.Fuzzer[deltaRef] =
         new window.Tandem.Delta(d.startLength, d.endLength, d.ops)
 
+    # Create a delta from a Ruby hash
+    createDelta: (template) ->
+      startLength = template['startLength']
+      endLength = template['endLength']
+      ops = _.map(template['ops'], (op) ->
+        if op['value']?
+          return new window.Tandem.InsertOp(op['value'], op['attributes'])
+        else if op["start"]?
+          return new window.Tandem.RetainOp(op['start'], op['end'], op['attributes'])
+        else
+          throw "Receive op that is not insert or retain: #{JSON.stringify(op)}"
+      )
+      window.Fuzzer.currentDelta = new window.Tandem.Delta(startLength, endLength, ops)
+
     createRandomDelta: ->
       randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
 
