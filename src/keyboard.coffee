@@ -1,6 +1,47 @@
 Scribe = require('./scribe')
 
 
+_initDeletes = ->
+  _.each([Scribe.Keyboard.KEYS.DELETE, Scribe.Keyboard.KEYS.BACKSPACE], (key) =>
+    this.addHotkey(key, =>
+      # Prevent deleting if editor is already blank (browser quirk fix)
+      return @editor.getLength() > 1
+    )
+  )
+
+_initHotkeys = ->
+  this.addHotkey(Scribe.Keyboard.KEYS.TAB, =>
+    @editor.selection.deleteRange()
+    this.insertText("\t")
+  )
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
+    this.toggleFormat(selection, 'bold')
+  )
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (selection) =>
+    this.toggleFormat(selection, 'italic')
+  )
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
+    this.toggleFormat(selection, 'underline')
+  )
+
+_initListeners = ->
+  @editor.root.addEventListener('keydown', (event) =>
+    event ||= window.event
+    if @hotkeys[event.which]?
+      prevent = false
+      _.each(@hotkeys[event.which], (hotkey) =>
+        return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
+        return if hotkey.shift? and event.shiftKey != hotkey.shift
+        @editor.selection.update(true)
+        selection = @editor.getSelection()
+        return unless selection?
+        prevent = hotkey.callback.call(null, selection) == false
+      )
+    event.preventDefault() if prevent
+    return !prevent
+  )
+
+
 class Scribe.Keyboard
   @KEYS:
     BACKSPACE : 8
@@ -19,45 +60,12 @@ class Scribe.Keyboard
     UNDO:       { key: 'Z', meta: true, shift: false }
     REDO:       { key: 'Z', meta: true, shift: true }
 
-  @PRINTABLE
 
   constructor: (@editor) ->
     @hotkeys = {}
-    this.initListeners()
-    this.initHotkeys()
-
-  initListeners: ->
-    @editor.root.addEventListener('keydown', (event) =>
-      event ||= window.event
-      if @hotkeys[event.which]?
-        prevent = false
-        _.each(@hotkeys[event.which], (hotkey) =>
-          return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
-          return if hotkey.shift? and event.shiftKey != hotkey.shift
-          @editor.selection.update(true)
-          selection = @editor.getSelection()
-          return unless selection?
-          prevent = true
-          hotkey.callback.call(null, selection)
-        )
-      event.preventDefault() if prevent
-      return !prevent
-    )
-
-  initHotkeys: ->
-    this.addHotkey(Scribe.Keyboard.KEYS.TAB, =>
-      @editor.selection.deleteRange()
-      this.insertText("\t")
-    )
-    this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
-      this.toggleFormat(selection, 'bold')
-    )
-    this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (selection) =>
-      this.toggleFormat(selection, 'italic')
-    )
-    this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
-      this.toggleFormat(selection, 'underline')
-    )
+    _initListeners.call(this)
+    _initHotkeys.call(this)
+    _initDeletes.call(this)
 
   addHotkey: (hotkey, callback) ->
     hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
