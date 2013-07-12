@@ -123,3 +123,6 @@
     :javascript
       var editor = new Scribe.Editor('editor-container');
       var toolbar = new Scribe.Toolbar('formatting-container', editor);
+      editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, function(delta) {
+        console.info('User', delta);
+      });
