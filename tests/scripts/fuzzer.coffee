@@ -21,7 +21,6 @@ $(document).ready( ->
       window.Fuzzer[deltaRef] =
         new window.Tandem.Delta(d.startLength, d.endLength, d.ops)
 
-    # Create a delta from a Ruby hash
     createDelta: (template) ->
       startLength = template['startLength']
       endLength = template['endLength']
