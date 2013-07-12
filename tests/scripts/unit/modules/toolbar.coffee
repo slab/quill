@@ -1,13 +1,27 @@
 describe('Toolbar', ->
   toolbarTests = new Scribe.Test.EditorTest(
-    initial: '<div><span>One</span><b>Bold</b></div>'
+    initial: '<div><span>one.com</span><b>Bold</b></div>'
+  )
+
+  afterEach( ->
+    # Remove all listeners on format-container to reset toolbar
+    html = $('#format-container').html()
+    $('#format-container').html('').html(html)
   )
 
   toolbarTests.run('Apply button format',
-    expected: '<div><b>OneBold</b></div>'
+    expected: '<div><b>one.comBold</b></div>'
     fn: (editor) ->
       toolbar = new Scribe.Toolbar('format-container', editor)
-      editor.setSelection(new Scribe.Range(editor, 0, 3))
+      editor.setSelection(new Scribe.Range(editor, 0, 7))
       $('#format-container .bold').trigger('click')
+  )
+
+  toolbarTests.run('Apply link format',
+    expected: '<div><a href="https://one.com" title="https://one.com/">one.com</a><b>Bold</b></div>'
+    fn: (editor) ->
+      toolbar = new Scribe.Toolbar('format-container', editor)
+      editor.setSelection(new Scribe.Range(editor, 0, 7))
+      $('#format-container .link').trigger('click')
   )
 )
