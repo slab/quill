@@ -20,6 +20,10 @@ describe "Test Insert" do
     @adapter.doc_length = 4
   end
 
+  after do
+    @driver.quit
+  end
+
   def apply_delta(delta)
     ScribeDriver.js_set_random_delta(@driver, delta)
     @adapter.apply_delta(delta)
