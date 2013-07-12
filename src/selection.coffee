@@ -47,10 +47,12 @@ class Scribe.Selection
   initListeners: ->
     checkUpdate = =>
       this.update() if @editor.root.isContentEditable
-    keyUpdate = (event) =>
-      checkUpdate() if Scribe.Keyboard.KEYS.LEFT <= event.which and event.which <= Scribe.Keyboard.KEYS.DOWN
-    @editor.root.addEventListener('keyup', keyUpdate)
     @editor.root.addEventListener('mouseup', checkUpdate)
+    _.each(Scribe.Keyboard.NAVIGATION, (key) =>
+      @editor.keyboard.addHotkey(key, =>
+        _.defer(checkUpdate)
+      )
+    )
 
   format: (name, value) ->
     this.update()

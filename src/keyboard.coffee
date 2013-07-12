@@ -60,6 +60,7 @@ class Scribe.Keyboard
     UNDO:       { key: 'Z', meta: true, shift: false }
     REDO:       { key: 'Z', meta: true, shift: true }
 
+  @NAVIGATION: [@KEYS.UP, @KEYS.DOWN, @KEYS.LEFT, @KEYS.RIGHT]
 
   constructor: (@editor) ->
     @hotkeys = {}
