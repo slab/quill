@@ -1,34 +1,35 @@
+require "selenium-webdriver"
 module ScribeDriver
   #############################################################################
   # JS Helpers
   #############################################################################
-  def execute_js(driver, src, args = nil)
+  def self.execute_js(driver, src, args = nil)
     driver.switch_to.default_content
     result = driver.execute_script(src, *args)
     driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
     return result
   end
 
-  def js_set_doc_delta(driver)
-    execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+  def self.js_set_doc_delta(driver)
+    self.execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
   end
 
-  def js_get_doc_length(driver)
-    return execute_js driver, "return window.editor.getLength();"
+  def self.js_get_doc_length(driver)
+    return self.execute_js driver, "return window.editor.getLength();"
   end
 
-  def js_check_consistency(driver)
-    return driver.execute_script "return window.Fuzzer.checkConsistency();"
+  def self.js_check_consistency(driver)
+    return self.execute_js driver, "return window.Fuzzer.checkConsistency();"
   end
 
-  def js_create_delta(driver, delta)
-    execute_js driver, "window.Fuzzer.create_delta(#{JSON.parse(delta)})"
+  def self.js_create_delta(driver, delta)
+    self.execute_js driver, "window.Fuzzer.createDelta(#{delta.to_json})"
   end
 
   #############################################################################
   # WebDriver helpers
   #############################################################################
-  def create_scribe_driver(browser, url)
+  def self.create_scribe_driver(browser, url)
     if browser == :firefox
       profile = Selenium::WebDriver::Firefox::Profile.new
       profile.native_events = true
@@ -41,7 +42,7 @@ module ScribeDriver
       driver = Selenium::WebDriver.for browser
     end
     driver.manage.timeouts.implicit_wait = 10
-    driver.get editor_url
+    driver.get url
     driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
     return driver
   end

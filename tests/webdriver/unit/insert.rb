@@ -1,6 +1,8 @@
 require "minitest/autorun"
 require "minitest/pride"
 require "minitest/reporters"
+require_relative "../lib/scribe_driver"
+require_relative "../lib/webdriver_adapter"
 MiniTest::Reporters.use!
 
 
