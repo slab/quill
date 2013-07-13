@@ -38,7 +38,6 @@ class WebdriverAdapter
   # private
 
   def insert_at(index, text)
-    puts "Inserting #{text} at #{index}"
     move_cursor(index)
     type_text(text)
     move_cursor index + text.length

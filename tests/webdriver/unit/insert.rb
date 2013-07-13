@@ -32,17 +32,15 @@ describe "Test Insert" do
   end
 
   # Single character insertion at every position
-  it "should correctly insert a single character at every position" do
+  it "should insert a single character at every position" do
     doc_length = ScribeDriver.js_get_doc_length(@driver)
     (0...doc_length).each do |insert_at|
-      insert_at = 1
-      puts "Inserting at: #{insert_at}"
       delta = ScribeDriver.make_insert_delta(@driver, doc_length, insert_at, 'a', {})
       apply_delta(delta)
       # Reset state for next iteration
       ScribeDriver.js_set_doc_delta(@driver, @start_delta)
       ScribeDriver.js_set_scribe_delta(@driver, @start_delta)
-      @adapter.cursor_pos = 0
+      @adapter.move_cursor(0)
       @adapter.doc_length = @start_delta["endLength"]
     end
   end
