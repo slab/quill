@@ -35,40 +35,8 @@
   .font-family, .font-size
     visibility: hidden
     
-  .bold
-    background-image: url(../images/bold.png)
-  .italic
-    background-image: url(../images/italic.png)
-  .strike
-    background-image: url(../images/strike.png)
-  .underline
-    background-image: url(../images/underline.png)
-  .list
-    background-image: url(../images/list-order.png)
-  .bullet
-    background-image: url(../images/list.png)
-  .outdent
-    background-image: url(../images/outdent.png)
-  .indent
-    background-image: url(../images/indent.png)
-  .link
-    background-image: url(../images/link.png)
-
-  .bold:hover, .bold:active, .bold.active
-    background-image: url(../images/bold-color.png)
-  .italic:hover, italic:active, .italic.active
-    background-image: url(../images/italic-color.png)
-  .strike:hover, .strike:active, .strike.active
-    background-image: url(../images/strike-color.png)
-  .underline:hover, .underline:active, .underline.active
-    background-image: url(../images/underline-color.png)
-  .list:hover, .list:active, .list.active
-    background-image: url(../images/list-order-color.png)
-  .bullet:hover, .bullet:active, .bullet.active
-    background-image: url(../images/list-color.png)
-  .outdent:hover, .outdent:active, .outdent.active
-    background-image: url(../images/outdent-color.png)
-  .indent:hover, .indent:active, .indent.active
-    background-image: url(../images/indent-color.png)
-  .link:hover, .link:active, .link.active
-    background-image: url(../images/link-color.png)
+  @each $format in bold, italic, strike, underline, list, bullet, outdent, indent, link
+    .#{$format}
+      background-image: url(../images/#{$format}.png)
+    .#{$format}:hover, .#{$format}:active, .#{$format}.active
+      background-image: url(../images/#{$format}-color.png)
