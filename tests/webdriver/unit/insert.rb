@@ -21,11 +21,11 @@ describe "Test Insert" do
     @driver.quit
   end
 
-  def apply_delta(delta)
+  def apply_delta(delta, err_msg)
     ScribeDriver.js_set_random_delta(@driver, delta)
     @adapter.apply_delta(delta)
     success = ScribeDriver.js_check_consistency(@driver)
-    success.must_equal true
+    success.must_equal true, err_msg
   end
 
   # Single character insertion at every position
@@ -33,7 +33,7 @@ describe "Test Insert" do
     doc_length = ScribeDriver.js_get_doc_length(@driver)
     (0...doc_length).each do |insert_at|
       delta = ScribeDriver.make_insert_delta(@driver, doc_length, insert_at, 'a', {})
-      apply_delta(delta)
+      apply_delta(delta, "Failed inserting 'a' at index #{insert_at}")
       # Reset state for next iteration
       ScribeDriver.execute_js(@driver, "window.Fuzzer.resetScribe()")
       @editor = @driver.find_element(:class, "editor")
