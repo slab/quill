@@ -38,9 +38,7 @@ $(document).ready( ->
       )
       return new window.Tandem.Delta(startLength, endLength, ops)
 
-    createRandomDelta: ->
-      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
-
+    autoFormatDelta: (delta) ->
       appendingToLine = (index) ->
         op = window.Fuzzer.docDelta.getOpsAt(index, 1)
         return op.length > 0 and _.first(op).value == "\n"
@@ -56,7 +54,7 @@ $(document).ready( ->
         return attrs
 
       index = 0
-      for op, opIndex in randomDelta.ops
+      for op, opIndex in delta.ops
         if window.Tandem.Delta.isInsert op
           precedingAttrs = followingAttrs = {}
           if appendingToLine(index)
@@ -77,12 +75,17 @@ $(document).ready( ->
           for elem in tail
             final.push(new window.Tandem.InsertOp("\n"))
             final.push(elem)
-          randomDelta.ops.splice(opIndex, 1, final...)
-          randomDelta.compact()
-          return randomDelta
+          delta.ops.splice(opIndex, 1, final...)
+          delta.compact()
+          return delta
         else
           index += op.getLength()
-      return randomDelta
+
+      return delta
+
+    createRandomDelta: ->
+      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
+      return window.Fuzzer.autoFormatDelta(randomDelta)
 
     initializeScribe: ->
       window.editor.setDelta(window.Fuzzer.docDelta)
