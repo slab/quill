@@ -14,14 +14,11 @@ _applyDelta = (delta) ->
 _buildCursor = (name, color) ->
   cursor = @container.ownerDocument.createElement('span')
   Scribe.DOM.addClass(cursor, 'cursor')
-  inner = @container.ownerDocument.createElement('span')
-  Scribe.DOM.addClass(inner, 'cursor-inner')
-  nameNode = @container.ownerDocument.createElement('span')
-  Scribe.DOM.addClass(nameNode, 'cursor-name')
-  nameNode.textContent = name
-  inner.style.backgroundColor = nameNode.style.backgroundColor = color
-  cursor.appendChild(nameNode)
-  cursor.appendChild(inner)
+  cursor.innerHTML = @options.template
+  cursorName = cursor.querySelector('.cursor-name')
+  cursorName.textContent = name
+  cursorCaret = cursor.querySelector('.cursor-caret')
+  cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
   @container.appendChild(cursor)
   return cursor
 
@@ -57,9 +54,12 @@ _updateCursor = (cursor) ->
 
 
 class Scribe.MultiCursor
-  @CURSOR_NAME_TIMEOUT: 2500
+  @DEFAULTS:
+    template: '<span class="cursor-name"></span><span class="cursor-caret"></span>'
+    timeout: 2500
 
-  constructor: (@editor) ->
+  constructor: (@editor, options = {}) ->
+    @options = _.defaults(options, Scribe.MultiCursor.DEFAULTS)
     @cursors = {}
     @container = @editor.root.ownerDocument.createElement('div')
     @container.id = 'cursor-container'
@@ -80,7 +80,7 @@ class Scribe.MultiCursor
         'white-space': 'nowrap'
       }
       '.cursor.hidden .cursor-name': { 'display': 'none' }
-      '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '100%', 'left': '-1px' }
+      '.cursor-caret': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '100%', 'left': '-1px' }
       '.cursor.top > .cursor-name': { 'top': '100%' }
     })
     @editor.renderer.runWhenLoaded( =>
@@ -121,7 +121,7 @@ class Scribe.MultiCursor
     cursor.timer = setTimeout( =>
       Scribe.DOM.addClass(cursor.elem, 'hidden')
       cursor.timer = null
-    , Scribe.MultiCursor.CURSOR_NAME_TIMEOUT)
+    , @options.timeout)
     _updateCursor.call(this, cursor) if update
 
   clearCursors: ->
