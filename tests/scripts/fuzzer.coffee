@@ -3,6 +3,10 @@ $(document).ready( ->
   window.editor = new Scribe.Editor($editors.get(0))
   editorToolbar = new Scribe.Toolbar('editor-toolbar', editor)
   window.Fuzzer =
+    resetScribe: ->
+      $('.editor-container').html($('#editor-cache').html())
+      window.editor = new Scribe.Editor($editors.get(0))
+
     getActiveFormats: ->
       actives = $('#editor-toolbar > .active')
       _.map(actives, (elem) ->

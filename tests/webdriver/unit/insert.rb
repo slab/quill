@@ -9,15 +9,12 @@ describe "Test Insert" do
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
       '../../../..', 'build/tests/webdriver.html')}"
     @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
+    ScribeDriver.execute_js(@driver, "window.Fuzzer.resetScribe()")
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
     @adapter.focus()
-    @start_delta = { 'startLength' => 0,
-                     'endLength' => 4,
-                     'ops' => [{ 'value' => "abc\n"}]}
-    ScribeDriver.js_set_doc_delta(@driver, @start_delta)
-    ScribeDriver.js_set_scribe_delta(@driver, @start_delta)
-    @adapter.doc_length = @start_delta['endLength']
+    ScribeDriver.js_set_doc_delta(@driver)
+    @adapter.doc_length = ScribeDriver.js_get_doc_length(@driver)
   end
 
   after do
@@ -38,10 +35,11 @@ describe "Test Insert" do
       delta = ScribeDriver.make_insert_delta(@driver, doc_length, insert_at, 'a', {})
       apply_delta(delta)
       # Reset state for next iteration
-      ScribeDriver.js_set_doc_delta(@driver, @start_delta)
-      ScribeDriver.js_set_scribe_delta(@driver, @start_delta)
-      @adapter.move_cursor(0)
-      @adapter.doc_length = @start_delta["endLength"]
+      ScribeDriver.execute_js(@driver, "window.Fuzzer.resetScribe()")
+      @editor = @driver.find_element(:class, "editor")
+      @adapter = WebdriverAdapter.new @driver, @editor
+      ScribeDriver.js_set_doc_delta(@driver)
+      @adapter.doc_length = ScribeDriver.js_get_doc_length(@driver)
     end
   end
 
