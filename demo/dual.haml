@@ -26,62 +26,7 @@
             %button.format-button.underline U
             %button.format-button.link L
           .editor-container
-            %div
-              %span Welcome to Stypi
-            %div
-              %b Bold
-              %span &nbsp;
-              %i Italic
-              %span &nbsp;
-              %s Strike
-              %span &nbsp;
-              %u Underline
-              %span &nbsp;
-              %a{:href => 'http://www.google.com'} Link
-            %div
-              %u Zero
-              %i One
-              %u Two
-              %i
-                %b Three
-                %s Four
-                %i Five
-            %div
-              %i
-                %b Hey
-                %u Now
-              %s What
-            %div
-              %b a
-              %i b
-              %b c
-              %i d
-              %b e
-              %i f
-              %b g
-            %div
-              %span &#09;I look like an indent but actually I'm not cuz I'm a tab.
-            %div
-              %span{:style => 'font-size: 32px;' } Huge
-              %span{:style => 'font-size: 18px;' } Large
-              %span{:style => 'font-size: 10px;' } Small
-            %div
-              %span{:style => 'font-size: 32px;' } Huge
-            %div
-              %span{:style => 'font-size: 18px;' } Large
-            %div
-              %span{:style => 'font-size: 10px;' } Small
-            %div
-              %span{:style => 'font-family: "Times New Roman", serif;' } Serif
-              %span{:style => 'font-family: "Courier New", monospace;' } Monospace
-            %div
-              %br
-            %div
-              %br
-            %div
-              %span Goodbye
-            %div
-              %br
+            = Haml::Engine.new(File.read('demo/content.haml')).render
 
     %script{:type => 'text/javascript', :src => '../scribe.all.js'}
     %script{:type => 'text/javascript', :src => 'scripts/dual.js'}

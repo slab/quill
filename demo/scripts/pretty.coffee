@@ -7,12 +7,12 @@ initToolbar = (editor) ->
       $(this).removeClass('dk_open') if that != this
     )
   )
-  _.each(dropkickFormats, (format) ->
-    $(".formatting-container .#{format}").dropkick({
-      change: (value) -> editor.selection.format(format, value)
-      width: 75
-    })
-  )
+  for format in dropkickFormats
+    do (format) ->
+      $(".formatting-container .#{format}").dropkick({
+        change: (value) -> editor.selection.format(format, value)
+        width: 75
+      })
   toolbar.on(Scribe.Toolbar.events.FORMAT, (format, value) ->
     if _.indexOf(dropkickFormats, format) > -1
       $("#formatting-container .#{format}").dropkick('set', ' ')

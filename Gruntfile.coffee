@@ -98,7 +98,7 @@ module.exports = (grunt) ->
       demo:
         expand: true
         dest: 'build/'
-        src: ['demo/*.haml']
+        src: ['demo/*.haml', '!demo/content.haml']
         ext: ['.html']
       tests:
         expand: true
