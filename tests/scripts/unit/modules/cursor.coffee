@@ -61,8 +61,7 @@ describe('Cursor', ->
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('0px')
       expect(parseInt(cursor.style.top)).to.be.within(29, 31)
-      inner = cursor.querySelector('.cursor-inner')
-      expect(parseInt(inner.style.height)).to.be.within(18, 21)
+      expect(parseInt(cursor.style.height)).to.be.within(18, 21)
     )
 
     it('should set in middle of large font', ->
@@ -70,15 +69,14 @@ describe('Cursor', ->
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('20px')
       expect(parseInt(cursor.style.top)).to.be.within(29, 31)
-      inner = cursor.querySelector('.cursor-inner')
-      expect(parseInt(inner.style.height)).to.be.within(18, 21)
+      expect(parseInt(cursor.style.height)).to.be.within(18, 21)
     )
 
     it('should set in end of large font', ->
       cursorManager.setCursor('id', 17, 'Test', 'red')
       # Cursor tested by 'should set at end test'
-      inner = cursorManager.container.querySelector('.cursor-inner')
-      expect(parseInt(inner.style.height)).to.be.within(18, 21)
+      cursor = cursorManager.container.querySelector('.cursor')
+      expect(parseInt(cursor.style.height)).to.be.within(18, 21)
     )
 
     it('should push cursor', ->

@@ -28,9 +28,8 @@ _buildCursor = (name, color) ->
 _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop
   cursor.elem.style.left = referenceNode.offsetLeft
-  cursorInner = cursor.elem.querySelector('.cursor-inner')
-  cursorInner.style.height = referenceNode.offsetHeight
-  if parseInt(cursor.elem.style.top) <= 5
+  cursor.elem.style.height = referenceNode.offsetHeight
+  if parseInt(cursor.elem.style.top) <= parseInt(cursor.elem.style.height)
     Scribe.DOM.addClass(cursor.elem, 'top')
   else
     Scribe.DOM.removeClass(cursor.elem, 'top')
@@ -67,13 +66,10 @@ class Scribe.MultiCursor
     @editor.renderer.addContainer(@container, true)
     @editor.renderer.addStyles({
       '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
-      '.cursor': { 'display': 'inline-block', 'height': '12px', 'position': 'absolute', 'width': '0px' }
+      '.cursor': { 'display': 'inline-block', 'height': '15px', 'position': 'absolute', 'width': '0px' }
       '.cursor-name': {
         'font-family': "'Helvetica', 'Arial', san-serif"
         'font-size': '13px'
-        'border-bottom-right-radius': '3px'
-        'border-top-left-radius': '3px'
-        'border-top-right-radius': '3px'
         'color': 'white'
         'display': 'inline-block'
         'left': '-1px'
@@ -84,8 +80,8 @@ class Scribe.MultiCursor
         'white-space': 'nowrap'
       }
       '.cursor.hidden .cursor-name': { 'display': 'none' }
-      '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '15px', 'left': '-1px' }
-      '.cursor.top > .cursor-name': { 'border-top-left-radius': '0px', 'border-bottom-left-radius': '3px', 'top': '15px' }
+      '.cursor-inner': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '100%', 'left': '-1px' }
+      '.cursor.top > .cursor-name': { 'top': '100%' }
     })
     @editor.renderer.runWhenLoaded( =>
       _.defer( =>
