@@ -12,7 +12,9 @@ listenEditor = (source, target) ->
 
 editors = []
 for num in [1, 2]
-  editor = new Scribe.Editor('editor-container' + num, {
+  wrapperClass = '.editor-wrapper'
+  wrapperClass += if num == 1 then '.first' else '.last'
+  editor = new Scribe.Editor(document.querySelector(wrapperClass + ' .editor-container'), {
     renderer: {
       styles: {
         'div.editor':
@@ -23,7 +25,7 @@ for num in [1, 2]
       }
     }
   })
-  toolbar = new Scribe.Toolbar("formatting-container#{num}", editor)
+  toolbar = new Scribe.Toolbar(document.querySelector(wrapperClass + ' .formatting-container'), editor)
   editor.cursorManager = new Scribe.MultiCursor(editor)
   editor.attributionManager = new Scribe.Attribution(editor, editor.id, 'blue') 
   editors.push(editor)
