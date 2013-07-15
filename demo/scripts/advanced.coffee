@@ -51,7 +51,32 @@ $(document).ready( ->
             'padding': '3px'
     })
     toolbar = new Scribe.Toolbar(container.querySelector('.formatting-container'), editor)
-    editor.cursorManager = new Scribe.MultiCursor(editor)
+    editor.cursorManager = new Scribe.MultiCursor(editor, {
+      template:
+       '<span class="cursor-flag">
+          <span class="cursor-name"></span>
+          <span class="cursor-triangle"></span>
+        </span>
+        <span class="cursor-caret"></span>'
+    });
+    editor.renderer.addStyles(
+      '.cursor-name':
+        'border-radius': '3px'
+        'font-size': '11px'
+        'font-family': 'Arial'
+        'margin-left': '-50%'
+        'padding': '4px 10px'
+      '.cursor-triangle':
+        'border-left': '4px solid transparent'
+        'border-right': '4px solid transparent'
+        'border-top': '4px solid #0054A6'
+        'display': 'block'
+        'height': '0px'
+        'margin-bottom': '-1px'
+        'margin-left': '-3px'
+        'width': '0px'
+      '.cursor.top > .cursor-flag': { 'bottom': '100%', 'top': 'auto' }
+    )
     editor.attributionManager = new Scribe.Attribution(editor, editor.id, CURSOR_COLOR)
     editors.push(editor)
     initToolbar(container, editor, toolbar)

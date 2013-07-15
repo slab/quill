@@ -85,7 +85,7 @@ class Scribe.MultiCursor
         'position': 'absolute'
         'width': '2px'
       '.cursor.hidden .cursor-flag': { 'display': 'none' }
-      '.cursor.top > .cursor-flag': { 'bottom': 'inherit', 'top': '100%' }
+      '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
     })
     @editor.renderer.on(Scribe.Renderer.events.UPDATE, =>
       _.defer( =>
