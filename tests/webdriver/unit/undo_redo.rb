@@ -32,9 +32,20 @@ describe "Test undo redo" do
     assert ScribeDriver::JS.editor_delta_equals end_delta
   end
 
-  # it "should undo redo deletes" do
-  #   skip "Implement me"
-  # end
+  it "should undo redo deletes" do
+    text = "abc"
+    undone_doc = { "startLength" => 0,
+      "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
+    redone_doc = { "startLength" => 0,
+      "endLength" => 1, "ops" => [{ "value" => "\n" }] }
+    @adapter.type_text text
+    sleep 2 # Keep undo manager from coalescing
+    @adapter.delete_at 0, text.length
+    @adapter.undo
+    assert ScribeDriver::JS.editor_delta_equals undone_doc
+    @adapter.redo
+    assert ScribeDriver::JS.editor_delta_equals redone_doc
+  end
 
   # it "should undo redo formatting" do
   #   skip "Implement me"
