@@ -10,6 +10,10 @@ module ScribeDriver
     return result
   end
 
+  def self.delta_equals_editor(driver, delta)
+    return self.execute_js driver, "return window.Fuzzer.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
+  end
+
   def self.make_insert_delta(driver, startLength, index, value, attributes)
     return self.execute_js driver,
       "return window.Fuzzer.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
