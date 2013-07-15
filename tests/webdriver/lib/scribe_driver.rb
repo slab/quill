@@ -12,7 +12,7 @@ module ScribeDriver
 
   def self.make_insert_delta(driver, startLength, index, value, attributes)
     return self.execute_js driver,
-      "return window.Fuzzer.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, 'a', #{attributes}));"
+      "return window.Fuzzer.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
   end
 
   def self.js_set_scribe_delta(driver, delta)
