@@ -46,9 +46,9 @@ initListeners = ->
       if /\w+\.\w+/.test(url)
         value = url
       else
-        enterEditMode.call(this, url)
         Scribe.DOM.addClass(@tooltip, 'editing')
         showTooptip.call(this, @editor.selection.getDimensions())
+        enterEditMode.call(this, url)
     if value?
       @editor.selection.format('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
