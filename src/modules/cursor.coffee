@@ -15,6 +15,7 @@ _buildCursor = (name, color) ->
   cursor = @container.ownerDocument.createElement('span')
   Scribe.DOM.addClass(cursor, 'cursor')
   cursor.innerHTML = @options.template
+  cursorFlag = cursor.querySelector('.cursor-flag')
   cursorName = cursor.querySelector('.cursor-name')
   cursorName.textContent = name
   cursorCaret = cursor.querySelector('.cursor-caret')
@@ -55,7 +56,11 @@ _updateCursor = (cursor) ->
 
 class Scribe.MultiCursor
   @DEFAULTS:
-    template: '<span class="cursor-name"></span><span class="cursor-caret"></span>'
+    template: 
+     '<span class="cursor-flag">
+        <span class="cursor-name"></span>
+      </span>
+      <span class="cursor-caret"></span>'
     timeout: 2500
 
   constructor: (@editor, options = {}) ->
@@ -66,21 +71,21 @@ class Scribe.MultiCursor
     @editor.renderer.addContainer(@container, true)
     @editor.renderer.addStyles({
       '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
-      '.cursor': { 'position': 'absolute' }
-      '.cursor-name': {
+      '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
+      '.cursor-flag':
         'bottom': '100%'
-        'color': 'white'
-        'padding': '2px 8px'
         'position': 'absolute'
         'white-space': 'nowrap'
-      }
-      '.cursor-caret': { 
+      '.cursor-name':
+        'display': 'inline-block'
+        'color': 'white'
+        'padding': '2px 8px'
+      '.cursor-caret':
         'height': '100%'
         'position': 'absolute'
         'width': '2px'
-      }
-      '.cursor.hidden .cursor-name': { 'display': 'none' }
-      '.cursor.top > .cursor-name': { 'bottom': 'inherit', 'top': '100%' }
+      '.cursor.hidden .cursor-flag': { 'display': 'none' }
+      '.cursor.top > .cursor-flag': { 'bottom': 'inherit', 'top': '100%' }
     })
     @editor.renderer.on(Scribe.Renderer.events.UPDATE, =>
       _.defer( =>
