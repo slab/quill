@@ -47,12 +47,19 @@ describe "Test undo redo" do
     assert ScribeDriver::JS.editor_delta_equals redone_doc
   end
 
-  # it "should undo redo formatting" do
-  #   skip "Implement me"
-  # end
-
-  # it "should undo redo a chain of edits" do
-  #   skip "Implement me"
-  # end
+  it "should undo redo formatting" do
+    text = "abc"
+    undone_doc = { "startLength" => 0,
+      "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
+    redone_doc = { "startLength" => 0,
+      "endLength" => 4, "ops" => [{"value" => "abc", "attributes" => {"bold" => true}}, { "value" => "\n" }] }
+    @adapter.type_text text
+    sleep 2 # Keep undo manager from coalescing
+    @adapter.format_at 0, 3, {:bold => true}
+    @adapter.undo
+    assert ScribeDriver::JS.editor_delta_equals undone_doc
+    @adapter.redo
+    assert ScribeDriver::JS.editor_delta_equals redone_doc
+  end
 
 end

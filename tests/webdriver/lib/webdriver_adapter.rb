@@ -52,13 +52,11 @@ class WebdriverAdapter
   end
 
   def delete_at(index, length)
-    puts "Deleting #{length} at #{index}"
     move_cursor(index)
     delete(length)
   end
 
   def format_at(index, length, attributes)
-    puts "Formatting #{length} starting at #{index} with #{attributes}"
     move_cursor(index)
     highlight(length)
     attributes.each do |attr, val|
