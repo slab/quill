@@ -1,45 +1,48 @@
 require "selenium-webdriver"
 module ScribeDriver
-  #############################################################################
-  # JS Helpers
-  #############################################################################
-  def self.execute_js(src, args = nil)
-    @@driver.switch_to.default_content
-    result = @@driver.execute_script(src, *args)
-    @@driver.switch_to.frame(@@driver.find_element(:tag_name, "iframe"))
-    return result
-  end
+  module JS
+    def self.execute_js(src, args = nil)
+      ScribeDriver.driver.switch_to.default_content
+      result = ScribeDriver.driver.execute_script(src, *args)
+      ScribeDriver.driver.switch_to.frame(ScribeDriver.driver.find_element(:tag_name, "iframe"))
+      return result
+    end
 
-  def self.delta_equals_editor(delta)
-    return self.execute_js "return window.Fuzzer.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
-  end
+    def self.editor_delta_equals(delta)
+      return self.execute_js "return window.Fuzzer.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
+    end
 
-  def self.make_insert_delta(startLength, index, value, attributes)
-    return self.execute_js "return window.Fuzzer.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
-  end
+    def self.make_insert_delta(startLength, index, value, attributes)
+      return self.execute_js "return window.Fuzzer.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
+    end
 
-  def self.js_set_scribe_delta(delta)
-    self.execute_js "window.editor.setDelta(window.Fuzzer.createDelta(#{delta.to_json}));"
-  end
+    def self.set_scribe_delta(delta)
+      self.execute_js "window.editor.setDelta(window.Fuzzer.createDelta(#{delta.to_json}));"
+    end
 
-  def self.js_set_doc_delta(delta = nil)
-    if not delta.nil?
-      self.execute_js "window.Fuzzer.docDelta = window.Fuzzer.createDelta(#{delta.to_json});"
-    else
-      self.execute_js "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+    def self.set_doc_delta(delta = nil)
+      if not delta.nil?
+        self.execute_js "window.Fuzzer.docDelta = window.Fuzzer.createDelta(#{delta.to_json});"
+      else
+        self.execute_js "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+      end
+    end
+
+    def self.get_doc_length
+      return self.execute_js "return window.editor.getLength();"
+    end
+
+    def self.check_consistency
+      return self.execute_js "return window.Fuzzer.checkConsistency();"
+    end
+
+    def self.set_random_delta(delta)
+      return self.execute_js "window.Fuzzer.randomDelta = window.Fuzzer.createDelta(#{delta.to_json})"
     end
   end
 
-  def self.js_get_doc_length
-    return self.execute_js "return window.editor.getLength();"
-  end
-
-  def self.js_check_consistency
-    return self.execute_js "return window.Fuzzer.checkConsistency();"
-  end
-
-  def self.js_set_random_delta(delta)
-    return self.execute_js "window.Fuzzer.randomDelta = window.Fuzzer.createDelta(#{delta.to_json})"
+  def self.driver
+    @@driver
   end
 
   #############################################################################
