@@ -27,7 +27,7 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop
   cursor.elem.style.left = referenceNode.offsetLeft
   cursor.elem.style.height = referenceNode.offsetHeight
-  if parseInt(cursor.elem.style.top) <= parseInt(cursor.elem.style.height)
+  if parseInt(cursor.elem.style.top) < parseInt(cursor.elem.style.height)
     Scribe.DOM.addClass(cursor.elem, 'top')
   else
     Scribe.DOM.removeClass(cursor.elem, 'top')
@@ -127,6 +127,7 @@ class Scribe.MultiCursor
       cursor.timer = null
     , @options.timeout)
     _updateCursor.call(this, cursor) if update
+    return cursor
 
   clearCursors: ->
     _.each(_.keys(@cursors), (id) =>
