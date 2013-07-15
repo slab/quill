@@ -20,18 +20,17 @@ describe "Test undo redo" do
     @driver.quit
   end
 
+  # 1. Need a better utility for checking before/after state
+  # 2. Current delta_equals_editor is incorrect
   it "should undo/redo typing" do
     start_delta = { "startLength" => 0,
       "endLength" => 1, "ops" => [{ "value" => "\n" }] }
     delta = { "startLength" => 1,
       "endLength" => 4, "ops" => [{ "value" => "abc" }, {"start" => 0, "end" => 1}] }
     @adapter.apply_delta delta
-    puts "Undoing"
     @adapter.undo
     assert ScribeDriver.delta_equals_editor(@driver, start_delta)
-    puts "redoing"
     @adapter.redo
-    puts "done"
     # assert ScribeDriver.delta_equals_editor(@driver, delta)
   end
 
