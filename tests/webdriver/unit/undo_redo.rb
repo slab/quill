@@ -78,35 +78,39 @@ describe "Test undo redo" do
       without_coalescing edit
     end
 
-    @adapter.undo
-    expected = { "startLength" => 0,
-      "endLength" => 4, "ops" => [{ "value" => "abc", "attributes" => {"bold" => true}}, {"value" => "\n" }] }
-    assert ScribeDriver::JS.editor_delta_equals expected
+    expected_deltas = [{ "startLength" => 0,
+                         "endLength" => 4,
+                         "ops" => [{ "value" => "abc", "attributes" => {"bold" => true}},
+                                   {"value" => "\n" }] },
+                       { "startLength" => 0,
+                         "endLength" => 4,
+                         "ops" => [{ "value" => "abc\n" }] },
+                       { "startLength" => 0,
+                         "endLength" => 1,
+                         "ops" => [{"value" => "\n" }] }
+    ]
 
-    @adapter.undo
-    expected = { "startLength" => 0,
-      "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
-    assert ScribeDriver::JS.editor_delta_equals expected
+    expected_deltas.each do |expected|
+      @adapter.undo
+      assert ScribeDriver::JS.editor_delta_equals expected
+    end
 
-    @adapter.undo
-    expected = { "startLength" => 0,
-      "endLength" => 1, "ops" => [{"value" => "\n" }] }
-    assert ScribeDriver::JS.editor_delta_equals expected
+    expected_deltas = [{ "startLength" => 0,
+                         "endLength" => 4,
+                         "ops" => [{"value" => "abc\n" }] },
+                       { "startLength" => 0,
+                         "endLength" => 4,
+                         "ops" => [{ "value" => "abc", "attributes" => {"bold" => true}},
+                                     {"value" => "\n" }] },
+                       { "startLength" => 0,
+                         "endLength" => 4,
+                         "ops" => [{ "value" => "abc", "attributes" => {"bold" => true, "italic" => true}}, 
+                                   {"value" => "\n" }] }
+    ]
 
-    @adapter.redo
-    expected = { "startLength" => 0,
-      "endLength" => 4, "ops" => [{"value" => "abc\n" }] }
-    assert ScribeDriver::JS.editor_delta_equals expected
-
-    @adapter.redo
-    expected = { "startLength" => 0,
-      "endLength" => 4, "ops" => [{ "value" => "abc", "attributes" => {"bold" => true}}, {"value" => "\n" }] }
-    assert ScribeDriver::JS.editor_delta_equals expected
-
-    @adapter.redo
-    expected = { "startLength" => 0,
-      "endLength" => 4, "ops" => [{ "value" => "abc", "attributes" => {"bold" => true, "italic" => true}}, {"value" => "\n" }] }
-    assert ScribeDriver::JS.editor_delta_equals expected
-
+    expected_deltas.each do |expected|
+      @adapter.redo
+      assert ScribeDriver::JS.editor_delta_equals expected
+    end
   end
 end
