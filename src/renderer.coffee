@@ -1,7 +1,7 @@
 Scribe = require('./scribe')
 
 
-class Scribe.Renderer
+class Scribe.Renderer extends EventEmitter2
   @DEFAULTS:
     id: 'editor'
     keepHTML: false
@@ -53,6 +53,9 @@ class Scribe.Renderer
       '.indent-8' : { 'margin-left': '16em' }
       '.indent-9' : { 'margin-left': '18em' }
 
+  @events:
+    UPDATE: 'renderer-update'
+
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -68,8 +71,10 @@ class Scribe.Renderer
     this.addStyles(Scribe.Renderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     this.runWhenLoaded( =>
-      this.addStyles(options.styles) if options.styles?
-    , -10)
+      _.defer( =>
+        this.addStyles(options.styles) if options.styles?
+      )
+    )
 
   addContainer: (container, before = false) ->
     this.runWhenLoaded( =>
@@ -89,6 +94,7 @@ class Scribe.Renderer
       # Firefox needs defer
       _.defer( =>
         @root.ownerDocument.head.appendChild(style)
+        this.emit(Scribe.Renderer.events.UPDATE, styles)
       )
     )
 
@@ -112,26 +118,21 @@ class Scribe.Renderer
     # IE does not have contentWindow
     return @iframe.document or @iframe.contentWindow?.document
 
-  runWhenLoaded: (fn, priority = 0) ->
+  runWhenLoaded: (fn) ->
     return fn.call(this) if this.getDocument()?.readyState == 'complete'
     if @callbacks?
-      @callbacks[priority] ?= []
-      @callbacks[priority].push(fn)
+      @callbacks.push(fn)
     else
-      @callbacks = {}
-      @callbacks[priority] = [fn]
+      @callbacks = [fn]
       interval = setInterval( =>
         doc = this.getDocument()
         if doc?.readyState == 'complete'
           clearInterval(interval)
           _.defer( =>
-            keys = _.keys(@callbacks).sort((a,b) -> b - a)
-            _.each(keys, (key) =>
-              _.each(@callbacks[key], (callback) =>
-                callback.call(this)
-              )
+            _.each(@callbacks, (callback) =>
+              callback.call(this)
             )
-            @callbacks = {}
+            @callbacks = []
           )
         else if !doc
           clearInterval(interval)

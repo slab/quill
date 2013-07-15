@@ -83,12 +83,12 @@ class Scribe.MultiCursor
       '.cursor-caret': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '100%', 'left': '-1px' }
       '.cursor.top > .cursor-name': { 'top': '100%' }
     })
-    @editor.renderer.runWhenLoaded( =>
+    @editor.renderer.on(Scribe.Renderer.events.UPDATE, =>
       _.defer( =>
         @container.style.top = @editor.root.offsetTop
         @container.style.left = @editor.root.offsetLeft
       )
-    , -20)
+    )
     this.initListeners()
 
   initListeners: ->

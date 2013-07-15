@@ -5,7 +5,6 @@ initToolbar = (container, editor, toolbar) ->
   dropkickFormats = ['family', 'size']
   for format in dropkickFormats
     do (format) ->
-      console.log format
       $(".#{format}", $formattingContainer).dropkick({
         change: (value) -> editor.selection.format(format, value)
         width: 75
@@ -38,6 +37,7 @@ $(document).ready( ->
     editor = new Scribe.Editor(container.querySelector('.editor-container'), {
       renderer:
         styles:
+          'div.editor': { 'bottom': '15px', 'top': '15px' }
           'a': { 'color': '#06c' }
           '#link-tooltip':
             'border': '1px solid #ccc'
