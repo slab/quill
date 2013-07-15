@@ -66,22 +66,21 @@ class Scribe.MultiCursor
     @editor.renderer.addContainer(@container, true)
     @editor.renderer.addStyles({
       '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
-      '.cursor': { 'display': 'inline-block', 'height': '15px', 'position': 'absolute', 'width': '0px' }
+      '.cursor': { 'position': 'absolute' }
       '.cursor-name': {
-        'font-family': "'Helvetica', 'Arial', san-serif"
-        'font-size': '13px'
+        'bottom': '100%'
         'color': 'white'
-        'display': 'inline-block'
-        'left': '-1px'
-        'line-height': '1.154'
         'padding': '2px 8px'
         'position': 'absolute'
-        'top': '-18px'
         'white-space': 'nowrap'
       }
+      '.cursor-caret': { 
+        'height': '100%'
+        'position': 'absolute'
+        'width': '2px'
+      }
       '.cursor.hidden .cursor-name': { 'display': 'none' }
-      '.cursor-caret': { 'display': 'inline-block', 'width': '2px', 'position': 'absolute', 'height': '100%', 'left': '-1px' }
-      '.cursor.top > .cursor-name': { 'top': '100%' }
+      '.cursor.top > .cursor-name': { 'bottom': 'inherit', 'top': '100%' }
     })
     @editor.renderer.on(Scribe.Renderer.events.UPDATE, =>
       _.defer( =>
