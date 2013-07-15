@@ -37,6 +37,14 @@ class WebdriverAdapter
 
   # private
 
+  def undo
+    @driver.action.key_down(@@cmd_modifier).send_keys("z").key_up(@@cmd_modifier).perform
+  end
+
+  def redo
+    @driver.action.key_down(@@cmd_modifier).send_keys("Z").key_up(@@cmd_modifier).perform
+  end
+
   def insert_at(index, text)
     move_cursor(index)
     type_text(text)
