@@ -10,18 +10,26 @@ _initDeletes = ->
   )
 
 _initHotkeys = ->
-  this.addHotkey(Scribe.Keyboard.KEYS.TAB, =>
-    @editor.selection.deleteRange()
-    this.insertText("\t")
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.INDENT, (range) =>
+    lines = range.getLines()
+    if lines.length > 1
+      index = Scribe.Position.getIndex(lines[0].node)
+      _.each(lines, (line) =>
+        @editor.insertAt(index, "\t", {}, { source: 'user' })
+        index += line.length
+      )
+    else
+      range.deleteContents({ source: 'user' })
+      range.insertContents(0, "\t", {}, { source: 'user' })
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
-    this.toggleFormat(selection, 'bold')
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (range) =>
+    this.toggleFormat(range, 'bold')
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (selection) =>
-    this.toggleFormat(selection, 'italic')
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (range) =>
+    this.toggleFormat(range, 'italic')
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
-    this.toggleFormat(selection, 'underline')
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (range) =>
+    this.toggleFormat(range, 'underline')
   )
 
 _initListeners = ->
@@ -54,11 +62,13 @@ class Scribe.Keyboard
     DELETE    : 46
 
   @HOTKEYS:
-    BOLD:       { key: 'B', meta: true }
-    ITALIC:     { key: 'I', meta: true }
-    UNDERLINE:  { key: 'U', meta: true }
-    UNDO:       { key: 'Z', meta: true, shift: false }
-    REDO:       { key: 'Z', meta: true, shift: true }
+    BOLD:       { key: 'B',       meta: true }
+    INDENT:     { key: @KEYS.TAB, shift: false }
+    ITALIC:     { key: 'I',       meta: true }
+    OUTDENT:    { key: @KEYS.TAB, shift: true }
+    UNDERLINE:  { key: 'U',       meta: true }
+    UNDO:       { key: 'Z',       meta: true, shift: false }
+    REDO:       { key: 'Z',       meta: true, shift: true }
 
   @NAVIGATION: [@KEYS.UP, @KEYS.DOWN, @KEYS.LEFT, @KEYS.RIGHT]
 
@@ -101,16 +111,9 @@ class Scribe.Keyboard
     intersection = selection.getFormats()
     return intersection.bullet? || intersection.indent? || intersection.list?
 
-  insertText: (text) ->
-    selection = @editor.getSelection()
-    @editor.insertAt(selection.start.index, text, {}, false) if selection?
-    # Make sure selection is after our text
-    range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
-    @editor.setSelection(range, true)
-
-  toggleFormat: (selection, format) ->
-    formats = selection.getFormats()
-    @editor.selection.format(format, !formats[format], false)
+  toggleFormat: (range, format) ->
+    formats = range.getFormats()
+    range.formatContents(format, !formats[format], { source: 'user' })
 
 
 module.exports = Scribe

@@ -87,24 +87,6 @@ class Scribe.Selection
       )
     )
 
-  format: (name, value) ->
-    this.update()
-    return unless @range
-    start = @range.start.index
-    end = @range.end.index
-    formats = @range.getFormats()
-    @editor.formatAt(start, end - start, name, value, { source: 'user' }) if end > start
-    formats[name] = value
-    @range.formats = formats
-    this.setRange(new Scribe.Range(@editor, start, end))
-
-  deleteRange: ->
-    this.update()
-    return false if @range.isCollapsed()
-    @editor.deleteAt(@range.start.index, @range.end.index - @range.start.index)
-    this.update()
-    return @range
-
   getDimensions: ->
     rangyRange = this.getNativeRange()
     return rangyRange?.nativeRange?.getBoundingClientRect()

@@ -9,10 +9,18 @@ class Scribe.Range
     @start = new Scribe.Position(@editor, @start) if _.isNumber(@start)
     @end = new Scribe.Position(@editor, @end) if _.isNumber(@end)
 
+  deleteContents: (options)->
+    return if this.isCollapsed()
+    @editor.deleteAt(@start.index, @end.index - @start.index, options)
+
   equals: (range) ->
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
   
+  formatContents: (name, value, options) ->
+    return if this.isCollapsed()
+    @editor.formatAt(@start.index, @start.index - @end.index, name, value, options)
+
   # TODO implement the following:    
   # Return object representing intersection of formats of leaves in range
   # Values can be number or string representing value all leaves in range have, or an array of values if mixed (falsy values removed)
@@ -98,6 +106,9 @@ class Scribe.Range
         line = leaf.line
       return part
     ).join('')
+
+  insertContents: (offset, text, formats, options) ->
+    @editor.insertAt(@start.index + offset, text, formats, options)
 
   isCollapsed: ->
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset
