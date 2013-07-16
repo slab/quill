@@ -115,8 +115,7 @@ class Scribe.Renderer extends EventEmitter2
 
   getDocument: ->
     # Firefox does not like us saving a reference to this result so retrieve every time
-    # IE does not have contentWindow
-    return @iframe.document or @iframe.contentWindow?.document
+    return @iframe.contentWindow?.document
 
   runWhenLoaded: (fn) ->
     return fn.call(this) if this.getDocument()?.readyState == 'complete'
