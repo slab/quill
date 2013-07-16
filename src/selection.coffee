@@ -74,7 +74,7 @@ class Scribe.Selection
     @editor.renderer.runWhenLoaded( =>
       rangy.init()
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe)
-      this.setRange(new Scribe.Range(@editor, 0, 0))    # Range gets set to end of doc in Firefox by default
+      this.setRange(null)
     )
 
   initListeners: ->
@@ -86,6 +86,9 @@ class Scribe.Selection
         _.defer(checkUpdate)
       )
     )
+    setInterval( =>
+      checkUpdate() unless @range?    # Less important to detect existing range being unset
+    , 100)
 
   format: (name, value) ->
     this.update()
@@ -110,6 +113,7 @@ class Scribe.Selection
     return rangyRange?.nativeRange?.getBoundingClientRect()
     
   getNativeRange: ->
+    return null unless @nativeSelection
     @nativeSelection.refresh()
     return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
 
