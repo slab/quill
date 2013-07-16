@@ -35,7 +35,17 @@ class WebdriverAdapter
     end
   end
 
-  # private
+  def copy(index, length)
+    move_cursor(index)
+    highlight(length)
+    @driver.action.key_down(@@cmd_modifier).send_keys("c").key_up(@@cmd_modifier).perform
+    remove_highlighting
+  end
+
+  def paste(index)
+    move_cursor(index)
+    @driver.action.key_down(@@cmd_modifier).send_keys("v").key_up(@@cmd_modifier).perform
+  end
 
   def undo
     @driver.action.key_down(@@cmd_modifier).send_keys("z").key_up(@@cmd_modifier).perform
