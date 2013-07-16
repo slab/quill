@@ -30,12 +30,12 @@ module.exports = (grunt) ->
           ext: '.js'
         }]
       test:
-        files: [{ 
+        files: [{
           dest: 'build/tests/scripts/editor.js'
           src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/editor.coffee']
         }, {
-          dest: 'build/tests/scripts/fuzzer.js'
-          src: 'tests/scripts/fuzzer.coffee'
+          dest: 'build/tests/scripts/scribedriver.js'
+          src: 'tests/scripts/scribedriver.coffee'
         }, {
           dest: 'build/tests/scripts/unit.js'
           src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee']
