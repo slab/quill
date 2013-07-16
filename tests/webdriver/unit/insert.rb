@@ -43,13 +43,5 @@ describe "Test Insert" do
     end
   end
 
-  # it "should append to document" do
-  #   doc_length = ScribeDriver.js_get_doc_length(@driver)
-  #   delta = { 'startLength' => doc_length,
-  #             'endLength' => doc_length + 1,
-  #             'ops' => [ {'start' => 0, 'end' => doc_length - 1, 'attributes' => {} }, { 'value' => "0"}, {'start' => doc_length - 1, 'end' => doc_length }]}
-  #   apply_delta(delta)
-  # end
-
   # Multiline insertion at every position
 end
