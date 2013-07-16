@@ -9,22 +9,22 @@ module ScribeDriver
     end
 
     def self.editor_delta_equals(delta)
-      return self.execute_js "return window.Fuzzer.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
+      return self.execute_js "return window.ScribeDriver.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
     end
 
     def self.make_insert_delta(startLength, index, value, attributes)
-      return self.execute_js "return window.Fuzzer.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
+      return self.execute_js "return window.ScribeDriver.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
     end
 
     def self.set_scribe_delta(delta)
-      self.execute_js "window.editor.setDelta(window.Fuzzer.createDelta(#{delta.to_json}));"
+      self.execute_js "window.editor.setDelta(window.ScribeDriver.createDelta(#{delta.to_json}));"
     end
 
     def self.set_doc_delta(delta = nil)
       if not delta.nil?
-        self.execute_js "window.Fuzzer.docDelta = window.Fuzzer.createDelta(#{delta.to_json});"
+        self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.createDelta(#{delta.to_json});"
       else
-        self.execute_js "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+        self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getDelta());"
       end
     end
 
@@ -33,11 +33,11 @@ module ScribeDriver
     end
 
     def self.check_consistency
-      return self.execute_js "return window.Fuzzer.checkConsistency();"
+      return self.execute_js "return window.ScribeDriver.checkConsistency();"
     end
 
     def self.set_current_delta(delta)
-      return self.execute_js "window.Fuzzer.currentDelta = window.Fuzzer.createDelta(#{delta.to_json})"
+      return self.execute_js "window.ScribeDriver.currentDelta = window.ScribeDriver.createDelta(#{delta.to_json})"
     end
   end
 

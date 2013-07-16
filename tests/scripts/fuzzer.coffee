@@ -2,7 +2,7 @@ $(document).ready( ->
   $editors = $('.editor-container')
   window.editor = new Scribe.Editor($editors.get(0))
   editorToolbar = new Scribe.Toolbar('editor-toolbar', editor)
-  window.Fuzzer =
+  window.ScribeDriver =
     resetScribe: ->
       $('.editor-container').html($('#editor-cache').html())
       window.editor = new Scribe.Editor($editors.get(0))
@@ -22,7 +22,7 @@ $(document).ready( ->
 
     setDeltaReplay: (docDelta, deltaRef) ->
       d = JSON.parse(docDelta)
-      window.Fuzzer[deltaRef] =
+      window.ScribeDriver[deltaRef] =
         new window.Tandem.Delta(d.startLength, d.endLength, d.ops)
 
     createDelta: (template) ->
@@ -40,16 +40,16 @@ $(document).ready( ->
 
     autoFormatDelta: (delta) ->
       appendingToLine = (index) ->
-        op = window.Fuzzer.docDelta.getOpsAt(index, 1)
+        op = window.ScribeDriver.docDelta.getOpsAt(index, 1)
         return op.length > 0 and _.first(op).value == "\n"
 
       prependingToLine = (index) ->
-        op = window.Fuzzer.docDelta.getOpsAt(index - 1, 1)
+        op = window.ScribeDriver.docDelta.getOpsAt(index - 1, 1)
         return index == 0 or (op.length > 0 and _.first(op).value == "\n")
 
       getAttrsAt = (index) ->
         attrs = {}
-        op = _.first(window.Fuzzer.docDelta.getOpsAt(index, 1))
+        op = _.first(window.ScribeDriver.docDelta.getOpsAt(index, 1))
         attrs = op.attributes if op
         return attrs
 
@@ -85,13 +85,13 @@ $(document).ready( ->
       return delta
 
     createRandomDelta: ->
-      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
-      return window.Fuzzer.autoFormatDelta(randomDelta)
+      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.ScribeDriver.docDelta, 1)
+      return window.ScribeDriver.autoFormatDelta(randomDelta)
 
     initializeScribe: ->
-      window.editor.setDelta(window.Fuzzer.docDelta)
+      window.editor.setDelta(window.ScribeDriver.docDelta)
 
     checkConsistency: ->
-      actual = window.Fuzzer.cleanup(editor.getDelta())
-      window.Fuzzer.docDelta.compose(window.Fuzzer.currentDelta).isEqual(actual)
+      actual = window.ScribeDriver.cleanup(editor.getDelta())
+      window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta).isEqual(actual)
 )

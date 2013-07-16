@@ -18,24 +18,24 @@ def execute_js(driver, src, args = nil)
 end
 
 def js_get_as_str(driver, ref)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer['#{ref}'])"
+  return execute_js driver, "return JSON.stringify(window.ScribeDriver['#{ref}'])"
 end
 
 def js_get(driver, ref)
-  return execute_js driver, "return window.Fuzzer['#{ref}']"
+  return execute_js driver, "return window.ScribeDriver['#{ref}']"
 end
 
 def js_set_scribe_delta(driver)
-  return execute_js driver, "window.Fuzzer.initializeScribe()"
+  return execute_js driver, "window.ScribeDriver.initializeScribe()"
 end
 
 def js_set_delta_replay(driver, delta, delta_ref)
-  src = "return window.Fuzzer.setDeltaReplay(arguments[0], arguments[1])"
+  src = "return window.ScribeDriver.setDeltaReplay(arguments[0], arguments[1])"
   execute_js driver, src, [delta, delta_ref]
 end
 
 def js_set_current_delta(driver)
-  src = "window.Fuzzer.currentDelta = window.Fuzzer.createRandomDelta()"
+  src = "window.ScribeDriver.currentDelta = window.ScribeDriver.createRandomDelta()"
   execute_js driver, src
 end
 
@@ -44,15 +44,15 @@ def js_get_cur_doc_delta_as_str(driver)
 end
 
 def js_get_doc_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta);"
+  return execute_js driver, "return JSON.stringify(window.ScribeDriver.docDelta);"
 end
 
 def js_get_expected_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta.compose(window.Fuzzer.currentDelta));"
+  return execute_js driver, "return JSON.stringify(window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta));"
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+  execute_js driver, "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getDelta());"
 end
 
 
@@ -141,7 +141,7 @@ adapter.focus()
 ################################################################################
 def check_consistency(driver, replay_file)
   driver.switch_to.default_content
-  success = driver.execute_script "return window.Fuzzer.checkConsistency();"
+  success = driver.execute_script "return window.ScribeDriver.checkConsistency();"
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
     rand_delta = js_get_as_str(driver, "currentDelta")

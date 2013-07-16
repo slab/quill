@@ -9,7 +9,7 @@ describe "Test Insert" do
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
       '../../../..', 'build/tests/webdriver.html')}"
     @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
-    ScribeDriver::JS.execute_js("window.Fuzzer.resetScribe()")
+    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
     @adapter.focus()
@@ -35,7 +35,7 @@ describe "Test Insert" do
       delta = ScribeDriver::JS.make_insert_delta(doc_length, insert_at, 'a', {})
       apply_delta(delta, "Failed inserting 'a' at index #{insert_at}")
       # Reset state for next iteration
-      ScribeDriver::JS.execute_js("window.Fuzzer.resetScribe()")
+      ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
       @editor = @driver.find_element(:class, "editor")
       @adapter = WebdriverAdapter.new @driver, @editor
       ScribeDriver::JS.set_doc_delta
