@@ -22,7 +22,7 @@ hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  @editor.root.addEventListener('click', (event) =>
+  @editor.root.addEventListener('mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
