@@ -27,7 +27,7 @@ describe "Test Delete" do
   end
 
   def apply_delta(delta, err_msg)
-    ScribeDriver::JS.set_random_delta(delta)
+    ScribeDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta)
     success = ScribeDriver::JS.check_consistency
     success.must_equal true, err_msg
