@@ -40,4 +40,19 @@ describe "Test Formatting" do
                         { "start" => 3, "end" => 4 }]}
     apply_delta(delta, "Failed adding bold at index 0, length 3")
   end
+
+  it "should unformat already formatted text" do
+    delta = { "startLength" => 0,
+              "endLength" => 4,
+              "ops" => [{ "value" => "abc", "attributes" => {"bold" => true}}, {"value" => "\n"}]
+    }
+    ScribeDriver::JS.set_doc_delta delta
+    ScribeDriver::JS.set_scribe_delta delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+    delta = { "startLength" => 4,
+              "endLength" => 4,
+              "ops" => [{ "start" => 0, "end" => 3, "attributes" => {"bold" => nil}}, {"start" => 3, "end" => 4}]
+    }
+    apply_delta(delta, "Failed removing bold at index 0, length 3")
+  end
 end
