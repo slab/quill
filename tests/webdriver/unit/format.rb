@@ -38,6 +38,6 @@ describe "Test Formatting" do
               "endLength" => 4,
               "ops" => [{ "start" => 0, "end" => 3, "attributes" => { "bold" => true }},
                         { "start" => 3, "end" => 4 }]}
-    apply_delta(delta, 
+    apply_delta(delta, "Failed adding bold at index 0, length 3")
   end
 end
