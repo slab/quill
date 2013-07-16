@@ -34,8 +34,8 @@ def js_set_delta_replay(driver, delta, delta_ref)
   execute_js driver, src, [delta, delta_ref]
 end
 
-def js_set_random_delta(driver)
-  src = "window.Fuzzer.randomDelta = window.Fuzzer.createRandomDelta()"
+def js_set_current_delta(driver)
+  src = "window.Fuzzer.currentDelta = window.Fuzzer.createRandomDelta()"
   execute_js driver, src
 end
 
@@ -48,7 +48,7 @@ def js_get_doc_delta_as_str(driver)
 end
 
 def js_get_expected_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta));"
+  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta.compose(window.Fuzzer.currentDelta));"
 end
 
 def js_set_doc_delta(driver)
@@ -96,7 +96,7 @@ end
 def initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
   doc_delta, rand_delta = read_deltas_from_file(replay_file)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
-  js_set_delta_replay(driver, rand_delta, 'randomDelta')
+  js_set_delta_replay(driver, rand_delta, 'currentDelta')
   doc_delta = js_get(driver, "docDelta")
   js_set_scribe_delta(driver)
 
@@ -144,7 +144,7 @@ def check_consistency(driver, replay_file)
   success = driver.execute_script "return window.Fuzzer.checkConsistency();"
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
-    rand_delta = js_get_as_str(driver, "randomDelta")
+    rand_delta = js_get_as_str(driver, "currentDelta")
     expected_delta = js_get_expected_as_str(driver)
     actual_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
@@ -167,14 +167,14 @@ end
 
 if replay_file
   initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
-  random_delta = js_get(driver, "randomDelta")
+  random_delta = js_get(driver, "currentDelta")
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay_file)
 else
   js_set_doc_delta(driver)
   NUM_EDITS.times do |i|
-    js_set_random_delta(driver)
-    random_delta = js_get(driver, "randomDelta")
+    js_set_current_delta(driver)
+    random_delta = js_get(driver, "currentDelta")
     puts i.to_s.colorize(:green) if i % 10 == 0
     adapter.apply_delta(random_delta)
     check_consistency(driver, nil)

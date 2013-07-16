@@ -93,5 +93,5 @@ $(document).ready( ->
 
     checkConsistency: ->
       actual = window.Fuzzer.cleanup(editor.getDelta())
-      window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta).isEqual(actual)
+      window.Fuzzer.docDelta.compose(window.Fuzzer.currentDelta).isEqual(actual)
 )

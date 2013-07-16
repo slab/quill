@@ -36,8 +36,8 @@ module ScribeDriver
       return self.execute_js "return window.Fuzzer.checkConsistency();"
     end
 
-    def self.set_random_delta(delta)
-      return self.execute_js "window.Fuzzer.randomDelta = window.Fuzzer.createDelta(#{delta.to_json})"
+    def self.set_current_delta(delta)
+      return self.execute_js "window.Fuzzer.currentDelta = window.Fuzzer.createDelta(#{delta.to_json})"
     end
   end
 
