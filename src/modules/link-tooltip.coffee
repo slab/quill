@@ -102,8 +102,10 @@ initTooltip = ->
     '#link-tooltip.editing .url'    : { 'display': 'none' }
     '#link-tooltip.editing .change' : { 'display': 'none' }
   )
-  @editor.renderer.addContainer(@tooltip)
-
+  @editor.renderer.runWhenLoaded( =>
+    @editor.renderer.addContainer(@tooltip)
+  )
+  
 showTooptip = (target, subjectDist = 5) ->
   tooltip = @tooltip.getBoundingClientRect()
   tooltipHeight = tooltip.bottom - tooltip.top
