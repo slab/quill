@@ -65,9 +65,13 @@ class Scribe.Renderer extends EventEmitter2
 
 
   constructor: (@container, options = {}) ->
+    originalStyles = options.styles
     @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
+    @options.styles = originalStyles
     this.createFrame()
     @formats = {}
+    # IE10 ignores conditional comments and it still displays <div><br></div> as two lines
+    Scribe.Renderer.DEFAULTS.styles['br'] = { 'display': 'none' } if navigator.userAgent.match(/MSIE/);
     this.addStyles(Scribe.Renderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     this.runWhenLoaded( =>
@@ -82,11 +86,11 @@ class Scribe.Renderer extends EventEmitter2
       @root.parentNode.insertBefore(container, refNode)
     )
 
-  addStyles: (styles) ->
+  addStyles: (css) ->
     this.runWhenLoaded( =>
       style = @root.ownerDocument.createElement('style')
       style.type = 'text/css'
-      css = Scribe.Renderer.objToCss(styles)
+      css = Scribe.Renderer.objToCss(css) unless _.isString(css)
       if style.styleSheet?
         style.styleSheet.cssText = css
       else
@@ -94,7 +98,7 @@ class Scribe.Renderer extends EventEmitter2
       # Firefox needs defer
       _.defer( =>
         @root.ownerDocument.head.appendChild(style)
-        this.emit(Scribe.Renderer.events.UPDATE, styles)
+        this.emit(Scribe.Renderer.events.UPDATE, css)
       )
     )
 

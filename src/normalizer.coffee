@@ -141,7 +141,7 @@ class Scribe.Normalizer
     # Remove whitespace between tags
     html = html.replace(/\>\s+\</g, '><')
     # Standardize br
-    html = html.replace(/<br><\/br>/, '<br>')
+    html = html.replace(/<br><\/br>/, '<br/>')
     return html
 
   @removeNoBreak: (root) ->
