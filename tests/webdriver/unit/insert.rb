@@ -8,7 +8,7 @@ describe "Test Insert" do
   before do
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
       '../../../..', 'build/tests/webdriver/webdriver.html')}"
-    @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
+    @driver = ScribeDriver.create_scribe_driver(:firefox, editor_url)
     ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
@@ -24,6 +24,7 @@ describe "Test Insert" do
   def apply_delta(delta, err_msg)
     ScribeDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta)
+    debugger
     success = ScribeDriver::JS.check_consistency
     success.must_equal true, err_msg
   end
@@ -56,6 +57,21 @@ describe "Test Insert" do
                       "endLength" => 2,
                       "ops" => [{ "value" => "\n", "attributes" => {} },
                                 { "start" => 0, "end" => 1}]}
+    apply_delta current_delta, "Inserting \n at start of empty document fails."
+  end
+
+  it "should insert a newline at end of document" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 4,
+                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+    ScribeDriver::JS.set_doc_delta start_delta
+    ScribeDriver::JS.set_scribe_delta start_delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+    current_delta = { "startLength" => 4,
+                      "endLength" => 5,
+                      "ops" => [{ "start" => 0, "end" => 3, "attributes" => {} },
+                                { "value" => "\n", "attributes" => {} },
+                                { "start" => 3, "end" => 4, "attributes" => {} }]}
     apply_delta current_delta, "Inserting \n at start of empty document fails."
   end
 
