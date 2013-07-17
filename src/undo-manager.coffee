@@ -56,9 +56,11 @@ class Scribe.UndoManager
   initListeners: ->
     @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.UNDO, =>
       this.undo()
+      return false
     )
     @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.REDO, =>
       this.redo()
+      return false
     )
     @ignoringChanges = false
     @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>

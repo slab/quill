@@ -47,7 +47,7 @@ class ScribeHtmlTest
 class ScribeEditorTest extends ScribeHtmlTest
   @DEFAULTS:
     async         : true
-    ignoreExpect  : true
+    ignoreExpect  : false
 
   constructor: (options = {}) ->
     @settings = _.defaults(options, ScribeEditorTest.DEFAULTS)

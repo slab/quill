@@ -1,6 +1,7 @@
 #= require underscore
 #= require eventemitter2
 #= require linked_list
+#= require rangy-core
 #= require tandem-core
 #= require tandem-core.module
 #= require_tree ./scribe

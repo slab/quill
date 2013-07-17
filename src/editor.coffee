@@ -172,8 +172,8 @@ class Scribe.Editor extends EventEmitter2
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
     @doc = new Scribe.Document(@root)
-    @selection = new Scribe.Selection(this)
     @keyboard = new Scribe.Keyboard(this)
+    @selection = new Scribe.Selection(this)
     @undoManager = new Scribe.UndoManager(this, @options.undoManager)
     @pasteManager = new Scribe.PasteManager(this)
     @renderer.runWhenLoaded(@options.onReady)

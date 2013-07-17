@@ -8,10 +8,12 @@ enterEditMode = (url) ->
 
 exitEditMode = ->
   if @tooltipLink.innerText != @tooltipInput.value
-    @tooltipLink.innerText = @tooltipLink.href = @tooltipInput.value
     @editor.setSelection(@savedRange, true)
     @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
-    @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', @tooltipInput.value)
+    formats = @savedRange.getFormats()
+    if formats['link']?
+      @tooltipLink.innerText = @tooltipLink.href = formats['link']
+      @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', formats['link'])
     @editor.setSelection(null, true)
   Scribe.DOM.removeClass(@tooltip, 'editing')
 

@@ -2,18 +2,6 @@ Scribe = require('./scribe')
 
 
 Scribe.Debug =
-  getEditor: (editor) ->
-    editor ||= Scribe.Editor.editors[0]
-    return if _.isNumber(editor) then Scribe.Editor.editors[editor] else editor
-
-  getHtml: (editor) ->
-    doc = this.getDocument(editor)
-    return doc.root
-
-  getDocument: (editor) ->
-    editor = this.getEditor(editor)
-    return editor.doc
-
   checkDocumentConsistency: (doc, output = false) ->
     isConsistent = ->
       nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
@@ -128,49 +116,6 @@ Scribe.Debug =
         console.error lines
         console.error doc.lineMap
       return false
-
-  Test:
-    getRandomLength: ->
-      rand = Math.random()
-      if rand < 0.1
-        return 1
-      else if rand < 0.6
-        return _.random(0, 2)
-      else if rand < 0.8
-        return _.random(3, 4)
-      else if rand < 0.9
-        return _.random(5, 9)
-      else
-        return _.random(10, 50)
-
-    getRandomOperation: (editor, alphabet, formats) ->
-      formatKeys = _.keys(formats)
-      rand = Math.random()
-      lengthLimit = editor.getLength() - 1
-      if rand < 0.2
-        index = 0
-      else if rand < 0.4
-        index = lengthLimit
-      else
-        index = _.random(0, lengthLimit)
-      length = Scribe.Debug.Test.getRandomLength() + 1
-      rand = Math.random()
-      if rand < 0.5
-        return {op: 'insertAt', args: [index, Scribe.Debug.Test.getRandomString(alphabet, length), {}]}
-      if rand < 0.75
-        return null if index + length > lengthLimit
-        return {op: 'deleteAt', args: [index, length - 1]}
-      else
-        format = formatKeys[_.random(0, formatKeys.length - 1)]
-        value = formats[format][_.random(0, formats[format].length - 1)]
-        if format == 'link' && value == true
-          value = 'http://www.google.com'
-        return {op: 'formatAt', args: [index, length, format, value]}
-
-    getRandomString: (alphabet, length) ->
-      return _.map([0..(length - 1)], ->
-        return alphabet[_.random(0, alphabet.length - 1)]
-      ).join('')
 
 
 module.exports = Scribe
