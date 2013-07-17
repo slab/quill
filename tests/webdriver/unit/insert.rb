@@ -24,9 +24,14 @@ describe "Test Insert" do
   def apply_delta(delta, err_msg)
     ScribeDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta)
-    debugger
     success = ScribeDriver::JS.check_consistency
     success.must_equal true, err_msg
+  end
+
+  def reset_to(delta)
+    ScribeDriver::JS.set_doc_delta delta
+    ScribeDriver::JS.set_scribe_delta delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
   # Test autoformatting: Inserting a character into any tiype
@@ -50,9 +55,7 @@ describe "Test Insert" do
     start_delta = { "startLength" => 0,
                     "endLength" => 1,
                     "ops" => [{ "value" => "\n", "attributes" => {}}]}
-    ScribeDriver::JS.set_doc_delta start_delta
-    ScribeDriver::JS.set_scribe_delta start_delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+    reset_to start_delta
     current_delta = { "startLength" => 1,
                       "endLength" => 2,
                       "ops" => [{ "value" => "\n", "attributes" => {} },
@@ -64,9 +67,7 @@ describe "Test Insert" do
     start_delta = { "startLength" => 0,
                     "endLength" => 4,
                     "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-    ScribeDriver::JS.set_doc_delta start_delta
-    ScribeDriver::JS.set_scribe_delta start_delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+    reset_to start_delta
     current_delta = { "startLength" => 4,
                       "endLength" => 5,
                       "ops" => [{ "start" => 0, "end" => 3, "attributes" => {} },
