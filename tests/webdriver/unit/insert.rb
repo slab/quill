@@ -76,5 +76,30 @@ describe "Test Insert" do
     apply_delta current_delta, "Inserting \n at start of empty document fails."
   end
 
+  it "should indent text when tab is hit" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 4,
+                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+    reset_to start_delta
+    current_delta = { "startLength" => 4,
+                      "endLength" => 5,
+                      "ops" => [{ "value" => "\t", "attributes" => {}},
+                                { "start" => 0, "end" => 4}]}
+    apply_delta current_delta, "Failed inserting tab at 0th index."
+  end
+
+  it "should insert a tab followed by more text" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 4,
+                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+    reset_to start_delta
+
+    current_delta = { "startLength" => 4,
+                      "endLength" => 8,
+                      "ops" => [{ "value" => "\tabc", "attributes" => {}},
+                                { "start" => 0, "end" => 4}]}
+    apply_delta current_delta, "Failed inserting tab + text at 0th index."
+  end
+
   # Multiline insertion at every position
 end
