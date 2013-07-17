@@ -35,7 +35,7 @@ module.exports = (grunt) ->
           src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/editor.coffee']
         }, {
           dest: 'build/tests/scripts/scribedriver.js'
-          src: 'tests/scripts/scribedriver.coffee'
+          src: 'tests/webdriver/lib/scribedriver.coffee'
         }, {
           dest: 'build/tests/scripts/unit.js'
           src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee']
