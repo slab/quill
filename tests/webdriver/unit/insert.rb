@@ -4,7 +4,7 @@ require 'minitest/pride'
 require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
 
-describe "Test Insert" do
+describe "Insert" do
   before do
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
       '../../../..', 'build/tests/webdriver/webdriver.html')}"
@@ -76,58 +76,60 @@ describe "Test Insert" do
     apply_delta current_delta, "Inserting \n at start of empty document fails."
   end
 
-  it "should indent text when tab is prepended" do
-    start_delta = { "startLength" => 0,
-                    "endLength" => 4,
-                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-    reset_to start_delta
+  describe "tab" do
+    it "should indent text when tab is prepended" do
+      start_delta = { "startLength" => 0,
+                      "endLength" => 4,
+                      "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+      reset_to start_delta
 
-    current_delta = { "startLength" => 4,
-                      "endLength" => 5,
-                      "ops" => [{ "value" => "\t", "attributes" => {}},
-                                { "start" => 0, "end" => 4}]}
-    apply_delta current_delta, "Failed inserting tab at 0th index."
-  end
+      current_delta = { "startLength" => 4,
+                        "endLength" => 5,
+                        "ops" => [{ "value" => "\t", "attributes" => {}},
+                                  { "start" => 0, "end" => 4}]}
+      apply_delta current_delta, "Failed inserting tab at 0th index."
+    end
 
-  it "should prepend a tab followed by more text" do
-    start_delta = { "startLength" => 0,
-                    "endLength" => 4,
-                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-    reset_to start_delta
+    it "should prepend a tab followed by more text" do
+      start_delta = { "startLength" => 0,
+                      "endLength" => 4,
+                      "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+      reset_to start_delta
 
-    current_delta = { "startLength" => 4,
-                      "endLength" => 8,
-                      "ops" => [{ "value" => "\tabc", "attributes" => {}},
-                                { "start" => 0, "end" => 4}]}
-    apply_delta current_delta, "Failed inserting tab + text at 0th index."
-  end
+      current_delta = { "startLength" => 4,
+                        "endLength" => 8,
+                        "ops" => [{ "value" => "\tabc", "attributes" => {}},
+                                  { "start" => 0, "end" => 4}]}
+      apply_delta current_delta, "Failed inserting tab + text at 0th index."
+    end
 
-  it "should append a tab" do
-    start_delta = { "startLength" => 0,
-                    "endLength" => 4,
-                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-    reset_to start_delta
+    it "should append a tab" do
+      start_delta = { "startLength" => 0,
+                      "endLength" => 4,
+                      "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+      reset_to start_delta
 
-    current_delta = { "startLength" => 4,
-                      "endLength" => 5,
-                      "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
-                                { "value" => "\t", "attributes" => {}},
-                                { "start" => 3, "end" => 4}]}
-    apply_delta current_delta, "Failed appending tab."
-  end
+      current_delta = { "startLength" => 4,
+                        "endLength" => 5,
+                        "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
+                                  { "value" => "\t", "attributes" => {}},
+                                  { "start" => 3, "end" => 4}]}
+      apply_delta current_delta, "Failed appending tab."
+    end
 
-  it "should append a tab followed by more text" do
-    start_delta = { "startLength" => 0,
-                    "endLength" => 4,
-                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-    reset_to start_delta
+    it "should append a tab followed by more text" do
+      start_delta = { "startLength" => 0,
+                      "endLength" => 4,
+                      "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+      reset_to start_delta
 
-    current_delta = { "startLength" => 4,
-                      "endLength" => 8,
-                      "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
-                                { "value" => "\tdef", "attributes" => {}},
-                                { "start" => 3, "end" => 4}]}
-    apply_delta current_delta, "Failed appending tab."
+      current_delta = { "startLength" => 4,
+                        "endLength" => 8,
+                        "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
+                                  { "value" => "\tdef", "attributes" => {}},
+                                  { "start" => 3, "end" => 4}]}
+      apply_delta current_delta, "Failed appending tab."
+    end
   end
 
   # Multiline insertion at every position
