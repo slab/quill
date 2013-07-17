@@ -58,7 +58,7 @@ module.exports = (grunt) ->
           ' *  Jason Chen, Salesforce.com\n' +
           ' */\n\n'
       scribe:
-        files: [{ 
+        files: [{
           dest: 'build/scribe.all.js'
           src: [
             'node_modules/underscore/underscore.js',
@@ -91,7 +91,7 @@ module.exports = (grunt) ->
       tests:
         expand: true
         dest: 'build/'
-        src: ['tests/*.haml', 'tests/testem/*.haml', '!tests/mocha.haml']
+        src: ['tests/*.haml', 'tests/testem/*.haml', 'tests/webdriver/*.haml', '!tests/mocha.haml']
         ext: ['.html']
 
     sass:

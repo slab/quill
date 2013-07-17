@@ -11,7 +11,7 @@ describe "Test undo redo" do
 
   before do
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
-      '../../../..', 'build/tests/webdriver.html')}"
+      '../../../..', 'build/tests/webdriver/webdriver.html')}"
     @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
