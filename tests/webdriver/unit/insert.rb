@@ -76,11 +76,12 @@ describe "Test Insert" do
     apply_delta current_delta, "Inserting \n at start of empty document fails."
   end
 
-  it "should indent text when tab is hit" do
+  it "should indent text when tab is prepended" do
     start_delta = { "startLength" => 0,
                     "endLength" => 4,
                     "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
     reset_to start_delta
+
     current_delta = { "startLength" => 4,
                       "endLength" => 5,
                       "ops" => [{ "value" => "\t", "attributes" => {}},
@@ -88,7 +89,7 @@ describe "Test Insert" do
     apply_delta current_delta, "Failed inserting tab at 0th index."
   end
 
-  it "should insert a tab followed by more text" do
+  it "should prepend a tab followed by more text" do
     start_delta = { "startLength" => 0,
                     "endLength" => 4,
                     "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
@@ -99,6 +100,34 @@ describe "Test Insert" do
                       "ops" => [{ "value" => "\tabc", "attributes" => {}},
                                 { "start" => 0, "end" => 4}]}
     apply_delta current_delta, "Failed inserting tab + text at 0th index."
+  end
+
+  it "should append a tab" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 4,
+                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+    reset_to start_delta
+
+    current_delta = { "startLength" => 4,
+                      "endLength" => 5,
+                      "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
+                                { "value" => "\t", "attributes" => {}},
+                                { "start" => 3, "end" => 4}]}
+    apply_delta current_delta, "Failed appending tab."
+  end
+
+  it "should append a tab followed by more text" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 4,
+                    "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
+    reset_to start_delta
+
+    current_delta = { "startLength" => 4,
+                      "endLength" => 8,
+                      "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
+                                { "value" => "\tdef", "attributes" => {}},
+                                { "start" => 3, "end" => 4}]}
+    apply_delta current_delta, "Failed appending tab."
   end
 
   # Multiline insertion at every position
