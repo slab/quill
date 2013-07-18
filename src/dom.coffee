@@ -2,7 +2,8 @@ Scribe = require('./scribe')
 
 
 Scribe.DOM = 
-  NOBREAK_SPACE:  "\uFEFF"
+  NOBREAK_SPACE:  "&nbps;"
+  ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
   addClass: (node, cssClass) ->
     return if Scribe.DOM.hasClass(node, cssClass)
