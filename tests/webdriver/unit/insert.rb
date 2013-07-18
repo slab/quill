@@ -151,6 +151,4 @@ describe "Insert" do
       apply_delta current_delta, "Failed appending tab."
     end
   end
-
-  # Multiline insertion at every position
 end
