@@ -15,6 +15,6 @@ describe('Leaf', ->
     arr = _.map(leafIterator.toArray(), (leaf) ->
       return leaf.id
     )
-    expect(arr).to.deep.equal(leaves)
+    expect(_.isEqual(arr, leaves)).to.be(true)
   )
 )

@@ -2,7 +2,10 @@ Scribe = require('./scribe')
 
 
 Scribe.DOM = 
-  NOBREAK_SPACE:  "\uFEFF"
+  ELEMENT_NODE: 1
+  NOBREAK_SPACE:  "&nbps;"
+  TEXT_NODE: 3
+  ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
   addClass: (node, cssClass) ->
     return if Scribe.DOM.hasClass(node, cssClass)
@@ -10,6 +13,16 @@ Scribe.DOM =
       node.classList.add(cssClass)
     else if node.className?
       node.className += ' ' + cssClass
+
+  addEventListener: (node, eventName, listener) ->
+    if node.addEventListener?
+      return node.addEventListener(eventName, listener)
+    else if node.attachEvent?
+      if _.indexOf(['change', 'click', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
+        return node.attachEvent("on#{eventName}", listener)
+      if eventName == 'DOMSubtreeModified'
+        return node.attachEvent('onpropertychange', listener)
+    console.warn 'Cannot attach to unsupported event', eventName
 
   findDeepestNode: (node, offset) ->
     if node.firstChild?
@@ -28,6 +41,13 @@ Scribe.DOM =
       return _.clone(node.classList)
     else if node.className?
       return node.className.split(' ')
+
+  getText: (node) ->
+    switch node.nodeType
+      when Scribe.DOM.ELEMENT_NODE
+        return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
+      when Scribe.DOM.TEXT_NODE then return node.data or ""
+      else return ""
 
   hasClass: (node, cssClass) ->
     if node.classList?
@@ -75,6 +95,16 @@ Scribe.DOM =
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
 
+  setText: (node, text) ->
+    switch node.nodeType
+      when Scribe.DOM.ELEMENT_NODE
+        if node.textContent
+          node.textContent = text
+        else
+          node.innerText = text
+      when Scribe.DOM.TEXT_NODE then node.data = text
+      else return # Noop
+
   splitAfter: (node, root) ->
     return false if node == root or node.parentNode == root
     parentNode = node.parentNode
@@ -91,7 +121,7 @@ Scribe.DOM =
     offset = Math.min(offset, nodeLength)
     return [node.previousSibling, node, false] unless force or offset != 0
     return [node, node.nextSibling, false] unless force or offset != nodeLength
-    if node.nodeType == node.TEXT_NODE
+    if node.nodeType == Scribe.DOM.TEXT_NODE
       after = node.splitText(offset)
       return [node, after, true]
     else

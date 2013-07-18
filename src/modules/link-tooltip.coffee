@@ -3,17 +3,16 @@ Scribe = require('../scribe')
 
 enterEditMode = (url) ->
   url = 'http://' + url unless /^http[s]?:\/\//.test(url)
-  @tooltipInput.value = url
   Scribe.DOM.addClass(@tooltip, 'editing')
+  @tooltipInput.focus()
+  @tooltipInput.value = url
 
 exitEditMode = ->
   if @tooltipLink.innerText != @tooltipInput.value
-    @editor.setSelection(@savedRange, true)
-    @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
-    formats = @savedRange.getFormats()
-    if formats['link']?
-      @tooltipLink.innerText = @tooltipLink.href = formats['link']
-      @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', formats['link'])
+    @savedRange.formatContents('link', @tooltipInput.value, { source: 'user' })
+    @tooltipLink.href = @tooltipInput.value
+    Scribe.DOM.setText(@tooltipLink, @tooltipInput.value)
+    @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', @tooltipInput.value)
     @editor.setSelection(null, true)
   Scribe.DOM.removeClass(@tooltip, 'editing')
 
@@ -21,12 +20,12 @@ hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  @editor.root.addEventListener('click', (event) =>
+  Scribe.DOM.addEventListener(@editor.root, 'mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
         start = new Scribe.Position(@editor, link, 0)
-        end = new Scribe.Position(@editor, link, link.textContent.length)
+        end = new Scribe.Position(@editor, link, Scribe.DOM.getText(link).length)
         @savedRange = new Scribe.Range(@editor, start, end)
         @tooltipLink.innerText = @tooltipLink.href = link.href
         Scribe.DOM.removeClass(@tooltip, 'editing')
@@ -35,7 +34,7 @@ initListeners = ->
       link = link.parentNode
     hideTooltip.call(this)
   )
-  @button.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@button, 'click', =>
     value = null
     if Scribe.DOM.hasClass(@button, 'active')
       value = false
@@ -45,22 +44,22 @@ initListeners = ->
       if /\w+\.\w+/.test(url)
         value = url
       else
-        enterEditMode.call(this, url)
         Scribe.DOM.addClass(@tooltip, 'editing')
         showTooptip.call(this, @editor.selection.getDimensions())
-        @tooltipInput.focus()
+        enterEditMode.call(this, url)
     if value?
-      @editor.selection.format('link', value, { source: 'user' })
+      range = @editor.selection.getRange()
+      range.formatContents('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
   )
-  @tooltipChange.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@tooltipChange, 'click', =>
     enterEditMode.call(this, @tooltipLink.innerText)
   )
-  @tooltipDone.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@tooltipDone, 'click', =>
     exitEditMode.call(this)
   )
-  @tooltipInput.addEventListener('keyup', (event) =>
-    exitEditMode.call(this) if event.which == Scribe.Keyboard.KEYS.ENTER
+  Scribe.DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
+    exitEditMode.call(this) if event.which == Scribe.Keyboard.keys.ENTER
   )
 
 initTooltip = ->
@@ -102,8 +101,10 @@ initTooltip = ->
     '#link-tooltip.editing .url'    : { 'display': 'none' }
     '#link-tooltip.editing .change' : { 'display': 'none' }
   )
-  @editor.renderer.addContainer(@tooltip)
-
+  @editor.renderer.runWhenLoaded( =>
+    @editor.renderer.addContainer(@tooltip)
+  )
+  
 showTooptip = (target, subjectDist = 5) ->
   tooltip = @tooltip.getBoundingClientRect()
   tooltipHeight = tooltip.bottom - tooltip.top

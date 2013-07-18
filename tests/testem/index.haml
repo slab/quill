@@ -37,11 +37,10 @@
     %script{:type => 'text/javascript', :src => "../../scribe.js"}
 
     %script{:type => 'text/javascript', :src => '../../lib/mocha.js'}
-    %script{:type => 'text/javascript', :src => '../../lib/chai.js'}
+    %script{:type => 'text/javascript', :src => '../../lib/expect.js'}
     %script{:type => 'text/javascript', :src => '/testem.js'}
     :javascript
       mocha.setup('bdd');
-      expect = chai.expect;
     %script{:type => 'text/javascript', :src => '../scripts/unit.js'}
     :javascript
       mocha.run();

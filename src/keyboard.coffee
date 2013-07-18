@@ -2,7 +2,7 @@ Scribe = require('./scribe')
 
 
 _initDeletes = ->
-  _.each([Scribe.Keyboard.KEYS.DELETE, Scribe.Keyboard.KEYS.BACKSPACE], (key) =>
+  _.each([Scribe.Keyboard.keys.DELETE, Scribe.Keyboard.keys.BACKSPACE], (key) =>
     this.addHotkey(key, =>
       # Prevent deleting if editor is already blank (browser quirk fix)
       return @editor.getLength() > 1
@@ -10,22 +10,29 @@ _initDeletes = ->
   )
 
 _initHotkeys = ->
-  this.addHotkey(Scribe.Keyboard.KEYS.TAB, =>
-    @editor.selection.deleteRange()
-    this.insertText("\t")
+  this.addHotkey(Scribe.Keyboard.hotkeys.OUTDENT, (range) =>
+    _onTab.call(this, range, true)
+    return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (selection) =>
-    this.toggleFormat(selection, 'bold')
+  this.addHotkey(Scribe.Keyboard.hotkeys.INDENT, (range) =>
+    _onTab.call(this, range, false)
+    return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (selection) =>
-    this.toggleFormat(selection, 'italic')
+  this.addHotkey(Scribe.Keyboard.hotkeys.BOLD, (range) =>
+    this.toggleFormat(range, 'bold')
+    return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (selection) =>
-    this.toggleFormat(selection, 'underline')
+  this.addHotkey(Scribe.Keyboard.hotkeys.ITALIC, (range) =>
+    this.toggleFormat(range, 'italic')
+    return false
+  )
+  this.addHotkey(Scribe.Keyboard.hotkeys.UNDERLINE, (range) =>
+    this.toggleFormat(range, 'underline')
+    return false
   )
 
 _initListeners = ->
-  @editor.root.addEventListener('keydown', (event) =>
+  Scribe.DOM.addEventListener(@editor.root, 'keydown', (event) =>
     event ||= window.event
     if @hotkeys[event.which]?
       prevent = false
@@ -41,9 +48,36 @@ _initListeners = ->
     return !prevent
   )
 
+_onTab = (range, shift = false) ->
+  # Behavior according to Google Docs + Word
+  # When tab on one line, regardless if shift is down, delete selection and insert a tab
+  # When tab on multiple lines, indent each line if possible, outdent if shift is down
+  lines = range.getLines()
+  if lines.length > 1
+    index = Scribe.Position.getIndex(lines[0].node)
+    start = range.start.index + (if shift then -1 else 1)
+    offsetChange = 0
+    _.each(lines, (line) =>
+      if !shift
+        @editor.insertAt(index, '\t', {}, { source: 'user' })
+        offsetChange += 1
+      else if line.leaves.first.text[0] == '\t'
+        @editor.deleteAt(index, 1, { source: 'user' })
+        offsetChange -= 1
+      else if line == lines[0]
+        start = range.start.index
+      index += line.length
+    )
+    end = range.end.index + offsetChange
+    @editor.setSelection(new Scribe.Range(@editor, start, end))
+  else
+    range.deleteContents({ source: 'user' })
+    range.insertContents(0, "\t", {}, { source: 'user' })
+    @editor.setSelection(new Scribe.Range(@editor, range.start.index + 1, range.start.index + 1))
+
 
 class Scribe.Keyboard
-  @KEYS:
+  @keys:
     BACKSPACE : 8
     TAB       : 9
     ENTER     : 13
@@ -53,14 +87,16 @@ class Scribe.Keyboard
     DOWN      : 40
     DELETE    : 46
 
-  @HOTKEYS:
-    BOLD:       { key: 'B', meta: true }
-    ITALIC:     { key: 'I', meta: true }
-    UNDERLINE:  { key: 'U', meta: true }
-    UNDO:       { key: 'Z', meta: true, shift: false }
-    REDO:       { key: 'Z', meta: true, shift: true }
+  @hotkeys:
+    BOLD:       { key: 'B',       meta: true }
+    INDENT:     { key: @keys.TAB, shift: false }
+    ITALIC:     { key: 'I',       meta: true }
+    OUTDENT:    { key: @keys.TAB, shift: true }
+    UNDERLINE:  { key: 'U',       meta: true }
+    UNDO:       { key: 'Z',       meta: true, shift: false }
+    REDO:       { key: 'Z',       meta: true, shift: true }
 
-  @NAVIGATION: [@KEYS.UP, @KEYS.DOWN, @KEYS.LEFT, @KEYS.RIGHT]
+  @NAVIGATION: [@keys.UP, @keys.DOWN, @keys.LEFT, @keys.RIGHT]
 
   constructor: (@editor) ->
     @hotkeys = {}
@@ -96,21 +132,9 @@ class Scribe.Keyboard
         applyIndent(line, 'indent')
     )
 
-  onIndentLine: (selection) ->
-    return false if !selection?
-    intersection = selection.getFormats()
-    return intersection.bullet? || intersection.indent? || intersection.list?
-
-  insertText: (text) ->
-    selection = @editor.getSelection()
-    @editor.insertAt(selection.start.index, text, {}, false) if selection?
-    # Make sure selection is after our text
-    range = new Scribe.Range(@editor, selection.start.index + text.length, selection.start.index + text.length)
-    @editor.setSelection(range, true)
-
-  toggleFormat: (selection, format) ->
-    formats = selection.getFormats()
-    @editor.selection.format(format, !formats[format], false)
+  toggleFormat: (range, format) ->
+    formats = range.getFormats()
+    range.formatContents(format, !formats[format], { source: 'user' })
 
 
 module.exports = Scribe

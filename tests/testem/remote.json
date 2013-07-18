@@ -75,7 +75,7 @@
     }
   },
   "launch_in_ci": [
-    "Mac Chrome", "Mac Firefox", "Mac Safari", 
+    "Mac Chrome", "Mac Firefox", "Mac Safari",
     "Windows 8 Chrome", "Windows 8 Firefox", "Windows 8 Safari", "Windows 8 IE 10",
     "Windows 7 Chrome", "Windows 7 Firefox", "Windows 7 Safari", "Windows 7 IE 10", "Windows 7 IE 9", "Windows 7 IE 8",
     "Windows XP Chrome", "Windows XP Firefox", "Windows XP Safari", "Windows XP IE 8"

@@ -1,7 +1,7 @@
 Scribe = require('./scribe')
 
 
-class Scribe.Renderer
+class Scribe.Renderer extends EventEmitter2
   @DEFAULTS:
     id: 'editor'
     keepHTML: false
@@ -53,6 +53,9 @@ class Scribe.Renderer
       '.indent-8' : { 'margin-left': '16em' }
       '.indent-9' : { 'margin-left': '18em' }
 
+  @events:
+    UPDATE: 'renderer-update'
+
 
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
@@ -62,14 +65,20 @@ class Scribe.Renderer
 
 
   constructor: (@container, options = {}) ->
+    originalStyles = options.styles
     @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
+    @options.styles = originalStyles
     this.createFrame()
     @formats = {}
+    # IE10 ignores conditional comments and it still displays <div><br></div> as two lines
+    Scribe.Renderer.DEFAULTS.styles['br'] = { 'display': 'none' } if navigator.userAgent.match(/MSIE/);
     this.addStyles(Scribe.Renderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     this.runWhenLoaded( =>
-      this.addStyles(options.styles) if options.styles?
-    , -10)
+      _.defer( =>
+        this.addStyles(options.styles) if options.styles?
+      )
+    )
 
   addContainer: (container, before = false) ->
     this.runWhenLoaded( =>
@@ -77,18 +86,19 @@ class Scribe.Renderer
       @root.parentNode.insertBefore(container, refNode)
     )
 
-  addStyles: (styles) ->
+  addStyles: (css) ->
     this.runWhenLoaded( =>
       style = @root.ownerDocument.createElement('style')
       style.type = 'text/css'
-      css = Scribe.Renderer.objToCss(styles)
+      css = Scribe.Renderer.objToCss(css) unless _.isString(css)
       if style.styleSheet?
         style.styleSheet.cssText = css
       else
         style.appendChild(@root.ownerDocument.createTextNode(css))
       # Firefox needs defer
       _.defer( =>
-        @root.ownerDocument.head.appendChild(style)
+        @root.ownerDocument.querySelector('head').appendChild(style)
+        this.emit(Scribe.Renderer.events.UPDATE, css)
       )
     )
 
@@ -96,7 +106,7 @@ class Scribe.Renderer
     html = @container.innerHTML
     @container.innerHTML = ''
     @iframe = @container.ownerDocument.createElement('iframe')
-    @iframe.frameborder = 0
+    @iframe.frameborder = '0'
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
     @root = this.getDocument().createElement('div')
@@ -109,29 +119,23 @@ class Scribe.Renderer
 
   getDocument: ->
     # Firefox does not like us saving a reference to this result so retrieve every time
-    # IE does not have contentWindow
-    return @iframe.document or @iframe.contentWindow?.document
+    return @iframe.contentWindow?.document
 
-  runWhenLoaded: (fn, priority = 0) ->
+  runWhenLoaded: (fn) ->
     return fn.call(this) if this.getDocument()?.readyState == 'complete'
     if @callbacks?
-      @callbacks[priority] ?= []
-      @callbacks[priority].push(fn)
+      @callbacks.push(fn)
     else
-      @callbacks = {}
-      @callbacks[priority] = [fn]
+      @callbacks = [fn]
       interval = setInterval( =>
         doc = this.getDocument()
         if doc?.readyState == 'complete'
           clearInterval(interval)
           _.defer( =>
-            keys = _.keys(@callbacks).sort((a,b) -> b - a)
-            _.each(keys, (key) =>
-              _.each(@callbacks[key], (callback) =>
-                callback.call(this)
-              )
+            _.each(@callbacks, (callback) =>
+              callback.call(this)
             )
-            @callbacks = {}
+            @callbacks = []
           )
         else if !doc
           clearInterval(interval)

@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "0.6.7",
+  "version": "0.7.0",
   "dependencies": {
     "tandem-core" : "git+ssh://git@github.com:stypi/tandem-core.git#v0.3.3",
     "underscore"  : "1.4.x"
@@ -11,6 +11,7 @@
     "chai": "1.7.x",
     "coffee-script": "1.6.x",
     "commander": "1.1.x",
+    "expect.js": "0.2.x",
     "grunt": "0.4.x",
     "grunt-coffeeify": "git+ssh://git@github.com:stypi/grunt-coffeeify.git#master",
     "grunt-contrib-clean": "0.4.x",

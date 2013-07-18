@@ -1,0 +1,48 @@
+.editor-wrapper
+  border: 1px solid #ccc
+  float: left
+  margin-left: 3%
+  margin-top: 15px
+  width: 45.5%
+
+.editor-container
+  height: 400px
+
+.formatting-container
+  border-bottom: 1px solid #ccc
+  height: 36px
+  line-height: 32px
+  padding: 0px 5px
+  .format-group
+    display: inline-block
+    height: 24px
+    line-height: 24px
+    margin-right: 15px
+    margin-top: 4px
+    vertical-align: middle
+  .format-button
+    background-repeat: repeat-x
+    display: inline-block
+    height: 24px
+  .format
+    background-position: center center
+    background-repeat: no-repeat
+    border-right: 1px solid #ddd
+    cursor: pointer
+    display: inline-block
+    height: 16px
+    padding: 0px 6px
+    vertical-align: middle
+    width: 16px
+  .format.last
+    border-right: 0px
+  .font-family
+    margin-right: 10px
+  .font-family, .font-size
+    visibility: hidden
+    
+  @each $format in bold, italic, strike, underline, list, bullet, outdent, indent, link
+    .#{$format}
+      background-image: url(../images/#{$format}.png)
+    .#{$format}:hover, .#{$format}:active, .#{$format}.active
+      background-image: url(../images/#{$format}-color.png)

@@ -5,12 +5,12 @@ Scribe = require('./scribe')
 class Scribe.Position
   @findLeafNode: (editor, node, offset) ->
     [node, offset] = Scribe.DOM.findDeepestNode(node, offset)
-    if node.nodeType == node.TEXT_NODE
+    if node.nodeType == Scribe.DOM.TEXT_NODE
       offset = Scribe.Position.getIndex(node, offset, node.parentNode)
       node = node.parentNode
     return [node, offset]
   
-  @getIndex: (node, index, offsetNode = null) ->
+  @getIndex: (node, index = 0, offsetNode = null) ->
     while node != offsetNode and node.ownerDocument? and node.parentNode != node.ownerDocument.body
       while node.previousSibling?
         node = node.previousSibling

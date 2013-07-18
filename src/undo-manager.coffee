@@ -54,11 +54,11 @@ class Scribe.UndoManager
     this.initListeners()
 
   initListeners: ->
-    @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.UNDO, =>
+    @editor.keyboard.addHotkey(Scribe.Keyboard.hotkeys.UNDO, =>
       this.undo()
       return false
     )
-    @editor.keyboard.addHotkey(Scribe.Keyboard.HOTKEYS.REDO, =>
+    @editor.keyboard.addHotkey(Scribe.Keyboard.hotkeys.REDO, =>
       this.redo()
       return false
     )
