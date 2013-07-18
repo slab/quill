@@ -97,7 +97,7 @@ class Scribe.Renderer extends EventEmitter2
         style.appendChild(@root.ownerDocument.createTextNode(css))
       # Firefox needs defer
       _.defer( =>
-        @root.ownerDocument.head.appendChild(style)
+        @root.ownerDocument.querySelector('head').appendChild(style)
         this.emit(Scribe.Renderer.events.UPDATE, css)
       )
     )
