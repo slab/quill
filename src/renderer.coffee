@@ -106,7 +106,7 @@ class Scribe.Renderer extends EventEmitter2
     html = @container.innerHTML
     @container.innerHTML = ''
     @iframe = @container.ownerDocument.createElement('iframe')
-    @iframe.frameborder = 0
+    @iframe.frameborder = '0'
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
     @root = this.getDocument().createElement('div')
