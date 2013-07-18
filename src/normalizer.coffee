@@ -145,7 +145,7 @@ class Scribe.Normalizer
     return html
 
   @requireLeaf: (lineNode) ->
-    unless lineNode.childNodes.length > 1
+    unless lineNode.childNodes.length > 0
       if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
