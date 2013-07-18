@@ -20,17 +20,20 @@ coverage:
 	@rm -rf tmp
 	@grunt > /dev/null
 
-chrome:
+fuzzer-chrome:
 	@ruby tests/webdriver/fuzzer.rb chrome
 
-firefox:
+fuzzer-firefox:
 	@ruby tests/webdriver/fuzzer.rb firefox
 
-chrome-replay:
+fuzzer-chrome-replay:
 	@ruby tests/webdriver/fuzzer.rb chrome $(replay_file)
 
-firefox-replay:
+fuzzer-firefox-replay:
 	@ruby tests/webdriver/fuzzer.rb firefox $(replay_file)
+
+webdriver-unit:
+	@ruby tests/webdriver/unit/unit_runner.rb
 
 test:
 	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html

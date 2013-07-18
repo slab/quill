@@ -9,7 +9,7 @@ describe "Insert" do
   before do
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
       '../../../..', 'build/tests/webdriver/webdriver.html')}"
-    @driver = ScribeDriver.create_scribe_driver(:firefox, editor_url)
+    @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
     ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
