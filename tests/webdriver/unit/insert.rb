@@ -34,20 +34,17 @@ describe "Insert" do
     @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
-  # Test autoformatting: Inserting a character into any tiype
+  # TODO:
   # Test newlines
-  # Single character insertion at every position
+
   it "should insert a single character at every position" do
-    doc_length = ScribeDriver::JS.get_doc_length
+    doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
-      delta = ScribeDriver::JS.make_insert_delta(doc_length, insert_at, 'a', {})
+      debugger if insert_at == doc_length - 1
+      cur_length = ScribeDriver::JS.get_doc_length
+      delta = ScribeDriver::JS.make_insert_delta(cur_length, @adapter.cursor_pos + 1, 'a', {})
       apply_delta(delta, "Failed inserting 'a' at index #{insert_at}")
-      # Reset state for next iteration
-      ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
-      @editor = @driver.find_element(:class, "editor")
-      @adapter = WebdriverAdapter.new @driver, @editor
       ScribeDriver::JS.set_doc_delta
-      @adapter.doc_length = ScribeDriver::JS.get_doc_length
     end
   end
 
