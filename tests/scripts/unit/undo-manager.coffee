@@ -1,4 +1,4 @@
-describe('Undo manager', ->
+describe('Undo Manager', ->
   describe('undo/redo', ->
     undoTests = new Scribe.Test.EditorTest(
       initial: Tandem.Delta.getInitial("The lazy fox\n")
@@ -42,20 +42,30 @@ describe('Undo manager', ->
     }, undoBlueStrikeDelta)
 
     # Multi-user
-    undoTests.run('remove external insert', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
-      Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
+    undoTests.run('remove external insert', 
+      fn: (editor, expectedEditor, delta) -> 
+        editor.applyDelta(delta, { source: 'api' })
+    , Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
 
-    undoTests.run('remove external delete', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
-      Tandem.Delta.makeDeleteDelta(13, 4, 5))
+    undoTests.run('remove external delete',
+      fn: (editor, expectedEditor, delta) -> 
+        editor.applyDelta(delta, { source: 'api' }) 
+    , Tandem.Delta.makeDeleteDelta(13, 4, 5))
 
-    undoTests.run('remove external replace', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
-      new Tandem.Delta(13, [
+    undoTests.run('remove external replace',
+      fn: (editor, expectedEditor, delta) -> 
+        editor.applyDelta(delta, { source: 'api' })
+    , new Tandem.Delta(13, [
         new Tandem.RetainOp(0, 4)
         new Tandem.InsertOp('hairy ')
         new Tandem.RetainOp(9, 13)
-      ]))
+      ])
+    )
 
-    undoTests.run('remove external replace all', {fn: (editor, expectedEditor, delta) -> editor.applyDelta(delta, {source: 'api'})}, 
-      new Tandem.Delta(13, [new Tandem.InsertOp('A fast bunny\n')]))
+    undoTests.run('remove external replace all', 
+      fn: (editor, expectedEditor, delta) -> 
+        editor.applyDelta(delta, { source: 'api' })
+      , new Tandem.Delta(13, [new Tandem.InsertOp('A fast bunny\n')])
+    )
   )
 )

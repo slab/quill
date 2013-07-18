@@ -1,17 +1,24 @@
 replay_file=$(shell find tests/selenium/fuzzer_output/fails -type f -exec stat -f "%m %N" {} \; | sort -n | tail -1 | cut -f2- -d" ")
 
 coverage:
+	@echo "Initial setup"
+	@grunt > /dev/null
 	@rm -rf tmp
 	@mkdir tmp
 	@mkdir tmp/coverage
 	@mkdir tmp/backup
 	@mv build/src/* tmp/backup/
+	@rm tmp/backup/ext/header.js tmp/backup/ext/footer.js
+	@echo "Coverting to jscoverage"
 	@jscoverage tmp/backup/ tmp/coverage/
 	@mv tmp/coverage/* build/src/
+	@echo "Running tests"
 	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
+	@echo "Cleaning up"
 	@rm -rf build/src/*
 	@mv tmp/backup/* build/src/
 	@rm -rf tmp
+	@grunt > /dev/null
 
 chrome:
 	@ruby tests/selenium/fuzzer.rb chrome

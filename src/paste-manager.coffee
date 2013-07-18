@@ -25,10 +25,9 @@ class Scribe.PasteManager
       @container.focus()
       _.defer( =>
         doc = new Scribe.Document(@container)
-        # Need to remove trailing newline so paste is inline
-        lastLine = doc.lines.last
-        lastLine.deleteText(lastLine.length - 1, 1)
         delta = doc.toDelta()
+        # Need to remove trailing newline so paste is inline
+        delta = delta.compose(Tandem.Delta.makeDeleteDelta(delta.endLength, delta.endLength - 1, 1))
         lengthAdded = delta.endLength
         delta.ops.unshift(new Tandem.RetainOp(0, range.start.index)) if range.start.index > 0
         delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength)) if range.end.index < oldDocLength

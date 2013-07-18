@@ -82,7 +82,7 @@ class Scribe.Format.Style extends Scribe.Format.Span
     container = super(value)
     return container unless @styles[value]?
     cssName = Scribe.Format.Style.getCamelCase(@cssName)
-    container.style[@cssName] = @styles[value] if @styles[value]
+    container.style[cssName] = @styles[value] if @styles[value]
     return container
 
   matchContainer: (container) ->
