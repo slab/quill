@@ -19,7 +19,7 @@ describe "Insert" do
   end
 
   after do
-    # @driver.quit
+    @driver.quit
   end
 
   def apply_delta(delta, err_msg)
