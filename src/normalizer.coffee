@@ -216,35 +216,32 @@ class Scribe.Normalizer
     Scribe.Normalizer.wrapText(lineNode)
 
   removeRedundant: (lineNode) ->
-    key = _.uniqueId('_Formats')
-    lineNode[key] = {}
-    isRedudant = (node) =>
-      if node.nodeType == node.ELEMENT_NODE
-        if Scribe.Utils.getNodeLength(node) == 0
-          return node.tagName != 'BR' or node.parentNode.childNodes.length > 1
-        [formatName, formatValue] = @formatManager.getFormat(node)
-        if formatName?
-          return node.parentNode[key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
-        else if node.tagName == 'SPAN'
-          # Check if childNodes need us
-          if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
-            return true
-          # Check if parent needs us
-          if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
-            return true
-      return false
+    nodes = [lineNode]
+    attributes = [{}]
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
-      if isRedudant(node)
+      [formatName, formatValue] = @formatManager.getFormat(node)
+      parentAttributes = attributes[_.indexOf(nodes, node.parentNode)]
+      redundant = do (node) =>
+        return false unless node.nodeType == node.ELEMENT_NODE
+        return node.tagName != 'BR' or node.parentNode.childNodes.length > 1 if Scribe.Utils.getNodeLength(node) == 0
+        # Parent format value will overwrite child's so no need to check formatValue
+        return parentAttributes[formatName]? if formatName?
+        return false unless node.tagName == 'SPAN'
+        # Check if childNodes need us
+        return true if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+        # Check if parent needs us
+        return true if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
+        return false
+      if redundant
         node = Scribe.DOM.unwrap(node)
       if node?
-        node[key] = _.clone(node.parentNode[key])
-        [formatName, formatValue] = @formatManager.getFormat(node)
-        node[key][formatName] = formatValue if formatName?
-      return node
-    )
-    delete lineNode[key]
-    Scribe.DOM.traversePreorder(lineNode, 0, (node) ->
-      delete node[key]
+        nodes.push(node)
+        if formatName?
+          nodeAttributes = _.clone(parentAttributes)
+          nodeAttributes[formatName] = formatValue
+          attributes.push(nodeAttributes)
+        else
+          attributes.push(parentAttributes)
       return node
     )
 
