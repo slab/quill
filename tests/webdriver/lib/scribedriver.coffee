@@ -59,7 +59,6 @@ $(document).ready( ->
           precedingAttrs = followingAttrs = {}
           if appendingToLine(index)
             precedingAttrs = getAttrsAt(index - 1)
-            delete precedingAttrs['link'] if precedingAttrs['link']?
           else if prependingToLine(index)
             precedingAttrs = followingAttrs = getAttrsAt(index)
           else
