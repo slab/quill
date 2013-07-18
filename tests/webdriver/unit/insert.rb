@@ -71,7 +71,7 @@ describe "Insert" do
     insert_at_every_position "abc\\ndef\\nghi"
   end
 
-  it "should insert a newline in the empty document" do
+  it "should insert a newline into the empty document" do
     start_delta = { "startLength" => 0,
                     "endLength" => 1,
                     "ops" => [{ "value" => "\n", "attributes" => {}}]}
@@ -83,7 +83,7 @@ describe "Insert" do
     apply_delta current_delta, "Inserting \n at start of empty document fails."
   end
 
-  it "should insert a newline at end of document" do
+  it "should append a newline to nonempty document" do
     start_delta = { "startLength" => 0,
                     "endLength" => 4,
                     "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
