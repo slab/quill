@@ -6,8 +6,7 @@ class Scribe.Line extends LinkedList.Node
   @CLASS_NAME : 'line'
   @ID_PREFIX  : 'line-'
 
-  @FORMATS:
-    align: ['center', 'justify', 'left', 'right']
+  @FORMATS: ['center', 'justify', 'left', 'right']
 
   @MAX_INDENT: 9
   @MIN_INDENT: 1    # Smallest besides not having an indent at all

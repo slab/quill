@@ -62,7 +62,7 @@ initListeners = ->
     exitEditMode.call(this)
   )
   Scribe.DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
-    exitEditMode.call(this) if event.which == Scribe.Keyboard.KEYS.ENTER
+    exitEditMode.call(this) if event.which == Scribe.Keyboard.keys.ENTER
   )
 
 initTooltip = ->

@@ -2,7 +2,7 @@ Scribe = require('./scribe')
 
 
 _initDeletes = ->
-  _.each([Scribe.Keyboard.KEYS.DELETE, Scribe.Keyboard.KEYS.BACKSPACE], (key) =>
+  _.each([Scribe.Keyboard.keys.DELETE, Scribe.Keyboard.keys.BACKSPACE], (key) =>
     this.addHotkey(key, =>
       # Prevent deleting if editor is already blank (browser quirk fix)
       return @editor.getLength() > 1
@@ -10,23 +10,23 @@ _initDeletes = ->
   )
 
 _initHotkeys = ->
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.OUTDENT, (range) =>
+  this.addHotkey(Scribe.Keyboard.hotkeys.OUTDENT, (range) =>
     _onTab.call(this, range, true)
     return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.INDENT, (range) =>
+  this.addHotkey(Scribe.Keyboard.hotkeys.INDENT, (range) =>
     _onTab.call(this, range, false)
     return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (range) =>
+  this.addHotkey(Scribe.Keyboard.hotkeys.BOLD, (range) =>
     this.toggleFormat(range, 'bold')
     return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (range) =>
+  this.addHotkey(Scribe.Keyboard.hotkeys.ITALIC, (range) =>
     this.toggleFormat(range, 'italic')
     return false
   )
-  this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (range) =>
+  this.addHotkey(Scribe.Keyboard.hotkeys.UNDERLINE, (range) =>
     this.toggleFormat(range, 'underline')
     return false
   )
@@ -77,7 +77,7 @@ _onTab = (range, shift = false) ->
 
 
 class Scribe.Keyboard
-  @KEYS:
+  @keys:
     BACKSPACE : 8
     TAB       : 9
     ENTER     : 13
@@ -87,16 +87,16 @@ class Scribe.Keyboard
     DOWN      : 40
     DELETE    : 46
 
-  @HOTKEYS:
+  @hotkeys:
     BOLD:       { key: 'B',       meta: true }
-    INDENT:     { key: @KEYS.TAB, shift: false }
+    INDENT:     { key: @keys.TAB, shift: false }
     ITALIC:     { key: 'I',       meta: true }
-    OUTDENT:    { key: @KEYS.TAB, shift: true }
+    OUTDENT:    { key: @keys.TAB, shift: true }
     UNDERLINE:  { key: 'U',       meta: true }
     UNDO:       { key: 'Z',       meta: true, shift: false }
     REDO:       { key: 'Z',       meta: true, shift: true }
 
-  @NAVIGATION: [@KEYS.UP, @KEYS.DOWN, @KEYS.LEFT, @KEYS.RIGHT]
+  @NAVIGATION: [@keys.UP, @keys.DOWN, @keys.LEFT, @keys.RIGHT]
 
   constructor: (@editor) ->
     @hotkeys = {}
