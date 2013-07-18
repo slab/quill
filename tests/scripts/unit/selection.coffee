@@ -18,15 +18,18 @@ describe('Selection', ->
   describe('findIndexes', (html) ->
     it('should find simple indexes', ->
       indexes = findIndexes('<div><span>01|23|4</span></div>')
-      expect(indexes).to.deep.equal([2,4])
+      expect(indexes[0]).to.equal(2)
+      expect(indexes[1]).to.equal(4)
     )
     it('should find multiline indexes', ->
       indexes = findIndexes('<div><span>01|234</span></div><div><span>67|89</span></div>')
-      expect(indexes).to.deep.equal([2,8])
+      expect(indexes[0]).to.equal(2)
+      expect(indexes[1]).to.equal(8)
     )
     it('should find collapsed indexes', ->
       indexes = findIndexes('<div><span>012||34</span></div>')
-      expect(indexes).to.deep.equal([3,3])
+      expect(indexes[0]).to.equal(3)
+      expect(indexes[1]).to.equal(3)
     )
   )
   
@@ -215,7 +218,7 @@ describe('Selection', ->
 
     checker = (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
       selection = testEditor.getSelection()
-      expect(selection).to.exist
+      expect(selection).not.to.be(null)
       expect(selection.start.index).to.equal(expectedStart)
       expect(selection.end.index).to.equal(expectedEnd)
 

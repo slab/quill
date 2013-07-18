@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.6.7'
+      version: '0.7.0-alpha'
 
     clean: ['build']
 
@@ -58,7 +58,7 @@ module.exports = (grunt) ->
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'
-        src: ['async/lib/async.js', 'chai/chai.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
+        src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
       lib:
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'build/lib/'

@@ -8,7 +8,8 @@ describe('Document', ->
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
           [line, offset] = doc.findLineAtOffset(index)
-          expect([line.id, offset]).to.deep.equal([lines[lineIndex].id, indexIndex])
+          expect(line.id).to.be.equal(lines[lineIndex].id)
+          expect(offset).to.be.equal(indexIndex)
         )
       )
     )
