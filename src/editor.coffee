@@ -25,7 +25,7 @@ initListeners = ->
       toCall.call(null)
     )
   onEditOnce = _.once(onEdit)
-  @root.addEventListener('DOMSubtreeModified', onSubtreeModified)
+  Scribe.DOM.addEventListener(@root, 'DOMSubtreeModified', onSubtreeModified)
 
 deleteAt = (index, length) ->
   return if length <= 0

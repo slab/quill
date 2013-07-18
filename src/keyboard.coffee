@@ -25,7 +25,7 @@ _initHotkeys = ->
   )
 
 _initListeners = ->
-  @editor.root.addEventListener('keydown', (event) =>
+  Scribe.DOM.addEventListener(@editor.root, 'keydown', (event) =>
     event ||= window.event
     if @hotkeys[event.which]?
       prevent = false

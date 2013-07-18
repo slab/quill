@@ -22,7 +22,7 @@ hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  @editor.root.addEventListener('mouseup', (event) =>
+  Scribe.DOM.addEventListener(@editor.root, 'mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
@@ -36,7 +36,7 @@ initListeners = ->
       link = link.parentNode
     hideTooltip.call(this)
   )
-  @button.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@button, 'click', =>
     value = null
     if Scribe.DOM.hasClass(@button, 'active')
       value = false
@@ -53,13 +53,13 @@ initListeners = ->
       @editor.selection.format('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
   )
-  @tooltipChange.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@tooltipChange, 'click', =>
     enterEditMode.call(this, @tooltipLink.innerText)
   )
-  @tooltipDone.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@tooltipDone, 'click', =>
     exitEditMode.call(this)
   )
-  @tooltipInput.addEventListener('keyup', (event) =>
+  Scribe.DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
     exitEditMode.call(this) if event.which == Scribe.Keyboard.KEYS.ENTER
   )
 

@@ -80,7 +80,7 @@ class Scribe.Selection
   initListeners: ->
     checkUpdate = =>
       this.update() if @editor.root.isContentEditable
-    @editor.root.addEventListener('mouseup', checkUpdate)
+    Scribe.DOM.addEventListener(@editor.root, 'mouseup', checkUpdate)
     _.each(Scribe.Keyboard.NAVIGATION, (key) =>
       @editor.keyboard.addHotkey(key, =>
         _.defer(checkUpdate)

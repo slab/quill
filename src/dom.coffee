@@ -12,6 +12,16 @@ Scribe.DOM =
     else if node.className?
       node.className += ' ' + cssClass
 
+  addEventListener: (node, eventName, listener) ->
+    if node.addEventListener?
+      return node.addEventListener(eventName, listener)
+    else if node.attachEvent?
+      if _.indexOf(['change', 'click', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
+        return node.attachEvent("on#{eventName}", listener)
+      if eventName == 'DOMSubtreeModified'
+        return node.attachEvent('onpropertychange', listener)
+    console.warn 'Cannot attach to unsupported event', eventName
+
   findDeepestNode: (node, offset) ->
     if node.firstChild?
       for child in _.clone(node.childNodes)
