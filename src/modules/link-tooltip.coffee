@@ -51,7 +51,8 @@ initListeners = ->
         showTooptip.call(this, @editor.selection.getDimensions())
         enterEditMode.call(this, url)
     if value?
-      @editor.selection.format('link', value, { source: 'user' })
+      range = @editor.selection.getRange()
+      range.formatContents('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
   )
   Scribe.DOM.addEventListener(@tooltipChange, 'click', =>

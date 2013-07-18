@@ -19,7 +19,7 @@ class Scribe.Range
   
   formatContents: (name, value, options) ->
     return if this.isCollapsed()
-    @editor.formatAt(@start.index, @start.index - @end.index, name, value, options)
+    @editor.formatAt(@start.index, @end.index - @start.index, name, value, options)
 
   # TODO implement the following:    
   # Return object representing intersection of formats of leaves in range
