@@ -145,6 +145,12 @@ Scribe.DOM =
     newNode.id = node.id if node.id
     return newNode
 
+  toggleClass: (node, className) ->
+    if Scribe.DOM.hasClass(node, className)
+      Scribe.DOM.removeChild(node, className)
+    else
+      Scribe.DOM.addClass(node, className)
+
   traversePostorder: (root, fn, context = fn) ->
     return unless root?
     cur = root.firstChild

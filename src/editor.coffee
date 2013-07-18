@@ -200,9 +200,9 @@ class Scribe.Editor extends EventEmitter2
     )
 
   emit: (eventName, args...) ->
-    super(Scribe.Editor.PRE_EVENT, eventName, args...)
+    super(Scribe.Editor.events.PRE_EVENT, eventName, args...)
     super(eventName, args...)
-    super(Scribe.Editor.POST_EVENT, eventName, args...)
+    super(Scribe.Editor.events.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
