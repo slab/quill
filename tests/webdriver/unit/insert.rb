@@ -37,15 +37,26 @@ describe "Insert" do
   # TODO:
   # Test newlines
 
-  it "should insert a single character at every position" do
+  def insert_at_every_position(text)
     doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
-      debugger if insert_at == doc_length - 1
       cur_length = ScribeDriver::JS.get_doc_length
-      delta = ScribeDriver::JS.make_insert_delta(cur_length, @adapter.cursor_pos + 1, 'a', {})
+      delta = ScribeDriver::JS.make_insert_delta(cur_length, @adapter.cursor_pos + 1, text, {})
       apply_delta(delta, "Failed inserting 'a' at index #{insert_at}")
       ScribeDriver::JS.set_doc_delta
     end
+  end
+
+  it "should insert a single character at every position" do
+    insert_at_every_position "a"
+  end
+
+  it "should insert multiple characters at every position" do
+    insert_at_every_position "abc"
+  end
+
+  it "should insert multiline characters at every position" do
+    insert_at_every_position "abc\\ndef\\nghi"
   end
 
   it "should insert a newline in the empty document" do
