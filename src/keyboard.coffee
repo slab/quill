@@ -10,26 +10,25 @@ _initDeletes = ->
   )
 
 _initHotkeys = ->
+  this.addHotkey(Scribe.Keyboard.HOTKEYS.OUTDENT, (range) =>
+    _onTab.call(this, range, true)
+    return false
+  )
   this.addHotkey(Scribe.Keyboard.HOTKEYS.INDENT, (range) =>
-    lines = range.getLines()
-    if lines.length > 1
-      index = Scribe.Position.getIndex(lines[0].node)
-      _.each(lines, (line) =>
-        @editor.insertAt(index, "\t", {}, { source: 'user' })
-        index += line.length
-      )
-    else
-      range.deleteContents({ source: 'user' })
-      range.insertContents(0, "\t", {}, { source: 'user' })
+    _onTab.call(this, range, false)
+    return false
   )
   this.addHotkey(Scribe.Keyboard.HOTKEYS.BOLD, (range) =>
     this.toggleFormat(range, 'bold')
+    return false
   )
   this.addHotkey(Scribe.Keyboard.HOTKEYS.ITALIC, (range) =>
     this.toggleFormat(range, 'italic')
+    return false
   )
   this.addHotkey(Scribe.Keyboard.HOTKEYS.UNDERLINE, (range) =>
     this.toggleFormat(range, 'underline')
+    return false
   )
 
 _initListeners = ->
@@ -48,6 +47,33 @@ _initListeners = ->
     event.preventDefault() if prevent
     return !prevent
   )
+
+_onTab = (range, shift = false) ->
+  # Behavior according to Google Docs + Word
+  # When tab on one line, regardless if shift is down, delete selection and insert a tab
+  # When tab on multiple lines, indent each line if possible, outdent if shift is down
+  lines = range.getLines()
+  if lines.length > 1
+    index = Scribe.Position.getIndex(lines[0].node)
+    start = range.start.index + (if shift then -1 else 1)
+    offsetChange = 0
+    _.each(lines, (line) =>
+      if !shift
+        @editor.insertAt(index, '\t', {}, { source: 'user' })
+        offsetChange += 1
+      else if line.leaves.first.text[0] == '\t'
+        @editor.deleteAt(index, 1, { source: 'user' })
+        offsetChange -= 1
+      else if line == lines[0]
+        start = range.start.index
+      index += line.length
+    )
+    end = range.end.index + offsetChange
+    @editor.setSelection(new Scribe.Range(@editor, start, end))
+  else
+    range.deleteContents({ source: 'user' })
+    range.insertContents(0, "\t", {}, { source: 'user' })
+    @editor.setSelection(new Scribe.Range(@editor, range.start.index + 1, range.start.index + 1))
 
 
 class Scribe.Keyboard
@@ -105,11 +131,6 @@ class Scribe.Keyboard
       else
         applyIndent(line, 'indent')
     )
-
-  onIndentLine: (selection) ->
-    return false if !selection?
-    intersection = selection.getFormats()
-    return intersection.bullet? || intersection.indent? || intersection.list?
 
   toggleFormat: (range, format) ->
     formats = range.getFormats()
