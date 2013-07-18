@@ -17,7 +17,7 @@ _buildCursor = (name, color) ->
   cursor.innerHTML = @options.template
   cursorFlag = cursor.querySelector('.cursor-flag')
   cursorName = cursor.querySelector('.cursor-name')
-  cursorName.textContent = name
+  Scribe.DOM.setText(cursorName, name)
   cursorCaret = cursor.querySelector('.cursor-caret')
   cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
   @container.appendChild(cursor)
@@ -35,20 +35,22 @@ _moveCursor = (cursor, referenceNode) ->
 _updateCursor = (cursor) ->
   @editor.doSilently( =>
     position = new Scribe.Position(@editor, cursor.index)
-    span = @container.ownerDocument.createElement('span')
-    span.textContent = Scribe.DOM.NOBREAK_SPACE
+    guide = @container.ownerDocument.createElement('span')
     if !position.leafNode.firstChild?
-      position.leafNode.parentNode.insertBefore(span, position.leafNode)
-      _moveCursor.call(this, cursor, span)
+      Scribe.DOM.setText(guide, Scribe.DOM.NOBREAK_SPACE)
+      # Should only be the case for empty lines
+      position.leafNode.parentNode.insertBefore(guide, position.leafNode)
+      _moveCursor.call(this, cursor, guide)
     else
+      Scribe.DOM.setText(guide, Scribe.DOM.ZERO_WIDTH_NOBREAK_SPACE)
       [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
-        rightText.parentNode.insertBefore(span, rightText)
-        _moveCursor.call(this, cursor, span)
+        rightText.parentNode.insertBefore(guide, rightText)
+        _moveCursor.call(this, cursor, guide)
       else if leftText?
-        leftText.parentNode.appendChild(span)
-        _moveCursor.call(this, cursor, span)
-    span.parentNode.removeChild(span)
+        leftText.parentNode.appendChild(guide)
+        _moveCursor.call(this, cursor, guide)
+    guide.parentNode.removeChild(guide)
     Scribe.DOM.normalize(position.leafNode) if didSplit
   )
   cursor.dirty = false

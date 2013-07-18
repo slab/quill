@@ -95,7 +95,7 @@ class Scribe.Line extends LinkedList.Node
       @delta = this.toDelta()
     else 
       span = @node.ownerDocument.createElement('span')
-      span.textContent = text
+      Scribe.DOM.setText(span, text)
       if offset == 0    # Special case for remote cursor preservation
         @node.insertBefore(span, @node.firstChild)
       else

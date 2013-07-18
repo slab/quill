@@ -31,8 +31,8 @@ Scribe.Utils =
       return _.reduce(node.childNodes, (length, child) ->
         return length + Scribe.Utils.getNodeLength(child)
       , (if Scribe.Line.isLineNode(node) then 1 else 0))
-    else if node.nodeType == node.TEXT_NODE
-      return node.textContent.length
+    else if node.nodeType == Scribe.DOM.TEXT_NODE
+      return Scribe.DOM.getText(node).length
     else
       return 0
 

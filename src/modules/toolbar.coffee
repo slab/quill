@@ -29,7 +29,7 @@ initFormats = ->
       return unless input?
       return new Scribe.LinkTooltip(input, this) if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
-      input.addEventListener(eventName, =>
+      Scribe.DOM.addEventListener(input, eventName, =>
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !Scribe.DOM.hasClass(input, 'active')
         range = @editor.getSelection()
         return if range.isCollapsed()

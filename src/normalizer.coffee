@@ -69,7 +69,7 @@ class Scribe.Normalizer
 
   @applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE
+      if node.nodeType == Scribe.DOM.ELEMENT_NODE
         rules = Scribe.Normalizer.TAG_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
@@ -141,18 +141,11 @@ class Scribe.Normalizer
     # Remove whitespace between tags
     html = html.replace(/\>\s+\</g, '><')
     # Standardize br
-    html = html.replace(/<br><\/br>/, '<br>')
+    html = html.replace(/<br><\/br>/, '<br/>')
     return html
 
-  @removeNoBreak: (root) ->
-    Scribe.DOM.traversePreorder(root, 0, (node) =>
-      if node.nodeType == node.TEXT_NODE
-        node.textContent = node.textContent.split(Scribe.DOM.NOBREAK_SPACE).join('')
-      return node
-    )
-
   @requireLeaf: (lineNode) ->
-    unless lineNode.childNodes.length > 1
+    unless lineNode.childNodes.length > 0
       if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
@@ -161,7 +154,7 @@ class Scribe.Normalizer
   @wrapText: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
       Scribe.DOM.normalize(node)
-      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == lineNode or node.parentNode.tagName == 'LI')
+      if node.nodeType == Scribe.DOM.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == lineNode or node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
         Scribe.DOM.wrap(span, node)
         node = span
@@ -173,7 +166,7 @@ class Scribe.Normalizer
 
   mergeAdjacent: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
-      if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
+      if node.nodeType == Scribe.DOM.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'
           [nodeFormat, nodeValue] = @formatManager.getFormat(node)
@@ -194,7 +187,6 @@ class Scribe.Normalizer
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
-    Scribe.Normalizer.removeNoBreak(lineNode)
     this.normalizeTags(lineNode)
     Scribe.Normalizer.requireLeaf(lineNode)
     Scribe.Normalizer.wrapText(lineNode)
@@ -216,35 +208,32 @@ class Scribe.Normalizer
     Scribe.Normalizer.wrapText(lineNode)
 
   removeRedundant: (lineNode) ->
-    key = _.uniqueId('_Formats')
-    lineNode[key] = {}
-    isRedudant = (node) =>
-      if node.nodeType == node.ELEMENT_NODE
-        if Scribe.Utils.getNodeLength(node) == 0
-          return node.tagName != 'BR' or node.parentNode.childNodes.length > 1
-        [formatName, formatValue] = @formatManager.getFormat(node)
-        if formatName?
-          return node.parentNode[key][formatName]?     # Parent format value will overwrite child's so no need to check formatValue
-        else if node.tagName == 'SPAN'
-          # Check if childNodes need us
-          if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
-            return true
-          # Check if parent needs us
-          if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
-            return true
-      return false
+    nodes = [lineNode]
+    attributes = [{}]
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
-      if isRedudant(node)
+      [formatName, formatValue] = @formatManager.getFormat(node)
+      parentAttributes = attributes[_.indexOf(nodes, node.parentNode)]
+      redundant = do (node) =>
+        return false unless node.nodeType == Scribe.DOM.ELEMENT_NODE
+        return node.tagName != 'BR' or node.parentNode.childNodes.length > 1 if Scribe.Utils.getNodeLength(node) == 0
+        # Parent format value will overwrite child's so no need to check formatValue
+        return parentAttributes[formatName]? if formatName?
+        return false unless node.tagName == 'SPAN'
+        # Check if childNodes need us
+        return true if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != Scribe.DOM.ELEMENT_NODE)
+        # Check if parent needs us
+        return true if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
+        return false
+      if redundant
         node = Scribe.DOM.unwrap(node)
       if node?
-        node[key] = _.clone(node.parentNode[key])
-        [formatName, formatValue] = @formatManager.getFormat(node)
-        node[key][formatName] = formatValue if formatName?
-      return node
-    )
-    delete lineNode[key]
-    Scribe.DOM.traversePreorder(lineNode, 0, (node) ->
-      delete node[key]
+        nodes.push(node)
+        if formatName?
+          nodeAttributes = _.clone(parentAttributes)
+          nodeAttributes[formatName] = formatValue
+          attributes.push(nodeAttributes)
+        else
+          attributes.push(parentAttributes)
       return node
     )
 

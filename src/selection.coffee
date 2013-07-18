@@ -8,7 +8,7 @@ normalizeNativePosition = (node, offset) ->
       node = node.firstChild if node.firstChild?
     else
       node = node.childNodes[node.childNodes.length-1]
-      offset = node.textContent.length
+      offset = Scribe.DOM.getText(node).length
   return [node, offset]
 
 normalizeNativeRange = (nativeRange) ->
@@ -74,24 +74,28 @@ class Scribe.Selection
     @editor.renderer.runWhenLoaded( =>
       rangy.init()
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe)
-      this.setRange(new Scribe.Range(@editor, 0, 0))    # Range gets set to end of doc in Firefox by default
+      this.setRange(null)
     )
 
   initListeners: ->
     checkUpdate = =>
       this.update() if @editor.root.isContentEditable
-    @editor.root.addEventListener('mouseup', checkUpdate)
+    Scribe.DOM.addEventListener(@editor.root, 'mouseup', checkUpdate)
     _.each(Scribe.Keyboard.NAVIGATION, (key) =>
       @editor.keyboard.addHotkey(key, =>
         _.defer(checkUpdate)
       )
     )
+    setInterval( =>
+      checkUpdate() unless @range?    # Less important to detect existing range being unset
+    , 100)
 
   getDimensions: ->
     rangyRange = this.getNativeRange()
     return rangyRange?.nativeRange?.getBoundingClientRect()
     
   getNativeRange: ->
+    return null unless @nativeSelection
     @nativeSelection.refresh()
     return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
 
@@ -121,8 +125,8 @@ class Scribe.Selection
       nativeRange = rangy.createRangyRange()
       _.each([@range.start, @range.end], (pos, i) ->
         [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
-        node = node.parentNode if node.tagName == "BR"      # Firefox does not like selections inside break tags
-        offset = Math.min(node.textContent.length, offset)  # Should only occur at end of document
+        node = node.parentNode if node.tagName == "BR"              # Firefox does not like selections inside break tags
+        offset = Math.min(Scribe.DOM.getText(node).length, offset)  # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )

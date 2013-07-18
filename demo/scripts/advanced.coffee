@@ -23,8 +23,11 @@ listenEditor = (source, target) ->
     targetDelta = target.doc.toDelta()
     console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta)
   ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
-    console.info source.id, 'selection change', range.start.index, range.end.index
-    target.cursorManager.setCursor(source.id, range.end.index, source.id, CURSOR_COLOR)
+    if range?
+      console.info source.id, 'selection change', range.start.index, range.end.index
+      target.cursorManager.setCursor(source.id, range.end.index, source.id, CURSOR_COLOR)
+    else  
+      console.info source.id, 'selection change', range
   )
 
 

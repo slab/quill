@@ -13,7 +13,8 @@ exitEditMode = ->
     @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
     formats = @savedRange.getFormats()
     if formats['link']?
-      @tooltipLink.textContent = @tooltipLink.href = formats['link']
+      @tooltipLink.href = formats['link']
+      Scribe.DOM.setText(@tooltipLink, formats['link'])
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', formats['link'])
     @editor.setSelection(null, true)
   Scribe.DOM.removeClass(@tooltip, 'editing')
@@ -22,12 +23,12 @@ hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  @editor.root.addEventListener('mouseup', (event) =>
+  Scribe.DOM.addEventListener(@editor.root, 'mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
         start = new Scribe.Position(@editor, link, 0)
-        end = new Scribe.Position(@editor, link, link.textContent.length)
+        end = new Scribe.Position(@editor, link, Scribe.DOM.getText(link).length)
         @savedRange = new Scribe.Range(@editor, start, end)
         @tooltipLink.innerText = @tooltipLink.href = link.href
         Scribe.DOM.removeClass(@tooltip, 'editing')
@@ -36,7 +37,7 @@ initListeners = ->
       link = link.parentNode
     hideTooltip.call(this)
   )
-  @button.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@button, 'click', =>
     value = null
     if Scribe.DOM.hasClass(@button, 'active')
       value = false
@@ -53,13 +54,13 @@ initListeners = ->
       @editor.selection.format('link', value, { source: 'user' })
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
   )
-  @tooltipChange.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@tooltipChange, 'click', =>
     enterEditMode.call(this, @tooltipLink.innerText)
   )
-  @tooltipDone.addEventListener('click', =>
+  Scribe.DOM.addEventListener(@tooltipDone, 'click', =>
     exitEditMode.call(this)
   )
-  @tooltipInput.addEventListener('keyup', (event) =>
+  Scribe.DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
     exitEditMode.call(this) if event.which == Scribe.Keyboard.KEYS.ENTER
   )
 

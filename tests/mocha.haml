@@ -40,10 +40,9 @@
       %script{:type => 'text/javascript', :src => "../src/#{src}.js"}
 
     %script{:type => 'text/javascript', :src => '../lib/mocha.js'}
-    %script{:type => 'text/javascript', :src => '../lib/chai.js'}
+    %script{:type => 'text/javascript', :src => '../lib/expect.js'}
     :javascript
       mocha.setup('bdd');
-      expect = chai.expect;
     = yield
     :javascript
       if (window.mochaPhantomJS) {

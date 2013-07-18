@@ -7,7 +7,7 @@ Scribe.Debug =
       nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
         nodes = lineNode.querySelectorAll('*')
         return _.filter(nodes, (node) ->
-          return node.nodeType == node.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == node.TEXT_NODE)
+          return node.nodeType == Scribe.DOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == Scribe.DOM.TEXT_NODE)
         )
       )
       lines = doc.lines.toArray()

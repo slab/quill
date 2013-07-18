@@ -17,7 +17,7 @@ class Scribe.PasteManager
     this.initListeners()
 
   initListeners: ->
-    @editor.root.addEventListener('paste', =>
+    Scribe.DOM.addEventListener(@editor.root, 'paste', =>
       oldDocLength = @editor.getLength()
       range = @editor.getSelection()
       return unless range?
