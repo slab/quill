@@ -144,13 +144,6 @@ class Scribe.Normalizer
     html = html.replace(/<br><\/br>/, '<br/>')
     return html
 
-  @removeNoBreak: (root) ->
-    Scribe.DOM.traversePreorder(root, 0, (node) =>
-      if node.nodeType == node.TEXT_NODE
-        node.textContent = node.textContent.split(Scribe.DOM.NOBREAK_SPACE).join('')
-      return node
-    )
-
   @requireLeaf: (lineNode) ->
     unless lineNode.childNodes.length > 1
       if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
@@ -194,7 +187,6 @@ class Scribe.Normalizer
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
-    Scribe.Normalizer.removeNoBreak(lineNode)
     this.normalizeTags(lineNode)
     Scribe.Normalizer.requireLeaf(lineNode)
     Scribe.Normalizer.wrapText(lineNode)
