@@ -1,7 +1,15 @@
 describe('Document', ->
   describe('findLineAtOffset', ->
     it('should find correct offset in line', ->
-      lines = ['<div><br></div>', '<div><span>12</span></div>', '<div><b>45</b></div>', '<div><br></div>', '<div><br></div>', '<ul><li><span>78</span></li></ul>', '<ul><li><br></li></ul>']
+      lines = [
+        '<div><br></div>'
+        '<div><span>12</span></div>'
+        '<div><b>45</b></div>'
+        '<div><br></div>'
+        '<div><br></div>'
+        '<ul><li><span>78</span></li></ul>'
+        '<ul><li><br></li></ul>'
+      ]
       $('#test-container').html(lines.join(''))
       doc = new Scribe.Document($('#test-container').get(0))
       lines = doc.lines.toArray()

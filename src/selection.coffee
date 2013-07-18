@@ -8,7 +8,7 @@ normalizeNativePosition = (node, offset) ->
       node = node.firstChild if node.firstChild?
     else
       node = node.childNodes[node.childNodes.length-1]
-      offset = node.textContent.length
+      offset = Scribe.DOM.getText(node).length
   return [node, offset]
 
 normalizeNativeRange = (nativeRange) ->
@@ -143,8 +143,8 @@ class Scribe.Selection
       nativeRange = rangy.createRangyRange()
       _.each([@range.start, @range.end], (pos, i) ->
         [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
-        node = node.parentNode if node.tagName == "BR"      # Firefox does not like selections inside break tags
-        offset = Math.min(node.textContent.length, offset)  # Should only occur at end of document
+        node = node.parentNode if node.tagName == "BR"              # Firefox does not like selections inside break tags
+        offset = Math.min(Scribe.DOM.getText(node).length, offset)  # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )

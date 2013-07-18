@@ -17,7 +17,7 @@ _buildCursor = (name, color) ->
   cursor.innerHTML = @options.template
   cursorFlag = cursor.querySelector('.cursor-flag')
   cursorName = cursor.querySelector('.cursor-name')
-  cursorName.textContent = name
+  Scribe.DOM.setText(cursorName, name)
   cursorCaret = cursor.querySelector('.cursor-caret')
   cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
   @container.appendChild(cursor)
@@ -37,12 +37,12 @@ _updateCursor = (cursor) ->
     position = new Scribe.Position(@editor, cursor.index)
     guide = @container.ownerDocument.createElement('span')
     if !position.leafNode.firstChild?
-      guide.textContent = Scribe.DOM.NOBREAK_SPACE
+      Scribe.DOM.setText(guide, Scribe.DOM.NOBREAK_SPACE)
       # Should only be the case for empty lines
       position.leafNode.parentNode.insertBefore(guide, position.leafNode)
       _moveCursor.call(this, cursor, guide)
     else
-      guide.textContent = Scribe.DOM.ZERO_WIDTH_NOBREAK_SPACE
+      Scribe.DOM.setText(guide, Scribe.DOM.ZERO_WIDTH_NOBREAK_SPACE)
       [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         rightText.parentNode.insertBefore(guide, rightText)

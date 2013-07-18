@@ -13,7 +13,8 @@ exitEditMode = ->
     @editor.selection.format('link', @tooltipInput.value, { source: 'user' })
     formats = @savedRange.getFormats()
     if formats['link']?
-      @tooltipLink.textContent = @tooltipLink.href = formats['link']
+      @tooltipLink.href = formats['link']
+      Scribe.DOM.setText(@tooltipLink, formats['link'])
       @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', formats['link'])
     @editor.setSelection(null, true)
   Scribe.DOM.removeClass(@tooltip, 'editing')
@@ -27,7 +28,7 @@ initListeners = ->
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
         start = new Scribe.Position(@editor, link, 0)
-        end = new Scribe.Position(@editor, link, link.textContent.length)
+        end = new Scribe.Position(@editor, link, Scribe.DOM.getText(link).length)
         @savedRange = new Scribe.Range(@editor, start, end)
         @tooltipLink.innerText = @tooltipLink.href = link.href
         Scribe.DOM.removeClass(@tooltip, 'editing')

@@ -69,7 +69,7 @@ class Scribe.Normalizer
 
   @applyRules: (root) ->
     Scribe.DOM.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == node.ELEMENT_NODE
+      if node.nodeType == Scribe.DOM.ELEMENT_NODE
         rules = Scribe.Normalizer.TAG_RULES[node.tagName]
         if rules?
           _.each(rules, (data, rule) ->
@@ -154,7 +154,7 @@ class Scribe.Normalizer
   @wrapText: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
       Scribe.DOM.normalize(node)
-      if node.nodeType == node.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == lineNode or node.parentNode.tagName == 'LI')
+      if node.nodeType == Scribe.DOM.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == lineNode or node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
         Scribe.DOM.wrap(span, node)
         node = span
@@ -166,7 +166,7 @@ class Scribe.Normalizer
 
   mergeAdjacent: (lineNode) ->
     Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
-      if node.nodeType == node.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
+      if node.nodeType == Scribe.DOM.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'
           [nodeFormat, nodeValue] = @formatManager.getFormat(node)
@@ -214,13 +214,13 @@ class Scribe.Normalizer
       [formatName, formatValue] = @formatManager.getFormat(node)
       parentAttributes = attributes[_.indexOf(nodes, node.parentNode)]
       redundant = do (node) =>
-        return false unless node.nodeType == node.ELEMENT_NODE
+        return false unless node.nodeType == Scribe.DOM.ELEMENT_NODE
         return node.tagName != 'BR' or node.parentNode.childNodes.length > 1 if Scribe.Utils.getNodeLength(node) == 0
         # Parent format value will overwrite child's so no need to check formatValue
         return parentAttributes[formatName]? if formatName?
         return false unless node.tagName == 'SPAN'
         # Check if childNodes need us
-        return true if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != child.ELEMENT_NODE)
+        return true if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != Scribe.DOM.ELEMENT_NODE)
         # Check if parent needs us
         return true if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
         return false
