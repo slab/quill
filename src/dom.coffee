@@ -44,8 +44,9 @@ Scribe.DOM =
 
   getText: (node) ->
     switch node.nodeType
-      when Scribe.DOM.ELEMENT_NODE then return node.textContent or node.innerText
-      when Scribe.DOM.TEXT_NODE then return node.data
+      when Scribe.DOM.ELEMENT_NODE
+        return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
+      when Scribe.DOM.TEXT_NODE then return node.data or ""
       else return ""
 
   hasClass: (node, cssClass) ->
