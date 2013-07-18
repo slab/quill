@@ -19,7 +19,6 @@ class Scribe.Leaf extends LinkedList.Node
   constructor: (@line, @node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Scribe.Leaf.ID_PREFIX)
-    Scribe.DOM.setText(@node, "") if @node.tagName == 'BR'
     @text = Scribe.DOM.getText(@node)
     @length = @text.length
 

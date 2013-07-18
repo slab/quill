@@ -95,10 +95,14 @@ Scribe.DOM =
       node.className = classArray.join(' ')
 
   setText: (node, text) ->
-    if node.textContent
-      node.textContent = text
-    else
-      node.innerText = text
+    switch node.nodeType
+      when Scribe.DOM.ELEMENT_NODE
+        if node.textContent
+          node.textContent = text
+        else
+          node.innerText = text
+      when Scribe.DOM.TEXT_NODE then node.data = text
+      else return # Noop
 
   splitAfter: (node, root) ->
     return false if node == root or node.parentNode == root
