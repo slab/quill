@@ -113,4 +113,27 @@ describe "Test undo redo" do
       assert ScribeDriver::JS.editor_delta_equals expected
     end
   end
+
+  it "should undo redo replaced text" do
+    text = "abc"
+    new_text = "ZZZ"
+    
+    start_delta = { "startLength" => 0, 
+      "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
+    end_delta = { "startLength" => 0, 
+      "endLength" => 4, "ops" => [{ "value" => "ZZZ\n" }] }
+
+    edits = [ Proc.new { @adapter.type_text text }, 
+             Proc.new { @adapter.move_cursor 0 },
+             Proc.new { @adapter.highlight 3 } ] # The shift key is still pressed after this edit
+    edits.each do |edit|
+      without_coalescing edit
+    end    
+
+    @adapter.type_text new_text
+    @adapter.undo
+    assert ScribeDriver::JS.editor_delta_equals start_delta
+    @adapter.redo
+    assert ScribeDriver::JS.editor_delta_equals end_delta
+  end
 end
