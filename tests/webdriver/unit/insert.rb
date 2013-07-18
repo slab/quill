@@ -1,3 +1,4 @@
+require 'colorize'
 gem "minitest"
 require 'minitest/autorun'
 require 'minitest/pride'
@@ -18,13 +19,27 @@ describe "Insert" do
   end
 
   after do
-    @driver.quit
+    # @driver.quit
   end
 
   def apply_delta(delta, err_msg)
     ScribeDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta)
     success = ScribeDriver::JS.check_consistency
+    unless success
+      doc_delta = ScribeDriver::JS.get_as_str("docDelta")
+      cur_delta = ScribeDriver::JS.get_as_str("currentDelta")
+      expected_delta = ScribeDriver::JS.get_expected_as_str
+      actual_delta = ScribeDriver::JS.get_cur_doc_delta_as_str
+      doc_delta = JSON.pretty_generate(JSON.parse(doc_delta))
+      cur_delta = JSON.pretty_generate(JSON.parse(cur_delta))
+      expected_delta = JSON.pretty_generate(JSON.parse(expected_delta))
+      actual_delta = JSON.pretty_generate(JSON.parse(actual_delta))
+      puts "#{'doc_delta: '.light_cyan + doc_delta},"
+      puts "#{'cur_delta: '.light_cyan + cur_delta},"
+      puts "#{'expected_delta: '.light_cyan + expected_delta},"
+      puts "#{'actual: '.light_cyan + actual_delta}"
+    end
     success.must_equal true, err_msg
   end
 
@@ -34,15 +49,12 @@ describe "Insert" do
     @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
-  # TODO:
-  # Test newlines
-
   def insert_at_every_position(text)
     doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
       cur_length = ScribeDriver::JS.get_doc_length
       delta = ScribeDriver::JS.make_insert_delta(cur_length, @adapter.cursor_pos + 1, text, {})
-      apply_delta(delta, "Failed inserting 'a' at index #{insert_at}")
+      apply_delta(delta, "Failed inserting #{text} at index #{insert_at}")
       ScribeDriver::JS.set_doc_delta
     end
   end

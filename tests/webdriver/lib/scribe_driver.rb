@@ -8,6 +8,23 @@ module ScribeDriver
       return result
     end
 
+    def self.get_as_str(ref)
+      return self.execute_js "return JSON.stringify(window.ScribeDriver['#{ref}'])"
+    end
+
+    def self.get_expected_as_str
+      src = "return JSON.stringify(window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta));"
+      return self.execute_js src
+    end
+
+    def self.get_cur_doc_delta_as_str
+      return execute_js "return JSON.stringify(editor.getDelta());"
+    end
+
+    def self.set_scribe_delta(driver)
+      return execute_js "window.ScribeDriver.initializeScribe()"
+    end
+
     def self.editor_delta_equals(delta)
       return self.execute_js "return window.ScribeDriver.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
     end
