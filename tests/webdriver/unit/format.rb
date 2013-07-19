@@ -102,7 +102,6 @@ describe "Test Formatting" do
       apply_delta delta, "Failed adding bold at index 0, length 3", true
     end
 
-    focus
     it "should bold and italicize highlighted text" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
