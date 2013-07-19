@@ -6,13 +6,10 @@ require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
 
 describe "Test Delete" do
+  include ScribeDriver
+
   before do
-    editor_url = "file://#{File.join(File.expand_path(__FILE__),
-      '../../../..', 'build/tests/webdriver/webdriver.html')}"
-    @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
-    @editor = @driver.find_element(:class, "editor")
-    @adapter = WebdriverAdapter.new @driver, @editor
-    @adapter.focus()
+    setup_test_suite
     delta = { "startLength" => 0,
               "endLength" => 4,
               "ops" => [{ "value" => "abc\n"}]

@@ -6,16 +6,13 @@ require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
 
 describe "Test undo redo" do
+  include ScribeDriver
+
   # Amount of time to sleep between edits to prevent the undo manager coalescing edits
   COALESCE_WINDOW = 2
 
   before do
-    editor_url = "file://#{File.join(File.expand_path(__FILE__),
-      '../../../..', 'build/tests/webdriver/webdriver.html')}"
-    @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
-    @editor = @driver.find_element(:class, "editor")
-    @adapter = WebdriverAdapter.new @driver, @editor
-    @adapter.focus()
+    setup_test_suite
     ScribeDriver::JS.set_doc_delta(@driver)
   end
 

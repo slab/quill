@@ -65,6 +65,17 @@ module ScribeDriver
   #############################################################################
   # WebDriver helpers
   #############################################################################
+  def setup_test_suite
+    browser = :chrome
+    browser = ARGV[0].to_sym if ARGV.length == 1
+    editor_url = "file://#{File.join(File.expand_path(__FILE__),
+      '../../../..', 'build/tests/webdriver/webdriver.html')}"
+    @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
+    @editor = @driver.find_element(:class, "editor")
+    @adapter = WebdriverAdapter.new @driver, @editor
+    @adapter.focus()
+  end
+
   def self.create_scribe_driver(browser, url)
     if browser == :firefox
       profile = Selenium::WebDriver::Firefox::Profile.new

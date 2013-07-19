@@ -6,10 +6,10 @@ require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
 
 describe "Test Copy Paste" do
+  include ScribeDriver
   before do
-    editor_url = "file://#{File.join(File.expand_path(__FILE__),
-      '../../../..', 'build/tests/webdriver/webdriver.html')}"
-    @driver = ScribeDriver.create_scribe_driver(:chrome, editor_url)
+    setup_test_suite
+    # Custom setup
     ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
