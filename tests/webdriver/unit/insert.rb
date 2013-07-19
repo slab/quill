@@ -1,22 +1,17 @@
 require 'colorize'
+require 'debugger'
 gem "minitest"
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
+require_relative '../lib/minitest/focus'
 
 describe "Insert" do
   include ScribeDriver
 
   before do
     setup_test_suite
-    # Custom setup
-    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
-    @editor = @driver.find_element(:class, "editor")
-    @adapter = WebdriverAdapter.new @driver, @editor
-    @adapter.focus()
-    ScribeDriver::JS.set_doc_delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
   after do
@@ -46,6 +41,12 @@ describe "Insert" do
   end
 
   def insert_at_every_position(text)
+    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
+    @editor = @driver.find_element(:class, "editor")
+    @adapter = WebdriverAdapter.new @driver, @editor
+    @adapter.focus()
+    ScribeDriver::JS.set_doc_delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
     doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
       cur_length = ScribeDriver::JS.get_doc_length
