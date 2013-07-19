@@ -1,6 +1,6 @@
 ####
 # Credit: This code is from zenspider's minitest-focus gem.
-# I'm including it here until he fixes it's dependencies so that it is
+# I'm including it here until he fixes its dependencies to be
 # compatible with minitest 5.
 # https://github.com/seattlerb/minitest-focus
 ####
