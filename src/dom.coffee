@@ -95,6 +95,16 @@ Scribe.DOM =
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
 
+  resetSelect: (select) ->
+    option = select.querySelector('option[selected]')
+    if option?
+      option.selected = true
+    else
+      # IE8
+      for o,i in select.options
+        if o.defaultSelected
+          return select.selectedIndex = i
+
   setText: (node, text) ->
     switch node.nodeType
       when Scribe.DOM.ELEMENT_NODE

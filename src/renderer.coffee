@@ -114,10 +114,12 @@ class Scribe.Renderer extends EventEmitter2
     @root.id = @options.id
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
     this.runWhenLoaded( =>
-      this.getDocument().body.appendChild(@root)
+      doc = this.getDocument()
+      doc.body.appendChild(@root) if doc?
     )
 
   getDocument: ->
+    return null unless @iframe.parentNode?
     # Firefox does not like us saving a reference to this result so retrieve every time
     return @iframe.contentWindow?.document
 

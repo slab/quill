@@ -73,7 +73,7 @@ class Scribe.Selection
     this.initListeners()
     @editor.renderer.runWhenLoaded( =>
       rangy.init()
-      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe)
+      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
       this.setRange(null)
     )
 

@@ -43,7 +43,7 @@ class Scribe.Toolbar extends EventEmitter2
       Scribe.DOM.removeClass(button, 'active')
     )
     _.each(@container.querySelectorAll('select'), (select) =>
-      select.querySelector('option[selected]').selected = true
+      Scribe.DOM.resetSelect(select)
     )
     return unless range?
     _.each(range.getFormats(), (value, key) =>
