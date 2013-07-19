@@ -98,7 +98,7 @@ Scribe.DOM =
   setText: (node, text) ->
     switch node.nodeType
       when Scribe.DOM.ELEMENT_NODE
-        if node.textContent
+        if node.textContent?
           node.textContent = text
         else
           node.innerText = text
