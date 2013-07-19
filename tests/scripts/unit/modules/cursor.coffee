@@ -25,28 +25,28 @@ describe('Cursor', ->
       cursorManager.setCursor('id', 2, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('17px')
-      expect(parseInt(cursor.style.top)).to.be.within(0, 1)
+      expect(parseInt(cursor.style.top)).to.be.within(-1, 1)
     )
 
     it('should set at leaf boundary', ->
       cursorManager.setCursor('id', 4, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('29px')
-      expect(parseInt(cursor.style.top)).to.be.within(0, 1)
+      expect(parseInt(cursor.style.top)).to.be.within(-1, 1)
     )
 
     it('should set at newline', ->
       cursorManager.setCursor('id', 11, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('0px')
-      expect(parseInt(cursor.style.top)).to.be.within(15, 16)
+      expect(parseInt(cursor.style.top)).to.be.within(14, 16)
     )
 
     it('should set at beginning', ->
       cursorManager.setCursor('id', 0, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('0px')
-      expect(parseInt(cursor.style.top)).to.be.within(0, 1)
+      expect(parseInt(cursor.style.top)).to.be.within(-1, 1)
     )
 
     it('should set at end', ->
@@ -85,7 +85,7 @@ describe('Cursor', ->
       expect(cursor.style.left).to.equal('9px')
       editor.insertAt(0, 'A', { bold: true })
       expect(parseInt(cursor.style.left)).to.be.within(18, 19)
-      expect(parseInt(cursor.style.top)).to.be.within(0, 1)
+      expect(parseInt(cursor.style.top)).to.be.within(-1, 1)
     )
 
     it('should append after external edit', ->
