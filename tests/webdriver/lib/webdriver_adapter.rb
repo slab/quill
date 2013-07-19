@@ -108,7 +108,7 @@ class WebdriverAdapter
   def highlight(length)
     keys = (0...length).to_a.map! { :arrow_right }
     @cursor_pos += length
-    @driver.action.key_down(:shift).send_keys(keys).key_up(:shift).perform
+    @driver.action.key_down(:shift).send_keys(*keys).key_up(:shift).perform
   end
 
   def delete(length)

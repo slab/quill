@@ -101,7 +101,7 @@ describe "Test undo redo" do
                                      {"value" => "\n" }] },
                        { "startLength" => 0,
                          "endLength" => 4,
-                         "ops" => [{ "value" => "abc", "attributes" => {"bold" => true, "italic" => true}}, 
+                         "ops" => [{ "value" => "abc", "attributes" => {"bold" => true, "italic" => true}},
                                    {"value" => "\n" }] }
     ]
 
@@ -113,19 +113,19 @@ describe "Test undo redo" do
 
   it "should undo redo replaced text" do
     text = "abc"
-    new_text = "ZZZ"
-    
-    start_delta = { "startLength" => 0, 
-      "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
-    end_delta = { "startLength" => 0, 
-      "endLength" => 4, "ops" => [{ "value" => "ZZZ\n" }] }
+    new_text = "zzz"
 
-    edits = [ Proc.new { @adapter.type_text text }, 
+    start_delta = { "startLength" => 0,
+      "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
+    end_delta = { "startLength" => 0,
+      "endLength" => 4, "ops" => [{ "value" => "zzz\n" }] }
+
+    edits = [ Proc.new { @adapter.type_text text },
              Proc.new { @adapter.move_cursor 0 },
-             Proc.new { @adapter.highlight 3 } ] # The shift key is still pressed after this edit
+             Proc.new { @adapter.highlight 3 } ]
     edits.each do |edit|
       without_coalescing edit
-    end    
+    end
 
     @adapter.type_text new_text
     @adapter.undo
