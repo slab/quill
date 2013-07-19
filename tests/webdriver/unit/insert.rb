@@ -112,6 +112,22 @@ describe "Insert" do
       run_insert_test start_delta, current_delta, "Failed inserting tab at 0th index."
     end
 
+    it "should indent highlighted lines" do
+      start_delta = { "startLength" => 0,
+                      "endLength" => 6,
+                      "ops" => [{ "value" => "1\n2\n3\n", "attributes" => {}}]}
+      reset_scribe start_delta
+
+      @adapter.move_cursor 0
+      @adapter.highlight 3
+      @editor.send_keys :tab
+      expected_delta = { "startLength" => 0,
+                         "endLength" => 8,
+                         "ops" => [{ "value" => "\t1\n\t2\n3\n", "attributes" => {}}]}
+
+      assert ScribeDriver::JS.editor_delta_equals(expected_delta), "Indenting multiple lines with tab failed."
+    end
+
     it "should prepend a tab followed by more text" do
       start_delta = { "startLength" => 0,
                       "endLength" => 4,
