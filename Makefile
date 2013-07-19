@@ -32,8 +32,11 @@ fuzzer-chrome-replay:
 fuzzer-firefox-replay:
 	@ruby tests/webdriver/fuzzer.rb firefox $(replay_file)
 
-webdriver-unit:
-	@ruby tests/webdriver/unit/unit_runner.rb
+webdriver-unit-chrome:
+	@ruby tests/webdriver/unit/unit_runner.rb chrome
+
+webdriver-unit-firefox:
+	@ruby tests/webdriver/unit/unit_runner.rb firefox
 
 test:
 	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html
