@@ -7,6 +7,7 @@ require_relative '../lib/webdriver_adapter'
 
 describe "Insert" do
   include ScribeDriver
+
   before do
     setup_test_suite
     # Custom setup
@@ -43,12 +44,6 @@ describe "Insert" do
     success.must_equal true, err_msg
   end
 
-  def reset_to(delta)
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
-  end
-
   def insert_at_every_position(text)
     doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
@@ -57,6 +52,11 @@ describe "Insert" do
       apply_delta(delta, "Failed inserting #{text} at index #{insert_at}")
       ScribeDriver::JS.set_doc_delta
     end
+  end
+
+  def run_insert_test(initial, insert_delta, err_msg)
+    reset_scribe initial
+    apply_delta insert_delta, err_msg
   end
 
   it "should insert a single character at every position" do
@@ -75,25 +75,26 @@ describe "Insert" do
     start_delta = { "startLength" => 0,
                     "endLength" => 1,
                     "ops" => [{ "value" => "\n", "attributes" => {}}]}
-    reset_to start_delta
+
     current_delta = { "startLength" => 1,
                       "endLength" => 2,
                       "ops" => [{ "value" => "\n", "attributes" => {} },
                                 { "start" => 0, "end" => 1}]}
-    apply_delta current_delta, "Inserting \n at start of empty document fails."
+    run_insert_test start_delta, current_delta, "Inserting \n at start of empty document fails."
   end
 
   it "should append a newline to nonempty document" do
     start_delta = { "startLength" => 0,
                     "endLength" => 4,
                     "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-    reset_to start_delta
+
     current_delta = { "startLength" => 4,
                       "endLength" => 5,
                       "ops" => [{ "start" => 0, "end" => 3, "attributes" => {} },
                                 { "value" => "\n", "attributes" => {} },
                                 { "start" => 3, "end" => 4, "attributes" => {} }]}
-    apply_delta current_delta, "Inserting \n at start of empty document fails."
+
+    run_insert_test start_delta, current_delta, "Inserting \n at start of empty document fails."
   end
 
   describe "tab" do
@@ -101,54 +102,52 @@ describe "Insert" do
       start_delta = { "startLength" => 0,
                       "endLength" => 4,
                       "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-      reset_to start_delta
 
       current_delta = { "startLength" => 4,
                         "endLength" => 5,
                         "ops" => [{ "value" => "\t", "attributes" => {}},
                                   { "start" => 0, "end" => 4}]}
-      apply_delta current_delta, "Failed inserting tab at 0th index."
+      run_insert_test start_delta, current_delta, "Failed inserting tab at 0th index."
     end
 
     it "should prepend a tab followed by more text" do
       start_delta = { "startLength" => 0,
                       "endLength" => 4,
                       "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-      reset_to start_delta
 
       current_delta = { "startLength" => 4,
                         "endLength" => 8,
                         "ops" => [{ "value" => "\tabc", "attributes" => {}},
                                   { "start" => 0, "end" => 4}]}
-      apply_delta current_delta, "Failed inserting tab + text at 0th index."
+      run_insert_test start_delta, current_delta, "Failed inserting tab + text at 0th index."
     end
 
     it "should append a tab" do
       start_delta = { "startLength" => 0,
                       "endLength" => 4,
                       "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-      reset_to start_delta
 
       current_delta = { "startLength" => 4,
                         "endLength" => 5,
                         "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
                                   { "value" => "\t", "attributes" => {}},
                                   { "start" => 3, "end" => 4}]}
-      apply_delta current_delta, "Failed appending tab."
+
+      run_insert_test start_delta, current_delta, "Failed appending tab."
     end
 
     it "should append a tab followed by more text" do
       start_delta = { "startLength" => 0,
                       "endLength" => 4,
                       "ops" => [{ "value" => "abc\n", "attributes" => {}}]}
-      reset_to start_delta
 
       current_delta = { "startLength" => 4,
                         "endLength" => 8,
                         "ops" => [{ "start" => 0, "end" => 3, "attributes" => {}},
                                   { "value" => "\tdef", "attributes" => {}},
                                   { "start" => 3, "end" => 4}]}
-      apply_delta current_delta, "Failed appending tab."
+
+      run_insert_test start_delta, current_delta, "Failed appending tab."
     end
   end
 end

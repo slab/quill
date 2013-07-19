@@ -17,19 +17,6 @@ describe "Test Delete" do
     @driver.quit
   end
 
-  def apply_delta(delta, err_msg)
-    ScribeDriver::JS.set_current_delta(delta)
-    @adapter.apply_delta(delta)
-    success = ScribeDriver::JS.check_consistency
-    success.must_equal true, err_msg
-  end
-
-  def reset_scribe(delta)
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
-  end
-
   def run_delete_test(initial, delete_delta, err_msg)
     reset_scribe initial
     apply_delta delete_delta, err_msg

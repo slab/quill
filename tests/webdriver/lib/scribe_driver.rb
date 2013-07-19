@@ -76,6 +76,19 @@ module ScribeDriver
     @adapter.focus()
   end
 
+  def reset_scribe(delta)
+    ScribeDriver::JS.set_doc_delta delta
+    ScribeDriver::JS.set_scribe_delta delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+  end
+
+  def apply_delta(delta, err_msg)
+    ScribeDriver::JS.set_current_delta(delta)
+    @adapter.apply_delta(delta)
+    success = ScribeDriver::JS.check_consistency
+    success.must_equal true, err_msg
+  end
+
   def self.create_scribe_driver(browser, url)
     if browser == :firefox
       profile = Selenium::WebDriver::Firefox::Profile.new
