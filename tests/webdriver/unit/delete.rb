@@ -77,6 +77,28 @@ describe "Test Delete" do
     apply_delta delta, "Failed deleting formatted, newlined text."
   end
 
+  it "should pull formatting onto previous line when newline is deleted" do
+    delta = { "startLength" => 0,
+              "endLength" => 10,
+              "ops" => [{ "value" => "ab", "attributes" => {} },
+                        { "value" => "cd", "attributes" => { "color" => "red" }},
+                        { "value" => "\n", "attributes" => {} },
+                        { "value" => "ef", "attributes" => {} },
+                        { "value" => "gh", "attributes" => {"color" => "red"}},
+                        { "value" => "\n" }]
+    }
+    ScribeDriver::JS.set_doc_delta delta
+    ScribeDriver::JS.set_scribe_delta delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+    delta = { "startLength" => 10,
+              "endLength" => 9,
+              "ops" => [{ "start" => 0, "end" => 4, "attributes" => {} },
+                        { "start" => 5, "end" => 10, "attributes" => {} }]
+    }
+    apply_delta delta, "Failed deleting newline that precedes formatting."
+
+  end
+
   it "should delete plain and formatted text" do
     delta = { "startLength" => 0,
               "endLength" => 8,
