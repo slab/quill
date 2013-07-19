@@ -69,7 +69,7 @@ describe "Test Formatting" do
   end
 
   describe 'Toolbar' do
-    it "should bold highlighted text when bold is clicked" do
+    it "should bold highlighted text" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
                   "ops" => [{ "value" => "abc\n"}]
@@ -85,7 +85,41 @@ describe "Test Formatting" do
       apply_delta delta, "Failed adding bold at index 0, length 3", true
     end
 
-    it "should bold, then unbold highlighted text when bold is clicked twice" do
+    it "should unbold highlighted text" do
+      initial = { "startLength" => 0,
+                  "endLength" => 4,
+                  "ops" => [{ "value" => "abc", "attributes" => {"bold" => true} },
+                            { "value" => "\n"}]
+      }
+
+      delta = { "startLength" => 4,
+                "endLength" => 4,
+                "ops" => [{ "start" => 0, "end" => 3, "attributes" => { "bold" => nil }},
+                          { "start" => 3, "end" => 4 }]
+      }
+
+      reset_scribe initial
+      apply_delta delta, "Failed adding bold at index 0, length 3", true
+    end
+
+    focus
+    it "should bold and italicize highlighted text" do
+      initial = { "startLength" => 0,
+                  "endLength" => 4,
+                  "ops" => [{ "value" => "abc\n"}]
+      }
+
+      delta = { "startLength" => 4,
+                "endLength" => 4,
+                "ops" => [{ "start" => 0, "end" => 3, "attributes" => { "bold" => true, "italic" => true }},
+                          { "start" => 3, "end" => 4 }]
+      }
+
+      reset_scribe initial
+      apply_delta delta, "Failed adding bold at index 0, length 3", true
+    end
+
+    it "should bold, then unbold highlighted text" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
                   "ops" => [{ "value" => "abc\n"}]
