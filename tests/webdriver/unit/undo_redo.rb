@@ -9,7 +9,7 @@ describe "Test undo redo" do
   include ScribeDriver
 
   # Amount of time to sleep between edits to prevent the undo manager coalescing edits
-  COALESCE_WINDOW = 2
+  COALESCE_WINDOW = 1
 
   before do
     setup_test_suite
