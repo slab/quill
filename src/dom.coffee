@@ -147,7 +147,7 @@ Scribe.DOM =
 
   toggleClass: (node, className) ->
     if Scribe.DOM.hasClass(node, className)
-      Scribe.DOM.removeChild(node, className)
+      Scribe.DOM.removeClass(node, className)
     else
       Scribe.DOM.addClass(node, className)
 

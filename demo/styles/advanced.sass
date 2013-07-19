@@ -20,6 +20,10 @@
     margin-right: 15px
     margin-top: 4px
     vertical-align: middle
+  .format-group.last
+    float: right
+    margin-right: 4px
+    margin-top: 6px
   .format-button
     background-repeat: repeat-x
     display: inline-block
@@ -41,7 +45,7 @@
   .font-family, .font-size
     visibility: hidden
     
-  @each $format in bold, italic, strike, underline, list, bullet, outdent, indent, link
+  @each $format in bold, italic, strike, underline, list, bullet, outdent, indent, link, attribution
     .#{$format}
       background-image: url(../images/#{$format}.png)
     .#{$format}:hover, .#{$format}:active, .#{$format}.active

@@ -3,7 +3,7 @@ Tandem = require('tandem-core')
 
 class Scribe.Attribution
   constructor: (@editor, @authorId, color, enabled = false) ->
-    @editor.on(Scribe.Editor.PRE_EVENT, (eventName, delta) =>
+    @editor.on(Scribe.Editor.events.PRE_EVENT, (eventName, delta) =>
       if eventName == Scribe.Editor.events.USER_TEXT_CHANGE
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
