@@ -102,7 +102,7 @@ To run some of the tests you will need [phantomjs](http://phantomjs.org/).
 Visit build/tests/unit.html to run unit tests or run:
     
     make unit
-
+    
 ### Browser Testing
 
 You can run the unit tests on all browsers on your machine by running:
@@ -121,29 +121,34 @@ To be clear the tunnel private key should be left blank. Then to run on the remo
 
     make testem-remote
 
-### Code Coverage
+### Webdriver Testing
+For webdriver unit tests, run:
+    
+    make webdriver-unit-chrome
+    make webdriver-unit-firefox
+    
+For the fuzzer, run:
 
-Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and run
+    make webdriver-fuzzer-[browser]
+    make webdriver-fuzzer-[browser]-replay _replay_file_
 
-    make coverage
-
-### Fuzzer
-
-Run tests/scripts/selenium/fuzzer.rb as follows:
-
-    ruby fuzzer.rb _browserdriver_ _replay_file_
-
-Possible values for ```_browser_driver_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
+Possible values for ```_browser_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
 ```_replay_file_``` must be the absolute path to the file the fuzzer creates after a failed run.
 This file contains the final edit that caused the fuzzer to fail, so that you can replay the edit until you fix the bug.
 
-In order to run the fuzzer against Chrome or IE, you'll need to download 
+In order to run any Webdriver tests against Chrome or IE, you'll need to download 
 [ChromeDriver](https://code.google.com/p/chromedriver/downloads/list) or
 [InternetExplorerDriver](https://code.google.com/p/selenium/downloads/list) and add it to your system's path.
 For Chrome, be sure to download ChromeDriver, not ChromeDriver2, which is still experimental. 
 Support for Firefox is built in and requires no special downloads.
 
 The fuzzer currently works against IE 9 & 10, Firefox 19 - 21, and Chrome 26.
+
+### Code Coverage
+
+Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and run
+
+    make coverage
 
 
 
