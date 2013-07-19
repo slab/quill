@@ -1,0 +1,127 @@
+!!! 5
+%html
+  %head
+    %title Scribe Webdriver Test
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../demo/styles/reset.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../demo/styles/style.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '../../demo/styles/webdriver.css'}
+    %meta{:charset => 'utf-8'}
+
+  %body
+    .editor-wrapper.fuzzer
+      #editor-toolbar.formatting-container
+        %select.family
+          %option{:value => false, :selected => true}  Sans Serif
+          %option{:value => 'serif'}      Serif
+          %option{:value => 'monospace'}  Monospace
+        %select.size
+          %option{:value => 'small'}  Small
+          %option{:value => false, :selected => true} Normal
+          %option{:value => 'large'}  Large
+          %option{:value => 'huge'}   Huge
+        %select.color
+          %option{:value => 'white'}  White
+          %option{:value => false, :selected => true}  Black
+          %option{:value => 'red'}    Red
+          %option{:value => 'blue'} Blue
+          %option{:value => 'lime'} Lime
+          %option{:value => 'teal'}  Teal
+          %option{:value => 'magenta'}   Magenta
+          %option{:value => 'yellow'} Yellow
+        %select.background
+          %option{:value => false, :selected => true}  White
+          %option{:value => 'black'}  Black
+          %option{:value => 'red'}   Red
+          %option{:value => 'blue'} Blue
+          %option{:value => 'lime'} Lime
+          %option{:value => 'teal'}  Teal
+          %option{:value => 'magenta'} Magenta
+          %option{:value => 'yellow'} Yellow
+        %button.format-button.bold Bold
+        %button.format-button.italic Italic
+        %button.format-button.underline Under
+        %button.format-button.strike Strike
+        %button.format-button.link Link
+      .editor-container
+      #editor-cache
+        %div
+          %span aa
+        %div
+          %b bb
+          %span &nbsp;
+          %i cc
+          %span &nbsp;
+          %s dd
+          %span &nbsp;
+          %u ee
+          %span &nbsp;
+          %a{:href => 'http://www.google.com'} ff
+        %div
+          %u gg
+          %i hh
+          %u ii
+          %i
+            %b jj
+            %s kk
+            %i ll
+        %div
+          %i
+            %b mm
+            %u nn
+          %s oo
+        %div
+          %b pp
+          %i qq
+          %b rr
+          %i ss
+          %b tt
+          %i ww
+          %b xx
+        %div
+          %span &#09;yy
+        %div
+          %span{:style => 'font-size: 32px;' } zz
+          %span{:style => 'font-size: 18px;' } aa
+          %span{:style => 'font-size: 10px;' } bb
+        %div
+          %span{:style => 'font-size: 32px;' } cc
+        %div
+          %span{:style => 'font-size: 18px;' } dd
+        %div
+          %span{:style => 'font-size: 10px;' } ee
+        %div
+          %span{:style => 'font-family: "Times New Roman", serif;' } ff
+          %span{:style => 'font-family: "Courier New", monospace;' } gg
+        %div
+          %span{:style => 'color: #FFF;' }
+            %span{:style => 'background-color: #000;'} hh
+          %span{:style => 'color: #F00;' } ii
+          %span{:style => 'color: #00F;' } jj
+          %span{:style => 'color: #0F0;' } kk
+          %span{:style => 'color: #0FF;' } ll
+          %span{:style => 'color: #F0F;' } mm
+          %span{:style => 'color: #FF0;' } nn
+        %div
+          %span{:style => 'background-color: #000;'}
+            %span{:style => 'color: #FFF;' } oo
+          %span{:style => 'background-color: #F00;' } pp
+          %span{:style => 'background-color: #00F;' } qq
+          %span{:style => 'background-color: #0F0;' } rr
+          %span{:style => 'background-color: #0FF;' } ss
+          %span{:style => 'background-color: #F0F;' } tt
+          %span{:style => 'background-color: #FF0;' } uu
+        %div
+          %br
+        %div
+          %br
+        %div
+          %span vv
+        %div
+          %br
+
+    %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'}
+    %script{:type => 'text/javascript', :src => 'https://raw.github.com/caolan/async/v0.2.3/lib/async.js'}
+    %script{:type => 'text/javascript', :src => '../../scribe.all.js'}
+    %script{:type => 'text/javascript', :src => '../scripts/scribedriver.js'}
+    %script{:type => 'text/javascript', :src => '../../lib/tandem-core.js'}
+    %script{:type => 'text/javascript', :src => '../../lib/underscore.js'}

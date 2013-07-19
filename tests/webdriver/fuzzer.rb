@@ -3,7 +3,7 @@ require 'colorize'
 require 'highline'
 require 'selenium-webdriver'
 require 'json'
-require_relative 'selenium_adapter'
+require_relative 'lib/webdriver_adapter'
 
 NUM_EDITS = 500
 
@@ -18,24 +18,24 @@ def execute_js(driver, src, args = nil)
 end
 
 def js_get_as_str(driver, ref)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer['#{ref}'])"
+  return execute_js driver, "return JSON.stringify(window.ScribeDriver['#{ref}'])"
 end
 
 def js_get(driver, ref)
-  return execute_js driver, "return window.Fuzzer['#{ref}']"
+  return execute_js driver, "return window.ScribeDriver['#{ref}']"
 end
 
 def js_set_scribe_delta(driver)
-  return execute_js driver, "window.Fuzzer.initializeScribe()"
+  return execute_js driver, "window.ScribeDriver.initializeScribe()"
 end
 
 def js_set_delta_replay(driver, delta, delta_ref)
-  src = "return window.Fuzzer.setDeltaReplay(arguments[0], arguments[1])"
+  src = "return window.ScribeDriver.setDeltaReplay(arguments[0], arguments[1])"
   execute_js driver, src, [delta, delta_ref]
 end
 
-def js_set_random_delta(driver)
-  src = "window.Fuzzer.randomDelta = window.Fuzzer.createRandomDelta()"
+def js_set_current_delta(driver)
+  src = "window.ScribeDriver.currentDelta = window.ScribeDriver.createRandomDelta()"
   execute_js driver, src
 end
 
@@ -44,15 +44,15 @@ def js_get_cur_doc_delta_as_str(driver)
 end
 
 def js_get_doc_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta);"
+  return execute_js driver, "return JSON.stringify(window.ScribeDriver.docDelta);"
 end
 
 def js_get_expected_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta));"
+  return execute_js driver, "return JSON.stringify(window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta));"
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.Fuzzer.docDelta = window.Fuzzer.cleanup(editor.getDelta());"
+  execute_js driver, "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getDelta());"
 end
 
 
@@ -96,7 +96,7 @@ end
 def initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
   doc_delta, rand_delta = read_deltas_from_file(replay_file)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
-  js_set_delta_replay(driver, rand_delta, 'randomDelta')
+  js_set_delta_replay(driver, rand_delta, 'currentDelta')
   doc_delta = js_get(driver, "docDelta")
   js_set_scribe_delta(driver)
 
@@ -117,7 +117,7 @@ unless ARGV.length == 1 or ARGV.length == 2
 end
 browserdriver = ARGV[0].to_sym
 replay_file = ARGV[1]
-editor_url = "file://#{File.join(File.expand_path(__FILE__), '../../..', 'build/tests/fuzzer.html')}"
+editor_url = "file://#{File.join(File.expand_path(__FILE__), '../../..', 'build/tests/webdriver/webdriver.html')}"
 if browserdriver == :firefox
   profile = Selenium::WebDriver::Firefox::Profile.new
   profile.native_events = true
@@ -133,7 +133,7 @@ driver.manage.timeouts.implicit_wait = 10
 driver.get editor_url
 driver.switch_to.frame(driver.find_element(:tag_name, "iframe"))
 editor = driver.find_element(:class, "editor")
-adapter = SeleniumAdapter.new driver, editor
+adapter = WebdriverAdapter.new driver, editor
 adapter.focus()
 
 ################################################################################
@@ -141,10 +141,10 @@ adapter.focus()
 ################################################################################
 def check_consistency(driver, replay_file)
   driver.switch_to.default_content
-  success = driver.execute_script "return window.Fuzzer.checkConsistency();"
+  success = driver.execute_script "return window.ScribeDriver.checkConsistency();"
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
-    rand_delta = js_get_as_str(driver, "randomDelta")
+    rand_delta = js_get_as_str(driver, "currentDelta")
     expected_delta = js_get_expected_as_str(driver)
     actual_delta = js_get_cur_doc_delta_as_str(driver)
     write_deltas_to_file(doc_delta, rand_delta) unless replay_file
@@ -167,14 +167,14 @@ end
 
 if replay_file
   initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
-  random_delta = js_get(driver, "randomDelta")
+  random_delta = js_get(driver, "currentDelta")
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay_file)
 else
   js_set_doc_delta(driver)
   NUM_EDITS.times do |i|
-    js_set_random_delta(driver)
-    random_delta = js_get(driver, "randomDelta")
+    js_set_current_delta(driver)
+    random_delta = js_get(driver, "currentDelta")
     puts i.to_s.colorize(:green) if i % 10 == 0
     adapter.apply_delta(random_delta)
     check_consistency(driver, nil)

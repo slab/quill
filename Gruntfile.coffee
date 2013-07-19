@@ -30,12 +30,12 @@ module.exports = (grunt) ->
           ext: '.js'
         }]
       test:
-        files: [{ 
+        files: [{
           dest: 'build/tests/scripts/editor.js'
           src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/editor.coffee']
         }, {
-          dest: 'build/tests/scripts/fuzzer.js'
-          src: 'tests/scripts/fuzzer.coffee'
+          dest: 'build/tests/scripts/scribedriver.js'
+          src: 'tests/webdriver/lib/scribedriver.coffee'
         }, {
           dest: 'build/tests/scripts/unit.js'
           src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee', 'tests/scripts/unit/modules/*.coffee']
@@ -86,7 +86,7 @@ module.exports = (grunt) ->
           ]
         }]
       scribe:
-        files: [{ 
+        files: [{
           dest: 'build/scribe.js'
           src: [
             'vendor/assets/javascripts/rangy-core.js'
@@ -103,7 +103,7 @@ module.exports = (grunt) ->
       tests:
         expand: true
         dest: 'build/'
-        src: ['tests/*.haml', 'tests/testem/*.haml', '!tests/mocha.haml']
+        src: ['tests/*.haml', 'tests/testem/*.haml', 'tests/webdriver/*.haml', '!tests/mocha.haml']
         ext: ['.html']
 
     sass:

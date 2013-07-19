@@ -1,4 +1,4 @@
-class SeleniumAdapter
+class WebdriverAdapter
 
   attr_accessor :doc_length, :cursor_pos
 
@@ -35,23 +35,38 @@ class SeleniumAdapter
     end
   end
 
-  # private
+  def copy(index, length)
+    move_cursor(index)
+    highlight(length)
+    @driver.action.key_down(@@cmd_modifier).send_keys("c").key_up(@@cmd_modifier).perform
+    remove_highlighting
+  end
+
+  def paste(index)
+    move_cursor(index)
+    @driver.action.key_down(@@cmd_modifier).send_keys("v").key_up(@@cmd_modifier).perform
+  end
+
+  def undo
+    @driver.action.key_down(@@cmd_modifier).send_keys("z").key_up(@@cmd_modifier).perform
+  end
+
+  def redo
+    @driver.action.key_down(@@cmd_modifier).send_keys("Z").key_up(@@cmd_modifier).perform
+  end
 
   def insert_at(index, text)
-    puts "Inserting #{text} at #{index}"
     move_cursor(index)
     type_text(text)
     move_cursor index + text.length
   end
 
   def delete_at(index, length)
-    puts "Deleting #{length} at #{index}"
     move_cursor(index)
     delete(length)
   end
 
   def format_at(index, length, attributes)
-    puts "Formatting #{length} starting at #{index} with #{attributes}"
     move_cursor(index)
     highlight(length)
     attributes.each do |attr, val|
@@ -66,7 +81,7 @@ class SeleniumAdapter
   end
 
   def jump_to_start
-    os = SeleniumAdapter.os()
+    os = WebdriverAdapter.os()
     if os == :windows or os == :linux
       key = :home
     elsif os == :macosx
@@ -93,7 +108,7 @@ class SeleniumAdapter
   def highlight(length)
     keys = (0...length).to_a.map! { :arrow_right }
     @cursor_pos += length
-    @driver.action.key_down(:shift).send_keys(keys).key_up(:shift).perform
+    @driver.action.key_down(:shift).send_keys(*keys).key_up(:shift).perform
   end
 
   def delete(length)
@@ -202,5 +217,5 @@ class SeleniumAdapter
       return :command
     end
   end
-  @@cmd_modifier = SeleniumAdapter.os_to_modifier()
+  @@cmd_modifier = WebdriverAdapter.os_to_modifier()
 end

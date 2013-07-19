@@ -2,7 +2,11 @@ $(document).ready( ->
   $editors = $('.editor-container')
   window.editor = new Scribe.Editor($editors.get(0))
   editorToolbar = new Scribe.Toolbar('editor-toolbar', editor)
-  window.Fuzzer =
+  window.ScribeDriver =
+    resetScribe: ->
+      $('.editor-container').html($('#editor-cache').html())
+      window.editor = new Scribe.Editor($editors.get(0))
+
     getActiveFormats: ->
       actives = $('#editor-toolbar > .active')
       _.map(actives, (elem) ->
@@ -18,28 +22,39 @@ $(document).ready( ->
 
     setDeltaReplay: (docDelta, deltaRef) ->
       d = JSON.parse(docDelta)
-      window.Fuzzer[deltaRef] =
+      window.ScribeDriver[deltaRef] =
         new window.Tandem.Delta(d.startLength, d.endLength, d.ops)
 
-    createRandomDelta: ->
-      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.Fuzzer.docDelta, 1)
+    createDelta: (template) ->
+      startLength = template['startLength']
+      endLength = template['endLength']
+      ops = _.map(template['ops'], (op) ->
+        if op['value']?
+          return new window.Tandem.InsertOp(op['value'], op['attributes'])
+        else if op['start']?
+          return new window.Tandem.RetainOp(op['start'], op['end'], op['attributes'])
+        else
+          throw "Receive op that is not insert or retain: #{JSON.stringify(op)}"
+      )
+      return new window.Tandem.Delta(startLength, endLength, ops)
 
+    autoFormatDelta: (delta) ->
       appendingToLine = (index) ->
-        op = window.Fuzzer.docDelta.getOpsAt(index, 1)
+        op = window.ScribeDriver.docDelta.getOpsAt(index, 1)
         return op.length > 0 and _.first(op).value == "\n"
 
       prependingToLine = (index) ->
-        op = window.Fuzzer.docDelta.getOpsAt(index - 1, 1)
+        op = window.ScribeDriver.docDelta.getOpsAt(index - 1, 1)
         return index == 0 or (op.length > 0 and _.first(op).value == "\n")
 
       getAttrsAt = (index) ->
         attrs = {}
-        op = _.first(window.Fuzzer.docDelta.getOpsAt(index, 1))
+        op = _.first(window.ScribeDriver.docDelta.getOpsAt(index, 1))
         attrs = op.attributes if op
         return attrs
 
       index = 0
-      for op, opIndex in randomDelta.ops
+      for op, opIndex in delta.ops
         if window.Tandem.Delta.isInsert op
           precedingAttrs = followingAttrs = {}
           if appendingToLine(index)
@@ -60,17 +75,22 @@ $(document).ready( ->
           for elem in tail
             final.push(new window.Tandem.InsertOp("\n"))
             final.push(elem)
-          randomDelta.ops.splice(opIndex, 1, final...)
-          randomDelta.compact()
-          return randomDelta
+          delta.ops.splice(opIndex, 1, final...)
+          delta.compact()
+          return delta
         else
           index += op.getLength()
-      return randomDelta
+
+      return delta
+
+    createRandomDelta: ->
+      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.ScribeDriver.docDelta, 1)
+      return window.ScribeDriver.autoFormatDelta(randomDelta)
 
     initializeScribe: ->
-      window.editor.setDelta(window.Fuzzer.docDelta)
+      window.editor.setDelta(window.ScribeDriver.docDelta)
 
     checkConsistency: ->
-      actual = window.Fuzzer.cleanup(editor.getDelta())
-      window.Fuzzer.docDelta.compose(window.Fuzzer.randomDelta).isEqual(actual)
+      actual = window.ScribeDriver.cleanup(editor.getDelta())
+      window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta).isEqual(actual)
 )
