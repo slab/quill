@@ -27,7 +27,7 @@ Scribe.Utils =
 
   getNodeLength: (node) ->
     return 0 unless node?
-    if node.nodeType == node.ELEMENT_NODE
+    if node.nodeType == Scribe.DOM.ELEMENT_NODE
       return _.reduce(node.childNodes, (length, child) ->
         return length + Scribe.Utils.getNodeLength(child)
       , (if Scribe.Line.isLineNode(node) then 1 else 0))

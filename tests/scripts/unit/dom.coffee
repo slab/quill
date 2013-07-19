@@ -131,7 +131,7 @@ describe('DOM', ->
     traverseTest.run('should traverse with correct index',
       checker: (container) ->
         Scribe.DOM.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == node.ELEMENT_NODE
+          if node.nodeType == Scribe.DOM.ELEMENT_NODE
             expect(offset).to.equal(expected[node.textContent])
           return node
         )
@@ -154,7 +154,7 @@ describe('DOM', ->
         </div>'
       fn: (container) ->
         Scribe.DOM.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == node.ELEMENT_NODE
+          if node.nodeType == Scribe.DOM.ELEMENT_NODE
             expect(offset).to.equal(expected[node.textContent])
             node = Scribe.DOM.switchTag(node, 'SPAN') if node.tagName != 'SPAN'
           return node
@@ -176,7 +176,7 @@ describe('DOM', ->
         </div>'
       fn: (container) ->
         Scribe.DOM.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == node.ELEMENT_NODE
+          if node.nodeType == Scribe.DOM.ELEMENT_NODE
             expect(offset).to.equal(expected[node.textContent])
             if node.tagName == 'H2'
               node = Scribe.DOM.unwrap(node)
