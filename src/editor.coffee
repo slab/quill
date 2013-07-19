@@ -72,7 +72,7 @@ formatAt = (index, length, name, value) ->
         else
           line.formatText(offset, line.length - offset, name, value)
       else
-        console.warn 'Unsupported format', name, value
+        throw new Error("Unsupported format #{name} #{value}")
       length -= (line.length - offset)
       offset = 0
       line = line.next
@@ -121,8 +121,6 @@ trackDelta = (fn, options) ->
     decompose = if decomposeA.ops.length < decomposeB.ops.length then decomposeA else decomposeB
   else
     decompose = decomposeA or decomposeB
-  compose = oldDelta.compose(decompose)
-  console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
   if !decompose.isIdentity() and !options.silent
     eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
     this.emit(eventName, decompose)
@@ -188,7 +186,7 @@ class Scribe.Editor extends EventEmitter2
       return this.setDelta(delta, options)
     return if delta.isIdentity()
     this.doSilently( =>
-      console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
+      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == this.getLength()
       oldDelta = @doc.toDelta()
       delta.apply(insertAt, deleteAt, formatAt, this)
       unless options.silent

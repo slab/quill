@@ -9,10 +9,10 @@ class Scribe.Format.Leaf
     Scribe.DOM.removeAttributes(node)
 
   createContainer: (value) ->
-    console.error('Descendants should implement')
+    throw new Error("Descendants should implement")
 
   matchContainer: (container) ->
-    console.error('Descendants should implement')
+    throw new Error("Descendants should implement")
 
 
 class Scribe.Format.Tag extends Scribe.Format.Leaf

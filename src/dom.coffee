@@ -22,7 +22,7 @@ Scribe.DOM =
         return node.attachEvent("on#{eventName}", listener)
       if eventName == 'DOMSubtreeModified'
         return node.attachEvent('onpropertychange', listener)
-    console.warn 'Cannot attach to unsupported event', eventName
+    throw new Error("Cannot attach to unsupported event #{eventName}")
 
   findDeepestNode: (node, offset) ->
     if node.firstChild?

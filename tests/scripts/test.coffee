@@ -15,7 +15,7 @@ class ScribeHtmlTest
     pre           : -> []
 
   constructor: (options = {}) ->
-    console.assert(_.isObject(options), "Invalid options passed into constructor")
+    throw new Error("Invalid options passed into constructor") unless _.isObject(options)
     @settings = _.defaults(options, ScribeHtmlTest.DEFAULTS)
 
   run: (name, options, args...) ->
@@ -59,7 +59,7 @@ class ScribeEditorTest extends ScribeHtmlTest
     )
 
   runWithoutIt: (options, args..., done) ->
-    console.assert(_.isObject(options), "Invalid options passed into run")
+    throw new Error("Invalid options passed into run") unless _.isObject(options)
     @options = _.defaults(options, @settings)
     testEditor = expectedEditor = null
     htmlOptions = _.clone(@options)
@@ -86,7 +86,6 @@ class ScribeEditorTest extends ScribeHtmlTest
       unless @options.ignoreExpect
         testDelta = testEditor.getDelta()
         expectedDelta = expectedEditor.getDelta()
-        console.error testDelta, expectedDelta unless testDelta.isEqual(expectedDelta)
         expect(testEditor.getDelta().isEqual(expectedEditor.getDelta())).to.be(true)
         consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
         expect(consistent).to.be(true)
