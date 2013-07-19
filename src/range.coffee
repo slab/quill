@@ -33,7 +33,6 @@ class Scribe.Range
   # <span class='size.huge'>Huge</span><span>Normal</span>                                           -> {size: ['huge']}
   # <span class='size.huge'>Huge</span><span>Normal</span><span class='size.small'>Small</span> -> {size: ['huge', 'normal', 'small']}
   getFormats: ->
-    return @formats if @formats?
     startLeaf = this.start.getLeaf()
     endLeaf = this.end.getLeaf()
     # TODO Fix race condition that makes check necessary... should always be able to return format intersection
@@ -59,7 +58,6 @@ class Scribe.Range
     _.each(formats, (value, key) ->
       formats[key] = _.uniq(value) if _.isArray(value)
     )
-    @formats = formats
     return formats
 
   getLeafNodes: ->

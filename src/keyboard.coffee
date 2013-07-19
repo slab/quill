@@ -18,17 +18,11 @@ _initHotkeys = ->
     _onTab.call(this, range, false)
     return false
   )
-  this.addHotkey(Scribe.Keyboard.hotkeys.BOLD, (range) =>
-    this.toggleFormat(range, 'bold')
-    return false
-  )
-  this.addHotkey(Scribe.Keyboard.hotkeys.ITALIC, (range) =>
-    this.toggleFormat(range, 'italic')
-    return false
-  )
-  this.addHotkey(Scribe.Keyboard.hotkeys.UNDERLINE, (range) =>
-    this.toggleFormat(range, 'underline')
-    return false
+  _.each(['bold', 'italic', 'underline'], (format) =>
+    this.addHotkey(Scribe.Keyboard.hotkeys[format.toUpperCase()], (range) =>
+      this.toggleFormat(range, format)
+      return false
+    )
   )
 
 _initListeners = ->

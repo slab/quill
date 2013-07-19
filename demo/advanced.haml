@@ -36,6 +36,9 @@
             .format-group
               .format-button
                 .format.link.last
+            .format-group.last
+              .format-button
+                .format.attribution.last
           #editor-container.editor-container
             = Haml::Engine.new(File.read('demo/content.haml')).render
 

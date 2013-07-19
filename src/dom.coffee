@@ -98,7 +98,7 @@ Scribe.DOM =
   setText: (node, text) ->
     switch node.nodeType
       when Scribe.DOM.ELEMENT_NODE
-        if node.textContent
+        if node.textContent?
           node.textContent = text
         else
           node.innerText = text
@@ -144,6 +144,12 @@ Scribe.DOM =
     newNode.className = node.className if node.className
     newNode.id = node.id if node.id
     return newNode
+
+  toggleClass: (node, className) ->
+    if Scribe.DOM.hasClass(node, className)
+      Scribe.DOM.removeClass(node, className)
+    else
+      Scribe.DOM.addClass(node, className)
 
   traversePostorder: (root, fn, context = fn) ->
     return unless root?

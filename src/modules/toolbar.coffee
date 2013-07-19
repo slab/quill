@@ -1,27 +1,6 @@
 Scribe = require('../scribe')
 
 
-initActiveFormatListener = ->
-  @editor.on(Scribe.Editor.events.SELECTION_CHANGE, (selection) =>
-    _.each(@container.querySelectorAll('.active'), (button) =>
-      Scribe.DOM.removeClass(button, 'active')
-    )
-    _.each(@container.querySelectorAll('select'), (select) =>
-      select.querySelector('option[selected]').selected = true
-    )
-    return unless selection?
-    _.each(selection.getFormats(), (value, key) =>
-      if value?
-        elem = @container.querySelector(".#{key}")
-        return unless elem?
-        if elem.tagName == 'SELECT'
-          value = '' if _.isArray(value)
-          elem.value = value
-        else
-          Scribe.DOM.addClass(elem, 'active')
-    )
-  )
-
 initFormats = ->
   _.each(Scribe.Toolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
@@ -50,10 +29,34 @@ class Scribe.Toolbar extends EventEmitter2
   constructor: (@container, @editor) ->
     @container = document.getElementById(@container) if _.isString(@container)
     initFormats.call(this)
-    initActiveFormatListener.call(this)
+    @editor.on(Scribe.Editor.events.POST_EVENT, (eventName) =>
+      return unless eventName == Scribe.Editor.events.API_TEXT_CHANGE or eventName == Scribe.Editor.events.USER_TEXT_CHANGE or eventName == Scribe.Editor.events.SELECTION_CHANGE
+      this.update()
+    )
     this.on(Scribe.Toolbar.events.FORMAT, =>
       @editor.root.focus()
     )
+
+  update: ->
+    range = @editor.getSelection()
+    _.each(@container.querySelectorAll('.active'), (button) =>
+      Scribe.DOM.removeClass(button, 'active')
+    )
+    _.each(@container.querySelectorAll('select'), (select) =>
+      select.querySelector('option[selected]').selected = true
+    )
+    return unless range?
+    _.each(range.getFormats(), (value, key) =>
+      if value?
+        elem = @container.querySelector(".#{key}")
+        return unless elem?
+        if elem.tagName == 'SELECT'
+          value = '' if _.isArray(value)
+          elem.value = value
+        else
+          Scribe.DOM.addClass(elem, 'active')
+    )
+
 
 
 module.exports = Scribe
