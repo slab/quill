@@ -2,6 +2,7 @@ require 'debugger'
 gem "minitest"
 require 'minitest/autorun'
 require 'minitest/pride'
+require_relative '../lib/minitest/focus'
 require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
 
@@ -56,7 +57,8 @@ describe "Test Delete" do
     apply_delta delta, "Failed deleting formatted text at index 3"
   end
 
-  it "should delete \n and retain formatting" do
+  focus
+  it "should delete newline and retain formatting" do
     delta = { "startLength" => 0,
               "endLength" => 8,
               "ops" => [{ "value" => "abc", "attributes" => {"color" => "red"} },
