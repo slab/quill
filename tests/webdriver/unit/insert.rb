@@ -36,10 +36,11 @@ describe "Insert" do
       cur_delta = JSON.pretty_generate(JSON.parse(cur_delta))
       expected_delta = JSON.pretty_generate(JSON.parse(expected_delta))
       actual_delta = JSON.pretty_generate(JSON.parse(actual_delta))
-      puts "#{'doc_delta: '.light_cyan + doc_delta},"
-      puts "#{'cur_delta: '.light_cyan + cur_delta},"
-      puts "#{'expected_delta: '.light_cyan + expected_delta},"
-      puts "#{'actual: '.light_cyan + actual_delta}"
+      error_details = "#{'doc_delta: '.light_cyan + doc_delta},\n"
+      error_details << "#{'cur_delta: '.light_cyan + cur_delta},\n"
+      error_details << "#{'expected_delta: '.light_cyan + expected_delta},\n"
+      error_details << "#{'actual: '.light_cyan + actual_delta}"
+      err_msg << "\n#{error_details}"
     end
     success.must_equal true, err_msg
   end
