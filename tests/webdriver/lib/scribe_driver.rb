@@ -82,9 +82,9 @@ module ScribeDriver
     @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
-  def apply_delta(delta, err_msg)
+  def apply_delta(delta, err_msg, toolbar_only = false)
     ScribeDriver::JS.set_current_delta(delta)
-    @adapter.apply_delta(delta)
+    @adapter.apply_delta(delta, toolbar_only)
     success = ScribeDriver::JS.check_consistency
     success.must_equal true, err_msg
   end

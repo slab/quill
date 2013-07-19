@@ -10,7 +10,7 @@ class WebdriverAdapter
   end
 
   # Assumes delta will contain only one document modifying op
-  def apply_delta(delta)
+  def apply_delta(delta, toolbar_only = false)
     index = 0
     delta['ops'].each_with_index do |op, i|
       if op['value']
@@ -27,7 +27,7 @@ class WebdriverAdapter
         break
       elsif !op['attributes'].empty?
         length = op['end'] - op['start']
-        format_at(index, length, op['attributes'])
+        format_at(index, length, op['attributes'], toolbar_only)
         break
       else
         index += op['end'] - op['start']
@@ -66,11 +66,11 @@ class WebdriverAdapter
     delete(length)
   end
 
-  def format_at(index, length, attributes)
+  def format_at(index, length, attributes, toolbar_only = false)
     move_cursor(index)
     highlight(length)
     attributes.each do |attr, val|
-      format(attr, val)
+      format(attr, val, toolbar_only)
     end
     remove_highlighting
   end
@@ -169,10 +169,10 @@ class WebdriverAdapter
     @driver.switch_to.frame(@driver.find_element(:tag_name, "iframe"))
   end
 
-  def format(format, value)
+  def format(format, value, toolbar_only = false)
     case format
     when /bold|italic|underline/
-      if Random.rand() < 0.5
+      if Random.rand() < 0.5 && !toolbar_only
         @driver.action.key_down(@@cmd_modifier).send_keys(format[0]).key_up(@@cmd_modifier).perform
       else
         click_button_from_toolbar(format)
