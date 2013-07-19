@@ -102,6 +102,12 @@ To run some of the tests you will need [phantomjs](http://phantomjs.org/).
 Visit build/tests/unit.html to run unit tests or run:
     
     make unit
+    
+For webdriver unit tests, run:
+    
+    make webdriver-unit-chrome
+    make webdriver-unit-firefox
+    
 
 ### Browser Testing
 
@@ -129,11 +135,10 @@ Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and ru
 
 ### Fuzzer
 
-Run tests/scripts/selenium/fuzzer.rb as follows:
+    make webdriver-fuzzer-[browser]
+    make webdriver-fuzzer-[browser]-replay _replay_file_
 
-    ruby fuzzer.rb _browserdriver_ _replay_file_
-
-Possible values for ```_browser_driver_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
+Possible values for ```_browser_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
 ```_replay_file_``` must be the absolute path to the file the fuzzer creates after a failed run.
 This file contains the final edit that caused the fuzzer to fail, so that you can replay the edit until you fix the bug.
 
