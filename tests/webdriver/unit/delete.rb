@@ -11,13 +11,6 @@ describe "Test Delete" do
 
   before do
     setup_test_suite
-    delta = { "startLength" => 0,
-              "endLength" => 4,
-              "ops" => [{ "value" => "abc\n"}]
-    }
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
   after do
@@ -31,54 +24,67 @@ describe "Test Delete" do
     success.must_equal true, err_msg
   end
 
+  def reset_scribe(delta)
+    ScribeDriver::JS.set_doc_delta delta
+    ScribeDriver::JS.set_scribe_delta delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+  end
+
+  def run_delete_test(initial, delete_delta, err_msg)
+    reset_scribe initial
+    apply_delta delete_delta, err_msg
+  end
+
   it "should delete plain text" do
+    initial = { "startLength" => 0,
+                "endLength" => 4,
+                "ops" => [{ "value" => "abc\n"}]
+    }
+
     delta = { "startLength" => 4,
               "endLength" => 3,
               "ops" => [{ "start" => 0, "end" => 2, "attributes" => {}},
                         { "start" => 3, "end" => 4, "attributes" => {}}]
     }
-    apply_delta(delta, "Failed deleting plain text at index 3")
+
+    run_delete_test initial, delta, "Failed deleting plain text at index 3"
   end
 
   it "should delete formatted text" do
-    delta = { "startLength" => 0,
+    initial = { "startLength" => 0,
               "endLength" => 4,
               "ops" => [{ "value" => "abc", "attributes" => {"color" => "red"}},
                         { "value" => "\n" }]
     }
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+
     delta = { "startLength" => 4,
               "endLength" => 3,
               "ops" => [{ "start" => 0, "end" => 2, "attributes" => {}},
                         { "start" => 3, "end" => 4, "attributes" => {}}]
     }
-    apply_delta delta, "Failed deleting formatted text at index 3"
+
+    run_delete_test initial, delta, "Failed deleting formatted text at index 3"
   end
 
-  focus
   it "should delete newline and retain formatting" do
-    delta = { "startLength" => 0,
+    initial = { "startLength" => 0,
               "endLength" => 8,
               "ops" => [{ "value" => "abc", "attributes" => {"color" => "red"} },
                         { "value" => "\n", "attributes" => {} },
                         { "value" => "def", "attributes" => {"color" => "red"} },
                         { "value" => "\n" }]
     }
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+
     delta = { "startLength" => 8,
               "endLength" => 5,
               "ops" => [{ "start" => 0, "end" => 2, "attributes" => {} },
                         { "start" => 5, "end" => 8, "attributes" => {} }]
     }
-    apply_delta delta, "Failed deleting formatted, newlined text."
+    run_delete_test initial, delta, "Failed deleting formatted, newlined text."
   end
 
   it "should pull formatting onto previous line when newline is deleted" do
-    delta = { "startLength" => 0,
+    initial = { "startLength" => 0,
               "endLength" => 10,
               "ops" => [{ "value" => "ab", "attributes" => {} },
                         { "value" => "cd", "attributes" => { "color" => "red" }},
@@ -87,34 +93,30 @@ describe "Test Delete" do
                         { "value" => "gh", "attributes" => {"color" => "red"}},
                         { "value" => "\n" }]
     }
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+
     delta = { "startLength" => 10,
               "endLength" => 9,
               "ops" => [{ "start" => 0, "end" => 4, "attributes" => {} },
                         { "start" => 5, "end" => 10, "attributes" => {} }]
     }
-    apply_delta delta, "Failed deleting newline that precedes formatting."
 
+    run_delete_test initial, delta, "Failed deleting newline that precedes formatting."
   end
 
   it "should delete plain and formatted text" do
-    delta = { "startLength" => 0,
+    initial = { "startLength" => 0,
               "endLength" => 8,
               "ops" => [{ "value" => "abc", "attributes" => {} },
                         { "value" => "\n", "attributes" => {} },
                         { "value" => "def", "attributes" => {"color" => "red"} },
                         { "value" => "\n" }]
     }
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+
     delta = { "startLength" => 8,
               "endLength" => 5,
               "ops" => [{ "start" => 0, "end" => 2, "attributes" => {} },
                         { "start" => 5, "end" => 8, "attributes" => {} }]
     }
-    apply_delta delta, "Failed deleting plain and formatted, newlined text."
+    run_delete_test initial, delta, "Failed deleting plain and formatted, newlined text."
   end
 end
