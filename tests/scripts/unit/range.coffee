@@ -26,7 +26,7 @@ describe('Range', ->
         ]
         _.each(expectedResults, (result, i) ->
           position = new Scribe.Position(editor, i)
-          expect(position.leafNode.textContent).to.equal(result.text)
+          expect(Scribe.DOM.getText(position.leafNode)).to.equal(result.text)
           expect(position.offset).to.equal(result.offset)
         )
     )

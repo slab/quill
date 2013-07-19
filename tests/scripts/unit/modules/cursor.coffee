@@ -18,7 +18,7 @@ describe('Cursor', ->
       inner = cursor.querySelector('.cursor-caret')
       expect(inner.style.backgroundColor).to.equal('red')
       name = cursor.querySelector('.cursor-name')
-      expect(name.textContent).to.equal('Test')
+      expect(Scribe.DOM.getText(name)).to.equal('Test')
     )
 
     it('should set at middle of leaf', ->
