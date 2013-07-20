@@ -18,7 +18,7 @@ Scribe.DOM =
     if node.addEventListener?
       return node.addEventListener(eventName, listener)
     else if node.attachEvent?
-      if _.indexOf(['change', 'click', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
+      if _.indexOf(['change', 'click', 'focus', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
         return node.attachEvent("on#{eventName}", listener)
       if eventName == 'DOMSubtreeModified'
         return node.attachEvent('onpropertychange', listener)

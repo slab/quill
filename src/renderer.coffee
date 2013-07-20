@@ -116,6 +116,9 @@ class Scribe.Renderer extends EventEmitter2
     this.runWhenLoaded( =>
       doc = this.getDocument()
       doc.body.appendChild(@root) if doc?
+      Scribe.DOM.addEventListener(@container, 'focus', =>
+        @root.focus()
+      )
     )
 
   getDocument: ->
