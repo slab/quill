@@ -24,6 +24,23 @@ describe "Cursor" do
                     "ops" => [{ "value" => "\n", "attributes" => {}}]}
     reset_scribe start_delta
     @adapter.type_text "\n"
-    assert ScribeDriver::JS.get_cursor_position == 1
+    expected_cursor_pos = 1
+    actual_cursor_pos = ScribeDriver::JS.get_cursor_position
+    assert expected_cursor_pos == actual_cursor_pos,
+      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}"
+  end
+
+  it "should maintain index after deleting formatted middle chars" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 1,
+                    "ops" => [{ "value" => "\n", "attributes" => {}}]}
+    reset_scribe start_delta
+    @adapter.type_text "abc"
+    @adapter.format_at 1, 1, { "bold" => true }
+    @adapter.delete_at 1, 1
+    expected_cursor_pos = 1
+    actual_cursor_pos = ScribeDriver::JS.get_cursor_position
+    assert expected_cursor_pos == actual_cursor_pos,
+      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}"
   end
 end
