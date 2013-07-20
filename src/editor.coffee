@@ -150,6 +150,12 @@ class Scribe.Editor extends EventEmitter2
     @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
+    # Make sure we our selection is set to deepest textNode, prevent bug in Firefox when tabbing in
+    Scribe.DOM.addEventListener(@root, 'focus', =>
+      range = this.getSelection()
+      this.setSelection(null, true)
+      this.setSelection(range, true)
+    )
     this.enable() if @options.enabled
 
   disable: ->
