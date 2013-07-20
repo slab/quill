@@ -1,22 +1,17 @@
 require 'colorize'
+require 'debugger'
 gem "minitest"
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/scribe_driver'
 require_relative '../lib/webdriver_adapter'
+require_relative '../lib/minitest/focus'
 
 describe "Insert" do
   include ScribeDriver
 
   before do
     setup_test_suite
-    # Custom setup
-    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
-    @editor = @driver.find_element(:class, "editor")
-    @adapter = WebdriverAdapter.new @driver, @editor
-    @adapter.focus()
-    ScribeDriver::JS.set_doc_delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
   end
 
   after do
@@ -46,6 +41,12 @@ describe "Insert" do
   end
 
   def insert_at_every_position(text)
+    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
+    @editor = @driver.find_element(:class, "editor")
+    @adapter = WebdriverAdapter.new @driver, @editor
+    @adapter.focus()
+    ScribeDriver::JS.set_doc_delta
+    @adapter.doc_length = ScribeDriver::JS.get_doc_length
     doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
       cur_length = ScribeDriver::JS.get_doc_length
@@ -109,6 +110,22 @@ describe "Insert" do
                         "ops" => [{ "value" => "\t", "attributes" => {}},
                                   { "start" => 0, "end" => 4}]}
       run_insert_test start_delta, current_delta, "Failed inserting tab at 0th index."
+    end
+
+    it "should indent highlighted lines" do
+      start_delta = { "startLength" => 0,
+                      "endLength" => 6,
+                      "ops" => [{ "value" => "1\n2\n3\n", "attributes" => {}}]}
+      reset_scribe start_delta
+
+      @adapter.move_cursor 0
+      @adapter.highlight 3
+      @editor.send_keys :tab
+      expected_delta = { "startLength" => 0,
+                         "endLength" => 8,
+                         "ops" => [{ "value" => "\t1\n\t2\n3\n", "attributes" => {}}]}
+
+      assert ScribeDriver::JS.editor_delta_equals(expected_delta), "Indenting multiple lines with tab failed."
     end
 
     it "should prepend a tab followed by more text" do

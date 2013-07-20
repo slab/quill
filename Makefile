@@ -1,4 +1,4 @@
-replay_file=$(shell find tests/selenium/fuzzer_output/fails -type f -exec stat -f "%m %N" {} \; | sort -n | tail -1 | cut -f2- -d" ")
+replay_file=$(shell find tests/webdriver/fuzzer_output/fails -type f -exec stat -f "%m %N" {} \; | sort -n | tail -1 | cut -f2- -d" ")
 
 coverage:
 	@echo "Initial setup"

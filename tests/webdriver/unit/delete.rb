@@ -92,11 +92,11 @@ describe "Test Delete" do
 
   it "should delete plain and formatted text" do
     initial = { "startLength" => 0,
-              "endLength" => 8,
-              "ops" => [{ "value" => "abc", "attributes" => {} },
-                        { "value" => "\n", "attributes" => {} },
-                        { "value" => "def", "attributes" => {"color" => "red"} },
-                        { "value" => "\n" }]
+                "endLength" => 8,
+                "ops" => [{ "value" => "abc", "attributes" => {} },
+                          { "value" => "\n", "attributes" => {} },
+                          { "value" => "def", "attributes" => {"color" => "red"} },
+                          { "value" => "\n" }]
     }
 
     delta = { "startLength" => 8,
