@@ -8,6 +8,10 @@ module ScribeDriver
       return result
     end
 
+    def self.get_cursor_position
+      return self.execute_js "return window.editor.getSelection().start.index"
+    end
+
     def self.get_as_str(ref)
       return self.execute_js "return JSON.stringify(window.ScribeDriver['#{ref}'])"
     end
