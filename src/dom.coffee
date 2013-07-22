@@ -18,11 +18,11 @@ Scribe.DOM =
     if node.addEventListener?
       return node.addEventListener(eventName, listener)
     else if node.attachEvent?
-      if _.indexOf(['change', 'click', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
+      if _.indexOf(['change', 'click', 'focus', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
         return node.attachEvent("on#{eventName}", listener)
       if eventName == 'DOMSubtreeModified'
         return node.attachEvent('onpropertychange', listener)
-    console.warn 'Cannot attach to unsupported event', eventName
+    throw new Error("Cannot attach to unsupported event #{eventName}")
 
   findDeepestNode: (node, offset) ->
     if node.firstChild?
@@ -94,6 +94,16 @@ Scribe.DOM =
       classArray = Scribe.DOM.getClasses(node)
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
+
+  resetSelect: (select) ->
+    option = select.querySelector('option[selected]')
+    if option?
+      option.selected = true
+    else
+      # IE8
+      for o,i in select.options
+        if o.defaultSelected
+          return select.selectedIndex = i
 
   setText: (node, text) ->
     switch node.nodeType

@@ -72,7 +72,7 @@ formatAt = (index, length, name, value) ->
         else
           line.formatText(offset, line.length - offset, name, value)
       else
-        console.warn 'Unsupported format', name, value
+        throw new Error("Unsupported format #{name} #{value}")
       length -= (line.length - offset)
       offset = 0
       line = line.next
@@ -121,8 +121,6 @@ trackDelta = (fn, options) ->
     decompose = if decomposeA.ops.length < decomposeB.ops.length then decomposeA else decomposeB
   else
     decompose = decomposeA or decomposeB
-  compose = oldDelta.compose(decompose)
-  console.assert(compose.isEqual(newDelta), oldDelta, newDelta, decompose, compose)
   if !decompose.isIdentity() and !options.silent
     eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
     this.emit(eventName, decompose)
@@ -152,6 +150,12 @@ class Scribe.Editor extends EventEmitter2
     @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
+    # Make sure we our selection is set to deepest textNode, prevent bug in Firefox when tabbing in
+    Scribe.DOM.addEventListener(@root, 'focus', =>
+      range = this.getSelection()
+      this.setSelection(null, true)
+      this.setSelection(range, true)
+    )
     this.enable() if @options.enabled
 
   disable: ->
@@ -188,7 +192,7 @@ class Scribe.Editor extends EventEmitter2
       return this.setDelta(delta, options)
     return if delta.isIdentity()
     this.doSilently( =>
-      console.assert(delta.startLength == this.getLength(), "Trying to apply delta to incorrect doc length", delta, this.getLength())
+      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == this.getLength()
       oldDelta = @doc.toDelta()
       delta.apply(insertAt, deleteAt, formatAt, this)
       unless options.silent
@@ -245,7 +249,7 @@ class Scribe.Editor extends EventEmitter2
     this.applyDelta(delta, { silent: true })
     @undoManager.clear()
     delta.startLength = oldLength
-    
+
   setSelection: (range, silent = false) ->
     @selection.setRange(range, silent)
 

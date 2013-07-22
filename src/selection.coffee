@@ -3,7 +3,7 @@ Scribe = require('./scribe')
 
 # DOM Selection API says offset is child index of container, not number of characters like Scribe.Position
 normalizeNativePosition = (node, offset) ->
-  if node?.nodeType == node.ELEMENT_NODE
+  if node?.nodeType == Scribe.DOM.ELEMENT_NODE
     if offset == 0
       node = node.firstChild if node.firstChild?
     else
@@ -73,7 +73,7 @@ class Scribe.Selection
     this.initListeners()
     @editor.renderer.runWhenLoaded( =>
       rangy.init()
-      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe)
+      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
       this.setRange(null)
     )
 

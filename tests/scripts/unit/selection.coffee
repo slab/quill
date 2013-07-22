@@ -6,8 +6,8 @@ describe('Selection', ->
     lineIndex = 0
     ret = _.reduce(lines, (indexes, line) ->
       offset = 0
-      while line.node.textContent.indexOf("|", offset) > -1
-        index = line.node.textContent.indexOf("|", offset)
+      while Scribe.DOM.getText(line.node).indexOf("|", offset) > -1
+        index = Scribe.DOM.getText(line.node).indexOf("|", offset)
         indexes.push(lineIndex + index - indexes.length)
         offset = index + 1
       lineIndex += line.length

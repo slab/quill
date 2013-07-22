@@ -63,12 +63,12 @@ class Scribe.Line extends LinkedList.Node
     return [leaf, offset]
 
   format: (name, value) ->
-    console.warn "Unimplemented"
+    throw new Error("Unimplemented")
 
   formatText: (offset, length, name, value) ->
     return if length <= 0
     format = @doc.formatManager.formats[name]
-    console.warn('Unrecognized format', name) unless format?
+    throw new Error("Unrecognized format #{name}") unless format?
     if value
       refNode = null
       formatNode = @doc.formatManager.createFormatContainer(name, value)
