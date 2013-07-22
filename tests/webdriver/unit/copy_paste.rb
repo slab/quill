@@ -9,13 +9,10 @@ describe "Test Copy Paste" do
   include ScribeDriver
   before do
     setup_test_suite
-    # Custom setup
-    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
-    @editor = @driver.find_element(:class, "editor")
-    @adapter = WebdriverAdapter.new @driver, @editor
-    @adapter.focus()
-    ScribeDriver::JS.set_doc_delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+    start_delta = { "startLength" => 0,
+                    "endLength" => 1,
+                    "ops" => [{ "value" => "\n", "attributes" => {}}]}
+    reset_scribe start_delta
   end
 
   after do
