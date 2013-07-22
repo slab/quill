@@ -101,7 +101,7 @@ module ScribeDriver
     elsif browser== :chrome
       log_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output"))
       log_path = log_path.first
-      @@driver = Selenium::WebDriver.for browser, :service_log_path => log_path
+      @@driver = Selenium::WebDriver.for browser
     else
       @@driver = Selenium::WebDriver.for browser
     end
