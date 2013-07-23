@@ -50,5 +50,11 @@
       var editor = new Scribe.Editor('editor-container');
       var toolbar = new Scribe.Toolbar('formatting-container', editor);
       editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, function(delta) {
-        console.info('User', delta);
+        console.info('Text', delta);
+      }).on(Scribe.Editor.events.SELECTION_CHANGE, function(range) {
+        if (range) {
+          console.info('Range', range.start.index, range.start.leafNode, range.start.offset, range.end.index, range.end.leafNode, range.end.offset);
+        } else {
+          console.info('Range', range);
+        }
       });
