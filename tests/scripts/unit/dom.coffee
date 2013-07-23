@@ -57,10 +57,10 @@ describe('DOM', ->
     , 1)
   )
 
-  describe('splitAfter', ->
+  describe('splitBefore', ->
     splitTest = new Scribe.Test.HtmlTest(
       fn: (testContainer, expectedContainer, target) ->
-        Scribe.DOM.splitAfter(target, testContainer)
+        Scribe.DOM.splitBefore(target, testContainer)
       pre: (testContainer, expectedContainer) ->
         return testContainer.querySelector('#target')
     )
@@ -85,11 +85,11 @@ describe('DOM', ->
           </div>
           <div>
             <div>Three</div>
-            <div>Four</div>
           </div>
         </div>
         <div>
           <div>
+            <div>Four</div>
             <div>Five</div>
           </div>
         </div>'
