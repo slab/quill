@@ -93,6 +93,7 @@ module ScribeDriver
     success.must_equal true, err_msg
   end
 
+  # Credit: http://jkotests.wordpress.com/2013/06/26/silencing-diagnostic-output-when-starting-webdrivers/
   class Selenium::WebDriver::Chrome::Service
     old_initialize = instance_method(:initialize)
     define_method(:initialize) do |executable_path, port, *extra_args|
