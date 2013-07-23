@@ -98,7 +98,7 @@ module ScribeDriver
       profile = Selenium::WebDriver::Firefox::Profile.new
       profile.native_events = true
       @@driver = Selenium::WebDriver.for browser, :profile => profile
-    elsif browser== :chrome
+    elsif browser == :chrome
       log_path = FileUtils.mkpath(File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), "logs", "driver"))
       log_path = File.join log_path.first, "chromedriver_#{Time.now.to_i.to_s}.log"
       @@driver = Selenium::WebDriver.for browser, :service_log_path => log_path
