@@ -58,6 +58,7 @@ class Scribe.Format.Style extends Scribe.Format.Span
     styleString = container.getAttribute('style') or ''
     return _.reduce(styleString.split(';').slice(0, -1), (styles, str) ->
       [name, value] = str.split(':')
+      name = name.slice(1) if name[0] == ' '
       value = value.slice(1) if value[0] == ' '
       styles[name] = value
       return styles
@@ -71,8 +72,10 @@ class Scribe.Format.Style extends Scribe.Format.Span
     return nameArr[0] + capitalNameArr.slice(1).join('')
 
   constructor: (@root, @keyName, @cssName, @styles, @matchFn) ->
-    @matchFn or= (formatName, cssValue) =>
-      return @styles[formatName] == cssValue
+    @matchFn or= (cssValue) =>
+      for key,value of @styles
+        return key if value == cssValue
+      return false
     super
 
   clean: (node) ->
@@ -88,10 +91,7 @@ class Scribe.Format.Style extends Scribe.Format.Span
   matchContainer: (container) ->
     return false unless super(container)
     styles = Scribe.Format.Style.getStyleObject(container)
-    if styles[@cssName]?
-      for formatName of @styles
-        return formatName if @matchFn(formatName, styles[@cssName])
-    return false
+    return if styles[@cssName]? then @matchFn(styles[@cssName]) else false
 
 
 class Scribe.Format.Bold extends Scribe.Format.Tag
@@ -142,41 +142,40 @@ class Scribe.Format.Background extends Scribe.Format.Style
 
 class Scribe.Format.Color extends Scribe.Format.Style
   @COLORS: {
-    'black'   : '#000'
-    'red'     : '#F00'
-    'blue'    : '#00F'
-    'lime'    : '#0F0'
-    'teal'    : '#0FF'
-    'magenta' : '#F0F'
-    'yellow'  : '#FF0'
-    'white'   : '#FFF'
+    'black'   : '#000000'
+    'red'     : '#FF0000'
+    'blue'    : '#0000FF'
+    'lime'    : '#00FF00'
+    'teal'    : '#00FFFF'
+    'magenta' : '#FF00FF'
+    'yellow'  : '#FFFF00'
+    'white'   : '#FFFFFF'
   }
 
   @normalizeColor: (color) ->
     color = Scribe.Format.Color.COLORS[color] if Scribe.Format.Color.COLORS[color]?
     if color[0] == '#'
-      color = color.slice(1)
-      if color.length == 3
-        color = _.map(color, (letter) ->
+      if color.length == 4
+        color = '#' + _.map(color.slice(1), (letter) ->
           letter + letter
         ).join('')
-      return [
-        parseInt(color.slice(0, 2), 16)
-        parseInt(color.slice(2, 4), 16)
-        parseInt(color.slice(4, 6), 16)
-      ]
+      return color
     else if color.indexOf('rgb(') == 0
       color = color.slice(4)
-      return _.map(color.split(',').slice(0, 3), (part) ->
-        parseInt(part, 10)
-      )
+      color = _.reduce(color.split(',').slice(0, 3), (color, part) ->
+        c = parseInt(part, 10).toString(16).toUpperCase()
+        c = '0' + c if c.length == 1
+        return color + c
+      , '#')
+      return color
     else
-      return [0, 0, 0]
+      return '#000000'
 
-  @matchColor: (color1, color2) ->
-    color1 = Scribe.Format.Color.normalizeColor(color1)
-    color2 = Scribe.Format.Color.normalizeColor(color2)
-    return _.isEqual(color1, color2)
+  @matchColor: (cssValue) ->
+    color = Scribe.Format.Color.normalizeColor(cssValue)
+    for key,value of @styles
+      return key if value == color
+    return false
 
   constructor: (@root) ->
     colors = _.clone(Scribe.Format.Color.COLORS)
@@ -189,8 +188,10 @@ class Scribe.Format.Family extends Scribe.Format.Style
     super(@root, 'family', 'font-family', {
       'serif'     : "'Times New Roman', serif"
       'monospace' : "'Courier New', monospace"
-    }, (formatValue, cssValue) =>
-      return cssValue.indexOf(formatValue) >= 0
+    }, (cssValue) =>
+      for key,value of @styles
+        return key if value.indexOf(cssValue) >= 0
+      return false
     )
 
 
