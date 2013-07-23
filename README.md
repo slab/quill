@@ -138,8 +138,7 @@ This file contains the final edit that caused the fuzzer to fail, so that you ca
 
 In order to run any Webdriver tests against Chrome or IE, you'll need to download 
 [ChromeDriver](https://code.google.com/p/chromedriver/downloads/list) or
-[InternetExplorerDriver](https://code.google.com/p/selenium/downloads/list) and add it to your system's path.
-For Chrome, be sure to download ChromeDriver, not ChromeDriver2, which is still experimental. 
+[InternetExplorerDriver](https://code.google.com/p/selenium/downloads/list) and add it to your system's path. 
 Support for Firefox is built in and requires no special downloads.
 
 The fuzzer currently works against IE 9 & 10, Firefox 19 - 21, and Chrome 26.

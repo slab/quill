@@ -8,6 +8,10 @@ module ScribeDriver
       return result
     end
 
+    def self.get_cursor_position
+      return self.execute_js "return window.editor.getSelection().start.index"
+    end
+
     def self.get_as_str(ref)
       return self.execute_js "return JSON.stringify(window.ScribeDriver['#{ref}'])"
     end
@@ -95,8 +99,8 @@ module ScribeDriver
       profile.native_events = true
       @@driver = Selenium::WebDriver.for browser, :profile => profile
     elsif browser== :chrome
-      log_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output"))
-      log_path = log_path.first
+      log_path = FileUtils.mkpath(File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), "logs", "driver"))
+      log_path = File.join log_path.first, "chromedriver_#{Time.now.to_i.to_s}.log"
       @@driver = Selenium::WebDriver.for browser, :service_log_path => log_path
     else
       @@driver = Selenium::WebDriver.for browser
