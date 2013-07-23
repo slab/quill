@@ -75,7 +75,7 @@ def read_deltas_from_file(file)
 end
 
 def write_deltas_to_file(doc_delta, rand_delta)
-  file_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output", "fails"))
+  file_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "logs", "fuzzer", "fails"))
   file_path = File.join file_path.first, "#{Time.now.to_i.to_s}"
   File.open(file_path, 'w+') do |f|
     f.puts doc_delta
@@ -123,9 +123,9 @@ if browserdriver == :firefox
   profile.native_events = true
   driver = Selenium::WebDriver.for browserdriver, :profile => profile
 elsif browserdriver == :chrome
-  log_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "fuzzer_output"))
-  log_path = log_path.first
-  driver = Selenium::WebDriver.for browserdriver
+  log_path = FileUtils.mkpath(File.join(File.dirname(File.expand_path(__FILE__)), "logs", "driver"))
+  log_path = File.join log_path.first, "chromedriver_#{Time.now.to_i.to_s}.log"
+  driver = Selenium::WebDriver.for browserdriver, :service_log_path => log_path
 else
   driver = Selenium::WebDriver.for browserdriver
 end
