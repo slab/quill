@@ -93,6 +93,20 @@ module ScribeDriver
     success.must_equal true, err_msg
   end
 
+  class Selenium::WebDriver::Chrome::Service
+    old_initialize = instance_method(:initialize)
+    define_method(:initialize) do |executable_path, port, *extra_args|
+      old_initialize.bind(self).call(executable_path, port, '--silent', *extra_args)
+    end
+  end
+
+  class Selenium::WebDriver::IE::Server
+    old_server_args = instance_method(:server_args)
+    define_method(:server_args) do
+      old_server_args.bind(self).() << "--silent"
+    end
+  end
+
   def self.create_scribe_driver(browser, url)
     if browser == :firefox
       profile = Selenium::WebDriver::Firefox::Profile.new
