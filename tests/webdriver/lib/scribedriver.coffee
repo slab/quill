@@ -59,11 +59,15 @@ $(document).ready( ->
           precedingAttrs = followingAttrs = {}
           if appendingToLine(index)
             precedingAttrs = getAttrsAt(index - 1)
+            delete precedingAttrs['link'] if precedingAttrs['link']?
           else if prependingToLine(index)
             precedingAttrs = followingAttrs = getAttrsAt(index)
+            delete precedingAttrs['link'] if precedingAttrs['link']?
+            delete followingAttrs['link'] if followingAttrs['link']?
           else
             precedingAttrs = getAttrsAt(index - 1)
             followingAttrs = getAttrsAt(index)
+            delete followingAttrs['link'] if followingAttrs['link']
           chunks = op.value.split("\n")
           head = _.first(chunks)
           tail = _.tail(chunks)
