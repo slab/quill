@@ -1,9 +1,4 @@
-require 'debugger'
-gem "minitest"
-require 'minitest/autorun'
-require 'minitest/pride'
 require_relative '../lib/scribe_driver'
-require_relative '../lib/webdriver_adapter'
 
 describe "Test Copy Paste" do
   include ScribeDriver

@@ -1,4 +1,12 @@
 require "selenium-webdriver"
+require 'colorize'
+require 'debugger'
+gem "minitest"
+require 'minitest/autorun'
+require 'minitest/pride'
+require_relative '../lib/minitest/focus'
+require_relative '../lib/webdriver_adapter'
+require_relative '../lib/minitest/focus'
 module ScribeDriver
   module JS
     def self.execute_js(src, args = nil)

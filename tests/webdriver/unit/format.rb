@@ -1,10 +1,4 @@
-require 'debugger'
-gem "minitest"
-require 'minitest/autorun'
-require 'minitest/pride'
 require_relative '../lib/scribe_driver'
-require_relative '../lib/webdriver_adapter'
-require_relative '../lib/minitest/focus'
 
 describe "Test Formatting" do
   include ScribeDriver
