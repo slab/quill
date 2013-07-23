@@ -1,5 +1,17 @@
 Scribe = require('./scribe')
 
+compareRanges = (range1, range2) ->
+  return true if range1 == null and range2 == null
+  return false if range1 == null or range2 == null
+  startContainer1 = range1.startContainer ? range1.start.leafNode
+  startContainer2 = range2.startContainer ? range2.start.leafNode
+  endContainer1 = range1.endContainer ? range1.end.leafNode
+  endContainer2 = range2.endContainer ? range2.end.leafNode
+  startOffset1 = range1.startOffset ? range1.start.offset
+  startOffset2 = range2.startOffset ? range2.start.offset
+  endOffset1 = range1.endOffset ? range1.end.offset
+  endOffset2 = range2.endOffset ? range2.end.offset
+  return startContainer1 == startContainer2 and endContainer1 == endContainer2 and startOffset1 == startOffset2 and endOffset1 == endOffset2
 
 # DOM Selection API says offset is child index of container, not number of characters like Scribe.Position
 normalizeNativePosition = (node, offset) ->
@@ -116,14 +128,9 @@ class Scribe.Selection
 
   setRange: (range, silent = false) ->
     return unless @nativeSelection?
-    unless silent
-      # If we are not emitting change, we don't care what the cursor was
-      this.update(true) unless silent
-      return if range == @range or @range?.equals(range)
-    @range = range
-    if @range?
+    if range?
       nativeRange = rangy.createRangyRange()
-      _.each([@range.start, @range.end], (pos, i) ->
+      _.each([range.start, range.end], (pos, i) ->
         [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
         node = node.parentNode if node.tagName == "BR"              # Firefox does not like selections inside break tags
         offset = Math.min(Scribe.DOM.getText(node).length, offset)  # Should only occur at end of document
@@ -133,13 +140,13 @@ class Scribe.Selection
       @nativeSelection.setSingleRange(nativeRange)
     else
       @nativeSelection.removeAllRanges()
-    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, @range) unless silent
+    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent or range == @range or @range?.equals(range)
+    @range = range
 
   update: (silent = false) ->
-    range = this.getRange()
-    unless range == @range or @range?.equals(range)
-      @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent
-      @range = range
+    nativeRange = normalizeNativeRange(this.getNativeRange())
+    unless compareRanges(nativeRange, @range)
+      this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
 
 
 module.exports = Scribe
