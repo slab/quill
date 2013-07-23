@@ -115,14 +115,15 @@ Scribe.DOM =
       when Scribe.DOM.TEXT_NODE then node.data = text
       else return # Noop
 
-  splitAfter: (node, root) ->
+  # Firefox needs splitBefore, not splitAfter like it used to be, see doc/selection
+  splitBefore: (node, root) ->
     return false if node == root or node.parentNode == root
     parentNode = node.parentNode
     parentClone = parentNode.cloneNode(false)
-    parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
-    while node.nextSibling?
-      parentClone.appendChild(node.nextSibling)
-    Scribe.DOM.splitAfter(parentNode, root)
+    parentNode.parentNode.insertBefore(parentClone, parentNode)
+    while node.previousSibling?
+      parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
+    Scribe.DOM.splitBefore(parentNode, root)
 
   splitNode: (node, offset, force = false) ->
     # Check if split necessary

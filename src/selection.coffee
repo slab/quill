@@ -35,7 +35,6 @@ normalizeNativeRange = (nativeRange) ->
   }
 
 _nativeRangeToRange = (nativeRange) ->
-  nativeRange = normalizeNativeRange(nativeRange)
   start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
   end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
   if start.index <= end.index 
@@ -54,8 +53,7 @@ _preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
   fn.call(null)
   this.setRange(new Scribe.Range(@editor, startIndex, endIndex), true)
 
-_preserveWithLine = (nativeRange, fn) ->
-  savedNativeRange = normalizeNativeRange(nativeRange)
+_preserveWithLine = (savedNativeRange, fn) ->
   savedData = _.map([
     { container: savedNativeRange.startContainer, offset: savedNativeRange.startOffset }
     { container: savedNativeRange.endContainer,   offset: savedNativeRange.endOffset }
@@ -68,7 +66,7 @@ _preserveWithLine = (nativeRange, fn) ->
     }
   )
   fn.call(null)
-  nativeRange = normalizeNativeRange(this.getNativeRange())
+  nativeRange = this.getNativeRange(true)
   if !_.isEqual(nativeRange, savedNativeRange)
     [start, end] = _.map(savedData, (savedDatum) =>
       if savedDatum.nextLine and savedDatum.lineNode.nextSibling?
@@ -103,21 +101,23 @@ class Scribe.Selection
     , 100)
 
   getDimensions: ->
-    rangyRange = this.getNativeRange()
+    rangyRange = this.getNativeRange(false)
     return rangyRange?.nativeRange?.getBoundingClientRect()
     
-  getNativeRange: ->
+  getNativeRange: (normalize = false) ->
     return null unless @nativeSelection
     @nativeSelection.refresh()
-    return if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
+    range = if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
+    range = normalizeNativeRange(range) if normalize
+    return range
 
   getRange: ->
-    nativeRange = this.getNativeRange()
+    nativeRange = this.getNativeRange(true)
     return if nativeRange? then _nativeRangeToRange.call(this, nativeRange) else null
 
   preserve: (index, lengthAdded, fn) ->
     fn = index if _.isFunction(index)
-    nativeRange = this.getNativeRange()
+    nativeRange = this.getNativeRange(true)
     if nativeRange?
       if _.isFunction(index)
         _preserveWithLine.call(this, nativeRange, index)
@@ -132,7 +132,7 @@ class Scribe.Selection
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
         [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
-        node = node.parentNode if node.tagName == "BR"              # Firefox does not like selections inside break tags
+        node = node.parentNode if node.tagName == "BR"              # Firefox does not split BR when hitting enter inside BR
         offset = Math.min(Scribe.DOM.getText(node).length, offset)  # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
@@ -144,7 +144,7 @@ class Scribe.Selection
     @range = range
 
   update: (silent = false) ->
-    nativeRange = normalizeNativeRange(this.getNativeRange())
+    nativeRange = this.getNativeRange(true)
     unless compareRanges(nativeRange, @range)
       this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
 
