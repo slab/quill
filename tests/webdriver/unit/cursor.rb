@@ -11,6 +11,29 @@ describe "Cursor" do
     @driver.quit
   end
 
+  def validate_cursor_position(expected, actual, err_msg)
+    assert expected == actual, err_msg
+  end
+
+  it "should advance when right arrow key is pressed" do
+    start_delta = { "startLength" => 0,
+                    "endLength" => 1,
+                    "ops" => [{ "value" => "\n", "attributes" => {}}]}
+    reset_scribe start_delta
+    @adapter.type_text "a"
+    expected_cursor_pos = 1
+    actual_cursor_pos = ScribeDriver::JS.get_cursor_position
+    assert expected_cursor_pos == actual_cursor_pos,
+      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}"
+    # Move cursor to beginning, then to end
+    @adapter.move_cursor 0
+    @adapter.move_cursor 1
+    expected_cursor_pos = 1
+    actual_cursor_pos = ScribeDriver::JS.get_cursor_position
+    validate_cursor_position(expected_cursor_pos, actual_cursor_pos,
+      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}")
+  end
+
   it "should advance after inserting newline to empty document" do
     start_delta = { "startLength" => 0,
                     "endLength" => 1,
@@ -19,8 +42,8 @@ describe "Cursor" do
     @adapter.type_text "\n"
     expected_cursor_pos = 1
     actual_cursor_pos = ScribeDriver::JS.get_cursor_position
-    assert expected_cursor_pos == actual_cursor_pos,
-      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}"
+    validate_cursor_position(expected_cursor_pos, actual_cursor_pos,
+      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}")
   end
 
   it "should maintain index after deleting formatted middle chars" do
@@ -33,7 +56,7 @@ describe "Cursor" do
     @adapter.delete_at 1, 1
     expected_cursor_pos = 1
     actual_cursor_pos = ScribeDriver::JS.get_cursor_position
-    assert expected_cursor_pos == actual_cursor_pos,
-      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}"
+    validate_cursor_position(expected_cursor_pos, actual_cursor_pos,
+      "Expected cursor to be at #{expected_cursor_pos} but actually at #{actual_cursor_pos}")
   end
 end
