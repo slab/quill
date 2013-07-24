@@ -190,7 +190,7 @@ class Scribe.Format.Family extends Scribe.Format.Style
       'monospace' : "'Courier New', monospace"
     }, (cssValue) =>
       for key,value of @styles
-        return key if value.indexOf(cssValue) >= 0
+        return key if value.indexOf(key) > -1
       return false
     )
 
