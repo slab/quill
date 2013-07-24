@@ -83,8 +83,7 @@ class Scribe.Document
   toDelta: ->
     lines = @lines.toArray()
     ops = _.flatten(_.map(lines, (line, index) ->
-      ops = Tandem.Delta.copy(line.delta).ops
-      return ops
+      return line.delta.ops
     ), true)
     delta = new Tandem.Delta(0, ops)
     return delta

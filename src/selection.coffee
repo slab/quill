@@ -38,9 +38,13 @@ _nativeRangeToRange = (nativeRange) ->
   start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
   end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
   if start.index <= end.index 
-    return new Scribe.Range(@editor, start, end)
+    range = new Scribe.Range(@editor, start, end)
+    range.isBackwards = false
   else
-    return new Scribe.Range(@editor, end, start)
+    range = new Scribe.Range(@editor, end, start)
+    range.isBackwards = true
+  range.isBackwards = true if nativeRange.isBackwards
+  return range
 
 _preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
   range = _nativeRangeToRange.call(this, nativeRange)
@@ -57,7 +61,7 @@ _preserveWithLine = (savedNativeRange, fn) ->
   savedData = _.map([
     { container: savedNativeRange.startContainer, offset: savedNativeRange.startOffset }
     { container: savedNativeRange.endContainer,   offset: savedNativeRange.endOffset }
-  ], (position) ->
+  ], (position) =>
     lineNode = Scribe.Utils.findAncestor(position.container, Scribe.Line.isLineNode) or @editor.root
     return {
       lineNode  : lineNode
@@ -109,6 +113,7 @@ class Scribe.Selection
     @nativeSelection.refresh()
     range = if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
     range = normalizeNativeRange(range) if normalize
+    range.isBackwards = true if @nativeSelection.isBackwards()
     return range
 
   getRange: ->
@@ -128,6 +133,7 @@ class Scribe.Selection
 
   setRange: (range, silent = false) ->
     return unless @nativeSelection?
+    @nativeSelection.removeAllRanges()
     if range?
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
@@ -137,9 +143,7 @@ class Scribe.Selection
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )
-      @nativeSelection.setSingleRange(nativeRange)
-    else
-      @nativeSelection.removeAllRanges()
+      @nativeSelection.addRange(nativeRange, range.isBackwards)
     @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent or range == @range or @range?.equals(range)
     @range = range
 
