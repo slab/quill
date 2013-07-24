@@ -56,11 +56,12 @@ class Scribe.Format.Class extends Scribe.Format.Span
 class Scribe.Format.Style extends Scribe.Format.Span
   @getStyleObject: (container) ->
     styleString = container.getAttribute('style') or ''
-    return _.reduce(styleString.split(';').slice(0, -1), (styles, str) ->
-      [name, value] = str.split(':')
-      name = name.slice(1) if name[0] == ' '
-      value = value.slice(1) if value[0] == ' '
-      styles[name] = value
+    return _.reduce(styleString.split(';'), (styles, str) ->
+      if str.length > 0
+        [name, value] = str.split(':')
+        name = name.slice(1) if name[0] == ' '
+        value = value.slice(1) if value[0] == ' '
+        styles[name.toLowerCase()] = value
       return styles
     , {})
 
