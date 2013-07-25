@@ -10,7 +10,7 @@ initFormats = ->
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       Scribe.DOM.addEventListener(input, eventName, =>
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !Scribe.DOM.hasClass(input, 'active')
-        range = @editor.getSelection()
+        range = @editor.getSelection() or @editor.selection.range
         range.formatContents(format, value, { source: 'user' })
         this.emit(Scribe.Toolbar.events.FORMAT, format, value) unless range.isCollapsed()
       )
@@ -35,6 +35,7 @@ class Scribe.Toolbar extends EventEmitter2
     )
     this.on(Scribe.Toolbar.events.FORMAT, =>
       @editor.root.focus()
+      @editor.setSelection(@editor.selection.range)
     )
 
   update: ->
