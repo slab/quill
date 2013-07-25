@@ -2,7 +2,7 @@ Scribe = require('../scribe')
 
 
 enterEditMode = (url) ->
-  url = 'http://' + url unless /^http[s]?:\/\//.test(url)
+  url = normalizeUrl(url)
   Scribe.DOM.addClass(@tooltip, 'editing')
   @tooltipInput.focus()
   @tooltipInput.value = url
@@ -42,7 +42,7 @@ initListeners = ->
       @savedRange = @editor.selection.getRange()
       url = @savedRange.getText()
       if /\w+\.\w+/.test(url)
-        value = url
+        value = normalizeUrl(url)
       else
         Scribe.DOM.addClass(@tooltip, 'editing')
         showTooptip.call(this, @editor.selection.getDimensions())
@@ -106,6 +106,11 @@ initTooltip = ->
       @editor.renderer.addContainer(@tooltip)
     )
   )
+
+normalizeUrl = (url) ->
+  url = 'http://' + url unless /^https?:\/\//.test(url)
+  url = url + '/' unless url.slice(-1) == '/' # Add trailing slash to standardize between browsers
+  return url
   
 showTooptip = (target, subjectDist = 5) ->
   tooltip = @tooltip.getBoundingClientRect()

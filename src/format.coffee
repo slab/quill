@@ -124,7 +124,7 @@ class Scribe.Format.Link extends Scribe.Format.Tag
 
   createContainer: (value) ->
     link = super(value)
-    value = 'https://' + value unless value.match(/https?:\/\//)
+    value = 'http://' + value unless value.match(/^https?:\/\//)
     link.href = value
     link.href = 'about:blank' if (link.protocol != 'http:' && link.protocol != 'https:')
     link.title = link.href

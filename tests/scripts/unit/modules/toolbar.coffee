@@ -18,7 +18,7 @@ describe('Toolbar', ->
   )
 
   toolbarTests.run('Apply link format',
-    expected: '<div><a href="https://one.com" title="https://one.com/">one.com</a><b>Bold</b></div>'
+    expected: '<div><a href="http://one.com/" title="http://one.com/">one.com</a><b>Bold</b></div>'
     fn: (editor) ->
       toolbar = new Scribe.Toolbar('format-container', editor)
       editor.setSelection(new Scribe.Range(editor, 0, 7))
