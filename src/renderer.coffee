@@ -65,6 +65,7 @@ class Scribe.Renderer extends EventEmitter2
 
 
   constructor: (@container, options = {}) ->
+    options = options.renderer or {}
     originalStyles = options.styles
     @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
     @options.styles = originalStyles

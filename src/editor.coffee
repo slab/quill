@@ -140,6 +140,7 @@ class Scribe.Editor extends EventEmitter2
     cursor: 0
     enabled: true
     onReady: ->
+    formatManager: {}
     renderer: {}
     undoManager: {}
 
@@ -177,13 +178,13 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = true
     @options.renderer.keepHTML = keepHTML
     @iframeContainer.innerHTML = @root.innerHTML if @root?
-    @renderer = new Scribe.Renderer(@iframeContainer, @options.renderer)
+    @renderer = new Scribe.Renderer(@iframeContainer, @options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root)
+    @doc = new Scribe.Document(@root, @options)
     @keyboard = new Scribe.Keyboard(this)
     @selection = new Scribe.Selection(this)
-    @undoManager = new Scribe.UndoManager(this, @options.undoManager)
+    @undoManager = new Scribe.UndoManager(this, @options)
     @pasteManager = new Scribe.PasteManager(this)
     @renderer.runWhenLoaded(@options.onReady)
     initListeners.call(this)

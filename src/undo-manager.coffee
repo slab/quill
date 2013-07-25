@@ -48,9 +48,9 @@ class Scribe.UndoManager
 
 
   constructor: (@editor, options = {}) ->
-    this.clear()
-    @options = _.defaults(options, Scribe.UndoManager.DEFAULTS)
+    @options = _.defaults(options.undoManager or {}, Scribe.UndoManager.DEFAULTS)
     @lastRecorded = 0
+    this.clear()
     this.initListeners()
 
   initListeners: ->

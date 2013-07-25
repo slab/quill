@@ -5,8 +5,8 @@ Tandem = require('tandem-core')
 class Scribe.Document
   @INDENT_PREFIX: 'indent-'
 
-  constructor: (@root) ->
-    @formatManager = new Scribe.FormatManager(@root)
+  constructor: (@root, options = {}) ->
+    @formatManager = new Scribe.FormatManager(@root, options)
     @normalizer = new Scribe.Normalizer(@root, @formatManager)
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(@root.innerHTML)
     @lines = new LinkedList()
