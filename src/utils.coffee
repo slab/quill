@@ -4,7 +4,10 @@ Scribe = require('./scribe')
 Scribe.Utils =
   cleanHtml: (html, keepIdClass = false) ->
     html = Scribe.Normalizer.normalizeHtml(html)
-    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '') unless keepIdClass == true
+    unless keepIdClass == true
+      html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
+      html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
+      html = html.replace(/\ (class|id)=[a-z0-9\-_]+>/gi, '>')
     return html
 
   findAncestor: (node, checkFn) ->
