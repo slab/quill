@@ -1,10 +1,4 @@
-require 'debugger'
-gem "minitest"
-require 'minitest/autorun'
-require 'minitest/pride'
-require_relative '../lib/minitest/focus'
 require_relative '../lib/scribe_driver'
-require_relative '../lib/webdriver_adapter'
 
 describe "Test Delete" do
   include ScribeDriver
@@ -68,6 +62,25 @@ describe "Test Delete" do
                         { "start" => 5, "end" => 8, "attributes" => {} }]
     }
     run_delete_test initial, delta, "Failed deleting formatted, newlined text."
+  end
+
+  it "should delete newline from empty document" do
+    initial = { "startLength" => 0,
+                "endLength" => 1,
+                "ops" => [{ "value" => "\n"}]
+    }
+
+    reset_scribe initial
+    @editor.send_keys :enter
+    @editor.send_keys :backspace
+    @editor.send_keys "a"
+    expected = { "startLength" => 0,
+                 "endLength" => 2,
+                 "ops" => [{ "value" => "a\n", "attributes" => {} }]
+    }
+    assert ScribeDriver::JS.editor_delta_equals(expected),
+      "Deleting a newline and then inserting into the empty document fails."
+
   end
 
   it "should pull formatting onto previous line when newline is deleted" do

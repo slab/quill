@@ -2,5 +2,4 @@ build
 node_modules
 coverage.html
 tests/webdriver/logs
-tests/webdriver/fuzzer_output
 libpeerconnection.log

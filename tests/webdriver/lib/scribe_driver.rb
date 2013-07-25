@@ -1,4 +1,12 @@
 require "selenium-webdriver"
+require 'colorize'
+require 'debugger'
+gem "minitest"
+require 'minitest/autorun'
+require 'minitest/pride'
+require_relative '../lib/minitest/focus'
+require_relative '../lib/webdriver_adapter'
+require_relative '../lib/minitest/focus'
 module ScribeDriver
   module JS
     def self.execute_js(src, args = nil)
@@ -93,12 +101,27 @@ module ScribeDriver
     success.must_equal true, err_msg
   end
 
+  # Credit: http://jkotests.wordpress.com/2013/06/26/silencing-diagnostic-output-when-starting-webdrivers/
+  class Selenium::WebDriver::Chrome::Service
+    old_initialize = instance_method(:initialize)
+    define_method(:initialize) do |executable_path, port, *extra_args|
+      old_initialize.bind(self).call(executable_path, port, '--silent', *extra_args)
+    end
+  end
+
+  class Selenium::WebDriver::IE::Server
+    old_server_args = instance_method(:server_args)
+    define_method(:server_args) do
+      old_server_args.bind(self).() << "--silent"
+    end
+  end
+
   def self.create_scribe_driver(browser, url)
     if browser == :firefox
       profile = Selenium::WebDriver::Firefox::Profile.new
       profile.native_events = true
       @@driver = Selenium::WebDriver.for browser, :profile => profile
-    elsif browser== :chrome
+    elsif browser == :chrome
       log_path = FileUtils.mkpath(File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), "logs", "driver"))
       log_path = File.join log_path.first, "chromedriver_#{Time.now.to_i.to_s}.log"
       @@driver = Selenium::WebDriver.for browser, :service_log_path => log_path
