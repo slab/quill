@@ -75,7 +75,7 @@ class Scribe.Format.Style extends Scribe.Format.Span
   constructor: (@root, @keyName, @cssName, @styles, @matchFn) ->
     @matchFn or= (cssValue) =>
       for key,value of @styles
-        return key if value == cssValue
+        return key if value.toUpperCase() == cssValue.toUpperCase()
       return false
     super
 
@@ -175,7 +175,7 @@ class Scribe.Format.Color extends Scribe.Format.Style
   @matchColor: (cssValue) ->
     color = Scribe.Format.Color.normalizeColor(cssValue)
     for key,value of @styles
-      return key if value == color
+      return key if value.toUpperCase() == color.toUpperCase()
     return false
 
   constructor: (@root) ->
