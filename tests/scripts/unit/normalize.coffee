@@ -110,7 +110,7 @@ describe('Normalize', ->
 
     lineTest.run('merge adjacent equal nodes', 
       initial:  '<b>Bold1</b><b>Bold2</b>'
-      expected: '<b>Bold1Bold2</b></div>'
+      expected: '<b>Bold1Bold2</b>'
     )
 
     lineTest.run('merge adjacent equal spans',
