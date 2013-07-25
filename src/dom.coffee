@@ -20,8 +20,6 @@ Scribe.DOM =
     else if node.attachEvent?
       if _.indexOf(['change', 'click', 'focus', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
         return node.attachEvent("on#{eventName}", listener)
-      if eventName == 'DOMSubtreeModified'
-        return node.attachEvent('onpropertychange', listener)
     throw new Error("Cannot attach to unsupported event #{eventName}")
 
   findDeepestNode: (node, offset) ->

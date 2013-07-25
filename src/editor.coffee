@@ -18,14 +18,19 @@ initListeners = ->
     onEditOnce = _.once(onEdit)
     return if @ignoreDomChanges or !@renderer.iframe.parentNode?    # Make sure we have not been deleted
     this.update()
-  onSubtreeModified = (arg1, arg2) =>
+  onSubtreeModified = =>
     return if @ignoreDomChanges
     toCall = onEditOnce
     _.defer( =>
       toCall.call(null)
     )
   onEditOnce = _.once(onEdit)
-  Scribe.DOM.addEventListener(@root, 'DOMSubtreeModified', onSubtreeModified)
+  innerHTML = null
+  setInterval( =>
+    if innerHTML != @root.innerHTML
+      onSubtreeModified()
+      innerHTML = @root.innerHTML
+  , 100)
 
 deleteAt = (index, length) ->
   return if length <= 0
