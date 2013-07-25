@@ -10,7 +10,7 @@ class Scribe.PasteManager
     @editor.renderer.addStyles(
       '.paste-container':
         'left': '-10000px'
-        'position': 'fixed'
+        'position': 'absolute'
         'top': '50%'
     )
     @editor.renderer.addContainer(@container)
