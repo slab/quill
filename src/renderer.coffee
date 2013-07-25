@@ -116,8 +116,11 @@ class Scribe.Renderer extends EventEmitter2
     @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
     this.runWhenLoaded( =>
       doc = this.getDocument()
-      doc.body.appendChild(@root) if doc?
-      Scribe.DOM.addEventListener(@container, 'focus', =>
+      doc.body.appendChild(@root)
+      Scribe.DOM.addEventListener(doc.body, 'click', =>
+        @root.focus()
+      )
+      Scribe.DOM.addEventListener(@container, 'click', =>
         @root.focus()
       )
     )
