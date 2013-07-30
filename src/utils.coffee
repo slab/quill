@@ -14,6 +14,18 @@ Scribe.Utils =
     while node? && !checkFn(node)
       node = node.parentNode
     return node
+
+  findDeepestNode: (node, offset) ->
+    if node.firstChild?
+      for child in _.clone(node.childNodes)
+        length = Scribe.Utils.getNodeLength(child)
+        if offset < length
+          return Scribe.Utils.findDeepestNode(child, offset)
+        else
+          offset -= length
+      return Scribe.Utils.findDeepestNode(child, offset + length)
+    else
+      return [node, offset]
         
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
@@ -46,6 +58,38 @@ Scribe.Utils =
       Scribe.Utils.removeFormatFromSubtree(child, format)
     )
     return subtree
+
+  # Firefox needs splitBefore, not splitAfter like it used to be, see doc/selection
+  splitBefore: (node, root) ->
+    return false if node == root or node.parentNode == root
+    parentNode = node.parentNode
+    parentClone = parentNode.cloneNode(false)
+    parentNode.parentNode.insertBefore(parentClone, parentNode)
+    while node.previousSibling?
+      parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
+    Scribe.Utils.splitBefore(parentNode, root)
+
+  splitNode: (node, offset, force = false) ->
+    # Check if split necessary
+    nodeLength = Scribe.Utils.getNodeLength(node)
+    offset = Math.max(0, offset)
+    offset = Math.min(offset, nodeLength)
+    return [node.previousSibling, node, false] unless force or offset != 0
+    return [node, node.nextSibling, false] unless force or offset != nodeLength
+    if node.nodeType == Scribe.DOM.TEXT_NODE
+      after = node.splitText(offset)
+      return [node, after, true]
+    else
+      left = node
+      right = node.cloneNode(false)
+      node.parentNode.insertBefore(right, left.nextSibling)
+      [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
+      [childLeft, childRight] = Scribe.Utils.splitNode(child, offset)
+      while childRight != null
+        nextRight = childRight.nextSibling
+        right.appendChild(childRight)
+        childRight = nextRight
+      return [left, right, true]
 
   traversePostorder: (root, fn, context = fn) ->
     return unless root?

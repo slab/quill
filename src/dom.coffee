@@ -22,18 +22,6 @@ Scribe.DOM =
         return node.attachEvent("on#{eventName}", listener)
     throw new Error("Cannot attach to unsupported event #{eventName}")
 
-  findDeepestNode: (node, offset) ->
-    if node.firstChild?
-      for child in _.clone(node.childNodes)
-        length = Scribe.Utils.getNodeLength(child)
-        if offset < length
-          return Scribe.DOM.findDeepestNode(child, offset)
-        else
-          offset -= length
-      return Scribe.DOM.findDeepestNode(child, offset + length)
-    else
-      return [node, offset]
-
   getClasses: (node) ->
     if node.classList
       return _.clone(node.classList)
@@ -115,38 +103,6 @@ Scribe.DOM =
           node.innerText = text
       when Scribe.DOM.TEXT_NODE then node.data = text
       else return # Noop
-
-  # Firefox needs splitBefore, not splitAfter like it used to be, see doc/selection
-  splitBefore: (node, root) ->
-    return false if node == root or node.parentNode == root
-    parentNode = node.parentNode
-    parentClone = parentNode.cloneNode(false)
-    parentNode.parentNode.insertBefore(parentClone, parentNode)
-    while node.previousSibling?
-      parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
-    Scribe.DOM.splitBefore(parentNode, root)
-
-  splitNode: (node, offset, force = false) ->
-    # Check if split necessary
-    nodeLength = Scribe.Utils.getNodeLength(node)
-    offset = Math.max(0, offset)
-    offset = Math.min(offset, nodeLength)
-    return [node.previousSibling, node, false] unless force or offset != 0
-    return [node, node.nextSibling, false] unless force or offset != nodeLength
-    if node.nodeType == Scribe.DOM.TEXT_NODE
-      after = node.splitText(offset)
-      return [node, after, true]
-    else
-      left = node
-      right = node.cloneNode(false)
-      node.parentNode.insertBefore(right, left.nextSibling)
-      [child, offset] = Scribe.Utils.getChildAtOffset(node, offset)
-      [childLeft, childRight] = Scribe.DOM.splitNode(child, offset)
-      while childRight != null
-        nextRight = childRight.nextSibling
-        right.appendChild(childRight)
-        childRight = nextRight
-      return [left, right, true]
 
   switchTag: (node, newTag) ->
     return if node.tagName == newTag

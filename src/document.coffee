@@ -73,7 +73,7 @@ class Scribe.Document
     @lines.remove(line)
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Scribe.DOM.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
     return this.insertLineBefore(lineNode2, line.next)

@@ -133,7 +133,7 @@ class Scribe.Line extends LinkedList.Node
     [node, offset] = Scribe.Utils.getChildAtOffset(@node, offset)
     if @node.tagName == 'OL' || @node.tagName == 'UL'
       [node, offset] = Scribe.Utils.getChildAtOffset(node, offset)
-    return Scribe.DOM.splitNode(node, offset)
+    return Scribe.Utils.splitNode(node, offset)
 
   toDelta: ->
     ops = _.map(@leaves.toArray(), (leaf) ->

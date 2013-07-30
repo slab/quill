@@ -137,7 +137,7 @@ class Scribe.Selection
     if range?
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
-        [node, offset] = Scribe.DOM.findDeepestNode(pos.leafNode, pos.offset)
+        [node, offset] = Scribe.Utils.findDeepestNode(pos.leafNode, pos.offset)
         node = node.parentNode if node.tagName == "BR"              # Firefox does not split BR when hitting enter inside BR
         offset = Math.min(Scribe.DOM.getText(node).length, offset)  # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'

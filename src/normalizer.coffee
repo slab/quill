@@ -128,10 +128,10 @@ class Scribe.Normalizer
     return if node == root
     if node.previousSibling?
       if node.nextSibling?
-        Scribe.DOM.splitBefore(node, root)
+        Scribe.Utils.splitBefore(node, root)
       node.parentNode.removeChild(node)
     else if node.nextSibling?
-      if Scribe.DOM.splitBefore(node.nextSibling, root)
+      if Scribe.Utils.splitBefore(node.nextSibling, root)
         Scribe.Normalizer.normalizeBreak(node, root)
     else if node.parentNode != root and node.parentNode.parentNode != root
       # Make sure <div><br/></div> is not unintentionally unwrapped

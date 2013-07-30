@@ -43,7 +43,7 @@ _updateCursor = (cursor) ->
       _moveCursor.call(this, cursor, guide)
     else
       Scribe.DOM.setText(guide, Scribe.DOM.ZERO_WIDTH_NOBREAK_SPACE)
-      [leftText, rightText, didSplit] = Scribe.DOM.splitNode(position.leafNode.firstChild, position.offset)
+      [leftText, rightText, didSplit] = Scribe.Utils.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         rightText.parentNode.insertBefore(guide, rightText)
         _moveCursor.call(this, cursor, guide)
