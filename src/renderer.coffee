@@ -123,6 +123,9 @@ class Scribe.Renderer extends EventEmitter2
       Scribe.DOM.addEventListener(@container, 'click', =>
         @root.focus()
       )
+      Scribe.DOM.addEventListener(@container, 'focus', =>
+        @root.focus()
+      )
     )
 
   getDocument: ->
