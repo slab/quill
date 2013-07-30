@@ -3,8 +3,6 @@ Tandem = require('tandem-core')
 
 
 class Scribe.Document
-  @INDENT_PREFIX: 'indent-'
-
   constructor: (@root, options = {}) ->
     @formatManager = new Scribe.FormatManager(@root, options)
     @normalizer = new Scribe.Normalizer(@root, @formatManager)
@@ -65,7 +63,7 @@ class Scribe.Document
     _.each(_.clone(lineToMerge.node.childNodes), (child) ->
       line.node.appendChild(child)
     )
-    Scribe.Utils.removeNode(lineToMerge.node)
+    Scribe.DOM.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
     line.trailingNewline = lineToMerge.trailingNewline
     line.rebuild()

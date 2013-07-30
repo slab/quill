@@ -46,7 +46,7 @@ deleteAt = (index, length) ->
           curLine.trailingNewline = false
           curLine.rebuild()
         else
-          Scribe.Utils.removeNode(curLine.node)
+          Scribe.DOM.removeNode(curLine.node)
           @doc.removeLine(curLine)
       else
         curLine.deleteText(offset, deleteLength)
@@ -150,6 +150,7 @@ class Scribe.Editor extends EventEmitter2
     POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
     USER_TEXT_CHANGE : 'user-text-change'
+
 
   constructor: (@iframeContainer, options = {}) ->
     @options = _.defaults(options, Scribe.Editor.DEFAULTS)

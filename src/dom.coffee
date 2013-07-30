@@ -93,6 +93,9 @@ Scribe.DOM =
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
 
+  removeNode: (node) ->
+    node.parentNode?.removeChild(node)
+
   resetSelect: (select) ->
     option = select.querySelector('option[selected]')
     if option?

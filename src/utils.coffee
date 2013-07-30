@@ -50,8 +50,5 @@ Scribe.Utils =
     )
     return subtree
 
-  removeNode: (node) ->
-    node.parentNode?.removeChild(node)
-
 
 module.exports = Scribe

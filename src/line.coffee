@@ -42,7 +42,7 @@ class Scribe.Line extends LinkedList.Node
 
   deleteText: (offset, length) ->
     this.applyToContents(offset, length, (node) ->
-      Scribe.Utils.removeNode(node)
+      Scribe.DOM.removeNode(node)
     )
     @trailingNewline = false if @length == offset + length
     this.rebuild()
