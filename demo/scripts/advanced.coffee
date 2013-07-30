@@ -70,7 +70,9 @@ initToolbar = (container, editor) ->
   for format in dropkickFormats
     do (format) ->
       $(".#{format}", $formattingContainer).dropkick({
-        change: (value) -> editor.selection.format(format, value)
+        change: (value) -> 
+          range = editor.getSelection()
+          range.formatContents(format, value, { source: 'user' }) if range?
         width: 75
       })
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, ->
