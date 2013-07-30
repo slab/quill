@@ -14,6 +14,14 @@ class ScribeHtmlTest
     ignoreExpect  : false
     pre           : -> []
 
+  @cleanHtml: (html, keepIdClass = false) ->
+    html = Scribe.Normalizer.normalizeHtml(html)
+    unless keepIdClass == true
+      html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
+      html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
+      html = html.replace(/\ (class|id)=[a-z0-9\-_]+>/gi, '>')
+    return html
+
   constructor: (options = {}) ->
     throw new Error("Invalid options passed into constructor") unless _.isObject(options)
     @settings = _.defaults(options, ScribeHtmlTest.DEFAULTS)
@@ -28,15 +36,15 @@ class ScribeHtmlTest
     options.initial = [options.initial] if _.isString(options.initial)
     options.expected = buildString(options.initial, if options.expected? then options.expected else @settings.expected)
     options.initial = options.initial.join('') if _.isArray(options.initial)
-    options.initial = Scribe.Utils.cleanHtml(options.initial, true)
-    options.expected = Scribe.Utils.cleanHtml(options.expected, true)
+    options.initial = ScribeHtmlTest.cleanHtml(options.initial, true)
+    options.expected = ScribeHtmlTest.cleanHtml(options.expected, true)
     testContainer = $('#test-container').html(options.initial).get(0)
     expectedContainer = $('#expected-container').html(options.expected).get(0)
     newArgs = options.pre.call(this, testContainer, expectedContainer)
     newArgs = [newArgs] unless _.isArray(newArgs)
     next = =>
-      testHtml = Scribe.Utils.cleanHtml(testContainer.innerHTML)
-      expectedHtml = Scribe.Utils.cleanHtml(expectedContainer.innerHTML)
+      testHtml = ScribeHtmlTest.cleanHtml(testContainer.innerHTML)
+      expectedHtml = ScribeHtmlTest.cleanHtml(expectedContainer.innerHTML)
       expect(testHtml).to.equal(expectedHtml) unless options.ignoreExpect
       options.checker.call(this, testContainer, expectedContainer, newArgs..., args...)
       done()

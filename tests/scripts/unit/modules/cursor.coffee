@@ -2,8 +2,8 @@ describe('Cursor', ->
   describe('basic operations', ->
     cursorManager = editor = null
     before((done) ->
-      initial = '<div><b>Bold</b><i>Italic</i></div><div><br></br><div><span style="font-size:18px;">Large</span></div>'
-      $('#test-container').html(Scribe.Utils.cleanHtml(initial, true))
+      initial = '<div><b>Bold</b><i>Italic</i></div><div><br /><div><span style="font-size:18px;">Large</span></div>'
+      $('#test-container').html(Scribe.Normalizer.normalizeHtml(initial))
       editor = new Scribe.Editor('test-container', { 
         onReady: ->
           _.defer(done)

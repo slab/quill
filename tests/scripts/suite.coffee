@@ -17,7 +17,7 @@
 
 class ScribeTestSuite
   constructor: (@options) ->
-    @options.initial = Scribe.Utils.cleanHtml(@options.initial, true)
+    @options.initial = Scribe.Test.HtmlTest.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
     doc = new Scribe.Document($('#test-container').get(0))
     @delta = doc.toDelta()
@@ -114,8 +114,6 @@ class ScribeFormatTestSuite extends ScribeTestSuite
     )
     
 
-window.Scribe or= {}
-window.Scribe.Test or= {}
 window.Scribe.Test.InsertTestSuite = ScribeInsertTestSuite
 window.Scribe.Test.DeleteTestSuite = ScribeDeleteTestSuite
 window.Scribe.Test.FormatTestSuite = ScribeFormatTestSuite
