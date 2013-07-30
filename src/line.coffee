@@ -38,7 +38,7 @@ class Scribe.Line extends LinkedList.Node
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)
-    Scribe.DOM.traverseSiblings(startNode, endNode, fn)
+    Scribe.Utils.traverseSiblings(startNode, endNode, fn)
 
   deleteText: (offset, length) ->
     this.applyToContents(offset, length, (node) ->

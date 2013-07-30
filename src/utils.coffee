@@ -47,5 +47,32 @@ Scribe.Utils =
     )
     return subtree
 
+  traversePostorder: (root, fn, context = fn) ->
+    return unless root?
+    cur = root.firstChild
+    while cur?
+      Scribe.Utils.traversePostorder.call(context, cur, fn)
+      cur = fn.call(context, cur)
+      cur = cur.nextSibling if cur?
+
+  traversePreorder: (root, offset, fn, context = fn, args...) ->
+    return unless root?
+    cur = root.firstChild
+    while cur?
+      nextOffset = offset + Scribe.Utils.getNodeLength(cur)
+      curHtml = cur.innerHTML
+      cur = fn.call(context, cur, offset, args...)
+      Scribe.Utils.traversePreorder.call(null, cur, offset, fn, context, args...)
+      if cur? && cur.innerHTML == curHtml
+        cur = cur.nextSibling
+        offset = nextOffset
+
+  traverseSiblings: (curNode, endNode, fn) ->
+    while curNode?
+      nextSibling = curNode.nextSibling
+      fn(curNode)
+      break if curNode == endNode
+      curNode = nextSibling
+
 
 module.exports = Scribe

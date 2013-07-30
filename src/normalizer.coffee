@@ -68,7 +68,7 @@ class Scribe.Normalizer
 
 
   @applyRules: (root) ->
-    Scribe.DOM.traversePreorder(root, 0, (node, index) =>
+    Scribe.Utils.traversePreorder(root, 0, (node, index) =>
       if node.nodeType == Scribe.DOM.ELEMENT_NODE
         rules = Scribe.Normalizer.TAG_RULES[node.tagName]
         if rules?
@@ -93,7 +93,7 @@ class Scribe.Normalizer
 
   @breakLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
-    Scribe.DOM.traversePostorder(lineNode, (node) =>
+    Scribe.Utils.traversePostorder(lineNode, (node) =>
       if Scribe.Normalizer.isBlock(node)
         node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
         if node.nextSibling?
@@ -155,7 +155,7 @@ class Scribe.Normalizer
       lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
     
   @wrapText: (lineNode) ->
-    Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
+    Scribe.Utils.traversePreorder(lineNode, 0, (node) =>
       Scribe.DOM.normalize(node)
       if node.nodeType == Scribe.DOM.TEXT_NODE && (node.nextSibling? || node.previousSibling? || node.parentNode == lineNode or node.parentNode.tagName == 'LI')
         span = node.ownerDocument.createElement('span')
@@ -168,7 +168,7 @@ class Scribe.Normalizer
   constructor: (@container, @formatManager) ->
 
   mergeAdjacent: (lineNode) ->
-    Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
+    Scribe.Utils.traversePreorder(lineNode, 0, (node) =>
       if node.nodeType == Scribe.DOM.ELEMENT_NODE and !Scribe.Line.isLineNode(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'
@@ -195,7 +195,7 @@ class Scribe.Normalizer
     Scribe.Normalizer.wrapText(lineNode)
 
   normalizeTags: (lineNode) ->
-    Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
+    Scribe.Utils.traversePreorder(lineNode, 0, (node) =>
       [nodeFormat, nodeValue] = @formatManager.getFormat(node)
       if @formatManager.formats[nodeFormat]?
         @formatManager.formats[nodeFormat].clean(node)
@@ -213,7 +213,7 @@ class Scribe.Normalizer
   removeRedundant: (lineNode) ->
     nodes = [lineNode]
     attributes = [{}]
-    Scribe.DOM.traversePreorder(lineNode, 0, (node) =>
+    Scribe.Utils.traversePreorder(lineNode, 0, (node) =>
       [formatName, formatValue] = @formatManager.getFormat(node)
       parentAttributes = attributes[_.indexOf(nodes, node.parentNode)]
       redundant = do (node) =>
