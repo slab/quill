@@ -39,9 +39,6 @@ Scribe.Utils =
     else
       return 0
 
-  isBlock: (node) ->
-    return _.indexOf(Scribe.Normalizer.BLOCK_TAGS, node.tagName) > -1
-
   removeFormatFromSubtree: (subtree, format) ->
     if format.matchContainer(subtree)
       subtree = Scribe.DOM.unwrap(subtree)

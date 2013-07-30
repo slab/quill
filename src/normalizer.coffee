@@ -94,7 +94,7 @@ class Scribe.Normalizer
   @breakLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
     Scribe.DOM.traversePostorder(lineNode, (node) =>
-      if Scribe.Utils.isBlock(node)
+      if Scribe.Normalizer.isBlock(node)
         node = Scribe.DOM.switchTag(node, 'div') if node.tagName != 'DIV'
         if node.nextSibling?
           line = lineNode.ownerDocument.createElement('div')
@@ -110,16 +110,19 @@ class Scribe.Normalizer
   @groupBlocks: (root) ->
     curLine = root.firstChild
     while curLine?
-      if Scribe.Utils.isBlock(curLine)
+      if Scribe.Normalizer.isBlock(curLine)
         curLine = curLine.nextSibling
       else
         line = root.ownerDocument.createElement('div')
         root.insertBefore(line, curLine)
-        while curLine? and !Scribe.Utils.isBlock(curLine)
+        while curLine? and !Scribe.Normalizer.isBlock(curLine)
           nextLine = curLine.nextSibling
           line.appendChild(curLine)
           curLine = nextLine
         curLine = line
+
+  @isBlock: (node) ->
+    return _.indexOf(Scribe.Normalizer.BLOCK_TAGS, node.tagName, true) > -1 
 
   @normalizeBreak: (node, root) ->
     return if node == root
