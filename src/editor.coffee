@@ -1,5 +1,14 @@
-Scribe = require('./scribe')
-Tandem = require('tandem-core')
+_                   = require('underscore')
+ScribeDOM           = require('./dom')
+ScribeDocument      = require('./document')
+ScribeKeyboard      = require('./keyboard')
+ScribeLine          = require('./line')
+ScribeNormalizer    = require('./normalizer')
+ScribePasteManager  = require('./paste-manager')
+ScribeRenderer      = require('./renderer')
+ScribeSelection     = require('./selection')
+ScribeUndoManager   = require('./undo-manager')
+Tandem              = require('tandem-core')
 
 
 DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
@@ -46,7 +55,7 @@ deleteAt = (index, length) ->
           curLine.trailingNewline = false
           curLine.rebuild()
         else
-          Scribe.DOM.removeNode(curLine.node)
+          ScribeDOM.removeNode(curLine.node)
           @doc.removeLine(curLine)
       else
         curLine.deleteText(offset, deleteLength)
@@ -67,7 +76,7 @@ formatAt = (index, length, name, value) ->
   @selection.preserve(index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
-      if Scribe.Line.FORMATS[name]?
+      if ScribeLine.FORMATS[name]?
         # If newline character is being applied with formatting
         if length > line.length - offset
           line.format(name, value)
@@ -127,11 +136,11 @@ trackDelta = (fn, options) ->
   else
     decompose = decomposeA or decomposeB
   if !decompose.isIdentity() and !options.silent
-    eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
+    eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
     this.emit(eventName, decompose)
   
 
-class Scribe.Editor extends EventEmitter2
+class ScribeEditor extends EventEmitter2
   @editors: []
 
   @ID_PREFIX: 'editor-'
@@ -153,12 +162,12 @@ class Scribe.Editor extends EventEmitter2
 
 
   constructor: (@iframeContainer, options = {}) ->
-    @options = _.defaults(options, Scribe.Editor.DEFAULTS)
-    @id = _.uniqueId(Scribe.Editor.ID_PREFIX)
+    @options = _.defaults(options, ScribeEditor.DEFAULTS)
+    @id = _.uniqueId(ScribeEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     # Make sure we our selection is set to deepest textNode, prevent bug in Firefox when tabbing in
-    Scribe.DOM.addEventListener(@root, 'focus', =>
+    ScribeDOM.addEventListener(@root, 'focus', =>
       range = this.getSelection()
       this.setSelection(null, true)
       this.setSelection(range, true)
@@ -179,18 +188,18 @@ class Scribe.Editor extends EventEmitter2
     @ignoreDomChanges = true
     @options.renderer.keepHTML = keepHTML
     @iframeContainer.innerHTML = @root.innerHTML if @root?
-    @renderer = new Scribe.Renderer(@iframeContainer, @options)
+    @renderer = new ScribeRenderer(@iframeContainer, @options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new Scribe.Document(@root, @options)
-    @keyboard = new Scribe.Keyboard(this)
-    @selection = new Scribe.Selection(this)
-    @undoManager = new Scribe.UndoManager(this, @options)
-    @pasteManager = new Scribe.PasteManager(this)
+    @doc = new ScribeDocument(@root, @options)
+    @keyboard = new ScribeKeyboard(this)
+    @selection = new ScribeSelection(this)
+    @undoManager = new ScribeUndoManager(this, @options)
+    @pasteManager = new ScribePasteManager(this)
     @renderer.runWhenLoaded(@options.onReady)
     initListeners.call(this)
     @ignoreDomChanges = false
-    Scribe.Editor.editors.push(this)
+    ScribeEditor.editors.push(this)
 
   applyDelta: (delta, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
@@ -203,7 +212,7 @@ class Scribe.Editor extends EventEmitter2
       oldDelta = @doc.toDelta()
       delta.apply(insertAt, deleteAt, formatAt, this)
       unless options.silent
-        eventName = if options.source == 'api' then Scribe.Editor.events.API_TEXT_CHANGE else Scribe.Editor.events.USER_TEXT_CHANGE
+        eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
         this.emit(eventName, delta)
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
@@ -211,9 +220,9 @@ class Scribe.Editor extends EventEmitter2
     )
 
   emit: (eventName, args...) ->
-    super(Scribe.Editor.events.PRE_EVENT, eventName, args...)
+    super(ScribeEditor.events.PRE_EVENT, eventName, args...)
     super(eventName, args...)
-    super(Scribe.Editor.events.POST_EVENT, eventName, args...)
+    super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
@@ -264,7 +273,7 @@ class Scribe.Editor extends EventEmitter2
     this.doSilently( =>
       trackDelta.call(this, =>
         @selection.preserve( =>
-          Scribe.Normalizer.breakBlocks(@root)
+          ScribeNormalizer.breakBlocks(@root)
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
           _.each(lines, (line, index) =>
@@ -286,4 +295,4 @@ class Scribe.Editor extends EventEmitter2
     )
 
 
-module.exports = Scribe
+module.exports = ScribeEditor

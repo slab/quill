@@ -1,12 +1,12 @@
-Scribe = require('./scribe')
-Scribe.Format ?= {}
+_         = require('underscore')
+ScribeDOM = require('./dom')
 
 
-class Scribe.Format.Leaf
+class ScribeLeafFormat
   constructor: (@root, @keyName) ->
 
   clean: (node) ->
-    Scribe.DOM.removeAttributes(node)
+    ScribeDOM.removeAttributes(node)
 
   createContainer: (value) ->
     throw new Error("Descendants should implement")
@@ -15,7 +15,7 @@ class Scribe.Format.Leaf
     throw new Error("Descendants should implement")
 
 
-class Scribe.Format.Tag extends Scribe.Format.Leaf
+class ScribeTagFormat extends ScribeLeafFormat
   constructor: (@root, @keyName, @tagName) ->
     super
 
@@ -26,26 +26,26 @@ class Scribe.Format.Tag extends Scribe.Format.Leaf
     return container.tagName == @tagName
 
 
-class Scribe.Format.Span extends Scribe.Format.Tag
+class ScribeSpanFormat extends ScribeTagFormat
   constructor: (@root, @keyName) ->
     super(@root, @keyName, 'SPAN')
 
 
-class Scribe.Format.Class extends Scribe.Format.Span
+class ScribeClassFormat extends ScribeSpanFormat
   constructor: (@root, @keyName) ->
     super
 
   clean: (node) ->
-    Scribe.DOM.removeAttributes(node, 'class')
+    ScribeDOM.removeAttributes(node, 'class')
 
   createContainer: (value) ->
     container = super(value)
-    Scribe.DOM.addClass(container, "#{@keyName}-#{value}")
+    ScribeDOM.addClass(container, "#{@keyName}-#{value}")
     return container
 
   matchContainer: (container) ->
     if super(container)
-      classList = Scribe.DOM.getClasses(container)
+      classList = ScribeDOM.getClasses(container)
       for css in classList
         parts = css.split('-')
         if parts.length > 1 and parts[0] == @keyName
@@ -53,7 +53,7 @@ class Scribe.Format.Class extends Scribe.Format.Span
     return false
 
 
-class Scribe.Format.Style extends Scribe.Format.Span
+class ScribeStyleFormat extends ScribeSpanFormat
   @getStyleObject: (container) ->
     styleString = container.getAttribute('style') or ''
     return _.reduce(styleString.split(';'), (styles, str) ->
@@ -80,47 +80,47 @@ class Scribe.Format.Style extends Scribe.Format.Span
     super
 
   clean: (node) ->
-    Scribe.DOM.removeAttributes(node, 'style')
+    ScribeDOM.removeAttributes(node, 'style')
 
   createContainer: (value) ->
     container = super(value)
     return container unless @styles[value]?
-    cssName = Scribe.Format.Style.getCamelCase(@cssName)
+    cssName = ScribeFormat.Style.getCamelCase(@cssName)
     container.style[cssName] = @styles[value] if @styles[value]
     return container
 
   matchContainer: (container) ->
     return false unless super(container)
-    styles = Scribe.Format.Style.getStyleObject(container)
+    styles = ScribeFormat.Style.getStyleObject(container)
     return if styles[@cssName]? then @matchFn(styles[@cssName]) else false
 
 
-class Scribe.Format.Bold extends Scribe.Format.Tag
+class ScribeBoldFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'bold', 'B')
 
 
-class Scribe.Format.Italic extends Scribe.Format.Tag
+class ScribeItalicFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'italic', 'I')
 
 
-class Scribe.Format.Strike extends Scribe.Format.Tag
+class ScribeStrikeFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'strike', 'S')
 
 
-class Scribe.Format.Underline extends Scribe.Format.Tag
+class ScribeUnderlineFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'underline', 'U')
 
 
-class Scribe.Format.Link extends Scribe.Format.Tag
+class ScribeLinkFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'link', 'A')
 
   clean: (node) ->
-    Scribe.DOM.removeAttributes(node, ['href', 'title'])
+    ScribeDOM.removeAttributes(node, ['href', 'title'])
 
   createContainer: (value) ->
     link = super(value)
@@ -134,14 +134,14 @@ class Scribe.Format.Link extends Scribe.Format.Tag
     return if super(container) then container.getAttribute('href') else false
 
 
-class Scribe.Format.Background extends Scribe.Format.Style
+class ScribeBackgroundFormat extends ScribeStyleFormat
   constructor: (@root) ->
-    colors = _.clone(Scribe.Format.Color.COLORS)
+    colors = _.clone(ScribeColorFormat.COLORS)
     delete colors['white']
-    super(@root, 'background', 'background-color', colors, Scribe.Format.Color.matchColor)
+    super(@root, 'background', 'background-color', colors, ScribeColorFormat.matchColor)
 
 
-class Scribe.Format.Color extends Scribe.Format.Style
+class ScribeColorFormat extends ScribeStyleFormat
   @COLORS: {
     'black'   : '#000000'
     'red'     : '#FF0000'
@@ -154,7 +154,7 @@ class Scribe.Format.Color extends Scribe.Format.Style
   }
 
   @normalizeColor: (color) ->
-    color = Scribe.Format.Color.COLORS[color] if Scribe.Format.Color.COLORS[color]?
+    color = ScribeColorFormat.COLORS[color] if ScribeColorFormat.COLORS[color]?
     if color[0] == '#'
       if color.length == 4
         color = '#' + _.map(color.slice(1), (letter) ->
@@ -173,18 +173,18 @@ class Scribe.Format.Color extends Scribe.Format.Style
       return '#000000'
 
   @matchColor: (cssValue) ->
-    color = Scribe.Format.Color.normalizeColor(cssValue)
+    color = ScribeColorFormat.normalizeColor(cssValue)
     for key,value of @styles
       return key if value.toUpperCase() == color.toUpperCase()
     return false
 
   constructor: (@root) ->
-    colors = _.clone(Scribe.Format.Color.COLORS)
+    colors = _.clone(ScribeColorFormat.COLORS)
     delete colors['black']
-    super(@root, 'color', 'color', colors, Scribe.Format.Color.matchColor)
+    super(@root, 'color', 'color', colors, ScribeColorFormat.matchColor)
 
 
-class Scribe.Format.Family extends Scribe.Format.Style
+class ScribeFamilyFormat extends ScribeStyleFormat
   constructor: (@root) ->
     super(@root, 'family', 'font-family', {
       'serif'     : "'Times New Roman', serif"
@@ -196,7 +196,7 @@ class Scribe.Format.Family extends Scribe.Format.Style
     )
 
 
-class Scribe.Format.Size extends Scribe.Format.Style
+class ScribeSizeFormat extends ScribeStyleFormat
   constructor: (@root) ->
     super(@root, 'size', 'font-size', {
       'huge'  : '32px'
@@ -209,5 +209,20 @@ class Scribe.Format.Size extends Scribe.Format.Style
     return container
 
 
+module.exports = 
+  Leaf  : ScribeLeafFormat
+  Tag   : ScribeTagFormat
+  Span  : ScribeSpanFormat
+  Class : ScribeClassFormat
+  Style : ScribeStyleFormat
 
-module.exports = Scribe
+  Bold      : ScribeBoldFormat
+  Italic    : ScribeItalicFormat
+  Link      : ScribeLinkFormat
+  Strike    : ScribeStrikeFormat
+  Underline : ScribeUnderlineFormat
+  
+  Background  : ScribeBackgroundFormat
+  Color       : ScribeColorFormat
+  Family      : ScribeFamilyFormat
+  Size        : ScribeSizeFormat

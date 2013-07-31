@@ -1,12 +1,17 @@
-Scribe = require('./scribe')
-Tandem = require('tandem-core')
+_                   = require('underscore')
+ScribeDOM           = require('./dom')
+ScribeFormatManager = require('./format-manager')
+ScribeLine          = require('./line')
+ScribeNormalizer    = require('./normalizer')
+ScribeUtils         = require('./utils')
+Tandem              = require('tandem-core')
 
 
-class Scribe.Document
+class ScribeDocument
   constructor: (@root, options = {}) ->
-    @formatManager = new Scribe.FormatManager(@root, options)
-    @normalizer = new Scribe.Normalizer(@root, @formatManager)
-    @root.innerHTML = Scribe.Normalizer.normalizeHtml(@root.innerHTML)
+    @formatManager = new ScribeFormatManager(@root, options)
+    @normalizer = new ScribeNormalizer(@root, @formatManager)
+    @root.innerHTML = ScribeNormalizer.normalizeHtml(@root.innerHTML)
     @lines = new LinkedList()
     @lineMap = {}
     @normalizer.normalizeDoc()
@@ -19,7 +24,7 @@ class Scribe.Document
 
   findLeaf: (node) ->
     lineNode = node.parentNode
-    while lineNode? && !Scribe.Line.isLineNode(lineNode)
+    while lineNode? && !ScribeLine.isLineNode(lineNode)
       lineNode = lineNode.parentNode
     return null if !lineNode?
     line = this.findLine(lineNode)
@@ -45,12 +50,12 @@ class Scribe.Document
     return [retLine, offset]
 
   findLineNode: (node) ->
-    while node? && !Scribe.Line.isLineNode(node)
+    while node? && !ScribeLine.isLineNode(node)
       node = node.parentNode
     return node
 
   insertLineBefore: (newLineNode, refLine) ->
-    line = new Scribe.Line(this, newLineNode)
+    line = new ScribeLine(this, newLineNode)
     if refLine != null
       @lines.insertAfter(refLine.prev, line)
     else
@@ -63,7 +68,7 @@ class Scribe.Document
     _.each(_.clone(lineToMerge.node.childNodes), (child) ->
       line.node.appendChild(child)
     )
-    Scribe.DOM.removeNode(lineToMerge.node)
+    ScribeDOM.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
     line.trailingNewline = lineToMerge.trailingNewline
     line.rebuild()
@@ -73,7 +78,7 @@ class Scribe.Document
     @lines.remove(line)
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = Scribe.Utils.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = ScribeUtils.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
     return this.insertLineBefore(lineNode2, line.next)
@@ -90,4 +95,4 @@ class Scribe.Document
     return line.rebuild()
 
 
-module.exports = Scribe
+module.exports = ScribeDocument

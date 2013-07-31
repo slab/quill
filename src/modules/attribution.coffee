@@ -1,10 +1,12 @@
-Scribe = require('../scribe')
-Tandem = require('tandem-core')
+ScribeDOM     = require('../dom')
+ScribeEditor  = require('../editor')
+Tandem        = require('tandem-core')
 
-class Scribe.Attribution
+
+class ScribeAttribution
   constructor: (@editor, @authorId, color, enabled = false) ->
-    @editor.on(Scribe.Editor.events.PRE_EVENT, (eventName, delta) =>
-      if eventName == Scribe.Editor.events.USER_TEXT_CHANGE
+    @editor.on(ScribeEditor.events.PRE_EVENT, (eventName, delta) =>
+      if eventName == ScribeEditor.events.USER_TEXT_CHANGE
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
             op.attributes['author'] = @authorId
@@ -15,7 +17,7 @@ class Scribe.Attribution
           @editor.formatAt(index, length, 'author', @authorId, { silent: true })
         )
     )
-    @editor.doc.formatManager.addFormat('author', new Scribe.Format.Class(@editor.renderer.root, 'author'))
+    @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
     this.addAuthor(@authorId, color)
     this.enable() if enabled
 
@@ -25,10 +27,10 @@ class Scribe.Attribution
     @editor.renderer.addStyles(styles)
 
   enable: ->
-    Scribe.DOM.addClass(@editor.root, 'attribution')
+    ScribeDOM.addClass(@editor.root, 'attribution')
 
   disable: ->
-    Scribe.DOM.removeClass(@editor.root, 'attribution')
+    ScribeDOM.removeClass(@editor.root, 'attribution')
 
 
-module.exports = Scribe
+module.exports = ScribeAttribution

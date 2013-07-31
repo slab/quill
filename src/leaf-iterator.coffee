@@ -1,7 +1,4 @@
-Scribe = require('./scribe')
-
-
-class Scribe.LeafIterator
+class ScribeLeafIterator
   # Start and end are both inclusive
   # Otherwise if end is inclusive, we cannot express end of line unambiguously
   constructor: (@start, @end) ->
@@ -22,10 +19,10 @@ class Scribe.LeafIterator
 
   toArray: ->
     arr = []
-    itr = new Scribe.LeafIterator(@start, @end)
+    itr = new ScribeLeafIterator(@start, @end)
     while next = itr.next()
       arr.push(next)
     return arr
 
 
-module.exports = Scribe
+module.exports = ScribeLeafIterator

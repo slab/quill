@@ -1,12 +1,14 @@
-Scribe = require('./scribe')
+_           = require('underscore')
+ScribeDOM   = require('./dom')
+ScribeUtils = require('./utils')
 
 
 # TODO fix this entire file, esp findDeepestNode
-class Scribe.Position
+class ScribePosition
   @findLeafNode: (editor, node, offset) ->
-    [node, offset] = Scribe.Utils.findDeepestNode(node, offset)
-    if node.nodeType == Scribe.DOM.TEXT_NODE
-      offset = Scribe.Position.getIndex(node, offset, node.parentNode)
+    [node, offset] = ScribeUtils.findDeepestNode(node, offset)
+    if node.nodeType == ScribeDOM.TEXT_NODE
+      offset = ScribePosition.getIndex(node, offset, node.parentNode)
       node = node.parentNode
     return [node, offset]
   
@@ -14,7 +16,7 @@ class Scribe.Position
     while node != offsetNode and node.ownerDocument? and node.parentNode != node.ownerDocument.body
       while node.previousSibling?
         node = node.previousSibling
-        index += Scribe.Utils.getNodeLength(node)
+        index += ScribeUtils.getNodeLength(node)
       node = node.parentNode
     return index
 
@@ -26,8 +28,8 @@ class Scribe.Position
       @offset = @index = @leafNode
       @leafNode = @editor.root
     else
-      @index = Scribe.Position.getIndex(@leafNode, @offset)
-    [@leafNode, @offset] = Scribe.Position.findLeafNode(@editor, @leafNode, @offset)
+      @index = ScribePosition.getIndex(@leafNode, @offset)
+    [@leafNode, @offset] = ScribePosition.findLeafNode(@editor, @leafNode, @offset)
 
   getLeaf: ->
     return @leaf if @leaf?
@@ -35,7 +37,7 @@ class Scribe.Position
     return @leaf
 
   getIndex: ->
-    return Scribe.Position.getIndex(@leafNode, @offset, @editor.root)
+    return ScribePosition.getIndex(@leafNode, @offset, @editor.root)
 
 
-module.exports = Scribe
+module.exports = ScribePosition

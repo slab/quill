@@ -1,12 +1,14 @@
-Scribe = require('./scribe')
+_           = require('underscore')
+ScribeDOM   = require('./dom')
+ScribeUtils = require('./utils')
 
 
-Scribe.Debug =
+ScribeDebug =
   checkDocumentConsistency: (doc) ->
     nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
-        return node.nodeType == Scribe.DOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == Scribe.DOM.TEXT_NODE)
+        return node.nodeType == ScribeDOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == ScribeDOM.TEXT_NODE)
       )
     )
     lines = doc.lines.toArray()
@@ -52,7 +54,7 @@ Scribe.Debug =
       if lines.length != nodesByLine.length
         throw new Error("doc.lines and nodesByLine differ in length")
       _.each(lines, (line, index) =>
-        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> Scribe.Utils.getNodeLength(node) + length), 0)
+        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> ScribeUtils.getNodeLength(node) + length), 0)
         calculatedLength += 1 if line.trailingNewline
         if line.length != calculatedLength
           throw new Error('Line length inccorect')
@@ -79,4 +81,4 @@ Scribe.Debug =
     return true
 
 
-module.exports = Scribe
+module.exports = ScribeDebug

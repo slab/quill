@@ -1,9 +1,13 @@
-Scribe = require('../scribe')
+_               = require('underscore')
+ScribeDOM       = require('../dom')
+ScribeKeyboard  = require('../keyboard')
+ScribePosition  = require('../position')
+ScribeRange     = require('../range')
 
 
 enterEditMode = (url) ->
   url = normalizeUrl(url)
-  Scribe.DOM.addClass(@tooltip, 'editing')
+  ScribeDOM.addClass(@tooltip, 'editing')
   @tooltipInput.focus()
   @tooltipInput.value = url
 
@@ -11,32 +15,32 @@ exitEditMode = ->
   if @tooltipLink.innerText != @tooltipInput.value
     @savedRange.formatContents('link', @tooltipInput.value, { source: 'user' })
     @tooltipLink.href = @tooltipInput.value
-    Scribe.DOM.setText(@tooltipLink, @tooltipInput.value)
-    @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', @tooltipInput.value)
+    ScribeDOM.setText(@tooltipLink, @tooltipInput.value)
+    @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', @tooltipInput.value)
     @editor.setSelection(null, true)
-  Scribe.DOM.removeClass(@tooltip, 'editing')
+  ScribeDOM.removeClass(@tooltip, 'editing')
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  Scribe.DOM.addEventListener(@editor.root, 'mouseup', (event) =>
+  ScribeDOM.addEventListener(@editor.root, 'mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
-        start = new Scribe.Position(@editor, link, 0)
-        end = new Scribe.Position(@editor, link, Scribe.DOM.getText(link).length)
-        @savedRange = new Scribe.Range(@editor, start, end)
+        start = new ScribePosition(@editor, link, 0)
+        end = new ScribePosition(@editor, link, ScribeDOM.getText(link).length)
+        @savedRange = new ScribeRange(@editor, start, end)
         @tooltipLink.innerText = @tooltipLink.href = link.href
-        Scribe.DOM.removeClass(@tooltip, 'editing')
+        ScribeDOM.removeClass(@tooltip, 'editing')
         showTooptip.call(this, link.getBoundingClientRect())
         return
       link = link.parentNode
     hideTooltip.call(this)
   )
-  Scribe.DOM.addEventListener(@button, 'click', =>
+  ScribeDOM.addEventListener(@button, 'click', =>
     value = null
-    if Scribe.DOM.hasClass(@button, 'active')
+    if ScribeDOM.hasClass(@button, 'active')
       value = false
     else
       @savedRange = @editor.selection.getRange()
@@ -44,22 +48,22 @@ initListeners = ->
       if /\w+\.\w+/.test(url)
         value = normalizeUrl(url)
       else
-        Scribe.DOM.addClass(@tooltip, 'editing')
+        ScribeDOM.addClass(@tooltip, 'editing')
         showTooptip.call(this, @editor.selection.getDimensions())
         enterEditMode.call(this, url)
     if value?
       range = @editor.selection.getRange()
       range.formatContents('link', value, { source: 'user' })
-      @toolbar.emit(Scribe.Toolbar.events.FORMAT, 'link', value)
+      @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', value)
   )
-  Scribe.DOM.addEventListener(@tooltipChange, 'click', =>
+  ScribeDOM.addEventListener(@tooltipChange, 'click', =>
     enterEditMode.call(this, @tooltipLink.innerText)
   )
-  Scribe.DOM.addEventListener(@tooltipDone, 'click', =>
+  ScribeDOM.addEventListener(@tooltipDone, 'click', =>
     exitEditMode.call(this)
   )
-  Scribe.DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
-    exitEditMode.call(this) if event.which == Scribe.Keyboard.keys.ENTER
+  ScribeDOM.addEventListener(@tooltipInput, 'keyup', (event) =>
+    exitEditMode.call(this) if event.which == ScribeKeyboard.keys.ENTER
   )
 
 initTooltip = ->
@@ -127,11 +131,11 @@ showTooptip = (target, subjectDist = 5) ->
   @tooltip.style.top = top + (@tooltip.offsetTop-tooltip.top)
 
 
-class Scribe.LinkTooltip
+class ScribeLinkTooltip
   constructor: (@button, @toolbar) ->
     @editor = @toolbar.editor
     initTooltip.call(this)
     initListeners.call(this)
 
 
-module.exports = Scribe
+module.exports = ScribeLinkTooltip

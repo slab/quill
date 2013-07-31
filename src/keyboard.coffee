@@ -1,8 +1,12 @@
-Scribe = require('./scribe')
+_               = require('underscore')
+ScribeDOM       = require('./dom')
+ScribeLine      = require('./line')
+ScribePosition  = require('./position')
+ScribeRange     = require('./range')
 
 
 _initDeletes = ->
-  _.each([Scribe.Keyboard.keys.DELETE, Scribe.Keyboard.keys.BACKSPACE], (key) =>
+  _.each([ScribeKeyboard.keys.DELETE, ScribeKeyboard.keys.BACKSPACE], (key) =>
     this.addHotkey(key, =>
       # Prevent deleting if editor is already blank (browser quirk fix)
       return @editor.getLength() > 1
@@ -10,23 +14,23 @@ _initDeletes = ->
   )
 
 _initHotkeys = ->
-  this.addHotkey(Scribe.Keyboard.hotkeys.OUTDENT, (range) =>
+  this.addHotkey(ScribeKeyboard.hotkeys.OUTDENT, (range) =>
     _onTab.call(this, range, true)
     return false
   )
-  this.addHotkey(Scribe.Keyboard.hotkeys.INDENT, (range) =>
+  this.addHotkey(ScribeKeyboard.hotkeys.INDENT, (range) =>
     _onTab.call(this, range, false)
     return false
   )
   _.each(['bold', 'italic', 'underline'], (format) =>
-    this.addHotkey(Scribe.Keyboard.hotkeys[format.toUpperCase()], (range) =>
+    this.addHotkey(ScribeKeyboard.hotkeys[format.toUpperCase()], (range) =>
       this.toggleFormat(range, format)
       return false
     )
   )
 
 _initListeners = ->
-  Scribe.DOM.addEventListener(@editor.root, 'keydown', (event) =>
+  ScribeDOM.addEventListener(@editor.root, 'keydown', (event) =>
     event ||= window.event
     if @hotkeys[event.which]?
       prevent = false
@@ -48,7 +52,7 @@ _onTab = (range, shift = false) ->
   # When tab on multiple lines, indent each line if possible, outdent if shift is down
   lines = range.getLines()
   if lines.length > 1
-    index = Scribe.Position.getIndex(lines[0].node)
+    index = ScribePosition.getIndex(lines[0].node)
     start = range.start.index + (if shift then -1 else 1)
     offsetChange = 0
     _.each(lines, (line) =>
@@ -63,14 +67,14 @@ _onTab = (range, shift = false) ->
       index += line.length
     )
     end = range.end.index + offsetChange
-    @editor.setSelection(new Scribe.Range(@editor, start, end))
+    @editor.setSelection(new ScribeRange(@editor, start, end))
   else
     range.deleteContents({ source: 'user' })
     range.insertContents(0, "\t", {}, { source: 'user' })
-    @editor.setSelection(new Scribe.Range(@editor, range.start.index + 1, range.start.index + 1))
+    @editor.setSelection(new ScribeRange(@editor, range.start.index + 1, range.start.index + 1))
 
 
-class Scribe.Keyboard
+class ScribeKeyboard
   @keys:
     BACKSPACE : 8
     TAB       : 9
@@ -111,7 +115,7 @@ class Scribe.Keyboard
       if increment
         indent = if _.isNumber(line.formats[format]) then line.formats[format] else (if line.formats[format] then 1 else 0)
         indent += increment
-        indent = Math.min(Math.max(indent, Scribe.Line.MIN_INDENT), Scribe.Line.MAX_INDENT)
+        indent = Math.min(Math.max(indent, ScribeLine.MIN_INDENT), ScribeLine.MAX_INDENT)
       else
         indent = false
       index = Position.getIndex(line.node, 0)
@@ -131,4 +135,4 @@ class Scribe.Keyboard
     range.formatContents(format, !formats[format], { source: 'user' })
 
 
-module.exports = Scribe
+module.exports = ScribeKeyboard

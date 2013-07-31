@@ -1,24 +1,26 @@
-Scribe = require('../scribe')
+ScribeDOM         = require('../dom')
+ScribeEditor      = require('../editor')
+ScribeLinkTooltip = require('./link-tooltip')
 
 
 initFormats = ->
-  _.each(Scribe.Toolbar.formats, (formats, formatGroup) =>
+  _.each(ScribeToolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
       input = @container.querySelector(".#{format}")
       return unless input?
-      return new Scribe.LinkTooltip(input, this) if format == 'link'
+      return new ScribeLinkTooltip(input, this) if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
-      Scribe.DOM.addEventListener(input, eventName, =>
-        value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !Scribe.DOM.hasClass(input, 'active')
+      ScribeDOM.addEventListener(input, eventName, =>
+        value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         range = @editor.getSelection() or @editor.selection.range
         range.formatContents(format, value, { source: 'user' })
-        this.emit(Scribe.Toolbar.events.FORMAT, format, value) unless range.isCollapsed()
+        this.emit(ScribeToolbar.events.FORMAT, format, value) unless range.isCollapsed()
       )
     )
   )
 
 
-class Scribe.Toolbar extends EventEmitter2
+class ScribeToolbar extends EventEmitter2
   @formats:
     BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'bullet', 'indent', 'outdent']
     SELECT: ['background', 'color', 'family', 'size']
@@ -29,11 +31,11 @@ class Scribe.Toolbar extends EventEmitter2
   constructor: (@container, @editor) ->
     @container = document.getElementById(@container) if _.isString(@container)
     initFormats.call(this)
-    @editor.on(Scribe.Editor.events.POST_EVENT, (eventName) =>
-      return unless eventName == Scribe.Editor.events.API_TEXT_CHANGE or eventName == Scribe.Editor.events.USER_TEXT_CHANGE or eventName == Scribe.Editor.events.SELECTION_CHANGE
+    @editor.on(ScribeEditor.events.POST_EVENT, (eventName) =>
+      return unless eventName == ScribeEditor.events.API_TEXT_CHANGE or eventName == ScribeEditor.events.USER_TEXT_CHANGE or eventName == ScribeEditor.events.SELECTION_CHANGE
       this.update()
     )
-    this.on(Scribe.Toolbar.events.FORMAT, =>
+    this.on(ScribeToolbar.events.FORMAT, =>
       @editor.root.focus()
       @editor.setSelection(@editor.selection.range)
     )
@@ -41,10 +43,10 @@ class Scribe.Toolbar extends EventEmitter2
   update: ->
     range = @editor.getSelection()
     _.each(@container.querySelectorAll('.active'), (button) =>
-      Scribe.DOM.removeClass(button, 'active')
+      ScribeDOM.removeClass(button, 'active')
     )
     _.each(@container.querySelectorAll('select'), (select) =>
-      Scribe.DOM.resetSelect(select)
+      ScribeDOM.resetSelect(select)
     )
     return unless range?
     _.each(range.getFormats(), (value, key) =>
@@ -55,9 +57,9 @@ class Scribe.Toolbar extends EventEmitter2
           value = '' if _.isArray(value)
           elem.value = value
         else
-          Scribe.DOM.addClass(elem, 'active')
+          ScribeDOM.addClass(elem, 'active')
     )
 
 
 
-module.exports = Scribe
+module.exports = ScribeToolbar

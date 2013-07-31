@@ -1,11 +1,14 @@
-Scribe = require('./scribe')
-Tandem = require('tandem-core')
+_               = require('underscore')
+ScribeDOM       = require('./dom')
+ScribeDocument  = require('./document')
+ScribeRange     = require('./range')
+Tandem          = require('tandem-core')
 
 
-class Scribe.PasteManager
+class ScribePasteManager
   constructor: (@editor) ->
     @container = @editor.root.ownerDocument.createElement('div')
-    Scribe.DOM.addClass(@container, 'paste-container')
+    ScribeDOM.addClass(@container, 'paste-container')
     @container.setAttribute('contenteditable', true)
     @editor.renderer.addStyles(
       '.paste-container':
@@ -17,14 +20,14 @@ class Scribe.PasteManager
     this.initListeners()
 
   initListeners: ->
-    Scribe.DOM.addEventListener(@editor.root, 'paste', =>
+    ScribeDOM.addEventListener(@editor.root, 'paste', =>
       oldDocLength = @editor.getLength()
       range = @editor.getSelection()
       return unless range?
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
-        doc = new Scribe.Document(@container)
+        doc = new ScribeDocument(@container)
         delta = doc.toDelta()
         # Need to remove trailing newline so paste is inline
         delta = delta.compose(Tandem.Delta.makeDeleteDelta(delta.endLength, delta.endLength - 1, 1))
@@ -35,9 +38,9 @@ class Scribe.PasteManager
         delta.startLength = oldDocLength
         @editor.applyDelta(delta, { source: 'user' })
         @editor.root.focus()
-        @editor.setSelection(new Scribe.Range(@editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
+        @editor.setSelection(new ScribeRange(@editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
       )
     )
 
 
-module.exports = Scribe
+module.exports = ScribePasteManager

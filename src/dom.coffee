@@ -1,14 +1,14 @@
-Scribe = require('./scribe')
+_ = require('underscore')
 
 
-Scribe.DOM = 
+ScribeDOM = 
   ELEMENT_NODE: 1
   NOBREAK_SPACE:  "&nbps;"
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
   addClass: (node, cssClass) ->
-    return if Scribe.DOM.hasClass(node, cssClass)
+    return if ScribeDOM.hasClass(node, cssClass)
     if node.classList?
       node.classList.add(cssClass)
     else if node.className?
@@ -30,16 +30,16 @@ Scribe.DOM =
 
   getText: (node) ->
     switch node.nodeType
-      when Scribe.DOM.ELEMENT_NODE
+      when ScribeDOM.ELEMENT_NODE
         return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
-      when Scribe.DOM.TEXT_NODE then return node.data or ""
+      when ScribeDOM.TEXT_NODE then return node.data or ""
       else return ""
 
   hasClass: (node, cssClass) ->
     if node.classList?
       return node.classList.contains(cssClass)
     else if node.className?
-      return _.indexOf(Scribe.DOM.getClasses(node), cssClass) > -1
+      return _.indexOf(ScribeDOM.getClasses(node), cssClass) > -1
     return false
 
   mergeNodes: (node1, node2) ->
@@ -48,7 +48,7 @@ Scribe.DOM =
     this.moveChildren(node1, node2)
     node2.parentNode.removeChild(node2)
     if (node1.tagName == 'OL' || node1.tagName == 'UL') && node1.childNodes.length == 2
-      Scribe.DOM.mergeNodes(node1.firstChild, node1.lastChild)
+      ScribeDOM.mergeNodes(node1.firstChild, node1.lastChild)
     return node1
 
   moveChildren: (newParent, oldParent) ->
@@ -73,11 +73,11 @@ Scribe.DOM =
     )
 
   removeClass: (node, cssClass) ->
-    return unless Scribe.DOM.hasClass(node, cssClass)
+    return unless ScribeDOM.hasClass(node, cssClass)
     if node.classList?
       return node.classList.remove(cssClass)
     else if node.className?
-      classArray = Scribe.DOM.getClasses(node)
+      classArray = ScribeDOM.getClasses(node)
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
 
@@ -96,12 +96,12 @@ Scribe.DOM =
 
   setText: (node, text) ->
     switch node.nodeType
-      when Scribe.DOM.ELEMENT_NODE
+      when ScribeDOM.ELEMENT_NODE
         if node.textContent?
           node.textContent = text
         else
           node.innerText = text
-      when Scribe.DOM.TEXT_NODE then node.data = text
+      when ScribeDOM.TEXT_NODE then node.data = text
       else return # Noop
 
   switchTag: (node, newTag) ->
@@ -114,10 +114,10 @@ Scribe.DOM =
     return newNode
 
   toggleClass: (node, className) ->
-    if Scribe.DOM.hasClass(node, className)
-      Scribe.DOM.removeClass(node, className)
+    if ScribeDOM.hasClass(node, className)
+      ScribeDOM.removeClass(node, className)
     else
-      Scribe.DOM.addClass(node, className)
+      ScribeDOM.addClass(node, className)
 
   unwrap: (node) ->
     ret = node.firstChild
@@ -134,4 +134,4 @@ Scribe.DOM =
     return wrapper
 
 
-module.exports = Scribe
+module.exports = ScribeDOM

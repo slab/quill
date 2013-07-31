@@ -1,4 +1,8 @@
-Scribe = require('../scribe')
+_               = require('underscore')
+ScribeDOM       = require('../dom')
+ScribeEditor    = require('../editor')
+ScribePosition  = require('../position')
+ScribeUtils     = require('../utils')
 
 
 _applyDelta = (delta) ->
@@ -13,11 +17,11 @@ _applyDelta = (delta) ->
 
 _buildCursor = (name, color) ->
   cursor = @container.ownerDocument.createElement('span')
-  Scribe.DOM.addClass(cursor, 'cursor')
+  ScribeDOM.addClass(cursor, 'cursor')
   cursor.innerHTML = @options.template
   cursorFlag = cursor.querySelector('.cursor-flag')
   cursorName = cursor.querySelector('.cursor-name')
-  Scribe.DOM.setText(cursorName, name)
+  ScribeDOM.setText(cursorName, name)
   cursorCaret = cursor.querySelector('.cursor-caret')
   cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
   @container.appendChild(cursor)
@@ -28,22 +32,22 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.left = referenceNode.offsetLeft
   cursor.elem.style.height = referenceNode.offsetHeight
   if parseInt(cursor.elem.style.top) < parseInt(cursor.elem.style.height)
-    Scribe.DOM.addClass(cursor.elem, 'top')
+    ScribeDOM.addClass(cursor.elem, 'top')
   else
-    Scribe.DOM.removeClass(cursor.elem, 'top')
+    ScribeDOM.removeClass(cursor.elem, 'top')
 
 _updateCursor = (cursor) ->
   @editor.doSilently( =>
-    position = new Scribe.Position(@editor, cursor.index)
+    position = new ScribePosition(@editor, cursor.index)
     guide = @container.ownerDocument.createElement('span')
     if !position.leafNode.firstChild?
-      Scribe.DOM.setText(guide, Scribe.DOM.NOBREAK_SPACE)
+      ScribeDOM.setText(guide, ScribeDOM.NOBREAK_SPACE)
       # Should only be the case for empty lines
       position.leafNode.parentNode.insertBefore(guide, position.leafNode)
       _moveCursor.call(this, cursor, guide)
     else
-      Scribe.DOM.setText(guide, Scribe.DOM.ZERO_WIDTH_NOBREAK_SPACE)
-      [leftText, rightText, didSplit] = Scribe.Utils.splitNode(position.leafNode.firstChild, position.offset)
+      ScribeDOM.setText(guide, ScribeDOM.ZERO_WIDTH_NOBREAK_SPACE)
+      [leftText, rightText, didSplit] = ScribeUtils.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         rightText.parentNode.insertBefore(guide, rightText)
         _moveCursor.call(this, cursor, guide)
@@ -51,12 +55,12 @@ _updateCursor = (cursor) ->
         leftText.parentNode.appendChild(guide)
         _moveCursor.call(this, cursor, guide)
     guide.parentNode.removeChild(guide)
-    Scribe.DOM.normalize(position.leafNode) if didSplit
+    ScribeDOM.normalize(position.leafNode) if didSplit
   )
   cursor.dirty = false
 
 
-class Scribe.MultiCursor
+class ScribeMultiCursor
   @DEFAULTS:
     template: 
      '<span class="cursor-flag">
@@ -66,7 +70,7 @@ class Scribe.MultiCursor
     timeout: 2500
 
   constructor: (@editor, options = {}) ->
-    @options = _.defaults(options, Scribe.MultiCursor.DEFAULTS)
+    @options = _.defaults(options, ScribeMultiCursor.DEFAULTS)
     @cursors = {}
     @container = @editor.root.ownerDocument.createElement('div')
     @container.id = 'cursor-container'
@@ -89,7 +93,7 @@ class Scribe.MultiCursor
       '.cursor.hidden .cursor-flag': { 'display': 'none' }
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
     })
-    @editor.renderer.on(Scribe.Renderer.events.UPDATE, =>
+    @editor.renderer.on(ScribeRenderer.events.UPDATE, =>
       _.defer( =>
         @container.style.top = @editor.root.offsetTop
         @container.style.left = @editor.root.offsetLeft
@@ -98,9 +102,9 @@ class Scribe.MultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
+    @editor.on(ScribeEditor.events.API_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
-    ).on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
+    ).on(ScribeEditor.events.USER_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
 
@@ -122,10 +126,10 @@ class Scribe.MultiCursor
       }
     cursor.index = index
     cursor.dirty = true
-    Scribe.DOM.removeClass(cursor.elem, 'hidden')
+    ScribeDOM.removeClass(cursor.elem, 'hidden')
     clearTimeout(cursor.timer)
     cursor.timer = setTimeout( =>
-      Scribe.DOM.addClass(cursor.elem, 'hidden')
+      ScribeDOM.addClass(cursor.elem, 'hidden')
       cursor.timer = null
     , @options.timeout)
     _updateCursor.call(this, cursor) if update
@@ -148,4 +152,4 @@ class Scribe.MultiCursor
     )
 
 
-module.exports = Scribe
+module.exports = ScribeMultiCursor

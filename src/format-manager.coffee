@@ -1,16 +1,17 @@
-Scribe = require('./scribe')
+_             = require('underscore')
+ScribeFormat  = require('./format')
 
 
-class Scribe.FormatManager
+class ScribeFormatManager
   @DEFAULTS:
     formats: ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
 
   constructor: (@container, options = {}) ->
-    @options = _.defaults(options.formatManager or {}, Scribe.FormatManager.DEFAULTS)
+    @options = _.defaults(options.formatManager or {}, ScribeFormatManager.DEFAULTS)
     @formats = {}
     _.each(@options.formats, (formatName) =>
       className = formatName[0].toUpperCase() + formatName.slice(1)
-      this.addFormat(formatName, new Scribe.Format[className](@container))
+      this.addFormat(formatName, new ScribeFormat[className](@container))
     )
 
   addFormat: (name, format) ->
@@ -29,4 +30,4 @@ class Scribe.FormatManager
     return []
 
 
-module.exports = Scribe
+module.exports = ScribeFormatManager

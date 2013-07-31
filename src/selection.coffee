@@ -1,4 +1,11 @@
-Scribe = require('./scribe')
+_               = require('underscore')
+ScribeDOM       = require('./dom')
+ScribePosition  = require('./position')
+ScribeRange     = require('./range')
+ScribeUtils     = require('./utils')
+ScribeLine      = require('./line')
+ScribeKeyboard  = require('./keyboard')
+
 
 compareRanges = (range1, range2) ->
   return true if range1 == null and range2 == null
@@ -13,14 +20,14 @@ compareRanges = (range1, range2) ->
   endOffset2 = range2.endOffset ? range2.end.offset
   return startContainer1 == startContainer2 and endContainer1 == endContainer2 and startOffset1 == startOffset2 and endOffset1 == endOffset2
 
-# DOM Selection API says offset is child index of container, not number of characters like Scribe.Position
+# DOM Selection API says offset is child index of container, not number of characters like ScribePosition
 normalizeNativePosition = (node, offset) ->
-  if node?.nodeType == Scribe.DOM.ELEMENT_NODE
+  if node?.nodeType == ScribeDOM.ELEMENT_NODE
     if offset == 0
       node = node.firstChild if node.firstChild?
     else
       node = node.childNodes[node.childNodes.length-1]
-      offset = Scribe.DOM.getText(node).length
+      offset = ScribeDOM.getText(node).length
   return [node, offset]
 
 normalizeNativeRange = (nativeRange) ->
@@ -35,13 +42,13 @@ normalizeNativeRange = (nativeRange) ->
   }
 
 _nativeRangeToRange = (nativeRange) ->
-  start = new Scribe.Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
-  end = new Scribe.Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
+  start = new ScribePosition(@editor, nativeRange.startContainer, nativeRange.startOffset)
+  end = new ScribePosition(@editor, nativeRange.endContainer, nativeRange.endOffset)
   if start.index <= end.index 
-    range = new Scribe.Range(@editor, start, end)
+    range = new ScribeRange(@editor, start, end)
     range.isBackwards = false
   else
-    range = new Scribe.Range(@editor, end, start)
+    range = new ScribeRange(@editor, end, start)
     range.isBackwards = true
   range.isBackwards = true if nativeRange.isBackwards
   return range
@@ -55,17 +62,17 @@ _preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
       return Math.max(pos.index + lengthAdded, index)
   )
   fn.call(null)
-  this.setRange(new Scribe.Range(@editor, startIndex, endIndex), true)
+  this.setRange(new ScribeRange(@editor, startIndex, endIndex), true)
 
 _preserveWithLine = (savedNativeRange, fn) ->
   savedData = _.map([
     { container: savedNativeRange.startContainer, offset: savedNativeRange.startOffset }
     { container: savedNativeRange.endContainer,   offset: savedNativeRange.endOffset }
   ], (position) =>
-    lineNode = Scribe.Utils.findAncestor(position.container, Scribe.Line.isLineNode) or @editor.root
+    lineNode = ScribeUtils.findAncestor(position.container, ScribeLine.isLineNode) or @editor.root
     return {
       lineNode  : lineNode
-      offset    : Scribe.Position.getIndex(position.container, position.offset, lineNode)
+      offset    : ScribePosition.getIndex(position.container, position.offset, lineNode)
       nextLine  : position.container.previousSibling?.tagName == 'BR'  # Track special case for Firefox
     }
   )
@@ -76,12 +83,12 @@ _preserveWithLine = (savedNativeRange, fn) ->
       if savedDatum.nextLine and savedDatum.lineNode.nextSibling?
         savedDatum.lineNode = savedDatum.lineNode.nextSibling
         savedDatum.offset = 0
-      return new Scribe.Position(@editor, savedDatum.lineNode, savedDatum.offset)
+      return new ScribePosition(@editor, savedDatum.lineNode, savedDatum.offset)
     )
-    this.setRange(new Scribe.Range(@editor, start, end), true)
+    this.setRange(new ScribeRange(@editor, start, end), true)
 
 
-class Scribe.Selection
+class ScribeSelection
   constructor: (@editor) ->
     @range = null
     this.initListeners()
@@ -94,8 +101,8 @@ class Scribe.Selection
   initListeners: ->
     checkUpdate = =>
       this.update() if @editor.root.isContentEditable
-    Scribe.DOM.addEventListener(@editor.root, 'mouseup', checkUpdate)
-    _.each(Scribe.Keyboard.NAVIGATION, (key) =>
+    ScribeDOM.addEventListener(@editor.root, 'mouseup', checkUpdate)
+    _.each(ScribeKeyboard.NAVIGATION, (key) =>
       @editor.keyboard.addHotkey(key, =>
         _.defer(checkUpdate)
       )
@@ -137,9 +144,9 @@ class Scribe.Selection
     if range?
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
-        [node, offset] = Scribe.Utils.findDeepestNode(pos.leafNode, pos.offset)
+        [node, offset] = ScribeUtils.findDeepestNode(pos.leafNode, pos.offset)
         node = node.parentNode if node.tagName == "BR"              # Firefox does not split BR when hitting enter inside BR
-        offset = Math.min(Scribe.DOM.getText(node).length, offset)  # Should only occur at end of document
+        offset = Math.min(ScribeDOM.getText(node).length, offset)  # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )
@@ -153,4 +160,4 @@ class Scribe.Selection
       this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
 
 
-module.exports = Scribe
+module.exports = ScribeSelection

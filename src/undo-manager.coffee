@@ -1,5 +1,7 @@
-Scribe = require('./scribe')
-Tandem = require('tandem-core')
+_               = require('underscore')
+ScribeKeyboard  = require('./keyboard')
+ScribeRange     = require('./range')
+Tandem          = require('tandem-core')
 
 
 getLastChangeIndex = (delta) ->
@@ -30,7 +32,7 @@ _change = (source, dest) ->
     _ignoreChanges.call(this, =>
       @editor.applyDelta(change[source], { source: 'user' })
       index = getLastChangeIndex(change[source])
-      @editor.setSelection(new Scribe.Range(@editor, index, index))
+      @editor.setSelection(new ScribeRange(@editor, index, index))
     )
     @stack[dest].push(change)
 
@@ -41,24 +43,24 @@ _ignoreChanges = (fn) ->
   @ignoringChanges = oldIgnoringChanges
 
 
-class Scribe.UndoManager
+class ScribeUndoManager
   @DEFAULTS:
     delay: 1000
     maxStack: 100
 
 
   constructor: (@editor, options = {}) ->
-    @options = _.defaults(options.undoManager or {}, Scribe.UndoManager.DEFAULTS)
+    @options = _.defaults(options.undoManager or {}, ScribeUndoManager.DEFAULTS)
     @lastRecorded = 0
     this.clear()
     this.initListeners()
 
   initListeners: ->
-    @editor.keyboard.addHotkey(Scribe.Keyboard.hotkeys.UNDO, =>
+    @editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.UNDO, =>
       this.undo()
       return false
     )
-    @editor.keyboard.addHotkey(Scribe.Keyboard.hotkeys.REDO, =>
+    @editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.REDO, =>
       this.redo()
       return false
     )
@@ -112,4 +114,4 @@ class Scribe.UndoManager
     _change.call(this, 'undo', 'redo')
 
 
-module.exports = Scribe
+module.exports = ScribeUndoManager

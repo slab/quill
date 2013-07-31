@@ -1,7 +1,9 @@
-Scribe = require('./scribe')
+_                 = require('underscore')
+ScribeDOM         = require('./dom')
+ScribeNormalizer  = require('./normalizer')
 
 
-class Scribe.Renderer extends EventEmitter2
+class ScribeRenderer extends EventEmitter2
   @DEFAULTS:
     id: 'editor'
     keepHTML: false
@@ -67,13 +69,13 @@ class Scribe.Renderer extends EventEmitter2
   constructor: (@container, options = {}) ->
     options = options.renderer or {}
     originalStyles = options.styles
-    @options = _.defaults(options, Scribe.Renderer.DEFAULTS)
+    @options = _.defaults(options, ScribeRenderer.DEFAULTS)
     @options.styles = originalStyles
     this.createFrame()
     @formats = {}
     # IE10 ignores conditional comments and it still displays <div><br></div> as two lines
-    Scribe.Renderer.DEFAULTS.styles['br'] = { 'display': 'none' } if navigator.userAgent.match(/MSIE/);
-    this.addStyles(Scribe.Renderer.DEFAULTS.styles)
+    ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if navigator.userAgent.match(/MSIE/);
+    this.addStyles(ScribeRenderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     this.runWhenLoaded( =>
       _.defer( =>
@@ -91,7 +93,7 @@ class Scribe.Renderer extends EventEmitter2
     this.runWhenLoaded( =>
       style = @root.ownerDocument.createElement('style')
       style.type = 'text/css'
-      css = Scribe.Renderer.objToCss(css) unless _.isString(css)
+      css = ScribeRenderer.objToCss(css) unless _.isString(css)
       if style.styleSheet?
         style.styleSheet.cssText = css
       else
@@ -99,7 +101,7 @@ class Scribe.Renderer extends EventEmitter2
       # Firefox needs defer
       _.defer( =>
         @root.ownerDocument.querySelector('head').appendChild(style)
-        this.emit(Scribe.Renderer.events.UPDATE, css)
+        this.emit(ScribeRenderer.events.UPDATE, css)
       )
     )
 
@@ -111,19 +113,19 @@ class Scribe.Renderer extends EventEmitter2
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
     @root = this.getDocument().createElement('div')
-    Scribe.DOM.addClass(@root, 'editor')
+    ScribeDOM.addClass(@root, 'editor')
     @root.id = @options.id
-    @root.innerHTML = Scribe.Normalizer.normalizeHtml(html) if @options.keepHTML
+    @root.innerHTML = ScribeNormalizer.normalizeHtml(html) if @options.keepHTML
     this.runWhenLoaded( =>
       doc = this.getDocument()
       doc.body.appendChild(@root)
-      Scribe.DOM.addEventListener(doc.body, 'click', =>
+      ScribeDOM.addEventListener(doc.body, 'click', =>
         @root.focus()
       )
-      Scribe.DOM.addEventListener(@container, 'click', =>
+      ScribeDOM.addEventListener(@container, 'click', =>
         @root.focus()
       )
-      Scribe.DOM.addEventListener(@container, 'focus', =>
+      ScribeDOM.addEventListener(@container, 'focus', =>
         @root.focus()
       )
     )
@@ -154,4 +156,4 @@ class Scribe.Renderer extends EventEmitter2
       , 100)
 
 
-module.exports = Scribe
+module.exports = ScribeRenderer
