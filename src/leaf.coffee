@@ -26,7 +26,7 @@ class ScribeLeaf extends LinkedList.Node
     @length = @text.length
 
   getFormats: ->
-    return _.extend(@formats, @line.formats)
+    return _.extend({}, @formats, @line.formats)
 
   getLineOffset: ->
     return ScribePosition.getIndex(@node, 0, @line.node)
