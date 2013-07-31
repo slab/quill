@@ -89,9 +89,7 @@ class ScribeLine extends LinkedList.Node
     # offset > 0 for multicursor
     if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
       leaf.insertText(leafOffset, text)
-      @length += text.length
-      @outerHTML = @node.outerHTML
-      @delta = this.toDelta()
+      this.resetContent()
     else 
       span = @node.ownerDocument.createElement('span')
       ScribeDOM.setText(span, text)
@@ -127,21 +125,17 @@ class ScribeLine extends LinkedList.Node
     @formats = {}
     [formatName, formatValue] = @doc.formatManager.getFormat(@node)
     @formats[formatName] = formatValue if formatName?
-    @delta = this.toDelta()
+    ops = _.map(@leaves.toArray(), (leaf) ->
+      return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
+    )
+    ops.push(new Tandem.InsertOp("\n", @formats)) if @trailingNewline
+    @delta = new Tandem.Delta(0, @length, ops)
 
   splitContents: (offset) ->
     [node, offset] = ScribeUtils.getChildAtOffset(@node, offset)
     if @node.tagName == 'OL' || @node.tagName == 'UL'
       [node, offset] = ScribeUtils.getChildAtOffset(node, offset)
     return ScribeUtils.splitNode(node, offset)
-
-  toDelta: ->
-    ops = _.map(@leaves.toArray(), (leaf) ->
-      return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
-    )
-    ops.push(new Tandem.InsertOp("\n", @formats)) if @trailingNewline
-    delta = new Tandem.Delta(0, @length, ops)
-    return delta
 
 
 module.exports = ScribeLine
