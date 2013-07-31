@@ -111,7 +111,6 @@ class ScribeLine extends LinkedList.Node
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
       @doc.normalizer.normalizeLine(@node)
-      @doc.normalizer.optimizeLine(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
     else

@@ -151,13 +151,13 @@ class ScribeNormalizer
     ScribeNormalizer.breakBlocks(@container)
     _.each(@container.childNodes, (lineNode) =>
       this.normalizeLine(lineNode)
-      this.optimizeLine(lineNode)
     )
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
     this.normalizeTags(lineNode)
     ScribeNormalizer.requireLeaf(lineNode)
+    this.removeRedundant(lineNode)
     ScribeNormalizer.wrapText(lineNode)
 
   normalizeTags: (lineNode) ->
@@ -169,11 +169,6 @@ class ScribeNormalizer
         ScribeDOM.removeAttributes(node)
       return node
     )
-
-  optimizeLine: (lineNode) ->
-    return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
-    this.removeRedundant(lineNode)
-    ScribeNormalizer.wrapText(lineNode)
 
   removeRedundant: (lineNode) ->
     nodes = [lineNode]
