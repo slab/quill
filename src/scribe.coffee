@@ -8,5 +8,6 @@ ScribeToolbar     = require('./modules/toolbar')
 window.Scribe =
   Attribution : ScribeAttribution
   Editor      : ScribeEditor
+  LinkTooltip : ScribeLinkTooltip
   MultiCursor : ScribeMultiCursor
   Toolbar     : ScribeToolbar

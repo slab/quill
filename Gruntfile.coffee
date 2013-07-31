@@ -45,8 +45,10 @@ module.exports = (grunt) ->
       options:
         extensions: ['.js', '.coffee']
         requires: ['tandem-core']
-      src:
+      scribe:
         files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
+      scribe_exposed:
+        files: [{ dest: 'build/scribe-exposed.js', src: ['src/scribe-exposed.coffee'] }]
       tandem_wrapper:
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
 
@@ -128,7 +130,7 @@ module.exports = (grunt) ->
         tasks: ['sass:demo']
       src:
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffee:src', 'coffeeify:src', 'concat', 'copy:build']
+        tasks: ['coffee:src', 'coffeeify', 'concat', 'copy:build']
       test:
         files: ['tests/scripts/**/**/*.coffee']
         tasks: ['coffee:test']

@@ -8,6 +8,7 @@ window.require = (module) ->
     when './scribe'     then return window.Scribe
     when '../scribe'    then return window.Scribe
     when 'tandem-core'  then return window.Tandem
+    when 'underscore'   then return window._
     else                     return null
 
 window.module = {
