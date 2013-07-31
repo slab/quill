@@ -14,7 +14,6 @@ class ScribeLine extends LinkedList.Node
   @MAX_INDENT: 9
   @MIN_INDENT: 1    # Smallest besides not having an indent at all
 
-
   @isLineNode: (node) ->
     return node? and ScribeDOM.hasClass(node, ScribeLine.CLASS_NAME)
 
@@ -26,6 +25,12 @@ class ScribeLine extends LinkedList.Node
     this.rebuild()
     super(@node)
 
+  applyToContents: (offset, length, fn) ->
+    return if length <= 0
+    [prevNode, startNode] = this.splitContents(offset)
+    [endNode, nextNode] = this.splitContents(offset + length)
+    ScribeUtils.traverseSiblings(startNode, endNode, fn)
+
   buildLeaves: (node, formats) ->
     _.each(node.childNodes, (node) =>
       nodeFormats = _.clone(formats)
@@ -36,12 +41,6 @@ class ScribeLine extends LinkedList.Node
       if ScribeLeaf.isLeafParent(node)
         this.buildLeaves(node, nodeFormats)
     )
-
-  applyToContents: (offset, length, fn) ->
-    return if length <= 0
-    [prevNode, startNode] = this.splitContents(offset)
-    [endNode, nextNode] = this.splitContents(offset + length)
-    ScribeUtils.traverseSiblings(startNode, endNode, fn)
 
   deleteText: (offset, length) ->
     this.applyToContents(offset, length, (node) ->

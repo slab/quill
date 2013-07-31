@@ -85,13 +85,13 @@ class ScribeStyleFormat extends ScribeSpanFormat
   createContainer: (value) ->
     container = super(value)
     return container unless @styles[value]?
-    cssName = ScribeFormat.Style.getCamelCase(@cssName)
+    cssName = ScribeStyleFormat.getCamelCase(@cssName)
     container.style[cssName] = @styles[value] if @styles[value]
     return container
 
   matchContainer: (container) ->
     return false unless super(container)
-    styles = ScribeFormat.Style.getStyleObject(container)
+    styles = ScribeStyleFormat.getStyleObject(container)
     return if styles[@cssName]? then @matchFn(styles[@cssName]) else false
 
 

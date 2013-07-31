@@ -171,7 +171,7 @@ class ScribeNormalizer
 
   mergeAdjacent: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>
-      if node.nodeType == ScribeDOM.ELEMENT_NODE and !ScribeLine.isLineNode(node)
+      if node.nodeType == ScribeDOM.ELEMENT_NODE and !ScribeNormalizer.isBlock(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'
           [nodeFormat, nodeValue] = @formatManager.getFormat(node)

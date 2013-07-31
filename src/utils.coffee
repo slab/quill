@@ -1,6 +1,5 @@
 _           = require('underscore')
 ScribeDOM   = require('./dom')
-ScribeLine  = require('./line')
 
 
 ScribeUtils =
@@ -39,7 +38,7 @@ ScribeUtils =
     if node.nodeType == ScribeDOM.ELEMENT_NODE
       return _.reduce(node.childNodes, (length, child) ->
         return length + ScribeUtils.getNodeLength(child)
-      , (if ScribeLine.isLineNode(node) then 1 else 0))
+      , 0)
     else if node.nodeType == ScribeDOM.TEXT_NODE
       return ScribeDOM.getText(node).length
     else
