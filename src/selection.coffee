@@ -144,7 +144,7 @@ class Scribe.Selection
         nativeRange[fn].call(nativeRange, node, offset)
       )
       @nativeSelection.addRange(nativeRange, range.isBackwards)
-    @editor.emit(Scribe.Editor.events.SELECTION_CHANGE, range) unless silent or range == @range or @range?.equals(range)
+    @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent or range == @range or @range?.equals(range)
     @range = range
 
   update: (silent = false) ->

@@ -63,10 +63,10 @@ class Scribe.UndoManager
       return false
     )
     @ignoringChanges = false
-    @editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) =>
+    @editor.on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
       this.record(delta, @oldDelta) unless @ignoringChanges
       @oldDelta = @editor.getDelta()
-    ).on(Scribe.Editor.events.API_TEXT_CHANGE, (delta) =>
+    ).on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
       this.record(delta, @oldDelta)
       @oldDelta = @editor.getDelta()
     )
