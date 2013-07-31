@@ -7,16 +7,14 @@ coverage:
 	@mkdir tmp
 	@mkdir tmp/coverage
 	@mkdir tmp/backup
-	@mv build/src/* tmp/backup/
-	@rm tmp/backup/ext/header.js tmp/backup/ext/footer.js
+	@mv build/scribe-exposed.js tmp/backup/scribe-exposed.js
 	@echo "Coverting to jscoverage"
-	@jscoverage tmp/backup/ tmp/coverage/
-	@mv tmp/coverage/* build/src/
+	@jscoverage tmp/backup tmp/coverage
+	@mv tmp/coverage/scribe-exposed.js build/scribe-exposed.js
 	@echo "Running tests"
 	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html --reporter json-cov | node scripts/jsoncovtohtmlcov > coverage.html
 	@echo "Cleaning up"
-	@rm -rf build/src/*
-	@mv tmp/backup/* build/src/
+	@mv tmp/backup/scribe-exposed.js build/scribe-exposed.js
 	@rm -rf tmp
 	@grunt > /dev/null
 

@@ -48,7 +48,7 @@ module.exports = (grunt) ->
       scribe:
         files: [{ dest: 'build/scribe.js', src: ['src/scribe.coffee'] }]
       scribe_exposed:
-        files: [{ dest: 'build/scribe-exposed.js', src: ['src/scribe-exposed.coffee'] }]
+        files: [{ dest: 'build/scribe-exposed.js', src: ['tests/scripts/scribe-exposed.coffee'] }]
       tandem_wrapper:
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
 
