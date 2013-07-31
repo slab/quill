@@ -6,20 +6,19 @@ getColor = (id, lighten) ->
     return "rgba(255, 153, 51, #{alpha})"
 
 
-initAttribution = (container, editor) ->
-  button = container.querySelector('.attribution')
+initAttribution = ($container, editor) ->
   attribution = new Scribe.Attribution(editor, editor.id, getColor(editor.id, true))
-  Scribe.DOM.addEventListener(button, 'click', ->
-    if Scribe.DOM.hasClass(button, 'active')
+  $('.attribution', $container).click( ->
+    if $(this).hasClass('active')
       attribution.disable()
     else
       attribution.enable()
-    Scribe.DOM.toggleClass(button, 'active')
+    $(this).toggleClass('active')
   )
   return attribution
 
-initEditor = (container) ->
-  editor = new Scribe.Editor(container.querySelector('.editor-container'), {
+initEditor = ($container) ->
+  editor = new Scribe.Editor($('.editor-container', $container).get(0), {
     renderer:
       styles:
         'div.editor': { 'bottom': '15px', 'top': '15px' }
@@ -63,9 +62,9 @@ initEditor = (container) ->
   )
   return editor  
 
-initToolbar = (container, editor) ->
-  toolbar = new Scribe.Toolbar(container.querySelector('.formatting-container'), editor)
-  $formattingContainer = $('.formatting-container', $(container))
+initToolbar = ($container, editor) ->
+  $formattingContainer = $('.formatting-container', $container)
+  toolbar = new Scribe.Toolbar($formattingContainer.get(0), editor)
   dropkickFormats = ['family', 'size']
   for format in dropkickFormats
     do (format) ->
@@ -103,7 +102,7 @@ $(document).ready( ->
   for num in [1, 2]
     wrapperClass = '.editor-wrapper'
     wrapperClass += if num == 1 then '.first' else '.last'
-    container = document.querySelector(wrapperClass)
+    container = $(wrapperClass)
     editor = initEditor(container)
     editor.attributionManager = initAttribution(container, editor)
     editor.toolbar = initToolbar(container, editor)
