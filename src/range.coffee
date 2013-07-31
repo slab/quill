@@ -45,7 +45,7 @@ class ScribeRange
     leaves.pop() if leaves.length > 1 && @end.offset == 0
     leaves.splice(0, 1) if leaves.length > 1 && @start.offset == leaves[0].length
     formats = if leaves.length > 0 then leaves[0].getFormats() else {}
-    _.all(leaves, (leaf) ->
+    _.all(leaves.slice(1), (leaf) ->
       leafFormats =  leaf.getFormats()
       _.each(formats, (value, key) ->
         if !leafFormats[key]

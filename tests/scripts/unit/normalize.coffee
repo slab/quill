@@ -108,30 +108,6 @@ describe('Normalize', ->
         normalizer.optimizeLine(lineNode)
     )
 
-    lineTest.run('merge adjacent equal nodes', 
-      initial:  '<b>Bold1</b><b>Bold2</b>'
-      expected: '<b>Bold1Bold2</b>'
-    )
-
-    lineTest.run('merge adjacent equal spans',
-      initial:
-        '<span style="color: #F00;">
-          <span style="background-color: #0FF;">Red1</span>
-        </span>
-        <span style="color: #F00;">
-          <span style="background-color: #0FF;">Red2</span>
-        </span>'
-      expected:
-        '<span style="color: #F00;">
-          <span style="background-color: #0FF;">Red1Red2</span>
-        </span>'
-    )
-
-    lineTest.run('do not merge adjacent unequal spans',
-      initial:  '<span style="font-size: 32px;">Huge</span><span style="font-size: 18px;">Large</span>'
-      expected: '<span style="font-size: 32px;">Huge</span><span style="font-size: 18px;">Large</span>'
-    )
-
     lineTest.run('preserve style attributes', 
       initial: 
         '<span style="font-size: 32px;">Huge</span>

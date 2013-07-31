@@ -145,18 +145,6 @@ class ScribeNormalizer
 
   constructor: (@container, @formatManager) ->
 
-  mergeAdjacent: (lineNode) ->
-    ScribeUtils.traversePreorder(lineNode, 0, (node) =>
-      if node.nodeType == ScribeDOM.ELEMENT_NODE and !ScribeUtils.isLineNode(node)
-        next = node.nextSibling
-        if next?.tagName == node.tagName and node.tagName != 'LI'
-          [nodeFormat, nodeValue] = @formatManager.getFormat(node)
-          [nextFormat, nextValue] = @formatManager.getFormat(next)
-          if nodeFormat == nextFormat && nodeValue == nextValue
-            node = ScribeDOM.mergeNodes(node, next)
-      return node
-    )
-
   normalizeDoc: ->
     @container.appendChild(@container.ownerDocument.createElement('div')) unless @container.firstChild
     ScribeNormalizer.applyRules(@container)
@@ -184,7 +172,6 @@ class ScribeNormalizer
 
   optimizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
-    this.mergeAdjacent(lineNode)
     this.removeRedundant(lineNode)
     ScribeNormalizer.wrapText(lineNode)
 
