@@ -63,7 +63,7 @@ Scribe.Debug =
         leaves = _.map(leaves, (leaf) -> 
           return _.pick(leaf, 'formats', 'length', 'line', 'node', 'text')
         )
-        line.rebuild()
+        line.rebuild(true)
         rebuiltLeaves = _.map(line.leaves.toArray(), (leaf) -> 
           return _.pick(leaf, 'formats', 'length', 'line', 'node', 'text')
         )

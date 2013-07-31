@@ -106,10 +106,10 @@ class Scribe.Line extends LinkedList.Node
       )
       this.rebuild()
 
-  rebuild: ->
+  rebuild: (force = false) ->
     if @node.parentNode == @doc.root
-      return false if @outerHTML? && @outerHTML == @node.outerHTML
-      while @leaves? && @leaves.length > 0
+      return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
+      while @leaves?.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
       @doc.normalizer.normalizeLine(@node)
