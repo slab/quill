@@ -4,27 +4,6 @@ ScribeUtils = require('./utils')
 
 
 class ScribeNormalizer
-  @BLOCK_TAGS: [
-    'ADDRESS'
-    'BLOCKQUOTE'
-    'DD'
-    'DIV'
-    'DL'
-    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
-    'LI'
-    'OL'
-    'P'
-    'PRE'
-    'TABLE'
-    'TBODY'
-    'TD'
-    'TFOOT'
-    'TH'
-    'THEAD'
-    'TR'
-    'UL'
-  ]
-
   # Missing rule implies removal
   @TAG_RULES: {
     'A'         : {}
@@ -96,7 +75,7 @@ class ScribeNormalizer
   @breakLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
     ScribeUtils.traversePostorder(lineNode, (node) =>
-      if ScribeNormalizer.isBlock(node)
+      if ScribeUtils.isBlock(node)
         node = ScribeDOM.switchTag(node, 'div') if node.tagName != 'DIV'
         if node.nextSibling?
           line = lineNode.ownerDocument.createElement('div')
@@ -112,19 +91,16 @@ class ScribeNormalizer
   @groupBlocks: (root) ->
     curLine = root.firstChild
     while curLine?
-      if ScribeNormalizer.isBlock(curLine)
+      if ScribeUtils.isBlock(curLine)
         curLine = curLine.nextSibling
       else
         line = root.ownerDocument.createElement('div')
         root.insertBefore(line, curLine)
-        while curLine? and !ScribeNormalizer.isBlock(curLine)
+        while curLine? and !ScribeUtils.isBlock(curLine)
           nextLine = curLine.nextSibling
           line.appendChild(curLine)
           curLine = nextLine
         curLine = line
-
-  @isBlock: (node) ->
-    return _.indexOf(ScribeNormalizer.BLOCK_TAGS, node.tagName, true) > -1 
 
   @normalizeBreak: (node, root) ->
     return if node == root
@@ -171,7 +147,7 @@ class ScribeNormalizer
 
   mergeAdjacent: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>
-      if node.nodeType == ScribeDOM.ELEMENT_NODE and !ScribeNormalizer.isBlock(node)
+      if node.nodeType == ScribeDOM.ELEMENT_NODE and !ScribeUtils.isLineNode(node)
         next = node.nextSibling
         if next?.tagName == node.tagName and node.tagName != 'LI'
           [nodeFormat, nodeValue] = @formatManager.getFormat(node)

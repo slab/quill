@@ -24,7 +24,7 @@ class ScribeDocument
 
   findLeaf: (node) ->
     lineNode = node.parentNode
-    while lineNode? && !ScribeLine.isLineNode(lineNode)
+    while lineNode? && !ScribeUtils.isLineNode(lineNode)
       lineNode = lineNode.parentNode
     return null if !lineNode?
     line = this.findLine(lineNode)
@@ -50,7 +50,7 @@ class ScribeDocument
     return [retLine, offset]
 
   findLineNode: (node) ->
-    while node? && !ScribeLine.isLineNode(node)
+    while node? && !ScribeUtils.isLineNode(node)
       node = node.parentNode
     return node
 

@@ -1,10 +1,10 @@
 _               = require('underscore')
 ScribeDOM       = require('./dom')
+ScribeLine      = require('./line')
+ScribeKeyboard  = require('./keyboard')
 ScribePosition  = require('./position')
 ScribeRange     = require('./range')
 ScribeUtils     = require('./utils')
-ScribeLine      = require('./line')
-ScribeKeyboard  = require('./keyboard')
 
 
 compareRanges = (range1, range2) ->
@@ -69,7 +69,7 @@ _preserveWithLine = (savedNativeRange, fn) ->
     { container: savedNativeRange.startContainer, offset: savedNativeRange.startOffset }
     { container: savedNativeRange.endContainer,   offset: savedNativeRange.endOffset }
   ], (position) =>
-    lineNode = ScribeUtils.findAncestor(position.container, ScribeLine.isLineNode) or @editor.root
+    lineNode = ScribeUtils.findAncestor(position.container, ScribeUtils.isLineNode) or @editor.root
     return {
       lineNode  : lineNode
       offset    : ScribePosition.getIndex(position.container, position.offset, lineNode)

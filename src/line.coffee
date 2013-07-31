@@ -2,6 +2,7 @@ _           = require('underscore')
 ScribeDOM   = require('./dom')
 ScribeLeaf  = require('./leaf')
 ScribeLine  = require('./line')
+ScribeUtils = require('./utils')
 Tandem      = require('tandem-core')
 
 
@@ -13,9 +14,6 @@ class ScribeLine extends LinkedList.Node
 
   @MAX_INDENT: 9
   @MIN_INDENT: 1    # Smallest besides not having an indent at all
-
-  @isLineNode: (node) ->
-    return node? and ScribeDOM.hasClass(node, ScribeLine.CLASS_NAME)
 
   constructor: (@doc, @node) ->
     @id = _.uniqueId(ScribeLine.ID_PREFIX)

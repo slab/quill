@@ -1,5 +1,6 @@
 ScribeDOM     = require('../dom')
 ScribeEditor  = require('../editor')
+ScribeFormat  = require('../format')
 Tandem        = require('tandem-core')
 
 

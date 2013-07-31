@@ -3,6 +3,27 @@ ScribeDOM   = require('./dom')
 
 
 ScribeUtils =
+  BLOCK_TAGS: [
+    'ADDRESS'
+    'BLOCKQUOTE'
+    'DD'
+    'DIV'
+    'DL'
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
+    'LI'
+    'OL'
+    'P'
+    'PRE'
+    'TABLE'
+    'TBODY'
+    'TD'
+    'TFOOT'
+    'TH'
+    'THEAD'
+    'TR'
+    'UL'
+  ]
+
   findAncestor: (node, checkFn) ->
     while node? && !checkFn(node)
       node = node.parentNode
@@ -38,11 +59,17 @@ ScribeUtils =
     if node.nodeType == ScribeDOM.ELEMENT_NODE
       return _.reduce(node.childNodes, (length, child) ->
         return length + ScribeUtils.getNodeLength(child)
-      , 0)
+      , if ScribeUtils.isLineNode(node) then 1 else 0)
     else if node.nodeType == ScribeDOM.TEXT_NODE
       return ScribeDOM.getText(node).length
     else
       return 0
+
+  isBlock: (node) ->
+    return _.indexOf(ScribeUtils.BLOCK_TAGS, node.tagName, true) > -1
+
+  isLineNode: (node) ->
+    return node?.parentNode?.parentNode?.tagName == "BODY" and ScribeUtils.isBlock(node)
 
   removeFormatFromSubtree: (subtree, format) ->
     if format.matchContainer(subtree)

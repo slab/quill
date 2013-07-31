@@ -1,7 +1,7 @@
 _ = require('underscore')
 
 
-ScribeDOM = 
+ScribeDOM =
   ELEMENT_NODE: 1
   NOBREAK_SPACE:  "&nbps;"
   TEXT_NODE: 3

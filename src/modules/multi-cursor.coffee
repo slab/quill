@@ -2,6 +2,7 @@ _               = require('underscore')
 ScribeDOM       = require('../dom')
 ScribeEditor    = require('../editor')
 ScribePosition  = require('../position')
+ScribeRenderer  = require('../renderer')
 ScribeUtils     = require('../utils')
 
 
