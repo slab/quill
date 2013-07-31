@@ -87,14 +87,6 @@ module.exports = (grunt) ->
             'build/src/ext/footer.js'
           ]
         }]
-      scribe:
-        files: [{
-          dest: 'build/scribe.js'
-          src: [
-            'vendor/assets/javascripts/rangy-core.js'
-            'build/scribe.js'
-          ]
-        }]
 
     haml:
       demo:
@@ -123,7 +115,7 @@ module.exports = (grunt) ->
         files: ['demo/*.haml']
         tasks: ['haml:demo']
       haml_tests:
-        files: ['tests/*.haml']
+        files: ['tests/*.haml', 'tests/testem/*.haml']
         tasks: ['haml:tests']
       sass:
         files: ['demo/styles/*.sass']
