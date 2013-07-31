@@ -119,8 +119,8 @@ class ScribeRenderer extends EventEmitter2
     this.runWhenLoaded( =>
       doc = this.getDocument()
       doc.body.appendChild(@root)
-      ScribeDOM.addEventListener(doc.body, 'click', =>
-        @root.focus()
+      ScribeDOM.addEventListener(doc.body, 'click', (event) =>
+        @root.focus() if event.target?.tagName == 'BODY'
       )
       ScribeDOM.addEventListener(@container, 'click', =>
         @root.focus()
