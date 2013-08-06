@@ -5,7 +5,6 @@ getColor = (id, lighten) ->
   else
     return "rgba(255, 153, 51, #{alpha})"
 
-
 initAttribution = ($container, editor) ->
   attribution = new Scribe.Attribution(editor, editor.id, getColor(editor.id, true))
   $('.attribution', $container).click( ->
@@ -82,18 +81,18 @@ initToolbar = ($container, editor) ->
 
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
-    console.info source.id, 'text change', delta
+    console.info source.id, 'text change', delta if console?
     target.applyDelta(delta)
     sourceDelta = source.doc.toDelta()
     targetDelta = target.doc.toDelta()
-    console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta)
+    console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
   ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
     if range?
-      console.info source.id, 'selection change', range.start.index, range.end.index
+      console.info source.id, 'selection change', range.start.index, range.end.index if console?
       cursor = target.cursorManager.setCursor(source.id, range.end.index, source.id, getColor(source.id))
       cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = getColor(source.id)
     else  
-      console.info source.id, 'selection change', range
+      console.info source.id, 'selection change', range if console?
   )
 
 
