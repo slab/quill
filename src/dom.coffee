@@ -15,11 +15,15 @@ ScribeDOM =
       node.className += ' ' + cssClass
 
   addEventListener: (node, eventName, listener) ->
+    callback = (event) ->
+      event ?= ScribeDOM.getWindow(node).event
+      event.target ?= event.srcElement
+      listener.call(null, event)
     if node.addEventListener?
-      return node.addEventListener(eventName, listener)
+      return node.addEventListener(eventName, callback)
     else if node.attachEvent?
       if _.indexOf(['change', 'click', 'focus', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
-        return node.attachEvent("on#{eventName}", listener)
+        return node.attachEvent("on#{eventName}", callback)
     throw new Error("Cannot attach to unsupported event #{eventName}")
 
   getClasses: (node) ->
@@ -34,6 +38,9 @@ ScribeDOM =
         return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
       when ScribeDOM.TEXT_NODE then return node.data or ""
       else return ""
+
+  getWindow: (node) ->
+    return node.ownerDocument.defaultView or node.ownerDocument.parentWindow
 
   hasClass: (node, cssClass) ->
     if node.classList?

@@ -34,7 +34,6 @@ initListeners = ->
         @tooltipLink.innerText = @tooltipLink.href = link.href
         ScribeDOM.removeClass(@tooltip, 'editing')
         showTooptip.call(this, link.getBoundingClientRect())
-        return
       link = link.parentNode
     hideTooltip.call(this)
   )
