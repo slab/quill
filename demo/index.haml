@@ -49,7 +49,7 @@
     :javascript
       var editor = new Scribe.Editor('editor-container');
       var toolbar = new Scribe.Toolbar('formatting-container', editor);
-      if (console) {
+      if (typeof console != 'undefined') {
         editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, function(delta) {
           console.info('Text', delta);
         }).on(Scribe.Editor.events.SELECTION_CHANGE, function(range) {
