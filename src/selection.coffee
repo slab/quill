@@ -107,9 +107,6 @@ class ScribeSelection
         _.defer(checkUpdate)
       )
     )
-    setInterval( =>
-      checkUpdate() unless @range?    # Less important to detect existing range being unset
-    , 100)
 
   getDimensions: ->
     rangyRange = this.getNativeRange(false)

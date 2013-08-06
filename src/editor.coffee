@@ -14,32 +14,17 @@ Tandem              = require('tandem-core')
 DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 
 
+checkUpdate = ->
+  if @innerHTML != @root.innerHTML
+    this.update()
+    @innerHTML = @root.innerHTML
+
 doAt = (fn, options) ->
   this.doSilently( =>
     trackDelta.call(this, =>
       fn.call(this)
     , options)
   )
-
-initListeners = ->
-  onEditOnce = =>
-  onEdit = =>
-    onEditOnce = _.once(onEdit)
-    return if @ignoreDomChanges or !@renderer.iframe.parentNode?    # Make sure we have not been deleted
-    this.update()
-  onSubtreeModified = =>
-    return if @ignoreDomChanges
-    toCall = onEditOnce
-    _.defer( =>
-      toCall.call(null)
-    )
-  onEditOnce = _.once(onEdit)
-  innerHTML = null
-  setInterval( =>
-    if innerHTML != @root.innerHTML
-      onSubtreeModified()
-      innerHTML = @root.innerHTML
-  , 100)
 
 deleteAt = (index, length) ->
   return if length <= 0
@@ -122,7 +107,7 @@ trackDelta = (fn, options) ->
   fn()
   newDelta = @doc.toDelta()
   try
-    newIndex = this.getSelection()?.start.index
+    newIndex = @selection.getRange()?.start.index     # this.getSelection() triggers infinite loop
     if oldIndex? and newIndex? and oldIndex <= oldDelta.endLength and newIndex <= newDelta.endLength
       [oldLeftDelta, oldRightDelta] = oldDelta.split(oldIndex)
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
@@ -172,6 +157,9 @@ class ScribeEditor extends EventEmitter2
       this.setSelection(null, true)
       this.setSelection(range, true)
     )
+    setInterval( =>
+      checkUpdate.call(this)
+    , 100)
     this.enable() if @options.enabled
 
   disable: ->
@@ -197,7 +185,6 @@ class ScribeEditor extends EventEmitter2
     @undoManager = new ScribeUndoManager(this, @options)
     @pasteManager = new ScribePasteManager(this)
     @renderer.runWhenLoaded(@options.onReady)
-    initListeners.call(this)
     @ignoreDomChanges = false
     ScribeEditor.editors.push(this)
 
@@ -244,12 +231,14 @@ class ScribeEditor extends EventEmitter2
     , options)
     
   getDelta: ->
+    checkUpdate.call(this)
     return @doc.toDelta()
 
   getLength: ->
-    return @doc.toDelta().endLength
+    return this.getDelta().endLength
 
   getSelection: ->
+    checkUpdate.call(this)
     return @selection.getRange()
 
   insertAt: (index, text, formatting = {}, options = {}) ->
