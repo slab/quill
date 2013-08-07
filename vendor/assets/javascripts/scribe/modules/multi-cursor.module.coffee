@@ -1,1 +1,1 @@
-../../../../../src/modules/cursor.coffee
+../../../../../src/modules/multi-cursor.coffee
