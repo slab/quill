@@ -20,11 +20,11 @@ ScribeDOM =
       event.target ?= event.srcElement
       listener.call(null, event)
     if node.addEventListener?
-      return node.addEventListener(eventName, callback)
+      node.addEventListener(eventName, callback)
     else if node.attachEvent?
-      if _.indexOf(['change', 'click', 'focus', 'keydown', 'keyup', 'mousedown', 'mouseup', 'paste'], eventName) > -1
-        return node.attachEvent("on#{eventName}", callback)
-    throw new Error("Cannot attach to unsupported event #{eventName}")
+      node.attachEvent("on#{eventName}", callback)
+    else
+      throw new Error("No add event support")
 
   getClasses: (node) ->
     if node.classList

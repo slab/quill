@@ -151,12 +151,6 @@ class ScribeEditor extends EventEmitter2
     @id = _.uniqueId(ScribeEditor.ID_PREFIX)
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
-    # Make sure we our selection is set to deepest textNode, prevent bug in Firefox when tabbing in
-    ScribeDOM.addEventListener(@root, 'focus', =>
-      range = this.getSelection()
-      this.setSelection(null, true)
-      this.setSelection(range, true)
-    )
     setInterval( =>
       checkUpdate.call(this)
     , 100)
@@ -223,6 +217,10 @@ class ScribeEditor extends EventEmitter2
     @ignoreDomChanges = true
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
+
+  focus: ->
+    @renderer.iframe.focus()
+    @root.focus()
 
   formatAt: (index, length, name, value, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)

@@ -13,6 +13,7 @@ describe('Toolbar', ->
     expected: '<div><b>one.comBold</b></div>'
     fn: (editor) ->
       toolbar = new Scribe.Toolbar('format-container', editor)
+      editor.focus()
       editor.setSelection(new Scribe.Range(editor, 0, 7))
       $('#format-container .bold').trigger('click')
   )
@@ -21,6 +22,7 @@ describe('Toolbar', ->
     expected: '<div><a href="http://one.com/" title="http://one.com/">one.com</a><b>Bold</b></div>'
     fn: (editor) ->
       toolbar = new Scribe.Toolbar('format-container', editor)
+      editor.focus()
       editor.setSelection(new Scribe.Range(editor, 0, 7))
       $('#format-container .link').trigger('click')
   )

@@ -12,9 +12,10 @@ initFormats = ->
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
+        @editor.focus()
         range = @editor.getSelection() or @editor.selection.range
         range.formatContents(format, value, { source: 'user' })
-        this.emit(ScribeToolbar.events.FORMAT, format, value) unless range.isCollapsed()
+        this.emit(ScribeToolbar.events.FORMAT, format, value, range) unless range.isCollapsed()
       )
     )
   )
@@ -34,10 +35,6 @@ class ScribeToolbar extends EventEmitter2
     @editor.on(ScribeEditor.events.POST_EVENT, (eventName) =>
       return unless eventName == ScribeEditor.events.API_TEXT_CHANGE or eventName == ScribeEditor.events.USER_TEXT_CHANGE or eventName == ScribeEditor.events.SELECTION_CHANGE
       this.update()
-    )
-    this.on(ScribeToolbar.events.FORMAT, =>
-      @editor.root.focus()
-      @editor.setSelection(@editor.selection.range)
     )
 
   update: ->

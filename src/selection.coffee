@@ -107,6 +107,9 @@ class ScribeSelection
         _.defer(checkUpdate)
       )
     )
+    setInterval( =>
+      checkUpdate() unless @range?    # Less important to detect existing range being unset
+    , 100)
 
   getDimensions: ->
     rangyRange = this.getNativeRange(false)
@@ -138,7 +141,7 @@ class ScribeSelection
       fn.call(null)
 
   setRange: (range, silent = false) ->
-    return unless @nativeSelection?
+    return unless @nativeSelection? and document.activeElement == @editor.renderer.iframe # We do want the parent frame's activeElement
     @nativeSelection.removeAllRanges()
     if range?
       nativeRange = rangy.createRangyRange()

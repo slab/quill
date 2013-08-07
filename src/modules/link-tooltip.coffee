@@ -40,10 +40,11 @@ initListeners = ->
   )
   ScribeDOM.addEventListener(@button, 'click', =>
     value = null
+    range = @editor.getSelection()
     if ScribeDOM.hasClass(@button, 'active')
       value = false
     else
-      @savedRange = @editor.selection.getRange()
+      @savedRange = range
       url = @savedRange.getText()
       if /\w+\.\w+/.test(url)
         value = normalizeUrl(url)
@@ -52,7 +53,6 @@ initListeners = ->
         showTooptip.call(this, @editor.selection.getDimensions())
         enterEditMode.call(this, url)
     if value?
-      range = @editor.selection.getRange()
       range.formatContents('link', value, { source: 'user' })
       @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', value)
   )
