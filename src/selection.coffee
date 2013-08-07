@@ -110,7 +110,9 @@ class ScribeSelection
 
   getDimensions: ->
     rangyRange = this.getNativeRange(false)
-    return rangyRange?.nativeRange?.getBoundingClientRect()
+    return null unless rangyRange?
+    nativeRange = rangyRange.nativeRange or rangyRange.textRange
+    return nativeRange.getBoundingClientRect()
     
   getNativeRange: (normalize = false) ->
     return null unless @nativeSelection
