@@ -120,15 +120,19 @@ class ScribeRenderer extends EventEmitter2
       doc = this.getDocument()
       doc.body.appendChild(@root)
       ScribeDOM.addEventListener(doc.body, 'click', (event) =>
-        @editor.focus() if event.target?.tagName == 'BODY'
+        this.focus() if event.target?.tagName == 'BODY'
       )
       ScribeDOM.addEventListener(@container, 'click', =>
-        @editor.focus()
+        this.focus()
       )
       ScribeDOM.addEventListener(@container, 'focus', =>
-        @editor.focus()
+        this.focus()
       )
     )
+
+  focus: ->
+    @iframe.focus()
+    @root.focus()
 
   getDocument: ->
     return null unless @iframe.parentNode?

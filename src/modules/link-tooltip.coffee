@@ -13,12 +13,15 @@ enterEditMode = (url) ->
 
 exitEditMode = ->
   if @tooltipLink.innerText != @tooltipInput.value
-    @savedRange.formatContents('link', @tooltipInput.value, { source: 'user' })
     @tooltipLink.href = @tooltipInput.value
     ScribeDOM.setText(@tooltipLink, @tooltipInput.value)
-    @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', @tooltipInput.value)
-    @editor.setSelection(null, true)
+    formatLink.call(this, @tooltipInput.value)
   ScribeDOM.removeClass(@tooltip, 'editing')
+
+formatLink = (value) ->
+  @editor.setSelection(@toolbar.savedRange, true)
+  @toolbar.savedRange.formatContents('link', value, { source: 'user' })
+  @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', value)
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
@@ -28,9 +31,6 @@ initListeners = ->
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
-        start = new ScribePosition(@editor, link, 0)
-        end = new ScribePosition(@editor, link, ScribeDOM.getText(link).length)
-        @savedRange = new ScribeRange(@editor, start, end)
         @tooltipLink.innerText = @tooltipLink.href = link.href
         ScribeDOM.removeClass(@tooltip, 'editing')
         showTooptip.call(this, link.getBoundingClientRect())
@@ -39,22 +39,19 @@ initListeners = ->
     hideTooltip.call(this)
   )
   ScribeDOM.addEventListener(@button, 'click', =>
-    value = null
-    range = @editor.getSelection()
     if ScribeDOM.hasClass(@button, 'active')
-      value = false
+      formatLink.call(this, false)
+      hideTooltip.call(this)
     else
-      @savedRange = range
-      url = @savedRange.getText()
+      url = @toolbar.savedRange.getText()
       if /\w+\.\w+/.test(url)
         value = normalizeUrl(url)
+        @editor.focus()
+        formatLink.call(this, value)
       else
         ScribeDOM.addClass(@tooltip, 'editing')
         showTooptip.call(this, @editor.selection.getDimensions())
         enterEditMode.call(this, url)
-    if value?
-      range.formatContents('link', value, { source: 'user' })
-      @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', value)
   )
   ScribeDOM.addEventListener(@tooltipChange, 'click', =>
     enterEditMode.call(this, @tooltipLink.innerText)
