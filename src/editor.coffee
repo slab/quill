@@ -218,9 +218,6 @@ class ScribeEditor extends EventEmitter2
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
 
-  focus: ->
-    @renderer.focus()
-
   formatAt: (index, length, name, value, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     doAt.call(this, =>

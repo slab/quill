@@ -37,7 +37,7 @@ class ScribePasteManager
         delta.endLength += (@editor.getLength() - (range.end.index - range.start.index))
         delta.startLength = oldDocLength
         @editor.applyDelta(delta, { source: 'user' })
-        @editor.focus()
+        @editor.root.focus()
         @editor.setSelection(new ScribeRange(@editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
       )
     )

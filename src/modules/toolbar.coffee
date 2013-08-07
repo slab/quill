@@ -12,7 +12,7 @@ initFormats = ->
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
-        @editor.focus()
+        @editor.root.focus()
         if @savedRange?
           @editor.setSelection(@savedRange, true)
           unless @savedRange.isCollapsed()

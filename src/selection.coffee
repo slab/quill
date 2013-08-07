@@ -141,7 +141,7 @@ class ScribeSelection
       fn.call(null)
 
   setRange: (range, silent = false) ->
-    return unless @nativeSelection? and document.activeElement == @editor.renderer.iframe # We do want the parent frame's activeElement
+    return unless @nativeSelection? and @editor.root.ownerDocument.activeElement?.tagName != 'BODY'
     @nativeSelection.removeAllRanges()
     if range?
       nativeRange = rangy.createRangyRange()

@@ -46,7 +46,7 @@ initListeners = ->
       url = @toolbar.savedRange.getText()
       if /\w+\.\w+/.test(url)
         value = normalizeUrl(url)
-        @editor.focus()
+        @editor.root.focus()
         formatLink.call(this, value)
       else
         ScribeDOM.addClass(@tooltip, 'editing')

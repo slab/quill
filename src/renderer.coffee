@@ -120,19 +120,13 @@ class ScribeRenderer extends EventEmitter2
       doc = this.getDocument()
       doc.body.appendChild(@root)
       ScribeDOM.addEventListener(doc.body, 'click', (event) =>
-        this.focus() if event.target?.tagName == 'BODY'
-      )
-      ScribeDOM.addEventListener(@container, 'click', =>
-        this.focus()
+        # Since IE does not properly expand width when left and right is set
+        @root.focus() if event.target?.tagName == 'BODY'
       )
       ScribeDOM.addEventListener(@container, 'focus', =>
-        this.focus()
+        @root.focus()
       )
     )
-
-  focus: ->
-    @iframe.focus()
-    @root.focus()
 
   getDocument: ->
     return null unless @iframe.parentNode?
