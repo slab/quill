@@ -40,7 +40,6 @@ _initListeners = ->
         return unless selection?
         prevent = hotkey.callback.call(null, selection) == false
       )
-    event.preventDefault() if prevent
     return !prevent
   )
 

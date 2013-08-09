@@ -16,7 +16,10 @@ ScribeDOM =
       event ?= ScribeDOM.getWindow(node).event
       event.target ?= event.srcElement
       event.which ?= event.keyCode
-      listener.call(null, event)
+      bubbles = listener.call(null, event)
+      if bubbles == false
+        if event.preventDefault then event.preventDefault() else event.returnValue = false
+        return false
     if node.addEventListener?
       node.addEventListener(eventName, callback)
     else if node.attachEvent?
