@@ -15,6 +15,7 @@ ScribeDOM =
     callback = (event) ->
       event ?= ScribeDOM.getWindow(node).event
       event.target ?= event.srcElement
+      event.which ?= event.keyCode
       listener.call(null, event)
     if node.addEventListener?
       node.addEventListener(eventName, callback)

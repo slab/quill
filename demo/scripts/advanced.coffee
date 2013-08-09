@@ -7,8 +7,9 @@ catch e
 finally
   scriptElem.style.color = ""
 
+
 getColor = (id, lighten) ->
-  alpha = if lighten then '.4' else '1.0'
+  alpha = if lighten then '0.4' else '1.0'
   if id == 'editor-1'
     return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
   else
@@ -98,8 +99,9 @@ listenEditor = (source, target) ->
   ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
     if range?
       console.info source.id, 'selection change', range.start.index, range.end.index if console?
-      cursor = target.cursorManager.setCursor(source.id, range.end.index, source.id, getColor(source.id))
-      cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = getColor(source.id)
+      color = getColor(source.id)
+      cursor = target.cursorManager.setCursor(source.id, range.end.index, source.id, color)
+      cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
     else  
       console.info source.id, 'selection change', range if console?
   )
