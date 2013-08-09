@@ -22,13 +22,6 @@ module.exports = (grunt) ->
         dest: 'build/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
-      src:
-        files: [{
-          expand: true
-          dest: 'build/'
-          src: ['src/**/*.coffee']
-          ext: '.js'
-        }]
       test:
         files: [{
           dest: 'build/tests/scripts/editor.js'
@@ -122,7 +115,7 @@ module.exports = (grunt) ->
         tasks: ['sass:demo']
       src:
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffee:src', 'coffeeify', 'concat', 'copy:build']
+        tasks: ['coffeeify', 'concat', 'copy:build']
       test:
         files: ['tests/scripts/**/**/*.coffee']
         tasks: ['coffee:test']
