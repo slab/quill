@@ -1,4 +1,3 @@
-_               = require('underscore')
 ScribeDOM       = require('../dom')
 ScribeKeyboard  = require('../keyboard')
 ScribePosition  = require('../position')

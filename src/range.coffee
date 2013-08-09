@@ -1,6 +1,5 @@
-_ = require('underscore')
-ScribeLeafIterator = require('./leaf-iterator')
-ScribePosition = require('./position')
+ScribeLeafIterator  = require('./leaf-iterator')
+ScribePosition      = require('./position')
 
 
 class ScribeRange

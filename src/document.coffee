@@ -1,4 +1,3 @@
-_                   = require('underscore')
 ScribeDOM           = require('./dom')
 ScribeFormatManager = require('./format-manager')
 ScribeLine          = require('./line')
