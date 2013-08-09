@@ -1,9 +1,18 @@
+supportsRGBA = true
+scriptElem = document.getElementsByTagName('script')[0]
+try
+  scriptElem.style.color = 'rgba(128,128,128,0.5)'
+catch e
+  supportsRGBA = false
+finally
+  scriptElem.style.color = ""
+
 getColor = (id, lighten) ->
   alpha = if lighten then '.4' else '1.0'
   if id == 'editor-1'
-    return "rgba(0, 153, 255, #{alpha})"
+    return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
   else
-    return "rgba(255, 153, 51, #{alpha})"
+    return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"
 
 initAttribution = ($container, editor) ->
   attribution = new Scribe.Attribution(editor, editor.id, getColor(editor.id, true))
