@@ -270,9 +270,11 @@ class ScribeEditor extends EventEmitter2
             lineNode = lineNode.nextSibling
           )
           while lineNode != null
+            @doc.normalizer.normalizeLine(lineNode)
             newLine = @doc.appendLine(lineNode)
             lineNode = lineNode.nextSibling
         )
+        @innerHTML = @root.innerHTML    # trackDelta will emit events that may cause clients to call get functions
       , { silent: false, source: 'user' })
     )
 

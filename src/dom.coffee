@@ -1,6 +1,6 @@
 ScribeDOM =
   ELEMENT_NODE: 1
-  NOBREAK_SPACE:  "&nbps;"
+  NOBREAK_SPACE:  "&nbsp;"
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
