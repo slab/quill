@@ -111,17 +111,17 @@ class ScribeRenderer extends EventEmitter2
     @iframe.frameBorder = '0'
     @iframe.height = @iframe.width = '100%'
     @container.appendChild(@iframe)
-    @root = this.getDocument().createElement('div')
+    doc = this.getDocument()
+    doc.open()
+    doc.write('<!DOCTYPE html>')
+    doc.close()
+    @root = doc.createElement('div')
     ScribeDOM.addClass(@root, 'editor')
     @root.id = @options.id
     @root.innerHTML = ScribeNormalizer.normalizeHtml(html) if @options.keepHTML
     this.runWhenLoaded( =>
       doc = this.getDocument()
       doc.body.appendChild(@root)
-      ScribeDOM.addEventListener(doc.body, 'click', (event) =>
-        # Since IE does not properly expand width when left and right is set
-        @root.focus() if event.target?.tagName == 'BODY'
-      )
       ScribeDOM.addEventListener(@container, 'focus', =>
         @root.focus()
       )
