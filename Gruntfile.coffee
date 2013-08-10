@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.8.0'
+      version: '0.8.1'
 
     clean: ['build']
 
