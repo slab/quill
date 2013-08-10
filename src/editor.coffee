@@ -95,7 +95,7 @@ insertAt = (index, text, formatting = {}) ->
           line = @doc.splitLine(line, offset + lineText.length)
         else
           line.trailingNewline = true
-          line.length += 1
+          line.resetContent()
       offset = 0
     )
   )
@@ -146,8 +146,9 @@ class ScribeEditor extends EventEmitter2
 
 
   constructor: (@iframeContainer, options = {}) ->
-    @options = _.defaults(options, ScribeEditor.DEFAULTS)
     @id = _.uniqueId(ScribeEditor.ID_PREFIX)
+    @options = _.defaults(options, ScribeEditor.DEFAULTS)
+    @options.renderer['id'] = @id
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     setInterval( =>

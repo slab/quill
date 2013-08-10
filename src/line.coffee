@@ -4,6 +4,8 @@ ScribeLine  = require('./line')
 ScribeUtils = require('./utils')
 Tandem      = require('tandem-core')
 
+# Note: Because Line uses @outerHTML as a heuristic to rebuild, we must be very careful to actually modify HTML when we modify it. Ex. Do not remove a <br> only to add another one back
+# Maybe a better heuristic would also check leaf children are still in the dom
 
 class ScribeLine extends LinkedList.Node
   @CLASS_NAME : 'line'
@@ -40,6 +42,7 @@ class ScribeLine extends LinkedList.Node
     )
 
   deleteText: (offset, length) ->
+    return unless length > 0
     this.applyToContents(offset, length, (node) ->
       ScribeDOM.removeNode(node)
     )
@@ -65,7 +68,16 @@ class ScribeLine extends LinkedList.Node
     throw new Error("Unimplemented")
 
   formatText: (offset, length, name, value) ->
-    return if length <= 0
+    while length > 0
+      op = _.first(@delta.getOpsAt(offset, 1))
+      break if (value and op.attributes[name] != value) or (!value and op.attributes[name]?)
+      offset += 1
+      length -= 1
+    while length > 0
+      op = _.first(@delta.getOpsAt(offset + length - 1, 1))
+      break if (value and op.attributes[name] != value) or (!value and op.attributes[name]?)
+      length -= 1
+    return unless length > 0
     format = @doc.formatManager.formats[name]
     throw new Error("Unrecognized format #{name}") unless format?
     if value
@@ -84,6 +96,7 @@ class ScribeLine extends LinkedList.Node
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->
+    return unless text?.length > 0
     [leaf, leafOffset] = this.findLeafAtOffset(offset)
     # offset > 0 for multicursor
     if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
@@ -98,10 +111,10 @@ class ScribeLine extends LinkedList.Node
         [prevNode, nextNode] = this.splitContents(offset)
         parentNode = prevNode?.parentNode or nextNode?.parentNode
         parentNode.insertBefore(span, nextNode)
+      this.rebuild()
       _.each(formats, (value, name) =>
         this.formatText(offset, text.length, name, value)
       )
-      this.rebuild()
 
   rebuild: (force = false) ->
     if @node.parentNode == @doc.root
