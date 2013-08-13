@@ -90,6 +90,7 @@ class ScribeKeyboard
     UNDERLINE:  { key: 'U',       meta: true }
     UNDO:       { key: 'Z',       meta: true, shift: false }
     REDO:       { key: 'Z',       meta: true, shift: true }
+    SELECT_ALL: { key: 'A',       meta: true }
 
   @NAVIGATION: [@keys.UP, @keys.DOWN, @keys.LEFT, @keys.RIGHT]
 

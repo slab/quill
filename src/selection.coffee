@@ -101,14 +101,13 @@ class ScribeSelection
     checkUpdate = =>
       this.update() if @editor.root.isContentEditable
     ScribeDOM.addEventListener(@editor.root, 'mouseup', checkUpdate)
-    _.each(ScribeKeyboard.NAVIGATION, (key) =>
+    ScribeDOM.addEventListener(@editor.root, 'mouseout', checkUpdate)
+    _.each(ScribeKeyboard.NAVIGATION.concat([ScribeKeyboard.hotkeys.SELECT_ALL]), (key) =>
       @editor.keyboard.addHotkey(key, =>
-        _.defer(checkUpdate)
+        _.defer(checkUpdate)          # Need to defer to let selection update from hotkey
       )
     )
-    setInterval( =>
-      checkUpdate() unless @range?    # Less important to detect existing range being unset
-    , 100)
+    setInterval(checkUpdate, 100)
 
   getDimensions: ->
     rangyRange = this.getNativeRange(false)
