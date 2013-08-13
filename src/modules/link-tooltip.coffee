@@ -11,7 +11,7 @@ enterEditMode = (url) ->
   @tooltipInput.value = url
 
 exitEditMode = ->
-  if ScribeDom.getText(@tooltipLink) != @tooltipInput.value
+  if ScribeDOM.getText(@tooltipLink) != @tooltipInput.value
     @tooltipLink.href = @tooltipInput.value
     ScribeDOM.setText(@tooltipLink, @tooltipInput.value)
     formatLink.call(this, @tooltipInput.value)

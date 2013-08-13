@@ -19,8 +19,10 @@ class ScribeRenderer extends EventEmitter2
       }
       'div.editor': {
         'bottom': '10px'
+        'left': '0px'
         'outline': 'none'
         'position': 'absolute'
+        'right': '0px'
         'tab-size': '4'
         'top': '10px'
         'white-space': 'pre-wrap'
