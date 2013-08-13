@@ -41,6 +41,7 @@ normalizeNativeRange = (nativeRange) ->
   }
 
 _nativeRangeToRange = (nativeRange) ->
+  return null unless nativeRange?
   start = new ScribePosition(@editor, nativeRange.startContainer, nativeRange.startOffset)
   end = new ScribePosition(@editor, nativeRange.endContainer, nativeRange.endOffset)
   if start.index <= end.index 
