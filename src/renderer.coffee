@@ -19,15 +19,13 @@ class ScribeRenderer extends EventEmitter2
       }
       'div.editor': {
         'bottom': '10px'
-        'left': '15px'
         'outline': 'none'
         'position': 'absolute'
-        'right': '15px'
         'tab-size': '4'
         'top': '10px'
         'white-space': 'pre-wrap'
       }
-      'div.line:last-child': { 'padding-bottom': '10px' }
+      'div.line': { 'padding-left': '15px', 'padding-right': '15px' }
       'a'    : { 'text-decoration': 'underline' }
       'b'    : { 'font-weight': 'bold' }
       'i'    : { 'font-style': 'italic' }
