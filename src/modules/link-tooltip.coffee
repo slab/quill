@@ -11,7 +11,7 @@ enterEditMode = (url) ->
   @tooltipInput.value = url
 
 exitEditMode = ->
-  if @tooltipLink.innerText != @tooltipInput.value
+  if ScribeDom.getText(@tooltipLink) != @tooltipInput.value
     @tooltipLink.href = @tooltipInput.value
     ScribeDOM.setText(@tooltipLink, @tooltipInput.value)
     formatLink.call(this, @tooltipInput.value)
@@ -30,7 +30,8 @@ initListeners = ->
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
-        @tooltipLink.innerText = @tooltipLink.href = link.href
+        ScribeDOM.setText(@tooltipLink, link.href)
+        @tooltipLink.href = link.href
         ScribeDOM.removeClass(@tooltip, 'editing')
         showTooptip.call(this, link.getBoundingClientRect())
         return
@@ -53,7 +54,7 @@ initListeners = ->
         enterEditMode.call(this, url)
   )
   ScribeDOM.addEventListener(@tooltipChange, 'click', =>
-    enterEditMode.call(this, @tooltipLink.innerText)
+    enterEditMode.call(this, ScribeDOM.getText(@tooltipLink))
   )
   ScribeDOM.addEventListener(@tooltipDone, 'click', =>
     exitEditMode.call(this)
