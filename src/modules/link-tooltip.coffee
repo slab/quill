@@ -123,8 +123,8 @@ showTooptip = (target, subjectDist = 5) ->
   top = target.bottom + subjectDist
   if top + tooltipHeight > limit.bottom and target.top - tooltipHeight - subjectDist > limit.top
     top = target.top - tooltipHeight - subjectDist
-  @tooltip.style.left = left
-  @tooltip.style.top = top + (@tooltip.offsetTop-tooltip.top)
+  @tooltip.style.left = left + 'px'
+  @tooltip.style.top = (top + (@tooltip.offsetTop-tooltip.top)) + 'px'
 
 
 class ScribeLinkTooltip
