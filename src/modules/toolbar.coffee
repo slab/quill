@@ -1,5 +1,6 @@
 ScribeDOM         = require('../dom')
 ScribeEditor      = require('../editor')
+ScribeRange       = require('../range')
 ScribeLinkTooltip = require('./link-tooltip')
 
 
@@ -14,6 +15,7 @@ initFormats = ->
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         @editor.root.focus()
         if @savedRange?
+          @savedRange = new ScribeRange(@editor, @savedRange.start.index, @savedRange.end.index)
           @editor.setSelection(@savedRange, true)
           unless @savedRange.isCollapsed()
             @savedRange.formatContents(format, value, { source: 'user' })
