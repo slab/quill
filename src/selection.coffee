@@ -80,9 +80,9 @@ class ScribeSelection
     @range = null
     @mouseIsDown = @keyIsDown = false
     ScribeDOM.addEventListener(@editor.root, 'keydown',   => _.defer( => @keyIsDown = true ))
-    ScribeDOM.addEventListener(@editor.root, 'keyup',     => _.defer( =>@keyIsDown = false ))
-    ScribeDOM.addEventListener(@editor.root, 'mousedown', => _.defer( =>@mouseIsDown = true ))
-    ScribeDOM.addEventListener(@editor.root, 'mouseup',   => _.defer( =>@mouseIsDown = false ))
+    ScribeDOM.addEventListener(@editor.root, 'keyup',     => _.defer( => @keyIsDown = false ))
+    ScribeDOM.addEventListener(@editor.root, 'mousedown', => _.defer( => @mouseIsDown = true ))
+    ScribeDOM.addEventListener(@editor.root, 'mouseup',   => _.defer( => @mouseIsDown = false ))
     @editor.renderer.runWhenLoaded( =>
       rangy.init()
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
@@ -139,6 +139,7 @@ class ScribeSelection
   update: (silent = false) ->
     return if (@mouseIsDown or @keyIsDown) and !silent
     nativeRange = this.getNativeRange(false)
+    return if nativeRange? and !(rangy.dom.isAncestorOf(@editor.root, nativeRange.startContainer) and rangy.dom.isAncestorOf(@editor.root, nativeRange.endContainer))
     unless nativeRange == @range or (nativeRange? and @range and nativeRange.equals(@range))
       nativeRange = normalizeNativeRange(nativeRange)
       this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
