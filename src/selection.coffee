@@ -6,19 +6,6 @@ ScribeRange     = require('./range')
 ScribeUtils     = require('./utils')
 
 
-compareRanges = (range1, range2) ->
-  return true if range1 == null and range2 == null
-  return false if range1 == null or range2 == null
-  startContainer1 = range1.startContainer ? range1.start.leafNode
-  startContainer2 = range2.startContainer ? range2.start.leafNode
-  endContainer1 = range1.endContainer ? range1.end.leafNode
-  endContainer2 = range2.endContainer ? range2.end.leafNode
-  startOffset1 = range1.startOffset ? range1.start.offset
-  startOffset2 = range2.startOffset ? range2.start.offset
-  endOffset1 = range1.endOffset ? range1.end.offset
-  endOffset2 = range2.endOffset ? range2.end.offset
-  return startContainer1 == startContainer2 and endContainer1 == endContainer2 and startOffset1 == startOffset2 and endOffset1 == endOffset2
-
 # DOM Selection API says offset is child index of container, not number of characters like ScribePosition
 normalizeNativePosition = (node, offset) ->
   if node?.nodeType == ScribeDOM.ELEMENT_NODE
@@ -91,24 +78,16 @@ _preserveWithLine = (savedNativeRange, fn) ->
 class ScribeSelection
   constructor: (@editor) ->
     @range = null
-    this.initListeners()
+    @mouseIsDown = @keyIsDown = false
+    ScribeDOM.addEventListener(@editor.root, 'keydown',   => _.defer( => @keyIsDown = true ))
+    ScribeDOM.addEventListener(@editor.root, 'keyup',     => _.defer( =>@keyIsDown = false ))
+    ScribeDOM.addEventListener(@editor.root, 'mousedown', => _.defer( =>@mouseIsDown = true ))
+    ScribeDOM.addEventListener(@editor.root, 'mouseup',   => _.defer( =>@mouseIsDown = false ))
     @editor.renderer.runWhenLoaded( =>
       rangy.init()
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
       this.setRange(null)
     )
-
-  initListeners: ->
-    checkUpdate = =>
-      this.update() if @editor.root.isContentEditable
-    ScribeDOM.addEventListener(@editor.root, 'mouseup', checkUpdate)
-    ScribeDOM.addEventListener(@editor.root, 'mouseout', checkUpdate)
-    _.each(ScribeKeyboard.NAVIGATION.concat([ScribeKeyboard.hotkeys.SELECT_ALL]), (key) =>
-      @editor.keyboard.addHotkey(key, =>
-        _.defer(checkUpdate)          # Need to defer to let selection update from hotkey
-      )
-    )
-    setInterval(checkUpdate, 100)
 
   getDimensions: ->
     rangyRange = this.getNativeRange(false)
@@ -152,12 +131,16 @@ class ScribeSelection
         nativeRange[fn].call(nativeRange, node, offset)
       )
       @nativeSelection.addRange(nativeRange, range.isBackwards)
-    @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent or range == @range or @range?.equals(range)
-    @range = range
+      @range = this.getNativeRange(false)
+    else
+      @range = null
+    @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
 
   update: (silent = false) ->
-    nativeRange = this.getNativeRange(true)
-    unless compareRanges(nativeRange, @range)
+    return if (@mouseIsDown or @keyIsDown) and !silent
+    nativeRange = this.getNativeRange(false)
+    unless nativeRange == @range or (nativeRange? and @range and nativeRange.equals(@range))
+      nativeRange = normalizeNativeRange(nativeRange)
       this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
 
 

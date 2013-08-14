@@ -78,6 +78,7 @@ class WebdriverAdapter
   def remove_highlighting
     @editor.send_keys [] # Workaround for an issue in Ruby bindings.
     @editor.send_keys [:arrow_right]
+    sleep 1
   end
 
   def jump_to_start
@@ -109,6 +110,7 @@ class WebdriverAdapter
     keys = (0...length).to_a.map! { :arrow_right }
     @cursor_pos += length
     @driver.action.key_down(:shift).send_keys(*keys).key_up(:shift).perform
+    sleep 1
   end
 
   def delete(length)

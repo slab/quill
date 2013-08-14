@@ -15,15 +15,20 @@ DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 
 checkUpdate = ->
   if @innerHTML != @root.innerHTML
-    this.update()
+    delta = this.update()
     @innerHTML = @root.innerHTML
+    return delta
+  else
+    return false
 
 doAt = (fn, options) ->
+  delta = false
   this.doSilently( =>
-    trackDelta.call(this, =>
+    delta = trackDelta.call(this, =>
       fn.call(this)
     , options)
   )
+  return delta
 
 deleteAt = (index, length) ->
   return if length <= 0
@@ -102,7 +107,7 @@ insertAt = (index, text, formatting = {}) ->
 
 trackDelta = (fn, options) ->
   oldDelta = @doc.toDelta()
-  oldIndex = @selection.range?.start.index # We do not want new range value so we do not use getSelection
+  oldIndex = @savedRange?.start.index
   fn()
   newDelta = @doc.toDelta()
   try
@@ -122,6 +127,8 @@ trackDelta = (fn, options) ->
   if !decompose.isIdentity() and !options.silent
     eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
     this.emit(eventName, decompose)
+    return decompose
+  return false
   
 
 class ScribeEditor extends EventEmitter2
@@ -152,8 +159,12 @@ class ScribeEditor extends EventEmitter2
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     setInterval( =>
-      checkUpdate.call(this)
+      changed = checkUpdate.call(this)
+      @selection.update(changed)
     , 100)
+    this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
+      @savedRange = range
+    )
     this.enable() if @options.enabled
 
   disable: ->
@@ -253,31 +264,29 @@ class ScribeEditor extends EventEmitter2
     @selection.setRange(range, silent)
 
   update: ->
-    this.doSilently( =>
-      trackDelta.call(this, =>
-        @selection.preserve( =>
-          ScribeNormalizer.breakBlocks(@root)
-          lines = @doc.lines.toArray()
-          lineNode = @root.firstChild
-          _.each(lines, (line, index) =>
-            while line.node != lineNode
-              if line.node.parentNode == @root
-                @doc.normalizer.normalizeLine(lineNode)
-                newLine = @doc.insertLineBefore(lineNode, line)
-                lineNode = lineNode.nextSibling
-              else
-                return @doc.removeLine(line)
-            @doc.updateLine(line)
-            lineNode = lineNode.nextSibling
-          )
-          while lineNode != null
-            @doc.normalizer.normalizeLine(lineNode)
-            newLine = @doc.appendLine(lineNode)
-            lineNode = lineNode.nextSibling
+    return doAt.call(this, =>
+      @selection.preserve( =>
+        ScribeNormalizer.breakBlocks(@root)
+        lines = @doc.lines.toArray()
+        lineNode = @root.firstChild
+        _.each(lines, (line, index) =>
+          while line.node != lineNode
+            if line.node.parentNode == @root
+              @doc.normalizer.normalizeLine(lineNode)
+              newLine = @doc.insertLineBefore(lineNode, line)
+              lineNode = lineNode.nextSibling
+            else
+              return @doc.removeLine(line)
+          @doc.updateLine(line)
+          lineNode = lineNode.nextSibling
         )
-        @innerHTML = @root.innerHTML    # trackDelta will emit events that may cause clients to call get functions
-      , { silent: false, source: 'user' })
-    )
+        while lineNode != null
+          @doc.normalizer.normalizeLine(lineNode)
+          newLine = @doc.appendLine(lineNode)
+          lineNode = lineNode.nextSibling
+      )
+      @innerHTML = @root.innerHTML    # trackDelta will emit events that may cause clients to call get functions
+    , { silent: false, source: 'user' })
 
 
 module.exports = ScribeEditor
