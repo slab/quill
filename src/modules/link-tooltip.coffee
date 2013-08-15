@@ -34,10 +34,11 @@ initListeners = ->
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
-        ScribeDOM.setText(@tooltipLink, link.href)
-        @tooltipLink.href = link.href
+        url = normalizeUrl(link.href)
+        @tooltipLink.href = url
+        ScribeDOM.setText(@tooltipLink, url)
         ScribeDOM.removeClass(@tooltip, 'editing')
-        showTooptip.call(this, link.getBoundingClientRect())
+        showTooltip.call(this, link.getBoundingClientRect())
         @savedLink = link
         return
       link = link.parentNode
@@ -48,14 +49,13 @@ initListeners = ->
       formatLink.call(this, false)
       hideTooltip.call(this)
     else
-      url = @toolbar.savedRange.getText()
+      url = normalizeUrl(@toolbar.savedRange.getText())
       if /\w+\.\w+/.test(url)
-        value = normalizeUrl(url)
         @editor.root.focus()
-        formatLink.call(this, value)
+        formatLink.call(this, url)
       else
         ScribeDOM.addClass(@tooltip, 'editing')
-        showTooptip.call(this, @editor.selection.getDimensions())
+        showTooltip.call(this, @editor.selection.getDimensions())
         enterEditMode.call(this, url)
   )
   ScribeDOM.addEventListener(@tooltipChange, 'click', =>
@@ -115,10 +115,10 @@ initTooltip = ->
 
 normalizeUrl = (url) ->
   url = 'http://' + url unless /^https?:\/\//.test(url)
-  url = url + '/' unless url.slice(-1) == '/' # Add trailing slash to standardize between browsers
+  url = url.slice(0, url.length - 1) if url.slice(url.length - 1) == '/' # Remove trailing slash to standardize between browsers
   return url
   
-showTooptip = (target, subjectDist = 5) ->
+showTooltip = (target, subjectDist = 5) ->
   tooltip = @tooltip.getBoundingClientRect()
   tooltipHeight = tooltip.bottom - tooltip.top
   tooltipWidth = tooltip.right - tooltip.left
