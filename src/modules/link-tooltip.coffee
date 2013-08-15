@@ -11,10 +11,14 @@ enterEditMode = (url) ->
   @tooltipInput.value = url
 
 exitEditMode = ->
-  if ScribeDOM.getText(@tooltipLink) != @tooltipInput.value
+  if @savedLink? or ScribeDOM.getText(@tooltipLink) != @tooltipInput.value
     @tooltipLink.href = @tooltipInput.value
     ScribeDOM.setText(@tooltipLink, @tooltipInput.value)
-    formatLink.call(this, @tooltipInput.value)
+    if @savedLink?
+      @savedLink.href = @tooltipInput.value
+      @savedLink = null
+    else
+      formatLink.call(this, @tooltipInput.value)
   ScribeDOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
@@ -34,6 +38,7 @@ initListeners = ->
         @tooltipLink.href = link.href
         ScribeDOM.removeClass(@tooltip, 'editing')
         showTooptip.call(this, link.getBoundingClientRect())
+        @savedLink = link
         return
       link = link.parentNode
     hideTooltip.call(this)
