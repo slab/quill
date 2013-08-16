@@ -92,10 +92,9 @@ initToolbar = ($container, editor) ->
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
     console.info source.id, 'text change', delta if console?
-    target.applyDelta(delta)
-    sourceDelta = source.doc.toDelta()
-    targetDelta = target.doc.toDelta()
-    console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
+    setTimeout( ->
+      target.applyDelta(delta)
+    , 2500)
   ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
     if range?
       console.info source.id, 'selection change', range.start.index, range.end.index if console?
