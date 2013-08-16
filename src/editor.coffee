@@ -13,7 +13,7 @@ Tandem              = require('tandem-core')
 DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 
 
-checkUpdate = ->
+_checkUpdate = ->
   if @innerHTML != @root.innerHTML
     delta = this.update()
     @innerHTML = @root.innerHTML
@@ -21,16 +21,16 @@ checkUpdate = ->
   else
     return false
 
-doAt = (fn, options) ->
+_doAt = (fn, options) ->
   delta = false
   this.doSilently( =>
-    delta = trackDelta.call(this, =>
+    delta = _trackDelta.call(this, =>
       fn.call(this)
     , options)
   )
   return delta
 
-deleteAt = (index, length) ->
+_deleteAt = (index, length) ->
   return if length <= 0
   @selection.preserve(index, -1 * length, =>
     [firstLine, offset] = @doc.findLineAtOffset(index)
@@ -55,13 +55,13 @@ deleteAt = (index, length) ->
       @doc.mergeLines(firstLine, firstLine.next)
   )
 
-forceTrailingNewline = ->
+_forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    # Can't do this.insertAt since still within the doAt call, this \n will alreayd be recorded by trackDelta
-    insertAt.call(this, this.getLength(), "\n")
+    # Can't do this.insertAt since still within the doAt call, this \n will already been recorded by _trackDelta
+    _insertAt.call(this, this.getLength(), "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
-formatAt = (index, length, name, value) ->
+_formatAt = (index, length, name, value) ->
   @selection.preserve(index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
@@ -81,7 +81,7 @@ formatAt = (index, length, name, value) ->
       line = line.next
   )
 
-insertAt = (index, text, formatting = {}) ->
+_insertAt = (index, text, formatting = {}) ->
   @selection.preserve(index, text.length, =>
     text = text.replace(/\r\n/g, '\n')
     text = text.replace(/\r/g, '\n')
@@ -105,7 +105,7 @@ insertAt = (index, text, formatting = {}) ->
     )
   )
 
-trackDelta = (fn, options) ->
+_trackDelta = (fn, options) ->
   oldDelta = @doc.toDelta()
   oldIndex = @savedRange?.start.index
   fn()
@@ -159,7 +159,7 @@ class ScribeEditor extends EventEmitter2
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     setInterval( =>
-      changed = checkUpdate.call(this)
+      changed = _checkUpdate.call(this)
       @selection.update(changed)
     , 100)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
@@ -202,13 +202,13 @@ class ScribeEditor extends EventEmitter2
     this.doSilently( =>
       throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == this.getLength()
       oldDelta = @doc.toDelta()
-      delta.apply(insertAt, deleteAt, formatAt, this)
+      delta.apply(_insertAt, _deleteAt, _formatAt, this)
       unless options.silent
         eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
         this.emit(eventName, delta)
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
-      forceTrailingNewline.call(this)
+      _forceTrailingNewline.call(this)
     )
 
   emit: (eventName, args...) ->
@@ -218,9 +218,9 @@ class ScribeEditor extends EventEmitter2
 
   deleteAt: (index, length, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
-    doAt.call(this, =>
-      deleteAt.call(this, index, length)
-      forceTrailingNewline.call(this)
+    _doAt.call(this, =>
+      _deleteAt.call(this, index, length)
+      _forceTrailingNewline.call(this)
     , options)
 
   doSilently: (fn) ->
@@ -231,26 +231,26 @@ class ScribeEditor extends EventEmitter2
 
   formatAt: (index, length, name, value, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
-    doAt.call(this, =>
-      formatAt.call(this, index, length, name, value)
+    _doAt.call(this, =>
+      _formatAt.call(this, index, length, name, value)
     , options)
     
   getDelta: ->
-    checkUpdate.call(this)
+    _checkUpdate.call(this)
     return @doc.toDelta()
 
   getLength: ->
     return this.getDelta().endLength
 
   getSelection: ->
-    checkUpdate.call(this)
+    _checkUpdate.call(this)
     return @selection.getRange()
 
   insertAt: (index, text, formatting = {}, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
-    doAt.call(this, =>
-      insertAt.call(this, index, text, formatting)
-      forceTrailingNewline.call(this)
+    _doAt.call(this, =>
+      _insertAt.call(this, index, text, formatting)
+      _forceTrailingNewline.call(this)
     , options)
 
   setDelta: (delta) ->
@@ -264,7 +264,7 @@ class ScribeEditor extends EventEmitter2
     @selection.setRange(range, silent)
 
   update: ->
-    return doAt.call(this, =>
+    return _doAt.call(this, =>
       @selection.preserve( =>
         ScribeNormalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()
