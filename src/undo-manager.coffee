@@ -85,8 +85,13 @@ class ScribeUndoManager
     timestamp = new Date().getTime()
     if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
       change = @stack.undo.pop()
-      undoDelta = undoDelta.compose(change.undo)
-      changeDelta = change.redo.compose(changeDelta)
+      if undoDelta.canCompose(change.undo) and change.redo.canCompose(changeDelta)
+        undoDelta = undoDelta.compose(change.undo)
+        changeDelta = change.redo.compose(changeDelta)
+      else
+        console.warn "Unable to compose change, clearing undo stack" if console?
+        this.clear()
+        @lastRecorded = timestamp
     else
       @lastRecorded = timestamp
     @stack.undo.push({
