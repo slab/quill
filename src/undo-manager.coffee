@@ -65,11 +65,11 @@ class ScribeUndoManager
     )
     @ignoringChanges = false
     @editor.on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
-      this.record(delta, @oldDelta) unless @ignoringChanges
-      @oldDelta = @oldDelta.compose(delta)
+      if this.record(delta, @oldDelta) and not @ignoringChanges
+        @oldDelta = @oldDelta.compose(delta)
     ).on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
-      this.record(delta, @oldDelta)
-      @oldDelta = @oldDelta.compose(delta)
+      if this.record(delta, @oldDelta)
+        @oldDelta = @oldDelta.compose(delta)
     )
 
   clear: ->
@@ -81,24 +81,29 @@ class ScribeUndoManager
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity()
     @redoStack = []
-    undoDelta = oldDelta.invert(changeDelta)
-    timestamp = new Date().getTime()
-    if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
-      change = @stack.undo.pop()
-      if undoDelta.canCompose(change.undo) and change.redo.canCompose(changeDelta)
-        undoDelta = undoDelta.compose(change.undo)
-        changeDelta = change.redo.compose(changeDelta)
+    try
+      undoDelta = oldDelta.invert(changeDelta)
+      timestamp = new Date().getTime()
+      if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
+        change = @stack.undo.pop()
+        if undoDelta.canCompose(change.undo) and change.redo.canCompose(changeDelta)
+          undoDelta = undoDelta.compose(change.undo)
+          changeDelta = change.redo.compose(changeDelta)
+        else
+          console.warn "Unable to compose change, clearing undo stack" if console?
+          this.clear()
+          @lastRecorded = timestamp
       else
-        console.warn "Unable to compose change, clearing undo stack" if console?
-        this.clear()
         @lastRecorded = timestamp
-    else
-      @lastRecorded = timestamp
-    @stack.undo.push({
-      redo: changeDelta
-      undo: undoDelta
-    })
-    @stack.undo.unshift() if @stack.undo.length > @options.maxStack
+      @stack.undo.push({
+        redo: changeDelta
+        undo: undoDelta
+      })
+      @stack.undo.unshift() if @stack.undo.length > @options.maxStack
+      return true
+    catch
+      this.clear()
+      return false
 
   redo: ->
     _change.call(this, 'redo', 'undo')
