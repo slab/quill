@@ -40,8 +40,7 @@ _deleteAt = (index, length) ->
 
 _forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    # Can't do this.insertAt since still within the doAt call, this \n will already been recorded by _trackDelta
-    _insertAt.call(this, this.getLength(), "\n")
+    this.insertAt(this.getLength(), "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 _formatAt = (index, length, name, value) ->
@@ -70,9 +69,13 @@ _insertAt = (index, text, formatting = {}) ->
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')
     if index == this.getLength() and @doc.lines.last.trailingNewline
+      newline = false
       if lineTexts[lineTexts.length - 1] == ''
         lineTexts.pop()
+        newline = true
       line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
+      line.trailingNewline = newline
+      line.resetContent()
       offset = 0
     else
       [line, offset] = @doc.findLineAtOffset(index)
@@ -169,8 +172,8 @@ class ScribeEditor extends EventEmitter2
       if delta
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
-        @selection.update(delta)
         this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
+      @selection.update(delta)
     , @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
