@@ -101,7 +101,7 @@ class ScribeUndoManager
       })
       @stack.undo.unshift() if @stack.undo.length > @options.maxStack
       return true
-    catch
+    catch ignored
       this.clear()
       return false
 

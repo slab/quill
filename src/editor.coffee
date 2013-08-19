@@ -133,11 +133,7 @@ _update = ->
       )
     )
   )
-  return false if delta.isIdentity()
-  oldDelta = @delta
-  @delta = oldDelta.compose(delta)
-  this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
-  return delta
+  return if delta.isIdentity() then false else delta
   
 
 class ScribeEditor extends EventEmitter2
@@ -169,8 +165,12 @@ class ScribeEditor extends EventEmitter2
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     setInterval( =>
-      changed = this.update()
-      @selection.update(changed)
+      delta = this.update()
+      if delta
+        oldDelta = @delta
+        @delta = oldDelta.compose(delta)
+        @selection.update(delta)
+        this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
     , @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
@@ -211,15 +211,22 @@ class ScribeEditor extends EventEmitter2
     if delta.startLength == 0 and this.getLength() == 1
       return this.setDelta(delta, options)
     this.doSilently( =>
-      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
-      #localDelta = this.update()
-      #delta = delta.follows(localDelta, false) if localDelta
-      delta.apply(_insertAt, _deleteAt, _formatAt, this)
-      oldDelta = @delta
-      @delta = oldDelta.compose(delta)
-      unless options.silent
-        eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
-        this.emit(eventName, delta, @delta)
+      localDelta = this.update()
+      if localDelta
+        @delta = @delta.compose(localDelta)
+        tempDelta = localDelta
+        localDelta = localDelta.follows(delta, true)
+        delta = delta.follows(tempDelta, false)
+      unless delta.isIdentity()   # Follows may have turned delta into the identity
+        throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
+        delta.apply(_insertAt, _deleteAt, _formatAt, this)
+        oldDelta = @delta
+        @delta = oldDelta.compose(delta)
+        unless options.silent
+          eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
+          this.emit(eventName, delta)
+      if localDelta and !localDelta.isIdentity()
+        this.emit(ScribeEditor.events.USER_TEXT_CHANGE, localDelta)
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       _forceTrailingNewline.call(this)
