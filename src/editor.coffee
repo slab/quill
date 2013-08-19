@@ -13,23 +13,6 @@ Tandem              = require('tandem-core')
 DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 
 
-_checkUpdate = ->
-  if @innerHTML != @root.innerHTML
-    delta = this.update()
-    @innerHTML = @root.innerHTML
-    return delta
-  else
-    return false
-
-_doAt = (fn, options) ->
-  delta = false
-  this.doSilently( =>
-    delta = _trackDelta.call(this, =>
-      fn.call(this)
-    , options)
-  )
-  return delta
-
 _deleteAt = (index, length) ->
   return if length <= 0
   @selection.preserve(index, -1 * length, =>
@@ -106,29 +89,55 @@ _insertAt = (index, text, formatting = {}) ->
   )
 
 _trackDelta = (fn, options) ->
-  oldDelta = @doc.toDelta()
   oldIndex = @savedRange?.start.index
   fn()
   newDelta = @doc.toDelta()
   try
     newIndex = @selection.getRange()?.start.index     # this.getSelection() triggers infinite loop
-    if oldIndex? and newIndex? and oldIndex <= oldDelta.endLength and newIndex <= newDelta.endLength
-      [oldLeftDelta, oldRightDelta] = oldDelta.split(oldIndex)
+    if oldIndex? and newIndex? and oldIndex <= @delta.endLength and newIndex <= newDelta.endLength
+      [oldLeftDelta, oldRightDelta] = @delta.split(oldIndex)
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
       decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
       decomposeRight = newRightDelta.decompose(oldRightDelta)
       decomposeA = decomposeLeft.merge(decomposeRight)
   catch ignored
-  decomposeB = newDelta.decompose(oldDelta)
+  decomposeB = newDelta.decompose(@delta)
   if decomposeA and decomposeB
     decompose = if decomposeA.ops.length < decomposeB.ops.length then decomposeA else decomposeB
   else
     decompose = decomposeA or decomposeB
-  if !decompose.isIdentity() and !options.silent
-    eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
-    this.emit(eventName, decompose)
-    return decompose
-  return false
+  return decompose
+
+_update = ->
+  delta = _trackDelta.call(this, =>
+    this.doSilently( =>
+      @selection.preserve( =>
+        ScribeNormalizer.breakBlocks(@root)
+        lines = @doc.lines.toArray()
+        lineNode = @root.firstChild
+        _.each(lines, (line, index) =>
+          while line.node != lineNode
+            if line.node.parentNode == @root
+              @doc.normalizer.normalizeLine(lineNode)
+              newLine = @doc.insertLineBefore(lineNode, line)
+              lineNode = lineNode.nextSibling
+            else
+              return @doc.removeLine(line)
+          @doc.updateLine(line)
+          lineNode = lineNode.nextSibling
+        )
+        while lineNode != null
+          @doc.normalizer.normalizeLine(lineNode)
+          newLine = @doc.appendLine(lineNode)
+          lineNode = lineNode.nextSibling
+      )
+    )
+  )
+  return false if delta.isIdentity()
+  oldDelta = @delta
+  @delta = oldDelta.compose(delta)
+  this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
+  return delta
   
 
 class ScribeEditor extends EventEmitter2
@@ -140,6 +149,7 @@ class ScribeEditor extends EventEmitter2
     cursor: 0
     enabled: true
     onReady: ->
+    pollInterval: 100
     formatManager: {}
     renderer: {}
     undoManager: {}
@@ -159,9 +169,9 @@ class ScribeEditor extends EventEmitter2
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     setInterval( =>
-      changed = _checkUpdate.call(this)
+      changed = this.update()
       @selection.update(changed)
-    , 100)
+    , @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
@@ -185,6 +195,7 @@ class ScribeEditor extends EventEmitter2
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
     @doc = new ScribeDocument(@root, @options)
+    @delta = @doc.toDelta()
     @keyboard = new ScribeKeyboard(this)
     @selection = new ScribeSelection(this)
     @undoManager = new ScribeUndoManager(this, @options)
@@ -195,17 +206,20 @@ class ScribeEditor extends EventEmitter2
 
   applyDelta: (delta, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
+    return if delta.isIdentity()
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
       return this.setDelta(delta, options)
-    return if delta.isIdentity()
     this.doSilently( =>
-      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == this.getLength()
-      oldDelta = @doc.toDelta()
+      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
+      #localDelta = this.update()
+      #delta = delta.follows(localDelta, false) if localDelta
       delta.apply(_insertAt, _deleteAt, _formatAt, this)
+      oldDelta = @delta
+      @delta = oldDelta.compose(delta)
       unless options.silent
         eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
-        this.emit(eventName, delta)
+        this.emit(eventName, delta, @delta)
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       _forceTrailingNewline.call(this)
@@ -217,11 +231,7 @@ class ScribeEditor extends EventEmitter2
     super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
   deleteAt: (index, length, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
-    _doAt.call(this, =>
-      _deleteAt.call(this, index, length)
-      _forceTrailingNewline.call(this)
-    , options)
+    this.applyDelta(Tandem.Delta.makeDeleteDelta(@delta.endLength, index, length), options)
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
@@ -230,28 +240,21 @@ class ScribeEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   formatAt: (index, length, name, value, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
-    _doAt.call(this, =>
-      _formatAt.call(this, index, length, name, value)
-    , options)
+    attribute = {}
+    attribute[name] = value
+    this.applyDelta(Tandem.Delta.makeRetainDelta(@delta.endLength, index, length, attribute), options)
     
   getDelta: ->
-    _checkUpdate.call(this)
-    return @doc.toDelta()
+    return @delta
 
   getLength: ->
-    return this.getDelta().endLength
+    return @delta.endLength
 
   getSelection: ->
-    _checkUpdate.call(this)
     return @selection.getRange()
 
   insertAt: (index, text, formatting = {}, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
-    _doAt.call(this, =>
-      _insertAt.call(this, index, text, formatting)
-      _forceTrailingNewline.call(this)
-    , options)
+    this.applyDelta(Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formatting), options)
 
   setDelta: (delta) ->
     oldLength = delta.startLength
@@ -264,29 +267,12 @@ class ScribeEditor extends EventEmitter2
     @selection.setRange(range, silent)
 
   update: ->
-    return _doAt.call(this, =>
-      @selection.preserve( =>
-        ScribeNormalizer.breakBlocks(@root)
-        lines = @doc.lines.toArray()
-        lineNode = @root.firstChild
-        _.each(lines, (line, index) =>
-          while line.node != lineNode
-            if line.node.parentNode == @root
-              @doc.normalizer.normalizeLine(lineNode)
-              newLine = @doc.insertLineBefore(lineNode, line)
-              lineNode = lineNode.nextSibling
-            else
-              return @doc.removeLine(line)
-          @doc.updateLine(line)
-          lineNode = lineNode.nextSibling
-        )
-        while lineNode != null
-          @doc.normalizer.normalizeLine(lineNode)
-          newLine = @doc.appendLine(lineNode)
-          lineNode = lineNode.nextSibling
-      )
-      @innerHTML = @root.innerHTML    # trackDelta will emit events that may cause clients to call get functions
-    , { silent: false, source: 'user' })
+    if @innerHTML != @root.innerHTML
+      delta = _update.call(this)
+      @innerHTML = @root.innerHTML
+      return delta
+    else
+      return false
 
 
 module.exports = ScribeEditor
