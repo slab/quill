@@ -79,8 +79,13 @@ class ScribeDocument
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = ScribeUtils.splitNode(line.node, offset, true)
     line.node = lineNode1
+    trailingNewline = line.trailingNewline
+    line.trailingNewline = true
     this.updateLine(line)
-    return this.insertLineBefore(lineNode2, line.next)
+    newLine = this.insertLineBefore(lineNode2, line.next)
+    newLine.trailingNewline = trailingNewline
+    newLine.resetContent()
+    return newLine
 
   toDelta: ->
     lines = @lines.toArray()
