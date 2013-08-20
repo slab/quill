@@ -28,7 +28,7 @@ describe('Undo Manager', ->
     boldDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { bold: true })
     undoTests.run('insert attribute', {}, boldDelta)
 
-    unboldDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { bold: false })
+    unboldDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { bold: null })
     undoTests.run('remove attribute', { 
       initial: Tandem.Delta.getInitial("The lazy fox\n").compose(boldDelta) 
     }, unboldDelta)
@@ -36,7 +36,7 @@ describe('Undo Manager', ->
     blueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: 'blue', strike: true })
     undoTests.run('insert color/strike', {}, blueStrikeDelta)
 
-    undoBlueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: false, strike: false })
+    undoBlueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: null, strike: null })
     undoTests.run('remove color/strike', { 
       initial: Tandem.Delta.getInitial("The lazy fox\n").compose(blueStrikeDelta) 
     }, undoBlueStrikeDelta)
