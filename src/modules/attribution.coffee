@@ -14,11 +14,19 @@ class ScribeAttribution
             op.attributes['author'] = @authorId
         )
         # Apply authorship to our own editor
+        authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)])
+        attribute = {}
+        attribute['author'] = @authorId
         delta.apply((index, text) =>
-          @editor.formatAt(index, text.length, 'author', @authorId, { silent: true })
-        , (=>), (index, length, name, value) =>
-          @editor.formatAt(index, length, 'author', @authorId, { silent: true })
+          _.each(text.split('\n'), (text) ->
+            authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
+            index += text.length + 1
+          )
+        , (=>)
+        , (index, length, name, value) =>
+          authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))
         )
+        @editor.applyDelta(authorDelta, { silent: true })
     )
     @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
     this.addAuthor(@authorId, color)
