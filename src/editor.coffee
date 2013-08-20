@@ -68,26 +68,17 @@ _insertAt = (index, text, formatting = {}) ->
     text = text.replace(/\r\n/g, '\n')
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')
-    if index == this.getLength() and @doc.lines.last.trailingNewline
-      newline = false
-      if lineTexts[lineTexts.length - 1] == ''
-        lineTexts.pop()
-        newline = true
-      line = @doc.splitLine(@doc.lines.last, @doc.lines.last.length)
-      line.trailingNewline = newline
+    [line, offset] = @doc.findLineAtOffset(index)
+    if line == @doc.lines.last and offset >= line.length and line.trailingNewline
+      line = @doc.splitLine(line, line.length)
+      line.trailingNewline = false
       line.resetContent()
       offset = 0
-    else
-      [line, offset] = @doc.findLineAtOffset(index)
     _.each(lineTexts, (lineText, i) =>
       line.insertText(offset, lineText, formatting)
-      if i < lineTexts.length - 1
-        if line.trailingNewline
-          line = @doc.splitLine(line, offset + lineText.length)
-        else
-          line.trailingNewline = true
-          line.resetContent()
-      offset = 0
+      if i < lineTexts.length - 1       # Are there more lines to insert?
+        line = @doc.splitLine(line, offset + lineText.length)
+        offset = 0
     )
   )
 
