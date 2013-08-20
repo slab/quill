@@ -78,6 +78,11 @@ describe('Editor', ->
       initial:  ['<div><br></div>']
       expected: ['<div><b>01</b><i>23</i></div>']
     , [new Tandem.InsertOp('01', {bold:true}), new Tandem.InsertOp('23', {italic:true}), new Tandem.RetainOp(0,1)])
+
+    applyTests.run('append complex delta',
+      initial: ['<div><br></div>']
+      expected: ['<div><br></div>', '<div><b>Welcome</b></div>', '<div><br><div>', '<div><br><div>', '<div><span>Formatting</span><div>']
+    , [new Tandem.InsertOp('\n'), new Tandem.InsertOp('Welcome', {bold:true}), new Tandem.InsertOp('\n\nFormatting\n')])
   )
 
 
