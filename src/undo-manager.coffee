@@ -65,11 +65,11 @@ class ScribeUndoManager
     )
     @ignoringChanges = false
     @editor.on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
-      if this.record(delta, @oldDelta) and not @ignoringChanges
-        @oldDelta = @oldDelta.compose(delta)
+      this.record(delta, @oldDelta) unless @ignoringChanges
+      @oldDelta = @editor.getDelta()
     ).on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
-      if this.record(delta, @oldDelta)
-        @oldDelta = @oldDelta.compose(delta)
+      this.record(delta, @oldDelta)
+      @oldDelta = @editor.getDelta()
     )
 
   clear: ->
