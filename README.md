@@ -89,6 +89,7 @@ Until we write a script, version numbers will have to be updated in the followin
 
 - lib/scribe-rails/version.rb
 - Gruntfile.coffee
+- index.coffee
 - package.json
 
 
