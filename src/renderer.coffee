@@ -27,7 +27,7 @@ class ScribeRenderer extends EventEmitter2
         'top': '10px'
         'white-space': 'pre-wrap'
       }
-      'div.line': { 'padding-left': '15px', 'padding-right': '15px' }
+      'div.line': { 'margin-left': '15px', 'margin-right': '15px' }
       'a'    : { 'text-decoration': 'underline' }
       'b'    : { 'font-weight': 'bold' }
       'i'    : { 'font-style': 'italic' }
