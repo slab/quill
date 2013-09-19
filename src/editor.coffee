@@ -138,7 +138,6 @@ class ScribeEditor extends EventEmitter2
   @DEFAULTS:
     cursor: 0
     enabled: true
-    onReady: ->
     pollInterval: 100
     formatManager: {}
     renderer: {}
@@ -194,7 +193,6 @@ class ScribeEditor extends EventEmitter2
     @selection = new ScribeSelection(this)
     @undoManager = new ScribeUndoManager(this, @options)
     @pasteManager = new ScribePasteManager(this)
-    @renderer.runWhenLoaded(@options.onReady)
     @ignoreDomChanges = false
     ScribeEditor.editors.push(this)
 

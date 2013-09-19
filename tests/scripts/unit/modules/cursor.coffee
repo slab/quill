@@ -4,11 +4,9 @@ describe('Cursor', ->
     before((done) ->
       initial = '<div><b>Bold</b><i>Italic</i></div><div><br /><div><span style="font-size:18px;">Large</span></div>'
       $('#test-container').html(Scribe.Normalizer.normalizeHtml(initial))
-      editor = new Scribe.Editor('test-container', { 
-        onReady: ->
-          _.defer(done)
-      })
+      editor = new Scribe.Editor('test-container')
       cursorManager = new Scribe.MultiCursor(editor)
+      _.defer(done)
     )
 
     it('should set cursor', ->

@@ -108,11 +108,7 @@ initTooltip = ->
     '#link-tooltip.editing .url'    : { 'display': 'none' }
     '#link-tooltip.editing .change' : { 'display': 'none' }
   )
-  @editor.renderer.runWhenLoaded( =>
-    _.defer( =>
-      @editor.renderer.addContainer(@tooltip)
-    )
-  )
+  @editor.renderer.addContainer(@tooltip)
 
 normalizeUrl = (url) ->
   url = 'http://' + url unless /^https?:\/\//.test(url)

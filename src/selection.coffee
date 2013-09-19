@@ -83,11 +83,9 @@ class ScribeSelection
     ScribeDOM.addEventListener(@editor.root, 'keyup',     => _.defer( => @keyIsDown = false ))
     ScribeDOM.addEventListener(@editor.root, 'mousedown', => _.defer( => @mouseIsDown = true ))
     ScribeDOM.addEventListener(@editor.root, 'mouseup',   => _.defer( => @mouseIsDown = false ))
-    @editor.renderer.runWhenLoaded( =>
-      rangy.init()
-      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
-      this.setRange(null)
-    )
+    rangy.init()
+    @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
+    this.setRange(null)
 
   getDimensions: ->
     rangyRange = this.getNativeRange(false)
@@ -125,7 +123,7 @@ class ScribeSelection
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
         [node, offset] = ScribeUtils.findDeepestNode(pos.leafNode, pos.offset)
-        node = node.parentNode if node.tagName == "BR"              # Firefox does not split BR when hitting enter inside BR
+        node = node.parentNode if node.tagName == "BR"             # Firefox does not split BR when
         offset = Math.min(ScribeDOM.getText(node).length, offset)  # Should only occur at end of document
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)

@@ -76,32 +76,26 @@ class ScribeRenderer extends EventEmitter2
     ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if navigator.userAgent.match(/MSIE/);
     this.addStyles(ScribeRenderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
-    this.runWhenLoaded( =>
-      _.defer( =>
-        this.addStyles(options.styles) if options.styles?
-      )
+    _.defer( =>
+      this.addStyles(options.styles) if options.styles?
     )
 
   addContainer: (container, before = false) ->
-    this.runWhenLoaded( =>
-      refNode = if before then @root else null
-      @root.parentNode.insertBefore(container, refNode)
-    )
+    refNode = if before then @root else null
+    @root.parentNode.insertBefore(container, refNode)
 
   addStyles: (css) ->
-    this.runWhenLoaded( =>
-      style = @root.ownerDocument.createElement('style')
-      style.type = 'text/css'
-      css = ScribeRenderer.objToCss(css) unless _.isString(css)
-      if style.styleSheet?
-        style.styleSheet.cssText = css
-      else
-        style.appendChild(@root.ownerDocument.createTextNode(css))
-      # Firefox needs defer
-      _.defer( =>
-        @root.ownerDocument.querySelector('head').appendChild(style)
-        this.emit(ScribeRenderer.events.UPDATE, css)
-      )
+    style = @root.ownerDocument.createElement('style')
+    style.type = 'text/css'
+    css = ScribeRenderer.objToCss(css) unless _.isString(css)
+    if style.styleSheet?
+      style.styleSheet.cssText = css
+    else
+      style.appendChild(@root.ownerDocument.createTextNode(css))
+    # Firefox needs defer
+    _.defer( =>
+      @root.ownerDocument.querySelector('head').appendChild(style)
+      this.emit(ScribeRenderer.events.UPDATE, css)
     )
 
   createFrame: ->
@@ -118,39 +112,16 @@ class ScribeRenderer extends EventEmitter2
     @root = doc.createElement('div')
     ScribeDOM.addClass(@root, 'editor')
     @root.id = @options.id
+    doc.body.appendChild(@root)
     @root.innerHTML = ScribeNormalizer.normalizeHtml(html) if @options.keepHTML
-    this.runWhenLoaded( =>
-      doc = this.getDocument()
-      doc.body.appendChild(@root)
-      ScribeDOM.addEventListener(@container, 'focus', =>
-        @root.focus()
-      )
+    ScribeDOM.addEventListener(@container, 'focus', =>
+      @root.focus()
     )
 
   getDocument: ->
     return null unless @iframe.parentNode?
     # Firefox does not like us saving a reference to this result so retrieve every time
     return @iframe.contentWindow?.document
-
-  runWhenLoaded: (fn) ->
-    return fn.call(this) if this.getDocument()?.readyState == 'complete'
-    if @callbacks?
-      @callbacks.push(fn)
-    else
-      @callbacks = [fn]
-      interval = setInterval( =>
-        doc = this.getDocument()
-        if doc?.readyState == 'complete'
-          clearInterval(interval)
-          _.defer( =>
-            _.each(@callbacks, (callback) =>
-              callback.call(this)
-            )
-            @callbacks = []
-          )
-        else if !doc
-          clearInterval(interval)
-      , 100)
 
 
 module.exports = ScribeRenderer
