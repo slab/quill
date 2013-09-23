@@ -115,6 +115,12 @@ class ScribeNormalizer
       ScribeDOM.unwrap(node.parentNode)
       ScribeNormalizer.normalizeBreak(node, root)
 
+  @normalizeEmpty: (root) ->
+    _.each(root.querySelectorAll('br'), (node) ->
+      # See IE's newline section in doc/browser-quirks
+      ScribeDOM.removeNode(node) if node.previousSibling? or node.nextSibling?
+    )
+
   @normalizeHtml: (html) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
