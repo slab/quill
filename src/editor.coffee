@@ -240,10 +240,13 @@ class ScribeEditor extends EventEmitter2
     @ignoreDomChanges = oldIgnoreDomChange
 
   formatAt: (index, length, name, value, options = {}) ->
-    attribute = {}
-    attribute[name] = value
-    this.applyDelta(Tandem.Delta.makeRetainDelta(@delta.endLength, index, length, attribute), options)
-    
+    if length > 0
+      attribute = {}
+      attribute[name] = value
+      this.applyDelta(Tandem.Delta.makeRetainDelta(@delta.endLength, index, length, attribute), options)
+    else
+      @root.ownerDocument.execCommand(name, false, value or null) # Change false -> null
+
   getDelta: ->
     return @delta
 

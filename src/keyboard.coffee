@@ -130,7 +130,7 @@ class ScribeKeyboard
 
   toggleFormat: (range, format) ->
     formats = range.getFormats()
-    range.formatContents(format, !formats[format], { source: 'user' })
+    range.format(format, !formats[format], { source: 'user' })
 
 
 module.exports = ScribeKeyboard

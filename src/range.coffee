@@ -18,8 +18,7 @@ class ScribeRange
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
   
-  formatContents: (name, value, options) ->
-    return if this.isCollapsed()
+  format: (name, value, options) ->
     @editor.formatAt(@start.index, @end.index - @start.index, name, value, options)
 
   # TODO implement the following:    

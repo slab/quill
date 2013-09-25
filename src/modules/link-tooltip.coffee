@@ -23,8 +23,8 @@ exitEditMode = ->
   ScribeDOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
-  @editor.setSelection(@toolbar.savedRange, true)
-  @toolbar.savedRange.formatContents('link', value, { source: 'user' })
+  @editor.setSelection(@savedRange, true)
+  @savedRange.format('link', value, { source: 'user' })
   @toolbar.emit(@toolbar.constructor.events.FORMAT, 'link', value)
 
 hideTooltip = ->
@@ -46,11 +46,12 @@ initListeners = ->
     hideTooltip.call(this)
   )
   ScribeDOM.addEventListener(@button, 'click', =>
+    @savedRange = @editor.getSelection()
     if ScribeDOM.hasClass(@button, 'active')
       formatLink.call(this, false)
       hideTooltip.call(this)
     else
-      url = normalizeUrl(@toolbar.savedRange.getText())
+      url = normalizeUrl(@savedRange.getText())
       if /\w+\.\w+/.test(url)
         @editor.root.focus()
         formatLink.call(this, url)

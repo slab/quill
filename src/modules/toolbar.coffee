@@ -14,12 +14,10 @@ initFormats = ->
       ScribeDOM.addEventListener(input, eventName, =>
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         @editor.root.focus()
-        if @savedRange?
-          @savedRange = new ScribeRange(@editor, @savedRange.start.index, @savedRange.end.index)
-          @editor.setSelection(@savedRange, true)
-          unless @savedRange.isCollapsed()
-            @savedRange.formatContents(format, value, { source: 'user' })
-            this.emit(ScribeToolbar.events.FORMAT, format, value)
+        range = @editor.getSelection()
+        if range
+          range.format(format, value, { source: 'user' })
+          this.emit(ScribeToolbar.events.FORMAT, format, value)
       )
     )
   )
@@ -39,9 +37,6 @@ class ScribeToolbar extends EventEmitter2
     @editor.on(ScribeEditor.events.POST_EVENT, (eventName) =>
       return unless eventName == ScribeEditor.events.API_TEXT_CHANGE or eventName == ScribeEditor.events.USER_TEXT_CHANGE or eventName == ScribeEditor.events.SELECTION_CHANGE
       this.update()
-    )
-    @editor.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
-      @savedRange = range
     )
 
   update: ->
