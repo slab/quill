@@ -148,6 +148,10 @@ class ScribeBackgroundFormat extends ScribeStyleFormat
     delete colors['white']
     super(@root, 'background', 'background-color', colors, ScribeColorFormat.matchColor)
 
+  preformat: (color) ->
+    color = ScribeColorFormat.normalizeColor(color) if color
+    @root.ownerDocument.execCommand('backColor', false, color)
+
 
 class ScribeColorFormat extends ScribeStyleFormat
   @COLORS: {
@@ -191,6 +195,10 @@ class ScribeColorFormat extends ScribeStyleFormat
     delete colors['black']
     super(@root, 'color', 'color', colors, ScribeColorFormat.matchColor)
 
+  preformat: (color) ->
+    color = ScribeColorFormat.normalizeColor(color) if color
+    @root.ownerDocument.execCommand('foreColor', false, color)
+
 
 class ScribeFamilyFormat extends ScribeStyleFormat
   constructor: (@root) ->
@@ -203,8 +211,9 @@ class ScribeFamilyFormat extends ScribeStyleFormat
       return false
     )
 
-  preformat: (value) ->
-    @root.ownerDocument.execCommand('fontName', false, @styles[value])
+  preformat: (family) ->
+    family = @styles[family] if family
+    @root.ownerDocument.execCommand('fontName', false, family)
 
 
 class ScribeSizeFormat extends ScribeStyleFormat
@@ -219,8 +228,8 @@ class ScribeSizeFormat extends ScribeStyleFormat
     container = super(value)
     return container
 
-  preformat: (value) ->
-    switch value
+  preformat: (size) ->
+    switch size
       when 'huge'   then size = 5
       when 'large'  then size = 3
       when 'small'  then size = 1
