@@ -25,7 +25,7 @@ initFormats = ->
 
 class ScribeToolbar extends EventEmitter2
   @formats:
-    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'bullet', 'indent', 'outdent']
+    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent']
     SELECT: ['background', 'color', 'family', 'size']
 
   @events:

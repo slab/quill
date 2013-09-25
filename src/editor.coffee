@@ -51,13 +51,8 @@ _formatAt = (index, length, name, value) ->
         # If newline character is being applied with formatting
         if length > line.length - offset
           line.format(name, value)
-      else if @doc.formatManager.formats[name]?
-        if line.length - offset >= length
-          line.formatText(offset, length, name, value)
-        else
-          line.formatText(offset, line.length - offset, name, value)
       else
-        throw new Error("Unsupported format #{name} #{value}")
+        line.formatText(offset, Math.min(length, line.length - offset), name, value)
       length -= (line.length - offset)
       offset = 0
       line = line.next
@@ -81,6 +76,11 @@ _insertAt = (index, text, formatting = {}) ->
         offset = 0
     )
   )
+
+_preformat = (name, value) ->
+  format = @doc.formatManager.formats[name]
+  throw new Error("Unsupported format #{name} #{value}") unless format?
+  format.preformat(value)
 
 _trackDelta = (fn, options) ->
   oldIndex = @savedRange?.start.index
@@ -245,7 +245,7 @@ class ScribeEditor extends EventEmitter2
       attribute[name] = value
       this.applyDelta(Tandem.Delta.makeRetainDelta(@delta.endLength, index, length, attribute), options)
     else
-      @root.ownerDocument.execCommand(name, false, value or null) # Change false -> null
+      _preformat.call(this, name, value)
 
   getDelta: ->
     return @delta

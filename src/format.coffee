@@ -7,10 +7,13 @@ class ScribeLeafFormat
   clean: (node) ->
     ScribeDOM.removeAttributes(node)
 
-  createContainer: (value) ->
+  createContainer: ->
     throw new Error("Descendants should implement")
 
   matchContainer: (container) ->
+    throw new Error("Descendants should implement")
+
+  preformat: (value) ->
     throw new Error("Descendants should implement")
 
 
@@ -18,11 +21,14 @@ class ScribeTagFormat extends ScribeLeafFormat
   constructor: (@root, @keyName, @tagName) ->
     super
 
-  createContainer: (value) ->
+  createContainer: ->
     return @root.ownerDocument.createElement(@tagName)
 
   matchContainer: (container) ->
     return container.tagName == @tagName
+
+  preformat: (value) ->
+    @root.ownerDocument.execCommand(@keyName, false, value)
 
 
 class ScribeSpanFormat extends ScribeTagFormat
