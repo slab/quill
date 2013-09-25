@@ -114,6 +114,9 @@ class ScribeStrikeFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'strike', 'S')
 
+  preformat: (value) ->
+    @root.ownerDocument.execCommand('strikeThrough', false, value)
+
 
 class ScribeUnderlineFormat extends ScribeTagFormat
   constructor: (@root) ->
@@ -200,6 +203,9 @@ class ScribeFamilyFormat extends ScribeStyleFormat
       return false
     )
 
+  preformat: (value) ->
+    @root.ownerDocument.execCommand('fontName', false, @styles[value])
+
 
 class ScribeSizeFormat extends ScribeStyleFormat
   constructor: (@root) ->
@@ -212,6 +218,14 @@ class ScribeSizeFormat extends ScribeStyleFormat
   createContainer: (value) ->
     container = super(value)
     return container
+
+  preformat: (value) ->
+    switch value
+      when 'huge'   then size = 5
+      when 'large'  then size = 3
+      when 'small'  then size = 1
+      else               size = 2
+    @root.ownerDocument.execCommand('fontSize', false, size)
 
 
 module.exports = 
