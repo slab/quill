@@ -195,6 +195,9 @@ class ScribeColorFormat extends ScribeStyleFormat
     delete colors['black']
     super(@root, 'color', 'color', colors, ScribeColorFormat.matchColor)
 
+  createContainer: (value) ->
+    node = super('magenta')
+
   preformat: (color) ->
     color = ScribeColorFormat.normalizeColor(color) if color
     @root.ownerDocument.execCommand('foreColor', false, color)

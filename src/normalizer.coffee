@@ -4,7 +4,7 @@ ScribeUtils = require('./utils')
 
 class ScribeNormalizer
   # Missing rule implies removal
-  @TAG_RULES: {
+  @TAG_RULES:
     'A'         : {}
     'ADDRESSS'  : {rename: 'div'}
     'B'         : {}
@@ -17,6 +17,14 @@ class ScribeNormalizer
     'DIV'       : {}
     'DL'        : {rename: 'div'}
     'EM'        : {rename: 'i'}
+    'FONT'      : (formatManager, node) ->
+      resultNode = ScribeDOM.unwrap(node)
+      _.each({ color: 'color', face: 'family', size: 'size' }, (format, attr) ->
+        if node.hasAttribute(attr)
+          formatNode = formatManager.createFormatContainer(format, node.getAttribute(attr))
+          resultNode = ScribeDOM.wrap(formatNode, resultNode)
+      )
+      return resultNode
     'H1'        : {rename: 'div'}
     'H2'        : {rename: 'div'}
     'H3'        : {rename: 'div'}
@@ -44,23 +52,6 @@ class ScribeNormalizer
     'TR'        : {rename: 'div'}
     'U'         : {}
     'UL'        : {rename: 'div'}
-  }
-
-
-  @applyRules: (root) ->
-    ScribeUtils.traversePreorder(root, 0, (node, index) =>
-      if node.nodeType == ScribeDOM.ELEMENT_NODE
-        rules = ScribeNormalizer.TAG_RULES[node.tagName]
-        if rules?
-          _.each(rules, (data, rule) ->
-            switch rule
-              when 'rename' then node = ScribeDOM.switchTag(node, data)
-              else return
-          )
-        else
-          node = ScribeDOM.unwrap(node)
-      return node
-    )
 
   @breakBlocks: (root) ->
     ScribeNormalizer.groupBlocks(root)
@@ -150,9 +141,27 @@ class ScribeNormalizer
 
   constructor: (@container, @formatManager) ->
 
+  applyRules: (root) ->
+    ScribeUtils.traversePreorder(root, 0, (node, index) =>
+      if node.nodeType == ScribeDOM.ELEMENT_NODE
+        rules = ScribeNormalizer.TAG_RULES[node.tagName]
+        if rules?
+          if _.isFunction(rules)
+            node = rules.call(null, @formatManager, node)
+          else if _.isObject(rules)
+            _.each(rules, (data, rule) ->
+              switch rule
+                when 'rename' then node = ScribeDOM.switchTag(node, data)
+                else return
+            )
+        else
+          node = ScribeDOM.unwrap(node)
+      return node
+    )
+
   normalizeDoc: ->
     @container.appendChild(@container.ownerDocument.createElement('div')) unless @container.firstChild
-    ScribeNormalizer.applyRules(@container)
+    this.applyRules(@container)
     ScribeNormalizer.breakBlocks(@container)
     _.each(@container.childNodes, (lineNode) =>
       this.normalizeLine(lineNode)
@@ -160,6 +169,7 @@ class ScribeNormalizer
 
   normalizeLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
+    this.applyRules(lineNode)
     this.normalizeTags(lineNode)
     ScribeNormalizer.requireLeaf(lineNode)
     this.removeRedundant(lineNode)
