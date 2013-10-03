@@ -3,13 +3,13 @@ ScribeFormat  = require('./format')
 
 class ScribeFormatManager
   @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'backColor', 'foreColor', 'family', 'size']
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'family', 'fore-color', 'size']
 
   constructor: (@container, options = {}) ->
     @options = _.defaults(options.formatManager or {}, ScribeFormatManager.DEFAULTS)
     @formats = {}
     _.each(@options.formats, (formatName) =>
-      className = formatName[0].toUpperCase() + formatName.slice(1)
+      className = _.str.classify(formatName)
       this.addFormat(formatName, new ScribeFormat[className](@container))
     )
 

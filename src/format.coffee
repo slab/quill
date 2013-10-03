@@ -82,13 +82,6 @@ class ScribeStyleFormat extends ScribeSpanFormat
       return styles
     , {})
 
-  @getCamelCase: (cssName) ->
-    nameArr = cssName.split('-')
-    capitalNameArr = _.map(nameArr, (name) ->
-      return name[0].toUpperCase() + name.slice(1)
-    )
-    return nameArr[0] + capitalNameArr.slice(1).join('')
-
   constructor: (@root, @keyName, @cssName, @styles) ->
     super
 
@@ -102,10 +95,8 @@ class ScribeStyleFormat extends ScribeSpanFormat
 
   createContainer: (value) ->
     container = super(value)
-    cssName = ScribeStyleFormat.getCamelCase(@cssName)
-    debugger
+    cssName = _.str.camelize(@cssName)
     container.style[cssName] = this.approximate(value)
-    console.log 'create dat container', value, cssName, this.approximate(value)
     return container
 
   matchContainer: (container) ->

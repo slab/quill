@@ -72,6 +72,7 @@ module.exports = (grunt) ->
           dest: 'build/scribe.all.js'
           src: [
             'node_modules/underscore/underscore.js'
+            'node_modules/underscore.string/lib/underscore.string.js'
             'vendor/assets/javascripts/rangy-core.js'
             'vendor/assets/javascripts/eventemitter2.js'
             'vendor/assets/javascripts/linked_list.js'

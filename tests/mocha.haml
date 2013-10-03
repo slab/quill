@@ -30,7 +30,7 @@
     // Need to separate files for code coverage
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js'}
 
-    - libs = ['underscore', 'eventemitter2', 'linked_list', 'rangy-core', 'tandem-core']
+    - libs = ['underscore', 'underscore.string', 'eventemitter2', 'linked_list', 'rangy-core', 'tandem-core']
     - libs.each do |lib|
       %script{:type => 'text/javascript', :src => "../lib/#{lib}.js"}
 
