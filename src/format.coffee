@@ -21,6 +21,10 @@ class ScribeTagFormat extends ScribeLeafFormat
   constructor: (@root, @keyName, @tagName) ->
     super
 
+  approximate: (value) ->
+    throw new Error('Tag format must have truthy value') unless value
+    return true
+
   createContainer: ->
     return @root.ownerDocument.createElement(@tagName)
 
@@ -35,10 +39,19 @@ class ScribeSpanFormat extends ScribeTagFormat
   constructor: (@root, @keyName) ->
     super(@root, @keyName, 'SPAN')
 
+  approximate: (value) ->
+    throw new Error("Descendants should implement")
+
 
 class ScribeClassFormat extends ScribeSpanFormat
   constructor: (@root, @keyName) ->
     super
+
+  approximate: (value) ->
+    parts = css.split('-')
+    if parts.length > 1 and parts[0] == @keyName
+      return parts.slice(1).join('-')
+    return false
 
   clean: (node) ->
     ScribeDOM.removeAttributes(node, 'class')
@@ -52,9 +65,8 @@ class ScribeClassFormat extends ScribeSpanFormat
     if super(container)
       classList = ScribeDOM.getClasses(container)
       for css in classList
-        parts = css.split('-')
-        if parts.length > 1 and parts[0] == @keyName
-          return parts.slice(1).join('-')
+        value = this.approximate(css)
+        return value if value
     return false
 
 
@@ -77,27 +89,29 @@ class ScribeStyleFormat extends ScribeSpanFormat
     )
     return nameArr[0] + capitalNameArr.slice(1).join('')
 
-  constructor: (@root, @keyName, @cssName, @styles, @matchFn) ->
-    @matchFn or= (cssValue) =>
-      for key,value of @styles
-        return key if value.toUpperCase() == cssValue.toUpperCase()
-      return false
+  constructor: (@root, @keyName, @cssName, @styles) ->
     super
+
+  approximate: (cssValue) ->
+    for key,value of @styles
+      return key if value.toUpperCase() == cssValue.toUpperCase()
+    return false
 
   clean: (node) ->
     ScribeDOM.removeAttributes(node, 'style')
 
   createContainer: (value) ->
     container = super(value)
-    return container unless @styles[value]?
     cssName = ScribeStyleFormat.getCamelCase(@cssName)
-    container.style[cssName] = @styles[value] if @styles[value]
+    debugger
+    container.style[cssName] = this.approximate(value)
+    console.log 'create dat container', value, cssName, this.approximate(value)
     return container
 
   matchContainer: (container) ->
     return false unless super(container)
     styles = ScribeStyleFormat.getStyleObject(container)
-    return if styles[@cssName]? then @matchFn(styles[@cssName]) else false
+    return if styles[@cssName]? then this.approximate(styles[@cssName]) else false
 
 
 class ScribeBoldFormat extends ScribeTagFormat
@@ -127,30 +141,21 @@ class ScribeLinkFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'link', 'A')
 
+  approximate: (value) ->
+    value = 'http://' + value unless value.match(/^https?:\/\//)
+    return value
+
   clean: (node) ->
     ScribeDOM.removeAttributes(node, ['href', 'title'])
 
   createContainer: (value) ->
     link = super(value)
-    value = 'http://' + value unless value.match(/^https?:\/\//)
-    link.href = value
-    link.href = 'about:blank' if (link.protocol != 'http:' && link.protocol != 'https:')
+    link.href = this.approximate(value)
     link.title = link.href
     return link
 
   matchContainer: (container) ->
     return if super(container) then container.getAttribute('href') else false
-
-
-class ScribeBackgroundFormat extends ScribeStyleFormat
-  constructor: (@root) ->
-    colors = _.clone(ScribeColorFormat.COLORS)
-    delete colors['white']
-    super(@root, 'background', 'background-color', colors, ScribeColorFormat.matchColor)
-
-  preformat: (color) ->
-    color = ScribeColorFormat.normalizeColor(color) if color
-    @root.ownerDocument.execCommand('backColor', false, color)
 
 
 class ScribeColorFormat extends ScribeStyleFormat
@@ -165,42 +170,51 @@ class ScribeColorFormat extends ScribeStyleFormat
     'white'   : '#FFFFFF'
   }
 
-  @normalizeColor: (color) ->
-    color = ScribeColorFormat.COLORS[color] if ScribeColorFormat.COLORS[color]?
-    if color[0] == '#'
-      if color.length == 4
-        color = '#' + _.map(color.slice(1), (letter) ->
-          letter + letter
-        ).join('')
-      return color
-    else if color.indexOf('rgb(') == 0
-      color = color.slice(4)
-      color = _.reduce(color.split(',').slice(0, 3), (color, part) ->
-        c = parseInt(part, 10).toString(16).toUpperCase()
-        c = '0' + c if c.length == 1
-        return color + c
-      , '#')
-      return color
+  @normalizeColor: (value) ->
+    if value[0] == '#' and value.length == 4
+      return _.map(value.slice(1), (letter) -> 
+        parseInt(letter + letter, 16)
+      )
+    else if value[0] == '#' and value.length == 7
+      return [
+        parseInt(value.slice(1,3), 16)
+        parseInt(value.slice(3,5), 16)
+        parseInt(value.slice(5,7), 16)
+      ]
+    else if value.indexOf('rgb') == 0
+      colors = value.slice(value.indexOf('(') + 1, value.indexOf(')')).split(',')
+      return _.map(colors, (color) ->
+        parseInt(color)
+      )
     else
-      return '#000000'
+      return [0,0,0]
 
-  @matchColor: (cssValue) ->
-    color = ScribeColorFormat.normalizeColor(cssValue)
-    for key,value of @styles
-      return key if value.toUpperCase() == color.toUpperCase()
-    return false
+  approximate: (value) ->
+    return value if @styles[value]?
+    c = ScribeColorFormat.normalizeColor(value)
+    closestDist = Infinity
+    closestColor = false
+    for key,hex of @styles
+      p = ScribeColorFormat.normalizeColor(hex)
+      dist = Math.sqrt(Math.pow(p[0]-c[0], 2) + Math.pow(p[1]-c[1], 2) + Math.pow(p[2]-c[2], 2))
+      return key if dist == 0
+      if dist < closestDist
+        closestDist = dist
+        closestColor = key
+    return closestColor
 
+
+class ScribeBackColorFormat extends ScribeColorFormat
   constructor: (@root) ->
-    colors = _.clone(ScribeColorFormat.COLORS)
-    delete colors['black']
-    super(@root, 'color', 'color', colors, ScribeColorFormat.matchColor)
+    super(@root, 'background', 'background-color', ScribeColorFormat.COLORS)
 
-  createContainer: (value) ->
-    node = super('magenta')
+  approximate: (value) ->
+    color = super(value)
+    return if color == 'white' then false else color
 
   preformat: (color) ->
-    color = ScribeColorFormat.normalizeColor(color) if color
-    @root.ownerDocument.execCommand('foreColor', false, color)
+    color = this.approximate(color)
+    @root.ownerDocument.execCommand('backColor', false, @styles[color]) if color != 'white'
 
 
 class ScribeFamilyFormat extends ScribeStyleFormat
@@ -208,15 +222,30 @@ class ScribeFamilyFormat extends ScribeStyleFormat
     super(@root, 'family', 'font-family', {
       'serif'     : "'Times New Roman', serif"
       'monospace' : "'Courier New', monospace"
-    }, (cssValue) =>
-      for key,value of @styles
-        return key if value.indexOf(key) > -1
-      return false
-    )
+    })
+
+  approximate: (value) ->
+    value = value.toUpperCase()
+    for key,font of @styles
+      return key if font.toUpperCase().indexOf(value) > -1
+    return false
 
   preformat: (family) ->
     family = @styles[family] if family
     @root.ownerDocument.execCommand('fontName', false, family)
+
+
+class ScribeForeColorFormat extends ScribeColorFormat
+  constructor: (@root) ->
+    super(@root, 'color', 'color', ScribeColorFormat.COLORS)
+
+  approximate: (value) ->
+    color = super(value)
+    return if color == 'black' then false else color
+
+  preformat: (color) ->
+    color = this.approximate(color)
+    @root.ownerDocument.execCommand('foreColor', false, @styles[color]) if color != 'black'
 
 
 class ScribeSizeFormat extends ScribeStyleFormat
@@ -227,9 +256,20 @@ class ScribeSizeFormat extends ScribeStyleFormat
       'small' : '10px'
     })
 
-  createContainer: (value) ->
-    container = super(value)
-    return container
+  approximate: (value) ->
+    return value if @styles[value]?
+    if _.isString(value) and value.indexOf('px') > -1
+      value = parseInt(value)
+      return 'small'  if value < 11
+      return false    if 11 <= value and value < 15
+      return 'large'  if 15 <= value and value < 25
+      return 'huge'
+    else
+      value = parseInt(value)
+      return 'small'  if value < 2
+      return false    if 2 <= value and value < 3
+      return 'large'  if 3 <= value and value < 5
+      return 'huge'
 
   preformat: (size) ->
     switch size
@@ -253,7 +293,7 @@ module.exports =
   Strike    : ScribeStrikeFormat
   Underline : ScribeUnderlineFormat
   
-  Background  : ScribeBackgroundFormat
-  Color       : ScribeColorFormat
-  Family      : ScribeFamilyFormat
-  Size        : ScribeSizeFormat
+  BackColor : ScribeBackColorFormat
+  Family    : ScribeFamilyFormat
+  ForeColor : ScribeForeColorFormat
+  Size      : ScribeSizeFormat

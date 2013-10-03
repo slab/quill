@@ -3,7 +3,7 @@ ScribeFormat  = require('./format')
 
 class ScribeFormatManager
   @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'background', 'color', 'family', 'size']
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'backColor', 'foreColor', 'family', 'size']
 
   constructor: (@container, options = {}) ->
     @options = _.defaults(options.formatManager or {}, ScribeFormatManager.DEFAULTS)
