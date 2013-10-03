@@ -96,7 +96,8 @@ class ScribeStyleFormat extends ScribeSpanFormat
   createContainer: (value) ->
     container = super(value)
     cssName = _.str.camelize(@cssName)
-    container.style[cssName] = this.approximate(value)
+    style = this.approximate(value)
+    container.style[cssName] = @styles[style] if style
     return container
 
   matchContainer: (container) ->
@@ -205,7 +206,8 @@ class ScribeBackColorFormat extends ScribeColorFormat
 
   preformat: (color) ->
     color = this.approximate(color)
-    @root.ownerDocument.execCommand('backColor', false, @styles[color]) if color != 'white'
+    color = if color == 'white' then null else @styles[color]
+    @root.ownerDocument.execCommand('BackColor', false, color)
 
 
 class ScribeFamilyFormat extends ScribeStyleFormat
@@ -216,9 +218,10 @@ class ScribeFamilyFormat extends ScribeStyleFormat
     })
 
   approximate: (value) ->
-    value = value.toUpperCase()
+    value = _.str.clean(value.toUpperCase().replace(/[^A-Z ]+/g, ' '))
     for key,font of @styles
-      return key if font.toUpperCase().indexOf(value) > -1
+      font = _.str.clean(font.toUpperCase().replace(/[^A-Z ]+/g, ' '))
+      return key if font.indexOf(value) > -1
     return false
 
   preformat: (family) ->
@@ -236,7 +239,8 @@ class ScribeForeColorFormat extends ScribeColorFormat
 
   preformat: (color) ->
     color = this.approximate(color)
-    @root.ownerDocument.execCommand('foreColor', false, @styles[color]) if color != 'black'
+    color = if color == 'black' then null else @styles[color]
+    @root.ownerDocument.execCommand('foreColor', false, color)
 
 
 class ScribeSizeFormat extends ScribeStyleFormat
