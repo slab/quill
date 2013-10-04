@@ -19,7 +19,7 @@ class ScribeNormalizer
     'EM'        : {rename: 'i'}
     'FONT'      : (formatManager, node) ->
       resultNode = ScribeDOM.unwrap(node)
-      _.each({ color: 'fore-color', face: 'family', size: 'size' }, (format, attr) ->
+      _.each({ color: 'fore-color', face: 'font-name', size: 'font-size' }, (format, attr) ->
         if node.hasAttribute(attr)
           formatNode = formatManager.createFormatContainer(format, node.getAttribute(attr))
           resultNode = ScribeDOM.wrap(formatNode, resultNode)

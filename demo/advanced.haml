@@ -19,9 +19,9 @@
                 %option{:value => 'serif'} Serif
                 %option{:value => 'monospace'} Monospace
             .format-group
-              %select.format-dropdown.size{:id => 'size-' + (num == 1 ? 'first': 'last')}
+              %select.format-dropdown.font-size{:id => 'font-size-' + (num == 1 ? 'first': 'last')}
                 %option{:value => 'small'} Small
-                %option.default{:value => false, :selected => true} Normal
+                %option.default{:value => 'normal', :selected => true} Normal
                 %option{:value => 'large'} Large
                 %option{:value => 'huge'} Huge
             .format-group

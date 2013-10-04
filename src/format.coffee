@@ -109,7 +109,8 @@ class ScribeStyleFormat extends ScribeSpanFormat
 
   preformat: (value) ->
     value = this.approximate(value) or @defaultStyle
-    @root.ownerDocument.execCommand(_.str.camelize(@keyName), null, @styles[value])
+    console.log 'pre', value, @styles[value], _.str.camelize(@keyName)
+    @root.ownerDocument.execCommand(_.str.camelize(@keyName), false, @styles[value])
 
 
 class ScribeBoldFormat extends ScribeTagFormat
@@ -217,16 +218,11 @@ class ScribeFontNameFormat extends ScribeStyleFormat
     return false
 
 
-class ScribeForeColorFormat extends ScribeColorFormat
-  constructor: (@root) ->
-    super(@root, 'fore-color', 'color', 'black', ScribeColorFormat.COLORS)
-
-
-class ScribeSizeFormat extends ScribeStyleFormat
-  @SCALE: 6.25      # Conversion from execCommand size to px
+class ScribeFontSizeFormat extends ScribeStyleFormat
+  @SCALE: 6.75      # Conversion from execCommand size to px
 
   constructor: (@root) ->
-    super(@root, 'size', 'font-size', 'normal', {
+    super(@root, 'font-size', 'font-size', 'normal', {
       'huge'  : '32px'
       'large' : '18px'
       'normal': '13px'
@@ -238,9 +234,19 @@ class ScribeSizeFormat extends ScribeStyleFormat
     if _.isString(value) and value.indexOf('px') > -1
       value = parseInt(value)
     else
-      value = parseInt(value) * ScribeSizeFormat.SCALE
+      value = parseInt(value) * ScribeFontSizeFormat.SCALE
     size = ScribeUtils.findClosestPoint(value, @styles, parseInt)
     return if size == @defaultStyle then false else size
+
+  preformat: (value) ->
+    value = this.approximate(value) or @defaultStyle
+    size = Math.round(parseInt(@styles[value]) / ScribeFontSizeFormat.SCALE)
+    @root.ownerDocument.execCommand(_.str.camelize(@keyName), false, size)
+
+
+class ScribeForeColorFormat extends ScribeColorFormat
+  constructor: (@root) ->
+    super(@root, 'fore-color', 'color', 'black', ScribeColorFormat.COLORS)
 
 
 module.exports = 
@@ -258,5 +264,5 @@ module.exports =
   
   BackColor : ScribeBackColorFormat
   FontName  : ScribeFontNameFormat
+  FontSize  : ScribeFontSizeFormat
   ForeColor : ScribeForeColorFormat
-  Size      : ScribeSizeFormat
