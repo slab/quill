@@ -203,6 +203,11 @@ class ScribeBackColorFormat extends ScribeColorFormat
 
 
 class ScribeFontNameFormat extends ScribeStyleFormat
+  @normalizeFont: (fontStr) ->
+    return _.map(fontStr.toUpperCase().split(','), (font) ->
+      return _.str.trim(font, "'\" ")
+    )
+
   constructor: (@root) ->
     super(@root, 'font-name', 'font-family', 'sans-serif', {
       'sans-serif': "'Helvetica', 'Arial', sans-serif"
@@ -211,10 +216,10 @@ class ScribeFontNameFormat extends ScribeStyleFormat
     })
 
   approximate: (value) ->
-    value = _.str.clean(value.toUpperCase().replace(/[^A-Z ]+/g, ' '))
-    for key,font of @styles
-      font = _.str.clean(font.toUpperCase().replace(/[^A-Z ]+/g, ' '))
-      return key if font.indexOf(value) > -1
+    values = ScribeFontNameFormat.normalizeFont(value)
+    for key,fonts of @styles
+      fonts = ScribeFontNameFormat.normalizeFont(fonts)
+      return key if _.intersection(fonts, values).length > 0
     return false
 
 
