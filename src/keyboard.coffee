@@ -130,7 +130,9 @@ class ScribeKeyboard
 
   toggleFormat: (range, format) ->
     formats = range.getFormats()
-    range.format(format, !formats[format], { source: 'user' })
+    value = !formats[format]
+    range.format(format, value, { source: 'user' })
+    @editor.emit(@editor.constructor.events.PREFORMAT, format, value)
 
 
 module.exports = ScribeKeyboard

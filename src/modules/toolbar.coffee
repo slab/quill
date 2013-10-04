@@ -1,5 +1,4 @@
 ScribeDOM         = require('../dom')
-ScribeEditor      = require('../editor')
 ScribeRange       = require('../range')
 ScribeLinkTooltip = require('./link-tooltip')
 
@@ -15,33 +14,30 @@ initFormats = ->
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         @editor.root.focus()
         range = @editor.getSelection()
-        if range
-          range.format(format, value, { source: 'user' })
-          this.emit(ScribeToolbar.events.FORMAT, format, value)
-          if value == true
-            ScribeDOM.addClass(@container.querySelector(".#{format}"), 'active')
-          else if value == false
-            ScribeDOM.removeClass(@container.querySelector(".#{format}"), 'active')
-          # Non-boolean values implies SELECT input instead of BUTTON
+        range.format(format, value, { source: 'user' }) if range
       )
     )
   )
 
 
-class ScribeToolbar extends EventEmitter2
+class ScribeToolbar
   @formats:
     BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent']
     SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
 
-  @events:
-    FORMAT: 'format'
-
   constructor: (@container, @editor) ->
     @container = document.getElementById(@container) if _.isString(@container)
     initFormats.call(this)
-    @editor.on(ScribeEditor.events.POST_EVENT, (eventName) =>
-      return unless eventName == ScribeEditor.events.API_TEXT_CHANGE or eventName == ScribeEditor.events.USER_TEXT_CHANGE or eventName == ScribeEditor.events.SELECTION_CHANGE
+    @editor.on(@editor.constructor.events.POST_EVENT, (eventName) =>
+      return unless eventName == @editor.constructor.events.API_TEXT_CHANGE or eventName == @editor.constructor.events.USER_TEXT_CHANGE or eventName == @editor.constructor.events.SELECTION_CHANGE
       this.update()
+    )
+    @editor.on(@editor.constructor.events.PREFORMAT, (format, value) =>
+      if value == true
+        ScribeDOM.addClass(@container.querySelector(".#{format}"), 'active')
+      else if value == false
+        ScribeDOM.removeClass(@container.querySelector(".#{format}"), 'active')
+      # Non-boolean values implies SELECT input instead of BUTTON
     )
 
   update: ->
