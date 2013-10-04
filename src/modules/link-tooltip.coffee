@@ -47,6 +47,7 @@ initListeners = ->
   )
   ScribeDOM.addEventListener(@button, 'click', =>
     @savedRange = @editor.getSelection()
+    return unless @savedRange? and !@savedRange.isCollapsed()
     if ScribeDOM.hasClass(@button, 'active')
       formatLink.call(this, false)
       hideTooltip.call(this)
