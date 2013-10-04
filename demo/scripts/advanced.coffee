@@ -74,7 +74,7 @@ initEditor = ($container) ->
 initToolbar = ($container, editor) ->
   $formattingContainer = $('.formatting-container', $container)
   toolbar = new Scribe.Toolbar($formattingContainer.get(0), editor)
-  dropkickFormats = ['family', 'size']
+  dropkickFormats = ['font-name', 'font-size']
   for format in dropkickFormats
     do (format) ->
       $(".#{format}", $formattingContainer).dropkick({
@@ -84,7 +84,7 @@ initToolbar = ($container, editor) ->
         width: 75
       })
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, ->
-    $(".family, .size", $formattingContainer).each((select) ->
+    $(".font-name, .font-size", $formattingContainer).each((select) ->
       $(this).dropkick('set', $('option:selected', this).text())
     )
   )
