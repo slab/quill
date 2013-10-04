@@ -53,7 +53,7 @@ module.exports = (grunt) ->
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'
-        src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js']
+        src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
       lib:
         expand: true, cwd: 'vendor/assets/javascripts/'
         dest: 'build/lib/'

@@ -49,7 +49,7 @@ class ScribeClassFormat extends ScribeSpanFormat
     super
 
   approximate: (value) ->
-    parts = css.split('-')
+    parts = value.split('-')
     if parts.length > 1 and parts[0] == @keyName
       return parts.slice(1).join('-')
     return false

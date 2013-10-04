@@ -33,10 +33,10 @@ describe('Undo Manager', ->
       initial: Tandem.Delta.getInitial("The lazy fox\n").compose(boldDelta) 
     }, unboldDelta)
 
-    blueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: 'blue', strike: true })
+    blueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { 'fore-color': 'blue', strike: true })
     undoTests.run('insert color/strike', {}, blueStrikeDelta)
 
-    undoBlueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { color: null, strike: null })
+    undoBlueStrikeDelta = Tandem.Delta.makeRetainDelta(13, 0, 12, { 'fore-color': null, strike: null })
     undoTests.run('remove color/strike', { 
       initial: Tandem.Delta.getInitial("The lazy fox\n").compose(blueStrikeDelta) 
     }, undoBlueStrikeDelta)
