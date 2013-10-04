@@ -18,6 +18,11 @@ initFormats = ->
         if range
           range.format(format, value, { source: 'user' })
           this.emit(ScribeToolbar.events.FORMAT, format, value)
+          if value == true
+            ScribeDOM.addClass(@container.querySelector(".#{format}"), 'active')
+          else if value == false
+            ScribeDOM.removeClass(@container.querySelector(".#{format}"), 'active')
+          # Non-boolean values implies SELECT input instead of BUTTON
       )
     )
   )
