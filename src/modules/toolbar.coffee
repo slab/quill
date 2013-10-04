@@ -14,7 +14,9 @@ initFormats = ->
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         @editor.root.focus()
         range = @editor.getSelection()
-        range.format(format, value, { source: 'user' }) if range
+        if range
+          range.format(format, value, { source: 'user' })
+          @editor.emit(@editor.constructor.events.PREFORMAT, format, value)
       )
     )
   )
