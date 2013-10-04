@@ -109,7 +109,6 @@ class ScribeStyleFormat extends ScribeSpanFormat
 
   preformat: (value) ->
     value = this.approximate(value) or @defaultStyle
-    console.log 'pre', value, @styles[value], _.str.camelize(@keyName)
     @root.ownerDocument.execCommand(_.str.camelize(@keyName), false, @styles[value])
 
 

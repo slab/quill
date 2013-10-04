@@ -44,7 +44,6 @@ ScribeUtils =
       if dist < closestDist
         closestDist = dist
         closestValue = key
-    console.log point, list, closestValue
     return closestValue
 
   findDeepestNode: (node, offset) ->
