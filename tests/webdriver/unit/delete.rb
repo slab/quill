@@ -34,7 +34,7 @@ describe "Test Delete" do
   it "should delete formatted text" do
     initial = { "startLength" => 0,
               "endLength" => 4,
-              "ops" => [{ "value" => "abc", "attributes" => {"color" => "red"}},
+              "ops" => [{ "value" => "abc", "attributes" => {"fore-color" => "red"}},
                         { "value" => "\n" }]
     }
 
@@ -50,9 +50,9 @@ describe "Test Delete" do
   it "should delete newline and retain formatting" do
     initial = { "startLength" => 0,
               "endLength" => 8,
-              "ops" => [{ "value" => "abc", "attributes" => {"color" => "red"} },
+              "ops" => [{ "value" => "abc", "attributes" => {"fore-color" => "red"} },
                         { "value" => "\n", "attributes" => {} },
-                        { "value" => "def", "attributes" => {"color" => "red"} },
+                        { "value" => "def", "attributes" => {"fore-color" => "red"} },
                         { "value" => "\n" }]
     }
 
@@ -87,10 +87,10 @@ describe "Test Delete" do
     initial = { "startLength" => 0,
               "endLength" => 10,
               "ops" => [{ "value" => "ab", "attributes" => {} },
-                        { "value" => "cd", "attributes" => { "color" => "red" }},
+                        { "value" => "cd", "attributes" => { "fore-color" => "red" }},
                         { "value" => "\n", "attributes" => {} },
                         { "value" => "ef", "attributes" => {} },
-                        { "value" => "gh", "attributes" => {"color" => "red"}},
+                        { "value" => "gh", "attributes" => {"fore-color" => "red"}},
                         { "value" => "\n" }]
     }
 
@@ -108,7 +108,7 @@ describe "Test Delete" do
                 "endLength" => 8,
                 "ops" => [{ "value" => "abc", "attributes" => {} },
                           { "value" => "\n", "attributes" => {} },
-                          { "value" => "def", "attributes" => {"color" => "red"} },
+                          { "value" => "def", "attributes" => {"fore-color" => "red"} },
                           { "value" => "\n" }]
     }
 

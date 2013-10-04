@@ -181,7 +181,7 @@ class WebdriverAdapter
       end
     when /link|strike/
       click_button_from_toolbar(format)
-    when /family|size|background|color/
+    when /font-family|font-size|back-color|fore-color/
       select_from_dropdown(format, value)
     else
       raise "Unknown formatting op: #{format}"
