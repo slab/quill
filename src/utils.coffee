@@ -28,6 +28,25 @@ ScribeUtils =
       node = node.parentNode
     return node
 
+  findClosestPoint: (point, list, prepFn = ->) ->    # Using Euclidien distance
+    point = prepFn.call(null, point)
+    point = [point] if !_.isArray(point)
+    closestDist = Infinity
+    closestValue = false
+    for key,coords of list
+      coords = prepFn.call(null, coords)
+      coords = [coords] if !_.isArray(coords)
+      dist = _.reduce(coords, (dist, coord, i) ->
+        dist + Math.pow(coord - point[i], 2)
+      , 0)
+      dist = Math.sqrt(dist)
+      return key if dist == 0
+      if dist < closestDist
+        closestDist = dist
+        closestValue = key
+    console.log point, list, closestValue
+    return closestValue
+
   findDeepestNode: (node, offset) ->
     if node.firstChild?
       for child in _.clone(node.childNodes)

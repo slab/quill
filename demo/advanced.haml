@@ -14,8 +14,8 @@
           #formatting-container.formatting-container
             .format-group
               // Dropkick screws up without id
-              %select.format-dropdown.family{:id => 'family-' + (num == 1 ? 'first': 'last')}
-                %option.default{:value => false, :selected => true} Sans Serif
+              %select.format-dropdown.font-name{:id => 'font-name-' + (num == 1 ? 'first': 'last')}
+                %option.default{:value => 'sans-serif', :selected => true} Sans Serif
                 %option{:value => 'serif'} Serif
                 %option{:value => 'monospace'} Monospace
             .format-group

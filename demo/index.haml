@@ -10,18 +10,18 @@
     #content-container
       .editor-wrapper
         #formatting-container.formatting-container
-          %select.family
-            %option{:value => false, :selected => true}  Sans Serif
+          %select.font-name
+            %option{:value => 'sans-serif', :selected => true}  Sans Serif
             %option{:value => 'serif'}      Serif
             %option{:value => 'monospace'}  Monospace
           %select.size
             %option{:value => 'small'}   Small
-            %option{:value => false, :selected => true} Normal
+            %option{:value => 'normal', :selected => true} Normal
             %option{:value => 'large'}   Large
             %option{:value => 'huge'}    Huge
           %select.fore-color
             %option{:value => 'white'}   White
-            %option{:value => false, :selected => true}  Black
+            %option{:value => 'black', :selected => true}  Black
             %option{:value => 'red'}     Red
             %option{:value => 'blue'}    Blue
             %option{:value => 'lime'}    Lime
@@ -29,7 +29,7 @@
             %option{:value => 'magenta'} Magenta
             %option{:value => 'yellow'}  Yellow
           %select.back-color
-            %option{:value => false, :selected => true}   White
+            %option{:value => 'white', :selected => true}   White
             %option{:value => 'black'}   Black
             %option{:value => 'red'}     Red
             %option{:value => 'blue'}    Blue

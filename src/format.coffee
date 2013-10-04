@@ -1,4 +1,5 @@
-ScribeDOM = require('./dom')
+ScribeDOM   = require('./dom')
+ScribeUtils = require('./utils')
 
 
 class ScribeLeafFormat
@@ -82,12 +83,13 @@ class ScribeStyleFormat extends ScribeSpanFormat
       return styles
     , {})
 
-  constructor: (@root, @keyName, @cssName, @styles) ->
+  constructor: (@root, @keyName, @cssName, @defaultStyle, @styles) ->
     super
 
   approximate: (cssValue) ->
     for key,value of @styles
-      return key if value.toUpperCase() == cssValue.toUpperCase()
+      if value.toUpperCase() == cssValue.toUpperCase()
+        return if key == @defaultStyle then false else key
     return false
 
   clean: (node) ->
@@ -104,6 +106,10 @@ class ScribeStyleFormat extends ScribeSpanFormat
     return false unless super(container)
     styles = ScribeStyleFormat.getStyleObject(container)
     return if styles[@cssName]? then this.approximate(styles[@cssName]) else false
+
+  preformat: (value) ->
+    value = this.approximate(value) or @defaultStyle
+    @root.ownerDocument.execCommand(_.str.camelize(@keyName), null, @styles[value])
 
 
 class ScribeBoldFormat extends ScribeTagFormat
@@ -181,38 +187,24 @@ class ScribeColorFormat extends ScribeStyleFormat
     else
       return [0,0,0]
 
+  constructor: (@root, @keyName, @cssName, @defaultStyle, @styles) ->
+    super
+
   approximate: (value) ->
     return value if @styles[value]?
-    c = ScribeColorFormat.normalizeColor(value)
-    closestDist = Infinity
-    closestColor = false
-    for key,hex of @styles
-      p = ScribeColorFormat.normalizeColor(hex)
-      dist = Math.sqrt(Math.pow(p[0]-c[0], 2) + Math.pow(p[1]-c[1], 2) + Math.pow(p[2]-c[2], 2))
-      return key if dist == 0
-      if dist < closestDist
-        closestDist = dist
-        closestColor = key
-    return closestColor
+    color = ScribeUtils.findClosestPoint(value, @styles, ScribeColorFormat.normalizeColor)
+    return if color == @defaultStyle then false else color
 
 
 class ScribeBackColorFormat extends ScribeColorFormat
   constructor: (@root) ->
-    super(@root, 'background', 'background-color', ScribeColorFormat.COLORS)
-
-  approximate: (value) ->
-    color = super(value)
-    return if color == 'white' then false else color
-
-  preformat: (color) ->
-    color = this.approximate(color)
-    color = if color == 'white' then null else @styles[color]
-    @root.ownerDocument.execCommand('BackColor', false, color)
+    super(@root, 'back-color', 'background-color', 'white', ScribeColorFormat.COLORS)
 
 
-class ScribeFamilyFormat extends ScribeStyleFormat
+class ScribeFontNameFormat extends ScribeStyleFormat
   constructor: (@root) ->
-    super(@root, 'family', 'font-family', {
+    super(@root, 'font-name', 'font-family', 'sans-serif', {
+      'sans-serif': "'Helvetica', 'Arial', sans-serif"
       'serif'     : "'Times New Roman', serif"
       'monospace' : "'Courier New', monospace"
     })
@@ -224,30 +216,20 @@ class ScribeFamilyFormat extends ScribeStyleFormat
       return key if font.indexOf(value) > -1
     return false
 
-  preformat: (family) ->
-    family = @styles[family] if family
-    @root.ownerDocument.execCommand('fontName', false, family)
-
 
 class ScribeForeColorFormat extends ScribeColorFormat
   constructor: (@root) ->
-    super(@root, 'color', 'color', ScribeColorFormat.COLORS)
-
-  approximate: (value) ->
-    color = super(value)
-    return if color == 'black' then false else color
-
-  preformat: (color) ->
-    color = this.approximate(color)
-    color = if color == 'black' then null else @styles[color]
-    @root.ownerDocument.execCommand('foreColor', false, color)
+    super(@root, 'fore-color', 'color', 'black', ScribeColorFormat.COLORS)
 
 
 class ScribeSizeFormat extends ScribeStyleFormat
+  @SCALE: 6.25      # Conversion from execCommand size to px
+
   constructor: (@root) ->
-    super(@root, 'size', 'font-size', {
+    super(@root, 'size', 'font-size', 'normal', {
       'huge'  : '32px'
       'large' : '18px'
+      'normal': '13px'
       'small' : '10px'
     })
 
@@ -255,24 +237,10 @@ class ScribeSizeFormat extends ScribeStyleFormat
     return value if @styles[value]?
     if _.isString(value) and value.indexOf('px') > -1
       value = parseInt(value)
-      return 'small'  if value < 11
-      return false    if 11 <= value and value < 15
-      return 'large'  if 15 <= value and value < 25
-      return 'huge'
     else
-      value = parseInt(value)
-      return 'small'  if value < 2
-      return false    if 2 <= value and value < 3
-      return 'large'  if 3 <= value and value < 5
-      return 'huge'
-
-  preformat: (size) ->
-    switch size
-      when 'huge'   then size = 5
-      when 'large'  then size = 3
-      when 'small'  then size = 1
-      else               size = 2
-    @root.ownerDocument.execCommand('fontSize', false, size)
+      value = parseInt(value) * ScribeSizeFormat.SCALE
+    size = ScribeUtils.findClosestPoint(value, @styles, parseInt)
+    return if size == @defaultStyle then false else size
 
 
 module.exports = 
@@ -289,6 +257,6 @@ module.exports =
   Underline : ScribeUnderlineFormat
   
   BackColor : ScribeBackColorFormat
-  Family    : ScribeFamilyFormat
+  FontName  : ScribeFontNameFormat
   ForeColor : ScribeForeColorFormat
   Size      : ScribeSizeFormat
