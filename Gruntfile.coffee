@@ -5,7 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
-  grunt.loadNpmTasks 'grunt-contrib-haml'
+  grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
@@ -82,17 +82,14 @@ module.exports = (grunt) ->
           ]
         }]
 
-    haml:
+    jade:
+      options:
+        pretty: true
       demo:
-        expand: true
         dest: 'build/'
-        src: ['demo/*.haml', '!demo/content.haml']
-        ext: ['.html']
-      tests:
         expand: true
-        dest: 'build/'
-        src: ['tests/*.haml', 'tests/testem/*.haml', 'tests/webdriver/*.haml', '!tests/mocha.haml']
         ext: ['.html']
+        src: ['demo/*.jade', '!demo/content.jade']
 
     sass:
       demo:
@@ -106,11 +103,11 @@ module.exports = (grunt) ->
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
       haml_demo:
-        files: ['demo/*.haml']
-        tasks: ['haml:demo']
+        files: ['demo/*.jade']
+        tasks: ['jade:demo']
       haml_tests:
-        files: ['tests/*.haml', 'tests/testem/*.haml']
-        tasks: ['haml:tests']
+        files: ['tests/*.jade', 'tests/testem/*.jade']
+        tasks: ['jade:tests']
       sass:
         files: ['demo/styles/*.sass']
         tasks: ['sass:demo']
@@ -122,4 +119,4 @@ module.exports = (grunt) ->
         tasks: ['coffee:test']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'coffeeify', 'concat', 'haml', 'sass']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'coffeeify', 'concat', 'jade', 'sass']

@@ -1,0 +1,48 @@
+doctype 5
+html
+  head
+    title Stypi Pretty Editor Demo
+    link(rel='stylesheet', type='text/css', href='styles/reset.css')
+    link(rel='stylesheet', type='text/css', href='styles/dropkick.css')
+    link(rel='stylesheet', type='text/css', href='styles/advanced.css')
+    meta(charset='utf-8')
+
+  body
+    #content-container
+      each num in [1, 2]
+        .editor-wrapper(class=(num == 1 ? 'first' : 'last'))
+          #formatting-container.formatting-container
+            .format-group
+              // Dropkick screws up without id
+              select.format-dropdown.font-name(id='font-name-' + (num == 1 ? 'first' : 'last'))
+                option.default(value='sans-serif', selected=true) Sans Serif
+                option(value='serif') Serif
+                option(value='monospace') Monospace
+            .format-group
+              select.format-dropdown.font-size(id='font-size-' + (num == 1 ? 'first' : 'last'))
+                option(value='small') Small
+                option.default(value='normal', selected=true) Normal
+                option(value='large') Large
+                option(value='huge') Huge
+            .format-group
+              .format-button
+                .format.bold
+              .format-button
+                .format.italic
+              .format-button
+                .format.underline
+              .format-button
+                .format.strike.last
+            .format-group
+              .format-button
+                .format.link.last
+            .format-group
+              .format-button
+                .format.attribution.last
+          #editor-container.editor-container
+            include content
+
+    script(type='text/javascript', src='http//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js')
+    script(type='text/javascript', src='scripts/dropkick.js')
+    script(type='text/javascript', src='../scribe.all.js')
+    script(type='text/javascript', src='scripts/advanced.js')
