@@ -31,4 +31,3 @@ When splitting this line, we can either add the new div before or after our curr
 <div><br></div>
 <div><br></div>
 But our selection points to the first div. Thus we must prepend for correct behavior of advancing our cursor to the next line.
-

@@ -15,9 +15,10 @@ var editor = new Scribe.Editor('editor')      // 'editor' is id of dom container
 Editor API
 ---
 
-### Modifying Text
+### Text Operations
 
-- editor.insertAt(index, text) - insert text (unformatted) at index
+- editor.getAt(index, length) - get length text starting from index, default to entire document
+- editor.insertAt(index, text, formatting) - insert text at index
 - editor.deleteAt(index, length) - delete length characters starting from index
 - editor.formatAt(index, length, name, value) - apply formatting to length characters starting at index
 
@@ -33,7 +34,8 @@ See [Tandem](https://github.com/stypi/tandem) for details on deltas.
 
 Events names are accessible through Scribe.Editor.events
 
-- editor.on('text-change', function(delta))
+- editor.on('api-text-change', function(delta))
+- editor.on('user-text-change', function(delta))
 - editor.on('selection-change', function(range)) - range is the new range of the selection
 
 
