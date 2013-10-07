@@ -40,9 +40,9 @@
     margin-right: 10px
   .font-family, .font-size
     visibility: hidden
-    
-  @each $format in bold, italic, strike, underline, list, bullet, outdent, indent, link, attribution
-    .#{$format}
-      background-image: url(../images/#{$format}.png)
-    .#{$format}:hover, .#{$format}:active, .#{$format}.active
-      background-image: url(../images/#{$format}-color.png)
+   
+  for $format in bold italic strike underline list bullet outdent indent link attribution
+    .{$format}
+      background-image: url('../images/' + $format + '.png')
+    .{$format}:hover, .{$format}:active, .{$format}.active
+      background-image: url('../images/' + $format + '-color.png')

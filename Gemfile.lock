@@ -12,19 +12,15 @@ GEM
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.2)
     ffi (1.8.1)
-    haml (4.0.1)
-      tilt
     highline (1.6.16)
     minitest (5.0.6)
     multi_json (1.7.4)
     rubyzip (0.9.9)
-    sass (3.2.7)
     selenium-webdriver (2.33.0)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
       rubyzip
       websocket (~> 1.0.4)
-    tilt (1.3.6)
     websocket (1.0.7)
 
 PLATFORMS
@@ -33,8 +29,6 @@ PLATFORMS
 DEPENDENCIES
   colorize (~> 0.5.8)
   debugger (~> 1.6.0)
-  haml (~> 4.0.1)
   highline (~> 1.6.16)
   minitest (~> 5.0.6)
-  sass (~> 3.2.7)
   selenium-webdriver (~> 2.33.0)

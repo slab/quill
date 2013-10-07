@@ -6,7 +6,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-jade'
-  grunt.loadNpmTasks 'grunt-contrib-sass'
+  grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   # Project configuration.
@@ -96,11 +96,11 @@ module.exports = (grunt) ->
         ext: ['.html']
         src: ['tests/*.jade', 'tests/testem/*.jade', 'tests/webdriver/*.jade', '!tests/mocha.jade']
 
-    sass:
+    stylus:
       demo:
         expand: true
         dest: 'build/'
-        src: ['demo/styles/*.sass']
+        src: ['demo/styles/*.styl']
         ext: ['.css']
 
     watch:
@@ -113,9 +113,9 @@ module.exports = (grunt) ->
       jade_test:
         files: ['tests/*.jade', 'tests/testem/*.jade']
         tasks: ['jade:tests']
-      sass:
-        files: ['demo/styles/*.sass']
-        tasks: ['sass:demo']
+      stylus:
+        files: ['demo/styles/*.styl']
+        tasks: ['stylus:demo']
       src:
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
         tasks: ['coffeeify', 'concat', 'copy:build']
@@ -124,4 +124,4 @@ module.exports = (grunt) ->
         tasks: ['coffee:test']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'coffeeify', 'concat', 'jade', 'sass']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'coffeeify', 'concat', 'jade', 'stylus']

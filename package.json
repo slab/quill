@@ -20,7 +20,7 @@
     "grunt-contrib-concat" : "0.1.x",
     "grunt-contrib-copy"   : "0.4.x",
     "grunt-contrib-jade"   : "0.8.x",
-    "grunt-contrib-sass"   : "0.2.x",
+    "grunt-contrib-stylus" : "0.8.x",
     "grunt-contrib-watch"  : "0.3.x",
     "jade"                 : "0.28.x",
     "mocha"                : "1.12.x",
