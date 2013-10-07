@@ -90,6 +90,11 @@ module.exports = (grunt) ->
         expand: true
         ext: ['.html']
         src: ['demo/*.jade', '!demo/content.jade']
+      tests:
+        dest: 'build/'
+        expand: true
+        ext: ['.html']
+        src: ['tests/*.jade', 'tests/testem/*.jade', 'tests/webdriver/*.jade', '!tests/mocha.jade']
 
     sass:
       demo:
@@ -102,10 +107,10 @@ module.exports = (grunt) ->
       demo:
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
-      haml_demo:
+      jade_demo:
         files: ['demo/*.jade']
         tasks: ['jade:demo']
-      haml_tests:
+      jade_test:
         files: ['tests/*.jade', 'tests/testem/*.jade']
         tasks: ['jade:tests']
       sass:

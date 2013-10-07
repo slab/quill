@@ -81,7 +81,7 @@ Install dependencies
 
 ### Building
 
-We use grunt to compile coffeescript, sass, and haml
+We use grunt to compile coffeescript, sass, and jade
 
     grunt
 
