@@ -248,6 +248,12 @@ class ScribeEditor extends EventEmitter2
     else
       _preformat.call(this, name, value)
 
+  getAt: (index = 0, length = null) ->
+    length = this.getLength() - index unless length?
+    return _.map(this.getDelta().getOpsAt(index, length), (op) ->
+      return op.value
+    ).join('')
+
   getDelta: ->
     return @delta
 
