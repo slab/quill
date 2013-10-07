@@ -1,1 +1,0 @@
-../../../../src/paste-manager.coffee

@@ -1,1 +1,0 @@
-../../../../../src/modules/attribution.coffee

@@ -1,1 +1,0 @@
-../../../../../src/modules/multi-cursor.coffee

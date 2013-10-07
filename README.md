@@ -89,7 +89,6 @@ We use grunt to compile coffeescript, sass, and haml
 
 Until we write a script, version numbers will have to be updated in the following files:
 
-- lib/scribe-rails/version.rb
 - Gruntfile.coffee
 - index.coffee
 - package.json

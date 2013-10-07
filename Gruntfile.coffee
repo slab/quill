@@ -55,7 +55,7 @@ module.exports = (grunt) ->
         dest: 'build/lib/'
         src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
       lib:
-        expand: true, cwd: 'vendor/assets/javascripts/'
+        expand: true, cwd: 'lib/'
         dest: 'build/lib/'
         src: ['*.js']
 
@@ -73,9 +73,9 @@ module.exports = (grunt) ->
           src: [
             'node_modules/underscore/underscore.js'
             'node_modules/underscore.string/lib/underscore.string.js'
-            'vendor/assets/javascripts/rangy-core.js'
-            'vendor/assets/javascripts/eventemitter2.js'
-            'vendor/assets/javascripts/linked_list.js'
+            'build/lib/rangy-core.js'
+            'build/lib/eventemitter2.js'
+            'build/lib/linked_list.js'
             'build/src/ext/header.js'
             'build/scribe.js'
             'build/src/ext/footer.js'

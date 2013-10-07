@@ -1,1 +1,0 @@
-../../../../../src/modules/toolbar.coffee
