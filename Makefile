@@ -37,13 +37,13 @@ webdriver-unit-firefox:
 	@ruby tests/webdriver/unit/unit_runner.rb firefox
 
 test:
-	@./node_modules/.bin/mocha-phantomjs build/tests/unit.html
+	@karma start tests/karma-unit.coffee --browsers Chrome
 
-test-editor:
-	@mocha-phantomjs build/tests/editor.html
+test-unit:
+	@karma start tests/karma-unit.coffee
 
 test-all:
-	@./node_modules/.bin/mocha-phantomjs build/tests/test.html
+	@karma start tests/karma-all.coffee
 
 testem:
 	@./node_modules/.bin/testem -f tests/testem/local.json ci -P 4
