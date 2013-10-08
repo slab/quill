@@ -24,14 +24,14 @@ module.exports = (grunt) ->
         ext: '.js'
       test:
         files: [{
-          dest: 'build/tests/scripts/editor.js'
-          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/editor.coffee']
+          dest: 'build/tests/karma/inject.js'
+          src: 'tests/karma/inject.coffee'
         }, {
-          dest: 'build/tests/scripts/scribedriver.js'
-          src: 'tests/webdriver/lib/scribedriver.coffee'
+          dest: 'build/tests/mocha/editor.js'
+          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
         }, {
-          dest: 'build/tests/scripts/unit.js'
-          src: ['tests/scripts/test.coffee', 'tests/scripts/suite.coffee', 'tests/scripts/unit/*.coffee', 'tests/scripts/unit/modules/*.coffee']
+          dest: 'build/tests/mocha/unit.js'
+          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
         }]
 
     coffeeify:
@@ -41,9 +41,9 @@ module.exports = (grunt) ->
       scribe:
         files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
       scribe_exposed:
-        files: [{ dest: 'build/scribe-exposed.js', src: ['tests/scripts/scribe-exposed.coffee'] }]
+        files: [{ dest: 'build/scribe-exposed.js', src: ['tests/mocha/scribe-exposed.coffee'] }]
       tandem_wrapper:
-        files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/scripts/tandem.coffee'] }]
+        files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/mocha/tandem.coffee'] }]
 
     copy:
       build:
@@ -94,13 +94,18 @@ module.exports = (grunt) ->
         dest: 'build/'
         expand: true
         ext: ['.html']
-        src: ['tests/*.jade', 'tests/testem/*.jade', 'tests/webdriver/*.jade', '!tests/mocha.jade']
+        src: ['tests/**/*.jade']
 
     stylus:
       demo:
         expand: true
         dest: 'build/'
         src: ['demo/styles/*.styl']
+        ext: ['.css']
+      tests:
+        expand: true
+        dest: 'build/'
+        src: ['tests/mocha/*.styl']
         ext: ['.css']
 
     watch:
@@ -111,7 +116,7 @@ module.exports = (grunt) ->
         files: ['demo/*.jade']
         tasks: ['jade:demo']
       jade_test:
-        files: ['tests/*.jade', 'tests/testem/*.jade']
+        files: ['tests/**/*.jade']
         tasks: ['jade:tests']
       stylus:
         files: ['demo/styles/*.styl']
@@ -120,7 +125,7 @@ module.exports = (grunt) ->
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
         tasks: ['coffeeify', 'concat', 'copy:build']
       test:
-        files: ['tests/scripts/**/**/*.coffee']
+        files: ['tests/mocha/**/*.coffee']
         tasks: ['coffee:test']
 
   # Default task.

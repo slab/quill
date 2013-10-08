@@ -1,7 +1,7 @@
-base = require('./karma-all')
+base = require('./config-all')
 
 module.exports = (config) ->
   base.call(this, config)
   config.set(
-    exclude: ["tests/scripts/editor.js"]
+    exclude: ['tests/mocha/editor.js']
   )

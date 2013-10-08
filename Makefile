@@ -37,10 +37,10 @@ webdriver-unit-firefox:
 	@ruby tests/webdriver/unit/unit_runner.rb firefox
 
 test:
-	@karma start tests/karma-unit.coffee --browsers Chrome
+	@karma start tests/karma/config-unit.coffee --browsers Chrome
 
 test-unit:
-	@karma start tests/karma-unit.coffee
+	@karma start tests/karma/config-unit.coffee
 
 test-all:
 	@karma start tests/karma-all.coffee
