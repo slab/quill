@@ -10,7 +10,7 @@
     "email": "byronner@gmail.com"  
   }],
   "dependencies": {
-    "tandem-core"          : "git+ssh://git@github.com:stypi/tandem-core.git#v0.4.4",
+    "tandem-core"          : "0.4.x",
     "underscore"           : "1.5.x",
     "underscore.string"    : "2.3.x"
   },
