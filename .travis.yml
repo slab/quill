@@ -4,5 +4,6 @@ before_install:
   - npm install -g grunt-cli
   - npm install
   - npm install browserify
+  - rm -rf node_modules/grunt-coffeeify/node_modules/browserify
   - mv node_modules/browserify node_modules/grunt-coffeeify/node_modules/
   - grunt
