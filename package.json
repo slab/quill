@@ -8,9 +8,6 @@
   },
   "devDependencies": {
     "async"                : "0.2.x",
-    "browserstack-cli"     : "git+ssh://git@github.com:stypi/browserstack-cli.git#master",
-    "chai"                 : "1.7.x",
-    "coffee-script"        : "1.6.x",
     "commander"            : "1.1.x",
     "expect.js"            : "0.2.x",
     "grunt"                : "0.4.x",
@@ -22,10 +19,11 @@
     "grunt-contrib-jade"   : "0.8.x",
     "grunt-contrib-stylus" : "0.8.x",
     "grunt-contrib-watch"  : "0.3.x",
-    "jade"                 : "0.28.x",
+    "karma"                : "0.10.x",
     "karma-coverage"       : "0.1.x",
     "karma-mocha"          : "0.1.x",
-    "karma-safari-launcher": "0.1.x",
+    "karma-browserstack-launcher" : "0.1.x",
+    "karma-safari-launcher"       : "0.1.x",
     "mocha"                : "1.12.x",
     "path"                 : "0.4.x"
   },

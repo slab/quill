@@ -1,4 +1,4 @@
-base = require('./config-all')
+base = require('./all.conf')
 
 module.exports = (config) ->
   base.call(this, config)

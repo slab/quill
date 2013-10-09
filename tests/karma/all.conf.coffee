@@ -32,7 +32,7 @@ module.exports = (config) ->
     colors: true
     logLevel: config.LOG_INFO
     autoWatch: false
-    browsers: ['Chrome', 'ChromeCanary', 'Firefox', 'Safari']
+    browsers: ['Chrome', 'Firefox', 'Safari']
     captureTimeout: 60000
     singleRun: true
   )
