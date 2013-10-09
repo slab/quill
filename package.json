@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "async"                : "0.2.x",
+    "coffee-script"        : "1.6.x",
     "expect.js"            : "0.2.x",
     "grunt"                : "0.4.x",
     "grunt-coffeeify"      : "git+ssh://git@github.com:stypi/grunt-coffeeify.git#master",
@@ -27,5 +28,8 @@
   },
   "engine": {
     "node": ">=0.8"
+  },
+  "scripts": {
+    "test": "make test-all"
   }
 }
