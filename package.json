@@ -19,7 +19,7 @@
     "coffee-script"        : "1.6.x",
     "expect.js"            : "0.2.x",
     "grunt"                : "0.4.x",
-    "grunt-coffeeify"      : "git+ssh://git@github.com:stypi/grunt-coffeeify.git#master",
+    "grunt-coffeeify"      : "0.1.x",
     "grunt-contrib-clean"  : "0.4.x",
     "grunt-contrib-coffee" : "0.6.x",
     "grunt-contrib-concat" : "0.1.x",
