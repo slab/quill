@@ -1,6 +1,6 @@
 build
 node_modules
-coverage.html
+coverage
 tests/webdriver/fuzzer_output
 tests/webdriver/logs
 libpeerconnection.log

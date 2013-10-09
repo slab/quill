@@ -21,7 +21,13 @@ module.exports = (config) ->
       'tests/mocha/editor.js'
     ]
     exclude: []
+    coverageReporter: 
+      type: 'html'
+      dir: '../coverage/'
     reporters: ['progress']
+    preprocessors: 
+      'scribe-exposed.js': ['coverage']
+      '**/*.html': ['html2js']
     port: 9876
     colors: true
     logLevel: config.LOG_INFO

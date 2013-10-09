@@ -23,6 +23,7 @@
     "grunt-contrib-stylus" : "0.8.x",
     "grunt-contrib-watch"  : "0.3.x",
     "jade"                 : "0.28.x",
+    "karma-coverage"       : "0.1.x",
     "karma-mocha"          : "0.1.x",
     "karma-safari-launcher": "0.1.x",
     "mocha"                : "1.12.x",
