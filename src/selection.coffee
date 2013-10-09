@@ -96,7 +96,11 @@ class ScribeSelection
   getNativeRange: (normalize = false) ->
     return null unless @nativeSelection
     @nativeSelection.refresh()
-    range = if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
+    # Editor needs focus for us to consider valid range
+    return null unless @editor.root.ownerDocument.activeElement == @editor.root and @nativeSelection?.rangeCount > 0
+    range = @nativeSelection.getRangeAt(0)
+    # Selection elements needs to be within editor root
+    return null unless rangy.dom.isAncestorOf(@editor.root, range.startContainer) and rangy.dom.isAncestorOf(@editor.root, range.endContainer)
     range = normalizeNativeRange(range) if normalize
     range.isBackwards = true if @nativeSelection.isBackwards()
     return range
@@ -117,8 +121,8 @@ class ScribeSelection
       fn.call(null)
 
   setRange: (range, silent = false) ->
-    return unless @nativeSelection? and @editor.root.ownerDocument.activeElement?.tagName != 'BODY'
-    @nativeSelection.removeAllRanges()
+    return unless @nativeSelection?
+    @nativeSelection.removeAllRanges() if @editor.root.ownerDocument.activeElement == @editor.root
     if range?
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
@@ -140,8 +144,7 @@ class ScribeSelection
   update: (silent = false) ->
     return if (@mouseIsDown or @keyIsDown) and !silent
     nativeRange = this.getNativeRange(false)
-    return if nativeRange? and !(rangy.dom.isAncestorOf(@editor.root, nativeRange.startContainer) and rangy.dom.isAncestorOf(@editor.root, nativeRange.endContainer))
-    unless nativeRange == @range or (nativeRange? and @range and nativeRange.equals(@range))
+    unless nativeRange == @range or (nativeRange? and @range? and nativeRange.equals(@range))
       nativeRange = normalizeNativeRange(nativeRange)
       this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
 
