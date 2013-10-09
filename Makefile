@@ -1,16 +1,16 @@
 replay_file=$(shell find tests/webdriver/fuzzer_output/fails -type f -exec stat -f "%m %N" {} \; | sort -n | tail -1 | cut -f2- -d" ")
 
 coverage:
-	@karma start tests/karma/unit.conf.coffee --browsers Chrome --reporters coverage
+	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers Chrome --reporters coverage
 
 test:
-	@karma start tests/karma/unit.conf.coffee --browsers Chrome
+	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers Chrome
 
 test-unit:
-	@karma start tests/karma/unit.conf.coffee
+	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee
 
 test-all:
-	@karma start tests/karma/all.conf.coffee
+	@./node_modules/.bin/karma start tests/karma/all.conf.coffee
 
 test-remote:
 	@coffee tests/karma/browserstack.coffee
