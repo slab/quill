@@ -75,7 +75,7 @@ Local Development
 
 Install dependencies
 
-    npm install -g grunt-cli phantomjs mocha-phantomjs
+    npm install -g grunt-cli
     npm install
     bundle install
 
@@ -97,31 +97,23 @@ Until we write a script, version numbers will have to be updated in the followin
 Testing
 ---
 
-To run some of the tests you will need [phantomjs](http://phantomjs.org/).
-
 ### Unit tests
 
 Visit build/tests/unit.html to run unit tests or run:
     
-    make unit
+    make test
     
 ### Browser Testing
 
 You can run the unit tests on all browsers on your machine by running:
 
-    make testem
+    make test-all
 
-You can also test on different operating systems or browsers not installed on your computer. To set this up run:
+You can also test on different operating systems or browsers on Browserstack:
 
-    ./node_modules/.bin/browserstack setup
-    Username: StypiAPIUser
-    Password: tandemtype
-    Tunnel private key:
-    Tunnel API key: m2LGGyTRgKd453bAQhcb
-
-To be clear the tunnel private key should be left blank. Then to run on the remote browsers run:
-
-    make testem-remote
+    export BROWSER_STACK_USERNAME=yourusername
+    export BROWSER_STACK_ACCESS_KEY=yourapikey
+    make test-remote
 
 ### Webdriver Testing
 For webdriver unit tests, run:
@@ -145,17 +137,3 @@ Support for Firefox is built in and requires no special downloads.
 
 The fuzzer currently works against IE 9 & 10, Firefox 19 - 21, and Chrome 26.
 
-### Code Coverage
-
-Install [node-jscoverage](https://github.com/visionmedia/node-jscoverage) and run
-
-    make coverage
-
-
-
-Dependencies
----
-
-tandem-core.js
-
-underscore.js
