@@ -1,7 +1,7 @@
 language: node_js
 node_js: "0.10"
 before_install:
+  - echo -e "Host heroku.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - npm install -g grunt-cli
   - npm install
   - grunt
-script: "make test"
