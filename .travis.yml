@@ -1,7 +1,8 @@
 language: node_js
 node_js: "0.10"
 before_install:
-  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - npm install -g grunt-cli
   - npm install
+  - npm install browserify
+  - mv node_modules/browserify node_modules/grunt-coffeeify/node_modules/
   - grunt
