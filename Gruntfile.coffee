@@ -32,6 +32,9 @@ module.exports = (grunt) ->
         }, {
           dest: 'build/tests/mocha/unit.js'
           src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
+        }, {
+          dest: 'build/tests/webdriver/scribedriver.js',
+          src: 'tests/webdriver/lib/scribedriver.coffee'
         }]
 
     coffeeify:
