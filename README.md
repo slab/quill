@@ -1,3 +1,9 @@
+WARNING
+===
+
+Please do not publicize this repository in any way. There are a few known documentation gaps and browser quirks we wish to address before publication. Thank you for your patience.
+
+
 Scribe Rich Text Editor
 ===
 
