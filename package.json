@@ -46,6 +46,6 @@
     "url": "https://github.com/stypi/scribe"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test-remote"
   }
 }
