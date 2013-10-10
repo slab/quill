@@ -14,7 +14,7 @@ browsers =
   'windows-8-firefox' : ['Windows', '8', 'firefox', '24.0']
   'windows-8-safari'  : ['Windows', '8', 'safari', '5.1']
   'windows-8-ie-10'   : ['Windows', '8', 'ie', '10.0']
-  
+
   'windows-7-ie-9'    : ['Windows', '7', 'ie', '9.0']
   'windows-7-ie-8'    : ['Windows', '7', 'ie', '8.0']
 
@@ -40,7 +40,7 @@ base.call(null, {
 options.basePath = 'build'
 options.customLaunchers = customLaunchers
 options.exclude = ['tests/mocha/editor.js']
-options.reporters = ['dot']
+options.reporters = ['dots']
 
 browserGroups = _.groupBy(browserList, (browser, i) ->
   return Math.floor(i / BROWSERSTACK_PARALLEL)
