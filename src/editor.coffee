@@ -146,6 +146,7 @@ class ScribeEditor extends EventEmitter2
 
   @events:
     API_TEXT_CHANGE  : 'api-text-change'
+    FOCUS_CHANGE     : 'focus-change'
     PRE_EVENT        : 'pre-event'
     PREFORMAT        : 'preformat'
     POST_EVENT       : 'post-event'

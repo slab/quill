@@ -6,6 +6,11 @@ ScribeRange     = require('./range')
 ScribeUtils     = require('./utils')
 
 
+compareNativeRanges = (r1, r2) ->
+  return true if r1 == r2           # Covers both is null case
+  return false unless r1? and r2?   # If either is null they are not equal
+  return r1.equals(r2)
+
 # DOM Selection API says offset is child index of container, not number of characters like ScribePosition
 normalizeNativePosition = (node, offset) ->
   if node?.nodeType == ScribeDOM.ELEMENT_NODE
@@ -25,6 +30,7 @@ normalizeNativeRange = (nativeRange) ->
     startOffset     : startOffset
     endContainer    : endContainer
     endOffset       : endOffset
+    isBackwards     : nativeRange.isBackwards
   }
 
 _nativeRangeToRange = (nativeRange) ->
@@ -79,6 +85,7 @@ class ScribeSelection
   constructor: (@editor) ->
     @range = null
     @mouseIsDown = @keyIsDown = false
+    @hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
     ScribeDOM.addEventListener(@editor.root, 'keydown',   => _.defer( => @keyIsDown = true ))
     ScribeDOM.addEventListener(@editor.root, 'keyup',     => _.defer( => @keyIsDown = false ))
     ScribeDOM.addEventListener(@editor.root, 'mousedown', => _.defer( => @mouseIsDown = true ))
@@ -97,7 +104,7 @@ class ScribeSelection
     return null unless @nativeSelection
     @nativeSelection.refresh()
     # Editor needs focus for us to consider valid range
-    return null unless @editor.root.ownerDocument.activeElement == @editor.root and @nativeSelection?.rangeCount > 0
+    return null unless @nativeSelection?.rangeCount > 0
     range = @nativeSelection.getRangeAt(0)
     # Selection elements needs to be within editor root
     return null unless rangy.dom.isAncestorOf(@editor.root, range.startContainer) and rangy.dom.isAncestorOf(@editor.root, range.endContainer)
@@ -144,7 +151,11 @@ class ScribeSelection
   update: (silent = false) ->
     return if (@mouseIsDown or @keyIsDown) and !silent
     nativeRange = this.getNativeRange(false)
-    unless nativeRange == @range or (nativeRange? and @range? and nativeRange.equals(@range))
+    hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
+    if hasFocus != @hasFocus
+      @editor.emit(@editor.constructor.events.FOCUS_CHANGE, hasFocus) unless silent
+      @hasFocus = hasFocus
+    unless compareNativeRanges(nativeRange, @range)
       nativeRange = normalizeNativeRange(nativeRange)
       this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
 
