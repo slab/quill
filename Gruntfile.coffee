@@ -1,6 +1,6 @@
 module.exports = (grunt) ->
 
-  grunt.loadNpmTasks 'grunt-coffeeify'
+  grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-copy'
@@ -37,10 +37,12 @@ module.exports = (grunt) ->
           src: 'tests/webdriver/lib/scribedriver.coffee'
         }]
 
-    coffeeify:
+    browserify:
       options:
+        alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         extensions: ['.js', '.coffee']
         requires: ['tandem-core']
+        transform: ['coffeeify']
       scribe:
         files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
       scribe_exposed:
@@ -126,10 +128,10 @@ module.exports = (grunt) ->
         tasks: ['stylus:demo']
       src:
         files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['coffeeify', 'concat', 'copy:build']
+        tasks: ['browserify', 'concat', 'copy:build']
       test:
         files: ['tests/mocha/**/*.coffee']
         tasks: ['coffee:test']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'coffeeify', 'concat', 'jade', 'stylus']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'browserify', 'concat', 'jade', 'stylus']
