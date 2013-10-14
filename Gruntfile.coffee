@@ -8,7 +8,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.loadNpmTasks 'grunt-line-remover'
+  grunt.loadNpmTasks 'grunt-string-replace'
 
   # Project configuration.
   grunt.initConfig
@@ -46,7 +46,7 @@ module.exports = (grunt) ->
           bare: true
         expand: true
         dest: 'build/'
-        src: ['tests/karma/inject.coffee', 'tests/karma/format-fix.coffee', 'tests/karma/module-fix.coffee']
+        src: ['tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
         ext: '.js'
       test:
         files: [{
@@ -111,10 +111,19 @@ module.exports = (grunt) ->
         ext: ['.html']
         src: ['tests/**/*.jade']
 
-    lineremover:
-      tests: 
+    'string-replace':
+      tests:
         options:
-          exclusionPattern: /require\(/g
+          replacements: [{
+            pattern: /.+ = require\(.+\);\n\n/g
+            replacement: ''
+          }, {
+            pattern: /^var .+;\n\n/g
+            replacement: ''
+          }, {
+            pattern: /^var .+,\n/g
+            replacement: 'var'
+          }]
         expand: true
         dest: ''
         src: ['build/src/**/*.js']
@@ -152,4 +161,4 @@ module.exports = (grunt) ->
         tasks: ['coffee:test']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'lineremover', 'browserify', 'concat', 'jade', 'stylus']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus']

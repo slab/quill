@@ -6,14 +6,17 @@ coverage:
 test:
 	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS
 
-test-unit:
-	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee
-
 test-all:
 	@./node_modules/.bin/karma start tests/karma/all.conf.coffee
 
+test-karma:
+	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS --no-single-run
+
 test-remote:
 	@./node_modules/.bin/coffee tests/karma/browserstack.coffee
+
+test-unit:
+	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee
 
 webdriver-fuzzer-chrome:
 	@ruby tests/webdriver/fuzzer.rb chrome
