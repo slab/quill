@@ -1,4 +1,5 @@
 ScribeDOM         = require('./dom')
+ScribeUtils       = require('./utils')
 ScribeNormalizer  = require('./normalizer')
 
 
@@ -73,7 +74,7 @@ class ScribeRenderer extends EventEmitter2
     this.createFrame()
     @formats = {}
     # IE10 ignores conditional comments and it still displays <div><br></div> as two lines
-    ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if navigator.userAgent.match(/MSIE/);
+    ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if ScribeUtils.isIE()
     this.addStyles(ScribeRenderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     _.defer( =>

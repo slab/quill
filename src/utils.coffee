@@ -85,6 +85,9 @@ ScribeUtils =
   isBlock: (node) ->
     return _.indexOf(ScribeUtils.BLOCK_TAGS, node.tagName, true) > -1
 
+  isIE: ->
+    return navigator.userAgent.match(/MSIE/)
+
   isLineNode: (node) ->
     return node?.parentNode?.parentNode?.tagName == "BODY" and ScribeUtils.isBlock(node)
 

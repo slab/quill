@@ -20,7 +20,7 @@ B
 
 Other editors (Gmail composer, Etherpad), perhaps for this reason, does not include a break tag in an empty tag. Since Scribe would like to maintain identical markup between browsers, and also guarantee existence of a leaf within a line, our solution is to make <br> display:none in IE.
 
-This creates the problem in that when you select the newline, the cursor is rendered in the line above. Not sure why this is the effect but the cause is certainly the display:none <br>. Thus on an empty line, we set the selection to be after the break tag. This creates the problem that when the user types, the entries are (correctly) made after the break. In all browsers a preceding break creates a newline. Ex:
+This creates the problem in that when you select the newline, the cursor is rendered in the line above in IE. Not sure why this is the effect but the cause is certainly the display:none <br>. Thus on an empty line, we set the selection to be after the break tag in IE. This creates a problem that when the user types, since the entry should be made after the break. In all browsers a preceding break creates a newline. Ex:
 
 <div>A</div>
 <div><br>Test</div>
@@ -33,4 +33,4 @@ A
 Test
 B
 
-To correct this problem we remove all breaks in the editor's update loop. This is fine in theory because <br> is technically unneeded in our markup (we add it to guarantee a leaf) and we can treat it as such. This theory is not rigorously tested.
+To correct this problem we remove all breaks in the editor's update loop in IE. Not both this and the setting the selection after the break is only true for IE. Firefox does not correctly append newlines when the latter is false. Since this is an IE quirk anyways, the solution is confined to IE as well.
