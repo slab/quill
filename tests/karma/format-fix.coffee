@@ -1,0 +1,1 @@
+ScribeFormat = window.module.exports

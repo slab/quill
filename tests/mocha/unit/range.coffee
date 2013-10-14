@@ -1,6 +1,6 @@
 describe('Range', ->
   describe('Position', ->
-    positionTests = new Scribe.Test.EditorTest(
+    positionTests = new ScribeEditorTest(
       initial: [
         '<div><b>12</b><i>34</i></div>'
         '<div><s>56</s><u>78</u></div>'
@@ -25,8 +25,8 @@ describe('Range', ->
           { text: '', offset: 0 }
         ]
         _.each(expectedResults, (result, i) ->
-          position = new Scribe.Position(editor, i)
-          expect(Scribe.DOM.getText(position.leafNode)).to.equal(result.text)
+          position = new ScribePosition(editor, i)
+          expect(ScribeDOM.getText(position.leafNode)).to.equal(result.text)
           expect(position.offset).to.equal(result.offset)
         )
     )
@@ -35,7 +35,7 @@ describe('Range', ->
 
 
   describe('getText', ->
-    textTests = new Scribe.Test.EditorTest(
+    textTests = new ScribeEditorTest(
       initial: 
         '<div>
           <b>abc</b>
@@ -66,14 +66,14 @@ describe('Range', ->
     textTests.run('should identifiy single node',
       checker: (editor) ->
         _.each(text.split(''), (char, index) ->
-          range = new Scribe.Range(editor, index, index + 1)
+          range = new ScribeRange(editor, index, index + 1)
           expect(range.getText()).to.equal(char)
         )
     )
 
     textTests.run('should identifiy entire document',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, text.length)
+        range = new ScribeRange(editor, 0, text.length)
         expect(range.getText()).to.equal(text)
     )
   )
@@ -81,7 +81,7 @@ describe('Range', ->
 
 
   describe('getFormats', ->
-    formatTests = new Scribe.Test.EditorTest(
+    formatTests = new ScribeEditorTest(
       initial:
         '<div>
           <b>123</b>
@@ -107,9 +107,9 @@ describe('Range', ->
         </div>'
       expected: [0]
       checker: (testEditor, expectedEditor, start, end, text, formats) ->
-        range = new Scribe.Range(testEditor, start, end)
+        range = new ScribeRange(testEditor, start, end)
         expect(range.getText()).to.equal(text)
-        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Leaf.DEFAULT_FORMATS, formats))
+        expect(range.getFormats()).to.eql(_.extend({}, ScribeLeaf.DEFAULT_FORMATS, formats))
     )
 
     formatTests.run('inside of node', {}, 1, 2, '2', { bold: true })
@@ -130,7 +130,7 @@ describe('Range', ->
 
 
   describe('getLeafNodes', ->
-    leafTests = new Scribe.Test.EditorTest(
+    leafTests = new ScribeEditorTest(
       initial: [
         '<div><b>123</b><i>456</i></div>'
         '<div><s>7</s><u>8</u><s>9</s><u>0</u></div>'
@@ -140,7 +140,7 @@ describe('Range', ->
 
     leafTests.run('should select a single node at boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, 3)
+        range = new ScribeRange(editor, 0, 3)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(editor.root.firstChild.firstChild)
@@ -148,7 +148,7 @@ describe('Range', ->
 
     leafTests.run('should select multiple nodes at boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, 6)
+        range = new ScribeRange(editor, 0, 6)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(editor.root.firstChild.childNodes[0])
@@ -158,7 +158,7 @@ describe('Range', ->
     leafTests.run('should select a single node inside boundaries',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor, i, i+1)
+          range = new ScribeRange(editor, i, i+1)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(1)
           expect(nodes[0]).to.equal(editor.root.firstChild.firstChild)
@@ -167,7 +167,7 @@ describe('Range', ->
     leafTests.run('should select multipe nodes inside boundaries',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor, i, i+4)
+          range = new ScribeRange(editor, i, i+4)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(2)
           expect(nodes[0]).to.equal(editor.root.firstChild.childNodes[0])
@@ -176,7 +176,7 @@ describe('Range', ->
 
     leafTests.run('should select multiple nodes across lines within boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, 6)
+        range = new ScribeRange(editor, 0, 6)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(editor.root.firstChild.childNodes[0])
@@ -185,7 +185,7 @@ describe('Range', ->
 
     leafTests.run('should select multiple nodes across lines outside boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 5, 8)
+        range = new ScribeRange(editor, 5, 8)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(editor.root.firstChild.lastChild)
@@ -195,7 +195,7 @@ describe('Range', ->
     leafTests.run('should select node collapsed',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor, i, i)
+          range = new ScribeRange(editor, i, i)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(1)
           expect(nodes[0]).to.equal(editor.root.firstChild.firstChild)

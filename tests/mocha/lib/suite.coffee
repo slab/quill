@@ -114,6 +114,4 @@ class ScribeFormatTestSuite extends ScribeTestSuite
     )
     
 
-window.Scribe.Test.InsertTestSuite = ScribeInsertTestSuite
-window.Scribe.Test.DeleteTestSuite = ScribeDeleteTestSuite
-window.Scribe.Test.FormatTestSuite = ScribeFormatTestSuite
+window.ScribeTestSuite = ScribeTestSuite

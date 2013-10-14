@@ -1,6 +1,6 @@
 describe('Undo Manager', ->
   describe('undo/redo', ->
-    undoTests = new Scribe.Test.EditorTest(
+    undoTests = new ScribeEditorTest(
       initial: Tandem.Delta.getInitial("The lazy fox\n")
       ignoreExpect: true
       fn: (editor, expectedEditor, delta) ->

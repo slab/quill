@@ -1,0 +1,2 @@
+window.module =
+  exports: null

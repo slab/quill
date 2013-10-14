@@ -17,22 +17,22 @@ describe('Editor', ->
   '
 
   describe('insertAt empty', ->
-    insertSuite = new Scribe.Test.InsertTestSuite({ initial: '<div><br></div>' })
+    insertSuite = new ScribeTest.InsertTestSuite({ initial: '<div><br></div>' })
     insertSuite.run()
   )
 
   describe('insertAt', ->
-    insertSuite = new Scribe.Test.InsertTestSuite({ initial: template })
+    insertSuite = new ScribeTest.InsertTestSuite({ initial: template })
     insertSuite.run()
   )
 
   describe('deleteAt', ->
-    deleteSuite = new Scribe.Test.DeleteTestSuite({ initial: template })
+    deleteSuite = new ScribeTest.DeleteTestSuite({ initial: template })
     deleteSuite.run()
   )
 
   describe('formatAt', ->
-    formatSuite = new Scribe.Test.FormatTestSuite({ initial: template })
+    formatSuite = new ScribeTest.FormatTestSuite({ initial: template })
     formatSuite.run()
   )
 )

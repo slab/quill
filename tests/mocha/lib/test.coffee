@@ -14,7 +14,7 @@ class ScribeHtmlTest
     pre           : -> []
 
   @cleanHtml: (html, keepIdClass = false) ->
-    html = Scribe.Normalizer.normalizeHtml(html)
+    html = ScribeNormalizer.normalizeHtml(html)
     unless keepIdClass == true
       html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
       html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
@@ -69,8 +69,8 @@ class ScribeEditorTest extends ScribeHtmlTest
     htmlOptions.initial = '' if Tandem.Delta.isDelta(htmlOptions.initial)
     htmlOptions.expected = '' if Tandem.Delta.isDelta(htmlOptions.expected)
     htmlOptions.fn = (testContainer, expectedContainer, args...) =>
-      testEditor = new Scribe.Editor(testContainer)
-      expectedEditor = new Scribe.Editor(expectedContainer)
+      testEditor = new ScribeEditor(testContainer)
+      expectedEditor = new ScribeEditor(expectedContainer)
       testEditor.setDelta(@options.initial) if Tandem.Delta.isDelta(@options.initial)
       expectedEditor.setDelta(@options.expected) if Tandem.Delta.isDelta(@options.expected)
       @options.fn.call(null, testEditor, expectedEditor, args...)
@@ -80,13 +80,10 @@ class ScribeEditorTest extends ScribeHtmlTest
         testDelta = testEditor.getDelta()
         expectedDelta = expectedEditor.getDelta()
         expect(testDelta.isEqual(expectedDelta)).to.be(true)
-        consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
+        consistent = ScribeDebug.checkDocumentConsistency(testEditor.doc)
         expect(consistent).to.be(true)
     super(htmlOptions, args...)
 
-    
 
-window.Scribe or= {}
-window.Scribe.Test = 
-  EditorTest  : ScribeEditorTest
-  HtmlTest    : ScribeHtmlTest
+window.ScribeHtmlTest = ScribeHtmlTest
+window.ScribeEditorTest = ScribeEditorTest

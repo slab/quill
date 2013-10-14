@@ -1,12 +1,12 @@
 describe('Normalize', ->
   describe('breakLine', ->
-    blockTest = new Scribe.Test.HtmlTest(
+    blockTest = new ScribeHtmlTest(
       expected: [
         '<div><span>One</span></div>'
         '<div><span>Two</span></div>'
       ]
       fn: (container) ->
-        Scribe.Normalizer.breakLine(container.firstChild, container)
+        ScribeNormalizer.breakLine(container.firstChild, container)
     )
 
     blockTest.run('Inner divs', 
@@ -29,9 +29,9 @@ describe('Normalize', ->
   )
 
   describe('normalizeBreak', ->
-    breakTest = new Scribe.Test.HtmlTest(
+    breakTest = new ScribeHtmlTest(
       fn: (container) ->
-        Scribe.Normalizer.normalizeBreak(container.querySelector('br'), container)
+        ScribeNormalizer.normalizeBreak(container.querySelector('br'), container)
     )
 
     breakTest.run('Break in middle of line', 
@@ -61,9 +61,9 @@ describe('Normalize', ->
   )
 
   describe('groupBlocks', ->
-    groupTest = new Scribe.Test.HtmlTest(
+    groupTest = new ScribeHtmlTest(
       fn: (container) ->
-        Scribe.Normalizer.groupBlocks(container)
+        ScribeNormalizer.groupBlocks(container)
     )
 
     groupTest.run('Wrap newline', 
@@ -98,11 +98,11 @@ describe('Normalize', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
-      formatManager = new Scribe.FormatManager(container)
-      normalizer = new Scribe.Normalizer(container, formatManager)
+      formatManager = new ScribeFormatManager(container)
+      normalizer = new ScribeNormalizer(container, formatManager)
     )
 
-    lineTest = new Scribe.Test.HtmlTest(
+    lineTest = new ScribeHtmlTest(
       fn: (lineNode) ->
         normalizer.normalizeLine(lineNode)
     )
@@ -157,7 +157,7 @@ describe('Normalize', ->
   )
 
   describe('normalizeDoc', ->
-    docTest = new Scribe.Test.EditorTest(
+    docTest = new ScribeEditorTest(
       fn: (editor) ->
         editor.doc.normalizer.normalizeDoc()
     )
@@ -235,11 +235,11 @@ describe('Normalize', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
-      formatManager = new Scribe.FormatManager(container)
-      normalizer = new Scribe.Normalizer(container, formatManager)
+      formatManager = new ScribeFormatManager(container)
+      normalizer = new ScribeNormalizer(container, formatManager)
     )
 
-    attrTest = new Scribe.Test.HtmlTest(
+    attrTest = new ScribeHtmlTest(
       fn: (lineNode) ->
         lineNode.firstChild.setAttribute('data-test', 'test')
         lineNode.firstChild.setAttribute('width', '100px')

@@ -8,34 +8,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-line-remover'
 
   # Project configuration.
   grunt.initConfig
     meta:
       version: '0.9.0'
-
-    clean: ['build']
-
-    coffee:
-      demo:
-        expand: true
-        dest: 'build/'
-        src: ['demo/scripts/*.coffee']
-        ext: '.js'
-      test:
-        files: [{
-          dest: 'build/tests/karma/inject.js'
-          src: 'tests/karma/inject.coffee'
-        }, {
-          dest: 'build/tests/mocha/editor.js'
-          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
-        }, {
-          dest: 'build/tests/mocha/unit.js'
-          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
-        }, {
-          dest: 'build/tests/webdriver/scribedriver.js',
-          src: 'tests/webdriver/lib/scribedriver.coffee'
-        }]
 
     browserify:
       options:
@@ -45,24 +23,42 @@ module.exports = (grunt) ->
         transform: ['coffeeify']
       scribe:
         files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
-      scribe_exposed:
-        files: [{ dest: 'build/scribe-exposed.js', src: ['tests/mocha/scribe-exposed.coffee'] }]
       tandem_wrapper:
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/mocha/tandem.coffee'] }]
 
-    copy:
-      build:
+    clean: ['build']
+
+    coffee:
+      demo:
         expand: true
         dest: 'build/'
-        src: ['src/ext/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
-      node_modules:
-        expand: true, flatten: true, cwd: 'node_modules/'
-        dest: 'build/lib/'
-        src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
-      lib:
-        expand: true, cwd: 'lib/'
-        dest: 'build/lib/'
-        src: ['*.js']
+        src: ['demo/scripts/*.coffee']
+        ext: '.js'
+      src:
+        options:
+          bare: true
+        expand: true
+        dest: 'build/'
+        src: ['src/**/*.coffee']
+        ext: '.js'
+      inject:
+        options:
+          bare: true
+        expand: true
+        dest: 'build/'
+        src: ['tests/karma/inject.coffee', 'tests/karma/format-fix.coffee', 'tests/karma/module-fix.coffee']
+        ext: '.js'
+      test:
+        files: [{
+          dest: 'build/tests/mocha/editor.js'
+          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
+        }, {
+          dest: 'build/tests/mocha/unit.js'
+          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
+        }, {
+          dest: 'build/tests/webdriver/scribedriver.js',
+          src: 'tests/webdriver/lib/scribedriver.coffee'
+        }]
 
     concat:
       options:
@@ -87,6 +83,20 @@ module.exports = (grunt) ->
           ]
         }]
 
+    copy:
+      build:
+        expand: true
+        dest: 'build/'
+        src: ['src/ext/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+      node_modules:
+        expand: true, flatten: true, cwd: 'node_modules/'
+        dest: 'build/lib/'
+        src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
+      lib:
+        expand: true, cwd: 'lib/'
+        dest: 'build/lib/'
+        src: ['*.js']
+
     jade:
       options:
         pretty: true
@@ -100,6 +110,14 @@ module.exports = (grunt) ->
         expand: true
         ext: ['.html']
         src: ['tests/**/*.jade']
+
+    lineremover:
+      tests: 
+        options:
+          exclusionPattern: /require\(/g
+        expand: true
+        dest: ''
+        src: ['build/src/**/*.js']
 
     stylus:
       demo:
@@ -134,4 +152,4 @@ module.exports = (grunt) ->
         tasks: ['coffee:test']
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'browserify', 'concat', 'jade', 'stylus']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'lineremover', 'browserify', 'concat', 'jade', 'stylus']

@@ -11,7 +11,7 @@ describe('Document', ->
         '<ul><li><br></li></ul>'
       ]
       $('#test-container').html(lines.join(''))
-      doc = new Scribe.Document($('#test-container').get(0))
+      doc = new ScribeDocument($('#test-container').get(0))
       lines = doc.lines.toArray()
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
@@ -24,7 +24,7 @@ describe('Document', ->
   )
 
   describe('toDelta', ->
-    deltaTest = new Scribe.Test.EditorTest()
+    deltaTest = new ScribeEditorTest()
     deltaTest.run('basic',
       initial:  ['<div><span>0123</span></div>']
       expected: new Tandem.Delta(0, [new Tandem.InsertOp("0123\n")])

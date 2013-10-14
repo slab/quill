@@ -1,6 +1,6 @@
 describe('Editor', ->
   describe('preserve trailing newline', ->
-    preserveTests = new Scribe.Test.EditorTest(
+    preserveTests = new ScribeEditorTest(
       initial:  Tandem.Delta.getInitial('Test\n')
       expected: Tandem.Delta.getInitial('Tes\n')
     )
@@ -23,7 +23,7 @@ describe('Editor', ->
   )
 
   describe('applyDelta', ->
-    applyTests = new Scribe.Test.EditorTest(
+    applyTests = new ScribeEditorTest(
       fn: (testEditor, expectedEditor, ops) ->
         delta = new Tandem.Delta(testEditor.getLength(), ops)
         testEditor.applyDelta(delta)
@@ -87,7 +87,7 @@ describe('Editor', ->
 
 
   describe('insertAt', ->
-    insertTests = new Scribe.Test.EditorTest(
+    insertTests = new ScribeEditorTest(
       initial: ['<div><span>Test</span></div>']
       fn: (testEditor, expectedEditor, delta) ->
         testEditor.applyDelta(delta)
@@ -136,7 +136,7 @@ describe('Editor', ->
 
 
   describe('setDelta', ->
-    deltaTest = new Scribe.Test.EditorTest(
+    deltaTest = new ScribeEditorTest(
       expected: '<div><span>Test</span></div>'
       fn: (editor) ->
         editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
