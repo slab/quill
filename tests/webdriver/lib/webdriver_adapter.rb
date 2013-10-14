@@ -14,6 +14,9 @@ class WebdriverAdapter
     index = 0
     delta['ops'].each_with_index do |op, i|
       if op['value']
+        if !op['attributes'].empty?
+          click_button_from_toolbar(op['attributes'].keys[0])
+        end
         while op and op['value']
           insert_at index, op['value']
           i += 1

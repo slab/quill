@@ -133,5 +133,21 @@ describe "Test Formatting" do
       }
       apply_delta delta, "Failed removing bold at index 0, length 3", true
     end
+
+    it "should type bolded text with preemptive bold" do
+      initial = { "startLength" => 0,
+                  "endLength" => 1,
+                  "ops" => [{ "value" => "\n", "attributes" => {}}]
+      }
+
+      reset_scribe initial
+
+      delta = { "startLength" => 1,
+                "endLength" => 4,
+                "ops" => [{ "value" => "zzz", "attributes" => { "bold" => true } },
+                          { "start" => 0, "end" => 1 }]}
+
+      apply_delta delta, "Text was not bold", true
+    end
   end
 end
