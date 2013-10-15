@@ -7,6 +7,7 @@ class ScribeLeafFormat
 
   clean: (node) ->
     ScribeDOM.removeAttributes(node)
+    return node
 
   createContainer: ->
     throw new Error("Descendants should implement")
@@ -26,6 +27,11 @@ class ScribeTagFormat extends ScribeLeafFormat
     throw new Error('Tag format must have truthy value') unless value
     return true
 
+  clean: (node) ->
+    node = super(node)
+    node = ScribeDOM.switchTag(node, @tagName) unless node.tagName == @tagName
+    return node
+
   createContainer: ->
     return @root.ownerDocument.createElement(@tagName)
 
@@ -39,6 +45,11 @@ class ScribeTagFormat extends ScribeLeafFormat
 class ScribeSpanFormat extends ScribeTagFormat
   constructor: (@root, @keyName) ->
     super(@root, @keyName, 'SPAN')
+
+  clean: (node) ->
+    # cannot super because LeafFormat removes all attributes
+    node = ScribeDOM.switchTag(node, @tagName) unless node.tagName == @tagName
+    return node
 
   approximate: (value) ->
     throw new Error("Descendants should implement")
@@ -56,6 +67,7 @@ class ScribeClassFormat extends ScribeSpanFormat
 
   clean: (node) ->
     ScribeDOM.removeAttributes(node, 'class')
+    return node
 
   createContainer: (value) ->
     container = super(value)
@@ -72,17 +84,6 @@ class ScribeClassFormat extends ScribeSpanFormat
 
 
 class ScribeStyleFormat extends ScribeSpanFormat
-  @getStyleObject: (container) ->
-    styleString = container.getAttribute('style') or ''
-    return _.reduce(styleString.split(';'), (styles, str) ->
-      [name, value] = str.split(':')
-      if name and value
-        name = name.slice(1) if name.slice(0, 1) == " "
-        value = value.slice(1) if value.slice(0, 1) == " "
-        styles[name.toLowerCase()] = value
-      return styles
-    , {})
-
   constructor: (@root, @keyName, @cssName, @defaultStyle, @styles) ->
     super
 
@@ -93,7 +94,13 @@ class ScribeStyleFormat extends ScribeSpanFormat
     return false
 
   clean: (node) ->
+    node = super(node)
     ScribeDOM.removeAttributes(node, 'style')
+    _.each(node.styles, (value, name) =>
+      style = if name == _.str.camelize(@cssName) then this.approximate(value) else ''
+      node.styles[name] = style
+    )
+    return node
 
   createContainer: (value) ->
     container = super(value)
@@ -103,9 +110,8 @@ class ScribeStyleFormat extends ScribeSpanFormat
     return container
 
   matchContainer: (container) ->
-    return false unless super(container)
-    styles = ScribeStyleFormat.getStyleObject(container)
-    return if styles[@cssName]? then this.approximate(styles[@cssName]) else false
+    style = container.style?[_.str.camelize(@cssName)]
+    return if style then this.approximate(style) else false
 
   preformat: (value) ->
     value = this.approximate(value) or @defaultStyle
@@ -145,6 +151,7 @@ class ScribeLinkFormat extends ScribeTagFormat
 
   clean: (node) ->
     ScribeDOM.removeAttributes(node, ['href', 'title'])
+    return node
 
   createContainer: (value) ->
     link = super(value)
