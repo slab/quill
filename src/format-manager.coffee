@@ -23,10 +23,17 @@ class ScribeFormatManager
       return @container.ownerDocument.createElement('SPAN')
 
   getFormat: (container) ->
+    names = []
+    formats = []
     for name,format of @formats
       value = format.matchContainer(container)
-      return [name, value] if value
-    return []
+      if value
+        names.push(name)
+        formats.push(value)
+    switch names.length
+      when 0 then return []
+      when 1 then return [names[0], formats[0]]
+      else return [names, formats]
 
 
 module.exports = ScribeFormatManager
