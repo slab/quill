@@ -231,7 +231,7 @@ describe('Normalize', ->
     )
   )
 
-  describe('normalizeTag', ->
+  describe('normalizeTags', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
@@ -241,9 +241,7 @@ describe('Normalize', ->
 
     attrTest = new ScribeHtmlTest(
       fn: (lineNode) ->
-        lineNode.firstChild.setAttribute('data-test', 'test')
-        lineNode.firstChild.setAttribute('width', '100px')
-        normalizer.normalizeLine(lineNode)
+        normalizer.normalizeTags(lineNode)
     )
 
     attrTest.run('strip extraneous attributes', 
@@ -259,6 +257,21 @@ describe('Normalize', ->
     attrTest.run('strip extraneous attributes from style tag', 
       initial:  '<span style="color:#0FF;" data-test="test" width="100px">Color</span>'
       expected: '<span style="color:#0FF;">Color</span>'
+    )
+
+    attrTest.run('separate multiple styles',
+      initial: '<span style="color:#0FF;background-color:#F00;">Color</span>'
+      expected: '<span style="color:#0FF;><span style="background-color:#F00;">Color</span></span>'
+    )
+
+    attrTest.run('separate style from non-span',
+      initial: '<i style="color:#0FF;">Color</i>'
+      expected: '<i><span style="color:#0FF;>Color</span></i>'
+    )
+
+    attrTest.run('separate multiple styles from non-span',
+      initial: '<i style="color:#0FF;background-color:#F00;">Color</i>'
+      expected: '<i><span style="color:#0FF;><span style="background-color:#F00;">Color</span></span></i>'
     )
   )
 )
