@@ -31,6 +31,5 @@ module.exports = (config) ->
   config.set(
     browsers: browserList
     customLaunchers: customLaunchers
-    exclude: ['tests/mocha/editor.js']
     reporters: ['dots']
   )

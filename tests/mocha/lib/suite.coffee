@@ -44,7 +44,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
           attributes: { bold: true }
         "insert red A":
           value: 'A'
-          attributes: { color: '#f00' }
+          attributes: { 'fore-color': '#f00' }
         "insert newline":
           value: '\n'
           attributes: {}
@@ -95,7 +95,7 @@ class ScribeFormatTestSuite extends ScribeTestSuite
       return unless index >= 0
       _.each([0..(@docLength-index-1)], (length) =>
         formats =
-          color: ['red', null]
+          'fore-color': ['red', null]
           bold: [true, false]
         _.each(formats, (values, format) =>
           _.each(values, (value) =>

@@ -191,6 +191,7 @@ class ScribeColorFormat extends ScribeStyleFormat
     super
 
   approximate: (value) ->
+    return false unless value
     return value if @styles[value]?
     color = ScribeUtils.findClosestPoint(value, @styles, ScribeColorFormat.normalizeColor)
     return if color == @defaultStyle then false else color
