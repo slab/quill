@@ -154,8 +154,8 @@ module.exports = (grunt) ->
         files: ['demo/styles/*.styl']
         tasks: ['stylus:demo']
       src:
-        files: ['src/**/*.coffee', 'node_modules/tandem-core/src/*']
-        tasks: ['browserify', 'concat', 'copy:build']
+        files: ['src/**/*.coffee']
+        tasks: ['browserify', 'coffee', 'string-replace', 'concat']
       test:
         files: ['tests/mocha/**/*.coffee']
         tasks: ['coffee:test']
