@@ -1,9 +1,5 @@
 _     = require('underscore')._
-async = require('async')
-karma = require('karma')
 base  = require('./all.conf')
-
-BROWSERSTACK_PARALLEL = process.env.BROWSERSTACK_PARALLEL or 4
 
 browsers =
   'mac-chrome'  : ['OS X', 'Mountain Lion', 'chrome', '29.0']
@@ -17,7 +13,6 @@ browsers =
 
   'windows-7-ie-9'    : ['Windows', '7', 'ie', '9.0']
   'windows-7-ie-8'    : ['Windows', '7', 'ie', '8.0']
-
 browserList = []
 customLaunchers = _.reduce(browsers, (memo, browser, name) ->
   browserList.push(name)
@@ -31,28 +26,10 @@ customLaunchers = _.reduce(browsers, (memo, browser, name) ->
   return memo
 , {})
 
-options = {}
-base.call(null, {
-  LOG_INFO: 'info'
-  set: (opts) ->
-    options = _.defaults(opts, options)
-})
-options.basePath = 'build'
-options.customLaunchers = customLaunchers
-options.exclude = ['tests/mocha/editor.js']
-options.reporters = ['dots']
-
-browserGroups = _.groupBy(browserList, (browser, i) ->
-  return Math.floor(i / BROWSERSTACK_PARALLEL)
-)
-async.eachSeries(_.keys(browserGroups), (key, done) ->
-  options.browsers = browserGroups[key]
-  karma.server.start(options, (exitCode) ->
-    setTimeout( ->
-      done(if exitCode == 0 then null else new Error('Test failure'))
-    , 1000)
+module.exports = (config) ->
+  base.call(this, config)
+  config.set(
+    browsers: browserList
+    customLaunchers: customLaunchers
+    reporters: ['dots']
   )
-, (err) ->
-  console.error(err) if err?
-  process.exit(if err? then 1 else 0)
-)
