@@ -17,12 +17,12 @@
 
 class ScribeTestSuite
   constructor: (@options) ->
-    @options.initial = Scribe.Test.HtmlTest.cleanHtml(@options.initial, true)
+    @options.initial = ScribeHtmlTest.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
-    doc = new Scribe.Document($('#test-container').get(0))
+    doc = new ScribeDocument($('#test-container').get(0))
     @delta = doc.toDelta()
     @docLength = @delta.endLength
-    @editorTest = new Scribe.Test.EditorTest(@options)
+    @editorTest = new ScribeEditorTest(@options)
 
 
 class ScribeInsertTestSuite extends ScribeTestSuite
@@ -114,4 +114,7 @@ class ScribeFormatTestSuite extends ScribeTestSuite
     )
     
 
-window.ScribeTestSuite = ScribeTestSuite
+window.ScribeTestSuite        = ScribeTestSuite
+window.ScribeInsertTestSuite  = ScribeInsertTestSuite
+window.ScribeDeleteTestSuite  = ScribeDeleteTestSuite
+window.ScribeFormatTestSuite  = ScribeFormatTestSuite

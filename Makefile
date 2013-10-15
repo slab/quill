@@ -13,7 +13,7 @@ test-karma:
 	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS --no-single-run
 
 test-remote:
-	@./node_modules/.bin/coffee tests/karma/browserstack.coffee
+	@./node_modules/.bin/karma start tests/karma/browserstack.conf.coffee
 
 test-unit:
 	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee

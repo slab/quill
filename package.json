@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "async"                : "0.2.x",
-    "coffee-script"        : "1.6.x",
     "expect.js"            : "0.2.x",
     "grunt"                : "0.4.x",
     "grunt-browserify"     : "1.2.x",
