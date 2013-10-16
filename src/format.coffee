@@ -96,9 +96,14 @@ class ScribeStyleFormat extends ScribeSpanFormat
   clean: (node) ->
     node = super(node)
     ScribeDOM.removeAttributes(node, 'style')
-    _.each(node.styles, (value, name) =>
-      style = if name == _.str.camelize(@cssName) then this.approximate(value) else ''
-      node.styles[name] = style
+    _.each(node.style, (name) =>
+      camelName = _.str.camelize(name)
+      if name != @cssName
+        style = ''
+      else
+        style = this.approximate(node.style[camelName])
+        style = if style then @styles[style] else ''
+      node.style[_.str.camelize(name)] = style
     )
     return node
 
@@ -167,18 +172,18 @@ class ScribeLinkFormat extends ScribeTagFormat
 
 
 class ScribeColorFormat extends ScribeStyleFormat
-  @COLORS: {
-    'black'   : '#000000'
-    'red'     : '#FF0000'
-    'blue'    : '#0000FF'
-    'lime'    : '#00FF00'
-    'teal'    : '#00FFFF'
-    'magenta' : '#FF00FF'
-    'yellow'  : '#FFFF00'
-    'white'   : '#FFFFFF'
-  }
+  @COLORS:
+    'black'   : 'rgb(0, 0, 0)'
+    'red'     : 'rgb(255, 0, 0)'
+    'blue'    : 'rgb(0, 0, 255)'
+    'lime'    : 'rgb(0, 255, 0)'
+    'teal'    : 'rgb(0, 255, 255)'
+    'magenta' : 'rgb(255, 0, 255)'
+    'yellow'  : 'rgb(255, 255, 0)'
+    'white'   : 'rgb(255, 255, 255)'
 
   @normalizeColor: (value) ->
+    value = value.replace(/\ /g, '')
     if value[0] == '#' and value.length == 4
       return _.map(value.slice(1), (letter) -> 
         parseInt(letter + letter, 16)

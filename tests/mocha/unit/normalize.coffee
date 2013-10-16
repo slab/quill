@@ -255,13 +255,13 @@ describe('Normalize', ->
     )
 
     attrTest.run('strip extraneous attributes from style tag', 
-      initial:  '<span style="color:#0FF;" data-test="test" width="100px">Color</span>'
-      expected: '<span style="color:#0FF;">Color</span>'
+      initial:  '<span style="color: rgb(0, 255, 255);" data-test="test" width="100px">Color</span>'
+      expected: '<span style="color: rgb(0, 255, 255);">Color</span>'
     )
 
     attrTest.run('separate multiple styles',
-      initial: '<span style="color:#0FF;background-color:#F00;">Color</span>'
-      expected: '<span style="color:#0FF;"><span style="background-color:#F00;">Color</span></span>'
+      initial: '<span style="background-color: rgb(255, 0, 0); color: rgb(0, 255, 255);">Color</span>'
+      expected: '<span style="color: rgb(0, 255, 255);"><span style="background-color: rgb(255, 0, 0);">Color</span></span>'
     )
 
     attrTest.run('separate non-standard style',
@@ -270,13 +270,13 @@ describe('Normalize', ->
     )
 
     attrTest.run('separate style from non-span',
-      initial: '<i style="color:#0FF;">Color</i>'
-      expected: '<i><span style="color:#0FF;">Color</span></i>'
+      initial: '<i style="color: rgb(0, 255, 255);">Color</i>'
+      expected: '<span style="color: rgb(0, 255, 255);"><i>Color</i></span>'
     )
 
     attrTest.run('separate multiple styles from non-span',
-      initial: '<i style="color:#0FF;background-color:#F00;">Color</i>'
-      expected: '<i><span style="color:#0FF;"><span style="background-color:#F00;">Color</span></span></i>'
+      initial: '<i style="background-color: rgb(255, 0, 0); color: rgb(0, 255, 255);">Color</i>'
+      expected: '<span style="background-color: rgb(255, 0, 0);"><span style="color: rgb(0, 255, 255);"><i>Color</i></span></span>'
     )
   )
 )

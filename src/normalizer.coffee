@@ -182,7 +182,7 @@ class ScribeNormalizer
       if _.isArray(nodeFormat)
         _.each(nodeFormat.slice(1), (format, i) =>
           if @formatManager.formats[format]?
-            container = @formatManager.formats[format].createContainer(nodeValue[i])
+            container = @formatManager.formats[format].createContainer(nodeValue[i+1])
             ScribeDOM.wrap(container, node)
         )
         nodeFormat = nodeFormat[0]
