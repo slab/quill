@@ -264,6 +264,11 @@ describe('Normalize', ->
       expected: '<span style="color:#0FF;><span style="background-color:#F00;">Color</span></span>'
     )
 
+    attrTest.run('separate non-standard style',
+      initial: '<span style="font-style:italic;">Italic</i>'
+      expected: '<i>Italic</i>'
+    )
+
     attrTest.run('separate style from non-span',
       initial: '<i style="color:#0FF;">Color</i>'
       expected: '<i><span style="color:#0FF;>Color</span></i>'

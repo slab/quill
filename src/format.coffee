@@ -127,6 +127,9 @@ class ScribeItalicFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'italic', 'I')
 
+  matchContainer: (container) ->
+    return super(container) or container.style?.fontStyle == 'italic'
+
 
 class ScribeStrikeFormat extends ScribeTagFormat
   constructor: (@root) ->
