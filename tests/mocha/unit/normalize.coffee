@@ -261,7 +261,7 @@ describe('Normalize', ->
 
     attrTest.run('separate multiple styles',
       initial: '<span style="color:#0FF;background-color:#F00;">Color</span>'
-      expected: '<span style="color:#0FF;><span style="background-color:#F00;">Color</span></span>'
+      expected: '<span style="color:#0FF;"><span style="background-color:#F00;">Color</span></span>'
     )
 
     attrTest.run('separate non-standard style',
@@ -271,12 +271,12 @@ describe('Normalize', ->
 
     attrTest.run('separate style from non-span',
       initial: '<i style="color:#0FF;">Color</i>'
-      expected: '<i><span style="color:#0FF;>Color</span></i>'
+      expected: '<i><span style="color:#0FF;">Color</span></i>'
     )
 
     attrTest.run('separate multiple styles from non-span',
       initial: '<i style="color:#0FF;background-color:#F00;">Color</i>'
-      expected: '<i><span style="color:#0FF;><span style="background-color:#F00;">Color</span></span></i>'
+      expected: '<i><span style="color:#0FF;"><span style="background-color:#F00;">Color</span></span></i>'
     )
   )
 )
