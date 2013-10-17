@@ -113,14 +113,14 @@ class ScribeStyleFormat extends ScribeSpanFormat
     node.removeAttribute('style')
     if styleObj[@cssName]
       style = this.approximate(styleObj[@cssName])
-      node.style[_.str.camelize(@cssName)] = @styles[style] if style
+      node.setAttribute('style', "#{@cssName}: #{@styles[style]};") if style    # PhantomJS adds a trailing space if we use node.style
     return node
 
   createContainer: (value) ->
     container = super(value)
     cssName = _.str.camelize(@cssName)
     style = this.approximate(value)
-    container.style[cssName] = @styles[style] if style
+    container.setAttribute('style', "#{@cssName}: #{@styles[style]};") if style # PhantomJS adds a trailing space if we use node.style
     return container
 
   matchContainer: (container) ->
