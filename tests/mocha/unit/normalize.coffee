@@ -265,7 +265,7 @@ describe('Normalize', ->
     )
 
     attrTest.run('separate non-standard style',
-      initial: '<span style="font-style:italic;">Italic</i>'
+      initial: '<span style="font-style:italic;">Italic</span>'
       expected: '<i>Italic</i>'
     )
 

@@ -7,12 +7,12 @@ describe('Editor', ->
         <span>cd</span>
       </i>
       <s>ef</s>
-      <span style="color: #F00;">gh</span>
+      <span style="color: rgb(255, 0, 0);">gh</span>
     </div>
     <div><br></div>
     <div><br></div>
     <div><b>ij</b></div>
-    <div><span style="color: #F00;">kl</span></div>
+    <div><span style="color: rgb(255, 0, 0);">kl</span></div>
     <div><br></div>
   '
 

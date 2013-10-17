@@ -84,6 +84,19 @@ class ScribeClassFormat extends ScribeSpanFormat
 
 
 class ScribeStyleFormat extends ScribeSpanFormat
+  @getStyleObject: (container) ->
+    # Iterating through container.style upsets IE8
+    styleString = container.getAttribute('style') or ''
+    obj = _.reduce(styleString.split(';'), (styles, str) ->
+      [name, value] = str.split(':')
+      if name and value
+        name = _.str.trim(name)
+        value = _.str.trim(value)
+        styles[name.toLowerCase()] = value
+      return styles
+    , {})
+    return obj
+
   constructor: (@root, @keyName, @cssName, @defaultStyle, @styles) ->
     super
 
@@ -96,15 +109,11 @@ class ScribeStyleFormat extends ScribeSpanFormat
   clean: (node) ->
     node = super(node)
     ScribeDOM.removeAttributes(node, 'style')
-    _.each(node.style, (name) =>
-      camelName = _.str.camelize(name)
-      if name != @cssName
-        style = ''
-      else
-        style = this.approximate(node.style[camelName])
-        style = if style then @styles[style] else ''
-      node.style[_.str.camelize(name)] = style
-    )
+    styleObj = ScribeStyleFormat.getStyleObject(node)
+    node.removeAttribute('style')
+    if styleObj[@cssName]
+      style = this.approximate(styleObj[@cssName])
+      node.style[_.str.camelize(@cssName)] = @styles[style] if style
     return node
 
   createContainer: (value) ->

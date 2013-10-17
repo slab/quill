@@ -44,7 +44,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
           attributes: { bold: true }
         "insert red A":
           value: 'A'
-          attributes: { 'fore-color': '#f00' }
+          attributes: { 'fore-color': 'rgb(255, 0, 0)' }
         "insert newline":
           value: '\n'
           attributes: {}
