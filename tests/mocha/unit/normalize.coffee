@@ -264,6 +264,11 @@ describe('Normalize', ->
       expected: '<span style="color: rgb(0, 255, 255);"><span style="background-color: rgb(255, 0, 0);">Color</span></span>'
     )
 
+    attrTest.run('separate conflicting styles',
+      initial: '<u style="text-decoration: line-through;">Understrike</u>'
+      expected: '<u><s>Understrike</s></u>'
+    )
+
     attrTest.run('separate non-standard style',
       initial: '<span style="font-style:italic;">Italic</span>'
       expected: '<i>Italic</i>'
