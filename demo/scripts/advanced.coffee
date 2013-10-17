@@ -80,7 +80,7 @@ initToolbar = ($container, editor) ->
       $(".#{format}", $formattingContainer).dropkick({
         change: (value) -> 
           range = editor.getSelection()
-          range.formatContents(format, value, { source: 'user' }) if range?
+          range.format(format, value, { source: 'user' }) if range?
         width: 75
       })
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, ->
