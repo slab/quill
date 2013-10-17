@@ -178,12 +178,13 @@ class ScribeNormalizer
 
   normalizeTags: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>
+      containerNode = node
       [nodeFormat, nodeValue] = @formatManager.getFormat(node)
       if _.isArray(nodeFormat)
         _.each(nodeFormat.slice(1), (format, i) =>
           if @formatManager.formats[format]?
             container = @formatManager.formats[format].createContainer(nodeValue[i+1])
-            ScribeDOM.wrap(container, node)
+            containerNode = ScribeDOM.wrap(container, node)
         )
         nodeFormat = nodeFormat[0]
         nodeValue = nodeValue[0]
@@ -191,7 +192,7 @@ class ScribeNormalizer
         @formatManager.formats[nodeFormat].clean(node)
       else
         ScribeDOM.removeAttributes(node)
-      return node
+      return containerNode
     )
 
   removeRedundant: (lineNode) ->
