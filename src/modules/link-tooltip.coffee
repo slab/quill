@@ -89,7 +89,6 @@ initTooltip = ->
     '#link-tooltip': {
       'background-color': '#fff'
       'border': '1px solid #000'
-      'left': '-10000px'
       'height': '23px'
       'padding': '5px 10px'
       'position': 'absolute'
@@ -110,6 +109,7 @@ initTooltip = ->
     '#link-tooltip.editing .url'    : { 'display': 'none' }
     '#link-tooltip.editing .change' : { 'display': 'none' }
   )
+  @tooltip.style.left = '-10000px'
   @editor.renderer.addContainer(@tooltip)
 
 normalizeUrl = (url) ->
