@@ -136,6 +136,9 @@ class ScribeBoldFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'bold', 'B')
 
+  matchContainer: (container) ->
+    return super(container) or container.style?.fontWeight == 'bold'
+
 
 class ScribeItalicFormat extends ScribeTagFormat
   constructor: (@root) ->
@@ -149,6 +152,9 @@ class ScribeStrikeFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'strike', 'S')
 
+  matchContainer: (container) ->
+    return super(container) or container.style?.textDecoration == 'line-through'
+
   preformat: (value) ->
     @root.ownerDocument.execCommand('strikeThrough', false, value)
 
@@ -156,6 +162,9 @@ class ScribeStrikeFormat extends ScribeTagFormat
 class ScribeUnderlineFormat extends ScribeTagFormat
   constructor: (@root) ->
     super(@root, 'underline', 'U')
+
+  matchContainer: (container) ->
+    return super(container) or container.style?.textDecoration == 'underline'
 
 
 class ScribeLinkFormat extends ScribeTagFormat
