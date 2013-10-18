@@ -107,7 +107,7 @@ class ScribeSelection
     return null unless @nativeSelection?.rangeCount > 0
     range = @nativeSelection.getRangeAt(0)
     # Selection elements needs to be within editor root
-    return null unless rangy.dom.isAncestorOf(@editor.root, range.startContainer) and rangy.dom.isAncestorOf(@editor.root, range.endContainer)
+    return null unless rangy.dom.isAncestorOf(@editor.root, range.startContainer, true) and rangy.dom.isAncestorOf(@editor.root, range.endContainer, true)
     range = normalizeNativeRange(range) if normalize
     range.isBackwards = true if @nativeSelection.isBackwards()
     return range
