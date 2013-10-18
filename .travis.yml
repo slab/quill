@@ -3,6 +3,10 @@ node_js: '0.10'
 before_script:
 - npm install -g grunt-cli
 - grunt
+branches:
+  only:
+    - master
+    - develop
 env:
   global:
   - secure: iaJMvPiY6yLSpzxXCDq0cXX+DhczaLrtYkEO0I2Y6AP+IGcVutoljJSbv5VN+JfE6j3jbQyiLJzeTt5mUHUaGbhsVhAnSV8oinkNIi1OsOcPRkUga7JACIL46Dm/n32yUJXzw9ARzsmg3yPUJ1ti/Qd2MLZttujnw5xAiZzPhNw=
