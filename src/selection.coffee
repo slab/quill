@@ -14,11 +14,15 @@ compareNativeRanges = (r1, r2) ->
 # DOM Selection API says offset is child index of container, not number of characters like ScribePosition
 normalizeNativePosition = (node, offset) ->
   if node?.nodeType == ScribeDOM.ELEMENT_NODE
-    if offset == 0
-      node = node.firstChild if node.firstChild?
+    return [node, 0] unless node.firstChild?
+    offset = Math.min(node.childNodes.length, offset)
+    if offset < node.childNodes.length
+      return normalizeNativePosition(node.childNodes[offset], 0)
     else
-      node = node.childNodes[node.childNodes.length-1]
-      offset = ScribeDOM.getText(node).length
+      if node.lastChild.nodeType == ScribeDOM.ELEMENT_NODE
+        return normalizeNativePosition(node.lastChild, node.lastChild.childNodes.length)
+      else
+        return [node.lastChild, ScribeUtils.getNodeLength(node.lastChild)]
   return [node, offset]
 
 normalizeNativeRange = (nativeRange) ->
