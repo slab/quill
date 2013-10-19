@@ -159,8 +159,12 @@ class ScribeSelection
       @editor.emit(@editor.constructor.events.FOCUS_CHANGE, hasFocus) unless silent
       @hasFocus = hasFocus
     unless compareNativeRanges(nativeRange, @range)
-      nativeRange = normalizeNativeRange(nativeRange)
-      this.setRange(_nativeRangeToRange.call(this, nativeRange), silent)
+      range = _nativeRangeToRange.call(this, normalizeNativeRange(nativeRange))
+      if (nativeRange? and !@range?) or !nativeRange?
+        this.setRange(range, silent)
+      else
+        @range = nativeRange
+        @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
 
 
 module.exports = ScribeSelection
