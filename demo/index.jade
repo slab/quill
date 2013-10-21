@@ -58,5 +58,7 @@ html
           } else {
             console.info('Range', range);
           }
+        }).on(Scribe.Editor.events.FOCUS_CHANGE, function(focus) {
+          console.log('Focus', focus);
         });
       }

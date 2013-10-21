@@ -98,12 +98,14 @@ listenEditor = (source, target) ->
     console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
   ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
     if range?
-      console.info source.id, 'selection change', range.start.index, range.end.index if console?
+      console.info source.id, 'selection change', range.start.index, range.start.leafNode, range.end.index, range.end.leafNode if console?
       color = getColor(source.id)
       cursor = target.cursorManager.setCursor(source.id, range.end.index, source.id, color)
       cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
     else  
       console.info source.id, 'selection change', range if console?
+  ).on(Scribe.Editor.events.FOCUS_CHANGE, (hasFocus) ->
+    console.info source.id, 'focus change', hasFocus if console?
   )
 
 
