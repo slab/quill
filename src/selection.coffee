@@ -90,10 +90,10 @@ class ScribeSelection
     @range = null
     @mouseIsDown = @keyIsDown = false
     @hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
-    ScribeDOM.addEventListener(@editor.root, 'keydown',   => _.defer( => @keyIsDown = true ))
-    ScribeDOM.addEventListener(@editor.root, 'keyup',     => _.defer( => @keyIsDown = false ))
-    ScribeDOM.addEventListener(@editor.root, 'mousedown', => _.defer( => @mouseIsDown = true ))
-    ScribeDOM.addEventListener(@editor.root, 'mouseup',   => _.defer( => @mouseIsDown = false ))
+    ScribeDOM.addEventListener(@editor.root, 'keydown',   => @keyIsDown = true )
+    ScribeDOM.addEventListener(@editor.root, 'keyup',     => @keyIsDown = false )
+    ScribeDOM.addEventListener(@editor.root, 'mousedown', => @mouseIsDown = true )
+    ScribeDOM.addEventListener(@editor.root, 'mouseup',   => @mouseIsDown = false )
     rangy.init()
     @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
     this.setRange(null)
