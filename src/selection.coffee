@@ -88,7 +88,7 @@ _preserveWithLine = (savedNativeRange, fn) ->
 class ScribeSelection
   constructor: (@editor) ->
     @range = null
-    @mouseIsDown = @keyIsDown = false
+    @mouseIsDown = @keyIsDown = @focusTransition = false
     @hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
     ScribeDOM.addEventListener(@editor.root, 'keydown',   => @keyIsDown = true )
     ScribeDOM.addEventListener(@editor.root, 'keyup',     => @keyIsDown = false )
@@ -99,9 +99,8 @@ class ScribeSelection
     this.setRange(null)
 
   getDimensions: ->
-    rangyRange = this.getNativeRange(false)
-    return null unless rangyRange?
-    nativeRange = rangyRange.nativeRange or rangyRange.textRange
+    return null unless @range?
+    nativeRange = @range.nativeRange or @range.textRange
     return nativeRange.getBoundingClientRect()
     
   getNativeRange: (normalize = false) ->
@@ -117,8 +116,7 @@ class ScribeSelection
     return range
 
   getRange: ->
-    nativeRange = this.getNativeRange(true)
-    return if nativeRange? then _nativeRangeToRange.call(this, nativeRange) else null
+    return _nativeRangeToRange.call(this, @range)
 
   preserve: (index, lengthAdded, fn) ->
     fn = index if _.isFunction(index)
@@ -152,12 +150,18 @@ class ScribeSelection
     @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
 
   update: (silent = false) ->
-    return if (@mouseIsDown or @keyIsDown) and !silent
-    nativeRange = this.getNativeRange(false)
+    return if (@mouseIsDown or @keyIsDown or @focusTransition) and !silent
     hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
     if hasFocus != @hasFocus
-      @editor.emit(@editor.constructor.events.FOCUS_CHANGE, hasFocus) unless silent
       @hasFocus = hasFocus
+      @editor.emit(@editor.constructor.events.FOCUS_CHANGE, @hasFocus) unless silent
+      clearTimeout(@focusTransition)
+      # In IE8 we actually lose the selection if we lose focus so delay updating the selection if it's temporary, ex. clicking on a toolbar button
+      @focusTransition = setTimeout( =>
+        @focusTransition = false
+      , @editor.options.pollInterval * 1.5)
+      return unless @hasFocus
+    nativeRange = this.getNativeRange(false)
     unless compareNativeRanges(nativeRange, @range)
       range = _nativeRangeToRange.call(this, normalizeNativeRange(nativeRange))
       if (nativeRange? and !@range?) or !nativeRange?
