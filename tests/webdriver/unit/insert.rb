@@ -21,12 +21,11 @@ describe "Insert" do
   def apply_delta(delta, err_msg)
     ScribeDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta)
-    success = ScribeDriver::JS.check_consistency
+    actual_delta, success = ScribeDriver::JS.check_consistency().values_at("actual_delta", "success")
     unless success
       doc_delta = ScribeDriver::JS.get_as_str("docDelta")
       cur_delta = ScribeDriver::JS.get_as_str("currentDelta")
       expected_delta = ScribeDriver::JS.get_expected_as_str
-      actual_delta = ScribeDriver::JS.get_cur_doc_delta_as_str
       doc_delta = JSON.pretty_generate(JSON.parse(doc_delta))
       cur_delta = JSON.pretty_generate(JSON.parse(cur_delta))
       expected_delta = JSON.pretty_generate(JSON.parse(expected_delta))

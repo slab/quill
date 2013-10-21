@@ -97,7 +97,7 @@ module ScribeDriver
   def apply_delta(delta, err_msg, toolbar_only = false)
     ScribeDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta, toolbar_only)
-    success = ScribeDriver::JS.check_consistency
+    actual_delta, success = ScribeDriver::JS.check_consistency().values_at("actual_delta", "success")
     success.must_equal true, err_msg
   end
 

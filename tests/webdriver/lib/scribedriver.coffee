@@ -96,5 +96,9 @@ $(document).ready( ->
 
     checkConsistency: ->
       actual = window.ScribeDriver.cleanup(editor.getDelta())
-      window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta).isEqual(actual)
+      consistent = window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta).isEqual(actual)
+      return {
+        success: consistent,
+        actual_delta: JSON.stringify(actual)
+      }
 )
