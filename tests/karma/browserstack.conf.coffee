@@ -2,13 +2,13 @@ _     = require('underscore')._
 base  = require('./all.conf')
 
 browsers =
-  'mac-chrome'  : ['OS X', 'Mountain Lion', 'chrome', '29.0']
-  'mac-firefox' : ['OS X', 'Mountain Lion', 'firefox', '24.0']
-  'mac-safari'  : ['OS X', 'Mountain Lion', 'safari', '6.0']
+  'mac-chrome'  : ['OS X', 'Mountain Lion', 'chrome', 'latest']
+  'mac-firefox' : ['OS X', 'Mountain Lion', 'firefox', 'latest']
+  'mac-safari'  : ['OS X', 'Mountain Lion', 'safari', 'latest']
 
-  'windows-8-chrome'  : ['Windows', '8', 'chrome', '29.0']
-  'windows-8-firefox' : ['Windows', '8', 'firefox', '24.0']
-  'windows-8-safari'  : ['Windows', '8', 'safari', '5.1']
+  'windows-8-chrome'  : ['Windows', '8', 'chrome', 'latest']
+  'windows-8-firefox' : ['Windows', '8', 'firefox', 'latest']
+  'windows-8-safari'  : ['Windows', '8', 'safari', 'latest']
   'windows-8-ie-10'   : ['Windows', '8', 'ie', '10.0']
 
   'windows-7-ie-9'    : ['Windows', '7', 'ie', '9.0']
