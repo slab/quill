@@ -18,7 +18,7 @@ ScribeDOM =
       event.which ?= event.keyCode
       bubbles = listener.call(null, event)
       if bubbles == false
-        if event.preventDefault then event.preventDefault() else event.returnValue = false
+        if event.stopPropagation then event.stopPropagation() else event.returnValue = false
         return false
     if node.addEventListener?
       node.addEventListener(eventName, callback)
@@ -126,6 +126,14 @@ ScribeDOM =
       ScribeDOM.removeClass(node, className)
     else
       ScribeDOM.addClass(node, className)
+
+  triggerEvent: (elem, eventName, bubble, cancels) ->
+    if document.createEvent
+      evt = document.createEvent("HTMLEvents")
+      evt.initEvent(eventName, bubble, cancels)
+      elem.dispatchEvent(evt)
+    else
+      elem.fireEvent("on#{eventName}", cancels)
 
   unwrap: (node) ->
     ret = node.firstChild

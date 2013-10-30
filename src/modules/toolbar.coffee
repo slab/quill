@@ -8,6 +8,9 @@ initFormats = ->
     _.each(formats, (format) =>
       input = @container.querySelector(".#{format}")
       return unless input?
+      if input?.tagName != 'SELECT' and formatGroup == 'SELECT'
+        input = input.querySelector('select')
+      return unless input?
       return new ScribeLinkTooltip(input, this) if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>

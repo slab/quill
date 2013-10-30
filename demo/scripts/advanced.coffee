@@ -69,13 +69,12 @@ initEditor = ($container) ->
       'width': '0px'
     '.cursor.top > .cursor-flag': { 'bottom': '100%', 'top': 'auto' }
   )
-  return editor  
+  return editor
 
 initToolbar = ($container, editor) ->
   $formattingContainer = $('.formatting-container', $container)
   toolbar = new Scribe.Toolbar($formattingContainer.get(0), editor)
-  dropkickFormats = ['font-name', 'font-size']
-  for format in dropkickFormats
+  for format in ['font-name', 'font-size']
     do (format) ->
       $(".#{format}", $formattingContainer).dropkick({
         change: (value) -> 
@@ -83,12 +82,14 @@ initToolbar = ($container, editor) ->
           range.format(format, value, { source: 'user' }) if range?
         width: 75
       })
+  for format in ['fore-color']
+    Scribe.ColorPicker.init($(".#{format}", $formattingContainer).get(0))
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, ->
     $(".font-name, .font-size", $formattingContainer).each((select) ->
       $(this).dropkick('set', $('option:selected', this).text())
     )
   )
-  Scribe.ColorPicker.init($('.fore-color', $formattingContainer).get(0))
+
 
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->

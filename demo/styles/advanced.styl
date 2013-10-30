@@ -43,9 +43,9 @@
   //.fore-color
 
   for $format in bold italic strike underline fore-color list bullet outdent indent link attribution
-    .{$format}
+    .format.{$format}
       background-image: url('../images/' + $format + '.png')
-    .{$format}:hover, .{$format}:active, .{$format}.active
+    .format.{$format}:hover, .{$format}:active, .{$format}.active
       background-image: url('../images/' + $format + '-active.png')
 
 .color-palette
