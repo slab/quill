@@ -82,7 +82,7 @@ initToolbar = ($container, editor) ->
           range.format(format, value, { source: 'user' }) if range?
         width: 75
       })
-  for format in ['fore-color']
+  for format in ['fore-color', 'back-color']
     Scribe.ColorPicker.init($(".#{format}", $formattingContainer).get(0))
   editor.on(Scribe.Editor.events.SELECTION_CHANGE, ->
     $(".font-name, .font-size", $formattingContainer).each((select) ->

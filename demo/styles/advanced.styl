@@ -42,7 +42,7 @@
     visibility: hidden
   //.fore-color
 
-  for $format in bold italic strike underline fore-color list bullet outdent indent link attribution
+  for $format in bold italic strike underline fore-color back-color list bullet outdent indent link attribution
     .format.{$format}
       background-image: url('../images/' + $format + '.png')
     .format.{$format}:hover, .{$format}:active, .{$format}.active

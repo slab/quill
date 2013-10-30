@@ -34,13 +34,5 @@ ScribeColorPicker =
     ScribeDOM.addEventListener(palette, 'blur', ->
       ScribeDOM.removeClass(palette, 'active')
     )
-    ScribeDOM.addEventListener(select, 'change', ->
-      if select.selectedIndex != 0
-        ScribeDOM.addClass(container, 'active')
-      else
-        ScribeDOM.removeClass(container, 'active')
-      ScribeDOM.triggerEvent(palette, 'blur', true, true)
-    )
-
 
 module.exports = ScribeColorPicker
