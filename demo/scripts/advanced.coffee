@@ -88,6 +88,7 @@ initToolbar = ($container, editor) ->
       $(this).dropkick('set', $('option:selected', this).text())
     )
   )
+  Scribe.ColorPicker.init($('.fore-color', $formattingContainer).get(0))
 
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->

@@ -23,7 +23,7 @@
   .format-button
     background-repeat: repeat-x
     display: inline-block
-    height: 24px
+    width: 29px
   .format
     background-position: center center
     background-repeat: no-repeat
@@ -40,9 +40,33 @@
     margin-right: 10px
   .font-family, .font-size
     visibility: hidden
-   
-  for $format in bold italic strike underline list bullet outdent indent link attribution
+  //.fore-color
+
+  for $format in bold italic strike underline fore-color list bullet outdent indent link attribution
     .{$format}
       background-image: url('../images/' + $format + '.png')
     .{$format}:hover, .{$format}:active, .{$format}.active
-      background-image: url('../images/' + $format + '-color.png')
+      background-image: url('../images/' + $format + '-active.png')
+
+.color-palette
+  background-color: #fff
+  border: 1px solid #ccc
+  display: none
+  height: 100px
+  left: 0px
+  padding: 2px
+  position: absolute
+  top: 20px
+  width: 100px
+  .color
+    cursor: pointer
+    display: inline-block
+    float: left
+    height: 16px
+    margin: 2px
+    width: 16px
+  .color.active, .color:hover
+    border: 1px solid black
+    margin: 1px
+.color-palette.active
+  display: block
