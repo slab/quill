@@ -106,7 +106,6 @@ class ScribeRenderer extends EventEmitter2
 
   buildFrame: ->
     html = @container.innerHTML
-    ScribeDOM.addClass(@container, 'editor-container')
     @container.innerHTML = ''
     if @options.iframe
       @iframe = @container.ownerDocument.createElement('iframe')
@@ -127,6 +126,7 @@ class ScribeRenderer extends EventEmitter2
       doc.body.appendChild(@root)
     else
       @container.appendChild(@root)
+    ScribeDOM.addClass(@root.parentNode, 'editor-container')
     @root.innerHTML = ScribeNormalizer.normalizeHtml(html) if @options.keepHTML
     ScribeDOM.addEventListener(@container, 'focus', =>
       @root.focus()
