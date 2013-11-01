@@ -95,7 +95,10 @@ class ScribeSelection
     ScribeDOM.addEventListener(@editor.root, 'mousedown', => @mouseIsDown = true )
     ScribeDOM.addEventListener(@editor.root, 'mouseup',   => @mouseIsDown = false )
     rangy.init()
-    @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
+    if @editor.renderer.options.iframe
+      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
+    else
+      @nativeSelection = rangy.getSelection()
     this.setRange(null)
 
   getDimensions: ->
