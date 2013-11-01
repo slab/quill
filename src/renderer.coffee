@@ -19,6 +19,10 @@ class ScribeRenderer extends EventEmitter2
         'margin': '0px'
         'padding': '0px'
       }
+      '.editor-container': {
+        'overflow': 'auto'
+        'position': 'relative'
+      }
       'div.editor': {
         'bottom': '10px'
         'left': '0px'
@@ -102,6 +106,7 @@ class ScribeRenderer extends EventEmitter2
 
   buildFrame: ->
     html = @container.innerHTML
+    ScribeDOM.addClass(@container, 'editor-container')
     @container.innerHTML = ''
     if @options.iframe
       @iframe = @container.ownerDocument.createElement('iframe')
@@ -116,12 +121,11 @@ class ScribeRenderer extends EventEmitter2
       @iframe = @container
       doc = this.getDocument()
     @root = doc.createElement('div')
-    ScribeDOM.addClass(@root, ScribeUtils.EDITOR_CLASS)
+    ScribeDOM.addClass(@root, 'editor')
     @root.id = @options.id
     if @options.iframe
       doc.body.appendChild(@root)
     else
-      @container.style.position = 'relative'
       @container.appendChild(@root)
     @root.innerHTML = ScribeNormalizer.normalizeHtml(html) if @options.keepHTML
     ScribeDOM.addEventListener(@container, 'focus', =>

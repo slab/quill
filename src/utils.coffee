@@ -22,7 +22,6 @@ ScribeUtils =
     'TR'
     'UL'
   ]
-  EDITOR_CLASS: 'editor'
 
   findAncestor: (node, checkFn) ->
     while node? && !checkFn(node)
