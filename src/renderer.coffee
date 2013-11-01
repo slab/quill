@@ -6,7 +6,7 @@ ScribeNormalizer  = require('./normalizer')
 class ScribeRenderer extends EventEmitter2
   @DEFAULTS:
     id: 'editor'
-    iframe: false
+    iframe: true
     keepHTML: false
     styles:
       'html' : { 'height': '100%' }
@@ -116,7 +116,7 @@ class ScribeRenderer extends EventEmitter2
       @iframe = @container
       doc = this.getDocument()
     @root = doc.createElement('div')
-    ScribeDOM.addClass(@root, 'editor')
+    ScribeDOM.addClass(@root, ScribeUtils.EDITOR_CLASS)
     @root.id = @options.id
     if @options.iframe
       doc.body.appendChild(@root)
