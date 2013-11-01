@@ -3,7 +3,6 @@ html
   head
     title Stypi Pretty Editor Demo
     link(rel='stylesheet', type='text/css', href='styles/reset.css')
-    link(rel='stylesheet', type='text/css', href='styles/dropkick.css')
     link(rel='stylesheet', type='text/css', href='styles/advanced.css')
     meta(charset='utf-8')
 
@@ -13,59 +12,46 @@ html
         .editor-wrapper(class=(num == 1 ? 'first' : 'last'))
           #formatting-container.formatting-container
             .format-group
-              // Dropkick screws up without id
-              select.format-dropdown.font-name(id='font-name-' + (num == 1 ? 'first' : 'last'))
-                option.default(value='sans-serif', selected=true) Sans Serif
+              select.font-name
+                option(value='sans-serif', selected=true) Sans Serif
                 option(value='serif') Serif
                 option(value='monospace') Monospace
             .format-group
-              select.format-dropdown.font-size(id='font-size-' + (num == 1 ? 'first' : 'last'))
+              select.font-size
                 option(value='small') Small
-                option.default(value='normal', selected=true) Normal
+                option(value='normal', selected=true) Normal
                 option(value='large') Large
                 option(value='huge') Huge
             .format-group
-              .format-button
-                .format.fore-color
-                  select
-                    option(value='black', selected=true)
-                    option(value='white')
-                    option(value='red')
-                    option(value='blue')
-                    option(value='lime')
-                    option(value='teal')
-                    option(value='magenta')
-                    option(value='yellow')
-              .format-button
-                .format.back-color.last
-                  select
-                    option(value='white', selected=true)
-                    option(value='black')
-                    option(value='red')
-                    option(value='blue')
-                    option(value='lime')
-                    option(value='teal')
-                    option(value='magenta')
-                    option(value='yellow')
+              select.fore-color
+                option(value='black', selected=true)
+                option(value='white')
+                option(value='red')
+                option(value='blue')
+                option(value='lime')
+                option(value='teal')
+                option(value='magenta')
+                option(value='yellow')
+              select.back-color
+                option(value='black')
+                option(value='white', selected=true)
+                option(value='red')
+                option(value='blue')
+                option(value='lime')
+                option(value='teal')
+                option(value='magenta')
+                option(value='yellow')
             .format-group
-              .format-button
-                .format.bold
-              .format-button
-                .format.italic
-              .format-button
-                .format.underline
-              .format-button
-                .format.strike.last
+              .format-button.bold
+              .format-button.italic
+              .format-button.underline
+              .format-button.strike
             .format-group
-              .format-button
-                .format.link.last
+              .format-button.link
             .format-group
-              .format-button
-                .format.attribution.last
+              .format-button.attribution
           #editor-container.editor-container
             include content
 
-    script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js')
-    script(type='text/javascript', src='scripts/dropkick.js')
     script(type='text/javascript', src='../scribe.all.js')
     script(type='text/javascript', src='scripts/advanced.js')

@@ -17,15 +17,19 @@ module.exports = (grunt) ->
 
     browserify:
       options:
-        alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         extensions: ['.js', '.coffee']
-        requires: ['tandem-core']
         transform: ['coffeeify']
       scribe:
+        options:
+          alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
+      scribe_themed:
+        files: [{ dest: 'build/scribe.themed.js', src: ['src/themes/snow.coffee'] }]
       tandem_wrapper:
+        options:
+          alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/mocha/tandem.coffee'] }]
-
+      
     clean: ['build']
 
     coffee:
@@ -34,20 +38,18 @@ module.exports = (grunt) ->
         dest: 'build/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
-      src:
+      bare:
         options:
           bare: true
-        expand: true
-        dest: 'build/'
-        src: ['src/**/*.coffee']
+        expand: true  
         ext: '.js'
-      inject:
-        options:
-          bare: true
-        expand: true
         dest: 'build/'
-        src: ['tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
+        src: ['src/**/*.coffee', 'tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
+      themes:
+        expand: true  
         ext: '.js'
+        dest: 'build/'
+        src: ['src/themes/*.coffee']
       test:
         files: [{
           dest: 'build/tests/mocha/editor.js'
@@ -61,13 +63,23 @@ module.exports = (grunt) ->
         }]
 
     concat:
-      options:
-        banner:
-          '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-          ' *  https://www.stypi.com/\n' +
-          ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
-          ' *  Jason Chen, Salesforce.com\n' +
-          ' */\n\n'
+      scribe:
+        options:
+          banner:
+            '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+            ' *  https://www.stypi.com/\n' +
+            ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
+            ' *  Jason Chen, Salesforce.com\n' +
+            ' */\n\n'
+        files: [{
+          dest: 'build/scribe.js'
+          src: ['build/scribe.js']
+        }]
+      scribe_theme:
+        files: [{
+          dest: 'build/scribe.themed.js'
+          src: ['build/scribe.js', 'build/scribe.themed.js']
+        }]
       scribe_all:
         files: [{
           dest: 'build/scribe.all.js'
@@ -78,7 +90,7 @@ module.exports = (grunt) ->
             'build/lib/eventemitter2.js'
             'build/lib/linked_list.js'
             'build/src/ext/header.js'
-            'build/scribe.js'
+            'build/scribe.themed.js'
             'build/src/ext/footer.js'
           ]
         }]
@@ -154,7 +166,7 @@ module.exports = (grunt) ->
         files: ['demo/styles/*.styl']
         tasks: ['stylus:demo']
       src:
-        files: ['src/**/*.coffee']
+        files: ['index.coffee', 'src/**/*.coffee']
         tasks: ['browserify', 'coffee', 'string-replace', 'concat']
       test:
         files: ['tests/mocha/**/*.coffee']

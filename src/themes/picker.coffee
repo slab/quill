@@ -23,7 +23,7 @@ buildPalette = (select) ->
   return palette
 
 
-ScribeColorPicker =
+ScribePicker =
   init: (container) ->
     container.style.position = 'relative'
     select = container.querySelector('select')
@@ -35,4 +35,4 @@ ScribeColorPicker =
       ScribeDOM.removeClass(palette, 'active')
     )
 
-module.exports = ScribeColorPicker
+module.exports = ScribePicker

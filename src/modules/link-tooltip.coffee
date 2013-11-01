@@ -25,7 +25,7 @@ exitEditMode = ->
 formatLink = (value) ->
   @editor.setSelection(@savedRange, true)
   @savedRange.format('link', value, { source: 'user' })
-  @toolbar.editor.emit(@toolbar.editor.constructor.events.PREFORMAT, 'link', value)
+  @editor.emit(@editor.constructor.events.PREFORMAT, 'link', value)
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
@@ -45,10 +45,10 @@ initListeners = ->
       link = link.parentNode
     hideTooltip.call(this)
   )
-  ScribeDOM.addEventListener(@button, 'click', =>
+  ScribeDOM.addEventListener(@options.button, 'click', =>
     @savedRange = @editor.getSelection()
     return unless @savedRange? and !@savedRange.isCollapsed()
-    if ScribeDOM.hasClass(@button, 'active')
+    if ScribeDOM.hasClass(@options.button, 'active')
       formatLink.call(this, false)
       hideTooltip.call(this)
     else
@@ -72,7 +72,7 @@ initListeners = ->
   )
 
 initTooltip = ->
-  @tooltip = @button.ownerDocument.createElement('div')
+  @tooltip = @options.button.ownerDocument.createElement('div')
   @tooltip.id = 'link-tooltip'
   @tooltip.innerHTML =
    '<span class="title">Visit URL:</span>
@@ -133,8 +133,11 @@ showTooltip = (target, subjectDist = 5) ->
 
 
 class ScribeLinkTooltip
-  constructor: (@button, @toolbar) ->
-    @editor = @toolbar.editor
+  @DEFAULTS:
+    button: null      # Required
+
+  constructor: (@editor, options = {}) ->
+    @options = _.defaults(options, ScribeLinkTooltip.DEFAULTS)
     initTooltip.call(this)
     initListeners.call(this)
 

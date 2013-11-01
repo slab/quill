@@ -47,8 +47,11 @@ html
 
     script(type='text/javascript', src='../scribe.all.js')
     script(type='text/javascript').
-      var editor = new Scribe.Editor('editor-container');
-      var toolbar = new Scribe.Toolbar('formatting-container', editor);
+      var editor = new Scribe.Editor('editor-container', {
+        modules: {
+          toolbar: 'formatting-container'
+        }
+      });
       if (typeof console != 'undefined') {
         editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, function(delta) {
           console.info('Text', delta);

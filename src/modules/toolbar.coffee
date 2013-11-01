@@ -10,7 +10,8 @@ initFormats = ->
       if input? and input.tagName != 'SELECT' and formatGroup == 'SELECT'
         input = input.querySelector('select')
       return unless input?
-      return new ScribeLinkTooltip(input, this) if format == 'link'
+      #return new ScribeLinkTooltip(input, this) if format == 'link'
+      return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
@@ -26,12 +27,17 @@ initFormats = ->
 
 
 class ScribeToolbar
+  @DEFAULTS:
+    container: null     # required
+
   @formats:
     BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent']
     SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
 
-  constructor: (@container, @editor) ->
-    @container = document.getElementById(@container) if _.isString(@container)
+  constructor: (@editor, options = {}) ->
+    @options = _.defaults(options, ScribeToolbar.DEFAULTS)
+    console.log options
+    @container = if _.isString(@options.container) then document.getElementById(@options.container) else @options.container
     initFormats.call(this)
     @editor.on(@editor.constructor.events.POST_EVENT, (eventName) =>
       return unless eventName == @editor.constructor.events.API_TEXT_CHANGE or eventName == @editor.constructor.events.USER_TEXT_CHANGE or eventName == @editor.constructor.events.SELECTION_CHANGE

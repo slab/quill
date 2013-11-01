@@ -143,6 +143,8 @@ class ScribeEditor extends EventEmitter2
     formatManager: {}
     renderer: {}
     undoManager: {}
+    modules: {}
+    theme: 'default'
 
   @events:
     API_TEXT_CHANGE  : 'api-text-change'
@@ -159,18 +161,10 @@ class ScribeEditor extends EventEmitter2
     @options = _.defaults(options, ScribeEditor.DEFAULTS)
     @options.renderer['id'] = @id
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
+    @theme = new Scribe.Themes[_.str.classify(@options.theme)](this)
     this.reset(true)
-    setInterval( =>
-      delta = this.update()
-      if delta
-        oldDelta = @delta
-        @delta = oldDelta.compose(delta)
-        this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
-      @selection.update(delta)
-    , @options.pollInterval)
-    this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
-      @savedRange = range
-    )
+    this.initModules()
+    this.initLoop()
     this.enable() if @options.enabled
 
   disable: ->
@@ -182,6 +176,27 @@ class ScribeEditor extends EventEmitter2
     this.doSilently( =>
       @root.setAttribute('contenteditable', true)
     )
+
+  initLoop: ->
+    setInterval( =>
+      delta = this.update()
+      if delta
+        oldDelta = @delta
+        @delta = oldDelta.compose(delta)
+        this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
+      @selection.update(delta)
+    , @options.pollInterval)
+    this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
+      @savedRange = range
+    )
+
+  initModules: ->
+    @modules = _.reduce(@options.modules, (modules, options, name) =>
+      console.log name, options
+      @theme.extendModule(name, options)
+      modules[name] = new Scribe.Modules[_.str.classify(name)](this, @options.modules[name])
+      return modules
+    , {})
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true
