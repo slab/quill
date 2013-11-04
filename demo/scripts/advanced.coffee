@@ -62,7 +62,7 @@ for num in [1, 2]
       #'attribution': {}
       'multi-cursor': {}
       'toolbar': {
-        container: wrapper.querySelector('.formatting-container')
+        container: wrapper.querySelector('.toolbar-container')
       }
     theme: 'snow'
   })

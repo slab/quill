@@ -10,7 +10,7 @@ html
     #content-container
       each num in [1, 2]
         .editor-wrapper(class=(num == 1 ? 'first' : 'last'))
-          #formatting-container.formatting-container
+          .toolbar-container
             .format-group
               select.font-name
                 option(value='sans-serif', selected=true) Sans Serif
@@ -42,14 +42,17 @@ html
                 option(value='magenta')
                 option(value='yellow')
             .format-group
-              .format-button.bold
-              .format-button.italic
-              .format-button.underline
-              .format-button.strike
+              span.format-button.bold
+              span.format-separator
+              span.format-button.italic
+              span.format-separator
+              span.format-button.underline
+              span.format-separator
+              span.format-button.strike
             .format-group
-              .format-button.link
+              span.format-button.link
             .format-group
-              .format-button.attribution
+              span.format-button.attribution
           #editor-container.editor-container
             include content
 

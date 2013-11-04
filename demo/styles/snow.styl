@@ -1,4 +1,4 @@
-.formatting-container
+.toolbar-container
   border-bottom: 1px solid #ccc
   height: 36px
   line-height: 32px
@@ -11,21 +11,15 @@
     margin-top: 4px
     vertical-align: middle
   .format-button
-    background-repeat: repeat-x
-    display: inline-block
-    width: 29px
-  .format
     background-position: center center
     background-repeat: no-repeat
-    border-right: 1px solid #ddd
     cursor: pointer
     display: inline-block
     height: 16px
-    padding: 0px 6px
     vertical-align: middle
-    width: 16px
-  .format.last
-    border-right: 0px
+    width: 29px
+  .format-separator
+    border-right: 1px solid #ddd
   .font-family
     margin-right: 10px
   .font-family, .font-size
@@ -33,9 +27,9 @@
   //.fore-color
 
   for $format in bold italic strike underline fore-color back-color list bullet outdent indent link attribution
-    .format.{$format}
+    .format-button.{$format}
       background-image: url('../images/' + $format + '.png')
-    .format.{$format}:hover, .{$format}:active, .{$format}.active
+    .format-button.{$format}:hover, .{$format}:active, .{$format}.active
       background-image: url('../images/' + $format + '-active.png')
 
 .color-palette
@@ -60,4 +54,3 @@
     margin: 1px
 .color-palette.active
   display: block
-  
