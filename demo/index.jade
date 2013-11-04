@@ -49,7 +49,9 @@ html
     script(type='text/javascript').
       var editor = new Scribe.Editor('editor-container', {
         modules: {
-          toolbar: 'formatting-container'
+          toolbar: {
+            container: 'formatting-container'
+          }
         }
       });
       if (typeof console != 'undefined') {

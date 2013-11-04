@@ -1,6 +1,6 @@
 ScribeDOM         = require('../dom')
 ScribeRange       = require('../range')
-ScribeLinkTooltip = require('./link-tooltip')
+#ScribeLinkTooltip = require('./link-tooltip')
 
 
 initFormats = ->
@@ -36,7 +36,6 @@ class ScribeToolbar
 
   constructor: (@editor, options = {}) ->
     @options = _.defaults(options, ScribeToolbar.DEFAULTS)
-    console.log options
     @container = if _.isString(@options.container) then document.getElementById(@options.container) else @options.container
     initFormats.call(this)
     @editor.on(@editor.constructor.events.POST_EVENT, (eventName) =>

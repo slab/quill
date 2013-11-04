@@ -192,7 +192,6 @@ class ScribeEditor extends EventEmitter2
 
   initModules: ->
     @modules = _.reduce(@options.modules, (modules, options, name) =>
-      console.log name, options
       @theme.extendModule(name, options)
       modules[name] = new Scribe.Modules[_.str.classify(name)](this, @options.modules[name])
       return modules

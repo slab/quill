@@ -5,7 +5,6 @@ ScribeDOM =
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
   addClass: (node, cssClass) ->
-    console.log node, cssClass
     return if ScribeDOM.hasClass(node, cssClass)
     if node.classList?
       node.classList.add(cssClass)
