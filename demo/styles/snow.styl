@@ -1,0 +1,63 @@
+.formatting-container
+  border-bottom: 1px solid #ccc
+  height: 36px
+  line-height: 32px
+  padding: 0px 5px
+  .format-group
+    display: inline-block
+    height: 24px
+    line-height: 24px
+    margin-right: 15px
+    margin-top: 4px
+    vertical-align: middle
+  .format-button
+    background-repeat: repeat-x
+    display: inline-block
+    width: 29px
+  .format
+    background-position: center center
+    background-repeat: no-repeat
+    border-right: 1px solid #ddd
+    cursor: pointer
+    display: inline-block
+    height: 16px
+    padding: 0px 6px
+    vertical-align: middle
+    width: 16px
+  .format.last
+    border-right: 0px
+  .font-family
+    margin-right: 10px
+  .font-family, .font-size
+    visibility: hidden
+  //.fore-color
+
+  for $format in bold italic strike underline fore-color back-color list bullet outdent indent link attribution
+    .format.{$format}
+      background-image: url('../images/' + $format + '.png')
+    .format.{$format}:hover, .{$format}:active, .{$format}.active
+      background-image: url('../images/' + $format + '-active.png')
+
+.color-palette
+  background-color: #fff
+  border: 1px solid #ccc
+  display: none
+  height: 100px
+  left: 0px
+  padding: 2px
+  position: absolute
+  top: 20px
+  width: 100px
+  .color
+    cursor: pointer
+    display: inline-block
+    float: left
+    height: 16px
+    margin: 2px
+    width: 16px
+  .color.active, .color:hover
+    border: 1px solid black
+    margin: 1px
+.color-palette.active
+  display: block
+  

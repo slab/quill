@@ -4,10 +4,10 @@ ScribeDefaultTheme = require('./default')
 class ScribeSnowTheme extends ScribeDefaultTheme
   constructor: (@editor) ->
     _.defaults(
-      renderer:
-        styles:
-          'div.editor': { 'bottom': '15px', 'top': '15px' }
-    , @editor.options)
+      styles:
+        'div.editor': { 'bottom': '15px', 'top': '15px' }
+    , @editor.options.renderer)
+    this.addStyleSheet('styles/snow.css')
 
   extendModule: (name, options) ->
     switch name
