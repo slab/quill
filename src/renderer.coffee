@@ -6,6 +6,7 @@ ScribeNormalizer  = require('./normalizer')
 class ScribeRenderer extends EventEmitter2
   @DEFAULTS:
     id: 'editor'
+    iframe: true
     keepHTML: false
     styles:
       'html' : { 'height': '100%' }
@@ -17,6 +18,10 @@ class ScribeRenderer extends EventEmitter2
         'line-height': '1.154'
         'margin': '0px'
         'padding': '0px'
+      }
+      '.editor-container': {
+        'overflow': 'auto'
+        'position': 'relative'
       }
       'div.editor': {
         'bottom': '10px'
@@ -71,7 +76,7 @@ class ScribeRenderer extends EventEmitter2
     originalStyles = options.styles
     @options = _.defaults(options, ScribeRenderer.DEFAULTS)
     @options.styles = originalStyles
-    this.createFrame()
+    this.buildFrame()
     @formats = {}
     # IE10 ignores conditional comments and it still displays <div><br></div> as two lines
     ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if ScribeUtils.isIE()
@@ -99,30 +104,44 @@ class ScribeRenderer extends EventEmitter2
       this.emit(ScribeRenderer.events.UPDATE, css)
     )
 
-  createFrame: ->
+  buildFrame: ->
     html = @container.innerHTML
     @container.innerHTML = ''
-    @iframe = @container.ownerDocument.createElement('iframe')
-    @iframe.frameBorder = '0'
-    @iframe.height = @iframe.width = '100%'
-    @container.appendChild(@iframe)
-    doc = this.getDocument()
-    doc.open()
-    doc.write('<!DOCTYPE html>')
-    doc.close()
+    if @options.iframe
+      @iframe = @container.ownerDocument.createElement('iframe')
+      @iframe.frameBorder = '0'
+      @iframe.height = @iframe.width = '100%'
+      @container.appendChild(@iframe)
+      doc = this.getDocument()
+      doc.open()
+      doc.write('<!DOCTYPE html>')
+      doc.close()
+    else
+      @iframe = @container
+      doc = this.getDocument()
     @root = doc.createElement('div')
     ScribeDOM.addClass(@root, 'editor')
     @root.id = @options.id
-    doc.body.appendChild(@root)
+    if @options.iframe
+      doc.body.appendChild(@root)
+    else
+      @container.appendChild(@root)
+    ScribeDOM.addClass(@root.parentNode, 'editor-container')
     @root.innerHTML = ScribeNormalizer.normalizeHtml(html) if @options.keepHTML
     ScribeDOM.addEventListener(@container, 'focus', =>
       @root.focus()
     )
 
+  checkFocus: ->
+    return @root.ownerDocument.activeElement == @root
+
   getDocument: ->
     return null unless @iframe.parentNode?
     # Firefox does not like us saving a reference to this result so retrieve every time
-    return @iframe.contentWindow?.document
+    if @options.iframe
+      return @iframe.contentWindow?.document
+    else
+      return @iframe.ownerDocument
 
 
 module.exports = ScribeRenderer

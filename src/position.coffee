@@ -12,7 +12,7 @@ class ScribePosition
     return [node, offset]
   
   @getIndex: (node, index = 0, offsetNode = null) ->
-    while node != offsetNode and node.ownerDocument? and node.parentNode != node.ownerDocument.body
+    while node != offsetNode and node.ownerDocument? and !ScribeDOM.hasClass(node, 'editor')
       while node.previousSibling?
         node = node.previousSibling
         index += ScribeUtils.getNodeLength(node)

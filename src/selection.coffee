@@ -95,7 +95,10 @@ class ScribeSelection
     ScribeDOM.addEventListener(@editor.root, 'mousedown', => @mouseIsDown = true )
     ScribeDOM.addEventListener(@editor.root, 'mouseup',   => @mouseIsDown = false )
     rangy.init()
-    @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
+    if @editor.renderer.options.iframe
+      @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
+    else
+      @nativeSelection = rangy.getSelection()
     this.setRange(null)
 
   getDimensions: ->
@@ -131,7 +134,7 @@ class ScribeSelection
 
   setRange: (range, silent = false) ->
     return unless @nativeSelection?
-    @nativeSelection.removeAllRanges() if @editor.root.ownerDocument.activeElement == @editor.root
+    @nativeSelection.removeAllRanges() if @editor.renderer.checkFocus()
     if range?
       nativeRange = rangy.createRangyRange()
       _.each([range.start, range.end], (pos, i) ->
@@ -151,7 +154,7 @@ class ScribeSelection
 
   update: (silent = false) ->
     return if (@mouseIsDown or @keyIsDown or @focusTransition) and !silent
-    hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
+    hasFocus = @editor.renderer.checkFocus()
     if hasFocus != @hasFocus
       @hasFocus = hasFocus
       @editor.emit(@editor.constructor.events.FOCUS_CHANGE, @hasFocus) unless silent
