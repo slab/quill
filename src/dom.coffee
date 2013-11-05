@@ -27,6 +27,13 @@ ScribeDOM =
     else
       throw new Error("No add event support")
 
+  getChildIndex: (node) ->
+    index = 0
+    while node.previousSibling?
+      node = previousSibling
+      index += 1
+    return index
+
   getClasses: (node) ->
     if node.classList
       return _.clone(node.classList)

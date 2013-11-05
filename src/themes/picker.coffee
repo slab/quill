@@ -1,41 +1,37 @@
 class ScribePicker
   constructor: (@select) ->
-    container = @select.ownerDocument.createElement('div')
+    @container = @select.ownerDocument.createElement('div')
     _.each(Scribe.DOM.getClasses(@select), (css) =>
-      Scribe.DOM.addClass(container, css)
+      Scribe.DOM.addClass(@container, css)
     )
-    Scribe.DOM.addClass(container, 'picker')
+    Scribe.DOM.addClass(@container, 'picker')
     @label = @select.ownerDocument.createElement('div')
     Scribe.DOM.addClass(@label, 'picker-label')
-    container.appendChild(@label)
+    @container.appendChild(@label)
     ul = this.buildPicker()
-    container.appendChild(ul)
+    @container.appendChild(ul)
     selected = ul.querySelector('.selected')
     Scribe.DOM.setText(@label, Scribe.DOM.getText(selected)) if selected?
-    Scribe.DOM.addEventListener(@label, 'click', ->
+    Scribe.DOM.addEventListener(@label, 'click', =>
       # Defer to avoid document click handler that closes all dropdowns
-      _.defer( ->   
-        Scribe.DOM.toggleClass(container, 'expanded')
+      _.defer( =>   
+        Scribe.DOM.toggleClass(@container, 'expanded')
       )
     )
-    Scribe.DOM.addEventListener(@select.ownerDocument, 'click', ->
-      Scribe.DOM.removeClass(container, 'expanded')
+    Scribe.DOM.addEventListener(@select.ownerDocument, 'click', =>
+      Scribe.DOM.removeClass(@container, 'expanded')
     )
     Scribe.DOM.addEventListener(@select, 'change', =>
-      selected = ul.querySelector('.selected')
-      Scribe.DOM.setText(@label, Scribe.DOM.getText(selected)) if selected? 
+      this.selectItem(@select.options[@select.selectedIndex])
     )
-    @select.parentNode.insertBefore(container, @select)
+    @select.parentNode.insertBefore(@container, @select)
 
   buildItem: (picker, option, index) ->
     li = @select.ownerDocument.createElement('li')
     Scribe.DOM.setText(li, Scribe.DOM.getText(option))
     Scribe.DOM.addClass(li, 'selected') if option.hasAttribute('selected')
     Scribe.DOM.addEventListener(li, 'click', =>
-      _.each(picker.querySelectorAll('.selected'), (activeColor) =>
-        Scribe.DOM.removeClass(activeColor, 'selected')
-      )
-      Scribe.DOM.addClass(li, 'selected')
+      this.selectItem(li)
       @select.selectedIndex = index
       Scribe.DOM.triggerEvent(@select, 'change', true, true)
     )
@@ -50,6 +46,15 @@ class ScribePicker
     )
     @select.style.display = 'none'
     return picker
+
+  selectItem: (li) ->
+    selected = @container.querySelector('.selected')
+    Scribe.DOM.removeClass(selected, 'selected') if selected?
+    if li?
+      Scribe.DOM.addClass(li, 'selected')
+      Scribe.DOM.setText(@label, Scribe.DOM.getText(li))
+    else
+      Scribe.DOM.setText(@label, '')
 
 
 module.exports = ScribePicker

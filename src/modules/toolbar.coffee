@@ -3,16 +3,22 @@ ScribeRange       = require('../range')
 #ScribeLinkTooltip = require('./link-tooltip')
 
 
+findInput = (format) ->
+  selector = ".#{format}"
+  if _.indexOf(ScribeToolbar.formats.SELECT, format) > -1
+    selector = 'select' + selector
+  input = @container.querySelector(selector)
+
 initFormats = ->
   _.each(ScribeToolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
-      selector = (if formatGroup == 'SELECT' then 'select' else '') + ".#{format}"
-      input = @container.querySelector(selector)
+      input = findInput.call(this, format)
       return unless input?
       #return new ScribeLinkTooltip(input, this) if format == 'link'
       return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
+        return if @triggering
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         @editor.root.focus()
         range = @editor.getSelection()
@@ -60,11 +66,14 @@ class ScribeToolbar
     return unless range?
     _.each(range.getFormats(), (value, key) =>
       if value?
-        elem = @container.querySelector(".#{key}")
+        elem = findInput.call(this, key)
         return unless elem?
         if elem.tagName == 'SELECT'
           value = '' if _.isArray(value)
           elem.value = value
+          @triggering = true
+          ScribeDOM.triggerEvent(elem, 'change')
+          @triggering = false
         else
           ScribeDOM.addClass(elem, 'active')
     )
