@@ -7,7 +7,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
       styles:
         'div.editor': { 'bottom': '15px', 'top': '15px' }
     , @editor.options.renderer)
-    this.addStyleSheet('styles/snow.css')
+    super
 
   extendModule: (name, options) ->
     switch name
@@ -61,6 +61,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     )
 
   extendToolbar: (options) ->
+    this.addStyleSheet('styles/snow.css')
 
 
 window.Scribe.Themes.Snow = ScribeSnowTheme
