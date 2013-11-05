@@ -6,9 +6,8 @@ ScribeRange       = require('../range')
 initFormats = ->
   _.each(ScribeToolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
-      input = @container.querySelector(".#{format}")
-      if input? and input.tagName != 'SELECT' and formatGroup == 'SELECT'
-        input = input.querySelector('select')
+      selector = (if formatGroup == 'SELECT' then 'select' else '') + ".#{format}"
+      input = @container.querySelector(selector)
       return unless input?
       #return new ScribeLinkTooltip(input, this) if format == 'link'
       return if format == 'link'

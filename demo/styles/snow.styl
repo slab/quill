@@ -1,17 +1,25 @@
+pickerPadding = 8px
+pickerWidth = 50px
+fontNamePickerWidth = 98px
+fontSizePickerWidth = 75px
+
 .toolbar-container
   border-bottom: 1px solid #ccc
   font-family: 'Helvetica', 'Arial', sans-serif
   font-size: 12px
   height: 36px
   line-height: 32px
-  padding: 0px 15px
+  padding: 0px (15px - pickerPadding)
+  user-select: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
   .format-group
     display: inline-block
     height: 24px
     line-height: 24px
     margin-right: 15px
     margin-top: 4px
-    position: relative
     vertical-align: middle
   .format-button
     background-position: center center
@@ -23,44 +31,43 @@
     width: 29px
   .format-separator
     border-right: 1px solid #ddd
-  //.font-name, .font-size
-  //  visibility: hidden
 
 
-pickerWidth = 50px
 .picker
-  background: #fff url('../images/arrows.png') no-repeat pickerWidth 6px
+  background-color: #fff
+  cursor: pointer
   font-weight: bold
-  left: 0px
-  padding: 0px 8px
-  top: 0px
-  width: pickerWidth
-  li
-    cursor: pointer
+  position: relative
+  .picker-label
+    background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) 6px
+    padding: 0px pickerPadding
+  ul.picker-options
     display: none
-  li.selected, li:hover
-    display: block
-  li:hover
-    color: #06c
+    padding: 0px pickerPadding
+    li.selected, li:hover
+      color: #06c
 .picker.expanded
-  background-image: url('../images/arrows-inactive.png')
-  border: 1px solid #ccc
-  li
+  .picker-label
+    background-image: url('../images/arrows-inactive.png')
+    border: 1px solid #ccc
+    color: #ccc
+    margin: -1px
+  ul.picker-options
+    border: 1px solid #ccc
+    box-shadow: rgba(0,0,0,0.2) 0 2px 8px
     display: block
-.picker:hover
-  background-image: url('../images/arrows-active.png')
-  color: #06c
+    margin: -1px
 
 
-fontNamePickerWidth = 85px
-.picker.font-name
-  background-position-x: fontNamePickerWidth
+.font-name
   width: fontNamePickerWidth
+  .picker-label
+    background-position-x: fontNamePickerWidth - 2*pickerPadding
 
-fontSizePickerWidth = 65px
-.picker.font-size
-  background-position-x: fontSizePickerWidth
+.font-size
   width: fontSizePickerWidth
+  .picker-label
+    background-position-x: fontSizePickerWidth - 2*pickerPadding
 
 
 for $format in bold italic strike underline fore-color back-color list bullet outdent indent link attribution
