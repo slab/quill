@@ -108,6 +108,7 @@ ScribeDOM =
       for o,i in select.options
         if o.defaultSelected
           return select.selectedIndex = i
+    ScribeDOM.triggerEvent(select, 'change')
 
   setText: (node, text) ->
     switch node.nodeType
@@ -128,11 +129,12 @@ ScribeDOM =
     newNode.id = node.id if node.id
     return newNode
 
-  toggleClass: (node, className) ->
-    if ScribeDOM.hasClass(node, className)
-      ScribeDOM.removeClass(node, className)
-    else
+  toggleClass: (node, className, state) ->
+    state = !ScribeDOM.hasClass(node, className) unless state?
+    if state
       ScribeDOM.addClass(node, className)
+    else
+      ScribeDOM.removeClass(node, className)
 
   triggerEvent: (elem, eventName, bubble, cancels) ->
     if document.createEvent

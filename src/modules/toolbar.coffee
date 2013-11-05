@@ -56,6 +56,7 @@ class ScribeToolbar
     )
 
   update: ->
+    @triggering = true
     range = @editor.getSelection()
     _.each(@container.querySelectorAll('.active'), (button) =>
       ScribeDOM.removeClass(button, 'active')
@@ -71,12 +72,11 @@ class ScribeToolbar
         if elem.tagName == 'SELECT'
           value = '' if _.isArray(value)
           elem.value = value
-          @triggering = true
           ScribeDOM.triggerEvent(elem, 'change')
-          @triggering = false
         else
           ScribeDOM.addClass(elem, 'active')
     )
+    @triggering = false
 
 
 

@@ -14,15 +14,16 @@ class ScribePicker
     Scribe.DOM.setText(@label, Scribe.DOM.getText(selected)) if selected?
     Scribe.DOM.addEventListener(@label, 'click', =>
       # Defer to avoid document click handler that closes all dropdowns
-      _.defer( =>   
-        Scribe.DOM.toggleClass(@container, 'expanded')
+      hasClass = Scribe.DOM.hasClass(@container, 'expanded')
+      _.defer( =>
+        Scribe.DOM.toggleClass(@container, 'expanded', !hasClass)
       )
     )
     Scribe.DOM.addEventListener(@select.ownerDocument, 'click', =>
       Scribe.DOM.removeClass(@container, 'expanded')
     )
     Scribe.DOM.addEventListener(@select, 'change', =>
-      this.selectItem(@select.options[@select.selectedIndex])
+      this.selectItem(@container.querySelectorAll('.picker-options li')[@select.selectedIndex])
     )
     @select.parentNode.insertBefore(@container, @select)
 
