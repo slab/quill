@@ -1,38 +1,43 @@
-ScribeDOM = require('../dom')
+# Add global listener for clicks anywhere in the document
 
-buildPalette = (select) ->
-  palette = select.ownerDocument.createElement('div')
-  ScribeDOM.addClass(palette, 'color-palette')
-  _.each(select.querySelectorAll('option'), (option, i) ->
-    color = select.ownerDocument.createElement('span')
-    color.style.backgroundColor = option.getAttribute('value')
-    ScribeDOM.addClass(color, 'color')
-    ScribeDOM.addEventListener(color, 'click', ->
-      _.each(palette.querySelectorAll('.active'), (activeColor) ->
-        ScribeDOM.removeClass(activeColor, 'active')
+
+class ScribePicker
+  constructor: (@select) ->
+    this.buildPicker()
+    Scribe.DOM.addEventListener(@picker, 'click', ->
+      Scribe.DOM.toggleClass(@picker, 'expanded')
+    )
+    Scribe.DOM.addEventListener(@picker, 'blur', ->
+      Scribe.DOM.removeClass(@picker, 'expanded')
+    )
+
+  buildItem: (option, index) ->
+    li = @select.ownerDocument.createElement('li')
+    Scribe.DOM.setText(li, Scribe.DOM.getText(option))
+    Scribe.DOM.addClass(li, 'selected') if option.hasAttribute('selected')
+    Scribe.DOM.addEventListener(li, 'click', =>
+      _.each(@picker.querySelectorAll('.selected'), (activeColor) =>
+        Scribe.DOM.removeClass(activeColor, 'selected')
       )
-      ScribeDOM.addClass(color, 'active')
-      select.selectedIndex = i
-      ScribeDOM.triggerEvent(select, 'change', false, true)
+      Scribe.DOM.addClass(li, 'selected')
+      @select.selectedIndex = index
+      Scribe.DOM.triggerEvent(@select, 'change', false, true)
       return false
     )
-    palette.appendChild(color)
-  )
-  select.parentNode.insertBefore(palette, select)
-  select.style.display = 'none'
-  return palette
+    return li
 
+  buildPicker: ->
+    @picker = @select.ownerDocument.createElement('ul')
+    _.each(Scribe.DOM.getClasses(@select), (css) =>
+      Scribe.DOM.addClass(@picker, css)
+    )
+    Scribe.DOM.addClass(@picker, 'picker')
+    _.each(@select.querySelectorAll('option'), (option, i) =>
+      item = this.buildItem(option, i)
+      @picker.appendChild(item)
+    )
+    @select.parentNode.insertBefore(@picker, @select)
+    @select.style.display = 'none'
 
-ScribePicker =
-  init: (container) ->
-    container.style.position = 'relative'
-    select = container.querySelector('select')
-    palette = buildPalette(select)
-    ScribeDOM.addEventListener(container, 'click', ->
-      ScribeDOM.toggleClass(palette, 'active')
-    )
-    ScribeDOM.addEventListener(palette, 'blur', ->
-      ScribeDOM.removeClass(palette, 'active')
-    )
 
 module.exports = ScribePicker

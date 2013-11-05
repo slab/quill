@@ -1,3 +1,4 @@
+ScribeDOM           = require('./src/dom')
 ScribeEditor        = require('./src/editor')
 ScribeAttribution   = require('./src/modules/attribution')
 ScribeLinkTooltip   = require('./src/modules/link-tooltip')
@@ -7,6 +8,7 @@ ScribeDefaultTheme  = require('./src/themes/default')
 
 window.Scribe =
   version : '0.9.2'
+  DOM     : ScribeDOM
   Editor  : ScribeEditor
   Modules :
     Attribution : ScribeAttribution
