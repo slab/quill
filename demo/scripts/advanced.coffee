@@ -43,7 +43,6 @@ listenEditor = (source, target) ->
     if range?
       console.info source.id, 'selection change', range.start.index, range.start.leafNode, range.end.index, range.end.leafNode if console?
       color = getColor(source.id)
-      console.log target.modules
       cursor = target.modules['multi-cursor'].setCursor(source.id, range.end.index, source.id, color)
       cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
     else  

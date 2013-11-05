@@ -41,10 +41,10 @@ fontSizePickerWidth = 75px
   .picker-label
     background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) 6px
     padding: 0px pickerPadding
-  ul.picker-options
+  .picker-options
     display: none
     padding: 0px pickerPadding
-    li.selected, li:hover
+    .picker-item.selected, .picker-item:hover
       color: #06c
 .picker.expanded
   .picker-label
@@ -52,7 +52,7 @@ fontSizePickerWidth = 75px
     border: 1px solid #ccc
     color: #ccc
     margin: -1px
-  ul.picker-options
+  .picker-options
     border: 1px solid #ccc
     box-shadow: rgba(0,0,0,0.2) 0 2px 8px
     display: block
