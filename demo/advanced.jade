@@ -23,25 +23,18 @@ html
                 option(value='large') Large
                 option(value='huge') Huge
             .format-group
-              select.fore-color
-                option(value='black', selected=true)
-                option(value='white')
-                option(value='red')
-                option(value='blue')
-                option(value='lime')
-                option(value='teal')
-                option(value='magenta')
-                option(value='yellow')
-              span.format-separator
-              select.back-color
-                option(value='black')
-                option(value='white', selected=true)
-                option(value='red')
-                option(value='blue')
-                option(value='lime')
-                option(value='teal')
-                option(value='magenta')
-                option(value='yellow')
+              each c in ['fore-color', 'back-color']
+                select(class=c)
+                  option(value='black', selected=(c == 'fore-color' ? true : false))
+                  option(value='white', selected=(c == 'back-color' ? true : false))
+                  option(value='red')
+                  option(value='blue')
+                  option(value='lime')
+                  option(value='teal')
+                  option(value='magenta')
+                  option(value='yellow')
+                if c == 'fore-color'
+                  span.format-separator
             .format-group
               span.format-button.bold
               span.format-separator
