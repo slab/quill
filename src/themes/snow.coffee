@@ -9,6 +9,12 @@ class ScribeSnowTheme extends ScribeDefaultTheme
       styles:
         'div.editor': { 'bottom': '15px', 'top': '15px' }
     , @editor.options.renderer)
+    @pickers = []
+    @editor.on(@editor.constructor.events.SELECTION_CHANGE, =>
+      _.each(@pickers, (picker) ->
+        picker.close()
+      )
+    )
     super
 
   extendModule: (name, options) ->
@@ -65,12 +71,13 @@ class ScribeSnowTheme extends ScribeDefaultTheme
   extendToolbar: (options) ->
     this.addStyleSheet('styles/snow.css')
     options.container = document.getElementById(options.container) if _.isString(options.container)
-    _.each(options.container.querySelectorAll('.font-name, .font-size'), (select) ->
+    _.each(options.container.querySelectorAll('.font-name, .font-size'), (select) =>
       picker = new ScribePicker(select)
+      @pickers.push(picker)
     )
-    _.each(options.container.querySelectorAll('.fore-color'), (select) ->
+    _.each(options.container.querySelectorAll('.fore-color, .back-color'), (select) =>
       picker = new ScribeColorPicker(select)
-      console.log picker.container
+      @pickers.push(picker)
       Scribe.DOM.addClass(picker.container.querySelector('.picker-label'), 'format-button')
     )
     

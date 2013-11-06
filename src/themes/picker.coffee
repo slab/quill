@@ -23,7 +23,9 @@ class ScribePicker
       Scribe.DOM.removeClass(@container, 'expanded')
     )
     Scribe.DOM.addEventListener(@select, 'change', =>
-      this.selectItem(@container.querySelectorAll('.picker-item')[@select.selectedIndex])
+      option = @container.querySelectorAll('.picker-item')[@select.selectedIndex]
+      this.selectItem(option)
+      Scribe.DOM.toggleClass(@label, 'active', option != selected)
     )
     @select.parentNode.insertBefore(@container, @select)
 
@@ -48,6 +50,9 @@ class ScribePicker
     )
     @select.style.display = 'none'
     return picker
+
+  close: ->
+    Scribe.DOM.removeClass(@container, 'expanded')
 
   selectItem: (item) ->
     selected = @container.querySelector('.selected')

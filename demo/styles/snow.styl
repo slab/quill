@@ -1,10 +1,13 @@
-pickerPadding = 8px
-pickerWidth = 50px
+blueColor = #06c
+grayColor = #ccc
+lightGrayColor = #ddd
 fontNamePickerWidth = 98px
 fontSizePickerWidth = 75px
+pickerPadding = 8px
+pickerWidth = 50px
 
 .toolbar-container
-  border-bottom: 1px solid #ccc
+  border-bottom: 1px solid grayColor
   font-family: 'Helvetica', 'Arial', sans-serif
   font-size: 12px
   height: 36px
@@ -27,36 +30,40 @@ fontSizePickerWidth = 75px
     cursor: pointer
     display: inline-block
     height: 16px
-    margin: 0px 7px
+    padding: 0px 7px
     vertical-align: middle
     width: 16px
   .format-separator
-    border-right: 1px solid #ddd
+    border-right: 1px solid lightGrayColor
 
 
 .picker
+  display: inline-block
   font-weight: bold
   position: relative
   .picker-label
-    background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) 6px
+    background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
     cursor: pointer
-    padding: 0px pickerPadding
+    padding: 1px pickerPadding
+  .picker-label.active, .picker-label:hover
+    background-image: url('../images/arrows-active.png')
+    color: blueColor
   .picker-options
     background-color: #fff
     display: none
-    padding: 0px pickerPadding
+    padding: 1px pickerPadding
     .picker-item
       cursor: pointer
     .picker-item.selected, .picker-item:hover
-      color: #06c
+      color: blueColor
 .picker.expanded
   .picker-label
     background-image: url('../images/arrows-inactive.png')
-    border: 1px solid #ccc
-    color: #ccc
+    border: 1px solid grayColor
+    color: grayColor
     margin: -1px
   .picker-options
-    border: 1px solid #ccc
+    border: 1px solid grayColor
     box-shadow: rgba(0,0,0,0.2) 0 2px 8px
     display: block
     margin: -1px
@@ -90,16 +97,15 @@ fontSizePickerWidth = 75px
   .picker-label
     background-position-x: fontSizePickerWidth - 2*pickerPadding
 
-.fore-color
-  .picker-label
-    background-image: url('../images/fore-color.png')
-.fore-color.expanded
-  .picker-label
-    background-image: url('../images/fore-color-active.png')
-
-.back-color
-  .picker-label
-    background-image: url('../images/back-color.png')
+for $format in fore-color back-color
+  .{$format}
+    .picker-label
+      background-image: url('../images/' + $format + '.png')
+    .picker-label.active, .picker-label:hover
+      background-image: url('../images/' + $format + '-active.png')
+  .{$format}.expanded
+    .picker-label
+      background-image: url('../images/' + $format + '-active.png')
 
 
 for $format in bold italic strike underline list bullet outdent indent link attribution

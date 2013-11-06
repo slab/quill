@@ -40,6 +40,17 @@ ScribeDOM =
     else if node.className?
       return node.className.split(' ')
 
+  getDefaultOption: (select) ->
+    option = select.querySelector('option[selected]')
+    if option?
+      return option
+    else
+      # IE8
+      for o,i in select.options
+        if o.defaultSelected
+          return o
+    return null
+
   getText: (node) ->
     switch node.nodeType
       when ScribeDOM.ELEMENT_NODE
@@ -100,15 +111,12 @@ ScribeDOM =
     node.parentNode?.removeChild(node)
 
   resetSelect: (select) ->
-    option = select.querySelector('option[selected]')
+    option = ScribeDOM.getDefaultOption(select)
     if option?
       option.selected = true
+      ScribeDOM.triggerEvent(select, 'change')
     else
-      # IE8
-      for o,i in select.options
-        if o.defaultSelected
-          return select.selectedIndex = i
-    ScribeDOM.triggerEvent(select, 'change')
+      select.selectedIndex = null
 
   setText: (node, text) ->
     switch node.nodeType
