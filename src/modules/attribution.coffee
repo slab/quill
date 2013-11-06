@@ -5,18 +5,25 @@ Tandem        = require('tandem-core')
 
 
 class ScribeAttribution
-  constructor: (@editor, @authorId, color, enabled = false) ->
+  DEFAULTS:
+    authorId: null
+    color: 'blue'
+    enabled: false
+
+  constructor: (@editor, options) ->
+    @options = _.defaults(options, ScribeAttribution.DEFAULTS)
+    @options.authorId or= @editor.id
     @editor.on(ScribeEditor.events.PRE_EVENT, (eventName, delta) =>
       if eventName == ScribeEditor.events.USER_TEXT_CHANGE
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
-            op.attributes['author'] = @authorId
+            op.attributes['author'] = @options.authorId
         )
         # Apply authorship to our own editor
         authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)])
         attribute = {}
-        attribute['author'] = @authorId
+        attribute['author'] = @options.authorId
         delta.apply((index, text) =>
           _.each(text.split('\n'), (text) ->
             authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
@@ -29,8 +36,8 @@ class ScribeAttribution
         @editor.applyDelta(authorDelta, { silent: true })
     )
     @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
-    this.addAuthor(@authorId, color)
-    this.enable() if enabled
+    this.addAuthor(@options.authorId, @options.color)
+    this.enable() if @options.enabled
 
   addAuthor: (id, color) ->
     styles = {}

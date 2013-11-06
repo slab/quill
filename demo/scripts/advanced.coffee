@@ -10,21 +10,19 @@ finally
 
 getColor = (id, lighten) ->
   alpha = if lighten then '0.4' else '1.0'
-  if id == 'editor-1'
+  if id == 1 or id == 'editor-1'
     return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
   else
     return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"
 
-initAttribution = (container, editor) ->
-  attribution = new Scribe.Attribution(editor, editor.id, getColor(editor.id, true))
-  $('.attribution', container).click( ->
-    if $(this).hasClass('active')
-      attribution.disable()
+initAttribution = (wrapper, editor) ->
+  Scribe.DOM.addEventListener(wrapper.querySelector('.attribution'), 'click', ->
+    if Scribe.DOM.hasClass(container, 'active')
+      editor.modules.attribution.disable()
     else
-      attribution.enable()
-    $(this).toggleClass('active')
+      editor.modules.attribution.enable()
+    Scribe.DOM.toggleClass(container, 'active')
   )
-  return attribution
 
 initToolbar = (container, editor) ->
   formattingContainer = container.querySelector('.formatting-container')
@@ -58,16 +56,19 @@ for num in [1, 2]
   container = wrapper.querySelector('.editor-container')
   editor = new Scribe.Editor(container, {
     modules:
-      #'attribution': {}
+      'attribution': {
+        enabled: false
+        color: getColor(num, true)
+      }
       'multi-cursor': {}
       'toolbar': {
         container: wrapper.querySelector('.toolbar-container')
       }
     theme: 'snow'
   })
-  #editor.attributionManager = initAttribution(container, editor)
+  initAttribution(wrapper, editor)
   editors.push(editor)
 listenEditor(editors[0], editors[1])
 listenEditor(editors[1], editors[0])
-#editors[0].attributionManager.addAuthor(editors[1].id, getColor(editors[1].id, true))
-#editors[1].attributionManager.addAuthor(editors[0].id, getColor(editors[0].id, true))
+editors[0].modules.attribution.addAuthor(editors[1].id, getColor(editors[1].id, true))
+editors[1].modules.attribution.addAuthor(editors[0].id, getColor(editors[0].id, true))

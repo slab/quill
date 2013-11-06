@@ -1,6 +1,6 @@
 ScribeDOM         = require('../dom')
 ScribeRange       = require('../range')
-#ScribeLinkTooltip = require('./link-tooltip')
+ScribeLinkTooltip = require('./link-tooltip')
 
 
 findInput = (format) ->
@@ -14,7 +14,7 @@ initFormats = ->
     _.each(formats, (format) =>
       input = findInput.call(this, format)
       return unless input?
-      #return new ScribeLinkTooltip(input, this) if format == 'link'
+      return new ScribeLinkTooltip(@editor, { button: input }) if format == 'link'
       return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
