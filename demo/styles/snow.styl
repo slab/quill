@@ -27,23 +27,26 @@ fontSizePickerWidth = 75px
     cursor: pointer
     display: inline-block
     height: 16px
+    margin: 0px 7px
     vertical-align: middle
-    width: 29px
+    width: 16px
   .format-separator
     border-right: 1px solid #ddd
 
 
 .picker
-  background-color: #fff
-  cursor: pointer
   font-weight: bold
   position: relative
   .picker-label
     background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) 6px
+    cursor: pointer
     padding: 0px pickerPadding
   .picker-options
+    background-color: #fff
     display: none
     padding: 0px pickerPadding
+    .picker-item
+      cursor: pointer
     .picker-item.selected, .picker-item:hover
       color: #06c
 .picker.expanded
@@ -58,6 +61,24 @@ fontSizePickerWidth = 75px
     display: block
     margin: -1px
 
+.picker.color-picker
+  .picker-label
+    background-position: center center
+    padding: 2px pickerPadding
+  .picker-options
+    height: 100px
+    padding: 4px
+    position: absolute
+    width: 100px
+    .picker-item
+      float: left
+      height: 16px
+      margin: 4px
+      width: 16px
+    .picker-item.selected, .picker-item:hover
+      border: 1px solid #000
+      margin: 3px
+
 
 .font-name
   width: fontNamePickerWidth
@@ -69,8 +90,19 @@ fontSizePickerWidth = 75px
   .picker-label
     background-position-x: fontSizePickerWidth - 2*pickerPadding
 
+.fore-color
+  .picker-label
+    background-image: url('../images/fore-color.png')
+.fore-color.expanded
+  .picker-label
+    background-image: url('../images/fore-color-active.png')
 
-for $format in bold italic strike underline fore-color back-color list bullet outdent indent link attribution
+.back-color
+  .picker-label
+    background-image: url('../images/back-color.png')
+
+
+for $format in bold italic strike underline list bullet outdent indent link attribution
   .format-button.{$format}
     background-image: url('../images/' + $format + '.png')
   .format-button.{$format}:hover, .{$format}:active, .{$format}.active

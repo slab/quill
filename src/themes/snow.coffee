@@ -1,3 +1,4 @@
+ScribeColorPicker = require('./color-picker')
 ScribeDefaultTheme = require('./default')
 ScribePicker = require('./picker')
 
@@ -64,10 +65,14 @@ class ScribeSnowTheme extends ScribeDefaultTheme
   extendToolbar: (options) ->
     this.addStyleSheet('styles/snow.css')
     options.container = document.getElementById(options.container) if _.isString(options.container)
-    _.each(['font-name', 'font-size', 'fore-color', 'back-color'], (selector) ->
-      select = options.container.querySelector("select.#{selector}")
-      picker = new ScribePicker(select) if select
+    _.each(options.container.querySelectorAll('.font-name, .font-size'), (select) ->
+      picker = new ScribePicker(select)
     )
-
+    _.each(options.container.querySelectorAll('.fore-color'), (select) ->
+      picker = new ScribeColorPicker(select)
+      console.log picker.container
+      Scribe.DOM.addClass(picker.container.querySelector('.picker-label'), 'format-button')
+    )
+    
 
 window.Scribe.Themes.Snow = ScribeSnowTheme
