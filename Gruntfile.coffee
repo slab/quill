@@ -17,15 +17,12 @@ module.exports = (grunt) ->
 
     browserify:
       options:
+        alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         extensions: ['.js', '.coffee']
         transform: ['coffeeify']
       scribe:
-        options:
-          alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
       tandem_wrapper:
-        options:
-          alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/mocha/tandem.coffee'] }]
       
     clean: ['build']
@@ -45,33 +42,22 @@ module.exports = (grunt) ->
         src: ['src/**/*.coffee', 'tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
       test:
         files: [{
-          dest: 'build/tests/mocha/editor.js'
-          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
-        }, {
-          dest: 'build/tests/mocha/unit.js'
-          src: ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
-        }, {
-          dest: 'build/tests/webdriver/scribedriver.js',
-          src: 'tests/webdriver/lib/scribedriver.coffee'
+          'build/tests/mocha/editor.js': ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
+          'build/tests/mocha/unit.js': ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
+          'build/tests/webdriver/scribedriver.js': 'tests/webdriver/lib/scribedriver.coffee'
         }]
 
     concat:
-      scribe:
-        options:
-          banner:
-            '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-            ' *  https://www.stypi.com/\n' +
-            ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
-            ' *  Jason Chen, Salesforce.com\n' +
-            ' */\n\n'
-        files: [{
-          dest: 'build/scribe.js'
-          src: ['build/scribe.js']
-        }]
+      options:
+        banner:
+          '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+          ' *  https://www.stypi.com/\n' +
+          ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
+          ' *  Jason Chen, Salesforce.com\n' +
+          ' */\n\n'
       scribe_all:
         files: [{
-          dest: 'build/scribe.all.js'
-          src: [
+          'build/scribe.all.js': [
             'node_modules/underscore/underscore.js'
             'node_modules/underscore.string/lib/underscore.string.js'
             'build/lib/rangy-core.js'
@@ -82,6 +68,8 @@ module.exports = (grunt) ->
             'build/src/ext/footer.js'
           ]
         }]
+      scribe:
+        files: [{ 'build/scribe.js': ['build/scribe.js'] }]
 
     copy:
       build:
