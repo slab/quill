@@ -73,18 +73,18 @@ pickerWidth = 50px
     background-position: center center
     padding: 2px pickerPadding
   .picker-options
-    height: 100px
-    padding: 4px
+    height: 106px
+    padding: 6px
     position: absolute
-    width: 100px
+    width: 140px
     .picker-item
       float: left
       height: 16px
-      margin: 4px
+      margin: 2px
       width: 16px
     .picker-item.selected, .picker-item:hover
       border: 1px solid #000
-      margin: 3px
+      margin: 1px
 
 
 .font-name
@@ -96,6 +96,13 @@ pickerWidth = 50px
   width: fontSizePickerWidth
   .picker-label
     background-position-x: fontSizePickerWidth - 2*pickerPadding
+
+.fore-color, .back-color
+  .picker-options
+    .picker-item.primary-color
+      margin-bottom: 8px
+    .picker-item.primary-color.selected
+      margin-bottom: 7px
 
 for $format in fore-color back-color
   .{$format}
