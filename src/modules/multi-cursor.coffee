@@ -1,5 +1,4 @@
 ScribeDOM       = require('../dom')
-ScribeEditor    = require('../editor')
 ScribePosition  = require('../position')
 ScribeRenderer  = require('../renderer')
 ScribeUtils     = require('../utils')
@@ -102,9 +101,9 @@ class ScribeMultiCursor
     this.initListeners()
 
   initListeners: ->
-    @editor.on(ScribeEditor.events.API_TEXT_CHANGE, (delta) =>
+    @editor.on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
-    ).on(ScribeEditor.events.USER_TEXT_CHANGE, (delta) =>
+    ).on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
 

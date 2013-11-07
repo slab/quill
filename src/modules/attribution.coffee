@@ -1,5 +1,4 @@
 ScribeDOM     = require('../dom')
-ScribeEditor  = require('../editor')
 ScribeFormat  = require('../format')
 Tandem        = require('tandem-core')
 
@@ -13,8 +12,8 @@ class ScribeAttribution
   constructor: (@editor, options) ->
     @options = _.defaults(options, ScribeAttribution.DEFAULTS)
     @options.authorId or= @editor.id
-    @editor.on(ScribeEditor.events.PRE_EVENT, (eventName, delta) =>
-      if eventName == ScribeEditor.events.USER_TEXT_CHANGE
+    @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta) =>
+      if eventName == @editor.constructor.events.USER_TEXT_CHANGE
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0

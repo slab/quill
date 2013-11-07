@@ -64,7 +64,7 @@ for num in [1, 2]
       'toolbar': {
         container: wrapper.querySelector('.toolbar-container')
       }
-    theme: 'snow'
+    theme: Scribe.Themes.Snow
   })
   initAttribution(wrapper, editor)
   editors.push(editor)

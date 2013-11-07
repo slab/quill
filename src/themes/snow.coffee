@@ -1,6 +1,7 @@
-ScribeColorPicker = require('./color-picker')
-ScribeDefaultTheme = require('./default')
-ScribePicker = require('./picker')
+ScribeColorPicker   = require('./color-picker')
+ScribeDefaultTheme  = require('./default')
+ScribeDOM           = require('../dom')
+ScribePicker        = require('./picker')
 
 
 class ScribeSnowTheme extends ScribeDefaultTheme
@@ -25,12 +26,13 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     )
     super
 
-  extendModule: (name, options) ->
+  addModule: (name, options) ->
     switch name
-      when 'attribution'  then return this.extendAttribution(options)
-      when 'link-tooltip' then return this.extendLinkTooltip(options)
-      when 'multi-cursor' then return this.extendMultiCursor(options)
-      when 'toolbar'      then return this.extendToolbar(options)
+      when 'attribution'  then this.extendAttribution(options)
+      when 'link-tooltip' then this.extendLinkTooltip(options)
+      when 'multi-cursor' then this.extendMultiCursor(options)
+      when 'toolbar'      then this.extendToolbar(options)
+    return super(name, options)
 
   extendAttribution: (options) ->
 
@@ -88,9 +90,9 @@ class ScribeSnowTheme extends ScribeDefaultTheme
       return unless select?
       picker = new ScribeColorPicker(select)
       @pickers.push(picker)
-      Scribe.DOM.addClass(picker.container.querySelector('.picker-label'), 'format-button')
+      ScribeDOM.addClass(picker.container.querySelector('.picker-label'), 'format-button')
       _.each(picker.container.querySelectorAll('.picker-item'), (item, i) ->
-        Scribe.DOM.addClass(item, 'primary-color') if i < 7
+        ScribeDOM.addClass(item, 'primary-color') if i < 7
       )
       format = @editor.doc.formatManager.formats[css]
       if format?
@@ -102,4 +104,4 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     )
 
 
-window.Scribe.Themes.Snow = ScribeSnowTheme
+module.exports = ScribeSnowTheme

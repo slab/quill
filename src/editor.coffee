@@ -1,4 +1,5 @@
 ScribeDOM           = require('./dom')
+ScribeDefaultTheme  = require('./themes/default')
 ScribeDocument      = require('./document')
 ScribeKeyboard      = require('./keyboard')
 ScribeLine          = require('./line')
@@ -144,7 +145,7 @@ class ScribeEditor extends EventEmitter2
     renderer: {}
     undoManager: {}
     modules: {}
-    theme: 'default'
+    theme: ScribeDefaultTheme
 
   @events:
     API_TEXT_CHANGE  : 'api-text-change'
@@ -161,23 +162,8 @@ class ScribeEditor extends EventEmitter2
     @options = _.defaults(options, ScribeEditor.DEFAULTS)
     @options.renderer['id'] = @id
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
-    @theme = new Scribe.Themes[_.str.classify(@options.theme)](this)
     this.reset(true)
-    this.initModules()
-    this.initLoop()
-    this.enable() if @options.enabled
-
-  disable: ->
-    this.doSilently( =>
-      @root.setAttribute('contenteditable', false)
-    )
-
-  enable: ->
-    this.doSilently( =>
-      @root.setAttribute('contenteditable', true)
-    )
-
-  initLoop: ->
+    @theme = new @options.theme(this)
     setInterval( =>
       delta = this.update()
       if delta
@@ -189,13 +175,17 @@ class ScribeEditor extends EventEmitter2
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
+    this.enable() if @options.enabled
 
-  initModules: ->
-    @modules = _.reduce(@options.modules, (modules, options, name) =>
-      @theme.extendModule(name, options)
-      modules[name] = new Scribe.Modules[_.str.classify(name)](this, @options.modules[name])
-      return modules
-    , {})
+  disable: ->
+    this.doSilently( =>
+      @root.setAttribute('contenteditable', false)
+    )
+
+  enable: ->
+    this.doSilently( =>
+      @root.setAttribute('contenteditable', true)
+    )
 
   reset: (keepHTML = false) ->
     @ignoreDomChanges = true

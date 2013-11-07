@@ -23,8 +23,6 @@ module.exports = (grunt) ->
         options:
           alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
         files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
-      scribe_themed:
-        files: [{ dest: 'build/scribe.themed.js', src: ['src/themes/snow.coffee'] }]
       tandem_wrapper:
         options:
           alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
@@ -45,11 +43,6 @@ module.exports = (grunt) ->
         ext: '.js'
         dest: 'build/'
         src: ['src/**/*.coffee', 'tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
-      themes:
-        expand: true  
-        ext: '.js'
-        dest: 'build/'
-        src: ['src/themes/*.coffee']
       test:
         files: [{
           dest: 'build/tests/mocha/editor.js'
@@ -75,11 +68,6 @@ module.exports = (grunt) ->
           dest: 'build/scribe.js'
           src: ['build/scribe.js']
         }]
-      scribe_theme:
-        files: [{
-          dest: 'build/scribe.themed.js'
-          src: ['build/scribe.js', 'build/scribe.themed.js']
-        }]
       scribe_all:
         files: [{
           dest: 'build/scribe.all.js'
@@ -90,7 +78,7 @@ module.exports = (grunt) ->
             'build/lib/eventemitter2.js'
             'build/lib/linked_list.js'
             'build/src/ext/header.js'
-            'build/scribe.themed.js'
+            'build/scribe.js'
             'build/src/ext/footer.js'
           ]
         }]
