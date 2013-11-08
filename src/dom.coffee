@@ -145,8 +145,8 @@ ScribeDOM =
       ScribeDOM.removeClass(node, className)
 
   triggerEvent: (elem, eventName, bubble, cancels) ->
-    if document.createEvent
-      evt = document.createEvent("HTMLEvents")
+    if elem.ownerDocument.createEvent
+      evt = elem.ownerDocument.createEvent("HTMLEvents")
       evt.initEvent(eventName, bubble, cancels)
       elem.dispatchEvent(evt)
     else
