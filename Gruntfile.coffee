@@ -33,7 +33,7 @@ module.exports = (grunt) ->
         dest: 'build/'
         src: ['demo/scripts/*.coffee']
         ext: '.js'
-      bare:
+      src:
         options:
           bare: true
         expand: true  
@@ -86,18 +86,12 @@ module.exports = (grunt) ->
         src: ['*.js']
 
     jade:
-      options:
+      all:
+        dest: 'build/'
+        expand: true
+        ext: ['.html']
         pretty: true
-      demo:
-        dest: 'build/'
-        expand: true
-        ext: ['.html']
-        src: ['demo/*.jade', '!demo/content.jade']
-      tests:
-        dest: 'build/'
-        expand: true
-        ext: ['.html']
-        src: ['tests/**/*.jade']
+        src: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
 
     'string-replace':
       tests:
@@ -117,43 +111,41 @@ module.exports = (grunt) ->
         src: ['build/src/**/*.js']
 
     stylus:
-      demo:
+      all:
         expand: true
         dest: 'build/'
-        src: ['demo/styles/*.styl']
-        ext: ['.css']
-      tests:
-        expand: true
-        dest: 'build/'
-        src: ['tests/mocha/*.styl']
+        src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
         ext: ['.css']
 
     watch:
       options:
         nospawn: true
-      demo:
+      coffee_demo:
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
-      jade_demo:
-        files: ['demo/*.jade']
-        tasks: ['jade:demo']
-      jade_test:
-        files: ['tests/**/*.jade']
-        tasks: ['jade:tests']
-      stylus:
-        files: ['demo/styles/*.styl']
-        tasks: ['stylus:demo']
-      src:
+      coffee_src:
         files: ['index.coffee', 'src/**/*.coffee']
-        tasks: ['coffee:bare', 'string-replace', 'browserify', 'concat']
-      test:
+        tasks: ['coffee:src', 'string-replace', 'browserify', 'concat']
+      coffee_test:
         files: ['tests/mocha/**/*.coffee']
         tasks: ['coffee:test']
+      jade:
+        files: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
+        tasks: ['jade']
+      stylus:
+        files: ['demo/styles/*.styl', 'tests/mocha/*.styl']
+        tasks: ['stylus']
 
 
   grunt.event.on('watch', (action, filepath) ->
-    if grunt.file.isMatch(grunt.config('watch.src.files'), filepath)
-      grunt.config('coffee.bare.src', filepath)
+    if grunt.file.isMatch(grunt.config('watch.coffee_demo.files'), filepath)
+      grunt.config('coffee.demo.src', filepath)
+    else if grunt.file.isMatch(grunt.config('watch.coffee_src.files'), filepath)
+      grunt.config('coffee.src.src', filepath)
+    else if grunt.file.isMatch(grunt.config('watch.jade.files'), filepath)
+      grunt.config('jade.all.src', filepath)
+    else if grunt.file.isMatch(grunt.config('watch.stylus.files'), filepath)
+      grunt.config('stylus.all.src', filepath)
   )
 
   # Default task.
