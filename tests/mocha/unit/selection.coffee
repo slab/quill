@@ -217,6 +217,7 @@ describe('Selection', ->
           expected: ['<div><b>0123|45|6789</b></div>']
 
     checker = (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
+      expect(testEditor.renderer.checkFocus()).to.be(true)
       selection = testEditor.getSelection()
       expect(selection).not.to.be(null)
       expect(selection.start.index).to.equal(expectedStart)
