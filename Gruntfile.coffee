@@ -94,7 +94,7 @@ module.exports = (grunt) ->
         src: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
 
     'string-replace':
-      tests:
+      src:
         options:
           replacements: [{
             pattern: /.+ = require\(.+\);\n\n/g
@@ -142,6 +142,7 @@ module.exports = (grunt) ->
       grunt.config('coffee.demo.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.coffee_src.files'), filepath)
       grunt.config('coffee.src.src', filepath)
+      grunt.config('string-replace.src.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.jade.files'), filepath)
       grunt.config('jade.all.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.stylus.files'), filepath)
