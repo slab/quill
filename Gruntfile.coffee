@@ -129,6 +129,8 @@ module.exports = (grunt) ->
         ext: ['.css']
 
     watch:
+      options:
+        nospawn: true
       demo:
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
@@ -143,10 +145,16 @@ module.exports = (grunt) ->
         tasks: ['stylus:demo']
       src:
         files: ['index.coffee', 'src/**/*.coffee']
-        tasks: ['browserify', 'coffee', 'string-replace', 'concat']
+        tasks: ['coffee:bare', 'string-replace', 'browserify', 'concat']
       test:
         files: ['tests/mocha/**/*.coffee']
         tasks: ['coffee:test']
+
+
+  grunt.event.on('watch', (action, filepath) ->
+    if grunt.file.isMatch(grunt.config('watch.src.files'), filepath)
+      grunt.config('coffee.bare.src', filepath)
+  )
 
   # Default task.
   grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus']
