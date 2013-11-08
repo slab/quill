@@ -64,7 +64,7 @@ class ScribePicker
       ScribeDOM.addClass(item, 'selected')
       ScribeDOM.setText(@label, ScribeDOM.getText(item))
     else
-      ScribeDOM.setText(@label, '')
+      @label.innerHTML = '&nbsp;'
 
 
 module.exports = ScribePicker
