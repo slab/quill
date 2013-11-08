@@ -103,7 +103,7 @@ module.exports = (grunt) ->
             pattern: /^var .+;\n\n/g
             replacement: ''
           }, {
-            pattern: /^var .+,\n/g
+            pattern: /^var [A-Za-z].+,\n/g
             replacement: 'var'
           }]
         expand: true
@@ -142,7 +142,6 @@ module.exports = (grunt) ->
       grunt.config('coffee.demo.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.coffee_src.files'), filepath)
       grunt.config('coffee.src.src', filepath)
-      grunt.config('string-replace.src.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.jade.files'), filepath)
       grunt.config('jade.all.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.stylus.files'), filepath)
