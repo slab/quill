@@ -8,10 +8,6 @@ class ScribeDefaultTheme
   @stylesheets: {}
 
   constructor: (@editor) ->
-    @editor.modules = _.reduce(@editor.options.modules, (modules, options, name) =>
-      modules[name] = this.addModule(name, options)
-      return modules
-    , {})
 
   addModule: (name, options) ->
     switch name

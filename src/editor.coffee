@@ -164,6 +164,10 @@ class ScribeEditor extends EventEmitter2
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
     this.reset(true)
     @theme = new @options.theme(this)
+    @modules = _.reduce(@options.modules, (modules, options, name) =>
+      modules[name] = @theme.addModule(name, options)
+      return modules
+    , {})
     setInterval( =>
       delta = this.update()
       if delta

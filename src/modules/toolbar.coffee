@@ -14,7 +14,7 @@ initFormats = ->
     _.each(formats, (format) =>
       input = findInput.call(this, format)
       return unless input?
-      return new ScribeLinkTooltip(@editor, { button: input }) if format == 'link'
+      return @editor.theme.addModule('link-tooltip', { button: input }) if format == 'link'
       return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
