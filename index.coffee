@@ -4,7 +4,7 @@ ScribeDefaultTheme  = require('./src/themes/default')
 ScribeSnowTheme     = require('./src/themes/snow')
 
 window.Scribe =
-  version : '0.9.2'
+  version : '0.10.0'
   DOM     : ScribeDOM
   Editor  : ScribeEditor
   Themes  :
