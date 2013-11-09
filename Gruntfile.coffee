@@ -8,6 +8,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-image-embed'
   grunt.loadNpmTasks 'grunt-string-replace'
 
   # Project configuration.
@@ -85,6 +86,12 @@ module.exports = (grunt) ->
         dest: 'build/lib/'
         src: ['*.js']
 
+    imageEmbed:
+      all:
+        dest: ''
+        expand: true
+        src: ['build/demo/styles/*.css', 'build/tests/mocha/*.css']
+
     jade:
       all:
         dest: 'build/'
@@ -114,8 +121,8 @@ module.exports = (grunt) ->
       all:
         expand: true
         dest: 'build/'
-        src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
         ext: ['.css']
+        src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
 
     watch:
       options:
@@ -149,4 +156,4 @@ module.exports = (grunt) ->
   )
 
   # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus']
+  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus', 'imageEmbed']

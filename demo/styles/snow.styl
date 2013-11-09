@@ -105,14 +105,10 @@ pickerWidth = 50px
       margin-bottom: 7px
 
 for $format in fore-color back-color
-  .{$format}
-    .picker-label
-      background-image: url('../images/' + $format + '.png')
-    .picker-label.active, .picker-label:hover
-      background-image: url('../images/' + $format + '-active.png')
-  .{$format}.expanded
-    .picker-label
-      background-image: url('../images/' + $format + '-active.png')
+  .{$format} .picker-label
+    background-image: url('../images/' + $format + '.png')
+  .{$format} .picker-label.active, .{$format} .picker-label:hover, .{$format}.expanded .picker-label
+    background-image: url('../images/' + $format + '-active.png')
 
 
 for $format in bold italic strike underline list bullet outdent indent link attribution
