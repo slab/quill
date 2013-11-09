@@ -2,7 +2,6 @@ ScribeDOM   = require('./dom')
 ScribeUtils = require('./utils')
 
 
-# TODO fix this entire file, esp findDeepestNode
 class ScribePosition
   @findLeafNode: (editor, node, offset) ->
     [node, offset] = ScribeUtils.findDeepestNode(node, offset)

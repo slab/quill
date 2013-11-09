@@ -119,7 +119,8 @@ class ScribeSelection
     return range
 
   getRange: ->
-    return _nativeRangeToRange.call(this, @range)
+    nativeRange = this.getNativeRange(true)
+    return if nativeRange? then _nativeRangeToRange.call(this, nativeRange) else null
 
   preserve: (index, lengthAdded, fn) ->
     fn = index if _.isFunction(index)
