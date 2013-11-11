@@ -23,7 +23,7 @@ class ScribeRenderer extends EventEmitter2
         'overflow': 'auto'
         'position': 'relative'
       }
-      'div.editor': {
+      '.editor': {
         'bottom': '10px'
         'left': '0px'
         'outline': 'none'
@@ -33,32 +33,32 @@ class ScribeRenderer extends EventEmitter2
         'top': '10px'
         'white-space': 'pre-wrap'
       }
-      'div.line': { 'margin-left': '15px', 'margin-right': '15px' }
-      'a'    : { 'text-decoration': 'underline' }
-      'b'    : { 'font-weight': 'bold' }
-      'i'    : { 'font-style': 'italic' }
-      's'    : { 'text-decoration': 'line-through' }
-      'u'    : { 'text-decoration': 'underline' }
-      'ol'   : { 'margin': '0px', 'padding': '0px' }
-      'ul'   : { 'list-style-type': 'disc', 'margin': '0px', 'padding': '0px' }
-      'ol.indent-1' : { 'list-style-type': 'decimal' }
-      'ol.indent-2' : { 'list-style-type': 'lower-alpha' }
-      'ol.indent-3' : { 'list-style-type': 'lower-roman' }
-      'ol.indent-4' : { 'list-style-type': 'decimal' }
-      'ol.indent-5' : { 'list-style-type': 'lower-alpha' }
-      'ol.indent-6' : { 'list-style-type': 'lower-roman' }
-      'ol.indent-7' : { 'list-style-type': 'decimal' }
-      'ol.indent-8' : { 'list-style-type': 'lower-alpha' }
-      'ol.indent-9' : { 'list-style-type': 'lower-roman' }
-      '.indent-1' : { 'margin-left': '2em' }
+      '.line': { 'margin-left': '15px', 'margin-right': '15px' }
+      '.editor a'    : { 'text-decoration': 'underline' }
+      '.editor b'    : { 'font-weight': 'bold' }
+      '.editor i'    : { 'font-style': 'italic' }
+      '.editor s'    : { 'text-decoration': 'line-through' }
+      '.editor u'    : { 'text-decoration': 'underline' }
+      '.editor ol'   : { 'margin': '0px', 'padding': '0px' }
+      '.editor ul'   : { 'list-style-type': 'disc', 'margin': '0px', 'padding': '0px' }
+      '.editor ol.indent-1' : { 'list-style-type': 'decimal' }
+      '.editor ol.indent-2' : { 'list-style-type': 'lower-alpha' }
+      '.editor ol.indent-3' : { 'list-style-type': 'lower-roman' }
+      '.editor ol.indent-4' : { 'list-style-type': 'decimal' }
+      '.editor ol.indent-5' : { 'list-style-type': 'lower-alpha' }
+      '.editor ol.indent-6' : { 'list-style-type': 'lower-roman' }
+      '.editor ol.indent-7' : { 'list-style-type': 'decimal' }
+      '.editor ol.indent-8' : { 'list-style-type': 'lower-alpha' }
+      '.editor ol.indent-9' : { 'list-style-type': 'lower-roman' }
+      '.editor .indent-1' : { 'margin-left': '2em' }
       '.indent-2' : { 'margin-left': '4em' }
-      '.indent-3' : { 'margin-left': '6em' }
-      '.indent-4' : { 'margin-left': '8em' }
-      '.indent-5' : { 'margin-left': '10em' }
-      '.indent-6' : { 'margin-left': '12em' }
-      '.indent-7' : { 'margin-left': '14em' }
-      '.indent-8' : { 'margin-left': '16em' }
-      '.indent-9' : { 'margin-left': '18em' }
+      '.editor .indent-3' : { 'margin-left': '6em' }
+      '.editor .indent-4' : { 'margin-left': '8em' }
+      '.editor .indent-5' : { 'margin-left': '10em' }
+      '.editor .indent-6' : { 'margin-left': '12em' }
+      '.editor .indent-7' : { 'margin-left': '14em' }
+      '.editor .indent-8' : { 'margin-left': '16em' }
+      '.editor .indent-9' : { 'margin-left': '18em' }
 
   @events:
     UPDATE: 'renderer-update'
