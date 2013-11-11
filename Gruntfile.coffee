@@ -94,10 +94,11 @@ module.exports = (grunt) ->
 
     jade:
       all:
+        options:
+          pretty: true
         dest: 'build/'
         expand: true
         ext: ['.html']
-        pretty: true
         src: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
 
     'string-replace':
