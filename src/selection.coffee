@@ -88,12 +88,7 @@ _preserveWithLine = (savedNativeRange, fn) ->
 class ScribeSelection
   constructor: (@editor) ->
     @range = null
-    @mouseIsDown = @keyIsDown = @focusTransition = false
-    @hasFocus = @editor.root.ownerDocument.activeElement == @editor.root
-    ScribeDOM.addEventListener(@editor.root, 'keydown',   => @keyIsDown = true )
-    ScribeDOM.addEventListener(@editor.root, 'keyup',     => @keyIsDown = false )
-    ScribeDOM.addEventListener(@editor.root, 'mousedown', => @mouseIsDown = true )
-    ScribeDOM.addEventListener(@editor.root, 'mouseup',   => @mouseIsDown = false )
+    @hasFocus = @editor.renderer.checkFocus()
     rangy.init()
     if @editor.renderer.options.iframe
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
@@ -107,16 +102,18 @@ class ScribeSelection
     return nativeRange.getBoundingClientRect()
     
   getNativeRange: (normalize = false) ->
+    return @range unless @editor.renderer.checkFocus()
     return null unless @nativeSelection
     @nativeSelection.refresh()
-    # Editor needs focus for us to consider valid range
-    return null unless @nativeSelection?.rangeCount > 0
-    range = @nativeSelection.getRangeAt(0)
+    range = if @nativeSelection?.rangeCount > 0 then @nativeSelection.getRangeAt(0) else null
     # Selection elements needs to be within editor root
-    return null unless rangy.dom.isAncestorOf(@editor.root, range.startContainer, true) and rangy.dom.isAncestorOf(@editor.root, range.endContainer, true)
-    range = normalizeNativeRange(range) if normalize
-    range.isBackwards = true if @nativeSelection.isBackwards()
-    return range
+    range = null if range? and (!rangy.dom.isAncestorOf(@editor.root, range.startContainer, true) or !rangy.dom.isAncestorOf(@editor.root, range.endContainer, true))
+    if range
+      range = normalizeNativeRange(range) if normalize
+      range.isBackwards = true if @nativeSelection.isBackwards()
+      return range
+    else
+      return null
 
   getRange: ->
     nativeRange = this.getNativeRange(true)
@@ -125,7 +122,7 @@ class ScribeSelection
   preserve: (index, lengthAdded, fn) ->
     fn = index if _.isFunction(index)
     nativeRange = this.getNativeRange(true)
-    if nativeRange?
+    if @range?
       if _.isFunction(index)
         _preserveWithLine.call(this, nativeRange, index)
       else
@@ -154,25 +151,14 @@ class ScribeSelection
     @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
 
   update: (silent = false) ->
-    return if (@mouseIsDown or @keyIsDown or @focusTransition) and !silent
-    hasFocus = @editor.renderer.checkFocus()
-    if hasFocus != @hasFocus
-      @hasFocus = hasFocus
-      @editor.emit(@editor.constructor.events.FOCUS_CHANGE, @hasFocus) unless silent
-      clearTimeout(@focusTransition)
-      # In IE8 we actually lose the selection if we lose focus so delay updating the selection if it's temporary, ex. clicking on a toolbar button
-      @focusTransition = setTimeout( =>
-        @focusTransition = false
-      , @editor.options.pollInterval * 1.5)
-      return unless @hasFocus
     nativeRange = this.getNativeRange(false)
-    unless compareNativeRanges(nativeRange, @range)
-      range = _nativeRangeToRange.call(this, normalizeNativeRange(nativeRange))
-      if (nativeRange? and !@range?) or !nativeRange?
-        this.setRange(range, silent)
-      else
-        @range = nativeRange
-        @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
+    hasFocus = @editor.renderer.checkFocus()
+    @editor.emit(@editor.constructor.events.FOCUS_CHANGE, hasFocus) if !silent and @hasFocus != hasFocus
+    @hasFocus = hasFocus
+    if hasFocus and !compareNativeRanges(nativeRange, @range)
+      @range = nativeRange
+      range = _nativeRangeToRange.call(this, normalizeNativeRange(@range))
+      @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
 
 
 module.exports = ScribeSelection

@@ -13,25 +13,25 @@ html
       each num in [1, 2]
         .editor-wrapper(class=(num == 1 ? 'first' : 'last'))
           .toolbar-container
-            .format-group
+            span.format-group
               select.font-name
                 option(value='sans-serif', selected=true) Sans Serif
                 option(value='serif') Serif
                 option(value='monospace') Monospace
-            .format-group
+            span.format-group
               select.font-size
                 option(value='small') Small
                 option(value='normal', selected=true) Normal
                 option(value='large') Large
                 option(value='huge') Huge
-            .format-group
+            span.format-group
               each c in ['fore-color', 'back-color']
                 select(class=c)
                   each color,i in colors
                     option(value=color, selected=((c == 'fore-color' && color == '#000000') || (c == 'back-color' && color == '#ffffff') ? true : false))
                 if c == 'fore-color'
                   span.format-separator
-            .format-group
+            span.format-group
               span.format-button.bold
               span.format-separator
               span.format-button.italic
@@ -39,9 +39,9 @@ html
               span.format-button.underline
               span.format-separator
               span.format-button.strike
-            .format-group
+            span.format-group
               span.format-button.link
-            .format-group
+            span.format-group
               span.format-button.attribution
           #editor-container.editor-container
             include content

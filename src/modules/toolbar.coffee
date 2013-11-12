@@ -20,7 +20,6 @@ initFormats = ->
       ScribeDOM.addEventListener(input, eventName, =>
         return if @triggering
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
-        @editor.root.focus()
         range = @editor.getSelection()
         if range
           range.format(format, value, { source: 'user' })

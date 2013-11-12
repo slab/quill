@@ -108,10 +108,11 @@ class ScribeRenderer extends EventEmitter2
       @iframe.frameBorder = '0'
       @container.appendChild(@iframe)
       doc = this.getDocument()
-      @iframe.height = @iframe.width = doc.body.style = '100%'
+      @iframe.height = @iframe.width = '100%'
       doc.open()
       doc.write('<!DOCTYPE html>')
       doc.close()
+      doc.body.style.height = '100%'
     else
       @iframe = @container
       doc = this.getDocument()
