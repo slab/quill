@@ -100,7 +100,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
           colors[c] = "rgb(#{parseInt(c.substr(1,2), 16)}, #{parseInt(c.substr(3,2), 16)}, #{parseInt(c.substr(5,2), 16)})"
           return colors
         , {})
-        format.defaultStyle = if css == 'fore-color' then '#ffffff' else '#000000'
+        format.defaultStyle = if css == 'fore-color' then '#000000' else '#ffffff'
     )
 
 
