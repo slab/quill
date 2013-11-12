@@ -106,7 +106,7 @@ _trackDelta = (fn, options) ->
 _update = ->
   delta = _trackDelta.call(this, =>
     this.doSilently( =>
-      ScribeNormalizer.normalizeEmpty(@root)
+      ScribeNormalizer.normalizeEmptyLines(@root)
       @selection.preserve( =>
         ScribeNormalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()

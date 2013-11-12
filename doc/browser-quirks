@@ -33,4 +33,4 @@ A
 Test
 B
 
-To correct this problem we remove all breaks in the editor's update loop in IE. Not both this and the setting the selection after the break is only true for IE. Firefox does not correctly append newlines when the latter is false. Since this is an IE quirk anyways, the solution is confined to IE as well.
+To correct this problem we remove all breaks that have sibling nodes in the editor's update loop in IE. Note both this and the setting the selection after the break is only true for IE. Firefox does not correctly append newlines when the latter is false. Since this is an IE quirk anyways, the solution is confined to IE as well.

@@ -106,7 +106,10 @@ class ScribeNormalizer
       ScribeDOM.unwrap(node.parentNode)
       ScribeNormalizer.normalizeBreak(node, root)
 
-  @normalizeEmpty: (root) ->
+  @normalizeEmptyDoc: (root) ->
+    root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
+
+  @normalizeEmptyLines: (root) ->
     return unless ScribeUtils.isIE()
     _.each(root.querySelectorAll('br'), (node) ->
       # See IE's newline section in doc/browser-quirks
@@ -161,7 +164,7 @@ class ScribeNormalizer
     )
 
   normalizeDoc: ->
-    @container.appendChild(@container.ownerDocument.createElement('div')) unless @container.firstChild
+    ScribeNormalizer.normalizeEmptyDoc(@container)
     this.applyRules(@container)
     ScribeNormalizer.breakBlocks(@container)
     _.each(@container.childNodes, (lineNode) =>
