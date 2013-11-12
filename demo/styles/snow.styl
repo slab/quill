@@ -1,3 +1,6 @@
+inputHeight = 16px
+inputMargin = 3px
+inputPadding = 4px
 blueColor = #06c
 grayColor = #ccc
 lightGrayColor = #ddd
@@ -10,31 +13,34 @@ pickerWidth = 50px
   border-bottom: 1px solid grayColor
   font-family: 'Helvetica', 'Arial', sans-serif
   font-size: 12px
-  height: 36px
-  line-height: 32px
-  padding: 0px (15px - pickerPadding)
+  height: inputHeight + inputPadding
+  padding: 8px (15px - pickerPadding)
   user-select: none
   -webkit-user-select: none
   -moz-user-select: none
   -ms-user-select: none
   .format-group
     display: inline-block
-    height: 24px
-    line-height: 24px
+    float: left
+    line-height: inputHeight
     margin-right: 15px
-    margin-top: 4px
-    vertical-align: middle
   .format-button
     background-position: center center
     background-repeat: no-repeat
     cursor: pointer
     display: inline-block
-    height: 16px
-    padding: 0px 7px
-    vertical-align: middle
+    height: inputHeight
+    margin-left: inputMargin
+    margin-right: inputMargin
+    padding: inputPadding
     width: 16px
   .format-separator
-    border-right: 1px solid lightGrayColor
+    background-color: lightGrayColor
+    display: inline-block
+    height: 16px
+    margin-bottom: inputPadding
+    margin-top: inputPadding
+    width: 1px
 
 
 .picker
@@ -44,16 +50,19 @@ pickerWidth = 50px
   .picker-label
     background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
     cursor: pointer
-    padding: 1px pickerPadding
+    padding: inputPadding pickerPadding
   .picker-label.active, .picker-label:hover
     background-image: url('../images/arrows-active.png')
     color: blueColor
   .picker-options
     background-color: #fff
     display: none
-    padding: 1px pickerPadding
+    padding: inputPadding pickerPadding
+    position: absolute
     .picker-item
       cursor: pointer
+      padding-bottom: inputPadding
+      padding-top: inputPadding
     .picker-item.selected, .picker-item:hover
       color: blueColor
 .picker.expanded
@@ -71,9 +80,10 @@ pickerWidth = 50px
 .picker.color-picker
   .picker-label
     background-position: center center
-    padding: 2px pickerPadding
   .picker-options
     height: 106px
+    margin-left: inputMargin
+    margin-top: -6px
     padding: 6px
     position: absolute
     width: 140px
@@ -81,10 +91,17 @@ pickerWidth = 50px
       float: left
       height: 16px
       margin: 2px
+      padding: 0px
       width: 16px
     .picker-item.selected, .picker-item:hover
       border: 1px solid #000
       margin: 1px
+.picker.color-picker.expanded
+  .picker-label
+    margin-left: inputMargin - 1px
+    margin-right: inputMargin - 1px
+  .picker-options
+    margin-left: inputMargin - 1px
 
 
 .toolbar-container
@@ -92,10 +109,14 @@ pickerWidth = 50px
     width: fontNamePickerWidth
     .picker-label
       background-position: (fontNamePickerWidth - 2*pickerPadding) center
+    .picker-options
+      width: fontNamePickerWidth - 2*pickerPadding
   .font-size
     width: fontSizePickerWidth
     .picker-label
       background-position: (fontSizePickerWidth - 2*pickerPadding) center
+    .picker-options
+      width: fontSizePickerWidth - 2*pickerPadding
 
   .fore-color, .back-color
     .picker-options
