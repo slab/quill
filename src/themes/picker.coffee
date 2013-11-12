@@ -36,7 +36,7 @@ class ScribePicker
     item = @select.ownerDocument.createElement('div')
     ScribeDOM.addClass(item, 'picker-item')
     ScribeDOM.setText(item, ScribeDOM.getText(option))
-    ScribeDOM.addClass(item, 'selected') if option.hasAttribute('selected')
+    ScribeDOM.addClass(item, 'selected') if @select.selectedIndex == index
     ScribeDOM.addEventListener(item, 'click', =>
       this.selectItem(item)
       @select.selectedIndex = index
