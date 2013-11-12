@@ -87,32 +87,33 @@ pickerWidth = 50px
       margin: 1px
 
 
-.font-name
-  width: fontNamePickerWidth
-  .picker-label
-    background-position-x: fontNamePickerWidth - 2*pickerPadding
+.toolbar-container
+  .font-name
+    width: fontNamePickerWidth
+    .picker-label
+      background-position-x: fontNamePickerWidth - 2*pickerPadding
 
-.font-size
-  width: fontSizePickerWidth
-  .picker-label
-    background-position-x: fontSizePickerWidth - 2*pickerPadding
+  .font-size
+    width: fontSizePickerWidth
+    .picker-label
+      background-position-x: fontSizePickerWidth - 2*pickerPadding
 
-.fore-color, .back-color
-  .picker-options
-    .picker-item.primary-color
-      margin-bottom: 8px
-    .picker-item.primary-color.selected, .picker-item.primary-color:hover
-      margin-bottom: 7px
+  .fore-color, .back-color
+    .picker-options
+      .picker-item.primary-color
+        margin-bottom: 8px
+      .picker-item.primary-color.selected, .picker-item.primary-color:hover
+        margin-bottom: 7px
 
-for $format in fore-color back-color
-  .{$format} .picker-label
-    background-image: url('../images/' + $format + '.png')
-  .{$format} .picker-label.active, .{$format} .picker-label:hover, .{$format}.expanded .picker-label
-    background-image: url('../images/' + $format + '-active.png')
+  for $format in fore-color back-color
+    .picker.{$format} .picker-label
+      background-image: url('../images/' + $format + '.png')
+    .picker.{$format} .picker-label.active, .picker.{$format} .picker-label:hover, .picker.{$format}.expanded .picker-label
+      background-image: url('../images/' + $format + '-active.png')
 
 
-for $format in bold italic strike underline list bullet outdent indent link attribution
-  .format-button.{$format}
-    background-image: url('../images/' + $format + '.png')
-  .format-button.{$format}:hover, .{$format}:active, .{$format}.active
-    background-image: url('../images/' + $format + '-active.png')
+  for $format in bold italic strike underline list bullet outdent indent link attribution
+    .format-button.{$format}
+      background-image: url('../images/' + $format + '.png')
+    .format-button.{$format}:hover, .format-button.{$format}.active
+      background-image: url('../images/' + $format + '-active.png')
