@@ -9,18 +9,14 @@ class ScribeRenderer extends EventEmitter2
     iframe: true
     keepHTML: false
     styles:
-      'html' : { 'height': '100%' }
-      'body': {
+      '.editor-container': {
         'cursor': 'text'
         'font-family': "'Helvetica', 'Arial', sans-serif"
         'font-size': '13px'
-        'height': '100%'
         'line-height': '1.154'
         'margin': '0px'
-        'padding': '0px'
-      }
-      '.editor-container': {
         'overflow': 'auto'
+        'padding': '0px'
         'position': 'relative'
       }
       '.editor': {
@@ -110,9 +106,9 @@ class ScribeRenderer extends EventEmitter2
     if @options.iframe
       @iframe = @container.ownerDocument.createElement('iframe')
       @iframe.frameBorder = '0'
-      @iframe.height = @iframe.width = '100%'
       @container.appendChild(@iframe)
       doc = this.getDocument()
+      @iframe.height = @iframe.width = doc.body.style = '100%'
       doc.open()
       doc.write('<!DOCTYPE html>')
       doc.close()
