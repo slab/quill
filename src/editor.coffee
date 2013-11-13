@@ -231,6 +231,7 @@ class ScribeEditor extends EventEmitter2
           this.emit(eventName, delta)
       if localDelta and !localDelta.isIdentity()
         this.emit(ScribeEditor.events.USER_TEXT_CHANGE, localDelta)
+      @innerHTML = @root.innerHTML
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       _forceTrailingNewline.call(this)
