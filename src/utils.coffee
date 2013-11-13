@@ -85,6 +85,13 @@ ScribeUtils =
   isBlock: (node) ->
     return _.indexOf(ScribeUtils.BLOCK_TAGS, node.tagName, true) > -1
 
+  isEmptyDoc: (root) ->
+    firstLine = root.firstChild
+    return true if firstLine == null
+    return true if firstLine.firstChild == null
+    return true if firstLine.firstChild == firstLine.lastChild and firstLine.firstChild.tagName == 'BR'
+    return false
+
   isIE: ->
     return navigator.userAgent.match(/MSIE/)
 
