@@ -44,6 +44,7 @@ class ScribeRange
     leaves.splice(0, 1) if leaves.length > 1 && @start.offset == leaves[0].length
     formats = if leaves.length > 0 then leaves[0].getFormats() else {}
     _.all(leaves.slice(1), (leaf) ->
+      return true if leaf.text == ''    # Emtpy lines will have leaf that has no text or formatting, ignore them
       leafFormats =  leaf.getFormats()
       _.each(formats, (value, key) ->
         if !leafFormats[key]
