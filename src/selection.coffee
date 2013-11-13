@@ -84,11 +84,28 @@ _preserveWithLine = (savedNativeRange, fn) ->
     )
     this.setRange(new ScribeRange(@editor, start, end), true)
 
+_updateFocus = (silent) ->
+  hasFocus = @editor.renderer.checkFocus()
+  if !silent and @hasFocus != hasFocus
+    if hasFocus
+      if @blurTimer
+        clearTimeout(@blurTimer)
+        @blurTimer = null
+      else
+        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, true) 
+    else if !@blurTimer?
+      @blurTimer = setTimeout( =>
+        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, false) 
+        @blurTimer = null
+      , 200)
+  @hasFocus = hasFocus
+
 
 class ScribeSelection
   constructor: (@editor) ->
     @range = null
     @hasFocus = @editor.renderer.checkFocus()
+    @blurTimer = null
     rangy.init()
     if @editor.renderer.options.iframe
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
@@ -152,11 +169,10 @@ class ScribeSelection
     @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
 
   update: (silent = false) ->
-    nativeRange = this.getNativeRange(false)
-    hasFocus = @editor.renderer.checkFocus()
-    @editor.emit(@editor.constructor.events.FOCUS_CHANGE, hasFocus) if !silent and @hasFocus != hasFocus
-    @hasFocus = hasFocus
-    if hasFocus and !compareNativeRanges(nativeRange, @range)
+    _updateFocus.call(this, silent)
+    if @hasFocus 
+      nativeRange = this.getNativeRange(false)
+      return if compareNativeRanges(nativeRange, @range)
       @range = nativeRange
       range = _nativeRangeToRange.call(this, normalizeNativeRange(@range))
       if ScribeUtils.isEmptyDoc(@editor.root)

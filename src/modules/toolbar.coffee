@@ -24,6 +24,7 @@ initFormats = ->
         if range
           range.format(format, value, { source: 'user' })
           @editor.emit(@editor.constructor.events.PREFORMAT, format, value)
+          @editor.root.focus()
         this.update()
       )
     )
