@@ -18,8 +18,12 @@ ScribeDOM =
       event.which ?= event.keyCode
       bubbles = listener.call(null, event)
       if bubbles == false
-        if event.stopPropagation then event.stopPropagation() else event.returnValue = false
-        return false
+        if event.preventDefault? and event.stopPropagation?
+          event.preventDefault()
+          event.stopPropagation()
+        else
+          event.returnValue = false
+      return bubbles
     if node.addEventListener?
       node.addEventListener(eventName, callback)
     else if node.attachEvent?

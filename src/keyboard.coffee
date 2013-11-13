@@ -38,7 +38,7 @@ _initListeners = ->
         @editor.selection.update(true)
         selection = @editor.getSelection()
         return unless selection?
-        prevent = hotkey.callback.call(null, selection) == false
+        prevent = hotkey.callback.call(null, selection) == false or prevent
       )
     return !prevent
   )
