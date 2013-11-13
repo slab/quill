@@ -14,7 +14,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.10.1'
+      version: '0.10.2'
 
     browserify:
       options:
