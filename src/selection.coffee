@@ -99,6 +99,7 @@ class ScribeSelection
   getDimensions: ->
     return null unless @range?
     nativeRange = @range.nativeRange or @range.textRange
+    nativeRange = nativeRange._selectionNativeRange unless nativeRange.getBoundingClientRect?
     return nativeRange.getBoundingClientRect()
     
   getNativeRange: (normalize = false) ->
@@ -134,7 +135,7 @@ class ScribeSelection
     return unless @nativeSelection?
     @nativeSelection.removeAllRanges() if @editor.renderer.checkFocus()
     if range?
-      nativeRange = rangy.createRangyRange()
+      nativeRange = rangy.createRangyRange(@editor.renderer.getDocument())
       _.each([range.start, range.end], (pos, i) ->
         [node, offset] = ScribeUtils.findDeepestNode(pos.leafNode, pos.offset)
         offset = Math.min(ScribeDOM.getText(node).length, offset)   # Should only occur at end of document
@@ -145,7 +146,7 @@ class ScribeSelection
         nativeRange[fn].call(nativeRange, node, offset)
       )
       @nativeSelection.addRange(nativeRange, range.isBackwards)
-      @range = nativeRange
+      @range = new rangy.WrappedRange(nativeRange)
     else
       @range = null
     @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
