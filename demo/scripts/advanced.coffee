@@ -34,9 +34,17 @@ listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
     console.info source.id, 'text change', delta if console?
     target.applyDelta(delta)
-    sourceDelta = source.doc.toDelta()
-    targetDelta = target.doc.toDelta()
-    console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
+    sourceDelta = source.getDelta()
+    targetDelta = target.getDelta()
+    decomposeDelta = targetDelta.decompose(sourceDelta)
+    isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
+      return false if op.value?
+      return true if (Scribe._.keys(op.attributes).length == 0)
+      sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
+      return true if sourceOp.length == 1 and sourceOp[0].value == "\n"
+      return false
+    )
+    console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
   ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
     if range?
       console.info source.id, 'selection change', range.start.index, range.start.leafNode, range.end.index, range.end.leafNode if console?
