@@ -10,16 +10,16 @@ html
     #content-container
       .editor-wrapper
         #formatting-container.formatting-container
-          select.font-name
+          select.font-name(title='Font')
             option(value='sans-serif', selected=true)  Sans Serif
             option(value='serif')      Serif
             option(value='monospace')  Monospace
-          select.font-size
+          select.font-size(title='Size')
             option(value='small')   Small
             option(value='normal', selected=true) Normal
             option(value='large')   Large
             option(value='huge')    Huge
-          select.fore-color
+          select.fore-color(title='Text Color')
             option(value='white')   White
             option(value='black', selected=true)  Black
             option(value='red')     Red
@@ -28,7 +28,7 @@ html
             option(value='teal')    Teal
             option(value='magenta') Magenta
             option(value='yellow')  Yellow
-          select.back-color
+          select.back-color(title='Background Color')
             option(value='white', selected=true)   White
             option(value='black')   Black
             option(value='red')     Red
@@ -37,11 +37,11 @@ html
             option(value='teal')    Teal
             option(value='magenta') Magenta
             option(value='yellow')  Yellow
-          button.format-button.bold Bold
-          button.format-button.italic Italic
-          button.format-button.underline Under
-          button.format-button.strike Strike
-          button.format-button.link Link
+          button.format-button.bold(title='Bold') Bold
+          button.format-button.italic(title='Italic') Italic
+          button.format-button.underline(title='Underline') Under
+          button.format-button.strike(title='Strikethrough') Strike
+          button.format-button.link(title='Link') Link
         #editor-container.editor-container
           include content
 

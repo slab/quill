@@ -14,35 +14,34 @@ html
         .editor-wrapper(class=(num == 1 ? 'first' : 'last'))
           .toolbar-container
             span.format-group
-              select.font-name
+              select.font-name(title='Font')
                 option(value='sans-serif', selected=true) Sans Serif
                 option(value='serif') Serif
                 option(value='monospace') Monospace
-            span.format-group
-              select.font-size
+              select.font-size(title='Size')
                 option(value='small') Small
                 option(value='normal', selected=true) Normal
                 option(value='large') Large
                 option(value='huge') Huge
             span.format-group
               each c in ['fore-color', 'back-color']
-                select(class=c)
+                select(class=c, title=(c=='fore-color'?'Text Color':'Background Color'))
                   each color,i in colors
                     option(value=color, selected=((c == 'fore-color' && color == '#000000') || (c == 'back-color' && color == '#ffffff') ? true : false))
                 if c == 'fore-color'
                   span.format-separator
             span.format-group
-              span.format-button.bold
+              span.format-button.bold(title='Bold')
               span.format-separator
-              span.format-button.italic
+              span.format-button.italic(title='Italic')
               span.format-separator
-              span.format-button.underline
+              span.format-button.underline(title='Underline')
               span.format-separator
-              span.format-button.strike
+              span.format-button.strike(title='Strikethrough')
             span.format-group
-              span.format-button.link
+              span.format-button.link(title='Link')
             span.format-group
-              span.format-button.attribution
+              span.format-button.attribution(title='Authors')
           #editor-container.editor-container
             include content
 

@@ -7,6 +7,8 @@ class ScribePicker
     _.each(ScribeDOM.getClasses(@select), (css) =>
       ScribeDOM.addClass(@container, css)
     )
+    title = @select.getAttribute('title')
+    @container.setAttribute('title', title) if title
     ScribeDOM.addClass(@container, 'picker')
     @label = @select.ownerDocument.createElement('div')
     ScribeDOM.addClass(@label, 'picker-label')
