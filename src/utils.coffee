@@ -97,8 +97,9 @@ ScribeUtils =
     return true if firstLine.firstChild == firstLine.lastChild and firstLine.firstChild.tagName == 'BR'
     return false
 
-  isIE: (version = 0) ->
-    return ieVersion? and ieVersion >= version
+  # We'll take a leap of faith that IE11 is good enough...
+  isIE: (version = 10) -> 
+    return ieVersion? and version >= ieVersion
 
   isLineNode: (node) ->
     return node?.parentNode? and ScribeDOM.hasClass(node.parentNode, 'editor') and ScribeUtils.isBlock(node)
