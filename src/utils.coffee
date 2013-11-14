@@ -1,6 +1,11 @@
 ScribeDOM   = require('./dom')
 
 
+ieVersion = do ->
+  matchVersion = navigator.userAgent.match(/MSIE [0-9\.]+/)
+  return if matchVersion? then parseInt(matchVersion[0].slice("MSIE".length)) else null
+
+
 ScribeUtils =
   BLOCK_TAGS: [
     'ADDRESS'
@@ -92,8 +97,8 @@ ScribeUtils =
     return true if firstLine.firstChild == firstLine.lastChild and firstLine.firstChild.tagName == 'BR'
     return false
 
-  isIE: ->
-    return navigator.userAgent.match(/MSIE/)
+  isIE: (version = 0) ->
+    return ieVersion? and ieVersion >= version
 
   isLineNode: (node) ->
     return node?.parentNode? and ScribeDOM.hasClass(node.parentNode, 'editor') and ScribeUtils.isBlock(node)

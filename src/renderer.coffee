@@ -75,7 +75,7 @@ class ScribeRenderer extends EventEmitter2
     this.buildFrame()
     @formats = {}
     # IE10 ignores conditional comments and it still displays <div><br></div> as two lines
-    ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if ScribeUtils.isIE()
+    ScribeRenderer.DEFAULTS.styles['br'] = { 'display': 'none' } if ScribeUtils.isIE(8)
     this.addStyles(ScribeRenderer.DEFAULTS.styles)
     # Ensure user specified styles are added last
     _.defer( =>
