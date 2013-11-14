@@ -13,5 +13,9 @@ class ScribeColorPicker extends ScribePicker
     ScribeDOM.setText(item, '')
     return item
 
+  selectItem: (item) ->
+    super(item)
+    @label.innerHTML = ''
+
 
 module.exports = ScribeColorPicker
