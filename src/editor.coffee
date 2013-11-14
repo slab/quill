@@ -174,7 +174,7 @@ class ScribeEditor extends EventEmitter2
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
         this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
-      @selection.update(delta)
+      @selection.update(delta != false)
     , @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
