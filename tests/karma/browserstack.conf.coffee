@@ -14,8 +14,8 @@ browsers =
   'windows-7-ie-9'    : ['Windows', '7', 'ie', '9.0']
   'windows-7-ie-8'    : ['Windows', '7', 'ie', '8.0']
 
-  'iphone'  : ['ios', '7.0', 'iPhone 5S']
-  'ipad'    : ['ios', '7.0', 'iPad 3rd (7.0)']
+  #'iphone'  : ['ios', '7.0', 'iPhone 5S']
+  #'ipad'    : ['ios', '7.0', 'iPad 3rd (7.0)']
   #'android' : ['android', '4.2', 'LG Nexus 4']       # Tests take wayyy too long
 browserList = []
 customLaunchers = _.reduce(browsers, (memo, browser, name) ->
