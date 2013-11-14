@@ -23,8 +23,8 @@ _initFormats = ->
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         range = @editor.getSelection()
         if range
-          range.format(format, value, { source: 'user' })
           @editor.root.focus()
+          range.format(format, value, { source: 'user' })
         activeFormats = {}
         activeFormats[format] = value
         this.updateActive(activeFormats)
