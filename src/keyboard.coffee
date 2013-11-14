@@ -132,7 +132,6 @@ class ScribeKeyboard
     formats = range.getFormats()
     value = !formats[format]
     range.format(format, value, { source: 'user' })
-    @editor.emit(@editor.constructor.events.PREFORMAT, format, value)
 
 
 module.exports = ScribeKeyboard

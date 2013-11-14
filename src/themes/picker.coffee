@@ -43,6 +43,7 @@ class ScribePicker
       this.selectItem(item)
       @select.selectedIndex = index
       ScribeDOM.triggerEvent(@select, 'change', true, true)
+      return true
     )
     return item
 

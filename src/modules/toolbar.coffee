@@ -1,18 +1,19 @@
 ScribeDOM         = require('../dom')
+ScribeKeyboard    = require('../keyboard')
 ScribeRange       = require('../range')
 ScribeLinkTooltip = require('./link-tooltip')
 
 
-findInput = (format) ->
+_findInput = (format) ->
   selector = ".#{format}"
   if _.indexOf(ScribeToolbar.formats.SELECT, format) > -1
     selector = 'select' + selector
   input = @container.querySelector(selector)
 
-initFormats = ->
+_initFormats = ->
   _.each(ScribeToolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
-      input = findInput.call(this, format)
+      input = _findInput.call(this, format)
       return unless input?
       return @editor.theme.addModule('link-tooltip', { button: input }) if format == 'link'
       return if format == 'link'
@@ -23,10 +24,19 @@ initFormats = ->
         range = @editor.getSelection()
         if range
           range.format(format, value, { source: 'user' })
-          @editor.emit(@editor.constructor.events.PREFORMAT, format, value)
           @editor.root.focus()
-        this.update()
+        activeFormats = {}
+        activeFormats[format] = value
+        this.updateActive(activeFormats)
       )
+    )
+  )
+  _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
+    @editor.keyboard.addHotkey(ScribeKeyboard.hotkeys[key], =>
+      activeFormats = {}
+      input = _findInput.call(this, key.toLowerCase())
+      activeFormats[key.toLowerCase()] = !ScribeDOM.hasClass(input, 'active') if input?
+      this.updateActive(activeFormats)
     )
   )
 
@@ -42,20 +52,13 @@ class ScribeToolbar
   constructor: (@editor, options = {}) ->
     @options = _.defaults(options, ScribeToolbar.DEFAULTS)
     @container = if _.isString(@options.container) then document.getElementById(@options.container) else @options.container
-    initFormats.call(this)
+    _initFormats.call(this)
     @editor.on(@editor.constructor.events.POST_EVENT, (eventName) =>
       return unless eventName == @editor.constructor.events.API_TEXT_CHANGE or eventName == @editor.constructor.events.USER_TEXT_CHANGE or eventName == @editor.constructor.events.SELECTION_CHANGE
-      this.update()
-    )
-    @editor.on(@editor.constructor.events.PREFORMAT, (format, value) =>
-      if value == true
-        ScribeDOM.addClass(@container.querySelector(".#{format}"), 'active')
-      else if value == false
-        ScribeDOM.removeClass(@container.querySelector(".#{format}"), 'active')
-      # Non-boolean values implies SELECT input instead of BUTTON
+      this.updateActive()
     )
 
-  update: ->
+  updateActive: (activeFormats = {}) ->
     @triggering = true
     range = @editor.getSelection()
     _.each(@container.querySelectorAll('.active'), (button) =>
@@ -65,9 +68,9 @@ class ScribeToolbar
       ScribeDOM.resetSelect(select)
     )
     return unless range?
-    _.each(range.getFormats(), (value, key) =>
-      if value?
-        elem = findInput.call(this, key)
+    _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>
+      if value
+        elem = _findInput.call(this, key)
         return unless elem?
         if elem.tagName == 'SELECT'
           value = '' if _.isArray(value)

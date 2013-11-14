@@ -25,7 +25,6 @@ exitEditMode = ->
 formatLink = (value) ->
   @editor.setSelection(@savedRange, true)
   @savedRange.format('link', value, { source: 'user' })
-  @editor.emit(@editor.constructor.events.PREFORMAT, 'link', value)
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
