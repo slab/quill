@@ -98,8 +98,8 @@ ScribeUtils =
     return false
 
   # We'll take a leap of faith that IE11 is good enough...
-  isIE: (version = 10) -> 
-    return ieVersion? and version >= ieVersion
+  isIE: (maxVersion = 10) ->
+    return ieVersion? and maxVersion >= ieVersion
 
   isLineNode: (node) ->
     return node?.parentNode? and ScribeDOM.hasClass(node.parentNode, 'editor') and ScribeUtils.isBlock(node)

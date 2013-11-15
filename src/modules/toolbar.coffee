@@ -25,6 +25,7 @@ _initFormats = ->
         range = @editor.getSelection()
         if range
           @editor.root.focus()
+          @editor.setSelection(range) if ScribeUtils.isIE(9)
           range.format(format, value, { source: 'user' })
         activeFormats = {}
         activeFormats[format] = value

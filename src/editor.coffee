@@ -8,6 +8,7 @@ ScribePasteManager  = require('./paste-manager')
 ScribeRenderer      = require('./renderer')
 ScribeSelection     = require('./selection')
 ScribeUndoManager   = require('./undo-manager')
+ScribeUtils         = require('./utils')
 Tandem              = require('tandem-core')
 
 
@@ -169,16 +170,15 @@ class ScribeEditor extends EventEmitter2
       return modules
     , {})
     setInterval( =>
-      delta = this.update()
-      if delta
-        oldDelta = @delta
-        @delta = oldDelta.compose(delta)
-        this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
-      @selection.update(delta != false)
+      this.checkUpdate()
     , @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
+    if ScribeUtils.isIE(9)
+      ScribeDOM.addEventListener(@root, 'beforedeactivate', =>
+        this.checkUpdate()
+      )
     this.enable() if @options.enabled
 
   disable: ->
@@ -235,6 +235,14 @@ class ScribeEditor extends EventEmitter2
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
       _forceTrailingNewline.call(this)
     )
+
+  checkUpdate: ->
+    delta = this.update()
+    if delta
+      oldDelta = @delta
+      @delta = oldDelta.compose(delta)
+      this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
+    @selection.update(delta != false)
 
   emit: (eventName, args...) ->
     super(ScribeEditor.events.PRE_EVENT, eventName, args...)
