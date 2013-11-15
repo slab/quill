@@ -31,30 +31,27 @@ initToolbar = (container, editor) ->
     Scribe.Picker.init(formattingContainer.querySelector(".#{format}"))
 
 listenEditor = (source, target) ->
-  source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
-    console.info source.id, 'text change', delta if console?
-    target.applyDelta(delta)
-    sourceDelta = source.getDelta()
-    targetDelta = target.getDelta()
-    decomposeDelta = targetDelta.decompose(sourceDelta)
-    isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
-      return false if op.value?
-      return true if (Scribe._.keys(op.attributes).length == 0)
-      sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
-      return true if sourceOp.length == 1 and sourceOp[0].value == "\n"
-      return false
-    )
-    console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
-  ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
-    if range?
-      console.info source.id, 'selection change', range.start.index, range.start.leafNode, range.end.index, range.end.leafNode if console?
-      color = getColor(source.id)
-      cursor = target.modules['multi-cursor'].setCursor(source.id, range.end.index, source.id, color)
-      cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
-    else  
-      console.info source.id, 'selection change', range if console?
-  ).on(Scribe.Editor.events.FOCUS_CHANGE, (hasFocus) ->
-    console.info source.id, 'focus change', hasFocus if console?
+  source.on(Scribe.Editor.events.POST_EVENT, (name, value, args...) ->
+    console.info(name, value, args...) if console?
+    switch name
+      when Scribe.Editor.events.USER_TEXT_CHANGE
+        target.applyDelta(value)
+        sourceDelta = source.getDelta()
+        targetDelta = target.getDelta()
+        decomposeDelta = targetDelta.decompose(sourceDelta)
+        isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
+          return false if op.value?
+          return true if (Scribe._.keys(op.attributes).length == 0)
+          sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
+          return true if sourceOp.length == 1 and sourceOp[0].value == "\n"
+          return false
+        )
+        console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
+      when Scribe.Editor.events.SELECTION_CHANGE
+        if value?
+          color = getColor(source.id)
+          cursor = target.modules['multi-cursor'].setCursor(source.id, value.end.index, source.id, color)
+          cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
   )
 
 

@@ -49,21 +49,12 @@ html
     script(type='text/javascript').
       var editor = new Scribe.Editor('editor-container', {
         modules: {
-          toolbar: {
-            container: 'formatting-container'
-          }
+          toolbar: { container: 'formatting-container' }
         }
       });
-      if (typeof console != 'undefined') {
-        editor.on(Scribe.Editor.events.USER_TEXT_CHANGE, function(delta) {
-          console.info('Text', delta);
-        }).on(Scribe.Editor.events.SELECTION_CHANGE, function(range) {
-          if (range) {
-            console.info('Range', range.start.index, range.start.leafNode, range.start.offset, range.end.index, range.end.leafNode, range.end.offset);
-          } else {
-            console.info('Range', range);
-          }
-        }).on(Scribe.Editor.events.FOCUS_CHANGE, function(focus) {
-          console.log('Focus', focus);
-        });
-      }
+      editor.on(Scribe.Editor.events.POST_EVENT, function() {
+        if (console) {
+          var args = 1 <= arguments.length ? arguments : [];
+          if (console) console.info.apply(console, args);
+        }
+      });
