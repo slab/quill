@@ -25,7 +25,6 @@ _initFormats = ->
         range = @editor.getSelection()
         if range
           @editor.root.focus()
-          @editor.setSelection(range) if ScribeUtils.isIE(9)    # Not sure this can't be done for all browsers, but breaks principle of messing with selection as little as possible
           range.format(format, value, { source: 'user' })
         activeFormats = {}
         activeFormats[format] = value
