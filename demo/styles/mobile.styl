@@ -1,0 +1,33 @@
+html, body
+  height: 100%
+
+#content-container
+  position: relative
+  height: 100%
+
+#formatting-container
+  border-bottom: 1px solid #ccc
+  display: table
+  position: fixed
+  width: 100%
+
+  .format-button
+    background-position: center center
+    background-repeat: no-repeat
+    cursor: pointer
+    display: table-cell
+    width: 25%
+    height: 34px
+
+  for $format in bold italic strike underline
+    .format-button.{$format}
+      background-image: url('../images/' + $format + '.png')
+    .format-button.{$format}:hover, .format-button.{$format}.active
+      background-image: url('../images/' + $format + '-active.png')
+
+#editor-container
+  bottom: 0px
+  overflow: hidden
+  position: absolute
+  top: 35px
+  width: 100%

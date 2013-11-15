@@ -1,0 +1,21 @@
+doctype 5
+html
+  head
+    title Stypi Pretty Editor Demo
+    link(rel='stylesheet', type='text/css', href='styles/reset.css')
+    link(rel='stylesheet', type='text/css', href='styles/mobile.css')
+    meta(charset='utf-8')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='viewport', content='width=device-width, height=device-height, initial-scale=1, maximum-scale=1')
+
+  body
+    #content-container
+      #formatting-container.formatting-container
+        span.format-button.bold(title='Bold')
+        span.format-button.italic(title='Italic')
+        span.format-button.underline(title='Underline')
+        span.format-button.strike(title='Strikethrough')
+      #editor-container.editor-container
+
+    script(type='text/javascript', src='../scribe.all.js')
+    script(type='text/javascript', src='scripts/mobile.js')
