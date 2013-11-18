@@ -1,6 +1,7 @@
 inputHeight = 16px
 inputMargin = 3px
 inputPadding = 4px
+blackColor = #454545
 blueColor = #06c
 grayColor = #ccc
 lightGrayColor = #ddd
@@ -9,12 +10,18 @@ fontSizePickerWidth = 75px
 pickerPadding = 8px
 pickerWidth = 50px
 
+@font-face
+  font-family: 'fa-editor'
+  font-style: normal
+  font-weight: normal
+  src: url('../fonts/fa-editor.eot') format('embedded-opentype'), url('../fonts/fa-editor.woff') format('woff')
+
 .toolbar-container
   border-bottom: 1px solid grayColor
+  color: blackColor
   font-family: 'Helvetica', 'Arial', sans-serif
   font-size: 12px
   height: inputHeight + inputPadding
-  overflow: hidden
   padding: 8px (15px - pickerPadding)
   user-select: none
   -webkit-user-select: none
@@ -29,20 +36,23 @@ pickerWidth = 50px
     background-position: center center
     background-repeat: no-repeat
     cursor: pointer
+    font-family: 'fa-editor'
     display: inline-block
+    float: left
     height: inputHeight
     margin-left: inputMargin
     margin-right: inputMargin
     padding: inputPadding
+    text-align: center
     width: 16px
   .format-separator
     background-color: lightGrayColor
     display: inline-block
-    height: 16px
+    float: left
+    height: inputHeight
     margin-bottom: inputPadding
     margin-top: inputPadding
     width: 1px
-
 
 .picker
   display: inline-block
@@ -79,12 +89,13 @@ pickerWidth = 50px
     margin: -1px
 
 .picker.color-picker
+  float: left
   .picker-label
     background-position: center center
   .picker-options
     height: 106px
     margin-left: inputMargin
-    margin-top: -6px
+    margin-top: 24px
     padding: 6px
     position: absolute
     width: 140px
@@ -104,8 +115,23 @@ pickerWidth = 50px
   .picker-options
     margin-left: inputMargin - 1px
 
-
 .toolbar-container
+  .format-button:hover, .format-button.active
+    color: blueColor
+  .format-button.bold:before
+    content: "\e801"
+    font-weight: bold
+  .format-button.italic:before
+    content: "\e802"
+  .format-button.underline:before
+    content: "\e80f"
+  .format-button.strike:before
+    content: "\e80e"
+  .format-button.link:before
+    content: "\e813"
+  .format-button.attribution:before
+    content: "\e816"
+
   .font-name
     width: fontNamePickerWidth
     .picker-label
@@ -130,11 +156,4 @@ pickerWidth = 50px
     .picker.{$format} .picker-label
       background-image: url('../images/' + $format + '.png')
     .picker.{$format} .picker-label.active, .picker.{$format} .picker-label:hover, .picker.{$format}.expanded .picker-label
-      background-image: url('../images/' + $format + '-active.png')
-
-
-  for $format in bold italic strike underline list bullet outdent indent link attribution
-    .format-button.{$format}
-      background-image: url('../images/' + $format + '.png')
-    .format-button.{$format}:hover, .format-button.{$format}.active
       background-image: url('../images/' + $format + '-active.png')

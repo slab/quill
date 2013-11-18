@@ -76,7 +76,7 @@ module.exports = (grunt) ->
       build:
         expand: true
         dest: 'build/'
-        src: ['src/ext/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png']
+        src: ['src/ext/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png', 'demo/fonts/*']
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'

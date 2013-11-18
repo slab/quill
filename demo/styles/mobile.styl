@@ -1,3 +1,11 @@
+blueColor = #06c
+
+@font-face
+  font-family: 'fa-editor'
+  font-style: normal
+  font-weight: normal
+  src: url('../fonts/fa-editor.eot') format('embedded-opentype'), url('../fonts/fa-editor.woff') format('woff')
+
 html, body
   height: 100%
 
@@ -10,21 +18,28 @@ html, body
   border-bottom: 1px solid #ccc
   height: 34px
   width: 100%
-
   .format-button
     background-position: center center
     background-repeat: no-repeat
     cursor: pointer
     display: inline-block
     float: left
-    width: 25%
+    font-family: 'fa-editor'
     height: 34px
-
-  for $format in bold italic strike underline
-    .format-button.{$format}
-      background-image: url('../images/' + $format + '.png')
-    .format-button.{$format}:hover, .format-button.{$format}.active
-      background-image: url('../images/' + $format + '-active.png')
+    line-height: 34px
+    text-align: center
+    width: 25%
+  .format-button:hover, .format-button.active
+    color: blueColor
+  .format-button.bold:before
+    content: "\e801"
+    font-weight: bold
+  .format-button.italic:before
+    content: "\e802"
+  .format-button.underline:before
+    content: "\e80f"
+  .format-button.strike:before
+    content: "\e80e"
 
 #editor-container
   bottom: 4px   // Some reason vertical scrollbars appear without 4px compensation
