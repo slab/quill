@@ -31,27 +31,24 @@ initToolbar = (container, editor) ->
     Scribe.Picker.init(formattingContainer.querySelector(".#{format}"))
 
 listenEditor = (source, target) ->
-  source.on(Scribe.Editor.events.POST_EVENT, (name, value, args...) ->
-    console.info(name, value, args...) if console?
-    switch name
-      when Scribe.Editor.events.USER_TEXT_CHANGE
-        target.applyDelta(value)
-        sourceDelta = source.getDelta()
-        targetDelta = target.getDelta()
-        decomposeDelta = targetDelta.decompose(sourceDelta)
-        isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
-          return false if op.value?
-          return true if (Scribe._.keys(op.attributes).length == 0)
-          sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
-          return true if sourceOp.length == 1 and sourceOp[0].value == "\n"
-          return false
-        )
-        console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
-      when Scribe.Editor.events.SELECTION_CHANGE
-        if value?
-          color = getColor(source.id)
-          cursor = target.modules['multi-cursor'].setCursor(source.id, value.end.index, source.id, color)
-          cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
+  source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
+    target.applyDelta(delta)
+    sourceDelta = source.getDelta()
+    targetDelta = target.getDelta()
+    decomposeDelta = targetDelta.decompose(sourceDelta)
+    isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
+      return false if op.delta?
+      return true if (Scribe._.keys(op.attributes).length == 0)
+      sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
+      return true if sourceOp.length == 1 and sourceOp[0].delta == "\n"
+      return false
+    )
+    console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
+  ).on(Scribe.Editor.events.SELECTION_CHANGE, (range) ->
+    return unless range?
+    color = getColor(source.id)
+    cursor = target.modules['multi-cursor'].setCursor(source.id, range.end.index, source.id, color)
+    cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
   )
 
 
@@ -60,6 +57,7 @@ for num in [1, 2]
   wrapper = document.querySelector(".editor-wrapper.#{if num == 1 then 'first' else 'last'}")
   container = wrapper.querySelector('.editor-container')
   editor = new Scribe.Editor(container, {
+    logLevel: 'info'
     modules:
       'attribution': {
         enabled: false

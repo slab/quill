@@ -3,6 +3,7 @@ ScribeDefaultTheme  = require('./themes/default')
 ScribeDocument      = require('./document')
 ScribeKeyboard      = require('./keyboard')
 ScribeLine          = require('./line')
+ScribeLogger        = require('./logger')
 ScribeNormalizer    = require('./normalizer')
 ScribePasteManager  = require('./paste-manager')
 ScribeRenderer      = require('./renderer')
@@ -142,6 +143,7 @@ class ScribeEditor extends EventEmitter2
   @DEFAULTS:
     cursor: 0
     enabled: true
+    logLevel: false
     pollInterval: 100
     formatManager: {}
     renderer: {}
@@ -163,6 +165,7 @@ class ScribeEditor extends EventEmitter2
     @options = _.defaults(options, ScribeEditor.DEFAULTS)
     @options.renderer['id'] = @id
     @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
+    @logger = new ScribeLogger(this, @options.logLevel)
     this.reset(true)
     @theme = new @options.theme(this)
     @modules = _.reduce(@options.modules, (modules, options, name) =>
@@ -241,11 +244,12 @@ class ScribeEditor extends EventEmitter2
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta, @delta)
+      this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta)
     @selection.update(delta != false)
 
   emit: (eventName, args...) ->
     super(ScribeEditor.events.PRE_EVENT, eventName, args...)
+    @logger.info(eventName, args...) if _.indexOf(_.values(ScribeEditor.events), eventName) > -1
     super(eventName, args...)
     super(ScribeEditor.events.POST_EVENT, eventName, args...)
 

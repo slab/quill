@@ -48,13 +48,8 @@ html
     script(type='text/javascript', src='../scribe.all.js')
     script(type='text/javascript').
       var editor = new Scribe.Editor('editor-container', {
+        logLevel: 'info',
         modules: {
           toolbar: { container: 'formatting-container' }
-        }
-      });
-      editor.on(Scribe.Editor.events.POST_EVENT, function() {
-        if (console) {
-          var args = 1 <= arguments.length ? arguments : [];
-          if (console) console.info.apply(console, args);
         }
       });

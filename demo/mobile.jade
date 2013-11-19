@@ -18,4 +18,10 @@ html
       #editor-container.editor-container
 
     script(type='text/javascript', src='../scribe.all.js')
-    script(type='text/javascript', src='scripts/mobile.js')
+    script(type='text/javascript').
+      var editor = new Scribe.Editor('editor-container', {
+        logLevel: 'info',
+        modules: {
+          toolbar: { container: 'formatting-container' }
+        }
+      });
