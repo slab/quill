@@ -9,7 +9,7 @@ Scribe Rich Text Editor
 
 Cross platform rich text editor built with coauthoring in mind. 
 
-[![Build Status](https://secure.travis-ci.org/stypi/scribe.png)](http://travis-ci.org/stypi/scribe)
+[![Build Status](https://secure.travis-ci.org/stypi/scribe.png?branch=master)](http://travis-ci.org/stypi/scribe)
 
 
 How to Use
