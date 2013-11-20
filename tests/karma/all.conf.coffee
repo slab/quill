@@ -32,7 +32,7 @@ module.exports = (config) ->
     ]
     exclude: []
     coverageReporter: 
-      type: 'html'
+      type: 'lcov'
       dir: '../coverage/'
     reporters: ['progress']
     preprocessors: 
