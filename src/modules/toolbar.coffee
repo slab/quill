@@ -23,12 +23,21 @@ _initFormats = ->
         return if @triggering
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         range = @editor.getSelection()
-        if range
-          @editor.setSelection(range) if ScribeUtils.isIE(9)
+        if range?
+          if ScribeUtils.isIE(8)
+            @editor.root.focus()
+            @editor.setSelection(range)
           range.format(format, value, { source: 'user' })
         activeFormats = {}
         activeFormats[format] = value
         this.updateActive(activeFormats)
+        return false
+      )
+      ScribeDOM.addEventListener(input, 'mousedown', =>
+        # Save selection before click is registered
+        @editor.checkUpdate()
+        # Prevent from losing focus, needed for bug in mobile Safari
+        return false
       )
     )
   )
@@ -60,6 +69,7 @@ class ScribeToolbar
     )
 
   updateActive: (activeFormats = {}) ->
+    @triggering = true
     range = @editor.getSelection()
     _.each(@container.querySelectorAll('.active'), (button) =>
       ScribeDOM.removeClass(button, 'active')
@@ -67,19 +77,18 @@ class ScribeToolbar
     _.each(@container.querySelectorAll('select'), (select) =>
       ScribeDOM.resetSelect(select)
     )
-    return unless range?
-    @triggering = true
-    _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>
-      if value
-        elem = _findInput.call(this, key)
-        return unless elem?
-        if elem.tagName == 'SELECT'
-          value = '' if _.isArray(value)
-          elem.value = value
-          ScribeDOM.triggerEvent(elem, 'change')
-        else
-          ScribeDOM.addClass(elem, 'active')
-    )
+    if range?
+      _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>
+        if value
+          elem = _findInput.call(this, key)
+          return unless elem?
+          if elem.tagName == 'SELECT'
+            value = '' if _.isArray(value)
+            elem.value = value
+            ScribeDOM.triggerEvent(elem, 'change')
+          else
+            ScribeDOM.addClass(elem, 'active')
+      )
     @triggering = false
 
 
