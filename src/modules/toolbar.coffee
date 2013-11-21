@@ -24,7 +24,6 @@ _initFormats = ->
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         range = @editor.getSelection()
         if range
-          @editor.root.focus()
           @editor.setSelection(range) if ScribeUtils.isIE(9)
           range.format(format, value, { source: 'user' })
         activeFormats = {}
@@ -61,7 +60,6 @@ class ScribeToolbar
     )
 
   updateActive: (activeFormats = {}) ->
-    @triggering = true
     range = @editor.getSelection()
     _.each(@container.querySelectorAll('.active'), (button) =>
       ScribeDOM.removeClass(button, 'active')
@@ -70,6 +68,7 @@ class ScribeToolbar
       ScribeDOM.resetSelect(select)
     )
     return unless range?
+    @triggering = true
     _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>
       if value
         elem = _findInput.call(this, key)

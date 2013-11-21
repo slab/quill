@@ -12,6 +12,11 @@ ScribeDOM =
       node.className += ' ' + cssClass
 
   addEventListener: (node, eventName, listener) ->
+    names = eventName.split(' ')
+    if names.length > 1
+      return _.each(names, (name) ->
+        ScribeDOM.addEventListener(node, name, listener)
+      )
     callback = (event) ->
       event ?= ScribeDOM.getWindow(node).event
       event.target ?= event.srcElement

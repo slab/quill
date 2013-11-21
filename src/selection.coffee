@@ -95,7 +95,7 @@ _updateFocus = (silent) ->
         @editor.emit(@editor.constructor.events.FOCUS_CHANGE, true) 
     else if !@blurTimer?
       @blurTimer = setTimeout( =>
-        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, false) 
+        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, false)  if @hasFocus == false
         @blurTimer = null
       , 200)
   @hasFocus = hasFocus
@@ -104,14 +104,20 @@ _updateFocus = (silent) ->
 class ScribeSelection
   constructor: (@editor) ->
     @range = null
-    @hasFocus = @editor.renderer.checkFocus()
     @blurTimer = null
     rangy.init()
     if @editor.renderer.options.iframe
       @nativeSelection = rangy.getIframeSelection(@editor.renderer.iframe) if @editor.renderer.iframe.parentNode?
     else
       @nativeSelection = rangy.getSelection()
-    this.setRange(null)
+    this.setRange(null, true)
+    @hasFocus = @editor.renderer.checkFocus()
+    ScribeDOM.addEventListener(@editor.root, 'focus', =>
+      _.defer( => @editor.checkUpdate())
+    )
+    ScribeDOM.addEventListener(@editor.root, 'beforedeactivate blur mouseup', =>
+      @editor.checkUpdate()
+    )
 
   getDimensions: ->
     return null unless @range?

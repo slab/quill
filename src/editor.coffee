@@ -178,10 +178,6 @@ class ScribeEditor extends EventEmitter2
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
-    if ScribeUtils.isIE(9)
-      ScribeDOM.addEventListener(@root, 'beforedeactivate', =>
-        this.checkUpdate()
-      )
     this.enable() if @options.enabled
 
   disable: ->
