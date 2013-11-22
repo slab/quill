@@ -10,26 +10,24 @@ class ScribeRenderer extends EventEmitter2
     keepHTML: false
     styles:
       '.editor-container': {
-        'cursor': 'text'
-        'font-family': "'Helvetica', 'Arial', sans-serif"
-        'font-size': '13px'
-        'line-height': '1.154'
-        'margin': '0px'
-        'overflow': 'auto'
-        'padding': '0px'
-        'position': 'relative'
+        'cursor'      : 'text'
+        'font-family' : "'Helvetica', 'Arial', sans-serif"
+        'font-size'   : '13px'
+        'height'      : '100%'
+        'line-height' : '1.154'
+        'margin'      : '0px'
+        'overflow'    : 'auto'
+        'padding'     : '0px'
       }
       '.editor': {
-        'bottom': '10px'
-        'left': '0px'
-        'outline': 'none'
-        'position': 'absolute'
-        'right': '0px'
-        'tab-size': '4'
-        'top': '10px'
-        'white-space': 'pre-wrap'
+        'height'      : '100%'
+        'outline'     : 'none'
+        'tab-size'    : '4'
+        'white-space' : 'pre-wrap'
       }
-      '.line': { 'margin-left': '15px', 'margin-right': '15px' }
+      '.editor .line:first-child' : { 'padding-top': '10px' }
+      '.editor .line:last-child'  : { 'padding-bottom': '10px' }
+      '.editor .line': { 'margin-left': '15px', 'margin-right': '15px' }
       '.editor a'    : { 'text-decoration': 'underline' }
       '.editor b'    : { 'font-weight': 'bold' }
       '.editor i'    : { 'font-style': 'italic' }
@@ -47,7 +45,7 @@ class ScribeRenderer extends EventEmitter2
       '.editor ol.indent-8' : { 'list-style-type': 'lower-alpha' }
       '.editor ol.indent-9' : { 'list-style-type': 'lower-roman' }
       '.editor .indent-1' : { 'margin-left': '2em' }
-      '.indent-2' : { 'margin-left': '4em' }
+      '.editor .indent-2' : { 'margin-left': '4em' }
       '.editor .indent-3' : { 'margin-left': '6em' }
       '.editor .indent-4' : { 'margin-left': '8em' }
       '.editor .indent-5' : { 'margin-left': '10em' }
