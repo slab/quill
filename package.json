@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "0.10.4-pre",
+  "version": "0.10.5",
   "description": "Cross browser rich text editor",
   "contributors": [{
     "name": "Jason Chen",
