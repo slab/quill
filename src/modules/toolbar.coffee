@@ -16,11 +16,13 @@ _initFormats = ->
     _.each(formats, (format) =>
       input = _findInput.call(this, format)
       return unless input?
+      @editor.logger.debug('Toolbar binding', format, input)
       return @editor.theme.addModule('link-tooltip', { button: input }) if format == 'link'
       return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
         return if @triggering
+        @editor.logger.debug('Toolbar event', eventName, format, input)
         value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
         range = @editor.getSelection()
         if range?

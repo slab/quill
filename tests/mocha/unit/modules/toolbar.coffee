@@ -3,7 +3,7 @@ describe('Toolbar', ->
     initial: '<div><span>one.com</span><b>Bold</b></div>'
   )
 
-  afterEach( ->
+  beforeEach( ->
     # Remove all listeners on format-container to reset toolbar
     html = $('#format-container').html()
     $('#format-container').html('').html(html)
@@ -15,7 +15,7 @@ describe('Toolbar', ->
       editor.theme.addModule('toolbar', { container: 'format-container' })
       editor.root.focus()
       editor.setSelection(new ScribeRange(editor, 0, 7))
-      $('#format-container .bold').trigger('click')
+      $('#format-container .bold').click()
   )
 
   toolbarTests.run('Apply link format',
@@ -24,6 +24,6 @@ describe('Toolbar', ->
       editor.theme.addModule('toolbar', { container: 'format-container' })
       editor.root.focus()
       editor.setSelection(new ScribeRange(editor, 0, 7))
-      $('#format-container .link').trigger('click')
+      $('#format-container .link').click()
   )
 )
