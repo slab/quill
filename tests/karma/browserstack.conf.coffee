@@ -39,7 +39,6 @@ module.exports = (config) ->
   config.set(
     browserStack:
       project: pjson.name
-      build: pjson.version
     browsers: browserList
     customLaunchers: customLaunchers
     exclude: ['tests/mocha/editor.js']
