@@ -71,8 +71,8 @@ class ScribeEditorTest extends ScribeHtmlTest
     htmlOptions.initial = '' if Tandem.Delta.isDelta(htmlOptions.initial)
     htmlOptions.expected = '' if Tandem.Delta.isDelta(htmlOptions.expected)
     htmlOptions.fn = (testContainer, expectedContainer, args...) =>
-      testEditor = new ScribeEditor(testContainer, { logLevel: 'debug' })
-      expectedEditor = new ScribeEditor(expectedContainer, { logLevel: 'debug' })
+      testEditor = new ScribeEditor(testContainer) #, { logLevel: 'debug' })
+      expectedEditor = new ScribeEditor(expectedContainer) #, { logLevel: 'debug' })
       testEditor.setDelta(@options.initial) if Tandem.Delta.isDelta(@options.initial)
       expectedEditor.setDelta(@options.expected) if Tandem.Delta.isDelta(@options.expected)
       @options.fn.call(null, testEditor, expectedEditor, args...)
