@@ -1,22 +1,22 @@
 replay_file=$(shell find tests/webdriver/fuzzer_output/fails -type f -exec stat -f "%m %N" {} \; | sort -n | tail -1 | cut -f2- -d" ")
 
 coverage:
-	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers Chrome --reporters coverage
+	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee --browsers Chrome --reporters coverage
 
 test:
-	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS
+	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS
 
 test-all:
-	@./node_modules/.bin/karma start tests/karma/all.conf.coffee
+	@./node_modules/karma/bin/karma start tests/karma/all.conf.coffee
 
 test-karma:
-	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS --no-single-run
+	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS --no-single-run
 
 test-remote:
-	@./node_modules/.bin/karma start tests/karma/browserstack.conf.coffee
+	@./node_modules/karma/bin/karma start tests/karma/browserstack.conf.coffee
 
 test-unit:
-	@./node_modules/.bin/karma start tests/karma/unit.conf.coffee
+	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee
 
 webdriver-fuzzer-chrome:
 	@ruby tests/webdriver/fuzzer.rb chrome
