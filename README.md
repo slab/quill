@@ -93,14 +93,6 @@ We use grunt to compile coffeescript, stylus, and jade
 
     grunt
 
-### Version numbers
-
-Until we write a script, version numbers will have to be updated in the following files:
-
-- Gruntfile.coffee
-- index.coffee
-- package.json
-
 
 Testing
 ---

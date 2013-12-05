@@ -1,5 +1,6 @@
 _     = require('underscore')._
 base  = require('./all.conf')
+pjson = require('../../package.json')
 
 browsers =
   'mac-chrome'  : ['OS X', 'Mavericks', 'chrome', 'latest']
@@ -36,7 +37,9 @@ customLaunchers = _.reduce(browsers, (memo, browser, name) ->
 module.exports = (config) ->
   base.call(this, config)
   config.set(
-    project: 'Scribe'
+    browserStack:
+      project: pjson.name
+      build: pjson.version
     browsers: browserList
     customLaunchers: customLaunchers
     exclude: ['tests/mocha/editor.js']

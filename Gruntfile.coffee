@@ -1,3 +1,6 @@
+pjson = require('./package.json')
+
+
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-browserify'
@@ -14,7 +17,7 @@ module.exports = (grunt) ->
   # Project configuration.
   grunt.initConfig
     meta:
-      version: '0.10.5'
+      version: pjson.version
 
     browserify:
       options:
