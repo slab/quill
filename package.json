@@ -29,7 +29,7 @@
     "grunt-contrib-watch"  : "0.5.x",
     "grunt-image-embed"    : "0.3.x",
     "grunt-string-replace" : "0.2.x",
-    "karma"                : "0.11.x",
+    "karma"                : "0.10.x",
     "karma-coverage"       : "0.1.x",
     "karma-mocha"          : "0.1.x",
     "karma-browserstack-launcher" : "0.0.x",

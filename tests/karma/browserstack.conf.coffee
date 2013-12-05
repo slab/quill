@@ -8,14 +8,14 @@ browsers =
 
   'windows-8-chrome'  : ['Windows', '8.1', 'chrome', 'latest']
   'windows-8-firefox' : ['Windows', '8.1', 'firefox', 'latest']
-  'windows-8-safari'  : ['Windows', '8.1', 'safari', 'latest']
+  'windows-8-ie-11'   : ['Windows', '8.1', 'ie', '11.0']
   'windows-8-ie-10'   : ['Windows', '8', 'ie', '10.0']
 
   'windows-7-ie-9'    : ['Windows', '7', 'ie', '9.0']
   'windows-7-ie-8'    : ['Windows', '7', 'ie', '8.0']
 
-  #'iphone'  : ['ios', '7.0', 'iPhone 5S']
-  #'ipad'    : ['ios', '7.0', 'iPad 3rd (7.0)']
+  'iphone'  : ['ios', '7.0', 'iPhone 5S']
+  'ipad'    : ['ios', '7.0', 'iPad 3rd (7.0)']
   #'android' : ['android', '4.2', 'LG Nexus 4']       # Tests take wayyy too long
 browserList = []
 customLaunchers = _.reduce(browsers, (memo, browser, name) ->
@@ -36,6 +36,7 @@ customLaunchers = _.reduce(browsers, (memo, browser, name) ->
 module.exports = (config) ->
   base.call(this, config)
   config.set(
+    project: 'Scribe'
     browsers: browserList
     customLaunchers: customLaunchers
     exclude: ['tests/mocha/editor.js']
