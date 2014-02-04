@@ -164,7 +164,7 @@ class ScribeEditor extends EventEmitter2
     @id = _.uniqueId(ScribeEditor.ID_PREFIX)
     @options = _.defaults(options, ScribeEditor.DEFAULTS)
     @options.renderer['id'] = @id
-    @iframeContainer = document.getElementById(@iframeContainer) if _.isString(@iframeContainer)
+    @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     @logger = new ScribeLogger(this, @options.logLevel)
     this.reset(true)
     @theme = new @options.theme(this)

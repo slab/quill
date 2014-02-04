@@ -63,7 +63,7 @@ class ScribeToolbar
 
   constructor: (@editor, options = {}) ->
     @options = _.defaults(options, ScribeToolbar.DEFAULTS)
-    @container = if _.isString(@options.container) then document.getElementById(@options.container) else @options.container
+    @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     _initFormats.call(this)
     @editor.on(@editor.constructor.events.POST_EVENT, (eventName) =>
       return unless eventName == @editor.constructor.events.API_TEXT_CHANGE or eventName == @editor.constructor.events.USER_TEXT_CHANGE or eventName == @editor.constructor.events.SELECTION_CHANGE
