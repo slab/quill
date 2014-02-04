@@ -19,21 +19,35 @@
   </head>
   <body>
     <!-- Navigation -->
-    <div class="container-fluid">
-      <a>Scribe</a>
-      <a>API</a>
-      <a>Themes</a>
-      <a>Modules</a>
-      <a>Wiki</a>
-
-      <a>Google</a>
-      <a>Twitter</a>
-    </div>
+    <header id="navigation-container" class="navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle Navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href='#'>Scribe</a>
+        </div>
+        <nav class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a>API</a></li>
+            <li><a>Themes</a></li>
+            <li><a>Modules</a></li>
+            <li><a>Wiki</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a>Google</a></li>
+            <li><a>Twitter</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
     <!-- Demo -->
-    <div id="navigation-container" class="container-fluid">
-      Scribe Demo
-      <div id='scribe-toolbar' class="toolbar-container">
+    <div id="demo-container">
+      <div id="scribe-toolbar" class="toolbar-container">
         <span class="format-group">
           <select title="Font" class="font-name">
             <option value="sans-serif" selected>Sans Serif</option>
@@ -142,14 +156,33 @@
       </div>
     </div>
 
-    <!-- Features -->
-    <div id="features-container" class="container-fluid">
-      Features
-    </div>
+    <div class="container">
+      <!-- Features -->
+      <div id="features-container" class="row">
+        <div class="col-lg-4">
+          <img >
+          <h3>Robust API</h3>
+          <p>Get fine grain access to document contents and notifications when they change.</p>
+        </div>
+        <div class="col-lg-4">
+          <img >
+          <h3>Cross Platform</h3>
+          <p>Works across all modern browsers on desktops, tablets and phones.</p>
+        </div>
+        <div class="col-lg-4">
+          <img >
+          <h3>Customizations</h3>
+          <p>It's easy to add any custom behavior or modifications on top of Scribe.</p>
+        </div>
+      </div>
 
-    <!-- Github -->
-    <div id="github-container" class="container-fluid">
-      Github
+      <hr class="half-rule">
+
+      <!-- Github -->
+      <div id="github-container">
+        <p>Scribe is open source. It is hosted and maintained on GitHub.</p>
+        <a href="https://github.com/stypi/scribe" class="btn-lg btn">View on Github</a>
+      </div>
     </div>
 
     <script type="text/javascript" src="javascripts/scribe.all.js"></script>
@@ -160,6 +193,13 @@
         },
         theme: Scribe.Themes.Snow
       });
+      try {
+        var navButton = document.querySelector('#navigation-container .navbar-toggle');
+        var navCollapse = document.querySelector('#navigation-container .collapse');
+        navButton.addEventListener('click', function() {
+          navCollapse.classList.toggle('in');
+        });
+      } catch (ignored) {}
     </script>
   </body>
 </html>

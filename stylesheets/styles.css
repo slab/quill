@@ -1,0 +1,31 @@
+#navigation-container {
+
+}
+#navigation-container .icon-bar {
+  background-color: red;
+}
+
+#demo-container {
+  border-bottom: 1px solid #ccc;
+  padding-top: 40px;
+}
+#demo-container #scribe-toolbar {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+#demo-container #scribe-toolbar, #demo-container #scribe-container {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 320px;
+  width: 66%;
+}
+
+#features-container {
+  text-align: center;
+}
+
+#github-container {
+  text-align: center;
+}
