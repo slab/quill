@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scribe</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/snow.css">
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -16,7 +18,148 @@
     </script>
   </head>
   <body>
-    <h1>Hello, world!</h1>
+    <!-- Navigation -->
+    <div class="container-fluid">
+      <a>Scribe</a>
+      <a>API</a>
+      <a>Themes</a>
+      <a>Modules</a>
+      <a>Wiki</a>
 
+      <a>Google</a>
+      <a>Twitter</a>
+    </div>
+
+    <!-- Demo -->
+    <div id="navigation-container" class="container-fluid">
+      Scribe Demo
+      <div id='scribe-toolbar' class="toolbar-container">
+        <span class="format-group">
+          <select title="Font" class="font-name">
+            <option value="sans-serif" selected>Sans Serif</option>
+            <option value="serif">Serif</option>
+            <option value="monospace">Monospace</option>
+          </select>
+          <select title="Size" class="font-size">
+            <option value="small">Small</option>
+            <option value="normal" selected>Normal</option>
+            <option value="large">Large</option>
+            <option value="huge">Huge</option>
+          </select>
+        </span>
+        <span class="format-group">
+          <select title="Text Color" class="fore-color">
+            <option value="#000000" selected></option>
+            <option value="#e60000"></option>
+            <option value="#ff9900"></option>
+            <option value="#ffff00"></option>
+            <option value="#008A00"></option>
+            <option value="#0066cc"></option>
+            <option value="#9933ff"></option>
+            <option value="#ffffff"></option>
+            <option value="#facccc"></option>
+            <option value="#ffebcc"></option>
+            <option value="#ffffcc"></option>
+            <option value="#cce8cc"></option>
+            <option value="#cce0f5"></option>
+            <option value="#ebd6ff"></option>
+            <option value="#bbbbbb"></option>
+            <option value="#f06666"></option>
+            <option value="#ffc266"></option>
+            <option value="#ffff66"></option>
+            <option value="#66b966"></option>
+            <option value="#66a3e0"></option>
+            <option value="#c285ff"></option>
+            <option value="#888888"></option>
+            <option value="#a10000"></option>
+            <option value="#b26b00"></option>
+            <option value="#b2b200"></option>
+            <option value="#006100"></option>
+            <option value="#0047b2"></option>
+            <option value="#6b24b2"></option>
+            <option value="#444444"></option>
+            <option value="#5c0000"></option>
+            <option value="#663d00"></option>
+            <option value="#666600"></option>
+            <option value="#003700"></option>
+            <option value="#002966"></option>
+            <option value="#3d1466"></option>
+          </select>
+          <span class="format-separator"></span>
+          <select title="Background Color" class="back-color">
+            <option value="#000000"></option>
+            <option value="#e60000"></option>
+            <option value="#ff9900"></option>
+            <option value="#ffff00"></option>
+            <option value="#008A00"></option>
+            <option value="#0066cc"></option>
+            <option value="#9933ff"></option>
+            <option value="#ffffff" selected></option>
+            <option value="#facccc"></option>
+            <option value="#ffebcc"></option>
+            <option value="#ffffcc"></option>
+            <option value="#cce8cc"></option>
+            <option value="#cce0f5"></option>
+            <option value="#ebd6ff"></option>
+            <option value="#bbbbbb"></option>
+            <option value="#f06666"></option>
+            <option value="#ffc266"></option>
+            <option value="#ffff66"></option>
+            <option value="#66b966"></option>
+            <option value="#66a3e0"></option>
+            <option value="#c285ff"></option>
+            <option value="#888888"></option>
+            <option value="#a10000"></option>
+            <option value="#b26b00"></option>
+            <option value="#b2b200"></option>
+            <option value="#006100"></option>
+            <option value="#0047b2"></option>
+            <option value="#6b24b2"></option>
+            <option value="#444444"></option>
+            <option value="#5c0000"></option>
+            <option value="#663d00"></option>
+            <option value="#666600"></option>
+            <option value="#003700"></option>
+            <option value="#002966"></option>
+            <option value="#3d1466"></option>
+          </select>
+        </span>
+        <span class="format-group">
+          <span title="Bold" class="format-button bold"></span>
+          <span class="format-separator"></span>
+          <span title="Italic" class="format-button italic"></span>
+          <span class="format-separator"></span>
+          <span title="Underline" class="format-button underline"></span>
+          <span class="format-separator"></span>
+          <span title="Strikethrough" class="format-button strike"></span>
+        </span>
+        <span class="format-group">
+          <span title="Link" class="format-button link"></span>
+        </span>
+      </div>
+      <div id="scribe-container">
+        <div>Some contents</div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div id="features-container" class="container-fluid">
+      Features
+    </div>
+
+    <!-- Github -->
+    <div id="github-container" class="container-fluid">
+      Github
+    </div>
+
+    <script type="text/javascript" src="javascripts/scribe.all.js"></script>
+    <script type="text/javascript">
+      editor = new Scribe.Editor('#scribe-container', {
+        modules: {
+          toolbar: { container: '#scribe-toolbar' }
+        },
+        theme: Scribe.Themes.Snow
+      });
+    </script>
   </body>
 </html>
