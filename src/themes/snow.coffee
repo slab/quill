@@ -80,6 +80,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
 
   extendToolbar: (options) ->
     options.container = document.querySelector(options.container) if _.isString(options.container)
+    ScribeDOM.addClass(options.container, 'toolbar-container')
     _.each(options.container.querySelectorAll('.font-name, .font-size'), (select) =>
       picker = new ScribePicker(select)
       @pickers.push(picker)
