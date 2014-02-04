@@ -16,15 +16,6 @@ class ScribeDefaultTheme
       when 'multi-cursor' then return new ScribeMultiCursor(@editor, options)
       when 'toolbar'      then return new ScribeToolbar(@editor, options)
       else return null
-
-  addStyleSheet: (url) ->
-    return if ScribeDefaultTheme.stylesheets[url]
-    sheet = document.createElement('link')
-    sheet.type = 'text/css'
-    sheet.rel = 'stylesheet'
-    sheet.href = url
-    document.querySelector('head').appendChild(sheet)
-    ScribeDefaultTheme.stylesheets[url] = true
   
 
 module.exports = ScribeDefaultTheme
