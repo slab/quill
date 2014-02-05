@@ -145,7 +145,7 @@ module.exports = (grunt) ->
         tasks: ['jade']
       stylus:
         files: ['demo/styles/*.styl', 'tests/mocha/*.styl']
-        tasks: ['stylus']
+        tasks: ['stylus', 'imageEmbed']
 
 
   grunt.event.on('watch', (action, filepath) ->

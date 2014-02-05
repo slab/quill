@@ -17,9 +17,9 @@ pickerWidth = 50px
   src: url('../fonts/fa-editor.eot') format('embedded-opentype'), url('../fonts/fa-editor.woff') format('woff')
 
 .toolbar-container
+  box-sizing: content-box
   color: blackColor
   font-family: 'Helvetica', 'Arial', sans-serif
-  font-size: 12px
   height: inputHeight + inputPadding
   padding: 8px (15px - pickerPadding)
   user-select: none
@@ -27,6 +27,7 @@ pickerWidth = 50px
   -moz-user-select: none
   -ms-user-select: none
   .format-group
+    box-sizing: content-box
     display: inline-block
     float: left
     line-height: inputHeight
@@ -34,8 +35,10 @@ pickerWidth = 50px
   .format-button
     background-position: center center
     background-repeat: no-repeat
+    box-sizing: content-box
     cursor: pointer
     font-family: 'fa-editor'
+    font-size: 12px
     display: inline-block
     float: left
     height: inputHeight
@@ -46,6 +49,7 @@ pickerWidth = 50px
     width: 16px
   .format-separator
     background-color: lightGrayColor
+    box-sizing: content-box
     display: inline-block
     float: left
     height: inputHeight
@@ -54,11 +58,14 @@ pickerWidth = 50px
     width: 1px
 
 .picker
+  box-sizing: content-box
+  font-size: 13px
   display: inline-block
   font-weight: bold
   position: relative
   .picker-label
     background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
+    box-sizing: content-box
     cursor: pointer
     padding: inputPadding pickerPadding
   .picker-label.active, .picker-label:hover
@@ -66,10 +73,12 @@ pickerWidth = 50px
     color: blueColor
   .picker-options
     background-color: #fff
+    box-sizing: content-box
     display: none
     padding: inputPadding pickerPadding
     position: absolute
     .picker-item
+      box-sizing: content-box
       cursor: pointer
       padding-bottom: inputPadding
       padding-top: inputPadding
