@@ -29,6 +29,9 @@
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
 }
+#demo-container #scribe-container {
+  height: 300px;
+}
 #demo-container #scribe-toolbar, #demo-container #scribe-container {
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
