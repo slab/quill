@@ -6,7 +6,7 @@ describe('Cursor', ->
     before((done) ->
       initial = '<div><b>Bold</b><i>Italic</i></div><div><br /><div><span style="font-size:18px;">Large</span></div>'
       $('#test-container').html(ScribeNormalizer.normalizeHtml(initial))
-      editor = new ScribeEditor('test-container')
+      editor = new ScribeEditor('#test-container')
       cursorManager = new ScribeMultiCursor(editor)
       _.defer(done)
     )

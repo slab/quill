@@ -16,7 +16,7 @@ How to Use
 ---
 
 ```javascript
-var editor = new Scribe.Editor('editor')      // 'editor' is id of dom container
+var editor = new Scribe.Editor('#editor');
 ```
 
 
@@ -66,7 +66,7 @@ Any DOM node with the following classes that is clicked will trigger the corresp
 
 Toolbar will listen to selection changes and will add/remove the 'active' class to the corresponding DOM node.
 
-Any DOM node with the following classes that is changed (change DOM event, ex. <select>) will trigger the corresponding format change:
+Any DOM node with the following classes that is changed ("change" DOM event, ex. <select>) will trigger the corresponding format change:
 
 - background - background color
 - color - text color
@@ -97,25 +97,20 @@ We use grunt to compile coffeescript, stylus, and jade
 Testing
 ---
 
-### Unit tests
+### Javascript Testing
 
-Visit build/tests/unit.html to run unit tests or run:
-    
-    make test
-    
-### Browser Testing
+    `make test` - run all tests with phantomjs
+    `make test-karma` - allows you to visit localhost:9876/debug.html for interactive testing
+    `make test-all` - run all unit tests with all locally installed browsers
+    `make test-remote` - run all tests on different platforms on Browserstack
 
-You can run the unit tests on all browsers on your machine by running:
-
-    make test-all
-
-You can also test on different operating systems or browsers on Browserstack:
+To run tests on Browserstack you will need to set your credentials:
 
     export BROWSER_STACK_USERNAME=yourusername
     export BROWSER_STACK_ACCESS_KEY=yourapikey
-    make test-remote
 
 ### Webdriver Testing
+
 For webdriver unit tests, run:
     
     make webdriver-unit-chrome
