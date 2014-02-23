@@ -9,6 +9,7 @@ fontNamePickerWidth = 98px
 fontSizePickerWidth = 75px
 pickerPadding = 8px
 pickerWidth = 50px
+toolbarPadding = 8px
 
 @font-face
   font-family: 'fa-editor'
@@ -17,11 +18,11 @@ pickerWidth = 50px
   src: url('../fonts/fa-editor.eot') format('embedded-opentype'), url('../fonts/fa-editor.woff') format('woff')
 
 .toolbar-container
-  box-sizing: content-box
+  box-sizing: border-box
   color: blackColor
   font-family: 'Helvetica', 'Arial', sans-serif
-  height: inputHeight + inputPadding
-  padding: 8px (15px - pickerPadding)
+  height: inputHeight + inputPadding*2 + toolbarPadding*2 - 2
+  padding: toolbarPadding (15px - pickerPadding)
   user-select: none
   -webkit-user-select: none
   -moz-user-select: none
