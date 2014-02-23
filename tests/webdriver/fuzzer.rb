@@ -40,7 +40,7 @@ def js_set_current_delta(driver)
 end
 
 def js_get_cur_doc_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(editor.getDelta());"
+  return execute_js driver, "return JSON.stringify(editor.getContents());"
 end
 
 def js_get_doc_delta_as_str(driver)
@@ -52,7 +52,7 @@ def js_get_expected_as_str(driver)
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getDelta());"
+  execute_js driver, "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getContents());"
 end
 
 

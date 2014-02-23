@@ -211,7 +211,7 @@ class ScribeEditor extends EventEmitter2
     return if delta.isIdentity()
     # Make exception for systems that assume editors start with empty text
     if delta.startLength == 0 and this.getLength() == 1
-      return this.setDelta(delta, options)
+      return this.setContents(delta, options)
     this.doSilently( =>
       localDelta = this.update()
       if localDelta
@@ -268,11 +268,11 @@ class ScribeEditor extends EventEmitter2
 
   getAt: (index = 0, length = null) ->
     length = this.getLength() - index unless length?
-    return _.map(this.getDelta().getOpsAt(index, length), (op) ->
+    return _.map(this.getContents().getOpsAt(index, length), (op) ->
       return op.value
     ).join('')
 
-  getDelta: ->
+  getContents: ->
     return @delta
 
   getLength: ->
@@ -284,7 +284,7 @@ class ScribeEditor extends EventEmitter2
   insertAt: (index, text, formatting = {}, options = {}) ->
     this.applyDelta(Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formatting), options)
 
-  setDelta: (delta) ->
+  setContents: (delta) ->
     oldLength = delta.startLength
     delta.startLength = this.getLength()
     this.applyDelta(delta, { silent: true })

@@ -16,6 +16,8 @@ describe('Toolbar', ->
       editor.root.focus()
       editor.setSelection(new ScribeRange(editor, 0, 7))
       $('#format-container .bold').click()
+      console.log $('#format-container .bold').length
+      console.log $('#format-container .bold').html()
   )
 
   toolbarTests.run('Apply link format',

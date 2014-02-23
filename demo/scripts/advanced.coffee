@@ -33,8 +33,8 @@ initToolbar = (container, editor) ->
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
     target.applyDelta(delta)
-    sourceDelta = source.getDelta()
-    targetDelta = target.getDelta()
+    sourceDelta = source.getContents()
+    targetDelta = target.getContents()
     decomposeDelta = targetDelta.decompose(sourceDelta)
     isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
       return false if op.delta?

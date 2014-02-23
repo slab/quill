@@ -135,11 +135,11 @@ describe('Editor', ->
   )
 
 
-  describe('setDelta', ->
+  describe('setContents', ->
     deltaTest = new ScribeEditorTest(
       expected: '<div><span>Test</span></div>'
       fn: (editor) ->
-        editor.setDelta(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
+        editor.setContents(new Tandem.Delta(0, [new Tandem.InsertOp('Test\n')]))
     )
     deltaTest.run('Empty', { initial: '<div><br></div>'} )
     deltaTest.run('Different text', { initial: '<div><span>One</span></div>' })

@@ -2,7 +2,7 @@ describe('Leaf', ->
   it('Leaf Iterator', ->
     lines = ['<div><br></div>', '<div><span>12</span></div>', '<div><b>45</b></div>', '<div><br></div>', '<div><br></div>', '<ul><li><span>78</span></li></ul>', '<ul><li><br></li></ul>']
     $('#test-container').html(lines.join(''))
-    editor = new ScribeEditor('test-container')
+    editor = new ScribeEditor('#test-container')
     lines = editor.doc.lines.toArray()
     leaves = _.reduce(lines, (leaves, line) ->
       leaves.push(_.map(line.leaves.toArray(), (leaf) ->

@@ -30,7 +30,7 @@ module ScribeDriver
     end
 
     def self.get_cur_doc_delta_as_str
-      return execute_js "return JSON.stringify(editor.getDelta());"
+      return execute_js "return JSON.stringify(editor.getContents());"
     end
 
     def self.set_scribe_delta(driver)
@@ -38,7 +38,7 @@ module ScribeDriver
     end
 
     def self.editor_delta_equals(delta)
-      return self.execute_js "return window.ScribeDriver.createDelta(#{delta.to_json}).isEqual(window.editor.getDelta())"
+      return self.execute_js "return window.ScribeDriver.createDelta(#{delta.to_json}).isEqual(window.editor.getContents())"
     end
 
     def self.make_insert_delta(startLength, index, value, attributes)
@@ -46,14 +46,14 @@ module ScribeDriver
     end
 
     def self.set_scribe_delta(delta)
-      self.execute_js "window.editor.setDelta(window.ScribeDriver.createDelta(#{delta.to_json}));"
+      self.execute_js "window.editor.setContents(window.ScribeDriver.createDelta(#{delta.to_json}));"
     end
 
     def self.set_doc_delta(delta = nil)
       if not delta.nil?
         self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.createDelta(#{delta.to_json});"
       else
-        self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getDelta());"
+        self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getContents());"
       end
     end
 

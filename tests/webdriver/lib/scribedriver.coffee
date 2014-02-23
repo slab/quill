@@ -92,10 +92,10 @@ $(document).ready( ->
       return window.ScribeDriver.autoFormatDelta(randomDelta)
 
     initializeScribe: ->
-      window.editor.setDelta(window.ScribeDriver.docDelta)
+      window.editor.setContents(window.ScribeDriver.docDelta)
 
     checkConsistency: ->
-      actual = window.ScribeDriver.cleanup(editor.getDelta())
+      actual = window.ScribeDriver.cleanup(editor.getContents())
       consistent = window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta).isEqual(actual)
       return {
         success: consistent,
