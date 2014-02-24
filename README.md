@@ -15,6 +15,9 @@ Cross platform rich text editor built with coauthoring in mind.
 How to Use
 ---
 
+Just instantiate a Scribe.Editor with a css selector for the div that should become the editor.
+
+
 ```javascript
 var editor = new Scribe.Editor('#editor');
 ```
@@ -50,10 +53,10 @@ Events names are accessible through Scribe.Editor.events
 Toolbar API
 ---
 
-You can create a toolbar to assist in formatting the editor.
+You can create a toolbar to assist in formatting the editor. Just set the container a css selector for where the toolbar is.
 
 ```javascript
-var toolbar = new Scribe.Toolbar('#toolbar', editor);
+editor.addModule('toolbar', { container: '#toolbar' });   // #toolbar is css selector
 ```
 
 Any DOM node with the following classes that is clicked will trigger the corresponding format change:

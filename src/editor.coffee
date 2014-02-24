@@ -249,6 +249,9 @@ class ScribeEditor extends EventEmitter2
     super(eventName, args...)
     super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
+  addModule: (args...) ->
+    @theme.addModule(args...)
+
   deleteAt: (index, length, options = {}) ->
     this.applyDelta(Tandem.Delta.makeDeleteDelta(@delta.endLength, index, length), options)
 
