@@ -35,8 +35,8 @@ Editor API
 See [Tandem](https://github.com/stypi/tandem) for details on deltas.
 
 - editor.applyDelta(delta) - applies delta to editor
-- editor.getDelta() - returns delta that describes contents of editor
-- editor.setDelta(delta) - sets editor to delta, assuming delta contains only insert operations
+- editor.getContents() - returns delta that describes contents of editor
+- editor.setContents(delta) - sets editor to delta, assuming delta contains only insert operations
 
 ### Events
 
@@ -53,7 +53,7 @@ Toolbar API
 You can create a toolbar to assist in formatting the editor.
 
 ```javascript
-var toolbar = new Scribe.Toolbar('toolbar', editor)   // 'toolbar' is the id of dom container
+var toolbar = new Scribe.Toolbar('#toolbar', editor);
 ```
 
 Any DOM node with the following classes that is clicked will trigger the corresponding format change:
