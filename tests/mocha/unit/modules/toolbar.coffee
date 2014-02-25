@@ -15,7 +15,7 @@ describe('Toolbar', ->
       editor.theme.addModule('toolbar', { container: '#format-container' })
       editor.root.focus()
       editor.setSelection(new ScribeRange(editor, 0, 7))
-      $('#format-container .bold').click()
+      $('#format-container .sc-bold').click()
   )
 
   toolbarTests.run('Apply link format',
@@ -24,6 +24,6 @@ describe('Toolbar', ->
       editor.theme.addModule('toolbar', { container: '#format-container' })
       editor.root.focus()
       editor.setSelection(new ScribeRange(editor, 0, 7))
-      $('#format-container .link').click()
+      $('#format-container .sc-link').click()
   )
 )

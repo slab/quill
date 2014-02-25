@@ -17,7 +17,7 @@ toolbarPadding = 8px
   font-weight: normal
   src: url('../fonts/fa-editor.eot') format('embedded-opentype'), url('../fonts/fa-editor.woff') format('woff')
 
-.toolbar-container
+.sc-toolbar-container
   box-sizing: border-box
   color: blackColor
   font-family: 'Helvetica', 'Arial', sans-serif
@@ -27,13 +27,13 @@ toolbarPadding = 8px
   -webkit-user-select: none
   -moz-user-select: none
   -ms-user-select: none
-  .format-group
+  .sc-format-group
     box-sizing: content-box
     display: inline-block
     float: left
     line-height: inputHeight
     margin-right: 15px
-  .format-button
+  .sc-format-button
     background-position: center center
     background-repeat: no-repeat
     box-sizing: content-box
@@ -48,7 +48,7 @@ toolbarPadding = 8px
     padding: inputPadding
     text-align: center
     width: 16px
-  .format-separator
+  .sc-format-separator
     background-color: lightGrayColor
     box-sizing: content-box
     display: inline-block
@@ -58,111 +58,111 @@ toolbarPadding = 8px
     margin-top: inputPadding
     width: 1px
 
-.picker
+.sc-picker
   box-sizing: content-box
   font-size: 13px
   display: inline-block
   font-weight: bold
   position: relative
-  .picker-label
+  .sc-picker-label
     background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
     box-sizing: content-box
     cursor: pointer
     padding: inputPadding pickerPadding
-  .picker-label.active, .picker-label:hover
+  .sc-picker-label.active, .sc-picker-label:hover
     background-image: url('../images/arrows-active.png')
     color: blueColor
-  .picker-options
+  .sc-picker-options
     background-color: #fff
     box-sizing: content-box
     display: none
     padding: inputPadding pickerPadding
     position: absolute
-    .picker-item
+    .sc-picker-item
       box-sizing: content-box
       cursor: pointer
       padding-bottom: inputPadding
       padding-top: inputPadding
-    .picker-item.selected, .picker-item:hover
+    .sc-picker-item.selected, .sc-picker-item:hover
       color: blueColor
-.picker.expanded
-  .picker-label
+.sc-picker.sc-expanded
+  .sc-picker-label
     background-image: url('../images/arrows-inactive.png')
     border: 1px solid grayColor
     color: grayColor
     margin: -1px
-  .picker-options
+  .sc-picker-options
     border: 1px solid grayColor
     box-shadow: rgba(0,0,0,0.2) 0 2px 8px
     display: block
     margin: -1px
 
-.picker.color-picker
+.sc-picker.sc-color-picker
   float: left
-  .picker-label
+  .sc-picker-label
     background-position: center center
-  .picker-options
+  .sc-picker-options
     height: 106px
     margin-left: inputMargin
     margin-top: 24px
     padding: 6px
     position: absolute
     width: 140px
-    .picker-item
+    .sc-picker-item
       float: left
       height: 16px
       margin: 2px
       padding: 0px
       width: 16px
-    .picker-item.selected, .picker-item:hover
+    .sc-picker-item.selected, .sc-picker-item:hover
       border: 1px solid #000
       margin: 1px
-.picker.color-picker.expanded
-  .picker-label
+.sc-picker.sc-color-picker.sc-expanded
+  .sc-picker-label
     margin-left: inputMargin - 1px
     margin-right: inputMargin - 1px
-  .picker-options
+  .sc-picker-options
     margin-left: inputMargin - 1px
 
-.toolbar-container
-  .format-button:hover, .format-button.active
+.sc-toolbar-container
+  .sc-format-button:hover, .sc-format-button.active
     color: blueColor
-  .format-button.bold:before
+  .sc-format-button.sc-bold:before
     content: "\e801"
     font-weight: bold
-  .format-button.italic:before
+  .sc-format-button.sc-italic:before
     content: "\e802"
-  .format-button.underline:before
+  .sc-format-button.sc-underline:before
     content: "\e80f"
-  .format-button.strike:before
+  .sc-format-button.sc-strike:before
     content: "\e80e"
-  .format-button.link:before
+  .sc-format-button.sc-link:before
     content: "\e813"
-  .format-button.attribution:before
+  .sc-format-button.sc-attribution:before
     content: "\e816"
 
-  .font-name
+  .sc-font-name
     width: fontNamePickerWidth
-    .picker-label
+    .sc-picker-label
       background-position: (fontNamePickerWidth - 2*pickerPadding) center
-    .picker-options
+    .sc-picker-options
       width: fontNamePickerWidth - 2*pickerPadding
-  .font-size
+  .sc-font-size
     width: fontSizePickerWidth
-    .picker-label
+    .sc-picker-label
       background-position: (fontSizePickerWidth - 2*pickerPadding) center
-    .picker-options
+    .sc-picker-options
       width: fontSizePickerWidth - 2*pickerPadding
 
-  .fore-color, .back-color
-    .picker-options
-      .picker-item.primary-color
+  .sc-fore-color, .sc-back-color
+    .sc-picker-options
+      .sc-picker-item.sc-primary-color
         margin-bottom: 8px
-      .picker-item.primary-color.selected, .picker-item.primary-color:hover
+      .sc-picker-item.sc-primary-color.sc-selected, .sc-picker-item.sc-primary-color:hover
         margin-bottom: 7px
 
   for $format in fore-color back-color
-    .picker.{$format} .picker-label
+    .sc-picker.sc-{$format} .sc-picker-label
       background-image: url('../images/' + $format + '.png')
-    .picker.{$format} .picker-label.active, .picker.{$format} .picker-label:hover, .picker.{$format}.expanded .picker-label
+    .sc-picker.sc-{$format} .sc-picker-label.sc-active, .sc-picker.sc-{$format} .sc-picker-label:hover, .sc-picker.sc-{$format}.sc-expanded .sc-picker-label
       background-image: url('../images/' + $format + '-active.png')

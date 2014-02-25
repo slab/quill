@@ -9,36 +9,36 @@ class ScribePicker
     )
     title = @select.getAttribute('title')
     @container.setAttribute('title', title) if title
-    ScribeDOM.addClass(@container, 'picker')
+    ScribeDOM.addClass(@container, 'sc-picker')
     @label = @select.ownerDocument.createElement('div')
-    ScribeDOM.addClass(@label, 'picker-label')
+    ScribeDOM.addClass(@label, 'sc-picker-label')
     @container.appendChild(@label)
     picker = this.buildPicker()
     @container.appendChild(picker)
-    selected = picker.querySelector('.selected')
+    selected = picker.querySelector('.sc-selected')
     ScribeDOM.setText(@label, ScribeDOM.getText(selected)) if selected?
     ScribeDOM.addEventListener(@label, 'click', =>
       # Defer to avoid document click handler that closes all dropdowns
-      hasClass = ScribeDOM.hasClass(@container, 'expanded')
+      hasClass = ScribeDOM.hasClass(@container, 'sc-expanded')
       _.defer( =>
-        ScribeDOM.toggleClass(@container, 'expanded', !hasClass)
+        ScribeDOM.toggleClass(@container, 'sc-expanded', !hasClass)
       )
     )
     ScribeDOM.addEventListener(@select.ownerDocument, 'click', =>
-      ScribeDOM.removeClass(@container, 'expanded')
+      ScribeDOM.removeClass(@container, 'sc-expanded')
     )
     ScribeDOM.addEventListener(@select, 'change', =>
-      option = @container.querySelectorAll('.picker-item')[@select.selectedIndex]
+      option = @container.querySelectorAll('.sc-picker-item')[@select.selectedIndex]
       this.selectItem(option)
-      ScribeDOM.toggleClass(@label, 'active', option != selected)
+      ScribeDOM.toggleClass(@label, 'sc-active', option != selected)
     )
     @select.parentNode.insertBefore(@container, @select)
 
   buildItem: (picker, option, index) ->
     item = @select.ownerDocument.createElement('div')
-    ScribeDOM.addClass(item, 'picker-item')
+    ScribeDOM.addClass(item, 'sc-picker-item')
     ScribeDOM.setText(item, ScribeDOM.getText(option))
-    ScribeDOM.addClass(item, 'selected') if @select.selectedIndex == index
+    ScribeDOM.addClass(item, 'sc-selected') if @select.selectedIndex == index
     ScribeDOM.addEventListener(item, 'click', =>
       this.selectItem(item)
       @select.selectedIndex = index
@@ -49,7 +49,7 @@ class ScribePicker
 
   buildPicker: ->
     picker = @select.ownerDocument.createElement('div')
-    ScribeDOM.addClass(picker, 'picker-options')
+    ScribeDOM.addClass(picker, 'sc-picker-options')
     _.each(@select.querySelectorAll('option'), (option, i) =>
       item = this.buildItem(picker, option, i)
       picker.appendChild(item)
@@ -58,13 +58,13 @@ class ScribePicker
     return picker
 
   close: ->
-    ScribeDOM.removeClass(@container, 'expanded')
+    ScribeDOM.removeClass(@container, 'sc-expanded')
 
   selectItem: (item) ->
-    selected = @container.querySelector('.selected')
-    ScribeDOM.removeClass(selected, 'selected') if selected?
+    selected = @container.querySelector('.sc-selected')
+    ScribeDOM.removeClass(selected, 'sc-selected') if selected?
     if item?
-      ScribeDOM.addClass(item, 'selected')
+      ScribeDOM.addClass(item, 'sc-selected')
       ScribeDOM.setText(@label, ScribeDOM.getText(item))
     else
       @label.innerHTML = '&nbsp;'

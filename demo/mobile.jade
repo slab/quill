@@ -1,7 +1,7 @@
 doctype 5
 html
   head
-    title Stypi Mobile Editor Demo
+    title Scribe Mobile Editor Demo
     link(rel='stylesheet', type='text/css', href='styles/mobile.css')
     meta(charset='utf-8')
     meta(name='apple-mobile-web-app-capable', content='yes')
@@ -9,11 +9,11 @@ html
 
   body
     #content-container
-      #formatting-container.formatting-container
-        span.format-button.bold(title='Bold')
-        span.format-button.italic(title='Italic')
-        span.format-button.underline(title='Underline')
-        span.format-button.strike(title='Strikethrough')
+      #formatting-container
+        span.sc-format-button.sc-bold(title='Bold')
+        span.sc-format-button.sc-italic(title='Italic')
+        span.sc-format-button.sc-underline(title='Underline')
+        span.sc-format-button.sc-strike(title='Strikethrough')
       #editor-container.editor-container
 
     script(type='text/javascript', src='../scribe.all.js')

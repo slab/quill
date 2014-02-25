@@ -6,7 +6,7 @@ ScribeUtils       = require('../utils')
 
 
 _findInput = (format) ->
-  selector = ".#{format}"
+  selector = ".sc-#{format}"
   if _.indexOf(ScribeToolbar.formats.SELECT, format) > -1
     selector = 'select' + selector
   input = @container.querySelector(selector)
@@ -17,7 +17,7 @@ _initFormats = ->
       input = _findInput.call(this, format)
       return unless input?
       @editor.logger.debug('Toolbar binding', format, input)
-      return @editor.theme.addModule('link-tooltip', { button: input }) if format == 'link'
+      return @editor.addModule('link-tooltip', { button: input }) if format == 'link'
       return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
@@ -47,7 +47,7 @@ _initFormats = ->
     @editor.keyboard.addHotkey(ScribeKeyboard.hotkeys[key], =>
       activeFormats = {}
       input = _findInput.call(this, key.toLowerCase())
-      activeFormats[key.toLowerCase()] = !ScribeDOM.hasClass(input, 'active') if input?
+      activeFormats[key.toLowerCase()] = !ScribeDOM.hasClass(input, 'sc-active') if input?
       this.updateActive(activeFormats)
     )
   )
@@ -73,10 +73,10 @@ class ScribeToolbar
   updateActive: (activeFormats = {}) ->
     @triggering = true
     range = @editor.getSelection()
-    _.each(@container.querySelectorAll('.active'), (button) =>
-      ScribeDOM.removeClass(button, 'active')
+    _.each(@container.querySelectorAll('.sc-active'), (button) =>
+      ScribeDOM.removeClass(button, 'sc-active')
     )
-    _.each(@container.querySelectorAll('select'), (select) =>
+    _.each(@container.querySelectorAll('sc-select'), (select) =>
       ScribeDOM.resetSelect(select)
     )
     if range?
@@ -89,7 +89,7 @@ class ScribeToolbar
             elem.value = value
             ScribeDOM.triggerEvent(elem, 'change')
           else
-            ScribeDOM.addClass(elem, 'active')
+            ScribeDOM.addClass(elem, 'sc-active')
       )
     @triggering = false
 

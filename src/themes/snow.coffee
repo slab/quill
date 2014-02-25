@@ -80,19 +80,19 @@ class ScribeSnowTheme extends ScribeDefaultTheme
 
   extendToolbar: (options) ->
     options.container = document.querySelector(options.container) if _.isString(options.container)
-    ScribeDOM.addClass(options.container, 'toolbar-container')
-    _.each(options.container.querySelectorAll('.font-name, .font-size'), (select) =>
+    ScribeDOM.addClass(options.container, 'sc-toolbar-container')
+    _.each(options.container.querySelectorAll('.sc-font-name, .sc-font-size'), (select) =>
       picker = new ScribePicker(select)
       @pickers.push(picker)
     )
     _.each(['fore-color', 'back-color'], (css) =>
-      select = options.container.querySelector(".#{css}")
+      select = options.container.querySelector(".sc-#{css}")
       return unless select?
       picker = new ScribeColorPicker(select)
       @pickers.push(picker)
-      ScribeDOM.addClass(picker.container.querySelector('.picker-label'), 'format-button')
-      _.each(picker.container.querySelectorAll('.picker-item'), (item, i) ->
-        ScribeDOM.addClass(item, 'primary-color') if i < 7
+      ScribeDOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button')
+      _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
+        ScribeDOM.addClass(item, 'sc-primary-color') if i < 7
       )
       format = @editor.doc.formatManager.formats[css]
       if format?
@@ -100,7 +100,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
           colors[c] = "rgb(#{parseInt(c.substr(1,2), 16)}, #{parseInt(c.substr(3,2), 16)}, #{parseInt(c.substr(5,2), 16)})"
           return colors
         , {})
-        format.defaultStyle = if css == 'fore-color' then '#000000' else '#ffffff'
+        format.defaultStyle = if css == 'sc-fore-color' then '#000000' else '#ffffff'
     )
 
 

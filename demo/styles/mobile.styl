@@ -8,6 +8,8 @@ blueColor = #06c
 
 html, body
   height: 100%
+  margin: 0px
+  padding: 0px
 
 #content-container
   position: relative
@@ -18,7 +20,7 @@ html, body
   border-bottom: 1px solid #ccc
   height: 34px
   width: 100%
-  .format-button
+  .sc-format-button
     background-position: center center
     background-repeat: no-repeat
     cursor: pointer
@@ -30,16 +32,16 @@ html, body
     line-height: 34px
     text-align: center
     width: 25%
-  .format-button:hover, .format-button.active
+  .sc-format-button:hover, .sc-format-button.sc-active
     color: blueColor
-  .format-button.bold:before
+  .sc-format-button.sc-bold:before
     content: "\e801"
     font-weight: bold
-  .format-button.italic:before
+  .sc-format-button.sc-italic:before
     content: "\e802"
-  .format-button.underline:before
+  .sc-format-button.sc-underline:before
     content: "\e80f"
-  .format-button.strike:before
+  .sc-format-button.sc-strike:before
     content: "\e80e"
 
 #editor-container

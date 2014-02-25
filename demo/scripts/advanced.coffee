@@ -16,19 +16,19 @@ getColor = (id, lighten) ->
     return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"
 
 initAttribution = (wrapper, editor) ->
-  Scribe.DOM.addEventListener(wrapper.querySelector('.attribution'), 'click', ->
-    if Scribe.DOM.hasClass(container, 'active')
+  Scribe.DOM.addEventListener(wrapper.querySelector('.sc-attribution'), 'click', ->
+    if Scribe.DOM.hasClass(container, 'sc-active')
       editor.modules.attribution.disable()
     else
       editor.modules.attribution.enable()
-    Scribe.DOM.toggleClass(container, 'active')
+    Scribe.DOM.toggleClass(container, 'sc-active')
   )
 
 initToolbar = (container, editor) ->
   formattingContainer = container.querySelector('.formatting-container')
   toolbar = new Scribe.Toolbar(formattingContainer, editor)
   for format in ['font-name', 'font-size', 'fore-color', 'back-color']
-    Scribe.Picker.init(formattingContainer.querySelector(".#{format}"))
+    Scribe.Picker.init(formattingContainer.querySelector(".sc-#{format}"))
 
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
