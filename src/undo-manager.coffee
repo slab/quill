@@ -7,10 +7,10 @@ getLastChangeIndex = (delta) ->
   lastChangeIndex = index = offset = 0
   _.each(delta.ops, (op) ->
     # Insert
-    if Tandem.Delta.isInsert(op)
+    if Tandem.InsertOp.isInsert(op)
       offset += op.getLength()
       lastChangeIndex = index + offset
-    else if Tandem.Delta.isRetain(op)
+    else if Tandem.RetainOp.isRetain(op)
       # Delete
       if op.start > index
         lastChangeIndex = index + offset
