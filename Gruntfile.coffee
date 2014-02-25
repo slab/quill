@@ -21,7 +21,7 @@ module.exports = (grunt) ->
 
     browserify:
       options:
-        alias: ['node_modules/tandem-core/src/tandem.coffee:tandem-core']
+        alias: ['node_modules/tandem-core/build/tandem-core.js:tandem-core']
         extensions: ['.js', '.coffee']
         transform: ['coffeeify']
       scribe:
