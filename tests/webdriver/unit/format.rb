@@ -149,7 +149,7 @@ describe "Test Formatting" do
       apply_delta delta, "Text was not bold", true
     end
 
-    it "should apply a font-name format"
+    it "should apply a font-name format" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
                   "ops" => [{ "value" => "abc\n"}]
@@ -165,7 +165,7 @@ describe "Test Formatting" do
       apply_delta delta, "Failed to apply monospace", true
     end
 
-    it "should apply a font-size format"
+    it "should apply a font-size format" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
                   "ops" => [{ "value" => "abc\n"}]
@@ -181,7 +181,7 @@ describe "Test Formatting" do
       apply_delta delta, "Failed to apply huge font-size", true
     end
 
-    it "should apply a fore-color"
+    it "should apply a fore-color" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
                   "ops" => [{ "value" => "abc\n"}]
@@ -197,7 +197,7 @@ describe "Test Formatting" do
       apply_delta delta, "Failed to apply white fore-color", true
     end
 
-    it "should apply a back-color"
+    it "should apply a back-color" do
       initial = { "startLength" => 0,
                   "endLength" => 4,
                   "ops" => [{ "value" => "abc\n"}]
