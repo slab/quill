@@ -8,9 +8,12 @@
   }, {
     "name": "Byron Milligan",
     "email": "byronner@gmail.com"  
+  }, {
+    "name": "Keegan Poppen",
+    "email": "keegan.poppen@gmail.com"  
   }],
   "dependencies": {
-    "tandem-core"          : "0.4.x",
+    "tandem-core"          : "0.5.x",
     "underscore"           : "1.5.x",
     "underscore.string"    : "2.3.x"
   },
