@@ -35,8 +35,8 @@
     "karma"                : "0.10.x",
     "karma-coverage"       : "0.2.x",
     "karma-mocha"          : "0.1.x",
-    "karma-browserstack-launcher" : "0.0.x",
-    "karma-safari-launcher"       : "0.1.x",
+    "karma-sauce-launcher" : "0.1.x",
+    "karma-safari-launcher": "0.1.x",
     "mocha"                : "1.17.x"
   },
   "engine": {

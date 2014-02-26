@@ -5,3 +5,4 @@ tests/webdriver/fuzzer_output
 tests/webdriver/logs
 libpeerconnection.log
 chromedriver.log
+sauce_connect.log
