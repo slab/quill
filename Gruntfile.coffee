@@ -129,8 +129,6 @@ module.exports = (grunt) ->
         src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
 
     watch:
-      options:
-        nospawn: true
       coffee_demo:
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
