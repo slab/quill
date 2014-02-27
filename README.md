@@ -109,6 +109,10 @@ Testing
     `grunt test:remote` - run tests on supported platforms on Sauce Labs
     `grunt test:exhaust` - run exhaustive test suite (used to create unit tests) on PhantomJS
 
+You can use mocha's grep feature to run specific tests ex.
+
+    grunt test:local --grep=cursor
+
 ### Webdriver Testing
 
 For webdriver unit tests, run:
