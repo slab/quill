@@ -1,5 +1,6 @@
 replay_file=$(shell find tests/webdriver/fuzzer_output/fails -type f -exec stat -f "%m %N" {} \; | sort -n | tail -1 | cut -f2- -d" ")
 
+
 coverage:
 	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee --browsers Chrome --reporters coverage
 
@@ -13,7 +14,16 @@ test-karma:
 	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee --browsers PhantomJS --no-single-run
 
 test-remote:
-	@./node_modules/karma/bin/karma start tests/karma/remote.conf.coffee
+	@echo "Testing Mac Browsers"
+	@./node_modules/karma/bin/karma start tests/karma/remote.conf.coffee --browsers mac-chrome,mac-firefox,mac-safari
+	@echo "Testing Windows Browsers"
+	@./node_modules/karma/bin/karma start tests/karma/remote.conf.coffee --browsers windows-chrome,windows-firefox,windows-ie-11
+	@echo "Testing Windows Legacy Browsers"
+	@./node_modules/karma/bin/karma start tests/karma/remote.conf.coffee --browsers windows-ie-10,windows-ie-9,windows-ie-8
+	@echo "Testing Linux Browsers"
+	@./node_modules/karma/bin/karma start tests/karma/remote.conf.coffee --browsers linux-chrome,linux-firefox
+	@echo "Testing Mobile Browsers"
+	@./node_modules/karma/bin/karma start tests/karma/remote.conf.coffee --browsers iphone,ipad
 
 test-unit:
 	@./node_modules/karma/bin/karma start tests/karma/unit.conf.coffee

@@ -12,8 +12,8 @@ browsers =
   'windows-ie-11'   : ['Windows 8.1', 'internet explorer', '11']
 
   'windows-ie-10'   : ['Windows 8', 'internet explorer', '10']
-  'windows-ie-9'    : ['Windows 7', 'ie', '9']
-  'windows-ie-8'    : ['Windows 7', 'ie', '8']
+  'windows-ie-9'    : ['Windows 7', 'internet explorer', '9']
+  'windows-ie-8'    : ['Windows 7', 'internet explorer', '8']
 
   'linux-chrome'    : ['Linux', 'chrome']
   'linux-firefox'   : ['Linux', 'firefox']
