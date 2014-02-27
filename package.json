@@ -14,7 +14,7 @@
   }],
   "dependencies": {
     "tandem-core"          : "0.5.x",
-    "underscore"           : "1.5.x",
+    "underscore"           : "1.6.x",
     "underscore.string"    : "2.3.x"
   },
   "devDependencies": {
