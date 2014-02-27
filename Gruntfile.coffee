@@ -3,16 +3,17 @@ pjson = require('./package.json')
 
 module.exports = (grunt) ->
 
-  grunt.loadNpmTasks 'grunt-browserify'
-  grunt.loadNpmTasks 'grunt-contrib-clean'
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-contrib-copy'
-  grunt.loadNpmTasks 'grunt-contrib-concat'
-  grunt.loadNpmTasks 'grunt-contrib-jade'
-  grunt.loadNpmTasks 'grunt-contrib-stylus'
-  grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.loadNpmTasks 'grunt-image-embed'
-  grunt.loadNpmTasks 'grunt-string-replace'
+  grunt.loadNpmTasks('grunt-browserify')
+  grunt.loadNpmTasks('grunt-contrib-clean')
+  grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-contrib-jade')
+  grunt.loadNpmTasks('grunt-contrib-stylus')
+  grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-image-embed')
+  grunt.loadNpmTasks('grunt-karma')
+  grunt.loadNpmTasks('grunt-string-replace')
 
   # Project configuration.
   grunt.initConfig
@@ -83,7 +84,10 @@ module.exports = (grunt) ->
       node_modules:
         expand: true, flatten: true, cwd: 'node_modules/'
         dest: 'build/lib/'
-        src: ['async/lib/async.js', 'expect.js/expect.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
+        src: ['async/lib/async.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
+      expectjs:
+        dest: 'build/lib/expect.js'
+        src:  'node_modules/expect.js/index.js'
       lib:
         expand: true, cwd: 'lib/'
         dest: 'build/lib/'
@@ -128,14 +132,38 @@ module.exports = (grunt) ->
         ext: ['.css']
         src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
 
+    karma:
+      options:
+        configFile: 'tests/karma/karma.conf.coffee'
+        exclude: ['tests/mocha/editor.js']
+      karma:
+        singleRun: false
+      unit:
+        browsers: ['PhantomJS']
+      exhaust:
+        exclude: ['tests/mocha/unit.js']
+        browsers: ['PhantomJS']
+      local:
+        browsers: ['Chrome', 'Firefox', 'Safari']
+      'remote-mac':
+        browsers: ['mac-chrome', 'mac-firefox', 'mac-safari']
+      'remote-windows':
+        browsers: ['windows-chrome', 'windows-firefox', 'windows-ie-11']
+      'remote-legacy':
+        browsers: ['windows-ie-10', 'windows-ie-9', 'windows-ie-8']
+      'remote-linux':
+        browsers: ['linux-chrome', 'linux-firefox']
+      'remote-mobile':
+        browsers: ['ipad', 'iphone']    # No android for now due to execution speed
+
     watch:
-      coffee_demo:
+      'coffee-demo':
         files: ['demo/scripts/*.coffee']
         tasks: ['coffee:demo']
-      coffee_src:
+      'coffee-src':
         files: ['index.coffee', 'src/**/*.coffee']
         tasks: ['coffee:src', 'string-replace', 'browserify', 'concat']
-      coffee_test:
+      'coffee-test':
         files: ['tests/mocha/**/*.coffee']
         tasks: ['coffee:test']
       jade:
@@ -147,9 +175,9 @@ module.exports = (grunt) ->
 
 
   grunt.event.on('watch', (action, filepath) ->
-    if grunt.file.isMatch(grunt.config('watch.coffee_demo.files'), filepath)
+    if grunt.file.isMatch(grunt.config('watch.coffee-demo.files'), filepath)
       grunt.config('coffee.demo.src', filepath)
-    else if grunt.file.isMatch(grunt.config('watch.coffee_src.files'), filepath)
+    else if grunt.file.isMatch(grunt.config('watch.coffee-src.files'), filepath)
       grunt.config('coffee.src.src', filepath)
     else if grunt.file.isMatch(grunt.config('watch.jade.files'), filepath)
       grunt.config('jade.all.src', filepath)
@@ -157,5 +185,10 @@ module.exports = (grunt) ->
       grunt.config('stylus.all.src', filepath)
   )
 
-  # Default task.
-  grunt.registerTask 'default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus', 'imageEmbed']
+  grunt.registerTask('default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus', 'imageEmbed'])
+
+  grunt.registerTask('test', ['karma:unit'])
+  grunt.registerTask('test:karma', ['karma:karma'])
+  grunt.registerTask('test:exhaust', ['karma:exhaust'])
+  grunt.registerTask('test:local', ['karma:local'])
+  grunt.registerTask('test:remote', ['karma:remote-mac', 'karma:remote-windows', 'karma:remote-linux', 'karma:remote-mobile', 'karma:remote-legacy'])

@@ -103,15 +103,11 @@ Testing
 
 ### Javascript Testing
 
-    `make test` - run all tests with phantomjs
-    `make test-karma` - allows you to visit localhost:9876/debug.html for interactive testing
-    `make test-all` - run all unit tests with all locally installed browsers
-    `make test-remote` - run all tests on different platforms on Browserstack
-
-To run tests on Browserstack you will need to set your credentials:
-
-    export BROWSER_STACK_USERNAME=yourusername
-    export BROWSER_STACK_ACCESS_KEY=yourapikey
+    `grunt test` - run tests with phantomjs
+    `grunt test:karma` - allows you to visit localhost:9876/debug.html for interactive testing
+    `grunt test:local` - run tests with locally installed browsers
+    `grunt test:remote` - run tests on supported platforms on Sauce Labs
+    `grunt test:exhaust` - run exhaustive test suite (used to create unit tests) on PhantomJS
 
 ### Webdriver Testing
 
