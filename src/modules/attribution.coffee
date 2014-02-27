@@ -36,12 +36,22 @@ class ScribeAttribution
     )
     @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
     this.addAuthor(@options.authorId, @options.color)
+    this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
 
   addAuthor: (id, color) ->
     styles = {}
     styles[".editor.attribution .author-#{id}"] = { "background-color": "#{color}" }
     @editor.renderer.addStyles(styles)
+
+  attachButton: (button) ->
+    ScribeDOM.addEventListener(button, 'click', =>
+      if ScribeDOM.hasClass(button, 'sc-active')
+        @editor.modules.attribution.disable()
+      else
+        @editor.modules.attribution.enable()
+      ScribeDOM.toggleClass(button, 'sc-active')
+    )
 
   enable: ->
     ScribeDOM.addClass(@editor.root, 'attribution')
