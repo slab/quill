@@ -29,7 +29,7 @@ module.exports = (grunt) ->
       tandem_wrapper:
         files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/mocha/tandem.coffee'] }]
       
-    clean: ['build']
+    clean: ['build', '*.log']
 
     coffee:
       demo:
