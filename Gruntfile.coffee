@@ -43,7 +43,7 @@ module.exports = (grunt) ->
         expand: true  
         ext: '.js'
         dest: 'build/'
-        src: ['src/**/*.coffee', 'tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
+        src: ['index.coffee', 'src/**/*.coffee', 'tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
       test:
         files: [{
           'build/tests/mocha/editor.js': ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']

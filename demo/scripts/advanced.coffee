@@ -1,3 +1,4 @@
+# IE feature detection
 supportsRGBA = true
 scriptElem = document.getElementsByTagName('script')[0]
 try
@@ -14,21 +15,6 @@ getColor = (id, lighten) ->
     return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
   else
     return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"
-
-initAttribution = (wrapper, editor) ->
-  Scribe.DOM.addEventListener(wrapper.querySelector('.sc-attribution'), 'click', ->
-    if Scribe.DOM.hasClass(container, 'sc-active')
-      editor.modules.attribution.disable()
-    else
-      editor.modules.attribution.enable()
-    Scribe.DOM.toggleClass(container, 'sc-active')
-  )
-
-initToolbar = (container, editor) ->
-  formattingContainer = container.querySelector('.formatting-container')
-  toolbar = new Scribe.Toolbar(formattingContainer, editor)
-  for format in ['font-name', 'font-size', 'fore-color', 'back-color']
-    Scribe.Picker.init(formattingContainer.querySelector(".sc-#{format}"))
 
 listenEditor = (source, target) ->
   source.on(Scribe.Editor.events.USER_TEXT_CHANGE, (delta) ->
@@ -48,29 +34,30 @@ listenEditor = (source, target) ->
     return unless range?
     color = getColor(source.id)
     cursor = target.modules['multi-cursor'].setCursor(source.id, range.end.index, source.id, color)
-    cursor.elem.querySelector('.cursor-triangle').style.borderTopColor = color
+    $('.cursor-triangle', cursor.elem).css('border-top-color', color)
   )
 
 
 editors = []
 for num in [1, 2]
-  wrapper = document.querySelector(".editor-wrapper.#{if num == 1 then 'first' else 'last'}")
-  container = wrapper.querySelector('.editor-container')
-  editor = new Scribe.Editor(container, {
+  $wrapper = $(".editor-wrapper.#{if num == 1 then 'first' else 'last'}")
+  $container = $('.editor-container', $wrapper)
+  editor = new Scribe.Editor($container.get(0), {
     logLevel: 'info'
     modules:
       'attribution': {
         enabled: false
         color: getColor(num, true)
+        button: $('.sc-attribution', $wrapper).get(0)
       }
-      'multi-cursor': {}
+      'multi-cursor': {}    # TODO does passing in null or true work?
       'toolbar': {
-        container: wrapper.querySelector('.toolbar-container')
+        container: $('.toolbar-container', $wrapper).get(0)
       }
     theme: Scribe.Themes.Snow
   })
-  initAttribution(wrapper, editor)
   editors.push(editor)
+  
 listenEditor(editors[0], editors[1])
 listenEditor(editors[1], editors[0])
 editors[0].modules.attribution.addAuthor(editors[1].id, getColor(editors[1].id, true))
