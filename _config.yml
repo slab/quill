@@ -1,0 +1,4 @@
+name: Scribe - Open Source Rich Text Editor
+markdown: redcarpet
+pygments: true
+timezone: America/Los_Angeles
