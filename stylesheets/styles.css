@@ -17,8 +17,8 @@
   border: 0;
   display: none;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: -1px;
+  top: -1px;
 }
 
 #demo-container {
