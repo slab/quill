@@ -20,9 +20,9 @@ permalink: /docs/api/editor/
 - update
 
 
-#### getAt
+### getAt
 
-Retrieves copy of text contents from the editor starting from given index.
+Retrieves string contents of the editor.
 
 **Methods**
 
@@ -35,14 +35,18 @@ Retrieves copy of text contents from the editor starting from given index.
 - index (Number) - Starting position of text retrieval. Defaults to 0.
 - length (Number) - Number of characters to retrieve. Defaults to the rest of the document.
 
+**Return***
+
+- String - String contents of the editor
+
 **Examples**
 
 ```javascript
-editor.get(0, 10);
+var text = editor.get(0, 10);
 ```
 
 
-#### insertAt
+### insertAt
 
 Inserts text into the editor.
 
@@ -72,7 +76,7 @@ editor.insertAt(5, 'Scribe', {
 ```
 
 
-#### deleteAt
+### deleteAt
 
 Deletes text from the editor.
 
@@ -92,7 +96,7 @@ editor.deleteAt(0, 10);
 ```
 
 
-#### formatAt
+### formatAt
 
 Formats text in the editor.
 
@@ -116,4 +120,85 @@ editor.formatAt(5, 6, {
   'italic': false,
   'fore-color': '#000fff'
 });
+```
+
+
+### getContents
+
+Retrieves contents of the editor, with formatting data, represented by a Delta object.
+
+**Methods**
+
+- getContents()
+- getContents(index)
+- getContents(index, length)
+
+**Parameters**
+
+- index (Number) - Starting position of retrieval. Defaults to 0.
+- length (Number) - Number of characters to retrieve. Defaults to the rest of the document.
+
+**Return***
+
+- Object - Contents of the editor.
+
+**Examples**
+
+```javascript
+var delta = editor.getContents();
+```
+
+
+### setContents
+
+Overwrites editor with given contents.
+
+**Methods**
+
+- setContents(contents)
+- setContents(delta)
+
+**Parameters**
+
+- contents (Array) - Contents editor will be set to, represented by an Array of objects with keys `text` representing the text and `attributes` representing the formatting corresponding to that `text`
+- delta (Object) - Contents editor will be set to, represented by a Delta object.
+
+**Examples**
+
+```javascript
+editor.setContents([
+  { text: 'Hello ' },
+  { text: 'World!', attributes: { bold: true } },
+  { text: '\n' }
+])
+```
+
+
+### update
+
+Applies Delta to editor contents.
+
+**Methods**
+
+- update(delta)
+
+**Parameters**
+
+- delta (Object) - Delta that will be applied.
+
+**Examples**
+
+```javascript
+// Assuming editor is currently contains [{ text: 'Hello World!' }]
+editor.update({
+  startLength: 12,
+  endLength: 13,
+  ops: [
+    { start: 0, end: 6 }, // Keep 'Hello '
+    { text: 'Scribe' },   // Insert 'Scribe'
+                          // Since there is no retain for index 6-10, 'World' is deleted
+    { start: 11, end: 12, attributes: { bold: true } }    // Bold exclamation mark
+  ]
+});
+// Editor should now be [{ text: 'Hello Scribe' }, { text: '!', attributes: { bold: true} }]
 ```
