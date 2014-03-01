@@ -41,20 +41,7 @@ navigation:
         Navigate the Docs... <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        {% for parent in page.navigation %}
-        <li {% if page.url contains parent.url %}class="active"{% endif %}>
-          <a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.text }}</a>
-          {% if parent.children != null %}
-          <ul>
-            {% for child in parent.children %}
-            <li {% if page.url contains child.url %}class="active"{% endif %}>
-              <a href="{{ site.baseurl }}{{ child.url }}">{{ child.text }}</a>
-            </li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </li>
-        {% endfor %}
+        {% include nav-items.html %}
       </ul>
     </div>
   </div>
@@ -64,20 +51,8 @@ navigation:
     </div>
     <div id="sidebar-container" class="col-md-3 col-sm-2">
       <ul class="nav sidebar-nav">
-        {% for parent in page.navigation %}
-        <li {% if page.url contains parent.url %}class="active"{% endif %}>
-          <a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.text }}</a>
-          {% if parent.children != null %}
-          <ul class="nav">
-            {% for child in parent.children %}
-            <li {% if page.url contains child.url %}class="active"{% endif %}>
-              <a href="{{ site.baseurl }}{{ child.url }}">{{ child.text }}</a>
-            </li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </li>
-        {% endfor %}
+        {% assign navClass = "nav" %}
+        {% include nav-items.html %}
       </ul>
     </div>
   </div>

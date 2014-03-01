@@ -1,0 +1,14 @@
+{% for parent in page.navigation %}
+<li {% if page.url contains parent.url %}class="active"{% endif %}>
+  <a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.text }}</a>
+  {% if parent.children != null %}
+  <ul {% if navClass != null %}class="nav"{% endif %}>
+    {% for child in parent.children %}
+    <li {% if page.url contains child.url %}class="active"{% endif %}>
+      <a href="{{ site.baseurl }}{{ child.url }}">{{ child.text }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</li>
+{% endfor %}
