@@ -1,0 +1,31 @@
+- title: Quickstart
+  url: /docs/quickstart/
+- title: API
+  url: /docs/api/
+  children:
+    - title: Editor
+      url: /docs/api/editor/
+    - title: Events
+      url: /docs/api/events/
+    - title: Deltas
+      url: /docs/api/deltas/
+- title: Modules
+  url: /docs/modules/
+  children:
+    - title: Toolbar
+      url: /docs/modules/toolbar/
+    - title: Link Tooltip
+      url: /docs/modules/link-tooltip/
+    - title: Authors
+      url: /docs/modules/authors/
+    - title: Cursors
+      url: /docs/modules/cursors/
+- title: Themes
+  url: /docs/themes/
+- title: Examples
+  url: /docs/examples/
+  children:
+    - title: Basic
+      url: /docs/examples/basic/
+    - title: Advanced
+      url: /docs/examples/advanced/
