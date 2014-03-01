@@ -1,24 +1,18 @@
 @media (min-width: 768px) {
-  #navigation-container .fork-image {
-    display: block !important;
-  }
   #navigation-container .navbar-right {
     margin-right: 100px;
   }
 }
 
-#navigation-container {
-
-}
 #navigation-container .icon-bar {
   background-color: red;
 }
-#navigation-container .fork-image {
-  border: 0;
-  display: none;
-  position: absolute;
-  right: -1px;
-  top: -1px;
+
+#sidebar-container > ul.nav > li > a {
+  padding: 0px;
+}
+#sidebar-container > ul.nav ul.nav > li > a {
+  padding: 0px 0px 0px 15px;
 }
 
 #demo-container {

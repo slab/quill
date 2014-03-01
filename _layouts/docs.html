@@ -27,26 +27,29 @@ navigation:
     url: /docs/themes/
 ---
 
-<div id="sidebar">
-  <ul class="sidebar-nav">
-    {% for parent in page.navigation %}
-    <li {% if page.url contains parent.url %}class="active"{% endif %}>
-      <a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.text }}</a>
-      {% if parent.children != blank %}
-      <ul>
-        {% for child in parent.children %}
-        <li {% if page.url contains child.url %}class="active"{% else %}>
-          <a href="{{ site.baseurl }}{{ child.url }}">{{ child.text }}</a>
+<div class="container">
+  <div class="row">
+    <div id="content-container" class="col-md-9">
+      {{ content }}
+    </div>
+    <div id="sidebar-container" class="col-md-3">
+      <ul class="nav sidebar-nav">
+        {% for parent in page.navigation %}
+        <li {% if page.url contains parent.url %}class="active"{% endif %}>
+          <a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.text }}</a>
+          {% if parent.children != null %}
+          <ul class="nav">
+            {% for child in parent.children %}
+            <li {% if page.url contains child.url %}class="active"{% endif %}>
+              <a href="{{ site.baseurl }}{{ child.url }}">{{ child.text }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
         </li>
         {% endfor %}
       </ul>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-
-<div id="content">
-  {{ content }}
+    </div>
+  </div>
 </div>
 
