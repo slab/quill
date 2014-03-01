@@ -6,6 +6,7 @@
     <title>{{ page.title }}</title>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/css/syntax.css">
     <link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css">
     {% if page.stylesheet %}<link rel="stylesheet" href="{{ page.stylesheet }}">{% endif %}
     {% include analytics.html  %}
@@ -24,7 +25,7 @@
         </div>
         <nav class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="{{ site.baseurl }}/docs/get-started/">Documentation</a></li>
+            <li><a href="{{ site.baseurl }}/docs/quickstart/">Documentation</a></li>
             <li><a href="{{ site.baseurl }}/docs/examples/">Examples</a></li>
           </ul>
         </nav>
