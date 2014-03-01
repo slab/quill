@@ -8,14 +8,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css">
     {% if page.stylesheet %}<link rel="stylesheet" href="{{ page.stylesheet }}">{% endif %}
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-19077541-2', 'stypi.github.io');
-      ga('send', 'pageview');
-    </script>
+    {% include analytics.html  %}
   </head>
   <body>
     <header id="navigation-container" class="navbar">
@@ -31,7 +24,7 @@
         </div>
         <nav class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="{{ site.baseurl }}/docs/getting-started/">Documentation</a></li>
+            <li><a href="{{ site.baseurl }}/docs/get-started/">Documentation</a></li>
             <li><a href="{{ site.baseurl }}/docs/examples/">Examples</a></li>
           </ul>
         </nav>
