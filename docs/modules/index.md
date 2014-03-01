@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Modules - Scribe
-permalink: /
+permalink: /docs/modules/
 ---
 
 # Modules

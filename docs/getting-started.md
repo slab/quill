@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Getting Started - Scribe
-permalink: get-started/
+permalink: /docs/getting-started/
 ---
 
 # Get Started

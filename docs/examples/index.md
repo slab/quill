@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Examples - Scribe
-permalink: /
+permalink: /docs/examples/
 ---
 
 # Examples

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Cursors Module - Scribe
-permalink: cursors/
+permalink: /docs/modules/cursors/
 ---
 
 # Cursors

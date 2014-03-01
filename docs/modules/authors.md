@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Authors Module - Scribe
-permalink: authors/
+permalink: /docs/modules/authors/
 ---
 
 # Authors

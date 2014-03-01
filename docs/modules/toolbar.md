@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Toolbar Module - Scribe
-permalink: toolbar/
+permalink: /docs/modules/toolbar/
 ---
 
 # Toolbar

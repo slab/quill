@@ -3,3 +3,4 @@ markdown: redcarpet
 pygments: true
 timezone: America/Los_Angeles
 baseurl: /scribe
+relative_permalinks: false
