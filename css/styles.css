@@ -2,12 +2,21 @@
   #navigation-container .navbar-right {
     margin-right: 100px;
   }
+  #sidebar-dropdown {
+    display: none;
+  }
+  #sidebar-container {
+    display: block !important;
+  }
 }
 
 #navigation-container .icon-bar {
   background-color: red;
 }
 
+#sidebar-container {
+  display: none;
+}
 #sidebar-container > ul.nav > li > a {
   padding: 0px;
 }
@@ -22,6 +31,7 @@
 #demo-container #scribe-toolbar {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
+  overflow: hidden;
 }
 #demo-container #scribe-container {
   height: 300px;
