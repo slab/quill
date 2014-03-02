@@ -10,6 +10,7 @@
   }
 }
 
+
 #navigation-container {
   background-color: #222;
   border-radius: 0px;
@@ -30,11 +31,30 @@
 #sidebar-container {
   display: none;
 }
+#sidebar-container a {
+  color: #999;
+  font-weight: 500;
+}
+#sidebar-container a:hover {
+  background-color: #fff;
+  color: #06c;
+}
+#sidebar-container > ul.sidebar-nav > li.active > a, #sidebar-container > ul.sidebar-nav > li.active > a:hover {
+  border-left: 2px solid #06c;
+  padding-left: 13px;
+}
+#sidebar-container > ul.sidebar-nav > li > a:hover {
+  border-left: 1px solid #06c;
+  padding-left: 14px;
+}
+#sidebar-container li.active > a {
+  color: #06c;
+}
 #sidebar-container > ul.nav > li > a {
-  padding: 0px;
+  padding: 2px 0px 2px 15px;
 }
 #sidebar-container > ul.nav ul.nav > li > a {
-  padding: 0px 0px 0px 15px;
+  padding: 2px 0px 2px 30px;
 }
 
 #demo-container {

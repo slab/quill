@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Text Manipulation - Scribe
-permalink: /docs/api/editor/
+permalink: /docs/api/manipulation/
 ---
 
 # Editor
