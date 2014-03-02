@@ -1,0 +1,23 @@
+<header id="navigation-container" class="navbar">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/scribe/" title="Scribe">Scribe</a>
+    </div>
+    <nav class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li{% if page.url contains "docs/" %} class="active"{% endif %}>
+          <a href="{{ site.baseurl }}/docs/quickstart/">Documentation</a>
+        </li>
+        <li{% if page.url contains "examples/" %} class="active"{% endif %}>
+          <a href="{{ site.baseurl }}/examples/">Examples</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

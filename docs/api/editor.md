@@ -8,16 +8,16 @@ permalink: /docs/api/editor/
 
 ## Text Manipulation
 
-- getAt
-- insertAt
-- deleteAt
-- formatAt
+- [getAt](#getAt)
+- [insertAt](#insertAt)
+- [deleteAt](#deleteAt)
+- [formatAt](#formatAt)
 
 ## Delta Operations
 
-- getContents
-- setContents
-- update
+- [getContents](#getContents)
+- [setContents](#setContents)
+- [updateContents](#updateContents)
 
 
 ### getAt
@@ -174,13 +174,13 @@ editor.setContents([
 ```
 
 
-### update
+### updateContents
 
 Applies Delta to editor contents.
 
 **Methods**
 
-- update(delta)
+- updateContents(delta)
 
 **Parameters**
 

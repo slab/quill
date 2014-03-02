@@ -22,10 +22,3 @@
       url: /docs/modules/cursors/
 - title: Themes
   url: /docs/themes/
-- title: Examples
-  url: /docs/examples/
-  children:
-    - title: Basic
-      url: /docs/examples/basic/
-    - title: Advanced
-      url: /docs/examples/advanced/

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Advanced Example - Scribe
-permalink: /docs/examples/advanced/
+permalink: /examples/advanced/
 ---
 
 # Advanced Example

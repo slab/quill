@@ -10,8 +10,21 @@
   }
 }
 
+#navigation-container {
+  background-color: #222;
+  border-radius: 0px;
+}
+#navigation-container .navbar-brand {
+  font-size: 24px;
+}
 #navigation-container .icon-bar {
-  background-color: red;
+  background-color: #fff;
+}
+#navigation-container a {
+  color: #fff;
+}
+#navigation-container .nav > li.active > a, #navigation-container .nav > li > a:hover {
+  background-color: #333;
 }
 
 #sidebar-container {
