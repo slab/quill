@@ -1,10 +1,17 @@
 - title: Quickstart
   url: /docs/quickstart/
+- title: Editor
+  url: /docs/editor/
+  children:
+    - title: Customization
+      url: /docs/editor/customization
+    - title: Formats
+      url: /docs/editor/formats
 - title: API
   url: /docs/api/
   children:
-    - title: Editor
-      url: /docs/api/editor/
+    - title: Manipulation
+      url: /docs/api/manipulation/
     - title: Events
       url: /docs/api/events/
     - title: Deltas
