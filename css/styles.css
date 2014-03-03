@@ -152,6 +152,9 @@ body.home {
 #features-container h3 {
   color: #06c;
 }
+#features-container hr {
+  border-color: #e8e8e8;
+}
 #features-container img {
   margin: 0px auto 10px;
 }
