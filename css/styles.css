@@ -132,7 +132,7 @@ body.home {
 }
 #demo-container #scribe-container {
   box-shadow: 0px 2px 10px #ccc;
-  height: 250px;
+  height: 240px;
 }
 #demo-container #scribe-toolbar, #demo-container #scribe-container {
   background-color: #fff;
@@ -146,6 +146,7 @@ body.home {
 
 #features-container {
   background-color: inherit;
+  font-size: 16px;
   padding-bottom: 40px;
   text-align: center;
 }
@@ -161,6 +162,19 @@ body.home {
 #features-container .container p {
   margin-left: 25px;
   margin-right: 25px;
+}
+
+#github-container {
+  margin-top: 40px;
+}
+#github-container .btn-lg {
+  border: 1px solid #06c;
+  color: #06c;
+  margin-top: 10px;
+}
+#github-container .btn-lg:hover {
+  background-color: #06c;
+  color: #fff;
 }
 
 #docs-container {
