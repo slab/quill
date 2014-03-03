@@ -42,7 +42,7 @@ ul {
 #navigation-container {
   background-color: #222;
   border-radius: 0px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 #navigation-container .navbar-brand {
   font-size: 24px;
@@ -59,6 +59,7 @@ ul {
 
 #sidebar-container {
   display: none;
+  margin-top: 20px;
 }
 #sidebar-container a {
   color: #999;
@@ -86,9 +87,36 @@ ul {
   padding: 2px 0px 2px 30px;
 }
 
+#sidebar-dropdown {
+  margin-bottom: 40px;
+}
+#sidebar-dropdown a {
+  color: #999;
+  text-decoration: none;
+}
+#sidebar-dropdown a:hover {
+  background-color: #f5f5f5;
+}
+#sidebar-dropdown ul {
+  padding-left: 0px;
+}
+#sidebar-dropdown li.active > a {
+  background-color: inherit;
+  color: #06c;
+  font-weight: 700;
+}
+#sidebar-dropdown ul.dropdown-menu > li > a {
+  font-size: 16px;
+  padding: 5px 20px;
+}
+#sidebar-dropdown ul.dropdown-menu > li > ul > li > a {
+  display: block;
+  padding: 5px 20px 5px 40px;
+}
+
 #demo-container {
   border-bottom: 1px solid #ccc;
-  padding-top: 20px;
+  padding-top: 40px;
 }
 #demo-container #scribe-toolbar {
   border-bottom: 1px solid #ccc;
@@ -116,6 +144,7 @@ ul {
 }
 
 #docs-container {
+  margin-top: 20px;
   padding-bottom: 40px;
 }
 #docs-container pre, #docs-container table, #docs-container ul {
