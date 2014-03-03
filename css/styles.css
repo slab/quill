@@ -132,7 +132,7 @@ body.home {
 }
 #demo-container #scribe-container {
   box-shadow: 0px 2px 10px #ccc;
-  height: 240px;
+  height: 250px;
 }
 #demo-container #scribe-toolbar, #demo-container #scribe-container {
   background-color: #fff;
@@ -148,6 +148,7 @@ body.home {
   background-color: inherit;
   font-size: 16px;
   padding-bottom: 40px;
+  padding-top: 10px;
   text-align: center;
 }
 #features-container h3 {
