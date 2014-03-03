@@ -38,6 +38,10 @@ ul {
   list-style: none;
 }
 
+body.home {
+  background-color: #fafafa;
+}
+
 
 #navigation-container {
   background-color: #222;
@@ -115,18 +119,23 @@ ul {
 }
 
 #demo-container {
+  background-color: #fafafa;
   border-bottom: 1px solid #ccc;
-  padding-top: 40px;
+  margin-top: -20px;
+  padding-top: 60px;
 }
 #demo-container #scribe-toolbar {
+  box-shadow: 0px 0px 10px #ccc;
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
   overflow: hidden;
 }
 #demo-container #scribe-container {
+  box-shadow: 0px 2px 10px #ccc;
   height: 300px;
 }
 #demo-container #scribe-toolbar, #demo-container #scribe-container {
+  background-color: #fff;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
   margin-left: auto;
@@ -136,11 +145,19 @@ ul {
 }
 
 #features-container {
+  background-color: inherit;
+  padding-bottom: 40px;
   text-align: center;
 }
-
-#github-container {
-  text-align: center;
+#features-container h3 {
+  color: #06c;
+}
+#features-container img {
+  margin: 0px auto 10px;
+}
+#features-container .container p {
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 #docs-container {
