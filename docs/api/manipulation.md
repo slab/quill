@@ -6,7 +6,7 @@ permalink: /docs/api/manipulation/
 
 # Manipulation
 
-## Methods
+Scribe allows granular access to its contents through the following methods.
 
 - [Scribe.prototype.getText](#getText)
 - [Scribe.prototype.insertText](#insertText)

@@ -153,6 +153,9 @@ ul {
 #docs-container ul {
   padding: 0px;
 }
+#docs-container > ul > li > a {
+  margin-left: -20px;
+}
 #docs-container p > strong {
   text-decoration: underline;
 }
