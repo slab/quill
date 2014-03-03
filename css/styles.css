@@ -122,7 +122,7 @@ body.home {
   background-color: #fafafa;
   border-bottom: 1px solid #ccc;
   margin-top: -20px;
-  padding-top: 60px;
+  padding-top: 40px;
 }
 #demo-container #scribe-toolbar {
   box-shadow: 0px 0px 10px #ccc;
@@ -132,7 +132,7 @@ body.home {
 }
 #demo-container #scribe-container {
   box-shadow: 0px 2px 10px #ccc;
-  height: 300px;
+  height: 250px;
 }
 #demo-container #scribe-toolbar, #demo-container #scribe-container {
   background-color: #fff;
@@ -150,7 +150,7 @@ body.home {
   text-align: center;
 }
 #features-container h3 {
-  color: #06c;
+  margin-top: 10px;
 }
 #features-container hr {
   border-color: #e8e8e8;
