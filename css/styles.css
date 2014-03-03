@@ -51,6 +51,9 @@ body.home {
 #navigation-container .navbar-brand {
   font-size: 24px;
 }
+#navigation-container .navbar-brand > img {
+  margin-top: -5px;
+}
 #navigation-container .icon-bar {
   background-color: #fff;
 }
