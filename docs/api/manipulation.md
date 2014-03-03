@@ -4,143 +4,153 @@ title: Text Manipulation - Scribe
 permalink: /docs/api/manipulation/
 ---
 
-# Editor
+# Manipulation
 
-## Text Manipulation
+## Methods
 
-- [getAt](#getAt)
-- [insertAt](#insertAt)
-- [deleteAt](#deleteAt)
-- [formatAt](#formatAt)
-
-## Delta Operations
-
-- [getContents](#getContents)
-- [setContents](#setContents)
-- [updateContents](#updateContents)
+- [Scribe.prototype.getText](#getText)
+- [Scribe.prototype.insertText](#insertText)
+- [Scribe.prototype.deleteText](#deleteText)
+- [Scribe.prototype.formatText](#formatText)
+- [Scribe.prototype.getContents](#getContents)
+- [Scribe.prototype.setContents](#setContents)
+- [Scribe.prototype.updateContents](#updateContents)
 
 
-### getAt
+### Scribe.prototype.getText
 
-Retrieves string contents of the editor.
+Retrieves the string contents of the editor.
 
 **Methods**
 
-- getAt()
-- getAt(index)
-- getAt(index, length)
+- `getText()`
+- `getText(index)`
+- `getText(index, length)`
 
 **Parameters**
 
-- index (Number) - Starting position of text retrieval. Defaults to 0.
-- length (Number) - Number of characters to retrieve. Defaults to the rest of the document.
+| Parameter | Description
+|-----------|-------------
+| `index`   | _Number_ Starting position of text retrieval. Defaults to 0.
+| `length`  | _Number_ of characters to retrieve. Defaults to the rest of the document.
 
-**Return***
 
-- String - String contents of the editor
+**Returns**
+
+- *String* contents of the editor
 
 **Examples**
 
 ```javascript
-var text = editor.get(0, 10);
+var text = editor.getText(0, 10);
 ```
 
 
-### insertAt
+### Scribe.prototype.insertText
 
 Inserts text into the editor.
 
 **Methods**
 
-- insertAt(index, text)
-- insertAt(index, text, formats)
-- insertAt(index, text, name, value)
+- `insertText(index, text)`
+- `insertText(index, text, formats)`
+- `insertText(index, text, name, value)`
 
 **Parameters**
 
-- index (Number) - Starting position of text retrieval. Defaults to 0.
-- text (String) - Number of characters to retrieve. If omitted, will return to the end of the document.
-- name (String) - Name of format to apply to inserted text.
-- value (String) - Value of format to apply to inserted text.
-- formats (Object) - Key/value pairs of formats to apply to inserted text.
+| Parameter | Description
+|-----------|-------------
+| `index`   | _Number_ Position where text should be inserted.
+| `text`    | _String_ Text to be inserted.
+| `name`    | _String_ Name of format to apply to inserted text.
+| `value`   | _String_ Value of format to apply to inserted text.
+| `formats` | _Object_ Key/value pairs of formats to apply to inserted text.
 
 **Examples**
 
 ```javascript
-editor.insertAt(0, 'Hello', 'bold', true);
+editor.insertText(0, 'Hello', 'bold', true);
 
-editor.insertAt(5, 'Scribe', {
+editor.insertText(5, 'Scribe', {
   'italic': true,
   'fore-color': '#ffff00'
 });
 ```
 
 
-### deleteAt
+### Scribe.prototype.deleteText
 
 Deletes text from the editor.
 
 **Methods**
 
-- deleteAt(index, length)
+- `deleteText(index, length)`
 
 **Parameters**
 
-- index (Number) - Starting position of deletion.
-- length (Number) - Number of characters to delete.
+| Parameter | Description
+|-----------|-------------
+| `index`   | _Number_ Starting position of deletion.
+| `length`  | _Number_ of characters to delete.
 
 **Examples**
 
 ```javascript
-editor.deleteAt(0, 10);
+editor.deleteText(0, 10);
 ```
 
 
-### formatAt
+### Scribe.prototype.formatText
 
 Formats text in the editor.
 
 **Methods**
 
-- formatAt(index, length)
-- formatAt(index, length, formats)
-- formatAt(index, length, name, value)
+- `formatText(index, length)`
+- `formatText(index, length, formats)`
+- `formatText(index, length, name, value)`
 
 **Parameters**
 
-- index (Number) - Starting position of formatting.
-- name (String) - Name of format to apply to text.
-- value (String) - Value of format to apply to text.
-- formats (Object) - Key/value pairs of formats to apply to text.
+| Parameter | Description
+|-----------|-------------
+| `index`   | _Number_ Starting position of formatting.
+| `name`    | _String_ Name of format to apply to text.
+| `value`   | _String_ Value of format to apply to text.
+| `formats` | _Object_ Key/value pairs of formats to apply to text.
+
+**Examples**
 
 ```javascript
-editor.formatAt(0, 10, 'bold', false);
+editor.formatText(0, 10, 'bold', false);
 
-editor.formatAt(5, 6, {
+editor.formatText(5, 6, {
   'italic': false,
   'fore-color': '#000fff'
 });
 ```
 
 
-### getContents
+### Scribe.prototype.getContents
 
 Retrieves contents of the editor, with formatting data, represented by a Delta object.
 
 **Methods**
 
-- getContents()
-- getContents(index)
-- getContents(index, length)
+- `getContents()`
+- `getContents(index)`
+- `getContents(index, length)`
 
 **Parameters**
 
-- index (Number) - Starting position of retrieval. Defaults to 0.
-- length (Number) - Number of characters to retrieve. Defaults to the rest of the document.
+| Parameter | Description
+|-----------|-------------
+| `index`   | _Number_ Starting position of retrieval. Defaults to 0.
+| `length`  | _Number_ of characters to retrieve. Defaults to the rest of the document.
 
-**Return***
+**Returns**
 
-- Object - Contents of the editor.
+- _Delta_ contents of the editor.
 
 **Examples**
 
@@ -149,19 +159,21 @@ var delta = editor.getContents();
 ```
 
 
-### setContents
+### Scribe.prototype.setContents
 
 Overwrites editor with given contents.
 
 **Methods**
 
-- setContents(contents)
-- setContents(delta)
+- `setContents(contents)`
+- `setContents(delta)`
 
 **Parameters**
 
-- contents (Array) - Contents editor will be set to, represented by an Array of objects with keys `text` representing the text and `attributes` representing the formatting corresponding to that `text`
-- delta (Object) - Contents editor will be set to, represented by a Delta object.
+| Parameter  | Description
+|------------|-------------
+| `contents` | _Array_ Contents editor will be set to, represented by an Array of objects with text and attribute keys.
+| `delta`    | _Delta_ editor should be set to, represented by a Delta object.
 
 **Examples**
 
@@ -174,17 +186,19 @@ editor.setContents([
 ```
 
 
-### updateContents
+### Scribe.prototype.updateContents
 
 Applies Delta to editor contents.
 
 **Methods**
 
-- updateContents(delta)
+- `updateContents(delta)`
 
 **Parameters**
 
-- delta (Object) - Delta that will be applied.
+| Parameter | Description
+|-----------|-------------
+| `delta`   | _Delta_ that will be applied.
 
 **Examples**
 
@@ -197,7 +211,7 @@ editor.update({
     { start: 0, end: 6 }, // Keep 'Hello '
     { text: 'Scribe' },   // Insert 'Scribe'
                           // Since there is no retain for index 6-10, 'World' is deleted
-    { start: 11, end: 12, attributes: { bold: true } }    // Bold exclamation mark
+    { start: 11, end: 12, attributes: { bold: true } }    // Apply bold to exclamation mark
   ]
 });
 // Editor should now be [{ text: 'Hello Scribe' }, { text: '!', attributes: { bold: true} }]
