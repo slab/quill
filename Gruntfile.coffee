@@ -147,19 +147,19 @@ module.exports = (grunt) ->
         browsers: ['Chrome', 'Firefox', 'Safari']
       'remote-mac':
         browsers: ['mac-chrome', 'mac-firefox', 'mac-safari']
-        reporter: 'dot'
+        reporters: 'dots'
       'remote-windows':
         browsers: ['windows-chrome', 'windows-firefox', 'windows-ie-11']
-        reporter: 'dot'
+        reporters: 'dots'
       'remote-legacy':
         browsers: ['windows-ie-10', 'windows-ie-9', 'windows-ie-8']
-        reporter: 'dot'
+        reporters: 'dots'
       'remote-linux':
         browsers: ['linux-chrome', 'linux-firefox']
-        reporter: 'dot'
+        reporters: 'dots'
       'remote-mobile':
         browsers: ['ipad', 'iphone', 'android']
-        reporter: 'dot'
+        reporters: 'dots'
 
     watch:
       'coffee-demo':
