@@ -136,6 +136,7 @@ module.exports = (grunt) ->
       options:
         configFile: 'tests/karma/karma.conf.coffee'
         exclude: ['tests/mocha/editor.js']
+        singleRun: true
       karma:
         singleRun: false
       unit:
@@ -158,7 +159,7 @@ module.exports = (grunt) ->
         browsers: ['linux-chrome', 'linux-firefox']
         reporters: 'dots'
       'remote-mobile':
-        browsers: ['ipad', 'iphone', 'android']
+        browsers: ['ipad', 'iphone']      # Testing on android is currently too slow
         reporters: 'dots'
 
     watch:
