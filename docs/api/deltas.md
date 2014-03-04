@@ -12,10 +12,10 @@ Deltas are objects used by Scribe to represent changes to the editor. In most ca
 Deltas can also be used to represent the contents of Scribe. When used in this manner, think of it as the change from the blank editor.
 
 1. [Operations](#operations)
-1. [Delta.prototype.constructor](#constructor)
-1. [Delta.prototype.apply](#apply)
-1. [Delta.prototype.compose](#compose)
-1. [Delta.prototype.decompose](#decompose)
+1. [Delta.prototype.constructor](#deltaprototypeconstructor)
+1. [Delta.prototype.apply](#deltaprototypeapply)
+1. [Delta.prototype.compose](#deltaprototypecompose)
+1. [Delta.prototype.decompose](#deltaprototypedecompose)
 
 ### Operations
 
