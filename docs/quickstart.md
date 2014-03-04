@@ -29,3 +29,9 @@ The best way to get started is a simple demo:
   editor.addModule('toolbar', { container: '#toolbar' });
 </script>
 ```
+
+That's all you need to do to set up a simple Scribe editor! Take a look at the [Editor]({{ site.baseurl }}/docs/editor/) docs to see what's going on here.
+
+# TODO: INSERT SIMPLE SCRIBE EDITOR HERE
+
+But the power of Scribe comes with its flexibility and extensibility. Check out how to customize its [look]({{ site.baseurl }}/docs/themes), [functionality]({{ site.baseurl }}/docs/modules/), and [more]({{ site.baseurl }}/examples/advanced/)!
