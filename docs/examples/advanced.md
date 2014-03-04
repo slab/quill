@@ -5,3 +5,5 @@ permalink: /examples/advanced/
 ---
 
 # Advanced Example
+
+## Same demo as source code's advanced
