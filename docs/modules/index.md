@@ -22,4 +22,4 @@ Or you can add it later:
 editor.addModule('multi-cursor');
 ```
 
-It is possible and our intention to enable you to create your own modules. We will provide documentation and guidance here once the interface is finalized.
+It is our intention to enable you to create your own modules. We will provide documentation and guidance here once the interface is finalized.
