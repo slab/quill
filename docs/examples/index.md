@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: examples
 title: Examples - Scribe
 permalink: /examples/
 ---
