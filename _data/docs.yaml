@@ -3,8 +3,8 @@
 - title: Editor
   url: /docs/editor/
   children:
-    - title: Customization
-      url: /docs/editor/customization
+    - title: Configuration
+      url: /docs/editor/configuration
     - title: Formats
       url: /docs/editor/formats
 - title: API
