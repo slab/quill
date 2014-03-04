@@ -13,8 +13,15 @@ layout: default
       </ul>
     </div>
   </div>
+
   <div class="row">
     <div id="docs-container" class="col-md-9 col-sm-10">
+      {% if page.stability == "red" %}
+      <div class="alert alert-danger">Changes to this interface are planned.</div>
+      {% elsif page.stability == "yellow" %}
+      <div class="alert alert-warning">This interface has not been finalized.</div>
+      {% endif %}
+
       {{ content }}
     </div>
     <div id="sidebar-container" class="col-md-3 col-sm-2">
