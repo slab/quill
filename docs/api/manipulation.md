@@ -41,9 +41,9 @@ Retrieves the string contents of the editor.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 var text = editor.getText(0, 10);
-```
+{% endhighlight %}
 
 
 ### Scribe.prototype.insertText
@@ -68,14 +68,14 @@ Inserts text into the editor.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 editor.insertText(0, 'Hello', 'bold', true);
 
 editor.insertText(5, 'Scribe', {
   'italic': true,
   'fore-color': '#ffff00'
 });
-```
+{% endhighlight %}
 
 
 ### Scribe.prototype.deleteText
@@ -95,9 +95,9 @@ Deletes text from the editor.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 editor.deleteText(0, 10);
-```
+{% endhighlight %}
 
 
 ### Scribe.prototype.formatText
@@ -121,14 +121,14 @@ Formats text in the editor.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 editor.formatText(0, 10, 'bold', false);
 
 editor.formatText(5, 6, {
   'italic': false,
   'fore-color': '#000fff'
 });
-```
+{% endhighlight %}
 
 
 ### Scribe.prototype.getContents
@@ -154,9 +154,9 @@ Retrieves contents of the editor, with formatting data, represented by a Delta o
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 var delta = editor.getContents();
-```
+{% endhighlight %}
 
 
 ### Scribe.prototype.setContents
@@ -177,13 +177,13 @@ Overwrites editor with given contents.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 editor.setContents([
   { text: 'Hello ' },
   { text: 'World!', attributes: { bold: true } },
   { text: '\n' }
 ])
-```
+{% endhighlight %}
 
 
 ### Scribe.prototype.updateContents
@@ -202,7 +202,7 @@ Applies Delta to editor contents.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 // Assuming editor is currently contains [{ text: 'Hello World!' }]
 editor.update({
   startLength: 12,
@@ -215,4 +215,4 @@ editor.update({
   ]
 });
 // Editor should now be [{ text: 'Hello Scribe' }, { text: '!', attributes: { bold: true} }]
-```
+{% endhighlight %}

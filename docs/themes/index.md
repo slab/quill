@@ -10,17 +10,17 @@ Themes allow you to easily make your Scribe editor look good with minimal effort
 
 To use a custom theme, simply add its stylesheet in the `<head>`:
 
-```html
+{% highlight html %}
 <link rel="stylesheet" href="http://stypi.github.io/scribe/css/scribe.snow.css" />
-```
+{% endhighlight %}
 
 and specify its usage at initialization:
 
-```javascript
+{% highlight javascript %}
 var editor = new Scribe('#editor', {
   theme: 'snow'
 });
-```
+{% endhighlight %}
 
 There is currently only one predefined theme `snow` for Scribe.
 

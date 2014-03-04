@@ -10,17 +10,17 @@ Several common extensions to Scribe are packaged as modules. Modules are meant t
 
 To enable a module, simply add it to the editor at initialization:
 
-```javascript
+{% highlight javascript %}
 var editor = new Scribe('#editor', {
   toolbar: { container: '#toolbar' }
 });
-```
+{% endhighlight %}
 
 Or you can add it later:
 
-```javascript
+{% highlight javascript %}
 editor.addModule('multi-cursor');
-```
+{% endhighlight %}
 
 See each modules' documentation for more details about each one:
 

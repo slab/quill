@@ -24,15 +24,14 @@ Emitted when the [Scribe API]({{ site.baseurl }}/docs/api/manipulation/) is used
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 var listener = function(delta) {
   console.log(delta);
 };
 editor.on('api-text-change', listener);
 
 editor.insertText(0, 'Hello!');   // Should trigger listener
-
-```
+{% endhighlight %}
 
 ### User Text Change
 
@@ -55,12 +54,11 @@ This event is mutually exclusive with the [api-text-change](#api-text-change) ev
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 editor.on('user-text-change', function(delta) {
   // User changed the contents
 });
-
-```
+{% endhighlight %}
 
 ### Selection Change
 
@@ -74,7 +72,7 @@ Emitted when a user or API causes the selection to change.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 editor.on('selection-change', function(range) {
   if (range) {
     if (range.start == range.end) {
@@ -87,5 +85,4 @@ editor.on('selection-change', function(range) {
     console.log('Cursor not in the editor');
   }
 });
-
-```
+{% endhighlight %}

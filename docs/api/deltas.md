@@ -32,13 +32,13 @@ An Array of operations are used to represent a Delta. Two types of operations ar
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 // Insert a bold 'Hello'
 var insert = {
   text: 'Hello!',
   attributes: { bold: true }
 };
-```
+{% endhighlight %}
 
 #### Retain
 
@@ -52,14 +52,14 @@ var insert = {
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 // Keep the first 10 characters and apply the bold format to those characters
 var retain = {
   start: 0,
   end: 10,
   attributes: { bold: true }
 };
-```
+{% endhighlight %}
 
 ### Delta.prototype.constructor
 
@@ -79,12 +79,12 @@ Constructor for creating Deltas.
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 var delta = new Delta(5, 13, [
   { start: 0, end: 5 },                  // Keep the first 5 characters
   { text: 'Scribe', { bold: true } }     // Insert a bolded 'Scribe'
 ]);
-```
+{% endhighlight %}
 
 ### Delta.prototype.apply
 
@@ -104,7 +104,7 @@ var delta = new Delta(5, 13, [
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 delta.apply(function(index, text, formats) {
   // Insert text into editor
 }, function(index, length) {
@@ -112,12 +112,12 @@ delta.apply(function(index, text, formats) {
 }, function(index, length, formats) {
   // Format text in editor
 });
-```
+{% endhighlight %}
 
-```javascript
+{% highlight javascript %}
 var editor = new Scribe('#editor');
 delta.apply(editor.insertText, editor.deleteText, editor.formatText);
-```
+{% endhighlight %}
 
 ### Delta.prototype.compose
 
@@ -139,7 +139,7 @@ Determines the combination of the current delta with another delta. Neither delt
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 var deltaA = new Delta(0, 6, [
   { text: 'Hello ' }
 ]);
@@ -151,7 +151,7 @@ var deltaB = new Delta(6, 12, [
 
 // Should equal new Delta(0, 12, [{ text: 'Hello World!' }])
 var composed = deltaA.compose(deltaB);
-```
+{% endhighlight %}
 
 ### Delta.prototype.decompose
 
@@ -173,7 +173,7 @@ Determines the difference between the current delta with another delta. Neither 
 
 **Examples**
 
-```javascript
+{% highlight javascript %}
 var deltaA = new Delta(0, 12, [
   { text: 'Hello World!' }
 ]);
@@ -184,5 +184,4 @@ var deltaB = new Delta(0, 6, [
 
 // Should equal new Delta(6, 12, [{ start: 0, end: 6 }, { text: 'World!' }])
 var decomposed = deltaA.decompose(deltaB);
-
-```
+{% endhighlight %}

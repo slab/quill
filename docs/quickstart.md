@@ -8,7 +8,7 @@ permalink: /docs/quickstart/
 
 The best way to get started is a simple demo:
 
-```html
+{% highlight html %}
 <!-- Create the toolbar container -->
 <div id="toolbar">
   <button class="sc-bold">Bold</button>
@@ -28,7 +28,7 @@ The best way to get started is a simple demo:
   var editor = new Scribe('#editor');
   editor.addModule('toolbar', { container: '#toolbar' });
 </script>
-```
+{% endhighlight %}
 
 That's all you need to do to set up a simple Scribe editor! Take a look at the [Editor]({{ site.baseurl }}/docs/editor/) docs to see what's going on here.
 
