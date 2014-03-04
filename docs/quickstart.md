@@ -34,4 +34,4 @@ That's all you need to do to set up a simple Scribe editor! Take a look at the [
 
 # TODO: INSERT SIMPLE SCRIBE EDITOR HERE
 
-But the power of Scribe comes with its flexibility and extensibility. Check out how to customize its [look]({{ site.baseurl }}/docs/themes), [functionality]({{ site.baseurl }}/docs/modules/), and [more]({{ site.baseurl }}/examples/advanced/)!
+But the power of Scribe comes with its flexibility and extensibility. Check out the rest of the documentation to learn more.
