@@ -8,13 +8,13 @@ permalink: /docs/api/manipulation/
 
 Scribe allows granular access to its contents through the following methods.
 
-- [Scribe.prototype.getText](#getText)
-- [Scribe.prototype.insertText](#insertText)
-- [Scribe.prototype.deleteText](#deleteText)
-- [Scribe.prototype.formatText](#formatText)
-- [Scribe.prototype.getContents](#getContents)
-- [Scribe.prototype.setContents](#setContents)
-- [Scribe.prototype.updateContents](#updateContents)
+1. [Scribe.prototype.getText](#getText)
+1. [Scribe.prototype.insertText](#insertText)
+1. [Scribe.prototype.deleteText](#deleteText)
+1. [Scribe.prototype.formatText](#formatText)
+1. [Scribe.prototype.getContents](#getContents)
+1. [Scribe.prototype.setContents](#setContents)
+1. [Scribe.prototype.updateContents](#updateContents)
 
 
 ### Scribe.prototype.getText

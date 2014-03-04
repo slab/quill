@@ -217,11 +217,11 @@ body.home {
 #docs-container h2, #docs-container h3 {
   margin-top: 60px;
 }
-#docs-container ul {
-  padding: 0px;
+#docs-container ol {
+  list-style: none;
 }
-#docs-container > ul > li > a {
-  margin-left: -20px;
+#docs-container ol, #docs-container ul {
+  padding: 0px;
 }
 #docs-container p > strong {
   text-decoration: underline;

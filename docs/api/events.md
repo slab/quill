@@ -8,9 +8,9 @@ permalink: /docs/api/events/
 
 Scribe inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) and allowing you access to listen to the following events:
 
-- [api-text-change](#api-text-change)
-- [user-text-change](#user-text-change)
-- [selection-change](#selection-change)
+1. [api-text-change](#api-text-change)
+1. [user-text-change](#user-text-change)
+1. [selection-change](#selection-change)
 
 ### API Text Change
 

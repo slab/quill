@@ -22,4 +22,11 @@ Or you can add it later:
 editor.addModule('multi-cursor');
 ```
 
+See each modules' documentation for more details about each one:
+
+- [Toolbar]({{ site.baseurl }}/docs/modules/toolbar/)
+- [Link Tooltip]({{ site.baseurl }}/docs/modules/link-tooltip/)
+- [Authors]({{ site.baseurl }}/docs/modules/authors/)
+- [Cursors]({{ site.baseurl }}/docs/modules/cursors/)
+
 It is our intention to enable you to create your own modules. We will provide documentation and guidance here once the interface is finalized.
