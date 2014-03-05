@@ -110,27 +110,3 @@ Testing
 You can use mocha's grep feature to run specific tests ex.
 
     grunt test:local --grep=cursor
-
-### Webdriver Testing
-
-For webdriver unit tests, run:
-    
-    make webdriver-unit-chrome
-    make webdriver-unit-firefox
-    
-For the fuzzer, run:
-
-    make webdriver-fuzzer-[browser]
-    make webdriver-fuzzer-[browser]-replay _replay_file_
-
-Possible values for ```_browser_``` are ```chrome```, ```internet_explorer```, or ```firefox```.
-```_replay_file_``` must be the absolute path to the file the fuzzer creates after a failed run.
-This file contains the final edit that caused the fuzzer to fail, so that you can replay the edit until you fix the bug.
-
-In order to run any Webdriver tests against Chrome or IE, you'll need to download 
-[ChromeDriver](https://code.google.com/p/chromedriver/downloads/list) or
-[InternetExplorerDriver](https://code.google.com/p/selenium/downloads/list) and add it to your system's path. 
-Support for Firefox is built in and requires no special downloads.
-
-The fuzzer currently works against IE 9 & 10, Firefox 19 - 21, and Chrome 26.
-
