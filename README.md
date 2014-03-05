@@ -16,7 +16,6 @@ How to Use
 
 Just instantiate a new Scribe object with a css selector for the div that should become the editor.
 
-
 ```javascript
 var editor = new Scribe('#editor');
 ```

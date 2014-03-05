@@ -1,3 +1,9 @@
+fs = require('fs')
+
+replay = ''
+if fs.existsSync('tests/webdriver/fuzzer_output/fails')
+  replay = fs.readdirSync('tests/webdriver/fuzzer_output/fails')[0] or ''
+
 module.exports = (grunt) ->
   grunt.config('karma', 
     options:
@@ -28,4 +34,15 @@ module.exports = (grunt) ->
     'remote-mobile':
       browsers: ['ipad', 'iphone']      # Testing on android is currently too slow
       reporters: 'dots'
+  )
+
+  grunt.config('shell',
+    options:
+      stdout: true
+    'wd-chrome-test':    { command: 'ruby tests/webdriver/unit/unit_runner.rb chrome' }
+    'wd-chrome-fuzzer':  { command: 'ruby tests/webdriver/fuzzer.rb chrome' }
+    'wd-chrome-replay':  { command: "ruby tests/webdriver/fuzzer.rb chrome #{replay}" }
+    'wd-firefox-test':   { command: 'ruby tests/webdriver/unit/unit_runner.rb firefox' }
+    'wd-firefox-fuzzer': { command: 'ruby tests/webdriver/fuzzer.rb firefox' }
+    'wd-firefox-replay': { command: "ruby tests/webdriver/fuzzer.rb firefox #{replay}" }
   )

@@ -17,3 +17,10 @@ module.exports = (grunt) ->
   grunt.registerTask('test:exhaust', ['karma:exhaust'])
   grunt.registerTask('test:local', ['karma:local'])
   grunt.registerTask('test:remote', ['karma:remote-mac', 'karma:remote-windows', 'karma:remote-linux', 'karma:remote-mobile', 'karma:remote-legacy'])
+
+  grunt.registerTask('test:wd', ['shell:wd-chrome-test'])
+  grunt.registerTask('test:fuzz', ['shell:wd-chrome-fuzzer'])
+  grunt.registerTask('test:replay', ['shell:wd-chrome-replay'])
+  grunt.registerTask('test:wd firefox', ['shell:wd-firefox-test'])
+  grunt.registerTask('test:fuzz firefox', ['shell:wd-firefox-fuzzer'])
+  grunt.registerTask('test:replay firefox', ['shell:wd-firefox-replay'])
