@@ -21,8 +21,6 @@
   children:
     - title: Toolbar
       url: /docs/modules/toolbar/
-    - title: Link Tooltip
-      url: /docs/modules/link-tooltip/
     - title: Authors
       url: /docs/modules/authors/
     - title: Cursors
