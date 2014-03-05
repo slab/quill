@@ -1,89 +1,45 @@
-WARNING
-===
+# WARNING
 
 Please do not publicize this repository in any way. There are a few known documentation gaps and browser quirks we wish to address before publication. Thank you for your patience.
 
 
-Scribe Rich Text Editor
-===
+# [Scribe Rich Text Editor](http://stypi.github.io/scribe) [![Build Status](https://secure.travis-ci.org/stypi/scribe.png?branch=master)](http://travis-ci.org/stypi/scribe) [![Dependency Status](https://gemnasium.com/stypi/scribe.png)](https://gemnasium.com/stypi/scribe)
 
-Cross platform rich text editor built with coauthoring in mind. 
+[![Selenium Test Status](https://saucelabs.com/browser-matrix/scribe.svg)](https://saucelabs.com/u/scribe)
 
-[![Build Status](https://secure.travis-ci.org/stypi/scribe.png?branch=master)](http://travis-ci.org/stypi/scribe)
+Scribe is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and Byron Milligan and open sourced by [Salesforce.com](http://www.salesforce.com).
 
-How to Use
----
+To get started, check out the [Scribe Github Page](http://stypi.github.io/scribe) or jump straight into the [demo](http://stypi.github.io/scribe/examples/advanced/).
 
-Just instantiate a new Scribe object with a css selector for the div that should become the editor.
+## Quickstart
 
-```javascript
-var editor = new Scribe('#editor');
+Instantiate a new Scribe object with a css selector for the div that should become the editor.
+
+```html
+<!-- Create the toolbar container -->
+<div id="toolbar">
+  <button class="sc-bold">Bold</button>
+  <button class="sc-italic">Italic</button>
+</div>
+
+<!-- Create the editor container -->
+<div id="editor">
+  <div>Hello World!</div>
+</div>
+
+<!-- Include the Scribe library -->
+<script src="http://stypi.github.io/scribe/js/scribe.all.js"></script>
+
+<!-- Initialize Scribe editor -->
+<script>
+  var editor = new Scribe('#editor');
+  editor.addModule('toolbar', { container: '#toolbar' });
+</script>
 ```
 
-
-Editor API
----
-
-### Text Operations
-
-- editor.getAt(index, length) - get length text starting from index, default to entire document
-- editor.insertAt(index, text, formatting) - insert text at index
-- editor.deleteAt(index, length) - delete length characters starting from index
-- editor.formatAt(index, length, name, value) - apply formatting to length characters starting at index
-
-### Delta operations
-
-Deltas are objects used by Scribe to describe changes. See .. for more details.
-
-See [Tandem](https://github.com/stypi/tandem) for details on deltas.
-
-- editor.update(delta) - applies delta to editor
-- editor.getContents() - returns delta that describes contents of editor
-- editor.setContents(delta) - sets editor to delta, assuming delta contains only insert operations
-
-### Events
-
-Events names are accessible through Scribe.Editor.events
-
-- editor.on('text-update', function(delta, source)) - source will either be 'api' or 'user'
-- editor.on('selection-update', function(range)) - range is the new range of the selection
-
-
-Toolbar API
----
-
-You can create a toolbar to assist in formatting the editor. Just set the container a css selector for where the toolbar is.
-
-```javascript
-editor.addModule('toolbar', { container: '#toolbar' });   // #toolbar is css selector
-```
-
-Any DOM node with the following classes that is clicked will trigger the corresponding format change:
-
-- bold
-- italic
-- strike
-- underline
-- link
-
-Toolbar will listen to selection changes and will add/remove the 'active' class to the corresponding DOM node.
-
-Any DOM node with the following classes that is changed ("change" DOM event, ex. <select>) will trigger the corresponding format change:
-
-- background - background color
-- color - text color
-- family - font family
-- size - font size
-
-Toolbar will listen to selection changes and will set the corresponding DOM node value to the selected text value.
-
-
-Local Development
----
+## Local Development
 
 ### Installation
-
-Install dependencies
 
     npm install -g grunt-cli
     npm install
@@ -91,22 +47,53 @@ Install dependencies
 
 ### Building
 
-We use grunt to compile coffeescript, stylus, and jade
-
     grunt
 
+### Testing
 
-Testing
----
-
-### Javascript Testing
-
-    `grunt test` - run tests with phantomjs
-    `grunt test:karma` - allows you to visit localhost:9876/debug.html for interactive testing
-    `grunt test:local` - run tests with locally installed browsers
-    `grunt test:remote` - run tests on supported platforms on Sauce Labs
-    `grunt test:exhaust` - run exhaustive test suite (used to create unit tests) on PhantomJS
+    grunt test - run tests with phantomjs
+    grunt test:karma - allows you to visit localhost:9876/debug.html for interactive testing
+    grunt test:local - run tests with locally installed browsers
+    grunt test:remote - run tests on supported platforms on Sauce Labs
+    grunt test:exhaust - run exhaustive test suite (used to create unit tests) on PhantomJS
 
 You can use mocha's grep feature to run specific tests ex.
 
     grunt test:local --grep=cursor
+    
+## Community
+
+Get help by asking questions on [Stack Overflow](http://stackoverflow.com/) (tag with scribejs). The maintainers of Scribe will actively monitor questions.
+
+## Contributing
+
+### Bug Reports
+
+Search through [Github Issues](https://github.com/stypi/scribe/issues) to see if the bug has already been reported. If so, please comment with any additional information about the bug.
+
+For new issues, create a new issue and tag with the appropriate browser tag. Include as much detail as possible such as:
+
+- Detailed description of faulty behavior
+- Affected platforms
+- Steps for reproduction
+- Failing test case
+
+The more details you provide, the more likely someone will be able to find and fix the bug.
+
+### Feature Requests
+
+We welcome feature requests. Please make sure they are within scope of Scribe's goals and submit them in [Github Issues](https://github.com/stypi/scribe/issues) tagged with the 'feature' tag. The more complete and compelling the request, the more likely it will be implemented. Garnering community support will help as well!
+
+### Pull Requests
+
+1. Please check to make sure your plans fall within Scribe's scope (likely through Github Issues).
+2. Fork Scribe
+3. Branch off of the 'develop' branch.
+4. Implement your changes.
+5. Submit a Pull Request.
+
+**Important:** By issuing a Pull Request you agree to allow the project owners to license your work under the terms of the [License](https://github.com/stypi/scribe/blob/master/LICENSE).
+
+## License
+
+BSD
