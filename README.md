@@ -12,15 +12,14 @@ Cross platform rich text editor built with coauthoring in mind.
 [![Build Status](https://secure.travis-ci.org/stypi/scribe.png?branch=master)](http://travis-ci.org/stypi/scribe)
 [![Dependency Status](https://david-dm.org/stypi/scribe.png?theme=shields.io)](https://david-dm.org/stypi/scribe)
 
-
 How to Use
 ---
 
-Just instantiate a Scribe.Editor with a css selector for the div that should become the editor.
+Just instantiate a new Scribe object with a css selector for the div that should become the editor.
 
 
 ```javascript
-var editor = new Scribe.Editor('#editor');
+var editor = new Scribe('#editor');
 ```
 
 
@@ -36,9 +35,11 @@ Editor API
 
 ### Delta operations
 
+Deltas are objects used by Scribe to describe changes. See .. for more details.
+
 See [Tandem](https://github.com/stypi/tandem) for details on deltas.
 
-- editor.applyDelta(delta) - applies delta to editor
+- editor.update(delta) - applies delta to editor
 - editor.getContents() - returns delta that describes contents of editor
 - editor.setContents(delta) - sets editor to delta, assuming delta contains only insert operations
 
@@ -46,9 +47,8 @@ See [Tandem](https://github.com/stypi/tandem) for details on deltas.
 
 Events names are accessible through Scribe.Editor.events
 
-- editor.on('api-text-change', function(delta))
-- editor.on('user-text-change', function(delta))
-- editor.on('selection-change', function(range)) - range is the new range of the selection
+- editor.on('text-update', function(delta, source)) - source will either be 'api' or 'user'
+- editor.on('selection-update', function(range)) - range is the new range of the selection
 
 
 Toolbar API
