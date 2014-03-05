@@ -32,6 +32,11 @@ customLaunchers = _.reduce(browsers, (memo, browser, name) ->
 , {})
 
 module.exports = (config) ->
+  if process.env.TRAVIS_JOB_ID?
+    build = 'travis-' + process.env.TRAVIS_JOB_ID
+  else
+    build = os.hostname() + _.random(16*16*16*16).toString(16)
+
   config.set(
     basePath: '../../build'
     frameworks: ['mocha']
@@ -83,6 +88,6 @@ module.exports = (config) ->
       # Open source account, please do not abuse
       username: 'scribe'
       accessKey: 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
-      build: process.env.TRAVIS_JOB_ID or os.hostname()
+      build: build
     customLaunchers: customLaunchers
   )

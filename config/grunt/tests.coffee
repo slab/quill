@@ -4,12 +4,14 @@ replay = ''
 if fs.existsSync('tests/webdriver/fuzzer_output/fails')
   replay = fs.readdirSync('tests/webdriver/fuzzer_output/fails')[0] or ''
 
+remoteReporter = ['dots']
+remoteReporter.push('saucelabs') # if process.env.TRAVIS_JOB_ID?
+
 module.exports = (grunt) ->
   grunt.config('karma', 
     options:
       configFile: 'tests/karma/karma.conf.coffee'
       exclude: ['tests/mocha/editor.js']
-      singleRun: true
     karma:
       singleRun: false
     unit:
@@ -21,19 +23,19 @@ module.exports = (grunt) ->
       browsers: ['Chrome', 'Firefox', 'Safari']
     'remote-mac':
       browsers: ['mac-chrome', 'mac-firefox', 'mac-safari']
-      reporters: 'dots'
+      reporters: remoteReporter
     'remote-windows':
       browsers: ['windows-chrome', 'windows-firefox', 'windows-ie-11']
-      reporters: 'dots'
+      reporters: remoteReporter
     'remote-legacy':
       browsers: ['windows-ie-10', 'windows-ie-9', 'windows-ie-8']
-      reporters: 'dots'
+      reporters: remoteReporter
     'remote-linux':
       browsers: ['linux-chrome', 'linux-firefox']
-      reporters: 'dots'
+      reporters: remoteReporter
     'remote-mobile':
       browsers: ['ipad', 'iphone']      # Testing on android is currently too slow
-      reporters: 'dots'
+      reporters: remoteReporter
   )
 
   grunt.config('shell',
