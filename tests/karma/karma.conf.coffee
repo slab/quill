@@ -1,4 +1,5 @@
-_   = require('underscore')._
+_  = require('underscore')._
+os = require('os')
 
 browsers =
   'mac-chrome'  : ['Mac 10.9', 'chrome']
@@ -31,7 +32,6 @@ customLaunchers = _.reduce(browsers, (memo, browser, name) ->
 , {})
 
 module.exports = (config) ->
-
   config.set(
     basePath: '../../build'
     frameworks: ['mocha']
@@ -83,5 +83,6 @@ module.exports = (config) ->
       # Open source account, please do not abuse
       username: 'scribe'
       accessKey: 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
+      build: process.env.TRAVIS_JOB_ID or os.hostname()
     customLaunchers: customLaunchers
   )
