@@ -22,5 +22,5 @@ env:
   - SAUCE_BROWSER=remote-windows-ie-8
   - SAUCE_BROWSER=remote-linux-chrome
   - SAUCE_BROWSER=remote-linux-firefox
-  - SAUCE_BROWSER=remote-linux-ipad
-  - SAUCE_BROWSER=remote-linux-iphone
+  - SAUCE_BROWSER=remote-ipad
+  - SAUCE_BROWSER=remote-iphone

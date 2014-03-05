@@ -6,7 +6,7 @@ if fs.existsSync('tests/webdriver/fuzzer_output/fails')
   replay = fs.readdirSync('tests/webdriver/fuzzer_output/fails')[0] or ''
 
 remoteReporter = ['dots']
-remoteReporter.push('saucelabs') if process.env.TRAVIS_BUILD_ID?
+remoteReporter.push('saucelabs') if process.env.TRAVIS_BRANCH == 'master'
 
 remoteBrowserGroups = 
   'mac'     : ['mac-chrome', 'mac-firefox', 'mac-safari']
