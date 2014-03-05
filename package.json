@@ -33,6 +33,7 @@
     "grunt-image-embed"    : "0.3.x",
     "grunt-karma"          : "0.6.x",
     "grunt-string-replace" : "0.2.x",
+    "load-grunt-tasks"     : "0.4.x",
     "karma"                : "0.10.x",
     "karma-coverage"       : "0.2.x",
     "karma-mocha"          : "0.1.x",

@@ -1,24 +1,9 @@
-pjson = require('./package.json')
-
-
 module.exports = (grunt) ->
-
-  grunt.loadNpmTasks('grunt-browserify')
-  grunt.loadNpmTasks('grunt-contrib-clean')
-  grunt.loadNpmTasks('grunt-contrib-coffee')
-  grunt.loadNpmTasks('grunt-contrib-copy')
-  grunt.loadNpmTasks('grunt-contrib-concat')
-  grunt.loadNpmTasks('grunt-contrib-jade')
-  grunt.loadNpmTasks('grunt-contrib-stylus')
-  grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-image-embed')
-  grunt.loadNpmTasks('grunt-karma')
-  grunt.loadNpmTasks('grunt-string-replace')
+  require('load-grunt-tasks')(grunt);
 
   # Project configuration.
   grunt.initConfig
-    meta:
-      version: pjson.version
+    pkg: grunt.file.readJSON('package.json')
 
     browserify:
       options:
@@ -55,7 +40,7 @@ module.exports = (grunt) ->
     concat:
       options:
         banner:
-          '/*! Stypi Editor - v<%= meta.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+          '/*! Stypi Editor - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
           ' *  https://www.stypi.com/\n' +
           ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
           ' *  Jason Chen, Salesforce.com\n' +
