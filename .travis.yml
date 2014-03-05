@@ -1,7 +1,7 @@
 language: node_js
 node_js: '0.10'
 script:
-  - grunt test:remote
+  - grunt karma:$SAUCE_BROWSER
 before_script:
   - npm install -g grunt-cli
   - grunt
@@ -11,6 +11,16 @@ branches:
     - develop
     - /^v\d+\.\d+\.\d+$/
 env:
-  global:
-    - secure: iaJMvPiY6yLSpzxXCDq0cXX+DhczaLrtYkEO0I2Y6AP+IGcVutoljJSbv5VN+JfE6j3jbQyiLJzeTt5mUHUaGbhsVhAnSV8oinkNIi1OsOcPRkUga7JACIL46Dm/n32yUJXzw9ARzsmg3yPUJ1ti/Qd2MLZttujnw5xAiZzPhNw=
-    - secure: QV3LHeSSgdy9lbz6t1f4zMC/bEEtRlTDOAip400cV2aJg7fUSUbYiw4/uksM+xyVqScVKVPvQFFH9bfDHUr9uvVByGlcC2gpSuO02PwU8+M+jCDm8Ge4RO7c+WH2g82+vvsYCHPb2+cSuimCZ9kHWC2Ayu2Y70Mf+BWiWqYrL4I=
+  - SAUCE_BROWSER=remote-mac-chrome
+  - SAUCE_BROWSER=remote-mac-firefox
+  - SAUCE_BROWSER=remote-mac-safari
+  - SAUCE_BROWSER=remote-windows-chrome
+  - SAUCE_BROWSER=remote-windows-firefox
+  - SAUCE_BROWSER=remote-windows-ie-11
+  - SAUCE_BROWSER=remote-windows-ie-10
+  - SAUCE_BROWSER=remote-windows-ie-9
+  - SAUCE_BROWSER=remote-windows-ie-8
+  - SAUCE_BROWSER=remote-linux-chrome
+  - SAUCE_BROWSER=remote-linux-firefox
+  - SAUCE_BROWSER=remote-linux-ipad
+  - SAUCE_BROWSER=remote-linux-iphone

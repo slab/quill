@@ -32,8 +32,8 @@ customLaunchers = _.reduce(browsers, (memo, browser, name) ->
 , {})
 
 module.exports = (config) ->
-  if process.env.TRAVIS_JOB_ID?
-    build = 'travis-' + process.env.TRAVIS_JOB_ID
+  if process.env.TRAVIS_BUILD_ID?
+    build = 'travis-' + process.env.TRAVIS_BUILD_ID
   else
     build = os.hostname() + _.random(16*16*16*16).toString(16)
 
