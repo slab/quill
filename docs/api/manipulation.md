@@ -116,7 +116,7 @@ Formats text in the editor.
 |-----------|-------------
 | `index`   | _Number_ Starting position of formatting.
 | `name`    | _String_ Name of format to apply to text.
-| `value`   | _String_ Value of format to apply to text.
+| `value`   | _String_ Value of format to apply to text. A falsy value will remove the format.
 | `formats` | _Object_ Key/value pairs of formats to apply to text.
 
 **Examples**
