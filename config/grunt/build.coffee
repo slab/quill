@@ -4,12 +4,16 @@ module.exports = (grunt) ->
       alias: [
         'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
         'lib/linked_list.js:linked-list'
-        'lib/rangy-core.js:rangy-core'
         'node_modules/tandem-core/build/tandem-core.js:tandem-core'
         'node_modules/underscore/underscore.js:underscore'
         'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
       ]
+      shim:
+        'rangy-core':
+          path: 'node_modules/rangy-browser/lib/rangy-core.js'
+          exports: 'rangy'
       extensions: ['.js', '.coffee']
+      standalone: 'Scribe'
       transform: ['coffeeify']
     scribe:
       files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
