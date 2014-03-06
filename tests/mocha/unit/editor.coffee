@@ -1,3 +1,8 @@
+expect = require('expect.js')
+Tandem = require('tandem-core')
+ScribeEditorTest = require('../lib/editor-test')
+
+
 describe('Editor', ->
   describe('preserve trailing newline', ->
     preserveTests = new ScribeEditorTest(

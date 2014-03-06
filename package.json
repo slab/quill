@@ -44,7 +44,8 @@
     "karma-mocha"          : "0.1.x",
     "karma-sauce-launcher" : "0.1.x",
     "karma-safari-launcher": "0.1.x",
-    "mocha"                : "1.17.x"
+    "mocha"                : "1.17.x",
+    "phantomjs"            : "1.9.1-0"
   },
   "engine": {
     "node": ">=0.8"

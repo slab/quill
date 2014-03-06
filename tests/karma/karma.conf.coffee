@@ -41,15 +41,17 @@ module.exports = (config) ->
     basePath: '../../build'
     frameworks: ['mocha']
     files: [
-      'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js'
       'tests/mocha/style.css'
-      
-      'lib/expect.js'
+
+      'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js'
+      'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js'
+      'http://cdnjs.cloudflare.com/ajax/libs/async/1.22/async.min.js'
 
       'tests/mocha/fixture.html'
+      'tests/karma/inject.js'
 
-      'scribe.js'
-
+      'scribe.exposed.js'
+      
       'tests/mocha/unit.js'
       'tests/mocha/editor.js'
     ]

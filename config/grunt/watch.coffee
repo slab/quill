@@ -1,10 +1,10 @@
 module.exports = (grunt) ->
   grunt.config('watch',
     scribe:
-      files: ['src/**/*.coffee']
-      tasks: ['browserify']
+      files: ['src/**/*.coffee', 'tests/mocha/**/*.coffee']
+      tasks: ['newer:browserify']
     coffee:
-      files: ['demo/scripts/*.coffee', 'tests/**/*.coffee']
+      files: ['demo/scripts/*.coffee', 'tests/webdriver/**/*.coffee']
       tasks: ['newer:coffee']
     jade:
       files: ['demo/*.jade', 'tests/**/*.jade']

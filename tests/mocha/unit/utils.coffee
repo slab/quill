@@ -1,8 +1,12 @@
+expect = require('expect.js')
+ScribeHtmlTest = require('../lib/html-test')
+
+
 describe('Utils', ->
   describe('splitNode', ->
     splitTest = new ScribeHtmlTest(
       fn: (testContainer, expectedContainer, offset) ->
-        ScribeUtils.splitNode(testContainer.firstChild, offset)
+        Scribe.Utils.splitNode(testContainer.firstChild, offset)
     )
 
     splitTest.run('should not split if not necessary 1',
@@ -60,7 +64,7 @@ describe('Utils', ->
   describe('splitBefore', ->
     splitTest = new ScribeHtmlTest(
       fn: (testContainer, expectedContainer, target) ->
-        ScribeUtils.splitBefore(target, testContainer)
+        Scribe.Utils.splitBefore(target, testContainer)
       pre: (testContainer, expectedContainer) ->
         return testContainer.querySelector('#target')
     )
@@ -130,9 +134,9 @@ describe('Utils', ->
 
     traverseTest.run('should traverse with correct index',
       checker: (container) ->
-        ScribeUtils.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == ScribeDOM.ELEMENT_NODE
-            expect(offset).to.equal(expected[ScribeDOM.getText(node)])
+        Scribe.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == Scribe.DOM.ELEMENT_NODE
+            expect(offset).to.equal(expected[Scribe.DOM.getText(node)])
           return node
         )
     )
@@ -153,10 +157,10 @@ describe('Utils', ->
           </span>
         </div>'
       fn: (container) ->
-        ScribeUtils.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == ScribeDOM.ELEMENT_NODE
-            expect(offset).to.equal(expected[ScribeDOM.getText(node)])
-            node = ScribeDOM.switchTag(node, 'SPAN') if node.tagName != 'SPAN'
+        Scribe.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == Scribe.DOM.ELEMENT_NODE
+            expect(offset).to.equal(expected[Scribe.DOM.getText(node)])
+            node = Scribe.DOM.switchTag(node, 'SPAN') if node.tagName != 'SPAN'
           return node
         )
     )
@@ -175,11 +179,11 @@ describe('Utils', ->
           </h3>
         </div>'
       fn: (container) ->
-        ScribeUtils.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == ScribeDOM.ELEMENT_NODE
-            expect(offset).to.equal(expected[ScribeDOM.getText(node)])
+        Scribe.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == Scribe.DOM.ELEMENT_NODE
+            expect(offset).to.equal(expected[Scribe.DOM.getText(node)])
             if node.tagName == 'H2'
-              node = ScribeDOM.unwrap(node)
+              node = Scribe.DOM.unwrap(node)
           return node
         )
     )

@@ -1,3 +1,5 @@
+ScribeTestSuite = require('./lib/suite')
+
 describe('Editor', ->
   template = '
     <div><br></div>
@@ -17,22 +19,22 @@ describe('Editor', ->
   '
 
   describe('insertAt empty', ->
-    insertSuite = new ScribeInsertTestSuite({ initial: '<div><br></div>' })
+    insertSuite = new ScribeTestSuite.Insert({ initial: '<div><br></div>' })
     insertSuite.run()
   )
 
   describe('insertAt', ->
-    insertSuite = new ScribeInsertTestSuite({ initial: template })
+    insertSuite = new ScribeTestSuite.Insert({ initial: template })
     insertSuite.run()
   )
 
   describe('deleteAt', ->
-    deleteSuite = new ScribeDeleteTestSuite({ initial: template })
+    deleteSuite = new ScribeTestSuite.Delete({ initial: template })
     deleteSuite.run()
   )
 
   describe('formatAt', ->
-    formatSuite = new ScribeFormatTestSuite({ initial: template })
+    formatSuite = new ScribeTestSuite.Format({ initial: template })
     formatSuite.run()
   )
 )

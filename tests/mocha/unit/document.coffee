@@ -1,3 +1,8 @@
+expect = require('expect.js')
+Tandem = require('tandem-core')
+ScribeEditorTest = require('../lib/editor-test')
+
+
 describe('Document', ->
   describe('findLineAtOffset', ->
     it('should find correct offset in line', ->
@@ -11,7 +16,7 @@ describe('Document', ->
         '<ul><li><br></li></ul>'
       ]
       $('#test-container').html(lines.join(''))
-      doc = new ScribeDocument($('#test-container').get(0))
+      doc = new Scribe.Document($('#test-container').get(0))
       lines = doc.lines.toArray()
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->

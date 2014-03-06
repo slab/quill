@@ -1,3 +1,8 @@
+expect = require('expect.js')
+ScribeEditorTest = require('../../lib/editor-test')
+
+
+
 describe('Toolbar', ->
   toolbarTests = new ScribeEditorTest(
     initial: '<div><span>one.com</span><b>Bold</b></div>'
@@ -14,7 +19,7 @@ describe('Toolbar', ->
     fn: (editor) ->
       editor.theme.addModule('toolbar', { container: '#format-container' })
       editor.root.focus()
-      editor.setSelection(new ScribeRange(editor, 0, 7))
+      editor.setSelection(new Scribe.Range(editor, 0, 7))
       $('#format-container .sc-bold').click()
   )
 
@@ -23,7 +28,7 @@ describe('Toolbar', ->
     fn: (editor) ->
       editor.theme.addModule('toolbar', { container: '#format-container' })
       editor.root.focus()
-      editor.setSelection(new ScribeRange(editor, 0, 7))
+      editor.setSelection(new Scribe.Range(editor, 0, 7))
       $('#format-container .sc-link').click()
   )
 )

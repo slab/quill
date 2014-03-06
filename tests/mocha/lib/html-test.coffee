@@ -1,3 +1,5 @@
+expect = require('expect.js')
+
 buildString = (reference, arr) ->
   return _.map(arr, (elem) =>
     return if _.isNumber(elem) then reference[elem] else elem
@@ -14,7 +16,7 @@ class ScribeHtmlTest
     pre           : -> []
 
   @cleanHtml: (html, keepIdClass = false) ->
-    html = ScribeNormalizer.normalizeHtml(html)
+    html = Scribe.Normalizer.normalizeHtml(html)
     unless keepIdClass == true
       html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
       html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
@@ -50,49 +52,5 @@ class ScribeHtmlTest
     )
     done() if options.checker.length <= newArgs.length + args.length + 2
 
-class ScribeEditorTest extends ScribeHtmlTest
-  @DEFAULTS:
-    ignoreExpect  : false
 
-  constructor: (options = {}) ->
-    @settings = _.defaults(options, ScribeEditorTest.DEFAULTS)
-    super(@settings)
-
-  run: (name, options, args...) ->
-    it(name, (done) =>
-      this.runWithoutIt(options, args..., done)
-    )
-
-  runWithoutIt: (options, args..., done) ->
-    throw new Error("Invalid options passed into run") unless _.isObject(options)
-    @options = _.defaults(options, @settings)
-    testEditor = expectedEditor = null
-    htmlOptions = _.clone(@options)
-    htmlOptions.initial = '' if Tandem.Delta.isDelta(htmlOptions.initial)
-    htmlOptions.expected = '' if Tandem.Delta.isDelta(htmlOptions.expected)
-    htmlOptions.fn = (testContainer, expectedContainer, args...) =>
-      testEditor = new ScribeEditor(testContainer) #, { logLevel: 'debug' })
-      expectedEditor = new ScribeEditor(expectedContainer) #, { logLevel: 'debug' })
-      testEditor.setContents(@options.initial) if Tandem.Delta.isDelta(@options.initial)
-      expectedEditor.setContents(@options.expected) if Tandem.Delta.isDelta(@options.expected)
-      @options.fn.call(null, testEditor, expectedEditor, args...)
-    checkDeltas = (testEditor, expectedEditor) =>
-      unless @options.ignoreExpect
-        testDelta = testEditor.getContents()
-        expectedDelta = expectedEditor.getContents()
-        expect(testDelta.isEqual(expectedDelta)).to.be(true)
-        consistent = ScribeDebug.checkDocumentConsistency(testEditor.doc)
-        expect(consistent).to.be(true)
-    htmlOptions.checker = (testContainer, expectedContainer, args..., callback) =>
-      @options.checker.call(this, testEditor, expectedEditor, args..., ->
-        checkDeltas(testEditor, expectedEditor)
-        done()
-      )
-      if @options.checker.length <= args.length + 2
-        checkDeltas(testEditor, expectedEditor)
-        done()
-    super(htmlOptions, args..., done)
-
-
-window.ScribeHtmlTest = ScribeHtmlTest
-window.ScribeEditorTest = ScribeEditorTest
+module.exports = ScribeHtmlTest

@@ -22,9 +22,9 @@ listenEditor = (source, target) ->
     sourceDelta = source.getContents()
     targetDelta = target.getContents()
     decomposeDelta = targetDelta.decompose(sourceDelta)
-    isEqual = Scribe._.all(decomposeDelta.ops, (op) ->
+    isEqual = _.all(decomposeDelta.ops, (op) ->
       return false if op.delta?
-      return true if (Scribe._.keys(op.attributes).length == 0)
+      return true if (_.keys(op.attributes).length == 0)
       sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
       return true if sourceOp.length == 1 and sourceOp[0].delta == "\n"
       return false

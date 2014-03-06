@@ -1,13 +1,17 @@
+expect = require('expect.js')
+ScribeEditorTest = require('../lib/editor-test')
+
+
 describe('Selection', ->
   findIndexes = (html) ->
     $('#test-container').html(html)
-    doc = new ScribeDocument($('#test-container').get(0))
+    doc = new Scribe.Document($('#test-container').get(0))
     lines = doc.lines.toArray()
     lineIndex = 0
     ret = _.reduce(lines, (indexes, line) ->
       offset = 0
-      while ScribeDOM.getText(line.node).indexOf("|", offset) > -1
-        index = ScribeDOM.getText(line.node).indexOf("|", offset)
+      while Scribe.DOM.getText(line.node).indexOf("|", offset) > -1
+        index = Scribe.DOM.getText(line.node).indexOf("|", offset)
         indexes.push(lineIndex + index - indexes.length)
         offset = index + 1
       lineIndex += line.length
@@ -243,7 +247,7 @@ describe('Selection', ->
             expected: test.expected
             fn: (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
               testEditor.root.focus()
-              testEditor.setSelection(new ScribeRange(testEditor, testStart, testEnd))
+              testEditor.setSelection(new Scribe.Range(testEditor, testStart, testEnd))
               test.fn.call(null, testEditor)
           )
         )

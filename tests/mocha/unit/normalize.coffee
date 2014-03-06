@@ -1,3 +1,8 @@
+expect = require('expect.js')
+ScribeHtmlTest = require('../lib/html-test')
+ScribeEditorTest = require('../lib/editor-test')
+
+
 describe('Normalize', ->
   describe('breakLine', ->
     blockTest = new ScribeHtmlTest(
@@ -6,7 +11,7 @@ describe('Normalize', ->
         '<div><span>Two</span></div>'
       ]
       fn: (container) ->
-        ScribeNormalizer.breakLine(container.firstChild, container)
+        Scribe.Normalizer.breakLine(container.firstChild, container)
     )
 
     blockTest.run('Inner divs', 
@@ -31,7 +36,7 @@ describe('Normalize', ->
   describe('normalizeBreak', ->
     breakTest = new ScribeHtmlTest(
       fn: (container) ->
-        ScribeNormalizer.normalizeBreak(container.querySelector('br'), container)
+        Scribe.Normalizer.normalizeBreak(container.querySelector('br'), container)
     )
 
     breakTest.run('Break in middle of line', 
@@ -63,7 +68,7 @@ describe('Normalize', ->
   describe('groupBlocks', ->
     groupTest = new ScribeHtmlTest(
       fn: (container) ->
-        ScribeNormalizer.groupBlocks(container)
+        Scribe.Normalizer.groupBlocks(container)
     )
 
     groupTest.run('Wrap newline', 
@@ -98,8 +103,8 @@ describe('Normalize', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
-      formatManager = new ScribeFormatManager(container)
-      normalizer = new ScribeNormalizer(container, formatManager)
+      formatManager = new Scribe.FormatManager(container)
+      normalizer = new Scribe.Normalizer(container, formatManager)
     )
 
     lineTest = new ScribeHtmlTest(
@@ -235,8 +240,8 @@ describe('Normalize', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
-      formatManager = new ScribeFormatManager(container)
-      normalizer = new ScribeNormalizer(container, formatManager)
+      formatManager = new Scribe.FormatManager(container)
+      normalizer = new Scribe.Normalizer(container, formatManager)
     )
 
     attrTest = new ScribeHtmlTest(

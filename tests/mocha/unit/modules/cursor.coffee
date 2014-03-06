@@ -1,3 +1,6 @@
+expect = require('expect.js')
+
+
 describe('Cursor', ->
   describe('basic operations', ->
     cursorManager = editor = null
@@ -5,20 +8,20 @@ describe('Cursor', ->
     offsetTop = 10
     before((done) ->
       initial = '<div><b>Bold</b><i>Italic</i></div><div><br /><div><span style="font-size:18px;">Large</span></div>'
-      $('#test-container').html(ScribeNormalizer.normalizeHtml(initial))
-      editor = new ScribeEditor('#test-container')
-      cursorManager = new ScribeMultiCursor(editor)
+      $('#test-container').html(Scribe.Normalizer.normalizeHtml(initial))
+      editor = new Scribe.Editor('#test-container')
+      cursorManager = new Scribe.Modules.MultiCursor(editor)
       _.defer(done)
     )
 
     it('should set cursor', ->
       cursorManager.setCursor('id', 2, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
-      expect(ScribeDOM.hasClass(cursor, 'top')).to.be(true)
+      expect(Scribe.DOM.hasClass(cursor, 'top')).to.be(true)
       inner = cursor.querySelector('.cursor-caret')
       expect(inner.style.backgroundColor).to.equal('red')
       name = cursor.querySelector('.cursor-name')
-      expect(ScribeDOM.getText(name)).to.equal('Test')
+      expect(Scribe.DOM.getText(name)).to.equal('Test')
     )
 
     it('should set at middle of leaf', ->
@@ -89,7 +92,7 @@ describe('Cursor', ->
     )
 
     it('should append after external edit', ->
-      attributionManager = new ScribeAttribution(editor, 'id1', 'blue')
+      attributionManager = new Scribe.Modules.Attribution(editor, 'id1', 'blue')
       editor.insertAt(10, 'Y', { author: 'id1' })
       cursorManager.setCursor('id2', 11, 'Test', 'red')
       editor.insertAt(11, 'Z', { author: 'id2' })

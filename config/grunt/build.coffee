@@ -1,38 +1,46 @@
 module.exports = (grunt) ->
   grunt.config('browserify', 
     options:
-      alias: [
-        'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
-        'lib/linked_list.js:linked-list'
-        'node_modules/tandem-core/build/tandem-core.js:tandem-core'
-        'node_modules/underscore/underscore.js:underscore'
-        'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
-      ]
-      shim:
-        'rangy-core':
-          path: 'node_modules/rangy-browser/lib/rangy-core.js'
-          exports: 'rangy'
       extensions: ['.js', '.coffee']
-      standalone: 'Scribe'
       transform: ['coffeeify']
     scribe:
-      files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
+      options:
+        alias: [
+          'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
+          'lib/linked_list.js:linked-list'
+          'node_modules/tandem-core/build/tandem-core.js:tandem-core'
+          'node_modules/underscore/underscore.js:underscore'
+          'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
+        ]
+        shim:
+          'rangy-core':
+            path: 'node_modules/rangy-browser/lib/rangy-core.js'
+            exports: 'rangy'
+        standalone: 'Scribe'
+      files: [{ 
+        'build/scribe.js': ['index.coffee']
+        'build/scribe.exposed.js': ['tests/scribe.coffee']
+      }]
+    tests:
+      options:
+        alias: [
+          'node_modules/expect.js/index.js:expect.js'
+          'node_modules/tandem-core/build/tandem-core.js:tandem-core'
+        ]
+      files: [{
+        'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee']
+        'build/tests/mocha/unit.js': ['tests/mocha/unit/**/*.coffee']
+      }]
   )
 
   grunt.config('clean', ['build'])
 
   grunt.config('coffee', 
-    demo:
+    all:
       expand: true
       dest: 'build/'
-      src: ['demo/scripts/*.coffee']
+      src: ['demo/scripts/*.coffee', 'tests/**/*.coffee', '!tests/mocha/**/*.coffee']
       ext: '.js'
-    test:
-      files: [{
-        'build/tests/mocha/editor.js': ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
-        'build/tests/mocha/unit.js': ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/unit/*.coffee', 'tests/mocha/unit/modules/*.coffee']
-        'build/tests/webdriver/scribedriver.js': 'tests/webdriver/lib/scribedriver.coffee'
-      }]
   )
 
   grunt.config('concat', 

@@ -15,11 +15,15 @@
 # n - document length
 # k - number of formats
 
+ScribeHtmlTest = require('./html-test')
+ScribeEditorTest = require('./editor-test')
+
+
 class ScribeTestSuite
   constructor: (@options) ->
     @options.initial = ScribeHtmlTest.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
-    doc = new ScribeDocument($('#test-container').get(0))
+    doc = new Scribe.Document($('#test-container').get(0))
     @delta = doc.toDelta()
     @docLength = @delta.endLength
     @editorTest = new ScribeEditorTest(@options)
@@ -112,9 +116,9 @@ class ScribeFormatTestSuite extends ScribeTestSuite
         )
       )
     )
-    
 
-window.ScribeTestSuite        = ScribeTestSuite
-window.ScribeInsertTestSuite  = ScribeInsertTestSuite
-window.ScribeDeleteTestSuite  = ScribeDeleteTestSuite
-window.ScribeFormatTestSuite  = ScribeFormatTestSuite
+
+module.exports =
+  Insert: ScribeInsertTestSuite
+  Delete: ScribeDeleteTestSuite
+  Format: ScribeFormatTestSuite
