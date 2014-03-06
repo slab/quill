@@ -36,6 +36,7 @@
     "grunt-image-embed"    : "0.3.x",
     "grunt-istanbul"       : "0.2.x",
     "grunt-karma"          : "0.6.x",
+    "grunt-newer"          : "0.6.x",
     "grunt-shell"          : "0.6.x",
     "load-grunt-tasks"     : "0.4.x",
     "karma"                : "0.10.x",

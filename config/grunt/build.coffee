@@ -19,7 +19,7 @@ module.exports = (grunt) ->
       files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
   )
 
-  grunt.config('clean', ['build', '*.log', 'src/**/*.js'])
+  grunt.config('clean', ['build'])
 
   grunt.config('coffee', 
     demo:
@@ -27,13 +27,6 @@ module.exports = (grunt) ->
       dest: 'build/'
       src: ['demo/scripts/*.coffee']
       ext: '.js'
-    src:
-      options:
-        bare: true
-      expand: true  
-      ext: '.js'
-      dest: 'build/'
-      src: ['index.coffee', 'src/**/*.coffee', 'tests/karma/inject.coffee', 'tests/karma/*-fix.coffee']
     test:
       files: [{
         'build/tests/mocha/editor.js': ['tests/mocha/lib/test.coffee', 'tests/mocha/lib/suite.coffee', 'tests/mocha/editor.coffee']
@@ -61,25 +54,17 @@ module.exports = (grunt) ->
     build:
       expand: true
       dest: 'build/'
-      src: ['src/ext/*.js', 'tests/lib/*.js', 'demo/scripts/dropkick.js', 'demo/images/*.png', 'demo/fonts/*']
-    node_modules:
-      expand: true, flatten: true, cwd: 'node_modules/'
-      dest: 'build/lib/'
-      src: ['async/lib/async.js', 'mocha/mocha.css', 'mocha/mocha.js', 'underscore/underscore.js', 'underscore.string/lib/underscore.string.js']
+      src: ['lib/*.js', 'demo/images/*.png', 'demo/fonts/*']
     expectjs:
       dest: 'build/lib/expect.js'
       src:  'node_modules/expect.js/index.js'
-    lib:
-      expand: true, cwd: 'lib/'
-      dest: 'build/lib/'
-      src: ['*.js']
   )
 
   grunt.config('imageEmbed', 
     all:
       dest: ''
       expand: true
-      src: ['build/demo/styles/*.css', 'build/tests/mocha/*.css']
+      src: ['build/demo/styles/*.css', 'build/tests/**/*.css']
   )
 
   grunt.config('jade',
@@ -97,7 +82,7 @@ module.exports = (grunt) ->
       expand: true
       dest: 'build/'
       ext: ['.css']
-      src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
+      src: ['demo/styles/*.styl', 'tests/**/*.styl']
   )
 
   grunt.config('uglify',
