@@ -41,15 +41,19 @@ module.exports = (grunt) ->
       browsers: ['PhantomJS']
     local:
       browsers: ['Chrome', 'Firefox', 'Safari']
+    coverage:
+      browsers: ['PhantomJS']
+      reporters: ['coverage']
   ))
 
   grunt.config('shell',
     options:
       stdout: true
-    'wd-chrome-test':    { command: 'ruby tests/webdriver/unit/unit_runner.rb chrome' }
-    'wd-chrome-fuzzer':  { command: 'ruby tests/webdriver/fuzzer.rb chrome' }
-    'wd-chrome-replay':  { command: "ruby tests/webdriver/fuzzer.rb chrome #{replay}" }
-    'wd-firefox-test':   { command: 'ruby tests/webdriver/unit/unit_runner.rb firefox' }
-    'wd-firefox-fuzzer': { command: 'ruby tests/webdriver/fuzzer.rb firefox' }
-    'wd-firefox-replay': { command: "ruby tests/webdriver/fuzzer.rb firefox #{replay}" }
+    'instrument'        : { command: './node_modules/.bin/istanbul instrument build/src -o src/' }
+    'wd-chrome-test'    : { command: 'ruby tests/webdriver/unit/unit_runner.rb chrome' }
+    'wd-chrome-fuzzer'  : { command: 'ruby tests/webdriver/fuzzer.rb chrome' }
+    'wd-chrome-replay'  : { command: "ruby tests/webdriver/fuzzer.rb chrome #{replay}" }
+    'wd-firefox-test'   : { command: 'ruby tests/webdriver/unit/unit_runner.rb firefox' }
+    'wd-firefox-fuzzer' : { command: 'ruby tests/webdriver/fuzzer.rb firefox' }
+    'wd-firefox-replay' : { command: "ruby tests/webdriver/fuzzer.rb firefox #{replay}" }
   )

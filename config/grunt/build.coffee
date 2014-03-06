@@ -3,43 +3,51 @@ module.exports = (grunt) ->
     options:
       extensions: ['.js', '.coffee']
       transform: ['coffeeify']
+      alias: [
+        'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
+        'lib/linked_list.js:linked-list'
+        'node_modules/tandem-core/build/tandem-core.js:tandem-core'
+        'node_modules/underscore/underscore.js:underscore'
+        'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
+      ]
+      shim:
+        'rangy-core':
+          path: 'node_modules/rangy-browser/lib/rangy-core.js'
+          exports: 'rangy'
+      standalone: 'Scribe'
     scribe:
-      options:
-        alias: [
-          'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
-          'lib/linked_list.js:linked-list'
-          'node_modules/tandem-core/build/tandem-core.js:tandem-core'
-          'node_modules/underscore/underscore.js:underscore'
-          'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
-        ]
-        shim:
-          'rangy-core':
-            path: 'node_modules/rangy-browser/lib/rangy-core.js'
-            exports: 'rangy'
-        standalone: 'Scribe'
-      files: [{ 
-        'build/scribe.js': ['index.coffee']
-        'build/scribe.exposed.js': ['tests/scribe.coffee']
-      }]
+      files: [{ 'build/scribe.js': ['index.coffee'] }]
+    exposed:
+      files: [{ 'build/scribe.exposed.js': ['tests/scribe.coffee'] }]
     tests:
       options:
         alias: [
           'node_modules/expect.js/index.js:expect.js'
           'node_modules/tandem-core/build/tandem-core.js:tandem-core'
         ]
+        shim: null
+        standalone: null
       files: [{
         'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee']
         'build/tests/mocha/unit.js': ['tests/mocha/unit/**/*.coffee']
       }]
   )
 
-  grunt.config('clean', ['build'])
+  grunt.config('clean',
+    all: ['build']
+    coverage: ['src/**/*.js']
+  )
 
   grunt.config('coffee', 
     all:
       expand: true
       dest: 'build/'
       src: ['demo/scripts/*.coffee', 'tests/**/*.coffee', '!tests/mocha/**/*.coffee']
+      ext: '.js'
+    coverage:
+      expand: true
+      dest: 'build/'
+      src: ['src/**/*.coffee', '!src/debug.coffee']
       ext: '.js'
   )
 

@@ -5,7 +5,7 @@ module.exports = (grunt) ->
       tasks: ['newer:browserify']
     coffee:
       files: ['demo/scripts/*.coffee', 'tests/webdriver/**/*.coffee']
-      tasks: ['newer:coffee']
+      tasks: ['newer:coffee:all']
     jade:
       files: ['demo/*.jade', 'tests/**/*.jade']
       tasks: ['newer:jade']

@@ -34,16 +34,16 @@
     "grunt-contrib-uglify" : "0.4.x",
     "grunt-contrib-watch"  : "0.5.x",
     "grunt-image-embed"    : "0.3.x",
-    "grunt-istanbul"       : "0.2.x",
     "grunt-karma"          : "0.6.x",
     "grunt-newer"          : "0.6.x",
     "grunt-shell"          : "0.6.x",
-    "load-grunt-tasks"     : "0.4.x",
+    "istanbul"             : "0.2.x",
     "karma"                : "0.10.x",
     "karma-coverage"       : "0.2.x",
     "karma-mocha"          : "0.1.x",
     "karma-sauce-launcher" : "0.1.x",
     "karma-safari-launcher": "0.1.x",
+    "load-grunt-tasks"     : "0.4.x",
     "mocha"                : "1.17.x",
     "phantomjs"            : "1.9.1-0"
   },
@@ -52,7 +52,7 @@
   },
   "license": {
     "type": "BSD",
-    "url": "https://github.com/stypi/scribe/blob/master/LICENSE"  
+    "url": "https://github.com/stypi/scribe/blob/master/LICENSE"
   },
   "repository": {
     "type": "git",

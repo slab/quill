@@ -61,9 +61,6 @@ module.exports = (config) ->
       dir: '../coverage/'
     reporters: ['progress']
     preprocessors: 
-      'src/!(debug).js': ['coverage']
-      'src/modules/*.js': ['coverage']
-      'src/themes/!(snow).js': ['coverage']
       '**/*.html': ['html2js']
     port: 9876
     colors: true

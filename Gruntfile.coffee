@@ -10,7 +10,7 @@ module.exports = (grunt) ->
   require('./config/grunt/tests')(grunt)
   require('./config/grunt/watch')(grunt)
 
-  grunt.registerTask('default', ['clean', 'coffee', 'copy', 'browserify', 'uglify', 'concat', 'jade', 'stylus', 'imageEmbed'])
+  grunt.registerTask('default', ['clean', 'coffee:all', 'copy', 'browserify', 'uglify', 'concat', 'jade', 'stylus', 'imageEmbed'])
 
   grunt.registerTask('test', ['karma:unit'])
   grunt.registerTask('test:karma', ['karma:karma'])
@@ -24,3 +24,5 @@ module.exports = (grunt) ->
   grunt.registerTask('test:wd firefox', ['shell:wd-firefox-test'])
   grunt.registerTask('test:fuzz firefox', ['shell:wd-firefox-fuzzer'])
   grunt.registerTask('test:replay firefox', ['shell:wd-firefox-replay'])
+
+  grunt.registerTask('test:coverage', ['coffee:coverage', 'shell:instrument', 'browserify:exposed', 'karma:coverage', 'clean:coverage'])
