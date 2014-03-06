@@ -5,7 +5,7 @@ module.exports = (grunt) ->
       tasks: ['coffee:demo']
     'coffee-src':
       files: ['index.coffee', 'src/**/*.coffee']
-      tasks: ['coffee:src', 'string-replace', 'browserify', 'concat']
+      tasks: ['coffee:src', 'string-replace', 'browserify', 'uglify', 'concat']
     'coffee-test':
       files: ['tests/mocha/**/*.coffee']
       tasks: ['coffee:test']

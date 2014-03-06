@@ -47,7 +47,10 @@ module.exports = (grunt) ->
         ' *  Jason Chen, Salesforce.com\n' +
         ' */\n\n'
     scribe:
-      files: [{ 'build/scribe.js': ['build/scribe.js'] }]
+      files: [{
+        'build/scribe.js': ['build/scribe.js']
+        'build/scribe.min.js': ['build/scribe.min.js']
+      }]
   )
 
   grunt.config('copy'
@@ -91,5 +94,10 @@ module.exports = (grunt) ->
       dest: 'build/'
       ext: ['.css']
       src: ['demo/styles/*.styl', 'tests/mocha/*.styl']
+  )
+
+  grunt.config('uglify',
+    scribe:
+      files: { 'build/scribe.min.js': ['build/scribe.js'] }
   )
 
