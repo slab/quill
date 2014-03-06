@@ -1,3 +1,5 @@
+_ = require('underscore')
+
 ScribeDOM =
   ELEMENT_NODE: 1
   NOBREAK_SPACE:  "&nbsp;"

@@ -1,3 +1,5 @@
+_               = require('underscore')
+LinkedList      = require('linked-list')
 ScribeDOM       = require('./dom')
 ScribePosition  = require('./position')
 ScribeUtils     = require('./utils')

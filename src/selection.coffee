@@ -1,3 +1,5 @@
+_               = require('underscore')
+rangy           = require('rangy-core')
 ScribeDOM       = require('./dom')
 ScribeLine      = require('./line')
 ScribeKeyboard  = require('./keyboard')

@@ -10,7 +10,7 @@ module.exports = (grunt) ->
   require('./config/grunt/tests')(grunt)
   require('./config/grunt/watch')(grunt)
 
-  grunt.registerTask('default', ['clean', 'coffee', 'copy', 'string-replace', 'browserify', 'concat', 'jade', 'stylus', 'imageEmbed'])
+  grunt.registerTask('default', ['clean', 'coffee:demo', 'coffee:test', 'copy', 'browserify', 'concat', 'jade', 'stylus', 'imageEmbed'])
 
   grunt.registerTask('test', ['karma:unit'])
   grunt.registerTask('test:karma', ['karma:karma'])

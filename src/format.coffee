@@ -1,3 +1,5 @@
+_           = require('underscore')
+_.str       = require('underscore.string')
 ScribeDOM   = require('./dom')
 ScribeUtils = require('./utils')
 

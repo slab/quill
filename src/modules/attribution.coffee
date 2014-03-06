@@ -1,3 +1,4 @@
+_             = require('underscore')
 ScribeDOM     = require('../dom')
 ScribeFormat  = require('../format')
 Tandem        = require('tandem-core')

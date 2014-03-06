@@ -1,3 +1,5 @@
+_                   = require('underscore')
+EventEmitter2       = require('eventemitter2').EventEmitter2
 ScribeDOM           = require('./dom')
 ScribeDefaultTheme  = require('./themes/default')
 ScribeDocument      = require('./document')

@@ -1,16 +1,21 @@
 module.exports = (grunt) ->
   grunt.config('browserify', 
     options:
-      alias: ['node_modules/tandem-core/build/tandem-core.js:tandem-core']
+      alias: [
+        'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
+        'lib/linked_list.js:linked-list'
+        'lib/rangy-core.js:rangy-core'
+        'node_modules/tandem-core/build/tandem-core.js:tandem-core'
+        'node_modules/underscore/underscore.js:underscore'
+        'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
+      ]
       extensions: ['.js', '.coffee']
       transform: ['coffeeify']
     scribe:
       files: [{ dest: 'build/scribe.js', src: ['index.coffee'] }]
-    tandem_wrapper:
-      files: [{ dest: 'build/lib/tandem-core.js', src: ['tests/mocha/tandem.coffee'] }]
   )
 
-  grunt.config('clean', ['build', '*.log'])
+  grunt.config('clean', ['build', '*.log', 'src/**/*.js'])
 
   grunt.config('coffee', 
     demo:
@@ -37,23 +42,10 @@ module.exports = (grunt) ->
     options:
       banner:
         '/*! Stypi Editor - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        ' *  https://www.stypi.com/\n' +
+        ' *  https://stypi.github.io/scribe/\n' +
         ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
         ' *  Jason Chen, Salesforce.com\n' +
         ' */\n\n'
-    scribe_all:
-      files: [{
-        'build/scribe.all.js': [
-          'node_modules/underscore/underscore.js'
-          'node_modules/underscore.string/lib/underscore.string.js'
-          'build/lib/rangy-core.js'
-          'build/lib/eventemitter2.js'
-          'build/lib/linked_list.js'
-          'build/src/ext/header.js'
-          'build/scribe.js'
-          'build/src/ext/footer.js'
-        ]
-      }]
     scribe:
       files: [{ 'build/scribe.js': ['build/scribe.js'] }]
   )
@@ -91,24 +83,6 @@ module.exports = (grunt) ->
       expand: true
       ext: ['.html']
       src: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
-  )
-
-  grunt.config('string-replace', 
-    src:
-      options:
-        replacements: [{
-          pattern: /.+ = require\(.+\);\n\n/g
-          replacement: ''
-        }, {
-          pattern: /^var .+;\n\n/g
-          replacement: ''
-        }, {
-          pattern: /^var [A-Za-z].+,\n/g
-          replacement: 'var'
-        }]
-      expand: true
-      dest: ''
-      src: ['build/src/**/*.js']
   )
 
   grunt.config('stylus',

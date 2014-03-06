@@ -1,3 +1,5 @@
+_ = require('underscore')
+
 class ScribeLogger
   constructor: (@editor, @logLevel) ->
     switch @logLevel

@@ -28,7 +28,7 @@ Instantiate a new Scribe object with a css selector for the div that should beco
 </div>
 
 <!-- Include the Scribe library -->
-<script src="http://stypi.github.io/scribe/js/scribe.all.js"></script>
+<script src="http://stypi.github.io/scribe/js/scribe.js"></script>
 
 <!-- Initialize Scribe editor -->
 <script>

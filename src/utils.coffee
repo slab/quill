@@ -1,4 +1,5 @@
-ScribeDOM   = require('./dom')
+_         = require('underscore')
+ScribeDOM = require('./dom')
 
 
 ieVersion = do ->

@@ -1,3 +1,4 @@
+_                   = require('underscore')
 ScribeLeafIterator  = require('./leaf-iterator')
 ScribePosition      = require('./position')
 

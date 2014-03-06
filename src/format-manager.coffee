@@ -1,4 +1,6 @@
-ScribeFormat  = require('./format')
+_            = require('underscore')
+_.str        = require('underscore.string')
+ScribeFormat = require('./format')
 
 
 class ScribeFormatManager

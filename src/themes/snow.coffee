@@ -1,3 +1,4 @@
+_                   = require('underscore')
 ScribeColorPicker   = require('./color-picker')
 ScribeDefaultTheme  = require('./default')
 ScribeDOM           = require('../dom')

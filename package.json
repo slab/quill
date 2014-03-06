@@ -7,12 +7,13 @@
     "email": "jhchen7@gmail.com"
   }, {
     "name": "Byron Milligan",
-    "email": "byronner@gmail.com"  
+    "email": "byronner@gmail.com"
   }, {
     "name": "Keegan Poppen",
-    "email": "keegan.poppen@gmail.com"  
+    "email": "keegan.poppen@gmail.com"
   }],
   "dependencies": {
+    "eventemitter2"        : "0.4.x",
     "tandem-core"          : "0.5.x",
     "underscore"           : "1.6.x",
     "underscore.string"    : "2.3.x"
@@ -31,6 +32,7 @@
     "grunt-contrib-stylus" : "0.13.x",
     "grunt-contrib-watch"  : "0.5.x",
     "grunt-image-embed"    : "0.3.x",
+    "grunt-istanbul"       : "0.2.x",
     "grunt-karma"          : "0.6.x",
     "grunt-shell"          : "0.6.x",
     "grunt-string-replace" : "0.2.x",
@@ -54,6 +56,6 @@
     "url": "https://github.com/stypi/scribe"
   },
   "scripts": {
-    "test": "grunt test:remote"
+    "test": "grunt test:local"
   }
 }

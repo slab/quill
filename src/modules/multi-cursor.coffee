@@ -1,3 +1,4 @@
+_               = require('underscore')
 ScribeDOM       = require('../dom')
 ScribePosition  = require('../position')
 ScribeRenderer  = require('../renderer')
