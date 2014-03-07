@@ -63,7 +63,8 @@ class Scribe extends EventEmitter2
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
     editor.applyDelta(delta)
 
-  getContents: (index = 0, length = 0) ->
+  getContents: (index, length) ->
+    index = 0 unless index?
     length = this.getLength() - index unless length?
     ops = @editor.getDelta().getOpsAt(index, length)
     return new Tandem.Delta(0, ops)
@@ -72,7 +73,7 @@ class Scribe extends EventEmitter2
     return @editor.getDelta().endLength
 
   getText: (index, length) ->
-    return _.pluck(this.getContents(index, length), 'value').join('')
+    return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
   insertText: (index, length, name, value) ->
     formats = buildFormats(name, value)
