@@ -44,13 +44,7 @@ _ignoreChanges = (fn) ->
 
 
 class ScribeUndoManager
-  @DEFAULTS:
-    delay: 1000
-    maxStack: 100
-
-
-  constructor: (@editor, options = {}) ->
-    @options = _.defaults(options.undoManager or {}, ScribeUndoManager.DEFAULTS)
+  constructor: (@editor, @options = {}) ->
     @lastRecorded = 0
     this.clear()
     this.initListeners()
@@ -85,7 +79,7 @@ class ScribeUndoManager
     try
       undoDelta = oldDelta.invert(changeDelta)
       timestamp = new Date().getTime()
-      if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
+      if @lastRecorded + @options.undoDelay > timestamp and @stack.undo.length > 0
         change = @stack.undo.pop()
         if undoDelta.canCompose(change.undo) and change.redo.canCompose(changeDelta)
           undoDelta = undoDelta.compose(change.undo)
@@ -100,7 +94,7 @@ class ScribeUndoManager
         redo: changeDelta
         undo: undoDelta
       })
-      @stack.undo.unshift() if @stack.undo.length > @options.maxStack
+      @stack.undo.unshift() if @stack.undo.length > @options.undoMaxStack
       return true
     catch ignored
       this.clear()

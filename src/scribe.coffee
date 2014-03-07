@@ -1,5 +1,6 @@
 _                   = require('lodash')
 pkg                 = require('../package.json')
+EventEmitter2       = require('eventemitter2').EventEmitter2
 ScribeEditor        = require('./editor')
 ScribeDefaultTheme  = require('./themes/default')
 ScribeSnowTheme     = require('./themes/snow')
@@ -15,18 +16,43 @@ buildFormats = (name, value) ->
   return formats
 
 
-class Scribe
+class Scribe extends EventEmitter2
   @version: pkg.version
+  @editors: []
+
+  @DEFAULTS:
+    readonly: false
+    iframe: true
+    logLevel: false
+    pollInterval: 100
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
+    theme: 'default'
+    undoDelay: 1000
+    undoMaxStack: 100
 
   @themes:
     default: ScribeDefaultTheme
     snow: ScribeSnowTheme
 
-  constructor: (container, options) ->
-    @editor = new ScribeEditor(container, options)
+  @events:
+    FOCUS_CHANGE     : 'focus-change'
+    PRE_EVENT        : 'pre-event'
+    POST_EVENT       : 'post-event'
+    SELECTION_CHANGE : 'selection-change'
+    TEXT_CHANGE      : 'text-change'
+
+  constructor: (container, options = {}) ->
+    @options = _.defaults(options, Scribe.DEFAULTS)
+    @editor = new ScribeEditor(container, this, @options)
+    Scribe.editors.push(@editor)
+    @theme = new Scribe.themes[@options.theme](@editor)
+    @modules = _.reduce(@options.modules, (modules, options, name) =>
+      modules[name] = @theme.addModule(name, options)
+      return modules
+    , {})
 
   addModule: (name, options) ->
-    @editor.theme.addModule(name, options)
+    @theme.addModule(name, options)
 
   deleteText: (index, length) ->
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)

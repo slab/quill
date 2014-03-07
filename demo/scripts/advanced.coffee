@@ -42,7 +42,7 @@ editors = []
 for num in [1, 2]
   $wrapper = $(".editor-wrapper.#{if num == 1 then 'first' else 'last'}")
   $container = $('.editor-container', $wrapper)
-  editor = new Scribe.Editor($container.get(0), {
+  editor = new Scribe($container.get(0), {
     logLevel: 'info'
     modules:
       'attribution': {
@@ -54,10 +54,10 @@ for num in [1, 2]
       'toolbar': {
         container: $('.toolbar-container', $wrapper).get(0)
       }
-    theme: Scribe.Themes.Snow
+    theme: 'snow'
   })
   editors.push(editor)
-  
+
 listenEditor(editors[0], editors[1])
 listenEditor(editors[1], editors[0])
 editors[0].modules.attribution.addAuthor(editors[1].id, getColor(editors[1].id, true))

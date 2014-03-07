@@ -4,11 +4,7 @@ ScribeFormat = require('./format')
 
 
 class ScribeFormatManager
-  @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
-
-  constructor: (@container, options = {}) ->
-    @options = _.defaults(options.formatManager or {}, ScribeFormatManager.DEFAULTS)
+  constructor: (@container, @options = {}) ->
     @formats = {}
     _.each(@options.formats, (formatName) =>
       className = _.str.classify(formatName)

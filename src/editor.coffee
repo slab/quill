@@ -1,7 +1,6 @@
 _                   = require('lodash')
 EventEmitter2       = require('eventemitter2').EventEmitter2
 ScribeDOM           = require('./dom')
-ScribeDefaultTheme  = require('./themes/default')
 ScribeDocument      = require('./document')
 ScribeKeyboard      = require('./keyboard')
 ScribeLine          = require('./line')
@@ -142,17 +141,6 @@ class ScribeEditor extends EventEmitter2
 
   @ID_PREFIX: 'editor-'
 
-  @DEFAULTS:
-    cursor: 0
-    enabled: true
-    logLevel: false
-    pollInterval: 100
-    formatManager: {}
-    renderer: {}
-    undoManager: {}
-    modules: {}
-    theme: ScribeDefaultTheme
-
   @events:
     API_TEXT_CHANGE  : 'api-text-change'
     FOCUS_CHANGE     : 'focus-change'
@@ -162,25 +150,19 @@ class ScribeEditor extends EventEmitter2
     USER_TEXT_CHANGE : 'user-text-change'
 
 
-  constructor: (@iframeContainer, options = {}) ->
+  constructor: (@iframeContainer, @scribe, @options = {}) ->
     @id = _.uniqueId(ScribeEditor.ID_PREFIX)
-    @options = _.defaults(options, ScribeEditor.DEFAULTS)
-    @options.renderer['id'] = @id
+    @options.id = @id
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     @logger = new ScribeLogger(this, @options.logLevel)
-    this.reset(true)
-    @theme = new @options.theme(this)
-    @modules = _.reduce(@options.modules, (modules, options, name) =>
-      modules[name] = @theme.addModule(name, options)
-      return modules
-    , {})
+    this.init()
     setInterval( =>
       this.checkUpdate()
     , @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
-    this.enable() if @options.enabled
+    this.enable() unless @options.readonly
 
   disable: ->
     this.doSilently( =>
@@ -192,10 +174,8 @@ class ScribeEditor extends EventEmitter2
       @root.setAttribute('contenteditable', true)
     )
 
-  reset: (keepHTML = false) ->
+  init: ->
     @ignoreDomChanges = true
-    @options.renderer.keepHTML = keepHTML
-    @iframeContainer.innerHTML = @root.innerHTML if @root?
     @renderer = new ScribeRenderer(@iframeContainer, @options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
@@ -206,7 +186,6 @@ class ScribeEditor extends EventEmitter2
     @undoManager = new ScribeUndoManager(this, @options)
     @pasteManager = new ScribePasteManager(this)
     @ignoreDomChanges = false
-    ScribeEditor.editors.push(this)
 
   applyDelta: (delta, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
