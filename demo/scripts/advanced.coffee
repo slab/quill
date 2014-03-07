@@ -33,8 +33,8 @@ listenEditor = (source, target) ->
     console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
   ).on(Scribe.events.SELECTION_CHANGE, (range) ->
     return unless range?
-    color = getColor(source.editor.id)
-    cursor = target.modules['multi-cursor'].setCursor(source.editor.id, range.end.index, source.editor.id, color)
+    color = getColor(source.id)
+    cursor = target.modules['multi-cursor'].setCursor(source.id, range.end.index, source.id, color)
     $('.cursor-triangle', cursor.elem).css('border-top-color', color)
   )
 
@@ -61,5 +61,5 @@ for num in [1, 2]
 
 listenEditor(editors[0], editors[1])
 listenEditor(editors[1], editors[0])
-editors[0].modules.attribution.addAuthor(editors[1].editor.id, getColor(editors[1].editor.id, true))
-editors[1].modules.attribution.addAuthor(editors[0].editor.id, getColor(editors[0].editor.id, true))
+editors[0].modules.attribution.addAuthor(editors[1].id, getColor(editors[1].id, true))
+editors[1].modules.attribution.addAuthor(editors[0].id, getColor(editors[0].id, true))

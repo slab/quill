@@ -41,6 +41,7 @@ class Scribe extends EventEmitter2
 
   constructor: (container, options = {}) ->
     @options = _.defaults(options, Scribe.DEFAULTS)
+    @options.id = @id = "scribe-#{Scribe.editors.length + 1}"
     @options.emitter = this
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)

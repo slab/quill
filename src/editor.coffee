@@ -139,8 +139,6 @@ _update = ->
 class ScribeEditor extends EventEmitter2
   @editors: []
 
-  @ID_PREFIX: 'editor-'
-
   @events:
     FOCUS_CHANGE     : 'focus-change'
     POST_EVENT       : 'post-event'
@@ -150,8 +148,6 @@ class ScribeEditor extends EventEmitter2
 
 
   constructor: (@iframeContainer, @scribe, @options = {}) ->
-    @id = _.uniqueId(ScribeEditor.ID_PREFIX)
-    @options.id = @id
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     @logger = new ScribeLogger(this, @options.logLevel)
     this.init()

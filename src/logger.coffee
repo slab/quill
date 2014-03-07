@@ -13,7 +13,7 @@ _.each(['error', 'warn', 'info', 'debug'], (level, index) ->
   ScribeLogger.prototype[level] = (args...) ->
     return unless console? and @logLevel >= index
     fn = if level == 'debug' then 'log' else level
-    args.unshift(@editor.id) if @editor.scribe.constructor.editors.length > 1
+    args.unshift(@editor.options.id) if @editor.scribe.constructor.editors.length > 1
     if console[fn].apply?
       console[fn].apply(console, args)
     else

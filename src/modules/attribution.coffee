@@ -12,18 +12,18 @@ class ScribeAttribution
 
   constructor: (@editor, options) ->
     @options = _.defaults(options, ScribeAttribution.DEFAULTS)
-    @options.authorId or= @editor.id
+    @authorId = @options.authorId or @editor.options.id
     @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @editor.constructor.events.TEXT_CHANGE and origin == 'user'
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
-            op.attributes['author'] = @options.authorId
+            op.attributes['author'] = @authorId
         )
         # Apply authorship to our own editor
         authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)])
         attribute = {}
-        attribute['author'] = @options.authorId
+        attribute['author'] = @authorId
         delta.apply((index, text) =>
           _.each(text.split('\n'), (text) ->
             authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
@@ -36,7 +36,7 @@ class ScribeAttribution
         @editor.applyDelta(authorDelta, { silent: true })
     )
     @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
-    this.addAuthor(@options.authorId, @options.color)
+    this.addAuthor(@authorId, @options.color)
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
 
