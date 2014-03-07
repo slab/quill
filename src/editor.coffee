@@ -142,12 +142,11 @@ class ScribeEditor extends EventEmitter2
   @ID_PREFIX: 'editor-'
 
   @events:
-    API_TEXT_CHANGE  : 'api-text-change'
     FOCUS_CHANGE     : 'focus-change'
-    PRE_EVENT        : 'pre-event'
     POST_EVENT       : 'post-event'
+    PRE_EVENT        : 'pre-event'
     SELECTION_CHANGE : 'selection-change'
-    USER_TEXT_CHANGE : 'user-text-change'
+    TEXT_CHANGE      : 'text-change'
 
 
   constructor: (@iframeContainer, @scribe, @options = {}) ->
@@ -203,10 +202,9 @@ class ScribeEditor extends EventEmitter2
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
         unless options.silent
-          eventName = if options.source == 'api' then ScribeEditor.events.API_TEXT_CHANGE else ScribeEditor.events.USER_TEXT_CHANGE
-          this.emit(eventName, delta)
+          this.emit(ScribeEditor.events.TEXT_CHANGE, delta, options.source)
       if localDelta and !localDelta.isIdentity()
-        this.emit(ScribeEditor.events.USER_TEXT_CHANGE, localDelta)
+        this.emit(ScribeEditor.events.TEXT_CHANGE, localDelta, 'user')
       @innerHTML = @root.innerHTML
       # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
       # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
@@ -218,20 +216,20 @@ class ScribeEditor extends EventEmitter2
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      this.emit(ScribeEditor.events.USER_TEXT_CHANGE, delta)
+      this.emit(ScribeEditor.events.TEXT_CHANGE, delta, 'user')
     @selection.update(delta != false)
-
-  emit: (eventName, args...) ->
-    super(ScribeEditor.events.PRE_EVENT, eventName, args...)
-    @logger.info(eventName, args...) if _.indexOf(_.values(ScribeEditor.events), eventName) > -1
-    super(eventName, args...)
-    super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
+
+  emit: (eventName, args...) ->
+    super(ScribeEditor.events.PRE_EVENT, eventName, args...)
+    @logger.info(eventName, args...) if _.indexOf(_.values(ScribeEditor.events), eventName) > -1
+    super(eventName, args...)
+    super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
   formatAt: (index, length, name, value, options = {}) ->
     if length > 0

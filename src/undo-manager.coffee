@@ -59,11 +59,8 @@ class ScribeUndoManager
       return false
     )
     @ignoringChanges = false
-    @editor.on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
-      this.record(delta, @oldDelta) unless @ignoringChanges
-      @oldDelta = @editor.getDelta()
-    ).on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
-      this.record(delta, @oldDelta)
+    @editor.on(@editor.constructor.events.TEXT_CHANGE, (delta, origin) =>
+      this.record(delta, @oldDelta) unless @ignoringChanges and origin == 'user'
       @oldDelta = @editor.getDelta()
     )
 

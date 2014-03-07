@@ -99,12 +99,7 @@ class ScribeMultiCursor
         @container.style.left = @editor.root.offsetLeft  + 'px'
       )
     )
-    this.initListeners()
-
-  initListeners: ->
-    @editor.on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
-      _applyDelta.call(this, delta)
-    ).on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
+    @editor.on(@editor.constructor.events.TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
 

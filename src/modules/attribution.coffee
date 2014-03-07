@@ -13,8 +13,8 @@ class ScribeAttribution
   constructor: (@editor, options) ->
     @options = _.defaults(options, ScribeAttribution.DEFAULTS)
     @options.authorId or= @editor.id
-    @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta) =>
-      if eventName == @editor.constructor.events.USER_TEXT_CHANGE
+    @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
+      if eventName == @editor.constructor.events.TEXT_CHANGE and origin == 'user'
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
@@ -48,9 +48,9 @@ class ScribeAttribution
   attachButton: (button) ->
     ScribeDOM.addEventListener(button, 'click', =>
       if ScribeDOM.hasClass(button, 'sc-active')
-        @editor.modules.attribution.disable()
+        this.disable()
       else
-        @editor.modules.attribution.enable()
+        this.enable()
       ScribeDOM.toggleClass(button, 'sc-active')
     )
 

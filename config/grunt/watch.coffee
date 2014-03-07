@@ -2,7 +2,7 @@ module.exports = (grunt) ->
   grunt.config('watch',
     scribe:
       files: ['src/**/*.coffee']
-      tasks: ['browserify:scribe', 'browserify:exposed']
+      tasks: ['concurrent:browserify-scribe']
     tests:
       files: ['tests/mocha/**/*.coffee']
       tasks: ['browserify:tests']

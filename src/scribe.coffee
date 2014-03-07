@@ -36,13 +36,12 @@ class Scribe extends EventEmitter2
 
   @events:
     FOCUS_CHANGE     : 'focus-change'
-    PRE_EVENT        : 'pre-event'
-    POST_EVENT       : 'post-event'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
   constructor: (container, options = {}) ->
     @options = _.defaults(options, Scribe.DEFAULTS)
+    @options.emitter = this
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)
     @theme = new Scribe.themes[@options.theme](@editor)
@@ -50,6 +49,12 @@ class Scribe extends EventEmitter2
       modules[name] = @theme.addModule(name, options)
       return modules
     , {})
+    # TODO We should not just be a passthrough
+    _.each(ScribeEditor.events, (eventName) =>
+      @editor.on(eventName, (args...) =>
+        this.emit(eventName, args...)
+      )
+    )
 
   addModule: (name, options) ->
     @theme.addModule(name, options)
