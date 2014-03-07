@@ -25,6 +25,7 @@
     "grunt"                : "0.4.x",
     "grunt-browserify"     : "1.3.x",
     "coffeeify"            : "0.6.x",
+    "grunt-concurrent"     : "0.5.x",
     "grunt-contrib-clean"  : "0.5.x",
     "grunt-contrib-coffee" : "0.10.x",
     "grunt-contrib-concat" : "0.3.x",
