@@ -67,17 +67,17 @@ class ScribeUndoManager
     @ignoringChanges = false
     @editor.on(@editor.constructor.events.USER_TEXT_CHANGE, (delta) =>
       this.record(delta, @oldDelta) unless @ignoringChanges
-      @oldDelta = @editor.getContents()
+      @oldDelta = @editor.getDelta()
     ).on(@editor.constructor.events.API_TEXT_CHANGE, (delta) =>
       this.record(delta, @oldDelta)
-      @oldDelta = @editor.getContents()
+      @oldDelta = @editor.getDelta()
     )
 
   clear: ->
     @stack =
       undo: []
       redo: []
-    @oldDelta = @editor.getContents()
+    @oldDelta = @editor.getDelta()
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity()

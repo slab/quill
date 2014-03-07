@@ -45,7 +45,7 @@ _deleteAt = (index, length) ->
 
 _forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(this.getLength(), "\n")
+    this.insertAt(@delta.endLength, "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 _formatAt = (index, length, name, value) ->
@@ -211,9 +211,6 @@ class ScribeEditor extends EventEmitter2
   applyDelta: (delta, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     return if delta.isIdentity()
-    # Make exception for systems that assume editors start with empty text
-    if delta.startLength == 0 and this.getLength() == 1
-      return this.setContents(delta, options)
     this.doSilently( =>
       localDelta = this.update()
       if localDelta
@@ -251,12 +248,6 @@ class ScribeEditor extends EventEmitter2
     super(eventName, args...)
     super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
-  addModule: (args...) ->
-    @theme.addModule(args...)
-
-  deleteAt: (index, length, options = {}) ->
-    this.applyDelta(Tandem.Delta.makeDeleteDelta(@delta.endLength, index, length), options)
-
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
     @ignoreDomChanges = true
@@ -271,30 +262,11 @@ class ScribeEditor extends EventEmitter2
     else
       _preformat.call(this, name, value)
 
-  getAt: (index = 0, length = null) ->
-    length = this.getLength() - index unless length?
-    return _.map(this.getContents().getOpsAt(index, length), (op) ->
-      return op.value
-    ).join('')
-
-  getContents: ->
+  getDelta: ->
     return @delta
-
-  getLength: ->
-    return @delta.endLength
 
   getSelection: ->
     return @selection.getRange()
-
-  insertAt: (index, text, formatting = {}, options = {}) ->
-    this.applyDelta(Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formatting), options)
-
-  setContents: (delta) ->
-    oldLength = delta.startLength
-    delta.startLength = this.getLength()
-    this.applyDelta(delta, { silent: true })
-    @undoManager.clear()
-    delta.startLength = oldLength
 
   setSelection: (range, silent = false) ->
     @selection.setRange(range, silent)
