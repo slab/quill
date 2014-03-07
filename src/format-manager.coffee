@@ -1,4 +1,4 @@
-_            = require('underscore')
+_            = require('lodash')
 _.str        = require('underscore.string')
 ScribeFormat = require('./format')
 

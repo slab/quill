@@ -1,4 +1,4 @@
-_ = require('underscore')
+_ = require('lodash')
 
 class ScribeLogger
   constructor: (@editor, @logLevel) ->

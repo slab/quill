@@ -1,4 +1,4 @@
-_         = require('underscore')
+_         = require('lodash')
 ScribeDOM = require('./dom')
 
 
@@ -63,7 +63,7 @@ ScribeUtils =
       return ScribeUtils.findDeepestNode(child, offset + length)
     else
       return [node, offset]
-        
+
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
     length = ScribeUtils.getNodeLength(child)

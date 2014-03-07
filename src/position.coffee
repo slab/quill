@@ -1,4 +1,4 @@
-_           = require('underscore')
+_           = require('lodash')
 ScribeDOM   = require('./dom')
 ScribeUtils = require('./utils')
 
@@ -10,7 +10,7 @@ class ScribePosition
       offset = ScribePosition.getIndex(node, offset, node.parentNode)
       node = node.parentNode
     return [node, offset]
-  
+
   @getIndex: (node, index = 0, offsetNode = null) ->
     while node != offsetNode and node.ownerDocument? and !ScribeDOM.hasClass(node, 'editor')
       while node.previousSibling?
@@ -21,7 +21,7 @@ class ScribePosition
 
 
   # constructor: (Editor editor, Object node, Number offset) ->
-  # constructor: (Editor editor, Number index) -> 
+  # constructor: (Editor editor, Number index) ->
   constructor: (@editor, @leafNode, @offset) ->
     if _.isNumber(@leafNode)
       @offset = @index = @leafNode

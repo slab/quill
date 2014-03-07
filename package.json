@@ -14,9 +14,9 @@
   }],
   "dependencies": {
     "eventemitter2"        : "0.4.x",
+    "lodash"               : "2.4.x",
     "rangy-browser"        : "1.2.3-1",
     "tandem-core"          : "0.5.x",
-    "underscore"           : "1.6.x",
     "underscore.string"    : "2.3.x"
   },
   "devDependencies": {

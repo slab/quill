@@ -1,4 +1,4 @@
-_ = require('underscore')
+_ = require('lodash')
 
 ScribeDOM =
   ELEMENT_NODE: 1
@@ -41,6 +41,14 @@ ScribeDOM =
     else
       throw new Error("No add event support")
 
+  getAttributes: (node) ->
+    return {} unless node.attributes?
+    attributes = {}
+    for value,i in node.attributes
+      attr = node.attributes[i]
+      attributes[attr.name] = attr.value
+    return attributes
+
   getChildIndex: (node) ->
     index = 0
     while node.previousSibling?
@@ -48,11 +56,16 @@ ScribeDOM =
       index += 1
     return index
 
+  getChildNodes: (node) ->
+    children = []
+    child = node.firstChild
+    while child?
+      children.push(child)
+      child = child.nextSibling
+    return children
+
   getClasses: (node) ->
-    if node.classList
-      return _.clone(node.classList)
-    else if node.className?
-      return node.className.split(' ')
+    return node.className.split(/\s+/)
 
   getDefaultOption: (select) ->
     option = select.querySelector('option[selected]')
@@ -92,7 +105,7 @@ ScribeDOM =
     return node1
 
   moveChildren: (newParent, oldParent) ->
-    _.each(_.clone(oldParent.childNodes), (child) ->
+    _.each(ScribeDOM.getChildNodes(oldParent), (child) ->
       newParent.appendChild(child)
     )
 
@@ -108,8 +121,8 @@ ScribeDOM =
 
   removeAttributes: (node, exception = []) ->
     exception = [exception] if _.isString(exception)
-    _.each(_.clone(node.attributes), (attrNode, value) ->
-      node.removeAttribute(attrNode.name) unless _.indexOf(exception, attrNode.name) > -1
+    _.each(ScribeDOM.getAttributes(node), (value, name) ->
+      node.removeAttribute(name) unless _.indexOf(exception, name) > -1
     )
 
   removeClass: (node, cssClass) ->
@@ -169,7 +182,7 @@ ScribeDOM =
   unwrap: (node) ->
     ret = node.firstChild
     next = node.nextSibling
-    _.each(_.clone(node.childNodes), (child) ->
+    _.each(ScribeDOM.getChildNodes(node), (child) ->
       node.parentNode.insertBefore(child, next)
     )
     node.parentNode.removeChild(node)

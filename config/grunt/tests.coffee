@@ -1,4 +1,4 @@
-_  = require('underscore')._
+_  = require('lodash')
 fs = require('fs')
 
 replay = ''
@@ -8,7 +8,7 @@ if fs.existsSync('tests/webdriver/fuzzer_output/fails')
 remoteReporter = ['dots']
 remoteReporter.push('saucelabs') if process.env.TRAVIS_BRANCH == 'master'
 
-remoteBrowserGroups = 
+remoteBrowserGroups =
   'mac'     : ['mac-chrome', 'mac-firefox', 'mac-safari']
   'windows' : ['windows-chrome', 'windows-firefox', 'windows-ie-11']
   'legacy'  : ['windows-ie-10', 'windows-ie-9', 'windows-ie-8']

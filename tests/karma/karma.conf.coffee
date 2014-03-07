@@ -1,4 +1,4 @@
-_  = require('underscore')._
+_  = require('lodash')
 os = require('os')
 
 browsers =
@@ -44,23 +44,23 @@ module.exports = (config) ->
       'tests/mocha/style.css'
 
       'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js'
-      'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js'
+      'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js'
       'http://cdnjs.cloudflare.com/ajax/libs/async/1.22/async.min.js'
 
       'tests/mocha/fixture.html'
       'tests/karma/inject.js'
 
       'scribe.exposed.js'
-      
+
       'tests/mocha/unit.js'
       'tests/mocha/editor.js'
     ]
     exclude: []
-    coverageReporter: 
+    coverageReporter:
       type: 'lcov'
       dir: '../coverage/'
     reporters: ['progress']
-    preprocessors: 
+    preprocessors:
       '**/*.html': ['html2js']
     port: 9876
     colors: true

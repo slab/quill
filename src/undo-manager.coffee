@@ -1,4 +1,4 @@
-_               = require('underscore')
+_               = require('lodash')
 ScribeKeyboard  = require('./keyboard')
 ScribeRange     = require('./range')
 Tandem          = require('tandem-core')

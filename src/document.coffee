@@ -1,4 +1,4 @@
-_                   = require('underscore')
+_                   = require('lodash')
 LinkedList          = require('linked-list')
 ScribeDOM           = require('./dom')
 ScribeFormatManager = require('./format-manager')

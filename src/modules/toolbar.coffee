@@ -1,4 +1,4 @@
-_                 = require('underscore')
+_                 = require('lodash')
 ScribeDOM         = require('../dom')
 ScribeKeyboard    = require('../keyboard')
 ScribeRange       = require('../range')

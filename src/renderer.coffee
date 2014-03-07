@@ -1,4 +1,4 @@
-_                 = require('underscore')
+_                 = require('lodash')
 EventEmitter2     = require('eventemitter2').EventEmitter2
 ScribeDOM         = require('./dom')
 ScribeUtils       = require('./utils')

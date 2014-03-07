@@ -1,4 +1,4 @@
-_           = require('underscore')
+_           = require('lodash')
 ScribeDOM   = require('./dom')
 ScribeUtils = require('./utils')
 
@@ -132,7 +132,7 @@ class ScribeNormalizer
         lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
         lineNode = lineNode.firstChild
       lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
-    
+
   @wrapText: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>
       ScribeDOM.normalize(node)

@@ -1,4 +1,4 @@
-_           = require('underscore')
+_           = require('lodash')
 _.str       = require('underscore.string')
 ScribeDOM   = require('./dom')
 ScribeUtils = require('./utils')
@@ -205,7 +205,7 @@ class ScribeColorFormat extends ScribeStyleFormat
   @normalizeColor: (value) ->
     value = value.replace(/\ /g, '')
     if value[0] == '#' and value.length == 4
-      return _.map(value.slice(1), (letter) -> 
+      return _.map(value.slice(1), (letter) ->
         parseInt(letter + letter, 16)
       )
     else if value[0] == '#' and value.length == 7
@@ -289,7 +289,7 @@ class ScribeForeColorFormat extends ScribeColorFormat
     super(@root, 'fore-color', 'color', 'black', ScribeColorFormat.COLORS)
 
 
-module.exports = 
+module.exports =
   Leaf  : ScribeLeafFormat
   Tag   : ScribeTagFormat
   Span  : ScribeSpanFormat
@@ -301,7 +301,7 @@ module.exports =
   Link      : ScribeLinkFormat
   Strike    : ScribeStrikeFormat
   Underline : ScribeUnderlineFormat
-  
+
   BackColor : ScribeBackColorFormat
   FontName  : ScribeFontNameFormat
   FontSize  : ScribeFontSizeFormat

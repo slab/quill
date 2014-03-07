@@ -1,8 +1,11 @@
 module.exports = (grunt) ->
   grunt.config('watch',
     scribe:
-      files: ['src/**/*.coffee', 'tests/mocha/**/*.coffee']
-      tasks: ['newer:browserify']
+      files: ['src/**/*.coffee']
+      tasks: ['browserify:scribe', 'browserify:exposed']
+    tests:
+      files: ['tests/mocha/**/*.coffee']
+      tasks: ['browserify:tests']
     coffee:
       files: ['demo/scripts/*.coffee', 'tests/webdriver/**/*.coffee']
       tasks: ['newer:coffee:all']
@@ -16,4 +19,3 @@ module.exports = (grunt) ->
       files: ['build/demo/styles/*.css', 'build/tests/**/*.css']
       tasks: ['newer:imageEmbed']
   )
-  

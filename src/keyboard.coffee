@@ -1,4 +1,4 @@
-_               = require('underscore')
+_               = require('lodash')
 ScribeDOM       = require('./dom')
 ScribeLine      = require('./line')
 ScribePosition  = require('./position')

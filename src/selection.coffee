@@ -1,4 +1,4 @@
-_               = require('underscore')
+_               = require('lodash')
 rangy           = require('rangy-core')
 ScribeDOM       = require('./dom')
 ScribeLine      = require('./line')
@@ -43,7 +43,7 @@ _nativeRangeToRange = (nativeRange) ->
   return null unless nativeRange?
   start = new ScribePosition(@editor, nativeRange.startContainer, nativeRange.startOffset)
   end = new ScribePosition(@editor, nativeRange.endContainer, nativeRange.endOffset)
-  if start.index <= end.index 
+  if start.index <= end.index
     range = new ScribeRange(@editor, start, end)
     range.isBackwards = false
   else
@@ -94,7 +94,7 @@ _updateFocus = (silent) ->
         clearTimeout(@blurTimer)
         @blurTimer = null
       else
-        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, true) 
+        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, true)
     else if !@blurTimer?
       @blurTimer = setTimeout( =>
         @editor.emit(@editor.constructor.events.FOCUS_CHANGE, false)  if @hasFocus == false
@@ -125,7 +125,7 @@ class ScribeSelection
     return null unless @range?
     nativeRange = @range.nativeRange or @range.textRange
     return nativeRange.getBoundingClientRect()
-    
+
   getNativeRange: (normalize = false) ->
     return @range unless @editor.renderer.checkFocus()
     return null unless @nativeSelection
@@ -177,7 +177,7 @@ class ScribeSelection
 
   update: (silent = false) ->
     _updateFocus.call(this, silent)
-    if @hasFocus 
+    if @hasFocus
       nativeRange = this.getNativeRange(false)
       return if compareNativeRanges(nativeRange, @range)
       @range = nativeRange

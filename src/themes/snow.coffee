@@ -1,4 +1,4 @@
-_                   = require('underscore')
+_                   = require('lodash')
 ScribeColorPicker   = require('./color-picker')
 ScribeDefaultTheme  = require('./default')
 ScribeDOM           = require('../dom')
@@ -54,7 +54,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     )
 
   extendMultiCursor: (options) ->
-    options.template = 
+    options.template =
      '<span class="cursor-flag">
         <span class="cursor-name"></span>
         <span class="cursor-triangle"></span>

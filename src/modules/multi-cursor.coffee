@@ -1,4 +1,4 @@
-_               = require('underscore')
+_               = require('lodash')
 ScribeDOM       = require('../dom')
 ScribePosition  = require('../position')
 ScribeRenderer  = require('../renderer')
@@ -62,7 +62,7 @@ _updateCursor = (cursor) ->
 
 class ScribeMultiCursor
   @DEFAULTS:
-    template: 
+    template:
      '<span class="cursor-flag">
         <span class="cursor-name"></span>
       </span>

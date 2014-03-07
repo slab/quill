@@ -1,4 +1,4 @@
-_               = require('underscore')
+_               = require('lodash')
 ScribeDOM       = require('../dom')
 ScribeKeyboard  = require('../keyboard')
 ScribePosition  = require('../position')
@@ -116,7 +116,7 @@ normalizeUrl = (url) ->
   url = 'http://' + url unless /^https?:\/\//.test(url)
   url = url.slice(0, url.length - 1) if url.slice(url.length - 1) == '/' # Remove trailing slash to standardize between browsers
   return url
-  
+
 showTooltip = (target, subjectDist = 5) ->
   tooltip = @tooltip.getBoundingClientRect()
   tooltipHeight = tooltip.bottom - tooltip.top

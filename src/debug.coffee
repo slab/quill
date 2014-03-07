@@ -1,4 +1,4 @@
-_           = require('underscore')
+_           = require('lodash')
 ScribeDOM   = require('./dom')
 ScribeUtils = require('./utils')
 
@@ -62,11 +62,11 @@ ScribeDebug =
         leafNodes = _.map(leaves, (leaf) -> return leaf.node)
         if !_.isEqual(leafNodes, nodesByLine[index])
           throw new Error("Nodes differ from leaves")
-        leaves = _.map(leaves, (leaf) -> 
+        leaves = _.map(leaves, (leaf) ->
           return _.pick(leaf, 'formats', 'length', 'line', 'node', 'text')
         )
         line.rebuild(true)
-        rebuiltLeaves = _.map(line.leaves.toArray(), (leaf) -> 
+        rebuiltLeaves = _.map(line.leaves.toArray(), (leaf) ->
           return _.pick(leaf, 'formats', 'length', 'line', 'node', 'text')
         )
         if !_.isEqual(leaves, rebuiltLeaves)

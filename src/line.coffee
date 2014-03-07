@@ -1,4 +1,4 @@
-_           = require('underscore')
+_           = require('lodash')
 LinkedList  = require('linked-list')
 ScribeDOM   = require('./dom')
 ScribeLeaf  = require('./leaf')
@@ -104,7 +104,7 @@ class ScribeLine extends LinkedList.Node
     if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
       leaf.insertText(leafOffset, text)
       this.resetContent()
-    else 
+    else
       span = @node.ownerDocument.createElement('span')
       ScribeDOM.setText(span, text)
       if offset == 0    # Special case for remote cursor preservation

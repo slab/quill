@@ -1,15 +1,15 @@
 module.exports = (grunt) ->
-  grunt.config('browserify', 
+  grunt.config('browserify',
     options:
-      extensions: ['.js', '.coffee']
-      transform: ['coffeeify']
       alias: [
         'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
         'lib/linked_list.js:linked-list'
+        'node_modules/lodash/lodash.js:lodash'
         'node_modules/tandem-core/build/tandem-core.js:tandem-core'
-        'node_modules/underscore/underscore.js:underscore'
         'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
       ]
+      extensions: ['.js', '.coffee']
+      transform: ['coffeeify']
       shim:
         'rangy-core':
           path: 'node_modules/rangy-browser/lib/rangy-core.js'
@@ -38,7 +38,7 @@ module.exports = (grunt) ->
     coverage: ['src/**/*.js']
   )
 
-  grunt.config('coffee', 
+  grunt.config('coffee',
     all:
       expand: true
       dest: 'build/'
@@ -51,7 +51,7 @@ module.exports = (grunt) ->
       ext: '.js'
   )
 
-  grunt.config('concat', 
+  grunt.config('concat',
     options:
       banner:
         '/*! Stypi Editor - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -76,7 +76,7 @@ module.exports = (grunt) ->
       src:  'node_modules/expect.js/index.js'
   )
 
-  grunt.config('imageEmbed', 
+  grunt.config('imageEmbed',
     all:
       dest: ''
       expand: true

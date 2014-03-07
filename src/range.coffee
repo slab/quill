@@ -1,4 +1,4 @@
-_                   = require('underscore')
+_                   = require('lodash')
 ScribeLeafIterator  = require('./leaf-iterator')
 ScribePosition      = require('./position')
 
@@ -18,11 +18,11 @@ class ScribeRange
   equals: (range) ->
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
-  
+
   format: (name, value, options) ->
     @editor.formatAt(@start.index, @end.index - @start.index, name, value, options)
 
-  # TODO implement the following:    
+  # TODO implement the following:
   # Return object representing intersection of formats of leaves in range
   # Values can be number or string representing value all leaves in range have, or an array of values if mixed (falsy values removed)
   # If all leaves have same format, the default, it is omitted
