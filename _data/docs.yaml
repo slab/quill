@@ -23,7 +23,7 @@
       url: /docs/modules/toolbar/
     - title: Authors
       url: /docs/modules/authors/
-    - title: Cursors
-      url: /docs/modules/cursors/
+    - title: Multi-Cursors
+      url: /docs/modules/multi-cursors/
 - title: Themes
   url: /docs/themes/

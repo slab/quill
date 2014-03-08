@@ -6,7 +6,11 @@ permalink: /docs/modules/toolbar/
 
 # Toolbar
 
-Toolbars allow users to easily format Scribe's contents. Simply create a container and the module to the Scribe editor.
+The Toolbar module allow users to easily format Scribe's contents.
+
+# Put a toolbar here?
+
+Simply create a container and the module to the Scribe editor.
 
 {% highlight html %}
 <!-- Create toolbar container -->
@@ -40,7 +44,7 @@ Any DOM node with the following classes that is clicked will trigger the corresp
 - `sc-underline`
 - `sc-link`
 
-Any DOM node with the following classes that is changed (DOM "change" event) will trigger the corresponding format change:
+Any DOM node with the following classes that is changed (DOM `change` event) will trigger the corresponding format change:
 
 - `sc-back-color`
 - `sc-fore-color`
