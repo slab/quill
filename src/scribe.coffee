@@ -8,11 +8,13 @@ Tandem              = require('tandem-core')
 
 
 buildFormats = (name, value) ->
-  if value?
+  if _.isString(name)
     formats = {}
     formats[name] = value
-  else
+  else if _.isObject(name)
     formats = name
+  else
+    formats = {}
   return formats
 
 

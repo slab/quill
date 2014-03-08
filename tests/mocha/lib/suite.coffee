@@ -17,13 +17,16 @@
 
 ScribeHtmlTest = require('./html-test')
 ScribeEditorTest = require('./editor-test')
+Tandem = require('tandem-core')
 
 
 class ScribeTestSuite
   constructor: (@options) ->
     @options.initial = ScribeHtmlTest.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
-    doc = new Scribe.Document($('#test-container').get(0))
+    doc = new Scribe.Document($('#test-container').get(0),
+      formats: Scribe.DEFAULTS.formats
+    )
     @delta = doc.toDelta()
     @docLength = @delta.endLength
     @editorTest = new ScribeEditorTest(@options)
