@@ -92,7 +92,7 @@ describe('Cursor', ->
     )
 
     it('should append after external edit', ->
-      attributionManager = editor.addModule('attribution', {
+      authorshipManager = editor.addModule('authorship', {
         authorId: 'id1'
         color: 'blue'
       })

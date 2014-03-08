@@ -46,10 +46,10 @@ for num in [1, 2]
   editor = new Scribe($container.get(0), {
     logLevel: 'info'
     modules:
-      'attribution': {
+      'authorship': {
         enabled: false
         color: getColor(num, true)
-        button: $('.sc-attribution', $wrapper).get(0)
+        button: $('.sc-authorship', $wrapper).get(0)
       }
       'multi-cursor': {}    # TODO does passing in null or true work?
       'toolbar': {
@@ -61,5 +61,5 @@ for num in [1, 2]
 
 listenEditor(editors[0], editors[1])
 listenEditor(editors[1], editors[0])
-editors[0].modules.attribution.addAuthor(editors[1].id, getColor(editors[1].id, true))
-editors[1].modules.attribution.addAuthor(editors[0].id, getColor(editors[0].id, true))
+editors[0].modules.authorship.addAuthor(editors[1].id, getColor(editors[1].id, true))
+editors[1].modules.authorship.addAuthor(editors[0].id, getColor(editors[0].id, true))

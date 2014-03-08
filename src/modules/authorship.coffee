@@ -4,14 +4,14 @@ ScribeFormat  = require('../format')
 Tandem        = require('tandem-core')
 
 
-class ScribeAttribution
+class ScribeAuthorship
   DEFAULTS:
     authorId: null
     color: 'blue'
     enabled: false
 
   constructor: (@editor, options) ->
-    @options = _.defaults(options, ScribeAttribution.DEFAULTS)
+    @options = _.defaults(options, ScribeAuthorship.DEFAULTS)
     @authorId = @options.authorId or @editor.options.id
     @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @editor.constructor.events.TEXT_CHANGE and origin == 'user'
@@ -42,7 +42,7 @@ class ScribeAttribution
 
   addAuthor: (id, color) ->
     styles = {}
-    styles[".editor.attribution .author-#{id}"] = { "background-color": "#{color}" }
+    styles[".editor.authorship .author-#{id}"] = { "background-color": "#{color}" }
     @editor.renderer.addStyles(styles)
 
   attachButton: (button) ->
@@ -55,10 +55,10 @@ class ScribeAttribution
     )
 
   enable: ->
-    ScribeDOM.addClass(@editor.root, 'attribution')
+    ScribeDOM.addClass(@editor.root, 'authorship')
 
   disable: ->
-    ScribeDOM.removeClass(@editor.root, 'attribution')
+    ScribeDOM.removeClass(@editor.root, 'authorship')
 
 
-module.exports = ScribeAttribution
+module.exports = ScribeAuthorship

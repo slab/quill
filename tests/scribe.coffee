@@ -1,6 +1,6 @@
 Scribe = require('../src/scribe')
 Scribe.Modules =
-  Attribution : require('../src/modules/attribution')
+  Authorship  : require('../src/modules/authorship')
   LinkTooltip : require('../src/modules/link-tooltip')
   MultiCursor : require('../src/modules/multi-cursor')
   Toolbar     : require('../src/modules/toolbar')
