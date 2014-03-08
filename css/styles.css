@@ -212,6 +212,9 @@ body.home {
   border-bottom: 1px solid #ddd;
   padding-bottom: 8px;
 }
+#docs-container h4 {
+  margin-top: 20px;
+}
 #docs-container h2, #docs-container h3 {
   margin-top: 60px;
 }
