@@ -11,7 +11,7 @@ finally
 
 getColor = (id, lighten) ->
   alpha = if lighten then '0.4' else '1.0'
-  if id == 1 or id == 'editor-1'
+  if id == 1 or id == 'scribe-1'
     return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
   else
     return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"

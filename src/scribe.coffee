@@ -45,13 +45,13 @@ class Scribe extends EventEmitter2
     @options = _.defaults(options, Scribe.DEFAULTS)
     @options.id = @id = "scribe-#{Scribe.editors.length + 1}"
     @options.emitter = this
+    @modules = {}
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)
     @theme = new Scribe.themes[@options.theme](@editor)
-    @modules = _.reduce(@options.modules, (modules, options, name) =>
-      modules[name] = @theme.addModule(name, options)
-      return modules
-    , {})
+    _.each(@options.modules, (options, name) =>
+      this.addModule(name, options)
+    )
     # TODO We should not just be a passthrough
     _.each(ScribeEditor.events, (eventName) =>
       @editor.on(eventName, (args...) =>
