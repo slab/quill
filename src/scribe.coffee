@@ -10,7 +10,7 @@ Tandem              = require('tandem-core')
 buildFormats = (name, value) ->
   if value?
     formats = {}
-    formats.name = value
+    formats[name] = value
   else
     formats = name
   return formats
@@ -58,16 +58,17 @@ class Scribe extends EventEmitter2
     )
 
   addModule: (name, options) ->
-    @theme.addModule(name, options)
+    @modules[name] = @theme.addModule(name, options)
+    return @modules[name]
 
   deleteText: (index, length) ->
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
-    editor.applyDelta(delta)
+    @editor.applyDelta(delta)
 
   formatText: (index, length, name, value) ->
     formats = buildFormats(name, value)
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
-    editor.applyDelta(delta)
+    @editor.applyDelta(delta)
 
   getContents: (index, length) ->
     index = 0 unless index?
@@ -81,14 +82,13 @@ class Scribe extends EventEmitter2
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
-  insertText: (index, length, name, value) ->
+  insertText: (index, text, name, value) ->
     formats = buildFormats(name, value)
-    delta = Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formats)
+    delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta)
 
   setContents: (delta) ->
-    if _.isArray(delta)
-      delta = new Tandem.Delta(0, delta)
+    delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)
     delta.startLength = this.getLength()
     @editor.applyDelta(delta)
 

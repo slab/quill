@@ -1,16 +1,16 @@
 # From canonical document, run every possible legal operation
 #
 # Insert: O(n * (k+2))
-#   - At every location: 
+#   - At every location:
 #     - insert letter
 #     - insert letter of every format
 #     - insert newline
 # Delete: O(n^2)
-#   - Delete at every possible index, length combination 
+#   - Delete at every possible index, length combination
 # Format: O(n^2 * k)
-#   - Format at every possible index, length, attribute, combination 
+#   - Format at every possible index, length, attribute, combination
 # Apply delta: O(n^2 * k)
-#   - for each above, generate and apply delta 
+#   - for each above, generate and apply delta
 #
 # n - document length
 # k - number of formats
@@ -65,7 +65,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
         @editorTest.run("#{name} at #{index}",
           expected: expected
           fn: (testEditor, expectedEditor) ->
-            testEditor.insertAt(index, test.value, test.attributes)
+            testEditor.insertText(index, test.value, test.attributes)
         )
       )
     )
@@ -84,7 +84,7 @@ class ScribeDeleteTestSuite extends ScribeTestSuite
         @editorTest.run("Delete #{length} characters at #{index}",
           expected: expected
           fn: (testEditor, expectedEditor) ->
-            testEditor.deleteAt(index, length)
+            testEditor.deleteText(index, length)
         )
       )
     )
@@ -110,7 +110,7 @@ class ScribeFormatTestSuite extends ScribeTestSuite
             @editorTest.run("Apply #{format} #{value} to #{length} characters at #{index}",
               expected: expected
               fn: (testEditor, expectedEditor) ->
-                testEditor.formatAt(index, length, format, value)
+                testEditor.formatText(index, length, format, value)
             )
           )
         )

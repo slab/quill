@@ -23,8 +23,8 @@ class ScribeEditorTest extends ScribeHtmlTest
     htmlOptions.initial = '' if Tandem.Delta.isDelta(htmlOptions.initial)
     htmlOptions.expected = '' if Tandem.Delta.isDelta(htmlOptions.expected)
     htmlOptions.fn = (testContainer, expectedContainer, args...) =>
-      testEditor = new Scribe.Editor(testContainer) #, { logLevel: 'debug' })
-      expectedEditor = new Scribe.Editor(expectedContainer) #, { logLevel: 'debug' })
+      testEditor = new Scribe(testContainer) #, { logLevel: 'debug' })
+      expectedEditor = new Scribe(expectedContainer) #, { logLevel: 'debug' })
       testEditor.setContents(@options.initial) if Tandem.Delta.isDelta(@options.initial)
       expectedEditor.setContents(@options.expected) if Tandem.Delta.isDelta(@options.expected)
       @options.fn.call(null, testEditor, expectedEditor, args...)
@@ -33,7 +33,7 @@ class ScribeEditorTest extends ScribeHtmlTest
         testDelta = testEditor.getContents()
         expectedDelta = expectedEditor.getContents()
         expect(testDelta.isEqual(expectedDelta)).to.be(true)
-        consistent = Scribe.Debug.checkDocumentConsistency(testEditor.doc)
+        consistent = Scribe.Debug.checkDocumentConsistency(testEditor.editor.doc)
         expect(consistent).to.be(true)
     htmlOptions.checker = (testContainer, expectedContainer, args..., callback) =>
       @options.checker.call(this, testEditor, expectedEditor, args..., ->

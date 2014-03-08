@@ -44,7 +44,7 @@ _deleteAt = (index, length) ->
 
 _forceTrailingNewline = ->
   unless @doc.lines.last?.trailingNewline
-    this.insertAt(@delta.endLength, "\n")
+    @scribe.insertText(@delta.endLength, "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 _formatAt = (index, length, name, value) ->

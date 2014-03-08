@@ -29,7 +29,7 @@ describe('Range', ->
           { text: '', offset: 0 }
         ]
         _.each(expectedResults, (result, i) ->
-          position = new Scribe.Position(editor, i)
+          position = new Scribe.Position(editor.editor, i)
           expect(Scribe.DOM.getText(position.leafNode)).to.equal(result.text)
           expect(position.offset).to.equal(result.offset)
         )
@@ -40,7 +40,7 @@ describe('Range', ->
 
   describe('getText', ->
     textTests = new ScribeEditorTest(
-      initial: 
+      initial:
         '<div>
           <b>abc</b>
           <i>def</i>
@@ -70,14 +70,14 @@ describe('Range', ->
     textTests.run('should identifiy single node',
       checker: (editor) ->
         _.each(text.split(''), (char, index) ->
-          range = new Scribe.Range(editor, index, index + 1)
+          range = new Scribe.Range(editor.editor, index, index + 1)
           expect(range.getText()).to.equal(char)
         )
     )
 
     textTests.run('should identifiy entire document',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, text.length)
+        range = new Scribe.Range(editor.editor, 0, text.length)
         expect(range.getText()).to.equal(text)
     )
   )
@@ -111,7 +111,7 @@ describe('Range', ->
         </div>'
       expected: [0]
       checker: (testEditor, expectedEditor, start, end, text, formats) ->
-        range = new Scribe.Range(testEditor, start, end)
+        range = new Scribe.Range(testEditor.editor, start, end)
         expect(range.getText()).to.equal(text)
         expect(range.getFormats()).to.eql(_.extend({}, Scribe.Leaf.DEFAULT_FORMATS, formats))
     )
@@ -144,65 +144,65 @@ describe('Range', ->
 
     leafTests.run('should select a single node at boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, 3)
+        range = new Scribe.Range(editor.editor, 0, 3)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
-        expect(nodes[0]).to.equal(editor.root.firstChild.firstChild)
+        expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
     )
 
     leafTests.run('should select multiple nodes at boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, 6)
+        range = new Scribe.Range(editor.editor, 0, 6)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
-        expect(nodes[0]).to.equal(editor.root.firstChild.childNodes[0])
-        expect(nodes[1]).to.equal(editor.root.firstChild.childNodes[1])
+        expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
+        expect(nodes[1]).to.equal(editor.editor.root.firstChild.childNodes[1])
     )
 
     leafTests.run('should select a single node inside boundaries',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor, i, i+1)
+          range = new Scribe.Range(editor.editor, i, i+1)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(1)
-          expect(nodes[0]).to.equal(editor.root.firstChild.firstChild)
+          expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
     )
 
     leafTests.run('should select multipe nodes inside boundaries',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor, i, i+4)
+          range = new Scribe.Range(editor.editor, i, i+4)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(2)
-          expect(nodes[0]).to.equal(editor.root.firstChild.childNodes[0])
-          expect(nodes[1]).to.equal(editor.root.firstChild.childNodes[1])
+          expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
+          expect(nodes[1]).to.equal(editor.editor.root.firstChild.childNodes[1])
     )
 
     leafTests.run('should select multiple nodes across lines within boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 0, 6)
+        range = new Scribe.Range(editor.editor, 0, 6)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
-        expect(nodes[0]).to.equal(editor.root.firstChild.childNodes[0])
-        expect(nodes[1]).to.equal(editor.root.firstChild.childNodes[1])
+        expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
+        expect(nodes[1]).to.equal(editor.editor.root.firstChild.childNodes[1])
     )
 
     leafTests.run('should select multiple nodes across lines outside boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor, 5, 8)
+        range = new Scribe.Range(editor.editor, 5, 8)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
-        expect(nodes[0]).to.equal(editor.root.firstChild.lastChild)
-        expect(nodes[1]).to.equal(editor.root.lastChild.firstChild)
+        expect(nodes[0]).to.equal(editor.editor.root.firstChild.lastChild)
+        expect(nodes[1]).to.equal(editor.editor.root.lastChild.firstChild)
     )
 
     leafTests.run('should select node collapsed',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor, i, i)
+          range = new Scribe.Range(editor.editor, i, i)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(1)
-          expect(nodes[0]).to.equal(editor.root.firstChild.firstChild)
+          expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
     )
   )
 )

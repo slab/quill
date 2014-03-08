@@ -72,7 +72,7 @@ class ScribeUndoManager
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity()
-    @redoStack = []
+    @stack.redo = []
     try
       undoDelta = oldDelta.invert(changeDelta)
       timestamp = new Date().getTime()

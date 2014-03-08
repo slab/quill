@@ -12,26 +12,26 @@ describe('Editor', ->
 
     preserveTests.run('delete last chars',
       fn: (editor) ->
-        editor.deleteAt(3, 2)
+        editor.deleteText(3, 2)
     )
 
-    preserveTests.run('delete last chars with applyDelta',
+    preserveTests.run('delete last chars with updateContents',
       fn: (editor) ->
-        editor.applyDelta(Tandem.Delta.makeDeleteDelta(5, 3, 2))
+        editor.updateContents(Tandem.Delta.makeDeleteDelta(5, 3, 2))
     )
 
     preserveTests.run('insert text after newline',
       expected: Tandem.Delta.getInitial('Test\ns\n')
       fn: (editor) ->
-        editor.insertAt(5, 's')
+        editor.insertText(5, 's')
     )
   )
 
-  describe('applyDelta', ->
+  describe('updateContents', ->
     applyTests = new ScribeEditorTest(
       fn: (testEditor, expectedEditor, ops) ->
         delta = new Tandem.Delta(testEditor.getLength(), ops)
-        testEditor.applyDelta(delta)
+        testEditor.updateContents(delta)
     )
 
     applyTests.run('apply to empty',
@@ -91,11 +91,11 @@ describe('Editor', ->
   )
 
 
-  describe('insertAt', ->
+  describe('insertText', ->
     insertTests = new ScribeEditorTest(
       initial: ['<div><span>Test</span></div>']
       fn: (testEditor, expectedEditor, delta) ->
-        testEditor.applyDelta(delta)
+        testEditor.updateContents(delta)
     )
 
     insertTests.run('insert in middle of text',

@@ -17,18 +17,18 @@ describe('Toolbar', ->
   toolbarTests.run('Apply button format',
     expected: '<div><b>one.comBold</b></div>'
     fn: (editor) ->
-      editor.theme.addModule('toolbar', { container: '#format-container' })
-      editor.root.focus()
-      editor.setSelection(new Scribe.Range(editor, 0, 7))
+      editor.addModule('toolbar', { container: '#format-container' })
+      editor.editor.root.focus()
+      editor.editor.setSelection(new Scribe.Range(editor.editor, 0, 7))
       $('#format-container .sc-bold').click()
   )
 
   toolbarTests.run('Apply link format',
     expected: '<div><a href="http://one.com" title="http://one.com">one.com</a><b>Bold</b></div>'
     fn: (editor) ->
-      editor.theme.addModule('toolbar', { container: '#format-container' })
-      editor.root.focus()
-      editor.setSelection(new Scribe.Range(editor, 0, 7))
+      editor.addModule('toolbar', { container: '#format-container' })
+      editor.editor.root.focus()
+      editor.editor.setSelection(new Scribe.Range(editor.editor, 0, 7))
       $('#format-container .sc-link').click()
   )
 )

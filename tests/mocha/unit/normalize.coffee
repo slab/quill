@@ -14,7 +14,7 @@ describe('Normalize', ->
         Scribe.Normalizer.breakLine(container.firstChild, container)
     )
 
-    blockTest.run('Inner divs', 
+    blockTest.run('Inner divs',
       initial: [
         '<div>
           <div><span>One</span></div>
@@ -23,7 +23,7 @@ describe('Normalize', ->
       ]
     )
 
-    blockTest.run('Nested inner divs', 
+    blockTest.run('Nested inner divs',
       initial: [
         '<div>
           <div><div><span>One</span></div></div>
@@ -39,7 +39,7 @@ describe('Normalize', ->
         Scribe.Normalizer.normalizeBreak(container.querySelector('br'), container)
     )
 
-    breakTest.run('Break in middle of line', 
+    breakTest.run('Break in middle of line',
       initial:  [
         '<div><b>One<br />Two</b></div>'
       ]
@@ -49,7 +49,7 @@ describe('Normalize', ->
       ]
     )
 
-    breakTest.run('Break preceding line', 
+    breakTest.run('Break preceding line',
       initial: [
         '<div><b><br />One</b></div>'
       ]
@@ -59,7 +59,7 @@ describe('Normalize', ->
       ]
     )
 
-    breakTest.run('Break after line', 
+    breakTest.run('Break after line',
       initial:  ['<div><b>One<br /></b></div>']
       expected: ['<div><b>One</b></div>']
     )
@@ -71,17 +71,17 @@ describe('Normalize', ->
         Scribe.Normalizer.groupBlocks(container)
     )
 
-    groupTest.run('Wrap newline', 
+    groupTest.run('Wrap newline',
       initial:  ['<br />']
       expected: ['<div><br /></div>']
     )
 
-    groupTest.run('Wrap span', 
+    groupTest.run('Wrap span',
       initial:  ['<span>One</span>']
       expected: ['<div><span>One</span></div>']
     )
 
-    groupTest.run('Wrap many spans', 
+    groupTest.run('Wrap many spans',
       initial: [
         '<div><span>One</span></div>'
         '<span>Two</span>'
@@ -93,7 +93,7 @@ describe('Normalize', ->
       ]
     )
 
-    groupTest.run('Wrap break and span', 
+    groupTest.run('Wrap break and span',
       initial:  ['<br /><span>One</span>']
       expected: ['<div><br /><span>One</span></div>']
     )
@@ -103,7 +103,9 @@ describe('Normalize', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
-      formatManager = new Scribe.FormatManager(container)
+      formatManager = new Scribe.FormatManager(container,
+        formats: Scribe.DEFAULTS.formats
+      )
       normalizer = new Scribe.Normalizer(container, formatManager)
     )
 
@@ -112,8 +114,8 @@ describe('Normalize', ->
         normalizer.normalizeLine(lineNode)
     )
 
-    lineTest.run('preserve style attributes', 
-      initial: 
+    lineTest.run('preserve style attributes',
+      initial:
         '<span style="font-size: 32px;">Huge</span>
         <span style="color: rgb(255, 0, 0);">Red</span>
         <span style="font-family: \'Times New Roman\', serif;">Serif</span>
@@ -125,37 +127,37 @@ describe('Normalize', ->
         <span style="font-size: 18px;">Large</span>'
     )
 
-    lineTest.run('remove redundant format elements', 
+    lineTest.run('remove redundant format elements',
       initial:  '<b><i><b>Bolder</b></i></b>'
       expected: '<b><i>Bolder</i></b>'
     )
 
-    lineTest.run('remove redundant elements 1', 
+    lineTest.run('remove redundant elements 1',
       initial:  '<span><br></span>'
       expected: '<br />'
     )
 
-    lineTest.run('remove redundant elements 2', 
+    lineTest.run('remove redundant elements 2',
       initial:  '<span><span>Span</span></span>'
       expected: '<span>Span</span>'
     )
 
-    lineTest.run('remove redundant elements 3', 
+    lineTest.run('remove redundant elements 3',
       initial:  '<span class="nothing special"><span>Span</span></span>'
       expected: '<span>Span</span>'
     )
 
-    lineTest.run('wrap text node', 
+    lineTest.run('wrap text node',
       initial:  'Hey'
       expected: '<span>Hey</span>'
     )
 
-    lineTest.run('wrap text node next to element node', 
+    lineTest.run('wrap text node next to element node',
       initial:  'Hey<b>Bold</b>'
       expected: '<span>Hey</span><b>Bold</b>'
     )
 
-    lineTest.run('unnecessary break', 
+    lineTest.run('unnecessary break',
       initial:  '<span>One</span><br>'
       expected: '<span>One</span>'
     )
@@ -164,25 +166,25 @@ describe('Normalize', ->
   describe('normalizeDoc', ->
     docTest = new ScribeEditorTest(
       fn: (editor) ->
-        editor.doc.normalizer.normalizeDoc()
+        editor.editor.doc.normalizer.normalizeDoc()
     )
 
-    docTest.run('empty string', 
+    docTest.run('empty string',
       initial:  ['']
       expected: ['<div><br></div>']
     )
 
-    docTest.run('lone break', 
+    docTest.run('lone break',
       initial:  ['<br>']
       expected: ['<div><br></div>']
     )
 
-    docTest.run('correct break', 
+    docTest.run('correct break',
       initial:  ['<div><br></div>']
       expected: [0]
     )
 
-    docTest.run('handle nonstandard block tags', 
+    docTest.run('handle nonstandard block tags',
       initial: [
         '<h1>
           <dl><dt>One</dt></dl>
@@ -197,7 +199,7 @@ describe('Normalize', ->
       ]
     )
 
-    docTest.run('handle nonstandard break tags', 
+    docTest.run('handle nonstandard break tags',
       initial: [
         '<div><b>One<br><hr>Two</b></div>'
       ]
@@ -240,7 +242,9 @@ describe('Normalize', ->
     normalizer = null
     before( ->
       container = $('#test-container').get(0)
-      formatManager = new Scribe.FormatManager(container)
+      formatManager = new Scribe.FormatManager(container,
+        formats: Scribe.DEFAULTS.formats
+      )
       normalizer = new Scribe.Normalizer(container, formatManager)
     )
 
@@ -249,17 +253,17 @@ describe('Normalize', ->
         normalizer.normalizeTags(lineNode)
     )
 
-    attrTest.run('strip extraneous attributes', 
+    attrTest.run('strip extraneous attributes',
       initial:  '<span data-test="test" width="100px">One</span>'
       expected: '<span>One</span>'
     )
 
-    attrTest.run('strip extraneous attributes from tag', 
+    attrTest.run('strip extraneous attributes from tag',
       initial:  '<b data-test="test" width="100px">Bold</b>'
       expected: '<b>Bold</b>'
     )
 
-    attrTest.run('strip extraneous attributes from style tag', 
+    attrTest.run('strip extraneous attributes from style tag',
       initial:  '<span style="color: rgb(0, 255, 255);" data-test="test" width="100px">Color</span>'
       expected: '<span style="color: rgb(0, 255, 255);">Color</span>'
     )

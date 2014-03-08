@@ -9,8 +9,8 @@ describe('Cursor', ->
     before((done) ->
       initial = '<div><b>Bold</b><i>Italic</i></div><div><br /><div><span style="font-size:18px;">Large</span></div>'
       $('#test-container').html(Scribe.Normalizer.normalizeHtml(initial))
-      editor = new Scribe.Editor('#test-container')
-      cursorManager = new Scribe.Modules.MultiCursor(editor)
+      editor = new Scribe('#test-container')
+      cursorManager = editor.addModule('multi-cursor')
       _.defer(done)
     )
 
@@ -86,16 +86,19 @@ describe('Cursor', ->
       cursorManager.setCursor('id', 1, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(cursor.style.left).to.equal('24px')
-      editor.insertAt(0, 'A', { bold: true })
+      editor.insertText(0, 'A', { bold: true })
       expect(parseInt(cursor.style.left) - offsetLeft).to.be.within(18, 19)
       expect(parseInt(cursor.style.top) - offsetTop).to.be.within(-1, 1)
     )
 
     it('should append after external edit', ->
-      attributionManager = new Scribe.Modules.Attribution(editor, 'id1', 'blue')
-      editor.insertAt(10, 'Y', { author: 'id1' })
+      attributionManager = editor.addModule('attribution', {
+        authorId: 'id1'
+        color: 'blue'
+      })
+      editor.insertText(10, 'Y', { author: 'id1' })
       cursorManager.setCursor('id2', 11, 'Test', 'red')
-      editor.insertAt(11, 'Z', { author: 'id2' })
+      editor.insertText(11, 'Z', { author: 'id2' })
       cursor = cursorManager.container.querySelector('.cursor')
     )
   )
