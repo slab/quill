@@ -4,3 +4,4 @@ timezone: America/Los_Angeles
 baseurl: /scribe
 relative_permalinks: false
 highlighter: pygments
+markdown: kramdown

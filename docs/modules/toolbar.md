@@ -52,3 +52,9 @@ Any DOM node with the following classes that is changed (DOM `change` event) wil
 - `sc-font-family`
 
 The toolbar will also listen to cursor changes and will add an `sc-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
+
+The following classes are also recognized by the toolbar but largely used the Themes for styling:
+
+- `sc-format-button`
+- `sc-format-group`
+- `sc-format-separator`
