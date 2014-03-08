@@ -35,7 +35,15 @@ module.exports = (config) ->
   if process.env.TRAVIS_BUILD_ID?
     build = 'travis-' + process.env.TRAVIS_BUILD_ID
   else
-    build = os.hostname() + _.random(16*16*16*16).toString(16)
+    build = os.hostname() + '-' + _.random(16*16*16*16).toString(16)
+
+  # Open source accounts, please do not abuse
+  if process.env.TRAVIS_BRANCH == 'master'
+    username = 'scribe'
+    accessKey = 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
+  else
+    username = 'scribe-develop'
+    accessKey = '9fe1b0b3-1490-4b22-b936-ba5a736cc216'
 
   config.set(
     basePath: '../../build'
@@ -69,9 +77,8 @@ module.exports = (config) ->
     captureTimeout: 60000
     singleRun: true
     sauceLabs:
-      # Open source account, please do not abuse
-      username: 'scribe'
-      accessKey: 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
+      username: username
+      accessKey: accessKey
       build: build
     customLaunchers: customLaunchers
   )
