@@ -36,7 +36,9 @@ Simply create a container and the module to the Scribe editor.
 </script>
 {% endhighlight %}
 
-Any DOM node with the following classes that is clicked will trigger the corresponding format change:
+The `sc-toolbar-container` class will be added to the toolbar container.
+
+A click handler will be added to any DOM element with the following classes:
 
 - `sc-bold`
 - `sc-italic`
@@ -44,16 +46,16 @@ Any DOM node with the following classes that is clicked will trigger the corresp
 - `sc-underline`
 - `sc-link`
 
-Any DOM node with the following classes that is changed (DOM `change` event) will trigger the corresponding format change:
+A change (DOM `change` event) handler will be added to any DOM element with the following classes:
 
 - `sc-back-color`
 - `sc-fore-color`
 - `sc-font-size`
 - `sc-font-family`
 
-The toolbar will also listen to cursor changes and will add an `sc-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
+The toolbar will also listen to cursor movements and will add an `sc-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
 
-The following classes are also recognized by the toolbar but largely used the Themes for styling:
+The following classes are also recognized by the toolbar but largely used by [Themes]({{ site.baseurl }}/docs/themes/) for styling:
 
 - `sc-format-button`
 - `sc-format-group`

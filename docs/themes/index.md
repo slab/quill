@@ -2,11 +2,12 @@
 layout: docs
 title: Themes - Scribe
 permalink: /docs/themes/
+stability: yellow
 ---
 
 # Themes
 
-Themes allow you to easily make your Scribe editor look good with minimal effort. 
+Themes allow you to easily make your Scribe editor look good with minimal effort.
 
 To use a custom theme, simply add its stylesheet in the `<head>`:
 
