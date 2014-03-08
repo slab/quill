@@ -94,6 +94,8 @@ module.exports = (grunt) ->
   )
 
   grunt.config('stylus',
+    options:
+      compress: false
     all:
       expand: true
       dest: 'build/'

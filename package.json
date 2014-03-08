@@ -30,7 +30,7 @@
     "grunt-contrib-coffee" : "0.10.x",
     "grunt-contrib-concat" : "0.3.x",
     "grunt-contrib-copy"   : "0.5.x",
-    "grunt-contrib-jade"   : "0.10.x",
+    "grunt-contrib-jade"   : "0.11.x",
     "grunt-contrib-stylus" : "0.13.x",
     "grunt-contrib-uglify" : "0.4.x",
     "grunt-contrib-watch"  : "0.5.x",
