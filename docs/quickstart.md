@@ -9,7 +9,7 @@ permalink: /docs/quickstart/
 The best way to get started is a simple demo:
 
 {% highlight html %}
-{% include quickstart.html }
+{% include quickstart.html %}
 
 <!-- Include the Scribe library -->
 <script src="http://stypi.github.io/scribe/js/scribe.js"></script>
