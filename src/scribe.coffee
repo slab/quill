@@ -82,6 +82,9 @@ class Scribe extends EventEmitter2
   getLength: ->
     return @editor.getDelta().endLength
 
+  getModule: (name) ->
+    return @modules[name]
+
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
