@@ -1,4 +1,4 @@
-/*! Stypi Editor - v0.11.0 - 2014-03-07
+/*! Stypi Editor - v0.11.1 - 2014-03-08
  *  https://stypi.github.io/scribe/
  *  Copyright (c) 2014
  *  Jason Chen, Salesforce.com
@@ -15260,7 +15260,7 @@ module.exports=_dereq_('Fq7WE+');
 },{}],23:[function(_dereq_,module,exports){
 module.exports={
   "name": "scribe",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Cross browser rich text editor",
   "contributors": [{
     "name": "Jason Chen",
@@ -15290,11 +15290,10 @@ module.exports={
     "grunt-contrib-coffee" : "0.10.x",
     "grunt-contrib-concat" : "0.3.x",
     "grunt-contrib-copy"   : "0.5.x",
-    "grunt-contrib-jade"   : "0.10.x",
+    "grunt-contrib-jade"   : "0.11.x",
     "grunt-contrib-stylus" : "0.13.x",
     "grunt-contrib-uglify" : "0.4.x",
     "grunt-contrib-watch"  : "0.5.x",
-    "grunt-image-embed"    : "0.3.x",
     "grunt-karma"          : "0.6.x",
     "grunt-newer"          : "0.6.x",
     "grunt-shell"          : "0.6.x",
@@ -17440,7 +17439,7 @@ module.exports = ScribeLogger;
 
 
 },{"lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
-var ScribeAttribution, ScribeDOM, ScribeFormat, Tandem, _;
+var ScribeAuthorship, ScribeDOM, ScribeFormat, Tandem, _;
 
 _ = _dereq_('lodash');
 
@@ -17450,16 +17449,16 @@ ScribeFormat = _dereq_('../format');
 
 Tandem = _dereq_('tandem-core');
 
-ScribeAttribution = (function() {
-  ScribeAttribution.prototype.DEFAULTS = {
+ScribeAuthorship = (function() {
+  ScribeAuthorship.prototype.DEFAULTS = {
     authorId: null,
     color: 'blue',
     enabled: false
   };
 
-  function ScribeAttribution(editor, options) {
+  function ScribeAuthorship(editor, options) {
     this.editor = editor;
-    this.options = _.defaults(options, ScribeAttribution.DEFAULTS);
+    this.options = _.defaults(options, ScribeAuthorship.DEFAULTS);
     this.authorId = this.options.authorId || this.editor.options.id;
     this.editor.on(this.editor.constructor.events.PRE_EVENT, (function(_this) {
       return function(eventName, delta, origin) {
@@ -17497,16 +17496,16 @@ ScribeAttribution = (function() {
     }
   }
 
-  ScribeAttribution.prototype.addAuthor = function(id, color) {
+  ScribeAuthorship.prototype.addAuthor = function(id, color) {
     var styles;
     styles = {};
-    styles[".editor.attribution .author-" + id] = {
+    styles[".editor.authorship .author-" + id] = {
       "background-color": "" + color
     };
     return this.editor.renderer.addStyles(styles);
   };
 
-  ScribeAttribution.prototype.attachButton = function(button) {
+  ScribeAuthorship.prototype.attachButton = function(button) {
     return ScribeDOM.addEventListener(button, 'click', (function(_this) {
       return function() {
         if (ScribeDOM.hasClass(button, 'sc-active')) {
@@ -17519,19 +17518,19 @@ ScribeAttribution = (function() {
     })(this));
   };
 
-  ScribeAttribution.prototype.enable = function() {
-    return ScribeDOM.addClass(this.editor.root, 'attribution');
+  ScribeAuthorship.prototype.enable = function() {
+    return ScribeDOM.addClass(this.editor.root, 'authorship');
   };
 
-  ScribeAttribution.prototype.disable = function() {
-    return ScribeDOM.removeClass(this.editor.root, 'attribution');
+  ScribeAuthorship.prototype.disable = function() {
+    return ScribeDOM.removeClass(this.editor.root, 'authorship');
   };
 
-  return ScribeAttribution;
+  return ScribeAuthorship;
 
 })();
 
-module.exports = ScribeAttribution;
+module.exports = ScribeAuthorship;
 
 
 },{"../dom":25,"../format":28,"lodash":"4HJaAd","tandem-core":"38mxji"}],35:[function(_dereq_,module,exports){
@@ -17746,9 +17745,13 @@ module.exports = ScribeLinkTooltip;
 
 
 },{"../dom":25,"../keyboard":29,"../position":40,"../range":41,"lodash":"4HJaAd"}],36:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeMultiCursor, ScribePosition, ScribeRenderer, ScribeUtils, _, _applyDelta, _buildCursor, _moveCursor, _updateCursor;
+var EventEmitter2, ScribeDOM, ScribeMultiCursor, ScribePosition, ScribeRenderer, ScribeUtils, _, _applyDelta, _buildCursor, _moveCursor, _updateCursor,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = _dereq_('lodash');
+
+EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
 ScribeDOM = _dereq_('../dom');
 
@@ -17794,10 +17797,11 @@ _moveCursor = function(cursor, referenceNode) {
   cursor.elem.style.left = referenceNode.offsetLeft + 'px';
   cursor.elem.style.height = referenceNode.offsetHeight + 'px';
   if (parseInt(cursor.elem.style.top) < parseInt(cursor.elem.style.height)) {
-    return ScribeDOM.addClass(cursor.elem, 'top');
+    ScribeDOM.addClass(cursor.elem, 'top');
   } else {
-    return ScribeDOM.removeClass(cursor.elem, 'top');
+    ScribeDOM.removeClass(cursor.elem, 'top');
   }
+  return this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor);
 };
 
 _updateCursor = function(cursor) {
@@ -17830,10 +17834,18 @@ _updateCursor = function(cursor) {
   return cursor.dirty = false;
 };
 
-ScribeMultiCursor = (function() {
+ScribeMultiCursor = (function(_super) {
+  __extends(ScribeMultiCursor, _super);
+
   ScribeMultiCursor.DEFAULTS = {
     template: '<span class="cursor-flag"> <span class="cursor-name"></span> </span> <span class="cursor-caret"></span>',
     timeout: 2500
+  };
+
+  ScribeMultiCursor.events = {
+    CURSOR_ADDED: 'cursor-addded',
+    CURSOR_MOVED: 'cursor-moved',
+    CURSOR_REMOVED: 'cursor-removed'
   };
 
   function ScribeMultiCursor(editor, options) {
@@ -17924,8 +17936,10 @@ ScribeMultiCursor = (function() {
       this.cursors[userId] = cursor = {
         userId: userId,
         index: index,
+        color: color,
         elem: _buildCursor.call(this, name, color)
       };
+      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor);
     }
     cursor.index = index;
     cursor.dirty = true;
@@ -17955,6 +17969,7 @@ ScribeMultiCursor = (function() {
   ScribeMultiCursor.prototype.removeCursor = function(userId) {
     var cursor;
     cursor = this.cursors[userId];
+    this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor);
     cursor.elem.parentNode.removeChild(cursor.elem) in (cursor != null);
     return delete this.cursors[userId];
   };
@@ -17971,12 +17986,12 @@ ScribeMultiCursor = (function() {
 
   return ScribeMultiCursor;
 
-})();
+})(EventEmitter2);
 
 module.exports = ScribeMultiCursor;
 
 
-},{"../dom":25,"../position":40,"../renderer":42,"../utils":50,"lodash":"4HJaAd"}],37:[function(_dereq_,module,exports){
+},{"../dom":25,"../position":40,"../renderer":42,"../utils":50,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],37:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeKeyboard, ScribeLinkTooltip, ScribeRange, ScribeToolbar, ScribeUtils, _, _findInput, _initFormats;
 
 _ = _dereq_('lodash');
@@ -18869,7 +18884,7 @@ DEFAULT_STYLES = {
     'font-family': "'Helvetica', 'Arial', sans-serif",
     'font-size': '13px',
     'height': '100%',
-    'line-height': '1.154',
+    'line-height': '1.3',
     'margin': '0px',
     'overflow': 'auto',
     'padding': '0px'
@@ -19185,6 +19200,9 @@ Scribe = (function(_super) {
   }
 
   Scribe.prototype.addModule = function(name, options) {
+    if (!_.isObject(options)) {
+      options = {};
+    }
     this.modules[name] = this.theme.addModule(name, options);
     return this.modules[name];
   };
@@ -19606,9 +19624,9 @@ module.exports = ScribeColorPicker;
 
 
 },{"../dom":25,"./picker":47}],46:[function(_dereq_,module,exports){
-var ScribeAttribution, ScribeDefaultTheme, ScribeLinkTooltip, ScribeMultiCursor, ScribeToolbar;
+var ScribeAuthorship, ScribeDefaultTheme, ScribeLinkTooltip, ScribeMultiCursor, ScribeToolbar;
 
-ScribeAttribution = _dereq_('../modules/attribution');
+ScribeAuthorship = _dereq_('../modules/authorship');
 
 ScribeLinkTooltip = _dereq_('../modules/link-tooltip');
 
@@ -19625,8 +19643,8 @@ ScribeDefaultTheme = (function() {
 
   ScribeDefaultTheme.prototype.addModule = function(name, options) {
     switch (name) {
-      case 'attribution':
-        return new ScribeAttribution(this.editor, options);
+      case 'authorship':
+        return new ScribeAuthorship(this.editor, options);
       case 'link-tooltip':
         return new ScribeLinkTooltip(this.editor, options);
       case 'multi-cursor':
@@ -19645,7 +19663,7 @@ ScribeDefaultTheme = (function() {
 module.exports = ScribeDefaultTheme;
 
 
-},{"../modules/attribution":34,"../modules/link-tooltip":35,"../modules/multi-cursor":36,"../modules/toolbar":37}],47:[function(_dereq_,module,exports){
+},{"../modules/authorship":34,"../modules/link-tooltip":35,"../modules/multi-cursor":36,"../modules/toolbar":37}],47:[function(_dereq_,module,exports){
 var ScribeDOM, ScribePicker, _;
 
 _ = _dereq_('lodash');
@@ -19767,18 +19785,24 @@ var ScribeColorPicker, ScribeDOM, ScribeDefaultTheme, ScribePicker, ScribeSnowTh
 
 _ = _dereq_('lodash');
 
-ScribeColorPicker = _dereq_('./color-picker');
+ScribeColorPicker = _dereq_('../color-picker');
 
-ScribeDefaultTheme = _dereq_('./default');
+ScribeDefaultTheme = _dereq_('../default');
 
-ScribeDOM = _dereq_('../dom');
+ScribeDOM = _dereq_('../../dom');
 
-ScribePicker = _dereq_('./picker');
+ScribePicker = _dereq_('../picker');
 
 ScribeSnowTheme = (function(_super) {
   __extends(ScribeSnowTheme, _super);
 
   ScribeSnowTheme.COLORS = ["#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"];
+
+  ScribeSnowTheme.OPTIONS = {
+    'multi-cursor': {
+      template: '<span class="cursor-flag"> <span class="cursor-name"></span> <span class="cursor-triangle"></span> </span> <span class="cursor-caret"></span>'
+    }
+  };
 
   function ScribeSnowTheme(editor) {
     this.editor = editor;
@@ -19802,25 +19826,28 @@ ScribeSnowTheme = (function(_super) {
   }
 
   ScribeSnowTheme.prototype.addModule = function(name, options) {
+    var module;
+    options = _.defaults(ScribeSnowTheme.OPTIONS[name] || {}, options);
+    module = ScribeSnowTheme.__super__.addModule.call(this, name, options);
     switch (name) {
-      case 'attribution':
-        this.extendAttribution(options);
+      case 'authorship':
+        this.extendAuthorship(module);
         break;
       case 'link-tooltip':
-        this.extendLinkTooltip(options);
+        this.extendLinkTooltip(module);
         break;
       case 'multi-cursor':
-        this.extendMultiCursor(options);
+        this.extendMultiCursor(module);
         break;
       case 'toolbar':
-        this.extendToolbar(options);
+        this.extendToolbar(module);
     }
-    return ScribeSnowTheme.__super__.addModule.call(this, name, options);
+    return module;
   };
 
-  ScribeSnowTheme.prototype.extendAttribution = function(options) {};
+  ScribeSnowTheme.prototype.extendAuthorship = function(module) {};
 
-  ScribeSnowTheme.prototype.extendLinkTooltip = function(options) {
+  ScribeSnowTheme.prototype.extendLinkTooltip = function(module) {
     return this.editor.renderer.addStyles({
       '.editor-container a': {
         'color': '#06c'
@@ -19841,9 +19868,8 @@ ScribeSnowTheme = (function(_super) {
     });
   };
 
-  ScribeSnowTheme.prototype.extendMultiCursor = function(options) {
-    options.template = '<span class="cursor-flag"> <span class="cursor-name"></span> <span class="cursor-triangle"></span> </span> <span class="cursor-caret"></span>';
-    return this.editor.renderer.addStyles({
+  ScribeSnowTheme.prototype.extendMultiCursor = function(module) {
+    this.editor.renderer.addStyles({
       '.editor-container .cursor-name': {
         'border-radius': '3px',
         'font-size': '11px',
@@ -19866,14 +19892,16 @@ ScribeSnowTheme = (function(_super) {
         'top': 'auto'
       }
     });
+    return module.on(module.constructor.events.CURSOR_ADDED, function(cursor) {
+      var triangle;
+      triangle = cursor.elem.querySelector('.cursor-triangle');
+      return triangle.style.borderTopColor = cursor.color;
+    });
   };
 
-  ScribeSnowTheme.prototype.extendToolbar = function(options) {
-    if (_.isString(options.container)) {
-      options.container = document.querySelector(options.container);
-    }
-    ScribeDOM.addClass(options.container, 'sc-toolbar-container');
-    _.each(options.container.querySelectorAll('.sc-font-name, .sc-font-size'), (function(_this) {
+  ScribeSnowTheme.prototype.extendToolbar = function(module) {
+    ScribeDOM.addClass(module.container, 'sc-toolbar-container');
+    _.each(module.container.querySelectorAll('.sc-font-name, .sc-font-size'), (function(_this) {
       return function(select) {
         var picker;
         picker = new ScribePicker(select);
@@ -19883,7 +19911,7 @@ ScribeSnowTheme = (function(_super) {
     return _.each(['fore-color', 'back-color'], (function(_this) {
       return function(css) {
         var format, picker, select;
-        select = options.container.querySelector(".sc-" + css);
+        select = module.container.querySelector(".sc-" + css);
         if (select == null) {
           return;
         }
@@ -19914,7 +19942,7 @@ ScribeSnowTheme = (function(_super) {
 module.exports = ScribeSnowTheme;
 
 
-},{"../dom":25,"./color-picker":45,"./default":46,"./picker":47,"lodash":"4HJaAd"}],49:[function(_dereq_,module,exports){
+},{"../../dom":25,"../color-picker":45,"../default":46,"../picker":47,"lodash":"4HJaAd"}],49:[function(_dereq_,module,exports){
 var ScribeKeyboard, ScribeRange, ScribeUndoManager, Tandem, getLastChangeIndex, _, _change, _ignoreChanges;
 
 _ = _dereq_('lodash');
