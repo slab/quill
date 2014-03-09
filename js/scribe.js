@@ -1,4 +1,4 @@
-/*! Stypi Editor - v0.11.1 - 2014-03-08
+/*! Stypi Editor - v0.11.0 - 2014-03-09
  *  https://stypi.github.io/scribe/
  *  Copyright (c) 2014
  *  Jason Chen, Salesforce.com
@@ -8,9 +8,7 @@
 module.exports = _dereq_('./src/scribe');
 
 
-},{"./src/scribe":43}],"linked-list":[function(_dereq_,module,exports){
-module.exports=_dereq_('uyMq3L');
-},{}],"uyMq3L":[function(_dereq_,module,exports){
+},{"./src/scribe":43}],"uyMq3L":[function(_dereq_,module,exports){
 // Inspired by http://blog.jcoglan.com/2007/07/23/writing-a-linked-list-in-javascript/
 
 function LinkedList() {}
@@ -90,6 +88,10 @@ LinkedList.Node = function(data) {
 
 module.exports = LinkedList;
 
+},{}],"linked-list":[function(_dereq_,module,exports){
+module.exports=_dereq_('uyMq3L');
+},{}],"eventemitter2":[function(_dereq_,module,exports){
+module.exports=_dereq_('x/3aRz');
 },{}],"x/3aRz":[function(_dereq_,module,exports){
 (function (process){
 ;!function(exports, undefined) {
@@ -655,9 +657,7 @@ module.exports = LinkedList;
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
 }).call(this,_dereq_("/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],"eventemitter2":[function(_dereq_,module,exports){
-module.exports=_dereq_('x/3aRz');
-},{}],6:[function(_dereq_,module,exports){
+},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],6:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -712,6 +712,8 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
+},{}],"lodash":[function(_dereq_,module,exports){
+module.exports=_dereq_('4HJaAd');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
 /**
@@ -7895,8 +7897,6 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"lodash":[function(_dereq_,module,exports){
-module.exports=_dereq_('4HJaAd');
 },{}],"rmqf9t":[function(_dereq_,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -14580,8 +14580,6 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -15257,10 +15255,12 @@ module.exports=_dereq_('Fq7WE+');
   root._.string = root._.str = _s;
 }(this, String);
 
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
 },{}],23:[function(_dereq_,module,exports){
 module.exports={
   "name": "scribe",
-  "version": "0.11.1",
+  "version": "0.11.0",
   "description": "Cross browser rich text editor",
   "contributors": [{
     "name": "Jason Chen",
@@ -16058,8 +16058,8 @@ ScribeEditor = (function(_super) {
         if (localDelta) {
           _this.delta = _this.delta.compose(localDelta);
           tempDelta = localDelta;
-          localDelta = localDelta.follows(delta, true);
-          delta = delta.follows(tempDelta, false);
+          localDelta = localDelta.transform(delta, true);
+          delta = delta.transform(tempDelta, false);
         }
         if (!delta.isIdentity()) {
           if (delta.startLength !== _this.delta.endLength) {
@@ -16109,6 +16109,24 @@ ScribeEditor = (function(_super) {
     }
     ScribeEditor.__super__.emit.apply(this, [eventName].concat(__slice.call(args)));
     return ScribeEditor.__super__.emit.apply(this, [ScribeEditor.events.POST_EVENT, eventName].concat(__slice.call(args)));
+  };
+
+  ScribeEditor.prototype.insertAt = function(index, text, formats, options) {
+    var delta;
+    if (options == null) {
+      options = {};
+    }
+    delta = Tandem.Delta.makeInsertDelta(this.delta.endLength, index, text, formats);
+    return this.applyDelta(delta, options);
+  };
+
+  ScribeEditor.prototype.deleteAt = function(index, length, options) {
+    var delta;
+    if (options == null) {
+      options = {};
+    }
+    delta = Tandem.Delta.makeDeleteDelta(this.delta.endLength, index, length);
+    return this.applyDelta(delta, options);
   };
 
   ScribeEditor.prototype.formatAt = function(index, length, name, value, options) {
@@ -16779,7 +16797,7 @@ _initDeletes = function() {
   return _.each([ScribeKeyboard.keys.DELETE, ScribeKeyboard.keys.BACKSPACE], (function(_this) {
     return function(key) {
       return _this.addHotkey(key, function() {
-        return _this.editor.getLength() > 1;
+        return _this.editor.scribe.getLength() > 1;
       });
     };
   })(this));
@@ -17793,14 +17811,14 @@ _buildCursor = function(name, color) {
 };
 
 _moveCursor = function(cursor, referenceNode) {
+  var flag;
   cursor.elem.style.top = referenceNode.offsetTop + 'px';
   cursor.elem.style.left = referenceNode.offsetLeft + 'px';
   cursor.elem.style.height = referenceNode.offsetHeight + 'px';
-  if (parseInt(cursor.elem.style.top) < parseInt(cursor.elem.style.height)) {
-    ScribeDOM.addClass(cursor.elem, 'top');
-  } else {
-    ScribeDOM.removeClass(cursor.elem, 'top');
-  }
+  flag = cursor.elem.querySelector('.cursor-flag');
+  ScribeDOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight);
+  ScribeDOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth);
+  ScribeDOM.toggleClass(cursor.elem, 'right', this.editor.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth);
   return this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor);
 };
 
@@ -17888,13 +17906,17 @@ ScribeMultiCursor = (function(_super) {
       '.cursor.top > .cursor-flag': {
         'bottom': 'auto',
         'top': '100%'
+      },
+      '.cursor.right > .cursor-flag': {
+        'right': '-2px'
       }
     });
     this.editor.renderer.on(ScribeRenderer.events.UPDATE, (function(_this) {
       return function() {
         return _.defer(function() {
           _this.container.style.top = _this.editor.root.offsetTop + 'px';
-          return _this.container.style.left = _this.editor.root.offsetLeft + 'px';
+          _this.container.style.left = _this.editor.root.offsetLeft + 'px';
+          return _this.update(true);
         });
       };
     })(this));
@@ -17904,6 +17926,62 @@ ScribeMultiCursor = (function(_super) {
       };
     })(this));
   }
+
+  ScribeMultiCursor.prototype.clearCursors = function() {
+    _.each(_.keys(this.cursors), (function(_this) {
+      return function(id) {
+        return _this.removeCursor(id);
+      };
+    })(this));
+    return this.cursors = {};
+  };
+
+  ScribeMultiCursor.prototype.moveCursor = function(userId, index, update) {
+    var cursor;
+    if (update == null) {
+      update = true;
+    }
+    cursor = this.cursors[userId];
+    cursor.index = index;
+    cursor.dirty = true;
+    ScribeDOM.removeClass(cursor.elem, 'hidden');
+    clearTimeout(cursor.timer);
+    cursor.timer = setTimeout((function(_this) {
+      return function() {
+        ScribeDOM.addClass(cursor.elem, 'hidden');
+        return cursor.timer = null;
+      };
+    })(this), this.options.timeout);
+    if (update) {
+      _updateCursor.call(this, cursor);
+    }
+    return cursor;
+  };
+
+  ScribeMultiCursor.prototype.removeCursor = function(userId) {
+    var cursor;
+    cursor = this.cursors[userId];
+    this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor);
+    cursor.elem.parentNode.removeChild(cursor.elem) in (cursor != null);
+    return delete this.cursors[userId];
+  };
+
+  ScribeMultiCursor.prototype.setCursor = function(userId, index, name, color, update) {
+    var cursor;
+    if (update == null) {
+      update = true;
+    }
+    if (this.cursors[userId] == null) {
+      this.cursors[userId] = cursor = {
+        userId: userId,
+        index: index,
+        color: color,
+        elem: _buildCursor.call(this, name, color)
+      };
+      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor);
+    }
+    return this.moveCursor(userId, index, update);
+  };
 
   ScribeMultiCursor.prototype.shiftCursors = function(index, length, authorId, update) {
     if (authorId == null) {
@@ -17926,58 +18004,16 @@ ScribeMultiCursor = (function(_super) {
     }
   };
 
-  ScribeMultiCursor.prototype.setCursor = function(userId, index, name, color, update) {
-    var cursor;
-    if (update == null) {
-      update = true;
+  ScribeMultiCursor.prototype.update = function(force) {
+    if (force == null) {
+      force = false;
     }
-    cursor = this.cursors[userId];
-    if (cursor == null) {
-      this.cursors[userId] = cursor = {
-        userId: userId,
-        index: index,
-        color: color,
-        elem: _buildCursor.call(this, name, color)
-      };
-      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor);
-    }
-    cursor.index = index;
-    cursor.dirty = true;
-    ScribeDOM.removeClass(cursor.elem, 'hidden');
-    clearTimeout(cursor.timer);
-    cursor.timer = setTimeout((function(_this) {
-      return function() {
-        ScribeDOM.addClass(cursor.elem, 'hidden');
-        return cursor.timer = null;
-      };
-    })(this), this.options.timeout);
-    if (update) {
-      _updateCursor.call(this, cursor);
-    }
-    return cursor;
-  };
-
-  ScribeMultiCursor.prototype.clearCursors = function() {
-    _.each(_.keys(this.cursors), (function(_this) {
-      return function(id) {
-        return _this.removeCursor(id);
-      };
-    })(this));
-    return this.cursors = {};
-  };
-
-  ScribeMultiCursor.prototype.removeCursor = function(userId) {
-    var cursor;
-    cursor = this.cursors[userId];
-    this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor);
-    cursor.elem.parentNode.removeChild(cursor.elem) in (cursor != null);
-    return delete this.cursors[userId];
-  };
-
-  ScribeMultiCursor.prototype.update = function() {
     return _.each(this.cursors, (function(_this) {
       return function(cursor, id) {
-        if (cursor != null ? cursor.dirty : void 0) {
+        if (cursor == null) {
+          return;
+        }
+        if (cursor.dirty || force) {
           return _updateCursor.call(_this, cursor);
         }
       };
@@ -18586,7 +18622,7 @@ ScribePasteManager = (function() {
     return ScribeDOM.addEventListener(this.editor.root, 'paste', (function(_this) {
       return function() {
         var oldDocLength, range;
-        oldDocLength = _this.editor.getLength();
+        oldDocLength = _this.editor.scribe.getLength();
         range = _this.editor.getSelection();
         if (range == null) {
           return;
@@ -18605,7 +18641,7 @@ ScribePasteManager = (function() {
           if (range.end.index < oldDocLength) {
             delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength));
           }
-          delta.endLength += _this.editor.getLength() - (range.end.index - range.start.index);
+          delta.endLength += _this.editor.scribe.getLength() - (range.end.index - range.start.index);
           delta.startLength = oldDocLength;
           _this.editor.applyDelta(delta, {
             source: 'user'
@@ -18886,7 +18922,8 @@ DEFAULT_STYLES = {
     'height': '100%',
     'line-height': '1.3',
     'margin': '0px',
-    'overflow': 'auto',
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
     'padding': '0px'
   },
   '.editor': {
@@ -18896,10 +18933,10 @@ DEFAULT_STYLES = {
     'white-space': 'pre-wrap'
   },
   '.editor .line:first-child': {
-    'padding-top': '10px'
+    'padding-top': '12px'
   },
   '.editor .line:last-child': {
-    'padding-bottom': '10px'
+    'padding-bottom': '12px'
   },
   '.editor .line': {
     'margin-left': '15px',
@@ -19234,6 +19271,10 @@ Scribe = (function(_super) {
 
   Scribe.prototype.getLength = function() {
     return this.editor.getDelta().endLength;
+  };
+
+  Scribe.prototype.getModule = function(name) {
+    return this.modules[name];
   };
 
   Scribe.prototype.getText = function(index, length) {
@@ -19800,7 +19841,7 @@ ScribeSnowTheme = (function(_super) {
 
   ScribeSnowTheme.OPTIONS = {
     'multi-cursor': {
-      template: '<span class="cursor-flag"> <span class="cursor-name"></span> <span class="cursor-triangle"></span> </span> <span class="cursor-caret"></span>'
+      template: '<span class="cursor-flag"> <span class="cursor-triangle top"></span> <span class="cursor-name"></span> <span class="cursor-triangle bottom"></span> </span> <span class="cursor-caret"></span>'
     }
   };
 
@@ -19822,6 +19863,7 @@ ScribeSnowTheme = (function(_super) {
         });
       };
     })(this));
+    ScribeDOM.addClass(this.editor.root.parentNode, 'snow');
     ScribeSnowTheme.__super__.constructor.apply(this, arguments);
   }
 
@@ -19849,18 +19891,18 @@ ScribeSnowTheme = (function(_super) {
 
   ScribeSnowTheme.prototype.extendLinkTooltip = function(module) {
     return this.editor.renderer.addStyles({
-      '.editor-container a': {
+      '.snow a': {
         'color': '#06c'
       },
-      '.editor-container #link-tooltip': {
+      '.snow #link-tooltip': {
         'border': '1px solid #ccc',
         'box-shadow': '0px 0px 5px #ddd',
         'color': '#222'
       },
-      '.editor-container #link-tooltip a': {
+      '.snow #link-tooltip a': {
         'color': '#06c'
       },
-      '.editor-container #link-tooltip .input': {
+      '.snow #link-tooltip .input': {
         'border': '1px solid #ccc',
         'margin': '0px',
         'padding': '3px'
@@ -19870,32 +19912,52 @@ ScribeSnowTheme = (function(_super) {
 
   ScribeSnowTheme.prototype.extendMultiCursor = function(module) {
     this.editor.renderer.addStyles({
-      '.editor-container .cursor-name': {
-        'border-radius': '3px',
+      '.snow .cursor-name': {
+        'border-radius': '4px',
         'font-size': '11px',
         'font-family': 'Arial',
         'margin-left': '-50%',
         'padding': '4px 10px'
       },
-      '.editor-container .cursor-triangle': {
+      '.snow .cursor-triangle': {
         'border-left': '4px solid transparent',
         'border-right': '4px solid transparent',
-        'border-top': '4px solid transparent',
-        'display': 'block',
         'height': '0px',
-        'margin-bottom': '-1px',
         'margin-left': '-3px',
         'width': '0px'
       },
-      '.editor-container .cursor.top > .cursor-flag': {
-        'bottom': '100%',
-        'top': 'auto'
+      '.snow .cursor.left .cursor-name': {
+        'margin-left': '-8px'
+      },
+      '.snow .cursor.right .cursor-flag': {
+        'right': 'auto'
+      },
+      '.snow .cursor.right .cursor-name': {
+        'margin-left': '-100%',
+        'margin-right': '-8px'
+      },
+      '.snow .cursor-triangle.bottom': {
+        'border-top': '4px solid transparent',
+        'display': 'block',
+        'margin-bottom': '-1px'
+      },
+      '.snow .cursor-triangle.top': {
+        'border-bottom': '4px solid transparent',
+        'display': 'none',
+        'margin-top': '-1px'
+      },
+      '.snow .cursor.top .cursor-triangle.bottom': {
+        'display': 'none'
+      },
+      '.snow .cursor.top .cursor-triangle.top': {
+        'display': 'block'
       }
     });
     return module.on(module.constructor.events.CURSOR_ADDED, function(cursor) {
-      var triangle;
-      triangle = cursor.elem.querySelector('.cursor-triangle');
-      return triangle.style.borderTopColor = cursor.color;
+      var bottomTriangle, topTriangle;
+      bottomTriangle = cursor.elem.querySelector('.cursor-triangle.bottom');
+      topTriangle = cursor.elem.querySelector('.cursor-triangle.top');
+      return bottomTriangle.style.borderTopColor = topTriangle.style.borderBottomColor = cursor.color;
     });
   };
 
@@ -20094,8 +20156,8 @@ ScribeUndoManager = (function() {
     return if delta.isIdentity()
     @stack['undo'] = _.map(@stack['undo'], (change) ->
       return {
-        redo: delta.follows(change.redo, true)
-        undo: change.undo.follows(delta, true)
+        redo: delta.transform(change.redo, true)
+        undo: change.undo.transform(delta, true)
       }
     )
    */
