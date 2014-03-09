@@ -24,7 +24,7 @@ var module = editor.addModule('authorship', {
 
 module.addAuthor('jrr', 'rgba(0,153,255,0.4)');
 module.addAuthor('tolkien', 'rgba(255,153,51,0.4)');
-module.enable()
+module.enable();
 
 editor.setContents({
   startLength: 0,
@@ -36,7 +36,7 @@ editor.setContents({
     { value: 'His enemy halted again, facing him, and the shadow about it reached out like two vast wings. It raised the whip, and the thongs whined and cracked. Fire came from its nostrils.', attributes: { author: 'jrr' } },
     { value: ' But Gandalf stood firm.', attributes: { author: 'tolkien' } }
   ]
-})
+});
 </script>
 
 Enabling this module will also add a new format `author` to the list of recognized [formats]({{ site.baseurl }}/docs/editor/formats/). The value of the `author` format is the id of the author. Changes made to the Scribe editor will also attach the local author metadata.

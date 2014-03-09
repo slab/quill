@@ -9,9 +9,31 @@ stability: yellow
 
 The Multi-Cursors modules enables the display of multiple external cursors inside the Scribe editor.
 
-# TODO add demo
+<div class='scribe-wrapper'>
+  <div id='editor'></div>
+</div>
 
-# Methods
+<script src="{{ site.baseurl }}/js/scribe.js"></script>
+<script>
+var editor = new Scribe('#editor');
+editor.insertText(0, 'Upon great pedestals founded in the deep waters stood two great kings of stone: still with blurred eyes and crannied brows they frowned upon the North. The left hand of each was raised palm outwards in gesture of warning; in each right hand there was an axe; upon each head there was a crumbling helm and crown. Great power and majesty they still wore, the silent wardens of a long-vanished kingdom.\n');
+
+module = editor.addModule('multi-cursor', {
+  timeout: 5000
+});
+module.setCursor('merry', 0, 'Merry', 'rgba(0,153,255,0.9)');
+module.setCursor('pippin', editor.getText().indexOf('.'), 'Pippin', 'rgba(255,153,51,0.9)');
+module.setCursor('frodo', editor.getText().indexOf(',')+1, 'Frodo', 'rgba(153,0,153,0.9)');
+</script>
+
+### Configuration
+
+| Parameter  | Description
+|------------|-------------
+| `template` | _String_ HTML template to use for cursor element.
+| `timeout`  | _Number_ of milliseconds of inaction before cursor flag is hidden.
+
+### Methods
 
 - `setCursor(id, index, text, color)`
 
@@ -22,12 +44,14 @@ The Multi-Cursors modules enables the display of multiple external cursors insid
 | `text`    | _String_ text to place above cursor
 | `color`   | _String_ Color of cursor. Can be any valid CSS color.
 
-# Example
+### Example
 
 {% highlight javascript %}
 
 var editor = new Scribe('#editor');
-var module = editor.addModule('multi-cursor');
+var module = editor.addModule('multi-cursor', {
+  timeout: 10000
+});
 
 module.setCursor('id-1234', 10, 'Frodo', '#ff00ff');
 
