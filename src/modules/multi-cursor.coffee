@@ -112,24 +112,14 @@ class ScribeMultiCursor extends EventEmitter2
       _applyDelta.call(this, delta)
     )
 
-  shiftCursors: (index, length, authorId = null, update = true) ->
-    _.each(@cursors, (cursor, id) =>
-      return unless cursor and (cursor.index > index or cursor.userId == authorId)
-      cursor.index += Math.max(length, index - cursor.index)
-      cursor.dirty = true
+  clearCursors: ->
+    _.each(_.keys(@cursors), (id) =>
+      this.removeCursor(id)
     )
-    this.update() if update
+    @cursors = {}
 
-  setCursor: (userId, index, name, color, update = true) ->
+  moveCursor: (userId, index, update = true) ->
     cursor = @cursors[userId]
-    unless cursor?
-      @cursors[userId] = cursor = {
-        userId: userId
-        index: index
-        color: color
-        elem: _buildCursor.call(this, name, color)
-      }
-      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor)
     cursor.index = index
     cursor.dirty = true
     ScribeDOM.removeClass(cursor.elem, 'hidden')
@@ -141,17 +131,30 @@ class ScribeMultiCursor extends EventEmitter2
     _updateCursor.call(this, cursor) if update
     return cursor
 
-  clearCursors: ->
-    _.each(_.keys(@cursors), (id) =>
-      this.removeCursor(id)
-    )
-    @cursors = {}
-
   removeCursor: (userId) ->
     cursor = @cursors[userId]
     this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor)
     cursor.elem.parentNode.removeChild(cursor.elem) of cursor?
     delete @cursors[userId]
+
+  setCursor: (userId, index, name, color, update = true) ->
+    unless @cursors[userId]?
+      @cursors[userId] = cursor = {
+        userId: userId
+        index: index
+        color: color
+        elem: _buildCursor.call(this, name, color)
+      }
+      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor)
+    return this.moveCursor(userId, index, update)
+
+  shiftCursors: (index, length, authorId = null, update = true) ->
+    _.each(@cursors, (cursor, id) =>
+      return unless cursor and (cursor.index > index or cursor.userId == authorId)
+      cursor.index += Math.max(length, index - cursor.index)
+      cursor.dirty = true
+    )
+    this.update() if update
 
   update: (force = false) ->
     _.each(@cursors, (cursor, id) =>
