@@ -104,6 +104,7 @@ class ScribeMultiCursor extends EventEmitter2
       _.defer( =>
         @container.style.top = @editor.root.offsetTop + 'px'
         @container.style.left = @editor.root.offsetLeft  + 'px'
+        this.update()
       )
     )
     @editor.on(@editor.constructor.events.TEXT_CHANGE, (delta) =>
