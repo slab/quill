@@ -10,7 +10,7 @@ module.exports = (grunt) ->
   require('./config/grunt/concurrent')(grunt)
   require('./config/grunt/watch')(grunt)
 
-  grunt.registerTask('default', ['clean', 'copy', 'concurrent:template', 'concurrent:browserify', 'uglify', 'concat', 'imageEmbed'])
+  grunt.registerTask('default', ['clean', 'copy', 'concurrent:template', 'concurrent:browserify', 'uglify', 'concat'])
 
   grunt.registerTask('test', ['karma:unit'])
   grunt.registerTask('test:karma', ['karma:karma'])

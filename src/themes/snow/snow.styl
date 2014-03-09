@@ -15,7 +15,7 @@ toolbarPadding = 8px
   font-family: 'fa-editor'
   font-style: normal
   font-weight: normal
-  src: url('../fonts/fa-editor.eot') format('embedded-opentype'), url('../fonts/fa-editor.woff') format('woff')
+  src: url('assets/fa-editor.eot') format('embedded-opentype'), url('assets/fa-editor.woff') format('woff')
 
 .sc-toolbar-container
   box-sizing: border-box
@@ -65,12 +65,12 @@ toolbarPadding = 8px
   font-weight: bold
   position: relative
   .sc-picker-label
-    background: url('../images/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
+    background: url('assets/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
     box-sizing: content-box
     cursor: pointer
     padding: inputPadding pickerPadding
   .sc-picker-label.active, .sc-picker-label:hover
-    background-image: url('../images/arrows-active.png')
+    background-image: url('assets/arrows-active.png')
     color: blueColor
   .sc-picker-options
     background-color: #fff
@@ -87,7 +87,7 @@ toolbarPadding = 8px
       color: blueColor
 .sc-picker.sc-expanded
   .sc-picker-label
-    background-image: url('../images/arrows-inactive.png')
+    background-image: url('assets/arrows-inactive.png')
     border: 1px solid grayColor
     color: grayColor
     margin: -1px
@@ -138,7 +138,7 @@ toolbarPadding = 8px
     content: "\e80e"
   .sc-format-button.sc-link:before
     content: "\e813"
-  .sc-format-button.sc-attribution:before
+  .sc-format-button.sc-authorship:before
     content: "\e816"
 
   .sc-font-name
@@ -163,6 +163,6 @@ toolbarPadding = 8px
 
   for $format in fore-color back-color
     .sc-picker.sc-{$format} .sc-picker-label
-      background-image: url('../images/' + $format + '.png')
+      background-image: url('assets/' + $format + '.png')
     .sc-picker.sc-{$format} .sc-picker-label.sc-active, .sc-picker.sc-{$format} .sc-picker-label:hover, .sc-picker.sc-{$format}.sc-expanded .sc-picker-label
-      background-image: url('../images/' + $format + '-active.png')
+      background-image: url('assets/' + $format + '-active.png')

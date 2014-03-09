@@ -76,30 +76,34 @@ module.exports = (grunt) ->
       src:  'node_modules/expect.js/index.js'
   )
 
-  grunt.config('imageEmbed',
-    all:
-      dest: ''
-      expand: true
-      src: ['build/demo/styles/*.css', 'build/tests/**/*.css']
-  )
-
   grunt.config('jade',
     all:
       options:
         pretty: true
       dest: 'build/'
       expand: true
-      ext: ['.html']
+      ext: '.html'
       src: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
   )
 
   grunt.config('stylus',
     options:
       compress: false
+    themes:
+      options:
+        urlfunc: 'url'
+      files: [{
+        expand: true
+        ext: '.css'
+        flatten: true
+        src: 'src/themes/**/*.styl'
+        rename: (dest, src) ->
+          return "build/themes/scribe.#{src}"
+      }]
     all:
       expand: true
+      ext: '.css'
       dest: 'build/'
-      ext: ['.css']
       src: ['demo/styles/*.styl', 'tests/**/*.styl']
   )
 

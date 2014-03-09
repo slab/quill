@@ -34,7 +34,6 @@
     "grunt-contrib-stylus" : "0.13.x",
     "grunt-contrib-uglify" : "0.4.x",
     "grunt-contrib-watch"  : "0.5.x",
-    "grunt-image-embed"    : "0.3.x",
     "grunt-karma"          : "0.6.x",
     "grunt-newer"          : "0.6.x",
     "grunt-shell"          : "0.6.x",

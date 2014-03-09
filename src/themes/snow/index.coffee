@@ -1,8 +1,8 @@
 _                   = require('lodash')
-ScribeColorPicker   = require('./color-picker')
-ScribeDefaultTheme  = require('./default')
-ScribeDOM           = require('../dom')
-ScribePicker        = require('./picker')
+ScribeColorPicker   = require('../color-picker')
+ScribeDefaultTheme  = require('../default')
+ScribeDOM           = require('../../dom')
+ScribePicker        = require('../picker')
 
 
 class ScribeSnowTheme extends ScribeDefaultTheme
@@ -29,13 +29,13 @@ class ScribeSnowTheme extends ScribeDefaultTheme
 
   addModule: (name, options) ->
     switch name
-      when 'attribution'  then this.extendAttribution(options)
+      when 'authorship'   then this.extendAuthorship(options)
       when 'link-tooltip' then this.extendLinkTooltip(options)
       when 'multi-cursor' then this.extendMultiCursor(options)
       when 'toolbar'      then this.extendToolbar(options)
     return super(name, options)
 
-  extendAttribution: (options) ->
+  extendAuthorship: (options) ->
 
 
   extendLinkTooltip: (options) ->

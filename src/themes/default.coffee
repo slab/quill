@@ -1,4 +1,4 @@
-ScribeAttribution = require('../modules/attribution')
+ScribeAuthorship  = require('../modules/authorship')
 ScribeLinkTooltip = require('../modules/link-tooltip')
 ScribeMultiCursor = require('../modules/multi-cursor')
 ScribeToolbar     = require('../modules/toolbar')
@@ -11,11 +11,11 @@ class ScribeDefaultTheme
 
   addModule: (name, options) ->
     switch name
-      when 'attribution'  then return new ScribeAttribution(@editor, options)
+      when 'authorship'  then return new ScribeAuthorship(@editor, options)
       when 'link-tooltip' then return new ScribeLinkTooltip(@editor, options)
       when 'multi-cursor' then return new ScribeMultiCursor(@editor, options)
       when 'toolbar'      then return new ScribeToolbar(@editor, options)
       else return null
-  
+
 
 module.exports = ScribeDefaultTheme

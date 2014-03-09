@@ -15,7 +15,4 @@ module.exports = (grunt) ->
     stylus:
       files: ['demo/**/*.styl', 'tests/**/*.styl']
       tasks: ['newer:stylus']
-    imageEmbed:
-      files: ['build/demo/styles/*.css', 'build/tests/**/*.css']
-      tasks: ['newer:imageEmbed']
   )
