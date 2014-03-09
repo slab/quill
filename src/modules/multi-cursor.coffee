@@ -32,7 +32,7 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop + 'px'
   cursor.elem.style.left = referenceNode.offsetLeft + 'px'
   cursor.elem.style.height = referenceNode.offsetHeight + 'px'
-  if parseInt(cursor.elem.style.top) < parseInt(cursor.elem.style.height)
+  if parseInt(cursor.elem.style.top) <= parseInt(cursor.elem.style.height)
     ScribeDOM.addClass(cursor.elem, 'top')
   else
     ScribeDOM.removeClass(cursor.elem, 'top')

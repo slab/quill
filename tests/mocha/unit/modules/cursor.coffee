@@ -3,7 +3,7 @@ expect = require('expect.js')
 describe('Cursor', ->
   describe('basic operations', ->
     OFFSET_LEFT = 15
-    OFFSET_TOP = 10
+    OFFSET_TOP = 12
 
     CURSOR_LEFT = [0, 0]
     CURSOR_END_LEFT = [61, 61]

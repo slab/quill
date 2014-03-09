@@ -19,8 +19,8 @@ DEFAULT_STYLES =
     'outline'     : 'none'
     'tab-size'    : '4'
     'white-space' : 'pre-wrap'
-  '.editor .line:first-child' : { 'padding-top': '10px' }
-  '.editor .line:last-child'  : { 'padding-bottom': '10px' }
+  '.editor .line:first-child' : { 'padding-top': '12px' }
+  '.editor .line:last-child'  : { 'padding-bottom': '12px' }
   '.editor .line': { 'margin-left': '15px', 'margin-right': '15px' }
   '.editor a'    : { 'text-decoration': 'underline' }
   '.editor b'    : { 'font-weight': 'bold' }
