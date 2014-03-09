@@ -9,7 +9,7 @@ _initDeletes = ->
   _.each([ScribeKeyboard.keys.DELETE, ScribeKeyboard.keys.BACKSPACE], (key) =>
     this.addHotkey(key, =>
       # Prevent deleting if editor is already blank (browser quirk fix)
-      return @editor.getLength() > 1
+      return @editor.scribe.getLength() > 1
     )
   )
 

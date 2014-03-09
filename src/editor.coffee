@@ -190,8 +190,8 @@ class ScribeEditor extends EventEmitter2
       if localDelta
         @delta = @delta.compose(localDelta)
         tempDelta = localDelta
-        localDelta = localDelta.follows(delta, true)
-        delta = delta.follows(tempDelta, false)
+        localDelta = localDelta.transform(delta, true)
+        delta = delta.transform(tempDelta, false)
       unless delta.isIdentity()   # Follows may have turned delta into the identity
         throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
         delta.apply(_insertAt, _deleteAt, _formatAt, this)
@@ -226,6 +226,14 @@ class ScribeEditor extends EventEmitter2
     @logger.info(eventName, args...) if _.indexOf(_.values(ScribeEditor.events), eventName) > -1
     super(eventName, args...)
     super(ScribeEditor.events.POST_EVENT, eventName, args...)
+
+  insertAt: (index, text, formats, options = {}) ->
+    delta = Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formats)
+    this.applyDelta(delta, options)
+
+  deleteAt: (index, length, options = {}) ->
+    delta = Tandem.Delta.makeDeleteDelta(@delta.endLength, index, length)
+    this.applyDelta(delta, options)
 
   formatAt: (index, length, name, value, options = {}) ->
     if length > 0

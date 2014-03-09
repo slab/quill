@@ -105,8 +105,8 @@ class ScribeUndoManager
     return if delta.isIdentity()
     @stack['undo'] = _.map(@stack['undo'], (change) ->
       return {
-        redo: delta.follows(change.redo, true)
-        undo: change.undo.follows(delta, true)
+        redo: delta.transform(change.redo, true)
+        undo: change.undo.transform(delta, true)
       }
     )
   ###
