@@ -228,8 +228,8 @@ body.home {
 #docs-container .scribe-wrapper {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
-  margin-bottom: 25px;
-  margin-top: 20px;
+  margin: 20px 0px 25px;
+  width: 600px;
 }
 
 #docs-container #multi-cursor-editor {
@@ -240,10 +240,7 @@ body.home {
   margin-left: 0px;
 }
 #examples-container .scribe-wrapper {
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
   margin: 15px 0px;
-  width: 600px;
 }
 #examples-container #basic-toolbar {
   padding: 5px 15px;

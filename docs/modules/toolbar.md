@@ -15,8 +15,6 @@ Simply create a container and the module to the Scribe editor.
 {% highlight html %}
 <!-- Create toolbar container -->
 <div id="toolbar">
-  <!-- Add a bold button -->
-  <button class="sc-bold"></button>
   <!-- Add font size dropdown -->
   <select class="sc-font-size">
     <option value="small">Small</option>
@@ -24,6 +22,8 @@ Simply create a container and the module to the Scribe editor.
     <option value="large">Large</option>
     <option value="huge">Huge</option>
   </select>
+  <!-- Add a bold button -->
+  <button class="sc-bold"></button>
 </div>
 <div id="editor"></div>
 
