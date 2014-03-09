@@ -231,3 +231,16 @@ body.home {
   margin-bottom: 25px;
   margin-top: 20px;
 }
+
+#examples-container pre {
+  margin-left: 0px;
+}
+#examples-container .scribe-wrapper {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  margin: 15px 0px;
+  width: 600px;
+}
+#examples-container #basic-editor, #examples-container #full-editor {
+  height: 250px;
+}

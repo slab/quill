@@ -1,10 +1,4 @@
-{% if page.items != "examples" %}
-  {% assign items = site.data.docs %}
-{% else %}
-  {% assign items = site.data.examples %}
-{% endif %}
-
-{% for parent in items %}
+{% for parent in site.data.docs %}
 <li {% if page.url contains parent.url %}class="active"{% endif %}>
   <a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.title }}</a>
   {% if parent.children != null %}

@@ -47,4 +47,4 @@ Only a subset of HTML is recognized for security (`<script>` tags are stripped) 
 
 That's all you need to do to set up a simple Scribe editor! But the power of Scribe comes with its flexibility and extensibility.
 
-Check out the [Full Example]({{ site.baseurl }}/examples/advanced/) to see all of this in action. Or start interacting with Scribe in powerful new ways with its flexible [API]({{ site.baseurl }}/docs/api/).
+Check out the [Examples]({{ site.baseurl }}/examples/) to see all of this in action. Or start interacting with Scribe in powerful new ways with its flexible [API]({{ site.baseurl }}/docs/api/).
