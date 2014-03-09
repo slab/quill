@@ -35,7 +35,6 @@ listenEditor = (source, target) ->
     return unless range?
     color = getColor(source.id)
     cursor = target.modules['multi-cursor'].setCursor(source.id, range.end.index, source.id, color)
-    $('.cursor-triangle', cursor.elem).css('border-top-color', color)
   )
 
 
@@ -51,7 +50,7 @@ for num in [1, 2]
         color: getColor(num, true)
         button: $('.sc-authorship', $wrapper).get(0)
       }
-      'multi-cursor': {}    # TODO does passing in null or true work?
+      'multi-cursor': true
       'toolbar': {
         container: $('.toolbar-container', $wrapper).get(0)
       }

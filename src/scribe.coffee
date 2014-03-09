@@ -60,6 +60,7 @@ class Scribe extends EventEmitter2
     )
 
   addModule: (name, options) ->
+    options = {} unless _.isObject(options)
     @modules[name] = @theme.addModule(name, options)
     return @modules[name]
 

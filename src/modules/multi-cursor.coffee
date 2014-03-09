@@ -1,4 +1,5 @@
 _               = require('lodash')
+EventEmitter2   = require('eventemitter2').EventEmitter2
 ScribeDOM       = require('../dom')
 ScribePosition  = require('../position')
 ScribeRenderer  = require('../renderer')
@@ -35,6 +36,7 @@ _moveCursor = (cursor, referenceNode) ->
     ScribeDOM.addClass(cursor.elem, 'top')
   else
     ScribeDOM.removeClass(cursor.elem, 'top')
+  this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor)
 
 _updateCursor = (cursor) ->
   @editor.doSilently( =>
@@ -60,7 +62,7 @@ _updateCursor = (cursor) ->
   cursor.dirty = false
 
 
-class ScribeMultiCursor
+class ScribeMultiCursor extends EventEmitter2
   @DEFAULTS:
     template:
      '<span class="cursor-flag">
@@ -68,6 +70,11 @@ class ScribeMultiCursor
       </span>
       <span class="cursor-caret"></span>'
     timeout: 2500
+
+  @events:
+    CURSOR_ADDED: 'cursor-addded'
+    CURSOR_MOVED: 'cursor-moved'
+    CURSOR_REMOVED: 'cursor-removed'
 
   constructor: (@editor, options = {}) ->
     @options = _.defaults(options, ScribeMultiCursor.DEFAULTS)
@@ -117,8 +124,10 @@ class ScribeMultiCursor
       @cursors[userId] = cursor = {
         userId: userId
         index: index
+        color: color
         elem: _buildCursor.call(this, name, color)
       }
+      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor)
     cursor.index = index
     cursor.dirty = true
     ScribeDOM.removeClass(cursor.elem, 'hidden')
@@ -138,6 +147,7 @@ class ScribeMultiCursor
 
   removeCursor: (userId) ->
     cursor = @cursors[userId]
+    this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor)
     cursor.elem.parentNode.removeChild(cursor.elem) of cursor?
     delete @cursors[userId]
 

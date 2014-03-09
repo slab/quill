@@ -14,6 +14,15 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"
   ]
 
+  @OPTIONS:
+    'multi-cursor':
+      template:
+       '<span class="cursor-flag">
+          <span class="cursor-name"></span>
+          <span class="cursor-triangle"></span>
+        </span>
+        <span class="cursor-caret"></span>'
+
   constructor: (@editor) ->
     _.defaults(
       styles:
@@ -28,17 +37,19 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     super
 
   addModule: (name, options) ->
+    options = _.defaults(ScribeSnowTheme.OPTIONS[name] or {}, options)
+    module = super(name, options)
     switch name
-      when 'authorship'   then this.extendAuthorship(options)
-      when 'link-tooltip' then this.extendLinkTooltip(options)
-      when 'multi-cursor' then this.extendMultiCursor(options)
-      when 'toolbar'      then this.extendToolbar(options)
-    return super(name, options)
+      when 'authorship'   then this.extendAuthorship(module)
+      when 'link-tooltip' then this.extendLinkTooltip(module)
+      when 'multi-cursor' then this.extendMultiCursor(module)
+      when 'toolbar'      then this.extendToolbar(module)
+    return module
 
-  extendAuthorship: (options) ->
+  extendAuthorship: (module) ->
 
 
-  extendLinkTooltip: (options) ->
+  extendLinkTooltip: (module) ->
     @editor.renderer.addStyles(
       '.editor-container a': { 'color': '#06c' }
       '.editor-container #link-tooltip':
@@ -53,13 +64,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         'padding': '3px'
     )
 
-  extendMultiCursor: (options) ->
-    options.template =
-     '<span class="cursor-flag">
-        <span class="cursor-name"></span>
-        <span class="cursor-triangle"></span>
-      </span>
-      <span class="cursor-caret"></span>'
+  extendMultiCursor: (module) ->
     @editor.renderer.addStyles(
       '.editor-container .cursor-name':
         'border-radius': '3px'
@@ -78,16 +83,19 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         'width': '0px'
       '.editor-container .cursor.top > .cursor-flag': { 'bottom': '100%', 'top': 'auto' }
     )
+    module.on(module.constructor.events.CURSOR_ADDED, (cursor) ->
+      triangle = cursor.elem.querySelector('.cursor-triangle')
+      triangle.style.borderTopColor = cursor.color
+    )
 
-  extendToolbar: (options) ->
-    options.container = document.querySelector(options.container) if _.isString(options.container)
-    ScribeDOM.addClass(options.container, 'sc-toolbar-container')
-    _.each(options.container.querySelectorAll('.sc-font-name, .sc-font-size'), (select) =>
+  extendToolbar: (module) ->
+    ScribeDOM.addClass(module.container, 'sc-toolbar-container')
+    _.each(module.container.querySelectorAll('.sc-font-name, .sc-font-size'), (select) =>
       picker = new ScribePicker(select)
       @pickers.push(picker)
     )
     _.each(['fore-color', 'back-color'], (css) =>
-      select = options.container.querySelector(".sc-#{css}")
+      select = module.container.querySelector(".sc-#{css}")
       return unless select?
       picker = new ScribeColorPicker(select)
       @pickers.push(picker)
