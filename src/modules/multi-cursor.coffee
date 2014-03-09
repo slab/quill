@@ -99,12 +99,13 @@ class ScribeMultiCursor extends EventEmitter2
         'width': '2px'
       '.cursor.hidden .cursor-flag': { 'display': 'none' }
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
+      '.cursor.right > .cursor-flag': { 'right': '-2px' }
     })
     @editor.renderer.on(ScribeRenderer.events.UPDATE, =>
       _.defer( =>
         @container.style.top = @editor.root.offsetTop + 'px'
         @container.style.left = @editor.root.offsetLeft  + 'px'
-        this.update()
+        this.update(true)
       )
     )
     @editor.on(@editor.constructor.events.TEXT_CHANGE, (delta) =>
@@ -152,9 +153,10 @@ class ScribeMultiCursor extends EventEmitter2
     cursor.elem.parentNode.removeChild(cursor.elem) of cursor?
     delete @cursors[userId]
 
-  update: ->
+  update: (force = false) ->
     _.each(@cursors, (cursor, id) =>
-      _updateCursor.call(this, cursor) if cursor?.dirty
+      return unless cursor?
+      _updateCursor.call(this, cursor) if cursor.dirty or force
     )
 
 

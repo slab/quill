@@ -35,6 +35,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         picker.close()
       )
     )
+    ScribeDOM.addClass(@editor.root.parentNode, 'snow')
     super
 
   addModule: (name, options) ->
@@ -52,14 +53,14 @@ class ScribeSnowTheme extends ScribeDefaultTheme
 
   extendLinkTooltip: (module) ->
     @editor.renderer.addStyles(
-      '.editor-container a': { 'color': '#06c' }
-      '.editor-container #link-tooltip':
+      '.snow a': { 'color': '#06c' }
+      '.snow #link-tooltip':
         'border': '1px solid #ccc'
         'box-shadow': '0px 0px 5px #ddd'
         'color': '#222'
-      '.editor-container #link-tooltip a':
+      '.snow #link-tooltip a':
         'color': '#06c'
-      '.editor-container #link-tooltip .input':
+      '.snow #link-tooltip .input':
         'border': '1px solid #ccc'
         'margin': '0px'
         'padding': '3px'
@@ -67,34 +68,36 @@ class ScribeSnowTheme extends ScribeDefaultTheme
 
   extendMultiCursor: (module) ->
     @editor.renderer.addStyles(
-      '.editor-container .cursor-name':
+      '.snow .cursor-name':
         'border-radius': '4px'
         'font-size': '11px'
         'font-family': 'Arial'
         'margin-left': '-50%'
         'padding': '4px 10px'
-      '.editor-container .cursor-triangle':
+      '.snow .cursor-triangle':
         'border-left': '4px solid transparent'
         'border-right': '4px solid transparent'
         'height': '0px'
         'margin-left': '-3px'
         'width': '0px'
-      '.editor-container .cursor.left .cursor-name':
+      '.snow .cursor.left .cursor-name':
         'margin-left': '-8px'
-      '.editor-container .cursor.right .cursor-name':
+      '.snow .cursor.right .cursor-flag':
+        'right': 'auto'
+      '.snow .cursor.right .cursor-name':
         'margin-left': '-100%'
         'margin-right': '-8px'
-      '.editor-container .cursor-triangle.bottom':
+      '.snow .cursor-triangle.bottom':
         'border-top': '4px solid transparent'
         'display': 'block'
         'margin-bottom': '-1px'
-      '.editor-container .cursor-triangle.top':
+      '.snow .cursor-triangle.top':
         'border-bottom': '4px solid transparent'
         'display': 'none'
         'margin-top': '-1px'
-      '.editor-container .cursor.top .cursor-triangle.bottom':
+      '.snow .cursor.top .cursor-triangle.bottom':
         'display': 'none'
-      '.editor-container .cursor.top .cursor-triangle.top':
+      '.snow .cursor.top .cursor-triangle.top':
         'display': 'block'
     )
     module.on(module.constructor.events.CURSOR_ADDED, (cursor) ->
