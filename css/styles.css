@@ -42,6 +42,21 @@ body.home {
   background-color: #fafafa;
 }
 
+.scribe-wrapper {
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  box-shadow: 0px 0px 10px #ccc;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 320px;
+  width: 66%;
+}
+.toolbar {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
 
 #navigation-container {
   background-color: #222;
@@ -127,23 +142,6 @@ body.home {
   margin-top: -20px;
   padding-top: 40px;
 }
-#demo-container #scribe-wrapper {
-  background-color: #fff;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  box-shadow: 0px 0px 10px #ccc;
-  margin-left: auto;
-  margin-right: auto;
-  min-width: 320px;
-  width: 66%;
-}
-#demo-container #scribe-toolbar {
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-}
-#demo-container #scribe-container {
-  height: 250px;
-}
 
 #features-container {
   background-color: inherit;
@@ -226,4 +224,10 @@ body.home {
 }
 #docs-container p > strong {
   text-decoration: underline;
+}
+#docs-container .scribe-wrapper {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  margin-bottom: 25px;
+  margin-top: 20px;
 }

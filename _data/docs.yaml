@@ -19,8 +19,8 @@
   children:
     - title: Toolbar
       url: /docs/modules/toolbar/
-    - title: Authors
-      url: /docs/modules/authors/
+    - title: Authorship
+      url: /docs/modules/authorship/
     - title: Multi-Cursors
       url: /docs/modules/multi-cursors/
 - title: Themes

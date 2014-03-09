@@ -6,8 +6,8 @@ bodyClass: 'home'
 ---
 
 <div id="demo-container">
-  <div id="scribe-wrapper">
-    <div id="scribe-toolbar" class="toolbar-container">
+  <div class="scribe-wrapper">
+    <div id="toolbar" class="toolbar">
       <span class="sc-format-group">
         <select title="Font" class="sc-font-name">
           <option value="sans-serif" selected>Sans Serif</option>
@@ -111,7 +111,7 @@ bodyClass: 'home'
         <span title="Link" class="sc-format-button sc-link"></span>
       </span>
     </div>
-    <div id="scribe-container">
+    <div id="editor">
       <div>Some contents</div>
     </div>
   </div>
@@ -149,9 +149,9 @@ bodyClass: 'home'
 
 <script type="text/javascript" src="{{ site.baseurl }}/js/scribe.js"></script>
 <script type="text/javascript">
-  var editor = new Scribe('#scribe-container', {
+  var editor = new Scribe('#editor', {
     modules: {
-      toolbar: { container: '#scribe-toolbar' }
+      toolbar: { container: '#toolbar' }
     },
     theme: 'snow'
   });
