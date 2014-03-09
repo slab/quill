@@ -18,8 +18,9 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     'multi-cursor':
       template:
        '<span class="cursor-flag">
+          <span class="cursor-triangle top"></span>
           <span class="cursor-name"></span>
-          <span class="cursor-triangle"></span>
+          <span class="cursor-triangle bottom"></span>
         </span>
         <span class="cursor-caret"></span>'
 
@@ -67,7 +68,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
   extendMultiCursor: (module) ->
     @editor.renderer.addStyles(
       '.editor-container .cursor-name':
-        'border-radius': '3px'
+        'border-radius': '4px'
         'font-size': '11px'
         'font-family': 'Arial'
         'margin-left': '-50%'
@@ -75,17 +76,26 @@ class ScribeSnowTheme extends ScribeDefaultTheme
       '.editor-container .cursor-triangle':
         'border-left': '4px solid transparent'
         'border-right': '4px solid transparent'
-        'border-top': '4px solid transparent'
-        'display': 'block'
         'height': '0px'
-        'margin-bottom': '-1px'
         'margin-left': '-3px'
         'width': '0px'
-      '.editor-container .cursor.top > .cursor-flag': { 'bottom': '100%', 'top': 'auto' }
+      '.editor-container .cursor-triangle.bottom':
+        'border-top': '4px solid transparent'
+        'display': 'block'
+        'margin-bottom': '-1px'
+      '.editor-container .cursor-triangle.top':
+        'border-bottom': '4px solid transparent'
+        'display': 'none'
+        'margin-top': '-1px'
+      '.editor-container .cursor.top .cursor-triangle.bottom':
+        'display': 'none'
+      '.editor-container .cursor.top .cursor-triangle.top':
+        'display': 'block'
     )
     module.on(module.constructor.events.CURSOR_ADDED, (cursor) ->
-      triangle = cursor.elem.querySelector('.cursor-triangle')
-      triangle.style.borderTopColor = cursor.color
+      bottomTriangle = cursor.elem.querySelector('.cursor-triangle.bottom')
+      topTriangle = cursor.elem.querySelector('.cursor-triangle.top')
+      bottomTriangle.style.borderTopColor = topTriangle.style.borderBottomColor = cursor.color
     )
 
   extendToolbar: (module) ->
