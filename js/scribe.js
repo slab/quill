@@ -8,7 +8,9 @@
 module.exports = _dereq_('./src/scribe');
 
 
-},{"./src/scribe":43}],"uyMq3L":[function(_dereq_,module,exports){
+},{"./src/scribe":43}],"linked-list":[function(_dereq_,module,exports){
+module.exports=_dereq_('uyMq3L');
+},{}],"uyMq3L":[function(_dereq_,module,exports){
 // Inspired by http://blog.jcoglan.com/2007/07/23/writing-a-linked-list-in-javascript/
 
 function LinkedList() {}
@@ -88,10 +90,6 @@ LinkedList.Node = function(data) {
 
 module.exports = LinkedList;
 
-},{}],"linked-list":[function(_dereq_,module,exports){
-module.exports=_dereq_('uyMq3L');
-},{}],"eventemitter2":[function(_dereq_,module,exports){
-module.exports=_dereq_('x/3aRz');
 },{}],"x/3aRz":[function(_dereq_,module,exports){
 (function (process){
 ;!function(exports, undefined) {
@@ -657,7 +655,9 @@ module.exports=_dereq_('x/3aRz');
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
 }).call(this,_dereq_("/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],6:[function(_dereq_,module,exports){
+},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],"eventemitter2":[function(_dereq_,module,exports){
+module.exports=_dereq_('x/3aRz');
+},{}],6:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -712,8 +712,6 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],"lodash":[function(_dereq_,module,exports){
-module.exports=_dereq_('4HJaAd');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
 /**
@@ -7897,6 +7895,8 @@ module.exports=_dereq_('4HJaAd');
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"lodash":[function(_dereq_,module,exports){
+module.exports=_dereq_('4HJaAd');
 },{}],"rmqf9t":[function(_dereq_,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -14580,6 +14580,8 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -15255,8 +15257,6 @@ this['DIFF_EQUAL'] = DIFF_EQUAL;
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],23:[function(_dereq_,module,exports){
 module.exports={
   "name": "scribe",
@@ -17477,19 +17477,28 @@ ScribeAuthorship = (function() {
   function ScribeAuthorship(editor, options) {
     this.editor = editor;
     this.options = _.defaults(options, ScribeAuthorship.DEFAULTS);
-    this.authorId = this.options.authorId || this.editor.options.id;
+    if (this.options.button != null) {
+      this.attachButton(this.options.button);
+    }
+    if (this.options.enabled) {
+      this.enable();
+    }
+    this.editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(this.editor.renderer.root, 'author'));
+    if (this.options.authorId == null) {
+      return;
+    }
     this.editor.on(this.editor.constructor.events.PRE_EVENT, (function(_this) {
       return function(eventName, delta, origin) {
         var attribute, authorDelta;
         if (eventName === _this.editor.constructor.events.TEXT_CHANGE && origin === 'user') {
           _.each(delta.ops, function(op) {
             if (Tandem.InsertOp.isInsert(op) || _.keys(op.attributes).length > 0) {
-              return op.attributes['author'] = _this.authorId;
+              return op.attributes['author'] = _this.options.authorId;
             }
           });
           authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)]);
           attribute = {};
-          attribute['author'] = _this.authorId;
+          attribute['author'] = _this.options.authorId;
           delta.apply(function(index, text) {
             return _.each(text.split('\n'), function(text) {
               authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute));
@@ -17504,14 +17513,7 @@ ScribeAuthorship = (function() {
         }
       };
     })(this));
-    this.editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(this.editor.renderer.root, 'author'));
-    this.addAuthor(this.authorId, this.options.color);
-    if (this.options.button != null) {
-      this.attachButton(this.options.button);
-    }
-    if (this.options.enabled) {
-      this.enable();
-    }
+    this.addAuthor(this.options.authorId, this.options.color);
   }
 
   ScribeAuthorship.prototype.addAuthor = function(id, color) {

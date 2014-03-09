@@ -245,6 +245,16 @@ body.home {
   margin: 15px 0px;
   width: 600px;
 }
+#examples-container #basic-toolbar {
+  padding: 5px 15px;
+}
+#examples-container #basic-toolbar button {
+  font-size: 12px;
+  height: 20px;
+}
+#examples-container #basic-toolbar, #examples-container #full-toolbar {
+  border-bottom: 1px solid #ccc;
+}
 #examples-container #basic-editor, #examples-container #full-editor {
   height: 250px;
 }

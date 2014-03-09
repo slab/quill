@@ -2,6 +2,7 @@
 layout: examples
 title: Examples - Scribe
 permalink: /examples/
+stylesheet: 'css/scribe.snow.css'
 ---
 
 # Examples
@@ -14,7 +15,14 @@ A basic editor with just a few formats to get started.
 
 <div class="scribe-wrapper">
   <div id="basic-toolbar">
-
+    <select title="Size" class="sc-font-size">
+      <option value="small">Small</option>
+      <option value="normal" selected>Normal</option>
+      <option value="large">Large</option>
+      <option value="huge">Huge</option>
+    </select>
+    <button class="sc-bold">Bold</button>
+    <button class="sc-italic">Italic</button>
   </div>
   <div id="basic-editor">
   {% include lotr.html %}
@@ -35,7 +43,7 @@ Uses all the features of Scribe, including [Modules]({{ site.baseurl }}/docs/mod
 
 <div class="scribe-wrapper">
   <div id="full-toolbar">
-
+  {% include full-toolbar.html %}
   </div>
   <div id="full-editor">
   {% include lotr.html %}

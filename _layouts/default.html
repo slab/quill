@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ site.baseurl }}/css/syntax.css" />
     <link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css" />
-    {% if page.stylesheet %}<link rel="stylesheet" href="{{ page.stylesheet }}" />{% endif %}
+    {% if page.stylesheet %}<link rel="stylesheet" href="{{ site.baseurl }}/{{ page.stylesheet }}" />{% endif %}
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
     {% include navbar.html %}
 
     {{ content }}
-    
+
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
   </body>

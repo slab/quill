@@ -1,9 +1,52 @@
+// Initialize editor with custom theme and modules
 var fullEditor = new Scribe('#full-editor', {
   modules: {
-    'authorship': true,
+    'authorship': { enabled: true },
+    'multi-cursor': true,
+    'toolbar': { container: '#full-toolbar' }
   },
-  themes: 'snow'
+  theme: 'snow'
 });
-fullEditor.addModule('toolbar', {
-  container: '#full-toolbar'
+
+// Add basic editor's author
+var authorship = fullEditor.modules['authorship'];
+authorship.addAuthor('gandalf', 'rgba(255,153,51,0.4)');
+
+// Add a cursor to represent basic editor's cursor
+var cursorManager = fullEditor.modules['multi-cursor'];
+cursorManager.setCursor('gandalf', fullEditor.getLength()-1, 'Gandalf', 'rgba(255,153,51,0.9)');
+
+// Sync basic editor's cursor location
+basicEditor.on('selection-change', function(range) {
+  cursorManager.moveCursor('gandalf', range.end.index);
+});
+
+// Update basic editor's content with ours
+fullEditor.on('text-change', function(delta, source) {
+  if (source == 'user') {
+    basicEditor.updateContents(delta);
+  }
+});
+
+// Update our content with basic editor's
+basicEditor.on('text-change', function(delta, source) {
+  // Since basic editor does not have authorship module,
+  // manually add authorship info
+  var insertFn = function(index, text, formats) {
+    formats = formats || {};
+    formats['author'] = 'gandalf';        // Add author
+    fullEditor.insertText(index, text, formats);
+  };
+  var deleteFn = function(index, length) {
+    fullEditor.deleteText(index, length);
+  };
+  var formatFn = function(index, length, format, value) {
+    var formats = { author: 'gandalf' };  // Add author
+    formats[format] = value;
+    fullEditor.formatText(index, length, formats);
+  };
+
+  if (source == 'user') {
+    delta.apply(insertFn, deleteFn, formatFn);
+  }
 });
