@@ -21,7 +21,6 @@ toolbarPadding = 8px
   box-sizing: border-box
   color: blackColor
   font-family: 'Helvetica', 'Arial', sans-serif
-  overflow: hidden
   padding: toolbarPadding (15px - pickerPadding) (toolbarPadding - 3px)
   user-select: none
   -webkit-user-select: none
@@ -57,6 +56,10 @@ toolbarPadding = 8px
     margin-bottom: inputPadding
     margin-top: inputPadding
     width: 1px
+.sc-toolbar-container:after
+  clear: both
+  content: ""
+  display: table
 
 .sc-picker
   box-sizing: content-box
