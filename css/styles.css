@@ -232,6 +232,10 @@ body.home {
   margin-top: 20px;
 }
 
+#docs-container #multi-cursor-editor {
+  height: 150px;
+}
+
 #examples-container pre {
   margin-left: 0px;
 }
