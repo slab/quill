@@ -2,13 +2,28 @@
 layout: docs
 title: Toolbar Module - Scribe
 permalink: /docs/modules/toolbar/
+stylesheet: 'css/scribe.snow.css'
 ---
 
 # Toolbar
 
 The Toolbar module allow users to easily format Scribe's contents.
 
-# Put a toolbar here?
+<div class='scribe-wrapper'>
+  <div id='toolbar-toolbar'>
+  {% include full-toolbar.html %}
+  </div>
+  <div id='toolbar-editor'></div>
+</div>
+<script src="{{ site.baseurl }}/js/scribe.js"></script>
+<script>
+  var editor = new Scribe('#toolbar-editor', {
+    modules: {
+      toolbar: { container: '#toolbar-toolbar' }
+    },
+    theme: 'snow'
+  });
+</script>
 
 Simply create a container and the module to the Scribe editor.
 

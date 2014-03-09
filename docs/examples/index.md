@@ -58,7 +58,6 @@ Uses all the features of Scribe, including [Modules]({{ site.baseurl }}/docs/mod
 {% endhighlight %}
 </div>
 
-
 <script src="{{ site.baseurl }}/js/scribe.js"></script>
 <script>
 {% include basic-editor.html %}

@@ -232,6 +232,9 @@ body.home {
   width: 600px;
 }
 
+#docs-container #toolbar-editor {
+  display: none;
+}
 #docs-container #multi-cursor-editor {
   height: 150px;
 }
