@@ -32,10 +32,10 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.top = referenceNode.offsetTop + 'px'
   cursor.elem.style.left = referenceNode.offsetLeft + 'px'
   cursor.elem.style.height = referenceNode.offsetHeight + 'px'
-  if parseInt(cursor.elem.style.top) <= parseInt(cursor.elem.style.height)
-    ScribeDOM.addClass(cursor.elem, 'top')
-  else
-    ScribeDOM.removeClass(cursor.elem, 'top')
+  flag = cursor.elem.querySelector('.cursor-flag')
+  ScribeDOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
+  ScribeDOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+  ScribeDOM.toggleClass(cursor.elem, 'right', @editor.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
   this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor)
 
 _updateCursor = (cursor) ->

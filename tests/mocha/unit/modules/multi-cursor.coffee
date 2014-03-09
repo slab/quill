@@ -32,9 +32,10 @@ describe('Cursor', ->
     )
 
     it('should set cursor', ->
-      cursorManager.setCursor('id', 2, 'Test', 'red')
+      cursorManager.setCursor('id', 0, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
       expect(Scribe.DOM.hasClass(cursor, 'top')).to.be(true)
+      expect(Scribe.DOM.hasClass(cursor, 'left')).to.be(true)
       inner = cursor.querySelector('.cursor-caret')
       expect(inner.style.backgroundColor).to.equal('red')
       name = cursor.querySelector('.cursor-name')

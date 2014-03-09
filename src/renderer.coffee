@@ -12,7 +12,8 @@ DEFAULT_STYLES =
     'height'      : '100%'
     'line-height' : '1.3'
     'margin'      : '0px'
-    'overflow'    : 'auto'
+    'overflow-x'  : 'hidden'
+    'overflow-y'  : 'auto'
     'padding'     : '0px'
   '.editor':
     'height'      : '100%'

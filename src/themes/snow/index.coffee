@@ -79,6 +79,11 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         'height': '0px'
         'margin-left': '-3px'
         'width': '0px'
+      '.editor-container .cursor.left .cursor-name':
+        'margin-left': '-8px'
+      '.editor-container .cursor.right .cursor-name':
+        'margin-left': '-100%'
+        'margin-right': '-8px'
       '.editor-container .cursor-triangle.bottom':
         'border-top': '4px solid transparent'
         'display': 'block'
