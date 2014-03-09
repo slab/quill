@@ -1,4 +1,7 @@
 @media (min-width: 768px) {
+  .github-ribbon {
+    display: block !important;
+  }
   #navigation-container .navbar-right {
     margin-right: 100px;
   }
@@ -40,6 +43,13 @@ ul {
 
 body.home {
   background-color: #fafafa;
+}
+
+.github-ribbon {
+  display: none;
+  position: absolute;
+  right: 0px;
+  z-index: 10;
 }
 
 .scribe-wrapper {
@@ -141,6 +151,9 @@ body.home {
   border-bottom: 1px solid #ccc;
   margin-top: -20px;
   padding-top: 40px;
+}
+#demo-container #editor {
+  height: 250px;
 }
 
 #features-container {
