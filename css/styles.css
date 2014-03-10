@@ -157,6 +157,15 @@ body.home {
 }
 #demo-container #editor {
   height: 250px;
+  -webkit-transition: height 500ms ease-out;
+  -moz-transition: height 500ms ease-out;
+  transition: height 500ms ease-out;
+}
+#demo-container #editor.focus {
+  height: 448px;
+  -webkit-transition: height 800ms ease-out;
+  -moz-transition: height 800ms ease-out;
+  transition: height 800ms ease-out;
 }
 
 #features-container {
