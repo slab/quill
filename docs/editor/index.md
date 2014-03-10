@@ -6,7 +6,13 @@ permalink: /docs/editor/
 
 # Editor
 
-Add some overview...
+Welcome to Scribe!
+
+Scribe was built to address the problem that existing WYSIWYG editors are themselves WYSIWYG. If the editor was not exactly the way you want it, it was difficult or impossible to customize it to fit your needs.
+
+Scribe aims to solve this by organizing itself into [modules]({{ site.baseurl }}/docs/modules/) and offering a powerful [API]({{ site.baseurl }}/docs/api/) to build additional modules.
+
+Scribe also implements all of what you've come to expect from a rich text editor, including a lightweight package, numerous [formatting]({{ site.baseurl }}/editor/formats/) options, and wide [cross platform](https://github.com/stypi/scribe#scribe-rich-text-editor--) support.
 
 ### Quickstart
 
