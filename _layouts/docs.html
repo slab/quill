@@ -25,10 +25,12 @@ layout: default
       {{ content }}
     </div>
     <div id="sidebar-container" class="col-md-3">
-      <ul class="nav sidebar-nav">
-        {% assign navClass = "nav" %}
-        {% include sidebar-items.html %}
-      </ul>
+      <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
+        <ul class="nav">
+          {% assign navClass = "nav" %}
+          {% include sidebar-items.html %}
+        </ul>
+      </div>
     </div>
   </div>
 </div>

@@ -101,21 +101,24 @@ body.home {
   background-color: #fff;
   color: #06c;
 }
-#sidebar-container > ul.sidebar-nav > li.active > a, #sidebar-container > ul.sidebar-nav > li.active > a:hover {
+#sidebar-container > .sidebar-nav {
+  top: 20px;
+}
+#sidebar-container > .sidebar-nav > ul.nav > li.active > a, #sidebar-container > .sidebar-nav > ul.nav > li.active > a:hover {
   border-left: 2px solid #06c;
   padding-left: 13px;
 }
-#sidebar-container > ul.sidebar-nav > li > a:hover {
+#sidebar-container ul.sidebar-nav > li > a:hover {
   border-left: 1px solid #06c;
   padding-left: 14px;
 }
 #sidebar-container li.active > a {
   color: #06c;
 }
-#sidebar-container > ul.nav > li > a {
+#sidebar-container > .sidebar-nav > ul.nav > li > a {
   padding: 2px 0px 2px 15px;
 }
-#sidebar-container > ul.nav ul.nav > li > a {
+#sidebar-container > .sidebar-nav > ul.nav ul.nav > li > a {
   padding: 2px 0px 2px 30px;
 }
 
