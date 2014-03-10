@@ -25,10 +25,10 @@ Changes may occur through an API but as long as they originate originate from th
 
 **Callback Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `delta`   | _Delta_ representing the change.
-| `source`  | _String_ Source of change. Will be either `"user"` or `"api"`.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `delta`   | [_Delta_]({{ site.baseurl }}/docs/api/deltas/) | Represention of change.
+| `source`  | _String_ | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 
@@ -50,9 +50,9 @@ Emitted when a user or API causes the selection to change.
 
 **Callback Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `range`   | _Object_ with **start** and **end** keys indicating the corresponding positions in the document where the selection exists.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `range`   | _Object_ | Object with **start** and **end** keys indicating the corresponding positions where the selection exists.
 
 **Examples**
 
@@ -77,9 +77,9 @@ Emitted when the editor gains or loses focus. This is different from just listen
 
 **Callback Parameters**
 
-| Parameter  | Description
-|------------|-------------
-| `hasFocus` | _Boolean_ Whether or not the editor has focus.
+| Parameter  | Type      | Description
+|------------|-----------|------------
+| `hasFocus` | _Boolean_ | Whether or not the editor has focus.
 
 **Examples**
 

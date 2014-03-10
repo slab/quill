@@ -207,12 +207,12 @@ body.home {
   display: none;
 }
 #docs-container table td {
+  padding-right: 12px;
   vertical-align: top;
 }
 #docs-container ul code, #docs-container table code {
   background-color: #fff;
   border: none;
-  margin-right: 15px;
   padding: 0px;
 }
 #docs-container h1 {

@@ -19,7 +19,7 @@ var editor = new Scribe('#multi-cursor-editor');
 editor.insertText(0, 'Upon great pedestals founded in the deep waters stood two great kings of stone: still with blurred eyes and crannied brows they frowned upon the North.\n\nThe left hand of each was raised palm outwards in gesture of warning; in each right hand there was an axe; upon each head there was a crumbling helm and crown.\n\nGreat power and majesty they still wore, the silent wardens of a long-vanished kingdom.');
 
 module = editor.addModule('multi-cursor', {
-  timeout: 5000
+  timeout: 600000
 });
 setTimeout(function() {
   module.setCursor('merry', 0, 'Merry', 'rgba(0,153,255,0.9)');
@@ -30,21 +30,21 @@ setTimeout(function() {
 
 ### Configuration
 
-| Parameter  | Description
-|------------|-------------
-| `template` | _String_ HTML template to use for cursor element.
-| `timeout`  | _Number_ of milliseconds of inaction before cursor flag is hidden.
+| Parameter | Type      | Description
+|-----------|-----------|------------
+| `template` | _String_ | HTML template to use for cursor element.
+| `timeout`  | _Number_ | Milliseconds of inaction before cursor flag is hidden.
 
 ### Methods
 
 - `setCursor(id, index, text, color)`
 
-| Parameter | Description
-|-----------|-------------
-| `id`      | _String_ id of cursor
-| `index`   | _Number_ position to place the cursor
-| `text`    | _String_ text to place above cursor
-| `color`   | _String_ Color of cursor. Can be any valid CSS color.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `id`      | _String_ | ID of cursor.
+| `index`   | _Number_ | Position to place the cursor.
+| `text`    | _String_ | Text to place above cursor.
+| `color`   | _String_ | Color of cursor. Can be any valid CSS color.
 
 ### Example
 

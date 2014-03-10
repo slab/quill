@@ -25,10 +25,10 @@ An Array of operations are used to represent a Delta. Two types of operations ar
 
 - An insert operation is an Object with the following properties:
 
-| Property     | Description
-|--------------|-------------
-| `text`       | _String_ The text to be inserted.
-| `attributes` | _Object_ Key/value pairs of formats to apply to text.
+| Parameter    | Type     | Description
+|--------------|----------|------------
+| `text`       | _String_ | The text to be inserted.
+| `attributes` | _Object_ | Key/value pairs of formats to apply to text.
 
 **Examples**
 
@@ -44,11 +44,11 @@ var insert = {
 
 - A retain operation is an Object with the following properties:
 
-| Property     | Description
-|--------------|-------------
-| `start`      | _Number_ The start index of text that should be kept.
-| `end`        | _Number_ The end index of text that should be kept.
-| `attributes` | _Object_ Key/value pairs of formats to apply to text.
+| Parameter    | Type     | Description
+|--------------|----------|------------
+| `start`      | _Number_ | The start index of text that should be kept.
+| `end`        | _Number_ | The end index of text that should be kept.
+| `attributes` | _Object_ | Key/value pairs of formats to apply to text.
 
 **Examples**
 
@@ -71,11 +71,11 @@ Constructor for creating Deltas.
 
 **Parameters**
 
-| Parameter      | Description
-|----------------|-------------
-| `startLength`  | _Number_ of characters in document before applying operations.
-| `endLength`    | _Number_ of characters in document after applying operations.
-| `ops`          | _Array_ of operations to be applied. See [operations](#operations) for more details.
+| Parameter     | Type     | Description
+|---------------|----------|------------
+| `startLength` | _Number_ | Characters in document before applying operations.
+| `endLength`   | _Number_ | Characters in document after applying operations.
+| `ops`         | _Array_  | Operations to be applied. See [operations](#operations) for more details.
 
 **Examples**
 
@@ -96,11 +96,11 @@ var delta = new Delta(5, 13, [
 
 **Parameters**
 
-| Parameter                          | Description
-|------------------------------------|-------------
-| `insertFn(index, text, formats)`   | _Function_ to be called when text should be inserted.
-| `deleteFn(index, length)`          | _Function_ to be called when text should be deleted.
-| `formatFn(index, length, formats)` | _Function_ to be called when text should be formatted.
+| Parameter                          | Type       | Description
+|------------------------------------|------------|------------
+| `insertFn(index, text, formats)`   | _Function_ | Called when text should be inserted.
+| `deleteFn(index, length)`          | _Function_ | Called when text should be deleted.
+| `formatFn(index, length, formats)` | _Function_ | Called when text should be formatted.
 
 **Examples**
 
@@ -129,9 +129,9 @@ Determines the combination of the current delta with another delta. Neither delt
 
 **Parameter**
 
-| Parameter | Description
-|-----------|-------------
-| `other`   | _Delta_ to compose with.
+| Parameter | Type    | Description
+|-----------|---------|------------
+| `other`   | _Delta_ | Delta to compose with.
 
 **Returns**
 
@@ -163,9 +163,9 @@ Determines the difference between the current delta with another delta. Neither 
 
 **Parameter**
 
-| Parameter | Description
-|-----------|-------------
-| `other`   | _Delta_ to decompose with.
+| Parameter | Type    | Description
+|-----------|---------|------------
+| `other`   | _Delta_ | Delta to decompose with.
 
 **Returns**
 

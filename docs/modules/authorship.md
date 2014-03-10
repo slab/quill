@@ -43,21 +43,21 @@ Enabling this module will also add a new format `author` to the list of recogniz
 
 ### Configuration
 
-| Parameter  | Description
-|------------|-------------
-| `authorId` | _String_ id of current author
-| `button`   | _String_ CSS selector for button that toggles authorship colors on/off
-| `color`    | _String_ Color to correspond with current author. Can be any valid CSS color.
+| Parameter  | Type     | Description
+|------------|----------|------------
+| `authorId` | _String_ | ID of current author.
+| `button`   | _String_ | CSS selector for button that toggles authorship colors on/off.
+| `color`    | _String_ | Color to correspond with current author. Can be any valid CSS color.
 
 
 ### Methods
 
 - `addAuthor(id, color)`
 
-| Parameter | Description
-|-----------|-------------
-| `id`      | _String_ id of author to add
-| `color`   | _String_ Color to correspond with author id. Can be any valid CSS color.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `id`      | _String_ | ID of author to add.
+| `color`   | _String_ | Color to correspond with author id. Can be any valid CSS color.
 
 
 ### Example

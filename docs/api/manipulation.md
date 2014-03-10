@@ -29,10 +29,10 @@ Retrieves the string contents of the editor.
 
 **Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `index`   | _Number_ Starting position of text retrieval. Defaults to 0.
-| `length`  | _Number_ of characters to retrieve. Defaults to the rest of the document.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Starting position of text retrieval. Defaults to 0.
+| `length`  | _Number_ | Number of characters to retrieve. Defaults to the rest of the document.
 
 
 **Returns**
@@ -48,7 +48,7 @@ var text = editor.getText(0, 10);
 
 ### Scribe.prototype.insertText
 
-Inserts text into the editor.
+Inserts text into the editor. See [formats]({{ site.baseurl }}/docs/editor/formats/) for a list of available formats.
 
 **Methods**
 
@@ -58,13 +58,13 @@ Inserts text into the editor.
 
 **Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `index`   | _Number_ Position where text should be inserted.
-| `text`    | _String_ Text to be inserted.
-| `name`    | _String_ Name of format to apply to inserted text.
-| `value`   | _String_ Value of format to apply to inserted text.
-| `formats` | _Object_ Key/value pairs of formats to apply to inserted text.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Position where text should be inserted.
+| `text`    | _String_ | Text to be inserted.
+| `name`    | _String_ | Name of format to apply to inserted text.
+| `value`   | _String_ | Value of format to apply to inserted text.
+| `formats` | _Object_ | Key/value pairs of formats to apply to inserted text.
 
 **Examples**
 
@@ -88,10 +88,10 @@ Deletes text from the editor.
 
 **Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `index`   | _Number_ Starting position of deletion.
-| `length`  | _Number_ of characters to delete.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Starting position of deletion.
+| `length`  | _Number_ | Number of characters to delete.
 
 **Examples**
 
@@ -102,7 +102,7 @@ editor.deleteText(0, 10);
 
 ### Scribe.prototype.formatText
 
-Formats text in the editor.
+Formats text in the editor. See [formats]({{ site.baseurl }}/docs/editor/formats/) for a list of available formats.
 
 **Methods**
 
@@ -112,12 +112,13 @@ Formats text in the editor.
 
 **Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `index`   | _Number_ Starting position of formatting.
-| `name`    | _String_ Name of format to apply to text.
-| `value`   | _String_ Value of format to apply to text. A falsy value will remove the format.
-| `formats` | _Object_ Key/value pairs of formats to apply to text.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Starting position of formatting.
+| `length`  | _Number_ | Number of characters following index to apply formatting.
+| `name`    | _String_ | Name of format to apply to text.
+| `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
+| `formats` | _Object_ | Key/value pairs of formats to apply to text.
 
 **Examples**
 
@@ -133,7 +134,7 @@ editor.formatText(5, 6, {
 
 ### Scribe.prototype.getContents
 
-Retrieves contents of the editor, with formatting data, represented by a Delta object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta]({{ site.baseurl }}/docs/api/deltas/) object.
 
 **Methods**
 
@@ -143,10 +144,10 @@ Retrieves contents of the editor, with formatting data, represented by a Delta o
 
 **Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `index`   | _Number_ Starting position of retrieval. Defaults to 0.
-| `length`  | _Number_ of characters to retrieve. Defaults to the rest of the document.
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Starting position of retrieval. Defaults to 0.
+| `length`  | _Number_ | Number of characters to retrieve. Defaults to the rest of the document.
 
 **Returns**
 
@@ -165,15 +166,13 @@ Overwrites editor with given contents.
 
 **Methods**
 
-- `setContents(contents)`
 - `setContents(delta)`
 
 **Parameters**
 
-| Parameter  | Description
-|------------|-------------
-| `contents` | _Array_ Contents editor will be set to, represented by an Array of objects with text and attribute keys.
-| `delta`    | _Delta_ editor should be set to, represented by a Delta object.
+| Parameter | Type | Description
+|-----------|------|------------
+| `delta`   | [_Delta_]({{ site.baseurl }}/docs/api/deltas/) | Delta editor should be set to.
 
 **Examples**
 
@@ -196,9 +195,9 @@ Applies Delta to editor contents.
 
 **Parameters**
 
-| Parameter | Description
-|-----------|-------------
-| `delta`   | _Delta_ that will be applied.
+| Parameter | Type | Description
+|-----------|------|------------
+| `delta`   | [_Delta_]({{ site.baseurl }}/docs/api/deltas/) | Delta that will be applied.
 
 **Examples**
 
