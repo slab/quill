@@ -7,7 +7,7 @@ stylesheet: 'css/scribe.snow.css'
 
 # Examples
 
-The two examples below are synchronized. Check out how they interact with each other!
+The two examples below demonstrate what is possible with Scribe. Check out how they interact with each other!
 
 ## Basic Example
 

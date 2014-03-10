@@ -5,9 +5,9 @@ permalink: /docs/modules/multi-cursors/
 stability: yellow
 ---
 
-# Multi-Cursors
+# Multiple Cursors
 
-The Multi-Cursors modules enables the display of multiple external cursors inside the Scribe editor.
+The Multiple Cursors modules enables the display of multiple external cursors inside the Scribe editor.
 
 <div class='scribe-wrapper'>
   <div id='multi-cursor-editor'></div>

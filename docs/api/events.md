@@ -8,55 +8,39 @@ permalink: /docs/api/events/
 
 Scribe inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) and allowing you access to listen to the following events:
 
-1. [api-text-change](#api_text_change)
-1. [user-text-change](#user_text_change)
-1. [selection-change](#selection_change)
+1. [text-change](#text-change)
+1. [selection-change](#selection-change)
+1. [focus-change](#focus-change)
 
-### API Text Change
+### Text Change
 
-Emitted when the [Scribe API]({{ site.baseurl }}/docs/api/manipulation/) is used to modify the editor contents. This event is mutually exclusive with the [user-text-change](#user-text-change) event.
+Emitted when the contents of Scribe has changed. Details of the change, along with the source of the change is provided. The source will be `"user"` if it originates from the users. For example:
 
-**Callback Parameters**
+- \- User types into the editor
+- \- User formats text using the toolbar
+- \- User uses a hotkey to undo
+- \- User uses OS spelling correction
 
-| Parameter | Description
-|-----------|-------------
-| `delta`   | _Delta_ representing the change.
-
-**Examples**
-
-{% highlight javascript %}
-var listener = function(delta) {
-  console.log(delta);
-};
-editor.on('api-text-change', listener);
-
-editor.insertText(0, 'Hello!');   // Should trigger listener
-{% endhighlight %}
-
-### User Text Change
-
-Emitted when a user action causes the editor contents to change. For example:
-
-- - User types into the editor
-- - User formats text using the toolbar
-- - User uses a hotkey to undo
-- - User uses OS spelling correction
-
-These changes may occur through an API but they always originate from the user. For example, when a user clicks on the toolbar, technically the toolbar module calls a Scribe API to effect the change. But this will still trigger the `user-text-change` event since the origin was the user's click.
-
-This event is mutually exclusive with the [api-text-change](#api-text-change) event.
+Changes may occur through an API but as long as they originate originate from the user, the provided source will still be `"user"`. For example, when a user clicks on the toolbar, technically the toolbar module calls a Scribe API to effect the change. But source is still `"user"` since the origin of the change was the user's click.
 
 **Callback Parameters**
 
 | Parameter | Description
 |-----------|-------------
 | `delta`   | _Delta_ representing the change.
+| `source`  | _String_ Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 
 {% highlight javascript %}
-editor.on('user-text-change', function(delta) {
-  // User changed the contents
+editor.on('text-change', function(delta, source) {
+  if (source == 'api') {
+    console.log("An API call triggered this change.");
+  } else if (source == 'user') {
+    console.log("A user action triggered this change.");
+  } else {
+    console.log("This shouldn't happen...");
+  }
 });
 {% endhighlight %}
 
@@ -68,7 +52,7 @@ Emitted when a user or API causes the selection to change.
 
 | Parameter | Description
 |-----------|-------------
-| `range`   | _Object_ with start and end keys indicating the corresponding positions in the document where the selection exists.
+| `range`   | _Object_ with **start** and **end** keys indicating the corresponding positions in the document where the selection exists.
 
 **Examples**
 
@@ -83,6 +67,28 @@ editor.on('selection-change', function(range) {
     }
   } else {
     console.log('Cursor not in the editor');
+  }
+});
+{% endhighlight %}
+
+### Focus Change
+
+Emitted when the editor gains or loses focus. This is different from just listening on `selection-change` and checking for a null value since modern browsers allow the loss of focus without the loss of selection (when you refocus, your old selection still exists).
+
+**Callback Parameters**
+
+| Parameter  | Description
+|------------|-------------
+| `hasFocus` | _Boolean_ Whether or not the editor has focus.
+
+**Examples**
+
+{% highlight javascript %}
+editor.on('focus-change', function(hasFocus) {
+  if (hasFocus) {
+    console.log("Editor has focus.");
+  } else {
+    console.log("Editor lost focus.");
   }
 });
 {% endhighlight %}

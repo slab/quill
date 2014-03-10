@@ -21,7 +21,7 @@
       url: /docs/modules/toolbar/
     - title: Authorship
       url: /docs/modules/authorship/
-    - title: Multi-Cursors
+    - title: Multiple Cursors
       url: /docs/modules/multi-cursors/
 - title: Themes
   url: /docs/themes/
