@@ -59,6 +59,7 @@ body.home {
   box-shadow: 0px 0px 10px #ccc;
   margin-left: auto;
   margin-right: auto;
+  max-width: 960px;
   min-width: 320px;
   width: 66%;
 }
