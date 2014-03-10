@@ -35,7 +35,7 @@ The best way to get started is a simple example:
 </div>
 
 <!-- Include the Scribe library -->
-<script src="http://stypi.github.io/scribe/js/scribe.js"></script>
+<script src="http://scribejs.com/js/scribe.js"></script>
 
 <!-- Initialize Scribe editor -->
 <script>
