@@ -1,7 +1,6 @@
 name: Scribe - Open Source Rich Text Editor
 pygments: true
 timezone: America/Los_Angeles
-baseurl: /scribe
 relative_permalinks: false
 highlighter: pygments
 markdown: kramdown

@@ -48,7 +48,7 @@ var text = editor.getText(0, 10);
 
 ### Scribe.prototype.insertText
 
-Inserts text into the editor. See [formats]({{ site.baseurl }}/docs/editor/formats/) for a list of available formats.
+Inserts text into the editor. See [formats](/docs/editor/formats/) for a list of available formats.
 
 **Methods**
 
@@ -102,7 +102,7 @@ editor.deleteText(0, 10);
 
 ### Scribe.prototype.formatText
 
-Formats text in the editor. See [formats]({{ site.baseurl }}/docs/editor/formats/) for a list of available formats.
+Formats text in the editor. See [formats](/docs/editor/formats/) for a list of available formats.
 
 **Methods**
 
@@ -134,7 +134,7 @@ editor.formatText(5, 6, {
 
 ### Scribe.prototype.getContents
 
-Retrieves contents of the editor, with formatting data, represented by a [Delta]({{ site.baseurl }}/docs/api/deltas/) object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/api/deltas/) object.
 
 **Methods**
 
@@ -170,9 +170,9 @@ Overwrites editor with given contents.
 
 **Parameters**
 
-| Parameter | Type | Description
-|-----------|------|------------
-| `delta`   | [_Delta_]({{ site.baseurl }}/docs/api/deltas/) | Delta editor should be set to.
+| Parameter | Type                         | Description
+|-----------|------------------------------|------------
+| `delta`   | [_Delta_](/docs/api/deltas/) | Delta editor should be set to.
 
 **Examples**
 
@@ -195,9 +195,9 @@ Applies Delta to editor contents.
 
 **Parameters**
 
-| Parameter | Type | Description
-|-----------|------|------------
-| `delta`   | [_Delta_]({{ site.baseurl }}/docs/api/deltas/) | Delta that will be applied.
+| Parameter | Type                         | Description
+|-----------|------------------------------|------------
+| `delta`   | [_Delta_](/docs/api/deltas/) | Delta that will be applied.
 
 **Examples**
 

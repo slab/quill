@@ -13,7 +13,7 @@ The Authorship module highlights the background of text to show who wrote what.
   <div id='authorship-editor'></div>
 </div>
 
-<script src="http://stypi.github.io/scribe/js/scribe.js"></script>
+<script src="/js/scribe.js"></script>
 <script>
 var editor = new Scribe('#authorship-editor');
 
@@ -39,7 +39,7 @@ editor.setContents({
 });
 </script>
 
-Enabling this module will also add a new format `author` to the list of recognized [formats]({{ site.baseurl }}/docs/editor/formats/). The value of the `author` format is the id of the author. Changes made to the Scribe editor will also attach the local author metadata.
+Enabling this module will also add a new format `author` to the list of recognized [formats](/docs/editor/formats/). The value of the `author` format is the id of the author. Changes made to the Scribe editor will also attach the local author metadata.
 
 ### Configuration
 

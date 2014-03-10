@@ -13,7 +13,7 @@ The Multiple Cursors modules enables the display of multiple external cursors in
   <div id='multi-cursor-editor'></div>
 </div>
 
-<script src="{{ site.baseurl }}/js/scribe.js"></script>
+<script src="/js/scribe.js"></script>
 <script>
 var editor = new Scribe('#multi-cursor-editor');
 editor.insertText(0, 'Upon great pedestals founded in the deep waters stood two great kings of stone: still with blurred eyes and crannied brows they frowned upon the North.\n\nThe left hand of each was raised palm outwards in gesture of warning; in each right hand there was an axe; upon each head there was a crumbling helm and crown.\n\nGreat power and majesty they still wore, the silent wardens of a long-vanished kingdom.');

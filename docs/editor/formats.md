@@ -12,7 +12,7 @@ Scribe currently supports a number of formats. Enabling a format:
 - \- Scribe API calls using the format
 - \- Registers associated hotkeys
 
-Note that enabling a format is distinct from adding a control in the [toolbar]({{ site.baseurl }}/docs/modules/toolbar/). By default all supported formats are enabled.
+Note that enabling a format is distinct from adding a control in the [toolbar](/docs/modules/toolbar/). By default all supported formats are enabled.
 
   - Bold - `bold`
   - Italic - `italic`

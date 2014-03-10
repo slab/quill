@@ -39,7 +39,7 @@ A basic editor with just a few formats to get started.
 
 ## Full Example
 
-Uses all the features of Scribe, including [Modules]({{ site.baseurl }}/docs/modules/) and [Themes]({{ site.baseurl }}/docs/themes/).
+Uses all the features of Scribe, including [Modules](/docs/modules/) and [Themes](/docs/themes/).
 
 <div class="scribe-wrapper">
   <div id="full-toolbar">
@@ -58,7 +58,7 @@ Uses all the features of Scribe, including [Modules]({{ site.baseurl }}/docs/mod
 {% endhighlight %}
 </div>
 
-<script src="{{ site.baseurl }}/js/scribe.js"></script>
+<script src="/js/scribe.js"></script>
 <script>
 {% include basic-editor.html %}
 {% include full-editor.html %}

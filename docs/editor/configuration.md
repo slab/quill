@@ -6,7 +6,7 @@ permalink: /docs/editor/configuration/
 
 # Configuration
 
-Scribe allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules]({{ site.baseurl }}/docs/modules/) section for adding new functionality and the [Themes]({{ site.baseurl }}/docs/themes/) section for styling.
+Scribe allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules](/docs/modules/) section for adding new functionality and the [Themes](/docs/themes/) section for styling.
 
 To configure Scribe, pass in an object with the following recognized keys:
 
@@ -21,7 +21,7 @@ var editor = new Scribe('#editor', configs);
 
 #### formats
 
-- Formats recognized by the editor. See [Formats]({{ site.baseurl }}/docs/editor/formats/) for more information.
+- Formats recognized by the editor. See [Formats](/docs/editor/formats/) for more information.
 
 #### logLevel
 
@@ -70,7 +70,7 @@ var editor = new Scribe('#editor', {
 
 #### theme
 
-- See [Themes]({{ site.baseurl }}/docs/themes/) for more information.
+- See [Themes](/docs/themes/) for more information.
 
 #### undoDelay
 

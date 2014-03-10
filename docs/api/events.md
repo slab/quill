@@ -25,10 +25,10 @@ Changes may occur through an API but as long as they originate originate from th
 
 **Callback Parameters**
 
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `delta`   | [_Delta_]({{ site.baseurl }}/docs/api/deltas/) | Represention of change.
-| `source`  | _String_ | Source of change. Will be either `"user"` or `"api"`.
+| Parameter | Type                         | Description
+|-----------|------------------------------|------------
+| `delta`   | [_Delta_](/docs/api/deltas/) | Represention of change.
+| `source`  | _String_                     | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 

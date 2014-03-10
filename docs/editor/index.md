@@ -10,9 +10,9 @@ Welcome to Scribe!
 
 Scribe was built to address the problem that existing WYSIWYG editors are themselves WYSIWYG. If the editor was not exactly the way you want it, it was difficult or impossible to customize it to fit your needs.
 
-Scribe aims to solve this by organizing itself into [modules]({{ site.baseurl }}/docs/modules/) and offering a powerful [API]({{ site.baseurl }}/docs/api/) to build additional modules. It also imposes no styles (though reasonable defaults are available) to allow you to skin the editor however you wish.
+Scribe aims to solve this by organizing itself into [modules](/docs/modules/) and offering a powerful [API](/docs/api/) to build additional modules. It also imposes no styles (though reasonable defaults are available) to allow you to skin the editor however you wish.
 
-Scribe also provides all of what you've come to expect from a rich text editor, including a lightweight package, numerous [formatting]({{ site.baseurl }}/editor/formats/) options, and wide [cross platform](https://saucelabs.com/u/scribe) support.
+Scribe also provides all of what you've come to expect from a rich text editor, including a lightweight package, numerous [formatting](/editor/formats/) options, and wide [cross platform](https://saucelabs.com/u/scribe) support.
 
 ### Quickstart
 
@@ -53,4 +53,4 @@ Only a subset of HTML is recognized for security (`<script>` tags are stripped) 
 
 That's all you need to do to set up a simple Scribe editor! But the power of Scribe comes with its flexibility and extensibility.
 
-Check out the [Examples]({{ site.baseurl }}/examples/) to see all of this in action. Or start interacting with Scribe in powerful new ways with its flexible [API]({{ site.baseurl }}/docs/api/).
+Check out the [Examples](/examples/) to see all of this in action. Or start interacting with Scribe in powerful new ways with its flexible [API](/docs/api/).

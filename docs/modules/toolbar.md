@@ -15,7 +15,7 @@ The Toolbar module allow users to easily format Scribe's contents.
   </div>
   <div id='toolbar-editor'></div>
 </div>
-<script src="{{ site.baseurl }}/js/scribe.js"></script>
+<script src="/js/scribe.js"></script>
 <script>
   var editor = new Scribe('#toolbar-editor', {
     modules: {
@@ -70,7 +70,7 @@ A change (DOM `change` event) handler will be added to any DOM element with the 
 
 The toolbar will also listen to cursor movements and will add an `sc-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
 
-The following classes are also recognized by the toolbar but largely used by [Themes]({{ site.baseurl }}/docs/themes/) for styling:
+The following classes are also recognized by the toolbar but largely used by [Themes](/docs/themes/) for styling:
 
 - `sc-format-button`
 - `sc-format-group`
