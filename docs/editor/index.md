@@ -12,7 +12,7 @@ Scribe was built to address the problem that existing WYSIWYG editors are themse
 
 Scribe aims to solve this by organizing itself into [modules]({{ site.baseurl }}/docs/modules/) and offering a powerful [API]({{ site.baseurl }}/docs/api/) to build additional modules. It also imposes no styles (though reasonable defaults are available) to allow you to skin the editor however you wish.
 
-Scribe also provides all of what you've come to expect from a rich text editor, including a lightweight package, numerous [formatting]({{ site.baseurl }}/editor/formats/) options, and wide [cross platform](https://github.com/stypi/scribe#scribe-rich-text-editor--) support.
+Scribe also provides all of what you've come to expect from a rich text editor, including a lightweight package, numerous [formatting]({{ site.baseurl }}/editor/formats/) options, and wide [cross platform](https://saucelabs.com/u/scribe) support.
 
 ### Quickstart
 

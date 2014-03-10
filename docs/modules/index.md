@@ -28,6 +28,6 @@ See each modules' documentation for more details about each one:
 
 - [Toolbar]({{ site.baseurl }}/docs/modules/toolbar/)
 - [Authorship]({{ site.baseurl }}/docs/modules/authorship/)
-- [Multiple Cursors]({{ site.baseurl }}/docs/modules/multi-cursor/)
+- [Multiple Cursors]({{ site.baseurl }}/docs/modules/multi-cursors/)
 
 We are still finalizing the interfaces and writing the documententation to guide you in building your own modules. We will provide addiitonal information here when they are ready.
