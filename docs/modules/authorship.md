@@ -10,12 +10,12 @@ stability: yellow
 The Authorship module highlights the background of text to show who wrote what.
 
 <div class='scribe-wrapper'>
-  <div id='editor'></div>
+  <div id='authorship-editor'></div>
 </div>
 
 <script src="http://stypi.github.io/scribe/js/scribe.js"></script>
 <script>
-var editor = new Scribe('#editor');
+var editor = new Scribe('#authorship-editor');
 
 var module = editor.addModule('authorship', {
   authorId: 'frodo',

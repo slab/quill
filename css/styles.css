@@ -248,6 +248,9 @@ body.home {
 #docs-container #toolbar-editor {
   display: none;
 }
+#docs-container #authorship-editor {
+  height: 120px;
+}
 #docs-container #multi-cursor-editor {
   height: 150px;
 }
