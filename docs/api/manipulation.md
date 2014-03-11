@@ -53,8 +53,8 @@ Inserts text into the editor. See [formats](/docs/editor/formats/) for a list of
 **Methods**
 
 - `insertText(index, text)`
-- `insertText(index, text, formats)`
 - `insertText(index, text, name, value)`
+- `insertText(index, text, formats)`
 
 **Parameters**
 
@@ -202,7 +202,7 @@ Applies Delta to editor contents.
 **Examples**
 
 {% highlight javascript %}
-// Assuming editor is currently contains [{ text: 'Hello World!' }]
+// Assuming editor currently contains [{ text: 'Hello World!' }]
 editor.update({
   startLength: 12,
   endLength: 13,
