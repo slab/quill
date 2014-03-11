@@ -6,7 +6,7 @@ permalink: /docs/api/events/
 
 # Events
 
-Scribe inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) and allowing you access to listen to the following events:
+Scribe inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) and allows you access to listen to the following events:
 
 1. [text-change](#text-change)
 1. [selection-change](#selection-change)
@@ -14,14 +14,14 @@ Scribe inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) an
 
 ### Text Change
 
-Emitted when the contents of Scribe has changed. Details of the change, along with the source of the change is provided. The source will be `"user"` if it originates from the users. For example:
+Emitted when the contents of Scribe have changed. Details of the change, along with the source of the change are provided. The source will be `"user"` if it originates from the users. For example:
 
 - \- User types into the editor
 - \- User formats text using the toolbar
 - \- User uses a hotkey to undo
 - \- User uses OS spelling correction
 
-Changes may occur through an API but as long as they originate originate from the user, the provided source will still be `"user"`. For example, when a user clicks on the toolbar, technically the toolbar module calls a Scribe API to effect the change. But source is still `"user"` since the origin of the change was the user's click.
+Changes may occur through an API but as long as they originate from the user, the provided source will still be `"user"`. For example, when a user clicks on the toolbar, technically the toolbar module calls a Scribe API to effect the change. But source is still `"user"` since the origin of the change was the user's click.
 
 **Callback Parameters**
 

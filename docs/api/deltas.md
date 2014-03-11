@@ -7,7 +7,7 @@ stability: yellow
 
 # Deltas
 
-Deltas are objects used by Scribe to represent changes to the editor. In most cases directly dealing with Deltas can be avoided. But it is available to provide a powerful interface to Scribe.
+Deltas are objects used by Scribe to represent changes to the editor's contents. In most cases directly dealing with Deltas can be avoided. But it is available to provide a powerful interface to Scribe.
 
 Deltas can also be used to represent the contents of Scribe. When used in this manner, think of it as the change from the blank editor.
 
@@ -19,7 +19,7 @@ Deltas can also be used to represent the contents of Scribe. When used in this m
 
 ### Operations
 
-An Array of operations are used to represent a Delta. Two types of operations are recognized: [insertions](#insert) and [retains](#retain). Insertions describe text to be inserted. Retains describe text to be kept. A delta and its operations describe the entire editor, so the absence of a retain over a portion of editor implies its deletion.
+An Array of operations are used to represent a Delta. Two types of operations are recognized: [insertions](#insert) and [retains](#retain). Insertions describe text to be inserted. Retains describe text to be kept. A delta and its operations describe the entire editor's contents, so the absence of a retain over a portion of contents implies its deletion.
 
 #### Insert
 
@@ -47,7 +47,7 @@ var insert = {
 | Parameter    | Type     | Description
 |--------------|----------|------------
 | `start`      | _Number_ | The start index of text that should be kept.
-| `end`        | _Number_ | The end index of text that should be kept.
+| `end`        | _Number_ | The exclusive end index of text that should be kept.
 | `attributes` | _Object_ | Key/value pairs of formats to apply to text.
 
 **Examples**
@@ -121,7 +121,7 @@ delta.apply(editor.insertText, editor.deleteText, editor.formatText);
 
 ### Delta.prototype.compose
 
-Determines the combination of the current delta with another delta. Neither deltas will be altered. The endLength of the current delta must be equal to the startLength of the delta to be combined.
+Determines the combination of the current delta with another delta. Neither delta will be altered. The endLength of the current delta must be equal to the startLength of the delta to be combined.
 
 **Methods**
 
@@ -155,7 +155,7 @@ var composed = deltaA.compose(deltaB);
 
 ### Delta.prototype.decompose
 
-Determines the difference between the current delta with another delta. Neither deltas will be altered. The composition of the other delta with the resulting decomposed delta should produce the current delta.
+Determines the difference between the current delta with another delta. Neither delta will be altered. The composition of the other delta with the resulting decomposed delta should produce the current delta.
 
 **Methods**
 
