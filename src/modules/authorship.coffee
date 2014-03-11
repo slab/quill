@@ -12,18 +12,21 @@ class ScribeAuthorship
 
   constructor: (@editor, options) ->
     @options = _.defaults(options, ScribeAuthorship.DEFAULTS)
-    @authorId = @options.authorId or @editor.options.id
+    this.attachButton(@options.button) if @options.button?
+    this.enable() if @options.enabled
+    @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
+    return unless @options.authorId?
     @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @editor.constructor.events.TEXT_CHANGE and origin == 'user'
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
-            op.attributes['author'] = @authorId
+            op.attributes['author'] = @options.authorId
         )
         # Apply authorship to our own editor
         authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)])
         attribute = {}
-        attribute['author'] = @authorId
+        attribute['author'] = @options.authorId
         delta.apply((index, text) =>
           _.each(text.split('\n'), (text) ->
             authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
@@ -35,10 +38,7 @@ class ScribeAuthorship
         )
         @editor.applyDelta(authorDelta, { silent: true })
     )
-    @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
-    this.addAuthor(@authorId, @options.color)
-    this.attachButton(@options.button) if @options.button?
-    this.enable() if @options.enabled
+    this.addAuthor(@options.authorId, @options.color)
 
   addAuthor: (id, color) ->
     styles = {}
