@@ -107,8 +107,8 @@ Formats text in the editor. See [formats](/docs/editor/formats/) for a list of a
 **Methods**
 
 - `formatText(index, length)`
-- `formatText(index, length, formats)`
 - `formatText(index, length, name, value)`
+- `formatText(index, length, formats)`
 
 **Parameters**
 
