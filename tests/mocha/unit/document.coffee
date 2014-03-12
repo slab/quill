@@ -12,8 +12,8 @@ describe('Document', ->
         '<div><b>45</b></div>'
         '<div><br></div>'
         '<div><br></div>'
-        '<ul><li><span>78</span></li></ul>'
-        '<ul><li><br></li></ul>'
+        '<div><span>78</span></div>'
+        '<div><br></div>'
       ]
       $('#test-container').html(lines.join(''))
       doc = new Scribe.Document($('#test-container').get(0))

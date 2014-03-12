@@ -3,7 +3,14 @@ expect = require('expect.js')
 
 describe('Leaf', ->
   it('Leaf Iterator', ->
-    lines = ['<div><br></div>', '<div><span>12</span></div>', '<div><b>45</b></div>', '<div><br></div>', '<div><br></div>', '<ul><li><span>78</span></li></ul>', '<ul><li><br></li></ul>']
+    lines = [
+      '<div><br></div>'
+      '<div><span>12</span></div>'
+      '<div><b>45</b></div>'
+      '<div><br></div>'
+      '<div><br></div>'
+      '<div><span>78</span></div>'
+      '<div><br></div>']
     $('#test-container').html(lines.join(''))
     editor = new Scribe('#test-container')
     lines = editor.editor.doc.lines.toArray()

@@ -124,12 +124,7 @@ class ScribeNormalizer
     return html
 
   @requireLeaf: (lineNode) ->
-    return if lineNode.childNodes.length > 0
-    if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
-      lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
-      lineNode = lineNode.firstChild
-    # Empty document should be <div><span></span></div>
-    lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
+    lineNode.appendChild(lineNode.ownerDocument.createElement('br')) if lineNode.childNodes.length == 0
 
   @wrapText: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>

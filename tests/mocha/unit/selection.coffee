@@ -102,9 +102,9 @@ describe('Selection', ->
           fn: (editor) -> editor.insertText(5, "\n")
           expected: ['<div><span>0123|4</span></div>', '<div><span>5|6789</span></div>']
         'initial newline to previous line format':
-          initial: ['<ol><li><span>0123456789</span></li></ol>', '<span>0123|45|6789</span></div>']
+          initial: ['<div><span>0123456789</span></div>', '<span>0123|45|6789</span></div>']
           fn: (editor) -> editor.insertText(10, "\n")
-          expected: [0, '<ol><li><span><br></span></li></ol>', 1]
+          expected: [0, '<div><br></div>', 1]
 
       'delete tests':
         'delete before':

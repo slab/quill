@@ -142,8 +142,6 @@ class ScribeLine extends LinkedList.Node
 
   splitContents: (offset) ->
     [node, offset] = ScribeUtils.getChildAtOffset(@node, offset)
-    if @node.tagName == 'OL' || @node.tagName == 'UL'
-      [node, offset] = ScribeUtils.getChildAtOffset(node, offset)
     return ScribeUtils.splitNode(node, offset)
 
 
