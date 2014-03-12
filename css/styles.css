@@ -168,6 +168,17 @@ body.home {
   -moz-transition: height 800ms ease-out;
   transition: height 800ms ease-out;
 }
+#demo-container .tooltip.left {
+  margin-left: -10px;
+}
+#demo-container .tooltip-arrow {
+  border-left-color: #222;
+}
+#demo-container .tooltip-inner {
+  background-color: #222;
+  font-size: 16px;
+  padding: 5px 15px;
+}
 
 #features-container {
   background-color: inherit;

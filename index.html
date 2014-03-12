@@ -1,12 +1,13 @@
 ---
 layout: default
 title: Scribe - Open Source Rich Text Editor
-stylesheet: 'css/scribe.snow.css'
+stylesheet: '/css/scribe.snow.css'
+javascript: '/js/index.js'
 bodyClass: 'home'
 ---
 
 <div id="demo-container">
-  <div class="scribe-wrapper">
+  <div class="scribe-wrapper" data-toggle="tooltip" data-placement="left" title="Try me out!">
     <div id="toolbar" class="toolbar">
     {% include full-toolbar.html %}
     </div>
@@ -37,19 +38,23 @@ bodyClass: 'home'
     <div class="row">
       <div class="col-md-4">
         <h3>Full Featured API</h3>
-        <img class="img-responsive" src="/images/cloud.png" alt="Full Featured API" />
+        <a title="Scribe API" href="/docs/api/">
+          <img class="img-responsive" src="/images/cloud.png" alt="Full Featured API" />
         </a>
         <p>Get fine grain access to editor contents and event notifications.</p>
       </div>
       <div class="col-md-4">
         <h3>Cross Platform</h3>
-        <img class="img-responsive" src="/images/browsers.png" alt="Cross Platform" />
+        <a title="Scribe on Sauce Labs" href="https://saucelabs.com/u/scribe">
+          <img class="img-responsive" src="/images/browsers.png" alt="Cross Platform" />
         </a>
         <p>Works across all modern browsers on desktops, tablets and phones.</p>
       </div>
       <div class="col-md-4">
         <h3>Customizable</h3>
-        <img class="img-responsive" src="/images/tubes.png" alt="Customizable" />
+        <a title="Scribe Modules" href="/docs/modules/">
+          <img class="img-responsive" src="/images/tubes.png" alt="Customizable" />
+        </a>
         <p>It's easy to add custom behavior or modifications on top of Scribe.</p>
       </div>
     </div>
@@ -64,14 +69,3 @@ bodyClass: 'home'
 </div>
 
 <script type="text/javascript" src="/js/scribe.js"></script>
-<script type="text/javascript">
-  var editor = new Scribe('#editor', {
-    modules: {
-      toolbar: { container: '#toolbar' }
-    },
-    theme: 'snow'
-  });
-  editor.on('focus-change', function(hasFocus) {
-    $('#editor').toggleClass('focus', hasFocus);
-  });
-</script>
