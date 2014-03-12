@@ -39,11 +39,11 @@ module.exports = (config) ->
 
   # Open source accounts, please do not abuse
   if process.env.TRAVIS_BRANCH == 'master'
+    username = 'scribe-master'
+    accessKey = '2da1aa8f-4d9b-4691-90d4-76c9f5ee7caf'
+  else
     username = 'scribe'
     accessKey = 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
-  else
-    username = 'scribe-develop'
-    accessKey = '9fe1b0b3-1490-4b22-b936-ba5a736cc216'
 
   config.set(
     basePath: '../../build'
