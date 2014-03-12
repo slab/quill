@@ -34,18 +34,18 @@
     "grunt-contrib-stylus" : "0.13.x",
     "grunt-contrib-uglify" : "0.4.x",
     "grunt-contrib-watch"  : "0.5.x",
-    "grunt-karma"          : "0.6.x",
+    "grunt-karma"          : "0.8.x",
     "grunt-newer"          : "0.6.x",
     "grunt-shell"          : "0.6.x",
     "istanbul"             : "0.2.x",
-    "karma"                : "0.10.x",
+    "karma"                : "0.12.x",
     "karma-coverage"       : "0.2.x",
     "karma-mocha"          : "0.1.x",
-    "karma-sauce-launcher" : "0.1.x",
+    "karma-sauce-launcher" : "0.2.x",
     "karma-safari-launcher": "0.1.x",
     "load-grunt-tasks"     : "0.4.x",
     "mocha"                : "1.17.x",
-    "phantomjs"            : "1.9.1-0"
+    "phantomjs"            : "1.9.x"
   },
   "engine": {
     "node": ">=0.8"
