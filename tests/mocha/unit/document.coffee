@@ -21,6 +21,7 @@ describe('Document', ->
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
           [line, offset] = doc.findLineAtOffset(index)
+          expect(line.node.innerHTML).to.be.equal(lines[lineIndex].node.innerHTML)
           expect(line.id).to.be.equal(lines[lineIndex].id)
           expect(offset).to.be.equal(indexIndex)
         )
@@ -28,18 +29,23 @@ describe('Document', ->
     )
   )
 
+  # TODO add more cases, esp with double newlines
   describe('toDelta', ->
     deltaTest = new ScribeEditorTest()
     deltaTest.run('basic',
       initial:  ['<div><span>0123</span></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0123\n")])
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0123")])
     )
-    deltaTest.run('format',
-      initial:  ['<div><b>0123</b></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp('0123', {bold:true}), new Tandem.InsertOp("\n")])
-    )
-    deltaTest.run('empty string',
+    deltaTest.run('blank',
       initial:  ['']
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp("")])
+    )
+    deltaTest.run('empty div',
+      initial:  ['<div></div>']
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n")])
+    )
+    deltaTest.run('empty span',
+      initial:  ['<div><span></span></div>']
       expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n")])
     )
     deltaTest.run('empty break',
@@ -52,11 +58,19 @@ describe('Document', ->
     )
     deltaTest.run('text and newline',
       initial:  ['<div><span>0</span></div>', '<div><br></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0\n\n")])
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0\n")])
     )
     deltaTest.run('newline and text',
       initial:  ['<div><br></div>', '<div><span>0</span></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n0\n")])
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n0")])
+    )
+    deltaTest.run('text, newline, text',
+      initial:  ['<div><span>0</span></div>', '<div><span>1</span></div>']
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0\n1")])
+    )
+    deltaTest.run('format',
+      initial:  ['<div><b>0123</b></div>']
+      expected: new Tandem.Delta(0, [new Tandem.InsertOp('0123', {bold:true})])
     )
   )
 )

@@ -39,16 +39,13 @@ class ScribeDocument
       return null
 
   findLineAtOffset: (offset) ->
-    retLine = @lines.first
-    _.all(@lines.toArray(), (line, index) =>
-      retLine = line
-      if offset < line.length
-        return false
-      else
-        offset -= line.length if index < @lines.length - 1
-        return true
-    )
-    return [retLine, offset]
+    curLine = @lines.first
+    while curLine?
+      return [curLine, offset] if offset <= curLine.length
+      offset -= curLine.length + 1
+      curLine = curLine.next
+    # TODO we want to signal at the very end of document...
+    return [null, offset]
 
   findLineNode: (node) ->
     while node? && !ScribeUtils.isLineNode(node)
@@ -71,7 +68,6 @@ class ScribeDocument
     )
     ScribeDOM.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
-    line.trailingNewline = lineToMerge.trailingNewline
     line.rebuild()
 
   removeLine: (line) ->
@@ -79,26 +75,24 @@ class ScribeDocument
     @lines.remove(line)
 
   splitLine: (line, offset) ->
-    if offset != line.length or line.trailingNewline
-      [lineNode1, lineNode2] = ScribeUtils.splitNode(line.node, offset, true)
-      line.node = lineNode1
-      trailingNewline = line.trailingNewline
-      line.trailingNewline = true
-      this.updateLine(line)
-      newLine = this.insertLineBefore(lineNode2, line.next)
-      newLine.trailingNewline = trailingNewline
-      newLine.resetContent()
-      return newLine
-    else
-      line.trailingNewline = true
-      line.resetContent()
-      return line
+    [lineNode1, lineNode2] = ScribeUtils.splitNode(line.node, offset, true)
+    line.node = lineNode1
+    this.updateLine(line)
+    newLine = this.insertLineBefore(lineNode2, line.next)
+    newLine.resetContent()
+    return newLine
 
   toDelta: ->
     lines = @lines.toArray()
-    ops = _.flatten(_.map(lines, (line, index) ->
-      return line.delta.ops
+    appendNewline = lines.length > 0
+    ops = _.flatten(_.map(lines, (line) ->
+      appendNewline = false if line.length > 0
+      ops = _.clone(line.delta.ops)
+      ops.push(new Tandem.InsertOp("\n", line.formats)) if line.next?
+      return ops
     ), true)
+    # TODO this is unintitive without going through the examples...
+    ops.push(new Tandem.InsertOp("\n", @lines.last.formats)) if appendNewline
     delta = new Tandem.Delta(0, ops)
     return delta
 

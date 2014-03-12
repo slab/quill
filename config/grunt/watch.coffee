@@ -1,5 +1,7 @@
 module.exports = (grunt) ->
   grunt.config('watch',
+    options:
+      interrupt: true
     scribe:
       files: ['src/**/*.coffee']
       tasks: ['concurrent:browserify-scribe']

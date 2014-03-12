@@ -107,9 +107,6 @@ class ScribeNormalizer
       ScribeDOM.unwrap(node.parentNode)
       ScribeNormalizer.normalizeBreak(node, root)
 
-  @normalizeEmptyDoc: (root) ->
-    root.appendChild(root.ownerDocument.createElement('div')) unless root.firstChild
-
   @normalizeEmptyLines: (root) ->
     return unless ScribeUtils.isIE()
     _.each(root.querySelectorAll('br'), (node) ->
@@ -127,11 +124,12 @@ class ScribeNormalizer
     return html
 
   @requireLeaf: (lineNode) ->
-    unless lineNode.childNodes.length > 0
-      if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
-        lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
-        lineNode = lineNode.firstChild
-      lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
+    return if lineNode.childNodes.length > 0
+    if lineNode.tagName == 'OL' || lineNode.tagName == 'UL'
+      lineNode.appendChild(lineNode.ownerDocument.createElement('li'))
+      lineNode = lineNode.firstChild
+    # Empty document should be <div><span></span></div>
+    lineNode.appendChild(lineNode.ownerDocument.createElement('br'))
 
   @wrapText: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>
@@ -165,7 +163,6 @@ class ScribeNormalizer
     )
 
   normalizeDoc: ->
-    ScribeNormalizer.normalizeEmptyDoc(@container)
     this.applyRules(@container)
     ScribeNormalizer.breakBlocks(@container)
     _.each(@container.childNodes, (lineNode) =>
@@ -173,11 +170,11 @@ class ScribeNormalizer
     )
 
   normalizeLine: (lineNode) ->
-    return if lineNode.childNodes.length == 1 and lineNode.childNodes[0].tagName == 'BR'
+    return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
     this.applyRules(lineNode)
     this.normalizeTags(lineNode)
-    ScribeNormalizer.requireLeaf(lineNode)
     this.removeRedundant(lineNode)
+    ScribeNormalizer.requireLeaf(lineNode)
     ScribeNormalizer.wrapText(lineNode)
 
   normalizeTags: (lineNode) ->
@@ -214,7 +211,7 @@ class ScribeNormalizer
         # Check if childNodes need us
         return true if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != ScribeDOM.ELEMENT_NODE)
         # Check if parent needs us
-        return true if node.previousSibling == null && node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
+        return true if node.previousSibling == null and node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
         return false
       if redundant
         node = ScribeDOM.unwrap(node)

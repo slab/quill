@@ -33,6 +33,7 @@ module.exports = (grunt) ->
       configFile: 'tests/karma/karma.conf.coffee'
       exclude: ['tests/mocha/editor.js']
     karma:
+      autoWatch: true
       singleRun: false
     unit:
       browsers: ['PhantomJS']

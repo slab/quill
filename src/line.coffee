@@ -22,7 +22,6 @@ class ScribeLine extends LinkedList.Node
     @id = _.uniqueId(ScribeLine.ID_PREFIX)
     @node.id = @id
     ScribeDOM.addClass(@node, ScribeLine.CLASS_NAME)
-    @trailingNewline = true
     this.rebuild()
     super(@node)
 
@@ -48,7 +47,6 @@ class ScribeLine extends LinkedList.Node
     this.applyToContents(offset, length, (node) ->
       ScribeDOM.removeNode(node)
     )
-    @trailingNewline = false if @length == offset + length
     this.rebuild()
 
   findLeaf: (leafNode) ->
@@ -133,7 +131,6 @@ class ScribeLine extends LinkedList.Node
 
   resetContent: ->
     @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
-    @length += 1 if @trailingNewline
     @outerHTML = @node.outerHTML
     @formats = {}
     [formatName, formatValue] = @doc.formatManager.getFormat(@node)
@@ -141,7 +138,6 @@ class ScribeLine extends LinkedList.Node
     ops = _.map(@leaves.toArray(), (leaf) ->
       return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
     )
-    ops.push(new Tandem.InsertOp("\n", @formats)) if @trailingNewline
     @delta = new Tandem.Delta(0, @length, ops)
 
   splitContents: (offset) ->

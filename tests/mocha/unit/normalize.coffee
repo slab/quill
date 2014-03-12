@@ -164,13 +164,27 @@ describe('Normalize', ->
   )
 
   describe('normalizeDoc', ->
-    docTest = new ScribeEditorTest(
+    normalizer = null
+    before( ->
+      container = $('#test-container').get(0)
+      formatManager = new Scribe.FormatManager(container,
+        formats: Scribe.DEFAULTS.formats
+      )
+      normalizer = new Scribe.Normalizer(container, formatManager)
+    )
+
+    docTest = new ScribeHtmlTest(
       fn: (editor) ->
-        editor.editor.doc.normalizer.normalizeDoc()
+        normalizer.normalizeDoc()
     )
 
     docTest.run('empty string',
       initial:  ['']
+      expected: [0]
+    )
+
+    docTest.run('empty span',
+      initial:  ['<div><span></span></div>']
       expected: ['<div><br></div>']
     )
 

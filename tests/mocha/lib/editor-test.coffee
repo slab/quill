@@ -32,8 +32,11 @@ class ScribeEditorTest extends ScribeHtmlTest
       unless @options.ignoreExpect
         testDelta = testEditor.getContents()
         expectedDelta = expectedEditor.getContents()
-        expect(testDelta.isEqual(expectedDelta)).to.be(true)
+        isEqual = testDelta.isEqual(expectedDelta)
+        console.error("Unequal deltas", testDelta, expectedDelta) unless isEqual
+        expect(isEqual).to.be(true)
         consistent = Scribe.Debug.checkDocumentConsistency(testEditor.editor.doc)
+        console.error("Editors not consistent", testEditor, expectedEditor) unless consistent
         expect(consistent).to.be(true)
     htmlOptions.checker = (testContainer, expectedContainer, args..., callback) =>
       @options.checker.call(this, testEditor, expectedEditor, args..., ->

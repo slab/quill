@@ -14,7 +14,7 @@ describe('Selection', ->
         index = Scribe.DOM.getText(line.node).indexOf("|", offset)
         indexes.push(lineIndex + index - indexes.length)
         offset = index + 1
-      lineIndex += line.length
+      lineIndex += line.length + 1
       return indexes
     , [])
     return ret

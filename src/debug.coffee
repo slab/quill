@@ -46,7 +46,6 @@ ScribeDebug =
         lineLength = _.reduce(line.leaves.toArray(), (count, leaf) ->
           return leaf.length + count
         , 0)
-        lineLength += 1 if line.trailingNewline
         if lineLength != line.length
           throw new Error('Incorrect line length')
       )
@@ -55,7 +54,6 @@ ScribeDebug =
         throw new Error("doc.lines and nodesByLine differ in length")
       _.each(lines, (line, index) =>
         calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> ScribeUtils.getNodeLength(node) + length), 0)
-        calculatedLength += 1 if line.trailingNewline
         if line.length != calculatedLength
           throw new Error('Line length inccorect')
         leaves = line.leaves.toArray()

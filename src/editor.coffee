@@ -26,25 +26,15 @@ _deleteAt = (index, length) ->
       deleteLength = Math.min(length, curLine.length - offset)
       nextLine = curLine.next
       if curLine.length == deleteLength
-        if curLine == @doc.lines.first and curLine == @doc.lines.last
-          curLine.node.innerHTML = ''
-          curLine.trailingNewline = false
-          curLine.rebuild()
-        else
-          ScribeDOM.removeNode(curLine.node)
-          @doc.removeLine(curLine)
+        ScribeDOM.removeNode(curLine.node)
+        @doc.removeLine(curLine)
       else
         curLine.deleteText(offset, deleteLength)
       length -= deleteLength
       curLine = nextLine
       offset = 0
-    if firstLine? and !firstLine.trailingNewline
-      @doc.mergeLines(firstLine, firstLine.next)
+    @doc.mergeLines(firstLine, firstLine.next) if firstLine?
   )
-
-_forceTrailingNewline = ->
-  unless @doc.lines.last?.trailingNewline
-    @scribe.insertText(@delta.endLength, "\n")
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 _formatAt = (index, length, name, value) ->
@@ -68,11 +58,17 @@ _insertAt = (index, text, formatting = {}) ->
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')
     [line, offset] = @doc.findLineAtOffset(index)
-    if line == @doc.lines.last and offset >= line.length and line.trailingNewline
-      line = @doc.splitLine(line, line.length)
-      line.trailingNewline = false
-      line.resetContent()
+    if !line?
+      # TODO only really makes sense if offset is also 0, signifying the end of the document
+      # TODO clean up... this add line logic doesnt belong here
+      lineNode = @root.ownerDocument.createElement('div')
+      @root.appendChild(lineNode)
+      lineNode.appendChild(@root.ownerDocument.createElement('br'))
+      line = @doc.appendLine(lineNode)
       offset = 0
+      # TODO this logic is very unintuitive without going through all the cases...
+      if lineTexts.length > 1 and lineTexts[0] == "" and lineTexts[1] == ""
+        lineTexts.shift()
     _.each(lineTexts, (lineText, i) =>
       line.insertText(offset, lineText, formatting)
       if i < lineTexts.length - 1       # Are there more lines to insert?
@@ -109,7 +105,6 @@ _trackDelta = (fn, options) ->
 _update = ->
   delta = _trackDelta.call(this, =>
     this.doSilently( =>
-      ScribeNormalizer.normalizeEmptyDoc(@root)
       ScribeNormalizer.normalizeEmptyLines(@root)
       @selection.preserve( =>
         ScribeNormalizer.breakBlocks(@root)
@@ -202,9 +197,6 @@ class ScribeEditor extends EventEmitter2
       if localDelta and !localDelta.isIdentity()
         this.emit(ScribeEditor.events.TEXT_CHANGE, localDelta, 'user')
       @innerHTML = @root.innerHTML
-      # TODO enable when we figure out addNewline issue, currently will fail if we do add newline
-      # console.assert(delta.endLength == this.getLength(), "Applying delta resulted in incorrect end length", delta, this.getLength())
-      _forceTrailingNewline.call(this)
     )
 
   checkUpdate: ->
