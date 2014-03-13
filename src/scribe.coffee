@@ -24,7 +24,7 @@ class Scribe extends EventEmitter2
   @editors: []
 
   @DEFAULTS:
-    readonly: false
+    readOnly: false
     iframe: true
     logLevel: false
     pollInterval: 100

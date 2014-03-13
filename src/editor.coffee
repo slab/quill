@@ -150,7 +150,7 @@ class ScribeEditor extends EventEmitter2
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
-    this.enable() unless @options.readonly
+    this.enable() unless @options.readOnly
 
   disable: ->
     this.doSilently( =>
