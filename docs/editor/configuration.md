@@ -13,7 +13,7 @@ To configure Scribe, pass in an object with the following recognized keys:
 {% highlight javascript %}
 var configs = {
   logLevel: 'warn',
-  readonly: true
+  readOnly: true
 };
 var editor = new Scribe('#editor', configs);
 {% endhighlight %}
@@ -41,11 +41,11 @@ var editor = new Scribe('#editor', configs);
 
 - Number of milliseconds between checking for local changes in the editor. Note that certain actions or API calls may prompt immediate checking.
 
-#### readonly
+#### readOnly
 
 - Default: `false`
 
-- Whether to instantiate the editor to readonly mode.
+- Whether to instantiate the editor to read-only mode.
 
 #### styles
 
@@ -58,10 +58,10 @@ var editor = new Scribe('#editor', configs);
 {% highlight javascript %}
 var editor = new Scribe('#editor', {
   styles: {
-    '.editor-container': {
+    'body': {
       'font-family': "'Arial', san-serif"
     },
-    '.editor a': {
+    'a': {
       'text-decoration': 'none'
     }
   }
