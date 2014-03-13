@@ -10,7 +10,7 @@ DEFAULT_STYLES =
     'font-family' : "'Helvetica', 'Arial', sans-serif"
     'font-size'   : '13px'
     'height'      : '100%'
-    'line-height' : '1.3'
+    'line-height' : '1.42'
     'margin'      : '0px'
     'overflow-x'  : 'hidden'
     'overflow-y'  : 'auto'

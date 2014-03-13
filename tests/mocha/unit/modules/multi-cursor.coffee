@@ -7,9 +7,9 @@ describe('Cursor', ->
 
     CURSOR_LEFT = [0, 0]
     CURSOR_END_LEFT = [61, 61]
-    CURSOR_FIRST_TOP = [-1, 1]
-    CURSOR_SECOND_TOP = [16, 18]
-    CURSOR_THIRD_TOP = [32, 36]
+    CURSOR_FIRST_TOP = [0, 2]
+    CURSOR_SECOND_TOP = [19, 21]
+    CURSOR_THIRD_TOP = [37, 40]
     LARGE_CURSOR_HEIGHT = [18, 24]
 
     cursorManager = editor = null
@@ -106,7 +106,7 @@ describe('Cursor', ->
       expect(cursor.style.left).to.equal('24px')
       editor.insertText(0, 'A', { bold: true })
       expect(parseInt(cursor.style.left) - OFFSET_LEFT).to.be.within(18, 19)
-      expect(parseInt(cursor.style.top) - OFFSET_TOP).to.be.within(-1, 1)
+      expect(parseInt(cursor.style.top) - OFFSET_TOP).to.be.within(CURSOR_FIRST_TOP[0], CURSOR_FIRST_TOP[1])
     )
 
     it('should append after external edit', ->
