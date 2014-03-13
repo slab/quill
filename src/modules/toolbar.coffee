@@ -24,7 +24,7 @@ _initFormats = ->
       ScribeDOM.addEventListener(input, eventName, =>
         return if @triggering
         @editor.logger.debug('Toolbar event', eventName, format, input)
-        value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'active')
+        value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'sc-active')
         range = @editor.getSelection()
         if range?
           if ScribeUtils.isIE(8)

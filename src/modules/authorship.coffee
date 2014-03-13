@@ -42,23 +42,20 @@ class ScribeAuthorship
 
   addAuthor: (id, color) ->
     styles = {}
-    styles[".editor.authorship .author-#{id}"] = { "background-color": "#{color}" }
+    styles["body.authorship .author-#{id}"] = { "background-color": "#{color}" }
     @editor.renderer.addStyles(styles)
 
   attachButton: (button) ->
     ScribeDOM.addEventListener(button, 'click', =>
-      if ScribeDOM.hasClass(button, 'sc-active')
-        this.disable()
-      else
-        this.enable()
       ScribeDOM.toggleClass(button, 'sc-active')
+      this.enable(ScribeDOM.hasClass(button, 'sc-active'))
     )
 
-  enable: ->
-    ScribeDOM.addClass(@editor.root, 'authorship')
+  enable: (enabled = true) ->
+    ScribeDOM.toggleClass(@editor.root, 'authorship', enabled)
 
   disable: ->
-    ScribeDOM.removeClass(@editor.root, 'authorship')
+    this.enable(false)
 
 
 module.exports = ScribeAuthorship

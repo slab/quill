@@ -73,7 +73,7 @@ initListeners = ->
 
 initTooltip = ->
   @tooltip = @options.button.ownerDocument.createElement('div')
-  @tooltip.id = 'link-tooltip'
+  ScribeDOM.addClass(@tooltip, 'link-tooltip-container')
   @tooltip.innerHTML =
    '<span class="title">Visit URL:</span>
     <a href="#" class="url" target="_blank" href="about:blank"></a>
@@ -86,7 +86,7 @@ initTooltip = ->
   @tooltipChange = @tooltip.querySelector('.change')
   @tooltipDone = @tooltip.querySelector('.done')
   @editor.renderer.addStyles(
-    '#link-tooltip': {
+    '.link-tooltip-container': {
       'background-color': '#fff'
       'border': '1px solid #000'
       'height': '23px'
@@ -94,20 +94,20 @@ initTooltip = ->
       'position': 'absolute'
       'white-space': 'nowrap'
     }
-    '#link-tooltip a': {
+    '.link-tooltip-container a': {
       'cursor': 'pointer'
       'text-decoration': 'none'
     }
-    '#link-tooltip > a, #link-tooltip > span': {
+    '.link-tooltip-container > a, .link-tooltip-container > span': {
       'display': 'inline-block'
       'line-height': '23px'
     }
-    '#link-tooltip .input'          : { 'display': 'none', 'width': '170px' }
-    '#link-tooltip .done'           : { 'display': 'none' }
-    '#link-tooltip.editing .input'  : { 'display': 'inline-block' }
-    '#link-tooltip.editing .done'   : { 'display': 'inline-block' }
-    '#link-tooltip.editing .url'    : { 'display': 'none' }
-    '#link-tooltip.editing .change' : { 'display': 'none' }
+    '.link-tooltip-container .input'          : { 'display': 'none', 'width': '170px' }
+    '.link-tooltip-container .done'           : { 'display': 'none' }
+    '.link-tooltip-container.editing .input'  : { 'display': 'inline-block' }
+    '.link-tooltip-container.editing .done'   : { 'display': 'inline-block' }
+    '.link-tooltip-container.editing .url'    : { 'display': 'none' }
+    '.link-tooltip-container.editing .change' : { 'display': 'none' }
   )
   @tooltip.style.left = '-10000px'
   @editor.renderer.addContainer(@tooltip)

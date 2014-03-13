@@ -25,10 +25,6 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         <span class="cursor-caret"></span>'
 
   constructor: (@editor) ->
-    _.defaults(
-      styles:
-        'div.editor': { 'bottom': '15px', 'top': '15px' }
-    , @editor.options.renderer)
     @pickers = []
     @editor.on(@editor.constructor.events.SELECTION_CHANGE, =>
       _.each(@pickers, (picker) ->
@@ -54,13 +50,13 @@ class ScribeSnowTheme extends ScribeDefaultTheme
   extendLinkTooltip: (module) ->
     @editor.renderer.addStyles(
       '.snow a': { 'color': '#06c' }
-      '.snow #link-tooltip':
+      '.snow .link-tooltip-container':
         'border': '1px solid #ccc'
         'box-shadow': '0px 0px 5px #ddd'
         'color': '#222'
-      '.snow #link-tooltip a':
+      '.snow .link-tooltip-container a':
         'color': '#06c'
-      '.snow #link-tooltip .input':
+      '.snow .link-tooltip-container .input':
         'border': '1px solid #ccc'
         'margin': '0px'
         'padding': '3px'

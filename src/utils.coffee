@@ -103,7 +103,7 @@ ScribeUtils =
     return ieVersion? and maxVersion >= ieVersion
 
   isLineNode: (node) ->
-    return node?.parentNode? and ScribeDOM.hasClass(node.parentNode, 'editor') and ScribeUtils.isBlock(node)
+    return node?.parentNode? and ScribeDOM.hasClass(node.parentNode, 'editor-container') and ScribeUtils.isBlock(node)
 
   removeFormatFromSubtree: (subtree, format) ->
     if format.matchContainer(subtree)
