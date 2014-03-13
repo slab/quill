@@ -80,6 +80,9 @@ class Scribe extends EventEmitter2
     ops = @editor.getDelta().getOpsAt(index, length)
     return new Tandem.Delta(0, ops)
 
+  getHTML: ->
+    return @editor.root.innerHTML
+
   getLength: ->
     return @editor.getDelta().endLength
 
@@ -98,6 +101,9 @@ class Scribe extends EventEmitter2
     delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)
     delta.startLength = this.getLength()
     @editor.applyDelta(delta)
+
+  setHTML: (html) ->
+    @editor.root.innerHTML = html
 
   updateContents: (delta) ->
     @editor.applyDelta(delta)
