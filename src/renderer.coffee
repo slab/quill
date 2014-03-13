@@ -65,9 +65,7 @@ class ScribeRenderer extends EventEmitter2
     this.buildFrame()
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added last
-    _.defer( =>
-      this.addStyles(@options.styles) if options.styles?
-    )
+    _.defer(this.addStyles.bind(this, @options.styles)) if options.styles?
 
   addContainer: (container, before = false) ->
     refNode = if before then @root else null

@@ -1,4 +1,5 @@
 _                   = require('lodash')
+es5shim             = require('es5-shim')
 pkg                 = require('../package.json')
 EventEmitter2       = require('eventemitter2').EventEmitter2
 ScribeEditor        = require('./editor')

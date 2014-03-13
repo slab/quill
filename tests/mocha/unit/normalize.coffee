@@ -36,7 +36,7 @@ describe('Normalize', ->
   describe('normalizeBreak', ->
     breakTest = new ScribeHtmlTest(
       fn: (container) ->
-        Scribe.Normalizer.normalizeBreak(container.querySelector('br'), container)
+        Scribe.Normalizer.normalizeBreak(container, container.querySelector('br'))
     )
 
     breakTest.run('Break in middle of line',

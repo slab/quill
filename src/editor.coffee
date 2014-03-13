@@ -146,9 +146,7 @@ class ScribeEditor extends EventEmitter2
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     @logger = new ScribeLogger(this, @options.logLevel)
     this.init()
-    setInterval( =>
-      this.checkUpdate()
-    , @options.pollInterval)
+    setInterval(this.checkUpdate.bind(this), @options.pollInterval)
     this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )

@@ -56,12 +56,8 @@ class ScribeNormalizer
 
   @breakBlocks: (root) ->
     ScribeNormalizer.groupBlocks(root)
-    _.each(root.querySelectorAll('br'), (node) =>
-      ScribeNormalizer.normalizeBreak(node, root)
-    )
-    _.each(root.childNodes, (childNode) =>
-      ScribeNormalizer.breakLine(childNode)
-    )
+    _.each(_.clone(root.querySelectorAll('br')), ScribeNormalizer.normalizeBreak.bind('this', root))
+    _.each(root.childNodes, ScribeNormalizer.breakLine.bind(this))
 
   @breakLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
@@ -93,7 +89,7 @@ class ScribeNormalizer
           curLine = nextLine
         curLine = line
 
-  @normalizeBreak: (node, root) ->
+  @normalizeBreak: (root, node) ->
     return if node == root
     if node.previousSibling?
       if node.nextSibling?
@@ -101,11 +97,11 @@ class ScribeNormalizer
       node.parentNode.removeChild(node)
     else if node.nextSibling?
       if ScribeUtils.splitBefore(node.nextSibling, root)
-        ScribeNormalizer.normalizeBreak(node, root)
+        ScribeNormalizer.normalizeBreak(root, node)
     else if node.parentNode != root and node.parentNode.parentNode != root
       # Make sure <div><br/></div> is not unintentionally unwrapped
       ScribeDOM.unwrap(node.parentNode)
-      ScribeNormalizer.normalizeBreak(node, root)
+      ScribeNormalizer.normalizeBreak(root, node)
 
   @normalizeEmptyLines: (root) ->
     return unless ScribeUtils.isIE()
