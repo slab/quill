@@ -16,13 +16,12 @@ DEFAULT_STYLES =
     'overflow-y'  : 'auto'
     'padding'     : '0px'
   '.editor-container':
+    'box-sizing'  : 'border-box'
     'height'      : '100%'
     'outline'     : 'none'
+    'padding'     : '12px 15px'
     'tab-size'    : '4'
     'white-space' : 'pre-wrap'
-  '.editor-container .line:first-child' : { 'padding-top': '12px' }
-  '.editor-container .line:last-child'  : { 'padding-bottom': '12px' }
-  '.editor-container .line': { 'margin-left': '15px', 'margin-right': '15px' }
   '.editor-container a'    : { 'text-decoration': 'underline' }
   '.editor-container b'    : { 'font-weight': 'bold' }
   '.editor-container i'    : { 'font-style': 'italic' }

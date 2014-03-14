@@ -19,7 +19,6 @@ _initFormats = ->
       return unless input?
       @editor.logger.debug('Toolbar binding', format, input)
       return @editor.scribe.addModule('link-tooltip', { button: input }) if format == 'link'
-      return if format == 'link'
       eventName = if formatGroup == 'SELECT' then 'change' else 'click'
       ScribeDOM.addEventListener(input, eventName, =>
         return if @triggering
