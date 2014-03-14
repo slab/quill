@@ -73,7 +73,7 @@ class ScribeToolbar
   updateActive: (activeFormats = {}) ->
     @triggering = true
     range = @editor.getSelection()
-    _.each(@container.querySelectorAll('sc-select'), ScribeDOM.resetSelect.bind(this))
+    _.each(@container.querySelectorAll('select'), ScribeDOM.resetSelect.bind(this))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
       ScribeDOM.removeClass(button, 'sc-active')
     )
