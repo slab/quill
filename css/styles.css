@@ -67,7 +67,12 @@ body.home {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
 }
-
+.editor, .toolbar {
+  visibility: hidden;
+}
+.editor.sc-container, .toolbar.sc-toolbar-container {
+  visibility: visible;
+}
 
 #navigation-container {
   background-color: #222;

@@ -9,11 +9,11 @@ stylesheet: 'css/scribe.snow.css'
 
 The Toolbar module allow users to easily format Scribe's contents.
 
-<div class='scribe-wrapper'>
-  <div id='toolbar-toolbar'>
+<div class="scribe-wrapper">
+  <div id="toolbar-toolbar" class="toolbar">
   {% include full-toolbar.html %}
   </div>
-  <div id='toolbar-editor'></div>
+  <div id="toolbar-editor" class="editor"></div>
 </div>
 <script src="/js/scribe.js"></script>
 <script>

@@ -9,8 +9,8 @@ stability: yellow
 
 The Multiple Cursors modules enables the display of multiple external cursors inside the Scribe editor.
 
-<div class='scribe-wrapper'>
-  <div id='multi-cursor-editor'></div>
+<div class="scribe-wrapper">
+  <div id="multi-cursor-editor" class="editor"></div>
 </div>
 
 <script src="/js/scribe.js"></script>

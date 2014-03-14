@@ -9,8 +9,8 @@ stability: yellow
 
 The Authorship module highlights the background of text to show who wrote what.
 
-<div class='scribe-wrapper'>
-  <div id='authorship-editor'></div>
+<div class="scribe-wrapper">
+  <div id="authorship-editor" class="editor"></div>
 </div>
 
 <script src="/js/scribe.js"></script>

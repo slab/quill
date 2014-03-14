@@ -14,7 +14,7 @@ The two examples below demonstrate what is possible with Scribe. Check out how t
 A basic editor with just a few formats to get started.
 
 <div class="scribe-wrapper">
-  <div id="basic-toolbar">
+  <div id="basic-toolbar" class="toolbar">
     <select title="Size" class="sc-font-size">
       <option value="small">Small</option>
       <option value="normal" selected>Normal</option>
@@ -24,7 +24,7 @@ A basic editor with just a few formats to get started.
     <button class="sc-bold">Bold</button>
     <button class="sc-italic">Italic</button>
   </div>
-  <div id="basic-editor">
+  <div id="basic-editor" class="editor">
   {% include lotr.html %}
   </div>
 </div>
@@ -42,10 +42,10 @@ A basic editor with just a few formats to get started.
 Uses all the features of Scribe, including [Modules](/docs/modules/) and [Themes](/docs/themes/).
 
 <div class="scribe-wrapper">
-  <div id="full-toolbar">
+  <div id="full-toolbar" class="toolbar">
   {% include full-toolbar.html %}
   </div>
-  <div id="full-editor">
+  <div id="full-editor" class="editor">
   {% include lotr.html %}
   </div>
 </div>
