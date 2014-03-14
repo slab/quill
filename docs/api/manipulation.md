@@ -12,6 +12,8 @@ Scribe allows granular access to its contents through the following methods.
 1. [Scribe.prototype.insertText](#scribeprototypeinserttext)
 1. [Scribe.prototype.deleteText](#scribeprototypedeletetext)
 1. [Scribe.prototype.formatText](#scribeprototypeformattext)
+1. [Scribe.prototype.getHTML](#scribeprototypegethtml)
+1. [Scribe.prototype.setHTML](#scribeprototypesethtml)
 1. [Scribe.prototype.getContents](#scribeprototypegetcontents)
 1. [Scribe.prototype.setContents](#scribeprototypesetcontents)
 1. [Scribe.prototype.updateContents](#scribeprototypeupdatecontents)
@@ -129,6 +131,46 @@ editor.formatText(5, 6, {
   'italic': false,
   'fore-color': '#000fff'
 });
+{% endhighlight %}
+
+
+### Scribe.prototype.getHTML
+
+Retrieves the HTML contents of the editor.
+
+**Methods**
+
+- `getHTML()`
+
+**Returns**
+
+- *String* HTML contents of the editor
+
+**Examples**
+
+{% highlight javascript %}
+var html = editor.getHTML();
+{% endhighlight %}
+
+
+### Scribe.prototype.setHTML
+
+Sets contents of editor with given HTML. Note the editor will be normalize the input to the subset it recognizes.
+
+**Methods**
+
+- `setHTML(html)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `html`    | _String_ | HTML to set editor contents to.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setHTML('<div>Hello</div>');
 {% endhighlight %}
 
 
