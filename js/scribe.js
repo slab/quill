@@ -1,4 +1,4 @@
-/*! Stypi Editor - v0.11.0 - 2014-03-09
+/*! Stypi Editor - v0.11.1 - 2014-03-13
  *  https://stypi.github.io/scribe/
  *  Copyright (c) 2014
  *  Jason Chen, Salesforce.com
@@ -8,9 +8,7 @@
 module.exports = _dereq_('./src/scribe');
 
 
-},{"./src/scribe":43}],"linked-list":[function(_dereq_,module,exports){
-module.exports=_dereq_('uyMq3L');
-},{}],"uyMq3L":[function(_dereq_,module,exports){
+},{"./src/scribe":45}],"uyMq3L":[function(_dereq_,module,exports){
 // Inspired by http://blog.jcoglan.com/2007/07/23/writing-a-linked-list-in-javascript/
 
 function LinkedList() {}
@@ -90,6 +88,1374 @@ LinkedList.Node = function(data) {
 
 module.exports = LinkedList;
 
+},{}],"linked-list":[function(_dereq_,module,exports){
+module.exports=_dereq_('uyMq3L');
+},{}],"4VPpiv":[function(_dereq_,module,exports){
+// Copyright 2009-2012 by contributors, MIT License
+// vim: ts=4 sts=4 sw=4 expandtab
+
+//Add semicolon to prevent IIFE from being passed as argument to concated code.
+;
+// Module systems magic dance
+(function (definition) {
+    // RequireJS
+    if (typeof define == "function") {
+        define(definition);
+    // YUI3
+    } else if (typeof YUI == "function") {
+        YUI.add("es5", definition);
+    // CommonJS and <script>
+    } else {
+        definition();
+    }
+})(function () {
+
+/**
+ * Brings an environment as close to ECMAScript 5 compliance
+ * as is possible with the facilities of erstwhile engines.
+ *
+ * Annotated ES5: http://es5.github.com/ (specific links below)
+ * ES5 Spec: http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf
+ * Required reading: http://javascriptweblog.wordpress.com/2011/12/05/extending-javascript-natives/
+ */
+
+// ES-5 15.1.2.2
+if (parseInt('08') !== 8) {
+    parseInt = (function (origParseInt) {
+        var hexRegex = /^0[xX]/;
+        return function parseIntES5(str, radix) {
+            str = String(str).trim();
+            if (!+radix) {
+                radix = hexRegex.test(str) ? 16 : 10;
+            }
+            return origParseInt(str, radix);
+        };
+    }(parseInt));
+}
+
+//
+// Function
+// ========
+//
+
+// ES-5 15.3.4.5
+// http://es5.github.com/#x15.3.4.5
+
+function Empty() {}
+
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        if (typeof target != "function") {
+            throw new TypeError("Function.prototype.bind called on incompatible " + target);
+        }
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        // XXX slicedArgs will stand in for "A" if used
+        var args = _Array_slice_.call(arguments, 1); // for normal call
+        // 4. Let F be a new native ECMAScript object.
+        // 11. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 12. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 13. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 14. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        var binder = function () {
+
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs, the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+                // 5. Return the result of calling the [[Construct]] internal
+                //   method of target providing args as the arguments.
+
+                var result = target.apply(
+                    this,
+                    args.concat(_Array_slice_.call(arguments))
+                );
+                if (Object(result) === result) {
+                    return result;
+                }
+                return this;
+
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs, the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+                // 5. Return the result of calling the [[Call]] internal method
+                //   of target providing boundThis as the this value and
+                //   providing args as the arguments.
+
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.apply(
+                    that,
+                    args.concat(_Array_slice_.call(arguments))
+                );
+
+            }
+
+        };
+
+        // 15. If the [[Class]] internal property of Target is "Function", then
+        //     a. Let L be the length property of Target minus the length of A.
+        //     b. Set the length own property of F to either 0 or L, whichever is
+        //       larger.
+        // 16. Else set the length own property of F to 0.
+
+        var boundLength = Math.max(0, target.length - args.length);
+
+        // 17. Set the attributes of the length own property of F to the values
+        //   specified in 15.3.5.1.
+        var boundArgs = [];
+        for (var i = 0; i < boundLength; i++) {
+            boundArgs.push("$" + i);
+        }
+
+        // XXX Build a dynamic function with desired amount of arguments is the only
+        // way to set the length property of a function.
+        // In environments where Content Security Policies enabled (Chrome extensions,
+        // for ex.) all use of eval or Function costructor throws an exception.
+        // However in all of these environments Function.prototype.bind exists
+        // and so this code will never be executed.
+        var bound = Function("binder", "return function(" + boundArgs.join(",") + "){return binder.apply(this,arguments)}")(binder);
+
+        if (target.prototype) {
+            Empty.prototype = target.prototype;
+            bound.prototype = new Empty();
+            // Clean up dangling references.
+            Empty.prototype = null;
+        }
+
+        // TODO
+        // 18. Set the [[Extensible]] internal property of F to true.
+
+        // TODO
+        // 19. Let thrower be the [[ThrowTypeError]] function Object (13.2.3).
+        // 20. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Get]]: thrower, [[Set]]:
+        //   thrower, [[Enumerable]]: false, [[Configurable]]: false}, and
+        //   false.
+        // 21. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Get]]: thrower,
+        //   [[Set]]: thrower, [[Enumerable]]: false, [[Configurable]]: false},
+        //   and false.
+
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property or the [[Code]], [[FormalParameters]], and
+        // [[Scope]] internal properties.
+        // XXX can't delete prototype in pure-js.
+
+        // 22. Return F.
+        return bound;
+    };
+}
+
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
+var call = Function.prototype.call;
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var _Array_slice_ = prototypeOfArray.slice;
+// Having a toString local variable name breaks in Opera so use _toString.
+var _toString = call.bind(prototypeOfObject.toString);
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
+
+// If JS engine supports accessors creating shortcuts.
+var defineGetter;
+var defineSetter;
+var lookupGetter;
+var lookupSetter;
+var supportsAccessors;
+if ((supportsAccessors = owns(prototypeOfObject, "__defineGetter__"))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
+
+//
+// Array
+// =====
+//
+
+// ES5 15.4.4.12
+// http://es5.github.com/#x15.4.4.12
+// Default value for second param
+// [bugfix, ielt9, old browsers]
+// IE < 9 bug: [1,2].splice(0).join("") == "" but should be "12"
+if ([1,2].splice(0).length != 2) {
+    var array_splice = Array.prototype.splice;
+    var array_push = Array.prototype.push;
+    var array_unshift = Array.prototype.unshift;
+
+    if (function() { // test IE < 9 to splice bug - see issue #138
+        function makeArray(l) {
+            var a = [];
+            while (l--) {
+                a.unshift(l)
+            }
+            return a
+        }
+
+        var array = []
+            , lengthBefore
+        ;
+
+        array.splice.bind(array, 0, 0).apply(null, makeArray(20));
+        array.splice.bind(array, 0, 0).apply(null, makeArray(26));
+
+        lengthBefore = array.length; //20
+        array.splice(5, 0, "XXX"); // add one element
+
+        if (lengthBefore + 1 == array.length) {
+            return true;// has right splice implementation without bugs
+        }
+        // else {
+        //    IE8 bug
+        // }
+    }()) {//IE 6/7
+        Array.prototype.splice = function(start, deleteCount) {
+            if (!arguments.length) {
+                return [];
+            } else {
+                return array_splice.apply(this, [
+                    start === void 0 ? 0 : start,
+                    deleteCount === void 0 ? (this.length - start) : deleteCount
+                ].concat(_Array_slice_.call(arguments, 2)))
+            }
+        };
+    }
+    else {//IE8
+        Array.prototype.splice = function(start, deleteCount) {
+            var result
+                , args = _Array_slice_.call(arguments, 2)
+                , addElementsCount = args.length
+            ;
+
+            if (!arguments.length) {
+                return [];
+            }
+
+            if (start === void 0) { // default
+                start = 0;
+            }
+            if (deleteCount === void 0) { // default
+                deleteCount = this.length - start;
+            }
+
+            if (addElementsCount > 0) {
+                if (deleteCount <= 0) {
+                    if (start == this.length) { // tiny optimisation #1
+                        array_push.apply(this, args);
+                        return [];
+                    }
+
+                    if (start == 0) { // tiny optimisation #2
+                        array_unshift.apply(this, args);
+                        return [];
+                    }
+                }
+
+                // Array.prototype.splice implementation
+                result = _Array_slice_.call(this, start, start + deleteCount);// delete part
+                args.push.apply(args, _Array_slice_.call(this, start + deleteCount, this.length));// right part
+                args.unshift.apply(args, _Array_slice_.call(this, 0, start));// left part
+
+                // delete all items from this array and replace it to 'left part' + _Array_slice_.call(arguments, 2) + 'right part'
+                args.unshift(0, this.length);
+
+                array_splice.apply(this, args);
+
+                return result;
+            }
+
+            return array_splice.call(this, start, deleteCount);
+        }
+
+    }
+}
+
+// ES5 15.4.4.12
+// http://es5.github.com/#x15.4.4.13
+// Return len+argCount.
+// [bugfix, ielt8]
+// IE < 8 bug: [].unshift(0) == undefined but should be "1"
+if ([].unshift(0) != 1) {
+    var array_unshift = Array.prototype.unshift;
+    Array.prototype.unshift = function() {
+        array_unshift.apply(this, arguments);
+        return this.length;
+    };
+}
+
+// ES5 15.4.3.2
+// http://es5.github.com/#x15.4.3.2
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray
+if (!Array.isArray) {
+    Array.isArray = function isArray(obj) {
+        return _toString(obj) == "[object Array]";
+    };
+}
+
+// The IsCallable() check in the Array functions
+// has been replaced with a strict check on the
+// internal class of the object to trap cases where
+// the provided function was actually a regular
+// expression literal, which in V8 and
+// JavaScriptCore is a typeof "function".  Only in
+// V8 are regular expression literals permitted as
+// reduce parameters, so it is desirable in the
+// general case for the shim to match the more
+// strict and common behavior of rejecting regular
+// expressions.
+
+// ES5 15.4.4.18
+// http://es5.github.com/#x15.4.4.18
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/forEach
+
+// Check failure of by-index access of string characters (IE < 9)
+// and failure of `0 in boxedString` (Rhino)
+var boxedString = Object("a"),
+    splitString = boxedString[0] != "a" || !(0 in boxedString);
+// Check node 0.6.21 bug where third parameter is not boxed
+var boxedForEach = true;
+if (Array.prototype.forEach) {
+    Array.prototype.forEach.call("foo", function(item, i, obj) {
+        if (typeof obj !== 'object') boxedForEach = false;
+    });
+}
+
+if (!Array.prototype.forEach || !boxedForEach) {
+    Array.prototype.forEach = function forEach(fun /*, thisp*/) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                object,
+            thisp = arguments[1],
+            i = -1,
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        while (++i < length) {
+            if (i in self) {
+                // Invoke the callback function with call, passing arguments:
+                // context, property value, property key, thisArg object
+                // context
+                fun.call(thisp, self[i], i, object);
+            }
+        }
+    };
+}
+
+// ES5 15.4.4.19
+// http://es5.github.com/#x15.4.4.19
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
+if (!Array.prototype.map) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                object,
+            length = self.length >>> 0,
+            result = Array(length),
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(fun + " is not a function");
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self)
+                result[i] = fun.call(thisp, self[i], i, object);
+        }
+        return result;
+    };
+}
+
+// ES5 15.4.4.20
+// http://es5.github.com/#x15.4.4.20
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
+if (!Array.prototype.filter) {
+    Array.prototype.filter = function filter(fun /*, thisp */) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                    object,
+            length = self.length >>> 0,
+            result = [],
+            value,
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(fun + " is not a function");
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self) {
+                value = self[i];
+                if (fun.call(thisp, value, i, object)) {
+                    result.push(value);
+                }
+            }
+        }
+        return result;
+    };
+}
+
+// ES5 15.4.4.16
+// http://es5.github.com/#x15.4.4.16
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every
+if (!Array.prototype.every) {
+    Array.prototype.every = function every(fun /*, thisp */) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                object,
+            length = self.length >>> 0,
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(fun + " is not a function");
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self && !fun.call(thisp, self[i], i, object)) {
+                return false;
+            }
+        }
+        return true;
+    };
+}
+
+// ES5 15.4.4.17
+// http://es5.github.com/#x15.4.4.17
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
+if (!Array.prototype.some) {
+    Array.prototype.some = function some(fun /*, thisp */) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                object,
+            length = self.length >>> 0,
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(fun + " is not a function");
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self && fun.call(thisp, self[i], i, object)) {
+                return true;
+            }
+        }
+        return false;
+    };
+}
+
+// ES5 15.4.4.21
+// http://es5.github.com/#x15.4.4.21
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
+if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                object,
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(fun + " is not a function");
+        }
+
+        // no value to return if no initial value and an empty array
+        if (!length && arguments.length == 1) {
+            throw new TypeError("reduce of empty array with no initial value");
+        }
+
+        var i = 0;
+        var result;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i++];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (++i >= length) {
+                    throw new TypeError("reduce of empty array with no initial value");
+                }
+            } while (true);
+        }
+
+        for (; i < length; i++) {
+            if (i in self) {
+                result = fun.call(void 0, result, self[i], i, object);
+            }
+        }
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.22
+// http://es5.github.com/#x15.4.4.22
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
+if (!Array.prototype.reduceRight) {
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
+        var object = toObject(this),
+            self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                object,
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(fun + " is not a function");
+        }
+
+        // no value to return if no initial value, empty array
+        if (!length && arguments.length == 1) {
+            throw new TypeError("reduceRight of empty array with no initial value");
+        }
+
+        var result, i = length - 1;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i--];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (--i < 0) {
+                    throw new TypeError("reduceRight of empty array with no initial value");
+                }
+            } while (true);
+        }
+
+        if (i < 0) {
+            return result;
+        }
+
+        do {
+            if (i in this) {
+                result = fun.call(void 0, result, self[i], i, object);
+            }
+        } while (i--);
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.14
+// http://es5.github.com/#x15.4.4.14
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
+if (!Array.prototype.indexOf || ([0, 1].indexOf(1, 2) != -1)) {
+    Array.prototype.indexOf = function indexOf(sought /*, fromIndex */ ) {
+        var self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                toObject(this),
+            length = self.length >>> 0;
+
+        if (!length) {
+            return -1;
+        }
+
+        var i = 0;
+        if (arguments.length > 1) {
+            i = toInteger(arguments[1]);
+        }
+
+        // handle negative indices
+        i = i >= 0 ? i : Math.max(0, length + i);
+        for (; i < length; i++) {
+            if (i in self && self[i] === sought) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
+
+// ES5 15.4.4.15
+// http://es5.github.com/#x15.4.4.15
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf
+if (!Array.prototype.lastIndexOf || ([0, 1].lastIndexOf(0, -3) != -1)) {
+    Array.prototype.lastIndexOf = function lastIndexOf(sought /*, fromIndex */) {
+        var self = splitString && _toString(this) == "[object String]" ?
+                this.split("") :
+                toObject(this),
+            length = self.length >>> 0;
+
+        if (!length) {
+            return -1;
+        }
+        var i = length - 1;
+        if (arguments.length > 1) {
+            i = Math.min(i, toInteger(arguments[1]));
+        }
+        // handle negative indices
+        i = i >= 0 ? i : length - Math.abs(i);
+        for (; i >= 0; i--) {
+            if (i in self && sought === self[i]) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
+
+//
+// Object
+// ======
+//
+
+// ES5 15.2.3.14
+// http://es5.github.com/#x15.2.3.14
+if (!Object.keys) {
+    // http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
+    var hasDontEnumBug = true,
+        dontEnums = [
+            "toString",
+            "toLocaleString",
+            "valueOf",
+            "hasOwnProperty",
+            "isPrototypeOf",
+            "propertyIsEnumerable",
+            "constructor"
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    for (var key in {"toString": null}) {
+        hasDontEnumBug = false;
+    }
+
+    Object.keys = function keys(object) {
+
+        if (
+            (typeof object != "object" && typeof object != "function") ||
+            object === null
+        ) {
+            throw new TypeError("Object.keys called on a non-object");
+        }
+
+        var keys = [];
+        for (var name in object) {
+            if (owns(object, name)) {
+                keys.push(name);
+            }
+        }
+
+        if (hasDontEnumBug) {
+            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
+                var dontEnum = dontEnums[i];
+                if (owns(object, dontEnum)) {
+                    keys.push(dontEnum);
+                }
+            }
+        }
+        return keys;
+    };
+
+}
+
+//
+// Date
+// ====
+//
+
+// ES5 15.9.5.43
+// http://es5.github.com/#x15.9.5.43
+// This function returns a String value represent the instance in time
+// represented by this Date object. The format of the String is the Date Time
+// string format defined in 15.9.1.15. All fields are present in the String.
+// The time zone is always UTC, denoted by the suffix Z. If the time value of
+// this object is not a finite Number a RangeError exception is thrown.
+var negativeDate = -62198755200000,
+    negativeYearString = "-000001";
+if (
+    !Date.prototype.toISOString ||
+    (new Date(negativeDate).toISOString().indexOf(negativeYearString) === -1)
+) {
+    Date.prototype.toISOString = function toISOString() {
+        var result, length, value, year, month;
+        if (!isFinite(this)) {
+            throw new RangeError("Date.prototype.toISOString called on non-finite value.");
+        }
+
+        year = this.getUTCFullYear();
+
+        month = this.getUTCMonth();
+        // see https://github.com/es-shims/es5-shim/issues/111
+        year += Math.floor(month / 12);
+        month = (month % 12 + 12) % 12;
+
+        // the date time string format is specified in 15.9.1.15.
+        result = [month + 1, this.getUTCDate(),
+            this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds()];
+        year = (
+            (year < 0 ? "-" : (year > 9999 ? "+" : "")) +
+            ("00000" + Math.abs(year))
+            .slice(0 <= year && year <= 9999 ? -4 : -6)
+        );
+
+        length = result.length;
+        while (length--) {
+            value = result[length];
+            // pad months, days, hours, minutes, and seconds to have two
+            // digits.
+            if (value < 10) {
+                result[length] = "0" + value;
+            }
+        }
+        // pad milliseconds to have three digits.
+        return (
+            year + "-" + result.slice(0, 2).join("-") +
+            "T" + result.slice(2).join(":") + "." +
+            ("000" + this.getUTCMilliseconds()).slice(-3) + "Z"
+        );
+    };
+}
+
+
+// ES5 15.9.5.44
+// http://es5.github.com/#x15.9.5.44
+// This function provides a String representation of a Date object for use by
+// JSON.stringify (15.12.3).
+var dateToJSONIsSupported = false;
+try {
+    dateToJSONIsSupported = (
+        Date.prototype.toJSON &&
+        new Date(NaN).toJSON() === null &&
+        new Date(negativeDate).toJSON().indexOf(negativeYearString) !== -1 &&
+        Date.prototype.toJSON.call({ // generic
+            toISOString: function () {
+                return true;
+            }
+        })
+    );
+} catch (e) {
+}
+if (!dateToJSONIsSupported) {
+    Date.prototype.toJSON = function toJSON(key) {
+        // When the toJSON method is called with argument key, the following
+        // steps are taken:
+
+        // 1.  Let O be the result of calling ToObject, giving it the this
+        // value as its argument.
+        // 2. Let tv be toPrimitive(O, hint Number).
+        var o = Object(this),
+            tv = toPrimitive(o),
+            toISO;
+        // 3. If tv is a Number and is not finite, return null.
+        if (typeof tv === "number" && !isFinite(tv)) {
+            return null;
+        }
+        // 4. Let toISO be the result of calling the [[Get]] internal method of
+        // O with argument "toISOString".
+        toISO = o.toISOString;
+        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
+        if (typeof toISO != "function") {
+            throw new TypeError("toISOString property is not callable");
+        }
+        // 6. Return the result of calling the [[Call]] internal method of
+        //  toISO with O as the this value and an empty argument list.
+        return toISO.call(o);
+
+        // NOTE 1 The argument is ignored.
+
+        // NOTE 2 The toJSON function is intentionally generic; it does not
+        // require that its this value be a Date object. Therefore, it can be
+        // transferred to other kinds of objects for use as a method. However,
+        // it does require that any such object have a toISOString method. An
+        // object is free to use the argument key to filter its
+        // stringification.
+    };
+}
+
+// ES5 15.9.4.2
+// http://es5.github.com/#x15.9.4.2
+// based on work shared by Daniel Friesen (dantman)
+// http://gist.github.com/303249
+if (!Date.parse || "Date.parse is buggy") {
+    // XXX global assignment won't work in embeddings that use
+    // an alternate object for the context.
+    Date = (function(NativeDate) {
+
+        // Date.length === 7
+        function Date(Y, M, D, h, m, s, ms) {
+            var length = arguments.length;
+            if (this instanceof NativeDate) {
+                var date = length == 1 && String(Y) === Y ? // isString(Y)
+                    // We explicitly pass it through parse:
+                    new NativeDate(Date.parse(Y)) :
+                    // We have to manually make calls depending on argument
+                    // length here
+                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
+                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
+                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
+                    length >= 4 ? new NativeDate(Y, M, D, h) :
+                    length >= 3 ? new NativeDate(Y, M, D) :
+                    length >= 2 ? new NativeDate(Y, M) :
+                    length >= 1 ? new NativeDate(Y) :
+                                  new NativeDate();
+                // Prevent mixups with unfixed Date object
+                date.constructor = Date;
+                return date;
+            }
+            return NativeDate.apply(this, arguments);
+        };
+
+        // 15.9.1.15 Date Time String Format.
+        var isoDateExpression = new RegExp("^" +
+            "(\\d{4}|[\+\-]\\d{6})" + // four-digit year capture or sign +
+                                      // 6-digit extended year
+            "(?:-(\\d{2})" + // optional month capture
+            "(?:-(\\d{2})" + // optional day capture
+            "(?:" + // capture hours:minutes:seconds.milliseconds
+                "T(\\d{2})" + // hours capture
+                ":(\\d{2})" + // minutes capture
+                "(?:" + // optional :seconds.milliseconds
+                    ":(\\d{2})" + // seconds capture
+                    "(?:(\\.\\d{1,}))?" + // milliseconds capture
+                ")?" +
+            "(" + // capture UTC offset component
+                "Z|" + // UTC capture
+                "(?:" + // offset specifier +/-hours:minutes
+                    "([-+])" + // sign capture
+                    "(\\d{2})" + // hours offset capture
+                    ":(\\d{2})" + // minutes offset capture
+                ")" +
+            ")?)?)?)?" +
+        "$");
+
+        var months = [
+            0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
+        ];
+
+        function dayFromMonth(year, month) {
+            var t = month > 1 ? 1 : 0;
+            return (
+                months[month] +
+                Math.floor((year - 1969 + t) / 4) -
+                Math.floor((year - 1901 + t) / 100) +
+                Math.floor((year - 1601 + t) / 400) +
+                365 * (year - 1970)
+            );
+        }
+
+        function toUTC(t) {
+            return Number(new NativeDate(1970, 0, 1, 0, 0, 0, t));
+        }
+
+        // Copy any custom methods a 3rd party library may have added
+        for (var key in NativeDate) {
+            Date[key] = NativeDate[key];
+        }
+
+        // Copy "native" methods explicitly; they may be non-enumerable
+        Date.now = NativeDate.now;
+        Date.UTC = NativeDate.UTC;
+        Date.prototype = NativeDate.prototype;
+        Date.prototype.constructor = Date;
+
+        // Upgrade Date.parse to handle simplified ISO 8601 strings
+        Date.parse = function parse(string) {
+            var match = isoDateExpression.exec(string);
+            if (match) {
+                // parse months, days, hours, minutes, seconds, and milliseconds
+                // provide default values if necessary
+                // parse the UTC offset component
+                var year = Number(match[1]),
+                    month = Number(match[2] || 1) - 1,
+                    day = Number(match[3] || 1) - 1,
+                    hour = Number(match[4] || 0),
+                    minute = Number(match[5] || 0),
+                    second = Number(match[6] || 0),
+                    millisecond = Math.floor(Number(match[7] || 0) * 1000),
+                    // When time zone is missed, local offset should be used
+                    // (ES 5.1 bug)
+                    // see https://bugs.ecmascript.org/show_bug.cgi?id=112
+                    isLocalTime = Boolean(match[4] && !match[8]),
+                    signOffset = match[9] === "-" ? 1 : -1,
+                    hourOffset = Number(match[10] || 0),
+                    minuteOffset = Number(match[11] || 0),
+                    result;
+                if (
+                    hour < (
+                        minute > 0 || second > 0 || millisecond > 0 ?
+                        24 : 25
+                    ) &&
+                    minute < 60 && second < 60 && millisecond < 1000 &&
+                    month > -1 && month < 12 && hourOffset < 24 &&
+                    minuteOffset < 60 && // detect invalid offsets
+                    day > -1 &&
+                    day < (
+                        dayFromMonth(year, month + 1) -
+                        dayFromMonth(year, month)
+                    )
+                ) {
+                    result = (
+                        (dayFromMonth(year, month) + day) * 24 +
+                        hour +
+                        hourOffset * signOffset
+                    ) * 60;
+                    result = (
+                        (result + minute + minuteOffset * signOffset) * 60 +
+                        second
+                    ) * 1000 + millisecond;
+                    if (isLocalTime) {
+                        result = toUTC(result);
+                    }
+                    if (-8.64e15 <= result && result <= 8.64e15) {
+                        return result;
+                    }
+                }
+                return NaN;
+            }
+            return NativeDate.parse.apply(this, arguments);
+        };
+
+        return Date;
+    })(Date);
+}
+
+// ES5 15.9.4.4
+// http://es5.github.com/#x15.9.4.4
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+
+
+//
+// Number
+// ======
+//
+
+// ES5.1 15.7.4.5
+// http://es5.github.com/#x15.7.4.5
+if (!Number.prototype.toFixed || (0.00008).toFixed(3) !== '0.000' || (0.9).toFixed(0) === '0' || (1.255).toFixed(2) !== '1.25' || (1000000000000000128).toFixed(0) !== "1000000000000000128") {
+    // Hide these variables and functions
+    (function () {
+        var base, size, data, i;
+
+        base = 1e7;
+        size = 6;
+        data = [0, 0, 0, 0, 0, 0];
+
+        function multiply(n, c) {
+            var i = -1;
+            while (++i < size) {
+                c += n * data[i];
+                data[i] = c % base;
+                c = Math.floor(c / base);
+            }
+        }
+
+        function divide(n) {
+            var i = size, c = 0;
+            while (--i >= 0) {
+                c += data[i];
+                data[i] = Math.floor(c / n);
+                c = (c % n) * base;
+            }
+        }
+
+        function toString() {
+            var i = size;
+            var s = '';
+            while (--i >= 0) {
+                if (s !== '' || i === 0 || data[i] !== 0) {
+                    var t = String(data[i]);
+                    if (s === '') {
+                        s = t;
+                    } else {
+                        s += '0000000'.slice(0, 7 - t.length) + t;
+                    }
+                }
+            }
+            return s;
+        }
+
+        function pow(x, n, acc) {
+            return (n === 0 ? acc : (n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc)));
+        }
+
+        function log(x) {
+            var n = 0;
+            while (x >= 4096) {
+                n += 12;
+                x /= 4096;
+            }
+            while (x >= 2) {
+                n += 1;
+                x /= 2;
+            }
+            return n;
+        }
+
+        Number.prototype.toFixed = function (fractionDigits) {
+            var f, x, s, m, e, z, j, k;
+
+            // Test for NaN and round fractionDigits down
+            f = Number(fractionDigits);
+            f = f !== f ? 0 : Math.floor(f);
+
+            if (f < 0 || f > 20) {
+                throw new RangeError("Number.toFixed called with invalid number of decimals");
+            }
+
+            x = Number(this);
+
+            // Test for NaN
+            if (x !== x) {
+                return "NaN";
+            }
+
+            // If it is too big or small, return the string value of the number
+            if (x <= -1e21 || x >= 1e21) {
+                return String(x);
+            }
+
+            s = "";
+
+            if (x < 0) {
+                s = "-";
+                x = -x;
+            }
+
+            m = "0";
+
+            if (x > 1e-21) {
+                // 1e-21 < x < 1e21
+                // -70 < log2(x) < 70
+                e = log(x * pow(2, 69, 1)) - 69;
+                z = (e < 0 ? x * pow(2, -e, 1) : x / pow(2, e, 1));
+                z *= 0x10000000000000; // Math.pow(2, 52);
+                e = 52 - e;
+
+                // -18 < e < 122
+                // x = z / 2 ^ e
+                if (e > 0) {
+                    multiply(0, z);
+                    j = f;
+
+                    while (j >= 7) {
+                        multiply(1e7, 0);
+                        j -= 7;
+                    }
+
+                    multiply(pow(10, j, 1), 0);
+                    j = e - 1;
+
+                    while (j >= 23) {
+                        divide(1 << 23);
+                        j -= 23;
+                    }
+
+                    divide(1 << j);
+                    multiply(1, 1);
+                    divide(2);
+                    m = toString();
+                } else {
+                    multiply(0, z);
+                    multiply(1 << (-e), 0);
+                    m = toString() + '0.00000000000000000000'.slice(2, 2 + f);
+                }
+            }
+
+            if (f > 0) {
+                k = m.length;
+
+                if (k <= f) {
+                    m = s + '0.0000000000000000000'.slice(0, f - k + 2) + m;
+                } else {
+                    m = s + m.slice(0, k - f) + '.' + m.slice(k - f);
+                }
+            } else {
+                m = s + m;
+            }
+
+            return m;
+        }
+    }());
+}
+
+
+//
+// String
+// ======
+//
+
+
+// ES5 15.5.4.14
+// http://es5.github.com/#x15.5.4.14
+
+// [bugfix, IE lt 9, firefox 4, Konqueror, Opera, obscure browsers]
+// Many browsers do not split properly with regular expressions or they
+// do not perform the split correctly under obscure conditions.
+// See http://blog.stevenlevithan.com/archives/cross-browser-split
+// I've tested in many browsers and this seems to cover the deviant ones:
+//    'ab'.split(/(?:ab)*/) should be ["", ""], not [""]
+//    '.'.split(/(.?)(.?)/) should be ["", ".", "", ""], not ["", ""]
+//    'tesst'.split(/(s)*/) should be ["t", undefined, "e", "s", "t"], not
+//       [undefined, "t", undefined, "e", ...]
+//    ''.split(/.?/) should be [], not [""]
+//    '.'.split(/()()/) should be ["."], not ["", "", "."]
+
+var string_split = String.prototype.split;
+if (
+    'ab'.split(/(?:ab)*/).length !== 2 ||
+    '.'.split(/(.?)(.?)/).length !== 4 ||
+    'tesst'.split(/(s)*/)[1] === "t" ||
+    ''.split(/.?/).length ||
+    '.'.split(/()()/).length > 1
+) {
+    (function () {
+        var compliantExecNpcg = /()??/.exec("")[1] === void 0; // NPCG: nonparticipating capturing group
+
+        String.prototype.split = function (separator, limit) {
+            var string = this;
+            if (separator === void 0 && limit === 0)
+                return [];
+
+            // If `separator` is not a regex, use native split
+            if (Object.prototype.toString.call(separator) !== "[object RegExp]") {
+                return string_split.apply(this, arguments);
+            }
+
+            var output = [],
+                flags = (separator.ignoreCase ? "i" : "") +
+                        (separator.multiline  ? "m" : "") +
+                        (separator.extended   ? "x" : "") + // Proposed for ES6
+                        (separator.sticky     ? "y" : ""), // Firefox 3+
+                lastLastIndex = 0,
+                // Make `global` and avoid `lastIndex` issues by working with a copy
+                separator = new RegExp(separator.source, flags + "g"),
+                separator2, match, lastIndex, lastLength;
+            string += ""; // Type-convert
+            if (!compliantExecNpcg) {
+                // Doesn't need flags gy, but they don't hurt
+                separator2 = new RegExp("^" + separator.source + "$(?!\\s)", flags);
+            }
+            /* Values for `limit`, per the spec:
+             * If undefined: 4294967295 // Math.pow(2, 32) - 1
+             * If 0, Infinity, or NaN: 0
+             * If positive number: limit = Math.floor(limit); if (limit > 4294967295) limit -= 4294967296;
+             * If negative number: 4294967296 - Math.floor(Math.abs(limit))
+             * If other: Type-convert, then use the above rules
+             */
+            limit = limit === void 0 ?
+                -1 >>> 0 : // Math.pow(2, 32) - 1
+                limit >>> 0; // ToUint32(limit)
+            while (match = separator.exec(string)) {
+                // `separator.lastIndex` is not reliable cross-browser
+                lastIndex = match.index + match[0].length;
+                if (lastIndex > lastLastIndex) {
+                    output.push(string.slice(lastLastIndex, match.index));
+                    // Fix browsers whose `exec` methods don't consistently return `undefined` for
+                    // nonparticipating capturing groups
+                    if (!compliantExecNpcg && match.length > 1) {
+                        match[0].replace(separator2, function () {
+                            for (var i = 1; i < arguments.length - 2; i++) {
+                                if (arguments[i] === void 0) {
+                                    match[i] = void 0;
+                                }
+                            }
+                        });
+                    }
+                    if (match.length > 1 && match.index < string.length) {
+                        Array.prototype.push.apply(output, match.slice(1));
+                    }
+                    lastLength = match[0].length;
+                    lastLastIndex = lastIndex;
+                    if (output.length >= limit) {
+                        break;
+                    }
+                }
+                if (separator.lastIndex === match.index) {
+                    separator.lastIndex++; // Avoid an infinite loop
+                }
+            }
+            if (lastLastIndex === string.length) {
+                if (lastLength || !separator.test("")) {
+                    output.push("");
+                }
+            } else {
+                output.push(string.slice(lastLastIndex));
+            }
+            return output.length > limit ? output.slice(0, limit) : output;
+        };
+    }());
+
+// [bugfix, chrome]
+// If separator is undefined, then the result array contains just one String,
+// which is the this value (converted to a String). If limit is not undefined,
+// then the output array is truncated so that it contains no more than limit
+// elements.
+// "0".split(undefined, 0) -> []
+} else if ("0".split(void 0, 0).length) {
+    String.prototype.split = function(separator, limit) {
+        if (separator === void 0 && limit === 0) return [];
+        return string_split.apply(this, arguments);
+    }
+}
+
+
+// ECMA-262, 3rd B.2.3
+// Note an ECMAScript standart, although ECMAScript 3rd Edition has a
+// non-normative section suggesting uniform semantics and it should be
+// normalized across all browsers
+// [bugfix, IE lt 9] IE < 9 substr() with negative value not working in IE
+if ("".substr && "0b".substr(-1) !== "b") {
+    var string_substr = String.prototype.substr;
+    /**
+     *  Get the substring of a string
+     *  @param  {integer}  start   where to start the substring
+     *  @param  {integer}  length  how many characters to return
+     *  @return {string}
+     */
+    String.prototype.substr = function(start, length) {
+        return string_substr.call(
+            this,
+            start < 0 ? ((start = this.length + start) < 0 ? 0 : start) : start,
+            length
+        );
+    }
+}
+
+// ES5 15.5.4.20
+// http://es5.github.com/#x15.5.4.20
+var ws = "\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003" +
+    "\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028" +
+    "\u2029\uFEFF";
+if (!String.prototype.trim || ws.trim()) {
+    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
+    // http://perfectionkills.com/whitespace-deviations/
+    ws = "[" + ws + "]";
+    var trimBeginRegexp = new RegExp("^" + ws + ws + "*"),
+        trimEndRegexp = new RegExp(ws + ws + "*$");
+    String.prototype.trim = function trim() {
+        if (this === void 0 || this === null) {
+            throw new TypeError("can't convert "+this+" to object");
+        }
+        return String(this)
+            .replace(trimBeginRegexp, "")
+            .replace(trimEndRegexp, "");
+    };
+}
+
+//
+// Util
+// ======
+//
+
+// ES5 9.4
+// http://es5.github.com/#x9.4
+// http://jsperf.com/to-integer
+
+function toInteger(n) {
+    n = +n;
+    if (n !== n) { // isNaN
+        n = 0;
+    } else if (n !== 0 && n !== (1/0) && n !== -(1/0)) {
+        n = (n > 0 || -1) * Math.floor(Math.abs(n));
+    }
+    return n;
+}
+
+function isPrimitive(input) {
+    var type = typeof input;
+    return (
+        input === null ||
+        type === "undefined" ||
+        type === "boolean" ||
+        type === "number" ||
+        type === "string"
+    );
+}
+
+function toPrimitive(input) {
+    var val, valueOf, toString;
+    if (isPrimitive(input)) {
+        return input;
+    }
+    valueOf = input.valueOf;
+    if (typeof valueOf === "function") {
+        val = valueOf.call(input);
+        if (isPrimitive(val)) {
+            return val;
+        }
+    }
+    toString = input.toString;
+    if (typeof toString === "function") {
+        val = toString.call(input);
+        if (isPrimitive(val)) {
+            return val;
+        }
+    }
+    throw new TypeError();
+}
+
+// ES5 9.9
+// http://es5.github.com/#x9.9
+var toObject = function (o) {
+    if (o == null) { // this matches both null and undefined
+        throw new TypeError("can't convert "+o+" to object");
+    }
+    return Object(o);
+};
+
+});
+
+},{}],"es5-shim":[function(_dereq_,module,exports){
+module.exports=_dereq_('4VPpiv');
+},{}],"eventemitter2":[function(_dereq_,module,exports){
+module.exports=_dereq_('x/3aRz');
 },{}],"x/3aRz":[function(_dereq_,module,exports){
 (function (process){
 ;!function(exports, undefined) {
@@ -655,9 +2021,7 @@ module.exports = LinkedList;
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
 }).call(this,_dereq_("/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],"eventemitter2":[function(_dereq_,module,exports){
-module.exports=_dereq_('x/3aRz');
-},{}],6:[function(_dereq_,module,exports){
+},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8}],8:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -712,6 +2076,8 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
+},{}],"lodash":[function(_dereq_,module,exports){
+module.exports=_dereq_('4HJaAd');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
 /**
@@ -7895,8 +9261,6 @@ process.chdir = function (dir) {
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"lodash":[function(_dereq_,module,exports){
-module.exports=_dereq_('4HJaAd');
 },{}],"rmqf9t":[function(_dereq_,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -11132,7 +12496,7 @@ rangy.createModule("DomUtil", function(api, module) {
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"rangy-core":[function(_dereq_,module,exports){
 module.exports=_dereq_('rmqf9t');
-},{}],11:[function(_dereq_,module,exports){
+},{}],13:[function(_dereq_,module,exports){
 (function() {
   var Delta, InsertOp, Op, RetainOp, diff_match_patch, dmp, _;
 
@@ -11798,7 +13162,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./diff_match_patch":13,"./insert":14,"./op":15,"./retain":16,"lodash":"4HJaAd"}],12:[function(_dereq_,module,exports){
+},{"./diff_match_patch":15,"./insert":16,"./op":17,"./retain":18,"lodash":"4HJaAd"}],14:[function(_dereq_,module,exports){
 (function() {
   var Delta, DeltaGenerator, InsertOp, RetainOp, getUtils, setDomain, _, _domain;
 
@@ -12155,7 +13519,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./delta":11,"./insert":14,"./retain":16,"lodash":"4HJaAd"}],13:[function(_dereq_,module,exports){
+},{"./delta":13,"./insert":16,"./retain":18,"lodash":"4HJaAd"}],15:[function(_dereq_,module,exports){
 (function() {
   var googlediff;
 
@@ -12171,7 +13535,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"googlediff":19}],14:[function(_dereq_,module,exports){
+},{"googlediff":21}],16:[function(_dereq_,module,exports){
 (function() {
   var InsertOp, Op, _,
     __hasProp = {}.hasOwnProperty,
@@ -12231,7 +13595,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./op":15,"lodash":"4HJaAd"}],15:[function(_dereq_,module,exports){
+},{"./op":17,"lodash":"4HJaAd"}],17:[function(_dereq_,module,exports){
 (function() {
   var Op, _;
 
@@ -12315,7 +13679,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"lodash":"4HJaAd"}],16:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],18:[function(_dereq_,module,exports){
 (function() {
   var Op, RetainOp, _,
     __hasProp = {}.hasOwnProperty,
@@ -12368,7 +13732,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./op":15,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
+},{"./op":17,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
 (function() {
   module.exports = {
     Delta: _dereq_('./delta'),
@@ -12380,12 +13744,12 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./delta":11,"./delta_generator":12,"./insert":14,"./op":15,"./retain":16}],"tandem-core":[function(_dereq_,module,exports){
+},{"./delta":13,"./delta_generator":14,"./insert":16,"./op":17,"./retain":18}],"tandem-core":[function(_dereq_,module,exports){
 module.exports=_dereq_('38mxji');
-},{}],19:[function(_dereq_,module,exports){
+},{}],21:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
-},{"./javascript/diff_match_patch_uncompressed.js":20}],20:[function(_dereq_,module,exports){
+},{"./javascript/diff_match_patch_uncompressed.js":22}],22:[function(_dereq_,module,exports){
 /**
  * Diff Match and Patch
  *
@@ -15257,55 +16621,64 @@ module.exports=_dereq_('Fq7WE+');
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}],23:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 module.exports={
   "name": "scribe",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Cross browser rich text editor",
-  "contributors": [{
-    "name": "Jason Chen",
-    "email": "jhchen7@gmail.com"
-  }, {
-    "name": "Byron Milligan",
-    "email": "byronner@gmail.com"
-  }, {
-    "name": "Keegan Poppen",
-    "email": "keegan.poppen@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Jason Chen",
+      "email": "jhchen7@gmail.com"
+    },
+    {
+      "name": "Byron Milligan",
+      "email": "byronner@gmail.com"
+    },
+    {
+      "name": "Keegan Poppen",
+      "email": "keegan.poppen@gmail.com"
+    }
+  ],
   "dependencies": {
-    "eventemitter2"        : "0.4.x",
-    "lodash"               : "2.4.x",
-    "rangy-browser"        : "1.2.3-1",
-    "tandem-core"          : "0.5.x",
-    "underscore.string"    : "2.3.x"
+    "es5-shim": "~2.3.0",
+    "eventemitter2": "~0.4.13",
+    "lodash": "~2.4.1",
+    "rangy-browser": "1.2.3-1",
+    "tandem-core": "~0.5.2",
+    "underscore.string": "~2.3.3"
   },
   "devDependencies": {
-    "async"                : "0.2.x",
-    "expect.js"            : "0.3.x",
-    "grunt"                : "0.4.x",
-    "grunt-browserify"     : "1.3.x",
-    "coffeeify"            : "0.6.x",
-    "grunt-concurrent"     : "0.5.x",
-    "grunt-contrib-clean"  : "0.5.x",
-    "grunt-contrib-coffee" : "0.10.x",
-    "grunt-contrib-concat" : "0.3.x",
-    "grunt-contrib-copy"   : "0.5.x",
-    "grunt-contrib-jade"   : "0.11.x",
-    "grunt-contrib-stylus" : "0.13.x",
-    "grunt-contrib-uglify" : "0.4.x",
-    "grunt-contrib-watch"  : "0.5.x",
-    "grunt-karma"          : "0.6.x",
-    "grunt-newer"          : "0.6.x",
-    "grunt-shell"          : "0.6.x",
-    "istanbul"             : "0.2.x",
-    "karma"                : "0.10.x",
-    "karma-coverage"       : "0.2.x",
-    "karma-mocha"          : "0.1.x",
-    "karma-sauce-launcher" : "0.1.x",
-    "karma-safari-launcher": "0.1.x",
-    "load-grunt-tasks"     : "0.4.x",
-    "mocha"                : "1.17.x",
-    "phantomjs"            : "1.9.1-0"
+    "async": "~0.2.10",
+    "expect.js": "~0.3.1",
+    "grunt": "~0.4.3",
+    "grunt-browserify": "~1.3.1",
+    "coffeeify": "~0.6.0",
+    "grunt-concurrent": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-jade": "~0.11.0",
+    "grunt-contrib-stylus": "~0.13.2",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-karma": "~0.8.0",
+    "grunt-newer": "~0.6.1",
+    "grunt-shell": "~0.6.4",
+    "istanbul": "~0.2.6",
+    "karma": "~0.12.0",
+    "karma-chrome-launcher": "~0.1.2",
+    "karma-coverage": "~0.2.0",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-mocha": "~0.1.1",
+    "karma-phantomjs-launcher": "~0.1.2",
+    "karma-safari-launcher": "~0.1.1",
+    "karma-sauce-launcher": "~0.2.1",
+    "load-grunt-tasks": "~0.4.0",
+    "mocha": "~1.17.1",
+    "phantomjs": "~1.9.7-1"
   },
   "engine": {
     "node": ">=0.8"
@@ -15323,7 +16696,7 @@ module.exports={
   }
 }
 
-},{}],24:[function(_dereq_,module,exports){
+},{}],26:[function(_dereq_,module,exports){
 var LinkedList, ScribeDOM, ScribeDocument, ScribeFormatManager, ScribeLine, ScribeNormalizer, ScribeUtils, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -15388,22 +16761,16 @@ ScribeDocument = (function() {
   };
 
   ScribeDocument.prototype.findLineAtOffset = function(offset) {
-    var retLine;
-    retLine = this.lines.first;
-    _.all(this.lines.toArray(), (function(_this) {
-      return function(line, index) {
-        retLine = line;
-        if (offset < line.length) {
-          return false;
-        } else {
-          if (index < _this.lines.length - 1) {
-            offset -= line.length;
-          }
-          return true;
-        }
-      };
-    })(this));
-    return [retLine, offset];
+    var curLine;
+    curLine = this.lines.first;
+    while (curLine != null) {
+      if (offset <= curLine.length) {
+        return [curLine, offset];
+      }
+      offset -= curLine.length + 1;
+      curLine = curLine.next;
+    }
+    return [null, offset];
   };
 
   ScribeDocument.prototype.findLineNode = function(node) {
@@ -15434,7 +16801,6 @@ ScribeDocument = (function() {
     });
     ScribeDOM.removeNode(lineToMerge.node);
     this.removeLine(lineToMerge);
-    line.trailingNewline = lineToMerge.trailingNewline;
     return line.rebuild();
   };
 
@@ -15444,30 +16810,32 @@ ScribeDocument = (function() {
   };
 
   ScribeDocument.prototype.splitLine = function(line, offset) {
-    var lineNode1, lineNode2, newLine, trailingNewline, _ref;
-    if (offset !== line.length || line.trailingNewline) {
-      _ref = ScribeUtils.splitNode(line.node, offset, true), lineNode1 = _ref[0], lineNode2 = _ref[1];
-      line.node = lineNode1;
-      trailingNewline = line.trailingNewline;
-      line.trailingNewline = true;
-      this.updateLine(line);
-      newLine = this.insertLineBefore(lineNode2, line.next);
-      newLine.trailingNewline = trailingNewline;
-      newLine.resetContent();
-      return newLine;
-    } else {
-      line.trailingNewline = true;
-      line.resetContent();
-      return line;
-    }
+    var lineNode1, lineNode2, newLine, _ref;
+    _ref = ScribeUtils.splitNode(line.node, offset, true), lineNode1 = _ref[0], lineNode2 = _ref[1];
+    line.node = lineNode1;
+    this.updateLine(line);
+    newLine = this.insertLineBefore(lineNode2, line.next);
+    newLine.resetContent();
+    return newLine;
   };
 
   ScribeDocument.prototype.toDelta = function() {
-    var delta, lines, ops;
+    var appendNewline, delta, lines, ops;
     lines = this.lines.toArray();
-    ops = _.flatten(_.map(lines, function(line, index) {
-      return line.delta.ops;
+    appendNewline = lines.length > 0;
+    ops = _.flatten(_.map(lines, function(line) {
+      if (line.length > 0) {
+        appendNewline = false;
+      }
+      ops = _.clone(line.delta.ops);
+      if (line.next != null) {
+        ops.push(new Tandem.InsertOp("\n", line.formats));
+      }
+      return ops;
     }), true);
+    if (appendNewline) {
+      ops.push(new Tandem.InsertOp("\n", this.lines.last.formats));
+    }
     delta = new Tandem.Delta(0, ops);
     return delta;
   };
@@ -15483,7 +16851,7 @@ ScribeDocument = (function() {
 module.exports = ScribeDocument;
 
 
-},{"./dom":25,"./format-manager":27,"./line":32,"./normalizer":38,"./utils":50,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],25:[function(_dereq_,module,exports){
+},{"./dom":27,"./format-manager":29,"./line":34,"./normalizer":40,"./utils":52,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],27:[function(_dereq_,module,exports){
 var ScribeDOM, _;
 
 _ = _dereq_('lodash');
@@ -15631,9 +16999,6 @@ ScribeDOM = {
     }
     this.moveChildren(node1, node2);
     node2.parentNode.removeChild(node2);
-    if ((node1.tagName === 'OL' || node1.tagName === 'UL') && node1.childNodes.length === 2) {
-      ScribeDOM.mergeNodes(node1.firstChild, node1.lastChild);
-    }
     return node1;
   },
   moveChildren: function(newParent, oldParent) {
@@ -15765,8 +17130,8 @@ ScribeDOM = {
 module.exports = ScribeDOM;
 
 
-},{"lodash":"4HJaAd"}],26:[function(_dereq_,module,exports){
-var DEFAULT_API_OPTIONS, EventEmitter2, ScribeDOM, ScribeDocument, ScribeEditor, ScribeKeyboard, ScribeLine, ScribeLogger, ScribeNormalizer, ScribePasteManager, ScribeRenderer, ScribeSelection, ScribeUndoManager, ScribeUtils, Tandem, _, _deleteAt, _forceTrailingNewline, _formatAt, _insertAt, _preformat, _trackDelta, _update,
+},{"lodash":"4HJaAd"}],28:[function(_dereq_,module,exports){
+var DEFAULT_API_OPTIONS, EventEmitter2, ScribeDOM, ScribeDocument, ScribeEditor, ScribeKeyboard, ScribeLine, ScribeLogger, ScribeNormalizer, ScribePasteManager, ScribeRenderer, ScribeSelection, ScribeUndoManager, ScribeUtils, Tandem, _, _deleteAt, _formatAt, _insertAt, _preformat, _trackDelta, _update,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __slice = [].slice;
@@ -15817,14 +17182,8 @@ _deleteAt = function(index, length) {
         deleteLength = Math.min(length, curLine.length - offset);
         nextLine = curLine.next;
         if (curLine.length === deleteLength) {
-          if (curLine === _this.doc.lines.first && curLine === _this.doc.lines.last) {
-            curLine.node.innerHTML = '';
-            curLine.trailingNewline = false;
-            curLine.rebuild();
-          } else {
-            ScribeDOM.removeNode(curLine.node);
-            _this.doc.removeLine(curLine);
-          }
+          ScribeDOM.removeNode(curLine.node);
+          _this.doc.removeLine(curLine);
         } else {
           curLine.deleteText(offset, deleteLength);
         }
@@ -15832,18 +17191,11 @@ _deleteAt = function(index, length) {
         curLine = nextLine;
         offset = 0;
       }
-      if ((firstLine != null) && !firstLine.trailingNewline) {
+      if (firstLine != null) {
         return _this.doc.mergeLines(firstLine, firstLine.next);
       }
     };
   })(this));
-};
-
-_forceTrailingNewline = function() {
-  var _ref;
-  if (!((_ref = this.doc.lines.last) != null ? _ref.trailingNewline : void 0)) {
-    return this.scribe.insertText(this.delta.endLength, "\n");
-  }
 };
 
 _formatAt = function(index, length, name, value) {
@@ -15875,16 +17227,20 @@ _insertAt = function(index, text, formatting) {
   }
   return this.selection.preserve(index, text.length, (function(_this) {
     return function() {
-      var line, lineTexts, offset, _ref;
+      var line, lineNode, lineTexts, offset, _ref;
       text = text.replace(/\r\n/g, '\n');
       text = text.replace(/\r/g, '\n');
       lineTexts = text.split('\n');
       _ref = _this.doc.findLineAtOffset(index), line = _ref[0], offset = _ref[1];
-      if (line === _this.doc.lines.last && offset >= line.length && line.trailingNewline) {
-        line = _this.doc.splitLine(line, line.length);
-        line.trailingNewline = false;
-        line.resetContent();
+      if (line == null) {
+        lineNode = _this.root.ownerDocument.createElement('div');
+        _this.root.appendChild(lineNode);
+        lineNode.appendChild(_this.root.ownerDocument.createElement('br'));
+        line = _this.doc.appendLine(lineNode);
         offset = 0;
+        if (lineTexts.length > 1 && lineTexts[0] === "" && lineTexts[1] === "") {
+          lineTexts.shift();
+        }
       }
       return _.each(lineTexts, function(lineText, i) {
         line.insertText(offset, lineText, formatting);
@@ -15937,7 +17293,6 @@ _update = function() {
   delta = _trackDelta.call(this, (function(_this) {
     return function() {
       return _this.doSilently(function() {
-        ScribeNormalizer.normalizeEmptyDoc(_this.root);
         ScribeNormalizer.normalizeEmptyLines(_this.root);
         return _this.selection.preserve(function() {
           var lineNode, lines, newLine, _results;
@@ -15998,17 +17353,13 @@ ScribeEditor = (function(_super) {
     }
     this.logger = new ScribeLogger(this, this.options.logLevel);
     this.init();
-    setInterval((function(_this) {
-      return function() {
-        return _this.checkUpdate();
-      };
-    })(this), this.options.pollInterval);
+    setInterval(this.checkUpdate.bind(this), this.options.pollInterval);
     this.on(ScribeEditor.events.SELECTION_CHANGE, (function(_this) {
       return function(range) {
         return _this.savedRange = range;
       };
     })(this));
-    if (!this.options.readonly) {
+    if (!this.options.readOnly) {
       this.enable();
     }
   }
@@ -16075,8 +17426,7 @@ ScribeEditor = (function(_super) {
         if (localDelta && !localDelta.isIdentity()) {
           _this.emit(ScribeEditor.events.TEXT_CHANGE, localDelta, 'user');
         }
-        _this.innerHTML = _this.root.innerHTML;
-        return _forceTrailingNewline.call(_this);
+        return _this.innerHTML = _this.root.innerHTML;
       };
     })(this));
   };
@@ -16176,7 +17526,7 @@ ScribeEditor = (function(_super) {
 module.exports = ScribeEditor;
 
 
-},{"./document":24,"./dom":25,"./keyboard":29,"./line":32,"./logger":33,"./normalizer":38,"./paste-manager":39,"./renderer":42,"./selection":44,"./undo-manager":49,"./utils":50,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji"}],27:[function(_dereq_,module,exports){
+},{"./document":26,"./dom":27,"./keyboard":31,"./line":34,"./logger":35,"./normalizer":40,"./paste-manager":41,"./renderer":44,"./selection":46,"./undo-manager":51,"./utils":52,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji"}],29:[function(_dereq_,module,exports){
 var ScribeFormat, ScribeFormatManager, _;
 
 _ = _dereq_('lodash');
@@ -16241,7 +17591,7 @@ ScribeFormatManager = (function() {
 module.exports = ScribeFormatManager;
 
 
-},{"./format":28,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],28:[function(_dereq_,module,exports){
+},{"./format":30,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],30:[function(_dereq_,module,exports){
 var ScribeBackColorFormat, ScribeBoldFormat, ScribeClassFormat, ScribeColorFormat, ScribeDOM, ScribeFontNameFormat, ScribeFontSizeFormat, ScribeForeColorFormat, ScribeItalicFormat, ScribeLeafFormat, ScribeLinkFormat, ScribeSpanFormat, ScribeStrikeFormat, ScribeStyleFormat, ScribeTagFormat, ScribeUnderlineFormat, ScribeUtils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -16780,7 +18130,7 @@ module.exports = {
 };
 
 
-},{"./dom":25,"./utils":50,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],29:[function(_dereq_,module,exports){
+},{"./dom":27,"./utils":52,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],31:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeKeyboard, ScribeLine, ScribePosition, ScribeRange, _, _initDeletes, _initHotkeys, _initListeners, _onTab;
 
 _ = _dereq_('lodash');
@@ -17014,7 +18364,7 @@ ScribeKeyboard = (function() {
 module.exports = ScribeKeyboard;
 
 
-},{"./dom":25,"./line":32,"./position":40,"./range":41,"lodash":"4HJaAd"}],30:[function(_dereq_,module,exports){
+},{"./dom":27,"./line":34,"./position":42,"./range":43,"lodash":"4HJaAd"}],32:[function(_dereq_,module,exports){
 var ScribeLeafIterator;
 
 ScribeLeafIterator = (function() {
@@ -17058,7 +18408,7 @@ ScribeLeafIterator = (function() {
 module.exports = ScribeLeafIterator;
 
 
-},{}],31:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
 var LinkedList, ScribeDOM, ScribeLeaf, ScribePosition, ScribeUtils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -17137,7 +18487,7 @@ ScribeLeaf = (function(_super) {
 module.exports = ScribeLeaf;
 
 
-},{"./dom":25,"./position":40,"./utils":50,"linked-list":"uyMq3L","lodash":"4HJaAd"}],32:[function(_dereq_,module,exports){
+},{"./dom":27,"./position":42,"./utils":52,"linked-list":"uyMq3L","lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
 var LinkedList, ScribeDOM, ScribeLeaf, ScribeLine, ScribeUtils, Tandem, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -17175,7 +18525,6 @@ ScribeLine = (function(_super) {
     this.id = _.uniqueId(ScribeLine.ID_PREFIX);
     this.node.id = this.id;
     ScribeDOM.addClass(this.node, ScribeLine.CLASS_NAME);
-    this.trailingNewline = true;
     this.rebuild();
     ScribeLine.__super__.constructor.call(this, this.node);
   }
@@ -17216,9 +18565,6 @@ ScribeLine = (function(_super) {
     this.applyToContents(offset, length, function(node) {
       return ScribeDOM.removeNode(node);
     });
-    if (this.length === offset + length) {
-      this.trailingNewline = false;
-    }
     return this.rebuild();
   };
 
@@ -17355,9 +18701,6 @@ ScribeLine = (function(_super) {
     this.length = _.reduce(this.leaves.toArray(), (function(length, leaf) {
       return leaf.length + length;
     }), 0);
-    if (this.trailingNewline) {
-      this.length += 1;
-    }
     this.outerHTML = this.node.outerHTML;
     this.formats = {};
     _ref = this.doc.formatManager.getFormat(this.node), formatName = _ref[0], formatValue = _ref[1];
@@ -17367,18 +18710,12 @@ ScribeLine = (function(_super) {
     ops = _.map(this.leaves.toArray(), function(leaf) {
       return new Tandem.InsertOp(leaf.text, leaf.getFormats(true));
     });
-    if (this.trailingNewline) {
-      ops.push(new Tandem.InsertOp("\n", this.formats));
-    }
     return this.delta = new Tandem.Delta(0, this.length, ops);
   };
 
   ScribeLine.prototype.splitContents = function(offset) {
-    var node, _ref, _ref1;
+    var node, _ref;
     _ref = ScribeUtils.getChildAtOffset(this.node, offset), node = _ref[0], offset = _ref[1];
-    if (this.node.tagName === 'OL' || this.node.tagName === 'UL') {
-      _ref1 = ScribeUtils.getChildAtOffset(node, offset), node = _ref1[0], offset = _ref1[1];
-    }
     return ScribeUtils.splitNode(node, offset);
   };
 
@@ -17389,7 +18726,7 @@ ScribeLine = (function(_super) {
 module.exports = ScribeLine;
 
 
-},{"./dom":25,"./leaf":31,"./line":32,"./utils":50,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],33:[function(_dereq_,module,exports){
+},{"./dom":27,"./leaf":33,"./line":34,"./utils":52,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],35:[function(_dereq_,module,exports){
 var ScribeLogger, _,
   __slice = [].slice;
 
@@ -17456,7 +18793,7 @@ _.each(['error', 'warn', 'info', 'debug'], function(level, index) {
 module.exports = ScribeLogger;
 
 
-},{"lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],36:[function(_dereq_,module,exports){
 var ScribeAuthorship, ScribeDOM, ScribeFormat, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -17519,7 +18856,7 @@ ScribeAuthorship = (function() {
   ScribeAuthorship.prototype.addAuthor = function(id, color) {
     var styles;
     styles = {};
-    styles[".editor.authorship .author-" + id] = {
+    styles[".authorship .author-" + id] = {
       "background-color": "" + color
     };
     return this.editor.renderer.addStyles(styles);
@@ -17528,22 +18865,21 @@ ScribeAuthorship = (function() {
   ScribeAuthorship.prototype.attachButton = function(button) {
     return ScribeDOM.addEventListener(button, 'click', (function(_this) {
       return function() {
-        if (ScribeDOM.hasClass(button, 'sc-active')) {
-          _this.disable();
-        } else {
-          _this.enable();
-        }
-        return ScribeDOM.toggleClass(button, 'sc-active');
+        ScribeDOM.toggleClass(button, 'sc-on');
+        return _this.enable(ScribeDOM.hasClass(button, 'sc-on'));
       };
     })(this));
   };
 
-  ScribeAuthorship.prototype.enable = function() {
-    return ScribeDOM.addClass(this.editor.root, 'authorship');
+  ScribeAuthorship.prototype.enable = function(enabled) {
+    if (enabled == null) {
+      enabled = true;
+    }
+    return ScribeDOM.toggleClass(this.editor.root, 'authorship', enabled);
   };
 
   ScribeAuthorship.prototype.disable = function() {
-    return ScribeDOM.removeClass(this.editor.root, 'authorship');
+    return this.enable(false);
   };
 
   return ScribeAuthorship;
@@ -17553,7 +18889,7 @@ ScribeAuthorship = (function() {
 module.exports = ScribeAuthorship;
 
 
-},{"../dom":25,"../format":28,"lodash":"4HJaAd","tandem-core":"38mxji"}],35:[function(_dereq_,module,exports){
+},{"../dom":27,"../format":30,"lodash":"4HJaAd","tandem-core":"38mxji"}],37:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeKeyboard, ScribeLinkTooltip, ScribePosition, ScribeRange, enterEditMode, exitEditMode, formatLink, hideTooltip, initListeners, initTooltip, normalizeUrl, showTooltip, _;
 
 _ = _dereq_('lodash');
@@ -17664,14 +19000,14 @@ initListeners = function() {
 
 initTooltip = function() {
   this.tooltip = this.options.button.ownerDocument.createElement('div');
-  this.tooltip.id = 'link-tooltip';
+  ScribeDOM.addClass(this.tooltip, 'link-tooltip-container');
   this.tooltip.innerHTML = '<span class="title">Visit URL:</span> <a href="#" class="url" target="_blank" href="about:blank"></a> <input class="input" type="text"> <span>&#45;</span> <a href="javascript:;" class="change">Change</a> <a href="javascript:;" class="done">Done</a>';
   this.tooltipLink = this.tooltip.querySelector('.url');
   this.tooltipInput = this.tooltip.querySelector('.input');
   this.tooltipChange = this.tooltip.querySelector('.change');
   this.tooltipDone = this.tooltip.querySelector('.done');
   this.editor.renderer.addStyles({
-    '#link-tooltip': {
+    '.link-tooltip-container': {
       'background-color': '#fff',
       'border': '1px solid #000',
       'height': '23px',
@@ -17679,36 +19015,36 @@ initTooltip = function() {
       'position': 'absolute',
       'white-space': 'nowrap'
     },
-    '#link-tooltip a': {
+    '.link-tooltip-container a': {
       'cursor': 'pointer',
       'text-decoration': 'none'
     },
-    '#link-tooltip > a, #link-tooltip > span': {
+    '.link-tooltip-container > a, .link-tooltip-container > span': {
       'display': 'inline-block',
       'line-height': '23px'
     },
-    '#link-tooltip .input': {
+    '.link-tooltip-container .input': {
       'display': 'none',
       'width': '170px'
     },
-    '#link-tooltip .done': {
+    '.link-tooltip-container .done': {
       'display': 'none'
     },
-    '#link-tooltip.editing .input': {
+    '.link-tooltip-container.editing .input': {
       'display': 'inline-block'
     },
-    '#link-tooltip.editing .done': {
+    '.link-tooltip-container.editing .done': {
       'display': 'inline-block'
     },
-    '#link-tooltip.editing .url': {
+    '.link-tooltip-container.editing .url': {
       'display': 'none'
     },
-    '#link-tooltip.editing .change': {
+    '.link-tooltip-container.editing .change': {
       'display': 'none'
     }
   });
-  this.tooltip.style.left = '-10000px';
-  return this.editor.renderer.addContainer(this.tooltip);
+  hideTooltip.call(this);
+  return _.defer(this.editor.renderer.addContainer.bind(this.editor.renderer, this.tooltip));
 };
 
 normalizeUrl = function(url) {
@@ -17764,7 +19100,7 @@ ScribeLinkTooltip = (function() {
 module.exports = ScribeLinkTooltip;
 
 
-},{"../dom":25,"../keyboard":29,"../position":40,"../range":41,"lodash":"4HJaAd"}],36:[function(_dereq_,module,exports){
+},{"../dom":27,"../keyboard":31,"../position":42,"../range":43,"lodash":"4HJaAd"}],38:[function(_dereq_,module,exports){
 var EventEmitter2, ScribeDOM, ScribeMultiCursor, ScribePosition, ScribeRenderer, ScribeUtils, _, _applyDelta, _buildCursor, _moveCursor, _updateCursor,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -18029,7 +19365,7 @@ ScribeMultiCursor = (function(_super) {
 module.exports = ScribeMultiCursor;
 
 
-},{"../dom":25,"../position":40,"../renderer":42,"../utils":50,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],37:[function(_dereq_,module,exports){
+},{"../dom":27,"../position":42,"../renderer":44,"../utils":52,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],39:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeKeyboard, ScribeLinkTooltip, ScribeRange, ScribeToolbar, ScribeUtils, _, _findInput, _initFormats;
 
 _ = _dereq_('lodash');
@@ -18068,9 +19404,6 @@ _initFormats = function() {
             button: input
           });
         }
-        if (format === 'link') {
-          return;
-        }
         eventName = formatGroup === 'SELECT' ? 'change' : 'click';
         ScribeDOM.addEventListener(input, eventName, function() {
           var activeFormats, range, value;
@@ -18078,7 +19411,7 @@ _initFormats = function() {
             return;
           }
           _this.editor.logger.debug('Toolbar event', eventName, format, input);
-          value = input.tagName === 'SELECT' ? input.options[input.selectedIndex].value : !ScribeDOM.hasClass(input, 'active');
+          value = input.tagName === 'SELECT' ? input.options[input.selectedIndex].value : !ScribeDOM.hasClass(input, 'sc-active');
           range = _this.editor.getSelection();
           if (range != null) {
             if (ScribeUtils.isIE(8)) {
@@ -18096,7 +19429,7 @@ _initFormats = function() {
         });
         return ScribeDOM.addEventListener(input, 'mousedown', function() {
           _this.editor.checkUpdate();
-          return false;
+          return true;
         });
       });
     };
@@ -18142,6 +19475,7 @@ ScribeToolbar = (function() {
         return _this.updateActive();
       };
     })(this));
+    _.defer(ScribeDOM.addClass.bind(this, this.container, 'sc-toolbar-container'));
   }
 
   ScribeToolbar.prototype.updateActive = function(activeFormats) {
@@ -18151,14 +19485,10 @@ ScribeToolbar = (function() {
     }
     this.triggering = true;
     range = this.editor.getSelection();
+    _.each(this.container.querySelectorAll('select'), ScribeDOM.resetSelect.bind(this));
     _.each(this.container.querySelectorAll('.sc-active'), (function(_this) {
       return function(button) {
         return ScribeDOM.removeClass(button, 'sc-active');
-      };
-    })(this));
-    _.each(this.container.querySelectorAll('sc-select'), (function(_this) {
-      return function(select) {
-        return ScribeDOM.resetSelect(select);
       };
     })(this));
     if (range != null) {
@@ -18193,7 +19523,7 @@ ScribeToolbar = (function() {
 module.exports = ScribeToolbar;
 
 
-},{"../dom":25,"../keyboard":29,"../range":41,"../utils":50,"./link-tooltip":35,"lodash":"4HJaAd"}],38:[function(_dereq_,module,exports){
+},{"../dom":27,"../keyboard":31,"../range":43,"../utils":52,"./link-tooltip":37,"lodash":"4HJaAd"}],40:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeNormalizer, ScribeUtils, _;
 
 _ = _dereq_('lodash');
@@ -18325,16 +19655,8 @@ ScribeNormalizer = (function() {
 
   ScribeNormalizer.breakBlocks = function(root) {
     ScribeNormalizer.groupBlocks(root);
-    _.each(root.querySelectorAll('br'), (function(_this) {
-      return function(node) {
-        return ScribeNormalizer.normalizeBreak(node, root);
-      };
-    })(this));
-    return _.each(root.childNodes, (function(_this) {
-      return function(childNode) {
-        return ScribeNormalizer.breakLine(childNode);
-      };
-    })(this));
+    _.each(_.clone(root.querySelectorAll('br')), ScribeNormalizer.normalizeBreak.bind('this', root));
+    return _.each(root.childNodes, ScribeNormalizer.breakLine.bind(this));
   };
 
   ScribeNormalizer.breakLine = function(lineNode) {
@@ -18385,7 +19707,7 @@ ScribeNormalizer = (function() {
     return _results;
   };
 
-  ScribeNormalizer.normalizeBreak = function(node, root) {
+  ScribeNormalizer.normalizeBreak = function(root, node) {
     if (node === root) {
       return;
     }
@@ -18396,17 +19718,11 @@ ScribeNormalizer = (function() {
       return node.parentNode.removeChild(node);
     } else if (node.nextSibling != null) {
       if (ScribeUtils.splitBefore(node.nextSibling, root)) {
-        return ScribeNormalizer.normalizeBreak(node, root);
+        return ScribeNormalizer.normalizeBreak(root, node);
       }
     } else if (node.parentNode !== root && node.parentNode.parentNode !== root) {
       ScribeDOM.unwrap(node.parentNode);
-      return ScribeNormalizer.normalizeBreak(node, root);
-    }
-  };
-
-  ScribeNormalizer.normalizeEmptyDoc = function(root) {
-    if (!root.firstChild) {
-      return root.appendChild(root.ownerDocument.createElement('div'));
+      return ScribeNormalizer.normalizeBreak(root, node);
     }
   };
 
@@ -18429,11 +19745,7 @@ ScribeNormalizer = (function() {
   };
 
   ScribeNormalizer.requireLeaf = function(lineNode) {
-    if (!(lineNode.childNodes.length > 0)) {
-      if (lineNode.tagName === 'OL' || lineNode.tagName === 'UL') {
-        lineNode.appendChild(lineNode.ownerDocument.createElement('li'));
-        lineNode = lineNode.firstChild;
-      }
+    if (lineNode.childNodes.length === 0) {
       return lineNode.appendChild(lineNode.ownerDocument.createElement('br'));
     }
   };
@@ -18485,7 +19797,6 @@ ScribeNormalizer = (function() {
   };
 
   ScribeNormalizer.prototype.normalizeDoc = function() {
-    ScribeNormalizer.normalizeEmptyDoc(this.container);
     this.applyRules(this.container);
     ScribeNormalizer.breakBlocks(this.container);
     return _.each(this.container.childNodes, (function(_this) {
@@ -18496,13 +19807,13 @@ ScribeNormalizer = (function() {
   };
 
   ScribeNormalizer.prototype.normalizeLine = function(lineNode) {
-    if (lineNode.childNodes.length === 1 && lineNode.childNodes[0].tagName === 'BR') {
+    if (lineNode.childNodes.length === 1 && lineNode.firstChild.tagName === 'BR') {
       return;
     }
     this.applyRules(lineNode);
     this.normalizeTags(lineNode);
-    ScribeNormalizer.requireLeaf(lineNode);
     this.removeRedundant(lineNode);
+    ScribeNormalizer.requireLeaf(lineNode);
     return ScribeNormalizer.wrapText(lineNode);
   };
 
@@ -18590,7 +19901,7 @@ ScribeNormalizer = (function() {
 module.exports = ScribeNormalizer;
 
 
-},{"./dom":25,"./utils":50,"lodash":"4HJaAd"}],39:[function(_dereq_,module,exports){
+},{"./dom":27,"./utils":52,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeDocument, ScribePasteManager, ScribeRange, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -18662,7 +19973,7 @@ ScribePasteManager = (function() {
 module.exports = ScribePasteManager;
 
 
-},{"./document":24,"./dom":25,"./range":41,"lodash":"4HJaAd","tandem-core":"38mxji"}],40:[function(_dereq_,module,exports){
+},{"./document":26,"./dom":27,"./range":43,"lodash":"4HJaAd","tandem-core":"38mxji"}],42:[function(_dereq_,module,exports){
 var ScribeDOM, ScribePosition, ScribeUtils, _;
 
 _ = _dereq_('lodash');
@@ -18689,7 +20000,7 @@ ScribePosition = (function() {
     if (offsetNode == null) {
       offsetNode = null;
     }
-    while (node !== offsetNode && (node.ownerDocument != null) && !ScribeDOM.hasClass(node, 'editor')) {
+    while (node !== offsetNode && (node.ownerDocument != null) && !ScribeDOM.hasClass(node, 'editor-container')) {
       while (node.previousSibling != null) {
         node = node.previousSibling;
         index += ScribeUtils.getNodeLength(node);
@@ -18732,7 +20043,7 @@ ScribePosition = (function() {
 module.exports = ScribePosition;
 
 
-},{"./dom":25,"./utils":50,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
+},{"./dom":27,"./utils":52,"lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
 var ScribeLeafIterator, ScribePosition, ScribeRange, _;
 
 _ = _dereq_('lodash');
@@ -18901,8 +20212,8 @@ ScribeRange = (function() {
 module.exports = ScribeRange;
 
 
-},{"./leaf-iterator":30,"./position":40,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
-var DEFAULT_STYLES, EventEmitter2, ScribeDOM, ScribeNormalizer, ScribeRenderer, ScribeUtils, _,
+},{"./leaf-iterator":32,"./position":42,"lodash":"4HJaAd"}],44:[function(_dereq_,module,exports){
+var DEFAULT_STYLES, EventEmitter2, LIST_STYLES, ScribeDOM, ScribeNormalizer, ScribeRenderer, ScribeUtils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -18917,112 +20228,61 @@ ScribeUtils = _dereq_('./utils');
 ScribeNormalizer = _dereq_('./normalizer');
 
 DEFAULT_STYLES = {
-  '.editor-container': {
+  'body': {
+    'box-sizing': 'border-box',
     'cursor': 'text',
     'font-family': "'Helvetica', 'Arial', sans-serif",
     'font-size': '13px',
     'height': '100%',
-    'line-height': '1.3',
+    'line-height': '1.42',
     'margin': '0px',
     'overflow-x': 'hidden',
     'overflow-y': 'auto',
-    'padding': '0px'
+    'padding': '12px 15px'
   },
-  '.editor': {
+  '.editor-container': {
     'height': '100%',
     'outline': 'none',
+    'position': 'relative',
     'tab-size': '4',
     'white-space': 'pre-wrap'
   },
-  '.editor .line:first-child': {
-    'padding-top': '12px'
-  },
-  '.editor .line:last-child': {
-    'padding-bottom': '12px'
-  },
-  '.editor .line': {
-    'margin-left': '15px',
-    'margin-right': '15px'
-  },
-  '.editor a': {
+  '.editor-container a': {
     'text-decoration': 'underline'
   },
-  '.editor b': {
+  '.editor-container b': {
     'font-weight': 'bold'
   },
-  '.editor i': {
+  '.editor-container i': {
     'font-style': 'italic'
   },
-  '.editor s': {
+  '.editor-container s': {
     'text-decoration': 'line-through'
   },
-  '.editor u': {
+  '.editor-container u': {
     'text-decoration': 'underline'
   },
-  '.editor ol': {
+  '.editor-container ol': {
     'margin': '0px',
     'padding': '0px'
   },
-  '.editor ul': {
+  '.editor-container ul': {
     'list-style-type': 'disc',
     'margin': '0px',
     'padding': '0px'
-  },
-  '.editor ol.indent-1': {
-    'list-style-type': 'decimal'
-  },
-  '.editor ol.indent-2': {
-    'list-style-type': 'lower-alpha'
-  },
-  '.editor ol.indent-3': {
-    'list-style-type': 'lower-roman'
-  },
-  '.editor ol.indent-4': {
-    'list-style-type': 'decimal'
-  },
-  '.editor ol.indent-5': {
-    'list-style-type': 'lower-alpha'
-  },
-  '.editor ol.indent-6': {
-    'list-style-type': 'lower-roman'
-  },
-  '.editor ol.indent-7': {
-    'list-style-type': 'decimal'
-  },
-  '.editor ol.indent-8': {
-    'list-style-type': 'lower-alpha'
-  },
-  '.editor ol.indent-9': {
-    'list-style-type': 'lower-roman'
-  },
-  '.editor .indent-1': {
-    'margin-left': '2em'
-  },
-  '.editor .indent-2': {
-    'margin-left': '4em'
-  },
-  '.editor .indent-3': {
-    'margin-left': '6em'
-  },
-  '.editor .indent-4': {
-    'margin-left': '8em'
-  },
-  '.editor .indent-5': {
-    'margin-left': '10em'
-  },
-  '.editor .indent-6': {
-    'margin-left': '12em'
-  },
-  '.editor .indent-7': {
-    'margin-left': '14em'
-  },
-  '.editor .indent-8': {
-    'margin-left': '16em'
-  },
-  '.editor .indent-9': {
-    'margin-left': '18em'
   }
 };
+
+LIST_STYLES = ['decimal', 'lower-alpha', 'lower-roman'];
+
+_.each([1, 2, 3, 4, 5, 6, 7, 8, 9], function(i) {
+  DEFAULT_STYLES[".editor-container .indent-" + i] = {
+    'margin-left': "" + (2 * i) + "em"
+  };
+  return DEFAULT_STYLES[".editor-container ol.indent-" + i] = {
+    'list-style-type': LIST_STYLES[(i - 1) % 3]
+  };
+});
 
 if (ScribeUtils.isIE()) {
   DEFAULT_STYLES['br'] = {
@@ -19052,13 +20312,9 @@ ScribeRenderer = (function(_super) {
     this.options = options != null ? options : {};
     this.buildFrame();
     this.addStyles(DEFAULT_STYLES);
-    _.defer((function(_this) {
-      return function() {
-        if (options.styles != null) {
-          return _this.addStyles(_this.options.styles);
-        }
-      };
-    })(this));
+    if (options.styles != null) {
+      _.defer(this.addStyles.bind(this, this.options.styles));
+    }
   }
 
   ScribeRenderer.prototype.addContainer = function(container, before) {
@@ -19085,7 +20341,8 @@ ScribeRenderer = (function(_super) {
     return _.defer((function(_this) {
       return function() {
         _this.root.ownerDocument.querySelector('head').appendChild(style);
-        return _this.emit(ScribeRenderer.events.UPDATE, css);
+        _this.emit(ScribeRenderer.events.UPDATE, css);
+        return ScribeDOM.addClass(_this.container, 'sc-container');
       };
     })(this));
   };
@@ -19110,14 +20367,13 @@ ScribeRenderer = (function(_super) {
       doc = this.getDocument();
     }
     this.root = doc.createElement('div');
-    ScribeDOM.addClass(this.root, 'editor');
+    ScribeDOM.addClass(this.root, 'editor-container');
     this.root.id = this.options.id;
     if (this.options.iframe) {
       doc.body.appendChild(this.root);
     } else {
       this.container.appendChild(this.root);
     }
-    ScribeDOM.addClass(this.root.parentNode, 'editor-container');
     this.root.innerHTML = ScribeNormalizer.normalizeHtml(html);
     return ScribeDOM.addEventListener(this.container, 'focus', (function(_this) {
       return function() {
@@ -19149,13 +20405,15 @@ ScribeRenderer = (function(_super) {
 module.exports = ScribeRenderer;
 
 
-},{"./dom":25,"./normalizer":38,"./utils":50,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
-var EventEmitter2, Scribe, ScribeDefaultTheme, ScribeEditor, ScribeSnowTheme, Tandem, buildFormats, pkg, _,
+},{"./dom":27,"./normalizer":40,"./utils":52,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],45:[function(_dereq_,module,exports){
+var EventEmitter2, Scribe, ScribeDefaultTheme, ScribeEditor, ScribeSnowTheme, Tandem, buildFormats, es5shim, pkg, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __slice = [].slice;
 
 _ = _dereq_('lodash');
+
+es5shim = _dereq_('es5-shim');
 
 pkg = _dereq_('../package.json');
 
@@ -19190,7 +20448,7 @@ Scribe = (function(_super) {
   Scribe.editors = [];
 
   Scribe.DEFAULTS = {
-    readonly: false,
+    readOnly: false,
     iframe: true,
     logLevel: false,
     pollInterval: 100,
@@ -19271,6 +20529,10 @@ Scribe = (function(_super) {
     return new Tandem.Delta(0, ops);
   };
 
+  Scribe.prototype.getHTML = function() {
+    return this.editor.root.innerHTML;
+  };
+
   Scribe.prototype.getLength = function() {
     return this.editor.getDelta().endLength;
   };
@@ -19296,6 +20558,10 @@ Scribe = (function(_super) {
     return this.editor.applyDelta(delta);
   };
 
+  Scribe.prototype.setHTML = function(html) {
+    return this.editor.root.innerHTML = html;
+  };
+
   Scribe.prototype.updateContents = function(delta) {
     return this.editor.applyDelta(delta);
   };
@@ -19307,7 +20573,7 @@ Scribe = (function(_super) {
 module.exports = Scribe;
 
 
-},{"../package.json":23,"./editor":26,"./themes/default":46,"./themes/snow":48,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji"}],44:[function(_dereq_,module,exports){
+},{"../package.json":25,"./editor":28,"./themes/default":48,"./themes/snow":50,"es5-shim":"4VPpiv","eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji"}],46:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeKeyboard, ScribeLine, ScribePosition, ScribeRange, ScribeSelection, ScribeUtils, compareNativeRanges, normalizeNativePosition, normalizeNativeRange, rangy, _, _nativeRangeToRange, _preserveWithIndex, _preserveWithLine, _updateFocus;
 
 _ = _dereq_('lodash');
@@ -19629,7 +20895,7 @@ ScribeSelection = (function() {
 module.exports = ScribeSelection;
 
 
-},{"./dom":25,"./keyboard":29,"./line":32,"./position":40,"./range":41,"./utils":50,"lodash":"4HJaAd","rangy-core":"rmqf9t"}],45:[function(_dereq_,module,exports){
+},{"./dom":27,"./keyboard":31,"./line":34,"./position":42,"./range":43,"./utils":52,"lodash":"4HJaAd","rangy-core":"rmqf9t"}],47:[function(_dereq_,module,exports){
 var ScribeColorPicker, ScribeDOM, ScribePicker,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -19666,7 +20932,7 @@ ScribeColorPicker = (function(_super) {
 module.exports = ScribeColorPicker;
 
 
-},{"../dom":25,"./picker":47}],46:[function(_dereq_,module,exports){
+},{"../dom":27,"./picker":49}],48:[function(_dereq_,module,exports){
 var ScribeAuthorship, ScribeDefaultTheme, ScribeLinkTooltip, ScribeMultiCursor, ScribeToolbar;
 
 ScribeAuthorship = _dereq_('../modules/authorship');
@@ -19706,7 +20972,7 @@ ScribeDefaultTheme = (function() {
 module.exports = ScribeDefaultTheme;
 
 
-},{"../modules/authorship":34,"../modules/link-tooltip":35,"../modules/multi-cursor":36,"../modules/toolbar":37}],47:[function(_dereq_,module,exports){
+},{"../modules/authorship":36,"../modules/link-tooltip":37,"../modules/multi-cursor":38,"../modules/toolbar":39}],49:[function(_dereq_,module,exports){
 var ScribeDOM, ScribePicker, _;
 
 _ = _dereq_('lodash');
@@ -19821,7 +21087,7 @@ ScribePicker = (function() {
 module.exports = ScribePicker;
 
 
-},{"../dom":25,"lodash":"4HJaAd"}],48:[function(_dereq_,module,exports){
+},{"../dom":27,"lodash":"4HJaAd"}],50:[function(_dereq_,module,exports){
 var ScribeColorPicker, ScribeDOM, ScribeDefaultTheme, ScribePicker, ScribeSnowTheme, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -19849,14 +21115,6 @@ ScribeSnowTheme = (function(_super) {
 
   function ScribeSnowTheme(editor) {
     this.editor = editor;
-    _.defaults({
-      styles: {
-        'div.editor': {
-          'bottom': '15px',
-          'top': '15px'
-        }
-      }
-    }, this.editor.options.renderer);
     this.pickers = [];
     this.editor.on(this.editor.constructor.events.SELECTION_CHANGE, (function(_this) {
       return function() {
@@ -19896,15 +21154,15 @@ ScribeSnowTheme = (function(_super) {
       '.snow a': {
         'color': '#06c'
       },
-      '.snow #link-tooltip': {
+      '.snow .link-tooltip-container': {
         'border': '1px solid #ccc',
         'box-shadow': '0px 0px 5px #ddd',
         'color': '#222'
       },
-      '.snow #link-tooltip a': {
+      '.snow .link-tooltip-container a': {
         'color': '#06c'
       },
-      '.snow #link-tooltip .input': {
+      '.snow .link-tooltip-container .input': {
         'border': '1px solid #ccc',
         'margin': '0px',
         'padding': '3px'
@@ -19964,7 +21222,6 @@ ScribeSnowTheme = (function(_super) {
   };
 
   ScribeSnowTheme.prototype.extendToolbar = function(module) {
-    ScribeDOM.addClass(module.container, 'sc-toolbar-container');
     _.each(module.container.querySelectorAll('.sc-font-name, .sc-font-size'), (function(_this) {
       return function(select) {
         var picker;
@@ -20006,7 +21263,7 @@ ScribeSnowTheme = (function(_super) {
 module.exports = ScribeSnowTheme;
 
 
-},{"../../dom":25,"../color-picker":45,"../default":46,"../picker":47,"lodash":"4HJaAd"}],49:[function(_dereq_,module,exports){
+},{"../../dom":27,"../color-picker":47,"../default":48,"../picker":49,"lodash":"4HJaAd"}],51:[function(_dereq_,module,exports){
 var ScribeKeyboard, ScribeRange, ScribeUndoManager, Tandem, getLastChangeIndex, _, _change, _ignoreChanges;
 
 _ = _dereq_('lodash');
@@ -20175,7 +21432,7 @@ ScribeUndoManager = (function() {
 module.exports = ScribeUndoManager;
 
 
-},{"./keyboard":29,"./range":41,"lodash":"4HJaAd","tandem-core":"38mxji"}],50:[function(_dereq_,module,exports){
+},{"./keyboard":31,"./range":43,"lodash":"4HJaAd","tandem-core":"38mxji"}],52:[function(_dereq_,module,exports){
 var ScribeDOM, ScribeUtils, ieVersion, _,
   __slice = [].slice;
 
@@ -20306,7 +21563,7 @@ ScribeUtils = {
     return (ieVersion != null) && maxVersion >= ieVersion;
   },
   isLineNode: function(node) {
-    return ((node != null ? node.parentNode : void 0) != null) && ScribeDOM.hasClass(node.parentNode, 'editor') && ScribeUtils.isBlock(node);
+    return ((node != null ? node.parentNode : void 0) != null) && ScribeDOM.hasClass(node.parentNode, 'editor-container') && ScribeUtils.isBlock(node);
   },
   removeFormatFromSubtree: function(subtree, format) {
     if (format.matchContainer(subtree)) {
@@ -20425,6 +21682,6 @@ ScribeUtils = {
 module.exports = ScribeUtils;
 
 
-},{"./dom":25,"lodash":"4HJaAd"}]},{},[1])
+},{"./dom":27,"lodash":"4HJaAd"}]},{},[1])
 (1)
 });
