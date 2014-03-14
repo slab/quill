@@ -6,6 +6,7 @@ ScribeNormalizer  = require('./normalizer')
 
 DEFAULT_STYLES =
   'body':
+    'box-sizing'  : 'border-box'
     'cursor'      : 'text'
     'font-family' : "'Helvetica', 'Arial', sans-serif"
     'font-size'   : '13px'
@@ -14,12 +15,11 @@ DEFAULT_STYLES =
     'margin'      : '0px'
     'overflow-x'  : 'hidden'
     'overflow-y'  : 'auto'
-    'padding'     : '0px'
+    'padding'     : '12px 15px'
   '.editor-container':
-    'box-sizing'  : 'border-box'
     'height'      : '100%'
     'outline'     : 'none'
-    'padding'     : '12px 15px'
+    'position'    : 'relative'
     'tab-size'    : '4'
     'white-space' : 'pre-wrap'
   '.editor-container a'    : { 'text-decoration': 'underline' }
