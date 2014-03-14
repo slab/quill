@@ -69,15 +69,14 @@ class ScribeToolbar
       return unless eventName == @editor.constructor.events.TEXT_CHANGE or eventName == @editor.constructor.events.SELECTION_CHANGE
       this.updateActive()
     )
+    _.defer(ScribeDOM.addClass.bind(this, @container, 'sc-toolbar-container'))
 
   updateActive: (activeFormats = {}) ->
     @triggering = true
     range = @editor.getSelection()
+    _.each(@container.querySelectorAll('sc-select'), ScribeDOM.resetSelect.bind(this))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
       ScribeDOM.removeClass(button, 'sc-active')
-    )
-    _.each(@container.querySelectorAll('sc-select'), (select) =>
-      ScribeDOM.resetSelect(select)
     )
     if range?
       _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>

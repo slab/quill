@@ -70,6 +70,7 @@ class ScribeRenderer extends EventEmitter2
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
       this.emit(ScribeRenderer.events.UPDATE, css)
+      ScribeDOM.addClass(@container, 'sc-container')
     )
 
   buildFrame: ->

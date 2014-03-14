@@ -7,7 +7,7 @@ html
 
   body
     #content-container
-      .editor-wrapper
+      #editor-wrapper
         #formatting-container
           select.sc-font-name(title='Font')
             option(value='sans-serif', selected=true)  Sans Serif
@@ -41,7 +41,7 @@ html
           button.sc-format-button.sc-underline(title='Underline') Under
           button.sc-format-button.sc-strike(title='Strikethrough') Strike
           button.sc-format-button.sc-link(title='Link') Link
-        #editor-container.editor-container
+        #editor-container
           include content
 
     script(type='text/javascript', src='../scribe.js')
