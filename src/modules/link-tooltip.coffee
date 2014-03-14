@@ -24,14 +24,14 @@ exitEditMode = ->
   ScribeDOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
-  @editor.setSelection(@savedRange, true)
+  @scribe.editor.setSelection(@savedRange, true)
   @savedRange.format('link', value, { source: 'user' })
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  ScribeDOM.addEventListener(@editor.root, 'mouseup', (event) =>
+  ScribeDOM.addEventListener(@editorContainer, 'mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
@@ -46,7 +46,7 @@ initListeners = ->
     hideTooltip.call(this)
   )
   ScribeDOM.addEventListener(@options.button, 'click', =>
-    @savedRange = @editor.getSelection()
+    @savedRange = @scribe.editor.getSelection()
     return unless @savedRange? and !@savedRange.isCollapsed()
     if ScribeDOM.hasClass(@options.button, 'active')
       formatLink.call(this, false)
@@ -54,11 +54,11 @@ initListeners = ->
     else
       url = normalizeUrl(@savedRange.getText())
       if /\w+\.\w+/.test(url)
-        @editor.root.focus()
+        @editorContainer.focus()
         formatLink.call(this, url)
       else
         ScribeDOM.addClass(@tooltip, 'editing')
-        showTooltip.call(this, @editor.selection.getDimensions())
+        showTooltip.call(this, @scribe.editor.selection.getDimensions())
         enterEditMode.call(this, url)
   )
   ScribeDOM.addEventListener(@tooltipChange, 'click', =>
@@ -110,7 +110,7 @@ initTooltip = ->
     '.link-tooltip-container.editing .change' : { 'display': 'none' }
   )
   hideTooltip.call(this)
-  _.defer(@editor.renderer.addContainer.bind(@editor.renderer, @tooltip))
+  _.defer(@scribe.editor.renderer.addContainer.bind(@scribe.editor.renderer, @tooltip))
 
 normalizeUrl = (url) ->
   url = 'http://' + url unless /^https?:\/\//.test(url)
@@ -121,7 +121,7 @@ showTooltip = (target, subjectDist = 5) ->
   tooltip = @tooltip.getBoundingClientRect()
   tooltipHeight = tooltip.bottom - tooltip.top
   tooltipWidth = tooltip.right - tooltip.left
-  limit = @editor.root.getBoundingClientRect()
+  limit = @editorContainer.getBoundingClientRect()
   left = Math.max(limit.left, target.left + (target.right-target.left)/2 - tooltipWidth/2)
   if left + tooltipWidth > limit.right and limit.right - tooltipWidth > limit.left
     left = limit.right - tooltipWidth
@@ -136,10 +136,12 @@ class ScribeLinkTooltip
   @DEFAULTS:
     button: null      # Required
 
-  constructor: (@editor, options = {}) ->
-    @options = _.defaults(options, ScribeLinkTooltip.DEFAULTS)
+  constructor: (@scribe, @editorContainer, @options) ->
     initTooltip.call(this)
     initListeners.call(this)
+    @scribe.theme.onModuleLoad('toolbar', (toolbar) ->
+      toolbar.initFormat('link', 'BUTTON')
+    )
 
 
 module.exports = ScribeLinkTooltip

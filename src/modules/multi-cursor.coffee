@@ -35,12 +35,12 @@ _moveCursor = (cursor, referenceNode) ->
   flag = cursor.elem.querySelector('.cursor-flag')
   ScribeDOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
   ScribeDOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-  ScribeDOM.toggleClass(cursor.elem, 'right', @editor.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+  ScribeDOM.toggleClass(cursor.elem, 'right', @editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
   this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor)
 
 _updateCursor = (cursor) ->
-  @editor.doSilently( =>
-    position = new ScribePosition(@editor, cursor.index)
+  @scribe.editor.doSilently( =>
+    position = new ScribePosition(@scribe.editor, cursor.index)
     guide = @container.ownerDocument.createElement('span')
     if !position.leafNode.firstChild?
       ScribeDOM.setText(guide, ScribeDOM.NOBREAK_SPACE)
@@ -76,13 +76,12 @@ class ScribeMultiCursor extends EventEmitter2
     CURSOR_MOVED: 'cursor-moved'
     CURSOR_REMOVED: 'cursor-removed'
 
-  constructor: (@editor, options = {}) ->
-    @options = _.defaults(options, ScribeMultiCursor.DEFAULTS)
+  constructor: (@scribe, @editorContainer, @options) ->
     @cursors = {}
-    @container = @editor.root.ownerDocument.createElement('div')
+    @container = @editorContainer.ownerDocument.createElement('div')
     @container.id = 'cursor-container'
-    @editor.renderer.addContainer(@container, true)
-    @editor.renderer.addStyles({
+    @scribe.editor.renderer.addContainer(@container, true)
+    @scribe.editor.renderer.addStyles({
       '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
       '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
       '.cursor-flag':
@@ -101,14 +100,14 @@ class ScribeMultiCursor extends EventEmitter2
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
       '.cursor.right > .cursor-flag': { 'right': '-2px' }
     })
-    @editor.renderer.on(ScribeRenderer.events.UPDATE, =>
+    @scribe.editor.renderer.on(ScribeRenderer.events.UPDATE, =>
       _.defer( =>
-        @container.style.top = @editor.root.offsetTop + 'px'
-        @container.style.left = @editor.root.offsetLeft  + 'px'
+        @container.style.top = @editorContainer.offsetTop + 'px'
+        @container.style.left = @editorContainer.offsetLeft  + 'px'
         this.update(true)
       )
     )
-    @editor.on(@editor.constructor.events.TEXT_CHANGE, (delta) =>
+    @scribe.on(@scribe.constructor.events.TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
 

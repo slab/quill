@@ -24,7 +24,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         </span>
         <span class="cursor-caret"></span>'
 
-  constructor: (@editor) ->
+  constructor: (@scribe, options) ->
     @pickers = []
     @editor.on(@editor.constructor.events.SELECTION_CHANGE, =>
       _.each(@pickers, (picker) ->
@@ -34,22 +34,13 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     ScribeDOM.addClass(@editor.root.parentNode, 'snow')
     super
 
-  addModule: (name, options) ->
-    options = _.defaults(ScribeSnowTheme.OPTIONS[name] or {}, options)
-    module = super(name, options)
-    switch name
-      when 'authorship'   then this.extendAuthorship(module)
-      when 'link-tooltip' then this.extendLinkTooltip(module)
-      when 'multi-cursor' then this.extendMultiCursor(module)
-      when 'toolbar'      then this.extendToolbar(module)
-    return module
-
   extendAuthorship: (module) ->
 
 
   extendLinkTooltip: (module) ->
     @editor.renderer.addStyles(
-      '.snow a': { 'color': '#06c' }
+      '.snow a':
+        'color': '#06c'
       '.snow .link-tooltip-container':
         'border': '1px solid #ccc'
         'box-shadow': '0px 0px 5px #ddd'

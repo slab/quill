@@ -7,6 +7,12 @@ ScribeDefaultTheme  = require('./themes/default')
 ScribeSnowTheme     = require('./themes/snow')
 Tandem              = require('tandem-core')
 
+Modules =
+  Authorship  : require('./modules/authorship')
+  LinkTooltip : require('./modules/link-tooltip')
+  MultiCursor : require('./modules/multi-cursor')
+  Toolbar     : require('./modules/toolbar')
+
 
 buildFormats = (name, value) ->
   if _.isString(name)
@@ -22,6 +28,7 @@ buildFormats = (name, value) ->
 class Scribe extends EventEmitter2
   @version: pkg.version
   @editors: []
+  @Module: Modules
 
   @DEFAULTS:
     readOnly: false
@@ -39,6 +46,7 @@ class Scribe extends EventEmitter2
 
   @events:
     FOCUS_CHANGE     : 'focus-change'
+    MODULE_INIT      : 'module-init'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
@@ -46,13 +54,9 @@ class Scribe extends EventEmitter2
     @options = _.defaults(options, Scribe.DEFAULTS)
     @options.id = @id = "scribe-#{Scribe.editors.length + 1}"
     @options.emitter = this
-    @modules = {}
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)
-    @theme = new Scribe.themes[@options.theme](@editor)
-    _.each(@options.modules, (options, name) =>
-      this.addModule(name, options)
-    )
+    @theme = new Scribe.themes[@options.theme](this, @options)
     # TODO We should not just be a passthrough
     _.each(ScribeEditor.events, (eventName) =>
       @editor.on(eventName, (args...) =>
@@ -61,9 +65,8 @@ class Scribe extends EventEmitter2
     )
 
   addModule: (name, options) ->
-    options = {} unless _.isObject(options)
-    @modules[name] = @theme.addModule(name, options)
-    return @modules[name]
+    options = {} unless _.isObject(options)  # Allow for addModule('module', true)
+    return @theme.addModule(name, options)
 
   deleteText: (index, length) ->
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
@@ -87,7 +90,7 @@ class Scribe extends EventEmitter2
     return @editor.getDelta().endLength
 
   getModule: (name) ->
-    return @modules[name]
+    return @theme.modules[name]
 
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')

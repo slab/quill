@@ -10,14 +10,13 @@ class ScribeAuthorship
     color: 'blue'
     enabled: false
 
-  constructor: (@editor, options) ->
-    @options = _.defaults(options, ScribeAuthorship.DEFAULTS)
+  constructor: (@scribe, @editorContainer, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
-    @editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editor.renderer.root, 'author'))
+    @scribe.editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editorContainer, 'author'))
     return unless @options.authorId?
-    @editor.on(@editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
-      if eventName == @editor.constructor.events.TEXT_CHANGE and origin == 'user'
+    @scribe.editor.on(@scribe.editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
+      if eventName == @scribe.editor.constructor.events.TEXT_CHANGE and origin == 'user'
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
@@ -36,14 +35,14 @@ class ScribeAuthorship
         , (index, length, name, value) =>
           authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))
         )
-        @editor.applyDelta(authorDelta, { silent: true })
+        @scribe.editor.applyDelta(authorDelta, { silent: true })
     )
     this.addAuthor(@options.authorId, @options.color)
 
   addAuthor: (id, color) ->
     styles = {}
     styles[".authorship .author-#{id}"] = { "background-color": "#{color}" }
-    @editor.renderer.addStyles(styles)
+    @scribe.editor.renderer.addStyles(styles)
 
   attachButton: (button) ->
     ScribeDOM.addEventListener(button, 'click', =>
@@ -52,7 +51,7 @@ class ScribeAuthorship
     )
 
   enable: (enabled = true) ->
-    ScribeDOM.toggleClass(@editor.root, 'authorship', enabled)
+    ScribeDOM.toggleClass(@editorContainer, 'authorship', enabled)
 
   disable: ->
     this.enable(false)

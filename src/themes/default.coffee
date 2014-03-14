@@ -1,21 +1,31 @@
-ScribeAuthorship  = require('../modules/authorship')
-ScribeLinkTooltip = require('../modules/link-tooltip')
-ScribeMultiCursor = require('../modules/multi-cursor')
-ScribeToolbar     = require('../modules/toolbar')
+_     = require('lodash')
+_.str = require('underscore.string')
 
 
 class ScribeDefaultTheme
-  @stylesheets: {}
+  @OPTIONS: {}
 
-  constructor: (@editor) ->
+  constructor: (@scribe, options) ->
+    @editor = @scribe.editor
+    @editorContainer = @editor.root
+    @modules = {}
+    _.each(options.modules, (option, name) =>
+      this.addModule(name, option)
+    )
 
   addModule: (name, options) ->
-    switch name
-      when 'authorship'  then return new ScribeAuthorship(@editor, options)
-      when 'link-tooltip' then return new ScribeLinkTooltip(@editor, options)
-      when 'multi-cursor' then return new ScribeMultiCursor(@editor, options)
-      when 'toolbar'      then return new ScribeToolbar(@editor, options)
-      else return null
+    className = _.str.capitalize(_.str.camelize(name))
+    options = _.defaults(this.constructor.OPTIONS[name] or {}, options)
+    @scribe.editor.logger.debug('Initializing module', name, options)
+    @modules[name] = new @scribe.constructor.Module[className](@scribe, @editorContainer, options)
+    @scribe.emit(@scribe.constructor.events.MODULE_INIT, name, @modules[name])
+    return @modules[name]
+
+  onModuleLoad: (name, callback) ->
+    if (@modules[name]) then return callback(@modules[name])
+    @scribe.on(@scribe.constructor.events.MODULE_INIT, (moduleName, module) ->
+      callback(module) if moduleName == name
+    )
 
 
 module.exports = ScribeDefaultTheme
