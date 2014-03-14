@@ -47,8 +47,8 @@ class ScribeAuthorship
 
   attachButton: (button) ->
     ScribeDOM.addEventListener(button, 'click', =>
-      ScribeDOM.toggleClass(button, 'sc-active')
-      this.enable(ScribeDOM.hasClass(button, 'sc-active'))
+      ScribeDOM.toggleClass(button, 'sc-on')
+      this.enable(ScribeDOM.hasClass(button, 'sc-on'))
     )
 
   enable: (enabled = true) ->
