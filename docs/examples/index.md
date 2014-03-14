@@ -2,7 +2,7 @@
 layout: examples
 title: Examples - Scribe
 permalink: /examples/
-stylesheet: 'css/scribe.snow.css'
+stylesheet: '/css/scribe.snow.css'
 ---
 
 # Examples
