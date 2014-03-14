@@ -77,6 +77,7 @@ class ScribeMultiCursor extends EventEmitter2
     CURSOR_REMOVED: 'cursor-removed'
 
   constructor: (@scribe, @editorContainer, @options) ->
+    console.log("my options", @options)
     @cursors = {}
     @container = @editorContainer.ownerDocument.createElement('div')
     @container.id = 'cursor-container'

@@ -15,9 +15,11 @@ class ScribeDefaultTheme
 
   addModule: (name, options) ->
     className = _.str.capitalize(_.str.camelize(name))
-    options = _.defaults(this.constructor.OPTIONS[name] or {}, options)
+    moduleClass = @scribe.constructor.Module[className]
+    options = {} unless _.isObject(options)  # Allow for addModule('module', true)
+    options = _.defaults(options, this.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
     @scribe.editor.logger.debug('Initializing module', name, options)
-    @modules[name] = new @scribe.constructor.Module[className](@scribe, @editorContainer, options)
+    @modules[name] = new moduleClass(@scribe, @editorContainer, options)
     @scribe.emit(@scribe.constructor.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
