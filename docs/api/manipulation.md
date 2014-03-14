@@ -223,7 +223,7 @@ editor.setContents([
   { text: 'Hello ' },
   { text: 'World!', attributes: { bold: true } },
   { text: '\n' }
-])
+]);
 {% endhighlight %}
 
 
