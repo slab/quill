@@ -38,8 +38,7 @@ _initFormats = ->
       ScribeDOM.addEventListener(input, 'mousedown', =>
         # Save selection before click is registered
         @editor.checkUpdate()
-        # Prevent from losing focus, needed for bug in mobile Safari
-        return false
+        return true
       )
     )
   )
