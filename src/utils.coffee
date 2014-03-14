@@ -54,7 +54,7 @@ ScribeUtils =
 
   findDeepestNode: (node, offset) ->
     if node.firstChild?
-      for child in _.clone(node.childNodes)
+      for child in ScribeDOM.getChildNodes(node)
         length = ScribeUtils.getNodeLength(child)
         if offset < length
           return ScribeUtils.findDeepestNode(child, offset)
@@ -80,7 +80,7 @@ ScribeUtils =
   getNodeLength: (node) ->
     return 0 unless node?
     if node.nodeType == ScribeDOM.ELEMENT_NODE
-      return _.reduce(node.childNodes, (length, child) ->
+      return _.reduce(ScribeDOM.getChildNodes(node), (length, child) ->
         return length + ScribeUtils.getNodeLength(child)
       , if ScribeUtils.isLineNode(node) then 1 else 0)
     else if node.nodeType == ScribeDOM.TEXT_NODE
@@ -108,7 +108,7 @@ ScribeUtils =
   removeFormatFromSubtree: (subtree, format) ->
     if format.matchContainer(subtree)
       subtree = ScribeDOM.unwrap(subtree)
-    _.each(subtree.childNodes, (child) ->
+    _.each(ScribeDOM.getChildNodes(subtree), (child) ->
       ScribeUtils.removeFormatFromSubtree(child, format)
     )
     return subtree

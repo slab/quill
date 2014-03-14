@@ -16,9 +16,7 @@ class ScribeDocument
     @lines = new LinkedList()
     @lineMap = {}
     @normalizer.normalizeDoc()
-    _.each(@root.childNodes, (node) =>
-      this.appendLine(node)
-    )
+    _.each(ScribeDOM.getChildNodes(@root), this.appendLine.bind(this))
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
@@ -63,7 +61,7 @@ class ScribeDocument
 
   mergeLines: (line, lineToMerge) ->
     return unless line? and lineToMerge?
-    _.each(_.clone(lineToMerge.node.childNodes), (child) ->
+    _.each(ScribeDOM.getChildNodes(lineToMerge.node), (child) ->
       line.node.appendChild(child)
     )
     ScribeDOM.removeNode(lineToMerge.node)

@@ -5,7 +5,7 @@ ScribeUtils = require('./utils')
 
 ScribeDebug =
   checkDocumentConsistency: (doc) ->
-    nodesByLine = _.map(_.clone(doc.root.childNodes), (lineNode) ->
+    nodesByLine = _.map(ScribeDOM.getChildNodes(doc.root), (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
         return node.nodeType == ScribeDOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == ScribeDOM.TEXT_NODE)
@@ -25,7 +25,7 @@ ScribeDebug =
             throw new Error("Null line")
       )
       # Line nodes and line's nodes should match
-      _.each(doc.root.childNodes, (lineNode, index) ->
+      _.each(ScribeDOM.getChildNodes(doc.root), (lineNode, index) ->
         if lines[index].node != lineNode
           throw new Error("Line and nodes do not match")
       )
@@ -53,7 +53,7 @@ ScribeDebug =
       if lines.length != nodesByLine.length
         throw new Error("doc.lines and nodesByLine differ in length")
       _.each(lines, (line, index) =>
-        calculatedLength = _.reduce(line.node.childNodes, ((length, node) -> ScribeUtils.getNodeLength(node) + length), 0)
+        calculatedLength = _.reduce(ScribeDOM.getChildNodes(line.node), ((length, node) -> ScribeUtils.getNodeLength(node) + length), 0)
         if line.length != calculatedLength
           throw new Error('Line length inccorect')
         leaves = line.leaves.toArray()

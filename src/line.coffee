@@ -32,7 +32,7 @@ class ScribeLine extends LinkedList.Node
     ScribeUtils.traverseSiblings(startNode, endNode, fn)
 
   buildLeaves: (node, formats) ->
-    _.each(node.childNodes, (node) =>
+    _.each(ScribeDOM.getChildNodes(node), (node) =>
       nodeFormats = _.clone(formats)
       [formatName, formatValue] = @doc.formatManager.getFormat(node)
       nodeFormats[formatName] = formatValue if formatName?

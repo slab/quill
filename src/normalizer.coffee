@@ -57,7 +57,7 @@ class ScribeNormalizer
   @breakBlocks: (root) ->
     ScribeNormalizer.groupBlocks(root)
     _.each(_.clone(root.querySelectorAll('br')), ScribeNormalizer.normalizeBreak.bind('this', root))
-    _.each(root.childNodes, ScribeNormalizer.breakLine.bind(this))
+    _.each(ScribeDOM.getChildNodes(root), ScribeNormalizer.breakLine.bind(this))
 
   @breakLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'
@@ -156,7 +156,7 @@ class ScribeNormalizer
   normalizeDoc: ->
     this.applyRules(@container)
     ScribeNormalizer.breakBlocks(@container)
-    _.each(@container.childNodes, (lineNode) =>
+    _.each(ScribeDOM.getChildNodes(@container), (lineNode) =>
       this.normalizeLine(lineNode)
     )
 
@@ -200,7 +200,7 @@ class ScribeNormalizer
         return parentAttributes[formatName]? if formatName?
         return false unless node.tagName == 'SPAN'
         # Check if childNodes need us
-        return true if node.childNodes.length == 0 or !_.any(node.childNodes, (child) -> child.nodeType != ScribeDOM.ELEMENT_NODE)
+        return true if node.childNodes.length == 0 or !_.any(ScribeDOM.getChildNodes(node), (child) -> child.nodeType != ScribeDOM.ELEMENT_NODE)
         # Check if parent needs us
         return true if node.previousSibling == null and node.nextSibling == null and node.parentNode != lineNode and node.parentNode.tagName != 'LI'
         return false
