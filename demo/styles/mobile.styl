@@ -12,13 +12,15 @@ html, body
   padding: 0px
 
 #content-container
-  position: relative
+  box-sizing: border-box
   height: 100%
+  padding-top: 35px
 
 #formatting-container
   background-color: #fff
   border-bottom: 1px solid #ccc
   height: 34px
+  margin-top: -35px
   width: 100%
   .sc-format-button
     background-position: center center
@@ -45,7 +47,5 @@ html, body
     content: "\e80e"
 
 #editor-container
-  bottom: 4px   // Some reason vertical scrollbars appear without 4px compensation
-  position: absolute
-  top: 35px
-  width: 100%
+  height: 100%
+  overflow: hidden      // Some reason this is necessary
