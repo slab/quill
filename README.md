@@ -3,13 +3,13 @@
 Please do not publicize this repository in any way. There are a few known documentation gaps and browser quirks we wish to address before publication. Thank you for your patience.
 
 
-# [Scribe Rich Text Editor](http://stypi.github.io/scribe) [![Build Status](https://secure.travis-ci.org/stypi/scribe.png?branch=master)](http://travis-ci.org/stypi/scribe) [![Dependency Status](https://gemnasium.com/stypi/scribe.png)](https://gemnasium.com/stypi/scribe)
+# [Scribe Rich Text Editor](http://scribejs.com/) [![Build Status](https://secure.travis-ci.org/stypi/scribe.png?branch=master)](http://travis-ci.org/stypi/scribe) [![Dependency Status](https://gemnasium.com/stypi/scribe.png)](https://gemnasium.com/stypi/scribe)
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/scribe-master.svg)](https://saucelabs.com/u/scribe)
 
 Scribe is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and Byron Milligan and open sourced by [Salesforce.com](http://www.salesforce.com).
 
-To get started, check out the [Scribe Github Page](http://stypi.github.io/scribe) or jump straight into the [demo](http://stypi.github.io/scribe/examples/advanced/).
+To get started, check out the [Scribe Github Page](http://scribejs.com/) or jump straight into the [demo](http://scribejs.com/examples/).
 
 ## Quickstart
 
@@ -28,7 +28,7 @@ Instantiate a new Scribe object with a css selector for the div that should beco
 </div>
 
 <!-- Include the Scribe library -->
-<script src="http://stypi.github.io/scribe/js/scribe.js"></script>
+<script src="http://scribejs.com/js/scribe.js"></script>
 
 <!-- Initialize Scribe editor -->
 <script>
