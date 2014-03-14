@@ -42,7 +42,7 @@ class ScribeAuthorship
 
   addAuthor: (id, color) ->
     styles = {}
-    styles["body.authorship .author-#{id}"] = { "background-color": "#{color}" }
+    styles[".authorship .author-#{id}"] = { "background-color": "#{color}" }
     @editor.renderer.addStyles(styles)
 
   attachButton: (button) ->

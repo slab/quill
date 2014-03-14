@@ -44,16 +44,16 @@ for num in [1, 2]
   editor = new Scribe($container.get(0), {
     logLevel: 'info'
     modules:
-      'authorship': {
-        enabled: false
-        color: getColor(num, true)
-        button: $('.sc-authorship', $wrapper).get(0)
-      }
       'multi-cursor': true
       'toolbar': {
         container: $('.toolbar-container', $wrapper).get(0)
       }
     theme: 'snow'
+  })
+  authorship = editor.addModule('authorship', {
+    authorId: editor.id
+    color: getColor(num, true)
+    button: $('.sc-authorship', $wrapper).get(0)
   })
   editors.push(editor)
 
