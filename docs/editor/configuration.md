@@ -35,6 +35,10 @@ var editor = new Scribe('#editor', configs);
 - `"error"`
 - `false`
 
+#### modules
+
+- See [Modules](/docs/modules/) for more information.
+
 #### pollInterval
 
 - Default: `100`
@@ -71,15 +75,3 @@ var editor = new Scribe('#editor', {
 #### theme
 
 - See [Themes](/docs/themes/) for more information.
-
-#### undoDelay
-
-- Default: `1000`
-
-- Minimum number of milliseconds between changes in the undo stack. Changes occurring within this threshold are combined in the undo stack.
-
-#### undoMaxStack
-
-- Defaults: `100`
-
-- Maximum number of changes the keep in the undo stack.
