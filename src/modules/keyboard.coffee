@@ -1,15 +1,15 @@
 _               = require('lodash')
-ScribeDOM       = require('./dom')
-ScribeLine      = require('./line')
-ScribePosition  = require('./position')
-ScribeRange     = require('./range')
+ScribeDOM       = require('../dom')
+ScribeLine      = require('../line')
+ScribePosition  = require('../position')
+ScribeRange     = require('../range')
 
 
 _initDeletes = ->
   _.each([ScribeKeyboard.keys.DELETE, ScribeKeyboard.keys.BACKSPACE], (key) =>
     this.addHotkey(key, =>
       # Prevent deleting if editor is already blank (browser quirk fix)
-      return @editor.scribe.getLength() > 1
+      return @scribe.getLength() > 1
     )
   )
 
@@ -30,14 +30,14 @@ _initHotkeys = ->
   )
 
 _initListeners = ->
-  ScribeDOM.addEventListener(@editor.root, 'keydown', (event) =>
+  ScribeDOM.addEventListener(@editorContainer, 'keydown', (event) =>
     if @hotkeys[event.which]?
       prevent = false
       _.each(@hotkeys[event.which], (hotkey) =>
         return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
         return if hotkey.shift? and event.shiftKey != hotkey.shift
-        @editor.selection.update(true)
-        selection = @editor.getSelection()
+        @scribe.editor.selection.update(true)
+        selection = @scribe.editor.getSelection()
         return unless selection?
         prevent = hotkey.callback.call(null, selection) == false or prevent
       )
@@ -55,21 +55,21 @@ _onTab = (range, shift = false) ->
     offsetChange = 0
     _.each(lines, (line) =>
       if !shift
-        @editor.insertAt(index, '\t', {}, { source: 'user' })
+        @scribe.editor.insertAt(index, '\t', {}, { source: 'user' })
         offsetChange += 1
       else if line.leaves.first.text[0] == '\t'
-        @editor.deleteAt(index, 1, { source: 'user' })
+        @scribe.editor.deleteAt(index, 1, { source: 'user' })
         offsetChange -= 1
       else if line == lines[0]
         start = range.start.index
       index += line.length
     )
     end = range.end.index + offsetChange
-    @editor.setSelection(new ScribeRange(@editor, start, end))
+    @scribe.editor.setSelection(new ScribeRange(@scribe.editor, start, end))
   else
     range.deleteContents({ source: 'user' })
     range.insertContents(0, "\t", {}, { source: 'user' })
-    @editor.setSelection(new ScribeRange(@editor, range.start.index + 1, range.start.index + 1))
+    @scribe.editor.setSelection(new ScribeRange(@scribe.editor, range.start.index + 1, range.start.index + 1))
 
 
 class ScribeKeyboard
@@ -95,7 +95,7 @@ class ScribeKeyboard
 
   @NAVIGATION: [@keys.UP, @keys.DOWN, @keys.LEFT, @keys.RIGHT]
 
-  constructor: (@editor) ->
+  constructor: (@scribe, @editorContainer, options) ->
     @hotkeys = {}
     _initListeners.call(this)
     _initHotkeys.call(this)
@@ -118,7 +118,7 @@ class ScribeKeyboard
       else
         indent = false
       index = Position.getIndex(line.node, 0)
-      @editor.formatAt(index, 0, format, indent)
+      @scribe.editor.formatAt(index, 0, format, indent)
 
     _.each(lines, (line) =>
       if line.formats.bullet?

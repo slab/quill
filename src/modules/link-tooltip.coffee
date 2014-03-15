@@ -1,6 +1,5 @@
 _               = require('lodash')
 ScribeDOM       = require('../dom')
-ScribeKeyboard  = require('../keyboard')
 ScribePosition  = require('../position')
 ScribeRange     = require('../range')
 

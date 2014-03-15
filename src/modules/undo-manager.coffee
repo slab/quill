@@ -1,5 +1,4 @@
 _               = require('lodash')
-ScribeKeyboard  = require('../keyboard')
 ScribeRange     = require('../range')
 Tandem          = require('tandem-core')
 
@@ -54,13 +53,15 @@ class ScribeUndoManager
     this.initListeners()
 
   initListeners: ->
-    @scribe.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.UNDO, =>
-      this.undo()
-      return false
-    )
-    @scribe.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.REDO, =>
-      this.redo()
-      return false
+    @scribe.theme.onModuleLoad('keyboard', (keyboard) =>
+      keyboard.addHotkey(keyboard.constructor.hotkeys.UNDO, =>
+        this.undo()
+        return false
+      )
+      keyboard.addHotkey(keyboard.constructor.hotkeys.REDO, =>
+        this.redo()
+        return false
+      )
     )
     @ignoringChanges = false
     @scribe.editor.on(@scribe.editor.constructor.events.TEXT_CHANGE, (delta, origin) =>

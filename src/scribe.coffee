@@ -9,6 +9,7 @@ Tandem              = require('tandem-core')
 
 Modules =
   Authorship    : require('./modules/authorship')
+  Keyboard      : require('./modules/keyboard')
   LinkTooltip   : require('./modules/link-tooltip')
   MultiCursor   : require('./modules/multi-cursor')
   PasteManager  : require('./modules/paste-manager')
@@ -37,6 +38,7 @@ class Scribe extends EventEmitter2
     iframe: true
     logLevel: false
     modules:
+      'keyboard': true
       'paste-manager': true
       'undo-manager': true
     pollInterval: 100

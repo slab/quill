@@ -2,7 +2,6 @@ _                   = require('lodash')
 EventEmitter2       = require('eventemitter2').EventEmitter2
 ScribeDOM           = require('./dom')
 ScribeDocument      = require('./document')
-ScribeKeyboard      = require('./keyboard')
 ScribeLine          = require('./line')
 ScribeLogger        = require('./logger')
 ScribeNormalizer    = require('./normalizer')
@@ -167,7 +166,6 @@ class ScribeEditor extends EventEmitter2
     @root = @renderer.root
     @doc = new ScribeDocument(@root, @options)
     @delta = @doc.toDelta()
-    @keyboard = new ScribeKeyboard(this)
     @selection = new ScribeSelection(this)
     @ignoreDomChanges = false
 

@@ -1,8 +1,6 @@
 _                 = require('lodash')
 ScribeDOM         = require('../dom')
-ScribeKeyboard    = require('../keyboard')
 ScribeRange       = require('../range')
-ScribeLinkTooltip = require('./link-tooltip')
 ScribeUtils       = require('../utils')
 
 
@@ -36,12 +34,14 @@ class ScribeToolbar
       this.updateActive()
     )
     _.defer(ScribeDOM.addClass.bind(this, @container, 'sc-toolbar-container'))
-    _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
-      @scribe.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys[key], =>
-        activeFormats = {}
-        input = _findInput.call(this, key.toLowerCase())
-        activeFormats[key.toLowerCase()] = !ScribeDOM.hasClass(input, 'sc-active') if input?
-        this.updateActive(activeFormats)
+    @scribe.theme.onModuleLoad('keyboard', (keyboard) =>
+      _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
+        keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
+          activeFormats = {}
+          input = _findInput.call(this, key.toLowerCase())
+          activeFormats[key.toLowerCase()] = ScribeDOM.hasClass(input, 'sc-active') if input?
+          this.updateActive(activeFormats)
+        )
       )
     )
 
