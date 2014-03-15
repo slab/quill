@@ -1,7 +1,7 @@
-_                 = require('lodash')
-ScribeDOM         = require('../dom')
-ScribeRange       = require('../range')
-ScribeUtils       = require('../utils')
+_           = require('lodash')
+ScribeDOM   = require('../dom')
+ScribeRange = require('../range')
+ScribeUtils = require('../utils')
 
 
 _findInput = (format) ->

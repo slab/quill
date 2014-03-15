@@ -25,17 +25,17 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         <span class="cursor-caret"></span>'
 
   constructor: (@scribe, options) ->
+    super
     @pickers = []
     @editor.on(@editor.constructor.events.SELECTION_CHANGE, =>
       _.each(@pickers, (picker) ->
         picker.close()
       )
     )
-    ScribeDOM.addClass(@editor.root.parentNode, 'snow')
-    super
-
-  extendAuthorship: (module) ->
-
+    ScribeDOM.addClass(@editorContainer.parentNode, 'snow')
+    this.onModuleLoad('link-tooltip', this.extendLinkTooltip.bind(this))
+    this.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
+    this.onModuleLoad('toolbar', this.extendToolbar.bind(this))
 
   extendLinkTooltip: (module) ->
     @editor.renderer.addStyles(

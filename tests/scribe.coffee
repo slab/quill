@@ -1,17 +1,4 @@
 Scribe = require('../src/scribe')
-Scribe.Modules =
-  Authorship    : require('../src/modules/authorship')
-  Keyboard      : require('../src/modules/keyboard')
-  LinkTooltip   : require('../src/modules/link-tooltip')
-  MultiCursor   : require('../src/modules/multi-cursor')
-  PasteManager  : require('../src/modules/paste-manager')
-  Toolbar       : require('../src/modules/toolbar')
-  UndoManager   : require('../src/modules/undo-manager')
-Scribe.Themes =
-  ColorPicker   : require('../src/themes/color-picker')
-  Default       : require('../src/themes/default')
-  Picker        : require('../src/themes/picker')
-  Snow          : require('../src/themes/snow')
 Scribe.Debug         = require('../src/debug')
 Scribe.Document      = require('../src/document')
 Scribe.DOM           = require('../src/dom')

@@ -1,11 +1,10 @@
-_                   = require('lodash')
-es5shim             = require('es5-shim')
-pkg                 = require('../package.json')
-EventEmitter2       = require('eventemitter2').EventEmitter2
-ScribeEditor        = require('./editor')
-ScribeDefaultTheme  = require('./themes/default')
-ScribeSnowTheme     = require('./themes/snow')
-Tandem              = require('tandem-core')
+_             = require('lodash')
+_.str         = require('underscore.string')
+es5shim       = require('es5-shim')
+pkg           = require('../package.json')
+EventEmitter2 = require('eventemitter2').EventEmitter2
+ScribeEditor  = require('./editor')
+Tandem        = require('tandem-core')
 
 Modules =
   Authorship    : require('./modules/authorship')
@@ -15,6 +14,10 @@ Modules =
   PasteManager  : require('./modules/paste-manager')
   Toolbar       : require('./modules/toolbar')
   UndoManager   : require('./modules/undo-manager')
+
+Themes =
+  Default : require('./themes/default')
+  Snow    : require('./themes/snow')
 
 
 buildFormats = (name, value) ->
@@ -31,7 +34,9 @@ buildFormats = (name, value) ->
 class Scribe extends EventEmitter2
   @version: pkg.version
   @editors: []
+
   @Module: Modules
+  @Theme: Themes
 
   @DEFAULTS:
     formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
@@ -45,10 +50,6 @@ class Scribe extends EventEmitter2
     readOnly: false
     theme: 'default'
 
-  @themes:
-    default: ScribeDefaultTheme
-    snow: ScribeSnowTheme
-
   @events:
     FOCUS_CHANGE     : 'focus-change'
     MODULE_INIT      : 'module-init'
@@ -61,7 +62,8 @@ class Scribe extends EventEmitter2
     @options.emitter = this
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)
-    @theme = new Scribe.themes[@options.theme](this, @options)
+    themeClass = _.str.capitalize(_.str.camelize(@options.theme))
+    @theme = new Scribe.Theme[themeClass](this, @options)
     @theme.init()   # Separate init since some module constructors refer to @theme
     # TODO We should not just be a passthrough
     _.each(ScribeEditor.events, (eventName) =>
