@@ -24,7 +24,7 @@ class ScribeToolbar
     container: null
 
   @formats:
-    BUTTON: ['bold', 'italic', 'strike', 'underline', 'indent', 'outdent']
+    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent']
     SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
 
   constructor: (@scribe, @editorContainer, @options) ->
@@ -49,7 +49,7 @@ class ScribeToolbar
     input = _findInput.call(this, format)
     return unless input?
     @scribe.editor.logger.debug('Toolbar binding', format, input)
-    return @scribe.addModule('link-tooltip', { button: input }) if format == 'link'
+    if format == 'link' then return @scribe.addModule('link-tooltip', { button: input })
     eventName = if group == 'SELECT' then 'change' else 'click'
     ScribeDOM.addEventListener(input, eventName, =>
       return if @triggering
@@ -92,7 +92,6 @@ class ScribeToolbar
             ScribeDOM.addClass(elem, 'sc-active')
       )
     @triggering = false
-
 
 
 module.exports = ScribeToolbar

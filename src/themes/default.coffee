@@ -9,9 +9,7 @@ class ScribeDefaultTheme
     @editor = @scribe.editor
     @editorContainer = @editor.root
     @modules = {}
-    _.each(options.modules, (option, name) =>
-      this.addModule(name, option)
-    )
+    @options = _.defaults(options.modules, @scribe.constructor.DEFAULTS.modules)
 
   addModule: (name, options) ->
     className = _.str.capitalize(_.str.camelize(name))
@@ -22,6 +20,11 @@ class ScribeDefaultTheme
     @modules[name] = new moduleClass(@scribe, @editorContainer, options)
     @scribe.emit(@scribe.constructor.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
+
+  init: ->
+    _.each(@options, (option, name) =>
+      this.addModule(name, option)
+    )
 
   onModuleLoad: (name, callback) ->
     if (@modules[name]) then return callback(@modules[name])

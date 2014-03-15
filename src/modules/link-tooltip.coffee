@@ -45,6 +45,16 @@ initListeners = ->
       link = link.parentNode
     hideTooltip.call(this)
   )
+  ScribeDOM.addEventListener(@tooltipChange, 'click', =>
+    enterEditMode.call(this, ScribeDOM.getText(@tooltipLink))
+  )
+  ScribeDOM.addEventListener(@tooltipDone, 'click', =>
+    exitEditMode.call(this)
+  )
+  ScribeDOM.addEventListener(@tooltipInput, 'keyup', (event) =>
+    exitEditMode.call(this) if event.which == ScribeKeyboard.keys.ENTER
+  )
+  return unless @options.button?
   ScribeDOM.addEventListener(@options.button, 'click', =>
     @savedRange = @scribe.editor.getSelection()
     return unless @savedRange? and !@savedRange.isCollapsed()
@@ -61,18 +71,9 @@ initListeners = ->
         showTooltip.call(this, @scribe.editor.selection.getDimensions())
         enterEditMode.call(this, url)
   )
-  ScribeDOM.addEventListener(@tooltipChange, 'click', =>
-    enterEditMode.call(this, ScribeDOM.getText(@tooltipLink))
-  )
-  ScribeDOM.addEventListener(@tooltipDone, 'click', =>
-    exitEditMode.call(this)
-  )
-  ScribeDOM.addEventListener(@tooltipInput, 'keyup', (event) =>
-    exitEditMode.call(this) if event.which == ScribeKeyboard.keys.ENTER
-  )
 
 initTooltip = ->
-  @tooltip = @options.button.ownerDocument.createElement('div')
+  @tooltip = @editorContainer.ownerDocument.createElement('div')
   ScribeDOM.addClass(@tooltip, 'link-tooltip-container')
   @tooltip.innerHTML =
    '<span class="title">Visit URL:</span>
@@ -85,7 +86,7 @@ initTooltip = ->
   @tooltipInput = @tooltip.querySelector('.input')
   @tooltipChange = @tooltip.querySelector('.change')
   @tooltipDone = @tooltip.querySelector('.done')
-  @editor.renderer.addStyles(
+  @scribe.editor.renderer.addStyles(
     '.link-tooltip-container': {
       'background-color': '#fff'
       'border': '1px solid #000'
@@ -133,15 +134,12 @@ showTooltip = (target, subjectDist = 5) ->
 
 
 class ScribeLinkTooltip
-  @DEFAULTS:
-    button: null      # Required
+  DEFAULTS:
+    button: null
 
   constructor: (@scribe, @editorContainer, @options) ->
     initTooltip.call(this)
     initListeners.call(this)
-    @scribe.theme.onModuleLoad('toolbar', (toolbar) ->
-      toolbar.initFormat('link', 'BUTTON')
-    )
 
 
 module.exports = ScribeLinkTooltip

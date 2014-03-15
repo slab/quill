@@ -31,11 +31,12 @@ class Scribe extends EventEmitter2
   @Module: Modules
 
   @DEFAULTS:
-    readOnly: false
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
     iframe: true
     logLevel: false
+    modules: {}
     pollInterval: 100
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
+    readOnly: false
     theme: 'default'
     undoDelay: 1000
     undoMaxStack: 100
@@ -57,6 +58,7 @@ class Scribe extends EventEmitter2
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)
     @theme = new Scribe.themes[@options.theme](this, @options)
+    @theme.init()   # Separate init since some module constructors refer to @theme
     # TODO We should not just be a passthrough
     _.each(ScribeEditor.events, (eventName) =>
       @editor.on(eventName, (args...) =>
