@@ -8,7 +8,6 @@ ScribeLogger        = require('./logger')
 ScribeNormalizer    = require('./normalizer')
 ScribeRenderer      = require('./renderer')
 ScribeSelection     = require('./selection')
-ScribeUndoManager   = require('./undo-manager')
 ScribeUtils         = require('./utils')
 Tandem              = require('tandem-core')
 
@@ -170,7 +169,6 @@ class ScribeEditor extends EventEmitter2
     @delta = @doc.toDelta()
     @keyboard = new ScribeKeyboard(this)
     @selection = new ScribeSelection(this)
-    @undoManager = new ScribeUndoManager(this, @options)
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->

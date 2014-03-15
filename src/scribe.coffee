@@ -13,6 +13,7 @@ Modules =
   MultiCursor   : require('./modules/multi-cursor')
   PasteManager  : require('./modules/paste-manager')
   Toolbar       : require('./modules/toolbar')
+  UndoManager   : require('./modules/undo-manager')
 
 
 buildFormats = (name, value) ->
@@ -37,11 +38,10 @@ class Scribe extends EventEmitter2
     logLevel: false
     modules:
       'paste-manager': true
+      'undo-manager': true
     pollInterval: 100
     readOnly: false
     theme: 'default'
-    undoDelay: 1000
-    undoMaxStack: 100
 
   @themes:
     default: ScribeDefaultTheme

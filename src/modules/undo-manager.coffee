@@ -1,6 +1,6 @@
 _               = require('lodash')
-ScribeKeyboard  = require('./keyboard')
-ScribeRange     = require('./range')
+ScribeKeyboard  = require('../keyboard')
+ScribeRange     = require('../range')
 Tandem          = require('tandem-core')
 
 
@@ -30,9 +30,9 @@ _change = (source, dest) ->
     change = @stack[source].pop()
     @lastRecorded = 0
     _ignoreChanges.call(this, =>
-      @editor.applyDelta(change[source], { source: 'user' })
+      @scribe.editor.applyDelta(change[source], { source: 'user' })
       index = getLastChangeIndex(change[source])
-      @editor.setSelection(new ScribeRange(@editor, index, index))
+      @scribe.editor.setSelection(new ScribeRange(@scribe.editor, index, index))
     )
     @stack[dest].push(change)
 
@@ -44,31 +44,35 @@ _ignoreChanges = (fn) ->
 
 
 class ScribeUndoManager
-  constructor: (@editor, @options = {}) ->
+  DEFAULTS:
+    delay: 1000
+    maxStack: 100
+
+  constructor: (@scribe, @editorContainer, @options = {}) ->
     @lastRecorded = 0
     this.clear()
     this.initListeners()
 
   initListeners: ->
-    @editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.UNDO, =>
+    @scribe.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.UNDO, =>
       this.undo()
       return false
     )
-    @editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.REDO, =>
+    @scribe.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.REDO, =>
       this.redo()
       return false
     )
     @ignoringChanges = false
-    @editor.on(@editor.constructor.events.TEXT_CHANGE, (delta, origin) =>
+    @scribe.editor.on(@scribe.editor.constructor.events.TEXT_CHANGE, (delta, origin) =>
       this.record(delta, @oldDelta) unless @ignoringChanges and origin == 'user'
-      @oldDelta = @editor.getDelta()
+      @oldDelta = @scribe.editor.getDelta()
     )
 
   clear: ->
     @stack =
       undo: []
       redo: []
-    @oldDelta = @editor.getDelta()
+    @oldDelta = @scribe.editor.getDelta()
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity()
@@ -76,7 +80,7 @@ class ScribeUndoManager
     try
       undoDelta = oldDelta.invert(changeDelta)
       timestamp = new Date().getTime()
-      if @lastRecorded + @options.undoDelay > timestamp and @stack.undo.length > 0
+      if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
         change = @stack.undo.pop()
         if undoDelta.canCompose(change.undo) and change.redo.canCompose(changeDelta)
           undoDelta = undoDelta.compose(change.undo)
@@ -91,7 +95,7 @@ class ScribeUndoManager
         redo: changeDelta
         undo: undoDelta
       })
-      @stack.undo.unshift() if @stack.undo.length > @options.undoMaxStack
+      @stack.undo.unshift() if @stack.undo.length > @options.maxStack
       return true
     catch ignored
       this.clear()

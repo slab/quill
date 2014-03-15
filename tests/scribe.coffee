@@ -5,6 +5,7 @@ Scribe.Modules =
   MultiCursor   : require('../src/modules/multi-cursor')
   PasteManager  : require('../src/modules/paste-manager')
   Toolbar       : require('../src/modules/toolbar')
+  UndoManager   : require('../src/modules/undo-manager')
 Scribe.Themes =
   ColorPicker   : require('../src/themes/color-picker')
   Default       : require('../src/themes/default')
@@ -26,7 +27,6 @@ Scribe.Position      = require('../src/position')
 Scribe.Range         = require('../src/range')
 Scribe.Renderer      = require('../src/renderer')
 Scribe.Selection     = require('../src/selection')
-Scribe.UndoManager   = require('../src/undo-manager')
 Scribe.Utils         = require('../src/utils')
 
 
