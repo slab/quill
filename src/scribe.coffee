@@ -8,10 +8,11 @@ ScribeSnowTheme     = require('./themes/snow')
 Tandem              = require('tandem-core')
 
 Modules =
-  Authorship  : require('./modules/authorship')
-  LinkTooltip : require('./modules/link-tooltip')
-  MultiCursor : require('./modules/multi-cursor')
-  Toolbar     : require('./modules/toolbar')
+  Authorship    : require('./modules/authorship')
+  LinkTooltip   : require('./modules/link-tooltip')
+  MultiCursor   : require('./modules/multi-cursor')
+  PasteManager  : require('./modules/paste-manager')
+  Toolbar       : require('./modules/toolbar')
 
 
 buildFormats = (name, value) ->
@@ -34,7 +35,8 @@ class Scribe extends EventEmitter2
     formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
     iframe: true
     logLevel: false
-    modules: {}
+    modules:
+      'paste-manager': true
     pollInterval: 100
     readOnly: false
     theme: 'default'

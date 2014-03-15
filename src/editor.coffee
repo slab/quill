@@ -6,7 +6,6 @@ ScribeKeyboard      = require('./keyboard')
 ScribeLine          = require('./line')
 ScribeLogger        = require('./logger')
 ScribeNormalizer    = require('./normalizer')
-ScribePasteManager  = require('./paste-manager')
 ScribeRenderer      = require('./renderer')
 ScribeSelection     = require('./selection')
 ScribeUndoManager   = require('./undo-manager')
@@ -172,7 +171,6 @@ class ScribeEditor extends EventEmitter2
     @keyboard = new ScribeKeyboard(this)
     @selection = new ScribeSelection(this)
     @undoManager = new ScribeUndoManager(this, @options)
-    @pasteManager = new ScribePasteManager(this)
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->
