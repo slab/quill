@@ -51,9 +51,9 @@ module.exports = (config) ->
     files: [
       'tests/mocha/style.css'
 
-      'http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js'
-      'http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js'
-      'http://cdnjs.cloudflare.com/ajax/libs/async/1.22/async.min.js'
+      '../node_modules/jquery/dist/jquery.js'
+      '../node_modules/lodash/lodash.js'
+      '../node_modules/async/lib/async.js'
 
       'tests/mocha/fixture.html'
       'tests/karma/inject.js'

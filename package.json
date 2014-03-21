@@ -54,7 +54,8 @@
     "karma-sauce-launcher": "~0.2.1",
     "load-grunt-tasks": "~0.4.0",
     "mocha": "~1.18.0",
-    "phantomjs": "~1.9.7-1"
+    "phantomjs": "~1.9.7-1",
+    "jquery": "~1.11.0"
   },
   "engine": {
     "node": ">=0.8"
