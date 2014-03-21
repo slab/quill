@@ -20,15 +20,17 @@ Themes =
   Snow    : require('./themes/snow')
 
 
-buildFormats = (name, value) ->
+DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
+
+
+buildFormats = (name, value, options) ->
   if _.isString(name)
     formats = {}
     formats[name] = value
-  else if _.isObject(name)
-    formats = name
   else
-    formats = {}
-  return formats
+    formats = if _.isObject(name) then name else {}
+    options = if _.isObject(value) then value else {}
+  return [formats, options]
 
 
 class Scribe extends EventEmitter2
@@ -75,16 +77,17 @@ class Scribe extends EventEmitter2
   addModule: (name, options) ->
     return @theme.addModule(name, options)
 
-  deleteText: (index, length) ->
+  deleteText: (index, length, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
-    @editor.applyDelta(delta)
+    @editor.applyDelta(delta, options)
 
-  formatText: (index, length, name, value) ->
-    formats = buildFormats(name, value)
+  formatText: (index, length, name, value, options = {}) ->
+    [formats, options] = buildFormats(name, value, options)
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
-    @editor.applyDelta(delta)
+    @editor.applyDelta(delta, options)
 
-  getContents: (index, length) ->
+  getContents: (index, length, options = {}) ->
     index = 0 unless index?
     length = this.getLength() - index unless length?
     ops = @editor.getDelta().getOpsAt(index, length)
@@ -102,10 +105,10 @@ class Scribe extends EventEmitter2
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
-  insertText: (index, text, name, value) ->
-    formats = buildFormats(name, value)
+  insertText: (index, text, name, value, options = {}) ->
+    [formats, options] = buildFormats(name, value, options)
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
-    @editor.applyDelta(delta)
+    @editor.applyDelta(delta, options)
 
   setContents: (delta) ->
     delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)

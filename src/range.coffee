@@ -15,12 +15,15 @@ class ScribeRange
     return if this.isCollapsed()
     @editor.deleteAt(@start.index, @end.index - @start.index, options)
 
-  equals: (range) ->
-    return false unless range?
-    return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
+  insertContents: (offset, text, formats, options) ->
+    @editor.insertAt(@start.index + offset, text, formats, options)
 
   format: (name, value, options) ->
     @editor.formatAt(@start.index, @end.index - @start.index, name, value, options)
+
+  equals: (range) ->
+    return false unless range?
+    return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
 
   # TODO implement the following:
   # Return object representing intersection of formats of leaves in range
@@ -106,9 +109,6 @@ class ScribeRange
         line = leaf.line
       return part
     ).join('')
-
-  insertContents: (offset, text, formats, options) ->
-    @editor.insertAt(@start.index + offset, text, formats, options)
 
   isCollapsed: ->
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset

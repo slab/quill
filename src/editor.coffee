@@ -11,9 +11,6 @@ ScribeUtils         = require('./utils')
 Tandem              = require('tandem-core')
 
 
-DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
-
-
 _deleteAt = (index, length) ->
   return if length <= 0
   @selection.preserve(index, -1 * length, =>
@@ -170,7 +167,6 @@ class ScribeEditor extends EventEmitter2
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
     return if delta.isIdentity()
     this.doSilently( =>
       localDelta = this.update()
