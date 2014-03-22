@@ -122,10 +122,11 @@ class Scribe extends EventEmitter2
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta, options)
 
-  setContents: (delta) ->
+  setContents: (delta, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
     delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)
     delta.startLength = this.getLength()
-    @editor.applyDelta(delta)
+    @editor.applyDelta(delta, options)
 
   setHTML: (html) ->
     @editor.root.innerHTML = html
@@ -134,8 +135,9 @@ class Scribe extends EventEmitter2
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     @editor.selection.setRange(range, options.silent)
 
-  updateContents: (delta) ->
-    @editor.applyDelta(delta)
+  updateContents: (delta, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
+    @editor.applyDelta(delta, options)
 
   updateSelection: (options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
