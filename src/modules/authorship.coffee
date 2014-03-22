@@ -42,7 +42,7 @@ class ScribeAuthorship
   addAuthor: (id, color) ->
     styles = {}
     styles[".authorship .author-#{id}"] = { "background-color": "#{color}" }
-    @scribe.editor.renderer.addStyles(styles)
+    @scribe.addStyles(styles)
 
   attachButton: (button) ->
     ScribeDOM.addEventListener(button, 'click', =>

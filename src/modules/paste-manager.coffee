@@ -10,7 +10,7 @@ class ScribePasteManager
     @container = @editorContainer.ownerDocument.createElement('div')
     ScribeDOM.addClass(@container, 'paste-container')
     @container.setAttribute('contenteditable', true)
-    @scribe.editor.renderer.addStyles(
+    @scribe.addStyles(
       '.paste-container':
         'left': '-10000px'
         'position': 'absolute'

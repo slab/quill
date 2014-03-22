@@ -77,6 +77,9 @@ class Scribe extends EventEmitter2
   addModule: (name, options) ->
     return @theme.addModule(name, options)
 
+  addStyles: (styles) ->
+    @editor.renderer.addStyles(styles)
+
   deleteText: (index, length, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)

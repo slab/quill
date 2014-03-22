@@ -81,7 +81,7 @@ class ScribeMultiCursor extends EventEmitter2
     @container = @editorContainer.ownerDocument.createElement('div')
     @container.id = 'cursor-container'
     @scribe.editor.renderer.addContainer(@container, true)
-    @scribe.editor.renderer.addStyles({
+    @scribe.addStyles(
       '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
       '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
       '.cursor-flag':
@@ -99,7 +99,7 @@ class ScribeMultiCursor extends EventEmitter2
       '.cursor.hidden .cursor-flag': { 'display': 'none' }
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
       '.cursor.right > .cursor-flag': { 'right': '-2px' }
-    })
+    )
     @scribe.editor.renderer.on(ScribeRenderer.events.UPDATE, =>
       _.defer( =>
         @container.style.top = @editorContainer.offsetTop + 'px'

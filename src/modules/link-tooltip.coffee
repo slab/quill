@@ -85,7 +85,7 @@ initTooltip = ->
   @tooltipInput = @tooltip.querySelector('.input')
   @tooltipChange = @tooltip.querySelector('.change')
   @tooltipDone = @tooltip.querySelector('.done')
-  @scribe.editor.renderer.addStyles(
+  @scribe.addStyles(
     '.link-tooltip-container': {
       'background-color': '#fff'
       'border': '1px solid #000'
