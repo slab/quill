@@ -88,6 +88,9 @@ class Scribe extends EventEmitter2
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
     @editor.applyDelta(delta, options)
 
+  focus: ->
+    @editor.root.focus()
+
   formatText: (index, length, name, value, options = {}) ->
     [formats, options] = buildFormats(name, value, options)
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)

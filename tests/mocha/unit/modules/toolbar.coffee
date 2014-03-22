@@ -18,7 +18,7 @@ describe('Toolbar', ->
     expected: '<div><b>one.comBold</b></div>'
     fn: (editor) ->
       editor.addModule('toolbar', { container: '#format-container' })
-      editor.editor.root.focus()
+      editor.focus()
       editor.setSelection(new Scribe.Range(editor.editor, 0, 7))
       $('#format-container .sc-bold').click()
   )
@@ -27,7 +27,7 @@ describe('Toolbar', ->
     expected: '<div><a href="http://one.com" title="http://one.com">one.com</a><b>Bold</b></div>'
     fn: (editor) ->
       editor.addModule('toolbar', { container: '#format-container' })
-      editor.editor.root.focus()
+      editor.focus()
       editor.setSelection(new Scribe.Range(editor.editor, 0, 7))
       $('#format-container .sc-link').click()
   )

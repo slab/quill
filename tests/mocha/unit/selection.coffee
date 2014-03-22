@@ -246,7 +246,7 @@ describe('Selection', ->
             initial: test.initial
             expected: test.expected
             fn: (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
-              testEditor.editor.root.focus()
+              testEditor.focus()
               testEditor.setSelection(new Scribe.Range(testEditor.editor, testStart, testEnd))
               test.fn.call(null, testEditor)
           )
