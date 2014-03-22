@@ -36,8 +36,8 @@ _initListeners = ->
       _.each(@hotkeys[event.which], (hotkey) =>
         return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
         return if hotkey.shift? and event.shiftKey != hotkey.shift
-        @scribe.editor.selection.update(true)
-        selection = @scribe.editor.getSelection()
+        @scribe.updateSelection({ silent: true })
+        selection = @scribe.getSelection()
         return unless selection?
         prevent = hotkey.callback.call(null, selection) == false or prevent
       )
@@ -65,11 +65,11 @@ _onTab = (range, shift = false) ->
       index += line.length
     )
     end = range.end.index + offsetChange
-    @scribe.editor.setSelection(new ScribeRange(@scribe.editor, start, end))
+    @scribe.setSelection(new ScribeRange(@scribe.editor, start, end))
   else
     range.deleteContents({ source: 'user' })
     range.insertContents(0, "\t", {}, { source: 'user' })
-    @scribe.editor.setSelection(new ScribeRange(@scribe.editor, range.start.index + 1, range.start.index + 1))
+    @scribe.setSelection(new ScribeRange(@scribe.editor, range.start.index + 1, range.start.index + 1))
 
 
 class ScribeKeyboard

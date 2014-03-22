@@ -23,7 +23,7 @@ exitEditMode = ->
   ScribeDOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
-  @scribe.editor.setSelection(@savedRange, true)
+  @scribe.setSelection(@savedRange, { silent: true })
   @savedRange.format('link', value, { source: 'user' })
 
 hideTooltip = ->
@@ -55,7 +55,7 @@ initListeners = ->
   )
   return unless @options.button?
   ScribeDOM.addEventListener(@options.button, 'click', =>
-    @savedRange = @scribe.editor.getSelection()
+    @savedRange = @scribe.getSelection()
     return unless @savedRange? and !@savedRange.isCollapsed()
     if ScribeDOM.hasClass(@options.button, 'active')
       formatLink.call(this, false)

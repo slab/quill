@@ -55,11 +55,11 @@ class ScribeToolbar
       return if @triggering
       @scribe.editor.logger.debug('Toolbar event', eventName, format, input)
       value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'sc-active')
-      range = @scribe.editor.getSelection()
+      range = @scribe.getSelection()
       if range?
         if ScribeUtils.isIE(8)
           @editorContainer.focus()
-          @scribe.editor.setSelection(range)
+          @scribe.setSelection(range)
         range.format(format, value, { source: 'user' })
       activeFormats = {}
       activeFormats[format] = value
@@ -74,7 +74,7 @@ class ScribeToolbar
 
   updateActive: (activeFormats = {}) ->
     @triggering = true
-    range = @scribe.editor.getSelection()
+    range = @scribe.getSelection()
     _.each(@container.querySelectorAll('select'), ScribeDOM.resetSelect.bind(this))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
       ScribeDOM.removeClass(button, 'sc-active')

@@ -222,7 +222,7 @@ describe('Selection', ->
 
     checker = (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
       expect(testEditor.editor.renderer.checkFocus()).to.be(true)
-      selection = testEditor.editor.getSelection()
+      selection = testEditor.getSelection()
       expect(selection).not.to.be(null)
       expect(selection.start.index).to.equal(expectedStart)
       expect(selection.end.index).to.equal(expectedEnd)
@@ -247,7 +247,7 @@ describe('Selection', ->
             expected: test.expected
             fn: (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
               testEditor.editor.root.focus()
-              testEditor.editor.setSelection(new Scribe.Range(testEditor.editor, testStart, testEnd))
+              testEditor.setSelection(new Scribe.Range(testEditor.editor, testStart, testEnd))
               test.fn.call(null, testEditor)
           )
         )

@@ -81,7 +81,7 @@ _trackDelta = (fn, options) ->
   fn()
   newDelta = @doc.toDelta()
   try
-    newIndex = @selection.getRange()?.start.index     # this.getSelection() triggers infinite loop
+    newIndex = @selection.getRange()?.start.index
     if oldIndex? and newIndex? and oldIndex <= @delta.endLength and newIndex <= newDelta.endLength
       [oldLeftDelta, oldRightDelta] = @delta.split(oldIndex)
       [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
@@ -225,12 +225,6 @@ class ScribeEditor extends EventEmitter2
 
   getDelta: ->
     return @delta
-
-  getSelection: ->
-    return @selection.getRange()
-
-  setSelection: (range, silent = false) ->
-    @selection.setRange(range, silent)
 
   update: ->
     if @innerHTML != @root.innerHTML

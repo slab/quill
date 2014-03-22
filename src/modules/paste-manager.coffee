@@ -20,7 +20,7 @@ class ScribePasteManager
   initListeners: ->
     ScribeDOM.addEventListener(@editorContainer.ownerDocument, 'paste', =>
       oldDocLength = @scribe.getLength()
-      range = @scribe.editor.getSelection()
+      range = @scribe.getSelection()
       return unless range?
       @container.innerHTML = ""
       @container.focus()
@@ -36,7 +36,7 @@ class ScribePasteManager
         delta.startLength = oldDocLength
         @scribe.editor.applyDelta(delta, { source: 'user' })
         @editorContainer.focus()
-        @scribe.editor.setSelection(new ScribeRange(@scribe.editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
+        @scribe.setSelection(new ScribeRange(@scribe.editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
       )
     )
 

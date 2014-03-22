@@ -108,6 +108,9 @@ class Scribe extends EventEmitter2
   getModule: (name) ->
     return @theme.modules[name]
 
+  getSelection: ->
+    return @editor.selection.getRange()
+
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
@@ -124,8 +127,16 @@ class Scribe extends EventEmitter2
   setHTML: (html) ->
     @editor.root.innerHTML = html
 
+  setSelection: (range, options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
+    @editor.selection.setRange(range, options.silent)
+
   updateContents: (delta) ->
     @editor.applyDelta(delta)
+
+  updateSelection: (options = {}) ->
+    options = _.defaults(options, DEFAULT_API_OPTIONS)
+    @editor.selection.update(options.silent)
 
 
 module.exports = Scribe
