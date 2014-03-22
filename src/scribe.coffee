@@ -74,6 +74,9 @@ class Scribe extends EventEmitter2
       )
     )
 
+  addContainer: (className, before = false) ->
+    @editor.renderer.addContainer(className, before)
+
   addModule: (name, options) ->
     return @theme.addModule(name, options)
 

@@ -54,9 +54,12 @@ class ScribeRenderer extends EventEmitter2
     # Ensure user specified styles are added last
     _.defer(this.addStyles.bind(this, @options.styles)) if options.styles?
 
-  addContainer: (container, before = false) ->
+  addContainer: (className, before = false) ->
     refNode = if before then @root else null
+    container = @root.ownerDocument.createElement('div')
+    ScribeDOM.addClass(container, className)
     @root.parentNode.insertBefore(container, refNode)
+    return container
 
   addStyles: (css) ->
     style = @root.ownerDocument.createElement('style')

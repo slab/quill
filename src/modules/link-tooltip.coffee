@@ -72,8 +72,8 @@ initListeners = ->
   )
 
 initTooltip = ->
-  @tooltip = @editorContainer.ownerDocument.createElement('div')
-  ScribeDOM.addClass(@tooltip, 'link-tooltip-container')
+  @tooltip = @scribe.addContainer('link-tooltip-container')
+  hideTooltip.call(this)
   @tooltip.innerHTML =
    '<span class="title">Visit URL:</span>
     <a href="#" class="url" target="_blank" href="about:blank"></a>
@@ -109,8 +109,6 @@ initTooltip = ->
     '.link-tooltip-container.editing .url'    : { 'display': 'none' }
     '.link-tooltip-container.editing .change' : { 'display': 'none' }
   )
-  hideTooltip.call(this)
-  _.defer(@scribe.editor.renderer.addContainer.bind(@scribe.editor.renderer, @tooltip))
 
 normalizeUrl = (url) ->
   url = 'http://' + url unless /^https?:\/\//.test(url)

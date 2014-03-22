@@ -78,11 +78,9 @@ class ScribeMultiCursor extends EventEmitter2
 
   constructor: (@scribe, @editorContainer, @options) ->
     @cursors = {}
-    @container = @editorContainer.ownerDocument.createElement('div')
-    @container.id = 'cursor-container'
-    @scribe.editor.renderer.addContainer(@container, true)
+    @container = @scribe.addContainer('cursor-container', true)
     @scribe.addStyles(
-      '#cursor-container': { 'position': 'absolute', 'z-index': '1000' }
+      '.cursor-container': { 'position': 'absolute', 'z-index': '1000' }
       '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
       '.cursor-flag':
         'bottom': '100%'
