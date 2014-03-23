@@ -25,14 +25,14 @@ class ScribePasteManager
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
-        doc = new ScribeDocument(@container, @scribe.editor.options)
+        doc = new ScribeDocument(@container, @scribe.options)
         delta = doc.toDelta()
         lengthAdded = delta.endLength
         delta.ops.unshift(new Tandem.RetainOp(0, range.start.index)) if range.start.index > 0
         delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength)) if range.end.index < oldDocLength
         delta.endLength += (@scribe.getLength() - (range.end.index - range.start.index))
         delta.startLength = oldDocLength
-        @scribe.editor.applyDelta(delta, { source: 'user' })
+        @scribe.updateContents(delta, { source: 'user' })
         @scribe.focus()
         @scribe.setSelection(new ScribeRange(@scribe.editor, range.start.index + lengthAdded, range.start.index + lengthAdded))
       )

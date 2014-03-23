@@ -55,10 +55,10 @@ _onTab = (range, shift = false) ->
     offsetChange = 0
     _.each(lines, (line) =>
       if !shift
-        @scribe.editor.insertAt(index, '\t', {}, { source: 'user' })
+        @scribe.insertText(index, '\t', {}, { source: 'user' })
         offsetChange += 1
       else if line.leaves.first.text[0] == '\t'
-        @scribe.editor.deleteAt(index, 1, { source: 'user' })
+        @scribe.deleteText(index, 1, { source: 'user' })
         offsetChange -= 1
       else if line == lines[0]
         start = range.start.index
@@ -118,7 +118,7 @@ class ScribeKeyboard
       else
         indent = false
       index = Position.getIndex(line.node, 0)
-      @scribe.editor.formatAt(index, 0, format, indent)
+      @scribe.formatText(index, 0, format, indent)
 
     _.each(lines, (line) =>
       if line.formats.bullet?

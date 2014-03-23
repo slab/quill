@@ -38,7 +38,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     this.onModuleLoad('toolbar', this.extendToolbar.bind(this))
 
   extendLinkTooltip: (module) ->
-    @editor.renderer.addStyles(
+    @scribe.addStyles(
       '.snow a':
         'color': '#06c'
       '.snow .link-tooltip-container':
@@ -54,7 +54,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     )
 
   extendMultiCursor: (module) ->
-    @editor.renderer.addStyles(
+    @scribe.addStyles(
       '.snow .cursor-name':
         'border-radius': '4px'
         'font-size': '11px'

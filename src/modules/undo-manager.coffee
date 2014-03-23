@@ -29,7 +29,7 @@ _change = (source, dest) ->
     change = @stack[source].pop()
     @lastRecorded = 0
     _ignoreChanges.call(this, =>
-      @scribe.editor.applyDelta(change[source], { source: 'user' })
+      @scribe.updateContents(change[source], { source: 'user' })
       index = getLastChangeIndex(change[source])
       @scribe.setSelection(new ScribeRange(@scribe.editor, index, index))
     )
@@ -66,14 +66,14 @@ class ScribeUndoManager
     @ignoringChanges = false
     @scribe.editor.on(@scribe.editor.constructor.events.TEXT_CHANGE, (delta, origin) =>
       this.record(delta, @oldDelta) unless @ignoringChanges and origin == 'user'
-      @oldDelta = @scribe.editor.getDelta()
+      @oldDelta = @scribe.getContents()
     )
 
   clear: ->
     @stack =
       undo: []
       redo: []
-    @oldDelta = @scribe.editor.getDelta()
+    @oldDelta = @scribe.getContents()
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity()

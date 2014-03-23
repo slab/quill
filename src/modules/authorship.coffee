@@ -35,7 +35,7 @@ class ScribeAuthorship
         , (index, length, name, value) =>
           authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))
         )
-        @scribe.editor.applyDelta(authorDelta, { silent: true })
+        @scribe.updateContents(authorDelta, { silent: true })
     )
     this.addAuthor(@options.authorId, @options.color)
 
