@@ -4,6 +4,7 @@ es5shim       = require('es5-shim')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 ScribeEditor  = require('./editor')
+ScribeRange   = require('./range')
 Tandem        = require('tandem-core')
 
 Modules =
@@ -131,7 +132,12 @@ class Scribe extends EventEmitter2
   setHTML: (html) ->
     @editor.root.innerHTML = html
 
-  setSelection: (range, options = {}) ->
+  setSelection: (start, end, options = {}) ->
+    if _.isNumber(start) and _.isNumber(end)
+      range = new ScribeRange(@editor, start, end)
+    else
+      range = start
+      options = end or {}
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     @editor.selection.setRange(range, options.silent)
 

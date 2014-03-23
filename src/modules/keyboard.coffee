@@ -2,7 +2,6 @@ _               = require('lodash')
 ScribeDOM       = require('../dom')
 ScribeLine      = require('../line')
 ScribePosition  = require('../position')
-ScribeRange     = require('../range')
 
 
 _initDeletes = ->
@@ -65,11 +64,11 @@ _onTab = (range, shift = false) ->
       index += line.length
     )
     end = range.end.index + offsetChange
-    @scribe.setSelection(new ScribeRange(@scribe.editor, start, end))
+    @scribe.setSelection(start, end)
   else
     range.deleteContents({ source: 'user' })
     range.insertContents(0, "\t", {}, { source: 'user' })
-    @scribe.setSelection(new ScribeRange(@scribe.editor, range.start.index + 1, range.start.index + 1))
+    @scribe.setSelection(range.start.index + 1, range.start.index + 1)
 
 
 class ScribeKeyboard

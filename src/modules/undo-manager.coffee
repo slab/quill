@@ -31,7 +31,7 @@ _change = (source, dest) ->
     _ignoreChanges.call(this, =>
       @scribe.updateContents(change[source], { source: 'user' })
       index = getLastChangeIndex(change[source])
-      @scribe.setSelection(new ScribeRange(@scribe.editor, index, index))
+      @scribe.setSelection(index, index)
     )
     @stack[dest].push(change)
 
