@@ -93,10 +93,10 @@ _updateFocus = (silent) ->
         clearTimeout(@blurTimer)
         @blurTimer = null
       else
-        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, true)
+        @emitter.emit(@emitter.constructor.events.FOCUS_CHANGE, true)
     else if !@blurTimer?
       @blurTimer = setTimeout( =>
-        @editor.emit(@editor.constructor.events.FOCUS_CHANGE, false)  if @hasFocus == false
+        @emitter.emit(@emitter.constructor.events.FOCUS_CHANGE, false)  if @hasFocus == false
         @blurTimer = null
       , 200)
   @hasFocus = hasFocus
