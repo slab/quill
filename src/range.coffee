@@ -11,16 +11,6 @@ class ScribeRange
     @start = new ScribePosition(@editor, @start) if _.isNumber(@start)
     @end = new ScribePosition(@editor, @end) if _.isNumber(@end)
 
-  deleteContents: (options)->
-    return if this.isCollapsed()
-    @editor.deleteAt(@start.index, @end.index - @start.index, options)
-
-  insertContents: (offset, text, formats, options) ->
-    @editor.insertAt(@start.index + offset, text, formats, options)
-
-  format: (name, value, options) ->
-    @editor.formatAt(@start.index, @end.index - @start.index, name, value, options)
-
   equals: (range) ->
     return false unless range?
     return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset

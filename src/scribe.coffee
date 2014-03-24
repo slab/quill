@@ -23,15 +23,21 @@ Themes =
 
 DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 
-
-buildFormats = (name, value, options) ->
-  if _.isString(name)
+# fn(Number index, Number length, String name, String value, Object options = {})
+# fn(Number index, Number length, Object formats, Object options = {})
+# fn(Object range, String name, String value, Object options = {})
+# fn(Object range, Object formats, Object options = {})
+buildParams = (params...) ->
+  if _.isObject(params[0])
+    index = params[0].start.getIndex()
+    length = params[0].end.getIndex() - index
+    params.splice(0, 1, index, length)
+  if _.isString(params[2])
     formats = {}
-    formats[name] = value
-  else
-    formats = if _.isObject(name) then name else {}
-    options = if _.isObject(value) then value else {}
-  return [formats, options]
+    formats[params[2]] = params[3]
+    params.splice(2, 2, formats)
+  params[3] = _.defaults(params[3] or {}, DEFAULT_API_OPTIONS)
+  return params
 
 
 class Scribe extends EventEmitter2
@@ -95,8 +101,8 @@ class Scribe extends EventEmitter2
   focus: ->
     @editor.root.focus()
 
-  formatText: (index, length, name, value, options = {}) ->
-    [formats, options] = buildFormats(name, value, options)
+  formatText: (index, length, name, value, options) ->
+    [index, length, formats, options] = buildParams(index, length, name, value, options)
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
     @editor.applyDelta(delta, options)
 
@@ -122,7 +128,7 @@ class Scribe extends EventEmitter2
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
   insertText: (index, text, name, value, options = {}) ->
-    [formats, options] = buildFormats(name, value, options)
+    [index, length, formats, options] = buildParams(index, 0, name, value, options)
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta, options)
 
@@ -131,6 +137,11 @@ class Scribe extends EventEmitter2
     delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)
     delta.startLength = this.getLength()
     @editor.applyDelta(delta, options)
+
+  setFormat: (name, value) ->
+    format = @editor.doc.formatManager.formats[name]
+    throw new Error("Unsupported format #{name} #{value}") unless format?
+    format.preformat(value)
 
   setHTML: (html) ->
     @editor.root.innerHTML = html

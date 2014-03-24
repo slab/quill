@@ -24,7 +24,7 @@ exitEditMode = ->
 
 formatLink = (value) ->
   @scribe.setSelection(@savedRange, { silent: true })
-  @savedRange.format('link', value, { source: 'user' })
+  @scribe.formatText(@savedRange, 'link', value, { source: 'user' })
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'

@@ -60,7 +60,10 @@ class ScribeToolbar
         if ScribeUtils.isIE(8)
           @editorContainer.focus()
           @scribe.setSelection(range)
-        range.format(format, value, { source: 'user' })
+        if range.isCollapsed()
+          @scribe.setFormat(format, value)
+        else
+          @scribe.formatText(range, format, value, { source: 'user' })
       activeFormats = {}
       activeFormats[format] = value
       this.updateActive(activeFormats)

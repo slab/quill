@@ -70,11 +70,6 @@ _insertAt = (index, text, formatting = {}) ->
     )
   )
 
-_preformat = (name, value) ->
-  format = @doc.formatManager.formats[name]
-  throw new Error("Unsupported format #{name} #{value}") unless format?
-  format.preformat(value)
-
 _trackDelta = (fn, options) ->
   oldIndex = @savedRange?.start.index
   fn()
@@ -189,22 +184,6 @@ class ScribeEditor
     @ignoreDomChanges = true
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
-
-  insertAt: (index, text, formats, options = {}) ->
-    delta = Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formats)
-    this.applyDelta(delta, options)
-
-  deleteAt: (index, length, options = {}) ->
-    delta = Tandem.Delta.makeDeleteDelta(@delta.endLength, index, length)
-    this.applyDelta(delta, options)
-
-  formatAt: (index, length, name, value, options = {}) ->
-    if length > 0
-      attribute = {}
-      attribute[name] = value
-      this.applyDelta(Tandem.Delta.makeRetainDelta(@delta.endLength, index, length, attribute), options)
-    else
-      _preformat.call(this, name, value)
 
   getDelta: ->
     return @delta

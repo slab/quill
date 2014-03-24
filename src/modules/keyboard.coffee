@@ -66,9 +66,10 @@ _onTab = (range, shift = false) ->
     end = range.end.index + offsetChange
     @scribe.setSelection(start, end)
   else
-    range.deleteContents({ source: 'user' })
-    range.insertContents(0, "\t", {}, { source: 'user' })
-    @scribe.setSelection(range.start.index + 1, range.start.index + 1)
+    index = @range.start.getIndex()
+    @scribe.deleteText(@range, { source: 'user' })
+    @scribe.insertText(index, "\t", {}, { source: 'user' })
+    @scribe.setSelection(index + 1, index + 1)
 
 
 class ScribeKeyboard
@@ -131,7 +132,7 @@ class ScribeKeyboard
   toggleFormat: (range, format) ->
     formats = range.getFormats()
     value = !formats[format]
-    range.format(format, value, { source: 'user' })
+    @scribe.formatText(range, format, value, { source: 'user' })
 
 
 module.exports = ScribeKeyboard
