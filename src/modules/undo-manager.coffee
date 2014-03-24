@@ -64,7 +64,7 @@ class ScribeUndoManager
       )
     )
     @ignoringChanges = false
-    @scribe.editor.on(@scribe.editor.constructor.events.TEXT_CHANGE, (delta, origin) =>
+    @scribe.on(@scribe.constructor.events.TEXT_CHANGE, (delta, origin) =>
       this.record(delta, @oldDelta) unless @ignoringChanges and origin == 'user'
       @oldDelta = @scribe.getContents()
     )

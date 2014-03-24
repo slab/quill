@@ -1,8 +1,8 @@
-_                 = require('lodash')
-EventEmitter2     = require('eventemitter2').EventEmitter2
-ScribeDOM         = require('./dom')
-ScribeUtils       = require('./utils')
-ScribeNormalizer  = require('./normalizer')
+_                = require('lodash')
+ScribeDOM        = require('./dom')
+ScribeUtils      = require('./utils')
+ScribeNormalizer = require('./normalizer')
+
 
 DEFAULT_STYLES =
   'body':
@@ -38,17 +38,14 @@ _.each([1..9], (i) ->
 DEFAULT_STYLES['br'] = { 'display': 'none' } if ScribeUtils.isIE()
 
 
-class ScribeRenderer extends EventEmitter2
-  @events:
-    UPDATE: 'renderer-update'
-
+class ScribeRenderer
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
       innerStr = _.map(value, (innerValue, innerKey) -> return "#{innerKey}: #{innerValue};" ).join(' ')
       return "#{key} { #{innerStr} }"
     ).join("\n")
 
-  constructor: (@container, @options = {}) ->
+  constructor: (@container, @emitter, @options = {}) ->
     this.buildFrame()
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added last
@@ -72,7 +69,7 @@ class ScribeRenderer extends EventEmitter2
     # Firefox needs defer
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
-      this.emit(ScribeRenderer.events.UPDATE, css)
+      @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css)
       ScribeDOM.addClass(@container, 'sc-container')
     )
 

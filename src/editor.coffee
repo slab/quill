@@ -1,14 +1,13 @@
-_                   = require('lodash')
-EventEmitter2       = require('eventemitter2').EventEmitter2
-ScribeDOM           = require('./dom')
-ScribeDocument      = require('./document')
-ScribeLine          = require('./line')
-ScribeLogger        = require('./logger')
-ScribeNormalizer    = require('./normalizer')
-ScribeRenderer      = require('./renderer')
-ScribeSelection     = require('./selection')
-ScribeUtils         = require('./utils')
-Tandem              = require('tandem-core')
+_                = require('lodash')
+ScribeDOM        = require('./dom')
+ScribeDocument   = require('./document')
+ScribeLine       = require('./line')
+ScribeLogger     = require('./logger')
+ScribeNormalizer = require('./normalizer')
+ScribeRenderer   = require('./renderer')
+ScribeSelection  = require('./selection')
+ScribeUtils      = require('./utils')
+Tandem           = require('tandem-core')
 
 
 _deleteAt = (index, length) ->
@@ -125,23 +124,13 @@ _update = ->
   return if delta.isIdentity() then false else delta
 
 
-class ScribeEditor extends EventEmitter2
-  @editors: []
-
-  @events:
-    FOCUS_CHANGE     : 'focus-change'
-    POST_EVENT       : 'post-event'
-    PRE_EVENT        : 'pre-event'
-    SELECTION_CHANGE : 'selection-change'
-    TEXT_CHANGE      : 'text-change'
-
-
+class ScribeEditor
   constructor: (@iframeContainer, @scribe, @options = {}) ->
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     @logger = new ScribeLogger(this, @options.logLevel)
     this.init()
     setInterval(this.checkUpdate.bind(this), @options.pollInterval)
-    this.on(ScribeEditor.events.SELECTION_CHANGE, (range) =>
+    @scribe.on(@scribe.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
     this.enable() unless @options.readOnly
@@ -158,12 +147,12 @@ class ScribeEditor extends EventEmitter2
 
   init: ->
     @ignoreDomChanges = true
-    @renderer = new ScribeRenderer(@iframeContainer, @options)
+    @renderer = new ScribeRenderer(@iframeContainer, @scribe, @options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
     @doc = new ScribeDocument(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new ScribeSelection(this)
+    @selection = new ScribeSelection(this, @scribe)
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->
@@ -181,9 +170,9 @@ class ScribeEditor extends EventEmitter2
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
         unless options.silent
-          this.emit(ScribeEditor.events.TEXT_CHANGE, delta, options.source)
+          @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, delta, options.source)
       if localDelta and !localDelta.isIdentity()
-        this.emit(ScribeEditor.events.TEXT_CHANGE, localDelta, 'user')
+        @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, localDelta, 'user')
       @innerHTML = @root.innerHTML
     )
 
@@ -192,7 +181,7 @@ class ScribeEditor extends EventEmitter2
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta, 'user')
+      @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, delta, 'user')
     @selection.update(delta != false)
 
   doSilently: (fn) ->
@@ -200,12 +189,6 @@ class ScribeEditor extends EventEmitter2
     @ignoreDomChanges = true
     fn()
     @ignoreDomChanges = oldIgnoreDomChange
-
-  emit: (eventName, args...) ->
-    super(ScribeEditor.events.PRE_EVENT, eventName, args...)
-    @logger.info(eventName, args...) if _.indexOf(_.values(ScribeEditor.events), eventName) > -1
-    super(eventName, args...)
-    super(ScribeEditor.events.POST_EVENT, eventName, args...)
 
   insertAt: (index, text, formats, options = {}) ->
     delta = Tandem.Delta.makeInsertDelta(@delta.endLength, index, text, formats)

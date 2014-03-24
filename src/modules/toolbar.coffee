@@ -29,8 +29,8 @@ class ScribeToolbar
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     _initFormats.call(this)
-    @scribe.editor.on(@scribe.editor.constructor.events.POST_EVENT, (eventName) =>
-      return unless eventName == @scribe.editor.constructor.events.TEXT_CHANGE or eventName == @scribe.editor.constructor.events.SELECTION_CHANGE
+    @scribe.on(@scribe.constructor.events.POST_EVENT, (eventName) =>
+      return unless eventName == @scribe.constructor.events.TEXT_CHANGE or eventName == @scribe.constructor.events.SELECTION_CHANGE
       this.updateActive()
     )
     _.defer(ScribeDOM.addClass.bind(this, @container, 'sc-toolbar-container'))

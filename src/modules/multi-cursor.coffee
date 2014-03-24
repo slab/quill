@@ -98,7 +98,7 @@ class ScribeMultiCursor extends EventEmitter2
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
       '.cursor.right > .cursor-flag': { 'right': '-2px' }
     )
-    @scribe.editor.renderer.on(ScribeRenderer.events.UPDATE, =>
+    @scribe.on(@scribe.constructor.events.RENDER_UPDATE, =>
       _.defer( =>
         @container.style.top = @editorContainer.offsetTop + 'px'
         @container.style.left = @editorContainer.offsetLeft  + 'px'

@@ -103,7 +103,7 @@ _updateFocus = (silent) ->
 
 
 class ScribeSelection
-  constructor: (@editor) ->
+  constructor: (@editor, @emitter) ->
     @range = null
     @blurTimer = null
     rangy.init()
@@ -172,7 +172,7 @@ class ScribeSelection
       @range = nativeRange
     else
       @range = null
-    @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
+    @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range) unless silent
 
   update: (silent = false) ->
     _updateFocus.call(this, silent)
@@ -184,7 +184,7 @@ class ScribeSelection
       if ScribeUtils.isEmptyDoc(@editor.root)
         this.setRange(range, silent)
       else
-        @editor.emit(@editor.constructor.events.SELECTION_CHANGE, range) unless silent
+        @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range) unless silent
 
 
 module.exports = ScribeSelection

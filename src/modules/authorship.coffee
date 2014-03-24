@@ -15,8 +15,8 @@ class ScribeAuthorship
     this.enable() if @options.enabled
     @scribe.editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editorContainer, 'author'))
     return unless @options.authorId?
-    @scribe.editor.on(@scribe.editor.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
-      if eventName == @scribe.editor.constructor.events.TEXT_CHANGE and origin == 'user'
+    @scribe.on(@scribe.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
+      if eventName == @scribe.constructor.events.TEXT_CHANGE and origin == 'user'
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0

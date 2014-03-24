@@ -56,6 +56,9 @@ class Scribe extends EventEmitter2
   @events:
     FOCUS_CHANGE     : 'focus-change'
     MODULE_INIT      : 'module-init'
+    POST_EVENT       : 'post-event'
+    PRE_EVENT        : 'pre-event'
+    RENDER_UPDATE    : 'renderer-update'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
@@ -68,12 +71,6 @@ class Scribe extends EventEmitter2
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Scribe.Theme[themeClass](this, @options)
     @theme.init()   # Separate init since some module constructors refer to @theme
-    # TODO We should not just be a passthrough
-    _.each(ScribeEditor.events, (eventName) =>
-      @editor.on(eventName, (args...) =>
-        this.emit(eventName, args...)
-      )
-    )
 
   addContainer: (className, before = false) ->
     @editor.renderer.addContainer(className, before)
@@ -88,6 +85,12 @@ class Scribe extends EventEmitter2
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
     @editor.applyDelta(delta, options)
+
+  emit: (eventName, args...) ->
+    super(Scribe.events.PRE_EVENT, eventName, args...)
+    @editor.logger.info(eventName, args...) if _.indexOf(_.values(Scribe.events), eventName) > -1
+    super(eventName, args...)
+    super(Scribe.events.POST_EVENT, eventName, args...)
 
   focus: ->
     @editor.root.focus()
