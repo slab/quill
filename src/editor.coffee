@@ -16,17 +16,17 @@ _deleteAt = (index, length) ->
     [firstLine, offset] = @doc.findLineAtOffset(index)
     curLine = firstLine
     while curLine? and length > 0
-      deleteLength = Math.min(length, curLine.length - offset)
+      deleteLength = Math.min(length, curLine.length - offset + 1)
       nextLine = curLine.next
-      if curLine.length == deleteLength
+      if deleteLength <= curLine.length
+        curLine.deleteText(offset, deleteLength)
+      else
         ScribeDOM.removeNode(curLine.node)
         @doc.removeLine(curLine)
-      else
-        curLine.deleteText(offset, deleteLength)
       length -= deleteLength
       curLine = nextLine
       offset = 0
-    @doc.mergeLines(firstLine, firstLine.next) if firstLine?
+    @doc.mergeLines(firstLine, firstLine.next) if firstLine?.next != nextLine
   )
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
