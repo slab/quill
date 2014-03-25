@@ -55,7 +55,7 @@ Instantiate a new Scribe object with a css selector for the div that should beco
     grunt test:karma - allows you to visit localhost:9876/debug.html for interactive testing
     grunt test:local - run tests with locally installed browsers
     grunt test:remote - run tests on supported platforms on Sauce Labs
-    grunt test:exhaust - run exhaustive test suite (used to create unit tests) on PhantomJS
+    grunt test:exhaust - run exhaustive test suite (used to create tests) on PhantomJS
 
 You can use mocha's grep feature to run specific tests ex.
 

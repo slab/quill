@@ -12,7 +12,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('default', ['clean', 'copy', 'concurrent:template', 'concurrent:browserify', 'uglify', 'concat'])
 
-  grunt.registerTask('test', ['karma:unit'])
+  grunt.registerTask('test', ['karma:functional'])
   grunt.registerTask('test:karma', ['karma:karma'])
   grunt.registerTask('test:exhaust', ['karma:exhaust'])
   grunt.registerTask('test:local', ['karma:local'])
