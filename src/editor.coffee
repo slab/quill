@@ -129,13 +129,11 @@ class ScribeEditor
     this.enable() unless @options.readOnly
 
   disable: ->
-    this.doSilently( =>
-      @root.setAttribute('contenteditable', false)
-    )
+    this.enable(false)
 
-  enable: ->
+  enable: (enabled = true) ->
     this.doSilently( =>
-      @root.setAttribute('contenteditable', true)
+      @root.setAttribute('contenteditable', enabled)
     )
 
   init: ->
