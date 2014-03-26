@@ -33,7 +33,7 @@ describe('Document', ->
         initial:  ['<div><span>0123</span></div>']
         expected: Tandem.Delta.getInitial('0123')
       'blank':
-        initial:  ['']
+        initial:  ['<div><span></span></div>']
         expected: Tandem.Delta.getInitial('')
       'empty break':
         initial:  ['<div><br></div>']

@@ -180,12 +180,12 @@ describe('Normalize', ->
 
     docTest.run('empty string',
       initial:  ['']
-      expected: [0]
+      expected: ['<div><span></span></div>']
     )
 
     docTest.run('empty span',
       initial:  ['<div><span></span></div>']
-      expected: ['<div><br></div>']
+      expected: [0]
     )
 
     docTest.run('lone break',
