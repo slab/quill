@@ -198,6 +198,22 @@ describe('Normalize', ->
       expected: [0]
     )
 
+    docTest.run('correct trailing newline',
+      initial:  [
+        '<div><span>Test</span></div>'
+        '<div><br></div>'
+      ]
+      expected: [0, 1]
+    )
+
+    docTest.run('correct multiline',
+      initial:  [
+        '<div><span>One</span></div>'
+        '<div><span>Two</span></div>'
+      ]
+      expected: [0, 1]
+    )
+
     docTest.run('handle nonstandard block tags',
       initial: [
         '<h1>
