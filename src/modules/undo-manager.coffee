@@ -53,7 +53,7 @@ class ScribeUndoManager
     this.initListeners()
 
   initListeners: ->
-    @scribe.theme.onModuleLoad('keyboard', (keyboard) =>
+    @scribe.onModuleLoad('keyboard', (keyboard) =>
       keyboard.addHotkey(keyboard.constructor.hotkeys.UNDO, =>
         this.undo()
         return false

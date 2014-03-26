@@ -69,20 +69,34 @@ class Scribe extends EventEmitter2
     TEXT_CHANGE      : 'text-change'
 
   constructor: (container, options = {}) ->
+    moduleOptions = _.defaults(options.modules or {}, Scribe.DEFAULTS.modules)
     @options = _.defaults(options, Scribe.DEFAULTS)
+    @options.modules = moduleOptions
     @options.id = @id = "scribe-#{Scribe.editors.length + 1}"
     @options.emitter = this
+    @modules = {}
     @editor = new ScribeEditor(container, this, @options)
     Scribe.editors.push(@editor)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Scribe.Theme[themeClass](this, @options)
-    @theme.init()   # Separate init since some module constructors refer to @theme
+    _.each(@options.modules, (option, name) =>
+      this.addModule(name, option)
+    )
 
   addContainer: (className, before = false) ->
     @editor.renderer.addContainer(className, before)
 
   addModule: (name, options) ->
-    return @theme.addModule(name, options)
+    className = _.str.capitalize(_.str.camelize(name))
+    moduleClass = Scribe.Module[className]
+    unless moduleClass?
+      throw new Error("Cannot load #{name} module. Are you sure you included it?")
+    options = {} unless _.isObject(options)  # Allow for addModule('module', true)
+    options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
+    @editor.logger.debug('Initializing module', name, options)
+    @modules[name] = new moduleClass(this, @editor.root, options)
+    this.emit(Scribe.events.MODULE_INIT, name, @modules[name])
+    return @modules[name]
 
   addStyles: (styles) ->
     @editor.renderer.addStyles(styles)
@@ -119,7 +133,7 @@ class Scribe extends EventEmitter2
     return @editor.getDelta().endLength
 
   getModule: (name) ->
-    return @theme.modules[name]
+    return @modules[name]
 
   getSelection: ->
     return @editor.selection.getRange()
@@ -131,6 +145,12 @@ class Scribe extends EventEmitter2
     [index, length, formats, options] = buildParams(index, 0, name, value, options)
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta, options)
+
+  onModuleLoad: (name, callback) ->
+    if (@modules[name]) then return callback(@modules[name])
+    this.on(Scribe.events.MODULE_INIT, (moduleName, module) ->
+      callback(module) if moduleName == name
+    )
 
   setContents: (delta, options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)

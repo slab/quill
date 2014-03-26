@@ -27,15 +27,15 @@ class ScribeSnowTheme extends ScribeDefaultTheme
   constructor: (@scribe, options) ->
     super
     @pickers = []
-    @editor.on(@editor.constructor.events.SELECTION_CHANGE, =>
+    @scribe.on(@scribe.constructor.events.SELECTION_CHANGE, =>
       _.each(@pickers, (picker) ->
         picker.close()
       )
     )
     ScribeDOM.addClass(@editorContainer.parentNode, 'snow')
-    this.onModuleLoad('link-tooltip', this.extendLinkTooltip.bind(this))
-    this.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
-    this.onModuleLoad('toolbar', this.extendToolbar.bind(this))
+    @scribe.onModuleLoad('link-tooltip', this.extendLinkTooltip.bind(this))
+    @scribe.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
+    @scribe.onModuleLoad('toolbar', this.extendToolbar.bind(this))
 
   extendLinkTooltip: (module) ->
     @scribe.addStyles(

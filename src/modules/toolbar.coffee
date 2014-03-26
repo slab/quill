@@ -34,7 +34,7 @@ class ScribeToolbar
       this.updateActive()
     )
     _.defer(ScribeDOM.addClass.bind(this, @container, 'sc-toolbar-container'))
-    @scribe.theme.onModuleLoad('keyboard', (keyboard) =>
+    @scribe.onModuleLoad('keyboard', (keyboard) =>
       _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
         keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
           activeFormats = {}
