@@ -112,6 +112,7 @@ class ScribeNormalizer
 
   @normalizeHtml: (html) ->
     # Remove leading and tailing whitespace
+    # TODO why not use \s\s+
     html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
     # Remove whitespace between tags
     html = html.replace(/\>\s+\</g, '><')
@@ -120,7 +121,9 @@ class ScribeNormalizer
     return html
 
   @requireLeaf: (lineNode) ->
-    lineNode.appendChild(lineNode.ownerDocument.createElement('br')) if lineNode.childNodes.length == 0
+    if lineNode.childNodes.length == 0
+      tagName = if (lineNode.previousSibling? or lineNode.nextSibling?) then 'br' else 'span'
+      lineNode.appendChild(lineNode.ownerDocument.createElement(tagName))
 
   @wrapText: (lineNode) ->
     ScribeUtils.traversePreorder(lineNode, 0, (node) =>
@@ -156,6 +159,7 @@ class ScribeNormalizer
   normalizeDoc: ->
     this.applyRules(@container)
     ScribeNormalizer.breakBlocks(@container)
+    @container.appendChild(@container.ownerDocument.createElement('div')) if @container.childNodes.length == 0
     _.each(ScribeDOM.getChildNodes(@container), (lineNode) =>
       this.normalizeLine(lineNode)
     )
@@ -195,7 +199,10 @@ class ScribeNormalizer
       parentAttributes = attributes[_.indexOf(nodes, node.parentNode)]
       redundant = do (node) =>
         return false unless node.nodeType == ScribeDOM.ELEMENT_NODE
-        return node.tagName != 'BR' or node.parentNode.childNodes.length > 1 if ScribeUtils.getNodeLength(node) == 0
+        if ScribeUtils.getNodeLength(node) == 0
+          return false if node.tagName == 'BR' and !node.previousSibling? and !node.nextSibling?
+          return false if node.tagName == 'SPAN' and node.parentNode == lineNode and !lineNode.previousSibling? and !lineNode.nextSibling?
+          return true
         # Parent format value will overwrite child's so no need to check formatValue
         return parentAttributes[formatName]? if formatName?
         return false unless node.tagName == 'SPAN'

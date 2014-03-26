@@ -1,4 +1,4 @@
-describe('Normalize', ->
+describe('Normalizer', ->
   describe('statics', ->
     describe('breakLine', ->
       initials =
