@@ -1,5 +1,6 @@
 _           = require('lodash')
 ScribeDOM   = require('./dom')
+ScribeNormalizer = require('./normalizer')
 ScribeUtils = require('./utils')
 
 
@@ -77,6 +78,16 @@ ScribeDebug =
       throw e
       return false
     return true
+
+  compareHtml: (html1, html2) ->
+    return ScribeDebug.stripClassId(html1) == ScribeDebug.stripClassId(html2)
+
+  stripClassId: (html) ->
+    html = Scribe.Normalizer.normalizeHtml(html)
+    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
+    html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
+    html = html.replace(/\ (class|id)=[a-z0-9\-_]+>/gi, '>')
+    return html
 
 
 module.exports = ScribeDebug

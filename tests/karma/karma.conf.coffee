@@ -54,6 +54,7 @@ module.exports = (config) ->
       '../node_modules/jquery/dist/jquery.js'
       '../node_modules/lodash/lodash.js'
       '../node_modules/async/lib/async.js'
+      '../node_modules/expect.js/index.js'
 
       'tests/mocha/fixture.html'
       'tests/karma/inject.js'

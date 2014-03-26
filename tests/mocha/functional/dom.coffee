@@ -1,6 +1,3 @@
-expect = require('expect.js')
-
-
 describe('DOM', ->
   it('removeAttributes', ->
     span = document.createElement('span')

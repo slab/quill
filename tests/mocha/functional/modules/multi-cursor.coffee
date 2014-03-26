@@ -1,5 +1,3 @@
-expect = require('expect.js')
-
 describe('Cursor', ->
   describe('basic operations', ->
     CURSOR_LEFT = [0, 0]

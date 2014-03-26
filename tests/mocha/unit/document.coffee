@@ -1,6 +1,4 @@
-expect = require('expect.js')
 Tandem = require('tandem-core')
-ScribeEditorTest = require('../lib/editor-test')
 
 
 describe('Document', ->
@@ -29,48 +27,51 @@ describe('Document', ->
     )
   )
 
-  # TODO add more cases, esp with double newlines
   describe('toDelta', ->
-    deltaTest = new ScribeEditorTest()
-    deltaTest.run('basic',
-      initial:  ['<div><span>0123</span></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0123")])
-    )
-    deltaTest.run('blank',
-      initial:  ['']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("")])
-    )
-    deltaTest.run('empty div',
-      initial:  ['<div></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n")])
-    )
-    deltaTest.run('empty span',
-      initial:  ['<div><span></span></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n")])
-    )
-    deltaTest.run('empty break',
-      initial:  ['<div><br></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n")])
-    )
-    deltaTest.run('two newlines',
-      initial:  ['<div><br></div>', '<div><br></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n\n")])
-    )
-    deltaTest.run('text and newline',
-      initial:  ['<div><span>0</span></div>', '<div><br></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0\n")])
-    )
-    deltaTest.run('newline and text',
-      initial:  ['<div><br></div>', '<div><span>0</span></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("\n0")])
-    )
-    deltaTest.run('text, newline, text',
-      initial:  ['<div><span>0</span></div>', '<div><span>1</span></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp("0\n1")])
-    )
-    deltaTest.run('format',
-      initial:  ['<div><b>0123</b></div>']
-      expected: new Tandem.Delta(0, [new Tandem.InsertOp('0123', {bold:true})])
+    tests =
+      'basic':
+        initial:  ['<div><span>0123</span></div>']
+        expected: Tandem.Delta.getInitial('0123')
+      'blank':
+        initial:  ['']
+        expected: Tandem.Delta.getInitial('')
+      'empty break':
+        initial:  ['<div><br></div>']
+        expected: Tandem.Delta.getInitial('\n')
+      'trailing newline':
+        initial:  ['<div><span>0</span></div>', '<div><br></div>']
+        expected: Tandem.Delta.getInitial('0\n')
+      'preceding newline':
+        initial:  ['<div><br></div>', '<div><span>0</span></div>']
+        expected: Tandem.Delta.getInitial('\n0')
+      'multiline':
+        initial:  ['<div><span>0</span></div>', '<div><span>1</span></div>']
+        expected: Tandem.Delta.getInitial('0\n1')
+      'double newline':
+        initial:  ['<div><br></div>', '<div><br></div>']
+        expected: Tandem.Delta.getInitial('\n\n')
+      'double preceding newline':
+        initial:  ['<div><br></div>', '<div><br></div>', '<div><span>0</span></div>']
+        expected: Tandem.Delta.getInitial('\n\n0')
+      'double trailing newline':
+        initial:  ['<div><span>0</span></span>', '<div><br></div>', '<div><br></div>']
+        expected: Tandem.Delta.getInitial('0\n\n')
+      'multiline with double newline':
+        initial:  ['<div><span>0</span></div>', '<div><br></div>', '<div><span>1</span></div>']
+        expected: Tandem.Delta.getInitial('0\n\n1')
+      'format':
+        initial:  ['<div><b>0123</b></div>']
+        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { bold:true })
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        $container = $('#test-container').html(test.initial.join(''))
+        doc = new Scribe.Document($container.get(0))
+        delta = doc.toDelta()
+        if !delta.isEqual(test.expected)
+          console.error(doc, delta, test.expected)
+          throw new Error('Unequal deltas')
+      )
     )
   )
 )

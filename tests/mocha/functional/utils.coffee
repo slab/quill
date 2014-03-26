@@ -1,4 +1,3 @@
-expect = require('expect.js')
 ScribeHtmlTest = require('../lib/html-test')
 
 

@@ -1,4 +1,3 @@
-expect = require('expect.js')
 Tandem = require('tandem-core')
 ScribeEditorTest = require('../../lib/editor-test')
 

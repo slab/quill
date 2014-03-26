@@ -1,4 +1,3 @@
-expect = require('expect.js')
 ScribeEditorTest = require('../lib/editor-test')
 
 

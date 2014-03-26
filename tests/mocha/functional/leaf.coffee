@@ -1,6 +1,3 @@
-expect = require('expect.js')
-
-
 describe('Leaf', ->
   it('Leaf Iterator', ->
     lines = [
