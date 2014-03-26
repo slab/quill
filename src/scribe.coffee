@@ -93,7 +93,6 @@ class Scribe extends EventEmitter2
       throw new Error("Cannot load #{name} module. Are you sure you included it?")
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
-    @editor.logger.debug('Initializing module', name, options)
     @modules[name] = new moduleClass(this, @editor.root, options)
     this.emit(Scribe.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
@@ -108,7 +107,6 @@ class Scribe extends EventEmitter2
 
   emit: (eventName, args...) ->
     super(Scribe.events.PRE_EVENT, eventName, args...)
-    @editor.logger.info(eventName, args...) if _.indexOf(_.values(Scribe.events), eventName) > -1
     super(eventName, args...)
     super(Scribe.events.POST_EVENT, eventName, args...)
 

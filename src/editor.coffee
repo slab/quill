@@ -2,7 +2,6 @@ _                = require('lodash')
 ScribeDOM        = require('./dom')
 ScribeDocument   = require('./document')
 ScribeLine       = require('./line')
-ScribeLogger     = require('./logger')
 ScribeNormalizer = require('./normalizer')
 ScribeRenderer   = require('./renderer')
 ScribeSelection  = require('./selection')
@@ -122,7 +121,6 @@ _update = ->
 class ScribeEditor
   constructor: (@iframeContainer, @scribe, @options = {}) ->
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
-    @logger = new ScribeLogger(this, @options.logLevel)
     this.init()
     setInterval(this.checkUpdate.bind(this), @options.pollInterval)
     @scribe.on(@scribe.constructor.events.SELECTION_CHANGE, (range) =>

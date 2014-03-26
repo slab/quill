@@ -48,12 +48,10 @@ class ScribeToolbar
   initFormat: (format, group) ->
     input = _findInput.call(this, format)
     return unless input?
-    @scribe.editor.logger.debug('Toolbar binding', format, input)
     if format == 'link' then return @scribe.addModule('link-tooltip', { button: input })
     eventName = if group == 'SELECT' then 'change' else 'click'
     ScribeDOM.addEventListener(input, eventName, =>
       return if @triggering
-      @scribe.editor.logger.debug('Toolbar event', eventName, format, input)
       value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'sc-active')
       range = @scribe.getSelection()
       if range?

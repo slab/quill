@@ -42,7 +42,6 @@ for num in [1, 2]
   $wrapper = $(".editor-wrapper.#{if num == 1 then 'first' else 'last'}")
   $container = $('.editor-container', $wrapper)
   editor = new Scribe($container.get(0), {
-    logLevel: 'info'
     modules:
       'multi-cursor': true
       'toolbar': {
