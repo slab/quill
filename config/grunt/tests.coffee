@@ -38,7 +38,7 @@ module.exports = (grunt) ->
     functional:
       browsers: ['PhantomJS']
     exhaust:
-      exclude: ['tests/mocha/functional.js']
+      exclude: ['tests/mocha/functional.js', 'tests/mocha/unit.js']
       browsers: ['PhantomJS']
     local:
       browsers: ['Chrome', 'Firefox', 'Safari']

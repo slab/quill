@@ -31,6 +31,7 @@ module.exports = (grunt) ->
       files: [{
         'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee']
         'build/tests/mocha/functional.js': ['tests/mocha/functional/**/*.coffee']
+        'build/tests/mocha/unit.js': ['tests/mocha/unit/**/*.coffee']
       }]
   )
 

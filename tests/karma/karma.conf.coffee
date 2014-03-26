@@ -61,6 +61,7 @@ module.exports = (config) ->
       'scribe.exposed.js'
 
       'tests/mocha/functional.js'
+      'tests/mocha/unit.js'
       'tests/mocha/editor.js'
     ]
     exclude: []
