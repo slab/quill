@@ -12,7 +12,9 @@ module.exports = (grunt) ->
 
   grunt.registerTask('default', ['clean', 'copy', 'concurrent:template', 'concurrent:browserify', 'uglify', 'concat'])
 
-  grunt.registerTask('test', ['karma:functional'])
+  grunt.registerTask('test', ['karma:test'])
+  grunt.registerTask('test:unit', ['karma:unit'])
+  grunt.registerTask('test:functional', ['karma:functional'])
   grunt.registerTask('test:karma', ['karma:karma'])
   grunt.registerTask('test:exhaust', ['karma:exhaust'])
   grunt.registerTask('test:local', ['karma:local'])
@@ -26,3 +28,4 @@ module.exports = (grunt) ->
   grunt.registerTask('test:replay firefox', ['shell:wd-firefox-replay'])
 
   grunt.registerTask('test:coverage', ['coffee:coverage', 'shell:instrument', 'browserify:exposed', 'karma:coverage', 'clean:coverage'])
+  grunt.registerTask('test:coverage:unit', ['coffee:coverage', 'shell:instrument', 'browserify:exposed', 'karma:coverage-unit', 'clean:coverage'])

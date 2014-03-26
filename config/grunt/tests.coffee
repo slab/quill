@@ -31,19 +31,25 @@ module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
       configFile: 'tests/karma/karma.conf.coffee'
+      browsers: ['PhantomJS']
       exclude: ['tests/mocha/editor.js']
     karma:
       autoWatch: true
       singleRun: false
-    functional:
+    test:
       browsers: ['PhantomJS']
+    unit:
+      exclude: ['tests/mocha/editor.js', 'tests/mocha/functional.js']
+    functional:
+      exclude: ['tests/mocha/editor.js', 'tests/mocha/unit.js']
     exhaust:
       exclude: ['tests/mocha/functional.js', 'tests/mocha/unit.js']
-      browsers: ['PhantomJS']
     local:
       browsers: ['Chrome', 'Firefox', 'Safari']
     coverage:
-      browsers: ['PhantomJS']
+      reporters: ['coverage']
+    'coverage-unit':
+      exclude: ['tests/mocha/editor.js', 'tests/mocha/functional.js']
       reporters: ['coverage']
   ))
 
