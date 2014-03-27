@@ -11,6 +11,7 @@ class ScribeLeaf extends LinkedList.Node
   @isLeafNode: (node) ->
     return false unless node?.nodeType == ScribeDOM.ELEMENT_NODE
     return true if node.tagName == 'BR'
+    return true if node.tagName == 'SPAN' and !node.firstChild?
     return true if node.childNodes.length == 1 and node.firstChild.nodeType == ScribeDOM.TEXT_NODE
     return false
 

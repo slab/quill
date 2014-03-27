@@ -34,7 +34,7 @@ ScribeUtils =
       node = node.parentNode
     return node
 
-  findClosestPoint: (point, list, prepFn = ->) ->    # Using Euclidien distance
+  findClosestPoint: (point, list, prepFn = ->) ->    # Using Euclidean distance
     point = prepFn.call(null, point)
     point = [point] if !_.isArray(point)
     closestDist = Infinity

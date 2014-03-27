@@ -101,7 +101,8 @@ class Scribe extends EventEmitter2
     @editor.renderer.addStyles(styles)
 
   deleteText: (index, length, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
+    [index, length, formats, options] = buildParams(index, length, {}, options)
+    return unless length > 0
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
     @editor.applyDelta(delta, options)
 
@@ -115,6 +116,7 @@ class Scribe extends EventEmitter2
 
   formatText: (index, length, name, value, options) ->
     [index, length, formats, options] = buildParams(index, length, name, value, options)
+    return unless length > 0
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
     @editor.applyDelta(delta, options)
 
@@ -141,6 +143,7 @@ class Scribe extends EventEmitter2
 
   insertText: (index, text, name, value, options = {}) ->
     [index, length, formats, options] = buildParams(index, 0, name, value, options)
+    return unless text.length > 0
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta, options)
 
