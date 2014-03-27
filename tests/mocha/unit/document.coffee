@@ -27,41 +27,45 @@ describe('Document', ->
     )
   )
 
+
   describe('toDelta', ->
     tests =
-      'basic':
-        initial:  ['<div><span>0123</span></div>']
-        expected: Tandem.Delta.getInitial('0123')
       'blank':
         initial:  ['<div><span></span></div>']
         expected: Tandem.Delta.getInitial('')
-      'empty break':
+      'single line':
+        initial:  ['<div><span>0123</span></div>']
+        expected: Tandem.Delta.getInitial('0123')
+      'single newline':
         initial:  ['<div><br></div>']
         expected: Tandem.Delta.getInitial('\n')
-      'trailing newline':
-        initial:  ['<div><span>0</span></div>', '<div><br></div>']
-        expected: Tandem.Delta.getInitial('0\n')
       'preceding newline':
         initial:  ['<div><br></div>', '<div><span>0</span></div>']
         expected: Tandem.Delta.getInitial('\n0')
-      'multiline':
+      'trailing newline':
+        initial:  ['<div><span>0</span></div>', '<div><br></div>']
+        expected: Tandem.Delta.getInitial('0\n')
+      'multiple lines':
         initial:  ['<div><span>0</span></div>', '<div><span>1</span></div>']
         expected: Tandem.Delta.getInitial('0\n1')
-      'double newline':
+      'multiple newlines':
         initial:  ['<div><br></div>', '<div><br></div>']
         expected: Tandem.Delta.getInitial('\n\n')
-      'double preceding newline':
+      'multiple preceding newlines':
         initial:  ['<div><br></div>', '<div><br></div>', '<div><span>0</span></div>']
         expected: Tandem.Delta.getInitial('\n\n0')
-      'double trailing newline':
-        initial:  ['<div><span>0</span></span>', '<div><br></div>', '<div><br></div>']
+      'multiple trailing newlines':
+        initial:  ['<div><span>0</span></div>', '<div><br></div>', '<div><br></div>']
         expected: Tandem.Delta.getInitial('0\n\n')
-      'multiline with double newline':
+      'lines separated by multiple newlines':
         initial:  ['<div><span>0</span></div>', '<div><br></div>', '<div><span>1</span></div>']
         expected: Tandem.Delta.getInitial('0\n\n1')
-      'format':
+      'tag format':
         initial:  ['<div><b>0123</b></div>']
-        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { bold:true })
+        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { bold: true })
+      'style format':
+        initial:  ['<div><span style="color: rgb(0, 255, 255);">0123</span></div>']
+        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { color: 'rgb(0, 255, 255)' })
 
     _.each(tests, (test, name) ->
       it(name, ->

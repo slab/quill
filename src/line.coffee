@@ -116,6 +116,9 @@ class ScribeLine extends LinkedList.Node
         this.formatText(offset, text.length, name, value)
       )
 
+  isNewline: ->
+    return @length == 0 and @leaves.length == 1 and @leaves.first.node.tagName == 'BR'
+
   rebuild: (force = false) ->
     if @node.parentNode == @doc.root
       return false if !force and @outerHTML? and @outerHTML == @node.outerHTML

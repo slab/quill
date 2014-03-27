@@ -82,15 +82,14 @@ class ScribeDocument
 
   toDelta: ->
     lines = @lines.toArray()
-    appendNewline = lines.length > 0
+    allNewlines = true
     ops = _.flatten(_.map(lines, (line) ->
-      appendNewline = false if line.length > 0
       ops = _.clone(line.delta.ops)
       ops.push(new Tandem.InsertOp("\n", line.formats)) if line.next?
+      allNewlines = allNewlines and line.isNewline()
       return ops
     ), true)
-    # TODO this is unintitive without going through the examples...
-    ops.push(new Tandem.InsertOp("\n", @lines.last.formats)) if appendNewline
+    ops.push(new Tandem.InsertOp("\n", @lines.last.formats)) if @lines.last? and allNewlines
     delta = new Tandem.Delta(0, ops)
     return delta
 
