@@ -111,8 +111,8 @@ ScribeDOM =
     # Credit: Tim Down - http://stackoverflow.com/questions/2023255/node-normalize-crashes-in-ie6
     child = node.firstChild
     while (child)
-      if (child.nodeType == 3)
-        while ((nextChild = child.nextSibling) && nextChild.nodeType == 3)
+      if (child.nodeType == ScribeDOM.TEXT_NODE)
+        while ((nextChild = child.nextSibling) && nextChild.nodeType == ScribeDOM.TEXT_NODE)
           child.appendData(nextChild.data)
           node.removeChild(nextChild)
       child = child.nextSibling

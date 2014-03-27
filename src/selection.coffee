@@ -162,8 +162,8 @@ class ScribeSelection
       _.each([range.start, range.end], (pos, i) ->
         [node, offset] = ScribeUtils.findDeepestNode(pos.leafNode, pos.offset)
         offset = Math.min(ScribeDOM.getText(node).length, offset)   # Should only occur at end of document
-        if node.tagName == 'BR'
-          node = node.parentNode if node.tagName == "BR"            # Firefox does not split BR, IE cannot select BR
+        if node.tagName == 'BR'             # Firefox does not split BR, IE cannot select BR
+          node = node.parentNode
           offset = 1 if ScribeUtils.isIE()
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)

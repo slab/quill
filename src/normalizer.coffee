@@ -4,7 +4,7 @@ ScribeUtils = require('./utils')
 
 
 class ScribeNormalizer
-  # Missing rule implies removal
+  # Missing tag rule implies removal, ex. SCRIPT is missing from list
   @TAG_RULES:
     'A'         : {}
     'ADDRESSS'  : {rename: 'div'}
@@ -112,8 +112,7 @@ class ScribeNormalizer
 
   @normalizeHtml: (html) ->
     # Remove leading and tailing whitespace
-    # TODO why not use \s\s+
-    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
     # Remove whitespace between tags
     html = html.replace(/\>\s+\</g, '><')
     # Standardize br
