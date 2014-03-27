@@ -64,13 +64,13 @@ describe('Document', ->
         initial:  ['<div><b>0123</b></div>']
         expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { bold: true })
       'style format':
-        initial:  ['<div><span style="color: rgb(0, 255, 255);">0123</span></div>']
-        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { color: 'rgb(0, 255, 255)' })
+        initial:  ['<div><span style="color: teal;">0123</span></div>']
+        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { 'fore-color': 'teal' })
 
     _.each(tests, (test, name) ->
       it(name, ->
         $container = $('#test-container').html(test.initial.join(''))
-        doc = new Scribe.Document($container.get(0))
+        doc = new Scribe.Document($container.get(0), { formats: Scribe.DEFAULTS.formats })
         delta = doc.toDelta()
         if !delta.isEqual(test.expected)
           console.error(doc, delta, test.expected)
