@@ -30,11 +30,12 @@ remoteKarma = _.reduce(remoteBrowserGroups, (memo, browsers, group) ->
 module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
-      configFile: 'tests/karma/karma.conf.coffee'
       browsers: ['PhantomJS']
+      configFile: 'tests/karma/karma.conf.coffee'
       exclude: ['tests/mocha/editor.js']
     karma:
       autoWatch: true
+      browsers: []
       singleRun: false
     test:
       browsers: ['PhantomJS']

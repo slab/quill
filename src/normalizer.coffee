@@ -186,7 +186,7 @@ class Normalizer
       if @formatManager.formats[nodeFormat]?
         @formatManager.formats[nodeFormat].clean(node)
       else
-        DOM.removeAttributes(node)
+        DOM.clearAttributes(node)
       return containerNode
     )
 

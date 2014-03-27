@@ -42,6 +42,12 @@ DOM =
     else
       throw new Error("No add event support")
 
+  clearAttributes: (node, exception = []) ->
+    exception = [exception] if _.isString(exception)
+    _.each(DOM.getAttributes(node), (value, name) ->
+      node.removeAttribute(name) unless _.indexOf(exception, name) > -1
+    )
+
   getAttributes: (node) ->
     return {} unless node.attributes?
     attributes = {}
@@ -53,7 +59,7 @@ DOM =
   getChildIndex: (node) ->
     index = 0
     while node.previousSibling?
-      node = previousSibling
+      node = node.previousSibling
       index += 1
     return index
 
@@ -117,12 +123,6 @@ DOM =
           child.appendData(nextChild.data)
           node.removeChild(nextChild)
       child = child.nextSibling
-
-  removeAttributes: (node, exception = []) ->
-    exception = [exception] if _.isString(exception)
-    _.each(DOM.getAttributes(node), (value, name) ->
-      node.removeAttribute(name) unless _.indexOf(exception, name) > -1
-    )
 
   removeClass: (node, cssClass) ->
     return unless DOM.hasClass(node, cssClass)

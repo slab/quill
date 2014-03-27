@@ -8,7 +8,7 @@ class LeafFormat
   constructor: (@root, @keyName) ->
 
   clean: (node) ->
-    DOM.removeAttributes(node)
+    DOM.clearAttributes(node)
     return node
 
   createContainer: ->
@@ -68,7 +68,7 @@ class ClassFormat extends SpanFormat
     return false
 
   clean: (node) ->
-    DOM.removeAttributes(node, 'class')
+    DOM.clearAttributes(node, 'class')
     return node
 
   createContainer: (value) ->
@@ -110,9 +110,8 @@ class StyleFormat extends SpanFormat
 
   clean: (node) ->
     node = super(node)
-    DOM.removeAttributes(node, 'style')
     styleObj = StyleFormat.getStyleObject(node)
-    node.removeAttribute('style')
+    DOM.clearAttributes(node, 'style')
     if styleObj[@cssName]
       style = this.approximate(styleObj[@cssName])
       node.setAttribute('style', "#{@cssName}: #{@styles[style]};") if style    # PhantomJS adds a trailing space if we use node.style
@@ -178,7 +177,7 @@ class LinkFormat extends TagFormat
     return value
 
   clean: (node) ->
-    DOM.removeAttributes(node, ['href', 'title'])
+    DOM.clearAttributes(node, ['href', 'title'])
     return node
 
   createContainer: (value) ->
