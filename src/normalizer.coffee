@@ -201,7 +201,7 @@ class ScribeNormalizer
         return false unless node.nodeType == ScribeDOM.ELEMENT_NODE
         if ScribeUtils.getNodeLength(node) == 0
           return false if node.tagName == 'BR' and !node.previousSibling? and !node.nextSibling?
-          return false if node.tagName == 'SPAN' and node.parentNode == lineNode and !lineNode.previousSibling? and !lineNode.nextSibling?
+          return false if node.tagName == 'SPAN' and node.parentNode == lineNode and !lineNode.parentNode.childNodes.length == 0 and lineNode.childNodes.length == 0
           return true
         # Parent format value will overwrite child's so no need to check formatValue
         return parentAttributes[formatName]? if formatName?

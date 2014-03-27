@@ -157,6 +157,9 @@ describe('Normalizer', ->
           expected: '<div><span></span></div>'
         'empty span':
           initial:  '<div><span></span></div>'
+        'double empty span':
+          initial:  '<div><span></span><span></span></div>'
+          expected: '<div><span></span></div>'
         'lone break':
           initial:  '<br>'
           expected: '<div><br></div>'
