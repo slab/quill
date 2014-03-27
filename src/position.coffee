@@ -1,21 +1,21 @@
-_           = require('lodash')
-ScribeDOM   = require('./dom')
-ScribeUtils = require('./utils')
+_     = require('lodash')
+DOM   = require('./dom')
+Utils = require('./utils')
 
 
-class ScribePosition
+class Position
   @findLeafNode: (editor, node, offset) ->
-    [node, offset] = ScribeUtils.findDeepestNode(node, offset)
-    if node.nodeType == ScribeDOM.TEXT_NODE
-      offset = ScribePosition.getIndex(node, offset, node.parentNode)
+    [node, offset] = Utils.findDeepestNode(node, offset)
+    if node.nodeType == DOM.TEXT_NODE
+      offset = Position.getIndex(node, offset, node.parentNode)
       node = node.parentNode
     return [node, offset]
 
   @getIndex: (node, index = 0, offsetNode = null) ->
-    while node != offsetNode and node.ownerDocument? and !ScribeDOM.hasClass(node, 'editor-container')
+    while node != offsetNode and node.ownerDocument? and !DOM.hasClass(node, 'editor-container')
       while node.previousSibling?
         node = node.previousSibling
-        index += ScribeUtils.getNodeLength(node)
+        index += Utils.getNodeLength(node)
       node = node.parentNode
     return index
 
@@ -27,8 +27,8 @@ class ScribePosition
       @offset = @index = @leafNode
       @leafNode = @editor.root
     else
-      @index = ScribePosition.getIndex(@leafNode, @offset)
-    [@leafNode, @offset] = ScribePosition.findLeafNode(@editor, @leafNode, @offset)
+      @index = Position.getIndex(@leafNode, @offset)
+    [@leafNode, @offset] = Position.findLeafNode(@editor, @leafNode, @offset)
 
   getLeaf: ->
     return @leaf if @leaf?
@@ -36,7 +36,7 @@ class ScribePosition
     return @leaf
 
   getIndex: ->
-    return ScribePosition.getIndex(@leafNode, @offset, @editor.root)
+    return Position.getIndex(@leafNode, @offset, @editor.root)
 
 
-module.exports = ScribePosition
+module.exports = Position

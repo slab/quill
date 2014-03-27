@@ -1,29 +1,29 @@
-_                   = require('lodash')
-LinkedList          = require('linked-list')
-ScribeDOM           = require('./dom')
-ScribeFormatManager = require('./format-manager')
-ScribeLine          = require('./line')
-ScribeNormalizer    = require('./normalizer')
-ScribeUtils         = require('./utils')
-Tandem              = require('tandem-core')
+_             = require('lodash')
+LinkedList    = require('linked-list')
+DOM           = require('./dom')
+FormatManager = require('./format-manager')
+Line          = require('./line')
+Normalizer    = require('./normalizer')
+Utils         = require('./utils')
+Tandem        = require('tandem-core')
 
 
-class ScribeDocument
+class Document
   constructor: (@root, options = {}) ->
-    @formatManager = new ScribeFormatManager(@root, options)
-    @normalizer = new ScribeNormalizer(@root, @formatManager)
-    @root.innerHTML = ScribeNormalizer.normalizeHtml(@root.innerHTML)
+    @formatManager = new FormatManager(@root, options)
+    @normalizer = new Normalizer(@root, @formatManager)
+    @root.innerHTML = Normalizer.normalizeHtml(@root.innerHTML)
     @lines = new LinkedList()
     @lineMap = {}
     @normalizer.normalizeDoc()
-    _.each(ScribeDOM.getChildNodes(@root), this.appendLine.bind(this))
+    _.each(DOM.getChildNodes(@root), this.appendLine.bind(this))
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
 
   findLeaf: (node) ->
     lineNode = node.parentNode
-    while lineNode? && !ScribeUtils.isLineNode(lineNode)
+    while lineNode? && !Utils.isLineNode(lineNode)
       lineNode = lineNode.parentNode
     return null if !lineNode?
     line = this.findLine(lineNode)
@@ -46,12 +46,12 @@ class ScribeDocument
     return [null, offset]
 
   findLineNode: (node) ->
-    while node? && !ScribeUtils.isLineNode(node)
+    while node? && !Utils.isLineNode(node)
       node = node.parentNode
     return node
 
   insertLineBefore: (newLineNode, refLine) ->
-    line = new ScribeLine(this, newLineNode)
+    line = new Line(this, newLineNode)
     if refLine != null
       @lines.insertAfter(refLine.prev, line)
     else
@@ -61,10 +61,10 @@ class ScribeDocument
 
   mergeLines: (line, lineToMerge) ->
     return unless line? and lineToMerge?
-    _.each(ScribeDOM.getChildNodes(lineToMerge.node), (child) ->
+    _.each(DOM.getChildNodes(lineToMerge.node), (child) ->
       line.node.appendChild(child)
     )
-    ScribeDOM.removeNode(lineToMerge.node)
+    DOM.removeNode(lineToMerge.node)
     this.removeLine(lineToMerge)
     line.rebuild()
 
@@ -73,7 +73,7 @@ class ScribeDocument
     @lines.remove(line)
 
   splitLine: (line, offset) ->
-    [lineNode1, lineNode2] = ScribeUtils.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     this.updateLine(line)
     newLine = this.insertLineBefore(lineNode2, line.next)
@@ -97,4 +97,4 @@ class ScribeDocument
     return line.rebuild()
 
 
-module.exports = ScribeDocument
+module.exports = Document

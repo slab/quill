@@ -1,12 +1,11 @@
-_                = require('lodash')
-ScribeDOM        = require('./dom')
-ScribeDocument   = require('./document')
-ScribeLine       = require('./line')
-ScribeNormalizer = require('./normalizer')
-ScribeRenderer   = require('./renderer')
-ScribeSelection  = require('./selection')
-ScribeUtils      = require('./utils')
-Tandem           = require('tandem-core')
+_          = require('lodash')
+DOM        = require('./dom')
+Document   = require('./document')
+Line       = require('./line')
+Normalizer = require('./normalizer')
+Renderer   = require('./renderer')
+Selection  = require('./selection')
+Tandem     = require('tandem-core')
 
 
 _deleteAt = (index, length) ->
@@ -20,7 +19,7 @@ _deleteAt = (index, length) ->
       if deleteLength <= curLine.length
         curLine.deleteText(offset, deleteLength)
       else
-        ScribeDOM.removeNode(curLine.node)
+        DOM.removeNode(curLine.node)
         @doc.removeLine(curLine)
       length -= deleteLength
       curLine = nextLine
@@ -33,7 +32,7 @@ _formatAt = (index, length, name, value) ->
   @selection.preserve(index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
-      if ScribeLine.FORMATS[name]?
+      if Line.FORMATS[name]?
         # If newline character is being applied with formatting
         if length > line.length - offset
           line.format(name, value)
@@ -92,9 +91,9 @@ _trackDelta = (fn, options) ->
 _update = ->
   delta = _trackDelta.call(this, =>
     this.doSilently( =>
-      ScribeNormalizer.normalizeEmptyLines(@root)
+      Normalizer.normalizeEmptyLines(@root)
       @selection.preserve( =>
-        ScribeNormalizer.breakBlocks(@root)
+        Normalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()
         lineNode = @root.firstChild
         _.each(lines, (line, index) =>
@@ -118,7 +117,7 @@ _update = ->
   return if delta.isIdentity() then false else delta
 
 
-class ScribeEditor
+class Editor
   constructor: (@iframeContainer, @scribe, @options = {}) ->
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     this.init()
@@ -138,12 +137,12 @@ class ScribeEditor
 
   init: ->
     @ignoreDomChanges = true
-    @renderer = new ScribeRenderer(@iframeContainer, @scribe, @options)
+    @renderer = new Renderer(@iframeContainer, @scribe, @options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
-    @doc = new ScribeDocument(@root, @options)
+    @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new ScribeSelection(this, @scribe)
+    @selection = new Selection(this, @scribe)
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->
@@ -172,7 +171,7 @@ class ScribeEditor
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, delta, 'user')
+      @.emit(@.constructor.events.TEXT_CHANGE, delta, 'user')
     @selection.update(delta != false)
 
   doSilently: (fn) ->
@@ -193,4 +192,4 @@ class ScribeEditor
       return false
 
 
-module.exports = ScribeEditor
+module.exports = Editor

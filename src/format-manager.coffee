@@ -1,14 +1,14 @@
-_            = require('lodash')
-_.str        = require('underscore.string')
-ScribeFormat = require('./format')
+_      = require('lodash')
+_.str  = require('underscore.string')
+Format = require('./format')
 
 
-class ScribeFormatManager
+class FormatManager
   constructor: (@container, @options = {}) ->
     @formats = {}
     _.each(@options.formats, (formatName) =>
       className = _.str.classify(formatName)
-      this.addFormat(formatName, new ScribeFormat[className](@container))
+      this.addFormat(formatName, new Format[className](@container))
     )
 
   addFormat: (name, format) ->
@@ -34,4 +34,4 @@ class ScribeFormatManager
       else return [names, formats]
 
 
-module.exports = ScribeFormatManager
+module.exports = FormatManager

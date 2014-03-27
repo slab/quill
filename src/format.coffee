@@ -1,14 +1,14 @@
-_           = require('lodash')
-_.str       = require('underscore.string')
-ScribeDOM   = require('./dom')
-ScribeUtils = require('./utils')
+_     = require('lodash')
+_.str = require('underscore.string')
+DOM   = require('./dom')
+Utils = require('./utils')
 
 
-class ScribeLeafFormat
+class LeafFormat
   constructor: (@root, @keyName) ->
 
   clean: (node) ->
-    ScribeDOM.removeAttributes(node)
+    DOM.removeAttributes(node)
     return node
 
   createContainer: ->
@@ -21,7 +21,7 @@ class ScribeLeafFormat
     throw new Error("Descendants should implement")
 
 
-class ScribeTagFormat extends ScribeLeafFormat
+class TagFormat extends LeafFormat
   constructor: (@root, @keyName, @tagName) ->
     super
 
@@ -31,7 +31,7 @@ class ScribeTagFormat extends ScribeLeafFormat
 
   clean: (node) ->
     node = super(node)
-    node = ScribeDOM.switchTag(node, @tagName) unless node.tagName == @tagName
+    node = DOM.switchTag(node, @tagName) unless node.tagName == @tagName
     return node
 
   createContainer: ->
@@ -44,20 +44,20 @@ class ScribeTagFormat extends ScribeLeafFormat
     @root.ownerDocument.execCommand(@keyName, false, value)
 
 
-class ScribeSpanFormat extends ScribeTagFormat
+class SpanFormat extends TagFormat
   constructor: (@root, @keyName) ->
     super(@root, @keyName, 'SPAN')
 
   clean: (node) ->
     # cannot super because LeafFormat removes all attributes
-    node = ScribeDOM.switchTag(node, @tagName) unless node.tagName == @tagName
+    node = DOM.switchTag(node, @tagName) unless node.tagName == @tagName
     return node
 
   approximate: (value) ->
     throw new Error("Descendants should implement")
 
 
-class ScribeClassFormat extends ScribeSpanFormat
+class ClassFormat extends SpanFormat
   constructor: (@root, @keyName) ->
     super
 
@@ -68,24 +68,24 @@ class ScribeClassFormat extends ScribeSpanFormat
     return false
 
   clean: (node) ->
-    ScribeDOM.removeAttributes(node, 'class')
+    DOM.removeAttributes(node, 'class')
     return node
 
   createContainer: (value) ->
     container = super(value)
-    ScribeDOM.addClass(container, "#{@keyName}-#{value}")
+    DOM.addClass(container, "#{@keyName}-#{value}")
     return container
 
   matchContainer: (container) ->
     if super(container)
-      classList = ScribeDOM.getClasses(container)
+      classList = DOM.getClasses(container)
       for css in classList
         value = this.approximate(css)
         return value if value
     return false
 
 
-class ScribeStyleFormat extends ScribeSpanFormat
+class StyleFormat extends SpanFormat
   @getStyleObject: (container) ->
     # Iterating through container.style upsets IE8
     styleString = container.getAttribute('style') or ''
@@ -110,8 +110,8 @@ class ScribeStyleFormat extends ScribeSpanFormat
 
   clean: (node) ->
     node = super(node)
-    ScribeDOM.removeAttributes(node, 'style')
-    styleObj = ScribeStyleFormat.getStyleObject(node)
+    DOM.removeAttributes(node, 'style')
+    styleObj = StyleFormat.getStyleObject(node)
     node.removeAttribute('style')
     if styleObj[@cssName]
       style = this.approximate(styleObj[@cssName])
@@ -134,7 +134,7 @@ class ScribeStyleFormat extends ScribeSpanFormat
     @root.ownerDocument.execCommand(_.str.camelize(@keyName), false, @styles[value])
 
 
-class ScribeBoldFormat extends ScribeTagFormat
+class BoldFormat extends TagFormat
   constructor: (@root) ->
     super(@root, 'bold', 'B')
 
@@ -142,7 +142,7 @@ class ScribeBoldFormat extends ScribeTagFormat
     return super(container) or container.style?.fontWeight == 'bold'
 
 
-class ScribeItalicFormat extends ScribeTagFormat
+class ItalicFormat extends TagFormat
   constructor: (@root) ->
     super(@root, 'italic', 'I')
 
@@ -150,7 +150,7 @@ class ScribeItalicFormat extends ScribeTagFormat
     return super(container) or container.style?.fontStyle == 'italic'
 
 
-class ScribeStrikeFormat extends ScribeTagFormat
+class StrikeFormat extends TagFormat
   constructor: (@root) ->
     super(@root, 'strike', 'S')
 
@@ -161,7 +161,7 @@ class ScribeStrikeFormat extends ScribeTagFormat
     @root.ownerDocument.execCommand('strikeThrough', false, value)
 
 
-class ScribeUnderlineFormat extends ScribeTagFormat
+class UnderlineFormat extends TagFormat
   constructor: (@root) ->
     super(@root, 'underline', 'U')
 
@@ -169,7 +169,7 @@ class ScribeUnderlineFormat extends ScribeTagFormat
     return super(container) or container.style?.textDecoration == 'underline'
 
 
-class ScribeLinkFormat extends ScribeTagFormat
+class LinkFormat extends TagFormat
   constructor: (@root) ->
     super(@root, 'link', 'A')
 
@@ -178,7 +178,7 @@ class ScribeLinkFormat extends ScribeTagFormat
     return value
 
   clean: (node) ->
-    ScribeDOM.removeAttributes(node, ['href', 'title'])
+    DOM.removeAttributes(node, ['href', 'title'])
     return node
 
   createContainer: (value) ->
@@ -191,7 +191,7 @@ class ScribeLinkFormat extends ScribeTagFormat
     return if super(container) then container.getAttribute('href') else false
 
 
-class ScribeColorFormat extends ScribeStyleFormat
+class ColorFormat extends StyleFormat
   @COLORS:
     'black'   : 'rgb(0, 0, 0)'
     'red'     : 'rgb(255, 0, 0)'
@@ -228,16 +228,16 @@ class ScribeColorFormat extends ScribeStyleFormat
   approximate: (value) ->
     return false unless value
     return value if @styles[value]?
-    color = ScribeUtils.findClosestPoint(value, @styles, ScribeColorFormat.normalizeColor)
+    color = Utils.findClosestPoint(value, @styles, ColorFormat.normalizeColor)
     return if color == @defaultStyle then false else color
 
 
-class ScribeBackColorFormat extends ScribeColorFormat
+class BackColorFormat extends ColorFormat
   constructor: (@root) ->
-    super(@root, 'back-color', 'background-color', 'white', ScribeColorFormat.COLORS)
+    super(@root, 'back-color', 'background-color', 'white', ColorFormat.COLORS)
 
 
-class ScribeFontNameFormat extends ScribeStyleFormat
+class FontNameFormat extends StyleFormat
   @normalizeFont: (fontStr) ->
     return _.map(fontStr.toUpperCase().split(','), (font) ->
       return _.str.trim(font, "'\" ")
@@ -251,14 +251,14 @@ class ScribeFontNameFormat extends ScribeStyleFormat
     })
 
   approximate: (value) ->
-    values = ScribeFontNameFormat.normalizeFont(value)
+    values = FontNameFormat.normalizeFont(value)
     for key,fonts of @styles
-      fonts = ScribeFontNameFormat.normalizeFont(fonts)
+      fonts = FontNameFormat.normalizeFont(fonts)
       return key if _.intersection(fonts, values).length > 0
     return false
 
 
-class ScribeFontSizeFormat extends ScribeStyleFormat
+class FontSizeFormat extends StyleFormat
   @SCALE: 6.75      # Conversion from execCommand size to px
 
   constructor: (@root) ->
@@ -274,35 +274,35 @@ class ScribeFontSizeFormat extends ScribeStyleFormat
     if _.isString(value) and value.indexOf('px') > -1
       value = parseInt(value)
     else
-      value = parseInt(value) * ScribeFontSizeFormat.SCALE
-    size = ScribeUtils.findClosestPoint(value, @styles, parseInt)
+      value = parseInt(value) * FontSizeFormat.SCALE
+    size = Utils.findClosestPoint(value, @styles, parseInt)
     return if size == @defaultStyle then false else size
 
   preformat: (value) ->
     value = this.approximate(value) or @defaultStyle
-    size = Math.round(parseInt(@styles[value]) / ScribeFontSizeFormat.SCALE)
+    size = Math.round(parseInt(@styles[value]) / FontSizeFormat.SCALE)
     @root.ownerDocument.execCommand(_.str.camelize(@keyName), false, size)
 
 
-class ScribeForeColorFormat extends ScribeColorFormat
+class ForeColorFormat extends ColorFormat
   constructor: (@root) ->
-    super(@root, 'fore-color', 'color', 'black', ScribeColorFormat.COLORS)
+    super(@root, 'fore-color', 'color', 'black', ColorFormat.COLORS)
 
 
 module.exports =
-  Leaf  : ScribeLeafFormat
-  Tag   : ScribeTagFormat
-  Span  : ScribeSpanFormat
-  Class : ScribeClassFormat
-  Style : ScribeStyleFormat
+  Leaf  : LeafFormat
+  Tag   : TagFormat
+  Span  : SpanFormat
+  Class : ClassFormat
+  Style : StyleFormat
 
-  Bold      : ScribeBoldFormat
-  Italic    : ScribeItalicFormat
-  Link      : ScribeLinkFormat
-  Strike    : ScribeStrikeFormat
-  Underline : ScribeUnderlineFormat
+  Bold      : BoldFormat
+  Italic    : ItalicFormat
+  Link      : LinkFormat
+  Strike    : StrikeFormat
+  Underline : UnderlineFormat
 
-  BackColor : ScribeBackColorFormat
-  FontName  : ScribeFontNameFormat
-  FontSize  : ScribeFontSizeFormat
-  ForeColor : ScribeForeColorFormat
+  BackColor : BackColorFormat
+  FontName  : FontNameFormat
+  FontSize  : FontSizeFormat
+  ForeColor : ForeColorFormat

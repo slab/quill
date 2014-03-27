@@ -1,8 +1,4 @@
-_     = require('lodash')
-_.str = require('underscore.string')
-
-
-class ScribeDefaultTheme
+class DefaultTheme
   @OPTIONS: {}
 
   constructor: (@scribe, options) ->
@@ -10,4 +6,4 @@ class ScribeDefaultTheme
     @editorContainer = @editor.root
 
 
-module.exports = ScribeDefaultTheme
+module.exports = DefaultTheme

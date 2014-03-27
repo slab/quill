@@ -1,11 +1,11 @@
-_                   = require('lodash')
-ScribeColorPicker   = require('../color-picker')
-ScribeDefaultTheme  = require('../default')
-ScribeDOM           = require('../../dom')
-ScribePicker        = require('../picker')
+_            = require('lodash')
+ColorPicker  = require('../color-picker')
+DefaultTheme = require('../default')
+DOM          = require('../../dom')
+Picker       = require('../picker')
 
 
-class ScribeSnowTheme extends ScribeDefaultTheme
+class SnowTheme extends DefaultTheme
   @COLORS: [
     "#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff"
     "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff"
@@ -32,7 +32,7 @@ class ScribeSnowTheme extends ScribeDefaultTheme
         picker.close()
       )
     )
-    ScribeDOM.addClass(@editorContainer.parentNode, 'snow')
+    DOM.addClass(@editorContainer.parentNode, 'snow')
     @scribe.onModuleLoad('link-tooltip', this.extendLinkTooltip.bind(this))
     @scribe.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
     @scribe.onModuleLoad('toolbar', this.extendToolbar.bind(this))
@@ -95,21 +95,21 @@ class ScribeSnowTheme extends ScribeDefaultTheme
 
   extendToolbar: (module) ->
     _.each(module.container.querySelectorAll('.sc-font-name, .sc-font-size'), (select) =>
-      picker = new ScribePicker(select)
+      picker = new Picker(select)
       @pickers.push(picker)
     )
     _.each(['fore-color', 'back-color'], (css) =>
       select = module.container.querySelector(".sc-#{css}")
       return unless select?
-      picker = new ScribeColorPicker(select)
+      picker = new ColorPicker(select)
       @pickers.push(picker)
-      ScribeDOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button')
+      DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button')
       _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
-        ScribeDOM.addClass(item, 'sc-primary-color') if i < 7
+        DOM.addClass(item, 'sc-primary-color') if i < 7
       )
       format = @editor.doc.formatManager.formats[css]
       if format?
-        format.styles = _.reduce(ScribeSnowTheme.COLORS, (colors, c) ->
+        format.styles = _.reduce(SnowTheme.COLORS, (colors, c) ->
           colors[c] = "rgb(#{parseInt(c.substr(1,2), 16)}, #{parseInt(c.substr(3,2), 16)}, #{parseInt(c.substr(5,2), 16)})"
           return colors
         , {})
@@ -117,4 +117,4 @@ class ScribeSnowTheme extends ScribeDefaultTheme
     )
 
 
-module.exports = ScribeSnowTheme
+module.exports = SnowTheme

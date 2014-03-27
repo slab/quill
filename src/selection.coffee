@@ -1,10 +1,9 @@
-_               = require('lodash')
-rangy           = require('rangy-core')
-ScribeDOM       = require('./dom')
-ScribeLine      = require('./line')
-ScribePosition  = require('./position')
-ScribeRange     = require('./range')
-ScribeUtils     = require('./utils')
+_        = require('lodash')
+rangy    = require('rangy-core')
+DOM      = require('./dom')
+Position = require('./position')
+Range    = require('./range')
+Utils    = require('./utils')
 
 
 compareNativeRanges = (r1, r2) ->
@@ -12,18 +11,18 @@ compareNativeRanges = (r1, r2) ->
   return false unless r1? and r2?   # If either is null they are not equal
   return r1.equals(r2)
 
-# DOM Selection API says offset is child index of container, not number of characters like ScribePosition
+# DOM Selection API says offset is child index of container, not number of characters like Position
 normalizeNativePosition = (node, offset) ->
-  if node?.nodeType == ScribeDOM.ELEMENT_NODE
+  if node?.nodeType == DOM.ELEMENT_NODE
     return [node, 0] unless node.firstChild?
     offset = Math.min(node.childNodes.length, offset)
     if offset < node.childNodes.length
       return normalizeNativePosition(node.childNodes[offset], 0)
     else
-      if node.lastChild.nodeType == ScribeDOM.ELEMENT_NODE
+      if node.lastChild.nodeType == DOM.ELEMENT_NODE
         return normalizeNativePosition(node.lastChild, node.lastChild.childNodes.length)
       else
-        return [node.lastChild, ScribeUtils.getNodeLength(node.lastChild)]
+        return [node.lastChild, Utils.getNodeLength(node.lastChild)]
   return [node, offset]
 
 normalizeNativeRange = (nativeRange) ->
@@ -40,13 +39,13 @@ normalizeNativeRange = (nativeRange) ->
 
 _nativeRangeToRange = (nativeRange) ->
   return null unless nativeRange?
-  start = new ScribePosition(@editor, nativeRange.startContainer, nativeRange.startOffset)
-  end = new ScribePosition(@editor, nativeRange.endContainer, nativeRange.endOffset)
+  start = new Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
+  end = new Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
   if start.index <= end.index
-    range = new ScribeRange(@editor, start, end)
+    range = new Range(@editor, start, end)
     range.isBackwards = false
   else
-    range = new ScribeRange(@editor, end, start)
+    range = new Range(@editor, end, start)
     range.isBackwards = true
   range.isBackwards = true if nativeRange.isBackwards
   return range
@@ -60,17 +59,17 @@ _preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
       return Math.max(pos.index + lengthAdded, index)
   )
   fn.call(null)
-  this.setRange(new ScribeRange(@editor, startIndex, endIndex), true)
+  this.setRange(new Range(@editor, startIndex, endIndex), true)
 
 _preserveWithLine = (savedNativeRange, fn) ->
   savedData = _.map([
     { container: savedNativeRange.startContainer, offset: savedNativeRange.startOffset }
     { container: savedNativeRange.endContainer,   offset: savedNativeRange.endOffset }
   ], (position) =>
-    lineNode = ScribeUtils.findAncestor(position.container, ScribeUtils.isLineNode) or @editor.root
+    lineNode = Utils.findAncestor(position.container, Utils.isLineNode) or @editor.root
     return {
       lineNode  : lineNode
-      offset    : ScribePosition.getIndex(position.container, position.offset, lineNode)
+      offset    : Position.getIndex(position.container, position.offset, lineNode)
       nextLine  : position.container.previousSibling?.tagName == 'BR'  # Track special case for Firefox
     }
   )
@@ -81,9 +80,9 @@ _preserveWithLine = (savedNativeRange, fn) ->
       if savedDatum.nextLine and savedDatum.lineNode.nextSibling?
         savedDatum.lineNode = savedDatum.lineNode.nextSibling
         savedDatum.offset = 0
-      return new ScribePosition(@editor, savedDatum.lineNode, savedDatum.offset)
+      return new Position(@editor, savedDatum.lineNode, savedDatum.offset)
     )
-    this.setRange(new ScribeRange(@editor, start, end), true)
+    this.setRange(new Range(@editor, start, end), true)
 
 _updateFocus = (silent) ->
   hasFocus = @editor.renderer.checkFocus()
@@ -102,7 +101,7 @@ _updateFocus = (silent) ->
   @hasFocus = hasFocus
 
 
-class ScribeSelection
+class Selection
   constructor: (@editor, @emitter) ->
     @range = null
     @blurTimer = null
@@ -113,10 +112,10 @@ class ScribeSelection
       @nativeSelection = rangy.getSelection()
     this.setRange(null, true)
     @hasFocus = @editor.renderer.checkFocus()
-    ScribeDOM.addEventListener(@editor.root, 'focus', =>
+    DOM.addEventListener(@editor.root, 'focus', =>
       _.defer( => @editor.checkUpdate())
     )
-    ScribeDOM.addEventListener(@editor.root, 'beforedeactivate blur mouseup', =>
+    DOM.addEventListener(@editor.root, 'beforedeactivate blur mouseup', =>
       @editor.checkUpdate()
     )
 
@@ -160,11 +159,11 @@ class ScribeSelection
     if range?
       nativeRange = rangy.createRangyRange(@editor.renderer.getDocument())
       _.each([range.start, range.end], (pos, i) ->
-        [node, offset] = ScribeUtils.findDeepestNode(pos.leafNode, pos.offset)
-        offset = Math.min(ScribeDOM.getText(node).length, offset)   # Should only occur at end of document
+        [node, offset] = Utils.findDeepestNode(pos.leafNode, pos.offset)
+        offset = Math.min(DOM.getText(node).length, offset)   # Should only occur at end of document
         if node.tagName == 'BR'             # Firefox does not split BR, IE cannot select BR
           node = node.parentNode
-          offset = 1 if ScribeUtils.isIE()
+          offset = 1 if Utils.isIE()
         fn = if i == 0 then 'setStart' else 'setEnd'
         nativeRange[fn].call(nativeRange, node, offset)
       )
@@ -181,10 +180,10 @@ class ScribeSelection
       return if compareNativeRanges(nativeRange, @range)
       @range = nativeRange
       range = _nativeRangeToRange.call(this, normalizeNativeRange(@range))
-      if ScribeUtils.isEmptyDoc(@editor.root)
+      if Utils.isEmptyDoc(@editor.root)
         this.setRange(range, silent)
       else
         @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range) unless silent
 
 
-module.exports = ScribeSelection
+module.exports = Selection

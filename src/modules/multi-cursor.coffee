@@ -1,9 +1,8 @@
-_               = require('lodash')
-EventEmitter2   = require('eventemitter2').EventEmitter2
-ScribeDOM       = require('../dom')
-ScribePosition  = require('../position')
-ScribeRenderer  = require('../renderer')
-ScribeUtils     = require('../utils')
+_             = require('lodash')
+EventEmitter2 = require('eventemitter2').EventEmitter2
+DOM           = require('../dom')
+Position      = require('../position')
+Utils         = require('../utils')
 
 
 _applyDelta = (delta) ->
@@ -18,11 +17,11 @@ _applyDelta = (delta) ->
 
 _buildCursor = (name, color) ->
   cursor = @container.ownerDocument.createElement('span')
-  ScribeDOM.addClass(cursor, 'cursor')
+  DOM.addClass(cursor, 'cursor')
   cursor.innerHTML = @options.template
   cursorFlag = cursor.querySelector('.cursor-flag')
   cursorName = cursor.querySelector('.cursor-name')
-  ScribeDOM.setText(cursorName, name)
+  DOM.setText(cursorName, name)
   cursorCaret = cursor.querySelector('.cursor-caret')
   cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
   @container.appendChild(cursor)
@@ -33,23 +32,23 @@ _moveCursor = (cursor, referenceNode) ->
   cursor.elem.style.left = referenceNode.offsetLeft + 'px'
   cursor.elem.style.height = referenceNode.offsetHeight + 'px'
   flag = cursor.elem.querySelector('.cursor-flag')
-  ScribeDOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
-  ScribeDOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-  ScribeDOM.toggleClass(cursor.elem, 'right', @editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-  this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor)
+  DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
+  DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+  DOM.toggleClass(cursor.elem, 'right', @editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+  this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
 _updateCursor = (cursor) ->
   @scribe.editor.doSilently( =>
-    position = new ScribePosition(@scribe.editor, cursor.index)
+    position = new Position(@scribe.editor, cursor.index)
     guide = @container.ownerDocument.createElement('span')
     if !position.leafNode.firstChild?
-      ScribeDOM.setText(guide, ScribeDOM.NOBREAK_SPACE)
+      DOM.setText(guide, DOM.NOBREAK_SPACE)
       # Should only be the case for empty lines
       position.leafNode.parentNode.insertBefore(guide, position.leafNode)
       _moveCursor.call(this, cursor, guide)
     else
-      ScribeDOM.setText(guide, ScribeDOM.ZERO_WIDTH_NOBREAK_SPACE)
-      [leftText, rightText, didSplit] = ScribeUtils.splitNode(position.leafNode.firstChild, position.offset)
+      DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
+      [leftText, rightText, didSplit] = Utils.splitNode(position.leafNode.firstChild, position.offset)
       if rightText?
         rightText.parentNode.insertBefore(guide, rightText)
         _moveCursor.call(this, cursor, guide)
@@ -57,12 +56,12 @@ _updateCursor = (cursor) ->
         leftText.parentNode.appendChild(guide)
         _moveCursor.call(this, cursor, guide)
     guide.parentNode.removeChild(guide)
-    ScribeDOM.normalize(position.leafNode) if didSplit
+    DOM.normalize(position.leafNode) if didSplit
   )
   cursor.dirty = false
 
 
-class ScribeMultiCursor extends EventEmitter2
+class MultiCursor extends EventEmitter2
   @DEFAULTS:
     template:
      '<span class="cursor-flag">
@@ -119,10 +118,10 @@ class ScribeMultiCursor extends EventEmitter2
     cursor = @cursors[userId]
     cursor.index = index
     cursor.dirty = true
-    ScribeDOM.removeClass(cursor.elem, 'hidden')
+    DOM.removeClass(cursor.elem, 'hidden')
     clearTimeout(cursor.timer)
     cursor.timer = setTimeout( =>
-      ScribeDOM.addClass(cursor.elem, 'hidden')
+      DOM.addClass(cursor.elem, 'hidden')
       cursor.timer = null
     , @options.timeout)
     _updateCursor.call(this, cursor) if update
@@ -130,7 +129,7 @@ class ScribeMultiCursor extends EventEmitter2
 
   removeCursor: (userId) ->
     cursor = @cursors[userId]
-    this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor)
+    this.emit(MultiCursor.events.CURSOR_REMOVED, cursor)
     cursor.elem.parentNode.removeChild(cursor.elem) of cursor?
     delete @cursors[userId]
 
@@ -142,7 +141,7 @@ class ScribeMultiCursor extends EventEmitter2
         color: color
         elem: _buildCursor.call(this, name, color)
       }
-      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor)
+      this.emit(MultiCursor.events.CURSOR_ADDED, cursor)
     return this.moveCursor(userId, index, update)
 
   shiftCursors: (index, length, authorId = null, update = true) ->
@@ -160,4 +159,4 @@ class ScribeMultiCursor extends EventEmitter2
     )
 
 
-module.exports = ScribeMultiCursor
+module.exports = MultiCursor

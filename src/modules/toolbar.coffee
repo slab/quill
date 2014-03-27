@@ -1,23 +1,22 @@
-_           = require('lodash')
-ScribeDOM   = require('../dom')
-ScribeRange = require('../range')
-ScribeUtils = require('../utils')
+_     = require('lodash')
+DOM   = require('../dom')
+Utils = require('../utils')
 
 
 _findInput = (format) ->
   selector = ".sc-#{format}"
-  if _.indexOf(ScribeToolbar.formats.SELECT, format) > -1
+  if _.indexOf(Toolbar.formats.SELECT, format) > -1
     selector = 'select' + selector
   input = @container.querySelector(selector)
 
 _initFormats = ->
-  _.each(ScribeToolbar.formats, (formats, formatGroup) =>
+  _.each(Toolbar.formats, (formats, formatGroup) =>
     _.each(formats, (format) =>
       this.initFormat(format, formatGroup)
     )
   )
 
-class ScribeToolbar
+class Toolbar
   @DEFAULTS:
     container: null
 
@@ -33,13 +32,13 @@ class ScribeToolbar
       return unless eventName == @scribe.constructor.events.TEXT_CHANGE or eventName == @scribe.constructor.events.SELECTION_CHANGE
       this.updateActive()
     )
-    _.defer(ScribeDOM.addClass.bind(this, @container, 'sc-toolbar-container'))
+    _.defer(DOM.addClass.bind(this, @container, 'sc-toolbar-container'))
     @scribe.onModuleLoad('keyboard', (keyboard) =>
       _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
         keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
           activeFormats = {}
           input = _findInput.call(this, key.toLowerCase())
-          activeFormats[key.toLowerCase()] = ScribeDOM.hasClass(input, 'sc-active') if input?
+          activeFormats[key.toLowerCase()] = DOM.hasClass(input, 'sc-active') if input?
           this.updateActive(activeFormats)
         )
       )
@@ -50,12 +49,12 @@ class ScribeToolbar
     return unless input?
     if format == 'link' then return @scribe.addModule('link-tooltip', { button: input })
     eventName = if group == 'SELECT' then 'change' else 'click'
-    ScribeDOM.addEventListener(input, eventName, =>
+    DOM.addEventListener(input, eventName, =>
       return if @triggering
-      value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !ScribeDOM.hasClass(input, 'sc-active')
+      value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
       range = @scribe.getSelection()
       if range?
-        if ScribeUtils.isIE(8)
+        if Utils.isIE(8)
           @editorContainer.focus()
           @scribe.setSelection(range)
         if range.isCollapsed()
@@ -67,7 +66,7 @@ class ScribeToolbar
       this.updateActive(activeFormats)
       return false
     )
-    ScribeDOM.addEventListener(input, 'mousedown', =>
+    DOM.addEventListener(input, 'mousedown', =>
       # Save selection before click is registered
       @scribe.editor.checkUpdate()
       return true
@@ -76,9 +75,9 @@ class ScribeToolbar
   updateActive: (activeFormats = {}) ->
     @triggering = true
     range = @scribe.getSelection()
-    _.each(@container.querySelectorAll('select'), ScribeDOM.resetSelect.bind(this))
+    _.each(@container.querySelectorAll('select'), DOM.resetSelect.bind(this))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
-      ScribeDOM.removeClass(button, 'sc-active')
+      DOM.removeClass(button, 'sc-active')
     )
     if range?
       _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>
@@ -88,11 +87,11 @@ class ScribeToolbar
           if elem.tagName == 'SELECT'
             value = '' if _.isArray(value)
             elem.value = value
-            ScribeDOM.triggerEvent(elem, 'change')
+            DOM.triggerEvent(elem, 'change')
           else
-            ScribeDOM.addClass(elem, 'sc-active')
+            DOM.addClass(elem, 'sc-active')
       )
     @triggering = false
 
 
-module.exports = ScribeToolbar
+module.exports = Toolbar

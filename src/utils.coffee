@@ -1,5 +1,5 @@
-_         = require('lodash')
-ScribeDOM = require('./dom')
+_   = require('lodash')
+DOM = require('./dom')
 
 
 ieVersion = do ->
@@ -7,7 +7,7 @@ ieVersion = do ->
   return if matchVersion? then parseInt(matchVersion[0].slice("MSIE".length)) else null
 
 
-ScribeUtils =
+Utils =
   BLOCK_TAGS: [
     'ADDRESS'
     'BLOCKQUOTE'
@@ -54,42 +54,42 @@ ScribeUtils =
 
   findDeepestNode: (node, offset) ->
     if node.firstChild?
-      for child in ScribeDOM.getChildNodes(node)
-        length = ScribeUtils.getNodeLength(child)
+      for child in DOM.getChildNodes(node)
+        length = Utils.getNodeLength(child)
         if offset < length
-          return ScribeUtils.findDeepestNode(child, offset)
+          return Utils.findDeepestNode(child, offset)
         else
           offset -= length
-      return ScribeUtils.findDeepestNode(child, offset + length)
+      return Utils.findDeepestNode(child, offset + length)
     else
       return [node, offset]
 
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
-    length = ScribeUtils.getNodeLength(child)
+    length = Utils.getNodeLength(child)
     while child?
       break if offset < length
       offset -= length
       child = child.nextSibling
-      length = ScribeUtils.getNodeLength(child)
+      length = Utils.getNodeLength(child)
     unless child?
       child = node.lastChild
-      offset = ScribeUtils.getNodeLength(child)
+      offset = Utils.getNodeLength(child)
     return [child, offset]
 
   getNodeLength: (node) ->
     return 0 unless node?
-    if node.nodeType == ScribeDOM.ELEMENT_NODE
-      return _.reduce(ScribeDOM.getChildNodes(node), (length, child) ->
-        return length + ScribeUtils.getNodeLength(child)
-      , if ScribeUtils.isLineNode(node) then 1 else 0)
-    else if node.nodeType == ScribeDOM.TEXT_NODE
-      return ScribeDOM.getText(node).length
+    if node.nodeType == DOM.ELEMENT_NODE
+      return _.reduce(DOM.getChildNodes(node), (length, child) ->
+        return length + Utils.getNodeLength(child)
+      , if Utils.isLineNode(node) then 1 else 0)
+    else if node.nodeType == DOM.TEXT_NODE
+      return DOM.getText(node).length
     else
       return 0
 
   isBlock: (node) ->
-    return _.indexOf(ScribeUtils.BLOCK_TAGS, node.tagName, true) > -1
+    return _.indexOf(Utils.BLOCK_TAGS, node.tagName, true) > -1
 
   isEmptyDoc: (root) ->
     firstLine = root.firstChild
@@ -103,13 +103,13 @@ ScribeUtils =
     return ieVersion? and maxVersion >= ieVersion
 
   isLineNode: (node) ->
-    return node?.parentNode? and ScribeDOM.hasClass(node.parentNode, 'editor-container') and ScribeUtils.isBlock(node)
+    return node?.parentNode? and DOM.hasClass(node.parentNode, 'editor-container') and Utils.isBlock(node)
 
   removeFormatFromSubtree: (subtree, format) ->
     if format.matchContainer(subtree)
-      subtree = ScribeDOM.unwrap(subtree)
-    _.each(ScribeDOM.getChildNodes(subtree), (child) ->
-      ScribeUtils.removeFormatFromSubtree(child, format)
+      subtree = DOM.unwrap(subtree)
+    _.each(DOM.getChildNodes(subtree), (child) ->
+      Utils.removeFormatFromSubtree(child, format)
     )
     return subtree
 
@@ -121,24 +121,24 @@ ScribeUtils =
     parentNode.parentNode.insertBefore(parentClone, parentNode)
     while node.previousSibling?
       parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
-    ScribeUtils.splitBefore(parentNode, root)
+    Utils.splitBefore(parentNode, root)
 
   splitNode: (node, offset, force = false) ->
     # Check if split necessary
-    nodeLength = ScribeUtils.getNodeLength(node)
+    nodeLength = Utils.getNodeLength(node)
     offset = Math.max(0, offset)
     offset = Math.min(offset, nodeLength)
     return [node.previousSibling, node, false] unless force or offset != 0
     return [node, node.nextSibling, false] unless force or offset != nodeLength
-    if node.nodeType == ScribeDOM.TEXT_NODE
+    if node.nodeType == DOM.TEXT_NODE
       after = node.splitText(offset)
       return [node, after, true]
     else
       left = node
       right = node.cloneNode(false)
       node.parentNode.insertBefore(right, left.nextSibling)
-      [child, offset] = ScribeUtils.getChildAtOffset(node, offset)
-      [childLeft, childRight] = ScribeUtils.splitNode(child, offset)
+      [child, offset] = Utils.getChildAtOffset(node, offset)
+      [childLeft, childRight] = Utils.splitNode(child, offset)
       while childRight != null
         nextRight = childRight.nextSibling
         right.appendChild(childRight)
@@ -149,7 +149,7 @@ ScribeUtils =
     return unless root?
     cur = root.firstChild
     while cur?
-      ScribeUtils.traversePostorder.call(context, cur, fn)
+      Utils.traversePostorder.call(context, cur, fn)
       cur = fn.call(context, cur)
       cur = cur.nextSibling if cur?
 
@@ -157,10 +157,10 @@ ScribeUtils =
     return unless root?
     cur = root.firstChild
     while cur?
-      nextOffset = offset + ScribeUtils.getNodeLength(cur)
+      nextOffset = offset + Utils.getNodeLength(cur)
       curHtml = cur.innerHTML
       cur = fn.call(context, cur, offset, args...)
-      ScribeUtils.traversePreorder.call(null, cur, offset, fn, context, args...)
+      Utils.traversePreorder.call(null, cur, offset, fn, context, args...)
       if cur? && cur.innerHTML == curHtml
         cur = cur.nextSibling
         offset = nextOffset
@@ -173,4 +173,4 @@ ScribeUtils =
       curNode = nextSibling
 
 
-module.exports = ScribeUtils
+module.exports = Utils

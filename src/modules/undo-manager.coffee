@@ -1,6 +1,5 @@
-_               = require('lodash')
-ScribeRange     = require('../range')
-Tandem          = require('tandem-core')
+_      = require('lodash')
+Tandem = require('tandem-core')
 
 
 getLastChangeIndex = (delta) ->
@@ -42,7 +41,7 @@ _ignoreChanges = (fn) ->
   @ignoringChanges = oldIgnoringChanges
 
 
-class ScribeUndoManager
+class UndoManager
   DEFAULTS:
     delay: 1000
     maxStack: 100
@@ -120,4 +119,4 @@ class ScribeUndoManager
     _change.call(this, 'undo', 'redo')
 
 
-module.exports = ScribeUndoManager
+module.exports = UndoManager

@@ -1,13 +1,14 @@
 _ = require('lodash')
 
-ScribeDOM =
+
+DOM =
   ELEMENT_NODE: 1
   NOBREAK_SPACE:  "&nbsp;"
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
   addClass: (node, cssClass) ->
-    return if ScribeDOM.hasClass(node, cssClass)
+    return if DOM.hasClass(node, cssClass)
     if node.classList?
       node.classList.add(cssClass)
     else if node.className?
@@ -17,10 +18,10 @@ ScribeDOM =
     names = eventName.split(' ')
     if names.length > 1
       return _.each(names, (name) ->
-        ScribeDOM.addEventListener(node, name, listener)
+        DOM.addEventListener(node, name, listener)
       )
     callback = (event) ->
-      event ?= ScribeDOM.getWindow(node).event
+      event ?= DOM.getWindow(node).event
       event.target ?= event.srcElement
       event.which ?= event.keyCode
       bubbles = listener.call(null, event)
@@ -80,9 +81,9 @@ ScribeDOM =
 
   getText: (node) ->
     switch node.nodeType
-      when ScribeDOM.ELEMENT_NODE
+      when DOM.ELEMENT_NODE
         return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
-      when ScribeDOM.TEXT_NODE then return node.data or ""
+      when DOM.TEXT_NODE then return node.data or ""
       else return ""
 
   getWindow: (node) ->
@@ -92,7 +93,7 @@ ScribeDOM =
     if node.classList?
       return node.classList.contains(cssClass)
     else if node.className?
-      return _.indexOf(ScribeDOM.getClasses(node), cssClass) > -1
+      return _.indexOf(DOM.getClasses(node), cssClass) > -1
     return false
 
   mergeNodes: (node1, node2) ->
@@ -103,7 +104,7 @@ ScribeDOM =
     return node1
 
   moveChildren: (newParent, oldParent) ->
-    _.each(ScribeDOM.getChildNodes(oldParent), (child) ->
+    _.each(DOM.getChildNodes(oldParent), (child) ->
       newParent.appendChild(child)
     )
 
@@ -111,24 +112,24 @@ ScribeDOM =
     # Credit: Tim Down - http://stackoverflow.com/questions/2023255/node-normalize-crashes-in-ie6
     child = node.firstChild
     while (child)
-      if (child.nodeType == ScribeDOM.TEXT_NODE)
-        while ((nextChild = child.nextSibling) && nextChild.nodeType == ScribeDOM.TEXT_NODE)
+      if (child.nodeType == DOM.TEXT_NODE)
+        while ((nextChild = child.nextSibling) && nextChild.nodeType == DOM.TEXT_NODE)
           child.appendData(nextChild.data)
           node.removeChild(nextChild)
       child = child.nextSibling
 
   removeAttributes: (node, exception = []) ->
     exception = [exception] if _.isString(exception)
-    _.each(ScribeDOM.getAttributes(node), (value, name) ->
+    _.each(DOM.getAttributes(node), (value, name) ->
       node.removeAttribute(name) unless _.indexOf(exception, name) > -1
     )
 
   removeClass: (node, cssClass) ->
-    return unless ScribeDOM.hasClass(node, cssClass)
+    return unless DOM.hasClass(node, cssClass)
     if node.classList?
       return node.classList.remove(cssClass)
     else if node.className?
-      classArray = ScribeDOM.getClasses(node)
+      classArray = DOM.getClasses(node)
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       node.className = classArray.join(' ')
 
@@ -136,21 +137,21 @@ ScribeDOM =
     node.parentNode?.removeChild(node)
 
   resetSelect: (select) ->
-    option = ScribeDOM.getDefaultOption(select)
+    option = DOM.getDefaultOption(select)
     if option?
       option.selected = true
-      ScribeDOM.triggerEvent(select, 'change')
+      DOM.triggerEvent(select, 'change')
     else
       select.selectedIndex = null
 
   setText: (node, text) ->
     switch node.nodeType
-      when ScribeDOM.ELEMENT_NODE
+      when DOM.ELEMENT_NODE
         if node.textContent?
           node.textContent = text
         else
           node.innerText = text
-      when ScribeDOM.TEXT_NODE then node.data = text
+      when DOM.TEXT_NODE then node.data = text
       else return # Noop
 
   switchTag: (node, newTag) ->
@@ -163,11 +164,11 @@ ScribeDOM =
     return newNode
 
   toggleClass: (node, className, state) ->
-    state = !ScribeDOM.hasClass(node, className) unless state?
+    state = !DOM.hasClass(node, className) unless state?
     if state
-      ScribeDOM.addClass(node, className)
+      DOM.addClass(node, className)
     else
-      ScribeDOM.removeClass(node, className)
+      DOM.removeClass(node, className)
 
   triggerEvent: (elem, eventName, bubble, cancels) ->
     if elem.ownerDocument.createEvent
@@ -180,7 +181,7 @@ ScribeDOM =
   unwrap: (node) ->
     ret = node.firstChild
     next = node.nextSibling
-    _.each(ScribeDOM.getChildNodes(node), (child) ->
+    _.each(DOM.getChildNodes(node), (child) ->
       node.parentNode.insertBefore(child, next)
     )
     node.parentNode.removeChild(node)
@@ -192,4 +193,4 @@ ScribeDOM =
     return wrapper
 
 
-module.exports = ScribeDOM
+module.exports = DOM

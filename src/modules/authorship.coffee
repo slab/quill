@@ -1,10 +1,10 @@
-_             = require('lodash')
-ScribeDOM     = require('../dom')
-ScribeFormat  = require('../format')
-Tandem        = require('tandem-core')
+_      = require('lodash')
+DOM    = require('../dom')
+Format = require('../format')
+Tandem = require('tandem-core')
 
 
-class ScribeAuthorship
+class Authorship
   DEFAULTS:
     authorId: null
     color: 'blue'
@@ -13,7 +13,7 @@ class ScribeAuthorship
   constructor: (@scribe, @editorContainer, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
-    @scribe.editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(@editorContainer, 'author'))
+    @scribe.editor.doc.formatManager.addFormat('author', new Format.Class(@editorContainer, 'author'))
     return unless @options.authorId?
     @scribe.on(@scribe.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @scribe.constructor.events.TEXT_CHANGE and origin == 'user'
@@ -45,16 +45,16 @@ class ScribeAuthorship
     @scribe.addStyles(styles)
 
   attachButton: (button) ->
-    ScribeDOM.addEventListener(button, 'click', =>
-      ScribeDOM.toggleClass(button, 'sc-on')
-      this.enable(ScribeDOM.hasClass(button, 'sc-on'))
+    DOM.addEventListener(button, 'click', =>
+      DOM.toggleClass(button, 'sc-on')
+      this.enable(DOM.hasClass(button, 'sc-on'))
     )
 
   enable: (enabled = true) ->
-    ScribeDOM.toggleClass(@editorContainer, 'authorship', enabled)
+    DOM.toggleClass(@editorContainer, 'authorship', enabled)
 
   disable: ->
     this.enable(false)
 
 
-module.exports = ScribeAuthorship
+module.exports = Authorship

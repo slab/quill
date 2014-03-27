@@ -1,4 +1,4 @@
-class ScribeLeafIterator
+class LeafIterator
   # Start and end are both inclusive
   # Otherwise if end is inclusive, we cannot express end of line unambiguously
   constructor: (@start, @end) ->
@@ -19,10 +19,10 @@ class ScribeLeafIterator
 
   toArray: ->
     arr = []
-    itr = new ScribeLeafIterator(@start, @end)
+    itr = new LeafIterator(@start, @end)
     while next = itr.next()
       arr.push(next)
     return arr
 
 
-module.exports = ScribeLeafIterator
+module.exports = LeafIterator

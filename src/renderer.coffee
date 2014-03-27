@@ -1,7 +1,7 @@
-_                = require('lodash')
-ScribeDOM        = require('./dom')
-ScribeUtils      = require('./utils')
-ScribeNormalizer = require('./normalizer')
+_          = require('lodash')
+DOM        = require('./dom')
+Utils      = require('./utils')
+Normalizer = require('./normalizer')
 
 
 DEFAULT_STYLES =
@@ -35,10 +35,10 @@ _.each([1..9], (i) ->
   DEFAULT_STYLES[".editor-container .indent-#{i}"] = { 'margin-left': "#{2*i}em" }
   DEFAULT_STYLES[".editor-container ol.indent-#{i}"] = { 'list-style-type': LIST_STYLES[(i-1)%3] }
 )
-DEFAULT_STYLES['br'] = { 'display': 'none' } if ScribeUtils.isIE()
+DEFAULT_STYLES['br'] = { 'display': 'none' } if Utils.isIE()
 
 
-class ScribeRenderer
+class Renderer
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
       innerStr = _.map(value, (innerValue, innerKey) -> return "#{innerKey}: #{innerValue};" ).join(' ')
@@ -54,14 +54,14 @@ class ScribeRenderer
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
     container = @root.ownerDocument.createElement('div')
-    ScribeDOM.addClass(container, className)
+    DOM.addClass(container, className)
     @root.parentNode.insertBefore(container, refNode)
     return container
 
   addStyles: (css) ->
     style = @root.ownerDocument.createElement('style')
     style.type = 'text/css'
-    css = ScribeRenderer.objToCss(css) unless _.isString(css)
+    css = Renderer.objToCss(css) unless _.isString(css)
     if style.styleSheet?
       style.styleSheet.cssText = css
     else
@@ -70,7 +70,7 @@ class ScribeRenderer
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
       @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css)
-      ScribeDOM.addClass(@container, 'sc-container')
+      DOM.addClass(@container, 'sc-container')
     )
 
   buildFrame: ->
@@ -91,14 +91,14 @@ class ScribeRenderer
       @iframe = @container
       doc = this.getDocument()
     @root = doc.createElement('div')
-    ScribeDOM.addClass(@root, 'editor-container')
+    DOM.addClass(@root, 'editor-container')
     @root.id = @options.id
     if @options.iframe
       doc.body.appendChild(@root)
     else
       @container.appendChild(@root)
-    @root.innerHTML = ScribeNormalizer.normalizeHtml(html)
-    ScribeDOM.addEventListener(@container, 'focus', =>
+    @root.innerHTML = Normalizer.normalizeHtml(html)
+    DOM.addEventListener(@container, 'focus', =>
       @root.focus()
     )
 
@@ -114,4 +114,4 @@ class ScribeRenderer
       return @iframe.ownerDocument
 
 
-module.exports = ScribeRenderer
+module.exports = Renderer

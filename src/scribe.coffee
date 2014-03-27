@@ -3,8 +3,8 @@ _.str         = require('underscore.string')
 es5shim       = require('es5-shim')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-ScribeEditor  = require('./editor')
-ScribeRange   = require('./range')
+Editor        = require('./editor')
+Range         = require('./range')
 Tandem        = require('tandem-core')
 
 Modules =
@@ -75,7 +75,7 @@ class Scribe extends EventEmitter2
     @options.id = @id = "scribe-#{Scribe.editors.length + 1}"
     @options.emitter = this
     @modules = {}
-    @editor = new ScribeEditor(container, this, @options)
+    @editor = new Editor(container, this, @options)
     Scribe.editors.push(@editor)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Scribe.Theme[themeClass](this, @options)
@@ -169,7 +169,7 @@ class Scribe extends EventEmitter2
 
   setSelection: (start, end, options = {}) ->
     if _.isNumber(start) and _.isNumber(end)
-      range = new ScribeRange(@editor, start, end)
+      range = new Range(@editor, start, end)
     else
       range = start
       options = end or {}

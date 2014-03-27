@@ -1,16 +1,16 @@
-ScribeDOM    = require('../dom')
-ScribePicker = require('./picker')
+DOM    = require('../dom')
+Picker = require('./picker')
 
 
-class ScribeColorPicker extends ScribePicker
+class ColorPicker extends Picker
   constructor: ->
     super
-    ScribeDOM.addClass(@container, 'sc-color-picker')
+    DOM.addClass(@container, 'sc-color-picker')
 
   buildItem: (picker, option, index) ->
     item = super(picker, option, index)
     item.style.backgroundColor = option.value
-    ScribeDOM.setText(item, '')
+    DOM.setText(item, '')
     return item
 
   selectItem: (item) ->
@@ -18,4 +18,4 @@ class ScribeColorPicker extends ScribePicker
     @label.innerHTML = ''
 
 
-module.exports = ScribeColorPicker
+module.exports = ColorPicker

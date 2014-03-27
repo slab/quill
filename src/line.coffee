@@ -1,15 +1,15 @@
-_           = require('lodash')
-LinkedList  = require('linked-list')
-ScribeDOM   = require('./dom')
-ScribeLeaf  = require('./leaf')
-ScribeLine  = require('./line')
-ScribeUtils = require('./utils')
-Tandem      = require('tandem-core')
+_          = require('lodash')
+LinkedList = require('linked-list')
+DOM        = require('./dom')
+Leaf       = require('./leaf')
+Line       = require('./line')
+Utils      = require('./utils')
+Tandem     = require('tandem-core')
 
 # Note: Because Line uses @outerHTML as a heuristic to rebuild, we must be very careful to actually modify HTML when we modify it. Ex. Do not remove a <br> only to add another one back
 # Maybe a better heuristic would also check leaf children are still in the dom
 
-class ScribeLine extends LinkedList.Node
+class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
   @ID_PREFIX  : 'line-'
 
@@ -19,9 +19,9 @@ class ScribeLine extends LinkedList.Node
   @MIN_INDENT: 1    # Smallest besides not having an indent at all
 
   constructor: (@doc, @node) ->
-    @id = _.uniqueId(ScribeLine.ID_PREFIX)
+    @id = _.uniqueId(Line.ID_PREFIX)
     @node.id = @id
-    ScribeDOM.addClass(@node, ScribeLine.CLASS_NAME)
+    DOM.addClass(@node, Line.CLASS_NAME)
     this.rebuild()
     super(@node)
 
@@ -29,23 +29,23 @@ class ScribeLine extends LinkedList.Node
     return if length <= 0
     [prevNode, startNode] = this.splitContents(offset)
     [endNode, nextNode] = this.splitContents(offset + length)
-    ScribeUtils.traverseSiblings(startNode, endNode, fn)
+    Utils.traverseSiblings(startNode, endNode, fn)
 
   buildLeaves: (node, formats) ->
-    _.each(ScribeDOM.getChildNodes(node), (node) =>
+    _.each(DOM.getChildNodes(node), (node) =>
       nodeFormats = _.clone(formats)
       [formatName, formatValue] = @doc.formatManager.getFormat(node)
       nodeFormats[formatName] = formatValue if formatName?
-      if ScribeLeaf.isLeafNode(node)
-        @leaves.append(new ScribeLeaf(this, node, nodeFormats))
-      if ScribeLeaf.isLeafParent(node)
+      if Leaf.isLeafNode(node)
+        @leaves.append(new Leaf(this, node, nodeFormats))
+      if Leaf.isLeafParent(node)
         this.buildLeaves(node, nodeFormats)
     )
 
   deleteText: (offset, length) ->
     return unless length > 0
     this.applyToContents(offset, length, (node) ->
-      ScribeDOM.removeNode(node)
+      DOM.removeNode(node)
     )
     this.rebuild()
 
@@ -86,12 +86,12 @@ class ScribeLine extends LinkedList.Node
       this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
         formatNode.appendChild(node)
-        ScribeUtils.removeFormatFromSubtree(node, format)
+        Utils.removeFormatFromSubtree(node, format)
       )
       @node.insertBefore(formatNode, refNode)
     else
       this.applyToContents(offset, length, (node) =>
-        ScribeUtils.removeFormatFromSubtree(node, format)
+        Utils.removeFormatFromSubtree(node, format)
       )
     this.rebuild()
 
@@ -104,7 +104,7 @@ class ScribeLine extends LinkedList.Node
       this.resetContent()
     else
       span = @node.ownerDocument.createElement('span')
-      ScribeDOM.setText(span, text)
+      DOM.setText(span, text)
       if offset == 0    # Special case for remote cursor preservation
         @node.insertBefore(span, @node.firstChild)
       else
@@ -144,8 +144,8 @@ class ScribeLine extends LinkedList.Node
     @delta = new Tandem.Delta(0, @length, ops)
 
   splitContents: (offset) ->
-    [node, offset] = ScribeUtils.getChildAtOffset(@node, offset)
-    return ScribeUtils.splitNode(node, offset)
+    [node, offset] = Utils.getChildAtOffset(@node, offset)
+    return Utils.splitNode(node, offset)
 
 
-module.exports = ScribeLine
+module.exports = Line

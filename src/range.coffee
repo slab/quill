@@ -1,15 +1,15 @@
-_                   = require('lodash')
-ScribeLeafIterator  = require('./leaf-iterator')
-ScribePosition      = require('./position')
+_            = require('lodash')
+LeafIterator = require('./leaf-iterator')
+Position     = require('./position')
 
 
-class ScribeRange
+class Range
   # constructor: (Editor editor, Number startIndex, Number endIndex) ->
   # constructor: (Editor editor, Object start, Object end) ->
   constructor: (@editor, @start, @end) ->
     # TODO initialize with index
-    @start = new ScribePosition(@editor, @start) if _.isNumber(@start)
-    @end = new ScribePosition(@editor, @end) if _.isNumber(@end)
+    @start = new Position(@editor, @start) if _.isNumber(@start)
+    @end = new Position(@editor, @end) if _.isNumber(@end)
 
   equals: (range) ->
     return false unless range?
@@ -57,13 +57,13 @@ class ScribeRange
 
   getLeafNodes: ->
     return [@start.leafNode] if this.isCollapsed()
-    leafIterator = new ScribeLeafIterator(@start.getLeaf(), @end.getLeaf())
+    leafIterator = new LeafIterator(@start.getLeaf(), @end.getLeaf())
     leafNodes = _.pluck(leafIterator.toArray(), 'node')
     leafNodes.pop() if leafNodes[leafNodes.length - 1] != @end.leafNode || @end.offset == 0
     return leafNodes
 
   getLeaves: ->
-    itr = new ScribeLeafIterator(@start.getLeaf(), @end.getLeaf())
+    itr = new LeafIterator(@start.getLeaf(), @end.getLeaf())
     arr = itr.toArray()
     return arr
 
@@ -104,4 +104,4 @@ class ScribeRange
     return @start.leafNode == @end.leafNode && @start.offset == @end.offset
 
 
-module.exports = ScribeRange
+module.exports = Range

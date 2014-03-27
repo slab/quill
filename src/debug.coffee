@@ -1,15 +1,14 @@
-_           = require('lodash')
-ScribeDOM   = require('./dom')
-ScribeNormalizer = require('./normalizer')
-ScribeUtils = require('./utils')
+_     = require('lodash')
+DOM   = require('./dom')
+Utils = require('./utils')
 
 
-ScribeDebug =
+Debug =
   checkDocumentConsistency: (doc) ->
-    nodesByLine = _.map(ScribeDOM.getChildNodes(doc.root), (lineNode) ->
+    nodesByLine = _.map(DOM.getChildNodes(doc.root), (lineNode) ->
       nodes = lineNode.querySelectorAll('*')
       return _.filter(nodes, (node) ->
-        return node.nodeType == ScribeDOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == ScribeDOM.TEXT_NODE)
+        return node.nodeType == DOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == DOM.TEXT_NODE)
       )
     )
     lines = doc.lines.toArray()
@@ -26,7 +25,7 @@ ScribeDebug =
             throw new Error("Null line")
       )
       # Line nodes and line's nodes should match
-      _.each(ScribeDOM.getChildNodes(doc.root), (lineNode, index) ->
+      _.each(DOM.getChildNodes(doc.root), (lineNode, index) ->
         if lines[index].node != lineNode
           throw new Error("Line and nodes do not match")
       )
@@ -54,7 +53,7 @@ ScribeDebug =
       if lines.length != nodesByLine.length
         throw new Error("doc.lines and nodesByLine differ in length")
       _.each(lines, (line, index) =>
-        calculatedLength = _.reduce(ScribeDOM.getChildNodes(line.node), ((length, node) -> ScribeUtils.getNodeLength(node) + length), 0)
+        calculatedLength = _.reduce(DOM.getChildNodes(line.node), ((length, node) -> Utils.getNodeLength(node) + length), 0)
         if line.length != calculatedLength
           throw new Error('Line length inccorect')
         leaves = line.leaves.toArray()
@@ -79,15 +78,5 @@ ScribeDebug =
       return false
     return true
 
-  compareHtml: (html1, html2) ->
-    return ScribeDebug.stripClassId(html1) == ScribeDebug.stripClassId(html2)
 
-  stripClassId: (html) ->
-    html = Scribe.Normalizer.normalizeHtml(html)
-    html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
-    html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
-    html = html.replace(/\ (class|id)=[a-z0-9\-_]+>/gi, '>')
-    return html
-
-
-module.exports = ScribeDebug
+module.exports = Debug

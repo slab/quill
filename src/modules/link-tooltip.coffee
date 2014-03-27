@@ -1,26 +1,24 @@
-_               = require('lodash')
-ScribeDOM       = require('../dom')
-ScribePosition  = require('../position')
-ScribeRange     = require('../range')
+_   = require('lodash')
+DOM = require('../dom')
 
 
 enterEditMode = (url) ->
   url = normalizeUrl(url)
-  ScribeDOM.addClass(@tooltip, 'editing')
+  DOM.addClass(@tooltip, 'editing')
   @tooltipInput.focus()
   @tooltipInput.value = url
 
 exitEditMode = ->
-  if @savedLink? or ScribeDOM.getText(@tooltipLink) != @tooltipInput.value
+  if @savedLink? or DOM.getText(@tooltipLink) != @tooltipInput.value
     url = normalizeUrl(@tooltipInput.value)
     @tooltipLink.href = url
-    ScribeDOM.setText(@tooltipLink, url)
+    DOM.setText(@tooltipLink, url)
     if @savedLink?
       @savedLink.href = url
       @savedLink = null
     else
       formatLink.call(this, @tooltipInput.value)
-  ScribeDOM.removeClass(@tooltip, 'editing')
+  DOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
   @scribe.setSelection(@savedRange, { silent: true })
@@ -30,34 +28,34 @@ hideTooltip = ->
   @tooltip.style.left = '-10000px'
 
 initListeners = ->
-  ScribeDOM.addEventListener(@editorContainer, 'mouseup', (event) =>
+  DOM.addEventListener(@editorContainer, 'mouseup', (event) =>
     link = event.target
     while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
       if link.tagName == 'A'
         url = normalizeUrl(link.href)
         @tooltipLink.href = url
-        ScribeDOM.setText(@tooltipLink, url)
-        ScribeDOM.removeClass(@tooltip, 'editing')
+        DOM.setText(@tooltipLink, url)
+        DOM.removeClass(@tooltip, 'editing')
         showTooltip.call(this, link.getBoundingClientRect())
         @savedLink = link
         return
       link = link.parentNode
     hideTooltip.call(this)
   )
-  ScribeDOM.addEventListener(@tooltipChange, 'click', =>
-    enterEditMode.call(this, ScribeDOM.getText(@tooltipLink))
+  DOM.addEventListener(@tooltipChange, 'click', =>
+    enterEditMode.call(this, DOM.getText(@tooltipLink))
   )
-  ScribeDOM.addEventListener(@tooltipDone, 'click', =>
+  DOM.addEventListener(@tooltipDone, 'click', =>
     exitEditMode.call(this)
   )
-  ScribeDOM.addEventListener(@tooltipInput, 'keyup', (event) =>
-    exitEditMode.call(this) if event.which == ScribeKeyboard.keys.ENTER
+  DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
+    exitEditMode.call(this) if event.which == Keyboard.keys.ENTER
   )
   return unless @options.button?
-  ScribeDOM.addEventListener(@options.button, 'click', =>
+  DOM.addEventListener(@options.button, 'click', =>
     @savedRange = @scribe.getSelection()
     return unless @savedRange? and !@savedRange.isCollapsed()
-    if ScribeDOM.hasClass(@options.button, 'active')
+    if DOM.hasClass(@options.button, 'active')
       formatLink.call(this, false)
       hideTooltip.call(this)
     else
@@ -66,7 +64,7 @@ initListeners = ->
         @scribe.focus()
         formatLink.call(this, url)
       else
-        ScribeDOM.addClass(@tooltip, 'editing')
+        DOM.addClass(@tooltip, 'editing')
         showTooltip.call(this, @scribe.editor.selection.getDimensions())
         enterEditMode.call(this, url)
   )
@@ -130,7 +128,7 @@ showTooltip = (target, subjectDist = 5) ->
   @tooltip.style.top = (top + (@tooltip.offsetTop-tooltip.top)) + 'px'
 
 
-class ScribeLinkTooltip
+class LinkTooltip
   DEFAULTS:
     button: null
 
@@ -139,4 +137,4 @@ class ScribeLinkTooltip
     initListeners.call(this)
 
 
-module.exports = ScribeLinkTooltip
+module.exports = LinkTooltip
