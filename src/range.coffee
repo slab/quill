@@ -4,12 +4,9 @@ Position     = require('./position')
 
 
 class Range
-  # constructor: (Editor editor, Number startIndex, Number endIndex) ->
-  # constructor: (Editor editor, Object start, Object end) ->
-  constructor: (@editor, @start, @end) ->
-    # TODO initialize with index
-    @start = new Position(@editor, @start) if _.isNumber(@start)
-    @end = new Position(@editor, @end) if _.isNumber(@end)
+  constructor: (@doc, @start, @end) ->
+    @start = new Position(@doc, @start) if _.isNumber(@start)
+    @end = new Position(@doc, @end) if _.isNumber(@end)
 
   equals: (range) ->
     return false unless range?
@@ -68,8 +65,8 @@ class Range
     return arr
 
   getLineNodes: ->
-    startLine = @editor.doc.findLineNode(@start.leafNode)
-    endLine = @editor.doc.findLineNode(@end.leafNode)
+    startLine = @doc.findLineNode(@start.leafNode)
+    endLine = @doc.findLineNode(@end.leafNode)
     if startLine == endLine
       return [startLine]
     lines = []
@@ -81,7 +78,7 @@ class Range
 
   getLines: ->
     return _.map(this.getLineNodes(), (lineNode) =>
-      return @editor.doc.findLine(lineNode)
+      return @doc.findLine(lineNode)
     )
 
   getText: ->

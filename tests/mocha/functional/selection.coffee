@@ -251,7 +251,7 @@ describe('Selection', ->
             expected: test.expected
             fn: (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
               testEditor.focus()
-              testEditor.setSelection(new Scribe.Range(testEditor.editor, testStart, testEnd))
+              testEditor.setSelection(new Scribe.Range(testEditor.editor.doc, testStart, testEnd))
               test.fn.call(null, testEditor)
           )
         )

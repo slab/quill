@@ -39,13 +39,13 @@ normalizeNativeRange = (nativeRange) ->
 
 _nativeRangeToRange = (nativeRange) ->
   return null unless nativeRange?
-  start = new Position(@editor, nativeRange.startContainer, nativeRange.startOffset)
-  end = new Position(@editor, nativeRange.endContainer, nativeRange.endOffset)
+  start = new Position(@editor.doc, nativeRange.startContainer, nativeRange.startOffset)
+  end = new Position(@editor.doc, nativeRange.endContainer, nativeRange.endOffset)
   if start.index <= end.index
-    range = new Range(@editor, start, end)
+    range = new Range(@editor.doc, start, end)
     range.isBackwards = false
   else
-    range = new Range(@editor, end, start)
+    range = new Range(@editor.doc, end, start)
     range.isBackwards = true
   range.isBackwards = true if nativeRange.isBackwards
   return range
@@ -59,7 +59,7 @@ _preserveWithIndex = (nativeRange, index, lengthAdded, fn) ->
       return Math.max(pos.index + lengthAdded, index)
   )
   fn.call(null)
-  this.setRange(new Range(@editor, startIndex, endIndex), true)
+  this.setRange(new Range(@editor.doc, startIndex, endIndex), true)
 
 _preserveWithLine = (savedNativeRange, fn) ->
   savedData = _.map([
@@ -80,9 +80,9 @@ _preserveWithLine = (savedNativeRange, fn) ->
       if savedDatum.nextLine and savedDatum.lineNode.nextSibling?
         savedDatum.lineNode = savedDatum.lineNode.nextSibling
         savedDatum.offset = 0
-      return new Position(@editor, savedDatum.lineNode, savedDatum.offset)
+      return new Position(@editor.doc, savedDatum.lineNode, savedDatum.offset)
     )
-    this.setRange(new Range(@editor, start, end), true)
+    this.setRange(new Range(@editor.doc, start, end), true)
 
 _updateFocus = (silent) ->
   hasFocus = @editor.renderer.checkFocus()

@@ -4,8 +4,8 @@ Utils = require('./utils')
 
 
 class Position
-  @findLeafNode: (editor, node, offset) ->
-    [node, offset] = Utils.findDeepestNode(node, offset)
+  @findLeafNode: (container, offset) ->
+    [node, offset] = Utils.findDeepestNode(container, offset)
     if node.nodeType == DOM.TEXT_NODE
       offset = Position.getIndex(node, offset, node.parentNode)
       node = node.parentNode
@@ -20,23 +20,23 @@ class Position
     return index
 
 
-  # constructor: (Editor editor, Object node, Number offset) ->
-  # constructor: (Editor editor, Number index) ->
-  constructor: (@editor, @leafNode, @offset) ->
-    if _.isNumber(@leafNode)
-      @offset = @index = @leafNode
-      @leafNode = @editor.root
+  # constructor: (Document doc, Object node, Number offset) ->
+  # constructor: (Document doc, Number index) ->
+  constructor: (@doc, node, offset) ->
+    if _.isNumber(node)
+      offset = @index = node
+      node = @doc.root
     else
-      @index = Position.getIndex(@leafNode, @offset)
-    [@leafNode, @offset] = Position.findLeafNode(@editor, @leafNode, @offset)
+      @index = Position.getIndex(node, offset)
+    [@leafNode, @offset] = Position.findLeafNode(node, offset)
 
   getLeaf: ->
     return @leaf if @leaf?
-    @leaf = @editor.doc.findLeaf(@leafNode)
+    @leaf = @doc.findLeaf(@leafNode)
     return @leaf
 
   getIndex: ->
-    return Position.getIndex(@leafNode, @offset, @editor.root)
+    return Position.getIndex(@leafNode, @offset, @doc.root)
 
 
 module.exports = Position

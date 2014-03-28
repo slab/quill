@@ -39,16 +39,16 @@ _moveCursor = (cursor, referenceNode) ->
 
 _updateCursor = (cursor) ->
   @scribe.editor.doSilently( =>
-    position = new Position(@scribe.editor, cursor.index)
+    [leafNode, offset] = Position.findLeafNode(@editorContainer, cursor.index)
     guide = @container.ownerDocument.createElement('span')
-    if !position.leafNode.firstChild?
+    if !leafNode.firstChild?
       DOM.setText(guide, DOM.NOBREAK_SPACE)
       # Should only be the case for empty lines
-      position.leafNode.parentNode.insertBefore(guide, position.leafNode)
+      leafNode.parentNode.insertBefore(guide, leafNode)
       _moveCursor.call(this, cursor, guide)
     else
       DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
-      [leftText, rightText, didSplit] = Utils.splitNode(position.leafNode.firstChild, position.offset)
+      [leftText, rightText, didSplit] = Utils.splitNode(leafNode.firstChild, offset)
       if rightText?
         rightText.parentNode.insertBefore(guide, rightText)
         _moveCursor.call(this, cursor, guide)
@@ -56,7 +56,7 @@ _updateCursor = (cursor) ->
         leftText.parentNode.appendChild(guide)
         _moveCursor.call(this, cursor, guide)
     guide.parentNode.removeChild(guide)
-    DOM.normalize(position.leafNode) if didSplit
+    DOM.normalize(leafNode) if didSplit
   )
   cursor.dirty = false
 
