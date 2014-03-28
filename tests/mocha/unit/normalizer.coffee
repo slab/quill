@@ -2,7 +2,7 @@ describe('Normalizer', ->
   describe('statics', ->
     describe('breakLine', ->
       initials =
-        'Inner divs': 
+        'Inner divs':
           '<div>
             <div><span>One</span></div>
             <div><span>Two</span></div>
@@ -19,10 +19,10 @@ describe('Normalizer', ->
 
       _.each(initials, (html, name) ->
         it(name, ->
-          html = html.replace(/\s/g, '')
+          html = html.replace(/\s+/g, '')
           container = $('#test-container').html(html).get(0)
           Scribe.Normalizer.breakLine(container.firstChild, container)
-          expect(container.innerHTML).to.equal(expectedHtml)
+          expect.equalHtml(container, expectedHtml)
         )
       )
     )
@@ -57,7 +57,7 @@ describe('Normalizer', ->
         it(name, ->
           container = $('#test-container').html(test.initial.join('')).get(0)
           Scribe.Normalizer.normalizeBreak(container, container.querySelector('br'))
-          expect(container.innerHTML).to.equal(test.expected.join(''))
+          expect.equalHtml(container, test.expected)
         )
       )
     )
@@ -90,7 +90,7 @@ describe('Normalizer', ->
         it(name, ->
           container = $('#test-container').html(test.initial.join('')).get(0)
           Scribe.Normalizer.groupBlocks(container)
-          expect(container.innerHTML).to.equal(test.expected.join(''))
+          expect.equalHtml(container, test.expected)
         )
       )
     )
@@ -145,7 +145,7 @@ describe('Normalizer', ->
         it(name, ->
           lineNode = $('#test-container').html(test.initial).get(0)
           @normalizer.normalizeLine(lineNode)
-          expect(lineNode.innerHTML).to.equal(test.expected)
+          expect.equalHtml(lineNode, test.expected)
         )
       )
     )
@@ -251,11 +251,10 @@ describe('Normalizer', ->
       _.each(tests, (test, name) ->
         it(name, ->
           html = if _.isArray(test.initial) then test.initial.join('') else test.initial
-          @container.innerHTML = html.replace(/\s/g, '')
+          @container.innerHTML = Scribe.Normalizer.normalizeHtml(html)
           @normalizer.normalizeDoc()
           expected = (test.expected or html)
-          expected = expected.join('') if _.isArray(expected)
-          expect(@container.innerHTML).to.equal(expected.replace(/\s/g, ''))
+          expect.equalHtml(@container, expected)
         )
       )
     )
@@ -291,9 +290,9 @@ describe('Normalizer', ->
         it(name, ->
           @container.innerHTML = test.initial
           @normalizer.normalizeTags(@container)
-          expect(@container.innerHTML).to.equal(test.expected)
+          expect.equalHtml(@container, test.expected)
         )
       )
-    )  
+    )
   )
 )

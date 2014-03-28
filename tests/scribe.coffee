@@ -1,5 +1,4 @@
 Scribe = require('../src/scribe')
-Scribe.Debug         = require('../src/debug')
 Scribe.Document      = require('../src/document')
 Scribe.DOM           = require('../src/dom')
 Scribe.Editor        = require('../src/editor')

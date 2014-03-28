@@ -52,17 +52,17 @@ describe('DOM', ->
       attributes = Scribe.DOM.getAttributes(@node)
       expect(_.keys(attributes).length).to.equal(2)
       expect(attributes['class']).to.equal('custom')
-      expect(attributes['style']).to.equal('color: red;')
+      expect(attributes['style'].toLowerCase()).to.contain('color: red')
     )
 
     it('clearAttributes', ->
       Scribe.DOM.clearAttributes(@node)
-      expect(@node.outerHTML).to.equal('<div></div>')
+      expect.equalHtml(@node.outerHTML, '<div></div>')
     )
 
     it('clearAttributes with exception', ->
       Scribe.DOM.clearAttributes(@node, 'class')
-      expect(@node.outerHTML).to.equal('<div class="custom"></div>')
+      expect.equalHtml(@node.outerHTML, '<div class="custom"></div>')
     )
   )
 
@@ -77,8 +77,9 @@ describe('DOM', ->
           </select>
         </div>'
       )
-      @button = testContainer.firstChild.firstElementChild
-      @select = testContainer.firstChild.lastElementChild
+      # IE8 does not define firstElementChild
+      @button = testContainer.firstChild.children[0]
+      @select = testContainer.firstChild.children[1]
     )
 
     it('addEventListener click', (done) ->
@@ -140,33 +141,33 @@ describe('DOM', ->
 
     it('mergeNodes', ->
       Scribe.DOM.mergeNodes(testContainer.firstChild, testContainer.lastChild)
-      expect($(testContainer).html()).to.equal('<div>One<span>Two</span><b>Bold</b></div>')
+      expect.equalHtml(testContainer, '<div>One<span>Two</span><b>Bold</b></div>')
     )
 
     it('moveChildren', ->
       Scribe.DOM.moveChildren(testContainer.firstChild, testContainer.lastChild)
-      expect($(testContainer).html()).to.equal('<div>One<span>Two</span><b>Bold</b></div><div></div>')
+      expect.equalHtml(testContainer, '<div>One<span>Two</span><b>Bold</b></div><div></div>')
     )
 
     it('removeNode', ->
       Scribe.DOM.removeNode(testContainer.lastChild.firstChild)
-      expect($(testContainer).html()).to.equal('<div>One</div><div><b>Bold</b></div>')
+      expect.equalHtml(testContainer, '<div>One</div><div><b>Bold</b></div>')
     )
 
     it('switchTag', ->
       Scribe.DOM.switchTag(testContainer.firstChild, 'span')
-      expect($(testContainer).html()).to.equal('<span>One</span><div><span>Two</span><b>Bold</b></div>')
+      expect.equalHtml(testContainer, '<span>One</span><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('unwrap', ->
       Scribe.DOM.unwrap(testContainer.lastChild)
-      expect($(testContainer).html()).to.equal('<div>One</div><span>Two</span><b>Bold</b>')
+      expect.equalHtml(testContainer, '<div>One</div><span>Two</span><b>Bold</b>')
     )
 
     it('wrap', ->
       wrapper = testContainer.ownerDocument.createElement('div')
       Scribe.DOM.wrap(wrapper, testContainer.firstChild)
-      expect($(testContainer).html()).to.equal('<div><div>One</div></div><div><span>Two</span><b>Bold</b></div>')
+      expect.equalHtml(testContainer, '<div><div>One</div></div><div><span>Two</span><b>Bold</b></div>')
     )
   )
 
@@ -178,12 +179,12 @@ describe('DOM', ->
           <option value="two" selected>Two</option>
         </select>
       ')
-      @select = testContainer.firstElementChild
+      @select = testContainer.children[0]
       $(@select).val('one')
     )
 
     it('getDefaultOption', ->
-      expect(Scribe.DOM.getDefaultOption(@select)).to.equal(@select.lastElementChild)
+      expect(Scribe.DOM.getDefaultOption(@select)).to.equal(@select.children[1])
     )
 
     it('resetSelect', ->

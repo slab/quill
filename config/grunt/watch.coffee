@@ -9,7 +9,7 @@ module.exports = (grunt) ->
       files: ['tests/mocha/**/*.coffee']
       tasks: ['browserify:tests']
     coffee:
-      files: ['demo/scripts/*.coffee', 'tests/webdriver/**/*.coffee']
+      files: ['demo/scripts/*.coffee', 'tests/karma/inject.coffee', 'tests/webdriver/**/*.coffee']
       tasks: ['newer:coffee:all']
     jade:
       files: ['demo/*.jade', 'tests/**/*.jade']

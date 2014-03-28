@@ -1,5 +1,3 @@
-expect = require('expect.js')
-
 buildString = (reference, arr) ->
   return _.map(arr, (elem) =>
     return if _.isNumber(elem) then reference[elem] else elem

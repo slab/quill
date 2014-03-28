@@ -1,4 +1,3 @@
-expect = require('expect.js')
 Tandem = require('tandem-core')
 ScribeHtmlTest = require('./html-test')
 
@@ -35,7 +34,8 @@ class ScribeEditorTest extends ScribeHtmlTest
         isEqual = testDelta.isEqual(expectedDelta)
         console.error("Unequal deltas", testDelta, expectedDelta) unless isEqual
         expect(isEqual).to.be(true)
-        consistent = Scribe.Debug.checkDocumentConsistency(testEditor.editor.doc)
+        # TODO fix this
+        consistent = expect.consistent(testEditor.editor.doc)
         console.error("Editors not consistent", testEditor, expectedEditor) unless consistent
         expect(consistent).to.be(true)
     htmlOptions.checker = (testContainer, expectedContainer, args..., callback) =>
