@@ -171,7 +171,7 @@ class Editor
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      @.emit(@.constructor.events.TEXT_CHANGE, delta, 'user')
+      @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, delta, 'user')
     @selection.update(delta != false)
 
   doSilently: (fn) ->
