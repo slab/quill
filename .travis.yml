@@ -9,6 +9,7 @@ branches:
   only:
     - master
     - develop
+    - /^sauce-.+$/
     - /^v\d+\.\d+\.\d+$/
 env:
   - SAUCE_BROWSER=remote-mac-chrome
