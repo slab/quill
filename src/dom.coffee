@@ -56,13 +56,6 @@ DOM =
       attributes[attr.name] = attr.value
     return attributes
 
-  getChildIndex: (node) ->
-    index = 0
-    while node.previousSibling?
-      node = node.previousSibling
-      index += 1
-    return index
-
   getChildNodes: (node) ->
     children = []
     child = node.firstChild
@@ -101,13 +94,6 @@ DOM =
     else if node.className?
       return _.indexOf(DOM.getClasses(node), cssClass) > -1
     return false
-
-  mergeNodes: (node1, node2) ->
-    return node2 if !node1?
-    return node1 if !node2?
-    this.moveChildren(node1, node2)
-    node2.parentNode.removeChild(node2)
-    return node1
 
   moveChildren: (newParent, oldParent) ->
     _.each(DOM.getChildNodes(oldParent), (child) ->

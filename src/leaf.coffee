@@ -1,7 +1,6 @@
 _          = require('lodash')
 LinkedList = require('linked-list')
 DOM        = require('./dom')
-Position   = require('./position')
 Utils      = require('./utils')
 
 
@@ -29,9 +28,6 @@ class Leaf extends LinkedList.Node
 
   getFormats: ->
     return _.extend({}, @formats, @line.formats)
-
-  getLineOffset: ->
-    return Position.getIndex(@node, 0, @line.node)
 
   insertText: (index, text) ->
     @text = @text.substring(0, index) + text + @text.substring(index)

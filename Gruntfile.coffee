@@ -5,10 +5,10 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
   })
 
-  require('./config/grunt/build')(grunt)
-  require('./config/grunt/tests')(grunt)
-  require('./config/grunt/concurrent')(grunt)
-  require('./config/grunt/watch')(grunt)
+  require('./grunt/build')(grunt)
+  require('./grunt/tests')(grunt)
+  require('./grunt/concurrent')(grunt)
+  require('./grunt/watch')(grunt)
 
   grunt.registerTask('default', ['clean', 'copy', 'concurrent:template', 'concurrent:browserify', 'uglify', 'concat'])
 

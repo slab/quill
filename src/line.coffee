@@ -64,9 +64,6 @@ class Line extends LinkedList.Node
         offset -= leaf.length
     return [leaf, offset]
 
-  format: (name, value) ->
-    throw new Error("Unimplemented")
-
   formatText: (offset, length, name, value) ->
     while length > 0
       op = _.first(@delta.getOpsAt(offset, 1))

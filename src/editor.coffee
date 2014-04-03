@@ -32,12 +32,7 @@ _formatAt = (index, length, name, value) ->
   @selection.preserve(index, 0, =>
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
-      if Line.FORMATS[name]?
-        # If newline character is being applied with formatting
-        if length > line.length - offset
-          line.format(name, value)
-      else
-        line.formatText(offset, Math.min(length, line.length - offset), name, value)
+      line.formatText(offset, Math.min(length, line.length - offset), name, value)
       length -= (line.length - offset)
       offset = 0
       line = line.next

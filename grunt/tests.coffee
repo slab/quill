@@ -50,7 +50,7 @@ module.exports = (grunt) ->
     coverage:
       reporters: ['coverage']
     'coverage-unit':
-      exclude: ['tests/mocha/editor.js', 'tests/mocha/functional.js']
+      exclude: ['tests/mocha/editor.js', 'tests/mocha/unit.js']
       reporters: ['coverage']
   ))
 

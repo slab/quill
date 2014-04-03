@@ -139,11 +139,6 @@ describe('DOM', ->
       $(testContainer).html('<div>One</div><div><span>Two</span><b>Bold</b></div>')
     )
 
-    it('mergeNodes', ->
-      Scribe.DOM.mergeNodes(testContainer.firstChild, testContainer.lastChild)
-      expect.equalHtml(testContainer, '<div>One<span>Two</span><b>Bold</b></div>')
-    )
-
     it('moveChildren', ->
       Scribe.DOM.moveChildren(testContainer.firstChild, testContainer.lastChild)
       expect.equalHtml(testContainer, '<div>One<span>Two</span><b>Bold</b></div><div></div>')
@@ -203,12 +198,6 @@ describe('DOM', ->
       nodes = Scribe.DOM.getChildNodes(testContainer)
       _.each(nodes, (node, i) ->
         expect(node).to.equal(testContainer.childNodes[i])
-      )
-    )
-
-    it('getChildIndex', ->
-      _.each(Scribe.DOM.getChildNodes(testContainer), (node, i) ->
-        expect(Scribe.DOM.getChildIndex(node)).to.equal(i)
       )
     )
   )
