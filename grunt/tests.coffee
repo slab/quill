@@ -5,8 +5,8 @@ replay = ''
 if fs.existsSync('tests/webdriver/fuzzer_output/fails')
   replay = fs.readdirSync('tests/webdriver/fuzzer_output/fails')[0] or ''
 
-remoteReporter = ['dots']
-remoteReporter.push('saucelabs') if process.env.TRAVIS_BRANCH == 'master'
+remoteReporters = ['dots']
+remoteReporters.push('saucelabs') if process.env.TRAVIS_BRANCH == 'master'
 
 remoteBrowserGroups =
   'mac'     : ['mac-chrome', 'mac-firefox', 'mac-safari']
@@ -15,14 +15,15 @@ remoteBrowserGroups =
   'linux'   : ['linux-chrome', 'linux-firefox']
   'mobile'  : ['ipad', 'iphone']
 
+remoteConfigs =
+  browserDisconnectTimeout: 10000
+  browserNoActivityTimeout: 20000
+  reporters: remoteReporters
+
 remoteKarma = _.reduce(remoteBrowserGroups, (memo, browsers, group) ->
-  memo["remote-#{group}"] =
-    browsers: browsers
-    reporters: remoteReporter
+  memo["remote-#{group}"] = _.defaults({ browsers: browsers }, remoteConfigs)
   _.each(browsers, (browser) ->
-    memo["remote-#{browser}"] =
-      browsers: [browser]
-      reporters: remoteReporter
+    memo["remote-#{browser}"] = _.defaults({ browsers: [browser] }, remoteConfigs)
   )
   return memo
 , {})
