@@ -114,6 +114,7 @@ class Normalizer
     # Remove leading and tailing whitespace
     html = html.replace(/^\s+/, '').replace(/\s+$/, '')
     # Remove whitespace between tags
+    # TODO: why does this not remove space within tags ex. <b> </b>
     html = html.replace(/\>\s+\</g, '><')
     # Standardize br
     html = html.replace(/<br><\/br>/, '<br/>')
