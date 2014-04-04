@@ -1,25 +1,25 @@
 ---
 layout: docs
-title: Text Manipulation - Scribe
+title: Text Manipulation - Quill
 permalink: /docs/api/manipulation/
 ---
 
 # Manipulation
 
-Scribe allows granular access to its contents through the following methods.
+Quill allows granular access to its contents through the following methods.
 
-1. [Scribe.prototype.getText](#scribeprototypegettext)
-1. [Scribe.prototype.insertText](#scribeprototypeinserttext)
-1. [Scribe.prototype.deleteText](#scribeprototypedeletetext)
-1. [Scribe.prototype.formatText](#scribeprototypeformattext)
-1. [Scribe.prototype.getHTML](#scribeprototypegethtml)
-1. [Scribe.prototype.setHTML](#scribeprototypesethtml)
-1. [Scribe.prototype.getContents](#scribeprototypegetcontents)
-1. [Scribe.prototype.setContents](#scribeprototypesetcontents)
-1. [Scribe.prototype.updateContents](#scribeprototypeupdatecontents)
+1. [Quill.prototype.getText](#quillprototypegettext)
+1. [Quill.prototype.insertText](#quillprototypeinserttext)
+1. [Quill.prototype.deleteText](#quillprototypedeletetext)
+1. [Quill.prototype.formatText](#quillprototypeformattext)
+1. [Quill.prototype.getHTML](#quillprototypegethtml)
+1. [Quill.prototype.setHTML](#quillprototypesethtml)
+1. [Quill.prototype.getContents](#quillprototypegetcontents)
+1. [Quill.prototype.setContents](#quillprototypesetcontents)
+1. [Quill.prototype.updateContents](#quillprototypeupdatecontents)
 
 
-### Scribe.prototype.getText
+### Quill.prototype.getText
 
 Retrieves the string contents of the editor.
 
@@ -48,7 +48,7 @@ var text = editor.getText(0, 10);
 {% endhighlight %}
 
 
-### Scribe.prototype.insertText
+### Quill.prototype.insertText
 
 Inserts text into the editor. See [formats](/docs/editor/formats/) for a list of available formats.
 
@@ -73,14 +73,14 @@ Inserts text into the editor. See [formats](/docs/editor/formats/) for a list of
 {% highlight javascript %}
 editor.insertText(0, 'Hello', 'bold', true);
 
-editor.insertText(5, 'Scribe', {
+editor.insertText(5, 'Quill', {
   'italic': true,
   'fore-color': '#ffff00'
 });
 {% endhighlight %}
 
 
-### Scribe.prototype.deleteText
+### Quill.prototype.deleteText
 
 Deletes text from the editor.
 
@@ -102,7 +102,7 @@ editor.deleteText(0, 10);
 {% endhighlight %}
 
 
-### Scribe.prototype.formatText
+### Quill.prototype.formatText
 
 Formats text in the editor. See [formats](/docs/editor/formats/) for a list of available formats.
 
@@ -134,7 +134,7 @@ editor.formatText(5, 6, {
 {% endhighlight %}
 
 
-### Scribe.prototype.getHTML
+### Quill.prototype.getHTML
 
 Retrieves the HTML contents of the editor.
 
@@ -153,7 +153,7 @@ var html = editor.getHTML();
 {% endhighlight %}
 
 
-### Scribe.prototype.setHTML
+### Quill.prototype.setHTML
 
 Sets contents of editor with given HTML. Note the editor will be normalize the input to the subset it recognizes.
 
@@ -174,7 +174,7 @@ editor.setHTML('<div>Hello</div>');
 {% endhighlight %}
 
 
-### Scribe.prototype.getContents
+### Quill.prototype.getContents
 
 Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/api/deltas/) object.
 
@@ -202,7 +202,7 @@ var delta = editor.getContents();
 {% endhighlight %}
 
 
-### Scribe.prototype.setContents
+### Quill.prototype.setContents
 
 Overwrites editor with given contents.
 
@@ -227,7 +227,7 @@ editor.setContents([
 {% endhighlight %}
 
 
-### Scribe.prototype.updateContents
+### Quill.prototype.updateContents
 
 Applies Delta to editor contents.
 
@@ -250,10 +250,10 @@ editor.update({
   endLength: 13,
   ops: [
     { start: 0, end: 6 }, // Keep 'Hello '
-    { text: 'Scribe' },   // Insert 'Scribe'
+    { text: 'Quill' },   // Insert 'Quill'
                           // Since there is no retain for index 6-10, 'World' is deleted
     { start: 11, end: 12, attributes: { bold: true } }    // Apply bold to exclamation mark
   ]
 });
-// Editor should now be [{ text: 'Hello Scribe' }, { text: '!', attributes: { bold: true} }]
+// Editor should now be [{ text: 'Hello Quill' }, { text: '!', attributes: { bold: true} }]
 {% endhighlight %}

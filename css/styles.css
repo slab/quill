@@ -52,7 +52,7 @@ body.home {
   z-index: 10;
 }
 
-.scribe-wrapper {
+.quill-wrapper {
   background-color: #fff;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
@@ -267,7 +267,7 @@ body.home {
 #docs-container p > strong {
   text-decoration: underline;
 }
-#docs-container .scribe-wrapper {
+#docs-container .quill-wrapper {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
   margin: 20px 0px 25px;
@@ -287,7 +287,7 @@ body.home {
 #examples-container pre {
   margin-left: 0px;
 }
-#examples-container .scribe-wrapper {
+#examples-container .quill-wrapper {
   margin: 15px 0px;
 }
 #examples-container #basic-toolbar {

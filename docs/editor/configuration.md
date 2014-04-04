@@ -1,21 +1,21 @@
 ---
 layout: docs
-title: Editor Configuration - Scribe
+title: Editor Configuration - Quill
 permalink: /docs/editor/configuration/
 ---
 
 # Configuration
 
-Scribe allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules](/docs/modules/) section for adding new functionality and the [Themes](/docs/themes/) section for styling.
+Quill allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules](/docs/modules/) section for adding new functionality and the [Themes](/docs/themes/) section for styling.
 
-To configure Scribe, pass in an object with the following recognized keys:
+To configure Quill, pass in an object with the following recognized keys:
 
 {% highlight javascript %}
 var configs = {
   logLevel: 'warn',
   readOnly: true
 };
-var editor = new Scribe('#editor', configs);
+var editor = new Quill('#editor', configs);
 {% endhighlight %}
 
 
@@ -27,7 +27,7 @@ var editor = new Scribe('#editor', configs);
 
 - Default: `false`
 
-- The amount of detail Scribe should log. Acceptable values are:
+- The amount of detail Quill should log. Acceptable values are:
 
 - `"debug"`
 - `"info"`
@@ -55,12 +55,12 @@ var editor = new Scribe('#editor', configs);
 
 - Default: `null`
 
-- Object containing CSS rules to add to Scribe editor.
+- Object containing CSS rules to add to Quill editor.
 
 - **Example**
 
 {% highlight javascript %}
-var editor = new Scribe('#editor', {
+var editor = new Quill('#editor', {
   styles: {
     'body': {
       'font-family': "'Arial', san-serif"

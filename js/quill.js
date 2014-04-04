@@ -1,14 +1,8 @@
-/*! Stypi Editor - v0.11.1 - 2014-04-04
- *  https://stypi.github.io/scribe/
- *  Copyright (c) 2014
- *  Jason Chen, Salesforce.com
- */
-
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Scribe=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-module.exports = _dereq_('./src/scribe');
+!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+module.exports = _dereq_('./src/quill');
 
 
-},{"./src/scribe":43}],"linked-list":[function(_dereq_,module,exports){
+},{"./src/quill":41}],"linked-list":[function(_dereq_,module,exports){
 module.exports=_dereq_('uyMq3L');
 },{}],"uyMq3L":[function(_dereq_,module,exports){
 // Inspired by http://blog.jcoglan.com/2007/07/23/writing-a-linked-list-in-javascript/
@@ -656,8 +650,8 @@ module.exports=_dereq_('x/3aRz');
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason.chen/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],6:[function(_dereq_,module,exports){
+}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/jason.chen/Dropbox/jetcode/quill/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],6:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -15266,8 +15260,8 @@ module.exports=_dereq_('Fq7WE+');
 
 },{}],23:[function(_dereq_,module,exports){
 module.exports={
-  "name": "scribe",
-  "version": "0.11.1",
+  "name": "quilljs",
+  "version": "0.12.0",
   "description": "Cross browser rich text editor",
   "contributors": [
     {
@@ -15329,11 +15323,11 @@ module.exports={
   },
   "license": {
     "type": "BSD",
-    "url": "https://github.com/stypi/scribe/blob/master/LICENSE"
+    "url": "https://github.com/quilljs/quill/blob/master/LICENSE"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stypi/scribe"
+    "url": "https://github.com/quilljs/quill"
   },
   "scripts": {
     "test": "grunt test:local"
@@ -15909,16 +15903,16 @@ _update = function() {
 };
 
 Editor = (function() {
-  function Editor(iframeContainer, scribe, options) {
+  function Editor(iframeContainer, quill, options) {
     this.iframeContainer = iframeContainer;
-    this.scribe = scribe;
+    this.quill = quill;
     this.options = options != null ? options : {};
     if (_.isString(this.iframeContainer)) {
       this.iframeContainer = document.querySelector(this.iframeContainer);
     }
     this.init();
     setInterval(_.bind(this.checkUpdate, this), this.options.pollInterval);
-    this.scribe.on(this.scribe.constructor.events.SELECTION_CHANGE, (function(_this) {
+    this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, (function(_this) {
       return function(range) {
         return _this.savedRange = range;
       };
@@ -15945,12 +15939,12 @@ Editor = (function() {
 
   Editor.prototype.init = function() {
     this.ignoreDomChanges = true;
-    this.renderer = new Renderer(this.iframeContainer, this.scribe, this.options);
+    this.renderer = new Renderer(this.iframeContainer, this.quill, this.options);
     this.contentWindow = this.renderer.iframe.contentWindow;
     this.root = this.renderer.root;
     this.doc = new Document(this.root, this.options);
     this.delta = this.doc.toDelta();
-    this.selection = new Selection(this, this.scribe);
+    this.selection = new Selection(this, this.quill);
     return this.ignoreDomChanges = false;
   };
 
@@ -15979,11 +15973,11 @@ Editor = (function() {
           oldDelta = _this.delta;
           _this.delta = oldDelta.compose(delta);
           if (!options.silent) {
-            _this.scribe.emit(_this.scribe.constructor.events.TEXT_CHANGE, delta, options.source);
+            _this.quill.emit(_this.quill.constructor.events.TEXT_CHANGE, delta, options.source);
           }
         }
         if (localDelta && !localDelta.isIdentity()) {
-          _this.scribe.emit(_this.scribe.constructor.events.TEXT_CHANGE, localDelta, 'user');
+          _this.quill.emit(_this.quill.constructor.events.TEXT_CHANGE, localDelta, 'user');
         }
         return _this.innerHTML = _this.root.innerHTML;
       };
@@ -15996,7 +15990,7 @@ Editor = (function() {
     if (delta) {
       oldDelta = this.delta;
       this.delta = oldDelta.compose(delta);
-      this.scribe.emit(this.scribe.constructor.events.TEXT_CHANGE, delta, 'user');
+      this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, delta, 'user');
     }
     return this.selection.update(delta !== false);
   };
@@ -16031,7 +16025,7 @@ Editor = (function() {
 module.exports = Editor;
 
 
-},{"./document":24,"./dom":25,"./line":31,"./normalizer":39,"./renderer":42,"./selection":44,"lodash":"4HJaAd","tandem-core":"38mxji"}],27:[function(_dereq_,module,exports){
+},{"./document":24,"./dom":25,"./line":31,"./normalizer":39,"./renderer":43,"./selection":44,"lodash":"4HJaAd","tandem-core":"38mxji"}],27:[function(_dereq_,module,exports){
 var Format, FormatManager, _;
 
 _ = _dereq_('lodash');
@@ -17009,8 +17003,8 @@ Authorship = (function() {
     enabled: false
   };
 
-  function Authorship(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function Authorship(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.options = options;
     if (this.options.button != null) {
@@ -17019,14 +17013,14 @@ Authorship = (function() {
     if (this.options.enabled) {
       this.enable();
     }
-    this.scribe.editor.doc.formatManager.addFormat('author', new Format.Class(this.editorContainer, 'author'));
+    this.quill.editor.doc.formatManager.addFormat('author', new Format.Class(this.editorContainer, 'author'));
     if (this.options.authorId == null) {
       return;
     }
-    this.scribe.on(this.scribe.constructor.events.PRE_EVENT, (function(_this) {
+    this.quill.on(this.quill.constructor.events.PRE_EVENT, (function(_this) {
       return function(eventName, delta, origin) {
         var attribute, authorDelta;
-        if (eventName === _this.scribe.constructor.events.TEXT_CHANGE && origin === 'user') {
+        if (eventName === _this.quill.constructor.events.TEXT_CHANGE && origin === 'user') {
           _.each(delta.ops, function(op) {
             if (Tandem.InsertOp.isInsert(op) || _.keys(op.attributes).length > 0) {
               return op.attributes['author'] = _this.options.authorId;
@@ -17043,7 +17037,7 @@ Authorship = (function() {
           }, (function() {}), function(index, length, name, value) {
             return authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute));
           });
-          return _this.scribe.updateContents(authorDelta, {
+          return _this.quill.updateContents(authorDelta, {
             silent: true
           });
         }
@@ -17058,7 +17052,7 @@ Authorship = (function() {
     styles[".authorship .author-" + id] = {
       "background-color": "" + color
     };
-    return this.scribe.addStyles(styles);
+    return this.quill.addStyles(styles);
   };
 
   Authorship.prototype.attachButton = function(button) {
@@ -17103,7 +17097,7 @@ _initDeletes = function() {
   return _.each([Keyboard.keys.DELETE, Keyboard.keys.BACKSPACE], (function(_this) {
     return function(key) {
       return _this.addHotkey(key, function() {
-        return _this.scribe.getLength() > 1;
+        return _this.quill.getLength() > 1;
       });
     };
   })(this));
@@ -17146,10 +17140,10 @@ _initListeners = function() {
           if ((hotkey.shift != null) && event.shiftKey !== hotkey.shift) {
             return;
           }
-          _this.scribe.updateSelection({
+          _this.quill.updateSelection({
             silent: true
           });
-          selection = _this.scribe.getSelection();
+          selection = _this.quill.getSelection();
           if (selection == null) {
             return;
           }
@@ -17174,12 +17168,12 @@ _onTab = function(range, shift) {
     _.each(lines, (function(_this) {
       return function(line) {
         if (!shift) {
-          _this.scribe.insertText(index, '\t', {}, {
+          _this.quill.insertText(index, '\t', {}, {
             source: 'user'
           });
           offsetChange += 1;
         } else if (line.leaves.first.text[0] === '\t') {
-          _this.scribe.deleteText(index, 1, {
+          _this.quill.deleteText(index, 1, {
             source: 'user'
           });
           offsetChange -= 1;
@@ -17190,16 +17184,16 @@ _onTab = function(range, shift) {
       };
     })(this));
     end = range.end.index + offsetChange;
-    return this.scribe.setSelection(start, end);
+    return this.quill.setSelection(start, end);
   } else {
     index = this.range.start.getIndex();
-    this.scribe.deleteText(this.range, {
+    this.quill.deleteText(this.range, {
       source: 'user'
     });
-    this.scribe.insertText(index, "\t", {}, {
+    this.quill.insertText(index, "\t", {}, {
       source: 'user'
     });
-    return this.scribe.setSelection(index + 1, index + 1);
+    return this.quill.setSelection(index + 1, index + 1);
   }
 };
 
@@ -17254,8 +17248,8 @@ Keyboard = (function() {
 
   Keyboard.NAVIGATION = [Keyboard.keys.UP, Keyboard.keys.DOWN, Keyboard.keys.LEFT, Keyboard.keys.RIGHT];
 
-  function Keyboard(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function Keyboard(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.hotkeys = {};
     _initListeners.call(this);
@@ -17292,7 +17286,7 @@ Keyboard = (function() {
           indent = false;
         }
         index = Position.getIndex(line.node, 0);
-        return _this.scribe.formatText(index, 0, format, indent);
+        return _this.quill.formatText(index, 0, format, indent);
       };
     })(this);
     return _.each(lines, (function(_this) {
@@ -17312,7 +17306,7 @@ Keyboard = (function() {
     var formats, value;
     formats = range.getFormats();
     value = !formats[format];
-    return this.scribe.formatText(range, format, value, {
+    return this.quill.formatText(range, format, value, {
       source: 'user'
     });
   };
@@ -17357,10 +17351,10 @@ exitEditMode = function() {
 };
 
 formatLink = function(value) {
-  this.scribe.setSelection(this.savedRange, {
+  this.quill.setSelection(this.savedRange, {
     silent: true
   });
-  return this.scribe.formatText(this.savedRange, 'link', value, {
+  return this.quill.formatText(this.savedRange, 'link', value, {
     source: 'user'
   });
 };
@@ -17412,7 +17406,7 @@ initListeners = function() {
   return DOM.addEventListener(this.options.button, 'click', (function(_this) {
     return function() {
       var url;
-      _this.savedRange = _this.scribe.getSelection();
+      _this.savedRange = _this.quill.getSelection();
       if (!((_this.savedRange != null) && !_this.savedRange.isCollapsed())) {
         return;
       }
@@ -17422,11 +17416,11 @@ initListeners = function() {
       } else {
         url = normalizeUrl(_this.savedRange.getText());
         if (/\w+\.\w+/.test(url)) {
-          _this.scribe.focus();
+          _this.quill.focus();
           return formatLink.call(_this, url);
         } else {
           DOM.addClass(_this.tooltip, 'editing');
-          showTooltip.call(_this, _this.scribe.editor.selection.getDimensions());
+          showTooltip.call(_this, _this.quill.editor.selection.getDimensions());
           return enterEditMode.call(_this, url);
         }
       }
@@ -17435,14 +17429,14 @@ initListeners = function() {
 };
 
 initTooltip = function() {
-  this.tooltip = this.scribe.addContainer('link-tooltip-container');
+  this.tooltip = this.quill.addContainer('link-tooltip-container');
   hideTooltip.call(this);
   this.tooltip.innerHTML = '<span class="title">Visit URL:</span> <a href="#" class="url" target="_blank" href="about:blank"></a> <input class="input" type="text"> <span>&#45;</span> <a href="javascript:;" class="change">Change</a> <a href="javascript:;" class="done">Done</a>';
   this.tooltipLink = this.tooltip.querySelector('.url');
   this.tooltipInput = this.tooltip.querySelector('.input');
   this.tooltipChange = this.tooltip.querySelector('.change');
   this.tooltipDone = this.tooltip.querySelector('.done');
-  return this.scribe.addStyles({
+  return this.quill.addStyles({
     '.link-tooltip-container': {
       'background-color': '#fff',
       'border': '1px solid #000',
@@ -17517,8 +17511,8 @@ LinkTooltip = (function() {
     button: null
   };
 
-  function LinkTooltip(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function LinkTooltip(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.options = options;
     initTooltip.call(this);
@@ -17591,7 +17585,7 @@ _moveCursor = function(cursor, referenceNode) {
 };
 
 _updateCursor = function(cursor) {
-  this.scribe.editor.doSilently((function(_this) {
+  this.quill.editor.doSilently((function(_this) {
     return function() {
       var didSplit, guide, leafNode, leftText, offset, rightText, _ref, _ref1;
       _ref = Position.findLeafNode(_this.editorContainer, cursor.index), leafNode = _ref[0], offset = _ref[1];
@@ -17634,13 +17628,13 @@ MultiCursor = (function(_super) {
     CURSOR_REMOVED: 'cursor-removed'
   };
 
-  function MultiCursor(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function MultiCursor(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.options = options;
     this.cursors = {};
-    this.container = this.scribe.addContainer('cursor-container', true);
-    this.scribe.addStyles({
+    this.container = this.quill.addContainer('cursor-container', true);
+    this.quill.addStyles({
       '.cursor-container': {
         'position': 'absolute',
         'z-index': '1000'
@@ -17675,7 +17669,7 @@ MultiCursor = (function(_super) {
         'right': '-2px'
       }
     });
-    this.scribe.on(this.scribe.constructor.events.RENDER_UPDATE, (function(_this) {
+    this.quill.on(this.quill.constructor.events.RENDER_UPDATE, (function(_this) {
       return function() {
         return _.defer(function() {
           _this.container.style.top = _this.editorContainer.offsetTop + 'px';
@@ -17684,7 +17678,7 @@ MultiCursor = (function(_super) {
         });
       };
     })(this));
-    this.scribe.on(this.scribe.constructor.events.TEXT_CHANGE, (function(_this) {
+    this.quill.on(this.quill.constructor.events.TEXT_CHANGE, (function(_this) {
       return function(delta) {
         return _applyDelta.call(_this, delta);
       };
@@ -17803,13 +17797,13 @@ Document = _dereq_('../document');
 Tandem = _dereq_('tandem-core');
 
 PasteManager = (function() {
-  function PasteManager(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function PasteManager(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.options = options;
-    this.container = this.scribe.addContainer('paste-container');
+    this.container = this.quill.addContainer('paste-container');
     this.container.setAttribute('contenteditable', true);
-    this.scribe.addStyles({
+    this.quill.addStyles({
       '.paste-container': {
         'left': '-10000px',
         'position': 'absolute',
@@ -17823,8 +17817,8 @@ PasteManager = (function() {
     return DOM.addEventListener(this.editorContainer.ownerDocument, 'paste', (function(_this) {
       return function() {
         var oldDocLength, range;
-        oldDocLength = _this.scribe.getLength();
-        range = _this.scribe.getSelection();
+        oldDocLength = _this.quill.getLength();
+        range = _this.quill.getSelection();
         if (range == null) {
           return;
         }
@@ -17832,7 +17826,7 @@ PasteManager = (function() {
         _this.container.focus();
         return _.defer(function() {
           var delta, doc, lengthAdded;
-          doc = new Document(_this.container, _this.scribe.options);
+          doc = new Document(_this.container, _this.quill.options);
           delta = doc.toDelta();
           lengthAdded = delta.endLength;
           if (range.start.index > 0) {
@@ -17841,13 +17835,13 @@ PasteManager = (function() {
           if (range.end.index < oldDocLength) {
             delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength));
           }
-          delta.endLength += _this.scribe.getLength() - (range.end.index - range.start.index);
+          delta.endLength += _this.quill.getLength() - (range.end.index - range.start.index);
           delta.startLength = oldDocLength;
-          _this.scribe.updateContents(delta, {
+          _this.quill.updateContents(delta, {
             source: 'user'
           });
-          _this.scribe.focus();
-          return _this.scribe.setSelection(range.start.index + lengthAdded, range.start.index + lengthAdded);
+          _this.quill.focus();
+          return _this.quill.setSelection(range.start.index + lengthAdded, range.start.index + lengthAdded);
         });
       };
     })(this));
@@ -17898,8 +17892,8 @@ Toolbar = (function() {
     SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
   };
 
-  function Toolbar(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function Toolbar(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.options = options;
     if (this.options.container == null) {
@@ -17907,16 +17901,16 @@ Toolbar = (function() {
     }
     this.container = _.isString(this.options.container) ? document.querySelector(this.options.container) : this.options.container;
     _initFormats.call(this);
-    this.scribe.on(this.scribe.constructor.events.POST_EVENT, (function(_this) {
+    this.quill.on(this.quill.constructor.events.POST_EVENT, (function(_this) {
       return function(eventName) {
-        if (!(eventName === _this.scribe.constructor.events.TEXT_CHANGE || eventName === _this.scribe.constructor.events.SELECTION_CHANGE)) {
+        if (!(eventName === _this.quill.constructor.events.TEXT_CHANGE || eventName === _this.quill.constructor.events.SELECTION_CHANGE)) {
           return;
         }
         return _this.updateActive();
       };
     })(this));
     _.defer(_.bind(DOM.addClass, this, this.container, 'sc-toolbar-container'));
-    this.scribe.onModuleLoad('keyboard', (function(_this) {
+    this.quill.onModuleLoad('keyboard', (function(_this) {
       return function(keyboard) {
         return _.each(['BOLD', 'ITALIC', 'UNDERLINE'], function(key) {
           return keyboard.addHotkey(keyboard.constructor.hotkeys[key], function() {
@@ -17940,7 +17934,7 @@ Toolbar = (function() {
       return;
     }
     if (format === 'link') {
-      return this.scribe.addModule('link-tooltip', {
+      return this.quill.addModule('link-tooltip', {
         button: input
       });
     }
@@ -17952,16 +17946,16 @@ Toolbar = (function() {
           return;
         }
         value = input.tagName === 'SELECT' ? input.options[input.selectedIndex].value : !DOM.hasClass(input, 'sc-active');
-        range = _this.scribe.getSelection();
+        range = _this.quill.getSelection();
         if (range != null) {
           if (Utils.isIE(8)) {
             _this.editorContainer.focus();
-            _this.scribe.setSelection(range);
+            _this.quill.setSelection(range);
           }
           if (range.isCollapsed()) {
-            _this.scribe.setFormat(format, value);
+            _this.quill.setFormat(format, value);
           } else {
-            _this.scribe.formatText(range, format, value, {
+            _this.quill.formatText(range, format, value, {
               source: 'user'
             });
           }
@@ -17974,7 +17968,7 @@ Toolbar = (function() {
     })(this));
     return DOM.addEventListener(input, 'mousedown', (function(_this) {
       return function() {
-        _this.scribe.editor.checkUpdate();
+        _this.quill.editor.checkUpdate();
         return true;
       };
     })(this));
@@ -17986,7 +17980,7 @@ Toolbar = (function() {
       activeFormats = {};
     }
     this.triggering = true;
-    range = this.scribe.getSelection();
+    range = this.quill.getSelection();
     _.each(this.container.querySelectorAll('select'), _.bind(DOM.resetSelect));
     _.each(this.container.querySelectorAll('.sc-active'), (function(_this) {
       return function(button) {
@@ -18064,11 +18058,11 @@ _change = function(source, dest) {
     _ignoreChanges.call(this, (function(_this) {
       return function() {
         var index;
-        _this.scribe.updateContents(change[source], {
+        _this.quill.updateContents(change[source], {
           source: 'user'
         });
         index = getLastChangeIndex(change[source]);
-        return _this.scribe.setSelection(index, index);
+        return _this.quill.setSelection(index, index);
       };
     })(this));
     return this.stack[dest].push(change);
@@ -18089,8 +18083,8 @@ UndoManager = (function() {
     maxStack: 100
   };
 
-  function UndoManager(scribe, editorContainer, options) {
-    this.scribe = scribe;
+  function UndoManager(quill, editorContainer, options) {
+    this.quill = quill;
     this.editorContainer = editorContainer;
     this.options = options != null ? options : {};
     this.lastRecorded = 0;
@@ -18099,7 +18093,7 @@ UndoManager = (function() {
   }
 
   UndoManager.prototype.initListeners = function() {
-    this.scribe.onModuleLoad('keyboard', (function(_this) {
+    this.quill.onModuleLoad('keyboard', (function(_this) {
       return function(keyboard) {
         keyboard.addHotkey(keyboard.constructor.hotkeys.UNDO, function() {
           _this.undo();
@@ -18112,12 +18106,12 @@ UndoManager = (function() {
       };
     })(this));
     this.ignoringChanges = false;
-    return this.scribe.on(this.scribe.constructor.events.TEXT_CHANGE, (function(_this) {
+    return this.quill.on(this.quill.constructor.events.TEXT_CHANGE, (function(_this) {
       return function(delta, origin) {
         if (!(_this.ignoringChanges && origin === 'user')) {
           _this.record(delta, _this.oldDelta);
         }
-        return _this.oldDelta = _this.scribe.getContents();
+        return _this.oldDelta = _this.quill.getContents();
       };
     })(this));
   };
@@ -18127,7 +18121,7 @@ UndoManager = (function() {
       undo: [],
       redo: []
     };
-    return this.oldDelta = this.scribe.getContents();
+    return this.oldDelta = this.quill.getContents();
   };
 
   UndoManager.prototype.record = function(changeDelta, oldDelta) {
@@ -18654,6 +18648,302 @@ module.exports = Position;
 
 
 },{"./dom":25,"./utils":49,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
+var DEFAULT_API_OPTIONS, Editor, EventEmitter2, Modules, Quill, Range, Tandem, Themes, buildParams, pkg, _,
+  __slice = [].slice,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+_ = _dereq_('lodash');
+
+_.str = _dereq_('underscore.string');
+
+pkg = _dereq_('../package.json');
+
+EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
+
+Editor = _dereq_('./editor');
+
+Range = _dereq_('./range');
+
+Tandem = _dereq_('tandem-core');
+
+Modules = {
+  Authorship: _dereq_('./modules/authorship'),
+  Keyboard: _dereq_('./modules/keyboard'),
+  LinkTooltip: _dereq_('./modules/link-tooltip'),
+  MultiCursor: _dereq_('./modules/multi-cursor'),
+  PasteManager: _dereq_('./modules/paste-manager'),
+  Toolbar: _dereq_('./modules/toolbar'),
+  UndoManager: _dereq_('./modules/undo-manager')
+};
+
+Themes = {
+  Default: _dereq_('./themes/default'),
+  Snow: _dereq_('./themes/snow')
+};
+
+DEFAULT_API_OPTIONS = {
+  silent: false,
+  source: 'api'
+};
+
+buildParams = function() {
+  var formats, index, length, params;
+  params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+  if (_.isObject(params[0])) {
+    index = params[0].start.getIndex();
+    length = params[0].end.getIndex() - index;
+    params.splice(0, 1, index, length);
+  }
+  if (_.isString(params[2])) {
+    formats = {};
+    formats[params[2]] = params[3];
+    params.splice(2, 2, formats);
+  }
+  params[3] = _.defaults(params[3] || {}, DEFAULT_API_OPTIONS);
+  return params;
+};
+
+Quill = (function(_super) {
+  __extends(Quill, _super);
+
+  Quill.version = pkg.version;
+
+  Quill.editors = [];
+
+  Quill.Module = Modules;
+
+  Quill.Theme = Themes;
+
+  Quill.DEFAULTS = {
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size'],
+    iframe: true,
+    logLevel: false,
+    modules: {
+      'keyboard': true,
+      'paste-manager': true,
+      'undo-manager': true
+    },
+    pollInterval: 100,
+    readOnly: false,
+    theme: 'default'
+  };
+
+  Quill.events = {
+    FOCUS_CHANGE: 'focus-change',
+    MODULE_INIT: 'module-init',
+    POST_EVENT: 'post-event',
+    PRE_EVENT: 'pre-event',
+    RENDER_UPDATE: 'renderer-update',
+    SELECTION_CHANGE: 'selection-change',
+    TEXT_CHANGE: 'text-change'
+  };
+
+  function Quill(container, options) {
+    var moduleOptions, themeClass;
+    if (options == null) {
+      options = {};
+    }
+    moduleOptions = _.defaults(options.modules || {}, Quill.DEFAULTS.modules);
+    this.options = _.defaults(options, Quill.DEFAULTS);
+    this.options.modules = moduleOptions;
+    this.options.id = this.id = "quill-" + (Quill.editors.length + 1);
+    this.options.emitter = this;
+    this.modules = {};
+    this.editor = new Editor(container, this, this.options);
+    Quill.editors.push(this.editor);
+    themeClass = _.str.capitalize(_.str.camelize(this.options.theme));
+    this.theme = new Quill.Theme[themeClass](this, this.options);
+    _.each(this.options.modules, (function(_this) {
+      return function(option, name) {
+        return _this.addModule(name, option);
+      };
+    })(this));
+  }
+
+  Quill.prototype.addContainer = function(className, before) {
+    if (before == null) {
+      before = false;
+    }
+    return this.editor.renderer.addContainer(className, before);
+  };
+
+  Quill.prototype.addModule = function(name, options) {
+    var className, moduleClass;
+    className = _.str.capitalize(_.str.camelize(name));
+    moduleClass = Quill.Module[className];
+    if (moduleClass == null) {
+      throw new Error("Cannot load " + name + " module. Are you sure you included it?");
+    }
+    if (!_.isObject(options)) {
+      options = {};
+    }
+    options = _.defaults(options, this.theme.constructor.OPTIONS[name] || {}, moduleClass.DEFAULTS || {});
+    this.modules[name] = new moduleClass(this, this.editor.root, options);
+    this.emit(Quill.events.MODULE_INIT, name, this.modules[name]);
+    return this.modules[name];
+  };
+
+  Quill.prototype.addStyles = function(styles) {
+    return this.editor.renderer.addStyles(styles);
+  };
+
+  Quill.prototype.deleteText = function(index, length, options) {
+    var delta, formats, _ref;
+    if (options == null) {
+      options = {};
+    }
+    _ref = buildParams(index, length, {}, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
+    if (!(length > 0)) {
+      return;
+    }
+    delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length);
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Quill.prototype.emit = function() {
+    var args, eventName;
+    eventName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    Quill.__super__.emit.apply(this, [Quill.events.PRE_EVENT, eventName].concat(__slice.call(args)));
+    Quill.__super__.emit.apply(this, [eventName].concat(__slice.call(args)));
+    return Quill.__super__.emit.apply(this, [Quill.events.POST_EVENT, eventName].concat(__slice.call(args)));
+  };
+
+  Quill.prototype.focus = function() {
+    return this.editor.root.focus();
+  };
+
+  Quill.prototype.formatText = function(index, length, name, value, options) {
+    var delta, formats, _ref;
+    _ref = buildParams(index, length, name, value, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
+    if (!(length > 0)) {
+      return;
+    }
+    delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats);
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Quill.prototype.getContents = function(index, length, options) {
+    var ops;
+    if (options == null) {
+      options = {};
+    }
+    if (index == null) {
+      index = 0;
+    }
+    if (length == null) {
+      length = this.getLength() - index;
+    }
+    ops = this.editor.getDelta().getOpsAt(index, length);
+    return new Tandem.Delta(0, ops);
+  };
+
+  Quill.prototype.getHTML = function() {
+    return this.editor.root.innerHTML;
+  };
+
+  Quill.prototype.getLength = function() {
+    return this.editor.getDelta().endLength;
+  };
+
+  Quill.prototype.getModule = function(name) {
+    return this.modules[name];
+  };
+
+  Quill.prototype.getSelection = function() {
+    return this.editor.selection.getRange();
+  };
+
+  Quill.prototype.getText = function(index, length) {
+    return _.pluck(this.getContents(index, length).ops, 'value').join('');
+  };
+
+  Quill.prototype.insertText = function(index, text, name, value, options) {
+    var delta, formats, length, _ref;
+    if (options == null) {
+      options = {};
+    }
+    _ref = buildParams(index, 0, name, value, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
+    if (!(text.length > 0)) {
+      return;
+    }
+    delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats);
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Quill.prototype.onModuleLoad = function(name, callback) {
+    if (this.modules[name]) {
+      return callback(this.modules[name]);
+    }
+    return this.on(Quill.events.MODULE_INIT, function(moduleName, module) {
+      if (moduleName === name) {
+        return callback(module);
+      }
+    });
+  };
+
+  Quill.prototype.setContents = function(delta, options) {
+    if (options == null) {
+      options = {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    delta = _.isArray(delta) ? new Tandem.Delta(0, delta) : Tandem.Delta.makeDelta(delta);
+    delta.startLength = this.getLength();
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Quill.prototype.setFormat = function(name, value) {
+    var format;
+    format = this.editor.doc.formatManager.formats[name];
+    if (format == null) {
+      throw new Error("Unsupported format " + name + " " + value);
+    }
+    return format.preformat(value);
+  };
+
+  Quill.prototype.setHTML = function(html) {
+    return this.editor.root.innerHTML = html;
+  };
+
+  Quill.prototype.setSelection = function(start, end, options) {
+    var range;
+    if (options == null) {
+      options = {};
+    }
+    if (_.isNumber(start) && _.isNumber(end)) {
+      range = new Range(this.editor.doc, start, end);
+    } else {
+      range = start;
+      options = end || {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    return this.editor.selection.setRange(range, options.silent);
+  };
+
+  Quill.prototype.updateContents = function(delta, options) {
+    if (options == null) {
+      options = {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Quill.prototype.updateSelection = function(options) {
+    if (options == null) {
+      options = {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    return this.editor.selection.update(options.silent);
+  };
+
+  return Quill;
+
+})(EventEmitter2);
+
+module.exports = Quill;
+
+
+},{"../package.json":23,"./editor":26,"./modules/authorship":32,"./modules/keyboard":33,"./modules/link-tooltip":34,"./modules/multi-cursor":35,"./modules/paste-manager":36,"./modules/toolbar":37,"./modules/undo-manager":38,"./range":42,"./themes/default":46,"./themes/snow":48,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],42:[function(_dereq_,module,exports){
 var LeafIterator, Position, Range, _;
 
 _ = _dereq_('lodash');
@@ -18807,7 +19097,7 @@ Range = (function() {
 module.exports = Range;
 
 
-},{"./leaf-iterator":29,"./position":40,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
+},{"./leaf-iterator":29,"./position":40,"lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
 var DEFAULT_STYLES, DOM, LIST_STYLES, Normalizer, Renderer, Utils, _;
 
 _ = _dereq_('lodash');
@@ -18994,303 +19284,7 @@ Renderer = (function() {
 module.exports = Renderer;
 
 
-},{"./dom":25,"./normalizer":39,"./utils":49,"lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
-var DEFAULT_API_OPTIONS, Editor, EventEmitter2, Modules, Range, Scribe, Tandem, Themes, buildParams, pkg, _,
-  __slice = [].slice,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-_ = _dereq_('lodash');
-
-_.str = _dereq_('underscore.string');
-
-pkg = _dereq_('../package.json');
-
-EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
-
-Editor = _dereq_('./editor');
-
-Range = _dereq_('./range');
-
-Tandem = _dereq_('tandem-core');
-
-Modules = {
-  Authorship: _dereq_('./modules/authorship'),
-  Keyboard: _dereq_('./modules/keyboard'),
-  LinkTooltip: _dereq_('./modules/link-tooltip'),
-  MultiCursor: _dereq_('./modules/multi-cursor'),
-  PasteManager: _dereq_('./modules/paste-manager'),
-  Toolbar: _dereq_('./modules/toolbar'),
-  UndoManager: _dereq_('./modules/undo-manager')
-};
-
-Themes = {
-  Default: _dereq_('./themes/default'),
-  Snow: _dereq_('./themes/snow')
-};
-
-DEFAULT_API_OPTIONS = {
-  silent: false,
-  source: 'api'
-};
-
-buildParams = function() {
-  var formats, index, length, params;
-  params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-  if (_.isObject(params[0])) {
-    index = params[0].start.getIndex();
-    length = params[0].end.getIndex() - index;
-    params.splice(0, 1, index, length);
-  }
-  if (_.isString(params[2])) {
-    formats = {};
-    formats[params[2]] = params[3];
-    params.splice(2, 2, formats);
-  }
-  params[3] = _.defaults(params[3] || {}, DEFAULT_API_OPTIONS);
-  return params;
-};
-
-Scribe = (function(_super) {
-  __extends(Scribe, _super);
-
-  Scribe.version = pkg.version;
-
-  Scribe.editors = [];
-
-  Scribe.Module = Modules;
-
-  Scribe.Theme = Themes;
-
-  Scribe.DEFAULTS = {
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size'],
-    iframe: true,
-    logLevel: false,
-    modules: {
-      'keyboard': true,
-      'paste-manager': true,
-      'undo-manager': true
-    },
-    pollInterval: 100,
-    readOnly: false,
-    theme: 'default'
-  };
-
-  Scribe.events = {
-    FOCUS_CHANGE: 'focus-change',
-    MODULE_INIT: 'module-init',
-    POST_EVENT: 'post-event',
-    PRE_EVENT: 'pre-event',
-    RENDER_UPDATE: 'renderer-update',
-    SELECTION_CHANGE: 'selection-change',
-    TEXT_CHANGE: 'text-change'
-  };
-
-  function Scribe(container, options) {
-    var moduleOptions, themeClass;
-    if (options == null) {
-      options = {};
-    }
-    moduleOptions = _.defaults(options.modules || {}, Scribe.DEFAULTS.modules);
-    this.options = _.defaults(options, Scribe.DEFAULTS);
-    this.options.modules = moduleOptions;
-    this.options.id = this.id = "scribe-" + (Scribe.editors.length + 1);
-    this.options.emitter = this;
-    this.modules = {};
-    this.editor = new Editor(container, this, this.options);
-    Scribe.editors.push(this.editor);
-    themeClass = _.str.capitalize(_.str.camelize(this.options.theme));
-    this.theme = new Scribe.Theme[themeClass](this, this.options);
-    _.each(this.options.modules, (function(_this) {
-      return function(option, name) {
-        return _this.addModule(name, option);
-      };
-    })(this));
-  }
-
-  Scribe.prototype.addContainer = function(className, before) {
-    if (before == null) {
-      before = false;
-    }
-    return this.editor.renderer.addContainer(className, before);
-  };
-
-  Scribe.prototype.addModule = function(name, options) {
-    var className, moduleClass;
-    className = _.str.capitalize(_.str.camelize(name));
-    moduleClass = Scribe.Module[className];
-    if (moduleClass == null) {
-      throw new Error("Cannot load " + name + " module. Are you sure you included it?");
-    }
-    if (!_.isObject(options)) {
-      options = {};
-    }
-    options = _.defaults(options, this.theme.constructor.OPTIONS[name] || {}, moduleClass.DEFAULTS || {});
-    this.modules[name] = new moduleClass(this, this.editor.root, options);
-    this.emit(Scribe.events.MODULE_INIT, name, this.modules[name]);
-    return this.modules[name];
-  };
-
-  Scribe.prototype.addStyles = function(styles) {
-    return this.editor.renderer.addStyles(styles);
-  };
-
-  Scribe.prototype.deleteText = function(index, length, options) {
-    var delta, formats, _ref;
-    if (options == null) {
-      options = {};
-    }
-    _ref = buildParams(index, length, {}, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
-    if (!(length > 0)) {
-      return;
-    }
-    delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length);
-    return this.editor.applyDelta(delta, options);
-  };
-
-  Scribe.prototype.emit = function() {
-    var args, eventName;
-    eventName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    Scribe.__super__.emit.apply(this, [Scribe.events.PRE_EVENT, eventName].concat(__slice.call(args)));
-    Scribe.__super__.emit.apply(this, [eventName].concat(__slice.call(args)));
-    return Scribe.__super__.emit.apply(this, [Scribe.events.POST_EVENT, eventName].concat(__slice.call(args)));
-  };
-
-  Scribe.prototype.focus = function() {
-    return this.editor.root.focus();
-  };
-
-  Scribe.prototype.formatText = function(index, length, name, value, options) {
-    var delta, formats, _ref;
-    _ref = buildParams(index, length, name, value, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
-    if (!(length > 0)) {
-      return;
-    }
-    delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats);
-    return this.editor.applyDelta(delta, options);
-  };
-
-  Scribe.prototype.getContents = function(index, length, options) {
-    var ops;
-    if (options == null) {
-      options = {};
-    }
-    if (index == null) {
-      index = 0;
-    }
-    if (length == null) {
-      length = this.getLength() - index;
-    }
-    ops = this.editor.getDelta().getOpsAt(index, length);
-    return new Tandem.Delta(0, ops);
-  };
-
-  Scribe.prototype.getHTML = function() {
-    return this.editor.root.innerHTML;
-  };
-
-  Scribe.prototype.getLength = function() {
-    return this.editor.getDelta().endLength;
-  };
-
-  Scribe.prototype.getModule = function(name) {
-    return this.modules[name];
-  };
-
-  Scribe.prototype.getSelection = function() {
-    return this.editor.selection.getRange();
-  };
-
-  Scribe.prototype.getText = function(index, length) {
-    return _.pluck(this.getContents(index, length).ops, 'value').join('');
-  };
-
-  Scribe.prototype.insertText = function(index, text, name, value, options) {
-    var delta, formats, length, _ref;
-    if (options == null) {
-      options = {};
-    }
-    _ref = buildParams(index, 0, name, value, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
-    if (!(text.length > 0)) {
-      return;
-    }
-    delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats);
-    return this.editor.applyDelta(delta, options);
-  };
-
-  Scribe.prototype.onModuleLoad = function(name, callback) {
-    if (this.modules[name]) {
-      return callback(this.modules[name]);
-    }
-    return this.on(Scribe.events.MODULE_INIT, function(moduleName, module) {
-      if (moduleName === name) {
-        return callback(module);
-      }
-    });
-  };
-
-  Scribe.prototype.setContents = function(delta, options) {
-    if (options == null) {
-      options = {};
-    }
-    options = _.defaults(options, DEFAULT_API_OPTIONS);
-    delta = _.isArray(delta) ? new Tandem.Delta(0, delta) : Tandem.Delta.makeDelta(delta);
-    delta.startLength = this.getLength();
-    return this.editor.applyDelta(delta, options);
-  };
-
-  Scribe.prototype.setFormat = function(name, value) {
-    var format;
-    format = this.editor.doc.formatManager.formats[name];
-    if (format == null) {
-      throw new Error("Unsupported format " + name + " " + value);
-    }
-    return format.preformat(value);
-  };
-
-  Scribe.prototype.setHTML = function(html) {
-    return this.editor.root.innerHTML = html;
-  };
-
-  Scribe.prototype.setSelection = function(start, end, options) {
-    var range;
-    if (options == null) {
-      options = {};
-    }
-    if (_.isNumber(start) && _.isNumber(end)) {
-      range = new Range(this.editor.doc, start, end);
-    } else {
-      range = start;
-      options = end || {};
-    }
-    options = _.defaults(options, DEFAULT_API_OPTIONS);
-    return this.editor.selection.setRange(range, options.silent);
-  };
-
-  Scribe.prototype.updateContents = function(delta, options) {
-    if (options == null) {
-      options = {};
-    }
-    options = _.defaults(options, DEFAULT_API_OPTIONS);
-    return this.editor.applyDelta(delta, options);
-  };
-
-  Scribe.prototype.updateSelection = function(options) {
-    if (options == null) {
-      options = {};
-    }
-    options = _.defaults(options, DEFAULT_API_OPTIONS);
-    return this.editor.selection.update(options.silent);
-  };
-
-  return Scribe;
-
-})(EventEmitter2);
-
-module.exports = Scribe;
-
-
-},{"../package.json":23,"./editor":26,"./modules/authorship":32,"./modules/keyboard":33,"./modules/link-tooltip":34,"./modules/multi-cursor":35,"./modules/paste-manager":36,"./modules/toolbar":37,"./modules/undo-manager":38,"./range":41,"./themes/default":46,"./themes/snow":48,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],44:[function(_dereq_,module,exports){
+},{"./dom":25,"./normalizer":39,"./utils":49,"lodash":"4HJaAd"}],44:[function(_dereq_,module,exports){
 var DOM, Position, Range, Selection, Utils, compareNativeRanges, normalizeNativePosition, normalizeNativeRange, rangy, _, _nativeRangeToRange, _preserveWithIndex, _preserveWithLine, _updateFocus;
 
 _ = _dereq_('lodash');
@@ -19607,7 +19601,7 @@ Selection = (function() {
 module.exports = Selection;
 
 
-},{"./dom":25,"./position":40,"./range":41,"./utils":49,"lodash":"4HJaAd","rangy-core":"rmqf9t"}],45:[function(_dereq_,module,exports){
+},{"./dom":25,"./position":40,"./range":42,"./utils":49,"lodash":"4HJaAd","rangy-core":"rmqf9t"}],45:[function(_dereq_,module,exports){
 var ColorPicker, DOM, Picker,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -19650,9 +19644,9 @@ var DefaultTheme;
 DefaultTheme = (function() {
   DefaultTheme.OPTIONS = {};
 
-  function DefaultTheme(scribe, options) {
-    this.scribe = scribe;
-    this.editor = this.scribe.editor;
+  function DefaultTheme(quill, options) {
+    this.quill = quill;
+    this.editor = this.quill.editor;
     this.editorContainer = this.editor.root;
   }
 
@@ -19804,11 +19798,11 @@ SnowTheme = (function(_super) {
     }
   };
 
-  function SnowTheme(scribe, options) {
-    this.scribe = scribe;
+  function SnowTheme(quill, options) {
+    this.quill = quill;
     SnowTheme.__super__.constructor.apply(this, arguments);
     this.pickers = [];
-    this.scribe.on(this.scribe.constructor.events.SELECTION_CHANGE, (function(_this) {
+    this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, (function(_this) {
       return function() {
         return _.each(_this.pickers, function(picker) {
           return picker.close();
@@ -19816,13 +19810,13 @@ SnowTheme = (function(_super) {
       };
     })(this));
     DOM.addClass(this.editorContainer.parentNode, 'snow');
-    this.scribe.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this));
-    this.scribe.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this));
-    this.scribe.onModuleLoad('toolbar', _.bind(this.extendToolbar, this));
+    this.quill.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this));
+    this.quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this));
+    this.quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this));
   }
 
   SnowTheme.prototype.extendLinkTooltip = function(module) {
-    return this.scribe.addStyles({
+    return this.quill.addStyles({
       '.snow a': {
         'color': '#06c'
       },
@@ -19843,7 +19837,7 @@ SnowTheme = (function(_super) {
   };
 
   SnowTheme.prototype.extendMultiCursor = function(module) {
-    this.scribe.addStyles({
+    this.quill.addStyles({
       '.snow .cursor-name': {
         'border-radius': '4px',
         'font-size': '11px',

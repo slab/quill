@@ -133,7 +133,8 @@
   margin-left: 2px;
 }
 .sc-toolbar-container .sc-format-button:hover,
-.sc-toolbar-container .sc-format-button.sc-active {
+.sc-toolbar-container .sc-format-button.sc-active,
+.sc-toolbar-container .sc-format-button.sc-on {
   color: #06c;
 }
 .sc-toolbar-container .sc-format-button.sc-bold:before {

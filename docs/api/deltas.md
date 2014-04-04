@@ -1,15 +1,15 @@
 ---
 layout: docs
-title: Deltas - Scribe
+title: Deltas - Quill
 permalink: /docs/api/deltas/
 stability: yellow
 ---
 
 # Deltas
 
-Deltas are objects used by Scribe to represent changes to the editor's contents. In most cases directly dealing with Deltas can be avoided. But it is available to provide a powerful interface to Scribe.
+Deltas are objects used by Quill to represent changes to the editor's contents. In most cases directly dealing with Deltas can be avoided. But it is available to provide a powerful interface to Quill.
 
-Deltas can also be used to represent the contents of Scribe. When used in this manner, think of it as the change from the blank editor.
+Deltas can also be used to represent the contents of Quill. When used in this manner, think of it as the change from the blank editor.
 
 1. [Operations](#operations)
 1. [Delta.prototype.constructor](#deltaprototypeconstructor)
@@ -19,7 +19,7 @@ Deltas can also be used to represent the contents of Scribe. When used in this m
 
 ### Operations
 
-An Array of operations are used to represent a Delta. Two types of operations are recognized: [insertions](#insert) and [retains](#retain). Insertions describe text to be inserted. Retains describe text to be kept. A delta and its operations describe the entire editor's contents, so the absence of a retain over a portion of contents implies its deletion.
+An Array of operations are used to represent a Delta. Two types of operations are recognized: [insertions](#insert) and [retains](#retain). Insertions dequill text to be inserted. Retains dequill text to be kept. A delta and its operations dequill the entire editor's contents, so the absence of a retain over a portion of contents implies its deletion.
 
 #### Insert
 
@@ -82,7 +82,7 @@ Constructor for creating Deltas.
 {% highlight javascript %}
 var delta = new Delta(5, 13, [
   { start: 0, end: 5 },                  // Keep the first 5 characters
-  { text: 'Scribe', { bold: true } }     // Insert a bolded 'Scribe'
+  { text: 'Quill', { bold: true } }     // Insert a bolded 'Quill'
 ]);
 {% endhighlight %}
 
@@ -115,7 +115,7 @@ delta.apply(function(index, text, formats) {
 {% endhighlight %}
 
 {% highlight javascript %}
-var editor = new Scribe('#editor');
+var editor = new Quill('#editor');
 delta.apply(editor.insertText, editor.deleteText, editor.formatText);
 {% endhighlight %}
 

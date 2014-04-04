@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Authorship Module - Scribe
+title: Authorship Module - Quill
 permalink: /docs/modules/authorship/
 stability: yellow
 ---
@@ -9,13 +9,13 @@ stability: yellow
 
 The Authorship module highlights the background of text to show who wrote what.
 
-<div class="scribe-wrapper">
+<div class="quill-wrapper">
   <div id="authorship-editor" class="editor"></div>
 </div>
 
-<script src="/js/scribe.js"></script>
+<script src="/js/quill.js"></script>
 <script>
-var editor = new Scribe('#authorship-editor');
+var editor = new Quill('#authorship-editor');
 
 var module = editor.addModule('authorship', {
   authorId: 'frodo',
@@ -39,7 +39,7 @@ editor.setContents({
 });
 </script>
 
-Enabling this module will also add a new format `author` to the list of recognized [formats](/docs/editor/formats/). The value of the `author` format is the id of the author. Changes made to the Scribe editor will also attach the local author metadata.
+Enabling this module will also add a new format `author` to the list of recognized [formats](/docs/editor/formats/). The value of the `author` format is the id of the author. Changes made to the Quill editor will also attach the local author metadata.
 
 ### Configuration
 
@@ -64,7 +64,7 @@ Enabling this module will also add a new format `author` to the list of recogniz
 
 {% highlight javascript %}
 
-var editor = new Scribe('#editor');
+var editor = new Quill('#editor');
 
 var module = editor.addModule('authorship', {
   authorId: 'id-1234',

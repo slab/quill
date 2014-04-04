@@ -1,21 +1,21 @@
 ---
 layout: docs
-title: Cursors Module - Scribe
+title: Cursors Module - Quill
 permalink: /docs/modules/multi-cursors/
 stability: yellow
 ---
 
 # Multiple Cursors
 
-The Multiple Cursors modules enables the display of multiple external cursors inside the Scribe editor.
+The Multiple Cursors modules enables the display of multiple external cursors inside the Quill editor.
 
-<div class="scribe-wrapper">
+<div class="quill-wrapper">
   <div id="multi-cursor-editor" class="editor"></div>
 </div>
 
-<script src="/js/scribe.js"></script>
+<script src="/js/quill.js"></script>
 <script>
-var editor = new Scribe('#multi-cursor-editor');
+var editor = new Quill('#multi-cursor-editor');
 editor.insertText(0, 'Upon great pedestals founded in the deep waters stood two great kings of stone: still with blurred eyes and crannied brows they frowned upon the North.\n\nThe left hand of each was raised palm outwards in gesture of warning; in each right hand there was an axe; upon each head there was a crumbling helm and crown.\n\nGreat power and majesty they still wore, the silent wardens of a long-vanished kingdom.');
 
 module = editor.addModule('multi-cursor', {
@@ -50,7 +50,7 @@ setTimeout(function() {
 
 {% highlight javascript %}
 
-var editor = new Scribe('#editor');
+var editor = new Quill('#editor');
 var module = editor.addModule('multi-cursor', {
   timeout: 10000
 });

@@ -1,19 +1,19 @@
 ---
 layout: examples
-title: Examples - Scribe
+title: Examples - Quill
 permalink: /examples/
-stylesheet: '/css/scribe.snow.css'
+stylesheet: '/css/quill.snow.css'
 ---
 
 # Examples
 
-The two examples below demonstrate what is possible with Scribe. Check out how they interact with each other!
+The two examples below demonstrate what is possible with Quill. Check out how they interact with each other!
 
 ## Basic Example
 
 A basic editor with just a few formats to get started.
 
-<div class="scribe-wrapper">
+<div class="quill-wrapper">
   <div id="basic-toolbar" class="toolbar">
     <select title="Size" class="sc-font-size">
       <option value="small">Small</option>
@@ -39,9 +39,9 @@ A basic editor with just a few formats to get started.
 
 ## Full Example
 
-Uses all the features of Scribe, including [Modules](/docs/modules/) and [Themes](/docs/themes/).
+Uses all the features of Quill, including [Modules](/docs/modules/) and [Themes](/docs/themes/).
 
-<div class="scribe-wrapper">
+<div class="quill-wrapper">
   <div id="full-toolbar" class="toolbar">
   {% include full-toolbar.html %}
   </div>
@@ -58,7 +58,7 @@ Uses all the features of Scribe, including [Modules](/docs/modules/) and [Themes
 {% endhighlight %}
 </div>
 
-<script src="/js/scribe.js"></script>
+<script src="/js/quill.js"></script>
 <script>
 {% include basic-editor.html %}
 {% include full-editor.html %}

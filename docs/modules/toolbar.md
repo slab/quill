@@ -1,23 +1,23 @@
 ---
 layout: docs
-title: Toolbar Module - Scribe
+title: Toolbar Module - Quill
 permalink: /docs/modules/toolbar/
-stylesheet: '/css/scribe.snow.css'
+stylesheet: '/css/quill.snow.css'
 ---
 
 # Toolbar
 
-The Toolbar module allow users to easily format Scribe's contents.
+The Toolbar module allow users to easily format Quill's contents.
 
-<div class="scribe-wrapper">
+<div class="quill-wrapper">
   <div id="toolbar-toolbar" class="toolbar">
   {% include full-toolbar.html %}
   </div>
   <div id="toolbar-editor" class="editor"></div>
 </div>
-<script src="/js/scribe.js"></script>
+<script src="/js/quill.js"></script>
 <script>
-  var editor = new Scribe('#toolbar-editor', {
+  var editor = new Quill('#toolbar-editor', {
     modules: {
       toolbar: { container: '#toolbar-toolbar' }
     },
@@ -25,7 +25,7 @@ The Toolbar module allow users to easily format Scribe's contents.
   });
 </script>
 
-Simply create a container and the module to the Scribe editor.
+Simply create a container and the module to the Quill editor.
 
 {% highlight html %}
 <!-- Create toolbar container -->
@@ -44,7 +44,7 @@ Simply create a container and the module to the Scribe editor.
 
 <!-- Initialize editor and toolbar -->
 <script>
-  var editor = new Scribe('#editor');
+  var editor = new Quill('#editor');
   editor.addModule('toolbar', {
     container: '#toolbar'     // Selector for toolbar container
   });
