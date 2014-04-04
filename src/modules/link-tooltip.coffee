@@ -1,5 +1,6 @@
-_   = require('lodash')
-DOM = require('../dom')
+_        = require('lodash')
+DOM      = require('../dom')
+Keyboard = require('./keyboard')
 
 
 enterEditMode = (url) ->

@@ -22,19 +22,13 @@ class Document
     return this.insertLineBefore(lineNode, null)
 
   findLeaf: (node) ->
-    lineNode = node.parentNode
-    while lineNode? && !Utils.isLineNode(lineNode)
-      lineNode = lineNode.parentNode
-    return null if !lineNode?
+    lineNode = this.findLineNode(node)
     line = this.findLine(lineNode)
     return line.findLeaf(node)
 
   findLine: (node) ->
     node = this.findLineNode(node)
-    if node?
-      return @lineMap[node.id]
-    else
-      return null
+    return if node? then @lineMap[node.id] else null
 
   findLineAtOffset: (offset) ->
     curLine = @lines.first
