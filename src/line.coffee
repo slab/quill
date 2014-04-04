@@ -9,6 +9,13 @@ Tandem     = require('tandem-core')
 # Note: Because Line uses @outerHTML as a heuristic to rebuild, we must be very careful to actually modify HTML when we modify it. Ex. Do not remove a <br> only to add another one back
 # Maybe a better heuristic would also check leaf children are still in the dom
 
+
+removeFormat = (format, subtree) ->
+  if format.matchContainer(subtree)
+    subtree = DOM.unwrap(subtree)
+  _.each(DOM.getChildNodes(subtree), removeFormat.bind(this, format))
+
+
 class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
   @ID_PREFIX  : 'line-'
@@ -26,10 +33,14 @@ class Line extends LinkedList.Node
     super(@node)
 
   applyToContents: (offset, length, fn) ->
-    return if length <= 0
-    [prevNode, startNode] = this.splitContents(offset)
-    [endNode, nextNode] = this.splitContents(offset + length)
-    Utils.traverseSiblings(startNode, endNode, fn)
+    [startNode, endNode] = Utils.partitionChildren(@node, offset, length)
+    curNode = startNode
+    endNode = endNode.nextSibling if curNode == endNode
+    while curNode? and curNode != endNode
+      nextNode = curNode.nextSibling
+      fn(curNode)
+      curNode = nextNode
+    return [startNode, endNode]
 
   buildLeaves: (node, formats) ->
     _.each(DOM.getChildNodes(node), (node) =>
@@ -44,9 +55,7 @@ class Line extends LinkedList.Node
 
   deleteText: (offset, length) ->
     return unless length > 0
-    this.applyToContents(offset, length, (node) ->
-      DOM.removeNode(node)
-    )
+    this.applyToContents(offset, length, DOM.removeNode)
     this.rebuild()
 
   findLeaf: (leafNode) ->
@@ -80,16 +89,14 @@ class Line extends LinkedList.Node
     if value
       refNode = null
       formatNode = @doc.formatManager.createFormatContainer(name, value)
-      this.applyToContents(offset, length, (node) =>
+      this.applyToContents(offset, length, (node) ->
         refNode = node.nextSibling
         formatNode.appendChild(node)
-        Utils.removeFormatFromSubtree(node, format)
+        removeFormat(format, node)
       )
       @node.insertBefore(formatNode, refNode)
     else
-      this.applyToContents(offset, length, (node) =>
-        Utils.removeFormatFromSubtree(node, format)
-      )
+      this.applyToContents(offset, length, removeFormat.bind(this, format))
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->
@@ -105,7 +112,7 @@ class Line extends LinkedList.Node
       if offset == 0    # Special case for remote cursor preservation
         @node.insertBefore(span, @node.firstChild)
       else
-        [prevNode, nextNode] = this.splitContents(offset)
+        [prevNode, nextNode] = Utils.splitChild(@node, offset)
         parentNode = prevNode?.parentNode or nextNode?.parentNode
         parentNode.insertBefore(span, nextNode)
       this.rebuild()
@@ -139,10 +146,6 @@ class Line extends LinkedList.Node
       return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
     )
     @delta = new Tandem.Delta(0, @length, ops)
-
-  splitContents: (offset) ->
-    [node, offset] = Utils.getChildAtOffset(@node, offset)
-    return Utils.splitNode(node, offset)
 
 
 module.exports = Line

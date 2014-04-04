@@ -105,13 +105,10 @@ Utils =
   isLineNode: (node) ->
     return node?.parentNode? and DOM.hasClass(node.parentNode, 'editor-container') and Utils.isBlock(node)
 
-  removeFormatFromSubtree: (subtree, format) ->
-    if format.matchContainer(subtree)
-      subtree = DOM.unwrap(subtree)
-    _.each(DOM.getChildNodes(subtree), (child) ->
-      Utils.removeFormatFromSubtree(child, format)
-    )
-    return subtree
+  partitionChildren: (node, offset, length) ->
+    [prevNode, startNode] = Utils.splitChild(node, offset)
+    [endNode, nextNode] = Utils.splitChild(node, offset + length)
+    return [startNode, endNode]
 
   # Firefox needs splitBefore, not splitAfter like it used to be, see doc/selection
   splitBefore: (node, root) ->
@@ -122,6 +119,10 @@ Utils =
     while node.previousSibling?
       parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
     Utils.splitBefore(parentNode, root)
+
+  splitChild: (parent, offset) ->
+    [node, offset] = Utils.getChildAtOffset(parent, offset)
+    return Utils.splitNode(node, offset)
 
   splitNode: (node, offset, force = false) ->
     # Check if split necessary
@@ -164,13 +165,6 @@ Utils =
       if cur? && cur.innerHTML == curHtml
         cur = cur.nextSibling
         offset = nextOffset
-
-  traverseSiblings: (curNode, endNode, fn) ->
-    while curNode?
-      nextSibling = curNode.nextSibling
-      fn(curNode)
-      break if curNode == endNode
-      curNode = nextSibling
 
 
 module.exports = Utils
