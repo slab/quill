@@ -17,7 +17,6 @@
     }
   ],
   "dependencies": {
-    "es5-shim": "~2.3.0",
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
     "rangy-browser": "1.2.3-1",

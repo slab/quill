@@ -1,6 +1,5 @@
 _             = require('lodash')
 _.str         = require('underscore.string')
-es5shim       = require('es5-shim')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 Editor        = require('./editor')

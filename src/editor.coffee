@@ -116,7 +116,7 @@ class Editor
   constructor: (@iframeContainer, @scribe, @options = {}) ->
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     this.init()
-    setInterval(this.checkUpdate.bind(this), @options.pollInterval)
+    setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     @scribe.on(@scribe.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )

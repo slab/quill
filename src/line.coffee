@@ -13,7 +13,7 @@ Tandem     = require('tandem-core')
 removeFormat = (format, subtree) ->
   if format.matchContainer(subtree)
     subtree = DOM.unwrap(subtree)
-  _.each(DOM.getChildNodes(subtree), removeFormat.bind(this, format))
+  _.each(DOM.getChildNodes(subtree), _.bind(removeFormat, this, format))
 
 
 class Line extends LinkedList.Node
@@ -74,6 +74,7 @@ class Line extends LinkedList.Node
     return [leaf, offset]
 
   formatText: (offset, length, name, value) ->
+    # Skip portions of text that already has format
     while length > 0
       op = _.first(@delta.getOpsAt(offset, 1))
       break if (value and op.attributes[name] != value) or (!value and op.attributes[name]?)
@@ -96,7 +97,7 @@ class Line extends LinkedList.Node
       )
       @node.insertBefore(formatNode, refNode)
     else
-      this.applyToContents(offset, length, removeFormat.bind(this, format))
+      this.applyToContents(offset, length, _.bind(removeFormat, this, format))
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->

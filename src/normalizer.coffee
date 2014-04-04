@@ -56,8 +56,8 @@ class Normalizer
 
   @breakBlocks: (root) ->
     Normalizer.groupBlocks(root)
-    _.each(_.clone(root.querySelectorAll('br')), Normalizer.normalizeBreak.bind('this', root))
-    _.each(DOM.getChildNodes(root), Normalizer.breakLine.bind(this))
+    _.each(_.clone(root.querySelectorAll('br')), _.bind(Normalizer.normalizeBreak, this, root))
+    _.each(DOM.getChildNodes(root), _.bind(Normalizer.breakLine))
 
   @breakLine: (lineNode) ->
     return if lineNode.childNodes.length == 1 and lineNode.firstChild.tagName == 'BR'

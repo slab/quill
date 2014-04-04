@@ -16,7 +16,7 @@ class Document
     @lines = new LinkedList()
     @lineMap = {}
     @normalizer.normalizeDoc()
-    _.each(DOM.getChildNodes(@root), this.appendLine.bind(this))
+    _.each(DOM.getChildNodes(@root), _.bind(this.appendLine, this))
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)

@@ -33,9 +33,9 @@ class SnowTheme extends DefaultTheme
       )
     )
     DOM.addClass(@editorContainer.parentNode, 'snow')
-    @scribe.onModuleLoad('link-tooltip', this.extendLinkTooltip.bind(this))
-    @scribe.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
-    @scribe.onModuleLoad('toolbar', this.extendToolbar.bind(this))
+    @scribe.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this))
+    @scribe.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
+    @scribe.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
 
   extendLinkTooltip: (module) ->
     @scribe.addStyles(

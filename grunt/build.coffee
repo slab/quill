@@ -2,7 +2,6 @@ module.exports = (grunt) ->
   grunt.config('browserify',
     options:
       alias: [
-        'node_modules/es5-shim/es5-shim.js:es5-shim'
         'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
         'lib/linked_list.js:linked-list'
         'node_modules/lodash/lodash.js:lodash'

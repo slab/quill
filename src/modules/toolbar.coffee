@@ -32,7 +32,7 @@ class Toolbar
       return unless eventName == @scribe.constructor.events.TEXT_CHANGE or eventName == @scribe.constructor.events.SELECTION_CHANGE
       this.updateActive()
     )
-    _.defer(DOM.addClass.bind(this, @container, 'sc-toolbar-container'))
+    _.defer(_.bind(DOM.addClass, this, @container, 'sc-toolbar-container'))
     @scribe.onModuleLoad('keyboard', (keyboard) =>
       _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
         keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
@@ -75,7 +75,7 @@ class Toolbar
   updateActive: (activeFormats = {}) ->
     @triggering = true
     range = @scribe.getSelection()
-    _.each(@container.querySelectorAll('select'), DOM.resetSelect.bind(this))
+    _.each(@container.querySelectorAll('select'), _.bind(DOM.resetSelect))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
       DOM.removeClass(button, 'sc-active')
     )
