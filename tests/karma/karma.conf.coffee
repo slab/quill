@@ -69,6 +69,9 @@ module.exports = (config) ->
       username: 'scribe'
       accessKey: 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
       build: os.hostname() + '-' + _.random(16*16*16*16).toString(16)
+      options:
+        'public': 'public'
+        'record-screenshots': false
     customLaunchers: customLaunchers
   )
 
