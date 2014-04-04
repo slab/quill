@@ -11,7 +11,7 @@ $(document).ready(function() {
     $('.scribe-wrapper').tooltip('show');
   }, 2500);
 
-  editor.on('focus-change', function(hasFocus) {
+  editor.once('focus-change', function(hasFocus) {
     $('#editor').toggleClass('focus', hasFocus);
     $('.scribe-wrapper').tooltip('destroy');
     clearTimeout(tooltipTimer);

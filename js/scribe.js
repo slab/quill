@@ -1,4 +1,4 @@
-/*! Stypi Editor - v0.11.1 - 2014-03-13
+/*! Stypi Editor - v0.11.1 - 2014-04-04
  *  https://stypi.github.io/scribe/
  *  Copyright (c) 2014
  *  Jason Chen, Salesforce.com
@@ -8,7 +8,9 @@
 module.exports = _dereq_('./src/scribe');
 
 
-},{"./src/scribe":45}],"uyMq3L":[function(_dereq_,module,exports){
+},{"./src/scribe":43}],"linked-list":[function(_dereq_,module,exports){
+module.exports=_dereq_('uyMq3L');
+},{}],"uyMq3L":[function(_dereq_,module,exports){
 // Inspired by http://blog.jcoglan.com/2007/07/23/writing-a-linked-list-in-javascript/
 
 function LinkedList() {}
@@ -88,1372 +90,6 @@ LinkedList.Node = function(data) {
 
 module.exports = LinkedList;
 
-},{}],"linked-list":[function(_dereq_,module,exports){
-module.exports=_dereq_('uyMq3L');
-},{}],"4VPpiv":[function(_dereq_,module,exports){
-// Copyright 2009-2012 by contributors, MIT License
-// vim: ts=4 sts=4 sw=4 expandtab
-
-//Add semicolon to prevent IIFE from being passed as argument to concated code.
-;
-// Module systems magic dance
-(function (definition) {
-    // RequireJS
-    if (typeof define == "function") {
-        define(definition);
-    // YUI3
-    } else if (typeof YUI == "function") {
-        YUI.add("es5", definition);
-    // CommonJS and <script>
-    } else {
-        definition();
-    }
-})(function () {
-
-/**
- * Brings an environment as close to ECMAScript 5 compliance
- * as is possible with the facilities of erstwhile engines.
- *
- * Annotated ES5: http://es5.github.com/ (specific links below)
- * ES5 Spec: http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf
- * Required reading: http://javascriptweblog.wordpress.com/2011/12/05/extending-javascript-natives/
- */
-
-// ES-5 15.1.2.2
-if (parseInt('08') !== 8) {
-    parseInt = (function (origParseInt) {
-        var hexRegex = /^0[xX]/;
-        return function parseIntES5(str, radix) {
-            str = String(str).trim();
-            if (!+radix) {
-                radix = hexRegex.test(str) ? 16 : 10;
-            }
-            return origParseInt(str, radix);
-        };
-    }(parseInt));
-}
-
-//
-// Function
-// ========
-//
-
-// ES-5 15.3.4.5
-// http://es5.github.com/#x15.3.4.5
-
-function Empty() {}
-
-if (!Function.prototype.bind) {
-    Function.prototype.bind = function bind(that) { // .length is 1
-        // 1. Let Target be the this value.
-        var target = this;
-        // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        if (typeof target != "function") {
-            throw new TypeError("Function.prototype.bind called on incompatible " + target);
-        }
-        // 3. Let A be a new (possibly empty) internal list of all of the
-        //   argument values provided after thisArg (arg1, arg2 etc), in order.
-        // XXX slicedArgs will stand in for "A" if used
-        var args = _Array_slice_.call(arguments, 1); // for normal call
-        // 4. Let F be a new native ECMAScript object.
-        // 11. Set the [[Prototype]] internal property of F to the standard
-        //   built-in Function prototype object as specified in 15.3.3.1.
-        // 12. Set the [[Call]] internal property of F as described in
-        //   15.3.4.5.1.
-        // 13. Set the [[Construct]] internal property of F as described in
-        //   15.3.4.5.2.
-        // 14. Set the [[HasInstance]] internal property of F as described in
-        //   15.3.4.5.3.
-        var binder = function () {
-
-            if (this instanceof bound) {
-                // 15.3.4.5.2 [[Construct]]
-                // When the [[Construct]] internal method of a function object,
-                // F that was created using the bind function is called with a
-                // list of arguments ExtraArgs, the following steps are taken:
-                // 1. Let target be the value of F's [[TargetFunction]]
-                //   internal property.
-                // 2. If target has no [[Construct]] internal method, a
-                //   TypeError exception is thrown.
-                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the
-                //   list boundArgs in the same order followed by the same
-                //   values as the list ExtraArgs in the same order.
-                // 5. Return the result of calling the [[Construct]] internal
-                //   method of target providing args as the arguments.
-
-                var result = target.apply(
-                    this,
-                    args.concat(_Array_slice_.call(arguments))
-                );
-                if (Object(result) === result) {
-                    return result;
-                }
-                return this;
-
-            } else {
-                // 15.3.4.5.1 [[Call]]
-                // When the [[Call]] internal method of a function object, F,
-                // which was created using the bind function is called with a
-                // this value and a list of arguments ExtraArgs, the following
-                // steps are taken:
-                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 2. Let boundThis be the value of F's [[BoundThis]] internal
-                //   property.
-                // 3. Let target be the value of F's [[TargetFunction]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the
-                //   list boundArgs in the same order followed by the same
-                //   values as the list ExtraArgs in the same order.
-                // 5. Return the result of calling the [[Call]] internal method
-                //   of target providing boundThis as the this value and
-                //   providing args as the arguments.
-
-                // equiv: target.call(this, ...boundArgs, ...args)
-                return target.apply(
-                    that,
-                    args.concat(_Array_slice_.call(arguments))
-                );
-
-            }
-
-        };
-
-        // 15. If the [[Class]] internal property of Target is "Function", then
-        //     a. Let L be the length property of Target minus the length of A.
-        //     b. Set the length own property of F to either 0 or L, whichever is
-        //       larger.
-        // 16. Else set the length own property of F to 0.
-
-        var boundLength = Math.max(0, target.length - args.length);
-
-        // 17. Set the attributes of the length own property of F to the values
-        //   specified in 15.3.5.1.
-        var boundArgs = [];
-        for (var i = 0; i < boundLength; i++) {
-            boundArgs.push("$" + i);
-        }
-
-        // XXX Build a dynamic function with desired amount of arguments is the only
-        // way to set the length property of a function.
-        // In environments where Content Security Policies enabled (Chrome extensions,
-        // for ex.) all use of eval or Function costructor throws an exception.
-        // However in all of these environments Function.prototype.bind exists
-        // and so this code will never be executed.
-        var bound = Function("binder", "return function(" + boundArgs.join(",") + "){return binder.apply(this,arguments)}")(binder);
-
-        if (target.prototype) {
-            Empty.prototype = target.prototype;
-            bound.prototype = new Empty();
-            // Clean up dangling references.
-            Empty.prototype = null;
-        }
-
-        // TODO
-        // 18. Set the [[Extensible]] internal property of F to true.
-
-        // TODO
-        // 19. Let thrower be the [[ThrowTypeError]] function Object (13.2.3).
-        // 20. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "caller", PropertyDescriptor {[[Get]]: thrower, [[Set]]:
-        //   thrower, [[Enumerable]]: false, [[Configurable]]: false}, and
-        //   false.
-        // 21. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "arguments", PropertyDescriptor {[[Get]]: thrower,
-        //   [[Set]]: thrower, [[Enumerable]]: false, [[Configurable]]: false},
-        //   and false.
-
-        // TODO
-        // NOTE Function objects created using Function.prototype.bind do not
-        // have a prototype property or the [[Code]], [[FormalParameters]], and
-        // [[Scope]] internal properties.
-        // XXX can't delete prototype in pure-js.
-
-        // 22. Return F.
-        return bound;
-    };
-}
-
-// Shortcut to an often accessed properties, in order to avoid multiple
-// dereference that costs universally.
-// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
-// us it in defining shortcuts.
-var call = Function.prototype.call;
-var prototypeOfArray = Array.prototype;
-var prototypeOfObject = Object.prototype;
-var _Array_slice_ = prototypeOfArray.slice;
-// Having a toString local variable name breaks in Opera so use _toString.
-var _toString = call.bind(prototypeOfObject.toString);
-var owns = call.bind(prototypeOfObject.hasOwnProperty);
-
-// If JS engine supports accessors creating shortcuts.
-var defineGetter;
-var defineSetter;
-var lookupGetter;
-var lookupSetter;
-var supportsAccessors;
-if ((supportsAccessors = owns(prototypeOfObject, "__defineGetter__"))) {
-    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
-    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
-    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
-    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
-}
-
-//
-// Array
-// =====
-//
-
-// ES5 15.4.4.12
-// http://es5.github.com/#x15.4.4.12
-// Default value for second param
-// [bugfix, ielt9, old browsers]
-// IE < 9 bug: [1,2].splice(0).join("") == "" but should be "12"
-if ([1,2].splice(0).length != 2) {
-    var array_splice = Array.prototype.splice;
-    var array_push = Array.prototype.push;
-    var array_unshift = Array.prototype.unshift;
-
-    if (function() { // test IE < 9 to splice bug - see issue #138
-        function makeArray(l) {
-            var a = [];
-            while (l--) {
-                a.unshift(l)
-            }
-            return a
-        }
-
-        var array = []
-            , lengthBefore
-        ;
-
-        array.splice.bind(array, 0, 0).apply(null, makeArray(20));
-        array.splice.bind(array, 0, 0).apply(null, makeArray(26));
-
-        lengthBefore = array.length; //20
-        array.splice(5, 0, "XXX"); // add one element
-
-        if (lengthBefore + 1 == array.length) {
-            return true;// has right splice implementation without bugs
-        }
-        // else {
-        //    IE8 bug
-        // }
-    }()) {//IE 6/7
-        Array.prototype.splice = function(start, deleteCount) {
-            if (!arguments.length) {
-                return [];
-            } else {
-                return array_splice.apply(this, [
-                    start === void 0 ? 0 : start,
-                    deleteCount === void 0 ? (this.length - start) : deleteCount
-                ].concat(_Array_slice_.call(arguments, 2)))
-            }
-        };
-    }
-    else {//IE8
-        Array.prototype.splice = function(start, deleteCount) {
-            var result
-                , args = _Array_slice_.call(arguments, 2)
-                , addElementsCount = args.length
-            ;
-
-            if (!arguments.length) {
-                return [];
-            }
-
-            if (start === void 0) { // default
-                start = 0;
-            }
-            if (deleteCount === void 0) { // default
-                deleteCount = this.length - start;
-            }
-
-            if (addElementsCount > 0) {
-                if (deleteCount <= 0) {
-                    if (start == this.length) { // tiny optimisation #1
-                        array_push.apply(this, args);
-                        return [];
-                    }
-
-                    if (start == 0) { // tiny optimisation #2
-                        array_unshift.apply(this, args);
-                        return [];
-                    }
-                }
-
-                // Array.prototype.splice implementation
-                result = _Array_slice_.call(this, start, start + deleteCount);// delete part
-                args.push.apply(args, _Array_slice_.call(this, start + deleteCount, this.length));// right part
-                args.unshift.apply(args, _Array_slice_.call(this, 0, start));// left part
-
-                // delete all items from this array and replace it to 'left part' + _Array_slice_.call(arguments, 2) + 'right part'
-                args.unshift(0, this.length);
-
-                array_splice.apply(this, args);
-
-                return result;
-            }
-
-            return array_splice.call(this, start, deleteCount);
-        }
-
-    }
-}
-
-// ES5 15.4.4.12
-// http://es5.github.com/#x15.4.4.13
-// Return len+argCount.
-// [bugfix, ielt8]
-// IE < 8 bug: [].unshift(0) == undefined but should be "1"
-if ([].unshift(0) != 1) {
-    var array_unshift = Array.prototype.unshift;
-    Array.prototype.unshift = function() {
-        array_unshift.apply(this, arguments);
-        return this.length;
-    };
-}
-
-// ES5 15.4.3.2
-// http://es5.github.com/#x15.4.3.2
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray
-if (!Array.isArray) {
-    Array.isArray = function isArray(obj) {
-        return _toString(obj) == "[object Array]";
-    };
-}
-
-// The IsCallable() check in the Array functions
-// has been replaced with a strict check on the
-// internal class of the object to trap cases where
-// the provided function was actually a regular
-// expression literal, which in V8 and
-// JavaScriptCore is a typeof "function".  Only in
-// V8 are regular expression literals permitted as
-// reduce parameters, so it is desirable in the
-// general case for the shim to match the more
-// strict and common behavior of rejecting regular
-// expressions.
-
-// ES5 15.4.4.18
-// http://es5.github.com/#x15.4.4.18
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/forEach
-
-// Check failure of by-index access of string characters (IE < 9)
-// and failure of `0 in boxedString` (Rhino)
-var boxedString = Object("a"),
-    splitString = boxedString[0] != "a" || !(0 in boxedString);
-// Check node 0.6.21 bug where third parameter is not boxed
-var boxedForEach = true;
-if (Array.prototype.forEach) {
-    Array.prototype.forEach.call("foo", function(item, i, obj) {
-        if (typeof obj !== 'object') boxedForEach = false;
-    });
-}
-
-if (!Array.prototype.forEach || !boxedForEach) {
-    Array.prototype.forEach = function forEach(fun /*, thisp*/) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                object,
-            thisp = arguments[1],
-            i = -1,
-            length = self.length >>> 0;
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(); // TODO message
-        }
-
-        while (++i < length) {
-            if (i in self) {
-                // Invoke the callback function with call, passing arguments:
-                // context, property value, property key, thisArg object
-                // context
-                fun.call(thisp, self[i], i, object);
-            }
-        }
-    };
-}
-
-// ES5 15.4.4.19
-// http://es5.github.com/#x15.4.4.19
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
-if (!Array.prototype.map) {
-    Array.prototype.map = function map(fun /*, thisp*/) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                object,
-            length = self.length >>> 0,
-            result = Array(length),
-            thisp = arguments[1];
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(fun + " is not a function");
-        }
-
-        for (var i = 0; i < length; i++) {
-            if (i in self)
-                result[i] = fun.call(thisp, self[i], i, object);
-        }
-        return result;
-    };
-}
-
-// ES5 15.4.4.20
-// http://es5.github.com/#x15.4.4.20
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
-if (!Array.prototype.filter) {
-    Array.prototype.filter = function filter(fun /*, thisp */) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                    object,
-            length = self.length >>> 0,
-            result = [],
-            value,
-            thisp = arguments[1];
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(fun + " is not a function");
-        }
-
-        for (var i = 0; i < length; i++) {
-            if (i in self) {
-                value = self[i];
-                if (fun.call(thisp, value, i, object)) {
-                    result.push(value);
-                }
-            }
-        }
-        return result;
-    };
-}
-
-// ES5 15.4.4.16
-// http://es5.github.com/#x15.4.4.16
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every
-if (!Array.prototype.every) {
-    Array.prototype.every = function every(fun /*, thisp */) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                object,
-            length = self.length >>> 0,
-            thisp = arguments[1];
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(fun + " is not a function");
-        }
-
-        for (var i = 0; i < length; i++) {
-            if (i in self && !fun.call(thisp, self[i], i, object)) {
-                return false;
-            }
-        }
-        return true;
-    };
-}
-
-// ES5 15.4.4.17
-// http://es5.github.com/#x15.4.4.17
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
-if (!Array.prototype.some) {
-    Array.prototype.some = function some(fun /*, thisp */) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                object,
-            length = self.length >>> 0,
-            thisp = arguments[1];
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(fun + " is not a function");
-        }
-
-        for (var i = 0; i < length; i++) {
-            if (i in self && fun.call(thisp, self[i], i, object)) {
-                return true;
-            }
-        }
-        return false;
-    };
-}
-
-// ES5 15.4.4.21
-// http://es5.github.com/#x15.4.4.21
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
-if (!Array.prototype.reduce) {
-    Array.prototype.reduce = function reduce(fun /*, initial*/) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                object,
-            length = self.length >>> 0;
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(fun + " is not a function");
-        }
-
-        // no value to return if no initial value and an empty array
-        if (!length && arguments.length == 1) {
-            throw new TypeError("reduce of empty array with no initial value");
-        }
-
-        var i = 0;
-        var result;
-        if (arguments.length >= 2) {
-            result = arguments[1];
-        } else {
-            do {
-                if (i in self) {
-                    result = self[i++];
-                    break;
-                }
-
-                // if array contains no values, no initial value to return
-                if (++i >= length) {
-                    throw new TypeError("reduce of empty array with no initial value");
-                }
-            } while (true);
-        }
-
-        for (; i < length; i++) {
-            if (i in self) {
-                result = fun.call(void 0, result, self[i], i, object);
-            }
-        }
-
-        return result;
-    };
-}
-
-// ES5 15.4.4.22
-// http://es5.github.com/#x15.4.4.22
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
-if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
-        var object = toObject(this),
-            self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                object,
-            length = self.length >>> 0;
-
-        // If no callback function or if callback is not a callable function
-        if (_toString(fun) != "[object Function]") {
-            throw new TypeError(fun + " is not a function");
-        }
-
-        // no value to return if no initial value, empty array
-        if (!length && arguments.length == 1) {
-            throw new TypeError("reduceRight of empty array with no initial value");
-        }
-
-        var result, i = length - 1;
-        if (arguments.length >= 2) {
-            result = arguments[1];
-        } else {
-            do {
-                if (i in self) {
-                    result = self[i--];
-                    break;
-                }
-
-                // if array contains no values, no initial value to return
-                if (--i < 0) {
-                    throw new TypeError("reduceRight of empty array with no initial value");
-                }
-            } while (true);
-        }
-
-        if (i < 0) {
-            return result;
-        }
-
-        do {
-            if (i in this) {
-                result = fun.call(void 0, result, self[i], i, object);
-            }
-        } while (i--);
-
-        return result;
-    };
-}
-
-// ES5 15.4.4.14
-// http://es5.github.com/#x15.4.4.14
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
-if (!Array.prototype.indexOf || ([0, 1].indexOf(1, 2) != -1)) {
-    Array.prototype.indexOf = function indexOf(sought /*, fromIndex */ ) {
-        var self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                toObject(this),
-            length = self.length >>> 0;
-
-        if (!length) {
-            return -1;
-        }
-
-        var i = 0;
-        if (arguments.length > 1) {
-            i = toInteger(arguments[1]);
-        }
-
-        // handle negative indices
-        i = i >= 0 ? i : Math.max(0, length + i);
-        for (; i < length; i++) {
-            if (i in self && self[i] === sought) {
-                return i;
-            }
-        }
-        return -1;
-    };
-}
-
-// ES5 15.4.4.15
-// http://es5.github.com/#x15.4.4.15
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf
-if (!Array.prototype.lastIndexOf || ([0, 1].lastIndexOf(0, -3) != -1)) {
-    Array.prototype.lastIndexOf = function lastIndexOf(sought /*, fromIndex */) {
-        var self = splitString && _toString(this) == "[object String]" ?
-                this.split("") :
-                toObject(this),
-            length = self.length >>> 0;
-
-        if (!length) {
-            return -1;
-        }
-        var i = length - 1;
-        if (arguments.length > 1) {
-            i = Math.min(i, toInteger(arguments[1]));
-        }
-        // handle negative indices
-        i = i >= 0 ? i : length - Math.abs(i);
-        for (; i >= 0; i--) {
-            if (i in self && sought === self[i]) {
-                return i;
-            }
-        }
-        return -1;
-    };
-}
-
-//
-// Object
-// ======
-//
-
-// ES5 15.2.3.14
-// http://es5.github.com/#x15.2.3.14
-if (!Object.keys) {
-    // http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
-    var hasDontEnumBug = true,
-        dontEnums = [
-            "toString",
-            "toLocaleString",
-            "valueOf",
-            "hasOwnProperty",
-            "isPrototypeOf",
-            "propertyIsEnumerable",
-            "constructor"
-        ],
-        dontEnumsLength = dontEnums.length;
-
-    for (var key in {"toString": null}) {
-        hasDontEnumBug = false;
-    }
-
-    Object.keys = function keys(object) {
-
-        if (
-            (typeof object != "object" && typeof object != "function") ||
-            object === null
-        ) {
-            throw new TypeError("Object.keys called on a non-object");
-        }
-
-        var keys = [];
-        for (var name in object) {
-            if (owns(object, name)) {
-                keys.push(name);
-            }
-        }
-
-        if (hasDontEnumBug) {
-            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
-                var dontEnum = dontEnums[i];
-                if (owns(object, dontEnum)) {
-                    keys.push(dontEnum);
-                }
-            }
-        }
-        return keys;
-    };
-
-}
-
-//
-// Date
-// ====
-//
-
-// ES5 15.9.5.43
-// http://es5.github.com/#x15.9.5.43
-// This function returns a String value represent the instance in time
-// represented by this Date object. The format of the String is the Date Time
-// string format defined in 15.9.1.15. All fields are present in the String.
-// The time zone is always UTC, denoted by the suffix Z. If the time value of
-// this object is not a finite Number a RangeError exception is thrown.
-var negativeDate = -62198755200000,
-    negativeYearString = "-000001";
-if (
-    !Date.prototype.toISOString ||
-    (new Date(negativeDate).toISOString().indexOf(negativeYearString) === -1)
-) {
-    Date.prototype.toISOString = function toISOString() {
-        var result, length, value, year, month;
-        if (!isFinite(this)) {
-            throw new RangeError("Date.prototype.toISOString called on non-finite value.");
-        }
-
-        year = this.getUTCFullYear();
-
-        month = this.getUTCMonth();
-        // see https://github.com/es-shims/es5-shim/issues/111
-        year += Math.floor(month / 12);
-        month = (month % 12 + 12) % 12;
-
-        // the date time string format is specified in 15.9.1.15.
-        result = [month + 1, this.getUTCDate(),
-            this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds()];
-        year = (
-            (year < 0 ? "-" : (year > 9999 ? "+" : "")) +
-            ("00000" + Math.abs(year))
-            .slice(0 <= year && year <= 9999 ? -4 : -6)
-        );
-
-        length = result.length;
-        while (length--) {
-            value = result[length];
-            // pad months, days, hours, minutes, and seconds to have two
-            // digits.
-            if (value < 10) {
-                result[length] = "0" + value;
-            }
-        }
-        // pad milliseconds to have three digits.
-        return (
-            year + "-" + result.slice(0, 2).join("-") +
-            "T" + result.slice(2).join(":") + "." +
-            ("000" + this.getUTCMilliseconds()).slice(-3) + "Z"
-        );
-    };
-}
-
-
-// ES5 15.9.5.44
-// http://es5.github.com/#x15.9.5.44
-// This function provides a String representation of a Date object for use by
-// JSON.stringify (15.12.3).
-var dateToJSONIsSupported = false;
-try {
-    dateToJSONIsSupported = (
-        Date.prototype.toJSON &&
-        new Date(NaN).toJSON() === null &&
-        new Date(negativeDate).toJSON().indexOf(negativeYearString) !== -1 &&
-        Date.prototype.toJSON.call({ // generic
-            toISOString: function () {
-                return true;
-            }
-        })
-    );
-} catch (e) {
-}
-if (!dateToJSONIsSupported) {
-    Date.prototype.toJSON = function toJSON(key) {
-        // When the toJSON method is called with argument key, the following
-        // steps are taken:
-
-        // 1.  Let O be the result of calling ToObject, giving it the this
-        // value as its argument.
-        // 2. Let tv be toPrimitive(O, hint Number).
-        var o = Object(this),
-            tv = toPrimitive(o),
-            toISO;
-        // 3. If tv is a Number and is not finite, return null.
-        if (typeof tv === "number" && !isFinite(tv)) {
-            return null;
-        }
-        // 4. Let toISO be the result of calling the [[Get]] internal method of
-        // O with argument "toISOString".
-        toISO = o.toISOString;
-        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof toISO != "function") {
-            throw new TypeError("toISOString property is not callable");
-        }
-        // 6. Return the result of calling the [[Call]] internal method of
-        //  toISO with O as the this value and an empty argument list.
-        return toISO.call(o);
-
-        // NOTE 1 The argument is ignored.
-
-        // NOTE 2 The toJSON function is intentionally generic; it does not
-        // require that its this value be a Date object. Therefore, it can be
-        // transferred to other kinds of objects for use as a method. However,
-        // it does require that any such object have a toISOString method. An
-        // object is free to use the argument key to filter its
-        // stringification.
-    };
-}
-
-// ES5 15.9.4.2
-// http://es5.github.com/#x15.9.4.2
-// based on work shared by Daniel Friesen (dantman)
-// http://gist.github.com/303249
-if (!Date.parse || "Date.parse is buggy") {
-    // XXX global assignment won't work in embeddings that use
-    // an alternate object for the context.
-    Date = (function(NativeDate) {
-
-        // Date.length === 7
-        function Date(Y, M, D, h, m, s, ms) {
-            var length = arguments.length;
-            if (this instanceof NativeDate) {
-                var date = length == 1 && String(Y) === Y ? // isString(Y)
-                    // We explicitly pass it through parse:
-                    new NativeDate(Date.parse(Y)) :
-                    // We have to manually make calls depending on argument
-                    // length here
-                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
-                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
-                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
-                    length >= 4 ? new NativeDate(Y, M, D, h) :
-                    length >= 3 ? new NativeDate(Y, M, D) :
-                    length >= 2 ? new NativeDate(Y, M) :
-                    length >= 1 ? new NativeDate(Y) :
-                                  new NativeDate();
-                // Prevent mixups with unfixed Date object
-                date.constructor = Date;
-                return date;
-            }
-            return NativeDate.apply(this, arguments);
-        };
-
-        // 15.9.1.15 Date Time String Format.
-        var isoDateExpression = new RegExp("^" +
-            "(\\d{4}|[\+\-]\\d{6})" + // four-digit year capture or sign +
-                                      // 6-digit extended year
-            "(?:-(\\d{2})" + // optional month capture
-            "(?:-(\\d{2})" + // optional day capture
-            "(?:" + // capture hours:minutes:seconds.milliseconds
-                "T(\\d{2})" + // hours capture
-                ":(\\d{2})" + // minutes capture
-                "(?:" + // optional :seconds.milliseconds
-                    ":(\\d{2})" + // seconds capture
-                    "(?:(\\.\\d{1,}))?" + // milliseconds capture
-                ")?" +
-            "(" + // capture UTC offset component
-                "Z|" + // UTC capture
-                "(?:" + // offset specifier +/-hours:minutes
-                    "([-+])" + // sign capture
-                    "(\\d{2})" + // hours offset capture
-                    ":(\\d{2})" + // minutes offset capture
-                ")" +
-            ")?)?)?)?" +
-        "$");
-
-        var months = [
-            0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365
-        ];
-
-        function dayFromMonth(year, month) {
-            var t = month > 1 ? 1 : 0;
-            return (
-                months[month] +
-                Math.floor((year - 1969 + t) / 4) -
-                Math.floor((year - 1901 + t) / 100) +
-                Math.floor((year - 1601 + t) / 400) +
-                365 * (year - 1970)
-            );
-        }
-
-        function toUTC(t) {
-            return Number(new NativeDate(1970, 0, 1, 0, 0, 0, t));
-        }
-
-        // Copy any custom methods a 3rd party library may have added
-        for (var key in NativeDate) {
-            Date[key] = NativeDate[key];
-        }
-
-        // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
-        Date.UTC = NativeDate.UTC;
-        Date.prototype = NativeDate.prototype;
-        Date.prototype.constructor = Date;
-
-        // Upgrade Date.parse to handle simplified ISO 8601 strings
-        Date.parse = function parse(string) {
-            var match = isoDateExpression.exec(string);
-            if (match) {
-                // parse months, days, hours, minutes, seconds, and milliseconds
-                // provide default values if necessary
-                // parse the UTC offset component
-                var year = Number(match[1]),
-                    month = Number(match[2] || 1) - 1,
-                    day = Number(match[3] || 1) - 1,
-                    hour = Number(match[4] || 0),
-                    minute = Number(match[5] || 0),
-                    second = Number(match[6] || 0),
-                    millisecond = Math.floor(Number(match[7] || 0) * 1000),
-                    // When time zone is missed, local offset should be used
-                    // (ES 5.1 bug)
-                    // see https://bugs.ecmascript.org/show_bug.cgi?id=112
-                    isLocalTime = Boolean(match[4] && !match[8]),
-                    signOffset = match[9] === "-" ? 1 : -1,
-                    hourOffset = Number(match[10] || 0),
-                    minuteOffset = Number(match[11] || 0),
-                    result;
-                if (
-                    hour < (
-                        minute > 0 || second > 0 || millisecond > 0 ?
-                        24 : 25
-                    ) &&
-                    minute < 60 && second < 60 && millisecond < 1000 &&
-                    month > -1 && month < 12 && hourOffset < 24 &&
-                    minuteOffset < 60 && // detect invalid offsets
-                    day > -1 &&
-                    day < (
-                        dayFromMonth(year, month + 1) -
-                        dayFromMonth(year, month)
-                    )
-                ) {
-                    result = (
-                        (dayFromMonth(year, month) + day) * 24 +
-                        hour +
-                        hourOffset * signOffset
-                    ) * 60;
-                    result = (
-                        (result + minute + minuteOffset * signOffset) * 60 +
-                        second
-                    ) * 1000 + millisecond;
-                    if (isLocalTime) {
-                        result = toUTC(result);
-                    }
-                    if (-8.64e15 <= result && result <= 8.64e15) {
-                        return result;
-                    }
-                }
-                return NaN;
-            }
-            return NativeDate.parse.apply(this, arguments);
-        };
-
-        return Date;
-    })(Date);
-}
-
-// ES5 15.9.4.4
-// http://es5.github.com/#x15.9.4.4
-if (!Date.now) {
-    Date.now = function now() {
-        return new Date().getTime();
-    };
-}
-
-
-//
-// Number
-// ======
-//
-
-// ES5.1 15.7.4.5
-// http://es5.github.com/#x15.7.4.5
-if (!Number.prototype.toFixed || (0.00008).toFixed(3) !== '0.000' || (0.9).toFixed(0) === '0' || (1.255).toFixed(2) !== '1.25' || (1000000000000000128).toFixed(0) !== "1000000000000000128") {
-    // Hide these variables and functions
-    (function () {
-        var base, size, data, i;
-
-        base = 1e7;
-        size = 6;
-        data = [0, 0, 0, 0, 0, 0];
-
-        function multiply(n, c) {
-            var i = -1;
-            while (++i < size) {
-                c += n * data[i];
-                data[i] = c % base;
-                c = Math.floor(c / base);
-            }
-        }
-
-        function divide(n) {
-            var i = size, c = 0;
-            while (--i >= 0) {
-                c += data[i];
-                data[i] = Math.floor(c / n);
-                c = (c % n) * base;
-            }
-        }
-
-        function toString() {
-            var i = size;
-            var s = '';
-            while (--i >= 0) {
-                if (s !== '' || i === 0 || data[i] !== 0) {
-                    var t = String(data[i]);
-                    if (s === '') {
-                        s = t;
-                    } else {
-                        s += '0000000'.slice(0, 7 - t.length) + t;
-                    }
-                }
-            }
-            return s;
-        }
-
-        function pow(x, n, acc) {
-            return (n === 0 ? acc : (n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc)));
-        }
-
-        function log(x) {
-            var n = 0;
-            while (x >= 4096) {
-                n += 12;
-                x /= 4096;
-            }
-            while (x >= 2) {
-                n += 1;
-                x /= 2;
-            }
-            return n;
-        }
-
-        Number.prototype.toFixed = function (fractionDigits) {
-            var f, x, s, m, e, z, j, k;
-
-            // Test for NaN and round fractionDigits down
-            f = Number(fractionDigits);
-            f = f !== f ? 0 : Math.floor(f);
-
-            if (f < 0 || f > 20) {
-                throw new RangeError("Number.toFixed called with invalid number of decimals");
-            }
-
-            x = Number(this);
-
-            // Test for NaN
-            if (x !== x) {
-                return "NaN";
-            }
-
-            // If it is too big or small, return the string value of the number
-            if (x <= -1e21 || x >= 1e21) {
-                return String(x);
-            }
-
-            s = "";
-
-            if (x < 0) {
-                s = "-";
-                x = -x;
-            }
-
-            m = "0";
-
-            if (x > 1e-21) {
-                // 1e-21 < x < 1e21
-                // -70 < log2(x) < 70
-                e = log(x * pow(2, 69, 1)) - 69;
-                z = (e < 0 ? x * pow(2, -e, 1) : x / pow(2, e, 1));
-                z *= 0x10000000000000; // Math.pow(2, 52);
-                e = 52 - e;
-
-                // -18 < e < 122
-                // x = z / 2 ^ e
-                if (e > 0) {
-                    multiply(0, z);
-                    j = f;
-
-                    while (j >= 7) {
-                        multiply(1e7, 0);
-                        j -= 7;
-                    }
-
-                    multiply(pow(10, j, 1), 0);
-                    j = e - 1;
-
-                    while (j >= 23) {
-                        divide(1 << 23);
-                        j -= 23;
-                    }
-
-                    divide(1 << j);
-                    multiply(1, 1);
-                    divide(2);
-                    m = toString();
-                } else {
-                    multiply(0, z);
-                    multiply(1 << (-e), 0);
-                    m = toString() + '0.00000000000000000000'.slice(2, 2 + f);
-                }
-            }
-
-            if (f > 0) {
-                k = m.length;
-
-                if (k <= f) {
-                    m = s + '0.0000000000000000000'.slice(0, f - k + 2) + m;
-                } else {
-                    m = s + m.slice(0, k - f) + '.' + m.slice(k - f);
-                }
-            } else {
-                m = s + m;
-            }
-
-            return m;
-        }
-    }());
-}
-
-
-//
-// String
-// ======
-//
-
-
-// ES5 15.5.4.14
-// http://es5.github.com/#x15.5.4.14
-
-// [bugfix, IE lt 9, firefox 4, Konqueror, Opera, obscure browsers]
-// Many browsers do not split properly with regular expressions or they
-// do not perform the split correctly under obscure conditions.
-// See http://blog.stevenlevithan.com/archives/cross-browser-split
-// I've tested in many browsers and this seems to cover the deviant ones:
-//    'ab'.split(/(?:ab)*/) should be ["", ""], not [""]
-//    '.'.split(/(.?)(.?)/) should be ["", ".", "", ""], not ["", ""]
-//    'tesst'.split(/(s)*/) should be ["t", undefined, "e", "s", "t"], not
-//       [undefined, "t", undefined, "e", ...]
-//    ''.split(/.?/) should be [], not [""]
-//    '.'.split(/()()/) should be ["."], not ["", "", "."]
-
-var string_split = String.prototype.split;
-if (
-    'ab'.split(/(?:ab)*/).length !== 2 ||
-    '.'.split(/(.?)(.?)/).length !== 4 ||
-    'tesst'.split(/(s)*/)[1] === "t" ||
-    ''.split(/.?/).length ||
-    '.'.split(/()()/).length > 1
-) {
-    (function () {
-        var compliantExecNpcg = /()??/.exec("")[1] === void 0; // NPCG: nonparticipating capturing group
-
-        String.prototype.split = function (separator, limit) {
-            var string = this;
-            if (separator === void 0 && limit === 0)
-                return [];
-
-            // If `separator` is not a regex, use native split
-            if (Object.prototype.toString.call(separator) !== "[object RegExp]") {
-                return string_split.apply(this, arguments);
-            }
-
-            var output = [],
-                flags = (separator.ignoreCase ? "i" : "") +
-                        (separator.multiline  ? "m" : "") +
-                        (separator.extended   ? "x" : "") + // Proposed for ES6
-                        (separator.sticky     ? "y" : ""), // Firefox 3+
-                lastLastIndex = 0,
-                // Make `global` and avoid `lastIndex` issues by working with a copy
-                separator = new RegExp(separator.source, flags + "g"),
-                separator2, match, lastIndex, lastLength;
-            string += ""; // Type-convert
-            if (!compliantExecNpcg) {
-                // Doesn't need flags gy, but they don't hurt
-                separator2 = new RegExp("^" + separator.source + "$(?!\\s)", flags);
-            }
-            /* Values for `limit`, per the spec:
-             * If undefined: 4294967295 // Math.pow(2, 32) - 1
-             * If 0, Infinity, or NaN: 0
-             * If positive number: limit = Math.floor(limit); if (limit > 4294967295) limit -= 4294967296;
-             * If negative number: 4294967296 - Math.floor(Math.abs(limit))
-             * If other: Type-convert, then use the above rules
-             */
-            limit = limit === void 0 ?
-                -1 >>> 0 : // Math.pow(2, 32) - 1
-                limit >>> 0; // ToUint32(limit)
-            while (match = separator.exec(string)) {
-                // `separator.lastIndex` is not reliable cross-browser
-                lastIndex = match.index + match[0].length;
-                if (lastIndex > lastLastIndex) {
-                    output.push(string.slice(lastLastIndex, match.index));
-                    // Fix browsers whose `exec` methods don't consistently return `undefined` for
-                    // nonparticipating capturing groups
-                    if (!compliantExecNpcg && match.length > 1) {
-                        match[0].replace(separator2, function () {
-                            for (var i = 1; i < arguments.length - 2; i++) {
-                                if (arguments[i] === void 0) {
-                                    match[i] = void 0;
-                                }
-                            }
-                        });
-                    }
-                    if (match.length > 1 && match.index < string.length) {
-                        Array.prototype.push.apply(output, match.slice(1));
-                    }
-                    lastLength = match[0].length;
-                    lastLastIndex = lastIndex;
-                    if (output.length >= limit) {
-                        break;
-                    }
-                }
-                if (separator.lastIndex === match.index) {
-                    separator.lastIndex++; // Avoid an infinite loop
-                }
-            }
-            if (lastLastIndex === string.length) {
-                if (lastLength || !separator.test("")) {
-                    output.push("");
-                }
-            } else {
-                output.push(string.slice(lastLastIndex));
-            }
-            return output.length > limit ? output.slice(0, limit) : output;
-        };
-    }());
-
-// [bugfix, chrome]
-// If separator is undefined, then the result array contains just one String,
-// which is the this value (converted to a String). If limit is not undefined,
-// then the output array is truncated so that it contains no more than limit
-// elements.
-// "0".split(undefined, 0) -> []
-} else if ("0".split(void 0, 0).length) {
-    String.prototype.split = function(separator, limit) {
-        if (separator === void 0 && limit === 0) return [];
-        return string_split.apply(this, arguments);
-    }
-}
-
-
-// ECMA-262, 3rd B.2.3
-// Note an ECMAScript standart, although ECMAScript 3rd Edition has a
-// non-normative section suggesting uniform semantics and it should be
-// normalized across all browsers
-// [bugfix, IE lt 9] IE < 9 substr() with negative value not working in IE
-if ("".substr && "0b".substr(-1) !== "b") {
-    var string_substr = String.prototype.substr;
-    /**
-     *  Get the substring of a string
-     *  @param  {integer}  start   where to start the substring
-     *  @param  {integer}  length  how many characters to return
-     *  @return {string}
-     */
-    String.prototype.substr = function(start, length) {
-        return string_substr.call(
-            this,
-            start < 0 ? ((start = this.length + start) < 0 ? 0 : start) : start,
-            length
-        );
-    }
-}
-
-// ES5 15.5.4.20
-// http://es5.github.com/#x15.5.4.20
-var ws = "\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003" +
-    "\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028" +
-    "\u2029\uFEFF";
-if (!String.prototype.trim || ws.trim()) {
-    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
-    // http://perfectionkills.com/whitespace-deviations/
-    ws = "[" + ws + "]";
-    var trimBeginRegexp = new RegExp("^" + ws + ws + "*"),
-        trimEndRegexp = new RegExp(ws + ws + "*$");
-    String.prototype.trim = function trim() {
-        if (this === void 0 || this === null) {
-            throw new TypeError("can't convert "+this+" to object");
-        }
-        return String(this)
-            .replace(trimBeginRegexp, "")
-            .replace(trimEndRegexp, "");
-    };
-}
-
-//
-// Util
-// ======
-//
-
-// ES5 9.4
-// http://es5.github.com/#x9.4
-// http://jsperf.com/to-integer
-
-function toInteger(n) {
-    n = +n;
-    if (n !== n) { // isNaN
-        n = 0;
-    } else if (n !== 0 && n !== (1/0) && n !== -(1/0)) {
-        n = (n > 0 || -1) * Math.floor(Math.abs(n));
-    }
-    return n;
-}
-
-function isPrimitive(input) {
-    var type = typeof input;
-    return (
-        input === null ||
-        type === "undefined" ||
-        type === "boolean" ||
-        type === "number" ||
-        type === "string"
-    );
-}
-
-function toPrimitive(input) {
-    var val, valueOf, toString;
-    if (isPrimitive(input)) {
-        return input;
-    }
-    valueOf = input.valueOf;
-    if (typeof valueOf === "function") {
-        val = valueOf.call(input);
-        if (isPrimitive(val)) {
-            return val;
-        }
-    }
-    toString = input.toString;
-    if (typeof toString === "function") {
-        val = toString.call(input);
-        if (isPrimitive(val)) {
-            return val;
-        }
-    }
-    throw new TypeError();
-}
-
-// ES5 9.9
-// http://es5.github.com/#x9.9
-var toObject = function (o) {
-    if (o == null) { // this matches both null and undefined
-        throw new TypeError("can't convert "+o+" to object");
-    }
-    return Object(o);
-};
-
-});
-
-},{}],"es5-shim":[function(_dereq_,module,exports){
-module.exports=_dereq_('4VPpiv');
 },{}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
 },{}],"x/3aRz":[function(_dereq_,module,exports){
@@ -2020,8 +656,8 @@ module.exports=_dereq_('x/3aRz');
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8}],8:[function(_dereq_,module,exports){
+}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/jason.chen/Dropbox/jetcode/scribe/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":6}],6:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2066,6 +702,13 @@ process.browser = true;
 process.env = {};
 process.argv = [];
 
+function noop() {}
+
+process.on = noop;
+process.once = noop;
+process.off = noop;
+process.emit = noop;
+
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
 }
@@ -2076,8 +719,6 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],"lodash":[function(_dereq_,module,exports){
-module.exports=_dereq_('4HJaAd');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
 /**
@@ -9261,6 +7902,8 @@ module.exports=_dereq_('4HJaAd');
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"lodash":[function(_dereq_,module,exports){
+module.exports=_dereq_('4HJaAd');
 },{}],"rmqf9t":[function(_dereq_,module,exports){
 (function (global){
 (function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
@@ -9933,7 +8576,7 @@ rangy.createModule("DomUtil", function(api, module) {
     var dom = api.dom;
     var DomPosition = dom.DomPosition;
     var DOMException = api.DOMException;
-
+    
     /*----------------------------------------------------------------------------------------------------------------*/
 
     // Utility functions
@@ -12496,7 +11139,7 @@ rangy.createModule("DomUtil", function(api, module) {
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"rangy-core":[function(_dereq_,module,exports){
 module.exports=_dereq_('rmqf9t');
-},{}],13:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 (function() {
   var Delta, InsertOp, Op, RetainOp, diff_match_patch, dmp, _;
 
@@ -13162,7 +11805,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./diff_match_patch":15,"./insert":16,"./op":17,"./retain":18,"lodash":"4HJaAd"}],14:[function(_dereq_,module,exports){
+},{"./diff_match_patch":13,"./insert":14,"./op":15,"./retain":16,"lodash":"4HJaAd"}],12:[function(_dereq_,module,exports){
 (function() {
   var Delta, DeltaGenerator, InsertOp, RetainOp, getUtils, setDomain, _, _domain;
 
@@ -13519,7 +12162,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./delta":13,"./insert":16,"./retain":18,"lodash":"4HJaAd"}],15:[function(_dereq_,module,exports){
+},{"./delta":11,"./insert":14,"./retain":16,"lodash":"4HJaAd"}],13:[function(_dereq_,module,exports){
 (function() {
   var googlediff;
 
@@ -13535,7 +12178,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"googlediff":21}],16:[function(_dereq_,module,exports){
+},{"googlediff":19}],14:[function(_dereq_,module,exports){
 (function() {
   var InsertOp, Op, _,
     __hasProp = {}.hasOwnProperty,
@@ -13595,7 +12238,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./op":17,"lodash":"4HJaAd"}],17:[function(_dereq_,module,exports){
+},{"./op":15,"lodash":"4HJaAd"}],15:[function(_dereq_,module,exports){
 (function() {
   var Op, _;
 
@@ -13679,7 +12322,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"lodash":"4HJaAd"}],18:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],16:[function(_dereq_,module,exports){
 (function() {
   var Op, RetainOp, _,
     __hasProp = {}.hasOwnProperty,
@@ -13732,7 +12375,7 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./op":17,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
+},{"./op":15,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
 (function() {
   module.exports = {
     Delta: _dereq_('./delta'),
@@ -13744,12 +12387,12 @@ module.exports=_dereq_('rmqf9t');
 
 }).call(this);
 
-},{"./delta":13,"./delta_generator":14,"./insert":16,"./op":17,"./retain":18}],"tandem-core":[function(_dereq_,module,exports){
+},{"./delta":11,"./delta_generator":12,"./insert":14,"./op":15,"./retain":16}],"tandem-core":[function(_dereq_,module,exports){
 module.exports=_dereq_('38mxji');
-},{}],21:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
-},{"./javascript/diff_match_patch_uncompressed.js":22}],22:[function(_dereq_,module,exports){
+},{"./javascript/diff_match_patch_uncompressed.js":20}],20:[function(_dereq_,module,exports){
 /**
  * Diff Match and Patch
  *
@@ -16621,7 +15264,7 @@ module.exports=_dereq_('Fq7WE+');
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}],25:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 module.exports={
   "name": "scribe",
   "version": "0.11.1",
@@ -16641,7 +15284,6 @@ module.exports={
     }
   ],
   "dependencies": {
-    "es5-shim": "~2.3.0",
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
     "rangy-browser": "1.2.3-1",
@@ -16662,22 +15304,24 @@ module.exports={
     "grunt-contrib-jade": "~0.11.0",
     "grunt-contrib-stylus": "~0.13.2",
     "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-watch": "~0.6.1",
     "grunt-karma": "~0.8.0",
-    "grunt-newer": "~0.6.1",
+    "grunt-newer": "~0.7.0",
     "grunt-shell": "~0.6.4",
     "istanbul": "~0.2.6",
+    "jquery": "~1.11.0",
     "karma": "~0.12.0",
     "karma-chrome-launcher": "~0.1.2",
     "karma-coverage": "~0.2.0",
     "karma-firefox-launcher": "~0.1.3",
+    "karma-coffee-preprocessor": "~0.2.1",
     "karma-html2js-preprocessor": "~0.1.0",
     "karma-mocha": "~0.1.1",
     "karma-phantomjs-launcher": "~0.1.2",
     "karma-safari-launcher": "~0.1.1",
-    "karma-sauce-launcher": "~0.2.1",
+    "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.4.0",
-    "mocha": "~1.17.1",
+    "mocha": "~1.18.0",
     "phantomjs": "~1.9.7-1"
   },
   "engine": {
@@ -16696,62 +15340,52 @@ module.exports={
   }
 }
 
-},{}],26:[function(_dereq_,module,exports){
-var LinkedList, ScribeDOM, ScribeDocument, ScribeFormatManager, ScribeLine, ScribeNormalizer, ScribeUtils, Tandem, _;
+},{}],24:[function(_dereq_,module,exports){
+var DOM, Document, FormatManager, Line, LinkedList, Normalizer, Tandem, Utils, _;
 
 _ = _dereq_('lodash');
 
 LinkedList = _dereq_('linked-list');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
-ScribeFormatManager = _dereq_('./format-manager');
+FormatManager = _dereq_('./format-manager');
 
-ScribeLine = _dereq_('./line');
+Line = _dereq_('./line');
 
-ScribeNormalizer = _dereq_('./normalizer');
+Normalizer = _dereq_('./normalizer');
 
-ScribeUtils = _dereq_('./utils');
+Utils = _dereq_('./utils');
 
 Tandem = _dereq_('tandem-core');
 
-ScribeDocument = (function() {
-  function ScribeDocument(root, options) {
+Document = (function() {
+  function Document(root, options) {
     this.root = root;
     if (options == null) {
       options = {};
     }
-    this.formatManager = new ScribeFormatManager(this.root, options);
-    this.normalizer = new ScribeNormalizer(this.root, this.formatManager);
-    this.root.innerHTML = ScribeNormalizer.normalizeHtml(this.root.innerHTML);
+    this.formatManager = new FormatManager(this.root, options);
+    this.normalizer = new Normalizer(this.root, this.formatManager);
+    this.root.innerHTML = Normalizer.normalizeHtml(this.root.innerHTML);
     this.lines = new LinkedList();
     this.lineMap = {};
     this.normalizer.normalizeDoc();
-    _.each(this.root.childNodes, (function(_this) {
-      return function(node) {
-        return _this.appendLine(node);
-      };
-    })(this));
+    _.each(DOM.getChildNodes(this.root), _.bind(this.appendLine, this));
   }
 
-  ScribeDocument.prototype.appendLine = function(lineNode) {
+  Document.prototype.appendLine = function(lineNode) {
     return this.insertLineBefore(lineNode, null);
   };
 
-  ScribeDocument.prototype.findLeaf = function(node) {
+  Document.prototype.findLeaf = function(node) {
     var line, lineNode;
-    lineNode = node.parentNode;
-    while ((lineNode != null) && !ScribeUtils.isLineNode(lineNode)) {
-      lineNode = lineNode.parentNode;
-    }
-    if (lineNode == null) {
-      return null;
-    }
+    lineNode = this.findLineNode(node);
     line = this.findLine(lineNode);
     return line.findLeaf(node);
   };
 
-  ScribeDocument.prototype.findLine = function(node) {
+  Document.prototype.findLine = function(node) {
     node = this.findLineNode(node);
     if (node != null) {
       return this.lineMap[node.id];
@@ -16760,7 +15394,7 @@ ScribeDocument = (function() {
     }
   };
 
-  ScribeDocument.prototype.findLineAtOffset = function(offset) {
+  Document.prototype.findLineAtOffset = function(offset) {
     var curLine;
     curLine = this.lines.first;
     while (curLine != null) {
@@ -16773,16 +15407,16 @@ ScribeDocument = (function() {
     return [null, offset];
   };
 
-  ScribeDocument.prototype.findLineNode = function(node) {
-    while ((node != null) && !ScribeUtils.isLineNode(node)) {
+  Document.prototype.findLineNode = function(node) {
+    while ((node != null) && !Utils.isLineNode(node)) {
       node = node.parentNode;
     }
     return node;
   };
 
-  ScribeDocument.prototype.insertLineBefore = function(newLineNode, refLine) {
+  Document.prototype.insertLineBefore = function(newLineNode, refLine) {
     var line;
-    line = new ScribeLine(this, newLineNode);
+    line = new Line(this, newLineNode);
     if (refLine !== null) {
       this.lines.insertAfter(refLine.prev, line);
     } else {
@@ -16792,26 +15426,26 @@ ScribeDocument = (function() {
     return line;
   };
 
-  ScribeDocument.prototype.mergeLines = function(line, lineToMerge) {
+  Document.prototype.mergeLines = function(line, lineToMerge) {
     if (!((line != null) && (lineToMerge != null))) {
       return;
     }
-    _.each(_.clone(lineToMerge.node.childNodes), function(child) {
+    _.each(DOM.getChildNodes(lineToMerge.node), function(child) {
       return line.node.appendChild(child);
     });
-    ScribeDOM.removeNode(lineToMerge.node);
+    DOM.removeNode(lineToMerge.node);
     this.removeLine(lineToMerge);
     return line.rebuild();
   };
 
-  ScribeDocument.prototype.removeLine = function(line) {
+  Document.prototype.removeLine = function(line) {
     delete this.lineMap[line.id];
     return this.lines.remove(line);
   };
 
-  ScribeDocument.prototype.splitLine = function(line, offset) {
+  Document.prototype.splitLine = function(line, offset) {
     var lineNode1, lineNode2, newLine, _ref;
-    _ref = ScribeUtils.splitNode(line.node, offset, true), lineNode1 = _ref[0], lineNode2 = _ref[1];
+    _ref = Utils.splitNode(line.node, offset, true), lineNode1 = _ref[0], lineNode2 = _ref[1];
     line.node = lineNode1;
     this.updateLine(line);
     newLine = this.insertLineBefore(lineNode2, line.next);
@@ -16819,50 +15453,48 @@ ScribeDocument = (function() {
     return newLine;
   };
 
-  ScribeDocument.prototype.toDelta = function() {
-    var appendNewline, delta, lines, ops;
+  Document.prototype.toDelta = function() {
+    var allNewlines, delta, lines, ops;
     lines = this.lines.toArray();
-    appendNewline = lines.length > 0;
+    allNewlines = true;
     ops = _.flatten(_.map(lines, function(line) {
-      if (line.length > 0) {
-        appendNewline = false;
-      }
       ops = _.clone(line.delta.ops);
       if (line.next != null) {
         ops.push(new Tandem.InsertOp("\n", line.formats));
       }
+      allNewlines = allNewlines && line.isNewline();
       return ops;
     }), true);
-    if (appendNewline) {
+    if ((this.lines.last != null) && allNewlines) {
       ops.push(new Tandem.InsertOp("\n", this.lines.last.formats));
     }
     delta = new Tandem.Delta(0, ops);
     return delta;
   };
 
-  ScribeDocument.prototype.updateLine = function(line) {
+  Document.prototype.updateLine = function(line) {
     return line.rebuild();
   };
 
-  return ScribeDocument;
+  return Document;
 
 })();
 
-module.exports = ScribeDocument;
+module.exports = Document;
 
 
-},{"./dom":27,"./format-manager":29,"./line":34,"./normalizer":40,"./utils":52,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],27:[function(_dereq_,module,exports){
-var ScribeDOM, _;
+},{"./dom":25,"./format-manager":27,"./line":31,"./normalizer":39,"./utils":49,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],25:[function(_dereq_,module,exports){
+var DOM, _;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = {
+DOM = {
   ELEMENT_NODE: 1,
   NOBREAK_SPACE: "&nbsp;",
   TEXT_NODE: 3,
   ZERO_WIDTH_NOBREAK_SPACE: "\uFEFF",
   addClass: function(node, cssClass) {
-    if (ScribeDOM.hasClass(node, cssClass)) {
+    if (DOM.hasClass(node, cssClass)) {
       return;
     }
     if (node.classList != null) {
@@ -16876,13 +15508,13 @@ ScribeDOM = {
     names = eventName.split(' ');
     if (names.length > 1) {
       return _.each(names, function(name) {
-        return ScribeDOM.addEventListener(node, name, listener);
+        return DOM.addEventListener(node, name, listener);
       });
     }
     callback = function(event) {
       var bubbles;
       if (event == null) {
-        event = ScribeDOM.getWindow(node).event;
+        event = DOM.getWindow(node).event;
       }
       if (event.target == null) {
         event.target = event.srcElement;
@@ -16913,6 +15545,19 @@ ScribeDOM = {
       throw new Error("No add event support");
     }
   },
+  clearAttributes: function(node, exception) {
+    if (exception == null) {
+      exception = [];
+    }
+    if (_.isString(exception)) {
+      exception = [exception];
+    }
+    return _.each(DOM.getAttributes(node), function(value, name) {
+      if (!(_.indexOf(exception, name) > -1)) {
+        return node.removeAttribute(name);
+      }
+    });
+  },
   getAttributes: function(node) {
     var attr, attributes, i, value, _i, _len, _ref;
     if (node.attributes == null) {
@@ -16926,15 +15571,6 @@ ScribeDOM = {
       attributes[attr.name] = attr.value;
     }
     return attributes;
-  },
-  getChildIndex: function(node) {
-    var index;
-    index = 0;
-    while (node.previousSibling != null) {
-      node = previousSibling;
-      index += 1;
-    }
-    return index;
   },
   getChildNodes: function(node) {
     var child, children;
@@ -16967,13 +15603,13 @@ ScribeDOM = {
   },
   getText: function(node) {
     switch (node.nodeType) {
-      case ScribeDOM.ELEMENT_NODE:
+      case DOM.ELEMENT_NODE:
         if (node.tagName === "BR") {
           return "";
         } else {
           return node.textContent || node.innerText || "";
         }
-      case ScribeDOM.TEXT_NODE:
+      case DOM.TEXT_NODE:
         return node.data || "";
       default:
         return "";
@@ -16986,23 +15622,12 @@ ScribeDOM = {
     if (node.classList != null) {
       return node.classList.contains(cssClass);
     } else if (node.className != null) {
-      return _.indexOf(ScribeDOM.getClasses(node), cssClass) > -1;
+      return _.indexOf(DOM.getClasses(node), cssClass) > -1;
     }
     return false;
   },
-  mergeNodes: function(node1, node2) {
-    if (node1 == null) {
-      return node2;
-    }
-    if (node2 == null) {
-      return node1;
-    }
-    this.moveChildren(node1, node2);
-    node2.parentNode.removeChild(node2);
-    return node1;
-  },
   moveChildren: function(newParent, oldParent) {
-    return _.each(ScribeDOM.getChildNodes(oldParent), function(child) {
+    return _.each(DOM.getChildNodes(oldParent), function(child) {
       return newParent.appendChild(child);
     });
   },
@@ -17011,8 +15636,8 @@ ScribeDOM = {
     child = node.firstChild;
     _results = [];
     while (child) {
-      if (child.nodeType === 3) {
-        while ((nextChild = child.nextSibling) && nextChild.nodeType === 3) {
+      if (child.nodeType === DOM.TEXT_NODE) {
+        while ((nextChild = child.nextSibling) && nextChild.nodeType === DOM.TEXT_NODE) {
           child.appendData(nextChild.data);
           node.removeChild(nextChild);
         }
@@ -17021,28 +15646,15 @@ ScribeDOM = {
     }
     return _results;
   },
-  removeAttributes: function(node, exception) {
-    if (exception == null) {
-      exception = [];
-    }
-    if (_.isString(exception)) {
-      exception = [exception];
-    }
-    return _.each(ScribeDOM.getAttributes(node), function(value, name) {
-      if (!(_.indexOf(exception, name) > -1)) {
-        return node.removeAttribute(name);
-      }
-    });
-  },
   removeClass: function(node, cssClass) {
     var classArray;
-    if (!ScribeDOM.hasClass(node, cssClass)) {
+    if (!DOM.hasClass(node, cssClass)) {
       return;
     }
     if (node.classList != null) {
       return node.classList.remove(cssClass);
     } else if (node.className != null) {
-      classArray = ScribeDOM.getClasses(node);
+      classArray = DOM.getClasses(node);
       classArray.splice(_.indexOf(classArray, cssClass), 1);
       return node.className = classArray.join(' ');
     }
@@ -17053,24 +15665,24 @@ ScribeDOM = {
   },
   resetSelect: function(select) {
     var option;
-    option = ScribeDOM.getDefaultOption(select);
+    option = DOM.getDefaultOption(select);
     if (option != null) {
       option.selected = true;
-      return ScribeDOM.triggerEvent(select, 'change');
+      return DOM.triggerEvent(select, 'change');
     } else {
       return select.selectedIndex = null;
     }
   },
   setText: function(node, text) {
     switch (node.nodeType) {
-      case ScribeDOM.ELEMENT_NODE:
+      case DOM.ELEMENT_NODE:
         if (node.textContent != null) {
           return node.textContent = text;
         } else {
           return node.innerText = text;
         }
         break;
-      case ScribeDOM.TEXT_NODE:
+      case DOM.TEXT_NODE:
         return node.data = text;
     }
   },
@@ -17092,12 +15704,12 @@ ScribeDOM = {
   },
   toggleClass: function(node, className, state) {
     if (state == null) {
-      state = !ScribeDOM.hasClass(node, className);
+      state = !DOM.hasClass(node, className);
     }
     if (state) {
-      return ScribeDOM.addClass(node, className);
+      return DOM.addClass(node, className);
     } else {
-      return ScribeDOM.removeClass(node, className);
+      return DOM.removeClass(node, className);
     }
   },
   triggerEvent: function(elem, eventName, bubble, cancels) {
@@ -17114,7 +15726,7 @@ ScribeDOM = {
     var next, ret;
     ret = node.firstChild;
     next = node.nextSibling;
-    _.each(ScribeDOM.getChildNodes(node), function(child) {
+    _.each(DOM.getChildNodes(node), function(child) {
       return node.parentNode.insertBefore(child, next);
     });
     node.parentNode.removeChild(node);
@@ -17127,47 +15739,27 @@ ScribeDOM = {
   }
 };
 
-module.exports = ScribeDOM;
+module.exports = DOM;
 
 
-},{"lodash":"4HJaAd"}],28:[function(_dereq_,module,exports){
-var DEFAULT_API_OPTIONS, EventEmitter2, ScribeDOM, ScribeDocument, ScribeEditor, ScribeKeyboard, ScribeLine, ScribeLogger, ScribeNormalizer, ScribePasteManager, ScribeRenderer, ScribeSelection, ScribeUndoManager, ScribeUtils, Tandem, _, _deleteAt, _formatAt, _insertAt, _preformat, _trackDelta, _update,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __slice = [].slice;
+},{"lodash":"4HJaAd"}],26:[function(_dereq_,module,exports){
+var DOM, Document, Editor, Line, Normalizer, Renderer, Selection, Tandem, _, _deleteAt, _formatAt, _insertAt, _trackDelta, _update;
 
 _ = _dereq_('lodash');
 
-EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
+DOM = _dereq_('./dom');
 
-ScribeDOM = _dereq_('./dom');
+Document = _dereq_('./document');
 
-ScribeDocument = _dereq_('./document');
+Line = _dereq_('./line');
 
-ScribeKeyboard = _dereq_('./keyboard');
+Normalizer = _dereq_('./normalizer');
 
-ScribeLine = _dereq_('./line');
+Renderer = _dereq_('./renderer');
 
-ScribeLogger = _dereq_('./logger');
-
-ScribeNormalizer = _dereq_('./normalizer');
-
-ScribePasteManager = _dereq_('./paste-manager');
-
-ScribeRenderer = _dereq_('./renderer');
-
-ScribeSelection = _dereq_('./selection');
-
-ScribeUndoManager = _dereq_('./undo-manager');
-
-ScribeUtils = _dereq_('./utils');
+Selection = _dereq_('./selection');
 
 Tandem = _dereq_('tandem-core');
-
-DEFAULT_API_OPTIONS = {
-  silent: false,
-  source: 'api'
-};
 
 _deleteAt = function(index, length) {
   if (length <= 0) {
@@ -17179,19 +15771,19 @@ _deleteAt = function(index, length) {
       _ref = _this.doc.findLineAtOffset(index), firstLine = _ref[0], offset = _ref[1];
       curLine = firstLine;
       while ((curLine != null) && length > 0) {
-        deleteLength = Math.min(length, curLine.length - offset);
+        deleteLength = Math.min(length, curLine.length - offset + 1);
         nextLine = curLine.next;
-        if (curLine.length === deleteLength) {
-          ScribeDOM.removeNode(curLine.node);
-          _this.doc.removeLine(curLine);
-        } else {
+        if (deleteLength <= curLine.length) {
           curLine.deleteText(offset, deleteLength);
+        } else {
+          DOM.removeNode(curLine.node);
+          _this.doc.removeLine(curLine);
         }
         length -= deleteLength;
         curLine = nextLine;
         offset = 0;
       }
-      if (firstLine != null) {
+      if ((firstLine != null ? firstLine.next : void 0) !== nextLine) {
         return _this.doc.mergeLines(firstLine, firstLine.next);
       }
     };
@@ -17205,13 +15797,7 @@ _formatAt = function(index, length, name, value) {
       _ref = _this.doc.findLineAtOffset(index), line = _ref[0], offset = _ref[1];
       _results = [];
       while ((line != null) && length > 0) {
-        if (ScribeLine.FORMATS[name] != null) {
-          if (length > line.length - offset) {
-            line.format(name, value);
-          }
-        } else {
-          line.formatText(offset, Math.min(length, line.length - offset), name, value);
-        }
+        line.formatText(offset, Math.min(length, line.length - offset), name, value);
         length -= line.length - offset;
         offset = 0;
         _results.push(line = line.next);
@@ -17253,15 +15839,6 @@ _insertAt = function(index, text, formatting) {
   })(this));
 };
 
-_preformat = function(name, value) {
-  var format;
-  format = this.doc.formatManager.formats[name];
-  if (format == null) {
-    throw new Error("Unsupported format " + name + " " + value);
-  }
-  return format.preformat(value);
-};
-
 _trackDelta = function(fn, options) {
   var decompose, decomposeA, decomposeB, decomposeLeft, decomposeRight, ignored, newDelta, newIndex, newLeftDelta, newRightDelta, oldIndex, oldLeftDelta, oldRightDelta, _ref, _ref1, _ref2, _ref3;
   oldIndex = (_ref = this.savedRange) != null ? _ref.start.index : void 0;
@@ -17293,10 +15870,10 @@ _update = function() {
   delta = _trackDelta.call(this, (function(_this) {
     return function() {
       return _this.doSilently(function() {
-        ScribeNormalizer.normalizeEmptyLines(_this.root);
+        Normalizer.normalizeEmptyLines(_this.root);
         return _this.selection.preserve(function() {
           var lineNode, lines, newLine, _results;
-          ScribeNormalizer.breakBlocks(_this.root);
+          Normalizer.breakBlocks(_this.root);
           lines = _this.doc.lines.toArray();
           lineNode = _this.root.firstChild;
           _.each(lines, function(line, index) {
@@ -17331,30 +15908,17 @@ _update = function() {
   }
 };
 
-ScribeEditor = (function(_super) {
-  __extends(ScribeEditor, _super);
-
-  ScribeEditor.editors = [];
-
-  ScribeEditor.events = {
-    FOCUS_CHANGE: 'focus-change',
-    POST_EVENT: 'post-event',
-    PRE_EVENT: 'pre-event',
-    SELECTION_CHANGE: 'selection-change',
-    TEXT_CHANGE: 'text-change'
-  };
-
-  function ScribeEditor(iframeContainer, scribe, options) {
+Editor = (function() {
+  function Editor(iframeContainer, scribe, options) {
     this.iframeContainer = iframeContainer;
     this.scribe = scribe;
     this.options = options != null ? options : {};
     if (_.isString(this.iframeContainer)) {
       this.iframeContainer = document.querySelector(this.iframeContainer);
     }
-    this.logger = new ScribeLogger(this, this.options.logLevel);
     this.init();
-    setInterval(this.checkUpdate.bind(this), this.options.pollInterval);
-    this.on(ScribeEditor.events.SELECTION_CHANGE, (function(_this) {
+    setInterval(_.bind(this.checkUpdate, this), this.options.pollInterval);
+    this.scribe.on(this.scribe.constructor.events.SELECTION_CHANGE, (function(_this) {
       return function(range) {
         return _this.savedRange = range;
       };
@@ -17364,41 +15928,36 @@ ScribeEditor = (function(_super) {
     }
   }
 
-  ScribeEditor.prototype.disable = function() {
+  Editor.prototype.disable = function() {
+    return this.enable(false);
+  };
+
+  Editor.prototype.enable = function(enabled) {
+    if (enabled == null) {
+      enabled = true;
+    }
     return this.doSilently((function(_this) {
       return function() {
-        return _this.root.setAttribute('contenteditable', false);
+        return _this.root.setAttribute('contenteditable', enabled);
       };
     })(this));
   };
 
-  ScribeEditor.prototype.enable = function() {
-    return this.doSilently((function(_this) {
-      return function() {
-        return _this.root.setAttribute('contenteditable', true);
-      };
-    })(this));
-  };
-
-  ScribeEditor.prototype.init = function() {
+  Editor.prototype.init = function() {
     this.ignoreDomChanges = true;
-    this.renderer = new ScribeRenderer(this.iframeContainer, this.options);
+    this.renderer = new Renderer(this.iframeContainer, this.scribe, this.options);
     this.contentWindow = this.renderer.iframe.contentWindow;
     this.root = this.renderer.root;
-    this.doc = new ScribeDocument(this.root, this.options);
+    this.doc = new Document(this.root, this.options);
     this.delta = this.doc.toDelta();
-    this.keyboard = new ScribeKeyboard(this);
-    this.selection = new ScribeSelection(this);
-    this.undoManager = new ScribeUndoManager(this, this.options);
-    this.pasteManager = new ScribePasteManager(this);
+    this.selection = new Selection(this, this.scribe);
     return this.ignoreDomChanges = false;
   };
 
-  ScribeEditor.prototype.applyDelta = function(delta, options) {
+  Editor.prototype.applyDelta = function(delta, options) {
     if (options == null) {
       options = {};
     }
-    options = _.defaults(options, DEFAULT_API_OPTIONS);
     if (delta.isIdentity()) {
       return;
     }
@@ -17420,29 +15979,29 @@ ScribeEditor = (function(_super) {
           oldDelta = _this.delta;
           _this.delta = oldDelta.compose(delta);
           if (!options.silent) {
-            _this.emit(ScribeEditor.events.TEXT_CHANGE, delta, options.source);
+            _this.scribe.emit(_this.scribe.constructor.events.TEXT_CHANGE, delta, options.source);
           }
         }
         if (localDelta && !localDelta.isIdentity()) {
-          _this.emit(ScribeEditor.events.TEXT_CHANGE, localDelta, 'user');
+          _this.scribe.emit(_this.scribe.constructor.events.TEXT_CHANGE, localDelta, 'user');
         }
         return _this.innerHTML = _this.root.innerHTML;
       };
     })(this));
   };
 
-  ScribeEditor.prototype.checkUpdate = function() {
+  Editor.prototype.checkUpdate = function() {
     var delta, oldDelta;
     delta = this.update();
     if (delta) {
       oldDelta = this.delta;
       this.delta = oldDelta.compose(delta);
-      this.emit(ScribeEditor.events.TEXT_CHANGE, delta, 'user');
+      this.scribe.emit(this.scribe.constructor.events.TEXT_CHANGE, delta, 'user');
     }
     return this.selection.update(delta !== false);
   };
 
-  ScribeEditor.prototype.doSilently = function(fn) {
+  Editor.prototype.doSilently = function(fn) {
     var oldIgnoreDomChange;
     oldIgnoreDomChange = this.ignoreDomChanges;
     this.ignoreDomChanges = true;
@@ -17450,65 +16009,11 @@ ScribeEditor = (function(_super) {
     return this.ignoreDomChanges = oldIgnoreDomChange;
   };
 
-  ScribeEditor.prototype.emit = function() {
-    var args, eventName, _ref;
-    eventName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    ScribeEditor.__super__.emit.apply(this, [ScribeEditor.events.PRE_EVENT, eventName].concat(__slice.call(args)));
-    if (_.indexOf(_.values(ScribeEditor.events), eventName) > -1) {
-      (_ref = this.logger).info.apply(_ref, [eventName].concat(__slice.call(args)));
-    }
-    ScribeEditor.__super__.emit.apply(this, [eventName].concat(__slice.call(args)));
-    return ScribeEditor.__super__.emit.apply(this, [ScribeEditor.events.POST_EVENT, eventName].concat(__slice.call(args)));
-  };
-
-  ScribeEditor.prototype.insertAt = function(index, text, formats, options) {
-    var delta;
-    if (options == null) {
-      options = {};
-    }
-    delta = Tandem.Delta.makeInsertDelta(this.delta.endLength, index, text, formats);
-    return this.applyDelta(delta, options);
-  };
-
-  ScribeEditor.prototype.deleteAt = function(index, length, options) {
-    var delta;
-    if (options == null) {
-      options = {};
-    }
-    delta = Tandem.Delta.makeDeleteDelta(this.delta.endLength, index, length);
-    return this.applyDelta(delta, options);
-  };
-
-  ScribeEditor.prototype.formatAt = function(index, length, name, value, options) {
-    var attribute;
-    if (options == null) {
-      options = {};
-    }
-    if (length > 0) {
-      attribute = {};
-      attribute[name] = value;
-      return this.applyDelta(Tandem.Delta.makeRetainDelta(this.delta.endLength, index, length, attribute), options);
-    } else {
-      return _preformat.call(this, name, value);
-    }
-  };
-
-  ScribeEditor.prototype.getDelta = function() {
+  Editor.prototype.getDelta = function() {
     return this.delta;
   };
 
-  ScribeEditor.prototype.getSelection = function() {
-    return this.selection.getRange();
-  };
-
-  ScribeEditor.prototype.setSelection = function(range, silent) {
-    if (silent == null) {
-      silent = false;
-    }
-    return this.selection.setRange(range, silent);
-  };
-
-  ScribeEditor.prototype.update = function() {
+  Editor.prototype.update = function() {
     var delta;
     if (this.innerHTML !== this.root.innerHTML) {
       delta = _update.call(this);
@@ -17519,24 +16024,24 @@ ScribeEditor = (function(_super) {
     }
   };
 
-  return ScribeEditor;
+  return Editor;
 
-})(EventEmitter2);
+})();
 
-module.exports = ScribeEditor;
+module.exports = Editor;
 
 
-},{"./document":26,"./dom":27,"./keyboard":31,"./line":34,"./logger":35,"./normalizer":40,"./paste-manager":41,"./renderer":44,"./selection":46,"./undo-manager":51,"./utils":52,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji"}],29:[function(_dereq_,module,exports){
-var ScribeFormat, ScribeFormatManager, _;
+},{"./document":24,"./dom":25,"./line":31,"./normalizer":39,"./renderer":42,"./selection":44,"lodash":"4HJaAd","tandem-core":"38mxji"}],27:[function(_dereq_,module,exports){
+var Format, FormatManager, _;
 
 _ = _dereq_('lodash');
 
 _.str = _dereq_('underscore.string');
 
-ScribeFormat = _dereq_('./format');
+Format = _dereq_('./format');
 
-ScribeFormatManager = (function() {
-  function ScribeFormatManager(container, options) {
+FormatManager = (function() {
+  function FormatManager(container, options) {
     this.container = container;
     this.options = options != null ? options : {};
     this.formats = {};
@@ -17544,16 +16049,16 @@ ScribeFormatManager = (function() {
       return function(formatName) {
         var className;
         className = _.str.classify(formatName);
-        return _this.addFormat(formatName, new ScribeFormat[className](_this.container));
+        return _this.addFormat(formatName, new Format[className](_this.container));
       };
     })(this));
   }
 
-  ScribeFormatManager.prototype.addFormat = function(name, format) {
+  FormatManager.prototype.addFormat = function(name, format) {
     return this.formats[name] = format;
   };
 
-  ScribeFormatManager.prototype.createFormatContainer = function(name, value) {
+  FormatManager.prototype.createFormatContainer = function(name, value) {
     if (this.formats[name]) {
       return this.formats[name].createContainer(value);
     } else {
@@ -17561,7 +16066,7 @@ ScribeFormatManager = (function() {
     }
   };
 
-  ScribeFormatManager.prototype.getFormat = function(container) {
+  FormatManager.prototype.getFormat = function(container) {
     var format, formats, name, names, value, _ref;
     names = [];
     formats = [];
@@ -17584,15 +16089,15 @@ ScribeFormatManager = (function() {
     }
   };
 
-  return ScribeFormatManager;
+  return FormatManager;
 
 })();
 
-module.exports = ScribeFormatManager;
+module.exports = FormatManager;
 
 
-},{"./format":30,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],30:[function(_dereq_,module,exports){
-var ScribeBackColorFormat, ScribeBoldFormat, ScribeClassFormat, ScribeColorFormat, ScribeDOM, ScribeFontNameFormat, ScribeFontSizeFormat, ScribeForeColorFormat, ScribeItalicFormat, ScribeLeafFormat, ScribeLinkFormat, ScribeSpanFormat, ScribeStrikeFormat, ScribeStyleFormat, ScribeTagFormat, ScribeUnderlineFormat, ScribeUtils, _,
+},{"./format":28,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],28:[function(_dereq_,module,exports){
+var BackColorFormat, BoldFormat, ClassFormat, ColorFormat, DOM, FontNameFormat, FontSizeFormat, ForeColorFormat, ItalicFormat, LeafFormat, LinkFormat, SpanFormat, StrikeFormat, StyleFormat, TagFormat, UnderlineFormat, Utils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -17600,112 +16105,112 @@ _ = _dereq_('lodash');
 
 _.str = _dereq_('underscore.string');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
-ScribeUtils = _dereq_('./utils');
+Utils = _dereq_('./utils');
 
-ScribeLeafFormat = (function() {
-  function ScribeLeafFormat(root, keyName) {
+LeafFormat = (function() {
+  function LeafFormat(root, keyName) {
     this.root = root;
     this.keyName = keyName;
   }
 
-  ScribeLeafFormat.prototype.clean = function(node) {
-    ScribeDOM.removeAttributes(node);
+  LeafFormat.prototype.clean = function(node) {
+    DOM.clearAttributes(node);
     return node;
   };
 
-  ScribeLeafFormat.prototype.createContainer = function() {
+  LeafFormat.prototype.createContainer = function() {
     throw new Error("Descendants should implement");
   };
 
-  ScribeLeafFormat.prototype.matchContainer = function(container) {
+  LeafFormat.prototype.matchContainer = function(container) {
     throw new Error("Descendants should implement");
   };
 
-  ScribeLeafFormat.prototype.preformat = function(value) {
+  LeafFormat.prototype.preformat = function(value) {
     throw new Error("Descendants should implement");
   };
 
-  return ScribeLeafFormat;
+  return LeafFormat;
 
 })();
 
-ScribeTagFormat = (function(_super) {
-  __extends(ScribeTagFormat, _super);
+TagFormat = (function(_super) {
+  __extends(TagFormat, _super);
 
-  function ScribeTagFormat(root, keyName, tagName) {
+  function TagFormat(root, keyName, tagName) {
     this.root = root;
     this.keyName = keyName;
     this.tagName = tagName;
-    ScribeTagFormat.__super__.constructor.apply(this, arguments);
+    TagFormat.__super__.constructor.apply(this, arguments);
   }
 
-  ScribeTagFormat.prototype.approximate = function(value) {
+  TagFormat.prototype.approximate = function(value) {
     if (!value) {
       throw new Error('Tag format must have truthy value');
     }
     return true;
   };
 
-  ScribeTagFormat.prototype.clean = function(node) {
-    node = ScribeTagFormat.__super__.clean.call(this, node);
+  TagFormat.prototype.clean = function(node) {
+    node = TagFormat.__super__.clean.call(this, node);
     if (node.tagName !== this.tagName) {
-      node = ScribeDOM.switchTag(node, this.tagName);
+      node = DOM.switchTag(node, this.tagName);
     }
     return node;
   };
 
-  ScribeTagFormat.prototype.createContainer = function() {
+  TagFormat.prototype.createContainer = function() {
     return this.root.ownerDocument.createElement(this.tagName);
   };
 
-  ScribeTagFormat.prototype.matchContainer = function(container) {
+  TagFormat.prototype.matchContainer = function(container) {
     return container.tagName === this.tagName;
   };
 
-  ScribeTagFormat.prototype.preformat = function(value) {
+  TagFormat.prototype.preformat = function(value) {
     return this.root.ownerDocument.execCommand(this.keyName, false, value);
   };
 
-  return ScribeTagFormat;
+  return TagFormat;
 
-})(ScribeLeafFormat);
+})(LeafFormat);
 
-ScribeSpanFormat = (function(_super) {
-  __extends(ScribeSpanFormat, _super);
+SpanFormat = (function(_super) {
+  __extends(SpanFormat, _super);
 
-  function ScribeSpanFormat(root, keyName) {
+  function SpanFormat(root, keyName) {
     this.root = root;
     this.keyName = keyName;
-    ScribeSpanFormat.__super__.constructor.call(this, this.root, this.keyName, 'SPAN');
+    SpanFormat.__super__.constructor.call(this, this.root, this.keyName, 'SPAN');
   }
 
-  ScribeSpanFormat.prototype.clean = function(node) {
+  SpanFormat.prototype.clean = function(node) {
     if (node.tagName !== this.tagName) {
-      node = ScribeDOM.switchTag(node, this.tagName);
+      node = DOM.switchTag(node, this.tagName);
     }
     return node;
   };
 
-  ScribeSpanFormat.prototype.approximate = function(value) {
+  SpanFormat.prototype.approximate = function(value) {
     throw new Error("Descendants should implement");
   };
 
-  return ScribeSpanFormat;
+  return SpanFormat;
 
-})(ScribeTagFormat);
+})(TagFormat);
 
-ScribeClassFormat = (function(_super) {
-  __extends(ScribeClassFormat, _super);
+ClassFormat = (function(_super) {
+  __extends(ClassFormat, _super);
 
-  function ScribeClassFormat(root, keyName) {
+  function ClassFormat(root, keyName) {
     this.root = root;
     this.keyName = keyName;
-    ScribeClassFormat.__super__.constructor.apply(this, arguments);
+    ClassFormat.__super__.constructor.apply(this, arguments);
   }
 
-  ScribeClassFormat.prototype.approximate = function(value) {
+  ClassFormat.prototype.approximate = function(value) {
     var parts;
     parts = value.split('-');
     if (parts.length > 1 && parts[0] === this.keyName) {
@@ -17714,22 +16219,22 @@ ScribeClassFormat = (function(_super) {
     return false;
   };
 
-  ScribeClassFormat.prototype.clean = function(node) {
-    ScribeDOM.removeAttributes(node, 'class');
+  ClassFormat.prototype.clean = function(node) {
+    DOM.clearAttributes(node, 'class');
     return node;
   };
 
-  ScribeClassFormat.prototype.createContainer = function(value) {
+  ClassFormat.prototype.createContainer = function(value) {
     var container;
-    container = ScribeClassFormat.__super__.createContainer.call(this, value);
-    ScribeDOM.addClass(container, "" + this.keyName + "-" + value);
+    container = ClassFormat.__super__.createContainer.call(this, value);
+    DOM.addClass(container, "" + this.keyName + "-" + value);
     return container;
   };
 
-  ScribeClassFormat.prototype.matchContainer = function(container) {
+  ClassFormat.prototype.matchContainer = function(container) {
     var classList, css, value, _i, _len;
-    if (ScribeClassFormat.__super__.matchContainer.call(this, container)) {
-      classList = ScribeDOM.getClasses(container);
+    if (ClassFormat.__super__.matchContainer.call(this, container)) {
+      classList = DOM.getClasses(container);
       for (_i = 0, _len = classList.length; _i < _len; _i++) {
         css = classList[_i];
         value = this.approximate(css);
@@ -17741,14 +16246,14 @@ ScribeClassFormat = (function(_super) {
     return false;
   };
 
-  return ScribeClassFormat;
+  return ClassFormat;
 
-})(ScribeSpanFormat);
+})(SpanFormat);
 
-ScribeStyleFormat = (function(_super) {
-  __extends(ScribeStyleFormat, _super);
+StyleFormat = (function(_super) {
+  __extends(StyleFormat, _super);
 
-  ScribeStyleFormat.getStyleObject = function(container) {
+  StyleFormat.getStyleObject = function(container) {
     var obj, styleString;
     styleString = container.getAttribute('style') || '';
     obj = _.reduce(styleString.split(';'), function(styles, str) {
@@ -17764,16 +16269,16 @@ ScribeStyleFormat = (function(_super) {
     return obj;
   };
 
-  function ScribeStyleFormat(root, keyName, cssName, defaultStyle, styles) {
+  function StyleFormat(root, keyName, cssName, defaultStyle, styles) {
     this.root = root;
     this.keyName = keyName;
     this.cssName = cssName;
     this.defaultStyle = defaultStyle;
     this.styles = styles;
-    ScribeStyleFormat.__super__.constructor.apply(this, arguments);
+    StyleFormat.__super__.constructor.apply(this, arguments);
   }
 
-  ScribeStyleFormat.prototype.approximate = function(cssValue) {
+  StyleFormat.prototype.approximate = function(cssValue) {
     var key, value, _ref;
     _ref = this.styles;
     for (key in _ref) {
@@ -17789,12 +16294,11 @@ ScribeStyleFormat = (function(_super) {
     return false;
   };
 
-  ScribeStyleFormat.prototype.clean = function(node) {
+  StyleFormat.prototype.clean = function(node) {
     var style, styleObj;
-    node = ScribeStyleFormat.__super__.clean.call(this, node);
-    ScribeDOM.removeAttributes(node, 'style');
-    styleObj = ScribeStyleFormat.getStyleObject(node);
-    node.removeAttribute('style');
+    node = StyleFormat.__super__.clean.call(this, node);
+    styleObj = StyleFormat.getStyleObject(node);
+    DOM.clearAttributes(node, 'style');
     if (styleObj[this.cssName]) {
       style = this.approximate(styleObj[this.cssName]);
       if (style) {
@@ -17804,9 +16308,9 @@ ScribeStyleFormat = (function(_super) {
     return node;
   };
 
-  ScribeStyleFormat.prototype.createContainer = function(value) {
+  StyleFormat.prototype.createContainer = function(value) {
     var container, cssName, style;
-    container = ScribeStyleFormat.__super__.createContainer.call(this, value);
+    container = StyleFormat.__super__.createContainer.call(this, value);
     cssName = _.str.camelize(this.cssName);
     style = this.approximate(value);
     if (style) {
@@ -17815,7 +16319,7 @@ ScribeStyleFormat = (function(_super) {
     return container;
   };
 
-  ScribeStyleFormat.prototype.matchContainer = function(container) {
+  StyleFormat.prototype.matchContainer = function(container) {
     var style, _ref;
     style = (_ref = container.style) != null ? _ref[_.str.camelize(this.cssName)] : void 0;
     if (style) {
@@ -17825,131 +16329,131 @@ ScribeStyleFormat = (function(_super) {
     }
   };
 
-  ScribeStyleFormat.prototype.preformat = function(value) {
+  StyleFormat.prototype.preformat = function(value) {
     value = this.approximate(value) || this.defaultStyle;
     return this.root.ownerDocument.execCommand(_.str.camelize(this.keyName), false, this.styles[value]);
   };
 
-  return ScribeStyleFormat;
+  return StyleFormat;
 
-})(ScribeSpanFormat);
+})(SpanFormat);
 
-ScribeBoldFormat = (function(_super) {
-  __extends(ScribeBoldFormat, _super);
+BoldFormat = (function(_super) {
+  __extends(BoldFormat, _super);
 
-  function ScribeBoldFormat(root) {
+  function BoldFormat(root) {
     this.root = root;
-    ScribeBoldFormat.__super__.constructor.call(this, this.root, 'bold', 'B');
+    BoldFormat.__super__.constructor.call(this, this.root, 'bold', 'B');
   }
 
-  ScribeBoldFormat.prototype.matchContainer = function(container) {
+  BoldFormat.prototype.matchContainer = function(container) {
     var _ref;
-    return ScribeBoldFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.fontWeight : void 0) === 'bold';
+    return BoldFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.fontWeight : void 0) === 'bold';
   };
 
-  return ScribeBoldFormat;
+  return BoldFormat;
 
-})(ScribeTagFormat);
+})(TagFormat);
 
-ScribeItalicFormat = (function(_super) {
-  __extends(ScribeItalicFormat, _super);
+ItalicFormat = (function(_super) {
+  __extends(ItalicFormat, _super);
 
-  function ScribeItalicFormat(root) {
+  function ItalicFormat(root) {
     this.root = root;
-    ScribeItalicFormat.__super__.constructor.call(this, this.root, 'italic', 'I');
+    ItalicFormat.__super__.constructor.call(this, this.root, 'italic', 'I');
   }
 
-  ScribeItalicFormat.prototype.matchContainer = function(container) {
+  ItalicFormat.prototype.matchContainer = function(container) {
     var _ref;
-    return ScribeItalicFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.fontStyle : void 0) === 'italic';
+    return ItalicFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.fontStyle : void 0) === 'italic';
   };
 
-  return ScribeItalicFormat;
+  return ItalicFormat;
 
-})(ScribeTagFormat);
+})(TagFormat);
 
-ScribeStrikeFormat = (function(_super) {
-  __extends(ScribeStrikeFormat, _super);
+StrikeFormat = (function(_super) {
+  __extends(StrikeFormat, _super);
 
-  function ScribeStrikeFormat(root) {
+  function StrikeFormat(root) {
     this.root = root;
-    ScribeStrikeFormat.__super__.constructor.call(this, this.root, 'strike', 'S');
+    StrikeFormat.__super__.constructor.call(this, this.root, 'strike', 'S');
   }
 
-  ScribeStrikeFormat.prototype.matchContainer = function(container) {
+  StrikeFormat.prototype.matchContainer = function(container) {
     var _ref;
-    return ScribeStrikeFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.textDecoration : void 0) === 'line-through';
+    return StrikeFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.textDecoration : void 0) === 'line-through';
   };
 
-  ScribeStrikeFormat.prototype.preformat = function(value) {
+  StrikeFormat.prototype.preformat = function(value) {
     return this.root.ownerDocument.execCommand('strikeThrough', false, value);
   };
 
-  return ScribeStrikeFormat;
+  return StrikeFormat;
 
-})(ScribeTagFormat);
+})(TagFormat);
 
-ScribeUnderlineFormat = (function(_super) {
-  __extends(ScribeUnderlineFormat, _super);
+UnderlineFormat = (function(_super) {
+  __extends(UnderlineFormat, _super);
 
-  function ScribeUnderlineFormat(root) {
+  function UnderlineFormat(root) {
     this.root = root;
-    ScribeUnderlineFormat.__super__.constructor.call(this, this.root, 'underline', 'U');
+    UnderlineFormat.__super__.constructor.call(this, this.root, 'underline', 'U');
   }
 
-  ScribeUnderlineFormat.prototype.matchContainer = function(container) {
+  UnderlineFormat.prototype.matchContainer = function(container) {
     var _ref;
-    return ScribeUnderlineFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.textDecoration : void 0) === 'underline';
+    return UnderlineFormat.__super__.matchContainer.call(this, container) || ((_ref = container.style) != null ? _ref.textDecoration : void 0) === 'underline';
   };
 
-  return ScribeUnderlineFormat;
+  return UnderlineFormat;
 
-})(ScribeTagFormat);
+})(TagFormat);
 
-ScribeLinkFormat = (function(_super) {
-  __extends(ScribeLinkFormat, _super);
+LinkFormat = (function(_super) {
+  __extends(LinkFormat, _super);
 
-  function ScribeLinkFormat(root) {
+  function LinkFormat(root) {
     this.root = root;
-    ScribeLinkFormat.__super__.constructor.call(this, this.root, 'link', 'A');
+    LinkFormat.__super__.constructor.call(this, this.root, 'link', 'A');
   }
 
-  ScribeLinkFormat.prototype.approximate = function(value) {
+  LinkFormat.prototype.approximate = function(value) {
     if (!value.match(/^https?:\/\//)) {
       value = 'http://' + value;
     }
     return value;
   };
 
-  ScribeLinkFormat.prototype.clean = function(node) {
-    ScribeDOM.removeAttributes(node, ['href', 'title']);
+  LinkFormat.prototype.clean = function(node) {
+    DOM.clearAttributes(node, ['href', 'title']);
     return node;
   };
 
-  ScribeLinkFormat.prototype.createContainer = function(value) {
+  LinkFormat.prototype.createContainer = function(value) {
     var link;
-    link = ScribeLinkFormat.__super__.createContainer.call(this, value);
+    link = LinkFormat.__super__.createContainer.call(this, value);
     link.href = this.approximate(value);
     link.title = link.href;
     return link;
   };
 
-  ScribeLinkFormat.prototype.matchContainer = function(container) {
-    if (ScribeLinkFormat.__super__.matchContainer.call(this, container)) {
+  LinkFormat.prototype.matchContainer = function(container) {
+    if (LinkFormat.__super__.matchContainer.call(this, container)) {
       return container.getAttribute('href');
     } else {
       return false;
     }
   };
 
-  return ScribeLinkFormat;
+  return LinkFormat;
 
-})(ScribeTagFormat);
+})(TagFormat);
 
-ScribeColorFormat = (function(_super) {
-  __extends(ScribeColorFormat, _super);
+ColorFormat = (function(_super) {
+  __extends(ColorFormat, _super);
 
-  ScribeColorFormat.COLORS = {
+  ColorFormat.COLORS = {
     'black': 'rgb(0, 0, 0)',
     'red': 'rgb(255, 0, 0)',
     'blue': 'rgb(0, 0, 255)',
@@ -17960,7 +16464,7 @@ ScribeColorFormat = (function(_super) {
     'white': 'rgb(255, 255, 255)'
   };
 
-  ScribeColorFormat.normalizeColor = function(value) {
+  ColorFormat.normalizeColor = function(value) {
     var colors;
     value = value.replace(/\ /g, '');
     if (value[0] === '#' && value.length === 4) {
@@ -17979,16 +16483,16 @@ ScribeColorFormat = (function(_super) {
     }
   };
 
-  function ScribeColorFormat(root, keyName, cssName, defaultStyle, styles) {
+  function ColorFormat(root, keyName, cssName, defaultStyle, styles) {
     this.root = root;
     this.keyName = keyName;
     this.cssName = cssName;
     this.defaultStyle = defaultStyle;
     this.styles = styles;
-    ScribeColorFormat.__super__.constructor.apply(this, arguments);
+    ColorFormat.__super__.constructor.apply(this, arguments);
   }
 
-  ScribeColorFormat.prototype.approximate = function(value) {
+  ColorFormat.prototype.approximate = function(value) {
     var color;
     if (!value) {
       return false;
@@ -17996,7 +16500,7 @@ ScribeColorFormat = (function(_super) {
     if (this.styles[value] != null) {
       return value;
     }
-    color = ScribeUtils.findClosestPoint(value, this.styles, ScribeColorFormat.normalizeColor);
+    color = Utils.findClosestPoint(value, this.styles, ColorFormat.normalizeColor);
     if (color === this.defaultStyle) {
       return false;
     } else {
@@ -18004,47 +16508,47 @@ ScribeColorFormat = (function(_super) {
     }
   };
 
-  return ScribeColorFormat;
+  return ColorFormat;
 
-})(ScribeStyleFormat);
+})(StyleFormat);
 
-ScribeBackColorFormat = (function(_super) {
-  __extends(ScribeBackColorFormat, _super);
+BackColorFormat = (function(_super) {
+  __extends(BackColorFormat, _super);
 
-  function ScribeBackColorFormat(root) {
+  function BackColorFormat(root) {
     this.root = root;
-    ScribeBackColorFormat.__super__.constructor.call(this, this.root, 'back-color', 'background-color', 'white', ScribeColorFormat.COLORS);
+    BackColorFormat.__super__.constructor.call(this, this.root, 'back-color', 'background-color', 'white', ColorFormat.COLORS);
   }
 
-  return ScribeBackColorFormat;
+  return BackColorFormat;
 
-})(ScribeColorFormat);
+})(ColorFormat);
 
-ScribeFontNameFormat = (function(_super) {
-  __extends(ScribeFontNameFormat, _super);
+FontNameFormat = (function(_super) {
+  __extends(FontNameFormat, _super);
 
-  ScribeFontNameFormat.normalizeFont = function(fontStr) {
+  FontNameFormat.normalizeFont = function(fontStr) {
     return _.map(fontStr.toUpperCase().split(','), function(font) {
       return _.str.trim(font, "'\" ");
     });
   };
 
-  function ScribeFontNameFormat(root) {
+  function FontNameFormat(root) {
     this.root = root;
-    ScribeFontNameFormat.__super__.constructor.call(this, this.root, 'font-name', 'font-family', 'sans-serif', {
+    FontNameFormat.__super__.constructor.call(this, this.root, 'font-name', 'font-family', 'sans-serif', {
       'sans-serif': "'Helvetica', 'Arial', sans-serif",
       'serif': "'Times New Roman', serif",
       'monospace': "'Courier New', monospace"
     });
   }
 
-  ScribeFontNameFormat.prototype.approximate = function(value) {
+  FontNameFormat.prototype.approximate = function(value) {
     var fonts, key, values, _ref;
-    values = ScribeFontNameFormat.normalizeFont(value);
+    values = FontNameFormat.normalizeFont(value);
     _ref = this.styles;
     for (key in _ref) {
       fonts = _ref[key];
-      fonts = ScribeFontNameFormat.normalizeFont(fonts);
+      fonts = FontNameFormat.normalizeFont(fonts);
       if (_.intersection(fonts, values).length > 0) {
         return key;
       }
@@ -18052,18 +16556,18 @@ ScribeFontNameFormat = (function(_super) {
     return false;
   };
 
-  return ScribeFontNameFormat;
+  return FontNameFormat;
 
-})(ScribeStyleFormat);
+})(StyleFormat);
 
-ScribeFontSizeFormat = (function(_super) {
-  __extends(ScribeFontSizeFormat, _super);
+FontSizeFormat = (function(_super) {
+  __extends(FontSizeFormat, _super);
 
-  ScribeFontSizeFormat.SCALE = 6.75;
+  FontSizeFormat.SCALE = 6.75;
 
-  function ScribeFontSizeFormat(root) {
+  function FontSizeFormat(root) {
     this.root = root;
-    ScribeFontSizeFormat.__super__.constructor.call(this, this.root, 'font-size', 'font-size', 'normal', {
+    FontSizeFormat.__super__.constructor.call(this, this.root, 'font-size', 'font-size', 'normal', {
       'huge': '32px',
       'large': '18px',
       'normal': '13px',
@@ -18071,7 +16575,7 @@ ScribeFontSizeFormat = (function(_super) {
     });
   }
 
-  ScribeFontSizeFormat.prototype.approximate = function(value) {
+  FontSizeFormat.prototype.approximate = function(value) {
     var size;
     if (this.styles[value] != null) {
       return value;
@@ -18079,9 +16583,9 @@ ScribeFontSizeFormat = (function(_super) {
     if (_.isString(value) && value.indexOf('px') > -1) {
       value = parseInt(value);
     } else {
-      value = parseInt(value) * ScribeFontSizeFormat.SCALE;
+      value = parseInt(value) * FontSizeFormat.SCALE;
     }
-    size = ScribeUtils.findClosestPoint(value, this.styles, parseInt);
+    size = Utils.findClosestPoint(value, this.styles, parseInt);
     if (size === this.defaultStyle) {
       return false;
     } else {
@@ -18089,292 +16593,58 @@ ScribeFontSizeFormat = (function(_super) {
     }
   };
 
-  ScribeFontSizeFormat.prototype.preformat = function(value) {
+  FontSizeFormat.prototype.preformat = function(value) {
     var size;
     value = this.approximate(value) || this.defaultStyle;
-    size = Math.round(parseInt(this.styles[value]) / ScribeFontSizeFormat.SCALE);
+    size = Math.round(parseInt(this.styles[value]) / FontSizeFormat.SCALE);
     return this.root.ownerDocument.execCommand(_.str.camelize(this.keyName), false, size);
   };
 
-  return ScribeFontSizeFormat;
+  return FontSizeFormat;
 
-})(ScribeStyleFormat);
+})(StyleFormat);
 
-ScribeForeColorFormat = (function(_super) {
-  __extends(ScribeForeColorFormat, _super);
+ForeColorFormat = (function(_super) {
+  __extends(ForeColorFormat, _super);
 
-  function ScribeForeColorFormat(root) {
+  function ForeColorFormat(root) {
     this.root = root;
-    ScribeForeColorFormat.__super__.constructor.call(this, this.root, 'fore-color', 'color', 'black', ScribeColorFormat.COLORS);
+    ForeColorFormat.__super__.constructor.call(this, this.root, 'fore-color', 'color', 'black', ColorFormat.COLORS);
   }
 
-  return ScribeForeColorFormat;
+  return ForeColorFormat;
 
-})(ScribeColorFormat);
+})(ColorFormat);
 
 module.exports = {
-  Leaf: ScribeLeafFormat,
-  Tag: ScribeTagFormat,
-  Span: ScribeSpanFormat,
-  Class: ScribeClassFormat,
-  Style: ScribeStyleFormat,
-  Bold: ScribeBoldFormat,
-  Italic: ScribeItalicFormat,
-  Link: ScribeLinkFormat,
-  Strike: ScribeStrikeFormat,
-  Underline: ScribeUnderlineFormat,
-  BackColor: ScribeBackColorFormat,
-  FontName: ScribeFontNameFormat,
-  FontSize: ScribeFontSizeFormat,
-  ForeColor: ScribeForeColorFormat
+  Leaf: LeafFormat,
+  Tag: TagFormat,
+  Span: SpanFormat,
+  Class: ClassFormat,
+  Style: StyleFormat,
+  Bold: BoldFormat,
+  Italic: ItalicFormat,
+  Link: LinkFormat,
+  Strike: StrikeFormat,
+  Underline: UnderlineFormat,
+  BackColor: BackColorFormat,
+  FontName: FontNameFormat,
+  FontSize: FontSizeFormat,
+  ForeColor: ForeColorFormat
 };
 
 
-},{"./dom":27,"./utils":52,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],31:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeKeyboard, ScribeLine, ScribePosition, ScribeRange, _, _initDeletes, _initHotkeys, _initListeners, _onTab;
+},{"./dom":25,"./utils":49,"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],29:[function(_dereq_,module,exports){
+var LeafIterator;
 
-_ = _dereq_('lodash');
-
-ScribeDOM = _dereq_('./dom');
-
-ScribeLine = _dereq_('./line');
-
-ScribePosition = _dereq_('./position');
-
-ScribeRange = _dereq_('./range');
-
-_initDeletes = function() {
-  return _.each([ScribeKeyboard.keys.DELETE, ScribeKeyboard.keys.BACKSPACE], (function(_this) {
-    return function(key) {
-      return _this.addHotkey(key, function() {
-        return _this.editor.scribe.getLength() > 1;
-      });
-    };
-  })(this));
-};
-
-_initHotkeys = function() {
-  this.addHotkey(ScribeKeyboard.hotkeys.OUTDENT, (function(_this) {
-    return function(range) {
-      _onTab.call(_this, range, true);
-      return false;
-    };
-  })(this));
-  this.addHotkey(ScribeKeyboard.hotkeys.INDENT, (function(_this) {
-    return function(range) {
-      _onTab.call(_this, range, false);
-      return false;
-    };
-  })(this));
-  return _.each(['bold', 'italic', 'underline'], (function(_this) {
-    return function(format) {
-      return _this.addHotkey(ScribeKeyboard.hotkeys[format.toUpperCase()], function(range) {
-        _this.toggleFormat(range, format);
-        return false;
-      });
-    };
-  })(this));
-};
-
-_initListeners = function() {
-  return ScribeDOM.addEventListener(this.editor.root, 'keydown', (function(_this) {
-    return function(event) {
-      var prevent;
-      if (_this.hotkeys[event.which] != null) {
-        prevent = false;
-        _.each(_this.hotkeys[event.which], function(hotkey) {
-          var selection;
-          if ((hotkey.meta != null) && (event.metaKey !== hotkey.meta && event.ctrlKey !== hotkey.meta)) {
-            return;
-          }
-          if ((hotkey.shift != null) && event.shiftKey !== hotkey.shift) {
-            return;
-          }
-          _this.editor.selection.update(true);
-          selection = _this.editor.getSelection();
-          if (selection == null) {
-            return;
-          }
-          return prevent = hotkey.callback.call(null, selection) === false || prevent;
-        });
-      }
-      return !prevent;
-    };
-  })(this));
-};
-
-_onTab = function(range, shift) {
-  var end, index, lines, offsetChange, start;
-  if (shift == null) {
-    shift = false;
-  }
-  lines = range.getLines();
-  if (lines.length > 1) {
-    index = ScribePosition.getIndex(lines[0].node);
-    start = range.start.index + (shift ? -1 : 1);
-    offsetChange = 0;
-    _.each(lines, (function(_this) {
-      return function(line) {
-        if (!shift) {
-          _this.editor.insertAt(index, '\t', {}, {
-            source: 'user'
-          });
-          offsetChange += 1;
-        } else if (line.leaves.first.text[0] === '\t') {
-          _this.editor.deleteAt(index, 1, {
-            source: 'user'
-          });
-          offsetChange -= 1;
-        } else if (line === lines[0]) {
-          start = range.start.index;
-        }
-        return index += line.length;
-      };
-    })(this));
-    end = range.end.index + offsetChange;
-    return this.editor.setSelection(new ScribeRange(this.editor, start, end));
-  } else {
-    range.deleteContents({
-      source: 'user'
-    });
-    range.insertContents(0, "\t", {}, {
-      source: 'user'
-    });
-    return this.editor.setSelection(new ScribeRange(this.editor, range.start.index + 1, range.start.index + 1));
-  }
-};
-
-ScribeKeyboard = (function() {
-  ScribeKeyboard.keys = {
-    BACKSPACE: 8,
-    TAB: 9,
-    ENTER: 13,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    DELETE: 46
-  };
-
-  ScribeKeyboard.hotkeys = {
-    BOLD: {
-      key: 'B',
-      meta: true
-    },
-    INDENT: {
-      key: ScribeKeyboard.keys.TAB,
-      shift: false
-    },
-    ITALIC: {
-      key: 'I',
-      meta: true
-    },
-    OUTDENT: {
-      key: ScribeKeyboard.keys.TAB,
-      shift: true
-    },
-    UNDERLINE: {
-      key: 'U',
-      meta: true
-    },
-    UNDO: {
-      key: 'Z',
-      meta: true,
-      shift: false
-    },
-    REDO: {
-      key: 'Z',
-      meta: true,
-      shift: true
-    },
-    SELECT_ALL: {
-      key: 'A',
-      meta: true
-    }
-  };
-
-  ScribeKeyboard.NAVIGATION = [ScribeKeyboard.keys.UP, ScribeKeyboard.keys.DOWN, ScribeKeyboard.keys.LEFT, ScribeKeyboard.keys.RIGHT];
-
-  function ScribeKeyboard(editor) {
-    this.editor = editor;
-    this.hotkeys = {};
-    _initListeners.call(this);
-    _initHotkeys.call(this);
-    _initDeletes.call(this);
-  }
-
-  ScribeKeyboard.prototype.addHotkey = function(hotkey, callback) {
-    var _base, _name;
-    hotkey = _.isObject(hotkey) ? _.clone(hotkey) : {
-      key: hotkey
-    };
-    if (_.isString(hotkey.key)) {
-      hotkey.key = hotkey.key.toUpperCase().charCodeAt(0);
-    }
-    hotkey.callback = callback;
-    if ((_base = this.hotkeys)[_name = hotkey.key] == null) {
-      _base[_name] = [];
-    }
-    return this.hotkeys[hotkey.key].push(hotkey);
-  };
-
-  ScribeKeyboard.prototype.indent = function(selection, increment) {
-    var applyIndent, lines;
-    lines = selection.getLines();
-    applyIndent = (function(_this) {
-      return function(line, format) {
-        var indent, index;
-        if (increment) {
-          indent = _.isNumber(line.formats[format]) ? line.formats[format] : (line.formats[format] ? 1 : 0);
-          indent += increment;
-          indent = Math.min(Math.max(indent, ScribeLine.MIN_INDENT), ScribeLine.MAX_INDENT);
-        } else {
-          indent = false;
-        }
-        index = Position.getIndex(line.node, 0);
-        return _this.editor.formatAt(index, 0, format, indent);
-      };
-    })(this);
-    return _.each(lines, (function(_this) {
-      return function(line) {
-        if (line.formats.bullet != null) {
-          return applyIndent(line, 'bullet');
-        } else if (line.formats.list != null) {
-          return applyIndent(line, 'list');
-        } else {
-          return applyIndent(line, 'indent');
-        }
-      };
-    })(this));
-  };
-
-  ScribeKeyboard.prototype.toggleFormat = function(range, format) {
-    var formats, value;
-    formats = range.getFormats();
-    value = !formats[format];
-    return range.format(format, value, {
-      source: 'user'
-    });
-  };
-
-  return ScribeKeyboard;
-
-})();
-
-module.exports = ScribeKeyboard;
-
-
-},{"./dom":27,"./line":34,"./position":42,"./range":43,"lodash":"4HJaAd"}],32:[function(_dereq_,module,exports){
-var ScribeLeafIterator;
-
-ScribeLeafIterator = (function() {
-  function ScribeLeafIterator(start, end) {
+LeafIterator = (function() {
+  function LeafIterator(start, end) {
     this.start = start;
     this.end = end;
     this.cur = this.start;
   }
 
-  ScribeLeafIterator.prototype.next = function() {
+  LeafIterator.prototype.next = function() {
     var line, ret;
     ret = this.cur;
     if (this.cur === this.end || this.cur === null) {
@@ -18391,25 +16661,25 @@ ScribeLeafIterator = (function() {
     return ret;
   };
 
-  ScribeLeafIterator.prototype.toArray = function() {
+  LeafIterator.prototype.toArray = function() {
     var arr, itr, next;
     arr = [];
-    itr = new ScribeLeafIterator(this.start, this.end);
+    itr = new LeafIterator(this.start, this.end);
     while (next = itr.next()) {
       arr.push(next);
     }
     return arr;
   };
 
-  return ScribeLeafIterator;
+  return LeafIterator;
 
 })();
 
-module.exports = ScribeLeafIterator;
+module.exports = LeafIterator;
 
 
-},{}],33:[function(_dereq_,module,exports){
-var LinkedList, ScribeDOM, ScribeLeaf, ScribePosition, ScribeUtils, _,
+},{}],30:[function(_dereq_,module,exports){
+var DOM, Leaf, LinkedList, Utils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -18417,78 +16687,75 @@ _ = _dereq_('lodash');
 
 LinkedList = _dereq_('linked-list');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
-ScribePosition = _dereq_('./position');
+Utils = _dereq_('./utils');
 
-ScribeUtils = _dereq_('./utils');
+Leaf = (function(_super) {
+  __extends(Leaf, _super);
 
-ScribeLeaf = (function(_super) {
-  __extends(ScribeLeaf, _super);
+  Leaf.ID_PREFIX = 'leaf-';
 
-  ScribeLeaf.ID_PREFIX = 'leaf-';
-
-  ScribeLeaf.isLeafNode = function(node) {
-    if ((node != null ? node.nodeType : void 0) !== ScribeDOM.ELEMENT_NODE) {
+  Leaf.isLeafNode = function(node) {
+    if ((node != null ? node.nodeType : void 0) !== DOM.ELEMENT_NODE) {
       return false;
     }
     if (node.tagName === 'BR') {
       return true;
     }
-    if (node.childNodes.length === 1 && node.firstChild.nodeType === ScribeDOM.TEXT_NODE) {
+    if (node.tagName === 'SPAN' && (node.firstChild == null)) {
+      return true;
+    }
+    if (node.childNodes.length === 1 && node.firstChild.nodeType === DOM.TEXT_NODE) {
       return true;
     }
     return false;
   };
 
-  ScribeLeaf.isLeafParent = function(node) {
-    if ((node != null ? node.nodeType : void 0) !== ScribeDOM.ELEMENT_NODE) {
+  Leaf.isLeafParent = function(node) {
+    if ((node != null ? node.nodeType : void 0) !== DOM.ELEMENT_NODE) {
       return false;
     }
     if (node.childNodes.length === 0) {
       return false;
     }
-    if (node.childNodes.length > 1 || node.firstChild.nodeType !== ScribeDOM.TEXT_NODE) {
+    if (node.childNodes.length > 1 || node.firstChild.nodeType !== DOM.TEXT_NODE) {
       return true;
     }
     return false;
   };
 
-  function ScribeLeaf(line, node, formats) {
+  function Leaf(line, node, formats) {
     this.line = line;
     this.node = node;
     this.formats = _.clone(formats);
-    this.id = _.uniqueId(ScribeLeaf.ID_PREFIX);
-    this.text = ScribeDOM.getText(this.node);
+    this.id = _.uniqueId(Leaf.ID_PREFIX);
+    this.text = DOM.getText(this.node);
     this.length = this.text.length;
   }
 
-  ScribeLeaf.prototype.getFormats = function() {
+  Leaf.prototype.getFormats = function() {
     return _.extend({}, this.formats, this.line.formats);
   };
 
-  ScribeLeaf.prototype.getLineOffset = function() {
-    return ScribePosition.getIndex(this.node, 0, this.line.node);
-  };
-
-  ScribeLeaf.prototype.insertText = function(index, text) {
+  Leaf.prototype.insertText = function(index, text) {
     var nodeText, offset, textNode, _ref;
     this.text = this.text.substring(0, index) + text + this.text.substring(index);
-    _ref = ScribeUtils.findDeepestNode(this.node, index), textNode = _ref[0], offset = _ref[1];
-    nodeText = ScribeDOM.getText(textNode);
-    ScribeDOM.setText(textNode, nodeText.substring(0, offset) + text + nodeText.substring(offset));
+    _ref = Utils.findDeepestNode(this.node, index), textNode = _ref[0], offset = _ref[1];
+    nodeText = DOM.getText(textNode);
+    DOM.setText(textNode, nodeText.substring(0, offset) + text + nodeText.substring(offset));
     return this.length = this.text.length;
   };
 
-  return ScribeLeaf;
+  return Leaf;
 
 })(LinkedList.Node);
 
-module.exports = ScribeLeaf;
+module.exports = Leaf;
 
 
-},{"./dom":27,"./position":42,"./utils":52,"linked-list":"uyMq3L","lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
-var LinkedList, ScribeDOM, ScribeLeaf, ScribeLine, ScribeUtils, Tandem, _,
+},{"./dom":25,"./utils":49,"linked-list":"uyMq3L","lodash":"4HJaAd"}],31:[function(_dereq_,module,exports){
+var DOM, Leaf, Line, LinkedList, Tandem, Utils, removeFormat, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -18496,51 +16763,63 @@ _ = _dereq_('lodash');
 
 LinkedList = _dereq_('linked-list');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
-ScribeLeaf = _dereq_('./leaf');
+Leaf = _dereq_('./leaf');
 
-ScribeLine = _dereq_('./line');
+Line = _dereq_('./line');
 
-ScribeUtils = _dereq_('./utils');
+Utils = _dereq_('./utils');
 
 Tandem = _dereq_('tandem-core');
 
-ScribeLine = (function(_super) {
-  __extends(ScribeLine, _super);
+removeFormat = function(format, subtree) {
+  if (format.matchContainer(subtree)) {
+    subtree = DOM.unwrap(subtree);
+  }
+  return _.each(DOM.getChildNodes(subtree), _.bind(removeFormat, this, format));
+};
 
-  ScribeLine.CLASS_NAME = 'line';
+Line = (function(_super) {
+  __extends(Line, _super);
 
-  ScribeLine.ID_PREFIX = 'line-';
+  Line.CLASS_NAME = 'line';
 
-  ScribeLine.FORMATS = ['center', 'justify', 'left', 'right'];
+  Line.ID_PREFIX = 'line-';
 
-  ScribeLine.MAX_INDENT = 9;
+  Line.FORMATS = ['center', 'justify', 'left', 'right'];
 
-  ScribeLine.MIN_INDENT = 1;
+  Line.MAX_INDENT = 9;
 
-  function ScribeLine(doc, node) {
+  Line.MIN_INDENT = 1;
+
+  function Line(doc, node) {
     this.doc = doc;
     this.node = node;
-    this.id = _.uniqueId(ScribeLine.ID_PREFIX);
+    this.id = _.uniqueId(Line.ID_PREFIX);
     this.node.id = this.id;
-    ScribeDOM.addClass(this.node, ScribeLine.CLASS_NAME);
+    DOM.addClass(this.node, Line.CLASS_NAME);
     this.rebuild();
-    ScribeLine.__super__.constructor.call(this, this.node);
+    Line.__super__.constructor.call(this, this.node);
   }
 
-  ScribeLine.prototype.applyToContents = function(offset, length, fn) {
-    var endNode, nextNode, prevNode, startNode, _ref, _ref1;
-    if (length <= 0) {
-      return;
+  Line.prototype.applyToContents = function(offset, length, fn) {
+    var curNode, endNode, nextNode, startNode, _ref;
+    _ref = Utils.partitionChildren(this.node, offset, length), startNode = _ref[0], endNode = _ref[1];
+    curNode = startNode;
+    if (curNode === endNode) {
+      endNode = endNode.nextSibling;
     }
-    _ref = this.splitContents(offset), prevNode = _ref[0], startNode = _ref[1];
-    _ref1 = this.splitContents(offset + length), endNode = _ref1[0], nextNode = _ref1[1];
-    return ScribeUtils.traverseSiblings(startNode, endNode, fn);
+    while ((curNode != null) && curNode !== endNode) {
+      nextNode = curNode.nextSibling;
+      fn(curNode);
+      curNode = nextNode;
+    }
+    return [startNode, endNode];
   };
 
-  ScribeLine.prototype.buildLeaves = function(node, formats) {
-    return _.each(node.childNodes, (function(_this) {
+  Line.prototype.buildLeaves = function(node, formats) {
+    return _.each(DOM.getChildNodes(node), (function(_this) {
       return function(node) {
         var formatName, formatValue, nodeFormats, _ref;
         nodeFormats = _.clone(formats);
@@ -18548,27 +16827,25 @@ ScribeLine = (function(_super) {
         if (formatName != null) {
           nodeFormats[formatName] = formatValue;
         }
-        if (ScribeLeaf.isLeafNode(node)) {
-          _this.leaves.append(new ScribeLeaf(_this, node, nodeFormats));
+        if (Leaf.isLeafNode(node)) {
+          _this.leaves.append(new Leaf(_this, node, nodeFormats));
         }
-        if (ScribeLeaf.isLeafParent(node)) {
+        if (Leaf.isLeafParent(node)) {
           return _this.buildLeaves(node, nodeFormats);
         }
       };
     })(this));
   };
 
-  ScribeLine.prototype.deleteText = function(offset, length) {
+  Line.prototype.deleteText = function(offset, length) {
     if (!(length > 0)) {
       return;
     }
-    this.applyToContents(offset, length, function(node) {
-      return ScribeDOM.removeNode(node);
-    });
+    this.applyToContents(offset, length, DOM.removeNode);
     return this.rebuild();
   };
 
-  ScribeLine.prototype.findLeaf = function(leafNode) {
+  Line.prototype.findLeaf = function(leafNode) {
     var curLeaf;
     curLeaf = this.leaves.first;
     while (curLeaf != null) {
@@ -18580,7 +16857,7 @@ ScribeLine = (function(_super) {
     return null;
   };
 
-  ScribeLine.prototype.findLeafAtOffset = function(offset) {
+  Line.prototype.findLeafAtOffset = function(offset) {
     var leaf, _i, _len, _ref;
     _ref = this.leaves.toArray();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -18594,11 +16871,7 @@ ScribeLine = (function(_super) {
     return [leaf, offset];
   };
 
-  ScribeLine.prototype.format = function(name, value) {
-    throw new Error("Unimplemented");
-  };
-
-  ScribeLine.prototype.formatText = function(offset, length, name, value) {
+  Line.prototype.formatText = function(offset, length, name, value) {
     var format, formatNode, op, refNode;
     while (length > 0) {
       op = _.first(this.delta.getOpsAt(offset, 1));
@@ -18625,25 +16898,19 @@ ScribeLine = (function(_super) {
     if (value) {
       refNode = null;
       formatNode = this.doc.formatManager.createFormatContainer(name, value);
-      this.applyToContents(offset, length, (function(_this) {
-        return function(node) {
-          refNode = node.nextSibling;
-          formatNode.appendChild(node);
-          return ScribeUtils.removeFormatFromSubtree(node, format);
-        };
-      })(this));
+      this.applyToContents(offset, length, function(node) {
+        refNode = node.nextSibling;
+        formatNode.appendChild(node);
+        return removeFormat(format, node);
+      });
       this.node.insertBefore(formatNode, refNode);
     } else {
-      this.applyToContents(offset, length, (function(_this) {
-        return function(node) {
-          return ScribeUtils.removeFormatFromSubtree(node, format);
-        };
-      })(this));
+      this.applyToContents(offset, length, _.bind(removeFormat, this, format));
     }
     return this.rebuild();
   };
 
-  ScribeLine.prototype.insertText = function(offset, text, formats) {
+  Line.prototype.insertText = function(offset, text, formats) {
     var leaf, leafOffset, nextNode, parentNode, prevNode, span, _ref, _ref1;
     if (formats == null) {
       formats = {};
@@ -18657,11 +16924,11 @@ ScribeLine = (function(_super) {
       return this.resetContent();
     } else {
       span = this.node.ownerDocument.createElement('span');
-      ScribeDOM.setText(span, text);
+      DOM.setText(span, text);
       if (offset === 0) {
         this.node.insertBefore(span, this.node.firstChild);
       } else {
-        _ref1 = this.splitContents(offset), prevNode = _ref1[0], nextNode = _ref1[1];
+        _ref1 = Utils.splitChild(this.node, offset), prevNode = _ref1[0], nextNode = _ref1[1];
         parentNode = (prevNode != null ? prevNode.parentNode : void 0) || (nextNode != null ? nextNode.parentNode : void 0);
         parentNode.insertBefore(span, nextNode);
       }
@@ -18674,7 +16941,11 @@ ScribeLine = (function(_super) {
     }
   };
 
-  ScribeLine.prototype.rebuild = function(force) {
+  Line.prototype.isNewline = function() {
+    return this.length === 0 && this.leaves.length === 1 && this.leaves.first.node.tagName === 'BR';
+  };
+
+  Line.prototype.rebuild = function(force) {
     var _ref;
     if (force == null) {
       force = false;
@@ -18696,7 +16967,7 @@ ScribeLine = (function(_super) {
     return true;
   };
 
-  ScribeLine.prototype.resetContent = function() {
+  Line.prototype.resetContent = function() {
     var formatName, formatValue, ops, _ref;
     this.length = _.reduce(this.leaves.toArray(), (function(length, leaf) {
       return leaf.length + length;
@@ -18713,121 +16984,49 @@ ScribeLine = (function(_super) {
     return this.delta = new Tandem.Delta(0, this.length, ops);
   };
 
-  ScribeLine.prototype.splitContents = function(offset) {
-    var node, _ref;
-    _ref = ScribeUtils.getChildAtOffset(this.node, offset), node = _ref[0], offset = _ref[1];
-    return ScribeUtils.splitNode(node, offset);
-  };
-
-  return ScribeLine;
+  return Line;
 
 })(LinkedList.Node);
 
-module.exports = ScribeLine;
+module.exports = Line;
 
 
-},{"./dom":27,"./leaf":33,"./line":34,"./utils":52,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],35:[function(_dereq_,module,exports){
-var ScribeLogger, _,
-  __slice = [].slice;
-
-_ = _dereq_('lodash');
-
-ScribeLogger = (function() {
-  function ScribeLogger(editor, logLevel) {
-    this.editor = editor;
-    this.logLevel = logLevel;
-    switch (this.logLevel) {
-      case 'debug':
-        this.logLevel = 3;
-        break;
-      case 'info':
-        this.logLevel = 2;
-        break;
-      case 'warn':
-        this.logLevel = 1;
-        break;
-      case 'error':
-        this.logLevel = 0;
-        break;
-      case false:
-        this.logLevel = -1;
-    }
-  }
-
-  return ScribeLogger;
-
-})();
-
-_.each(['error', 'warn', 'info', 'debug'], function(level, index) {
-  return ScribeLogger.prototype[level] = function() {
-    var args, fn;
-    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    if (!((typeof console !== "undefined" && console !== null) && this.logLevel >= index)) {
-      return;
-    }
-    fn = level === 'debug' ? 'log' : level;
-    if (this.editor.scribe.constructor.editors.length > 1) {
-      args.unshift(this.editor.options.id);
-    }
-    if (console[fn].apply != null) {
-      return console[fn].apply(console, args);
-    } else {
-      switch (args.length) {
-        case 1:
-          return console[fn](args[0]);
-        case 2:
-          return console[fn](args[0], args[1]);
-        case 3:
-          return console[fn](args[0], args[1], args[2]);
-        case 4:
-          return console[fn](args[0], args[1], args[2], args[3]);
-        case 5:
-          return console[fn](args[0], args[1], args[2], args[3], args[4]);
-        default:
-          return console[fn](args[0], args[1], args[2], args[3], args[4], args.slice(5));
-      }
-    }
-  };
-});
-
-module.exports = ScribeLogger;
-
-
-},{"lodash":"4HJaAd"}],36:[function(_dereq_,module,exports){
-var ScribeAuthorship, ScribeDOM, ScribeFormat, Tandem, _;
+},{"./dom":25,"./leaf":30,"./line":31,"./utils":49,"linked-list":"uyMq3L","lodash":"4HJaAd","tandem-core":"38mxji"}],32:[function(_dereq_,module,exports){
+var Authorship, DOM, Format, Tandem, _;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('../dom');
+DOM = _dereq_('../dom');
 
-ScribeFormat = _dereq_('../format');
+Format = _dereq_('../format');
 
 Tandem = _dereq_('tandem-core');
 
-ScribeAuthorship = (function() {
-  ScribeAuthorship.prototype.DEFAULTS = {
+Authorship = (function() {
+  Authorship.prototype.DEFAULTS = {
     authorId: null,
     color: 'blue',
     enabled: false
   };
 
-  function ScribeAuthorship(editor, options) {
-    this.editor = editor;
-    this.options = _.defaults(options, ScribeAuthorship.DEFAULTS);
+  function Authorship(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.options = options;
     if (this.options.button != null) {
       this.attachButton(this.options.button);
     }
     if (this.options.enabled) {
       this.enable();
     }
-    this.editor.doc.formatManager.addFormat('author', new ScribeFormat.Class(this.editor.renderer.root, 'author'));
+    this.scribe.editor.doc.formatManager.addFormat('author', new Format.Class(this.editorContainer, 'author'));
     if (this.options.authorId == null) {
       return;
     }
-    this.editor.on(this.editor.constructor.events.PRE_EVENT, (function(_this) {
+    this.scribe.on(this.scribe.constructor.events.PRE_EVENT, (function(_this) {
       return function(eventName, delta, origin) {
         var attribute, authorDelta;
-        if (eventName === _this.editor.constructor.events.TEXT_CHANGE && origin === 'user') {
+        if (eventName === _this.scribe.constructor.events.TEXT_CHANGE && origin === 'user') {
           _.each(delta.ops, function(op) {
             if (Tandem.InsertOp.isInsert(op) || _.keys(op.attributes).length > 0) {
               return op.attributes['author'] = _this.options.authorId;
@@ -18844,7 +17043,7 @@ ScribeAuthorship = (function() {
           }, (function() {}), function(index, length, name, value) {
             return authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute));
           });
-          return _this.editor.applyDelta(authorDelta, {
+          return _this.scribe.updateContents(authorDelta, {
             silent: true
           });
         }
@@ -18853,68 +17052,300 @@ ScribeAuthorship = (function() {
     this.addAuthor(this.options.authorId, this.options.color);
   }
 
-  ScribeAuthorship.prototype.addAuthor = function(id, color) {
+  Authorship.prototype.addAuthor = function(id, color) {
     var styles;
     styles = {};
     styles[".authorship .author-" + id] = {
       "background-color": "" + color
     };
-    return this.editor.renderer.addStyles(styles);
+    return this.scribe.addStyles(styles);
   };
 
-  ScribeAuthorship.prototype.attachButton = function(button) {
-    return ScribeDOM.addEventListener(button, 'click', (function(_this) {
+  Authorship.prototype.attachButton = function(button) {
+    return DOM.addEventListener(button, 'click', (function(_this) {
       return function() {
-        ScribeDOM.toggleClass(button, 'sc-on');
-        return _this.enable(ScribeDOM.hasClass(button, 'sc-on'));
+        DOM.toggleClass(button, 'sc-on');
+        return _this.enable(DOM.hasClass(button, 'sc-on'));
       };
     })(this));
   };
 
-  ScribeAuthorship.prototype.enable = function(enabled) {
+  Authorship.prototype.enable = function(enabled) {
     if (enabled == null) {
       enabled = true;
     }
-    return ScribeDOM.toggleClass(this.editor.root, 'authorship', enabled);
+    return DOM.toggleClass(this.editorContainer, 'authorship', enabled);
   };
 
-  ScribeAuthorship.prototype.disable = function() {
+  Authorship.prototype.disable = function() {
     return this.enable(false);
   };
 
-  return ScribeAuthorship;
+  return Authorship;
 
 })();
 
-module.exports = ScribeAuthorship;
+module.exports = Authorship;
 
 
-},{"../dom":27,"../format":30,"lodash":"4HJaAd","tandem-core":"38mxji"}],37:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeKeyboard, ScribeLinkTooltip, ScribePosition, ScribeRange, enterEditMode, exitEditMode, formatLink, hideTooltip, initListeners, initTooltip, normalizeUrl, showTooltip, _;
+},{"../dom":25,"../format":28,"lodash":"4HJaAd","tandem-core":"38mxji"}],33:[function(_dereq_,module,exports){
+var DOM, Keyboard, Line, Position, _, _initDeletes, _initHotkeys, _initListeners, _onTab;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('../dom');
+DOM = _dereq_('../dom');
 
-ScribeKeyboard = _dereq_('../keyboard');
+Line = _dereq_('../line');
 
-ScribePosition = _dereq_('../position');
+Position = _dereq_('../position');
 
-ScribeRange = _dereq_('../range');
+_initDeletes = function() {
+  return _.each([Keyboard.keys.DELETE, Keyboard.keys.BACKSPACE], (function(_this) {
+    return function(key) {
+      return _this.addHotkey(key, function() {
+        return _this.scribe.getLength() > 1;
+      });
+    };
+  })(this));
+};
+
+_initHotkeys = function() {
+  this.addHotkey(Keyboard.hotkeys.OUTDENT, (function(_this) {
+    return function(range) {
+      _onTab.call(_this, range, true);
+      return false;
+    };
+  })(this));
+  this.addHotkey(Keyboard.hotkeys.INDENT, (function(_this) {
+    return function(range) {
+      _onTab.call(_this, range, false);
+      return false;
+    };
+  })(this));
+  return _.each(['bold', 'italic', 'underline'], (function(_this) {
+    return function(format) {
+      return _this.addHotkey(Keyboard.hotkeys[format.toUpperCase()], function(range) {
+        _this.toggleFormat(range, format);
+        return false;
+      });
+    };
+  })(this));
+};
+
+_initListeners = function() {
+  return DOM.addEventListener(this.editorContainer, 'keydown', (function(_this) {
+    return function(event) {
+      var prevent;
+      if (_this.hotkeys[event.which] != null) {
+        prevent = false;
+        _.each(_this.hotkeys[event.which], function(hotkey) {
+          var selection;
+          if ((hotkey.meta != null) && (event.metaKey !== hotkey.meta && event.ctrlKey !== hotkey.meta)) {
+            return;
+          }
+          if ((hotkey.shift != null) && event.shiftKey !== hotkey.shift) {
+            return;
+          }
+          _this.scribe.updateSelection({
+            silent: true
+          });
+          selection = _this.scribe.getSelection();
+          if (selection == null) {
+            return;
+          }
+          return prevent = hotkey.callback.call(null, selection) === false || prevent;
+        });
+      }
+      return !prevent;
+    };
+  })(this));
+};
+
+_onTab = function(range, shift) {
+  var end, index, lines, offsetChange, start;
+  if (shift == null) {
+    shift = false;
+  }
+  lines = range.getLines();
+  if (lines.length > 1) {
+    index = Position.getIndex(lines[0].node);
+    start = range.start.index + (shift ? -1 : 1);
+    offsetChange = 0;
+    _.each(lines, (function(_this) {
+      return function(line) {
+        if (!shift) {
+          _this.scribe.insertText(index, '\t', {}, {
+            source: 'user'
+          });
+          offsetChange += 1;
+        } else if (line.leaves.first.text[0] === '\t') {
+          _this.scribe.deleteText(index, 1, {
+            source: 'user'
+          });
+          offsetChange -= 1;
+        } else if (line === lines[0]) {
+          start = range.start.index;
+        }
+        return index += line.length;
+      };
+    })(this));
+    end = range.end.index + offsetChange;
+    return this.scribe.setSelection(start, end);
+  } else {
+    index = this.range.start.getIndex();
+    this.scribe.deleteText(this.range, {
+      source: 'user'
+    });
+    this.scribe.insertText(index, "\t", {}, {
+      source: 'user'
+    });
+    return this.scribe.setSelection(index + 1, index + 1);
+  }
+};
+
+Keyboard = (function() {
+  Keyboard.keys = {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    DELETE: 46
+  };
+
+  Keyboard.hotkeys = {
+    BOLD: {
+      key: 'B',
+      meta: true
+    },
+    INDENT: {
+      key: Keyboard.keys.TAB,
+      shift: false
+    },
+    ITALIC: {
+      key: 'I',
+      meta: true
+    },
+    OUTDENT: {
+      key: Keyboard.keys.TAB,
+      shift: true
+    },
+    UNDERLINE: {
+      key: 'U',
+      meta: true
+    },
+    UNDO: {
+      key: 'Z',
+      meta: true,
+      shift: false
+    },
+    REDO: {
+      key: 'Z',
+      meta: true,
+      shift: true
+    },
+    SELECT_ALL: {
+      key: 'A',
+      meta: true
+    }
+  };
+
+  Keyboard.NAVIGATION = [Keyboard.keys.UP, Keyboard.keys.DOWN, Keyboard.keys.LEFT, Keyboard.keys.RIGHT];
+
+  function Keyboard(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.hotkeys = {};
+    _initListeners.call(this);
+    _initHotkeys.call(this);
+    _initDeletes.call(this);
+  }
+
+  Keyboard.prototype.addHotkey = function(hotkey, callback) {
+    var _base, _name;
+    hotkey = _.isObject(hotkey) ? _.clone(hotkey) : {
+      key: hotkey
+    };
+    if (_.isString(hotkey.key)) {
+      hotkey.key = hotkey.key.toUpperCase().charCodeAt(0);
+    }
+    hotkey.callback = callback;
+    if ((_base = this.hotkeys)[_name = hotkey.key] == null) {
+      _base[_name] = [];
+    }
+    return this.hotkeys[hotkey.key].push(hotkey);
+  };
+
+  Keyboard.prototype.indent = function(selection, increment) {
+    var applyIndent, lines;
+    lines = selection.getLines();
+    applyIndent = (function(_this) {
+      return function(line, format) {
+        var indent, index;
+        if (increment) {
+          indent = _.isNumber(line.formats[format]) ? line.formats[format] : (line.formats[format] ? 1 : 0);
+          indent += increment;
+          indent = Math.min(Math.max(indent, Line.MIN_INDENT), Line.MAX_INDENT);
+        } else {
+          indent = false;
+        }
+        index = Position.getIndex(line.node, 0);
+        return _this.scribe.formatText(index, 0, format, indent);
+      };
+    })(this);
+    return _.each(lines, (function(_this) {
+      return function(line) {
+        if (line.formats.bullet != null) {
+          return applyIndent(line, 'bullet');
+        } else if (line.formats.list != null) {
+          return applyIndent(line, 'list');
+        } else {
+          return applyIndent(line, 'indent');
+        }
+      };
+    })(this));
+  };
+
+  Keyboard.prototype.toggleFormat = function(range, format) {
+    var formats, value;
+    formats = range.getFormats();
+    value = !formats[format];
+    return this.scribe.formatText(range, format, value, {
+      source: 'user'
+    });
+  };
+
+  return Keyboard;
+
+})();
+
+module.exports = Keyboard;
+
+
+},{"../dom":25,"../line":31,"../position":40,"lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
+var DOM, Keyboard, LinkTooltip, enterEditMode, exitEditMode, formatLink, hideTooltip, initListeners, initTooltip, normalizeUrl, showTooltip, _;
+
+_ = _dereq_('lodash');
+
+DOM = _dereq_('../dom');
+
+Keyboard = _dereq_('./keyboard');
 
 enterEditMode = function(url) {
   url = normalizeUrl(url);
-  ScribeDOM.addClass(this.tooltip, 'editing');
+  DOM.addClass(this.tooltip, 'editing');
   this.tooltipInput.focus();
   return this.tooltipInput.value = url;
 };
 
 exitEditMode = function() {
   var url;
-  if ((this.savedLink != null) || ScribeDOM.getText(this.tooltipLink) !== this.tooltipInput.value) {
+  if ((this.savedLink != null) || DOM.getText(this.tooltipLink) !== this.tooltipInput.value) {
     url = normalizeUrl(this.tooltipInput.value);
     this.tooltipLink.href = url;
-    ScribeDOM.setText(this.tooltipLink, url);
+    DOM.setText(this.tooltipLink, url);
     if (this.savedLink != null) {
       this.savedLink.href = url;
       this.savedLink = null;
@@ -18922,12 +17353,14 @@ exitEditMode = function() {
       formatLink.call(this, this.tooltipInput.value);
     }
   }
-  return ScribeDOM.removeClass(this.tooltip, 'editing');
+  return DOM.removeClass(this.tooltip, 'editing');
 };
 
 formatLink = function(value) {
-  this.editor.setSelection(this.savedRange, true);
-  return this.savedRange.format('link', value, {
+  this.scribe.setSelection(this.savedRange, {
+    silent: true
+  });
+  return this.scribe.formatText(this.savedRange, 'link', value, {
     source: 'user'
   });
 };
@@ -18937,7 +17370,7 @@ hideTooltip = function() {
 };
 
 initListeners = function() {
-  ScribeDOM.addEventListener(this.editor.root, 'mouseup', (function(_this) {
+  DOM.addEventListener(this.editorContainer, 'mouseup', (function(_this) {
     return function(event) {
       var link, url;
       link = event.target;
@@ -18945,8 +17378,8 @@ initListeners = function() {
         if (link.tagName === 'A') {
           url = normalizeUrl(link.href);
           _this.tooltipLink.href = url;
-          ScribeDOM.setText(_this.tooltipLink, url);
-          ScribeDOM.removeClass(_this.tooltip, 'editing');
+          DOM.setText(_this.tooltipLink, url);
+          DOM.removeClass(_this.tooltip, 'editing');
           showTooltip.call(_this, link.getBoundingClientRect());
           _this.savedLink = link;
           return;
@@ -18956,57 +17389,60 @@ initListeners = function() {
       return hideTooltip.call(_this);
     };
   })(this));
-  ScribeDOM.addEventListener(this.options.button, 'click', (function(_this) {
+  DOM.addEventListener(this.tooltipChange, 'click', (function(_this) {
+    return function() {
+      return enterEditMode.call(_this, DOM.getText(_this.tooltipLink));
+    };
+  })(this));
+  DOM.addEventListener(this.tooltipDone, 'click', (function(_this) {
+    return function() {
+      return exitEditMode.call(_this);
+    };
+  })(this));
+  DOM.addEventListener(this.tooltipInput, 'keyup', (function(_this) {
+    return function(event) {
+      if (event.which === Keyboard.keys.ENTER) {
+        return exitEditMode.call(_this);
+      }
+    };
+  })(this));
+  if (this.options.button == null) {
+    return;
+  }
+  return DOM.addEventListener(this.options.button, 'click', (function(_this) {
     return function() {
       var url;
-      _this.savedRange = _this.editor.getSelection();
+      _this.savedRange = _this.scribe.getSelection();
       if (!((_this.savedRange != null) && !_this.savedRange.isCollapsed())) {
         return;
       }
-      if (ScribeDOM.hasClass(_this.options.button, 'active')) {
+      if (DOM.hasClass(_this.options.button, 'active')) {
         formatLink.call(_this, false);
         return hideTooltip.call(_this);
       } else {
         url = normalizeUrl(_this.savedRange.getText());
         if (/\w+\.\w+/.test(url)) {
-          _this.editor.root.focus();
+          _this.scribe.focus();
           return formatLink.call(_this, url);
         } else {
-          ScribeDOM.addClass(_this.tooltip, 'editing');
-          showTooltip.call(_this, _this.editor.selection.getDimensions());
+          DOM.addClass(_this.tooltip, 'editing');
+          showTooltip.call(_this, _this.scribe.editor.selection.getDimensions());
           return enterEditMode.call(_this, url);
         }
-      }
-    };
-  })(this));
-  ScribeDOM.addEventListener(this.tooltipChange, 'click', (function(_this) {
-    return function() {
-      return enterEditMode.call(_this, ScribeDOM.getText(_this.tooltipLink));
-    };
-  })(this));
-  ScribeDOM.addEventListener(this.tooltipDone, 'click', (function(_this) {
-    return function() {
-      return exitEditMode.call(_this);
-    };
-  })(this));
-  return ScribeDOM.addEventListener(this.tooltipInput, 'keyup', (function(_this) {
-    return function(event) {
-      if (event.which === ScribeKeyboard.keys.ENTER) {
-        return exitEditMode.call(_this);
       }
     };
   })(this));
 };
 
 initTooltip = function() {
-  this.tooltip = this.options.button.ownerDocument.createElement('div');
-  ScribeDOM.addClass(this.tooltip, 'link-tooltip-container');
+  this.tooltip = this.scribe.addContainer('link-tooltip-container');
+  hideTooltip.call(this);
   this.tooltip.innerHTML = '<span class="title">Visit URL:</span> <a href="#" class="url" target="_blank" href="about:blank"></a> <input class="input" type="text"> <span>&#45;</span> <a href="javascript:;" class="change">Change</a> <a href="javascript:;" class="done">Done</a>';
   this.tooltipLink = this.tooltip.querySelector('.url');
   this.tooltipInput = this.tooltip.querySelector('.input');
   this.tooltipChange = this.tooltip.querySelector('.change');
   this.tooltipDone = this.tooltip.querySelector('.done');
-  this.editor.renderer.addStyles({
+  return this.scribe.addStyles({
     '.link-tooltip-container': {
       'background-color': '#fff',
       'border': '1px solid #000',
@@ -19043,8 +17479,6 @@ initTooltip = function() {
       'display': 'none'
     }
   });
-  hideTooltip.call(this);
-  return _.defer(this.editor.renderer.addContainer.bind(this.editor.renderer, this.tooltip));
 };
 
 normalizeUrl = function(url) {
@@ -19065,7 +17499,7 @@ showTooltip = function(target, subjectDist) {
   tooltip = this.tooltip.getBoundingClientRect();
   tooltipHeight = tooltip.bottom - tooltip.top;
   tooltipWidth = tooltip.right - tooltip.left;
-  limit = this.editor.root.getBoundingClientRect();
+  limit = this.editorContainer.getBoundingClientRect();
   left = Math.max(limit.left, target.left + (target.right - target.left) / 2 - tooltipWidth / 2);
   if (left + tooltipWidth > limit.right && limit.right - tooltipWidth > limit.left) {
     left = limit.right - tooltipWidth;
@@ -19078,30 +17512,28 @@ showTooltip = function(target, subjectDist) {
   return this.tooltip.style.top = (top + (this.tooltip.offsetTop - tooltip.top)) + 'px';
 };
 
-ScribeLinkTooltip = (function() {
-  ScribeLinkTooltip.DEFAULTS = {
+LinkTooltip = (function() {
+  LinkTooltip.prototype.DEFAULTS = {
     button: null
   };
 
-  function ScribeLinkTooltip(editor, options) {
-    this.editor = editor;
-    if (options == null) {
-      options = {};
-    }
-    this.options = _.defaults(options, ScribeLinkTooltip.DEFAULTS);
+  function LinkTooltip(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.options = options;
     initTooltip.call(this);
     initListeners.call(this);
   }
 
-  return ScribeLinkTooltip;
+  return LinkTooltip;
 
 })();
 
-module.exports = ScribeLinkTooltip;
+module.exports = LinkTooltip;
 
 
-},{"../dom":27,"../keyboard":31,"../position":42,"../range":43,"lodash":"4HJaAd"}],38:[function(_dereq_,module,exports){
-var EventEmitter2, ScribeDOM, ScribeMultiCursor, ScribePosition, ScribeRenderer, ScribeUtils, _, _applyDelta, _buildCursor, _moveCursor, _updateCursor,
+},{"../dom":25,"./keyboard":33,"lodash":"4HJaAd"}],35:[function(_dereq_,module,exports){
+var DOM, EventEmitter2, MultiCursor, Position, Utils, _, _applyDelta, _buildCursor, _moveCursor, _updateCursor,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -19109,13 +17541,11 @@ _ = _dereq_('lodash');
 
 EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
-ScribeDOM = _dereq_('../dom');
+DOM = _dereq_('../dom');
 
-ScribePosition = _dereq_('../position');
+Position = _dereq_('../position');
 
-ScribeRenderer = _dereq_('../renderer');
-
-ScribeUtils = _dereq_('../utils');
+Utils = _dereq_('../utils');
 
 _applyDelta = function(delta) {
   delta.apply((function(_this) {
@@ -19137,11 +17567,11 @@ _applyDelta = function(delta) {
 _buildCursor = function(name, color) {
   var cursor, cursorCaret, cursorFlag, cursorName;
   cursor = this.container.ownerDocument.createElement('span');
-  ScribeDOM.addClass(cursor, 'cursor');
+  DOM.addClass(cursor, 'cursor');
   cursor.innerHTML = this.options.template;
   cursorFlag = cursor.querySelector('.cursor-flag');
   cursorName = cursor.querySelector('.cursor-name');
-  ScribeDOM.setText(cursorName, name);
+  DOM.setText(cursorName, name);
   cursorCaret = cursor.querySelector('.cursor-caret');
   cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color;
   this.container.appendChild(cursor);
@@ -19154,25 +17584,25 @@ _moveCursor = function(cursor, referenceNode) {
   cursor.elem.style.left = referenceNode.offsetLeft + 'px';
   cursor.elem.style.height = referenceNode.offsetHeight + 'px';
   flag = cursor.elem.querySelector('.cursor-flag');
-  ScribeDOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight);
-  ScribeDOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth);
-  ScribeDOM.toggleClass(cursor.elem, 'right', this.editor.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth);
-  return this.emit(ScribeMultiCursor.events.CURSOR_MOVED, cursor);
+  DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight);
+  DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth);
+  DOM.toggleClass(cursor.elem, 'right', this.editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth);
+  return this.emit(MultiCursor.events.CURSOR_MOVED, cursor);
 };
 
 _updateCursor = function(cursor) {
-  this.editor.doSilently((function(_this) {
+  this.scribe.editor.doSilently((function(_this) {
     return function() {
-      var didSplit, guide, leftText, position, rightText, _ref;
-      position = new ScribePosition(_this.editor, cursor.index);
+      var didSplit, guide, leafNode, leftText, offset, rightText, _ref, _ref1;
+      _ref = Position.findLeafNode(_this.editorContainer, cursor.index), leafNode = _ref[0], offset = _ref[1];
       guide = _this.container.ownerDocument.createElement('span');
-      if (position.leafNode.firstChild == null) {
-        ScribeDOM.setText(guide, ScribeDOM.NOBREAK_SPACE);
-        position.leafNode.parentNode.insertBefore(guide, position.leafNode);
+      if (leafNode.firstChild == null) {
+        DOM.setText(guide, DOM.NOBREAK_SPACE);
+        leafNode.parentNode.insertBefore(guide, leafNode);
         _moveCursor.call(_this, cursor, guide);
       } else {
-        ScribeDOM.setText(guide, ScribeDOM.ZERO_WIDTH_NOBREAK_SPACE);
-        _ref = ScribeUtils.splitNode(position.leafNode.firstChild, position.offset), leftText = _ref[0], rightText = _ref[1], didSplit = _ref[2];
+        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
+        _ref1 = Utils.splitNode(leafNode.firstChild, offset), leftText = _ref1[0], rightText = _ref1[1], didSplit = _ref1[2];
         if (rightText != null) {
           rightText.parentNode.insertBefore(guide, rightText);
           _moveCursor.call(_this, cursor, guide);
@@ -19183,39 +17613,35 @@ _updateCursor = function(cursor) {
       }
       guide.parentNode.removeChild(guide);
       if (didSplit) {
-        return ScribeDOM.normalize(position.leafNode);
+        return DOM.normalize(leafNode);
       }
     };
   })(this));
   return cursor.dirty = false;
 };
 
-ScribeMultiCursor = (function(_super) {
-  __extends(ScribeMultiCursor, _super);
+MultiCursor = (function(_super) {
+  __extends(MultiCursor, _super);
 
-  ScribeMultiCursor.DEFAULTS = {
+  MultiCursor.DEFAULTS = {
     template: '<span class="cursor-flag"> <span class="cursor-name"></span> </span> <span class="cursor-caret"></span>',
     timeout: 2500
   };
 
-  ScribeMultiCursor.events = {
+  MultiCursor.events = {
     CURSOR_ADDED: 'cursor-addded',
     CURSOR_MOVED: 'cursor-moved',
     CURSOR_REMOVED: 'cursor-removed'
   };
 
-  function ScribeMultiCursor(editor, options) {
-    this.editor = editor;
-    if (options == null) {
-      options = {};
-    }
-    this.options = _.defaults(options, ScribeMultiCursor.DEFAULTS);
+  function MultiCursor(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.options = options;
     this.cursors = {};
-    this.container = this.editor.root.ownerDocument.createElement('div');
-    this.container.id = 'cursor-container';
-    this.editor.renderer.addContainer(this.container, true);
-    this.editor.renderer.addStyles({
-      '#cursor-container': {
+    this.container = this.scribe.addContainer('cursor-container', true);
+    this.scribe.addStyles({
+      '.cursor-container': {
         'position': 'absolute',
         'z-index': '1000'
       },
@@ -19249,23 +17675,23 @@ ScribeMultiCursor = (function(_super) {
         'right': '-2px'
       }
     });
-    this.editor.renderer.on(ScribeRenderer.events.UPDATE, (function(_this) {
+    this.scribe.on(this.scribe.constructor.events.RENDER_UPDATE, (function(_this) {
       return function() {
         return _.defer(function() {
-          _this.container.style.top = _this.editor.root.offsetTop + 'px';
-          _this.container.style.left = _this.editor.root.offsetLeft + 'px';
+          _this.container.style.top = _this.editorContainer.offsetTop + 'px';
+          _this.container.style.left = _this.editorContainer.offsetLeft + 'px';
           return _this.update(true);
         });
       };
     })(this));
-    this.editor.on(this.editor.constructor.events.TEXT_CHANGE, (function(_this) {
+    this.scribe.on(this.scribe.constructor.events.TEXT_CHANGE, (function(_this) {
       return function(delta) {
         return _applyDelta.call(_this, delta);
       };
     })(this));
   }
 
-  ScribeMultiCursor.prototype.clearCursors = function() {
+  MultiCursor.prototype.clearCursors = function() {
     _.each(_.keys(this.cursors), (function(_this) {
       return function(id) {
         return _this.removeCursor(id);
@@ -19274,7 +17700,7 @@ ScribeMultiCursor = (function(_super) {
     return this.cursors = {};
   };
 
-  ScribeMultiCursor.prototype.moveCursor = function(userId, index, update) {
+  MultiCursor.prototype.moveCursor = function(userId, index, update) {
     var cursor;
     if (update == null) {
       update = true;
@@ -19282,11 +17708,11 @@ ScribeMultiCursor = (function(_super) {
     cursor = this.cursors[userId];
     cursor.index = index;
     cursor.dirty = true;
-    ScribeDOM.removeClass(cursor.elem, 'hidden');
+    DOM.removeClass(cursor.elem, 'hidden');
     clearTimeout(cursor.timer);
     cursor.timer = setTimeout((function(_this) {
       return function() {
-        ScribeDOM.addClass(cursor.elem, 'hidden');
+        DOM.addClass(cursor.elem, 'hidden');
         return cursor.timer = null;
       };
     })(this), this.options.timeout);
@@ -19296,15 +17722,15 @@ ScribeMultiCursor = (function(_super) {
     return cursor;
   };
 
-  ScribeMultiCursor.prototype.removeCursor = function(userId) {
+  MultiCursor.prototype.removeCursor = function(userId) {
     var cursor;
     cursor = this.cursors[userId];
-    this.emit(ScribeMultiCursor.events.CURSOR_REMOVED, cursor);
+    this.emit(MultiCursor.events.CURSOR_REMOVED, cursor);
     cursor.elem.parentNode.removeChild(cursor.elem) in (cursor != null);
     return delete this.cursors[userId];
   };
 
-  ScribeMultiCursor.prototype.setCursor = function(userId, index, name, color, update) {
+  MultiCursor.prototype.setCursor = function(userId, index, name, color, update) {
     var cursor;
     if (update == null) {
       update = true;
@@ -19316,12 +17742,12 @@ ScribeMultiCursor = (function(_super) {
         color: color,
         elem: _buildCursor.call(this, name, color)
       };
-      this.emit(ScribeMultiCursor.events.CURSOR_ADDED, cursor);
+      this.emit(MultiCursor.events.CURSOR_ADDED, cursor);
     }
     return this.moveCursor(userId, index, update);
   };
 
-  ScribeMultiCursor.prototype.shiftCursors = function(index, length, authorId, update) {
+  MultiCursor.prototype.shiftCursors = function(index, length, authorId, update) {
     if (authorId == null) {
       authorId = null;
     }
@@ -19342,7 +17768,7 @@ ScribeMultiCursor = (function(_super) {
     }
   };
 
-  ScribeMultiCursor.prototype.update = function(force) {
+  MultiCursor.prototype.update = function(force) {
     if (force == null) {
       force = false;
     }
@@ -19358,137 +17784,213 @@ ScribeMultiCursor = (function(_super) {
     })(this));
   };
 
-  return ScribeMultiCursor;
+  return MultiCursor;
 
 })(EventEmitter2);
 
-module.exports = ScribeMultiCursor;
+module.exports = MultiCursor;
 
 
-},{"../dom":27,"../position":42,"../renderer":44,"../utils":52,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],39:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeKeyboard, ScribeLinkTooltip, ScribeRange, ScribeToolbar, ScribeUtils, _, _findInput, _initFormats;
+},{"../dom":25,"../position":40,"../utils":49,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],36:[function(_dereq_,module,exports){
+var DOM, Document, PasteManager, Tandem, _;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('../dom');
+DOM = _dereq_('../dom');
 
-ScribeKeyboard = _dereq_('../keyboard');
+Document = _dereq_('../document');
 
-ScribeRange = _dereq_('../range');
+Tandem = _dereq_('tandem-core');
 
-ScribeLinkTooltip = _dereq_('./link-tooltip');
+PasteManager = (function() {
+  function PasteManager(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.options = options;
+    this.container = this.scribe.addContainer('paste-container');
+    this.container.setAttribute('contenteditable', true);
+    this.scribe.addStyles({
+      '.paste-container': {
+        'left': '-10000px',
+        'position': 'absolute',
+        'top': '50%'
+      }
+    });
+    this.initListeners();
+  }
 
-ScribeUtils = _dereq_('../utils');
+  PasteManager.prototype.initListeners = function() {
+    return DOM.addEventListener(this.editorContainer.ownerDocument, 'paste', (function(_this) {
+      return function() {
+        var oldDocLength, range;
+        oldDocLength = _this.scribe.getLength();
+        range = _this.scribe.getSelection();
+        if (range == null) {
+          return;
+        }
+        _this.container.innerHTML = "";
+        _this.container.focus();
+        return _.defer(function() {
+          var delta, doc, lengthAdded;
+          doc = new Document(_this.container, _this.scribe.options);
+          delta = doc.toDelta();
+          lengthAdded = delta.endLength;
+          if (range.start.index > 0) {
+            delta.ops.unshift(new Tandem.RetainOp(0, range.start.index));
+          }
+          if (range.end.index < oldDocLength) {
+            delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength));
+          }
+          delta.endLength += _this.scribe.getLength() - (range.end.index - range.start.index);
+          delta.startLength = oldDocLength;
+          _this.scribe.updateContents(delta, {
+            source: 'user'
+          });
+          _this.scribe.focus();
+          return _this.scribe.setSelection(range.start.index + lengthAdded, range.start.index + lengthAdded);
+        });
+      };
+    })(this));
+  };
+
+  return PasteManager;
+
+})();
+
+module.exports = PasteManager;
+
+
+},{"../document":24,"../dom":25,"lodash":"4HJaAd","tandem-core":"38mxji"}],37:[function(_dereq_,module,exports){
+var DOM, Toolbar, Utils, _, _findInput, _initFormats;
+
+_ = _dereq_('lodash');
+
+DOM = _dereq_('../dom');
+
+Utils = _dereq_('../utils');
 
 _findInput = function(format) {
   var input, selector;
   selector = ".sc-" + format;
-  if (_.indexOf(ScribeToolbar.formats.SELECT, format) > -1) {
+  if (_.indexOf(Toolbar.formats.SELECT, format) > -1) {
     selector = 'select' + selector;
   }
   return input = this.container.querySelector(selector);
 };
 
 _initFormats = function() {
-  _.each(ScribeToolbar.formats, (function(_this) {
+  return _.each(Toolbar.formats, (function(_this) {
     return function(formats, formatGroup) {
       return _.each(formats, function(format) {
-        var eventName, input;
-        input = _findInput.call(_this, format);
-        if (input == null) {
-          return;
-        }
-        _this.editor.logger.debug('Toolbar binding', format, input);
-        if (format === 'link') {
-          return _this.editor.scribe.addModule('link-tooltip', {
-            button: input
-          });
-        }
-        eventName = formatGroup === 'SELECT' ? 'change' : 'click';
-        ScribeDOM.addEventListener(input, eventName, function() {
-          var activeFormats, range, value;
-          if (_this.triggering) {
-            return;
-          }
-          _this.editor.logger.debug('Toolbar event', eventName, format, input);
-          value = input.tagName === 'SELECT' ? input.options[input.selectedIndex].value : !ScribeDOM.hasClass(input, 'sc-active');
-          range = _this.editor.getSelection();
-          if (range != null) {
-            if (ScribeUtils.isIE(8)) {
-              _this.editor.root.focus();
-              _this.editor.setSelection(range);
-            }
-            range.format(format, value, {
-              source: 'user'
-            });
-          }
-          activeFormats = {};
-          activeFormats[format] = value;
-          _this.updateActive(activeFormats);
-          return false;
-        });
-        return ScribeDOM.addEventListener(input, 'mousedown', function() {
-          _this.editor.checkUpdate();
-          return true;
-        });
-      });
-    };
-  })(this));
-  return _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (function(_this) {
-    return function(key) {
-      return _this.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys[key], function() {
-        var activeFormats, input;
-        activeFormats = {};
-        input = _findInput.call(_this, key.toLowerCase());
-        if (input != null) {
-          activeFormats[key.toLowerCase()] = !ScribeDOM.hasClass(input, 'sc-active');
-        }
-        return _this.updateActive(activeFormats);
+        return _this.initFormat(format, formatGroup);
       });
     };
   })(this));
 };
 
-ScribeToolbar = (function() {
-  ScribeToolbar.DEFAULTS = {
+Toolbar = (function() {
+  Toolbar.DEFAULTS = {
     container: null
   };
 
-  ScribeToolbar.formats = {
+  Toolbar.formats = {
     BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent'],
     SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
   };
 
-  function ScribeToolbar(editor, options) {
-    this.editor = editor;
-    if (options == null) {
-      options = {};
+  function Toolbar(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.options = options;
+    if (this.options.container == null) {
+      throw new Error('container required for toolbar', this.options);
     }
-    this.options = _.defaults(options, ScribeToolbar.DEFAULTS);
     this.container = _.isString(this.options.container) ? document.querySelector(this.options.container) : this.options.container;
     _initFormats.call(this);
-    this.editor.on(this.editor.constructor.events.POST_EVENT, (function(_this) {
+    this.scribe.on(this.scribe.constructor.events.POST_EVENT, (function(_this) {
       return function(eventName) {
-        if (!(eventName === _this.editor.constructor.events.TEXT_CHANGE || eventName === _this.editor.constructor.events.SELECTION_CHANGE)) {
+        if (!(eventName === _this.scribe.constructor.events.TEXT_CHANGE || eventName === _this.scribe.constructor.events.SELECTION_CHANGE)) {
           return;
         }
         return _this.updateActive();
       };
     })(this));
-    _.defer(ScribeDOM.addClass.bind(this, this.container, 'sc-toolbar-container'));
+    _.defer(_.bind(DOM.addClass, this, this.container, 'sc-toolbar-container'));
+    this.scribe.onModuleLoad('keyboard', (function(_this) {
+      return function(keyboard) {
+        return _.each(['BOLD', 'ITALIC', 'UNDERLINE'], function(key) {
+          return keyboard.addHotkey(keyboard.constructor.hotkeys[key], function() {
+            var activeFormats, input;
+            activeFormats = {};
+            input = _findInput.call(_this, key.toLowerCase());
+            if (input != null) {
+              activeFormats[key.toLowerCase()] = DOM.hasClass(input, 'sc-active');
+            }
+            return _this.updateActive(activeFormats);
+          });
+        });
+      };
+    })(this));
   }
 
-  ScribeToolbar.prototype.updateActive = function(activeFormats) {
+  Toolbar.prototype.initFormat = function(format, group) {
+    var eventName, input;
+    input = _findInput.call(this, format);
+    if (input == null) {
+      return;
+    }
+    if (format === 'link') {
+      return this.scribe.addModule('link-tooltip', {
+        button: input
+      });
+    }
+    eventName = group === 'SELECT' ? 'change' : 'click';
+    DOM.addEventListener(input, eventName, (function(_this) {
+      return function() {
+        var activeFormats, range, value;
+        if (_this.triggering) {
+          return;
+        }
+        value = input.tagName === 'SELECT' ? input.options[input.selectedIndex].value : !DOM.hasClass(input, 'sc-active');
+        range = _this.scribe.getSelection();
+        if (range != null) {
+          if (Utils.isIE(8)) {
+            _this.editorContainer.focus();
+            _this.scribe.setSelection(range);
+          }
+          if (range.isCollapsed()) {
+            _this.scribe.setFormat(format, value);
+          } else {
+            _this.scribe.formatText(range, format, value, {
+              source: 'user'
+            });
+          }
+        }
+        activeFormats = {};
+        activeFormats[format] = value;
+        _this.updateActive(activeFormats);
+        return false;
+      };
+    })(this));
+    return DOM.addEventListener(input, 'mousedown', (function(_this) {
+      return function() {
+        _this.scribe.editor.checkUpdate();
+        return true;
+      };
+    })(this));
+  };
+
+  Toolbar.prototype.updateActive = function(activeFormats) {
     var range;
     if (activeFormats == null) {
       activeFormats = {};
     }
     this.triggering = true;
-    range = this.editor.getSelection();
-    _.each(this.container.querySelectorAll('select'), ScribeDOM.resetSelect.bind(this));
+    range = this.scribe.getSelection();
+    _.each(this.container.querySelectorAll('select'), _.bind(DOM.resetSelect));
     _.each(this.container.querySelectorAll('.sc-active'), (function(_this) {
       return function(button) {
-        return ScribeDOM.removeClass(button, 'sc-active');
+        return DOM.removeClass(button, 'sc-active');
       };
     })(this));
     if (range != null) {
@@ -19505,9 +18007,9 @@ ScribeToolbar = (function() {
                 value = '';
               }
               elem.value = value;
-              return ScribeDOM.triggerEvent(elem, 'change');
+              return DOM.triggerEvent(elem, 'change');
             } else {
-              return ScribeDOM.addClass(elem, 'sc-active');
+              return DOM.addClass(elem, 'sc-active');
             }
           }
         };
@@ -19516,24 +18018,195 @@ ScribeToolbar = (function() {
     return this.triggering = false;
   };
 
-  return ScribeToolbar;
+  return Toolbar;
 
 })();
 
-module.exports = ScribeToolbar;
+module.exports = Toolbar;
 
 
-},{"../dom":27,"../keyboard":31,"../range":43,"../utils":52,"./link-tooltip":37,"lodash":"4HJaAd"}],40:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeNormalizer, ScribeUtils, _;
+},{"../dom":25,"../utils":49,"lodash":"4HJaAd"}],38:[function(_dereq_,module,exports){
+var Tandem, UndoManager, getLastChangeIndex, _, _change, _ignoreChanges;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('./dom');
+Tandem = _dereq_('tandem-core');
 
-ScribeUtils = _dereq_('./utils');
+getLastChangeIndex = function(delta) {
+  var index, lastChangeIndex, offset;
+  lastChangeIndex = index = offset = 0;
+  _.each(delta.ops, function(op) {
+    if (Tandem.InsertOp.isInsert(op)) {
+      offset += op.getLength();
+      return lastChangeIndex = index + offset;
+    } else if (Tandem.RetainOp.isRetain(op)) {
+      if (op.start > index) {
+        lastChangeIndex = index + offset;
+        offset -= op.start - index;
+      }
+      if (_.keys(op.attributes).length > 0) {
+        lastChangeIndex = op.end + offset;
+      }
+      return index = op.end;
+    }
+  });
+  if (delta.endLength < delta.startLength + offset) {
+    lastChangeIndex = delta.endLength;
+  }
+  return lastChangeIndex;
+};
 
-ScribeNormalizer = (function() {
-  ScribeNormalizer.TAG_RULES = {
+_change = function(source, dest) {
+  var change;
+  if (this.stack[source].length > 0) {
+    change = this.stack[source].pop();
+    this.lastRecorded = 0;
+    _ignoreChanges.call(this, (function(_this) {
+      return function() {
+        var index;
+        _this.scribe.updateContents(change[source], {
+          source: 'user'
+        });
+        index = getLastChangeIndex(change[source]);
+        return _this.scribe.setSelection(index, index);
+      };
+    })(this));
+    return this.stack[dest].push(change);
+  }
+};
+
+_ignoreChanges = function(fn) {
+  var oldIgnoringChanges;
+  oldIgnoringChanges = this.ignoringChanges;
+  this.ignoringChanges = true;
+  fn.call(this);
+  return this.ignoringChanges = oldIgnoringChanges;
+};
+
+UndoManager = (function() {
+  UndoManager.prototype.DEFAULTS = {
+    delay: 1000,
+    maxStack: 100
+  };
+
+  function UndoManager(scribe, editorContainer, options) {
+    this.scribe = scribe;
+    this.editorContainer = editorContainer;
+    this.options = options != null ? options : {};
+    this.lastRecorded = 0;
+    this.clear();
+    this.initListeners();
+  }
+
+  UndoManager.prototype.initListeners = function() {
+    this.scribe.onModuleLoad('keyboard', (function(_this) {
+      return function(keyboard) {
+        keyboard.addHotkey(keyboard.constructor.hotkeys.UNDO, function() {
+          _this.undo();
+          return false;
+        });
+        return keyboard.addHotkey(keyboard.constructor.hotkeys.REDO, function() {
+          _this.redo();
+          return false;
+        });
+      };
+    })(this));
+    this.ignoringChanges = false;
+    return this.scribe.on(this.scribe.constructor.events.TEXT_CHANGE, (function(_this) {
+      return function(delta, origin) {
+        if (!(_this.ignoringChanges && origin === 'user')) {
+          _this.record(delta, _this.oldDelta);
+        }
+        return _this.oldDelta = _this.scribe.getContents();
+      };
+    })(this));
+  };
+
+  UndoManager.prototype.clear = function() {
+    this.stack = {
+      undo: [],
+      redo: []
+    };
+    return this.oldDelta = this.scribe.getContents();
+  };
+
+  UndoManager.prototype.record = function(changeDelta, oldDelta) {
+    var change, ignored, timestamp, undoDelta;
+    if (changeDelta.isIdentity()) {
+      return;
+    }
+    this.stack.redo = [];
+    try {
+      undoDelta = oldDelta.invert(changeDelta);
+      timestamp = new Date().getTime();
+      if (this.lastRecorded + this.options.delay > timestamp && this.stack.undo.length > 0) {
+        change = this.stack.undo.pop();
+        if (undoDelta.canCompose(change.undo) && change.redo.canCompose(changeDelta)) {
+          undoDelta = undoDelta.compose(change.undo);
+          changeDelta = change.redo.compose(changeDelta);
+        } else {
+          if (typeof console !== "undefined" && console !== null) {
+            console.warn("Unable to compose change, clearing undo stack");
+          }
+          this.clear();
+          this.lastRecorded = timestamp;
+        }
+      } else {
+        this.lastRecorded = timestamp;
+      }
+      this.stack.undo.push({
+        redo: changeDelta,
+        undo: undoDelta
+      });
+      if (this.stack.undo.length > this.options.maxStack) {
+        this.stack.undo.unshift();
+      }
+      return true;
+    } catch (_error) {
+      ignored = _error;
+      this.clear();
+      return false;
+    }
+  };
+
+  UndoManager.prototype.redo = function() {
+    return _change.call(this, 'redo', 'undo');
+  };
+
+
+  /*
+  transformExternal: (delta) ->
+    return if delta.isIdentity()
+    @stack['undo'] = _.map(@stack['undo'], (change) ->
+      return {
+        redo: delta.transform(change.redo, true)
+        undo: change.undo.transform(delta, true)
+      }
+    )
+   */
+
+  UndoManager.prototype.undo = function() {
+    return _change.call(this, 'undo', 'redo');
+  };
+
+  return UndoManager;
+
+})();
+
+module.exports = UndoManager;
+
+
+},{"lodash":"4HJaAd","tandem-core":"38mxji"}],39:[function(_dereq_,module,exports){
+var DOM, Normalizer, Utils, _;
+
+_ = _dereq_('lodash');
+
+DOM = _dereq_('./dom');
+
+Utils = _dereq_('./utils');
+
+Normalizer = (function() {
+  Normalizer.TAG_RULES = {
     'A': {},
     'ADDRESSS': {
       rename: 'div'
@@ -19564,7 +18237,7 @@ ScribeNormalizer = (function() {
     },
     'FONT': function(formatManager, node) {
       var resultNode;
-      resultNode = ScribeDOM.unwrap(node);
+      resultNode = DOM.unwrap(node);
       _.each({
         color: 'fore-color',
         face: 'font-name',
@@ -19573,7 +18246,7 @@ ScribeNormalizer = (function() {
         var formatNode;
         if (node.hasAttribute(attr)) {
           formatNode = formatManager.createFormatContainer(format, node.getAttribute(attr));
-          return resultNode = ScribeDOM.wrap(formatNode, resultNode);
+          return resultNode = DOM.wrap(formatNode, resultNode);
         }
       });
       return resultNode;
@@ -19653,22 +18326,22 @@ ScribeNormalizer = (function() {
     }
   };
 
-  ScribeNormalizer.breakBlocks = function(root) {
-    ScribeNormalizer.groupBlocks(root);
-    _.each(_.clone(root.querySelectorAll('br')), ScribeNormalizer.normalizeBreak.bind('this', root));
-    return _.each(root.childNodes, ScribeNormalizer.breakLine.bind(this));
+  Normalizer.breakBlocks = function(root) {
+    Normalizer.groupBlocks(root);
+    _.each(_.clone(root.querySelectorAll('br')), _.bind(Normalizer.normalizeBreak, this, root));
+    return _.each(DOM.getChildNodes(root), _.bind(Normalizer.breakLine));
   };
 
-  ScribeNormalizer.breakLine = function(lineNode) {
+  Normalizer.breakLine = function(lineNode) {
     if (lineNode.childNodes.length === 1 && lineNode.firstChild.tagName === 'BR') {
       return;
     }
-    return ScribeUtils.traversePostorder(lineNode, (function(_this) {
+    return Utils.traversePostorder(lineNode, (function(_this) {
       return function(node) {
         var line;
-        if (ScribeUtils.isBlock(node)) {
+        if (Utils.isBlock(node)) {
           if (node.tagName !== 'DIV') {
-            node = ScribeDOM.switchTag(node, 'div');
+            node = DOM.switchTag(node, 'div');
           }
           if (node.nextSibling != null) {
             line = lineNode.ownerDocument.createElement('div');
@@ -19676,9 +18349,9 @@ ScribeNormalizer = (function() {
             while (node.nextSibling != null) {
               line.appendChild(node.nextSibling);
             }
-            ScribeNormalizer.breakLine(line);
+            Normalizer.breakLine(line);
           }
-          return ScribeDOM.unwrap(node);
+          return DOM.unwrap(node);
         } else {
           return node;
         }
@@ -19686,17 +18359,17 @@ ScribeNormalizer = (function() {
     })(this));
   };
 
-  ScribeNormalizer.groupBlocks = function(root) {
+  Normalizer.groupBlocks = function(root) {
     var curLine, line, nextLine, _results;
     curLine = root.firstChild;
     _results = [];
     while (curLine != null) {
-      if (ScribeUtils.isBlock(curLine)) {
+      if (Utils.isBlock(curLine)) {
         _results.push(curLine = curLine.nextSibling);
       } else {
         line = root.ownerDocument.createElement('div');
         root.insertBefore(line, curLine);
-        while ((curLine != null) && !ScribeUtils.isBlock(curLine)) {
+        while ((curLine != null) && !Utils.isBlock(curLine)) {
           nextLine = curLine.nextSibling;
           line.appendChild(curLine);
           curLine = nextLine;
@@ -19707,57 +18380,59 @@ ScribeNormalizer = (function() {
     return _results;
   };
 
-  ScribeNormalizer.normalizeBreak = function(root, node) {
+  Normalizer.normalizeBreak = function(root, node) {
     if (node === root) {
       return;
     }
     if (node.previousSibling != null) {
       if (node.nextSibling != null) {
-        ScribeUtils.splitBefore(node, root);
+        Utils.splitBefore(node, root);
       }
       return node.parentNode.removeChild(node);
     } else if (node.nextSibling != null) {
-      if (ScribeUtils.splitBefore(node.nextSibling, root)) {
-        return ScribeNormalizer.normalizeBreak(root, node);
+      if (Utils.splitBefore(node.nextSibling, root)) {
+        return Normalizer.normalizeBreak(root, node);
       }
     } else if (node.parentNode !== root && node.parentNode.parentNode !== root) {
-      ScribeDOM.unwrap(node.parentNode);
-      return ScribeNormalizer.normalizeBreak(root, node);
+      DOM.unwrap(node.parentNode);
+      return Normalizer.normalizeBreak(root, node);
     }
   };
 
-  ScribeNormalizer.normalizeEmptyLines = function(root) {
-    if (!ScribeUtils.isIE()) {
+  Normalizer.normalizeEmptyLines = function(root) {
+    if (!Utils.isIE()) {
       return;
     }
     return _.each(root.querySelectorAll('br'), function(node) {
       if ((node.previousSibling != null) || (node.nextSibling != null)) {
-        return ScribeDOM.removeNode(node);
+        return DOM.removeNode(node);
       }
     });
   };
 
-  ScribeNormalizer.normalizeHtml = function(html) {
-    html = html.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+  Normalizer.normalizeHtml = function(html) {
+    html = html.replace(/^\s+/, '').replace(/\s+$/, '');
     html = html.replace(/\>\s+\</g, '><');
     html = html.replace(/<br><\/br>/, '<br/>');
     return html;
   };
 
-  ScribeNormalizer.requireLeaf = function(lineNode) {
+  Normalizer.requireLeaf = function(lineNode) {
+    var tagName;
     if (lineNode.childNodes.length === 0) {
-      return lineNode.appendChild(lineNode.ownerDocument.createElement('br'));
+      tagName = (lineNode.previousSibling != null) || (lineNode.nextSibling != null) ? 'br' : 'span';
+      return lineNode.appendChild(lineNode.ownerDocument.createElement(tagName));
     }
   };
 
-  ScribeNormalizer.wrapText = function(lineNode) {
-    return ScribeUtils.traversePreorder(lineNode, 0, (function(_this) {
+  Normalizer.wrapText = function(lineNode) {
+    return Utils.traversePreorder(lineNode, 0, (function(_this) {
       return function(node) {
         var span;
-        ScribeDOM.normalize(node);
-        if (node.nodeType === ScribeDOM.TEXT_NODE && ((node.nextSibling != null) || (node.previousSibling != null) || node.parentNode === lineNode || node.parentNode.tagName === 'LI')) {
+        DOM.normalize(node);
+        if (node.nodeType === DOM.TEXT_NODE && ((node.nextSibling != null) || (node.previousSibling != null) || node.parentNode === lineNode || node.parentNode.tagName === 'LI')) {
           span = node.ownerDocument.createElement('span');
-          ScribeDOM.wrap(span, node);
+          DOM.wrap(span, node);
           node = span;
         }
         return node;
@@ -19765,17 +18440,17 @@ ScribeNormalizer = (function() {
     })(this));
   };
 
-  function ScribeNormalizer(container, formatManager) {
+  function Normalizer(container, formatManager) {
     this.container = container;
     this.formatManager = formatManager;
   }
 
-  ScribeNormalizer.prototype.applyRules = function(root) {
-    return ScribeUtils.traversePreorder(root, 0, (function(_this) {
+  Normalizer.prototype.applyRules = function(root) {
+    return Utils.traversePreorder(root, 0, (function(_this) {
       return function(node, index) {
         var rules;
-        if (node.nodeType === ScribeDOM.ELEMENT_NODE) {
-          rules = ScribeNormalizer.TAG_RULES[node.tagName];
+        if (node.nodeType === DOM.ELEMENT_NODE) {
+          rules = Normalizer.TAG_RULES[node.tagName];
           if (rules != null) {
             if (_.isFunction(rules)) {
               node = rules.call(null, _this.formatManager, node);
@@ -19783,12 +18458,12 @@ ScribeNormalizer = (function() {
               _.each(rules, function(data, rule) {
                 switch (rule) {
                   case 'rename':
-                    return node = ScribeDOM.switchTag(node, data);
+                    return node = DOM.switchTag(node, data);
                 }
               });
             }
           } else {
-            node = ScribeDOM.unwrap(node);
+            node = DOM.unwrap(node);
           }
         }
         return node;
@@ -19796,29 +18471,32 @@ ScribeNormalizer = (function() {
     })(this));
   };
 
-  ScribeNormalizer.prototype.normalizeDoc = function() {
+  Normalizer.prototype.normalizeDoc = function() {
     this.applyRules(this.container);
-    ScribeNormalizer.breakBlocks(this.container);
-    return _.each(this.container.childNodes, (function(_this) {
+    Normalizer.breakBlocks(this.container);
+    if (this.container.childNodes.length === 0) {
+      this.container.appendChild(this.container.ownerDocument.createElement('div'));
+    }
+    return _.each(DOM.getChildNodes(this.container), (function(_this) {
       return function(lineNode) {
         return _this.normalizeLine(lineNode);
       };
     })(this));
   };
 
-  ScribeNormalizer.prototype.normalizeLine = function(lineNode) {
+  Normalizer.prototype.normalizeLine = function(lineNode) {
     if (lineNode.childNodes.length === 1 && lineNode.firstChild.tagName === 'BR') {
       return;
     }
     this.applyRules(lineNode);
     this.normalizeTags(lineNode);
     this.removeRedundant(lineNode);
-    ScribeNormalizer.requireLeaf(lineNode);
-    return ScribeNormalizer.wrapText(lineNode);
+    Normalizer.requireLeaf(lineNode);
+    return Normalizer.wrapText(lineNode);
   };
 
-  ScribeNormalizer.prototype.normalizeTags = function(lineNode) {
-    return ScribeUtils.traversePreorder(lineNode, 0, (function(_this) {
+  Normalizer.prototype.normalizeTags = function(lineNode) {
+    return Utils.traversePreorder(lineNode, 0, (function(_this) {
       return function(node) {
         var containerNode, nodeFormat, nodeValue, _ref;
         containerNode = node;
@@ -19828,7 +18506,7 @@ ScribeNormalizer = (function() {
             var container;
             if (_this.formatManager.formats[format] != null) {
               container = _this.formatManager.formats[format].createContainer(nodeValue[i + 1]);
-              return containerNode = ScribeDOM.wrap(container, node);
+              return containerNode = DOM.wrap(container, node);
             }
           });
           nodeFormat = nodeFormat[0];
@@ -19837,28 +18515,34 @@ ScribeNormalizer = (function() {
         if (_this.formatManager.formats[nodeFormat] != null) {
           _this.formatManager.formats[nodeFormat].clean(node);
         } else {
-          ScribeDOM.removeAttributes(node);
+          DOM.clearAttributes(node);
         }
         return containerNode;
       };
     })(this));
   };
 
-  ScribeNormalizer.prototype.removeRedundant = function(lineNode) {
+  Normalizer.prototype.removeRedundant = function(lineNode) {
     var attributes, nodes;
     nodes = [lineNode];
     attributes = [{}];
-    return ScribeUtils.traversePreorder(lineNode, 0, (function(_this) {
+    return Utils.traversePreorder(lineNode, 0, (function(_this) {
       return function(node) {
         var formatName, formatValue, nodeAttributes, parentAttributes, redundant, _ref;
         _ref = _this.formatManager.getFormat(node), formatName = _ref[0], formatValue = _ref[1];
         parentAttributes = attributes[_.indexOf(nodes, node.parentNode)];
         redundant = (function(node) {
-          if (node.nodeType !== ScribeDOM.ELEMENT_NODE) {
+          if (node.nodeType !== DOM.ELEMENT_NODE) {
             return false;
           }
-          if (ScribeUtils.getNodeLength(node) === 0) {
-            return node.tagName !== 'BR' || node.parentNode.childNodes.length > 1;
+          if (Utils.getNodeLength(node) === 0) {
+            if (node.tagName === 'BR' && (node.previousSibling == null) && (node.nextSibling == null)) {
+              return false;
+            }
+            if (node.tagName === 'SPAN' && node.parentNode === lineNode && !lineNode.parentNode.childNodes.length === 0 && lineNode.childNodes.length === 0) {
+              return false;
+            }
+            return true;
           }
           if (formatName != null) {
             return parentAttributes[formatName] != null;
@@ -19866,8 +18550,8 @@ ScribeNormalizer = (function() {
           if (node.tagName !== 'SPAN') {
             return false;
           }
-          if (node.childNodes.length === 0 || !_.any(node.childNodes, function(child) {
-            return child.nodeType !== ScribeDOM.ELEMENT_NODE;
+          if (node.childNodes.length === 0 || !_.any(DOM.getChildNodes(node), function(child) {
+            return child.nodeType !== DOM.ELEMENT_NODE;
           })) {
             return true;
           }
@@ -19877,7 +18561,7 @@ ScribeNormalizer = (function() {
           return false;
         })(node);
         if (redundant) {
-          node = ScribeDOM.unwrap(node);
+          node = DOM.unwrap(node);
         }
         if (node != null) {
           nodes.push(node);
@@ -19894,196 +18578,111 @@ ScribeNormalizer = (function() {
     })(this));
   };
 
-  return ScribeNormalizer;
+  return Normalizer;
 
 })();
 
-module.exports = ScribeNormalizer;
+module.exports = Normalizer;
 
 
-},{"./dom":27,"./utils":52,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeDocument, ScribePasteManager, ScribeRange, Tandem, _;
-
-_ = _dereq_('lodash');
-
-ScribeDOM = _dereq_('./dom');
-
-ScribeDocument = _dereq_('./document');
-
-ScribeRange = _dereq_('./range');
-
-Tandem = _dereq_('tandem-core');
-
-ScribePasteManager = (function() {
-  function ScribePasteManager(editor) {
-    this.editor = editor;
-    this.container = this.editor.root.ownerDocument.createElement('div');
-    ScribeDOM.addClass(this.container, 'paste-container');
-    this.container.setAttribute('contenteditable', true);
-    this.editor.renderer.addStyles({
-      '.paste-container': {
-        'left': '-10000px',
-        'position': 'absolute',
-        'top': '50%'
-      }
-    });
-    this.editor.renderer.addContainer(this.container);
-    this.initListeners();
-  }
-
-  ScribePasteManager.prototype.initListeners = function() {
-    return ScribeDOM.addEventListener(this.editor.root, 'paste', (function(_this) {
-      return function() {
-        var oldDocLength, range;
-        oldDocLength = _this.editor.scribe.getLength();
-        range = _this.editor.getSelection();
-        if (range == null) {
-          return;
-        }
-        _this.container.innerHTML = "";
-        _this.container.focus();
-        return _.defer(function() {
-          var delta, doc, lengthAdded;
-          doc = new ScribeDocument(_this.container, _this.editor.options);
-          delta = doc.toDelta();
-          delta = delta.compose(Tandem.Delta.makeDeleteDelta(delta.endLength, delta.endLength - 1, 1));
-          lengthAdded = delta.endLength;
-          if (range.start.index > 0) {
-            delta.ops.unshift(new Tandem.RetainOp(0, range.start.index));
-          }
-          if (range.end.index < oldDocLength) {
-            delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength));
-          }
-          delta.endLength += _this.editor.scribe.getLength() - (range.end.index - range.start.index);
-          delta.startLength = oldDocLength;
-          _this.editor.applyDelta(delta, {
-            source: 'user'
-          });
-          _this.editor.root.focus();
-          return _this.editor.setSelection(new ScribeRange(_this.editor, range.start.index + lengthAdded, range.start.index + lengthAdded));
-        });
-      };
-    })(this));
-  };
-
-  return ScribePasteManager;
-
-})();
-
-module.exports = ScribePasteManager;
-
-
-},{"./document":26,"./dom":27,"./range":43,"lodash":"4HJaAd","tandem-core":"38mxji"}],42:[function(_dereq_,module,exports){
-var ScribeDOM, ScribePosition, ScribeUtils, _;
+},{"./dom":25,"./utils":49,"lodash":"4HJaAd"}],40:[function(_dereq_,module,exports){
+var DOM, Position, Utils, _;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
-ScribeUtils = _dereq_('./utils');
+Utils = _dereq_('./utils');
 
-ScribePosition = (function() {
-  ScribePosition.findLeafNode = function(editor, node, offset) {
-    var _ref;
-    _ref = ScribeUtils.findDeepestNode(node, offset), node = _ref[0], offset = _ref[1];
-    if (node.nodeType === ScribeDOM.TEXT_NODE) {
-      offset = ScribePosition.getIndex(node, offset, node.parentNode);
+Position = (function() {
+  Position.findLeafNode = function(container, offset) {
+    var node, _ref;
+    _ref = Utils.findDeepestNode(container, offset), node = _ref[0], offset = _ref[1];
+    if (node.nodeType === DOM.TEXT_NODE) {
+      offset = Position.getIndex(node, offset, node.parentNode);
       node = node.parentNode;
     }
     return [node, offset];
   };
 
-  ScribePosition.getIndex = function(node, index, offsetNode) {
+  Position.getIndex = function(node, index, offsetNode) {
     if (index == null) {
       index = 0;
     }
     if (offsetNode == null) {
       offsetNode = null;
     }
-    while (node !== offsetNode && (node.ownerDocument != null) && !ScribeDOM.hasClass(node, 'editor-container')) {
+    while (node !== offsetNode && (node.ownerDocument != null) && !DOM.hasClass(node, 'editor-container')) {
       while (node.previousSibling != null) {
         node = node.previousSibling;
-        index += ScribeUtils.getNodeLength(node);
+        index += Utils.getNodeLength(node);
       }
       node = node.parentNode;
     }
     return index;
   };
 
-  function ScribePosition(editor, leafNode, offset) {
+  function Position(doc, node, offset) {
     var _ref;
-    this.editor = editor;
-    this.leafNode = leafNode;
-    this.offset = offset;
-    if (_.isNumber(this.leafNode)) {
-      this.offset = this.index = this.leafNode;
-      this.leafNode = this.editor.root;
+    this.doc = doc;
+    if (_.isNumber(node)) {
+      offset = this.index = node;
+      node = this.doc.root;
     } else {
-      this.index = ScribePosition.getIndex(this.leafNode, this.offset);
+      this.index = Position.getIndex(node, offset);
     }
-    _ref = ScribePosition.findLeafNode(this.editor, this.leafNode, this.offset), this.leafNode = _ref[0], this.offset = _ref[1];
+    _ref = Position.findLeafNode(node, offset), this.leafNode = _ref[0], this.offset = _ref[1];
   }
 
-  ScribePosition.prototype.getLeaf = function() {
+  Position.prototype.getLeaf = function() {
     if (this.leaf != null) {
       return this.leaf;
     }
-    this.leaf = this.editor.doc.findLeaf(this.leafNode);
+    this.leaf = this.doc.findLeaf(this.leafNode);
     return this.leaf;
   };
 
-  ScribePosition.prototype.getIndex = function() {
-    return ScribePosition.getIndex(this.leafNode, this.offset, this.editor.root);
+  Position.prototype.getIndex = function() {
+    return Position.getIndex(this.leafNode, this.offset, this.doc.root);
   };
 
-  return ScribePosition;
+  return Position;
 
 })();
 
-module.exports = ScribePosition;
+module.exports = Position;
 
 
-},{"./dom":27,"./utils":52,"lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
-var ScribeLeafIterator, ScribePosition, ScribeRange, _;
+},{"./dom":25,"./utils":49,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
+var LeafIterator, Position, Range, _;
 
 _ = _dereq_('lodash');
 
-ScribeLeafIterator = _dereq_('./leaf-iterator');
+LeafIterator = _dereq_('./leaf-iterator');
 
-ScribePosition = _dereq_('./position');
+Position = _dereq_('./position');
 
-ScribeRange = (function() {
-  function ScribeRange(editor, start, end) {
-    this.editor = editor;
+Range = (function() {
+  function Range(doc, start, end) {
+    this.doc = doc;
     this.start = start;
     this.end = end;
     if (_.isNumber(this.start)) {
-      this.start = new ScribePosition(this.editor, this.start);
+      this.start = new Position(this.doc, this.start);
     }
     if (_.isNumber(this.end)) {
-      this.end = new ScribePosition(this.editor, this.end);
+      this.end = new Position(this.doc, this.end);
     }
   }
 
-  ScribeRange.prototype.deleteContents = function(options) {
-    if (this.isCollapsed()) {
-      return;
-    }
-    return this.editor.deleteAt(this.start.index, this.end.index - this.start.index, options);
-  };
-
-  ScribeRange.prototype.equals = function(range) {
+  Range.prototype.equals = function(range) {
     if (range == null) {
       return false;
     }
     return range.start.leafNode === this.start.leafNode && range.end.leafNode === this.end.leafNode && range.start.offset === this.start.offset && range.end.offset === this.end.offset;
   };
 
-  ScribeRange.prototype.format = function(name, value, options) {
-    return this.editor.formatAt(this.start.index, this.end.index - this.start.index, name, value, options);
-  };
-
-  ScribeRange.prototype.getFormats = function() {
+  Range.prototype.getFormats = function() {
     var endLeaf, formats, leaves, startLeaf;
     startLeaf = this.start.getLeaf();
     endLeaf = this.end.getLeaf();
@@ -20127,12 +18726,12 @@ ScribeRange = (function() {
     return formats;
   };
 
-  ScribeRange.prototype.getLeafNodes = function() {
+  Range.prototype.getLeafNodes = function() {
     var leafIterator, leafNodes;
     if (this.isCollapsed()) {
       return [this.start.leafNode];
     }
-    leafIterator = new ScribeLeafIterator(this.start.getLeaf(), this.end.getLeaf());
+    leafIterator = new LeafIterator(this.start.getLeaf(), this.end.getLeaf());
     leafNodes = _.pluck(leafIterator.toArray(), 'node');
     if (leafNodes[leafNodes.length - 1] !== this.end.leafNode || this.end.offset === 0) {
       leafNodes.pop();
@@ -20140,17 +18739,17 @@ ScribeRange = (function() {
     return leafNodes;
   };
 
-  ScribeRange.prototype.getLeaves = function() {
+  Range.prototype.getLeaves = function() {
     var arr, itr;
-    itr = new ScribeLeafIterator(this.start.getLeaf(), this.end.getLeaf());
+    itr = new LeafIterator(this.start.getLeaf(), this.end.getLeaf());
     arr = itr.toArray();
     return arr;
   };
 
-  ScribeRange.prototype.getLineNodes = function() {
+  Range.prototype.getLineNodes = function() {
     var endLine, lines, startLine;
-    startLine = this.editor.doc.findLineNode(this.start.leafNode);
-    endLine = this.editor.doc.findLineNode(this.end.leafNode);
+    startLine = this.doc.findLineNode(this.start.leafNode);
+    endLine = this.doc.findLineNode(this.end.leafNode);
     if (startLine === endLine) {
       return [startLine];
     }
@@ -20163,15 +18762,15 @@ ScribeRange = (function() {
     return lines;
   };
 
-  ScribeRange.prototype.getLines = function() {
+  Range.prototype.getLines = function() {
     return _.map(this.getLineNodes(), (function(_this) {
       return function(lineNode) {
-        return _this.editor.doc.findLine(lineNode);
+        return _this.doc.findLine(lineNode);
       };
     })(this));
   };
 
-  ScribeRange.prototype.getText = function() {
+  Range.prototype.getText = function() {
     var leaves, line;
     leaves = this.getLeaves();
     if (leaves.length === 0) {
@@ -20197,35 +18796,27 @@ ScribeRange = (function() {
     })(this)).join('');
   };
 
-  ScribeRange.prototype.insertContents = function(offset, text, formats, options) {
-    return this.editor.insertAt(this.start.index + offset, text, formats, options);
-  };
-
-  ScribeRange.prototype.isCollapsed = function() {
+  Range.prototype.isCollapsed = function() {
     return this.start.leafNode === this.end.leafNode && this.start.offset === this.end.offset;
   };
 
-  return ScribeRange;
+  return Range;
 
 })();
 
-module.exports = ScribeRange;
+module.exports = Range;
 
 
-},{"./leaf-iterator":32,"./position":42,"lodash":"4HJaAd"}],44:[function(_dereq_,module,exports){
-var DEFAULT_STYLES, EventEmitter2, LIST_STYLES, ScribeDOM, ScribeNormalizer, ScribeRenderer, ScribeUtils, _,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+},{"./leaf-iterator":29,"./position":40,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
+var DEFAULT_STYLES, DOM, LIST_STYLES, Normalizer, Renderer, Utils, _;
 
 _ = _dereq_('lodash');
 
-EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
+DOM = _dereq_('./dom');
 
-ScribeDOM = _dereq_('./dom');
+Utils = _dereq_('./utils');
 
-ScribeUtils = _dereq_('./utils');
-
-ScribeNormalizer = _dereq_('./normalizer');
+Normalizer = _dereq_('./normalizer');
 
 DEFAULT_STYLES = {
   'body': {
@@ -20284,20 +18875,14 @@ _.each([1, 2, 3, 4, 5, 6, 7, 8, 9], function(i) {
   };
 });
 
-if (ScribeUtils.isIE()) {
+if (Utils.isIE()) {
   DEFAULT_STYLES['br'] = {
     'display': 'none'
   };
 }
 
-ScribeRenderer = (function(_super) {
-  __extends(ScribeRenderer, _super);
-
-  ScribeRenderer.events = {
-    UPDATE: 'renderer-update'
-  };
-
-  ScribeRenderer.objToCss = function(obj) {
+Renderer = (function() {
+  Renderer.objToCss = function(obj) {
     return _.map(obj, function(value, key) {
       var innerStr;
       innerStr = _.map(value, function(innerValue, innerKey) {
@@ -20307,31 +18892,35 @@ ScribeRenderer = (function(_super) {
     }).join("\n");
   };
 
-  function ScribeRenderer(container, options) {
+  function Renderer(container, emitter, options) {
     this.container = container;
+    this.emitter = emitter;
     this.options = options != null ? options : {};
     this.buildFrame();
     this.addStyles(DEFAULT_STYLES);
     if (options.styles != null) {
-      _.defer(this.addStyles.bind(this, this.options.styles));
+      _.defer(_.bind(this.addStyles, this, this.options.styles));
     }
   }
 
-  ScribeRenderer.prototype.addContainer = function(container, before) {
-    var refNode;
+  Renderer.prototype.addContainer = function(className, before) {
+    var container, refNode;
     if (before == null) {
       before = false;
     }
     refNode = before ? this.root : null;
-    return this.root.parentNode.insertBefore(container, refNode);
+    container = this.root.ownerDocument.createElement('div');
+    DOM.addClass(container, className);
+    this.root.parentNode.insertBefore(container, refNode);
+    return container;
   };
 
-  ScribeRenderer.prototype.addStyles = function(css) {
+  Renderer.prototype.addStyles = function(css) {
     var style;
     style = this.root.ownerDocument.createElement('style');
     style.type = 'text/css';
     if (!_.isString(css)) {
-      css = ScribeRenderer.objToCss(css);
+      css = Renderer.objToCss(css);
     }
     if (style.styleSheet != null) {
       style.styleSheet.cssText = css;
@@ -20341,13 +18930,13 @@ ScribeRenderer = (function(_super) {
     return _.defer((function(_this) {
       return function() {
         _this.root.ownerDocument.querySelector('head').appendChild(style);
-        _this.emit(ScribeRenderer.events.UPDATE, css);
-        return ScribeDOM.addClass(_this.container, 'sc-container');
+        _this.emitter.emit(_this.emitter.constructor.events.RENDER_UPDATE, css);
+        return DOM.addClass(_this.container, 'sc-container');
       };
     })(this));
   };
 
-  ScribeRenderer.prototype.buildFrame = function() {
+  Renderer.prototype.buildFrame = function() {
     var doc, html, htmlTag;
     html = this.container.innerHTML;
     this.container.innerHTML = '';
@@ -20367,26 +18956,26 @@ ScribeRenderer = (function(_super) {
       doc = this.getDocument();
     }
     this.root = doc.createElement('div');
-    ScribeDOM.addClass(this.root, 'editor-container');
+    DOM.addClass(this.root, 'editor-container');
     this.root.id = this.options.id;
     if (this.options.iframe) {
       doc.body.appendChild(this.root);
     } else {
       this.container.appendChild(this.root);
     }
-    this.root.innerHTML = ScribeNormalizer.normalizeHtml(html);
-    return ScribeDOM.addEventListener(this.container, 'focus', (function(_this) {
+    this.root.innerHTML = Normalizer.normalizeHtml(html);
+    return DOM.addEventListener(this.container, 'focus', (function(_this) {
       return function() {
         return _this.root.focus();
       };
     })(this));
   };
 
-  ScribeRenderer.prototype.checkFocus = function() {
+  Renderer.prototype.checkFocus = function() {
     return this.root.ownerDocument.activeElement === this.root;
   };
 
-  ScribeRenderer.prototype.getDocument = function() {
+  Renderer.prototype.getDocument = function() {
     var _ref;
     if (this.iframe.parentNode == null) {
       return null;
@@ -20398,46 +18987,68 @@ ScribeRenderer = (function(_super) {
     }
   };
 
-  return ScribeRenderer;
+  return Renderer;
 
-})(EventEmitter2);
+})();
 
-module.exports = ScribeRenderer;
+module.exports = Renderer;
 
 
-},{"./dom":27,"./normalizer":40,"./utils":52,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],45:[function(_dereq_,module,exports){
-var EventEmitter2, Scribe, ScribeDefaultTheme, ScribeEditor, ScribeSnowTheme, Tandem, buildFormats, es5shim, pkg, _,
+},{"./dom":25,"./normalizer":39,"./utils":49,"lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
+var DEFAULT_API_OPTIONS, Editor, EventEmitter2, Modules, Range, Scribe, Tandem, Themes, buildParams, pkg, _,
+  __slice = [].slice,
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __slice = [].slice;
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = _dereq_('lodash');
 
-es5shim = _dereq_('es5-shim');
+_.str = _dereq_('underscore.string');
 
 pkg = _dereq_('../package.json');
 
 EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
-ScribeEditor = _dereq_('./editor');
+Editor = _dereq_('./editor');
 
-ScribeDefaultTheme = _dereq_('./themes/default');
-
-ScribeSnowTheme = _dereq_('./themes/snow');
+Range = _dereq_('./range');
 
 Tandem = _dereq_('tandem-core');
 
-buildFormats = function(name, value) {
-  var formats;
-  if (_.isString(name)) {
-    formats = {};
-    formats[name] = value;
-  } else if (_.isObject(name)) {
-    formats = name;
-  } else {
-    formats = {};
+Modules = {
+  Authorship: _dereq_('./modules/authorship'),
+  Keyboard: _dereq_('./modules/keyboard'),
+  LinkTooltip: _dereq_('./modules/link-tooltip'),
+  MultiCursor: _dereq_('./modules/multi-cursor'),
+  PasteManager: _dereq_('./modules/paste-manager'),
+  Toolbar: _dereq_('./modules/toolbar'),
+  UndoManager: _dereq_('./modules/undo-manager')
+};
+
+Themes = {
+  Default: _dereq_('./themes/default'),
+  Snow: _dereq_('./themes/snow')
+};
+
+DEFAULT_API_OPTIONS = {
+  silent: false,
+  source: 'api'
+};
+
+buildParams = function() {
+  var formats, index, length, params;
+  params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+  if (_.isObject(params[0])) {
+    index = params[0].start.getIndex();
+    length = params[0].end.getIndex() - index;
+    params.splice(0, 1, index, length);
   }
-  return formats;
+  if (_.isString(params[2])) {
+    formats = {};
+    formats[params[2]] = params[3];
+    params.splice(2, 2, formats);
+  }
+  params[3] = _.defaults(params[3] || {}, DEFAULT_API_OPTIONS);
+  return params;
 };
 
 Scribe = (function(_super) {
@@ -20447,78 +19058,123 @@ Scribe = (function(_super) {
 
   Scribe.editors = [];
 
+  Scribe.Module = Modules;
+
+  Scribe.Theme = Themes;
+
   Scribe.DEFAULTS = {
-    readOnly: false,
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size'],
     iframe: true,
     logLevel: false,
+    modules: {
+      'keyboard': true,
+      'paste-manager': true,
+      'undo-manager': true
+    },
     pollInterval: 100,
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size'],
-    theme: 'default',
-    undoDelay: 1000,
-    undoMaxStack: 100
-  };
-
-  Scribe.themes = {
-    "default": ScribeDefaultTheme,
-    snow: ScribeSnowTheme
+    readOnly: false,
+    theme: 'default'
   };
 
   Scribe.events = {
     FOCUS_CHANGE: 'focus-change',
+    MODULE_INIT: 'module-init',
+    POST_EVENT: 'post-event',
+    PRE_EVENT: 'pre-event',
+    RENDER_UPDATE: 'renderer-update',
     SELECTION_CHANGE: 'selection-change',
     TEXT_CHANGE: 'text-change'
   };
 
   function Scribe(container, options) {
+    var moduleOptions, themeClass;
     if (options == null) {
       options = {};
     }
+    moduleOptions = _.defaults(options.modules || {}, Scribe.DEFAULTS.modules);
     this.options = _.defaults(options, Scribe.DEFAULTS);
+    this.options.modules = moduleOptions;
     this.options.id = this.id = "scribe-" + (Scribe.editors.length + 1);
     this.options.emitter = this;
     this.modules = {};
-    this.editor = new ScribeEditor(container, this, this.options);
+    this.editor = new Editor(container, this, this.options);
     Scribe.editors.push(this.editor);
-    this.theme = new Scribe.themes[this.options.theme](this.editor);
+    themeClass = _.str.capitalize(_.str.camelize(this.options.theme));
+    this.theme = new Scribe.Theme[themeClass](this, this.options);
     _.each(this.options.modules, (function(_this) {
-      return function(options, name) {
-        return _this.addModule(name, options);
-      };
-    })(this));
-    _.each(ScribeEditor.events, (function(_this) {
-      return function(eventName) {
-        return _this.editor.on(eventName, function() {
-          var args;
-          args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-          return _this.emit.apply(_this, [eventName].concat(__slice.call(args)));
-        });
+      return function(option, name) {
+        return _this.addModule(name, option);
       };
     })(this));
   }
 
+  Scribe.prototype.addContainer = function(className, before) {
+    if (before == null) {
+      before = false;
+    }
+    return this.editor.renderer.addContainer(className, before);
+  };
+
   Scribe.prototype.addModule = function(name, options) {
+    var className, moduleClass;
+    className = _.str.capitalize(_.str.camelize(name));
+    moduleClass = Scribe.Module[className];
+    if (moduleClass == null) {
+      throw new Error("Cannot load " + name + " module. Are you sure you included it?");
+    }
     if (!_.isObject(options)) {
       options = {};
     }
-    this.modules[name] = this.theme.addModule(name, options);
+    options = _.defaults(options, this.theme.constructor.OPTIONS[name] || {}, moduleClass.DEFAULTS || {});
+    this.modules[name] = new moduleClass(this, this.editor.root, options);
+    this.emit(Scribe.events.MODULE_INIT, name, this.modules[name]);
     return this.modules[name];
   };
 
-  Scribe.prototype.deleteText = function(index, length) {
-    var delta;
+  Scribe.prototype.addStyles = function(styles) {
+    return this.editor.renderer.addStyles(styles);
+  };
+
+  Scribe.prototype.deleteText = function(index, length, options) {
+    var delta, formats, _ref;
+    if (options == null) {
+      options = {};
+    }
+    _ref = buildParams(index, length, {}, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
+    if (!(length > 0)) {
+      return;
+    }
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length);
-    return this.editor.applyDelta(delta);
+    return this.editor.applyDelta(delta, options);
   };
 
-  Scribe.prototype.formatText = function(index, length, name, value) {
-    var delta, formats;
-    formats = buildFormats(name, value);
+  Scribe.prototype.emit = function() {
+    var args, eventName;
+    eventName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    Scribe.__super__.emit.apply(this, [Scribe.events.PRE_EVENT, eventName].concat(__slice.call(args)));
+    Scribe.__super__.emit.apply(this, [eventName].concat(__slice.call(args)));
+    return Scribe.__super__.emit.apply(this, [Scribe.events.POST_EVENT, eventName].concat(__slice.call(args)));
+  };
+
+  Scribe.prototype.focus = function() {
+    return this.editor.root.focus();
+  };
+
+  Scribe.prototype.formatText = function(index, length, name, value, options) {
+    var delta, formats, _ref;
+    _ref = buildParams(index, length, name, value, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
+    if (!(length > 0)) {
+      return;
+    }
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats);
-    return this.editor.applyDelta(delta);
+    return this.editor.applyDelta(delta, options);
   };
 
-  Scribe.prototype.getContents = function(index, length) {
+  Scribe.prototype.getContents = function(index, length, options) {
     var ops;
+    if (options == null) {
+      options = {};
+    }
     if (index == null) {
       index = 0;
     }
@@ -20541,29 +19197,90 @@ Scribe = (function(_super) {
     return this.modules[name];
   };
 
+  Scribe.prototype.getSelection = function() {
+    return this.editor.selection.getRange();
+  };
+
   Scribe.prototype.getText = function(index, length) {
     return _.pluck(this.getContents(index, length).ops, 'value').join('');
   };
 
-  Scribe.prototype.insertText = function(index, text, name, value) {
-    var delta, formats;
-    formats = buildFormats(name, value);
+  Scribe.prototype.insertText = function(index, text, name, value, options) {
+    var delta, formats, length, _ref;
+    if (options == null) {
+      options = {};
+    }
+    _ref = buildParams(index, 0, name, value, options), index = _ref[0], length = _ref[1], formats = _ref[2], options = _ref[3];
+    if (!(text.length > 0)) {
+      return;
+    }
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats);
-    return this.editor.applyDelta(delta);
+    return this.editor.applyDelta(delta, options);
   };
 
-  Scribe.prototype.setContents = function(delta) {
+  Scribe.prototype.onModuleLoad = function(name, callback) {
+    if (this.modules[name]) {
+      return callback(this.modules[name]);
+    }
+    return this.on(Scribe.events.MODULE_INIT, function(moduleName, module) {
+      if (moduleName === name) {
+        return callback(module);
+      }
+    });
+  };
+
+  Scribe.prototype.setContents = function(delta, options) {
+    if (options == null) {
+      options = {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
     delta = _.isArray(delta) ? new Tandem.Delta(0, delta) : Tandem.Delta.makeDelta(delta);
     delta.startLength = this.getLength();
-    return this.editor.applyDelta(delta);
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Scribe.prototype.setFormat = function(name, value) {
+    var format;
+    format = this.editor.doc.formatManager.formats[name];
+    if (format == null) {
+      throw new Error("Unsupported format " + name + " " + value);
+    }
+    return format.preformat(value);
   };
 
   Scribe.prototype.setHTML = function(html) {
     return this.editor.root.innerHTML = html;
   };
 
-  Scribe.prototype.updateContents = function(delta) {
-    return this.editor.applyDelta(delta);
+  Scribe.prototype.setSelection = function(start, end, options) {
+    var range;
+    if (options == null) {
+      options = {};
+    }
+    if (_.isNumber(start) && _.isNumber(end)) {
+      range = new Range(this.editor.doc, start, end);
+    } else {
+      range = start;
+      options = end || {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    return this.editor.selection.setRange(range, options.silent);
+  };
+
+  Scribe.prototype.updateContents = function(delta, options) {
+    if (options == null) {
+      options = {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    return this.editor.applyDelta(delta, options);
+  };
+
+  Scribe.prototype.updateSelection = function(options) {
+    if (options == null) {
+      options = {};
+    }
+    options = _.defaults(options, DEFAULT_API_OPTIONS);
+    return this.editor.selection.update(options.silent);
   };
 
   return Scribe;
@@ -20573,24 +19290,20 @@ Scribe = (function(_super) {
 module.exports = Scribe;
 
 
-},{"../package.json":25,"./editor":28,"./themes/default":48,"./themes/snow":50,"es5-shim":"4VPpiv","eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji"}],46:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeKeyboard, ScribeLine, ScribePosition, ScribeRange, ScribeSelection, ScribeUtils, compareNativeRanges, normalizeNativePosition, normalizeNativeRange, rangy, _, _nativeRangeToRange, _preserveWithIndex, _preserveWithLine, _updateFocus;
+},{"../package.json":23,"./editor":26,"./modules/authorship":32,"./modules/keyboard":33,"./modules/link-tooltip":34,"./modules/multi-cursor":35,"./modules/paste-manager":36,"./modules/toolbar":37,"./modules/undo-manager":38,"./range":41,"./themes/default":46,"./themes/snow":48,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],44:[function(_dereq_,module,exports){
+var DOM, Position, Range, Selection, Utils, compareNativeRanges, normalizeNativePosition, normalizeNativeRange, rangy, _, _nativeRangeToRange, _preserveWithIndex, _preserveWithLine, _updateFocus;
 
 _ = _dereq_('lodash');
 
 rangy = _dereq_('rangy-core');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
-ScribeLine = _dereq_('./line');
+Position = _dereq_('./position');
 
-ScribeKeyboard = _dereq_('./keyboard');
+Range = _dereq_('./range');
 
-ScribePosition = _dereq_('./position');
-
-ScribeRange = _dereq_('./range');
-
-ScribeUtils = _dereq_('./utils');
+Utils = _dereq_('./utils');
 
 compareNativeRanges = function(r1, r2) {
   if (r1 === r2) {
@@ -20603,7 +19316,7 @@ compareNativeRanges = function(r1, r2) {
 };
 
 normalizeNativePosition = function(node, offset) {
-  if ((node != null ? node.nodeType : void 0) === ScribeDOM.ELEMENT_NODE) {
+  if ((node != null ? node.nodeType : void 0) === DOM.ELEMENT_NODE) {
     if (node.firstChild == null) {
       return [node, 0];
     }
@@ -20611,10 +19324,10 @@ normalizeNativePosition = function(node, offset) {
     if (offset < node.childNodes.length) {
       return normalizeNativePosition(node.childNodes[offset], 0);
     } else {
-      if (node.lastChild.nodeType === ScribeDOM.ELEMENT_NODE) {
+      if (node.lastChild.nodeType === DOM.ELEMENT_NODE) {
         return normalizeNativePosition(node.lastChild, node.lastChild.childNodes.length);
       } else {
-        return [node.lastChild, ScribeUtils.getNodeLength(node.lastChild)];
+        return [node.lastChild, Utils.getNodeLength(node.lastChild)];
       }
     }
   }
@@ -20642,13 +19355,13 @@ _nativeRangeToRange = function(nativeRange) {
   if (nativeRange == null) {
     return null;
   }
-  start = new ScribePosition(this.editor, nativeRange.startContainer, nativeRange.startOffset);
-  end = new ScribePosition(this.editor, nativeRange.endContainer, nativeRange.endOffset);
+  start = new Position(this.editor.doc, nativeRange.startContainer, nativeRange.startOffset);
+  end = new Position(this.editor.doc, nativeRange.endContainer, nativeRange.endOffset);
   if (start.index <= end.index) {
-    range = new ScribeRange(this.editor, start, end);
+    range = new Range(this.editor.doc, start, end);
     range.isBackwards = false;
   } else {
-    range = new ScribeRange(this.editor, end, start);
+    range = new Range(this.editor.doc, end, start);
     range.isBackwards = true;
   }
   if (nativeRange.isBackwards) {
@@ -20668,7 +19381,7 @@ _preserveWithIndex = function(nativeRange, index, lengthAdded, fn) {
     }
   }), startIndex = _ref[0], endIndex = _ref[1];
   fn.call(null);
-  return this.setRange(new ScribeRange(this.editor, startIndex, endIndex), true);
+  return this.setRange(new Range(this.editor.doc, startIndex, endIndex), true);
 };
 
 _preserveWithLine = function(savedNativeRange, fn) {
@@ -20684,10 +19397,10 @@ _preserveWithLine = function(savedNativeRange, fn) {
   ], (function(_this) {
     return function(position) {
       var lineNode, _ref;
-      lineNode = ScribeUtils.findAncestor(position.container, ScribeUtils.isLineNode) || _this.editor.root;
+      lineNode = Utils.findAncestor(position.container, Utils.isLineNode) || _this.editor.root;
       return {
         lineNode: lineNode,
-        offset: ScribePosition.getIndex(position.container, position.offset, lineNode),
+        offset: Position.getIndex(position.container, position.offset, lineNode),
         nextLine: ((_ref = position.container.previousSibling) != null ? _ref.tagName : void 0) === 'BR'
       };
     };
@@ -20701,10 +19414,10 @@ _preserveWithLine = function(savedNativeRange, fn) {
           savedDatum.lineNode = savedDatum.lineNode.nextSibling;
           savedDatum.offset = 0;
         }
-        return new ScribePosition(_this.editor, savedDatum.lineNode, savedDatum.offset);
+        return new Position(_this.editor.doc, savedDatum.lineNode, savedDatum.offset);
       };
     })(this)), start = _ref[0], end = _ref[1];
-    return this.setRange(new ScribeRange(this.editor, start, end), true);
+    return this.setRange(new Range(this.editor.doc, start, end), true);
   }
 };
 
@@ -20717,13 +19430,13 @@ _updateFocus = function(silent) {
         clearTimeout(this.blurTimer);
         this.blurTimer = null;
       } else {
-        this.editor.emit(this.editor.constructor.events.FOCUS_CHANGE, true);
+        this.emitter.emit(this.emitter.constructor.events.FOCUS_CHANGE, true);
       }
     } else if (this.blurTimer == null) {
       this.blurTimer = setTimeout((function(_this) {
         return function() {
           if (_this.hasFocus === false) {
-            _this.editor.emit(_this.editor.constructor.events.FOCUS_CHANGE, false);
+            _this.emitter.emit(_this.emitter.constructor.events.FOCUS_CHANGE, false);
           }
           return _this.blurTimer = null;
         };
@@ -20733,9 +19446,10 @@ _updateFocus = function(silent) {
   return this.hasFocus = hasFocus;
 };
 
-ScribeSelection = (function() {
-  function ScribeSelection(editor) {
+Selection = (function() {
+  function Selection(editor, emitter) {
     this.editor = editor;
+    this.emitter = emitter;
     this.range = null;
     this.blurTimer = null;
     rangy.init();
@@ -20748,21 +19462,21 @@ ScribeSelection = (function() {
     }
     this.setRange(null, true);
     this.hasFocus = this.editor.renderer.checkFocus();
-    ScribeDOM.addEventListener(this.editor.root, 'focus', (function(_this) {
+    DOM.addEventListener(this.editor.root, 'focus', (function(_this) {
       return function() {
         return _.defer(function() {
           return _this.editor.checkUpdate();
         });
       };
     })(this));
-    ScribeDOM.addEventListener(this.editor.root, 'beforedeactivate blur mouseup', (function(_this) {
+    DOM.addEventListener(this.editor.root, 'beforedeactivate blur mouseup', (function(_this) {
       return function() {
         return _this.editor.checkUpdate();
       };
     })(this));
   }
 
-  ScribeSelection.prototype.getDimensions = function() {
+  Selection.prototype.getDimensions = function() {
     var nativeRange;
     if (this.range == null) {
       return null;
@@ -20771,7 +19485,7 @@ ScribeSelection = (function() {
     return nativeRange.getBoundingClientRect();
   };
 
-  ScribeSelection.prototype.getNativeRange = function(normalize) {
+  Selection.prototype.getNativeRange = function(normalize) {
     var range, _ref;
     if (normalize == null) {
       normalize = false;
@@ -20800,7 +19514,7 @@ ScribeSelection = (function() {
     }
   };
 
-  ScribeSelection.prototype.getRange = function() {
+  Selection.prototype.getRange = function() {
     var nativeRange;
     nativeRange = this.getNativeRange(true);
     if (nativeRange != null) {
@@ -20810,7 +19524,7 @@ ScribeSelection = (function() {
     }
   };
 
-  ScribeSelection.prototype.preserve = function(index, lengthAdded, fn) {
+  Selection.prototype.preserve = function(index, lengthAdded, fn) {
     var nativeRange;
     if (_.isFunction(index)) {
       fn = index;
@@ -20827,7 +19541,7 @@ ScribeSelection = (function() {
     }
   };
 
-  ScribeSelection.prototype.setRange = function(range, silent) {
+  Selection.prototype.setRange = function(range, silent) {
     var nativeRange;
     if (silent == null) {
       silent = false;
@@ -20842,13 +19556,11 @@ ScribeSelection = (function() {
       nativeRange = rangy.createRangyRange(this.editor.renderer.getDocument());
       _.each([range.start, range.end], function(pos, i) {
         var fn, node, offset, _ref;
-        _ref = ScribeUtils.findDeepestNode(pos.leafNode, pos.offset), node = _ref[0], offset = _ref[1];
-        offset = Math.min(ScribeDOM.getText(node).length, offset);
+        _ref = Utils.findDeepestNode(pos.leafNode, pos.offset), node = _ref[0], offset = _ref[1];
+        offset = Math.min(DOM.getText(node).length, offset);
         if (node.tagName === 'BR') {
-          if (node.tagName === "BR") {
-            node = node.parentNode;
-          }
-          if (ScribeUtils.isIE()) {
+          node = node.parentNode;
+          if (Utils.isIE()) {
             offset = 1;
           }
         }
@@ -20861,11 +19573,11 @@ ScribeSelection = (function() {
       this.range = null;
     }
     if (!silent) {
-      return this.editor.emit(this.editor.constructor.events.SELECTION_CHANGE, range);
+      return this.emitter.emit(this.emitter.constructor.events.SELECTION_CHANGE, range);
     }
   };
 
-  ScribeSelection.prototype.update = function(silent) {
+  Selection.prototype.update = function(silent) {
     var nativeRange, range;
     if (silent == null) {
       silent = false;
@@ -20878,179 +19590,158 @@ ScribeSelection = (function() {
       }
       this.range = nativeRange;
       range = _nativeRangeToRange.call(this, normalizeNativeRange(this.range));
-      if (ScribeUtils.isEmptyDoc(this.editor.root)) {
+      if (Utils.isEmptyDoc(this.editor.root)) {
         return this.setRange(range, silent);
       } else {
         if (!silent) {
-          return this.editor.emit(this.editor.constructor.events.SELECTION_CHANGE, range);
+          return this.emitter.emit(this.emitter.constructor.events.SELECTION_CHANGE, range);
         }
       }
     }
   };
 
-  return ScribeSelection;
+  return Selection;
 
 })();
 
-module.exports = ScribeSelection;
+module.exports = Selection;
 
 
-},{"./dom":27,"./keyboard":31,"./line":34,"./position":42,"./range":43,"./utils":52,"lodash":"4HJaAd","rangy-core":"rmqf9t"}],47:[function(_dereq_,module,exports){
-var ScribeColorPicker, ScribeDOM, ScribePicker,
+},{"./dom":25,"./position":40,"./range":41,"./utils":49,"lodash":"4HJaAd","rangy-core":"rmqf9t"}],45:[function(_dereq_,module,exports){
+var ColorPicker, DOM, Picker,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-ScribeDOM = _dereq_('../dom');
+DOM = _dereq_('../dom');
 
-ScribePicker = _dereq_('./picker');
+Picker = _dereq_('./picker');
 
-ScribeColorPicker = (function(_super) {
-  __extends(ScribeColorPicker, _super);
+ColorPicker = (function(_super) {
+  __extends(ColorPicker, _super);
 
-  function ScribeColorPicker() {
-    ScribeColorPicker.__super__.constructor.apply(this, arguments);
-    ScribeDOM.addClass(this.container, 'sc-color-picker');
+  function ColorPicker() {
+    ColorPicker.__super__.constructor.apply(this, arguments);
+    DOM.addClass(this.container, 'sc-color-picker');
   }
 
-  ScribeColorPicker.prototype.buildItem = function(picker, option, index) {
+  ColorPicker.prototype.buildItem = function(picker, option, index) {
     var item;
-    item = ScribeColorPicker.__super__.buildItem.call(this, picker, option, index);
+    item = ColorPicker.__super__.buildItem.call(this, picker, option, index);
     item.style.backgroundColor = option.value;
-    ScribeDOM.setText(item, '');
+    DOM.setText(item, '');
     return item;
   };
 
-  ScribeColorPicker.prototype.selectItem = function(item) {
-    ScribeColorPicker.__super__.selectItem.call(this, item);
+  ColorPicker.prototype.selectItem = function(item) {
+    ColorPicker.__super__.selectItem.call(this, item);
     return this.label.innerHTML = '';
   };
 
-  return ScribeColorPicker;
+  return ColorPicker;
 
-})(ScribePicker);
+})(Picker);
 
-module.exports = ScribeColorPicker;
+module.exports = ColorPicker;
 
 
-},{"../dom":27,"./picker":49}],48:[function(_dereq_,module,exports){
-var ScribeAuthorship, ScribeDefaultTheme, ScribeLinkTooltip, ScribeMultiCursor, ScribeToolbar;
+},{"../dom":25,"./picker":47}],46:[function(_dereq_,module,exports){
+var DefaultTheme;
 
-ScribeAuthorship = _dereq_('../modules/authorship');
+DefaultTheme = (function() {
+  DefaultTheme.OPTIONS = {};
 
-ScribeLinkTooltip = _dereq_('../modules/link-tooltip');
-
-ScribeMultiCursor = _dereq_('../modules/multi-cursor');
-
-ScribeToolbar = _dereq_('../modules/toolbar');
-
-ScribeDefaultTheme = (function() {
-  ScribeDefaultTheme.stylesheets = {};
-
-  function ScribeDefaultTheme(editor) {
-    this.editor = editor;
+  function DefaultTheme(scribe, options) {
+    this.scribe = scribe;
+    this.editor = this.scribe.editor;
+    this.editorContainer = this.editor.root;
   }
 
-  ScribeDefaultTheme.prototype.addModule = function(name, options) {
-    switch (name) {
-      case 'authorship':
-        return new ScribeAuthorship(this.editor, options);
-      case 'link-tooltip':
-        return new ScribeLinkTooltip(this.editor, options);
-      case 'multi-cursor':
-        return new ScribeMultiCursor(this.editor, options);
-      case 'toolbar':
-        return new ScribeToolbar(this.editor, options);
-      default:
-        return null;
-    }
-  };
-
-  return ScribeDefaultTheme;
+  return DefaultTheme;
 
 })();
 
-module.exports = ScribeDefaultTheme;
+module.exports = DefaultTheme;
 
 
-},{"../modules/authorship":36,"../modules/link-tooltip":37,"../modules/multi-cursor":38,"../modules/toolbar":39}],49:[function(_dereq_,module,exports){
-var ScribeDOM, ScribePicker, _;
+},{}],47:[function(_dereq_,module,exports){
+var DOM, Picker, _;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('../dom');
+DOM = _dereq_('../dom');
 
-ScribePicker = (function() {
-  function ScribePicker(select) {
+Picker = (function() {
+  function Picker(select) {
     var picker, selected, title;
     this.select = select;
     this.container = this.select.ownerDocument.createElement('div');
-    _.each(ScribeDOM.getClasses(this.select), (function(_this) {
+    _.each(DOM.getClasses(this.select), (function(_this) {
       return function(css) {
-        return ScribeDOM.addClass(_this.container, css);
+        return DOM.addClass(_this.container, css);
       };
     })(this));
     title = this.select.getAttribute('title');
     if (title) {
       this.container.setAttribute('title', title);
     }
-    ScribeDOM.addClass(this.container, 'sc-picker');
+    DOM.addClass(this.container, 'sc-picker');
     this.label = this.select.ownerDocument.createElement('div');
-    ScribeDOM.addClass(this.label, 'sc-picker-label');
+    DOM.addClass(this.label, 'sc-picker-label');
     this.container.appendChild(this.label);
     picker = this.buildPicker();
     this.container.appendChild(picker);
     selected = picker.querySelector('.sc-selected');
     if (selected != null) {
-      ScribeDOM.setText(this.label, ScribeDOM.getText(selected));
+      DOM.setText(this.label, DOM.getText(selected));
     }
-    ScribeDOM.addEventListener(this.label, 'click', (function(_this) {
+    DOM.addEventListener(this.label, 'click', (function(_this) {
       return function() {
         var hasClass;
-        hasClass = ScribeDOM.hasClass(_this.container, 'sc-expanded');
+        hasClass = DOM.hasClass(_this.container, 'sc-expanded');
         return _.defer(function() {
-          return ScribeDOM.toggleClass(_this.container, 'sc-expanded', !hasClass);
+          return DOM.toggleClass(_this.container, 'sc-expanded', !hasClass);
         });
       };
     })(this));
-    ScribeDOM.addEventListener(this.select.ownerDocument, 'click', (function(_this) {
+    DOM.addEventListener(this.select.ownerDocument, 'click', (function(_this) {
       return function() {
-        return ScribeDOM.removeClass(_this.container, 'sc-expanded');
+        return DOM.removeClass(_this.container, 'sc-expanded');
       };
     })(this));
-    ScribeDOM.addEventListener(this.select, 'change', (function(_this) {
+    DOM.addEventListener(this.select, 'change', (function(_this) {
       return function() {
         var option;
         option = _this.container.querySelectorAll('.sc-picker-item')[_this.select.selectedIndex];
         _this.selectItem(option);
-        return ScribeDOM.toggleClass(_this.label, 'sc-active', option !== selected);
+        return DOM.toggleClass(_this.label, 'sc-active', option !== selected);
       };
     })(this));
     this.select.parentNode.insertBefore(this.container, this.select);
   }
 
-  ScribePicker.prototype.buildItem = function(picker, option, index) {
+  Picker.prototype.buildItem = function(picker, option, index) {
     var item;
     item = this.select.ownerDocument.createElement('div');
-    ScribeDOM.addClass(item, 'sc-picker-item');
-    ScribeDOM.setText(item, ScribeDOM.getText(option));
+    DOM.addClass(item, 'sc-picker-item');
+    DOM.setText(item, DOM.getText(option));
     if (this.select.selectedIndex === index) {
-      ScribeDOM.addClass(item, 'sc-selected');
+      DOM.addClass(item, 'sc-selected');
     }
-    ScribeDOM.addEventListener(item, 'click', (function(_this) {
+    DOM.addEventListener(item, 'click', (function(_this) {
       return function() {
         _this.selectItem(item);
         _this.select.selectedIndex = index;
-        ScribeDOM.triggerEvent(_this.select, 'change', true, true);
+        DOM.triggerEvent(_this.select, 'change', true, true);
         return true;
       };
     })(this));
     return item;
   };
 
-  ScribePicker.prototype.buildPicker = function() {
+  Picker.prototype.buildPicker = function() {
     var picker;
     picker = this.select.ownerDocument.createElement('div');
-    ScribeDOM.addClass(picker, 'sc-picker-options');
+    DOM.addClass(picker, 'sc-picker-options');
     _.each(this.select.querySelectorAll('option'), (function(_this) {
       return function(option, i) {
         var item;
@@ -21062,95 +19753,76 @@ ScribePicker = (function() {
     return picker;
   };
 
-  ScribePicker.prototype.close = function() {
-    return ScribeDOM.removeClass(this.container, 'sc-expanded');
+  Picker.prototype.close = function() {
+    return DOM.removeClass(this.container, 'sc-expanded');
   };
 
-  ScribePicker.prototype.selectItem = function(item) {
+  Picker.prototype.selectItem = function(item) {
     var selected;
     selected = this.container.querySelector('.sc-selected');
     if (selected != null) {
-      ScribeDOM.removeClass(selected, 'sc-selected');
+      DOM.removeClass(selected, 'sc-selected');
     }
     if (item != null) {
-      ScribeDOM.addClass(item, 'sc-selected');
-      return ScribeDOM.setText(this.label, ScribeDOM.getText(item));
+      DOM.addClass(item, 'sc-selected');
+      return DOM.setText(this.label, DOM.getText(item));
     } else {
       return this.label.innerHTML = '&nbsp;';
     }
   };
 
-  return ScribePicker;
+  return Picker;
 
 })();
 
-module.exports = ScribePicker;
+module.exports = Picker;
 
 
-},{"../dom":27,"lodash":"4HJaAd"}],50:[function(_dereq_,module,exports){
-var ScribeColorPicker, ScribeDOM, ScribeDefaultTheme, ScribePicker, ScribeSnowTheme, _,
+},{"../dom":25,"lodash":"4HJaAd"}],48:[function(_dereq_,module,exports){
+var ColorPicker, DOM, DefaultTheme, Picker, SnowTheme, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = _dereq_('lodash');
 
-ScribeColorPicker = _dereq_('../color-picker');
+ColorPicker = _dereq_('../color-picker');
 
-ScribeDefaultTheme = _dereq_('../default');
+DefaultTheme = _dereq_('../default');
 
-ScribeDOM = _dereq_('../../dom');
+DOM = _dereq_('../../dom');
 
-ScribePicker = _dereq_('../picker');
+Picker = _dereq_('../picker');
 
-ScribeSnowTheme = (function(_super) {
-  __extends(ScribeSnowTheme, _super);
+SnowTheme = (function(_super) {
+  __extends(SnowTheme, _super);
 
-  ScribeSnowTheme.COLORS = ["#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"];
+  SnowTheme.COLORS = ["#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"];
 
-  ScribeSnowTheme.OPTIONS = {
+  SnowTheme.OPTIONS = {
     'multi-cursor': {
       template: '<span class="cursor-flag"> <span class="cursor-triangle top"></span> <span class="cursor-name"></span> <span class="cursor-triangle bottom"></span> </span> <span class="cursor-caret"></span>'
     }
   };
 
-  function ScribeSnowTheme(editor) {
-    this.editor = editor;
+  function SnowTheme(scribe, options) {
+    this.scribe = scribe;
+    SnowTheme.__super__.constructor.apply(this, arguments);
     this.pickers = [];
-    this.editor.on(this.editor.constructor.events.SELECTION_CHANGE, (function(_this) {
+    this.scribe.on(this.scribe.constructor.events.SELECTION_CHANGE, (function(_this) {
       return function() {
         return _.each(_this.pickers, function(picker) {
           return picker.close();
         });
       };
     })(this));
-    ScribeDOM.addClass(this.editor.root.parentNode, 'snow');
-    ScribeSnowTheme.__super__.constructor.apply(this, arguments);
+    DOM.addClass(this.editorContainer.parentNode, 'snow');
+    this.scribe.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this));
+    this.scribe.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this));
+    this.scribe.onModuleLoad('toolbar', _.bind(this.extendToolbar, this));
   }
 
-  ScribeSnowTheme.prototype.addModule = function(name, options) {
-    var module;
-    options = _.defaults(ScribeSnowTheme.OPTIONS[name] || {}, options);
-    module = ScribeSnowTheme.__super__.addModule.call(this, name, options);
-    switch (name) {
-      case 'authorship':
-        this.extendAuthorship(module);
-        break;
-      case 'link-tooltip':
-        this.extendLinkTooltip(module);
-        break;
-      case 'multi-cursor':
-        this.extendMultiCursor(module);
-        break;
-      case 'toolbar':
-        this.extendToolbar(module);
-    }
-    return module;
-  };
-
-  ScribeSnowTheme.prototype.extendAuthorship = function(module) {};
-
-  ScribeSnowTheme.prototype.extendLinkTooltip = function(module) {
-    return this.editor.renderer.addStyles({
+  SnowTheme.prototype.extendLinkTooltip = function(module) {
+    return this.scribe.addStyles({
       '.snow a': {
         'color': '#06c'
       },
@@ -21170,8 +19842,8 @@ ScribeSnowTheme = (function(_super) {
     });
   };
 
-  ScribeSnowTheme.prototype.extendMultiCursor = function(module) {
-    this.editor.renderer.addStyles({
+  SnowTheme.prototype.extendMultiCursor = function(module) {
+    this.scribe.addStyles({
       '.snow .cursor-name': {
         'border-radius': '4px',
         'font-size': '11px',
@@ -21221,11 +19893,11 @@ ScribeSnowTheme = (function(_super) {
     });
   };
 
-  ScribeSnowTheme.prototype.extendToolbar = function(module) {
+  SnowTheme.prototype.extendToolbar = function(module) {
     _.each(module.container.querySelectorAll('.sc-font-name, .sc-font-size'), (function(_this) {
       return function(select) {
         var picker;
-        picker = new ScribePicker(select);
+        picker = new Picker(select);
         return _this.pickers.push(picker);
       };
     })(this));
@@ -21236,17 +19908,17 @@ ScribeSnowTheme = (function(_super) {
         if (select == null) {
           return;
         }
-        picker = new ScribeColorPicker(select);
+        picker = new ColorPicker(select);
         _this.pickers.push(picker);
-        ScribeDOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button');
+        DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button');
         _.each(picker.container.querySelectorAll('.sc-picker-item'), function(item, i) {
           if (i < 7) {
-            return ScribeDOM.addClass(item, 'sc-primary-color');
+            return DOM.addClass(item, 'sc-primary-color');
           }
         });
         format = _this.editor.doc.formatManager.formats[css];
         if (format != null) {
-          format.styles = _.reduce(ScribeSnowTheme.COLORS, function(colors, c) {
+          format.styles = _.reduce(SnowTheme.COLORS, function(colors, c) {
             colors[c] = "rgb(" + (parseInt(c.substr(1, 2), 16)) + ", " + (parseInt(c.substr(3, 2), 16)) + ", " + (parseInt(c.substr(5, 2), 16)) + ")";
             return colors;
           }, {});
@@ -21256,189 +19928,20 @@ ScribeSnowTheme = (function(_super) {
     })(this));
   };
 
-  return ScribeSnowTheme;
+  return SnowTheme;
 
-})(ScribeDefaultTheme);
+})(DefaultTheme);
 
-module.exports = ScribeSnowTheme;
-
-
-},{"../../dom":27,"../color-picker":47,"../default":48,"../picker":49,"lodash":"4HJaAd"}],51:[function(_dereq_,module,exports){
-var ScribeKeyboard, ScribeRange, ScribeUndoManager, Tandem, getLastChangeIndex, _, _change, _ignoreChanges;
-
-_ = _dereq_('lodash');
-
-ScribeKeyboard = _dereq_('./keyboard');
-
-ScribeRange = _dereq_('./range');
-
-Tandem = _dereq_('tandem-core');
-
-getLastChangeIndex = function(delta) {
-  var index, lastChangeIndex, offset;
-  lastChangeIndex = index = offset = 0;
-  _.each(delta.ops, function(op) {
-    if (Tandem.InsertOp.isInsert(op)) {
-      offset += op.getLength();
-      return lastChangeIndex = index + offset;
-    } else if (Tandem.RetainOp.isRetain(op)) {
-      if (op.start > index) {
-        lastChangeIndex = index + offset;
-        offset -= op.start - index;
-      }
-      if (_.keys(op.attributes).length > 0) {
-        lastChangeIndex = op.end + offset;
-      }
-      return index = op.end;
-    }
-  });
-  if (delta.endLength < delta.startLength + offset) {
-    lastChangeIndex = delta.endLength;
-  }
-  return lastChangeIndex;
-};
-
-_change = function(source, dest) {
-  var change;
-  if (this.stack[source].length > 0) {
-    change = this.stack[source].pop();
-    this.lastRecorded = 0;
-    _ignoreChanges.call(this, (function(_this) {
-      return function() {
-        var index;
-        _this.editor.applyDelta(change[source], {
-          source: 'user'
-        });
-        index = getLastChangeIndex(change[source]);
-        return _this.editor.setSelection(new ScribeRange(_this.editor, index, index));
-      };
-    })(this));
-    return this.stack[dest].push(change);
-  }
-};
-
-_ignoreChanges = function(fn) {
-  var oldIgnoringChanges;
-  oldIgnoringChanges = this.ignoringChanges;
-  this.ignoringChanges = true;
-  fn.call(this);
-  return this.ignoringChanges = oldIgnoringChanges;
-};
-
-ScribeUndoManager = (function() {
-  function ScribeUndoManager(editor, options) {
-    this.editor = editor;
-    this.options = options != null ? options : {};
-    this.lastRecorded = 0;
-    this.clear();
-    this.initListeners();
-  }
-
-  ScribeUndoManager.prototype.initListeners = function() {
-    this.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.UNDO, (function(_this) {
-      return function() {
-        _this.undo();
-        return false;
-      };
-    })(this));
-    this.editor.keyboard.addHotkey(ScribeKeyboard.hotkeys.REDO, (function(_this) {
-      return function() {
-        _this.redo();
-        return false;
-      };
-    })(this));
-    this.ignoringChanges = false;
-    return this.editor.on(this.editor.constructor.events.TEXT_CHANGE, (function(_this) {
-      return function(delta, origin) {
-        if (!(_this.ignoringChanges && origin === 'user')) {
-          _this.record(delta, _this.oldDelta);
-        }
-        return _this.oldDelta = _this.editor.getDelta();
-      };
-    })(this));
-  };
-
-  ScribeUndoManager.prototype.clear = function() {
-    this.stack = {
-      undo: [],
-      redo: []
-    };
-    return this.oldDelta = this.editor.getDelta();
-  };
-
-  ScribeUndoManager.prototype.record = function(changeDelta, oldDelta) {
-    var change, ignored, timestamp, undoDelta;
-    if (changeDelta.isIdentity()) {
-      return;
-    }
-    this.stack.redo = [];
-    try {
-      undoDelta = oldDelta.invert(changeDelta);
-      timestamp = new Date().getTime();
-      if (this.lastRecorded + this.options.undoDelay > timestamp && this.stack.undo.length > 0) {
-        change = this.stack.undo.pop();
-        if (undoDelta.canCompose(change.undo) && change.redo.canCompose(changeDelta)) {
-          undoDelta = undoDelta.compose(change.undo);
-          changeDelta = change.redo.compose(changeDelta);
-        } else {
-          if (typeof console !== "undefined" && console !== null) {
-            console.warn("Unable to compose change, clearing undo stack");
-          }
-          this.clear();
-          this.lastRecorded = timestamp;
-        }
-      } else {
-        this.lastRecorded = timestamp;
-      }
-      this.stack.undo.push({
-        redo: changeDelta,
-        undo: undoDelta
-      });
-      if (this.stack.undo.length > this.options.undoMaxStack) {
-        this.stack.undo.unshift();
-      }
-      return true;
-    } catch (_error) {
-      ignored = _error;
-      this.clear();
-      return false;
-    }
-  };
-
-  ScribeUndoManager.prototype.redo = function() {
-    return _change.call(this, 'redo', 'undo');
-  };
+module.exports = SnowTheme;
 
 
-  /*
-  transformExternal: (delta) ->
-    return if delta.isIdentity()
-    @stack['undo'] = _.map(@stack['undo'], (change) ->
-      return {
-        redo: delta.transform(change.redo, true)
-        undo: change.undo.transform(delta, true)
-      }
-    )
-   */
-
-  ScribeUndoManager.prototype.undo = function() {
-    return _change.call(this, 'undo', 'redo');
-  };
-
-  return ScribeUndoManager;
-
-})();
-
-module.exports = ScribeUndoManager;
-
-
-},{"./keyboard":31,"./range":43,"lodash":"4HJaAd","tandem-core":"38mxji"}],52:[function(_dereq_,module,exports){
-var ScribeDOM, ScribeUtils, ieVersion, _,
+},{"../../dom":25,"../color-picker":45,"../default":46,"../picker":47,"lodash":"4HJaAd"}],49:[function(_dereq_,module,exports){
+var DOM, Utils, ieVersion, _,
   __slice = [].slice;
 
 _ = _dereq_('lodash');
 
-ScribeDOM = _dereq_('./dom');
+DOM = _dereq_('./dom');
 
 ieVersion = (function() {
   var matchVersion;
@@ -21450,7 +19953,7 @@ ieVersion = (function() {
   }
 })();
 
-ScribeUtils = {
+Utils = {
   BLOCK_TAGS: ['ADDRESS', 'BLOCKQUOTE', 'DD', 'DIV', 'DL', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'OL', 'P', 'PRE', 'TABLE', 'TBODY', 'TD', 'TFOOT', 'TH', 'THEAD', 'TR', 'UL'],
   findAncestor: function(node, checkFn) {
     while ((node != null) && !checkFn(node)) {
@@ -21492,17 +19995,17 @@ ScribeUtils = {
   findDeepestNode: function(node, offset) {
     var child, length, _i, _len, _ref;
     if (node.firstChild != null) {
-      _ref = _.clone(node.childNodes);
+      _ref = DOM.getChildNodes(node);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
-        length = ScribeUtils.getNodeLength(child);
+        length = Utils.getNodeLength(child);
         if (offset < length) {
-          return ScribeUtils.findDeepestNode(child, offset);
+          return Utils.findDeepestNode(child, offset);
         } else {
           offset -= length;
         }
       }
-      return ScribeUtils.findDeepestNode(child, offset + length);
+      return Utils.findDeepestNode(child, offset + length);
     } else {
       return [node, offset];
     }
@@ -21510,18 +20013,18 @@ ScribeUtils = {
   getChildAtOffset: function(node, offset) {
     var child, length;
     child = node.firstChild;
-    length = ScribeUtils.getNodeLength(child);
+    length = Utils.getNodeLength(child);
     while (child != null) {
       if (offset < length) {
         break;
       }
       offset -= length;
       child = child.nextSibling;
-      length = ScribeUtils.getNodeLength(child);
+      length = Utils.getNodeLength(child);
     }
     if (child == null) {
       child = node.lastChild;
-      offset = ScribeUtils.getNodeLength(child);
+      offset = Utils.getNodeLength(child);
     }
     return [child, offset];
   },
@@ -21529,18 +20032,18 @@ ScribeUtils = {
     if (node == null) {
       return 0;
     }
-    if (node.nodeType === ScribeDOM.ELEMENT_NODE) {
-      return _.reduce(node.childNodes, function(length, child) {
-        return length + ScribeUtils.getNodeLength(child);
-      }, ScribeUtils.isLineNode(node) ? 1 : 0);
-    } else if (node.nodeType === ScribeDOM.TEXT_NODE) {
-      return ScribeDOM.getText(node).length;
+    if (node.nodeType === DOM.ELEMENT_NODE) {
+      return _.reduce(DOM.getChildNodes(node), function(length, child) {
+        return length + Utils.getNodeLength(child);
+      }, Utils.isLineNode(node) ? 1 : 0);
+    } else if (node.nodeType === DOM.TEXT_NODE) {
+      return DOM.getText(node).length;
     } else {
       return 0;
     }
   },
   isBlock: function(node) {
-    return _.indexOf(ScribeUtils.BLOCK_TAGS, node.tagName, true) > -1;
+    return _.indexOf(Utils.BLOCK_TAGS, node.tagName, true) > -1;
   },
   isEmptyDoc: function(root) {
     var firstLine;
@@ -21563,16 +20066,13 @@ ScribeUtils = {
     return (ieVersion != null) && maxVersion >= ieVersion;
   },
   isLineNode: function(node) {
-    return ((node != null ? node.parentNode : void 0) != null) && ScribeDOM.hasClass(node.parentNode, 'editor-container') && ScribeUtils.isBlock(node);
+    return ((node != null ? node.parentNode : void 0) != null) && DOM.hasClass(node.parentNode, 'editor-container') && Utils.isBlock(node);
   },
-  removeFormatFromSubtree: function(subtree, format) {
-    if (format.matchContainer(subtree)) {
-      subtree = ScribeDOM.unwrap(subtree);
-    }
-    _.each(subtree.childNodes, function(child) {
-      return ScribeUtils.removeFormatFromSubtree(child, format);
-    });
-    return subtree;
+  partitionChildren: function(node, offset, length) {
+    var endNode, nextNode, prevNode, startNode, _ref, _ref1;
+    _ref = Utils.splitChild(node, offset), prevNode = _ref[0], startNode = _ref[1];
+    _ref1 = Utils.splitChild(node, offset + length), endNode = _ref1[0], nextNode = _ref1[1];
+    return [startNode, endNode];
   },
   splitBefore: function(node, root) {
     var parentClone, parentNode;
@@ -21585,14 +20085,19 @@ ScribeUtils = {
     while (node.previousSibling != null) {
       parentClone.insertBefore(node.previousSibling, parentClone.firstChild);
     }
-    return ScribeUtils.splitBefore(parentNode, root);
+    return Utils.splitBefore(parentNode, root);
+  },
+  splitChild: function(parent, offset) {
+    var node, _ref;
+    _ref = Utils.getChildAtOffset(parent, offset), node = _ref[0], offset = _ref[1];
+    return Utils.splitNode(node, offset);
   },
   splitNode: function(node, offset, force) {
     var after, child, childLeft, childRight, left, nextRight, nodeLength, right, _ref, _ref1;
     if (force == null) {
       force = false;
     }
-    nodeLength = ScribeUtils.getNodeLength(node);
+    nodeLength = Utils.getNodeLength(node);
     offset = Math.max(0, offset);
     offset = Math.min(offset, nodeLength);
     if (!(force || offset !== 0)) {
@@ -21601,15 +20106,15 @@ ScribeUtils = {
     if (!(force || offset !== nodeLength)) {
       return [node, node.nextSibling, false];
     }
-    if (node.nodeType === ScribeDOM.TEXT_NODE) {
+    if (node.nodeType === DOM.TEXT_NODE) {
       after = node.splitText(offset);
       return [node, after, true];
     } else {
       left = node;
       right = node.cloneNode(false);
       node.parentNode.insertBefore(right, left.nextSibling);
-      _ref = ScribeUtils.getChildAtOffset(node, offset), child = _ref[0], offset = _ref[1];
-      _ref1 = ScribeUtils.splitNode(child, offset), childLeft = _ref1[0], childRight = _ref1[1];
+      _ref = Utils.getChildAtOffset(node, offset), child = _ref[0], offset = _ref[1];
+      _ref1 = Utils.splitNode(child, offset), childLeft = _ref1[0], childRight = _ref1[1];
       while (childRight !== null) {
         nextRight = childRight.nextSibling;
         right.appendChild(childRight);
@@ -21629,7 +20134,7 @@ ScribeUtils = {
     cur = root.firstChild;
     _results = [];
     while (cur != null) {
-      ScribeUtils.traversePostorder.call(context, cur, fn);
+      Utils.traversePostorder.call(context, cur, fn);
       cur = fn.call(context, cur);
       if (cur != null) {
         _results.push(cur = cur.nextSibling);
@@ -21651,10 +20156,10 @@ ScribeUtils = {
     cur = root.firstChild;
     _results = [];
     while (cur != null) {
-      nextOffset = offset + ScribeUtils.getNodeLength(cur);
+      nextOffset = offset + Utils.getNodeLength(cur);
       curHtml = cur.innerHTML;
       cur = fn.call.apply(fn, [context, cur, offset].concat(__slice.call(args)));
-      (_ref = ScribeUtils.traversePreorder).call.apply(_ref, [null, cur, offset, fn, context].concat(__slice.call(args)));
+      (_ref = Utils.traversePreorder).call.apply(_ref, [null, cur, offset, fn, context].concat(__slice.call(args)));
       if ((cur != null) && cur.innerHTML === curHtml) {
         cur = cur.nextSibling;
         _results.push(offset = nextOffset);
@@ -21663,25 +20168,12 @@ ScribeUtils = {
       }
     }
     return _results;
-  },
-  traverseSiblings: function(curNode, endNode, fn) {
-    var nextSibling, _results;
-    _results = [];
-    while (curNode != null) {
-      nextSibling = curNode.nextSibling;
-      fn(curNode);
-      if (curNode === endNode) {
-        break;
-      }
-      _results.push(curNode = nextSibling);
-    }
-    return _results;
   }
 };
 
-module.exports = ScribeUtils;
+module.exports = Utils;
 
 
-},{"./dom":27,"lodash":"4HJaAd"}]},{},[1])
+},{"./dom":25,"lodash":"4HJaAd"}]},{},[1])
 (1)
 });
