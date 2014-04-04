@@ -17,7 +17,8 @@ remoteBrowserGroups =
 
 remoteConfigs =
   browserDisconnectTimeout: 10000
-  browserNoActivityTimeout: 20000
+  browserDisconnectTolerance: 2
+  browserNoActivityTimeout: 30000
   reporters: remoteReporters
 
 remoteKarma = _.reduce(remoteBrowserGroups, (memo, browsers, group) ->
