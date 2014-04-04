@@ -67,7 +67,7 @@ module.exports = (config) ->
     sauceLabs:
       testName: 'Quill'
       username: 'quill'
-      accessKey: 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
+      accessKey: 'adc0c0cf-221b-46f1-81b9-a4429b722c2e'
       build: os.hostname() + '-' + _.random(16*16*16*16).toString(16)
       options:
         'public': 'public'
@@ -80,4 +80,4 @@ module.exports = (config) ->
     config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID
     if process.env.TRAVIS_BRANCH == 'master'
       config.sauceLabs.username = 'quill-master'
-      config.sauceLabs.username = '2da1aa8f-4d9b-4691-90d4-76c9f5ee7caf'
+      config.sauceLabs.username = '685c8996-7b70-4543-8167-58f8e88a8484'
