@@ -1,16 +1,16 @@
-ScribeEditorTest = require('../lib/editor-test')
+QuillEditorTest = require('../lib/editor-test')
 
 
 describe('Selection', ->
   findIndexes = (html) ->
     $('#test-container').html(html)
-    doc = new Scribe.Document($('#test-container').get(0))
+    doc = new Quill.Document($('#test-container').get(0))
     lines = doc.lines.toArray()
     lineIndex = 0
     ret = _.reduce(lines, (indexes, line) ->
       offset = 0
-      while Scribe.DOM.getText(line.node).indexOf("|", offset) > -1
-        index = Scribe.DOM.getText(line.node).indexOf("|", offset)
+      while Quill.DOM.getText(line.node).indexOf("|", offset) > -1
+        index = Quill.DOM.getText(line.node).indexOf("|", offset)
         indexes.push(lineIndex + index - indexes.length)
         offset = index + 1
       lineIndex += line.length + 1
@@ -240,7 +240,7 @@ describe('Selection', ->
 
     _.each(tests, (testGroup, groupName) ->
       describe(groupName, ->
-        selectionTests = new ScribeEditorTest(
+        selectionTests = new QuillEditorTest(
           checker: checker
           ignoreExpect: true
           pre: pre
@@ -251,7 +251,7 @@ describe('Selection', ->
             expected: test.expected
             fn: (testEditor, expectedEditor, testStart, testEnd, expectedStart, expectedEnd) ->
               testEditor.focus()
-              testEditor.setSelection(new Scribe.Range(testEditor.editor.doc, testStart, testEnd))
+              testEditor.setSelection(new Quill.Range(testEditor.editor.doc, testStart, testEnd))
               test.fn.call(null, testEditor)
           )
         )

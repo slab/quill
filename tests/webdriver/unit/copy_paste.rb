@@ -1,13 +1,13 @@
-require_relative '../lib/scribe_driver'
+require_relative '../lib/quill_driver'
 
 describe "Test Copy Paste" do
-  include ScribeDriver
+  include QuillDriver
   before do
     setup_test_suite
     start_delta = { "startLength" => 0,
                     "endLength" => 1,
                     "ops" => [{ "value" => "\n", "attributes" => {}}]}
-    reset_scribe start_delta
+    reset_quill start_delta
   end
 
   after do

@@ -24,16 +24,16 @@ class Toolbar
     BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent']
     SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
 
-  constructor: (@scribe, @editorContainer, @options) ->
+  constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     _initFormats.call(this)
-    @scribe.on(@scribe.constructor.events.POST_EVENT, (eventName) =>
-      return unless eventName == @scribe.constructor.events.TEXT_CHANGE or eventName == @scribe.constructor.events.SELECTION_CHANGE
+    @quill.on(@quill.constructor.events.POST_EVENT, (eventName) =>
+      return unless eventName == @quill.constructor.events.TEXT_CHANGE or eventName == @quill.constructor.events.SELECTION_CHANGE
       this.updateActive()
     )
     _.defer(_.bind(DOM.addClass, this, @container, 'sc-toolbar-container'))
-    @scribe.onModuleLoad('keyboard', (keyboard) =>
+    @quill.onModuleLoad('keyboard', (keyboard) =>
       _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
         keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
           activeFormats = {}
@@ -47,20 +47,20 @@ class Toolbar
   initFormat: (format, group) ->
     input = _findInput.call(this, format)
     return unless input?
-    if format == 'link' then return @scribe.addModule('link-tooltip', { button: input })
+    if format == 'link' then return @quill.addModule('link-tooltip', { button: input })
     eventName = if group == 'SELECT' then 'change' else 'click'
     DOM.addEventListener(input, eventName, =>
       return if @triggering
       value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
-      range = @scribe.getSelection()
+      range = @quill.getSelection()
       if range?
         if Utils.isIE(8)
           @editorContainer.focus()
-          @scribe.setSelection(range)
+          @quill.setSelection(range)
         if range.isCollapsed()
-          @scribe.setFormat(format, value)
+          @quill.setFormat(format, value)
         else
-          @scribe.formatText(range, format, value, { source: 'user' })
+          @quill.formatText(range, format, value, { source: 'user' })
       activeFormats = {}
       activeFormats[format] = value
       this.updateActive(activeFormats)
@@ -68,13 +68,13 @@ class Toolbar
     )
     DOM.addEventListener(input, 'mousedown', =>
       # Save selection before click is registered
-      @scribe.editor.checkUpdate()
+      @quill.editor.checkUpdate()
       return true
     )
 
   updateActive: (activeFormats = {}) ->
     @triggering = true
-    range = @scribe.getSelection()
+    range = @quill.getSelection()
     _.each(@container.querySelectorAll('select'), _.bind(DOM.resetSelect))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
       DOM.removeClass(button, 'sc-active')

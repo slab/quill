@@ -20,8 +20,8 @@ describe('Cursor', ->
         '<div>' +
           '<span style="font-size:18px;">Large</span>' +
         '</div>'
-      $('#test-container').html(Scribe.Normalizer.normalizeHtml(initial))
-      editor = new Scribe('#test-container')
+      $('#test-container').html(Quill.Normalizer.normalizeHtml(initial))
+      editor = new Quill('#test-container')
       cursorManager = editor.addModule('multi-cursor')
       _.defer(done)
     )
@@ -29,12 +29,12 @@ describe('Cursor', ->
     it('should set cursor', ->
       cursorManager.setCursor('id', 0, 'Test', 'red')
       cursor = cursorManager.container.querySelector('.cursor')
-      expect(Scribe.DOM.hasClass(cursor, 'top')).to.be(true)
-      expect(Scribe.DOM.hasClass(cursor, 'left')).to.be(true)
+      expect(Quill.DOM.hasClass(cursor, 'top')).to.be(true)
+      expect(Quill.DOM.hasClass(cursor, 'left')).to.be(true)
       inner = cursor.querySelector('.cursor-caret')
       expect(inner.style.backgroundColor).to.equal('red')
       name = cursor.querySelector('.cursor-name')
-      expect(Scribe.DOM.getText(name)).to.equal('Test')
+      expect(Quill.DOM.getText(name)).to.equal('Test')
     )
 
     it('should set at middle of leaf', ->

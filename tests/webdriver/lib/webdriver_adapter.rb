@@ -6,7 +6,7 @@ class WebdriverAdapter
     @cursor_pos = 0
     @driver = driver
     @editor = editor
-    @doc_length = 1 # Initial val of 1 due to Scribe's "phantom" newline
+    @doc_length = 1 # Initial val of 1 due to Quill's "phantom" newline
   end
 
   # Assumes delta will contain only one document modifying op

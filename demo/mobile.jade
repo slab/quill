@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Scribe Mobile Editor Demo
+    title Quill Mobile Editor Demo
     link(rel='stylesheet', type='text/css', href='styles/mobile.css')
     meta(charset='utf-8')
     meta(name='apple-mobile-web-app-capable', content='yes')
@@ -16,9 +16,9 @@ html
         span.sc-format-button.sc-strike(title='Strikethrough')
       #editor-container.editor-container
 
-    script(type='text/javascript', src='../scribe.js')
+    script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').
-      var editor = new Scribe('#editor-container', {
+      var editor = new Quill('#editor-container', {
         logLevel: 'info',
         modules: {
           toolbar: { container: '#formatting-container' }

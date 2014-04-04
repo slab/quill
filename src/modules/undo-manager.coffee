@@ -28,9 +28,9 @@ _change = (source, dest) ->
     change = @stack[source].pop()
     @lastRecorded = 0
     _ignoreChanges.call(this, =>
-      @scribe.updateContents(change[source], { source: 'user' })
+      @quill.updateContents(change[source], { source: 'user' })
       index = getLastChangeIndex(change[source])
-      @scribe.setSelection(index, index)
+      @quill.setSelection(index, index)
     )
     @stack[dest].push(change)
 
@@ -46,13 +46,13 @@ class UndoManager
     delay: 1000
     maxStack: 100
 
-  constructor: (@scribe, @editorContainer, @options = {}) ->
+  constructor: (@quill, @editorContainer, @options = {}) ->
     @lastRecorded = 0
     this.clear()
     this.initListeners()
 
   initListeners: ->
-    @scribe.onModuleLoad('keyboard', (keyboard) =>
+    @quill.onModuleLoad('keyboard', (keyboard) =>
       keyboard.addHotkey(keyboard.constructor.hotkeys.UNDO, =>
         this.undo()
         return false
@@ -63,16 +63,16 @@ class UndoManager
       )
     )
     @ignoringChanges = false
-    @scribe.on(@scribe.constructor.events.TEXT_CHANGE, (delta, origin) =>
+    @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, origin) =>
       this.record(delta, @oldDelta) unless @ignoringChanges and origin == 'user'
-      @oldDelta = @scribe.getContents()
+      @oldDelta = @quill.getContents()
     )
 
   clear: ->
     @stack =
       undo: []
       redo: []
-    @oldDelta = @scribe.getContents()
+    @oldDelta = @quill.getContents()
 
   record: (changeDelta, oldDelta) ->
     return if changeDelta.isIdentity()

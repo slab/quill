@@ -14,11 +14,11 @@ module.exports = (grunt) ->
         'rangy-core':
           path: 'node_modules/rangy-browser/lib/rangy-core.js'
           exports: 'rangy'
-      standalone: 'Scribe'
-    scribe:
-      files: [{ 'build/scribe.js': ['index.coffee'] }]
+      standalone: 'Quill'
+    quill:
+      files: [{ 'build/quill.js': ['index.coffee'] }]
     exposed:
-      files: [{ 'build/scribe.exposed.js': ['tests/scribe.coffee'] }]
+      files: [{ 'build/quill.exposed.js': ['tests/quill.coffee'] }]
     tests:
       options:
         alias: [
@@ -56,14 +56,14 @@ module.exports = (grunt) ->
     options:
       banner:
         '/*! Stypi Editor - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        ' *  https://stypi.github.io/scribe/\n' +
+        ' *  https://quilljs.com/\n' +
         ' *  Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
         ' *  Jason Chen, Salesforce.com\n' +
         ' */\n\n'
-    scribe:
+    quill:
       files: [{
-        'build/scribe.js': ['build/scribe.js']
-        'build/scribe.min.js': ['build/scribe.min.js']
+        'build/quill.js': ['build/quill.js']
+        'build/quill.min.js': ['build/quill.min.js']
       }]
   )
 
@@ -99,7 +99,7 @@ module.exports = (grunt) ->
         flatten: true
         src: 'src/themes/**/*.styl'
         rename: (dest, src) ->
-          return "build/themes/scribe.#{src}"
+          return "build/themes/quill.#{src}"
       }]
     all:
       expand: true
@@ -109,7 +109,7 @@ module.exports = (grunt) ->
   )
 
   grunt.config('uglify',
-    scribe:
-      files: { 'build/scribe.min.js': ['build/scribe.js'] }
+    quill:
+      files: { 'build/quill.min.js': ['build/quill.js'] }
   )
 

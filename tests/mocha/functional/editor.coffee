@@ -1,10 +1,10 @@
 Tandem = require('tandem-core')
-ScribeEditorTest = require('../lib/editor-test')
+QuillEditorTest = require('../lib/editor-test')
 
 
 describe('Editor', ->
   describe('updateContents', ->
-    applyTests = new ScribeEditorTest(
+    applyTests = new QuillEditorTest(
       fn: (testEditor, expectedEditor, ops) ->
         delta = new Tandem.Delta(testEditor.getLength(), ops)
         testEditor.updateContents(delta)
@@ -68,7 +68,7 @@ describe('Editor', ->
 
 
   describe('insertText', ->
-    insertTests = new ScribeEditorTest(
+    insertTests = new QuillEditorTest(
       initial: ['<div><span>Test</span></div>']
       fn: (testEditor, expectedEditor, delta) ->
         testEditor.updateContents(delta)
@@ -117,7 +117,7 @@ describe('Editor', ->
 
 
   describe('setContents', ->
-    deltaTest = new ScribeEditorTest(
+    deltaTest = new QuillEditorTest(
       expected: '<div><span>Test</span></div>'
       fn: (editor) ->
         editor.setContents(new Tandem.Delta(0, [new Tandem.InsertOp('Test')]))

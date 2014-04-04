@@ -1,1 +1,1 @@
-module.exports = require('./src/scribe')
+module.exports = require('./src/quill')

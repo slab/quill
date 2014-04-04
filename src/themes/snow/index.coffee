@@ -24,21 +24,21 @@ class SnowTheme extends DefaultTheme
         </span>
         <span class="cursor-caret"></span>'
 
-  constructor: (@scribe, options) ->
+  constructor: (@quill, options) ->
     super
     @pickers = []
-    @scribe.on(@scribe.constructor.events.SELECTION_CHANGE, =>
+    @quill.on(@quill.constructor.events.SELECTION_CHANGE, =>
       _.each(@pickers, (picker) ->
         picker.close()
       )
     )
     DOM.addClass(@editorContainer.parentNode, 'snow')
-    @scribe.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this))
-    @scribe.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
-    @scribe.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
+    @quill.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this))
+    @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
+    @quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
 
   extendLinkTooltip: (module) ->
-    @scribe.addStyles(
+    @quill.addStyles(
       '.snow a':
         'color': '#06c'
       '.snow .link-tooltip-container':
@@ -54,7 +54,7 @@ class SnowTheme extends DefaultTheme
     )
 
   extendMultiCursor: (module) ->
-    @scribe.addStyles(
+    @quill.addStyles(
       '.snow .cursor-name':
         'border-radius': '4px'
         'font-size': '11px'

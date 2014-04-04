@@ -10,13 +10,13 @@ class Authorship
     color: 'blue'
     enabled: false
 
-  constructor: (@scribe, @editorContainer, @options) ->
+  constructor: (@quill, @editorContainer, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
-    @scribe.editor.doc.formatManager.addFormat('author', new Format.Class(@editorContainer, 'author'))
+    @quill.editor.doc.formatManager.addFormat('author', new Format.Class(@editorContainer, 'author'))
     return unless @options.authorId?
-    @scribe.on(@scribe.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
-      if eventName == @scribe.constructor.events.TEXT_CHANGE and origin == 'user'
+    @quill.on(@quill.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
+      if eventName == @quill.constructor.events.TEXT_CHANGE and origin == 'user'
         # Add authorship to insert/format
         _.each(delta.ops, (op) =>
           if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
@@ -35,14 +35,14 @@ class Authorship
         , (index, length, name, value) =>
           authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))
         )
-        @scribe.updateContents(authorDelta, { silent: true })
+        @quill.updateContents(authorDelta, { silent: true })
     )
     this.addAuthor(@options.authorId, @options.color)
 
   addAuthor: (id, color) ->
     styles = {}
     styles[".authorship .author-#{id}"] = { "background-color": "#{color}" }
-    @scribe.addStyles(styles)
+    @quill.addStyles(styles)
 
   attachButton: (button) ->
     DOM.addEventListener(button, 'click', =>

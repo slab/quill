@@ -21,7 +21,7 @@ describe('Normalizer', ->
         it(name, ->
           html = html.replace(/\s+/g, '')
           container = $('#test-container').html(html).get(0)
-          Scribe.Normalizer.breakLine(container.firstChild, container)
+          Quill.Normalizer.breakLine(container.firstChild, container)
           expect.equalHtml(container, expectedHtml)
         )
       )
@@ -56,7 +56,7 @@ describe('Normalizer', ->
       _.each(tests, (test, name) ->
         it(name, ->
           container = $('#test-container').html(test.initial.join('')).get(0)
-          Scribe.Normalizer.normalizeBreak(container, container.querySelector('br'))
+          Quill.Normalizer.normalizeBreak(container, container.querySelector('br'))
           expect.equalHtml(container, test.expected)
         )
       )
@@ -89,7 +89,7 @@ describe('Normalizer', ->
       _.each(tests, (test, name) ->
         it(name, ->
           container = $('#test-container').html(test.initial.join('')).get(0)
-          Scribe.Normalizer.groupBlocks(container)
+          Quill.Normalizer.groupBlocks(container)
           expect.equalHtml(container, test.expected)
         )
       )
@@ -99,10 +99,10 @@ describe('Normalizer', ->
   describe('methods', ->
     beforeEach( ->
       @container = $('#test-container').get(0)
-      formatManager = new Scribe.FormatManager(@container,
-        formats: Scribe.DEFAULTS.formats
+      formatManager = new Quill.FormatManager(@container,
+        formats: Quill.DEFAULTS.formats
       )
-      @normalizer = new Scribe.Normalizer(@container, formatManager)
+      @normalizer = new Quill.Normalizer(@container, formatManager)
     )
 
     describe('normalizeLine', ->
@@ -251,7 +251,7 @@ describe('Normalizer', ->
       _.each(tests, (test, name) ->
         it(name, ->
           html = if _.isArray(test.initial) then test.initial.join('') else test.initial
-          @container.innerHTML = Scribe.Normalizer.normalizeHtml(html)
+          @container.innerHTML = Quill.Normalizer.normalizeHtml(html)
           @normalizer.normalizeDoc()
           expected = (test.expected or html)
           expect.equalHtml(@container, expected)

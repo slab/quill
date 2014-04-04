@@ -1,9 +1,9 @@
-ScribeEditorTest = require('../lib/editor-test')
+QuillEditorTest = require('../lib/editor-test')
 
 
 describe('Range', ->
   describe('Position', ->
-    positionTests = new ScribeEditorTest(
+    positionTests = new QuillEditorTest(
       initial: [
         '<div><b>12</b><i>34</i></div>'
         '<div><s>56</s><u>78</u></div>'
@@ -28,8 +28,8 @@ describe('Range', ->
           { text: '', offset: 0 }
         ]
         _.each(expectedResults, (result, i) ->
-          position = new Scribe.Position(editor.editor.doc, i)
-          expect(Scribe.DOM.getText(position.leafNode)).to.equal(result.text)
+          position = new Quill.Position(editor.editor.doc, i)
+          expect(Quill.DOM.getText(position.leafNode)).to.equal(result.text)
           expect(position.offset).to.equal(result.offset)
         )
     )
@@ -38,7 +38,7 @@ describe('Range', ->
 
 
   describe('getText', ->
-    textTests = new ScribeEditorTest(
+    textTests = new QuillEditorTest(
       initial:
         '<div>
           <b>abc</b>
@@ -69,14 +69,14 @@ describe('Range', ->
     textTests.run('should identifiy single node',
       checker: (editor) ->
         _.each(text.split(''), (char, index) ->
-          range = new Scribe.Range(editor.editor.doc, index, index + 1)
+          range = new Quill.Range(editor.editor.doc, index, index + 1)
           expect(range.getText()).to.equal(char)
         )
     )
 
     textTests.run('should identifiy entire document',
       checker: (editor) ->
-        range = new Scribe.Range(editor.editor.doc, 0, text.length)
+        range = new Quill.Range(editor.editor.doc, 0, text.length)
         expect(range.getText()).to.equal(text)
     )
   )
@@ -84,7 +84,7 @@ describe('Range', ->
 
 
   describe('getFormats', ->
-    formatTests = new ScribeEditorTest(
+    formatTests = new QuillEditorTest(
       initial:
         '<div>
           <b>123</b>
@@ -110,9 +110,9 @@ describe('Range', ->
         </div>'
       expected: [0]
       checker: (testEditor, expectedEditor, start, end, text, formats) ->
-        range = new Scribe.Range(testEditor.editor.doc, start, end)
+        range = new Quill.Range(testEditor.editor.doc, start, end)
         expect(range.getText()).to.equal(text)
-        expect(range.getFormats()).to.eql(_.extend({}, Scribe.Leaf.DEFAULT_FORMATS, formats))
+        expect(range.getFormats()).to.eql(_.extend({}, Quill.Leaf.DEFAULT_FORMATS, formats))
     )
 
     formatTests.run('inside of node', {}, 1, 2, '2', { bold: true })
@@ -133,7 +133,7 @@ describe('Range', ->
 
 
   describe('getLeafNodes', ->
-    leafTests = new ScribeEditorTest(
+    leafTests = new QuillEditorTest(
       initial: [
         '<div><b>123</b><i>456</i></div>'
         '<div><s>7</s><u>8</u><s>9</s><u>0</u></div>'
@@ -143,7 +143,7 @@ describe('Range', ->
 
     leafTests.run('should select a single node at boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor.editor.doc, 0, 3)
+        range = new Quill.Range(editor.editor.doc, 0, 3)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(1)
         expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
@@ -151,7 +151,7 @@ describe('Range', ->
 
     leafTests.run('should select multiple nodes at boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor.editor.doc, 0, 6)
+        range = new Quill.Range(editor.editor.doc, 0, 6)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
@@ -161,7 +161,7 @@ describe('Range', ->
     leafTests.run('should select a single node inside boundaries',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor.editor.doc, i, i+1)
+          range = new Quill.Range(editor.editor.doc, i, i+1)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(1)
           expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
@@ -170,7 +170,7 @@ describe('Range', ->
     leafTests.run('should select multipe nodes inside boundaries',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor.editor.doc, i, i+4)
+          range = new Quill.Range(editor.editor.doc, i, i+4)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(2)
           expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
@@ -179,7 +179,7 @@ describe('Range', ->
 
     leafTests.run('should select multiple nodes across lines within boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor.editor.doc, 0, 6)
+        range = new Quill.Range(editor.editor.doc, 0, 6)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
@@ -188,7 +188,7 @@ describe('Range', ->
 
     leafTests.run('should select multiple nodes across lines outside boundaries',
       checker: (editor) ->
-        range = new Scribe.Range(editor.editor.doc, 5, 8)
+        range = new Quill.Range(editor.editor.doc, 5, 8)
         nodes = range.getLeafNodes()
         expect(nodes.length).to.equal(2)
         expect(nodes[0]).to.equal(editor.editor.root.firstChild.lastChild)
@@ -198,7 +198,7 @@ describe('Range', ->
     leafTests.run('should select node collapsed',
       checker: (editor) ->
         for i in [0..2]
-          range = new Scribe.Range(editor.editor.doc, i, i)
+          range = new Quill.Range(editor.editor.doc, i, i)
           nodes = range.getLeafNodes()
           expect(nodes.length).to.equal(1)
           expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)

@@ -8,7 +8,7 @@ _initDeletes = ->
   _.each([Keyboard.keys.DELETE, Keyboard.keys.BACKSPACE], (key) =>
     this.addHotkey(key, =>
       # Prevent deleting if editor is already blank (browser quirk fix)
-      return @scribe.getLength() > 1
+      return @quill.getLength() > 1
     )
   )
 
@@ -35,8 +35,8 @@ _initListeners = ->
       _.each(@hotkeys[event.which], (hotkey) =>
         return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
         return if hotkey.shift? and event.shiftKey != hotkey.shift
-        @scribe.updateSelection({ silent: true })
-        selection = @scribe.getSelection()
+        @quill.updateSelection({ silent: true })
+        selection = @quill.getSelection()
         return unless selection?
         prevent = hotkey.callback.call(null, selection) == false or prevent
       )
@@ -54,22 +54,22 @@ _onTab = (range, shift = false) ->
     offsetChange = 0
     _.each(lines, (line) =>
       if !shift
-        @scribe.insertText(index, '\t', {}, { source: 'user' })
+        @quill.insertText(index, '\t', {}, { source: 'user' })
         offsetChange += 1
       else if line.leaves.first.text[0] == '\t'
-        @scribe.deleteText(index, 1, { source: 'user' })
+        @quill.deleteText(index, 1, { source: 'user' })
         offsetChange -= 1
       else if line == lines[0]
         start = range.start.index
       index += line.length
     )
     end = range.end.index + offsetChange
-    @scribe.setSelection(start, end)
+    @quill.setSelection(start, end)
   else
     index = @range.start.getIndex()
-    @scribe.deleteText(@range, { source: 'user' })
-    @scribe.insertText(index, "\t", {}, { source: 'user' })
-    @scribe.setSelection(index + 1, index + 1)
+    @quill.deleteText(@range, { source: 'user' })
+    @quill.insertText(index, "\t", {}, { source: 'user' })
+    @quill.setSelection(index + 1, index + 1)
 
 
 class Keyboard
@@ -95,7 +95,7 @@ class Keyboard
 
   @NAVIGATION: [@keys.UP, @keys.DOWN, @keys.LEFT, @keys.RIGHT]
 
-  constructor: (@scribe, @editorContainer, options) ->
+  constructor: (@quill, @editorContainer, options) ->
     @hotkeys = {}
     _initListeners.call(this)
     _initHotkeys.call(this)
@@ -118,7 +118,7 @@ class Keyboard
       else
         indent = false
       index = Position.getIndex(line.node, 0)
-      @scribe.formatText(index, 0, format, indent)
+      @quill.formatText(index, 0, format, indent)
 
     _.each(lines, (line) =>
       if line.formats.bullet?
@@ -132,7 +132,7 @@ class Keyboard
   toggleFormat: (range, format) ->
     formats = range.getFormats()
     value = !formats[format]
-    @scribe.formatText(range, format, value, { source: 'user' })
+    @quill.formatText(range, format, value, { source: 'user' })
 
 
 module.exports = Keyboard

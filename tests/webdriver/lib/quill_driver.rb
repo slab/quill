@@ -7,12 +7,12 @@ require 'minitest/pride'
 require_relative '../lib/minitest/focus'
 require_relative '../lib/webdriver_adapter'
 require_relative '../lib/minitest/focus'
-module ScribeDriver
+module QuillDriver
   module JS
     def self.execute_js(src, args = nil)
-      ScribeDriver.driver.switch_to.default_content
-      result = ScribeDriver.driver.execute_script(src, *args)
-      ScribeDriver.driver.switch_to.frame(ScribeDriver.driver.find_element(:tag_name, "iframe"))
+      QuillDriver.driver.switch_to.default_content
+      result = QuillDriver.driver.execute_script(src, *args)
+      QuillDriver.driver.switch_to.frame(QuillDriver.driver.find_element(:tag_name, "iframe"))
       return result
     end
 
@@ -21,11 +21,11 @@ module ScribeDriver
     end
 
     def self.get_as_str(ref)
-      return self.execute_js "return JSON.stringify(window.ScribeDriver['#{ref}'])"
+      return self.execute_js "return JSON.stringify(window.QuillDriver['#{ref}'])"
     end
 
     def self.get_expected_as_str
-      src = "return JSON.stringify(window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta));"
+      src = "return JSON.stringify(window.QuillDriver.docDelta.compose(window.QuillDriver.currentDelta));"
       return self.execute_js src
     end
 
@@ -33,27 +33,27 @@ module ScribeDriver
       return execute_js "return JSON.stringify(editor.getContents());"
     end
 
-    def self.set_scribe_delta(driver)
-      return execute_js "window.ScribeDriver.initializeScribe()"
+    def self.set_quill_delta(driver)
+      return execute_js "window.QuillDriver.initializeQuill()"
     end
 
     def self.editor_delta_equals(delta)
-      return self.execute_js "return window.ScribeDriver.createDelta(#{delta.to_json}).isEqual(window.editor.getContents())"
+      return self.execute_js "return window.QuillDriver.createDelta(#{delta.to_json}).isEqual(window.editor.getContents())"
     end
 
     def self.make_insert_delta(startLength, index, value, attributes)
-      return self.execute_js "return window.ScribeDriver.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
+      return self.execute_js "return window.QuillDriver.autoFormatDelta(window.Tandem.Delta.makeInsertDelta(#{startLength}, #{index}, '#{value}', #{attributes}));"
     end
 
-    def self.set_scribe_delta(delta)
-      self.execute_js "window.editor.setContents(window.ScribeDriver.createDelta(#{delta.to_json}));"
+    def self.set_quill_delta(delta)
+      self.execute_js "window.editor.setContents(window.QuillDriver.createDelta(#{delta.to_json}));"
     end
 
     def self.set_doc_delta(delta = nil)
       if not delta.nil?
-        self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.createDelta(#{delta.to_json});"
+        self.execute_js "window.QuillDriver.docDelta = window.QuillDriver.createDelta(#{delta.to_json});"
       else
-        self.execute_js "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getContents());"
+        self.execute_js "window.QuillDriver.docDelta = window.QuillDriver.cleanup(editor.getContents());"
       end
     end
 
@@ -62,11 +62,11 @@ module ScribeDriver
     end
 
     def self.check_consistency
-      return self.execute_js "return window.ScribeDriver.checkConsistency();"
+      return self.execute_js "return window.QuillDriver.checkConsistency();"
     end
 
     def self.set_current_delta(delta)
-      return self.execute_js "window.ScribeDriver.currentDelta = window.ScribeDriver.createDelta(#{delta.to_json})"
+      return self.execute_js "window.QuillDriver.currentDelta = window.QuillDriver.createDelta(#{delta.to_json})"
     end
   end
 
@@ -82,22 +82,22 @@ module ScribeDriver
     browser = ARGV[0].to_sym if ARGV.length >= 1
     editor_url = "file://#{File.join(File.expand_path(__FILE__),
       '../../../..', 'build/tests/webdriver/webdriver.html')}"
-    @driver = ScribeDriver.create_scribe_driver(browser, editor_url)
+    @driver = QuillDriver.create_quill_driver(browser, editor_url)
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
     @adapter.focus()
   end
 
-  def reset_scribe(delta)
-    ScribeDriver::JS.set_doc_delta delta
-    ScribeDriver::JS.set_scribe_delta delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
+  def reset_quill(delta)
+    QuillDriver::JS.set_doc_delta delta
+    QuillDriver::JS.set_quill_delta delta
+    @adapter.doc_length = QuillDriver::JS.get_doc_length
   end
 
   def apply_delta(delta, err_msg, toolbar_only = false)
-    ScribeDriver::JS.set_current_delta(delta)
+    QuillDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta, toolbar_only)
-    actual_delta, success = ScribeDriver::JS.check_consistency().values_at("actual_delta", "success")
+    actual_delta, success = QuillDriver::JS.check_consistency().values_at("actual_delta", "success")
     success.must_equal true, err_msg
   end
 
@@ -116,7 +116,7 @@ module ScribeDriver
     end
   end
 
-  def self.create_scribe_driver(browser, url)
+  def self.create_quill_driver(browser, url)
     if browser == :firefox
       profile = Selenium::WebDriver::Firefox::Profile.new
       profile.native_events = true

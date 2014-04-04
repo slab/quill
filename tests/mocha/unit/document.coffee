@@ -14,7 +14,7 @@ describe('Document', ->
         '<div><br></div>'
       ]
       $('#test-container').html(lines.join(''))
-      doc = new Scribe.Document($('#test-container').get(0))
+      doc = new Quill.Document($('#test-container').get(0))
       lines = doc.lines.toArray()
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
@@ -70,7 +70,7 @@ describe('Document', ->
     _.each(tests, (test, name) ->
       it(name, ->
         $container = $('#test-container').html(test.initial.join(''))
-        doc = new Scribe.Document($container.get(0), { formats: Scribe.DEFAULTS.formats })
+        doc = new Quill.Document($container.get(0), { formats: Quill.DEFAULTS.formats })
         delta = doc.toDelta()
         if !delta.isEqual(test.expected)
           console.error(doc, delta, test.expected)

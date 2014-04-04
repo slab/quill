@@ -39,7 +39,7 @@ buildParams = (params...) ->
   return params
 
 
-class Scribe extends EventEmitter2
+class Quill extends EventEmitter2
   @version: pkg.version
   @editors: []
 
@@ -68,16 +68,16 @@ class Scribe extends EventEmitter2
     TEXT_CHANGE      : 'text-change'
 
   constructor: (container, options = {}) ->
-    moduleOptions = _.defaults(options.modules or {}, Scribe.DEFAULTS.modules)
-    @options = _.defaults(options, Scribe.DEFAULTS)
+    moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
+    @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
-    @options.id = @id = "scribe-#{Scribe.editors.length + 1}"
+    @options.id = @id = "quill-#{Quill.editors.length + 1}"
     @options.emitter = this
     @modules = {}
     @editor = new Editor(container, this, @options)
-    Scribe.editors.push(@editor)
+    Quill.editors.push(@editor)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
-    @theme = new Scribe.Theme[themeClass](this, @options)
+    @theme = new Quill.Theme[themeClass](this, @options)
     _.each(@options.modules, (option, name) =>
       this.addModule(name, option)
     )
@@ -87,13 +87,13 @@ class Scribe extends EventEmitter2
 
   addModule: (name, options) ->
     className = _.str.capitalize(_.str.camelize(name))
-    moduleClass = Scribe.Module[className]
+    moduleClass = Quill.Module[className]
     unless moduleClass?
       throw new Error("Cannot load #{name} module. Are you sure you included it?")
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
     @modules[name] = new moduleClass(this, @editor.root, options)
-    this.emit(Scribe.events.MODULE_INIT, name, @modules[name])
+    this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
   addStyles: (styles) ->
@@ -106,9 +106,9 @@ class Scribe extends EventEmitter2
     @editor.applyDelta(delta, options)
 
   emit: (eventName, args...) ->
-    super(Scribe.events.PRE_EVENT, eventName, args...)
+    super(Quill.events.PRE_EVENT, eventName, args...)
     super(eventName, args...)
-    super(Scribe.events.POST_EVENT, eventName, args...)
+    super(Quill.events.POST_EVENT, eventName, args...)
 
   focus: ->
     @editor.root.focus()
@@ -148,7 +148,7 @@ class Scribe extends EventEmitter2
 
   onModuleLoad: (name, callback) ->
     if (@modules[name]) then return callback(@modules[name])
-    this.on(Scribe.events.MODULE_INIT, (moduleName, module) ->
+    this.on(Quill.events.MODULE_INIT, (moduleName, module) ->
       callback(module) if moduleName == name
     )
 
@@ -184,4 +184,4 @@ class Scribe extends EventEmitter2
     @editor.selection.update(options.silent)
 
 
-module.exports = Scribe
+module.exports = Quill

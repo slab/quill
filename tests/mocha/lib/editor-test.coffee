@@ -1,12 +1,12 @@
 Tandem = require('tandem-core')
-ScribeHtmlTest = require('./html-test')
+QuillHtmlTest = require('./html-test')
 
-class ScribeEditorTest extends ScribeHtmlTest
+class QuillEditorTest extends QuillHtmlTest
   @DEFAULTS:
     ignoreExpect  : false
 
   constructor: (options = {}) ->
-    @settings = _.defaults(options, ScribeEditorTest.DEFAULTS)
+    @settings = _.defaults(options, QuillEditorTest.DEFAULTS)
     super(@settings)
 
   run: (name, options, args...) ->
@@ -22,8 +22,8 @@ class ScribeEditorTest extends ScribeHtmlTest
     htmlOptions.initial = '' if Tandem.Delta.isDelta(htmlOptions.initial)
     htmlOptions.expected = '' if Tandem.Delta.isDelta(htmlOptions.expected)
     htmlOptions.fn = (testContainer, expectedContainer, args...) =>
-      testEditor = new Scribe(testContainer) #, { logLevel: 'debug' })
-      expectedEditor = new Scribe(expectedContainer) #, { logLevel: 'debug' })
+      testEditor = new Quill(testContainer) #, { logLevel: 'debug' })
+      expectedEditor = new Quill(expectedContainer) #, { logLevel: 'debug' })
       testEditor.setContents(@options.initial) if Tandem.Delta.isDelta(@options.initial)
       expectedEditor.setContents(@options.expected) if Tandem.Delta.isDelta(@options.expected)
       @options.fn.call(null, testEditor, expectedEditor, args...)
@@ -48,4 +48,4 @@ class ScribeEditorTest extends ScribeHtmlTest
         done()
     super(htmlOptions, args..., done)
 
-module.exports = ScribeEditorTest
+module.exports = QuillEditorTest

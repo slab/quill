@@ -1,14 +1,14 @@
-require_relative '../lib/scribe_driver'
+require_relative '../lib/quill_driver'
 
 describe "Test undo redo" do
-  include ScribeDriver
+  include QuillDriver
 
   # Amount of time to sleep between edits to prevent the undo manager coalescing edits
   COALESCE_WINDOW = 1
 
   before do
     setup_test_suite
-    ScribeDriver::JS.set_doc_delta(@driver)
+    QuillDriver::JS.set_doc_delta(@driver)
   end
 
   after do
@@ -27,9 +27,9 @@ describe "Test undo redo" do
       "endLength" => 4, "ops" => [{ "value" => "abc\n" }] }
     @adapter.type_text "abc"
     @adapter.undo
-    assert ScribeDriver::JS.editor_delta_equals(start_delta), "Failed undoing typing 'abc'."
+    assert QuillDriver::JS.editor_delta_equals(start_delta), "Failed undoing typing 'abc'."
     @adapter.redo
-    assert ScribeDriver::JS.editor_delta_equals(end_delta), "Failed redoing typing 'abc'."
+    assert QuillDriver::JS.editor_delta_equals(end_delta), "Failed redoing typing 'abc'."
   end
 
   it "should undo redo deletes" do
@@ -41,9 +41,9 @@ describe "Test undo redo" do
     without_coalescing Proc.new { @adapter.type_text text }
     @adapter.delete_at 0, text.length
     @adapter.undo
-    assert ScribeDriver::JS.editor_delta_equals(undone_doc), "Failed undoing deletion of entire doc."
+    assert QuillDriver::JS.editor_delta_equals(undone_doc), "Failed undoing deletion of entire doc."
     @adapter.redo
-    assert ScribeDriver::JS.editor_delta_equals(redone_doc), "Failed redoing deletion of entire doc."
+    assert QuillDriver::JS.editor_delta_equals(redone_doc), "Failed redoing deletion of entire doc."
   end
 
   it "should undo redo formatting" do
@@ -55,9 +55,9 @@ describe "Test undo redo" do
     without_coalescing Proc.new { @adapter.type_text text }
     @adapter.format_at 0, 3, {:bold => true}
     @adapter.undo
-    assert ScribeDriver::JS.editor_delta_equals(undone_doc), "Failed undoing bolding of text."
+    assert QuillDriver::JS.editor_delta_equals(undone_doc), "Failed undoing bolding of text."
     @adapter.redo
-    assert ScribeDriver::JS.editor_delta_equals(redone_doc), "Failed redoing bolding of text."
+    assert QuillDriver::JS.editor_delta_equals(redone_doc), "Failed redoing bolding of text."
   end
 
 
@@ -84,7 +84,7 @@ describe "Test undo redo" do
 
     expected_deltas.each do |expected|
       @adapter.undo
-      assert ScribeDriver::JS.editor_delta_equals(expected), "Failed undoing edit."
+      assert QuillDriver::JS.editor_delta_equals(expected), "Failed undoing edit."
     end
 
     expected_deltas = [{ "startLength" => 0,
@@ -102,7 +102,7 @@ describe "Test undo redo" do
 
     expected_deltas.each do |expected|
       @adapter.redo
-      assert ScribeDriver::JS.editor_delta_equals(expected), "Failed redoing edit."
+      assert QuillDriver::JS.editor_delta_equals(expected), "Failed redoing edit."
     end
   end
 
@@ -124,8 +124,8 @@ describe "Test undo redo" do
 
     @adapter.type_text new_text
     @adapter.undo
-    assert ScribeDriver::JS.editor_delta_equals(start_delta), "Failed undoing overwriting of 'abc' with 'zzz'."
+    assert QuillDriver::JS.editor_delta_equals(start_delta), "Failed undoing overwriting of 'abc' with 'zzz'."
     @adapter.redo
-    assert ScribeDriver::JS.editor_delta_equals(end_delta), "Failed redoing overwriting of 'abc' with 'zzz'."
+    assert QuillDriver::JS.editor_delta_equals(end_delta), "Failed redoing overwriting of 'abc' with 'zzz'."
   end
 end

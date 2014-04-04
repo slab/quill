@@ -4,7 +4,7 @@ buildString = (reference, arr) ->
   ).join('')
 
 
-class ScribeHtmlTest
+class QuillHtmlTest
   @DEFAULTS:
     checker       : ->
     fn            : ->
@@ -14,7 +14,7 @@ class ScribeHtmlTest
     pre           : -> []
 
   @cleanHtml: (html, keepIdClass = false) ->
-    html = Scribe.Normalizer.normalizeHtml(html)
+    html = Quill.Normalizer.normalizeHtml(html)
     unless keepIdClass == true
       html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
       html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
@@ -23,7 +23,7 @@ class ScribeHtmlTest
 
   constructor: (options = {}) ->
     throw new Error("Invalid options passed into constructor") unless _.isObject(options)
-    @settings = _.defaults(options, ScribeHtmlTest.DEFAULTS)
+    @settings = _.defaults(options, QuillHtmlTest.DEFAULTS)
 
   run: (name, options, args...) ->
     it(name, (done) =>
@@ -35,15 +35,15 @@ class ScribeHtmlTest
     options.initial = [options.initial] if _.isString(options.initial)
     options.expected = buildString(options.initial, if options.expected? then options.expected else @settings.expected)
     options.initial = options.initial.join('') if _.isArray(options.initial)
-    options.initial = ScribeHtmlTest.cleanHtml(options.initial, true)
-    options.expected = ScribeHtmlTest.cleanHtml(options.expected, true)
+    options.initial = QuillHtmlTest.cleanHtml(options.initial, true)
+    options.expected = QuillHtmlTest.cleanHtml(options.expected, true)
     testContainer = $('#test-container').html(options.initial).get(0)
     expectedContainer = $('#expected-container').html(options.expected).get(0)
     newArgs = options.pre.call(this, testContainer, expectedContainer)
     newArgs = [newArgs] unless _.isArray(newArgs)
     options.fn.call(null, testContainer, expectedContainer, newArgs..., args...)
-    testHtml = ScribeHtmlTest.cleanHtml(testContainer.innerHTML)
-    expectedHtml = ScribeHtmlTest.cleanHtml(expectedContainer.innerHTML)
+    testHtml = QuillHtmlTest.cleanHtml(testContainer.innerHTML)
+    expectedHtml = QuillHtmlTest.cleanHtml(expectedContainer.innerHTML)
     expect(testHtml).to.equal(expectedHtml) unless options.ignoreExpect
     options.checker.call(null, testContainer, expectedContainer, newArgs..., args..., ->
       done()
@@ -51,4 +51,4 @@ class ScribeHtmlTest
     done() if options.checker.length <= newArgs.length + args.length + 2
 
 
-module.exports = ScribeHtmlTest
+module.exports = QuillHtmlTest

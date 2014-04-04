@@ -1,8 +1,8 @@
 class DefaultTheme
   @OPTIONS: {}
 
-  constructor: (@scribe, options) ->
-    @editor = @scribe.editor
+  constructor: (@quill, options) ->
+    @editor = @quill.editor
     @editorContainer = @editor.root
 
 

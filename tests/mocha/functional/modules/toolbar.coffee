@@ -1,8 +1,8 @@
-ScribeEditorTest = require('../../lib/editor-test')
+QuillEditorTest = require('../../lib/editor-test')
 
 
 describe('Toolbar', ->
-  toolbarTests = new ScribeEditorTest(
+  toolbarTests = new QuillEditorTest(
     initial: '<div><span>one.com</span><b>Bold</b></div>'
   )
 
@@ -17,7 +17,7 @@ describe('Toolbar', ->
     fn: (editor) ->
       editor.addModule('toolbar', { container: '#format-container' })
       editor.focus()
-      editor.setSelection(new Scribe.Range(editor.editor.doc, 0, 7))
+      editor.setSelection(new Quill.Range(editor.editor.doc, 0, 7))
       $('#format-container .sc-bold').click()
   )
 
@@ -26,7 +26,7 @@ describe('Toolbar', ->
     fn: (editor) ->
       editor.addModule('toolbar', { container: '#format-container' })
       editor.focus()
-      editor.setSelection(new Scribe.Range(editor.editor.doc, 0, 7))
+      editor.setSelection(new Quill.Range(editor.editor.doc, 0, 7))
       $('#format-container .sc-link').click()
   )
 )

@@ -113,11 +113,11 @@ _update = ->
 
 
 class Editor
-  constructor: (@iframeContainer, @scribe, @options = {}) ->
+  constructor: (@iframeContainer, @quill, @options = {}) ->
     @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     this.init()
     setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
-    @scribe.on(@scribe.constructor.events.SELECTION_CHANGE, (range) =>
+    @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
     this.enable() unless @options.readOnly
@@ -132,12 +132,12 @@ class Editor
 
   init: ->
     @ignoreDomChanges = true
-    @renderer = new Renderer(@iframeContainer, @scribe, @options)
+    @renderer = new Renderer(@iframeContainer, @quill, @options)
     @contentWindow = @renderer.iframe.contentWindow
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new Selection(this, @scribe)
+    @selection = new Selection(this, @quill)
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->
@@ -155,9 +155,9 @@ class Editor
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
         unless options.silent
-          @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, delta, options.source)
+          @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, options.source)
       if localDelta and !localDelta.isIdentity()
-        @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, localDelta, 'user')
+        @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
       @innerHTML = @root.innerHTML
     )
 
@@ -166,7 +166,7 @@ class Editor
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      @scribe.emit(@scribe.constructor.events.TEXT_CHANGE, delta, 'user')
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, 'user')
     @selection.update(delta != false)
 
   doSilently: (fn) ->

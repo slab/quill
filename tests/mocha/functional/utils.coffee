@@ -1,11 +1,11 @@
-ScribeHtmlTest = require('../lib/html-test')
+QuillHtmlTest = require('../lib/html-test')
 
 
 describe('Utils', ->
   describe('splitNode', ->
-    splitTest = new ScribeHtmlTest(
+    splitTest = new QuillHtmlTest(
       fn: (testContainer, expectedContainer, offset) ->
-        Scribe.Utils.splitNode(testContainer.firstChild, offset)
+        Quill.Utils.splitNode(testContainer.firstChild, offset)
     )
 
     splitTest.run('should not split if not necessary 1',
@@ -61,9 +61,9 @@ describe('Utils', ->
   )
 
   describe('splitBefore', ->
-    splitTest = new ScribeHtmlTest(
+    splitTest = new QuillHtmlTest(
       fn: (testContainer, expectedContainer, target) ->
-        Scribe.Utils.splitBefore(target, testContainer)
+        Quill.Utils.splitBefore(target, testContainer)
       pre: (testContainer, expectedContainer) ->
         return testContainer.querySelector('#target')
     )
@@ -112,7 +112,7 @@ describe('Utils', ->
       'Five'       : 15
     }
 
-    traverseTest = new ScribeHtmlTest(
+    traverseTest = new QuillHtmlTest(
       initial: [
         '<div>
           <h1>
@@ -133,9 +133,9 @@ describe('Utils', ->
 
     traverseTest.run('should traverse with correct index',
       checker: (container) ->
-        Scribe.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == Scribe.DOM.ELEMENT_NODE
-            expect(offset).to.equal(expected[Scribe.DOM.getText(node)])
+        Quill.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == Quill.DOM.ELEMENT_NODE
+            expect(offset).to.equal(expected[Quill.DOM.getText(node)])
           return node
         )
     )
@@ -156,10 +156,10 @@ describe('Utils', ->
           </span>
         </div>'
       fn: (container) ->
-        Scribe.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == Scribe.DOM.ELEMENT_NODE
-            expect(offset).to.equal(expected[Scribe.DOM.getText(node)])
-            node = Scribe.DOM.switchTag(node, 'SPAN') if node.tagName != 'SPAN'
+        Quill.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == Quill.DOM.ELEMENT_NODE
+            expect(offset).to.equal(expected[Quill.DOM.getText(node)])
+            node = Quill.DOM.switchTag(node, 'SPAN') if node.tagName != 'SPAN'
           return node
         )
     )
@@ -178,11 +178,11 @@ describe('Utils', ->
           </h3>
         </div>'
       fn: (container) ->
-        Scribe.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
-          if node.nodeType == Scribe.DOM.ELEMENT_NODE
-            expect(offset).to.equal(expected[Scribe.DOM.getText(node)])
+        Quill.Utils.traversePreorder(container.firstChild, 0, (node, offset) ->
+          if node.nodeType == Quill.DOM.ELEMENT_NODE
+            expect(offset).to.equal(expected[Quill.DOM.getText(node)])
             if node.tagName == 'H2'
-              node = Scribe.DOM.unwrap(node)
+              node = Quill.DOM.unwrap(node)
           return node
         )
     )

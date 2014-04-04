@@ -3,12 +3,12 @@ require 'debugger'
 gem "minitest"
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/scribe_driver'
+require_relative '../lib/quill_driver'
 require_relative '../lib/webdriver_adapter'
 require_relative '../lib/minitest/focus'
 
 describe "Insert" do
-  include ScribeDriver
+  include QuillDriver
 
   before do
     setup_test_suite
@@ -19,13 +19,13 @@ describe "Insert" do
   end
 
   def apply_delta(delta, err_msg)
-    ScribeDriver::JS.set_current_delta(delta)
+    QuillDriver::JS.set_current_delta(delta)
     @adapter.apply_delta(delta)
-    actual_delta, success = ScribeDriver::JS.check_consistency().values_at("actual_delta", "success")
+    actual_delta, success = QuillDriver::JS.check_consistency().values_at("actual_delta", "success")
     unless success
-      doc_delta = ScribeDriver::JS.get_as_str("docDelta")
-      cur_delta = ScribeDriver::JS.get_as_str("currentDelta")
-      expected_delta = ScribeDriver::JS.get_expected_as_str
+      doc_delta = QuillDriver::JS.get_as_str("docDelta")
+      cur_delta = QuillDriver::JS.get_as_str("currentDelta")
+      expected_delta = QuillDriver::JS.get_expected_as_str
       doc_delta = JSON.pretty_generate(JSON.parse(doc_delta))
       cur_delta = JSON.pretty_generate(JSON.parse(cur_delta))
       expected_delta = JSON.pretty_generate(JSON.parse(expected_delta))
@@ -40,23 +40,23 @@ describe "Insert" do
   end
 
   def insert_at_every_position(text)
-    ScribeDriver::JS.execute_js("window.ScribeDriver.resetScribe()")
+    QuillDriver::JS.execute_js("window.QuillDriver.resetQuill()")
     @editor = @driver.find_element(:class, "editor")
     @adapter = WebdriverAdapter.new @driver, @editor
     @adapter.focus()
-    ScribeDriver::JS.set_doc_delta
-    @adapter.doc_length = ScribeDriver::JS.get_doc_length
-    doc_length = ScribeDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
+    QuillDriver::JS.set_doc_delta
+    @adapter.doc_length = QuillDriver::JS.get_doc_length
+    doc_length = QuillDriver::JS.get_doc_length - 1 # - 1 accounts for phantom newline
     (0...doc_length).each do |insert_at|
-      cur_length = ScribeDriver::JS.get_doc_length
-      delta = ScribeDriver::JS.make_insert_delta(cur_length, @adapter.cursor_pos + 1, text, {})
+      cur_length = QuillDriver::JS.get_doc_length
+      delta = QuillDriver::JS.make_insert_delta(cur_length, @adapter.cursor_pos + 1, text, {})
       apply_delta(delta, "Failed inserting #{text} at index #{insert_at}")
-      ScribeDriver::JS.set_doc_delta
+      QuillDriver::JS.set_doc_delta
     end
   end
 
   def run_insert_test(initial, insert_delta, err_msg)
-    reset_scribe initial
+    reset_quill initial
     apply_delta insert_delta, err_msg
   end
 
@@ -115,7 +115,7 @@ describe "Insert" do
       start_delta = { "startLength" => 0,
                       "endLength" => 6,
                       "ops" => [{ "value" => "1\n2\n3\n", "attributes" => {}}]}
-      reset_scribe start_delta
+      reset_quill start_delta
 
       @adapter.move_cursor 0
       @adapter.highlight 3
@@ -124,7 +124,7 @@ describe "Insert" do
                          "endLength" => 8,
                          "ops" => [{ "value" => "\t1\n\t2\n3\n", "attributes" => {}}]}
 
-      assert ScribeDriver::JS.editor_delta_equals(expected_delta), "Indenting multiple lines with tab failed."
+      assert QuillDriver::JS.editor_delta_equals(expected_delta), "Indenting multiple lines with tab failed."
     end
 
     it "should prepend a tab followed by more text" do

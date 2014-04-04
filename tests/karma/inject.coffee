@@ -5,10 +5,10 @@ $(document.body).prepend(_.map(window.__html__, (html) ->
 
 
 expect.consistent = (doc) ->
-  nodesByLine = _.map(Scribe.DOM.getChildNodes(doc.root), (lineNode) ->
+  nodesByLine = _.map(Quill.DOM.getChildNodes(doc.root), (lineNode) ->
     nodes = lineNode.querySelectorAll('*')
     return _.filter(nodes, (node) ->
-      return node.nodeType == Scribe.DOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == Scribe.DOM.TEXT_NODE)
+      return node.nodeType == Quill.DOM.ELEMENT_NODE && (node.nodeName == 'BR' || !node.firstChild? || node.firstChild.nodeType == Quill.DOM.TEXT_NODE)
     )
   )
   lines = doc.lines.toArray()
@@ -25,7 +25,7 @@ expect.consistent = (doc) ->
           throw new Error("Null line")
     )
     # Line nodes and line's nodes should match
-    _.each(Scribe.DOM.getChildNodes(doc.root), (lineNode, index) ->
+    _.each(Quill.DOM.getChildNodes(doc.root), (lineNode, index) ->
       if lines[index].node != lineNode
         throw new Error("Line and nodes do not match")
     )
@@ -53,7 +53,7 @@ expect.consistent = (doc) ->
     if lines.length != nodesByLine.length
       throw new Error("doc.lines and nodesByLine differ in length")
     _.each(lines, (line, index) =>
-      calculatedLength = _.reduce(Scribe.DOM.getChildNodes(line.node), ((length, node) -> Scribe.Utils.getNodeLength(node) + length), 0)
+      calculatedLength = _.reduce(Quill.DOM.getChildNodes(line.node), ((length, node) -> Quill.Utils.getNodeLength(node) + length), 0)
       if line.length != calculatedLength
         throw new Error('Line length inccorect')
       leaves = line.leaves.toArray()
@@ -85,7 +85,7 @@ expect.equalHtml = (html1, html2) ->
   [html1, html2] = _.map([html1, html2], (html) ->
     html = html.join('') if _.isArray(html)
     html = html.innerHTML unless _.isString(html)
-    html = Scribe.Normalizer.normalizeHtml(html)
+    html = Quill.Normalizer.normalizeHtml(html)
     html = html.replace(/[\'\";]/g, '')    # IE8 outerHTML does not have quotes
     html = html.replace(/rgb\((\d+), ?(\d+), ?(\d+)\)/g, "rgb($1, $2, $3)") # IE8 removes spaces between digits
     html = html.toLowerCase()              # IE8 uppercases their tags

@@ -1,7 +1,7 @@
-require_relative '../lib/scribe_driver'
+require_relative '../lib/quill_driver'
 
 describe "Test Delete" do
-  include ScribeDriver
+  include QuillDriver
 
   before do
     setup_test_suite
@@ -12,7 +12,7 @@ describe "Test Delete" do
   end
 
   def run_delete_test(initial, delete_delta, err_msg)
-    reset_scribe initial
+    reset_quill initial
     apply_delta delete_delta, err_msg
   end
 
@@ -70,7 +70,7 @@ describe "Test Delete" do
                 "ops" => [{ "value" => "\n"}]
     }
 
-    reset_scribe initial
+    reset_quill initial
     @editor.send_keys :enter
     @editor.send_keys :backspace
     @editor.send_keys "a"
@@ -78,7 +78,7 @@ describe "Test Delete" do
                  "endLength" => 2,
                  "ops" => [{ "value" => "a\n", "attributes" => {} }]
     }
-    assert ScribeDriver::JS.editor_delta_equals(expected),
+    assert QuillDriver::JS.editor_delta_equals(expected),
       "Deleting a newline and then inserting into the empty document fails."
 
   end

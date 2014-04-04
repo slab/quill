@@ -1,7 +1,7 @@
-require_relative '../lib/scribe_driver'
+require_relative '../lib/quill_driver'
 
 describe "Test Formatting" do
-  include ScribeDriver
+  include QuillDriver
   before do
     setup_test_suite
   end
@@ -11,7 +11,7 @@ describe "Test Formatting" do
   end
 
   def run_format_test(initial, format_delta, err_msg)
-    reset_scribe initial
+    reset_quill initial
     apply_delta format_delta, err_msg
   end
 
@@ -75,7 +75,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed adding bold at index 0, length 3", true
     end
 
@@ -92,7 +92,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed adding bold at index 0, length 3", true
     end
 
@@ -108,7 +108,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed adding bold at index 0, length 3", true
     end
 
@@ -117,7 +117,7 @@ describe "Test Formatting" do
                   "endLength" => 8,
                   "ops" => [{ "value" => "abc def\n"}]
       }
-      reset_scribe initial
+      reset_quill initial
 
       delta = { "startLength" => 8,
                 "endLength" => 8,
@@ -145,7 +145,7 @@ describe "Test Formatting" do
                 "ops" => [{ "value" => "zzz", "attributes" => { "bold" => true } },
                           { "start" => 0, "end" => 1 }]}
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Text was not bold", true
     end
 
@@ -161,7 +161,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed to apply monospace", true
     end
 
@@ -177,7 +177,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed to apply huge font-size", true
     end
 
@@ -193,7 +193,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed to apply white fore-color", true
     end
 
@@ -209,7 +209,7 @@ describe "Test Formatting" do
                           { "start" => 3, "end" => 4 }]
       }
 
-      reset_scribe initial
+      reset_quill initial
       apply_delta delta, "Failed to apply black back-color", true
     end
   end

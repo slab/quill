@@ -38,7 +38,7 @@ _moveCursor = (cursor, referenceNode) ->
   this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
 _updateCursor = (cursor) ->
-  @scribe.editor.doSilently( =>
+  @quill.editor.doSilently( =>
     [leafNode, offset] = Position.findLeafNode(@editorContainer, cursor.index)
     guide = @container.ownerDocument.createElement('span')
     if !leafNode.firstChild?
@@ -75,10 +75,10 @@ class MultiCursor extends EventEmitter2
     CURSOR_MOVED: 'cursor-moved'
     CURSOR_REMOVED: 'cursor-removed'
 
-  constructor: (@scribe, @editorContainer, @options) ->
+  constructor: (@quill, @editorContainer, @options) ->
     @cursors = {}
-    @container = @scribe.addContainer('cursor-container', true)
-    @scribe.addStyles(
+    @container = @quill.addContainer('cursor-container', true)
+    @quill.addStyles(
       '.cursor-container': { 'position': 'absolute', 'z-index': '1000' }
       '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
       '.cursor-flag':
@@ -97,14 +97,14 @@ class MultiCursor extends EventEmitter2
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
       '.cursor.right > .cursor-flag': { 'right': '-2px' }
     )
-    @scribe.on(@scribe.constructor.events.RENDER_UPDATE, =>
+    @quill.on(@quill.constructor.events.RENDER_UPDATE, =>
       _.defer( =>
         @container.style.top = @editorContainer.offsetTop + 'px'
         @container.style.left = @editorContainer.offsetLeft  + 'px'
         this.update(true)
       )
     )
-    @scribe.on(@scribe.constructor.events.TEXT_CHANGE, (delta) =>
+    @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta) =>
       _applyDelta.call(this, delta)
     )
 

@@ -5,10 +5,10 @@ Tandem   = require('tandem-core')
 
 
 class PasteManager
-  constructor: (@scribe, @editorContainer, @options) ->
-    @container = @scribe.addContainer('paste-container')
+  constructor: (@quill, @editorContainer, @options) ->
+    @container = @quill.addContainer('paste-container')
     @container.setAttribute('contenteditable', true)
-    @scribe.addStyles(
+    @quill.addStyles(
       '.paste-container':
         'left': '-10000px'
         'position': 'absolute'
@@ -18,22 +18,22 @@ class PasteManager
 
   initListeners: ->
     DOM.addEventListener(@editorContainer.ownerDocument, 'paste', =>
-      oldDocLength = @scribe.getLength()
-      range = @scribe.getSelection()
+      oldDocLength = @quill.getLength()
+      range = @quill.getSelection()
       return unless range?
       @container.innerHTML = ""
       @container.focus()
       _.defer( =>
-        doc = new Document(@container, @scribe.options)
+        doc = new Document(@container, @quill.options)
         delta = doc.toDelta()
         lengthAdded = delta.endLength
         delta.ops.unshift(new Tandem.RetainOp(0, range.start.index)) if range.start.index > 0
         delta.ops.push(new Tandem.RetainOp(range.end.index, oldDocLength)) if range.end.index < oldDocLength
-        delta.endLength += (@scribe.getLength() - (range.end.index - range.start.index))
+        delta.endLength += (@quill.getLength() - (range.end.index - range.start.index))
         delta.startLength = oldDocLength
-        @scribe.updateContents(delta, { source: 'user' })
-        @scribe.focus()
-        @scribe.setSelection(range.start.index + lengthAdded, range.start.index + lengthAdded)
+        @quill.updateContents(delta, { source: 'user' })
+        @quill.focus()
+        @quill.setSelection(range.start.index + lengthAdded, range.start.index + lengthAdded)
       )
     )
 

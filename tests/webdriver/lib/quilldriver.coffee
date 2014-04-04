@@ -1,11 +1,11 @@
 $(document).ready( ->
   $editors = $('.editor-container')
-  window.editor = new Scribe.Editor($editors.get(0))
-  editorToolbar = new Scribe.Toolbar('editor-toolbar', editor)
-  window.ScribeDriver =
-    resetScribe: ->
+  window.editor = new Quill.Editor($editors.get(0))
+  editorToolbar = new Quill.Toolbar('editor-toolbar', editor)
+  window.QuillDriver =
+    resetQuill: ->
       $('.editor-container').html($('#editor-cache').html())
-      window.editor = new Scribe.Editor($editors.get(0))
+      window.editor = new Quill.Editor($editors.get(0))
 
     getActiveFormats: ->
       actives = $('#editor-toolbar > .active')
@@ -22,7 +22,7 @@ $(document).ready( ->
 
     setDeltaReplay: (docDelta, deltaRef) ->
       d = JSON.parse(docDelta)
-      window.ScribeDriver[deltaRef] =
+      window.QuillDriver[deltaRef] =
         new window.Tandem.Delta(d.startLength, d.endLength, d.ops)
 
     createDelta: (template) ->
@@ -40,16 +40,16 @@ $(document).ready( ->
 
     autoFormatDelta: (delta) ->
       appendingToLine = (index) ->
-        op = window.ScribeDriver.docDelta.getOpsAt(index, 1)
+        op = window.QuillDriver.docDelta.getOpsAt(index, 1)
         return op.length > 0 and _.first(op).value == "\n"
 
       prependingToLine = (index) ->
-        op = window.ScribeDriver.docDelta.getOpsAt(index - 1, 1)
+        op = window.QuillDriver.docDelta.getOpsAt(index - 1, 1)
         return index == 0 or (op.length > 0 and _.first(op).value == "\n")
 
       getAttrsAt = (index) ->
         attrs = {}
-        op = _.first(window.ScribeDriver.docDelta.getOpsAt(index, 1))
+        op = _.first(window.QuillDriver.docDelta.getOpsAt(index, 1))
         attrs = op.attributes if op
         return attrs
 
@@ -88,15 +88,15 @@ $(document).ready( ->
       return delta
 
     createRandomDelta: ->
-      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.ScribeDriver.docDelta, 1)
-      return window.ScribeDriver.autoFormatDelta(randomDelta)
+      randomDelta = window.Tandem.DeltaGen.getRandomDelta(window.QuillDriver.docDelta, 1)
+      return window.QuillDriver.autoFormatDelta(randomDelta)
 
-    initializeScribe: ->
-      window.editor.setContents(window.ScribeDriver.docDelta)
+    initializeQuill: ->
+      window.editor.setContents(window.QuillDriver.docDelta)
 
     checkConsistency: ->
-      actual = window.ScribeDriver.cleanup(editor.getContents())
-      consistent = window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta).isEqual(actual)
+      actual = window.QuillDriver.cleanup(editor.getContents())
+      consistent = window.QuillDriver.docDelta.compose(window.QuillDriver.currentDelta).isEqual(actual)
       return {
         success: consistent,
         actual_delta: JSON.stringify(actual)

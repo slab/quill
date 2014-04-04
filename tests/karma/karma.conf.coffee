@@ -46,7 +46,7 @@ module.exports = (config) ->
       'tests/mocha/fixture.html'
       'tests/karma/inject.js'
 
-      'scribe.exposed.js'
+      'quill.exposed.js'
 
       'tests/mocha/functional.js'
       'tests/mocha/unit.js'
@@ -65,8 +65,8 @@ module.exports = (config) ->
     autoWatch: false
     singleRun: true
     sauceLabs:
-      testName: 'Scribe'
-      username: 'scribe'
+      testName: 'Quill'
+      username: 'quill'
       accessKey: 'e0d99fc3-17bc-4b0d-b131-8621bc81f5a0'
       build: os.hostname() + '-' + _.random(16*16*16*16).toString(16)
       options:
@@ -79,5 +79,5 @@ module.exports = (config) ->
     config.transports = ['xhr-polling']
     config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID
     if process.env.TRAVIS_BRANCH == 'master'
-      config.sauceLabs.username = 'scribe-master'
+      config.sauceLabs.username = 'quill-master'
       config.sauceLabs.username = '2da1aa8f-4d9b-4691-90d4-76c9f5ee7caf'

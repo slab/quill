@@ -1,4 +1,4 @@
-ScribeTestSuite = require('./lib/suite')
+QuillTestSuite = require('./lib/suite')
 
 describe('Editor', ->
   template = '
@@ -19,22 +19,22 @@ describe('Editor', ->
   '
 
   describe('insertText empty', ->
-    insertSuite = new ScribeTestSuite.Insert({ initial: '<div><br></div>' })
+    insertSuite = new QuillTestSuite.Insert({ initial: '<div><br></div>' })
     insertSuite.run()
   )
 
   describe('insertText', ->
-    insertSuite = new ScribeTestSuite.Insert({ initial: template })
+    insertSuite = new QuillTestSuite.Insert({ initial: template })
     insertSuite.run()
   )
 
   describe('deleteText', ->
-    deleteSuite = new ScribeTestSuite.Delete({ initial: template })
+    deleteSuite = new QuillTestSuite.Delete({ initial: template })
     deleteSuite.run()
   )
 
   describe('formatText', ->
-    formatSuite = new ScribeTestSuite.Format({ initial: template })
+    formatSuite = new QuillTestSuite.Format({ initial: template })
     formatSuite.run()
   )
 )

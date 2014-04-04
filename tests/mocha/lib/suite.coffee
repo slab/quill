@@ -15,24 +15,24 @@
 # n - document length
 # k - number of formats
 
-ScribeHtmlTest = require('./html-test')
-ScribeEditorTest = require('./editor-test')
+QuillHtmlTest = require('./html-test')
+QuillEditorTest = require('./editor-test')
 Tandem = require('tandem-core')
 
 
-class ScribeTestSuite
+class QuillTestSuite
   constructor: (@options) ->
-    @options.initial = ScribeHtmlTest.cleanHtml(@options.initial, true)
+    @options.initial = QuillHtmlTest.cleanHtml(@options.initial, true)
     $('#test-container').html(options.initial)
-    doc = new Scribe.Document($('#test-container').get(0),
-      formats: Scribe.DEFAULTS.formats
+    doc = new Quill.Document($('#test-container').get(0),
+      formats: Quill.DEFAULTS.formats
     )
     @delta = doc.toDelta()
     @docLength = @delta.endLength
-    @editorTest = new ScribeEditorTest(@options)
+    @editorTest = new QuillEditorTest(@options)
 
 
-class ScribeInsertTestSuite extends ScribeTestSuite
+class QuillInsertTestSuite extends QuillTestSuite
   constructor: (options) ->
     super
 
@@ -74,7 +74,7 @@ class ScribeInsertTestSuite extends ScribeTestSuite
     )
 
 
-class ScribeDeleteTestSuite extends ScribeTestSuite
+class QuillDeleteTestSuite extends QuillTestSuite
   constructor: (options) ->
     super
 
@@ -93,7 +93,7 @@ class ScribeDeleteTestSuite extends ScribeTestSuite
     )
 
 
-class ScribeFormatTestSuite extends ScribeTestSuite
+class QuillFormatTestSuite extends QuillTestSuite
   constructor: (options) ->
     super
 
@@ -122,6 +122,6 @@ class ScribeFormatTestSuite extends ScribeTestSuite
 
 
 module.exports =
-  Insert: ScribeInsertTestSuite
-  Delete: ScribeDeleteTestSuite
-  Format: ScribeFormatTestSuite
+  Insert: QuillInsertTestSuite
+  Delete: QuillDeleteTestSuite
+  Format: QuillFormatTestSuite

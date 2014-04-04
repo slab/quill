@@ -18,24 +18,24 @@ def execute_js(driver, src, args = nil)
 end
 
 def js_get_as_str(driver, ref)
-  return execute_js driver, "return JSON.stringify(window.ScribeDriver['#{ref}'])"
+  return execute_js driver, "return JSON.stringify(window.QuillDriver['#{ref}'])"
 end
 
 def js_get(driver, ref)
-  return execute_js driver, "return window.ScribeDriver['#{ref}']"
+  return execute_js driver, "return window.QuillDriver['#{ref}']"
 end
 
-def js_set_scribe_delta(driver)
-  return execute_js driver, "window.ScribeDriver.initializeScribe()"
+def js_set_quill_delta(driver)
+  return execute_js driver, "window.QuillDriver.initializeQuill()"
 end
 
 def js_set_delta_replay(driver, delta, delta_ref)
-  src = "return window.ScribeDriver.setDeltaReplay(arguments[0], arguments[1])"
+  src = "return window.QuillDriver.setDeltaReplay(arguments[0], arguments[1])"
   execute_js driver, src, [delta, delta_ref]
 end
 
 def js_set_current_delta(driver)
-  src = "window.ScribeDriver.currentDelta = window.ScribeDriver.createRandomDelta()"
+  src = "window.QuillDriver.currentDelta = window.QuillDriver.createRandomDelta()"
   execute_js driver, src
 end
 
@@ -44,15 +44,15 @@ def js_get_cur_doc_delta_as_str(driver)
 end
 
 def js_get_doc_delta_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.ScribeDriver.docDelta);"
+  return execute_js driver, "return JSON.stringify(window.QuillDriver.docDelta);"
 end
 
 def js_get_expected_as_str(driver)
-  return execute_js driver, "return JSON.stringify(window.ScribeDriver.docDelta.compose(window.ScribeDriver.currentDelta));"
+  return execute_js driver, "return JSON.stringify(window.QuillDriver.docDelta.compose(window.QuillDriver.currentDelta));"
 end
 
 def js_set_doc_delta(driver)
-  execute_js driver, "window.ScribeDriver.docDelta = window.ScribeDriver.cleanup(editor.getContents());"
+  execute_js driver, "window.QuillDriver.docDelta = window.QuillDriver.cleanup(editor.getContents());"
 end
 
 
@@ -93,12 +93,12 @@ def delete_fail_file(file)
   end
 end
 
-def initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
+def initialize_quill_from_replay_file(replay_file, driver, adapter, editor)
   doc_delta, rand_delta = read_deltas_from_file(replay_file)
   js_set_delta_replay(driver, doc_delta, 'docDelta')
   js_set_delta_replay(driver, rand_delta, 'currentDelta')
   doc_delta = js_get(driver, "docDelta")
-  js_set_scribe_delta(driver)
+  js_set_quill_delta(driver)
 
   # Remove inexplicable highlighting that gets applied when setting delta and
   # reset cursor to 0th position
@@ -141,7 +141,7 @@ adapter.focus()
 ################################################################################
 def check_consistency(driver, replay_file)
   driver.switch_to.default_content
-  success = driver.execute_script "return window.ScribeDriver.checkConsistency();"
+  success = driver.execute_script "return window.QuillDriver.checkConsistency();"
   if not success
     doc_delta = js_get_as_str(driver, "docDelta")
     rand_delta = js_get_as_str(driver, "currentDelta")
@@ -166,7 +166,7 @@ def check_consistency(driver, replay_file)
 end
 
 if replay_file
-  initialize_scribe_from_replay_file(replay_file, driver, adapter, editor)
+  initialize_quill_from_replay_file(replay_file, driver, adapter, editor)
   random_delta = js_get(driver, "currentDelta")
   adapter.apply_delta(random_delta)
   check_consistency(driver, replay_file)

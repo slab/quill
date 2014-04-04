@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Scribe Editor Demo
+    title Quill Editor Demo
     link(rel='stylesheet', type='text/css', href='styles/style.css')
     meta(charset='utf-8')
 
@@ -44,9 +44,9 @@ html
         #editor-container
           include content
 
-    script(type='text/javascript', src='../scribe.js')
+    script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').
-      var editor = new Scribe('#editor-container', {
+      var editor = new Quill('#editor-container', {
         logLevel: 'info',
         modules: {
           toolbar: { container: '#formatting-container' }

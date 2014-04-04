@@ -22,8 +22,8 @@ exitEditMode = ->
   DOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
-  @scribe.setSelection(@savedRange, { silent: true })
-  @scribe.formatText(@savedRange, 'link', value, { source: 'user' })
+  @quill.setSelection(@savedRange, { silent: true })
+  @quill.formatText(@savedRange, 'link', value, { source: 'user' })
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'
@@ -54,7 +54,7 @@ initListeners = ->
   )
   return unless @options.button?
   DOM.addEventListener(@options.button, 'click', =>
-    @savedRange = @scribe.getSelection()
+    @savedRange = @quill.getSelection()
     return unless @savedRange? and !@savedRange.isCollapsed()
     if DOM.hasClass(@options.button, 'active')
       formatLink.call(this, false)
@@ -62,16 +62,16 @@ initListeners = ->
     else
       url = normalizeUrl(@savedRange.getText())
       if /\w+\.\w+/.test(url)
-        @scribe.focus()
+        @quill.focus()
         formatLink.call(this, url)
       else
         DOM.addClass(@tooltip, 'editing')
-        showTooltip.call(this, @scribe.editor.selection.getDimensions())
+        showTooltip.call(this, @quill.editor.selection.getDimensions())
         enterEditMode.call(this, url)
   )
 
 initTooltip = ->
-  @tooltip = @scribe.addContainer('link-tooltip-container')
+  @tooltip = @quill.addContainer('link-tooltip-container')
   hideTooltip.call(this)
   @tooltip.innerHTML =
    '<span class="title">Visit URL:</span>
@@ -84,7 +84,7 @@ initTooltip = ->
   @tooltipInput = @tooltip.querySelector('.input')
   @tooltipChange = @tooltip.querySelector('.change')
   @tooltipDone = @tooltip.querySelector('.done')
-  @scribe.addStyles(
+  @quill.addStyles(
     '.link-tooltip-container': {
       'background-color': '#fff'
       'border': '1px solid #000'
@@ -133,7 +133,7 @@ class LinkTooltip
   DEFAULTS:
     button: null
 
-  constructor: (@scribe, @editorContainer, @options) ->
+  constructor: (@quill, @editorContainer, @options) ->
     initTooltip.call(this)
     initListeners.call(this)
 

@@ -11,13 +11,13 @@ finally
 
 getColor = (id, lighten) ->
   alpha = if lighten then '0.4' else '1.0'
-  if id == 1 or id == 'scribe-1'
+  if id == 1 or id == 'quill-1'
     return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
   else
     return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"
 
 listenEditor = (source, target) ->
-  source.on(Scribe.events.TEXT_CHANGE, (delta, origin) ->
+  source.on(Quill.events.TEXT_CHANGE, (delta, origin) ->
     return if origin == 'api'
     target.updateContents(delta)
     sourceDelta = source.getContents()
@@ -31,7 +31,7 @@ listenEditor = (source, target) ->
       return false
     )
     console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
-  ).on(Scribe.events.SELECTION_CHANGE, (range) ->
+  ).on(Quill.events.SELECTION_CHANGE, (range) ->
     return unless range?
     target.getModule('multi-cursor').moveCursor(source.id, range.end.index)
   )
@@ -41,7 +41,7 @@ editors = []
 for num in [1, 2]
   $wrapper = $(".editor-wrapper.#{if num == 1 then 'first' else 'last'}")
   $container = $('.editor-container', $wrapper)
-  editor = new Scribe($container.get(0), {
+  editor = new Quill($container.get(0), {
     modules:
       'multi-cursor': true
       'toolbar': {

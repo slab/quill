@@ -1,21 +1,21 @@
 Tandem = require('tandem-core')
-ScribeEditorTest = require('../../lib/editor-test')
+QuillEditorTest = require('../../lib/editor-test')
 
 
 describe('Undo Manager', ->
   describe('undo/redo', ->
-    undoTests = new ScribeEditorTest(
+    undoTests = new QuillEditorTest(
       initial: Tandem.Delta.getInitial("The lazy fox\n")
       ignoreExpect: true
-      fn: (scribe, expectedScribe, delta) ->
-        scribe.getModule('undo-manager').clear()
-        scribe.editor.applyDelta(delta, { source: 'user' })
-      checker: (scribe, expectedEditor, delta) ->
-        beforeDelta = scribe.getContents()
-        scribe.getModule('undo-manager').undo()
-        expect(scribe.getContents().isEqual(@options.initial)).to.be(true)
-        scribe.getModule('undo-manager').redo()
-        expect(scribe.getContents().isEqual(beforeDelta)).to.be(true)
+      fn: (quill, expectedQuill, delta) ->
+        quill.getModule('undo-manager').clear()
+        quill.editor.applyDelta(delta, { source: 'user' })
+      checker: (quill, expectedEditor, delta) ->
+        beforeDelta = quill.getContents()
+        quill.getModule('undo-manager').undo()
+        expect(quill.getContents().isEqual(@options.initial)).to.be(true)
+        quill.getModule('undo-manager').redo()
+        expect(quill.getContents().isEqual(beforeDelta)).to.be(true)
     )
 
     undoTests.run('insert', {}, Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
@@ -48,21 +48,21 @@ describe('Undo Manager', ->
 
     # Multi-user
     undoTests.run('remove external insert',
-      fn: (scribe, expectedScribe, delta) ->
-        scribe.getModule('undo-manager').clear()
-        scribe.editor.applyDelta(delta, { source: 'api' })
+      fn: (quill, expectedQuill, delta) ->
+        quill.getModule('undo-manager').clear()
+        quill.editor.applyDelta(delta, { source: 'api' })
     , Tandem.Delta.makeInsertDelta(13, 9, 'hairy '))
 
     undoTests.run('remove external delete',
-      fn: (scribe, expectedScribe, delta) ->
-        scribe.getModule('undo-manager').clear()
-        scribe.editor.applyDelta(delta, { source: 'api' })
+      fn: (quill, expectedQuill, delta) ->
+        quill.getModule('undo-manager').clear()
+        quill.editor.applyDelta(delta, { source: 'api' })
     , Tandem.Delta.makeDeleteDelta(13, 4, 5))
 
     undoTests.run('remove external replace',
-      fn: (scribe, expectedScribe, delta) ->
-        scribe.getModule('undo-manager').clear()
-        scribe.editor.applyDelta(delta, { source: 'api' })
+      fn: (quill, expectedQuill, delta) ->
+        quill.getModule('undo-manager').clear()
+        quill.editor.applyDelta(delta, { source: 'api' })
     , new Tandem.Delta(13, [
         new Tandem.RetainOp(0, 4)
         new Tandem.InsertOp('hairy ')
@@ -71,9 +71,9 @@ describe('Undo Manager', ->
     )
 
     undoTests.run('remove external replace all',
-      fn: (scribe, expectedScribe, delta) ->
-        scribe.getModule('undo-manager').clear()
-        scribe.editor.applyDelta(delta, { source: 'api' })
+      fn: (quill, expectedQuill, delta) ->
+        quill.getModule('undo-manager').clear()
+        quill.editor.applyDelta(delta, { source: 'api' })
       , new Tandem.Delta(13, [new Tandem.InsertOp('A fast bunny\n')])
     )
   )
