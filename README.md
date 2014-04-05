@@ -3,7 +3,7 @@
 Please do not publicize this repository in any way. There are a few known documentation gaps and browser quirks we wish to address before publication. Thank you for your patience.
 
 
-# [Quill Rich Text Editor](http://quilljs.com/) [![Build Status](https://secure.travis-ci.org/quilljs/quill.png?branch=master)](http://travis-ci.org/quilljs/quill) [![Dependency Status](https://gemnasium.com/quilljs/quill.png)](https://gemnasium.com/quilljs/quill)
+# [Quill Rich Text Editor](http://quilljs.com/) [![Build Status](https://travis-ci.org/quilljs/quill.svg?branch=master)](http://travis-ci.org/quilljs/quill) [![Dependency Status](https://gemnasium.com/quilljs/quill.png)](https://gemnasium.com/quilljs/quill)
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/quill-master.svg)](https://saucelabs.com/u/quill)
 
@@ -63,7 +63,11 @@ You can use mocha's grep feature to run specific tests ex.
 
 ## Community
 
-Get help by asking questions on [Stack Overflow](http://stackoverflow.com/) (tag with quilljs). The maintainers of Quill will actively monitor questions.
+Get help or stay up to date.
+
+- Follow [@quilljs](https://twitter.com/quilljs) on Twitter
+- Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quilljs)
+- Visit the [discussion group](http://discuss.quilljs.com)
 
 ## Contributing
 
