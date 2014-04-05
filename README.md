@@ -66,7 +66,7 @@ You can use mocha's grep feature to run specific tests ex.
 Get help or stay up to date.
 
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
-- Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quilljs)
+- Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quill)
 - Visit the [discussion group](http://discuss.quilljs.com)
 
 ## Contributing
