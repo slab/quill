@@ -80,4 +80,4 @@ module.exports = (config) ->
     config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID
     if process.env.TRAVIS_BRANCH == 'master'
       config.sauceLabs.username = 'quill-master'
-      config.sauceLabs.username = '685c8996-7b70-4543-8167-58f8e88a8484'
+      config.sauceLabs.accessKey = '685c8996-7b70-4543-8167-58f8e88a8484'
