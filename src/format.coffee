@@ -20,10 +20,6 @@ class Format
       tag: 'I'
       preformat: 'italic'
 
-    link:
-      tag: 'A'
-      attribute: 'href'
-
     color:
       style: 'color'
       preformat: 'foreColor'
@@ -39,6 +35,14 @@ class Format
     size:
       style: 'fontSize'
       preformat: 'fontSize'
+
+    link:
+      tag: 'A'
+      attribute: 'href'
+
+    image:
+      tag: 'IMG'
+      attribute: 'src'
 
 
   constructor: (@config) ->

@@ -89,8 +89,11 @@ class Line extends LinkedList.Node
       formatNode = format.container(@node, value)
       this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
-        formatNode.appendChild(node)
-        removeFormat(format, node)
+        if DOM.isVoid(formatNode)
+          DOM.removeNode(node)
+        else
+          formatNode.appendChild(node)
+          removeFormat(format, node)
       )
       @node.insertBefore(formatNode, refNode)
     else

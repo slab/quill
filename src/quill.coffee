@@ -48,7 +48,7 @@ class Quill extends EventEmitter2
   @Theme: Themes
 
   @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'color', 'background', 'font', 'size']
+    formats: ['bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image']
     iframe: true
     logLevel: false
     modules:
@@ -149,6 +149,10 @@ class Quill extends EventEmitter2
 
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
+
+  insertMedia: (index, type, source) ->
+    # No reason we picked ! besides its one character (so delta cannot split it up)
+    this.insertText(index, '!', type, source)
 
   insertText: (index, text, name, value, options = {}) ->
     [index, length, formats, options] = buildParams(index, 0, name, value, options)

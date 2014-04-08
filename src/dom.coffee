@@ -7,6 +7,8 @@ DOM =
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
+  VOID_ELEMMENTS: ['BR', 'IMG']   # We only care about the Quill valid ones
+
   addClass: (node, cssClass) ->
     return if DOM.hasClass(node, cssClass)
     if node.classList?
@@ -95,6 +97,9 @@ DOM =
 
   isElement: (node) ->
     return node?.nodeType == DOM.ELEMENT_NODE
+
+  isVoid: (node) ->
+    return node? and _.indexOf(DOM.VOID_ELEMMENTS, node.tagName) > -1
 
   moveChildren: (newParent, oldParent) ->
     _.each(DOM.getChildNodes(oldParent), (child) ->

@@ -21,7 +21,8 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link']
+    BUTTON: ['bold', 'bullet', 'indent', 'italic', 'link', 'list', 'outdent', 'strike', 'underline']
+    EMBED: ['image']
     SELECT: ['background', 'color', 'font', 'size']
 
   constructor: (@quill, @editorContainer, @options) ->
@@ -57,7 +58,10 @@ class Toolbar
         if Utils.isIE(8)
           @editorContainer.focus()
           @quill.setSelection(range)
-        if range.isCollapsed()
+        if _.indexOf(Toolbar.formats.EMBED, format) > -1
+          @quill.insertMedia(range.end.index, format, 'https://www.google.com/images/srpr/logo11w.png')
+          # TODO set selection to after the embed insertion point
+        else if range.isCollapsed()
           @quill.setFormat(format, value)
         else
           @quill.formatText(range, format, value, { source: 'user' })
