@@ -169,7 +169,7 @@ class Quill extends EventEmitter2
     @editor.applyDelta(delta, options)
 
   setFormat: (name, value) ->
-    format = @editor.doc.formatManager.formats[name]
+    # TODO Implement
     throw new Error("Unsupported format #{name} #{value}") unless format?
     format.preformat(value)
 

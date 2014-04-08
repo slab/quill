@@ -32,7 +32,7 @@ class SnowTheme extends DefaultTheme
         picker.close()
       )
     )
-    DOM.addClass(@editorContainer.parentNode, 'snow')
+    DOM.addClass(@editorContainer.ownerDocument.body, 'snow')
     @quill.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this))
     @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
     @quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
@@ -107,13 +107,6 @@ class SnowTheme extends DefaultTheme
       _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
         DOM.addClass(item, 'sc-primary-color') if i < 7
       )
-      format = @editor.doc.formatManager.formats[css]
-      if format?
-        format.styles = _.reduce(SnowTheme.COLORS, (colors, c) ->
-          colors[c] = "rgb(#{parseInt(c.substr(1,2), 16)}, #{parseInt(c.substr(3,2), 16)}, #{parseInt(c.substr(5,2), 16)})"
-          return colors
-        , {})
-        format.defaultStyle = if css == 'sc-color' then '#000000' else '#ffffff'
     )
 
 

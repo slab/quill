@@ -152,9 +152,8 @@ class Editor
         delta.apply(_insertAt, _deleteAt, _formatAt, this)
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
-        unless options.silent
-          @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, options.source)
-      if localDelta and !localDelta.isIdentity()
+        @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, options.source) unless options.silent
+      if localDelta and !localDelta.isIdentity() and !options.silent
         @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
       @innerHTML = @root.innerHTML
     )
