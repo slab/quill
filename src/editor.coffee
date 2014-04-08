@@ -86,15 +86,15 @@ _trackDelta = (fn, options) ->
 _update = ->
   delta = _trackDelta.call(this, =>
     this.doSilently( =>
-      Normalizer.normalizeEmptyLines(@root)
+      # TODO do we need this?
+      # Normalizer.normalizeEmptyLines(@root)
       @selection.preserve( =>
-        Normalizer.breakBlocks(@root)
+        # Normalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()
         lineNode = @root.firstChild
         _.each(lines, (line, index) =>
           while line.node != lineNode
             if line.node.parentNode == @root
-              @doc.normalizer.normalizeLine(lineNode)
               newLine = @doc.insertLineBefore(lineNode, line)
               lineNode = lineNode.nextSibling
             else
@@ -103,7 +103,6 @@ _update = ->
           lineNode = lineNode.nextSibling
         )
         while lineNode != null
-          @doc.normalizer.normalizeLine(lineNode)
           newLine = @doc.appendLine(lineNode)
           lineNode = lineNode.nextSibling
       )
@@ -114,7 +113,6 @@ _update = ->
 
 class Editor
   constructor: (@iframeContainer, @quill, @options = {}) ->
-    @iframeContainer = document.querySelector(@iframeContainer) if _.isString(@iframeContainer)
     this.init()
     setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>

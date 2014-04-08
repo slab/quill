@@ -1,7 +1,7 @@
 _             = require('lodash')
 LinkedList    = require('linked-list')
 DOM           = require('./dom')
-FormatManager = require('./format-manager')
+Format        = require('./format')
 Line          = require('./line')
 Normalizer    = require('./normalizer')
 Utils         = require('./utils')
@@ -10,13 +10,15 @@ Tandem        = require('tandem-core')
 
 class Document
   constructor: (@root, options = {}) ->
-    @formatManager = new FormatManager(@root, options)
-    @normalizer = new Normalizer(@root, @formatManager)
-    @root.innerHTML = Normalizer.normalizeHtml(@root.innerHTML)
-    @lines = new LinkedList()
-    @lineMap = {}
-    @normalizer.normalizeDoc()
-    _.each(DOM.getChildNodes(@root), _.bind(this.appendLine, this))
+    @normalizer = new Normalizer(@root)
+    @formats = {}
+    this.setHTML(@root.innerHTML)
+
+  addFormat: (name, config) ->
+    console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
+    @formats[name] = new Format(name, config)
+    @normalizer.addTag(config.tag) if config.tag?
+    @normalizer.addStyle(config.style) if config.style?
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
@@ -65,6 +67,13 @@ class Document
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
+
+  setHTML: (html) ->
+    @lines = new LinkedList()
+    @lineMap = {}
+    @root.innerHTML = Normalizer.normalizeHTML(html)
+    @normalizer.normalizeDoc()
+    _.each(DOM.getChildNodes(@root), _.bind(this.appendLine, this))
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Utils.splitNode(line.node, offset, true)

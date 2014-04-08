@@ -20,11 +20,6 @@ class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
   @ID_PREFIX  : 'line-'
 
-  @FORMATS: ['center', 'justify', 'left', 'right']
-
-  @MAX_INDENT: 9
-  @MIN_INDENT: 1    # Smallest besides not having an indent at all
-
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Line.ID_PREFIX)
     @node.id = @id
@@ -45,8 +40,10 @@ class Line extends LinkedList.Node
   buildLeaves: (node, formats) ->
     _.each(DOM.getChildNodes(node), (node) =>
       nodeFormats = _.clone(formats)
-      [formatName, formatValue] = @doc.formatManager.getFormat(node)
-      nodeFormats[formatName] = formatValue if formatName?
+      # TODO: optimize
+      _.each(@doc.formats, (format, name) ->
+        nodeFormats[name] = format.value(node) if format.match(node)
+      )
       if Leaf.isLeafNode(node)
         @leaves.append(new Leaf(this, node, nodeFormats))
       if Leaf.isLeafParent(node)
@@ -85,11 +82,11 @@ class Line extends LinkedList.Node
       break if (value and op.attributes[name] != value) or (!value and op.attributes[name]?)
       length -= 1
     return unless length > 0
-    format = @doc.formatManager.formats[name]
+    format = @doc.formats[name]
     throw new Error("Unrecognized format #{name}") unless format?
     if value
       refNode = null
-      formatNode = @doc.formatManager.createFormatContainer(name, value)
+      formatNode = format.container(name, value)
       this.applyToContents(offset, length, (node) ->
         refNode = node.nextSibling
         formatNode.appendChild(node)
@@ -140,9 +137,6 @@ class Line extends LinkedList.Node
   resetContent: ->
     @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
-    @formats = {}
-    [formatName, formatValue] = @doc.formatManager.getFormat(@node)
-    @formats[formatName] = formatValue if formatName?
     ops = _.map(@leaves.toArray(), (leaf) ->
       return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
     )

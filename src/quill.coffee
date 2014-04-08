@@ -3,6 +3,7 @@ _.str         = require('underscore.string')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 Editor        = require('./editor')
+Format        = require('./format')
 Range         = require('./range')
 Tandem        = require('tandem-core')
 
@@ -68,7 +69,10 @@ class Quill extends EventEmitter2
     TEXT_CHANGE      : 'text-change'
 
   constructor: (container, options = {}) ->
+    container = document.querySelector(container) if _.isString(container)
+    throw new Error('Invalid Quill container') unless container?
     moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
+    html = container.innerHTML
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
     @options.id = @id = "quill-#{Quill.editors.length + 1}"
@@ -76,6 +80,10 @@ class Quill extends EventEmitter2
     @modules = {}
     @editor = new Editor(container, this, @options)
     Quill.editors.push(@editor)
+    _.each(@options.formats, (name) =>
+      this.addFormat(name, Format.FORMATS[name])
+    )
+    this.setHTML(html)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Quill.Theme[themeClass](this, @options)
     _.each(@options.modules, (option, name) =>
@@ -84,6 +92,9 @@ class Quill extends EventEmitter2
 
   addContainer: (className, before = false) ->
     @editor.renderer.addContainer(className, before)
+
+  addFormat: (name, format) ->
+    @editor.doc.addFormat(name, format)
 
   addModule: (name, options) ->
     className = _.str.capitalize(_.str.camelize(name))
@@ -164,7 +175,7 @@ class Quill extends EventEmitter2
     format.preformat(value)
 
   setHTML: (html) ->
-    @editor.root.innerHTML = html
+    @editor.doc.setHTML(html)
 
   setSelection: (start, end, options = {}) ->
     if _.isNumber(start) and _.isNumber(end)

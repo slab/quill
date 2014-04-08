@@ -74,7 +74,6 @@ class Renderer
     )
 
   buildFrame: ->
-    html = @container.innerHTML
     @container.innerHTML = ''
     if @options.iframe
       @iframe = @container.ownerDocument.createElement('iframe')
@@ -97,7 +96,6 @@ class Renderer
       doc.body.appendChild(@root)
     else
       @container.appendChild(@root)
-    @root.innerHTML = Normalizer.normalizeHtml(html)
     DOM.addEventListener(@container, 'focus', =>
       @root.focus()
     )

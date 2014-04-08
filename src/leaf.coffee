@@ -27,7 +27,7 @@ class Leaf extends LinkedList.Node
     @length = @text.length
 
   getFormats: ->
-    return _.extend({}, @formats, @line.formats)
+    return @formats
 
   insertText: (index, text) ->
     @text = @text.substring(0, index) + text + @text.substring(index)

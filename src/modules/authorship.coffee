@@ -13,7 +13,7 @@ class Authorship
   constructor: (@quill, @editorContainer, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
-    @quill.editor.doc.formatManager.addFormat('author', new Format.Class(@editorContainer, 'author'))
+    @quill.addFormat('author', { class: /^author-(.*)$/ });
     return unless @options.authorId?
     @quill.on(@quill.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @quill.constructor.events.TEXT_CHANGE and origin == 'user'
