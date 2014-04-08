@@ -4,39 +4,39 @@ DOM = require('./dom')
 
 class Format
   @FORMATS:
-    'bold':
+    bold:
       tag: 'B'
       preformat: 'bold'
 
-    'underline':
+    underline:
       tag: 'U'
       preformat: 'underline'
 
-    'strike':
+    strike:
       tag: 'S'
       preformat: 'strikeThrough'
 
-    'italic':
+    italic:
       tag: 'I'
       preformat: 'italic'
 
-    'link':
+    link:
       tag: 'A'
       attribute: 'href'
 
-    'fore-color':
+    color:
       style: 'color'
       preformat: 'foreColor'
 
-    'back-color':
+    background:
       style: 'backgroundColor'
       preformat: 'backColor'
 
-    'font-name':
+    font:
       style: 'fontFamily'
       preformat: 'fontName'
 
-    'font-size':
+    size:
       style: 'fontSize'
       preformat: 'fontSize'
 

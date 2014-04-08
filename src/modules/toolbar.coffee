@@ -21,8 +21,8 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link', 'indent', 'outdent']
-    SELECT: ['back-color', 'fore-color', 'font-name', 'font-size']
+    BUTTON: ['bold', 'italic', 'strike', 'underline', 'link']
+    SELECT: ['background', 'color', 'font', 'size']
 
   constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?

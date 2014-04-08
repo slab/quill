@@ -94,11 +94,11 @@ class SnowTheme extends DefaultTheme
     )
 
   extendToolbar: (module) ->
-    _.each(module.container.querySelectorAll('.sc-font-name, .sc-font-size'), (select) =>
+    _.each(module.container.querySelectorAll('.sc-font, .sc-size'), (select) =>
       picker = new Picker(select)
       @pickers.push(picker)
     )
-    _.each(['fore-color', 'back-color'], (css) =>
+    _.each(['color', 'background'], (css) =>
       select = module.container.querySelector(".sc-#{css}")
       return unless select?
       picker = new ColorPicker(select)
@@ -113,7 +113,7 @@ class SnowTheme extends DefaultTheme
           colors[c] = "rgb(#{parseInt(c.substr(1,2), 16)}, #{parseInt(c.substr(3,2), 16)}, #{parseInt(c.substr(5,2), 16)})"
           return colors
         , {})
-        format.defaultStyle = if css == 'sc-fore-color' then '#000000' else '#ffffff'
+        format.defaultStyle = if css == 'sc-color' then '#000000' else '#ffffff'
     )
 
 

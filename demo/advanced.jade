@@ -15,21 +15,21 @@ html
         .editor-wrapper(class=(num == 1 ? 'first' : 'last'))
           .toolbar-container
             span.sc-format-group
-              select.sc-font-name(title='Font')
+              select.sc-font(title='Font')
                 option(value='sans-serif', selected=true) Sans Serif
                 option(value='serif') Serif
                 option(value='monospace') Monospace
-              select.sc-font-size(title='Size')
+              select.sc-size(title='Size')
                 option(value='small') Small
                 option(value='normal', selected=true) Normal
                 option(value='large') Large
                 option(value='huge') Huge
             span.sc-format-group
-              each c in ['sc-fore-color', 'sc-back-color']
-                select(class=c, title=(c=='sc-fore-color'?'Text Color':'Background Color'))
+              each c in ['sc-color', 'sc-background']
+                select(class=c, title=(c=='sc-color'?'Text Color':'Background Color'))
                   each color,i in colors
-                    option(value=color, selected=((c == 'sc-fore-color' && color == '#000000') || (c == 'sc-back-color' && color == '#ffffff') ? true : false))
-                if c == 'sc-fore-color'
+                    option(value=color, selected=((c == 'sc-color' && color == '#000000') || (c == 'sc-background' && color == '#ffffff') ? true : false))
+                if c == 'sc-color'
                   span.sc-format-separator
             span.sc-format-group
               span.sc-format-button.sc-bold(title='Bold')

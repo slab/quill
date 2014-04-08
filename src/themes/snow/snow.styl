@@ -144,27 +144,27 @@ toolbarPadding = 8px
   .sc-format-button.sc-authorship:before
     content: "\e816"
 
-  .sc-font-name
+  .sc-font
     width: fontNamePickerWidth
     .sc-picker-label
       background-position: (fontNamePickerWidth - 2*pickerPadding) center
     .sc-picker-options
       width: fontNamePickerWidth - 2*pickerPadding
-  .sc-font-size
+  .sc-size
     width: fontSizePickerWidth
     .sc-picker-label
       background-position: (fontSizePickerWidth - 2*pickerPadding) center
     .sc-picker-options
       width: fontSizePickerWidth - 2*pickerPadding
 
-  .sc-fore-color, .sc-back-color
+  .sc-color, .sc-background
     .sc-picker-options
       .sc-picker-item.sc-primary-color
         margin-bottom: 8px
       .sc-picker-item.sc-primary-color.sc-selected, .sc-picker-item.sc-primary-color:hover
         margin-bottom: 7px
 
-  for $format in fore-color back-color
+  for $format in color background
     .sc-picker.sc-{$format} .sc-picker-label
       background-image: url('assets/' + $format + '.png')
     .sc-picker.sc-{$format} .sc-picker-label.sc-active, .sc-picker.sc-{$format} .sc-picker-label:hover, .sc-picker.sc-{$format}.sc-expanded .sc-picker-label

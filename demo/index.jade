@@ -9,16 +9,16 @@ html
     #content-container
       #editor-wrapper
         #formatting-container
-          select.sc-font-name(title='Font')
+          select.sc-font(title='Font')
             option(value='sans-serif', selected=true)  Sans Serif
             option(value='serif')      Serif
             option(value='monospace')  Monospace
-          select.sc-font-size(title='Size')
+          select.sc-size(title='Size')
             option(value='small')   Small
             option(value='normal', selected=true) Normal
             option(value='large')   Large
             option(value='huge')    Huge
-          select.sc-fore-color(title='Text Color')
+          select.sc-color(title='Text Color')
             option(value='white')   White
             option(value='black', selected=true)  Black
             option(value='red')     Red
@@ -27,7 +27,7 @@ html
             option(value='teal')    Teal
             option(value='magenta') Magenta
             option(value='yellow')  Yellow
-          select.sc-back-color(title='Background Color')
+          select.sc-background(title='Background Color')
             option(value='white', selected=true)   White
             option(value='black')   Black
             option(value='red')     Red

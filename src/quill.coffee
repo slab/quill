@@ -48,7 +48,7 @@ class Quill extends EventEmitter2
   @Theme: Themes
 
   @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'back-color', 'font-name', 'fore-color', 'font-size']
+    formats: ['bold', 'italic', 'strike', 'underline', 'link', 'color', 'background', 'font', 'size']
     iframe: true
     logLevel: false
     modules:
