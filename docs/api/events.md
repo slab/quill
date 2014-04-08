@@ -59,10 +59,10 @@ Emitted when a user or API causes the selection to change.
 {% highlight javascript %}
 editor.on('selection-change', function(range) {
   if (range) {
-    if (range.start == range.end) {
-      console.log('User cursor is on', range.start);
+    if (range.start.index == range.end.index) {
+      console.log('User cursor is on', range.start.index);
     } else {
-      var text = editor.getText(range.start, range.end - range.start);
+      var text = editor.getText(range.start.index, range.end.index - range.start.index);
       console.log('User has highlighted', text);
     }
   } else {
