@@ -31,7 +31,7 @@ toolbarPadding = 8px
     display: inline-block
     float: left
     line-height: inputHeight
-    margin-right: 10px
+    margin-right: 15px
   .sc-format-button
     background-position: center center
     background-repeat: no-repeat
@@ -56,6 +56,7 @@ toolbarPadding = 8px
     margin-bottom: inputPadding
     margin-top: inputPadding
     width: 1px
+// Clearfloat
 .sc-toolbar-container:after
   clear: both
   content: ""
@@ -68,12 +69,15 @@ toolbarPadding = 8px
   font-weight: bold
   position: relative
   .sc-picker-label
-    background: url('assets/arrows.png') no-repeat (pickerWidth - 2*pickerPadding) center
     box-sizing: content-box
     cursor: pointer
     padding: inputPadding pickerPadding
+  .sc-picker-label:after
+    content: "\e80"
+    font-family: 'quill-snow'
+    font-size: 12px
+    margin-left: 8px
   .sc-picker-label.sc-active, .sc-picker-label:hover
-    background-image: url('assets/arrows-active.png')
     color: blueColor
   .sc-picker-options
     background-color: #fff
@@ -90,7 +94,6 @@ toolbarPadding = 8px
       color: blueColor
 .sc-picker.sc-expanded
   .sc-picker-label
-    background-image: url('assets/arrows-inactive.png')
     border: 1px solid grayColor
     color: grayColor
     margin: -1px
@@ -104,6 +107,8 @@ toolbarPadding = 8px
   float: left
   .sc-picker-label
     background-position: center center
+  .sc-picker-label:after
+    content: normal
   .sc-picker-options
     height: 106px
     margin-left: inputMargin
@@ -167,14 +172,10 @@ toolbarPadding = 8px
 
   .sc-font
     width: fontNamePickerWidth
-    .sc-picker-label
-      background-position: (fontNamePickerWidth - 2*pickerPadding) center
     .sc-picker-options
       width: fontNamePickerWidth - 2*pickerPadding
   .sc-size
     width: fontSizePickerWidth
-    .sc-picker-label
-      background-position: (fontSizePickerWidth - 2*pickerPadding) center
     .sc-picker-options
       width: fontSizePickerWidth - 2*pickerPadding
 
