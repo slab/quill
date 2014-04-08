@@ -71,6 +71,9 @@ class Format
     return true if @style? and node.style[@style]?
     return false
 
+  remove: (node) ->
+
+
   value: (node) ->
     return null unless this.match(node)
     if _.isBoolean(@config.value)

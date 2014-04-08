@@ -10,12 +10,6 @@ Tandem     = require('tandem-core')
 # Maybe a better heuristic would also check leaf children are still in the dom
 
 
-removeFormat = (format, subtree) ->
-  if format.matchContainer(subtree)
-    subtree = DOM.unwrap(subtree)
-  _.each(DOM.getChildNodes(subtree), _.bind(removeFormat, this, format))
-
-
 class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
   @ID_PREFIX  : 'line-'
@@ -86,15 +80,15 @@ class Line extends LinkedList.Node
     throw new Error("Unrecognized format #{name}") unless format?
     if value
       refNode = null
-      formatNode = format.container(name, value)
+      formatNode = format.container(@node, value)
       this.applyToContents(offset, length, (node) ->
         refNode = node.nextSibling
         formatNode.appendChild(node)
-        removeFormat(format, node)
+        format.remove(node)
       )
       @node.insertBefore(formatNode, refNode)
     else
-      this.applyToContents(offset, length, _.bind(removeFormat, this, format))
+      this.applyToContents(offset, length, _.bind(format.remove, format))
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->

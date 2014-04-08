@@ -16,7 +16,7 @@ class Document
 
   addFormat: (name, config) ->
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
-    @formats[name] = new Format(name, config)
+    @formats[name] = new Format(config)
     @normalizer.addTag(config.tag) if config.tag?
     @normalizer.addStyle(config.style) if config.style?
 
