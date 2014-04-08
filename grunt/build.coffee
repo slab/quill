@@ -71,7 +71,7 @@ module.exports = (grunt) ->
     build:
       expand: true
       dest: 'build/'
-      src: ['lib/*.js', 'demo/images/*.png', 'demo/fonts/*']
+      src: ['lib/*.js', 'demo/images/*.png']
     expectjs:
       dest: 'build/lib/expect.js'
       src:  'node_modules/expect.js/index.js'

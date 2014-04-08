@@ -59,7 +59,7 @@ class Toolbar
           @editorContainer.focus()
           @quill.setSelection(range)
         if _.indexOf(Toolbar.formats.EMBED, format) > -1
-          @quill.insertMedia(range.end.index, format, 'https://www.google.com/images/srpr/logo11w.png')
+          @quill.insertMedia(range.end.index, format, 'images/cloud.png')
           # TODO set selection to after the embed insertion point
         else if range.isCollapsed()
           @quill.setFormat(format, value)
