@@ -56,13 +56,11 @@ DOM =
       attributes[attr.name] = attr.value
     return attributes
 
-  getChildNodes: (node) ->
-    children = []
-    child = node.firstChild
-    while child?
-      children.push(child)
-      child = child.nextSibling
-    return children
+  getChildNodes: (parent) ->
+    return _.map(parent.childNodes)
+
+  getDescendants: (parent) ->
+    return _.map(parent.getElementsByTagName('*'))
 
   getClasses: (node) ->
     return node.className.split(/\s+/)
@@ -94,6 +92,9 @@ DOM =
     else if node.className?
       return _.indexOf(DOM.getClasses(node), cssClass) > -1
     return false
+
+  isElement: (node) ->
+    return node?.nodeType == DOM.ELEMENT_NODE
 
   moveChildren: (newParent, oldParent) ->
     _.each(DOM.getChildNodes(oldParent), (child) ->

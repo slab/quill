@@ -9,6 +9,12 @@ Tandem     = require('tandem-core')
 # Note: Because Line uses @outerHTML as a heuristic to rebuild, we must be very careful to actually modify HTML when we modify it. Ex. Do not remove a <br> only to add another one back
 # Maybe a better heuristic would also check leaf children are still in the dom
 
+removeFormat = (format, subtree) ->
+  return unless DOM.isElement(subtree)
+  nodes = DOM.getDescendants(subtree)
+  nodes.push(subtree)
+  _.each(nodes, _.bind(format.remove, format))
+
 
 class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
@@ -81,14 +87,14 @@ class Line extends LinkedList.Node
     if value
       refNode = null
       formatNode = format.container(@node, value)
-      this.applyToContents(offset, length, (node) ->
+      this.applyToContents(offset, length, (node) =>
         refNode = node.nextSibling
         formatNode.appendChild(node)
-        format.remove(node)
+        removeFormat(format, node)
       )
       @node.insertBefore(formatNode, refNode)
     else
-      this.applyToContents(offset, length, _.bind(format.remove, format))
+      this.applyToContents(offset, length, _.bind(removeFormat, this, format))
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->

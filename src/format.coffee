@@ -1,89 +1,81 @@
-_ = require('lodash')
+_   = require('lodash')
+DOM = require('./dom')
 
 
 class Format
   @FORMATS:
     'bold':
       tag: 'B'
-      value: true
       preformat: 'bold'
 
     'underline':
       tag: 'U'
-      value: true
       preformat: 'underline'
 
     'strike':
       tag: 'S'
-      value: true
       preformat: 'strikeThrough'
 
     'italic':
       tag: 'I'
-      value: true
       preformat: 'italic'
 
     'link':
       tag: 'A'
-      value:
-        attribute: 'href'
+      attribute: 'href'
 
     'fore-color':
       style: 'color'
-      value: (node) ->
-        color = node.style.color
-        return if color == '#fff' then false else color
       preformat: 'foreColor'
 
     'back-color':
-      style: 'background-color'
-      value: (node) ->
-        color = node.style.backgroundColor
-        return if color == '#000' then false else color
+      style: 'backgroundColor'
       preformat: 'backColor'
 
     'font-name':
-      style: 'font-family'
-      value: (node) ->
-        font = node.style.fontFamily
-        return if font == 'serif' then false else font
+      style: 'fontFamily'
       preformat: 'fontName'
 
     'font-size':
-      style: 'font-size'
-      value: (node) ->
-        size = node.style.fontSize
-        return if size == '13px' then false else size
+      style: 'fontSize'
       preformat: 'fontSize'
 
 
   constructor: (@config) ->
-    @tag = @config.tag if @config.tag?
-    @style = @config.style if @config.style?
 
   container: (@root, value) ->
-    node = @root.ownerDocument.createElement(@tag or 'SPAN')
-    node.style[@style] = value if @style?
+    node = @root.ownerDocument.createElement(@config.tag or 'SPAN')
+    node.style[@config.style] = value if _.isString(@config.style)
+    node.setAttribute(@config.attribute, value) if _.isString(@config.attribute)
     return node
 
   match: (node) ->
-    return true if node.tagName == @tag
-    return true if @style? and node.style[@style]?
-    return false
+    return false unless DOM.isElement(node)
+    return false if _.isString(@config.tag) and node.tagName != @config.tag
+    return false if _.isString(@config.style) and !node.style[@config.style]
+    return false if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
+    return true
 
   remove: (node) ->
-
+    return unless this.match(node)
+    if _.isString(@config.style)
+      node.style[@config.style] = null
+    if _.isString(@config.attribute)
+      node.removeAttribute(@config.attribute)
+    if _.isString(@config.tag)
+      if _.keys(DOM.getAttributes(node)).length > 0
+        return DOM.switchTag(node, 'span')
+      else
+        return DOM.unwrap(node)
+    return node
 
   value: (node) ->
-    return null unless this.match(node)
-    if _.isBoolean(@config.value)
-      return @config.value
-    else if _.isFunction(@config.value)
-      return @config.value(node)
-    else if _.isObject(@config.value) and @config.value.attribute?
-      return node.getAttribute(@config.value.attribute)
+    return @config.value(node) or null if _.isFunction(@config.value)
+    return node.style[@config.style] or null if _.isString(@config.style)
+    return node.getAttribute(@config.attribute) or null if _.isString(@config.attribute)
+    return true if _.isString(@config.tag) and node.tagName == @config.tag
     # TODO class regex
-    return null
+    return false
 
 
 module.exports = Format
