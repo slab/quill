@@ -22,18 +22,21 @@ DEFAULT_STYLES =
     'position'    : 'relative'
     'tab-size'    : '4'
     'white-space' : 'pre-wrap'
-  '.editor-container a'    : { 'text-decoration': 'underline' }
-  '.editor-container b'    : { 'font-weight': 'bold' }
-  '.editor-container i'    : { 'font-style': 'italic' }
-  '.editor-container s'    : { 'text-decoration': 'line-through' }
-  '.editor-container u'    : { 'text-decoration': 'underline' }
-  '.editor-container ol'   : { 'margin': '0px', 'padding': '0px' }
-  '.editor-container ul'   : { 'list-style-type': 'disc', 'margin': '0px', 'padding': '0px' }
+  '.editor-container a'          : { 'text-decoration': 'underline' }
+  '.editor-container b'          : { 'font-weight': 'bold' }
+  '.editor-container i'          : { 'font-style': 'italic' }
+  '.editor-container s'          : { 'text-decoration': 'line-through' }
+  '.editor-container u'          : { 'text-decoration': 'underline' }
+  '.editor-container blockquote' : { 'margin': '0 0 0 2em', 'padding': '0' }
+  '.editor-container ol'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'decimal' }
+  '.editor-container ul'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'disc' }
 
 LIST_STYLES = ['decimal', 'lower-alpha', 'lower-roman']
+rule = '.editor-container ol > li'
 _.each([1..9], (i) ->
-  DEFAULT_STYLES[".editor-container .indent-#{i}"] = { 'margin-left': "#{2*i}em" }
-  DEFAULT_STYLES[".editor-container ol.indent-#{i}"] = { 'list-style-type': LIST_STYLES[(i-1)%3] }
+  rule += ' > ol'
+  DEFAULT_STYLES[rule] = { 'list-style-type': LIST_STYLES[i%3] }
+  rule += ' > li'
 )
 DEFAULT_STYLES['br'] = { 'display': 'none' } if Utils.isIE()
 
