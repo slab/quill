@@ -12,10 +12,10 @@ pickerWidth = 50px
 toolbarPadding = 8px
 
 @font-face
-  font-family: 'fa-editor'
+  font-family: 'quill-snow'
   font-style: normal
   font-weight: normal
-  src: url('assets/fa-editor.eot') format('embedded-opentype'), url('assets/fa-editor.woff') format('woff')
+  src: url('assets/quill-snow.eot') format('embedded-opentype'), url('assets/quill-snow.woff') format('woff')
 
 .sc-toolbar-container
   box-sizing: border-box
@@ -31,13 +31,13 @@ toolbarPadding = 8px
     display: inline-block
     float: left
     line-height: inputHeight
-    margin-right: 15px
+    margin-right: 10px
   .sc-format-button
     background-position: center center
     background-repeat: no-repeat
     box-sizing: content-box
     cursor: pointer
-    font-family: 'fa-editor'
+    font-family: 'quill-snow'
     font-size: 12px
     display: inline-block
     float: left
@@ -132,17 +132,38 @@ toolbarPadding = 8px
     color: blueColor
   .sc-format-button.sc-bold:before
     content: "\e801"
-    font-weight: bold
   .sc-format-button.sc-italic:before
     content: "\e802"
   .sc-format-button.sc-underline:before
-    content: "\e80f"
+    content: "\e803"
   .sc-format-button.sc-strike:before
-    content: "\e80e"
+    content: "\e804"
   .sc-format-button.sc-link:before
-    content: "\e813"
+    content: "\e805"
+  .sc-format-button.sc-image:before
+    content: "\e806"
+  .sc-format-button.sc-list:before
+    content: "\e807"
+  .sc-format-button.sc-bullet:before
+    content: "\e808"
+  .sc-format-button.sc-indent:before
+    content: "\e809"
+  .sc-format-button.sc-outdent:before
+    content: "\e80A"
+  .sc-format-button.sc-left:before
+    content: "\e80B"
+  .sc-format-button.sc-right:before
+    content: "\e80C"
+  .sc-format-button.sc-center:before
+    content: "\e80D"
+  .sc-format-button.sc-justify:before
+    content: "\e80E"
+  .sc-format-button.sc-superscript:before
+    content: "\e80F"
+  .sc-format-button.sc-subscript:before
+    content: "\e810"
   .sc-format-button.sc-authorship:before
-    content: "\e816"
+    content: "\e811"
 
   .sc-font
     width: fontNamePickerWidth
