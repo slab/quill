@@ -48,7 +48,7 @@ class Quill extends EventEmitter2
   @Theme: Themes
 
   @DEFAULTS:
-    formats: ['bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image']
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image']
     iframe: true
     logLevel: false
     modules:
@@ -122,6 +122,24 @@ class Quill extends EventEmitter2
 
   focus: ->
     @editor.root.focus()
+
+  formatLines: (index, length, name, value, options) ->
+    [index, length, formats, options] = buildParams(index, length, name, value, options)
+    [line, offset] = @editor.doc.findLineAtOffset(index)
+    # TODO potential util function with editor._formatAt
+    delta = Tandem.Delta.getIdentity(this.getLength())
+    while line? and length > 0
+      index += (line.length - offset)
+      length -= (line.length - offset)
+      line = line.next
+      offset = 0
+      if index < delta.endLength
+        lineDelta = Tandem.Delta.makeRetainDelta(delta.endLength, index, 1, formats)
+      else
+        lineDelta = Tandem.Delta.makeInsertDelta(delta.endLength, delta.endLength, '\n', formats)
+      delta = delta.compose(lineDelta)
+    console.log(delta)
+    @editor.applyDelta(delta, options)
 
   formatText: (index, length, name, value, options) ->
     [index, length, formats, options] = buildParams(index, length, name, value, options)

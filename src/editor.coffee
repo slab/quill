@@ -33,6 +33,7 @@ _formatAt = (index, length, name, value) ->
     [line, offset] = @doc.findLineAtOffset(index)
     while line? and length > 0
       line.formatText(offset, Math.min(length, line.length - offset), name, value)
+      line.format(name, value)
       length -= (line.length - offset)
       offset = 0
       line = line.next

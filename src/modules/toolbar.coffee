@@ -9,26 +9,19 @@ _findInput = (format) ->
     selector = 'select' + selector
   input = @container.querySelector(selector)
 
-_initFormats = ->
-  _.each(Toolbar.formats, (formats, formatGroup) =>
-    _.each(formats, (format) =>
-      this.initFormat(format, formatGroup)
-    )
-  )
-
 class Toolbar
   @DEFAULTS:
     container: null
 
   @formats:
-    BUTTON: ['bold', 'bullet', 'indent', 'italic', 'link', 'list', 'outdent', 'strike', 'underline']
     EMBED: ['image']
-    SELECT: ['background', 'color', 'font', 'size']
+    LINE: ['align', 'bullet', 'list']
+    SELECT: ['align', 'background', 'color', 'font', 'size']
 
   constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
-    _initFormats.call(this)
+    _.each(@quill.options.formats, _.bind(this.initFormat, this))
     @quill.on(@quill.constructor.events.POST_EVENT, (eventName) =>
       return unless eventName == @quill.constructor.events.TEXT_CHANGE or eventName == @quill.constructor.events.SELECTION_CHANGE
       this.updateActive()
@@ -45,11 +38,11 @@ class Toolbar
       )
     )
 
-  initFormat: (format, group) ->
+  initFormat: (format) ->
     input = _findInput.call(this, format)
     return unless input?
     if format == 'link' then return @quill.addModule('link-tooltip', { button: input })
-    eventName = if group == 'SELECT' then 'change' else 'click'
+    eventName = if _.indexOf(Toolbar.formats.SELECT, format) > -1 then 'change' else 'click'
     DOM.addEventListener(input, eventName, =>
       return if @triggering
       value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
@@ -59,8 +52,11 @@ class Toolbar
           @editorContainer.focus()
           @quill.setSelection(range)
         if _.indexOf(Toolbar.formats.EMBED, format) > -1
+          # TODO show link tooltip..
           @quill.insertMedia(range.end.index, format, 'images/cloud.png')
           # TODO set selection to after the embed insertion point
+        else if _.indexOf(Toolbar.formats.LINE, format) > -1
+          @quill.formatLines(range, format, value)
         else if range.isCollapsed()
           @quill.setFormat(format, value)
         else

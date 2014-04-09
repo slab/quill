@@ -1,6 +1,7 @@
 _          = require('lodash')
 LinkedList = require('linked-list')
 DOM        = require('./dom')
+Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
 Utils      = require('./utils')
@@ -70,6 +71,13 @@ class Line extends LinkedList.Node
         offset -= leaf.length
     return [leaf, offset]
 
+  format: (name, value) ->
+    format = @doc.formats[name]
+    # TODO reassigning @node might be dangerous...
+    @node = format.add(@node, value)
+    value or= undefined   # value of false should remove format
+    @formats[name] = value
+
   formatText: (offset, length, name, value) ->
     # Skip portions of text that already has format
     while length > 0
@@ -130,6 +138,8 @@ class Line extends LinkedList.Node
       while @leaves?.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
+      # TODO detect and fill formats
+      @formats = {}
       @doc.normalizer.normalizeLine(@node)
       this.buildLeaves(@node, {})
       this.resetContent()

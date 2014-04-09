@@ -3,6 +3,9 @@ DOM = require('./dom')
 
 
 class Format
+  @types:
+    LINE: 'line'
+
   @FORMATS:
     bold:
       tag: 'B'
@@ -44,6 +47,16 @@ class Format
       tag: 'IMG'
       attribute: 'src'
 
+    align:
+      type: Format.types.LINE
+      style: 'textAlign'
+
+    list:
+      type: Format.types.LINE
+
+    bullet:
+      type: Format.types.LINE
+
 
   constructor: (@config) ->
 
@@ -51,6 +64,18 @@ class Format
     node = @root.ownerDocument.createElement(@config.tag or 'SPAN')
     node.style[@config.style] = value if _.isString(@config.style)
     node.setAttribute(@config.attribute, value) if _.isString(@config.attribute)
+    return node
+
+  add: (node, value) ->
+    return this.remove(node) unless value
+    return if this.match(node)
+    if _.isString(@config.style)
+      node.style[@config.style] = value
+    if _.isString(@config.attribute)
+      node.setAttribute(@config.attribute, value)
+    if _.isString(@config.tag)
+      formatNode = node.ownerDocument.createElement(@config.tag)
+      node = DOM.wrap(formatNode, node)
     return node
 
   match: (node) ->
