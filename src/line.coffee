@@ -74,7 +74,8 @@ class Line extends LinkedList.Node
   format: (name, value) ->
     format = @doc.formats[name]
     # TODO reassigning @node might be dangerous...
-    @node = format.add(@node, value)
+    if format.isType(Format.types.LINE)
+      @node = format.add(@node, value)
     value or= undefined   # value of false should remove format
     @formats[name] = value
 
@@ -93,17 +94,11 @@ class Line extends LinkedList.Node
     format = @doc.formats[name]
     throw new Error("Unrecognized format #{name}") unless format?
     if value
-      refNode = null
-      formatNode = format.container(@node, value)
       this.applyToContents(offset, length, (node) =>
-        refNode = node.nextSibling
-        if DOM.isVoid(formatNode)
-          DOM.removeNode(node)
-        else
-          formatNode.appendChild(node)
-          removeFormat(format, node)
+        # TODO need to handle case where middle portion of text is already formatted with this
+        # removeFormat(format, node)
+        format.add(node, value)
       )
-      @node.insertBefore(formatNode, refNode)
     else
       this.applyToContents(offset, length, _.bind(removeFormat, this, format))
     this.rebuild()

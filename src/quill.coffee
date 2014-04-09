@@ -138,7 +138,6 @@ class Quill extends EventEmitter2
       else
         lineDelta = Tandem.Delta.makeInsertDelta(delta.endLength, delta.endLength, '\n', formats)
       delta = delta.compose(lineDelta)
-    console.log(delta)
     @editor.applyDelta(delta, options)
 
   formatText: (index, length, name, value, options) ->

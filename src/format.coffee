@@ -52,31 +52,35 @@ class Format
       style: 'textAlign'
 
     list:
+      tag: 'OL'
       type: Format.types.LINE
 
     bullet:
+      tag: 'UL'
       type: Format.types.LINE
 
 
   constructor: (@config) ->
 
-  container: (@root, value) ->
-    node = @root.ownerDocument.createElement(@config.tag or 'SPAN')
-    node.style[@config.style] = value if _.isString(@config.style)
-    node.setAttribute(@config.attribute, value) if _.isString(@config.attribute)
-    return node
-
   add: (node, value) ->
     return this.remove(node) unless value
     return if this.match(node)
+    if _.isString(@config.tag)
+      formatNode = node.ownerDocument.createElement(@config.tag)
+      if DOM.isVoid(formatNode)
+        node.parentNode.insertBefore(formatNode, node)
+        DOM.removeNode(node)
+        node = formatNode
+      else
+        node = DOM.wrap(formatNode, node)
     if _.isString(@config.style)
       node.style[@config.style] = value
     if _.isString(@config.attribute)
       node.setAttribute(@config.attribute, value)
-    if _.isString(@config.tag)
-      formatNode = node.ownerDocument.createElement(@config.tag)
-      node = DOM.wrap(formatNode, node)
     return node
+
+  isType: (type) ->
+    return type == @config.type
 
   match: (node) ->
     return false unless DOM.isElement(node)
@@ -92,10 +96,7 @@ class Format
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.tag)
-      if _.keys(DOM.getAttributes(node)).length > 0
-        return DOM.switchTag(node, 'span')
-      else
-        return DOM.unwrap(node)
+      return DOM.switchTag(node, 'span')
     return node
 
   value: (node) ->
