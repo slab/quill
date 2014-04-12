@@ -51,27 +51,25 @@ describe('Normalizer', ->
   )
 
   describe('pullBlocks', ->
-    initials =
-      'Inner divs':
-        '<div>
-          <div><span>One</span></div>
-          <div><span>Two</span></div>
-        </div>'
-      'Nested inner divs':
-        '<div>
-          <div><div><span>One</span></div></div>
-          <div><div><span>Two</span></div></div>
-        </div>'
-    expected = [
-      '<div><span>One</span></div>'
-      '<div><span>Two</span></div>'
-    ].join('')
+    tests =
+      'Inner block':
+        initial:  '<div><div><span>Test</span></div><div><span>Another</span></div></div>'
+        expected: '<div><span>Test</span></div><div><span>Another</span></div>'
+      'Inner deep block':
+        initial:  '<div><div><div><span>Test</span></div></div></div>'
+        expected: '<div><span>Test</span></div>'
+      'Inner deep recursive':
+        initial:  '<div><div><span>Test</span><div>Test</div></div></div>'
+        expected: '<div><span>Test</span></div><div><div>Test</div></div>'
+      'Continuous inlines':
+        initial:  '<div><span>A</span><br><span>B</span><div>Inner</div></div>'
+        expected: '<div><span>A</span><br><span>B</span></div><div><div>Inner</div></div>'
 
-    _.each(initials, (html, name) ->
+    _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = Quill.Normalizer.stripWhitespace(html)
-        Quill.Normalizer.pullBlocks(@container)
-        expect.equalHTML(@container, expected)
+        @container.innerHTML = test.initial
+        Quill.Normalizer.pullBlocks(@container.firstChild)
+        expect.equalHTML(@container, test.expected)
       )
     )
   )
@@ -84,9 +82,9 @@ describe('Normalizer', ->
             <span>Test</span>
           </div>
           <div>
-            <br />
+            <br>
           </div>'
-        expected: '<div><span>Test</span></div><div><br /></div>'
+        expected: '<div><span>Test</span></div><div><br></div>'
       'preceding and trailing spaces':
         initial:  '  <div></div>  '
         expected: '<div></div>'

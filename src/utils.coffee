@@ -88,7 +88,7 @@ Utils =
 
   # Firefox needs splitBefore, not splitAfter like it used to be, see doc/selection
   splitBefore: (node, root) ->
-    return false if node == root or node.parentNode == root
+    return false if node == root
     parentNode = node.parentNode
     parentClone = parentNode.cloneNode(false)
     parentNode.parentNode.insertBefore(parentClone, parentNode)

@@ -60,7 +60,18 @@ class Normalizer
 
   # Make sure descendants are all inline elements
   @pullBlocks: (lineNode) ->
-    # TODO implement
+    curNode = lineNode.firstChild
+    if DOM.BLOCK_TAGS[curNode.tagName]?
+      if curNode.nextSibling?
+        Utils.splitBefore(curNode.nextSibling, lineNode)
+      DOM.unwrap(curNode)
+      return Normalizer.pullBlocks(lineNode)
+    curNode = curNode.nextSibling
+    while curNode?
+      if DOM.BLOCK_TAGS[curNode.tagName]?
+        Utils.splitBefore(curNode, lineNode)
+        break
+      curNode = curNode.nextSibling
     return lineNode
 
   @stripWhitespace: (html) ->

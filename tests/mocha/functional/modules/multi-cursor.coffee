@@ -15,7 +15,7 @@ describe('Cursor', ->
           '<b>Bold</b><i>Italic</i>' +
         '</div>' +
         '<div>' +
-          '<br />' +
+          '<br>' +
         '</div>' +
         '<div>' +
           '<span style="font-size:18px;">Large</span>' +
