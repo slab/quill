@@ -88,23 +88,27 @@ _trackDelta = (fn, options) ->
 _update = ->
   delta = _trackDelta.call(this, =>
     this.doSilently( =>
-      # TODO do we need this?
-      # Normalizer.normalizeEmptyLines(@root)
       @selection.preserve( =>
-        # Normalizer.breakBlocks(@root)
         lines = @doc.lines.toArray()
         lineNode = @root.firstChild
         _.each(lines, (line, index) =>
           while line.node != lineNode
             if line.node.parentNode == @root
+              # New line
+              lineNode = Normalizer.normalizeLine(lineNode)
               newLine = @doc.insertLineBefore(lineNode, line)
               lineNode = lineNode.nextSibling
             else
+              # Existing line removed
               return @doc.removeLine(line)
-          @doc.updateLine(line)
-          lineNode = lineNode.nextSibling
+          if line.outerHTML != lineNode.outerHTML
+            # Existing line changed
+            line.node = Normalizer.normalizeLine(line.node)
+            line.rebuild()
+          lineNode = line.node.nextSibling
         )
         while lineNode != null
+          lineNode = Normalizer.normalizeLine(lineNode)
           newLine = @doc.appendLine(lineNode)
           lineNode = lineNode.nextSibling
       )

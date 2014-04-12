@@ -20,7 +20,7 @@ describe('Cursor', ->
         '<div>' +
           '<span style="font-size:18px;">Large</span>' +
         '</div>'
-      $('#test-container').html(Quill.Normalizer.normalizeHtml(initial))
+      $('#test-container').html(Quill.Normalizer.normalizeHTML(initial))
       editor = new Quill('#test-container')
       cursorManager = editor.addModule('multi-cursor')
       _.defer(done)

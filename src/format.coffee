@@ -11,6 +11,10 @@ class Format
       tag: 'B'
       preformat: 'bold'
 
+    italic:
+      tag: 'I'
+      preformat: 'italic'
+
     underline:
       tag: 'U'
       preformat: 'underline'
@@ -18,10 +22,6 @@ class Format
     strike:
       tag: 'S'
       preformat: 'strikeThrough'
-
-    italic:
-      tag: 'I'
-      preformat: 'italic'
 
     color:
       style: 'color'
@@ -67,7 +67,7 @@ class Format
     return if this.match(node)
     if _.isString(@config.tag)
       formatNode = node.ownerDocument.createElement(@config.tag)
-      if DOM.isVoid(formatNode)
+      if DOM.VOID_TAGS[formatNode.tagName]?
         node.parentNode.insertBefore(formatNode, node)
         DOM.removeNode(node)
         node = formatNode

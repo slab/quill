@@ -4,6 +4,7 @@ DOM        = require('./dom')
 Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
+Normalizer = require('./normalizer')
 Utils      = require('./utils')
 Tandem     = require('tandem-core')
 
@@ -40,6 +41,7 @@ class Line extends LinkedList.Node
 
   buildLeaves: (node, formats) ->
     _.each(DOM.getChildNodes(node), (node) =>
+      node = Normalizer.normalizeNode(node)
       nodeFormats = _.clone(formats)
       # TODO: optimize
       _.each(@doc.formats, (format, name) ->
@@ -135,7 +137,7 @@ class Line extends LinkedList.Node
       @leaves = new LinkedList()
       # TODO detect and fill formats
       @formats = {}
-      @doc.normalizer.normalizeLine(@node)
+      @node = Normalizer.normalizeNode(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
     else

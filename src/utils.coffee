@@ -8,27 +8,6 @@ ieVersion = do ->
 
 
 Utils =
-  BLOCK_TAGS: [
-    'ADDRESS'
-    'BLOCKQUOTE'
-    'DD'
-    'DIV'
-    'DL'
-    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
-    'LI'
-    'OL'
-    'P'
-    'PRE'
-    'TABLE'
-    'TBODY'
-    'TD'
-    'TFOOT'
-    'TH'
-    'THEAD'
-    'TR'
-    'UL'
-  ]
-
   findAncestor: (node, checkFn) ->
     while node? && !checkFn(node)
       node = node.parentNode
@@ -88,9 +67,6 @@ Utils =
     else
       return 0
 
-  isBlock: (node) ->
-    return _.indexOf(Utils.BLOCK_TAGS, node.tagName, true) > -1
-
   isEmptyDoc: (root) ->
     firstLine = root.firstChild
     return true if firstLine == null
@@ -103,7 +79,7 @@ Utils =
     return ieVersion? and maxVersion >= ieVersion
 
   isLineNode: (node) ->
-    return node?.parentNode? and DOM.hasClass(node.parentNode, 'editor-container') and Utils.isBlock(node)
+    return node?.parentNode? and DOM.hasClass(node.parentNode, 'editor-container') and DOM.BLOCK_TAGS[node.tagName]?
 
   partitionChildren: (node, offset, length) ->
     [prevNode, startNode] = Utils.splitChild(node, offset)
@@ -145,26 +121,6 @@ Utils =
         right.appendChild(childRight)
         childRight = nextRight
       return [left, right, true]
-
-  traversePostorder: (root, fn, context = fn) ->
-    return unless root?
-    cur = root.firstChild
-    while cur?
-      Utils.traversePostorder.call(context, cur, fn)
-      cur = fn.call(context, cur)
-      cur = cur.nextSibling if cur?
-
-  traversePreorder: (root, offset, fn, context = fn, args...) ->
-    return unless root?
-    cur = root.firstChild
-    while cur?
-      nextOffset = offset + Utils.getNodeLength(cur)
-      curHtml = cur.innerHTML
-      cur = fn.call(context, cur, offset, args...)
-      Utils.traversePreorder.call(null, cur, offset, fn, context, args...)
-      if cur? && cur.innerHTML == curHtml
-        cur = cur.nextSibling
-        offset = nextOffset
 
 
 module.exports = Utils

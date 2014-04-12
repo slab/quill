@@ -1,4 +1,5 @@
-_ = require('lodash')
+_     = require('lodash')
+_.str = require('underscore.string')
 
 
 DOM =
@@ -7,7 +8,58 @@ DOM =
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
-  VOID_ELEMMENTS: ['BR', 'IMG']   # We only care about the Quill valid ones
+  BLOCK_TAGS: {
+    'ADDRESS'
+    'ARTICLE'
+    'ASIDE'
+    'AUDIO'
+    'BLOCKQUOTE'
+    'CANVAS'
+    'DD'
+    'DIV'
+    'DL'
+    'FIGCAPTION'
+    'FIGURE'
+    'FOOTER'
+    'FORM'
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
+    'HEADER'
+    'HGROUP'
+    'LI'
+    'OL'
+    'OUTPUT'
+    'P'
+    'PRE'
+    'SECTION'
+    'TABLE'
+    'TBODY'
+    'TD'
+    'TFOOT'
+    'TH'
+    'THEAD'
+    'TR'
+    'UL'
+    'VIDEO'
+  }
+
+  VOID_TAGS: {
+    'AREA'
+    'BASE'
+    'BR'
+    'COL'
+    'COMMAND'
+    'EMBED'
+    'HR'
+    'IMG'
+    'INPUT'
+    'KEYGEN'
+    'LINK'
+    'META'
+    'PARAM'
+    'SOURCE'
+    'TRACK'
+    'WBR'
+  }
 
   addClass: (node, cssClass) ->
     return if DOM.hasClass(node, cssClass)
@@ -78,12 +130,31 @@ DOM =
           return o
     return null
 
+  getStyles: (node) ->
+    styleString = node.getAttribute('style') or ''
+    obj = _.reduce(styleString.split(';'), (styles, str) ->
+      [name, value] = str.split(':')
+      if name and value
+        name = _.str.trim(name)
+        value = _.str.trim(value)
+        styles[name.toLowerCase()] = value
+      return styles
+    , {})
+    return obj
+
   getText: (node) ->
     switch node.nodeType
       when DOM.ELEMENT_NODE
         return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
+
+  getTextNodes: (parent) ->
+    walker = parent.ownerDocument.createTreeWalker(parent, NodeFilter.SHOW_TEXT)
+    results = []
+    while (walker.nextNode())
+      results.push(walker.currentNode)
+    return results
 
   getWindow: (node) ->
     return node.ownerDocument.defaultView or node.ownerDocument.parentWindow
@@ -98,23 +169,10 @@ DOM =
   isElement: (node) ->
     return node?.nodeType == DOM.ELEMENT_NODE
 
-  isVoid: (node) ->
-    return node? and _.indexOf(DOM.VOID_ELEMMENTS, node.tagName) > -1
-
   moveChildren: (newParent, oldParent) ->
     _.each(DOM.getChildNodes(oldParent), (child) ->
       newParent.appendChild(child)
     )
-
-  normalize: (node) ->
-    # Credit: Tim Down - http://stackoverflow.com/questions/2023255/node-normalize-crashes-in-ie6
-    child = node.firstChild
-    while (child)
-      if (child.nodeType == DOM.TEXT_NODE)
-        while ((nextChild = child.nextSibling) && nextChild.nodeType == DOM.TEXT_NODE)
-          child.appendData(nextChild.data)
-          node.removeChild(nextChild)
-      child = child.nextSibling
 
   removeClass: (node, cssClass) ->
     return unless DOM.hasClass(node, cssClass)
@@ -136,6 +194,12 @@ DOM =
     else
       select.selectedIndex = null
 
+  setStyles: (node, styles) ->
+    styleString = _.map(styles, (style, name) ->
+      return "#{name}: #{style}"
+    ).join('; ') + ';'
+    node.setAttribute('style', styleString)
+
   setText: (node, text) ->
     switch node.nodeType
       when DOM.ELEMENT_NODE
@@ -149,10 +213,12 @@ DOM =
   switchTag: (node, newTag) ->
     return if node.tagName == newTag
     newNode = node.ownerDocument.createElement(newTag)
+    attributes = DOM.getAttributes(node)
     this.moveChildren(newNode, node)
     node.parentNode.replaceChild(newNode, node)
-    newNode.className = node.className if node.className
-    newNode.id = node.id if node.id
+    _.each(attributes, (value, name) ->
+      newNode.setAttribute(name, value)
+    )
     return newNode
 
   toggleClass: (node, className, state) ->

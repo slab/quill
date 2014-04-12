@@ -10,15 +10,12 @@ Tandem        = require('tandem-core')
 
 class Document
   constructor: (@root, options = {}) ->
-    @normalizer = new Normalizer(@root)
     @formats = {}
     this.setHTML(@root.innerHTML)
 
   addFormat: (name, config) ->
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
     @formats[name] = new Format(config)
-    @normalizer.addTag(config.tag) if config.tag?
-    @normalizer.addStyle(config.style) if config.style?
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
@@ -72,15 +69,16 @@ class Document
     @lines = new LinkedList()
     @lineMap = {}
     @root.innerHTML = Normalizer.normalizeHTML(html)
-    @normalizer.normalizeDoc()
-    _.each(DOM.getChildNodes(@root), _.bind(this.appendLine, this))
+    lineNode = @root.firstChild
+    while lineNode?
+      this.appendLine(Normalizer.normalizeLine(lineNode))
+      lineNode = lineNode.nextSibling
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
-    this.updateLine(line)
+    line.rebuild()
     newLine = this.insertLineBefore(lineNode2, line.next)
-    newLine.resetContent()
     return newLine
 
   toDelta: ->
@@ -95,9 +93,6 @@ class Document
     ops.push(new Tandem.InsertOp("\n", @lines.last.formats)) if @lines.last? and allNewlines
     delta = new Tandem.Delta(0, ops)
     return delta
-
-  updateLine: (line) ->
-    return line.rebuild()
 
 
 module.exports = Document

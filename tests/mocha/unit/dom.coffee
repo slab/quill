@@ -2,7 +2,7 @@ describe('DOM', ->
   testContainer = $('#test-container').get(0)
   expectContainer = $('#expected-container').get(0)
 
-  afterEach( ->
+  beforeEach( ->
     $(testContainer).html('')
   )
 
@@ -57,12 +57,32 @@ describe('DOM', ->
 
     it('clearAttributes', ->
       Quill.DOM.clearAttributes(@node)
-      expect.equalHtml(@node.outerHTML, '<div></div>')
+      expect.equalHTML(@node.outerHTML, '<div></div>')
     )
 
     it('clearAttributes with exception', ->
       Quill.DOM.clearAttributes(@node, 'class')
-      expect.equalHtml(@node.outerHTML, '<div class="custom"></div>')
+      expect.equalHTML(@node.outerHTML, '<div class="custom"></div>')
+    )
+  )
+
+  describe('styles', ->
+    html = '<span style="color: red; background-color: blue; display: inline;">Test</span>'
+    styles =
+      'color': 'red'
+      'background-color': 'blue'
+      'display': 'inline'
+
+    it('should retrieve styles', ->
+      $(testContainer).html(html)
+      result = Quill.DOM.getStyles(testContainer.firstChild)
+      expect(result).to.eql(styles)
+    )
+
+    it('should set styles', ->
+      $(testContainer).html('<span>Test</span>')
+      Quill.DOM.setStyles(testContainer.firstChild, styles)
+      expect.equalHTML(testContainer.firstChild.outerHTML, html)
     )
   )
 
@@ -136,33 +156,33 @@ describe('DOM', ->
 
   describe('manipulation', ->
     beforeEach( ->
-      $(testContainer).html('<div>One</div><div><span>Two</span><b>Bold</b></div>')
+      $(testContainer).html('<div style="cursor: pointer">One</div><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('moveChildren', ->
       Quill.DOM.moveChildren(testContainer.firstChild, testContainer.lastChild)
-      expect.equalHtml(testContainer, '<div>One<span>Two</span><b>Bold</b></div><div></div>')
+      expect.equalHTML(testContainer, '<div style="cursor: pointer>One<span>Two</span><b>Bold</b></div><div></div>')
     )
 
     it('removeNode', ->
       Quill.DOM.removeNode(testContainer.lastChild.firstChild)
-      expect.equalHtml(testContainer, '<div>One</div><div><b>Bold</b></div>')
+      expect.equalHTML(testContainer, '<div style="cursor: pointer>One</div><div><b>Bold</b></div>')
     )
 
     it('switchTag', ->
       Quill.DOM.switchTag(testContainer.firstChild, 'span')
-      expect.equalHtml(testContainer, '<span>One</span><div><span>Two</span><b>Bold</b></div>')
+      expect.equalHTML(testContainer, '<span style="cursor: pointer>One</span><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('unwrap', ->
       Quill.DOM.unwrap(testContainer.lastChild)
-      expect.equalHtml(testContainer, '<div>One</div><span>Two</span><b>Bold</b>')
+      expect.equalHTML(testContainer, '<div style="cursor: pointer>One</div><span>Two</span><b>Bold</b>')
     )
 
     it('wrap', ->
       wrapper = testContainer.ownerDocument.createElement('div')
       Quill.DOM.wrap(wrapper, testContainer.firstChild)
-      expect.equalHtml(testContainer, '<div><div>One</div></div><div><span>Two</span><b>Bold</b></div>')
+      expect.equalHTML(testContainer, '<div><div style="cursor: pointer>One</div></div><div><span>Two</span><b>Bold</b></div>')
     )
   )
 

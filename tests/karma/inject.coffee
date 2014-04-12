@@ -81,11 +81,11 @@ expect.consistent = (doc) ->
 expect.equalDeltas = (delta1, delta2) ->
   return false
 
-expect.equalHtml = (html1, html2) ->
+expect.equalHTML = (html1, html2) ->
   [html1, html2] = _.map([html1, html2], (html) ->
     html = html.join('') if _.isArray(html)
     html = html.innerHTML unless _.isString(html)
-    html = Quill.Normalizer.normalizeHtml(html)
+    html = Quill.Normalizer.stripWhitespace(html)
     html = html.replace(/[\'\";]/g, '')    # IE8 outerHTML does not have quotes
     html = html.replace(/rgb\((\d+), ?(\d+), ?(\d+)\)/g, "rgb($1, $2, $3)") # IE8 removes spaces between digits
     html = html.toLowerCase()              # IE8 uppercases their tags
