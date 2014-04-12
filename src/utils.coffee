@@ -95,6 +95,7 @@ Utils =
     while node.previousSibling?
       parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
     Utils.splitBefore(parentNode, root)
+    return parentClone
 
   splitChild: (parent, offset) ->
     [node, offset] = Utils.getChildAtOffset(parent, offset)

@@ -32,14 +32,28 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial.join('')
-        Quill.Normalizer.handleBreaks(@container)
+        Quill.Normalizer.handleBreaks(@container.firstChild)
         expect.equalHTML(@container, test.expected)
       )
     )
   )
 
   describe('normalizeLine', ->
+    tests =
+      'pull text node':
+        initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
+        expected: '<div><span>A</span><span>B</span></div><div><div>C</div></div>'
+      'inline with text':
+        initial:  '<span>What</span>Test'
+        expected: '<div><span>What</span><span>Test</span>'
 
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = test.initial
+        Quill.Normalizer.normalizeLine(@container.firstChild)
+        expect.equalHTML(@container, test.expected)
+      )
+    )
   )
 
   describe('normalizeNode', ->

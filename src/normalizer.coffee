@@ -37,15 +37,16 @@ class Normalizer
   # Make sure descendant break tags are not causing multiple lines to be rendered
   @handleBreaks: (lineNode) ->
     breaks = _.map(lineNode.querySelectorAll('br'))
-    _.each(breaks, (node) =>
-      return if node == lineNode
-      if node.previousSibling?
-        if node.nextSibling?
-          Utils.splitBefore(node, lineNode)
-        node.parentNode.removeChild(node)
-      else if node.nextSibling?
-        Utils.splitBefore(node.nextSibling, lineNode)
+    _.each(breaks, (br) =>
+      return if br == lineNode
+      if br.previousSibling?
+        if br.nextSibling?
+          lineNode = Utils.splitBefore(br, lineNode)
+        br.parentNode.removeChild(br)
+      else if br.nextSibling?
+        lineNode = Utils.splitBefore(br.nextSibling, lineNode)
     )
+    return lineNode
 
   @normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
@@ -61,6 +62,7 @@ class Normalizer
   # Make sure descendants are all inline elements
   @pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
+    return lineNode unless curNode?
     if DOM.BLOCK_TAGS[curNode.tagName]?
       if curNode.nextSibling?
         Utils.splitBefore(curNode.nextSibling, lineNode)
@@ -69,7 +71,7 @@ class Normalizer
     curNode = curNode.nextSibling
     while curNode?
       if DOM.BLOCK_TAGS[curNode.tagName]?
-        Utils.splitBefore(curNode, lineNode)
+        lineNode = Utils.splitBefore(curNode, lineNode)
         break
       curNode = curNode.nextSibling
     return lineNode
