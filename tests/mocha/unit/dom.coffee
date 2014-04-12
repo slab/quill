@@ -214,16 +214,17 @@ describe('DOM', ->
     )
   )
 
-  describe('children', ->
-    beforeEach( ->
-      $(testContainer).html('<b>0</b><i>1</i><u>2</u><br>')
+  describe('get nodes', ->
+    it('getChildNodes', ->
+      testContainer.innerHTML = '<b>0</b><i>1</i><u>2</u><br>'
+      nodes = Quill.DOM.getChildNodes(testContainer)
+      expect(nodes.length).to.equal(4)
     )
 
-    it('getChildNodes', ->
-      nodes = Quill.DOM.getChildNodes(testContainer)
-      _.each(nodes, (node, i) ->
-        expect(node).to.equal(testContainer.childNodes[i])
-      )
+    it('getDescendants', ->
+      testContainer.innerHTML = '<b>0</b><i><span>1</span><s>2</s></i><u>3</u><br>'
+      nodes = Quill.DOM.getDescendants(testContainer)
+      expect(nodes.length).to.equal(6)
     )
   )
 )

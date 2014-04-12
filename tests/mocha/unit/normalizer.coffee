@@ -45,7 +45,7 @@ describe('Normalizer', ->
         expected: '<div><span>A</span><span>B</span></div><div><div>C</div></div>'
       'inline with text':
         initial:  '<span>What</span>Test'
-        expected: '<div><span>What</span><span>Test</span>'
+        expected: '<div><span>What</span><span>Test</span></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
