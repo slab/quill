@@ -68,7 +68,7 @@ class Document
   setHTML: (html) ->
     @lines = new LinkedList()
     @lineMap = {}
-    @root.innerHTML = Normalizer.normalizeHTML(html)
+    @root.innerHTML = Normalizer.stripWhitespace(html)
     lineNode = @root.firstChild
     while lineNode?
       this.appendLine(Normalizer.normalizeLine(lineNode))
