@@ -143,24 +143,26 @@ describe('Normalizer', ->
       'not element':
         initial:  'Test'
         expected: 'Test'
-      'void without children':
-        initial:  '<img src="https://www.google.com/images/srpr/logo11w.png" />'
-        expected: '<img src="https://www.google.com/images/srpr/logo11w.png" />'
-      'void with children':
-        initial:  '<img src="https://www.google.com/images/srpr/logo11w.png"><span>Test</span></img>'
-        expected: '<img src="https://www.google.com/images/srpr/logo11w.png" />'
-      'alias switching':
+      'no switch needed':
+        initial:  '<b>Bold</b>'
+        expected: '<b>Bold</b>'
+      'alias':
         initial:  '<strong>Bold</strong>'
         expected: '<b>Bold</b>'
-      'whitelist':
-        initial:  ''
-        expected: ''
-      'whitelist block':
-        initial:  ''
-        expected: ''
-      'allowed':
-        initial:  ''
-        expected: ''
+      'switch inline':
+        initial:  '<script>var test = "true";</script>'
+        expected:  '<span>var test = "true";</span>'
+      'switch block':
+        initial:  '<h1>Test</h1>'
+        expected: '<div>Test</div>'
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = test.initial
+        Quill.Normalizer.whitelistTags(@container.firstChild)
+        expect.equalHTML(@container, test.expected)
+      )
+    )
   )
 
   describe('wrapInline', ->

@@ -95,11 +95,7 @@ class Normalizer
   @whitelistTags: (node) ->
     return unless DOM.isElement(node)
     node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]) if Normalizer.ALIASES[node.tagName]
-    if Normalizer.TAGS[node.tagName]?
-      if DOM.VOID_TAGS[node.tagName]? and node.childNodes.length > 0
-        replacement = node.cloneNode(false)
-        node = node.parentNode.replaceChild(replacement, node)
-    else
+    if !Normalizer.TAGS[node.tagName]?
       tagName = if DOM.BLOCK_TAGS[node.tagName]? then 'div' else 'span'
       node = DOM.switchTag(node, tagName)
     return node
