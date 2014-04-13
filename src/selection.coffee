@@ -115,8 +115,8 @@ class Selection
     DOM.addEventListener(@editor.root, 'focus', =>
       _.defer( => @editor.checkUpdate())
     )
-    DOM.addEventListener(@editor.root, 'beforedeactivate blur mouseup', =>
-      @editor.checkUpdate()
+    _.each(['beforedeactivate', 'blur', 'mouseup'], (event) =>
+      DOM.addEventListener(@editor.root, event, _.bind(@editor.checkUpdate, @editor))
     )
 
   getDimensions: ->

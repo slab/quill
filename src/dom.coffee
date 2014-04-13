@@ -69,11 +69,6 @@ DOM =
       node.className += ' ' + cssClass
 
   addEventListener: (node, eventName, listener) ->
-    names = eventName.split(' ')
-    if names.length > 1
-      return _.each(names, (name) ->
-        DOM.addEventListener(node, name, listener)
-      )
     callback = (event) ->
       event ?= DOM.getWindow(node).event
       event.target ?= event.srcElement
@@ -93,8 +88,6 @@ DOM =
       node.addEventListener(eventName, callback)
     else if node.attachEvent?
       node.attachEvent("on#{eventName}", callback)
-    else
-      throw new Error("No add event support")
 
   clearAttributes: (node, exception = []) ->
     exception = [exception] if _.isString(exception)
@@ -211,7 +204,7 @@ DOM =
       else return # Noop
 
   switchTag: (node, newTag) ->
-    return if node.tagName == newTag
+    return if node.tagName == newTag.toUpperCase()
     newNode = node.ownerDocument.createElement(newTag)
     attributes = DOM.getAttributes(node)
     this.moveChildren(newNode, node)

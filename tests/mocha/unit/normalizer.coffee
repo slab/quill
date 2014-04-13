@@ -66,6 +66,9 @@ describe('Normalizer', ->
 
   describe('pullBlocks', ->
     tests =
+      'No children':
+        initial:  '<div></div>'
+        expected: '<div></div>'
       'Inner block':
         initial:  '<div><div><span>Test</span></div><div><span>Another</span></div></div>'
         expected: '<div><span>Test</span></div><div><span>Another</span></div>'

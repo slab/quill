@@ -38,7 +38,6 @@ class Normalizer
   @handleBreaks: (lineNode) ->
     breaks = _.map(lineNode.querySelectorAll('br'))
     _.each(breaks, (br) =>
-      return if br == lineNode
       if br.previousSibling?
         if br.nextSibling?
           lineNode = Utils.splitAncestors(br, lineNode)
@@ -114,7 +113,6 @@ class Normalizer
   @wrapText: (lineNode) ->
     texts = DOM.getTextNodes(lineNode)
     _.each(texts, (textNode) =>
-      return unless textNode.parentNode?
       if textNode.previousSibling? or textNode.nextSibling?
         DOM.wrap(lineNode.ownerDocument.createElement('span'), textNode)
     )

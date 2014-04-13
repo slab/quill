@@ -1,6 +1,6 @@
 describe('DOM', ->
   beforeEach( ->
-    @container = $('#test-container').html('').get(0)
+    @container = $('#test-container').html('<div></div>').get(0).firstChild
   )
 
   describe('classes', ->
@@ -8,30 +8,43 @@ describe('DOM', ->
       $(@container).removeClass()
     )
 
-    it('addClass', ->
+    it('add class', ->
       Quill.DOM.addClass(@container, 'custom')
       expect($(@container).hasClass('custom')).to.be(true)
     )
 
-    it('getClasses', ->
-      $(@container).addClass('custom')
-      $(@container).addClass('another')
-      classes = Quill.DOM.getClasses(@container)
-      expect(_.union(classes, ['custom', 'another']).length).to.equal(2)
+    it('add exisiting class', ->
+      Quill.DOM.addClass(@container, 'custom')
+      Quill.DOM.addClass(@container, 'custom')
+      expect($(@container).attr('class')).to.equal('custom')
     )
 
-    it('hasClass', ->
+    it('get classes', ->
+      $(@container).addClass('custom')
+      $(@container).addClass('another')
+      classes = Quill.DOM.getClasses(@container).sort()
+      expect(classes.length).to.equal(2)
+      expect(classes[0]).to.equal('another')
+      expect(classes[1]).to.equal('custom')
+    )
+
+    it('has class', ->
       $(@container).addClass('custom')
       expect(Quill.DOM.hasClass(@container, 'custom')).to.be(true)
     )
 
-    it('removeClass', ->
+    it('remove class', ->
       $(@container).addClass('custom')
       Quill.DOM.removeClass(@container, 'custom')
       expect($(@container).hasClass('custom')).to.be(false)
     )
 
-    it('toggleClass', ->
+    it('remove nonexistent class', ->
+      Quill.DOM.removeClass(@container, 'custom')
+      expect.equalHTML(@container.outerHTML, '<div></div>')
+    )
+
+    it('toggle class', ->
       Quill.DOM.toggleClass(@container, 'custom')
       expect($(@container).hasClass('custom')).to.be(true)
       Quill.DOM.toggleClass(@container, 'custom')
@@ -43,6 +56,13 @@ describe('DOM', ->
     beforeEach( ->
       $(@container).html('<div class="custom" style="color: red;"></div>')
       @node = @container.firstChild
+    )
+
+    it('get no attributes', ->
+      $(@container).html('<div></div>')
+      @node = @container.firstChild
+      attributes = Quill.DOM.getAttributes(@node)
+      expect(_.keys(attributes).length).to.equal(0)
     )
 
     it('getAttributes', ->
@@ -140,6 +160,14 @@ describe('DOM', ->
       expect(Quill.DOM.getText(@container)).to.equal('0123')
     )
 
+    it('should retrieve text from break', ->
+      expect(Quill.DOM.getText(@container.lastChild)).to.equal('')
+    )
+
+    it('should retrieve text from comment', ->
+      expect(Quill.DOM.getText(@container.childNodes[2])).to.equal('')
+    )
+
     it('should set element text', ->
       Quill.DOM.setText(@container, 'test')
       expect($(@container).text()).to.equal('test')
@@ -174,6 +202,12 @@ describe('DOM', ->
     it('switchTag', ->
       Quill.DOM.switchTag(@container.firstChild, 'span')
       expect.equalHTML(@container, '<span style="cursor: pointer>One</span><div><span>Two</span><b>Bold</b></div>')
+    )
+
+    it('switchTag to same', ->
+      html = @container.innerHTML
+      Quill.DOM.switchTag(@container.firstChild, 'div')
+      expect.equalHTML(@container, html)
     )
 
     it('unwrap', ->
