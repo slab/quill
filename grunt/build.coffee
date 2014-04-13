@@ -48,7 +48,7 @@ module.exports = (grunt) ->
     coverage:
       expand: true
       dest: 'build/'
-      src: ['src/**/*.coffee', '!src/debug.coffee']
+      src: ['src/**/*.coffee']
       ext: '.js'
   )
 
