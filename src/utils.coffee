@@ -13,35 +13,10 @@ Utils =
       node = node.parentNode
     return node
 
-  findClosestPoint: (point, list, prepFn = ->) ->    # Using Euclidean distance
-    point = prepFn.call(null, point)
-    point = [point] if !_.isArray(point)
-    closestDist = Infinity
-    closestValue = false
-    for key,coords of list
-      coords = prepFn.call(null, coords)
-      coords = [coords] if !_.isArray(coords)
-      dist = _.reduce(coords, (dist, coord, i) ->
-        dist + Math.pow(coord - point[i], 2)
-      , 0)
-      dist = Math.sqrt(dist)
-      return key if dist == 0
-      if dist < closestDist
-        closestDist = dist
-        closestValue = key
-    return closestValue
-
   findDeepestNode: (node, offset) ->
-    if node.firstChild?
-      for child in DOM.getChildNodes(node)
-        length = Utils.getNodeLength(child)
-        if offset < length
-          return Utils.findDeepestNode(child, offset)
-        else
-          offset -= length
-      return Utils.findDeepestNode(child, offset + length)
-    else
-      return [node, offset]
+    while node.firstChild?
+      [node, offset] = Utils.getChildAtOffset(node, offset)
+    return [node, offset]
 
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
@@ -86,15 +61,15 @@ Utils =
     [endNode, nextNode] = Utils.splitChild(node, offset + length)
     return [startNode, endNode]
 
-  # Firefox needs splitBefore, not splitAfter like it used to be, see doc/selection
-  splitBefore: (node, root) ->
-    return false if node == root
-    parentNode = node.parentNode
+  # refNode is node after split point, root is eldest node we want split
+  splitAncestors: (refNode, root) ->
+    return false if refNode == root
+    parentNode = refNode.parentNode
     parentClone = parentNode.cloneNode(false)
     parentNode.parentNode.insertBefore(parentClone, parentNode)
-    while node.previousSibling?
-      parentClone.insertBefore(node.previousSibling, parentClone.firstChild)
-    Utils.splitBefore(parentNode, root)
+    while refNode.previousSibling?
+      parentClone.insertBefore(refNode.previousSibling, parentClone.firstChild)
+    Utils.splitAncestors(parentNode, root)
     return parentClone
 
   splitChild: (parent, offset) ->

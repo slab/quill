@@ -41,10 +41,10 @@ class Normalizer
       return if br == lineNode
       if br.previousSibling?
         if br.nextSibling?
-          lineNode = Utils.splitBefore(br, lineNode)
+          lineNode = Utils.splitAncestors(br, lineNode)
         br.parentNode.removeChild(br)
       else if br.nextSibling?
-        lineNode = Utils.splitBefore(br.nextSibling, lineNode)
+        lineNode = Utils.splitAncestors(br.nextSibling, lineNode)
     )
     return lineNode
 
@@ -65,13 +65,13 @@ class Normalizer
     return lineNode unless curNode?
     if DOM.BLOCK_TAGS[curNode.tagName]?
       if curNode.nextSibling?
-        Utils.splitBefore(curNode.nextSibling, lineNode)
+        Utils.splitAncestors(curNode.nextSibling, lineNode)
       DOM.unwrap(curNode)
       return Normalizer.pullBlocks(lineNode)
     curNode = curNode.nextSibling
     while curNode?
       if DOM.BLOCK_TAGS[curNode.tagName]?
-        lineNode = Utils.splitBefore(curNode, lineNode)
+        lineNode = Utils.splitAncestors(curNode, lineNode)
         break
       curNode = curNode.nextSibling
     return lineNode
