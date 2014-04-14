@@ -35,8 +35,6 @@ describe('Range', ->
     )
   )
 
-
-
   describe('getText', ->
     textTests = new QuillEditorTest(
       initial:
@@ -80,8 +78,6 @@ describe('Range', ->
         expect(range.getText()).to.equal(text)
     )
   )
-
-
 
   describe('getFormats', ->
     formatTests = new QuillEditorTest(
@@ -128,80 +124,5 @@ describe('Range', ->
     formatTests.run('node with preceding newline', {}, 6, 9, '\n78', { bold: true, strike: true })
     formatTests.run('node with trailing newline', {}, 13, 16, '34\n', { bold: true, strike: true })
     formatTests.run('line with preceding and trailing newline', {}, 6, 16, "\n78901234\n", { bold: true })
-  )
-
-
-
-  describe('getLeafNodes', ->
-    leafTests = new QuillEditorTest(
-      initial: [
-        '<div><b>123</b><i>456</i></div>'
-        '<div><s>7</s><u>8</u><s>9</s><u>0</u></div>'
-      ]
-      expected: [0, 1]
-    )
-
-    leafTests.run('should select a single node at boundaries',
-      checker: (editor) ->
-        range = new Quill.Range(editor.editor.doc, 0, 3)
-        nodes = range.getLeafNodes()
-        expect(nodes.length).to.equal(1)
-        expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
-    )
-
-    leafTests.run('should select multiple nodes at boundaries',
-      checker: (editor) ->
-        range = new Quill.Range(editor.editor.doc, 0, 6)
-        nodes = range.getLeafNodes()
-        expect(nodes.length).to.equal(2)
-        expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
-        expect(nodes[1]).to.equal(editor.editor.root.firstChild.childNodes[1])
-    )
-
-    leafTests.run('should select a single node inside boundaries',
-      checker: (editor) ->
-        for i in [0..2]
-          range = new Quill.Range(editor.editor.doc, i, i+1)
-          nodes = range.getLeafNodes()
-          expect(nodes.length).to.equal(1)
-          expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
-    )
-
-    leafTests.run('should select multipe nodes inside boundaries',
-      checker: (editor) ->
-        for i in [0..2]
-          range = new Quill.Range(editor.editor.doc, i, i+4)
-          nodes = range.getLeafNodes()
-          expect(nodes.length).to.equal(2)
-          expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
-          expect(nodes[1]).to.equal(editor.editor.root.firstChild.childNodes[1])
-    )
-
-    leafTests.run('should select multiple nodes across lines within boundaries',
-      checker: (editor) ->
-        range = new Quill.Range(editor.editor.doc, 0, 6)
-        nodes = range.getLeafNodes()
-        expect(nodes.length).to.equal(2)
-        expect(nodes[0]).to.equal(editor.editor.root.firstChild.childNodes[0])
-        expect(nodes[1]).to.equal(editor.editor.root.firstChild.childNodes[1])
-    )
-
-    leafTests.run('should select multiple nodes across lines outside boundaries',
-      checker: (editor) ->
-        range = new Quill.Range(editor.editor.doc, 5, 8)
-        nodes = range.getLeafNodes()
-        expect(nodes.length).to.equal(2)
-        expect(nodes[0]).to.equal(editor.editor.root.firstChild.lastChild)
-        expect(nodes[1]).to.equal(editor.editor.root.lastChild.firstChild)
-    )
-
-    leafTests.run('should select node collapsed',
-      checker: (editor) ->
-        for i in [0..2]
-          range = new Quill.Range(editor.editor.doc, i, i)
-          nodes = range.getLeafNodes()
-          expect(nodes.length).to.equal(1)
-          expect(nodes[0]).to.equal(editor.editor.root.firstChild.firstChild)
-    )
   )
 )

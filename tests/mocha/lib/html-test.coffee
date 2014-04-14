@@ -14,7 +14,7 @@ class QuillHtmlTest
     pre           : -> []
 
   @cleanHtml: (html, keepIdClass = false) ->
-    html = Quill.Normalizer.normalizeHtml(html)
+    html = Quill.Normalizer.stripWhitespace(html)
     unless keepIdClass == true
       html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
       html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
