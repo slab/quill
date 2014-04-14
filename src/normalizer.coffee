@@ -20,11 +20,11 @@ class Normalizer
   }
 
   @STYLES: {
-    'background-color'
-    'color'
-    'font-family'
-    'font-size'
-    'text-align'
+    'background-color' : '#fff'
+    'color'            : '#000'
+    'font-family'      : "'Helvetica', 'Arial', sans-serif"
+    'font-size'        : '13px'
+    'text-align'       : 'left'
   }
 
   @ALIASES: {
@@ -84,7 +84,9 @@ class Normalizer
 
   @whitelistStyles: (node) ->
     original = DOM.getStyles(node)
-    styles = _.pick(original, _.keys(Normalizer.STYLES))
+    styles = _.omit(original, (value, key) ->
+      return !Normalizer.STYLES[key]? or value == Normalizer.STYLES[key]
+    )
     if _.keys(styles).length < _.keys(original).length
       if _.keys(styles).length > 0
         DOM.setStyles(node, styles)
