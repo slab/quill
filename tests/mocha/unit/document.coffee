@@ -72,12 +72,8 @@ describe('Document', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        $container = $('#test-container').html('')
-        doc = new Quill.Document($container.get(0))
-        _.each(Quill.DEFAULTS.formats, (name) ->
-          doc.addFormat(name, Quill.Format.FORMATS[name])
-        )
-        doc.setHTML(test.initial.join(''))
+        $container = $('#test-container').html(test.initial.join(''))
+        doc = new Quill.Document($container.get(0), { formats: Quill.DEFAULTS.formats })
         delta = doc.toDelta()
         if !delta.isEqual(test.expected)
           console.error(doc, delta, test.expected)

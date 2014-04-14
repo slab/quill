@@ -11,9 +11,13 @@ Tandem        = require('tandem-core')
 class Document
   constructor: (@root, options = {}) ->
     @formats = {}
+    _.each(options.formats, (name) =>
+      this.addFormat(name)
+    )
     this.setHTML(@root.innerHTML)
 
   addFormat: (name, config) ->
+    config = Format.FORMATS[name] unless config?
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
     @formats[name] = new Format(config)
 

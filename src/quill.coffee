@@ -80,9 +80,6 @@ class Quill extends EventEmitter2
     @modules = {}
     @editor = new Editor(container, this, @options)
     Quill.editors.push(@editor)
-    _.each(@options.formats, (name) =>
-      this.addFormat(name, Format.FORMATS[name])
-    )
     this.setHTML(html)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Quill.Theme[themeClass](this, @options)
