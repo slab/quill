@@ -65,13 +65,14 @@ class Line extends LinkedList.Node
       curLeaf = curLeaf.next
     return null
 
-  findLeafAtOffset: (offset) ->
-    for leaf in @leaves.toArray()
-      if offset <= leaf.length
-        return [leaf, offset]
-      else
-        offset -= leaf.length
-    return [leaf, offset]
+  findLeafAt: (offset) ->
+    # TODO exact same code as findLineAt
+    leaf = @leaves.first
+    while leaf?
+      return [leaf, offset] if offset <= leaf.length
+      offset -= leaf.length
+      leaf = leaf.next
+    return [null, offset]
 
   format: (name, value) ->
     format = @doc.formats[name]
@@ -107,7 +108,7 @@ class Line extends LinkedList.Node
 
   insertText: (offset, text, formats = {}) ->
     return unless text?.length > 0
-    [leaf, leafOffset] = this.findLeafAtOffset(offset)
+    [leaf, leafOffset] = this.findLeafAt(offset)
     # offset > 0 for multicursor
     if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
       leaf.insertText(leafOffset, text)

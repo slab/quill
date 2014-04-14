@@ -35,7 +35,6 @@ class Document
       return [curLine, index] if index <= curLine.length
       index -= curLine.length + 1
       curLine = curLine.next
-    # TODO we want to signal at the very end of document...
     return [null, index]
 
   insertLineBefore: (newLineNode, refLine) ->
