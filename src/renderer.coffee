@@ -38,7 +38,7 @@ _.each([1..9], (i) ->
   DEFAULT_STYLES[rule] = { 'list-style-type': LIST_STYLES[i%3] }
   rule += ' > li'
 )
-DEFAULT_STYLES['br'] = { 'display': 'none' } if Utils.isIE()
+DEFAULT_STYLES[DOM.DEFAULT_BREAK_TAG] = { 'display': 'none' } if Utils.isIE()
 
 
 class Renderer

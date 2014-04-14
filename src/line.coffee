@@ -114,21 +114,21 @@ class Line extends LinkedList.Node
       leaf.insertText(leafOffset, text)
       this.resetContent()
     else
-      span = @node.ownerDocument.createElement('span')
-      DOM.setText(span, text)
+      inline = @node.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG)
+      DOM.setText(inline, text)
       if offset == 0    # Special case for remote cursor preservation
-        @node.insertBefore(span, @node.firstChild)
+        @node.insertBefore(inline, @node.firstChild)
       else
         [prevNode, nextNode] = Utils.splitChild(@node, offset)
         parentNode = prevNode?.parentNode or nextNode?.parentNode
-        parentNode.insertBefore(span, nextNode)
+        parentNode.insertBefore(inline, nextNode)
       this.rebuild()
       _.each(formats, (value, name) =>
         this.formatText(offset, text.length, name, value)
       )
 
   isNewline: ->
-    return @length == 0 and @leaves.length == 1 and @leaves.first.node.tagName == 'BR'
+    return @length == 0 and @leaves.length == 1 and @leaves.first.node.tagName == DOM.DEFAULT_BREAK_TAG
 
   rebuild: (force = false) ->
     if @node.parentNode == @doc.root

@@ -8,6 +8,10 @@ DOM =
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
+  DEFAULT_BLOCK_TAG: 'DIV'
+  DEFAULT_BREAK_TAG: 'BR'
+  DEFAULT_INLNE_TAG: 'SPAN'
+
   BLOCK_TAGS: {
     'ADDRESS'
     'ARTICLE'
@@ -138,7 +142,7 @@ DOM =
   getText: (node) ->
     switch node.nodeType
       when DOM.ELEMENT_NODE
-        return if node.tagName == "BR" then "" else node.textContent or node.innerText or ""
+        return if node.tagName == DOM.DEFAULT_BREAK_TAG then "" else node.textContent or node.innerText or ""
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
 

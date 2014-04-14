@@ -28,15 +28,15 @@ class Normalizer
   }
 
   @ALIASES: {
-    'STRONG': 'B'
-    'EM': 'I'
-    'DEL': 'S'
-    'STRIKE': 'S'
+    'STRONG' : 'B'
+    'EM'     : 'I'
+    'DEL'    : 'S'
+    'STRIKE' : 'S'
   }
 
   # Make sure descendant break tags are not causing multiple lines to be rendered
   @handleBreaks: (lineNode) ->
-    breaks = _.map(lineNode.querySelectorAll('br'))
+    breaks = _.map(lineNode.querySelectorAll(DOM.DEFAULT_BREAK_TAG))
     _.each(breaks, (br) =>
       if br.previousSibling?
         if br.nextSibling?
@@ -95,14 +95,14 @@ class Normalizer
     return unless DOM.isElement(node)
     node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]) if Normalizer.ALIASES[node.tagName]
     if !Normalizer.TAGS[node.tagName]?
-      tagName = if DOM.BLOCK_TAGS[node.tagName]? then 'div' else 'span'
+      tagName = if DOM.BLOCK_TAGS[node.tagName]? then DOM.DEFAULT_BLOCK_TAG else DOM.DEFAULT_INLNE_TAG
       node = DOM.switchTag(node, tagName)
     return node
 
   # Wrap inline nodes with block tags
   @wrapInline: (lineNode) ->
     return lineNode if DOM.BLOCK_TAGS[lineNode.tagName]?
-    blockNode = lineNode.ownerDocument.createElement('div')
+    blockNode = lineNode.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG)
     lineNode.parentNode.insertBefore(blockNode, lineNode)
     while lineNode? and !DOM.BLOCK_TAGS[lineNode.tagName]?
       nextNode = lineNode.nextSibling
@@ -114,7 +114,7 @@ class Normalizer
     texts = DOM.getTextNodes(lineNode)
     _.each(texts, (textNode) =>
       if textNode.previousSibling? or textNode.nextSibling?
-        DOM.wrap(lineNode.ownerDocument.createElement('span'), textNode)
+        DOM.wrap(lineNode.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), textNode)
     )
 
 

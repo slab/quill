@@ -24,7 +24,7 @@ class Leaf extends LinkedList.Node
 
   insertText: (index, text) ->
     @text = @text.slice(0, index) + text + @text.slice(index)
-    @node = DOM.switchTag(@node, 'span') if @node.tagName == 'BR'
+    @node = DOM.switchTag(@node, DOM.DEFAULT_INLNE_TAG) if @node.tagName == DOM.DEFAULT_BREAK_TAG
     targetNode = @node.firstChild or @node
     DOM.setText(targetNode, @text)
     @length = @text.length

@@ -49,9 +49,9 @@ _insertAt = (index, text, formatting = {}) ->
     if !line?
       # TODO only really makes sense if offset is also 0, signifying the end of the document
       # TODO clean up... this add line logic doesnt belong here
-      lineNode = @root.ownerDocument.createElement('div')
+      lineNode = @root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG)
       @root.appendChild(lineNode)
-      lineNode.appendChild(@root.ownerDocument.createElement('br'))
+      lineNode.appendChild(@root.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
       line = @doc.appendLine(lineNode)
       offset = 0
       # TODO this logic is very unintuitive without going through all the cases...
