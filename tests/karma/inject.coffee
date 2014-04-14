@@ -79,7 +79,19 @@ expect.consistent = (doc) ->
   return true
 
 expect.equalDeltas = (delta1, delta2) ->
-  return false
+  [delta1, delta2] = _.map([delta1, delta2], (delta) ->
+    return {
+      startLength: delta.startLength
+      endLength: delta.endLength
+      ops: _.map(delta.ops, (op) ->
+        return {
+          value: op.value
+          attributes: JSON.stringify(op.attributes)
+        }
+      )
+    }
+  )
+  expect(delta1).to.eql(delta2)
 
 expect.equalHTML = (html1, html2) ->
   [html1, html2] = _.map([html1, html2], (html) ->
