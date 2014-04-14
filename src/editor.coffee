@@ -11,7 +11,7 @@ Tandem     = require('tandem-core')
 _deleteAt = (index, length) ->
   return if length <= 0
   @selection.preserve(index, -1 * length, =>
-    [firstLine, offset] = @doc.findLineAtOffset(index)
+    [firstLine, offset] = @doc.findLineAt(index)
     curLine = firstLine
     while curLine? and length > 0
       deleteLength = Math.min(length, curLine.length - offset + 1)
@@ -30,7 +30,7 @@ _deleteAt = (index, length) ->
 # formatAt (Number index, Number length, String name, Mixed value) ->
 _formatAt = (index, length, name, value) ->
   @selection.preserve(index, 0, =>
-    [line, offset] = @doc.findLineAtOffset(index)
+    [line, offset] = @doc.findLineAt(index)
     while line? and length > 0
       line.formatText(offset, Math.min(length, line.length - offset), name, value)
       length -= (line.length - offset)
@@ -45,7 +45,7 @@ _insertAt = (index, text, formatting = {}) ->
     text = text.replace(/\r\n/g, '\n')
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')
-    [line, offset] = @doc.findLineAtOffset(index)
+    [line, offset] = @doc.findLineAt(index)
     if !line?
       # TODO only really makes sense if offset is also 0, signifying the end of the document
       # TODO clean up... this add line logic doesnt belong here

@@ -125,7 +125,7 @@ class Quill extends EventEmitter2
 
   formatLines: (index, length, name, value, options) ->
     [index, length, formats, options] = buildParams(index, length, name, value, options)
-    [line, offset] = @editor.doc.findLineAtOffset(index)
+    [line, offset] = @editor.doc.findLineAt(index)
     # TODO potential util function with editor._formatAt
     delta = Tandem.Delta.getIdentity(this.getLength())
     while line? and length > 0

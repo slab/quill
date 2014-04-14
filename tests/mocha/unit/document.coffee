@@ -2,7 +2,7 @@ Tandem = require('tandem-core')
 
 
 describe('Document', ->
-  describe('findLineAtOffset', ->
+  describe('findLineAt', ->
     it('should find correct offset in line', ->
       lines = [
         '<div><br></div>'
@@ -18,7 +18,7 @@ describe('Document', ->
       lines = doc.lines.toArray()
       _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
         _.each(indexGroup, (index, indexIndex) ->
-          [line, offset] = doc.findLineAtOffset(index)
+          [line, offset] = doc.findLineAt(index)
           expect(line.node.innerHTML).to.be.equal(lines[lineIndex].node.innerHTML)
           expect(line.id).to.be.equal(lines[lineIndex].id)
           expect(offset).to.be.equal(indexIndex)

@@ -21,27 +21,22 @@ class Document
     return this.insertLineBefore(lineNode, null)
 
   findLeaf: (node) ->
-    lineNode = this.findLineNode(node)
-    line = this.findLine(lineNode)
+    line = this.findLine(node)
     return line.findLeaf(node)
 
   findLine: (node) ->
-    node = this.findLineNode(node)
+    while node? and !Utils.isLineNode(node)
+      node = node.parentNode
     return if node? then @lineMap[node.id] else null
 
-  findLineAtOffset: (offset) ->
+  findLineAt: (index) ->
     curLine = @lines.first
     while curLine?
-      return [curLine, offset] if offset <= curLine.length
-      offset -= curLine.length + 1
+      return [curLine, index] if index <= curLine.length
+      index -= curLine.length + 1
       curLine = curLine.next
     # TODO we want to signal at the very end of document...
-    return [null, offset]
-
-  findLineNode: (node) ->
-    while node? && !Utils.isLineNode(node)
-      node = node.parentNode
-    return node
+    return [null, index]
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)

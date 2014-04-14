@@ -53,10 +53,8 @@ class Range
     return result
 
   getLines: ->
-    startLineNode = @doc.findLineNode(@start.leafNode)
-    endLineNode = @doc.findLineNode(@end.leafNode)
-    startLine = @doc.findLine(startLineNode)
-    endLine = @doc.findLine(endLineNode)
+    startLine = @doc.findLine(@start.leafNode)
+    endLine = @doc.findLine(@end.leafNode)
     ret = [startLine]
     while startLine != endLine
       startLine = startLine.next
