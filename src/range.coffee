@@ -52,22 +52,16 @@ class Range
     )
     return result
 
-  getLineNodes: ->
-    startLine = @doc.findLineNode(@start.leafNode)
-    endLine = @doc.findLineNode(@end.leafNode)
-    if startLine == endLine
-      return [startLine]
-    lines = []
-    while startLine != endLine
-      lines.push(startLine)
-      startLine = startLine.nextSibling
-    lines.push(endLine)
-    return lines
-
   getLines: ->
-    return _.map(this.getLineNodes(), (lineNode) =>
-      return @doc.findLine(lineNode)
-    )
+    startLineNode = @doc.findLineNode(@start.leafNode)
+    endLineNode = @doc.findLineNode(@end.leafNode)
+    startLine = @doc.findLine(startLineNode)
+    endLine = @doc.findLine(endLineNode)
+    ret = [startLine]
+    while startLine != endLine
+      startLine = startLine.next
+      ret.push(startLine)
+    return ret
 
   getText: ->
     delta = @doc.toDelta()
