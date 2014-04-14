@@ -31,6 +31,9 @@ describe('Document', ->
   describe('toDelta', ->
     tests =
       'blank':
+        initial:  ['']
+        expected: Tandem.Delta.getInitial('')
+      'empty':
         initial:  ['<div><span></span></div>']
         expected: Tandem.Delta.getInitial('')
       'single line':
@@ -65,12 +68,16 @@ describe('Document', ->
         expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { bold: true })
       'style format':
         initial:  ['<div><span style="color: teal;">0123</span></div>']
-        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { 'fore-color': 'teal' })
+        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { 'color': 'teal' })
 
     _.each(tests, (test, name) ->
       it(name, ->
-        $container = $('#test-container').html(test.initial.join(''))
-        doc = new Quill.Document($container.get(0), { formats: Quill.DEFAULTS.formats })
+        $container = $('#test-container').html('')
+        doc = new Quill.Document($container.get(0))
+        _.each(Quill.DEFAULTS.formats, (name) ->
+          doc.addFormat(name, Quill.Format.FORMATS[name])
+        )
+        doc.setHTML(test.initial.join(''))
         delta = doc.toDelta()
         if !delta.isEqual(test.expected)
           console.error(doc, delta, test.expected)
