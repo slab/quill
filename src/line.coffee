@@ -79,7 +79,7 @@ class Line extends LinkedList.Node
     # TODO reassigning @node might be dangerous...
     if format.isType(Format.types.LINE)
       @node = format.add(@node, value)
-    value or= undefined   # value of false should remove format
+    value or= undefined   # Falsy value should remove format
     @formats[name] = value
 
   formatText: (offset, length, name, value) ->

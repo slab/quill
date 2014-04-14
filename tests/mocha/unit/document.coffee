@@ -27,6 +27,13 @@ describe('Document', ->
     )
   )
 
+  describe('findLine', -> )
+  describe('findLineAt', -> )
+  describe('mergeLines', -> )
+  describe('removeLine', -> )
+  describe('splitLine', -> )
+  describe('setHTML', -> )
+
 
   describe('toDelta', ->
     tests =
@@ -74,10 +81,7 @@ describe('Document', ->
       it(name, ->
         $container = $('#test-container').html(test.initial.join(''))
         doc = new Quill.Document($container.get(0), { formats: Quill.DEFAULTS.formats })
-        delta = doc.toDelta()
-        if !delta.isEqual(test.expected)
-          console.error(doc, delta, test.expected)
-          throw new Error('Unequal deltas')
+        expect.equalDeltas(doc.toDelta(), test.expected)
       )
     )
   )
