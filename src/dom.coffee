@@ -162,6 +162,9 @@ DOM =
   isElement: (node) ->
     return node?.nodeType == DOM.ELEMENT_NODE
 
+  isTextNode: (node) ->
+    return node?.nodeType == DOM.TEXT_NODE
+
   moveChildren: (newParent, oldParent) ->
     _.each(DOM.getChildNodes(oldParent), (child) ->
       newParent.appendChild(child)

@@ -14,7 +14,7 @@ class Document
     _.each(options.formats, (name) =>
       this.addFormat(name)
     )
-    this.setHTML(@root.innerHTML)
+    this.rebuild()
 
   addFormat: (name, config) ->
     config = Format.FORMATS[name] unless config?
@@ -59,18 +59,21 @@ class Document
     this.removeLine(lineToMerge)
     line.rebuild()
 
+  rebuild: ->
+    @lines = new LinkedList()
+    @lineMap = {}
+    lineNode = @root.firstChild
+    while lineNode?
+      this.appendLine(Normalizer.normalizeLine(lineNode))
+      lineNode = lineNode.nextSibling
+
   removeLine: (line) ->
     delete @lineMap[line.id]
     @lines.remove(line)
 
   setHTML: (html) ->
-    @lines = new LinkedList()
-    @lineMap = {}
     @root.innerHTML = Normalizer.stripWhitespace(html)
-    lineNode = @root.firstChild
-    while lineNode?
-      this.appendLine(Normalizer.normalizeLine(lineNode))
-      lineNode = lineNode.nextSibling
+    this.rebuild()
 
   splitLine: (line, offset) ->
     [lineNode1, lineNode2] = Utils.splitNode(line.node, offset, true)

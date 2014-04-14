@@ -6,6 +6,7 @@ Editor        = require('./editor')
 Format        = require('./format')
 Range         = require('./range')
 Tandem        = require('tandem-core')
+window._ = _
 
 Modules =
   Authorship    : require('./modules/authorship')

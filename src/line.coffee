@@ -48,8 +48,8 @@ class Line extends LinkedList.Node
         nodeFormats[name] = format.value(node) if format.match(node)
       )
       if Leaf.isLeafNode(node)
-        @leaves.append(new Leaf(this, node, nodeFormats))
-      if Leaf.isLeafParent(node)
+        @leaves.append(new Leaf(node, nodeFormats))
+      else
         this.buildLeaves(node, nodeFormats)
     )
 
