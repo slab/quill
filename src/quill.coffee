@@ -166,8 +166,7 @@ class Quill extends EventEmitter2
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
   insertMedia: (index, type, source) ->
-    # No reason we picked ! besides its one character (so delta cannot split it up)
-    this.insertText(index, '!', type, source)
+    this.insertText(index, Format.MEDIA_TEXT, type, source)
 
   insertText: (index, text, name, value, options = {}) ->
     [index, length, formats, options] = buildParams(index, 0, name, value, options)

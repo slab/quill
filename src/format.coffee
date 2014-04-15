@@ -6,6 +6,8 @@ class Format
   @types:
     LINE: 'line'
 
+  @MEDIA_TEXT: '!' # No reason we picked ! besides it being one character (so delta cannot split it up)
+
   @FORMATS:
     bold:
       tag: 'B'
