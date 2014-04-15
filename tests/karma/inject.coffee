@@ -98,6 +98,7 @@ expect.equalHTML = (html1, html2) ->
     html = html.join('') if _.isArray(html)
     html = html.innerHTML unless _.isString(html)
     html = Quill.Normalizer.stripWhitespace(html)
+    html = html.replace(/style="(.+); "/g, 'style="$1;"')   # PhantomJS adds space after last style
     html = html.replace(/[\'\";]/g, '')    # IE8 outerHTML does not have quotes
     html = html.replace(/rgb\((\d+), ?(\d+), ?(\d+)\)/g, "rgb($1, $2, $3)") # IE8 removes spaces between digits
     html = html.toLowerCase()              # IE8 uppercases their tags

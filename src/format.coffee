@@ -93,6 +93,7 @@ class Format
     return unless this.match(node)
     if _.isString(@config.style)
       node.style[@config.style] = null
+      node.removeAttribute('style') unless node.getAttribute('style')   # If style is now ''
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.tag)
