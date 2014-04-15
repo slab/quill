@@ -1,6 +1,7 @@
 _          = require('lodash')
 LinkedList = require('linked-list')
 DOM        = require('./dom')
+Format     = require('./format')
 Utils      = require('./utils')
 
 
@@ -16,7 +17,7 @@ class Leaf extends LinkedList.Node
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Leaf.ID_PREFIX)
-    @text = DOM.getText(@node)
+    @text = if @node.tagName == 'IMG' then Format.MEDIA_TEXT else DOM.getText(@node)
     @length = @text.length
 
   getFormats: ->

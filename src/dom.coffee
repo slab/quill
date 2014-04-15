@@ -142,7 +142,8 @@ DOM =
   getText: (node) ->
     switch node.nodeType
       when DOM.ELEMENT_NODE
-        return if node.tagName == DOM.DEFAULT_BREAK_TAG then "" else node.textContent or node.innerText or ""
+        return "" if node.tagName == DOM.DEFAULT_BREAK_TAG
+        return node.textContent or node.innerText or ""
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
 

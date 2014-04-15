@@ -3,7 +3,31 @@ describe('Leaf', ->
     @container = $('#test-container').html('').get(0)
   )
 
-  describe('isLeafNode', ->
+  describe('constructor', ->
+    tests =
+      'image':
+        html: '<img>'
+        text: Quill.Format.MEDIA_TEXT
+      'break':
+        html: '<br>'
+        text: ''
+      'empty element':
+        html: '<b></b>'
+        text: ''
+      'element':
+        html: '<b>Bold</b>'
+        text: 'Bold'
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = test.html
+        leaf = new Quill.Leaf(@container.firstChild, {})
+        expect(leaf.text).to.equal(test.text)
+      )
+    )
+  )
+
+  describe('isLeafNode()', ->
     tests =
       'text node':
         html: 'Test'
@@ -13,6 +37,9 @@ describe('Leaf', ->
         expected: true
       'break':
         html: '<br>'
+        expected: true
+      'image':
+        html: '<img>'
         expected: true
       'element with element child':
         html: '<b><i></i></b>'
@@ -29,7 +56,7 @@ describe('Leaf', ->
     )
   )
 
-  describe('insertText', ->
+  describe('insertText()', ->
     tests =
       'element with text node':
         initial:  '<b>Test</b>'
