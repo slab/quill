@@ -33,6 +33,13 @@ describe('Format', ->
       existing: '<div style="text-align: right">Text</div>'
       missing: '<div>Text</div>'
       value: 'right'
+    complex:
+      format: new Quill.Format(Quill.Format.FORMATS.bold)
+      existing: '<b><i>Text</i><s>Strike</s></b><u>Under</u>'
+      missing: '<i>Text</i><s>Strike</s><u>Under</u>'
+      removed: '<span><i>Text</i><s>Strike</s></span><u>Under</u>'
+      added: '<b><i>Text</i></b><s>Strike</s><u>Under</u>'
+      value: true
 
   describe('match()', ->
     _.each(tests, (test, name) ->
