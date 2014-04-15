@@ -45,7 +45,7 @@ class Line extends LinkedList.Node
       nodeFormats = _.clone(formats)
       # TODO: optimize
       _.each(@doc.formats, (format, name) ->
-        nodeFormats[name] = format.value(node) if format.match(node)
+        nodeFormats[name] = format.value(node)
       )
       if Leaf.isLeafNode(node)
         @leaves.append(new Leaf(node, nodeFormats))

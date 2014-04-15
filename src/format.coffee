@@ -96,16 +96,16 @@ class Format
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.tag)
-      return DOM.switchTag(node, 'span')
+      return DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG)
     return node
 
   value: (node) ->
-    return @config.value(node) or null if _.isFunction(@config.value)
-    return node.style[@config.style] or null if _.isString(@config.style)
-    return node.getAttribute(@config.attribute) or null if _.isString(@config.attribute)
+    return undefined unless this.match(node)
+    return node.getAttribute(@config.attribute) or undefined if _.isString(@config.attribute)
+    return node.style[@config.style] or undefined if _.isString(@config.style)
     return true if _.isString(@config.tag) and node.tagName == @config.tag
     # TODO class regex
-    return false
+    return undefined
 
 
 module.exports = Format

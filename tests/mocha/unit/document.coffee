@@ -32,8 +32,6 @@ describe('Document', ->
   describe('mergeLines', -> )
   describe('removeLine', -> )
   describe('splitLine', -> )
-  describe('setHTML', -> )
-
 
   describe('toDelta', ->
     tests =
