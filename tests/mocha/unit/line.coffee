@@ -2,65 +2,49 @@ describe('Line', ->
   beforeEach( ->
     @container = $('#test-container').html('<div></div>').get(0).firstChild
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
-    @lineNode = @container.ownerDocument.createElement('div')
-    @container.appendChild(@lineNode)
   )
 
   describe('buildLeaves', ->
-    it('no children', ->
-      @lineNode.style.textAlign = 'right'
-      line = new Quill.Line(@doc, @lineNode)
-      expect(line.node).to.equal(@lineNode)
-      expect(line.leaves.length).to.equal(0)
-      expect(line.length).to.equal(0)
-      expect(line.formats).to.eql({ align: 'right' })
-    )
+    tests =
+      'no children':
+        html: '<div style="text-align: right;"></div>'
+        format: { align: 'right' }
+        leaves: []
+      'single leaf child':
+        html: '<div><b>Bold</b></div>'
+        leaves: [{ text: 'Bold', formats: { bold: true } }]
+      'single media child':
+        html: '<div><img src="http://quilljs.com/images/icon.png"></div>'
+        leaves: [{ text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
+      'single break child':
+        html: '<div><br></div>'
+        leaves: [{ text: '', formats: {} }]
+      'lots of children':
+        html: '<div><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></div>'
+        leaves: [
+          { text: 'A', formats: { bold: true, italic: true } }
+          { text: 'B', formats: { bold: true, strike: true } }
+          { text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }
+          { text: 'D', formats: { underline: true } }
+        ]
 
-    it('single leaf child', ->
-      @lineNode.innerHTML = '<b>Bold</b>'
-      line = new Quill.Line(@doc, @lineNode)
-      expect(line.node).to.equal(@lineNode)
-      expect(line.length).to.equal(4)
-      expect(line.leaves.length).to.equal(1)
-      expect(line.leaves.first.formats).to.eql({ bold: true })
-      expect(line.leaves.first.text).to.equal('Bold')
-    )
-
-    it('single media child', ->
-      @lineNode.innerHTML = '<img src="http://quilljs.com/images/icon.png">'
-      line = new Quill.Line(@doc, @lineNode)
-      expect(line.node).to.equal(@lineNode)
-      expect(line.length).to.equal(1)
-      expect(line.leaves.length).to.equal(1)
-      expect(line.leaves.first.formats).to.eql({ image: 'http://quilljs.com/images/icon.png' })
-      expect(line.leaves.first.text).to.equal(Quill.Format.MEDIA_TEXT)
-    )
-
-    it('single break child', ->
-      @lineNode.innerHTML = '<br>'
-      line = new Quill.Line(@doc, @lineNode)
-      expect(line.node).to.equal(@lineNode)
-      expect(line.length).to.equal(0)
-      expect(line.leaves.length).to.equal(1)
-      expect(line.leaves.first.formats).to.eql({})
-      expect(line.leaves.first.text).to.equal('')
-    )
-
-    it('lots of children', ->
-      @lineNode.innerHTML = '<b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u>'
-      line = new Quill.Line(@doc, @lineNode)
-      expect(line.node).to.equal(@lineNode)
-      expect(line.length).to.equal(4)
-      expect(line.leaves.length).to.equal(4)
-      leaves = line.leaves.toArray()
-      expect(leaves[0].formats).to.eql({ bold: true, italic: true })
-      expect(leaves[0].text).to.equal('A')
-      expect(leaves[1].formats).to.eql({ bold: true, strike: true })
-      expect(leaves[1].text).to.equal('B')
-      expect(leaves[2].formats).to.eql({ image: 'http://quilljs.com/images/icon.png' })
-      expect(leaves[2].text).to.equal(Quill.Format.MEDIA_TEXT)
-      expect(leaves[3].formats).to.eql({ underline: true })
-      expect(leaves[3].text).to.equal('D')
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = test.html
+        lineNode = @container.firstChild
+        line = new Quill.Line(@doc, lineNode)
+        expect(line.node).to.equal(lineNode)
+        expect(line.leaves.length).to.equal(test.leaves.length)
+        length = _.reduce(test.leaves, (length, leaf) ->
+          return length + leaf.text.length
+        , 0)
+        expect(line.length).to.equal(length)
+        leaves = line.leaves.toArray()
+        _.each(leaves, (leaf, i) ->
+          expect(leaf.text).to.equal(test.leaves[i].text)
+          expect(leaf.formats).to.eql(test.leaves[i].formats)
+        )
+      )
     )
   )
 

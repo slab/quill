@@ -137,8 +137,10 @@ class Line extends LinkedList.Node
       while @leaves?.length > 0
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
-      # TODO detect and fill formats
-      @formats = {}
+      @formats = _.reduce(@doc.formats, (formats, format, name) =>
+        formats[name] = format.value(@node) if format.isType(Format.types.LINE)
+        return formats
+      , {})
       @node = Normalizer.normalizeNode(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
