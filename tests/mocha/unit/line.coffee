@@ -10,13 +10,16 @@ describe('Line', ->
         html: '<div style="text-align: right;"></div>'
         format: { align: 'right' }
         leaves: []
-      'single leaf child':
+      'empty child':
+        html: '<div><b></b></div>'
+        leaves: [{ text: '', formats: { bold: true } }]
+      'leaf child':
         html: '<div><b>Bold</b></div>'
         leaves: [{ text: 'Bold', formats: { bold: true } }]
-      'single media child':
+      'media child':
         html: '<div><img src="http://quilljs.com/images/icon.png"></div>'
         leaves: [{ text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
-      'single break child':
+      'break child':
         html: '<div><br></div>'
         leaves: [{ text: '', formats: {} }]
       'lots of children':
@@ -62,7 +65,7 @@ describe('Line', ->
     # do not find node that is a child but not a leaf
     # find break leaf
     # no match
-    # line has no leaves... valid?
+    # line has no leaves
   )
 
   describe('findLeafAt', ->
