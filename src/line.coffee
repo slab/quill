@@ -70,7 +70,7 @@ class Line extends LinkedList.Node
     # TODO exact same code as findLineAt
     leaf = @leaves.first
     while leaf?
-      return [leaf, offset] if offset <= leaf.length
+      return [leaf, offset] if offset < leaf.length
       offset -= leaf.length
       leaf = leaf.next
     return [null, offset]

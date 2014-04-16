@@ -4,7 +4,7 @@ describe('Line', ->
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
   )
 
-  describe('buildLeaves()', ->
+  describe('constructor', ->
     tests =
       'no children':
         html: '<div style="text-align: right;"></div>'
@@ -51,26 +51,87 @@ describe('Line', ->
     )
   )
 
-  describe('deleteText()', ->
-    # Need to check html input and output
-    # delete entire line
-    # delete single node
-    # delete part of node
-    # delete part of multiple nodes
-  )
-
   describe('findLeaf()', ->
-    # Relies on build leaf but then get one
-    # find normal leaf
-    # do not find node that is a child but not a leaf
-    # find break leaf
-    # no match
-    # line has no leaves
+    tests =
+      'child leaf':
+        html: '<b>Bold</b><i><s>Strike</s><u>Under</u></i>'
+        match: true, query: 's'
+      'leaf parent':
+        html: '<b>Bold</b><i><s>Strike</s><u>Under</u></i>'
+        match: false, query: 'i'
+      'break leaf':
+        html: '<br>'
+        match: true, query: 'br'
+      'no match':
+        html: '<b>Bold</b><i><s>Strike</s><u>Under</u></i>'
+        match: false, query: $('#expected-container').get(0)
+      'line with no leaves':
+        html: ''
+        match: false, query: $('#expected-container').get(0)
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = "<div>#{test.html}</div>"
+        lineNode = @container.firstChild
+        line = new Quill.Line(@doc, lineNode)
+        queryNode = if _.isString(test.query) then @container.querySelector(test.query) else test.query
+        leaf = line.findLeaf(queryNode)
+        if test.match
+          expect(leaf.node).to.equal(queryNode)
+        else
+          expect(leaf).to.be(null)
+      )
+    )
   )
 
   describe('findLeafAt()', ->
-    # find leaf at boundaries (start and end and beyond end)
-      # for normal line and empty line
+    tests =
+      'empty line':
+        html: ''
+        offset: 0
+        expected: [null, 0]
+      'beyond empty line':
+        html: ''
+        offset: 2
+        expected: [null, 2]
+      'leaf at 0':
+        html: '<b>0123</b><i>4567</i>'
+        offset: 0
+        expected: ['b', 0]
+      'leaf in middle of line':
+        html: '<b>0123</b><s>4567</s><u>8901</u>'
+        offset: 6
+        expected: ['s', 2]
+      'leaf at boundry':
+        html: '<b>0123</b><s>4567</s><u>8901</u>'
+        offset: 4
+        expected: ['s', 0]
+      'leaf with parent':
+        html: '<b>0123</b><i><s>4567</s><u>8901</u></i>'
+        offset: 6
+        expected: ['s', 2]
+      'leaf at boundary with parent':
+        html: '<b>0123</b><i><s>4567</s><u>8901</u></i>'
+        offset: 8
+        expected: ['u', 0]
+      'beyond line':
+        html: '<b>0123</b><i>4567</i>'
+        offset: 10
+        expected: [null, 2]
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = "<div>#{test.html}</div>"
+        lineNode = @container.firstChild
+        line = new Quill.Line(@doc, lineNode)
+        [leaf, offset] = line.findLeafAt(test.offset)
+        if test.expected[0]
+          expect(leaf.node).to.equal(lineNode.querySelector(test.expected[0]))
+        else
+          expect(leaf).to.be(null)
+        expect(offset).to.equal(test.expected[1])
+      )
+    )
   )
 
   describe('format()', ->
@@ -107,6 +168,14 @@ describe('Line', ->
         expect.equalHTML(line.node.outerHTML, test.expected)
       )
     )
+  )
+
+  describe('deleteText()', ->
+    # Need to check html input and output
+    # delete entire line
+    # delete single node
+    # delete part of node
+    # delete part of multiple nodes
   )
 
   describe('formatText()', ->
