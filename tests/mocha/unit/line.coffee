@@ -4,7 +4,7 @@ describe('Line', ->
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
   )
 
-  describe('buildLeaves', ->
+  describe('buildLeaves()', ->
     tests =
       'no children':
         html: '<div style="text-align: right;"></div>'
@@ -51,7 +51,7 @@ describe('Line', ->
     )
   )
 
-  describe('deleteText', ->
+  describe('deleteText()', ->
     # Need to check html input and output
     # delete entire line
     # delete single node
@@ -59,7 +59,7 @@ describe('Line', ->
     # delete part of multiple nodes
   )
 
-  describe('findLeaf', ->
+  describe('findLeaf()', ->
     # Relies on build leaf but then get one
     # find normal leaf
     # do not find node that is a child but not a leaf
@@ -68,22 +68,52 @@ describe('Line', ->
     # line has no leaves
   )
 
-  describe('findLeafAt', ->
+  describe('findLeafAt()', ->
     # find leaf at boundaries (start and end and beyond end)
       # for normal line and empty line
   )
 
-  describe('format', ->
-    # add text align
-    # set to different text align
-    # add bold
+  describe('format()', ->
+    tests =
+      'add text align':
+        initial: '<div></div>'
+        expected: '<div style="text-align: right;"></div>'
+        formats: { align: 'right' }
+      'add different text align':
+        initial: '<div style="text-align: right;"></div>'
+        expected: '<div style="text-align: center;"></div>'
+        formats: { align: 'center' }
+      'remove text align':
+        initial: '<div style="text-align: right;"></div>'
+        expected: '<div></div>'
+        formats: { align: false }
+      'add bold':
+        initial: '<div></div>'
+        expected: '<div></div>'
+        formats: { bold: true }
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = test.initial
+        lineNode = @container.firstChild
+        line = new Quill.Line(@doc, lineNode)
+        expectedFormats = _.clone(test.formats)
+        _.each(test.formats, (value, name) ->
+          line.format(name, value)
+          delete expectedFormats[name] unless value
+        )
+        expect(line.formats).to.eql(expectedFormats)
+        Quill.DOM.clearAttributes(line.node, ['style'])
+        expect.equalHTML(line.node.outerHTML, test.expected)
+      )
+    )
   )
 
-  describe('formatText', ->
+  describe('formatText()', ->
     # similar to delete
   )
 
-  describe('insertText', ->
+  describe('insertText()', ->
     # insert in middle of two nodes
     # insert in middle of node
     # insert in middle of node with children

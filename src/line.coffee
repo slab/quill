@@ -80,8 +80,10 @@ class Line extends LinkedList.Node
     # TODO reassigning @node might be dangerous...
     if format.isType(Format.types.LINE)
       @node = format.add(@node, value)
-    value or= undefined   # Falsy value should remove format
-    @formats[name] = value
+    if value
+      @formats[name] = value
+    else
+      delete @formats[name]
 
   formatText: (offset, length, name, value) ->
     # Skip portions of text that already has format
@@ -138,7 +140,7 @@ class Line extends LinkedList.Node
         @leaves.remove(@leaves.first)
       @leaves = new LinkedList()
       @formats = _.reduce(@doc.formats, (formats, format, name) =>
-        formats[name] = format.value(@node) if format.isType(Format.types.LINE)
+        formats[name] = format.value(@node) if format.isType(Format.types.LINE) and format.match(@node)
         return formats
       , {})
       @node = Normalizer.normalizeNode(@node)

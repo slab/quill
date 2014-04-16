@@ -66,7 +66,7 @@ class Format
 
   add: (node, value) ->
     return this.remove(node) unless value
-    return if this.match(node)
+    return node if this.value(node) == value
     if _.isString(@config.tag)
       formatNode = node.ownerDocument.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?

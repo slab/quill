@@ -95,6 +95,13 @@ describe('Format', ->
         expect.equalHTML(@container, test.missing)
       )
     )
+
+    it('change value', ->
+      @container.innerHTML = '<span style="color: blue;">Text</span>'
+      format = new Quill.Format(Quill.Format.FORMATS.color)
+      format.add(@container.firstChild, 'red')
+      expect.equalHTML(@container, '<span style="color: red;">Text</span>')
+    )
   )
 
   describe('remove()', ->
