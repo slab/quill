@@ -3,7 +3,7 @@ describe('Normalizer', ->
     @container = $('#test-container').html('').get(0)
   )
 
-  describe('handleBreaks', ->
+  describe('handleBreaks()', ->
     tests =
       'Break in middle of line':
         initial: [
@@ -38,7 +38,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('normalizeLine', ->
+  describe('normalizeLine()', ->
     tests =
       'pull text node':
         initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
@@ -56,7 +56,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('normalizeNode', ->
+  describe('normalizeNode()', ->
     it('should whitelist style and tag', ->
       @container.innerHTML = '<strong style="color: red; display: inline;">Test</strong>'
       Quill.Normalizer.normalizeNode(@container.firstChild)
@@ -64,7 +64,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('pullBlocks', ->
+  describe('pullBlocks()', ->
     tests =
       'No children':
         initial:  '<div></div>'
@@ -91,7 +91,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('stripWhitespace', ->
+  describe('stripWhitespace()', ->
     tests =
       'newlines':
         initial:
@@ -117,7 +117,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('whitelistStyles', ->
+  describe('whitelistStyles()', ->
     tests =
       'no styles':
         initial:  '<div></div>'
@@ -144,7 +144,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('whitelistTags', ->
+  describe('whitelistTags()', ->
     tests =
       'not element':
         initial:  'Test'
@@ -171,7 +171,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('wrapInline', ->
+  describe('wrapInline()', ->
     tests =
       'Wrap newline':
         initial:  ['<br>']
@@ -200,7 +200,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('wrapText', ->
+  describe('wrapText()', ->
     tests =
       'inner text':
         initial:  '<span><span>Inner</span>Test</span>'

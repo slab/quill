@@ -4,7 +4,7 @@ describe('Utils', ->
   )
 
   # TODO no tests for traversing multiple line nodes
-  describe('findDeepestNode', ->
+  describe('findDeepestNode()', ->
     tests =
       'zeroth':
         html: '<div><b>0123</b></div>'
@@ -31,7 +31,7 @@ describe('Utils', ->
     )
   )
 
-  describe('getChildAtOffset', ->
+  describe('getChildAtOffset()', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('
         <span>111</span>
@@ -66,7 +66,7 @@ describe('Utils', ->
   )
 
   # TODO no tests for line node
-  describe('getNodeLength', ->
+  describe('getNodeLength()', ->
     tests =
       'element':
         html: '<span>One</span>'
@@ -90,7 +90,7 @@ describe('Utils', ->
     )
   )
 
-  describe('partitionChildren', ->
+  describe('partitionChildren()', ->
     tests =
       'multiple splits':
         initial:  '<div><span>01</span><b>23</b></div>'
@@ -113,7 +113,7 @@ describe('Utils', ->
     )
   )
 
-  it('splitAncestors', ->
+  it('splitAncestors()', ->
     @container.innerHTML = Quill.Normalizer.stripWhitespace('
       <div>
         <div>
@@ -148,7 +148,7 @@ describe('Utils', ->
     )
   )
 
-  describe('splitChild', ->
+  describe('splitChild()', ->
     tests =
       'split middle':
         initial:  '<div><b>01</b><i>23</i></div>'
@@ -169,7 +169,7 @@ describe('Utils', ->
     )
   )
 
-  describe('splitNode', ->
+  describe('splitNode()', ->
     tests =
       'unnecessary split before':
         initial:  '<b>Bold</b>'

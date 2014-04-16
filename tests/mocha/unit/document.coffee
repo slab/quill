@@ -2,7 +2,7 @@ Tandem = require('tandem-core')
 
 
 describe('Document', ->
-  describe('findLineAt', ->
+  describe('findLineAt()', ->
     it('should find correct offset in line', ->
       lines = [
         '<div><br></div>'
@@ -27,13 +27,13 @@ describe('Document', ->
     )
   )
 
-  describe('findLine', -> )
-  describe('findLineAt', -> )
-  describe('mergeLines', -> )
-  describe('removeLine', -> )
-  describe('splitLine', -> )
+  describe('findLine()', -> )
+  describe('findLineAt()', -> )
+  describe('mergeLines()', -> )
+  describe('removeLine()', -> )
+  describe('splitLine()', -> )
 
-  describe('toDelta', ->
+  describe('toDelta()', ->
     tests =
       'blank':
         initial:  ['']
