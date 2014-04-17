@@ -212,10 +212,11 @@ DOM =
       else return # Noop
 
   switchTag: (node, newTag) ->
-    return if node.tagName == newTag.toUpperCase()
+    newTag = newTag.toUpperCase()
+    return if node.tagName == newTag
     newNode = node.ownerDocument.createElement(newTag)
     attributes = DOM.getAttributes(node)
-    this.moveChildren(newNode, node)
+    this.moveChildren(newNode, node) unless DOM.VOID_TAGS[newTag]?
     node.parentNode.replaceChild(newNode, node)
     _.each(attributes, (value, name) ->
       newNode.setAttribute(name, value)

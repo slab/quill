@@ -210,6 +210,11 @@ describe('DOM', ->
       expect.equalHTML(@container, html)
     )
 
+    it('switchTag() to void', ->
+      Quill.DOM.switchTag(@container.lastChild, 'br')
+      expect.equalHTML(@container, '<div style="cursor: pointer">One</div><br>')
+    )
+
     it('unwrap()', ->
       Quill.DOM.unwrap(@container.lastChild)
       expect.equalHTML(@container, '<div style="cursor: pointer>One</div><span>Two</span><b>Bold</b>')
