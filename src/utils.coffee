@@ -56,11 +56,6 @@ Utils =
   isLineNode: (node) ->
     return node?.parentNode? and DOM.hasClass(node.parentNode, 'editor-container') and DOM.BLOCK_TAGS[node.tagName]?
 
-  partitionChildren: (node, offset, length) ->
-    [prevNode, startNode] = Utils.splitChild(node, offset)
-    [endNode, nextNode] = Utils.splitChild(node, offset + length)
-    return [startNode, endNode]
-
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (refNode, root) ->
     return refNode if refNode == root or refNode.parentNode == root
@@ -70,10 +65,6 @@ Utils =
     while refNode.previousSibling?
       parentClone.insertBefore(refNode.previousSibling, parentClone.firstChild)
     return Utils.splitAncestors(parentNode, root)
-
-  splitChild: (parent, offset) ->
-    [node, offset] = Utils.getChildAtOffset(parent, offset)
-    return Utils.splitNode(node, offset)
 
   splitNode: (node, offset, force = false) ->
     # Check if split necessary

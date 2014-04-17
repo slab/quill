@@ -204,7 +204,49 @@ describe('Line', ->
   )
 
   describe('formatText()', ->
-    # similar to delete
+    tests =
+      'single node add':
+        initial: '<b>01</b><s>23</s><i>45</i>'
+        expected: '<b>01</b><u><s>23</s></u><i>45</i>'
+        args: [2, 2, 'underline', true]
+      'single node remove':
+        initial: '<b>01</b><s>23</s><i>45</i>'
+        expected: '<b>01</b><span>23</span><i>45</i>'
+        args: [2, 2, 'strike', false]
+      'multiple node add':
+        initial: '<b>01</b><s>23</s><i>45</i>'
+        expected: '<u><b>01</b></u><u><s>23</s></u><i>45</i>'
+        args: [0, 4, 'underline', true]
+      'multiple node remove':
+        initial: '<b>01</b><span>23</span><b>45</b>'
+        expected: '<span>01</span><span>23</span><span>45</span>'
+        args: [0, 6, 'bold', false]
+      'skip boundaries add':
+        initial: '<b>01</b><s>23</s><b>45</b>'
+        expected: '<b>01</b><b><s>23</s></b><b>45</b>'
+        args: [0, 6, 'bold', true]
+      'skip boundaries remove':
+        initial: '<span>01</span><b>23</b><span>45</span>'
+        expected: '<span>01</span><span>23</span><span>45</span>'
+        args: [0, 6, 'bold', false]
+      'split boundaries add':
+        initial: '<span>01</span><s>23</s><span>45</span>'
+        expected: '<span>0</span><b><span>1</span></b><b><s>23</s></b><b><span>4</span></b><span>5</span>'
+        args: [1, 4, 'bold', true]
+      'split boundaries remove':
+        initial: '<b>01</b><b>23</b><b>45</b>'
+        expected: '<b>0</b><span>1</span><span>23</span><span>4</span><b>5</b>'
+        args: [1, 4, 'bold', false]
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = "<div>#{test.initial}</div>"
+        lineNode = @container.firstChild
+        @line = new Quill.Line(@doc, lineNode)
+        @line.formatText(test.args...)
+        expect.equalHTML(@line.node, test.expected)
+      )
+    )
   )
 
   describe('insertText()', ->
@@ -212,19 +254,19 @@ describe('Line', ->
       'between two nodes':
         initial: '<b>01</b><s>23</s>'
         expected: '<b>01</b><span>|</span><s>23</s>'
-        offset: 2, formats: {}
+        offset: 2
       'middle of node':
         initial: '<b>01</b>'
         expected: '<b>0</b><span>|</span><b>1</b>'
-        offset: 1, formats: {}
+        offset: 1
       'between two nodes with parent':
         initial: '<b><i>01</i><s>23</s></b>'
         expected: '<b><i>01</i></b><span>|</span><b><s>23</s></b>'
-        offset: 2, formats: {}
+        offset: 2
       'inside leaf':
         initial: '<span>01</span>'
         expected: '<span>0|1</span>'
-        offset: 1, formats: {}
+        offset: 1
       'inside leaf with format':
         initial: '<b>01</b>'
         expected: '<b>0|1</b>'
@@ -236,7 +278,7 @@ describe('Line', ->
       'empty line':
         initial: '<br>'
         expected: '<span>|</span><br>'
-        offset: 0, formats: {}
+        offset: 0
       'format in empty line':
         initial: '<br>'
         expected: '<b>|</b><br>'

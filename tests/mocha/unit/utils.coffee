@@ -90,29 +90,6 @@ describe('Utils', ->
     )
   )
 
-  describe('partitionChildren()', ->
-    tests =
-      'multiple splits':
-        initial:  '<div><span>01</span><b>23</b></div>'
-        expected: '<div><span>0</span><span>1</span><b>2</b><b>3</b></div>'
-        offset: 1, length: 2, start: '1', end: '2'
-
-      'enclose':
-        initial:  '<div><b>01</b><i>23</i><u>45</u><s>67</s></div>'
-        expected: '<div><b>01</b><i>23</i><u>45</u><s>67</s></div>'
-        offset: 2, length: 4, start: '23', end: '45'
-
-    _.each(tests, (test, name) ->
-      it(name, ->
-        @container.innerHTML = test.initial
-        [start, end] = Quill.Utils.partitionChildren(@container.firstChild, test.offset, test.length)
-        expect.equalHTML(@container, test.expected)
-        expect(Quill.DOM.getText(start)).to.equal(test.start)
-        expect(Quill.DOM.getText(end)).to.equal(test.end)
-      )
-    )
-  )
-
   it('splitAncestors()', ->
     @container.innerHTML = Quill.Normalizer.stripWhitespace('
       <div>
@@ -145,27 +122,6 @@ describe('Utils', ->
           <div>Five</div>
         </div>
       </div>'
-    )
-  )
-
-  describe('splitChild()', ->
-    tests =
-      'split middle':
-        initial:  '<div><b>01</b><i>23</i></div>'
-        expected: '<dib><b>0</b><b>1</b><i>23</i></div>'
-        offset: 1, left: '0', right: '1', split: true
-      'no split':
-        initial:  '<div><b>01</b><i>23</i></div>'
-        expected: '<div><b>01</b><i>23</i></div>'
-        offset: 2, left: '01', right: '23', split: false
-    _.each(tests, (test, name) ->
-      it(name, ->
-        @container.innerHTML = test.initial
-        [left, right, split] = Quill.Utils.splitChild(@container.firstChild, test.offset)
-        expect(Quill.DOM.getText(left)).to.equal(test.left)
-        expect(Quill.DOM.getText(right)).to.equal(test.right)
-        expect(test.split).to.equal(split)
-      )
     )
   )
 

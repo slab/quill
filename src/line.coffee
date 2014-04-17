@@ -102,27 +102,27 @@ class Line extends LinkedList.Node
       delete @formats[name]
 
   formatText: (offset, length, name, value) ->
-    # Skip portions of text that already has format
-    while length > 0
-      op = _.first(@delta.getOpsAt(offset, 1))
-      break if (value and op.attributes[name] != value) or (!value and op.attributes[name]?)
-      offset += 1
-      length -= 1
-    while length > 0
-      op = _.first(@delta.getOpsAt(offset + length - 1, 1))
-      break if (value and op.attributes[name] != value) or (!value and op.attributes[name]?)
-      length -= 1
-    return unless length > 0
+    [leaf, leafOffset] = this.findLeafAt(offset)
     format = @doc.formats[name]
-    throw new Error("Unrecognized format #{name}") unless format?
-    if value
-      this.applyToContents(offset, length, (node) =>
-        # TODO need to handle case where middle portion of text is already formatted with this
-        # removeFormat(format, node)
-        format.add(node, value)
-      )
-    else
-      this.applyToContents(offset, length, _.bind(removeFormat, this, format))
+    while leaf?
+      nextLeaf = leaf.next
+      # Make sure we need to change leaf format
+      if (value and leaf.formats[name] != value) or (!value and leaf.formats[name]?)
+        # Identify node to modify
+        targetNode = leaf.node
+        while !value and !format.match(targetNode)
+          if targetNode.previousSibling?
+            targetNode.splitAncestors(targetNode, targetNode.parentNode.parentNode)
+          targetNode = targetNode.parentNode
+        # Isolate target node
+        if leafOffset > 0
+          [leftNode, targetNode] = Utils.splitNode(targetNode, leafOffset)
+        if leaf.length > leafOffset + length  # leaf.length does not update even though we may have just split leaf.node
+          [targetNode, rightNode] = Utils.splitNode(targetNode, length)
+        format.add(targetNode, value)
+      length -= leaf.length - leafOffset
+      leafOffset = 0
+      leaf = nextLeaf
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->
@@ -143,7 +143,7 @@ class Line extends LinkedList.Node
       this.rebuild()
 
   isNewline: ->
-    return @length == 0 and @leaves.length == 1 and @leaves.first.node.tagName == DOM.DEFAULT_BREAK_TAG
+    return @length == 0 and @leaves.length == 1 and @leaves.last.node.tagName == DOM.DEFAULT_BREAK_TAG
 
   rebuild: (force = false) ->
     if @node.parentNode == @doc.root
