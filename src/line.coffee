@@ -39,7 +39,6 @@ class Line extends LinkedList.Node
     )
 
   deleteText: (offset, length) ->
-    return unless length > 0
     deleteLength = length
     [leaf, offset] = this.findLeafAt(offset)
     while leaf and deleteLength > 0
@@ -110,7 +109,6 @@ class Line extends LinkedList.Node
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->
-    return unless text?.length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
     # offset > 0 for multicursor
     if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
