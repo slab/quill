@@ -70,7 +70,7 @@ describe('Leaf', ->
         expected: '<b>Te</b>'
         offset: 2, length: 2
       'remove all':
-        expected: '<br>'
+        expected: '<b></b>'
         offset: 0, length: 4
 
     _.each(tests, (test, name) ->

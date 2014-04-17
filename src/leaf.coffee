@@ -26,11 +26,8 @@ class Leaf extends LinkedList.Node
   deleteText: (offset, length) ->
     @text = @text.slice(0, offset) + @text.slice(offset + length)
     @length = @text.length
-    if @length == 0
-      @node = DOM.switchTag(@node, DOM.DEFAULT_BREAK_TAG)
-    else
-      targetNode = @node.firstChild or @node
-      DOM.setText(targetNode, @text)
+    targetNode = @node.firstChild or @node
+    DOM.setText(targetNode, @text)
 
   insertText: (offset, text) ->
     @text = @text.slice(0, offset) + text + @text.slice(offset)
