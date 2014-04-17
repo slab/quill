@@ -16,6 +16,9 @@ describe('Line', ->
       'leaf child':
         html: '<div><b>Bold</b></div>'
         leaves: [{ text: 'Bold', formats: { bold: true } }]
+      'nested leaf child':
+        html: '<div><s><b>Bold</b></s></div>'
+        leaves: [{ text: 'Bold', formats: { bold: true, strike: true } }]
       'media child':
         html: '<div><img src="http://quilljs.com/images/icon.png"></div>'
         leaves: [{ text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
@@ -172,11 +175,32 @@ describe('Line', ->
   )
 
   describe('deleteText()', ->
-    # Need to check html input and output
-    # delete entire line
-    # delete single node
-    # delete part of node
-    # delete part of multiple nodes
+    beforeEach( ->
+      @container.innerHTML = '<div><b>01</b><i><s>23</s><u>45</u></i><b>67</b></div>'
+      lineNode = @container.firstChild
+      @line = new Quill.Line(@doc, lineNode)
+    )
+
+    tests =
+      'part of node':
+        expected: '<b>01</b><i><s>3</s><u>45</u></i><b>67</b>'
+        offset: 2, length: 1
+      'entire node':
+        expected: '<b>01</b><i><u>45</u></i><b>67</b>'
+        offset: 2, length: 2
+      'part of multiple nodes':
+        expected: '<b>01</b><i><s>2</s><u>5</u></i><b>67</b>'
+        offset: 3, length: 2
+      'entire line':
+        expected: '<br>'
+        offset: 0, length: 8
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @line.deleteText(test.offset, test.length)
+        expect.equalHTML(@line.node, test.expected)
+      )
+    )
   )
 
   describe('formatText()', ->

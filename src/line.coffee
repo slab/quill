@@ -56,8 +56,23 @@ class Line extends LinkedList.Node
 
   deleteText: (offset, length) ->
     return unless length > 0
-    this.applyToContents(offset, length, DOM.removeNode)
-    this.rebuild()
+    if length < @length
+      [leaf, offset] = this.findLeafAt(offset)
+      while leaf and length > 0
+        nextLeaf = leaf.next
+        if offset == 0 and leaf.length <= length and (leaf.next? or leaf.prev?)  # We don't want to remove last leaf
+          DOM.removeNode(leaf.node)
+          @leaves.remove(leaf)
+        else
+          leaf.deleteText(offset, length)
+        length -= Math.min(leaf.length, length)
+        leaf = nextLeaf
+        offset = 0
+      this.resetContent()
+    else
+      # TODO potentially dangerous if we are using any nodes as markers for selection saving
+      @node.innerHTML = '<br>'
+      this.rebuild()
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -136,14 +151,12 @@ class Line extends LinkedList.Node
   rebuild: (force = false) ->
     if @node.parentNode == @doc.root
       return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
-      while @leaves?.length > 0
-        @leaves.remove(@leaves.first)
+      @node = Normalizer.normalizeNode(@node)
       @leaves = new LinkedList()
       @formats = _.reduce(@doc.formats, (formats, format, name) =>
         formats[name] = format.value(@node) if format.isType(Format.types.LINE) and format.match(@node)
         return formats
       , {})
-      @node = Normalizer.normalizeNode(@node)
       this.buildLeaves(@node, {})
       this.resetContent()
     else
