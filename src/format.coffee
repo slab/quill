@@ -70,7 +70,7 @@ class Format
     if _.isString(@config.tag)
       formatNode = node.ownerDocument.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
-        node.parentNode.insertBefore(formatNode, node)
+        node.parentNode.insertBefore(formatNode, node) if node.parentNode?
         DOM.removeNode(node)
         node = formatNode
       else

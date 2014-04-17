@@ -40,10 +40,10 @@ class Normalizer
     _.each(breaks, (br) =>
       if br.previousSibling?
         if br.nextSibling?
-          lineNode = Utils.splitAncestors(br, lineNode)
+          lineNode = Utils.splitAncestors(br, lineNode.parentNode)
         br.parentNode.removeChild(br)
       else if br.nextSibling?
-        lineNode = Utils.splitAncestors(br.nextSibling, lineNode)
+        lineNode = Utils.splitAncestors(br.nextSibling, lineNode.parentNode)
     )
     return lineNode
 
@@ -64,13 +64,13 @@ class Normalizer
     return lineNode unless curNode?
     if DOM.BLOCK_TAGS[curNode.tagName]?
       if curNode.nextSibling?
-        Utils.splitAncestors(curNode.nextSibling, lineNode)
+        Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
       DOM.unwrap(curNode)
       return Normalizer.pullBlocks(lineNode)
     curNode = curNode.nextSibling
     while curNode?
       if DOM.BLOCK_TAGS[curNode.tagName]?
-        lineNode = Utils.splitAncestors(curNode, lineNode)
+        lineNode = Utils.splitAncestors(curNode, lineNode.parentNode)
         break
       curNode = curNode.nextSibling
     return lineNode

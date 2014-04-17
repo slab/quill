@@ -128,7 +128,7 @@ describe('Utils', ->
       </div>'
     )
     node = @container.querySelector('span')
-    Quill.Utils.splitAncestors(node, @container.firstChild)
+    ret = Quill.Utils.splitAncestors(node, @container)
     expect.equalHTML(@container, '
       <div>
         <div>

@@ -56,23 +56,23 @@ class Line extends LinkedList.Node
 
   deleteText: (offset, length) ->
     return unless length > 0
-    if length < @length
-      [leaf, offset] = this.findLeafAt(offset)
-      while leaf and length > 0
-        nextLeaf = leaf.next
-        if offset == 0 and leaf.length <= length and (leaf.next? or leaf.prev?)  # We don't want to remove last leaf
-          DOM.removeNode(leaf.node)
-          @leaves.remove(leaf)
-        else
-          leaf.deleteText(offset, length)
-        length -= Math.min(leaf.length, length)
-        leaf = nextLeaf
-        offset = 0
-      this.resetContent()
-    else
-      # TODO potentially dangerous if we are using any nodes as markers for selection saving
-      @node.innerHTML = '<br>'
+    deleteLength = length
+    [leaf, offset] = this.findLeafAt(offset)
+    while leaf and deleteLength > 0
+      nextLeaf = leaf.next
+      if offset == 0 and leaf.length <= deleteLength
+        DOM.removeNode(leaf.node)
+        @leaves.remove(leaf)
+      else
+        leaf.deleteText(offset, deleteLength)
+      deleteLength -= Math.min(leaf.length, deleteLength)
+      leaf = nextLeaf
+      offset = 0
+    if length == @length
+      @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
       this.rebuild()
+    else
+      this.resetContent()
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -83,6 +83,7 @@ class Line extends LinkedList.Node
 
   findLeafAt: (offset) ->
     # TODO exact same code as findLineAt
+    return [@leaves.last, 0] if offset == @length
     leaf = @leaves.first
     while leaf?
       return [leaf, offset] if offset < leaf.length
@@ -132,18 +133,14 @@ class Line extends LinkedList.Node
       leaf.insertText(leafOffset, text)
       this.resetContent()
     else
-      inline = @node.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG)
-      DOM.setText(inline, text)
-      if offset == 0    # Special case for remote cursor preservation
-        @node.insertBefore(inline, @node.firstChild)
-      else
-        [prevNode, nextNode] = Utils.splitChild(@node, offset)
-        parentNode = prevNode?.parentNode or nextNode?.parentNode
-        parentNode.insertBefore(inline, nextNode)
+      node = _.reduce(formats, (node, value, name) =>
+        return @doc.formats[name].add(node, value)
+      , @node.ownerDocument.createTextNode(text))
+      node = DOM.wrap(@node.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), node) if DOM.isTextNode(node)
+      [prevNode, nextNode] = Utils.splitNode(leaf.node, leafOffset)
+      refNode = Utils.splitAncestors(nextNode, @node)
+      @node.insertBefore(node, refNode)
       this.rebuild()
-      _.each(formats, (value, name) =>
-        this.formatText(offset, text.length, name, value)
-      )
 
   isNewline: ->
     return @length == 0 and @leaves.length == 1 and @leaves.first.node.tagName == DOM.DEFAULT_BREAK_TAG

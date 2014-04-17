@@ -61,16 +61,15 @@ Utils =
     [endNode, nextNode] = Utils.splitChild(node, offset + length)
     return [startNode, endNode]
 
-  # refNode is node after split point, root is eldest node we want split
+  # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (refNode, root) ->
-    return false if refNode == root
+    return refNode if refNode == root or refNode.parentNode == root
     parentNode = refNode.parentNode
     parentClone = parentNode.cloneNode(false)
     parentNode.parentNode.insertBefore(parentClone, parentNode)
     while refNode.previousSibling?
       parentClone.insertBefore(refNode.previousSibling, parentClone.firstChild)
-    Utils.splitAncestors(parentNode, root)
-    return parentClone
+    return Utils.splitAncestors(parentNode, root)
 
   splitChild: (parent, offset) ->
     [node, offset] = Utils.getChildAtOffset(parent, offset)

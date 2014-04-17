@@ -42,7 +42,7 @@ describe('Normalizer', ->
     tests =
       'pull text node':
         initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
-        expected: '<div><span>A</span><span>B</span></div><div><div>C</div></div>'
+        expected: '<div><span>A</span>B</div><div><div>C</div></div>'
       'inline with text':
         initial:  '<span>What</span>Test'
         expected: '<div><span>What</span><span>Test</span></div>'
@@ -76,7 +76,7 @@ describe('Normalizer', ->
         initial:  '<div><div><div><span>Test</span></div></div></div>'
         expected: '<div><span>Test</span></div>'
       'Inner deep recursive':
-        initial:  '<div><div><span>Test</span><div>Test</div></div></div>'
+        initial:  '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
         expected: '<div><span>Test</span></div><div><div>Test</div></div>'
       'Continuous inlines':
         initial:  '<div><span>A</span><br><span>B</span><div>Inner</div></div>'

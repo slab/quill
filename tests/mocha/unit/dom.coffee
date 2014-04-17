@@ -225,6 +225,13 @@ describe('DOM', ->
       Quill.DOM.wrap(wrapper, @container.firstChild)
       expect.equalHTML(@container, '<div><div style="cursor: pointer>One</div></div><div><span>Two</span><b>Bold</b></div>')
     )
+
+    it('wrap() orphan node', ->
+      wrapper = @container.ownerDocument.createElement('div')
+      node = @container.ownerDocument.createElement('span')
+      Quill.DOM.wrap(wrapper, node)
+      expect.equalHTML(wrapper.outerHTML, '<div><span></span></div>')
+    )
   )
 
   describe('select', ->

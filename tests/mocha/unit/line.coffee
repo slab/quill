@@ -90,11 +90,11 @@ describe('Line', ->
   describe('findLeafAt()', ->
     tests =
       'empty line':
-        html: ''
+        html: '<br>'
         offset: 0
-        expected: [null, 0]
+        expected: ['br', 0]
       'beyond empty line':
-        html: ''
+        html: '<br>'
         offset: 2
         expected: [null, 2]
       'leaf at 0':
@@ -192,7 +192,7 @@ describe('Line', ->
         expected: '<b>01</b><i><s>2</s><u>5</u></i><b>67</b>'
         offset: 3, length: 2
       'entire line':
-        expected: '<br>'
+        expected: '<i></i><br>'
         offset: 0, length: 8
 
     _.each(tests, (test, name) ->
@@ -208,10 +208,56 @@ describe('Line', ->
   )
 
   describe('insertText()', ->
-    # insert in middle of two nodes
-    # insert in middle of node
-    # insert in middle of node with children
-    # insert in middle of node but can just adjust text
-    # insert into empty line
+    tests =
+      'between two nodes':
+        initial: '<b>01</b><s>23</s>'
+        expected: '<b>01</b><span>|</span><s>23</s>'
+        offset: 2, formats: {}
+      'middle of node':
+        initial: '<b>01</b>'
+        expected: '<b>0</b><span>|</span><b>1</b>'
+        offset: 1, formats: {}
+      'between two nodes with parent':
+        initial: '<b><i>01</i><s>23</s></b>'
+        expected: '<b><i>01</i></b><span>|</span><b><s>23</s></b>'
+        offset: 2, formats: {}
+      'inside leaf':
+        initial: '<span>01</span>'
+        expected: '<span>0|1</span>'
+        offset: 1, formats: {}
+      'inside leaf with format':
+        initial: '<b>01</b>'
+        expected: '<b>0|1</b>'
+        offset: 1, formats: { bold: true }
+      'inside leaf with multiple formats':
+        initial: '<b><i>01</i></b>'
+        expected: '<b><i>0|1</i></b>'
+        offset: 1, formats: { bold: true, italic: true }
+      'empty line':
+        initial: '<br>'
+        expected: '<span>|</span><br>'
+        offset: 0, formats: {}
+      'format in empty line':
+        initial: '<br>'
+        expected: '<b>|</b><br>'
+        offset: 0, formats: { bold: true }
+      'void in empty line':
+        initial: '<br>'
+        expected: '<img src="http://quilljs.com/images/icon.png"><br>'
+        offset: 0, formats: { image: 'http://quilljs.com/images/icon.png' }
+      'void in middle of node':
+        initial: '<b>01</b>'
+        expected: '<b>0</b><img src="http://quilljs.com/images/icon.png"><b>1</b>'
+        offset: 1, formats: { image: 'http://quilljs.com/images/icon.png' }
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = "<div>#{test.initial}</div>"
+        lineNode = @container.firstChild
+        @line = new Quill.Line(@doc, lineNode)
+        @line.insertText(test.offset, '|', test.formats)
+        expect.equalHTML(@line.node, test.expected)
+      )
+    )
   )
 )

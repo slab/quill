@@ -248,7 +248,7 @@ DOM =
     return ret
 
   wrap: (wrapper, node) ->
-    node.parentNode.insertBefore(wrapper, node)
+    node.parentNode.insertBefore(wrapper, node) if node.parentNode?
     wrapper.appendChild(node)
     return wrapper
 
