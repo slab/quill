@@ -23,8 +23,17 @@ class Leaf extends LinkedList.Node
   getFormats: ->
     return @formats
 
-  insertText: (index, text) ->
-    @text = @text.slice(0, index) + text + @text.slice(index)
+  deleteText: (offset, length) ->
+    @text = @text.slice(0, offset) + @text.slice(offset + length)
+    @length = @text.length
+    if @length == 0
+      @node = DOM.switchTag(@node, DOM.DEFAULT_BREAK_TAG)
+    else
+      targetNode = @node.firstChild or @node
+      DOM.setText(targetNode, @text)
+
+  insertText: (offset, text) ->
+    @text = @text.slice(0, offset) + text + @text.slice(offset)
     @node = DOM.switchTag(@node, DOM.DEFAULT_INLNE_TAG) if @node.tagName == DOM.DEFAULT_BREAK_TAG
     targetNode = @node.firstChild or @node
     DOM.setText(targetNode, @text)

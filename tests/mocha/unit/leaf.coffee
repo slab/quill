@@ -56,6 +56,31 @@ describe('Leaf', ->
     )
   )
 
+  describe('deleteText()', ->
+    beforeEach( ->
+      @container.innerHTML = '<b>Test</b>'
+      @leaf = new Quill.Leaf(@container.firstChild, {})
+    )
+
+    tests =
+      'remove middle':
+        expected: '<b>Tt</b>'
+        offset: 1, length: 2
+      'remove till end':
+        expected: '<b>Te</b>'
+        offset: 2, length: 2
+      'remove all':
+        expected: '<br>'
+        offset: 0, length: 4
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @leaf.deleteText(test.offset, test.length)
+        expect.equalHTML(@leaf.node.outerHTML, test.expected)
+      )
+    )
+  )
+
   describe('insertText()', ->
     tests =
       'element with text node':
