@@ -237,6 +237,22 @@ describe('Line', ->
         initial: '<b>01</b><b>23</b><b>45</b>'
         expected: '<b>0</b><span>1</span><span>23</span><span>4</span><b>5</b>'
         args: [1, 4, 'bold', false]
+      'split boundaries with parents add':
+        initial: '<b><i>01</i></b><span>23</span><i><b>45</b></i>'
+        expected: '<b><i>0</i><s><i>1</i></s></b><s><span>23</span></s><i><s><b>4</b></s><b>5</b></i>'
+        args: [1, 4, 'strike', true]
+      'split boundaries with parents remove':
+        initial: '<b><i>01</i><s>23</s></b><i><s>45</s><b>67</b></i>'
+        expected: '<b><i>01</i></b><b><s>2</s></b><span><s>3</s></span><i><s>45</s><span>6</span><b>7</b></i>'
+        args: [3, 4, 'bold', false]
+      'remove image':
+        initial: '<b>01</b><img src="http://quilljs.com/images/icon.png"><s>34</s>'
+        expected: "<b>01</b><span>#{Quill.Format.MEDIA_TEXT}</span><s>34</s>"
+        args: [2, 1, 'image', false]
+      'change format':
+        initial: '<b style="color: red;">012</b>'
+        expected: '<b style="color: red;">0</b><b style="color: blue;">1</b><b style="color: red;">2</b>'
+        args: [1, 1, 'color', 'blue']
 
     _.each(tests, (test, name) ->
       it(name, ->

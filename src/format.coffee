@@ -99,7 +99,8 @@ class Format
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.tag)
-      return DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG)
+      node = DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG)
+      DOM.setText(node, Format.MEDIA_TEXT) if @config.tag == 'IMG'
     return node
 
   value: (node) ->

@@ -20,7 +20,7 @@ describe('Format', ->
       format: new Quill.Format(Quill.Format.FORMATS.image)
       existing: '<img src="http://quilljs.com/images/icon.png">'
       missing: '<span>Text</span>'
-      removed: '<span></span>'
+      removed: "<span>#{Quill.Format.MEDIA_TEXT}</span>"
       value: 'http://quilljs.com/images/icon.png'
     link:
       format: new Quill.Format(Quill.Format.FORMATS.link)

@@ -11,12 +11,6 @@ Tandem     = require('tandem-core')
 # Note: Because Line uses @outerHTML as a heuristic to rebuild, we must be very careful to actually modify HTML when we modify it. Ex. Do not remove a <br> only to add another one back
 # Maybe a better heuristic would also check leaf children are still in the dom
 
-removeFormat = (format, subtree) ->
-  return unless DOM.isElement(subtree)
-  nodes = DOM.getDescendants(subtree)
-  nodes.push(subtree)
-  _.each(nodes, _.bind(format.remove, format))
-
 
 class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
@@ -28,16 +22,6 @@ class Line extends LinkedList.Node
     DOM.addClass(@node, Line.CLASS_NAME)
     this.rebuild()
     super(@node)
-
-  applyToContents: (offset, length, fn) ->
-    [startNode, endNode] = Utils.partitionChildren(@node, offset, length)
-    curNode = startNode
-    endNode = endNode.nextSibling if curNode == endNode
-    while curNode? and curNode != endNode
-      nextNode = curNode.nextSibling
-      fn(curNode)
-      curNode = nextNode
-    return [startNode, endNode]
 
   buildLeaves: (node, formats) ->
     _.each(DOM.getChildNodes(node), (node) =>
@@ -112,7 +96,7 @@ class Line extends LinkedList.Node
         targetNode = leaf.node
         while !value and !format.match(targetNode)
           if targetNode.previousSibling?
-            targetNode.splitAncestors(targetNode, targetNode.parentNode.parentNode)
+            Utils.splitAncestors(targetNode, targetNode.parentNode.parentNode)
           targetNode = targetNode.parentNode
         # Isolate target node
         if leafOffset > 0
