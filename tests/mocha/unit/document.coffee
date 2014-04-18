@@ -38,6 +38,85 @@ describe('Document', ->
     )
   )
 
+  describe('search', ->
+    beforeEach( ->
+      @container.innerHTML = '
+        <div>
+          <div><span>0123</span></div>
+          <div><br></div>
+          <div><b>6789</b></div>
+        </div>
+      '
+      @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
+    )
+
+    it('findLine() lineNode', ->
+      line = @doc.findLine(@doc.root.firstChild)
+      expect(line).to.equal(@doc.lines.first)
+    )
+
+    it('findLine() not a line', ->
+      node = @doc.root.ownerDocument.createElement('i')
+      node.innerHTML = '<span>Test</span>'
+      @doc.root.appendChild(node)
+      line = @doc.findLine(node)
+      expect(line).to.be(null)
+    )
+
+    it('findLine() not in doc', ->
+      line = @doc.findLine($('#expected-container').get(0))
+      expect(line).to.be(null)
+    )
+
+    it('findLine() id false positive', ->
+      clone = @doc.root.firstChild.cloneNode(true)
+      @doc.root.appendChild(clone)
+      line = @doc.findLine(clone)
+      expect(line).to.be(null)
+    )
+
+    it('findLine() leaf node', ->
+      line = @doc.findLine(@doc.root.querySelector('b'))
+      expect(line).to.equal(@doc.lines.last)
+    )
+
+    it('findLineAt() middle of line', ->
+      [line, offset] = @doc.findLineAt(2)
+      expect(line).to.equal(@doc.lines.first)
+      expect(offset).to.equal(2)
+    )
+
+    it('findLineAt() last line', ->
+      [line, offset] = @doc.findLineAt(8)
+      expect(line).to.equal(@doc.lines.last)
+      expect(offset).to.equal(2)
+    )
+
+    it('findLineAt() end of line', ->
+      [line, offset] = @doc.findLineAt(5)
+      expect(line).to.equal(@doc.lines.first)
+      expect(offset).to.equal(5)
+    )
+
+    it('findLineAt() newline', ->
+      [line, offset] = @doc.findLineAt(6)
+      expect(line).to.equal(@doc.lines.first.next)
+      expect(offset).to.equal(1)
+    )
+
+    it('findLineAt() end of document', ->
+      [line, offset] = @doc.findLineAt(10)
+      expect(line).to.be(@doc.lines.last)
+      expect(offset).to.equal(0)
+    )
+
+    it('findLineAt() beyond document', ->
+      [line, offset] = @doc.findLineAt(11)
+      expect(line).to.be(null)
+      expect(offset).to.equal(1)
+    )
+  )
+
   describe('manipulation', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('
@@ -48,7 +127,7 @@ describe('Document', ->
           <div><br></div>
           <div><b>Test</b></div>
         </div>
-      ', true)
+      ')
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
       @lines = @doc.lines.toArray()
     )

@@ -36,7 +36,7 @@ Utils =
     if node.nodeType == DOM.ELEMENT_NODE
       return _.reduce(DOM.getChildNodes(node), (length, child) ->
         return length + Utils.getNodeLength(child)
-      , if Utils.isLineNode(node) then 1 else 0)
+      , 0)
     else if node.nodeType == DOM.TEXT_NODE
       return DOM.getText(node).length
     else
@@ -52,9 +52,6 @@ Utils =
   # We'll take a leap of faith that IE11 is good enough...
   isIE: (maxVersion = 10) ->
     return ieVersion? and maxVersion >= ieVersion
-
-  isLineNode: (node) ->
-    return node?.parentNode? and DOM.hasClass(node.parentNode, 'editor-container') and DOM.BLOCK_TAGS[node.tagName]?
 
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (refNode, root) ->
