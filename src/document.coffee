@@ -12,7 +12,7 @@ class Document
   constructor: (@root, options = {}) ->
     @formats = {}
     _.each(options.formats, _.bind(this.addFormat, this))
-    this.rebuild()
+    this.setHTML(@root.innerHTML)
 
   addFormat: (name, config) ->
     config = Format.FORMATS[name] unless _.isObject(config)
@@ -23,9 +23,10 @@ class Document
     return this.insertLineBefore(lineNode, null)
 
   findLine: (node) ->
-    while node? and !Utils.isLineNode(node)
+    while node? and node.parentNode != @root
       node = node.parentNode
-    return if node? then @lineMap[node.id] else null
+    line = if node? then @lineMap[node.id] else null
+    return if line?.node == node then line else null
 
   findLineAt: (index) ->
     curLine = @lines.first

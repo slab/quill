@@ -38,6 +38,55 @@ describe('Document', ->
     )
   )
 
+  describe('search', ->
+    beforeEach( ->
+      @container.innerHTML = '
+        <div>
+          <div><span>Test</span></div>
+          <div><br></div>
+          <div><b>Test</b></div>
+        </div>
+      '
+      @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
+    )
+
+    it('findLine() lineNode', ->
+      line = @doc.findLine(@doc.root.firstChild)
+      expect(line).to.equal(@doc.lines.first)
+    )
+
+    it('findLine() not a line', ->
+      node = @doc.root.ownerDocument.createElement('i')
+      node.innerHTML = '<span>Test</span>'
+      @doc.root.appendChild(node)
+      line = @doc.findLine(node)
+      expect(line).to.be(null)
+    )
+
+    it('findLine() not in doc', ->
+      line = @doc.findLine($('#expected-container').get(0))
+      expect(line).to.be(null)
+    )
+
+    it('findLine() id false positive', ->
+      clone = @doc.root.firstChild.cloneNode(true)
+      @doc.root.appendChild(clone)
+      line = @doc.findLine(clone)
+      expect(line).to.be(null)
+    )
+
+    it('findLine() leaf node', ->
+      line = @doc.findLine(@doc.root.querySelector('b'))
+      expect(line).to.equal(@doc.lines.last)
+    )
+
+    # findLineAt
+    # offset in middle of line
+    # on newline line
+    # offset at newline
+    # beyond document
+  )
+
   describe('manipulation', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('
@@ -48,7 +97,7 @@ describe('Document', ->
           <div><br></div>
           <div><b>Test</b></div>
         </div>
-      ', true)
+      ')
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
       @lines = @doc.lines.toArray()
     )
