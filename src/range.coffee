@@ -1,15 +1,12 @@
-_        = require('lodash')
-Position = require('./position')
+_ = require('lodash')
 
 
 class Range
   constructor: (@doc, @start, @end) ->
-    @start = new Position(@doc, @start) if _.isNumber(@start)
-    @end = new Position(@doc, @end) if _.isNumber(@end)
 
   equals: (range) ->
     return false unless range?
-    return range.start.leafNode == @start.leafNode && range.end.leafNode == @end.leafNode && range.start.offset == @start.offset && range.end.offset == @end.offset
+    return @doc == range.doc and @start == range.start and @end == range.end
 
   # TODO implement the following:
   # Return object representing intersection of formats of leaves in range
@@ -24,10 +21,11 @@ class Range
   # <span class='size.huge'>Huge</span><span>Normal</span><span class='size.small'>Small</span> -> {size: ['huge', 'normal', 'small']}
   getFormats: ->
     if this.isCollapsed()
-      leaf = @start.getLeaf()
-      return if leaf then leaf.getFormats() else {}
+      [line, offset] = @doc.getLineAt(@start)
+      leaf = line.getLeafAt(offset)
+      return if leaf then leaf.formats else {}
     delta = @doc.toDelta()
-    ops = delta.getOpsAt(@start.index, @end.index - @start.index)
+    ops = delta.getOpsAt(@start, @end - @start)
     # TODO newlines should not be ignored
     ops = _.filter(ops, (op) ->
       return op.value != '\n'
@@ -53,8 +51,8 @@ class Range
     return result
 
   getLines: ->
-    startLine = @doc.findLine(@start.leafNode)
-    endLine = @doc.findLine(@end.leafNode)
+    [startLine, offset] = @doc.findLineAt(@start)
+    [endLine, offset] = @doc.findLineAt(@end)
     ret = [startLine]
     while startLine != endLine
       startLine = startLine.next
@@ -63,12 +61,12 @@ class Range
 
   getText: ->
     delta = @doc.toDelta()
-    ops = delta.getOpsAt(@start.index, @end.index - @start.index)
+    ops = delta.getOpsAt(@start, @end - @start)
     # TODO remove duplication with Quill.getText
     return _.pluck(ops, 'value').join('')
 
   isCollapsed: ->
-    return @start.leafNode == @end.leafNode && @start.offset == @end.offset
+    return @start == @end
 
 
 module.exports = Range

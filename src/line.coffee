@@ -147,7 +147,7 @@ class Line extends LinkedList.Node
     @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
     ops = _.map(@leaves.toArray(), (leaf) ->
-      return new Tandem.InsertOp(leaf.text, leaf.getFormats(true))
+      return new Tandem.InsertOp(leaf.text, leaf.formats)
     )
     @delta = new Tandem.Delta(0, @length, ops)
 

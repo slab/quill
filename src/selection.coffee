@@ -1,9 +1,8 @@
-_        = require('lodash')
-rangy    = require('rangy-core')
-DOM      = require('./dom')
-Position = require('./position')
-Range    = require('./range')
-Utils    = require('./utils')
+_     = require('lodash')
+rangy = require('rangy-core')
+DOM   = require('./dom')
+Range = require('./range')
+Utils = require('./utils')
 
 
 compareNativeRanges = (r1, r2) ->

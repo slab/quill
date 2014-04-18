@@ -1,7 +1,6 @@
 _        = require('lodash')
 DOM      = require('../dom')
 Line     = require('../line')
-Position = require('../position')
 
 
 _initDeletes = ->

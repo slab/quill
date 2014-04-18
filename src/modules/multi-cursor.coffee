@@ -1,7 +1,6 @@
 _             = require('lodash')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 DOM           = require('../dom')
-Position      = require('../position')
 Utils         = require('../utils')
 
 
