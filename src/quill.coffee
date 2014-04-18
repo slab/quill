@@ -165,8 +165,8 @@ class Quill extends EventEmitter2
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
-  insertMedia: (index, type, source) ->
-    this.insertText(index, Format.MEDIA_TEXT, type, source)
+  insertEmbed: (index, type, source) ->
+    this.insertText(index, Format.EMBED_TEXT, type, source)
 
   insertText: (index, text, name, value, options = {}) ->
     [index, length, formats, options] = buildParams(index, 0, name, value, options)

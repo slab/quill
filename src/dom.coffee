@@ -46,6 +46,10 @@ DOM =
     'VIDEO'
   }
 
+  EMBED_TAGS: {
+    'IMG'
+  }
+
   VOID_TAGS: {
     'AREA'
     'BASE'

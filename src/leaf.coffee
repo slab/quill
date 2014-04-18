@@ -17,7 +17,7 @@ class Leaf extends LinkedList.Node
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Leaf.ID_PREFIX)
-    @text = if @node.tagName == 'IMG' then Format.MEDIA_TEXT else DOM.getText(@node)
+    @text = if DOM.EMBED_TAGS[@node.tagName]? then Format.EMBED_TEXT else DOM.getText(@node)
     @length = @text.length
 
   getFormats: ->

@@ -3,7 +3,6 @@ describe('Utils', ->
     @container = $('#test-container').html('').get(0)
   )
 
-  # TODO no tests for traversing multiple line nodes
   describe('findDeepestNode()', ->
     tests =
       'zeroth':
@@ -65,7 +64,6 @@ describe('Utils', ->
     )
   )
 
-  # TODO no tests for line node
   describe('getNodeLength()', ->
     tests =
       'element':
@@ -80,6 +78,9 @@ describe('Utils', ->
       'ignore break':
         html: '<span><span>A<br></span><br><span>B</span></span>'
         length: 2
+      'include embed':
+        html: '<span>Test<img>Test</span>'
+        length: 9
 
     _.each(tests, (test, name) ->
       it(name, ->

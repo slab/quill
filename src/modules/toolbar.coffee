@@ -53,7 +53,7 @@ class Toolbar
           @quill.setSelection(range)
         if _.indexOf(Toolbar.formats.EMBED, format) > -1
           # TODO show link tooltip..
-          @quill.insertMedia(range.end.index, format, 'images/cloud.png')
+          @quill.insertEmbed(range.end.index, format, 'images/cloud.png')
           # TODO set selection to after the embed insertion point
         else if _.indexOf(Toolbar.formats.LINE, format) > -1
           @quill.formatLines(range, format, value)

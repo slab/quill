@@ -7,7 +7,7 @@ describe('Leaf', ->
     tests =
       'image':
         html: '<img>'
-        text: Quill.Format.MEDIA_TEXT
+        text: Quill.Format.EMBED_TEXT
       'break':
         html: '<br>'
         text: ''
