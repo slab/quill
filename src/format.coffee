@@ -53,14 +53,6 @@ class Format
       type: Format.types.LINE
       style: 'textAlign'
 
-    list:
-      tag: 'OL'
-      type: Format.types.LINE
-
-    bullet:
-      tag: 'UL'
-      type: Format.types.LINE
-
 
   constructor: (@config) ->
 
