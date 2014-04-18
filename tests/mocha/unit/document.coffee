@@ -1,34 +1,43 @@
 Tandem = require('tandem-core')
 
-
 describe('Document', ->
-  describe('findLineAt()', ->
-    it('should find correct offset in line', ->
-      lines = [
-        '<div><br></div>'
-        '<div><span>12</span></div>'
-        '<div><b>45</b></div>'
-        '<div><br></div>'
-        '<div><br></div>'
-        '<div><span>78</span></div>'
-        '<div><br></div>'
-      ]
-      $('#test-container').html(lines.join(''))
-      doc = new Quill.Document($('#test-container').get(0))
-      lines = doc.lines.toArray()
-      _.each([[0], [1,2,3], [4,5,6], [7], [8], [9,10,11], [12]], (indexGroup, lineIndex) ->
-        _.each(indexGroup, (index, indexIndex) ->
-          [line, offset] = doc.findLineAt(index)
-          expect(line.node.innerHTML).to.be.equal(lines[lineIndex].node.innerHTML)
-          expect(line.id).to.be.equal(lines[lineIndex].id)
-          expect(offset).to.be.equal(indexIndex)
-        )
+  beforeEach( ->
+    @container = $('#test-container').html('').get(0)
+  )
+
+  describe('constructor', ->
+    tests =
+      'blank':
+        initial: ''
+        expected: ''
+      'no change':
+        initial: '<div><span>Test</span></div>'
+        expected: '<div><span>Test</span></div>'
+      'text':
+        initial: 'Test'
+        expected: '<div><span>Test</span></div>'
+      'inline':
+        initial: '<span>Test</span>'
+        expected: '<div><span>Test</span></div>'
+      'block pulling':
+        initial: '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
+        expected: '<div><span>Test</span></div><div><span>Test</span></div>'
+      'break blocks':
+        initial: '<div><span>A</span><br><span>B</span><br><span>C</span></div>'
+        expected: '<div><span>A</span></div><div><span>B</span></div><div><span>C</span></div>'
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = "<div>#{test.initial}</div>"
+        doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
+        expect.equalHTML(@container.firstChild, test.expected, true)
       )
     )
   )
 
   describe('findLine()', -> )
   describe('findLineAt()', -> )
+
   describe('mergeLines()', -> )
   describe('removeLine()', -> )
   describe('splitLine()', -> )
@@ -37,9 +46,6 @@ describe('Document', ->
     tests =
       'blank':
         initial:  ['']
-        expected: Tandem.Delta.getInitial('')
-      'empty':
-        initial:  ['<div><span></span></div>']
         expected: Tandem.Delta.getInitial('')
       'single line':
         initial:  ['<div><span>0123</span></div>']
@@ -77,8 +83,8 @@ describe('Document', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        $container = $('#test-container').html(test.initial.join(''))
-        doc = new Quill.Document($container.get(0), { formats: Quill.DEFAULTS.formats })
+        @container.innerHTML = test.initial.join('')
+        doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
         expect.equalDeltas(doc.toDelta(), test.expected)
       )
     )

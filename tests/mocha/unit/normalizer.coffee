@@ -42,7 +42,7 @@ describe('Normalizer', ->
     tests =
       'pull text node':
         initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
-        expected: '<div><span>A</span>B</div><div><div>C</div></div>'
+        expected: '<div><span>A</span><span>B</span></div><div><div>C</div></div>'
       'inline with text':
         initial:  '<span>What</span>Test'
         expected: '<div><span>What</span><span>Test</span></div>'
@@ -71,7 +71,7 @@ describe('Normalizer', ->
         expected: '<div></div>'
       'Inner block':
         initial:  '<div><div><span>Test</span></div><div><span>Another</span></div></div>'
-        expected: '<div><span>Test</span></div><div><span>Another</span></div>'
+        expected: '<div><span>Test</span></div><div><div><span>Another</span></div></div>'
       'Inner deep block':
         initial:  '<div><div><div><span>Test</span></div></div></div>'
         expected: '<div><span>Test</span></div>'
@@ -85,8 +85,10 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial
-        Quill.Normalizer.pullBlocks(@container.firstChild)
+        firstChild = @container.firstChild
+        Quill.Normalizer.pullBlocks(firstChild)
         expect.equalHTML(@container, test.expected)
+        expect(firstChild).to.equal(@container.firstChild)
       )
     )
   )
@@ -208,6 +210,9 @@ describe('Normalizer', ->
       'multiple inner':
         initial:  '<span>Test<span>Test<span>Test</span></span></span>'
         expected: '<span><span>Test</span><span><span>Test</span><span>Test</span></span></span>'
+      'text node':
+        initial: 'Test'
+        expected: '<span>Test</span>'
 
     _.each(tests, (test, name) ->
       it(name, ->

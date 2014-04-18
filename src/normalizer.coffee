@@ -50,7 +50,7 @@ class Normalizer
   @normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
     lineNode = Normalizer.handleBreaks(lineNode)
-    lineNode = Normalizer.pullBlocks(lineNode)
+    Normalizer.pullBlocks(lineNode)
     Normalizer.wrapText(lineNode)
     return lineNode
 
@@ -61,19 +61,18 @@ class Normalizer
   # Make sure descendants are all inline elements
   @pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
-    return lineNode unless curNode?
+    return unless curNode?
     if DOM.BLOCK_TAGS[curNode.tagName]?
       if curNode.nextSibling?
         Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
       DOM.unwrap(curNode)
-      return Normalizer.pullBlocks(lineNode)
+      Normalizer.pullBlocks(lineNode)
     curNode = curNode.nextSibling
     while curNode?
       if DOM.BLOCK_TAGS[curNode.tagName]?
         lineNode = Utils.splitAncestors(curNode, lineNode.parentNode)
         break
       curNode = curNode.nextSibling
-    return lineNode
 
   @stripWhitespace: (html) ->
     # Remove leading and tailing whitespace
@@ -115,7 +114,7 @@ class Normalizer
   @wrapText: (lineNode) ->
     texts = DOM.getTextNodes(lineNode)
     _.each(texts, (textNode) =>
-      if textNode.previousSibling? or textNode.nextSibling?
+      if textNode.previousSibling? or textNode.nextSibling? or textNode.parentNode == lineNode
         DOM.wrap(lineNode.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), textNode)
     )
 

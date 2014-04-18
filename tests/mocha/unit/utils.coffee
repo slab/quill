@@ -105,7 +105,7 @@ describe('Utils', ->
       </div>'
     )
     node = @container.querySelector('span')
-    ret = Quill.Utils.splitAncestors(node, @container)
+    retNode = Quill.Utils.splitAncestors(node, @container)
     expect.equalHTML(@container, '
       <div>
         <div>
@@ -123,6 +123,7 @@ describe('Utils', ->
         </div>
       </div>'
     )
+    expect(retNode).to.equal(@container.lastChild)
   )
 
   describe('splitNode()', ->

@@ -167,9 +167,7 @@ describe('Line', ->
           delete expectedFormats[name] unless value
         )
         expect(line.formats).to.eql(expectedFormats)
-        node = line.node.cloneNode(true)
-        Quill.DOM.clearAttributes(node, ['style'])
-        expect.equalHTML(node.outerHTML, test.expected)
+        expect.equalHTML(line.node.outerHTML, test.expected, true)
       )
     )
   )

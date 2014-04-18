@@ -61,10 +61,12 @@ Utils =
     return refNode if refNode == root or refNode.parentNode == root
     parentNode = refNode.parentNode
     parentClone = parentNode.cloneNode(false)
-    parentNode.parentNode.insertBefore(parentClone, parentNode)
-    while refNode.previousSibling?
-      parentClone.insertBefore(refNode.previousSibling, parentClone.firstChild)
-    return Utils.splitAncestors(parentNode, root)
+    parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
+    while refNode?
+      nextNode = refNode.nextSibling
+      parentClone.appendChild(refNode)
+      refNode = nextNode
+    return Utils.splitAncestors(parentClone, root)
 
   splitNode: (node, offset, force = false) ->
     # Check if split necessary

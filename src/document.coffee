@@ -11,22 +11,16 @@ Tandem        = require('tandem-core')
 class Document
   constructor: (@root, options = {}) ->
     @formats = {}
-    _.each(options.formats, (name) =>
-      this.addFormat(name)
-    )
+    _.each(options.formats, _.bind(this.addFormat, this))
     this.rebuild()
 
   addFormat: (name, config) ->
-    config = Format.FORMATS[name] unless config?
+    config = Format.FORMATS[name] unless _.isObject(config)
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
     @formats[name] = new Format(config)
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
-
-  findLeaf: (node) ->
-    line = this.findLine(node)
-    return line.findLeaf(node)
 
   findLine: (node) ->
     while node? and !Utils.isLineNode(node)
@@ -64,7 +58,8 @@ class Document
     @lineMap = {}
     lineNode = @root.firstChild
     while lineNode?
-      this.appendLine(Normalizer.normalizeLine(lineNode))
+      lineNode = Normalizer.normalizeLine(lineNode)
+      this.appendLine(lineNode)
       lineNode = lineNode.nextSibling
 
   removeLine: (line) ->
