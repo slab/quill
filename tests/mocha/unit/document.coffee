@@ -42,9 +42,9 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <div><span>Test</span></div>
+          <div><span>0123</span></div>
           <div><br></div>
-          <div><b>Test</b></div>
+          <div><b>6789</b></div>
         </div>
       '
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
@@ -80,11 +80,41 @@ describe('Document', ->
       expect(line).to.equal(@doc.lines.last)
     )
 
-    # findLineAt
-    # offset in middle of line
-    # on newline line
-    # offset at newline
-    # beyond document
+    it('findLineAt() middle of line', ->
+      [line, offset] = @doc.findLineAt(2)
+      expect(line).to.equal(@doc.lines.first)
+      expect(offset).to.equal(2)
+    )
+
+    it('findLineAt() last line', ->
+      [line, offset] = @doc.findLineAt(8)
+      expect(line).to.equal(@doc.lines.last)
+      expect(offset).to.equal(2)
+    )
+
+    it('findLineAt() end of line', ->
+      [line, offset] = @doc.findLineAt(5)
+      expect(line).to.equal(@doc.lines.first)
+      expect(offset).to.equal(5)
+    )
+
+    it('findLineAt() newline', ->
+      [line, offset] = @doc.findLineAt(6)
+      expect(line).to.equal(@doc.lines.first.next)
+      expect(offset).to.equal(1)
+    )
+
+    it('findLineAt() end of document', ->
+      [line, offset] = @doc.findLineAt(10)
+      expect(line).to.be(@doc.lines.last)
+      expect(offset).to.equal(0)
+    )
+
+    it('findLineAt() beyond document', ->
+      [line, offset] = @doc.findLineAt(11)
+      expect(line).to.be(null)
+      expect(offset).to.equal(1)
+    )
   )
 
   describe('manipulation', ->

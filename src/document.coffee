@@ -29,12 +29,15 @@ class Document
     return if line?.node == node then line else null
 
   findLineAt: (index) ->
+    length = this.toDelta().endLength     # TODO optimize
+    return [@lines.last, 0] if index == length
+    return [null, index - length] if index > length
     curLine = @lines.first
     while curLine?
-      return [curLine, index] if index <= curLine.length
+      return [curLine, index] if index <= curLine.length + 1
       index -= curLine.length + 1
       curLine = curLine.next
-    return [null, index]
+    return [null, index]    # Should never occur unless length calculation is off
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
