@@ -26,7 +26,7 @@ describe('Line', ->
       'media child':
         initial: '<div><img src="http://quilljs.com/images/icon.png"></div>'
         expected: '<div><img src="http://quilljs.com/images/icon.png"></div>'
-        leaves: [{ text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
+        leaves: [{ text: Quill.Format.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
       'break child':
         initial: '<div><br></div>'
         expected: '<div><br></div>'
@@ -37,7 +37,7 @@ describe('Line', ->
         leaves: [
           { text: 'A', formats: { bold: true, italic: true } }
           { text: 'B', formats: { bold: true, strike: true } }
-          { text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }
+          { text: Quill.Format.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }
           { text: 'D', formats: { underline: true } }
         ]
 
@@ -253,7 +253,7 @@ describe('Line', ->
         args: [3, 4, 'bold', false]
       'remove image':
         initial: '<b>01</b><img src="http://quilljs.com/images/icon.png"><s>34</s>'
-        expected: "<b>01</b><span>#{Quill.Format.MEDIA_TEXT}</span><s>34</s>"
+        expected: "<b>01</b><span>#{Quill.Format.EMBED_TEXT}</span><s>34</s>"
         args: [2, 1, 'image', false]
       'change format':
         initial: '<b style="color: red;">012</b>'

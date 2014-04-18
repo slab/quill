@@ -33,14 +33,10 @@ Utils =
 
   getNodeLength: (node) ->
     return 0 unless node?
-    if node.nodeType == DOM.ELEMENT_NODE
-      return _.reduce(DOM.getChildNodes(node), (length, child) ->
-        return length + Utils.getNodeLength(child)
-      , 0)
-    else if node.nodeType == DOM.TEXT_NODE
-      return DOM.getText(node).length
-    else
-      return 0
+    length = DOM.getText(node).length
+    if DOM.isElement(node)
+      length += node.querySelectorAll(_.keys(DOM.EMBED_TAGS).join(',')).length
+    return length
 
   isEmptyDoc: (root) ->
     firstLine = root.firstChild
