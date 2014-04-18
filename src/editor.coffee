@@ -19,7 +19,6 @@ _deleteAt = (index, length) ->
       if deleteLength <= curLine.length
         curLine.deleteText(offset, deleteLength)
       else
-        DOM.removeNode(curLine.node)
         @doc.removeLine(curLine)
       length -= deleteLength
       curLine = nextLine

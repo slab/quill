@@ -128,18 +128,19 @@ class Line extends LinkedList.Node
     return @length == 0 and @leaves.length == 1 and @leaves.last.node.tagName == DOM.DEFAULT_BREAK_TAG
 
   rebuild: (force = false) ->
-    if @node.parentNode == @doc.root
-      return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
-      @node = Normalizer.normalizeNode(@node)
-      @leaves = new LinkedList()
-      @formats = _.reduce(@doc.formats, (formats, format, name) =>
-        formats[name] = format.value(@node) if format.isType(Format.types.LINE) and format.match(@node)
-        return formats
-      , {})
-      this.buildLeaves(@node, {})
-      this.resetContent()
-    else
-      @doc.removeLine(this)
+    return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
+    @node = Normalizer.normalizeNode(@node)
+    @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG)) unless @node.firstChild?
+    @leaves = new LinkedList()
+    @formats = _.reduce(@doc.formats, (formats, format, name) =>
+      formats[name] = format.value(@node) if format.isType(Format.types.LINE) and format.match(@node)
+      return formats
+    , {})
+    this.buildLeaves(@node, {})
+    if @leaves.length == 1 and @leaves.first.length == 0 and @leaves.first.node.tagName != DOM.DEFAULT_BREAK_TAG
+      @leaves.first.node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
+      @leaves.first.node = @leaves.first.node.firstChild
+    this.resetContent()
     return true
 
   resetContent: ->

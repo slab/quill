@@ -25,6 +25,9 @@ describe('Document', ->
       'break blocks':
         initial: '<div><span>A</span><br><span>B</span><br><span>C</span></div>'
         expected: '<div><span>A</span></div><div><span>B</span></div><div><span>C</span></div>'
+      'pull and break':
+        initial: '<div><div><div><span>A</span></div><span>B</span><br><span>C</span></div></div>'
+        expected: '<div><span>A</span></div><div><span>B</span></div><div><span>C</span></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -35,12 +38,178 @@ describe('Document', ->
     )
   )
 
-  describe('findLine()', -> )
-  describe('findLineAt()', -> )
+  describe('manipulation', ->
+    beforeEach( ->
+      @container.innerHTML = Quill.Normalizer.stripWhitespace('
+        <div>
+          <div><span>Test</span></div>
+          <div><i>Test</i></div>
+          <div><br></div>
+          <div><br></div>
+          <div><b>Test</b></div>
+        </div>
+      ', true)
+      @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
+      @lines = @doc.lines.toArray()
+    )
 
-  describe('mergeLines()', -> )
-  describe('removeLine()', -> )
-  describe('splitLine()', -> )
+    it('mergeLines() normal', ->
+      @doc.mergeLines(@lines[0], @lines[1])
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length - 1)
+    )
+
+    it('mergeLines() with newline', ->
+      @doc.mergeLines(@lines[1], @lines[2])
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length - 1)
+    )
+
+    it('mergeLines() from newline', ->
+      @doc.mergeLines(@lines[3], @lines[4])
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length - 1)
+    )
+
+    it('mergeLines() two newlines', ->
+      @doc.mergeLines(@lines[2], @lines[3])
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length - 1)
+    )
+
+    it('removeLine() existing', ->
+      @doc.removeLine(@lines[1])
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length - 1)
+    )
+
+    it('removeLine() lineNode missing', ->
+      Quill.DOM.removeNode(@lines[1].node)
+      @doc.removeLine(@lines[1])
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length - 1)
+    )
+
+    it('splitLine() middle', ->
+      @doc.splitLine(@lines[1], 2)
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Te</i></div>
+        <div><i>st</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length + 1)
+    )
+
+    it('splitLine() beginning', ->
+      @doc.splitLine(@lines[1], 0)
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><br></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length + 1)
+    )
+
+    it('splitLine() end', ->
+      @doc.splitLine(@lines[1], 4)
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length + 1)
+    )
+
+    it('splitLine() split break', ->
+      @doc.splitLine(@lines[2], 0)
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).to.equal(@lines.length + 1)
+    )
+
+    it('setHTML() valid', ->
+      html = '<div><span>Test</span></div>'
+      @doc.setHTML(html)
+      expect.equalHTML(@doc.root, html, true)
+    )
+
+    it('setHTML() invalid', ->
+      @doc.setHTML('
+        <div>
+          <div>
+            <div>
+              <span>A</span>
+            </div>
+            <span>B</span>
+            <br>
+            <span>C</span>
+          </div>
+        </div>
+        <div>
+          <b></b>
+        </div>
+      ')
+      expect.equalHTML(@doc.root, '
+        <div>
+          <span>A</span>
+        </div>
+        <div>
+          <span>B</span>
+        </div>
+        <div>
+          <span>C</span>
+        </div>
+        <div>
+          <b><br></b>
+        </div>
+      ', true)
+    )
+  )
 
   describe('toDelta()', ->
     tests =

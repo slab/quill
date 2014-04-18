@@ -45,11 +45,11 @@ class Document
     return line
 
   mergeLines: (line, lineToMerge) ->
-    return unless line? and lineToMerge?
-    _.each(DOM.getChildNodes(lineToMerge.node), (child) ->
-      line.node.appendChild(child)
-    )
-    DOM.removeNode(lineToMerge.node)
+    unless lineToMerge.isNewline()
+      DOM.removeNode(line.leaves.first.node) if line.isNewline()
+      _.each(DOM.getChildNodes(lineToMerge.node), (child) ->
+        line.node.appendChild(child) if child.tagName != DOM.DEFAULT_BREAK_TAG
+      )
     this.removeLine(lineToMerge)
     line.rebuild()
 
@@ -63,6 +63,7 @@ class Document
       lineNode = lineNode.nextSibling
 
   removeLine: (line) ->
+    DOM.removeNode(line.node) if line.node.parentNode == @root
     delete @lineMap[line.id]
     @lines.remove(line)
 

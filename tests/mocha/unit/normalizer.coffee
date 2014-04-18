@@ -32,8 +32,9 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial.join('')
-        Quill.Normalizer.handleBreaks(@container.firstChild)
+        lineNode = Quill.Normalizer.handleBreaks(@container.firstChild)
         expect.equalHTML(@container, test.expected)
+        expect(lineNode).to.equal(@container.firstChild)
       )
     )
   )
@@ -50,8 +51,9 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial
-        Quill.Normalizer.normalizeLine(@container.firstChild)
+        lineNode = Quill.Normalizer.normalizeLine(@container.firstChild)
         expect.equalHTML(@container, test.expected)
+        expect(lineNode).to.equal(@container.firstChild)
       )
     )
   )

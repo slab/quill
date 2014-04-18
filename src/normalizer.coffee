@@ -40,10 +40,10 @@ class Normalizer
     _.each(breaks, (br) =>
       if br.previousSibling?
         if br.nextSibling?
-          lineNode = Utils.splitAncestors(br, lineNode.parentNode)
+          Utils.splitAncestors(br, lineNode.parentNode)
         br.parentNode.removeChild(br)
       else if br.nextSibling?
-        lineNode = Utils.splitAncestors(br.nextSibling, lineNode.parentNode)
+        Utils.splitAncestors(br.nextSibling, lineNode.parentNode)
     )
     return lineNode
 

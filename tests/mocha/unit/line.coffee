@@ -7,26 +7,33 @@ describe('Line', ->
   describe('constructor', ->
     tests =
       'no children':
-        html: '<div style="text-align: right;"></div>'
+        initial: '<div style="text-align: right;"></div>'
+        expected: '<div style="text-align: right;"><br></div>'
         format: { align: 'right' }
-        leaves: []
+        leaves: [{ text: '', formats: {} }]
       'empty child':
-        html: '<div><b></b></div>'
+        initial: '<div><b></b></div>'
+        expected: '<div><b><br></b></div>'
         leaves: [{ text: '', formats: { bold: true } }]
       'leaf child':
-        html: '<div><b>Bold</b></div>'
+        initial: '<div><b>Bold</b></div>'
+        expected: '<div><b>Bold</b></div>'
         leaves: [{ text: 'Bold', formats: { bold: true } }]
       'nested leaf child':
-        html: '<div><s><b>Bold</b></s></div>'
+        initial: '<div><s><b>Bold</b></s></div>'
+        expected: '<div><s><b>Bold</b></s></div>'
         leaves: [{ text: 'Bold', formats: { bold: true, strike: true } }]
       'media child':
-        html: '<div><img src="http://quilljs.com/images/icon.png"></div>'
+        initial: '<div><img src="http://quilljs.com/images/icon.png"></div>'
+        expected: '<div><img src="http://quilljs.com/images/icon.png"></div>'
         leaves: [{ text: Quill.Format.MEDIA_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
       'break child':
-        html: '<div><br></div>'
+        initial: '<div><br></div>'
+        expected: '<div><br></div>'
         leaves: [{ text: '', formats: {} }]
       'lots of children':
-        html: '<div><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></div>'
+        initial: '<div><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></div>'
+        expected: '<div><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></div>'
         leaves: [
           { text: 'A', formats: { bold: true, italic: true } }
           { text: 'B', formats: { bold: true, strike: true } }
@@ -36,10 +43,11 @@ describe('Line', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = test.html
+        @container.innerHTML = test.initial
         lineNode = @container.firstChild
         line = new Quill.Line(@doc, lineNode)
         expect(line.node).to.equal(lineNode)
+        expect.equalHTML(lineNode.outerHTML, test.expected, true)
         expect(line.leaves.length).to.equal(test.leaves.length)
         length = _.reduce(test.leaves, (length, leaf) ->
           return length + leaf.text.length
@@ -140,20 +148,20 @@ describe('Line', ->
   describe('format()', ->
     tests =
       'add text align':
-        initial: '<div></div>'
-        expected: '<div style="text-align: right;"></div>'
+        initial: '<div><br></div>'
+        expected: '<div style="text-align: right;"><br></div>'
         formats: { align: 'right' }
       'add different text align':
-        initial: '<div style="text-align: right;"></div>'
-        expected: '<div style="text-align: center;"></div>'
+        initial: '<div style="text-align: right;"><br></div>'
+        expected: '<div style="text-align: center;"><br></div>'
         formats: { align: 'center' }
       'remove text align':
-        initial: '<div style="text-align: right;"></div>'
-        expected: '<div></div>'
+        initial: '<div style="text-align: right;"><br></div>'
+        expected: '<div><br></div>'
         formats: { align: false }
       'add bold':
-        initial: '<div></div>'
-        expected: '<div></div>'
+        initial: '<div><br></div>'
+        expected: '<div><br></div>'
         formats: { bold: true }
 
     _.each(tests, (test, name) ->
