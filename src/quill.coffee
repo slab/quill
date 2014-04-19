@@ -29,8 +29,8 @@ DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 # fn(Object range, Object formats, Object options = {})
 buildParams = (params...) ->
   if _.isObject(params[0])
-    index = params[0].start.getIndex()
-    length = params[0].end.getIndex() - index
+    index = params[0].start
+    length = params[0].end - index
     params.splice(0, 1, index, length)
   if _.isString(params[2])
     formats = {}

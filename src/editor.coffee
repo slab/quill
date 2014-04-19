@@ -10,7 +10,7 @@ Tandem     = require('tandem-core')
 
 _deleteAt = (index, length) ->
   return if length <= 0
-  @selection.preserve(index, -1 * length, =>
+  @selection.shiftAfter(index, -1 * length, =>
     [firstLine, offset] = @doc.findLineAt(index)
     curLine = firstLine
     while curLine? and length > 0
@@ -28,7 +28,7 @@ _deleteAt = (index, length) ->
 
 # formatAt (Number index, Number length, String name, Mixed value) ->
 _formatAt = (index, length, name, value) ->
-  @selection.preserve(index, 0, =>
+  @selection.shiftAfter(index, 0, =>
     [line, offset] = @doc.findLineAt(index)
     while line? and length > 0
       line.formatText(offset, Math.min(length, line.length - offset), name, value)
@@ -40,7 +40,7 @@ _formatAt = (index, length, name, value) ->
   )
 
 _insertAt = (index, text, formatting = {}) ->
-  @selection.preserve(index, text.length, =>
+  @selection.shiftAfter(index, text.length, =>
     text = text.replace(/\r\n/g, '\n')
     text = text.replace(/\r/g, '\n')
     lineTexts = text.split('\n')
@@ -140,7 +140,7 @@ class Editor
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new Selection(this, @quill)
+    @selection = new Selection(@doc, @quill)
     @ignoreDomChanges = false
 
   applyDelta: (delta, options = {}) ->
