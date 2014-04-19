@@ -14,10 +14,13 @@ module.exports = (grunt) ->
         'rangy-core':
           path: 'node_modules/rangy-browser/lib/rangy-core.js'
           exports: 'rangy'
-      standalone: 'Quill'
     quill:
+      options:
+        standalone: 'Quill'
       files: [{ 'build/quill.js': ['index.coffee'] }]
     exposed:
+      options:
+        standalone: 'Quill'
       files: [{ 'build/quill.exposed.js': ['tests/quill.coffee'] }]
     tests:
       options:
@@ -26,7 +29,6 @@ module.exports = (grunt) ->
           'node_modules/tandem-core/build/tandem-core.js:tandem-core'
         ]
         shim: null
-        standalone: null
       files: [{
         'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee']
         'build/tests/mocha/functional.js': ['tests/mocha/functional/**/*.coffee']
