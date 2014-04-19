@@ -248,7 +248,7 @@ DOM =
     _.each(DOM.getChildNodes(node), (child) ->
       node.parentNode.insertBefore(child, next)
     )
-    node.parentNode.removeChild(node)
+    DOM.removeNode(node)
     return ret
 
   wrap: (wrapper, node) ->

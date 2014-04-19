@@ -6,32 +6,18 @@ describe('Normalizer', ->
   describe('handleBreaks()', ->
     tests =
       'Break in middle of line':
-        initial: [
-          '<div><b>One<br>Two</b></div>'
-        ]
-        expected: [
-          '<div><b>One</b></div>'
-          '<div><b>Two</b></div>'
-        ]
+        initial:  '<div><b>One<br>Two</b></div>'
+        expected: '<div><b>One<br></b></div><div><b>Two</b></div>'
       'Break preceding line':
-        initial: [
-          '<div><b><br>One</b></div>'
-        ]
-        expected: [
-          '<div><b><br></b></div>'
-          '<div><b>One</b></div>'
-        ]
+        initial:  '<div><b><br>One</b></div>'
+        expected: '<div><b><br></b></div><div><b>One</b></div>'
       'Break after line':
-        initial: [
-          '<div><b>One<br></b></div>'
-        ]
-        expected: [
-          '<div><b>One</b></div>'
-        ]
+        initial:  '<div><b>One<br></b></div>'
+        expected: '<div><b>One<br></b></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = test.initial.join('')
+        @container.innerHTML = test.initial
         lineNode = Quill.Normalizer.handleBreaks(@container.firstChild)
         expect.equalHTML(@container, test.expected)
         expect(lineNode).to.equal(@container.firstChild)

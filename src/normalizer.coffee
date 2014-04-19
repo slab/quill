@@ -38,12 +38,7 @@ class Normalizer
   @handleBreaks: (lineNode) ->
     breaks = _.map(lineNode.querySelectorAll(DOM.DEFAULT_BREAK_TAG))
     _.each(breaks, (br) =>
-      if br.previousSibling?
-        if br.nextSibling?
-          Utils.splitAncestors(br, lineNode.parentNode)
-        br.parentNode.removeChild(br)
-      else if br.nextSibling?
-        Utils.splitAncestors(br.nextSibling, lineNode.parentNode)
+      Utils.splitAncestors(br.nextSibling, lineNode.parentNode) if br.nextSibling?
     )
     return lineNode
 

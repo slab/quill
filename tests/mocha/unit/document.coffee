@@ -22,12 +22,12 @@ describe('Document', ->
       'block pulling':
         initial: '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
         expected: '<div><span>Test</span></div><div><span>Test</span></div>'
-      'break blocks':
+      'with blocks':
         initial: '<div><span>A</span><br><span>B</span><br><span>C</span></div>'
-        expected: '<div><span>A</span></div><div><span>B</span></div><div><span>C</span></div>'
+        expected: '<div><span>A</span><br></div><div><span>B</span><br></div><div><span>C</span></div>'
       'pull and break':
         initial: '<div><div><div><span>A</span></div><span>B</span><br><span>C</span></div></div>'
-        expected: '<div><span>A</span></div><div><span>B</span></div><div><span>C</span></div>'
+        expected: '<div><span>A</span></div><div><span>B</span><br></div><div><span>C</span></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -278,7 +278,7 @@ describe('Document', ->
           <span>A</span>
         </div>
         <div>
-          <span>B</span>
+          <span>B</span><br>
         </div>
         <div>
           <span>C</span>
