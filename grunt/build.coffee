@@ -9,15 +9,18 @@ module.exports = (grunt) ->
         'node_modules/tandem-core/build/tandem-core.js:tandem-core'
         'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
       ]
-      extensions: ['.js', '.coffee']
+      browserifyOptions:
+        extensions: ['.js', '.coffee']
       transform: ['coffeeify']
     quill:
       options:
-        standalone: 'Quill'
+        bundleOptions:
+          standalone: 'Quill'
       files: [{ 'build/quill.js': ['index.coffee'] }]
     exposed:
       options:
-        standalone: 'Quill'
+        bundleOptions:
+          standalone: 'Quill'
       files: [{ 'build/quill.exposed.js': ['tests/quill.coffee'] }]
     tests:
       files: [{
