@@ -3,6 +3,7 @@ module.exports = (grunt) ->
     options:
       alias: [
         'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
+        'node_modules/expect.js/index.js:expect.js'
         'lib/linked_list.js:linked-list'
         'node_modules/lodash/lodash.js:lodash'
         'node_modules/tandem-core/build/tandem-core.js:tandem-core'
@@ -10,10 +11,6 @@ module.exports = (grunt) ->
       ]
       extensions: ['.js', '.coffee']
       transform: ['coffeeify']
-      shim:
-        'rangy-core':
-          path: 'node_modules/rangy-browser/lib/rangy-core.js'
-          exports: 'rangy'
     quill:
       options:
         standalone: 'Quill'
@@ -23,12 +20,6 @@ module.exports = (grunt) ->
         standalone: 'Quill'
       files: [{ 'build/quill.exposed.js': ['tests/quill.coffee'] }]
     tests:
-      options:
-        alias: [
-          'node_modules/expect.js/index.js:expect.js'
-          'node_modules/tandem-core/build/tandem-core.js:tandem-core'
-        ]
-        shim: null
       files: [{
         'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee']
         'build/tests/mocha/functional.js': ['tests/mocha/functional/**/*.coffee']
