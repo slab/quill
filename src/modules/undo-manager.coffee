@@ -2,45 +2,6 @@ _      = require('lodash')
 Tandem = require('tandem-core')
 
 
-getLastChangeIndex = (delta) ->
-  lastChangeIndex = index = offset = 0
-  _.each(delta.ops, (op) ->
-    # Insert
-    if Tandem.InsertOp.isInsert(op)
-      offset += op.getLength()
-      lastChangeIndex = index + offset
-    else if Tandem.RetainOp.isRetain(op)
-      # Delete
-      if op.start > index
-        lastChangeIndex = index + offset
-        offset -= (op.start - index)
-      # Format
-      if _.keys(op.attributes).length > 0
-        lastChangeIndex = op.end + offset
-      index = op.end
-  )
-  if delta.endLength < delta.startLength + offset
-    lastChangeIndex = delta.endLength
-  return lastChangeIndex
-
-_change = (source, dest) ->
-  if @stack[source].length > 0
-    change = @stack[source].pop()
-    @lastRecorded = 0
-    _ignoreChanges.call(this, =>
-      @quill.updateContents(change[source], { source: 'user' })
-      index = getLastChangeIndex(change[source])
-      @quill.setSelection(index, index)
-    )
-    @stack[dest].push(change)
-
-_ignoreChanges = (fn) ->
-  oldIgnoringChanges = @ignoringChanges
-  @ignoringChanges = true
-  fn.call(this)
-  @ignoringChanges = oldIgnoringChanges
-
-
 class UndoManager
   DEFAULTS:
     delay: 1000
@@ -102,21 +63,48 @@ class UndoManager
       return false
 
   redo: ->
-    _change.call(this, 'redo', 'undo')
-
-  ###
-  transformExternal: (delta) ->
-    return if delta.isIdentity()
-    @stack['undo'] = _.map(@stack['undo'], (change) ->
-      return {
-        redo: delta.transform(change.redo, true)
-        undo: change.undo.transform(delta, true)
-      }
-    )
-  ###
+    this._change('redo', 'undo')
 
   undo: ->
-    _change.call(this, 'undo', 'redo')
+    this._change('undo', 'redo')
+
+  _getLastChangeIndex: (delta) ->
+    lastChangeIndex = index = offset = 0
+    _.each(delta.ops, (op) ->
+      # Insert
+      if Tandem.InsertOp.isInsert(op)
+        offset += op.getLength()
+        lastChangeIndex = index + offset
+      else if Tandem.RetainOp.isRetain(op)
+        # Delete
+        if op.start > index
+          lastChangeIndex = index + offset
+          offset -= (op.start - index)
+        # Format
+        if _.keys(op.attributes).length > 0
+          lastChangeIndex = op.end + offset
+        index = op.end
+    )
+    if delta.endLength < delta.startLength + offset
+      lastChangeIndex = delta.endLength
+    return lastChangeIndex
+
+  _change: (source, dest) ->
+    if @stack[source].length > 0
+      change = @stack[source].pop()
+      @lastRecorded = 0
+      this._ignoreChanges( =>
+        @quill.updateContents(change[source], { source: 'user' })
+        index = this._getLastChangeIndex(change[source])
+        @quill.setSelection(index, index)
+      )
+      @stack[dest].push(change)
+
+  _ignoreChanges: (fn) ->
+    oldIgnoringChanges = @ignoringChanges
+    @ignoringChanges = true
+    fn.call(this)
+    @ignoringChanges = oldIgnoringChanges
 
 
 module.exports = UndoManager

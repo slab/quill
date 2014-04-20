@@ -4,62 +4,6 @@ DOM           = require('../dom')
 Utils         = require('../utils')
 
 
-_applyDelta = (delta) ->
-  delta.apply((index, text, formatting) =>
-    this.shiftCursors(index, text.length, formatting['author'], false)
-  , (index, length) =>
-    this.shiftCursors(index, -1 * length, null, false)
-  , (index, length, name, value) =>
-    this.shiftCursors(index, 0, null, false)
-  )
-  this.update()
-
-_buildCursor = (name, color) ->
-  cursor = @container.ownerDocument.createElement('span')
-  DOM.addClass(cursor, 'cursor')
-  cursor.innerHTML = @options.template
-  cursorFlag = cursor.querySelector('.cursor-flag')
-  cursorName = cursor.querySelector('.cursor-name')
-  DOM.setText(cursorName, name)
-  cursorCaret = cursor.querySelector('.cursor-caret')
-  cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
-  @container.appendChild(cursor)
-  return cursor
-
-_moveCursor = (cursor, referenceNode) ->
-  cursor.elem.style.top = referenceNode.offsetTop + 'px'
-  cursor.elem.style.left = referenceNode.offsetLeft + 'px'
-  cursor.elem.style.height = referenceNode.offsetHeight + 'px'
-  flag = cursor.elem.querySelector('.cursor-flag')
-  DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
-  DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-  DOM.toggleClass(cursor.elem, 'right', @editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-  this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
-
-_updateCursor = (cursor) ->
-  @quill.editor.doSilently( =>
-    [leafNode, offset] = Position.findLeafNode(@editorContainer, cursor.index)
-    guide = @container.ownerDocument.createElement('span')
-    if !leafNode.firstChild?
-      DOM.setText(guide, DOM.NOBREAK_SPACE)
-      # Should only be the case for empty lines
-      leafNode.parentNode.insertBefore(guide, leafNode)
-      _moveCursor.call(this, cursor, guide)
-    else
-      DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
-      [leftText, rightText, didSplit] = Utils.splitNode(leafNode.firstChild, offset)
-      if rightText?
-        rightText.parentNode.insertBefore(guide, rightText)
-        _moveCursor.call(this, cursor, guide)
-      else if leftText?
-        leftText.parentNode.appendChild(guide)
-        _moveCursor.call(this, cursor, guide)
-    guide.parentNode.removeChild(guide)
-    DOM.normalize(leafNode) if didSplit
-  )
-  cursor.dirty = false
-
-
 class MultiCursor extends EventEmitter2
   @DEFAULTS:
     template:
@@ -103,14 +47,10 @@ class MultiCursor extends EventEmitter2
         this.update(true)
       )
     )
-    @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta) =>
-      _applyDelta.call(this, delta)
-    )
+    @quill.on(@quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this))
 
   clearCursors: ->
-    _.each(_.keys(@cursors), (id) =>
-      this.removeCursor(id)
-    )
+    _.each(_.keys(@cursors), _.bind(this.removeCursor, this))
     @cursors = {}
 
   moveCursor: (userId, index, update = true) ->
@@ -123,7 +63,7 @@ class MultiCursor extends EventEmitter2
       DOM.addClass(cursor.elem, 'hidden')
       cursor.timer = null
     , @options.timeout)
-    _updateCursor.call(this, cursor) if update
+    this._updateCursor(cursor) if update
     return cursor
 
   removeCursor: (userId) ->
@@ -138,7 +78,7 @@ class MultiCursor extends EventEmitter2
         userId: userId
         index: index
         color: color
-        elem: _buildCursor.call(this, name, color)
+        elem: this._buildCursor(name, color)
       }
       this.emit(MultiCursor.events.CURSOR_ADDED, cursor)
     return this.moveCursor(userId, index, update)
@@ -154,8 +94,63 @@ class MultiCursor extends EventEmitter2
   update: (force = false) ->
     _.each(@cursors, (cursor, id) =>
       return unless cursor?
-      _updateCursor.call(this, cursor) if cursor.dirty or force
+      this._updateCursor(cursor) if cursor.dirty or force
     )
+
+  _applyDelta: (delta) ->
+    delta.apply((index, text, formatting) =>
+      this.shiftCursors(index, text.length, formatting['author'], false)
+    , (index, length) =>
+      this.shiftCursors(index, -1 * length, null, false)
+    , (index, length, name, value) =>
+      this.shiftCursors(index, 0, null, false)
+    )
+    this.update()
+
+  _buildCursor: (name, color) ->
+    cursor = @container.ownerDocument.createElement('span')
+    DOM.addClass(cursor, 'cursor')
+    cursor.innerHTML = @options.template
+    cursorFlag = cursor.querySelector('.cursor-flag')
+    cursorName = cursor.querySelector('.cursor-name')
+    DOM.setText(cursorName, name)
+    cursorCaret = cursor.querySelector('.cursor-caret')
+    cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
+    @container.appendChild(cursor)
+    return cursor
+
+  _moveCursor: (cursor, referenceNode) ->
+    cursor.elem.style.top = referenceNode.offsetTop + 'px'
+    cursor.elem.style.left = referenceNode.offsetLeft + 'px'
+    cursor.elem.style.height = referenceNode.offsetHeight + 'px'
+    flag = cursor.elem.querySelector('.cursor-flag')
+    DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
+    DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+    DOM.toggleClass(cursor.elem, 'right', @editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+    this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
+
+  _updateCursor: (cursor) ->
+    @quill.editor.doSilently( =>
+      [leafNode, offset] = Position.findLeafNode(@editorContainer, cursor.index)
+      guide = @container.ownerDocument.createElement('span')
+      if !leafNode.firstChild?
+        DOM.setText(guide, DOM.NOBREAK_SPACE)
+        # Should only be the case for empty lines
+        leafNode.parentNode.insertBefore(guide, leafNode)
+        this._moveCursor(cursor, guide)
+      else
+        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
+        [leftText, rightText, didSplit] = Utils.splitNode(leafNode.firstChild, offset)
+        if rightText?
+          rightText.parentNode.insertBefore(guide, rightText)
+          this._moveCursor(cursor, guide)
+        else if leftText?
+          leftText.parentNode.appendChild(guide)
+          this._moveCursor(cursor, guide)
+      guide.parentNode.removeChild(guide)
+      DOM.normalize(leafNode) if didSplit
+    )
+    cursor.dirty = false
 
 
 module.exports = MultiCursor

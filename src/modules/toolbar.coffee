@@ -3,12 +3,6 @@ DOM   = require('../dom')
 Utils = require('../utils')
 
 
-_findInput = (format) ->
-  selector = ".sc-#{format}"
-  if _.indexOf(Toolbar.formats.SELECT, format) > -1
-    selector = 'select' + selector
-  input = @container.querySelector(selector)
-
 class Toolbar
   @DEFAULTS:
     container: null
@@ -17,6 +11,7 @@ class Toolbar
     EMBED: ['image']
     LINE: ['align', 'bullet', 'list']
     SELECT: ['align', 'background', 'color', 'font', 'size']
+
 
   constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
@@ -31,7 +26,7 @@ class Toolbar
       _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
         keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
           activeFormats = {}
-          input = _findInput.call(this, key.toLowerCase())
+          input = this._findInput(key.toLowerCase())
           activeFormats[key.toLowerCase()] = DOM.hasClass(input, 'sc-active') if input?
           this.updateActive(activeFormats)
         )
@@ -39,7 +34,7 @@ class Toolbar
     )
 
   initFormat: (format) ->
-    input = _findInput.call(this, format)
+    input = this._findInput(format)
     return unless input?
     if format == 'link' then return @quill.addModule('link-tooltip', { button: input })
     eventName = if _.indexOf(Toolbar.formats.SELECT, format) > -1 then 'change' else 'click'
@@ -80,9 +75,10 @@ class Toolbar
       DOM.removeClass(button, 'sc-active')
     )
     if range?
-      _.each(_.extend(range.getFormats(), activeFormats), (value, key) =>
+      formats = {}  # TODO get formats
+      _.each(_.extend({}, activeFormats), (value, key) =>
         if value
-          elem = _findInput.call(this, key)
+          elem = this._findInput(key)
           return unless elem?
           if elem.tagName == 'SELECT'
             value = '' if _.isArray(value)
@@ -92,6 +88,12 @@ class Toolbar
             DOM.addClass(elem, 'sc-active')
       )
     @triggering = false
+
+  _findInput: (format) ->
+    selector = ".sc-#{format}"
+    if _.indexOf(Toolbar.formats.SELECT, format) > -1
+      selector = 'select' + selector
+    input = @container.querySelector(selector)
 
 
 module.exports = Toolbar
