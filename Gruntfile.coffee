@@ -1,3 +1,6 @@
+_ = require('lodash')
+child_process = require('child_process')
+
 module.exports = (grunt) ->
   require('load-grunt-tasks')(grunt)
 
@@ -7,10 +10,17 @@ module.exports = (grunt) ->
 
   require('./grunt/build')(grunt)
   require('./grunt/tests')(grunt)
-  require('./grunt/concurrent')(grunt)
   require('./grunt/watch')(grunt)
 
-  grunt.registerTask('default', ['clean', 'copy', 'concurrent:template', 'concurrent:browserify', 'uglify', 'concat'])
+  grunt.registerTask('default', ['clean', 'copy', 'browserify:quill', 'browserify:tests', 'uglify', 'concat'])
+
+  # TODO is there a better way to do this...
+  grunt.registerTask('watchify', 'Grunt watch and browserify/watchify', ->
+    done = this.async()
+    child_process.spawn('grunt', ['watch'], { stdio: 'inherit'})
+    child_process.spawn('grunt', ['browserify:quill-watchify'], { stdio: 'inherit'})
+    child_process.spawn('grunt', ['browserify:quill-exposed-watchify'], { stdio: 'inherit'})
+  )
 
   grunt.registerTask('test', ['karma:test'])
   grunt.registerTask('test:unit', ['karma:unit'])

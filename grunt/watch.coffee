@@ -2,9 +2,6 @@ module.exports = (grunt) ->
   grunt.config('watch',
     options:
       interrupt: true
-    quill:
-      files: ['src/**/*.coffee']
-      tasks: ['concurrent:browserify-quill']
     tests:
       files: ['tests/mocha/**/*.coffee']
       tasks: ['browserify:tests']

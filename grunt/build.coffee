@@ -11,23 +11,37 @@ module.exports = (grunt) ->
       ]
       browserifyOptions:
         extensions: ['.js', '.coffee']
+      bundleOptions:
+        standalone: 'Quill'
       transform: ['coffeeify']
-    quill:
+    'quill':
       options:
         bundleOptions:
           standalone: 'Quill'
+      'files': [
+        { 'build/quill.js': ['index.coffee'] }
+        { 'build/quill.exposed.js': ['tests/quill.coffee'] }
+      ]
+    'tests':
+      files: [
+        { 'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee'] }
+        { 'build/tests/mocha/functional.js': ['tests/mocha/functional/**/*.coffee'] }
+        { 'build/tests/mocha/unit.js': ['tests/mocha/unit/**/*.coffee'] }
+      ]
+    'quill-watchify':
+      options:
+        bundleOptions:
+          standalone: 'Quill'
+        keepAlive: true
+        watch: true
       files: [{ 'build/quill.js': ['index.coffee'] }]
-    exposed:
+    'quill-exposed-watchify':
       options:
         bundleOptions:
           standalone: 'Quill'
+        keepAlive: true
+        watch: true
       files: [{ 'build/quill.exposed.js': ['tests/quill.coffee'] }]
-    tests:
-      files: [{
-        'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee']
-        'build/tests/mocha/functional.js': ['tests/mocha/functional/**/*.coffee']
-        'build/tests/mocha/unit.js': ['tests/mocha/unit/**/*.coffee']
-      }]
   )
 
   grunt.config('clean',
@@ -57,10 +71,8 @@ module.exports = (grunt) ->
         ' *  Jason Chen, Salesforce.com\n' +
         ' */\n\n'
     quill:
-      files: [{
-        'build/quill.js': ['build/quill.js']
-        'build/quill.min.js': ['build/quill.min.js']
-      }]
+      'build/quill.js': ['build/quill.js']
+      'build/quill.min.js': ['build/quill.min.js']
   )
 
   grunt.config('copy'
