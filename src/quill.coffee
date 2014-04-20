@@ -23,22 +23,6 @@ Themes =
 
 DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
 
-# fn(Number index, Number length, String name, String value, Object options = {})
-# fn(Number index, Number length, Object formats, Object options = {})
-# fn(Object range, String name, String value, Object options = {})
-# fn(Object range, Object formats, Object options = {})
-buildParams = (params...) ->
-  if _.isObject(params[0])
-    index = params[0].start
-    length = params[0].end - index
-    params.splice(0, 1, index, length)
-  if _.isString(params[2])
-    formats = {}
-    formats[params[2]] = params[3]
-    params.splice(2, 2, formats)
-  params[3] = _.defaults(params[3] or {}, DEFAULT_API_OPTIONS)
-  return params
-
 
 class Quill extends EventEmitter2
   @version: pkg.version
@@ -104,7 +88,7 @@ class Quill extends EventEmitter2
     @editor.renderer.addStyles(styles)
 
   deleteText: (index, length, options = {}) ->
-    [index, length, formats, options] = buildParams(index, length, {}, options)
+    [index, length, formats, options] = this._buildParams(index, length, {}, options)
     return unless length > 0
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
     @editor.applyDelta(delta, options)
@@ -118,7 +102,7 @@ class Quill extends EventEmitter2
     @editor.root.focus()
 
   formatLines: (index, length, name, value, options) ->
-    [index, length, formats, options] = buildParams(index, length, name, value, options)
+    [index, length, formats, options] = this._buildParams(index, length, name, value, options)
     [line, offset] = @editor.doc.findLineAt(index)
     # TODO potential util function with editor._formatAt
     delta = Tandem.Delta.getIdentity(this.getLength())
@@ -135,7 +119,7 @@ class Quill extends EventEmitter2
     @editor.applyDelta(delta, options)
 
   formatText: (index, length, name, value, options) ->
-    [index, length, formats, options] = buildParams(index, length, name, value, options)
+    [index, length, formats, options] = this._buildParams(index, length, name, value, options)
     return unless length > 0
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
     @editor.applyDelta(delta, options)
@@ -165,7 +149,7 @@ class Quill extends EventEmitter2
     this.insertText(index, Format.EMBED_TEXT, type, source)
 
   insertText: (index, text, name, value, options = {}) ->
-    [index, length, formats, options] = buildParams(index, 0, name, value, options)
+    [index, length, formats, options] = this._buildParams(index, 0, name, value, options)
     return unless text.length > 0
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta, options)
@@ -206,6 +190,22 @@ class Quill extends EventEmitter2
   updateSelection: (options = {}) ->
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     @editor.selection.update(options.silent)
+
+  # fn(Number index, Number length, String name, String value, Object options = {})
+  # fn(Number index, Number length, Object formats, Object options = {})
+  # fn(Object range, String name, String value, Object options = {})
+  # fn(Object range, Object formats, Object options = {})
+  _buildParams: (params...) ->
+    if _.isObject(params[0])
+      index = params[0].start
+      length = params[0].end - index
+      params.splice(0, 1, index, length)
+    if _.isString(params[2])
+      formats = {}
+      formats[params[2]] = params[3]
+      params.splice(2, 2, formats)
+    params[3] = _.defaults(params[3] or {}, DEFAULT_API_OPTIONS)
+    return params
 
 
 module.exports = Quill
