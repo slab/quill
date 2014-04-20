@@ -50,8 +50,6 @@ module.exports = (grunt) ->
     local:
       browsers: ['Chrome', 'Firefox', 'Safari']
     coverage:
-      reporters: ['coverage']
-    'coverage-unit':
       exclude: ['tests/mocha/editor.js', 'tests/mocha/functional.js']
       reporters: ['coverage']
   ))

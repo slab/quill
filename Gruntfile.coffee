@@ -41,4 +41,3 @@ module.exports = (grunt) ->
   grunt.registerTask('test:replay firefox', ['shell:wd-firefox-replay'])
 
   grunt.registerTask('test:coverage', ['coffee:coverage', 'shell:instrument', 'browserify:quill', 'karma:coverage', 'clean:coverage'])
-  grunt.registerTask('test:coverage:unit', ['coffee:coverage', 'shell:instrument', 'browserify:quill', 'karma:coverage-unit', 'clean:coverage'])
