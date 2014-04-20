@@ -48,8 +48,29 @@ class Renderer
       return "#{key} { #{innerStr} }"
     ).join("\n")
 
+  @buildFrame: (container) ->
+    iframe = container.ownerDocument.createElement('iframe')
+    iframe.frameBorder = '0'
+    container.appendChild(iframe)
+    iframeDoc = iframe.contentWindow.document
+    iframe.height = iframe.width = '100%'
+    iframeDoc.open()
+    iframeDoc.write('<!DOCTYPE html>')
+    iframeDoc.close()
+    htmlTag = iframeDoc.querySelector('html')
+    htmlTag.style.height = iframeDoc.body.style.height = '100%'
+    root = iframeDoc.createElement('div')
+    iframeDoc.body.appendChild(root)
+    return root
+
   constructor: (@container, @emitter, @options = {}) ->
-    this.buildFrame()
+    @container.innerHTML = ''
+    @root = Renderer.buildFrame(@container)
+    @root.id = @options.id
+    DOM.addClass(@root, 'editor-container')
+    DOM.addEventListener(@container, 'focus', =>
+      @root.focus()
+    )
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added last
     _.defer(_.bind(this.addStyles, this, @options.styles)) if options.styles?
@@ -75,31 +96,6 @@ class Renderer
       @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css)
       DOM.addClass(@container, 'sc-container')
     )
-
-  buildFrame: ->
-    @container.innerHTML = ''
-    @iframe = @container.ownerDocument.createElement('iframe')
-    @iframe.frameBorder = '0'
-    @container.appendChild(@iframe)
-    doc = this.getDocument()
-    @iframe.height = @iframe.width = '100%'
-    doc.open()
-    doc.write('<!DOCTYPE html>')
-    doc.close()
-    htmlTag = doc.querySelector('html')
-    htmlTag.style.height = doc.body.style.height = '100%'
-    @root = doc.createElement('div')
-    DOM.addClass(@root, 'editor-container')
-    @root.id = @options.id
-    doc.body.appendChild(@root)
-    DOM.addEventListener(@container, 'focus', =>
-      @root.focus()
-    )
-
-  getDocument: ->
-    return null unless @iframe.parentNode?
-    # Firefox does not like us saving a reference to this result so retrieve every time
-    return @iframe.contentWindow?.document
 
 
 module.exports = Renderer
