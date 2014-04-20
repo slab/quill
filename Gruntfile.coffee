@@ -9,17 +9,20 @@ module.exports = (grunt) ->
   })
 
   require('./grunt/build')(grunt)
+  require('./grunt/server')(grunt)
   require('./grunt/tests')(grunt)
   require('./grunt/watch')(grunt)
 
   grunt.registerTask('default', ['clean', 'copy', 'browserify:quill', 'browserify:tests', 'uglify', 'concat'])
 
   # TODO is there a better way to do this...
-  grunt.registerTask('watchify', 'Grunt watch and browserify/watchify', ->
+  grunt.registerTask('dev', 'All the tasks for Quill development', ->
     done = this.async()
     child_process.spawn('grunt', ['watch'], { stdio: 'inherit'})
     child_process.spawn('grunt', ['browserify:quill-watchify'], { stdio: 'inherit'})
     child_process.spawn('grunt', ['browserify:quill-exposed-watchify'], { stdio: 'inherit'})
+    child_process.spawn('grunt', ['test:karma'], { stdio: 'inherit'})
+    child_process.spawn('grunt', ['connect:server'], { stdio: 'inherit' })
   )
 
   grunt.registerTask('test', ['karma:test'])
