@@ -45,7 +45,9 @@ DEFAULT_STYLES[DOM.DEFAULT_BREAK_TAG] = { 'display': 'none' } if Utils.isIE()
 class Renderer
   @objToCss: (obj) ->
     return _.map(obj, (value, key) ->
-      innerStr = _.map(value, (innerValue, innerKey) -> return "#{innerKey}: #{innerValue};" ).join(' ')
+      innerStr = _.map(value, (innerValue, innerKey) ->
+        return "#{innerKey}: #{innerValue};"
+      ).join(' ')
       return "#{key} { #{innerStr} }"
     ).join("\n")
 
@@ -72,7 +74,7 @@ class Renderer
     )
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added last
-    _.defer(_.bind(this.addStyles, this, @options.styles)) if options.styles?
+    _.defer(_.bind(this.addStyles, this, @options.styles)) if @options.styles?
 
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
@@ -92,7 +94,7 @@ class Renderer
     # Firefox needs defer
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
-      @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css)
+      @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css) if @emitter?
       DOM.addClass(@container, 'sc-container')
     )
 

@@ -187,10 +187,6 @@ class Quill extends EventEmitter2
     options = _.defaults(options, DEFAULT_API_OPTIONS)
     @editor.applyDelta(delta, options)
 
-  updateSelection: (options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
-    @editor.selection.update(options.silent)
-
   # fn(Number index, Number length, String name, String value, Object options = {})
   # fn(Number index, Number length, Object formats, Object options = {})
   # fn(Object range, String name, String value, Object options = {})
