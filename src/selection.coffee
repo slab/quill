@@ -1,7 +1,7 @@
 _     = require('lodash')
 DOM   = require('./dom')
 Leaf  = require('./leaf')
-Range = require('./range')
+Range = require('./lib/range')
 
 
 class Selection

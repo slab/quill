@@ -4,7 +4,7 @@ pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 Editor        = require('./editor')
 Format        = require('./format')
-Range         = require('./range')
+Range         = require('./lib/range')
 Tandem        = require('tandem-core')
 
 Modules =

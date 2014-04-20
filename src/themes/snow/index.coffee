@@ -1,8 +1,8 @@
 _            = require('lodash')
-ColorPicker  = require('../color-picker')
+ColorPicker  = require('../../lib/color-picker')
 DefaultTheme = require('../default')
 DOM          = require('../../dom')
-Picker       = require('../picker')
+Picker       = require('../../lib/picker')
 
 
 class SnowTheme extends DefaultTheme
