@@ -51,11 +51,15 @@ class Selection
     @document = @doc.root.ownerDocument
     @range = this.getRange()
 
+  checkFocus: ->
+    return @document.activeElement == @doc.root
+
   getNativeRange: ->
     selection = @document.getSelection()
     return if selection.rangeCount <= 0 then null else selection.getRangeAt(0)
 
   getRange: ->
+    return null unless this.checkFocus()
     nativeRange = this.getNativeRange()
     return null unless nativeRange?
     start = _getIndex.call(this, nativeRange.startContainer, nativeRange.startOffset)
@@ -84,6 +88,8 @@ class Selection
       nativeRange.setStart(startNode, startOffset)
       nativeRange.setEnd(endNode, endOffset)
       selection.addRange(nativeRange)
+    else
+      @doc.root.blur()
 
   setRange: (range, silent) ->
     return this.setNativeRange(null) unless range?

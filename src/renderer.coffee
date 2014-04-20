@@ -103,9 +103,6 @@ class Renderer
       @root.focus()
     )
 
-  checkFocus: ->
-    return @root.ownerDocument.activeElement == @root
-
   getDocument: ->
     return null unless @iframe.parentNode?
     # Firefox does not like us saving a reference to this result so retrieve every time

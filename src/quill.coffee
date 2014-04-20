@@ -60,7 +60,6 @@ class Quill extends EventEmitter2
     theme: 'default'
 
   @events:
-    FOCUS_CHANGE     : 'focus-change'
     MODULE_INIT      : 'module-init'
     POST_EVENT       : 'post-event'
     PRE_EVENT        : 'pre-event'
