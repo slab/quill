@@ -4,7 +4,6 @@ module.exports = (grunt) ->
       alias: [
         'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
         'node_modules/expect.js/index.js:expect.js'
-        'lib/linked_list.js:linked-list'
         'node_modules/lodash/lodash.js:lodash'
         'node_modules/tandem-core/build/tandem-core.js:tandem-core'
         'node_modules/underscore.string/lib/underscore.string.js:underscore.string'

@@ -1,7 +1,7 @@
 _          = require('lodash')
-LinkedList = require('linked-list')
 DOM        = require('./dom')
 Format     = require('./format')
+LinkedList = require('./lib/linked-list')
 Utils      = require('./utils')
 
 

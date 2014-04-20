@@ -1,11 +1,11 @@
-_             = require('lodash')
-LinkedList    = require('linked-list')
-DOM           = require('./dom')
-Format        = require('./format')
-Line          = require('./line')
-Normalizer    = require('./normalizer')
-Utils         = require('./utils')
-Tandem        = require('tandem-core')
+_          = require('lodash')
+DOM        = require('./dom')
+Format     = require('./format')
+Line       = require('./line')
+LinkedList = require('./lib/linked-list')
+Normalizer = require('./normalizer')
+Utils      = require('./utils')
+Tandem     = require('tandem-core')
 
 
 class Document
