@@ -69,7 +69,7 @@ class Keyboard
     _.each([Keyboard.keys.DELETE, Keyboard.keys.BACKSPACE], (key) =>
       this.addHotkey(key, =>
         # Prevent deleting if editor is already blank (browser quirk fix)
-        return @quill.getLength() > 1
+        return @quill.getLength() > 0
       )
     )
 
