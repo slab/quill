@@ -5,6 +5,7 @@ Normalizer = require('./normalizer')
 
 
 DEFAULT_STYLES =
+  'html': { 'height': '100%', 'width': '100%' }
   'body':
     'box-sizing'  : 'border-box'
     'cursor'      : 'text'
@@ -51,14 +52,12 @@ class Renderer
   @buildFrame: (container) ->
     iframe = container.ownerDocument.createElement('iframe')
     iframe.frameBorder = '0'
+    iframe.height = iframe.width = '100%'
     container.appendChild(iframe)
     iframeDoc = iframe.contentWindow.document
-    iframe.height = iframe.width = '100%'
     iframeDoc.open()
     iframeDoc.write('<!DOCTYPE html>')
     iframeDoc.close()
-    htmlTag = iframeDoc.querySelector('html')
-    htmlTag.style.height = iframeDoc.body.style.height = '100%'
     root = iframeDoc.createElement('div')
     iframeDoc.body.appendChild(root)
     return root
