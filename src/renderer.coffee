@@ -78,27 +78,20 @@ class Renderer
 
   buildFrame: ->
     @container.innerHTML = ''
-    if @options.iframe
-      @iframe = @container.ownerDocument.createElement('iframe')
-      @iframe.frameBorder = '0'
-      @container.appendChild(@iframe)
-      doc = this.getDocument()
-      @iframe.height = @iframe.width = '100%'
-      doc.open()
-      doc.write('<!DOCTYPE html>')
-      doc.close()
-      htmlTag = doc.querySelector('html')
-      htmlTag.style.height = doc.body.style.height = '100%'
-    else
-      @iframe = @container
-      doc = this.getDocument()
+    @iframe = @container.ownerDocument.createElement('iframe')
+    @iframe.frameBorder = '0'
+    @container.appendChild(@iframe)
+    doc = this.getDocument()
+    @iframe.height = @iframe.width = '100%'
+    doc.open()
+    doc.write('<!DOCTYPE html>')
+    doc.close()
+    htmlTag = doc.querySelector('html')
+    htmlTag.style.height = doc.body.style.height = '100%'
     @root = doc.createElement('div')
     DOM.addClass(@root, 'editor-container')
     @root.id = @options.id
-    if @options.iframe
-      doc.body.appendChild(@root)
-    else
-      @container.appendChild(@root)
+    doc.body.appendChild(@root)
     DOM.addEventListener(@container, 'focus', =>
       @root.focus()
     )
@@ -106,10 +99,7 @@ class Renderer
   getDocument: ->
     return null unless @iframe.parentNode?
     # Firefox does not like us saving a reference to this result so retrieve every time
-    if @options.iframe
-      return @iframe.contentWindow?.document
-    else
-      return @iframe.ownerDocument
+    return @iframe.contentWindow?.document
 
 
 module.exports = Renderer
