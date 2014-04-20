@@ -34,7 +34,7 @@ class Editor
   applyDelta: (delta, options = {}) ->
     return if delta.isIdentity()
     this.doSilently( =>
-      localDelta = this.update()
+      localDelta = this._update()
       if localDelta
         @delta = @delta.compose(localDelta)
         tempDelta = localDelta
@@ -52,7 +52,7 @@ class Editor
     )
 
   checkUpdate: ->
-    delta = this.update()
+    delta = this._update()
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
@@ -67,14 +67,6 @@ class Editor
 
   getDelta: ->
     return @delta
-
-  update: ->
-    if @innerHTML != @root.innerHTML
-      delta = this._update()
-      @innerHTML = @root.innerHTML
-      return delta
-    else
-      return false
 
   _deleteAt: (index, length) ->
     return if length <= 0
@@ -152,6 +144,7 @@ class Editor
     return decompose
 
   _update: ->
+    return false if @innerHTML == @root.innerHTML
     delta = this._trackDelta( =>
       this.doSilently( =>
         @selection.preserve( =>
@@ -180,6 +173,7 @@ class Editor
         )
       )
     )
+    @innerHTML = @root.innerHTML
     return if delta.isIdentity() then false else delta
 
 
