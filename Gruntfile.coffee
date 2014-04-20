@@ -40,5 +40,5 @@ module.exports = (grunt) ->
   grunt.registerTask('test:fuzz firefox', ['shell:wd-firefox-fuzzer'])
   grunt.registerTask('test:replay firefox', ['shell:wd-firefox-replay'])
 
-  grunt.registerTask('test:coverage', ['coffee:coverage', 'shell:instrument', 'browserify:exposed', 'karma:coverage', 'clean:coverage'])
-  grunt.registerTask('test:coverage:unit', ['coffee:coverage', 'shell:instrument', 'browserify:exposed', 'karma:coverage-unit', 'clean:coverage'])
+  grunt.registerTask('test:coverage', ['coffee:coverage', 'shell:instrument', 'browserify:quill', 'karma:coverage', 'clean:coverage'])
+  grunt.registerTask('test:coverage:unit', ['coffee:coverage', 'shell:instrument', 'browserify:quill', 'karma:coverage-unit', 'clean:coverage'])
