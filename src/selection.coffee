@@ -24,6 +24,7 @@ _getIndex = (node, offset) ->
     line = line.prev
     lineOffset += line.length + 1
   leaf = line.findLeaf(node)
+  leaf = line.leaves.first unless leaf?
   leafOffset = 0
   while leaf.prev?
     leaf = leaf.prev
@@ -33,8 +34,15 @@ _getIndex = (node, offset) ->
 _getPosition = (index) ->
   [line, lineOffset] = @doc.findLineAt(index)
   [leaf, leafOffset] = line.findLeafAt(lineOffset)
+  unless leaf?
+    leaf = line.leaves.first
+    leafOffset = 0
   node = leaf.node
-  node = node.firstChild if node.firstChild?
+  if DOM.isTextNode(node.firstChild)
+    node = node.firstChild
+  else if node.tagName == DOM.DEFAULT_BREAK_TAG
+    node = node.parentNode
+    leafOffset = node.childNodes.length - 1   # Set right before break tag
   return [node, leafOffset]
 
 
@@ -71,6 +79,7 @@ class Selection
     selection = @document.getSelection()
     selection.removeAllRanges()
     if startNode?
+      @doc.root.focus()
       nativeRange = @document.createRange()
       nativeRange.setStart(startNode, startOffset)
       nativeRange.setEnd(endNode, endOffset)
