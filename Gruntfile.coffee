@@ -13,7 +13,7 @@ module.exports = (grunt) ->
   require('./grunt/tests')(grunt)
   require('./grunt/watch')(grunt)
 
-  grunt.registerTask('default', ['clean', 'copy', 'browserify:quill', 'browserify:tests', 'uglify', 'concat'])
+  grunt.registerTask('default', ['clean', 'copy', 'browserify:quill', 'browserify:tests', 'uglify', 'concat', 'coffee', 'jade', 'stylus'])
 
   # TODO is there a better way to do this...
   grunt.registerTask('dev', 'All the tasks for Quill development', ->

@@ -11,8 +11,6 @@ module.exports = (grunt) ->
       ]
       browserifyOptions:
         extensions: ['.js', '.coffee']
-      bundleOptions:
-        standalone: 'Quill'
       transform: ['coffeeify']
     'quill':
       options:
