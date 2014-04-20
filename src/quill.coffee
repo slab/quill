@@ -49,7 +49,6 @@ class Quill extends EventEmitter2
 
   @DEFAULTS:
     formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image']
-    iframe: true
     logLevel: false
     modules:
       'keyboard': true
