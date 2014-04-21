@@ -89,6 +89,7 @@ class Selection
     line = @doc.findLine(node)
     # TODO move to linked list
     lineOffset = 0
+    return 0 unless line?   # Occurs on empty document
     while line.prev?
       line = line.prev
       lineOffset += line.length + 1

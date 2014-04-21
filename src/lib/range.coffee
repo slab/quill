@@ -1,13 +1,17 @@
+_ = require('lodash')
+
+
 class Range
-  constructor: (@doc, @start, @end) ->
+  constructor: (@start, @end) ->
 
   equals: (range) ->
     return false unless range?
-    return @doc == range.doc and @start == range.start and @end == range.end
+    return @start == range.start and @end == range.end
 
   shift: (index, length) ->
-    @start += length
-    @end += length
+    [@start, @end] = _.map([@start, @end], (pos) ->
+      return if index <= pos then pos + length else Math.min(index + length, pos)
+    )
 
   isCollapsed: ->
     return @start == @end

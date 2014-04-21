@@ -48,7 +48,10 @@ module.exports = function(config) {
 
       'quill.exposed.js',
 
-      'test/unit/*.js'
+      'test/unit/*.js',
+      'test/unit/lib/*.js',
+      'test/unit/modules/*.js',
+      'test/unit/themes/*.js'
     ],
     exclude: [],
     coverageReporter: {
