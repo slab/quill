@@ -30,7 +30,8 @@ class Document
 
   findLineAt: (index) ->
     length = this.toDelta().endLength     # TODO optimize
-    return [@lines.last, 0] if index == length
+    # TODO there is a bug here that if lines.last has trailing newline we need to set to @lines.last.length + 1
+    return [@lines.last, @lines.last.length] if index == length
     return [null, index - length] if index > length
     curLine = @lines.first
     while curLine?

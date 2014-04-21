@@ -105,8 +105,10 @@ describe('Document', ->
     it('findLineAt() end of document', ->
       [line, offset] = @doc.findLineAt(10)
       expect(line).toBe(@doc.lines.last)
-      expect(offset).toEqual(0)
+      expect(offset).toEqual(4)
     )
+
+    # TODO add test where finding line beyond last line (when line level format is present)
 
     it('findLineAt() beyond document', ->
       [line, offset] = @doc.findLineAt(11)
