@@ -152,10 +152,11 @@ DOM =
       else return ""
 
   getTextNodes: (parent) ->
-    walker = parent.ownerDocument.createTreeWalker(parent, NodeFilter.SHOW_TEXT)
     results = []
-    while (walker.nextNode())
-      results.push(walker.currentNode)
+    results.push(parent) if DOM.isTextNode(parent)
+    _.each(DOM.getChildNodes(parent), (node) ->
+      results = results.concat(DOM.getTextNodes(node))
+    )
     return results
 
   getWindow: (node) ->

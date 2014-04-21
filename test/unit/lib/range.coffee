@@ -1,5 +1,5 @@
 describe('Range', ->
-  describe('shift', ->
+  describe('shift()', ->
     tests =
       'before':
         initial: [10, 20]
