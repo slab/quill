@@ -128,7 +128,7 @@ class Editor
     fn()
     newDelta = @doc.toDelta()
     try
-      newIndex = @selection.getRange()?.start.index
+      newIndex = @selection.getRange()?.start
       if oldIndex? and newIndex? and oldIndex <= @delta.endLength and newIndex <= newDelta.endLength
         [oldLeftDelta, oldRightDelta] = @delta.split(oldIndex)
         [newLeftDelta, newRightDelta] = newDelta.split(newIndex)

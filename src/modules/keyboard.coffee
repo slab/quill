@@ -96,7 +96,6 @@ class Keyboard
         _.each(@hotkeys[event.which], (hotkey) =>
           return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
           return if hotkey.shift? and event.shiftKey != hotkey.shift
-          @quill.updateSelection({ silent: true })
           selection = @quill.getSelection()
           return unless selection?
           prevent = hotkey.callback.call(hotkey.callback, selection) == false or prevent
@@ -111,7 +110,7 @@ class Keyboard
     lines = range.getLines()
     if lines.length > 1
       index = Position.getIndex(lines[0].node)
-      start = range.start.index + (if shift then -1 else 1)
+      start = range.start + (if shift then -1 else 1)
       offsetChange = 0
       _.each(lines, (line) =>
         if !shift
@@ -121,10 +120,10 @@ class Keyboard
           @quill.deleteText(index, 1, { source: 'user' })
           offsetChange -= 1
         else if line == lines[0]
-          start = range.start.index
+          start = range.start
         index += line.length
       )
-      end = range.end.index + offsetChange
+      end = range.end + offsetChange
       @quill.setSelection(start, end)
     else
       index = @range.start.getIndex()

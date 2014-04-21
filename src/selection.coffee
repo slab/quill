@@ -25,7 +25,7 @@ class Selection
       end = this._getIndex(nativeRange.endContainer, nativeRange.endOffset)
     else
       end = start - nativeRange.startOffset + nativeRange.endOffset
-    return new Range(@doc, Math.min(start, end), Math.max(start, end))
+    return new Range(Math.min(start, end), Math.max(start, end))
 
   preserve: (fn) ->
     nativeRange = this.getNativeRange()

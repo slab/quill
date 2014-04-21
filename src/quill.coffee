@@ -176,7 +176,7 @@ class Quill extends EventEmitter2
 
   setSelection: (start, end, options = {}) ->
     if _.isNumber(start) and _.isNumber(end)
-      range = new Range(@editor.doc, start, end)
+      range = new Range(start, end)
     else
       range = start
       options = end or {}
