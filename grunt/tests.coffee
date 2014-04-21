@@ -38,6 +38,7 @@ module.exports = (grunt) ->
     karma:
       autoWatch: true
       browsers: []
+      exclude: ['tests/mocha/editor.js', 'tests/mocha/functional.js']
       singleRun: false
     test:
       browsers: ['PhantomJS']

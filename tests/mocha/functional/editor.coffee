@@ -74,42 +74,6 @@ describe('Editor', ->
         testEditor.updateContents(delta)
     )
 
-    insertTests.run('insert in middle of text',
-      expected: ['<div><span>TeAst</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, 'A'))
-
-    insertTests.run('insert formatted text',
-      expected: ['<div><span>Te</span><b>A</b><span>st</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, 'A', {bold:true}))
-
-    insertTests.run('insert newline in front of text',
-      expected: ['<div><br></div>', '<div><span>Test</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 0, '\n'))
-
-    insertTests.run('append newline',
-      expected: ['<div><span>Test</span></div>', '<div><br></div>']
-    , Tandem.Delta.makeInsertDelta(4, 4, '\n'))
-
-    insertTests.run('insert newline in middle of text',
-      expected: ['<div><span>Te</span></div>', '<div><span>st</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, '\n'))
-
-    insertTests.run('simple multiline insert',
-      expected: ['<div><span>TeA</span></div>', '<div><span>Bst</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, 'A\nB'))
-
-    insertTests.run('multiline insert with newline prefix',
-      expected: ['<div><span>Te</span></div>', '<div><span>A</span></div>', '<div><span>Bst</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, '\nA\nB'))
-
-    insertTests.run('multiline insert with newline after',
-      expected: ['<div><span>TeA</span></div>', '<div><span>B</span></div>', '<div><span>st</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, 'A\nB\n'))
-
-    insertTests.run('multiline insert with newline surrounding',
-      expected: ['<div><span>Te</span></div>', '<div><span>A</span></div>', '<div><span>B</span></div>', '<div><span>st</span></div>']
-    , Tandem.Delta.makeInsertDelta(4, 2, '\nA\nB\n'))
-
     insertTests.run('multiline insert with formatted text',
       expected: ['<div><span>Te</span></div>', '<div><b>A</b></div>', '<div><span>B</span></div>', '<div><span>st</span></div>']
     , new Tandem.Delta(4, [new Tandem.RetainOp(0, 2), new Tandem.InsertOp('\n'), new Tandem.InsertOp('A', {bold:true}), new Tandem.InsertOp('\nB\n'), new Tandem.RetainOp(2, 4)]))

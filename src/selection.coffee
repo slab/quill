@@ -14,7 +14,7 @@ class Selection
 
   getNativeRange: ->
     selection = @document.getSelection()
-    return if selection.rangeCount <= 0 then null else selection.getRangeAt(0)
+    return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
 
   getRange: ->
     return null unless this.checkFocus()
