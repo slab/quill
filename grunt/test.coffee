@@ -41,6 +41,12 @@ module.exports = (grunt) ->
       reporters: ['coverage']
   ))
 
+  grunt.config('protractor',
+    options:
+      configFile: 'test/protractor.js'
+    test: {}
+  )
+
   grunt.config('shell',
     options:
       stdout: true

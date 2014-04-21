@@ -50,12 +50,10 @@ html
           button.sc-format-button.sc-list(title='List') List
           button.sc-format-button.sc-bullet(title='Bullet') Bullet
         #editor-container
-          include content
 
     script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').
       var editor = new Quill('#editor-container', {
-        logLevel: 'info',
         modules: {
           toolbar: { container: '#formatting-container' }
         }
