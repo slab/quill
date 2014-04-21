@@ -125,6 +125,10 @@ describe('Line', ->
         html: '<b>0123</b><i><s>4567</s><u>8901</u></i>'
         offset: 8
         expected: ['u', 0]
+      'leaf at end of line':
+        html: '<b>0123</b><i>4567</i>'
+        offset: 8
+        expected: ['i', 4]
       'beyond line':
         html: '<b>0123</b><i>4567</i>'
         offset: 10

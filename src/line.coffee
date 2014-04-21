@@ -66,7 +66,7 @@ class Line extends LinkedList.Node
 
   findLeafAt: (offset) ->
     # TODO exact same code as findLineAt
-    return [@leaves.last, 0] if offset == @length
+    return [@leaves.last, @leaves.last.length] if offset == @length
     leaf = @leaves.first
     while leaf?
       return [leaf, offset] if offset < leaf.length
@@ -126,6 +126,10 @@ class Line extends LinkedList.Node
 
   isNewline: ->
     return @length == 0 and @leaves.length == 1 and @leaves.last.node.tagName == DOM.DEFAULT_BREAK_TAG
+
+  optimize: ->
+    Normalizer.optimizeLine(@node)
+    this.rebuild()
 
   rebuild: (force = false) ->
     return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
