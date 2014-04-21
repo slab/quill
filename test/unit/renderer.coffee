@@ -11,7 +11,7 @@ describe('Renderer', ->
       '.editor-container b':
         'font-weight': 'bold'
     )
-    expect(css).to.equal([
+    expect(css).toEqual([
       '.editor-container a { font-style: italic; text-decoration: underline; }'
       '.editor-container b { font-weight: bold; }'
     ].join('\n'))
@@ -19,14 +19,14 @@ describe('Renderer', ->
 
   it('buildFrame()', ->
     root = Quill.Renderer.buildFrame(@container)
-    expect(@container.querySelectorAll('iframe').length).to.equal(1)
-    expect(root.ownerDocument.body.firstChild).to.equal(root)
-    expect(root.innerHTML).to.equal('')
+    expect(@container.querySelectorAll('iframe').length).toEqual(1)
+    expect(root.ownerDocument.body.firstChild).toEqual(root)
+    expect(root.innerHTML).toEqual('')
   )
 
   it('constructor', ->
     renderer = new Quill.Renderer(@container)
-    expect(@container.querySelectorAll('iframe').length).to.equal(1)
-    expect(renderer.root.id).to.not.be(null)
+    expect(@container.querySelectorAll('iframe').length).toEqual(1)
+    expect(renderer.root.id).not.toBe(null)
   )
 )

@@ -44,12 +44,12 @@ describe('Format', ->
     _.each(tests, (test, name) ->
       it("#{name} existing", ->
         @container.innerHTML = test.existing
-        expect(test.format.match(@container.firstChild)).to.be(true)
+        expect(test.format.match(@container.firstChild)).toBe(true)
       )
 
       it("#{name} missing", ->
         @container.innerHTML = test.missing
-        expect(test.format.match(@container.firstChild)).to.be(false)
+        expect(test.format.match(@container.firstChild)).toBe(false)
       )
     )
   )
@@ -58,12 +58,12 @@ describe('Format', ->
     _.each(tests, (test, name) ->
       it("#{name} existing", ->
         @container.innerHTML = test.existing
-        expect(test.format.value(@container.firstChild)).to.equal(test.value)
+        expect(test.format.value(@container.firstChild)).toEqual(test.value)
       )
 
       it("#{name} missing", ->
         @container.innerHTML = test.missing
-        expect(test.format.value(@container.firstChild)).to.equal(undefined)
+        expect(test.format.value(@container.firstChild)).toEqual(undefined)
       )
     )
   )

@@ -36,13 +36,12 @@ var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
 module.exports = function(config) {
   config.set({
     basePath: '../build',
-    frameworks: ['mocha'],
+    frameworks: ['jasmine'],
     files: [
       '../node_modules/jquery/dist/jquery.js',
       '../node_modules/lodash/lodash.js',
       '../node_modules/async/lib/async.js',
       'tandem-core.js',
-      '../node_modules/expect.js/index.js',
 
       'test/fixtures/unit.html',
       'test/helpers/*.js',

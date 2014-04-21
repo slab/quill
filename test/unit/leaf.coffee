@@ -22,7 +22,7 @@ describe('Leaf', ->
       it(name, ->
         @container.innerHTML = test.html
         leaf = new Quill.Leaf(@container.firstChild, {})
-        expect(leaf.text).to.equal(test.text)
+        expect(leaf.text).toEqual(test.text)
       )
     )
   )
@@ -51,7 +51,7 @@ describe('Leaf', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.html
-        expect(Quill.Leaf.isLeafNode(@container.firstChild)).to.be(test.expected)
+        expect(Quill.Leaf.isLeafNode(@container.firstChild)).toBe(test.expected)
       )
     )
   )
@@ -100,12 +100,12 @@ describe('Leaf', ->
         leaf = new Quill.Leaf(@container.firstChild, {})
         text = test.text or ''
         length = text.length
-        expect(leaf.text).to.equal(text)
-        expect(leaf.length).to.equal(length)
+        expect(leaf.text).toEqual(text)
+        expect(leaf.length).toEqual(length)
         leaf.insertText(length/2, '|')
         expect.equalHTML(leaf.node.outerHTML, test.expected)
-        expect(leaf.text).to.equal(leaf.node.innerHTML)
-        expect(leaf.length).to.equal(length + 1)
+        expect(leaf.text).toEqual(leaf.node.innerHTML)
+        expect(leaf.length).toEqual(length + 1)
       )
     )
   )

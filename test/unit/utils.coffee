@@ -24,8 +24,8 @@ describe('Utils', ->
       it(name, ->
         @container.innerHTML = test.html
         [node, offset] = Quill.Utils.findDeepestNode(@container.firstChild, test.index)
-        expect(node).to.equal(@container.querySelector('b').firstChild)
-        expect(offset).to.equal(test.offset)
+        expect(node).toEqual(@container.querySelector('b').firstChild)
+        expect(offset).toEqual(test.offset)
       )
     )
   )
@@ -57,9 +57,9 @@ describe('Utils', ->
       [offset, nodeIndex] = test
       it(name, ->
         [child, childOffset] = Quill.Utils.getChildAtOffset(@container, offset)
-        expect(child).to.equal(@container.childNodes[nodeIndex])
+        expect(child).toEqual(@container.childNodes[nodeIndex])
         expectedOffset = if offset < length then offset%3 else 3
-        expect(childOffset).to.equal(expectedOffset)
+        expect(childOffset).toEqual(expectedOffset)
       )
     )
   )
@@ -86,7 +86,7 @@ describe('Utils', ->
       it(name, ->
         @container.innerHTML = test.html
         length = Quill.Utils.getNodeLength(@container.firstChild)
-        expect(length).to.equal(test.length)
+        expect(length).toEqual(test.length)
       )
     )
   )
@@ -124,7 +124,7 @@ describe('Utils', ->
         </div>
       </div>'
     )
-    expect(retNode).to.equal(@container.lastChild)
+    expect(retNode).toEqual(@container.lastChild)
   )
 
   describe('splitNode()', ->
@@ -190,9 +190,9 @@ describe('Utils', ->
         expect.equalHTML(@container, test.expected)
         leftText = if left then Quill.DOM.getText(left) else null
         rightText = if right then Quill.DOM.getText(right) else null
-        expect(leftText).to.equal(test.left)
-        expect(rightText).to.equal(test.right)
-        expect(test.split).to.equal(split)
+        expect(leftText).toEqual(test.left)
+        expect(rightText).toEqual(test.right)
+        expect(test.split).toEqual(split)
       )
     )
   )

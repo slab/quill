@@ -46,17 +46,17 @@ describe('Line', ->
         @container.innerHTML = test.initial
         lineNode = @container.firstChild
         line = new Quill.Line(@doc, lineNode)
-        expect(line.node).to.equal(lineNode)
+        expect(line.node).toEqual(lineNode)
         expect.equalHTML(lineNode.outerHTML, test.expected, true)
-        expect(line.leaves.length).to.equal(test.leaves.length)
+        expect(line.leaves.length).toEqual(test.leaves.length)
         length = _.reduce(test.leaves, (length, leaf) ->
           return length + leaf.text.length
         , 0)
-        expect(line.length).to.equal(length)
+        expect(line.length).toEqual(length)
         leaves = line.leaves.toArray()
         _.each(leaves, (leaf, i) ->
-          expect(leaf.text).to.equal(test.leaves[i].text)
-          expect(leaf.formats).to.eql(test.leaves[i].formats)
+          expect(leaf.text).toEqual(test.leaves[i].text)
+          expect(leaf.formats).toEqual(test.leaves[i].formats)
         )
       )
     )
@@ -88,9 +88,9 @@ describe('Line', ->
         queryNode = if _.isString(test.query) then @container.querySelector(test.query) else test.query
         leaf = line.findLeaf(queryNode)
         if test.match
-          expect(leaf.node).to.equal(queryNode)
+          expect(leaf.node).toEqual(queryNode)
         else
-          expect(leaf).to.be(null)
+          expect(leaf).toBe(null)
       )
     )
   )
@@ -137,10 +137,10 @@ describe('Line', ->
         line = new Quill.Line(@doc, lineNode)
         [leaf, offset] = line.findLeafAt(test.offset)
         if test.expected[0]
-          expect(leaf.node).to.equal(lineNode.querySelector(test.expected[0]))
+          expect(leaf.node).toEqual(lineNode.querySelector(test.expected[0]))
         else
-          expect(leaf).to.be(null)
-        expect(offset).to.equal(test.expected[1])
+          expect(leaf).toBe(null)
+        expect(offset).toEqual(test.expected[1])
       )
     )
   )
@@ -174,7 +174,7 @@ describe('Line', ->
           line.format(name, value)
           delete expectedFormats[name] unless value
         )
-        expect(line.formats).to.eql(expectedFormats)
+        expect(line.formats).toEqual(expectedFormats)
         expect.equalHTML(line.node.outerHTML, test.expected, true)
       )
     )

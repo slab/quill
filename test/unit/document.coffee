@@ -50,7 +50,7 @@ describe('Document', ->
 
     it('findLine() lineNode', ->
       line = @doc.findLine(@doc.root.firstChild)
-      expect(line).to.equal(@doc.lines.first)
+      expect(line).toEqual(@doc.lines.first)
     )
 
     it('findLine() not a line', ->
@@ -58,60 +58,60 @@ describe('Document', ->
       node.innerHTML = '<span>Test</span>'
       @doc.root.appendChild(node)
       line = @doc.findLine(node)
-      expect(line).to.be(null)
+      expect(line).toBe(null)
     )
 
     it('findLine() not in doc', ->
       line = @doc.findLine($('#toolbar-container').get(0))
-      expect(line).to.be(null)
+      expect(line).toBe(null)
     )
 
     it('findLine() id false positive', ->
       clone = @doc.root.firstChild.cloneNode(true)
       @doc.root.appendChild(clone)
       line = @doc.findLine(clone)
-      expect(line).to.be(null)
+      expect(line).toBe(null)
     )
 
     it('findLine() leaf node', ->
       line = @doc.findLine(@doc.root.querySelector('b'))
-      expect(line).to.equal(@doc.lines.last)
+      expect(line).toEqual(@doc.lines.last)
     )
 
     it('findLineAt() middle of line', ->
       [line, offset] = @doc.findLineAt(2)
-      expect(line).to.equal(@doc.lines.first)
-      expect(offset).to.equal(2)
+      expect(line).toEqual(@doc.lines.first)
+      expect(offset).toEqual(2)
     )
 
     it('findLineAt() last line', ->
       [line, offset] = @doc.findLineAt(8)
-      expect(line).to.equal(@doc.lines.last)
-      expect(offset).to.equal(2)
+      expect(line).toEqual(@doc.lines.last)
+      expect(offset).toEqual(2)
     )
 
     it('findLineAt() end of line', ->
       [line, offset] = @doc.findLineAt(5)
-      expect(line).to.equal(@doc.lines.first)
-      expect(offset).to.equal(5)
+      expect(line).toEqual(@doc.lines.first)
+      expect(offset).toEqual(5)
     )
 
     it('findLineAt() newline', ->
       [line, offset] = @doc.findLineAt(6)
-      expect(line).to.equal(@doc.lines.first.next)
-      expect(offset).to.equal(1)
+      expect(line).toEqual(@doc.lines.first.next)
+      expect(offset).toEqual(1)
     )
 
     it('findLineAt() end of document', ->
       [line, offset] = @doc.findLineAt(10)
-      expect(line).to.be(@doc.lines.last)
-      expect(offset).to.equal(0)
+      expect(line).toBe(@doc.lines.last)
+      expect(offset).toEqual(0)
     )
 
     it('findLineAt() beyond document', ->
       [line, offset] = @doc.findLineAt(11)
-      expect(line).to.be(null)
-      expect(offset).to.equal(1)
+      expect(line).toBe(null)
+      expect(offset).toEqual(1)
     )
   )
 
@@ -138,7 +138,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length - 1)
+      expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('mergeLines() with newline', ->
@@ -149,7 +149,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length - 1)
+      expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('mergeLines() from newline', ->
@@ -160,7 +160,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length - 1)
+      expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('mergeLines() two newlines', ->
@@ -171,7 +171,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length - 1)
+      expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('removeLine() existing', ->
@@ -182,7 +182,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length - 1)
+      expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('removeLine() lineNode missing', ->
@@ -194,7 +194,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length - 1)
+      expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('splitLine() middle', ->
@@ -207,7 +207,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length + 1)
+      expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() beginning', ->
@@ -220,7 +220,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length + 1)
+      expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() end', ->
@@ -233,7 +233,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length + 1)
+      expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() split break', ->
@@ -246,7 +246,7 @@ describe('Document', ->
         <div><br></div>
         <div><b>Test</b></div>
       ', true)
-      expect(@doc.lines.length).to.equal(@lines.length + 1)
+      expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('setHTML() valid', ->

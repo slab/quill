@@ -10,33 +10,33 @@ describe('DOM', ->
 
     it('addClass()', ->
       Quill.DOM.addClass(@container, 'custom')
-      expect($(@container).hasClass('custom')).to.be(true)
+      expect($(@container).hasClass('custom')).toBe(true)
     )
 
     it('addClass() existing', ->
       Quill.DOM.addClass(@container, 'custom')
       Quill.DOM.addClass(@container, 'custom')
-      expect($(@container).attr('class')).to.equal('custom')
+      expect($(@container).attr('class')).toEqual('custom')
     )
 
     it('getClasses()', ->
       $(@container).addClass('custom')
       $(@container).addClass('another')
       classes = Quill.DOM.getClasses(@container).sort()
-      expect(classes.length).to.equal(2)
-      expect(classes[0]).to.equal('another')
-      expect(classes[1]).to.equal('custom')
+      expect(classes.length).toEqual(2)
+      expect(classes[0]).toEqual('another')
+      expect(classes[1]).toEqual('custom')
     )
 
     it('hasClass()', ->
       $(@container).addClass('custom')
-      expect(Quill.DOM.hasClass(@container, 'custom')).to.be(true)
+      expect(Quill.DOM.hasClass(@container, 'custom')).toBe(true)
     )
 
     it('removeClass()', ->
       $(@container).addClass('custom')
       Quill.DOM.removeClass(@container, 'custom')
-      expect($(@container).hasClass('custom')).to.be(false)
+      expect($(@container).hasClass('custom')).toBe(false)
     )
 
     it('removeClass() nonexistent', ->
@@ -46,9 +46,9 @@ describe('DOM', ->
 
     it('toggleClass()', ->
       Quill.DOM.toggleClass(@container, 'custom')
-      expect($(@container).hasClass('custom')).to.be(true)
+      expect($(@container).hasClass('custom')).toBe(true)
       Quill.DOM.toggleClass(@container, 'custom')
-      expect($(@container).hasClass('custom')).to.be(false)
+      expect($(@container).hasClass('custom')).toBe(false)
     )
   )
 
@@ -62,14 +62,14 @@ describe('DOM', ->
       $(@container).html('<div></div>')
       @node = @container.firstChild
       attributes = Quill.DOM.getAttributes(@node)
-      expect(_.keys(attributes).length).to.equal(0)
+      expect(_.keys(attributes).length).toEqual(0)
     )
 
     it('getAttributes() multiple', ->
       attributes = Quill.DOM.getAttributes(@node)
-      expect(_.keys(attributes).length).to.equal(2)
-      expect(attributes['class']).to.equal('custom')
-      expect(attributes['style'].toLowerCase()).to.contain('color: red')
+      expect(_.keys(attributes).length).toEqual(2)
+      expect(attributes['class']).toEqual('custom')
+      expect(attributes['style'].toLowerCase()).toContain('color: red')
     )
 
     it('clearAttributes()', ->
@@ -93,7 +93,7 @@ describe('DOM', ->
     it('getStyles()', ->
       $(@container).html(html)
       result = Quill.DOM.getStyles(@container.firstChild)
-      expect(result).to.eql(styles)
+      expect(result).toEqual(styles)
     )
 
     it('setStyles()', ->
@@ -157,30 +157,30 @@ describe('DOM', ->
     )
 
     it('getText() from element', ->
-      expect(Quill.DOM.getText(@container)).to.equal('0123')
+      expect(Quill.DOM.getText(@container)).toEqual('0123')
     )
 
     it('getText() from break', ->
-      expect(Quill.DOM.getText(@container.lastChild)).to.equal('')
+      expect(Quill.DOM.getText(@container.lastChild)).toEqual('')
     )
 
     it('getText() from comment', ->
-      expect(Quill.DOM.getText(@container.childNodes[2])).to.equal('')
+      expect(Quill.DOM.getText(@container.childNodes[2])).toEqual('')
     )
 
     it('setText() element', ->
       Quill.DOM.setText(@container, 'test')
-      expect($(@container).text()).to.equal('test')
+      expect($(@container).text()).toEqual('test')
     )
 
     it('setText() text node', ->
       Quill.DOM.setText(@container.firstChild, 'A')
-      expect($(@container).text()).to.equal('A123')
+      expect($(@container).text()).toEqual('A123')
     )
 
     it('getTextNodes()', ->
       textNodes = Quill.DOM.getTextNodes(@container)
-      expect(textNodes.length).to.equal(4)
+      expect(textNodes.length).toEqual(4)
     )
   )
 
@@ -247,13 +247,13 @@ describe('DOM', ->
     )
 
     it('getDefaultOption()', ->
-      expect(Quill.DOM.getDefaultOption(@select)).to.equal(@select.children[1])
+      expect(Quill.DOM.getDefaultOption(@select)).toEqual(@select.children[1])
     )
 
     it('resetSelect()', ->
-      expect($(@select).val()).to.equal('one')
+      expect($(@select).val()).toEqual('one')
       Quill.DOM.resetSelect(@select)
-      expect($(@select).val()).to.equal('two')
+      expect($(@select).val()).toEqual('two')
     )
   )
 
@@ -261,13 +261,13 @@ describe('DOM', ->
     it('getChildNodes()', ->
       @container.innerHTML = '<b>0</b><i>1</i><u>2</u><br>'
       nodes = Quill.DOM.getChildNodes(@container)
-      expect(nodes.length).to.equal(4)
+      expect(nodes.length).toEqual(4)
     )
 
     it('getDescendants()', ->
       @container.innerHTML = '<b>0</b><i><span>1</span><s>2</s></i><u>3</u><br>'
       nodes = Quill.DOM.getDescendants(@container)
-      expect(nodes.length).to.equal(6)
+      expect(nodes.length).toEqual(6)
     )
   )
 )
