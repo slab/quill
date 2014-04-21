@@ -1,6 +1,6 @@
 describe('DOM', ->
   beforeEach( ->
-    @container = $('#test-container').html('<div></div>').get(0).firstChild
+    @container = $('#editor-container').html('<div></div>').get(0).firstChild
   )
 
   describe('classes', ->

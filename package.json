@@ -69,6 +69,6 @@
     "url": "https://github.com/quilljs/quill"
   },
   "scripts": {
-    "test": "grunt test:local"
+    "test": "grunt test"
   }
 }

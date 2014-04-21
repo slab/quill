@@ -15,16 +15,15 @@ module.exports = (grunt) ->
       options:
         bundleOptions:
           standalone: 'Quill'
-      'files': [
-        { 'build/quill.js': ['index.coffee'] }
-        { 'build/quill.exposed.js': ['tests/quill.coffee'] }
-      ]
-    'tests':
       files: [
-        { 'build/tests/mocha/editor.js': ['tests/mocha/editor.coffee'] }
-        { 'build/tests/mocha/functional.js': ['tests/mocha/functional/**/*.coffee'] }
-        { 'build/tests/mocha/unit.js': ['tests/mocha/unit/**/*.coffee'] }
+        { 'build/quill.js': ['index.coffee'] }
+        { 'build/quill.exposed.js': ['test/quill.coffee'] }
       ]
+    'tandem':
+      options:
+        bundleOptions:
+          standalone: 'Tandem'
+      files: [{ 'build/tandem-core.js': ['node_modules/tandem-core/index.js'] }]
     'quill-watchify':
       options:
         bundleOptions:
@@ -38,7 +37,7 @@ module.exports = (grunt) ->
           standalone: 'Quill'
         keepAlive: true
         watch: true
-      files: [{ 'build/quill.exposed.js': ['tests/quill.coffee'] }]
+      files: [{ 'build/quill.exposed.js': ['test/quill.coffee'] }]
   )
 
   grunt.config('clean',
@@ -50,7 +49,7 @@ module.exports = (grunt) ->
     all:
       expand: true
       dest: 'build/'
-      src: ['demo/scripts/*.coffee', 'tests/**/*.coffee', '!tests/mocha/**/*.coffee']
+      src: ['demo/scripts/*.coffee', 'test/**/*.coffee']
       ext: '.js'
     coverage:
       expand: true
@@ -77,9 +76,6 @@ module.exports = (grunt) ->
       expand: true
       dest: 'build/'
       src: ['lib/*.js', 'demo/images/*.png']
-    expectjs:
-      dest: 'build/lib/expect.js'
-      src:  'node_modules/expect.js/index.js'
   )
 
   grunt.config('jade',
@@ -89,7 +85,7 @@ module.exports = (grunt) ->
       dest: 'build/'
       expand: true
       ext: '.html'
-      src: ['demo/*.jade', 'tests/**/*.jade', '!demo/content.jade']
+      src: ['demo/*.jade', 'test/fixtures/*.jade', '!demo/content.jade']
   )
 
   grunt.config('stylus',
@@ -106,11 +102,11 @@ module.exports = (grunt) ->
         rename: (dest, src) ->
           return "build/themes/quill.#{src}"
       }]
-    all:
+    demo:
       expand: true
       ext: '.css'
       dest: 'build/'
-      src: ['demo/styles/*.styl', 'tests/**/*.styl']
+      src: ['demo/styles/*.styl']
   )
 
   grunt.config('uglify',

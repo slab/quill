@@ -1,6 +1,6 @@
 describe('Line', ->
   beforeEach( ->
-    @container = $('#test-container').html('<div></div>').get(0).firstChild
+    @container = $('#editor-container').html('<div></div>').get(0).firstChild
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
   )
 
@@ -75,10 +75,10 @@ describe('Line', ->
         match: true, query: 'br'
       'no match':
         html: '<b>Bold</b><i><s>Strike</s><u>Under</u></i>'
-        match: false, query: $('#expected-container').get(0)
+        match: false, query: $('#toolbar-container').get(0)
       'line with no leaves':
         html: ''
-        match: false, query: $('#expected-container').get(0)
+        match: false, query: $('#toolbar-container').get(0)
 
     _.each(tests, (test, name) ->
       it(name, ->

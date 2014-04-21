@@ -2,16 +2,13 @@ module.exports = (grunt) ->
   grunt.config('watch',
     options:
       interrupt: true
-    tests:
-      files: ['tests/mocha/**/*.coffee']
-      tasks: ['browserify:tests']
     coffee:
-      files: ['demo/scripts/*.coffee', 'tests/karma/inject.coffee', 'tests/webdriver/**/*.coffee']
+      files: ['demo/scripts/*.coffee', 'test/**/*.coffee']
       tasks: ['newer:coffee:all']
     jade:
-      files: ['demo/*.jade', 'tests/**/*.jade']
+      files: ['demo/*.jade', 'test/**/*.jade']
       tasks: ['newer:jade']
     stylus:
-      files: ['demo/**/*.styl', 'src/**/*.styl', 'tests/**/*.styl']
+      files: ['demo/**/*.styl', 'src/**/*.styl']
       tasks: ['newer:stylus']
   )

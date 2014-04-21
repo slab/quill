@@ -1,7 +1,6 @@
 describe('Format', ->
-  voidFormat = Quill.Format.FORMATS.image
   beforeEach( ->
-    @container = $('#test-container').html('').get(0)
+    @container = $('#editor-container').html('').get(0)
   )
 
   tests =

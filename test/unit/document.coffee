@@ -1,8 +1,6 @@
-Tandem = require('tandem-core')
-
 describe('Document', ->
   beforeEach( ->
-    @container = $('#test-container').html('').get(0)
+    @container = $('#editor-container').html('').get(0)
   )
 
   describe('constructor', ->
@@ -64,7 +62,7 @@ describe('Document', ->
     )
 
     it('findLine() not in doc', ->
-      line = @doc.findLine($('#expected-container').get(0))
+      line = @doc.findLine($('#toolbar-container').get(0))
       expect(line).to.be(null)
     )
 
