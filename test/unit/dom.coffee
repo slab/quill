@@ -84,11 +84,11 @@ describe('DOM', ->
   )
 
   describe('styles', ->
-    html = '<span style="color: red; background-color: blue; display: inline;">Test</span>'
+    html = '<span style="color: red; display: inline; background-color: blue;">Test</span>'
     styles =
       'color': 'red'
-      'background-color': 'blue'
       'display': 'inline'
+      'background-color': 'blue'
 
     it('getStyles()', ->
       $(@container).html(html)
