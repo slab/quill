@@ -58,6 +58,12 @@ class Document
     this.removeLine(lineToMerge)
     line.rebuild()
 
+  optimizeLines: ->
+    # TODO optimize algorithm (track which lines get dirty and only Normalize.optimizeLine those)
+    _.each(@lines.toArray(), (line) ->
+      Normalizer.optimizeLine(line.node)
+    )
+
   rebuild: ->
     @lines = new LinkedList()
     @lineMap = {}

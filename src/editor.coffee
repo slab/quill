@@ -43,6 +43,7 @@ class Editor
       unless delta.isIdentity()   # Follows may have turned delta into the identity
         throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
         delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
+        @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
         @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, options.source) unless options.silent
@@ -101,8 +102,7 @@ class Editor
 
   _insertAt: (index, text, formatting = {}) ->
     @selection.shiftAfter(index, text.length, =>
-      text = text.replace(/\r\n/g, '\n')
-      text = text.replace(/\r/g, '\n')
+      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
       if !line?
@@ -148,17 +148,15 @@ class Editor
     return false if @innerHTML == @root.innerHTML
     delta = this._trackDelta( =>
       this.doSilently( =>
-        dirtyLines = []
         @selection.preserve( =>
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
           _.each(lines, (line, index) =>
             while line.node != lineNode
               if line.node.parentNode == @root
-                # New line
+                # New line inserted
                 lineNode = Normalizer.normalizeLine(lineNode)
                 newLine = @doc.insertLineBefore(lineNode, line)
-                dirtyLines.push(newLine)
                 lineNode = lineNode.nextSibling
               else
                 # Existing line removed
@@ -167,20 +165,15 @@ class Editor
               # Existing line changed
               line.node = Normalizer.normalizeLine(line.node)
               line.rebuild()
-              dirtyLines.push(line)
             lineNode = line.node.nextSibling
           )
+          # New lines appended
           while lineNode != null
             lineNode = Normalizer.normalizeLine(lineNode)
             newLine = @doc.appendLine(lineNode)
-            dirtyLines.push(newLine)
             lineNode = lineNode.nextSibling
         )
-        @selection.shiftAfter(0, 0, =>
-          _.each(dirtyLines, (line) ->
-            line.optimize()
-          )
-        )
+        @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
       )
     )
     @innerHTML = @root.innerHTML
