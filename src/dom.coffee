@@ -147,7 +147,9 @@ DOM =
     switch node.nodeType
       when DOM.ELEMENT_NODE
         return "" if node.tagName == DOM.DEFAULT_BREAK_TAG
-        return node.textContent or node.innerText or ""
+        return node.textContent if node.textContent?
+        return node.innerText.replace('\n', '') if node.innerText?
+        return ""
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
 
