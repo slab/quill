@@ -239,7 +239,7 @@ DOM =
     this.moveChildren(newNode, node) unless DOM.VOID_TAGS[newTag]?
     node.parentNode.replaceChild(newNode, node)
     _.each(attributes, (value, name) ->
-      newNode.setAttribute(name, value)
+      newNode.setAttribute(name, value) unless name == 'shape' and node.tagName == 'A'  # IE8 bug
     )
     return newNode
 
