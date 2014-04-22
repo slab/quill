@@ -63,6 +63,9 @@ describe('Normalizer', ->
       'preserve only span':
         initial:  '<span>Test</span>'
         expected: '<span>Test</span>'
+      'preserve span with attributes':
+        initial:  '<span class="custom"><span id="span-1234">Test</span></span>'
+        expected: '<span class="custom"><span id="span-1234">Test</span></span>'
       'unwrap zero length nodes':
         initial:  '<b></b>'
         expected: ''
@@ -86,13 +89,16 @@ describe('Normalizer', ->
         expected: '<span style="color: red;">AB</span>'
       'merge multiple criteria similar nodes':
         initial:  '<b style="color: red;">A</b><b style="color: red;">B</b>'
-        initial:  '<b style="color: red;">AB</b>'
+        expected: '<b style="color: red;">AB</b>'
       'merge similar nodes after unwrap':
         initial:  '<span><b>A</b></span><b>B</b>'
         expected: '<b>AB</b>'
+      'merge recursive':
+        initial:  '<s><b>A</b></s><s><b>B</b></s>'
+        expected: '<s><b>AB</b></s>'
       'preserve close but not same nodes':
         initial:  '<b style="color: red;">A</b><b style="color: blue;">B</b>'
-        initial:  '<b style="color: red;">A</b><b style="color: blue;">B</b>'
+        expected: '<b style="color: red;">A</b><b style="color: blue;">B</b>'
       'preserve similar images':
         initial:  '<img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png">'
         expected: '<img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png">'
