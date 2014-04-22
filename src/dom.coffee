@@ -148,7 +148,7 @@ DOM =
       when DOM.ELEMENT_NODE
         return "" if node.tagName == DOM.DEFAULT_BREAK_TAG
         return node.textContent if node.textContent?
-        return node.innerText.replace('\n', '') if node.innerText?
+        return node.innerText.replace(/[\r\n]/g, '') if node.innerText?
         return ""
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
