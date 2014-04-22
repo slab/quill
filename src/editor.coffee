@@ -147,6 +147,7 @@ class Editor
     return false if @innerHTML == @root.innerHTML
     delta = this._trackDelta( =>
       this.doSilently( =>
+        dirtyLines = []
         @selection.preserve( =>
           lines = @doc.lines.toArray()
           lineNode = @root.firstChild
@@ -156,6 +157,7 @@ class Editor
                 # New line
                 lineNode = Normalizer.normalizeLine(lineNode)
                 newLine = @doc.insertLineBefore(lineNode, line)
+                dirtyLines.push(newLine)
                 lineNode = lineNode.nextSibling
               else
                 # Existing line removed
@@ -164,12 +166,19 @@ class Editor
               # Existing line changed
               line.node = Normalizer.normalizeLine(line.node)
               line.rebuild()
+              dirtyLines.push(line)
             lineNode = line.node.nextSibling
           )
           while lineNode != null
             lineNode = Normalizer.normalizeLine(lineNode)
             newLine = @doc.appendLine(lineNode)
+            dirtyLines.push(newLine)
             lineNode = lineNode.nextSibling
+        )
+        @selection.shiftAfter(0, 0, =>
+          _.each(dirtyLines, (line) ->
+            line.optimize()
+          )
         )
       )
     )

@@ -61,32 +61,24 @@ Normalizer =
         # Remove unneeded BRs
         DOM.removeNode(node) unless lineNodeLength == 0
       else if Utils.getNodeLength(node) == 0
-        # if node.parentNode? and node.parentNode != lineNode
-        #   nodes.push(node.parentNode)
         nodes.push(node.nextSibling)
         DOM.unwrap(node)
       else
         attributes = DOM.getAttributes(node)
         if node.tagName == DOM.DEFAULT_INLNE_TAG
-        # Remove unneeded SPANs
+          # Remove unneeded SPANs
           if _.keys(attributes).length == 0 and (node.parentNode != lineNode or DOM.isElement(node.firstChild))
             nodes.push(node.nextSibling)
             DOM.unwrap(node)
             continue
         if node.previousSibling? and node.tagName == node.previousSibling.tagName
+          # Merge similar nodes
           neighborAttributes = DOM.getAttributes(node.previousSibling)
           if _.isEqual(attributes, neighborAttributes)
             nodes.push(node.firstChild)
             DOM.moveChildren(node.previousSibling, node)
             node.previousSibling.normalize()
             DOM.removeNode(node)
-
-
-    # _.each(DOM.getDescendants(lineNode), (node) ->
-    #   return unless node.parentNode?
-    #   if node.tagName != DOM.DEFAULT_BREAK_TAG and Utils.getNodeLength(node) == 0
-
-    # )
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
