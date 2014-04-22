@@ -63,6 +63,9 @@ describe('Normalizer', ->
       'preserve only span':
         initial:  '<span>Test</span>'
         expected: '<span>Test</span>'
+      'remove unneeded break':
+        initial:  '<span>Test</span><br>'
+        expected: '<span>Test</span>'
       'preserve span with attributes':
         initial:  '<span class="custom"><span id="span-1234">Test</span></span>'
         expected: '<span class="custom"><span id="span-1234">Test</span></span>'

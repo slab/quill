@@ -50,13 +50,14 @@ Normalizer =
     Normalizer.whitelistStyles(node)
     return Normalizer.whitelistTags(node)
 
+  # Removes unnecessary tags but does not modify line contents
   optimizeLine: (lineNode) ->
     lineNodeLength = Utils.getNodeLength(lineNode)
     nodes = DOM.getDescendants(lineNode)
     while nodes.length > 0
       node = nodes.pop()
       continue unless node?.parentNode?
-      continue if DOM.VOID_TAGS[node.tagName]?
+      continue if DOM.EMBED_TAGS[node.tagName]?
       if node.tagName == DOM.DEFAULT_BREAK_TAG
         # Remove unneeded BRs
         DOM.removeNode(node) unless lineNodeLength == 0
