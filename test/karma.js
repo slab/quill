@@ -3,11 +3,11 @@ var os = require('os');
 
 
 var browsers = {
-  'mac-chrome'  : ['Mac 10.9', 'chrome', '33'],
+  'mac-chrome'  : ['Mac 10.9', 'chrome', '34'],
   'mac-firefox' : ['Mac 10.9', 'firefox', '28'],
   'mac-safari'  : ['Mac 10.9', 'safari', '7'],
 
-  'windows-chrome'  : ['Windows 8.1', 'chrome', '33'],
+  'windows-chrome'  : ['Windows 8.1', 'chrome', '34'],
   'windows-firefox' : ['Windows 8.1', 'firefox', '28'],
   'windows-ie-11'   : ['Windows 8.1', 'internet explorer', '11'],
 
@@ -15,7 +15,7 @@ var browsers = {
   'windows-ie-9'    : ['Windows 7', 'internet explorer', '9'],
   'windows-ie-8'    : ['Windows 7', 'internet explorer', '8'],
 
-  'linux-chrome'    : ['Linux', 'chrome', '33'],
+  'linux-chrome'    : ['Linux', 'chrome', '34'],
   'linux-firefox'   : ['Linux', 'firefox', '28'],
 
   'iphone'  : ['Mac 10.9', 'iphone', '7.1'],
