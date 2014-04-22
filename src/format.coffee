@@ -86,7 +86,7 @@ class Format
   remove: (node) ->
     return unless this.match(node)
     if _.isString(@config.style)
-      node.style[@config.style] = null
+      node.style[@config.style] = ''  # IE10 requires setting to '', other browsers can take null
       node.removeAttribute('style') unless node.getAttribute('style')   # If style is now ''
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
