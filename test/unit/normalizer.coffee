@@ -209,8 +209,8 @@ describe('Normalizer', ->
         initial:  '<strong>Bold</strong>'
         expected: '<b>Bold</b>'
       'switch inline':
-        initial:  '<script>var test = "true";</script>'
-        expected:  '<span>var test = "true";</span>'
+        initial:  '<abbr>A</abbr>'
+        expected:  '<span>A</span>'
       'switch block':
         initial:  '<h1>Test</h1>'
         expected: '<div>Test</div>'
