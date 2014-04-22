@@ -84,11 +84,10 @@ describe('DOM', ->
   )
 
   describe('styles', ->
-    html = '<span style="color: red; display: inline; background-color: blue;">Test</span>'
+    html = '<span style="color: red; display: inline;">Test</span>'
     styles =
       'color': 'red'
       'display': 'inline'
-      'background-color': 'blue'
 
     it('getStyles()', ->
       $(@container).html(html)
@@ -99,7 +98,9 @@ describe('DOM', ->
     it('setStyles()', ->
       $(@container).html('<span>Test</span>')
       Quill.DOM.setStyles(@container.firstChild, styles)
-      expect.equalHTML(@container.firstChild.outerHTML, html)
+      _.each(styles, (value, name) =>
+        expect(@container.firstChild.style[name]).toEqual(value)
+      )
     )
   )
 

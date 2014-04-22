@@ -20,7 +20,7 @@ expect.equalHTML = (html1, html2, ignoreClassId = false) ->
     html = Quill.Normalizer.stripWhitespace(html)
     if ignoreClassId
       html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
-      html = html.replace(/\ (class|id)=[a-z0-9\-_]+ /gi, '')
+      html = html.replace(/\ (class|id)=[a-z0-9\-_]+/gi, '')
       html = html.replace(/\ (class|id)=[a-z0-9\-_]+>/gi, '>')
     html = html.replace(/style="(.+); "/g, 'style="$1;"')   # PhantomJS adds space after last style
     html = html.replace(/[\'\";]/g, '')    # IE8 outerHTML does not have quotes
