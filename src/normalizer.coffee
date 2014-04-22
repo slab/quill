@@ -78,7 +78,7 @@ Normalizer =
           if _.isEqual(attributes, neighborAttributes)
             nodes.push(node.firstChild)
             DOM.moveChildren(node.previousSibling, node)
-            node.previousSibling.normalize()
+            DOM.normalize(node.previousSibling)
             DOM.removeNode(node)
 
   # Make sure descendants are all inline elements

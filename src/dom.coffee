@@ -182,6 +182,19 @@ DOM =
       newParent.appendChild(child)
     )
 
+  # IE normalize is broken
+  normalize: (node) ->
+    curNode = node.firstChild
+    while curNode?
+      nextNode = curNode.nextSibling
+      if DOM.isTextNode(curNode)
+        if DOM.getText(curNode).length == 0
+          DOM.removeNode(curNode)
+        else if DOM.isTextNode(nextNode)
+          nextNode = nextNode.nextSibling
+          DOM.setText(curNode, DOM.getText(curNode) + DOM.getText(curNode.nextSibling))
+      curNode = nextNode
+
   removeClass: (node, cssClass) ->
     return unless DOM.hasClass(node, cssClass)
     if node.classList?
