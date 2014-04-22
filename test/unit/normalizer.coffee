@@ -52,6 +52,60 @@ describe('Normalizer', ->
     )
   )
 
+  describe('optimizeLine', ->
+    tests =
+      'unwrap non-format node':
+        initial:  '<b><span>Test</span></b>'
+        expected: '<b>Test</b>'
+      'unwrap non-format node':
+        initial:  '<span><b>Test</b></span>'
+        expected: '<b>Test</b>'
+      'preserve only span':
+        initial:  '<span>Test</span>'
+        expected: '<span>Test</span>'
+      'unwrap zero length nodes':
+        initial:  '<b></b>'
+        expected: ''
+      'unwrap eventually':
+        initial:  '<b><i></i><s></s></b>'
+        expected: ''
+      'unwrap break on empty line':
+        initial:  '<b><i><br></i></b>'
+        expected: '<br>'
+      'preserve break on empty line':
+        initial:  '<b><i></i></b><br>'
+        expected: '<br>'
+      'unwrap eventually with break':
+        initial:  '<b><i></i><s><br></s></b>'
+        expected: '<br>'
+      'merge similar nodes':
+        initial:  '<b>A</b><b>B</b>'
+        expected: '<b>AB</b>'
+      'merge similar span nodes':
+        initial:  '<span style="color: red;">A</span><span style="color: red;">B</span>'
+        expected: '<span style="color: red;">AB</span>'
+      'merge multiple criteria similar nodes':
+        initial:  '<b style="color: red;">A</b><b style="color: red;">B</b>'
+        initial:  '<b style="color: red;">AB</b>'
+      'merge similar nodes after unwrap':
+        initial:  '<span><b>A</b></span><b>B</b>'
+        expected: '<b>AB</b>'
+      'preserve close but not same nodes':
+        initial:  '<b style="color: red;">A</b><b style="color: blue;">B</b>'
+        initial:  '<b style="color: red;">A</b><b style="color: blue;">B</b>'
+      'preserve similar images':
+        initial:  '<img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png">'
+        expected: '<img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png">'
+
+    _.each(tests, (test, name) ->
+      it(name, ->
+        @container.innerHTML = "<div>#{test.initial}</div>"
+        Quill.Normalizer.optimizeLine(@container.firstChild)
+        expect.equalHTML(@container.firstChild, test.expected)
+      )
+    )
+  )
+
   describe('pullBlocks()', ->
     tests =
       'No children':
