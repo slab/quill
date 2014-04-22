@@ -18,7 +18,7 @@ describe('Renderer', ->
   )
 
   it('buildFrame()', ->
-    root = Quill.Renderer.buildFrame(@container)
+    [root, iframe] = Quill.Renderer.buildFrame(@container)
     expect(@container.querySelectorAll('iframe').length).toEqual(1)
     expect(root.ownerDocument.body.firstChild).toEqual(root)
     expect(root.innerHTML).toEqual('')

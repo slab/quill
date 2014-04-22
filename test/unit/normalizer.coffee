@@ -52,7 +52,7 @@ describe('Normalizer', ->
     )
   )
 
-  describe('optimizeLine', ->
+  describe('optimizeLine()', ->
     tests =
       'unwrap non-format node':
         initial:  '<b><span>Test</span></b>'

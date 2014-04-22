@@ -62,11 +62,11 @@ class Renderer
     iframeDoc.close()
     root = iframeDoc.createElement('div')
     iframeDoc.body.appendChild(root)
-    return root
+    return [root, iframe]
 
   constructor: (@container, @emitter, @options = {}) ->
     @container.innerHTML = ''
-    @root = Renderer.buildFrame(@container)
+    [@root, @iframe] = Renderer.buildFrame(@container)
     @root.id = @options.id
     DOM.addClass(@root, 'editor-container')
     DOM.addEventListener(@container, 'focus', =>
