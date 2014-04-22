@@ -27,18 +27,22 @@ class Format
 
     color:
       style: 'color'
+      default: '#000'
       preformat: 'foreColor'
 
     background:
       style: 'backgroundColor'
+      default: '#fff'
       preformat: 'backColor'
 
     font:
       style: 'fontFamily'
+      default: "'Helvetica', 'Arial', sans-serif"
       preformat: 'fontName'
 
     size:
       style: 'fontSize'
+      default: '13px'
       preformat: 'fontSize'
 
     link:
@@ -52,6 +56,7 @@ class Format
     align:
       type: Format.types.LINE
       style: 'textAlign'
+      default: 'left'
 
 
   constructor: (@config) ->
@@ -68,7 +73,7 @@ class Format
       else
         node = DOM.wrap(formatNode, node)
     if _.isString(@config.style)
-      node.style[@config.style] = value
+      node.style[@config.style] = value if value != @config.default
     if _.isString(@config.attribute)
       node.setAttribute(@config.attribute, value)
     return node
@@ -79,15 +84,15 @@ class Format
   match: (node) ->
     return false unless DOM.isElement(node)
     return false if _.isString(@config.tag) and node.tagName != @config.tag
-    return false if _.isString(@config.style) and !node.style[@config.style]
+    return false if _.isString(@config.style) and (!node.style[@config.style] or node.style[@config.style] == @config.default)
     return false if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
     return true
 
   remove: (node) ->
     return unless this.match(node)
     if _.isString(@config.style)
-      node.style[@config.style] = ''  # IE10 requires setting to '', other browsers can take null
-      node.removeAttribute('style') unless node.getAttribute('style')   # If style is now ''
+      node.style[@config.style] = ''    # IE10 requires setting to '', other browsers can take null
+      node.removeAttribute('style') unless node.getAttribute('style')  # Some browsers leave empty style attribute
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.tag)
@@ -98,7 +103,7 @@ class Format
   value: (node) ->
     return undefined unless this.match(node)
     return node.getAttribute(@config.attribute) or undefined if _.isString(@config.attribute)
-    return node.style[@config.style] or undefined if _.isString(@config.style)
+    return node.style[@config.style] or undefined if _.isString(@config.style) and node.style[@config.style] != @config.default
     return true if _.isString(@config.tag) and node.tagName == @config.tag
     # TODO class regex
     return undefined

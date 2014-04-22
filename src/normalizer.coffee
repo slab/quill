@@ -4,6 +4,21 @@ Utils = require('./utils')
 
 
 Normalizer =
+  ALIASES: {
+    'STRONG' : 'B'
+    'EM'     : 'I'
+    'DEL'    : 'S'
+    'STRIKE' : 'S'
+  }
+
+  STYLES: {
+    'background-color'
+    'color'
+    'font-family'
+    'font-size'
+    'text-align'
+  }
+
   TAGS: {
     'DIV'
     'BR'
@@ -14,21 +29,6 @@ Normalizer =
     'U'
     'A'
     'IMG'
-  }
-
-  STYLES: {
-    'background-color' : '#fff'
-    'color'            : '#000'
-    'font-family'      : "'Helvetica', 'Arial', sans-serif"
-    'font-size'        : '13px'
-    'text-align'       : 'left'
-  }
-
-  ALIASES: {
-    'STRONG' : 'B'
-    'EM'     : 'I'
-    'DEL'    : 'S'
-    'STRIKE' : 'S'
   }
 
   # Make sure descendant break tags are not causing multiple lines to be rendered
@@ -107,7 +107,7 @@ Normalizer =
   whitelistStyles: (node) ->
     original = DOM.getStyles(node)
     styles = _.omit(original, (value, key) ->
-      return !Normalizer.STYLES[key]? or value == Normalizer.STYLES[key]
+      return !Normalizer.STYLES[key]?
     )
     if _.keys(styles).length < _.keys(original).length
       if _.keys(styles).length > 0

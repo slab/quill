@@ -181,9 +181,6 @@ describe('Normalizer', ->
       'removal':
         initial:  '<div style="color: red; display: inline;"></div>'
         expected: '<div style="color: red;"></div>'
-      'remove default style':
-        initial:  '<div style="font-size: 13px;"></div>'
-        expected: '<div></div>'
       'complete removal':
         initial:  '<div style="display: inline; cursor: pointer;"></div>'
         expected: '<div></div>'

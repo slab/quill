@@ -52,6 +52,12 @@ describe('Format', ->
         expect(test.format.match(@container.firstChild)).toBe(false)
       )
     )
+
+    it('default', ->
+      @container.innerHTML = '<span style="font-size: 13px;">Text</span>'
+      format = new Quill.Format(Quill.Format.FORMATS.color)
+      expect(format.match(@container.firstChild)).toBe(false)
+    )
   )
 
   describe('value()', ->
@@ -63,8 +69,14 @@ describe('Format', ->
 
       it("#{name} missing", ->
         @container.innerHTML = test.missing
-        expect(test.format.value(@container.firstChild)).toEqual(undefined)
+        expect(test.format.value(@container.firstChild)).toBe(undefined)
       )
+    )
+
+    it('default', ->
+      @container.innerHTML = '<span style="font-size: 13px;">Text</span>'
+      format = new Quill.Format(Quill.Format.FORMATS.color)
+      expect(format.value(@container.firstChild)).toBe(undefined)
     )
   )
 
@@ -100,6 +112,13 @@ describe('Format', ->
       format = new Quill.Format(Quill.Format.FORMATS.color)
       format.add(@container.firstChild, 'red')
       expect.equalHTML(@container, '<span style="color: red;">Text</span>')
+    )
+
+    it('default value', ->
+      @container.innerHTML = '<span>Text</span>'
+      format = new Quill.Format(Quill.Format.FORMATS.size)
+      format.add(@container.firstChild, Quill.Format.FORMATS.size.default)
+      expect.equalHTML(@container, '<span>Text</span>')
     )
   )
 
