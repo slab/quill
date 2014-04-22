@@ -74,7 +74,7 @@ DOM =
     if node.classList?
       node.classList.add(cssClass)
     else if node.className?
-      node.className += ' ' + cssClass
+      node.className = _.str.trim(node.className + ' ' + cssClass)
 
   addEventListener: (node, eventName, listener) ->
     callback = (event) ->
