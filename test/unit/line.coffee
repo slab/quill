@@ -311,6 +311,10 @@ describe('Line', ->
         initial: '<br>'
         expected: '<span>|</span><br>'
         offset: 0
+      'beyond last line':
+        initial: '<br>'
+        expected: '<span>|</span><br>'
+        offset: 1
       'format in empty line':
         initial: '<br>'
         expected: '<b>|</b><br>'

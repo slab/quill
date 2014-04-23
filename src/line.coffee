@@ -39,7 +39,6 @@ class Line extends LinkedList.Node
     )
 
   deleteText: (offset, length) ->
-    length = Math.min(@length - 1 - offset, length)   # Cannot delete trailing newline
     deleteLength = length
     [leaf, offset] = this.findLeafAt(offset)
     while leaf and deleteLength > 0
@@ -67,7 +66,7 @@ class Line extends LinkedList.Node
 
   findLeafAt: (offset) ->
     # TODO exact same code as findLineAt
-    return [@leaves.last, @leaves.last.length] if offset == @length - 1
+    return [@leaves.last, @leaves.last.length] if offset >= @length - 1
     return [null, offset - @length] if offset >= @length
     leaf = @leaves.first
     while leaf?
