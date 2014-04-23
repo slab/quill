@@ -238,6 +238,19 @@ describe('Document', ->
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
+    it('splitLine() beyond end', ->
+      @doc.splitLine(@lines[1], 5)
+      expect.equalHTML(@doc.root, '
+        <div><span>Test</span></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
+      ', true)
+      expect(@doc.lines.length).toEqual(@lines.length + 1)
+    )
+
     it('splitLine() split break', ->
       @doc.splitLine(@lines[2], 0)
       expect.equalHTML(@doc.root, '

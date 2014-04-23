@@ -104,7 +104,7 @@ describe('Line', ->
       'beyond empty line':
         html: '<br>'
         offset: 2
-        expected: [null, 1]
+        expected: ['br', 0]
       'leaf at 0':
         html: '<b>0123</b><i>4567</i>'
         offset: 0
@@ -128,11 +128,11 @@ describe('Line', ->
       'leaf at end of line':
         html: '<b>0123</b><i>4567</i>'
         offset: 9
-        expected: [null, 0]
+        expected: ['i', 4]
       'beyond line':
         html: '<b>0123</b><i>4567</i>'
         offset: 10
-        expected: [null, 1]
+        expected: ['i', 4]
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -336,6 +336,14 @@ describe('Line', ->
         @line.insertText(test.offset, '|', test.formats)
         expect.equalHTML(@line.node, test.expected)
       )
+    )
+
+    it('empty string into empty line', ->
+      @container.innerHTML = '<div><br></div>'
+      lineNode = @container.firstChild
+      @line = new Quill.Line(@doc, lineNode)
+      @line.insertText(0, '')
+      expect.equalHTML(@line.node, '<br>')
     )
   )
 )

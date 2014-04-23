@@ -39,9 +39,10 @@ class Line extends LinkedList.Node
     )
 
   deleteText: (offset, length) ->
+    return unless length > 0
     deleteLength = length
     [leaf, offset] = this.findLeafAt(offset)
-    while leaf and deleteLength > 0
+    while leaf? and deleteLength > 0
       nextLeaf = leaf.next
       if offset == 0 and leaf.length <= deleteLength
         DOM.removeNode(leaf.node)
@@ -51,7 +52,7 @@ class Line extends LinkedList.Node
       deleteLength -= Math.min(leaf.length, deleteLength)
       leaf = nextLeaf
       offset = 0
-    if length == @length - 1
+    if length >= @length - 1
       @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
       this.rebuild()
     else
@@ -86,6 +87,7 @@ class Line extends LinkedList.Node
       delete @formats[name]
 
   formatText: (offset, length, name, value) ->
+    return unless length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
     format = @doc.formats[name]
     while leaf?
@@ -110,6 +112,7 @@ class Line extends LinkedList.Node
     this.rebuild()
 
   insertText: (offset, text, formats = {}) ->
+    return unless text.length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
     # offset > 0 for multicursor
     if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0

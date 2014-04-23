@@ -7,7 +7,6 @@ describe('Editor', ->
   # checkUpdate()
   # update()
   # _deleteAt()
-  # _insertAt()
   # _formatAt()
   # _trackDelta()
     # Turn off checkInterval, change shit via DOM API
@@ -27,10 +26,10 @@ describe('Editor', ->
 
         tests =
           'text':
-            expected: '<div><span>Test</i></span>'
+            expected: '<div><span>Test</span></div>'
             text: 'Test'
           'formatted text':
-            expected: '<div><b><i>Test</i></b></div>'
+            expected: '<div><i><b>Test</b></i></div>'
             text: 'Test', formats: { bold: true, italic: true }
           'newline':
             expected: '<div><br></div>'

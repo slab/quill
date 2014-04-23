@@ -29,6 +29,7 @@ class Document
     return if line?.node == node then line else null
 
   findLineAt: (index) ->
+    return [null, index] unless @lines.length > 0
     length = this.toDelta().endLength     # TODO optimize
     return [@lines.last, @lines.last.length] if index == length
     return [null, index - length] if index > length
@@ -42,8 +43,10 @@ class Document
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
     if refLine != null
+      @root.insertBefore(newLineNode, refLine.node) unless newLineNode.parentNode?
       @lines.insertAfter(refLine.prev, line)
     else
+      @root.appendChild(newLineNode) unless newLineNode.parentNode?
       @lines.append(line)
     @lineMap[line.id] = line
     return line
@@ -82,6 +85,7 @@ class Document
     this.rebuild()
 
   splitLine: (line, offset) ->
+    offset = Math.min(offset, line.length - 1)
     [lineNode1, lineNode2] = Utils.splitNode(line.node, offset, true)
     line.node = lineNode1
     line.rebuild()

@@ -105,17 +105,11 @@ class Editor
       text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
-      if !line?
-        # TODO only really makes sense if offset is also 0, signifying the end of the document
-        # TODO clean up... this add line logic doesnt belong here
-        lineNode = @root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG)
-        @root.appendChild(lineNode)
-        lineNode.appendChild(@root.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
-        line = @doc.appendLine(lineNode)
+      if !line?   # Empty document
+        line = @doc.appendLine(@root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG))
         offset = 0
-        # TODO this logic is very unintuitive without going through all the cases...
-        if lineTexts.length > 1 and lineTexts[0] == "" and lineTexts[1] == ""
-          lineTexts.shift()
+        line.insertText(offset, lineTexts[0], formatting)
+        lineTexts = lineTexts.slice(1)
       _.each(lineTexts, (lineText, i) =>
         line.insertText(offset, lineText, formatting)
         if i < lineTexts.length - 1       # Are there more lines to insert?
