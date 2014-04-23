@@ -8,11 +8,6 @@ ieVersion = do ->
 
 
 Utils =
-  findAncestor: (node, checkFn) ->
-    while node? && !checkFn(node)
-      node = node.parentNode
-    return node
-
   findDeepestNode: (node, offset) ->
     while node.firstChild?
       [node, offset] = Utils.getChildAtOffset(node, offset)
@@ -37,13 +32,6 @@ Utils =
     if DOM.isElement(node)
       length += node.querySelectorAll(_.keys(DOM.EMBED_TAGS).join(',')).length
     return length
-
-  isEmptyDoc: (root) ->
-    firstLine = root.firstChild
-    return true if firstLine == null
-    return true if firstLine.firstChild == null
-    return true if firstLine.firstChild == firstLine.lastChild and firstLine.firstChild.tagName == 'BR'
-    return false
 
   # We'll take a leap of faith that IE11 is good enough...
   isIE: (maxVersion = 10) ->
