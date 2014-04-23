@@ -30,13 +30,12 @@ class Document
 
   findLineAt: (index) ->
     length = this.toDelta().endLength     # TODO optimize
-    # TODO there is a bug here that if lines.last has trailing newline we need to set to @lines.last.length + 1
     return [@lines.last, @lines.last.length] if index == length
     return [null, index - length] if index > length
     curLine = @lines.first
     while curLine?
-      return [curLine, index] if index <= curLine.length + 1
-      index -= curLine.length + 1
+      return [curLine, index] if index < curLine.length
+      index -= curLine.length
       curLine = curLine.next
     return [null, index]    # Should never occur unless length calculation is off
 
@@ -50,8 +49,8 @@ class Document
     return line
 
   mergeLines: (line, lineToMerge) ->
-    unless lineToMerge.isNewline()
-      DOM.removeNode(line.leaves.first.node) if line.isNewline()
+    if lineToMerge.length > 1
+      DOM.removeNode(line.leaves.last.node) if line.length == 1
       _.each(DOM.getChildNodes(lineToMerge.node), (child) ->
         line.node.appendChild(child) if child.tagName != DOM.DEFAULT_BREAK_TAG
       )
@@ -91,16 +90,10 @@ class Document
 
   toDelta: ->
     lines = @lines.toArray()
-    allNewlines = true
     ops = _.flatten(_.map(lines, (line) ->
-      ops = _.clone(line.delta.ops)
-      ops.push(new Tandem.InsertOp("\n", line.formats)) if line.next?
-      allNewlines = allNewlines and line.isNewline()
-      return ops
+      return _.clone(line.delta.ops)
     ), true)
-    ops.push(new Tandem.InsertOp("\n", @lines.last.formats)) if @lines.last? and allNewlines
-    delta = new Tandem.Delta(0, ops)
-    return delta
+    return new Tandem.Delta(0, ops)
 
 
 module.exports = Document

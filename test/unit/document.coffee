@@ -6,25 +6,25 @@ describe('Document', ->
   describe('constructor', ->
     tests =
       'blank':
-        initial: ''
+        initial:  ''
         expected: ''
       'no change':
-        initial: '<div><span>Test</span></div>'
+        initial:  '<div><span>Test</span></div>'
         expected: '<div><span>Test</span></div>'
       'text':
-        initial: 'Test'
+        initial:  'Test'
         expected: '<div><span>Test</span></div>'
       'inline':
-        initial: '<span>Test</span>'
+        initial:  '<span>Test</span>'
         expected: '<div><span>Test</span></div>'
       'block pulling':
-        initial: '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
+        initial:  '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
         expected: '<div><span>Test</span></div><div><span>Test</span></div>'
       'with blocks':
-        initial: '<div><span>A</span><br><span>B</span><br><span>C</span></div>'
+        initial:  '<div><span>A</span><br><span>B</span><br><span>C</span></div>'
         expected: '<div><span>A</span><br></div><div><span>B</span><br></div><div><span>C</span></div>'
       'pull and break':
-        initial: '<div><div><div><span>A</span></div><span>B</span><br><span>C</span></div></div>'
+        initial:  '<div><div><div><span>A</span></div><span>B</span><br><span>C</span></div></div>'
         expected: '<div><span>A</span></div><div><span>B</span><br></div><div><span>C</span></div>'
 
     _.each(tests, (test, name) ->
@@ -91,27 +91,27 @@ describe('Document', ->
     )
 
     it('findLineAt() end of line', ->
-      [line, offset] = @doc.findLineAt(5)
+      [line, offset] = @doc.findLineAt(4)
       expect(line).toEqual(@doc.lines.first)
-      expect(offset).toEqual(5)
+      expect(offset).toEqual(4)
     )
 
     it('findLineAt() newline', ->
-      [line, offset] = @doc.findLineAt(6)
+      [line, offset] = @doc.findLineAt(5)
       expect(line).toEqual(@doc.lines.first.next)
-      expect(offset).toEqual(1)
+      expect(offset).toEqual(0)
     )
 
     it('findLineAt() end of document', ->
-      [line, offset] = @doc.findLineAt(10)
+      [line, offset] = @doc.findLineAt(11)
       expect(line).toBe(@doc.lines.last)
-      expect(offset).toEqual(4)
+      expect(offset).toEqual(5)
     )
 
     # TODO add test where finding line beyond last line (when line level format is present)
 
     it('findLineAt() beyond document', ->
-      [line, offset] = @doc.findLineAt(11)
+      [line, offset] = @doc.findLineAt(12)
       expect(line).toBe(null)
       expect(offset).toEqual(1)
     )
@@ -297,37 +297,43 @@ describe('Document', ->
         expected: Tandem.Delta.getInitial('')
       'single line':
         initial:  ['<div><span>0123</span></div>']
-        expected: Tandem.Delta.getInitial('0123')
+        expected: Tandem.Delta.getInitial('0123\n')
       'single newline':
         initial:  ['<div><br></div>']
         expected: Tandem.Delta.getInitial('\n')
       'preceding newline':
         initial:  ['<div><br></div>', '<div><span>0</span></div>']
-        expected: Tandem.Delta.getInitial('\n0')
-      'trailing newline':
+        expected: Tandem.Delta.getInitial('\n0\n')
+      'explicit trailing newline':
         initial:  ['<div><span>0</span></div>', '<div><br></div>']
-        expected: Tandem.Delta.getInitial('0\n')
+        expected: Tandem.Delta.getInitial('0\n\n')
       'multiple lines':
         initial:  ['<div><span>0</span></div>', '<div><span>1</span></div>']
-        expected: Tandem.Delta.getInitial('0\n1')
+        expected: Tandem.Delta.getInitial('0\n1\n')
       'multiple newlines':
         initial:  ['<div><br></div>', '<div><br></div>']
         expected: Tandem.Delta.getInitial('\n\n')
       'multiple preceding newlines':
         initial:  ['<div><br></div>', '<div><br></div>', '<div><span>0</span></div>']
-        expected: Tandem.Delta.getInitial('\n\n0')
-      'multiple trailing newlines':
+        expected: Tandem.Delta.getInitial('\n\n0\n')
+      'multiple explicit trailing newlines':
         initial:  ['<div><span>0</span></div>', '<div><br></div>', '<div><br></div>']
-        expected: Tandem.Delta.getInitial('0\n\n')
+        expected: Tandem.Delta.getInitial('0\n\n\n')
       'lines separated by multiple newlines':
         initial:  ['<div><span>0</span></div>', '<div><br></div>', '<div><span>1</span></div>']
-        expected: Tandem.Delta.getInitial('0\n\n1')
+        expected: Tandem.Delta.getInitial('0\n\n1\n')
       'tag format':
         initial:  ['<div><b>0123</b></div>']
-        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { bold: true })
+        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+          { value: '0123', attributes: { bold: true } }
+          { value: '\n' }
+        ]})
       'style format':
         initial:  ['<div><span style="color: teal;">0123</span></div>']
-        expected: Tandem.Delta.makeInsertDelta(0, 0, '0123', { 'color': 'teal' })
+        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+          { value: '0123', attributes: { color: 'teal' } }
+          { value: '\n' }
+        ]})
 
     _.each(tests, (test, name) ->
       it(name, ->

@@ -51,7 +51,7 @@ describe('Line', ->
         expect(line.leaves.length).toEqual(test.leaves.length)
         length = _.reduce(test.leaves, (length, leaf) ->
           return length + leaf.text.length
-        , 0)
+        , 1)
         expect(line.length).toEqual(length)
         leaves = line.leaves.toArray()
         _.each(leaves, (leaf, i) ->
@@ -104,7 +104,7 @@ describe('Line', ->
       'beyond empty line':
         html: '<br>'
         offset: 2
-        expected: [null, 2]
+        expected: [null, 1]
       'leaf at 0':
         html: '<b>0123</b><i>4567</i>'
         offset: 0
@@ -127,12 +127,12 @@ describe('Line', ->
         expected: ['u', 0]
       'leaf at end of line':
         html: '<b>0123</b><i>4567</i>'
-        offset: 8
-        expected: ['i', 4]
+        offset: 9
+        expected: [null, 0]
       'beyond line':
         html: '<b>0123</b><i>4567</i>'
         offset: 10
-        expected: [null, 2]
+        expected: [null, 1]
 
     _.each(tests, (test, name) ->
       it(name, ->

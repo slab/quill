@@ -51,7 +51,7 @@ class Line extends LinkedList.Node
       deleteLength -= Math.min(leaf.length, deleteLength)
       leaf = nextLeaf
       offset = 0
-    if length == @length
+    if length == @length - 1
       @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
       this.rebuild()
     else
@@ -66,13 +66,14 @@ class Line extends LinkedList.Node
 
   findLeafAt: (offset) ->
     # TODO exact same code as findLineAt
-    return [@leaves.last, @leaves.last.length] if offset == @length
+    return [@leaves.last, @leaves.last.length] if offset == @length - 1
+    return [null, offset - @length] if offset >= @length
     leaf = @leaves.first
     while leaf?
       return [leaf, offset] if offset < leaf.length
       offset -= leaf.length
       leaf = leaf.next
-    return [null, offset]
+    return [null, offset]   # Should never occur unless length calculation is off
 
   format: (name, value) ->
     format = @doc.formats[name]
@@ -124,9 +125,6 @@ class Line extends LinkedList.Node
       @node.insertBefore(node, refNode)
       this.rebuild()
 
-  isNewline: ->
-    return @length == 0 and @leaves.length == 1 and @leaves.last.node.tagName == DOM.DEFAULT_BREAK_TAG
-
   optimize: ->
     Normalizer.optimizeLine(@node)
     this.rebuild()
@@ -141,6 +139,7 @@ class Line extends LinkedList.Node
       return formats
     , {})
     this.buildLeaves(@node, {})
+    # TODO does this belong here...
     if @leaves.length == 1 and @leaves.first.length == 0 and @leaves.first.node.tagName != DOM.DEFAULT_BREAK_TAG
       @leaves.first.node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
       @leaves.first.node = @leaves.first.node.firstChild
@@ -148,11 +147,13 @@ class Line extends LinkedList.Node
     return true
 
   resetContent: ->
-    @length = _.reduce(@leaves.toArray(), ((length, leaf) -> leaf.length + length), 0)
     @outerHTML = @node.outerHTML
-    ops = _.map(@leaves.toArray(), (leaf) ->
+    @length = 1
+    ops = _.map(@leaves.toArray(), (leaf) =>
+      @length += leaf.length
       return new Tandem.InsertOp(leaf.text, leaf.formats)
     )
+    ops.push(new Tandem.InsertOp('\n', @formats))
     @delta = new Tandem.Delta(0, @length, ops)
 
 
