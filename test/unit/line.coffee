@@ -204,6 +204,12 @@ describe('Line', ->
       'entire line':
         expected: '<i></i><br>'
         offset: 0, length: 8
+      'trailing newline':
+        expected: '<b>01</b><i><s>23</s><u>45</u></i><b>67</b>'
+        offset: 8, length: 1
+      'entire line':
+        expected: '<i></i><br>'
+        offset: 0, length: 9
 
     _.each(tests, (test, name) ->
       it(name, ->
