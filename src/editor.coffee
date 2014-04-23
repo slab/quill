@@ -75,17 +75,18 @@ class Editor
     @selection.shiftAfter(index, -1 * length, =>
       [firstLine, offset] = @doc.findLineAt(index)
       curLine = firstLine
+      mergeFirstLine = firstLine.length - offset <= length and offset > 0
       while curLine? and length > 0
-        deleteLength = Math.min(length, curLine.length - offset + 1)
         nextLine = curLine.next
-        if deleteLength <= curLine.length
-          curLine.deleteText(offset, deleteLength)
-        else
+        deleteLength = Math.min(curLine.length - offset, length)
+        if offset == 0 and length >= curLine.length
           @doc.removeLine(curLine)
+        else
+          curLine.deleteText(offset, deleteLength)
         length -= deleteLength
         curLine = nextLine
         offset = 0
-      @doc.mergeLines(firstLine, firstLine.next) if firstLine?.next != nextLine
+      @doc.mergeLines(firstLine, firstLine.next) if mergeFirstLine and firstLine.next
     )
 
   _formatAt: (index, length, name, value) ->

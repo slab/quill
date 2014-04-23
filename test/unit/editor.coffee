@@ -13,17 +13,58 @@ describe('Editor', ->
   # _update()
 
   describe('manipulation', ->
-    describe('_deleteAt()', -> )
+    describe('_deleteAt()', ->
+      tests =
+        'part of line':
+          initial:  ['<div><span>0123</span></div>']
+          expected: ['<div><span>03</span></div>']
+          index: 1, length: 2
+        'part of multiple lines':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>']
+          expected: ['<div><span>01</span><b>78</b></div>']
+          index: 2, length: 5
+        'entire line keeping trailing newline':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>']
+          expected: ['<div><br></div>', '<div><b>5678</b></div>']
+          index: 0, length: 4
+        'trailing newline':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>']
+          expected: ['<div><span>0123</span><b>5678</b></div>']
+          index: 4, length: 1
+        'entire line and parts of neighbors':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>', '<div><span>abcd</span></div>']
+          expected: ['<div><span>01cd</span></div>']
+          index: 2, length: 10
+        'entire doc':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>']
+          expected: ['']
+          index: 0, length: 10
+        'entire doc except trailing newline':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>']
+          expected: ['<div><br></div>']
+          index: 0, length: 9
+        'last trailing newline':
+          initial:  ['<div><span>0123</span></div>']
+          expected: ['<div><span>0123</span></div>']
+          index: 4, length: 1
 
-    describe('_formatAt()', ->)
+      _.each(tests, (test, name) ->
+        it(name, ->
+          @container.innerHTML = test.initial.join('')
+          @quill = new Quill(@container)
+          @quill.editor._deleteAt(test.index, test.length)
+          @quill.editor.doc.optimizeLines()
+          expect.equalHTML(@quill.editor.root, test.expected.join(''), true)
+        )
+      )
+    )
+
+    describe('_formatAt()', ->
+
+    )
 
     describe('_insertAt()', ->
       describe('empty', ->
-        beforeEach( ->
-          @quill = new Quill(@container)
-          @editor = @quill.editor
-        )
-
         tests =
           'text':
             expected: '<div><span>Test</span></div>'
@@ -40,9 +81,10 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
-            @editor._insertAt(0, test.text, test.formats)
-            @editor.doc.optimizeLines()
-            expect.equalHTML(@editor.root, test.expected, true)
+            @quill = new Quill(@container)
+            @quill.editor._insertAt(0, test.text, test.formats)
+            @quill.editor.doc.optimizeLines()
+            expect.equalHTML(@quill.editor.root, test.expected, true)
           )
         )
       )
