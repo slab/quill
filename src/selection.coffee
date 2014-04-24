@@ -12,51 +12,35 @@ class Selection
   checkFocus: ->
     return @document.activeElement == @doc.root
 
-  getNativeRange: ->
-    selection = @document.getSelection()
-    return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
-
   getRange: ->
     return null unless this.checkFocus()
-    nativeRange = this.getNativeRange()
+    nativeRange = this._getNativeRange()
     return null unless nativeRange?
-    start = this._getIndex(nativeRange.startContainer, nativeRange.startOffset)
+    start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset)
     if nativeRange.endContainer != nativeRange.startContainer
-      end = this._getIndex(nativeRange.endContainer, nativeRange.endOffset)
+      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset)
     else
       end = start - nativeRange.startOffset + nativeRange.endOffset
     return new Range(Math.min(start, end), Math.max(start, end))
 
   preserve: (fn) ->
-    nativeRange = this.getNativeRange()
+    nativeRange = this._getNativeRange()
     if nativeRange?
-      [startNode, startOffset] = this._findTerminal(nativeRange.startContainer, nativeRange.startOffset)
-      [endNode, endOffset] = this._findTerminal(nativeRange.endContainer, nativeRange.endOffset)
+      [startNode, startOffset] = this._normalizePosition(nativeRange.startContainer, nativeRange.startOffset)
+      [endNode, endOffset] = this._normalizePosition(nativeRange.endContainer, nativeRange.endOffset)
       fn()
-      this.setNativeRange(startNode, startOffset, endNode, endOffset)
+      this._setNativeRange(startNode, startOffset, endNode, endOffset)
     else
       fn()
-
-  setNativeRange: (startNode, startOffset, endNode, endOffset) ->
-    selection = @document.getSelection()
-    selection.removeAllRanges()
-    if startNode?
-      @doc.root.focus()
-      nativeRange = @document.createRange()
-      nativeRange.setStart(startNode, startOffset)
-      nativeRange.setEnd(endNode, endOffset)
-      selection.addRange(nativeRange)
-    else
-      @doc.root.blur()
 
   setRange: (range, silent) ->
-    return this.setNativeRange(null) unless range?
-    [startNode, startOffset] = this._getPosition(range.start)
+    return this._setNativeRange(null) unless range?
+    [startNode, startOffset] = this._indexToPosition(range.start)
     if range.isCollapsed()
       [endNode, endOffset] = [startNode, startOffset]
     else
-      [endNode, endOffset] = this._getPosition(range.end)
-    this.setNativeRange(startNode, startOffset, endNode, endOffset)
+      [endNode, endOffset] = this._indexToPosition(range.end)
+    this._setNativeRange(startNode, startOffset, endNode, endOffset)
     this.update(silent)
 
   shiftAfter: (index, length, fn) ->
@@ -68,23 +52,16 @@ class Selection
 
   update: (silent) ->
     range = this.getRange()
-    if !silent and !this._compareRanges(range, @range)
+    if !silent and !Range.compare(range, @range)
       @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range)
     @range = range
 
-  _compareRanges: (r1, r2) ->
-    return true if r1 == r2           # Covers both is null case
-    return false unless r1? and r2?   # If either is null they are not equal
-    return r1.equals(r2)
+  _getNativeRange: ->
+    selection = @document.getSelection()
+    return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
 
-  _findTerminal: (node, offset) ->
-    while !DOM.isTextNode(node) and node.tagName == DOM.DEFAULT_BREAK_TAG
-      node = node.childNodes[offset]
-      offset = 0
-    return [node, offset]
-
-  _getIndex: (node, offset) ->
-    [node, offset] = this._findTerminal(node, offset)
+  _positionToIndex: (node, offset) ->
+    [node, offset] = this._normalizePosition(node, offset)
     node = node.parentNode if DOM.isTextNode(node)
     line = @doc.findLine(node)
     # TODO move to linked list
@@ -101,7 +78,13 @@ class Selection
       leafOffset += leaf.length
     return lineOffset + leafOffset + offset
 
-  _getPosition: (index) ->
+  _normalizePosition: (node, offset) ->
+    while !DOM.isTextNode(node) and node.tagName == DOM.DEFAULT_BREAK_TAG
+      node = node.childNodes[offset]
+      offset = 0
+    return [node, offset]
+
+  _indexToPosition: (index) ->
     [line, lineOffset] = @doc.findLineAt(index)
     [leaf, leafOffset] = line.findLeafAt(lineOffset)
     unless leaf?
@@ -114,6 +97,18 @@ class Selection
       node = node.parentNode
       leafOffset = node.childNodes.length - 1   # Set right before break tag
     return [node, leafOffset]
+
+  _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
+    selection = @document.getSelection()
+    selection.removeAllRanges()
+    if startNode?
+      @doc.root.focus()
+      nativeRange = @document.createRange()
+      nativeRange.setStart(startNode, startOffset)
+      nativeRange.setEnd(endNode, endOffset)
+      selection.addRange(nativeRange)
+    else
+      @doc.root.blur()
 
 
 module.exports = Selection
