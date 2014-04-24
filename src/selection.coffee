@@ -79,10 +79,17 @@ class Selection
     return lineOffset + leafOffset + offset
 
   _normalizePosition: (node, offset) ->
-    while !DOM.isTextNode(node) and node.tagName == DOM.DEFAULT_BREAK_TAG
-      node = node.childNodes[offset]
-      offset = 0
-    return [node, offset]
+    while true
+      if DOM.isTextNode(node) or node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
+        return [node, offset]
+      else if offset < node.childNodes.length
+        node = node.childNodes[offset]
+        offset = 0
+      else if node.childNodes.length == 0
+        return [node, 0]
+      else
+        node = node.lastChild
+        offset = 0
 
   _indexToPosition: (index) ->
     [line, lineOffset] = @doc.findLineAt(index)

@@ -12,6 +12,7 @@ Quill.Selection  = require('../src/selection')
 Quill.Utils      = require('../src/utils')
 
 Quill.Lib =
+  EventEmitter2 : require('eventemitter2').EventEmitter2
   Range         : require('../src/lib/range')
   LinkedList    : require('../src/lib/linked-list')
 
