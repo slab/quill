@@ -47,7 +47,7 @@ describe('Line', ->
         lineNode = @container.firstChild
         line = new Quill.Line(@doc, lineNode)
         expect(line.node).toEqual(lineNode)
-        expect.equalHTML(lineNode.outerHTML, test.expected, true)
+        expect(lineNode.outerHTML).toEqualHTML(test.expected, true)
         expect(line.leaves.length).toEqual(test.leaves.length)
         length = _.reduce(test.leaves, (length, leaf) ->
           return length + leaf.text.length
@@ -179,7 +179,7 @@ describe('Line', ->
           delete expectedFormats[name] unless value
         )
         expect(line.formats).toEqual(expectedFormats)
-        expect.equalHTML(line.node.outerHTML, test.expected, true)
+        expect(line.node.outerHTML).toEqualHTML(test.expected, true)
       )
     )
   )
@@ -214,7 +214,7 @@ describe('Line', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @line.deleteText(test.offset, test.length)
-        expect.equalHTML(@line.node, test.expected)
+        expect(@line.node).toEqualHTML(test.expected)
       )
     )
   )
@@ -276,7 +276,7 @@ describe('Line', ->
         lineNode = @container.firstChild
         @line = new Quill.Line(@doc, lineNode)
         @line.formatText(test.args...)
-        expect.equalHTML(@line.node, test.expected)
+        expect(@line.node).toEqualHTML(test.expected)
       )
     )
   )
@@ -334,7 +334,7 @@ describe('Line', ->
         lineNode = @container.firstChild
         @line = new Quill.Line(@doc, lineNode)
         @line.insertText(test.offset, '|', test.formats)
-        expect.equalHTML(@line.node, test.expected)
+        expect(@line.node).toEqualHTML(test.expected)
       )
     )
 
@@ -343,7 +343,7 @@ describe('Line', ->
       lineNode = @container.firstChild
       @line = new Quill.Line(@doc, lineNode)
       @line.insertText(0, '')
-      expect.equalHTML(@line.node, '<br>')
+      expect(@line.node).toEqualHTML('<br>')
     )
   )
 )

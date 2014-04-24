@@ -19,7 +19,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = test.initial
         lineNode = Quill.Normalizer.handleBreaks(@container.firstChild)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
         expect(lineNode).toEqual(@container.firstChild)
       )
     )
@@ -38,7 +38,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = test.initial
         lineNode = Quill.Normalizer.normalizeLine(@container.firstChild)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
         expect(lineNode).toEqual(@container.firstChild)
       )
     )
@@ -48,7 +48,7 @@ describe('Normalizer', ->
     it('should whitelist style and tag', ->
       @container.innerHTML = '<strong style="color: red; display: inline;">Test</strong>'
       Quill.Normalizer.normalizeNode(@container.firstChild)
-      expect.equalHTML(@container, '<b style="color: red;">Test</b>')
+      expect(@container).toEqualHTML('<b style="color: red;">Test</b>')
     )
   )
 
@@ -110,7 +110,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = "<div>#{test.initial}</div>"
         Quill.Normalizer.optimizeLine(@container.firstChild)
-        expect.equalHTML(@container.firstChild, test.expected)
+        expect(@container.firstChild).toEqualHTML(test.expected)
       )
     )
   )
@@ -138,7 +138,7 @@ describe('Normalizer', ->
         @container.innerHTML = test.initial
         firstChild = @container.firstChild
         Quill.Normalizer.pullBlocks(firstChild)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
         expect(firstChild).toEqual(@container.firstChild)
       )
     )
@@ -189,7 +189,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = test.initial
         Quill.Normalizer.whitelistStyles(@container.firstChild)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
       )
     )
   )
@@ -216,7 +216,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = test.initial
         Quill.Normalizer.whitelistTags(@container.firstChild)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
       )
     )
   )
@@ -245,7 +245,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = test.initial.join('')
         Quill.Normalizer.wrapInline(@container.firstChild)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
       )
     )
   )
@@ -266,7 +266,7 @@ describe('Normalizer', ->
       it(name, ->
         @container.innerHTML = test.initial
         Quill.Normalizer.wrapText(@container)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
       )
     )
 
@@ -274,7 +274,7 @@ describe('Normalizer', ->
       @container.appendChild(@container.ownerDocument.createTextNode('A'))
       @container.appendChild(@container.ownerDocument.createTextNode('B'))
       Quill.Normalizer.wrapText(@container)
-      expect.equalHTML(@container, '<span>A</span><span>B</span>')
+      expect(@container).toEqualHTML('<span>A</span><span>B</span>')
     )
   )
 )

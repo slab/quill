@@ -107,7 +107,7 @@ describe('Utils', ->
     )
     node = @container.querySelector('span')
     retNode = Quill.Utils.splitAncestors(node, @container)
-    expect.equalHTML(@container, '
+    expect(@container).toEqualHTML('
       <div>
         <div>
           <div>One</div>
@@ -187,7 +187,7 @@ describe('Utils', ->
       it(name, ->
         @container.innerHTML = Quill.Normalizer.stripWhitespace(test.initial)
         [left, right, split] = Quill.Utils.splitNode(@container.firstChild, test.offset, test.force)
-        expect.equalHTML(@container, test.expected)
+        expect(@container).toEqualHTML(test.expected)
         leftText = if left then Quill.DOM.getText(left) else null
         rightText = if right then Quill.DOM.getText(right) else null
         expect(leftText).toEqual(test.left)

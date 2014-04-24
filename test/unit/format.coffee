@@ -85,25 +85,25 @@ describe('Format', ->
       it("#{name} add value", ->
         @container.innerHTML = test.missing
         test.format.add(@container.firstChild, test.value)
-        expect.equalHTML(@container, test.added or test.existing)
+        expect(@container).toEqualHTML(test.added or test.existing)
       )
 
       it("#{name} add value to exisitng", ->
         @container.innerHTML = test.existing
         test.format.add(@container.firstChild, test.value)
-        expect.equalHTML(@container, test.existing)
+        expect(@container).toEqualHTML(test.existing)
       )
 
       it("#{name} add falsy value to existing", ->
         @container.innerHTML = test.existing
         test.format.add(@container.firstChild, false)
-        expect.equalHTML(@container, test.removed or test.missing)
+        expect(@container).toEqualHTML(test.removed or test.missing)
       )
 
       it("#{name} add falsy value to missing", ->
         @container.innerHTML = test.missing
         test.format.add(@container.firstChild, false)
-        expect.equalHTML(@container, test.missing)
+        expect(@container).toEqualHTML(test.missing)
       )
     )
 
@@ -111,14 +111,14 @@ describe('Format', ->
       @container.innerHTML = '<span style="color: blue;">Text</span>'
       format = new Quill.Format(Quill.Format.FORMATS.color)
       format.add(@container.firstChild, 'red')
-      expect.equalHTML(@container, '<span style="color: red;">Text</span>')
+      expect(@container).toEqualHTML('<span style="color: red;">Text</span>')
     )
 
     it('default value', ->
       @container.innerHTML = '<span>Text</span>'
       format = new Quill.Format(Quill.Format.FORMATS.size)
       format.add(@container.firstChild, Quill.Format.FORMATS.size.default)
-      expect.equalHTML(@container, '<span>Text</span>')
+      expect(@container).toEqualHTML('<span>Text</span>')
     )
   )
 
@@ -127,13 +127,13 @@ describe('Format', ->
       it("#{name} existing", ->
         @container.innerHTML = test.existing
         test.format.remove(@container.firstChild)
-        expect.equalHTML(@container, test.removed or test.missing)
+        expect(@container).toEqualHTML(test.removed or test.missing)
       )
 
       it("#{name} missing", ->
         @container.innerHTML = test.missing
         test.format.remove(@container.firstChild)
-        expect.equalHTML(@container, test.missing)
+        expect(@container).toEqualHTML(test.missing)
       )
     )
   )

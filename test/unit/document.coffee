@@ -31,7 +31,7 @@ describe('Document', ->
       it(name, ->
         @container.innerHTML = "<div>#{test.initial}</div>"
         doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
-        expect.equalHTML(@container.firstChild, test.expected, true)
+        expect(@container.firstChild).toEqualHTML(test.expected, true)
       )
     )
   )
@@ -134,7 +134,7 @@ describe('Document', ->
 
     it('mergeLines() normal', ->
       @doc.mergeLines(@lines[0], @lines[1])
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span><i>Test</i></div>
         <div><br></div>
         <div><br></div>
@@ -145,7 +145,7 @@ describe('Document', ->
 
     it('mergeLines() with newline', ->
       @doc.mergeLines(@lines[1], @lines[2])
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Test</i></div>
         <div><br></div>
@@ -156,7 +156,7 @@ describe('Document', ->
 
     it('mergeLines() from newline', ->
       @doc.mergeLines(@lines[3], @lines[4])
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Test</i></div>
         <div><br></div>
@@ -167,7 +167,7 @@ describe('Document', ->
 
     it('mergeLines() two newlines', ->
       @doc.mergeLines(@lines[2], @lines[3])
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Test</i></div>
         <div><br></div>
@@ -178,7 +178,7 @@ describe('Document', ->
 
     it('removeLine() existing', ->
       @doc.removeLine(@lines[1])
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><br></div>
         <div><br></div>
@@ -190,7 +190,7 @@ describe('Document', ->
     it('removeLine() lineNode missing', ->
       Quill.DOM.removeNode(@lines[1].node)
       @doc.removeLine(@lines[1])
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><br></div>
         <div><br></div>
@@ -201,7 +201,7 @@ describe('Document', ->
 
     it('splitLine() middle', ->
       @doc.splitLine(@lines[1], 2)
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Te</i></div>
         <div><i>st</i></div>
@@ -214,7 +214,7 @@ describe('Document', ->
 
     it('splitLine() beginning', ->
       @doc.splitLine(@lines[1], 0)
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><br></div>
         <div><i>Test</i></div>
@@ -227,7 +227,7 @@ describe('Document', ->
 
     it('splitLine() end', ->
       @doc.splitLine(@lines[1], 4)
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Test</i></div>
         <div><br></div>
@@ -240,7 +240,7 @@ describe('Document', ->
 
     it('splitLine() beyond end', ->
       @doc.splitLine(@lines[1], 5)
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Test</i></div>
         <div><br></div>
@@ -253,7 +253,7 @@ describe('Document', ->
 
     it('splitLine() split break', ->
       @doc.splitLine(@lines[2], 0)
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div><span>Test</span></div>
         <div><i>Test</i></div>
         <div><br></div>
@@ -267,7 +267,7 @@ describe('Document', ->
     it('setHTML() valid', ->
       html = '<div><span>Test</span></div>'
       @doc.setHTML(html)
-      expect.equalHTML(@doc.root, html, true)
+      expect(@doc.root).toEqualHTML(html, true)
     )
 
     it('setHTML() invalid', ->
@@ -286,7 +286,7 @@ describe('Document', ->
           <b></b>
         </div>
       ')
-      expect.equalHTML(@doc.root, '
+      expect(@doc.root).toEqualHTML('
         <div>
           <span>A</span>
         </div>
