@@ -1,17 +1,18 @@
-expect.equalDeltas = (delta1, delta2) ->
-  [delta1, delta2] = _.map([delta1, delta2], (delta) ->
-    return {
-      startLength: delta.startLength
-      endLength: delta.endLength
-      ops: _.map(delta.ops, (op) ->
-        return {
-          value: op.value
-          attributes: JSON.stringify(op.attributes)
-        }
-      )
-    }
-  )
-  expect(delta1).toEqual(delta2)
+beforeEach( ->
+  matchers =
+    toEqualDelta: (other) ->
+      return {
+        compare: (actual, expected) ->
+          pass = actual.isEqual(expected)
+          if pass
+            message = 'Deltas equal'
+          else
+            message = "Deltas unequal: \n#{jasmine.pp(actual)}\n\n#{jasmine.pp(expected)}\n"
+          return { message: message, pass: pass }
+      }
+
+  jasmine.addMatchers(matchers)
+)
 
 expect.equalHTML = (html1, html2, ignoreClassId = false) ->
   [html1, html2] = _.map([html1, html2], (html) ->

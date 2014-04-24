@@ -352,7 +352,7 @@ describe('Document', ->
       it(name, ->
         @container.innerHTML = test.initial.join('')
         doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
-        expect.equalDeltas(doc.toDelta(), test.expected)
+        expect(doc.toDelta()).toEqualDelta(test.expected)
       )
     )
   )
