@@ -6,8 +6,6 @@ describe('Editor', ->
     # Test local delta transformation
   # checkUpdate()
   # update()
-  # _deleteAt()
-  # _formatAt()
   # _trackDelta()
     # Turn off checkInterval, change shit via DOM API
   # _update()
@@ -60,7 +58,55 @@ describe('Editor', ->
     )
 
     describe('_formatAt()', ->
+      tests =
+        'part of line':
+          initial:  ['<div><span>0123</span></div>']
+          expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+            { value: '0'}
+            { value: '12', attributes: { bold: true } }
+            { value: '3\n'}
+          ]})
+          index: 1, length: 2, name: 'bold', value: true
+        'trailing newline with normal format':
+          initial:  ['<div><span>0123</span></div>']
+          expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+            { value: '0123'}
+            { value: '\n', attributes: { bold: true } }
+          ]})
+          index: 4, length: 1, name: 'bold', value: true
+        'trailing newline with line format':
+          initial:  ['<div><span>0123</span></div>']
+          expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+            { value: '0123'}
+            { value: '\n', attributes: { align: 'right' } }
+          ]})
+          index: 4, length: 1, name: 'align', value: 'right'
+        'part of multiple lines':
+          initial:  ['<div><span>0123</span></div>', '<div><b>5678</b></div>']
+          expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 10, ops: [
+            { value: '01' }
+            { value: '23\n', attributes: { strike: true } }
+            { value: '56', attributes: { bold: true, strike: true } }
+            { value: '78', attributes: { bold: true } }
+            { value: '\n' }
+          ]})
+          index: 2, length: 5, name: 'strike', value: true
+        'line contents with line level format':
+          initial:  ['<div><span>0123</span></div>']
+          expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+            { value: '0123\n'}
+          ]})
+          index: 1, length: 2, name: 'align', value: 'right'
 
+      _.each(tests, (test, name) ->
+        it(name, ->
+          @container.innerHTML = test.initial.join('')
+          quill = new Quill(@container)
+          quill.editor._formatAt(test.index, test.length, test.name, test.value)
+          quill.editor.doc.optimizeLines()
+          expect(quill.editor.doc.toDelta()).toEqualDelta(test.expected)
+        )
+      )
     )
 
     describe('_insertAt()', ->
@@ -93,7 +139,6 @@ describe('Editor', ->
         beforeEach( ->
           @container.innerHTML = '<div><span>0123</span><b><i>4567</i></b></div>'
           @quill = new Quill(@container)
-          @editor = @quill.editor
         )
 
         tests =
@@ -130,9 +175,9 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
-            @editor._insertAt(test.index, test.text, test.formats)
-            @editor.doc.optimizeLines()
-            expect.equalHTML(@editor.root, test.expected.join(''), true)
+            @quill.editor._insertAt(test.index, test.text, test.formats)
+            @quill.editor.doc.optimizeLines()
+            expect.equalHTML(@quill.editor.root, test.expected.join(''), true)
           )
         )
       )

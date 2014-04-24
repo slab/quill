@@ -93,8 +93,9 @@ class Editor
     @selection.shiftAfter(index, 0, =>
       [line, offset] = @doc.findLineAt(index)
       while line? and length > 0
-        line.formatText(offset, Math.min(length, line.length - offset), name, value)
-        length -= (line.length - offset)
+        formatLength = Math.min(length, line.length - offset - 1)
+        line.formatText(offset, formatLength, name, value)
+        length -= formatLength
         line.format(name, value) if length > 0
         length -= 1
         offset = 0

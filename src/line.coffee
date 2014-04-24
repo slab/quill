@@ -85,11 +85,13 @@ class Line extends LinkedList.Node
       @formats[name] = value
     else
       delete @formats[name]
+    this.resetContent()
 
   formatText: (offset, length, name, value) ->
     return unless length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
     format = @doc.formats[name]
+    return unless format? and format.config.type != Format.types.LINE
     while leaf?
       nextLeaf = leaf.next
       # Make sure we need to change leaf format
