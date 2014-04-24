@@ -2,8 +2,7 @@ describe('Editor', ->
   beforeEach( ->
     @container = $('#editor-container').html('').get(0)
   )
-  # applyDelta()
-    # Test local delta transformation
+  # applyDelta() with local delta transformation
   # checkUpdate()
   # update()
   # _trackDelta()
@@ -62,22 +61,22 @@ describe('Editor', ->
         'part of line':
           initial:  ['<div><span>0123</span></div>']
           expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
-            { value: '0'}
+            { value: '0' }
             { value: '12', attributes: { bold: true } }
-            { value: '3\n'}
+            { value: '3\n' }
           ]})
           index: 1, length: 2, name: 'bold', value: true
         'trailing newline with normal format':
           initial:  ['<div><span>0123</span></div>']
           expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
-            { value: '0123'}
+            { value: '0123' }
             { value: '\n', attributes: { bold: true } }
           ]})
           index: 4, length: 1, name: 'bold', value: true
         'trailing newline with line format':
           initial:  ['<div><span>0123</span></div>']
           expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
-            { value: '0123'}
+            { value: '0123' }
             { value: '\n', attributes: { align: 'right' } }
           ]})
           index: 4, length: 1, name: 'align', value: 'right'
@@ -94,7 +93,7 @@ describe('Editor', ->
         'line contents with line level format':
           initial:  ['<div><span>0123</span></div>']
           expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
-            { value: '0123\n'}
+            { value: '0123\n' }
           ]})
           index: 1, length: 2, name: 'align', value: 'right'
 
@@ -136,11 +135,6 @@ describe('Editor', ->
       )
 
       describe('nonempty', ->
-        beforeEach( ->
-          @container.innerHTML = '<div><span>0123</span><b><i>4567</i></b></div>'
-          @quill = new Quill(@container)
-        )
-
         tests =
           'insert in middle of text':
             expected: ['<div><span>01A23</span><b><i>4567</i></b></div>']
@@ -175,12 +169,27 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
+            @container.innerHTML = '<div><span>0123</span><b><i>4567</i></b></div>'
+            @quill = new Quill(@container)
             @quill.editor._insertAt(test.index, test.text, test.formats)
             @quill.editor.doc.optimizeLines()
             expect(@quill.editor.root).toEqualHTML(test.expected.join(''), true)
           )
         )
       )
+    )
+
+    describe('applyDelta()', ->
+      tests =
+        '':
+          initial: ''
+          delta: ''
+          expected: ''
+
+      # Simple insert delta, with format
+      # Simple delete delta
+      # Multiple format delta,
+      # All three in different spots
     )
   )
 )
