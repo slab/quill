@@ -68,13 +68,12 @@ class Line extends LinkedList.Node
   findLeafAt: (offset) ->
     # TODO exact same code as findLineAt
     return [@leaves.last, @leaves.last.length] if offset >= @length - 1
-    return [null, offset - @length] if offset >= @length
     leaf = @leaves.first
     while leaf?
       return [leaf, offset] if offset < leaf.length
       offset -= leaf.length
       leaf = leaf.next
-    return [null, offset]   # Should never occur unless length calculation is off
+    return [@leaves.last, offset - @leaves.last.length]   # Should never occur unless length calculation is off
 
   format: (name, value) ->
     format = @doc.formats[name]

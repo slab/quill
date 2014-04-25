@@ -65,17 +65,16 @@ class Selection
     node = node.parentNode if DOM.isTextNode(node)
     line = @doc.findLine(node)
     # TODO move to linked list
-    lineOffset = 0
     return 0 unless line?   # Occurs on empty document
-    while line.prev?
-      line = line.prev
-      lineOffset += line.length + 1
     leaf = line.findLeaf(node)
-    leaf = line.leaves.first unless leaf?
     leafOffset = 0
     while leaf.prev?
       leaf = leaf.prev
       leafOffset += leaf.length
+    lineOffset = 0
+    while line.prev?
+      line = line.prev
+      lineOffset += line.length
     return lineOffset + leafOffset + offset
 
   _normalizePosition: (node, offset) ->
@@ -89,21 +88,24 @@ class Selection
         return [node, 0]
       else
         node = node.lastChild
-        offset = 0
+        offset = node.childNodes.length + 1
 
   _indexToPosition: (index) ->
+    return [@doc.root, 0] if @doc.lines.length == 0
     [line, lineOffset] = @doc.findLineAt(index)
-    [leaf, leafOffset] = line.findLeafAt(lineOffset)
-    unless leaf?
-      leaf = line.leaves.first
-      leafOffset = 0
+    [leaf, offset] = line.findLeafAt(lineOffset)
     node = leaf.node
     if DOM.isTextNode(node.firstChild)
       node = node.firstChild
-    else if node.tagName == DOM.DEFAULT_BREAK_TAG
+    else if node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
+      childIndex = 0
+      child = node.parentNode.firstChild
+      while child != node
+        childIndex += 1
+        node = node.nextSibling
       node = node.parentNode
-      leafOffset = node.childNodes.length - 1   # Set right before break tag
-    return [node, leafOffset]
+      offset = childIndex + offset
+    return [node, offset]
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
     selection = @document.getSelection()

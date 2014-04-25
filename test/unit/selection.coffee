@@ -20,8 +20,8 @@ describe('Selection', ->
         <div>
           <div><span>0123</span></div>
           <div><br></div>
-          <div>|<img>|</div>
-          <div><b><s>78</s></b><i>9a</i>|</div>
+          <div><img></div>
+          <div><b><s>89</s></b><i>ab</i></div>
         </div>
       '
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
@@ -35,13 +35,13 @@ describe('Selection', ->
           return [@doc.root.querySelector('s').firstChild, 1]
         normalized: ->
           return [@doc.root.querySelector('s').firstChild, 1]
-        index: 8
+        index: 9
       'between leaves':
         native: ->
-          return [@doc.root.querySelector('s').firstChild, 2]
+          return [@doc.root.querySelector('i').firstChild, 0]
         normalized: ->
-          return [@doc.root.querySelector('s').firstChild, 2]
-        index: 9
+          return [@doc.root.querySelector('i').firstChild, 0]
+        index: 10
       'break node':
         native: ->
           return [@doc.root.querySelector('br').parentNode, 0]
@@ -60,6 +60,13 @@ describe('Selection', ->
         normalized: ->
           return [@doc.root.querySelector('img'), 1]
         index: 7
+      'end of document':
+        native: ->
+          return [@doc.root.querySelector('i').firstChild, 2]
+        normalized: ->
+          return [@doc.root.querySelector('i').firstChild, 2]
+        index: 12
+
 
     describe('_normalizePosition()', ->
       _.each(tests, (test, name) ->
@@ -103,8 +110,8 @@ describe('Selection', ->
     describe('_indexToPosition()', ->
       _.each(tests, (test, name) ->
         it(name, ->
-          [node, offest] = @selection._indexToPosition(test.index)
-          [expectedNode, expectedOffset] = test.normalized.call(this)
+          [node, offset] = @selection._indexToPosition(test.index)
+          [expectedNode, expectedOffset] = test.native.call(this)
           expect(node).toEqual(expectedNode)
           expect(offset).toEqual(expectedOffset)
         )
@@ -114,7 +121,7 @@ describe('Selection', ->
         @container.innerHTML = '<div></div>'
         @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
         @selection = new Quill.Selection(@doc, @emitter)
-        [node, offest] = @selection._indexToPosition(0)
+        [node, offset] = @selection._indexToPosition(0)
         expect(node).toEqual(@doc.root)
         expect(offset).toEqual(0)
       )
