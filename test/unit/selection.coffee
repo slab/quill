@@ -1,34 +1,20 @@
 describe('Selection', ->
   beforeEach( ->
-    @container = $('#editor-container').html('').get(0)
+    @container = $('#editor-container').get(0)
+    @container.innerHTML = '
+      <div>
+        <div><span>0123</span></div>
+        <div><br></div>
+        <div><img></div>
+        <div><b><s>89</s></b><i>ab</i></div>
+      </div>
+    '
+    @quill = new Quill(@container.firstChild)   # Need Quill to create iframe for focus logic
+    @doc = @quill.editor.doc
+    @selection = @quill.editor.selection
   )
 
-  it('constructor', -> )
-  it('checkFocus', -> )
-  it('getRange', -> )
-  it('preserve', -> )
-  it('setRange', -> )
-  it('shiftAfter', -> )
-  it('update', -> )
-  it('_getNativeRange', -> )
-  it('_setNativeRange', -> )
-
-
   describe('helpers', ->
-    beforeEach( ->
-      @container.innerHTML = '
-        <div>
-          <div><span>0123</span></div>
-          <div><br></div>
-          <div><img></div>
-          <div><b><s>89</s></b><i>ab</i></div>
-        </div>
-      '
-      @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
-      @emitter = new Quill.Lib.EventEmitter2
-      @selection = new Quill.Selection(@doc, @emitter)
-    )
-
     tests =
       'text node':
         native: ->
@@ -81,10 +67,9 @@ describe('Selection', ->
 
       it('empty document', ->
         @container.innerHTML = '<div></div>'
-        @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
-        @selection = new Quill.Selection(@doc, @emitter)
-        [resultNode, resultIndex] = @selection._normalizePosition(@doc.root, 0)
-        expect(resultNode).toEqual(@doc.root)
+        quill = new Quill(@container.firstChild)
+        [resultNode, resultIndex] = quill.editor.selection._normalizePosition(quill.editor.doc.root, 0)
+        expect(resultNode).toEqual(quill.editor.doc.root)
         expect(resultIndex).toEqual(0)
       )
     )
@@ -100,9 +85,8 @@ describe('Selection', ->
 
       it('empty document', ->
         @container.innerHTML = '<div></div>'
-        @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
-        @selection = new Quill.Selection(@doc, @emitter)
-        index = @selection._positionToIndex(@doc.root, 0)
+        quill = new Quill(@container.firstChild)
+        index = quill.editor.selection._positionToIndex(quill.editor.doc.root, 0)
         expect(index).toEqual(0)
       )
     )
@@ -119,16 +103,58 @@ describe('Selection', ->
 
       it('empty document', ->
         @container.innerHTML = '<div></div>'
-        @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
-        @selection = new Quill.Selection(@doc, @emitter)
-        [node, offset] = @selection._indexToPosition(0)
-        expect(node).toEqual(@doc.root)
+        quill = new Quill(@container.firstChild)
+        [node, offset] = quill.editor.selection._indexToPosition(0)
+        expect(node).toEqual(quill.editor.doc.root)
         expect(offset).toEqual(0)
       )
     )
-  )
 
-  # Set range, get range, see if its the same
+    describe('get/set range', ->
+      _.each(tests, (test, name) ->
+        it(name, ->
+          @quill.focus()
+          @selection.setRange(new Quill.Lib.Range(test.index, test.index))
+          expect(@selection.checkFocus()).toBe(true)
+          range = @selection.getRange()
+          expect(range).not.toEqual(null)
+          expect(range.start).toEqual(test.index)
+          expect(range.end).toEqual(test.index)
+        )
+      )
+
+      it('entire document', ->
+        @quill.focus()
+        @selection.setRange(new Quill.Lib.Range(0, 12))
+        expect(@selection.checkFocus()).toBe(true)
+        range = @selection.getRange()
+        expect(range).not.toEqual(null)
+        expect(range.start).toEqual(0)
+        expect(range.end).toEqual(12)
+      )
+
+      it('null range', ->
+        @quill.focus()
+        @selection.setRange(new Quill.Lib.Range(0, 0))
+        expect(@selection.checkFocus()).toBe(true)
+        @selection.setRange(null)
+        expect(@selection.checkFocus()).toBe(false)
+        range = @selection.getRange()
+        expect(range).toBe(null)
+      )
+
+      it('empty document', ->
+        @container.innerHTML = '<div></div>'
+        quill = new Quill(@container.firstChild)
+        quill.editor.selection.setRange(new Quill.Lib.Range(0, 0))
+        expect(quill.editor.selection.checkFocus()).toBe(true)
+        range = quill.editor.selection.getRange()
+        expect(range).not.toEqual(null)
+        expect(range.start).toEqual(0)
+        expect(range.end).toEqual(0)
+      )
+    )
+  )
 
   # Shift after
   # Preserve
