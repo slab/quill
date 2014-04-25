@@ -25,7 +25,7 @@ beforeEach( ->
             html = html.replace(/style="(.+); "/g, 'style="$1;"')   # PhantomJS adds space after last style
             html = html.replace(/[\'\";]/g, '')    # IE8 outerHTML does not have quotes
             html = html.replace(/rgb\((\d+), ?(\d+), ?(\d+)\)/g, "rgb($1, $2, $3)") # IE8 removes spaces between digits
-            html = html.replace(/<img width=\d+/g, '<img').replace(/<img height=\d+/g, '<img')  # IE10 adds width, height to image tags
+            html = html.replace(/\ width=\d+/g, '').replace(/\ height=\d+/g, '')  # IE10 adds width, height to image tags
             html = html.toLowerCase()              # IE8 uppercases their tags
           )
 
