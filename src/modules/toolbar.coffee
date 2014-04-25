@@ -44,8 +44,6 @@ class Toolbar
       value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
       range = @quill.getSelection()
       if range?
-        if Utils.isIE(8)
-          @quill.setSelection(range)
         if _.indexOf(Toolbar.formats.EMBED, format) > -1
           # TODO show link tooltip..
           @quill.insertEmbed(range.end, format, 'images/cloud.png')

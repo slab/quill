@@ -2,11 +2,6 @@ _   = require('lodash')
 DOM = require('./dom')
 
 
-ieVersion = do ->
-  matchVersion = navigator.userAgent.match(/MSIE [0-9\.]+/)
-  return if matchVersion? then parseInt(matchVersion[0].slice("MSIE".length)) else null
-
-
 Utils =
   findDeepestNode: (node, offset) ->
     while node.firstChild?
@@ -33,9 +28,9 @@ Utils =
       length += node.querySelectorAll(_.keys(DOM.EMBED_TAGS).join(',')).length
     return length
 
-  # We'll take a leap of faith that IE11 is good enough...
-  isIE: (maxVersion = 10) ->
-    return ieVersion? and maxVersion >= ieVersion
+  isIE: (maxVersion) ->
+    version = document.documentMode
+    return version and maxVersion >= version
 
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (refNode, root) ->

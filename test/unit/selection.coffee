@@ -1,4 +1,6 @@
 describe('Selection', ->
+  return unless document.getSelection
+
   beforeEach( ->
     @container = $('#editor-container').get(0)
   )
