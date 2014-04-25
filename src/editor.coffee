@@ -144,31 +144,7 @@ class Editor
     return false if @innerHTML == @root.innerHTML
     delta = this._trackDelta( =>
       this.doSilently( =>
-        @selection.preserve( =>
-          lines = @doc.lines.toArray()
-          lineNode = @root.firstChild
-          _.each(lines, (line, index) =>
-            while line.node != lineNode
-              if line.node.parentNode == @root
-                # New line inserted
-                lineNode = Normalizer.normalizeLine(lineNode)
-                newLine = @doc.insertLineBefore(lineNode, line)
-                lineNode = lineNode.nextSibling
-              else
-                # Existing line removed
-                return @doc.removeLine(line)
-            if line.outerHTML != lineNode.outerHTML
-              # Existing line changed
-              line.node = Normalizer.normalizeLine(line.node)
-              line.rebuild()
-            lineNode = line.node.nextSibling
-          )
-          # New lines appended
-          while lineNode != null
-            lineNode = Normalizer.normalizeLine(lineNode)
-            newLine = @doc.appendLine(lineNode)
-            lineNode = lineNode.nextSibling
-        )
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
         @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
       )
     )

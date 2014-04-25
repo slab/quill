@@ -68,9 +68,25 @@ class Document
     )
 
   rebuild: ->
-    @lines = new LinkedList()
-    @lineMap = {}
+    lines = @lines.toArray()
     lineNode = @root.firstChild
+    _.each(lines, (line, index) =>
+      while line.node != lineNode
+        if line.node.parentNode == @root
+          # New line inserted
+          lineNode = Normalizer.normalizeLine(lineNode)
+          newLine = this.insertLineBefore(lineNode, line)
+          lineNode = lineNode.nextSibling
+        else
+          # Existing line removed
+          return this.removeLine(line)
+      if line.outerHTML != lineNode.outerHTML
+        # Existing line changed
+        line.node = Normalizer.normalizeLine(line.node)
+        line.rebuild()
+      lineNode = line.node.nextSibling
+    )
+    # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
@@ -83,6 +99,8 @@ class Document
 
   setHTML: (html) ->
     @root.innerHTML = Normalizer.stripWhitespace(html)
+    @lines = new LinkedList()
+    @lineMap = {}
     this.rebuild()
 
   splitLine: (line, offset) ->
