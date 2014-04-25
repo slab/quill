@@ -42,11 +42,11 @@ class Document
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
-    if refLine != null
-      @root.insertBefore(newLineNode, refLine.node) unless newLineNode.parentNode?
+    if refLine?
+      @root.insertBefore(newLineNode, refLine.node) unless DOM.isElement(newLineNode.parentNode)
       @lines.insertAfter(refLine.prev, line)
     else
-      @root.appendChild(newLineNode) unless newLineNode.parentNode?
+      @root.appendChild(newLineNode) unless DOM.isElement(newLineNode.parentNode)
       @lines.append(line)
     @lineMap[line.id] = line
     return line
