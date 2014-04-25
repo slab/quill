@@ -52,9 +52,10 @@ class Selection
 
   update: (silent) ->
     range = this.getRange()
-    if !silent and !Range.compare(range, @range)
-      @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range)
+    emit = !silent and !Range.compare(range, @range)
     @range = range
+    # Set range before emitting to prevent infinite loop if listeners call quill.getSelection()
+    @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range) if emit
 
   _getNativeRange: ->
     selection = @document.getSelection()

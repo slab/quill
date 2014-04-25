@@ -68,6 +68,7 @@ class Toolbar
     )
 
   updateActive: (activeFormats = {}) ->
+    return
     @triggering = true
     range = @quill.getSelection()
     _.each(@container.querySelectorAll('select'), _.bind(DOM.resetSelect))

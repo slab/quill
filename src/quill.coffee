@@ -140,7 +140,7 @@ class Quill extends EventEmitter2
     return @modules[name]
 
   getSelection: ->
-    @editor.checkUpdate()
+    @editor.checkUpdate()   # Make sure we access getRange with editor in consistent state
     return @editor.selection.getRange()
 
   getText: (index, length) ->
