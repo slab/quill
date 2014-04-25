@@ -26,9 +26,11 @@ class Selection
   preserve: (fn) ->
     nativeRange = this._getNativeRange()
     if nativeRange?
-      [startNode, startOffset] = this._normalizePosition(nativeRange.startContainer, nativeRange.startOffset)
-      [endNode, endOffset] = this._normalizePosition(nativeRange.endContainer, nativeRange.endOffset)
+      [startNode, startOffset] = this._encodePosition(nativeRange.startContainer, nativeRange.startOffset)
+      [endNode, endOffset] = this._encodePosition(nativeRange.endContainer, nativeRange.endOffset)
       fn()
+      [startNode, startOffset] = this._decodePosition(startNode, startOffset)
+      [endNode, endOffset] = this._decodePosition(endNode, endOffset)
       this._setNativeRange(startNode, startOffset, endNode, endOffset)
     else
       fn()
@@ -57,28 +59,14 @@ class Selection
     # Set range before emitting to prevent infinite loop if listeners call quill.getSelection()
     @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range) if emit
 
-  _getNativeRange: ->
-    selection = @document.getSelection()
-    return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
+  _decodePosition: (node, offset) ->
+    if DOM.isElement(node)
+      childIndex = _.indexOf(DOM.getChildNodes(node.parentNode), node)
+      offset += childIndex
+      node = node.parentNode
+    return [node, offset]
 
-  _positionToIndex: (node, offset) ->
-    [node, offset] = this._normalizePosition(node, offset)
-    node = node.parentNode if DOM.isTextNode(node)
-    line = @doc.findLine(node)
-    # TODO move to linked list
-    return 0 unless line?   # Occurs on empty document
-    leaf = line.findLeaf(node)
-    leafOffset = 0
-    while leaf.prev?
-      leaf = leaf.prev
-      leafOffset += leaf.length
-    lineOffset = 0
-    while line.prev?
-      line = line.prev
-      lineOffset += line.length
-    return lineOffset + leafOffset + offset
-
-  _normalizePosition: (node, offset) ->
+  _encodePosition: (node, offset) ->
     while true
       if DOM.isTextNode(node) or node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
         return [node, offset]
@@ -91,22 +79,34 @@ class Selection
         node = node.lastChild
         offset = node.childNodes.length + 1
 
+  _getNativeRange: ->
+    selection = @document.getSelection()
+    return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
+
   _indexToPosition: (index) ->
     return [@doc.root, 0] if @doc.lines.length == 0
     [line, lineOffset] = @doc.findLineAt(index)
     [leaf, offset] = line.findLeafAt(lineOffset)
     node = leaf.node
-    if DOM.isTextNode(node.firstChild)
-      node = node.firstChild
-    else if node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
-      childIndex = 0
-      child = node.parentNode.firstChild
-      while child != node
-        childIndex += 1
-        child = child.nextSibling
-      node = node.parentNode
-      offset = childIndex + offset
-    return [node, offset]
+    node = node.firstChild if DOM.isTextNode(node.firstChild)
+    return this._decodePosition(node, offset)
+
+  _positionToIndex: (node, offset) ->
+    [leafNode, offset] = this._encodePosition(node, offset)
+    leafNode = leafNode.parentNode if DOM.isTextNode(leafNode)
+    line = @doc.findLine(leafNode)
+    # TODO move to linked list
+    return 0 unless line?   # Occurs on empty document
+    leaf = line.findLeaf(leafNode)
+    leafOffset = 0
+    while leaf.prev?
+      leaf = leaf.prev
+      leafOffset += leaf.length
+    lineOffset = 0
+    while line.prev?
+      line = line.prev
+      lineOffset += line.length
+    return lineOffset + leafOffset + offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
     selection = @document.getSelection()

@@ -9,7 +9,7 @@ describe('Selection', ->
         <div>
           <div><span>0123</span></div>
           <div><br></div>
-          <div><img></div>
+          <div><img src="http://quilljs.com/images/icon.png"></div>
           <div><b><s>89</s></b><i>ab</i></div>
         </div>
       '
@@ -22,46 +22,58 @@ describe('Selection', ->
       'text node':
         native: ->
           return [@doc.root.querySelector('s').firstChild, 1]
-        normalized: ->
+        encoded: ->
           return [@doc.root.querySelector('s').firstChild, 1]
         index: 9
       'between leaves':
         native: ->
           return [@doc.root.querySelector('i').firstChild, 0]
-        normalized: ->
+        encoded: ->
           return [@doc.root.querySelector('i').firstChild, 0]
         index: 10
       'break node':
         native: ->
           return [@doc.root.querySelector('br').parentNode, 0]
-        normalized: ->
+        encoded: ->
           return [@doc.root.querySelector('br'), 0]
         index: 5
       'before image':
         native: ->
           return [@doc.root.querySelector('img').parentNode, 0]
-        normalized: ->
+        encoded: ->
           return [@doc.root.querySelector('img'), 0]
         index: 6
       'after image':
         native: ->
           return [@doc.root.querySelector('img').parentNode, 1]
-        normalized: ->
+        encoded: ->
           return [@doc.root.querySelector('img'), 1]
         index: 7
       'end of document':
         native: ->
           return [@doc.root.querySelector('i').firstChild, 2]
-        normalized: ->
+        encoded: ->
           return [@doc.root.querySelector('i').firstChild, 2]
         index: 12
 
-    describe('_normalizePosition()', ->
+    describe('_decodePosition()', ->
+      _.each(tests, (test, name) ->
+        it(name, ->
+          [node, offset] = test.encoded.call(this)
+          [resultNode, resultOffset] = @selection._decodePosition(node, offset)
+          [expectedNode, expectedOffset] = test.native.call(this)
+          expect(resultNode).toEqual(expectedNode)
+          expect(resultOffset).toEqual(expectedOffset)
+        )
+      )
+    )
+
+    describe('_encodePosition()', ->
       _.each(tests, (test, name) ->
         it(name, ->
           [node, offset] = test.native.call(this)
-          [resultNode, resultOffset] = @selection._normalizePosition(node, offset)
-          [expectedNode, expectedOffset] = test.normalized.call(this)
+          [resultNode, resultOffset] = @selection._encodePosition(node, offset)
+          [expectedNode, expectedOffset] = test.encoded.call(this)
           expect(resultNode).toEqual(expectedNode)
           expect(resultOffset).toEqual(expectedOffset)
         )
@@ -70,7 +82,7 @@ describe('Selection', ->
       it('empty document', ->
         @container.innerHTML = '<div></div>'
         quill = new Quill(@container.firstChild)
-        [resultNode, resultIndex] = quill.editor.selection._normalizePosition(quill.editor.doc.root, 0)
+        [resultNode, resultIndex] = quill.editor.selection._encodePosition(quill.editor.doc.root, 0)
         expect(resultNode).toEqual(quill.editor.doc.root)
         expect(resultIndex).toEqual(0)
       )
@@ -177,7 +189,7 @@ describe('Selection', ->
             <div><br></div>
             <div><span>1234</span></div>
           </div>'
-        quill = new Quill(@container.firstChild, { pollInterval: 1000000 })
+        quill = new Quill(@container.firstChild)
         quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
         quill.editor._insertAt(0, '!', { image: 'http://quilljs.com/images/icon.png' })
         quill.editor._formatAt(2, 4, 'bold', true)
@@ -196,7 +208,74 @@ describe('Selection', ->
     )
 
     describe('preserve()', ->
+      beforeEach( ->
+        @container.innerHTML = '<div></div>'
+        @quill = new Quill(@container.firstChild)
+        @quill.focus()
+        @doc = @quill.editor.doc
+        @selection = @quill.editor.selection
+      )
 
+      it('wrapInline() text', ->
+        @doc.root.innerHTML = 'Test'
+        textNode = @doc.root.firstChild
+        @selection._setNativeRange(textNode, 0, textNode, 4)
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
+        range = @selection.getRange()
+        expect(range.start).toEqual(0)
+        expect(range.end).toEqual(4)
+      )
+
+      it('wrapInline() image', ->
+        @doc.root.innerHTML = '<img src="http://quilljs.com/images/icon.png">'
+        @selection._setNativeRange(@doc.root, 0, @doc.root, 1)
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
+        range = @selection.getRange()
+        expect(range.start).toEqual(0)
+        expect(range.end).toEqual(1)
+      )
+
+      it('handleBreaks()', ->
+        @doc.root.innerHTML = '<div>01<br>34</div>'
+        firstTextNode = @doc.root.firstChild.firstChild
+        lastTextNode = @doc.root.firstChild.lastChild
+        @selection._setNativeRange(firstTextNode, 1, lastTextNode, 1)
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
+        range = @selection.getRange()
+        expect(range.start).toEqual(1)
+        expect(range.end).toEqual(4)
+      )
+
+      it('pullBlocks()', ->
+        @doc.root.innerHTML = '<div><div>01</div><div>34</div></div>'
+        firstTextNode = @doc.root.firstChild.firstChild.firstChild
+        lastTextNode = @doc.root.firstChild.lastChild.firstChild
+        @selection._setNativeRange(firstTextNode, 1, lastTextNode, 1)
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
+        range = @selection.getRange()
+        expect(range.start).toEqual(1)
+        expect(range.end).toEqual(4)
+      )
+
+      it('wrapText()', ->
+        @doc.root.innerHTML = '<div>0123</div><div>5678</div>'
+        firstTextNode = @doc.root.firstChild.firstChild
+        lastTextNode = @doc.root.lastChild.firstChild
+        @selection._setNativeRange(firstTextNode, 2, lastTextNode, 2)
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
+        range = @selection.getRange()
+        expect(range.start).toEqual(2)
+        expect(range.end).toEqual(7)
+      )
+
+      it('no range', ->
+        @doc.root.innerHTML = '<div><span>Test</span></div>'
+        textNode = @doc.root.querySelector('span').firstChild
+        @selection._setNativeRange(null)
+        @selection.preserve(_.bind(@doc.rebuild, @doc))
+        range = @selection.getRange()
+        expect(range).toBe(null)
+      )
     )
   )
 )
