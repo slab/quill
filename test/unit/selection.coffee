@@ -20,8 +20,8 @@ describe('Selection', ->
         <div>
           <div><span>0123</span></div>
           <div><br></div>
-          <div><img></div>
-          <div><b><s>67</s></b><i>89</i></div>
+          <div>|<img>|</div>
+          <div><b><s>78</s></b><i>9a</i>|</div>
         </div>
       '
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
@@ -29,77 +29,97 @@ describe('Selection', ->
       @selection = new Quill.Selection(@doc, @emitter)
     )
 
+    tests =
+      'text node':
+        native: ->
+          return [@doc.root.querySelector('s').firstChild, 1]
+        normalized: ->
+          return [@doc.root.querySelector('s').firstChild, 1]
+        index: 8
+      'between leaves':
+        native: ->
+          return [@doc.root.querySelector('s').firstChild, 2]
+        normalized: ->
+          return [@doc.root.querySelector('s').firstChild, 2]
+        index: 9
+      'break node':
+        native: ->
+          return [@doc.root.querySelector('br').parentNode, 0]
+        normalized: ->
+          return [@doc.root.querySelector('br'), 0]
+        index: 5
+      'before image':
+        native: ->
+          return [@doc.root.querySelector('img').parentNode, 0]
+        normalized: ->
+          return [@doc.root.querySelector('img'), 0]
+        index: 6
+      'after image':
+        native: ->
+          return [@doc.root.querySelector('img').parentNode, 1]
+        normalized: ->
+          return [@doc.root.querySelector('img'), 1]
+        index: 7
+
     describe('_normalizePosition()', ->
-      it('text node', ->
-        node = @doc.root.querySelector('span').firstChild
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 2)
-        expect(resultNode).toEqual(node)
-        expect(resultIndex).toEqual(2)
-      )
-
-      it('leaf node', ->
-        node = @doc.root.querySelector('span')
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 0)
-        expect(resultNode).toEqual(node.firstChild)
-        expect(resultIndex).toEqual(0)
-      )
-
-      it('line node', ->
-        node = @doc.root.lastChild
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 1)
-        expect(resultNode).toEqual(node.querySelector('i').firstChild)
-        expect(resultIndex).toEqual(0)
-      )
-
-      it('break node', ->
-        node = @doc.root.querySelector('br')
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 0)
-        expect(resultNode).toEqual(node)
-        expect(resultIndex).toEqual(0)
-      )
-
-      it('image node', ->
-        node = @doc.root.querySelector('img')
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 0)
-        expect(resultNode).toEqual(node)
-        expect(resultIndex).toEqual(0)
-      )
-
-      it('document root', ->
-        node = @doc.root
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 0)
-        expect(resultNode).toEqual(@doc.root.querySelector('span').firstChild)
-        expect(resultIndex).toEqual(0)
+      _.each(tests, (test, name) ->
+        it(name, ->
+          [node, offset] = test.native.call(this)
+          [resultNode, resultOffset] = @selection._normalizePosition(node, offset)
+          [expectedNode, expectedOffset] = test.normalized.call(this)
+          expect(resultNode).toEqual(expectedNode)
+          expect(resultOffset).toEqual(expectedOffset)
+        )
       )
 
       it('empty document', ->
         @container.innerHTML = '<div></div>'
         @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
-        @emitter = new Quill.Lib.EventEmitter2
         @selection = new Quill.Selection(@doc, @emitter)
-        node = @doc.root
-        [resultNode, resultIndex] = @selection._normalizePosition(node, 0)
+        [resultNode, resultIndex] = @selection._normalizePosition(@doc.root, 0)
         expect(resultNode).toEqual(@doc.root)
         expect(resultIndex).toEqual(0)
       )
     )
 
-    describe('_indexToPosition', ->
-      # end of line (on trailing newline)
-      # end of document (on trailing newline)
-      # 0 on empty document
-      # on break tag
+    describe('_positionToIndex()', ->
+      _.each(tests, (test, name) ->
+        it(name, ->
+          [node, offset] = test.native.call(this)
+          index = @selection._positionToIndex(node, offset)
+          expect(index).toEqual(test.index)
+        )
+      )
+
+      it('empty document', ->
+        @container.innerHTML = '<div></div>'
+        @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
+        @selection = new Quill.Selection(@doc, @emitter)
+        index = @selection._positionToIndex(@doc.root, 0)
+        expect(index).toEqual(0)
+      )
     )
 
-    describe('_positionToIndex', ->
+    describe('_indexToPosition()', ->
+      _.each(tests, (test, name) ->
+        it(name, ->
+          [node, offest] = @selection._indexToPosition(test.index)
+          [expectedNode, expectedOffset] = test.normalized.call(this)
+          expect(node).toEqual(expectedNode)
+          expect(offset).toEqual(expectedOffset)
+        )
+      )
 
+      it('empty document', ->
+        @container.innerHTML = '<div></div>'
+        @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
+        @selection = new Quill.Selection(@doc, @emitter)
+        [node, offest] = @selection._indexToPosition(0)
+        expect(node).toEqual(@doc.root)
+        expect(offset).toEqual(0)
+      )
     )
   )
-
-  # Normalizing position
-
-  # Converting positionToIndex
-  # Converting indexToPosition
 
   # Set range, get range, see if its the same
 
