@@ -62,8 +62,9 @@ class Document
 
   optimizeLines: ->
     # TODO optimize algorithm (track which lines get dirty and only Normalize.optimizeLine those)
-    _.each(@lines.toArray(), (line) ->
-      Normalizer.optimizeLine(line.node)
+    _.each(@lines.toArray(), (line, i) ->
+      line.optimize()
+      return true    # line.optimize() might return false, prevent early break
     )
 
   rebuild: ->

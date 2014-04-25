@@ -30,4 +30,7 @@ Quill.Theme =
   Snow          : require('../src/themes/snow')
 
 
+Quill.DEFAULTS.pollInterval = 10000000
+
+
 module.exports = Quill

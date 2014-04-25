@@ -19,6 +19,7 @@ class Line extends LinkedList.Node
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Line.ID_PREFIX)
     @node.id = @id
+    @formats = {}
     DOM.addClass(@node, Line.CLASS_NAME)
     this.rebuild()
     super(@node)
@@ -139,9 +140,13 @@ class Line extends LinkedList.Node
     @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG)) unless @node.firstChild?
     @leaves = new LinkedList()
     @formats = _.reduce(@doc.formats, (formats, format, name) =>
-      formats[name] = format.value(@node) if format.isType(Format.types.LINE) and format.match(@node)
+      if format.isType(Format.types.LINE)
+        if format.match(@node)
+          formats[name] = format.value(@node)
+        else
+          delete formats[name]
       return formats
-    , {})
+    , @formats)
     this.buildLeaves(@node, {})
     # TODO does this belong here...
     if @leaves.length == 1 and @leaves.first.length == 0 and @leaves.first.node.tagName != DOM.DEFAULT_BREAK_TAG

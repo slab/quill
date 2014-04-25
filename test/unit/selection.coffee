@@ -1,7 +1,10 @@
 describe('Selection', ->
+  beforeEach( ->
+    @container = $('#editor-container').get(0)
+  )
+
   describe('helpers', ->
     beforeEach( ->
-      @container = $('#editor-container').get(0)
       @container.innerHTML = '
         <div>
           <div><span>0123</span></div>
@@ -52,7 +55,6 @@ describe('Selection', ->
         normalized: ->
           return [@doc.root.querySelector('i').firstChild, 2]
         index: 12
-
 
     describe('_normalizePosition()', ->
       _.each(tests, (test, name) ->
@@ -167,7 +169,34 @@ describe('Selection', ->
     )
   )
 
-  # Shift after
-  # Preserve
-    # We modify dat DOM
+  describe('preserve', ->
+    describe('shiftAfter()', ->
+      it('line optimization', ->
+        @container.innerHTML = '
+          <div>
+            <div><br></div>
+            <div><span>1234</span></div>
+          </div>'
+        quill = new Quill(@container.firstChild, { pollInterval: 1000000 })
+        quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
+        quill.editor._insertAt(0, '!', { image: 'http://quilljs.com/images/icon.png' })
+        quill.editor._formatAt(2, 4, 'bold', true)
+        expect(quill.editor.doc.root).toEqualHTML('
+          <div><img src="http://quilljs.com/images/icon.png"><br></div>
+          <div><b><span>1234</span></b></div>
+        ', true)
+        range = quill.editor.selection.getRange()
+        expect(range.start).toEqual(1)
+        expect(range.end).toEqual(4)
+        quill.editor.selection.shiftAfter(0, 0, _.bind(quill.editor.doc.optimizeLines, quill.editor.doc))
+        range = quill.editor.selection.getRange()
+        expect(range.start).toEqual(1)
+        expect(range.end).toEqual(4)
+      )
+    )
+
+    describe('preserve()', ->
+
+    )
+  )
 )
