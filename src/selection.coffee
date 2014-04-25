@@ -103,7 +103,7 @@ class Selection
       child = node.parentNode.firstChild
       while child != node
         childIndex += 1
-        node = node.nextSibling
+        child = child.nextSibling
       node = node.parentNode
       offset = childIndex + offset
     return [node, offset]

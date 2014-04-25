@@ -1,20 +1,20 @@
 describe('Selection', ->
-  beforeEach( ->
-    @container = $('#editor-container').get(0)
-    @container.innerHTML = '
-      <div>
-        <div><span>0123</span></div>
-        <div><br></div>
-        <div><img></div>
-        <div><b><s>89</s></b><i>ab</i></div>
-      </div>
-    '
-    @quill = new Quill(@container.firstChild)   # Need Quill to create iframe for focus logic
-    @doc = @quill.editor.doc
-    @selection = @quill.editor.selection
-  )
-
   describe('helpers', ->
+    beforeEach( ->
+      @container = $('#editor-container').get(0)
+      @container.innerHTML = '
+        <div>
+          <div><span>0123</span></div>
+          <div><br></div>
+          <div><img></div>
+          <div><b><s>89</s></b><i>ab</i></div>
+        </div>
+      '
+      @quill = new Quill(@container.firstChild)   # Need Quill to create iframe for focus logic
+      @doc = @quill.editor.doc
+      @selection = @quill.editor.selection
+    )
+
     tests =
       'text node':
         native: ->
@@ -107,6 +107,17 @@ describe('Selection', ->
         [node, offset] = quill.editor.selection._indexToPosition(0)
         expect(node).toEqual(quill.editor.doc.root)
         expect(offset).toEqual(0)
+      )
+
+      it('multiple consecutive images', ->
+        @container.innerHTML = '
+          <div>
+            <div><img><img></div>
+          </div>'
+        quill = new Quill(@container.firstChild)
+        [node, offset] = quill.editor.selection._indexToPosition(1)
+        expect(node).toEqual(quill.editor.doc.root.firstChild)
+        expect(offset).toEqual(1)
       )
     )
 
