@@ -25,7 +25,7 @@ class Selection
 
   preserve: (fn) ->
     nativeRange = this._getNativeRange()
-    if nativeRange?
+    if nativeRange? and this.checkFocus()
       [startNode, startOffset] = this._encodePosition(nativeRange.startContainer, nativeRange.startOffset)
       [endNode, endOffset] = this._encodePosition(nativeRange.endContainer, nativeRange.endOffset)
       fn()
@@ -79,8 +79,12 @@ class Selection
         node = node.lastChild
         offset = node.childNodes.length + 1
 
+  _getNativeSelection: ->
+    # IE8 will always get null selection
+    return if @document.getSelection? then @document.getSelection() else null
+
   _getNativeRange: ->
-    selection = @document.getSelection()
+    selection = this._getNativeSelection()
     return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
 
   _indexToPosition: (index) ->
@@ -109,7 +113,8 @@ class Selection
     return lineOffset + leafOffset + offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
-    selection = @document.getSelection()
+    selection = this._getNativeSelection()
+    return unless selection
     selection.removeAllRanges()
     if startNode?
       @doc.root.focus()

@@ -1,6 +1,6 @@
 describe('Editor', ->
   beforeEach( ->
-    @container = $('#editor-container').html('').get(0)
+    @container = $('#editor-container').html('<div></div>').get(0)
   )
   # applyDelta() with local delta transformation
   # checkUpdate()
@@ -126,7 +126,7 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
-            @quill = new Quill(@container)
+            @quill = new Quill(@container.firstChild)
             @quill.editor._insertAt(0, test.text, test.formats)
             @quill.editor.doc.optimizeLines()
             expect(@quill.editor.root).toEqualHTML(test.expected, true)
