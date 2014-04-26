@@ -73,7 +73,7 @@ class Renderer
       @root.focus()
     )
     this.addStyles(DEFAULT_STYLES)
-    # Ensure user specified styles are added last
+    # Ensure user specified styles are added after modules'
     _.defer(_.bind(this.addStyles, this, @options.styles)) if @options.styles?
 
   addContainer: (className, before = false) ->
@@ -95,7 +95,6 @@ class Renderer
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
       @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css) if @emitter?
-      DOM.addClass(@container, 'sc-container')
     )
 
 

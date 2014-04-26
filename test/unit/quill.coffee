@@ -23,15 +23,28 @@ describe('Quill', ->
     )
   )
 
-  # describe('styles', ->
-  #   it('addStyles()', ->
+  describe('styles', ->
+    it('constructor overwrite', (done) ->
+      @container.innerHTML = '<div><span>0123</span></div>'
+      @quill = new Quill(@container.firstChild, {
+        styles: { '.editor-container div': { 'line-height': '25px' } }
+      })
+      @quill.on(Quill.events.RENDER_UPDATE, (css) =>
+        if css.indexOf('.editor-container div') > -1
+          expect(@quill.editor.root.firstChild.offsetHeight).toEqual(25)
+          done()
+      )
+    )
 
-  #   )
-
-  #   it('constructor overwrite', ->
-
-  #   )
-  # )
+    it('addStyles()', (done) ->
+      @quill.addStyles({ '.editor-container div': { 'line-height': '25px' } })
+      @quill.on(Quill.events.RENDER_UPDATE, (css) =>
+        if css.indexOf('.editor-container div') > -1
+          expect(@quill.editor.root.firstChild.offsetHeight).toEqual(25)
+          done()
+      )
+    )
+  )
 
   describe('modules', ->
     it('addContainer()', ->
