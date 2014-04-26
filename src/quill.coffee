@@ -21,9 +21,6 @@ Themes =
   Snow    : require('./themes/snow')
 
 
-DEFAULT_API_OPTIONS = { silent: false, source: 'api' }
-
-
 class Quill extends EventEmitter2
   @version: pkg.version
   @editors: []
@@ -49,6 +46,11 @@ class Quill extends EventEmitter2
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
+  @sources:
+    API    : 'api'
+    SILENT : 'silent'
+    USER   : 'user'
+
   constructor: (container, options = {}) ->
     container = document.querySelector(container) if _.isString(container)
     throw new Error('Invalid Quill container') unless container?
@@ -61,7 +63,7 @@ class Quill extends EventEmitter2
     @modules = {}
     @editor = new Editor(container, this, @options)
     Quill.editors.push(@editor)
-    this.setHTML(html)
+    this.setHTML(html, Quill.sources.SILENT)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Quill.Theme[themeClass](this, @options)
     _.each(@options.modules, (option, name) =>
@@ -87,11 +89,11 @@ class Quill extends EventEmitter2
   addStyles: (styles) ->
     @editor.renderer.addStyles(styles)
 
-  deleteText: (index, length, options = {}) ->
-    [index, length, formats, options] = this._buildParams(index, length, {}, options)
+  deleteText: (index, length, source = Quill.sources.API) ->
+    [index, length, formats, source] = this._buildParams(index, length, {}, source)
     return unless length > 0
     delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
-    @editor.applyDelta(delta, options)
+    @editor.applyDelta(delta, source)
 
   emit: (eventName, args...) ->
     super(Quill.events.PRE_EVENT, eventName, args...)
@@ -101,8 +103,8 @@ class Quill extends EventEmitter2
   focus: ->
     @editor.root.focus()
 
-  formatLines: (index, length, name, value, options) ->
-    [index, length, formats, options] = this._buildParams(index, length, name, value, options)
+  formatLines: (index, length, name, value, source) ->
+    [index, length, formats, source] = this._buildParams(index, length, name, value, source)
     [line, offset] = @editor.doc.findLineAt(index)
     # TODO potential util function with editor._formatAt
     delta = Tandem.Delta.getIdentity(this.getLength())
@@ -116,15 +118,15 @@ class Quill extends EventEmitter2
       else
         lineDelta = Tandem.Delta.makeInsertDelta(delta.endLength, delta.endLength, '\n', formats)
       delta = delta.compose(lineDelta)
-    @editor.applyDelta(delta, options)
+    @editor.applyDelta(delta, source)
 
-  formatText: (index, length, name, value, options) ->
-    [index, length, formats, options] = this._buildParams(index, length, name, value, options)
+  formatText: (index, length, name, value, source) ->
+    [index, length, formats, source] = this._buildParams(index, length, name, value, source)
     return unless length > 0
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
-    @editor.applyDelta(delta, options)
+    @editor.applyDelta(delta, source)
 
-  getContents: (index, length, options = {}) ->
+  getContents: (index, length) ->
     index = 0 unless index?
     length = this.getLength() - index unless length?
     ops = @editor.getDelta().getOpsAt(index, length)
@@ -146,14 +148,14 @@ class Quill extends EventEmitter2
   getText: (index, length) ->
     return _.pluck(this.getContents(index, length).ops, 'value').join('')
 
-  insertEmbed: (index, type, source) ->
-    this.insertText(index, Format.EMBED_TEXT, type, source)
+  insertEmbed: (index, type, url, source) ->
+    this.insertText(index, Format.EMBED_TEXT, type, url, source)
 
-  insertText: (index, text, name, value, options = {}) ->
-    [index, length, formats, options] = this._buildParams(index, 0, name, value, options)
+  insertText: (index, text, name, value, source) ->
+    [index, length, formats, source] = this._buildParams(index, 0, name, value, source)
     return unless text.length > 0
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
-    @editor.applyDelta(delta, options)
+    @editor.applyDelta(delta, source)
 
   onModuleLoad: (name, callback) ->
     if (@modules[name]) then return callback(@modules[name])
@@ -161,37 +163,35 @@ class Quill extends EventEmitter2
       callback(module) if moduleName == name
     )
 
-  setContents: (delta, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
+  setContents: (delta, source = Quill.sources.API) ->
     delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)
     delta.startLength = this.getLength()
-    @editor.applyDelta(delta, options)
+    @editor.applyDelta(delta, source)
 
   setFormat: (name, value) ->
     # TODO Implement
     throw new Error("Unsupported format #{name} #{value}") unless format?
     format.preformat(value)
 
-  setHTML: (html) ->
+  setHTML: (html, source = Quill.sources.API) ->
     @editor.doc.setHTML(html)
+    @editor.checkUpdate(source)
 
-  setSelection: (start, end, options = {}) ->
+  setSelection: (start, end, source = Quill.sources.API) ->
     if _.isNumber(start) and _.isNumber(end)
       range = new Range(start, end)
     else
       range = start
-      options = end or {}
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
-    @editor.selection.setRange(range, options.silent)
+      source = end or source
+    @editor.selection.setRange(range, source)
 
-  updateContents: (delta, options = {}) ->
-    options = _.defaults(options, DEFAULT_API_OPTIONS)
-    @editor.applyDelta(delta, options)
+  updateContents: (delta, source = Quill.sources.API) ->
+    @editor.applyDelta(delta, source)
 
-  # fn(Number index, Number length, String name, String value, Object options = {})
-  # fn(Number index, Number length, Object formats, Object options = {})
-  # fn(Object range, String name, String value, Object options = {})
-  # fn(Object range, Object formats, Object options = {})
+  # fn(Number index, Number length, String name, String value, String source)
+  # fn(Number index, Number length, Object formats, String source)
+  # fn(Object range, String name, String value, String source)
+  # fn(Object range, Object formats, String source)
   _buildParams: (params...) ->
     if _.isObject(params[0])
       index = params[0].start
@@ -201,7 +201,7 @@ class Quill extends EventEmitter2
       formats = {}
       formats[params[2]] = params[3]
       params.splice(2, 2, formats)
-    params[3] = _.defaults(params[3] or {}, DEFAULT_API_OPTIONS)
+    params[3] ?= Quill.sources.API
     return params
 
 
