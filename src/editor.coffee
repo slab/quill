@@ -17,7 +17,7 @@ class Editor
     @delta = @doc.toDelta()
     @selection = new Selection(@doc, @quill)
     @ignoreDomChanges = false
-    @timer = setInterval(_.bind(this.checkUpdate, this, 'user'), @options.pollInterval)
+    @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
@@ -52,7 +52,7 @@ class Editor
       @innerHTML = @root.innerHTML
     )
 
-  checkUpdate: (source) ->
+  checkUpdate: (source = 'user') ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
     delta = this._update()
     if delta

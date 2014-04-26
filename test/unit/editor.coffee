@@ -169,8 +169,8 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
-            @container.innerHTML = '<div><span>0123</span><b><i>4567</i></b></div>'
-            @quill = new Quill(@container)
+            @container.innerHTML = '<div><div><span>0123</span><b><i>4567</i></b></div></div>'
+            @quill = new Quill(@container.firstChild)
             @quill.editor._insertAt(test.index, test.text, test.formats)
             @quill.editor.doc.optimizeLines()
             expect(@quill.editor.root).toEqualHTML(test.expected.join(''), true)
@@ -181,11 +181,23 @@ describe('Editor', ->
 
     describe('applyDelta()', ->
       tests =
-        '':
-          initial: ''
-          delta: ''
-          expected: ''
+        'insert formatted':
+          initial: '<div><span>0123</span></div>'
+          delta: Tandem.Delta.makeInsertDelta(5, 2, '|', { bold: true })
+          expected: '<div><span>01</span><b>|</b><span>23</span></div>'
+        'multiple formats':
+          initial: '<div><span>0123</span></div>'
+          delta: Tandem.Delta.makeRetainDelta(5, 1, 2, { bold: true, italic: true })
+          expected: '<div><span>0</span><b><i>12</i></b><span>3</span></div>'
 
+      _.each(tests, (test, name) ->
+        it(name, ->
+          @container.innerHTML = "<div>#{test.initial}</div>"
+          @quill = new Quill(@container.firstChild)
+          @quill.editor.applyDelta(test.delta)
+          expect(@quill.editor.root).toEqualHTML(test.expected, true)
+        )
+      )
       # Simple insert delta, with format
       # Simple delete delta
       # Multiple format delta,
