@@ -35,7 +35,7 @@ class Selection
     else
       fn()
 
-  setRange: (range, silent) ->
+  setRange: (range, source) ->
     return this._setNativeRange(null) unless range?
     [startNode, startOffset] = this._indexToPosition(range.start)
     if range.isCollapsed()
@@ -43,7 +43,7 @@ class Selection
     else
       [endNode, endOffset] = this._indexToPosition(range.end)
     this._setNativeRange(startNode, startOffset, endNode, endOffset)
-    this.update(silent)
+    this.update(source)
 
   shiftAfter: (index, length, fn) ->
     range = this.getRange()
@@ -52,12 +52,12 @@ class Selection
       range.shift(index, length)
       this.setRange(range)
 
-  update: (silent) ->
+  update: (source) ->
     range = this.getRange()
-    emit = !silent and !Range.compare(range, @range)
+    emit = source != 'silent' and !Range.compare(range, @range)
     @range = range
     # Set range before emitting to prevent infinite loop if listeners call quill.getSelection()
-    @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range) if emit
+    @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range, source) if emit
 
   _decodePosition: (node, offset) ->
     if DOM.isElement(node)

@@ -17,7 +17,7 @@ class Editor
     @delta = @doc.toDelta()
     @selection = new Selection(@doc, @quill)
     @ignoreDomChanges = false
-    @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
+    @timer = setInterval(_.bind(this.checkUpdate, this, 'user'), @options.pollInterval)
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
     )
@@ -31,7 +31,7 @@ class Editor
       @root.setAttribute('contenteditable', enabled)
     )
 
-  applyDelta: (delta, options = {}) ->
+  applyDelta: (delta, source) ->
     return if delta.isIdentity()
     this.doSilently( =>
       localDelta = this._update()
@@ -46,20 +46,21 @@ class Editor
         @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
         oldDelta = @delta
         @delta = oldDelta.compose(delta)
-        @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, options.source) unless options.silent
-      if localDelta and !localDelta.isIdentity() and !options.silent
+        @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) unless source == 'silent'
+      if localDelta and !localDelta.isIdentity() and source != 'silent'
         @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
       @innerHTML = @root.innerHTML
     )
 
-  checkUpdate: ->
+  checkUpdate: (source) ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
     delta = this._update()
     if delta
       oldDelta = @delta
       @delta = oldDelta.compose(delta)
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, 'user')
-    @selection.update(delta != false)
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
+    source = 'silent' if delta
+    @selection.update(source)
 
   doSilently: (fn) ->
     oldIgnoreDomChange = @ignoreDomChanges
