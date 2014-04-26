@@ -164,8 +164,14 @@ class Quill extends EventEmitter2
     )
 
   setContents: (delta, source = Quill.sources.API) ->
-    delta = if _.isArray(delta) then new Tandem.Delta(0, delta) else Tandem.Delta.makeDelta(delta)
-    delta.startLength = this.getLength()
+    if _.isArray(delta)
+      delta = Tandem.Delta.makeDelta({
+        startLength: this.getLength()
+        ops: delta
+      })
+    else
+      delta = Tandem.Delta.makeDelta(delta)
+      delta.startLength = this.getLength()
     @editor.applyDelta(delta, source)
 
   setFormat: (name, value) ->
