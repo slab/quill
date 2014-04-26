@@ -2,25 +2,31 @@ var _  = require('lodash');
 var os = require('os');
 
 
-var browsers = {
-  'mac-chrome'  : ['Mac 10.9', 'chrome', '34'],
-  'mac-firefox' : ['Mac 10.9', 'firefox', '28'],
-  'mac-safari'  : ['Mac 10.9', 'safari', '7'],
+var CHROME_VERSION = '33'
+var FIREFOX_VERSION = '28'
+var SAFARI_VERSION = '7'
+var IOS_VERSION = '7.1'
+var ANDROID_VERSION = '4.3'
 
-  'windows-chrome'  : ['Windows 8.1', 'chrome', '34'],
-  'windows-firefox' : ['Windows 8.1', 'firefox', '28'],
+var browsers = {
+  'mac-chrome'  : ['Mac 10.9', 'chrome', CHROME_VERSION],
+  'mac-firefox' : ['Mac 10.9', 'firefox', FIREFOX_VERSION],
+  'mac-safari'  : ['Mac 10.9', 'safari', SAFARI_VERSION],
+
+  'windows-chrome'  : ['Windows 8.1', 'chrome', CHROME_VERSION],
+  'windows-firefox' : ['Windows 8.1', 'firefox', FIREFOX_VERSION],
   'windows-ie-11'   : ['Windows 8.1', 'internet explorer', '11'],
 
   'windows-ie-10'   : ['Windows 7', 'internet explorer', '10'],
   'windows-ie-9'    : ['Windows 7', 'internet explorer', '9'],
   'windows-ie-8'    : ['Windows 7', 'internet explorer', '8'],
 
-  'linux-chrome'    : ['Linux', 'chrome', '34'],
-  'linux-firefox'   : ['Linux', 'firefox', '28'],
+  'linux-chrome'    : ['Linux', 'chrome', CHROME_VERSION],
+  'linux-firefox'   : ['Linux', 'firefox', FIREFOX_VERSION],
 
-  'iphone'  : ['Mac 10.9', 'iphone', '7.1'],
-  'ipad'    : ['Mac 10.9', 'ipad', '7.1'],
-  'android' : ['Linux', 'android', '4.3']
+  'iphone'  : ['Mac 10.9', 'iphone', IOS_VERSION],
+  'ipad'    : ['Mac 10.9', 'ipad', IOS_VERSION],
+  'android' : ['Linux', 'android', ANDROID_VERSION]
 }
 
 var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
