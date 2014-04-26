@@ -1,5 +1,5 @@
 describe('Selection', ->
-  return unless document.getSelection
+  return if Quill.Utils.isIE(8)
 
   beforeEach( ->
     @container = $('#editor-container').get(0)
@@ -140,7 +140,6 @@ describe('Selection', ->
     describe('get/set range', ->
       _.each(tests, (test, name) ->
         it(name, ->
-          @quill.focus()
           @selection.setRange(new Quill.Lib.Range(test.index, test.index))
           expect(@selection.checkFocus()).toBe(true)
           range = @selection.getRange()
@@ -151,7 +150,6 @@ describe('Selection', ->
       )
 
       it('entire document', ->
-        @quill.focus()
         @selection.setRange(new Quill.Lib.Range(0, 12))
         expect(@selection.checkFocus()).toBe(true)
         range = @selection.getRange()
@@ -161,7 +159,6 @@ describe('Selection', ->
       )
 
       it('null range', ->
-        @quill.focus()
         @selection.setRange(new Quill.Lib.Range(0, 0))
         expect(@selection.checkFocus()).toBe(true)
         @selection.setRange(null)
@@ -213,7 +210,6 @@ describe('Selection', ->
       beforeEach( ->
         @container.innerHTML = '<div></div>'
         @quill = new Quill(@container.firstChild)
-        @quill.focus()
         @doc = @quill.editor.doc
         @selection = @quill.editor.selection
       )

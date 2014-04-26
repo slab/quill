@@ -115,14 +115,15 @@ class Selection
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
     selection = this._getNativeSelection()
     return unless selection
-    selection.removeAllRanges()
     if startNode?
-      @doc.root.focus()
+      @doc.root.focus()   # Some reason need to focus before removing ranges otherwise cannot set them
+      selection.removeAllRanges()
       nativeRange = @document.createRange()
       nativeRange.setStart(startNode, startOffset)
       nativeRange.setEnd(endNode, endOffset)
       selection.addRange(nativeRange)
     else
+      selection.removeAllRanges()
       @doc.root.blur()
 
 
