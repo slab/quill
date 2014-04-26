@@ -32,7 +32,6 @@ class Editor
     )
 
   applyDelta: (delta, source) ->
-    return if delta.isIdentity()
     this.doSilently( =>
       localDelta = this._update()
       if localDelta

@@ -1,6 +1,9 @@
 describe('Editor', ->
   beforeEach( ->
     @container = $('#editor-container').html('<div></div>').get(0)
+    Quill.Lib.EventEmitter2.events = Quill.events
+    emitter = new Quill.Lib.EventEmitter2
+    @editor = new Quill.Editor(@container.firstChild, emitter, { formats: Quill.DEFAULTS.formats })
   )
   # applyDelta() with local delta transformation
   # checkUpdate()
@@ -47,11 +50,10 @@ describe('Editor', ->
 
       _.each(tests, (test, name) ->
         it(name, ->
-          @container.innerHTML = test.initial.join('')
-          @quill = new Quill(@container)
-          @quill.editor._deleteAt(test.index, test.length)
-          @quill.editor.doc.optimizeLines()
-          expect(@quill.editor.root).toEqualHTML(test.expected.join(''), true)
+          @editor.doc.setHTML(test.initial.join(''))
+          @editor._deleteAt(test.index, test.length)
+          @editor.doc.optimizeLines()
+          expect(@editor.root).toEqualHTML(test.expected.join(''), true)
         )
       )
     )
@@ -99,11 +101,10 @@ describe('Editor', ->
 
       _.each(tests, (test, name) ->
         it(name, ->
-          @container.innerHTML = test.initial.join('')
-          quill = new Quill(@container)
-          quill.editor._formatAt(test.index, test.length, test.name, test.value)
-          quill.editor.doc.optimizeLines()
-          expect(quill.editor.doc.toDelta()).toEqualDelta(test.expected)
+          @editor.doc.setHTML(test.initial.join(''))
+          @editor._formatAt(test.index, test.length, test.name, test.value)
+          @editor.doc.optimizeLines()
+          expect(@editor.doc.toDelta()).toEqualDelta(test.expected)
         )
       )
     )
@@ -126,10 +127,9 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
-            @quill = new Quill(@container.firstChild)
-            @quill.editor._insertAt(0, test.text, test.formats)
-            @quill.editor.doc.optimizeLines()
-            expect(@quill.editor.root).toEqualHTML(test.expected, true)
+            @editor._insertAt(0, test.text, test.formats)
+            @editor.doc.optimizeLines()
+            expect(@editor.root).toEqualHTML(test.expected, true)
           )
         )
       )
@@ -169,11 +169,10 @@ describe('Editor', ->
 
         _.each(tests, (test, name) ->
           it(name, ->
-            @container.innerHTML = '<div><div><span>0123</span><b><i>4567</i></b></div></div>'
-            @quill = new Quill(@container.firstChild)
-            @quill.editor._insertAt(test.index, test.text, test.formats)
-            @quill.editor.doc.optimizeLines()
-            expect(@quill.editor.root).toEqualHTML(test.expected.join(''), true)
+            @editor.doc.setHTML('<div><span>0123</span><b><i>4567</i></b></div>')
+            @editor._insertAt(test.index, test.text, test.formats)
+            @editor.doc.optimizeLines()
+            expect(@editor.root).toEqualHTML(test.expected.join(''), true)
           )
         )
       )
@@ -189,19 +188,41 @@ describe('Editor', ->
           initial: '<div><span>0123</span></div>'
           delta: Tandem.Delta.makeRetainDelta(5, 1, 2, { bold: true, italic: true })
           expected: '<div><span>0</span><b><i>12</i></b><span>3</span></div>'
+        'multiple instructions':
+          initial: '
+            <div><span>0123</span></div>
+            <div><span>5678</span></div>
+            <div><span>abcd</span></div>'
+          delta: Tandem.Delta.makeDelta({ startLength: 15, endLength: 17, ops: [
+            { start: 0, end: 4 }
+            { start: 5, end: 7 }
+            { value: '|\n|' }
+            { start: 7, end: 14 }
+            { start: 14, end: 15, attributes: { align: 'right' } }
+          ]})
+          expected: '
+            <div><span>012356|</span></div>
+            <div><span>|78</span></div>
+            <div style="text-align: right;"><span>abcd</span></div>'
 
       _.each(tests, (test, name) ->
         it(name, ->
-          @container.innerHTML = "<div>#{test.initial}</div>"
-          @quill = new Quill(@container.firstChild)
-          @quill.editor.applyDelta(test.delta)
-          expect(@quill.editor.root).toEqualHTML(test.expected, true)
+          @editor.doc.setHTML(test.initial)
+          @editor.checkUpdate()
+          @editor.applyDelta(test.delta)
+          expect(@editor.root).toEqualHTML(test.expected, true)
         )
       )
-      # Simple insert delta, with format
-      # Simple delete delta
-      # Multiple format delta,
-      # All three in different spots
+
+      it('local change', ->
+        @editor.doc.setHTML('<div><span>0123</span></div>')
+        @editor.checkUpdate()
+        delta = Tandem.Delta.makeInsertDelta(5, 2, '|')
+        @editor.root.querySelector('span').innerHTML = '01a23'
+        @editor.applyDelta(delta)
+        expected = '<div><span>01|a23</span></div>'
+        expect(@editor.root).toEqualHTML(expected, true)
+      )
     )
   )
 )
