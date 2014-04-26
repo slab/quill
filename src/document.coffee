@@ -43,7 +43,7 @@ class Document
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
     if refLine?
-      @root.insertBefore(newLineNode, refLine.node) unless DOM.isElement(newLineNode.parentNode)
+      @root.insertBefore(newLineNode, refLine.node) unless DOM.isElement(newLineNode.parentNode)  # Would prefer newLineNode.parentNode? but IE will have non-null object
       @lines.insertAfter(refLine.prev, line)
     else
       @root.appendChild(newLineNode) unless DOM.isElement(newLineNode.parentNode)

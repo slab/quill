@@ -356,4 +356,56 @@ describe('Document', ->
       )
     )
   )
+
+  describe('rebuild()', ->
+    beforeEach( ->
+      @container.innerHTML = '
+        <div>
+          <div><span>0123</span></div>
+          <div><span>5678</span></div>
+        </div>'
+      @doc = new Quill.Document(@container)
+    )
+
+    it('new line inserted', ->
+      lineNode = @doc.root.ownerDocument.createElement('div')
+      lineNode.innerHTML = '<span>A</span>'
+      @doc.root.insertBefore(lineNode, @doc.root.lastChild)
+      @doc.rebuild()
+      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\nA\n5678\n'))
+    )
+
+    it('existing line changed', ->
+      @doc.root.firstChild.innerHTML = '<span>01A23</span>'
+      @doc.rebuild()
+      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01A23\n5678\n'))
+    )
+
+    it('existing line removed', ->
+      @doc.root.removeChild(@doc.root.firstChild)
+      @doc.rebuild()
+      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '5678\n'))
+    )
+
+    it('existing line split', ->
+      Quill.Utils.splitNode(@doc.root.firstChild, 2)
+      @doc.rebuild()
+      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
+    )
+
+    it('existing lines merged', ->
+      Quill.DOM.moveChildren(@doc.root.firstChild, @doc.root.lastChild)
+      @doc.root.removeChild(@doc.root.lastChild)
+      @doc.rebuild()
+      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01235678\n'))
+    )
+
+    it('new lines appended', ->
+      lineNode = @doc.root.ownerDocument.createElement('div')
+      lineNode.innerHTML = '<span>A</span>'
+      @doc.root.appendChild(lineNode)
+      @doc.rebuild()
+      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\n5678\nA\n'))
+    )
+  )
 )
