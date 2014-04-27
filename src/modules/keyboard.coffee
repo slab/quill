@@ -1,6 +1,7 @@
-_        = require('lodash')
-DOM      = require('../dom')
-Line     = require('../line')
+_      = require('lodash')
+DOM    = require('../dom')
+Line   = require('../line')
+Tandem = require('tandem-core')
 
 
 class Keyboard
@@ -78,9 +79,16 @@ class Keyboard
     # Behavior according to Google Docs + Word
     # When tab on one line, regardless if shift is down, delete selection and insert a tab
     # When tab on multiple lines, indent each line if possible, outdent if shift is down
-    @quill.deleteText(range, { source: 'user' })
-    @quill.insertText(range.start, "\t", {}, { source: 'user' })
-    @quill.setSelection(range.start + 1, range.start.index + 1)
+    delta = Tandem.Delta.makeDelta({
+      startLength: @quill.getLength()
+      ops: [
+        { start: 0, end: range.start }
+        { value: "\t" }
+        { start: range.end, end: @quill.getLength() }
+      ]
+    })
+    @quill.updateContents(delta)
+    @quill.setSelection(range.start + 1, range.start + 1)
 
 
 module.exports = Keyboard
