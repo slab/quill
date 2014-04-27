@@ -94,7 +94,7 @@ class UndoManager
       change = @stack[source].pop()
       @lastRecorded = 0
       this._ignoreChanges( =>
-        @quill.updateContents(change[source], { source: 'user' })
+        @quill.updateContents(change[source], 'user')
         index = this._getLastChangeIndex(change[source])
         @quill.setSelection(index, index)
       )

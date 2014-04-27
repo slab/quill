@@ -22,8 +22,8 @@ exitEditMode = ->
   DOM.removeClass(@tooltip, 'editing')
 
 formatLink = (value) ->
-  @quill.setSelection(@savedRange, { silent: true })
-  @quill.formatText(@savedRange, 'link', value, { source: 'user' })
+  @quill.setSelection(@savedRange, 'silent')
+  @quill.formatText(@savedRange, 'link', value, 'user')
 
 hideTooltip = ->
   @tooltip.style.left = '-10000px'

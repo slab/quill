@@ -53,7 +53,7 @@ class Toolbar
         else if range.isCollapsed()
           @quill.setFormat(format, value)
         else
-          @quill.formatText(range, format, value, { source: 'user' })
+          @quill.formatText(range, format, value, 'user')
       activeFormats = {}
       activeFormats[format] = value
       this.updateActive(activeFormats)

@@ -31,7 +31,7 @@ class PasteManager
         delta.ops.push(new Tandem.RetainOp(range.end, oldDocLength)) if range.end < oldDocLength
         delta.endLength += (@quill.getLength() - (range.end - range.start))
         delta.startLength = oldDocLength
-        @quill.updateContents(delta, { source: 'user' })
+        @quill.updateContents(delta, 'user')
         @quill.focus()
         @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
       )
