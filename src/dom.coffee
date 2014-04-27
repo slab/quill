@@ -12,6 +12,16 @@ DOM =
   DEFAULT_BREAK_TAG: 'BR'
   DEFAULT_INLNE_TAG: 'SPAN'
 
+  KEYS:
+    BACKSPACE : 8
+    TAB       : 9
+    ENTER     : 13
+    LEFT      : 37
+    UP        : 38
+    RIGHT     : 39
+    DOWN      : 40
+    DELETE    : 46
+
   BLOCK_TAGS: {
     'ADDRESS'
     'ARTICLE'

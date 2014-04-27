@@ -4,27 +4,16 @@ Line     = require('../line')
 
 
 class Keyboard
-  @keys:
-    BACKSPACE : 8
-    TAB       : 9
-    ENTER     : 13
-    LEFT      : 37
-    UP        : 38
-    RIGHT     : 39
-    DOWN      : 40
-    DELETE    : 46
-
   @hotkeys:
-    BOLD:       { key: 'B',       meta: true }
-    INDENT:     { key: @keys.TAB, shift: false }
-    ITALIC:     { key: 'I',       meta: true }
-    OUTDENT:    { key: @keys.TAB, shift: true }
-    UNDERLINE:  { key: 'U',       meta: true }
-    UNDO:       { key: 'Z',       meta: true, shift: false }
-    REDO:       { key: 'Z',       meta: true, shift: true }
-    SELECT_ALL: { key: 'A',       meta: true }
+    BOLD:       { key: 'B',          meta: true }
+    INDENT:     { key: DOM.KEYS.TAB, shift: false }
+    ITALIC:     { key: 'I',          meta: true }
+    OUTDENT:    { key: DOM.KEYS.TAB, shift: true }
+    UNDERLINE:  { key: 'U',          meta: true }
+    UNDO:       { key: 'Z',          meta: true, shift: false }
+    REDO:       { key: 'Z',          meta: true, shift: true }
 
-  @NAVIGATION: [@keys.UP, @keys.DOWN, @keys.LEFT, @keys.RIGHT]
+  @NAVIGATION: [DOM.KEYS.UP, DOM.KEYS.DOWN, DOM.KEYS.LEFT, DOM.KEYS.RIGHT]
 
   constructor: (@quill, @editorContainer, options) ->
     @hotkeys = {}
@@ -66,9 +55,9 @@ class Keyboard
     @quill.formatText(range, format, value, { source: 'user' })
 
   _initDeletes: ->
-    _.each([Keyboard.keys.DELETE, Keyboard.keys.BACKSPACE], (key) =>
+    _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (key) =>
       this.addHotkey(key, =>
-        # Prevent deleting if editor is already blank (browser quirk fix)
+        # Prevent deleting if editor is already blank
         return @quill.getLength() > 0
       )
     )

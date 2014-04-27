@@ -1,6 +1,5 @@
 _        = require('lodash')
 DOM      = require('../dom')
-Keyboard = require('./keyboard')
 
 
 enterEditMode = (url) ->
@@ -50,7 +49,7 @@ initListeners = ->
     exitEditMode.call(this)
   )
   DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
-    exitEditMode.call(this) if event.which == Keyboard.keys.ENTER
+    exitEditMode.call(this) if event.which == DOM.KEYS.ENTER
   )
   return unless @options.button?
   DOM.addEventListener(@options.button, 'click', =>
