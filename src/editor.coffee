@@ -10,13 +10,11 @@ Tandem     = require('tandem-core')
 
 class Editor
   constructor: (@iframeContainer, @quill, @options = {}) ->
-    @ignoreDomChanges = true
     @renderer = new Renderer(@iframeContainer, @quill, @options)
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
     @selection = new Selection(@doc, @quill)
-    @ignoreDomChanges = false
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
@@ -27,29 +25,25 @@ class Editor
     this.enable(false)
 
   enable: (enabled = true) ->
-    this.doSilently( =>
-      @root.setAttribute('contenteditable', enabled)
-    )
+    @root.setAttribute('contenteditable', enabled)
 
   applyDelta: (delta, source) ->
-    this.doSilently( =>
-      localDelta = this._update()
-      if localDelta
-        @delta = @delta.compose(localDelta)
-        tempDelta = localDelta
-        localDelta = localDelta.transform(delta, true)
-        delta = delta.transform(tempDelta, false)
-      unless delta.isIdentity()   # Follows may have turned delta into the identity
-        throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
-        delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
-        @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
-        oldDelta = @delta
-        @delta = oldDelta.compose(delta)
-        @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) unless source == 'silent'
-      if localDelta and !localDelta.isIdentity() and source != 'silent'
-        @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
-      @innerHTML = @root.innerHTML
-    )
+    localDelta = this._update()
+    if localDelta
+      @delta = @delta.compose(localDelta)
+      tempDelta = localDelta
+      localDelta = localDelta.transform(delta, true)
+      delta = delta.transform(tempDelta, false)
+    unless delta.isIdentity()   # Follows may have turned delta into the identity
+      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
+      delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
+      @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
+      oldDelta = @delta
+      @delta = oldDelta.compose(delta)
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) unless source == 'silent'
+    if localDelta and !localDelta.isIdentity() and source != 'silent'
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
+    @innerHTML = @root.innerHTML
 
   checkUpdate: (source = 'user') ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
@@ -60,12 +54,6 @@ class Editor
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = 'silent' if delta
     @selection.update(source)
-
-  doSilently: (fn) ->
-    oldIgnoreDomChange = @ignoreDomChanges
-    @ignoreDomChanges = true
-    fn()
-    @ignoreDomChanges = oldIgnoreDomChange
 
   getDelta: ->
     return @delta
@@ -143,10 +131,8 @@ class Editor
   _update: ->
     return false if @innerHTML == @root.innerHTML
     delta = this._trackDelta( =>
-      this.doSilently( =>
-        @selection.preserve(_.bind(@doc.rebuild, @doc))
-        @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
-      )
+      @selection.preserve(_.bind(@doc.rebuild, @doc))
+      @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
     )
     @innerHTML = @root.innerHTML
     return if delta.isIdentity() then false else delta
