@@ -8,7 +8,7 @@ remoteBrowserGroups =
   'windows' : ['windows-chrome', 'windows-firefox', 'windows-ie-11']
   'legacy'  : ['windows-ie-10', 'windows-ie-9']
   'linux'   : ['linux-chrome', 'linux-firefox']
-  'mobile'  : ['ipad', 'iphone']
+  'mobile'  : ['ipad', 'iphone', 'android']
 
 remoteConfigs =
   browserDisconnectTimeout: 10000
