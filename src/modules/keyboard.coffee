@@ -39,7 +39,7 @@ class Keyboard
   _initDeletes: ->
     _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (key) =>
       this.addHotkey(key, =>
-        # Prevent deleting if editor is already blank
+        # Prevent deleting if editor is already blank (or just empty newline)
         return @quill.getLength() > 1
       )
     )
