@@ -87,25 +87,13 @@ DOM =
       node.className = _.str.trim(node.className + ' ' + cssClass)
 
   addEventListener: (node, eventName, listener) ->
-    callback = (event) ->
-      event ?= DOM.getWindow(node).event
-      event.target ?= event.srcElement
-      event.which ?= event.keyCode
-      bubbles = listener.call(null, event)
-      if bubbles == false
-        if event.preventDefault?
-          event.preventDefault()
-        else
-          event.returnValue = false
-        if event.stopPropagation?
-          event.stopPropagation()
-        else
-          event.cancelBubble = true
-      return bubbles
-    if node.addEventListener?
-      node.addEventListener(eventName, callback)
-    else if node.attachEvent?
-      node.attachEvent("on#{eventName}", callback)
+    node.addEventListener(eventName, (event) ->
+      propogate = listener.call(null, event)
+      unless propogate
+        event.preventDefault()
+        event.stopPropagation()
+      return propogate
+    )
 
   clearAttributes: (node, exception = []) ->
     exception = [exception] if _.isString(exception)
@@ -131,15 +119,7 @@ DOM =
     return node.className.split(/\s+/)
 
   getDefaultOption: (select) ->
-    option = select.querySelector('option[selected]')
-    if option?
-      return option
-    else
-      # IE8
-      for o,i in select.options
-        if o.defaultSelected
-          return o
-    return null
+    return select.querySelector('option[selected]')
 
   getStyles: (node) ->
     styleString = node.getAttribute('style') or ''
@@ -249,7 +229,7 @@ DOM =
     this.moveChildren(newNode, node) unless DOM.VOID_TAGS[newTag]?
     node.parentNode.replaceChild(newNode, node)
     _.each(attributes, (value, name) ->
-      newNode.setAttribute(name, value) unless name == 'shape' and node.tagName == 'A'  # IE8 bug
+      newNode.setAttribute(name, value)
     )
     return newNode
 
@@ -261,12 +241,9 @@ DOM =
       DOM.removeClass(node, className)
 
   triggerEvent: (elem, eventName, bubble, cancels) ->
-    if elem.ownerDocument.createEvent
-      evt = elem.ownerDocument.createEvent("HTMLEvents")
-      evt.initEvent(eventName, bubble, cancels)
-      elem.dispatchEvent(evt)
-    else
-      elem.fireEvent("on#{eventName}", cancels)
+    evt = elem.ownerDocument.createEvent("HTMLEvents")
+    evt.initEvent(eventName, bubble, cancels)
+    elem.dispatchEvent(evt)
 
   unwrap: (node) ->
     ret = node.firstChild

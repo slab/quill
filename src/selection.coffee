@@ -80,7 +80,6 @@ class Selection
         offset = node.childNodes.length + 1
 
   _getNativeSelection: ->
-    # IE8 will always get null selection
     return if @document.getSelection? then @document.getSelection() else null
 
   _getNativeRange: ->
