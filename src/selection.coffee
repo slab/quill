@@ -50,7 +50,7 @@ class Selection
     fn()
     if range?
       range.shift(index, length)
-      this.setRange(range)
+      this.setRange(range, 'silent')
 
   update: (source) ->
     range = this.getRange()
