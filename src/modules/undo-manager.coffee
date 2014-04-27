@@ -47,7 +47,7 @@ class UndoManager
           undoDelta = undoDelta.compose(change.undo)
           changeDelta = change.redo.compose(changeDelta)
         else
-          console.warn "Unable to compose change, clearing undo stack" if console?
+          # TODO log warning
           this.clear()
           @lastRecorded = timestamp
       else
@@ -57,10 +57,9 @@ class UndoManager
         undo: undoDelta
       })
       @stack.undo.unshift() if @stack.undo.length > @options.maxStack
-      return true
     catch ignored
+      # TODO log warning
       this.clear()
-      return false
 
   redo: ->
     this._change('redo', 'undo')
