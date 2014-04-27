@@ -3,7 +3,7 @@ Tandem = require('tandem-core')
 
 
 class UndoManager
-  DEFAULTS:
+  @DEFAULTS:
     delay: 1000
     maxStack: 100
 

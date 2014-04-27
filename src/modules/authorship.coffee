@@ -5,7 +5,7 @@ Tandem = require('tandem-core')
 
 
 class Authorship
-  DEFAULTS:
+  @DEFAULTS:
     authorId: null
     color: 'blue'
     enabled: false
