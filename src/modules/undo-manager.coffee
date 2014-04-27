@@ -68,25 +68,15 @@ class UndoManager
     this._change('undo', 'redo')
 
   _getLastChangeIndex: (delta) ->
-    lastChangeIndex = index = offset = 0
-    _.each(delta.ops, (op) ->
-      # Insert
-      if Tandem.InsertOp.isInsert(op)
-        offset += op.getLength()
-        lastChangeIndex = index + offset
-      else if Tandem.RetainOp.isRetain(op)
-        # Delete
-        if op.start > index
-          lastChangeIndex = index + offset
-          offset -= (op.start - index)
-        # Format
-        if _.keys(op.attributes).length > 0
-          lastChangeIndex = op.end + offset
-        index = op.end
+    lastIndex = 0
+    delta.apply((index, text) ->
+      lastIndex = Math.max(index + text.length, lastIndex)
+    , (index, length) ->
+      lastIndex = Math.max(index, lastIndex)
+    , (index, length) ->
+      lastIndex = Math.max(index + length, lastIndex)
     )
-    if delta.endLength < delta.startLength + offset
-      lastChangeIndex = delta.endLength
-    return lastChangeIndex
+    return lastIndex
 
   _change: (source, dest) ->
     if @stack[source].length > 0
