@@ -80,6 +80,7 @@ Normalizer =
             DOM.moveChildren(node.previousSibling, node)
             DOM.normalize(node.previousSibling)
             DOM.removeNode(node)
+    Normalizer.wrapText(lineNode)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
