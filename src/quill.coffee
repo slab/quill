@@ -126,9 +126,12 @@ class Quill extends EventEmitter2
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
     @editor.applyDelta(delta, source)
 
-  getContents: (index, length) ->
-    index = 0 unless index?
-    length = this.getLength() - index unless length?
+  getContents: (index = 0, length = null) ->
+    if _.isObject(index)
+      length = index.end - index.start
+      index = index.start
+    else
+      length = this.getLength() - index unless length?
     ops = @editor.getDelta().getOpsAt(index, length)
     return new Tandem.Delta(0, ops)
 

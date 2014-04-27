@@ -28,31 +28,12 @@ class Keyboard
     @hotkeys[hotkey.key] ?= []
     @hotkeys[hotkey.key].push(hotkey)
 
-  indent: (selection, increment) ->
-    lines = selection.getLines()
-    applyIndent = (line, format) =>
-      if increment
-        indent = if _.isNumber(line.formats[format]) then line.formats[format] else (if line.formats[format] then 1 else 0)
-        indent += increment
-        indent = Math.min(Math.max(indent, Line.MIN_INDENT), Line.MAX_INDENT)
-      else
-        indent = false
-      index = Position.getIndex(line.node, 0)
-      @quill.formatText(index, 0, format, indent)
-
-    _.each(lines, (line) =>
-      if line.formats.bullet?
-        applyIndent(line, 'bullet')
-      else if line.formats.list?
-        applyIndent(line, 'list')
-      else
-        applyIndent(line, 'indent')
-    )
-
   toggleFormat: (range, format) ->
-    formats = range.getFormats()
-    value = !formats[format]
-    @quill.formatText(range, format, value, { source: 'user' })
+    delta = @quill.getContents(range)
+    hasFormat = _.all(delta.ops, (op) ->
+      return op.attributes[format]
+    )
+    @quill.formatText(range, format, !hasFormat, { source: 'user' })
 
   _initDeletes: ->
     _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (key) =>
@@ -63,12 +44,12 @@ class Keyboard
     )
 
   _initHotkeys: ->
-    this.addHotkey(Keyboard.hotkeys.OUTDENT, (range) =>
-      this._onTab(range, true)
-      return false
-    )
     this.addHotkey(Keyboard.hotkeys.INDENT, (range) =>
       this._onTab(range, false)
+      return false
+    )
+    this.addHotkey(Keyboard.hotkeys.OUTDENT, (range) =>
+      # TODO implement when we implement multiline tabs
       return false
     )
     _.each(['bold', 'italic', 'underline'], (format) =>
@@ -82,43 +63,24 @@ class Keyboard
     DOM.addEventListener(@editorContainer, 'keydown', (event) =>
       if @hotkeys[event.which]?
         prevent = false
-        _.each(@hotkeys[event.which], (hotkey) =>
-          return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
-          return if hotkey.shift? and event.shiftKey != hotkey.shift
-          selection = @quill.getSelection()
-          return unless selection?
-          prevent = hotkey.callback.call(hotkey.callback, selection) == false or prevent
-        )
+        range = @quill.getSelection()
+        if range?   # Should only not be the case if keydown was programmatically triggered
+          _.each(@hotkeys[event.which], (hotkey) =>
+            return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
+            return if hotkey.shift? and event.shiftKey != hotkey.shift
+            prevent = hotkey.callback(range) == false or prevent
+          )
       return !prevent
     )
 
   _onTab: (range, shift = false) ->
+    # TODO implement multiline tab behavior
     # Behavior according to Google Docs + Word
     # When tab on one line, regardless if shift is down, delete selection and insert a tab
     # When tab on multiple lines, indent each line if possible, outdent if shift is down
-    lines = range.getLines()
-    if lines.length > 1
-      index = Position.getIndex(lines[0].node)
-      start = range.start + (if shift then -1 else 1)
-      offsetChange = 0
-      _.each(lines, (line) =>
-        if !shift
-          @quill.insertText(index, '\t', {}, { source: 'user' })
-          offsetChange += 1
-        else if line.leaves.first.text[0] == '\t'
-          @quill.deleteText(index, 1, { source: 'user' })
-          offsetChange -= 1
-        else if line == lines[0]
-          start = range.start
-        index += line.length
-      )
-      end = range.end + offsetChange
-      @quill.setSelection(start, end)
-    else
-      index = @range.start.getIndex()
-      @quill.deleteText(@range, { source: 'user' })
-      @quill.insertText(index, "\t", {}, { source: 'user' })
-      @quill.setSelection(index + 1, index + 1)
+    @quill.deleteText(range, { source: 'user' })
+    @quill.insertText(range.start, "\t", {}, { source: 'user' })
+    @quill.setSelection(range.start + 1, range.start.index + 1)
 
 
 module.exports = Keyboard
