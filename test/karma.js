@@ -19,7 +19,6 @@ var browsers = {
 
   'windows-ie-10'   : ['Windows 7', 'internet explorer', '10'],
   'windows-ie-9'    : ['Windows 7', 'internet explorer', '9'],
-  'windows-ie-8'    : ['Windows 7', 'internet explorer', '8'],
 
   'linux-chrome'    : ['Linux', 'chrome', CHROME_VERSION],
   'linux-firefox'   : ['Linux', 'firefox', FIREFOX_VERSION],

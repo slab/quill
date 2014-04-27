@@ -6,7 +6,7 @@ remoteReporters.push('saucelabs') if process.env.TRAVIS_BRANCH == 'master'
 remoteBrowserGroups =
   'mac'     : ['mac-chrome', 'mac-firefox', 'mac-safari']
   'windows' : ['windows-chrome', 'windows-firefox', 'windows-ie-11']
-  'legacy'  : ['windows-ie-10', 'windows-ie-9', 'windows-ie-8']
+  'legacy'  : ['windows-ie-10', 'windows-ie-9']
   'linux'   : ['linux-chrome', 'linux-firefox']
   'mobile'  : ['ipad', 'iphone']
 

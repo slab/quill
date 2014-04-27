@@ -147,8 +147,6 @@ describe('Quill', ->
   )
 
   describe('selection', ->
-    return if Quill.Utils.isIE(8)
-
     it('get/set range', ->
       @quill.setSelection(1, 2)
       range = @quill.getSelection()

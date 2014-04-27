@@ -1,6 +1,4 @@
 describe('Selection', ->
-  return if Quill.Utils.isIE(8)
-
   beforeEach( ->
     @container = $('#editor-container').get(0)
   )
