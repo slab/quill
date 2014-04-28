@@ -206,17 +206,18 @@ DOM =
   removeNode: (node) ->
     node.parentNode?.removeChild(node)
 
-  resetSelect: (select) ->
+  resetSelect: (select, trigger = true) ->
     option = DOM.getDefaultOption(select)
     if option?
       option.selected = true
-      DOM.triggerEvent(select, 'change')
+      DOM.triggerEvent(select, 'change') if trigger
     else
       select.selectedIndex = null
 
-  selectOption: (select, option) ->
-    select.selectedIndex = _.indexOf(DOM.getChildren(select), option)
-    DOM.triggerEvent(select, 'change')
+  selectOption: (select, option, trigger = true) ->
+    value = if _.isElement(option) then option.value else option
+    select.value = value
+    DOM.triggerEvent(select, 'change') if trigger
 
   setStyles: (node, styles) ->
     styleString = _.map(styles, (style, name) ->

@@ -286,9 +286,14 @@ describe('DOM', ->
       expect($(@select).val()).toEqual('two')
     )
 
-    it('selectOption()', ->
+    it('selectOption() option', ->
       option = @select.children[2]
       Quill.DOM.selectOption(@select, option)
+      expect($(@select).val()).toEqual('three')
+    )
+
+    it('selectOption() value', ->
+      Quill.DOM.selectOption(@select, 'three')
       expect($(@select).val()).toEqual('three')
     )
   )
