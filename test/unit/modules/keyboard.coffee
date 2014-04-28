@@ -29,49 +29,40 @@ describe('Keyboard', ->
     )
   )
 
-  # describe('listeners', ->
-  #   it('prevent bubbling', ->
+  describe('hotkeys', ->
+    beforeEach( ->
+      @container.innerHTML = '<div><div><span>0123</span></div></div>'
+      @quill = new Quill(@container.firstChild)
+      @keyboard = @quill.getModule('keyboard')
+    )
 
-  #   )
+    it('trigger', (done) ->
+      hotkey = { key: 'B', metaKey: true }
+      @keyboard.addHotkey(hotkey, (range) ->
+        expect(range.start).toEqual(1)
+        expect(range.end).toEqual(2)
+        done()
+      )
+      @quill.setSelection(1, 2)
+      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', hotkey)
+    )
 
-  #   it('allow bubbling', ->
+    it('format', ->
+      @quill.setSelection(0, 4)
+      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.Keyboard.hotkeys.BOLD)
+      expect(@quill.editor.root).toEqualHTML('<div><b>0123</b></div>', true)
+    )
 
-  #   )
+    it('tab', ->
+      @quill.setSelection(1, 3)
+      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.Keyboard.hotkeys.INDENT)
+      expect(@quill.editor.root).toEqualHTML('<div><span>0\t3</span></div>', true)
+    )
 
-  #   it('shift', ->
-
-  #   )
-
-  #   it('meta', ->
-
-  #   )
-  # )
-
-  # describe('hotkeys', ->
-  #   beforeEach( ->
-  #     @container.innerHTML = '<div><div><span>0123</span></div></div>'
-  #     @quill = new Quill(@container.firstChild)
-  #     @keyboard = @quill.getModule('keyboard')
-  #   )
-
-  #   it('format', ->
-
-  #   )
-
-  #   it('tab', ->
-
-  #   )
-
-  #   it('shift + tab', ->
-
-  #   )
-
-  #   it('prevent backspace', ->
-
-  #   )
-
-  #   it('prevent delete', ->
-
-  #   )
-  # )
+    it('shift + tab', ->
+      @quill.setSelection(0, 2)
+      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.Keyboard.hotkeys.OUTDENT)
+      expect(@quill.editor.root).toEqualHTML('<div><span>0123</span></div>', true)
+    )
+  )
 )
