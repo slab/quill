@@ -11,39 +11,39 @@ class Format
   @FORMATS:
     bold:
       tag: 'B'
-      preformat: 'bold'
+      prepare: 'bold'
 
     italic:
       tag: 'I'
-      preformat: 'italic'
+      prepare: 'italic'
 
     underline:
       tag: 'U'
-      preformat: 'underline'
+      prepare: 'underline'
 
     strike:
       tag: 'S'
-      preformat: 'strikeThrough'
+      prepare: 'strikeThrough'
 
     color:
       style: 'color'
       default: '#000'
-      preformat: 'foreColor'
+      prepare: 'foreColor'
 
     background:
       style: 'backgroundColor'
       default: '#fff'
-      preformat: 'backColor'
+      prepare: 'backColor'
 
     font:
       style: 'fontFamily'
       default: "'Helvetica', 'Arial', sans-serif"
-      preformat: 'fontName'
+      prepare: 'fontName'
 
     size:
       style: 'fontSize'
       default: '13px'
-      preformat: 'fontSize'
+      prepare: 'fontSize'
 
     link:
       tag: 'A'
@@ -59,13 +59,13 @@ class Format
       default: 'left'
 
 
-  constructor: (@config) ->
+  constructor: (@document, @config) ->
 
   add: (node, value) ->
     return this.remove(node) unless value
     return node if this.value(node) == value
     if _.isString(@config.tag)
-      formatNode = node.ownerDocument.createElement(@config.tag)
+      formatNode = @document.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
         node.parentNode.insertBefore(formatNode, node) if node.parentNode?
         DOM.removeNode(node)
@@ -87,6 +87,12 @@ class Format
     return false if _.isString(@config.style) and (!node.style[@config.style] or node.style[@config.style] == @config.default)
     return false if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
     return true
+
+  prepare: (value) ->
+    if _.isString(@config.prepare)
+      @document.execCommand(@config.prepare, false, value)
+    else if _.isFunction(@config.prepare)
+      @config.prepare(@document, value)
 
   remove: (node) ->
     return unless this.match(node)

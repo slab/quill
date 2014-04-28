@@ -32,7 +32,7 @@ class Toolbar
       range = @quill.getSelection()
       if range?
         if range.isCollapsed()
-          @quill.setFormat(format, value)
+          @quill.prepareFormat(format, value)
         else
           @quill.formatText(range, format, value, 'user')
       this.setActive(input, value)

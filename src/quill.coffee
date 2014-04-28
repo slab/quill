@@ -149,6 +149,11 @@ class Quill extends EventEmitter2
       callback(module) if moduleName == name
     )
 
+  prepareFormat: (name, value) ->
+    format = @editor.doc.formats[name]
+    return unless format?     # TODO warn
+    format.prepare(value)
+
   setContents: (delta, source = Quill.sources.API) ->
     if _.isArray(delta)
       delta = Tandem.Delta.makeDelta({
@@ -159,11 +164,6 @@ class Quill extends EventEmitter2
       delta = Tandem.Delta.makeDelta(delta)
       delta.startLength = this.getLength()
     @editor.applyDelta(delta, source)
-
-  setFormat: (name, value) ->
-    # TODO Implement
-    throw new Error("Unsupported format #{name} #{value}") unless format?
-    format.preformat(value)
 
   setHTML: (html, source = Quill.sources.API) ->
     @editor.doc.setHTML(html)
