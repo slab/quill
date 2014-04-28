@@ -11,8 +11,6 @@ class Keyboard
     ITALIC:     { key: 'I',          metaKey: true }
     OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
-    UNDO:       { key: 'Z',          metaKey: true, shiftKey: false }
-    REDO:       { key: 'Z',          metaKey: true, shiftKey: true }
 
   @NAVIGATION: [DOM.KEYS.UP, DOM.KEYS.DOWN, DOM.KEYS.LEFT, DOM.KEYS.RIGHT]
 

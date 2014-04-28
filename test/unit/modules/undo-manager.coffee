@@ -75,5 +75,15 @@ describe('UndoManager', ->
       expect(@quill.getContents()).toEqual(@original)
       expect(@undoManager.stack.undo.length).toEqual(0)
     )
+
+    it('hotkeys', ->
+      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 0, 'A '))
+      changed = @quill.getContents()
+      expect(changed).not.toEqualDelta(@original)
+      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.UndoManager.hotkeys.UNDO)
+      expect(@quill.getContents()).toEqualDelta(@original)
+      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.UndoManager.hotkeys.REDO)
+      expect(@quill.getContents()).toEqualDelta(changed)
+    )
   )
 )

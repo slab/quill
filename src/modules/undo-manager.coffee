@@ -7,6 +7,10 @@ class UndoManager
     delay: 1000
     maxStack: 100
 
+  @hotkeys:
+    UNDO: { key: 'Z', metaKey: true, shiftKey: false }
+    REDO: { key: 'Z', metaKey: true, shiftKey: true }
+
   constructor: (@quill, @editorContainer, @options = {}) ->
     @lastRecorded = 0
     this.clear()
@@ -14,11 +18,11 @@ class UndoManager
 
   initListeners: ->
     @quill.onModuleLoad('keyboard', (keyboard) =>
-      keyboard.addHotkey(keyboard.constructor.hotkeys.UNDO, =>
+      keyboard.addHotkey(UndoManager.hotkeys.UNDO, =>
         this.undo()
         return false
       )
-      keyboard.addHotkey(keyboard.constructor.hotkeys.REDO, =>
+      keyboard.addHotkey(UndoManager.hotkeys.REDO, =>
         this.redo()
         return false
       )
