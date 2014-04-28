@@ -8,91 +8,85 @@ class Toolbar
     container: null
 
   @formats:
-    EMBED: ['image']
-    LINE: ['align', 'bullet', 'list']
-    SELECT: ['align', 'background', 'color', 'font', 'size']
-
+    BUTTON: {'bold', 'italic', 'strike', 'underline'}
+    SELECT: {'align', 'background', 'color', 'font', 'size'}
 
   constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
-    _.each(@quill.options.formats, _.bind(this.initFormat, this))
-    @quill.on(@quill.constructor.events.POST_EVENT, (eventName) =>
-      return unless eventName == @quill.constructor.events.TEXT_CHANGE or eventName == @quill.constructor.events.SELECTION_CHANGE
-      this.updateActive()
+    _.each(@quill.options.formats, (format) =>
+      if Toolbar.formats.BUTTON[format]?
+        this.initFormat(format, 'click')
+      else if Toolbar.formats.SELECT[format]?
+        this.initFormat(format, 'change')
     )
-    _.defer(_.bind(DOM.addClass, this, @container, 'sc-toolbar-container'))
-    @quill.onModuleLoad('keyboard', (keyboard) =>
-      _.each(['BOLD', 'ITALIC', 'UNDERLINE'], (key) =>
-        keyboard.addHotkey(keyboard.constructor.hotkeys[key], =>
-          activeFormats = {}
-          input = this._findInput(key.toLowerCase())
-          activeFormats[key.toLowerCase()] = DOM.hasClass(input, 'sc-active') if input?
-          this.updateActive(activeFormats)
-        )
-      )
-    )
+    @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
+    DOM.addClass(@container, 'sc-toolbar-container')
 
-  initFormat: (format) ->
-    input = this._findInput(format)
+  initFormat: (format, eventName) ->
+    input = this._getInput(format)
     return unless input?
-    if format == 'link' then return @quill.addModule('link-tooltip', { button: input })
-    eventName = if _.indexOf(Toolbar.formats.SELECT, format) > -1 then 'change' else 'click'
     DOM.addEventListener(input, eventName, =>
-      return if @triggering
-      @editorContainer.focus()
-      value = if input.tagName == 'SELECT' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
+      value = if eventName == 'change' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
+      @quill.focus()
       range = @quill.getSelection()
       if range?
-        if _.indexOf(Toolbar.formats.EMBED, format) > -1
-          # TODO show link tooltip..
-          @quill.insertEmbed(range.end, format, 'images/cloud.png')
-          # TODO set selection to after the embed insertion point
-        else if _.indexOf(Toolbar.formats.LINE, format) > -1
-          @quill.formatLines(range, format, value)
-        else if range.isCollapsed()
+        if range.isCollapsed()
           @quill.setFormat(format, value)
         else
           @quill.formatText(range, format, value, 'user')
-      activeFormats = {}
-      activeFormats[format] = value
-      this.updateActive(activeFormats)
+      this.setActive(input, value)
       return false
     )
-    DOM.addEventListener(input, 'mousedown', =>
-      # Save selection before click is registered
-      @quill.editor.checkUpdate()
-      return true
-    )
 
-  updateActive: (activeFormats = {}) ->
+  setActive: (input, value) ->
+    if input.tagName == 'SELECT'
+      value = '' if _.isArray(value)
+      input.value = value
+    else
+      DOM.addClass(input, 'sc-active')
+
+  updateActive: (range) ->
     return
-    @triggering = true
-    range = @quill.getSelection()
+    activeFormats = this._getActive(range)
     _.each(@container.querySelectorAll('select'), _.bind(DOM.resetSelect))
     _.each(@container.querySelectorAll('.sc-active'), (button) =>
       DOM.removeClass(button, 'sc-active')
     )
-    if range?
-      formats = {}  # TODO get formats
-      _.each(_.extend({}, activeFormats), (value, key) =>
-        if value
-          elem = this._findInput(key)
-          return unless elem?
-          if elem.tagName == 'SELECT'
-            value = '' if _.isArray(value)
-            elem.value = value
-            DOM.triggerEvent(elem, 'change')
-          else
-            DOM.addClass(elem, 'sc-active')
-      )
-    @triggering = false
+    _.each(activeFormats, (value, key) =>
+      return unless value
+      input = this._getInput(key)
+      return unless input?
+      this.setActive(input, value)
+    )
 
-  _findInput: (format) ->
+  _getInput: (format) ->
     selector = ".sc-#{format}"
     if _.indexOf(Toolbar.formats.SELECT, format) > -1
       selector = 'select' + selector
     input = @container.querySelector(selector)
+
+  _getActive: (range) ->
+    if range?
+      contents = @quill.getContents(range)
+      formatsArr = _.pluck(contents, 'attributes')
+      return {} unless formatsArr.length > 0
+      activeFormats = formatsArr[0]
+      _.each(formatsArr.slice(1), (formats) ->
+        _.each(_.keys(activeFormats), (name) ->
+          if formats[name]
+            if _.isArray(activeFormats[name])
+              activeFormats[name].push(formats[name]) if _.indexOf(activeFormats[name], formats[name]) > -1
+            else if activeFormats[name] != formats[name]
+              activeFormats[name] = [activeFormats[name], formats[name]]
+          else
+            delete activeFormats[name]
+        )
+        return _.keys(activeFormats).length > 0
+      )
+      return activeFormats
+    else
+      return {}
 
 
 module.exports = Toolbar

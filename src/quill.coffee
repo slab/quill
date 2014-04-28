@@ -103,23 +103,6 @@ class Quill extends EventEmitter2
   focus: ->
     @editor.root.focus()
 
-  formatLines: (index, length, name, value, source) ->
-    [index, length, formats, source] = this._buildParams(index, length, name, value, source)
-    [line, offset] = @editor.doc.findLineAt(index)
-    # TODO potential util function with editor._formatAt
-    delta = Tandem.Delta.getIdentity(this.getLength())
-    while line? and length > 0
-      index += (line.length - offset)
-      length -= (line.length - offset)
-      line = line.next
-      offset = 0
-      if index < delta.endLength
-        lineDelta = Tandem.Delta.makeRetainDelta(delta.endLength, index, 1, formats)
-      else
-        lineDelta = Tandem.Delta.makeInsertDelta(delta.endLength, delta.endLength, '\n', formats)
-      delta = delta.compose(lineDelta)
-    @editor.applyDelta(delta, source)
-
   formatText: (index, length, name, value, source) ->
     [index, length, formats, source] = this._buildParams(index, length, name, value, source)
     return unless length > 0
