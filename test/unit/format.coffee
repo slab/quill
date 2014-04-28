@@ -5,35 +5,35 @@ describe('Format', ->
 
   tests =
     tag:
-      format: new Quill.Format(Quill.Format.FORMATS.bold)
+      format: new Quill.Format(document, Quill.Format.FORMATS.bold)
       existing: '<b>Text</b>'
       missing: '<span>Text</span>'
       added: '<b><span>Text</span></b>'
       value: true
     style:
-      format: new Quill.Format(Quill.Format.FORMATS.color)
+      format: new Quill.Format(document, Quill.Format.FORMATS.color)
       existing: '<span style="color: blue;">Text</span>'
       missing: '<span>Text</span>'
       value: 'blue'
     image:
-      format: new Quill.Format(Quill.Format.FORMATS.image)
+      format: new Quill.Format(document, Quill.Format.FORMATS.image)
       existing: '<img src="http://quilljs.com/images/icon.png">'
       missing: '<span>Text</span>'
       removed: "<span>#{Quill.Format.EMBED_TEXT}</span>"
       value: 'http://quilljs.com/images/icon.png'
     link:
-      format: new Quill.Format(Quill.Format.FORMATS.link)
+      format: new Quill.Format(document, Quill.Format.FORMATS.link)
       existing: '<a href="http://quilljs.com">Text</a>'
       missing: '<span>Text</span>'
       added: '<a href="http://quilljs.com"><span>Text</span></a>'
       value: 'http://quilljs.com'
     line:
-      format: new Quill.Format(Quill.Format.FORMATS.align)
+      format: new Quill.Format(document, Quill.Format.FORMATS.align)
       existing: '<div style="text-align: right">Text</div>'
       missing: '<div>Text</div>'
       value: 'right'
     complex:
-      format: new Quill.Format(Quill.Format.FORMATS.bold)
+      format: new Quill.Format(document, Quill.Format.FORMATS.bold)
       existing: '<b><i>Text</i><s>Strike</s></b><u>Under</u>'
       missing: '<i>Text</i><s>Strike</s><u>Under</u>'
       removed: '<span><i>Text</i><s>Strike</s></span><u>Under</u>'
@@ -55,7 +55,7 @@ describe('Format', ->
 
     it('default', ->
       @container.innerHTML = '<span style="font-size: 13px;">Text</span>'
-      format = new Quill.Format(Quill.Format.FORMATS.color)
+      format = new Quill.Format(document, Quill.Format.FORMATS.color)
       expect(format.match(@container.firstChild)).toBe(false)
     )
   )
@@ -75,7 +75,7 @@ describe('Format', ->
 
     it('default', ->
       @container.innerHTML = '<span style="font-size: 13px;">Text</span>'
-      format = new Quill.Format(Quill.Format.FORMATS.color)
+      format = new Quill.Format(document, Quill.Format.FORMATS.color)
       expect(format.value(@container.firstChild)).toBe(undefined)
     )
   )
@@ -109,14 +109,14 @@ describe('Format', ->
 
     it('change value', ->
       @container.innerHTML = '<span style="color: blue;">Text</span>'
-      format = new Quill.Format(Quill.Format.FORMATS.color)
+      format = new Quill.Format(document, Quill.Format.FORMATS.color)
       format.add(@container.firstChild, 'red')
       expect(@container).toEqualHTML('<span style="color: red;">Text</span>')
     )
 
     it('default value', ->
       @container.innerHTML = '<span>Text</span>'
-      format = new Quill.Format(Quill.Format.FORMATS.size)
+      format = new Quill.Format(document, Quill.Format.FORMATS.size)
       format.add(@container.firstChild, Quill.Format.FORMATS.size.default)
       expect(@container).toEqualHTML('<span>Text</span>')
     )
