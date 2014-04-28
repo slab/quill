@@ -60,7 +60,7 @@ describe('Quill', ->
       spyOn(obj, 'after')
       expect(@quill.getModule('toolbar')).toBe(undefined)
       @quill.onModuleLoad('toolbar', obj.before)
-      @quill.addModule('toolbar', { container: '#format-container' })
+      @quill.addModule('toolbar', { container: '#toolbar-container' })
       expect(@quill.getModule('toolbar')).not.toBe(null)
       expect(obj.before).toHaveBeenCalled()
       @quill.onModuleLoad('toolbar', obj.after)
