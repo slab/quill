@@ -12,8 +12,6 @@ class Keyboard
     OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
 
-  @NAVIGATION: [DOM.KEYS.UP, DOM.KEYS.DOWN, DOM.KEYS.LEFT, DOM.KEYS.RIGHT]
-
   constructor: (@quill, @editorContainer, options) ->
     @hotkeys = {}
     this._initListeners()

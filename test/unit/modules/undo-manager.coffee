@@ -76,6 +76,17 @@ describe('UndoManager', ->
       expect(@undoManager.stack.undo.length).toEqual(0)
     )
 
+    it('dont merge changes', (done) ->
+      expect(@undoManager.stack.undo.length).toEqual(0)
+      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 12, 'e'))
+      expect(@undoManager.stack.undo.length).toEqual(1)
+      setTimeout( =>
+        @quill.updateContents(Tandem.Delta.makeInsertDelta(14, 13, 's'))
+        expect(@undoManager.stack.undo.length).toEqual(2)
+        done()
+      , Quill.Module.UndoManager.DEFAULTS.delay * 1.25)
+    )
+
     it('hotkeys', ->
       @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 0, 'A '))
       changed = @quill.getContents()
