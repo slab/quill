@@ -8,12 +8,13 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON: {'bold', 'italic', 'strike', 'underline'}
-    SELECT: {'align', 'background', 'color', 'font', 'size'}
+    BUTTON: { 'bold', 'italic', 'strike', 'underline' }
+    SELECT: { 'align', 'background', 'color', 'font', 'size' }
 
   constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
+    @activeFormats = {}
     _.each(@quill.options.formats, (format) =>
       if Toolbar.formats.BUTTON[format]?
         this.initFormat(format, 'click')
@@ -26,7 +27,10 @@ class Toolbar
   initFormat: (format, eventName) ->
     input = this._getInput(format)
     return unless input?
+    triggering = false
     DOM.addEventListener(input, eventName, =>
+      return if triggering
+      triggering = true
       value = if eventName == 'change' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
       @quill.focus()
       range = @quill.getSelection()
@@ -35,29 +39,37 @@ class Toolbar
           @quill.prepareFormat(format, value)
         else
           @quill.formatText(range, format, value, 'user')
-      this.setActive(input, value)
+      this.setActive(format, value)
+      triggering = false
       return false
     )
 
-  setActive: (input, value) ->
-    if input.tagName == 'SELECT'
-      value = '' if _.isArray(value)
-      input.value = value
+  setActive: (format, value) ->
+    if value
+      @activeFormats[format] = value
     else
-      DOM.addClass(input, 'sc-active')
+      delete @activeFormats[format]
+    input = this._getInput(format)
+    return unless input?
+    if input.tagName == 'SELECT'
+      if value
+        value = '' if _.isArray(value)
+        DOM.selectOption(input, value)
+      else
+        DOM.resetSelect(input, false)
+    else
+      DOM.toggleClass(input, 'sc-active', value)
 
   updateActive: (range) ->
-    return
     activeFormats = this._getActive(range)
-    _.each(@container.querySelectorAll('select'), _.bind(DOM.resetSelect))
-    _.each(@container.querySelectorAll('.sc-active'), (button) =>
-      DOM.removeClass(button, 'sc-active')
+    _.each(_.keys(@activeFormats), (name) =>
+      if activeFormats[name]?
+        this.setActive(name, activeFormats[name]) if activeFormats[name] != @activeFormats[name]
+      else
+        this.setActive(name, false)
     )
-    _.each(activeFormats, (value, key) =>
-      return unless value
-      input = this._getInput(key)
-      return unless input?
-      this.setActive(input, value)
+    _.each(activeFormats, (value, name) =>
+      this.setActive(name, value) unless @activeFormats[name]?
     )
 
   _getInput: (format) ->
@@ -68,10 +80,13 @@ class Toolbar
 
   _getActive: (range) ->
     if range?
-      contents = @quill.getContents(range)
+      if range.isCollapsed()
+        contents = @quill.getContents(range)
+      else
+        index = Math.max(0, range.start - 1)
+        contents = @quill.getContents(index, index)
       formatsArr = _.pluck(contents, 'attributes')
-      return {} unless formatsArr.length > 0
-      activeFormats = formatsArr[0]
+      activeFormats = formatsArr[0] or {}
       _.each(formatsArr.slice(1), (formats) ->
         _.each(_.keys(activeFormats), (name) ->
           if formats[name]
