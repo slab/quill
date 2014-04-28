@@ -6,13 +6,13 @@ Tandem = require('tandem-core')
 
 class Keyboard
   @hotkeys:
-    BOLD:       { key: 'B',          meta: true }
-    INDENT:     { key: DOM.KEYS.TAB, shift: false }
-    ITALIC:     { key: 'I',          meta: true }
-    OUTDENT:    { key: DOM.KEYS.TAB, shift: true }
-    UNDERLINE:  { key: 'U',          meta: true }
-    UNDO:       { key: 'Z',          meta: true, shift: false }
-    REDO:       { key: 'Z',          meta: true, shift: true }
+    BOLD:       { key: 'B',          metaKey: true }
+    INDENT:     { key: DOM.KEYS.TAB, shiftKey: false }
+    ITALIC:     { key: 'I',          metaKey: true }
+    OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
+    UNDERLINE:  { key: 'U',          metaKey: true }
+    UNDO:       { key: 'Z',          metaKey: true, shiftKey: false }
+    REDO:       { key: 'Z',          metaKey: true, shiftKey: true }
 
   @NAVIGATION: [DOM.KEYS.UP, DOM.KEYS.DOWN, DOM.KEYS.LEFT, DOM.KEYS.RIGHT]
 
@@ -24,7 +24,6 @@ class Keyboard
 
   addHotkey: (hotkey, callback) ->
     hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
-    hotkey.key = hotkey.key.toUpperCase().charCodeAt(0) if _.isString(hotkey.key)
     hotkey.callback = callback
     @hotkeys[hotkey.key] ?= []
     @hotkeys[hotkey.key].push(hotkey)
@@ -62,15 +61,14 @@ class Keyboard
 
   _initListeners: ->
     DOM.addEventListener(@editorContainer, 'keydown', (event) =>
-      if @hotkeys[event.which]?
-        prevent = false
+      prevent = false
+      if @hotkeys[event.key]?
         range = @quill.getSelection()
-        if range?   # Should only not be the case if keydown was programmatically triggered
-          _.each(@hotkeys[event.which], (hotkey) =>
-            return if hotkey.meta? and (event.metaKey != hotkey.meta and event.ctrlKey != hotkey.meta)
-            return if hotkey.shift? and event.shiftKey != hotkey.shift
-            prevent = hotkey.callback(range) == false or prevent
-          )
+        _.each(@hotkeys[event.key], (hotkey) =>
+          return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)
+          return if hotkey.shiftKey? and event.shiftKey != hotkey.shiftKey
+          prevent = hotkey.callback(range) == false or prevent
+        )
       return !prevent
     )
 
