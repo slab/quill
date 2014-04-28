@@ -105,50 +105,73 @@ describe('DOM', ->
   )
 
   describe('events', ->
-    beforeEach( ->
-      $(@container).html('
-        <div>
-          <button type="button">Button</button>
+    describe('addEventListener()', ->
+      beforeEach( ->
+        $(@container).html('<div><button type="button">Button</button></div>')
+        @button = @container.querySelector('button')
+      )
+
+      it('click', (done) ->
+        Quill.DOM.addEventListener(@button, 'click', _.partial(done, null))
+        $(@button).trigger('click')
+      )
+
+      it('bubble', (done) ->
+        Quill.DOM.addEventListener(@button.parentNode, 'click', _.partial(done, null))
+        $(@button).trigger('click')
+      )
+
+      it('prevent bubble', (done) ->
+        Quill.DOM.addEventListener(@button, 'click', ->
+          _.defer(done)
+          return false
+        )
+        Quill.DOM.addEventListener(@button.parentNode, 'click', ->
+          throw new Error('Bubble not prevented')
+        )
+        $(@button).trigger('click')
+      )
+    )
+
+    describe('triggerEvent()', ->
+      it('click', ->
+        $(@container).html('<button type="button" onclick="window._triggerClick = true;">Button</button>')
+        @button = @container.querySelector('button')
+        expect(window._triggerClick).not.toBeTruthy()
+        Quill.DOM.triggerEvent(@button, 'click')
+        expect(window._triggerClick).toBe(true)
+        window._triggerClick = undefined
+      )
+
+      it('change', (done) ->
+        $(@container).html('
           <select>
             <option value="one" selected>One</option>
             <option value="two">Two</option>
-          </select>
-        </div>'
+          </select>'
+        )
+        select = @container.querySelector('select')
+        # Only testing event handler is fired, actually changing select is tested in select section below
+        Quill.DOM.addEventListener(select, 'change', ->
+          expect(select.selectedIndex).toEqual(0)
+          done()
+        )
+        Quill.DOM.triggerEvent(select, 'change')
       )
-      # IE8 does not define firstElementChild
-      @button = @container.firstChild.children[0]
-      @select = @container.firstChild.children[1]
-    )
 
-    it('addEventListener() click', (done) ->
-      Quill.DOM.addEventListener(@button, 'click', _.partial(done, null))
-      $(@button).trigger('click')
-    )
-
-    it('addEventListener() bubble', (done) ->
-      Quill.DOM.addEventListener(@button.parentNode, 'click', _.partial(done, null))
-      $(@button).trigger('click')
-    )
-
-    it('addEventListener() prevent bubble', (done) ->
-      Quill.DOM.addEventListener(@button, 'click', ->
-        _.defer(done)
-        return false
+      it('keydown', (done) ->
+        $(@container).html('<div contenteditable=true></div>')
+        @container.firstChild.focus()
+        Quill.DOM.addEventListener(@container.firstChild, 'keydown', (event) ->
+          expect(event.key).toEqual('A')
+          expect(event.altKey).not.toBeTruthy()
+          expect(event.ctrlKey).not.toBeTruthy()
+          expect(event.metaKey).toBeTruthy()
+          expect(event.shiftKey).toBeTruthy()
+          done()
+        )
+        Quill.DOM.triggerEvent(@container.firstChild, 'keydown', { key: 'A', shiftKey: true, metaKey: true })
       )
-      Quill.DOM.addEventListener(@button.parentNode, 'click', ->
-        throw new Error('Bubble not prevented')
-      )
-      $(@button).trigger('click')
-    )
-
-    it('triggerEvent()', (done) ->
-      $(@button).on('click', _.partial(done, null))
-      Quill.DOM.triggerEvent(@button, 'click')
-    )
-
-    it('addEventListener() change', (done) ->
-      Quill.DOM.addEventListener(@select, 'change', _.partial(done, null))
-      Quill.DOM.triggerEvent(@select, 'change')
     )
   )
 
@@ -246,6 +269,7 @@ describe('DOM', ->
         <select>
           <option value="one">One</option>
           <option value="two" selected>Two</option>
+          <option value="three">Three</option>
         </select>
       ')
       @select = @container.firstChild
@@ -260,6 +284,12 @@ describe('DOM', ->
       expect($(@select).val()).toEqual('one')
       Quill.DOM.resetSelect(@select)
       expect($(@select).val()).toEqual('two')
+    )
+
+    it('selectOption()', ->
+      option = @select.children[2]
+      Quill.DOM.selectOption(@select, option)
+      expect($(@select).val()).toEqual('three')
     )
   )
 

@@ -1,6 +1,7 @@
 _     = require('lodash')
 _.str = require('underscore.string')
 
+lastKeyEvent = {}    # Workaround for fact we can't dispatch keyboard event via javascript
 
 DOM =
   ELEMENT_NODE: 1
@@ -88,7 +89,8 @@ DOM =
 
   addEventListener: (node, eventName, listener) ->
     node.addEventListener(eventName, (event) ->
-      propogate = listener.call(null, event)
+      arg = if eventName == 'keydown' or eventName == 'keyup' then lastKeyEvent else event
+      propogate = listener(arg)
       unless propogate
         event.preventDefault()
         event.stopPropagation()
@@ -111,6 +113,9 @@ DOM =
 
   getChildNodes: (parent) ->
     return _.map(parent.childNodes)
+
+  getChildren: (parent) ->
+    return _.map(parent.children)
 
   getDescendants: (parent) ->
     return _.map(parent.getElementsByTagName('*'))
@@ -185,6 +190,10 @@ DOM =
           DOM.setText(curNode, DOM.getText(curNode) + DOM.getText(curNode.nextSibling))
       curNode = nextNode
 
+  isIE: (maxVersion) ->
+    version = document.documentMode
+    return version and maxVersion >= version
+
   removeClass: (node, cssClass) ->
     return unless DOM.hasClass(node, cssClass)
     if node.classList?
@@ -204,6 +213,10 @@ DOM =
       DOM.triggerEvent(select, 'change')
     else
       select.selectedIndex = null
+
+  selectOption: (select, option) ->
+    select.selectedIndex = _.indexOf(DOM.getChildren(select), option)
+    DOM.triggerEvent(select, 'change')
 
   setStyles: (node, styles) ->
     styleString = _.map(styles, (style, name) ->
@@ -240,10 +253,25 @@ DOM =
     else
       DOM.removeClass(node, className)
 
-  triggerEvent: (elem, eventName, bubble, cancels) ->
-    evt = elem.ownerDocument.createEvent("HTMLEvents")
-    evt.initEvent(eventName, bubble, cancels)
-    elem.dispatchEvent(evt)
+  triggerEvent: (elem, eventName, options = {}) ->
+    if _.indexOf(['keypress', 'keydown', 'keyup'], eventName) < 0
+      event = elem.ownerDocument.createEvent('Event')
+      event.initEvent(eventName, options.bubbles, options.cancelable)
+    else
+      event = elem.ownerDocument.createEvent('KeyboardEvent')
+      lastKeyEvent = options
+      if DOM.isIE(10)
+        modifiers = []
+        modifiers.push('Alt') if options.altKey
+        modifiers.push('Control') if options.ctrlKey
+        modifiers.push('Meta') if options.metaKey
+        modifiers.push('Shift') if options.shiftKey
+        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, elem.ownerDocument.defaultView.window, 0, 0, modifiers.join(' '), null, null)
+      else
+        # FF uses initKeyEvent, Webkit uses initKeyboardEvent
+        initFn = if _.isFunction(event.initKeyboardEvent) then 'initKeyboardEvent' else 'initKeyEvent'
+        event[initFn](eventName, options.bubbles, options.cancelable, elem.ownerDocument.defaultView.window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
+    elem.dispatchEvent(event)
 
   unwrap: (node) ->
     ret = node.firstChild
