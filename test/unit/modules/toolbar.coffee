@@ -1,4 +1,4 @@
-ddescribe('Toolbar', ->
+describe('Toolbar', ->
   beforeEach( ->
     @editorContainer = $('#editor-container').html('
       <div></div>

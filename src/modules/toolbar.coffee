@@ -86,14 +86,17 @@ class Toolbar
 
   _intersectFormats: (formatsArr) ->
     activeFormats = formatsArr[0] or {}
+    _.each(_.keys(activeFormats), (name) ->
+      activeFormats[name] = [activeFormats[name]] if Toolbar.formats.SELECT[name]?
+    )
     _.each(formatsArr.slice(1), (formats) ->
       _.each(_.keys(activeFormats), (name) ->
         if formats[name]
           if _.isArray(activeFormats[name])
-            activeFormats[name].push(formats[name]) if _.indexOf(activeFormats[name], formats[name]) > -1
+            activeFormats[name].push(formats[name]) unless _.indexOf(activeFormats[name], formats[name]) > -1
           else if activeFormats[name] != formats[name]
             activeFormats[name] = [activeFormats[name], formats[name]]
-        else
+        else if !Toolbar.formats.SELECT[name]?
           delete activeFormats[name]
       )
       return _.keys(activeFormats).length > 0
