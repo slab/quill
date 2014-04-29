@@ -11,6 +11,11 @@ Normalizer =
     'STRIKE' : 'S'
   }
 
+  ATTRIBUTES: {
+    'color': 'color'
+    'face' : 'fontFamily'
+  }
+
   STYLES: {
     'background-color'
     'color'
@@ -47,6 +52,11 @@ Normalizer =
     return lineNode
 
   normalizeNode: (node) ->
+    _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
+      if node.hasAttribute(attribute)
+        node.style[style] = node.getAttribute(attribute)
+        node.removeAttribute(attribute)
+    )
     Normalizer.whitelistStyles(node)
     return Normalizer.whitelistTags(node)
 
