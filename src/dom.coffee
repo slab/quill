@@ -126,6 +126,9 @@ DOM =
   getDefaultOption: (select) ->
     return select.querySelector('option[selected]')
 
+  getSelectValue: (select) ->
+    return if select.selectedIndex > -1 then select.options[select.selectedIndex].value else ''
+
   getStyles: (node) ->
     styleString = node.getAttribute('style') or ''
     obj = _.reduce(styleString.split(';'), (styles, str) ->
@@ -216,7 +219,10 @@ DOM =
 
   selectOption: (select, option, trigger = true) ->
     value = if _.isElement(option) then option.value else option
-    select.value = value
+    if value
+      select.value = value
+    else
+      select.selectedIndex = -1  # PhantomJS
     DOM.triggerEvent(select, 'change') if trigger
 
   setStyles: (node, styles) ->

@@ -287,14 +287,28 @@ describe('DOM', ->
     )
 
     it('selectOption() option', ->
-      option = @select.children[2]
-      Quill.DOM.selectOption(@select, option)
+      Quill.DOM.selectOption(@select, @select.children[2])
       expect($(@select).val()).toEqual('three')
     )
 
     it('selectOption() value', ->
       Quill.DOM.selectOption(@select, 'three')
       expect($(@select).val()).toEqual('three')
+    )
+
+    it('getSelectValue() option', ->
+      Quill.DOM.selectOption(@select, @select.children[2])
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('three')
+    )
+
+    it('getSelectValue() value', ->
+      Quill.DOM.selectOption(@select, 'three')
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('three')
+    )
+
+    it('getSelectValue() blank', ->
+      Quill.DOM.selectOption(@select, '')
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('')
     )
   )
 

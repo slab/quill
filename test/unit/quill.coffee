@@ -129,8 +129,12 @@ describe('Quill', ->
   )
 
   describe('retrievals', ->
-    it('getContents()', ->
+    it('getContents() all', ->
       expect(@quill.getContents()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\n5678\n'))
+    )
+
+    it('getContents() partial', ->
+      expect(@quill.getContents(2, 5)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '23\n56'))
     )
 
     it('getHTML()', ->

@@ -36,13 +36,15 @@ class Selection
       fn()
 
   setRange: (range, source) ->
-    return this._setNativeRange(null) unless range?
-    [startNode, startOffset] = this._indexToPosition(range.start)
-    if range.isCollapsed()
-      [endNode, endOffset] = [startNode, startOffset]
+    if range?
+      [startNode, startOffset] = this._indexToPosition(range.start)
+      if range.isCollapsed()
+        [endNode, endOffset] = [startNode, startOffset]
+      else
+        [endNode, endOffset] = this._indexToPosition(range.end)
+      this._setNativeRange(startNode, startOffset, endNode, endOffset)
     else
-      [endNode, endOffset] = this._indexToPosition(range.end)
-    this._setNativeRange(startNode, startOffset, endNode, endOffset)
+      this._setNativeRange(null)
     this.update(source)
 
   shiftAfter: (index, length, fn) ->

@@ -31,7 +31,7 @@ class Toolbar
     DOM.addEventListener(input, eventName, =>
       return if triggering
       triggering = true
-      value = if eventName == 'change' then input.options[input.selectedIndex].value else !DOM.hasClass(input, 'sc-active')
+      value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'sc-active')
       @quill.focus()
       range = @quill.getSelection()
       if range?
@@ -54,7 +54,7 @@ class Toolbar
     if input.tagName == 'SELECT'
       if value
         value = '' if _.isArray(value)
-        DOM.selectOption(input, value)
+        DOM.selectOption(input, value, false)
       else
         DOM.resetSelect(input, false)
     else
@@ -75,33 +75,40 @@ class Toolbar
   _getActive: (range) ->
     if range?
       if range.isCollapsed()
-        contents = @quill.getContents(range)
+        start = Math.max(0, range.start - 1)
+        contents = @quill.getContents(start, range.end - start)
       else
-        index = Math.max(0, range.start - 1)
-        contents = @quill.getContents(index, index)
-      formatsArr = _.pluck(contents, 'attributes')
+        contents = @quill.getContents(range)
+      formatsArr = _.map(contents.ops, 'attributes')
       return this._intersectFormats(formatsArr)
     else
       return {}
 
   _intersectFormats: (formatsArr) ->
-    activeFormats = formatsArr[0] or {}
-    _.each(_.keys(activeFormats), (name) ->
-      activeFormats[name] = [activeFormats[name]] if Toolbar.formats.SELECT[name]?
-    )
-    _.each(formatsArr.slice(1), (formats) ->
-      _.each(_.keys(activeFormats), (name) ->
-        if formats[name]
+    return _.reduce(formatsArr.slice(1), (activeFormats, formats) ->
+      activeKeys = _.keys(activeFormats)
+      formatKeys = _.keys(formats)
+      intersection = _.intersection(activeKeys, formatKeys)
+      missing = _.difference(activeKeys, formatKeys)
+      added = _.difference(formatKeys, activeKeys)
+      _.each(intersection, (name) ->
+        if Toolbar.formats.SELECT[name]?
           if _.isArray(activeFormats[name])
-            activeFormats[name].push(formats[name]) unless _.indexOf(activeFormats[name], formats[name]) > -1
+            activeFormats[name].push(formats[name]) if _.indexOf(activeFormats[name], formats[name]) < 0
           else if activeFormats[name] != formats[name]
             activeFormats[name] = [activeFormats[name], formats[name]]
-        else if !Toolbar.formats.SELECT[name]?
-          delete activeFormats[name]
       )
-      return _.keys(activeFormats).length > 0
-    )
-    return activeFormats
+      _.each(missing, (name) ->
+        if Toolbar.formats.BUTTON[name]?
+          delete activeFormats[name]
+        else if Toolbar.formats.SELECT[name]? and !_.isArray(activeFormats[name])
+          activeFormats[name] = [activeFormats[name]]
+      )
+      _.each(added, (name) ->
+        activeFormats[name] = [formats[name]] if Toolbar.formats.SELECT[name]?
+      )
+      return activeFormats
+    , formatsArr[0] or {})
 
 
 module.exports = Toolbar
