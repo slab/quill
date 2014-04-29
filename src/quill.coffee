@@ -106,6 +106,12 @@ class Quill extends EventEmitter2
   formatText: (index, length, name, value, source) ->
     [index, length, formats, source] = this._buildParams(index, length, name, value, source)
     return unless length > 0
+    formats = _.reduce(formats, (formats, value, name) =>
+      format = @editor.doc.formats[name]
+      # TODO warn if no format
+      formats[name] = null unless value and value != format.config.default     # false will be composed and kept in attributes
+      return formats
+    , formats)
     delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
     @editor.applyDelta(delta, source)
 

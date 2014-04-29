@@ -91,7 +91,12 @@ describe('Quill', ->
     it('formatText()', ->
       @quill.formatText(2, 2, 'bold', true)
       expect(@quill.editor.root).toEqualHTML('<div><span>01</span><b>23</b></div><div><span>5678</span></div>', true)
+      @quill.formatText(2, 2, 'bold', false)
+      expect(@quill.editor.root).toEqualHTML('<div><span>0123</span></div><div><span>5678</span></div>', true)
+      expect(@quill.getContents(0, 4)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123'))
     )
+
+    # TODO add test for formatText(range, 'size', '13px')   where 13px is the default
 
     # it('insertEmbed()', ->
     #   @quill.insertEmbed(4, 'image', 'http://quilljs.com/images/icon.png')

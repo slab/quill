@@ -2,38 +2,69 @@ describe('Toolbar', ->
   beforeEach( ->
     @editorContainer = $('#editor-container').html('
       <div>
-        <b>01</b><span>23</span><i>45</i><span style="font-size: 18px;">67</span><span style="font-size: 32px;">89</span>
+        <div>
+          <b>01</b><span>23</span><i>45</i><span style="font-size: 18px;">67</span><span style="font-size: 32px;">89</span>
+        </div>
       </div>
     ').get(0)
     @toolbarContainer = $('#toolbar-container').get(0)
     @toolbarContainer.innerHTML = @toolbarContainer.innerHTML   # Remove child listeners
     @quill = new Quill(@editorContainer.firstChild)
     @toolbar = @quill.addModule('toolbar', { container: @toolbarContainer })
+    @button = @toolbarContainer.querySelector('.sc-bold')
+    @select = @toolbarContainer.querySelector('.sc-size')
+  )
+
+  describe('format', ->
+    it('button add', ->
+      range = new Quill.Lib.Range(2, 4)
+      @quill.setSelection(range)
+      Quill.DOM.triggerEvent(@button, 'click')
+      expect(@quill.getContents(range)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '23', { bold: true }))
+    )
+
+    it('button remove', ->
+      range = new Quill.Lib.Range(0, 2)
+      @quill.setSelection(range)
+      Quill.DOM.triggerEvent(@button, 'click')
+      expect(@quill.getContents(range)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01'))
+    )
+
+    it('dropdown add', ->
+      range = new Quill.Lib.Range(2, 4)
+      @quill.setSelection(range)
+      Quill.DOM.selectOption(@select, '18px')
+      expect(@quill.getContents(range)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '23', { size: '18px' }))
+    )
+
+    it('dropdown remove', ->
+      range = new Quill.Lib.Range(6, 8)
+      @quill.setSelection(range)
+      Quill.DOM.resetSelect(@select)
+      expect(@quill.getContents(range)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '67'))
+    )
   )
 
   describe('updateActive()', ->
     it('button', ->
-      button = @toolbarContainer.querySelector('.sc-bold')
       @quill.setSelection(1, 1)
-      expect(Quill.DOM.hasClass(button, 'sc-active')).toBe(true)
+      expect(Quill.DOM.hasClass(@button, 'sc-active')).toBe(true)
       @quill.setSelection(null)
-      expect(Quill.DOM.hasClass(button, 'sc-active')).toBe(false)
+      expect(Quill.DOM.hasClass(@button, 'sc-active')).toBe(false)
     )
 
     it('dropdown', ->
-      dropdown = @toolbarContainer.querySelector('.sc-size')
       @quill.setSelection(7, 7)
-      expect(Quill.DOM.getSelectValue(dropdown)).toEqual('18px')
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('18px')
       @quill.setSelection(9, 9)
-      expect(Quill.DOM.getSelectValue(dropdown)).toEqual('32px')
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('32px')
       @quill.setSelection(3, 3)
-      expect(Quill.DOM.getSelectValue(dropdown)).toEqual('13px')
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('13px')
     )
 
     it('dropdown blank', ->
-      dropdown = @toolbarContainer.querySelector('.sc-size')
       @quill.setSelection(5, 7)
-      expect(Quill.DOM.getSelectValue(dropdown)).toEqual('')
+      expect(Quill.DOM.getSelectValue(@select)).toEqual('')
     )
   )
 
@@ -91,11 +122,3 @@ describe('Toolbar', ->
     )
   )
 )
-
-###
-
-format
-  similar to keyboard tests
-  do selection changes similar to keyboard tests
-
-###
