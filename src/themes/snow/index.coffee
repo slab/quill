@@ -24,8 +24,54 @@ class SnowTheme extends DefaultTheme
         </span>
         <span class="cursor-caret"></span>'
 
-  constructor: (@quill, options) ->
+  @STYLES:
+    '.snow .cursor-name':
+      'border-radius': '4px'
+      'font-size': '11px'
+      'font-family': 'Arial'
+      'margin-left': '-50%'
+      'padding': '4px 10px'
+    '.snow .cursor-triangle':
+      'border-left': '4px solid transparent'
+      'border-right': '4px solid transparent'
+      'height': '0px'
+      'margin-left': '-3px'
+      'width': '0px'
+    '.snow .cursor.left .cursor-name':
+      'margin-left': '-8px'
+    '.snow .cursor.right .cursor-flag':
+      'right': 'auto'
+    '.snow .cursor.right .cursor-name':
+      'margin-left': '-100%'
+      'margin-right': '-8px'
+    '.snow .cursor-triangle.bottom':
+      'border-top': '4px solid transparent'
+      'display': 'block'
+      'margin-bottom': '-1px'
+    '.snow .cursor-triangle.top':
+      'border-bottom': '4px solid transparent'
+      'display': 'none'
+      'margin-top': '-1px'
+    '.snow .cursor.top .cursor-triangle.bottom':
+      'display': 'none'
+    '.snow .cursor.top .cursor-triangle.top':
+      'display': 'block'
+    '.snow a':
+      'color': '#06c'
+    '.snow .tooltip':
+      'border': '1px solid #ccc'
+      'box-shadow': '0px 0px 5px #ddd'
+      'color': '#222'
+    '.snow .tooltip a':
+      'color': '#06c'
+    '.snow .tooltip .input':
+      'border': '1px solid #ccc'
+      'margin': '0px'
+      'padding': '3px'
+
+  constructor: (@quill) ->
     super
+    @quill.addStyles(SnowTheme.STYLES)
     @pickers = []
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, =>
       _.each(@pickers, (picker) ->
@@ -33,60 +79,10 @@ class SnowTheme extends DefaultTheme
       )
     )
     DOM.addClass(@editorContainer.ownerDocument.body, 'snow')
-    @quill.onModuleLoad('link-tooltip', _.bind(this.extendLinkTooltip, this))
     @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
     @quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
 
-  extendLinkTooltip: (module) ->
-    @quill.addStyles(
-      '.snow a':
-        'color': '#06c'
-      '.snow .link-tooltip-container':
-        'border': '1px solid #ccc'
-        'box-shadow': '0px 0px 5px #ddd'
-        'color': '#222'
-      '.snow .link-tooltip-container a':
-        'color': '#06c'
-      '.snow .link-tooltip-container .input':
-        'border': '1px solid #ccc'
-        'margin': '0px'
-        'padding': '3px'
-    )
-
   extendMultiCursor: (module) ->
-    @quill.addStyles(
-      '.snow .cursor-name':
-        'border-radius': '4px'
-        'font-size': '11px'
-        'font-family': 'Arial'
-        'margin-left': '-50%'
-        'padding': '4px 10px'
-      '.snow .cursor-triangle':
-        'border-left': '4px solid transparent'
-        'border-right': '4px solid transparent'
-        'height': '0px'
-        'margin-left': '-3px'
-        'width': '0px'
-      '.snow .cursor.left .cursor-name':
-        'margin-left': '-8px'
-      '.snow .cursor.right .cursor-flag':
-        'right': 'auto'
-      '.snow .cursor.right .cursor-name':
-        'margin-left': '-100%'
-        'margin-right': '-8px'
-      '.snow .cursor-triangle.bottom':
-        'border-top': '4px solid transparent'
-        'display': 'block'
-        'margin-bottom': '-1px'
-      '.snow .cursor-triangle.top':
-        'border-bottom': '4px solid transparent'
-        'display': 'none'
-        'margin-top': '-1px'
-      '.snow .cursor.top .cursor-triangle.bottom':
-        'display': 'none'
-      '.snow .cursor.top .cursor-triangle.top':
-        'display': 'block'
-    )
     module.on(module.constructor.events.CURSOR_ADDED, (cursor) ->
       bottomTriangle = cursor.elem.querySelector('.cursor-triangle.bottom')
       topTriangle = cursor.elem.querySelector('.cursor-triangle.top')

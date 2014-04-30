@@ -1,7 +1,7 @@
 class DefaultTheme
   @OPTIONS: {}
 
-  constructor: (@quill, options) ->
+  constructor: (@quill) ->
     @editor = @quill.editor
     @editorContainer = @editor.root
 
