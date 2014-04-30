@@ -8,23 +8,29 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON: { 'bold', 'italic', 'strike', 'underline' }
+    BUTTON: { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
     SELECT: { 'align', 'background', 'color', 'font', 'size' }
+    TOOLTIP: { 'image', 'link' }
 
   constructor: (@quill, @editorContainer, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     @activeFormats = {}
     _.each(@quill.options.formats, (format) =>
-      if Toolbar.formats.BUTTON[format]?
-        this.initFormat(format, 'click')
-      else if Toolbar.formats.SELECT[format]?
-        this.initFormat(format, 'change')
+      return if Toolbar.formats.TOOLTIP[format]?
+      eventName = if Toolbar.formats.SELECT[format]? then 'change' else 'click'
+      this.initFormat(format, eventName, (range, value) =>
+        if range.isCollapsed()
+          @quill.prepareFormat(format, value)
+        else
+          @quill.formatText(range, format, value, 'user')
+        this.setActive(format, value)
+      )
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
     DOM.addClass(@container, 'sc-toolbar-container')
 
-  initFormat: (format, eventName) ->
+  initFormat: (format, eventName, callback) ->
     input = @container.querySelector(".sc-#{format}")
     return unless input?
     triggering = false
@@ -34,14 +40,9 @@ class Toolbar
       value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'sc-active')
       @quill.focus()
       range = @quill.getSelection()
-      if range?
-        if range.isCollapsed()
-          @quill.prepareFormat(format, value)
-        else
-          @quill.formatText(range, format, value, 'user')
-      this.setActive(format, value)
+      callback(range, value) if range?
       triggering = false
-      return false
+      return true
     )
 
   setActive: (format, value) ->

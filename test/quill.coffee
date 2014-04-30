@@ -19,10 +19,12 @@ Quill.Lib =
 Quill.Module =
   Authorship    : require('../src/modules/authorship')
   Keyboard      : require('../src/modules/keyboard')
+  ImageTooltip  : require('../src/modules/image-tooltip')
   LinkTooltip   : require('../src/modules/link-tooltip')
   MultiCursor   : require('../src/modules/multi-cursor')
   PasteManager  : require('../src/modules/paste-manager')
   Toolbar       : require('../src/modules/toolbar')
+  Tooltip       : require('../src/modules/tooltip')
   UndoManager   : require('../src/modules/undo-manager')
 
 Quill.Theme =

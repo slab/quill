@@ -1,140 +1,99 @@
-_        = require('lodash')
-DOM      = require('../dom')
+_       = require('lodash')
+DOM     = require('../dom')
+Tooltip = require('./tooltip')
 
 
-enterEditMode = (url) ->
-  url = normalizeUrl(url)
-  DOM.addClass(@tooltip, 'editing')
-  @tooltipInput.focus()
-  @tooltipInput.value = url
-
-exitEditMode = ->
-  if @savedLink? or DOM.getText(@tooltipLink) != @tooltipInput.value
-    url = normalizeUrl(@tooltipInput.value)
-    @tooltipLink.href = url
-    DOM.setText(@tooltipLink, url)
-    if @savedLink?
-      @savedLink.href = url
-      @savedLink = null
-    else
-      formatLink.call(this, @tooltipInput.value)
-  DOM.removeClass(@tooltip, 'editing')
-
-formatLink = (value) ->
-  @quill.setSelection(@savedRange, 'silent')
-  @quill.formatText(@savedRange, 'link', value, 'user')
-
-hideTooltip = ->
-  @tooltip.style.left = '-10000px'
-
-initListeners = ->
-  DOM.addEventListener(@editorContainer, 'mouseup', (event) =>
-    link = event.target
-    while link? and link.tagName != 'DIV' and link.tagName != 'BODY'
-      if link.tagName == 'A'
-        url = normalizeUrl(link.href)
-        @tooltipLink.href = url
-        DOM.setText(@tooltipLink, url)
-        DOM.removeClass(@tooltip, 'editing')
-        showTooltip.call(this, link.getBoundingClientRect())
-        @savedLink = link
-        return
-      link = link.parentNode
-    hideTooltip.call(this)
-  )
-  DOM.addEventListener(@tooltipChange, 'click', =>
-    enterEditMode.call(this, DOM.getText(@tooltipLink))
-  )
-  DOM.addEventListener(@tooltipDone, 'click', =>
-    exitEditMode.call(this)
-  )
-  DOM.addEventListener(@tooltipInput, 'keyup', (event) =>
-    exitEditMode.call(this) if event.which == DOM.KEYS.ENTER
-  )
-  return unless @options.button?
-  DOM.addEventListener(@options.button, 'click', =>
-    @savedRange = @quill.getSelection()
-    return unless @savedRange? and !@savedRange.isCollapsed()
-    if DOM.hasClass(@options.button, 'active')
-      formatLink.call(this, false)
-      hideTooltip.call(this)
-    else
-      url = normalizeUrl(@savedRange.getText())
-      if /\w+\.\w+/.test(url)
-        @quill.focus()
-        formatLink.call(this, url)
-      else
-        DOM.addClass(@tooltip, 'editing')
-        showTooltip.call(this, @quill.editor.selection.getDimensions())
-        enterEditMode.call(this, url)
-  )
-
-initTooltip = ->
-  @tooltip = @quill.addContainer('link-tooltip-container')
-  hideTooltip.call(this)
-  @tooltip.innerHTML =
-   '<span class="title">Visit URL:</span>
-    <a href="#" class="url" target="_blank" href="about:blank"></a>
-    <input class="input" type="text">
-    <span>&#45;</span>
-    <a href="javascript:;" class="change">Change</a>
-    <a href="javascript:;" class="done">Done</a>'
-  @tooltipLink = @tooltip.querySelector('.url')
-  @tooltipInput = @tooltip.querySelector('.input')
-  @tooltipChange = @tooltip.querySelector('.change')
-  @tooltipDone = @tooltip.querySelector('.done')
-  @quill.addStyles(
-    '.link-tooltip-container': {
-      'background-color': '#fff'
-      'border': '1px solid #000'
-      'height': '23px'
-      'padding': '5px 10px'
-      'position': 'absolute'
-      'white-space': 'nowrap'
-    }
-    '.link-tooltip-container a': {
-      'cursor': 'pointer'
-      'text-decoration': 'none'
-    }
-    '.link-tooltip-container > a, .link-tooltip-container > span': {
-      'display': 'inline-block'
-      'line-height': '23px'
-    }
-    '.link-tooltip-container .input'          : { 'display': 'none', 'width': '170px' }
-    '.link-tooltip-container .done'           : { 'display': 'none' }
-    '.link-tooltip-container.editing .input'  : { 'display': 'inline-block' }
-    '.link-tooltip-container.editing .done'   : { 'display': 'inline-block' }
-    '.link-tooltip-container.editing .url'    : { 'display': 'none' }
-    '.link-tooltip-container.editing .change' : { 'display': 'none' }
-  )
-
-normalizeUrl = (url) ->
-  url = 'http://' + url unless /^https?:\/\//.test(url)
-  url = url.slice(0, url.length - 1) if url.slice(url.length - 1) == '/' # Remove trailing slash to standardize between browsers
-  return url
-
-showTooltip = (target, subjectDist = 5) ->
-  tooltip = @tooltip.getBoundingClientRect()
-  tooltipHeight = tooltip.bottom - tooltip.top
-  tooltipWidth = tooltip.right - tooltip.left
-  limit = @editorContainer.getBoundingClientRect()
-  left = Math.max(limit.left, target.left + (target.right-target.left)/2 - tooltipWidth/2)
-  if left + tooltipWidth > limit.right and limit.right - tooltipWidth > limit.left
-    left = limit.right - tooltipWidth
-  top = target.bottom + subjectDist
-  if top + tooltipHeight > limit.bottom and target.top - tooltipHeight - subjectDist > limit.top
-    top = target.top - tooltipHeight - subjectDist
-  @tooltip.style.left = left + 'px'
-  @tooltip.style.top = (top + (@tooltip.offsetTop-tooltip.top)) + 'px'
-
-
-class LinkTooltip
-  DEFAULTS:
-    button: null
+class LinkTooltip extends Tooltip
+  @DEFAULTS:
+    styles:
+      '.link-tooltip-container a': {
+        'cursor': 'pointer'
+        'text-decoration': 'none'
+      }
+      '.link-tooltip-container > a, .link-tooltip-container > span': {
+        'display': 'inline-block'
+        'line-height': '24px'
+      }
+      '.link-tooltip-container .input'          : { 'display': 'none', 'width': '170px' }
+      '.link-tooltip-container .done'           : { 'display': 'none' }
+      '.link-tooltip-container.editing .input'  : { 'display': 'inline-block' }
+      '.link-tooltip-container.editing .done'   : { 'display': 'inline-block' }
+      '.link-tooltip-container.editing .url'    : { 'display': 'none' }
+      '.link-tooltip-container.editing .change' : { 'display': 'none' }
+    template:
+     '<span class="title">Visit URL:&nbsp;</span>
+      <a href="#" class="url" target="_blank" href="about:blank"></a>
+      <input class="input" type="text">
+      <span>&nbsp;&#45;&nbsp;</span>
+      <a href="javascript:;" class="change">Change</a>
+      <a href="javascript:;" class="done">Done</a>'
 
   constructor: (@quill, @editorContainer, @options) ->
-    initTooltip.call(this)
-    initListeners.call(this)
+    @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
+    super(@quill, @editorContainer, @options)
+    @options = _.defaults(@options, Tooltip.DEFAULTS)
+    DOM.addClass(@container, 'link-tooltip-container')
+    @textbox = @container.querySelector('.input')
+    @link = @container.querySelector('.url')
+    this.initToolbar()
+    this.initListeners()
+
+  initListeners: ->
+    @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
+      return unless range? and range.isCollapsed()
+      index = Math.max(0, range.start - 1)
+      [line, offset] = @quill.editor.doc.findLineAt(index)
+      return unless line?
+      [leaf, offset] = line.findLeafAt(offset)
+      node = leaf.node
+      while node?
+        if node.tagName == 'A'
+          this.setMode(node.href, false)
+          this.show(node)
+        else
+          node = node.parentNode
+    )
+    DOM.addEventListener(@container.querySelector('.done'), 'click', _.bind(this.saveLink, this))
+    DOM.addEventListener(@textbox, 'keyup', (event) =>
+      this.saveLink() if event.which == DOM.KEYS.ENTER
+    )
+    DOM.addEventListener(@container.querySelector('.change'), 'click', =>
+      this.setMode(@link.href, true)
+    )
+
+  initToolbar: ->
+    @quill.onModuleLoad('toolbar', (toolbar) =>
+      toolbar.initFormat('link', 'click', (range, value) =>
+        if value
+          this.setMode(this._suggestURL(range), true)
+          nativeRange = @quill.editor.selection._getNativeRange()
+          this.show(nativeRange)
+        else
+          @quill.formatText(range, 'link', false, 'user')
+      )
+    )
+
+  saveLink: ->
+    url = this._normalizeURL(@textbox.value)
+    @quill.formatText(@range, 'link', url) if @range?
+    this.setMode(url, false)
+
+  setMode: (url, edit = false) ->
+    if edit
+      @textbox.value = url
+    else
+      @link.href = url
+    DOM.toggleClass(@container, 'editing', edit)
+
+  _normalizeURL: (url) ->
+    url = 'http://' + url unless /^https?:\/\//.test(url)
+    # TODO do we need this?
+    # url += '/' if url.slice(url.length - 1) != '/' # Add trailing slash to standardize between browsers
+    return url
+
+  _suggestURL: (range) ->
+    text = @quill.getText(range)
+    return this._normalizeURL(text)
 
 
 module.exports = LinkTooltip
