@@ -40,22 +40,23 @@ class Tooltip
   _limit: (left, top) ->
     editorRect = @editorContainer.getBoundingClientRect()
     toolbarRect = @container.getBoundingClientRect()
-    left = Math.min(editorRect.right - toolbarRect.width - @options.margin, toolbarRect.left)
-    left = Math.max(editorRect.left + @options.margin, toolbarRect.left)
-    top = Math.min(editorRect.bottom - toolbarRect.height - @options.margin, toolbarRect.top)
-    top = Math.max(editorRect.top + @options.margin, toolbarRect.top)
+    left = Math.min(editorRect.right - toolbarRect.width - @options.margin, toolbarRect.left)   # right boundary
+    left = Math.max(editorRect.left + @options.margin, toolbarRect.left)                        # left boundary
+    top = Math.min(editorRect.bottom - toolbarRect.height - @options.margin, toolbarRect.top)   # bottom boundary
+    top = Math.max(editorRect.top + @options.margin, toolbarRect.top)                           # top boundary
     return [left, top]
 
   _position: (reference) ->
     toolbarRect = @container.getBoundingClientRect()
     editorRect = @editorContainer.getBoundingClientRect()
-    left = editorRect.left + editorRect.width/2 - toolbarRect.width/2
     if reference?
       referenceBounds = reference.getBoundingClientRect()
+      left = referenceBounds.left + referenceBounds.width/2 - toolbarRect.width/2
       top = referenceBounds.top + referenceBounds.height + @options.offset
       if top + toolbarRect.height > editorRect.bottom - @options.margin
-        top = referenceBounds.top - referenceBounds.height - @options.offset
+        top = referenceBounds.top - toolbarRect.height - @options.offset
     else
+      left = editorRect.left + editorRect.width/2 - toolbarRect.width/2
       top = editorRect.top + editorRect.height/2 - toolbarRect.height/2
     return [left, top]
 
