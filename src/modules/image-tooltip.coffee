@@ -21,7 +21,9 @@ class ImageTooltip extends Tooltip
     this.initToolbar()
     DOM.addEventListener(@container.querySelector('.done'), 'click', =>
       url = this._normalizeURL(@textbox.value)
-      @quill.insertEmbed(@range.end, 'image', url, 'user') if @range
+      if @range
+        @quill.insertEmbed(@range.end, 'image', url, 'user')
+        @quill.setSelection(@range.end + 1, @range.end + 1)
       @textbox.value = ''
       this.hide()
     )
@@ -41,7 +43,7 @@ class ImageTooltip extends Tooltip
       )
     )
 
-  _normalizeURL: ->
+  _normalizeURL: (url) ->
     # For now identical to link-tooltip but will change when we allow data uri
     url = 'http://' + url unless /^https?:\/\//.test(url)
     return url

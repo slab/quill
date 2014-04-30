@@ -99,7 +99,7 @@ class Line extends LinkedList.Node
         targetNode = leaf.node
         while !value and !format.match(targetNode)
           if targetNode.previousSibling?
-            Utils.splitAncestors(targetNode, targetNode.parentNode.parentNode)
+            Utils.splitAncestors(targetNode, @node)
           targetNode = targetNode.parentNode
         # Isolate target node
         if leafOffset > 0
@@ -125,8 +125,8 @@ class Line extends LinkedList.Node
       , @node.ownerDocument.createTextNode(text))
       node = DOM.wrap(@node.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), node) if DOM.isTextNode(node)
       [prevNode, nextNode] = Utils.splitNode(leaf.node, leafOffset)
-      refNode = Utils.splitAncestors(nextNode, @node)
-      @node.insertBefore(node, refNode)
+      nextNode = Utils.splitAncestors(nextNode, @node) if nextNode
+      @node.insertBefore(node, nextNode)
       this.rebuild()
 
   optimize: ->
