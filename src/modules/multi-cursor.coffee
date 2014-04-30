@@ -130,9 +130,10 @@ class MultiCursor extends EventEmitter2
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
   _updateCursor: (cursor) ->
-    @quill.editor.doSilently( =>
-      [leafNode, offset] = Position.findLeafNode(@editorContainer, cursor.index)
-      guide = @container.ownerDocument.createElement('span')
+    [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index)
+    guide = @container.ownerDocument.createElement('span')
+    if leaf?
+      leafNode = leaf.node
       if !leafNode.firstChild?
         DOM.setText(guide, DOM.NOBREAK_SPACE)
         # Should only be the case for empty lines
@@ -147,9 +148,12 @@ class MultiCursor extends EventEmitter2
         else if leftText?
           leftText.parentNode.appendChild(guide)
           this._moveCursor(cursor, guide)
-      guide.parentNode.removeChild(guide)
-      DOM.normalize(leafNode) if didSplit
-    )
+    else
+      DOM.setText(guide, DOM.NOBREAK_SPACE)
+      @editorContainer.appendChild(guide)
+      this._moveCursor(cursor, guide)
+    guide.parentNode.removeChild(guide)
+    DOM.normalize(leafNode) if didSplit
     cursor.dirty = false
 
 

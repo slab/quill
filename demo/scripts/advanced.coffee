@@ -33,7 +33,7 @@ listenEditor = (source, target) ->
     console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
   ).on(Quill.events.SELECTION_CHANGE, (range) ->
     return unless range?
-    target.getModule('multi-cursor').moveCursor(source.id, range.end.index)
+    target.getModule('multi-cursor').moveCursor(source.id, range.end)
   )
 
 
@@ -44,9 +44,9 @@ for num in [1, 2]
   editor = new Quill($container.get(0), {
     modules:
       'multi-cursor': true
-      'toolbar': {
-        container: $('.toolbar-container', $wrapper).get(0)
-      }
+      'toolbar': { container: $('.toolbar-container', $wrapper).get(0) }
+      'link-tooltip': true
+      'image-tooltip': true
     theme: 'snow'
   })
   authorship = editor.addModule('authorship', {

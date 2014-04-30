@@ -13,7 +13,8 @@ class Authorship
   constructor: (@quill, @editorContainer, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
-    @quill.addFormat('author', { class: /^author-(.*)$/ });
+    # TODO fix
+    @quill.addFormat('author', { class: /^author-(.*)$/ })
     return unless @options.authorId?
     @quill.on(@quill.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @quill.constructor.events.TEXT_CHANGE and origin == 'user'
@@ -35,7 +36,7 @@ class Authorship
         , (index, length, name, value) =>
           authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))
         )
-        @quill.updateContents(authorDelta, { silent: true })
+        @quill.updateContents(authorDelta, 'silent')
     )
     this.addAuthor(@options.authorId, @options.color)
 

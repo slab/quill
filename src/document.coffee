@@ -22,6 +22,10 @@ class Document
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
 
+  findLeafAt: (index) ->
+    [line, offset] = this.findLineAt(index)
+    return if line? then line.findLeafAt(offset) else [null, offset]
+
   findLine: (node) ->
     while node? and node.parentNode != @root
       node = node.parentNode
