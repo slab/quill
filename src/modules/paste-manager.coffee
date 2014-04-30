@@ -14,7 +14,7 @@ class PasteManager
         'position': 'absolute'
         'top': '50%'
     )
-    DOM.addEventListener(@editorContainer.ownerDocument, 'paste', _.bind(this._paste, this))
+    DOM.addEventListener(@editorContainer, 'paste', _.bind(this._paste, this))
 
   _paste: ->
     oldDocLength = @quill.getLength()
