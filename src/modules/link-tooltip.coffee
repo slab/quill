@@ -30,8 +30,8 @@ class LinkTooltip extends Tooltip
 
   constructor: (@quill, @editorContainer, @options) ->
     @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
-    super(@quill, @editorContainer, @options)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
+    super(@quill, @editorContainer, @options)
     DOM.addClass(@container, 'link-tooltip-container')
     @textbox = @container.querySelector('.input')
     @link = @container.querySelector('.url')

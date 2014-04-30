@@ -9,6 +9,7 @@ Tandem        = require('tandem-core')
 
 Modules =
   Authorship    : require('./modules/authorship')
+  ImageTooltip  : require('./modules/image-tooltip')
   Keyboard      : require('./modules/keyboard')
   LinkTooltip   : require('./modules/link-tooltip')
   MultiCursor   : require('./modules/multi-cursor')
