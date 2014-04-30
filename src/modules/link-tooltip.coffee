@@ -50,8 +50,10 @@ class LinkTooltip extends Tooltip
         if node.tagName == 'A'
           this.setMode(node.href, false)
           this.show(node)
+          return
         else
           node = node.parentNode
+      this.hide()
     )
     DOM.addEventListener(@container.querySelector('.done'), 'click', _.bind(this.saveLink, this))
     DOM.addEventListener(@textbox, 'keyup', (event) =>
@@ -81,14 +83,17 @@ class LinkTooltip extends Tooltip
   setMode: (url, edit = false) ->
     if edit
       @textbox.value = url
+      @textbox.focus()
+      _.defer( =>
+        @textbox.setSelectionRange(url.length, url.length)
+      )
     else
       @link.href = url
+      DOM.setText(@link, url)
     DOM.toggleClass(@container, 'editing', edit)
 
   _normalizeURL: (url) ->
     url = 'http://' + url unless /^https?:\/\//.test(url)
-    # TODO do we need this?
-    # url += '/' if url.slice(url.length - 1) != '/' # Add trailing slash to standardize between browsers
     return url
 
   _suggestURL: (range) ->

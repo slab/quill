@@ -5,7 +5,6 @@ Normalizer = require('../normalizer')
 
 class Tooltip
   @DEFAULTS:
-    margin: 10
     offset: 10
     styles:
       '.tooltip': {
@@ -40,10 +39,10 @@ class Tooltip
   _limit: (left, top) ->
     editorRect = @editorContainer.getBoundingClientRect()
     toolbarRect = @container.getBoundingClientRect()
-    left = Math.min(editorRect.right - toolbarRect.width - @options.margin, toolbarRect.left)   # right boundary
-    left = Math.max(editorRect.left + @options.margin, toolbarRect.left)                        # left boundary
-    top = Math.min(editorRect.bottom - toolbarRect.height - @options.margin, toolbarRect.top)   # bottom boundary
-    top = Math.max(editorRect.top + @options.margin, toolbarRect.top)                           # top boundary
+    left = Math.min(editorRect.right - toolbarRect.width, left)   # right boundary
+    left = Math.max(editorRect.left, left)                        # left boundary
+    top = Math.min(editorRect.bottom - toolbarRect.height, top)   # bottom boundary
+    top = Math.max(editorRect.top, top)                           # top boundary
     return [left, top]
 
   _position: (reference) ->
@@ -53,7 +52,7 @@ class Tooltip
       referenceBounds = reference.getBoundingClientRect()
       left = referenceBounds.left + referenceBounds.width/2 - toolbarRect.width/2
       top = referenceBounds.top + referenceBounds.height + @options.offset
-      if top + toolbarRect.height > editorRect.bottom - @options.margin
+      if top + toolbarRect.height > editorRect.bottom
         top = referenceBounds.top - toolbarRect.height - @options.offset
     else
       left = editorRect.left + editorRect.width/2 - toolbarRect.width/2

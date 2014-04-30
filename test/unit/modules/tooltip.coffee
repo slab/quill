@@ -8,7 +8,7 @@ describe('Tooltip', ->
   beforeEach( ->
     @editorContainer = $('#editor-container').html('<div></div>').get(0)
     @quill = new Quill(@editorContainer.firstChild)
-    @tooltip = @quill.addModule('tooltip', { offset: 20, margin: 20 })
+    @tooltip = @quill.addModule('tooltip', { offset: 20 })
   )
 
   describe('show/hide', ->
