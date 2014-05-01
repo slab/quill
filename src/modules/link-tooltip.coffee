@@ -8,11 +8,11 @@ class LinkTooltip extends Tooltip
     styles:
       '.link-tooltip-container':
         'padding': '5px 10px'
-      '.link-tooltip-container .input':
+      '.link-tooltip-container input.input':
         'width': '170px'
-      '.link-tooltip-container .input, .link-tooltip-container .done, .link-tooltip-container.editing .url, .link-tooltip-container.editing .change':
+      '.link-tooltip-container input.input, .link-tooltip-container a.done, .link-tooltip-container.editing a.url, .link-tooltip-container.editing a.change':
         'display': 'none'
-      '.link-tooltip-container.editing .input, .link-tooltip-container.editing .done':
+      '.link-tooltip-container.editing input.input, .link-tooltip-container.editing a.done':
         'display': 'inline-block'
     template:
      '<span class="title">Visit URL:&nbsp;</span>
@@ -36,7 +36,7 @@ class LinkTooltip extends Tooltip
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       return unless range? and range.isCollapsed()
       [leaf, offset] = @quill.editor.doc.findLeafAt(Math.max(0, range.start - 1))
-      node = leaf.node
+      node = leaf.node if leaf?
       while node?
         if node.tagName == 'A'
           this.setMode(node.href, false)

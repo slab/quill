@@ -25,6 +25,11 @@ class SnowTheme extends DefaultTheme
         <span class="cursor-caret"></span>'
 
   @STYLES:
+    '.snow .image-tooltip-container a':
+      'border': '1px solid #06c'
+    '.snow .image-tooltip-container a.insert':
+      'background-color': '#06c'
+      'color': '#fff'
     '.snow .cursor-name':
       'border-radius': '4px'
       'font-size': '11px'
@@ -67,7 +72,13 @@ class SnowTheme extends DefaultTheme
     '.snow .tooltip .input':
       'border': '1px solid #ccc'
       'margin': '0px'
-      'padding': '3px'
+      'padding': '5px'
+    '.snow .image-tooltip-container .preview':
+      'border-color': '#ccc'
+      'color': '#ccc'
+    '.snow .link-tooltip-container a, .snow .link-tooltip-container span':
+      'display': 'inline-block'
+      'line-height': '25px'
 
   constructor: (@quill) ->
     super
