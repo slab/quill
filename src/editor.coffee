@@ -30,20 +30,19 @@ class Editor
   applyDelta: (delta, source) ->
     localDelta = this._update()
     if localDelta
-      @delta = @delta.compose(localDelta)
       tempDelta = localDelta
       localDelta = localDelta.transform(delta, true)
       delta = delta.transform(tempDelta, false)
+      @delta = @doc.toDelta()   # Only for our error check below, otherwise dont need to update yet
     unless delta.isIdentity()   # Follows may have turned delta into the identity
-      throw new Error("Trying to apply delta to incorrect doc length") unless delta.startLength == @delta.endLength
+      throw new Error("Trying to apply delta to incorrect doc length") if delta.startLength != @delta.endLength
       delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
       @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
-      oldDelta = @delta
-      @delta = oldDelta.compose(delta)
+      @delta = @doc.toDelta()
+      @innerHTML = @root.innerHTML
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) unless source == 'silent'
     if localDelta and !localDelta.isIdentity() and source != 'silent'
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
-    @innerHTML = @root.innerHTML
 
   checkUpdate: (source = 'user') ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
