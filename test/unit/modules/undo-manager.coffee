@@ -55,7 +55,7 @@ describe('UndoManager', ->
     )
 
     it('user change', ->
-      @quill.editor.root.firstChild.innerHTML = '<span>The lazy foxes</span>'
+      @quill.root.firstChild.innerHTML = '<span>The lazy foxes</span>'
       @quill.editor.checkUpdate()
       changed = @quill.getContents()
       expect(changed).not.toEqualDelta(@original)
@@ -91,9 +91,9 @@ describe('UndoManager', ->
       @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 0, 'A '))
       changed = @quill.getContents()
       expect(changed).not.toEqualDelta(@original)
-      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.UndoManager.hotkeys.UNDO)
+      Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.UndoManager.hotkeys.UNDO)
       expect(@quill.getContents()).toEqualDelta(@original)
-      Quill.DOM.triggerEvent(@quill.editor.root, 'keydown', Quill.Module.UndoManager.hotkeys.REDO)
+      Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.UndoManager.hotkeys.REDO)
       expect(@quill.getContents()).toEqualDelta(changed)
     )
   )

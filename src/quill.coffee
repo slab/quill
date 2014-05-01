@@ -63,7 +63,8 @@ class Quill extends EventEmitter2
     @options.emitter = this
     @modules = {}
     @editor = new Editor(container, this, @options)
-    Quill.editors.push(@editor)
+    @root = @editor.doc.root
+    Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
     themeClass = _.str.capitalize(_.str.camelize(@options.theme))
     @theme = new Quill.Theme[themeClass](this, @options)
@@ -83,7 +84,7 @@ class Quill extends EventEmitter2
     throw new Error("Cannot load #{name} module. Are you sure you included it?") unless moduleClass?
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
-    @modules[name] = new moduleClass(this, @editor.root, options)
+    @modules[name] = new moduleClass(this, @root, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
@@ -102,7 +103,7 @@ class Quill extends EventEmitter2
     super(Quill.events.POST_EVENT, eventName, args...)
 
   focus: ->
-    @editor.root.focus()
+    @root.focus()
 
   formatText: (index, length, name, value, source) ->
     [index, length, formats, source] = this._buildParams(index, length, name, value, source)
@@ -126,7 +127,7 @@ class Quill extends EventEmitter2
     return new Tandem.Delta(0, ops)
 
   getHTML: ->
-    return @editor.root.innerHTML
+    return @root.innerHTML
 
   getLength: ->
     return @editor.getDelta().endLength

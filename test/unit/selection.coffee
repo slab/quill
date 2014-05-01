@@ -14,46 +14,45 @@ describe('Selection', ->
         </div>
       '
       @quill = new Quill(@container.firstChild)   # Need Quill to create iframe for focus logic
-      @doc = @quill.editor.doc
       @selection = @quill.editor.selection
     )
 
     tests =
       'text node':
         native: ->
-          return [@doc.root.querySelector('s').firstChild, 1]
+          return [@quill.root.querySelector('s').firstChild, 1]
         encoded: ->
-          return [@doc.root.querySelector('s').firstChild, 1]
+          return [@quill.root.querySelector('s').firstChild, 1]
         index: 9
       'between leaves':
         native: ->
-          return [@doc.root.querySelector('i').firstChild, 0]
+          return [@quill.root.querySelector('i').firstChild, 0]
         encoded: ->
-          return [@doc.root.querySelector('i').firstChild, 0]
+          return [@quill.root.querySelector('i').firstChild, 0]
         index: 10
       'break node':
         native: ->
-          return [@doc.root.querySelector('br').parentNode, 0]
+          return [@quill.root.querySelector('br').parentNode, 0]
         encoded: ->
-          return [@doc.root.querySelector('br'), 0]
+          return [@quill.root.querySelector('br'), 0]
         index: 5
       'before image':
         native: ->
-          return [@doc.root.querySelector('img').parentNode, 0]
+          return [@quill.root.querySelector('img').parentNode, 0]
         encoded: ->
-          return [@doc.root.querySelector('img'), 0]
+          return [@quill.root.querySelector('img'), 0]
         index: 6
       'after image':
         native: ->
-          return [@doc.root.querySelector('img').parentNode, 1]
+          return [@quill.root.querySelector('img').parentNode, 1]
         encoded: ->
-          return [@doc.root.querySelector('img'), 1]
+          return [@quill.root.querySelector('img'), 1]
         index: 7
       'end of document':
         native: ->
-          return [@doc.root.querySelector('i').firstChild, 2]
+          return [@quill.root.querySelector('i').firstChild, 2]
         encoded: ->
-          return [@doc.root.querySelector('i').firstChild, 2]
+          return [@quill.root.querySelector('i').firstChild, 2]
         index: 12
 
     describe('_decodePosition()', ->
@@ -82,8 +81,8 @@ describe('Selection', ->
       it('empty document', ->
         @container.innerHTML = '<div></div>'
         quill = new Quill(@container.firstChild)
-        [resultNode, resultIndex] = quill.editor.selection._encodePosition(quill.editor.doc.root, 0)
-        expect(resultNode).toEqual(quill.editor.doc.root)
+        [resultNode, resultIndex] = quill.editor.selection._encodePosition(quill.root, 0)
+        expect(resultNode).toEqual(quill.root)
         expect(resultIndex).toEqual(0)
       )
     )
@@ -100,7 +99,7 @@ describe('Selection', ->
       it('empty document', ->
         @container.innerHTML = '<div></div>'
         quill = new Quill(@container.firstChild)
-        index = quill.editor.selection._positionToIndex(quill.editor.doc.root, 0)
+        index = quill.editor.selection._positionToIndex(quill.root, 0)
         expect(index).toEqual(0)
       )
     )
@@ -119,7 +118,7 @@ describe('Selection', ->
         @container.innerHTML = '<div></div>'
         quill = new Quill(@container.firstChild)
         [node, offset] = quill.editor.selection._indexToPosition(0)
-        expect(node).toEqual(quill.editor.doc.root)
+        expect(node).toEqual(quill.root)
         expect(offset).toEqual(0)
       )
 
@@ -130,7 +129,7 @@ describe('Selection', ->
           </div>'
         quill = new Quill(@container.firstChild)
         [node, offset] = quill.editor.selection._indexToPosition(1)
-        expect(node).toEqual(quill.editor.doc.root.firstChild)
+        expect(node).toEqual(quill.root.firstChild)
         expect(offset).toEqual(1)
       )
     )
@@ -190,7 +189,7 @@ describe('Selection', ->
         quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
         quill.editor._insertAt(0, '!', { image: 'http://quilljs.com/images/icon.png' })
         quill.editor._formatAt(2, 4, 'bold', true)
-        expect(quill.editor.doc.root).toEqualHTML('
+        expect(quill.root).toEqualHTML('
           <div><img src="http://quilljs.com/images/icon.png"><br></div>
           <div><b><span>1234</span></b></div>
         ', true)
@@ -213,8 +212,8 @@ describe('Selection', ->
       )
 
       it('wrapInline() text', ->
-        @doc.root.innerHTML = 'Test'
-        textNode = @doc.root.firstChild
+        @quill.root.innerHTML = 'Test'
+        textNode = @quill.root.firstChild
         @selection._setNativeRange(textNode, 0, textNode, 4)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()
@@ -223,8 +222,8 @@ describe('Selection', ->
       )
 
       it('wrapInline() image', ->
-        @doc.root.innerHTML = '<img src="http://quilljs.com/images/icon.png">'
-        @selection._setNativeRange(@doc.root, 0, @doc.root, 1)
+        @quill.root.innerHTML = '<img src="http://quilljs.com/images/icon.png">'
+        @selection._setNativeRange(@quill.root, 0, @quill.root, 1)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()
         expect(range.start).toEqual(0)
@@ -232,9 +231,9 @@ describe('Selection', ->
       )
 
       it('handleBreaks()', ->
-        @doc.root.innerHTML = '<div>01<br>34</div>'
-        firstTextNode = @doc.root.firstChild.firstChild
-        lastTextNode = @doc.root.firstChild.lastChild
+        @quill.root.innerHTML = '<div>01<br>34</div>'
+        firstTextNode = @quill.root.firstChild.firstChild
+        lastTextNode = @quill.root.firstChild.lastChild
         @selection._setNativeRange(firstTextNode, 1, lastTextNode, 1)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()
@@ -243,9 +242,9 @@ describe('Selection', ->
       )
 
       it('pullBlocks()', ->
-        @doc.root.innerHTML = '<div><div>01</div><div>34</div></div>'
-        firstTextNode = @doc.root.firstChild.firstChild.firstChild
-        lastTextNode = @doc.root.firstChild.lastChild.firstChild
+        @quill.root.innerHTML = '<div><div>01</div><div>34</div></div>'
+        firstTextNode = @quill.root.firstChild.firstChild.firstChild
+        lastTextNode = @quill.root.firstChild.lastChild.firstChild
         @selection._setNativeRange(firstTextNode, 1, lastTextNode, 1)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()
@@ -254,9 +253,9 @@ describe('Selection', ->
       )
 
       it('wrapText()', ->
-        @doc.root.innerHTML = '<div>0123</div><div>5678</div>'
-        firstTextNode = @doc.root.firstChild.firstChild
-        lastTextNode = @doc.root.lastChild.firstChild
+        @quill.root.innerHTML = '<div>0123</div><div>5678</div>'
+        firstTextNode = @quill.root.firstChild.firstChild
+        lastTextNode = @quill.root.lastChild.firstChild
         @selection._setNativeRange(firstTextNode, 2, lastTextNode, 2)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()
@@ -265,8 +264,8 @@ describe('Selection', ->
       )
 
       it('no range', ->
-        @doc.root.innerHTML = '<div><span>Test</span></div>'
-        textNode = @doc.root.querySelector('span').firstChild
+        @quill.root.innerHTML = '<div><span>Test</span></div>'
+        textNode = @quill.root.querySelector('span').firstChild
         @selection._setNativeRange(null)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()
