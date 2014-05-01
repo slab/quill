@@ -117,6 +117,9 @@ describe('Editor', ->
         'multiple newlines':
           expected: '<div><br></div><div><br></div>'
           text: '\n\n'
+        'multiline insert':
+          expected: '<div><span>A</span></div><div><span>B</span></div>'
+          text: 'A\nB\n'
 
       _.each(tests, (test, name) ->
         it(name, ->
@@ -124,6 +127,20 @@ describe('Editor', ->
           @editor.doc.optimizeLines()
           expect(@editor.root).toEqualHTML(test.expected, true)
         )
+      )
+
+      it('formatted newline', ->
+        @editor._insertAt(0, 'A\n', { bold: true })
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<div><b>A</b></div>', true)
+        expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, 'A\n', { bold: true }))
+      )
+
+      it('multiple formatted newlines', ->
+        @editor._insertAt(0, 'A\nB\n', { bold: true })
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<div><b>A</b></div><div><b>B</b></div>', true)
+        expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, 'A\nB\n', { bold: true }))
       )
     )
 

@@ -95,16 +95,21 @@ class Editor
       text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
-      if !line?   # Empty document
-        line = @doc.appendLine(@root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG))
-        offset = 0
-        line.insertText(offset, lineTexts[0], formatting)
-        lineTexts = lineTexts.slice(1)
       _.each(lineTexts, (lineText, i) =>
-        line.insertText(offset, lineText, formatting)
-        if i < lineTexts.length - 1       # Are there more lines to insert?
-          line = @doc.splitLine(line, offset + lineText.length)
-          offset = 0
+        if !line?
+          if i < lineTexts.length - 1 or lineText.length > 0
+            line = @doc.appendLine(@root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG))
+            offset = 0
+            line.insertText(offset, lineText, formatting)
+            line.format(formatting)
+            nextLine = null
+        else
+          line.insertText(offset, lineText, formatting)
+          if i < lineTexts.length - 1       # Are there more lines to insert?
+            nextLine = @doc.splitLine(line, offset + lineText.length)
+            line.format(formatting)
+            offset = 0
+        line = nextLine
       )
     )
 
