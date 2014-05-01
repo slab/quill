@@ -24,7 +24,7 @@ class Toolbar
           @quill.prepareFormat(format, value)
         else
           @quill.formatText(range, format, value, 'user')
-        this.setActive(format, value)
+        this.setActive(format, value) if eventName != 'change'    # Dropdowns should already be set since it changing triggers this event
       )
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
@@ -33,16 +33,11 @@ class Toolbar
   initFormat: (format, eventName, callback) ->
     input = @container.querySelector(".sc-#{format}")
     return unless input?
-    triggering = false
     DOM.addEventListener(input, eventName, =>
-      return if triggering
-      triggering = true
       value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'sc-active')
       @quill.focus()
       range = @quill.getSelection()
       callback(range, value) if range?
-      triggering = false
-      return true
     )
 
   setActive: (format, value) ->
