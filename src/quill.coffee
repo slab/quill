@@ -91,10 +91,10 @@ class Quill extends EventEmitter2
   addStyles: (styles) ->
     @editor.renderer.addStyles(styles)
 
-  deleteText: (index, length, source = Quill.sources.API) ->
-    [index, length, formats, source] = this._buildParams(index, length, {}, source)
-    return unless length > 0
-    delta = Tandem.Delta.makeDeleteDelta(this.getLength(), index, length)
+  deleteText: (start, end, source = Quill.sources.API) ->
+    [start, end, formats, source] = this._buildParams(start, end, {}, source)
+    return unless end > start
+    delta = Tandem.Delta.makeDeleteDelta(this.getLength(), start, end - start)
     @editor.applyDelta(delta, source)
 
   emit: (eventName, args...) ->
@@ -105,25 +105,25 @@ class Quill extends EventEmitter2
   focus: ->
     @root.focus()
 
-  formatText: (index, length, name, value, source) ->
-    [index, length, formats, source] = this._buildParams(index, length, name, value, source)
-    return unless length > 0
+  formatText: (start, end, name, value, source) ->
+    [start, end, formats, source] = this._buildParams(start, end, name, value, source)
+    return unless end > start
     formats = _.reduce(formats, (formats, value, name) =>
       format = @editor.doc.formats[name]
       # TODO warn if no format
       formats[name] = null unless value and value != format.config.default     # false will be composed and kept in attributes
       return formats
     , formats)
-    delta = Tandem.Delta.makeRetainDelta(this.getLength(), index, length, formats)
+    delta = Tandem.Delta.makeRetainDelta(this.getLength(), start, end - start, formats)
     @editor.applyDelta(delta, source)
 
-  getContents: (index = 0, length = null) ->
-    if _.isObject(index)
-      length = index.end - index.start
-      index = index.start
+  getContents: (start = 0, end = null) ->
+    if _.isObject(start)
+      end = start.end
+      start = start.start
     else
-      length = this.getLength() - index unless length?
-    ops = @editor.getDelta().getOpsAt(index, length)
+      end = this.getLength() unless end?
+    ops = @editor.getDelta().getOpsAt(start, end - start)
     return new Tandem.Delta(0, ops)
 
   getHTML: ->
@@ -139,14 +139,14 @@ class Quill extends EventEmitter2
     @editor.checkUpdate()   # Make sure we access getRange with editor in consistent state
     return @editor.selection.getRange()
 
-  getText: (index, length) ->
-    return _.pluck(this.getContents(index, length).ops, 'value').join('')
+  getText: (start = 0, end = null) ->
+    return _.pluck(this.getContents(start, end).ops, 'value').join('')
 
   insertEmbed: (index, type, url, source) ->
     this.insertText(index, Format.EMBED_TEXT, type, url, source)
 
   insertText: (index, text, name, value, source) ->
-    [index, length, formats, source] = this._buildParams(index, 0, name, value, source)
+    [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
     return unless text.length > 0
     delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
     @editor.applyDelta(delta, source)
@@ -188,15 +188,13 @@ class Quill extends EventEmitter2
   updateContents: (delta, source = Quill.sources.API) ->
     @editor.applyDelta(delta, source)
 
-  # fn(Number index, Number length, String name, String value, String source)
-  # fn(Number index, Number length, Object formats, String source)
+  # fn(Number start, Number end, String name, String value, String source)
+  # fn(Number start, Number end, Object formats, String source)
   # fn(Object range, String name, String value, String source)
   # fn(Object range, Object formats, String source)
   _buildParams: (params...) ->
     if _.isObject(params[0])
-      index = params[0].start
-      length = params[0].end - index
-      params.splice(0, 1, index, length)
+      params.splice(0, 1, params[0].start, params[0].end)
     if _.isString(params[2])
       formats = {}
       formats[params[2]] = params[3]

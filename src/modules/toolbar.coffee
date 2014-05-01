@@ -77,7 +77,7 @@ class Toolbar
     if range?
       if range.isCollapsed()
         start = Math.max(0, range.start - 1)
-        contents = @quill.getContents(start, range.end - start)
+        contents = @quill.getContents(start, range.end)
       else
         contents = @quill.getContents(range)
       formatsArr = _.map(contents.ops, 'attributes')

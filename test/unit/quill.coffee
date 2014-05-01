@@ -76,7 +76,7 @@ describe('Quill', ->
 
   describe('manipulation', ->
     it('deleteText()', ->
-      @quill.deleteText(2, 1)
+      @quill.deleteText(2, 3)
       expect(@quill.root).toEqualHTML('<div><span>013</span></div><div><span>5678</span></div>', true)
     )
 
@@ -89,9 +89,9 @@ describe('Quill', ->
     # )
 
     it('formatText()', ->
-      @quill.formatText(2, 2, 'bold', true)
+      @quill.formatText(2, 4, 'bold', true)
       expect(@quill.root).toEqualHTML('<div><span>01</span><b>23</b></div><div><span>5678</span></div>', true)
-      @quill.formatText(2, 2, 'bold', false)
+      @quill.formatText(2, 4, 'bold', false)
       expect(@quill.root).toEqualHTML('<div><span>0123</span></div><div><span>5678</span></div>', true)
       expect(@quill.getContents(0, 4)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123'))
     )
@@ -139,7 +139,7 @@ describe('Quill', ->
     )
 
     it('getContents() partial', ->
-      expect(@quill.getContents(2, 5)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '23\n56'))
+      expect(@quill.getContents(2, 7)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '23\n56'))
     )
 
     it('getHTML()', ->
@@ -183,22 +183,22 @@ describe('Quill', ->
 
   describe('_buildParams()', ->
     tests =
-      'index range string formats'  : [1, 2, 'bold', true]
-      'index range object formats'  : [1, 2, { bold: true }]
+      'index range string formats'  : [1, 3, 'bold', true]
+      'index range object formats'  : [1, 3, { bold: true }]
       'object range string formats' : [new Quill.Lib.Range(1, 3), 'bold', true]
       'object range object formats' : [new Quill.Lib.Range(1, 3), { bold: true }]
 
     _.each(tests, (args, name) ->
       it(name, ->
-        [index, length, formats, source] = @quill._buildParams(args...)
-        expect(index).toEqual(1)
-        expect(length).toEqual(2)
+        [start, end, formats, source] = @quill._buildParams(args...)
+        expect(start).toEqual(1)
+        expect(end).toEqual(3)
         expect(formats).toEqual({ bold: true })
       )
     )
 
     it('source override', ->
-      [index, length, formats, source] = @quill._buildParams(1, 2, {}, 'silent')
+      [start, end, formats, source] = @quill._buildParams(1, 2, {}, 'silent')
       expect(source).toEqual('silent')
     )
   )
