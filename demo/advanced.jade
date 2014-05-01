@@ -20,10 +20,10 @@ html
                 option(value='serif') Serif
                 option(value='monospace') Monospace
               select.sc-size(title='Size')
-                option(value='small') Small
-                option(value='normal', selected=true) Normal
-                option(value='large') Large
-                option(value='huge') Huge
+                option(value='10px') Small
+                option(value='13px', selected=true) Normal
+                option(value='18px') Large
+                option(value='32px') Huge
             span.sc-format-group
               each c in ['sc-color', 'sc-background']
                 select(class=c, title=(c=='sc-color'?'Text Color':'Background Color'))

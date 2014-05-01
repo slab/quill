@@ -1,5 +1,6 @@
-_   = require('lodash')
-DOM = require('./dom')
+_     = require('lodash')
+DOM   = require('./dom')
+Utils = require('./utils')
 
 
 class Format
@@ -43,7 +44,8 @@ class Format
     size:
       style: 'fontSize'
       default: '13px'
-      prepare: 'fontSize'
+      prepare: (doc, value) ->
+        doc.execCommand('fontSize', false, Utils.convertFontSize(value))
 
     link:
       tag: 'A'
