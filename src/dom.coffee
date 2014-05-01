@@ -91,7 +91,6 @@ DOM =
   addEventListener: (node, eventName, listener) ->
     node.addEventListener(eventName, (event) ->
       arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
-      console.log eventName, arg
       propogate = listener(arg)
       unless propogate
         event.preventDefault()

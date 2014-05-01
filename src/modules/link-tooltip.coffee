@@ -29,39 +29,26 @@ class LinkTooltip extends Tooltip
     DOM.addClass(@container, 'link-tooltip-container')
     @textbox = @container.querySelector('.input')
     @link = @container.querySelector('.url')
-    this.initToolbar()
     this.initListeners()
 
   initListeners: ->
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       return unless range? and range.isCollapsed()
-      [leaf, offset] = @quill.editor.doc.findLeafAt(Math.max(0, range.start - 1))
-      node = leaf.node if leaf?
-      while node?
-        if node.tagName == 'A'
-          this.setMode(node.href, false)
-          this.show(node)
-          return
-        else
-          node = node.parentNode
-      this.hide()
+      anchor = this._findAnchor(range)
+      if anchor
+        this.setMode(anchor.href, false)
+        this.show(anchor)
+      else
+        @range = null   # Prevent restoring selection to last saved
+        this.hide()
     )
     DOM.addEventListener(@container.querySelector('.done'), 'click', _.bind(this.saveLink, this))
     DOM.addEventListener(@container.querySelector('.change'), 'click', =>
       this.setMode(@link.href, true)
     )
     this.initTextbox(@textbox, this.saveLink, this.hide)
-
-  initToolbar: ->
     @quill.onModuleLoad('toolbar', (toolbar) =>
-      toolbar.initFormat('link', 'click', (range, value) =>
-        if value
-          this.setMode(this._suggestURL(range), true)
-          nativeRange = @quill.editor.selection._getNativeRange()
-          this.show(nativeRange)
-        else
-          @quill.formatText(range, 'link', false, 'user')
-      )
+      toolbar.initFormat('link', 'click', _.bind(this._onToolbar, this))
     )
 
   saveLink: ->
@@ -80,6 +67,27 @@ class LinkTooltip extends Tooltip
       @link.href = url
       DOM.setText(@link, url)
     DOM.toggleClass(@container, 'editing', edit)
+
+  _findAnchor: (range) ->
+    [leaf, offset] = @quill.editor.doc.findLeafAt(Math.max(0, range.start - 1))
+    node = leaf.node if leaf?
+    while node?
+      if node.tagName == 'A'
+        this.setMode(node.href, false)
+        this.show(node)
+        return node
+      else
+        node = node.parentNode
+    return null
+
+  _onToolbar: (range, value) ->
+    return unless range and !range.isCollapsed()
+    if value
+      this.setMode(this._suggestURL(range), true)
+      nativeRange = @quill.editor.selection._getNativeRange()
+      this.show(nativeRange)
+    else
+      @quill.formatText(range, 'link', false, 'user')
 
   _normalizeURL: (url) ->
     url = 'http://' + url unless /^https?:\/\//.test(url)

@@ -60,25 +60,20 @@ class ImageTooltip extends Tooltip
     @preview = @container.querySelector('.preview')
     @textbox = @container.querySelector('.input')
     DOM.addClass(@container, 'image-tooltip-container')
-    this.initToolbar()
     this.initListeners()
 
   initListeners: ->
     DOM.addEventListener(@container.querySelector('.insert'), 'click', _.bind(this.insertImage, this))
     DOM.addEventListener(@container.querySelector('.cancel'), 'click', _.bind(this.hide, this))
-    DOM.addEventListener(@textbox, 'input', =>
-      if this._matchImageURL(@textbox.value)
-        if @preview.firstChild.tagName == 'IMG'
-          @preview.firstChild.setAttribute('src', @textbox.value)
-        else
-          img = @preview.ownerDocument.createElement('img')
-          img.setAttribute('src', @textbox.value)
-          @preview.replaceChild(img, @preview.firstChild)
-    )
+    DOM.addEventListener(@textbox, 'input', _.bind(this._preview, this))
     this.initTextbox(@textbox, this.insertImage, this.hide)
+    @quill.onModuleLoad('toolbar', (toolbar) =>
+      toolbar.initFormat('image', 'click', _.bind(this._onToolbar, this))
+    )
 
   insertImage: ->
     url = this._normalizeURL(@textbox.value)
+    @range = new Range(0, 0) unless @range?   # If we lost the selection somehow, just put image at beginning of document
     if @range
       @preview.innerHTML = '<span>Preview</span>'
       @textbox.value = ''
@@ -86,20 +81,25 @@ class ImageTooltip extends Tooltip
       @quill.setSelection(@range.end + 1, @range.end + 1)
     this.hide()
 
-  initToolbar: ->
-    @quill.onModuleLoad('toolbar', (toolbar) =>
-      toolbar.initFormat('image', 'click', (range, value) =>
-        if value
-          @textbox.value = 'http://' unless @textbox.value
-          this.show()
-          @textbox.focus()
-          _.defer( =>
-            @textbox.setSelectionRange(@textbox.value.length, @textbox.value.length)
-          )
-        else
-          @quill.deleteText(range, 'user')
+  _onToolbar: (range, value) ->
+    if value
+      @textbox.value = 'http://' unless @textbox.value
+      this.show()
+      @textbox.focus()
+      _.defer( =>
+        @textbox.setSelectionRange(@textbox.value.length, @textbox.value.length)
       )
-    )
+    else
+      @quill.deleteText(range, 'user')
+
+  _preview: ->
+    return unless this._matchImageURL(@textbox.value)
+    if @preview.firstChild.tagName == 'IMG'
+      @preview.firstChild.setAttribute('src', @textbox.value)
+    else
+      img = @preview.ownerDocument.createElement('img')
+      img.setAttribute('src', @textbox.value)
+      @preview.replaceChild(img, @preview.firstChild)
 
   _matchImageURL: (url) ->
     return /^https?:\/\/.+\.(jp?g|gif|png)$/.test(url)
