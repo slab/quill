@@ -268,7 +268,12 @@ DOM =
     else
       event = elem.ownerDocument.createEvent('KeyboardEvent')
       lastKeyEvent = _.clone(options)
-      lastKeyEvent.which = if _.isNumber(options.key) then options.key else options.key.toUpperCase().getCharAt(0)
+      if _.isNumber(options.key)
+        lastKeyEvent.which = options.key
+      else if _.isString(options.key)
+        lastKeyEvent.which = options.key.toUpperCase().charCodeAt(0)
+      else
+        lastKeyEvent.which = 0
       if DOM.isIE(10)
         modifiers = []
         modifiers.push('Alt') if options.altKey
