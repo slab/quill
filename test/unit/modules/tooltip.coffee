@@ -6,8 +6,8 @@ describe('Tooltip', ->
     }
 
   beforeEach( ->
-    @editorContainer = $('#editor-container').html('<div></div>').get(0)
-    @quill = new Quill(@editorContainer.firstChild)
+    @container = $('#editor-container').html('<div></div>').get(0)
+    @quill = new Quill(@container.firstChild)
     @tooltip = @quill.addModule('tooltip', { offset: 20 })
   )
 
@@ -25,7 +25,7 @@ describe('Tooltip', ->
 
   describe('_position()', ->
     beforeEach( ->
-      @tooltip.editorContainer = makeBounder(50, 50, 600, 400)
+      @quill.root = makeBounder(50, 50, 600, 400)
       @tooltip.container = makeBounder(60, 60, 200, 100)
     )
 

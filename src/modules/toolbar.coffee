@@ -12,7 +12,7 @@ class Toolbar
     SELECT: { 'align', 'background', 'color', 'font', 'size' }
     TOOLTIP: { 'image', 'link' }
 
-  constructor: (@quill, @editorContainer, @options) ->
+  constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     @activeFormats = {}

@@ -10,7 +10,7 @@ class Authorship
     color: 'blue'
     enabled: false
 
-  constructor: (@quill, @editorContainer, @options) ->
+  constructor: (@quill, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
     # TODO fix
@@ -52,7 +52,7 @@ class Authorship
     )
 
   enable: (enabled = true) ->
-    DOM.toggleClass(@editorContainer, 'authorship', enabled)
+    DOM.toggleClass(@quill.root, 'authorship', enabled)
 
   disable: ->
     this.enable(false)

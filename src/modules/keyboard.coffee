@@ -12,7 +12,7 @@ class Keyboard
     OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
 
-  constructor: (@quill, @editorContainer, options) ->
+  constructor: (@quill, options) ->
     @hotkeys = {}
     this._initListeners()
     this._initHotkeys()
@@ -56,7 +56,7 @@ class Keyboard
     )
 
   _initListeners: ->
-    DOM.addEventListener(@editorContainer, 'keydown', (event) =>
+    DOM.addEventListener(@quill.root, 'keydown', (event) =>
       prevent = false
       if @hotkeys[event.key]?
         range = @quill.getSelection()

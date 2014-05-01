@@ -18,7 +18,7 @@ class MultiCursor extends EventEmitter2
     CURSOR_MOVED: 'cursor-moved'
     CURSOR_REMOVED: 'cursor-removed'
 
-  constructor: (@quill, @editorContainer, @options) ->
+  constructor: (@quill, @options) ->
     @cursors = {}
     @container = @quill.addContainer('cursor-container', true)
     @quill.addStyles(
@@ -42,8 +42,8 @@ class MultiCursor extends EventEmitter2
     )
     @quill.on(@quill.constructor.events.RENDER_UPDATE, =>
       _.defer( =>
-        @container.style.top = @editorContainer.offsetTop + 'px'
-        @container.style.left = @editorContainer.offsetLeft  + 'px'
+        @container.style.top = @quill.root.offsetTop + 'px'
+        @container.style.left = @quill.root.offsetLeft  + 'px'
         this.update(true)
       )
     )
@@ -126,7 +126,7 @@ class MultiCursor extends EventEmitter2
     flag = cursor.elem.querySelector('.cursor-flag')
     DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
     DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-    DOM.toggleClass(cursor.elem, 'right', @editorContainer.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+    DOM.toggleClass(cursor.elem, 'right', @quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
   _updateCursor: (cursor) ->
@@ -150,7 +150,7 @@ class MultiCursor extends EventEmitter2
           this._moveCursor(cursor, guide)
     else
       DOM.setText(guide, DOM.NOBREAK_SPACE)
-      @editorContainer.appendChild(guide)
+      @quill.root.appendChild(guide)
       this._moveCursor(cursor, guide)
     guide.parentNode.removeChild(guide)
     DOM.normalize(leafNode) if didSplit

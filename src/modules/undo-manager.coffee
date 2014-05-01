@@ -11,7 +11,7 @@ class UndoManager
     UNDO: { key: 'Z', metaKey: true, shiftKey: false }
     REDO: { key: 'Z', metaKey: true, shiftKey: true }
 
-  constructor: (@quill, @editorContainer, @options = {}) ->
+  constructor: (@quill, @options = {}) ->
     @lastRecorded = 0
     this.clear()
     this.initListeners()

@@ -5,7 +5,7 @@ Tandem   = require('tandem-core')
 
 
 class PasteManager
-  constructor: (@quill, @editorContainer, @options) ->
+  constructor: (@quill, @options) ->
     @container = @quill.addContainer('paste-container')
     @container.setAttribute('contenteditable', true)
     @quill.addStyles(
@@ -14,7 +14,7 @@ class PasteManager
         'position': 'absolute'
         'top': '50%'
     )
-    DOM.addEventListener(@editorContainer, 'paste', _.bind(this._paste, this))
+    DOM.addEventListener(@quill.root, 'paste', _.bind(this._paste, this))
 
   _paste: ->
     oldDocLength = @quill.getLength()

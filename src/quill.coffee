@@ -84,7 +84,7 @@ class Quill extends EventEmitter2
     throw new Error("Cannot load #{name} module. Are you sure you included it?") unless moduleClass?
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
-    @modules[name] = new moduleClass(this, @root, options)
+    @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 

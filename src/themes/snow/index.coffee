@@ -78,7 +78,7 @@ class SnowTheme extends DefaultTheme
         picker.close()
       )
     )
-    DOM.addClass(@editorContainer.ownerDocument.body, 'snow')
+    DOM.addClass(@quill.root.ownerDocument.body, 'snow')
     @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
     @quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
 

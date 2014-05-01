@@ -53,10 +53,10 @@ class ImageTooltip extends Tooltip
       <a href="javascript:;" class="cancel">Cancel</a>
       <a href="javascript:;" class="insert">Insert</a>'
 
-  constructor: (@quill, @editorContainer, @options) ->
+  constructor: (@quill, @options) ->
     @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
-    super(@quill, @editorContainer, @options)
+    super(@quill, @options)
     @preview = @container.querySelector('.preview')
     @textbox = @container.querySelector('.input')
     DOM.addClass(@container, 'image-tooltip-container')

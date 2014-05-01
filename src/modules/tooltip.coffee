@@ -16,12 +16,12 @@ class Tooltip
         'text-decoration': 'none'
     template: ''
 
-  constructor: (@quill, @editorContainer, @options) ->
+  constructor: (@quill, @options) ->
     @quill.addStyles(@options.styles)
     @container = @quill.addContainer('tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
     @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker
-    DOM.addEventListener(@editorContainer, 'focus', _.bind(this.hide, this))
+    DOM.addEventListener(@quill.root, 'focus', _.bind(this.hide, this))
     this.hide()
 
   hide: ->
@@ -38,7 +38,7 @@ class Tooltip
     @container.focus()
 
   _limit: (left, top) ->
-    editorRect = @editorContainer.getBoundingClientRect()
+    editorRect = @quill.root.getBoundingClientRect()
     toolbarRect = @container.getBoundingClientRect()
     left = Math.min(editorRect.right - toolbarRect.width, left)   # right boundary
     left = Math.max(editorRect.left, left)                        # left boundary
@@ -48,7 +48,7 @@ class Tooltip
 
   _position: (reference) ->
     toolbarRect = @container.getBoundingClientRect()
-    editorRect = @editorContainer.getBoundingClientRect()
+    editorRect = @quill.root.getBoundingClientRect()
     if reference?
       referenceBounds = reference.getBoundingClientRect()
       left = referenceBounds.left + referenceBounds.width/2 - toolbarRect.width/2
