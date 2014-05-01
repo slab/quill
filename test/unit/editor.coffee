@@ -185,6 +185,21 @@ describe('Editor', ->
           expect(@editor.root).toEqualHTML(test.expected.join(''), true)
         )
       )
+
+      it('append formatted newline', ->
+        @editor.doc.setHTML('<div><span>A</span></div>')
+        @editor._insertAt(2, '\n', { bold: true })
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<div><span>A</span></div><div><br></div>', true)
+        expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeDelta({
+          startLength: 0
+          endLength: 3
+          ops: [
+            { value: 'A\n' }
+            { value: '\n', attributes: { bold: true } }
+          ]
+        }))
+      )
     )
   )
 

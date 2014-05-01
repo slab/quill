@@ -36,11 +36,13 @@ class Editor
       @delta = @doc.toDelta()   # Only for our error check below, otherwise dont need to update yet
     unless delta.isIdentity()   # Follows may have turned delta into the identity
       throw new Error("Trying to apply delta to incorrect doc length") if delta.startLength != @delta.endLength
-      delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
-      @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
+      delta = this._trackDelta( =>
+        delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
+        @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
+      )
       @delta = @doc.toDelta()
       @innerHTML = @root.innerHTML
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) unless source == 'silent'
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != 'silent'
     if localDelta and !localDelta.isIdentity() and source != 'silent'
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
 
@@ -95,7 +97,7 @@ class Editor
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
       _.each(lineTexts, (lineText, i) =>
-        if !line?
+        if !line? or line.length <= offset    # End of document
           if i < lineTexts.length - 1 or lineText.length > 0
             line = @doc.appendLine(@root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG))
             offset = 0
@@ -112,7 +114,7 @@ class Editor
       )
     )
 
-  _trackDelta: (fn, options) ->
+  _trackDelta: (fn) ->
     oldIndex = @savedRange?.start
     fn()
     newDelta = @doc.toDelta()

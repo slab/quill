@@ -22,15 +22,7 @@ listenEditor = (source, target) ->
     target.updateContents(delta)
     sourceDelta = source.getContents()
     targetDelta = target.getContents()
-    decomposeDelta = targetDelta.decompose(sourceDelta)
-    isEqual = _.all(decomposeDelta.ops, (op) ->
-      return false if op.delta?
-      return true if (_.keys(op.attributes).length == 0)
-      sourceOp = sourceDelta.getOpsAt(op.start, op.end - op.start)
-      return true if sourceOp.length == 1 and sourceOp[0].delta == "\n"
-      return false
-    )
-    console.assert(decomposeDelta.startLength == decomposeDelta.endLength and isEqual, "Editor diversion!", source, target, sourceDelta, targetDelta) if console?
+    console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta)
   ).on(Quill.events.SELECTION_CHANGE, (range) ->
     return unless range?
     # target.getModule('multi-cursor').moveCursor(source.id, range.end)
