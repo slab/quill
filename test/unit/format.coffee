@@ -125,6 +125,27 @@ describe('Format', ->
       format.add(@container.firstChild, Quill.Format.FORMATS.size.default)
       expect(@container).toEqualHTML('<span>Text</span>')
     )
+
+    it('text node tag', ->
+      @container.innerHTML = 'Text'
+      format = new Quill.Format(document, Quill.Format.FORMATS.bold)
+      format.add(@container.firstChild, true)
+      expect(@container).toEqualHTML('<b>Text</b>')
+    )
+
+    it('text node style', ->
+      @container.innerHTML = 'Text'
+      format = new Quill.Format(document, Quill.Format.FORMATS.size)
+      format.add(@container.firstChild, '18px')
+      expect(@container).toEqualHTML('<span style="font-size: 18px;">Text</span>')
+    )
+
+    it('class over existing', ->
+      @container.innerHTML = '<span class="author-argo">Text</span>'
+      format = new Quill.Format(document, { class: 'author-' })
+      format.add(@container.firstChild, 'jason')
+      expect(@container).toEqualHTML('<span class="author-jason">Text</span>')
+    )
   )
 
   describe('remove()', ->
