@@ -72,11 +72,14 @@ class Format
         node = formatNode
       else
         node = DOM.wrap(formatNode, node)
+    if DOM.isTextNode(node)
+      node = DOM.wrap(@document.createElement(DOM.DEFAULT_INLNE_TAG), node)
     if _.isString(@config.style)
       node.style[@config.style] = value if value != @config.default
     if _.isString(@config.attribute)
       node.setAttribute(@config.attribute, value)
     if _.isString(@config.class)
+      this.remove(node)
       DOM.addClass(node, @config.class + value)
     return node
 

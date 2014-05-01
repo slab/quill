@@ -13,8 +13,7 @@ class Authorship
   constructor: (@quill, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
-    # TODO fix
-    @quill.addFormat({ class: /^author-(.*)$/ })
+    @quill.addFormat('author', { class: 'author-' })
     return unless @options.authorId?
     @quill.on(@quill.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @quill.constructor.events.TEXT_CHANGE and origin == 'user'
@@ -25,13 +24,9 @@ class Authorship
         )
         # Apply authorship to our own editor
         authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)])
-        attribute = {}
-        attribute['author'] = @options.authorId
+        attribute = { author: @options.authorId }
         delta.apply((index, text) =>
-          _.each(text.split('\n'), (text) ->
-            authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
-            index += text.length + 1
-          )
+          authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
         , (=>)
         , (index, length, name, value) =>
           authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))

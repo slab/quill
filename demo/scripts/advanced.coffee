@@ -49,16 +49,16 @@ for num in [1, 2]
       'image-tooltip': true
     theme: 'snow'
   })
-  # authorship = editor.addModule('authorship', {
-  #   authorId: editor.id
-  #   color: getColor(num, true)
-  #   button: $('.sc-authorship', $wrapper).get(0)
-  # })
+  authorship = editor.addModule('authorship', {
+    authorId: editor.id
+    color: getColor(num, true)
+    button: $('.sc-authorship', $wrapper).get(0)
+  })
   editors.push(editor)
 
 listenEditor(editors[0], editors[1])
 listenEditor(editors[1], editors[0])
-# editors[0].getModule('authorship').addAuthor(editors[1].id, getColor(editors[1].id, true))
-# editors[1].getModule('authorship').addAuthor(editors[0].id, getColor(editors[0].id, true))
+editors[0].getModule('authorship').addAuthor(editors[1].id, getColor(editors[1].id, true))
+editors[1].getModule('authorship').addAuthor(editors[0].id, getColor(editors[0].id, true))
 # editors[0].getModule('multi-cursor').setCursor(editors[1].id, 0, editors[1].id, getColor(editors[1].id))
 # editors[1].getModule('multi-cursor').setCursor(editors[0].id, 0, editors[0].id, getColor(editors[0].id))
