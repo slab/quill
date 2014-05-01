@@ -27,6 +27,11 @@ describe('Format', ->
       missing: '<span>Text</span>'
       added: '<a href="http://quilljs.com"><span>Text</span></a>'
       value: 'http://quilljs.com'
+    class:
+      format: new Quill.Format(document, { class: 'author-' })
+      existing: '<span class="author-jason">Text</span>'
+      missing: '<span>Text</span>'
+      value: 'jason'
     line:
       format: new Quill.Format(document, Quill.Format.FORMATS.align)
       existing: '<div style="text-align: right">Text</div>'

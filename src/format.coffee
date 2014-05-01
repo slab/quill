@@ -76,6 +76,8 @@ class Format
       node.style[@config.style] = value if value != @config.default
     if _.isString(@config.attribute)
       node.setAttribute(@config.attribute, value)
+    if _.isString(@config.class)
+      DOM.addClass(node, @config.class + value)
     return node
 
   isType: (type) ->
@@ -83,9 +85,16 @@ class Format
 
   match: (node) ->
     return false unless DOM.isElement(node)
-    return false if _.isString(@config.tag) and node.tagName != @config.tag
-    return false if _.isString(@config.style) and (!node.style[@config.style] or node.style[@config.style] == @config.default)
-    return false if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
+    if _.isString(@config.tag) and node.tagName != @config.tag
+      return false
+    if _.isString(@config.style) and (!node.style[@config.style] or node.style[@config.style] == @config.default)
+      return false
+    if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
+      return false
+    if _.isString(@config.class)
+      for c in DOM.getClasses(node)
+        return true if c.indexOf(@config.class) == 0
+      return false
     return true
 
   prepare: (value) ->
@@ -101,6 +110,10 @@ class Format
       node.removeAttribute('style') unless node.getAttribute('style')  # Some browsers leave empty style attribute
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
+    if _.isString(@config.class)
+      for c in DOM.getClasses(node)
+        DOM.removeClass(node, c) if c.indexOf(@config.class) == 0
+      node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
       node = DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG)
       DOM.setText(node, Format.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?
@@ -108,10 +121,15 @@ class Format
 
   value: (node) ->
     return undefined unless this.match(node)
-    return node.getAttribute(@config.attribute) or undefined if _.isString(@config.attribute)
-    return node.style[@config.style] or undefined if _.isString(@config.style) and node.style[@config.style] != @config.default
-    return true if _.isString(@config.tag) and node.tagName == @config.tag
-    # TODO class regex
+    if _.isString(@config.attribute)
+      return node.getAttribute(@config.attribute) or undefined
+    else if _.isString(@config.style) and node.style[@config.style] != @config.default
+      return node.style[@config.style] or undefined
+    else if _.isString(@config.class)
+      for c in DOM.getClasses(node)
+        return c.slice(@config.class.length) if c.indexOf(@config.class) == 0
+    else if _.isString(@config.tag) and node.tagName == @config.tag
+      return true
     return undefined
 
 
