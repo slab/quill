@@ -6,20 +6,14 @@ Tooltip = require('./tooltip')
 class LinkTooltip extends Tooltip
   @DEFAULTS:
     styles:
-      '.link-tooltip-container a': {
-        'cursor': 'pointer'
-        'text-decoration': 'none'
-      }
-      '.link-tooltip-container > a, .link-tooltip-container > span': {
+      '.link-tooltip-container':
+        'padding': '5px 10px'
+      '.link-tooltip-container .input':
+        'width': '170px'
+      '.link-tooltip-container .input, .link-tooltip-container .done, .link-tooltip-container.editing .url, .link-tooltip-container.editing .change':
+        'display': 'none'
+      '.link-tooltip-container.editing .input, .link-tooltip-container.editing .done':
         'display': 'inline-block'
-        'line-height': '24px'
-      }
-      '.link-tooltip-container .input'          : { 'display': 'none', 'width': '170px' }
-      '.link-tooltip-container .done'           : { 'display': 'none' }
-      '.link-tooltip-container.editing .input'  : { 'display': 'inline-block' }
-      '.link-tooltip-container.editing .done'   : { 'display': 'inline-block' }
-      '.link-tooltip-container.editing .url'    : { 'display': 'none' }
-      '.link-tooltip-container.editing .change' : { 'display': 'none' }
     template:
      '<span class="title">Visit URL:&nbsp;</span>
       <a href="#" class="url" target="_blank" href="about:blank"></a>
@@ -56,9 +50,6 @@ class LinkTooltip extends Tooltip
       this.hide()
     )
     DOM.addEventListener(@container.querySelector('.done'), 'click', _.bind(this.saveLink, this))
-    DOM.addEventListener(@textbox, 'keyup', (event) =>
-      this.saveLink() if event.which == DOM.KEYS.ENTER
-    )
     DOM.addEventListener(@container.querySelector('.change'), 'click', =>
       this.setMode(@link.href, true)
     )

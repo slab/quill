@@ -7,12 +7,13 @@ class Tooltip
   @DEFAULTS:
     offset: 10
     styles:
-      '.tooltip': {
+      '.tooltip':
         'background-color': '#fff'
         'border': '1px solid #000'
-        'padding': '5px 10px'
         'white-space': 'nowrap'
-      }
+      '.tooltip a':
+        'cursor': 'pointer'
+        'text-decoration': 'none'
     template: ''
 
   constructor: (@quill, @editorContainer, @options) ->
