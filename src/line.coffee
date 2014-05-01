@@ -77,14 +77,21 @@ class Line extends LinkedList.Node
     return [@leaves.last, offset - @leaves.last.length]   # Should never occur unless length calculation is off
 
   format: (name, value) ->
-    format = @doc.formats[name]
-    # TODO reassigning @node might be dangerous...
-    if format.isType(Format.types.LINE)
-      @node = format.add(@node, value)
-    if value
-      @formats[name] = value
+    if _.isObject(name)
+      formats = name
     else
-      delete @formats[name]
+      formats = {}
+      formats[name] = value
+    _.each(formats, (value, name) =>
+      format = @doc.formats[name]
+      # TODO reassigning @node might be dangerous...
+      if format.isType(Format.types.LINE)
+        @node = format.add(@node, value)
+      if value
+        @formats[name] = value
+      else
+        delete @formats[name]
+    )
     this.resetContent()
 
   formatText: (offset, length, name, value) ->
