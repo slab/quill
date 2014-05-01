@@ -3,6 +3,17 @@ DOM = require('./dom')
 
 
 Utils =
+  convertFontSize: (size) ->
+    if _.isString(size) and size.indexOf('px') > -1
+      sources = _.keys(DOM.FONT_SIZES)
+      targets = _.values(DOM.FONT_SIZES)
+    else
+      targets = _.keys(DOM.FONT_SIZES)
+      sources = _.values(DOM.FONT_SIZES)
+    for i,s of sources
+      return targets[i] if parseInt(size) <= parseInt(s)
+    return _.last(targets)
+
   findDeepestNode: (node, offset) ->
     while node.firstChild?
       [node, offset] = Utils.getChildAtOffset(node, offset)

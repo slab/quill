@@ -3,6 +3,28 @@ describe('Utils', ->
     @container = $('#editor-container').html('').get(0)
   )
 
+  describe('convertFontSize()', ->
+    it('size to pixel', ->
+      expect(Quill.Utils.convertFontSize(2)).toEqual('13px')
+    )
+
+    it('pixel to size', ->
+      expect(Quill.Utils.convertFontSize('16px')).toEqual(3)
+    )
+
+    it('approx pixel to size', ->
+      expect(Quill.Utils.convertFontSize('19px')).toEqual(5)
+    )
+
+    it('smaller than smallest', ->
+      expect(Quill.Utils.convertFontSize(0)).toEqual('10px')
+    )
+
+    it('larger than largest', ->
+      expect(Quill.Utils.convertFontSize('52px')).toEqual(7)
+    )
+  )
+
   describe('findDeepestNode()', ->
     tests =
       'zeroth':

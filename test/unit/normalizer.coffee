@@ -45,10 +45,16 @@ describe('Normalizer', ->
   )
 
   describe('normalizeNode()', ->
-    it('should whitelist style and tag', ->
+    it('whitelist style and tag', ->
       @container.innerHTML = '<strong style="color: red; display: inline;">Test</strong>'
       Quill.Normalizer.normalizeNode(@container.firstChild)
       expect(@container).toEqualHTML('<b style="color: red;">Test</b>')
+    )
+
+    it('convert size attribute', ->
+      @container.innerHTML = '<font size="3">Test</font>'
+      Quill.Normalizer.normalizeNode(@container.firstChild)
+      expect(@container).toEqualHTML('<span style="font-size: 16px;">Test</span>')
     )
   )
 

@@ -13,6 +13,15 @@ DOM =
   DEFAULT_BREAK_TAG: 'BR'
   DEFAULT_INLNE_TAG: 'SPAN'
 
+  FONT_SIZES:
+    '10px': 1
+    '13px': 2
+    '16px': 3
+    '18px': 4
+    '24px': 5
+    '32px': 6
+    '48px': 7
+
   KEYS:
     BACKSPACE : 8
     TAB       : 9

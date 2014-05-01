@@ -14,6 +14,7 @@ Normalizer =
   ATTRIBUTES: {
     'color': 'color'
     'face' : 'fontFamily'
+    'size' : 'fontSize'
   }
 
   STYLES: {
@@ -54,7 +55,9 @@ Normalizer =
   normalizeNode: (node) ->
     _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
       if node.hasAttribute(attribute)
-        node.style[style] = node.getAttribute(attribute)
+        value = node.getAttribute(attribute)
+        value = Utils.convertFontSize(value) if attribute == 'size'
+        node.style[style] = value
         node.removeAttribute(attribute)
     )
     Normalizer.whitelistStyles(node)
