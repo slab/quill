@@ -50,6 +50,7 @@ class LinkTooltip extends Tooltip
     DOM.addEventListener(@container.querySelector('.change'), 'click', =>
       this.setMode(@link.href, true)
     )
+    this.initTextbox(@textbox, this.saveLink, this.hide)
 
   initToolbar: ->
     @quill.onModuleLoad('toolbar', (toolbar) =>

@@ -1,7 +1,7 @@
 _     = require('lodash')
 _.str = require('underscore.string')
 
-lastKeyEvent = {}    # Workaround for fact we can't dispatch keyboard event via javascript
+lastKeyEvent = null    # Workaround for fact we can't dispatch keyboard event via javascript
 
 DOM =
   ELEMENT_NODE: 1
@@ -17,6 +17,7 @@ DOM =
     BACKSPACE : 8
     TAB       : 9
     ENTER     : 13
+    ESCAPE    : 27
     LEFT      : 37
     UP        : 38
     RIGHT     : 39
@@ -89,7 +90,8 @@ DOM =
 
   addEventListener: (node, eventName, listener) ->
     node.addEventListener(eventName, (event) ->
-      arg = if eventName == 'keydown' or eventName == 'keyup' then lastKeyEvent else event
+      arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
+      console.log eventName, arg
       propogate = listener(arg)
       unless propogate
         event.preventDefault()
@@ -266,7 +268,8 @@ DOM =
       event.initEvent(eventName, options.bubbles, options.cancelable)
     else
       event = elem.ownerDocument.createEvent('KeyboardEvent')
-      lastKeyEvent = options
+      lastKeyEvent = _.clone(options)
+      lastKeyEvent.which = if _.isNumber(options.key) then options.key else options.key.toUpperCase().getCharAt(0)
       if DOM.isIE(10)
         modifiers = []
         modifiers.push('Alt') if options.altKey
@@ -279,6 +282,7 @@ DOM =
         initFn = if _.isFunction(event.initKeyboardEvent) then 'initKeyboardEvent' else 'initKeyEvent'
         event[initFn](eventName, options.bubbles, options.cancelable, elem.ownerDocument.defaultView.window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
     elem.dispatchEvent(event)
+    lastKeyEvent = null
 
   unwrap: (node) ->
     ret = node.firstChild

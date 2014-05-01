@@ -64,15 +64,7 @@ class ImageTooltip extends Tooltip
     this.initListeners()
 
   initListeners: ->
-    DOM.addEventListener(@container.querySelector('.insert'), 'click', =>
-      url = this._normalizeURL(@textbox.value)
-      if @range
-        @preview.innerHTML = '<span>Preview</span>'
-        @textbox.value = ''
-        @quill.insertEmbed(@range.end, 'image', url, 'user')
-        @quill.setSelection(@range.end + 1, @range.end + 1)
-      this.hide()
-    )
+    DOM.addEventListener(@container.querySelector('.insert'), 'click', _.bind(this.insertImage, this))
     DOM.addEventListener(@container.querySelector('.cancel'), 'click', _.bind(this.hide, this))
     DOM.addEventListener(@textbox, 'input', =>
       if this._matchImageURL(@textbox.value)
@@ -83,6 +75,16 @@ class ImageTooltip extends Tooltip
           img.setAttribute('src', @textbox.value)
           @preview.replaceChild(img, @preview.firstChild)
     )
+    this.initTextbox(@textbox, this.insertImage, this.hide)
+
+  insertImage: ->
+    url = this._normalizeURL(@textbox.value)
+    if @range
+      @preview.innerHTML = '<span>Preview</span>'
+      @textbox.value = ''
+      @quill.insertEmbed(@range.end, 'image', url, 'user')
+      @quill.setSelection(@range.end + 1, @range.end + 1)
+    this.hide()
 
   initToolbar: ->
     @quill.onModuleLoad('toolbar', (toolbar) =>

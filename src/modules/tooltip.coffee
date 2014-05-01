@@ -24,6 +24,14 @@ class Tooltip
     DOM.addEventListener(@quill.root, 'focus', _.bind(this.hide, this))
     this.hide()
 
+  initTextbox: (textbox, enterCallback, escapeCallback) ->
+    DOM.addEventListener(textbox, 'keyup', (event) =>
+      switch event.which
+        when DOM.KEYS.ENTER   then enterCallback.call(this)
+        when DOM.KEYS.ESCAPE  then escapeCallback.call(this)
+        else return true
+    )
+
   hide: ->
     @container.style.left = '-10000px'
     @quill.setSelection(@range) if @range
