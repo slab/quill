@@ -35,10 +35,7 @@ class LinkTooltip extends Tooltip
   initListeners: ->
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       return unless range? and range.isCollapsed()
-      index = Math.max(0, range.start - 1)
-      [line, offset] = @quill.editor.doc.findLineAt(index)
-      return unless line?
-      [leaf, offset] = line.findLeafAt(offset)
+      [leaf, offset] = @quill.editor.doc.findLeafAt(Math.max(0, range.start - 1))
       node = leaf.node
       while node?
         if node.tagName == 'A'
