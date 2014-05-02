@@ -81,7 +81,10 @@ Normalizer =
         attributes = DOM.getAttributes(node)
         if node.tagName == DOM.DEFAULT_INLNE_TAG
           # Remove unneeded SPANs
-          if _.keys(attributes).length == 0 and (node.parentNode != lineNode or DOM.isElement(node.firstChild))
+          hasAttributes = _.keys(attributes).length > 0
+          exposeTextNode = DOM.isTextNode(node.firstChild) and (DOM.isElement(node.previousSibling) or DOM.isElement(node.nextSibling))
+          exposeToLine = node.parentNode == lineNode and DOM.isTextNode(node.firstChild)
+          if !hasAttributes and !exposeTextNode and !exposeToLine
             nodes.push(node.nextSibling)
             DOM.unwrap(node)
             continue
