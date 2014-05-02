@@ -17,10 +17,12 @@ class Toolbar
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     @activeFormats = {}
     @preventUpdate = false
+    @triggering = false
     _.each(@quill.options.formats, (format) =>
       return if Toolbar.formats.TOOLTIP[format]?
       eventName = if Toolbar.formats.SELECT[format]? then 'change' else 'click'
       this.initFormat(format, eventName, (range, value) =>
+        return if @triggering
         if range.isCollapsed()
           @quill.prepareFormat(format, value)
         else
@@ -53,12 +55,14 @@ class Toolbar
     return unless input?
     if input.tagName == 'SELECT'
       # IE does not handle immediate triggering of change very well
-      _.defer( ->
+      _.defer( =>
+        @triggering = true
         if value
           value = '' if _.isArray(value)
           DOM.selectOption(input, value)
         else
           DOM.resetSelect(input)
+        @triggering = false
       )
     else
       DOM.toggleClass(input, 'sc-active', value)
