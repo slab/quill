@@ -48,14 +48,15 @@ class Toolbar
       @activeFormats[format] = value
     else
       delete @activeFormats[format]
-    input = @container.querySelector(".sc-#{format}")
+    selector = if Toolbar.formats.SELECT[format]? then "select.sc-#{format}" else ".sc-#{format}"  # Prevent selecting picker
+    @container.querySelector(".sc-#{format}")
     return unless input?
     if input.tagName == 'SELECT'
       if value
         value = '' if _.isArray(value)
-        DOM.selectOption(input, value, false)
+        DOM.selectOption(input, value)
       else
-        DOM.resetSelect(input, false)
+        DOM.resetSelect(input)
     else
       DOM.toggleClass(input, 'sc-active', value)
 

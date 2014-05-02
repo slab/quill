@@ -227,9 +227,9 @@ DOM =
     option = DOM.getDefaultOption(select)
     if option?
       option.selected = true
-      DOM.triggerEvent(select, 'change') if trigger
     else
-      select.selectedIndex = null
+      select.selectedIndex = -1
+    DOM.triggerEvent(select, 'change') if trigger
 
   selectOption: (select, option, trigger = true) ->
     value = if _.isElement(option) then option.value else option
