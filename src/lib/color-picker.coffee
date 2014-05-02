@@ -13,9 +13,5 @@ class ColorPicker extends Picker
     DOM.setText(item, '')
     return item
 
-  selectItem: (item) ->
-    super(item)
-    @label.innerHTML = ''
-
 
 module.exports = ColorPicker

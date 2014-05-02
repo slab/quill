@@ -84,10 +84,8 @@ class SnowTheme extends DefaultTheme
     super
     @quill.addStyles(SnowTheme.STYLES)
     @pickers = []
-    @quill.on(@quill.constructor.events.SELECTION_CHANGE, =>
-      _.each(@pickers, (picker) ->
-        picker.close()
-      )
+    @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
+      _.invoke(@pickers, 'close') if range?
     )
     DOM.addClass(@quill.root.ownerDocument.body, 'snow')
     @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
