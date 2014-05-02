@@ -2,19 +2,11 @@
   "name": "quilljs",
   "version": "0.12.0",
   "description": "Cross browser rich text editor",
+  "author": "Jason Chen <jhchen7@gmail.com>",
+  "homepage": "http://quilljs.com",
   "contributors": [
-    {
-      "name": "Jason Chen",
-      "email": "jhchen7@gmail.com"
-    },
-    {
-      "name": "Byron Milligan",
-      "email": "byronner@gmail.com"
-    },
-    {
-      "name": "Keegan Poppen",
-      "email": "keegan.poppen@gmail.com"
-    }
+    "Byron Milligan <byronner@gmail.com>",
+    "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
   "dependencies": {
     "eventemitter2": "~0.4.13",
@@ -56,18 +48,19 @@
     "mocha": "~1.18.0",
     "protractor": "~0.21.0"
   },
-  "engine": {
-    "node": ">=0.8"
+  "engines": {
+    "node": ">=0.10"
   },
-  "license": {
-    "type": "BSD",
-    "url": "https://github.com/quilljs/quill/blob/master/LICENSE"
-  },
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "https://github.com/quilljs/quill"
   },
+  "bugs": {
+    "url": "https://github.com/quilljs/quill/issues"
+  },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "keywords": ["editor", "rich text", "wysiwyg"]
 }

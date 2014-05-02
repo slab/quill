@@ -55,11 +55,6 @@ Instantiate a new Quill object with a css selector for the div that should becom
     grunt test:karma - allows you to visit localhost:9876/debug.html for interactive testing
     grunt test:local - run tests with locally installed browsers
     grunt test:remote - run tests on supported platforms on Sauce Labs
-    grunt test:exhaust - run exhaustive test suite (used to create tests) on PhantomJS
-
-You can use mocha's grep feature to run specific tests ex.
-
-    grunt test:local --grep=cursor
 
 ## Community
 
@@ -82,7 +77,7 @@ For new issues, create a new issue and tag with the appropriate browser tag. Inc
 - Steps for reproduction
 - Failing test case
 
-The more details you provide, the more likely someone will be able to find and fix the bug.
+The more details you provide, the more likely we or someone else will be able to find and fix the bug.
 
 ### Feature Requests
 
@@ -100,4 +95,4 @@ We welcome feature requests. Please make sure they are within scope of Quill's g
 
 ## License
 
-BSD
+BSD 3-clause

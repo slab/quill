@@ -2,8 +2,8 @@
   "name": "quill",
   "version": "0.12.0",
   "homepage": "http://quilljs.com",
-  "authors": [
-    "Jason Chen <jhchen7@gmail.com>",
+  "authors": ["Jason Chen <jhchen7@gmail.com>"],
+  "contributors": [
     "Byron Milligan <byronner@gmail.com>",
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
