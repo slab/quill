@@ -129,6 +129,7 @@ class Selection
       nativeRange.setStart(startNode, startOffset)
       nativeRange.setEnd(endNode, endOffset)
       selection.addRange(nativeRange)
+      @doc.root.focus()   # IE11 needs refocus
     else
       selection.removeAllRanges()
       @doc.root.blur()
