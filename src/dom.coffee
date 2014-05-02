@@ -12,6 +12,7 @@ DOM =
   DEFAULT_BLOCK_TAG: 'DIV'
   DEFAULT_BREAK_TAG: 'BR'
   DEFAULT_INLNE_TAG: 'SPAN'
+  EMBED_TEXT: '!' # No reason we picked ! besides it being one character (so delta cannot split it up)
 
   FONT_SIZES:
     '10px': 1
@@ -155,6 +156,7 @@ DOM =
     switch node.nodeType
       when DOM.ELEMENT_NODE
         return "" if node.tagName == DOM.DEFAULT_BREAK_TAG
+        return DOM.EMBED_TEXT if DOM.EMBED_TAGS[node.tagName]?
         return node.textContent if node.textContent?
         return node.innerText.replace(/[\r\n]/g, '') if node.innerText?
         return ""

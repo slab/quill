@@ -100,6 +100,9 @@ describe('Utils', ->
       'ignore break':
         html: '<span><span>A<br></span><br><span>B</span></span>'
         length: 2
+      'embed node':
+        html: '<img>'
+        length: 1
       'include embed':
         html: '<span>Test<img>Test</span>'
         length: 9
@@ -204,6 +207,10 @@ describe('Utils', ->
         initial:  '<b>Bold</b>'
         expected: '<b>Bold</b><b></b>'
         offset: 4, left: 'Bold', right: '', split: true, force: true
+      'split image':
+        initial:  '<img src="http://quilljs.com/images/cloud.png">'
+        expected: '<img src="http://quilljs.com/images/cloud.png">'
+        offset: 1, left: '!', right: null, split: false
 
     _.each(tests, (test, name) ->
       it(name, ->

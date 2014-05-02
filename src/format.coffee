@@ -7,8 +7,6 @@ class Format
   @types:
     LINE: 'line'
 
-  @EMBED_TEXT: '!' # No reason we picked ! besides it being one character (so delta cannot split it up)
-
   @FORMATS:
     bold:
       tag: 'B'
@@ -121,7 +119,7 @@ class Format
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
       node = DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG)
-      DOM.setText(node, Format.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?
+      DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?
     return node
 
   value: (node) ->

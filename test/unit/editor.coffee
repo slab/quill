@@ -200,6 +200,13 @@ describe('Editor', ->
           ]
         }))
       )
+
+      it('insert after image', ->
+        @editor.doc.setHTML('<div><img src="http://quilljs.com/images/cloud.png"></div>')
+        @editor._insertAt(1, 'A', { bold: true })
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<div><img src="http://quilljs.com/images/cloud.png"><b>A</b></div>', true)
+      )
     )
   )
 

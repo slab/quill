@@ -19,7 +19,7 @@ describe('Format', ->
       format: new Quill.Format(document, Quill.Format.FORMATS.image)
       existing: '<img src="http://quilljs.com/images/icon.png">'
       missing: '<span>Text</span>'
-      removed: "<span>#{Quill.Format.EMBED_TEXT}</span>"
+      removed: "<span>#{Quill.DOM.EMBED_TEXT}</span>"
       value: 'http://quilljs.com/images/icon.png'
     link:
       format: new Quill.Format(document, Quill.Format.FORMATS.link)

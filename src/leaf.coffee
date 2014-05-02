@@ -17,7 +17,7 @@ class Leaf extends LinkedList.Node
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Leaf.ID_PREFIX)
-    @text = if DOM.EMBED_TAGS[@node.tagName]? then Format.EMBED_TEXT else DOM.getText(@node)
+    @text = DOM.getText(@node)
     @length = @text.length
 
   getFormats: ->

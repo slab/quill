@@ -2,6 +2,7 @@ _             = require('lodash')
 _.str         = require('underscore.string')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
+DOM           = require('./dom')
 Editor        = require('./editor')
 Format        = require('./format')
 Range         = require('./lib/range')
@@ -143,7 +144,7 @@ class Quill extends EventEmitter2
     return _.pluck(this.getContents(start, end).ops, 'value').join('')
 
   insertEmbed: (index, type, url, source) ->
-    this.insertText(index, Format.EMBED_TEXT, type, url, source)
+    this.insertText(index, DOM.EMBED_TEXT, type, url, source)
 
   insertText: (index, text, name, value, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, name, value, source)

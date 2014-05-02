@@ -177,7 +177,7 @@ describe('DOM', ->
 
   describe('text', ->
     beforeEach( ->
-      $(@container).html('0<span>1</span><!-- Comment --><b><i>2</i></b>3<br>')
+      $(@container).html('0<span>1</span><!-- Comment --><b><i>2</i></b>3<img><br>')
     )
 
     it('getText() from element', ->
@@ -190,6 +190,10 @@ describe('DOM', ->
 
     it('getText() from comment', ->
       expect(Quill.DOM.getText(@container.childNodes[2])).toEqual('')
+    )
+
+    it('getText() embed tag', ->
+      expect(Quill.DOM.getText(@container.querySelector('img'))).toEqual(Quill.DOM.EMBED_TEXT)
     )
 
     it('setText() element', ->
