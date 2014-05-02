@@ -32,7 +32,10 @@ class Picker
     DOM.addClass(item, 'sc-picker-item')
     DOM.setText(item, DOM.getText(option))
     this.selectItem(item, option, false) if @select.selectedIndex == index
-    DOM.addEventListener(item, 'click', _.bind(this.selectItem, this, item, option, true))
+    DOM.addEventListener(item, 'click', =>
+      this.selectItem(item, option, true)
+      this.close()
+    )
     return item
 
   buildPicker: ->
