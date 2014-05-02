@@ -16,10 +16,8 @@ class Picker
     @select.parentNode.insertBefore(@container, @select)
     DOM.addEventListener(@select.ownerDocument, 'click', _.bind(this.close, this))
     DOM.addEventListener(@label, 'click', =>
-      # Defer to avoid document click handler that closes all dropdowns
-      _.defer( =>
-        DOM.toggleClass(@container, 'sc-expanded')
-      )
+      DOM.toggleClass(@container, 'sc-expanded')
+      return false    # Avoid document click handler that closes all dropdowns
     )
     DOM.addEventListener(@select, 'change', =>
       if @select.selectedIndex > -1

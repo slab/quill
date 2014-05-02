@@ -22,7 +22,7 @@ beforeEach( ->
               html = html.replace(/\ (class|id)="[a-z0-9\-_]+"/gi, '')
               html = html.replace(/\ (class|id)=[a-z0-9\-_]+/gi, '')
               html = html.replace(/\ (class|id)=[a-z0-9\-_]+>/gi, '>')
-            html = html.replace(/style="(.+); "/g, 'style="$1;"')   # PhantomJS adds space after last style
+            html = html.replace(/style="([^"]+); /g, 'style="$1;"')   # PhantomJS adds space after last style
             html = html.replace(/[\'\";]/g, '')    # IE8 outerHTML does not have quotes
             html = html.replace(/rgb\((\d+), ?(\d+), ?(\d+)\)/g, "rgb($1, $2, $3)") # IE8 removes spaces between digits
             html = html.replace(/\ width=\d+/g, '').replace(/\ height=\d+/g, '')  # IE10 adds width, height to image tags
