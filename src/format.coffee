@@ -26,12 +26,12 @@ class Format
 
     color:
       style: 'color'
-      default: '#000'
+      default: 'rgb(0, 0, 0)'
       prepare: 'foreColor'
 
     background:
       style: 'backgroundColor'
-      default: '#fff'
+      default: 'rgb(255, 255, 255)'
       prepare: 'backColor'
 
     font:

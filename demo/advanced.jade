@@ -1,4 +1,4 @@
-- var colors = ["#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"]
+- var colors = ["rgb(0, 0, 0)", "rgb(230, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 138, 0)", "rgb(0, 102, 204)", "rgb(153, 51, 255)", "rgb(255, 255, 255)", "rgb(250, 204, 204)", "rgb(255, 235, 204)", "rgb(255, 255, 204)", "rgb(204, 232, 204)", "rgb(204, 224, 245)", "rgb(235, 214, 255)", "rgb(187, 187, 187)", "rgb(240, 102, 102)", "rgb(255, 194, 102)", "rgb(255, 255, 102)", "rgb(102, 185, 102)", "rgb(102, 163, 224)", "rgb(194, 133, 255)", "rgb(136, 136, 136)", "rgb(161, 0, 0)", "rgb(178, 107, 0)", "rgb(178, 178, 0)", "rgb(0, 97, 0)", "rgb(0, 71, 178)", "rgb(107, 36, 178)", "rgb(68, 68, 68)", "rgb(92, 0, 0)", "rgb(102, 61, 0)", "rgb(102, 102, 0)", "rgb(0, 55, 0)", "rgb(0, 41, 102)", "rgb(61, 20, 102)"]
 
 doctype html
 html
@@ -28,7 +28,7 @@ html
               each c in ['sc-color', 'sc-background']
                 select(class=c, title=(c=='sc-color'?'Text Color':'Background Color'))
                   each color,i in colors
-                    option(value=color, selected=((c == 'sc-color' && color == '#000000') || (c == 'sc-background' && color == '#ffffff') ? true : false))
+                    option(value=color, selected=((c == 'sc-color' && color == 'rgb(0, 0, 0)') || (c == 'sc-background' && color == 'rgb(255, 255, 255)') ? true : false))
                 if c == 'sc-color'
                   span.sc-format-separator
             span.sc-format-group
