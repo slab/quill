@@ -113,6 +113,8 @@ class Document
     line.node = lineNode1
     line.rebuild()
     newLine = this.insertLineBefore(lineNode2, line.next)
+    newLine.formats = _.clone(line.formats)
+    newLine.resetContent()
     return newLine
 
   toDelta: ->

@@ -164,6 +164,9 @@ describe('Editor', ->
         'insert newline in middle':
           expected: ['<div><span>0123</span><b><i>45</i></b></div>', '<div><b><i>67</i></b></div>']
           index: 6, text: '\n'
+        'insert two newlines in middle':
+          expected: ['<div><span>0123</span><b><i>45</i></b></div>', '<div><br></div>', '<div><b><i>67</i></b></div>']
+          index: 6, text: '\n\n'
         'insert text with newline':
           expected: ['<div><span>0123</span><b><i>45</i></b><span>A</span></div>', '<div><span>B</span><b><i>67</i></b></div>']
           index: 6, text: 'A\nB'
