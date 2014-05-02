@@ -51,18 +51,38 @@ describe('Toolbar', ->
       expect(Quill.DOM.hasClass(@button, 'sc-active')).toBe(true)
     )
 
-    it('dropdown', ->
+    it('dropdown', (done) ->
       @quill.setSelection(7, 7)
-      expect(Quill.DOM.getSelectValue(@select)).toEqual('18px')
-      @quill.setSelection(9, 9)
-      expect(Quill.DOM.getSelectValue(@select)).toEqual('32px')
-      @quill.setSelection(3, 3)
-      expect(Quill.DOM.getSelectValue(@select)).toEqual('13px')
+      _.defer( =>
+        expect(Quill.DOM.getSelectValue(@select)).toEqual('18px')
+        done()
+      )
     )
 
-    it('dropdown blank', ->
+    it('dropdown change', (done) ->
+      @quill.setSelection(7, 7)
+      @quill.setSelection(9, 9)
+      _.defer( =>
+        expect(Quill.DOM.getSelectValue(@select)).toEqual('32px')
+        done()
+      )
+    )
+
+    it('dropdown reset', (done) ->
+      @quill.setSelection(7, 7)
+      @quill.setSelection(3, 3)
+      _.defer( =>
+        expect(Quill.DOM.getSelectValue(@select)).toEqual('13px')
+        done()
+      )
+    )
+
+    it('dropdown blank', (done) ->
       @quill.setSelection(5, 7)
-      expect(Quill.DOM.getSelectValue(@select)).toEqual('')
+      _.defer( =>
+        expect(Quill.DOM.getSelectValue(@select)).toEqual('')
+        done()
+      )
     )
   )
 

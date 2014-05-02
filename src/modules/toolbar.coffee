@@ -52,11 +52,14 @@ class Toolbar
     input = @container.querySelector(selector)
     return unless input?
     if input.tagName == 'SELECT'
-      if value
-        value = '' if _.isArray(value)
-        DOM.selectOption(input, value)
-      else
-        DOM.resetSelect(input)
+      # IE does not handle immediate triggering of change very well
+      _.defer( ->
+        if value
+          value = '' if _.isArray(value)
+          DOM.selectOption(input, value)
+        else
+          DOM.resetSelect(input)
+      )
     else
       DOM.toggleClass(input, 'sc-active', value)
 
