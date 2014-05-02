@@ -5,7 +5,11 @@ describe('UndoManager', ->
       <div>
         <div><span>The lazy fox</span></div>
       </div>'
-    @quill = new Quill(@container.firstChild)
+    @quill = new Quill(@container.firstChild, {
+      modules: {
+        'undo-manager': { delay: 10 }
+      }
+    })
     @undoManager = @quill.getModule('undo-manager')
     @original = @quill.getContents()
   )
@@ -84,7 +88,7 @@ describe('UndoManager', ->
         @quill.updateContents(Tandem.Delta.makeInsertDelta(14, 13, 's'))
         expect(@undoManager.stack.undo.length).toEqual(2)
         done()
-      , Quill.Module.UndoManager.DEFAULTS.delay * 1.25)
+      , @undoManager.options.delay * 1.25)
     )
 
     it('hotkeys', ->
