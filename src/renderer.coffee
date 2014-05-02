@@ -53,8 +53,11 @@ class Renderer
 
   @buildFrame: (container) ->
     iframe = container.ownerDocument.createElement('iframe')
-    iframe.frameBorder = '0'
-    iframe.height = iframe.width = '100%'
+    iframe.setAttribute('frameBorder', '0')
+    iframe.setAttribute('height', '100%')
+    iframe.setAttribute('width', '100%')
+    iframe.setAttribute('title', 'Quill Rich Text Editor')
+    iframe.setAttribute('role', 'presentation')
     container.appendChild(iframe)
     iframeDoc = iframe.contentWindow.document
     iframeDoc.open()
