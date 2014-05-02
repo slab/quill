@@ -1,31 +1,20 @@
-# IE feature detection
-supportsRGBA = true
-scriptElem = document.getElementsByTagName('script')[0]
-try
-  scriptElem.style.color = 'rgba(128,128,128,0.5)'
-catch e
-  supportsRGBA = false
-finally
-  scriptElem.style.color = ""
-
-
 getColor = (id, lighten) ->
   alpha = if lighten then '0.4' else '1.0'
-  if id == 1 or id == 'quill-1'
-    return if supportsRGBA then "rgba(0,153,255,#{alpha})" else "rgb(0,153,255)"
-  else
-    return if supportsRGBA then "rgba(255,153,51,#{alpha})" else "rgb(255,153,51)"
+  return if id == 1 or id == 'quill-1' then "rgba(0,153,255,#{alpha})" else "rgba(255,153,51,#{alpha})"
 
 listenEditor = (source, target) ->
   source.on(Quill.events.TEXT_CHANGE, (delta, origin) ->
+    console.log source.id, 'text', delta, origin
     return if origin == 'api'
     target.updateContents(delta)
     sourceDelta = source.getContents()
     targetDelta = target.getContents()
     console.assert(sourceDelta.isEqual(targetDelta), "Editor diversion!", source, target, sourceDelta, targetDelta)
   ).on(Quill.events.SELECTION_CHANGE, (range) ->
+    console.log source.id, 'selection', range
     return unless range?
-    target.getModule('multi-cursor').moveCursor(source.id, range.end)
+    cursorManager = target.getModule('multi-cursor')
+    cursorManager.moveCursor(source.id, range.end)
   )
 
 
@@ -35,16 +24,15 @@ for num in [1, 2]
   $container = $('.editor-container', $wrapper)
   editor = new Quill($container.get(0), {
     modules:
-      'multi-cursor': true
       'toolbar': { container: $('.toolbar-container', $wrapper).get(0) }
       'link-tooltip': true
       'image-tooltip': true
+      'multi-cursor': true
     theme: 'snow'
   })
   authorship = editor.addModule('authorship', {
     authorId: editor.id
     color: getColor(num, true)
-    button: $('.sc-authorship', $wrapper).get(0)
   })
   editors.push(editor)
 
