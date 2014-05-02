@@ -2,7 +2,7 @@ var _  = require('lodash');
 var os = require('os');
 
 
-var CHROME_VERSION = '33'
+var CHROME_VERSION = '34'
 var FIREFOX_VERSION = '28'
 var SAFARI_VERSION = '7'
 var IOS_VERSION = '7.1'
