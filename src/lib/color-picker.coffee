@@ -13,8 +13,8 @@ class ColorPicker extends Picker
     DOM.setText(item, '')
     return item
 
-  selectItem: (item) ->
-    super(item)
+  selectItem: (item, option, trigger) ->
+    super(item, option, trigger)
     @label.innerHTML = ''
 
 

@@ -1,72 +1,64 @@
-_   = require('lodash')
-DOM = require('../dom')
+_          = require('lodash')
+DOM        = require('../dom')
+Normalizer = require('../normalizer')
 
 
 class Picker
+  @TEMPLATE: '
+    <div class="sc-picker-label"></div>
+    <div class="sc-picker-options"></div>'
+
   constructor: (@select) ->
     @container = @select.ownerDocument.createElement('div')
-    _.each(DOM.getClasses(@select), (css) =>
-      DOM.addClass(@container, css)
-    )
-    title = @select.getAttribute('title')
-    @container.setAttribute('title', title) if title
+    this.buildPicker()
     DOM.addClass(@container, 'sc-picker')
-    @label = @select.ownerDocument.createElement('div')
-    DOM.addClass(@label, 'sc-picker-label')
-    @container.appendChild(@label)
-    picker = this.buildPicker()
-    @container.appendChild(picker)
-    selected = picker.querySelector('.sc-selected')
-    DOM.setText(@label, DOM.getText(selected)) if selected?
+    @select.style.display = 'none'
+    @select.parentNode.insertBefore(@container, @select)
+    DOM.addEventListener(@select.ownerDocument, 'click', _.bind(this.close, this))
     DOM.addEventListener(@label, 'click', =>
       # Defer to avoid document click handler that closes all dropdowns
-      hasClass = DOM.hasClass(@container, 'sc-expanded')
       _.defer( =>
-        DOM.toggleClass(@container, 'sc-expanded', !hasClass)
+        DOM.toggleClass(@container, 'sc-expanded')
       )
     )
-    DOM.addEventListener(@select.ownerDocument, 'click', =>
-      DOM.removeClass(@container, 'sc-expanded')
-    )
     DOM.addEventListener(@select, 'change', =>
-      option = @container.querySelectorAll('.sc-picker-item')[@select.selectedIndex]
-      this.selectItem(option)
-      DOM.toggleClass(@label, 'sc-active', option != selected)
+      if @select.selectedIndex > -1
+        item = @container.querySelectorAll('.sc-picker-item')[@select.selectedIndex]
+        option = @select.options[@select.selectedIndex]
+      this.selectItem(item, option, false)
+      DOM.toggleClass(@label, 'sc-active', option != DOM.getDefaultOption(@select))
     )
-    @select.parentNode.insertBefore(@container, @select)
 
   buildItem: (picker, option, index) ->
     item = @select.ownerDocument.createElement('div')
     DOM.addClass(item, 'sc-picker-item')
     DOM.setText(item, DOM.getText(option))
-    DOM.addClass(item, 'sc-selected') if @select.selectedIndex == index
-    DOM.addEventListener(item, 'click', =>
-      this.selectItem(item)
-      @select.selectedIndex = index
-      DOM.triggerEvent(@select, 'change', true, true)
-      return true
-    )
+    this.selectItem(item, option, false) if @select.selectedIndex == index
+    DOM.addEventListener(item, 'click', _.bind(this.selectItem, this, item, option, true))
     return item
 
   buildPicker: ->
-    picker = @select.ownerDocument.createElement('div')
-    DOM.addClass(picker, 'sc-picker-options')
-    _.each(@select.querySelectorAll('option'), (option, i) =>
+    _.each(DOM.getAttributes(@select), (value, name) =>
+      @container.setAttribute(name, value)
+    )
+    @container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE)
+    @label = @container.querySelector('.sc-picker-label')
+    picker = @container.querySelector('.sc-picker-options')
+    _.each(@select.options, (option, i) =>
       item = this.buildItem(picker, option, i)
       picker.appendChild(item)
     )
-    @select.style.display = 'none'
-    return picker
 
   close: ->
     DOM.removeClass(@container, 'sc-expanded')
 
-  selectItem: (item) ->
+  selectItem: (item, option, trigger) ->
     selected = @container.querySelector('.sc-selected')
     DOM.removeClass(selected, 'sc-selected') if selected?
     if item?
       DOM.addClass(item, 'sc-selected')
       DOM.setText(@label, DOM.getText(item))
+      DOM.selectOption(@select, option, trigger)
     else
       @label.innerHTML = '&nbsp;'
 
