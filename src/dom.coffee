@@ -200,7 +200,9 @@ DOM =
           DOM.removeNode(curNode)
         else if DOM.isTextNode(nextNode)
           nextNode = nextNode.nextSibling
-          DOM.setText(curNode, DOM.getText(curNode) + DOM.getText(curNode.nextSibling))
+          newText = DOM.getText(curNode) + DOM.getText(curNode.nextSibling)
+          DOM.setText(curNode, newText)
+          DOM.removeNode(curNode.nextSibling)
       curNode = nextNode
 
   isIE: (maxVersion) ->
