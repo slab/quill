@@ -34,7 +34,7 @@ describe('Format', ->
       value: 'jason'
     line:
       format: new Quill.Format(document, Quill.Format.FORMATS.align)
-      existing: '<div style="text-align: right">Text</div>'
+      existing: '<div style="text-align: right;">Text</div>'
       missing: '<div>Text</div>'
       value: 'right'
     complex:

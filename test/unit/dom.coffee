@@ -224,17 +224,17 @@ describe('DOM', ->
 
     it('moveChildren()', ->
       Quill.DOM.moveChildren(@container.firstChild, @container.lastChild)
-      expect(@container).toEqualHTML('<div style="cursor: pointer>One<span>Two</span><b>Bold</b></div><div></div>')
+      expect(@container).toEqualHTML('<div style="cursor: pointer">One<span>Two</span><b>Bold</b></div><div></div>')
     )
 
     it('removeNode()', ->
       Quill.DOM.removeNode(@container.lastChild.firstChild)
-      expect(@container).toEqualHTML('<div style="cursor: pointer>One</div><div><b>Bold</b></div>')
+      expect(@container).toEqualHTML('<div style="cursor: pointer">One</div><div><b>Bold</b></div>')
     )
 
     it('switchTag()', ->
       Quill.DOM.switchTag(@container.firstChild, 'span')
-      expect(@container).toEqualHTML('<span style="cursor: pointer>One</span><div><span>Two</span><b>Bold</b></div>')
+      expect(@container).toEqualHTML('<span style="cursor: pointer">One</span><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('switchTag() to same', ->
@@ -250,13 +250,13 @@ describe('DOM', ->
 
     it('unwrap()', ->
       Quill.DOM.unwrap(@container.lastChild)
-      expect(@container).toEqualHTML('<div style="cursor: pointer>One</div><span>Two</span><b>Bold</b>')
+      expect(@container).toEqualHTML('<div style="cursor: pointer">One</div><span>Two</span><b>Bold</b>')
     )
 
     it('wrap()', ->
       wrapper = @container.ownerDocument.createElement('div')
       Quill.DOM.wrap(wrapper, @container.firstChild)
-      expect(@container).toEqualHTML('<div><div style="cursor: pointer>One</div></div><div><span>Two</span><b>Bold</b></div>')
+      expect(@container).toEqualHTML('<div><div style="cursor: pointer">One</div></div><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('wrap() orphan node', ->

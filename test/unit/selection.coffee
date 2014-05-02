@@ -187,7 +187,7 @@ describe('Selection', ->
           </div>'
         quill = new Quill(@container.firstChild)
         quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
-        quill.editor._insertAt(0, '!', { image: 'http://quilljs.com/images/icon.png' })
+        quill.editor._insertAt(0, Quill.DOM.EMBED_TEXT, { image: 'http://quilljs.com/images/icon.png' })
         quill.editor._formatAt(2, 4, 'bold', true)
         expect(quill.root).toEqualHTML('
           <div><img src="http://quilljs.com/images/icon.png"><br></div>
