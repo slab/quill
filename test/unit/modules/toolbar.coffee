@@ -49,8 +49,6 @@ describe('Toolbar', ->
     it('button', ->
       @quill.setSelection(1, 1)
       expect(Quill.DOM.hasClass(@button, 'sc-active')).toBe(true)
-      @quill.setSelection(null)
-      expect(Quill.DOM.hasClass(@button, 'sc-active')).toBe(false)
     )
 
     it('dropdown', ->
