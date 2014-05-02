@@ -49,7 +49,7 @@ class Toolbar
     else
       delete @activeFormats[format]
     selector = if Toolbar.formats.SELECT[format]? then "select.sc-#{format}" else ".sc-#{format}"  # Prevent selecting picker
-    @container.querySelector(".sc-#{format}")
+    input = @container.querySelector(selector)
     return unless input?
     if input.tagName == 'SELECT'
       if value
