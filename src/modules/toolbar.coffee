@@ -16,6 +16,7 @@ class Toolbar
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     @activeFormats = {}
+    @preventUpdate = false
     _.each(@quill.options.formats, (format) =>
       return if Toolbar.formats.TOOLTIP[format]?
       eventName = if Toolbar.formats.SELECT[format]? then 'change' else 'click'
@@ -35,9 +36,11 @@ class Toolbar
     return unless input?
     DOM.addEventListener(input, eventName, =>
       value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'sc-active')
+      @preventUpdate = true
       @quill.focus()
       range = @quill.getSelection()
       callback(range, value) if range?
+      @preventUpdate = false
     )
 
   setActive: (format, value) ->
@@ -57,6 +60,7 @@ class Toolbar
       DOM.toggleClass(input, 'sc-active', value)
 
   updateActive: (range) ->
+    return unless range? and !@preventUpdate
     activeFormats = this._getActive(range)
     _.each(_.keys(@activeFormats), (name) =>
       if activeFormats[name]?
@@ -69,16 +73,13 @@ class Toolbar
     )
 
   _getActive: (range) ->
-    if range?
-      if range.isCollapsed()
-        start = Math.max(0, range.start - 1)
-        contents = @quill.getContents(start, range.end)
-      else
-        contents = @quill.getContents(range)
-      formatsArr = _.map(contents.ops, 'attributes')
-      return this._intersectFormats(formatsArr)
+    if range.isCollapsed()
+      start = Math.max(0, range.start - 1)
+      contents = @quill.getContents(start, range.end)
     else
-      return {}
+      contents = @quill.getContents(range)
+    formatsArr = _.map(contents.ops, 'attributes')
+    return this._intersectFormats(formatsArr)
 
   _intersectFormats: (formatsArr) ->
     return _.reduce(formatsArr.slice(1), (activeFormats, formats) ->
