@@ -1,3 +1,28 @@
+compareNodes = (node1, node2, ignoredAttributes = []) ->
+  return false unless node1.nodeType == node2.nodeType
+  if Quill.DOM.isElement(node1)
+    return false unless Quill.DOM.isElement(node2)
+    [attr1, attr2] = _.map([node1, node2], (node) ->
+      attr = Quill.DOM.getAttributes(node)
+      _.each(ignoredAttributes, (name) ->
+        delete attr[name]
+      )
+      attr.style = attr.style.trim() if attr.style?
+      return attr
+    )
+    return false unless _.isEqual(attr1, attr2)
+    return false unless node1.childNodes.length == node2.childNodes.length
+    equal = true
+    _.each(Quill.DOM.getChildNodes(node1), (child1, i) ->
+      if !compareNodes(child1, node2.childNodes[i], ignoredAttributes)
+        equal = false
+        return false
+    )
+    return equal
+  else
+    return Quill.DOM.getText(node1) == Quill.DOM.getText(node2)
+
+
 beforeEach( ->
   matchers =
     toEqualDelta: ->
@@ -14,30 +39,20 @@ beforeEach( ->
     toEqualHTML: ->
       return {
         compare: (actual, expected, ignoreClassId) ->
-          [html1, html2] = _.map([actual, expected], (html) ->
+          [div1, div2] = _.map([actual, expected], (html) ->
             html = html.join('') if _.isArray(html)
             html = html.innerHTML if _.isElement(html)
             div = document.createElement('div')
             div.innerHTML = Quill.Normalizer.stripWhitespace(html)
-            if ignoreClassId
-              _.each(div.querySelectorAll('*'), (node) ->
-                node.removeAttribute('class')
-                node.removeAttribute('id')
-              )
-            # IE adds width/height attributes automatically
-            _.each(div.querySelectorAll('img'), (node) ->
-              node.removeAttribute('width')
-              node.removeAttribute('height')
-            )
-            html = div.innerHTML
-            html = html.replace(/style="([^"]+); "/g, 'style="$1;"')   # PhantomJS adds space after last style
-            return html
+            return div
           )
-          pass = html1 == html2
+          ignoredAttributes = if ignoreClassId then ['class', 'id'] else []
+          ignoredAttributes = ignoredAttributes.concat(['width', 'height'])   # IE adds automatically
+          pass = compareNodes(div1, div2, ignoredAttributes)
           if pass
             message = 'HTMLs equal'
           else
-            message = "HTMLs unequal: \n#{jasmine.pp(html1)}\n\n#{jasmine.pp(html2)}\n"
+            message = "HTMLs unequal: \n#{jasmine.pp(div1.innerHTML)}\n\n#{jasmine.pp(div2.innerHTML)}\n"
           return { message: message, pass: pass }
       }
 

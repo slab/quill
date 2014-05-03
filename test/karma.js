@@ -47,11 +47,10 @@ module.exports = function(config) {
       '../node_modules/lodash/lodash.js',
       '../node_modules/async/lib/async.js',
       'tandem-core.js',
+      'quill.exposed.js',
 
       'test/fixtures/unit.html',
       'test/helpers/*.js',
-
-      'quill.exposed.js',
 
       'test/unit/*.js',
       'test/unit/lib/*.js',
