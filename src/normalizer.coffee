@@ -41,10 +41,7 @@ Normalizer =
   handleBreaks: (lineNode) ->
     breaks = _.map(lineNode.querySelectorAll(DOM.DEFAULT_BREAK_TAG))
     _.each(breaks, (br) =>
-      if br.nextSibling? and (!DOM.isIE(10) or br.previousSibling?)
-        Utils.splitAncestors(br.nextSibling, lineNode.parentNode)
-      if br.previousSibling?
-        DOM.removeNode(br)
+      Utils.splitAncestors(br.nextSibling, lineNode.parentNode) if br.nextSibling?
     )
     return lineNode
 
