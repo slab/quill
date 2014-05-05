@@ -27,11 +27,11 @@ The best way to get started is a simple example:
 
 <!-- Create the editor container -->
 <div id="editor">
-  <div>Hello World!</div>
-  <div>
+  <p>Hello World!</p>
+  <p>
     <span>Some initial </span><b>bold</b></span> text</span>
-  </div>
-  <div><br /></div>
+  </p>
+  <p><br></p>
 </div>
 
 <!-- Include the Quill library -->

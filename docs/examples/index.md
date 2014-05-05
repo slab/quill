@@ -16,10 +16,10 @@ A basic editor with just a few formats to get started.
 <div class="quill-wrapper">
   <div id="basic-toolbar" class="toolbar">
     <select title="Size" class="sc-font-size">
-      <option value="small">Small</option>
-      <option value="normal" selected>Normal</option>
-      <option value="large">Large</option>
-      <option value="huge">Huge</option>
+      <option value="10px">Small</option>
+      <option value="13px" selected>Normal</option>
+      <option value="18px">Large</option>
+      <option value="32px">Huge</option>
     </select>
     <button class="sc-bold">Bold</button>
     <button class="sc-italic">Italic</button>
