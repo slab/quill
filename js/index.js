@@ -1,7 +1,10 @@
 $(document).ready(function() {
   var editor = new Quill('#editor', {
     modules: {
-      toolbar: { container: '#toolbar' }
+      'toolbar': { container: '#toolbar' },
+      'image-tooltip': true,
+      'link-tooltip': true
+
     },
     theme: 'snow'
   });
@@ -11,7 +14,7 @@ $(document).ready(function() {
     $('.quill-wrapper').tooltip('show');
   }, 2500);
 
-  editor.once('focus-change', function(hasFocus) {
+  editor.once('selection-change', function(hasFocus) {
     $('#editor').toggleClass('focus', hasFocus);
     $('.quill-wrapper').tooltip('destroy');
     clearTimeout(tooltipTimer);
