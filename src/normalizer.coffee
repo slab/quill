@@ -26,7 +26,7 @@ Normalizer =
   }
 
   TAGS: {
-    'DIV'
+    'P'
     'BR'
     'SPAN'
     'B'
@@ -48,9 +48,9 @@ Normalizer =
 
   normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
-    lineNode = Normalizer.normalizeNode(lineNode)
     lineNode = Normalizer.handleBreaks(lineNode)
     Normalizer.pullBlocks(lineNode)
+    lineNode = Normalizer.normalizeNode(lineNode)
     Normalizer.wrapText(lineNode)
     return lineNode
 
