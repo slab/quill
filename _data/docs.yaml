@@ -5,15 +5,12 @@
       url: /docs/editor/configuration
     - title: Formats
       url: /docs/editor/formats
-- title: API
-  url: /docs/api/
-  children:
-    - title: Manipulation
-      url: /docs/api/manipulation/
+    - title: API
+      url: /docs/editor/api
     - title: Events
-      url: /docs/api/events/
+      url: /docs/editor/events/
     - title: Deltas
-      url: /docs/api/deltas/
+      url: /docs/editor/deltas/
 - title: Modules
   url: /docs/modules/
   children:

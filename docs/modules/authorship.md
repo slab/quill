@@ -69,10 +69,10 @@ var editor = new Quill('#editor');
 var module = editor.addModule('authorship', {
   authorId: 'id-1234',
   button: '#author-button',
-  color: '#ff00ff'
+  color: 'rgb(255, 0, 255)'
 });
 
-module.addAuthor('id-5678', '#ffff00'); // Set external authors
+module.addAuthor('id-5678', 'rgb(255, 255, 0)'); // Set external authors
 
 editor.on('text-update', function(delta) {
   // If the user types an 'a' into the editor, normally we would get:

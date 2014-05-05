@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Text Manipulation - Quill
-permalink: /docs/api/manipulation/
+permalink: /docs/editor/api/
 ---
 
 # Manipulation

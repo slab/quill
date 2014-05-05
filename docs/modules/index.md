@@ -6,7 +6,7 @@ permalink: /docs/modules/
 
 # Modules
 
-Modules allow you to customize the functionality of Quill to your liking. Add the features you need and exclude the ones you don't. You can also [build your own](/docs/api/) modules for any particularly custom integrations or use cases. Several common modules are listed below.
+Modules allow you to customize the functionality of Quill to your liking. Add the features you need and exclude the ones you don't. You can also [build your own](/docs/editor/api/) modules for any particularly custom integrations or use cases. Several common modules are listed below.
 
 Modules are meant to provide **functionality** only. See the [Configuration](/docs/editor/configuration/) and [Theme](/docs/themes/) guides to learn about customizing style.
 

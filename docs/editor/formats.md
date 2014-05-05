@@ -9,7 +9,7 @@ permalink: /docs/editor/formats/
 Quill currently supports a number of formats. Enabling a format:
 
 - \- Allows the Quill Editor to recognize the format
-- \- Quill API calls using the format
+- \- Allows API calls using the format
 - \- Registers associated hotkeys
 
 Note that enabling a format is distinct from adding a control in the [toolbar](/docs/modules/toolbar/). By default all supported formats are enabled.
@@ -18,11 +18,12 @@ Note that enabling a format is distinct from adding a control in the [toolbar](/
   - Italic - `italic`
   - Strikethrough - `strike`
   - Underline - `underline`
+  - Font - `font`
+  - Size - `size`
+  - Color - `color`
+  - Background Color - `background`
+  - Image - `image`
   - Link - `link`
-  - Font - `font-name`
-  - Size - `font-size`
-  - Color - `fore-color`
-  - Background Color - `back-color`
 
 ### Configuring
 

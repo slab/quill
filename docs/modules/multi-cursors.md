@@ -55,6 +55,6 @@ var module = editor.addModule('multi-cursor', {
   timeout: 10000
 });
 
-module.setCursor('id-1234', 10, 'Frodo', '#ff00ff');
+module.setCursor('id-1234', 10, 'Frodo', 'rgb(255, 0, 255)');
 
 {% endhighlight %}

@@ -37,7 +37,7 @@ var editor = new Quill('#editor', configs);
 
 #### modules
 
-- See [Modules](/docs/modules/) for more information.
+- Collection of modules to include. See [Modules](/docs/modules/) for more information.
 
 #### pollInterval
 
@@ -74,4 +74,4 @@ var editor = new Quill('#editor', {
 
 #### theme
 
-- See [Themes](/docs/themes/) for more information.
+- Name of theme to use. See [Themes](/docs/themes/) for more information.

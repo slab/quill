@@ -10,11 +10,11 @@ var fullEditor = new Quill('#full-editor', {
 });
 
 // Add basic editor's author
-var authorship = fullEditor.modules['authorship'];
+var authorship = fullEditor.getModule('authorship');
 authorship.addAuthor('gandalf', 'rgba(255,153,51,0.4)');
 
 // Add a cursor to represent basic editor's cursor
-var cursorManager = fullEditor.modules['multi-cursor'];
+var cursorManager = fullEditor.getModule('multi-cursor');
 cursorManager.setCursor('gandalf', fullEditor.getLength()-1, 'Gandalf', 'rgba(255,153,51,0.9)');
 
 // Sync basic editor's cursor location

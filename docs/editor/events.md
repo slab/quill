@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Events - Quill
-permalink: /docs/api/events/
+permalink: /docs/editor/events/
 ---
 
 # Events
@@ -10,7 +10,6 @@ Quill inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) and
 
 1. [text-change](#text-change)
 1. [selection-change](#selection-change)
-1. [focus-change](#focus-change)
 
 ### Text Change
 
@@ -25,10 +24,10 @@ Changes may occur through an API but as long as they originate from the user, th
 
 **Callback Parameters**
 
-| Parameter | Type                         | Description
-|-----------|------------------------------|------------
-| `delta`   | [_Delta_](/docs/api/deltas/) | Represention of change.
-| `source`  | _String_                     | Source of change. Will be either `"user"` or `"api"`.
+| Parameter | Type                            | Description
+|-----------|---------------------------------|------------
+| `delta`   | [_Delta_](/docs/editor/deltas/) | Represention of change.
+| `source`  | _String_                        | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 
@@ -38,57 +37,36 @@ editor.on('text-change', function(delta, source) {
     console.log("An API call triggered this change.");
   } else if (source == 'user') {
     console.log("A user action triggered this change.");
-  } else {
-    console.log("This shouldn't happen...");
   }
 });
 {% endhighlight %}
 
 ### Selection Change
 
-Emitted when a user or API causes the selection to change.
+Emitted when a user or API causes the selection to change, with a range representing the selection boundaries. A null range indicates selection loss (usually caused by loss of focus from the editor).
+
+You can also use this event as a focus change event by just checking if the emitted range is null or not.
 
 **Callback Parameters**
 
 | Parameter | Type     | Description
 |-----------|----------|------------
-| `range`   | _Object_ | Object with **start** and **end** keys indicating the corresponding positions where the selection exists.
+| `range`   | _Object_ | Object with **start** and **end** keys indicating the corresponding indexes where the selection exists.
+| `source`  | _String_ | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 
 {% highlight javascript %}
 editor.on('selection-change', function(range) {
   if (range) {
-    if (range.start.index == range.end.index) {
-      console.log('User cursor is on', range.start.index);
+    if (range.start == range.end) {
+      console.log('User cursor is on', range.start);
     } else {
-      var text = editor.getText(range.start.index, range.end.index - range.start.index);
+      var text = editor.getText(range.start, range.end);
       console.log('User has highlighted', text);
     }
   } else {
     console.log('Cursor not in the editor');
-  }
-});
-{% endhighlight %}
-
-### Focus Change
-
-Emitted when the editor gains or loses focus. This is different from just listening on `selection-change` and checking for a null value since modern browsers allow the loss of focus without the loss of selection (when you refocus, your old selection still exists).
-
-**Callback Parameters**
-
-| Parameter  | Type      | Description
-|------------|-----------|------------
-| `hasFocus` | _Boolean_ | Whether or not the editor has focus.
-
-**Examples**
-
-{% highlight javascript %}
-editor.on('focus-change', function(hasFocus) {
-  if (hasFocus) {
-    console.log("Editor has focus.");
-  } else {
-    console.log("Editor lost focus.");
   }
 });
 {% endhighlight %}

@@ -31,7 +31,7 @@ Simply create a container and the module to the Quill editor.
 <!-- Create toolbar container -->
 <div id="toolbar">
   <!-- Add font size dropdown -->
-  <select class="sc-font-size">
+  <select class="sc-size">
     <option value="small">Small</option>
     <option value="normal" selected>Normal</option>
     <option value="large">Large</option>
@@ -63,10 +63,10 @@ A click handler will be added to any DOM element with the following classes:
 
 A change (DOM `change` event) handler will be added to any DOM element with the following classes:
 
-- `sc-back-color`
-- `sc-fore-color`
-- `sc-font-size`
-- `sc-font-family`
+- `sc-background`
+- `sc-color`
+- `sc-font`
+- `sc-size`
 
 The toolbar will also listen to cursor movements and will add an `sc-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
 
