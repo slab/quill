@@ -26,9 +26,9 @@ describe('Selection', ->
         index: 9
       'between leaves':
         native: ->
-          return [@quill.root.querySelector('i').firstChild, 0]
+          return [@quill.root.querySelector('s').firstChild, 2]
         encoded: ->
-          return [@quill.root.querySelector('i').firstChild, 0]
+          return [@quill.root.querySelector('s').firstChild, 2]
         index: 10
       'break node':
         native: ->

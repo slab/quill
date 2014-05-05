@@ -96,8 +96,7 @@ class Selection
 
   _indexToPosition: (index) ->
     return [@doc.root, 0] if @doc.lines.length == 0
-    [line, lineOffset] = @doc.findLineAt(index)
-    [leaf, offset] = line.findLeafAt(lineOffset)
+    [leaf, offset] = @doc.findLeafAt(index, true)
     node = leaf.node
     node = node.firstChild if DOM.isTextNode(node.firstChild)
     return this._decodePosition(node, offset)

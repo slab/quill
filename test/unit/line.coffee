@@ -117,6 +117,10 @@ describe('Line', ->
         html: '<b>0123</b><s>4567</s><u>8901</u>'
         offset: 4
         expected: ['s', 0]
+      'leaf at boundry inclusive':
+        html: '<b>0123</b><s>4567</s><u>8901</u>'
+        offset: 4, inclusive: true
+        expected: ['b', 4]
       'leaf with parent':
         html: '<b>0123</b><i><s>4567</s><u>8901</u></i>'
         offset: 6
@@ -139,7 +143,7 @@ describe('Line', ->
         @container.innerHTML = "<div>#{test.html}</div>"
         lineNode = @container.firstChild
         line = new Quill.Line(@doc, lineNode)
-        [leaf, offset] = line.findLeafAt(test.offset)
+        [leaf, offset] = line.findLeafAt(test.offset, test.inclusive)
         if test.expected[0]
           expect(leaf.node).toEqual(lineNode.querySelector(test.expected[0]))
         else

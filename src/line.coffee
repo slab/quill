@@ -66,12 +66,13 @@ class Line extends LinkedList.Node
       curLeaf = curLeaf.next
     return null
 
-  findLeafAt: (offset) ->
+  findLeafAt: (offset, inclusive = false) ->
     # TODO exact same code as findLineAt
     return [@leaves.last, @leaves.last.length] if offset >= @length - 1
     leaf = @leaves.first
     while leaf?
-      return [leaf, offset] if offset < leaf.length
+      if offset < leaf.length or (offset == leaf.length and inclusive)
+        return [leaf, offset]
       offset -= leaf.length
       leaf = leaf.next
     return [@leaves.last, offset - @leaves.last.length]   # Should never occur unless length calculation is off
