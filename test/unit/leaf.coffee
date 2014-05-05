@@ -6,7 +6,7 @@ describe('Leaf', ->
   describe('constructor', ->
     tests =
       'image':
-        html: '<img>'
+        html: '<img src="http://quilljs.com/images/icon.png">'
         text: Quill.DOM.EMBED_TEXT
       'break':
         html: '<br>'
@@ -39,7 +39,7 @@ describe('Leaf', ->
         html: '<br>'
         expected: true
       'image':
-        html: '<img>'
+        html: '<img src="http://quilljs.com/images/icon.png">'
         expected: true
       'element with element child':
         html: '<b><i></i></b>'
