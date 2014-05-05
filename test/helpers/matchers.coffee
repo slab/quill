@@ -2,6 +2,7 @@ compareNodes = (node1, node2, ignoredAttributes = []) ->
   return false unless node1.nodeType == node2.nodeType
   if Quill.DOM.isElement(node1)
     return false unless Quill.DOM.isElement(node2)
+    return false unless node1.tagName == node2.tagName
     [attr1, attr2] = _.map([node1, node2], (node) ->
       attr = Quill.DOM.getAttributes(node)
       _.each(ignoredAttributes, (name) ->
