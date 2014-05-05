@@ -107,11 +107,11 @@ class Selection
     line = @doc.findLine(leafNode)
     # TODO move to linked list
     return 0 unless line?   # Occurs on empty document
+    leaf = line.findLeaf(leafNode)
     lineOffset = 0
     while line.prev?
       line = line.prev
       lineOffset += line.length
-    leaf = line.findLeaf(leafNode)
     return lineOffset unless leaf?
     leafOffset = 0
     while leaf.prev?

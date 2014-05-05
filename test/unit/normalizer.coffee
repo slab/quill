@@ -11,11 +11,13 @@ describe('Normalizer', ->
       'Break preceding line':
         initial:  '<div><b><br>One</b></div>'
         expected: '<div><b><br></b></div><div><b>One</b></div>'
+        ieOmit: true
       'Break after line':
         initial:  '<div><b>One<br></b></div>'
         expected: '<div><b>One<br></b></div>'
 
     _.each(tests, (test, name) ->
+      return if test.ieOmit and Quill.DOM.isIE(10)
       it(name, ->
         @container.innerHTML = test.initial
         lineNode = Quill.Normalizer.handleBreaks(@container.firstChild)
