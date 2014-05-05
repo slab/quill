@@ -31,6 +31,10 @@ class Toolbar
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
     DOM.addClass(@container, 'sc-toolbar-container')
+    if DOM.isIE(11)
+      DOM.addEventListener(@container, 'mousedown', =>
+        return false  # IE destroys selection by default when we click away
+      )
 
   initFormat: (format, callback) ->
     selector = ".sc-#{format}"
