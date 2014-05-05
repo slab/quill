@@ -21,8 +21,9 @@ class Keyboard
   addHotkey: (hotkey, callback) ->
     hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
     hotkey.callback = callback
-    @hotkeys[hotkey.key] ?= []
-    @hotkeys[hotkey.key].push(hotkey)
+    which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.toUpperCase().charCodeAt(0)
+    @hotkeys[which] ?= []
+    @hotkeys[which].push(hotkey)
 
   toggleFormat: (range, format) ->
     delta = @quill.getContents(range)
@@ -58,13 +59,12 @@ class Keyboard
   _initListeners: ->
     DOM.addEventListener(@quill.root, 'keydown', (event) =>
       prevent = false
-      if @hotkeys[event.key]?
-        range = @quill.getSelection()
-        _.each(@hotkeys[event.key], (hotkey) =>
-          return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)
-          return if hotkey.shiftKey? and event.shiftKey != hotkey.shiftKey
-          prevent = hotkey.callback(range) == false or prevent
-        )
+      range = @quill.getSelection()
+      _.each(@hotkeys[event.which], (hotkey) =>
+        return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)
+        return if hotkey.shiftKey? and event.shiftKey != hotkey.shiftKey
+        prevent = hotkey.callback(range) == false or prevent
+      )
       return !prevent
     )
 
