@@ -27,10 +27,13 @@ class Keyboard
 
   toggleFormat: (range, format) ->
     delta = @quill.getContents(range)
-    hasFormat = _.all(delta.ops, (op) ->
+    value = !_.all(delta.ops, (op) ->
       return op.attributes[format]
     )
-    @quill.formatText(range, format, !hasFormat, { source: 'user' })
+    if range.isCollapsed()
+      @quill.prepareFormat(format, value)
+    else
+      @quill.formatText(range, format, value, 'user')
 
   _initDeletes: ->
     _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (key) =>
