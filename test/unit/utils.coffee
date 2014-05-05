@@ -28,19 +28,19 @@ describe('Utils', ->
   describe('findDeepestNode()', ->
     tests =
       'zeroth':
-        html: '<div><b>0123</b></div>'
+        html: '<p><b>0123</b></p>'
         index: 0, offset: 0
       'first child':
-        html: '<div><b>0123</b></div>'
+        html: '<p><b>0123</b></p>'
         index: 2, offset: 2
       'middle child':
-        html: '<div>01<br><span>23<b>45</b></div>'
+        html: '<p>01<br><span>23<b>45</b></p>'
         index: 5, offset: 1
       'last child':
-        html: '<div>01<br><b>23</b></div>'
+        html: '<p>01<br><b>23</b></p>'
         index: 3, offset: 1
       'beyond end of document':
-        html: '<div><b>01</b></div>'
+        html: '<p><b>01</b></p>'
         index: 4, offset: 2
     _.each(tests, (test, name) ->
       it(name, ->
@@ -58,11 +58,11 @@ describe('Utils', ->
         <span>111</span>
         <b>222</b>
         <br>
-        <div>
+        <p>
           <span>3</span>
           <s>3</s>
           <span>3</span>
-        </div>
+        </p>
         <i>444</i>'
       )
     )

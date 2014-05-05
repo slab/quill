@@ -2,8 +2,8 @@ describe('Quill', ->
   beforeEach( ->
     @container = $('#editor-container').html('
       <div>
-        <div><span>0123</span></div>
-        <div><span>5678</span></div>
+        <p><span>0123</span></p>
+        <p><span>5678</span></p>
       </div>
     ').get(0)
     @quill = new Quill(@container.firstChild)
@@ -25,21 +25,21 @@ describe('Quill', ->
 
   describe('styles', ->
     it('constructor overwrite', (done) ->
-      @container.innerHTML = '<div><span>0123</span></div>'
+      @container.innerHTML = '<p><span>0123</span></p>'
       @quill = new Quill(@container.firstChild, {
-        styles: { '.editor-container div': { 'line-height': '25px' } }
+        styles: { '.editor-container > p': { 'line-height': '25px' } }
       })
       @quill.on(Quill.events.RENDER_UPDATE, (css) =>
-        if css.indexOf('.editor-container div') > -1
+        if css.indexOf('.editor-container > p') > -1
           expect(@quill.root.firstChild.offsetHeight).toEqual(25)
           done()
       )
     )
 
     it('addStyles()', (done) ->
-      @quill.addStyles({ '.editor-container div': { 'line-height': '25px' } })
+      @quill.addStyles({ '.editor-container > p': { 'line-height': '25px' } })
       @quill.on(Quill.events.RENDER_UPDATE, (css) =>
-        if css.indexOf('.editor-container div') > -1
+        if css.indexOf('.editor-container > p') > -1
           expect(@quill.root.firstChild.offsetHeight).toEqual(25)
           done()
       )
@@ -77,22 +77,22 @@ describe('Quill', ->
   describe('manipulation', ->
     it('deleteText()', ->
       @quill.deleteText(2, 3)
-      expect(@quill.root).toEqualHTML('<div><span>013</span></div><div><span>5678</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>013</span></p><p><span>5678</span></p>', true)
     )
 
     # it('formatLines()', ->
     #   @quill.formatLines(4, 2, 'align', 'right')
     #   expect(@quill.root).toEqualHTML('
-    #     <div style="text-align: right;"><span>0123</span></div>
-    #     <div style="text-align: right;"><span>5678</span></div>
+    #     <p style="text-align: right;"><span>0123</span></p>
+    #     <p style="text-align: right;"><span>5678</span></p>
     #   ', true)
     # )
 
     it('formatText()', ->
       @quill.formatText(2, 4, 'bold', true)
-      expect(@quill.root).toEqualHTML('<div><span>01</span><b>23</b></div><div><span>5678</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>01</span><b>23</b></p><p><span>5678</span></p>', true)
       @quill.formatText(2, 4, 'bold', false)
-      expect(@quill.root).toEqualHTML('<div><span>0123</span></div><div><span>5678</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>0123</span></p><p><span>5678</span></p>', true)
       expect(@quill.getContents(0, 4)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123'))
     )
 
@@ -100,12 +100,12 @@ describe('Quill', ->
 
     # it('insertEmbed()', ->
     #   @quill.insertEmbed(4, 'image', 'http://quilljs.com/images/icon.png')
-    #   expect(@quill.root).toEqualHTML('<div><span>0123</span><img src="http://quilljs.com/images/icon.png"></div><div><span>5678</span></div>', true)
+    #   expect(@quill.root).toEqualHTML('<p><span>0123</span><img src="http://quilljs.com/images/icon.png"></p><p><span>5678</span></p>', true)
     # )
 
     it('insertText()', ->
       @quill.insertText(2, 'A')
-      expect(@quill.root).toEqualHTML('<div><span>01A23</span></div><div><span>5678</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>01A23</span></p><p><span>5678</span></p>', true)
     )
 
     it('setContents() with delta', ->
@@ -114,22 +114,22 @@ describe('Quill', ->
         endLength: 1
         ops: [{ value: 'A', attributes: { bold: true } }]
       })
-      expect(@quill.root).toEqualHTML('<div><b>A</b></div>', true)
+      expect(@quill.root).toEqualHTML('<p><b>A</b></p>', true)
     )
 
     it('setContents() with ops', ->
       @quill.setContents([{ value: 'A', attributes: { bold: true } }])
-      expect(@quill.root).toEqualHTML('<div><b>A</b></div>', true)
+      expect(@quill.root).toEqualHTML('<p><b>A</b></p>', true)
     )
 
     it('setHTML()', ->
-      @quill.setHTML('<div>A</div>')
-      expect(@quill.root).toEqualHTML('<div><span>A</span></div>', true)
+      @quill.setHTML('<p>A</p>')
+      expect(@quill.root).toEqualHTML('<p><span>A</span></p>', true)
     )
 
     it('updateContents()', ->
       @quill.updateContents(Tandem.Delta.makeInsertDelta(10, 2, 'A'))
-      expect(@quill.root).toEqualHTML('<div><span>01A23</span></div><div><span>5678</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>01A23</span></p><p><span>5678</span></p>', true)
     )
   )
 
@@ -143,7 +143,7 @@ describe('Quill', ->
     )
 
     it('getHTML()', ->
-      expect(@quill.getHTML()).toEqualHTML('<div><span>0123</span></div><div><span>5678</span></div>', true)
+      expect(@quill.getHTML()).toEqualHTML('<p><span>0123</span></p><p><span>5678</span></p>', true)
     )
 
     it('getLength()', ->

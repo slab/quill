@@ -6,15 +6,15 @@ describe('Normalizer', ->
   describe('handleBreaks()', ->
     tests =
       'Break in middle of line':
-        initial:  '<div><b>One<br>Two</b></div>'
-        expected: '<div><b>One<br></b></div><div><b>Two</b></div>'
+        initial:  '<p><b>One<br>Two</b></p>'
+        expected: '<p><b>One<br></b></p><p><b>Two</b></p>'
       'Break preceding line':
-        initial:  '<div><b><br>One</b></div>'
-        expected: '<div><b><br></b></div><div><b>One</b></div>'
+        initial:  '<p><b><br>One</b></p>'
+        expected: '<p><b><br></b></p><p><b>One</b></p>'
         ieOmit: true
       'Break after line':
-        initial:  '<div><b>One<br></b></div>'
-        expected: '<div><b>One<br></b></div>'
+        initial:  '<p><b>One<br></b></p>'
+        expected: '<p><b>One<br></b></p>'
 
     _.each(tests, (test, name) ->
       return if test.ieOmit and Quill.DOM.isIE(10)
@@ -29,15 +29,15 @@ describe('Normalizer', ->
 
   describe('normalizeLine()', ->
     tests =
-      'pull text node':
-        initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
-        expected: '<div><span>A</span><span>B</span></div><div><div>C</div></div>'
       'inline with text':
         initial:  '<span>What</span>Test'
-        expected: '<div><span>What</span><span>Test</span></div>'
+        expected: '<p><span>What</span><span>Test</span></p>'
       'whitelist line node':
-        initial:  '<p><span>Test</span></p>'
-        expected: '<div><span>Test</span></div>'
+        initial:  '<div><span>Test</span></div>'
+        expected: '<p><span>Test</span></p>'
+      'pull text node':
+        initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
+        expected: '<p><span>A</span><span>B</span></p><div><div>C</div></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -162,19 +162,19 @@ describe('Normalizer', ->
     tests =
       'newlines':
         initial:
-         '<div>
+         '<p>
             <span>Test</span>
-          </div>
-          <div>
+          </p>
+          <p>
             <br>
-          </div>'
-        expected: '<div><span>Test</span></div><div><br></div>'
+          </p>'
+        expected: '<p><span>Test</span></p><p><br></p>'
       'preceding and trailing spaces':
-        initial:  '  <div></div>  '
-        expected: '<div></div>'
+        initial:  '  <p></p>  '
+        expected: '<p></p>'
       'inner spaces':
-        initial:  '<div> <span> </span> <span>&nbsp; </span> </div>'
-        expected: '<div><span></span><span>&nbsp; </span></div>'
+        initial:  '<p> <span> </span> <span>&nbsp; </span> </p>'
+        expected: '<p><span></span><span>&nbsp; </span></p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -187,17 +187,17 @@ describe('Normalizer', ->
   describe('whitelistStyles()', ->
     tests =
       'no styles':
-        initial:  '<div></div>'
-        expected: '<div></div>'
+        initial:  '<p></p>'
+        expected: '<p></p>'
       'no removal':
-        initial:  '<div style="color: red;"></div>'
-        expected: '<div style="color: red;"></div>'
+        initial:  '<p style="color: red;"></p>'
+        expected: '<p style="color: red;"></p>'
       'removal':
-        initial:  '<div style="color: red; display: inline;"></div>'
-        expected: '<div style="color: red;"></div>'
+        initial:  '<p style="color: red; display: inline;"></p>'
+        expected: '<p style="color: red;"></p>'
       'complete removal':
-        initial:  '<div style="display: inline; cursor: pointer;"></div>'
-        expected: '<div></div>'
+        initial:  '<p style="display: inline; cursor: pointer;"></p>'
+        expected: '<p></p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -224,7 +224,7 @@ describe('Normalizer', ->
         expected:  '<span>A</span>'
       'switch block':
         initial:  '<h1>Test</h1>'
-        expected: '<div>Test</div>'
+        expected: '<p>Test</p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -239,21 +239,21 @@ describe('Normalizer', ->
     tests =
       'Wrap newline':
         initial:  ['<br>']
-        expected: ['<div><br></div>']
+        expected: ['<p><br></p>']
       'Wrap span':
         initial:  ['<span>One</span>']
-        expected: ['<div><span>One</span></div>']
+        expected: ['<p><span>One</span></p>']
       'Wrap many spans':
         initial: [
           '<span>One</span>'
           '<span>Two</span>'
         ]
         expected: [
-          '<div><span>One</span><span>Two</span></div>'
+          '<p><span>One</span><span>Two</span></p>'
         ]
       'Wrap break and span':
         initial:  ['<br><span>One</span>']
-        expected: ['<div><br><span>One</span></div>']
+        expected: ['<p><br><span>One</span></p>']
 
     _.each(tests, (test, name) ->
       it(name, ->

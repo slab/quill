@@ -7,33 +7,33 @@ describe('Line', ->
   describe('constructor', ->
     tests =
       'no children':
-        initial: '<div style="text-align: right;"></div>'
-        expected: '<div style="text-align: right;"><br></div>'
+        initial: '<p style="text-align: right;"></p>'
+        expected: '<p style="text-align: right;"><br></p>'
         format: { align: 'right' }
         leaves: [{ text: '', formats: {} }]
       'empty child':
-        initial: '<div><b></b></div>'
-        expected: '<div><b><br></b></div>'
+        initial: '<p><b></b></p>'
+        expected: '<p><b><br></b></p>'
         leaves: [{ text: '', formats: { bold: true } }]
       'leaf child':
-        initial: '<div><b>Bold</b></div>'
-        expected: '<div><b>Bold</b></div>'
+        initial: '<p><b>Bold</b></p>'
+        expected: '<p><b>Bold</b></p>'
         leaves: [{ text: 'Bold', formats: { bold: true } }]
       'nested leaf child':
-        initial: '<div><s><b>Bold</b></s></div>'
-        expected: '<div><s><b>Bold</b></s></div>'
+        initial: '<p><s><b>Bold</b></s></p>'
+        expected: '<p><s><b>Bold</b></s></p>'
         leaves: [{ text: 'Bold', formats: { bold: true, strike: true } }]
       'media child':
-        initial: '<div><img src="http://quilljs.com/images/icon.png"></div>'
-        expected: '<div><img src="http://quilljs.com/images/icon.png"></div>'
+        initial: '<p><img src="http://quilljs.com/images/icon.png"></p>'
+        expected: '<p><img src="http://quilljs.com/images/icon.png"></p>'
         leaves: [{ text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
       'break child':
-        initial: '<div><br></div>'
-        expected: '<div><br></div>'
+        initial: '<p><br></p>'
+        expected: '<p><br></p>'
         leaves: [{ text: '', formats: {} }]
       'lots of children':
-        initial: '<div><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></div>'
-        expected: '<div><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></div>'
+        initial: '<p><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></p>'
+        expected: '<p><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></p>'
         leaves: [
           { text: 'A', formats: { bold: true, italic: true } }
           { text: 'B', formats: { bold: true, strike: true } }
@@ -82,7 +82,7 @@ describe('Line', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = "<div>#{test.html}</div>"
+        @container.innerHTML = "<p>#{test.html}</p>"
         lineNode = @container.firstChild
         line = new Quill.Line(@doc, lineNode)
         queryNode = if _.isString(test.query) then @container.querySelector(test.query) else test.query
@@ -140,7 +140,7 @@ describe('Line', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = "<div>#{test.html}</div>"
+        @container.innerHTML = "<p>#{test.html}</p>"
         lineNode = @container.firstChild
         line = new Quill.Line(@doc, lineNode)
         [leaf, offset] = line.findLeafAt(test.offset, test.inclusive)
@@ -156,20 +156,20 @@ describe('Line', ->
   describe('format()', ->
     tests =
       'add text align':
-        initial: '<div><br></div>'
-        expected: '<div style="text-align: right;"><br></div>'
+        initial: '<p><br></p>'
+        expected: '<p style="text-align: right;"><br></p>'
         formats: { align: 'right' }
       'add different text align':
-        initial: '<div style="text-align: right;"><br></div>'
-        expected: '<div style="text-align: center;"><br></div>'
+        initial: '<p style="text-align: right;"><br></p>'
+        expected: '<p style="text-align: center;"><br></p>'
         formats: { align: 'center' }
       'remove text align':
-        initial: '<div style="text-align: right;"><br></div>'
-        expected: '<div><br></div>'
+        initial: '<p style="text-align: right;"><br></p>'
+        expected: '<p><br></p>'
         formats: { align: false }
       'add bold':
-        initial: '<div><br></div>'
-        expected: '<div><br></div>'
+        initial: '<p><br></p>'
+        expected: '<p><br></p>'
         formats: { bold: true }
 
     _.each(tests, (test, name) ->
@@ -190,7 +190,7 @@ describe('Line', ->
 
   describe('deleteText()', ->
     beforeEach( ->
-      @container.innerHTML = '<div><b>01</b><i><s>23</s><u>45</u></i><b>67</b></div>'
+      @container.innerHTML = '<p><b>01</b><i><s>23</s><u>45</u></i><b>67</b></p>'
       lineNode = @container.firstChild
       @line = new Quill.Line(@doc, lineNode)
     )
@@ -276,7 +276,7 @@ describe('Line', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = "<div>#{test.initial}</div>"
+        @container.innerHTML = "<p>#{test.initial}</p>"
         lineNode = @container.firstChild
         @line = new Quill.Line(@doc, lineNode)
         @line.formatText(test.args...)
@@ -334,7 +334,7 @@ describe('Line', ->
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = "<div>#{test.initial}</div>"
+        @container.innerHTML = "<p>#{test.initial}</p>"
         lineNode = @container.firstChild
         @line = new Quill.Line(@doc, lineNode)
         @line.insertText(test.offset, '|', test.formats)
@@ -343,7 +343,7 @@ describe('Line', ->
     )
 
     it('empty string into empty line', ->
-      @container.innerHTML = '<div><br></div>'
+      @container.innerHTML = '<p><br></p>'
       lineNode = @container.firstChild
       @line = new Quill.Line(@doc, lineNode)
       @line.insertText(0, '')

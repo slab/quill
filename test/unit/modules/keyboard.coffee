@@ -7,7 +7,7 @@ describe('Keyboard', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <div><s>01</s><b>23</b><span>45</span></div>
+          <p><s>01</s><b>23</b><span>45</span></p>
         </div>'
       @quill = new Quill(@container.firstChild)
       @keyboard = @quill.getModule('keyboard')
@@ -31,7 +31,7 @@ describe('Keyboard', ->
 
   describe('hotkeys', ->
     beforeEach( ->
-      @container.innerHTML = '<div><div><span>0123</span></div></div>'
+      @container.innerHTML = '<div><p><span>0123</span></p></div>'
       @quill = new Quill(@container.firstChild)
       @keyboard = @quill.getModule('keyboard')
     )
@@ -50,19 +50,19 @@ describe('Keyboard', ->
     it('format', ->
       @quill.setSelection(0, 4)
       Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.Keyboard.hotkeys.BOLD)
-      expect(@quill.root).toEqualHTML('<div><b>0123</b></div>', true)
+      expect(@quill.root).toEqualHTML('<p><b>0123</b></p>', true)
     )
 
     it('tab', ->
       @quill.setSelection(1, 3)
       Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.Keyboard.hotkeys.INDENT)
-      expect(@quill.root).toEqualHTML('<div><span>0\t3</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>0\t3</span></p>', true)
     )
 
     it('shift + tab', ->
       @quill.setSelection(0, 2)
       Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.Keyboard.hotkeys.OUTDENT)
-      expect(@quill.root).toEqualHTML('<div><span>0123</span></div>', true)
+      expect(@quill.root).toEqualHTML('<p><span>0123</span></p>', true)
     )
   )
 )
