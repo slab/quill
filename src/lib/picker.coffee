@@ -14,7 +14,10 @@ class Picker
     DOM.addClass(@container, 'sc-picker')
     @select.style.display = 'none'
     @select.parentNode.insertBefore(@container, @select)
-    DOM.addEventListener(@select.ownerDocument, 'click', _.bind(this.close, this))
+    DOM.addEventListener(@select.ownerDocument, 'click', =>
+      this.close()
+      return true
+    )
     DOM.addEventListener(@label, 'click', =>
       DOM.toggleClass(@container, 'sc-expanded')
       return false    # Avoid document click handler that closes all dropdowns
