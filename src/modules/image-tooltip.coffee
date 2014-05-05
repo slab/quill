@@ -68,7 +68,7 @@ class ImageTooltip extends Tooltip
     DOM.addEventListener(@textbox, 'input', _.bind(this._preview, this))
     this.initTextbox(@textbox, this.insertImage, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
-      toolbar.initFormat('image', 'click', _.bind(this._onToolbar, this))
+      toolbar.initFormat('image', _.bind(this._onToolbar, this))
     )
 
   insertImage: ->

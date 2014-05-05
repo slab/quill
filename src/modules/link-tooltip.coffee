@@ -48,7 +48,7 @@ class LinkTooltip extends Tooltip
     )
     this.initTextbox(@textbox, this.saveLink, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
-      toolbar.initFormat('link', 'click', _.bind(this._onToolbar, this))
+      toolbar.initFormat('link', _.bind(this._onToolbar, this))
     )
 
   saveLink: ->

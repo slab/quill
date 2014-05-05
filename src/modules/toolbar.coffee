@@ -15,27 +15,33 @@ class Toolbar
   constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
-    @activeFormats = {}
+    @inputs = {}
     @preventUpdate = false
     @triggering = false
     _.each(@quill.options.formats, (format) =>
       return if Toolbar.formats.TOOLTIP[format]?
-      eventName = if Toolbar.formats.SELECT[format]? then 'change' else 'click'
-      this.initFormat(format, eventName, (range, value) =>
+      this.initFormat(format, (range, value) =>
         return if @triggering
         if range.isCollapsed()
           @quill.prepareFormat(format, value)
         else
           @quill.formatText(range, format, value, 'user')
-        this.setActive(format, value) if eventName != 'change'    # Dropdowns should already be set since it changing triggers this event
+        this.setActive(format, value)
       )
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
     DOM.addClass(@container, 'sc-toolbar-container')
 
-  initFormat: (format, eventName, callback) ->
-    input = @container.querySelector(".sc-#{format}")
+  initFormat: (format, callback) ->
+    selector = ".sc-#{format}"
+    if Toolbar.formats.SELECT[format]?
+      selector = "select#{selector}"
+      eventName = 'change'
+    else
+      eventName = 'click'
+    input = @container.querySelector(selector)
     return unless input?
+    @inputs[format] = input
     DOM.addEventListener(input, eventName, =>
       value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'sc-active')
       @preventUpdate = true
@@ -46,38 +52,27 @@ class Toolbar
     )
 
   setActive: (format, value) ->
-    if value
-      @activeFormats[format] = value
-    else
-      delete @activeFormats[format]
-    selector = if Toolbar.formats.SELECT[format]? then "select.sc-#{format}" else ".sc-#{format}"  # Prevent selecting picker
-    input = @container.querySelector(selector)
+    input = @inputs[format]
     return unless input?
     if input.tagName == 'SELECT'
-      # IE does not handle immediate triggering of change very well
-      _.defer( =>
-        @triggering = true
-        if value
-          value = '' if _.isArray(value)
+      @triggering = true
+      selectValue = DOM.getSelectValue(input)
+      value = '' if _.isArray(value)
+      if value != selectValue
+        if value?
           DOM.selectOption(input, value)
         else
           DOM.resetSelect(input)
-        @triggering = false
-      )
+      @triggering = false
     else
-      DOM.toggleClass(input, 'sc-active', value)
+      DOM.toggleClass(input, 'sc-active', value or false)
 
   updateActive: (range) ->
     return unless range? and !@preventUpdate
     activeFormats = this._getActive(range)
-    _.each(_.keys(@activeFormats), (name) =>
-      if activeFormats[name]?
-        this.setActive(name, activeFormats[name]) if activeFormats[name] != @activeFormats[name]
-      else
-        this.setActive(name, false)
-    )
-    _.each(activeFormats, (value, name) =>
-      this.setActive(name, value) unless @activeFormats[name]?
+    _.each(@inputs, (input, format) =>
+      this.setActive(format, activeFormats[format])
+      return true
     )
 
   _getActive: (range) ->

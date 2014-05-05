@@ -228,7 +228,7 @@ DOM =
     if option?
       option.selected = true
     else
-      select.selectedIndex = -1
+      select.selectedIndex = 0
     DOM.triggerEvent(select, 'change') if trigger
 
   selectOption: (select, option, trigger = true) ->
