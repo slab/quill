@@ -19,7 +19,9 @@ cursorManager.setCursor('gandalf', fullEditor.getLength()-1, 'Gandalf', 'rgba(25
 
 // Sync basic editor's cursor location
 basicEditor.on('selection-change', function(range) {
-  cursorManager.moveCursor('gandalf', range.end.index);
+  if (range) {
+    cursorManager.moveCursor('gandalf', range.end);
+  }
 });
 
 // Update basic editor's content with ours
@@ -39,12 +41,12 @@ basicEditor.on('text-change', function(delta, source) {
     fullEditor.insertText(index, text, formats);
   };
   var deleteFn = function(index, length) {
-    fullEditor.deleteText(index, length);
+    fullEditor.deleteText(index, index + length);
   };
   var formatFn = function(index, length, format, value) {
     var formats = { author: 'gandalf' };  // Add author
     formats[format] = value;
-    fullEditor.formatText(index, length, formats);
+    fullEditor.formatText(index, index + length, formats);
   };
 
   if (source == 'user') {

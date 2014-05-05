@@ -15,7 +15,7 @@ A basic editor with just a few formats to get started.
 
 <div class="quill-wrapper">
   <div id="basic-toolbar" class="toolbar">
-    <select title="Size" class="sc-font-size">
+    <select title="Size" class="sc-size">
       <option value="10px">Small</option>
       <option value="13px" selected>Normal</option>
       <option value="18px">Large</option>
