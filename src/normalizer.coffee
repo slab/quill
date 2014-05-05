@@ -50,6 +50,7 @@ Normalizer =
 
   normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
+    lineNode = Normalizer.normalizeNode(lineNode)
     lineNode = Normalizer.handleBreaks(lineNode)
     Normalizer.pullBlocks(lineNode)
     Normalizer.wrapText(lineNode)

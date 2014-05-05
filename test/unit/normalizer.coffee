@@ -33,6 +33,9 @@ describe('Normalizer', ->
       'inline with text':
         initial:  '<span>What</span>Test'
         expected: '<div><span>What</span><span>Test</span></div>'
+      'whitelist line node':
+        initial:  '<p><span>Test</span></p>'
+        expected: '<div><span>Test</span></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
