@@ -88,7 +88,7 @@ var text = editor.getText(0, 10);
 
 ### Quill.prototype.getContents
 
-Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/api/deltas/) object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/editor/deltas/) object.
 
 **Methods**
 
@@ -263,9 +263,9 @@ Applies Delta to editor contents.
 
 **Parameters**
 
-| Parameter | Type                         | Description
-|-----------|------------------------------|------------
-| `delta`   | [_Delta_](/docs/api/deltas/) | Delta that will be applied.
+| Parameter | Type                            | Description
+|-----------|---------------------------------|------------
+| `delta`   | [_Delta_](/docs/editor/deltas/) | Delta that will be applied.
 
 **Examples**
 
@@ -295,9 +295,9 @@ Overwrites editor with given contents.
 
 **Parameters**
 
-| Parameter | Type                         | Description
-|-----------|------------------------------|------------
-| `delta`   | [_Delta_](/docs/api/deltas/) | Delta editor should be set to.
+| Parameter | Type                            | Description
+|-----------|---------------------------------|------------
+| `delta`   | [_Delta_](/docs/editor/deltas/) | Delta editor should be set to.
 
 **Examples**
 
