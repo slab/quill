@@ -22,7 +22,7 @@ class MultiCursor extends EventEmitter2
     @cursors = {}
     @container = @quill.addContainer('cursor-container', true)
     @quill.addStyles(
-      '.cursor-container': { 'position': 'absolute', 'z-index': '1000' }
+      '.cursor-container': { 'position': 'absolute', 'left': '0', 'top': '0', 'z-index': '1000' }
       '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
       '.cursor-flag':
         'bottom': '100%'
@@ -39,13 +39,6 @@ class MultiCursor extends EventEmitter2
       '.cursor.hidden .cursor-flag': { 'display': 'none' }
       '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
       '.cursor.right > .cursor-flag': { 'right': '-2px' }
-    )
-    @quill.on(@quill.constructor.events.RENDER_UPDATE, =>
-      _.defer( =>
-        @container.style.top = @quill.root.offsetTop + 'px'
-        @container.style.left = @quill.root.offsetLeft  + 'px'
-        this.update(true)
-      )
     )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this))
 
@@ -119,10 +112,11 @@ class MultiCursor extends EventEmitter2
     @container.appendChild(cursor)
     return cursor
 
-  _moveCursor: (cursor, referenceNode) ->
-    cursor.elem.style.top = referenceNode.offsetTop + 'px'
-    cursor.elem.style.left = referenceNode.offsetLeft + 'px'
-    cursor.elem.style.height = referenceNode.offsetHeight + 'px'
+  _moveCursor: (cursor, reference, side = 'left') ->
+    bounds = reference.getBoundingClientRect()
+    cursor.elem.style.top = bounds.top + 'px'
+    cursor.elem.style.left = bounds[side] + 'px'
+    cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')
     DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
     DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
@@ -130,30 +124,22 @@ class MultiCursor extends EventEmitter2
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
   _updateCursor: (cursor) ->
-    [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index)
-    guide = @container.ownerDocument.createElement('span')
+    [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
     if leaf?
-      leafNode = leaf.node
-      if !leafNode.firstChild?
-        DOM.setText(guide, DOM.NOBREAK_SPACE)
-        # Should only be the case for empty lines
-        leafNode.parentNode.insertBefore(guide, leafNode)
-        this._moveCursor(cursor, guide)
+      if offset == 0
+        this._moveCursor(cursor, leaf.node.parentNode)
+      else if offset == leaf.length
+        this._moveCursor(cursor, leaf.node.parentNode, 'right')
       else
-        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
-        [leftText, rightText, didSplit] = Utils.splitNode(leafNode.firstChild, offset)
-        if rightText?
-          rightText.parentNode.insertBefore(guide, rightText)
-          this._moveCursor(cursor, guide)
-        else if leftText?
-          leftText.parentNode.appendChild(guide)
-          this._moveCursor(cursor, guide)
+        [leftNode, rightNode] = Utils.splitNode(leaf.node.parentNode, offset)
+        this._moveCursor(cursor, leftNode, 'right')
+        DOM.normalize(leaf.node.parentNode)
     else
+      guide = @container.ownerDocument.createElement('span')
       DOM.setText(guide, DOM.NOBREAK_SPACE)
       @quill.root.appendChild(guide)
       this._moveCursor(cursor, guide)
-    guide.parentNode.removeChild(guide)
-    DOM.normalize(leafNode) if didSplit
+      DOM.removeNode(guide)
     cursor.dirty = false
 
 
