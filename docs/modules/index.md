@@ -2,6 +2,7 @@
 layout: docs
 title: Modules - Quill
 permalink: /docs/modules/
+stability: yellow
 ---
 
 # Modules

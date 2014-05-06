@@ -55,7 +55,7 @@ var editor = new Quill('#editor', configs);
 
 - Default: `null`
 
-- Object containing CSS rules to add to Quill editor.
+- Object containing CSS rules to add to the Quill editor.
 
 - **Example**
 
