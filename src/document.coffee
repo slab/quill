@@ -102,7 +102,8 @@ class Document
     @lines.remove(line)
 
   setHTML: (html) ->
-    @root.innerHTML = Normalizer.stripWhitespace(html)
+    html = Normalizer.stripWhitespace(html)
+    @root.innerHTML = html
     @lines = new LinkedList()
     @lineMap = {}
     this.rebuild()

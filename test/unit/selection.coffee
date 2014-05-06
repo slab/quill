@@ -81,6 +81,8 @@ describe('Selection', ->
       it('empty document', ->
         @container.innerHTML = '<div></div>'
         quill = new Quill(@container.firstChild)
+        quill.root.innerHTML = ''
+        quill.editor.doc.rebuild()
         [resultNode, resultIndex] = quill.editor.selection._encodePosition(quill.root, 0)
         expect(resultNode).toEqual(quill.root)
         expect(resultIndex).toEqual(0)
@@ -117,6 +119,8 @@ describe('Selection', ->
       it('empty document', ->
         @container.innerHTML = '<div></div>'
         quill = new Quill(@container.firstChild)
+        quill.root.innerHTML = ''
+        quill.editor.doc.rebuild()
         [node, offset] = quill.editor.selection._indexToPosition(0)
         expect(node).toEqual(quill.root)
         expect(offset).toEqual(0)

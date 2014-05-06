@@ -175,6 +175,7 @@ class Quill extends EventEmitter2
     @editor.applyDelta(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
+    html = "<#{DOM.DEFAULT_BLOCK_TAG}><#{DOM.DEFAULT_BREAK_TAG}></#{DOM.DEFAULT_BLOCK_TAG}>" unless html
     @editor.doc.setHTML(html)
     @editor.checkUpdate(source)
 
