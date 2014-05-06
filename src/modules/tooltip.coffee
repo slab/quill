@@ -23,6 +23,11 @@ class Tooltip
     @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker
     DOM.addEventListener(@quill.root, 'focus', _.bind(this.hide, this))
     this.hide()
+    @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
+      if source == 'user'
+        @range = null
+        this.hide()
+    )
 
   initTextbox: (textbox, enterCallback, escapeCallback) ->
     DOM.addEventListener(textbox, 'keyup', (event) =>

@@ -122,7 +122,8 @@ class Selection
     if startNode?
       @doc.root.focus()   # Some reason need to focus before removing ranges otherwise cannot set them
       nativeRange = this._getNativeRange()
-      if startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
+      if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
+        selection.removeAllRanges() if nativeRange?
         selection.removeAllRanges()
         nativeRange = @document.createRange()
         nativeRange.setStart(startNode, startOffset)
