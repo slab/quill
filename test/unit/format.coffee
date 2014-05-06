@@ -7,30 +7,28 @@ describe('Format', ->
     tag:
       format: new Quill.Format(document, Quill.Format.FORMATS.bold)
       existing: '<b>Text</b>'
-      missing: '<span>Text</span>'
-      added: '<b><span>Text</span></b>'
+      missing: 'Text'
       value: true
     style:
       format: new Quill.Format(document, Quill.Format.FORMATS.color)
       existing: '<span style="color: blue;">Text</span>'
-      missing: '<span>Text</span>'
+      missing: 'Text'
       value: 'blue'
     image:
       format: new Quill.Format(document, Quill.Format.FORMATS.image)
       existing: '<img src="http://quilljs.com/images/icon.png">'
-      missing: '<span>Text</span>'
-      removed: "<span>#{Quill.DOM.EMBED_TEXT}</span>"
+      missing: 'Text'
+      removed: Quill.DOM.EMBED_TEXT
       value: 'http://quilljs.com/images/icon.png'
     link:
       format: new Quill.Format(document, Quill.Format.FORMATS.link)
       existing: '<a href="http://quilljs.com">Text</a>'
-      missing: '<span>Text</span>'
-      added: '<a href="http://quilljs.com"><span>Text</span></a>'
+      missing: 'Text'
       value: 'http://quilljs.com'
     class:
       format: new Quill.Format(document, { class: 'author-' })
       existing: '<span class="author-jason">Text</span>'
-      missing: '<span>Text</span>'
+      missing: 'Text'
       value: 'jason'
     line:
       format: new Quill.Format(document, Quill.Format.FORMATS.align)
@@ -39,10 +37,8 @@ describe('Format', ->
       value: 'right'
     complex:
       format: new Quill.Format(document, Quill.Format.FORMATS.bold)
-      existing: '<b><i>Text</i><s>Strike</s></b><u>Under</u>'
-      missing: '<i>Text</i><s>Strike</s><u>Under</u>'
-      removed: '<span><i>Text</i><s>Strike</s></span><u>Under</u>'
-      added: '<b><i>Text</i></b><s>Strike</s><u>Under</u>'
+      existing: '<b><u><i>Text</i><s>Strike</s></u></b><i>Italic</i>'
+      missing: '<u><i>Text</i><s>Strike</s></u><i>Italic</i>'
       value: true
 
   describe('match()', ->

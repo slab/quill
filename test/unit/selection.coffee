@@ -1,4 +1,4 @@
-describe('Selection', ->
+ddescribe('Selection', ->
   beforeEach( ->
     @container = $('#editor-container').get(0)
   )
@@ -7,7 +7,7 @@ describe('Selection', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p><span>0123</span></p>
+          <p>0123</p>
           <p><br></p>
           <p><img src="http://quilljs.com/images/icon.png"></p>
           <p><b><s>89</s></b><i>ab</i></p>
@@ -183,7 +183,7 @@ describe('Selection', ->
         @container.innerHTML = '
           <div>
             <p><br></p>
-            <p><span>1234</span></p>
+            <p>1234</p>
           </div>'
         quill = new Quill(@container.firstChild)
         quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
@@ -191,7 +191,7 @@ describe('Selection', ->
         quill.editor._formatAt(2, 4, 'bold', true)
         expect(quill.root).toEqualHTML('
           <p><img src="http://quilljs.com/images/icon.png"><br></p>
-          <p><b><span>1234</span></b></p>
+          <p><b>1234</b></p>
         ', true)
         range = quill.editor.selection.getRange()
         expect(range.start).toEqual(1)
@@ -264,8 +264,8 @@ describe('Selection', ->
       )
 
       it('no range', ->
-        @quill.root.innerHTML = '<p><span>Test</span></p>'
-        textNode = @quill.root.querySelector('span').firstChild
+        @quill.root.innerHTML = '<p>Test</p>'
+        textNode = @quill.root.querySelector('p').firstChild
         @selection._setNativeRange(null)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()

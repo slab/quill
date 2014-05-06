@@ -31,13 +31,13 @@ describe('Normalizer', ->
     tests =
       'inline with text':
         initial:  '<span>What</span>Test'
-        expected: '<p><span>What</span><span>Test</span></p>'
+        expected: '<p>WhatTest</p>'
       'whitelist line node':
-        initial:  '<div><span>Test</span></div>'
-        expected: '<p><span>Test</span></p>'
+        initial:  '<div>Test</div>'
+        expected: '<p>Test</p>'
       'pull text node':
-        initial:  '<div><div><span>A</span>B<div>C</div></div></div>'
-        expected: '<p><span>A</span><span>B</span></p><div><div>C</div></div>'
+        initial:  '<div><div>AB<div>C</div></div></div>'
+        expected: '<p>AB</p><div><div>C</div></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -61,22 +61,19 @@ describe('Normalizer', ->
       Quill.Normalizer.normalizeNode(@container.firstChild)
       expect(@container).toEqualHTML('<span style="font-size: 16px;">Test</span>')
     )
+
+    it('text node', ->
+      @container.innerHTML = 'Test'
+      Quill.Normalizer.normalizeNode(@container.firstChild)
+      expect(@container).toEqualHTML('Test')
+    )
   )
 
   describe('optimizeLine()', ->
     tests =
-      'unwrap non-format node':
-        initial:  '<b><span>Test</span></b>'
-        expected: '<b>Test</b>'
-      'unwrap non-format node':
-        initial:  '<span><b>Test</b></span>'
-        expected: '<b>Test</b>'
-      'preserve only span':
-        initial:  '<span>Test</span>'
-        expected: '<span>Test</span>'
       'remove unneeded break':
-        initial:  '<span>Test</span><br>'
-        expected: '<span>Test</span>'
+        initial:  'Test<br>'
+        expected: 'Test'
       'preserve span with attributes':
         initial:  '<span class="custom"><span id="span-1234">Test</span></span>'
         expected: '<span class="custom"><span id="span-1234">Test</span></span>'
@@ -104,9 +101,6 @@ describe('Normalizer', ->
       'merge multiple criteria similar nodes':
         initial:  '<b style="color: red;">A</b><b style="color: red;">B</b>'
         expected: '<b style="color: red;">AB</b>'
-      'merge similar nodes after unwrap':
-        initial:  '<span><b>A</b></span><b>B</b>'
-        expected: '<b>AB</b>'
       'merge recursive':
         initial:  '<s><b>A</b></s><s><b>B</b></s>'
         expected: '<s><b>AB</b></s>'
@@ -135,17 +129,17 @@ describe('Normalizer', ->
         initial:  '<div></div>'
         expected: '<div></div>'
       'Inner block':
-        initial:  '<div><div><span>Test</span></div><div><span>Another</span></div></div>'
-        expected: '<div><span>Test</span></div><div><div><span>Another</span></div></div>'
+        initial:  '<div><div>Test</div><div>Another</div></div>'
+        expected: '<div>Test</div><div><div>Another</div></div>'
       'Inner deep block':
-        initial:  '<div><div><div><span>Test</span></div></div></div>'
-        expected: '<div><span>Test</span></div>'
+        initial:  '<div><div><div>Test</div></div></div>'
+        expected: '<div>Test</div>'
       'Inner deep recursive':
-        initial:  '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
-        expected: '<div><span>Test</span></div><div><div>Test</div></div>'
+        initial:  '<div><div><div><div>Test<div>Test</div></div></div></div></div>'
+        expected: '<div>Test</div><div><div>Test</div></div>'
       'Continuous inlines':
-        initial:  '<div><span>A</span><br><span>B</span><div>Inner</div></div>'
-        expected: '<div><span>A</span><br><span>B</span></div><div><div>Inner</div></div>'
+        initial:  '<div>A<br>B<div>Inner</div></div>'
+        expected: '<div>A<br>B</div><div><div>Inner</div></div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -163,18 +157,18 @@ describe('Normalizer', ->
       'newlines':
         initial:
          '<p>
-            <span>Test</span>
+            Test
           </p>
           <p>
             <br>
           </p>'
-        expected: '<p><span>Test</span></p><p><br></p>'
+        expected: '<p>Test</p><p><br></p>'
       'preceding and trailing spaces':
         initial:  '  <p></p>  '
         expected: '<p></p>'
       'inner spaces':
         initial:  '<p> <span> </span> <span>&nbsp; </span> </p>'
-        expected: '<p><span></span><span>&nbsp; </span></p>'
+        expected: '<p><span></span><span>&nbsp;</span></p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -219,9 +213,9 @@ describe('Normalizer', ->
       'alias':
         initial:  '<strong>Bold</strong>'
         expected: '<b>Bold</b>'
-      'switch inline':
+      'unwrap inline':
         initial:  '<abbr>A</abbr>'
-        expected:  '<span>A</span>'
+        expected:  'A'
       'switch block':
         initial:  '<h1>Test</h1>'
         expected: '<p>Test</p>'
@@ -240,20 +234,20 @@ describe('Normalizer', ->
       'Wrap newline':
         initial:  ['<br>']
         expected: ['<p><br></p>']
-      'Wrap span':
-        initial:  ['<span>One</span>']
-        expected: ['<p><span>One</span></p>']
-      'Wrap many spans':
+      'Wrap text':
+        initial:  ['One']
+        expected: ['<p>One</p>']
+      'Wrap multiple':
         initial: [
-          '<span>One</span>'
-          '<span>Two</span>'
+          '<b>One</b>'
+          '<s>Two</s>'
         ]
         expected: [
-          '<p><span>One</span><span>Two</span></p>'
+          '<p><b>One</b><s>Two</s></p>'
         ]
-      'Wrap break and span':
-        initial:  ['<br><span>One</span>']
-        expected: ['<p><br><span>One</span></p>']
+      'Wrap break and text':
+        initial:  ['<br>One']
+        expected: ['<p><br>One</p>']
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -264,31 +258,24 @@ describe('Normalizer', ->
     )
   )
 
-  describe('wrapText()', ->
+  describe('unwrapText()', ->
     tests =
       'inner text':
         initial:  '<span><span>Inner</span>Test</span>'
-        expected: '<span><span>Inner</span><span>Test</span></span>'
+        expected: 'InnerTest'
       'multiple inner':
         initial:  '<span>Test<span>Test<span>Test</span></span></span>'
-        expected: '<span><span>Test</span><span><span>Test</span><span>Test</span></span></span>'
-      'text node':
-        initial: 'Test'
-        expected: '<span>Test</span>'
+        expected: 'TestTestTest'
+      'dont unwrap':
+        initial:  '<span class="custom">Test</span>'
+        expected: '<span class="custom">Test</span>'
 
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial
-        Quill.Normalizer.wrapText(@container)
+        Quill.Normalizer.unwrapText(@container)
         expect(@container).toEqualHTML(test.expected)
       )
-    )
-
-    it('should wrap multiple text nodes', ->
-      @container.appendChild(@container.ownerDocument.createTextNode('A'))
-      @container.appendChild(@container.ownerDocument.createTextNode('B'))
-      Quill.Normalizer.wrapText(@container)
-      expect(@container).toEqualHTML('<span>A</span><span>B</span>')
     )
   )
 )

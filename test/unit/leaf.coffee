@@ -14,9 +14,9 @@ describe('Leaf', ->
       'empty element':
         html: '<b></b>'
         text: ''
-      'element':
-        html: '<b>Bold</b>'
-        text: 'Bold'
+      'text':
+        html: 'Text'
+        text: 'Text'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -31,7 +31,7 @@ describe('Leaf', ->
     tests =
       'text node':
         html: 'Test'
-        expected: false
+        expected: true
       'empty element':
         html: '<b></b>'
         expected: true
@@ -46,7 +46,7 @@ describe('Leaf', ->
         expected: false
       'element with text child':
         html: '<b>Test</b>'
-        expected: true
+        expected: false
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -58,25 +58,26 @@ describe('Leaf', ->
 
   describe('deleteText()', ->
     beforeEach( ->
-      @container.innerHTML = '<b>Test</b>'
+      @container.innerHTML = 'Test'
       @leaf = new Quill.Leaf(@container.firstChild, {})
     )
 
     tests =
       'remove middle':
-        expected: '<b>Tt</b>'
+        expected: 'Tt'
         offset: 1, length: 2
       'remove till end':
-        expected: '<b>Te</b>'
+        expected: 'Te'
         offset: 2, length: 2
       'remove all':
-        expected: '<b></b>'
+        expected: ''
         offset: 0, length: 4
 
     _.each(tests, (test, name) ->
       it(name, ->
         @leaf.deleteText(test.offset, test.length)
-        expect(@leaf.node.outerHTML).toEqualHTML(test.expected)
+        expect(@leaf.text).toEqualHTML(test.expected)
+        expect(Quill.DOM.getText(@leaf.node)).toEqualHTML(test.expected)
       )
     )
   )
@@ -84,15 +85,15 @@ describe('Leaf', ->
   describe('insertText()', ->
     tests =
       'element with text node':
-        initial:  '<b>Test</b>'
-        expected: '<b>Te|st</b>'
+        initial:  'Test'
+        expected: 'Te|st'
         text: 'Test'
       'element without text node':
         initial:  '<b></b>'
         expected: '<b>|</b>'
       'break':
         initial:  '<br>'
-        expected: '<span>|</span>'
+        expected: '|'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -103,8 +104,8 @@ describe('Leaf', ->
         expect(leaf.text).toEqual(text)
         expect(leaf.length).toEqual(length)
         leaf.insertText(length/2, '|')
-        expect(leaf.node.outerHTML).toEqualHTML(test.expected)
-        expect(leaf.text).toEqual(leaf.node.innerHTML)
+        expect(@container).toEqualHTML(test.expected)
+        expect(leaf.text).toEqual(Quill.DOM.getText(leaf.node))
         expect(leaf.length).toEqual(length + 1)
       )
     )

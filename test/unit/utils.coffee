@@ -25,33 +25,6 @@ describe('Utils', ->
     )
   )
 
-  describe('findDeepestNode()', ->
-    tests =
-      'zeroth':
-        html: '<p><b>0123</b></p>'
-        index: 0, offset: 0
-      'first child':
-        html: '<p><b>0123</b></p>'
-        index: 2, offset: 2
-      'middle child':
-        html: '<p>01<br><span>23<b>45</b></p>'
-        index: 5, offset: 1
-      'last child':
-        html: '<p>01<br><b>23</b></p>'
-        index: 3, offset: 1
-      'beyond end of document':
-        html: '<p><b>01</b></p>'
-        index: 4, offset: 2
-    _.each(tests, (test, name) ->
-      it(name, ->
-        @container.innerHTML = test.html
-        [node, offset] = Quill.Utils.findDeepestNode(@container.firstChild, test.index)
-        expect(node).toEqual(@container.querySelector('b').firstChild)
-        expect(offset).toEqual(test.offset)
-      )
-    )
-  )
-
   describe('getChildAtOffset()', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('
@@ -89,22 +62,22 @@ describe('Utils', ->
   describe('getNodeLength()', ->
     tests =
       'element':
-        html: '<span>One</span>'
+        html: '<b>One</b>'
         length: 3
       'text':
         html: 'One'
         length: 3
       'many nodes':
-        html: '<span><b><i>A</i>B<u>C<s>D</s></u></span>'
+        html: '<i><b><i>A</i>B<u>C<s>D</s></u></i>'
         length: 4
       'ignore break':
-        html: '<span><span>A<br></span><br><span>B</span></span>'
+        html: '<b><i>A<br></i><br><s>B</s></b>'
         length: 2
       'embed node':
         html: '<img>'
         length: 1
       'include embed':
-        html: '<span>Test<img>Test</span>'
+        html: '<b>Test<img>Test</b>'
         length: 9
 
     _.each(tests, (test, name) ->
@@ -116,40 +89,107 @@ describe('Utils', ->
     )
   )
 
-  it('splitAncestors()', ->
-    @container.innerHTML = Quill.Normalizer.stripWhitespace('
-      <div>
+  describe('splitAncestors()', ->
+    beforeEach( ->
+      @container.innerHTML = Quill.Normalizer.stripWhitespace('
         <div>
-          <div>One</div>
-          <div>Two</div>
+          <span>One</span>
+          <b>Two</b>
+          <div>
+            <i>Three</i>
+            <s>Four</s>
+            <u>Five</u>
+          </div>
         </div>
-        <div>
-          <div>Three</div>
-          <span>Four</span>
-          <div>Five</div>
-        </div>
-      </div>'
+      ')
     )
-    node = @container.querySelector('span')
-    retNode = Quill.Utils.splitAncestors(node, @container)
-    expect(@container).toEqualHTML('
-      <div>
+
+    it('single split', ->
+      node = @container.querySelector('b')
+      retNode = Quill.Utils.splitAncestors(node, @container)
+      expect(@container).toEqualHTML('
         <div>
-          <div>One</div>
-          <div>Two</div>
+          <span>One</span>
         </div>
         <div>
-          <div>Three</div>
+          <b>Two</b>
+          <div>
+            <i>Three</i>
+            <s>Four</s>
+            <u>Five</u>
+          </div>
         </div>
-      </div>
-      <div>
-        <div>
-          <span>Four</span>
-          <div>Five</div>
-        </div>
-      </div>'
+      ')
+      expect(retNode).toEqual(@container.lastChild)
     )
-    expect(retNode).toEqual(@container.lastChild)
+
+    it('split multiple', ->
+      node = @container.querySelector('s')
+      retNode = Quill.Utils.splitAncestors(node, @container)
+      expect(@container).toEqualHTML('
+        <div>
+          <span>One</span>
+          <b>Two</b>
+          <div>
+            <i>Three</i>
+          </div>
+        </div>
+        <div>
+          <div>
+            <s>Four</s>
+            <u>Five</u>
+          </div>
+        </div>
+      ')
+      expect(retNode).toEqual(@container.lastChild)
+    )
+
+    it('split none', ->
+      node = @container.querySelector('span')
+      html = @container.innerHTML
+      retNode = Quill.Utils.splitAncestors(node, @container)
+      expect(@container).toEqualHTML(html)
+      expect(retNode).toEqual(@container.firstChild)
+    )
+
+    it('split parent', ->
+      node = @container.querySelector('i')
+      html = @container.innerHTML
+      retNode = Quill.Utils.splitAncestors(node, @container)
+      expect(@container).toEqualHTML('
+        <div>
+          <span>One</span>
+          <b>Two</b>
+        </div>
+        <div>
+          <div>
+            <i>Three</i>
+            <s>Four</s>
+            <u>Five</u>
+          </div>
+        </div>
+      ')
+      expect(retNode).toEqual(@container.lastChild)
+    )
+
+    it('split force', ->
+      node = @container.querySelector('span')
+      retNode = Quill.Utils.splitAncestors(node, @container, true)
+      expect(@container).toEqualHTML('
+        <div>
+        </div>
+        <div>
+          <span>One</span>
+          <b>Two</b>
+          <div>
+            <i>Three</i>
+            <s>Four</s>
+            <u>Five</u>
+          </div>
+        </div>
+      ')
+      expect(retNode).toEqual(node.parentNode)
+    )
   )
 
   describe('splitNode()', ->

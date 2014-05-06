@@ -26,7 +26,7 @@ class Selection
 
   preserve: (fn) ->
     nativeRange = this._getNativeRange()
-    if nativeRange? and this.checkFocus()
+    if nativeRange? and this.checkFocus() and false
       [startNode, startOffset] = this._encodePosition(nativeRange.startContainer, nativeRange.startOffset)
       [endNode, endOffset] = this._encodePosition(nativeRange.endContainer, nativeRange.endOffset)
       fn()
@@ -51,7 +51,7 @@ class Selection
   shiftAfter: (index, length, fn) ->
     range = this.getRange()
     fn()
-    if range?
+    if range? and false
       range.shift(index, length)
       this.setRange(range, 'silent')
 

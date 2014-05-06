@@ -9,23 +9,23 @@ describe('Document', ->
         initial:  ''
         expected: ''
       'no change':
-        initial:  '<p><span>Test</span></p>'
-        expected: '<p><span>Test</span></p>'
+        initial:  '<p><b>Test</b></p>'
+        expected: '<p><b>Test</b></p>'
       'text':
         initial:  'Test'
-        expected: '<p><span>Test</span></p>'
+        expected: '<p>Test</p>'
       'inline':
-        initial:  '<span>Test</span>'
-        expected: '<p><span>Test</span></p>'
+        initial:  '<b>Test</b>'
+        expected: '<p><b>Test</b></p>'
       'block pulling':
-        initial:  '<div><div><div><div><span>Test</span><div>Test</div></div></div></div></div>'
-        expected: '<p><span>Test</span></p><p><span>Test</span></p>'
-      'with blocks':
-        initial:  '<p><span>A</span><br><span>B</span><br><span>C</span></p>'
-        expected: '<p><span>A</span><br></p><p><span>B</span><br></p><p><span>C</span></p>'
+        initial:  '<div><div><div><div><b>Test</b><div>Test</div></div></div></div></div>'
+        expected: '<p><b>Test</b></p><p>Test</p>'
+      'with breaks':
+        initial:  '<p>A<br>B<br>C</p>'
+        expected: '<p>A<br></p><p>B<br></p><p>C</p>'
       'pull and break':
-        initial:  '<div><div><div><span>A</span></div><span>B</span><br><span>C</span></div></div>'
-        expected: '<p><span>A</span></p><p><span>B</span><br></p><p><span>C</span></p>'
+        initial:  '<div><div><div>A</div>B<br>C</div></div>'
+        expected: '<p>A</p><p>B<br></p><p>C</p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -40,7 +40,7 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p><span>0123</span></p>
+          <p>0123</p>
           <p><br></p>
           <p><b>6789</b></p>
         </div>
@@ -55,7 +55,7 @@ describe('Document', ->
 
     it('findLine() not a line', ->
       node = @doc.root.ownerDocument.createElement('i')
-      node.innerHTML = '<span>Test</span>'
+      node.innerHTML = 'Test'
       @doc.root.appendChild(node)
       line = @doc.findLine(node)
       expect(line).toBe(null)
@@ -121,7 +121,7 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('
         <div>
-          <p><span>Test</span></p>
+          <p>Test</p>
           <p><i>Test</i></p>
           <p><br></p>
           <p><br></p>
@@ -135,7 +135,7 @@ describe('Document', ->
     it('mergeLines() normal', ->
       @doc.mergeLines(@lines[0], @lines[1])
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span><i>Test</i></p>
+        <p>Test<i>Test</i></p>
         <p><br></p>
         <p><br></p>
         <p><b>Test</b></p>
@@ -146,7 +146,7 @@ describe('Document', ->
     it('mergeLines() with newline', ->
       @doc.mergeLines(@lines[1], @lines[2])
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Test</i></p>
         <p><br></p>
         <p><b>Test</b></p>
@@ -157,7 +157,7 @@ describe('Document', ->
     it('mergeLines() from newline', ->
       @doc.mergeLines(@lines[3], @lines[4])
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Test</i></p>
         <p><br></p>
         <p><b>Test</b></p>
@@ -168,7 +168,7 @@ describe('Document', ->
     it('mergeLines() two newlines', ->
       @doc.mergeLines(@lines[2], @lines[3])
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Test</i></p>
         <p><br></p>
         <p><b>Test</b></p>
@@ -179,7 +179,7 @@ describe('Document', ->
     it('removeLine() existing', ->
       @doc.removeLine(@lines[1])
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><br></p>
         <p><br></p>
         <p><b>Test</b></p>
@@ -191,7 +191,7 @@ describe('Document', ->
       Quill.DOM.removeNode(@lines[1].node)
       @doc.removeLine(@lines[1])
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><br></p>
         <p><br></p>
         <p><b>Test</b></p>
@@ -202,7 +202,7 @@ describe('Document', ->
     it('splitLine() middle', ->
       @doc.splitLine(@lines[1], 2)
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Te</i></p>
         <p><i>st</i></p>
         <p><br></p>
@@ -215,7 +215,7 @@ describe('Document', ->
     it('splitLine() beginning', ->
       @doc.splitLine(@lines[1], 0)
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><br></p>
         <p><i>Test</i></p>
         <p><br></p>
@@ -228,7 +228,7 @@ describe('Document', ->
     it('splitLine() end', ->
       @doc.splitLine(@lines[1], 4)
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Test</i></p>
         <p><br></p>
         <p><br></p>
@@ -241,7 +241,7 @@ describe('Document', ->
     it('splitLine() beyond end', ->
       @doc.splitLine(@lines[1], 5)
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Test</i></p>
         <p><br></p>
         <p><br></p>
@@ -254,7 +254,7 @@ describe('Document', ->
     it('splitLine() split break', ->
       @doc.splitLine(@lines[2], 0)
       expect(@doc.root).toEqualHTML('
-        <p><span>Test</span></p>
+        <p>Test</p>
         <p><i>Test</i></p>
         <p><br></p>
         <p><br></p>
@@ -265,7 +265,7 @@ describe('Document', ->
     )
 
     it('setHTML() valid', ->
-      html = '<p><span>Test</span></p>'
+      html = '<p>Test</p>'
       @doc.setHTML(html)
       expect(@doc.root).toEqualHTML(html, true)
     )
@@ -274,12 +274,7 @@ describe('Document', ->
       @doc.setHTML('
         <div>
           <div>
-            <div>
-              <span>A</span>
-            </div>
-            <span>B</span>
-            <br>
-            <span>C</span>
+            <div>A</div>B<br>C
           </div>
         </div>
         <div>
@@ -287,10 +282,10 @@ describe('Document', ->
         </div>
       ')
       expect(@doc.root).toEqualHTML('
-        <p><span>A</span></p>
-        <p><span>B</span><br></p>
-        <p><span>C</span></p>
-        <p><b><br></b></p>
+        <p>A</p>
+        <p>B<br></p>
+        <p>C</p>
+        <p><b></b><br></p>
       ', true)
     )
   )
@@ -301,31 +296,31 @@ describe('Document', ->
         initial:  ['']
         expected: Tandem.Delta.getInitial('')
       'single line':
-        initial:  ['<p><span>0123</span></p>']
+        initial:  ['<p>0123</p>']
         expected: Tandem.Delta.getInitial('0123\n')
       'single newline':
         initial:  ['<p><br></p>']
         expected: Tandem.Delta.getInitial('\n')
       'preceding newline':
-        initial:  ['<p><br></p>', '<p><span>0</span></p>']
+        initial:  ['<p><br></p>', '<p>0</p>']
         expected: Tandem.Delta.getInitial('\n0\n')
       'explicit trailing newline':
-        initial:  ['<p><span>0</span></p>', '<p><br></p>']
+        initial:  ['<p>0</p>', '<p><br></p>']
         expected: Tandem.Delta.getInitial('0\n\n')
       'multiple lines':
-        initial:  ['<p><span>0</span></p>', '<p><span>1</span></p>']
+        initial:  ['<p>0</p>', '<p>1</p>']
         expected: Tandem.Delta.getInitial('0\n1\n')
       'multiple newlines':
         initial:  ['<p><br></p>', '<p><br></p>']
         expected: Tandem.Delta.getInitial('\n\n')
       'multiple preceding newlines':
-        initial:  ['<p><br></p>', '<p><br></p>', '<p><span>0</span></p>']
+        initial:  ['<p><br></p>', '<p><br></p>', '<p>0</p>']
         expected: Tandem.Delta.getInitial('\n\n0\n')
       'multiple explicit trailing newlines':
-        initial:  ['<p><span>0</span></p>', '<p><br></p>', '<p><br></p>']
+        initial:  ['<p>0</p>', '<p><br></p>', '<p><br></p>']
         expected: Tandem.Delta.getInitial('0\n\n\n')
       'lines separated by multiple newlines':
-        initial:  ['<p><span>0</span></p>', '<p><br></p>', '<p><span>1</span></p>']
+        initial:  ['<p>0</p>', '<p><br></p>', '<p>1</p>']
         expected: Tandem.Delta.getInitial('0\n\n1\n')
       'tag format':
         initial:  ['<p><b>0123</b></p>']
@@ -353,22 +348,22 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p><span>0123</span></p>
-          <p><span>5678</span></p>
+          <p>0123</p>
+          <p>5678</p>
         </div>'
       @doc = new Quill.Document(@container)
     )
 
     it('new line inserted', ->
       lineNode = @doc.root.ownerDocument.createElement(Quill.DOM.DEFAULT_BLOCK_TAG)
-      lineNode.innerHTML = '<span>A</span>'
+      lineNode.innerHTML = 'A'
       @doc.root.insertBefore(lineNode, @doc.root.lastChild)
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\nA\n5678\n'))
     )
 
     it('existing line changed', ->
-      @doc.root.firstChild.innerHTML = '<span>01A23</span>'
+      @doc.root.firstChild.innerHTML = '01A23'
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01A23\n5678\n'))
     )
@@ -394,7 +389,7 @@ describe('Document', ->
 
     it('new lines appended', ->
       lineNode = @doc.root.ownerDocument.createElement(Quill.DOM.DEFAULT_BLOCK_TAG)
-      lineNode.innerHTML = '<span>A</span>'
+      lineNode.innerHTML = 'A'
       @doc.root.appendChild(lineNode)
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\n5678\nA\n'))

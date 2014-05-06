@@ -9,10 +9,7 @@ class Leaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
 
   @isLeafNode: (node) ->
-    return false unless DOM.isElement(node)
-    return true if !node.firstChild?
-    return true if node.childNodes.length == 1 and DOM.isTextNode(node.firstChild)
-    return false
+    return DOM.isTextNode(node) or !node.firstChild?
 
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
@@ -31,9 +28,15 @@ class Leaf extends LinkedList.Node
 
   insertText: (offset, text) ->
     @text = @text.slice(0, offset) + text + @text.slice(offset)
-    @node = DOM.switchTag(@node, DOM.DEFAULT_INLNE_TAG) if @node.tagName == DOM.DEFAULT_BREAK_TAG
-    targetNode = @node.firstChild or @node
-    DOM.setText(targetNode, @text)
+    if DOM.isTextNode(@node)
+      DOM.setText(@node, @text)
+    else
+      textNode = @node.ownerDocument.createTextNode(text)
+      if @node.tagName == DOM.DEFAULT_BREAK_TAG
+        DOM.replaceNode(textNode, @node)
+      else
+        @node.appendChild(textNode)
+      @node = textNode
     @length = @text.length
 
 

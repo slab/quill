@@ -51,10 +51,11 @@ Normalizer =
     lineNode = Normalizer.handleBreaks(lineNode)
     Normalizer.pullBlocks(lineNode)
     lineNode = Normalizer.normalizeNode(lineNode)
-    Normalizer.wrapText(lineNode)
+    Normalizer.unwrapText(lineNode)
     return lineNode
 
   normalizeNode: (node) ->
+    return node if DOM.isTextNode(node)
     _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
       if node.hasAttribute(attribute)
         value = node.getAttribute(attribute)
@@ -79,26 +80,13 @@ Normalizer =
       else if Utils.getNodeLength(node) == 0
         nodes.push(node.nextSibling)
         DOM.unwrap(node)
-      else
-        attributes = DOM.getAttributes(node)
-        if node.tagName == DOM.DEFAULT_INLNE_TAG
-          # Remove unneeded SPANs
-          hasAttributes = _.keys(attributes).length > 0
-          exposeTextNode = DOM.isTextNode(node.firstChild) and (DOM.isElement(node.previousSibling) or DOM.isElement(node.nextSibling))
-          exposeToLine = node.parentNode == lineNode and DOM.isTextNode(node.firstChild)
-          if !hasAttributes and !exposeTextNode and !exposeToLine
-            nodes.push(node.nextSibling)
-            DOM.unwrap(node)
-            continue
-        if node.previousSibling? and node.tagName == node.previousSibling.tagName
-          # Merge similar nodes
-          neighborAttributes = DOM.getAttributes(node.previousSibling)
-          if _.isEqual(attributes, neighborAttributes)
-            nodes.push(node.firstChild)
-            DOM.moveChildren(node.previousSibling, node)
-            DOM.normalize(node.previousSibling)
-            DOM.removeNode(node)
-    Normalizer.wrapText(lineNode)
+      else if node.previousSibling? and node.tagName == node.previousSibling.tagName
+        # Merge similar nodes
+        if _.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))
+          nodes.push(node.firstChild)
+          DOM.moveChildren(node.previousSibling, node)
+          DOM.normalize(node.previousSibling)
+          DOM.removeNode(node)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
@@ -120,7 +108,7 @@ Normalizer =
     # Remove leading and tailing whitespace
     html = html.replace(/^\s+/, '').replace(/\s+$/, '')
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
-    html = html.replace(/\>\s+\</g, '><')
+    html = html.replace(/\>\s+/g, '>').replace(/\s+\</g, '<')
     return html
 
   whitelistStyles: (node) ->
@@ -138,8 +126,12 @@ Normalizer =
     return unless DOM.isElement(node)
     node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]) if Normalizer.ALIASES[node.tagName]?
     if !Normalizer.TAGS[node.tagName]?
-      tagName = if DOM.BLOCK_TAGS[node.tagName]? then DOM.DEFAULT_BLOCK_TAG else DOM.DEFAULT_INLNE_TAG
-      node = DOM.switchTag(node, tagName)
+      if DOM.BLOCK_TAGS[node.tagName]?
+        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
+      else if node.hasAttributes()
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
+      else
+        node = DOM.unwrap(node)
     return node
 
   # Wrap inline nodes with block tags
@@ -153,11 +145,12 @@ Normalizer =
       lineNode = nextNode
     return blockNode
 
-  wrapText: (lineNode) ->
-    texts = DOM.getTextNodes(lineNode)
-    _.each(texts, (textNode) =>
-      if textNode.previousSibling? or textNode.nextSibling? or textNode.parentNode == lineNode
-        DOM.wrap(lineNode.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), textNode)
+  unwrapText: (lineNode) ->
+    spans = _.map(lineNode.querySelectorAll(DOM.DEFAULT_INLINE_TAG))
+    _.each(spans, (span) ->
+      attributes = DOM.getAttributes(span)
+      if _.keys(attributes).length == 0
+        DOM.unwrap(span)
     )
 
 

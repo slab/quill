@@ -41,23 +41,14 @@ class Line extends LinkedList.Node
 
   deleteText: (offset, length) ->
     return unless length > 0
-    deleteLength = length
     [leaf, offset] = this.findLeafAt(offset)
-    while leaf? and deleteLength > 0
-      nextLeaf = leaf.next
-      if offset == 0 and leaf.length <= deleteLength
-        DOM.removeNode(leaf.node)
-        @leaves.remove(leaf)
-      else
-        leaf.deleteText(offset, deleteLength)
-      deleteLength -= Math.min(leaf.length, deleteLength)
-      leaf = nextLeaf
+    while leaf? and length > 0
+      deleteLength = Math.min(length, leaf.length - offset)
+      leaf.deleteText(offset, deleteLength)
+      length -= deleteLength
+      leaf = leaf.next
       offset = 0
-    if length >= @length - 1
-      @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
-      this.rebuild()
-    else
-      this.resetContent()
+    this.rebuild()
 
   findLeaf: (leafNode) ->
     curLeaf = @leaves.first
@@ -124,14 +115,13 @@ class Line extends LinkedList.Node
     return unless text.length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
     # offset > 0 for multicursor
-    if _.isEqual(leaf.formats, formats) and @length > 1 and offset > 0
+    if _.isEqual(leaf.formats, formats)
       leaf.insertText(leafOffset, text)
       this.resetContent()
     else
       node = _.reduce(formats, (node, value, name) =>
         return @doc.formats[name].add(node, value)
       , @node.ownerDocument.createTextNode(text))
-      node = DOM.wrap(@node.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), node) if DOM.isTextNode(node)
       [prevNode, nextNode] = Utils.splitNode(leaf.node, leafOffset)
       nextNode = Utils.splitAncestors(nextNode, @node) if nextNode
       @node.insertBefore(node, nextNode)
@@ -144,7 +134,8 @@ class Line extends LinkedList.Node
   rebuild: (force = false) ->
     return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
     @node = Normalizer.normalizeNode(@node)
-    @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG)) unless @node.firstChild?
+    if Utils.getNodeLength(@node) == 0 and !@node.querySelector(DOM.DEFAULT_BREAK_TAG)
+      @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
     @leaves = new LinkedList()
     @formats = _.reduce(@doc.formats, (formats, format, name) =>
       if format.isType(Format.types.LINE)
@@ -155,10 +146,6 @@ class Line extends LinkedList.Node
       return formats
     , @formats)
     this.buildLeaves(@node, {})
-    # TODO does this belong here...
-    if @leaves.length == 1 and @leaves.first.length == 0 and @leaves.first.node.tagName != DOM.DEFAULT_BREAK_TAG
-      @leaves.first.node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
-      @leaves.first.node = @leaves.first.node.firstChild
     this.resetContent()
     return true
 

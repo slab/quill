@@ -14,11 +14,6 @@ Utils =
       return targets[i] if parseInt(size) <= parseInt(s)
     return _.last(targets)
 
-  findDeepestNode: (node, offset) ->
-    while node.firstChild?
-      [node, offset] = Utils.getChildAtOffset(node, offset)
-    return [node, offset]
-
   getChildAtOffset: (node, offset) ->
     child = node.firstChild
     length = Utils.getNodeLength(child)
@@ -44,16 +39,19 @@ Utils =
     return version and maxVersion >= version
 
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
-  splitAncestors: (refNode, root) ->
+  splitAncestors: (refNode, root, force = false) ->
     return refNode if refNode == root or refNode.parentNode == root
-    parentNode = refNode.parentNode
-    parentClone = parentNode.cloneNode(false)
-    parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
-    while refNode?
-      nextNode = refNode.nextSibling
-      parentClone.appendChild(refNode)
-      refNode = nextNode
-    return Utils.splitAncestors(parentClone, root)
+    if refNode.previousSibling? or force
+      parentNode = refNode.parentNode
+      parentClone = parentNode.cloneNode(false)
+      parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
+      while refNode?
+        nextNode = refNode.nextSibling
+        parentClone.appendChild(refNode)
+        refNode = nextNode
+      return Utils.splitAncestors(parentClone, root)
+    else
+      return Utils.splitAncestors(refNode.parentNode, root)
 
   splitNode: (node, offset, force = false) ->
     # Check if split necessary

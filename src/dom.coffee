@@ -11,7 +11,7 @@ DOM =
 
   DEFAULT_BLOCK_TAG: 'P'
   DEFAULT_BREAK_TAG: 'BR'
-  DEFAULT_INLNE_TAG: 'SPAN'
+  DEFAULT_INLINE_TAG: 'SPAN'
   EMBED_TEXT: '!' # No reason we picked ! besides it being one character (so delta cannot split it up)
 
   FONT_SIZES:
@@ -222,6 +222,10 @@ DOM =
 
   removeNode: (node) ->
     node.parentNode?.removeChild(node)
+
+  replaceNode: (newNode, oldNode) ->
+    oldNode.parentNode.replaceChild(newNode, oldNode)
+    return newNode
 
   resetSelect: (select, trigger = true) ->
     option = DOM.getDefaultOption(select)

@@ -9,36 +9,36 @@ describe('Editor', ->
   describe('_deleteAt()', ->
     tests =
       'part of line':
-        initial:  ['<p><span>0123</span></p>']
-        expected: ['<p><span>03</span></p>']
+        initial:  ['<p>0123</p>']
+        expected: ['<p>03</p>']
         index: 1, length: 2
       'part of multiple lines':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>']
-        expected: ['<p><span>01</span><b>78</b></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
+        expected: ['<p>01<b>78</b></p>']
         index: 2, length: 5
       'entire line keeping trailing newline':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
         expected: ['<p><br></p>', '<p><b>5678</b></p>']
         index: 0, length: 4
       'trailing newline':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>']
-        expected: ['<p><span>0123</span><b>5678</b></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
+        expected: ['<p>0123<b>5678</b></p>']
         index: 4, length: 1
       'entire line and parts of neighbors':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>', '<p><span>abcd</span></p>']
-        expected: ['<p><span>01cd</span></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>', '<p>abcd</p>']
+        expected: ['<p>01cd</p>']
         index: 2, length: 10
       'entire doc':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
         expected: ['']
         index: 0, length: 10
       'entire doc except trailing newline':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
         expected: ['<p><br></p>']
         index: 0, length: 9
       'last trailing newline':
-        initial:  ['<p><span>0123</span></p>']
-        expected: ['<p><span>0123</span></p>']
+        initial:  ['<p>0123</p>']
+        expected: ['<p>0123</p>']
         index: 4, length: 1
 
     _.each(tests, (test, name) ->
@@ -54,7 +54,7 @@ describe('Editor', ->
   describe('_formatAt()', ->
     tests =
       'part of line':
-        initial:  ['<p><span>0123</span></p>']
+        initial:  ['<p>0123</p>']
         expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
           { value: '0' }
           { value: '12', attributes: { bold: true } }
@@ -62,21 +62,21 @@ describe('Editor', ->
         ]})
         index: 1, length: 2, name: 'bold', value: true
       'trailing newline with normal format':
-        initial:  ['<p><span>0123</span></p>']
+        initial:  ['<p>0123</p>']
         expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
           { value: '0123' }
           { value: '\n', attributes: { bold: true } }
         ]})
         index: 4, length: 1, name: 'bold', value: true
       'trailing newline with line format':
-        initial:  ['<p><span>0123</span></p>']
+        initial:  ['<p>0123</p>']
         expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
           { value: '0123' }
           { value: '\n', attributes: { align: 'right' } }
         ]})
         index: 4, length: 1, name: 'align', value: 'right'
       'part of multiple lines':
-        initial:  ['<p><span>0123</span></p>', '<p><b>5678</b></p>']
+        initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
         expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 10, ops: [
           { value: '01' }
           { value: '23\n', attributes: { strike: true } }
@@ -86,7 +86,7 @@ describe('Editor', ->
         ]})
         index: 2, length: 5, name: 'strike', value: true
       'line contents with line level format':
-        initial:  ['<p><span>0123</span></p>']
+        initial:  ['<p>0123</p>']
         expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
           { value: '0123\n' }
         ]})
@@ -106,7 +106,7 @@ describe('Editor', ->
     describe('empty', ->
       tests =
         'text':
-          expected: '<p><span>Test</span></p>'
+          expected: '<p>Test</p>'
           text: 'Test'
         'formatted text':
           expected: '<p><i><b>Test</b></i></p>'
@@ -118,7 +118,7 @@ describe('Editor', ->
           expected: '<p><br></p><p><br></p>'
           text: '\n\n'
         'multiline insert':
-          expected: '<p><span>A</span></p><p><span>B</span></p>'
+          expected: '<p>A</p><p>B</p>'
           text: 'A\nB\n'
 
       _.each(tests, (test, name) ->
@@ -147,42 +147,42 @@ describe('Editor', ->
     describe('nonempty', ->
       tests =
         'insert in middle of text':
-          expected: ['<p><span>01A23</span><b><i>4567</i></b></p>']
+          expected: ['<p>01A23<b><i>4567</i></b></p>']
           index: 2, text: 'A'
         'insert in middle of formatted text':
-          expected: ['<p><span>0123</span><b><i>45</i></b><span>A</span><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b>A<b><i>67</i></b></p>']
           index: 6, text: 'A'
         'insert formatted text with match':
-          expected: ['<p><span>0123</span><b><i>45A67</i></b></p>']
+          expected: ['<p>0123<b><i>45A67</i></b></p>']
           index: 6, text: 'A', formats: { bold: true, italic: true }
         'prepend newline':
-          expected: ['<p><br></p>', '<p><span>0123</span><b><i>4567</i></b></p>']
+          expected: ['<p><br></p>', '<p>0123<b><i>4567</i></b></p>']
           index: 0, text: '\n'
         'append newline':
-          expected: ['<p><span>0123</span><b><i>4567</i></b></p>', '<p><br></p>']
+          expected: ['<p>0123<b><i>4567</i></b></p>', '<p><br></p>']
           index: 8, text: '\n'
         'insert newline in middle':
-          expected: ['<p><span>0123</span><b><i>45</i></b></p>', '<p><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b></p>', '<p><b><i>67</i></b></p>']
           index: 6, text: '\n'
         'insert two newlines in middle':
-          expected: ['<p><span>0123</span><b><i>45</i></b></p>', '<p><br></p>', '<p><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b></p>', '<p><br></p>', '<p><b><i>67</i></b></p>']
           index: 6, text: '\n\n'
         'insert text with newline':
-          expected: ['<p><span>0123</span><b><i>45</i></b><span>A</span></p>', '<p><span>B</span><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b>A</p>', '<p>B<b><i>67</i></b></p>']
           index: 6, text: 'A\nB'
         'multiline insert with preceding newline':
-          expected: ['<p><span>0123</span><b><i>45</i></b></p>', '<p><span>A</span></p>', '<p><span>B</span><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b></p>', '<p>A</p>', '<p>B<b><i>67</i></b></p>']
           index: 6, text: '\nA\nB'
         'multiline insert with newline after':
-          expected: ['<p><span>0123</span><b><i>45</i></b><span>A</span></p>', '<p><span>B</span></p>', '<p><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b>A</p>', '<p>B</p>', '<p><b><i>67</i></b></p>']
           index: 6, text: 'A\nB\n'
         'multiline insert with newline surrounding':
-          expected: ['<p><span>0123</span><b><i>45</i></b></p>', '<p><span>A</span></p>', '<p><span>B</span></p>', '<p><b><i>67</i></b></p>']
+          expected: ['<p>0123<b><i>45</i></b></p>', '<p>A</p>', '<p>B</p>', '<p><b><i>67</i></b></p>']
           index: 6, text: '\nA\nB\n'
 
       _.each(tests, (test, name) ->
         it(name, ->
-          @editor.doc.setHTML('<p><span>0123</span><b><i>4567</i></b></p>')
+          @editor.doc.setHTML('<p>0123<b><i>4567</i></b></p>')
           @editor._insertAt(test.index, test.text, test.formats)
           @editor.doc.optimizeLines()
           expect(@editor.root).toEqualHTML(test.expected.join(''), true)
@@ -190,10 +190,10 @@ describe('Editor', ->
       )
 
       it('append formatted newline', ->
-        @editor.doc.setHTML('<p><span>A</span></p>')
+        @editor.doc.setHTML('<p>A</p>')
         @editor._insertAt(2, '\n', { bold: true })
         @editor.doc.optimizeLines()
-        expect(@editor.root).toEqualHTML('<p><span>A</span></p><p><br></p>', true)
+        expect(@editor.root).toEqualHTML('<p>A</p><p><br></p>', true)
         expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeDelta({
           startLength: 0
           endLength: 3
@@ -216,18 +216,18 @@ describe('Editor', ->
   describe('applyDelta()', ->
     tests =
       'insert formatted':
-        initial: '<p><span>0123</span></p>'
+        initial: '<p>0123</p>'
         delta: Tandem.Delta.makeInsertDelta(5, 2, '|', { bold: true })
-        expected: '<p><span>01</span><b>|</b><span>23</span></p>'
+        expected: '<p>01<b>|</b>23</p>'
       'multiple formats':
-        initial: '<p><span>0123</span></p>'
+        initial: '<p>0123</p>'
         delta: Tandem.Delta.makeRetainDelta(5, 1, 2, { bold: true, italic: true })
-        expected: '<p><span>0</span><b><i>12</i></b><span>3</span></p>'
+        expected: '<p>0<b><i>12</i></b>3</p>'
       'multiple instructions':
         initial: '
-          <p><span>0123</span></p>
-          <p><span>5678</span></p>
-          <p><span>abcd</span></p>'
+          <p>0123</p>
+          <p>5678</p>
+          <p>abcd</p>'
         delta: Tandem.Delta.makeDelta({ startLength: 15, endLength: 17, ops: [
           { start: 0, end: 4 }
           { start: 5, end: 7 }
@@ -236,9 +236,9 @@ describe('Editor', ->
           { start: 14, end: 15, attributes: { align: 'right' } }
         ]})
         expected: '
-          <p><span>012356|</span></p>
-          <p><span>|78</span></p>
-          <p style="text-align: right;"><span>abcd</span></p>'
+          <p>012356|</p>
+          <p>|78</p>
+          <p style="text-align: right;">abcd</p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -250,12 +250,12 @@ describe('Editor', ->
     )
 
     it('local change', ->
-      @editor.doc.setHTML('<p><span>0123</span></p>')
+      @editor.doc.setHTML('<p>0123</p>')
       @editor.checkUpdate()
       delta = Tandem.Delta.makeInsertDelta(5, 2, '|')
-      @editor.root.querySelector('span').innerHTML = '01a23'
+      @editor.root.querySelector('p').innerHTML = '01a23'
       @editor.applyDelta(delta)
-      expected = '<p><span>01|a23</span></p>'
+      expected = '<p>01|a23</p>'
       expect(@editor.root).toEqualHTML(expected, true)
     )
   )

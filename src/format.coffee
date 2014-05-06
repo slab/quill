@@ -72,15 +72,16 @@ class Format
         node = formatNode
       else
         node = DOM.wrap(formatNode, node)
-    if DOM.isTextNode(node)
-      node = DOM.wrap(@document.createElement(DOM.DEFAULT_INLNE_TAG), node)
-    if _.isString(@config.style)
-      node.style[@config.style] = value if value != @config.default
-    if _.isString(@config.attribute)
-      node.setAttribute(@config.attribute, value)
-    if _.isString(@config.class)
-      this.remove(node)
-      DOM.addClass(node, @config.class + value)
+    if _.isString(@config.style) or _.isString(@config.attribute) or _.isString(@config.class)
+      node = this.remove(node) if _.isString(@config.class)
+      if DOM.isTextNode(node)
+        node = DOM.wrap(@document.createElement(DOM.DEFAULT_INLINE_TAG), node)
+      if _.isString(@config.style)
+        node.style[@config.style] = value if value != @config.default
+      if _.isString(@config.attribute)
+        node.setAttribute(@config.attribute, value)
+      if _.isString(@config.class)
+        DOM.addClass(node, @config.class + value)
     return node
 
   isType: (type) ->
@@ -107,7 +108,7 @@ class Format
       @config.prepare(@document, value)
 
   remove: (node) ->
-    return unless this.match(node)
+    return node unless this.match(node)
     if _.isString(@config.style)
       node.style[@config.style] = ''    # IE10 requires setting to '', other browsers can take null
       node.removeAttribute('style') unless node.getAttribute('style')  # Some browsers leave empty style attribute
@@ -118,8 +119,10 @@ class Format
         DOM.removeClass(node, c) if c.indexOf(@config.class) == 0
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
-      node = DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG)
+      node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
       DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?
+    if node.tagName == DOM.DEFAULT_INLINE_TAG and !node.hasAttributes()
+      node = DOM.unwrap(node)
     return node
 
   value: (node) ->
