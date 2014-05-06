@@ -121,12 +121,14 @@ class Selection
     return unless selection
     if startNode?
       @doc.root.focus()   # Some reason need to focus before removing ranges otherwise cannot set them
-      selection.removeAllRanges()
-      nativeRange = @document.createRange()
-      nativeRange.setStart(startNode, startOffset)
-      nativeRange.setEnd(endNode, endOffset)
-      selection.addRange(nativeRange)
-      @doc.root.focus()   # IE11 needs refocus
+      nativeRange = this._getNativeRange()
+      if startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
+        selection.removeAllRanges()
+        nativeRange = @document.createRange()
+        nativeRange.setStart(startNode, startOffset)
+        nativeRange.setEnd(endNode, endOffset)
+        selection.addRange(nativeRange)
+        @doc.root.focus()   # IE11 needs refocus
     else
       selection.removeAllRanges()
       @doc.root.blur()
