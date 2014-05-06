@@ -53,6 +53,7 @@ class Toolbar
       range = @quill.getSelection()
       callback(range, value) if range?
       @preventUpdate = false
+      return true
     )
 
   setActive: (format, value) ->
