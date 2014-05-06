@@ -16,6 +16,8 @@ class Tooltip
         'text-decoration': 'none'
     template: ''
 
+  @HIDE_MARGIN = '-10000px'
+
   constructor: (@quill, @options) ->
     @quill.addStyles(@options.styles)
     @container = @quill.addContainer('tooltip')
@@ -24,7 +26,7 @@ class Tooltip
     DOM.addEventListener(@quill.root, 'focus', _.bind(this.hide, this))
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
-      if source == 'user'
+      if source == 'user' and @container.style.left != Tooltip.HIDE_MARGIN
         @range = null
         this.hide()
     )
@@ -38,7 +40,7 @@ class Tooltip
     )
 
   hide: ->
-    @container.style.left = '-10000px'
+    @container.style.left = Tooltip.HIDE_MARGIN
     @quill.setSelection(@range) if @range
     @range = null
 

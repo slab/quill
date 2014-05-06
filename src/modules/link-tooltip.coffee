@@ -69,7 +69,7 @@ class LinkTooltip extends Tooltip
     DOM.toggleClass(@container, 'editing', edit)
 
   _findAnchor: (range) ->
-    [leaf, offset] = @quill.editor.doc.findLeafAt(Math.max(0, range.start - 1))
+    [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
     node = leaf.node if leaf?
     while node?
       if node.tagName == 'A'
