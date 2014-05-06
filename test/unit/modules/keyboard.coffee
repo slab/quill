@@ -7,7 +7,7 @@ describe('Keyboard', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p><s>01</s><b>23</b><span>45</span></p>
+          <p><s>01</s><b>23</b>45</p>
         </div>'
       @quill = new Quill(@container.firstChild)
       @keyboard = @quill.getModule('keyboard')
@@ -15,23 +15,23 @@ describe('Keyboard', ->
 
     it('set if all unset', ->
       @keyboard.toggleFormat(new Quill.Lib.Range(3, 6), 'strike')
-      expect(@quill.root.firstChild).toEqualHTML('<s>01</s><b>2</b><s><b>3</b><span>45</span></s>')
+      expect(@quill.root.firstChild).toEqualHTML('<s>01</s><b>2<s>3</s></b><s>45</s>')
     )
 
     it('unset if all set', ->
       @keyboard.toggleFormat(new Quill.Lib.Range(2, 4), 'bold')
-      expect(@quill.root.firstChild).toEqualHTML('<s>01</s><span>2345</span>')
+      expect(@quill.root.firstChild).toEqualHTML('<s>01</s>2345')
     )
 
     it('set if partially set', ->
       @keyboard.toggleFormat(new Quill.Lib.Range(3, 5), 'bold')
-      expect(@quill.root.firstChild).toEqualHTML('<s>01</s><b>234</b><span>5</span>')
+      expect(@quill.root.firstChild).toEqualHTML('<s>01</s><b>234</b>5')
     )
   )
 
   describe('hotkeys', ->
     beforeEach( ->
-      @container.innerHTML = '<div><p><span>0123</span></p></div>'
+      @container.innerHTML = '<div><p>0123</p></div>'
       @quill = new Quill(@container.firstChild)
       @keyboard = @quill.getModule('keyboard')
     )
@@ -56,13 +56,13 @@ describe('Keyboard', ->
     it('tab', ->
       @quill.setSelection(1, 3)
       Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.Keyboard.hotkeys.INDENT)
-      expect(@quill.root).toEqualHTML('<p><span>0\t3</span></p>', true)
+      expect(@quill.root).toEqualHTML('<p>0\t3</p>', true)
     )
 
     it('shift + tab', ->
       @quill.setSelection(0, 2)
       Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.Keyboard.hotkeys.OUTDENT)
-      expect(@quill.root).toEqualHTML('<p><span>0123</span></p>', true)
+      expect(@quill.root).toEqualHTML('<p>0123</p>', true)
     )
   )
 )

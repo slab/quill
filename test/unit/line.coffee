@@ -24,20 +24,20 @@ describe('Line', ->
         expected: '<p><s><b>Bold</b></s></p>'
         leaves: [{ text: 'Bold', formats: { bold: true, strike: true } }]
       'media child':
-        initial: '<p><img src="http://quilljs.com/images/icon.png"></p>'
-        expected: '<p><img src="http://quilljs.com/images/icon.png"></p>'
-        leaves: [{ text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }]
+        initial: '<p><img src="http://quilljs.com/images/cloud.png"></p>'
+        expected: '<p><img src="http://quilljs.com/images/cloud.png"></p>'
+        leaves: [{ text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/cloud.png' } }]
       'break child':
         initial: '<p><br></p>'
         expected: '<p><br></p>'
         leaves: [{ text: '', formats: {} }]
       'lots of children':
-        initial: '<p><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></p>'
-        expected: '<p><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/icon.png"><u>D</u></p>'
+        initial: '<p><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/cloud.png"><u>D</u></p>'
+        expected: '<p><b><i>A</i><s>B</s></b><img src="http://quilljs.com/images/cloud.png"><u>D</u></p>'
         leaves: [
           { text: 'A', formats: { bold: true, italic: true } }
           { text: 'B', formats: { bold: true, strike: true } }
-          { text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/icon.png' } }
+          { text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/cloud.png' } }
           { text: 'D', formats: { underline: true } }
         ]
 
@@ -274,7 +274,7 @@ describe('Line', ->
         expected: '<b><i>01</i></b><b><s>2</s></b><s>3</s><i><s>45</s>6<b>7</b></i>'
         args: [3, 4, 'bold', false]
       'remove image':
-        initial: '<b>01</b><img src="http://quilljs.com/images/icon.png"><s>34</s>'
+        initial: '<b>01</b><img src="http://quilljs.com/images/cloud.png"><s>34</s>'
         expected: "<b>01</b>#{Quill.DOM.EMBED_TEXT}<s>34</s>"
         args: [2, 1, 'image', false]
       'change format':
@@ -333,12 +333,12 @@ describe('Line', ->
         offset: 0, formats: { bold: true }
       'void in empty line':
         initial: '<br>'
-        expected: '<img src="http://quilljs.com/images/icon.png"><br>'
-        offset: 0, formats: { image: 'http://quilljs.com/images/icon.png' }
+        expected: '<img src="http://quilljs.com/images/cloud.png"><br>'
+        offset: 0, formats: { image: 'http://quilljs.com/images/cloud.png' }
       'void in middle of node':
         initial: '<b>01</b>'
-        expected: '<b>0</b><img src="http://quilljs.com/images/icon.png"><b>1</b>'
-        offset: 1, formats: { image: 'http://quilljs.com/images/icon.png' }
+        expected: '<b>0</b><img src="http://quilljs.com/images/cloud.png"><b>1</b>'
+        offset: 1, formats: { image: 'http://quilljs.com/images/cloud.png' }
 
     _.each(tests, (test, name) ->
       it(name, ->

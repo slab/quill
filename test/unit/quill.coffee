@@ -99,8 +99,8 @@ describe('Quill', ->
     # TODO add test for formatText(range, 'size', '13px')   where 13px is the default
 
     # it('insertEmbed()', ->
-    #   @quill.insertEmbed(4, 'image', 'http://quilljs.com/images/icon.png')
-    #   expect(@quill.root).toEqualHTML('<p><span>0123</span><img src="http://quilljs.com/images/icon.png"></p><p><span>5678</span></p>', true)
+    #   @quill.insertEmbed(4, 'image', 'http://quilljs.com/images/cloud.png')
+    #   expect(@quill.root).toEqualHTML('<p><span>0123</span><img src="http://quilljs.com/images/cloud.png"></p><p><span>5678</span></p>', true)
     # )
 
     it('insertText()', ->

@@ -163,14 +163,6 @@ DOM =
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
 
-  getTextNodes: (parent) ->
-    results = []
-    results.push(parent) if DOM.isTextNode(parent)
-    _.each(DOM.getChildNodes(parent), (node) ->
-      results = results.concat(DOM.getTextNodes(node))
-    )
-    return results
-
   getWindow: (node) ->
     return node.ownerDocument.defaultView or node.ownerDocument.parentWindow
 

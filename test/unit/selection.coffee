@@ -1,4 +1,4 @@
-ddescribe('Selection', ->
+describe('Selection', ->
   beforeEach( ->
     @container = $('#editor-container').get(0)
   )
@@ -9,7 +9,7 @@ ddescribe('Selection', ->
         <div>
           <p>0123</p>
           <p><br></p>
-          <p><img src="http://quilljs.com/images/icon.png"></p>
+          <p><img src="http://quilljs.com/images/cloud.png"></p>
           <p><b><s>89</s></b><i>ab</i></p>
         </div>
       '
@@ -125,7 +125,7 @@ ddescribe('Selection', ->
       it('multiple consecutive images', ->
         @container.innerHTML = '
           <div>
-            <p><img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png"></p>
+            <p><img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png"></p>
           </div>'
         quill = new Quill(@container.firstChild)
         [node, offset] = quill.editor.selection._indexToPosition(1)
@@ -187,10 +187,10 @@ ddescribe('Selection', ->
           </div>'
         quill = new Quill(@container.firstChild)
         quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
-        quill.editor._insertAt(0, Quill.DOM.EMBED_TEXT, { image: 'http://quilljs.com/images/icon.png' })
+        quill.editor._insertAt(0, Quill.DOM.EMBED_TEXT, { image: 'http://quilljs.com/images/cloud.png' })
         quill.editor._formatAt(2, 4, 'bold', true)
         expect(quill.root).toEqualHTML('
-          <p><img src="http://quilljs.com/images/icon.png"><br></p>
+          <p><img src="http://quilljs.com/images/cloud.png"><br></p>
           <p><b>1234</b></p>
         ', true)
         range = quill.editor.selection.getRange()
@@ -222,7 +222,7 @@ ddescribe('Selection', ->
       )
 
       it('wrapInline() image', ->
-        @quill.root.innerHTML = '<img src="http://quilljs.com/images/icon.png">'
+        @quill.root.innerHTML = '<img src="http://quilljs.com/images/cloud.png">'
         @selection._setNativeRange(@quill.root, 0, @quill.root, 1)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()

@@ -3,7 +3,7 @@ describe('PasteManager', ->
     container = $('#editor-container').get(0)
     container.innerHTML = '
       <div>
-        <p><span>0123</span></p>
+        <p>0123</p>
       </div>'
     quill = new Quill(container.firstChild)
     pasteManager = quill.getModule('paste-manager')

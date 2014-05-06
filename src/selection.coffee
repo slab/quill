@@ -26,7 +26,7 @@ class Selection
 
   preserve: (fn) ->
     nativeRange = this._getNativeRange()
-    if nativeRange? and this.checkFocus() and false
+    if nativeRange? and this.checkFocus()
       [startNode, startOffset] = this._encodePosition(nativeRange.startContainer, nativeRange.startOffset)
       [endNode, endOffset] = this._encodePosition(nativeRange.endContainer, nativeRange.endOffset)
       fn()
@@ -51,7 +51,7 @@ class Selection
   shiftAfter: (index, length, fn) ->
     range = this.getRange()
     fn()
-    if range? and false
+    if range?
       range.shift(index, length)
       this.setRange(range, 'silent')
 
@@ -97,13 +97,10 @@ class Selection
   _indexToPosition: (index) ->
     return [@doc.root, 0] if @doc.lines.length == 0
     [leaf, offset] = @doc.findLeafAt(index, true)
-    node = leaf.node
-    node = node.firstChild if DOM.isTextNode(node.firstChild)
-    return this._decodePosition(node, offset)
+    return this._decodePosition(leaf.node, offset)
 
   _positionToIndex: (node, offset) ->
     [leafNode, offset] = this._encodePosition(node, offset)
-    leafNode = leafNode.parentNode if DOM.isTextNode(leafNode)
     line = @doc.findLine(leafNode)
     # TODO move to linked list
     return 0 unless line?   # Occurs on empty document

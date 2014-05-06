@@ -16,10 +16,10 @@ describe('Format', ->
       value: 'blue'
     image:
       format: new Quill.Format(document, Quill.Format.FORMATS.image)
-      existing: '<img src="http://quilljs.com/images/icon.png">'
+      existing: '<img src="http://quilljs.com/images/cloud.png">'
       missing: 'Text'
       removed: Quill.DOM.EMBED_TEXT
-      value: 'http://quilljs.com/images/icon.png'
+      value: 'http://quilljs.com/images/cloud.png'
     link:
       format: new Quill.Format(document, Quill.Format.FORMATS.link)
       existing: '<a href="http://quilljs.com">Text</a>'

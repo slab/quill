@@ -3,7 +3,7 @@ describe('UndoManager', ->
     @container = $('#editor-container').get(0)
     @container.innerHTML = '
       <div>
-        <p><span>The lazy fox</span></p>
+        <p>The lazy fox</p>
       </div>'
     @quill = new Quill(@container.firstChild, {
       modules: {
@@ -59,7 +59,7 @@ describe('UndoManager', ->
     )
 
     it('user change', ->
-      @quill.root.firstChild.innerHTML = '<span>The lazy foxes</span>'
+      @quill.root.firstChild.innerHTML = 'The lazy foxes'
       @quill.editor.checkUpdate()
       changed = @quill.getContents()
       expect(changed).not.toEqualDelta(@original)

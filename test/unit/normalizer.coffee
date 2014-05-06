@@ -108,8 +108,8 @@ describe('Normalizer', ->
         initial:  '<b style="color: red;">A</b><b style="color: blue;">B</b>'
         expected: '<b style="color: red;">A</b><b style="color: blue;">B</b>'
       'preserve similar images':
-        initial:  '<img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png">'
-        expected: '<img src="http://quilljs.com/images/icon.png"><img src="http://quilljs.com/images/icon.png">'
+        initial:  '<img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png">'
+        expected: '<img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png">'
       'wrap orphaned text node':
         initial:  '<s><b>0</b></s><s><span>1</span></s>'
         expected: '<s><b>0</b><span>1</span></s>'
