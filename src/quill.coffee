@@ -161,6 +161,8 @@ class Quill extends EventEmitter2
   prepareFormat: (name, value) ->
     format = @editor.doc.formats[name]
     return unless format?     # TODO warn
+    range = this.getSelection()
+    return unless range?.isCollapsed()
     format.prepare(value)
 
   setContents: (delta, source = Quill.sources.API) ->
