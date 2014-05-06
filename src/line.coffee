@@ -94,16 +94,16 @@ class Line extends LinkedList.Node
       nextLeaf = leaf.next
       # Make sure we need to change leaf format
       if (value and leaf.formats[name] != value) or (!value and leaf.formats[name]?)
-        # Identify node to modify
         targetNode = leaf.node
-        while !value and !format.match(targetNode)
-          if targetNode.previousSibling?
-            Utils.splitAncestors(targetNode, @node)
-          targetNode = targetNode.parentNode
+        # Identify node to modify
+        if leaf.formats[name]?
+          Utils.splitAncestors(targetNode, @node)
+          while !format.match(targetNode)
+            targetNode = targetNode.parentNode
         # Isolate target node
         if leafOffset > 0
           [leftNode, targetNode] = Utils.splitNode(targetNode, leafOffset)
-        if leaf.length > leafOffset + length  # leaf.length does not update even though we may have just split leaf.node
+        if leaf.length > leafOffset + length  # leaf.length does not update with splitNode
           [targetNode, rightNode] = Utils.splitNode(targetNode, length)
         format.add(targetNode, value)
       length -= leaf.length - leafOffset

@@ -271,7 +271,7 @@ describe('Line', ->
         args: [1, 4, 'strike', true]
       'split boundaries with parents remove':
         initial: '<b><i>01</i><s>23</s></b><i><s>45</s><b>67</b></i>'
-        expected: '<b><i>01</i></b><b><s>2</s></b><s>3</s><i><s>45</s>6<b>7</b></i>'
+        expected: '<b><i>01</i></b><b><s>2</s></b><s>3</s><i><s>45</s></i><i>6<b>7</b></i>'
         args: [3, 4, 'bold', false]
       'remove image':
         initial: '<b>01</b><img src="http://quilljs.com/images/cloud.png"><s>34</s>'
