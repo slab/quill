@@ -11,6 +11,7 @@ class Tooltip
         'background-color': '#fff'
         'border': '1px solid #000'
         'white-space': 'nowrap'
+        'z-index': '2000'
       '.tooltip a':
         'cursor': 'pointer'
         'text-decoration': 'none'
