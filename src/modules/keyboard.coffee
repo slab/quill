@@ -26,14 +26,19 @@ class Keyboard
     @hotkeys[which].push(hotkey)
 
   toggleFormat: (range, format) ->
-    delta = @quill.getContents(range)
-    value = !_.all(delta.ops, (op) ->
+    if range.isCollapsed()
+      delta = @quill.getContents(Math.max(0, range.start-1), range.end)
+    else
+      delta = @quill.getContents(range)
+    value = delta.ops.length == 0 or !_.all(delta.ops, (op) ->
       return op.attributes[format]
     )
     if range.isCollapsed()
       @quill.prepareFormat(format, value)
     else
       @quill.formatText(range, format, value, 'user')
+    toolbar = @quill.getModule('toolbar')
+    toolbar.setActive(format, value) if toolbar?
 
   _initDeletes: ->
     _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (key) =>
