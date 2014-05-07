@@ -53,7 +53,7 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    @quill.formatText(@range, 'link', url) if @range?
+    @quill.formatText(@range, 'link', url, 'user') if @range?
     this.setMode(url, false)
 
   setMode: (url, edit = false) ->
