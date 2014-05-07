@@ -11,6 +11,9 @@
   #sidebar-container {
     display: block !important;
   }
+  #demo-container .quill-wrapper #editor.focus {
+    height: 612px;
+  }
 }
 
 
@@ -159,6 +162,7 @@ body.home {
   background-color: #fafafa;
   border-bottom: 1px solid #ccc;
   margin-top: -20px;
+  overflow-y: hidden;
   padding-top: 40px;
 }
 #demo-container #editor {
