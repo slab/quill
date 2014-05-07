@@ -72,12 +72,8 @@ class LinkTooltip extends Tooltip
     [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
     node = leaf.node if leaf?
     while node?
-      if node.tagName == 'A'
-        this.setMode(node.href, false)
-        this.show(node)
-        return node
-      else
-        node = node.parentNode
+      return node if node.tagName == 'A'
+      node = node.parentNode
     return null
 
   _onToolbar: (range, value) ->
