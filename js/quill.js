@@ -566,8 +566,8 @@ module.exports = _dereq_('./src/quill');
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason.chen/Dropbox/jetcode/quill/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":4}],"eventemitter2":[function(_dereq_,module,exports){
+}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":4}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
 },{}],4:[function(_dereq_,module,exports){
 // shim for using process in browser
@@ -9052,7 +9052,9 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":11,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
+},{"./op":11,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
+module.exports=_dereq_('38mxji');
+},{}],"38mxji":[function(_dereq_,module,exports){
 (function() {
   module.exports = {
     Delta: _dereq_('./delta'),
@@ -9064,9 +9066,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],"tandem-core":[function(_dereq_,module,exports){
-module.exports=_dereq_('38mxji');
-},{}],15:[function(_dereq_,module,exports){
+},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],15:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
 },{"./javascript/diff_match_patch_uncompressed.js":16}],16:[function(_dereq_,module,exports){
@@ -11264,8 +11264,6 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -11941,10 +11939,12 @@ module.exports=_dereq_('Fq7WE+');
   root._.string = root._.str = _s;
 }(this, String);
 
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
 },{}],19:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.1",
+  "version": "0.13.0",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -13474,7 +13474,6 @@ Line = (function(_super) {
     this.doc = doc;
     this.node = node;
     this.id = _.uniqueId(Line.ID_PREFIX);
-    this.node.id = this.id;
     this.formats = {};
     DOM.addClass(this.node, Line.CLASS_NAME);
     this.rebuild();
@@ -13668,6 +13667,9 @@ Line = (function(_super) {
 
   Line.prototype.resetContent = function() {
     var ops;
+    if (this.node.id !== this.id) {
+      this.node.id = this.id;
+    }
     this.outerHTML = this.node.outerHTML;
     this.length = 1;
     ops = _.map(this.leaves.toArray(), (function(_this) {
@@ -14109,6 +14111,7 @@ LinkTooltip = (function(_super) {
   __extends(LinkTooltip, _super);
 
   LinkTooltip.DEFAULTS = {
+    maxLength: 50,
     styles: {
       '.link-tooltip-container': {
         'padding': '5px 10px'
@@ -14173,12 +14176,13 @@ LinkTooltip = (function(_super) {
     var url;
     url = this._normalizeURL(this.textbox.value);
     if (this.range != null) {
-      this.quill.formatText(this.range, 'link', url);
+      this.quill.formatText(this.range, 'link', url, 'user');
     }
     return this.setMode(url, false);
   };
 
   LinkTooltip.prototype.setMode = function(url, edit) {
+    var text;
     if (edit == null) {
       edit = false;
     }
@@ -14192,7 +14196,8 @@ LinkTooltip = (function(_super) {
       })(this));
     } else {
       this.link.href = url;
-      DOM.setText(this.link, url);
+      text = url.length > this.options.maxLength ? url.slice(0, this.options.maxLength) + '...' : url;
+      DOM.setText(this.link, text);
     }
     return DOM.toggleClass(this.container, 'editing', edit);
   };
@@ -14205,12 +14210,9 @@ LinkTooltip = (function(_super) {
     }
     while (node != null) {
       if (node.tagName === 'A') {
-        this.setMode(node.href, false);
-        this.show(node);
         return node;
-      } else {
-        node = node.parentNode;
       }
+      node = node.parentNode;
     }
     return null;
   };
@@ -14786,6 +14788,7 @@ Tooltip = (function() {
       '.tooltip': {
         'background-color': '#fff',
         'border': '1px solid #000',
+        'top': '0px',
         'white-space': 'nowrap',
         'z-index': '2000'
       },
@@ -14846,14 +14849,31 @@ Tooltip = (function() {
     this.range = this.quill.getSelection();
     _ref = this._position(reference), left = _ref[0], top = _ref[1];
     _ref1 = this._limit(left, top), left = _ref1[0], top = _ref1[1];
+    left += this.quill.root.ownerDocument.defaultView.window.pageXOffset;
+    top += this.quill.root.ownerDocument.defaultView.window.pageYOffset;
     this.container.style.left = "" + left + "px";
     this.container.style.top = "" + top + "px";
     return this.container.focus();
   };
 
+  Tooltip.prototype._getBounds = function() {
+    var bounds, scrollX, scrollY;
+    bounds = this.quill.root.getBoundingClientRect();
+    scrollX = this.quill.root.ownerDocument.defaultView.window.pageXOffset;
+    scrollY = this.quill.root.ownerDocument.defaultView.window.pageYOffset;
+    return {
+      left: bounds.left + scrollX,
+      right: bounds.right + scrollX,
+      top: bounds.top + scrollY,
+      bottom: bounds.bottom + scrollY,
+      width: bounds.width,
+      height: bounds.height
+    };
+  };
+
   Tooltip.prototype._limit = function(left, top) {
     var editorRect, toolbarRect;
-    editorRect = this.quill.root.getBoundingClientRect();
+    editorRect = this._getBounds();
     toolbarRect = this.container.getBoundingClientRect();
     left = Math.min(editorRect.right - toolbarRect.width, left);
     left = Math.max(editorRect.left, left);
@@ -14865,7 +14885,7 @@ Tooltip = (function() {
   Tooltip.prototype._position = function(reference) {
     var editorRect, left, referenceBounds, toolbarRect, top;
     toolbarRect = this.container.getBoundingClientRect();
-    editorRect = this.quill.root.getBoundingClientRect();
+    editorRect = this._getBounds();
     if (reference != null) {
       referenceBounds = reference.getBoundingClientRect();
       left = referenceBounds.left + referenceBounds.width / 2 - toolbarRect.width / 2;
@@ -15640,6 +15660,9 @@ DEFAULT_STYLES = {
   },
   '.editor-container u': {
     'text-decoration': 'underline'
+  },
+  '.editor-container img': {
+    'max-width': '100%'
   },
   '.editor-container blockquote': {
     'margin': '0 0 0 2em',

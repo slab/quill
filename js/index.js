@@ -4,7 +4,6 @@ $(document).ready(function() {
       'toolbar': { container: '#toolbar' },
       'image-tooltip': true,
       'link-tooltip': true
-
     },
     theme: 'snow'
   });
