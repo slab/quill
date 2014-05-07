@@ -87,12 +87,28 @@ class Toolbar
     )
 
   _getActive: (range) ->
+    leafFormats = this._getLeafActive(range)
+    lineFormats = this._getLineActive(range)
+    return _.defaults(leafFormats, lineFormats)
+
+  _getLeafActive: (range) ->
     if range.isCollapsed()
       start = Math.max(0, range.start - 1)
       contents = @quill.getContents(start, range.end)
     else
       contents = @quill.getContents(range)
     formatsArr = _.map(contents.ops, 'attributes')
+    return this._intersectFormats(formatsArr)
+
+  _getLineActive: (range) ->
+    formatsArr = []
+    [firstLine, offset] = @quill.editor.doc.findLineAt(range.start)
+    [lastLine, offset] = @quill.editor.doc.findLineAt(range.end)
+    lastLine = lastLine.next if lastLine? and lastLine == firstLine
+    while firstLine? and firstLine != lastLine
+      formats = { 'align': firstLine.formats['align'] }    # TODO fix when we have more line attributes
+      formatsArr.push(firstLine.formats)
+      firstLine = firstLine.next
     return this._intersectFormats(formatsArr)
 
   _intersectFormats: (formatsArr) ->
