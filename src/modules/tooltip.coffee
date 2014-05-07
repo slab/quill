@@ -10,6 +10,7 @@ class Tooltip
       '.tooltip':
         'background-color': '#fff'
         'border': '1px solid #000'
+        'top': '0px'
         'white-space': 'nowrap'
         'z-index': '2000'
       '.tooltip a':
