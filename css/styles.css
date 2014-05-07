@@ -206,15 +206,15 @@ body.home {
   margin-right: 25px;
 }
 
-#github-container {
+#download-container {
   margin-top: 40px;
 }
-#github-container .btn-lg {
+#download-container .btn-lg {
   border: 1px solid #06c;
   color: #06c;
   margin-top: 10px;
 }
-#github-container .btn-lg:hover {
+#download-container .btn-lg:hover {
   background-color: #06c;
   color: #fff;
 }
