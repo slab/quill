@@ -28,9 +28,7 @@ The best way to get started is a simple example:
 <!-- Create the editor container -->
 <div id="editor">
   <p>Hello World!</p>
-  <p>
-    <span>Some initial </span><b>bold</b></span> text</span>
-  </p>
+  <p>Some initial <b>bold</b> text</p>
   <p><br></p>
 </div>
 
