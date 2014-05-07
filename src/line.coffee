@@ -149,7 +149,7 @@ class Line extends LinkedList.Node
     return true
 
   resetContent: ->
-    @node.id = @id unless @node.id
+    @node.id = @id unless @node.id == @id
     @outerHTML = @node.outerHTML
     @length = 1
     ops = _.map(@leaves.toArray(), (leaf) =>
