@@ -5,6 +5,7 @@ Tooltip = require('./tooltip')
 
 class LinkTooltip extends Tooltip
   @DEFAULTS:
+    maxLength: 50
     styles:
       '.link-tooltip-container':
         'padding': '5px 10px'
@@ -65,7 +66,8 @@ class LinkTooltip extends Tooltip
       )
     else
       @link.href = url
-      DOM.setText(@link, url)
+      text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
+      DOM.setText(@link, text)
     DOM.toggleClass(@container, 'editing', edit)
 
   _findAnchor: (range) ->
