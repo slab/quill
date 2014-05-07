@@ -21,6 +21,11 @@ html
             option(value='13px', selected=true) Normal
             option(value='18px') Large
             option(value='32px') Huge
+          select.sc-align(title='Text Alignment')
+            option(value='left', selected) Left
+            option(value='center') Center
+            option(value='right') Right
+            option(value='justify') Justify
           button.sc-bold(title='Bold') Bold
           button.sc-italic(title='Italic') Italic
           button.sc-underline(title='Underline') Underline
@@ -55,6 +60,12 @@ html
             span.sc-format-button.sc-link(title='Link')
             span.sc-format-separator
             span.sc-format-button.sc-image(title='Image')
+          span.sc-format-group
+            select.sc-align(title='Text Alignment')
+              option.sc-align-left(value='left', selected)
+              option.sc-align-center(value='center')
+              option.sc-align-right(value='right')
+              option.sc-align-justify(value='justify')
           span.sc-format-group
             span.sc-format-button.sc-authorship(title='Authorship')
         .editor-container
