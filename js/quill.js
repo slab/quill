@@ -2,69 +2,7 @@
 module.exports = _dereq_('./src/quill');
 
 
-},{"./src/quill":40}],2:[function(_dereq_,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-process.nextTick = (function () {
-    var canSetImmediate = typeof window !== 'undefined'
-    && window.setImmediate;
-    var canPost = typeof window !== 'undefined'
-    && window.postMessage && window.addEventListener
-    ;
-
-    if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
-    }
-
-    if (canPost) {
-        var queue = [];
-        window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-
-        return function nextTick(fn) {
-            queue.push(fn);
-            window.postMessage('process-tick', '*');
-        };
-    }
-
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
-    };
-})();
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-
-function noop() {}
-
-process.on = noop;
-process.once = noop;
-process.off = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-}
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-
-},{}],"x/3aRz":[function(_dereq_,module,exports){
+},{"./src/quill":40}],"x/3aRz":[function(_dereq_,module,exports){
 (function (process){
 ;!function(exports, undefined) {
 
@@ -628,9 +566,71 @@ process.chdir = function (dir) {
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason.chen/Dropbox/jetcode/quill/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":2}],"eventemitter2":[function(_dereq_,module,exports){
+}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/jason.chen/Dropbox/jetcode/quill/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":4}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
+},{}],4:[function(_dereq_,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    if (canPost) {
+        var queue = [];
+        window.addEventListener('message', function (ev) {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+function noop() {}
+
+process.on = noop;
+process.once = noop;
+process.off = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+}
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
 /**
@@ -11944,7 +11944,7 @@ module.exports=_dereq_('Fq7WE+');
 },{}],19:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -12180,7 +12180,8 @@ Document = (function() {
   };
 
   Document.prototype.setHTML = function(html) {
-    this.root.innerHTML = Normalizer.stripWhitespace(html);
+    html = Normalizer.stripWhitespace(html);
+    this.root.innerHTML = html;
     this.lines = new LinkedList();
     this.lineMap = {};
     return this.rebuild();
@@ -12230,7 +12231,7 @@ DOM = {
   ZERO_WIDTH_NOBREAK_SPACE: "\uFEFF",
   DEFAULT_BLOCK_TAG: 'P',
   DEFAULT_BREAK_TAG: 'BR',
-  DEFAULT_INLNE_TAG: 'SPAN',
+  DEFAULT_INLINE_TAG: 'SPAN',
   EMBED_TEXT: '!',
   FONT_SIZES: {
     '10px': 1,
@@ -12419,17 +12420,6 @@ DOM = {
         return "";
     }
   },
-  getTextNodes: function(parent) {
-    var results;
-    results = [];
-    if (DOM.isTextNode(parent)) {
-      results.push(parent);
-    }
-    _.each(DOM.getChildNodes(parent), function(node) {
-      return results = results.concat(DOM.getTextNodes(node));
-    });
-    return results;
-  },
   getWindow: function(node) {
     return node.ownerDocument.defaultView || node.ownerDocument.parentWindow;
   },
@@ -12477,6 +12467,9 @@ DOM = {
     version = document.documentMode;
     return version && maxVersion >= version;
   },
+  isIOS: function() {
+    return /iPhone|iPad/i.test(navigator.userAgent);
+  },
   removeClass: function(node, cssClass) {
     var classArray;
     if (!DOM.hasClass(node, cssClass)) {
@@ -12493,6 +12486,10 @@ DOM = {
   removeNode: function(node) {
     var _ref;
     return (_ref = node.parentNode) != null ? _ref.removeChild(node) : void 0;
+  },
+  replaceNode: function(newNode, oldNode) {
+    oldNode.parentNode.replaceChild(newNode, oldNode);
+    return newNode;
   },
   resetSelect: function(select, trigger) {
     var option;
@@ -12967,20 +12964,24 @@ Format = (function() {
         node = DOM.wrap(formatNode, node);
       }
     }
-    if (DOM.isTextNode(node)) {
-      node = DOM.wrap(this.document.createElement(DOM.DEFAULT_INLNE_TAG), node);
-    }
-    if (_.isString(this.config.style)) {
-      if (value !== this.config["default"]) {
-        node.style[this.config.style] = value;
+    if (_.isString(this.config.style) || _.isString(this.config.attribute) || _.isString(this.config["class"])) {
+      if (_.isString(this.config["class"])) {
+        node = this.remove(node);
       }
-    }
-    if (_.isString(this.config.attribute)) {
-      node.setAttribute(this.config.attribute, value);
-    }
-    if (_.isString(this.config["class"])) {
-      this.remove(node);
-      DOM.addClass(node, this.config["class"] + value);
+      if (DOM.isTextNode(node)) {
+        node = DOM.wrap(this.document.createElement(DOM.DEFAULT_INLINE_TAG), node);
+      }
+      if (_.isString(this.config.style)) {
+        if (value !== this.config["default"]) {
+          node.style[this.config.style] = value;
+        }
+      }
+      if (_.isString(this.config.attribute)) {
+        node.setAttribute(this.config.attribute, value);
+      }
+      if (_.isString(this.config["class"])) {
+        DOM.addClass(node, this.config["class"] + value);
+      }
     }
     return node;
   };
@@ -13027,7 +13028,7 @@ Format = (function() {
   Format.prototype.remove = function(node) {
     var c, _i, _len, _ref;
     if (!this.match(node)) {
-      return;
+      return node;
     }
     if (_.isString(this.config.style)) {
       node.style[this.config.style] = '';
@@ -13051,10 +13052,13 @@ Format = (function() {
       }
     }
     if (_.isString(this.config.tag)) {
-      node = DOM.switchTag(node, DOM.DEFAULT_INLNE_TAG);
+      node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
       if (DOM.EMBED_TAGS[this.config.tag] != null) {
         DOM.setText(node, DOM.EMBED_TEXT);
       }
+    }
+    if (node.tagName === DOM.DEFAULT_INLINE_TAG && !node.hasAttributes()) {
+      node = DOM.unwrap(node);
     }
     return node;
   };
@@ -13110,16 +13114,7 @@ Leaf = (function(_super) {
   Leaf.ID_PREFIX = 'leaf-';
 
   Leaf.isLeafNode = function(node) {
-    if (!DOM.isElement(node)) {
-      return false;
-    }
-    if (node.firstChild == null) {
-      return true;
-    }
-    if (node.childNodes.length === 1 && DOM.isTextNode(node.firstChild)) {
-      return true;
-    }
-    return false;
+    return DOM.isTextNode(node) || (node.firstChild == null);
   };
 
   function Leaf(node, formats) {
@@ -13143,13 +13138,19 @@ Leaf = (function(_super) {
   };
 
   Leaf.prototype.insertText = function(offset, text) {
-    var targetNode;
+    var textNode;
     this.text = this.text.slice(0, offset) + text + this.text.slice(offset);
-    if (this.node.tagName === DOM.DEFAULT_BREAK_TAG) {
-      this.node = DOM.switchTag(this.node, DOM.DEFAULT_INLNE_TAG);
+    if (DOM.isTextNode(this.node)) {
+      DOM.setText(this.node, this.text);
+    } else {
+      textNode = this.node.ownerDocument.createTextNode(text);
+      if (this.node.tagName === DOM.DEFAULT_BREAK_TAG) {
+        DOM.replaceNode(textNode, this.node);
+      } else {
+        this.node.appendChild(textNode);
+      }
+      this.node = textNode;
     }
-    targetNode = this.node.firstChild || this.node;
-    DOM.setText(targetNode, this.text);
     return this.length = this.text.length;
   };
 
@@ -13501,30 +13502,19 @@ Line = (function(_super) {
   };
 
   Line.prototype.deleteText = function(offset, length) {
-    var deleteLength, leaf, nextLeaf, _ref;
+    var deleteLength, leaf, _ref;
     if (!(length > 0)) {
       return;
     }
-    deleteLength = length;
     _ref = this.findLeafAt(offset), leaf = _ref[0], offset = _ref[1];
-    while ((leaf != null) && deleteLength > 0) {
-      nextLeaf = leaf.next;
-      if (offset === 0 && leaf.length <= deleteLength) {
-        DOM.removeNode(leaf.node);
-        this.leaves.remove(leaf);
-      } else {
-        leaf.deleteText(offset, deleteLength);
-      }
-      deleteLength -= Math.min(leaf.length, deleteLength);
-      leaf = nextLeaf;
+    while ((leaf != null) && length > 0) {
+      deleteLength = Math.min(length, leaf.length - offset);
+      leaf.deleteText(offset, deleteLength);
+      length -= deleteLength;
+      leaf = leaf.next;
       offset = 0;
     }
-    if (length >= this.length - 1) {
-      this.node.appendChild(this.node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG));
-      return this.rebuild();
-    } else {
-      return this.resetContent();
-    }
+    return this.rebuild();
   };
 
   Line.prototype.findLeaf = function(leafNode) {
@@ -13594,11 +13584,11 @@ Line = (function(_super) {
       nextLeaf = leaf.next;
       if ((value && leaf.formats[name] !== value) || (!value && (leaf.formats[name] != null))) {
         targetNode = leaf.node;
-        while (!value && !format.match(targetNode)) {
-          if (targetNode.previousSibling != null) {
-            Utils.splitAncestors(targetNode, this.node);
+        if (leaf.formats[name] != null) {
+          Utils.splitAncestors(targetNode, this.node);
+          while (!format.match(targetNode)) {
+            targetNode = targetNode.parentNode;
           }
-          targetNode = targetNode.parentNode;
         }
         if (leafOffset > 0) {
           _ref1 = Utils.splitNode(targetNode, leafOffset), leftNode = _ref1[0], targetNode = _ref1[1];
@@ -13624,7 +13614,7 @@ Line = (function(_super) {
       return;
     }
     _ref = this.findLeafAt(offset), leaf = _ref[0], leafOffset = _ref[1];
-    if (_.isEqual(leaf.formats, formats) && this.length > 1 && offset > 0) {
+    if (_.isEqual(leaf.formats, formats)) {
       leaf.insertText(leafOffset, text);
       return this.resetContent();
     } else {
@@ -13633,9 +13623,6 @@ Line = (function(_super) {
           return _this.doc.formats[name].add(node, value);
         };
       })(this), this.node.ownerDocument.createTextNode(text));
-      if (DOM.isTextNode(node)) {
-        node = DOM.wrap(this.node.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), node);
-      }
       _ref1 = Utils.splitNode(leaf.node, leafOffset), prevNode = _ref1[0], nextNode = _ref1[1];
       if (nextNode) {
         nextNode = Utils.splitAncestors(nextNode, this.node);
@@ -13658,7 +13645,7 @@ Line = (function(_super) {
       return false;
     }
     this.node = Normalizer.normalizeNode(this.node);
-    if (this.node.firstChild == null) {
+    if (Utils.getNodeLength(this.node) === 0 && !this.node.querySelector(DOM.DEFAULT_BREAK_TAG)) {
       this.node.appendChild(this.node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG));
     }
     this.leaves = new LinkedList();
@@ -13675,10 +13662,6 @@ Line = (function(_super) {
       };
     })(this), this.formats);
     this.buildLeaves(this.node, {});
-    if (this.leaves.length === 1 && this.leaves.first.length === 0 && this.leaves.first.node.tagName !== DOM.DEFAULT_BREAK_TAG) {
-      this.leaves.first.node.appendChild(this.node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG));
-      this.leaves.first.node = this.leaves.first.node.firstChild;
-    }
     this.resetContent();
     return true;
   };
@@ -14009,15 +13992,23 @@ Keyboard = (function() {
   };
 
   Keyboard.prototype.toggleFormat = function(range, format) {
-    var delta, value;
-    delta = this.quill.getContents(range);
-    value = !_.all(delta.ops, function(op) {
+    var delta, toolbar, value;
+    if (range.isCollapsed()) {
+      delta = this.quill.getContents(Math.max(0, range.start - 1), range.end);
+    } else {
+      delta = this.quill.getContents(range);
+    }
+    value = delta.ops.length === 0 || !_.all(delta.ops, function(op) {
       return op.attributes[format];
     });
     if (range.isCollapsed()) {
-      return this.quill.prepareFormat(format, value);
+      this.quill.prepareFormat(format, value);
     } else {
-      return this.quill.formatText(range, format, value, 'user');
+      this.quill.formatText(range, format, value, 'user');
+    }
+    toolbar = this.quill.getModule('toolbar');
+    if (toolbar != null) {
+      return toolbar.setActive(format, value);
     }
   };
 
@@ -14208,7 +14199,7 @@ LinkTooltip = (function(_super) {
 
   LinkTooltip.prototype._findAnchor = function(range) {
     var leaf, node, offset, _ref;
-    _ref = this.quill.editor.doc.findLeafAt(Math.max(0, range.start - 1)), leaf = _ref[0], offset = _ref[1];
+    _ref = this.quill.editor.doc.findLeafAt(range.start, true), leaf = _ref[0], offset = _ref[1];
     if (leaf != null) {
       node = leaf.node;
     }
@@ -14293,6 +14284,8 @@ MultiCursor = (function(_super) {
     this.quill.addStyles({
       '.cursor-container': {
         'position': 'absolute',
+        'left': '0',
+        'top': '0',
         'z-index': '1000'
       },
       '.cursor': {
@@ -14325,15 +14318,6 @@ MultiCursor = (function(_super) {
         'right': '-2px'
       }
     });
-    this.quill.on(this.quill.constructor.events.RENDER_UPDATE, (function(_this) {
-      return function() {
-        return _.defer(function() {
-          _this.container.style.top = _this.quill.root.offsetTop + 'px';
-          _this.container.style.left = _this.quill.root.offsetLeft + 'px';
-          return _this.update(true);
-        });
-      };
-    })(this));
     this.quill.on(this.quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this));
   }
 
@@ -14386,7 +14370,12 @@ MultiCursor = (function(_super) {
       };
       this.emit(MultiCursor.events.CURSOR_ADDED, cursor);
     }
-    return this.moveCursor(userId, index, update);
+    _.defer((function(_this) {
+      return function() {
+        return _this.moveCursor(userId, index, update);
+      };
+    })(this));
+    return this.cursors[userId];
   };
 
   MultiCursor.prototype.shiftCursors = function(index, length, authorId, update) {
@@ -14457,11 +14446,15 @@ MultiCursor = (function(_super) {
     return cursor;
   };
 
-  MultiCursor.prototype._moveCursor = function(cursor, referenceNode) {
-    var flag;
-    cursor.elem.style.top = referenceNode.offsetTop + 'px';
-    cursor.elem.style.left = referenceNode.offsetLeft + 'px';
-    cursor.elem.style.height = referenceNode.offsetHeight + 'px';
+  MultiCursor.prototype._moveCursor = function(cursor, reference, side) {
+    var bounds, flag;
+    if (side == null) {
+      side = 'left';
+    }
+    bounds = reference.getBoundingClientRect();
+    cursor.elem.style.top = bounds.top + 'px';
+    cursor.elem.style.left = bounds[side] + 'px';
+    cursor.elem.style.height = bounds.height + 'px';
     flag = cursor.elem.querySelector('.cursor-flag');
     DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight);
     DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth);
@@ -14470,34 +14463,36 @@ MultiCursor = (function(_super) {
   };
 
   MultiCursor.prototype._updateCursor = function(cursor) {
-    var didSplit, guide, leaf, leafNode, leftText, offset, rightText, _ref, _ref1;
-    _ref = this.quill.editor.doc.findLeafAt(cursor.index), leaf = _ref[0], offset = _ref[1];
-    guide = this.container.ownerDocument.createElement('span');
+    var guide, leaf, leftNode, offset, rightNode, _ref, _ref1;
+    _ref = this.quill.editor.doc.findLeafAt(cursor.index, true), leaf = _ref[0], offset = _ref[1];
     if (leaf != null) {
-      leafNode = leaf.node;
-      if (leafNode.firstChild == null) {
-        DOM.setText(guide, DOM.NOBREAK_SPACE);
-        leafNode.parentNode.insertBefore(guide, leafNode);
-        this._moveCursor(cursor, guide);
-      } else {
-        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
-        _ref1 = Utils.splitNode(leafNode.firstChild, offset), leftText = _ref1[0], rightText = _ref1[1], didSplit = _ref1[2];
-        if (rightText != null) {
-          rightText.parentNode.insertBefore(guide, rightText);
+      if (offset === 0) {
+        this._moveCursor(cursor, leaf.node.parentNode);
+      } else if (offset === leaf.length) {
+        if (DOM.BLOCK_TAGS[leaf.node.parentNode.tagName] != null) {
+          guide = this.container.ownerDocument.createElement('span');
+          DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
+          leaf.node.parentNode.appendChild(guide);
           this._moveCursor(cursor, guide);
-        } else if (leftText != null) {
-          leftText.parentNode.appendChild(guide);
-          this._moveCursor(cursor, guide);
+          DOM.removeNode(guide);
+        } else {
+          this._moveCursor(cursor, leaf.node.parentNode, 'right');
         }
+      } else {
+        _ref1 = Utils.splitNode(leaf.node, offset), leftNode = _ref1[0], rightNode = _ref1[1];
+        guide = this.container.ownerDocument.createElement('span');
+        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
+        leaf.node.parentNode.insertBefore(guide, rightNode);
+        this._moveCursor(cursor, guide);
+        DOM.removeNode(guide);
+        DOM.normalize(leaf.node.parentNode);
       }
     } else {
+      guide = this.container.ownerDocument.createElement('span');
       DOM.setText(guide, DOM.NOBREAK_SPACE);
       this.quill.root.appendChild(guide);
       this._moveCursor(cursor, guide);
-    }
-    guide.parentNode.removeChild(guide);
-    if (didSplit) {
-      DOM.normalize(leafNode);
+      DOM.removeNode(guide);
     }
     return cursor.dirty = false;
   };
@@ -14640,7 +14635,10 @@ Toolbar = (function() {
     })(this));
     this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this));
     DOM.addClass(this.container, 'sc-toolbar-container');
-    if (DOM.isIE(11)) {
+    if (DOM.isIOS()) {
+      DOM.addClass(this.container, 'ios');
+    }
+    if (DOM.isIE(11) || DOM.isIOS()) {
       DOM.addEventListener(this.container, 'mousedown', (function(_this) {
         return function() {
           return false;
@@ -14673,7 +14671,8 @@ Toolbar = (function() {
         if (range != null) {
           callback(range, value);
         }
-        return _this.preventUpdate = false;
+        _this.preventUpdate = false;
+        return true;
       };
     })(this));
   };
@@ -14787,7 +14786,8 @@ Tooltip = (function() {
       '.tooltip': {
         'background-color': '#fff',
         'border': '1px solid #000',
-        'white-space': 'nowrap'
+        'white-space': 'nowrap',
+        'z-index': '2000'
       },
       '.tooltip a': {
         'cursor': 'pointer',
@@ -14796,6 +14796,8 @@ Tooltip = (function() {
     },
     template: ''
   };
+
+  Tooltip.HIDE_MARGIN = '-10000px';
 
   function Tooltip(quill, options) {
     this.quill = quill;
@@ -14806,6 +14808,14 @@ Tooltip = (function() {
     this.container.style.position = 'absolute';
     DOM.addEventListener(this.quill.root, 'focus', _.bind(this.hide, this));
     this.hide();
+    this.quill.on(this.quill.constructor.events.TEXT_CHANGE, (function(_this) {
+      return function(delta, source) {
+        if (source === 'user' && _this.container.style.left !== Tooltip.HIDE_MARGIN) {
+          _this.range = null;
+          return _this.hide();
+        }
+      };
+    })(this));
   }
 
   Tooltip.prototype.initTextbox = function(textbox, enterCallback, escapeCallback) {
@@ -14824,7 +14834,7 @@ Tooltip = (function() {
   };
 
   Tooltip.prototype.hide = function() {
-    this.container.style.left = '-10000px';
+    this.container.style.left = Tooltip.HIDE_MARGIN;
     if (this.range) {
       this.quill.setSelection(this.range);
     }
@@ -15086,10 +15096,13 @@ Normalizer = {
     lineNode = Normalizer.handleBreaks(lineNode);
     Normalizer.pullBlocks(lineNode);
     lineNode = Normalizer.normalizeNode(lineNode);
-    Normalizer.wrapText(lineNode);
+    Normalizer.unwrapText(lineNode);
     return lineNode;
   },
   normalizeNode: function(node) {
+    if (DOM.isTextNode(node)) {
+      return node;
+    }
     _.each(Normalizer.ATTRIBUTES, function(style, attribute) {
       var value;
       if (node.hasAttribute(attribute)) {
@@ -15105,9 +15118,10 @@ Normalizer = {
     return Normalizer.whitelistTags(node);
   },
   optimizeLine: function(lineNode) {
-    var attributes, exposeTextNode, exposeToLine, hasAttributes, lineNodeLength, neighborAttributes, node, nodes;
+    var lineNodeLength, node, nodes, _results;
     lineNodeLength = Utils.getNodeLength(lineNode);
     nodes = DOM.getDescendants(lineNode);
+    _results = [];
     while (nodes.length > 0) {
       node = nodes.pop();
       if ((node != null ? node.parentNode : void 0) == null) {
@@ -15118,35 +15132,27 @@ Normalizer = {
       }
       if (node.tagName === DOM.DEFAULT_BREAK_TAG) {
         if (lineNodeLength !== 0) {
-          DOM.removeNode(node);
+          _results.push(DOM.removeNode(node));
+        } else {
+          _results.push(void 0);
         }
       } else if (Utils.getNodeLength(node) === 0) {
         nodes.push(node.nextSibling);
-        DOM.unwrap(node);
+        _results.push(DOM.unwrap(node));
+      } else if ((node.previousSibling != null) && node.tagName === node.previousSibling.tagName) {
+        if (_.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))) {
+          nodes.push(node.firstChild);
+          DOM.moveChildren(node.previousSibling, node);
+          DOM.normalize(node.previousSibling);
+          _results.push(DOM.removeNode(node));
+        } else {
+          _results.push(void 0);
+        }
       } else {
-        attributes = DOM.getAttributes(node);
-        if (node.tagName === DOM.DEFAULT_INLNE_TAG) {
-          hasAttributes = _.keys(attributes).length > 0;
-          exposeTextNode = DOM.isTextNode(node.firstChild) && (DOM.isElement(node.previousSibling) || DOM.isElement(node.nextSibling));
-          exposeToLine = node.parentNode === lineNode && DOM.isTextNode(node.firstChild);
-          if (!hasAttributes && !exposeTextNode && !exposeToLine) {
-            nodes.push(node.nextSibling);
-            DOM.unwrap(node);
-            continue;
-          }
-        }
-        if ((node.previousSibling != null) && node.tagName === node.previousSibling.tagName) {
-          neighborAttributes = DOM.getAttributes(node.previousSibling);
-          if (_.isEqual(attributes, neighborAttributes)) {
-            nodes.push(node.firstChild);
-            DOM.moveChildren(node.previousSibling, node);
-            DOM.normalize(node.previousSibling);
-            DOM.removeNode(node);
-          }
-        }
+        _results.push(void 0);
       }
     }
-    return Normalizer.wrapText(lineNode);
+    return _results;
   },
   pullBlocks: function(lineNode) {
     var curNode, _results;
@@ -15192,7 +15198,6 @@ Normalizer = {
     }
   },
   whitelistTags: function(node) {
-    var tagName;
     if (!DOM.isElement(node)) {
       return;
     }
@@ -15200,8 +15205,13 @@ Normalizer = {
       node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]);
     }
     if (Normalizer.TAGS[node.tagName] == null) {
-      tagName = DOM.BLOCK_TAGS[node.tagName] != null ? DOM.DEFAULT_BLOCK_TAG : DOM.DEFAULT_INLNE_TAG;
-      node = DOM.switchTag(node, tagName);
+      if (DOM.BLOCK_TAGS[node.tagName] != null) {
+        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG);
+      } else if (node.hasAttributes()) {
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
+      } else {
+        node = DOM.unwrap(node);
+      }
     }
     return node;
   },
@@ -15219,16 +15229,16 @@ Normalizer = {
     }
     return blockNode;
   },
-  wrapText: function(lineNode) {
-    var texts;
-    texts = DOM.getTextNodes(lineNode);
-    return _.each(texts, (function(_this) {
-      return function(textNode) {
-        if ((textNode.previousSibling != null) || (textNode.nextSibling != null) || textNode.parentNode === lineNode) {
-          return DOM.wrap(lineNode.ownerDocument.createElement(DOM.DEFAULT_INLNE_TAG), textNode);
-        }
-      };
-    })(this));
+  unwrapText: function(lineNode) {
+    var spans;
+    spans = _.map(lineNode.querySelectorAll(DOM.DEFAULT_INLINE_TAG));
+    return _.each(spans, function(span) {
+      var attributes;
+      attributes = DOM.getAttributes(span);
+      if (_.keys(attributes).length === 0) {
+        return DOM.unwrap(span);
+      }
+    });
   }
 };
 
@@ -15493,9 +15503,13 @@ Quill = (function(_super) {
   };
 
   Quill.prototype.prepareFormat = function(name, value) {
-    var format;
+    var format, range;
     format = this.editor.doc.formats[name];
     if (format == null) {
+      return;
+    }
+    range = this.getSelection();
+    if (!(range != null ? range.isCollapsed() : void 0)) {
       return;
     }
     return format.prepare(value);
@@ -15520,6 +15534,9 @@ Quill = (function(_super) {
   Quill.prototype.setHTML = function(html, source) {
     if (source == null) {
       source = Quill.sources.API;
+    }
+    if (!html) {
+      html = "<" + DOM.DEFAULT_BLOCK_TAG + "><" + DOM.DEFAULT_BREAK_TAG + "></" + DOM.DEFAULT_BLOCK_TAG + ">";
     }
     this.editor.doc.setHTML(html);
     return this.editor.checkUpdate(source);
@@ -15892,24 +15909,17 @@ Selection = (function() {
   };
 
   Selection.prototype._indexToPosition = function(index) {
-    var leaf, node, offset, _ref;
+    var leaf, offset, _ref;
     if (this.doc.lines.length === 0) {
       return [this.doc.root, 0];
     }
     _ref = this.doc.findLeafAt(index, true), leaf = _ref[0], offset = _ref[1];
-    node = leaf.node;
-    if (DOM.isTextNode(node.firstChild)) {
-      node = node.firstChild;
-    }
-    return this._decodePosition(node, offset);
+    return this._decodePosition(leaf.node, offset);
   };
 
   Selection.prototype._positionToIndex = function(node, offset) {
     var leaf, leafNode, leafOffset, line, lineOffset, _ref;
     _ref = this._encodePosition(node, offset), leafNode = _ref[0], offset = _ref[1];
-    if (DOM.isTextNode(leafNode)) {
-      leafNode = leafNode.parentNode;
-    }
     line = this.doc.findLine(leafNode);
     if (line == null) {
       return 0;
@@ -15939,12 +15949,18 @@ Selection = (function() {
     }
     if (startNode != null) {
       this.doc.root.focus();
-      selection.removeAllRanges();
-      nativeRange = this.document.createRange();
-      nativeRange.setStart(startNode, startOffset);
-      nativeRange.setEnd(endNode, endOffset);
-      selection.addRange(nativeRange);
-      return this.doc.root.focus();
+      nativeRange = this._getNativeRange();
+      if ((nativeRange == null) || startNode !== nativeRange.startContainer || startOffset !== nativeRange.startOffset || endNode !== nativeRange.endContainer || endOffset !== nativeRange.endOffset) {
+        if (nativeRange != null) {
+          selection.removeAllRanges();
+        }
+        selection.removeAllRanges();
+        nativeRange = this.document.createRange();
+        nativeRange.setStart(startNode, startOffset);
+        nativeRange.setEnd(endNode, endOffset);
+        selection.addRange(nativeRange);
+        return this.doc.root.focus();
+      }
     } else {
       selection.removeAllRanges();
       return this.doc.root.blur();
@@ -16162,13 +16178,6 @@ Utils = {
     }
     return _.last(targets);
   },
-  findDeepestNode: function(node, offset) {
-    var _ref;
-    while (node.firstChild != null) {
-      _ref = Utils.getChildAtOffset(node, offset), node = _ref[0], offset = _ref[1];
-    }
-    return [node, offset];
-  },
   getChildAtOffset: function(node, offset) {
     var child, length;
     child = node.firstChild;
@@ -16203,20 +16212,27 @@ Utils = {
     version = document.documentMode;
     return version && maxVersion >= version;
   },
-  splitAncestors: function(refNode, root) {
+  splitAncestors: function(refNode, root, force) {
     var nextNode, parentClone, parentNode;
+    if (force == null) {
+      force = false;
+    }
     if (refNode === root || refNode.parentNode === root) {
       return refNode;
     }
-    parentNode = refNode.parentNode;
-    parentClone = parentNode.cloneNode(false);
-    parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling);
-    while (refNode != null) {
-      nextNode = refNode.nextSibling;
-      parentClone.appendChild(refNode);
-      refNode = nextNode;
+    if ((refNode.previousSibling != null) || force) {
+      parentNode = refNode.parentNode;
+      parentClone = parentNode.cloneNode(false);
+      parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling);
+      while (refNode != null) {
+        nextNode = refNode.nextSibling;
+        parentClone.appendChild(refNode);
+        refNode = nextNode;
+      }
+      return Utils.splitAncestors(parentClone, root);
+    } else {
+      return Utils.splitAncestors(refNode.parentNode, root);
     }
-    return Utils.splitAncestors(parentClone, root);
   },
   splitNode: function(node, offset, force) {
     var after, child, childLeft, childRight, left, nextRight, nodeLength, right, _ref, _ref1;
