@@ -112,15 +112,13 @@ toolbarPadding = 8px
     margin-left: inputMargin
     margin-top: 24px
     width: textAlignPickerWidth
-  .sc-picker-label:before
+  .sc-picker-label[data-value=left]:before, .sc-picker-item[data-value=left]:before
     content: "\e80B"
-  .sc-align-left:before
-    content: "\e80B"
-  .sc-align-right:before
+  .sc-picker-label[data-value=right]:before, .sc-picker-item[data-value=right]:before
     content: "\e80C"
-  .sc-align-center:before
+  .sc-picker-label[data-value=center]:before, .sc-picker-item[data-value=center]:before
     content: "\e80D"
-  .sc-align-justify:before
+  .sc-picker-label[data-value=justify]:before, .sc-picker-item[data-value=justify]:before
     content: "\e80E"
 
 .sc-picker.sc-align.sc-expanded

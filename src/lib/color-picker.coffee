@@ -11,7 +11,6 @@ class ColorPicker extends Picker
   buildItem: (picker, option, index) ->
     item = super(picker, option, index)
     item.style.backgroundColor = option.value
-    DOM.setText(item, '')
     return item
 
 
