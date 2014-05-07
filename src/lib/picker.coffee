@@ -32,6 +32,7 @@ class Picker
 
   buildItem: (picker, option, index) ->
     item = @select.ownerDocument.createElement('div')
+    item.setAttribute('class', option.getAttribute('class'))
     DOM.addClass(item, 'sc-picker-item')
     DOM.setText(item, DOM.getText(option))
     this.selectItem(item, option, false) if @select.selectedIndex == index
