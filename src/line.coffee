@@ -18,7 +18,6 @@ class Line extends LinkedList.Node
 
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Line.ID_PREFIX)
-    @node.id = @id
     @formats = {}
     DOM.addClass(@node, Line.CLASS_NAME)
     this.rebuild()
@@ -150,6 +149,7 @@ class Line extends LinkedList.Node
     return true
 
   resetContent: ->
+    @node.id = @id unless @node.id
     @outerHTML = @node.outerHTML
     @length = 1
     ops = _.map(@leaves.toArray(), (leaf) =>
