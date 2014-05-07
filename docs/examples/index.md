@@ -43,7 +43,10 @@ Uses all the features of Quill, including [Modules](/docs/modules/) and [Themes]
 
 <div class="quill-wrapper">
   <div id="full-toolbar" class="toolbar">
-  {% include full-toolbar.html %}
+    {% include full-toolbar.html %}
+    <span class="sc-format-group">
+      <span title="Link" class="sc-format-button sc-link"></span>
+    </span>
   </div>
   <div id="full-editor" class="editor">
   {% include lotr.html %}
