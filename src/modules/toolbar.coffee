@@ -31,9 +31,11 @@ class Toolbar
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
     DOM.addClass(@container, 'sc-toolbar-container')
-    if DOM.isIE(11)
+    if DOM.isIE(11) or /iPhone|iPad/i.test(navigator.userAgent)    # :(
       DOM.addEventListener(@container, 'mousedown', =>
-        return false  # IE destroys selection by default when we click away
+        # IE destroys selection by default when we click away
+        # Also fixes bug in iOS where preformating prevents subsequent typing
+        return false
       )
 
   initFormat: (format, callback) ->
