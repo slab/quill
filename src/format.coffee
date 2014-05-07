@@ -57,6 +57,13 @@ class Format
       type: Format.types.LINE
       style: 'textAlign'
       default: 'left'
+      prepare: (doc, value) ->
+        switch value
+          when 'left'    then command = 'justifyLeft'
+          when 'center'  then command = 'justifyCenter'
+          when 'right'   then command = 'justifyRight'
+          when 'justify' then command = 'justifyFull'
+        doc.execCommand(command, false)
 
 
   constructor: (@document, @config) ->

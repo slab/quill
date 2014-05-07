@@ -8,9 +8,10 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON: { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
-    SELECT: { 'align', 'background', 'color', 'font', 'size' }
-    TOOLTIP: { 'image', 'link' }
+    BUTTON  : { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
+    LINE    : { 'align' }
+    SELECT  : { 'align', 'background', 'color', 'font', 'size' }
+    TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
@@ -24,6 +25,8 @@ class Toolbar
         return if @triggering
         if range.isCollapsed()
           @quill.prepareFormat(format, value)
+        else if Toolbar.formats.LINE[format]?
+          @quill.formatLine(range, format, value, 'user')
         else
           @quill.formatText(range, format, value, 'user')
         this.setActive(format, value)
