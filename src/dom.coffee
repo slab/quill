@@ -203,6 +203,9 @@ DOM =
     version = document.documentMode
     return version and maxVersion >= version
 
+  isIOS: ->
+    return /iPhone|iPad/i.test(navigator.userAgent)
+
   removeClass: (node, cssClass) ->
     return unless DOM.hasClass(node, cssClass)
     if node.classList?

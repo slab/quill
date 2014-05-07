@@ -133,6 +133,13 @@ toolbarPadding = 8px
   .sc-picker-options
     margin-left: inputMargin - 1px
 
+/* Fix for iOS not losing hover state after click */
+.sc-toolbar-container.ios
+  .sc-format-button:hover
+    color: inherit
+  .sc-format-button.sc-active, .sc-format-button.sc-on
+    color: blueColor
+
 .sc-toolbar-container
   .sc-format-button:hover, .sc-format-button.sc-active, .sc-format-button.sc-on
     color: blueColor

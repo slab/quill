@@ -31,7 +31,8 @@ class Toolbar
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
     DOM.addClass(@container, 'sc-toolbar-container')
-    if DOM.isIE(11) or /iPhone|iPad/i.test(navigator.userAgent)    # :(
+    DOM.addClass(@container, 'ios') if DOM.isIOS()  # Fix for iOS not losing hover state after click
+    if DOM.isIE(11) or DOM.isIOS()
       DOM.addEventListener(@container, 'mousedown', =>
         # IE destroys selection by default when we click away
         # Also fixes bug in iOS where preformating prevents subsequent typing
