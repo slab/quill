@@ -156,9 +156,7 @@ describe('Normalizer', ->
     tests =
       'newlines':
         initial:
-         '<p>
-            Test
-          </p>
+         '<p>Test</p>
           <p>
             <br>
           </p>'
@@ -168,7 +166,7 @@ describe('Normalizer', ->
         expected: '<p></p>'
       'inner spaces':
         initial:  '<p> <span> </span> <span>&nbsp; </span> </p>'
-        expected: '<p><span></span><span>&nbsp;</span></p>'
+        expected: '<p><span></span><span>&nbsp; </span></p>'
 
     _.each(tests, (test, name) ->
       it(name, ->

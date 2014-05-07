@@ -274,7 +274,7 @@ describe('Document', ->
       @doc.setHTML('
         <div>
           <div>
-            <div>A</div>B<br>C
+            <div>A</div>B<br>C</div>
           </div>
         </div>
         <div>

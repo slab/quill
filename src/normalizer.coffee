@@ -108,7 +108,7 @@ Normalizer =
     # Remove leading and tailing whitespace
     html = html.replace(/^\s+/, '').replace(/\s+$/, '')
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
-    html = html.replace(/\>\s+/g, '>').replace(/\s+\</g, '<')
+    html = html.replace(/\>\s+\</g, '><')
     return html
 
   whitelistStyles: (node) ->
