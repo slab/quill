@@ -131,8 +131,12 @@ class MultiCursor extends EventEmitter2
       else if offset == leaf.length
         this._moveCursor(cursor, leaf.node.parentNode, 'right')
       else
-        [leftNode, rightNode] = Utils.splitNode(leaf.node.parentNode, offset)
-        this._moveCursor(cursor, leftNode, 'right')
+        [leftNode, rightNode] = Utils.splitNode(leaf.node, offset)
+        guide = @container.ownerDocument.createElement('span')
+        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
+        leaf.node.parentNode.insertBefore(guide, rightNode)
+        this._moveCursor(cursor, guide)
+        DOM.removeNode(guide)
         DOM.normalize(leaf.node.parentNode)
     else
       guide = @container.ownerDocument.createElement('span')
