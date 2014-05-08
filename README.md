@@ -38,18 +38,17 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
     npm install -g grunt-cli
     npm install
-    bundle install
 
 ### Building
 
-    grunt
+    grunt build
 
 ### Testing
 
     grunt test - run tests with phantomjs
     grunt test:karma - allows you to visit localhost:9876/debug.html for interactive testing
-    grunt test:local - run tests with locally installed browsers
     grunt test:remote - run tests on supported platforms on Sauce Labs
+    grunt test:coverage - run coverage tests using phantomjs
 
 ## Community
 
@@ -58,6 +57,7 @@ Get help or stay up to date.
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quill)
 - Visit the [discussion group](http://discuss.quilljs.com)
+- For large or interesting use cases you may also email support@quilljs.com
 
 ## Contributing
 
