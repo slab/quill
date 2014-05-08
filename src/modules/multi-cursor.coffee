@@ -128,32 +128,17 @@ class MultiCursor extends EventEmitter2
 
   _updateCursor: (cursor) ->
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
+    guide = @container.ownerDocument.createElement('span')
     if leaf?
-      if offset == 0
-        this._moveCursor(cursor, leaf.node.parentNode)
-      else if offset == leaf.length
-        if DOM.BLOCK_TAGS[leaf.node.parentNode.tagName]?
-          guide = @container.ownerDocument.createElement('span')
-          DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
-          leaf.node.parentNode.appendChild(guide)
-          this._moveCursor(cursor, guide)
-          DOM.removeNode(guide)
-        else
-          this._moveCursor(cursor, leaf.node.parentNode, 'right')
-      else
-        [leftNode, rightNode] = Utils.splitNode(leaf.node, offset)
-        guide = @container.ownerDocument.createElement('span')
-        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
-        leaf.node.parentNode.insertBefore(guide, rightNode)
-        this._moveCursor(cursor, guide)
-        DOM.removeNode(guide)
-        DOM.normalize(leaf.node.parentNode)
+      [leftNode, rightNode, didSplit] = Utils.splitNode(leaf.node, offset)
+      DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
+      leaf.node.parentNode.insertBefore(guide, rightNode)
     else
-      guide = @container.ownerDocument.createElement('span')
       DOM.setText(guide, DOM.NOBREAK_SPACE)
       @quill.root.appendChild(guide)
-      this._moveCursor(cursor, guide)
-      DOM.removeNode(guide)
+    this._moveCursor(cursor, guide)
+    DOM.removeNode(guide)
+    DOM.normalize(leaf.node.parentNode) if didSplit
     cursor.dirty = false
 
 
