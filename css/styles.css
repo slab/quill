@@ -11,9 +11,6 @@
   #sidebar-container {
     display: block !important;
   }
-  #demo-container .quill-wrapper #editor.focus {
-    height: 612px;
-  }
 }
 
 

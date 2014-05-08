@@ -15,6 +15,10 @@ $(document).ready(function() {
 
   editor.once('selection-change', function(hasFocus) {
     $('#editor').toggleClass('focus', hasFocus);
+    // Hack for inability to scroll on mobile
+    if (/mobile/i.test(navigator.userAgent)) {
+      $('#editor').css('height', editor.root.scrollHeight + 30)   // 30 for padding
+    }
     $('.quill-wrapper').tooltip('destroy');
     clearTimeout(tooltipTimer);
   });
