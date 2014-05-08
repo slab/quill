@@ -106,6 +106,12 @@ class Quill extends EventEmitter2
   focus: ->
     @root.focus()
 
+  formatLine: (start, end, name, value, source) ->
+    [start, end, formats, source] = this._buildParams(start, end, name, value, source)
+    [line, offset] = @editor.doc.findLineAt(end)
+    end += (line.length - offset) if line?
+    this.formatText(start, end, formats, source)
+
   formatText: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)
     return unless end > start
