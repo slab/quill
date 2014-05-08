@@ -21,6 +21,11 @@ html
             option(value='13px', selected=true) Normal
             option(value='18px') Large
             option(value='32px') Huge
+          select.sc-align(title='Text Alignment')
+            option(value='left', selected) Left
+            option(value='center') Center
+            option(value='right') Right
+            option(value='justify') Justify
           button.sc-bold(title='Bold') Bold
           button.sc-italic(title='Italic') Italic
           button.sc-underline(title='Underline') Underline
@@ -39,18 +44,23 @@ html
               option(value='18px') Large
               option(value='32px') Huge
           span.sc-format-group
-            each c in ['sc-color', 'sc-background']
-              select(class=c, title=(c=='sc-color'?'Text Color':'Background Color'))
-                each color,i in colors
-                  option(value=color, selected=((c == 'sc-color' && color == 'rgb(0, 0, 0)') || (c == 'sc-background' && color == 'rgb(255, 255, 255)') ? true : false))
-              if c == 'sc-color'
-                span.sc-format-separator
-          span.sc-format-group
             span.sc-format-button.sc-bold(title='Bold')
             span.sc-format-separator
             span.sc-format-button.sc-italic(title='Italic')
             span.sc-format-separator
             span.sc-format-button.sc-underline(title='Underline')
+          span.sc-format-group
+            each c in ['sc-color', 'sc-background']
+              select(class=c, title=(c=='sc-color'?'Text Color':'Background Color'))
+                each color,i in colors
+                  option(value=color, selected=((c == 'sc-color' && color == 'rgb(0, 0, 0)') || (c == 'sc-background' && color == 'rgb(255, 255, 255)') ? true : false))
+              if c == 'sc-color'
+              span.sc-format-separator
+            select.sc-align(title='Text Alignment')
+              option(value='left', selected)
+              option(value='center')
+              option(value='right')
+              option(value='justify')
           span.sc-format-group
             span.sc-format-button.sc-link(title='Link')
             span.sc-format-separator

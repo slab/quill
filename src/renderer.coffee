@@ -29,6 +29,7 @@ DEFAULT_STYLES =
   '.editor-container i'          : { 'font-style': 'italic' }
   '.editor-container s'          : { 'text-decoration': 'line-through' }
   '.editor-container u'          : { 'text-decoration': 'underline' }
+  '.editor-container img'        : { 'max-width': '100%' }
   '.editor-container blockquote' : { 'margin': '0 0 0 2em', 'padding': '0' }
   '.editor-container ol'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'decimal' }
   '.editor-container ul'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'disc' }

@@ -8,9 +8,10 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON: { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
-    SELECT: { 'align', 'background', 'color', 'font', 'size' }
-    TOOLTIP: { 'image', 'link' }
+    BUTTON  : { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
+    LINE    : { 'align' }
+    SELECT  : { 'align', 'background', 'color', 'font', 'size' }
+    TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
@@ -24,6 +25,8 @@ class Toolbar
         return if @triggering
         if range.isCollapsed()
           @quill.prepareFormat(format, value)
+        else if Toolbar.formats.LINE[format]?
+          @quill.formatLine(range, format, value, 'user')
         else
           @quill.formatText(range, format, value, 'user')
         this.setActive(format, value)
@@ -84,12 +87,28 @@ class Toolbar
     )
 
   _getActive: (range) ->
+    leafFormats = this._getLeafActive(range)
+    lineFormats = this._getLineActive(range)
+    return _.defaults(leafFormats, lineFormats)
+
+  _getLeafActive: (range) ->
     if range.isCollapsed()
       start = Math.max(0, range.start - 1)
       contents = @quill.getContents(start, range.end)
     else
       contents = @quill.getContents(range)
     formatsArr = _.map(contents.ops, 'attributes')
+    return this._intersectFormats(formatsArr)
+
+  _getLineActive: (range) ->
+    formatsArr = []
+    [firstLine, offset] = @quill.editor.doc.findLineAt(range.start)
+    [lastLine, offset] = @quill.editor.doc.findLineAt(range.end)
+    lastLine = lastLine.next if lastLine? and lastLine == firstLine
+    while firstLine? and firstLine != lastLine
+      formats = { 'align': firstLine.formats['align'] }    # TODO fix when we have more line attributes
+      formatsArr.push(firstLine.formats)
+      firstLine = firstLine.next
     return this._intersectFormats(formatsArr)
 
   _intersectFormats: (formatsArr) ->

@@ -7,6 +7,7 @@ grayColor = #ccc
 lightGrayColor = #ddd
 fontNamePickerWidth = 105px
 fontSizePickerWidth = 80px
+textAlignPickerWidth = 32px
 pickerPadding = 8px
 pickerWidth = 50px
 toolbarPadding = 8px
@@ -104,6 +105,31 @@ toolbarPadding = 8px
     display: block
     margin: -1px
 
+.sc-picker.sc-align
+  .sc-picker-label:after
+    content: normal
+  .sc-picker-options
+    margin-left: inputMargin
+    margin-top: 24px
+    padding-left: 0px
+    padding-right: 0px
+    width: textAlignPickerWidth
+  .sc-picker-label[data-value=left]:before, .sc-picker-item[data-value=left]:before
+    content: "\e80B"
+  .sc-picker-label[data-value=right]:before, .sc-picker-item[data-value=right]:before
+    content: "\e80C"
+  .sc-picker-label[data-value=center]:before, .sc-picker-item[data-value=center]:before
+    content: "\e80D"
+  .sc-picker-label[data-value=justify]:before, .sc-picker-item[data-value=justify]:before
+    content: "\e80E"
+
+.sc-picker.sc-align.sc-expanded
+  .sc-picker-label
+    margin-left: inputMargin - 1px
+    margin-right: inputMargin - 1px
+  .sc-picker-options
+    margin-left: inputMargin - 1px
+
 .sc-picker.sc-color-picker
   float: left
   .sc-picker-label
@@ -163,14 +189,6 @@ toolbarPadding = 8px
     content: "\e809"
   .sc-format-button.sc-outdent:before
     content: "\e80A"
-  .sc-format-button.sc-left:before
-    content: "\e80B"
-  .sc-format-button.sc-right:before
-    content: "\e80C"
-  .sc-format-button.sc-center:before
-    content: "\e80D"
-  .sc-format-button.sc-justify:before
-    content: "\e80E"
   .sc-format-button.sc-superscript:before
     content: "\e80F"
   .sc-format-button.sc-subscript:before

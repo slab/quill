@@ -26,6 +26,7 @@ describe('Tooltip', ->
   describe('_position()', ->
     beforeEach( ->
       @quill.root = makeBounder(50, 50, 600, 400)
+      @quill.root.ownerDocument = @tooltip.container.ownerDocument
       @tooltip.container = makeBounder(60, 60, 200, 100)
     )
 

@@ -10,6 +10,7 @@ class Tooltip
       '.tooltip':
         'background-color': '#fff'
         'border': '1px solid #000'
+        'top': '0px'
         'white-space': 'nowrap'
         'z-index': '2000'
       '.tooltip a':
@@ -49,12 +50,27 @@ class Tooltip
     @range = @quill.getSelection()
     [left, top] = this._position(reference)
     [left, top] = this._limit(left, top)
+    left += @quill.root.ownerDocument.defaultView.window.pageXOffset
+    top += @quill.root.ownerDocument.defaultView.window.pageYOffset
     @container.style.left = "#{left}px"
     @container.style.top = "#{top}px"
     @container.focus()
 
+  _getBounds: ->
+    bounds = @quill.root.getBoundingClientRect()
+    scrollX = @quill.root.ownerDocument.defaultView.window.pageXOffset
+    scrollY = @quill.root.ownerDocument.defaultView.window.pageYOffset
+    return {
+      left:   bounds.left + scrollX
+      right:  bounds.right + scrollX
+      top:    bounds.top + scrollY
+      bottom: bounds.bottom + scrollY
+      width:  bounds.width
+      height: bounds.height
+    }
+
   _limit: (left, top) ->
-    editorRect = @quill.root.getBoundingClientRect()
+    editorRect = this._getBounds()
     toolbarRect = @container.getBoundingClientRect()
     left = Math.min(editorRect.right - toolbarRect.width, left)   # right boundary
     left = Math.max(editorRect.left, left)                        # left boundary
@@ -64,7 +80,7 @@ class Tooltip
 
   _position: (reference) ->
     toolbarRect = @container.getBoundingClientRect()
-    editorRect = @quill.root.getBoundingClientRect()
+    editorRect = this._getBounds()
     if reference?
       referenceBounds = reference.getBoundingClientRect()
       left = referenceBounds.left + referenceBounds.width/2 - toolbarRect.width/2

@@ -99,19 +99,24 @@ class SnowTheme extends DefaultTheme
     )
 
   extendToolbar: (module) ->
-    _.each(module.container.querySelectorAll('.sc-font, .sc-size'), (select) =>
-      picker = new Picker(select)
-      @pickers.push(picker)
-    )
-    _.each(['color', 'background'], (css) =>
-      select = module.container.querySelector(".sc-#{css}")
+    _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
+      select = module.container.querySelector(".sc-#{format}")
       return unless select?
-      picker = new ColorPicker(select)
-      @pickers.push(picker)
-      DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button')
-      _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
-        DOM.addClass(item, 'sc-primary-color') if i < 7
-      )
+      switch format
+        when 'font', 'size'
+          picker = new Picker(select)
+        when 'align'
+          picker = new Picker(select)
+          DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button')
+          _.each(picker.container.querySelectorAll('.sc-picker-item'), (item) ->
+            DOM.addClass(item, 'sc-format-button')
+          )
+        when 'color', 'background'
+          picker = new ColorPicker(select)
+          _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
+            DOM.addClass(item, 'sc-primary-color') if i < 7
+          )
+      @pickers.push(picker) if picker?
     )
 
 

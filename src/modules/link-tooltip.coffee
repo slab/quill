@@ -5,6 +5,7 @@ Tooltip = require('./tooltip')
 
 class LinkTooltip extends Tooltip
   @DEFAULTS:
+    maxLength: 50
     styles:
       '.link-tooltip-container':
         'padding': '5px 10px'
@@ -53,7 +54,7 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    @quill.formatText(@range, 'link', url) if @range?
+    @quill.formatText(@range, 'link', url, 'user') if @range?
     this.setMode(url, false)
 
   setMode: (url, edit = false) ->
@@ -65,19 +66,16 @@ class LinkTooltip extends Tooltip
       )
     else
       @link.href = url
-      DOM.setText(@link, url)
+      text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
+      DOM.setText(@link, text)
     DOM.toggleClass(@container, 'editing', edit)
 
   _findAnchor: (range) ->
     [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
     node = leaf.node if leaf?
     while node?
-      if node.tagName == 'A'
-        this.setMode(node.href, false)
-        this.show(node)
-        return node
-      else
-        node = node.parentNode
+      return node if node.tagName == 'A'
+      node = node.parentNode
     return null
 
   _onToolbar: (range, value) ->

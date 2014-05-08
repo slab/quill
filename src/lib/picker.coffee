@@ -26,17 +26,18 @@ class Picker
       if @select.selectedIndex > -1
         item = @container.querySelectorAll('.sc-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
-      this.selectItem(item, option, false)
+      this.selectItem(item, false)
       DOM.toggleClass(@label, 'sc-active', option != DOM.getDefaultOption(@select))
     )
 
   buildItem: (picker, option, index) ->
     item = @select.ownerDocument.createElement('div')
+    item.setAttribute('data-value', option.getAttribute('value'))
     DOM.addClass(item, 'sc-picker-item')
     DOM.setText(item, DOM.getText(option))
-    this.selectItem(item, option, false) if @select.selectedIndex == index
+    this.selectItem(item, false) if @select.selectedIndex == index
     DOM.addEventListener(item, 'click', =>
-      this.selectItem(item, option, true)
+      this.selectItem(item, true)
       this.close()
     )
     return item
@@ -56,15 +57,18 @@ class Picker
   close: ->
     DOM.removeClass(@container, 'sc-expanded')
 
-  selectItem: (item, option, trigger) ->
+  selectItem: (item, trigger) ->
     selected = @container.querySelector('.sc-selected')
     DOM.removeClass(selected, 'sc-selected') if selected?
     if item?
+      value = item.getAttribute('data-value')
       DOM.addClass(item, 'sc-selected')
       DOM.setText(@label, DOM.getText(item))
-      DOM.selectOption(@select, option, trigger)
+      DOM.selectOption(@select, value, trigger)
+      @label.setAttribute('data-value', value)
     else
       @label.innerHTML = '&nbsp;'
+      @label.removeAttribute('data-value')
 
 
 module.exports = Picker
