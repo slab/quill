@@ -14,11 +14,11 @@ describe('Picker', ->
   it('constructor', ->
     expect(@container.querySelector('.sc-picker').outerHTML).toEqualHTML('
       <div title="Font" class="sc-font sc-picker">
-        <div class="sc-picker-label">Sans Serif</div>
+        <div data-value="sans-serif" class="sc-picker-label">Sans Serif</div>
         <div class="sc-picker-options">
-          <div class="sc-picker-item sc-selected">Sans Serif</div>
-          <div class="sc-picker-item">Serif</div>
-          <div class="sc-picker-item">Monospace</div>
+          <div data-value="sans-serif" class="sc-picker-item sc-selected">Sans Serif</div>
+          <div data-value="serif" class="sc-picker-item">Serif</div>
+          <div data-value="monospace" class="sc-picker-item">Monospace</div>
         </div>
       </div>
     ')
@@ -35,37 +35,25 @@ describe('Picker', ->
 
   it('select picker item', ->
     Quill.DOM.triggerEvent(@container.querySelector('.sc-picker-options').lastChild, 'click')
-    expect(@container.querySelector('.sc-picker')).toEqualHTML('
-      <div class="sc-picker-label sc-active">Monospace</div>
-      <div class="sc-picker-options">
-        <div class="sc-picker-item">Sans Serif</div>
-        <div class="sc-picker-item">Serif</div>
-        <div class="sc-picker-item sc-selected">Monospace</div>
-      </div>
-    ')
+    expect(Quill.DOM.getText(@picker.label)).toEqual('Monospace')
+    _.each(@container.querySelectorAll('.sc-picker-item'), (item, i) ->
+      expect(Quill.DOM.hasClass(item, 'sc-selected')).toBe(i == 2)
+    )
   )
 
   it('select option', ->
     Quill.DOM.selectOption(@select, 'serif')
-    expect(@container.querySelector('.sc-picker')).toEqualHTML('
-      <div class="sc-picker-label sc-active">Serif</div>
-      <div class="sc-picker-options">
-        <div class="sc-picker-item">Sans Serif</div>
-        <div class="sc-picker-item sc-selected">Serif</div>
-        <div class="sc-picker-item">Monospace</div>
-      </div>
-    ')
+    expect(Quill.DOM.getText(@picker.label)).toEqual('Serif')
+    _.each(@container.querySelectorAll('.sc-picker-item'), (item, i) ->
+      expect(Quill.DOM.hasClass(item, 'sc-selected')).toBe(i == 1)
+    )
   )
 
   it('select option mixed', ->
     Quill.DOM.selectOption(@select, '')
-    expect(@container.querySelector('.sc-picker')).toEqualHTML('
-      <div class="sc-picker-label sc-active">&nbsp;</div>
-      <div class="sc-picker-options">
-        <div class="sc-picker-item">Sans Serif</div>
-        <div class="sc-picker-item">Serif</div>
-        <div class="sc-picker-item">Monospace</div>
-      </div>
-    ')
+    expect(Quill.DOM.getText(@picker.label).trim()).toEqual('')
+    _.each(@container.querySelectorAll('.sc-picker-item'), (item, i) ->
+      expect(Quill.DOM.hasClass(item, 'sc-selected')).toBe(false)
+    )
   )
 )
