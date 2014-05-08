@@ -103,6 +103,39 @@
   display: block;
   margin: -1px;
 }
+.sc-picker.sc-align .sc-picker-label:after {
+  content: normal;
+}
+.sc-picker.sc-align .sc-picker-options {
+  margin-left: 3px;
+  margin-top: 24px;
+  padding-left: 0px;
+  padding-right: 0px;
+  width: 32px;
+}
+.sc-picker.sc-align .sc-picker-label[data-value=left]:before,
+.sc-picker.sc-align .sc-picker-item[data-value=left]:before {
+  content: "\e80B";
+}
+.sc-picker.sc-align .sc-picker-label[data-value=right]:before,
+.sc-picker.sc-align .sc-picker-item[data-value=right]:before {
+  content: "\e80C";
+}
+.sc-picker.sc-align .sc-picker-label[data-value=center]:before,
+.sc-picker.sc-align .sc-picker-item[data-value=center]:before {
+  content: "\e80D";
+}
+.sc-picker.sc-align .sc-picker-label[data-value=justify]:before,
+.sc-picker.sc-align .sc-picker-item[data-value=justify]:before {
+  content: "\e80E";
+}
+.sc-picker.sc-align.sc-expanded .sc-picker-label {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+.sc-picker.sc-align.sc-expanded .sc-picker-options {
+  margin-left: 2px;
+}
 .sc-picker.sc-color-picker {
   float: left;
 }
@@ -181,18 +214,6 @@
 }
 .sc-toolbar-container .sc-format-button.sc-outdent:before {
   content: "\e80A";
-}
-.sc-toolbar-container .sc-format-button.sc-left:before {
-  content: "\e80B";
-}
-.sc-toolbar-container .sc-format-button.sc-right:before {
-  content: "\e80C";
-}
-.sc-toolbar-container .sc-format-button.sc-center:before {
-  content: "\e80D";
-}
-.sc-toolbar-container .sc-format-button.sc-justify:before {
-  content: "\e80E";
 }
 .sc-toolbar-container .sc-format-button.sc-superscript:before {
   content: "\e80F";

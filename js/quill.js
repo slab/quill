@@ -2,7 +2,69 @@
 module.exports = _dereq_('./src/quill');
 
 
-},{"./src/quill":40}],"x/3aRz":[function(_dereq_,module,exports){
+},{"./src/quill":40}],2:[function(_dereq_,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    if (canPost) {
+        var queue = [];
+        window.addEventListener('message', function (ev) {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+function noop() {}
+
+process.on = noop;
+process.once = noop;
+process.off = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+}
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
+},{}],"x/3aRz":[function(_dereq_,module,exports){
 (function (process){
 ;!function(exports, undefined) {
 
@@ -566,71 +628,9 @@ module.exports = _dereq_('./src/quill');
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/grunt-browserify/node_modules/watchify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":4}],"eventemitter2":[function(_dereq_,module,exports){
+}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":2}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
-},{}],4:[function(_dereq_,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-
-process.nextTick = (function () {
-    var canSetImmediate = typeof window !== 'undefined'
-    && window.setImmediate;
-    var canPost = typeof window !== 'undefined'
-    && window.postMessage && window.addEventListener
-    ;
-
-    if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
-    }
-
-    if (canPost) {
-        var queue = [];
-        window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-
-        return function nextTick(fn) {
-            queue.push(fn);
-            window.postMessage('process-tick', '*');
-        };
-    }
-
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
-    };
-})();
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-
-function noop() {}
-
-process.on = noop;
-process.once = noop;
-process.off = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-}
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
 /**
@@ -9052,9 +9052,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":11,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
-module.exports=_dereq_('38mxji');
-},{}],"38mxji":[function(_dereq_,module,exports){
+},{"./op":11,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
 (function() {
   module.exports = {
     Delta: _dereq_('./delta'),
@@ -9066,7 +9064,9 @@ module.exports=_dereq_('38mxji');
 
 }).call(this);
 
-},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],15:[function(_dereq_,module,exports){
+},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],"tandem-core":[function(_dereq_,module,exports){
+module.exports=_dereq_('38mxji');
+},{}],15:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
 },{"./javascript/diff_match_patch_uncompressed.js":16}],16:[function(_dereq_,module,exports){
@@ -11264,6 +11264,8 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -11939,12 +11941,10 @@ this['DIFF_EQUAL'] = DIFF_EQUAL;
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],19:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.0",
+  "version": "0.13.2-rc1",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -12935,7 +12935,24 @@ Format = (function() {
     align: {
       type: Format.types.LINE,
       style: 'textAlign',
-      "default": 'left'
+      "default": 'left',
+      prepare: function(doc, value) {
+        var command;
+        switch (value) {
+          case 'left':
+            command = 'justifyLeft';
+            break;
+          case 'center':
+            command = 'justifyCenter';
+            break;
+          case 'right':
+            command = 'justifyRight';
+            break;
+          case 'justify':
+            command = 'justifyFull';
+        }
+        return doc.execCommand(command, false);
+      }
     }
   };
 
@@ -13176,13 +13193,13 @@ ColorPicker = (function(_super) {
   function ColorPicker() {
     ColorPicker.__super__.constructor.apply(this, arguments);
     DOM.addClass(this.container, 'sc-color-picker');
+    DOM.addClass(this.container.querySelector('.sc-picker-label'), 'sc-format-button');
   }
 
   ColorPicker.prototype.buildItem = function(picker, option, index) {
     var item;
     item = ColorPicker.__super__.buildItem.call(this, picker, option, index);
     item.style.backgroundColor = option.value;
-    DOM.setText(item, '');
     return item;
   };
 
@@ -13322,7 +13339,7 @@ Picker = (function() {
           item = _this.container.querySelectorAll('.sc-picker-item')[_this.select.selectedIndex];
           option = _this.select.options[_this.select.selectedIndex];
         }
-        _this.selectItem(item, option, false);
+        _this.selectItem(item, false);
         return DOM.toggleClass(_this.label, 'sc-active', option !== DOM.getDefaultOption(_this.select));
       };
     })(this));
@@ -13331,14 +13348,15 @@ Picker = (function() {
   Picker.prototype.buildItem = function(picker, option, index) {
     var item;
     item = this.select.ownerDocument.createElement('div');
+    item.setAttribute('data-value', option.getAttribute('value'));
     DOM.addClass(item, 'sc-picker-item');
     DOM.setText(item, DOM.getText(option));
     if (this.select.selectedIndex === index) {
-      this.selectItem(item, option, false);
+      this.selectItem(item, false);
     }
     DOM.addEventListener(item, 'click', (function(_this) {
       return function() {
-        _this.selectItem(item, option, true);
+        _this.selectItem(item, true);
         return _this.close();
       };
     })(this));
@@ -13368,18 +13386,21 @@ Picker = (function() {
     return DOM.removeClass(this.container, 'sc-expanded');
   };
 
-  Picker.prototype.selectItem = function(item, option, trigger) {
-    var selected;
+  Picker.prototype.selectItem = function(item, trigger) {
+    var selected, value;
     selected = this.container.querySelector('.sc-selected');
     if (selected != null) {
       DOM.removeClass(selected, 'sc-selected');
     }
     if (item != null) {
+      value = item.getAttribute('data-value');
       DOM.addClass(item, 'sc-selected');
       DOM.setText(this.label, DOM.getText(item));
-      return DOM.selectOption(this.select, option, trigger);
+      DOM.selectOption(this.select, value, trigger);
+      return this.label.setAttribute('data-value', value);
     } else {
-      return this.label.innerHTML = '&nbsp;';
+      this.label.innerHTML = '&nbsp;';
+      return this.label.removeAttribute('data-value');
     }
   };
 
@@ -14465,36 +14486,21 @@ MultiCursor = (function(_super) {
   };
 
   MultiCursor.prototype._updateCursor = function(cursor) {
-    var guide, leaf, leftNode, offset, rightNode, _ref, _ref1;
+    var didSplit, guide, leaf, leftNode, offset, rightNode, _ref, _ref1;
     _ref = this.quill.editor.doc.findLeafAt(cursor.index, true), leaf = _ref[0], offset = _ref[1];
+    guide = this.container.ownerDocument.createElement('span');
     if (leaf != null) {
-      if (offset === 0) {
-        this._moveCursor(cursor, leaf.node.parentNode);
-      } else if (offset === leaf.length) {
-        if (DOM.BLOCK_TAGS[leaf.node.parentNode.tagName] != null) {
-          guide = this.container.ownerDocument.createElement('span');
-          DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
-          leaf.node.parentNode.appendChild(guide);
-          this._moveCursor(cursor, guide);
-          DOM.removeNode(guide);
-        } else {
-          this._moveCursor(cursor, leaf.node.parentNode, 'right');
-        }
-      } else {
-        _ref1 = Utils.splitNode(leaf.node, offset), leftNode = _ref1[0], rightNode = _ref1[1];
-        guide = this.container.ownerDocument.createElement('span');
-        DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
-        leaf.node.parentNode.insertBefore(guide, rightNode);
-        this._moveCursor(cursor, guide);
-        DOM.removeNode(guide);
-        DOM.normalize(leaf.node.parentNode);
-      }
+      _ref1 = Utils.splitNode(leaf.node, offset), leftNode = _ref1[0], rightNode = _ref1[1], didSplit = _ref1[2];
+      DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
+      leaf.node.parentNode.insertBefore(guide, rightNode);
     } else {
-      guide = this.container.ownerDocument.createElement('span');
       DOM.setText(guide, DOM.NOBREAK_SPACE);
       this.quill.root.appendChild(guide);
-      this._moveCursor(cursor, guide);
-      DOM.removeNode(guide);
+    }
+    this._moveCursor(cursor, guide);
+    DOM.removeNode(guide);
+    if (didSplit) {
+      DOM.normalize(leaf.node.parentNode);
     }
     return cursor.dirty = false;
   };
@@ -14594,6 +14600,9 @@ Toolbar = (function() {
       'strike': 'strike',
       'underline': 'underline'
     },
+    LINE: {
+      'align': 'align'
+    },
     SELECT: {
       'align': 'align',
       'background': 'background',
@@ -14628,6 +14637,8 @@ Toolbar = (function() {
           }
           if (range.isCollapsed()) {
             _this.quill.prepareFormat(format, value);
+          } else if (Toolbar.formats.LINE[format] != null) {
+            _this.quill.formatLine(range, format, value, 'user');
           } else {
             _this.quill.formatText(range, format, value, 'user');
           }
@@ -14719,6 +14730,13 @@ Toolbar = (function() {
   };
 
   Toolbar.prototype._getActive = function(range) {
+    var leafFormats, lineFormats;
+    leafFormats = this._getLeafActive(range);
+    lineFormats = this._getLineActive(range);
+    return _.defaults(leafFormats, lineFormats);
+  };
+
+  Toolbar.prototype._getLeafActive = function(range) {
     var contents, formatsArr, start;
     if (range.isCollapsed()) {
       start = Math.max(0, range.start - 1);
@@ -14727,6 +14745,24 @@ Toolbar = (function() {
       contents = this.quill.getContents(range);
     }
     formatsArr = _.map(contents.ops, 'attributes');
+    return this._intersectFormats(formatsArr);
+  };
+
+  Toolbar.prototype._getLineActive = function(range) {
+    var firstLine, formats, formatsArr, lastLine, offset, _ref, _ref1;
+    formatsArr = [];
+    _ref = this.quill.editor.doc.findLineAt(range.start), firstLine = _ref[0], offset = _ref[1];
+    _ref1 = this.quill.editor.doc.findLineAt(range.end), lastLine = _ref1[0], offset = _ref1[1];
+    if ((lastLine != null) && lastLine === firstLine) {
+      lastLine = lastLine.next;
+    }
+    while ((firstLine != null) && firstLine !== lastLine) {
+      formats = {
+        'align': firstLine.formats['align']
+      };
+      formatsArr.push(firstLine.formats);
+      firstLine = firstLine.next;
+    }
     return this._intersectFormats(formatsArr);
   };
 
@@ -15428,6 +15464,16 @@ Quill = (function(_super) {
 
   Quill.prototype.focus = function() {
     return this.root.focus();
+  };
+
+  Quill.prototype.formatLine = function(start, end, name, value, source) {
+    var formats, line, offset, _ref, _ref1;
+    _ref = this._buildParams(start, end, name, value, source), start = _ref[0], end = _ref[1], formats = _ref[2], source = _ref[3];
+    _ref1 = this.editor.doc.findLineAt(end), line = _ref1[0], offset = _ref1[1];
+    if (line != null) {
+      end += line.length - offset;
+    }
+    return this.formatText(start, end, formats, source);
   };
 
   Quill.prototype.formatText = function(start, end, name, value, source) {
@@ -16143,28 +16189,37 @@ SnowTheme = (function(_super) {
   };
 
   SnowTheme.prototype.extendToolbar = function(module) {
-    _.each(module.container.querySelectorAll('.sc-font, .sc-size'), (function(_this) {
-      return function(select) {
-        var picker;
-        picker = new Picker(select);
-        return _this.pickers.push(picker);
-      };
-    })(this));
-    return _.each(['color', 'background'], (function(_this) {
-      return function(css) {
+    return _.each(['color', 'background', 'font', 'size', 'align'], (function(_this) {
+      return function(format) {
         var picker, select;
-        select = module.container.querySelector(".sc-" + css);
+        select = module.container.querySelector(".sc-" + format);
         if (select == null) {
           return;
         }
-        picker = new ColorPicker(select);
-        _this.pickers.push(picker);
-        DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button');
-        return _.each(picker.container.querySelectorAll('.sc-picker-item'), function(item, i) {
-          if (i < 7) {
-            return DOM.addClass(item, 'sc-primary-color');
-          }
-        });
+        switch (format) {
+          case 'font':
+          case 'size':
+            picker = new Picker(select);
+            break;
+          case 'align':
+            picker = new Picker(select);
+            DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button');
+            _.each(picker.container.querySelectorAll('.sc-picker-item'), function(item) {
+              return DOM.addClass(item, 'sc-format-button');
+            });
+            break;
+          case 'color':
+          case 'background':
+            picker = new ColorPicker(select);
+            _.each(picker.container.querySelectorAll('.sc-picker-item'), function(item, i) {
+              if (i < 7) {
+                return DOM.addClass(item, 'sc-primary-color');
+              }
+            });
+        }
+        if (picker != null) {
+          return _this.pickers.push(picker);
+        }
       };
     })(this));
   };
