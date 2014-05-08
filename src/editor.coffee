@@ -27,23 +27,14 @@ class Editor
     @root.setAttribute('contenteditable', enabled)
 
   applyDelta: (delta, source) ->
-    localDelta = this._update()
-    if localDelta
-      tempDelta = localDelta
-      localDelta = localDelta.transform(delta, true)
-      delta = delta.transform(tempDelta, false)
-      @delta = @doc.toDelta()   # Only for our error check below, otherwise dont need to update yet
-    unless delta.isIdentity()   # Follows may have turned delta into the identity
-      throw new Error("Trying to apply delta to incorrect doc length") if delta.startLength != @delta.endLength
-      delta = this._trackDelta( =>
-        delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
-        @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
-      )
-      @delta = @doc.toDelta()
-      @innerHTML = @root.innerHTML
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != 'silent'
-    if localDelta and !localDelta.isIdentity() and source != 'silent'
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
+    this._update()
+    delta = this._trackDelta( =>
+      delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
+      @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
+    )
+    @delta = @doc.toDelta()
+    @innerHTML = @root.innerHTML
+    @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != 'silent'
 
   checkUpdate: (source = 'user') ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
