@@ -628,8 +628,8 @@ process.chdir = function (dir) {
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason.chen/Dropbox/jetcode/quill-another/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":2}],"eventemitter2":[function(_dereq_,module,exports){
+}).call(this,_dereq_("/Users/jason/Dropbox/jetcode/quill/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+},{"/Users/jason/Dropbox/jetcode/quill/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":2}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
@@ -11264,8 +11264,6 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -11941,10 +11939,12 @@ module.exports=_dereq_('Fq7WE+');
   root._.string = root._.str = _s;
 }(this, String);
 
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
 },{}],19:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.2-rc1",
+  "version": "0.13.2",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -12681,32 +12681,17 @@ Editor = (function() {
   };
 
   Editor.prototype.applyDelta = function(delta, source) {
-    var localDelta, tempDelta;
-    localDelta = this._update();
-    if (localDelta) {
-      tempDelta = localDelta;
-      localDelta = localDelta.transform(delta, true);
-      delta = delta.transform(tempDelta, false);
-      this.delta = this.doc.toDelta();
-    }
-    if (!delta.isIdentity()) {
-      if (delta.startLength !== this.delta.endLength) {
-        throw new Error("Trying to apply delta to incorrect doc length");
-      }
-      delta = this._trackDelta((function(_this) {
-        return function() {
-          delta.apply(_this._insertAt, _this._deleteAt, _this._formatAt, _this);
-          return _this.selection.shiftAfter(0, 0, _.bind(_this.doc.optimizeLines, _this.doc));
-        };
-      })(this));
-      this.delta = this.doc.toDelta();
-      this.innerHTML = this.root.innerHTML;
-      if (delta && source !== 'silent') {
-        this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, delta, source);
-      }
-    }
-    if (localDelta && !localDelta.isIdentity() && source !== 'silent') {
-      return this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, localDelta, 'user');
+    this._update();
+    delta = this._trackDelta((function(_this) {
+      return function() {
+        delta.apply(_this._insertAt, _this._deleteAt, _this._formatAt, _this);
+        return _this.selection.shiftAfter(0, 0, _.bind(_this.doc.optimizeLines, _this.doc));
+      };
+    })(this));
+    this.delta = this.doc.toDelta();
+    this.innerHTML = this.root.innerHTML;
+    if (delta && source !== 'silent') {
+      return this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, delta, source);
     }
   };
 
