@@ -13,6 +13,7 @@ Modules =
   ImageTooltip  : require('./modules/image-tooltip')
   Keyboard      : require('./modules/keyboard')
   LinkTooltip   : require('./modules/link-tooltip')
+  MarkupTooltip : require('./modules/markup-tooltip')
   MultiCursor   : require('./modules/multi-cursor')
   PasteManager  : require('./modules/paste-manager')
   Toolbar       : require('./modules/toolbar')
