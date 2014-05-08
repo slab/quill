@@ -7,7 +7,7 @@ grayColor = #ccc
 lightGrayColor = #ddd
 fontNamePickerWidth = 105px
 fontSizePickerWidth = 80px
-textAlignPickerWidth = 30px
+textAlignPickerWidth = 32px
 pickerPadding = 8px
 pickerWidth = 50px
 toolbarPadding = 8px
@@ -106,11 +106,13 @@ toolbarPadding = 8px
     margin: -1px
 
 .sc-picker.sc-align
-  .sc-picker-label
-    width: textAlignPickerWidth
+  .sc-picker-label:after
+    content: normal
   .sc-picker-options
     margin-left: inputMargin
     margin-top: 24px
+    padding-left: 0px
+    padding-right: 0px
     width: textAlignPickerWidth
   .sc-picker-label[data-value=left]:before, .sc-picker-item[data-value=left]:before
     content: "\e80B"
