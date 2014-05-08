@@ -252,10 +252,10 @@ describe('Editor', ->
     it('local change', ->
       @editor.doc.setHTML('<p>0123</p>')
       @editor.checkUpdate()
-      delta = Tandem.Delta.makeInsertDelta(5, 2, '|')
+      delta = Tandem.Delta.makeInsertDelta(5, 4, '|')
       @editor.root.querySelector('p').innerHTML = '01a23'
       @editor.applyDelta(delta)
-      expected = '<p>01|a23</p>'
+      expected = '<p>01a23|</p>'
       expect(@editor.root).toEqualHTML(expected, true)
     )
   )
