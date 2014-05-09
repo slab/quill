@@ -23,6 +23,7 @@ Quill.Module =
   Keyboard      : require('../src/modules/keyboard')
   ImageTooltip  : require('../src/modules/image-tooltip')
   LinkTooltip   : require('../src/modules/link-tooltip')
+  MarkupTooltip : require('../src/modules/markup-tooltip')
   MultiCursor   : require('../src/modules/multi-cursor')
   PasteManager  : require('../src/modules/paste-manager')
   Toolbar       : require('../src/modules/toolbar')

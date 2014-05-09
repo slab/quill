@@ -8,10 +8,10 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON  : { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
+    BUTTON  : { 'bold', 'image', 'italic', 'link', 'markup', 'strike', 'underline' }
     LINE    : { 'align' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
-    TOOLTIP : { 'image', 'link' }
+    TOOLTIP : { 'image', 'link', 'markup' }
 
   constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
