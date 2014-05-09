@@ -13,6 +13,7 @@ class UndoManager
 
   constructor: (@quill, @options = {}) ->
     @lastRecorded = 0
+    @emittedDelta = null
     this.clear()
     this.initListeners()
 
@@ -27,9 +28,11 @@ class UndoManager
         return false
       )
     )
-    @ignoringChanges = false
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, origin) =>
-      this.record(delta, @oldDelta) unless @ignoringChanges and origin == 'user'
+      if delta.isEqual(@emittedDelta)
+        @emittedDelta = null
+        return
+      this.record(delta, @oldDelta)
       @oldDelta = @quill.getContents()
     )
 
@@ -86,18 +89,12 @@ class UndoManager
     if @stack[source].length > 0
       change = @stack[source].pop()
       @lastRecorded = 0
-      this._ignoreChanges( =>
-        @quill.updateContents(change[source], 'user')
-        index = this._getLastChangeIndex(change[source])
-        @quill.setSelection(index, index)
-      )
+      @emittedDelta = change[source]
+      @quill.updateContents(change[source], 'user')
+      @emittedDelta = null
+      index = this._getLastChangeIndex(change[source])
+      @quill.setSelection(index, index)
       @stack[dest].push(change)
-
-  _ignoreChanges: (fn) ->
-    oldIgnoringChanges = @ignoringChanges
-    @ignoringChanges = true
-    fn.call(this)
-    @ignoringChanges = oldIgnoringChanges
 
 
 module.exports = UndoManager
