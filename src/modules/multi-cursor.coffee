@@ -62,7 +62,7 @@ class MultiCursor extends EventEmitter2
   removeCursor: (userId) ->
     cursor = @cursors[userId]
     this.emit(MultiCursor.events.CURSOR_REMOVED, cursor)
-    cursor.elem.parentNode.removeChild(cursor.elem) of cursor?
+    cursor.elem.parentNode.removeChild(cursor.elem) if cursor?
     delete @cursors[userId]
 
   setCursor: (userId, index, name, color, update = true) ->
