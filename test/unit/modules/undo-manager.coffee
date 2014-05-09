@@ -91,6 +91,20 @@ describe('UndoManager', ->
       , @undoManager.options.delay * 1.25)
     )
 
+    it('multiple undos', (done) ->
+      expect(@undoManager.stack.undo.length).toEqual(0)
+      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 12, 'e'))
+      contents = @quill.getContents()
+      setTimeout( =>
+        @quill.updateContents(Tandem.Delta.makeInsertDelta(14, 13, 's'))
+        @undoManager.undo()
+        expect(@quill.getContents()).toEqual(contents)
+        @undoManager.undo()
+        expect(@quill.getContents()).toEqual(@original)
+        done()
+      , @undoManager.options.delay * 1.25)
+    )
+
     it('hotkeys', ->
       @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 0, 'A '))
       changed = @quill.getContents()
