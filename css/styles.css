@@ -1,9 +1,6 @@
 @media (min-width: 768px) {
-  .github-ribbon {
-    display: block !important;
-  }
-  #navigation-container .navbar-right {
-    margin-right: 100px;
+  .github-button {
+    margin: 15px 0px 0px !important;
   }
   #sidebar-dropdown {
     display: none;
@@ -45,11 +42,10 @@ body.home {
   background-color: #fafafa;
 }
 
-.github-ribbon {
-  display: none;
-  position: absolute;
-  right: 0px;
-  z-index: 10;
+.github-button {
+  height: 20px;
+  margin: 0px 15px 5px;
+  width: 100px;
 }
 
 .quill-wrapper {
