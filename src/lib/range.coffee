@@ -15,7 +15,11 @@ class Range
 
   shift: (index, length) ->
     [@start, @end] = _.map([@start, @end], (pos) ->
-      return if index <= pos then pos + length else Math.min(index + length, pos)
+      return pos if index > pos
+      if length >= 0
+        return pos + length
+      else
+        return Math.max(index, pos + length)
     )
 
   isCollapsed: ->

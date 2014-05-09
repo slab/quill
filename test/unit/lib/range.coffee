@@ -29,17 +29,21 @@ describe('Range', ->
         initial: [10, 20]
         index: 15, length: -2
         expected: [10, 18]
-      'between remove beyond start':
+      'before remove beyond start':
         initial: [10, 20]
-        index: 15, length: -10
+        index: 5, length: -10
         expected: [5, 10]
-      'after remove beyond start':
+      'after remove':
         initial: [10, 20]
         index: 25, length: -20
-        expected: [5, 5]
+        expected: [10, 20]
       'remove on cursor':
         initial: [10, 10]
         index: 10, length: -5
+        expected: [10, 10]
+      'after remove beyond start':
+        initial: [10, 10]
+        index: 5, length: -50
         expected: [5, 5]
 
     _.each(tests, (test, name) ->
