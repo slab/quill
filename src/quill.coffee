@@ -113,16 +113,32 @@ class Quill extends EventEmitter2
     this.formatText(start, end, formats, source)
 
   formatText: (start, end, name, value, source) ->
-    [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    return unless end > start
-    formats = _.reduce(formats, (formats, value, name) =>
-      format = @editor.doc.formats[name]
-      # TODO warn if no format
-      formats[name] = null unless value and value != format.config.default     # false will be composed and kept in attributes
-      return formats
-    , formats)
-    delta = Tandem.Delta.makeRetainDelta(this.getLength(), start, end - start, formats)
-    @editor.applyDelta(delta, source)
+    @batchFormatText([[start, end, name, value, source]])
+
+  batchFormatText: (paramArray) ->
+    mergedDelta =
+      ops: []
+      startLength: 0
+      endLength: Number.MAX_VALUE
+
+    for params in paramArray
+      [start, end, formats, source] = this._buildParams.apply(this, params)
+      return unless end > start
+      formats = _.reduce(formats, (formats, value, name) =>
+        format = @editor.doc.formats[name]
+        # TODO warn if no format
+        formats[name] = null unless value and value != format.config.default     # false will be composed and kept in attributes
+        return formats
+      , formats)
+      delta = Tandem.Delta.makeRetainDelta(this.getLength(), start, end - start, formats)
+
+      mergedDelta.__proto__ = delta.__proto__
+      mergedDelta.ops = mergedDelta.ops.concat(delta.ops)
+      mergedDelta.startLength = Math.min(mergedDelta.startLength, delta.startLength)
+      mergedDelta.endLength = Math.max(mergedDelta.endLength, delta.endLength)
+
+    @editor.applyDelta(mergedDelta, source)
+
 
   getContents: (start = 0, end = null) ->
     if _.isObject(start)
