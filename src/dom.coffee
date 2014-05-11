@@ -164,7 +164,7 @@ DOM =
       else return ""
 
   getTextNodes: (root) ->
-    walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+    walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false)
     nodes = []
     while node = walker.nextNode()
       nodes.push(node)
