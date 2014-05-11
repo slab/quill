@@ -13,24 +13,29 @@ describe('Picker', ->
 
   it('constructor', ->
     expect(@container.querySelector('.sc-picker').outerHTML).toEqualHTML('
-      <div title="Font" class="sc-font sc-picker">
-        <div data-value="sans-serif" class="sc-picker-label">Sans Serif</div>
-        <div class="sc-picker-options">
-          <div data-value="sans-serif" class="sc-picker-item sc-selected">Sans Serif</div>
-          <div data-value="serif" class="sc-picker-item">Serif</div>
-          <div data-value="monospace" class="sc-picker-item">Monospace</div>
-        </div>
-      </div>
+      <span title="Font" class="sc-font sc-picker">
+        <span data-value="sans-serif" class="sc-picker-label">Sans Serif</span>
+        <span class="sc-picker-options">
+          <span data-value="sans-serif" class="sc-picker-item sc-selected">Sans Serif</span>
+          <span data-value="serif" class="sc-picker-item">Serif</span>
+          <span data-value="monospace" class="sc-picker-item">Monospace</span>
+        </span>
+      </span>
     ')
   )
 
-  it('expand/close', ->
+  it('expand/close', (done) ->
     label = @container.querySelector('.sc-picker-label')
     picker = @container.querySelector('.sc-picker')
     Quill.DOM.triggerEvent(label, 'click')
-    expect(Quill.DOM.hasClass(picker, 'sc-expanded')).toBe(true)
-    Quill.DOM.triggerEvent(label, 'click')
-    expect(Quill.DOM.hasClass(picker, 'sc-expanded')).toBe(false)
+    _.defer( ->
+      expect(Quill.DOM.hasClass(picker, 'sc-expanded')).toBe(true)
+      Quill.DOM.triggerEvent(label, 'click')
+      _.defer( ->
+        expect(Quill.DOM.hasClass(picker, 'sc-expanded')).toBe(false)
+        done()
+      )
+    )
   )
 
   it('select picker item', ->
