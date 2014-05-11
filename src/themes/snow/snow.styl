@@ -36,7 +36,7 @@ formatInput =
 
 .sc-toolbar-container
   box-sizing: border-box
-  padding: toolbarPadding
+  padding: toolbarPadding toolbarPadding toolbarPadding - 1 toolbarPadding
   user-select: none
   -webkit-user-select: none
   -moz-user-select: none
@@ -62,6 +62,7 @@ formatInput =
     cursor: pointer
     font-family: 'quill-snow'
     font-size: inputSize
+    margin-top: 1px     // Some reason buttons look more aligned with this
     text-align: center
     width: inputHeight
   .sc-format-button:hover, .sc-format-button.sc-active, .sc-format-button.sc-on
@@ -158,6 +159,8 @@ formatInput =
   width: fontSizePickerWidth
 .sc-picker.sc-align
   font-family: 'quill-snow'
+  .sc-picker-label
+    margin-top: 1px     // Some reason button look more aligned with this
   .sc-picker-label:after
     content: normal
   .sc-picker-options
