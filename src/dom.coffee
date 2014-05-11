@@ -163,6 +163,13 @@ DOM =
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
 
+  getTextNodes: (root) ->
+    walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+    nodes = []
+    while node = walker.nextNode()
+      nodes.push(node)
+    return nodes
+
   getWindow: (node) ->
     return node.ownerDocument.defaultView or node.ownerDocument.parentWindow
 

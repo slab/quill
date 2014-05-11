@@ -103,20 +103,18 @@ class SnowTheme extends DefaultTheme
       select = module.container.querySelector(".sc-#{format}")
       return unless select?
       switch format
-        when 'font', 'size'
+        when 'font', 'size', 'align'
           picker = new Picker(select)
-        when 'align'
-          picker = new Picker(select)
-          DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button')
-          _.each(picker.container.querySelectorAll('.sc-picker-item'), (item) ->
-            DOM.addClass(item, 'sc-format-button')
-          )
         when 'color', 'background'
           picker = new ColorPicker(select)
           _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
             DOM.addClass(item, 'sc-primary-color') if i < 7
           )
       @pickers.push(picker) if picker?
+    )
+    _.each(DOM.getTextNodes(module.container), (node) ->
+      if DOM.getText(node).trim().length == 0
+        DOM.removeNode(node)
     )
 
 
