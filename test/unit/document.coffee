@@ -288,6 +288,13 @@ describe('Document', ->
         <p><b></b><br></p>
       ', true)
     )
+
+    it('setHTML() with comment', ->
+      @doc.setHTML('
+        <!-- HTML Comment -->
+        <p>Test</p>
+      ')
+    )
   )
 
   describe('toDelta()', ->

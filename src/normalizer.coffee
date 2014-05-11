@@ -104,6 +104,9 @@ Normalizer =
         break
       curNode = curNode.nextSibling
 
+  stripComments: (html) ->
+    html = html.replace(/<!--[\s\S]*?-->/g, '')
+
   stripWhitespace: (html) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s+/, '').replace(/\s+$/, '')
@@ -123,15 +126,15 @@ Normalizer =
         node.removeAttribute('style')
 
   whitelistTags: (node) ->
-    return unless DOM.isElement(node)
+    return node unless DOM.isElement(node)
     node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]) if Normalizer.ALIASES[node.tagName]?
     if !Normalizer.TAGS[node.tagName]?
       if DOM.BLOCK_TAGS[node.tagName]?
         node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
-      else if node.hasAttributes()
-        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
-      else
+      else if !node.hasAttributes() and node.firstChild?
         node = DOM.unwrap(node)
+      else
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
     return node
 
   # Wrap inline nodes with block tags
