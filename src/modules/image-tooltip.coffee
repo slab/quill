@@ -77,8 +77,9 @@ class ImageTooltip extends Tooltip
     if @range
       @preview.innerHTML = '<span>Preview</span>'
       @textbox.value = ''
-      @quill.insertEmbed(@range.end, 'image', url, 'user')
-      @quill.setSelection(@range.end + 1, @range.end + 1)
+      index = @range.end
+      @quill.insertEmbed(index, 'image', url, 'user')
+      @quill.setSelection(index + 1, index + 1)
     this.hide()
 
   _onToolbar: (range, value) ->
