@@ -21,10 +21,14 @@ class Leaf extends LinkedList.Node
     return @formats
 
   deleteText: (offset, length) ->
+    return unless length > 0
     @text = @text.slice(0, offset) + @text.slice(offset + length)
     @length = @text.length
-    targetNode = @node.firstChild or @node
-    DOM.setText(targetNode, @text)
+    if DOM.EMBED_TAGS[@node.tagName]?
+      textNode = @node.ownerDocument.createTextNode(@text)
+      @node = DOM.replaceNode(textNode, @node)
+    else
+      DOM.setText(@node, @text)
 
   insertText: (offset, text) ->
     @text = @text.slice(0, offset) + text + @text.slice(offset)
