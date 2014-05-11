@@ -122,7 +122,8 @@ class Quill extends EventEmitter2
       endLength: Number.MAX_VALUE
 
     for params in paramArray
-      [start, end, formats, source] = this._buildParams.apply(this, params)
+      # apply cannot be used due to quirks in IE 9
+      [start, end, formats, source] = this._buildParams(params[0], params[1], params[2], params[3], params[4])
       return unless end > start
       formats = _.reduce(formats, (formats, value, name) =>
         format = @editor.doc.formats[name]
