@@ -15,6 +15,9 @@
     "tandem-core": "~0.5.2",
     "underscore.string": "~2.3.3"
   },
+  "browserify": {
+    "transform": ["coffeeify"]
+  },
   "devDependencies": {
     "async": "~0.6.2",
     "coffeeify": "~0.6.0",
