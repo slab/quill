@@ -18,6 +18,7 @@
   "browserify": {
     "transform": ["coffeeify"]
   },
+  "main": "index.coffee",
   "devDependencies": {
     "async": "~0.6.2",
     "coffeeify": "~0.6.0",
