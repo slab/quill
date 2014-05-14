@@ -1,16 +1,31 @@
-inputHeight = 16px
-inputMargin = 3px
-inputPadding = 4px
 blackColor = #454545
 blueColor = #06c
 grayColor = #ccc
 lightGrayColor = #ddd
+whiteColor = #fff
+
 fontNamePickerWidth = 105px
 fontSizePickerWidth = 80px
 textAlignPickerWidth = 32px
-pickerPadding = 8px
-pickerWidth = 50px
+
+inputSize = 12px
+inputPadding = 6px
+separatorMargin = 4px
+inputHeight = inputSize + 2*inputPadding
 toolbarPadding = 8px
+
+colorItemMargin = 2px
+colorItemWidth = 16px
+colorItemsPerRow = 7
+
+formatGroupMargin = 15px
+
+formatInput =
+  box-sizing: border-box
+  display: inline-block
+  height: inputHeight
+  line-height: inputHeight
+  vertical-align: middle
 
 @font-face
   font-family: 'quill-snow'
@@ -18,155 +33,38 @@ toolbarPadding = 8px
   font-weight: normal
   src: url('assets/quill-snow.eot') format('embedded-opentype'), url('assets/quill-snow.woff') format('woff')
 
+
 .sc-toolbar-container
   box-sizing: border-box
-  color: blackColor
-  font-family: 'Helvetica', 'Arial', sans-serif
-  padding: toolbarPadding (15px - pickerPadding) (toolbarPadding - 3px)
+  padding: toolbarPadding toolbarPadding toolbarPadding - 1 toolbarPadding
   user-select: none
   -webkit-user-select: none
   -moz-user-select: none
   -ms-user-select: none
   .sc-format-group
-    box-sizing: content-box
     display: inline-block
-    float: left
-    line-height: inputHeight
-    margin-right: 15px
+    margin-right: formatGroupMargin
+    vertical-align: middle
+  .sc-format-separator
+    box-sizing: border-box
+    background-color: lightGrayColor
+    display: inline-block
+    height: inputHeight - inputPadding
+    margin-left: separatorMargin
+    margin-right: separatorMargin
+    vertical-align: middle
+    width: 1px
   .sc-format-button
+    {formatInput}
     background-position: center center
     background-repeat: no-repeat
-    box-sizing: content-box
+    box-sizing: border-box
     cursor: pointer
     font-family: 'quill-snow'
-    font-size: 12px
-    display: inline-block
-    float: left
-    height: inputHeight
-    margin-left: inputMargin
-    margin-right: inputMargin
-    padding: inputPadding
+    font-size: inputSize
+    margin-top: 1px     // Some reason buttons look more aligned with this
     text-align: center
-    width: 16px
-  .sc-format-separator
-    background-color: lightGrayColor
-    box-sizing: content-box
-    display: inline-block
-    float: left
-    height: inputHeight
-    margin-bottom: inputPadding
-    margin-top: inputPadding
-    width: 1px
-// Clearfloat
-.sc-toolbar-container:after
-  clear: both
-  content: ""
-  display: table
-
-.sc-picker
-  box-sizing: content-box
-  font-size: 13px
-  display: inline-block
-  font-weight: bold
-  position: relative
-  .sc-picker-label
-    box-sizing: content-box
-    cursor: pointer
-    padding: inputPadding pickerPadding
-  .sc-picker-label:after
-    content: "\e812"
-    float: right
-    font-family: 'quill-snow'
-    font-size: 12px
-    margin-left: 8px
-  .sc-picker-label.sc-active, .sc-picker-label:hover
-    color: blueColor
-  .sc-picker-options
-    background-color: #fff
-    box-sizing: content-box
-    display: none
-    padding: inputPadding pickerPadding
-    position: absolute
-    .sc-picker-item
-      box-sizing: content-box
-      cursor: pointer
-      padding-bottom: inputPadding
-      padding-top: inputPadding
-    .sc-picker-item.selected, .sc-picker-item:hover
-      color: blueColor
-.sc-picker.sc-expanded
-  .sc-picker-label
-    border: 1px solid grayColor
-    color: grayColor
-    margin: -1px
-  .sc-picker-options
-    border: 1px solid grayColor
-    box-shadow: rgba(0,0,0,0.2) 0 2px 8px
-    display: block
-    margin: -1px
-
-.sc-picker.sc-align
-  .sc-picker-label:after
-    content: normal
-  .sc-picker-options
-    margin-left: inputMargin
-    margin-top: 24px
-    padding-left: 0px
-    padding-right: 0px
-    width: textAlignPickerWidth
-  .sc-picker-label[data-value=left]:before, .sc-picker-item[data-value=left]:before
-    content: "\e80B"
-  .sc-picker-label[data-value=right]:before, .sc-picker-item[data-value=right]:before
-    content: "\e80C"
-  .sc-picker-label[data-value=center]:before, .sc-picker-item[data-value=center]:before
-    content: "\e80D"
-  .sc-picker-label[data-value=justify]:before, .sc-picker-item[data-value=justify]:before
-    content: "\e80E"
-
-.sc-picker.sc-align.sc-expanded
-  .sc-picker-label
-    margin-left: inputMargin - 1px
-    margin-right: inputMargin - 1px
-  .sc-picker-options
-    margin-left: inputMargin - 1px
-
-.sc-picker.sc-color-picker
-  float: left
-  .sc-picker-label
-    background-position: center center
-  .sc-picker-label:after
-    content: normal
-  .sc-picker-options
-    height: 106px
-    margin-left: inputMargin
-    margin-top: 24px
-    padding: 6px
-    position: absolute
-    width: 140px
-    .sc-picker-item
-      float: left
-      height: 16px
-      margin: 2px
-      padding: 0px
-      width: 16px
-    .sc-picker-item.selected, .sc-picker-item:hover
-      border: 1px solid #000
-      margin: 1px
-.sc-picker.sc-color-picker.sc-expanded
-  .sc-picker-label
-    margin-left: inputMargin - 1px
-    margin-right: inputMargin - 1px
-  .sc-picker-options
-    margin-left: inputMargin - 1px
-
-/* Fix for iOS not losing hover state after click */
-.sc-toolbar-container.ios
-  .sc-format-button:hover
-    color: inherit
-  .sc-format-button.sc-active, .sc-format-button.sc-on
-    color: blueColor
-
-.sc-toolbar-container
+    width: inputHeight
   .sc-format-button:hover, .sc-format-button.sc-active, .sc-format-button.sc-on
     color: blueColor
   .sc-format-button.sc-bold:before
@@ -196,24 +94,110 @@ toolbarPadding = 8px
   .sc-format-button.sc-authorship:before
     content: "\e811"
 
-  .sc-font
-    width: fontNamePickerWidth
-    .sc-picker-options
-      width: fontNamePickerWidth - 2*pickerPadding
-  .sc-size
-    width: fontSizePickerWidth
-    .sc-picker-options
-      width: fontSizePickerWidth - 2*pickerPadding
+/* Fix for iOS not losing hover state after click */
+.sc-toolbar-container.ios
+  .sc-format-button:hover
+    color: inherit
+  .sc-format-button.sc-active, .sc-format-button.sc-on
+    color: blueColor
 
-  .sc-color, .sc-background
-    .sc-picker-options
-      .sc-picker-item.sc-primary-color
-        margin-bottom: 8px
-      .sc-picker-item.sc-primary-color.sc-selected, .sc-picker-item.sc-primary-color:hover
-        margin-bottom: 7px
+.sc-picker
+  box-sizing: border-box
+  font-size: 13px
+  display: inline-block
+  font-family: 'Helvetica', 'Arial', sans-serif
+  font-weight: bold
+  position: relative
+  .sc-picker-label
+    {formatInput}
+    background-color: whiteColor
+    border: 1px solid transparent
+    cursor: pointer
+    padding-left: toolbarPadding
+    padding-right: toolbarPadding
+    position: relative
+    width: 100%
+  .sc-picker-label:after
+    content: "\e812"
+    float: right
+    font-family: 'quill-snow'
+    font-size: 12px
+    margin-left: 8px
+  .sc-picker-label.sc-active, .sc-picker-label:hover
+    color: blueColor
+  .sc-picker-options
+    background-color: whiteColor
+    border: 1px solid transparent
+    box-sizing: border-box
+    display: none
+    padding: 0.5*toolbarPadding toolbarPadding
+    position: absolute
+    width: 100%
+    .sc-picker-item
+      box-sizing: border-box
+      cursor: pointer
+      display: block
+      padding-bottom: inputPadding
+      padding-top: inputPadding
+    .sc-picker-item.selected, .sc-picker-item:hover
+      color: blueColor
+.sc-picker.sc-expanded
+  .sc-picker-label
+    border-color: grayColor
+    color: grayColor
+    z-index: 2
+  .sc-picker-options
+    border-color: grayColor
+    box-shadow: rgba(0,0,0,0.2) 0 2px 8px
+    display: block
+    margin-top: -1px
+    z-index: 1
 
-  for $format in color background
-    .sc-picker.sc-{$format} .sc-picker-label
-      background-image: url('assets/' + $format + '.png')
-    .sc-picker.sc-{$format} .sc-picker-label.sc-active, .sc-picker.sc-{$format} .sc-picker-label:hover, .sc-picker.sc-{$format}.sc-expanded .sc-picker-label
-      background-image: url('assets/' + $format + '-active.png')
+.sc-picker.sc-font
+  width: fontNamePickerWidth
+.sc-picker.sc-size
+  width: fontSizePickerWidth
+.sc-picker.sc-align
+  font-family: 'quill-snow'
+  .sc-picker-label
+    margin-top: 1px     // Some reason button look more aligned with this
+  .sc-picker-label:after
+    content: normal
+  .sc-picker-options
+    width: textAlignPickerWidth
+  .sc-picker-label[data-value=left]:before, .sc-picker-item[data-value=left]:before
+    content: "\e80B"
+  .sc-picker-label[data-value=right]:before, .sc-picker-item[data-value=right]:before
+    content: "\e80C"
+  .sc-picker-label[data-value=center]:before, .sc-picker-item[data-value=center]:before
+    content: "\e80D"
+  .sc-picker-label[data-value=justify]:before, .sc-picker-item[data-value=justify]:before
+    content: "\e80E"
+
+.sc-picker.sc-color-picker
+  width: 32px   // Remove when we switch to using font icons
+  .sc-picker-label
+    background-position: center center
+    background-repeat: no-repeat
+  .sc-picker-label:after
+    content: normal
+  .sc-picker-options
+    padding: inputPadding
+    width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
+    .sc-picker-item
+      border: 1px solid transparent
+      float: left
+      height: colorItemWidth
+      margin: colorItemMargin
+      padding: 0px
+      width: colorItemWidth
+    .sc-picker-item.sc-primary-color
+      margin-bottom: 8px
+    .sc-picker-item.selected, .sc-picker-item:hover
+      border-color: #000
+
+for $format in color background
+  .sc-picker.sc-{$format} .sc-picker-label
+    background-image: url('assets/' + $format + '.png')
+  .sc-picker.sc-{$format} .sc-picker-label.sc-active, .sc-picker.sc-{$format} .sc-picker-label:hover, .sc-picker.sc-{$format}.sc-expanded .sc-picker-label
+    background-image: url('assets/' + $format + '-active.png')

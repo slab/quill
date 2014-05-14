@@ -102,6 +102,7 @@ class Document
     @lines.remove(line)
 
   setHTML: (html) ->
+    html = Normalizer.stripComments(html)
     html = Normalizer.stripWhitespace(html)
     @root.innerHTML = html
     @lines = new LinkedList()

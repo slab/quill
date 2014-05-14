@@ -4,12 +4,10 @@ Normalizer = require('../normalizer')
 
 
 class Picker
-  @TEMPLATE: '
-    <div class="sc-picker-label"></div>
-    <div class="sc-picker-options"></div>'
+  @TEMPLATE: '<span class="sc-picker-label"></span><span class="sc-picker-options"></span>'
 
   constructor: (@select) ->
-    @container = @select.ownerDocument.createElement('div')
+    @container = @select.ownerDocument.createElement('span')
     this.buildPicker()
     DOM.addClass(@container, 'sc-picker')
     @select.style.display = 'none'
@@ -19,8 +17,9 @@ class Picker
       return true
     )
     DOM.addEventListener(@label, 'click', =>
-      DOM.toggleClass(@container, 'sc-expanded')
-      return false    # Avoid document click handler that closes all dropdowns
+      _.defer( =>
+        DOM.toggleClass(@container, 'sc-expanded')
+      )
     )
     DOM.addEventListener(@select, 'change', =>
       if @select.selectedIndex > -1
@@ -31,7 +30,7 @@ class Picker
     )
 
   buildItem: (picker, option, index) ->
-    item = @select.ownerDocument.createElement('div')
+    item = @select.ownerDocument.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
     DOM.addClass(item, 'sc-picker-item')
     DOM.setText(item, DOM.getText(option))

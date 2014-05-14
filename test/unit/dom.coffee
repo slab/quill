@@ -205,6 +205,11 @@ describe('DOM', ->
       Quill.DOM.setText(@container.firstChild, 'A')
       expect($(@container).text()).toEqual('A123')
     )
+
+    it('getTextNodes()', ->
+      textNodes = Quill.DOM.getTextNodes(@container)
+      expect(textNodes.length).toEqual(4)
+    )
   )
 
   describe('manipulation', ->
