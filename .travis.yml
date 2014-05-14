@@ -12,16 +12,20 @@ branches:
     - /^sauce-.+$/
     - /^v\d+\.\d+\.\d+$/
 env:
-  - SAUCE_BROWSER=remote-mac-chrome
-  - SAUCE_BROWSER=remote-mac-firefox
-  - SAUCE_BROWSER=remote-mac-safari
-  - SAUCE_BROWSER=remote-windows-chrome
-  - SAUCE_BROWSER=remote-windows-firefox
-  - SAUCE_BROWSER=remote-windows-ie-11
-  - SAUCE_BROWSER=remote-windows-ie-10
-  - SAUCE_BROWSER=remote-windows-ie-9
-  - SAUCE_BROWSER=remote-linux-chrome
-  - SAUCE_BROWSER=remote-linux-firefox
-  - SAUCE_BROWSER=remote-ipad
-  - SAUCE_BROWSER=remote-iphone
-  - SAUCE_BROWSER=remote-android
+  global:
+    - secure: "SeXav7dHVe5RBv7pzdd4LIYNLLF2STKPuIw8lpo2X48Czb96wMLKYRcpehQiB8YPpACYryE0mpjEt0+qNLC2kxGLV57JP44ABTBbWS7MvrUwaKJILxr4usVInIJPHFPksN+oNjHwuRN8jR8a2pKQ0GBHeCcwKt0lIZZ8b7O12X4="
+    - secure: "WupAm8AsMBqQ8jZ1tLuXw8gHBUwV7NqwdcJ/idR8Fqum2RcHUzT5zlxlbmvjUMI6rJgjFLLF4gTHwNG219wskpuzEdXxLjpBqSmpUWyTlq2rgE9U/wT8H5/VWgH6v6Py1ZY6GxLdcC+Tqxf/5xupMfPoXPKbxpQ0DkYcVEfJkcU="
+  matrix:
+    - SAUCE_BROWSER=remote-mac-chrome
+    - SAUCE_BROWSER=remote-mac-firefox
+    - SAUCE_BROWSER=remote-mac-safari
+    - SAUCE_BROWSER=remote-windows-chrome
+    - SAUCE_BROWSER=remote-windows-firefox
+    - SAUCE_BROWSER=remote-windows-ie-11
+    - SAUCE_BROWSER=remote-windows-ie-10
+    - SAUCE_BROWSER=remote-windows-ie-9
+    - SAUCE_BROWSER=remote-linux-chrome
+    - SAUCE_BROWSER=remote-linux-firefox
+    - SAUCE_BROWSER=remote-ipad
+    - SAUCE_BROWSER=remote-iphone
+    - SAUCE_BROWSER=remote-android

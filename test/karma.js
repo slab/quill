@@ -73,8 +73,6 @@ module.exports = function(config) {
     singleRun: true,
     sauceLabs: {
       testName: 'Quill',
-      username: 'quill',
-      accessKey: 'adc0c0cf-221b-46f1-81b9-a4429b722c2e',
       build: os.hostname() + '-' + _.random(16*16*16*16).toString(16),
       options: {
         'public': 'public',
@@ -87,9 +85,9 @@ module.exports = function(config) {
   if (process.env.TRAVIS) {
     config.transports = ['xhr-polling'];
     config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID;
-    if (process.env.TRAVIS_BRANCH == 'master' && !process.env.TRAVIS_PULL_REQUEST) {
-      config.sauceLabs.username = 'quill-master';
-      config.sauceLabs.accessKey = '685c8996-7b70-4543-8167-58f8e88a8484';
+    if (process.env.TRAVIS_BRANCH !== 'master' || process.env.TRAVIS_PULL_REQUEST) {
+      config.sauceLabs.username = 'quill';
+      config.sauceLabs.accessKey = 'adc0c0cf-221b-46f1-81b9-a4429b722c2e';
     }
   }
 }
