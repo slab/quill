@@ -85,7 +85,7 @@ module.exports = function(config) {
   if (process.env.TRAVIS) {
     config.transports = ['xhr-polling'];
     config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID;
-    if (process.env.TRAVIS_BRANCH !== 'master' || process.env.TRAVIS_PULL_REQUEST) {
+    if (process.env.TRAVIS_BRANCH !== 'master' || process.env.TRAVIS_PULL_REQUEST !== 'false') {
       config.sauceLabs.username = 'quill';
       config.sauceLabs.accessKey = 'adc0c0cf-221b-46f1-81b9-a4429b722c2e';
     }
