@@ -45,7 +45,6 @@
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.4.0",
-    "mocha": "~1.18.0",
     "protractor": "~0.21.0"
   },
   "engines": {
