@@ -11264,6 +11264,8 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -11939,12 +11941,10 @@ this['DIFF_EQUAL'] = DIFF_EQUAL;
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],19:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -12180,6 +12180,7 @@ Document = (function() {
   };
 
   Document.prototype.setHTML = function(html) {
+    html = Normalizer.stripComments(html);
     html = Normalizer.stripWhitespace(html);
     this.root.innerHTML = html;
     this.lines = new LinkedList();
@@ -12419,6 +12420,15 @@ DOM = {
       default:
         return "";
     }
+  },
+  getTextNodes: function(root) {
+    var node, nodes, walker;
+    walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    nodes = [];
+    while (node = walker.nextNode()) {
+      nodes.push(node);
+    }
+    return nodes;
   },
   getWindow: function(node) {
     return node.ownerDocument.defaultView || node.ownerDocument.parentWindow;
@@ -12681,17 +12691,32 @@ Editor = (function() {
   };
 
   Editor.prototype.applyDelta = function(delta, source) {
-    this._update();
-    delta = this._trackDelta((function(_this) {
-      return function() {
-        delta.apply(_this._insertAt, _this._deleteAt, _this._formatAt, _this);
-        return _this.selection.shiftAfter(0, 0, _.bind(_this.doc.optimizeLines, _this.doc));
-      };
-    })(this));
-    this.delta = this.doc.toDelta();
-    this.innerHTML = this.root.innerHTML;
-    if (delta && source !== 'silent') {
-      return this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, delta, source);
+    var localDelta, tempDelta;
+    localDelta = this._update();
+    if (localDelta) {
+      tempDelta = localDelta;
+      localDelta = localDelta.transform(delta, true);
+      delta = delta.transform(tempDelta, false);
+      this.delta = this.doc.toDelta();
+    }
+    if (!delta.isIdentity()) {
+      if (delta.startLength !== this.delta.endLength) {
+        console.warn("Trying to apply delta to incorrect doc length", delta, this.delta);
+      }
+      delta = this._trackDelta((function(_this) {
+        return function() {
+          delta.apply(_this._insertAt, _this._deleteAt, _this._formatAt, _this);
+          return _this.selection.shiftAfter(0, 0, _.bind(_this.doc.optimizeLines, _this.doc));
+        };
+      })(this));
+      this.delta = this.doc.toDelta();
+      this.innerHTML = this.root.innerHTML;
+      if (delta && source !== 'silent') {
+        this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, delta, source);
+      }
+    }
+    if (localDelta && !localDelta.isIdentity() && source !== 'silent') {
+      return this.quill.emit(this.quill.constructor.events.TEXT_CHANGE, localDelta, 'user');
     }
   };
 
@@ -13132,11 +13157,18 @@ Leaf = (function(_super) {
   };
 
   Leaf.prototype.deleteText = function(offset, length) {
-    var targetNode;
+    var textNode;
+    if (!(length > 0)) {
+      return;
+    }
     this.text = this.text.slice(0, offset) + this.text.slice(offset + length);
     this.length = this.text.length;
-    targetNode = this.node.firstChild || this.node;
-    return DOM.setText(targetNode, this.text);
+    if (DOM.EMBED_TAGS[this.node.tagName] != null) {
+      textNode = this.node.ownerDocument.createTextNode(this.text);
+      return this.node = DOM.replaceNode(textNode, this.node);
+    } else {
+      return DOM.setText(this.node, this.text);
+    }
   };
 
   Leaf.prototype.insertText = function(offset, text) {
@@ -13178,7 +13210,6 @@ ColorPicker = (function(_super) {
   function ColorPicker() {
     ColorPicker.__super__.constructor.apply(this, arguments);
     DOM.addClass(this.container, 'sc-color-picker');
-    DOM.addClass(this.container.querySelector('.sc-picker-label'), 'sc-format-button');
   }
 
   ColorPicker.prototype.buildItem = function(picker, option, index) {
@@ -13296,11 +13327,11 @@ DOM = _dereq_('../dom');
 Normalizer = _dereq_('../normalizer');
 
 Picker = (function() {
-  Picker.TEMPLATE = '<div class="sc-picker-label"></div> <div class="sc-picker-options"></div>';
+  Picker.TEMPLATE = '<span class="sc-picker-label"></span><span class="sc-picker-options"></span>';
 
   function Picker(select) {
     this.select = select;
-    this.container = this.select.ownerDocument.createElement('div');
+    this.container = this.select.ownerDocument.createElement('span');
     this.buildPicker();
     DOM.addClass(this.container, 'sc-picker');
     this.select.style.display = 'none';
@@ -13313,8 +13344,9 @@ Picker = (function() {
     })(this));
     DOM.addEventListener(this.label, 'click', (function(_this) {
       return function() {
-        DOM.toggleClass(_this.container, 'sc-expanded');
-        return false;
+        return _.defer(function() {
+          return DOM.toggleClass(_this.container, 'sc-expanded');
+        });
       };
     })(this));
     DOM.addEventListener(this.select, 'change', (function(_this) {
@@ -13332,7 +13364,7 @@ Picker = (function() {
 
   Picker.prototype.buildItem = function(picker, option, index) {
     var item;
-    item = this.select.ownerDocument.createElement('div');
+    item = this.select.ownerDocument.createElement('span');
     item.setAttribute('data-value', option.getAttribute('value'));
     DOM.addClass(item, 'sc-picker-item');
     DOM.setText(item, DOM.getText(option));
@@ -13427,10 +13459,13 @@ Range = (function() {
   Range.prototype.shift = function(index, length) {
     var _ref;
     return _ref = _.map([this.start, this.end], function(pos) {
-      if (index <= pos) {
+      if (index > pos) {
+        return pos;
+      }
+      if (length >= 0) {
         return pos + length;
       } else {
-        return Math.min(index + length, pos);
+        return Math.max(index, pos + length);
       }
     }), this.start = _ref[0], this.end = _ref[1], _ref;
   };
@@ -13880,7 +13915,7 @@ ImageTooltip = (function(_super) {
   };
 
   ImageTooltip.prototype.insertImage = function() {
-    var url;
+    var index, url;
     url = this._normalizeURL(this.textbox.value);
     if (this.range == null) {
       this.range = new Range(0, 0);
@@ -13888,8 +13923,9 @@ ImageTooltip = (function(_super) {
     if (this.range) {
       this.preview.innerHTML = '<span>Preview</span>';
       this.textbox.value = '';
-      this.quill.insertEmbed(this.range.end, 'image', url, 'user');
-      this.quill.setSelection(this.range.end + 1, this.range.end + 1);
+      index = this.range.end;
+      this.quill.insertEmbed(index, 'image', url, 'user');
+      this.quill.setSelection(index + 1, index + 1);
     }
     return this.hide();
   };
@@ -14360,7 +14396,9 @@ MultiCursor = (function(_super) {
     var cursor;
     cursor = this.cursors[userId];
     this.emit(MultiCursor.events.CURSOR_REMOVED, cursor);
-    cursor.elem.parentNode.removeChild(cursor.elem) in (cursor != null);
+    if (cursor != null) {
+      cursor.elem.parentNode.removeChild(cursor.elem);
+    }
     return delete this.cursors[userId];
   };
 
@@ -14958,6 +14996,7 @@ UndoManager = (function() {
     this.quill = quill;
     this.options = options != null ? options : {};
     this.lastRecorded = 0;
+    this.emittedDelta = null;
     this.clear();
     this.initListeners();
   }
@@ -14975,12 +15014,13 @@ UndoManager = (function() {
         });
       };
     })(this));
-    this.ignoringChanges = false;
     return this.quill.on(this.quill.constructor.events.TEXT_CHANGE, (function(_this) {
       return function(delta, origin) {
-        if (!(_this.ignoringChanges && origin === 'user')) {
-          _this.record(delta, _this.oldDelta);
+        if (delta.isEqual(_this.emittedDelta)) {
+          _this.emittedDelta = null;
+          return;
         }
+        _this.record(delta, _this.oldDelta);
         return _this.oldDelta = _this.quill.getContents();
       };
     })(this));
@@ -15050,28 +15090,17 @@ UndoManager = (function() {
   };
 
   UndoManager.prototype._change = function(source, dest) {
-    var change;
+    var change, index;
     if (this.stack[source].length > 0) {
       change = this.stack[source].pop();
       this.lastRecorded = 0;
-      this._ignoreChanges((function(_this) {
-        return function() {
-          var index;
-          _this.quill.updateContents(change[source], 'user');
-          index = _this._getLastChangeIndex(change[source]);
-          return _this.quill.setSelection(index, index);
-        };
-      })(this));
+      this.emittedDelta = change[source];
+      this.quill.updateContents(change[source], 'user');
+      this.emittedDelta = null;
+      index = this._getLastChangeIndex(change[source]);
+      this.quill.setSelection(index, index);
       return this.stack[dest].push(change);
     }
-  };
-
-  UndoManager.prototype._ignoreChanges = function(fn) {
-    var oldIgnoringChanges;
-    oldIgnoringChanges = this.ignoringChanges;
-    this.ignoringChanges = true;
-    fn.call(this);
-    return this.ignoringChanges = oldIgnoringChanges;
   };
 
   return UndoManager;
@@ -15219,6 +15248,9 @@ Normalizer = {
     }
     return _results;
   },
+  stripComments: function(html) {
+    return html = html.replace(/<!--[\s\S]*?-->/g, '');
+  },
   stripWhitespace: function(html) {
     html = html.replace(/^\s+/, '').replace(/\s+$/, '');
     html = html.replace(/\>\s+\</g, '><');
@@ -15240,7 +15272,7 @@ Normalizer = {
   },
   whitelistTags: function(node) {
     if (!DOM.isElement(node)) {
-      return;
+      return node;
     }
     if (Normalizer.ALIASES[node.tagName] != null) {
       node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]);
@@ -15248,10 +15280,10 @@ Normalizer = {
     if (Normalizer.TAGS[node.tagName] == null) {
       if (DOM.BLOCK_TAGS[node.tagName] != null) {
         node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG);
-      } else if (node.hasAttributes()) {
-        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
-      } else {
+      } else if (!node.hasAttributes() && (node.firstChild != null)) {
         node = DOM.unwrap(node);
+      } else {
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
       }
     }
     return node;
@@ -16174,7 +16206,7 @@ SnowTheme = (function(_super) {
   };
 
   SnowTheme.prototype.extendToolbar = function(module) {
-    return _.each(['color', 'background', 'font', 'size', 'align'], (function(_this) {
+    _.each(['color', 'background', 'font', 'size', 'align'], (function(_this) {
       return function(format) {
         var picker, select;
         select = module.container.querySelector(".sc-" + format);
@@ -16184,14 +16216,8 @@ SnowTheme = (function(_super) {
         switch (format) {
           case 'font':
           case 'size':
-            picker = new Picker(select);
-            break;
           case 'align':
             picker = new Picker(select);
-            DOM.addClass(picker.container.querySelector('.sc-picker-label'), 'sc-format-button');
-            _.each(picker.container.querySelectorAll('.sc-picker-item'), function(item) {
-              return DOM.addClass(item, 'sc-format-button');
-            });
             break;
           case 'color':
           case 'background':
@@ -16207,6 +16233,11 @@ SnowTheme = (function(_super) {
         }
       };
     })(this));
+    return _.each(DOM.getTextNodes(module.container), function(node) {
+      if (DOM.getText(node).trim().length === 0) {
+        return DOM.removeNode(node);
+      }
+    });
   };
 
   return SnowTheme;
