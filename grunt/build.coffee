@@ -41,6 +41,7 @@ module.exports = (grunt) ->
 
   grunt.config('clean',
     all: ['build']
+    coffee: ['lib']
     coverage: ['src/**/*.js']
   )
 

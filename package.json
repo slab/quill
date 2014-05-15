@@ -60,6 +60,7 @@
   },
   "scripts": {
     "prepublish": "grunt coffee:src",
+    "postpublish": "grunt clean:coffee",
     "test": "grunt test"
   },
   "keywords": ["editor", "rich text", "wysiwyg"]
