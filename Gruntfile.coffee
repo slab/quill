@@ -15,7 +15,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('default', ['build'])
 
-  grunt.registerTask('build', ['clean', 'copy', 'browserify:quill', 'browserify:tandem', 'uglify', 'concat', 'coffee', 'jade', 'stylus'])
+  grunt.registerTask('build', ['clean', 'browserify:quill', 'browserify:tandem', 'uglify', 'concat', 'coffee', 'jade', 'stylus'])
 
   # TODO is there a better way to do this...
   grunt.registerTask('dev', 'All the tasks for Quill development', ->
@@ -33,4 +33,4 @@ module.exports = (grunt) ->
   grunt.registerTask('test:unit', ['karma:test'])
   grunt.registerTask('test:unit:remote', ['karma:remote-mac', 'karma:remote-windows', 'karma:remote-linux', 'karma:remote-mobile', 'karma:remote-legacy'])
 
-  grunt.registerTask('test:coverage', ['coffee:coverage', 'shell:instrument', 'browserify:quill', 'karma:coverage', 'clean:coverage', 'browserify:quill'])
+  grunt.registerTask('test:coverage', ['coffee:src', 'shell:instrument', 'browserify:quill', 'karma:coverage', 'clean:coverage', 'browserify:quill'])

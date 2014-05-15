@@ -1,7 +1,7 @@
 build
 node_modules
 coverage
+lib
 tests/webdriver/fuzzer_output
 tests/webdriver/logs
 *.log
-TODO

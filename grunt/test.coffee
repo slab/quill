@@ -50,5 +50,5 @@ module.exports = (grunt) ->
   grunt.config('shell',
     options:
       stdout: true
-    instrument: { command: './node_modules/.bin/istanbul instrument build/src -o src/' }
+    instrument: { command: './node_modules/.bin/istanbul instrument lib/ -o src/' }
   )

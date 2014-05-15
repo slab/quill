@@ -15,7 +15,7 @@ module.exports = (grunt) ->
         bundleOptions:
           standalone: 'Quill'
       files: [
-        { 'build/quill.js': ['index.coffee'] }
+        { 'build/quill.js': ['src/quill.coffee'] }
         { 'build/quill.exposed.js': ['test/quill.coffee'] }
       ]
     'tandem':
@@ -29,7 +29,7 @@ module.exports = (grunt) ->
           standalone: 'Quill'
         keepAlive: true
         watch: true
-      files: [{ 'build/quill.js': ['index.coffee'] }]
+      files: [{ 'build/quill.js': ['src/quill.coffee'] }]
     'quill-exposed-watchify':
       options:
         bundleOptions:
@@ -50,10 +50,13 @@ module.exports = (grunt) ->
       dest: 'build/'
       src: ['demo/scripts/*.coffee', 'test/**/*.coffee']
       ext: '.js'
-    coverage:
+    src:
+      options:
+        bare: true
+      cwd: 'src/'
+      dest: 'lib/'
       expand: true
-      dest: 'build/'
-      src: ['src/**/*.coffee']
+      src: ['**/*.coffee']
       ext: '.js'
   )
 
@@ -68,13 +71,6 @@ module.exports = (grunt) ->
     quill:
       'build/quill.js': ['build/quill.js']
       'build/quill.min.js': ['build/quill.min.js']
-  )
-
-  grunt.config('copy'
-    build:
-      expand: true
-      dest: 'build/'
-      src: ['lib/*.js', 'demo/images/*.png']
   )
 
   grunt.config('jade',
