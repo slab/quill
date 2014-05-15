@@ -81,12 +81,14 @@ Constructor for creating Deltas.
 
 {% highlight javascript %}
 var delta = new Delta(5, 13, [
-  { start: 0, end: 5 },                  // Keep the first 5 characters
+  { start: 0, end: 5 },                 // Keep the first 5 characters
   { text: 'Quill', { bold: true } }     // Insert a bolded 'Quill'
 ]);
 {% endhighlight %}
 
 ### Delta.prototype.apply
+
+Will call given insert, delete, and format functions based on the instructions of the current delta.
 
 **Methods**
 
