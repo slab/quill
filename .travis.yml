@@ -14,8 +14,8 @@ branches:
     - /^v\d+\.\d+\.\d+$/
 env:
   global:
-    - secure: "SeXav7dHVe5RBv7pzdd4LIYNLLF2STKPuIw8lpo2X48Czb96wMLKYRcpehQiB8YPpACYryE0mpjEt0+qNLC2kxGLV57JP44ABTBbWS7MvrUwaKJILxr4usVInIJPHFPksN+oNjHwuRN8jR8a2pKQ0GBHeCcwKt0lIZZ8b7O12X4="
-    - secure: "WupAm8AsMBqQ8jZ1tLuXw8gHBUwV7NqwdcJ/idR8Fqum2RcHUzT5zlxlbmvjUMI6rJgjFLLF4gTHwNG219wskpuzEdXxLjpBqSmpUWyTlq2rgE9U/wT8H5/VWgH6v6Py1ZY6GxLdcC+Tqxf/5xupMfPoXPKbxpQ0DkYcVEfJkcU="
+    - secure: "Smk4w36atd3Ttj0XsoEZr6dMplTWsK52E70EpxTV72hTQIYa3w5uHMEKpg/sZ9ZFfYQF7Rx003Dmbq9AUGPxqlgPtE8CFWlqYBRAVmvQHTEHmhzIKe0NJ8cXtWWVLnnqbsd9vanXGhd8jjC65ZJYQfOVsbPMShVwv2bSLcTr0cE="
+    - secure: "Mgrp2KtzPaZIG36ZoKleP2WneOamT5WFIFUDhS0mj4jbAFSjXWGnRJI7R0XuT9wDmS/f0gIsxazFELXher9CAmsa3VINFW3cVztykqIMSD5HBhyOyTuVzi6q3tvhx2u/OCxqV8o12XrgGJnKwnBuHbapHqhM39CJI2UjYhsgct8="
   matrix:
     - SAUCE_BROWSER=remote-mac-chrome
     - SAUCE_BROWSER=remote-mac-firefox
