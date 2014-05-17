@@ -69,7 +69,7 @@ class Renderer
     iframeDoc.body.appendChild(root)
     return [root, iframe]
 
-  constructor: (@container, @emitter, @options = {}) ->
+  constructor: (@container, @options = {}) ->
     @container.innerHTML = ''
     [@root, @iframe] = Renderer.buildFrame(@container)
     @root.id = @options.id
@@ -100,7 +100,6 @@ class Renderer
     # Firefox needs defer
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
-      @emitter.emit(@emitter.constructor.events.RENDER_UPDATE, css) if @emitter?
     )
 
 

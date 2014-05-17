@@ -9,7 +9,7 @@ Tandem     = require('tandem-core')
 
 class Editor
   constructor: (@iframeContainer, @quill, @options = {}) ->
-    @renderer = new Renderer(@iframeContainer, @quill, @options)
+    @renderer = new Renderer(@iframeContainer, @options)
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()

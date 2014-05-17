@@ -29,19 +29,22 @@ describe('Quill', ->
       @quill = new Quill(@container.firstChild, {
         styles: { '.editor-container > p': { 'line-height': '25px' } }
       })
-      @quill.on(Quill.events.RENDER_UPDATE, (css) =>
-        if css.indexOf('.editor-container > p') > -1
+      # Two defers since renderer itself defers
+      _.defer( =>
+        _.defer( =>
           expect(@quill.root.firstChild.offsetHeight).toEqual(25)
           done()
+        )
       )
     )
 
     it('addStyles()', (done) ->
       @quill.addStyles({ '.editor-container > p': { 'line-height': '25px' } })
-      @quill.on(Quill.events.RENDER_UPDATE, (css) =>
-        if css.indexOf('.editor-container > p') > -1
+      _.defer( =>
+        _.defer( =>
           expect(@quill.root.firstChild.offsetHeight).toEqual(25)
           done()
+        )
       )
     )
   )
