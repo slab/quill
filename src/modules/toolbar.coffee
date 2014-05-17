@@ -8,9 +8,9 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON  : { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
-    LINE    : { 'align' }
+    LINE    : { 'align', 'bullet' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
+    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'strike', 'underline' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
@@ -126,7 +126,7 @@ class Toolbar
             activeFormats[name] = [activeFormats[name], formats[name]]
       )
       _.each(missing, (name) ->
-        if Toolbar.formats.BUTTON[name]?
+        if Toolbar.formats.TOGGLE[name]?
           delete activeFormats[name]
         else if Toolbar.formats.SELECT[name]? and !_.isArray(activeFormats[name])
           activeFormats[name] = [activeFormats[name]]
