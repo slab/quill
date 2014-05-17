@@ -81,6 +81,15 @@ describe('DOM', ->
       Quill.DOM.clearAttributes(@node, 'class')
       expect(@node.outerHTML).toEqualHTML('<div class="custom"></div>')
     )
+
+    it('setAttributes()', ->
+      Quill.DOM.clearAttributes(@node)
+      attributes =
+        'class': 'test'
+        'style': 'font-size: 13px;'
+      Quill.DOM.setAttributes(@node, attributes)
+      expect(Quill.DOM.getAttributes(@node)).toEqual(attributes)
+    )
   )
 
   describe('styles', ->

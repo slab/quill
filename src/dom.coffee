@@ -245,6 +245,11 @@ DOM =
       select.selectedIndex = -1  # PhantomJS
     DOM.triggerEvent(select, 'change') if trigger
 
+  setAttributes: (node, attributes) ->
+    _.each(attributes, (value, name) ->
+      node.setAttribute(name, value)
+    )
+
   setStyles: (node, styles) ->
     styleString = _.map(styles, (style, name) ->
       return "#{name}: #{style}"
