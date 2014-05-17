@@ -57,13 +57,13 @@ describe('Quill', ->
       expect(@quill.root).toEqualHTML('<p>013</p><p>5678</p>', true)
     )
 
-    # it('formatLines()', ->
-    #   @quill.formatLines(4, 2, 'align', 'right')
-    #   expect(@quill.root).toEqualHTML('
-    #     <p style="text-align: right;"><span>0123</span></p>
-    #     <p style="text-align: right;"><span>5678</span></p>
-    #   ', true)
-    # )
+    it('formatLine()', ->
+      @quill.formatLine(4, 6, 'align', 'right')
+      expect(@quill.root).toEqualHTML('
+        <p style="text-align: right;">0123</p>
+        <p style="text-align: right;">5678</p>
+      ', true)
+    )
 
     it('formatText()', ->
       @quill.formatText(2, 4, 'bold', true)
@@ -73,12 +73,16 @@ describe('Quill', ->
       expect(@quill.getContents(0, 4)).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123'))
     )
 
-    # TODO add test for formatText(range, 'size', '13px')   where 13px is the default
+    it('formatText() default style', ->
+      html = @quill.root.innerHTML
+      @quill.formatText(2, 4, 'size', '13px')
+      expect(@quill.root).toEqualHTML(html)
+    )
 
-    # it('insertEmbed()', ->
-    #   @quill.insertEmbed(4, 'image', 'http://quilljs.com/images/cloud.png')
-    #   expect(@quill.root).toEqualHTML('<p><span>0123</span><img src="http://quilljs.com/images/cloud.png"></p><p><span>5678</span></p>', true)
-    # )
+    it('insertEmbed()', ->
+      @quill.insertEmbed(2, 'image', 'http://quilljs.com/images/cloud.png')
+      expect(@quill.root).toEqualHTML('<p>01<img src="http://quilljs.com/images/cloud.png">23</p><p>5678</p>', true)
+    )
 
     it('insertText()', ->
       @quill.insertText(2, 'A')
