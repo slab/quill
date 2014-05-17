@@ -23,32 +23,6 @@ describe('Quill', ->
     )
   )
 
-  describe('styles', ->
-    it('constructor overwrite', (done) ->
-      @container.innerHTML = '<p>0123</p>'
-      @quill = new Quill(@container.firstChild, {
-        styles: { '.editor-container > p': { 'line-height': '25px' } }
-      })
-      # Two defers since renderer itself defers
-      _.defer( =>
-        _.defer( =>
-          expect(@quill.root.firstChild.offsetHeight).toEqual(25)
-          done()
-        )
-      )
-    )
-
-    it('addStyles()', (done) ->
-      @quill.addStyles({ '.editor-container > p': { 'line-height': '25px' } })
-      _.defer( =>
-        _.defer( =>
-          expect(@quill.root.firstChild.offsetHeight).toEqual(25)
-          done()
-        )
-      )
-    )
-  )
-
   describe('modules', ->
     it('addContainer()', ->
       @quill.addContainer('test-container', true)

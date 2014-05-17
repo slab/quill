@@ -29,4 +29,33 @@ describe('Renderer', ->
     expect(@container.querySelectorAll('iframe').length).toEqual(1)
     expect(renderer.root.id).not.toBe(null)
   )
+
+  it('constructor with styles', (done) ->
+    renderer = new Quill.Renderer(@container, {
+      styles: { '.editor-container > p': { 'line-height': '25px' } }
+    })
+    renderer.root.innerHTML = '<p>Test</p>'
+    # Two defers since renderer itself defers
+    _.defer( =>
+      _.defer( =>
+        expect(renderer.root.firstChild.offsetHeight).toEqual(25)
+        done()
+      )
+    )
+  )
+
+  it('addStyles()', (done) ->
+    renderer = new Quill.Renderer(@container)
+    renderer.root.innerHTML = '<p>Test</p>'
+    renderer.addStyles({
+      '.editor-container > p': { 'line-height': '25px' }
+    })
+    # Two defers since renderer itself defers
+    _.defer( =>
+      _.defer( =>
+        expect(renderer.root.firstChild.offsetHeight).toEqual(25)
+        done()
+      )
+    )
+  )
 )
