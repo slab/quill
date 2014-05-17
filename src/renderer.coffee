@@ -96,10 +96,7 @@ class Renderer
     style.type = 'text/css'
     css = Renderer.objToCss(css)
     style.appendChild(@root.ownerDocument.createTextNode(css))
-    # Firefox needs defer
-    _.defer( =>
-      @root.ownerDocument.querySelector('head').appendChild(style)
-    )
+    @root.ownerDocument.head.appendChild(style)
 
 
 module.exports = Renderer
