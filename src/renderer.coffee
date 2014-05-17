@@ -94,11 +94,8 @@ class Renderer
   addStyles: (css) ->
     style = @root.ownerDocument.createElement('style')
     style.type = 'text/css'
-    css = Renderer.objToCss(css) unless _.isString(css)
-    if style.styleSheet?
-      style.styleSheet.cssText = css
-    else
-      style.appendChild(@root.ownerDocument.createTextNode(css))
+    css = Renderer.objToCss(css)
+    style.appendChild(@root.ownerDocument.createTextNode(css))
     # Firefox needs defer
     _.defer( =>
       @root.ownerDocument.querySelector('head').appendChild(style)
