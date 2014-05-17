@@ -35,6 +35,8 @@ Normalizer =
     'U'
     'A'
     'IMG'
+    'UL'
+    'LI'
   }
 
   # Make sure descendant break tags are not causing multiple lines to be rendered

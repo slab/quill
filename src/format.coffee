@@ -65,6 +65,11 @@ class Format
           when 'justify' then command = 'justifyFull'
         doc.execCommand(command, false)
 
+    bullet:
+      type: Format.types.LINE
+      tag: ['UL', 'LI']
+      prepare: 'insertUnorderedList'
+
 
   constructor: (@document, @config) ->
 
