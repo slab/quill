@@ -129,7 +129,14 @@ class Editor
     catch ignored
     decomposeB = newDelta.decompose(@delta)
     if decomposeA and decomposeB
-      decompose = if decomposeA.ops.length < decomposeB.ops.length then decomposeA else decomposeB
+      # Choose delta with fewest insertions
+      [lengthA, lengthB] = _.map([decomposeA, decomposeB], (delta) ->
+        return _.reduce(delta.ops, (count, op) ->
+          count += op.value.length if op.value?
+          return count
+        , 0)
+      )
+      decompose = if lengthA < lengthA then decomposeA else decomposeB
     else
       decompose = decomposeA or decomposeB
     return decompose

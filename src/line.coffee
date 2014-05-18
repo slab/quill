@@ -8,9 +8,6 @@ Normalizer = require('./normalizer')
 Utils      = require('./utils')
 Tandem     = require('tandem-core')
 
-# Note: Because Line uses @outerHTML as a heuristic to rebuild, we must be very careful to actually modify HTML when we modify it. Ex. Do not remove a <br> only to add another one back
-# Maybe a better heuristic would also check leaf children are still in the dom
-
 
 class Line extends LinkedList.Node
   @CLASS_NAME : 'line'
@@ -131,7 +128,11 @@ class Line extends LinkedList.Node
     this.rebuild()
 
   rebuild: (force = false) ->
-    return false if !force and @outerHTML? and @outerHTML == @node.outerHTML
+    if !force and @outerHTML? and @outerHTML == @node.outerHTML
+      if _.all(@leaves.toArray(), (leaf) ->
+        return leaf.node.parentNode?
+      )
+        return false
     @node = Normalizer.normalizeNode(@node)
     if Utils.getNodeLength(@node) == 0 and !@node.querySelector(DOM.DEFAULT_BREAK_TAG)
       @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))

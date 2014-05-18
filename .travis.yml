@@ -2,8 +2,9 @@ language: node_js
 node_js: '0.10'
 script:
   - grunt karma:$SAUCE_BROWSER
-before_script:
+before_install:
   - npm install -g grunt-cli
+before_script:
   - grunt
 branches:
   only:

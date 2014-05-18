@@ -1,0 +1,11 @@
+.git
+.travis.yml
+_*
+bower.json
+npm-debug.log
+build
+coverage
+demo
+grunt
+src
+test

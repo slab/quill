@@ -8,6 +8,7 @@
     "Byron Milligan <byronner@gmail.com>",
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
+  "main": "index.js",
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
@@ -23,7 +24,6 @@
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-connect": "~0.7.1",
-    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-jade": "~0.11.0",
     "grunt-contrib-stylus": "~0.13.2",
     "grunt-contrib-uglify": "~0.4.0",
@@ -59,6 +59,8 @@
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
+    "prepublish": "grunt coffee:src",
+    "postpublish": "grunt clean:coffee",
     "test": "grunt test"
   },
   "keywords": ["editor", "rich text", "wysiwyg"]
