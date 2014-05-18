@@ -28,6 +28,7 @@ Quill.Module =
   Toolbar       : require('../src/modules/toolbar')
   Tooltip       : require('../src/modules/tooltip')
   UndoManager   : require('../src/modules/undo-manager')
+  Placeholder   : require('../src/modules/placeholder')
 
 Quill.Theme =
   Default       : require('../src/themes/default')

@@ -11,6 +11,7 @@ advancedEditor = new Quill('.advanced-wrapper .editor-container',
     'link-tooltip': true
     'image-tooltip': true
     'multi-cursor': true
+    'placeholder': {text: 'Enter text'}
   theme: 'snow'
 )
 

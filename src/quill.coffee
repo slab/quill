@@ -17,6 +17,7 @@ Modules =
   PasteManager  : require('./modules/paste-manager')
   Toolbar       : require('./modules/toolbar')
   UndoManager   : require('./modules/undo-manager')
+  Placeholder   : require('./modules/placeholder')
 
 Themes =
   Default : require('./themes/default')
