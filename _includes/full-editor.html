@@ -26,30 +26,20 @@ basicEditor.on('selection-change', function(range) {
 
 // Update basic editor's content with ours
 fullEditor.on('text-change', function(delta, source) {
-  if (source == 'user') {
+  if (source === 'user') {
     basicEditor.updateContents(delta);
   }
 });
 
+// basicEditor needs authorship module to accept changes from fullEditor's authorship module
+basicEditor.addModule('authorship', {
+  authorId: 'gandalf',
+  color: 'rgba(255,153,51,0.4)'
+});
+
 // Update our content with basic editor's
 basicEditor.on('text-change', function(delta, source) {
-  // Since basic editor does not have authorship module,
-  // manually add authorship info
-  var insertFn = function(index, text, formats) {
-    formats = formats || {};
-    formats['author'] = 'gandalf';        // Add author
-    fullEditor.insertText(index, text, formats);
-  };
-  var deleteFn = function(index, length) {
-    fullEditor.deleteText(index, index + length);
-  };
-  var formatFn = function(index, length, format, value) {
-    var formats = { author: 'gandalf' };  // Add author
-    formats[format] = value;
-    fullEditor.formatText(index, index + length, formats);
-  };
-
-  if (source == 'user') {
-    delta.apply(insertFn, deleteFn, formatFn);
+  if (source === 'user') {
+    fullEditor.updateContents(delta);
   }
 });
