@@ -13,14 +13,12 @@ describe('Placeholder', ->
   )
 
   it('placeholder enable disable', () ->
-
-    @quill.on(Quill.events.TEXT_CHANGE, ((delta) ->
+    @textChange = (delta) ->
       if(delta.endLength > 1)
         expect(Quill.DOM.hasClass(@quill.root, 'placeholder-container')).toEqual(false)   
       else
         expect(Quill.DOM.hasClass(@quill.root, 'placeholder-container')).toEqual(true) 
-    ).bind(this))
-
+    @quill.on(Quill.events.TEXT_CHANGE, _.bind(this.textChange, this))
     @quill.updateContents(Tandem.Delta.makeInsertDelta(0, 1, 'e'), 'user')
     Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.UndoManager.hotkeys.UNDO)
   )
