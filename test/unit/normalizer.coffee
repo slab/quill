@@ -37,7 +37,7 @@ describe('Normalizer', ->
         expected: '<p>Test</p>'
       'pull text node':
         initial:  '<div><div>AB<div>C</div></div></div>'
-        expected: '<p>AB</p><div><div>C</div></div>'
+        expected: '<p>AB</p><div>C</div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -128,6 +128,9 @@ describe('Normalizer', ->
       'No children':
         initial:  '<div></div>'
         expected: '<div></div>'
+      'Middle block':
+        initial:  '<div>One<div>Two</div>Three</div>'
+        expected: '<div>One</div><div>Two</div><div>Three</div>'
       'Inner block':
         initial:  '<div><div>Test</div><div>Another</div></div>'
         expected: '<div>Test</div><div><div>Another</div></div>'
@@ -136,10 +139,10 @@ describe('Normalizer', ->
         expected: '<div>Test</div>'
       'Inner deep recursive':
         initial:  '<div><div><div><div>Test<div>Test</div></div></div></div></div>'
-        expected: '<div>Test</div><div><div>Test</div></div>'
+        expected: '<div>Test</div><div>Test</div>'
       'Continuous inlines':
         initial:  '<div>A<br>B<div>Inner</div></div>'
-        expected: '<div>A<br>B</div><div><div>Inner</div></div>'
+        expected: '<div>A<br>B</div><div>Inner</div>'
 
     _.each(tests, (test, name) ->
       it(name, ->

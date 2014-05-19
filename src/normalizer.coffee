@@ -91,17 +91,14 @@ Normalizer =
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
-    return unless curNode?
-    if DOM.BLOCK_TAGS[curNode.tagName]?
-      if curNode.nextSibling?
-        Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
-      DOM.unwrap(curNode)
-      Normalizer.pullBlocks(lineNode)
-    curNode = curNode.nextSibling
     while curNode?
       if DOM.BLOCK_TAGS[curNode.tagName]?
-        lineNode = Utils.splitAncestors(curNode, lineNode.parentNode)
-        break
+        if curNode.previousSibling?
+          Utils.splitAncestors(curNode, lineNode.parentNode)
+        if curNode.nextSibling?
+          Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
+        DOM.unwrap(curNode)
+        Normalizer.pullBlocks(lineNode)
       curNode = curNode.nextSibling
 
   stripComments: (html) ->
