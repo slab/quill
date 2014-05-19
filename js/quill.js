@@ -1,8 +1,4 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-module.exports = _dereq_('./src/quill');
-
-
-},{"./src/quill":40}],2:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -50,8 +46,11 @@ process.argv = [];
 function noop() {}
 
 process.on = noop;
+process.addListener = noop;
 process.once = noop;
 process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
 process.emit = noop;
 
 process.binding = function (name) {
@@ -628,8 +627,8 @@ process.chdir = function (dir) {
 
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
-}).call(this,_dereq_("/Users/jason/Dropbox/jetcode/quill/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/jason/Dropbox/jetcode/quill/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":2}],"eventemitter2":[function(_dereq_,module,exports){
+}).call(this,_dereq_("FWaASH"))
+},{"FWaASH":1}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
@@ -7816,7 +7815,7 @@ module.exports=_dereq_('x/3aRz');
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"lodash":[function(_dereq_,module,exports){
 module.exports=_dereq_('4HJaAd');
-},{}],7:[function(_dereq_,module,exports){
+},{}],6:[function(_dereq_,module,exports){
 (function() {
   var Delta, InsertOp, Op, RetainOp, diff_match_patch, dmp, _;
 
@@ -8482,7 +8481,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./diff_match_patch":9,"./insert":10,"./op":11,"./retain":12,"lodash":"4HJaAd"}],8:[function(_dereq_,module,exports){
+},{"./diff_match_patch":8,"./insert":9,"./op":10,"./retain":11,"lodash":"4HJaAd"}],7:[function(_dereq_,module,exports){
 (function() {
   var Delta, DeltaGenerator, InsertOp, RetainOp, getUtils, setDomain, _, _domain;
 
@@ -8839,7 +8838,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./delta":7,"./insert":10,"./retain":12,"lodash":"4HJaAd"}],9:[function(_dereq_,module,exports){
+},{"./delta":6,"./insert":9,"./retain":11,"lodash":"4HJaAd"}],8:[function(_dereq_,module,exports){
 (function() {
   var googlediff;
 
@@ -8855,7 +8854,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"googlediff":15}],10:[function(_dereq_,module,exports){
+},{"googlediff":14}],9:[function(_dereq_,module,exports){
 (function() {
   var InsertOp, Op, _,
     __hasProp = {}.hasOwnProperty,
@@ -8915,7 +8914,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":11,"lodash":"4HJaAd"}],11:[function(_dereq_,module,exports){
+},{"./op":10,"lodash":"4HJaAd"}],10:[function(_dereq_,module,exports){
 (function() {
   var Op, _;
 
@@ -8999,7 +8998,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"lodash":"4HJaAd"}],12:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],11:[function(_dereq_,module,exports){
 (function() {
   var Op, RetainOp, _,
     __hasProp = {}.hasOwnProperty,
@@ -9052,7 +9051,9 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":11,"lodash":"4HJaAd"}],"38mxji":[function(_dereq_,module,exports){
+},{"./op":10,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
+module.exports=_dereq_('38mxji');
+},{}],"38mxji":[function(_dereq_,module,exports){
 (function() {
   module.exports = {
     Delta: _dereq_('./delta'),
@@ -9064,12 +9065,10 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],"tandem-core":[function(_dereq_,module,exports){
-module.exports=_dereq_('38mxji');
-},{}],15:[function(_dereq_,module,exports){
+},{"./delta":6,"./delta_generator":7,"./insert":9,"./op":10,"./retain":11}],14:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
-},{"./javascript/diff_match_patch_uncompressed.js":16}],16:[function(_dereq_,module,exports){
+},{"./javascript/diff_match_patch_uncompressed.js":15}],15:[function(_dereq_,module,exports){
 /**
  * Diff Match and Patch
  *
@@ -11264,8 +11263,6 @@ this['DIFF_DELETE'] = DIFF_DELETE;
 this['DIFF_INSERT'] = DIFF_INSERT;
 this['DIFF_EQUAL'] = DIFF_EQUAL;
 
-},{}],"underscore.string":[function(_dereq_,module,exports){
-module.exports=_dereq_('Fq7WE+');
 },{}],"Fq7WE+":[function(_dereq_,module,exports){
 //  Underscore.string
 //  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
@@ -11941,10 +11938,12 @@ module.exports=_dereq_('Fq7WE+');
   root._.string = root._.str = _s;
 }(this, String);
 
-},{}],19:[function(_dereq_,module,exports){
+},{}],"underscore.string":[function(_dereq_,module,exports){
+module.exports=_dereq_('Fq7WE+');
+},{}],18:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -11952,6 +11951,7 @@ module.exports={
     "Byron Milligan <byronner@gmail.com>",
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
+  "main": "index.js",
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
@@ -11967,7 +11967,6 @@ module.exports={
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-connect": "~0.7.1",
-    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-jade": "~0.11.0",
     "grunt-contrib-stylus": "~0.13.2",
     "grunt-contrib-uglify": "~0.4.0",
@@ -11989,7 +11988,6 @@ module.exports={
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.4.0",
-    "mocha": "~1.18.0",
     "protractor": "~0.21.0"
   },
   "engines": {
@@ -12004,12 +12002,14 @@ module.exports={
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
+    "prepublish": "grunt coffee:src",
+    "postpublish": "grunt clean:coffee",
     "test": "grunt test"
   },
   "keywords": ["editor", "rich text", "wysiwyg"]
 }
 
-},{}],20:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 var DOM, Document, Format, Line, LinkedList, Normalizer, Tandem, Utils, _;
 
 _ = _dereq_('lodash');
@@ -12216,7 +12216,7 @@ Document = (function() {
 module.exports = Document;
 
 
-},{"./dom":21,"./format":23,"./lib/linked-list":26,"./line":29,"./normalizer":39,"./utils":45,"lodash":"4HJaAd","tandem-core":"38mxji"}],21:[function(_dereq_,module,exports){
+},{"./dom":20,"./format":22,"./lib/linked-list":25,"./line":28,"./normalizer":38,"./utils":44,"lodash":"4HJaAd","tandem-core":"38mxji"}],20:[function(_dereq_,module,exports){
 var DOM, lastKeyEvent, _;
 
 _ = _dereq_('lodash');
@@ -12641,7 +12641,7 @@ DOM = {
 module.exports = DOM;
 
 
-},{"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],22:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd","underscore.string":"Fq7WE+"}],21:[function(_dereq_,module,exports){
 var DOM, Document, Editor, Line, Renderer, Selection, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -12830,7 +12830,7 @@ Editor = (function() {
   };
 
   Editor.prototype._trackDelta = function(fn) {
-    var decompose, decomposeA, decomposeB, decomposeLeft, decomposeRight, ignored, newDelta, newIndex, newLeftDelta, newRightDelta, oldIndex, oldLeftDelta, oldRightDelta, _ref, _ref1, _ref2, _ref3;
+    var decompose, decomposeA, decomposeB, decomposeLeft, decomposeRight, ignored, lengthA, lengthB, newDelta, newIndex, newLeftDelta, newRightDelta, oldIndex, oldLeftDelta, oldRightDelta, _ref, _ref1, _ref2, _ref3, _ref4;
     oldIndex = (_ref = this.savedRange) != null ? _ref.start : void 0;
     fn();
     newDelta = this.doc.toDelta();
@@ -12848,7 +12848,15 @@ Editor = (function() {
     }
     decomposeB = newDelta.decompose(this.delta);
     if (decomposeA && decomposeB) {
-      decompose = decomposeA.ops.length < decomposeB.ops.length ? decomposeA : decomposeB;
+      _ref4 = _.map([decomposeA, decomposeB], function(delta) {
+        return _.reduce(delta.ops, function(count, op) {
+          if (op.value != null) {
+            count += op.value.length;
+          }
+          return count;
+        }, 0);
+      }), lengthA = _ref4[0], lengthB = _ref4[1];
+      decompose = lengthA < lengthA ? decomposeA : decomposeB;
     } else {
       decompose = decomposeA || decomposeB;
     }
@@ -12881,7 +12889,7 @@ Editor = (function() {
 module.exports = Editor;
 
 
-},{"./document":20,"./dom":21,"./line":29,"./renderer":41,"./selection":42,"lodash":"4HJaAd","tandem-core":"38mxji"}],23:[function(_dereq_,module,exports){
+},{"./document":19,"./dom":20,"./line":28,"./renderer":40,"./selection":41,"lodash":"4HJaAd","tandem-core":"38mxji"}],22:[function(_dereq_,module,exports){
 var DOM, Format, Utils, _;
 
 _ = _dereq_('lodash');
@@ -13120,7 +13128,7 @@ Format = (function() {
 module.exports = Format;
 
 
-},{"./dom":21,"./utils":45,"lodash":"4HJaAd"}],24:[function(_dereq_,module,exports){
+},{"./dom":20,"./utils":44,"lodash":"4HJaAd"}],23:[function(_dereq_,module,exports){
 var DOM, Format, Leaf, LinkedList, Utils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13195,7 +13203,7 @@ Leaf = (function(_super) {
 module.exports = Leaf;
 
 
-},{"./dom":21,"./format":23,"./lib/linked-list":26,"./utils":45,"lodash":"4HJaAd"}],25:[function(_dereq_,module,exports){
+},{"./dom":20,"./format":22,"./lib/linked-list":25,"./utils":44,"lodash":"4HJaAd"}],24:[function(_dereq_,module,exports){
 var ColorPicker, DOM, Picker,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13226,7 +13234,7 @@ ColorPicker = (function(_super) {
 module.exports = ColorPicker;
 
 
-},{"../dom":21,"./picker":27}],26:[function(_dereq_,module,exports){
+},{"../dom":20,"./picker":26}],25:[function(_dereq_,module,exports){
 var LinkedList, Node;
 
 Node = (function() {
@@ -13317,7 +13325,7 @@ LinkedList = (function() {
 module.exports = LinkedList;
 
 
-},{}],27:[function(_dereq_,module,exports){
+},{}],26:[function(_dereq_,module,exports){
 var DOM, Normalizer, Picker, _;
 
 _ = _dereq_('lodash');
@@ -13428,7 +13436,7 @@ Picker = (function() {
 module.exports = Picker;
 
 
-},{"../dom":21,"../normalizer":39,"lodash":"4HJaAd"}],28:[function(_dereq_,module,exports){
+},{"../dom":20,"../normalizer":38,"lodash":"4HJaAd"}],27:[function(_dereq_,module,exports){
 var Range, _;
 
 _ = _dereq_('lodash');
@@ -13481,7 +13489,7 @@ Range = (function() {
 module.exports = Range;
 
 
-},{"lodash":"4HJaAd"}],29:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],28:[function(_dereq_,module,exports){
 var DOM, Format, Leaf, Line, LinkedList, Normalizer, Tandem, Utils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13682,7 +13690,11 @@ Line = (function(_super) {
       force = false;
     }
     if (!force && (this.outerHTML != null) && this.outerHTML === this.node.outerHTML) {
-      return false;
+      if (_.all(this.leaves.toArray(), function(leaf) {
+        return leaf.node.parentNode != null;
+      })) {
+        return false;
+      }
     }
     this.node = Normalizer.normalizeNode(this.node);
     if (Utils.getNodeLength(this.node) === 0 && !this.node.querySelector(DOM.DEFAULT_BREAK_TAG)) {
@@ -13730,7 +13742,7 @@ Line = (function(_super) {
 module.exports = Line;
 
 
-},{"./dom":21,"./format":23,"./leaf":24,"./lib/linked-list":26,"./line":29,"./normalizer":39,"./utils":45,"lodash":"4HJaAd","tandem-core":"38mxji"}],30:[function(_dereq_,module,exports){
+},{"./dom":20,"./format":22,"./leaf":23,"./lib/linked-list":25,"./line":28,"./normalizer":38,"./utils":44,"lodash":"4HJaAd","tandem-core":"38mxji"}],29:[function(_dereq_,module,exports){
 var Authorship, DOM, Format, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -13824,7 +13836,7 @@ Authorship = (function() {
 module.exports = Authorship;
 
 
-},{"../dom":21,"../format":23,"lodash":"4HJaAd","tandem-core":"38mxji"}],31:[function(_dereq_,module,exports){
+},{"../dom":20,"../format":22,"lodash":"4HJaAd","tandem-core":"38mxji"}],30:[function(_dereq_,module,exports){
 var DOM, ImageTooltip, Tooltip, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -13979,7 +13991,7 @@ ImageTooltip = (function(_super) {
 module.exports = ImageTooltip;
 
 
-},{"../dom":21,"./tooltip":37,"lodash":"4HJaAd"}],32:[function(_dereq_,module,exports){
+},{"../dom":20,"./tooltip":36,"lodash":"4HJaAd"}],31:[function(_dereq_,module,exports){
 var DOM, Keyboard, Line, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -14138,7 +14150,7 @@ Keyboard = (function() {
 module.exports = Keyboard;
 
 
-},{"../dom":21,"../line":29,"lodash":"4HJaAd","tandem-core":"38mxji"}],33:[function(_dereq_,module,exports){
+},{"../dom":20,"../line":28,"lodash":"4HJaAd","tandem-core":"38mxji"}],32:[function(_dereq_,module,exports){
 var DOM, LinkTooltip, Tooltip, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -14293,7 +14305,7 @@ LinkTooltip = (function(_super) {
 module.exports = LinkTooltip;
 
 
-},{"../dom":21,"./tooltip":37,"lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
+},{"../dom":20,"./tooltip":36,"lodash":"4HJaAd"}],33:[function(_dereq_,module,exports){
 var DOM, EventEmitter2, MultiCursor, Utils, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -14535,7 +14547,7 @@ MultiCursor = (function(_super) {
 module.exports = MultiCursor;
 
 
-},{"../dom":21,"../utils":45,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],35:[function(_dereq_,module,exports){
+},{"../dom":20,"../utils":44,"eventemitter2":"x/3aRz","lodash":"4HJaAd"}],34:[function(_dereq_,module,exports){
 var DOM, Document, PasteManager, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -14600,7 +14612,7 @@ PasteManager = (function() {
 module.exports = PasteManager;
 
 
-},{"../document":20,"../dom":21,"lodash":"4HJaAd","tandem-core":"38mxji"}],36:[function(_dereq_,module,exports){
+},{"../document":19,"../dom":20,"lodash":"4HJaAd","tandem-core":"38mxji"}],35:[function(_dereq_,module,exports){
 var DOM, Toolbar, Utils, _;
 
 _ = _dereq_('lodash');
@@ -14831,7 +14843,7 @@ Toolbar = (function() {
 module.exports = Toolbar;
 
 
-},{"../dom":21,"../utils":45,"lodash":"4HJaAd"}],37:[function(_dereq_,module,exports){
+},{"../dom":20,"../utils":44,"lodash":"4HJaAd"}],36:[function(_dereq_,module,exports){
 var DOM, Normalizer, Tooltip, _;
 
 _ = _dereq_('lodash');
@@ -14966,7 +14978,7 @@ Tooltip = (function() {
 module.exports = Tooltip;
 
 
-},{"../dom":21,"../normalizer":39,"lodash":"4HJaAd"}],38:[function(_dereq_,module,exports){
+},{"../dom":20,"../normalizer":38,"lodash":"4HJaAd"}],37:[function(_dereq_,module,exports){
 var Tandem, UndoManager, _;
 
 _ = _dereq_('lodash');
@@ -15110,7 +15122,7 @@ UndoManager = (function() {
 module.exports = UndoManager;
 
 
-},{"lodash":"4HJaAd","tandem-core":"38mxji"}],39:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd","tandem-core":"38mxji"}],38:[function(_dereq_,module,exports){
 var DOM, Normalizer, Utils, _;
 
 _ = _dereq_('lodash');
@@ -15318,7 +15330,7 @@ Normalizer = {
 module.exports = Normalizer;
 
 
-},{"./dom":21,"./utils":45,"lodash":"4HJaAd"}],40:[function(_dereq_,module,exports){
+},{"./dom":20,"./utils":44,"lodash":"4HJaAd"}],39:[function(_dereq_,module,exports){
 var DOM, Editor, EventEmitter2, Format, Modules, Quill, Range, Tandem, Themes, pkg, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -15670,7 +15682,7 @@ Quill = (function(_super) {
 module.exports = Quill;
 
 
-},{"../package.json":19,"./dom":21,"./editor":22,"./format":23,"./lib/range":28,"./modules/authorship":30,"./modules/image-tooltip":31,"./modules/keyboard":32,"./modules/link-tooltip":33,"./modules/multi-cursor":34,"./modules/paste-manager":35,"./modules/toolbar":36,"./modules/undo-manager":38,"./themes/default":43,"./themes/snow":44,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],41:[function(_dereq_,module,exports){
+},{"../package.json":18,"./dom":20,"./editor":21,"./format":22,"./lib/range":27,"./modules/authorship":29,"./modules/image-tooltip":30,"./modules/keyboard":31,"./modules/link-tooltip":32,"./modules/multi-cursor":33,"./modules/paste-manager":34,"./modules/toolbar":35,"./modules/undo-manager":37,"./themes/default":42,"./themes/snow":43,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],40:[function(_dereq_,module,exports){
 var DEFAULT_STYLES, DOM, LIST_STYLES, Normalizer, Renderer, Utils, rule, _;
 
 _ = _dereq_('lodash');
@@ -15852,7 +15864,7 @@ Renderer = (function() {
 module.exports = Renderer;
 
 
-},{"./dom":21,"./normalizer":39,"./utils":45,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
+},{"./dom":20,"./normalizer":38,"./utils":44,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
 var DOM, Leaf, Range, Selection, _;
 
 _ = _dereq_('lodash');
@@ -16060,7 +16072,7 @@ Selection = (function() {
 module.exports = Selection;
 
 
-},{"./dom":21,"./leaf":24,"./lib/range":28,"lodash":"4HJaAd"}],43:[function(_dereq_,module,exports){
+},{"./dom":20,"./leaf":23,"./lib/range":27,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
 var DefaultTheme;
 
 DefaultTheme = (function() {
@@ -16079,7 +16091,7 @@ DefaultTheme = (function() {
 module.exports = DefaultTheme;
 
 
-},{}],44:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 var ColorPicker, DOM, DefaultTheme, Picker, SnowTheme, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -16247,7 +16259,7 @@ SnowTheme = (function(_super) {
 module.exports = SnowTheme;
 
 
-},{"../../dom":21,"../../lib/color-picker":25,"../../lib/picker":27,"../default":43,"lodash":"4HJaAd"}],45:[function(_dereq_,module,exports){
+},{"../../dom":20,"../../lib/color-picker":24,"../../lib/picker":26,"../default":42,"lodash":"4HJaAd"}],44:[function(_dereq_,module,exports){
 var DOM, Utils, _;
 
 _ = _dereq_('lodash');
@@ -16364,6 +16376,6 @@ Utils = {
 module.exports = Utils;
 
 
-},{"./dom":21,"lodash":"4HJaAd"}]},{},[1])
-(1)
+},{"./dom":20,"lodash":"4HJaAd"}]},{},[39])
+(39)
 });
