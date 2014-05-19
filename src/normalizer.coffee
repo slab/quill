@@ -51,7 +51,7 @@ Normalizer =
   normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
     lineNode = Normalizer.handleBreaks(lineNode)
-    Normalizer.pullBlocks(lineNode)
+    lineNode = Normalizer.pullBlocks(lineNode)
     lineNode = Normalizer.normalizeNode(lineNode)
     Normalizer.unwrapText(lineNode)
     return lineNode
@@ -94,14 +94,20 @@ Normalizer =
   pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
     while curNode?
-      if DOM.BLOCK_TAGS[curNode.tagName]?
+      if DOM.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
         if curNode.previousSibling?
           Utils.splitAncestors(curNode, lineNode.parentNode)
         if curNode.nextSibling?
           Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
-        DOM.unwrap(curNode)
-        Normalizer.pullBlocks(lineNode)
+        if curNode.tagName != 'UL'
+          DOM.unwrap(curNode)
+          Normalizer.pullBlocks(lineNode)
+        else
+          DOM.unwrap(curNode.parentNode)
+          lineNode = curNode unless lineNode.parentNode?    # May have just unwrapped lineNode
+        break
       curNode = curNode.nextSibling
+    return lineNode
 
   stripComments: (html) ->
     html = html.replace(/<!--[\s\S]*?-->/g, '')

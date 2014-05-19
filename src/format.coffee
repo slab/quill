@@ -79,11 +79,20 @@ class Format
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
+        # TODO use replaceNode
         node.parentNode.insertBefore(formatNode, node) if node.parentNode?
         DOM.removeNode(node)
         node = formatNode
       else
         node = DOM.wrap(formatNode, node)
+    else if _.isArray(@config.tag)
+      ancestorNode = @document.createElement(_.first(@config.tag))
+      _.reduce(@config.tag.slice(1), (parentNode, tag) =>
+        childNode = @document.createElement(tag)
+        parentNode.appendChild(childNode)
+        return childNode
+      , ancestorNode)
+      node = DOM.wrap(ancestorNode, node)
     if _.isString(@config.style) or _.isString(@config.attribute) or _.isString(@config.class)
       node = this.remove(node) if _.isString(@config.class)
       if DOM.isTextNode(node)

@@ -323,8 +323,11 @@ DOM =
 
   wrap: (wrapper, node) ->
     node.parentNode.insertBefore(wrapper, node) if node.parentNode?
-    wrapper.appendChild(node)
-    return wrapper
+    parent = wrapper
+    while parent.firstChild?
+      parent = wrapper.firstChild
+    parent.appendChild(node)
+    return parent
 
 
 module.exports = DOM
