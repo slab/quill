@@ -27,7 +27,7 @@ class Line extends LinkedList.Node
       # TODO: optimize
       _.each(@doc.formats, (format, name) ->
         # format.value() also checks match() but existing bug in tandem-core requires check anyways
-        nodeFormats[name] = format.value(node) if format.match(node)
+        nodeFormats[name] = format.value(node) if !format.isType(Format.types.LINE) and format.match(node)
       )
       if Leaf.isLeafNode(node)
         @leaves.append(new Leaf(node, nodeFormats))

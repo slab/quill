@@ -87,6 +87,8 @@ class Format
         node.parentNode.insertBefore(formatNode, node) if node.parentNode?
         DOM.removeNode(node)
         node = formatNode
+      else if this.isType(Format.types.LINE)
+        node = DOM.switchTag(node, @config.tag)
       else
         node = DOM.wrap(formatNode, node)
     if _.isString(@config.style) or _.isString(@config.attribute) or _.isString(@config.class)

@@ -331,15 +331,23 @@ describe('Document', ->
         expected: Tandem.Delta.getInitial('0\n\n1\n')
       'tag format':
         initial:  ['<p><b>0123</b></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { bold: true } }
           { value: '\n' }
         ]})
       'style format':
         initial:  ['<p><span style="color: teal;">0123</span></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { color: 'teal' } }
           { value: '\n' }
+        ]})
+      'bullets':
+        initial:  ['<ul><li>One</li><li>Two</li></ul>']
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+          { value: 'One' }
+          { value: '\n', attributes: { bullet: true } }
+          { value: 'Two' }
+          { value: '\n', attributes: { bullet: true } }
         ]})
 
     _.each(tests, (test, name) ->
