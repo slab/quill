@@ -1,11 +1,12 @@
-_          = require('lodash')
-DOM        = require('./dom')
-Format     = require('./format')
-Line       = require('./line')
-LinkedList = require('./lib/linked-list')
-Normalizer = require('./normalizer')
-Utils      = require('./utils')
-Tandem     = require('tandem-core')
+_            = require('lodash')
+DOM          = require('./dom')
+Format       = require('./format')
+Line         = require('./line')
+LineIterator = require('./lib/line-iterator')
+LinkedList   = require('./lib/linked-list')
+Normalizer   = require('./normalizer')
+Utils        = require('./utils')
+Tandem       = require('tandem-core')
 
 
 class Document
@@ -73,14 +74,15 @@ class Document
 
   rebuild: ->
     lines = @lines.toArray()
-    lineNode = @root.firstChild
+    lineIterator = new LineIterator(@root)
+    lineNode = lineIterator.next()
     _.each(lines, (line, index) =>
       while line.node != lineNode
         if line.node.parentNode == @root
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
-          lineNode = lineNode.nextSibling
+          lineNode = lineIterator.next()
         else
           # Existing line removed
           return this.removeLine(line)
@@ -88,13 +90,13 @@ class Document
         # Existing line changed
         line.node = Normalizer.normalizeLine(line.node)
         line.rebuild()
-      lineNode = line.node.nextSibling
+      lineNode = lineIterator.next()
     )
     # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
-      lineNode = lineNode.nextSibling
+      lineNode = lineIterator.next()
 
   removeLine: (line) ->
     DOM.removeNode(line.node) if line.node.parentNode == @root

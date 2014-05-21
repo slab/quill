@@ -67,7 +67,8 @@ class Format
 
     bullet:
       type: Format.types.LINE
-      tag: ['UL', 'LI']
+      parentTag: 'UL'
+      tag: 'LI'
       prepare: 'insertUnorderedList'
 
 
@@ -76,6 +77,9 @@ class Format
   add: (node, value) ->
     return this.remove(node) unless value
     return node if this.value(node) == value
+    if _.isString(@config.parentTag)
+      parentNode = @document.createElement(@config.parentTag)
+      DOM.wrap(parentNode, node)
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
@@ -85,14 +89,6 @@ class Format
         node = formatNode
       else
         node = DOM.wrap(formatNode, node)
-    else if _.isArray(@config.tag)
-      ancestorNode = @document.createElement(_.first(@config.tag))
-      _.reduce(@config.tag.slice(1), (parentNode, tag) =>
-        childNode = @document.createElement(tag)
-        parentNode.appendChild(childNode)
-        return childNode
-      , ancestorNode)
-      node = DOM.wrap(ancestorNode, node)
     if _.isString(@config.style) or _.isString(@config.attribute) or _.isString(@config.class)
       node = this.remove(node) if _.isString(@config.class)
       if DOM.isTextNode(node)
@@ -110,6 +106,8 @@ class Format
 
   match: (node) ->
     return false unless DOM.isElement(node)
+    if _.isString(@config.parentTag) and node.parentNode?.tagName != @config.parentTag
+      return false
     if _.isString(@config.tag) and node.tagName != @config.tag
       return false
     if _.isString(@config.style) and (!node.style[@config.style] or node.style[@config.style] == @config.default)
@@ -140,8 +138,15 @@ class Format
         DOM.removeClass(node, c) if c.indexOf(@config.class) == 0
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
-      node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
-      DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?
+      if this.isType(Format.types.LINE)
+        Utils.splitAncestors(node, node.parentNode.parentNode) if node.previousSibling?
+        Utils.splitAncestors(node.nextSibling, node.parentNode.parentNode) if node.nextSibling?
+        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
+      else
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
+        DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?   # TODO is this desireable?
+    if _.isString(@config.parentTag)
+      DOM.unwrap(node.parentNode)
     if node.tagName == DOM.DEFAULT_INLINE_TAG and !node.hasAttributes()
       node = DOM.unwrap(node)
     return node
@@ -149,13 +154,13 @@ class Format
   value: (node) ->
     return undefined unless this.match(node)
     if _.isString(@config.attribute)
-      return node.getAttribute(@config.attribute) or undefined
-    else if _.isString(@config.style) and node.style[@config.style] != @config.default
+      return node.getAttribute(@config.attribute) or undefined    # So "" does not get returned
+    else if _.isString(@config.style)
       return node.style[@config.style] or undefined
     else if _.isString(@config.class)
       for c in DOM.getClasses(node)
         return c.slice(@config.class.length) if c.indexOf(@config.class) == 0
-    else if _.isString(@config.tag) and node.tagName == @config.tag
+    else if _.isString(@config.tag)
       return true
     return undefined
 

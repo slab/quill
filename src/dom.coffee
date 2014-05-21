@@ -72,6 +72,11 @@ DOM =
     'IMG'
   }
 
+  LIST_TAGS: {
+    'OL'
+    'UL'
+  }
+
   VOID_TAGS: {
     'AREA'
     'BASE'
