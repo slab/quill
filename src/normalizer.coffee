@@ -86,9 +86,7 @@ Normalizer =
         # Merge similar nodes
         if _.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))
           nodes.push(node.firstChild)
-          DOM.moveChildren(node.previousSibling, node)
-          DOM.normalize(node.previousSibling)
-          DOM.removeNode(node)
+          Utils.mergeNodes(node.previousSibling, node)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->

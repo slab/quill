@@ -89,6 +89,21 @@ describe('Utils', ->
     )
   )
 
+  describe('mergeNodes()', ->
+    it('merge nodes', ->
+      @container.innerHTML = '<ul><li>One</li></ul><ul><li>Two</li></ul>'
+      Quill.Utils.mergeNodes(@container.firstChild, @container.lastChild)
+      expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li></ul>')
+    )
+
+    it('merge and normalize', ->
+      @container.innerHTML = '<span>One</span><span>Two</span>'
+      Quill.Utils.mergeNodes(@container.firstChild, @container.lastChild)
+      expect(@container).toEqualHTML('<span>OneTwo</span>')
+      expect(@container.firstChild.childNodes.length).toEqual(1)
+    )
+  )
+
   describe('splitAncestors()', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('

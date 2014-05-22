@@ -38,6 +38,11 @@ Utils =
     version = document.documentMode
     return version and maxVersion >= version
 
+  mergeNodes: (newNode, oldNode) ->
+    DOM.moveChildren(newNode, oldNode)
+    DOM.normalize(newNode)
+    DOM.removeNode(oldNode)
+
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (refNode, root, force = false) ->
     return refNode if refNode == root or refNode.parentNode == root

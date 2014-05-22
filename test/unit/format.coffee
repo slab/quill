@@ -169,7 +169,7 @@ describe('Format', ->
       format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
       p = @container.childNodes[1]
       format.add(p, true)
-      expect(@container).toEqualHTML('<ul><li>One</li></ul><ul><li>Two</li></ul><ul><li>Three</li></ul>')
+      expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li><li>Three</li></ul>')
     )
   )
 

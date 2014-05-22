@@ -80,6 +80,10 @@ class Format
     if _.isString(@config.parentTag)
       parentNode = @document.createElement(@config.parentTag)
       DOM.wrap(parentNode, node)
+      if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
+        Utils.mergeNodes(node.parentNode.previousSibling, node.parentNode)
+      if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
+        Utils.mergeNodes(node.parentNode, node.parentNode.nextSibling)
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
