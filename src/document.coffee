@@ -77,7 +77,7 @@ class Document
     lineNode = lineNode.firstChild if lineNode? and DOM.LIST_TAGS[lineNode.tagName]?
     _.each(lines, (line, index) =>
       while line.node != lineNode
-        if line.node.parentNode == @root
+        if line.node.parentNode?
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
@@ -98,7 +98,11 @@ class Document
       lineNode = Utils.getNextLineNode(lineNode, @root)
 
   removeLine: (line) ->
-    DOM.removeNode(line.node) if line.node.parentNode == @root
+    if line.node.parentNode?
+      if DOM.LIST_TAGS[line.node.parentNode.tagName] and line.node.parentNode.childNodes.length == 1
+        DOM.removeNode(line.node.parentNode)
+      else
+        DOM.removeNode(line.node)
     delete @lineMap[line.id]
     @lines.remove(line)
 

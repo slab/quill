@@ -40,6 +40,10 @@ describe('Editor', ->
         initial:  ['<p>0123</p>']
         expected: ['<p>0123</p>']
         index: 4, length: 1
+      'bulleted line':
+        initial:  ['<p>0</p><ul><li><br></li>']
+        expected: ['<p>0</p>']
+        index: 2, length: 1
 
     _.each(tests, (test, name) ->
       it(name, ->
