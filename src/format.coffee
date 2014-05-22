@@ -60,7 +60,14 @@ class Format
 
     bullet:
       type: Format.types.LINE
+      exclude: 'list'
       parentTag: 'UL'
+      tag: 'LI'
+
+    list:
+      type: Format.types.LINE
+      exclude: 'bullet'
+      parentTag: 'OL'
       tag: 'LI'
 
 
