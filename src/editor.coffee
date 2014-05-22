@@ -108,7 +108,9 @@ class Editor
           line.insertText(offset, lineText, formatting)
           if i < lineTexts.length - 1       # Are there more lines to insert?
             nextLine = @doc.splitLine(line, offset + lineText.length)
-            line.format(formatting)
+            _.each(_.defaults({}, formatting, line.formats), (value, format) ->
+              line.format(format, formatting[format])
+            )
             offset = 0
         line = nextLine
       )

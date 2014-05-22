@@ -210,6 +210,13 @@ describe('Editor', ->
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<p><img src="http://quilljs.com/images/cloud.png"><b>A</b></p>', true)
       )
+
+      it('insert newline after bullet', ->
+        @editor.doc.setHTML('<ul><li>One</li></ul>')
+        @editor._insertAt(1, '\n')
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<p>O</p><ul><li>ne</li></ul>', true)
+      )
     )
   )
 
