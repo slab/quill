@@ -1,12 +1,11 @@
-_            = require('lodash')
-DOM          = require('./dom')
-Format       = require('./format')
-Line         = require('./line')
-LineIterator = require('./lib/line-iterator')
-LinkedList   = require('./lib/linked-list')
-Normalizer   = require('./normalizer')
-Utils        = require('./utils')
-Tandem       = require('tandem-core')
+_          = require('lodash')
+DOM        = require('./dom')
+Format     = require('./format')
+Line       = require('./line')
+LinkedList = require('./lib/linked-list')
+Normalizer = require('./normalizer')
+Utils      = require('./utils')
+Tandem     = require('tandem-core')
 
 
 class Document
@@ -28,7 +27,7 @@ class Document
     return if line? then line.findLeafAt(offset, inclusive) else [null, offset]
 
   findLine: (node) ->
-    while node? and node.parentNode != @root
+    while node? and !DOM.BLOCK_TAGS[node.tagName]?
       node = node.parentNode
     line = if node? then @lineMap[node.id] else null
     return if line?.node == node then line else null

@@ -10,6 +10,10 @@ describe('Selection', ->
           <p>0123</p>
           <p><br></p>
           <p><img src="http://quilljs.com/images/cloud.png"></p>
+          <ul>
+            <li>One</li>
+            <li>Two</li>
+          </ul>
           <p><b><s>89</s></b><i>ab</i></p>
         </div>
       '
@@ -23,13 +27,13 @@ describe('Selection', ->
           return [@quill.root.querySelector('s').firstChild, 1]
         encoded: ->
           return [@quill.root.querySelector('s').firstChild, 1]
-        index: 9
+        index: 17
       'between leaves':
         native: ->
           return [@quill.root.querySelector('s').firstChild, 2]
         encoded: ->
           return [@quill.root.querySelector('s').firstChild, 2]
-        index: 10
+        index: 18
       'break node':
         native: ->
           return [@quill.root.querySelector('br').parentNode, 0]
@@ -48,12 +52,18 @@ describe('Selection', ->
         encoded: ->
           return [@quill.root.querySelector('img'), 1]
         index: 7
+      'bullet':
+        native: ->
+          return [@quill.root.querySelectorAll('li')[1].firstChild, 1]
+        encoded: ->
+          return [@quill.root.querySelectorAll('li')[1].firstChild, 1]
+        index: 13
       'end of document':
         native: ->
           return [@quill.root.querySelector('i').firstChild, 2]
         encoded: ->
           return [@quill.root.querySelector('i').firstChild, 2]
-        index: 12
+        index: 20
 
     describe('_decodePosition()', ->
       _.each(tests, (test, name) ->
@@ -151,12 +161,12 @@ describe('Selection', ->
       )
 
       it('entire document', ->
-        @selection.setRange(new Quill.Lib.Range(0, 12))
+        @selection.setRange(new Quill.Lib.Range(0, 20))
         expect(@selection.checkFocus()).toBe(true)
         range = @selection.getRange()
         expect(range).not.toEqual(null)
         expect(range.start).toEqual(0)
-        expect(range.end).toEqual(12)
+        expect(range.end).toEqual(20)
       )
 
       it('null range', ->
