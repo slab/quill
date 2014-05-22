@@ -74,15 +74,15 @@ class Document
 
   rebuild: ->
     lines = @lines.toArray()
-    lineIterator = new LineIterator(@root)
-    lineNode = lineIterator.next()
+    lineNode = @root.firstChild
+    lineNode = lineNode.firstChild if lineNode? and DOM.LIST_TAGS[lineNode.tagName]?
     _.each(lines, (line, index) =>
       while line.node != lineNode
         if line.node.parentNode == @root
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
-          lineNode = lineIterator.next()
+          lineNode = Utils.getNextLineNode(lineNode, @root)
         else
           # Existing line removed
           return this.removeLine(line)
@@ -90,13 +90,13 @@ class Document
         # Existing line changed
         line.node = Normalizer.normalizeLine(line.node)
         line.rebuild()
-      lineNode = lineIterator.next()
+      lineNode = Utils.getNextLineNode(lineNode, @root)
     )
     # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
-      lineNode = lineIterator.next()
+      lineNode = Utils.getNextLineNode(lineNode, @root)
 
   removeLine: (line) ->
     DOM.removeNode(line.node) if line.node.parentNode == @root

@@ -27,6 +27,14 @@ Utils =
       offset = Utils.getNodeLength(child)
     return [child, offset]
 
+  getNextLineNode: (curNode, root) ->
+    nextNode = curNode.nextSibling
+    if !nextNode? and curNode.parentNode != root
+      nextNode = curNode.parentNode.nextSibling
+    if nextNode? and DOM.LIST_TAGS[nextNode.tagName]?
+      nextNode = nextNode.firstChild
+    return nextNode
+
   getNodeLength: (node) ->
     return 0 unless node?
     length = DOM.getText(node).length

@@ -5,27 +5,27 @@ describe('Document', ->
 
   describe('constructor', ->
     tests =
-      'blank':
-        initial:  ''
-        expected: ''
-      'no change':
-        initial:  '<p><b>Test</b></p>'
-        expected: '<p><b>Test</b></p>'
-      'text':
-        initial:  'Test'
-        expected: '<p>Test</p>'
-      'inline':
-        initial:  '<b>Test</b>'
-        expected: '<p><b>Test</b></p>'
+      # 'blank':
+      #   initial:  ''
+      #   expected: ''
+      # 'no change':
+      #   initial:  '<p><b>Test</b></p>'
+      #   expected: '<p><b>Test</b></p>'
+      # 'text':
+      #   initial:  'Test'
+      #   expected: '<p>Test</p>'
+      # 'inline':
+      #   initial:  '<b>Test</b>'
+      #   expected: '<p><b>Test</b></p>'
       'block pulling':
         initial:  '<div><div><div><div><b>Test</b><div>Test</div></div></div></div></div>'
         expected: '<p><b>Test</b></p><p>Test</p>'
-      'with breaks':
-        initial:  '<p>A<br>B<br>C</p>'
-        expected: '<p>A<br></p><p>B<br></p><p>C</p>'
-      'pull and break':
-        initial:  '<div><div><div>A</div>B<br>C</div></div>'
-        expected: '<p>A</p><p>B<br></p><p>C</p>'
+      # 'with breaks':
+      #   initial:  '<p>A<br>B<br>C</p>'
+      #   expected: '<p>A<br></p><p>B<br></p><p>C</p>'
+      # 'pull and break':
+      #   initial:  '<div><div><div>A</div>B<br>C</div></div>'
+      #   expected: '<p>A</p><p>B<br></p><p>C</p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -43,8 +43,7 @@ describe('Document', ->
           <p>0123</p>
           <p><br></p>
           <p><b>6789</b></p>
-        </div>
-      '
+        </div>'
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
     )
 
