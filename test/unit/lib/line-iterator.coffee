@@ -41,9 +41,18 @@ describe('LineIterator', ->
 
   it('iterate over empty', ->
     container = $('#editor-container').html('').get(0)
-
     iterator = new Quill.Lib.LineIterator(container)
     line = iterator.next()
     expect(line).toEqual(null)
+  )
+
+  it('iterate with change', ->
+    container = $('#editor-container').html('<div id="line-1">One</div><p id="line-2">Two</p>').get(0)
+    iterator = new Quill.Lib.LineIterator(container)
+    line = iterator.next()
+    expect(line.id).toEqual('line-1')
+    Quill.DOM.switchTag(container.lastChild, 'div')
+    line = iterator.next()
+    expect(line).not.toEqual(null)
   )
 )

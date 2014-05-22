@@ -3,22 +3,17 @@ DOM = require('../dom')
 
 class LineIterator
   constructor: (@root) ->
-    @lineNode = @root.firstChild
-    if @lineNode? and DOM.LIST_TAGS[@lineNode.tagName]?
-      @lineNode = @lineNode.firstChild
 
   next: ->
-    return null unless @lineNode?
-    retNode = @lineNode
-    @lineNode = @lineNode.nextSibling
-    if !@lineNode?
-      if @root != retNode.parentNode
-        @lineNode = retNode.parentNode.nextSibling
-      else
-        return retNode
-    if @lineNode? and DOM.LIST_TAGS[@lineNode.tagName]
-      @lineNode = @lineNode.firstChild
-    return retNode
+    return null unless @root?
+    nextNode = if @lineNode then @lineNode.nextSibling else @root.firstChild
+    if !nextNode? and @lineNode? and @lineNode.parentNode != @root
+      nextNode = @lineNode.parentNode.nextSibling
+    if nextNode? and DOM.LIST_TAGS[nextNode.tagName]?
+      nextNode = nextNode.firstChild
+    @root = null unless nextNode?
+    @lineNode = nextNode
+    return @lineNode
 
 
 module.exports = LineIterator
