@@ -128,6 +128,7 @@ class MultiCursor extends EventEmitter2
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
   _updateCursor: (cursor) ->
+    @quill.editor.checkUpdate()
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
     guide = @container.ownerDocument.createElement('span')
     if leaf?
@@ -141,6 +142,7 @@ class MultiCursor extends EventEmitter2
     DOM.removeNode(guide)
     DOM.normalize(leaf.node.parentNode) if didSplit
     cursor.dirty = false
+    @quill.editor.selection.update('silent')
 
 
 module.exports = MultiCursor
