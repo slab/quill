@@ -91,6 +91,7 @@ class MultiCursor extends EventEmitter2
     _.each(@cursors, (cursor, id) =>
       return unless cursor?
       this._updateCursor(cursor) if cursor.dirty or force
+      return true
     )
 
   _applyDelta: (delta) ->
