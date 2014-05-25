@@ -29,7 +29,10 @@ class Toolbar
           @quill.formatLine(range, format, value, 'user')
         else
           @quill.formatText(range, format, value, 'user')
-        this.setActive(format, value)
+        _.defer( =>
+          this.updateActive(range)  # Clear exclusive formats
+          this.setActive(format, value)
+        )
       )
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
@@ -45,7 +48,7 @@ class Toolbar
   initFormat: (format, callback) ->
     selector = ".sc-#{format}"
     if Toolbar.formats.SELECT[format]?
-      selector = "select#{selector}"
+      selector = "select#{selector}"    # Avoid selecting the picker container
       eventName = 'change'
     else
       eventName = 'click'
