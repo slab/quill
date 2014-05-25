@@ -59,7 +59,7 @@ describe('Editor', ->
     tests =
       'part of line':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0' }
           { value: '12', attributes: { bold: true } }
           { value: '3\n' }
@@ -67,21 +67,21 @@ describe('Editor', ->
         index: 1, length: 2, name: 'bold', value: true
       'trailing newline with normal format':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123' }
           { value: '\n', attributes: { bold: true } }
         ]})
         index: 4, length: 1, name: 'bold', value: true
       'trailing newline with line format':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123' }
           { value: '\n', attributes: { align: 'right' } }
         ]})
         index: 4, length: 1, name: 'align', value: 'right'
       'part of multiple lines':
         initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 10, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '01' }
           { value: '23\n', attributes: { strike: true } }
           { value: '56', attributes: { bold: true, strike: true } }
@@ -91,7 +91,7 @@ describe('Editor', ->
         index: 2, length: 5, name: 'strike', value: true
       'line contents with line level format':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123\n' }
         ]})
         index: 1, length: 2, name: 'align', value: 'right'
