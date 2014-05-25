@@ -8,7 +8,7 @@
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
   "description": "Cross browser rich text editor",
-  "main": "index.coffee",
+  "main": "index.js",
   "license": "BSD",
   "ignore": [
     "**/.*",
