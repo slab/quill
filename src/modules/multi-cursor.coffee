@@ -46,17 +46,16 @@ class MultiCursor extends EventEmitter2
     _.each(_.keys(@cursors), _.bind(this.removeCursor, this))
     @cursors = {}
 
-  moveCursor: (userId, index, update = true) ->
+  moveCursor: (userId, index) ->
     cursor = @cursors[userId]
     cursor.index = index
-    cursor.dirty = true
     DOM.removeClass(cursor.elem, 'hidden')
     clearTimeout(cursor.timer)
     cursor.timer = setTimeout( =>
       DOM.addClass(cursor.elem, 'hidden')
       cursor.timer = null
     , @options.timeout)
-    this._updateCursor(cursor) if update
+    this._updateCursor(cursor)
     return cursor
 
   removeCursor: (userId) ->
@@ -65,7 +64,7 @@ class MultiCursor extends EventEmitter2
     cursor.elem.parentNode.removeChild(cursor.elem) if cursor?
     delete @cursors[userId]
 
-  setCursor: (userId, index, name, color, update = true) ->
+  setCursor: (userId, index, name, color) ->
     unless @cursors[userId]?
       @cursors[userId] = cursor = {
         userId: userId
@@ -75,32 +74,30 @@ class MultiCursor extends EventEmitter2
       }
       this.emit(MultiCursor.events.CURSOR_ADDED, cursor)
     _.defer( =>
-      this.moveCursor(userId, index, update)
+      this.moveCursor(userId, index)
     )
     return @cursors[userId]
 
-  shiftCursors: (index, length, authorId = null, update = true) ->
+  shiftCursors: (index, length, authorId = null) ->
     _.each(@cursors, (cursor, id) =>
       return unless cursor and (cursor.index > index or cursor.userId == authorId)
       cursor.index += Math.max(length, index - cursor.index)
-      cursor.dirty = true
     )
-    this.update() if update
 
-  update: (force = false) ->
+  update: ->
     _.each(@cursors, (cursor, id) =>
       return unless cursor?
-      this._updateCursor(cursor) if cursor.dirty or force
+      this._updateCursor(cursor)
       return true
     )
 
   _applyDelta: (delta) ->
     delta.apply((index, text, formatting) =>
-      this.shiftCursors(index, text.length, formatting['author'], false)
+      this.shiftCursors(index, text.length, formatting['author'])
     , (index, length) =>
-      this.shiftCursors(index, -1 * length, null, false)
+      this.shiftCursors(index, -1 * length, null)
     , (index, length, name, value) =>
-      this.shiftCursors(index, 0, null, false)
+      this.shiftCursors(index, 0, null)
     )
     this.update()
 
@@ -141,7 +138,6 @@ class MultiCursor extends EventEmitter2
     this._moveCursor(cursor, guide)
     DOM.removeNode(guide)
     DOM.normalize(leaf.node.parentNode) if didSplit
-    cursor.dirty = false
     @quill.editor.selection.update('silent')
 
 
