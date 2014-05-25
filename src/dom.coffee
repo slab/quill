@@ -273,7 +273,7 @@ DOM =
 
   switchTag: (node, newTag) ->
     newTag = newTag.toUpperCase()
-    return if node.tagName == newTag
+    return node if node.tagName == newTag
     newNode = node.ownerDocument.createElement(newTag)
     attributes = DOM.getAttributes(node)
     this.moveChildren(newNode, node) unless DOM.VOID_TAGS[newTag]?
