@@ -40,6 +40,10 @@ describe('Editor', ->
         initial:  ['<p>0123</p>']
         expected: ['<p>0123</p>']
         index: 4, length: 1
+      'bulleted line':
+        initial:  ['<p>0</p><ul><li><br></li>']
+        expected: ['<p>0</p>']
+        index: 2, length: 1
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -209,6 +213,13 @@ describe('Editor', ->
         @editor._insertAt(1, 'A', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<p><img src="http://quilljs.com/images/cloud.png"><b>A</b></p>', true)
+      )
+
+      it('insert newline after bullet', ->
+        @editor.doc.setHTML('<ul><li>One</li></ul>')
+        @editor._insertAt(1, '\n')
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<p>O</p><ul><li>ne</li></ul>', true)
       )
     )
   )

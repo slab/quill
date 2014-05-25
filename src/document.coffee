@@ -27,7 +27,7 @@ class Document
     return if line? then line.findLeafAt(offset, inclusive) else [null, offset]
 
   findLine: (node) ->
-    while node? and node.parentNode != @root
+    while node? and !DOM.BLOCK_TAGS[node.tagName]?
       node = node.parentNode
     line = if node? then @lineMap[node.id] else null
     return if line?.node == node then line else null
@@ -74,13 +74,14 @@ class Document
   rebuild: ->
     lines = @lines.toArray()
     lineNode = @root.firstChild
+    lineNode = lineNode.firstChild if lineNode? and DOM.LIST_TAGS[lineNode.tagName]?
     _.each(lines, (line, index) =>
       while line.node != lineNode
-        if line.node.parentNode == @root
+        if line.node.parentNode?
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
-          lineNode = lineNode.nextSibling
+          lineNode = Utils.getNextLineNode(lineNode, @root)
         else
           # Existing line removed
           return this.removeLine(line)
@@ -88,16 +89,20 @@ class Document
         # Existing line changed
         line.node = Normalizer.normalizeLine(line.node)
         line.rebuild()
-      lineNode = line.node.nextSibling
+      lineNode = Utils.getNextLineNode(lineNode, @root)
     )
     # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
-      lineNode = lineNode.nextSibling
+      lineNode = Utils.getNextLineNode(lineNode, @root)
 
   removeLine: (line) ->
-    DOM.removeNode(line.node) if line.node.parentNode == @root
+    if line.node.parentNode?
+      if DOM.LIST_TAGS[line.node.parentNode.tagName] and line.node.parentNode.childNodes.length == 1
+        DOM.removeNode(line.node.parentNode)
+      else
+        DOM.removeNode(line.node)
     delete @lineMap[line.id]
     @lines.remove(line)
 

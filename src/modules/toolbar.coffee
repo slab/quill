@@ -8,9 +8,9 @@ class Toolbar
     container: null
 
   @formats:
-    BUTTON  : { 'bold', 'image', 'italic', 'link', 'strike', 'underline' }
-    LINE    : { 'align' }
+    LINE    : { 'align', 'bullet', 'list' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
+    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
@@ -93,8 +93,11 @@ class Toolbar
 
   _getLeafActive: (range) ->
     if range.isCollapsed()
-      start = Math.max(0, range.start - 1)
-      contents = @quill.getContents(start, range.end)
+      [line, offset] = @quill.editor.doc.findLineAt(range.start)
+      if offset == 0
+        contents = @quill.getContents(range.start, range.end + 1)
+      else
+        contents = @quill.getContents(range.start - 1, range.end)
     else
       contents = @quill.getContents(range)
     formatsArr = _.map(contents.ops, 'attributes')
@@ -106,7 +109,6 @@ class Toolbar
     [lastLine, offset] = @quill.editor.doc.findLineAt(range.end)
     lastLine = lastLine.next if lastLine? and lastLine == firstLine
     while firstLine? and firstLine != lastLine
-      formats = { 'align': firstLine.formats['align'] }    # TODO fix when we have more line attributes
       formatsArr.push(firstLine.formats)
       firstLine = firstLine.next
     return this._intersectFormats(formatsArr)
@@ -126,7 +128,7 @@ class Toolbar
             activeFormats[name] = [activeFormats[name], formats[name]]
       )
       _.each(missing, (name) ->
-        if Toolbar.formats.BUTTON[name]?
+        if Toolbar.formats.TOGGLE[name]?
           delete activeFormats[name]
         else if Toolbar.formats.SELECT[name]? and !_.isArray(activeFormats[name])
           activeFormats[name] = [activeFormats[name]]

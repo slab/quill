@@ -27,6 +27,14 @@ Utils =
       offset = Utils.getNodeLength(child)
     return [child, offset]
 
+  getNextLineNode: (curNode, root) ->
+    nextNode = curNode.nextSibling
+    if !nextNode? and curNode.parentNode != root
+      nextNode = curNode.parentNode.nextSibling
+    if nextNode? and DOM.LIST_TAGS[nextNode.tagName]?
+      nextNode = nextNode.firstChild
+    return nextNode
+
   getNodeLength: (node) ->
     return 0 unless node?
     length = DOM.getText(node).length
@@ -37,6 +45,11 @@ Utils =
   isIE: (maxVersion) ->
     version = document.documentMode
     return version and maxVersion >= version
+
+  mergeNodes: (newNode, oldNode) ->
+    DOM.moveChildren(newNode, oldNode)
+    DOM.normalize(newNode)
+    DOM.removeNode(oldNode)
 
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (refNode, root, force = false) ->

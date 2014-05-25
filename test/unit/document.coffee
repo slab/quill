@@ -5,27 +5,27 @@ describe('Document', ->
 
   describe('constructor', ->
     tests =
-      'blank':
-        initial:  ''
-        expected: ''
-      'no change':
-        initial:  '<p><b>Test</b></p>'
-        expected: '<p><b>Test</b></p>'
-      'text':
-        initial:  'Test'
-        expected: '<p>Test</p>'
-      'inline':
-        initial:  '<b>Test</b>'
-        expected: '<p><b>Test</b></p>'
+      # 'blank':
+      #   initial:  ''
+      #   expected: ''
+      # 'no change':
+      #   initial:  '<p><b>Test</b></p>'
+      #   expected: '<p><b>Test</b></p>'
+      # 'text':
+      #   initial:  'Test'
+      #   expected: '<p>Test</p>'
+      # 'inline':
+      #   initial:  '<b>Test</b>'
+      #   expected: '<p><b>Test</b></p>'
       'block pulling':
         initial:  '<div><div><div><div><b>Test</b><div>Test</div></div></div></div></div>'
         expected: '<p><b>Test</b></p><p>Test</p>'
-      'with breaks':
-        initial:  '<p>A<br>B<br>C</p>'
-        expected: '<p>A<br></p><p>B<br></p><p>C</p>'
-      'pull and break':
-        initial:  '<div><div><div>A</div>B<br>C</div></div>'
-        expected: '<p>A</p><p>B<br></p><p>C</p>'
+      # 'with breaks':
+      #   initial:  '<p>A<br>B<br>C</p>'
+      #   expected: '<p>A<br></p><p>B<br></p><p>C</p>'
+      # 'pull and break':
+      #   initial:  '<div><div><div>A</div>B<br>C</div></div>'
+      #   expected: '<p>A</p><p>B<br></p><p>C</p>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -43,8 +43,7 @@ describe('Document', ->
           <p>0123</p>
           <p><br></p>
           <p><b>6789</b></p>
-        </div>
-      '
+        </div>'
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
     )
 
@@ -331,15 +330,23 @@ describe('Document', ->
         expected: Tandem.Delta.getInitial('0\n\n1\n')
       'tag format':
         initial:  ['<p><b>0123</b></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { bold: true } }
           { value: '\n' }
         ]})
       'style format':
         initial:  ['<p><span style="color: teal;">0123</span></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, endLength: 5, ops: [
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { color: 'teal' } }
           { value: '\n' }
+        ]})
+      'bullets':
+        initial:  ['<ul><li>One</li><li>Two</li></ul>']
+        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+          { value: 'One' }
+          { value: '\n', attributes: { bullet: true } }
+          { value: 'Two' }
+          { value: '\n', attributes: { bullet: true } }
         ]})
 
     _.each(tests, (test, name) ->

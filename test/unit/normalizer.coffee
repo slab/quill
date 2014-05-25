@@ -128,6 +128,9 @@ describe('Normalizer', ->
       'No children':
         initial:  '<div></div>'
         expected: '<div></div>'
+      'After block':
+        initial:  '<div>One<div>Two</div>'
+        expected: '<div>One</div><div>Two</div>'
       'Middle block':
         initial:  '<div>One<div>Two</div>Three</div>'
         expected: '<div>One</div><div>Two</div><div>Three</div>'
@@ -143,6 +146,15 @@ describe('Normalizer', ->
       'Continuous inlines':
         initial:  '<div>A<br>B<div>Inner</div></div>'
         expected: '<div>A<br>B</div><div>Inner</div>'
+      'Bullets':
+        initial:  '<ul><li>One</li><li>Two</li></ul>'
+        expected: '<ul><li>One</li><li>Two</li></ul>'
+      'Inner list':
+        initial:  '<div><ul><li>One</li><li>Two</li></ul></div>'
+        expected: '<ul><li>One</li><li>Two</li></ul>'
+      'Middle list':
+        initial:  '<div>Test<ul><li>One</li><li>Two</li></ul>Test</div>'
+        expected: '<div>Test</div><ul><li>One</li><li>Two</li></ul><div>Test</div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -150,7 +162,6 @@ describe('Normalizer', ->
         firstChild = @container.firstChild
         Quill.Normalizer.pullBlocks(firstChild)
         expect(@container).toEqualHTML(test.expected)
-        expect(firstChild).toEqual(@container.firstChild)
       )
     )
   )

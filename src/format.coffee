@@ -57,13 +57,18 @@ class Format
       type: Format.types.LINE
       style: 'textAlign'
       default: 'left'
-      prepare: (doc, value) ->
-        switch value
-          when 'left'    then command = 'justifyLeft'
-          when 'center'  then command = 'justifyCenter'
-          when 'right'   then command = 'justifyRight'
-          when 'justify' then command = 'justifyFull'
-        doc.execCommand(command, false)
+
+    bullet:
+      type: Format.types.LINE
+      exclude: 'list'
+      parentTag: 'UL'
+      tag: 'LI'
+
+    list:
+      type: Format.types.LINE
+      exclude: 'bullet'
+      parentTag: 'OL'
+      tag: 'LI'
 
 
   constructor: (@document, @config) ->
@@ -71,12 +76,22 @@ class Format
   add: (node, value) ->
     return this.remove(node) unless value
     return node if this.value(node) == value
+    if _.isString(@config.parentTag)
+      parentNode = @document.createElement(@config.parentTag)
+      DOM.wrap(parentNode, node)
+      if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
+        Utils.mergeNodes(node.parentNode.previousSibling, node.parentNode)
+      if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
+        Utils.mergeNodes(node.parentNode, node.parentNode.nextSibling)
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
+        # TODO use replaceNode
         node.parentNode.insertBefore(formatNode, node) if node.parentNode?
         DOM.removeNode(node)
         node = formatNode
+      else if this.isType(Format.types.LINE)
+        node = DOM.switchTag(node, @config.tag)
       else
         node = DOM.wrap(formatNode, node)
     if _.isString(@config.style) or _.isString(@config.attribute) or _.isString(@config.class)
@@ -96,6 +111,8 @@ class Format
 
   match: (node) ->
     return false unless DOM.isElement(node)
+    if _.isString(@config.parentTag) and node.parentNode?.tagName != @config.parentTag
+      return false
     if _.isString(@config.tag) and node.tagName != @config.tag
       return false
     if _.isString(@config.style) and (!node.style[@config.style] or node.style[@config.style] == @config.default)
@@ -126,8 +143,15 @@ class Format
         DOM.removeClass(node, c) if c.indexOf(@config.class) == 0
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
-      node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
-      DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?
+      if this.isType(Format.types.LINE)
+        Utils.splitAncestors(node, node.parentNode.parentNode) if node.previousSibling?
+        Utils.splitAncestors(node.nextSibling, node.parentNode.parentNode) if node.nextSibling?
+        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
+      else
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
+        DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?   # TODO is this desireable?
+    if _.isString(@config.parentTag)
+      DOM.unwrap(node.parentNode)
     if node.tagName == DOM.DEFAULT_INLINE_TAG and !node.hasAttributes()
       node = DOM.unwrap(node)
     return node
@@ -135,13 +159,13 @@ class Format
   value: (node) ->
     return undefined unless this.match(node)
     if _.isString(@config.attribute)
-      return node.getAttribute(@config.attribute) or undefined
-    else if _.isString(@config.style) and node.style[@config.style] != @config.default
+      return node.getAttribute(@config.attribute) or undefined    # So "" does not get returned
+    else if _.isString(@config.style)
       return node.style[@config.style] or undefined
     else if _.isString(@config.class)
       for c in DOM.getClasses(node)
         return c.slice(@config.class.length) if c.indexOf(@config.class) == 0
-    else if _.isString(@config.tag) and node.tagName == @config.tag
+    else if _.isString(@config.tag)
       return true
     return undefined
 

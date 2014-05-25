@@ -35,6 +35,8 @@ Normalizer =
     'U'
     'A'
     'IMG'
+    'UL'
+    'LI'
   }
 
   # Make sure descendant break tags are not causing multiple lines to be rendered
@@ -49,7 +51,7 @@ Normalizer =
   normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
     lineNode = Normalizer.handleBreaks(lineNode)
-    Normalizer.pullBlocks(lineNode)
+    lineNode = Normalizer.pullBlocks(lineNode)
     lineNode = Normalizer.normalizeNode(lineNode)
     Normalizer.unwrapText(lineNode)
     return lineNode
@@ -84,22 +86,26 @@ Normalizer =
         # Merge similar nodes
         if _.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))
           nodes.push(node.firstChild)
-          DOM.moveChildren(node.previousSibling, node)
-          DOM.normalize(node.previousSibling)
-          DOM.removeNode(node)
+          Utils.mergeNodes(node.previousSibling, node)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
     while curNode?
-      if DOM.BLOCK_TAGS[curNode.tagName]?
+      if DOM.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
         if curNode.previousSibling?
           Utils.splitAncestors(curNode, lineNode.parentNode)
         if curNode.nextSibling?
           Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
-        DOM.unwrap(curNode)
-        Normalizer.pullBlocks(lineNode)
+        if !DOM.LIST_TAGS[curNode.tagName]?
+          DOM.unwrap(curNode)
+          Normalizer.pullBlocks(lineNode)
+        else
+          DOM.unwrap(curNode.parentNode)
+          lineNode = curNode unless lineNode.parentNode?    # May have just unwrapped lineNode
+        break
       curNode = curNode.nextSibling
+    return lineNode
 
   stripComments: (html) ->
     html = html.replace(/<!--[\s\S]*?-->/g, '')

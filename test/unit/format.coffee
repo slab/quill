@@ -54,6 +54,20 @@ describe('Format', ->
       )
     )
 
+    it("bullet existing", ->
+      @container.innerHTML = '<ul><li>One</li><li>Two</li><li>Three</li></ul>'
+      format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+      li = @container.firstChild.childNodes[1]
+      expect(format.match(li)).toBe(true)
+    )
+
+    it("bullet missing", ->
+      @container.innerHTML = '<ul><li>One</li></ul><p>Two</p><ul><li>Three</li></ul>'
+      format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+      li = @container.firstChild.childNodes[1]
+      expect(format.match(li)).toBe(false)
+    )
+
     it('default', ->
       @container.innerHTML = '<span style="font-size: 13px;">Text</span>'
       format = new Quill.Format(document, Quill.Format.FORMATS.color)
@@ -78,6 +92,13 @@ describe('Format', ->
       @container.innerHTML = '<span style="font-size: 13px;">Text</span>'
       format = new Quill.Format(document, Quill.Format.FORMATS.color)
       expect(format.value(@container.firstChild)).toBe(undefined)
+    )
+
+    it('bullets', ->
+      @container.innerHTML = '<ul><li>One</li><li>Two</li><li>Three</li></ul>'
+      format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+      li = @container.firstChild.childNodes[1]
+      expect(format.value(li)).toBe(true)
     )
   )
 
@@ -142,6 +163,14 @@ describe('Format', ->
       format.add(@container.firstChild, 'jason')
       expect(@container).toEqualHTML('<span class="author-jason">Text</span>')
     )
+
+    it('bullets', ->
+      @container.innerHTML = '<ul><li>One</li></ul><p>Two</p><ul><li>Three</li></ul>'
+      format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+      p = @container.childNodes[1]
+      format.add(p, true)
+      expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li><li>Three</li></ul>')
+    )
   )
 
   describe('remove()', ->
@@ -158,5 +187,13 @@ describe('Format', ->
         expect(@container).toEqualHTML(test.missing)
       )
     )
+  )
+
+  it('bullets', ->
+    @container.innerHTML = '<ul><li>One</li><li>Two</li><li>Three</li></ul>'
+    format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+    li = @container.firstChild.childNodes[1]
+    format.remove(li)
+    expect(@container).toEqualHTML('<ul><li>One</li></ul><p>Two</p><ul><li>Three</li></ul>')
   )
 )

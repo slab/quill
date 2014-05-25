@@ -31,7 +31,7 @@ class Quill extends EventEmitter2
   @Theme: Themes
 
   @DEFAULTS:
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image']
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
     modules:
       'keyboard': true
       'paste-manager': true
@@ -113,7 +113,6 @@ class Quill extends EventEmitter2
 
   formatText: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    return unless end > start
     formats = _.reduce(formats, (formats, value, name) =>
       format = @editor.doc.formats[name]
       # TODO warn if no format
@@ -168,7 +167,10 @@ class Quill extends EventEmitter2
     return unless format?     # TODO warn
     range = this.getSelection()
     return unless range?.isCollapsed()
-    format.prepare(value)
+    if format.isType(Format.types.LINE)
+      this.formatLine(range, name, value, Quill.sources.USER)
+    else
+      format.prepare(value)
 
   setContents: (delta, source = Quill.sources.API) ->
     if _.isArray(delta)
