@@ -24,6 +24,8 @@ Note that enabling a format is distinct from adding a control in the [toolbar](/
   - Background Color - `background`
   - Image - `image`
   - Link - `link`
+  - Bullet - `bullet`
+  - List - `list`
 
 ### Configuring
 
