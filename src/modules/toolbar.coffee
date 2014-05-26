@@ -92,7 +92,7 @@ class Toolbar
   _getActive: (range) ->
     leafFormats = this._getLeafActive(range)
     lineFormats = this._getLineActive(range)
-    return _.defaults(leafFormats, lineFormats)
+    return _.defaults({}, leafFormats, lineFormats)
 
   _getLeafActive: (range) ->
     if range.isCollapsed()
@@ -112,7 +112,7 @@ class Toolbar
     [lastLine, offset] = @quill.editor.doc.findLineAt(range.end)
     lastLine = lastLine.next if lastLine? and lastLine == firstLine
     while firstLine? and firstLine != lastLine
-      formatsArr.push(firstLine.formats)
+      formatsArr.push(_.clone(firstLine.formats))
       firstLine = firstLine.next
     return this._intersectFormats(formatsArr)
 
