@@ -1,4 +1,26 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+module.exports={
+  "name": "quill",
+  "version": "0.13.5",
+  "homepage": "http://quilljs.com",
+  "authors": ["Jason Chen <jhchen7@gmail.com>"],
+  "contributors": [
+    "Byron Milligan <byronner@gmail.com>",
+    "Keegan Poppen <keegan.poppen@gmail.com>"
+  ],
+  "description": "Cross browser rich text editor",
+  "main": "index.js",
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "build",
+    "tests"
+  ]
+}
+
+},{}],2:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -628,7 +650,7 @@ process.chdir = function (dir) {
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
 }).call(this,_dereq_("FWaASH"))
-},{"FWaASH":1}],"eventemitter2":[function(_dereq_,module,exports){
+},{"FWaASH":2}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
@@ -7815,7 +7837,7 @@ module.exports=_dereq_('x/3aRz');
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"lodash":[function(_dereq_,module,exports){
 module.exports=_dereq_('4HJaAd');
-},{}],6:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
 (function() {
   var Delta, InsertOp, Op, RetainOp, diff_match_patch, dmp, _;
 
@@ -8481,7 +8503,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./diff_match_patch":8,"./insert":9,"./op":10,"./retain":11,"lodash":"4HJaAd"}],7:[function(_dereq_,module,exports){
+},{"./diff_match_patch":9,"./insert":10,"./op":11,"./retain":12,"lodash":"4HJaAd"}],8:[function(_dereq_,module,exports){
 (function() {
   var Delta, DeltaGenerator, InsertOp, RetainOp, getUtils, setDomain, _, _domain;
 
@@ -8838,7 +8860,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./delta":6,"./insert":9,"./retain":11,"lodash":"4HJaAd"}],8:[function(_dereq_,module,exports){
+},{"./delta":7,"./insert":10,"./retain":12,"lodash":"4HJaAd"}],9:[function(_dereq_,module,exports){
 (function() {
   var googlediff;
 
@@ -8854,7 +8876,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"googlediff":14}],9:[function(_dereq_,module,exports){
+},{"googlediff":15}],10:[function(_dereq_,module,exports){
 (function() {
   var InsertOp, Op, _,
     __hasProp = {}.hasOwnProperty,
@@ -8914,7 +8936,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":10,"lodash":"4HJaAd"}],10:[function(_dereq_,module,exports){
+},{"./op":11,"lodash":"4HJaAd"}],11:[function(_dereq_,module,exports){
 (function() {
   var Op, _;
 
@@ -8998,7 +9020,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"lodash":"4HJaAd"}],11:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],12:[function(_dereq_,module,exports){
 (function() {
   var Op, RetainOp, _,
     __hasProp = {}.hasOwnProperty,
@@ -9051,7 +9073,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":10,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
+},{"./op":11,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
 module.exports=_dereq_('38mxji');
 },{}],"38mxji":[function(_dereq_,module,exports){
 (function() {
@@ -9065,10 +9087,10 @@ module.exports=_dereq_('38mxji');
 
 }).call(this);
 
-},{"./delta":6,"./delta_generator":7,"./insert":9,"./op":10,"./retain":11}],14:[function(_dereq_,module,exports){
+},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],15:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
-},{"./javascript/diff_match_patch_uncompressed.js":15}],15:[function(_dereq_,module,exports){
+},{"./javascript/diff_match_patch_uncompressed.js":16}],16:[function(_dereq_,module,exports){
 /**
  * Diff Match and Patch
  *
@@ -11940,75 +11962,6 @@ this['DIFF_EQUAL'] = DIFF_EQUAL;
 
 },{}],"underscore.string":[function(_dereq_,module,exports){
 module.exports=_dereq_('Fq7WE+');
-},{}],18:[function(_dereq_,module,exports){
-module.exports={
-  "name": "quilljs",
-  "version": "0.13.4",
-  "description": "Cross browser rich text editor",
-  "author": "Jason Chen <jhchen7@gmail.com>",
-  "homepage": "http://quilljs.com",
-  "contributors": [
-    "Byron Milligan <byronner@gmail.com>",
-    "Keegan Poppen <keegan.poppen@gmail.com>"
-  ],
-  "main": "index.js",
-  "dependencies": {
-    "eventemitter2": "~0.4.13",
-    "lodash": "~2.4.1",
-    "tandem-core": "~0.5.2",
-    "underscore.string": "~2.3.3"
-  },
-  "devDependencies": {
-    "async": "~0.6.2",
-    "coffeeify": "~0.6.0",
-    "grunt": "~0.4.3",
-    "grunt-browserify": "~2.0.7",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-connect": "~0.7.1",
-    "grunt-contrib-jade": "~0.11.0",
-    "grunt-contrib-stylus": "~0.13.2",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-karma": "~0.8.0",
-    "grunt-newer": "~0.7.0",
-    "grunt-protractor-runner": "~0.2.4",
-    "grunt-shell": "~0.6.4",
-    "istanbul": "~0.2.6",
-    "jquery": "~1.11.0",
-    "karma": "~0.12.0",
-    "karma-chrome-launcher": "~0.1.2",
-    "karma-coffee-preprocessor": "~0.2.1",
-    "karma-coverage": "~0.2.0",
-    "karma-firefox-launcher": "~0.1.3",
-    "karma-html2js-preprocessor": "~0.1.0",
-    "karma-jasmine": "~0.2.0",
-    "karma-phantomjs-launcher": "~0.1.2",
-    "karma-safari-launcher": "~0.1.1",
-    "karma-sauce-launcher": "~0.2.2",
-    "load-grunt-tasks": "~0.4.0",
-    "protractor": "~0.21.0"
-  },
-  "engines": {
-    "node": ">=0.10"
-  },
-  "license": "BSD-3-Clause",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/quilljs/quill"
-  },
-  "bugs": {
-    "url": "https://github.com/quilljs/quill/issues"
-  },
-  "scripts": {
-    "prepublish": "grunt coffee:src",
-    "postpublish": "grunt clean:coffee",
-    "test": "grunt test"
-  },
-  "keywords": ["editor", "rich text", "wysiwyg"]
-}
-
 },{}],19:[function(_dereq_,module,exports){
 var DOM, Document, Format, Line, LinkedList, Normalizer, Tandem, Utils, _;
 
@@ -12065,7 +12018,7 @@ Document = (function() {
 
   Document.prototype.findLine = function(node) {
     var line;
-    while ((node != null) && node.parentNode !== this.root) {
+    while ((node != null) && (DOM.BLOCK_TAGS[node.tagName] == null)) {
       node = node.parentNode;
     }
     line = node != null ? this.lineMap[node.id] : null;
@@ -12143,14 +12096,17 @@ Document = (function() {
     var lineNode, lines, _results;
     lines = this.lines.toArray();
     lineNode = this.root.firstChild;
+    if ((lineNode != null) && (DOM.LIST_TAGS[lineNode.tagName] != null)) {
+      lineNode = lineNode.firstChild;
+    }
     _.each(lines, (function(_this) {
       return function(line, index) {
         var newLine;
         while (line.node !== lineNode) {
-          if (line.node.parentNode === _this.root) {
+          if (line.node.parentNode != null) {
             lineNode = Normalizer.normalizeLine(lineNode);
             newLine = _this.insertLineBefore(lineNode, line);
-            lineNode = lineNode.nextSibling;
+            lineNode = Utils.getNextLineNode(lineNode, _this.root);
           } else {
             return _this.removeLine(line);
           }
@@ -12159,21 +12115,25 @@ Document = (function() {
           line.node = Normalizer.normalizeLine(line.node);
           line.rebuild();
         }
-        return lineNode = line.node.nextSibling;
+        return lineNode = Utils.getNextLineNode(lineNode, _this.root);
       };
     })(this));
     _results = [];
     while (lineNode != null) {
       lineNode = Normalizer.normalizeLine(lineNode);
       this.appendLine(lineNode);
-      _results.push(lineNode = lineNode.nextSibling);
+      _results.push(lineNode = Utils.getNextLineNode(lineNode, this.root));
     }
     return _results;
   };
 
   Document.prototype.removeLine = function(line) {
-    if (line.node.parentNode === this.root) {
-      DOM.removeNode(line.node);
+    if (line.node.parentNode != null) {
+      if (DOM.LIST_TAGS[line.node.parentNode.tagName] && line.node.parentNode.childNodes.length === 1) {
+        DOM.removeNode(line.node.parentNode);
+      } else {
+        DOM.removeNode(line.node);
+      }
     }
     delete this.lineMap[line.id];
     return this.lines.remove(line);
@@ -12294,6 +12254,10 @@ DOM = {
   },
   EMBED_TAGS: {
     'IMG': 'IMG'
+  },
+  LIST_TAGS: {
+    'OL': 'OL',
+    'UL': 'UL'
   },
   VOID_TAGS: {
     'AREA': 'AREA',
@@ -12531,6 +12495,11 @@ DOM = {
       return DOM.triggerEvent(select, 'change');
     }
   },
+  setAttributes: function(node, attributes) {
+    return _.each(attributes, function(value, name) {
+      return node.setAttribute(name, value);
+    });
+  },
   setStyles: function(node, styles) {
     var styleString;
     styleString = _.map(styles, function(style, name) {
@@ -12555,7 +12524,7 @@ DOM = {
     var attributes, newNode;
     newTag = newTag.toUpperCase();
     if (node.tagName === newTag) {
-      return;
+      return node;
     }
     newNode = node.ownerDocument.createElement(newTag);
     attributes = DOM.getAttributes(node);
@@ -12630,11 +12599,16 @@ DOM = {
     return ret;
   },
   wrap: function(wrapper, node) {
+    var parent;
     if (node.parentNode != null) {
       node.parentNode.insertBefore(wrapper, node);
     }
-    wrapper.appendChild(node);
-    return wrapper;
+    parent = wrapper;
+    while (parent.firstChild != null) {
+      parent = wrapper.firstChild;
+    }
+    parent.appendChild(node);
+    return parent;
   }
 };
 
@@ -12663,7 +12637,7 @@ Editor = (function() {
     this.iframeContainer = iframeContainer;
     this.quill = quill;
     this.options = options != null ? options : {};
-    this.renderer = new Renderer(this.iframeContainer, this.quill, this.options);
+    this.renderer = new Renderer(this.iframeContainer, this.options);
     this.root = this.renderer.root;
     this.doc = new Document(this.root, this.options);
     this.delta = this.doc.toDelta();
@@ -12819,7 +12793,9 @@ Editor = (function() {
             line.insertText(offset, lineText, formatting);
             if (i < lineTexts.length - 1) {
               nextLine = _this.doc.splitLine(line, offset + lineText.length);
-              line.format(formatting);
+              _.each(_.defaults({}, formatting, line.formats), function(value, format) {
+                return line.format(format, formatting[format]);
+              });
               offset = 0;
             }
           }
@@ -12953,24 +12929,19 @@ Format = (function() {
     align: {
       type: Format.types.LINE,
       style: 'textAlign',
-      "default": 'left',
-      prepare: function(doc, value) {
-        var command;
-        switch (value) {
-          case 'left':
-            command = 'justifyLeft';
-            break;
-          case 'center':
-            command = 'justifyCenter';
-            break;
-          case 'right':
-            command = 'justifyRight';
-            break;
-          case 'justify':
-            command = 'justifyFull';
-        }
-        return doc.execCommand(command, false);
-      }
+      "default": 'left'
+    },
+    bullet: {
+      type: Format.types.LINE,
+      exclude: 'list',
+      parentTag: 'UL',
+      tag: 'LI'
+    },
+    list: {
+      type: Format.types.LINE,
+      exclude: 'bullet',
+      parentTag: 'OL',
+      tag: 'LI'
     }
   };
 
@@ -12980,12 +12951,22 @@ Format = (function() {
   }
 
   Format.prototype.add = function(node, value) {
-    var formatNode;
+    var formatNode, parentNode, _ref, _ref1;
     if (!value) {
       return this.remove(node);
     }
     if (this.value(node) === value) {
       return node;
+    }
+    if (_.isString(this.config.parentTag)) {
+      parentNode = this.document.createElement(this.config.parentTag);
+      DOM.wrap(parentNode, node);
+      if (node.parentNode.tagName === ((_ref = node.parentNode.previousSibling) != null ? _ref.tagName : void 0)) {
+        Utils.mergeNodes(node.parentNode.previousSibling, node.parentNode);
+      }
+      if (node.parentNode.tagName === ((_ref1 = node.parentNode.nextSibling) != null ? _ref1.tagName : void 0)) {
+        Utils.mergeNodes(node.parentNode, node.parentNode.nextSibling);
+      }
     }
     if (_.isString(this.config.tag)) {
       formatNode = this.document.createElement(this.config.tag);
@@ -12995,6 +12976,8 @@ Format = (function() {
         }
         DOM.removeNode(node);
         node = formatNode;
+      } else if (this.isType(Format.types.LINE)) {
+        node = DOM.switchTag(node, this.config.tag);
       } else {
         node = DOM.wrap(formatNode, node);
       }
@@ -13026,8 +13009,11 @@ Format = (function() {
   };
 
   Format.prototype.match = function(node) {
-    var c, _i, _len, _ref;
+    var c, _i, _len, _ref, _ref1;
     if (!DOM.isElement(node)) {
+      return false;
+    }
+    if (_.isString(this.config.parentTag) && ((_ref = node.parentNode) != null ? _ref.tagName : void 0) !== this.config.parentTag) {
       return false;
     }
     if (_.isString(this.config.tag) && node.tagName !== this.config.tag) {
@@ -13040,9 +13026,9 @@ Format = (function() {
       return false;
     }
     if (_.isString(this.config["class"])) {
-      _ref = DOM.getClasses(node);
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        c = _ref[_i];
+      _ref1 = DOM.getClasses(node);
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        c = _ref1[_i];
         if (c.indexOf(this.config["class"]) === 0) {
           return true;
         }
@@ -13087,10 +13073,23 @@ Format = (function() {
       }
     }
     if (_.isString(this.config.tag)) {
-      node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
-      if (DOM.EMBED_TAGS[this.config.tag] != null) {
-        DOM.setText(node, DOM.EMBED_TEXT);
+      if (this.isType(Format.types.LINE)) {
+        if (node.previousSibling != null) {
+          Utils.splitAncestors(node, node.parentNode.parentNode);
+        }
+        if (node.nextSibling != null) {
+          Utils.splitAncestors(node.nextSibling, node.parentNode.parentNode);
+        }
+        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG);
+      } else {
+        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
+        if (DOM.EMBED_TAGS[this.config.tag] != null) {
+          DOM.setText(node, DOM.EMBED_TEXT);
+        }
       }
+    }
+    if (_.isString(this.config.parentTag)) {
+      DOM.unwrap(node.parentNode);
     }
     if (node.tagName === DOM.DEFAULT_INLINE_TAG && !node.hasAttributes()) {
       node = DOM.unwrap(node);
@@ -13105,7 +13104,7 @@ Format = (function() {
     }
     if (_.isString(this.config.attribute)) {
       return node.getAttribute(this.config.attribute) || void 0;
-    } else if (_.isString(this.config.style) && node.style[this.config.style] !== this.config["default"]) {
+    } else if (_.isString(this.config.style)) {
       return node.style[this.config.style] || void 0;
     } else if (_.isString(this.config["class"])) {
       _ref = DOM.getClasses(node);
@@ -13115,7 +13114,7 @@ Format = (function() {
           return c.slice(this.config["class"].length);
         }
       }
-    } else if (_.isString(this.config.tag) && node.tagName === this.config.tag) {
+    } else if (_.isString(this.config.tag)) {
       return true;
     }
     return void 0;
@@ -13536,7 +13535,7 @@ Line = (function(_super) {
         node = Normalizer.normalizeNode(node);
         nodeFormats = _.clone(formats);
         _.each(_this.doc.formats, function(format, name) {
-          if (format.match(node)) {
+          if (!format.isType(Format.types.LINE) && format.match(node)) {
             return nodeFormats[name] = format.value(node);
           }
         });
@@ -13606,9 +13605,16 @@ Line = (function(_super) {
     }
     _.each(formats, (function(_this) {
       return function(value, name) {
-        var format;
+        var excludeFormat, format;
         format = _this.doc.formats[name];
         if (format.isType(Format.types.LINE)) {
+          if (format.config.exclude && _this.formats[format.config.exclude]) {
+            excludeFormat = _this.doc.formats[format.config.exclude];
+            if (excludeFormat != null) {
+              _this.node = excludeFormat.remove(_this.node);
+              delete _this.formats[format.config.exclude];
+            }
+          }
           _this.node = format.add(_this.node, value);
         }
         if (value) {
@@ -14382,14 +14388,10 @@ MultiCursor = (function(_super) {
     return this.cursors = {};
   };
 
-  MultiCursor.prototype.moveCursor = function(userId, index, update) {
+  MultiCursor.prototype.moveCursor = function(userId, index) {
     var cursor;
-    if (update == null) {
-      update = true;
-    }
     cursor = this.cursors[userId];
     cursor.index = index;
-    cursor.dirty = true;
     DOM.removeClass(cursor.elem, 'hidden');
     clearTimeout(cursor.timer);
     cursor.timer = setTimeout((function(_this) {
@@ -14398,9 +14400,7 @@ MultiCursor = (function(_super) {
         return cursor.timer = null;
       };
     })(this), this.options.timeout);
-    if (update) {
-      this._updateCursor(cursor);
-    }
+    this._updateCursor(cursor);
     return cursor;
   };
 
@@ -14414,11 +14414,8 @@ MultiCursor = (function(_super) {
     return delete this.cursors[userId];
   };
 
-  MultiCursor.prototype.setCursor = function(userId, index, name, color, update) {
+  MultiCursor.prototype.setCursor = function(userId, index, name, color) {
     var cursor;
-    if (update == null) {
-      update = true;
-    }
     if (this.cursors[userId] == null) {
       this.cursors[userId] = cursor = {
         userId: userId,
@@ -14430,45 +14427,34 @@ MultiCursor = (function(_super) {
     }
     _.defer((function(_this) {
       return function() {
-        return _this.moveCursor(userId, index, update);
+        return _this.moveCursor(userId, index);
       };
     })(this));
     return this.cursors[userId];
   };
 
-  MultiCursor.prototype.shiftCursors = function(index, length, authorId, update) {
+  MultiCursor.prototype.shiftCursors = function(index, length, authorId) {
     if (authorId == null) {
       authorId = null;
     }
-    if (update == null) {
-      update = true;
-    }
-    _.each(this.cursors, (function(_this) {
+    return _.each(this.cursors, (function(_this) {
       return function(cursor, id) {
         if (!(cursor && (cursor.index > index || cursor.userId === authorId))) {
           return;
         }
-        cursor.index += Math.max(length, index - cursor.index);
-        return cursor.dirty = true;
+        return cursor.index += Math.max(length, index - cursor.index);
       };
     })(this));
-    if (update) {
-      return this.update();
-    }
   };
 
-  MultiCursor.prototype.update = function(force) {
-    if (force == null) {
-      force = false;
-    }
+  MultiCursor.prototype.update = function() {
     return _.each(this.cursors, (function(_this) {
       return function(cursor, id) {
         if (cursor == null) {
           return;
         }
-        if (cursor.dirty || force) {
-          return _this._updateCursor(cursor);
-        }
+        _this._updateCursor(cursor);
+        return true;
       };
     })(this));
   };
@@ -14476,15 +14462,15 @@ MultiCursor = (function(_super) {
   MultiCursor.prototype._applyDelta = function(delta) {
     delta.apply((function(_this) {
       return function(index, text, formatting) {
-        return _this.shiftCursors(index, text.length, formatting['author'], false);
+        return _this.shiftCursors(index, text.length, formatting['author']);
       };
     })(this), (function(_this) {
       return function(index, length) {
-        return _this.shiftCursors(index, -1 * length, null, false);
+        return _this.shiftCursors(index, -1 * length, null);
       };
     })(this), (function(_this) {
       return function(index, length, name, value) {
-        return _this.shiftCursors(index, 0, null, false);
+        return _this.shiftCursors(index, 0, null);
       };
     })(this));
     return this.update();
@@ -14522,6 +14508,7 @@ MultiCursor = (function(_super) {
 
   MultiCursor.prototype._updateCursor = function(cursor) {
     var didSplit, guide, leaf, leftNode, offset, rightNode, _ref, _ref1;
+    this.quill.editor.checkUpdate();
     _ref = this.quill.editor.doc.findLeafAt(cursor.index, true), leaf = _ref[0], offset = _ref[1];
     guide = this.container.ownerDocument.createElement('span');
     if (leaf != null) {
@@ -14537,7 +14524,7 @@ MultiCursor = (function(_super) {
     if (didSplit) {
       DOM.normalize(leaf.node.parentNode);
     }
-    return cursor.dirty = false;
+    return this.quill.editor.selection.update('silent');
   };
 
   return MultiCursor;
@@ -14627,16 +14614,10 @@ Toolbar = (function() {
   };
 
   Toolbar.formats = {
-    BUTTON: {
-      'bold': 'bold',
-      'image': 'image',
-      'italic': 'italic',
-      'link': 'link',
-      'strike': 'strike',
-      'underline': 'underline'
-    },
     LINE: {
-      'align': 'align'
+      'align': 'align',
+      'bullet': 'bullet',
+      'list': 'list'
     },
     SELECT: {
       'align': 'align',
@@ -14644,6 +14625,16 @@ Toolbar = (function() {
       'color': 'color',
       'font': 'font',
       'size': 'size'
+    },
+    TOGGLE: {
+      'bold': 'bold',
+      'bullet': 'bullet',
+      'image': 'image',
+      'italic': 'italic',
+      'link': 'link',
+      'list': 'list',
+      'strike': 'strike',
+      'underline': 'underline'
     },
     TOOLTIP: {
       'image': 'image',
@@ -14677,7 +14668,10 @@ Toolbar = (function() {
           } else {
             _this.quill.formatText(range, format, value, 'user');
           }
-          return _this.setActive(format, value);
+          return _.defer(function() {
+            _this.updateActive(range);
+            return _this.setActive(format, value);
+          });
         });
       };
     })(this));
@@ -14768,14 +14762,18 @@ Toolbar = (function() {
     var leafFormats, lineFormats;
     leafFormats = this._getLeafActive(range);
     lineFormats = this._getLineActive(range);
-    return _.defaults(leafFormats, lineFormats);
+    return _.defaults({}, leafFormats, lineFormats);
   };
 
   Toolbar.prototype._getLeafActive = function(range) {
-    var contents, formatsArr, start;
+    var contents, formatsArr, line, offset, _ref;
     if (range.isCollapsed()) {
-      start = Math.max(0, range.start - 1);
-      contents = this.quill.getContents(start, range.end);
+      _ref = this.quill.editor.doc.findLineAt(range.start), line = _ref[0], offset = _ref[1];
+      if (offset === 0) {
+        contents = this.quill.getContents(range.start, range.end + 1);
+      } else {
+        contents = this.quill.getContents(range.start - 1, range.end);
+      }
     } else {
       contents = this.quill.getContents(range);
     }
@@ -14784,7 +14782,7 @@ Toolbar = (function() {
   };
 
   Toolbar.prototype._getLineActive = function(range) {
-    var firstLine, formats, formatsArr, lastLine, offset, _ref, _ref1;
+    var firstLine, formatsArr, lastLine, offset, _ref, _ref1;
     formatsArr = [];
     _ref = this.quill.editor.doc.findLineAt(range.start), firstLine = _ref[0], offset = _ref[1];
     _ref1 = this.quill.editor.doc.findLineAt(range.end), lastLine = _ref1[0], offset = _ref1[1];
@@ -14792,10 +14790,7 @@ Toolbar = (function() {
       lastLine = lastLine.next;
     }
     while ((firstLine != null) && firstLine !== lastLine) {
-      formats = {
-        'align': firstLine.formats['align']
-      };
-      formatsArr.push(firstLine.formats);
+      formatsArr.push(_.clone(firstLine.formats));
       firstLine = firstLine.next;
     }
     return this._intersectFormats(formatsArr);
@@ -14821,7 +14816,7 @@ Toolbar = (function() {
         }
       });
       _.each(missing, function(name) {
-        if (Toolbar.formats.BUTTON[name] != null) {
+        if (Toolbar.formats.TOGGLE[name] != null) {
           return delete activeFormats[name];
         } else if ((Toolbar.formats.SELECT[name] != null) && !_.isArray(activeFormats[name])) {
           return activeFormats[name] = [activeFormats[name]];
@@ -15159,7 +15154,9 @@ Normalizer = {
     'S': 'S',
     'U': 'U',
     'A': 'A',
-    'IMG': 'IMG'
+    'IMG': 'IMG',
+    'UL': 'UL',
+    'LI': 'LI'
   },
   handleBreaks: function(lineNode) {
     var breaks;
@@ -15176,7 +15173,7 @@ Normalizer = {
   normalizeLine: function(lineNode) {
     lineNode = Normalizer.wrapInline(lineNode);
     lineNode = Normalizer.handleBreaks(lineNode);
-    Normalizer.pullBlocks(lineNode);
+    lineNode = Normalizer.pullBlocks(lineNode);
     lineNode = Normalizer.normalizeNode(lineNode);
     Normalizer.unwrapText(lineNode);
     return lineNode;
@@ -15224,9 +15221,7 @@ Normalizer = {
       } else if ((node.previousSibling != null) && node.tagName === node.previousSibling.tagName) {
         if (_.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))) {
           nodes.push(node.firstChild);
-          DOM.moveChildren(node.previousSibling, node);
-          DOM.normalize(node.previousSibling);
-          _results.push(DOM.removeNode(node));
+          _results.push(Utils.mergeNodes(node.previousSibling, node));
         } else {
           _results.push(void 0);
         }
@@ -15237,28 +15232,30 @@ Normalizer = {
     return _results;
   },
   pullBlocks: function(lineNode) {
-    var curNode, _results;
+    var curNode;
     curNode = lineNode.firstChild;
-    if (curNode == null) {
-      return;
-    }
-    if (DOM.BLOCK_TAGS[curNode.tagName] != null) {
-      if (curNode.nextSibling != null) {
-        Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode);
-      }
-      DOM.unwrap(curNode);
-      Normalizer.pullBlocks(lineNode);
-    }
-    curNode = curNode.nextSibling;
-    _results = [];
     while (curNode != null) {
-      if (DOM.BLOCK_TAGS[curNode.tagName] != null) {
-        lineNode = Utils.splitAncestors(curNode, lineNode.parentNode);
+      if ((DOM.BLOCK_TAGS[curNode.tagName] != null) && curNode.tagName !== 'LI') {
+        if (curNode.previousSibling != null) {
+          Utils.splitAncestors(curNode, lineNode.parentNode);
+        }
+        if (curNode.nextSibling != null) {
+          Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode);
+        }
+        if (DOM.LIST_TAGS[curNode.tagName] == null) {
+          DOM.unwrap(curNode);
+          Normalizer.pullBlocks(lineNode);
+        } else {
+          DOM.unwrap(curNode.parentNode);
+          if (lineNode.parentNode == null) {
+            lineNode = curNode;
+          }
+        }
         break;
       }
-      _results.push(curNode = curNode.nextSibling);
+      curNode = curNode.nextSibling;
     }
-    return _results;
+    return lineNode;
   },
   stripComments: function(html) {
     return html = html.replace(/<!--[\s\S]*?-->/g, '');
@@ -15340,7 +15337,7 @@ _ = _dereq_('lodash');
 
 _.str = _dereq_('underscore.string');
 
-pkg = _dereq_('../package.json');
+pkg = _dereq_('../bower.json');
 
 EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
@@ -15382,7 +15379,7 @@ Quill = (function(_super) {
   Quill.Theme = Themes;
 
   Quill.DEFAULTS = {
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image'],
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list'],
     modules: {
       'keyboard': true,
       'paste-manager': true,
@@ -15397,7 +15394,6 @@ Quill = (function(_super) {
     MODULE_INIT: 'module-init',
     POST_EVENT: 'post-event',
     PRE_EVENT: 'pre-event',
-    RENDER_UPDATE: 'renderer-update',
     SELECTION_CHANGE: 'selection-change',
     TEXT_CHANGE: 'text-change'
   };
@@ -15508,9 +15504,6 @@ Quill = (function(_super) {
   Quill.prototype.formatText = function(start, end, name, value, source) {
     var delta, formats, _ref;
     _ref = this._buildParams(start, end, name, value, source), start = _ref[0], end = _ref[1], formats = _ref[2], source = _ref[3];
-    if (!(end > start)) {
-      return;
-    }
     formats = _.reduce(formats, (function(_this) {
       return function(formats, value, name) {
         var format;
@@ -15607,7 +15600,11 @@ Quill = (function(_super) {
     if (!(range != null ? range.isCollapsed() : void 0)) {
       return;
     }
-    return format.prepare(value);
+    if (format.isType(Format.types.LINE)) {
+      return this.formatLine(range, name, value, Quill.sources.USER);
+    } else {
+      return format.prepare(value);
+    }
   };
 
   Quill.prototype.setContents = function(delta, source) {
@@ -15682,7 +15679,7 @@ Quill = (function(_super) {
 module.exports = Quill;
 
 
-},{"../package.json":18,"./dom":20,"./editor":21,"./format":22,"./lib/range":27,"./modules/authorship":29,"./modules/image-tooltip":30,"./modules/keyboard":31,"./modules/link-tooltip":32,"./modules/multi-cursor":33,"./modules/paste-manager":34,"./modules/toolbar":35,"./modules/undo-manager":37,"./themes/default":42,"./themes/snow":43,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],40:[function(_dereq_,module,exports){
+},{"../bower.json":1,"./dom":20,"./editor":21,"./format":22,"./lib/range":27,"./modules/authorship":29,"./modules/image-tooltip":30,"./modules/keyboard":31,"./modules/link-tooltip":32,"./modules/multi-cursor":33,"./modules/paste-manager":34,"./modules/toolbar":35,"./modules/undo-manager":37,"./themes/default":42,"./themes/snow":43,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],40:[function(_dereq_,module,exports){
 var DEFAULT_STYLES, DOM, LIST_STYLES, Normalizer, Renderer, Utils, rule, _;
 
 _ = _dereq_('lodash');
@@ -15787,11 +15784,13 @@ Renderer = (function() {
   Renderer.buildFrame = function(container) {
     var iframe, iframeDoc, root;
     iframe = container.ownerDocument.createElement('iframe');
-    iframe.setAttribute('frameBorder', '0');
-    iframe.setAttribute('height', '100%');
-    iframe.setAttribute('width', '100%');
-    iframe.setAttribute('title', 'Quill Rich Text Editor');
-    iframe.setAttribute('role', 'presentation');
+    DOM.setAttributes(iframe, {
+      frameBorder: '0',
+      height: '100%',
+      width: '100%',
+      title: 'Quill Rich Text Editor',
+      role: 'presentation'
+    });
     container.appendChild(iframe);
     iframeDoc = iframe.contentWindow.document;
     iframeDoc.open();
@@ -15802,10 +15801,9 @@ Renderer = (function() {
     return [root, iframe];
   };
 
-  function Renderer(container, emitter, options) {
+  function Renderer(container, options) {
     var _ref;
     this.container = container;
-    this.emitter = emitter;
     this.options = options != null ? options : {};
     this.container.innerHTML = '';
     _ref = Renderer.buildFrame(this.container), this.root = _ref[0], this.iframe = _ref[1];
@@ -15839,22 +15837,9 @@ Renderer = (function() {
     var style;
     style = this.root.ownerDocument.createElement('style');
     style.type = 'text/css';
-    if (!_.isString(css)) {
-      css = Renderer.objToCss(css);
-    }
-    if (style.styleSheet != null) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(this.root.ownerDocument.createTextNode(css));
-    }
-    return _.defer((function(_this) {
-      return function() {
-        _this.root.ownerDocument.querySelector('head').appendChild(style);
-        if (_this.emitter != null) {
-          return _this.emitter.emit(_this.emitter.constructor.events.RENDER_UPDATE, css);
-        }
-      };
-    })(this));
+    css = Renderer.objToCss(css);
+    style.appendChild(this.root.ownerDocument.createTextNode(css));
+    return this.root.ownerDocument.head.appendChild(style);
   };
 
   return Renderer;
@@ -16302,6 +16287,17 @@ Utils = {
     }
     return [child, offset];
   },
+  getNextLineNode: function(curNode, root) {
+    var nextNode;
+    nextNode = curNode.nextSibling;
+    if ((nextNode == null) && curNode.parentNode !== root) {
+      nextNode = curNode.parentNode.nextSibling;
+    }
+    if ((nextNode != null) && (DOM.LIST_TAGS[nextNode.tagName] != null)) {
+      nextNode = nextNode.firstChild;
+    }
+    return nextNode;
+  },
   getNodeLength: function(node) {
     var length;
     if (node == null) {
@@ -16317,6 +16313,11 @@ Utils = {
     var version;
     version = document.documentMode;
     return version && maxVersion >= version;
+  },
+  mergeNodes: function(newNode, oldNode) {
+    DOM.moveChildren(newNode, oldNode);
+    DOM.normalize(newNode);
+    return DOM.removeNode(oldNode);
   },
   splitAncestors: function(refNode, root, force) {
     var nextNode, parentClone, parentNode;
