@@ -1,6 +1,6 @@
 _             = require('lodash')
 _.str         = require('underscore.string')
-pkg           = require('../bower.json')
+pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 DOM           = require('./dom')
 Editor        = require('./editor')
