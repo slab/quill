@@ -6,13 +6,13 @@ Utils = require('./utils')
 
 
 class Selection
-  constructor: (@doc, @emitter) ->
+  constructor: (@doc, @iframe, @emitter) ->
     @document = @doc.root.ownerDocument
     @range = this.getRange()
     @nullDelay = false
 
   checkFocus: ->
-    return @document.activeElement == @doc.root
+    return @document.activeElement == @doc.root and document.activeElement == @iframe
 
   getRange: ->
     return null unless this.checkFocus()

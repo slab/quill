@@ -13,7 +13,7 @@ class Editor
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new Selection(@doc, @quill)
+    @selection = new Selection(@doc, @renderer.iframe, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       @savedRange = range
