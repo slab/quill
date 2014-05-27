@@ -58,7 +58,7 @@ describe('Selection', ->
         encoded: ->
           return [@quill.root.querySelectorAll('li')[1].firstChild, 1]
         index: 13
-      'end of document':
+      'last node':
         native: ->
           return [@quill.root.querySelector('i').firstChild, 2]
         encoded: ->
@@ -96,6 +96,13 @@ describe('Selection', ->
         [resultNode, resultIndex] = quill.editor.selection._encodePosition(quill.root, 0)
         expect(resultNode).toEqual(quill.root)
         expect(resultIndex).toEqual(0)
+      )
+
+      it('end of document', ->
+        [resultNode, resultOffset] = @selection._encodePosition(@quill.root, 5)
+        console.log resultNode, resultOffset
+        expect(resultNode).toEqual(@quill.root.querySelector('i').firstChild)
+        expect(resultOffset).toEqual(2)
       )
     )
 

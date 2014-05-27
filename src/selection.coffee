@@ -2,6 +2,7 @@ _     = require('lodash')
 DOM   = require('./dom')
 Leaf  = require('./leaf')
 Range = require('./lib/range')
+Utils = require('./utils')
 
 
 class Selection
@@ -18,10 +19,10 @@ class Selection
     nativeRange = this._getNativeRange()
     return null unless nativeRange?
     start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset)
-    if nativeRange.endContainer != nativeRange.startContainer
-      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset)
+    if nativeRange.startContainer == nativeRange.endContainer and nativeRange.startOffset == nativeRange.endOffset
+      end = start
     else
-      end = start - nativeRange.startOffset + nativeRange.endOffset
+      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset)
     return new Range(Math.min(start, end), Math.max(start, end))
 
   preserve: (fn) ->
@@ -85,7 +86,13 @@ class Selection
         return [node, 0]
       else
         node = node.lastChild
-        offset = node.childNodes.length + 1
+        if DOM.isElement(node)
+          if node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
+            return [node, 1]
+          else
+            offset = node.childNodes.length
+        else
+          return [node, Utils.getNodeLength(node)]
 
   _getNativeSelection: ->
     return if @document.getSelection? then @document.getSelection() else null
