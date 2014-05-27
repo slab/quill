@@ -15,7 +15,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('default', ['build'])
 
-  grunt.registerTask('build', ['clean', 'browserify:quill', 'browserify:tandem', 'uglify', 'concat', 'coffee', 'jade', 'stylus'])
+  grunt.registerTask('build', ['clean', 'browserify:quill', 'browserify:tandem', 'uglify', 'concat', 'coffee:all', 'jade', 'stylus'])
 
   # TODO is there a better way to do this...
   grunt.registerTask('dev', 'All the tasks for Quill development', ->
