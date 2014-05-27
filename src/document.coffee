@@ -77,7 +77,7 @@ class Document
     lineNode = lineNode.firstChild if lineNode? and DOM.LIST_TAGS[lineNode.tagName]?
     _.each(lines, (line, index) =>
       while line.node != lineNode
-        if line.node.parentNode?
+        if line.node.parentNode == @root or line.node.parentNode?.parentNode == @root
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
