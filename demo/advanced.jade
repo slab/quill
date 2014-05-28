@@ -12,64 +12,64 @@ html
     #content-container
       .basic-wrapper
         .toolbar-container
-          select.sc-font(title='Font')
+          select.ql-font(title='Font')
             option(value='sans-serif', selected) Sans Serif
             option(value='Georgia, serif') Serif
             option(value='Monaco, "Courier New", monospace') Monospace
-          select.sc-size(title='Size')
+          select.ql-size(title='Size')
             option(value='10px') Small
             option(value='13px', selected) Normal
             option(value='18px') Large
             option(value='32px') Huge
-          select.sc-align(title='Text Alignment')
+          select.ql-align(title='Text Alignment')
             option(value='left', selected) Left
             option(value='center') Center
             option(value='right') Right
             option(value='justify') Justify
-          button.sc-bold(title='Bold') Bold
-          button.sc-italic(title='Italic') Italic
-          button.sc-underline(title='Underline') Under
-          button.sc-bullet(title='Bullet') Bullet
+          button.ql-bold(title='Bold') Bold
+          button.ql-italic(title='Italic') Italic
+          button.ql-underline(title='Underline') Under
+          button.ql-bullet(title='Bullet') Bullet
         .editor-container
 
       .advanced-wrapper
         .toolbar-container
-          span.sc-format-group
-            select.sc-font(title='Font')
+          span.ql-format-group
+            select.ql-font(title='Font')
               option(value='sans-serif', selected) Sans Serif
               option(value='Georgia, serif') Serif
               option(value='Monaco, "Courier New", monospace') Monospace
-            select.sc-size(title='Size')
+            select.ql-size(title='Size')
               option(value='10px') Small
               option(value='13px', selected) Normal
               option(value='18px') Large
               option(value='32px') Huge
-          span.sc-format-group
-            span.sc-format-button.sc-bold(title='Bold')
-            span.sc-format-separator
-            span.sc-format-button.sc-italic(title='Italic')
-            span.sc-format-separator
-            span.sc-format-button.sc-underline(title='Underline')
-          span.sc-format-group
-            each c in ['sc-color', 'sc-background']
-              select(class=c, title=(c=='sc-color'?'Text Color':'Background Color'))
+          span.ql-format-group
+            span.ql-format-button.ql-bold(title='Bold')
+            span.ql-format-separator
+            span.ql-format-button.ql-italic(title='Italic')
+            span.ql-format-separator
+            span.ql-format-button.ql-underline(title='Underline')
+          span.ql-format-group
+            each c in ['ql-color', 'ql-background']
+              select(class=c, title=(c=='ql-color'?'Text Color':'Background Color'))
                 each color,i in colors
-                  option(value=color, selected=((c == 'sc-color' && color == 'rgb(0, 0, 0)') || (c == 'sc-background' && color == 'rgb(255, 255, 255)') ? true : false))
-              if c == 'sc-color'
-              span.sc-format-separator
-            select.sc-align(title='Text Alignment')
+                  option(value=color, selected=((c == 'ql-color' && color == 'rgb(0, 0, 0)') || (c == 'ql-background' && color == 'rgb(255, 255, 255)') ? true : false))
+              if c == 'ql-color'
+              span.ql-format-separator
+            select.ql-align(title='Text Alignment')
               option(value='left', selected)
               option(value='center')
               option(value='right')
               option(value='justify')
-          span.sc-format-group
-            span.sc-format-button.sc-link(title='Link')
-            span.sc-format-separator
-            span.sc-format-button.sc-image(title='Image')
-            span.sc-format-separator
-            span.sc-format-button.sc-bullet(title='Bullet')
-          span.sc-format-group
-            span.sc-format-button.sc-authorship(title='Authorship')
+          span.ql-format-group
+            span.ql-format-button.ql-link(title='Link')
+            span.ql-format-separator
+            span.ql-format-button.ql-image(title='Image')
+            span.ql-format-separator
+            span.ql-format-button.ql-bullet(title='Bullet')
+          span.ql-format-group
+            span.ql-format-button.ql-authorship(title='Authorship')
         .editor-container
 
     script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js')

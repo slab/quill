@@ -36,7 +36,7 @@ class Toolbar
       )
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
-    DOM.addClass(@container, 'sc-toolbar-container')
+    DOM.addClass(@container, 'ql-toolbar-container')
     DOM.addClass(@container, 'ios') if DOM.isIOS()  # Fix for iOS not losing hover state after click
     if DOM.isIE(11) or DOM.isIOS()
       DOM.addEventListener(@container, 'mousedown', =>
@@ -46,7 +46,7 @@ class Toolbar
       )
 
   initFormat: (format, callback) ->
-    selector = ".sc-#{format}"
+    selector = ".ql-#{format}"
     if Toolbar.formats.SELECT[format]?
       selector = "select#{selector}"    # Avoid selecting the picker container
       eventName = 'change'
@@ -56,7 +56,7 @@ class Toolbar
     return unless input?
     @inputs[format] = input
     DOM.addEventListener(input, eventName, =>
-      value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'sc-active')
+      value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'ql-active')
       @preventUpdate = true
       @quill.focus()
       range = @quill.getSelection()
@@ -79,7 +79,7 @@ class Toolbar
           DOM.resetSelect(input)
       @triggering = false
     else
-      DOM.toggleClass(input, 'sc-active', value or false)
+      DOM.toggleClass(input, 'ql-active', value or false)
 
   updateActive: (range) ->
     return unless range? and !@preventUpdate

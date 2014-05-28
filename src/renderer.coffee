@@ -76,7 +76,7 @@ class Renderer
     [@root, @iframe] = Renderer.buildFrame(@container)
     @root.id = @options.id
     DOM.addClass(@root, 'editor-container')
-    DOM.addClass(@container, 'sc-container')
+    DOM.addClass(@container, 'ql-container')
     DOM.addEventListener(@container, 'focus', =>
       @root.focus()
     )

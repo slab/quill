@@ -11,8 +11,8 @@ describe('Toolbar', ->
     @toolbarContainer.innerHTML = @toolbarContainer.innerHTML   # Remove child listeners
     @quill = new Quill(@editorContainer.firstChild)
     @toolbar = @quill.addModule('toolbar', { container: @toolbarContainer })
-    @button = @toolbarContainer.querySelector('.sc-bold')
-    @select = @toolbarContainer.querySelector('.sc-size')
+    @button = @toolbarContainer.querySelector('.ql-bold')
+    @select = @toolbarContainer.querySelector('.ql-size')
   )
 
   describe('format', ->
@@ -48,7 +48,7 @@ describe('Toolbar', ->
   describe('updateActive()', ->
     it('button', ->
       @quill.setSelection(1, 1)
-      expect(Quill.DOM.hasClass(@button, 'sc-active')).toBe(true)
+      expect(Quill.DOM.hasClass(@button, 'ql-active')).toBe(true)
     )
 
     it('dropdown', ->
