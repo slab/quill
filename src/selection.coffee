@@ -12,7 +12,10 @@ class Selection
     @nullDelay = false
 
   checkFocus: ->
-    return @document.activeElement == @doc.root and document.activeElement == @iframe
+    return false unless @document.activeElement == @doc.root
+    if document.activeElement? and document.activeElement.tagName == 'IFRAME'
+      return document.activeElement == @iframe
+    return true
 
   getRange: ->
     return null unless this.checkFocus()
