@@ -100,7 +100,6 @@ describe('Selection', ->
 
       it('end of document', ->
         [resultNode, resultOffset] = @selection._encodePosition(@quill.root, 5)
-        console.log resultNode, resultOffset
         expect(resultNode).toEqual(@quill.root.querySelector('i').firstChild)
         expect(resultOffset).toEqual(2)
       )
