@@ -57,7 +57,7 @@ Get help or stay up to date.
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quill)
 - Visit the [discussion group](http://discuss.quilljs.com)
-- For large or interesting use cases you may also email support@quilljs.com
+- If a private channel is required, you may also email support@quilljs.com
 
 ## Contributing
 
