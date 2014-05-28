@@ -1,26 +1,4 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-module.exports={
-  "name": "quill",
-  "version": "0.13.5",
-  "homepage": "http://quilljs.com",
-  "authors": ["Jason Chen <jhchen7@gmail.com>"],
-  "contributors": [
-    "Byron Milligan <byronner@gmail.com>",
-    "Keegan Poppen <keegan.poppen@gmail.com>"
-  ],
-  "description": "Cross browser rich text editor",
-  "main": "index.js",
-  "license": "BSD",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "build",
-    "tests"
-  ]
-}
-
-},{}],2:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -650,7 +628,7 @@ process.chdir = function (dir) {
 }(typeof process !== 'undefined' && typeof process.title !== 'undefined' && typeof exports !== 'undefined' ? exports : window);
 
 }).call(this,_dereq_("FWaASH"))
-},{"FWaASH":2}],"eventemitter2":[function(_dereq_,module,exports){
+},{"FWaASH":1}],"eventemitter2":[function(_dereq_,module,exports){
 module.exports=_dereq_('x/3aRz');
 },{}],"4HJaAd":[function(_dereq_,module,exports){
 (function (global){
@@ -7837,7 +7815,7 @@ module.exports=_dereq_('x/3aRz');
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],"lodash":[function(_dereq_,module,exports){
 module.exports=_dereq_('4HJaAd');
-},{}],7:[function(_dereq_,module,exports){
+},{}],6:[function(_dereq_,module,exports){
 (function() {
   var Delta, InsertOp, Op, RetainOp, diff_match_patch, dmp, _;
 
@@ -8503,7 +8481,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./diff_match_patch":9,"./insert":10,"./op":11,"./retain":12,"lodash":"4HJaAd"}],8:[function(_dereq_,module,exports){
+},{"./diff_match_patch":8,"./insert":9,"./op":10,"./retain":11,"lodash":"4HJaAd"}],7:[function(_dereq_,module,exports){
 (function() {
   var Delta, DeltaGenerator, InsertOp, RetainOp, getUtils, setDomain, _, _domain;
 
@@ -8860,7 +8838,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./delta":7,"./insert":10,"./retain":12,"lodash":"4HJaAd"}],9:[function(_dereq_,module,exports){
+},{"./delta":6,"./insert":9,"./retain":11,"lodash":"4HJaAd"}],8:[function(_dereq_,module,exports){
 (function() {
   var googlediff;
 
@@ -8876,7 +8854,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"googlediff":15}],10:[function(_dereq_,module,exports){
+},{"googlediff":14}],9:[function(_dereq_,module,exports){
 (function() {
   var InsertOp, Op, _,
     __hasProp = {}.hasOwnProperty,
@@ -8936,7 +8914,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":11,"lodash":"4HJaAd"}],11:[function(_dereq_,module,exports){
+},{"./op":10,"lodash":"4HJaAd"}],10:[function(_dereq_,module,exports){
 (function() {
   var Op, _;
 
@@ -9020,7 +8998,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"lodash":"4HJaAd"}],12:[function(_dereq_,module,exports){
+},{"lodash":"4HJaAd"}],11:[function(_dereq_,module,exports){
 (function() {
   var Op, RetainOp, _,
     __hasProp = {}.hasOwnProperty,
@@ -9073,7 +9051,7 @@ module.exports=_dereq_('4HJaAd');
 
 }).call(this);
 
-},{"./op":11,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
+},{"./op":10,"lodash":"4HJaAd"}],"tandem-core":[function(_dereq_,module,exports){
 module.exports=_dereq_('38mxji');
 },{}],"38mxji":[function(_dereq_,module,exports){
 (function() {
@@ -9087,10 +9065,10 @@ module.exports=_dereq_('38mxji');
 
 }).call(this);
 
-},{"./delta":7,"./delta_generator":8,"./insert":10,"./op":11,"./retain":12}],15:[function(_dereq_,module,exports){
+},{"./delta":6,"./delta_generator":7,"./insert":9,"./op":10,"./retain":11}],14:[function(_dereq_,module,exports){
 module.exports = _dereq_('./javascript/diff_match_patch_uncompressed.js').diff_match_patch;
 
-},{"./javascript/diff_match_patch_uncompressed.js":16}],16:[function(_dereq_,module,exports){
+},{"./javascript/diff_match_patch_uncompressed.js":15}],15:[function(_dereq_,module,exports){
 /**
  * Diff Match and Patch
  *
@@ -11962,6 +11940,75 @@ this['DIFF_EQUAL'] = DIFF_EQUAL;
 
 },{}],"underscore.string":[function(_dereq_,module,exports){
 module.exports=_dereq_('Fq7WE+');
+},{}],18:[function(_dereq_,module,exports){
+module.exports={
+  "name": "quilljs",
+  "version": "0.13.7",
+  "description": "Cross browser rich text editor",
+  "author": "Jason Chen <jhchen7@gmail.com>",
+  "homepage": "http://quilljs.com",
+  "contributors": [
+    "Byron Milligan <byronner@gmail.com>",
+    "Keegan Poppen <keegan.poppen@gmail.com>"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "eventemitter2": "~0.4.13",
+    "lodash": "~2.4.1",
+    "tandem-core": "~0.5.2",
+    "underscore.string": "~2.3.3"
+  },
+  "devDependencies": {
+    "async": "~0.6.2",
+    "coffeeify": "~0.6.0",
+    "grunt": "~0.4.3",
+    "grunt-browserify": "~2.0.7",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-connect": "~0.7.1",
+    "grunt-contrib-jade": "~0.11.0",
+    "grunt-contrib-stylus": "~0.13.2",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-karma": "~0.8.0",
+    "grunt-newer": "~0.7.0",
+    "grunt-protractor-runner": "~0.2.4",
+    "grunt-shell": "~0.6.4",
+    "istanbul": "~0.2.6",
+    "jquery": "~1.11.0",
+    "karma": "~0.12.0",
+    "karma-chrome-launcher": "~0.1.2",
+    "karma-coffee-preprocessor": "~0.2.1",
+    "karma-coverage": "~0.2.0",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.2.0",
+    "karma-phantomjs-launcher": "~0.1.2",
+    "karma-safari-launcher": "~0.1.1",
+    "karma-sauce-launcher": "~0.2.2",
+    "load-grunt-tasks": "~0.4.0",
+    "protractor": "~0.21.0"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quilljs/quill"
+  },
+  "bugs": {
+    "url": "https://github.com/quilljs/quill/issues"
+  },
+  "scripts": {
+    "prepublish": "grunt coffee:src",
+    "postpublish": "grunt clean:coffee",
+    "test": "grunt test"
+  },
+  "keywords": ["editor", "rich text", "wysiwyg"]
+}
+
 },{}],19:[function(_dereq_,module,exports){
 var DOM, Document, Format, Line, LinkedList, Normalizer, Tandem, Utils, _;
 
@@ -12101,9 +12148,9 @@ Document = (function() {
     }
     _.each(lines, (function(_this) {
       return function(line, index) {
-        var newLine;
+        var newLine, _ref;
         while (line.node !== lineNode) {
-          if (line.node.parentNode != null) {
+          if (line.node.parentNode === _this.root || ((_ref = line.node.parentNode) != null ? _ref.parentNode : void 0) === _this.root) {
             lineNode = Normalizer.normalizeLine(lineNode);
             newLine = _this.insertLineBefore(lineNode, line);
             lineNode = Utils.getNextLineNode(lineNode, _this.root);
@@ -12641,7 +12688,7 @@ Editor = (function() {
     this.root = this.renderer.root;
     this.doc = new Document(this.root, this.options);
     this.delta = this.doc.toDelta();
-    this.selection = new Selection(this.doc, this.quill);
+    this.selection = new Selection(this.doc, this.renderer.iframe, this.quill);
     this.timer = setInterval(_.bind(this.checkUpdate, this), this.options.pollInterval);
     this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, (function(_this) {
       return function(range) {
@@ -15337,7 +15384,7 @@ _ = _dereq_('lodash');
 
 _.str = _dereq_('underscore.string');
 
-pkg = _dereq_('../bower.json');
+pkg = _dereq_('../package.json');
 
 EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
@@ -15679,7 +15726,7 @@ Quill = (function(_super) {
 module.exports = Quill;
 
 
-},{"../bower.json":1,"./dom":20,"./editor":21,"./format":22,"./lib/range":27,"./modules/authorship":29,"./modules/image-tooltip":30,"./modules/keyboard":31,"./modules/link-tooltip":32,"./modules/multi-cursor":33,"./modules/paste-manager":34,"./modules/toolbar":35,"./modules/undo-manager":37,"./themes/default":42,"./themes/snow":43,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],40:[function(_dereq_,module,exports){
+},{"../package.json":18,"./dom":20,"./editor":21,"./format":22,"./lib/range":27,"./modules/authorship":29,"./modules/image-tooltip":30,"./modules/keyboard":31,"./modules/link-tooltip":32,"./modules/multi-cursor":33,"./modules/paste-manager":34,"./modules/toolbar":35,"./modules/undo-manager":37,"./themes/default":42,"./themes/snow":43,"eventemitter2":"x/3aRz","lodash":"4HJaAd","tandem-core":"38mxji","underscore.string":"Fq7WE+"}],40:[function(_dereq_,module,exports){
 var DEFAULT_STYLES, DOM, LIST_STYLES, Normalizer, Renderer, Utils, rule, _;
 
 _ = _dereq_('lodash');
@@ -15850,7 +15897,7 @@ module.exports = Renderer;
 
 
 },{"./dom":20,"./normalizer":38,"./utils":44,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
-var DOM, Leaf, Range, Selection, _;
+var DOM, Leaf, Range, Selection, Utils, _;
 
 _ = _dereq_('lodash');
 
@@ -15860,9 +15907,12 @@ Leaf = _dereq_('./leaf');
 
 Range = _dereq_('./lib/range');
 
+Utils = _dereq_('./utils');
+
 Selection = (function() {
-  function Selection(doc, emitter) {
+  function Selection(doc, iframe, emitter) {
     this.doc = doc;
+    this.iframe = iframe;
     this.emitter = emitter;
     this.document = this.doc.root.ownerDocument;
     this.range = this.getRange();
@@ -15870,7 +15920,13 @@ Selection = (function() {
   }
 
   Selection.prototype.checkFocus = function() {
-    return this.document.activeElement === this.doc.root;
+    if (this.document.activeElement !== this.doc.root) {
+      return false;
+    }
+    if ((document.activeElement != null) && document.activeElement.tagName === 'IFRAME') {
+      return document.activeElement === this.iframe;
+    }
+    return true;
   };
 
   Selection.prototype.getRange = function() {
@@ -15883,10 +15939,10 @@ Selection = (function() {
       return null;
     }
     start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset);
-    if (nativeRange.endContainer !== nativeRange.startContainer) {
-      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset);
+    if (nativeRange.startContainer === nativeRange.endContainer && nativeRange.startOffset === nativeRange.endOffset) {
+      end = start;
     } else {
-      end = start - nativeRange.startOffset + nativeRange.endOffset;
+      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset);
     }
     return new Range(Math.min(start, end), Math.max(start, end));
   };
@@ -15968,7 +16024,15 @@ Selection = (function() {
         return [node, 0];
       } else {
         node = node.lastChild;
-        offset = node.childNodes.length + 1;
+        if (DOM.isElement(node)) {
+          if (node.tagName === DOM.DEFAULT_BREAK_TAG || (DOM.EMBED_TAGS[node.tagName] != null)) {
+            return [node, 1];
+          } else {
+            offset = node.childNodes.length;
+          }
+        } else {
+          return [node, Utils.getNodeLength(node)];
+        }
       }
     }
   };
@@ -16057,7 +16121,7 @@ Selection = (function() {
 module.exports = Selection;
 
 
-},{"./dom":20,"./leaf":23,"./lib/range":27,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
+},{"./dom":20,"./leaf":23,"./lib/range":27,"./utils":44,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
 var DefaultTheme;
 
 DefaultTheme = (function() {
