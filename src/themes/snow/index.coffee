@@ -100,15 +100,15 @@ class SnowTheme extends DefaultTheme
 
   extendToolbar: (module) ->
     _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
-      select = module.container.querySelector(".sc-#{format}")
+      select = module.container.querySelector(".ql-#{format}")
       return unless select?
       switch format
         when 'font', 'size', 'align'
           picker = new Picker(select)
         when 'color', 'background'
           picker = new ColorPicker(select)
-          _.each(picker.container.querySelectorAll('.sc-picker-item'), (item, i) ->
-            DOM.addClass(item, 'sc-primary-color') if i < 7
+          _.each(picker.container.querySelectorAll('.ql-picker-item'), (item, i) ->
+            DOM.addClass(item, 'ql-primary-color') if i < 7
           )
       @pickers.push(picker) if picker?
     )

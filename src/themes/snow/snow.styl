@@ -34,18 +34,18 @@ formatInput =
   src: url('assets/quill-snow.eot') format('embedded-opentype'), url('assets/quill-snow.woff') format('woff')
 
 
-.sc-toolbar-container
+.ql-toolbar-container
   box-sizing: border-box
   padding: toolbarPadding toolbarPadding toolbarPadding - 1 toolbarPadding
   user-select: none
   -webkit-user-select: none
   -moz-user-select: none
   -ms-user-select: none
-  .sc-format-group
+  .ql-format-group
     display: inline-block
     margin-right: formatGroupMargin
     vertical-align: middle
-  .sc-format-separator
+  .ql-format-separator
     box-sizing: border-box
     background-color: lightGrayColor
     display: inline-block
@@ -54,7 +54,7 @@ formatInput =
     margin-right: separatorMargin
     vertical-align: middle
     width: 1px
-  .sc-format-button
+  .ql-format-button
     {formatInput}
     background-position: center center
     background-repeat: no-repeat
@@ -65,50 +65,50 @@ formatInput =
     margin-top: 1px     // Some reason buttons look more aligned with this
     text-align: center
     width: inputHeight
-  .sc-format-button:hover, .sc-format-button.sc-active, .sc-format-button.sc-on
+  .ql-format-button:hover, .ql-format-button.ql-active, .ql-format-button.ql-on
     color: blueColor
-  .sc-format-button.sc-bold:before
+  .ql-format-button.ql-bold:before
     content: "\e801"
-  .sc-format-button.sc-italic:before
+  .ql-format-button.ql-italic:before
     content: "\e802"
-  .sc-format-button.sc-underline:before
+  .ql-format-button.ql-underline:before
     content: "\e803"
-  .sc-format-button.sc-strike:before
+  .ql-format-button.ql-strike:before
     content: "\e804"
-  .sc-format-button.sc-link:before
+  .ql-format-button.ql-link:before
     content: "\e805"
-  .sc-format-button.sc-image:before
+  .ql-format-button.ql-image:before
     content: "\e806"
-  .sc-format-button.sc-list:before
+  .ql-format-button.ql-list:before
     content: "\e807"
-  .sc-format-button.sc-bullet:before
+  .ql-format-button.ql-bullet:before
     content: "\e808"
-  .sc-format-button.sc-indent:before
+  .ql-format-button.ql-indent:before
     content: "\e809"
-  .sc-format-button.sc-outdent:before
+  .ql-format-button.ql-outdent:before
     content: "\e80A"
-  .sc-format-button.sc-superscript:before
+  .ql-format-button.ql-superscript:before
     content: "\e80F"
-  .sc-format-button.sc-subscript:before
+  .ql-format-button.ql-subscript:before
     content: "\e810"
-  .sc-format-button.sc-authorship:before
+  .ql-format-button.ql-authorship:before
     content: "\e811"
 
 /* Fix for iOS not losing hover state after click */
-.sc-toolbar-container.ios
-  .sc-format-button:hover
+.ql-toolbar-container.ios
+  .ql-format-button:hover
     color: inherit
-  .sc-format-button.sc-active, .sc-format-button.sc-on
+  .ql-format-button.ql-active, .ql-format-button.ql-on
     color: blueColor
 
-.sc-picker
+.ql-picker
   box-sizing: border-box
   font-size: 13px
   display: inline-block
   font-family: 'Helvetica', 'Arial', sans-serif
   font-weight: bold
   position: relative
-  .sc-picker-label
+  .ql-picker-label
     {formatInput}
     background-color: whiteColor
     border: 1px solid transparent
@@ -117,15 +117,15 @@ formatInput =
     padding-right: toolbarPadding
     position: relative
     width: 100%
-  .sc-picker-label:after
+  .ql-picker-label:after
     content: "\e812"
     float: right
     font-family: 'quill-snow'
     font-size: 12px
     margin-left: 8px
-  .sc-picker-label.sc-active, .sc-picker-label:hover
+  .ql-picker-label.ql-active, .ql-picker-label:hover
     color: blueColor
-  .sc-picker-options
+  .ql-picker-options
     background-color: whiteColor
     border: 1px solid transparent
     box-sizing: border-box
@@ -133,71 +133,71 @@ formatInput =
     padding: 0.5*toolbarPadding toolbarPadding
     position: absolute
     width: 100%
-    .sc-picker-item
+    .ql-picker-item
       box-sizing: border-box
       cursor: pointer
       display: block
       padding-bottom: inputPadding
       padding-top: inputPadding
-    .sc-picker-item.selected, .sc-picker-item:hover
+    .ql-picker-item.selected, .ql-picker-item:hover
       color: blueColor
-.sc-picker.sc-expanded
-  .sc-picker-label
+.ql-picker.ql-expanded
+  .ql-picker-label
     border-color: grayColor
     color: grayColor
     z-index: 2
-  .sc-picker-options
+  .ql-picker-options
     border-color: grayColor
     box-shadow: rgba(0,0,0,0.2) 0 2px 8px
     display: block
     margin-top: -1px
     z-index: 1
 
-.sc-picker.sc-font
+.ql-picker.ql-font
   width: fontNamePickerWidth
-.sc-picker.sc-size
+.ql-picker.ql-size
   width: fontSizePickerWidth
-.sc-picker.sc-align
+.ql-picker.ql-align
   font-family: 'quill-snow'
-  .sc-picker-label
+  .ql-picker-label
     margin-top: 1px     // Some reason button look more aligned with this
-  .sc-picker-label:after
+  .ql-picker-label:after
     content: normal
-  .sc-picker-options
+  .ql-picker-options
     width: textAlignPickerWidth
-  .sc-picker-label[data-value=left]:before, .sc-picker-item[data-value=left]:before
+  .ql-picker-label[data-value=left]:before, .ql-picker-item[data-value=left]:before
     content: "\e80B"
-  .sc-picker-label[data-value=right]:before, .sc-picker-item[data-value=right]:before
+  .ql-picker-label[data-value=right]:before, .ql-picker-item[data-value=right]:before
     content: "\e80C"
-  .sc-picker-label[data-value=center]:before, .sc-picker-item[data-value=center]:before
+  .ql-picker-label[data-value=center]:before, .ql-picker-item[data-value=center]:before
     content: "\e80D"
-  .sc-picker-label[data-value=justify]:before, .sc-picker-item[data-value=justify]:before
+  .ql-picker-label[data-value=justify]:before, .ql-picker-item[data-value=justify]:before
     content: "\e80E"
 
-.sc-picker.sc-color-picker
+.ql-picker.ql-color-picker
   width: 32px   // Remove when we switch to using font icons
-  .sc-picker-label
+  .ql-picker-label
     background-position: center center
     background-repeat: no-repeat
-  .sc-picker-label:after
+  .ql-picker-label:after
     content: normal
-  .sc-picker-options
+  .ql-picker-options
     padding: inputPadding
     width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
-    .sc-picker-item
+    .ql-picker-item
       border: 1px solid transparent
       float: left
       height: colorItemWidth
       margin: colorItemMargin
       padding: 0px
       width: colorItemWidth
-    .sc-picker-item.sc-primary-color
+    .ql-picker-item.ql-primary-color
       margin-bottom: 8px
-    .sc-picker-item.selected, .sc-picker-item:hover
+    .ql-picker-item.selected, .ql-picker-item:hover
       border-color: #000
 
 for $format in color background
-  .sc-picker.sc-{$format} .sc-picker-label
+  .ql-picker.ql-{$format} .ql-picker-label
     background-image: url('assets/' + $format + '.png')
-  .sc-picker.sc-{$format} .sc-picker-label.sc-active, .sc-picker.sc-{$format} .sc-picker-label:hover, .sc-picker.sc-{$format}.sc-expanded .sc-picker-label
+  .ql-picker.ql-{$format} .ql-picker-label.ql-active, .ql-picker.ql-{$format} .ql-picker-label:hover, .ql-picker.ql-{$format}.ql-expanded .ql-picker-label
     background-image: url('assets/' + $format + '-active.png')

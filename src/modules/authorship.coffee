@@ -42,8 +42,8 @@ class Authorship
 
   attachButton: (button) ->
     DOM.addEventListener(button, 'click', =>
-      DOM.toggleClass(button, 'sc-on')
-      this.enable(DOM.hasClass(button, 'sc-on'))
+      DOM.toggleClass(button, 'ql-on')
+      this.enable(DOM.hasClass(button, 'ql-on'))
     )
 
   enable: (enabled = true) ->
