@@ -163,7 +163,6 @@ DOM =
         return "" if node.tagName == DOM.DEFAULT_BREAK_TAG
         return DOM.EMBED_TEXT if DOM.EMBED_TAGS[node.tagName]?
         return node.textContent if node.textContent?
-        return node.innerText.replace(/[\r\n]/g, '') if node.innerText?
         return ""
       when DOM.TEXT_NODE then return node.data or ""
       else return ""
@@ -264,10 +263,7 @@ DOM =
   setText: (node, text) ->
     switch node.nodeType
       when DOM.ELEMENT_NODE
-        if node.textContent?
-          node.textContent = text
-        else
-          node.innerText = text
+        node.textContent = text
       when DOM.TEXT_NODE then node.data = text
       else return # Noop
 
