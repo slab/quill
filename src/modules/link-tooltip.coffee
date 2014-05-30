@@ -37,7 +37,6 @@ class LinkTooltip extends Tooltip
       return unless range? and range.isCollapsed()
       anchor = this._findAnchor(range)
       if anchor
-        @range = range
         this.setMode(anchor.href, false)
         this.show(anchor)
       else
@@ -55,11 +54,11 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    if @range?
+    if @range? and @range.isCollapsed()
       anchor = this._findAnchor(@range)
-      if anchor?
-        anchor.href = url
-    @quill.formatText(@range, 'link', url, 'user') if @range?
+      anchor.href = url if anchor?
+    else
+      @quill.formatText(@range, 'link', url, 'user') if @range?
     this.setMode(url, false)
 
   setMode: (url, edit = false) ->
