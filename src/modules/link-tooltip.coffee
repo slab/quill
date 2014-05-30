@@ -54,11 +54,12 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    if @range? and @range.isCollapsed()
-      anchor = this._findAnchor(@range)
-      anchor.href = url if anchor?
-    else
-      @quill.formatText(@range, 'link', url, 'user') if @range?
+    if @range? 
+      if @range.isCollapsed()
+        anchor = this._findAnchor(@range)
+        anchor.href = url if anchor?
+      else
+        @quill.formatText(@range, 'link', url, 'user') if @range?
     this.setMode(url, false)
 
   setMode: (url, edit = false) ->
