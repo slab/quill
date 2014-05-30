@@ -59,7 +59,7 @@ class LinkTooltip extends Tooltip
         anchor = this._findAnchor(@range)
         anchor.href = url if anchor?
       else
-        @quill.formatText(@range, 'link', url, 'user') if @range?
+        @quill.formatText(@range, 'link', url, 'user')
     this.setMode(url, false)
 
   setMode: (url, edit = false) ->
