@@ -174,14 +174,12 @@ class Quill extends EventEmitter2
 
   setContents: (delta, source = Quill.sources.API) ->
     if _.isArray(delta)
-      delta = Tandem.Delta.makeDelta({
+      delta =
         startLength: this.getLength()
         ops: delta
-      })
     else
-      delta = Tandem.Delta.makeDelta(delta)
       delta.startLength = this.getLength()
-    @editor.applyDelta(delta, source)
+    this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
     html = "<#{DOM.DEFAULT_BLOCK_TAG}><#{DOM.DEFAULT_BREAK_TAG}></#{DOM.DEFAULT_BLOCK_TAG}>" unless html
