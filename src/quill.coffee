@@ -197,6 +197,7 @@ class Quill extends EventEmitter2
     @editor.selection.setRange(range, source)
 
   updateContents: (delta, source = Quill.sources.API) ->
+    delta = Tandem.Delta.makeDelta(delta)
     @editor.applyDelta(delta, source)
 
   # fn(Number start, Number end, String name, String value, String source)
