@@ -15,14 +15,14 @@ A basic editor with just a few formats to get started.
 
 <div class="quill-wrapper">
   <div id="basic-toolbar" class="toolbar">
-    <select title="Size" class="sc-size">
+    <select title="Size" class="ql-size">
       <option value="10px">Small</option>
       <option value="13px" selected>Normal</option>
       <option value="18px">Large</option>
       <option value="32px">Huge</option>
     </select>
-    <button class="sc-bold">Bold</button>
-    <button class="sc-italic">Italic</button>
+    <button class="ql-bold">Bold</button>
+    <button class="ql-italic">Italic</button>
   </div>
   <div id="basic-editor" class="editor">
   {% include lotr.html %}
@@ -44,8 +44,8 @@ Uses all the features of Quill, including [Modules](/docs/modules/) and [Themes]
 <div class="quill-wrapper">
   <div id="full-toolbar" class="toolbar">
     {% include full-toolbar.html %}
-    <span class="sc-format-group">
-      <span title="Link" class="sc-format-button sc-link"></span>
+    <span class="ql-format-group">
+      <span title="Link" class="ql-format-button ql-link"></span>
     </span>
   </div>
   <div id="full-editor" class="editor">

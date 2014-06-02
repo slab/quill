@@ -66,7 +66,7 @@ body.home {
 .editor, .toolbar {
   visibility: hidden;
 }
-.editor.sc-container, .toolbar.sc-toolbar-container {
+.editor.ql-container, .toolbar.ql-toolbar-container {
   visibility: visible;
 }
 

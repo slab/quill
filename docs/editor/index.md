@@ -21,8 +21,8 @@ The best way to get started is a simple example:
 {% highlight html %}
 <!-- Create the toolbar container -->
 <div id="toolbar">
-  <button class="sc-bold">Bold</button>
-  <button class="sc-italic">Italic</button>
+  <button class="ql-bold">Bold</button>
+  <button class="ql-italic">Italic</button>
 </div>
 
 <!-- Create the editor container -->

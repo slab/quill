@@ -31,14 +31,14 @@ Simply create a container and the module to the Quill editor.
 <!-- Create toolbar container -->
 <div id="toolbar">
   <!-- Add font size dropdown -->
-  <select class="sc-size">
+  <select class="ql-size">
     <option value="small">Small</option>
     <option value="normal" selected>Normal</option>
     <option value="large">Large</option>
     <option value="huge">Huge</option>
   </select>
   <!-- Add a bold button -->
-  <button class="sc-bold"></button>
+  <button class="ql-bold"></button>
 </div>
 <div id="editor"></div>
 
@@ -51,27 +51,27 @@ Simply create a container and the module to the Quill editor.
 </script>
 {% endhighlight %}
 
-The `sc-toolbar-container` class will be added to the toolbar container.
+The `ql-toolbar-container` class will be added to the toolbar container.
 
 A click handler will be added to any DOM element with the following classes:
 
-- `sc-bold`
-- `sc-italic`
-- `sc-strike`
-- `sc-underline`
-- `sc-link`
+- `ql-bold`
+- `ql-italic`
+- `ql-strike`
+- `ql-underline`
+- `ql-link`
 
 A change (DOM `change` event) handler will be added to any DOM element with the following classes:
 
-- `sc-background`
-- `sc-color`
-- `sc-font`
-- `sc-size`
+- `ql-background`
+- `ql-color`
+- `ql-font`
+- `ql-size`
 
-The toolbar will also listen to cursor movements and will add an `sc-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
+The toolbar will also listen to cursor movements and will add an `ql-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
 
 The following classes are also recognized by the toolbar but largely used by [Themes](/docs/themes/) for styling:
 
-- `sc-format-button`
-- `sc-format-group`
-- `sc-format-separator`
+- `ql-format-button`
+- `ql-format-group`
+- `ql-format-separator`
