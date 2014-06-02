@@ -1,4 +1,4 @@
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -7935,8 +7935,7 @@ module.exports=_dereq_('4HJaAd');
     }
 
     Delta.prototype.apply = function(insertFn, deleteFn, applyAttrFn, context) {
-      var index, offset, retains,
-        _this = this;
+      var index, offset, retains;
       if (insertFn == null) {
         insertFn = (function() {});
       }
@@ -7955,34 +7954,38 @@ module.exports=_dereq_('4HJaAd');
       index = 0;
       offset = 0;
       retains = [];
-      _.each(this.ops, function(op) {
-        if (Op.isInsert(op)) {
-          insertFn.call(context, index + offset, op.value, op.attributes);
-          return offset += op.getLength();
-        } else if (Op.isRetain(op)) {
-          if (op.start > index) {
-            deleteFn.call(context, index + offset, op.start - index);
-            offset -= op.start - index;
+      _.each(this.ops, (function(_this) {
+        return function(op) {
+          if (Op.isInsert(op)) {
+            insertFn.call(context, index + offset, op.value, op.attributes);
+            return offset += op.getLength();
+          } else if (Op.isRetain(op)) {
+            if (op.start > index) {
+              deleteFn.call(context, index + offset, op.start - index);
+              offset -= op.start - index;
+            }
+            retains.push(new RetainOp(op.start + offset, op.end + offset, op.attributes));
+            return index = op.end;
           }
-          retains.push(new RetainOp(op.start + offset, op.end + offset, op.attributes));
-          return index = op.end;
-        }
-      });
+        };
+      })(this));
       if (this.endLength < this.startLength + offset) {
         deleteFn.call(context, this.endLength, this.startLength + offset - this.endLength);
       }
-      return _.each(retains, function(op) {
-        _.each(op.attributes, function(value, format) {
-          if (value === null) {
-            return applyAttrFn.call(context, op.start, op.end - op.start, format, value);
-          }
-        });
-        return _.each(op.attributes, function(value, format) {
-          if (value != null) {
-            return applyAttrFn.call(context, op.start, op.end - op.start, format, value);
-          }
-        });
-      });
+      return _.each(retains, (function(_this) {
+        return function(op) {
+          _.each(op.attributes, function(value, format) {
+            if (value === null) {
+              return applyAttrFn.call(context, op.start, op.end - op.start, format, value);
+            }
+          });
+          return _.each(op.attributes, function(value, format) {
+            if (value != null) {
+              return applyAttrFn.call(context, op.start, op.end - op.start, format, value);
+            }
+          });
+        };
+      })(this));
     };
 
     Delta.prototype.applyToText = function(text) {
@@ -8430,15 +8433,16 @@ module.exports=_dereq_('4HJaAd');
     };
 
     Delta.prototype.merge = function(other) {
-      var ops,
-        _this = this;
-      ops = _.map(other.ops, function(op) {
-        if (Op.isRetain(op)) {
-          return new RetainOp(op.start + _this.startLength, op.end + _this.startLength, op.attributes);
-        } else {
-          return op;
-        }
-      });
+      var ops;
+      ops = _.map(other.ops, (function(_this) {
+        return function(op) {
+          if (Op.isRetain(op)) {
+            return new RetainOp(op.start + _this.startLength, op.end + _this.startLength, op.attributes);
+          } else {
+            return op;
+          }
+        };
+      })(this));
       ops = this.ops.concat(ops);
       return new Delta(this.startLength + other.startLength, ops);
     };
@@ -8627,8 +8631,7 @@ module.exports=_dereq_('4HJaAd');
         }, 0);
       },
       formatAt: function(delta, formatPoint, numToFormat, attrs, reference) {
-        var attr, charIndex, cur, curFormat, head, op, ops, reachedFormatPoint, tail, _formatBooleanAttribute, _formatNonBooleanAttribute, _i, _j, _len, _len1, _limitScope, _ref, _ref1, _splitOpInThree,
-          _this = this;
+        var attr, charIndex, cur, curFormat, head, op, ops, reachedFormatPoint, tail, _formatBooleanAttribute, _formatNonBooleanAttribute, _i, _j, _len, _len1, _limitScope, _ref, _ref1, _splitOpInThree;
         _splitOpInThree = function(elem, splitAt, length, reference) {
           var cur, curStr, head, headStr, marker, newCur, op, origOps, tail, tailStr, _i, _len;
           if (InsertOp.isInsert(elem)) {
@@ -8727,37 +8730,39 @@ module.exports=_dereq_('4HJaAd');
             }
           }
         };
-        _formatNonBooleanAttribute = function(op, tail, attr, reference) {
-          var getNewAttrVal, referenceOps;
-          getNewAttrVal = function(prevVal) {
-            if (prevVal != null) {
-              return _.first(_.shuffle(_.without(domain.nonBooleanAttributes[attr], prevVal)));
-            } else {
-              return _.first(_.shuffle(_.without(domain.nonBooleanAttributes[attr], domain.defaultAttributeValue[attr])));
-            }
-          };
-          if (InsertOp.isInsert(op)) {
-            return op.attributes[attr] = getNewAttrVal(attr, op.attributes[attr]);
-          } else {
-            if (!RetainOp.isRetain(op)) {
-              throw new Error("Expected retain but got " + op);
-            }
-            referenceOps = reference.getOpsAt(op.start, op.getLength());
-            if (!_.every(referenceOps, function(op) {
-              return InsertOp.isInsert(op);
-            })) {
-              throw new Error("Formatting a retain that does not refer to an insert.");
-            }
-            if (referenceOps.length > 0) {
-              _limitScope(op, tail, attr, referenceOps);
-              if ((op.attributes[attr] != null) && Math.random() < 0.5) {
-                return delete op.attributes[attr];
+        _formatNonBooleanAttribute = (function(_this) {
+          return function(op, tail, attr, reference) {
+            var getNewAttrVal, referenceOps;
+            getNewAttrVal = function(prevVal) {
+              if (prevVal != null) {
+                return _.first(_.shuffle(_.without(domain.nonBooleanAttributes[attr], prevVal)));
               } else {
-                return op.attributes[attr] = getNewAttrVal(op.attributes[attr]);
+                return _.first(_.shuffle(_.without(domain.nonBooleanAttributes[attr], domain.defaultAttributeValue[attr])));
+              }
+            };
+            if (InsertOp.isInsert(op)) {
+              return op.attributes[attr] = getNewAttrVal(attr, op.attributes[attr]);
+            } else {
+              if (!RetainOp.isRetain(op)) {
+                throw new Error("Expected retain but got " + op);
+              }
+              referenceOps = reference.getOpsAt(op.start, op.getLength());
+              if (!_.every(referenceOps, function(op) {
+                return InsertOp.isInsert(op);
+              })) {
+                throw new Error("Formatting a retain that does not refer to an insert.");
+              }
+              if (referenceOps.length > 0) {
+                _limitScope(op, tail, attr, referenceOps);
+                if ((op.attributes[attr] != null) && Math.random() < 0.5) {
+                  return delete op.attributes[attr];
+                } else {
+                  return op.attributes[attr] = getNewAttrVal(op.attributes[attr]);
+                }
               }
             }
-          }
-        };
+          };
+        })(this);
         charIndex = 0;
         ops = [];
         _ref = delta.ops;
@@ -8955,30 +8960,31 @@ module.exports=_dereq_('4HJaAd');
     };
 
     Op.prototype.composeAttributes = function(attributes) {
-      var resolveAttributes,
-        _this = this;
-      resolveAttributes = function(oldAttrs, newAttrs) {
-        var key, resolvedAttrs, value;
-        if (!newAttrs) {
-          return oldAttrs;
-        }
-        resolvedAttrs = _.clone(oldAttrs);
-        for (key in newAttrs) {
-          value = newAttrs[key];
-          if (Op.isInsert(_this) && value === null) {
-            delete resolvedAttrs[key];
-          } else if (typeof value !== 'undefined') {
-            if (typeof resolvedAttrs[key] === 'object' && typeof value === 'object' && _.all([resolvedAttrs[key], newAttrs[key]], (function(val) {
-              return val !== null;
-            }))) {
-              resolvedAttrs[key] = resolveAttributes(resolvedAttrs[key], value);
-            } else {
-              resolvedAttrs[key] = value;
+      var resolveAttributes;
+      resolveAttributes = (function(_this) {
+        return function(oldAttrs, newAttrs) {
+          var key, resolvedAttrs, value;
+          if (!newAttrs) {
+            return oldAttrs;
+          }
+          resolvedAttrs = _.clone(oldAttrs);
+          for (key in newAttrs) {
+            value = newAttrs[key];
+            if (Op.isInsert(_this) && value === null) {
+              delete resolvedAttrs[key];
+            } else if (typeof value !== 'undefined') {
+              if (typeof resolvedAttrs[key] === 'object' && typeof value === 'object' && _.all([resolvedAttrs[key], newAttrs[key]], (function(val) {
+                return val !== null;
+              }))) {
+                resolvedAttrs[key] = resolveAttributes(resolvedAttrs[key], value);
+              } else {
+                resolvedAttrs[key] = value;
+              }
             }
           }
-        }
-        return resolvedAttrs;
-      };
+          return resolvedAttrs;
+        };
+      })(this);
       return resolveAttributes(this.attributes, attributes);
     };
 
@@ -11943,7 +11949,7 @@ module.exports=_dereq_('Fq7WE+');
 },{}],18:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.13.7",
+  "version": "0.14.0",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -11955,26 +11961,26 @@ module.exports={
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
-    "tandem-core": "~0.5.2",
+    "tandem-core": "~0.6.1",
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
-    "async": "~0.6.2",
+    "async": "~0.9.0",
     "coffeeify": "~0.6.0",
     "grunt": "~0.4.3",
-    "grunt-browserify": "~2.0.7",
+    "grunt-browserify": "~2.1.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-connect": "~0.7.1",
     "grunt-contrib-jade": "~0.11.0",
-    "grunt-contrib-stylus": "~0.13.2",
+    "grunt-contrib-stylus": "~0.16.0",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-karma": "~0.8.0",
     "grunt-newer": "~0.7.0",
     "grunt-protractor-runner": "~0.2.4",
-    "grunt-shell": "~0.6.4",
+    "grunt-shell": "~0.7.0",
     "istanbul": "~0.2.6",
     "jquery": "~1.11.0",
     "karma": "~0.12.0",
@@ -11988,7 +11994,7 @@ module.exports={
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.4.0",
-    "protractor": "~0.21.0"
+    "protractor": "~0.23.0"
   },
   "engines": {
     "node": ">=0.10"
@@ -12422,9 +12428,6 @@ DOM = {
         if (node.textContent != null) {
           return node.textContent;
         }
-        if (node.innerText != null) {
-          return node.innerText.replace(/[\r\n]/g, '');
-        }
         return "";
       case DOM.TEXT_NODE:
         return node.data || "";
@@ -12557,12 +12560,7 @@ DOM = {
   setText: function(node, text) {
     switch (node.nodeType) {
       case DOM.ELEMENT_NODE:
-        if (node.textContent != null) {
-          return node.textContent = text;
-        } else {
-          return node.innerText = text;
-        }
-        break;
+        return node.textContent = text;
       case DOM.TEXT_NODE:
         return node.data = text;
     }
@@ -13263,7 +13261,7 @@ ColorPicker = (function(_super) {
 
   function ColorPicker() {
     ColorPicker.__super__.constructor.apply(this, arguments);
-    DOM.addClass(this.container, 'sc-color-picker');
+    DOM.addClass(this.container, 'ql-color-picker');
   }
 
   ColorPicker.prototype.buildItem = function(picker, option, index) {
@@ -13381,13 +13379,13 @@ DOM = _dereq_('../dom');
 Normalizer = _dereq_('../normalizer');
 
 Picker = (function() {
-  Picker.TEMPLATE = '<span class="sc-picker-label"></span><span class="sc-picker-options"></span>';
+  Picker.TEMPLATE = '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>';
 
   function Picker(select) {
     this.select = select;
     this.container = this.select.ownerDocument.createElement('span');
     this.buildPicker();
-    DOM.addClass(this.container, 'sc-picker');
+    DOM.addClass(this.container, 'ql-picker');
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
     DOM.addEventListener(this.select.ownerDocument, 'click', (function(_this) {
@@ -13399,7 +13397,7 @@ Picker = (function() {
     DOM.addEventListener(this.label, 'click', (function(_this) {
       return function() {
         return _.defer(function() {
-          return DOM.toggleClass(_this.container, 'sc-expanded');
+          return DOM.toggleClass(_this.container, 'ql-expanded');
         });
       };
     })(this));
@@ -13407,11 +13405,11 @@ Picker = (function() {
       return function() {
         var item, option;
         if (_this.select.selectedIndex > -1) {
-          item = _this.container.querySelectorAll('.sc-picker-item')[_this.select.selectedIndex];
+          item = _this.container.querySelectorAll('.ql-picker-item')[_this.select.selectedIndex];
           option = _this.select.options[_this.select.selectedIndex];
         }
         _this.selectItem(item, false);
-        return DOM.toggleClass(_this.label, 'sc-active', option !== DOM.getDefaultOption(_this.select));
+        return DOM.toggleClass(_this.label, 'ql-active', option !== DOM.getDefaultOption(_this.select));
       };
     })(this));
   }
@@ -13420,7 +13418,7 @@ Picker = (function() {
     var item;
     item = this.select.ownerDocument.createElement('span');
     item.setAttribute('data-value', option.getAttribute('value'));
-    DOM.addClass(item, 'sc-picker-item');
+    DOM.addClass(item, 'ql-picker-item');
     DOM.setText(item, DOM.getText(option));
     if (this.select.selectedIndex === index) {
       this.selectItem(item, false);
@@ -13442,8 +13440,8 @@ Picker = (function() {
       };
     })(this));
     this.container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE);
-    this.label = this.container.querySelector('.sc-picker-label');
-    picker = this.container.querySelector('.sc-picker-options');
+    this.label = this.container.querySelector('.ql-picker-label');
+    picker = this.container.querySelector('.ql-picker-options');
     return _.each(this.select.options, (function(_this) {
       return function(option, i) {
         var item;
@@ -13454,18 +13452,18 @@ Picker = (function() {
   };
 
   Picker.prototype.close = function() {
-    return DOM.removeClass(this.container, 'sc-expanded');
+    return DOM.removeClass(this.container, 'ql-expanded');
   };
 
   Picker.prototype.selectItem = function(item, trigger) {
     var selected, value;
-    selected = this.container.querySelector('.sc-selected');
+    selected = this.container.querySelector('.ql-selected');
     if (selected != null) {
-      DOM.removeClass(selected, 'sc-selected');
+      DOM.removeClass(selected, 'ql-selected');
     }
     if (item != null) {
       value = item.getAttribute('data-value');
-      DOM.addClass(item, 'sc-selected');
+      DOM.addClass(item, 'ql-selected');
       DOM.setText(this.label, DOM.getText(item));
       DOM.selectOption(this.select, value, trigger);
       return this.label.setAttribute('data-value', value);
@@ -13865,8 +13863,8 @@ Authorship = (function() {
   Authorship.prototype.attachButton = function(button) {
     return DOM.addEventListener(button, 'click', (function(_this) {
       return function() {
-        DOM.toggleClass(button, 'sc-on');
-        return _this.enable(DOM.hasClass(button, 'sc-on'));
+        DOM.toggleClass(button, 'ql-on');
+        return _this.enable(DOM.hasClass(button, 'ql-on'));
       };
     })(this));
   };
@@ -14280,10 +14278,17 @@ LinkTooltip = (function(_super) {
   };
 
   LinkTooltip.prototype.saveLink = function() {
-    var url;
+    var anchor, url;
     url = this._normalizeURL(this.textbox.value);
     if (this.range != null) {
-      this.quill.formatText(this.range, 'link', url, 'user');
+      if (this.range.isCollapsed()) {
+        anchor = this._findAnchor(this.range);
+        if (anchor != null) {
+          anchor.href = url;
+        }
+      } else {
+        this.quill.formatText(this.range, 'link', url, 'user');
+      }
     }
     return this.setMode(url, false);
   };
@@ -14723,7 +14728,7 @@ Toolbar = (function() {
       };
     })(this));
     this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this));
-    DOM.addClass(this.container, 'sc-toolbar-container');
+    DOM.addClass(this.container, 'ql-toolbar-container');
     if (DOM.isIOS()) {
       DOM.addClass(this.container, 'ios');
     }
@@ -14738,7 +14743,7 @@ Toolbar = (function() {
 
   Toolbar.prototype.initFormat = function(format, callback) {
     var eventName, input, selector;
-    selector = ".sc-" + format;
+    selector = ".ql-" + format;
     if (Toolbar.formats.SELECT[format] != null) {
       selector = "select" + selector;
       eventName = 'change';
@@ -14753,7 +14758,7 @@ Toolbar = (function() {
     return DOM.addEventListener(input, eventName, (function(_this) {
       return function() {
         var range, value;
-        value = eventName === 'change' ? DOM.getSelectValue(input) : !DOM.hasClass(input, 'sc-active');
+        value = eventName === 'change' ? DOM.getSelectValue(input) : !DOM.hasClass(input, 'ql-active');
         _this.preventUpdate = true;
         _this.quill.focus();
         range = _this.quill.getSelection();
@@ -14787,7 +14792,7 @@ Toolbar = (function() {
       }
       return this.triggering = false;
     } else {
-      return DOM.toggleClass(input, 'sc-active', value || false);
+      return DOM.toggleClass(input, 'ql-active', value || false);
     }
   };
 
@@ -15659,15 +15664,14 @@ Quill = (function(_super) {
       source = Quill.sources.API;
     }
     if (_.isArray(delta)) {
-      delta = Tandem.Delta.makeDelta({
+      delta = {
         startLength: this.getLength(),
         ops: delta
-      });
+      };
     } else {
-      delta = Tandem.Delta.makeDelta(delta);
       delta.startLength = this.getLength();
     }
-    return this.editor.applyDelta(delta, source);
+    return this.updateContents(delta, source);
   };
 
   Quill.prototype.setHTML = function(html, source) {
@@ -15699,6 +15703,7 @@ Quill = (function(_super) {
     if (source == null) {
       source = Quill.sources.API;
     }
+    delta = Tandem.Delta.makeDelta(delta);
     return this.editor.applyDelta(delta, source);
   };
 
@@ -15856,7 +15861,7 @@ Renderer = (function() {
     _ref = Renderer.buildFrame(this.container), this.root = _ref[0], this.iframe = _ref[1];
     this.root.id = this.options.id;
     DOM.addClass(this.root, 'editor-container');
-    DOM.addClass(this.container, 'sc-container');
+    DOM.addClass(this.container, 'ql-container');
     DOM.addEventListener(this.container, 'focus', (function(_this) {
       return function() {
         return _this.root.focus();
@@ -16270,7 +16275,7 @@ SnowTheme = (function(_super) {
     _.each(['color', 'background', 'font', 'size', 'align'], (function(_this) {
       return function(format) {
         var picker, select;
-        select = module.container.querySelector(".sc-" + format);
+        select = module.container.querySelector(".ql-" + format);
         if (select == null) {
           return;
         }
@@ -16283,9 +16288,9 @@ SnowTheme = (function(_super) {
           case 'color':
           case 'background':
             picker = new ColorPicker(select);
-            _.each(picker.container.querySelectorAll('.sc-picker-item'), function(item, i) {
+            _.each(picker.container.querySelectorAll('.ql-picker-item'), function(item, i) {
               if (i < 7) {
-                return DOM.addClass(item, 'sc-primary-color');
+                return DOM.addClass(item, 'ql-primary-color');
               }
             });
         }
