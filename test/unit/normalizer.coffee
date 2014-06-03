@@ -166,6 +166,18 @@ describe('Normalizer', ->
     )
   )
 
+  describe('stripComments()', ->
+    it('single line', ->
+      html = '<p>Test</p><!-- Comment --><p>Test</p>'
+      expect(Quill.Normalizer.stripComments(html)).toEqual('<p>Test</p><p>Test</p>')
+    )
+
+    it('multiple lines', ->
+      html = "<p>Test</p>\n<!-- Comment -->\n<p>Test</p>"
+      expect(Quill.Normalizer.stripComments(html)).toEqual("<p>Test</p>\n\n<p>Test</p>")
+    )
+  )
+
   describe('stripWhitespace()', ->
     tests =
       'newlines':
