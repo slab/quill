@@ -113,10 +113,13 @@ describe('Normalizer', ->
       'wrap orphaned text node':
         initial:  '<s><b>0</b></s><s><span>1</span></s>'
         expected: '<s><b>0</b><span>1</span></s>'
+      'merge text nodes':
+        initial:  'A <b></b> B.'
+        expected:  'A  B.'
 
     _.each(tests, (test, name) ->
       it(name, ->
-        @container.innerHTML = "<div>#{test.initial}</div>"
+        @container.innerHTML = "<p>#{test.initial}</p>"
         Quill.Normalizer.optimizeLine(@container.firstChild)
         expect(@container.firstChild).toEqualHTML(test.expected)
       )
