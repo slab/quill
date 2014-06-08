@@ -146,9 +146,21 @@ describe('Utils', ->
 
     it('merge and normalize', ->
       @container.innerHTML = '<span>One</span><span>Two</span>'
+      expect(@container.childNodes.length).toEqual(2)
       Quill.Utils.mergeNodes(@container.firstChild, @container.lastChild)
       expect(@container).toEqualHTML('<span>OneTwo</span>')
+      expect(@container.childNodes.length).toEqual(1)
       expect(@container.firstChild.childNodes.length).toEqual(1)
+    )
+
+    it('merge text nodes', ->
+      @container.innerHTML = ''
+      @container.appendChild(document.createTextNode('One'))
+      @container.appendChild(document.createTextNode('Two'))
+      expect(@container.childNodes.length).toEqual(2)
+      Quill.Utils.mergeNodes(@container.firstChild, @container.lastChild)
+      expect(@container).toEqualHTML('OneTwo')
+      expect(@container.childNodes.length).toEqual(1)
     )
   )
 

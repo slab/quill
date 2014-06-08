@@ -47,8 +47,12 @@ Utils =
     return version and maxVersion >= version
 
   mergeNodes: (newNode, oldNode) ->
-    DOM.moveChildren(newNode, oldNode)
-    DOM.normalize(newNode)
+    if DOM.isElement(newNode)
+      DOM.moveChildren(newNode, oldNode)
+      DOM.normalize(newNode)
+    else
+      text = DOM.getText(newNode) + DOM.getText(oldNode)
+      DOM.setText(newNode, text)
     DOM.removeNode(oldNode)
 
   # refNode is node after split point, root is parent of eldest node we want split (root will not be split)

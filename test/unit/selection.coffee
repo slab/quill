@@ -94,7 +94,8 @@ describe('Selection', ->
         quill.root.innerHTML = ''
         quill.editor.doc.rebuild()
         [resultNode, resultIndex] = quill.editor.selection._encodePosition(quill.root, 0)
-        expect(resultNode).toEqual(quill.root)
+        expect(Quill.DOM.isTextNode(resultNode)).toBe(true)
+        expect(Quill.DOM.getText(resultNode)).toEqual('')
         expect(resultIndex).toEqual(0)
       )
 
