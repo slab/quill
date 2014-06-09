@@ -11949,7 +11949,7 @@ module.exports=_dereq_('Fq7WE+');
 },{}],18:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.14.0",
+  "version": "0.14.2",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -15310,7 +15310,7 @@ Normalizer = {
     return lineNode;
   },
   stripComments: function(html) {
-    return html = html.replace(/<!--[\s\S]*?-->/g, '');
+    return html.replace(/<!--[\s\S]*?-->/g, '');
   },
   stripWhitespace: function(html) {
     html = html.replace(/^\s+/, '').replace(/\s+$/, '');
@@ -15902,13 +15902,15 @@ module.exports = Renderer;
 
 
 },{"./dom":20,"./normalizer":38,"./utils":44,"lodash":"4HJaAd"}],41:[function(_dereq_,module,exports){
-var DOM, Leaf, Range, Selection, Utils, _;
+var DOM, Leaf, Normalizer, Range, Selection, Utils, _;
 
 _ = _dereq_('lodash');
 
 DOM = _dereq_('./dom');
 
 Leaf = _dereq_('./leaf');
+
+Normalizer = _dereq_('./normalizer');
 
 Range = _dereq_('./lib/range');
 
@@ -16019,6 +16021,7 @@ Selection = (function() {
   };
 
   Selection.prototype._encodePosition = function(node, offset) {
+    var text;
     while (true) {
       if (DOM.isTextNode(node) || node.tagName === DOM.DEFAULT_BREAK_TAG || (DOM.EMBED_TAGS[node.tagName] != null)) {
         return [node, offset];
@@ -16026,6 +16029,11 @@ Selection = (function() {
         node = node.childNodes[offset];
         offset = 0;
       } else if (node.childNodes.length === 0) {
+        if (Normalizer.TAGS[node.tagName] == null) {
+          text = node.ownerDocument.createTextNode('');
+          node.appendChild(text);
+          node = text;
+        }
         return [node, 0];
       } else {
         node = node.lastChild;
@@ -16126,7 +16134,7 @@ Selection = (function() {
 module.exports = Selection;
 
 
-},{"./dom":20,"./leaf":23,"./lib/range":27,"./utils":44,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
+},{"./dom":20,"./leaf":23,"./lib/range":27,"./normalizer":38,"./utils":44,"lodash":"4HJaAd"}],42:[function(_dereq_,module,exports){
 var DefaultTheme;
 
 DefaultTheme = (function() {
@@ -16384,8 +16392,14 @@ Utils = {
     return version && maxVersion >= version;
   },
   mergeNodes: function(newNode, oldNode) {
-    DOM.moveChildren(newNode, oldNode);
-    DOM.normalize(newNode);
+    var text;
+    if (DOM.isElement(newNode)) {
+      DOM.moveChildren(newNode, oldNode);
+      DOM.normalize(newNode);
+    } else {
+      text = DOM.getText(newNode) + DOM.getText(oldNode);
+      DOM.setText(newNode, text);
+    }
     return DOM.removeNode(oldNode);
   },
   splitAncestors: function(refNode, root, force) {
