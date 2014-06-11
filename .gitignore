@@ -3,3 +3,4 @@
 /coverage
 /lib
 *.log
+.DS_Store
