@@ -10,7 +10,7 @@ class Toolbar
   @formats:
     LINE    : { 'align', 'bullet', 'list', 'blockquote', 'firstheader', 'secondheader', 'thirdheader' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size', }
-    TOGGLE  : { 'blockquote', 'firstheader', 'secondheader', 'thirdheader', 'blockquote', 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
+    TOGGLE  : { 'firstheader', 'secondheader', 'thirdheader', 'blockquote', 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
