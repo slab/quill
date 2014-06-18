@@ -8,6 +8,30 @@ class Format
     LINE: 'line'
 
   @FORMATS:
+    firstheader:
+      type: Format.types.LINE
+      tag: 'H1'
+      parentTag: 'HEADER'
+      prepare: 'firstheader'
+
+    secondheader:
+      type: Format.types.LINE
+      tag: 'H2'
+      parentTag: 'HEADER'
+      prepare: 'secondheader'
+
+    thirdheader:
+      type: Format.types.LINE
+      tag: 'H3'
+      parentTag: 'HEADER'
+      prepare: 'thirdheader'
+
+    blockquote:
+      type: Format.types.LINE
+      tag: 'P'
+      parentTag: 'BLOCKQUOTE'
+      prepare: 'blockquote'
+
     bold:
       tag: 'B'
       prepare: 'bold'

@@ -30,6 +30,7 @@ html
           button.ql-italic(title='Italic') Italic
           button.ql-underline(title='Underline') Under
           button.ql-bullet(title='Bullet') Bullet
+          button.ql-firstheader(title='H1') H1
         .editor-container
 
       .advanced-wrapper
@@ -45,11 +46,17 @@ html
               option(value='18px') Large
               option(value='32px') Huge
           span.ql-format-group
+            span.ql-format-button.ql-firstheader(title='H1') H1
+            span.ql-format-button.ql-secondheader(title='H2') H2
+            span.ql-format-button.ql-thirdheader(title='H3') H3
+            span.ql-format-separator
+          span.ql-format-group
             span.ql-format-button.ql-bold(title='Bold')
             span.ql-format-separator
             span.ql-format-button.ql-italic(title='Italic')
             span.ql-format-separator
             span.ql-format-button.ql-underline(title='Underline')
+            span.ql-format-separator
           span.ql-format-group
             each c in ['ql-color', 'ql-background']
               select(class=c, title=(c=='ql-color'?'Text Color':'Background Color'))
