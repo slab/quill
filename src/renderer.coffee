@@ -30,7 +30,10 @@ DEFAULT_STYLES =
   '.editor-container s'          : { 'text-decoration': 'line-through' }
   '.editor-container u'          : { 'text-decoration': 'underline' }
   '.editor-container img'        : { 'max-width': '100%' }
-  '.editor-container blockquote' : { 'margin': '0 0 0 2em', 'padding': '0' }
+  '.editor-container h1'         : { 'font-weight': 'bold', 'font-size': '2em' }
+  '.editor-container h2'         : { 'font-weight': 'bold', 'font-size': '1.75em' }
+  '.editor-container h3'         : { 'font-weight': 'bold', 'font-size': '1.5em' }
+  '.editor-container blockquote' : { 'border-left': '2px solid grey', 'padding-left': '10px', 'font-size': '1.25em' }
   '.editor-container ol'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'decimal' }
   '.editor-container ul'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'disc' }
 
