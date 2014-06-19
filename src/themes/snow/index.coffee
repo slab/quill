@@ -79,6 +79,8 @@ class SnowTheme extends DefaultTheme
     '.snow .link-tooltip-container a, .snow .link-tooltip-container span':
       'display': 'inline-block'
       'line-height': '25px'
+    '.snow .placeholder-container:after':
+      'color': '#ccc'
 
   constructor: (@quill) ->
     super
