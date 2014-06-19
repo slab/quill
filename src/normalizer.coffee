@@ -37,6 +37,7 @@ Normalizer =
     'IMG'
     'UL'
     'LI'
+    'IFRAME'
   }
 
   # Make sure descendant break tags are not causing multiple lines to be rendered

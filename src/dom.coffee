@@ -70,6 +70,7 @@ DOM =
 
   EMBED_TAGS: {
     'IMG'
+    'IFRAME'
   }
 
   LIST_TAGS: {
