@@ -108,7 +108,7 @@ Normalizer =
     return lineNode
 
   stripComments: (html) ->
-    html = html.replace(/<!--[\s\S]*?-->/g, '')
+    return html.replace(/<!--[\s\S]*?-->/g, '')
 
   stripWhitespace: (html) ->
     # Remove leading and tailing whitespace
