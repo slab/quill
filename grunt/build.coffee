@@ -49,7 +49,7 @@ module.exports = (grunt) ->
     all:
       expand: true
       dest: 'build/'
-      src: ['demo/scripts/*.coffee', 'test/**/*.coffee']
+      src: ['examples/scripts/*.coffee', 'test/**/*.coffee']
       ext: '.js'
     src:
       options:
@@ -81,7 +81,7 @@ module.exports = (grunt) ->
       dest: 'build/'
       expand: true
       ext: '.html'
-      src: ['demo/*.jade', 'test/fixtures/*.jade', '!demo/content.jade']
+      src: ['examples/*.jade', 'test/fixtures/*.jade']
   )
 
   grunt.config('stylus',
@@ -98,11 +98,11 @@ module.exports = (grunt) ->
         rename: (dest, src) ->
           return "build/themes/quill.#{src}"
       }]
-    demo:
+    examples:
       expand: true
       ext: '.css'
       dest: 'build/'
-      src: ['demo/styles/*.styl']
+      src: ['examples/styles/*.styl']
   )
 
   grunt.config('uglify',

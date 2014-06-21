@@ -5,7 +5,7 @@ bower.json
 npm-debug.log
 build
 coverage
-demo
+examples
 grunt
 src
 test
