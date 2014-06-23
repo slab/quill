@@ -11,7 +11,7 @@ exports.config = {
   allScriptsTimeout: 11000,
 
   specs: [
-    '../build/test/e2e/*.js'
+    '../dist/test/e2e/*.js'
   ],
   exclude: [],
 

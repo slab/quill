@@ -2,9 +2,12 @@
 .travis.yml
 _*
 bower.json
-npm-debug.log
-build
+*.log
 coverage
+dist/examples
+dist/test
+dist/quill-exposed.js
+dist/tandem-core.js
 examples
 grunt
 src

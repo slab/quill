@@ -8,14 +8,15 @@
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
   "description": "Cross browser rich text editor",
-  "main": "index.js",
+  "main": "dist/quill.js",
   "license": "BSD",
   "ignore": [
     "**/.*",
-    "node_modules",
-    "bower_components",
-    "build",
     "examples",
-    "test"
+    "src",
+    "test",
+    "Gruntfile.coffee",
+    "index.js",
+    "package.json"
   ]
 }
