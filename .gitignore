@@ -1,5 +1,5 @@
-/build
-/node_modules
 /coverage
+/dist
 /lib
+/node_modules
 *.log

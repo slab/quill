@@ -15,32 +15,32 @@ module.exports = (grunt) ->
         bundleOptions:
           standalone: 'Quill'
       files: [
-        { 'build/quill.js': ['src/quill.coffee'] }
-        { 'build/quill.exposed.js': ['test/quill.coffee'] }
+        { 'dist/quill.js': ['src/quill.coffee'] }
+        { 'dist/quill.exposed.js': ['test/quill.coffee'] }
       ]
     'tandem':
       options:
         bundleOptions:
           standalone: 'Tandem'
-      files: [{ 'build/tandem-core.js': ['node_modules/tandem-core/index.js'] }]
+      files: [{ 'dist/tandem-core.js': ['node_modules/tandem-core/index.js'] }]
     'quill-watchify':
       options:
         bundleOptions:
           standalone: 'Quill'
         keepAlive: true
         watch: true
-      files: [{ 'build/quill.js': ['src/quill.coffee'] }]
+      files: [{ 'dist/quill.js': ['src/quill.coffee'] }]
     'quill-exposed-watchify':
       options:
         bundleOptions:
           standalone: 'Quill'
         keepAlive: true
         watch: true
-      files: [{ 'build/quill.exposed.js': ['test/quill.coffee'] }]
+      files: [{ 'dist/quill.exposed.js': ['test/quill.coffee'] }]
   )
 
   grunt.config('clean',
-    all: ['build']
+    all: ['dist']
     coffee: ['lib']
     coverage: ['src/**/*.js']
   )
@@ -48,8 +48,8 @@ module.exports = (grunt) ->
   grunt.config('coffee',
     all:
       expand: true
-      dest: 'build/'
-      src: ['demo/scripts/*.coffee', 'test/**/*.coffee']
+      dest: 'dist/'
+      src: ['examples/scripts/*.coffee', 'test/**/*.coffee']
       ext: '.js'
     src:
       options:
@@ -70,18 +70,18 @@ module.exports = (grunt) ->
         ' *  Jason Chen, Salesforce.com\n' +
         ' */\n\n'
     quill:
-      'build/quill.js': ['build/quill.js']
-      'build/quill.min.js': ['build/quill.min.js']
+      'dist/quill.js': ['dist/quill.js']
+      'dist/quill.min.js': ['dist/quill.min.js']
   )
 
   grunt.config('jade',
     all:
       options:
         pretty: true
-      dest: 'build/'
+      dest: 'dist/'
       expand: true
       ext: '.html'
-      src: ['demo/*.jade', 'test/fixtures/*.jade', '!demo/content.jade']
+      src: ['examples/*.jade', 'test/fixtures/*.jade']
   )
 
   grunt.config('stylus',
@@ -96,17 +96,17 @@ module.exports = (grunt) ->
         flatten: true
         src: 'src/themes/**/*.styl'
         rename: (dest, src) ->
-          return "build/themes/quill.#{src}"
+          return "dist/themes/quill.#{src}"
       }]
-    demo:
+    examples:
       expand: true
       ext: '.css'
-      dest: 'build/'
-      src: ['demo/styles/*.styl']
+      dest: 'dist/'
+      src: ['examples/styles/*.styl']
   )
 
   grunt.config('uglify',
     quill:
-      files: { 'build/quill.min.js': ['build/quill.js'] }
+      files: { 'dist/quill.min.js': ['dist/quill.js'] }
   )
 

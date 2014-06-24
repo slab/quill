@@ -40,7 +40,7 @@ var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
 
 module.exports = function(config) {
   config.set({
-    basePath: '../build',
+    basePath: '../dist',
     frameworks: ['jasmine'],
     files: [
       '../node_modules/jquery/dist/jquery.js',

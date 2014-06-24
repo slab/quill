@@ -3,12 +3,12 @@ module.exports = (grunt) ->
     options:
       interrupt: true
     coffee:
-      files: ['demo/scripts/*.coffee', 'test/**/*.coffee']
+      files: ['examples/scripts/*.coffee', 'test/**/*.coffee']
       tasks: ['newer:coffee:all']
     jade:
-      files: ['demo/*.jade', 'test/**/*.jade']
+      files: ['examples/*.jade', 'test/**/*.jade']
       tasks: ['newer:jade']
     stylus:
-      files: ['demo/**/*.styl', 'src/**/*.styl']
+      files: ['examples/**/*.styl', 'src/**/*.styl']
       tasks: ['newer:stylus']
   )
