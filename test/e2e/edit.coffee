@@ -2,7 +2,7 @@ switchToEditorFrame = ->
   browser.driver.switchTo().frame(browser.driver.findElement(By.tagName("iframe")))
 
 describe('Editing text', ->
-  browser.driver.get('http://localhost:9000/build/demo/index.html')
+  browser.driver.get('http://localhost:9000/dist/demo/index.html')
 
   it('click into editor', ->
     browser.driver.findElement(By.id('editor-container')).click()

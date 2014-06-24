@@ -2,8 +2,8 @@ var _  = require('lodash');
 var os = require('os');
 
 
-var CHROME_VERSION = '34'
-var FIREFOX_VERSION = '28'
+var CHROME_VERSION = '35'
+var FIREFOX_VERSION = '30'
 var SAFARI_VERSION = '7'
 var IOS_VERSION = '7.1'
 var ANDROID_VERSION = '4.3'
@@ -40,7 +40,7 @@ var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
 
 module.exports = function(config) {
   config.set({
-    basePath: '../build',
+    basePath: '../dist',
     frameworks: ['jasmine'],
     files: [
       '../node_modules/jquery/dist/jquery.js',
