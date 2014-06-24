@@ -13,6 +13,7 @@
   "ignore": [
     "**/.*",
     "examples",
+    "grunt",
     "src",
     "test",
     "Gruntfile.coffee",
