@@ -1,5 +1,7 @@
+var quill;   // Expose as global so people can easily try out the API
+
 $(document).ready(function() {
-  var editor = new Quill('#editor', {
+  quill = new Quill('#editor', {
     modules: {
       'toolbar': { container: '#toolbar' },
       'image-tooltip': true,
@@ -13,11 +15,11 @@ $(document).ready(function() {
     $('.quill-wrapper').tooltip('show');
   }, 2500);
 
-  editor.once('selection-change', function(hasFocus) {
+  quill.once('selection-change', function(hasFocus) {
     $('#editor').toggleClass('focus', hasFocus);
     // Hack for inability to scroll on mobile
     if (/mobile/i.test(navigator.userAgent)) {
-      $('#editor').css('height', editor.root.scrollHeight + 30)   // 30 for padding
+      $('#editor').css('height', quill.root.scrollHeight + 30)   // 30 for padding
     }
     $('.quill-wrapper').tooltip('destroy');
     clearTimeout(tooltipTimer);
