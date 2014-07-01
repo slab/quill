@@ -447,17 +447,19 @@ editor.addFormat('strike', { tag: 'S', prepare: 'strikeThrough' });
 
 ### Quill.prototype.addStyles
 
-Add css styles rules to editor.
+Add custom css styles to editor.
 
 **Methods**
 
 - `addStyles(rules)`
+- `addStyles(stylesheet)`
 
 **Parameters**
 
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `rules`   | _Object_ | Object containing CSS rules to add to the editor.
+| Parameter    | Type     | Description
+|--------------|----------|------------
+| `rules`      | _Object_ | Object containing CSS rules to add to the editor.
+| `stylesheet` | _String_ | URL of external stylesheet to include.
 
 **Examples**
 
@@ -466,6 +468,10 @@ editor.addStyles({
   'body': { 'font-family': "'Arial', san-serif" },
   'a': { 'text-decoration': 'none' }
 });
+{% endhighlight %}
+
+{% highlight javascript %}
+editor.addStyles('css/styles.css');
 {% endhighlight %}
 
 
