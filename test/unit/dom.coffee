@@ -111,6 +111,17 @@ describe('DOM', ->
         expect(@container.firstChild.style[name]).toEqual(value)
       )
     )
+
+    it('addStyles()', ->
+      $(@container).html(html)
+      Quill.DOM.addStyles(@container.firstChild,
+        color: 'blue'
+        cursor: 'pointer'
+      )
+      expect(@container.firstChild.style.display).toEqual('inline')
+      expect(@container.firstChild.style.color).toEqual('blue')
+      expect(@container.firstChild.style.cursor).toEqual('pointer')
+    )
   )
 
   describe('events', ->

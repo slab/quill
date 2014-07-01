@@ -113,6 +113,10 @@ DOM =
       return propogate
     )
 
+  addStyles: (node, styles) ->
+    styles = _.defaults(styles, DOM.getStyles(node))
+    DOM.setStyles(node, styles)
+
   clearAttributes: (node, exception = []) ->
     exception = [exception] if _.isString(exception)
     _.each(DOM.getAttributes(node), (value, name) ->
