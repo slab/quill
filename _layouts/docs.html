@@ -15,7 +15,7 @@ layout: default
   </div>
 
   <div class="row">
-    <div id="docs-container" class="col-md-9">
+    <div id="docs-container" class="col-sm-9">
       {% if page.stability == "red" %}
       <div class="alert alert-danger">Changes to this interface are planned.</div>
       {% elsif page.stability == "yellow" %}
@@ -24,7 +24,7 @@ layout: default
 
       {{ content }}
     </div>
-    <div id="sidebar-container" class="col-md-3">
+    <div id="sidebar-container" class="col-sm-3">
       <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
         <ul class="nav">
           {% assign navClass = "nav" %}

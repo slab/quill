@@ -55,9 +55,9 @@ body.home {
   box-shadow: 0px 0px 10px #ccc;
   margin-left: auto;
   margin-right: auto;
-  max-width: 960px;
+  max-width: 600px;
   min-width: 320px;
-  width: 66%;
+  width: 100%;
 }
 .toolbar {
   border-bottom: 1px solid #ccc;
@@ -268,7 +268,6 @@ body.home {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
   margin: 20px 0px 25px;
-  width: 600px;
 }
 
 #docs-container #toolbar-editor {
