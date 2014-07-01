@@ -80,6 +80,12 @@ class Renderer
     DOM.addEventListener(@container, 'focus', =>
       @root.focus()
     )
+    # Mobile Safari lets iframe content overflow
+    if DOM.isIOS()
+      DOM.addStyles(@container,
+        'overflow': 'auto'
+        '-webkit-overflow-scrolling': 'touch'
+      )
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added after modules'
     _.defer(_.bind(this.addStyles, this, @options.styles)) if @options.styles?
