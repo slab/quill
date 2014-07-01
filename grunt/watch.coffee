@@ -9,6 +9,6 @@ module.exports = (grunt) ->
       files: ['examples/*.jade', 'test/**/*.jade']
       tasks: ['newer:jade']
     stylus:
-      files: ['examples/**/*.styl', 'src/**/*.styl']
+      files: ['examples/**/*.styl', 'src/**/*.styl', 'test/fixtures/*.styl']
       tasks: ['newer:stylus']
   )

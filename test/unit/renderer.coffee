@@ -35,18 +35,31 @@ describe('Renderer', ->
       styles: { '.editor-container > p': { 'line-height': '25px' } }
     })
     renderer.root.innerHTML = '<p>Test</p>'
-    _.defer( =>
+    _.defer( ->
       expect(renderer.root.firstChild.offsetHeight).toEqual(25)
       done()
     )
   )
 
-  it('addStyles()', ->
+  it('addStyles()', (done) ->
     renderer = new Quill.Renderer(@container)
     renderer.root.innerHTML = '<p>Test</p>'
     renderer.addStyles({
       '.editor-container > p': { 'line-height': '25px' }
     })
-    expect(renderer.root.firstChild.offsetHeight).toEqual(25)
+    _.defer( ->
+      expect(renderer.root.firstChild.offsetHeight).toEqual(25)
+      done()
+    )
+  )
+
+  it('addStyles() stylesheet', (done) ->
+    renderer = new Quill.Renderer(@container)
+    renderer.root.innerHTML = '<p>Test</p>'
+    renderer.addStyles('/base/test/fixtures/style.css')
+    _.defer( ->
+      expect(renderer.root.firstChild.offsetHeight).toEqual(25)
+      done()
+    )
   )
 )

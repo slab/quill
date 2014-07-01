@@ -52,6 +52,8 @@ module.exports = function(config) {
       'test/fixtures/unit.html',
       'test/helpers/*.js',
 
+      { pattern: 'test/fixtures/*.css', included: false },
+
       'test/unit/*.js',
       'test/unit/lib/*.js',
       'test/unit/modules/*.js',

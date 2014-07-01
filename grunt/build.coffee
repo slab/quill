@@ -98,11 +98,11 @@ module.exports = (grunt) ->
         rename: (dest, src) ->
           return "dist/themes/quill.#{src}"
       }]
-    examples:
+    static:
       expand: true
       ext: '.css'
       dest: 'dist/'
-      src: ['examples/styles/*.styl']
+      src: ['examples/styles/*.styl', 'test/fixtures/*.styl']
   )
 
   grunt.config('uglify',
