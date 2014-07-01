@@ -41,7 +41,7 @@ describe('Renderer', ->
     )
   )
 
-  it('addStyles()', (done) ->
+  it('addStyles() object', (done) ->
     renderer = new Quill.Renderer(@container)
     renderer.root.innerHTML = '<p>Test</p>'
     renderer.addStyles({
@@ -57,9 +57,10 @@ describe('Renderer', ->
     renderer = new Quill.Renderer(@container)
     renderer.root.innerHTML = '<p>Test</p>'
     renderer.addStyles('/base/test/fixtures/style.css')
-    _.defer( ->
-      expect(renderer.root.firstChild.offsetHeight).toEqual(25)
-      done()
-    )
+    interval = setInterval( ->
+      if renderer.root.firstChild.offsetHeight == 25
+        clearInterval(interval)
+        done()
+    , 100)
   )
 )
