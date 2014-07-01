@@ -11949,7 +11949,7 @@ module.exports=_dereq_('Fq7WE+');
 },{}],18:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -12351,6 +12351,10 @@ DOM = {
       }
       return propogate;
     });
+  },
+  addStyles: function(node, styles) {
+    styles = _.defaults(styles, DOM.getStyles(node));
+    return DOM.setStyles(node, styles);
   },
   clearAttributes: function(node, exception) {
     if (exception == null) {
@@ -15867,6 +15871,12 @@ Renderer = (function() {
         return _this.root.focus();
       };
     })(this));
+    if (DOM.isIOS()) {
+      DOM.addStyles(this.container, {
+        'overflow': 'auto',
+        '-webkit-overflow-scrolling': 'touch'
+      });
+    }
     this.addStyles(DEFAULT_STYLES);
     if (this.options.styles != null) {
       _.defer(_.bind(this.addStyles, this, this.options.styles));
@@ -15886,12 +15896,22 @@ Renderer = (function() {
   };
 
   Renderer.prototype.addStyles = function(css) {
-    var style;
-    style = this.root.ownerDocument.createElement('style');
-    style.type = 'text/css';
-    css = Renderer.objToCss(css);
-    style.appendChild(this.root.ownerDocument.createTextNode(css));
-    return this.root.ownerDocument.head.appendChild(style);
+    var link, style;
+    if (typeof css === 'object') {
+      style = this.root.ownerDocument.createElement('style');
+      style.type = 'text/css';
+      css = Renderer.objToCss(css);
+      style.appendChild(this.root.ownerDocument.createTextNode(css));
+      return this.root.ownerDocument.head.appendChild(style);
+    } else if (typeof css === 'string') {
+      link = this.root.ownerDocument.createElement('link');
+      DOM.setAttributes(link, {
+        type: 'text/css',
+        rel: 'stylesheet',
+        href: css
+      });
+      return this.root.ownerDocument.head.appendChild(link);
+    }
   };
 
   return Renderer;
