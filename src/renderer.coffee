@@ -83,7 +83,6 @@ class Renderer
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added after modules'
     _.defer(_.bind(this.addStyles, this, @options.styles)) if @options.styles?
-    _.defer(_.bind(this.addStyles, this, @options.stylesheet)) if @options.stylesheet?
 
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
@@ -100,13 +99,13 @@ class Renderer
       style.appendChild(@root.ownerDocument.createTextNode(css))
       @root.ownerDocument.head.appendChild(style)
     else if typeof css == 'string'
-      # external stylesheet
       link = @root.ownerDocument.createElement('link')
       DOM.setAttributes(link,
         type: 'text/css'
         rel: 'stylesheet'
-        href: css 
+        href: css
       )
       @root.ownerDocument.head.appendChild(link)
-    
+
+
 module.exports = Renderer
