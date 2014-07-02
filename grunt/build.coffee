@@ -3,7 +3,7 @@ module.exports = (grunt) ->
     options:
       alias: [
         'node_modules/eventemitter2/lib/eventemitter2.js:eventemitter2'
-        'node_modules/lodash/lodash.js:lodash'
+        'dist/lodash.js:lodash'
         'node_modules/tandem-core/build/tandem-core.js:tandem-core'
         'node_modules/underscore.string/lib/underscore.string.js:underscore.string'
       ]
@@ -82,6 +82,17 @@ module.exports = (grunt) ->
       expand: true
       ext: '.html'
       src: ['examples/*.jade', 'test/fixtures/*.jade']
+  )
+
+  grunt.config('lodash',
+    options:
+      modifier: 'modern'
+      include: [
+        'each', 'map', 'reduce'
+      ]
+      flags: ['debug']
+    target:
+      dest: 'dist/lodash.js'
   )
 
   grunt.config('stylus',

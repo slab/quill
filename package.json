@@ -29,6 +29,7 @@
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-karma": "~0.8.0",
+    "grunt-lodash": "~0.3.0",
     "grunt-newer": "~0.7.0",
     "grunt-protractor-runner": "~0.2.4",
     "grunt-shell": "~0.7.0",
@@ -63,5 +64,9 @@
     "postpublish": "grunt clean:coffee",
     "test": "grunt test"
   },
-  "keywords": ["editor", "rich text", "wysiwyg"]
+  "keywords": [
+    "editor",
+    "rich text",
+    "wysiwyg"
+  ]
 }
