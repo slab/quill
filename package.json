@@ -12,7 +12,7 @@
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
-    "tandem-core": "~0.6.1",
+    "tandem-core": "~0.6.2",
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
