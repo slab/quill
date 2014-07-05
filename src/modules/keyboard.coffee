@@ -17,6 +17,7 @@ class Keyboard
     this._initListeners()
     this._initHotkeys()
     this._initDeletes()
+    this._initEnter()
 
   addHotkey: (hotkey, callback) ->
     hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
@@ -46,6 +47,23 @@ class Keyboard
         # Prevent deleting if editor is already blank (or just empty newline)
         return @quill.getLength() > 1
       )
+    )
+
+  _initEnter: ->
+    this.addHotkey(DOM.KEYS.ENTER, =>
+      range = @quill.getSelection()
+      leaves = @quill.editor.doc.findLeafAt(range.end, true)
+      toolbarInputs = @quill.modules.toolbar.inputs;
+      formats = @quill.options.formats;
+      activeFormats = []
+      for format in formats 
+        if(toolbarInputs[format] and DOM.hasClass(toolbarInputs[format], "sc-active"))
+          activeFormats.push({format: format, value: true})
+      insertDelta = Tandem.Delta.makeInsertDelta(@quill.getLength(), range.end, '\n');
+      @quill.editor.applyDelta(insertDelta, 'user')
+      for format in activeFormats
+        @quill.prepareFormat(format.format, format.value)
+      return false
     )
 
   _initHotkeys: ->
