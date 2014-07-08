@@ -40,24 +40,24 @@ var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
 
 module.exports = function(config) {
   config.set({
-    basePath: '../dist',
+    basePath: '../',
     frameworks: ['jasmine'],
     files: [
-      '../node_modules/jquery/dist/jquery.js',
-      '../node_modules/lodash/lodash.js',
-      '../node_modules/async/lib/async.js',
-      'tandem-core.js',
-      'quill.exposed.js',
+      'node_modules/jquery/dist/jquery.js',
+      'node_modules/lodash/lodash.js',
+      'node_modules/async/lib/async.js',
+      'dist/tandem-core.js',
+      'dist/quill.exposed.js',
 
       'test/fixtures/unit.html',
-      'test/helpers/*.js',
+      'test/helpers/*.coffee',
 
       { pattern: 'test/fixtures/*.css', included: false },
 
-      'test/unit/*.js',
-      'test/unit/lib/*.js',
-      'test/unit/modules/*.js',
-      'test/unit/themes/*.js'
+      'test/unit/*.coffee',     // We dont do **/*.coffee to control order of tests
+      'test/unit/lib/*.coffee',
+      'test/unit/modules/*.coffee',
+      'test/unit/themes/*.coffee'
     ],
     exclude: [],
     coverageReporter: {
@@ -66,6 +66,7 @@ module.exports = function(config) {
     },
     reporters: ['progress'],
     preprocessors: {
+      '**/*.coffee': ['coffee'],
       '**/*.html': ['html2js']
     },
     port: 9876,
