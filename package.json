@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "async": "~0.9.0",
+    "coffee-script": "~1.7.1",
     "coffeeify": "~0.6.0",
     "grunt": "~0.4.3",
     "grunt-browserify": "~2.1.0",
