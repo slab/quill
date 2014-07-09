@@ -15,3 +15,4 @@ app.use('/test/quill.js', respond.bind(this, './test/quill.coffee'));
 app.use(harp.mount(__dirname + '/..'));
 
 app.listen(9000);
+console.info('Quill development server listening on port 9000');

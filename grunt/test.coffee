@@ -51,4 +51,5 @@ module.exports = (grunt) ->
     options:
       stdout: true
     instrument: { command: './node_modules/.bin/istanbul instrument lib/ -o src/' }
+    server:     { command: 'node scripts/server' }
   )
