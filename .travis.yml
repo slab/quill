@@ -5,7 +5,8 @@ script:
 before_install:
   - npm install -g grunt-cli
 before_script:
-  - grunt
+  - grunt:build
+  - grunt:server &
 branches:
   only:
     - master
