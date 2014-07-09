@@ -14,7 +14,7 @@ describe('PasteManager', ->
       <p style="text-align: right;">Text</p>
     '
     quill.on(Quill.events.TEXT_CHANGE, (delta) ->
-      expect(delta).toEqualDelta(Tandem.Delta.makeDelta({
+      expect(delta).toEqualDelta(Quill.Delta.makeDelta({
         startLength: 5
         endLength: 16
         ops: [

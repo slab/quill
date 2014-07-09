@@ -59,7 +59,7 @@ describe('Editor', ->
     tests =
       'part of line':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0' }
           { value: '12', attributes: { bold: true } }
           { value: '3\n' }
@@ -67,21 +67,21 @@ describe('Editor', ->
         index: 1, length: 2, name: 'bold', value: true
       'trailing newline with normal format':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123' }
           { value: '\n', attributes: { bold: true } }
         ]})
         index: 4, length: 1, name: 'bold', value: true
       'trailing newline with line format':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123' }
           { value: '\n', attributes: { align: 'right' } }
         ]})
         index: 4, length: 1, name: 'align', value: 'right'
       'part of multiple lines':
         initial:  ['<p>0123</p>', '<p><b>5678</b></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '01' }
           { value: '23\n', attributes: { strike: true } }
           { value: '56', attributes: { bold: true, strike: true } }
@@ -91,7 +91,7 @@ describe('Editor', ->
         index: 2, length: 5, name: 'strike', value: true
       'line contents with line level format':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123\n' }
         ]})
         index: 1, length: 2, name: 'align', value: 'right'
@@ -137,14 +137,14 @@ describe('Editor', ->
         @editor._insertAt(0, 'A\n', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<p><b>A</b></p>', true)
-        expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, 'A\n', { bold: true }))
+        expect(@editor.doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, 'A\n', { bold: true }))
       )
 
       it('multiple formatted newlines', ->
         @editor._insertAt(0, 'A\nB\n', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<p><b>A</b></p><p><b>B</b></p>', true)
-        expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, 'A\nB\n', { bold: true }))
+        expect(@editor.doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, 'A\nB\n', { bold: true }))
       )
     )
 
@@ -198,7 +198,7 @@ describe('Editor', ->
         @editor._insertAt(2, '\n', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<p>A</p><p><br></p>', true)
-        expect(@editor.doc.toDelta()).toEqualDelta(Tandem.Delta.makeDelta({
+        expect(@editor.doc.toDelta()).toEqualDelta(Quill.Delta.makeDelta({
           startLength: 0
           endLength: 3
           ops: [
@@ -228,18 +228,18 @@ describe('Editor', ->
     tests =
       'insert formatted':
         initial: '<p>0123</p>'
-        delta: Tandem.Delta.makeInsertDelta(5, 2, '|', { bold: true })
+        delta: Quill.Delta.makeInsertDelta(5, 2, '|', { bold: true })
         expected: '<p>01<b>|</b>23</p>'
       'multiple formats':
         initial: '<p>0123</p>'
-        delta: Tandem.Delta.makeRetainDelta(5, 1, 2, { bold: true, italic: true })
+        delta: Quill.Delta.makeRetainDelta(5, 1, 2, { bold: true, italic: true })
         expected: '<p>0<b><i>12</i></b>3</p>'
       'multiple instructions':
         initial: '
           <p>0123</p>
           <p>5678</p>
           <p>abcd</p>'
-        delta: Tandem.Delta.makeDelta({ startLength: 15, endLength: 17, ops: [
+        delta: Quill.Delta.makeDelta({ startLength: 15, endLength: 17, ops: [
           { start: 0, end: 4 }
           { start: 5, end: 7 }
           { value: '|\n|' }
@@ -263,7 +263,7 @@ describe('Editor', ->
     it('local change', ->
       @editor.doc.setHTML('<p>0123</p>')
       @editor.checkUpdate()
-      delta = Tandem.Delta.makeInsertDelta(5, 4, '|')
+      delta = Quill.Delta.makeInsertDelta(5, 4, '|')
       @editor.root.querySelector('p').innerHTML = '01a23'
       @editor.applyDelta(delta)
       expected = '<p>01a23|</p>'

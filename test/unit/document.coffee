@@ -300,49 +300,49 @@ describe('Document', ->
     tests =
       'blank':
         initial:  ['']
-        expected: Tandem.Delta.getInitial('')
+        expected: Quill.Delta.getInitial('')
       'single line':
         initial:  ['<p>0123</p>']
-        expected: Tandem.Delta.getInitial('0123\n')
+        expected: Quill.Delta.getInitial('0123\n')
       'single newline':
         initial:  ['<p><br></p>']
-        expected: Tandem.Delta.getInitial('\n')
+        expected: Quill.Delta.getInitial('\n')
       'preceding newline':
         initial:  ['<p><br></p>', '<p>0</p>']
-        expected: Tandem.Delta.getInitial('\n0\n')
+        expected: Quill.Delta.getInitial('\n0\n')
       'explicit trailing newline':
         initial:  ['<p>0</p>', '<p><br></p>']
-        expected: Tandem.Delta.getInitial('0\n\n')
+        expected: Quill.Delta.getInitial('0\n\n')
       'multiple lines':
         initial:  ['<p>0</p>', '<p>1</p>']
-        expected: Tandem.Delta.getInitial('0\n1\n')
+        expected: Quill.Delta.getInitial('0\n1\n')
       'multiple newlines':
         initial:  ['<p><br></p>', '<p><br></p>']
-        expected: Tandem.Delta.getInitial('\n\n')
+        expected: Quill.Delta.getInitial('\n\n')
       'multiple preceding newlines':
         initial:  ['<p><br></p>', '<p><br></p>', '<p>0</p>']
-        expected: Tandem.Delta.getInitial('\n\n0\n')
+        expected: Quill.Delta.getInitial('\n\n0\n')
       'multiple explicit trailing newlines':
         initial:  ['<p>0</p>', '<p><br></p>', '<p><br></p>']
-        expected: Tandem.Delta.getInitial('0\n\n\n')
+        expected: Quill.Delta.getInitial('0\n\n\n')
       'lines separated by multiple newlines':
         initial:  ['<p>0</p>', '<p><br></p>', '<p>1</p>']
-        expected: Tandem.Delta.getInitial('0\n\n1\n')
+        expected: Quill.Delta.getInitial('0\n\n1\n')
       'tag format':
         initial:  ['<p><b>0123</b></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { bold: true } }
           { value: '\n' }
         ]})
       'style format':
         initial:  ['<p><span style="color: teal;">0123</span></p>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { color: 'teal' } }
           { value: '\n' }
         ]})
       'bullets':
         initial:  ['<ul><li>One</li><li>Two</li></ul>']
-        expected: Tandem.Delta.makeDelta({ startLength: 0, ops: [
+        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: 'One' }
           { value: '\n', attributes: { bullet: true } }
           { value: 'Two' }
@@ -373,32 +373,32 @@ describe('Document', ->
       lineNode.innerHTML = 'A'
       @doc.root.insertBefore(lineNode, @doc.root.lastChild)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\nA\n5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '0123\nA\n5678\n'))
     )
 
     it('existing line changed', ->
       @doc.root.firstChild.innerHTML = '01A23'
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01A23\n5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01A23\n5678\n'))
     )
 
     it('existing line removed', ->
       @doc.root.removeChild(@doc.root.firstChild)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '5678\n'))
     )
 
     it('existing line split', ->
       Quill.Utils.splitNode(@doc.root.firstChild, 2)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
     )
 
     it('existing lines merged', ->
       Quill.DOM.moveChildren(@doc.root.firstChild, @doc.root.lastChild)
       @doc.root.removeChild(@doc.root.lastChild)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '01235678\n'))
+      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01235678\n'))
     )
 
     it('new lines appended', ->
@@ -406,7 +406,7 @@ describe('Document', ->
       lineNode.innerHTML = 'A'
       @doc.root.appendChild(lineNode)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Tandem.Delta.makeInsertDelta(0, 0, '0123\n5678\nA\n'))
+      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '0123\n5678\nA\n'))
     )
   )
 )

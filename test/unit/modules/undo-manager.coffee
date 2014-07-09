@@ -16,16 +16,16 @@ describe('UndoManager', ->
 
   tests =
     'insert':
-      delta: Tandem.Delta.makeInsertDelta(13, 9, 'hairy ')
+      delta: Quill.Delta.makeInsertDelta(13, 9, 'hairy ')
       index: 15
     'delete':
-      delta: Tandem.Delta.makeDeleteDelta(13, 4, 5)
+      delta: Quill.Delta.makeDeleteDelta(13, 4, 5)
       index: 4
     'format':
-      delta: Tandem.Delta.makeRetainDelta(13, 4, 5, { bold: true })
+      delta: Quill.Delta.makeRetainDelta(13, 4, 5, { bold: true })
       index: 9
     'multiple':
-      delta: Tandem.Delta.makeDelta({
+      delta: Quill.Delta.makeDelta({
         startLength: 13
         endLength: 14
         ops: [
@@ -71,9 +71,9 @@ describe('UndoManager', ->
 
     it('merge changes', ->
       expect(@undoManager.stack.undo.length).toEqual(0)
-      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 12, 'e'))
+      @quill.updateContents(Quill.Delta.makeInsertDelta(13, 12, 'e'))
       expect(@undoManager.stack.undo.length).toEqual(1)
-      @quill.updateContents(Tandem.Delta.makeInsertDelta(14, 13, 's'))
+      @quill.updateContents(Quill.Delta.makeInsertDelta(14, 13, 's'))
       expect(@undoManager.stack.undo.length).toEqual(1)
       @undoManager.undo()
       expect(@quill.getContents()).toEqual(@original)
@@ -82,10 +82,10 @@ describe('UndoManager', ->
 
     it('dont merge changes', (done) ->
       expect(@undoManager.stack.undo.length).toEqual(0)
-      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 12, 'e'))
+      @quill.updateContents(Quill.Delta.makeInsertDelta(13, 12, 'e'))
       expect(@undoManager.stack.undo.length).toEqual(1)
       setTimeout( =>
-        @quill.updateContents(Tandem.Delta.makeInsertDelta(14, 13, 's'))
+        @quill.updateContents(Quill.Delta.makeInsertDelta(14, 13, 's'))
         expect(@undoManager.stack.undo.length).toEqual(2)
         done()
       , @undoManager.options.delay * 1.25)
@@ -93,10 +93,10 @@ describe('UndoManager', ->
 
     it('multiple undos', (done) ->
       expect(@undoManager.stack.undo.length).toEqual(0)
-      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 12, 'e'))
+      @quill.updateContents(Quill.Delta.makeInsertDelta(13, 12, 'e'))
       contents = @quill.getContents()
       setTimeout( =>
-        @quill.updateContents(Tandem.Delta.makeInsertDelta(14, 13, 's'))
+        @quill.updateContents(Quill.Delta.makeInsertDelta(14, 13, 's'))
         @undoManager.undo()
         expect(@quill.getContents()).toEqual(contents)
         @undoManager.undo()
@@ -106,7 +106,7 @@ describe('UndoManager', ->
     )
 
     it('hotkeys', ->
-      @quill.updateContents(Tandem.Delta.makeInsertDelta(13, 0, 'A '))
+      @quill.updateContents(Quill.Delta.makeInsertDelta(13, 0, 'A '))
       changed = @quill.getContents()
       expect(changed).not.toEqualDelta(@original)
       Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.UndoManager.hotkeys.UNDO)

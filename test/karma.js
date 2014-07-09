@@ -44,10 +44,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     files: [
       'node_modules/jquery/dist/jquery.js',
-      'node_modules/lodash/lodash.js',
-      'node_modules/async/lib/async.js',
-      'dist/tandem-core.js',
-      'dist/quill.exposed.js',
+      'http://localhost:9000/test/quill.js',
 
       'test/fixtures/unit.html',
       'test/helpers/*.coffee',

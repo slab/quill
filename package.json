@@ -16,9 +16,10 @@
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
-    "async": "~0.9.0",
     "coffee-script": "~1.7.1",
+    "browserify": "~4.2.0",
     "coffeeify": "~0.6.0",
+    "connect": "~3.0.1",
     "grunt": "~0.4.3",
     "grunt-browserify": "~2.1.0",
     "grunt-contrib-clean": "~0.5.0",
@@ -34,6 +35,7 @@
     "grunt-newer": "~0.7.0",
     "grunt-protractor-runner": "~0.2.4",
     "grunt-shell": "~0.7.0",
+    "harp": "~0.12.1",
     "istanbul": "~0.2.6",
     "jquery": "~1.11.0",
     "karma": "~0.12.0",
