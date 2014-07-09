@@ -1,9 +1,7 @@
 module.exports = (grunt) ->
   grunt.config('browserify',
     options:
-      alias: [
-        '.build/lodash.js:lodash'
-      ]
+      alias: ['.build/lodash.js:lodash']
       browserifyOptions:
         extensions: ['.js', '.coffee']
       bundleOptions:
@@ -15,7 +13,7 @@ module.exports = (grunt) ->
   )
 
   grunt.config('clean',
-    all: ['dist']
+    all: ['.build', 'dist']
     coffee: ['lib']
     coverage: ['src/**/*.js']
   )
@@ -51,7 +49,7 @@ module.exports = (grunt) ->
       include: [
         'difference', 'flatten', 'intersection', 'last'
         'all', 'each', 'map', 'pluck', 'reduce'
-        'bind', 'defer'
+        'bind', 'defer', 'partial'
         'clone', 'defaults', 'has', 'keys', 'omit', 'values'
         'isArray', 'isElement', 'isEqual', 'isNumber', 'isObject', 'isString'
         'uniqueId'

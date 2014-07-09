@@ -13,6 +13,7 @@ var watchers = {
   'test': watchify('./test/quill.coffee', opts)
 };
 _.each(watchers, function(w) {
+  w.require('./.build/lodash.js', { expose: 'lodash' });
   w.transform(coffeeify);
   w.on('update', bundle.bind(this, w));
   bundle(w);
