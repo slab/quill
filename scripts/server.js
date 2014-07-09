@@ -1,17 +1,31 @@
-var browserify = require('browserify');
+var _ = require('lodash');
 var coffeeify = require('coffeeify');
 var connect = require('connect');
 var harp = require('harp');
+var watchify = require('watchify');
+
+var opts = { extensions: ['.js', '.coffee'] };
+var bundle = function(w) {
+  return w.bundle({ standalone: 'Quill' });
+};
+var watchers = {
+  'main': watchify('./src/quill.coffee', opts),
+  'test': watchify('./test/quill.coffee', opts)
+};
+_.each(watchers, function(w) {
+  w.transform(coffeeify);
+  w.on('update', bundle.bind(this, w));
+  bundle(w);
+});
 
 var app = connect();
-var respond = function(file, req, res, next) {
+var respond = function(type, req, res, next) {
   res.setHeader('Content-Type', 'application/javascript');
-  var b = browserify(file, { extensions: ['.js', '.coffee'] });
-  b.transform(coffeeify).bundle({ standalone: 'Quill' }).pipe(res);
+  bundle(watchers[type]).pipe(res);
 };
 
-app.use('/quill.js', respond.bind(this, './src/quill.coffee'));
-app.use('/test/quill.js', respond.bind(this, './test/quill.coffee'));
+app.use('/quill.js', respond.bind(this, 'main'));
+app.use('/test/quill.js', respond.bind(this, 'test'));
 app.use(harp.mount(__dirname + '/..'));
 
 app.listen(9000);

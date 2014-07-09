@@ -26,4 +26,4 @@ module.exports = (grunt) ->
   grunt.registerTask('test:unit', ['karma:test'])
   grunt.registerTask('test:unit:remote', ['karma:remote-mac', 'karma:remote-windows', 'karma:remote-linux', 'karma:remote-mobile', 'karma:remote-legacy'])
 
-  grunt.registerTask('test:coverage', ['coffee:src', 'shell:instrument', 'browserify', 'karma:coverage', 'clean:coffee', 'clean:coverage', 'browserify'])
+  grunt.registerTask('test:coverage', ['coffee:src', 'shell:instrument', 'karma:coverage', 'clean:coffee', 'clean:coverage'])

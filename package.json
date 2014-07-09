@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
-    "browserify": "~4.2.0",
     "coffeeify": "~0.6.0",
     "connect": "~3.0.1",
     "grunt": "~0.4.3",
@@ -44,7 +43,8 @@
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.4.0",
-    "protractor": "~0.23.0"
+    "protractor": "~0.23.0",
+    "watchify": "~0.10.2"
   },
   "engines": {
     "node": ">=0.10"
