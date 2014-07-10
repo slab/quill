@@ -1,16 +1,14 @@
-/*! Quill Editor v0.15.2
+/*! Quill Editor v0.15.3
  *  https://quilljs.com/
  *  Copyright (c) 2014, Jason Chen
  *  Copyright (c) 2013, salesforce.com
  */
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"lodash":[function(_dereq_,module,exports){
-module.exports=_dereq_('M4+//f');
-},{}],"M4+//f":[function(_dereq_,module,exports){
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Quill=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"M4+//f":[function(_dereq_,module,exports){
 (function (global){
 /**
  * @license
  * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modern include="difference,flatten,intersection,last,all,each,map,pluck,reduce,bind,defer,partial,clone,defaults,has,keys,omit,values,isArray,isElement,isEqual,isNumber,isObject,isString,uniqueId" --debug --output .build/lodash.js`
+ * Build: `lodash modern include="difference,flatten,intersection,last,all,each,invoke,map,pluck,reduce,bind,defer,partial,clone,defaults,has,keys,omit,values,isArray,isElement,isEqual,isNumber,isObject,isString,uniqueId" --debug --output .build/lodash.js`
  * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1753,6 +1751,41 @@ module.exports=_dereq_('M4+//f');
   }
 
   /**
+   * Invokes the method named by `methodName` on each element in the `collection`
+   * returning an array of the results of each invoked method. Additional arguments
+   * will be provided to each invoked method. If `methodName` is a function it
+   * will be invoked for, and `this` bound to, each element in the `collection`.
+   *
+   * @static
+   * @memberOf _
+   * @category Collections
+   * @param {Array|Object|string} collection The collection to iterate over.
+   * @param {Function|string} methodName The name of the method to invoke or
+   *  the function invoked per iteration.
+   * @param {...*} [arg] Arguments to invoke the method with.
+   * @returns {Array} Returns a new array of the results of each invoked method.
+   * @example
+   *
+   * _.invoke([[5, 1, 7], [3, 2, 1]], 'sort');
+   * // => [[1, 5, 7], [1, 2, 3]]
+   *
+   * _.invoke([123, 456], String.prototype.split, '');
+   * // => [['1', '2', '3'], ['4', '5', '6']]
+   */
+  function invoke(collection, methodName) {
+    var args = slice(arguments, 2),
+        index = -1,
+        isFunc = typeof methodName == 'function',
+        length = collection ? collection.length : 0,
+        result = Array(typeof length == 'number' ? length : 0);
+
+    forEach(collection, function(value) {
+      result[++index] = (isFunc ? methodName : value[methodName]).apply(value, args);
+    });
+    return result;
+  }
+
+  /**
    * Creates an array of values by running each element in the collection
    * through the callback. The callback is bound to `thisArg` and invoked with
    * three arguments; (value, index|key, collection).
@@ -2436,6 +2469,7 @@ module.exports=_dereq_('M4+//f');
   lodash.forIn = forIn;
   lodash.forOwn = forOwn;
   lodash.intersection = intersection;
+  lodash.invoke = invoke;
   lodash.keys = keys;
   lodash.map = map;
   lodash.omit = omit;
@@ -2523,6 +2557,8 @@ module.exports=_dereq_('M4+//f');
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],"lodash":[function(_dereq_,module,exports){
+module.exports=_dereq_('M4+//f');
 },{}],3:[function(_dereq_,module,exports){
 /*!
  * EventEmitter2
@@ -5382,7 +5418,7 @@ if (typeof module !== 'undefined') {
 },{}],13:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
