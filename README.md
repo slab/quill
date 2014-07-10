@@ -34,6 +34,8 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ## Local Development
 
+Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Browserify](http://browserify.org/) to organize its files.
+
 ### Installation
 
     npm install -g grunt-cli
@@ -41,9 +43,12 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ### Building
 
-    grunt build
+    grunt dist - compile and browserify
+    grunt server - starts a local server that will build and serve assets on the fly
 
 ### Testing
+
+All tests assume the local server is running.
 
     grunt test - run tests with phantomjs
     grunt test:karma - allows you to visit localhost:9876/debug.html for interactive testing
