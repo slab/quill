@@ -13,11 +13,13 @@ module.exports = (grunt) ->
   grunt.registerTask('dev', 'All the tasks for Quill development', ->
     done = this.async()
     child_process.spawn('grunt', ['test:karma'], { stdio: 'inherit'})
-    child_process.spawn('grunt', ['shell:server'], { stdio: 'inherit' })
+    child_process.spawn('grunt', ['server'], { stdio: 'inherit' })
   )
 
   grunt.registerTask('dist', ['clean', 'lodash', 'browserify', 'uglify', 'stylus', 'concat'])
   grunt.registerTask('release', ['dist', 'shell:examples', 'copy', 'compress'])
+
+  grunt.registerTask('server', ['shell:server'])
 
   grunt.registerTask('test', ['karma:test'])
 
