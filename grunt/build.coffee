@@ -41,6 +41,30 @@ module.exports = (grunt) ->
       files:
         'dist/quill.js': ['dist/quill.js']
         'dist/quill.min.js': ['dist/quill.min.js']
+        'dist/quill.snow.css': ['dist/quill.snow.css']
+  )
+
+  grunt.config('compress',
+    dist:
+      options:
+        archive: '.build/quill.tar.gz'
+        mode: 'tgz'
+      files: [{
+        cwd: '.build/quill'
+        src: ['**/*']
+        dest: 'quill/'
+        expand: true
+      }]
+  )
+
+  grunt.config('copy',
+    dist:
+      files: [{
+        src: 'dist/*'
+        dest: '.build/quill/'
+        expand: true
+        flatten: true
+      }]
   )
 
   grunt.config('lodash',
@@ -57,6 +81,22 @@ module.exports = (grunt) ->
       flags: ['debug']
     target:
       dest: '.build/lodash.js'
+  )
+
+  grunt.config('stylus',
+    options:
+      compress: false
+    themes:
+      options:
+        urlfunc: 'url'
+      files: [{
+        expand: true
+        ext: '.css'
+        flatten: true
+        src: 'src/themes/**/*.styl'
+        rename: (dest, src) ->
+          return "dist/quill.#{src}"
+      }]
   )
 
   grunt.config('uglify',
