@@ -13,7 +13,7 @@ remoteBrowserGroups =
 remoteConfigs =
   browserDisconnectTimeout: 10000
   browserDisconnectTolerance: 2
-  browserNoActivityTimeout: 30000
+  browserNoActivityTimeout: 60000
   reporters: remoteReporters
 
 remoteKarma = _.reduce(remoteBrowserGroups, (memo, browsers, group) ->
@@ -37,6 +37,7 @@ module.exports = (grunt) ->
     local:
       browsers: ['Chrome', 'Firefox', 'Safari']
     coverage:
+      browserNoActivityTimeout: 30000
       browsers: ['PhantomJS']
       reporters: ['coverage']
   ))

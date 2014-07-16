@@ -1,10 +1,10 @@
 .build
+.coverage
 .git
 .travis.yml
 _*
 bower.json
 *.log
-coverage
 examples
 grunt
 src

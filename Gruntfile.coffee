@@ -1,5 +1,3 @@
-child_process = require('child_process')
-
 module.exports = (grunt) ->
   require('load-grunt-tasks')(grunt)
 
@@ -8,18 +6,15 @@ module.exports = (grunt) ->
   )
 
   require('./grunt/build')(grunt)
+  require('./grunt/server')(grunt)
   require('./grunt/test')(grunt)
 
-  grunt.registerTask('dev', 'All the tasks for Quill development', ->
-    done = this.async()
-    child_process.spawn('grunt', ['test:karma'], { stdio: 'inherit'})
-    child_process.spawn('grunt', ['server'], { stdio: 'inherit' })
-  )
+  grunt.registerTask('dev', ['connect:server', 'test:karma'])
 
   grunt.registerTask('dist', ['clean', 'lodash', 'browserify', 'uglify', 'stylus', 'concat'])
   grunt.registerTask('release', ['dist', 'shell:examples', 'copy', 'compress'])
 
-  grunt.registerTask('server', ['shell:server'])
+  grunt.registerTask('server', ['connect:server:keepalive'])
 
   grunt.registerTask('test', ['karma:test'])
 
@@ -27,4 +22,5 @@ module.exports = (grunt) ->
   grunt.registerTask('test:unit', ['karma:test'])
   grunt.registerTask('test:unit:remote', ['karma:remote-mac', 'karma:remote-windows', 'karma:remote-linux', 'karma:remote-mobile', 'karma:remote-legacy'])
 
-  grunt.registerTask('test:coverage', ['coffee:src', 'shell:instrument', 'karma:coverage', 'clean:coffee', 'clean:coverage'])
+  grunt.registerTask('test:coverage', ['coffee:src', 'shell:instrument', 'connect:server', 'karma:coverage', 'clean:coffee', 'clean:coverage'])
+
