@@ -59,7 +59,7 @@ module.exports = function(config) {
     exclude: [],
     coverageReporter: {
       type: 'lcov',
-      dir: '../coverage/'
+      dir: '.coverage/'
     },
     reporters: ['progress'],
     preprocessors: {
