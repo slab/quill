@@ -19,7 +19,7 @@ module.exports = (grunt) ->
   )
 
   grunt.config('coffee',
-    src:
+    quill:
       options:
         bare: true
       cwd: 'src/'
@@ -42,29 +42,6 @@ module.exports = (grunt) ->
         'dist/quill.js': ['dist/quill.js']
         'dist/quill.min.js': ['dist/quill.min.js']
         'dist/quill.snow.css': ['dist/quill.snow.css']
-  )
-
-  grunt.config('compress',
-    dist:
-      options:
-        archive: '.build/quill.tar.gz'
-        mode: 'tgz'
-      files: [{
-        cwd: '.build/quill'
-        src: ['**/*']
-        dest: 'quill/'
-        expand: true
-      }]
-  )
-
-  grunt.config('copy',
-    dist:
-      files: [{
-        src: 'dist/*'
-        dest: '.build/quill/'
-        expand: true
-        flatten: true
-      }]
   )
 
   grunt.config('lodash',

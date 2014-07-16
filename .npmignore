@@ -5,8 +5,8 @@
 _*
 bower.json
 *.log
+config
 examples
-grunt
 src
 test
 Gruntfile.coffee

@@ -5,7 +5,7 @@ exports.config = {
   allScriptsTimeout: 11000,
 
   specs: [
-    'webdriver/*.coffee'
+    '../test/webdriver/*.coffee'
   ],
 
   capabilities: {

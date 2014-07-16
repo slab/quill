@@ -12,8 +12,8 @@
   "license": "BSD",
   "ignore": [
     "**/.*",
+    "config",
     "examples",
-    "grunt",
     "src",
     "test",
     "Gruntfile.coffee",

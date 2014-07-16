@@ -16,8 +16,10 @@
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
+    "async": "~0.9.0",
     "coffee-script": "~1.7.1",
     "coffeeify": "~0.6.0",
+    "glob": "~4.0.4",
     "grunt": "~0.4.3",
     "grunt-browserify": "~2.1.0",
     "grunt-contrib-clean": "~0.5.0",
@@ -61,7 +63,7 @@
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
-    "prepublish": "grunt coffee:src",
+    "prepublish": "grunt coffee:quill",
     "postpublish": "grunt clean:coffee",
     "test": "grunt test"
   },

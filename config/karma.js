@@ -47,7 +47,8 @@ module.exports = function(config) {
       'http://localhost:9000/test/quill.js',
 
       'test/fixtures/unit.html',
-      'test/helpers/*.coffee',
+      'test/helpers/inject.coffee',
+      'test/helpers/matchers.coffee',
 
       { pattern: 'test/fixtures/*.css', included: false },
 
@@ -58,8 +59,8 @@ module.exports = function(config) {
     ],
     exclude: [],
     coverageReporter: {
-      type: 'lcov',
-      dir: '.coverage/'
+      type: 'json',
+      dir: '.coverage/karma/'
     },
     reporters: ['progress'],
     preprocessors: {

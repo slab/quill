@@ -27,29 +27,17 @@ remoteKarma = _.reduce(remoteBrowserGroups, (memo, browsers, group) ->
 module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
-      configFile: 'test/karma.js'
-    karma:
+      configFile: 'config/karma.js'
+    coverage:
+      browserNoActivityTimeout: 30000
+      browsers: ['PhantomJS']
+      reporters: ['coverage']
+    local:
+      browsers: ['Chrome', 'Firefox', 'Safari']
+    server:
       autoWatch: true
       browsers: []
       singleRun: false
     test:
       browsers: ['PhantomJS']
-    local:
-      browsers: ['Chrome', 'Firefox', 'Safari']
-    coverage:
-      browserNoActivityTimeout: 30000
-      browsers: ['PhantomJS']
-      reporters: ['coverage']
   ))
-
-  grunt.config('protractor',
-    options:
-      configFile: 'test/protractor.js'
-    test: {}
-  )
-
-  grunt.config('shell',
-    options:
-      stdout: true
-    examples:   { command: './node_modules/.bin/harp compile examples/ .build/quill/examples/' }
-  )

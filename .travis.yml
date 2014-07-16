@@ -7,12 +7,6 @@ before_install:
 before_script:
   - grunt lodash
   - grunt connect:server:keepalive &
-branches:
-  only:
-    - master
-    - develop
-    - /^sauce-.+$/
-    - /^v\d+\.\d+\.\d+$/
 env:
   global:
     - secure: "Smk4w36atd3Ttj0XsoEZr6dMplTWsK52E70EpxTV72hTQIYa3w5uHMEKpg/sZ9ZFfYQF7Rx003Dmbq9AUGPxqlgPtE8CFWlqYBRAVmvQHTEHmhzIKe0NJ8cXtWWVLnnqbsd9vanXGhd8jjC65ZJYQfOVsbPMShVwv2bSLcTr0cE="

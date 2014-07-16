@@ -48,13 +48,10 @@ module.exports = (grunt) ->
         , {})
       middleware: (connect, options, middlewares) ->
         middlewares.push(serve.bind(this, connect))
-        middlewares.push(harp.mount(__dirname + '/..'))
+        middlewares.push(harp.mount(__dirname + '/../..'))
         return middlewares
       debug: true
     server:
       options:
         port: 9000
-    coverage:
-      options:
-        port: 9001
   )
