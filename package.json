@@ -31,7 +31,6 @@
     "grunt-karma": "~0.8.0",
     "grunt-lodash": "~0.3.0",
     "grunt-protractor-runner": "~1.0.0",
-    "grunt-shell": "~0.7.0",
     "harp": "~0.12.1",
     "istanbul": "~0.3.0",
     "jquery": "~2.1.1",

@@ -7,12 +7,13 @@ module.exports = (grunt) ->
 
   require('./grunt/build')(grunt)
   require('./grunt/server')(grunt)
+  require('./grunt/shell')(grunt)
   require('./grunt/test')(grunt)
 
   grunt.registerTask('dev', ['connect:server', 'test:karma'])
 
   grunt.registerTask('dist', ['clean', 'lodash', 'browserify', 'uglify', 'stylus', 'concat'])
-  grunt.registerTask('release', ['dist', 'shell:examples', 'copy', 'compress'])
+  grunt.registerTask('release', ['dist', 'examples', 'copy', 'compress'])
 
   grunt.registerTask('server', ['connect:server:keepalive'])
 
@@ -22,5 +23,5 @@ module.exports = (grunt) ->
   grunt.registerTask('test:unit', ['karma:test'])
   grunt.registerTask('test:unit:remote', ['karma:remote-mac', 'karma:remote-windows', 'karma:remote-linux', 'karma:remote-mobile', 'karma:remote-legacy'])
 
-  grunt.registerTask('test:coverage', ['coffee:src', 'shell:instrument', 'connect:server', 'karma:coverage', 'clean:coffee', 'clean:coverage'])
+  grunt.registerTask('test:coverage', ['coffee:src', 'instrument', 'connect:server', 'karma:coverage', 'clean:coffee', 'clean:coverage'])
 
