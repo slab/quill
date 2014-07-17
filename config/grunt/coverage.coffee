@@ -24,7 +24,7 @@ module.exports = (grunt) ->
           callback()
         )
       , (err) ->
-        reporter.add('html')
+        reporter.addAll(['html', 'text'])
         reporter.write(collector, false, done)
       )
     )
