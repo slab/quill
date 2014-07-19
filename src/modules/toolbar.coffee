@@ -1,6 +1,5 @@
 _     = require('lodash')
 DOM   = require('../dom')
-Utils = require('../utils')
 
 
 class Toolbar

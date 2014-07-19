@@ -1,6 +1,5 @@
 _      = require('lodash')
 DOM    = require('../dom')
-Format = require('../format')
 Tandem = require('tandem-core')
 
 
