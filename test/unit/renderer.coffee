@@ -32,9 +32,9 @@ describe('Renderer', ->
 
   it('constructor with styles', (done) ->
     renderer = new Quill.Renderer(@container, {
-      styles: { '.editor-container > p': { 'line-height': '25px' } }
+      styles: { '.editor-container > div': { 'line-height': '25px' } }
     })
-    renderer.root.innerHTML = '<p>Test</p>'
+    renderer.root.innerHTML = '<div>Test</div>'
     _.defer( ->
       expect(renderer.root.firstChild.offsetHeight).toEqual(25)
       done()
@@ -43,9 +43,9 @@ describe('Renderer', ->
 
   it('addStyles() object', (done) ->
     renderer = new Quill.Renderer(@container)
-    renderer.root.innerHTML = '<p>Test</p>'
+    renderer.root.innerHTML = '<div>Test</div>'
     renderer.addStyles({
-      '.editor-container > p': { 'line-height': '25px' }
+      '.editor-container > div': { 'line-height': '25px' }
     })
     _.defer( ->
       expect(renderer.root.firstChild.offsetHeight).toEqual(25)
@@ -55,7 +55,7 @@ describe('Renderer', ->
 
   it('addStyles() stylesheet', (done) ->
     renderer = new Quill.Renderer(@container)
-    renderer.root.innerHTML = '<p>Test</p>'
+    renderer.root.innerHTML = '<div>Test</div>'
     renderer.addStyles('/base/test/fixtures/style.css')
     interval = setInterval( ->
       if renderer.root.firstChild.offsetHeight == 25

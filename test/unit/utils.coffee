@@ -31,11 +31,11 @@ describe('Utils', ->
         <span>111</span>
         <b>222</b>
         <br>
-        <p>
+        <div>
           <span>3</span>
           <s>3</s>
           <span>3</span>
-        </p>
+        </div>
         <i>444</i>'
       )
     )
@@ -62,9 +62,9 @@ describe('Utils', ->
   describe('getNextLineNode()', ->
     it('iterate over standard lines', ->
       container = $('#editor-container').html(Quill.Normalizer.stripWhitespace('
-        <p id="line-1">Test</p>
-        <p id="line-2"><br></p>
-        <p id="line-3">Test</p>'
+        <div id="line-1">Test</div>
+        <div id="line-2"><br></div>
+        <div id="line-3">Test</div>'
       )).get(0)
       lineNode = container.firstChild
       _.each([1..3], (i) ->
@@ -77,7 +77,7 @@ describe('Utils', ->
 
     it('iterate over lists', ->
       container = $('#editor-container').html(Quill.Normalizer.stripWhitespace('
-        <p id="line-1">Test</p>
+        <div id="line-1">Test</div>
         <ul>
           <li id="line-2">One</li>
           <li id="line-3">Two</li>
@@ -97,7 +97,7 @@ describe('Utils', ->
     )
 
     it('iterate with change', ->
-      container = $('#editor-container').html('<div id="line-1">One</div><p id="line-2">Two</p>').get(0)
+      container = $('#editor-container').html('<div id="line-1">One</div><div id="line-2">Two</div>').get(0)
       lineNode = container.firstChild
       expect(lineNode.id).toEqual('line-1')
       Quill.DOM.switchTag(container.lastChild, 'div')

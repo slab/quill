@@ -3,7 +3,7 @@ describe('PasteManager', ->
     container = $('#editor-container').get(0)
     container.innerHTML = '
       <div>
-        <p>0123</p>
+        <div>0123</div>
       </div>'
     quill = new Quill(container.firstChild)
     pasteManager = quill.getModule('paste-manager')
@@ -11,7 +11,7 @@ describe('PasteManager', ->
     pasteManager._paste()
     pasteManager.container.innerHTML = '
       <b>Pasted</b>
-      <p style="text-align: right;">Text</p>
+      <div style="text-align: right;">Text</div>
     '
     quill.on(Quill.events.TEXT_CHANGE, (delta) ->
       expect(delta).toEqualDelta(Quill.Delta.makeDelta({

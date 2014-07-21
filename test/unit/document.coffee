@@ -9,23 +9,23 @@ describe('Document', ->
         initial:  ''
         expected: ''
       'no change':
-        initial:  '<p><b>Test</b></p>'
-        expected: '<p><b>Test</b></p>'
+        initial:  '<div><b>Test</b></div>'
+        expected: '<div><b>Test</b></div>'
       'text':
         initial:  'Test'
-        expected: '<p>Test</p>'
+        expected: '<div>Test</div>'
       'inline':
         initial:  '<b>Test</b>'
-        expected: '<p><b>Test</b></p>'
+        expected: '<div><b>Test</b></div>'
       'block pulling':
         initial:  '<div><div><div><div><b>Test</b><div>Test</div></div></div></div></div>'
-        expected: '<p><b>Test</b></p><p>Test</p>'
+        expected: '<div><b>Test</b></div><div>Test</div>'
       'with breaks':
-        initial:  '<p>A<br>B<br>C</p>'
-        expected: '<p>A<br></p><p>B<br></p><p>C</p>'
+        initial:  '<div>A<br>B<br>C</div>'
+        expected: '<div>A<br></div><div>B<br></div><div>C</div>'
       'pull and break':
         initial:  '<div><div><div>A</div>B<br>C</div></div>'
-        expected: '<p>A</p><p>B<br></p><p>C</p>'
+        expected: '<div>A</div><div>B<br></div><div>C</div>'
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -40,9 +40,9 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p>0123</p>
-          <p><br></p>
-          <p><b>6789</b></p>
+          <div>0123</div>
+          <div><br></div>
+          <div><b>6789</b></div>
         </div>'
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
     )
@@ -120,11 +120,11 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = Quill.Normalizer.stripWhitespace('
         <div>
-          <p>Test</p>
-          <p><i>Test</i></p>
-          <p><br></p>
-          <p><br></p>
-          <p><b>Test</b></p>
+          <div>Test</div>
+          <div><i>Test</i></div>
+          <div><br></div>
+          <div><br></div>
+          <div><b>Test</b></div>
         </div>
       ')
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
@@ -134,10 +134,10 @@ describe('Document', ->
     it('mergeLines() normal', ->
       @doc.mergeLines(@lines[0], @lines[1])
       expect(@doc.root).toEqualHTML('
-        <p>Test<i>Test</i></p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test<i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -145,10 +145,10 @@ describe('Document', ->
     it('mergeLines() with newline', ->
       @doc.mergeLines(@lines[1], @lines[2])
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -156,10 +156,10 @@ describe('Document', ->
     it('mergeLines() from newline', ->
       @doc.mergeLines(@lines[3], @lines[4])
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -167,10 +167,10 @@ describe('Document', ->
     it('mergeLines() two newlines', ->
       @doc.mergeLines(@lines[2], @lines[3])
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -178,10 +178,10 @@ describe('Document', ->
     it('removeLine() existing', ->
       @doc.removeLine(@lines[1])
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -190,10 +190,10 @@ describe('Document', ->
       Quill.DOM.removeNode(@lines[1].node)
       @doc.removeLine(@lines[1])
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -201,12 +201,12 @@ describe('Document', ->
     it('splitLine() middle', ->
       @doc.splitLine(@lines[1], 2)
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Te</i></p>
-        <p><i>st</i></p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Te</i></div>
+        <div><i>st</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
@@ -214,12 +214,12 @@ describe('Document', ->
     it('splitLine() beginning', ->
       @doc.splitLine(@lines[1], 0)
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><br></p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><br></div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
@@ -227,12 +227,12 @@ describe('Document', ->
     it('splitLine() end', ->
       @doc.splitLine(@lines[1], 4)
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
@@ -240,12 +240,12 @@ describe('Document', ->
     it('splitLine() beyond end', ->
       @doc.splitLine(@lines[1], 5)
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
@@ -253,18 +253,18 @@ describe('Document', ->
     it('splitLine() split break', ->
       @doc.splitLine(@lines[2], 0)
       expect(@doc.root).toEqualHTML('
-        <p>Test</p>
-        <p><i>Test</i></p>
-        <p><br></p>
-        <p><br></p>
-        <p><br></p>
-        <p><b>Test</b></p>
+        <div>Test</div>
+        <div><i>Test</i></div>
+        <div><br></div>
+        <div><br></div>
+        <div><br></div>
+        <div><b>Test</b></div>
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('setHTML() valid', ->
-      html = '<p>Test</p>'
+      html = '<div>Test</div>'
       @doc.setHTML(html)
       expect(@doc.root).toEqualHTML(html, true)
     )
@@ -281,17 +281,17 @@ describe('Document', ->
         </div>
       ')
       expect(@doc.root).toEqualHTML('
-        <p>A</p>
-        <p>B<br></p>
-        <p>C</p>
-        <p><b></b><br></p>
+        <div>A</div>
+        <div>B<br></div>
+        <div>C</div>
+        <div><b></b><br></div>
       ', true)
     )
 
     it('setHTML() with comment', ->
       @doc.setHTML('
         <!-- HTML Comment -->
-        <p>Test</p>
+        <div>Test</div>
       ')
     )
   )
@@ -302,40 +302,40 @@ describe('Document', ->
         initial:  ['']
         expected: Quill.Delta.getInitial('')
       'single line':
-        initial:  ['<p>0123</p>']
+        initial:  ['<div>0123</div>']
         expected: Quill.Delta.getInitial('0123\n')
       'single newline':
-        initial:  ['<p><br></p>']
+        initial:  ['<div><br></div>']
         expected: Quill.Delta.getInitial('\n')
       'preceding newline':
-        initial:  ['<p><br></p>', '<p>0</p>']
+        initial:  ['<div><br></div>', '<div>0</div>']
         expected: Quill.Delta.getInitial('\n0\n')
       'explicit trailing newline':
-        initial:  ['<p>0</p>', '<p><br></p>']
+        initial:  ['<div>0</div>', '<div><br></div>']
         expected: Quill.Delta.getInitial('0\n\n')
       'multiple lines':
-        initial:  ['<p>0</p>', '<p>1</p>']
+        initial:  ['<div>0</div>', '<div>1</div>']
         expected: Quill.Delta.getInitial('0\n1\n')
       'multiple newlines':
-        initial:  ['<p><br></p>', '<p><br></p>']
+        initial:  ['<div><br></div>', '<div><br></div>']
         expected: Quill.Delta.getInitial('\n\n')
       'multiple preceding newlines':
-        initial:  ['<p><br></p>', '<p><br></p>', '<p>0</p>']
+        initial:  ['<div><br></div>', '<div><br></div>', '<div>0</div>']
         expected: Quill.Delta.getInitial('\n\n0\n')
       'multiple explicit trailing newlines':
-        initial:  ['<p>0</p>', '<p><br></p>', '<p><br></p>']
+        initial:  ['<div>0</div>', '<div><br></div>', '<div><br></div>']
         expected: Quill.Delta.getInitial('0\n\n\n')
       'lines separated by multiple newlines':
-        initial:  ['<p>0</p>', '<p><br></p>', '<p>1</p>']
+        initial:  ['<div>0</div>', '<div><br></div>', '<div>1</div>']
         expected: Quill.Delta.getInitial('0\n\n1\n')
       'tag format':
-        initial:  ['<p><b>0123</b></p>']
+        initial:  ['<div><b>0123</b></div>']
         expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { bold: true } }
           { value: '\n' }
         ]})
       'style format':
-        initial:  ['<p><span style="color: teal;">0123</span></p>']
+        initial:  ['<div><span style="color: teal;">0123</span></div>']
         expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
           { value: '0123', attributes: { color: 'teal' } }
           { value: '\n' }
@@ -362,8 +362,8 @@ describe('Document', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p>0123</p>
-          <p>5678</p>
+          <div>0123</div>
+          <div>5678</div>
         </div>'
       @doc = new Quill.Document(@container)
     )

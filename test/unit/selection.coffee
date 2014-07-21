@@ -7,14 +7,14 @@ describe('Selection', ->
     beforeEach( ->
       @container.innerHTML = '
         <div>
-          <p>0123</p>
-          <p><br></p>
-          <p><img src="http://quilljs.com/images/cloud.png"></p>
+          <div>0123</div>
+          <div><br></div>
+          <div><img src="http://quilljs.com/images/cloud.png"></div>
           <ul>
             <li>One</li>
             <li>Two</li>
           </ul>
-          <p><b><s>89</s></b><i>ab</i></p>
+          <div><b><s>89</s></b><i>ab</i></div>
         </div>
       '
       @quill = new Quill(@container.firstChild)   # Need Quill to create iframe for focus logic
@@ -146,7 +146,7 @@ describe('Selection', ->
       it('multiple consecutive images', ->
         @container.innerHTML = '
           <div>
-            <p><img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png"></p>
+            <div><img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png"></div>
           </div>'
         quill = new Quill(@container.firstChild)
         [node, offset] = quill.editor.selection._indexToPosition(1)
@@ -203,16 +203,16 @@ describe('Selection', ->
       it('line optimization', ->
         @container.innerHTML = '
           <div>
-            <p><br></p>
-            <p>1234</p>
+            <div><br></div>
+            <div>1234</div>
           </div>'
         quill = new Quill(@container.firstChild)
         quill.editor.selection.setRange(new Quill.Lib.Range(0, 3))
         quill.editor._insertAt(0, Quill.DOM.EMBED_TEXT, { image: 'http://quilljs.com/images/cloud.png' })
         quill.editor._formatAt(2, 4, 'bold', true)
         expect(quill.root).toEqualHTML('
-          <p><img src="http://quilljs.com/images/cloud.png"><br></p>
-          <p><b>1234</b></p>
+          <div><img src="http://quilljs.com/images/cloud.png"><br></div>
+          <div><b>1234</b></div>
         ', true)
         range = quill.editor.selection.getRange()
         expect(range.start).toEqual(1)
@@ -252,7 +252,7 @@ describe('Selection', ->
       )
 
       it('handleBreaks()', ->
-        @quill.root.innerHTML = '<p>01<br>34</p>'
+        @quill.root.innerHTML = '<div>01<br>34</div>'
         firstTextNode = @quill.root.firstChild.firstChild
         lastTextNode = @quill.root.firstChild.lastChild
         @selection._setNativeRange(firstTextNode, 1, lastTextNode, 1)
@@ -274,7 +274,7 @@ describe('Selection', ->
       )
 
       it('wrapText()', ->
-        @quill.root.innerHTML = '<p>0123</p><p>5678</p>'
+        @quill.root.innerHTML = '<div>0123</div><div>5678</div>'
         firstTextNode = @quill.root.firstChild.firstChild
         lastTextNode = @quill.root.lastChild.firstChild
         @selection._setNativeRange(firstTextNode, 2, lastTextNode, 2)
@@ -285,8 +285,8 @@ describe('Selection', ->
       )
 
       it('no range', ->
-        @quill.root.innerHTML = '<p>Test</p>'
-        textNode = @quill.root.querySelector('p').firstChild
+        @quill.root.innerHTML = '<div>Test</div>'
+        textNode = @quill.root.querySelector('div').firstChild
         @selection._setNativeRange(null)
         @selection.preserve(_.bind(@doc.rebuild, @doc))
         range = @selection.getRange()

@@ -2,9 +2,9 @@ describe('Toolbar', ->
   beforeEach( ->
     @editorContainer = $('#editor-container').html('
       <div>
-        <p>
+        <div>
           <b>01</b>23<i>45</i><span style="font-size: 18px;">67</span><span style="font-size: 32px;">89</span>
-        </p>
+        </div>
       </div>
     ').get(0)
     @toolbarContainer = $('#toolbar-container').get(0)
