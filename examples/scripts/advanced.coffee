@@ -1,12 +1,12 @@
 basicEditor = new Quill('.basic-wrapper .editor-container',
   modules:
-    authorship: { authorId: 'basic', color: 'white', enabled: false }
+    authorship: { authorId: 'basic', enabled: false }
     toolbar: { container: '.basic-wrapper .toolbar-container' }
 )
 
 advancedEditor = new Quill('.advanced-wrapper .editor-container',
   modules:
-    'authorship': { enabled: true }
+    'authorship': { authorId: 'advanced', color: 'white', enabled: true }
     'toolbar': { container: '.advanced-wrapper .toolbar-container' }
     'link-tooltip': true
     'image-tooltip': true
