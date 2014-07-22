@@ -5,3 +5,4 @@ highlighter: pygments
 markdown: kramdown
 gems:
   - jekyll-sitemap
+version: 0.15.3
