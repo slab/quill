@@ -1,7 +1,4 @@
 @media (min-width: 768px) {
-  .github-button {
-    margin: 15px 0px 0px !important;
-  }
   #sidebar-dropdown {
     display: none;
   }
@@ -44,7 +41,7 @@ body.home {
 
 .github-button {
   height: 20px;
-  margin: 0px 15px 5px;
+  margin: 15px 0px 0px 15px;
   width: 100px;
 }
 
