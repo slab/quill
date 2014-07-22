@@ -27,9 +27,9 @@ The best way to get started is a simple example:
 
 <!-- Create the editor container -->
 <div id="editor">
-  <p>Hello World!</p>
-  <p>Some initial <b>bold</b> text</p>
-  <p><br></p>
+  <div>Hello World!</div>
+  <div>Some initial <b>bold</b> text</div>
+  <div><br></div>
 </div>
 
 <!-- Include the Quill library -->

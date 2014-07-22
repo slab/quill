@@ -1,4 +1,4 @@
-/*! Quill Editor v0.15.3
+/*! Quill Editor v0.16.0
  *  https://quilljs.com/
  *  Copyright (c) 2014, Jason Chen
  *  Copyright (c) 2013, salesforce.com
@@ -5418,7 +5418,7 @@ if (typeof module !== 'undefined') {
 },{}],13:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.15.3",
+  "version": "0.16.0",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -5434,24 +5434,25 @@ module.exports={
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
+    "async": "~0.9.0",
     "coffee-script": "~1.7.1",
     "coffeeify": "~0.6.0",
-    "connect": "~3.0.1",
+    "glob": "~4.0.4",
     "grunt": "~0.4.3",
     "grunt-browserify": "~2.1.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-contrib-compress": "~0.9.1",
     "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-connect": "~0.8.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-stylus": "~0.18.0",
-    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-uglify": "~0.5.0",
     "grunt-karma": "~0.8.0",
     "grunt-lodash": "~0.3.0",
-    "grunt-protractor-runner": "~0.2.4",
-    "grunt-shell": "~0.7.0",
+    "grunt-protractor-runner": "~1.0.0",
     "harp": "~0.12.1",
-    "istanbul": "~0.2.6",
+    "istanbul": "~0.3.0",
     "jquery": "~2.1.1",
     "karma": "~0.12.0",
     "karma-chrome-launcher": "~0.1.2",
@@ -5463,8 +5464,8 @@ module.exports={
     "karma-phantomjs-launcher": "~0.1.2",
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
-    "load-grunt-tasks": "~0.4.0",
-    "protractor": "~0.23.0",
+    "load-grunt-tasks": "~0.6.0",
+    "protractor": "~0.24.2",
     "stylus": "~0.47.1",
     "watchify": "~0.10.2"
   },
@@ -5480,7 +5481,7 @@ module.exports={
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
-    "prepublish": "grunt coffee:src",
+    "prepublish": "grunt coffee:quill",
     "postpublish": "grunt clean:coffee",
     "test": "grunt test"
   },
@@ -5719,7 +5720,7 @@ DOM = {
   NOBREAK_SPACE: "&nbsp;",
   TEXT_NODE: 3,
   ZERO_WIDTH_NOBREAK_SPACE: "\uFEFF",
-  DEFAULT_BLOCK_TAG: 'P',
+  DEFAULT_BLOCK_TAG: 'DIV',
   DEFAULT_BREAK_TAG: 'BR',
   DEFAULT_INLINE_TAG: 'SPAN',
   EMBED_TEXT: '!',
@@ -7274,20 +7275,18 @@ module.exports = Line;
 
 
 },{"./dom":15,"./format":17,"./leaf":18,"./lib/linked-list":20,"./line":23,"./normalizer":33,"./utils":39,"lodash":"M4+//f","tandem-core":10}],24:[function(_dereq_,module,exports){
-var Authorship, DOM, Format, Tandem, _;
+var Authorship, DOM, Tandem, _;
 
 _ = _dereq_('lodash');
 
 DOM = _dereq_('../dom');
-
-Format = _dereq_('../format');
 
 Tandem = _dereq_('tandem-core');
 
 Authorship = (function() {
   Authorship.DEFAULTS = {
     authorId: null,
-    color: 'blue',
+    color: 'white',
     enabled: false
   };
 
@@ -7367,7 +7366,7 @@ Authorship = (function() {
 module.exports = Authorship;
 
 
-},{"../dom":15,"../format":17,"lodash":"M4+//f","tandem-core":10}],25:[function(_dereq_,module,exports){
+},{"../dom":15,"lodash":"M4+//f","tandem-core":10}],25:[function(_dereq_,module,exports){
 var DOM, ImageTooltip, Tooltip, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -7523,13 +7522,11 @@ module.exports = ImageTooltip;
 
 
 },{"../dom":15,"./tooltip":31,"lodash":"M4+//f"}],26:[function(_dereq_,module,exports){
-var DOM, Keyboard, Line, Tandem, _;
+var DOM, Keyboard, Tandem, _;
 
 _ = _dereq_('lodash');
 
 DOM = _dereq_('../dom');
-
-Line = _dereq_('../line');
 
 Tandem = _dereq_('tandem-core');
 
@@ -7681,7 +7678,7 @@ Keyboard = (function() {
 module.exports = Keyboard;
 
 
-},{"../dom":15,"../line":23,"lodash":"M4+//f","tandem-core":10}],27:[function(_dereq_,module,exports){
+},{"../dom":15,"lodash":"M4+//f","tandem-core":10}],27:[function(_dereq_,module,exports){
 var DOM, LinkTooltip, Tooltip, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8135,13 +8132,11 @@ module.exports = PasteManager;
 
 
 },{"../document":14,"../dom":15,"lodash":"M4+//f","tandem-core":10}],30:[function(_dereq_,module,exports){
-var DOM, Toolbar, Utils, _;
+var DOM, Toolbar, _;
 
 _ = _dereq_('lodash');
 
 DOM = _dereq_('../dom');
-
-Utils = _dereq_('../utils');
 
 Toolbar = (function() {
   Toolbar.DEFAULTS = {
@@ -8373,7 +8368,7 @@ Toolbar = (function() {
 module.exports = Toolbar;
 
 
-},{"../dom":15,"../utils":39,"lodash":"M4+//f"}],31:[function(_dereq_,module,exports){
+},{"../dom":15,"lodash":"M4+//f"}],31:[function(_dereq_,module,exports){
 var DOM, Normalizer, Tooltip, _;
 
 _ = _dereq_('lodash');
@@ -8681,7 +8676,7 @@ Normalizer = {
     'text-align': 'text-align'
   },
   TAGS: {
-    'P': 'P',
+    'DIV': 'DIV',
     'BR': 'BR',
     'SPAN': 'SPAN',
     'B': 'B',
@@ -9249,7 +9244,7 @@ DEFAULT_STYLES = {
     'tab-size': '4',
     'white-space': 'pre-wrap'
   },
-  '.editor-container p': {
+  '.editor-container div': {
     'margin': '0',
     'padding': '0'
   },
