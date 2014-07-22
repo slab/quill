@@ -1,5 +1,4 @@
 _     = require('lodash')
-_.str = require('underscore.string')
 
 lastKeyEvent = null    # Workaround for fact we can't dispatch keyboard event via javascript
 
@@ -101,7 +100,7 @@ DOM =
     if node.classList?
       node.classList.add(cssClass)
     else if node.className?
-      node.className = _.str.trim(node.className + ' ' + cssClass)
+      node.className = (node.className + ' ' + cssClass).trim()
 
   addEventListener: (node, eventName, listener) ->
     node.addEventListener(eventName, (event) ->
@@ -154,8 +153,8 @@ DOM =
     obj = _.reduce(styleString.split(';'), (styles, str) ->
       [name, value] = str.split(':')
       if name and value
-        name = _.str.trim(name)
-        value = _.str.trim(value)
+        name = name.trim()
+        value = value.trim()
         styles[name.toLowerCase()] = value
       return styles
     , {})
