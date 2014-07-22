@@ -21,10 +21,27 @@
 
     {{ content }}
 
+    <footer>
+      <div class="container">
+        <ul>
+          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=false" title="Star on GitHub" width="50" height="20" allowtransparency="true" frameborder="0" scrolling="0"></iframe></li>
+          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=fork&amp;count=false" title="Fork on GitHub" width="54" height="20" allowtransparency="true" frameborder="0" scrolling="0"></iframe></li>
+          <li><a href="https://twitter.com/quilljs" class="twitter-follow-button" data-show-count="false">Follow @quilljs</a></li>
+          <li><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com" data-text="Quill - A Rich Text Editor with an API" data-via="quilljs" data-count="none">Tweet</a></li>
+        </ul>
+        <div>
+          Quill is open source under
+          <a title="BSD" href="https://github.com/quilljs/quill#license">BSD</a>.
+          The latest version is currently
+          <a title="Version 0.15.3" href="https://github.com/quilljs/quill/releases/tag/v0.15.3">v0.15.3</a>
+        </div>
+      </div>
+    </footer>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     {% if page.javascript %}
     <script type="text/javascript" src="{{ page.javascript }}"></script>
     {% endif %}
+    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 </html>

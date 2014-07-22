@@ -39,6 +39,24 @@ body.home {
   background-color: #fafafa;
 }
 
+footer {
+  border-top: 1px solid #e8e8e8;
+  color: #8a8a8a;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  text-align: center;
+}
+
+footer a, footer a:hover {
+  color: #8a8a8a;
+  text-decoration: underline;
+}
+
+footer li {
+  display: inline-block;
+  padding: 5px;
+}
+
 .github-button {
   height: 20px;
   margin: 15px 0px 0px 15px;
@@ -219,7 +237,7 @@ body.home {
 
 #docs-container {
   margin-top: 20px;
-  padding-bottom: 40px;
+  padding-bottom: 80px;
 }
 #docs-container pre, #docs-container table, #docs-container ul {
   margin-left: 20px;
