@@ -11,7 +11,7 @@ class Keyboard
     OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
 
-  constructor: (@quill, options) ->
+  constructor: (@quill, @utils, options) ->
     @hotkeys = {}
     this._initListeners()
     this._initHotkeys()

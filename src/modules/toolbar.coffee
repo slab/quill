@@ -12,7 +12,7 @@ class Toolbar
     TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
     TOOLTIP : { 'image', 'link' }
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @utils, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     @inputs = {}

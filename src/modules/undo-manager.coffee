@@ -11,7 +11,7 @@ class UndoManager
     UNDO: { key: 'Z', metaKey: true, shiftKey: false }
     REDO: { key: 'Z', metaKey: true, shiftKey: true }
 
-  constructor: (@quill, @options = {}) ->
+  constructor: (@quill, @utils, @options = {}) ->
     @lastRecorded = 0
     @emittedDelta = null
     this.clear()

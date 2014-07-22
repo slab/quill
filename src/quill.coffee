@@ -8,27 +8,16 @@ Format        = require('./format')
 Range         = require('./lib/range')
 Tandem        = require('tandem-core')
 
-Modules =
-  Authorship    : require('./modules/authorship')
-  ImageTooltip  : require('./modules/image-tooltip')
-  Keyboard      : require('./modules/keyboard')
-  LinkTooltip   : require('./modules/link-tooltip')
-  MultiCursor   : require('./modules/multi-cursor')
-  PasteManager  : require('./modules/paste-manager')
-  Toolbar       : require('./modules/toolbar')
-  UndoManager   : require('./modules/undo-manager')
-
-Themes =
-  Default : require('./themes/default')
-  Snow    : require('./themes/snow')
-
 
 class Quill extends EventEmitter2
   @version: pkg.version
   @editors: []
 
-  @Module: Modules
-  @Theme: Themes
+  @modules: []
+  @themes: []
+  @utils:
+    _: _
+    dom: DOM
 
   @DEFAULTS:
     formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
@@ -52,6 +41,16 @@ class Quill extends EventEmitter2
     SILENT : 'silent'
     USER   : 'user'
 
+
+  @registerModule: (name, module) ->
+    console.warn("Overwriting #{name} module") if Quill.modules[name]?
+    Quill.modules[name] = module
+
+  @registerTheme: (name, theme) ->
+    console.warn("Overwriting #{name} theme") if Quill.themes[name]?
+    Quill.themes[name] = theme
+
+
   constructor: (container, options = {}) ->
     container = document.querySelector(container) if _.isString(container)
     throw new Error('Invalid Quill container') unless container?
@@ -66,8 +65,9 @@ class Quill extends EventEmitter2
     @root = @editor.doc.root
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
-    themeClass = _.str.capitalize(_.str.camelize(@options.theme))
-    @theme = new Quill.Theme[themeClass](this, @options)
+    themeClass = Quill.themes[@options.theme]
+    throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
+    @theme = new themeClass(this, @options)
     _.each(@options.modules, (option, name) =>
       this.addModule(name, option)
     )
@@ -79,12 +79,11 @@ class Quill extends EventEmitter2
     @editor.doc.addFormat(name, format)
 
   addModule: (name, options) ->
-    className = _.str.capitalize(_.str.camelize(name))
-    moduleClass = Quill.Module[className]
-    throw new Error("Cannot load #{name} module. Are you sure you included it?") unless moduleClass?
+    moduleClass = Quill.modules[name]
+    throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
-    @modules[name] = new moduleClass(this, options)
+    @modules[name] = new moduleClass(this, Quill.utils, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
@@ -211,6 +210,20 @@ class Quill extends EventEmitter2
       params.splice(2, 2, formats)
     params[3] ?= Quill.sources.API
     return params
+
+
+Quill.registerModule('authorship',    require('./modules/authorship'))
+Quill.registerModule('image-tooltip', require('./modules/image-tooltip'))
+Quill.registerModule('keyboard',      require('./modules/keyboard'))
+Quill.registerModule('link-tooltip',  require('./modules/link-tooltip'))
+Quill.registerModule('multi-cursor',  require('./modules/multi-cursor'))
+Quill.registerModule('paste-manager', require('./modules/paste-manager'))
+Quill.registerModule('tooltip',       require('./modules/tooltip'))
+Quill.registerModule('toolbar',       require('./modules/toolbar'))
+Quill.registerModule('undo-manager',  require('./modules/undo-manager'))
+
+Quill.registerTheme('default', require('./themes/default'))
+Quill.registerTheme('snow',    require('./themes/snow'))
 
 
 module.exports = Quill

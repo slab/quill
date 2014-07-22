@@ -23,7 +23,7 @@ class LinkTooltip extends Tooltip
       <a href="javascript:;" class="change">Change</a>
       <a href="javascript:;" class="done">Done</a>'
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @utils, @options) ->
     @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
@@ -54,7 +54,7 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    if @range? 
+    if @range?
       if @range.isCollapsed()
         anchor = this._findAnchor(@range)
         anchor.href = url if anchor?

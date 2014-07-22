@@ -20,7 +20,7 @@ class Tooltip
 
   @HIDE_MARGIN = '-10000px'
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @utils, @options) ->
     @quill.addStyles(@options.styles)
     @container = @quill.addContainer('tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)

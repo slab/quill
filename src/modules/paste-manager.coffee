@@ -5,7 +5,7 @@ Tandem   = require('tandem-core')
 
 
 class PasteManager
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @utils, @options) ->
     @container = @quill.addContainer('paste-container')
     @container.setAttribute('contenteditable', true)
     @quill.addStyles(

@@ -9,7 +9,7 @@ class Authorship
     color: 'white'
     enabled: false
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @utils, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
     @quill.addFormat('author', { class: 'author-' })

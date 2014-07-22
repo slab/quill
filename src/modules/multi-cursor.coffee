@@ -18,7 +18,7 @@ class MultiCursor extends EventEmitter2
     CURSOR_MOVED: 'cursor-moved'
     CURSOR_REMOVED: 'cursor-removed'
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @utils, @options) ->
     @cursors = {}
     @container = @quill.addContainer('cursor-container', true)
     @quill.addStyles(
