@@ -26,7 +26,7 @@ Normalizer =
   }
 
   TAGS: {
-    'P'
+    'DIV'
     'BR'
     'SPAN'
     'B'
