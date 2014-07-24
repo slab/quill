@@ -1,7 +1,8 @@
 ---
 layout: docs
-title: Editor Configuration - Quill
-permalink: /docs/editor/configuration/
+title: Configuration - Quill
+permalink: /docs/configuration/
+redirect_from: /docs/editor/configuration/
 ---
 
 # Configuration
@@ -43,7 +44,7 @@ The following keys are recognized:
 
 #### formats
 
-- Formats recognized by the editor. See [Formats](/docs/editor/formats/) for more information.
+- Formats recognized by the editor. See [Formats](/docs/formats/) for more information.
 
 #### modules
 

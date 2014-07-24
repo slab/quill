@@ -1,7 +1,8 @@
 ---
 layout: docs
 title: Events - Quill
-permalink: /docs/editor/events/
+permalink: /docs/events/
+redirect_from: /docs/editor/events/
 ---
 
 # Events
@@ -24,10 +25,10 @@ Changes may occur through an API but as long as they originate from the user, th
 
 **Callback Parameters**
 
-| Parameter | Type                            | Description
-|-----------|---------------------------------|------------
-| `delta`   | [_Delta_](/docs/editor/deltas/) | Represention of change.
-| `source`  | _String_                        | Source of change. Will be either `"user"` or `"api"`.
+| Parameter | Type                     | Description
+|-----------|--------------------------|------------
+| `delta`   | [_Delta_](/docs/deltas/) | Represention of change.
+| `source`  | _String_                 | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 

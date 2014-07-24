@@ -1,7 +1,8 @@
 ---
 layout: docs
 title: API - Quill
-permalink: /docs/editor/api/
+permalink: /docs/api/
+redirect_from: /docs/editor/api/
 ---
 
 # API
@@ -88,7 +89,7 @@ var text = editor.getLength();
 
 ### Quill.prototype.getContents
 
-Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/editor/deltas/) object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/deltas/) object.
 
 **Methods**
 
@@ -135,7 +136,7 @@ var html = editor.getHTML();
 
 ### Quill.prototype.insertText
 
-Inserts text into the editor. See [formats](/docs/editor/formats/) for a list of available formats.
+Inserts text into the editor. See [formats](/docs/formats/) for a list of available formats.
 
 **Methods**
 
@@ -155,7 +156,7 @@ Inserts text into the editor. See [formats](/docs/editor/formats/) for a list of
 | `name`    | _String_ | Name of format to apply to inserted text.
 | `value`   | _String_ | Value of format to apply to inserted text.
 | `formats` | _Object_ | Key/value pairs of formats to apply to inserted text.
-| `source`  | _String_ | [Source](/docs/editor/events/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
 
 **Examples**
 
@@ -184,7 +185,7 @@ Deletes text from the editor.
 |-----------|----------|------------
 | `start`   | _Number_ | Start index of deletion.
 | `end`     | _Number_ | End index of deletion.
-| `source`  | _String_ | [Source](/docs/editor/events/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
 
 **Examples**
 
@@ -195,7 +196,7 @@ editor.deleteText(0, 10);
 
 ### Quill.prototype.formatText
 
-Formats text in the editor. See [formats](/docs/editor/formats/) for a list of available formats.
+Formats text in the editor. See [formats](/docs/formats/) for a list of available formats.
 
 **Methods**
 
@@ -214,7 +215,7 @@ Formats text in the editor. See [formats](/docs/editor/formats/) for a list of a
 | `end`     | _Number_ | End index of formatting range.
 | `name`    | _String_ | Name of format to apply to text.
 | `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/editor/events/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
 
 **Examples**
 
@@ -244,7 +245,7 @@ Insert embedded content into the editor. Currently only images are supported.
 | `index`   | _Number_ | Index where content should be inserted.
 | `type`    | _String_ | Type of content. Currently accepts only `image`.
 | `url`     | _String_ | URL where content is located.
-| `source`  | _String_ | [Source](/docs/editor/events/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
 
 **Examples**
 
@@ -263,9 +264,9 @@ Applies Delta to editor contents.
 
 **Parameters**
 
-| Parameter | Type                            | Description
-|-----------|---------------------------------|------------
-| `delta`   | [_Delta_](/docs/editor/deltas/) | Delta that will be applied.
+| Parameter | Type                     | Description
+|-----------|--------------------------|------------
+| `delta`   | [_Delta_](/docs/deltas/) | Delta that will be applied.
 
 **Examples**
 
@@ -295,9 +296,9 @@ Overwrites editor with given contents.
 
 **Parameters**
 
-| Parameter | Type                            | Description
-|-----------|---------------------------------|------------
-| `delta`   | [_Delta_](/docs/editor/deltas/) | Delta editor should be set to.
+| Parameter | Type                     | Description
+|-----------|--------------------------|------------
+| `delta`   | [_Delta_](/docs/deltas/) | Delta editor should be set to.
 
 **Examples**
 
@@ -398,7 +399,7 @@ Has no effect if current selection does not exist or is not a cursor.
 
 | Parameter | Type     | Description
 |-----------|----------|------------
-| `format`  | _String_ | Name of format to set. See [formats](/docs/editor/formats/) for a list of available formats.
+| `format`  | _String_ | Name of format to set. See [formats](/docs/formats/) for a list of available formats.
 | `value`   | _String_ | Value of format to apply to set. A falsy value will unset the format.
 
 **Examples**
@@ -436,7 +437,7 @@ Add a custom defined format to editor.
 | Parameter | Type     | Description
 |-----------|----------|------------
 | `name`    | _String_ | Name of format to add. Will overwrite if name already exists.
-| `config`  | _Object_ | Format configurations. See [formats](/docs/editor/formats/) for more details.
+| `config`  | _Object_ | Format configurations. See [formats](/docs/formats/) for more details.
 
 **Examples**
 

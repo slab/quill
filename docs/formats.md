@@ -1,7 +1,8 @@
 ---
 layout: docs
-title: Editor Formats - Quill
-permalink: /docs/editor/formats/
+title: Formats - Quill
+permalink: /docs/formats/
+redirect_from: /docs/editor/formats/
 ---
 
 # Formats

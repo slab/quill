@@ -5,4 +5,5 @@ highlighter: pygments
 markdown: kramdown
 gems:
   - jekyll-sitemap
+  - jekyll-redirect-from
 version: 0.16.0

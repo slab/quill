@@ -1,7 +1,8 @@
 ---
 layout: docs
 title: Deltas - Quill
-permalink: /docs/editor/deltas/
+permalink: /docs/deltas/
+redirect_from: /docs/editor/deltas/
 stability: yellow
 ---
 

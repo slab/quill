@@ -1,7 +1,8 @@
 ---
 layout: docs
-title: Editor - Quill
+title: Quickstart - Quill
 permalink: /docs/quickstart/
+redirect_from: /docs/editor/
 ---
 
 # Quickstart
@@ -32,7 +33,7 @@ The best way to get started is a simple example. Quill is initialized with a DOM
 </script>
 {% endhighlight %}
 
-Quill also supports a powerful [API](/docs/editor/api/) for fine grain access and manipulation of the editor contents.
+Quill also supports a powerful [API](/docs/api/) for fine grain access and manipulation of the editor contents.
 
 {% highlight html %}
 <script>
@@ -47,4 +48,4 @@ Quill also supports a powerful [API](/docs/editor/api/) for fine grain access an
 
 ### Next Steps ###
 
-That's all you need to do to set up a simple Quill editor! But the power of Quill is its flexibility and extensibility. Check out the [Examples](/examples/) to see this in action. Or start interacting with Quill with its flexible [API](/docs/editor/api/).
+That's all you need to do to set up a simple Quill editor! But the power of Quill is its flexibility and extensibility. Check out the [Examples](/examples/) to see this in action. Or start interacting with Quill with its flexible [API](/docs/api/).

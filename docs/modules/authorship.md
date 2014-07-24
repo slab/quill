@@ -39,7 +39,7 @@ editor.setContents({
 });
 </script>
 
-Enabling this module will also add a new format `author` to the list of recognized [formats](/docs/editor/formats/). The value of the `author` format is the id of the author. Changes made to the Quill editor will also attach the local author metadata.
+Enabling this module will also add a new format `author` to the list of recognized [formats](/docs/formats/). The value of the `author` format is the id of the author. Changes made to the Quill editor will also attach the local author metadata.
 
 ### Configuration
 
