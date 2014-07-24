@@ -8,32 +8,42 @@ permalink: /docs/editor/configuration/
 
 Quill allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules](/docs/modules/) section for adding new functionality and the [Themes](/docs/themes/) section for styling.
 
-To configure Quill, pass in an object with the following recognized keys:
+
+### Container
+
+Quill requires an container where the editor will be appended. You can either pass in a CSS selector or a DOM object.
+
+{% highlight javascript %}
+var editor = new Quill('.editor');  // The first result of the selector will be used
+{% endhighlight %}
+
+{% highlight javascript %}
+var container = document.getElementById('editor');
+var editor = new Quill(container);
+{% endhighlight %}
+
+{% highlight javascript %}
+var container = $('.editor').get(0);
+var editor = new Quill(container);
+{% endhighlight %}
+
+### Options
+
+To configure Quill, pass in an options object:
 
 {% highlight javascript %}
 var configs = {
-  logLevel: 'warn',
-  readOnly: true
+  readOnly: true,
+  theme: 'snow'
 };
 var editor = new Quill('#editor', configs);
 {% endhighlight %}
 
+The following keys are recognized:
 
 #### formats
 
 - Formats recognized by the editor. See [Formats](/docs/editor/formats/) for more information.
-
-#### logLevel
-
-- Default: `false`
-
-- The amount of detail Quill should log. Acceptable values are:
-
-- `"debug"`
-- `"info"`
-- `"warn"`
-- `"error"`
-- `false`
 
 #### modules
 
