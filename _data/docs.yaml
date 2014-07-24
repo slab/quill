@@ -1,16 +1,15 @@
 - title: Editor
-  url: /docs/editor/
-  children:
-    - title: Configuration
-      url: /docs/editor/configuration/
-    - title: Formats
-      url: /docs/editor/formats/
-    - title: API
-      url: /docs/editor/api/
-    - title: Events
-      url: /docs/editor/events/
-    - title: Deltas
-      url: /docs/editor/deltas/
+  url: /docs/quickstart/
+- title: Configuration
+  url: /docs/configuration/
+- title: Formats
+  url: /docs/formats/
+- title: API
+  url: /docs/api/
+- title: Events
+  url: /docs/events/
+- title: Deltas
+  url: /docs/deltas/
 - title: Modules
   url: /docs/modules/
   children:
