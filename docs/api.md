@@ -31,12 +31,13 @@ Quill allows granular access to its contents.
 - [Quill.prototype.focus](#quillprototypefocus)
 
 #### Customization
-- [Quill.prototype.addFormat](#quillprototypeaddformat)
-- [Quill.prototype.addStyles](#quillprototypeaddstyles)
-- [Quill.prototype.addContainer](#quillprototypeaddcontainer)
+- [Quill.registerModule](#quillregistermodule)
 - [Quill.prototype.addModule](#quillprototypeaddmodule)
 - [Quill.prototype.getModule](#quillprototypegetmodule)
 - [Quill.prototype.onModuleLoad](#quillprototypeonmoduleload)
+- [Quill.prototype.addFormat](#quillprototypeaddformat)
+- [Quill.prototype.addStyles](#quillprototypeaddstyles)
+- [Quill.prototype.addContainer](#quillprototypeaddcontainer)
 
 
 ### Quill.prototype.getText
@@ -424,6 +425,107 @@ editor.focus();
 {% endhighlight %}
 
 
+### Quill.registerModule
+
+Registers a module, making it available to be added to an editor. See [Modules](/docs/modules/) for more details.
+
+**Methods**
+
+- `registerModule(name, function)`
+
+**Parameters**
+
+| Parameter | Type       | Description
+|-----------|------------|------------
+| `name`    | _String_   | Name of module to register.
+| `options` | _Function_ | Options to be passed into module constructor.
+
+**Examples**
+
+{% highlight javascript %}
+Quill.registerModule('custom-module', function(quill, options) {
+  console.log(options);
+});
+{% endhighlight %}
+
+
+### Quill.prototype.addModule
+
+Add module to editor. The module should have been previously registered with [registerModule](#quillregistermodule). See [Modules](/docs/modules/) for more details.
+
+**Methods**
+
+- `addModule(name, options)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `name`    | _String_ | Name of module to add.
+| `options` | _Object_ | Options to be passed into module constructor.
+
+**Returns**
+
+- *Object* Instance of the module that was added.
+
+**Examples**
+
+{% highlight javascript %}
+var toolbar = editor.addModule('toolbar', {
+  container: '#toolbar-container'
+});
+{% endhighlight %}
+
+
+### Quill.prototype.getModule
+
+Retrieves a module that has been added to the editor.
+
+**Methods**
+
+- `getModule(name)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `name`    | _String_ | Name of module to retrieve.
+
+**Returns**
+
+- *Object* Instance of the module that was added.
+
+**Examples**
+
+{% highlight javascript %}
+var toolbar = editor.getModule('toolbar');
+{% endhighlight %}
+
+
+### Quill.prototype.onModuleLoad
+
+Calls a given callback when given module is added. If the module is already added, the callback is called immediately.
+
+**Methods**
+
+- `onModuleLoad(name, callback)`
+
+**Parameters**
+
+| Parameter  | Type       | Description
+|------------|------------|------------
+| `name`     | _String_   | Name of module.
+| `callback` | _Function_ | Function to call.
+
+**Examples**
+
+{% highlight javascript %}
+editor.onModuleLoad('toolbar', function(toolbar) {
+  console.log('Toolbar has been added');
+});
+{% endhighlight %}
+
+
 ### Quill.prototype.addFormat
 
 Add a custom defined format to editor.
@@ -499,81 +601,4 @@ Add a div container inside the editor iframe, sibling to the editor itself. Reme
 
 {% highlight javascript %}
 var container = editor.addContainer('custom-container');
-{% endhighlight %}
-
-
-### Quill.prototype.addModule
-
-Add module to editor. The module should already be defined in and accessible by `Quill.Modules`. See [Modules](/docs/modules/) for more details.
-
-**Methods**
-
-- `addModule(name, options)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `name`    | _String_ | Name of module to add.
-| `options` | _Object_ | Options to be passed into module constructor.
-
-**Returns**
-
-- *Object* Instance of the module that was added.
-
-**Examples**
-
-{% highlight javascript %}
-var toolbar = editor.addModule('toolbar', {
-  container: '#toolbar-container'
-});
-{% endhighlight %}
-
-
-### Quill.prototype.getModule
-
-Retrieves a module that has been added to the editor.
-
-**Methods**
-
-- `getModule(name)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `name`    | _String_ | Name of module to retrieve.
-
-**Returns**
-
-- *Object* Instance of the module that was added.
-
-**Examples**
-
-{% highlight javascript %}
-var toolbar = editor.getModule('toolbar');
-{% endhighlight %}
-
-
-### Quill.prototype.onModuleLoad
-
-Calls a given callback when given module is added. If the module is already added, the callback is called immediately.
-
-**Methods**
-
-- `onModuleLoad(name, callback)`
-
-**Parameters**
-
-| Parameter  | Type       | Description
-|------------|------------|------------
-| `name`     | _String_   | Name of module.
-| `callback` | _Function_ | Function to call.
-
-**Examples**
-
-{% highlight javascript %}
-editor.onModuleLoad('toolbar', function(toolbar) {
-  console.log('Toolbar has been added');
-});
 {% endhighlight %}
