@@ -61,5 +61,6 @@ module.exports = function(config) {
   if (process.env.TRAVIS) {
     config.transports = ['xhr-polling'];
     config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID;
+    config.sauceLabs.tunnelIdentifier = process.env.TRAVIS_JOB_NUMBER;
   }
 }

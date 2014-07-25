@@ -19,6 +19,7 @@ remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
         isVerbose: false
     if process.env.TRAVIS
       options.args.capabilities.build = 'travis-' + process.env.TRAVIS_BUILD_ID
+      options.args.capabilities['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER
     else
       options.args.capabilities.build = os.hostname() + '-' + _.random(16*16*16*16).toString(16)
     memo["#{test}-#{browser}"] = { options: options }
