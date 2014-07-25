@@ -1,4 +1,6 @@
+_ = require('lodash')
 fs = require('fs')
+browsers = require('./config/browsers')
 
 GRUNT_DIR = 'config/grunt'
 
@@ -24,15 +26,8 @@ module.exports = (grunt) ->
   grunt.registerTask('test', ['karma:test'])
 
   grunt.registerTask('test:unit', ['karma:test'])
-  grunt.registerTask('test:unit:remote', [
-    'karma:remote-mac'
-    'karma:remote-windows'
-    'karma:remote-linux'
-    'karma:remote-mobile'
-    'karma:remote-legacy'
-  ])
-
-  grunt.registerTask('test:webdriver', ['protractor:test'])
+  grunt.registerTask('test:wd', ['protractor:test'])
+  grunt.registerTask('test:e2e', ['protractor:e2e'])
 
   grunt.registerTask('test:coverage', [
     'lodash', 'coffee:quill', 'istanbul:instrument'
@@ -40,3 +35,11 @@ module.exports = (grunt) ->
     'clean:coffee', 'clean:coverage'
   ])
 
+  _.each(browsers, (config, browser) ->
+    grunt.registerTask("test:#{browser}", [
+      'connect:server'
+      "karma:#{browser}"
+      "protractor:wd-#{browser}"
+      "protractor:e2e-#{browser}"
+    ])
+  )
