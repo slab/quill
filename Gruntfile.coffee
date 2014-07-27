@@ -36,10 +36,8 @@ module.exports = (grunt) ->
   ])
 
   _.each(browsers, (config, browser) ->
-    grunt.registerTask("test:#{browser}", [
-      'connect:server'
-      "karma:#{browser}"
-      "protractor:wd-#{browser}"
-      "protractor:e2e-#{browser}"
-    ])
+    tasks = ['connect:server', "karma:#{browser}"]
+    unless browser == 'iphone' or browser == 'ipad' or browser == 'mac-safari'
+      tasks.push("protractor:wd-#{browser}", "protractor:e2e-#{browser}")
+    grunt.registerTask("test:#{browser}", tasks)
   )
