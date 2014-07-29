@@ -66,11 +66,10 @@ class Keyboard
   _initListeners: ->
     DOM.addEventListener(@quill.root, 'keydown', (event) =>
       prevent = false
-      range = @quill.getSelection()
       _.each(@hotkeys[event.which], (hotkey) =>
         return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)
         return if hotkey.shiftKey? and event.shiftKey != hotkey.shiftKey
-        prevent = hotkey.callback(range) == false or prevent
+        prevent = hotkey.callback(@quill.getSelection()) == false or prevent
       )
       return !prevent
     )
