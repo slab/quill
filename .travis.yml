@@ -1,7 +1,7 @@
 language: node_js
 node_js: '0.10'
 script:
-  - grunt test:$BROWSER
+  - grunt travis:$TEST
 before_install:
   - npm install -g grunt-cli
   - source config/sauce.sh
@@ -12,18 +12,32 @@ env:
     - secure: "Smk4w36atd3Ttj0XsoEZr6dMplTWsK52E70EpxTV72hTQIYa3w5uHMEKpg/sZ9ZFfYQF7Rx003Dmbq9AUGPxqlgPtE8CFWlqYBRAVmvQHTEHmhzIKe0NJ8cXtWWVLnnqbsd9vanXGhd8jjC65ZJYQfOVsbPMShVwv2bSLcTr0cE="
     - secure: "Mgrp2KtzPaZIG36ZoKleP2WneOamT5WFIFUDhS0mj4jbAFSjXWGnRJI7R0XuT9wDmS/f0gIsxazFELXher9CAmsa3VINFW3cVztykqIMSD5HBhyOyTuVzi6q3tvhx2u/OCxqV8o12XrgGJnKwnBuHbapHqhM39CJI2UjYhsgct8="
   matrix:
-    - BROWSER=mac-chrome
-    - BROWSER=mac-firefox
-    - BROWSER=mac-safari
-    - BROWSER=windows-firefox
-    - BROWSER=windows-chrome
-    - BROWSER=windows-ie-11
-    - BROWSER=windows-ie-10
-    - BROWSER=windows-ie-9
-    - BROWSER=linux-chrome
-    - BROWSER=linux-firefox
-    - BROWSER=ipad
-    - BROWSER=iphone
-    - BROWSER=android
+    - TEST=unit-mac-chrome
+    - TEST=unit-mac-firefox
+    - TEST=unit-mac-safari
+    - TEST=unit-windows-firefox
+    - TEST=unit-windows-chrome
+    - TEST=unit-windows-ie-11
+    - TEST=unit-windows-ie-10
+    - TEST=unit-windows-ie-9
+    - TEST=unit-linux-chrome
+    - TEST=unit-linux-firefox
+    - TEST=unit-ipad
+    - TEST=unit-iphone
+    - TEST=unit-android
+    - TEST=wd-mac-chrome
+    - TEST=wd-mac-firefox
+    - TEST=wd-windows-firefox
+    - TEST=wd-windows-chrome
+    - TEST=wd-windows-ie-11
+    - TEST=wd-windows-ie-10
+    - TEST=wd-windows-ie-9
+    - TEST=e2e-mac-chrome
+    - TEST=e2e-mac-firefox
+    - TEST=e2e-windows-firefox
+    - TEST=e2e-windows-chrome
+    - TEST=e2e-windows-ie-11
+    - TEST=e2e-windows-ie-10
+    - TEST=e2e-windows-ie-9
 addons:
   sauce_connect: true
