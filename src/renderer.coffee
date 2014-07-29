@@ -74,7 +74,8 @@ class Renderer
   constructor: (@container, @options = {}) ->
     @container.innerHTML = ''
     [@root, @iframe] = Renderer.buildFrame(@container)
-    @root.id = @options.id
+    @root.setAttribute('id', @options.id)
+    @iframe.setAttribute('name', @options.id)
     DOM.addClass(@root, 'editor-container')
     DOM.addClass(@container, 'ql-container')
     DOM.addEventListener(@container, 'focus', =>
