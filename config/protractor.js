@@ -8,6 +8,12 @@ exports.config = {
     'browserName': 'chrome'
   },
 
+  suites: {
+    helper: '../../test/helpers/matchers.coffee',
+    e2e: '../../test/e2e/*.coffee',
+    wd: '../../test/wd/*.coffee'
+  },
+
   baseUrl: 'http://localhost:9000',
 
   onPrepare: function() {
