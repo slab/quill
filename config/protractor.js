@@ -4,8 +4,6 @@ exports.config = {
   chromeOnly: false,
   allScriptsTimeout: 11000,
 
-  specs: ['../test/wd/*.coffee'],
-
   capabilities: {
     'browserName': 'chrome'
   },

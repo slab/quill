@@ -6,7 +6,6 @@ remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
   return _.reduce(['e2e', 'wd'], (memo, test) ->
     options =
       configFile: 'config/protractor.js'
-      specs: ["../test/#{test}/*.coffee"]
       args:
         capabilities:
           name: "quill-#{test}"
@@ -15,6 +14,7 @@ remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
           version: config[2]
         sauceUser: process.env.SAUCE_USERNAME
         sauceKey: process.env.SAUCE_ACCESS_KEY
+        specs: ["test/#{test}/*.coffee"]
       jasmineNodeOpts:
         isVerbose: false
     if process.env.TRAVIS
@@ -32,14 +32,18 @@ module.exports = (grunt) ->
     coverage:
       options:
         configFile: 'config/protractor.coverage.js'
+        args:
+          specs: ['test/wd/*.coffee']
     test:
       options:
         configFile: 'config/protractor.js'
-        specs: ['../test/wd/*.coffee']
+        args:
+          specs: ['test/wd/*.coffee']
     e2e:
       options:
         configFile: 'config/protractor.js'
-        specs: ['../test/e2e/*.coffee']
+        args:
+          specs: ['test/e2e/*.coffee']
   ))
 
   grunt.registerMultiTask('webdriver-manager', 'Protractor webdriver manager', ->
