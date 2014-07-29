@@ -12,8 +12,11 @@ env:
     - secure: "Smk4w36atd3Ttj0XsoEZr6dMplTWsK52E70EpxTV72hTQIYa3w5uHMEKpg/sZ9ZFfYQF7Rx003Dmbq9AUGPxqlgPtE8CFWlqYBRAVmvQHTEHmhzIKe0NJ8cXtWWVLnnqbsd9vanXGhd8jjC65ZJYQfOVsbPMShVwv2bSLcTr0cE="
     - secure: "Mgrp2KtzPaZIG36ZoKleP2WneOamT5WFIFUDhS0mj4jbAFSjXWGnRJI7R0XuT9wDmS/f0gIsxazFELXher9CAmsa3VINFW3cVztykqIMSD5HBhyOyTuVzi6q3tvhx2u/OCxqV8o12XrgGJnKwnBuHbapHqhM39CJI2UjYhsgct8="
   matrix:
-    - BROWSER=windows-chrome
+    - BROWSER=mac-chrome
+    - BROWSER=mac-firefox
+    - BROWSER=mac-safari
     - BROWSER=windows-firefox
+    - BROWSER=windows-chrome
     - BROWSER=windows-ie-11
     - BROWSER=windows-ie-10
     - BROWSER=windows-ie-9
