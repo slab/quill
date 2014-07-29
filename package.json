@@ -32,7 +32,7 @@
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-karma": "~0.8.0",
     "grunt-lodash": "~0.3.0",
-    "grunt-protractor-runner": "~1.0.0",
+    "grunt-protractor-runner": "~1.1.0",
     "harp": "~0.12.1",
     "istanbul": "~0.3.0",
     "jquery": "~2.1.1",
@@ -47,7 +47,7 @@
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.6.0",
-    "protractor": "~0.24.2",
+    "protractor": "1.0.0",
     "stylus": "~0.47.1",
     "watchify": "~0.10.2"
   },
