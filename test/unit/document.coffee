@@ -389,7 +389,7 @@ describe('Document', ->
     )
 
     it('existing line split', ->
-      Quill.Utils.splitNode(@doc.root.firstChild, 2)
+      Quill.DOM.splitNode(@doc.root.firstChild, 2)
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
     )

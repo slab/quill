@@ -3,7 +3,6 @@ DOM        = require('./dom')
 Leaf       = require('./leaf')
 Normalizer = require('./normalizer')
 Range      = require('./lib/range')
-Utils      = require('./utils')
 
 
 class Selection
@@ -101,7 +100,7 @@ class Selection
           else
             offset = node.childNodes.length
         else
-          return [node, Utils.getNodeLength(node)]
+          return [node, DOM.getNodeLength(node)]
 
   _getNativeSelection: ->
     return if @document.getSelection? then @document.getSelection() else null

@@ -4,7 +4,6 @@ Format     = require('./format')
 Line       = require('./line')
 LinkedList = require('./lib/linked-list')
 Normalizer = require('./normalizer')
-Utils      = require('./utils')
 Tandem     = require('tandem-core')
 
 
@@ -81,7 +80,7 @@ class Document
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
-          lineNode = Utils.getNextLineNode(lineNode, @root)
+          lineNode = DOM.getNextLineNode(lineNode, @root)
         else
           # Existing line removed
           return this.removeLine(line)
@@ -89,13 +88,13 @@ class Document
         # Existing line changed
         line.node = Normalizer.normalizeLine(line.node)
         line.rebuild()
-      lineNode = Utils.getNextLineNode(lineNode, @root)
+      lineNode = DOM.getNextLineNode(lineNode, @root)
     )
     # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
-      lineNode = Utils.getNextLineNode(lineNode, @root)
+      lineNode = DOM.getNextLineNode(lineNode, @root)
 
   removeLine: (line) ->
     if line.node.parentNode?
@@ -116,7 +115,7 @@ class Document
 
   splitLine: (line, offset) ->
     offset = Math.min(offset, line.length - 1)
-    [lineNode1, lineNode2] = Utils.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = DOM.splitNode(line.node, offset, true)
     line.node = lineNode1
     line.rebuild()
     newLine = this.insertLineBefore(lineNode2, line.next)

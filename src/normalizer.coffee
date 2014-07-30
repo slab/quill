@@ -1,6 +1,5 @@
-_     = require('lodash')
-DOM   = require('./dom')
-Utils = require('./utils')
+_   = require('lodash')
+DOM = require('./dom')
 
 
 Normalizer =
@@ -44,7 +43,7 @@ Normalizer =
     breaks = _.map(lineNode.querySelectorAll(DOM.DEFAULT_BREAK_TAG))
     _.each(breaks, (br) =>
       if br.nextSibling? and (!DOM.isIE(10) or br.previousSibling?)
-        Utils.splitAncestors(br.nextSibling, lineNode.parentNode)
+        DOM.splitAncestors(br.nextSibling, lineNode.parentNode)
     )
     return lineNode
 
@@ -61,7 +60,7 @@ Normalizer =
     _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
       if node.hasAttribute(attribute)
         value = node.getAttribute(attribute)
-        value = Utils.convertFontSize(value) if attribute == 'size'
+        value = DOM.convertFontSize(value) if attribute == 'size'
         node.style[style] = value
         node.removeAttribute(attribute)
     )
@@ -70,7 +69,7 @@ Normalizer =
 
   # Removes unnecessary tags but does not modify line contents
   optimizeLine: (lineNode) ->
-    lineNodeLength = Utils.getNodeLength(lineNode)
+    lineNodeLength = DOM.getNodeLength(lineNode)
     nodes = DOM.getDescendants(lineNode)
     while nodes.length > 0
       node = nodes.pop()
@@ -79,14 +78,14 @@ Normalizer =
       if node.tagName == DOM.DEFAULT_BREAK_TAG
         # Remove unneeded BRs
         DOM.removeNode(node) unless lineNodeLength == 0
-      else if Utils.getNodeLength(node) == 0
+      else if DOM.getNodeLength(node) == 0
         nodes.push(node.nextSibling)
         DOM.unwrap(node)
       else if node.previousSibling? and node.tagName == node.previousSibling.tagName
         # Merge similar nodes
         if _.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))
           nodes.push(node.firstChild)
-          Utils.mergeNodes(node.previousSibling, node)
+          DOM.mergeNodes(node.previousSibling, node)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
@@ -94,9 +93,9 @@ Normalizer =
     while curNode?
       if DOM.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
         if curNode.previousSibling?
-          Utils.splitAncestors(curNode, lineNode.parentNode)
+          DOM.splitAncestors(curNode, lineNode.parentNode)
         if curNode.nextSibling?
-          Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
+          DOM.splitAncestors(curNode.nextSibling, lineNode.parentNode)
         if !DOM.LIST_TAGS[curNode.tagName]?
           DOM.unwrap(curNode)
           Normalizer.pullBlocks(lineNode)

@@ -122,6 +122,17 @@ DOM =
       node.removeAttribute(name) unless _.indexOf(exception, name) > -1
     )
 
+  convertFontSize: (size) ->
+    if _.isString(size) and size.indexOf('px') > -1
+      sources = _.keys(DOM.FONT_SIZES)
+      targets = _.values(DOM.FONT_SIZES)
+    else
+      targets = _.keys(DOM.FONT_SIZES)
+      sources = _.values(DOM.FONT_SIZES)
+    for i,s of sources
+      return targets[i] if parseInt(size) <= parseInt(s)
+    return _.last(targets)
+
   getAttributes: (node) ->
     return {} unless node.attributes?
     attributes = {}
@@ -129,6 +140,19 @@ DOM =
       attr = node.attributes[i]
       attributes[attr.name] = attr.value
     return attributes
+
+  getChildAtOffset: (node, offset) ->
+    child = node.firstChild
+    length = DOM.getNodeLength(child)
+    while child?
+      break if offset < length
+      offset -= length
+      child = child.nextSibling
+      length = DOM.getNodeLength(child)
+    unless child?
+      child = node.lastChild
+      offset = DOM.getNodeLength(child)
+    return [child, offset]
 
   getChildNodes: (parent) ->
     return _.map(parent.childNodes)
@@ -144,6 +168,21 @@ DOM =
 
   getDefaultOption: (select) ->
     return select.querySelector('option[selected]')
+
+  getNextLineNode: (curNode, root) ->
+    nextNode = curNode.nextSibling
+    if !nextNode? and curNode.parentNode != root
+      nextNode = curNode.parentNode.nextSibling
+    if nextNode? and DOM.LIST_TAGS[nextNode.tagName]?
+      nextNode = nextNode.firstChild
+    return nextNode
+
+  getNodeLength: (node) ->
+    return 0 unless node?
+    length = DOM.getText(node).length
+    if DOM.isElement(node)
+      length += node.querySelectorAll(_.keys(DOM.EMBED_TAGS).join(',')).length
+    return length
 
   getSelectValue: (select) ->
     return if select.selectedIndex > -1 then select.options[select.selectedIndex].value else ''
@@ -192,6 +231,15 @@ DOM =
 
   isTextNode: (node) ->
     return node?.nodeType == DOM.TEXT_NODE
+
+  mergeNodes: (newNode, oldNode) ->
+    if DOM.isElement(newNode)
+      DOM.moveChildren(newNode, oldNode)
+      DOM.normalize(newNode)
+    else
+      text = DOM.getText(newNode) + DOM.getText(oldNode)
+      DOM.setText(newNode, text)
+    DOM.removeNode(oldNode)
 
   moveChildren: (newParent, oldParent) ->
     _.each(DOM.getChildNodes(oldParent), (child) ->
@@ -269,6 +317,43 @@ DOM =
         node.textContent = text
       when DOM.TEXT_NODE then node.data = text
       else return # Noop
+
+  # refNode is node after split point, root is parent of eldest node we want split (root will not be split)
+  splitAncestors: (refNode, root, force = false) ->
+    return refNode if refNode == root or refNode.parentNode == root
+    if refNode.previousSibling? or force
+      parentNode = refNode.parentNode
+      parentClone = parentNode.cloneNode(false)
+      parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
+      while refNode?
+        nextNode = refNode.nextSibling
+        parentClone.appendChild(refNode)
+        refNode = nextNode
+      return DOM.splitAncestors(parentClone, root)
+    else
+      return DOM.splitAncestors(refNode.parentNode, root)
+
+  splitNode: (node, offset, force = false) ->
+    # Check if split necessary
+    nodeLength = DOM.getNodeLength(node)
+    offset = Math.max(0, offset)
+    offset = Math.min(offset, nodeLength)
+    return [node.previousSibling, node, false] unless force or offset != 0
+    return [node, node.nextSibling, false] unless force or offset != nodeLength
+    if node.nodeType == DOM.TEXT_NODE
+      after = node.splitText(offset)
+      return [node, after, true]
+    else
+      left = node
+      right = node.cloneNode(false)
+      node.parentNode.insertBefore(right, left.nextSibling)
+      [child, offset] = DOM.getChildAtOffset(node, offset)
+      [childLeft, childRight] = DOM.splitNode(child, offset)
+      while childRight != null
+        nextRight = childRight.nextSibling
+        right.appendChild(childRight)
+        childRight = nextRight
+      return [left, right, true]
 
   switchTag: (node, newTag) ->
     newTag = newTag.toUpperCase()

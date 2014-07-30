@@ -5,7 +5,6 @@ Leaf       = require('./leaf')
 Line       = require('./line')
 LinkedList = require('./lib/linked-list')
 Normalizer = require('./normalizer')
-Utils      = require('./utils')
 Tandem     = require('tandem-core')
 
 
@@ -98,14 +97,14 @@ class Line extends LinkedList.Node
         targetNode = leaf.node
         # Identify node to modify
         if leaf.formats[name]?
-          Utils.splitAncestors(targetNode, @node)
+          DOM.splitAncestors(targetNode, @node)
           while !format.match(targetNode)
             targetNode = targetNode.parentNode
         # Isolate target node
         if leafOffset > 0
-          [leftNode, targetNode] = Utils.splitNode(targetNode, leafOffset)
+          [leftNode, targetNode] = DOM.splitNode(targetNode, leafOffset)
         if leaf.length > leafOffset + length  # leaf.length does not update with splitNode
-          [targetNode, rightNode] = Utils.splitNode(targetNode, length)
+          [targetNode, rightNode] = DOM.splitNode(targetNode, length)
         format.add(targetNode, value)
       length -= leaf.length - leafOffset
       leafOffset = 0
@@ -123,8 +122,8 @@ class Line extends LinkedList.Node
       node = _.reduce(formats, (node, value, name) =>
         return @doc.formats[name].add(node, value)
       , @node.ownerDocument.createTextNode(text))
-      [prevNode, nextNode] = Utils.splitNode(leaf.node, leafOffset)
-      nextNode = Utils.splitAncestors(nextNode, @node) if nextNode
+      [prevNode, nextNode] = DOM.splitNode(leaf.node, leafOffset)
+      nextNode = DOM.splitAncestors(nextNode, @node) if nextNode
       @node.insertBefore(node, nextNode)
       this.rebuild()
 
@@ -139,7 +138,7 @@ class Line extends LinkedList.Node
       )
         return false
     @node = Normalizer.normalizeNode(@node)
-    if Utils.getNodeLength(@node) == 0 and !@node.querySelector(DOM.DEFAULT_BREAK_TAG)
+    if DOM.getNodeLength(@node) == 0 and !@node.querySelector(DOM.DEFAULT_BREAK_TAG)
       @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
     @leaves = new LinkedList()
     @formats = _.reduce(@doc.formats, (formats, format, name) =>

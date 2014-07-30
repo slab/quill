@@ -1,6 +1,5 @@
 _     = require('lodash')
 DOM   = require('./dom')
-Utils = require('./utils')
 
 
 class Format
@@ -43,7 +42,7 @@ class Format
       style: 'fontSize'
       default: '13px'
       prepare: (doc, value) ->
-        doc.execCommand('fontSize', false, Utils.convertFontSize(value))
+        doc.execCommand('fontSize', false, DOM.convertFontSize(value))
 
     link:
       tag: 'A'
@@ -80,9 +79,9 @@ class Format
       parentNode = @document.createElement(@config.parentTag)
       DOM.wrap(parentNode, node)
       if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
-        Utils.mergeNodes(node.parentNode.previousSibling, node.parentNode)
+        DOM.mergeNodes(node.parentNode.previousSibling, node.parentNode)
       if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
-        Utils.mergeNodes(node.parentNode, node.parentNode.nextSibling)
+        DOM.mergeNodes(node.parentNode, node.parentNode.nextSibling)
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if DOM.VOID_TAGS[formatNode.tagName]?
@@ -144,8 +143,8 @@ class Format
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
       if this.isType(Format.types.LINE)
-        Utils.splitAncestors(node, node.parentNode.parentNode) if node.previousSibling?
-        Utils.splitAncestors(node.nextSibling, node.parentNode.parentNode) if node.nextSibling?
+        DOM.splitAncestors(node, node.parentNode.parentNode) if node.previousSibling?
+        DOM.splitAncestors(node.nextSibling, node.parentNode.parentNode) if node.nextSibling?
         node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
       else
         node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)

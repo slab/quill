@@ -1,6 +1,5 @@
 _          = require('lodash')
 DOM        = require('./dom')
-Utils      = require('./utils')
 Normalizer = require('./normalizer')
 
 
@@ -41,7 +40,7 @@ _.each([1..9], (i) ->
   DEFAULT_STYLES[rule] = { 'list-style-type': LIST_STYLES[i%3] }
   rule += ' > li'
 )
-DEFAULT_STYLES[DOM.DEFAULT_BREAK_TAG] = { 'display': 'none' } if Utils.isIE(10)
+DEFAULT_STYLES[DOM.DEFAULT_BREAK_TAG] = { 'display': 'none' } if DOM.isIE(10)
 
 
 class Renderer

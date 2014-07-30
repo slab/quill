@@ -13,7 +13,6 @@ Quill.Line       = require('../src/line')
 Quill.Normalizer = require('../src/normalizer')
 Quill.Renderer   = require('../src/renderer')
 Quill.Selection  = require('../src/selection')
-Quill.Utils      = require('../src/utils')
 
 Quill.Lib =
   EventEmitter2 : require('eventemitter2').EventEmitter2

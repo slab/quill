@@ -1,7 +1,6 @@
 _             = require('lodash')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 DOM           = require('../dom')
-Utils         = require('../utils')
 
 
 class MultiCursor extends EventEmitter2
@@ -129,7 +128,7 @@ class MultiCursor extends EventEmitter2
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
     guide = @container.ownerDocument.createElement('span')
     if leaf?
-      [leftNode, rightNode, didSplit] = Utils.splitNode(leaf.node, offset)
+      [leftNode, rightNode, didSplit] = DOM.splitNode(leaf.node, offset)
       DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
       leaf.node.parentNode.insertBefore(guide, rightNode)
     else
