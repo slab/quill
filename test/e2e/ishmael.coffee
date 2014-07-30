@@ -6,12 +6,12 @@ cleanLines = (html) ->
 
 describe('Editing text', ->
   browser.get('http://localhost:9000/test/fixtures/e2e.html')
-  startRange = browser.findElement(By.id('start-range'))
-  endRange = browser.findElement(By.id('end-range'))
-  deltaOutput = browser.findElement(By.id('delta'))
+  startRange = element(By.id('start-range'))
+  endRange = element(By.id('end-range'))
+  deltaOutput = element(By.id('delta'))
 
   browser.switchTo().frame('quill-1')
-  editor = browser.findElement(By.className('editor-container'))
+  editor = element(By.className('editor-container'))
   updateEditor = (switchBack = true) ->
     browser.switchTo().defaultContent()
     browser.executeScript('quill.editor.checkUpdate()')
@@ -89,38 +89,138 @@ describe('Editing text', ->
   )
 
   it('move cursor', ->
-
+    editor.sendKeys(protractor.Key.ARROW_LEFT)
+    updateEditor(false)
+    expect(startRange.getText()).toEqual('1529')
+    expect(endRange.getText()).toEqual('1529')
+    browser.switchTo().frame('quill-1')
+    [0..15].forEach( ->   # More than enough times to get back to the top
+      editor.sendKeys(protractor.Key.ARROW_UP)
+    )
+    updateEditor(false)
+    expect(startRange.getText()).toEqual('0')
+    expect(endRange.getText()).toEqual('0')
+    browser.switchTo().frame('quill-1')
+    [0..3].forEach( ->
+      editor.sendKeys(protractor.Key.ARROW_RIGHT)
+    )
+    updateEditor(false)
+    expect(startRange.getText()).toEqual('4')
+    expect(endRange.getText()).toEqual('4')
   )
 
-  it('backspace + delete', ->
+  it('backspace', ->
+    [1..4].forEach( ->
+      editor.sendKeys(protractor.Key.BACK_SPACE)
+    )
+    updateEditor()
+    firstLine = element.all(By.css('.editor-container div')).first()
+    expect(firstLine.getOuterHtml().then(cleanLines)).toEqual('<div>Whale</div>')
+  )
 
+  it('delete', ->
+    [1..5].forEach( ->
+      editor.sendKeys(protractor.Key.DELETE)
+    )
+    updateEditor()
+    lines = element.all(By.css('.editor-container div'))
+    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
+    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
+  )
+
+  it('delete newline', ->
+    editor.sendKeys(protractor.Key.DELETE)
+    updateEditor()
+    lines = element.all(By.css('.editor-container div'))
+    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
+    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div>Chapter 1. Loomings.</div>')
   )
 
   it('preformat', ->
-
+    browser.switchTo().defaultContent()
+    element(By.css('.ql-size')).click()
+    element(By.cssContainingText('.ql-size option', 'Huge')).click()
+    browser.switchTo().frame('quill-1')
+    text = 'Moby Dick'
+    editor.sendKeys(text)
+    updateEditor()
+    firstLine = element.all(By.css('.editor-container div')).first()
+    expect(firstLine.getOuterHtml().then(cleanLines)).toEqual(
+      "<div><span style=\"font-size: 32px;\">#{text}</span></div>"
+    )
+    browser.switchTo().defaultContent()
+    expectedDelta = {
+      startLength: 1521
+      endLength: text.length + 1521
+      ops: [
+        { value: text, attributes: { size: '32px' } }
+        { start: 0, end: 1521, attributes: {} }
+      ]
+    }
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
   )
 
-  it('format', ->
-
+  it('hotkey format', ->
+    editor.sendKeys(protractor.Key.ARROW_RIGHT)
+    keys = [1..20].map( ->
+      return protractor.Key.ARROW_RIGHT
+    )
+    keys.unshift(protractor.Key.SHIFT)
+    keys.push(protractor.Key.NULL)
+    editor.sendKeys(keys...)
+    editor.sendKeys(protractor.Key.chord(protractor.Key.META, 'b'))
+    updateEditor()
+    lines = element.all(By.css('.editor-container div'))
+    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual(
+      '<div><b>Chapter 1. Loomings.</b></div>'
+    )
+    browser.switchTo().defaultContent()
+    expectedDelta = {
+      startLength: 1530
+      endLength: 1530
+      ops: [
+        { start: 0, end: 10, attributes: {} }
+        { start: 10, end: 30, attributes: { bold: true } }
+        { start: 30, end: 1530, attributes: {} }
+      ]
+    }
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
   )
 
   it('line format', ->
-
-  )
-
-  it('copy + paste', ->
-
-  )
-
-  it('undo', ->
-
-  )
-
-  it('redo', ->
-
+    editor.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_UP))
+    browser.switchTo().defaultContent()
+    element(By.css('.ql-align')).click()
+    element(By.cssContainingText('.ql-align option', 'Center')).click()
+    updateEditor()
+    lines = element.all(By.css('.editor-container div'))
+    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual(
+      '<div style="text-align: center;"><span style="font-size: 32px;">Moby Dick</span></div>'
+    )
+    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual(
+      '<div style="text-align: center;"><b>Chapter 1. Loomings.</b></div>'
+    )
+    browser.switchTo().defaultContent()
+    expectedDelta = {
+      startLength: 1530
+      endLength: 1530
+      ops: [
+        { start: 0, end: 9, attributes: {} }
+        { start: 9, end: 10, attributes: { align: 'center' } }
+        { start: 10, end: 30, attributes: {} }
+        { start: 30, end: 31, attributes: { align: 'center' } }
+        { start: 31, end: 1530, attributes: {} }
+      ]
+    }
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
   )
 
   it('blur', ->
-
+    browser.switchTo().defaultContent()
+    startRange.click()    # Any element outside editor to lose focus
+    updateEditor()        # Blur currently requires two update cycles to trigger
+    updateEditor(false)
+    expect(startRange.getText()).toEqual('')
+    expect(endRange.getText()).toEqual('')
   )
 )
