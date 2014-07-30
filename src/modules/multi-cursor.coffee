@@ -1,6 +1,7 @@
-_             = require('lodash')
+Quill         = require('../quill')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-DOM           = require('../dom')
+_             = Quill.require('lodash')
+DOM           = Quill.require('dom')
 
 
 class MultiCursor extends EventEmitter2
@@ -17,7 +18,7 @@ class MultiCursor extends EventEmitter2
     CURSOR_MOVED: 'cursor-moved'
     CURSOR_REMOVED: 'cursor-removed'
 
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     @cursors = {}
     @container = @quill.addContainer('cursor-container', true)
     @quill.addStyles(
@@ -140,4 +141,5 @@ class MultiCursor extends EventEmitter2
     @quill.editor.selection.update('silent')
 
 
+Quill.registerModule('multi-cursor', MultiCursor)
 module.exports = MultiCursor

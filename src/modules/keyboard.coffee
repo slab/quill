@@ -1,6 +1,7 @@
-_      = require('lodash')
-DOM    = require('../dom')
-Tandem = require('tandem-core')
+Quill  = require('../quill')
+_      = Quill.require('lodash')
+DOM    = Quill.require('dom')
+Tandem = Quill.require('tandem-core')
 
 
 class Keyboard
@@ -11,7 +12,7 @@ class Keyboard
     OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
 
-  constructor: (@quill, @utils, options) ->
+  constructor: (@quill, options) ->
     @hotkeys = {}
     this._initListeners()
     this._initHotkeys()
@@ -91,4 +92,5 @@ class Keyboard
     @quill.setSelection(range.start + 1, range.start + 1)
 
 
+Quill.registerModule('keyboard', Keyboard)
 module.exports = Keyboard

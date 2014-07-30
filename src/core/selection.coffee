@@ -2,7 +2,7 @@ _          = require('lodash')
 DOM        = require('./dom')
 Leaf       = require('./leaf')
 Normalizer = require('./normalizer')
-Range      = require('./lib/range')
+Range      = require('../lib/range')
 
 
 class Selection

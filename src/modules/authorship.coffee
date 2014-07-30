@@ -1,6 +1,7 @@
-_      = require('lodash')
-DOM    = require('../dom')
-Tandem = require('tandem-core')
+Quill  = require('../quill')
+_      = Quill.require('lodash')
+DOM    = Quill.require('dom')
+Tandem = Quill.require('tandem-core')
 
 
 class Authorship
@@ -9,7 +10,7 @@ class Authorship
     color: 'white'
     enabled: false
 
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     this.attachButton(@options.button) if @options.button?
     this.enable() if @options.enabled
     @quill.addFormat('author', { class: 'author-' })
@@ -52,4 +53,5 @@ class Authorship
     this.enable(false)
 
 
+Quill.registerModule('authorship', Authorship)
 module.exports = Authorship

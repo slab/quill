@@ -2,7 +2,7 @@ _          = require('lodash')
 DOM        = require('./dom')
 Format     = require('./format')
 Line       = require('./line')
-LinkedList = require('./lib/linked-list')
+LinkedList = require('../lib/linked-list')
 Normalizer = require('./normalizer')
 Tandem     = require('tandem-core')
 

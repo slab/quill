@@ -1,6 +1,7 @@
-_       = require('lodash')
-DOM     = require('../dom')
+Quill   = require('../quill')
 Tooltip = require('./tooltip')
+_       = Quill.require('lodash')
+DOM     = Quill.require('dom')
 
 
 class LinkTooltip extends Tooltip
@@ -23,7 +24,7 @@ class LinkTooltip extends Tooltip
       <a href="javascript:;" class="change">Change</a>
       <a href="javascript:;" class="done">Done</a>'
 
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
@@ -101,4 +102,5 @@ class LinkTooltip extends Tooltip
     return this._normalizeURL(text)
 
 
+Quill.registerModule('link-tooltip', LinkTooltip)
 module.exports = LinkTooltip

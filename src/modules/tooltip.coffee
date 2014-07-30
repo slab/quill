@@ -1,6 +1,7 @@
-_          = require('lodash')
-DOM        = require('../dom')
-Normalizer = require('../normalizer')
+Quill      = require('../quill')
+Normalizer = require('../core/normalizer')
+_          = Quill.require('lodash')
+DOM        = Quill.require('dom')
 
 
 class Tooltip
@@ -20,7 +21,7 @@ class Tooltip
 
   @HIDE_MARGIN = '-10000px'
 
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     @quill.addStyles(@options.styles)
     @container = @quill.addContainer('tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
@@ -93,4 +94,5 @@ class Tooltip
     return [left, top]
 
 
+Quill.registerModule('tooltip', Tooltip)
 module.exports = Tooltip

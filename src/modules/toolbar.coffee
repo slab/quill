@@ -1,5 +1,6 @@
-_     = require('lodash')
-DOM   = require('../dom')
+Quill = require('../quill')
+_     = Quill.require('lodash')
+DOM   = Quill.require('dom')
 
 
 class Toolbar
@@ -12,7 +13,7 @@ class Toolbar
     TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
     TOOLTIP : { 'image', 'link' }
 
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
     @inputs = {}
@@ -142,4 +143,5 @@ class Toolbar
     , formatsArr[0] or {})
 
 
+Quill.registerModule('toolbar', Toolbar)
 module.exports = Toolbar

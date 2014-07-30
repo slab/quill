@@ -1,4 +1,4 @@
-_     = require('lodash')
+_ = require('lodash')
 
 lastKeyEvent = null    # Workaround for fact we can't dispatch keyboard event via javascript
 

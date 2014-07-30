@@ -1,11 +1,11 @@
-_        = require('lodash')
-DOM      = require('../dom')
-Document = require('../document')
-Tandem   = require('tandem-core')
-
+Quill    = require('../quill')
+Document = require('../core/document')
+_        = Quill.require('lodash')
+DOM      = Quill.require('dom')
+Tandem   = Quill.require('tandem-core')
 
 class PasteManager
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     @container = @quill.addContainer('paste-container')
     @container.setAttribute('contenteditable', true)
     @quill.addStyles(
@@ -41,4 +41,5 @@ class PasteManager
     )
 
 
+Quill.registerModule('paste-manager', PasteManager)
 module.exports = PasteManager

@@ -1,6 +1,8 @@
-_       = require('lodash')
-DOM     = require('../dom')
+Quill   = require('../quill')
 Tooltip = require('./tooltip')
+_       = Quill.require('lodash')
+DOM     = Quill.require('dom')
+Tandem  = Quill.require('tandem-core')
 
 
 class ImageTooltip extends Tooltip
@@ -53,7 +55,7 @@ class ImageTooltip extends Tooltip
       <a href="javascript:;" class="cancel">Cancel</a>
       <a href="javascript:;" class="insert">Insert</a>'
 
-  constructor: (@quill, @utils, @options) ->
+  constructor: (@quill, @options) ->
     @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
@@ -111,4 +113,5 @@ class ImageTooltip extends Tooltip
     return url
 
 
+Quill.registerModule('image-tooltip', ImageTooltip)
 module.exports = ImageTooltip

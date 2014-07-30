@@ -1,7 +1,7 @@
 _          = require('lodash')
 DOM        = require('./dom')
 Format     = require('./format')
-LinkedList = require('./lib/linked-list')
+LinkedList = require('../lib/linked-list')
 
 
 class Leaf extends LinkedList.Node

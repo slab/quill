@@ -3,7 +3,7 @@ DOM        = require('./dom')
 Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
-LinkedList = require('./lib/linked-list')
+LinkedList = require('../lib/linked-list')
 Normalizer = require('./normalizer')
 Tandem     = require('tandem-core')
 

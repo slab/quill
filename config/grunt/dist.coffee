@@ -9,7 +9,7 @@ module.exports = (grunt) ->
       transform: ['coffeeify']
     quill:
       files:
-        'dist/quill.js': ['src/quill.coffee']
+        'dist/quill.js': ['src/index.coffee']
   )
 
   grunt.config('clean',

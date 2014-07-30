@@ -2,9 +2,9 @@ _             = require('lodash')
 _.str         = require('underscore.string')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-DOM           = require('./dom')
-Editor        = require('./editor')
-Format        = require('./format')
+DOM           = require('./core/dom')
+Editor        = require('./core/editor')
+Format        = require('./core/format')
 Range         = require('./lib/range')
 Tandem        = require('tandem-core')
 
@@ -15,9 +15,6 @@ class Quill extends EventEmitter2
 
   @modules: []
   @themes: []
-  @utils:
-    _: _
-    dom: DOM
 
   @DEFAULTS:
     formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
@@ -49,6 +46,13 @@ class Quill extends EventEmitter2
   @registerTheme: (name, theme) ->
     console.warn("Overwriting #{name} theme") if Quill.themes[name]?
     Quill.themes[name] = theme
+
+  @require: (name) ->
+    switch name
+      when 'lodash' then return _
+      when 'dom' then return DOM
+      when 'tandem-core' then return Tandem
+      else return null
 
 
   constructor: (container, options = {}) ->
@@ -83,7 +87,7 @@ class Quill extends EventEmitter2
     throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
-    @modules[name] = new moduleClass(this, Quill.utils, options)
+    @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
@@ -211,16 +215,6 @@ class Quill extends EventEmitter2
     params[3] ?= Quill.sources.API
     return params
 
-
-Quill.registerModule('authorship',    require('./modules/authorship'))
-Quill.registerModule('image-tooltip', require('./modules/image-tooltip'))
-Quill.registerModule('keyboard',      require('./modules/keyboard'))
-Quill.registerModule('link-tooltip',  require('./modules/link-tooltip'))
-Quill.registerModule('multi-cursor',  require('./modules/multi-cursor'))
-Quill.registerModule('paste-manager', require('./modules/paste-manager'))
-Quill.registerModule('tooltip',       require('./modules/tooltip'))
-Quill.registerModule('toolbar',       require('./modules/toolbar'))
-Quill.registerModule('undo-manager',  require('./modules/undo-manager'))
 
 Quill.registerTheme('default', require('./themes/default'))
 Quill.registerTheme('snow',    require('./themes/snow'))
