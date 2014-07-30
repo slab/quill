@@ -25,19 +25,5 @@ env:
     - TEST=unit-ipad
     - TEST=unit-iphone
     - TEST=unit-android
-    - TEST=wd-mac-chrome
-    - TEST=wd-mac-firefox
-    - TEST=wd-windows-firefox
-    - TEST=wd-windows-chrome
-    - TEST=wd-windows-ie-11
-    - TEST=wd-windows-ie-10
-    - TEST=wd-windows-ie-9
-    - TEST=e2e-mac-chrome
-    - TEST=e2e-mac-firefox
-    - TEST=e2e-windows-firefox
-    - TEST=e2e-windows-chrome
-    - TEST=e2e-windows-ie-11
-    - TEST=e2e-windows-ie-10
-    - TEST=e2e-windows-ie-9
 addons:
   sauce_connect: true

@@ -14,9 +14,10 @@ remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
           version: config[2]
         sauceUser: process.env.SAUCE_USERNAME
         sauceKey: process.env.SAUCE_ACCESS_KEY
-        specs: ["test/#{test}/*.coffee"]
+        specs: ['test/wd/*.coffee']
       jasmineNodeOpts:
         isVerbose: false
+    options.args.exclude = ['test/wd/e2e.coffee'] if test == 'wd'
     if process.env.TRAVIS
       options.args.capabilities.build = 'travis-' + process.env.TRAVIS_BUILD_ID
       options.args.capabilities['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER
@@ -38,12 +39,13 @@ module.exports = (grunt) ->
       options:
         configFile: 'config/protractor.js'
         args:
+          exclude: ['test/wd/e2e.coffee']
           specs: ['test/wd/*.coffee']
     e2e:
       options:
         configFile: 'config/protractor.js'
         args:
-          specs: ['test/e2e/*.coffee']
+          specs: ['test/wd/e2e.coffee']
   ))
 
   grunt.registerMultiTask('webdriver-manager', 'Protractor webdriver manager', ->
