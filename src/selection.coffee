@@ -56,7 +56,7 @@ class Selection
   shiftAfter: (index, length, fn) ->
     range = this.getRange()
     fn()
-    if range?
+    if range? and length != 0
       range.shift(index, length)
       this.setRange(range, 'silent')
 
