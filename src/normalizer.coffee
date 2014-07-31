@@ -35,6 +35,7 @@ Normalizer =
     'U'
     'A'
     'IMG'
+    'OL'
     'UL'
     'LI'
   }
@@ -54,6 +55,7 @@ Normalizer =
     lineNode = Normalizer.pullBlocks(lineNode)
     lineNode = Normalizer.normalizeNode(lineNode)
     Normalizer.unwrapText(lineNode)
+    lineNode = lineNode.firstChild if lineNode? and DOM.LIST_TAGS[lineNode.tagName]?
     return lineNode
 
   normalizeNode: (node) ->

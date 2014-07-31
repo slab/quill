@@ -71,6 +71,11 @@ DOM =
     'IMG'
   }
 
+  LINE_TAGS: {
+    'DIV'
+    'LI'
+  }
+
   LIST_TAGS: {
     'OL'
     'UL'

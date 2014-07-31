@@ -26,12 +26,18 @@ describe('Document', ->
       'pull and break':
         initial:  '<div><div><div>A</div>B<br>C</div></div>'
         expected: '<div>A</div><div>B<br></div><div>C</div>'
+      'list':
+        initial:  '<div><ul><li>line</li></ul></div>'
+        expected: '<ul><li>line</li></ul>'
 
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = "<div>#{test.initial}</div>"
         doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
         expect(@container.firstChild).toEqualHTML(test.expected, true)
+        _.each(doc.lines.toArray(), (line) ->
+          expect(Quill.DOM.LINE_TAGS[line.node.tagName]).toBeDefined()
+        )
       )
     )
   )
