@@ -99,7 +99,7 @@ Normalizer =
           Utils.splitAncestors(curNode, lineNode.parentNode)
         if curNode.nextSibling?
           Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode)
-        if !DOM.LIST_TAGS[curNode.tagName]?
+        if !DOM.LIST_TAGS[curNode.tagName]? or !curNode.firstChild
           DOM.unwrap(curNode)
           Normalizer.pullBlocks(lineNode)
         else
