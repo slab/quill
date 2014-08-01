@@ -134,8 +134,8 @@ class Line extends LinkedList.Node
 
   rebuild: (force = false) ->
     if !force and @outerHTML? and @outerHTML == @node.outerHTML
-      if _.all(@leaves.toArray(), (leaf) ->
-        return leaf.node.parentNode?
+      if _.all(@leaves.toArray(), (leaf) =>
+        return DOM.isAncestor(@node, leaf.node)
       )
         return false
     @node = Normalizer.normalizeNode(@node)

@@ -218,6 +218,13 @@ DOM =
           DOM.removeNode(curNode.nextSibling)
       curNode = nextNode
 
+  isAncestor: (ancestor, node, inclusive = false) ->
+    return inclusive if ancestor == node
+    while node
+      return true if node == ancestor
+      node = node.parentNode
+    return false
+
   isIE: (maxVersion) ->
     version = document.documentMode
     return version and maxVersion >= version
