@@ -1,4 +1,4 @@
-/*! Quill Editor v0.16.0
+/*! Quill Editor v0.16.1
  *  https://quilljs.com/
  *  Copyright (c) 2014, Jason Chen
  *  Copyright (c) 2013, salesforce.com
@@ -8,7 +8,7 @@
 /**
  * @license
  * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modern include="difference,flatten,intersection,last,all,each,invoke,map,pluck,reduce,bind,defer,partial,clone,defaults,has,keys,omit,values,isArray,isElement,isEqual,isNumber,isObject,isString,uniqueId" --debug --output .build/lodash.js`
+ * Build: `lodash modern include="difference,flatten,intersection,last,all,each,indexOf,invoke,map,pluck,reduce,bind,defer,partial,clone,defaults,has,keys,omit,values,isArray,isElement,isEqual,isNumber,isObject,isString,uniqueId" --debug --output .build/lodash.js`
  * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -5418,7 +5418,7 @@ if (typeof module !== 'undefined') {
 },{}],13:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -5440,17 +5440,17 @@ module.exports={
     "glob": "~4.0.4",
     "grunt": "~0.4.3",
     "grunt-browserify": "~2.1.0",
-    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-contrib-compress": "~0.9.1",
-    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-concat": "~0.5.0",
     "grunt-contrib-connect": "~0.8.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-stylus": "~0.18.0",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-karma": "~0.8.0",
     "grunt-lodash": "~0.3.0",
-    "grunt-protractor-runner": "~1.0.0",
+    "grunt-protractor-runner": "~1.1.0",
     "harp": "~0.12.1",
     "istanbul": "~0.3.0",
     "jquery": "~2.1.1",
@@ -5465,7 +5465,7 @@ module.exports={
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.6.0",
-    "protractor": "~0.24.2",
+    "protractor": "1.0.0",
     "stylus": "~0.47.1",
     "watchify": "~0.10.2"
   },
@@ -5711,8 +5711,6 @@ var DOM, lastKeyEvent, _;
 
 _ = _dereq_('lodash');
 
-_.str = _dereq_('underscore.string');
-
 lastKeyEvent = null;
 
 DOM = {
@@ -5785,6 +5783,10 @@ DOM = {
   EMBED_TAGS: {
     'IMG': 'IMG'
   },
+  LINE_TAGS: {
+    'DIV': 'DIV',
+    'LI': 'LI'
+  },
   LIST_TAGS: {
     'OL': 'OL',
     'UL': 'UL'
@@ -5814,7 +5816,7 @@ DOM = {
     if (node.classList != null) {
       return node.classList.add(cssClass);
     } else if (node.className != null) {
-      return node.className = _.str.trim(node.className + ' ' + cssClass);
+      return node.className = (node.className + ' ' + cssClass).trim();
     }
   },
   addEventListener: function(node, eventName, listener) {
@@ -5889,8 +5891,8 @@ DOM = {
       var name, value, _ref;
       _ref = str.split(':'), name = _ref[0], value = _ref[1];
       if (name && value) {
-        name = _.str.trim(name);
-        value = _.str.trim(value);
+        name = name.trim();
+        value = value.trim();
         styles[name.toLowerCase()] = value;
       }
       return styles;
@@ -5966,6 +5968,21 @@ DOM = {
       _results.push(curNode = nextNode);
     }
     return _results;
+  },
+  isAncestor: function(ancestor, node, inclusive) {
+    if (inclusive == null) {
+      inclusive = false;
+    }
+    if (ancestor === node) {
+      return inclusive;
+    }
+    while (node) {
+      if (node === ancestor) {
+        return true;
+      }
+      node = node.parentNode;
+    }
+    return false;
   },
   isIE: function(maxVersion) {
     var version;
@@ -6141,7 +6158,7 @@ DOM = {
 module.exports = DOM;
 
 
-},{"lodash":"M4+//f","underscore.string":12}],16:[function(_dereq_,module,exports){
+},{"lodash":"M4+//f"}],16:[function(_dereq_,module,exports){
 var DOM, Document, Editor, Line, Renderer, Selection, Tandem, _;
 
 _ = _dereq_('lodash');
@@ -7222,9 +7239,11 @@ Line = (function(_super) {
       force = false;
     }
     if (!force && (this.outerHTML != null) && this.outerHTML === this.node.outerHTML) {
-      if (_.all(this.leaves.toArray(), function(leaf) {
-        return leaf.node.parentNode != null;
-      })) {
+      if (_.all(this.leaves.toArray(), (function(_this) {
+        return function(leaf) {
+          return DOM.isAncestor(_this.node, leaf.node);
+        };
+      })(this))) {
         return false;
       }
     }
@@ -7631,9 +7650,8 @@ Keyboard = (function() {
   Keyboard.prototype._initListeners = function() {
     return DOM.addEventListener(this.quill.root, 'keydown', (function(_this) {
       return function(event) {
-        var prevent, range;
+        var prevent;
         prevent = false;
-        range = _this.quill.getSelection();
         _.each(_this.hotkeys[event.which], function(hotkey) {
           if ((hotkey.metaKey != null) && (event.metaKey !== hotkey.metaKey && event.ctrlKey !== hotkey.metaKey)) {
             return;
@@ -7641,7 +7659,7 @@ Keyboard = (function() {
           if ((hotkey.shiftKey != null) && event.shiftKey !== hotkey.shiftKey) {
             return;
           }
-          return prevent = hotkey.callback(range) === false || prevent;
+          return prevent = hotkey.callback(_this.quill.getSelection()) === false || prevent;
         });
         return !prevent;
       };
@@ -8685,6 +8703,7 @@ Normalizer = {
     'U': 'U',
     'A': 'A',
     'IMG': 'IMG',
+    'OL': 'OL',
     'UL': 'UL',
     'LI': 'LI'
   },
@@ -8706,6 +8725,9 @@ Normalizer = {
     lineNode = Normalizer.pullBlocks(lineNode);
     lineNode = Normalizer.normalizeNode(lineNode);
     Normalizer.unwrapText(lineNode);
+    if ((lineNode != null) && (DOM.LIST_TAGS[lineNode.tagName] != null)) {
+      lineNode = lineNode.firstChild;
+    }
     return lineNode;
   },
   normalizeNode: function(node) {
@@ -8772,7 +8794,7 @@ Normalizer = {
         if (curNode.nextSibling != null) {
           Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode);
         }
-        if (DOM.LIST_TAGS[curNode.tagName] == null) {
+        if ((DOM.LIST_TAGS[curNode.tagName] == null) || !curNode.firstChild) {
           DOM.unwrap(curNode);
           Normalizer.pullBlocks(lineNode);
         } else {
@@ -9337,7 +9359,8 @@ Renderer = (function() {
     this.options = options != null ? options : {};
     this.container.innerHTML = '';
     _ref = Renderer.buildFrame(this.container), this.root = _ref[0], this.iframe = _ref[1];
-    this.root.id = this.options.id;
+    this.root.setAttribute('id', this.options.id);
+    this.iframe.setAttribute('name', this.options.id);
     DOM.addClass(this.root, 'editor-container');
     DOM.addClass(this.container, 'ql-container');
     DOM.addEventListener(this.container, 'focus', (function(_this) {
