@@ -1,7 +1,7 @@
 _            = require('lodash')
 ColorPicker  = require('../../lib/color-picker')
 DefaultTheme = require('../default')
-DOM          = require('../../core/dom')
+DOM          = require('../../lib/dom')
 Picker       = require('../../lib/picker')
 
 

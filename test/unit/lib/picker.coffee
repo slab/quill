@@ -1,6 +1,6 @@
 describe('Picker', ->
   beforeEach( ->
-    @container = $('#editor-container').html(Quill.Normalizer.stripWhitespace('
+    @container = $('#editor-container').html(Quill.Lib.Normalizer.stripWhitespace('
       <select title="Font" class="ql-font">
         <option value="sans-serif" selected>Sans Serif</option>
         <option value="serif">Serif</option>
@@ -27,38 +27,38 @@ describe('Picker', ->
   it('expand/close', (done) ->
     label = @container.querySelector('.ql-picker-label')
     picker = @container.querySelector('.ql-picker')
-    Quill.DOM.triggerEvent(label, 'click')
+    Quill.Lib.DOM.triggerEvent(label, 'click')
     _.defer( ->
-      expect(Quill.DOM.hasClass(picker, 'ql-expanded')).toBe(true)
-      Quill.DOM.triggerEvent(label, 'click')
+      expect(Quill.Lib.DOM.hasClass(picker, 'ql-expanded')).toBe(true)
+      Quill.Lib.DOM.triggerEvent(label, 'click')
       _.defer( ->
-        expect(Quill.DOM.hasClass(picker, 'ql-expanded')).toBe(false)
+        expect(Quill.Lib.DOM.hasClass(picker, 'ql-expanded')).toBe(false)
         done()
       )
     )
   )
 
   it('select picker item', ->
-    Quill.DOM.triggerEvent(@container.querySelector('.ql-picker-options').lastChild, 'click')
-    expect(Quill.DOM.getText(@picker.label)).toEqual('Monospace')
+    Quill.Lib.DOM.triggerEvent(@container.querySelector('.ql-picker-options').lastChild, 'click')
+    expect(Quill.Lib.DOM.getText(@picker.label)).toEqual('Monospace')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
-      expect(Quill.DOM.hasClass(item, 'ql-selected')).toBe(i == 2)
+      expect(Quill.Lib.DOM.hasClass(item, 'ql-selected')).toBe(i == 2)
     )
   )
 
   it('select option', ->
-    Quill.DOM.selectOption(@select, 'serif')
-    expect(Quill.DOM.getText(@picker.label)).toEqual('Serif')
+    Quill.Lib.DOM.selectOption(@select, 'serif')
+    expect(Quill.Lib.DOM.getText(@picker.label)).toEqual('Serif')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
-      expect(Quill.DOM.hasClass(item, 'ql-selected')).toBe(i == 1)
+      expect(Quill.Lib.DOM.hasClass(item, 'ql-selected')).toBe(i == 1)
     )
   )
 
   it('select option mixed', ->
-    Quill.DOM.selectOption(@select, '')
-    expect(Quill.DOM.getText(@picker.label).trim()).toEqual('')
+    Quill.Lib.DOM.selectOption(@select, '')
+    expect(Quill.Lib.DOM.getText(@picker.label).trim()).toEqual('')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
-      expect(Quill.DOM.hasClass(item, 'ql-selected')).toBe(false)
+      expect(Quill.Lib.DOM.hasClass(item, 'ql-selected')).toBe(false)
     )
   )
 )

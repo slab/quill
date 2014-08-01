@@ -1,5 +1,5 @@
 _          = require('lodash')
-DOM        = require('./dom')
+DOM        = require('../lib/dom')
 Document   = require('./document')
 Line       = require('./line')
 Renderer   = require('./renderer')

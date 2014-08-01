@@ -18,7 +18,7 @@ describe('Format', ->
       format: new Quill.Format(document, Quill.Format.FORMATS.image)
       existing: '<img src="http://quilljs.com/images/cloud.png">'
       missing: 'Text'
-      removed: Quill.DOM.EMBED_TEXT
+      removed: Quill.Lib.DOM.EMBED_TEXT
       value: 'http://quilljs.com/images/cloud.png'
     link:
       format: new Quill.Format(document, Quill.Format.FORMATS.link)

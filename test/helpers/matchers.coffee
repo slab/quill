@@ -1,10 +1,10 @@
 compareNodes = (node1, node2, ignoredAttributes = []) ->
   return false unless node1.nodeType == node2.nodeType
-  if Quill.DOM.isElement(node1)
-    return false unless Quill.DOM.isElement(node2)
+  if Quill.Lib.DOM.isElement(node1)
+    return false unless Quill.Lib.DOM.isElement(node2)
     return false unless node1.tagName == node2.tagName
     [attr1, attr2] = _.map([node1, node2], (node) ->
-      attr = Quill.DOM.getAttributes(node)
+      attr = Quill.Lib.DOM.getAttributes(node)
       _.each(ignoredAttributes, (name) ->
         delete attr[name]
       )
@@ -14,14 +14,14 @@ compareNodes = (node1, node2, ignoredAttributes = []) ->
     return false unless _.isEqual(attr1, attr2)
     return false unless node1.childNodes.length == node2.childNodes.length
     equal = true
-    _.each(Quill.DOM.getChildNodes(node1), (child1, i) ->
+    _.each(Quill.Lib.DOM.getChildNodes(node1), (child1, i) ->
       if !compareNodes(child1, node2.childNodes[i], ignoredAttributes)
         equal = false
         return false
     )
     return equal
   else
-    return Quill.DOM.getText(node1) == Quill.DOM.getText(node2)
+    return Quill.Lib.DOM.getText(node1) == Quill.Lib.DOM.getText(node2)
 
 
 beforeEach( ->
@@ -44,7 +44,7 @@ beforeEach( ->
             html = html.join('') if _.isArray(html)
             html = html.innerHTML if _.isElement(html)
             div = document.createElement('div')
-            div.innerHTML = Quill.Normalizer.stripWhitespace(html)
+            div.innerHTML = Quill.Lib.Normalizer.stripWhitespace(html)
             return div
           )
           ignoredAttributes = if ignoreClassId then ['class', 'id'] else []

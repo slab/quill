@@ -1,10 +1,10 @@
 _          = require('lodash')
-DOM        = require('./dom')
+DOM        = require('../lib/dom')
 Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
 LinkedList = require('../lib/linked-list')
-Normalizer = require('./normalizer')
+Normalizer = require('../lib/normalizer')
 Tandem     = require('tandem-core')
 
 

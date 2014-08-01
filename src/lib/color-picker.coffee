@@ -1,4 +1,4 @@
-DOM    = require('../core/dom')
+DOM    = require('./dom')
 Picker = require('./picker')
 
 

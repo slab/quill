@@ -1,6 +1,6 @@
 _          = require('lodash')
-DOM        = require('./dom')
-Normalizer = require('./normalizer')
+DOM        = require('../lib/dom')
+Normalizer = require('../lib/normalizer')
 
 
 DEFAULT_STYLES =

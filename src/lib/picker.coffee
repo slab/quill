@@ -1,6 +1,6 @@
 _          = require('lodash')
-DOM        = require('../core/dom')
-Normalizer = require('../core/normalizer')
+DOM        = require('./dom')
+Normalizer = require('./normalizer')
 
 
 class Picker

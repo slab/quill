@@ -1,5 +1,5 @@
 Quill      = require('../quill')
-Normalizer = require('../core/normalizer')
+Normalizer = require('../lib/normalizer')
 _          = Quill.require('lodash')
 DOM        = Quill.require('dom')
 

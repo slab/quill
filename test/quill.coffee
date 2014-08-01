@@ -5,19 +5,19 @@ Quill = require('../src/quill')
 Quill.Delta = require('tandem-core').Delta
 
 Quill.Document   = require('../src/core/document')
-Quill.DOM        = require('../src/core/dom')
 Quill.Editor     = require('../src/core/editor')
 Quill.Format     = require('../src/core/format')
 Quill.Leaf       = require('../src/core/leaf')
 Quill.Line       = require('../src/core/line')
-Quill.Normalizer = require('../src/core/normalizer')
 Quill.Renderer   = require('../src/core/renderer')
 Quill.Selection  = require('../src/core/selection')
 
 Quill.Lib =
   EventEmitter2 : require('eventemitter2').EventEmitter2
   ColorPicker   : require('../src/lib/color-picker')
+  DOM           : require('../src/lib/dom')
   LinkedList    : require('../src/lib/linked-list')
+  Normalizer    : require('../src/lib/normalizer')
   Picker        : require('../src/lib/picker')
   Range         : require('../src/lib/range')
 

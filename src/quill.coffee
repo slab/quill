@@ -1,7 +1,7 @@
 _             = require('lodash')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-DOM           = require('./core/dom')
+DOM           = require('./lib/dom')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Range         = require('./lib/range')

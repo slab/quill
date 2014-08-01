@@ -1,7 +1,7 @@
 _          = require('lodash')
-DOM        = require('./dom')
+DOM        = require('../lib/dom')
 Leaf       = require('./leaf')
-Normalizer = require('./normalizer')
+Normalizer = require('../lib/normalizer')
 Range      = require('../lib/range')
 
 
