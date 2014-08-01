@@ -1,5 +1,4 @@
 _             = require('lodash')
-_.str         = require('underscore.string')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 DOM           = require('./core/dom')
