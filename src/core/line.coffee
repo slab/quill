@@ -20,7 +20,7 @@ class Line extends LinkedList.Node
     super(@node)
 
   buildLeaves: (node, formats) ->
-    _.each(dom(node).getChildNodes(), (node) =>
+    _.each(dom(node).childNodes(), (node) =>
       node = Normalizer.normalizeNode(node)
       nodeFormats = _.clone(formats)
       # TODO: optimize
@@ -138,7 +138,7 @@ class Line extends LinkedList.Node
       )
         return false
     @node = Normalizer.normalizeNode(@node)
-    if dom(@node).getNodeLength() == 0 and !@node.querySelector(dom.DEFAULT_BREAK_TAG)
+    if dom(@node).length() == 0 and !@node.querySelector(dom.DEFAULT_BREAK_TAG)
       @node.appendChild(@node.ownerDocument.createElement(dom.DEFAULT_BREAK_TAG))
     @leaves = new LinkedList()
     @formats = _.reduce(@doc.formats, (formats, format, name) =>

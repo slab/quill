@@ -57,7 +57,7 @@ class Document
   mergeLines: (line, lineToMerge) ->
     if lineToMerge.length > 1
       dom(line.leaves.last.node).removeNode() if line.length == 1
-      _.each(dom(lineToMerge.node).getChildNodes(), (child) ->
+      _.each(dom(lineToMerge.node).childNodes(), (child) ->
         line.node.appendChild(child) if child.tagName != dom.DEFAULT_BREAK_TAG
       )
     this.removeLine(lineToMerge)

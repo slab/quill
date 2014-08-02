@@ -69,8 +69,8 @@ Normalizer =
 
   # Removes unnecessary tags but does not modify line contents
   optimizeLine: (lineNode) ->
-    lineNodeLength = dom(lineNode).getNodeLength()
-    nodes = dom(lineNode).getDescendants()
+    lineNodeLength = dom(lineNode).length()
+    nodes = dom(lineNode).descendants()
     while nodes.length > 0
       node = nodes.pop()
       continue unless node?.parentNode?
@@ -78,7 +78,7 @@ Normalizer =
       if node.tagName == dom.DEFAULT_BREAK_TAG
         # Remove unneeded BRs
         dom(node).removeNode() unless lineNodeLength == 0
-      else if dom(node).getNodeLength() == 0
+      else if dom(node).length() == 0
         nodes.push(node.nextSibling)
         dom(node).unwrap()
       else if node.previousSibling? and node.tagName == node.previousSibling.tagName

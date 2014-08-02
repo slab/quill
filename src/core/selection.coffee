@@ -73,7 +73,7 @@ class Selection
 
   _decodePosition: (node, offset) ->
     if dom(node).isElement()
-      childIndex = _.indexOf(dom(node.parentNode).getChildNodes(), node)
+      childIndex = _.indexOf(dom(node.parentNode).childNodes(), node)
       offset += childIndex
       node = node.parentNode
     return [node, offset]
@@ -100,7 +100,7 @@ class Selection
           else
             offset = node.childNodes.length
         else
-          return [node, dom(node).getNodeLength()]
+          return [node, dom(node).length()]
 
   _getNativeSelection: ->
     return if @document.getSelection? then @document.getSelection() else null

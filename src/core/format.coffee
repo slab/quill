@@ -123,7 +123,7 @@ class Format
     if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
       return false
     if _.isString(@config.class)
-      for c in dom(node).getClasses()
+      for c in dom(node).classes()
         return true if c.indexOf(@config.class) == 0
       return false
     return true
@@ -142,7 +142,7 @@ class Format
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.class)
-      for c in dom(node).getClasses()
+      for c in dom(node).classes()
         dom(node).removeClass(c) if c.indexOf(@config.class) == 0
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
@@ -166,7 +166,7 @@ class Format
     else if _.isString(@config.style)
       return node.style[@config.style] or undefined
     else if _.isString(@config.class)
-      for c in dom(node).getClasses()
+      for c in dom(node).classes()
         return c.slice(@config.class.length) if c.indexOf(@config.class) == 0
     else if _.isString(@config.tag)
       return true

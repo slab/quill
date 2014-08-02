@@ -25,9 +25,6 @@ class Wrapper
     )
     return this
 
-  get: ->
-    return @node
-
   attributes: (attributes) ->
     if attributes
       _.each(attributes, (value, name) =>
@@ -42,30 +39,30 @@ class Wrapper
         attributes[attr.name] = attr.value
       return attributes
 
+  childNodes: ->
+    return _.map(@node.childNodes)
+
+  descendants: ->
+    return _.map(@node.getElementsByTagName('*'))
+
+  classes: ->
+    return @node.className.split(/\s+/)
+
+  get: ->
+    return @node
+
   getChildAtOffset: (offset) ->
     child = @node.firstChild
-    length = dom(child).getNodeLength()
+    length = dom(child).length()
     while child?
       break if offset < length
       offset -= length
       child = child.nextSibling
-      length = dom(child).getNodeLength()
+      length = dom(child).length()
     unless child?
       child = @node.lastChild
-      offset = dom(child).getNodeLength()
+      offset = dom(child).length()
     return [child, offset]
-
-  getChildNodes: ->
-    return _.map(@node.childNodes)
-
-  getChildren: ->
-    return _.map(@node.children)
-
-  getDescendants: ->
-    return _.map(@node.getElementsByTagName('*'))
-
-  getClasses: ->
-    return @node.className.split(/\s+/)
 
   getDefaultOption: ->
     return @node.querySelector('option[selected]')
@@ -78,31 +75,14 @@ class Wrapper
       nextNode = nextNode.firstChild
     return nextNode
 
-  getNodeLength: ->
-    return 0 unless @node?
-    length = this.text().length
-    if this.isElement()
-      length += @node.querySelectorAll(_.keys(dom.EMBED_TAGS).join(',')).length
-    return length
-
   getSelectValue: ->
     return if @node.selectedIndex > -1 then @node.options[@node.selectedIndex].value else ''
-
-  getTextNodes: ->
-    walker = @node.ownerDocument.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
-    textNodes = []
-    while textNode = walker.nextNode()
-      textNodes.push(textNode)
-    return textNodes
-
-  getWindow: ->
-    return @node.ownerDocument.defaultView or @node.ownerDocument.parentWindow
 
   hasClass: (cssClass) ->
     if @node.classList?
       return @node.classList.contains(cssClass)
     else if @node.className?
-      return _.indexOf(this.getClasses(), cssClass) > -1
+      return _.indexOf(this.classes(), cssClass) > -1
     return false
 
   isElement: ->
@@ -110,6 +90,13 @@ class Wrapper
 
   isTextNode: ->
     return @node?.nodeType == dom.TEXT_NODE
+
+  length: ->
+    return 0 unless @node?
+    length = this.text().length
+    if this.isElement()
+      length += @node.querySelectorAll(_.keys(dom.EMBED_TAGS).join(',')).length
+    return length
 
   mergeNodes: (node) ->
     $node = dom(node)
@@ -122,7 +109,7 @@ class Wrapper
     return this
 
   moveChildren: (newParent) ->
-    _.each(this.getChildNodes(), (child) ->
+    _.each(this.childNodes(), (child) ->
       newParent.appendChild(child)
     )
     return this
@@ -148,7 +135,7 @@ class Wrapper
     if @node.classList?
       return @node.classList.remove(cssClass)
     else if @node.className?
-      classArray = this.getClasses()
+      classArray = this.classes()
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       @node.className = classArray.join(' ')
     return this
@@ -199,7 +186,7 @@ class Wrapper
 
   splitNode: (offset, force = false) ->
     # Check if split necessary
-    nodeLength = this.getNodeLength()
+    nodeLength = this.length()
     offset = Math.max(0, offset)
     offset = Math.min(offset, nodeLength)
     return [@node.previousSibling, @node, false] unless force or offset != 0
@@ -265,6 +252,13 @@ class Wrapper
         when dom.TEXT_NODE then return @node.data or ""
         else return ""
 
+  textNodes: ->
+    walker = @node.ownerDocument.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
+    textNodes = []
+    while textNode = walker.nextNode()
+      textNodes.push(textNode)
+    return textNodes
+
   toggleClass: (className, state) ->
     state = !this.hasClass(className) unless state?
     if state
@@ -291,22 +285,25 @@ class Wrapper
         modifiers.push('Control') if options.ctrlKey
         modifiers.push('Meta') if options.metaKey
         modifiers.push('Shift') if options.shiftKey
-        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, @node.ownerDocument.defaultView.window, 0, 0, modifiers.join(' '), null, null)
+        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, this.window(), 0, 0, modifiers.join(' '), null, null)
       else
         # FF uses initKeyEvent, Webkit uses initKeyboardEvent
         initFn = if _.isFunction(event.initKeyboardEvent) then 'initKeyboardEvent' else 'initKeyEvent'
-        event[initFn](eventName, options.bubbles, options.cancelable, @node.ownerDocument.defaultView.window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
+        event[initFn](eventName, options.bubbles, options.cancelable, this.window(), options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
     @node.dispatchEvent(event)
     lastKeyEvent = null
 
   unwrap: ->
     ret = @node.firstChild
     next = @node.nextSibling
-    _.each(this.getChildNodes(), (child) =>
+    _.each(this.childNodes(), (child) =>
       @node.parentNode.insertBefore(child, next)
     )
     this.removeNode()
     return ret
+
+  window: ->
+    return @node.ownerDocument.defaultView or @node.ownerDocument.parentWindow
 
   wrap: (wrapper) ->
     @node.parentNode.insertBefore(wrapper, @node) if @node.parentNode?

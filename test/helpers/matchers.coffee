@@ -17,7 +17,7 @@ compareNodes = (node1, node2, ignoredAttributes = []) ->
     return false unless _.isEqual(attr1, attr2)
     return false unless node1.childNodes.length == node2.childNodes.length
     equal = true
-    _.each(dom(node1).getChildNodes(), (child1, i) ->
+    _.each(dom(node1).childNodes(), (child1, i) ->
       if !compareNodes(child1, node2.childNodes[i], ignoredAttributes)
         equal = false
         return false

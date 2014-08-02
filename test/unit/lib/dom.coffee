@@ -21,10 +21,10 @@ describe('DOM', ->
       expect($(@container).attr('class')).toEqual('custom')
     )
 
-    it('getClasses()', ->
+    it('get classes', ->
       $(@container).addClass('custom')
       $(@container).addClass('another')
-      classes = dom(@container).getClasses().sort()
+      classes = dom(@container).classes().sort()
       expect(classes.length).toEqual(2)
       expect(classes[0]).toEqual('another')
       expect(classes[1]).toEqual('custom')
@@ -217,8 +217,8 @@ describe('DOM', ->
       expect($(@container).text()).toEqual('A123')
     )
 
-    it('getTextNodes()', ->
-      textNodes = dom(@container).getTextNodes()
+    it('get text nodes', ->
+      textNodes = dom(@container).textNodes()
       expect(textNodes.length).toEqual(4)
     )
   )
@@ -262,7 +262,7 @@ describe('DOM', ->
       )
     )
 
-    describe('getNodeLength()', ->
+    describe('get node length', ->
       tests =
         'element':
           html: '<b>One</b>'
@@ -286,7 +286,7 @@ describe('DOM', ->
       _.each(tests, (test, name) ->
         it(name, ->
           @container.innerHTML = test.html
-          length = dom(@container.firstChild).getNodeLength()
+          length = dom(@container.firstChild).length()
           expect(length).toEqual(test.length)
         )
       )
@@ -603,15 +603,15 @@ describe('DOM', ->
   )
 
   describe('get nodes', ->
-    it('getChildNodes()', ->
+    it('get child nodes', ->
       @container.innerHTML = '<b>0</b><i>1</i><u>2</u><br>'
-      nodes = dom(@container).getChildNodes()
+      nodes = dom(@container).childNodes()
       expect(nodes.length).toEqual(4)
     )
 
-    it('getDescendants()', ->
+    it('get descendants', ->
       @container.innerHTML = '<b>0</b><i><span>1</span><s>2</s></i><u>3</u><br>'
-      nodes = dom(@container).getDescendants()
+      nodes = dom(@container).descendants()
       expect(nodes.length).toEqual(6)
     )
   )

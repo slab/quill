@@ -21,7 +21,7 @@ class PasteManager
     range = @quill.getSelection()
     return unless range?
     @container.innerHTML = ""
-    iframe = @quill.root.ownerDocument.defaultView
+    iframe = dom(@quill.root).window()
     scrollY = iframe.scrollY
     @container.focus()
     _.defer( =>
