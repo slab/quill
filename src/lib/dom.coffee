@@ -30,13 +30,6 @@ class Wrapper
     this.setStyles(styles)
     return this
 
-  clearAttributes: (exception = []) ->
-    exception = [exception] if _.isString(exception)
-    _.each(this.attributes(), (value, name) =>
-      @node.removeAttribute(name) unless _.indexOf(exception, name) > -1
-    )
-    return this
-
   get: ->
     return @node
 

@@ -73,16 +73,6 @@ describe('DOM', ->
       expect(attributes['style'].toLowerCase()).toContain('color: red')
     )
 
-    it('clearAttributes()', ->
-      dom(@node).clearAttributes()
-      expect(@node.outerHTML).toEqualHTML('<div></div>')
-    )
-
-    it('clearAttributes() with exception', ->
-      dom(@node).clearAttributes('class')
-      expect(@node.outerHTML).toEqualHTML('<div class="custom"></div>')
-    )
-
     it('set attributes', ->
       dom(@node).clearAttributes()
       attributes =
