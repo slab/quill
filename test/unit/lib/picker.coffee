@@ -49,7 +49,7 @@ describe('Picker', ->
   )
 
   it('select option', ->
-    dom(@select).selectOption('serif')
+    dom(@select).option('serif')
     expect(dom(@picker.label).text()).toEqual('Serif')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
       expect(dom(item).hasClass('ql-selected')).toBe(i == 1)
@@ -57,7 +57,7 @@ describe('Picker', ->
   )
 
   it('select option mixed', ->
-    dom(@select).selectOption('')
+    dom(@select).option('')
     expect(dom(@picker.label).text().trim()).toEqual('')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
       expect(dom(item).hasClass('ql-selected')).toBe(false)

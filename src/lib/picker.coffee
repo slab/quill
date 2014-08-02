@@ -26,7 +26,7 @@ class Picker
         item = @container.querySelectorAll('.ql-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
       this.selectItem(item, false)
-      dom(@label).toggleClass('ql-active', option != dom(@select).getDefaultOption())
+      dom(@label).toggleClass('ql-active', option != dom(@select).default())
     )
 
   buildItem: (picker, option, index) ->
@@ -61,7 +61,7 @@ class Picker
       value = item.getAttribute('data-value')
       dom(item).addClass('ql-selected')
       dom(@label).text(dom(item).text())
-      dom(@select).selectOption(value, trigger)
+      dom(@select).option(value, trigger)
       @label.setAttribute('data-value', value)
     else
       @label.innerHTML = '&nbsp;'

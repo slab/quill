@@ -35,14 +35,14 @@ describe('Toolbar', ->
     it('dropdown add', ->
       range = new Quill.Lib.Range(2, 4)
       @quill.setSelection(range)
-      dom(@select).selectOption('18px')
+      dom(@select).option('18px')
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23', { size: '18px' }))
     )
 
     it('dropdown remove', ->
       range = new Quill.Lib.Range(6, 8)
       @quill.setSelection(range)
-      dom(@select).resetSelect()
+      dom(@select).reset()
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '67'))
     )
   )
@@ -55,24 +55,24 @@ describe('Toolbar', ->
 
     it('dropdown', ->
       @quill.setSelection(7, 7)
-      expect(dom(@select).getSelectValue()).toEqual('18px')
+      expect(dom(@select).value()).toEqual('18px')
     )
 
     it('dropdown change', ->
       @quill.setSelection(7, 7)
       @quill.setSelection(9, 9)
-      expect(dom(@select).getSelectValue()).toEqual('32px')
+      expect(dom(@select).value()).toEqual('32px')
     )
 
     it('dropdown reset', ->
       @quill.setSelection(7, 7)
       @quill.setSelection(3, 3)
-      expect(dom(@select).getSelectValue()).toEqual('13px')
+      expect(dom(@select).value()).toEqual('13px')
     )
 
     it('dropdown blank', ->
       @quill.setSelection(5, 7)
-      expect(dom(@select).getSelectValue()).toEqual('')
+      expect(dom(@select).value()).toEqual('')
     )
   )
 

@@ -566,39 +566,39 @@ describe('DOM', ->
       $(@select).val('one')
     )
 
-    it('getDefaultOption()', ->
-      expect(dom(@select).getDefaultOption()).toEqual(@select.children[1])
+    it('default option', ->
+      expect(dom(@select).default()).toEqual(@select.children[1])
     )
 
-    it('resetSelect()', ->
+    it('reset', ->
       expect($(@select).val()).toEqual('one')
-      dom(@select).resetSelect()
+      dom(@select).reset()
       expect($(@select).val()).toEqual('two')
     )
 
-    it('selectOption() option', ->
-      dom(@select).selectOption(@select.children[2])
+    it('option() dom', ->
+      dom(@select).option(@select.children[2])
       expect($(@select).val()).toEqual('three')
     )
 
-    it('selectOption() value', ->
-      dom(@select).selectOption('three')
+    it('option() value', ->
+      dom(@select).option('three')
       expect($(@select).val()).toEqual('three')
     )
 
-    it('getSelectValue() option', ->
-      dom(@select).selectOption(@select.children[2])
-      expect(dom(@select).getSelectValue()).toEqual('three')
+    it('value() option', ->
+      dom(@select).option(@select.children[2])
+      expect(dom(@select).value()).toEqual('three')
     )
 
-    it('getSelectValue() value', ->
-      dom(@select).selectOption('three')
-      expect(dom(@select).getSelectValue()).toEqual('three')
+    it('value() value', ->
+      dom(@select).option('three')
+      expect(dom(@select).value()).toEqual('three')
     )
 
-    it('getSelectValue() blank', ->
-      dom(@select).selectOption('')
-      expect(dom(@select).getSelectValue()).toEqual('')
+    it('value() blank', ->
+      dom(@select).option('')
+      expect(dom(@select).value()).toEqual('')
     )
   )
 

@@ -56,7 +56,7 @@ class Toolbar
     return unless input?
     @inputs[format] = input
     dom(input).on(eventName, =>
-      value = if eventName == 'change' then dom(input).getSelectValue() else !dom(input).hasClass('ql-active')
+      value = if eventName == 'change' then dom(input).value() else !dom(input).hasClass('ql-active')
       @preventUpdate = true
       @quill.focus()
       range = @quill.getSelection()
@@ -71,13 +71,13 @@ class Toolbar
     $input = dom(input)
     if input.tagName == 'SELECT'
       @triggering = true
-      selectValue = $input.getSelectValue(input)
+      selectValue = $input.value(input)
       value = '' if _.isArray(value)
       if value != selectValue
         if value?
-          $input.selectOption(value)
+          $input.option(value)
         else
-          $input.resetSelect()
+          $input.reset()
       @triggering = false
     else
       $input.toggleClass('ql-active', value or false)

@@ -53,9 +53,6 @@ class Wrapper
       offset = dom(child).length()
     return [child, offset]
 
-  getDefaultOption: ->
-    return @node.querySelector('option[selected]')
-
   getNextLineNode: (root) ->
     nextNode = @node.nextSibling
     if !nextNode? and @node.parentNode != root
@@ -63,9 +60,6 @@ class Wrapper
     if nextNode? and dom.LIST_TAGS[nextNode.tagName]?
       nextNode = nextNode.firstChild
     return nextNode
-
-  getSelectValue: ->
-    return if @node.selectedIndex > -1 then @node.options[@node.selectedIndex].value else ''
 
   hasClass: (cssClass) ->
     if @node.classList?
@@ -109,7 +103,7 @@ class Wrapper
     while curNode?
       nextNode = curNode.nextSibling
       $node = dom(curNode)
-      if dom(nextNode).isTextNode()
+      if nextNode? and dom(nextNode).isTextNode()
         if $node.text().length == 0
           $node.remove()
         else if $node.isTextNode()
@@ -149,24 +143,6 @@ class Wrapper
     @node.parentNode.replaceChild(newNode, @node)
     @node = newNode
     return newNode
-
-  resetSelect: (trigger = true) ->
-    option = this.getDefaultOption()
-    if option?
-      option.selected = true
-    else
-      @node.selectedIndex = 0
-    this.trigger('change') if trigger
-    return this
-
-  selectOption: (option, trigger = true) ->
-    value = if _.isElement(option) then option.value else option
-    if value
-      @node.value = value
-    else
-      @node.selectedIndex = -1  # PhantomJS
-    this.trigger('change') if trigger
-    return this
 
   # @node is node after split point, root is parent of eldest node we want split (root will not be split)
   splitAncestors: (root, force = false) ->
@@ -314,8 +290,38 @@ class Wrapper
     return this
 
 
+class SelectWrapper extends Wrapper
+  default: ->
+    return @node.querySelector('option[selected]')
+
+  option: (option, trigger = true) ->
+    value = if _.isElement(option) then option.value else option
+    if value
+      @node.value = value
+    else
+      @node.selectedIndex = -1  # PhantomJS
+    this.trigger('change') if trigger
+    return this
+
+  reset: (trigger = true) ->
+    option = this.default()
+    if option?
+      option.selected = true
+    else
+      @node.selectedIndex = 0
+    this.trigger('change') if trigger
+    return this
+
+  value: ->
+    return if @node.selectedIndex > -1 then @node.options[@node.selectedIndex].value else ''
+
+
 dom = (node) ->
-  return new Wrapper(node)
+  if node?.tagName == 'SELECT'
+    return new SelectWrapper(node)
+  else
+    return new Wrapper(node)
+
 
 dom = _.extend(dom,
   ELEMENT_NODE: 1
