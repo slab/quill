@@ -32,7 +32,7 @@ class Picker
   buildItem: (picker, option, index) ->
     item = @select.ownerDocument.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
-    dom(item).addClass('ql-picker-item').setText(dom(option).getText()).addEventListener('click', =>
+    dom(item).addClass('ql-picker-item').text(dom(option).text()).addEventListener('click', =>
       this.selectItem(item, true)
       this.close()
     )
@@ -60,7 +60,7 @@ class Picker
     if item?
       value = item.getAttribute('data-value')
       dom(item).addClass('ql-selected')
-      dom(@label).setText(dom(item).getText())
+      dom(@label).text(dom(item).text())
       dom(@select).selectOption(value, trigger)
       @label.setAttribute('data-value', value)
     else

@@ -107,7 +107,7 @@ class MultiCursor extends EventEmitter2
     cursor.innerHTML = @options.template
     cursorFlag = cursor.querySelector('.cursor-flag')
     cursorName = cursor.querySelector('.cursor-name')
-    dom(cursorName).setText(name)
+    dom(cursorName).text(name)
     cursorCaret = cursor.querySelector('.cursor-caret')
     cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
     @container.appendChild(cursor)
@@ -130,10 +130,10 @@ class MultiCursor extends EventEmitter2
     guide = @container.ownerDocument.createElement('span')
     if leaf?
       [leftNode, rightNode, didSplit] = dom(leaf.node).splitNode(offset)
-      dom(guide).setText(dom.ZERO_WIDTH_NOBREAK_SPACE)
+      dom(guide).text(dom.ZERO_WIDTH_NOBREAK_SPACE)
       leaf.node.parentNode.insertBefore(guide, rightNode)
     else
-      dom(guide).setText(dom.NOBREAK_SPACE)
+      dom(guide).text(dom.NOBREAK_SPACE)
       @quill.root.appendChild(guide)
     this._moveCursor(cursor, guide)
     dom(guide).removeNode()

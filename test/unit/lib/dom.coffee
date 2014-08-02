@@ -191,29 +191,29 @@ describe('DOM', ->
       $(@container).html('0<span>1</span><!-- Comment --><b><i>2</i></b>3<img><br>')
     )
 
-    it('getText() from element', ->
-      expect(dom(@container).getText()).toEqual('0123')
+    it('get text from element', ->
+      expect(dom(@container).text()).toEqual('0123')
     )
 
-    it('getText() from break', ->
-      expect(dom(@container.lastChild).getText()).toEqual('')
+    it('get text from break', ->
+      expect(dom(@container.lastChild).text()).toEqual('')
     )
 
-    it('getText() from comment', ->
-      expect(dom(@container.childNodes[2]).getText()).toEqual('')
+    it('get text from comment', ->
+      expect(dom(@container.childNodes[2]).text()).toEqual('')
     )
 
-    it('getText() embed tag', ->
-      expect(dom(@container.querySelector('img')).getText()).toEqual(dom.EMBED_TEXT)
+    it('get text embed tag', ->
+      expect(dom(@container.querySelector('img')).text()).toEqual(dom.EMBED_TEXT)
     )
 
-    it('setText() element', ->
-      dom(@container).setText('test')
+    it('set text on element', ->
+      dom(@container).text('test')
       expect($(@container).text()).toEqual('test')
     )
 
-    it('setText() text node', ->
-      dom(@container.firstChild).setText('A')
+    it('set text on text node', ->
+      dom(@container.firstChild).text('A')
       expect($(@container).text()).toEqual('A123')
     )
 
@@ -542,8 +542,8 @@ describe('DOM', ->
           @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace(test.initial)
           [left, right, split] = dom(@container.firstChild).splitNode(test.offset, test.force)
           expect(@container).toEqualHTML(test.expected)
-          leftText = if left then dom(left).getText() else null
-          rightText = if right then dom(right).getText() else null
+          leftText = if left then dom(left).text() else null
+          rightText = if right then dom(right).text() else null
           expect(leftText).toEqual(test.left)
           expect(rightText).toEqual(test.right)
           expect(test.split).toEqual(split)

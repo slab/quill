@@ -24,7 +24,7 @@ compareNodes = (node1, node2, ignoredAttributes = []) ->
     )
     return equal
   else
-    return dom(node1).getText() == dom(node2).getText()
+    return dom(node1).text() == dom(node2).text()
 
 
 beforeEach( ->

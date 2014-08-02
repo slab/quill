@@ -73,7 +73,7 @@ class LinkTooltip extends Tooltip
     else
       @link.href = url
       text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
-      dom(@link).setText(text)
+      dom(@link).text(text)
     dom(@container).toggleClass('editing', edit)
 
   _findAnchor: (range) ->

@@ -79,7 +79,7 @@ describe('Leaf', ->
       it(name, ->
         @leaf.deleteText(test.offset, test.length)
         expect(@leaf.text).toEqualHTML(test.expected)
-        expect(dom(@leaf.node).getText()).toEqualHTML(test.expected)
+        expect(dom(@leaf.node).text()).toEqualHTML(test.expected)
       )
     )
   )
@@ -107,7 +107,7 @@ describe('Leaf', ->
         expect(leaf.length).toEqual(length)
         leaf.insertText(length/2, '|')
         expect(@container).toEqualHTML(test.expected)
-        expect(leaf.text).toEqual(dom(leaf.node).getText())
+        expect(leaf.text).toEqual(dom(leaf.node).text())
         expect(leaf.length).toEqual(length + 1)
       )
     )

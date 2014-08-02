@@ -152,7 +152,7 @@ class Format
         node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
       else
         node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
-        dom(node).setText(dom.EMBED_TEXT) if dom.EMBED_TAGS[@config.tag]?   # TODO is this desireable?
+        dom(node).text(dom.EMBED_TEXT) if dom.EMBED_TAGS[@config.tag]?   # TODO is this desireable?
     if _.isString(@config.parentTag)
       dom(node.parentNode).unwrap()
     if node.tagName == dom.DEFAULT_INLINE_TAG and !node.hasAttributes()

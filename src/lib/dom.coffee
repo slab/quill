@@ -80,23 +80,13 @@ class Wrapper
 
   getNodeLength: ->
     return 0 unless @node?
-    length = this.getText().length
+    length = this.text().length
     if this.isElement()
       length += @node.querySelectorAll(_.keys(dom.EMBED_TAGS).join(',')).length
     return length
 
   getSelectValue: ->
     return if @node.selectedIndex > -1 then @node.options[@node.selectedIndex].value else ''
-
-  getText: ->
-    switch @node.nodeType
-      when dom.ELEMENT_NODE
-        return "" if @node.tagName == dom.DEFAULT_BREAK_TAG
-        return dom.EMBED_TEXT if dom.EMBED_TAGS[@node.tagName]?
-        return @node.textContent if @node.textContent?
-        return ""
-      when dom.TEXT_NODE then return @node.data or ""
-      else return ""
 
   getTextNodes: ->
     walker = @node.ownerDocument.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
@@ -127,7 +117,7 @@ class Wrapper
       $node.moveChildren(@node)
       this.normalize()
     else
-      this.setText(this.getText() + $node.getText())
+      this.text(this.text() + $node.text())
     $node.removeNode()
     return this
 
@@ -144,7 +134,7 @@ class Wrapper
       nextNode = curNode.nextSibling
       $node = dom(curNode)
       if dom(nextNode).isTextNode()
-        if $node.getText().length == 0
+        if $node.text().length == 0
           $node.removeNode()
         else if $node.isTextNode()
           followingNode = nextNode.nextSibling
@@ -189,14 +179,6 @@ class Wrapper
     else
       @node.selectedIndex = -1  # PhantomJS
     this.triggerEvent('change') if trigger
-    return this
-
-  setText: (text) ->
-    switch @node.nodeType
-      when dom.ELEMENT_NODE
-        @node.textContent = text
-      when dom.TEXT_NODE then @node.data = text
-      else return # Noop
     return this
 
   # @node is node after split point, root is parent of eldest node we want split (root will not be split)
@@ -265,6 +247,23 @@ class Wrapper
     this.moveChildren(newNode) unless dom.VOID_TAGS[newTag]?
     this.replaceNode(newNode)
     return this.attributes(attributes).get()
+
+  text: (text) ->
+    if text?
+      switch @node.nodeType
+        when dom.ELEMENT_NODE
+          @node.textContent = text
+        when dom.TEXT_NODE then @node.data = text
+      return this
+    else
+      switch @node.nodeType
+        when dom.ELEMENT_NODE
+          return "" if @node.tagName == dom.DEFAULT_BREAK_TAG
+          return dom.EMBED_TEXT if dom.EMBED_TAGS[@node.tagName]?
+          return @node.textContent if @node.textContent?
+          return ""
+        when dom.TEXT_NODE then return @node.data or ""
+        else return ""
 
   toggleClass: (className, state) ->
     state = !this.hasClass(className) unless state?

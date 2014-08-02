@@ -13,7 +13,7 @@ class Leaf extends LinkedList.Node
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Leaf.ID_PREFIX)
-    @text = dom(@node).getText()
+    @text = dom(@node).text()
     @length = @text.length
 
   getFormats: ->
@@ -27,12 +27,12 @@ class Leaf extends LinkedList.Node
       textNode = @node.ownerDocument.createTextNode(@text)
       @node = dom(@node).replaceNode(@textNode)
     else
-      dom(@node).setText(@text)
+      dom(@node).text(@text)
 
   insertText: (offset, text) ->
     @text = @text.slice(0, offset) + text + @text.slice(offset)
     if dom(@node).isTextNode()
-      dom(@node).setText(@text)
+      dom(@node).text(@text)
     else
       textNode = @node.ownerDocument.createTextNode(text)
       if @node.tagName == dom.DEFAULT_BREAK_TAG
