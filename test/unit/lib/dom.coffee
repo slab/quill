@@ -228,7 +228,7 @@ describe('DOM', ->
       @container = $('#editor-container').html('').get(0)
     )
 
-    describe('getChildAtOffset()', ->
+    describe('child at offset', ->
       beforeEach( ->
         @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace('
           <span>111</span>
@@ -254,7 +254,7 @@ describe('DOM', ->
       _.each(tests, (test, name) =>
         [offset, nodeIndex] = test
         it(name, ->
-          [child, childOffset] = dom(@container).getChildAtOffset(offset)
+          [child, childOffset] = dom(@container).child(offset)
           expect(child).toEqual(@container.childNodes[nodeIndex])
           expectedOffset = if offset < length then offset%3 else 3
           expect(childOffset).toEqual(expectedOffset)
@@ -638,7 +638,7 @@ describe('DOM', ->
     )
   )
 
-  describe('getNextLineNode()', ->
+  describe('get next line node', ->
     it('iterate over standard lines', ->
       container = $('#editor-container').html(Quill.Lib.Normalizer.stripWhitespace('
         <div id="line-1">Test</div>
@@ -649,7 +649,7 @@ describe('DOM', ->
       _.each([1..3], (i) ->
         idIndex = parseInt(lineNode.id.slice('line-'.length))
         expect(idIndex).toEqual(i)
-        lineNode = dom(lineNode).getNextLineNode(container)
+        lineNode = dom(lineNode).nextLineNode(container)
       )
       expect(lineNode).toEqual(null)
     )
@@ -670,7 +670,7 @@ describe('DOM', ->
       _.each([1..5], (i) ->
         idIndex = parseInt(lineNode.id.slice('line-'.length))
         expect(idIndex).toEqual(i)
-        lineNode = dom(lineNode).getNextLineNode(container)
+        lineNode = dom(lineNode).nextLineNode(container)
       )
       expect(lineNode).toEqual(null)
     )
@@ -680,7 +680,7 @@ describe('DOM', ->
       lineNode = container.firstChild
       expect(lineNode.id).toEqual('line-1')
       dom(container.lastChild).switchTag('div')
-      lineNode = dom(lineNode).getNextLineNode(container)
+      lineNode = dom(lineNode).nextLineNode(container)
       expect(lineNode).not.toEqual(null)
       expect(lineNode.id).toEqual('line-2')
     )

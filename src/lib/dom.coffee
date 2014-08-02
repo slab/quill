@@ -28,19 +28,7 @@ class Wrapper
         attributes[attr.name] = attr.value
       return attributes
 
-  childNodes: ->
-    return _.map(@node.childNodes)
-
-  descendants: ->
-    return _.map(@node.getElementsByTagName('*'))
-
-  classes: ->
-    return @node.className.split(/\s+/)
-
-  get: ->
-    return @node
-
-  getChildAtOffset: (offset) ->
+  child: (offset) ->
     child = @node.firstChild
     length = dom(child).length()
     while child?
@@ -53,13 +41,17 @@ class Wrapper
       offset = dom(child).length()
     return [child, offset]
 
-  getNextLineNode: (root) ->
-    nextNode = @node.nextSibling
-    if !nextNode? and @node.parentNode != root
-      nextNode = @node.parentNode.nextSibling
-    if nextNode? and dom.LIST_TAGS[nextNode.tagName]?
-      nextNode = nextNode.firstChild
-    return nextNode
+  childNodes: ->
+    return _.map(@node.childNodes)
+
+  classes: ->
+    return @node.className.split(/\s+/)
+
+  descendants: ->
+    return _.map(@node.getElementsByTagName('*'))
+
+  get: ->
+    return @node
 
   hasClass: (cssClass) ->
     if @node.classList?
@@ -96,6 +88,14 @@ class Wrapper
       newParent.appendChild(child)
     )
     return this
+
+  nextLineNode: (root) ->
+    nextNode = @node.nextSibling
+    if !nextNode? and @node.parentNode != root
+      nextNode = @node.parentNode.nextSibling
+    if nextNode? and dom.LIST_TAGS[nextNode.tagName]?
+      nextNode = nextNode.firstChild
+    return nextNode
 
   # IE normalize is broken
   normalize: ->
@@ -174,7 +174,7 @@ class Wrapper
       left = @node
       right = @node.cloneNode(false)
       @node.parentNode.insertBefore(right, left.nextSibling)
-      [child, offset] = this.getChildAtOffset(offset)
+      [child, offset] = this.child(offset)
       [childLeft, childRight] = dom(child).split(offset)
       while childRight != null
         nextRight = childRight.nextSibling

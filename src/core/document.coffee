@@ -80,7 +80,7 @@ class Document
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
-          lineNode = dom(lineNode).getNextLineNode(@root)
+          lineNode = dom(lineNode).nextLineNode(@root)
         else
           # Existing line removed
           return this.removeLine(line)
@@ -88,13 +88,13 @@ class Document
         # Existing line changed
         line.node = Normalizer.normalizeLine(line.node)
         line.rebuild()
-      lineNode = dom(lineNode).getNextLineNode(@root)
+      lineNode = dom(lineNode).nextLineNode(@root)
     )
     # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
-      lineNode = dom(lineNode).getNextLineNode(@root)
+      lineNode = dom(lineNode).nextLineNode(@root)
 
   removeLine: (line) ->
     if line.node.parentNode?
