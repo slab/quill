@@ -1,5 +1,6 @@
-_      = require('lodash')
-Tandem = require('tandem-core')
+Quill  = require('../quill')
+_      = Quill.require('lodash')
+Tandem = Quill.require('tandem-core')
 
 
 class UndoManager
@@ -97,4 +98,5 @@ class UndoManager
       @stack[dest].push(change)
 
 
+Quill.registerModule('undo-manager', UndoManager)
 module.exports = UndoManager

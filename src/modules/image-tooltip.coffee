@@ -1,6 +1,8 @@
-_       = require('lodash')
-DOM     = require('../dom')
+Quill   = require('../quill')
 Tooltip = require('./tooltip')
+_       = Quill.require('lodash')
+dom     = Quill.require('dom')
+Tandem  = Quill.require('tandem-core')
 
 
 class ImageTooltip extends Tooltip
@@ -59,13 +61,13 @@ class ImageTooltip extends Tooltip
     super(@quill, @options)
     @preview = @container.querySelector('.preview')
     @textbox = @container.querySelector('.input')
-    DOM.addClass(@container, 'image-tooltip-container')
+    dom(@container).addClass('image-tooltip-container')
     this.initListeners()
 
   initListeners: ->
-    DOM.addEventListener(@container.querySelector('.insert'), 'click', _.bind(this.insertImage, this))
-    DOM.addEventListener(@container.querySelector('.cancel'), 'click', _.bind(this.hide, this))
-    DOM.addEventListener(@textbox, 'input', _.bind(this._preview, this))
+    dom(@container.querySelector('.insert')).on('click', _.bind(this.insertImage, this))
+    dom(@container.querySelector('.cancel')).on('click', _.bind(this.hide, this))
+    dom(@textbox).on('input', _.bind(this._preview, this))
     this.initTextbox(@textbox, this.insertImage, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
       toolbar.initFormat('image', _.bind(this._onToolbar, this))
@@ -111,4 +113,5 @@ class ImageTooltip extends Tooltip
     return url
 
 
+Quill.registerModule('image-tooltip', ImageTooltip)
 module.exports = ImageTooltip

@@ -1,1 +1,1 @@
-module.exports = require('./lib/quill');
+module.exports = require('./lib/index');

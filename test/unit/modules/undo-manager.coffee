@@ -1,3 +1,5 @@
+dom = Quill.Lib.DOM
+
 describe('UndoManager', ->
   beforeEach( ->
     @container = $('#editor-container').get(0)
@@ -109,9 +111,9 @@ describe('UndoManager', ->
       @quill.updateContents(Quill.Delta.makeInsertDelta(13, 0, 'A '))
       changed = @quill.getContents()
       expect(changed).not.toEqualDelta(@original)
-      Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.UndoManager.hotkeys.UNDO)
+      dom(@quill.root).trigger('keydown', Quill.Module.UndoManager.hotkeys.UNDO)
       expect(@quill.getContents()).toEqualDelta(@original)
-      Quill.DOM.triggerEvent(@quill.root, 'keydown', Quill.Module.UndoManager.hotkeys.REDO)
+      dom(@quill.root).trigger('keydown', Quill.Module.UndoManager.hotkeys.REDO)
       expect(@quill.getContents()).toEqualDelta(changed)
     )
   )

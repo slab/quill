@@ -1,5 +1,6 @@
-_     = require('lodash')
-DOM   = require('../dom')
+Quill = require('../quill')
+_     = Quill.require('lodash')
+dom   = Quill.require('dom')
 
 
 class Toolbar
@@ -35,10 +36,10 @@ class Toolbar
       )
     )
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
-    DOM.addClass(@container, 'ql-toolbar-container')
-    DOM.addClass(@container, 'ios') if DOM.isIOS()  # Fix for iOS not losing hover state after click
-    if DOM.isIE(11) or DOM.isIOS()
-      DOM.addEventListener(@container, 'mousedown', =>
+    dom(@container).addClass('ql-toolbar-container')
+    dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
+    if dom.isIE(11) or dom.isIOS()
+      dom(@container).on('mousedown', =>
         # IE destroys selection by default when we click away
         # Also fixes bug in iOS where preformating prevents subsequent typing
         return false
@@ -54,8 +55,8 @@ class Toolbar
     input = @container.querySelector(selector)
     return unless input?
     @inputs[format] = input
-    DOM.addEventListener(input, eventName, =>
-      value = if eventName == 'change' then DOM.getSelectValue(input) else !DOM.hasClass(input, 'ql-active')
+    dom(input).on(eventName, =>
+      value = if eventName == 'change' then dom(input).value() else !dom(input).hasClass('ql-active')
       @preventUpdate = true
       @quill.focus()
       range = @quill.getSelection()
@@ -67,18 +68,19 @@ class Toolbar
   setActive: (format, value) ->
     input = @inputs[format]
     return unless input?
+    $input = dom(input)
     if input.tagName == 'SELECT'
       @triggering = true
-      selectValue = DOM.getSelectValue(input)
+      selectValue = $input.value(input)
       value = '' if _.isArray(value)
       if value != selectValue
         if value?
-          DOM.selectOption(input, value)
+          $input.option(value)
         else
-          DOM.resetSelect(input)
+          $input.reset()
       @triggering = false
     else
-      DOM.toggleClass(input, 'ql-active', value or false)
+      $input.toggleClass('ql-active', value or false)
 
   updateActive: (range) ->
     return unless range? and !@preventUpdate
@@ -142,4 +144,5 @@ class Toolbar
     , formatsArr[0] or {})
 
 
+Quill.registerModule('toolbar', Toolbar)
 module.exports = Toolbar

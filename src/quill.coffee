@@ -1,34 +1,19 @@
 _             = require('lodash')
-_.str         = require('underscore.string')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-DOM           = require('./dom')
-Editor        = require('./editor')
-Format        = require('./format')
+dom           = require('./lib/dom')
+Editor        = require('./core/editor')
+Format        = require('./core/format')
 Range         = require('./lib/range')
 Tandem        = require('tandem-core')
-
-Modules =
-  Authorship    : require('./modules/authorship')
-  ImageTooltip  : require('./modules/image-tooltip')
-  Keyboard      : require('./modules/keyboard')
-  LinkTooltip   : require('./modules/link-tooltip')
-  MultiCursor   : require('./modules/multi-cursor')
-  PasteManager  : require('./modules/paste-manager')
-  Toolbar       : require('./modules/toolbar')
-  UndoManager   : require('./modules/undo-manager')
-
-Themes =
-  Default : require('./themes/default')
-  Snow    : require('./themes/snow')
 
 
 class Quill extends EventEmitter2
   @version: pkg.version
   @editors: []
 
-  @Module: Modules
-  @Theme: Themes
+  @modules: []
+  @themes: []
 
   @DEFAULTS:
     formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
@@ -52,6 +37,23 @@ class Quill extends EventEmitter2
     SILENT : 'silent'
     USER   : 'user'
 
+
+  @registerModule: (name, module) ->
+    console.warn("Overwriting #{name} module") if Quill.modules[name]?
+    Quill.modules[name] = module
+
+  @registerTheme: (name, theme) ->
+    console.warn("Overwriting #{name} theme") if Quill.themes[name]?
+    Quill.themes[name] = theme
+
+  @require: (name) ->
+    switch name
+      when 'lodash' then return _
+      when 'dom' then return dom
+      when 'tandem-core' then return Tandem
+      else return null
+
+
   constructor: (container, options = {}) ->
     container = document.querySelector(container) if _.isString(container)
     throw new Error('Invalid Quill container') unless container?
@@ -66,8 +68,9 @@ class Quill extends EventEmitter2
     @root = @editor.doc.root
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
-    themeClass = _.str.capitalize(_.str.camelize(@options.theme))
-    @theme = new Quill.Theme[themeClass](this, @options)
+    themeClass = Quill.themes[@options.theme]
+    throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
+    @theme = new themeClass(this, @options)
     _.each(@options.modules, (option, name) =>
       this.addModule(name, option)
     )
@@ -79,9 +82,8 @@ class Quill extends EventEmitter2
     @editor.doc.addFormat(name, format)
 
   addModule: (name, options) ->
-    className = _.str.capitalize(_.str.camelize(name))
-    moduleClass = Quill.Module[className]
-    throw new Error("Cannot load #{name} module. Are you sure you included it?") unless moduleClass?
+    moduleClass = Quill.modules[name]
+    throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
     options = {} unless _.isObject(options)  # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
     @modules[name] = new moduleClass(this, options)
@@ -148,7 +150,7 @@ class Quill extends EventEmitter2
     return _.pluck(this.getContents(start, end).ops, 'value').join('')
 
   insertEmbed: (index, type, url, source) ->
-    this.insertText(index, DOM.EMBED_TEXT, type, url, source)
+    this.insertText(index, dom.EMBED_TEXT, type, url, source)
 
   insertText: (index, text, name, value, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
@@ -182,7 +184,7 @@ class Quill extends EventEmitter2
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
-    html = "<#{DOM.DEFAULT_BLOCK_TAG}><#{DOM.DEFAULT_BREAK_TAG}></#{DOM.DEFAULT_BLOCK_TAG}>" unless html
+    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html
     @editor.doc.setHTML(html)
     @editor.checkUpdate(source)
 
@@ -211,6 +213,10 @@ class Quill extends EventEmitter2
       params.splice(2, 2, formats)
     params[3] ?= Quill.sources.API
     return params
+
+
+Quill.registerTheme('default', require('./themes/default'))
+Quill.registerTheme('snow',    require('./themes/snow'))
 
 
 module.exports = Quill

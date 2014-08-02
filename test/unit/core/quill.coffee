@@ -47,7 +47,7 @@ describe('Quill', ->
     it('addModule() nonexistent', ->
       expect( =>
         @quill.addModule('nonexistent')
-      ).toThrow(new Error("Cannot load nonexistent module. Are you sure you included it?"))
+      ).toThrow(new Error("Cannot load nonexistent module. Are you sure you registered it?"))
     )
   )
 

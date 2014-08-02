@@ -1,3 +1,5 @@
+dom = Quill.Lib.DOM
+
 describe('Line', ->
   beforeEach( ->
     @container = $('#editor-container').html('<div></div>').get(0).firstChild
@@ -26,7 +28,7 @@ describe('Line', ->
       'media child':
         initial: '<div><img src="http://quilljs.com/images/cloud.png"></div>'
         expected: '<div><img src="http://quilljs.com/images/cloud.png"></div>'
-        leaves: [{ text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/cloud.png' } }]
+        leaves: [{ text: dom.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/cloud.png' } }]
       'break child':
         initial: '<div><br></div>'
         expected: '<div><br></div>'
@@ -37,7 +39,7 @@ describe('Line', ->
         leaves: [
           { text: 'A', formats: { bold: true, italic: true } }
           { text: 'B', formats: { bold: true, strike: true } }
-          { text: Quill.DOM.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/cloud.png' } }
+          { text: dom.EMBED_TEXT, formats: { image: 'http://quilljs.com/images/cloud.png' } }
           { text: 'D', formats: { underline: true } }
         ]
 
@@ -154,7 +156,7 @@ describe('Line', ->
         line = new Quill.Line(@doc, lineNode)
         [leaf, offset] = line.findLeafAt(test.offset, test.inclusive)
         node = lineNode.querySelector(test.expected[0])
-        node = node.firstChild unless node.tagName == Quill.DOM.DEFAULT_BREAK_TAG
+        node = node.firstChild unless node.tagName == dom.DEFAULT_BREAK_TAG
         expect(leaf.node).toEqual(node)
         expect(offset).toEqual(test.expected[1])
       )
@@ -275,7 +277,7 @@ describe('Line', ->
         args: [3, 4, 'bold', false]
       'remove image':
         initial: '<b>01</b><img src="http://quilljs.com/images/cloud.png"><s>34</s>'
-        expected: "<b>01</b>#{Quill.DOM.EMBED_TEXT}<s>34</s>"
+        expected: "<b>01</b>#{dom.EMBED_TEXT}<s>34</s>"
         args: [2, 1, 'image', false]
       'change format':
         initial: '<b style="color: red;">012</b>'

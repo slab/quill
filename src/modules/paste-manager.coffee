@@ -1,8 +1,8 @@
-_        = require('lodash')
-DOM      = require('../dom')
-Document = require('../document')
-Tandem   = require('tandem-core')
-
+Quill    = require('../quill')
+Document = require('../core/document')
+_        = Quill.require('lodash')
+dom      = Quill.require('dom')
+Tandem   = Quill.require('tandem-core')
 
 class PasteManager
   constructor: (@quill, @options) ->
@@ -14,14 +14,14 @@ class PasteManager
         'position': 'absolute'
         'top': '50%'
     )
-    DOM.addEventListener(@quill.root, 'paste', _.bind(this._paste, this))
+    dom(@quill.root).on('paste', _.bind(this._paste, this))
 
   _paste: ->
     oldDocLength = @quill.getLength()
     range = @quill.getSelection()
     return unless range?
     @container.innerHTML = ""
-    iframe = @quill.root.ownerDocument.defaultView
+    iframe = dom(@quill.root).window()
     scrollY = iframe.scrollY
     @container.focus()
     _.defer( =>
@@ -41,4 +41,5 @@ class PasteManager
     )
 
 
+Quill.registerModule('paste-manager', PasteManager)
 module.exports = PasteManager

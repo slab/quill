@@ -1,6 +1,7 @@
-_          = require('lodash')
-DOM        = require('../dom')
-Normalizer = require('../normalizer')
+Quill      = require('../quill')
+Normalizer = require('../lib/normalizer')
+_          = Quill.require('lodash')
+dom        = Quill.require('dom')
 
 
 class Tooltip
@@ -25,7 +26,7 @@ class Tooltip
     @container = @quill.addContainer('tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
     @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker
-    DOM.addEventListener(@quill.root, 'focus', _.bind(this.hide, this))
+    dom(@quill.root).on('focus', _.bind(this.hide, this))
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
       if source == 'user' and @container.style.left != Tooltip.HIDE_MARGIN
@@ -34,10 +35,10 @@ class Tooltip
     )
 
   initTextbox: (textbox, enterCallback, escapeCallback) ->
-    DOM.addEventListener(textbox, 'keyup', (event) =>
+    dom(textbox).on('keyup', (event) =>
       switch event.which
-        when DOM.KEYS.ENTER   then enterCallback.call(this)
-        when DOM.KEYS.ESCAPE  then escapeCallback.call(this)
+        when dom.KEYS.ENTER  then enterCallback.call(this)
+        when dom.KEYS.ESCAPE then escapeCallback.call(this)
         else return true
     )
 
@@ -50,16 +51,18 @@ class Tooltip
     @range = @quill.getSelection()
     [left, top] = this._position(reference)
     [left, top] = this._limit(left, top)
-    left += @quill.root.ownerDocument.defaultView.window.pageXOffset
-    top += @quill.root.ownerDocument.defaultView.window.pageYOffset
+    win = dom(@quill.root).window()
+    left += win.pageXOffset
+    top += win.pageYOffset
     @container.style.left = "#{left}px"
     @container.style.top = "#{top}px"
     @container.focus()
 
   _getBounds: ->
     bounds = @quill.root.getBoundingClientRect()
-    scrollX = @quill.root.ownerDocument.defaultView.window.pageXOffset
-    scrollY = @quill.root.ownerDocument.defaultView.window.pageYOffset
+    win = dom(@quill.root).window()
+    scrollX = win.pageXOffset
+    scrollY = win.pageYOffset
     return {
       left:   bounds.left + scrollX
       right:  bounds.right + scrollX
@@ -93,4 +96,5 @@ class Tooltip
     return [left, top]
 
 
+Quill.registerModule('tooltip', Tooltip)
 module.exports = Tooltip

@@ -1,3 +1,5 @@
+dom = Quill.Lib.DOM
+
 describe('Document', ->
   beforeEach( ->
     @container = $('#editor-container').html('').get(0)
@@ -36,7 +38,7 @@ describe('Document', ->
         doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
         expect(@container.firstChild).toEqualHTML(test.expected, true)
         _.each(doc.lines.toArray(), (line) ->
-          expect(Quill.DOM.LINE_TAGS[line.node.tagName]).toBeDefined()
+          expect(dom.LINE_TAGS[line.node.tagName]).toBeDefined()
         )
       )
     )
@@ -124,7 +126,7 @@ describe('Document', ->
 
   describe('manipulation', ->
     beforeEach( ->
-      @container.innerHTML = Quill.Normalizer.stripWhitespace('
+      @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace('
         <div>
           <div>Test</div>
           <div><i>Test</i></div>
@@ -193,7 +195,7 @@ describe('Document', ->
     )
 
     it('removeLine() lineNode missing', ->
-      Quill.DOM.removeNode(@lines[1].node)
+      dom(@lines[1].node).remove()
       @doc.removeLine(@lines[1])
       expect(@doc.root).toEqualHTML('
         <div>Test</div>
@@ -375,7 +377,7 @@ describe('Document', ->
     )
 
     it('new line inserted', ->
-      lineNode = @doc.root.ownerDocument.createElement(Quill.DOM.DEFAULT_BLOCK_TAG)
+      lineNode = @doc.root.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG)
       lineNode.innerHTML = 'A'
       @doc.root.insertBefore(lineNode, @doc.root.lastChild)
       @doc.rebuild()
@@ -395,20 +397,20 @@ describe('Document', ->
     )
 
     it('existing line split', ->
-      Quill.Utils.splitNode(@doc.root.firstChild, 2)
+      dom(@doc.root.firstChild).split(2)
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
     )
 
     it('existing lines merged', ->
-      Quill.DOM.moveChildren(@doc.root.firstChild, @doc.root.lastChild)
+      dom(@doc.root.lastChild).moveChildren(@doc.root.firstChild)
       @doc.root.removeChild(@doc.root.lastChild)
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01235678\n'))
     )
 
     it('new lines appended', ->
-      lineNode = @doc.root.ownerDocument.createElement(Quill.DOM.DEFAULT_BLOCK_TAG)
+      lineNode = @doc.root.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG)
       lineNode.innerHTML = 'A'
       @doc.root.appendChild(lineNode)
       @doc.rebuild()

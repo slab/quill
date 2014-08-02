@@ -26,8 +26,9 @@ module.exports = function(config) {
 
       { pattern: 'test/fixtures/*.css', included: false },
 
-      'test/unit/*.coffee',     // We dont do **/*.coffee to control order of tests
+      // We dont do **/*.coffee to control order of tests
       'test/unit/lib/*.coffee',
+      'test/unit/core/*.coffee',
       'test/unit/modules/*.coffee',
       'test/unit/themes/*.coffee'
     ],
