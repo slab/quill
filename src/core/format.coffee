@@ -85,9 +85,7 @@ class Format
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if dom.VOID_TAGS[formatNode.tagName]?
-        # TODO use replaceNode
-        node.parentNode.insertBefore(formatNode, node) if node.parentNode?
-        dom(node).remove()
+        dom(node).replace(formatNode) if node.parentNode?
         node = formatNode
       else if this.isType(Format.types.LINE)
         node = dom(node).switchTag(@config.tag)
