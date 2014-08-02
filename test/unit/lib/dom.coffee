@@ -74,7 +74,6 @@ describe('DOM', ->
     )
 
     it('set attributes', ->
-      dom(@node).clearAttributes()
       attributes =
         'class': 'test'
         'style': 'font-size: 13px;'
@@ -89,23 +88,24 @@ describe('DOM', ->
       'color': 'red'
       'display': 'inline'
 
-    it('getStyles()', ->
+    it('get styles', ->
       $(@container).html(html)
-      result = dom(@container.firstChild).getStyles()
+      result = dom(@container.firstChild).styles()
       expect(result).toEqual(styles)
     )
 
-    it('setStyles()', ->
-      $(@container).html('<span>Test</span>')
-      dom(@container.firstChild).setStyles(styles)
+    it('set styles', ->
+      $(@container).html('<span style="cursor: pointer;">Test</span>')
+      dom(@container.firstChild).styles(styles, true)
       _.each(styles, (value, name) =>
         expect(@container.firstChild.style[name]).toEqual(value)
       )
+      expect(@container.firstChild.style.pointer).toBeUndefined()
     )
 
-    it('addStyles()', ->
+    it('add styles', ->
       $(@container).html(html)
-      dom(@container.firstChild).addStyles(
+      dom(@container.firstChild).styles(
         color: 'blue'
         cursor: 'pointer'
       )

@@ -25,23 +25,16 @@ class Wrapper
     )
     return this
 
-  addStyles: (styles) ->
-    styles = _.defaults(styles, this.getStyles())
-    this.setStyles(styles)
-    return this
-
   get: ->
     return @node
 
   attributes: (attributes) ->
     if attributes
-      # add attributes
       _.each(attributes, (value, name) =>
         @node.setAttribute(name, value)
       )
       return this
     else
-      # get attributes
       return {} unless @node.attributes?
       attributes = {}
       for value,i in @node.attributes
@@ -94,18 +87,6 @@ class Wrapper
 
   getSelectValue: ->
     return if @node.selectedIndex > -1 then @node.options[@node.selectedIndex].value else ''
-
-  getStyles: ->
-    styleString = @node.getAttribute('style') or ''
-    obj = _.reduce(styleString.split(';'), (styles, str) ->
-      [name, value] = str.split(':')
-      if name and value
-        name = name.trim()
-        value = value.trim()
-        styles[name.toLowerCase()] = value
-      return styles
-    , {})
-    return obj
 
   getText: ->
     switch @node.nodeType
@@ -210,13 +191,6 @@ class Wrapper
     this.triggerEvent('change') if trigger
     return this
 
-  setStyles: (styles) ->
-    styleString = _.map(styles, (style, name) ->
-      return "#{name}: #{style}"
-    ).join('; ') + ';'
-    @node.setAttribute('style', styleString)
-    return this
-
   setText: (text) ->
     switch @node.nodeType
       when dom.ELEMENT_NODE
@@ -262,6 +236,26 @@ class Wrapper
         right.appendChild(childRight)
         childRight = nextRight
       return [left, right, true]
+
+  styles: (styles, overwrite = false) ->
+    if styles
+      styles = _.defaults(styles, this.styles()) if !overwrite
+      styleString = _.map(styles, (style, name) ->
+        return "#{name}: #{style}"
+      ).join('; ') + ';'
+      @node.setAttribute('style', styleString)
+      return this
+    else
+      styleString = @node.getAttribute('style') or ''
+      obj = _.reduce(styleString.split(';'), (styles, str) ->
+        [name, value] = str.split(':')
+        if name and value
+          name = name.trim()
+          value = value.trim()
+          styles[name.toLowerCase()] = value
+        return styles
+      , {})
+      return obj
 
   switchTag: (newTag) ->
     newTag = newTag.toUpperCase()

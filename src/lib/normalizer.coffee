@@ -117,13 +117,13 @@ Normalizer =
     return html
 
   whitelistStyles: (node) ->
-    original = dom(node).getStyles()
+    original = dom(node).styles()
     styles = _.omit(original, (value, key) ->
       return !Normalizer.STYLES[key]?
     )
     if _.keys(styles).length < _.keys(original).length
       if _.keys(styles).length > 0
-        dom(node).setStyles(styles)
+        dom(node).styles(styles, true)
       else
         node.removeAttribute('style')
 
