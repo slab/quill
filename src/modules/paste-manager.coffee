@@ -35,8 +35,11 @@ class PasteManager
       delta.endLength += (@quill.getLength() - (range.end - range.start))
       delta.startLength = oldDocLength
       @quill.updateContents(delta, 'user')
-      @quill.focus()
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
+      [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
+      lineBottom = line.node.offsetTop + line.node.offsetHeight
+      if lineBottom > scrollY + @quill.root.offsetHeight
+        scrollY = line.node.offsetTop - @quill.root.offsetHeight / 2
       iframe.scrollTo(0, scrollY)
     )
 
