@@ -1,7 +1,7 @@
 Quill         = require('../quill')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 _             = Quill.require('lodash')
-DOM           = Quill.require('dom')
+dom           = Quill.require('dom')
 
 
 class MultiCursor extends EventEmitter2
@@ -49,10 +49,10 @@ class MultiCursor extends EventEmitter2
   moveCursor: (userId, index) ->
     cursor = @cursors[userId]
     cursor.index = index
-    DOM.removeClass(cursor.elem, 'hidden')
+    dom(cursor.elem).removeClass('hidden')
     clearTimeout(cursor.timer)
     cursor.timer = setTimeout( =>
-      DOM.addClass(cursor.elem, 'hidden')
+      dom(cursor.elem).addClass('hidden')
       cursor.timer = null
     , @options.timeout)
     this._updateCursor(cursor)
@@ -103,11 +103,11 @@ class MultiCursor extends EventEmitter2
 
   _buildCursor: (name, color) ->
     cursor = @container.ownerDocument.createElement('span')
-    DOM.addClass(cursor, 'cursor')
+    dom(cursor).addClass('cursor')
     cursor.innerHTML = @options.template
     cursorFlag = cursor.querySelector('.cursor-flag')
     cursorName = cursor.querySelector('.cursor-name')
-    DOM.setText(cursorName, name)
+    dom(cursorName).setText(name)
     cursorCaret = cursor.querySelector('.cursor-caret')
     cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
     @container.appendChild(cursor)
@@ -119,9 +119,9 @@ class MultiCursor extends EventEmitter2
     cursor.elem.style.left = bounds[side] + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')
-    DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
-    DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-    DOM.toggleClass(cursor.elem, 'right', @quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+    dom(cursor.elem).toggleClass('top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
+                    .toggleClass('left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+                    .toggleClass('right', @quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
   _updateCursor: (cursor) ->
@@ -129,15 +129,15 @@ class MultiCursor extends EventEmitter2
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
     guide = @container.ownerDocument.createElement('span')
     if leaf?
-      [leftNode, rightNode, didSplit] = DOM.splitNode(leaf.node, offset)
-      DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE)
+      [leftNode, rightNode, didSplit] = dom(leaf.node).splitNode(offset)
+      dom(guide).setText(dom.ZERO_WIDTH_NOBREAK_SPACE)
       leaf.node.parentNode.insertBefore(guide, rightNode)
     else
-      DOM.setText(guide, DOM.NOBREAK_SPACE)
+      dom(guide).setText(dom.NOBREAK_SPACE)
       @quill.root.appendChild(guide)
     this._moveCursor(cursor, guide)
-    DOM.removeNode(guide)
-    DOM.normalize(leaf.node.parentNode) if didSplit
+    dom(guide).removeNode()
+    dom(leaf.node.parentNode).normalize() if didSplit
     @quill.editor.selection.update('silent')
 
 

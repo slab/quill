@@ -1,7 +1,7 @@
 Quill   = require('../quill')
 Tooltip = require('./tooltip')
 _       = Quill.require('lodash')
-DOM     = Quill.require('dom')
+dom     = Quill.require('dom')
 
 
 class LinkTooltip extends Tooltip
@@ -28,7 +28,7 @@ class LinkTooltip extends Tooltip
     @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
-    DOM.addClass(@container, 'link-tooltip-container')
+    dom(@container).addClass('link-tooltip-container')
     @textbox = @container.querySelector('.input')
     @link = @container.querySelector('.url')
     this.initListeners()
@@ -44,8 +44,8 @@ class LinkTooltip extends Tooltip
         @range = null   # Prevent restoring selection to last saved
         this.hide()
     )
-    DOM.addEventListener(@container.querySelector('.done'), 'click', _.bind(this.saveLink, this))
-    DOM.addEventListener(@container.querySelector('.change'), 'click', =>
+    dom(@container.querySelector('.done')).addEventListener('click', _.bind(this.saveLink, this))
+    dom(@container.querySelector('.change')).addEventListener('click', =>
       this.setMode(@link.href, true)
     )
     this.initTextbox(@textbox, this.saveLink, this.hide)
@@ -73,8 +73,8 @@ class LinkTooltip extends Tooltip
     else
       @link.href = url
       text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
-      DOM.setText(@link, text)
-    DOM.toggleClass(@container, 'editing', edit)
+      dom(@link).setText(text)
+    dom(@container).toggleClass('editing', edit)
 
   _findAnchor: (range) ->
     [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)

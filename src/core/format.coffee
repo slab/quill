@@ -1,5 +1,5 @@
-_     = require('lodash')
-DOM   = require('../lib/dom')
+_   = require('lodash')
+dom = require('../lib/dom')
 
 
 class Format
@@ -42,7 +42,7 @@ class Format
       style: 'fontSize'
       default: '13px'
       prepare: (doc, value) ->
-        doc.execCommand('fontSize', false, DOM.convertFontSize(value))
+        doc.execCommand('fontSize', false, dom.convertFontSize(value))
 
     link:
       tag: 'A'
@@ -77,39 +77,43 @@ class Format
     return node if this.value(node) == value
     if _.isString(@config.parentTag)
       parentNode = @document.createElement(@config.parentTag)
-      DOM.wrap(parentNode, node)
+      dom(node).wrap(parentNode)
       if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
-        DOM.mergeNodes(node.parentNode.previousSibling, node.parentNode)
+        dom(node.parentNode.previousSibling).mergeNodes(node.parentNode)
       if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
-        DOM.mergeNodes(node.parentNode, node.parentNode.nextSibling)
+        dom(node.parentNode).mergeNodes(node.parentNode.nextSibling)
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
-      if DOM.VOID_TAGS[formatNode.tagName]?
+      if dom.VOID_TAGS[formatNode.tagName]?
         # TODO use replaceNode
         node.parentNode.insertBefore(formatNode, node) if node.parentNode?
-        DOM.removeNode(node)
+        dom(node).removeNode()
         node = formatNode
       else if this.isType(Format.types.LINE)
-        node = DOM.switchTag(node, @config.tag)
+        node = dom(node).switchTag(@config.tag)
       else
-        node = DOM.wrap(formatNode, node)
+        dom(node).wrap(formatNode)
+        node = formatNode
     if _.isString(@config.style) or _.isString(@config.attribute) or _.isString(@config.class)
-      node = this.remove(node) if _.isString(@config.class)
-      if DOM.isTextNode(node)
-        node = DOM.wrap(@document.createElement(DOM.DEFAULT_INLINE_TAG), node)
+      if _.isString(@config.class)
+        node = this.remove(node)
+      if dom(node).isTextNode()
+        inline = @document.createElement(dom.DEFAULT_INLINE_TAG)
+        dom(node).wrap(inline)
+        node = inline
       if _.isString(@config.style)
         node.style[@config.style] = value if value != @config.default
       if _.isString(@config.attribute)
         node.setAttribute(@config.attribute, value)
       if _.isString(@config.class)
-        DOM.addClass(node, @config.class + value)
+        dom(node).addClass(@config.class + value)
     return node
 
   isType: (type) ->
     return type == @config.type
 
   match: (node) ->
-    return false unless DOM.isElement(node)
+    return false unless dom(node).isElement()
     if _.isString(@config.parentTag) and node.parentNode?.tagName != @config.parentTag
       return false
     if _.isString(@config.tag) and node.tagName != @config.tag
@@ -119,7 +123,7 @@ class Format
     if _.isString(@config.attribute) and !node.hasAttribute(@config.attribute)
       return false
     if _.isString(@config.class)
-      for c in DOM.getClasses(node)
+      for c in dom(node).getClasses()
         return true if c.indexOf(@config.class) == 0
       return false
     return true
@@ -138,21 +142,21 @@ class Format
     if _.isString(@config.attribute)
       node.removeAttribute(@config.attribute)
     if _.isString(@config.class)
-      for c in DOM.getClasses(node)
-        DOM.removeClass(node, c) if c.indexOf(@config.class) == 0
+      for c in dom(node).getClasses()
+        dom(node).removeClass(c) if c.indexOf(@config.class) == 0
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
       if this.isType(Format.types.LINE)
-        DOM.splitAncestors(node, node.parentNode.parentNode) if node.previousSibling?
-        DOM.splitAncestors(node.nextSibling, node.parentNode.parentNode) if node.nextSibling?
-        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
+        dom(node).splitAncestors(node.parentNode.parentNode) if node.previousSibling?
+        dom(node.nextSibling).splitAncestors(node.parentNode.parentNode) if node.nextSibling?
+        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
       else
-        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
-        DOM.setText(node, DOM.EMBED_TEXT) if DOM.EMBED_TAGS[@config.tag]?   # TODO is this desireable?
+        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
+        dom(node).setText(dom.EMBED_TEXT) if dom.EMBED_TAGS[@config.tag]?   # TODO is this desireable?
     if _.isString(@config.parentTag)
-      DOM.unwrap(node.parentNode)
-    if node.tagName == DOM.DEFAULT_INLINE_TAG and !node.hasAttributes()
-      node = DOM.unwrap(node)
+      dom(node.parentNode).unwrap()
+    if node.tagName == dom.DEFAULT_INLINE_TAG and !node.hasAttributes()
+      node = dom(node).unwrap()
     return node
 
   value: (node) ->
@@ -162,7 +166,7 @@ class Format
     else if _.isString(@config.style)
       return node.style[@config.style] or undefined
     else if _.isString(@config.class)
-      for c in DOM.getClasses(node)
+      for c in dom(node).getClasses()
         return c.slice(@config.class.length) if c.indexOf(@config.class) == 0
     else if _.isString(@config.tag)
       return true

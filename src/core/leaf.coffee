@@ -1,5 +1,5 @@
 _          = require('lodash')
-DOM        = require('../lib/dom')
+dom        = require('../lib/dom')
 Format     = require('./format')
 LinkedList = require('../lib/linked-list')
 
@@ -8,12 +8,12 @@ class Leaf extends LinkedList.Node
   @ID_PREFIX: 'leaf-'
 
   @isLeafNode: (node) ->
-    return DOM.isTextNode(node) or !node.firstChild?
+    return dom(node).isTextNode() or !node.firstChild?
 
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
     @id = _.uniqueId(Leaf.ID_PREFIX)
-    @text = DOM.getText(@node)
+    @text = dom(@node).getText()
     @length = @text.length
 
   getFormats: ->
@@ -23,23 +23,23 @@ class Leaf extends LinkedList.Node
     return unless length > 0
     @text = @text.slice(0, offset) + @text.slice(offset + length)
     @length = @text.length
-    if DOM.EMBED_TAGS[@node.tagName]?
+    if dom.EMBED_TAGS[@node.tagName]?
       textNode = @node.ownerDocument.createTextNode(@text)
-      @node = DOM.replaceNode(textNode, @node)
+      @node = dom(@node).replaceNode(@textNode)
     else
-      DOM.setText(@node, @text)
+      dom(@node).setText(@text)
 
   insertText: (offset, text) ->
     @text = @text.slice(0, offset) + text + @text.slice(offset)
-    if DOM.isTextNode(@node)
-      DOM.setText(@node, @text)
+    if dom(@node).isTextNode()
+      dom(@node).setText(@text)
     else
       textNode = @node.ownerDocument.createTextNode(text)
-      if @node.tagName == DOM.DEFAULT_BREAK_TAG
-        DOM.replaceNode(textNode, @node)
+      if @node.tagName == dom.DEFAULT_BREAK_TAG
+        @node = dom(@node).replaceNode(textNode)
       else
         @node.appendChild(textNode)
-      @node = textNode
+        @node = textNode
     @length = @text.length
 
 

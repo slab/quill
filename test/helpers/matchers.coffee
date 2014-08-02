@@ -1,10 +1,13 @@
+dom = Quill.Lib.DOM
+
+
 compareNodes = (node1, node2, ignoredAttributes = []) ->
   return false unless node1.nodeType == node2.nodeType
-  if Quill.Lib.DOM.isElement(node1)
-    return false unless Quill.Lib.DOM.isElement(node2)
+  if dom(node1).isElement()
+    return false unless dom(node2).isElement()
     return false unless node1.tagName == node2.tagName
     [attr1, attr2] = _.map([node1, node2], (node) ->
-      attr = Quill.Lib.DOM.getAttributes(node)
+      attr = dom(node).getAttributes()
       _.each(ignoredAttributes, (name) ->
         delete attr[name]
       )
@@ -14,14 +17,14 @@ compareNodes = (node1, node2, ignoredAttributes = []) ->
     return false unless _.isEqual(attr1, attr2)
     return false unless node1.childNodes.length == node2.childNodes.length
     equal = true
-    _.each(Quill.Lib.DOM.getChildNodes(node1), (child1, i) ->
+    _.each(dom(node1).getChildNodes(), (child1, i) ->
       if !compareNodes(child1, node2.childNodes[i], ignoredAttributes)
         equal = false
         return false
     )
     return equal
   else
-    return Quill.Lib.DOM.getText(node1) == Quill.Lib.DOM.getText(node2)
+    return dom(node1).getText() == dom(node2).getText()
 
 
 beforeEach( ->

@@ -1,6 +1,6 @@
 Quill  = require('../quill')
 _      = Quill.require('lodash')
-DOM    = Quill.require('dom')
+dom    = Quill.require('dom')
 Tandem = Quill.require('tandem-core')
 
 
@@ -41,13 +41,14 @@ class Authorship
     @quill.addStyles(styles)
 
   attachButton: (button) ->
-    DOM.addEventListener(button, 'click', =>
-      DOM.toggleClass(button, 'ql-on')
-      this.enable(DOM.hasClass(button, 'ql-on'))
+    $button = dom(button)
+    $button.addEventListener('click', =>
+      $button.toggleClass('ql-on')
+      this.enable($dom.hasClass('ql-on'))
     )
 
   enable: (enabled = true) ->
-    DOM.toggleClass(@quill.root, 'authorship', enabled)
+    dom(@quill.root).toggleClass('authorship', enabled)
 
   disable: ->
     this.enable(false)

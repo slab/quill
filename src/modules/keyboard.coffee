@@ -1,15 +1,15 @@
 Quill  = require('../quill')
 _      = Quill.require('lodash')
-DOM    = Quill.require('dom')
+dom    = Quill.require('dom')
 Tandem = Quill.require('tandem-core')
 
 
 class Keyboard
   @hotkeys:
     BOLD:       { key: 'B',          metaKey: true }
-    INDENT:     { key: DOM.KEYS.TAB, shiftKey: false }
+    INDENT:     { key: dom.KEYS.TAB, shiftKey: false }
     ITALIC:     { key: 'I',          metaKey: true }
-    OUTDENT:    { key: DOM.KEYS.TAB, shiftKey: true }
+    OUTDENT:    { key: dom.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
 
   constructor: (@quill, options) ->
@@ -41,7 +41,7 @@ class Keyboard
     toolbar.setActive(format, value) if toolbar?
 
   _initDeletes: ->
-    _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (key) =>
+    _.each([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (key) =>
       this.addHotkey(key, =>
         # Prevent deleting if editor is already blank (or just empty newline)
         return @quill.getLength() > 1
@@ -65,7 +65,7 @@ class Keyboard
     )
 
   _initListeners: ->
-    DOM.addEventListener(@quill.root, 'keydown', (event) =>
+    dom(@quill.root).addEventListener('keydown', (event) =>
       prevent = false
       _.each(@hotkeys[event.which], (hotkey) =>
         return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)

@@ -1,7 +1,7 @@
 Quill    = require('../quill')
 Document = require('../core/document')
 _        = Quill.require('lodash')
-DOM      = Quill.require('dom')
+dom      = Quill.require('dom')
 Tandem   = Quill.require('tandem-core')
 
 class PasteManager
@@ -14,7 +14,7 @@ class PasteManager
         'position': 'absolute'
         'top': '50%'
     )
-    DOM.addEventListener(@quill.root, 'paste', _.bind(this._paste, this))
+    dom(@quill.root).addEventListener('paste', _.bind(this._paste, this))
 
   _paste: ->
     oldDocLength = @quill.getLength()

@@ -1,5 +1,5 @@
 _          = require('lodash')
-DOM        = require('../lib/dom')
+dom        = require('../lib/dom')
 Leaf       = require('./leaf')
 Normalizer = require('../lib/normalizer')
 Range      = require('../lib/range')
@@ -72,15 +72,15 @@ class Selection
       @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range, source) if emit
 
   _decodePosition: (node, offset) ->
-    if DOM.isElement(node)
-      childIndex = _.indexOf(DOM.getChildNodes(node.parentNode), node)
+    if dom(node).isElement()
+      childIndex = _.indexOf(dom(node.parentNode).getChildNodes(), node)
       offset += childIndex
       node = node.parentNode
     return [node, offset]
 
   _encodePosition: (node, offset) ->
     while true
-      if DOM.isTextNode(node) or node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
+      if dom(node).isTextNode() or node.tagName == dom.DEFAULT_BREAK_TAG or dom.EMBED_TAGS[node.tagName]?
         return [node, offset]
       else if offset < node.childNodes.length
         node = node.childNodes[offset]
@@ -94,13 +94,13 @@ class Selection
         return [node, 0]
       else
         node = node.lastChild
-        if DOM.isElement(node)
-          if node.tagName == DOM.DEFAULT_BREAK_TAG or DOM.EMBED_TAGS[node.tagName]?
+        if dom(node).isElement()
+          if node.tagName == dom.DEFAULT_BREAK_TAG or dom.EMBED_TAGS[node.tagName]?
             return [node, 1]
           else
             offset = node.childNodes.length
         else
-          return [node, DOM.getNodeLength(node)]
+          return [node, dom(node).getNodeLength()]
 
   _getNativeSelection: ->
     return if @document.getSelection? then @document.getSelection() else null

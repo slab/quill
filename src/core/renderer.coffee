@@ -1,5 +1,5 @@
 _          = require('lodash')
-DOM        = require('../lib/dom')
+dom        = require('../lib/dom')
 Normalizer = require('../lib/normalizer')
 
 
@@ -40,7 +40,7 @@ _.each([1..9], (i) ->
   DEFAULT_STYLES[rule] = { 'list-style-type': LIST_STYLES[i%3] }
   rule += ' > li'
 )
-DEFAULT_STYLES[DOM.DEFAULT_BREAK_TAG] = { 'display': 'none' } if DOM.isIE(10)
+DEFAULT_STYLES[dom.DEFAULT_BREAK_TAG] = { 'display': 'none' } if dom.isIE(10)
 
 
 class Renderer
@@ -54,7 +54,7 @@ class Renderer
 
   @buildFrame: (container) ->
     iframe = container.ownerDocument.createElement('iframe')
-    DOM.setAttributes(iframe,
+    dom(iframe).setAttributes(
       frameBorder: '0'
       height: '100%'
       width: '100%'
@@ -75,14 +75,14 @@ class Renderer
     [@root, @iframe] = Renderer.buildFrame(@container)
     @root.setAttribute('id', @options.id)
     @iframe.setAttribute('name', @options.id)
-    DOM.addClass(@root, 'editor-container')
-    DOM.addClass(@container, 'ql-container')
-    DOM.addEventListener(@container, 'focus', =>
+    dom(@root).addClass('editor-container')
+    dom(@container).addClass('ql-container')
+    dom(@container).addEventListener('focus', =>
       @root.focus()
     )
     # Mobile Safari lets iframe content overflow
-    if DOM.isIOS()
-      DOM.addStyles(@container,
+    if dom.isIOS()
+      dom(@container).addStyles(
         'overflow': 'auto'
         '-webkit-overflow-scrolling': 'touch'
       )
@@ -93,7 +93,7 @@ class Renderer
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
     container = @root.ownerDocument.createElement('div')
-    DOM.addClass(container, className)
+    dom(container).addClass(className)
     @root.parentNode.insertBefore(container, refNode)
     return container
 
@@ -106,7 +106,7 @@ class Renderer
       @root.ownerDocument.head.appendChild(style)
     else if typeof css == 'string'
       link = @root.ownerDocument.createElement('link')
-      DOM.setAttributes(link,
+      dom(link).setAttributes(
         type: 'text/css'
         rel: 'stylesheet'
         href: css

@@ -1,7 +1,7 @@
 Quill      = require('../quill')
 Normalizer = require('../lib/normalizer')
 _          = Quill.require('lodash')
-DOM        = Quill.require('dom')
+dom        = Quill.require('dom')
 
 
 class Tooltip
@@ -26,7 +26,7 @@ class Tooltip
     @container = @quill.addContainer('tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
     @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker
-    DOM.addEventListener(@quill.root, 'focus', _.bind(this.hide, this))
+    dom(@quill.root).addEventListener('focus', _.bind(this.hide, this))
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
       if source == 'user' and @container.style.left != Tooltip.HIDE_MARGIN
@@ -35,10 +35,10 @@ class Tooltip
     )
 
   initTextbox: (textbox, enterCallback, escapeCallback) ->
-    DOM.addEventListener(textbox, 'keyup', (event) =>
+    dom(textbox).addEventListener('keyup', (event) =>
       switch event.which
-        when DOM.KEYS.ENTER   then enterCallback.call(this)
-        when DOM.KEYS.ESCAPE  then escapeCallback.call(this)
+        when dom.KEYS.ENTER  then enterCallback.call(this)
+        when dom.KEYS.ESCAPE then escapeCallback.call(this)
         else return true
     )
 

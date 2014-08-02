@@ -1,5 +1,5 @@
 _          = require('lodash')
-DOM        = require('../lib/dom')
+dom        = require('../lib/dom')
 Format     = require('./format')
 Line       = require('./line')
 LinkedList = require('../lib/linked-list')
@@ -26,7 +26,7 @@ class Document
     return if line? then line.findLeafAt(offset, inclusive) else [null, offset]
 
   findLine: (node) ->
-    while node? and !DOM.BLOCK_TAGS[node.tagName]?
+    while node? and !dom.BLOCK_TAGS[node.tagName]?
       node = node.parentNode
     line = if node? then @lineMap[node.id] else null
     return if line?.node == node then line else null
@@ -46,19 +46,19 @@ class Document
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
     if refLine?
-      @root.insertBefore(newLineNode, refLine.node) unless DOM.isElement(newLineNode.parentNode)  # Would prefer newLineNode.parentNode? but IE will have non-null object
+      @root.insertBefore(newLineNode, refLine.node) unless dom(newLineNode.parentNode).isElement()  # Would prefer newLineNode.parentNode? but IE will have non-null object
       @lines.insertAfter(refLine.prev, line)
     else
-      @root.appendChild(newLineNode) unless DOM.isElement(newLineNode.parentNode)
+      @root.appendChild(newLineNode) unless dom(newLineNode.parentNode).isElement()
       @lines.append(line)
     @lineMap[line.id] = line
     return line
 
   mergeLines: (line, lineToMerge) ->
     if lineToMerge.length > 1
-      DOM.removeNode(line.leaves.last.node) if line.length == 1
-      _.each(DOM.getChildNodes(lineToMerge.node), (child) ->
-        line.node.appendChild(child) if child.tagName != DOM.DEFAULT_BREAK_TAG
+      dom(line.leaves.last.node).removeNode() if line.length == 1
+      _.each(dom(lineToMerge.node).getChildNodes(), (child) ->
+        line.node.appendChild(child) if child.tagName != dom.DEFAULT_BREAK_TAG
       )
     this.removeLine(lineToMerge)
     line.rebuild()
@@ -73,14 +73,14 @@ class Document
   rebuild: ->
     lines = @lines.toArray()
     lineNode = @root.firstChild
-    lineNode = lineNode.firstChild if lineNode? and DOM.LIST_TAGS[lineNode.tagName]?
+    lineNode = lineNode.firstChild if lineNode? and dom.LIST_TAGS[lineNode.tagName]?
     _.each(lines, (line, index) =>
       while line.node != lineNode
         if line.node.parentNode == @root or line.node.parentNode?.parentNode == @root
           # New line inserted
           lineNode = Normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
-          lineNode = DOM.getNextLineNode(lineNode, @root)
+          lineNode = dom(lineNode).getNextLineNode(@root)
         else
           # Existing line removed
           return this.removeLine(line)
@@ -88,20 +88,20 @@ class Document
         # Existing line changed
         line.node = Normalizer.normalizeLine(line.node)
         line.rebuild()
-      lineNode = DOM.getNextLineNode(lineNode, @root)
+      lineNode = dom(lineNode).getNextLineNode(@root)
     )
     # New lines appended
     while lineNode?
       lineNode = Normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
-      lineNode = DOM.getNextLineNode(lineNode, @root)
+      lineNode = dom(lineNode).getNextLineNode(@root)
 
   removeLine: (line) ->
     if line.node.parentNode?
-      if DOM.LIST_TAGS[line.node.parentNode.tagName] and line.node.parentNode.childNodes.length == 1
-        DOM.removeNode(line.node.parentNode)
+      if dom.LIST_TAGS[line.node.parentNode.tagName] and line.node.parentNode.childNodes.length == 1
+        dom(line.node.parentNode).removeNode()
       else
-        DOM.removeNode(line.node)
+        dom(line.node).removeNode()
     delete @lineMap[line.id]
     @lines.remove(line)
 
@@ -115,7 +115,7 @@ class Document
 
   splitLine: (line, offset) ->
     offset = Math.min(offset, line.length - 1)
-    [lineNode1, lineNode2] = DOM.splitNode(line.node, offset, true)
+    [lineNode1, lineNode2] = dom(line.node).splitNode(offset, true)
     line.node = lineNode1
     line.rebuild()
     newLine = this.insertLineBefore(lineNode2, line.next)

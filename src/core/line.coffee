@@ -1,5 +1,5 @@
 _          = require('lodash')
-DOM        = require('../lib/dom')
+dom        = require('../lib/dom')
 Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
@@ -15,12 +15,12 @@ class Line extends LinkedList.Node
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Line.ID_PREFIX)
     @formats = {}
-    DOM.addClass(@node, Line.CLASS_NAME)
+    dom(@node).addClass(Line.CLASS_NAME)
     this.rebuild()
     super(@node)
 
   buildLeaves: (node, formats) ->
-    _.each(DOM.getChildNodes(node), (node) =>
+    _.each(dom(node).getChildNodes(), (node) =>
       node = Normalizer.normalizeNode(node)
       nodeFormats = _.clone(formats)
       # TODO: optimize
@@ -97,14 +97,14 @@ class Line extends LinkedList.Node
         targetNode = leaf.node
         # Identify node to modify
         if leaf.formats[name]?
-          DOM.splitAncestors(targetNode, @node)
+          dom(targetNode).splitAncestors(@node)
           while !format.match(targetNode)
             targetNode = targetNode.parentNode
         # Isolate target node
         if leafOffset > 0
-          [leftNode, targetNode] = DOM.splitNode(targetNode, leafOffset)
+          [leftNode, targetNode] = dom(targetNode).splitNode(leafOffset)
         if leaf.length > leafOffset + length  # leaf.length does not update with splitNode
-          [targetNode, rightNode] = DOM.splitNode(targetNode, length)
+          [targetNode, rightNode] = dom(targetNode).splitNode(length)
         format.add(targetNode, value)
       length -= leaf.length - leafOffset
       leafOffset = 0
@@ -122,8 +122,8 @@ class Line extends LinkedList.Node
       node = _.reduce(formats, (node, value, name) =>
         return @doc.formats[name].add(node, value)
       , @node.ownerDocument.createTextNode(text))
-      [prevNode, nextNode] = DOM.splitNode(leaf.node, leafOffset)
-      nextNode = DOM.splitAncestors(nextNode, @node) if nextNode
+      [prevNode, nextNode] = dom(leaf.node).splitNode(leafOffset)
+      nextNode = dom(nextNode).splitAncestors(@node).get() if nextNode
       @node.insertBefore(node, nextNode)
       this.rebuild()
 
@@ -138,8 +138,8 @@ class Line extends LinkedList.Node
       )
         return false
     @node = Normalizer.normalizeNode(@node)
-    if DOM.getNodeLength(@node) == 0 and !@node.querySelector(DOM.DEFAULT_BREAK_TAG)
-      @node.appendChild(@node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG))
+    if dom(@node).getNodeLength() == 0 and !@node.querySelector(dom.DEFAULT_BREAK_TAG)
+      @node.appendChild(@node.ownerDocument.createElement(dom.DEFAULT_BREAK_TAG))
     @leaves = new LinkedList()
     @formats = _.reduce(@doc.formats, (formats, format, name) =>
       if format.isType(Format.types.LINE)

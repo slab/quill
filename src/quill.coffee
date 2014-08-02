@@ -1,7 +1,7 @@
 _             = require('lodash')
 pkg           = require('../package.json')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-DOM           = require('./lib/dom')
+dom           = require('./lib/dom')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Range         = require('./lib/range')
@@ -49,7 +49,7 @@ class Quill extends EventEmitter2
   @require: (name) ->
     switch name
       when 'lodash' then return _
-      when 'dom' then return DOM
+      when 'dom' then return dom
       when 'tandem-core' then return Tandem
       else return null
 
@@ -150,7 +150,7 @@ class Quill extends EventEmitter2
     return _.pluck(this.getContents(start, end).ops, 'value').join('')
 
   insertEmbed: (index, type, url, source) ->
-    this.insertText(index, DOM.EMBED_TEXT, type, url, source)
+    this.insertText(index, dom.EMBED_TEXT, type, url, source)
 
   insertText: (index, text, name, value, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
@@ -184,7 +184,7 @@ class Quill extends EventEmitter2
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
-    html = "<#{DOM.DEFAULT_BLOCK_TAG}><#{DOM.DEFAULT_BREAK_TAG}></#{DOM.DEFAULT_BLOCK_TAG}>" unless html
+    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html
     @editor.doc.setHTML(html)
     @editor.checkUpdate(source)
 

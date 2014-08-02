@@ -1,5 +1,5 @@
 _   = require('lodash')
-DOM = require('./dom')
+dom = require('./dom')
 
 
 Normalizer =
@@ -40,10 +40,10 @@ Normalizer =
 
   # Make sure descendant break tags are not causing multiple lines to be rendered
   handleBreaks: (lineNode) ->
-    breaks = _.map(lineNode.querySelectorAll(DOM.DEFAULT_BREAK_TAG))
+    breaks = _.map(lineNode.querySelectorAll(dom.DEFAULT_BREAK_TAG))
     _.each(breaks, (br) =>
-      if br.nextSibling? and (!DOM.isIE(10) or br.previousSibling?)
-        DOM.splitAncestors(br.nextSibling, lineNode.parentNode)
+      if br.nextSibling? and (!dom.isIE(10) or br.previousSibling?)
+        dom(br.nextSibling).splitAncestors(lineNode.parentNode)
     )
     return lineNode
 
@@ -56,11 +56,11 @@ Normalizer =
     return lineNode
 
   normalizeNode: (node) ->
-    return node if DOM.isTextNode(node)
+    return node if dom(node).isTextNode()
     _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
       if node.hasAttribute(attribute)
         value = node.getAttribute(attribute)
-        value = DOM.convertFontSize(value) if attribute == 'size'
+        value = dom.convertFontSize(value) if attribute == 'size'
         node.style[style] = value
         node.removeAttribute(attribute)
     )
@@ -69,38 +69,38 @@ Normalizer =
 
   # Removes unnecessary tags but does not modify line contents
   optimizeLine: (lineNode) ->
-    lineNodeLength = DOM.getNodeLength(lineNode)
-    nodes = DOM.getDescendants(lineNode)
+    lineNodeLength = dom(lineNode).getNodeLength()
+    nodes = dom(lineNode).getDescendants()
     while nodes.length > 0
       node = nodes.pop()
       continue unless node?.parentNode?
-      continue if DOM.EMBED_TAGS[node.tagName]?
-      if node.tagName == DOM.DEFAULT_BREAK_TAG
+      continue if dom.EMBED_TAGS[node.tagName]?
+      if node.tagName == dom.DEFAULT_BREAK_TAG
         # Remove unneeded BRs
-        DOM.removeNode(node) unless lineNodeLength == 0
-      else if DOM.getNodeLength(node) == 0
+        dom(node).removeNode() unless lineNodeLength == 0
+      else if dom(node).getNodeLength() == 0
         nodes.push(node.nextSibling)
-        DOM.unwrap(node)
+        dom(node).unwrap()
       else if node.previousSibling? and node.tagName == node.previousSibling.tagName
         # Merge similar nodes
-        if _.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))
+        if _.isEqual(dom(node).getAttributes(), dom(node.previousSibling).getAttributes())
           nodes.push(node.firstChild)
-          DOM.mergeNodes(node.previousSibling, node)
+          dom(node.previousSibling).mergeNodes(node)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
     while curNode?
-      if DOM.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
+      if dom.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
         if curNode.previousSibling?
-          DOM.splitAncestors(curNode, lineNode.parentNode)
+          dom(curNode).splitAncestors(lineNode.parentNode)
         if curNode.nextSibling?
-          DOM.splitAncestors(curNode.nextSibling, lineNode.parentNode)
-        if !DOM.LIST_TAGS[curNode.tagName]?
-          DOM.unwrap(curNode)
+          dom(curNode.nextSibling).splitAncestors(lineNode.parentNode)
+        if !dom.LIST_TAGS[curNode.tagName]?
+          dom(curNode).unwrap()
           Normalizer.pullBlocks(lineNode)
         else
-          DOM.unwrap(curNode.parentNode)
+          dom(curNode.parentNode).unwrap()
           lineNode = curNode unless lineNode.parentNode?    # May have just unwrapped lineNode
         break
       curNode = curNode.nextSibling
@@ -117,45 +117,46 @@ Normalizer =
     return html
 
   whitelistStyles: (node) ->
-    original = DOM.getStyles(node)
+    original = dom(node).getStyles()
     styles = _.omit(original, (value, key) ->
       return !Normalizer.STYLES[key]?
     )
     if _.keys(styles).length < _.keys(original).length
       if _.keys(styles).length > 0
-        DOM.setStyles(node, styles)
+        dom(node).setStyles(styles)
       else
         node.removeAttribute('style')
 
   whitelistTags: (node) ->
-    return node unless DOM.isElement(node)
-    node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]) if Normalizer.ALIASES[node.tagName]?
-    if !Normalizer.TAGS[node.tagName]?
-      if DOM.BLOCK_TAGS[node.tagName]?
-        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG)
+    return node unless dom(node).isElement()
+    if Normalizer.ALIASES[node.tagName]?
+      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName])
+    else if !Normalizer.TAGS[node.tagName]?
+      if dom.BLOCK_TAGS[node.tagName]?
+        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
       else if !node.hasAttributes() and node.firstChild?
-        node = DOM.unwrap(node)
+        node = dom(node).unwrap()
       else
-        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG)
+        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
     return node
 
   # Wrap inline nodes with block tags
   wrapInline: (lineNode) ->
-    return lineNode if DOM.BLOCK_TAGS[lineNode.tagName]?
-    blockNode = lineNode.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG)
+    return lineNode if dom.BLOCK_TAGS[lineNode.tagName]?
+    blockNode = lineNode.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG)
     lineNode.parentNode.insertBefore(blockNode, lineNode)
-    while lineNode? and !DOM.BLOCK_TAGS[lineNode.tagName]?
+    while lineNode? and !dom.BLOCK_TAGS[lineNode.tagName]?
       nextNode = lineNode.nextSibling
       blockNode.appendChild(lineNode)
       lineNode = nextNode
     return blockNode
 
   unwrapText: (lineNode) ->
-    spans = _.map(lineNode.querySelectorAll(DOM.DEFAULT_INLINE_TAG))
+    spans = _.map(lineNode.querySelectorAll(dom.DEFAULT_INLINE_TAG))
     _.each(spans, (span) ->
-      attributes = DOM.getAttributes(span)
-      if _.keys(attributes).length == 0
-        DOM.unwrap(span)
+      $span = dom(span)
+      attributes = $span.getAttributes()
+      $span.unwrap() if _.keys(attributes).length == 0
     )
 
 

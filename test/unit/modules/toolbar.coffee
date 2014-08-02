@@ -1,3 +1,5 @@
+dom = Quill.Lib.DOM
+
 describe('Toolbar', ->
   beforeEach( ->
     @editorContainer = $('#editor-container').html('
@@ -19,28 +21,28 @@ describe('Toolbar', ->
     it('button add', ->
       range = new Quill.Lib.Range(2, 4)
       @quill.setSelection(range)
-      Quill.Lib.DOM.triggerEvent(@button, 'click')
+      dom(@button).triggerEvent('click')
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23', { bold: true }))
     )
 
     it('button remove', ->
       range = new Quill.Lib.Range(0, 2)
       @quill.setSelection(range)
-      Quill.Lib.DOM.triggerEvent(@button, 'click')
+      dom(@button).triggerEvent('click')
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01'))
     )
 
     it('dropdown add', ->
       range = new Quill.Lib.Range(2, 4)
       @quill.setSelection(range)
-      Quill.Lib.DOM.selectOption(@select, '18px')
+      dom(@select).selectOption('18px')
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23', { size: '18px' }))
     )
 
     it('dropdown remove', ->
       range = new Quill.Lib.Range(6, 8)
       @quill.setSelection(range)
-      Quill.Lib.DOM.resetSelect(@select)
+      dom(@select).resetSelect()
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '67'))
     )
   )
@@ -48,29 +50,29 @@ describe('Toolbar', ->
   describe('updateActive()', ->
     it('button', ->
       @quill.setSelection(1, 1)
-      expect(Quill.Lib.DOM.hasClass(@button, 'ql-active')).toBe(true)
+      expect(dom(@button).hasClass('ql-active')).toBe(true)
     )
 
     it('dropdown', ->
       @quill.setSelection(7, 7)
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('18px')
+      expect(dom(@select).getSelectValue()).toEqual('18px')
     )
 
     it('dropdown change', ->
       @quill.setSelection(7, 7)
       @quill.setSelection(9, 9)
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('32px')
+      expect(dom(@select).getSelectValue()).toEqual('32px')
     )
 
     it('dropdown reset', ->
       @quill.setSelection(7, 7)
       @quill.setSelection(3, 3)
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('13px')
+      expect(dom(@select).getSelectValue()).toEqual('13px')
     )
 
     it('dropdown blank', ->
       @quill.setSelection(5, 7)
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('')
+      expect(dom(@select).getSelectValue()).toEqual('')
     )
   )
 

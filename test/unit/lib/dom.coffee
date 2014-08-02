@@ -1,3 +1,5 @@
+dom = Quill.Lib.DOM
+
 describe('DOM', ->
   beforeEach( ->
     @container = $('#editor-container').html('<div></div>').get(0).firstChild
@@ -9,20 +11,20 @@ describe('DOM', ->
     )
 
     it('addClass()', ->
-      Quill.Lib.DOM.addClass(@container, 'custom')
+      dom(@container).addClass('custom')
       expect($(@container).hasClass('custom')).toBe(true)
     )
 
     it('addClass() existing', ->
-      Quill.Lib.DOM.addClass(@container, 'custom')
-      Quill.Lib.DOM.addClass(@container, 'custom')
+      dom(@container).addClass('custom')
+      dom(@container).addClass('custom')
       expect($(@container).attr('class')).toEqual('custom')
     )
 
     it('getClasses()', ->
       $(@container).addClass('custom')
       $(@container).addClass('another')
-      classes = Quill.Lib.DOM.getClasses(@container).sort()
+      classes = dom(@container).getClasses().sort()
       expect(classes.length).toEqual(2)
       expect(classes[0]).toEqual('another')
       expect(classes[1]).toEqual('custom')
@@ -30,24 +32,24 @@ describe('DOM', ->
 
     it('hasClass()', ->
       $(@container).addClass('custom')
-      expect(Quill.Lib.DOM.hasClass(@container, 'custom')).toBe(true)
+      expect(dom(@container).hasClass('custom')).toBe(true)
     )
 
     it('removeClass()', ->
       $(@container).addClass('custom')
-      Quill.Lib.DOM.removeClass(@container, 'custom')
+      dom(@container).removeClass('custom')
       expect($(@container).hasClass('custom')).toBe(false)
     )
 
     it('removeClass() nonexistent', ->
-      Quill.Lib.DOM.removeClass(@container, 'custom')
+      dom(@container).removeClass('custom')
       expect(@container.outerHTML).toEqualHTML('<div></div>')
     )
 
     it('toggleClass()', ->
-      Quill.Lib.DOM.toggleClass(@container, 'custom')
+      dom(@container).toggleClass('custom')
       expect($(@container).hasClass('custom')).toBe(true)
-      Quill.Lib.DOM.toggleClass(@container, 'custom')
+      dom(@container).toggleClass('custom')
       expect($(@container).hasClass('custom')).toBe(false)
     )
   )
@@ -60,35 +62,35 @@ describe('DOM', ->
 
     it('getAttributes() none', ->
       $(@container).html('<div></div>')
-      @node = @container.firstChild
-      attributes = Quill.Lib.DOM.getAttributes(@node)
+      attributes = dom(@container.firstChild).getAttributes()
       expect(_.keys(attributes).length).toEqual(0)
     )
 
     it('getAttributes() multiple', ->
-      attributes = Quill.Lib.DOM.getAttributes(@node)
+      attributes = dom(@node).getAttributes()
       expect(_.keys(attributes).length).toEqual(2)
       expect(attributes['class']).toEqual('custom')
       expect(attributes['style'].toLowerCase()).toContain('color: red')
     )
 
     it('clearAttributes()', ->
-      Quill.Lib.DOM.clearAttributes(@node)
+      dom(@node).clearAttributes()
       expect(@node.outerHTML).toEqualHTML('<div></div>')
     )
 
     it('clearAttributes() with exception', ->
-      Quill.Lib.DOM.clearAttributes(@node, 'class')
+      dom(@node).clearAttributes('class')
       expect(@node.outerHTML).toEqualHTML('<div class="custom"></div>')
     )
 
     it('setAttributes()', ->
-      Quill.Lib.DOM.clearAttributes(@node)
+      dom(@node).clearAttributes()
       attributes =
         'class': 'test'
         'style': 'font-size: 13px;'
-      Quill.Lib.DOM.setAttributes(@node, attributes)
-      expect(Quill.Lib.DOM.getAttributes(@node)).toEqual(attributes)
+      dom(@node).setAttributes(attributes)
+
+      expect(dom(@node).getAttributes()).toEqual(attributes)
     )
   )
 
@@ -100,13 +102,13 @@ describe('DOM', ->
 
     it('getStyles()', ->
       $(@container).html(html)
-      result = Quill.Lib.DOM.getStyles(@container.firstChild)
+      result = dom(@container.firstChild).getStyles()
       expect(result).toEqual(styles)
     )
 
     it('setStyles()', ->
       $(@container).html('<span>Test</span>')
-      Quill.Lib.DOM.setStyles(@container.firstChild, styles)
+      dom(@container.firstChild).setStyles(styles)
       _.each(styles, (value, name) =>
         expect(@container.firstChild.style[name]).toEqual(value)
       )
@@ -114,7 +116,7 @@ describe('DOM', ->
 
     it('addStyles()', ->
       $(@container).html(html)
-      Quill.Lib.DOM.addStyles(@container.firstChild,
+      dom(@container.firstChild).addStyles(
         color: 'blue'
         cursor: 'pointer'
       )
@@ -132,21 +134,21 @@ describe('DOM', ->
       )
 
       it('click', (done) ->
-        Quill.Lib.DOM.addEventListener(@button, 'click', _.partial(done, null))
+        dom(@button).addEventListener('click', _.partial(done, null))
         $(@button).trigger('click')
       )
 
       it('bubble', (done) ->
-        Quill.Lib.DOM.addEventListener(@button.parentNode, 'click', _.partial(done, null))
+        dom(@button.parentNode).addEventListener('click', _.partial(done, null))
         $(@button).trigger('click')
       )
 
       it('prevent bubble', (done) ->
-        Quill.Lib.DOM.addEventListener(@button, 'click', ->
+        dom(@button).addEventListener('click', ->
           _.defer(done)
           return false
         )
-        Quill.Lib.DOM.addEventListener(@button.parentNode, 'click', ->
+        dom(@button.parentNode).addEventListener('click', ->
           throw new Error('Bubble not prevented')
         )
         $(@button).trigger('click')
@@ -158,7 +160,7 @@ describe('DOM', ->
         $(@container).html('<button type="button" onclick="window._triggerClick = true;">Button</button>')
         @button = @container.querySelector('button')
         expect(window._triggerClick).not.toBeTruthy()
-        Quill.Lib.DOM.triggerEvent(@button, 'click')
+        dom(@button).triggerEvent('click')
         expect(window._triggerClick).toBe(true)
         window._triggerClick = undefined
       )
@@ -172,17 +174,17 @@ describe('DOM', ->
         )
         select = @container.querySelector('select')
         # Only testing event handler is fired, actually changing select is tested in select section below
-        Quill.Lib.DOM.addEventListener(select, 'change', ->
+        dom(select).addEventListener('change', ->
           expect(select.selectedIndex).toEqual(0)
           done()
         )
-        Quill.Lib.DOM.triggerEvent(select, 'change')
+        dom(select).triggerEvent('change')
       )
 
       it('keydown', (done) ->
         $(@container).html('<div contenteditable=true></div>')
         @container.firstChild.focus()
-        Quill.Lib.DOM.addEventListener(@container.firstChild, 'keydown', (event) ->
+        dom(@container.firstChild).addEventListener('keydown', (event) ->
           expect(event.key).toEqual('A')
           expect(event.altKey).not.toBeTruthy()
           expect(event.ctrlKey).not.toBeTruthy()
@@ -190,7 +192,7 @@ describe('DOM', ->
           expect(event.shiftKey).toBeTruthy()
           done()
         )
-        Quill.Lib.DOM.triggerEvent(@container.firstChild, 'keydown', { key: 'A', shiftKey: true, metaKey: true })
+        dom(@container.firstChild).triggerEvent('keydown', { key: 'A', shiftKey: true, metaKey: true })
       )
     )
   )
@@ -201,33 +203,33 @@ describe('DOM', ->
     )
 
     it('getText() from element', ->
-      expect(Quill.Lib.DOM.getText(@container)).toEqual('0123')
+      expect(dom(@container).getText()).toEqual('0123')
     )
 
     it('getText() from break', ->
-      expect(Quill.Lib.DOM.getText(@container.lastChild)).toEqual('')
+      expect(dom(@container.lastChild).getText()).toEqual('')
     )
 
     it('getText() from comment', ->
-      expect(Quill.Lib.DOM.getText(@container.childNodes[2])).toEqual('')
+      expect(dom(@container.childNodes[2]).getText()).toEqual('')
     )
 
     it('getText() embed tag', ->
-      expect(Quill.Lib.DOM.getText(@container.querySelector('img'))).toEqual(Quill.Lib.DOM.EMBED_TEXT)
+      expect(dom(@container.querySelector('img')).getText()).toEqual(dom.EMBED_TEXT)
     )
 
     it('setText() element', ->
-      Quill.Lib.DOM.setText(@container, 'test')
+      dom(@container).setText('test')
       expect($(@container).text()).toEqual('test')
     )
 
     it('setText() text node', ->
-      Quill.Lib.DOM.setText(@container.firstChild, 'A')
+      dom(@container.firstChild).setText('A')
       expect($(@container).text()).toEqual('A123')
     )
 
     it('getTextNodes()', ->
-      textNodes = Quill.Lib.DOM.getTextNodes(@container)
+      textNodes = dom(@container).getTextNodes()
       expect(textNodes.length).toEqual(4)
     )
   )
@@ -260,10 +262,10 @@ describe('DOM', ->
         'beyond node length': [16, 4]
         'child with children': [8, 3]
 
-      _.each(tests, (test, name) ->
+      _.each(tests, (test, name) =>
         [offset, nodeIndex] = test
         it(name, ->
-          [child, childOffset] = Quill.Lib.DOM.getChildAtOffset(@container, offset)
+          [child, childOffset] = dom(@container).getChildAtOffset(offset)
           expect(child).toEqual(@container.childNodes[nodeIndex])
           expectedOffset = if offset < length then offset%3 else 3
           expect(childOffset).toEqual(expectedOffset)
@@ -295,7 +297,7 @@ describe('DOM', ->
       _.each(tests, (test, name) ->
         it(name, ->
           @container.innerHTML = test.html
-          length = Quill.Lib.DOM.getNodeLength(@container.firstChild)
+          length = dom(@container.firstChild).getNodeLength()
           expect(length).toEqual(test.length)
         )
       )
@@ -308,46 +310,45 @@ describe('DOM', ->
     )
 
     it('moveChildren()', ->
-      Quill.Lib.DOM.moveChildren(@container.firstChild, @container.lastChild)
+      dom(@container.lastChild).moveChildren(@container.firstChild)
       expect(@container).toEqualHTML('<div style="cursor: pointer">One<span>Two</span><b>Bold</b></div><div></div>')
     )
 
     it('removeNode()', ->
-      Quill.Lib.DOM.removeNode(@container.lastChild.firstChild)
+      dom(@container.lastChild.firstChild).removeNode()
       expect(@container).toEqualHTML('<div style="cursor: pointer">One</div><div><b>Bold</b></div>')
     )
 
     it('switchTag()', ->
-      Quill.Lib.DOM.switchTag(@container.firstChild, 'span')
+      dom(@container.firstChild).switchTag('span')
       expect(@container).toEqualHTML('<span style="cursor: pointer">One</span><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('switchTag() to same', ->
       html = @container.innerHTML
-      Quill.Lib.DOM.switchTag(@container.firstChild, 'div')
       expect(@container).toEqualHTML(html)
     )
 
     it('switchTag() to void', ->
-      Quill.Lib.DOM.switchTag(@container.lastChild, 'br')
+      dom(@container.lastChild).switchTag('br')
       expect(@container).toEqualHTML('<div style="cursor: pointer">One</div><br>')
     )
 
     it('unwrap()', ->
-      Quill.Lib.DOM.unwrap(@container.lastChild)
+      dom(@container.lastChild).unwrap()
       expect(@container).toEqualHTML('<div style="cursor: pointer">One</div><span>Two</span><b>Bold</b>')
     )
 
     it('wrap()', ->
       wrapper = @container.ownerDocument.createElement('div')
-      Quill.Lib.DOM.wrap(wrapper, @container.firstChild)
+      dom(@container.firstChild).wrap(wrapper)
       expect(@container).toEqualHTML('<div><div style="cursor: pointer">One</div></div><div><span>Two</span><b>Bold</b></div>')
     )
 
     it('wrap() orphan node', ->
       wrapper = @container.ownerDocument.createElement('div')
       node = @container.ownerDocument.createElement('span')
-      Quill.Lib.DOM.wrap(wrapper, node)
+      dom(node).wrap(wrapper)
       expect(wrapper.outerHTML).toEqualHTML('<div><span></span></div>')
     )
   )
@@ -360,14 +361,14 @@ describe('DOM', ->
     describe('mergeNodes()', ->
       it('merge nodes', ->
         @container.innerHTML = '<ul><li>One</li></ul><ul><li>Two</li></ul>'
-        Quill.Lib.DOM.mergeNodes(@container.firstChild, @container.lastChild)
+        dom(@container.firstChild).mergeNodes(@container.lastChild)
         expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li></ul>')
       )
 
       it('merge and normalize', ->
         @container.innerHTML = '<span>One</span><span>Two</span>'
         expect(@container.childNodes.length).toEqual(2)
-        Quill.Lib.DOM.mergeNodes(@container.firstChild, @container.lastChild)
+        dom(@container.firstChild).mergeNodes(@container.lastChild)
         expect(@container).toEqualHTML('<span>OneTwo</span>')
         expect(@container.childNodes.length).toEqual(1)
         expect(@container.firstChild.childNodes.length).toEqual(1)
@@ -378,7 +379,7 @@ describe('DOM', ->
         @container.appendChild(document.createTextNode('One'))
         @container.appendChild(document.createTextNode('Two'))
         expect(@container.childNodes.length).toEqual(2)
-        Quill.Lib.DOM.mergeNodes(@container.firstChild, @container.lastChild)
+        dom(@container.firstChild).mergeNodes(@container.lastChild)
         expect(@container).toEqualHTML('OneTwo')
         expect(@container.childNodes.length).toEqual(1)
       )
@@ -401,7 +402,7 @@ describe('DOM', ->
 
       it('single split', ->
         node = @container.querySelector('b')
-        retNode = Quill.Lib.DOM.splitAncestors(node, @container)
+        retNode = dom(node).splitAncestors(@container).get()
         expect(@container).toEqualHTML('
           <div>
             <span>One</span>
@@ -420,7 +421,7 @@ describe('DOM', ->
 
       it('split multiple', ->
         node = @container.querySelector('s')
-        retNode = Quill.Lib.DOM.splitAncestors(node, @container)
+        retNode = dom(node).splitAncestors(@container).get()
         expect(@container).toEqualHTML('
           <div>
             <span>One</span>
@@ -442,7 +443,7 @@ describe('DOM', ->
       it('split none', ->
         node = @container.querySelector('span')
         html = @container.innerHTML
-        retNode = Quill.Lib.DOM.splitAncestors(node, @container)
+        retNode = dom(node).splitAncestors(@container).get()
         expect(@container).toEqualHTML(html)
         expect(retNode).toEqual(@container.firstChild)
       )
@@ -450,7 +451,7 @@ describe('DOM', ->
       it('split parent', ->
         node = @container.querySelector('i')
         html = @container.innerHTML
-        retNode = Quill.Lib.DOM.splitAncestors(node, @container)
+        retNode = dom(node).splitAncestors(@container).get()
         expect(@container).toEqualHTML('
           <div>
             <span>One</span>
@@ -469,7 +470,7 @@ describe('DOM', ->
 
       it('split force', ->
         node = @container.querySelector('span')
-        retNode = Quill.Lib.DOM.splitAncestors(node, @container, true)
+        retNode = dom(node).splitAncestors(@container, true).get()
         expect(@container).toEqualHTML('
           <div>
           </div>
@@ -550,10 +551,10 @@ describe('DOM', ->
       _.each(tests, (test, name) ->
         it(name, ->
           @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace(test.initial)
-          [left, right, split] = Quill.Lib.DOM.splitNode(@container.firstChild, test.offset, test.force)
+          [left, right, split] = dom(@container.firstChild).splitNode(test.offset, test.force)
           expect(@container).toEqualHTML(test.expected)
-          leftText = if left then Quill.Lib.DOM.getText(left) else null
-          rightText = if right then Quill.Lib.DOM.getText(right) else null
+          leftText = if left then dom(left).getText() else null
+          rightText = if right then dom(right).getText() else null
           expect(leftText).toEqual(test.left)
           expect(rightText).toEqual(test.right)
           expect(test.split).toEqual(split)
@@ -577,74 +578,74 @@ describe('DOM', ->
     )
 
     it('getDefaultOption()', ->
-      expect(Quill.Lib.DOM.getDefaultOption(@select)).toEqual(@select.children[1])
+      expect(dom(@select).getDefaultOption()).toEqual(@select.children[1])
     )
 
     it('resetSelect()', ->
       expect($(@select).val()).toEqual('one')
-      Quill.Lib.DOM.resetSelect(@select)
+      dom(@select).resetSelect()
       expect($(@select).val()).toEqual('two')
     )
 
     it('selectOption() option', ->
-      Quill.Lib.DOM.selectOption(@select, @select.children[2])
+      dom(@select).selectOption(@select.children[2])
       expect($(@select).val()).toEqual('three')
     )
 
     it('selectOption() value', ->
-      Quill.Lib.DOM.selectOption(@select, 'three')
+      dom(@select).selectOption('three')
       expect($(@select).val()).toEqual('three')
     )
 
     it('getSelectValue() option', ->
-      Quill.Lib.DOM.selectOption(@select, @select.children[2])
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('three')
+      dom(@select).selectOption(@select.children[2])
+      expect(dom(@select).getSelectValue()).toEqual('three')
     )
 
     it('getSelectValue() value', ->
-      Quill.Lib.DOM.selectOption(@select, 'three')
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('three')
+      dom(@select).selectOption('three')
+      expect(dom(@select).getSelectValue()).toEqual('three')
     )
 
     it('getSelectValue() blank', ->
-      Quill.Lib.DOM.selectOption(@select, '')
-      expect(Quill.Lib.DOM.getSelectValue(@select)).toEqual('')
+      dom(@select).selectOption('')
+      expect(dom(@select).getSelectValue()).toEqual('')
     )
   )
 
   describe('get nodes', ->
     it('getChildNodes()', ->
       @container.innerHTML = '<b>0</b><i>1</i><u>2</u><br>'
-      nodes = Quill.Lib.DOM.getChildNodes(@container)
+      nodes = dom(@container).getChildNodes()
       expect(nodes.length).toEqual(4)
     )
 
     it('getDescendants()', ->
       @container.innerHTML = '<b>0</b><i><span>1</span><s>2</s></i><u>3</u><br>'
-      nodes = Quill.Lib.DOM.getDescendants(@container)
+      nodes = dom(@container).getDescendants()
       expect(nodes.length).toEqual(6)
     )
   )
 
   describe('convertFontSize()', ->
     it('size to pixel', ->
-      expect(Quill.Lib.DOM.convertFontSize(2)).toEqual('13px')
+      expect(dom.convertFontSize(2)).toEqual('13px')
     )
 
     it('pixel to size', ->
-      expect(Quill.Lib.DOM.convertFontSize('16px')).toEqual(3)
+      expect(dom.convertFontSize('16px')).toEqual(3)
     )
 
     it('approx pixel to size', ->
-      expect(Quill.Lib.DOM.convertFontSize('19px')).toEqual(5)
+      expect(dom.convertFontSize('19px')).toEqual(5)
     )
 
     it('smaller than smallest', ->
-      expect(Quill.Lib.DOM.convertFontSize(0)).toEqual('10px')
+      expect(dom.convertFontSize(0)).toEqual('10px')
     )
 
     it('larger than largest', ->
-      expect(Quill.Lib.DOM.convertFontSize('52px')).toEqual(7)
+      expect(dom.convertFontSize('52px')).toEqual(7)
     )
   )
 
@@ -659,7 +660,7 @@ describe('DOM', ->
       _.each([1..3], (i) ->
         idIndex = parseInt(lineNode.id.slice('line-'.length))
         expect(idIndex).toEqual(i)
-        lineNode = Quill.Lib.DOM.getNextLineNode(lineNode, container)
+        lineNode = dom(lineNode).getNextLineNode(container)
       )
       expect(lineNode).toEqual(null)
     )
@@ -680,7 +681,7 @@ describe('DOM', ->
       _.each([1..5], (i) ->
         idIndex = parseInt(lineNode.id.slice('line-'.length))
         expect(idIndex).toEqual(i)
-        lineNode = Quill.Lib.DOM.getNextLineNode(lineNode, container)
+        lineNode = dom(lineNode).getNextLineNode(container)
       )
       expect(lineNode).toEqual(null)
     )
@@ -689,8 +690,8 @@ describe('DOM', ->
       container = $('#editor-container').html('<div id="line-1">One</div><div id="line-2">Two</div>').get(0)
       lineNode = container.firstChild
       expect(lineNode.id).toEqual('line-1')
-      Quill.Lib.DOM.switchTag(container.lastChild, 'div')
-      lineNode = Quill.Lib.DOM.getNextLineNode(lineNode, container)
+      dom(container.lastChild).switchTag('div')
+      lineNode = dom(lineNode).getNextLineNode(container)
       expect(lineNode).not.toEqual(null)
       expect(lineNode.id).toEqual('line-2')
     )
