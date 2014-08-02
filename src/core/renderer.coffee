@@ -82,7 +82,7 @@ class Renderer
     )
     # Mobile Safari lets iframe content overflow
     if dom.isIOS()
-      dom(@container).addStyles(
+      dom(@container).styles(
         'overflow': 'auto'
         '-webkit-overflow-scrolling': 'touch'
       )
