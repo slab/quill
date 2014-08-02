@@ -39,7 +39,7 @@ class Toolbar
     dom(@container).addClass('ql-toolbar-container')
     dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
     if dom.isIE(11) or dom.isIOS()
-      dom(@container).addEventListener('mousedown', =>
+      dom(@container).on('mousedown', =>
         # IE destroys selection by default when we click away
         # Also fixes bug in iOS where preformating prevents subsequent typing
         return false
@@ -55,7 +55,7 @@ class Toolbar
     input = @container.querySelector(selector)
     return unless input?
     @inputs[format] = input
-    dom(input).addEventListener(eventName, =>
+    dom(input).on(eventName, =>
       value = if eventName == 'change' then dom(input).getSelectValue() else !dom(input).hasClass('ql-active')
       @preventUpdate = true
       @quill.focus()

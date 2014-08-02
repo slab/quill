@@ -42,7 +42,7 @@ class Authorship
 
   attachButton: (button) ->
     $button = dom(button)
-    $button.addEventListener('click', =>
+    $button.on('click', =>
       $button.toggleClass('ql-on')
       this.enable($dom.hasClass('ql-on'))
     )

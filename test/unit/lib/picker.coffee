@@ -29,10 +29,10 @@ describe('Picker', ->
   it('expand/close', (done) ->
     label = @container.querySelector('.ql-picker-label')
     picker = @container.querySelector('.ql-picker')
-    dom(label).triggerEvent('click')
+    dom(label).trigger('click')
     _.defer( ->
       expect(dom(picker).hasClass('ql-expanded')).toBe(true)
-      dom(label).triggerEvent('click')
+      dom(label).trigger('click')
       _.defer( ->
         expect(dom(picker).hasClass('ql-expanded')).toBe(false)
         done()
@@ -41,7 +41,7 @@ describe('Picker', ->
   )
 
   it('select picker item', ->
-    dom(@container.querySelector('.ql-picker-options').lastChild).triggerEvent('click')
+    dom(@container.querySelector('.ql-picker-options').lastChild).trigger('click')
     expect(dom(@picker.label).text()).toEqual('Monospace')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
       expect(dom(item).hasClass('ql-selected')).toBe(i == 2)

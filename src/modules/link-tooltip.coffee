@@ -44,8 +44,8 @@ class LinkTooltip extends Tooltip
         @range = null   # Prevent restoring selection to last saved
         this.hide()
     )
-    dom(@container.querySelector('.done')).addEventListener('click', _.bind(this.saveLink, this))
-    dom(@container.querySelector('.change')).addEventListener('click', =>
+    dom(@container.querySelector('.done')).on('click', _.bind(this.saveLink, this))
+    dom(@container.querySelector('.change')).on('click', =>
       this.setMode(@link.href, true)
     )
     this.initTextbox(@textbox, this.saveLink, this.hide)

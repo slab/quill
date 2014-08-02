@@ -21,14 +21,14 @@ describe('Toolbar', ->
     it('button add', ->
       range = new Quill.Lib.Range(2, 4)
       @quill.setSelection(range)
-      dom(@button).triggerEvent('click')
+      dom(@button).trigger('click')
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23', { bold: true }))
     )
 
     it('button remove', ->
       range = new Quill.Lib.Range(0, 2)
       @quill.setSelection(range)
-      dom(@button).triggerEvent('click')
+      dom(@button).trigger('click')
       expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01'))
     )
 

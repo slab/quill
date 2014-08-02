@@ -46,24 +46,24 @@ describe('Keyboard', ->
         done()
       )
       @quill.setSelection(1, 2)
-      dom(@quill.root).triggerEvent('keydown', hotkey)
+      dom(@quill.root).trigger('keydown', hotkey)
     )
 
     it('format', ->
       @quill.setSelection(0, 4)
-      dom(@quill.root).triggerEvent('keydown', Quill.Module.Keyboard.hotkeys.BOLD)
+      dom(@quill.root).trigger('keydown', Quill.Module.Keyboard.hotkeys.BOLD)
       expect(@quill.root).toEqualHTML('<div><b>0123</b></div>', true)
     )
 
     it('tab', ->
       @quill.setSelection(1, 3)
-      dom(@quill.root).triggerEvent('keydown', Quill.Module.Keyboard.hotkeys.INDENT)
+      dom(@quill.root).trigger('keydown', Quill.Module.Keyboard.hotkeys.INDENT)
       expect(@quill.root).toEqualHTML('<div>0\t3</div>', true)
     )
 
     it('shift + tab', ->
       @quill.setSelection(0, 2)
-      dom(@quill.root).triggerEvent('keydown', Quill.Module.Keyboard.hotkeys.OUTDENT)
+      dom(@quill.root).trigger('keydown', Quill.Module.Keyboard.hotkeys.OUTDENT)
       expect(@quill.root).toEqualHTML('<div>0123</div>', true)
     )
   )

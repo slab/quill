@@ -116,40 +116,40 @@ describe('DOM', ->
   )
 
   describe('events', ->
-    describe('addEventListener()', ->
+    describe('on()', ->
       beforeEach( ->
         $(@container).html('<div><button type="button">Button</button></div>')
         @button = @container.querySelector('button')
       )
 
       it('click', (done) ->
-        dom(@button).addEventListener('click', _.partial(done, null))
+        dom(@button).on('click', _.partial(done, null))
         $(@button).trigger('click')
       )
 
       it('bubble', (done) ->
-        dom(@button.parentNode).addEventListener('click', _.partial(done, null))
+        dom(@button.parentNode).on('click', _.partial(done, null))
         $(@button).trigger('click')
       )
 
       it('prevent bubble', (done) ->
-        dom(@button).addEventListener('click', ->
+        dom(@button).on('click', ->
           _.defer(done)
           return false
         )
-        dom(@button.parentNode).addEventListener('click', ->
+        dom(@button.parentNode).on('click', ->
           throw new Error('Bubble not prevented')
         )
         $(@button).trigger('click')
       )
     )
 
-    describe('triggerEvent()', ->
+    describe('trigger()', ->
       it('click', ->
         $(@container).html('<button type="button" onclick="window._triggerClick = true;">Button</button>')
         @button = @container.querySelector('button')
         expect(window._triggerClick).not.toBeTruthy()
-        dom(@button).triggerEvent('click')
+        dom(@button).trigger('click')
         expect(window._triggerClick).toBe(true)
         window._triggerClick = undefined
       )
@@ -163,17 +163,17 @@ describe('DOM', ->
         )
         select = @container.querySelector('select')
         # Only testing event handler is fired, actually changing select is tested in select section below
-        dom(select).addEventListener('change', ->
+        dom(select).on('change', ->
           expect(select.selectedIndex).toEqual(0)
           done()
         )
-        dom(select).triggerEvent('change')
+        dom(select).trigger('change')
       )
 
       it('keydown', (done) ->
         $(@container).html('<div contenteditable=true></div>')
         @container.firstChild.focus()
-        dom(@container.firstChild).addEventListener('keydown', (event) ->
+        dom(@container.firstChild).on('keydown', (event) ->
           expect(event.key).toEqual('A')
           expect(event.altKey).not.toBeTruthy()
           expect(event.ctrlKey).not.toBeTruthy()
@@ -181,7 +181,7 @@ describe('DOM', ->
           expect(event.shiftKey).toBeTruthy()
           done()
         )
-        dom(@container.firstChild).triggerEvent('keydown', { key: 'A', shiftKey: true, metaKey: true })
+        dom(@container.firstChild).trigger('keydown', { key: 'A', shiftKey: true, metaKey: true })
       )
     )
   )

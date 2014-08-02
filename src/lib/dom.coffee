@@ -14,17 +14,6 @@ class Wrapper
       @node.className = (@node.className + ' ' + cssClass).trim()
     return this
 
-  addEventListener: (eventName, listener) ->
-    @node.addEventListener(eventName, (event) ->
-      arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
-      propogate = listener(arg)
-      unless propogate
-        event.preventDefault()
-        event.stopPropagation()
-      return propogate
-    )
-    return this
-
   attributes: (attributes) ->
     if attributes
       _.each(attributes, (value, name) =>
@@ -130,6 +119,22 @@ class Wrapper
       curNode = nextNode
     return this
 
+  on: (eventName, listener) ->
+    @node.addEventListener(eventName, (event) ->
+      arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
+      propogate = listener(arg)
+      unless propogate
+        event.preventDefault()
+        event.stopPropagation()
+      return propogate
+    )
+    return this
+
+  remove: ->
+    @node.parentNode?.removeChild(@node)
+    @node = null
+    return null
+
   removeClass: (cssClass) ->
     return unless this.hasClass(cssClass)
     if @node.classList?
@@ -139,11 +144,6 @@ class Wrapper
       classArray.splice(_.indexOf(classArray, cssClass), 1)
       @node.className = classArray.join(' ')
     return this
-
-  remove: ->
-    @node.parentNode?.removeChild(@node)
-    @node = null
-    return null
 
   replace: (newNode) ->
     @node.parentNode.replaceChild(newNode, @node)
@@ -156,7 +156,7 @@ class Wrapper
       option.selected = true
     else
       @node.selectedIndex = 0
-    this.triggerEvent('change') if trigger
+    this.trigger('change') if trigger
     return this
 
   selectOption: (option, trigger = true) ->
@@ -165,7 +165,7 @@ class Wrapper
       @node.value = value
     else
       @node.selectedIndex = -1  # PhantomJS
-    this.triggerEvent('change') if trigger
+    this.trigger('change') if trigger
     return this
 
   # @node is node after split point, root is parent of eldest node we want split (root will not be split)
@@ -266,7 +266,7 @@ class Wrapper
     else
       this.removeClass(className)
 
-  triggerEvent: (eventName, options = {}) =>
+  trigger: (eventName, options = {}) =>
     if _.indexOf(['keypress', 'keydown', 'keyup'], eventName) < 0
       event = @node.ownerDocument.createEvent('Event')
       event.initEvent(eventName, options.bubbles, options.cancelable)

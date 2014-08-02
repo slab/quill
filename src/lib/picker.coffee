@@ -12,16 +12,16 @@ class Picker
     dom(@container).addClass('ql-picker')
     @select.style.display = 'none'
     @select.parentNode.insertBefore(@container, @select)
-    dom(@select.ownerDocument).addEventListener('click', =>
+    dom(@select.ownerDocument).on('click', =>
       this.close()
       return true
     )
-    dom(@label).addEventListener('click', =>
+    dom(@label).on('click', =>
       _.defer( =>
         dom(@container).toggleClass('ql-expanded')
       )
     )
-    dom(@select).addEventListener('change', =>
+    dom(@select).on('change', =>
       if @select.selectedIndex > -1
         item = @container.querySelectorAll('.ql-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
@@ -32,7 +32,7 @@ class Picker
   buildItem: (picker, option, index) ->
     item = @select.ownerDocument.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
-    dom(item).addClass('ql-picker-item').text(dom(option).text()).addEventListener('click', =>
+    dom(item).addClass('ql-picker-item').text(dom(option).text()).on('click', =>
       this.selectItem(item, true)
       this.close()
     )

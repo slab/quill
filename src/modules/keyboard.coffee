@@ -65,7 +65,7 @@ class Keyboard
     )
 
   _initListeners: ->
-    dom(@quill.root).addEventListener('keydown', (event) =>
+    dom(@quill.root).on('keydown', (event) =>
       prevent = false
       _.each(@hotkeys[event.which], (hotkey) =>
         return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)

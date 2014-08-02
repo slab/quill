@@ -14,7 +14,7 @@ class PasteManager
         'position': 'absolute'
         'top': '50%'
     )
-    dom(@quill.root).addEventListener('paste', _.bind(this._paste, this))
+    dom(@quill.root).on('paste', _.bind(this._paste, this))
 
   _paste: ->
     oldDocLength = @quill.getLength()
