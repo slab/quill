@@ -40,7 +40,7 @@ class Picker
     return item
 
   buildPicker: ->
-    _.each(dom(@select).getAttributes(), (value, name) =>
+    _.each(dom(@select).attributes(), (value, name) =>
       @container.setAttribute(name, value)
     )
     @container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE)

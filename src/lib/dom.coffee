@@ -32,7 +32,7 @@ class Wrapper
 
   clearAttributes: (exception = []) ->
     exception = [exception] if _.isString(exception)
-    _.each(this.getAttributes(), (value, name) =>
+    _.each(this.attributes(), (value, name) =>
       @node.removeAttribute(name) unless _.indexOf(exception, name) > -1
     )
     return this
@@ -40,13 +40,21 @@ class Wrapper
   get: ->
     return @node
 
-  getAttributes: ->
-    return {} unless @node.attributes?
-    attributes = {}
-    for value,i in @node.attributes
-      attr = @node.attributes[i]
-      attributes[attr.name] = attr.value
-    return attributes
+  attributes: (attributes) ->
+    if attributes
+      # add attributes
+      _.each(attributes, (value, name) =>
+        @node.setAttribute(name, value)
+      )
+      return this
+    else
+      # get attributes
+      return {} unless @node.attributes?
+      attributes = {}
+      for value,i in @node.attributes
+        attr = @node.attributes[i]
+        attributes[attr.name] = attr.value
+      return attributes
 
   getChildAtOffset: (offset) ->
     child = @node.firstChild
@@ -209,12 +217,6 @@ class Wrapper
     this.triggerEvent('change') if trigger
     return this
 
-  setAttributes: (attributes) ->
-    _.each(attributes, (value, name) =>
-      @node.setAttribute(name, value)
-    )
-    return this
-
   setStyles: (styles) ->
     styleString = _.map(styles, (style, name) ->
       return "#{name}: #{style}"
@@ -272,10 +274,10 @@ class Wrapper
     newTag = newTag.toUpperCase()
     return this if @node.tagName == newTag
     newNode = @node.ownerDocument.createElement(newTag)
-    attributes = this.getAttributes()
+    attributes = this.attributes()
     this.moveChildren(newNode) unless dom.VOID_TAGS[newTag]?
     this.replaceNode(newNode)
-    return this.setAttributes(attributes).get()
+    return this.attributes(attributes).get()
 
   toggleClass: (className, state) ->
     state = !this.hasClass(className) unless state?

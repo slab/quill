@@ -60,14 +60,14 @@ describe('DOM', ->
       @node = @container.firstChild
     )
 
-    it('getAttributes() none', ->
+    it('get attributes none', ->
       $(@container).html('<div></div>')
-      attributes = dom(@container.firstChild).getAttributes()
+      attributes = dom(@container.firstChild).attributes()
       expect(_.keys(attributes).length).toEqual(0)
     )
 
-    it('getAttributes() multiple', ->
-      attributes = dom(@node).getAttributes()
+    it('get attributes multiple', ->
+      attributes = dom(@node).attributes()
       expect(_.keys(attributes).length).toEqual(2)
       expect(attributes['class']).toEqual('custom')
       expect(attributes['style'].toLowerCase()).toContain('color: red')
@@ -83,14 +83,13 @@ describe('DOM', ->
       expect(@node.outerHTML).toEqualHTML('<div class="custom"></div>')
     )
 
-    it('setAttributes()', ->
+    it('set attributes', ->
       dom(@node).clearAttributes()
       attributes =
         'class': 'test'
         'style': 'font-size: 13px;'
-      dom(@node).setAttributes(attributes)
-
-      expect(dom(@node).getAttributes()).toEqual(attributes)
+      dom(@node).attributes(attributes)
+      expect(dom(@node).attributes()).toEqual(attributes)
     )
   )
 

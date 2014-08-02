@@ -83,7 +83,7 @@ Normalizer =
         dom(node).unwrap()
       else if node.previousSibling? and node.tagName == node.previousSibling.tagName
         # Merge similar nodes
-        if _.isEqual(dom(node).getAttributes(), dom(node.previousSibling).getAttributes())
+        if _.isEqual(dom(node).attributes(), dom(node.previousSibling).attributes())
           nodes.push(node.firstChild)
           dom(node.previousSibling).mergeNodes(node)
 
@@ -154,9 +154,7 @@ Normalizer =
   unwrapText: (lineNode) ->
     spans = _.map(lineNode.querySelectorAll(dom.DEFAULT_INLINE_TAG))
     _.each(spans, (span) ->
-      $span = dom(span)
-      attributes = $span.getAttributes()
-      $span.unwrap() if _.keys(attributes).length == 0
+      dom(span).unwrap() if (!span.hasAttributes())
     )
 
 

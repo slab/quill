@@ -54,7 +54,7 @@ class Renderer
 
   @buildFrame: (container) ->
     iframe = container.ownerDocument.createElement('iframe')
-    dom(iframe).setAttributes(
+    dom(iframe).attributes(
       frameBorder: '0'
       height: '100%'
       width: '100%'
@@ -106,7 +106,7 @@ class Renderer
       @root.ownerDocument.head.appendChild(style)
     else if typeof css == 'string'
       link = @root.ownerDocument.createElement('link')
-      dom(link).setAttributes(
+      dom(link).attributes(
         type: 'text/css'
         rel: 'stylesheet'
         href: css

@@ -7,7 +7,7 @@ compareNodes = (node1, node2, ignoredAttributes = []) ->
     return false unless dom(node2).isElement()
     return false unless node1.tagName == node2.tagName
     [attr1, attr2] = _.map([node1, node2], (node) ->
-      attr = dom(node).getAttributes()
+      attr = dom(node).attributes()
       _.each(ignoredAttributes, (name) ->
         delete attr[name]
       )
