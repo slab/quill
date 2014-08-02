@@ -98,14 +98,14 @@ class Wrapper
       length += @node.querySelectorAll(_.keys(dom.EMBED_TAGS).join(',')).length
     return length
 
-  mergeNodes: (node) ->
+  merge: (node) ->
     $node = dom(node)
     if this.isElement()
       $node.moveChildren(@node)
       this.normalize()
     else
       this.text(this.text() + $node.text())
-    $node.removeNode()
+    $node.remove()
     return this
 
   moveChildren: (newParent) ->
@@ -122,10 +122,10 @@ class Wrapper
       $node = dom(curNode)
       if dom(nextNode).isTextNode()
         if $node.text().length == 0
-          $node.removeNode()
+          $node.remove()
         else if $node.isTextNode()
           followingNode = nextNode.nextSibling
-          $node.mergeNodes(nextNode)
+          $node.merge(nextNode)
           nextNode = followingNode
       curNode = nextNode
     return this
@@ -140,12 +140,12 @@ class Wrapper
       @node.className = classArray.join(' ')
     return this
 
-  removeNode: ->
+  remove: ->
     @node.parentNode?.removeChild(@node)
     @node = null
     return null
 
-  replaceNode: (newNode) ->
+  replace: (newNode) ->
     @node.parentNode.replaceChild(newNode, @node)
     @node = newNode
     return newNode
@@ -184,7 +184,7 @@ class Wrapper
     else
       return dom(@node.parentNode).splitAncestors(root)
 
-  splitNode: (offset, force = false) ->
+  split: (offset, force = false) ->
     # Check if split necessary
     nodeLength = this.length()
     offset = Math.max(0, offset)
@@ -199,7 +199,7 @@ class Wrapper
       right = @node.cloneNode(false)
       @node.parentNode.insertBefore(right, left.nextSibling)
       [child, offset] = this.getChildAtOffset(offset)
-      [childLeft, childRight] = dom(child).splitNode(offset)
+      [childLeft, childRight] = dom(child).split(offset)
       while childRight != null
         nextRight = childRight.nextSibling
         right.appendChild(childRight)
@@ -232,7 +232,7 @@ class Wrapper
     newNode = @node.ownerDocument.createElement(newTag)
     attributes = this.attributes()
     this.moveChildren(newNode) unless dom.VOID_TAGS[newTag]?
-    this.replaceNode(newNode)
+    this.replace(newNode)
     return this.attributes(attributes).get()
 
   text: (text) ->
@@ -299,7 +299,7 @@ class Wrapper
     _.each(this.childNodes(), (child) =>
       @node.parentNode.insertBefore(child, next)
     )
-    this.removeNode()
+    this.remove()
     return ret
 
   window: ->

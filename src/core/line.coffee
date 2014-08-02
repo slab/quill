@@ -102,9 +102,9 @@ class Line extends LinkedList.Node
             targetNode = targetNode.parentNode
         # Isolate target node
         if leafOffset > 0
-          [leftNode, targetNode] = dom(targetNode).splitNode(leafOffset)
-        if leaf.length > leafOffset + length  # leaf.length does not update with splitNode
-          [targetNode, rightNode] = dom(targetNode).splitNode(length)
+          [leftNode, targetNode] = dom(targetNode).split(leafOffset)
+        if leaf.length > leafOffset + length  # leaf.length does not update with split()
+          [targetNode, rightNode] = dom(targetNode).split(length)
         format.add(targetNode, value)
       length -= leaf.length - leafOffset
       leafOffset = 0
@@ -122,7 +122,7 @@ class Line extends LinkedList.Node
       node = _.reduce(formats, (node, value, name) =>
         return @doc.formats[name].add(node, value)
       , @node.ownerDocument.createTextNode(text))
-      [prevNode, nextNode] = dom(leaf.node).splitNode(leafOffset)
+      [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
       nextNode = dom(nextNode).splitAncestors(@node).get() if nextNode
       @node.insertBefore(node, nextNode)
       this.rebuild()

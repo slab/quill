@@ -189,7 +189,7 @@ describe('Document', ->
     )
 
     it('removeLine() lineNode missing', ->
-      dom(@lines[1].node).removeNode()
+      dom(@lines[1].node).remove()
       @doc.removeLine(@lines[1])
       expect(@doc.root).toEqualHTML('
         <div>Test</div>
@@ -391,7 +391,7 @@ describe('Document', ->
     )
 
     it('existing line split', ->
-      dom(@doc.root.firstChild).splitNode(2)
+      dom(@doc.root.firstChild).split(2)
       @doc.rebuild()
       expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
     )

@@ -114,7 +114,7 @@ class SnowTheme extends DefaultTheme
     )
     _.each(dom(module.container).textNodes(), (node) ->
       if dom(node).text().trim().length == 0
-        dom(node).removeNode()
+        dom(node).remove()
     )
 
 

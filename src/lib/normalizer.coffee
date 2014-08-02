@@ -77,7 +77,7 @@ Normalizer =
       continue if dom.EMBED_TAGS[node.tagName]?
       if node.tagName == dom.DEFAULT_BREAK_TAG
         # Remove unneeded BRs
-        dom(node).removeNode() unless lineNodeLength == 0
+        dom(node).remove() unless lineNodeLength == 0
       else if dom(node).length() == 0
         nodes.push(node.nextSibling)
         dom(node).unwrap()
@@ -85,7 +85,7 @@ Normalizer =
         # Merge similar nodes
         if _.isEqual(dom(node).attributes(), dom(node.previousSibling).attributes())
           nodes.push(node.firstChild)
-          dom(node.previousSibling).mergeNodes(node)
+          dom(node.previousSibling).merge(node)
 
   # Make sure descendants are all inline elements
   pullBlocks: (lineNode) ->

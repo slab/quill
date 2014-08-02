@@ -129,14 +129,14 @@ class MultiCursor extends EventEmitter2
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
     guide = @container.ownerDocument.createElement('span')
     if leaf?
-      [leftNode, rightNode, didSplit] = dom(leaf.node).splitNode(offset)
+      [leftNode, rightNode, didSplit] = dom(leaf.node).split(offset)
       dom(guide).text(dom.ZERO_WIDTH_NOBREAK_SPACE)
       leaf.node.parentNode.insertBefore(guide, rightNode)
     else
       dom(guide).text(dom.NOBREAK_SPACE)
       @quill.root.appendChild(guide)
     this._moveCursor(cursor, guide)
-    dom(guide).removeNode()
+    dom(guide).remove()
     dom(leaf.node.parentNode).normalize() if didSplit
     @quill.editor.selection.update('silent')
 

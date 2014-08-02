@@ -25,7 +25,7 @@ class Leaf extends LinkedList.Node
     @length = @text.length
     if dom.EMBED_TAGS[@node.tagName]?
       textNode = @node.ownerDocument.createTextNode(@text)
-      @node = dom(@node).replaceNode(@textNode)
+      @node = dom(@node).replace(@textNode)
     else
       dom(@node).text(@text)
 
@@ -36,7 +36,7 @@ class Leaf extends LinkedList.Node
     else
       textNode = @node.ownerDocument.createTextNode(text)
       if @node.tagName == dom.DEFAULT_BREAK_TAG
-        @node = dom(@node).replaceNode(textNode)
+        @node = dom(@node).replace(textNode)
       else
         @node.appendChild(textNode)
         @node = textNode

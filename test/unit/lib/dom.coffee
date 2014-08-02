@@ -303,8 +303,8 @@ describe('DOM', ->
       expect(@container).toEqualHTML('<div style="cursor: pointer">One<span>Two</span><b>Bold</b></div><div></div>')
     )
 
-    it('removeNode()', ->
-      dom(@container.lastChild.firstChild).removeNode()
+    it('remove()', ->
+      dom(@container.lastChild.firstChild).remove()
       expect(@container).toEqualHTML('<div style="cursor: pointer">One</div><div><b>Bold</b></div>')
     )
 
@@ -347,17 +347,17 @@ describe('DOM', ->
       @container = $('#editor-container').html('').get(0)
     )
 
-    describe('mergeNodes()', ->
+    describe('merge', ->
       it('merge nodes', ->
         @container.innerHTML = '<ul><li>One</li></ul><ul><li>Two</li></ul>'
-        dom(@container.firstChild).mergeNodes(@container.lastChild)
+        dom(@container.firstChild).merge(@container.lastChild)
         expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li></ul>')
       )
 
       it('merge and normalize', ->
         @container.innerHTML = '<span>One</span><span>Two</span>'
         expect(@container.childNodes.length).toEqual(2)
-        dom(@container.firstChild).mergeNodes(@container.lastChild)
+        dom(@container.firstChild).merge(@container.lastChild)
         expect(@container).toEqualHTML('<span>OneTwo</span>')
         expect(@container.childNodes.length).toEqual(1)
         expect(@container.firstChild.childNodes.length).toEqual(1)
@@ -368,7 +368,7 @@ describe('DOM', ->
         @container.appendChild(document.createTextNode('One'))
         @container.appendChild(document.createTextNode('Two'))
         expect(@container.childNodes.length).toEqual(2)
-        dom(@container.firstChild).mergeNodes(@container.lastChild)
+        dom(@container.firstChild).merge(@container.lastChild)
         expect(@container).toEqualHTML('OneTwo')
         expect(@container.childNodes.length).toEqual(1)
       )
@@ -477,7 +477,7 @@ describe('DOM', ->
       )
     )
 
-    describe('splitNode()', ->
+    describe('split node', ->
       tests =
         'unnecessary split before':
           initial:  '<b>Bold</b>'
@@ -540,7 +540,7 @@ describe('DOM', ->
       _.each(tests, (test, name) ->
         it(name, ->
           @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace(test.initial)
-          [left, right, split] = dom(@container.firstChild).splitNode(test.offset, test.force)
+          [left, right, split] = dom(@container.firstChild).split(test.offset, test.force)
           expect(@container).toEqualHTML(test.expected)
           leftText = if left then dom(left).text() else null
           rightText = if right then dom(right).text() else null

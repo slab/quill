@@ -79,15 +79,15 @@ class Format
       parentNode = @document.createElement(@config.parentTag)
       dom(node).wrap(parentNode)
       if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
-        dom(node.parentNode.previousSibling).mergeNodes(node.parentNode)
+        dom(node.parentNode.previousSibling).merge(node.parentNode)
       if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
-        dom(node.parentNode).mergeNodes(node.parentNode.nextSibling)
+        dom(node.parentNode).merge(node.parentNode.nextSibling)
     if _.isString(@config.tag)
       formatNode = @document.createElement(@config.tag)
       if dom.VOID_TAGS[formatNode.tagName]?
         # TODO use replaceNode
         node.parentNode.insertBefore(formatNode, node) if node.parentNode?
-        dom(node).removeNode()
+        dom(node).remove()
         node = formatNode
       else if this.isType(Format.types.LINE)
         node = dom(node).switchTag(@config.tag)

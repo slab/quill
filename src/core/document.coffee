@@ -56,7 +56,7 @@ class Document
 
   mergeLines: (line, lineToMerge) ->
     if lineToMerge.length > 1
-      dom(line.leaves.last.node).removeNode() if line.length == 1
+      dom(line.leaves.last.node).remove() if line.length == 1
       _.each(dom(lineToMerge.node).childNodes(), (child) ->
         line.node.appendChild(child) if child.tagName != dom.DEFAULT_BREAK_TAG
       )
@@ -99,9 +99,9 @@ class Document
   removeLine: (line) ->
     if line.node.parentNode?
       if dom.LIST_TAGS[line.node.parentNode.tagName] and line.node.parentNode.childNodes.length == 1
-        dom(line.node.parentNode).removeNode()
+        dom(line.node.parentNode).remove()
       else
-        dom(line.node).removeNode()
+        dom(line.node).remove()
     delete @lineMap[line.id]
     @lines.remove(line)
 
@@ -115,7 +115,7 @@ class Document
 
   splitLine: (line, offset) ->
     offset = Math.min(offset, line.length - 1)
-    [lineNode1, lineNode2] = dom(line.node).splitNode(offset, true)
+    [lineNode1, lineNode2] = dom(line.node).split(offset, true)
     line.node = lineNode1
     line.rebuild()
     newLine = this.insertLineBefore(lineNode2, line.next)
