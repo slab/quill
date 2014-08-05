@@ -1,4 +1,4 @@
-blackColor = #454545
+blackColor = #444
 blueColor = #06c
 grayColor = #ccc
 lightGrayColor = #ddd
@@ -27,12 +27,6 @@ formatInput =
   line-height: inputHeight
   vertical-align: middle
 
-@font-face
-  font-family: 'quill-snow'
-  font-style: normal
-  font-weight: normal
-  src: url('assets/quill-snow.eot') format('embedded-opentype'), url('assets/quill-snow.woff') format('woff')
-
 
 .ql-toolbar-container
   box-sizing: border-box
@@ -60,39 +54,8 @@ formatInput =
     background-repeat: no-repeat
     box-sizing: border-box
     cursor: pointer
-    font-family: 'quill-snow'
-    font-size: inputSize
-    margin-top: 1px     // Some reason buttons look more aligned with this
     text-align: center
     width: inputHeight
-  .ql-format-button:hover, .ql-format-button.ql-active, .ql-format-button.ql-on
-    color: blueColor
-  .ql-format-button.ql-bold:before
-    content: "\e801"
-  .ql-format-button.ql-italic:before
-    content: "\e802"
-  .ql-format-button.ql-underline:before
-    content: "\e803"
-  .ql-format-button.ql-strike:before
-    content: "\e804"
-  .ql-format-button.ql-link:before
-    content: "\e805"
-  .ql-format-button.ql-image:before
-    content: "\e806"
-  .ql-format-button.ql-list:before
-    content: "\e807"
-  .ql-format-button.ql-bullet:before
-    content: "\e808"
-  .ql-format-button.ql-indent:before
-    content: "\e809"
-  .ql-format-button.ql-outdent:before
-    content: "\e80A"
-  .ql-format-button.ql-superscript:before
-    content: "\e80F"
-  .ql-format-button.ql-subscript:before
-    content: "\e810"
-  .ql-format-button.ql-authorship:before
-    content: "\e811"
 
 /* Fix for iOS not losing hover state after click */
 .ql-toolbar-container.ios
@@ -103,26 +66,24 @@ formatInput =
 
 .ql-picker
   box-sizing: border-box
-  font-size: 13px
+  color: blackColor
   display: inline-block
-  font-family: 'Helvetica', 'Arial', sans-serif
-  font-weight: bold
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
+  font-size: 14px
+  font-weight: 500
   position: relative
   .ql-picker-label
     {formatInput}
     background-color: whiteColor
+    background-position: center center
+    background-repeat: no-repeat
+    background-size: 18px 18px
     border: 1px solid transparent
     cursor: pointer
     padding-left: toolbarPadding
     padding-right: toolbarPadding
     position: relative
     width: 100%
-  .ql-picker-label:after
-    content: "\e812"
-    float: right
-    font-family: 'quill-snow'
-    font-size: 12px
-    margin-left: 8px
   .ql-picker-label.ql-active, .ql-picker-label:hover
     color: blueColor
   .ql-picker-options
@@ -134,12 +95,15 @@ formatInput =
     position: absolute
     width: 100%
     .ql-picker-item
+      background-position: center center
+      background-repeat: no-repeat
+      background-size: 18px 18px
       box-sizing: border-box
       cursor: pointer
       display: block
       padding-bottom: inputPadding
       padding-top: inputPadding
-    .ql-picker-item.selected, .ql-picker-item:hover
+    .ql-picker-item.ql-selected, .ql-picker-item:hover
       color: blueColor
 .ql-picker.ql-expanded
   .ql-picker-label
@@ -153,34 +117,10 @@ formatInput =
     margin-top: -1px
     z-index: 1
 
-.ql-picker.ql-font
-  width: fontNamePickerWidth
-.ql-picker.ql-size
-  width: fontSizePickerWidth
-.ql-picker.ql-align
-  font-family: 'quill-snow'
-  .ql-picker-label
-    margin-top: 1px     // Some reason button look more aligned with this
-  .ql-picker-label:after
-    content: normal
-  .ql-picker-options
-    width: textAlignPickerWidth
-  .ql-picker-label[data-value=left]:before, .ql-picker-item[data-value=left]:before
-    content: "\e80B"
-  .ql-picker-label[data-value=right]:before, .ql-picker-item[data-value=right]:before
-    content: "\e80C"
-  .ql-picker-label[data-value=center]:before, .ql-picker-item[data-value=center]:before
-    content: "\e80D"
-  .ql-picker-label[data-value=justify]:before, .ql-picker-item[data-value=justify]:before
-    content: "\e80E"
-
 .ql-picker.ql-color-picker
-  width: 32px   // Remove when we switch to using font icons
+  width: inputHeight
   .ql-picker-label
-    background-position: center center
-    background-repeat: no-repeat
-  .ql-picker-label:after
-    content: normal
+    padding: 0px
   .ql-picker-options
     padding: inputPadding
     width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
@@ -196,8 +136,81 @@ formatInput =
     .ql-picker-item.selected, .ql-picker-item:hover
       border-color: #000
 
+.ql-picker.ql-font
+  width: fontNamePickerWidth
+.ql-picker.ql-size
+  width: fontSizePickerWidth
+.ql-picker.ql-font, .ql-picker.ql-size
+  .ql-picker-label
+    background-position: right center
+
+.ql-picker.ql-align
+  .ql-picker-label
+    padding: 0px
+    width: textAlignPickerWidth
+  .ql-picker-item
+    {formatInput}
+    padding: 0px
+    width: textAlignPickerWidth
+  .ql-picker-options
+    padding: 4px 0px
+
+
+for $format in bold italic underline strike link image list bullet authorship
+  .ql-{$format}.ql-format-button
+    background-image: url('assets/' + $format + '.png')
+  .ql-{$format}.ql-format-button:hover, .ql-{$format}.ql-format-button.ql-active
+    background-image: url('assets/active/' + $format + '.png')
+.ql-authorship.ql-on
+  background-image: url('assets/active/authorship.png')
+
+.ql-picker.ql-font, .ql-picker.ql-size
+  .ql-picker-label
+    background-image: url('assets/dropdown.png')
+  .ql-picker-label:hover, .ql-picker-label.ql-active
+    background-image: url('assets/active/dropdown.png')
+.ql-picker.ql-font.ql-expanded, .ql-picker.ql-size.ql-expanded
+  .ql-picker-label
+    background-image: url('assets/dropdown.png')  // Should be gray
+
 for $format in color background
   .ql-picker.ql-{$format} .ql-picker-label
     background-image: url('assets/' + $format + '.png')
   .ql-picker.ql-{$format} .ql-picker-label.ql-active, .ql-picker.ql-{$format} .ql-picker-label:hover, .ql-picker.ql-{$format}.ql-expanded .ql-picker-label
-    background-image: url('assets/' + $format + '-active.png')
+    background-image: url('assets/active/' + $format + '.png')
+
+for $format in left right center justify
+  .ql-picker-label[data-value={$format}], .ql-picker-item[data-value={$format}]
+    background-image: url('assets/align-' + $format + '.png')
+  .ql-active.ql-picker-label[data-value={$format}], .ql-selected.ql-picker-item[data-value={$format}], .ql-picker-item[data-value={$format}]:hover
+    background-image: url('assets/active/align-' + $format + '.png')
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
+  for $format in bold italic underline strike link image list bullet authorship
+    .ql-{$format}.ql-format-button
+      background-image: url('assets/' + $format + '@2x.png')
+    .ql-{$format}.ql-format-button:hover, .ql-{$format}.ql-format-button.ql-active
+      background-image: url('assets/active/' + $format + '@2x.png')
+  .ql-authorship.ql-on
+    background-image: url('assets/active/authorship@2x.png')
+
+  .ql-picker.ql-font, .ql-picker.ql-size
+    .ql-picker-label
+      background-image: url('assets/dropdown@2x.png')
+    .ql-picker-label:hover, .ql-picker-label.ql-active
+      background-image: url('assets/active/dropdown@2x.png')
+  .ql-picker.ql-font.ql-expanded, .ql-picker.ql-size.ql-expanded
+    .ql-picker-label
+      background-image: url('assets/dropdown@2x.png')  // Should be gray
+
+  for $format in color background
+    .ql-picker.ql-{$format} .ql-picker-label
+      background-image: url('assets/' + $format + '@2x.png')
+    .ql-picker.ql-{$format} .ql-picker-label.ql-active, .ql-picker.ql-{$format} .ql-picker-label:hover, .ql-picker.ql-{$format}.ql-expanded .ql-picker-label
+      background-image: url('assets/active/' + $format + '@2x.png')
+
+  for $format in left right center justify
+    .ql-picker-label[data-value={$format}], .ql-picker-item[data-value={$format}]
+      background-image: url('assets/align-' + $format + '@2x.png')
+    .ql-active.ql-picker-label[data-value={$format}], .ql-selected.ql-picker-item[data-value={$format}], .ql-picker-item[data-value={$format}]:hover
+      background-image: url('assets/active/align-' + $format + '@2x.png')
