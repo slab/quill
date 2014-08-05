@@ -135,16 +135,18 @@ class Selection
     selection = this._getNativeSelection()
     return unless selection
     if startNode?
-      @doc.root.focus()   # Some reason need to focus before removing ranges otherwise cannot set them
+      # Some reason need to focus before removing ranges otherwise cannot set them
+      @doc.root.focus() unless this.checkFocus()
       nativeRange = this._getNativeRange()
       if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
-        selection.removeAllRanges() if nativeRange?
+        # IE9 requires removeAllRanges() regardless of value of
+        # nativeRange or else formatting from toolbar does not work
         selection.removeAllRanges()
         nativeRange = @document.createRange()
         nativeRange.setStart(startNode, startOffset)
         nativeRange.setEnd(endNode, endOffset)
         selection.addRange(nativeRange)
-        @doc.root.focus()   # IE11 needs refocus
+        @doc.root.focus() unless this.checkFocus()
     else
       selection.removeAllRanges()
       @doc.root.blur()
