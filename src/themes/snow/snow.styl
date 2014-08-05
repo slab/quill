@@ -6,13 +6,15 @@ whiteColor = #fff
 
 fontNamePickerWidth = 105px
 fontSizePickerWidth = 80px
-textAlignPickerWidth = 32px
+iconPickerWidth = 28px
 
-inputSize = 12px
-inputPadding = 6px
+inputHeight = 14px
+inputPadding = 5px
 separatorMargin = 4px
-inputHeight = inputSize + 2*inputPadding
+inputSize = inputHeight + 2*inputPadding
 toolbarPadding = 8px
+
+imageSize = 18px
 
 colorItemMargin = 2px
 colorItemWidth = 16px
@@ -23,14 +25,14 @@ formatGroupMargin = 15px
 formatInput =
   box-sizing: border-box
   display: inline-block
-  height: inputHeight
-  line-height: inputHeight
+  height: inputSize
+  line-height: inputSize
   vertical-align: middle
 
 
 .ql-toolbar-container
   box-sizing: border-box
-  padding: toolbarPadding toolbarPadding toolbarPadding - 1 toolbarPadding
+  padding: toolbarPadding
   user-select: none
   -webkit-user-select: none
   -moz-user-select: none
@@ -43,7 +45,7 @@ formatInput =
     box-sizing: border-box
     background-color: lightGrayColor
     display: inline-block
-    height: inputHeight - inputPadding
+    height: inputHeight
     margin-left: separatorMargin
     margin-right: separatorMargin
     vertical-align: middle
@@ -52,10 +54,11 @@ formatInput =
     {formatInput}
     background-position: center center
     background-repeat: no-repeat
+    background-size: imageSize imageSize
     box-sizing: border-box
     cursor: pointer
     text-align: center
-    width: inputHeight
+    width: inputSize
 
 /* Fix for iOS not losing hover state after click */
 .ql-toolbar-container.ios
@@ -77,11 +80,9 @@ formatInput =
     background-color: whiteColor
     background-position: center center
     background-repeat: no-repeat
-    background-size: 18px 18px
+    background-size: imageSize imageSize
     border: 1px solid transparent
     cursor: pointer
-    padding-left: toolbarPadding
-    padding-right: toolbarPadding
     position: relative
     width: 100%
   .ql-picker-label.ql-active, .ql-picker-label:hover
@@ -97,7 +98,7 @@ formatInput =
     .ql-picker-item
       background-position: center center
       background-repeat: no-repeat
-      background-size: 18px 18px
+      background-size: imageSize imageSize
       box-sizing: border-box
       cursor: pointer
       display: block
@@ -117,10 +118,10 @@ formatInput =
     margin-top: -1px
     z-index: 1
 
+
 .ql-picker.ql-color-picker
-  width: inputHeight
   .ql-picker-label
-    padding: 0px
+    width: iconPickerWidth
   .ql-picker-options
     padding: inputPadding
     width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
@@ -132,7 +133,7 @@ formatInput =
       padding: 0px
       width: colorItemWidth
     .ql-picker-item.ql-primary-color
-      margin-bottom: 8px
+      margin-bottom: toolbarPadding
     .ql-picker-item.selected, .ql-picker-item:hover
       border-color: #000
 
@@ -143,15 +144,16 @@ formatInput =
 .ql-picker.ql-font, .ql-picker.ql-size
   .ql-picker-label
     background-position: right center
+    padding-left: toolbarPadding
+    padding-right: toolbarPadding
 
 .ql-picker.ql-align
   .ql-picker-label
-    padding: 0px
-    width: textAlignPickerWidth
+    width: iconPickerWidth
   .ql-picker-item
     {formatInput}
     padding: 0px
-    width: textAlignPickerWidth
+    width: iconPickerWidth
   .ql-picker-options
     padding: 4px 0px
 
