@@ -20,6 +20,7 @@ class Picker
       _.defer( =>
         dom(@container).toggleClass('ql-expanded')
       )
+      return false
     )
     dom(@select).on('change', =>
       if @select.selectedIndex > -1

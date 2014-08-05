@@ -249,6 +249,7 @@ class Wrapper
       this.addClass(className)
     else
       this.removeClass(className)
+    return this
 
   trigger: (eventName, options = {}) =>
     if _.indexOf(['keypress', 'keydown', 'keyup'], eventName) < 0
@@ -276,6 +277,7 @@ class Wrapper
         event[initFn](eventName, options.bubbles, options.cancelable, this.window(), options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
     @node.dispatchEvent(event)
     lastKeyEvent = null
+    return this
 
   unwrap: ->
     ret = @node.firstChild
