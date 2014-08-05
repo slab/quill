@@ -24,6 +24,7 @@ class Quill extends EventEmitter2
     pollInterval: 100
     readOnly: false
     theme: 'default'
+    useIFrame: true
 
   @events:
     MODULE_INIT      : 'module-init'

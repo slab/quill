@@ -70,11 +70,21 @@ class Renderer
     iframeDoc.body.appendChild(root)
     return [root, iframe]
 
+  @buildRoot: (container) ->
+    root = container.ownerDocument.createElement('div')
+    container.appendChild(root)
+    return root
+
   constructor: (@container, @options = {}) ->
     @container.innerHTML = ''
-    [@root, @iframe] = Renderer.buildFrame(@container)
+
+    if @options.useIFrame
+      [@root, @iframe] = Renderer.buildFrame(@container)
+      @iframe.setAttribute('name', @options.id)
+    else
+      @root = Renderer.buildRoot(@container)
+
     @root.setAttribute('id', @options.id)
-    @iframe.setAttribute('name', @options.id)
     dom(@root).addClass('editor-container')
     dom(@container).addClass('ql-container')
     dom(@container).on('focus', =>
@@ -89,6 +99,9 @@ class Renderer
     this.addStyles(DEFAULT_STYLES)
     # Ensure user specified styles are added after modules'
     _.defer(_.bind(this.addStyles, this, @options.styles)) if @options.styles?
+
+  detached: ->
+    (@iframe and !@iframe.parentNode?) or !@root.parentNode
 
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
