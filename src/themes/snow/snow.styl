@@ -29,6 +29,8 @@ formatInput =
   line-height: inputSize
   vertical-align: middle
 
+formats = (bold italic underline strike link image list bullet authorship color background left right center justify)
+
 
 .ql-toolbar-container
   box-sizing: border-box
@@ -158,61 +160,39 @@ formatInput =
     padding: 4px 0px
 
 
-for $format in bold italic underline strike link image list bullet authorship
-  .ql-{$format}.ql-format-button
-    background-image: url('assets/' + $format + '.png')
-  .ql-{$format}.ql-format-button:hover, .ql-{$format}.ql-format-button.ql-active
-    background-image: url('assets/active/' + $format + '.png')
-.ql-authorship.ql-on
-  background-image: url('assets/active/authorship.png')
+for format in formats
+  .ql-toolbar-container
+    .ql-format-button.ql-{format},
+    .ql-picker.ql-{format} .ql-picker-label,
+    .ql-picker-label[data-value={format}],
+    .ql-picker-item[data-value={format}]
+      background-image: url('assets/' + format + '.png')
 
-.ql-picker.ql-font, .ql-picker.ql-size
-  .ql-picker-label
-    background-image: url('assets/dropdown.png')
-  .ql-picker-label:hover, .ql-picker-label.ql-active
-    background-image: url('assets/active/dropdown.png')
-.ql-picker.ql-font.ql-expanded, .ql-picker.ql-size.ql-expanded
-  .ql-picker-label
-    background-image: url('assets/dropdown.png')  // Should be gray
-
-for $format in color background
-  .ql-picker.ql-{$format} .ql-picker-label
-    background-image: url('assets/' + $format + '.png')
-  .ql-picker.ql-{$format} .ql-picker-label.ql-active, .ql-picker.ql-{$format} .ql-picker-label:hover, .ql-picker.ql-{$format}.ql-expanded .ql-picker-label
-    background-image: url('assets/active/' + $format + '.png')
-
-for $format in left right center justify
-  .ql-picker-label[data-value={$format}], .ql-picker-item[data-value={$format}]
-    background-image: url('assets/align-' + $format + '.png')
-  .ql-active.ql-picker-label[data-value={$format}], .ql-selected.ql-picker-item[data-value={$format}], .ql-picker-item[data-value={$format}]:hover
-    background-image: url('assets/active/align-' + $format + '.png')
+  .ql-toolbar-container .ql-format-button.ql-{format}.ql-active,
+  .ql-toolbar-container .ql-picker.ql-{format} .ql-picker-label.ql-active,
+  .ql-toolbar-container .ql-picker-label[data-value={format}].ql-active,
+  .ql-toolbar-container .ql-picker-item[data-value={format}].ql-selected,
+  .ql-toolbar-container:not(.ios) .ql-format-button.ql-{format}:hover,
+  .ql-toolbar-container:not(.ios) .ql-picker.ql-{format} .ql-picker-label:hover,
+  .ql-toolbar-container:not(.ios) .ql-picker-label[data-value={format}]:hover,
+  .ql-toolbar-container:not(.ios) .ql-picker-item[data-value={format}]:hover
+      background-image: url('assets/active/' + format + '.png')
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
-  for $format in bold italic underline strike link image list bullet authorship
-    .ql-{$format}.ql-format-button
-      background-image: url('assets/' + $format + '@2x.png')
-    .ql-{$format}.ql-format-button:hover, .ql-{$format}.ql-format-button.ql-active
-      background-image: url('assets/active/' + $format + '@2x.png')
-  .ql-authorship.ql-on
-    background-image: url('assets/active/authorship@2x.png')
+  for format in formats
+    .ql-toolbar-container
+      .ql-format-button.ql-{format},
+      .ql-picker.ql-{format} .ql-picker-label,
+      .ql-picker-label[data-value={format}],
+      .ql-picker-item[data-value={format}]
+        background-image: url('assets/' + format + '.png')
 
-  .ql-picker.ql-font, .ql-picker.ql-size
-    .ql-picker-label
-      background-image: url('assets/dropdown@2x.png')
-    .ql-picker-label:hover, .ql-picker-label.ql-active
-      background-image: url('assets/active/dropdown@2x.png')
-  .ql-picker.ql-font.ql-expanded, .ql-picker.ql-size.ql-expanded
-    .ql-picker-label
-      background-image: url('assets/dropdown@2x.png')  // Should be gray
-
-  for $format in color background
-    .ql-picker.ql-{$format} .ql-picker-label
-      background-image: url('assets/' + $format + '@2x.png')
-    .ql-picker.ql-{$format} .ql-picker-label.ql-active, .ql-picker.ql-{$format} .ql-picker-label:hover, .ql-picker.ql-{$format}.ql-expanded .ql-picker-label
-      background-image: url('assets/active/' + $format + '@2x.png')
-
-  for $format in left right center justify
-    .ql-picker-label[data-value={$format}], .ql-picker-item[data-value={$format}]
-      background-image: url('assets/align-' + $format + '@2x.png')
-    .ql-active.ql-picker-label[data-value={$format}], .ql-selected.ql-picker-item[data-value={$format}], .ql-picker-item[data-value={$format}]:hover
-      background-image: url('assets/active/align-' + $format + '@2x.png')
+    .ql-toolbar-container .ql-format-button.ql-{format}.ql-active,
+    .ql-toolbar-container .ql-picker.ql-{format} .ql-picker-label.ql-active,
+    .ql-toolbar-container .ql-picker-label[data-value={format}].ql-active,
+    .ql-toolbar-container .ql-picker-item[data-value={format}].ql-selected,
+    .ql-toolbar-container:not(.ios) .ql-format-button.ql-{format}:hover,
+    .ql-toolbar-container:not(.ios) .ql-picker.ql-{format} .ql-picker-label:hover,
+    .ql-toolbar-container:not(.ios) .ql-picker-label[data-value={format}]:hover,
+    .ql-toolbar-container:not(.ios) .ql-picker-item[data-value={format}]:hover
+        background-image: url('assets/active/' + format + '.png')
