@@ -62,13 +62,6 @@ formats = (bold italic underline strike link image list bullet authorship color 
     text-align: center
     width: inputSize
 
-/* Fix for iOS not losing hover state after click */
-.ql-toolbar-container.ios
-  .ql-format-button:hover
-    color: inherit
-  .ql-format-button.ql-active, .ql-format-button.ql-on
-    color: blueColor
-
 .ql-picker
   box-sizing: border-box
   color: blackColor
@@ -80,7 +73,7 @@ formats = (bold italic underline strike link image list bullet authorship color 
   .ql-picker-label
     {formatInput}
     background-color: whiteColor
-    background-position: center center
+    background-position: right center
     background-repeat: no-repeat
     background-size: imageSize imageSize
     border: 1px solid transparent
@@ -120,9 +113,9 @@ formats = (bold italic underline strike link image list bullet authorship color 
     margin-top: -1px
     z-index: 1
 
-
 .ql-picker.ql-color-picker
   .ql-picker-label
+    background-position: center center
     width: iconPickerWidth
   .ql-picker-options
     padding: inputPadding
@@ -145,12 +138,12 @@ formats = (bold italic underline strike link image list bullet authorship color 
   width: fontSizePickerWidth
 .ql-picker.ql-font, .ql-picker.ql-size
   .ql-picker-label
-    background-position: right center
     padding-left: toolbarPadding
     padding-right: toolbarPadding
 
 .ql-picker.ql-align
   .ql-picker-label
+    background-position: center center
     width: iconPickerWidth
   .ql-picker-item
     {formatInput}
@@ -160,39 +153,35 @@ formats = (bold italic underline strike link image list bullet authorship color 
     padding: 4px 0px
 
 
-for format in formats
-  .ql-toolbar-container
-    .ql-format-button.ql-{format},
-    .ql-picker.ql-{format} .ql-picker-label,
-    .ql-picker-label[data-value={format}],
-    .ql-picker-item[data-value={format}]
-      background-image: url('assets/' + format + '.png')
+imageRules(retina)
+  suffix = retina ? '@2x' : ''
+  .ql-toolbar-container .ql-picker .ql-picker-label
+    background-image: url('assets/dropdown' + suffix + '.png')
+  .ql-toolbar-container .ql-picker.ql-expanded .ql-picker-label
+    background-image: url('assets/inactive/dropdown' + suffix + '.png')
+  .ql-toolbar-container .ql-picker.ql-active:not(.ql-expanded) .ql-picker-label,
+  .ql-toolbar-container:not(.ios) .ql-picker:not(.ql-expanded) .ql-picker-label:hover
+    background-image: url('assets/active/dropdown' + suffix + '.png')
 
-  .ql-toolbar-container .ql-format-button.ql-{format}.ql-active,
-  .ql-toolbar-container .ql-picker.ql-{format} .ql-picker-label.ql-active,
-  .ql-toolbar-container .ql-picker-label[data-value={format}].ql-active,
-  .ql-toolbar-container .ql-picker-item[data-value={format}].ql-selected,
-  .ql-toolbar-container:not(.ios) .ql-format-button.ql-{format}:hover,
-  .ql-toolbar-container:not(.ios) .ql-picker.ql-{format} .ql-picker-label:hover,
-  .ql-toolbar-container:not(.ios) .ql-picker-label[data-value={format}]:hover,
-  .ql-toolbar-container:not(.ios) .ql-picker-item[data-value={format}]:hover
-      background-image: url('assets/active/' + format + '.png')
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
   for format in formats
     .ql-toolbar-container
       .ql-format-button.ql-{format},
       .ql-picker.ql-{format} .ql-picker-label,
-      .ql-picker-label[data-value={format}],
-      .ql-picker-item[data-value={format}]
-        background-image: url('assets/' + format + '.png')
+      .ql-picker .ql-picker-label[data-value={format}],
+      .ql-picker .ql-picker-item[data-value={format}]
+        background-image: url('assets/' + format + suffix + '.png')
 
     .ql-toolbar-container .ql-format-button.ql-{format}.ql-active,
     .ql-toolbar-container .ql-picker.ql-{format} .ql-picker-label.ql-active,
-    .ql-toolbar-container .ql-picker-label[data-value={format}].ql-active,
-    .ql-toolbar-container .ql-picker-item[data-value={format}].ql-selected,
+    .ql-toolbar-container .ql-picker .ql-picker-label[data-value={format}].ql-active,
+    .ql-toolbar-container .ql-picker .ql-picker-item[data-value={format}].ql-selected,
     .ql-toolbar-container:not(.ios) .ql-format-button.ql-{format}:hover,
     .ql-toolbar-container:not(.ios) .ql-picker.ql-{format} .ql-picker-label:hover,
-    .ql-toolbar-container:not(.ios) .ql-picker-label[data-value={format}]:hover,
-    .ql-toolbar-container:not(.ios) .ql-picker-item[data-value={format}]:hover
-        background-image: url('assets/active/' + format + '.png')
+    .ql-toolbar-container:not(.ios) .ql-picker .ql-picker-label[data-value={format}]:hover,
+    .ql-toolbar-container:not(.ios) .ql-picker .ql-picker-item[data-value={format}]:hover
+        background-image: url('assets/active/' + format + suffix + '.png')
+
+imageRules(false)
+
+@media (-webkit-min-device-pixel-ratio: 2)
+  imageRules(true)
