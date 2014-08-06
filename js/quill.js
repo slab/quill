@@ -1,4 +1,4 @@
-/*! Quill Editor v0.16.1
+/*! Quill Editor v0.17.0
  *  https://quilljs.com/
  *  Copyright (c) 2014, Jason Chen
  *  Copyright (c) 2013, salesforce.com
@@ -4741,684 +4741,9 @@ if (typeof module !== 'undefined') {
 }
 
 },{}],12:[function(_dereq_,module,exports){
-//  Underscore.string
-//  (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
-//  Underscore.string is freely distributable under the terms of the MIT license.
-//  Documentation: https://github.com/epeli/underscore.string
-//  Some code is borrowed from MooTools and Alexandru Marasteanu.
-//  Version '2.3.2'
-
-!function(root, String){
-  'use strict';
-
-  // Defining helper functions.
-
-  var nativeTrim = String.prototype.trim;
-  var nativeTrimRight = String.prototype.trimRight;
-  var nativeTrimLeft = String.prototype.trimLeft;
-
-  var parseNumber = function(source) { return source * 1 || 0; };
-
-  var strRepeat = function(str, qty){
-    if (qty < 1) return '';
-    var result = '';
-    while (qty > 0) {
-      if (qty & 1) result += str;
-      qty >>= 1, str += str;
-    }
-    return result;
-  };
-
-  var slice = [].slice;
-
-  var defaultToWhiteSpace = function(characters) {
-    if (characters == null)
-      return '\\s';
-    else if (characters.source)
-      return characters.source;
-    else
-      return '[' + _s.escapeRegExp(characters) + ']';
-  };
-
-  // Helper for toBoolean
-  function boolMatch(s, matchers) {
-    var i, matcher, down = s.toLowerCase();
-    matchers = [].concat(matchers);
-    for (i = 0; i < matchers.length; i += 1) {
-      matcher = matchers[i];
-      if (!matcher) continue;
-      if (matcher.test && matcher.test(s)) return true;
-      if (matcher.toLowerCase() === down) return true;
-    }
-  }
-
-  var escapeChars = {
-    lt: '<',
-    gt: '>',
-    quot: '"',
-    amp: '&',
-    apos: "'"
-  };
-
-  var reversedEscapeChars = {};
-  for(var key in escapeChars) reversedEscapeChars[escapeChars[key]] = key;
-  reversedEscapeChars["'"] = '#39';
-
-  // sprintf() for JavaScript 0.7-beta1
-  // http://www.diveintojavascript.com/projects/javascript-sprintf
-  //
-  // Copyright (c) Alexandru Marasteanu <alexaholic [at) gmail (dot] com>
-  // All rights reserved.
-
-  var sprintf = (function() {
-    function get_type(variable) {
-      return Object.prototype.toString.call(variable).slice(8, -1).toLowerCase();
-    }
-
-    var str_repeat = strRepeat;
-
-    var str_format = function() {
-      if (!str_format.cache.hasOwnProperty(arguments[0])) {
-        str_format.cache[arguments[0]] = str_format.parse(arguments[0]);
-      }
-      return str_format.format.call(null, str_format.cache[arguments[0]], arguments);
-    };
-
-    str_format.format = function(parse_tree, argv) {
-      var cursor = 1, tree_length = parse_tree.length, node_type = '', arg, output = [], i, k, match, pad, pad_character, pad_length;
-      for (i = 0; i < tree_length; i++) {
-        node_type = get_type(parse_tree[i]);
-        if (node_type === 'string') {
-          output.push(parse_tree[i]);
-        }
-        else if (node_type === 'array') {
-          match = parse_tree[i]; // convenience purposes only
-          if (match[2]) { // keyword argument
-            arg = argv[cursor];
-            for (k = 0; k < match[2].length; k++) {
-              if (!arg.hasOwnProperty(match[2][k])) {
-                throw new Error(sprintf('[_.sprintf] property "%s" does not exist', match[2][k]));
-              }
-              arg = arg[match[2][k]];
-            }
-          } else if (match[1]) { // positional argument (explicit)
-            arg = argv[match[1]];
-          }
-          else { // positional argument (implicit)
-            arg = argv[cursor++];
-          }
-
-          if (/[^s]/.test(match[8]) && (get_type(arg) != 'number')) {
-            throw new Error(sprintf('[_.sprintf] expecting number but found %s', get_type(arg)));
-          }
-          switch (match[8]) {
-            case 'b': arg = arg.toString(2); break;
-            case 'c': arg = String.fromCharCode(arg); break;
-            case 'd': arg = parseInt(arg, 10); break;
-            case 'e': arg = match[7] ? arg.toExponential(match[7]) : arg.toExponential(); break;
-            case 'f': arg = match[7] ? parseFloat(arg).toFixed(match[7]) : parseFloat(arg); break;
-            case 'o': arg = arg.toString(8); break;
-            case 's': arg = ((arg = String(arg)) && match[7] ? arg.substring(0, match[7]) : arg); break;
-            case 'u': arg = Math.abs(arg); break;
-            case 'x': arg = arg.toString(16); break;
-            case 'X': arg = arg.toString(16).toUpperCase(); break;
-          }
-          arg = (/[def]/.test(match[8]) && match[3] && arg >= 0 ? '+'+ arg : arg);
-          pad_character = match[4] ? match[4] == '0' ? '0' : match[4].charAt(1) : ' ';
-          pad_length = match[6] - String(arg).length;
-          pad = match[6] ? str_repeat(pad_character, pad_length) : '';
-          output.push(match[5] ? arg + pad : pad + arg);
-        }
-      }
-      return output.join('');
-    };
-
-    str_format.cache = {};
-
-    str_format.parse = function(fmt) {
-      var _fmt = fmt, match = [], parse_tree = [], arg_names = 0;
-      while (_fmt) {
-        if ((match = /^[^\x25]+/.exec(_fmt)) !== null) {
-          parse_tree.push(match[0]);
-        }
-        else if ((match = /^\x25{2}/.exec(_fmt)) !== null) {
-          parse_tree.push('%');
-        }
-        else if ((match = /^\x25(?:([1-9]\d*)\$|\(([^\)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(_fmt)) !== null) {
-          if (match[2]) {
-            arg_names |= 1;
-            var field_list = [], replacement_field = match[2], field_match = [];
-            if ((field_match = /^([a-z_][a-z_\d]*)/i.exec(replacement_field)) !== null) {
-              field_list.push(field_match[1]);
-              while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
-                if ((field_match = /^\.([a-z_][a-z_\d]*)/i.exec(replacement_field)) !== null) {
-                  field_list.push(field_match[1]);
-                }
-                else if ((field_match = /^\[(\d+)\]/.exec(replacement_field)) !== null) {
-                  field_list.push(field_match[1]);
-                }
-                else {
-                  throw new Error('[_.sprintf] huh?');
-                }
-              }
-            }
-            else {
-              throw new Error('[_.sprintf] huh?');
-            }
-            match[2] = field_list;
-          }
-          else {
-            arg_names |= 2;
-          }
-          if (arg_names === 3) {
-            throw new Error('[_.sprintf] mixing positional and named placeholders is not (yet) supported');
-          }
-          parse_tree.push(match);
-        }
-        else {
-          throw new Error('[_.sprintf] huh?');
-        }
-        _fmt = _fmt.substring(match[0].length);
-      }
-      return parse_tree;
-    };
-
-    return str_format;
-  })();
-
-
-
-  // Defining underscore.string
-
-  var _s = {
-
-    VERSION: '2.3.0',
-
-    isBlank: function(str){
-      if (str == null) str = '';
-      return (/^\s*$/).test(str);
-    },
-
-    stripTags: function(str){
-      if (str == null) return '';
-      return String(str).replace(/<\/?[^>]+>/g, '');
-    },
-
-    capitalize : function(str){
-      str = str == null ? '' : String(str);
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    },
-
-    chop: function(str, step){
-      if (str == null) return [];
-      str = String(str);
-      step = ~~step;
-      return step > 0 ? str.match(new RegExp('.{1,' + step + '}', 'g')) : [str];
-    },
-
-    clean: function(str){
-      return _s.strip(str).replace(/\s+/g, ' ');
-    },
-
-    count: function(str, substr){
-      if (str == null || substr == null) return 0;
-
-      str = String(str);
-      substr = String(substr);
-
-      var count = 0,
-        pos = 0,
-        length = substr.length;
-
-      while (true) {
-        pos = str.indexOf(substr, pos);
-        if (pos === -1) break;
-        count++;
-        pos += length;
-      }
-
-      return count;
-    },
-
-    chars: function(str) {
-      if (str == null) return [];
-      return String(str).split('');
-    },
-
-    swapCase: function(str) {
-      if (str == null) return '';
-      return String(str).replace(/\S/g, function(c){
-        return c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase();
-      });
-    },
-
-    escapeHTML: function(str) {
-      if (str == null) return '';
-      return String(str).replace(/[&<>"']/g, function(m){ return '&' + reversedEscapeChars[m] + ';'; });
-    },
-
-    unescapeHTML: function(str) {
-      if (str == null) return '';
-      return String(str).replace(/\&([^;]+);/g, function(entity, entityCode){
-        var match;
-
-        if (entityCode in escapeChars) {
-          return escapeChars[entityCode];
-        } else if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {
-          return String.fromCharCode(parseInt(match[1], 16));
-        } else if (match = entityCode.match(/^#(\d+)$/)) {
-          return String.fromCharCode(~~match[1]);
-        } else {
-          return entity;
-        }
-      });
-    },
-
-    escapeRegExp: function(str){
-      if (str == null) return '';
-      return String(str).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
-    },
-
-    splice: function(str, i, howmany, substr){
-      var arr = _s.chars(str);
-      arr.splice(~~i, ~~howmany, substr);
-      return arr.join('');
-    },
-
-    insert: function(str, i, substr){
-      return _s.splice(str, i, 0, substr);
-    },
-
-    include: function(str, needle){
-      if (needle === '') return true;
-      if (str == null) return false;
-      return String(str).indexOf(needle) !== -1;
-    },
-
-    join: function() {
-      var args = slice.call(arguments),
-        separator = args.shift();
-
-      if (separator == null) separator = '';
-
-      return args.join(separator);
-    },
-
-    lines: function(str) {
-      if (str == null) return [];
-      return String(str).split("\n");
-    },
-
-    reverse: function(str){
-      return _s.chars(str).reverse().join('');
-    },
-
-    startsWith: function(str, starts){
-      if (starts === '') return true;
-      if (str == null || starts == null) return false;
-      str = String(str); starts = String(starts);
-      return str.length >= starts.length && str.slice(0, starts.length) === starts;
-    },
-
-    endsWith: function(str, ends){
-      if (ends === '') return true;
-      if (str == null || ends == null) return false;
-      str = String(str); ends = String(ends);
-      return str.length >= ends.length && str.slice(str.length - ends.length) === ends;
-    },
-
-    succ: function(str){
-      if (str == null) return '';
-      str = String(str);
-      return str.slice(0, -1) + String.fromCharCode(str.charCodeAt(str.length-1) + 1);
-    },
-
-    titleize: function(str){
-      if (str == null) return '';
-      str  = String(str).toLowerCase();
-      return str.replace(/(?:^|\s|-)\S/g, function(c){ return c.toUpperCase(); });
-    },
-
-    camelize: function(str){
-      return _s.trim(str).replace(/[-_\s]+(.)?/g, function(match, c){ return c ? c.toUpperCase() : ""; });
-    },
-
-    underscored: function(str){
-      return _s.trim(str).replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
-    },
-
-    dasherize: function(str){
-      return _s.trim(str).replace(/([A-Z])/g, '-$1').replace(/[-_\s]+/g, '-').toLowerCase();
-    },
-
-    classify: function(str){
-      return _s.titleize(String(str).replace(/[\W_]/g, ' ')).replace(/\s/g, '');
-    },
-
-    humanize: function(str){
-      return _s.capitalize(_s.underscored(str).replace(/_id$/,'').replace(/_/g, ' '));
-    },
-
-    trim: function(str, characters){
-      if (str == null) return '';
-      if (!characters && nativeTrim) return nativeTrim.call(str);
-      characters = defaultToWhiteSpace(characters);
-      return String(str).replace(new RegExp('\^' + characters + '+|' + characters + '+$', 'g'), '');
-    },
-
-    ltrim: function(str, characters){
-      if (str == null) return '';
-      if (!characters && nativeTrimLeft) return nativeTrimLeft.call(str);
-      characters = defaultToWhiteSpace(characters);
-      return String(str).replace(new RegExp('^' + characters + '+'), '');
-    },
-
-    rtrim: function(str, characters){
-      if (str == null) return '';
-      if (!characters && nativeTrimRight) return nativeTrimRight.call(str);
-      characters = defaultToWhiteSpace(characters);
-      return String(str).replace(new RegExp(characters + '+$'), '');
-    },
-
-    truncate: function(str, length, truncateStr){
-      if (str == null) return '';
-      str = String(str); truncateStr = truncateStr || '...';
-      length = ~~length;
-      return str.length > length ? str.slice(0, length) + truncateStr : str;
-    },
-
-    /**
-     * _s.prune: a more elegant version of truncate
-     * prune extra chars, never leaving a half-chopped word.
-     * @author github.com/rwz
-     */
-    prune: function(str, length, pruneStr){
-      if (str == null) return '';
-
-      str = String(str); length = ~~length;
-      pruneStr = pruneStr != null ? String(pruneStr) : '...';
-
-      if (str.length <= length) return str;
-
-      var tmpl = function(c){ return c.toUpperCase() !== c.toLowerCase() ? 'A' : ' '; },
-        template = str.slice(0, length+1).replace(/.(?=\W*\w*$)/g, tmpl); // 'Hello, world' -> 'HellAA AAAAA'
-
-      if (template.slice(template.length-2).match(/\w\w/))
-        template = template.replace(/\s*\S+$/, '');
-      else
-        template = _s.rtrim(template.slice(0, template.length-1));
-
-      return (template+pruneStr).length > str.length ? str : str.slice(0, template.length)+pruneStr;
-    },
-
-    words: function(str, delimiter) {
-      if (_s.isBlank(str)) return [];
-      return _s.trim(str, delimiter).split(delimiter || /\s+/);
-    },
-
-    pad: function(str, length, padStr, type) {
-      str = str == null ? '' : String(str);
-      length = ~~length;
-
-      var padlen  = 0;
-
-      if (!padStr)
-        padStr = ' ';
-      else if (padStr.length > 1)
-        padStr = padStr.charAt(0);
-
-      switch(type) {
-        case 'right':
-          padlen = length - str.length;
-          return str + strRepeat(padStr, padlen);
-        case 'both':
-          padlen = length - str.length;
-          return strRepeat(padStr, Math.ceil(padlen/2)) + str
-                  + strRepeat(padStr, Math.floor(padlen/2));
-        default: // 'left'
-          padlen = length - str.length;
-          return strRepeat(padStr, padlen) + str;
-        }
-    },
-
-    lpad: function(str, length, padStr) {
-      return _s.pad(str, length, padStr);
-    },
-
-    rpad: function(str, length, padStr) {
-      return _s.pad(str, length, padStr, 'right');
-    },
-
-    lrpad: function(str, length, padStr) {
-      return _s.pad(str, length, padStr, 'both');
-    },
-
-    sprintf: sprintf,
-
-    vsprintf: function(fmt, argv){
-      argv.unshift(fmt);
-      return sprintf.apply(null, argv);
-    },
-
-    toNumber: function(str, decimals) {
-      if (!str) return 0;
-      str = _s.trim(str);
-      if (!str.match(/^-?\d+(?:\.\d+)?$/)) return NaN;
-      return parseNumber(parseNumber(str).toFixed(~~decimals));
-    },
-
-    numberFormat : function(number, dec, dsep, tsep) {
-      if (isNaN(number) || number == null) return '';
-
-      number = number.toFixed(~~dec);
-      tsep = typeof tsep == 'string' ? tsep : ',';
-
-      var parts = number.split('.'), fnums = parts[0],
-        decimals = parts[1] ? (dsep || '.') + parts[1] : '';
-
-      return fnums.replace(/(\d)(?=(?:\d{3})+$)/g, '$1' + tsep) + decimals;
-    },
-
-    strRight: function(str, sep){
-      if (str == null) return '';
-      str = String(str); sep = sep != null ? String(sep) : sep;
-      var pos = !sep ? -1 : str.indexOf(sep);
-      return ~pos ? str.slice(pos+sep.length, str.length) : str;
-    },
-
-    strRightBack: function(str, sep){
-      if (str == null) return '';
-      str = String(str); sep = sep != null ? String(sep) : sep;
-      var pos = !sep ? -1 : str.lastIndexOf(sep);
-      return ~pos ? str.slice(pos+sep.length, str.length) : str;
-    },
-
-    strLeft: function(str, sep){
-      if (str == null) return '';
-      str = String(str); sep = sep != null ? String(sep) : sep;
-      var pos = !sep ? -1 : str.indexOf(sep);
-      return ~pos ? str.slice(0, pos) : str;
-    },
-
-    strLeftBack: function(str, sep){
-      if (str == null) return '';
-      str += ''; sep = sep != null ? ''+sep : sep;
-      var pos = str.lastIndexOf(sep);
-      return ~pos ? str.slice(0, pos) : str;
-    },
-
-    toSentence: function(array, separator, lastSeparator, serial) {
-      separator = separator || ', ';
-      lastSeparator = lastSeparator || ' and ';
-      var a = array.slice(), lastMember = a.pop();
-
-      if (array.length > 2 && serial) lastSeparator = _s.rtrim(separator) + lastSeparator;
-
-      return a.length ? a.join(separator) + lastSeparator + lastMember : lastMember;
-    },
-
-    toSentenceSerial: function() {
-      var args = slice.call(arguments);
-      args[3] = true;
-      return _s.toSentence.apply(_s, args);
-    },
-
-    slugify: function(str) {
-      if (str == null) return '';
-
-      var from  = "ąàáäâãåæăćęèéëêìíïîłńòóöôõøśșțùúüûñçżź",
-          to    = "aaaaaaaaaceeeeeiiiilnoooooosstuuuunczz",
-          regex = new RegExp(defaultToWhiteSpace(from), 'g');
-
-      str = String(str).toLowerCase().replace(regex, function(c){
-        var index = from.indexOf(c);
-        return to.charAt(index) || '-';
-      });
-
-      return _s.dasherize(str.replace(/[^\w\s-]/g, ''));
-    },
-
-    surround: function(str, wrapper) {
-      return [wrapper, str, wrapper].join('');
-    },
-
-    quote: function(str, quoteChar) {
-      return _s.surround(str, quoteChar || '"');
-    },
-
-    unquote: function(str, quoteChar) {
-      quoteChar = quoteChar || '"';
-      if (str[0] === quoteChar && str[str.length-1] === quoteChar)
-        return str.slice(1,str.length-1);
-      else return str;
-    },
-
-    exports: function() {
-      var result = {};
-
-      for (var prop in this) {
-        if (!this.hasOwnProperty(prop) || prop.match(/^(?:include|contains|reverse)$/)) continue;
-        result[prop] = this[prop];
-      }
-
-      return result;
-    },
-
-    repeat: function(str, qty, separator){
-      if (str == null) return '';
-
-      qty = ~~qty;
-
-      // using faster implementation if separator is not needed;
-      if (separator == null) return strRepeat(String(str), qty);
-
-      // this one is about 300x slower in Google Chrome
-      for (var repeat = []; qty > 0; repeat[--qty] = str) {}
-      return repeat.join(separator);
-    },
-
-    naturalCmp: function(str1, str2){
-      if (str1 == str2) return 0;
-      if (!str1) return -1;
-      if (!str2) return 1;
-
-      var cmpRegex = /(\.\d+)|(\d+)|(\D+)/g,
-        tokens1 = String(str1).toLowerCase().match(cmpRegex),
-        tokens2 = String(str2).toLowerCase().match(cmpRegex),
-        count = Math.min(tokens1.length, tokens2.length);
-
-      for(var i = 0; i < count; i++) {
-        var a = tokens1[i], b = tokens2[i];
-
-        if (a !== b){
-          var num1 = parseInt(a, 10);
-          if (!isNaN(num1)){
-            var num2 = parseInt(b, 10);
-            if (!isNaN(num2) && num1 - num2)
-              return num1 - num2;
-          }
-          return a < b ? -1 : 1;
-        }
-      }
-
-      if (tokens1.length === tokens2.length)
-        return tokens1.length - tokens2.length;
-
-      return str1 < str2 ? -1 : 1;
-    },
-
-    levenshtein: function(str1, str2) {
-      if (str1 == null && str2 == null) return 0;
-      if (str1 == null) return String(str2).length;
-      if (str2 == null) return String(str1).length;
-
-      str1 = String(str1); str2 = String(str2);
-
-      var current = [], prev, value;
-
-      for (var i = 0; i <= str2.length; i++)
-        for (var j = 0; j <= str1.length; j++) {
-          if (i && j)
-            if (str1.charAt(j - 1) === str2.charAt(i - 1))
-              value = prev;
-            else
-              value = Math.min(current[j], current[j - 1], prev) + 1;
-          else
-            value = i + j;
-
-          prev = current[j];
-          current[j] = value;
-        }
-
-      return current.pop();
-    },
-
-    toBoolean: function(str, trueValues, falseValues) {
-      if (typeof str === "number") str = "" + str;
-      if (typeof str !== "string") return !!str;
-      str = _s.trim(str);
-      if (boolMatch(str, trueValues || ["true", "1"])) return true;
-      if (boolMatch(str, falseValues || ["false", "0"])) return false;
-    }
-  };
-
-  // Aliases
-
-  _s.strip    = _s.trim;
-  _s.lstrip   = _s.ltrim;
-  _s.rstrip   = _s.rtrim;
-  _s.center   = _s.lrpad;
-  _s.rjust    = _s.lpad;
-  _s.ljust    = _s.rpad;
-  _s.contains = _s.include;
-  _s.q        = _s.quote;
-  _s.toBool   = _s.toBoolean;
-
-  // Exporting
-
-  // CommonJS module is defined
-  if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports)
-      module.exports = _s;
-
-    exports._s = _s;
-  }
-
-  // Register as a named module with AMD.
-  if (typeof define === 'function' && define.amd)
-    define('underscore.string', [], function(){ return _s; });
-
-
-  // Integrate with Underscore.js if defined
-  // or create our own underscore object.
-  root._ = root._ || {};
-  root._.string = root._.str = _s;
-}(this, String);
-
-},{}],13:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -5430,8 +4755,7 @@ module.exports={
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
-    "tandem-core": "~0.6.2",
-    "underscore.string": "~2.3.3"
+    "tandem-core": "~0.6.2"
   },
   "devDependencies": {
     "async": "~0.9.0",
@@ -5492,22 +4816,20 @@ module.exports={
   ]
 }
 
-},{}],14:[function(_dereq_,module,exports){
-var DOM, Document, Format, Line, LinkedList, Normalizer, Tandem, Utils, _;
+},{}],13:[function(_dereq_,module,exports){
+var Document, Format, Line, LinkedList, Normalizer, Tandem, dom, _;
 
 _ = _dereq_('lodash');
 
-DOM = _dereq_('./dom');
+dom = _dereq_('../lib/dom');
 
 Format = _dereq_('./format');
 
 Line = _dereq_('./line');
 
-LinkedList = _dereq_('./lib/linked-list');
+LinkedList = _dereq_('../lib/linked-list');
 
-Normalizer = _dereq_('./normalizer');
-
-Utils = _dereq_('./utils');
+Normalizer = _dereq_('../lib/normalizer');
 
 Tandem = _dereq_('tandem-core');
 
@@ -5548,7 +4870,7 @@ Document = (function() {
 
   Document.prototype.findLine = function(node) {
     var line;
-    while ((node != null) && (DOM.BLOCK_TAGS[node.tagName] == null)) {
+    while ((node != null) && (dom.BLOCK_TAGS[node.tagName] == null)) {
       node = node.parentNode;
     }
     line = node != null ? this.lineMap[node.id] : null;
@@ -5586,12 +4908,12 @@ Document = (function() {
     var line;
     line = new Line(this, newLineNode);
     if (refLine != null) {
-      if (!DOM.isElement(newLineNode.parentNode)) {
+      if (!dom(newLineNode.parentNode).isElement()) {
         this.root.insertBefore(newLineNode, refLine.node);
       }
       this.lines.insertAfter(refLine.prev, line);
     } else {
-      if (!DOM.isElement(newLineNode.parentNode)) {
+      if (!dom(newLineNode.parentNode).isElement()) {
         this.root.appendChild(newLineNode);
       }
       this.lines.append(line);
@@ -5603,10 +4925,10 @@ Document = (function() {
   Document.prototype.mergeLines = function(line, lineToMerge) {
     if (lineToMerge.length > 1) {
       if (line.length === 1) {
-        DOM.removeNode(line.leaves.last.node);
+        dom(line.leaves.last.node).remove();
       }
-      _.each(DOM.getChildNodes(lineToMerge.node), function(child) {
-        if (child.tagName !== DOM.DEFAULT_BREAK_TAG) {
+      _.each(dom(lineToMerge.node).childNodes(), function(child) {
+        if (child.tagName !== dom.DEFAULT_BREAK_TAG) {
           return line.node.appendChild(child);
         }
       });
@@ -5626,7 +4948,7 @@ Document = (function() {
     var lineNode, lines, _results;
     lines = this.lines.toArray();
     lineNode = this.root.firstChild;
-    if ((lineNode != null) && (DOM.LIST_TAGS[lineNode.tagName] != null)) {
+    if ((lineNode != null) && (dom.LIST_TAGS[lineNode.tagName] != null)) {
       lineNode = lineNode.firstChild;
     }
     _.each(lines, (function(_this) {
@@ -5636,7 +4958,7 @@ Document = (function() {
           if (line.node.parentNode === _this.root || ((_ref = line.node.parentNode) != null ? _ref.parentNode : void 0) === _this.root) {
             lineNode = Normalizer.normalizeLine(lineNode);
             newLine = _this.insertLineBefore(lineNode, line);
-            lineNode = Utils.getNextLineNode(lineNode, _this.root);
+            lineNode = dom(lineNode).nextLineNode(_this.root);
           } else {
             return _this.removeLine(line);
           }
@@ -5645,24 +4967,24 @@ Document = (function() {
           line.node = Normalizer.normalizeLine(line.node);
           line.rebuild();
         }
-        return lineNode = Utils.getNextLineNode(lineNode, _this.root);
+        return lineNode = dom(lineNode).nextLineNode(_this.root);
       };
     })(this));
     _results = [];
     while (lineNode != null) {
       lineNode = Normalizer.normalizeLine(lineNode);
       this.appendLine(lineNode);
-      _results.push(lineNode = Utils.getNextLineNode(lineNode, this.root));
+      _results.push(lineNode = dom(lineNode).nextLineNode(this.root));
     }
     return _results;
   };
 
   Document.prototype.removeLine = function(line) {
     if (line.node.parentNode != null) {
-      if (DOM.LIST_TAGS[line.node.parentNode.tagName] && line.node.parentNode.childNodes.length === 1) {
-        DOM.removeNode(line.node.parentNode);
+      if (dom.LIST_TAGS[line.node.parentNode.tagName] && line.node.parentNode.childNodes.length === 1) {
+        dom(line.node.parentNode).remove();
       } else {
-        DOM.removeNode(line.node);
+        dom(line.node).remove();
       }
     }
     delete this.lineMap[line.id];
@@ -5681,7 +5003,7 @@ Document = (function() {
   Document.prototype.splitLine = function(line, offset) {
     var lineNode1, lineNode2, newLine, _ref;
     offset = Math.min(offset, line.length - 1);
-    _ref = Utils.splitNode(line.node, offset, true), lineNode1 = _ref[0], lineNode2 = _ref[1];
+    _ref = dom(line.node).split(offset, true), lineNode1 = _ref[0], lineNode2 = _ref[1];
     line.node = lineNode1;
     line.rebuild();
     newLine = this.insertLineBefore(lineNode2, line.next);
@@ -5706,464 +5028,12 @@ Document = (function() {
 module.exports = Document;
 
 
-},{"./dom":15,"./format":17,"./lib/linked-list":20,"./line":23,"./normalizer":33,"./utils":39,"lodash":"M4+//f","tandem-core":10}],15:[function(_dereq_,module,exports){
-var DOM, lastKeyEvent, _;
+},{"../lib/dom":22,"../lib/linked-list":23,"../lib/normalizer":24,"./format":15,"./line":17,"lodash":"M4+//f","tandem-core":10}],14:[function(_dereq_,module,exports){
+var Document, Editor, Line, Renderer, Selection, Tandem, dom, _;
 
 _ = _dereq_('lodash');
 
-lastKeyEvent = null;
-
-DOM = {
-  ELEMENT_NODE: 1,
-  NOBREAK_SPACE: "&nbsp;",
-  TEXT_NODE: 3,
-  ZERO_WIDTH_NOBREAK_SPACE: "\uFEFF",
-  DEFAULT_BLOCK_TAG: 'DIV',
-  DEFAULT_BREAK_TAG: 'BR',
-  DEFAULT_INLINE_TAG: 'SPAN',
-  EMBED_TEXT: '!',
-  FONT_SIZES: {
-    '10px': 1,
-    '13px': 2,
-    '16px': 3,
-    '18px': 4,
-    '24px': 5,
-    '32px': 6,
-    '48px': 7
-  },
-  KEYS: {
-    BACKSPACE: 8,
-    TAB: 9,
-    ENTER: 13,
-    ESCAPE: 27,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    DELETE: 46
-  },
-  BLOCK_TAGS: {
-    'ADDRESS': 'ADDRESS',
-    'ARTICLE': 'ARTICLE',
-    'ASIDE': 'ASIDE',
-    'AUDIO': 'AUDIO',
-    'BLOCKQUOTE': 'BLOCKQUOTE',
-    'CANVAS': 'CANVAS',
-    'DD': 'DD',
-    'DIV': 'DIV',
-    'DL': 'DL',
-    'FIGCAPTION': 'FIGCAPTION',
-    'FIGURE': 'FIGURE',
-    'FOOTER': 'FOOTER',
-    'FORM': 'FORM',
-    'H1': 'H1',
-    'H2': 'H2',
-    'H3': 'H3',
-    'H4': 'H4',
-    'H5': 'H5',
-    'H6': 'H6',
-    'HEADER': 'HEADER',
-    'HGROUP': 'HGROUP',
-    'LI': 'LI',
-    'OL': 'OL',
-    'OUTPUT': 'OUTPUT',
-    'P': 'P',
-    'PRE': 'PRE',
-    'SECTION': 'SECTION',
-    'TABLE': 'TABLE',
-    'TBODY': 'TBODY',
-    'TD': 'TD',
-    'TFOOT': 'TFOOT',
-    'TH': 'TH',
-    'THEAD': 'THEAD',
-    'TR': 'TR',
-    'UL': 'UL',
-    'VIDEO': 'VIDEO'
-  },
-  EMBED_TAGS: {
-    'IMG': 'IMG'
-  },
-  LINE_TAGS: {
-    'DIV': 'DIV',
-    'LI': 'LI'
-  },
-  LIST_TAGS: {
-    'OL': 'OL',
-    'UL': 'UL'
-  },
-  VOID_TAGS: {
-    'AREA': 'AREA',
-    'BASE': 'BASE',
-    'BR': 'BR',
-    'COL': 'COL',
-    'COMMAND': 'COMMAND',
-    'EMBED': 'EMBED',
-    'HR': 'HR',
-    'IMG': 'IMG',
-    'INPUT': 'INPUT',
-    'KEYGEN': 'KEYGEN',
-    'LINK': 'LINK',
-    'META': 'META',
-    'PARAM': 'PARAM',
-    'SOURCE': 'SOURCE',
-    'TRACK': 'TRACK',
-    'WBR': 'WBR'
-  },
-  addClass: function(node, cssClass) {
-    if (DOM.hasClass(node, cssClass)) {
-      return;
-    }
-    if (node.classList != null) {
-      return node.classList.add(cssClass);
-    } else if (node.className != null) {
-      return node.className = (node.className + ' ' + cssClass).trim();
-    }
-  },
-  addEventListener: function(node, eventName, listener) {
-    return node.addEventListener(eventName, function(event) {
-      var arg, propogate;
-      arg = lastKeyEvent && (eventName === 'keydown' || eventName === 'keyup') ? lastKeyEvent : event;
-      propogate = listener(arg);
-      if (!propogate) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      return propogate;
-    });
-  },
-  addStyles: function(node, styles) {
-    styles = _.defaults(styles, DOM.getStyles(node));
-    return DOM.setStyles(node, styles);
-  },
-  clearAttributes: function(node, exception) {
-    if (exception == null) {
-      exception = [];
-    }
-    if (_.isString(exception)) {
-      exception = [exception];
-    }
-    return _.each(DOM.getAttributes(node), function(value, name) {
-      if (!(_.indexOf(exception, name) > -1)) {
-        return node.removeAttribute(name);
-      }
-    });
-  },
-  getAttributes: function(node) {
-    var attr, attributes, i, value, _i, _len, _ref;
-    if (node.attributes == null) {
-      return {};
-    }
-    attributes = {};
-    _ref = node.attributes;
-    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-      value = _ref[i];
-      attr = node.attributes[i];
-      attributes[attr.name] = attr.value;
-    }
-    return attributes;
-  },
-  getChildNodes: function(parent) {
-    return _.map(parent.childNodes);
-  },
-  getChildren: function(parent) {
-    return _.map(parent.children);
-  },
-  getDescendants: function(parent) {
-    return _.map(parent.getElementsByTagName('*'));
-  },
-  getClasses: function(node) {
-    return node.className.split(/\s+/);
-  },
-  getDefaultOption: function(select) {
-    return select.querySelector('option[selected]');
-  },
-  getSelectValue: function(select) {
-    if (select.selectedIndex > -1) {
-      return select.options[select.selectedIndex].value;
-    } else {
-      return '';
-    }
-  },
-  getStyles: function(node) {
-    var obj, styleString;
-    styleString = node.getAttribute('style') || '';
-    obj = _.reduce(styleString.split(';'), function(styles, str) {
-      var name, value, _ref;
-      _ref = str.split(':'), name = _ref[0], value = _ref[1];
-      if (name && value) {
-        name = name.trim();
-        value = value.trim();
-        styles[name.toLowerCase()] = value;
-      }
-      return styles;
-    }, {});
-    return obj;
-  },
-  getText: function(node) {
-    switch (node.nodeType) {
-      case DOM.ELEMENT_NODE:
-        if (node.tagName === DOM.DEFAULT_BREAK_TAG) {
-          return "";
-        }
-        if (DOM.EMBED_TAGS[node.tagName] != null) {
-          return DOM.EMBED_TEXT;
-        }
-        if (node.textContent != null) {
-          return node.textContent;
-        }
-        return "";
-      case DOM.TEXT_NODE:
-        return node.data || "";
-      default:
-        return "";
-    }
-  },
-  getTextNodes: function(root) {
-    var node, nodes, walker;
-    walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-    nodes = [];
-    while (node = walker.nextNode()) {
-      nodes.push(node);
-    }
-    return nodes;
-  },
-  getWindow: function(node) {
-    return node.ownerDocument.defaultView || node.ownerDocument.parentWindow;
-  },
-  hasClass: function(node, cssClass) {
-    if (node.classList != null) {
-      return node.classList.contains(cssClass);
-    } else if (node.className != null) {
-      return _.indexOf(DOM.getClasses(node), cssClass) > -1;
-    }
-    return false;
-  },
-  isElement: function(node) {
-    return (node != null ? node.nodeType : void 0) === DOM.ELEMENT_NODE;
-  },
-  isTextNode: function(node) {
-    return (node != null ? node.nodeType : void 0) === DOM.TEXT_NODE;
-  },
-  moveChildren: function(newParent, oldParent) {
-    return _.each(DOM.getChildNodes(oldParent), function(child) {
-      return newParent.appendChild(child);
-    });
-  },
-  normalize: function(node) {
-    var curNode, newText, nextNode, _results;
-    curNode = node.firstChild;
-    _results = [];
-    while (curNode != null) {
-      nextNode = curNode.nextSibling;
-      if (DOM.isTextNode(curNode)) {
-        if (DOM.getText(curNode).length === 0) {
-          DOM.removeNode(curNode);
-        } else if (DOM.isTextNode(nextNode)) {
-          nextNode = nextNode.nextSibling;
-          newText = DOM.getText(curNode) + DOM.getText(curNode.nextSibling);
-          DOM.setText(curNode, newText);
-          DOM.removeNode(curNode.nextSibling);
-        }
-      }
-      _results.push(curNode = nextNode);
-    }
-    return _results;
-  },
-  isAncestor: function(ancestor, node, inclusive) {
-    if (inclusive == null) {
-      inclusive = false;
-    }
-    if (ancestor === node) {
-      return inclusive;
-    }
-    while (node) {
-      if (node === ancestor) {
-        return true;
-      }
-      node = node.parentNode;
-    }
-    return false;
-  },
-  isIE: function(maxVersion) {
-    var version;
-    version = document.documentMode;
-    return version && maxVersion >= version;
-  },
-  isIOS: function() {
-    return /iPhone|iPad/i.test(navigator.userAgent);
-  },
-  removeClass: function(node, cssClass) {
-    var classArray;
-    if (!DOM.hasClass(node, cssClass)) {
-      return;
-    }
-    if (node.classList != null) {
-      return node.classList.remove(cssClass);
-    } else if (node.className != null) {
-      classArray = DOM.getClasses(node);
-      classArray.splice(_.indexOf(classArray, cssClass), 1);
-      return node.className = classArray.join(' ');
-    }
-  },
-  removeNode: function(node) {
-    var _ref;
-    return (_ref = node.parentNode) != null ? _ref.removeChild(node) : void 0;
-  },
-  replaceNode: function(newNode, oldNode) {
-    oldNode.parentNode.replaceChild(newNode, oldNode);
-    return newNode;
-  },
-  resetSelect: function(select, trigger) {
-    var option;
-    if (trigger == null) {
-      trigger = true;
-    }
-    option = DOM.getDefaultOption(select);
-    if (option != null) {
-      option.selected = true;
-    } else {
-      select.selectedIndex = 0;
-    }
-    if (trigger) {
-      return DOM.triggerEvent(select, 'change');
-    }
-  },
-  selectOption: function(select, option, trigger) {
-    var value;
-    if (trigger == null) {
-      trigger = true;
-    }
-    value = _.isElement(option) ? option.value : option;
-    if (value) {
-      select.value = value;
-    } else {
-      select.selectedIndex = -1;
-    }
-    if (trigger) {
-      return DOM.triggerEvent(select, 'change');
-    }
-  },
-  setAttributes: function(node, attributes) {
-    return _.each(attributes, function(value, name) {
-      return node.setAttribute(name, value);
-    });
-  },
-  setStyles: function(node, styles) {
-    var styleString;
-    styleString = _.map(styles, function(style, name) {
-      return "" + name + ": " + style;
-    }).join('; ') + ';';
-    return node.setAttribute('style', styleString);
-  },
-  setText: function(node, text) {
-    switch (node.nodeType) {
-      case DOM.ELEMENT_NODE:
-        return node.textContent = text;
-      case DOM.TEXT_NODE:
-        return node.data = text;
-    }
-  },
-  switchTag: function(node, newTag) {
-    var attributes, newNode;
-    newTag = newTag.toUpperCase();
-    if (node.tagName === newTag) {
-      return node;
-    }
-    newNode = node.ownerDocument.createElement(newTag);
-    attributes = DOM.getAttributes(node);
-    if (DOM.VOID_TAGS[newTag] == null) {
-      this.moveChildren(newNode, node);
-    }
-    node.parentNode.replaceChild(newNode, node);
-    _.each(attributes, function(value, name) {
-      return newNode.setAttribute(name, value);
-    });
-    return newNode;
-  },
-  toggleClass: function(node, className, state) {
-    if (state == null) {
-      state = !DOM.hasClass(node, className);
-    }
-    if (state) {
-      return DOM.addClass(node, className);
-    } else {
-      return DOM.removeClass(node, className);
-    }
-  },
-  triggerEvent: function(elem, eventName, options) {
-    var event, initFn, modifiers;
-    if (options == null) {
-      options = {};
-    }
-    if (_.indexOf(['keypress', 'keydown', 'keyup'], eventName) < 0) {
-      event = elem.ownerDocument.createEvent('Event');
-      event.initEvent(eventName, options.bubbles, options.cancelable);
-    } else {
-      event = elem.ownerDocument.createEvent('KeyboardEvent');
-      lastKeyEvent = _.clone(options);
-      if (_.isNumber(options.key)) {
-        lastKeyEvent.which = options.key;
-      } else if (_.isString(options.key)) {
-        lastKeyEvent.which = options.key.toUpperCase().charCodeAt(0);
-      } else {
-        lastKeyEvent.which = 0;
-      }
-      if (DOM.isIE(10)) {
-        modifiers = [];
-        if (options.altKey) {
-          modifiers.push('Alt');
-        }
-        if (options.ctrlKey) {
-          modifiers.push('Control');
-        }
-        if (options.metaKey) {
-          modifiers.push('Meta');
-        }
-        if (options.shiftKey) {
-          modifiers.push('Shift');
-        }
-        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, elem.ownerDocument.defaultView.window, 0, 0, modifiers.join(' '), null, null);
-      } else {
-        initFn = _.isFunction(event.initKeyboardEvent) ? 'initKeyboardEvent' : 'initKeyEvent';
-        event[initFn](eventName, options.bubbles, options.cancelable, elem.ownerDocument.defaultView.window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0);
-      }
-    }
-    elem.dispatchEvent(event);
-    return lastKeyEvent = null;
-  },
-  unwrap: function(node) {
-    var next, ret;
-    ret = node.firstChild;
-    next = node.nextSibling;
-    _.each(DOM.getChildNodes(node), function(child) {
-      return node.parentNode.insertBefore(child, next);
-    });
-    DOM.removeNode(node);
-    return ret;
-  },
-  wrap: function(wrapper, node) {
-    var parent;
-    if (node.parentNode != null) {
-      node.parentNode.insertBefore(wrapper, node);
-    }
-    parent = wrapper;
-    while (parent.firstChild != null) {
-      parent = wrapper.firstChild;
-    }
-    parent.appendChild(node);
-    return parent;
-  }
-};
-
-module.exports = DOM;
-
-
-},{"lodash":"M4+//f"}],16:[function(_dereq_,module,exports){
-var DOM, Document, Editor, Line, Renderer, Selection, Tandem, _;
-
-_ = _dereq_('lodash');
-
-DOM = _dereq_('./dom');
+dom = _dereq_('../lib/dom');
 
 Document = _dereq_('./document');
 
@@ -6326,7 +5196,7 @@ Editor = (function() {
           var nextLine;
           if ((line == null) || line.length <= offset) {
             if (i < lineTexts.length - 1 || lineText.length > 0) {
-              line = _this.doc.appendLine(_this.root.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG));
+              line = _this.doc.appendLine(_this.root.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG));
               offset = 0;
               line.insertText(offset, lineText, formatting);
               line.format(formatting);
@@ -6408,14 +5278,12 @@ Editor = (function() {
 module.exports = Editor;
 
 
-},{"./document":14,"./dom":15,"./line":23,"./renderer":35,"./selection":36,"lodash":"M4+//f","tandem-core":10}],17:[function(_dereq_,module,exports){
-var DOM, Format, Utils, _;
+},{"../lib/dom":22,"./document":13,"./line":17,"./renderer":18,"./selection":19,"lodash":"M4+//f","tandem-core":10}],15:[function(_dereq_,module,exports){
+var Format, dom, _;
 
 _ = _dereq_('lodash');
 
-DOM = _dereq_('./dom');
-
-Utils = _dereq_('./utils');
+dom = _dereq_('../lib/dom');
 
 Format = (function() {
   Format.types = {
@@ -6458,7 +5326,7 @@ Format = (function() {
       style: 'fontSize',
       "default": '13px',
       prepare: function(doc, value) {
-        return doc.execCommand('fontSize', false, Utils.convertFontSize(value));
+        return doc.execCommand('fontSize', false, dom.convertFontSize(value));
       }
     },
     link: {
@@ -6494,7 +5362,7 @@ Format = (function() {
   }
 
   Format.prototype.add = function(node, value) {
-    var formatNode, parentNode, _ref, _ref1;
+    var formatNode, inline, parentNode, _ref, _ref1;
     if (!value) {
       return this.remove(node);
     }
@@ -6503,34 +5371,36 @@ Format = (function() {
     }
     if (_.isString(this.config.parentTag)) {
       parentNode = this.document.createElement(this.config.parentTag);
-      DOM.wrap(parentNode, node);
+      dom(node).wrap(parentNode);
       if (node.parentNode.tagName === ((_ref = node.parentNode.previousSibling) != null ? _ref.tagName : void 0)) {
-        Utils.mergeNodes(node.parentNode.previousSibling, node.parentNode);
+        dom(node.parentNode.previousSibling).merge(node.parentNode);
       }
       if (node.parentNode.tagName === ((_ref1 = node.parentNode.nextSibling) != null ? _ref1.tagName : void 0)) {
-        Utils.mergeNodes(node.parentNode, node.parentNode.nextSibling);
+        dom(node.parentNode).merge(node.parentNode.nextSibling);
       }
     }
     if (_.isString(this.config.tag)) {
       formatNode = this.document.createElement(this.config.tag);
-      if (DOM.VOID_TAGS[formatNode.tagName] != null) {
+      if (dom.VOID_TAGS[formatNode.tagName] != null) {
         if (node.parentNode != null) {
-          node.parentNode.insertBefore(formatNode, node);
+          dom(node).replace(formatNode);
         }
-        DOM.removeNode(node);
         node = formatNode;
       } else if (this.isType(Format.types.LINE)) {
-        node = DOM.switchTag(node, this.config.tag);
+        node = dom(node).switchTag(this.config.tag);
       } else {
-        node = DOM.wrap(formatNode, node);
+        dom(node).wrap(formatNode);
+        node = formatNode;
       }
     }
     if (_.isString(this.config.style) || _.isString(this.config.attribute) || _.isString(this.config["class"])) {
       if (_.isString(this.config["class"])) {
         node = this.remove(node);
       }
-      if (DOM.isTextNode(node)) {
-        node = DOM.wrap(this.document.createElement(DOM.DEFAULT_INLINE_TAG), node);
+      if (dom(node).isTextNode()) {
+        inline = this.document.createElement(dom.DEFAULT_INLINE_TAG);
+        dom(node).wrap(inline);
+        node = inline;
       }
       if (_.isString(this.config.style)) {
         if (value !== this.config["default"]) {
@@ -6541,7 +5411,7 @@ Format = (function() {
         node.setAttribute(this.config.attribute, value);
       }
       if (_.isString(this.config["class"])) {
-        DOM.addClass(node, this.config["class"] + value);
+        dom(node).addClass(this.config["class"] + value);
       }
     }
     return node;
@@ -6553,7 +5423,7 @@ Format = (function() {
 
   Format.prototype.match = function(node) {
     var c, _i, _len, _ref, _ref1;
-    if (!DOM.isElement(node)) {
+    if (!dom(node).isElement()) {
       return false;
     }
     if (_.isString(this.config.parentTag) && ((_ref = node.parentNode) != null ? _ref.tagName : void 0) !== this.config.parentTag) {
@@ -6569,7 +5439,7 @@ Format = (function() {
       return false;
     }
     if (_.isString(this.config["class"])) {
-      _ref1 = DOM.getClasses(node);
+      _ref1 = dom(node).classes();
       for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
         c = _ref1[_i];
         if (c.indexOf(this.config["class"]) === 0) {
@@ -6604,11 +5474,11 @@ Format = (function() {
       node.removeAttribute(this.config.attribute);
     }
     if (_.isString(this.config["class"])) {
-      _ref = DOM.getClasses(node);
+      _ref = dom(node).classes();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         c = _ref[_i];
         if (c.indexOf(this.config["class"]) === 0) {
-          DOM.removeClass(node, c);
+          dom(node).removeClass(c);
         }
       }
       if (!node.getAttribute('class')) {
@@ -6618,24 +5488,24 @@ Format = (function() {
     if (_.isString(this.config.tag)) {
       if (this.isType(Format.types.LINE)) {
         if (node.previousSibling != null) {
-          Utils.splitAncestors(node, node.parentNode.parentNode);
+          dom(node).splitAncestors(node.parentNode.parentNode);
         }
         if (node.nextSibling != null) {
-          Utils.splitAncestors(node.nextSibling, node.parentNode.parentNode);
+          dom(node.nextSibling).splitAncestors(node.parentNode.parentNode);
         }
-        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG);
+        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG);
       } else {
-        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
-        if (DOM.EMBED_TAGS[this.config.tag] != null) {
-          DOM.setText(node, DOM.EMBED_TEXT);
+        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG);
+        if (dom.EMBED_TAGS[this.config.tag] != null) {
+          dom(node).text(dom.EMBED_TEXT);
         }
       }
     }
     if (_.isString(this.config.parentTag)) {
-      DOM.unwrap(node.parentNode);
+      dom(node.parentNode).unwrap();
     }
-    if (node.tagName === DOM.DEFAULT_INLINE_TAG && !node.hasAttributes()) {
-      node = DOM.unwrap(node);
+    if (node.tagName === dom.DEFAULT_INLINE_TAG && !node.hasAttributes()) {
+      node = dom(node).unwrap();
     }
     return node;
   };
@@ -6650,7 +5520,7 @@ Format = (function() {
     } else if (_.isString(this.config.style)) {
       return node.style[this.config.style] || void 0;
     } else if (_.isString(this.config["class"])) {
-      _ref = DOM.getClasses(node);
+      _ref = dom(node).classes();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         c = _ref[_i];
         if (c.indexOf(this.config["class"]) === 0) {
@@ -6670,20 +5540,18 @@ Format = (function() {
 module.exports = Format;
 
 
-},{"./dom":15,"./utils":39,"lodash":"M4+//f"}],18:[function(_dereq_,module,exports){
-var DOM, Format, Leaf, LinkedList, Utils, _,
+},{"../lib/dom":22,"lodash":"M4+//f"}],16:[function(_dereq_,module,exports){
+var Format, Leaf, LinkedList, dom, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = _dereq_('lodash');
 
-DOM = _dereq_('./dom');
+dom = _dereq_('../lib/dom');
 
 Format = _dereq_('./format');
 
-LinkedList = _dereq_('./lib/linked-list');
-
-Utils = _dereq_('./utils');
+LinkedList = _dereq_('../lib/linked-list');
 
 Leaf = (function(_super) {
   __extends(Leaf, _super);
@@ -6691,14 +5559,14 @@ Leaf = (function(_super) {
   Leaf.ID_PREFIX = 'leaf-';
 
   Leaf.isLeafNode = function(node) {
-    return DOM.isTextNode(node) || (node.firstChild == null);
+    return dom(node).isTextNode() || (node.firstChild == null);
   };
 
   function Leaf(node, formats) {
     this.node = node;
     this.formats = _.clone(formats);
     this.id = _.uniqueId(Leaf.ID_PREFIX);
-    this.text = DOM.getText(this.node);
+    this.text = dom(this.node).text();
     this.length = this.text.length;
   }
 
@@ -6713,27 +5581,27 @@ Leaf = (function(_super) {
     }
     this.text = this.text.slice(0, offset) + this.text.slice(offset + length);
     this.length = this.text.length;
-    if (DOM.EMBED_TAGS[this.node.tagName] != null) {
+    if (dom.EMBED_TAGS[this.node.tagName] != null) {
       textNode = this.node.ownerDocument.createTextNode(this.text);
-      return this.node = DOM.replaceNode(textNode, this.node);
+      return this.node = dom(this.node).replace(this.textNode);
     } else {
-      return DOM.setText(this.node, this.text);
+      return dom(this.node).text(this.text);
     }
   };
 
   Leaf.prototype.insertText = function(offset, text) {
     var textNode;
     this.text = this.text.slice(0, offset) + text + this.text.slice(offset);
-    if (DOM.isTextNode(this.node)) {
-      DOM.setText(this.node, this.text);
+    if (dom(this.node).isTextNode()) {
+      dom(this.node).text(this.text);
     } else {
       textNode = this.node.ownerDocument.createTextNode(text);
-      if (this.node.tagName === DOM.DEFAULT_BREAK_TAG) {
-        DOM.replaceNode(textNode, this.node);
+      if (this.node.tagName === dom.DEFAULT_BREAK_TAG) {
+        this.node = dom(this.node).replace(textNode);
       } else {
         this.node.appendChild(textNode);
+        this.node = textNode;
       }
-      this.node = textNode;
     }
     return this.length = this.text.length;
   };
@@ -6745,300 +5613,14 @@ Leaf = (function(_super) {
 module.exports = Leaf;
 
 
-},{"./dom":15,"./format":17,"./lib/linked-list":20,"./utils":39,"lodash":"M4+//f"}],19:[function(_dereq_,module,exports){
-var ColorPicker, DOM, Picker,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-DOM = _dereq_('../dom');
-
-Picker = _dereq_('./picker');
-
-ColorPicker = (function(_super) {
-  __extends(ColorPicker, _super);
-
-  function ColorPicker() {
-    ColorPicker.__super__.constructor.apply(this, arguments);
-    DOM.addClass(this.container, 'ql-color-picker');
-  }
-
-  ColorPicker.prototype.buildItem = function(picker, option, index) {
-    var item;
-    item = ColorPicker.__super__.buildItem.call(this, picker, option, index);
-    item.style.backgroundColor = option.value;
-    return item;
-  };
-
-  return ColorPicker;
-
-})(Picker);
-
-module.exports = ColorPicker;
-
-
-},{"../dom":15,"./picker":21}],20:[function(_dereq_,module,exports){
-var LinkedList, Node;
-
-Node = (function() {
-  function Node(data) {
-    this.data = data;
-    this.prev = this.next = null;
-  }
-
-  return Node;
-
-})();
-
-LinkedList = (function() {
-  LinkedList.Node = Node;
-
-  function LinkedList() {
-    this.length = 0;
-    this.first = this.last = null;
-  }
-
-  LinkedList.prototype.append = function(node) {
-    if (this.first != null) {
-      node.next = null;
-      this.last.next = node;
-    } else {
-      this.first = node;
-    }
-    node.prev = this.last;
-    this.last = node;
-    return this.length += 1;
-  };
-
-  LinkedList.prototype.insertAfter = function(refNode, newNode) {
-    newNode.prev = refNode;
-    if (refNode != null) {
-      newNode.next = refNode.next;
-      if (refNode.next != null) {
-        refNode.next.prev = newNode;
-      }
-      refNode.next = newNode;
-      if (refNode === this.last) {
-        this.last = newNode;
-      }
-    } else {
-      newNode.next = this.first;
-      this.first.prev = newNode;
-      this.first = newNode;
-    }
-    return this.length += 1;
-  };
-
-  LinkedList.prototype.remove = function(node) {
-    if (this.length > 1) {
-      if (node.prev != null) {
-        node.prev.next = node.next;
-      }
-      if (node.next != null) {
-        node.next.prev = node.prev;
-      }
-      if (node === this.first) {
-        this.first = node.next;
-      }
-      if (node === this.last) {
-        this.last = node.prev;
-      }
-    } else {
-      this.first = this.last = null;
-    }
-    node.prev = node.next = null;
-    return this.length -= 1;
-  };
-
-  LinkedList.prototype.toArray = function() {
-    var arr, cur;
-    arr = [];
-    cur = this.first;
-    while (cur != null) {
-      arr.push(cur);
-      cur = cur.next;
-    }
-    return arr;
-  };
-
-  return LinkedList;
-
-})();
-
-module.exports = LinkedList;
-
-
-},{}],21:[function(_dereq_,module,exports){
-var DOM, Normalizer, Picker, _;
-
-_ = _dereq_('lodash');
-
-DOM = _dereq_('../dom');
-
-Normalizer = _dereq_('../normalizer');
-
-Picker = (function() {
-  Picker.TEMPLATE = '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>';
-
-  function Picker(select) {
-    this.select = select;
-    this.container = this.select.ownerDocument.createElement('span');
-    this.buildPicker();
-    DOM.addClass(this.container, 'ql-picker');
-    this.select.style.display = 'none';
-    this.select.parentNode.insertBefore(this.container, this.select);
-    DOM.addEventListener(this.select.ownerDocument, 'click', (function(_this) {
-      return function() {
-        _this.close();
-        return true;
-      };
-    })(this));
-    DOM.addEventListener(this.label, 'click', (function(_this) {
-      return function() {
-        return _.defer(function() {
-          return DOM.toggleClass(_this.container, 'ql-expanded');
-        });
-      };
-    })(this));
-    DOM.addEventListener(this.select, 'change', (function(_this) {
-      return function() {
-        var item, option;
-        if (_this.select.selectedIndex > -1) {
-          item = _this.container.querySelectorAll('.ql-picker-item')[_this.select.selectedIndex];
-          option = _this.select.options[_this.select.selectedIndex];
-        }
-        _this.selectItem(item, false);
-        return DOM.toggleClass(_this.label, 'ql-active', option !== DOM.getDefaultOption(_this.select));
-      };
-    })(this));
-  }
-
-  Picker.prototype.buildItem = function(picker, option, index) {
-    var item;
-    item = this.select.ownerDocument.createElement('span');
-    item.setAttribute('data-value', option.getAttribute('value'));
-    DOM.addClass(item, 'ql-picker-item');
-    DOM.setText(item, DOM.getText(option));
-    if (this.select.selectedIndex === index) {
-      this.selectItem(item, false);
-    }
-    DOM.addEventListener(item, 'click', (function(_this) {
-      return function() {
-        _this.selectItem(item, true);
-        return _this.close();
-      };
-    })(this));
-    return item;
-  };
-
-  Picker.prototype.buildPicker = function() {
-    var picker;
-    _.each(DOM.getAttributes(this.select), (function(_this) {
-      return function(value, name) {
-        return _this.container.setAttribute(name, value);
-      };
-    })(this));
-    this.container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE);
-    this.label = this.container.querySelector('.ql-picker-label');
-    picker = this.container.querySelector('.ql-picker-options');
-    return _.each(this.select.options, (function(_this) {
-      return function(option, i) {
-        var item;
-        item = _this.buildItem(picker, option, i);
-        return picker.appendChild(item);
-      };
-    })(this));
-  };
-
-  Picker.prototype.close = function() {
-    return DOM.removeClass(this.container, 'ql-expanded');
-  };
-
-  Picker.prototype.selectItem = function(item, trigger) {
-    var selected, value;
-    selected = this.container.querySelector('.ql-selected');
-    if (selected != null) {
-      DOM.removeClass(selected, 'ql-selected');
-    }
-    if (item != null) {
-      value = item.getAttribute('data-value');
-      DOM.addClass(item, 'ql-selected');
-      DOM.setText(this.label, DOM.getText(item));
-      DOM.selectOption(this.select, value, trigger);
-      return this.label.setAttribute('data-value', value);
-    } else {
-      this.label.innerHTML = '&nbsp;';
-      return this.label.removeAttribute('data-value');
-    }
-  };
-
-  return Picker;
-
-})();
-
-module.exports = Picker;
-
-
-},{"../dom":15,"../normalizer":33,"lodash":"M4+//f"}],22:[function(_dereq_,module,exports){
-var Range, _;
-
-_ = _dereq_('lodash');
-
-Range = (function() {
-  Range.compare = function(r1, r2) {
-    if (r1 === r2) {
-      return true;
-    }
-    if (!((r1 != null) && (r2 != null))) {
-      return false;
-    }
-    return r1.equals(r2);
-  };
-
-  function Range(start, end) {
-    this.start = start;
-    this.end = end;
-  }
-
-  Range.prototype.equals = function(range) {
-    if (range == null) {
-      return false;
-    }
-    return this.start === range.start && this.end === range.end;
-  };
-
-  Range.prototype.shift = function(index, length) {
-    var _ref;
-    return _ref = _.map([this.start, this.end], function(pos) {
-      if (index > pos) {
-        return pos;
-      }
-      if (length >= 0) {
-        return pos + length;
-      } else {
-        return Math.max(index, pos + length);
-      }
-    }), this.start = _ref[0], this.end = _ref[1], _ref;
-  };
-
-  Range.prototype.isCollapsed = function() {
-    return this.start === this.end;
-  };
-
-  return Range;
-
-})();
-
-module.exports = Range;
-
-
-},{"lodash":"M4+//f"}],23:[function(_dereq_,module,exports){
-var DOM, Format, Leaf, Line, LinkedList, Normalizer, Tandem, Utils, _,
+},{"../lib/dom":22,"../lib/linked-list":23,"./format":15,"lodash":"M4+//f"}],17:[function(_dereq_,module,exports){
+var Format, Leaf, Line, LinkedList, Normalizer, Tandem, dom, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = _dereq_('lodash');
 
-DOM = _dereq_('./dom');
+dom = _dereq_('../lib/dom');
 
 Format = _dereq_('./format');
 
@@ -7046,11 +5628,9 @@ Leaf = _dereq_('./leaf');
 
 Line = _dereq_('./line');
 
-LinkedList = _dereq_('./lib/linked-list');
+LinkedList = _dereq_('../lib/linked-list');
 
-Normalizer = _dereq_('./normalizer');
-
-Utils = _dereq_('./utils');
+Normalizer = _dereq_('../lib/normalizer');
 
 Tandem = _dereq_('tandem-core');
 
@@ -7066,13 +5646,13 @@ Line = (function(_super) {
     this.node = node;
     this.id = _.uniqueId(Line.ID_PREFIX);
     this.formats = {};
-    DOM.addClass(this.node, Line.CLASS_NAME);
+    dom(this.node).addClass(Line.CLASS_NAME);
     this.rebuild();
     Line.__super__.constructor.call(this, this.node);
   }
 
   Line.prototype.buildLeaves = function(node, formats) {
-    return _.each(DOM.getChildNodes(node), (function(_this) {
+    return _.each(dom(node).childNodes(), (function(_this) {
       return function(node) {
         var nodeFormats;
         node = Normalizer.normalizeNode(node);
@@ -7182,16 +5762,16 @@ Line = (function(_super) {
       if ((value && leaf.formats[name] !== value) || (!value && (leaf.formats[name] != null))) {
         targetNode = leaf.node;
         if (leaf.formats[name] != null) {
-          Utils.splitAncestors(targetNode, this.node);
+          dom(targetNode).splitAncestors(this.node);
           while (!format.match(targetNode)) {
             targetNode = targetNode.parentNode;
           }
         }
         if (leafOffset > 0) {
-          _ref1 = Utils.splitNode(targetNode, leafOffset), leftNode = _ref1[0], targetNode = _ref1[1];
+          _ref1 = dom(targetNode).split(leafOffset), leftNode = _ref1[0], targetNode = _ref1[1];
         }
         if (leaf.length > leafOffset + length) {
-          _ref2 = Utils.splitNode(targetNode, length), targetNode = _ref2[0], rightNode = _ref2[1];
+          _ref2 = dom(targetNode).split(length), targetNode = _ref2[0], rightNode = _ref2[1];
         }
         format.add(targetNode, value);
       }
@@ -7220,9 +5800,9 @@ Line = (function(_super) {
           return _this.doc.formats[name].add(node, value);
         };
       })(this), this.node.ownerDocument.createTextNode(text));
-      _ref1 = Utils.splitNode(leaf.node, leafOffset), prevNode = _ref1[0], nextNode = _ref1[1];
+      _ref1 = dom(leaf.node).split(leafOffset), prevNode = _ref1[0], nextNode = _ref1[1];
       if (nextNode) {
-        nextNode = Utils.splitAncestors(nextNode, this.node);
+        nextNode = dom(nextNode).splitAncestors(this.node).get();
       }
       this.node.insertBefore(node, nextNode);
       return this.rebuild();
@@ -7241,15 +5821,15 @@ Line = (function(_super) {
     if (!force && (this.outerHTML != null) && this.outerHTML === this.node.outerHTML) {
       if (_.all(this.leaves.toArray(), (function(_this) {
         return function(leaf) {
-          return DOM.isAncestor(_this.node, leaf.node);
+          return dom(leaf.node).isAncestor(_this.node);
         };
       })(this))) {
         return false;
       }
     }
     this.node = Normalizer.normalizeNode(this.node);
-    if (Utils.getNodeLength(this.node) === 0 && !this.node.querySelector(DOM.DEFAULT_BREAK_TAG)) {
-      this.node.appendChild(this.node.ownerDocument.createElement(DOM.DEFAULT_BREAK_TAG));
+    if (dom(this.node).length() === 0 && !this.node.querySelector(dom.DEFAULT_BREAK_TAG)) {
+      this.node.appendChild(this.node.ownerDocument.createElement(dom.DEFAULT_BREAK_TAG));
     }
     this.leaves = new LinkedList();
     this.formats = _.reduce(this.doc.formats, (function(_this) {
@@ -7293,14 +5873,1603 @@ Line = (function(_super) {
 module.exports = Line;
 
 
-},{"./dom":15,"./format":17,"./leaf":18,"./lib/linked-list":20,"./line":23,"./normalizer":33,"./utils":39,"lodash":"M4+//f","tandem-core":10}],24:[function(_dereq_,module,exports){
-var Authorship, DOM, Tandem, _;
+},{"../lib/dom":22,"../lib/linked-list":23,"../lib/normalizer":24,"./format":15,"./leaf":16,"./line":17,"lodash":"M4+//f","tandem-core":10}],18:[function(_dereq_,module,exports){
+var DEFAULT_STYLES, LIST_STYLES, Normalizer, Renderer, dom, rule, _;
 
 _ = _dereq_('lodash');
 
-DOM = _dereq_('../dom');
+dom = _dereq_('../lib/dom');
 
-Tandem = _dereq_('tandem-core');
+Normalizer = _dereq_('../lib/normalizer');
+
+DEFAULT_STYLES = {
+  'html': {
+    'height': '100%',
+    'width': '100%'
+  },
+  'body': {
+    'box-sizing': 'border-box',
+    'cursor': 'text',
+    'font-family': "'Helvetica', 'Arial', sans-serif",
+    'font-size': '13px',
+    'height': '100%',
+    'line-height': '1.42',
+    'margin': '0px',
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
+    'padding': '12px 15px'
+  },
+  '.editor-container': {
+    'height': '100%',
+    'outline': 'none',
+    'position': 'relative',
+    'tab-size': '4',
+    'white-space': 'pre-wrap'
+  },
+  '.editor-container div': {
+    'margin': '0',
+    'padding': '0'
+  },
+  '.editor-container a': {
+    'text-decoration': 'underline'
+  },
+  '.editor-container b': {
+    'font-weight': 'bold'
+  },
+  '.editor-container i': {
+    'font-style': 'italic'
+  },
+  '.editor-container s': {
+    'text-decoration': 'line-through'
+  },
+  '.editor-container u': {
+    'text-decoration': 'underline'
+  },
+  '.editor-container img': {
+    'max-width': '100%'
+  },
+  '.editor-container blockquote': {
+    'margin': '0 0 0 2em',
+    'padding': '0'
+  },
+  '.editor-container ol': {
+    'margin': '0 0 0 2em',
+    'padding': '0',
+    'list-style-type': 'decimal'
+  },
+  '.editor-container ul': {
+    'margin': '0 0 0 2em',
+    'padding': '0',
+    'list-style-type': 'disc'
+  }
+};
+
+LIST_STYLES = ['decimal', 'lower-alpha', 'lower-roman'];
+
+rule = '.editor-container ol > li';
+
+_.each([1, 2, 3, 4, 5, 6, 7, 8, 9], function(i) {
+  rule += ' > ol';
+  DEFAULT_STYLES[rule] = {
+    'list-style-type': LIST_STYLES[i % 3]
+  };
+  return rule += ' > li';
+});
+
+if (dom.isIE(10)) {
+  DEFAULT_STYLES[dom.DEFAULT_BREAK_TAG] = {
+    'display': 'none'
+  };
+}
+
+Renderer = (function() {
+  Renderer.objToCss = function(obj) {
+    return _.map(obj, function(value, key) {
+      var innerStr;
+      innerStr = _.map(value, function(innerValue, innerKey) {
+        return "" + innerKey + ": " + innerValue + ";";
+      }).join(' ');
+      return "" + key + " { " + innerStr + " }";
+    }).join("\n");
+  };
+
+  Renderer.buildFrame = function(container) {
+    var iframe, iframeDoc, root;
+    iframe = container.ownerDocument.createElement('iframe');
+    dom(iframe).attributes({
+      frameBorder: '0',
+      height: '100%',
+      width: '100%',
+      title: 'Quill Rich Text Editor',
+      role: 'presentation'
+    });
+    container.appendChild(iframe);
+    iframeDoc = iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write('<!DOCTYPE html>');
+    iframeDoc.close();
+    root = iframeDoc.createElement('div');
+    iframeDoc.body.appendChild(root);
+    return [root, iframe];
+  };
+
+  function Renderer(container, options) {
+    var _ref;
+    this.container = container;
+    this.options = options != null ? options : {};
+    this.container.innerHTML = '';
+    _ref = Renderer.buildFrame(this.container), this.root = _ref[0], this.iframe = _ref[1];
+    this.root.setAttribute('id', this.options.id);
+    this.iframe.setAttribute('name', this.options.id);
+    dom(this.root).addClass('editor-container');
+    dom(this.container).addClass('ql-container');
+    dom(this.container).on('focus', (function(_this) {
+      return function() {
+        return _this.root.focus();
+      };
+    })(this));
+    if (dom.isIOS()) {
+      dom(this.container).styles({
+        'overflow': 'auto',
+        '-webkit-overflow-scrolling': 'touch'
+      });
+    }
+    this.addStyles(DEFAULT_STYLES);
+    if (this.options.styles != null) {
+      _.defer(_.bind(this.addStyles, this, this.options.styles));
+    }
+  }
+
+  Renderer.prototype.addContainer = function(className, before) {
+    var container, refNode;
+    if (before == null) {
+      before = false;
+    }
+    refNode = before ? this.root : null;
+    container = this.root.ownerDocument.createElement('div');
+    dom(container).addClass(className);
+    this.root.parentNode.insertBefore(container, refNode);
+    return container;
+  };
+
+  Renderer.prototype.addStyles = function(css) {
+    var link, style;
+    if (typeof css === 'object') {
+      style = this.root.ownerDocument.createElement('style');
+      style.type = 'text/css';
+      css = Renderer.objToCss(css);
+      style.appendChild(this.root.ownerDocument.createTextNode(css));
+      return this.root.ownerDocument.head.appendChild(style);
+    } else if (typeof css === 'string') {
+      link = this.root.ownerDocument.createElement('link');
+      dom(link).attributes({
+        type: 'text/css',
+        rel: 'stylesheet',
+        href: css
+      });
+      return this.root.ownerDocument.head.appendChild(link);
+    }
+  };
+
+  return Renderer;
+
+})();
+
+module.exports = Renderer;
+
+
+},{"../lib/dom":22,"../lib/normalizer":24,"lodash":"M4+//f"}],19:[function(_dereq_,module,exports){
+var Leaf, Normalizer, Range, Selection, dom, _;
+
+_ = _dereq_('lodash');
+
+dom = _dereq_('../lib/dom');
+
+Leaf = _dereq_('./leaf');
+
+Normalizer = _dereq_('../lib/normalizer');
+
+Range = _dereq_('../lib/range');
+
+Selection = (function() {
+  function Selection(doc, iframe, emitter) {
+    this.doc = doc;
+    this.iframe = iframe;
+    this.emitter = emitter;
+    this.document = this.doc.root.ownerDocument;
+    this.range = this.getRange();
+    this.nullDelay = false;
+  }
+
+  Selection.prototype.checkFocus = function() {
+    if (this.document.activeElement !== this.doc.root) {
+      return false;
+    }
+    if ((document.activeElement != null) && document.activeElement.tagName === 'IFRAME') {
+      return document.activeElement === this.iframe;
+    }
+    return true;
+  };
+
+  Selection.prototype.getRange = function() {
+    var end, nativeRange, start;
+    if (!this.checkFocus()) {
+      return null;
+    }
+    nativeRange = this._getNativeRange();
+    if (nativeRange == null) {
+      return null;
+    }
+    start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset);
+    if (nativeRange.startContainer === nativeRange.endContainer && nativeRange.startOffset === nativeRange.endOffset) {
+      end = start;
+    } else {
+      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset);
+    }
+    return new Range(Math.min(start, end), Math.max(start, end));
+  };
+
+  Selection.prototype.preserve = function(fn) {
+    var endNode, endOffset, nativeRange, startNode, startOffset, _ref, _ref1, _ref2, _ref3;
+    nativeRange = this._getNativeRange();
+    if ((nativeRange != null) && this.checkFocus()) {
+      _ref = this._encodePosition(nativeRange.startContainer, nativeRange.startOffset), startNode = _ref[0], startOffset = _ref[1];
+      _ref1 = this._encodePosition(nativeRange.endContainer, nativeRange.endOffset), endNode = _ref1[0], endOffset = _ref1[1];
+      fn();
+      _ref2 = this._decodePosition(startNode, startOffset), startNode = _ref2[0], startOffset = _ref2[1];
+      _ref3 = this._decodePosition(endNode, endOffset), endNode = _ref3[0], endOffset = _ref3[1];
+      return this._setNativeRange(startNode, startOffset, endNode, endOffset);
+    } else {
+      return fn();
+    }
+  };
+
+  Selection.prototype.setRange = function(range, source) {
+    var endNode, endOffset, startNode, startOffset, _ref, _ref1, _ref2;
+    if (range != null) {
+      _ref = this._indexToPosition(range.start), startNode = _ref[0], startOffset = _ref[1];
+      if (range.isCollapsed()) {
+        _ref1 = [startNode, startOffset], endNode = _ref1[0], endOffset = _ref1[1];
+      } else {
+        _ref2 = this._indexToPosition(range.end), endNode = _ref2[0], endOffset = _ref2[1];
+      }
+      this._setNativeRange(startNode, startOffset, endNode, endOffset);
+    } else {
+      this._setNativeRange(null);
+    }
+    return this.update(source);
+  };
+
+  Selection.prototype.shiftAfter = function(index, length, fn) {
+    var range;
+    range = this.getRange();
+    fn();
+    if (range != null) {
+      range.shift(index, length);
+      return this.setRange(range, 'silent');
+    }
+  };
+
+  Selection.prototype.update = function(source) {
+    var emit, range;
+    range = this.getRange();
+    emit = source !== 'silent' && !Range.compare(range, this.range);
+    if (range === null && source === 'user' && !this.nullDelay) {
+      return this.nullDelay = true;
+    } else {
+      this.nullDelay = false;
+      this.range = range;
+      if (emit) {
+        return this.emitter.emit(this.emitter.constructor.events.SELECTION_CHANGE, range, source);
+      }
+    }
+  };
+
+  Selection.prototype._decodePosition = function(node, offset) {
+    var childIndex;
+    if (dom(node).isElement()) {
+      childIndex = _.indexOf(dom(node.parentNode).childNodes(), node);
+      offset += childIndex;
+      node = node.parentNode;
+    }
+    return [node, offset];
+  };
+
+  Selection.prototype._encodePosition = function(node, offset) {
+    var text;
+    while (true) {
+      if (dom(node).isTextNode() || node.tagName === dom.DEFAULT_BREAK_TAG || (dom.EMBED_TAGS[node.tagName] != null)) {
+        return [node, offset];
+      } else if (offset < node.childNodes.length) {
+        node = node.childNodes[offset];
+        offset = 0;
+      } else if (node.childNodes.length === 0) {
+        if (Normalizer.TAGS[node.tagName] == null) {
+          text = node.ownerDocument.createTextNode('');
+          node.appendChild(text);
+          node = text;
+        }
+        return [node, 0];
+      } else {
+        node = node.lastChild;
+        if (dom(node).isElement()) {
+          if (node.tagName === dom.DEFAULT_BREAK_TAG || (dom.EMBED_TAGS[node.tagName] != null)) {
+            return [node, 1];
+          } else {
+            offset = node.childNodes.length;
+          }
+        } else {
+          return [node, dom(node).length()];
+        }
+      }
+    }
+  };
+
+  Selection.prototype._getNativeSelection = function() {
+    if (this.document.getSelection != null) {
+      return this.document.getSelection();
+    } else {
+      return null;
+    }
+  };
+
+  Selection.prototype._getNativeRange = function() {
+    var selection;
+    selection = this._getNativeSelection();
+    if ((selection != null ? selection.rangeCount : void 0) > 0) {
+      return selection.getRangeAt(0);
+    } else {
+      return null;
+    }
+  };
+
+  Selection.prototype._indexToPosition = function(index) {
+    var leaf, offset, _ref;
+    if (this.doc.lines.length === 0) {
+      return [this.doc.root, 0];
+    }
+    _ref = this.doc.findLeafAt(index, true), leaf = _ref[0], offset = _ref[1];
+    return this._decodePosition(leaf.node, offset);
+  };
+
+  Selection.prototype._positionToIndex = function(node, offset) {
+    var leaf, leafNode, leafOffset, line, lineOffset, _ref;
+    _ref = this._encodePosition(node, offset), leafNode = _ref[0], offset = _ref[1];
+    line = this.doc.findLine(leafNode);
+    if (line == null) {
+      return 0;
+    }
+    leaf = line.findLeaf(leafNode);
+    lineOffset = 0;
+    while (line.prev != null) {
+      line = line.prev;
+      lineOffset += line.length;
+    }
+    if (leaf == null) {
+      return lineOffset;
+    }
+    leafOffset = 0;
+    while (leaf.prev != null) {
+      leaf = leaf.prev;
+      leafOffset += leaf.length;
+    }
+    return lineOffset + leafOffset + offset;
+  };
+
+  Selection.prototype._setNativeRange = function(startNode, startOffset, endNode, endOffset) {
+    var nativeRange, selection;
+    selection = this._getNativeSelection();
+    if (!selection) {
+      return;
+    }
+    if (startNode != null) {
+      if (!this.checkFocus()) {
+        this.doc.root.focus();
+      }
+      nativeRange = this._getNativeRange();
+      if ((nativeRange == null) || startNode !== nativeRange.startContainer || startOffset !== nativeRange.startOffset || endNode !== nativeRange.endContainer || endOffset !== nativeRange.endOffset) {
+        selection.removeAllRanges();
+        nativeRange = this.document.createRange();
+        nativeRange.setStart(startNode, startOffset);
+        nativeRange.setEnd(endNode, endOffset);
+        selection.addRange(nativeRange);
+        if (!this.checkFocus()) {
+          return this.doc.root.focus();
+        }
+      }
+    } else {
+      selection.removeAllRanges();
+      return this.doc.root.blur();
+    }
+  };
+
+  return Selection;
+
+})();
+
+module.exports = Selection;
+
+
+},{"../lib/dom":22,"../lib/normalizer":24,"../lib/range":26,"./leaf":16,"lodash":"M4+//f"}],20:[function(_dereq_,module,exports){
+_dereq_('./modules/authorship');
+
+_dereq_('./modules/image-tooltip');
+
+_dereq_('./modules/keyboard');
+
+_dereq_('./modules/link-tooltip');
+
+_dereq_('./modules/multi-cursor');
+
+_dereq_('./modules/paste-manager');
+
+_dereq_('./modules/toolbar');
+
+_dereq_('./modules/tooltip');
+
+_dereq_('./modules/undo-manager');
+
+module.exports = _dereq_('./quill');
+
+
+},{"./modules/authorship":27,"./modules/image-tooltip":28,"./modules/keyboard":29,"./modules/link-tooltip":30,"./modules/multi-cursor":31,"./modules/paste-manager":32,"./modules/toolbar":33,"./modules/tooltip":34,"./modules/undo-manager":35,"./quill":36}],21:[function(_dereq_,module,exports){
+var ColorPicker, Picker, dom,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+dom = _dereq_('./dom');
+
+Picker = _dereq_('./picker');
+
+ColorPicker = (function(_super) {
+  __extends(ColorPicker, _super);
+
+  function ColorPicker() {
+    ColorPicker.__super__.constructor.apply(this, arguments);
+    dom(this.container).addClass('ql-color-picker');
+  }
+
+  ColorPicker.prototype.buildItem = function(picker, option, index) {
+    var item;
+    item = ColorPicker.__super__.buildItem.call(this, picker, option, index);
+    item.style.backgroundColor = option.value;
+    return item;
+  };
+
+  return ColorPicker;
+
+})(Picker);
+
+module.exports = ColorPicker;
+
+
+},{"./dom":22,"./picker":25}],22:[function(_dereq_,module,exports){
+var SelectWrapper, Wrapper, dom, lastKeyEvent, _,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+_ = _dereq_('lodash');
+
+lastKeyEvent = null;
+
+Wrapper = (function() {
+  function Wrapper(node) {
+    this.node = node;
+    this.trigger = __bind(this.trigger, this);
+  }
+
+  Wrapper.prototype.addClass = function(cssClass) {
+    if (this.hasClass(cssClass)) {
+      return;
+    }
+    if (this.node.classList != null) {
+      this.node.classList.add(cssClass);
+    } else if (this.node.className != null) {
+      this.node.className = (this.node.className + ' ' + cssClass).trim();
+    }
+    return this;
+  };
+
+  Wrapper.prototype.attributes = function(attributes) {
+    var attr, i, value, _i, _len, _ref;
+    if (attributes) {
+      _.each(attributes, (function(_this) {
+        return function(value, name) {
+          return _this.node.setAttribute(name, value);
+        };
+      })(this));
+      return this;
+    } else {
+      if (this.node.attributes == null) {
+        return {};
+      }
+      attributes = {};
+      _ref = this.node.attributes;
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        value = _ref[i];
+        attr = this.node.attributes[i];
+        attributes[attr.name] = attr.value;
+      }
+      return attributes;
+    }
+  };
+
+  Wrapper.prototype.child = function(offset) {
+    var child, length;
+    child = this.node.firstChild;
+    length = dom(child).length();
+    while (child != null) {
+      if (offset < length) {
+        break;
+      }
+      offset -= length;
+      child = child.nextSibling;
+      length = dom(child).length();
+    }
+    if (child == null) {
+      child = this.node.lastChild;
+      offset = dom(child).length();
+    }
+    return [child, offset];
+  };
+
+  Wrapper.prototype.childNodes = function() {
+    return _.map(this.node.childNodes);
+  };
+
+  Wrapper.prototype.classes = function() {
+    return this.node.className.split(/\s+/);
+  };
+
+  Wrapper.prototype.descendants = function() {
+    return _.map(this.node.getElementsByTagName('*'));
+  };
+
+  Wrapper.prototype.get = function() {
+    return this.node;
+  };
+
+  Wrapper.prototype.hasClass = function(cssClass) {
+    if (this.node.classList != null) {
+      return this.node.classList.contains(cssClass);
+    } else if (this.node.className != null) {
+      return _.indexOf(this.classes(), cssClass) > -1;
+    }
+    return false;
+  };
+
+  Wrapper.prototype.isAncestor = function(ancestor, inclusive) {
+    var node;
+    if (inclusive == null) {
+      inclusive = false;
+    }
+    if (ancestor === this.node) {
+      return inclusive;
+    }
+    node = this.node;
+    while (node) {
+      if (node === ancestor) {
+        return true;
+      }
+      node = node.parentNode;
+    }
+    return false;
+  };
+
+  Wrapper.prototype.isElement = function() {
+    var _ref;
+    return ((_ref = this.node) != null ? _ref.nodeType : void 0) === dom.ELEMENT_NODE;
+  };
+
+  Wrapper.prototype.isTextNode = function() {
+    var _ref;
+    return ((_ref = this.node) != null ? _ref.nodeType : void 0) === dom.TEXT_NODE;
+  };
+
+  Wrapper.prototype.length = function() {
+    var length;
+    if (this.node == null) {
+      return 0;
+    }
+    length = this.text().length;
+    if (this.isElement()) {
+      length += this.node.querySelectorAll(_.keys(dom.EMBED_TAGS).join(',')).length;
+    }
+    return length;
+  };
+
+  Wrapper.prototype.merge = function(node) {
+    var $node;
+    $node = dom(node);
+    if (this.isElement()) {
+      $node.moveChildren(this.node);
+      this.normalize();
+    } else {
+      this.text(this.text() + $node.text());
+    }
+    $node.remove();
+    return this;
+  };
+
+  Wrapper.prototype.moveChildren = function(newParent) {
+    _.each(this.childNodes(), function(child) {
+      return newParent.appendChild(child);
+    });
+    return this;
+  };
+
+  Wrapper.prototype.nextLineNode = function(root) {
+    var nextNode;
+    nextNode = this.node.nextSibling;
+    if ((nextNode == null) && this.node.parentNode !== root) {
+      nextNode = this.node.parentNode.nextSibling;
+    }
+    if ((nextNode != null) && (dom.LIST_TAGS[nextNode.tagName] != null)) {
+      nextNode = nextNode.firstChild;
+    }
+    return nextNode;
+  };
+
+  Wrapper.prototype.normalize = function() {
+    var $node, curNode, followingNode, nextNode;
+    curNode = this.node.firstChild;
+    while (curNode != null) {
+      nextNode = curNode.nextSibling;
+      $node = dom(curNode);
+      if ((nextNode != null) && dom(nextNode).isTextNode()) {
+        if ($node.text().length === 0) {
+          $node.remove();
+        } else if ($node.isTextNode()) {
+          followingNode = nextNode.nextSibling;
+          $node.merge(nextNode);
+          nextNode = followingNode;
+        }
+      }
+      curNode = nextNode;
+    }
+    return this;
+  };
+
+  Wrapper.prototype.on = function(eventName, listener) {
+    this.node.addEventListener(eventName, function(event) {
+      var arg, propogate;
+      arg = lastKeyEvent && (eventName === 'keydown' || eventName === 'keyup') ? lastKeyEvent : event;
+      propogate = listener(arg);
+      if (!propogate) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      return propogate;
+    });
+    return this;
+  };
+
+  Wrapper.prototype.remove = function() {
+    var _ref;
+    if ((_ref = this.node.parentNode) != null) {
+      _ref.removeChild(this.node);
+    }
+    this.node = null;
+    return null;
+  };
+
+  Wrapper.prototype.removeClass = function(cssClass) {
+    var classArray;
+    if (!this.hasClass(cssClass)) {
+      return;
+    }
+    if (this.node.classList != null) {
+      return this.node.classList.remove(cssClass);
+    } else if (this.node.className != null) {
+      classArray = this.classes();
+      classArray.splice(_.indexOf(classArray, cssClass), 1);
+      this.node.className = classArray.join(' ');
+    }
+    return this;
+  };
+
+  Wrapper.prototype.replace = function(newNode) {
+    this.node.parentNode.replaceChild(newNode, this.node);
+    this.node = newNode;
+    return newNode;
+  };
+
+  Wrapper.prototype.splitAncestors = function(root, force) {
+    var nextNode, parentClone, parentNode, refNode;
+    if (force == null) {
+      force = false;
+    }
+    if (this.node === root || this.node.parentNode === root) {
+      return this;
+    }
+    if ((this.node.previousSibling != null) || force) {
+      parentNode = this.node.parentNode;
+      parentClone = parentNode.cloneNode(false);
+      parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling);
+      refNode = this.node;
+      while (refNode != null) {
+        nextNode = refNode.nextSibling;
+        parentClone.appendChild(refNode);
+        refNode = nextNode;
+      }
+      return dom(parentClone).splitAncestors(root);
+    } else {
+      return dom(this.node.parentNode).splitAncestors(root);
+    }
+  };
+
+  Wrapper.prototype.split = function(offset, force) {
+    var after, child, childLeft, childRight, left, nextRight, nodeLength, right, _ref, _ref1;
+    if (force == null) {
+      force = false;
+    }
+    nodeLength = this.length();
+    offset = Math.max(0, offset);
+    offset = Math.min(offset, nodeLength);
+    if (!(force || offset !== 0)) {
+      return [this.node.previousSibling, this.node, false];
+    }
+    if (!(force || offset !== nodeLength)) {
+      return [this.node, this.node.nextSibling, false];
+    }
+    if (this.node.nodeType === dom.TEXT_NODE) {
+      after = this.node.splitText(offset);
+      return [this.node, after, true];
+    } else {
+      left = this.node;
+      right = this.node.cloneNode(false);
+      this.node.parentNode.insertBefore(right, left.nextSibling);
+      _ref = this.child(offset), child = _ref[0], offset = _ref[1];
+      _ref1 = dom(child).split(offset), childLeft = _ref1[0], childRight = _ref1[1];
+      while (childRight !== null) {
+        nextRight = childRight.nextSibling;
+        right.appendChild(childRight);
+        childRight = nextRight;
+      }
+      return [left, right, true];
+    }
+  };
+
+  Wrapper.prototype.styles = function(styles, overwrite) {
+    var obj, styleString;
+    if (overwrite == null) {
+      overwrite = false;
+    }
+    if (styles) {
+      if (!overwrite) {
+        styles = _.defaults(styles, this.styles());
+      }
+      styleString = _.map(styles, function(style, name) {
+        return "" + name + ": " + style;
+      }).join('; ') + ';';
+      this.node.setAttribute('style', styleString);
+      return this;
+    } else {
+      styleString = this.node.getAttribute('style') || '';
+      obj = _.reduce(styleString.split(';'), function(styles, str) {
+        var name, value, _ref;
+        _ref = str.split(':'), name = _ref[0], value = _ref[1];
+        if (name && value) {
+          name = name.trim();
+          value = value.trim();
+          styles[name.toLowerCase()] = value;
+        }
+        return styles;
+      }, {});
+      return obj;
+    }
+  };
+
+  Wrapper.prototype.switchTag = function(newTag) {
+    var attributes, newNode;
+    newTag = newTag.toUpperCase();
+    if (this.node.tagName === newTag) {
+      return this;
+    }
+    newNode = this.node.ownerDocument.createElement(newTag);
+    attributes = this.attributes();
+    if (dom.VOID_TAGS[newTag] == null) {
+      this.moveChildren(newNode);
+    }
+    this.replace(newNode);
+    return this.attributes(attributes).get();
+  };
+
+  Wrapper.prototype.text = function(text) {
+    if (text != null) {
+      switch (this.node.nodeType) {
+        case dom.ELEMENT_NODE:
+          this.node.textContent = text;
+          break;
+        case dom.TEXT_NODE:
+          this.node.data = text;
+      }
+      return this;
+    } else {
+      switch (this.node.nodeType) {
+        case dom.ELEMENT_NODE:
+          if (this.node.tagName === dom.DEFAULT_BREAK_TAG) {
+            return "";
+          }
+          if (dom.EMBED_TAGS[this.node.tagName] != null) {
+            return dom.EMBED_TEXT;
+          }
+          if (this.node.textContent != null) {
+            return this.node.textContent;
+          }
+          return "";
+        case dom.TEXT_NODE:
+          return this.node.data || "";
+        default:
+          return "";
+      }
+    }
+  };
+
+  Wrapper.prototype.textNodes = function() {
+    var textNode, textNodes, walker;
+    walker = this.node.ownerDocument.createTreeWalker(this.node, NodeFilter.SHOW_TEXT, null, false);
+    textNodes = [];
+    while (textNode = walker.nextNode()) {
+      textNodes.push(textNode);
+    }
+    return textNodes;
+  };
+
+  Wrapper.prototype.toggleClass = function(className, state) {
+    if (state == null) {
+      state = !this.hasClass(className);
+    }
+    if (state) {
+      this.addClass(className);
+    } else {
+      this.removeClass(className);
+    }
+    return this;
+  };
+
+  Wrapper.prototype.trigger = function(eventName, options) {
+    var event, initFn, modifiers;
+    if (options == null) {
+      options = {};
+    }
+    if (_.indexOf(['keypress', 'keydown', 'keyup'], eventName) < 0) {
+      event = this.node.ownerDocument.createEvent('Event');
+      event.initEvent(eventName, options.bubbles, options.cancelable);
+    } else {
+      event = this.node.ownerDocument.createEvent('KeyboardEvent');
+      lastKeyEvent = _.clone(options);
+      if (_.isNumber(options.key)) {
+        lastKeyEvent.which = options.key;
+      } else if (_.isString(options.key)) {
+        lastKeyEvent.which = options.key.toUpperCase().charCodeAt(0);
+      } else {
+        lastKeyEvent.which = 0;
+      }
+      if (dom.isIE(10)) {
+        modifiers = [];
+        if (options.altKey) {
+          modifiers.push('Alt');
+        }
+        if (options.ctrlKey) {
+          modifiers.push('Control');
+        }
+        if (options.metaKey) {
+          modifiers.push('Meta');
+        }
+        if (options.shiftKey) {
+          modifiers.push('Shift');
+        }
+        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, this.window(), 0, 0, modifiers.join(' '), null, null);
+      } else {
+        initFn = _.isFunction(event.initKeyboardEvent) ? 'initKeyboardEvent' : 'initKeyEvent';
+        event[initFn](eventName, options.bubbles, options.cancelable, this.window(), options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0);
+      }
+    }
+    this.node.dispatchEvent(event);
+    lastKeyEvent = null;
+    return this;
+  };
+
+  Wrapper.prototype.unwrap = function() {
+    var next, ret;
+    ret = this.node.firstChild;
+    next = this.node.nextSibling;
+    _.each(this.childNodes(), (function(_this) {
+      return function(child) {
+        return _this.node.parentNode.insertBefore(child, next);
+      };
+    })(this));
+    this.remove();
+    return ret;
+  };
+
+  Wrapper.prototype.window = function() {
+    return this.node.ownerDocument.defaultView || this.node.ownerDocument.parentWindow;
+  };
+
+  Wrapper.prototype.wrap = function(wrapper) {
+    var parent;
+    if (this.node.parentNode != null) {
+      this.node.parentNode.insertBefore(wrapper, this.node);
+    }
+    parent = wrapper;
+    while (parent.firstChild != null) {
+      parent = wrapper.firstChild;
+    }
+    parent.appendChild(this.node);
+    return this;
+  };
+
+  return Wrapper;
+
+})();
+
+SelectWrapper = (function(_super) {
+  __extends(SelectWrapper, _super);
+
+  function SelectWrapper() {
+    return SelectWrapper.__super__.constructor.apply(this, arguments);
+  }
+
+  SelectWrapper.prototype["default"] = function() {
+    return this.node.querySelector('option[selected]');
+  };
+
+  SelectWrapper.prototype.option = function(option, trigger) {
+    var value;
+    if (trigger == null) {
+      trigger = true;
+    }
+    value = _.isElement(option) ? option.value : option;
+    if (value) {
+      this.node.value = value;
+    } else {
+      this.node.selectedIndex = -1;
+    }
+    if (trigger) {
+      this.trigger('change');
+    }
+    return this;
+  };
+
+  SelectWrapper.prototype.reset = function(trigger) {
+    var option;
+    if (trigger == null) {
+      trigger = true;
+    }
+    option = this["default"]();
+    if (option != null) {
+      option.selected = true;
+    } else {
+      this.node.selectedIndex = 0;
+    }
+    if (trigger) {
+      this.trigger('change');
+    }
+    return this;
+  };
+
+  SelectWrapper.prototype.value = function() {
+    if (this.node.selectedIndex > -1) {
+      return this.node.options[this.node.selectedIndex].value;
+    } else {
+      return '';
+    }
+  };
+
+  return SelectWrapper;
+
+})(Wrapper);
+
+dom = function(node) {
+  if ((node != null ? node.tagName : void 0) === 'SELECT') {
+    return new SelectWrapper(node);
+  } else {
+    return new Wrapper(node);
+  }
+};
+
+dom = _.extend(dom, {
+  ELEMENT_NODE: 1,
+  NOBREAK_SPACE: "&nbsp;",
+  TEXT_NODE: 3,
+  ZERO_WIDTH_NOBREAK_SPACE: "\uFEFF",
+  DEFAULT_BLOCK_TAG: 'DIV',
+  DEFAULT_BREAK_TAG: 'BR',
+  DEFAULT_INLINE_TAG: 'SPAN',
+  EMBED_TEXT: '!',
+  FONT_SIZES: {
+    '10px': 1,
+    '13px': 2,
+    '16px': 3,
+    '18px': 4,
+    '24px': 5,
+    '32px': 6,
+    '48px': 7
+  },
+  KEYS: {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    ESCAPE: 27,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    DELETE: 46
+  },
+  BLOCK_TAGS: {
+    'ADDRESS': 'ADDRESS',
+    'ARTICLE': 'ARTICLE',
+    'ASIDE': 'ASIDE',
+    'AUDIO': 'AUDIO',
+    'BLOCKQUOTE': 'BLOCKQUOTE',
+    'CANVAS': 'CANVAS',
+    'DD': 'DD',
+    'DIV': 'DIV',
+    'DL': 'DL',
+    'FIGCAPTION': 'FIGCAPTION',
+    'FIGURE': 'FIGURE',
+    'FOOTER': 'FOOTER',
+    'FORM': 'FORM',
+    'H1': 'H1',
+    'H2': 'H2',
+    'H3': 'H3',
+    'H4': 'H4',
+    'H5': 'H5',
+    'H6': 'H6',
+    'HEADER': 'HEADER',
+    'HGROUP': 'HGROUP',
+    'LI': 'LI',
+    'OL': 'OL',
+    'OUTPUT': 'OUTPUT',
+    'P': 'P',
+    'PRE': 'PRE',
+    'SECTION': 'SECTION',
+    'TABLE': 'TABLE',
+    'TBODY': 'TBODY',
+    'TD': 'TD',
+    'TFOOT': 'TFOOT',
+    'TH': 'TH',
+    'THEAD': 'THEAD',
+    'TR': 'TR',
+    'UL': 'UL',
+    'VIDEO': 'VIDEO'
+  },
+  EMBED_TAGS: {
+    'IMG': 'IMG'
+  },
+  LINE_TAGS: {
+    'DIV': 'DIV',
+    'LI': 'LI'
+  },
+  LIST_TAGS: {
+    'OL': 'OL',
+    'UL': 'UL'
+  },
+  VOID_TAGS: {
+    'AREA': 'AREA',
+    'BASE': 'BASE',
+    'BR': 'BR',
+    'COL': 'COL',
+    'COMMAND': 'COMMAND',
+    'EMBED': 'EMBED',
+    'HR': 'HR',
+    'IMG': 'IMG',
+    'INPUT': 'INPUT',
+    'KEYGEN': 'KEYGEN',
+    'LINK': 'LINK',
+    'META': 'META',
+    'PARAM': 'PARAM',
+    'SOURCE': 'SOURCE',
+    'TRACK': 'TRACK',
+    'WBR': 'WBR'
+  },
+  convertFontSize: function(size) {
+    var i, s, sources, targets;
+    if (_.isString(size) && size.indexOf('px') > -1) {
+      sources = _.keys(dom.FONT_SIZES);
+      targets = _.values(dom.FONT_SIZES);
+    } else {
+      targets = _.keys(dom.FONT_SIZES);
+      sources = _.values(dom.FONT_SIZES);
+    }
+    for (i in sources) {
+      s = sources[i];
+      if (parseInt(size) <= parseInt(s)) {
+        return targets[i];
+      }
+    }
+    return _.last(targets);
+  },
+  isIE: function(maxVersion) {
+    var version;
+    version = document.documentMode;
+    return version && maxVersion >= version;
+  },
+  isIOS: function() {
+    return /iPhone|iPad/i.test(navigator.userAgent);
+  }
+});
+
+module.exports = dom;
+
+
+},{"lodash":"M4+//f"}],23:[function(_dereq_,module,exports){
+var LinkedList, Node;
+
+Node = (function() {
+  function Node(data) {
+    this.data = data;
+    this.prev = this.next = null;
+  }
+
+  return Node;
+
+})();
+
+LinkedList = (function() {
+  LinkedList.Node = Node;
+
+  function LinkedList() {
+    this.length = 0;
+    this.first = this.last = null;
+  }
+
+  LinkedList.prototype.append = function(node) {
+    if (this.first != null) {
+      node.next = null;
+      this.last.next = node;
+    } else {
+      this.first = node;
+    }
+    node.prev = this.last;
+    this.last = node;
+    return this.length += 1;
+  };
+
+  LinkedList.prototype.insertAfter = function(refNode, newNode) {
+    newNode.prev = refNode;
+    if (refNode != null) {
+      newNode.next = refNode.next;
+      if (refNode.next != null) {
+        refNode.next.prev = newNode;
+      }
+      refNode.next = newNode;
+      if (refNode === this.last) {
+        this.last = newNode;
+      }
+    } else {
+      newNode.next = this.first;
+      this.first.prev = newNode;
+      this.first = newNode;
+    }
+    return this.length += 1;
+  };
+
+  LinkedList.prototype.remove = function(node) {
+    if (this.length > 1) {
+      if (node.prev != null) {
+        node.prev.next = node.next;
+      }
+      if (node.next != null) {
+        node.next.prev = node.prev;
+      }
+      if (node === this.first) {
+        this.first = node.next;
+      }
+      if (node === this.last) {
+        this.last = node.prev;
+      }
+    } else {
+      this.first = this.last = null;
+    }
+    node.prev = node.next = null;
+    return this.length -= 1;
+  };
+
+  LinkedList.prototype.toArray = function() {
+    var arr, cur;
+    arr = [];
+    cur = this.first;
+    while (cur != null) {
+      arr.push(cur);
+      cur = cur.next;
+    }
+    return arr;
+  };
+
+  return LinkedList;
+
+})();
+
+module.exports = LinkedList;
+
+
+},{}],24:[function(_dereq_,module,exports){
+var Normalizer, dom, _;
+
+_ = _dereq_('lodash');
+
+dom = _dereq_('./dom');
+
+Normalizer = {
+  ALIASES: {
+    'STRONG': 'B',
+    'EM': 'I',
+    'DEL': 'S',
+    'STRIKE': 'S'
+  },
+  ATTRIBUTES: {
+    'color': 'color',
+    'face': 'fontFamily',
+    'size': 'fontSize'
+  },
+  STYLES: {
+    'background-color': 'background-color',
+    'color': 'color',
+    'font-family': 'font-family',
+    'font-size': 'font-size',
+    'text-align': 'text-align'
+  },
+  TAGS: {
+    'DIV': 'DIV',
+    'BR': 'BR',
+    'SPAN': 'SPAN',
+    'B': 'B',
+    'I': 'I',
+    'S': 'S',
+    'U': 'U',
+    'A': 'A',
+    'IMG': 'IMG',
+    'OL': 'OL',
+    'UL': 'UL',
+    'LI': 'LI'
+  },
+  handleBreaks: function(lineNode) {
+    var breaks;
+    breaks = _.map(lineNode.querySelectorAll(dom.DEFAULT_BREAK_TAG));
+    _.each(breaks, (function(_this) {
+      return function(br) {
+        if ((br.nextSibling != null) && (!dom.isIE(10) || (br.previousSibling != null))) {
+          return dom(br.nextSibling).splitAncestors(lineNode.parentNode);
+        }
+      };
+    })(this));
+    return lineNode;
+  },
+  normalizeLine: function(lineNode) {
+    lineNode = Normalizer.wrapInline(lineNode);
+    lineNode = Normalizer.handleBreaks(lineNode);
+    lineNode = Normalizer.pullBlocks(lineNode);
+    lineNode = Normalizer.normalizeNode(lineNode);
+    Normalizer.unwrapText(lineNode);
+    if ((lineNode != null) && (dom.LIST_TAGS[lineNode.tagName] != null)) {
+      lineNode = lineNode.firstChild;
+    }
+    return lineNode;
+  },
+  normalizeNode: function(node) {
+    if (dom(node).isTextNode()) {
+      return node;
+    }
+    _.each(Normalizer.ATTRIBUTES, function(style, attribute) {
+      var value;
+      if (node.hasAttribute(attribute)) {
+        value = node.getAttribute(attribute);
+        if (attribute === 'size') {
+          value = dom.convertFontSize(value);
+        }
+        node.style[style] = value;
+        return node.removeAttribute(attribute);
+      }
+    });
+    Normalizer.whitelistStyles(node);
+    return Normalizer.whitelistTags(node);
+  },
+  optimizeLine: function(lineNode) {
+    var lineNodeLength, node, nodes, _results;
+    lineNodeLength = dom(lineNode).length();
+    nodes = dom(lineNode).descendants();
+    _results = [];
+    while (nodes.length > 0) {
+      node = nodes.pop();
+      if ((node != null ? node.parentNode : void 0) == null) {
+        continue;
+      }
+      if (dom.EMBED_TAGS[node.tagName] != null) {
+        continue;
+      }
+      if (node.tagName === dom.DEFAULT_BREAK_TAG) {
+        if (lineNodeLength !== 0) {
+          _results.push(dom(node).remove());
+        } else {
+          _results.push(void 0);
+        }
+      } else if (dom(node).length() === 0) {
+        nodes.push(node.nextSibling);
+        _results.push(dom(node).unwrap());
+      } else if ((node.previousSibling != null) && node.tagName === node.previousSibling.tagName) {
+        if (_.isEqual(dom(node).attributes(), dom(node.previousSibling).attributes())) {
+          nodes.push(node.firstChild);
+          _results.push(dom(node.previousSibling).merge(node));
+        } else {
+          _results.push(void 0);
+        }
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  },
+  pullBlocks: function(lineNode) {
+    var curNode;
+    curNode = lineNode.firstChild;
+    while (curNode != null) {
+      if ((dom.BLOCK_TAGS[curNode.tagName] != null) && curNode.tagName !== 'LI') {
+        if (curNode.previousSibling != null) {
+          dom(curNode).splitAncestors(lineNode.parentNode);
+        }
+        if (curNode.nextSibling != null) {
+          dom(curNode.nextSibling).splitAncestors(lineNode.parentNode);
+        }
+        if ((dom.LIST_TAGS[curNode.tagName] == null) || !curNode.firstChild) {
+          dom(curNode).unwrap();
+          Normalizer.pullBlocks(lineNode);
+        } else {
+          dom(curNode.parentNode).unwrap();
+          if (lineNode.parentNode == null) {
+            lineNode = curNode;
+          }
+        }
+        break;
+      }
+      curNode = curNode.nextSibling;
+    }
+    return lineNode;
+  },
+  stripComments: function(html) {
+    return html.replace(/<!--[\s\S]*?-->/g, '');
+  },
+  stripWhitespace: function(html) {
+    html = html.replace(/^\s+/, '').replace(/\s+$/, '');
+    html = html.replace(/\>\s+\</g, '><');
+    return html;
+  },
+  whitelistStyles: function(node) {
+    var original, styles;
+    original = dom(node).styles();
+    styles = _.omit(original, function(value, key) {
+      return Normalizer.STYLES[key] == null;
+    });
+    if (_.keys(styles).length < _.keys(original).length) {
+      if (_.keys(styles).length > 0) {
+        return dom(node).styles(styles, true);
+      } else {
+        return node.removeAttribute('style');
+      }
+    }
+  },
+  whitelistTags: function(node) {
+    if (!dom(node).isElement()) {
+      return node;
+    }
+    if (Normalizer.ALIASES[node.tagName] != null) {
+      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName]);
+    } else if (Normalizer.TAGS[node.tagName] == null) {
+      if (dom.BLOCK_TAGS[node.tagName] != null) {
+        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG);
+      } else if (!node.hasAttributes() && (node.firstChild != null)) {
+        node = dom(node).unwrap();
+      } else {
+        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG);
+      }
+    }
+    return node;
+  },
+  wrapInline: function(lineNode) {
+    var blockNode, nextNode;
+    if (dom.BLOCK_TAGS[lineNode.tagName] != null) {
+      return lineNode;
+    }
+    blockNode = lineNode.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG);
+    lineNode.parentNode.insertBefore(blockNode, lineNode);
+    while ((lineNode != null) && (dom.BLOCK_TAGS[lineNode.tagName] == null)) {
+      nextNode = lineNode.nextSibling;
+      blockNode.appendChild(lineNode);
+      lineNode = nextNode;
+    }
+    return blockNode;
+  },
+  unwrapText: function(lineNode) {
+    var spans;
+    spans = _.map(lineNode.querySelectorAll(dom.DEFAULT_INLINE_TAG));
+    return _.each(spans, function(span) {
+      if (!span.hasAttributes()) {
+        return dom(span).unwrap();
+      }
+    });
+  }
+};
+
+module.exports = Normalizer;
+
+
+},{"./dom":22,"lodash":"M4+//f"}],25:[function(_dereq_,module,exports){
+var Normalizer, Picker, dom, _;
+
+_ = _dereq_('lodash');
+
+dom = _dereq_('./dom');
+
+Normalizer = _dereq_('./normalizer');
+
+Picker = (function() {
+  Picker.TEMPLATE = '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>';
+
+  function Picker(select) {
+    this.select = select;
+    this.container = this.select.ownerDocument.createElement('span');
+    this.buildPicker();
+    dom(this.container).addClass('ql-picker');
+    this.select.style.display = 'none';
+    this.select.parentNode.insertBefore(this.container, this.select);
+    dom(this.select.ownerDocument).on('click', (function(_this) {
+      return function() {
+        _this.close();
+        return true;
+      };
+    })(this));
+    dom(this.label).on('click', (function(_this) {
+      return function() {
+        _.defer(function() {
+          return dom(_this.container).toggleClass('ql-expanded');
+        });
+        return false;
+      };
+    })(this));
+    dom(this.select).on('change', (function(_this) {
+      return function() {
+        var item, option;
+        if (_this.select.selectedIndex > -1) {
+          item = _this.container.querySelectorAll('.ql-picker-item')[_this.select.selectedIndex];
+          option = _this.select.options[_this.select.selectedIndex];
+        }
+        _this.selectItem(item, false);
+        return dom(_this.label).toggleClass('ql-active', option !== dom(_this.select)["default"]());
+      };
+    })(this));
+  }
+
+  Picker.prototype.buildItem = function(picker, option, index) {
+    var item;
+    item = this.select.ownerDocument.createElement('span');
+    item.setAttribute('data-value', option.getAttribute('value'));
+    dom(item).addClass('ql-picker-item').text(dom(option).text()).on('click', (function(_this) {
+      return function() {
+        _this.selectItem(item, true);
+        return _this.close();
+      };
+    })(this));
+    if (this.select.selectedIndex === index) {
+      this.selectItem(item, false);
+    }
+    return item;
+  };
+
+  Picker.prototype.buildPicker = function() {
+    var picker;
+    _.each(dom(this.select).attributes(), (function(_this) {
+      return function(value, name) {
+        return _this.container.setAttribute(name, value);
+      };
+    })(this));
+    this.container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE);
+    this.label = this.container.querySelector('.ql-picker-label');
+    picker = this.container.querySelector('.ql-picker-options');
+    return _.each(this.select.options, (function(_this) {
+      return function(option, i) {
+        var item;
+        item = _this.buildItem(picker, option, i);
+        return picker.appendChild(item);
+      };
+    })(this));
+  };
+
+  Picker.prototype.close = function() {
+    return dom(this.container).removeClass('ql-expanded');
+  };
+
+  Picker.prototype.selectItem = function(item, trigger) {
+    var selected, value;
+    selected = this.container.querySelector('.ql-selected');
+    if (selected != null) {
+      dom(selected).removeClass('ql-selected');
+    }
+    if (item != null) {
+      value = item.getAttribute('data-value');
+      dom(item).addClass('ql-selected');
+      dom(this.label).text(dom(item).text());
+      dom(this.select).option(value, trigger);
+      return this.label.setAttribute('data-value', value);
+    } else {
+      this.label.innerHTML = '&nbsp;';
+      return this.label.removeAttribute('data-value');
+    }
+  };
+
+  return Picker;
+
+})();
+
+module.exports = Picker;
+
+
+},{"./dom":22,"./normalizer":24,"lodash":"M4+//f"}],26:[function(_dereq_,module,exports){
+var Range, _;
+
+_ = _dereq_('lodash');
+
+Range = (function() {
+  Range.compare = function(r1, r2) {
+    if (r1 === r2) {
+      return true;
+    }
+    if (!((r1 != null) && (r2 != null))) {
+      return false;
+    }
+    return r1.equals(r2);
+  };
+
+  function Range(start, end) {
+    this.start = start;
+    this.end = end;
+  }
+
+  Range.prototype.equals = function(range) {
+    if (range == null) {
+      return false;
+    }
+    return this.start === range.start && this.end === range.end;
+  };
+
+  Range.prototype.shift = function(index, length) {
+    var _ref;
+    return _ref = _.map([this.start, this.end], function(pos) {
+      if (index > pos) {
+        return pos;
+      }
+      if (length >= 0) {
+        return pos + length;
+      } else {
+        return Math.max(index, pos + length);
+      }
+    }), this.start = _ref[0], this.end = _ref[1], _ref;
+  };
+
+  Range.prototype.isCollapsed = function() {
+    return this.start === this.end;
+  };
+
+  return Range;
+
+})();
+
+module.exports = Range;
+
+
+},{"lodash":"M4+//f"}],27:[function(_dereq_,module,exports){
+var Authorship, Quill, Tandem, dom, _;
+
+Quill = _dereq_('../quill');
+
+_ = Quill.require('lodash');
+
+dom = Quill.require('dom');
+
+Tandem = Quill.require('tandem-core');
 
 Authorship = (function() {
   Authorship.DEFAULTS = {
@@ -7359,10 +7528,12 @@ Authorship = (function() {
   };
 
   Authorship.prototype.attachButton = function(button) {
-    return DOM.addEventListener(button, 'click', (function(_this) {
+    var $button;
+    $button = dom(button);
+    return $button.on('click', (function(_this) {
       return function() {
-        DOM.toggleClass(button, 'ql-on');
-        return _this.enable(DOM.hasClass(button, 'ql-on'));
+        $button.toggleClass('ql-on');
+        return _this.enable($dom.hasClass('ql-on'));
       };
     })(this));
   };
@@ -7371,7 +7542,7 @@ Authorship = (function() {
     if (enabled == null) {
       enabled = true;
     }
-    return DOM.toggleClass(this.quill.root, 'authorship', enabled);
+    return dom(this.quill.root).toggleClass('authorship', enabled);
   };
 
   Authorship.prototype.disable = function() {
@@ -7382,19 +7553,25 @@ Authorship = (function() {
 
 })();
 
+Quill.registerModule('authorship', Authorship);
+
 module.exports = Authorship;
 
 
-},{"../dom":15,"lodash":"M4+//f","tandem-core":10}],25:[function(_dereq_,module,exports){
-var DOM, ImageTooltip, Tooltip, _,
+},{"../quill":36}],28:[function(_dereq_,module,exports){
+var ImageTooltip, Quill, Tandem, Tooltip, dom, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-_ = _dereq_('lodash');
-
-DOM = _dereq_('../dom');
+Quill = _dereq_('../quill');
 
 Tooltip = _dereq_('./tooltip');
+
+_ = Quill.require('lodash');
+
+dom = Quill.require('dom');
+
+Tandem = Quill.require('tandem-core');
 
 ImageTooltip = (function(_super) {
   __extends(ImageTooltip, _super);
@@ -7459,14 +7636,14 @@ ImageTooltip = (function(_super) {
     ImageTooltip.__super__.constructor.call(this, this.quill, this.options);
     this.preview = this.container.querySelector('.preview');
     this.textbox = this.container.querySelector('.input');
-    DOM.addClass(this.container, 'image-tooltip-container');
+    dom(this.container).addClass('image-tooltip-container');
     this.initListeners();
   }
 
   ImageTooltip.prototype.initListeners = function() {
-    DOM.addEventListener(this.container.querySelector('.insert'), 'click', _.bind(this.insertImage, this));
-    DOM.addEventListener(this.container.querySelector('.cancel'), 'click', _.bind(this.hide, this));
-    DOM.addEventListener(this.textbox, 'input', _.bind(this._preview, this));
+    dom(this.container.querySelector('.insert')).on('click', _.bind(this.insertImage, this));
+    dom(this.container.querySelector('.cancel')).on('click', _.bind(this.hide, this));
+    dom(this.textbox).on('input', _.bind(this._preview, this));
     this.initTextbox(this.textbox, this.insertImage, this.hide);
     return this.quill.onModuleLoad('toolbar', (function(_this) {
       return function(toolbar) {
@@ -7537,17 +7714,21 @@ ImageTooltip = (function(_super) {
 
 })(Tooltip);
 
+Quill.registerModule('image-tooltip', ImageTooltip);
+
 module.exports = ImageTooltip;
 
 
-},{"../dom":15,"./tooltip":31,"lodash":"M4+//f"}],26:[function(_dereq_,module,exports){
-var DOM, Keyboard, Tandem, _;
+},{"../quill":36,"./tooltip":34}],29:[function(_dereq_,module,exports){
+var Keyboard, Quill, Tandem, dom, _;
 
-_ = _dereq_('lodash');
+Quill = _dereq_('../quill');
 
-DOM = _dereq_('../dom');
+_ = Quill.require('lodash');
 
-Tandem = _dereq_('tandem-core');
+dom = Quill.require('dom');
+
+Tandem = Quill.require('tandem-core');
 
 Keyboard = (function() {
   Keyboard.hotkeys = {
@@ -7556,7 +7737,7 @@ Keyboard = (function() {
       metaKey: true
     },
     INDENT: {
-      key: DOM.KEYS.TAB,
+      key: dom.KEYS.TAB,
       shiftKey: false
     },
     ITALIC: {
@@ -7564,7 +7745,7 @@ Keyboard = (function() {
       metaKey: true
     },
     OUTDENT: {
-      key: DOM.KEYS.TAB,
+      key: dom.KEYS.TAB,
       shiftKey: true
     },
     UNDERLINE: {
@@ -7616,7 +7797,7 @@ Keyboard = (function() {
   };
 
   Keyboard.prototype._initDeletes = function() {
-    return _.each([DOM.KEYS.DELETE, DOM.KEYS.BACKSPACE], (function(_this) {
+    return _.each([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (function(_this) {
       return function(key) {
         return _this.addHotkey(key, function() {
           return _this.quill.getLength() > 1;
@@ -7648,7 +7829,7 @@ Keyboard = (function() {
   };
 
   Keyboard.prototype._initListeners = function() {
-    return DOM.addEventListener(this.quill.root, 'keydown', (function(_this) {
+    return dom(this.quill.root).on('keydown', (function(_this) {
       return function(event) {
         var prevent;
         prevent = false;
@@ -7693,19 +7874,23 @@ Keyboard = (function() {
 
 })();
 
+Quill.registerModule('keyboard', Keyboard);
+
 module.exports = Keyboard;
 
 
-},{"../dom":15,"lodash":"M4+//f","tandem-core":10}],27:[function(_dereq_,module,exports){
-var DOM, LinkTooltip, Tooltip, _,
+},{"../quill":36}],30:[function(_dereq_,module,exports){
+var LinkTooltip, Quill, Tooltip, dom, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-_ = _dereq_('lodash');
-
-DOM = _dereq_('../dom');
+Quill = _dereq_('../quill');
 
 Tooltip = _dereq_('./tooltip');
+
+_ = Quill.require('lodash');
+
+dom = Quill.require('dom');
 
 LinkTooltip = (function(_super) {
   __extends(LinkTooltip, _super);
@@ -7735,7 +7920,7 @@ LinkTooltip = (function(_super) {
     this.options.styles = _.defaults(this.options.styles, Tooltip.DEFAULTS.styles);
     this.options = _.defaults(this.options, Tooltip.DEFAULTS);
     LinkTooltip.__super__.constructor.call(this, this.quill, this.options);
-    DOM.addClass(this.container, 'link-tooltip-container');
+    dom(this.container).addClass('link-tooltip-container');
     this.textbox = this.container.querySelector('.input');
     this.link = this.container.querySelector('.url');
     this.initListeners();
@@ -7758,8 +7943,8 @@ LinkTooltip = (function(_super) {
         }
       };
     })(this));
-    DOM.addEventListener(this.container.querySelector('.done'), 'click', _.bind(this.saveLink, this));
-    DOM.addEventListener(this.container.querySelector('.change'), 'click', (function(_this) {
+    dom(this.container.querySelector('.done')).on('click', _.bind(this.saveLink, this));
+    dom(this.container.querySelector('.change')).on('click', (function(_this) {
       return function() {
         return _this.setMode(_this.link.href, true);
       };
@@ -7804,9 +7989,9 @@ LinkTooltip = (function(_super) {
     } else {
       this.link.href = url;
       text = url.length > this.options.maxLength ? url.slice(0, this.options.maxLength) + '...' : url;
-      DOM.setText(this.link, text);
+      dom(this.link).text(text);
     }
-    return DOM.toggleClass(this.container, 'editing', edit);
+    return dom(this.container).toggleClass('editing', edit);
   };
 
   LinkTooltip.prototype._findAnchor = function(range) {
@@ -7855,21 +8040,23 @@ LinkTooltip = (function(_super) {
 
 })(Tooltip);
 
+Quill.registerModule('link-tooltip', LinkTooltip);
+
 module.exports = LinkTooltip;
 
 
-},{"../dom":15,"./tooltip":31,"lodash":"M4+//f"}],28:[function(_dereq_,module,exports){
-var DOM, EventEmitter2, MultiCursor, Utils, _,
+},{"../quill":36,"./tooltip":34}],31:[function(_dereq_,module,exports){
+var EventEmitter2, MultiCursor, Quill, dom, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-_ = _dereq_('lodash');
+Quill = _dereq_('../quill');
 
 EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
-DOM = _dereq_('../dom');
+_ = Quill.require('lodash');
 
-Utils = _dereq_('../utils');
+dom = Quill.require('dom');
 
 MultiCursor = (function(_super) {
   __extends(MultiCursor, _super);
@@ -7939,11 +8126,11 @@ MultiCursor = (function(_super) {
     var cursor;
     cursor = this.cursors[userId];
     cursor.index = index;
-    DOM.removeClass(cursor.elem, 'hidden');
+    dom(cursor.elem).removeClass('hidden');
     clearTimeout(cursor.timer);
     cursor.timer = setTimeout((function(_this) {
       return function() {
-        DOM.addClass(cursor.elem, 'hidden');
+        dom(cursor.elem).addClass('hidden');
         return cursor.timer = null;
       };
     })(this), this.options.timeout);
@@ -8026,11 +8213,11 @@ MultiCursor = (function(_super) {
   MultiCursor.prototype._buildCursor = function(name, color) {
     var cursor, cursorCaret, cursorFlag, cursorName;
     cursor = this.container.ownerDocument.createElement('span');
-    DOM.addClass(cursor, 'cursor');
+    dom(cursor).addClass('cursor');
     cursor.innerHTML = this.options.template;
     cursorFlag = cursor.querySelector('.cursor-flag');
     cursorName = cursor.querySelector('.cursor-name');
-    DOM.setText(cursorName, name);
+    dom(cursorName).text(name);
     cursorCaret = cursor.querySelector('.cursor-caret');
     cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color;
     this.container.appendChild(cursor);
@@ -8047,9 +8234,7 @@ MultiCursor = (function(_super) {
     cursor.elem.style.left = bounds[side] + 'px';
     cursor.elem.style.height = bounds.height + 'px';
     flag = cursor.elem.querySelector('.cursor-flag');
-    DOM.toggleClass(cursor.elem, 'top', parseInt(cursor.elem.style.top) <= flag.offsetHeight);
-    DOM.toggleClass(cursor.elem, 'left', parseInt(cursor.elem.style.left) <= flag.offsetWidth);
-    DOM.toggleClass(cursor.elem, 'right', this.quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth);
+    dom(cursor.elem).toggleClass('top', parseInt(cursor.elem.style.top) <= flag.offsetHeight).toggleClass('left', parseInt(cursor.elem.style.left) <= flag.offsetWidth).toggleClass('right', this.quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth);
     return this.emit(MultiCursor.events.CURSOR_MOVED, cursor);
   };
 
@@ -8059,17 +8244,17 @@ MultiCursor = (function(_super) {
     _ref = this.quill.editor.doc.findLeafAt(cursor.index, true), leaf = _ref[0], offset = _ref[1];
     guide = this.container.ownerDocument.createElement('span');
     if (leaf != null) {
-      _ref1 = Utils.splitNode(leaf.node, offset), leftNode = _ref1[0], rightNode = _ref1[1], didSplit = _ref1[2];
-      DOM.setText(guide, DOM.ZERO_WIDTH_NOBREAK_SPACE);
+      _ref1 = dom(leaf.node).split(offset), leftNode = _ref1[0], rightNode = _ref1[1], didSplit = _ref1[2];
+      dom(guide).text(dom.ZERO_WIDTH_NOBREAK_SPACE);
       leaf.node.parentNode.insertBefore(guide, rightNode);
     } else {
-      DOM.setText(guide, DOM.NOBREAK_SPACE);
+      dom(guide).text(dom.NOBREAK_SPACE);
       this.quill.root.appendChild(guide);
     }
     this._moveCursor(cursor, guide);
-    DOM.removeNode(guide);
+    dom(guide).remove();
     if (didSplit) {
-      DOM.normalize(leaf.node.parentNode);
+      dom(leaf.node.parentNode).normalize();
     }
     return this.quill.editor.selection.update('silent');
   };
@@ -8078,19 +8263,23 @@ MultiCursor = (function(_super) {
 
 })(EventEmitter2);
 
+Quill.registerModule('multi-cursor', MultiCursor);
+
 module.exports = MultiCursor;
 
 
-},{"../dom":15,"../utils":39,"eventemitter2":3,"lodash":"M4+//f"}],29:[function(_dereq_,module,exports){
-var DOM, Document, PasteManager, Tandem, _;
+},{"../quill":36,"eventemitter2":3}],32:[function(_dereq_,module,exports){
+var Document, PasteManager, Quill, Tandem, dom, _;
 
-_ = _dereq_('lodash');
+Quill = _dereq_('../quill');
 
-DOM = _dereq_('../dom');
+Document = _dereq_('../core/document');
 
-Document = _dereq_('../document');
+_ = Quill.require('lodash');
 
-Tandem = _dereq_('tandem-core');
+dom = Quill.require('dom');
+
+Tandem = Quill.require('tandem-core');
 
 PasteManager = (function() {
   function PasteManager(quill, options) {
@@ -8105,7 +8294,7 @@ PasteManager = (function() {
         'top': '50%'
       }
     });
-    DOM.addEventListener(this.quill.root, 'paste', _.bind(this._paste, this));
+    dom(this.quill.root).on('paste', _.bind(this._paste, this));
   }
 
   PasteManager.prototype._paste = function() {
@@ -8116,12 +8305,12 @@ PasteManager = (function() {
       return;
     }
     this.container.innerHTML = "";
-    iframe = this.quill.root.ownerDocument.defaultView;
+    iframe = dom(this.quill.root).window();
     scrollY = iframe.scrollY;
     this.container.focus();
     return _.defer((function(_this) {
       return function() {
-        var delta, doc, lengthAdded;
+        var delta, doc, lengthAdded, line, lineBottom, offset, _ref;
         doc = new Document(_this.container, _this.quill.options);
         delta = doc.toDelta();
         delta = delta.compose(Tandem.Delta.makeDeleteDelta(delta.endLength, delta.endLength - 1, 1));
@@ -8135,8 +8324,12 @@ PasteManager = (function() {
         delta.endLength += _this.quill.getLength() - (range.end - range.start);
         delta.startLength = oldDocLength;
         _this.quill.updateContents(delta, 'user');
-        _this.quill.focus();
         _this.quill.setSelection(range.start + lengthAdded, range.start + lengthAdded);
+        _ref = _this.quill.editor.doc.findLineAt(range.start + lengthAdded), line = _ref[0], offset = _ref[1];
+        lineBottom = line.node.offsetTop + line.node.offsetHeight;
+        if (lineBottom > scrollY + _this.quill.root.offsetHeight) {
+          scrollY = line.node.offsetTop - _this.quill.root.offsetHeight / 2;
+        }
         return iframe.scrollTo(0, scrollY);
       };
     })(this));
@@ -8146,15 +8339,19 @@ PasteManager = (function() {
 
 })();
 
+Quill.registerModule('paste-manager', PasteManager);
+
 module.exports = PasteManager;
 
 
-},{"../document":14,"../dom":15,"lodash":"M4+//f","tandem-core":10}],30:[function(_dereq_,module,exports){
-var DOM, Toolbar, _;
+},{"../core/document":13,"../quill":36}],33:[function(_dereq_,module,exports){
+var Quill, Toolbar, dom, _;
 
-_ = _dereq_('lodash');
+Quill = _dereq_('../quill');
 
-DOM = _dereq_('../dom');
+_ = Quill.require('lodash');
+
+dom = Quill.require('dom');
 
 Toolbar = (function() {
   Toolbar.DEFAULTS = {
@@ -8224,12 +8421,12 @@ Toolbar = (function() {
       };
     })(this));
     this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this));
-    DOM.addClass(this.container, 'ql-toolbar-container');
-    if (DOM.isIOS()) {
-      DOM.addClass(this.container, 'ios');
+    dom(this.container).addClass('ql-toolbar-container');
+    if (dom.isIOS()) {
+      dom(this.container).addClass('ios');
     }
-    if (DOM.isIE(11) || DOM.isIOS()) {
-      DOM.addEventListener(this.container, 'mousedown', (function(_this) {
+    if (dom.isIE(11) || dom.isIOS()) {
+      dom(this.container).on('mousedown', (function(_this) {
         return function() {
           return false;
         };
@@ -8251,10 +8448,10 @@ Toolbar = (function() {
       return;
     }
     this.inputs[format] = input;
-    return DOM.addEventListener(input, eventName, (function(_this) {
+    return dom(input).on(eventName, (function(_this) {
       return function() {
         var range, value;
-        value = eventName === 'change' ? DOM.getSelectValue(input) : !DOM.hasClass(input, 'ql-active');
+        value = eventName === 'change' ? dom(input).value() : !dom(input).hasClass('ql-active');
         _this.preventUpdate = true;
         _this.quill.focus();
         range = _this.quill.getSelection();
@@ -8268,27 +8465,28 @@ Toolbar = (function() {
   };
 
   Toolbar.prototype.setActive = function(format, value) {
-    var input, selectValue;
+    var $input, input, selectValue;
     input = this.inputs[format];
     if (input == null) {
       return;
     }
+    $input = dom(input);
     if (input.tagName === 'SELECT') {
       this.triggering = true;
-      selectValue = DOM.getSelectValue(input);
+      selectValue = $input.value(input);
       if (_.isArray(value)) {
         value = '';
       }
       if (value !== selectValue) {
         if (value != null) {
-          DOM.selectOption(input, value);
+          $input.option(value);
         } else {
-          DOM.resetSelect(input);
+          $input.reset();
         }
       }
       return this.triggering = false;
     } else {
-      return DOM.toggleClass(input, 'ql-active', value || false);
+      return $input.toggleClass('ql-active', value || false);
     }
   };
 
@@ -8383,17 +8581,21 @@ Toolbar = (function() {
 
 })();
 
+Quill.registerModule('toolbar', Toolbar);
+
 module.exports = Toolbar;
 
 
-},{"../dom":15,"lodash":"M4+//f"}],31:[function(_dereq_,module,exports){
-var DOM, Normalizer, Tooltip, _;
+},{"../quill":36}],34:[function(_dereq_,module,exports){
+var Normalizer, Quill, Tooltip, dom, _;
 
-_ = _dereq_('lodash');
+Quill = _dereq_('../quill');
 
-DOM = _dereq_('../dom');
+Normalizer = _dereq_('../lib/normalizer');
 
-Normalizer = _dereq_('../normalizer');
+_ = Quill.require('lodash');
+
+dom = Quill.require('dom');
 
 Tooltip = (function() {
   Tooltip.DEFAULTS = {
@@ -8423,7 +8625,7 @@ Tooltip = (function() {
     this.container = this.quill.addContainer('tooltip');
     this.container.innerHTML = Normalizer.stripWhitespace(this.options.template);
     this.container.style.position = 'absolute';
-    DOM.addEventListener(this.quill.root, 'focus', _.bind(this.hide, this));
+    dom(this.quill.root).on('focus', _.bind(this.hide, this));
     this.hide();
     this.quill.on(this.quill.constructor.events.TEXT_CHANGE, (function(_this) {
       return function(delta, source) {
@@ -8436,12 +8638,12 @@ Tooltip = (function() {
   }
 
   Tooltip.prototype.initTextbox = function(textbox, enterCallback, escapeCallback) {
-    return DOM.addEventListener(textbox, 'keyup', (function(_this) {
+    return dom(textbox).on('keyup', (function(_this) {
       return function(event) {
         switch (event.which) {
-          case DOM.KEYS.ENTER:
+          case dom.KEYS.ENTER:
             return enterCallback.call(_this);
-          case DOM.KEYS.ESCAPE:
+          case dom.KEYS.ESCAPE:
             return escapeCallback.call(_this);
           default:
             return true;
@@ -8459,22 +8661,24 @@ Tooltip = (function() {
   };
 
   Tooltip.prototype.show = function(reference) {
-    var left, top, _ref, _ref1;
+    var left, top, win, _ref, _ref1;
     this.range = this.quill.getSelection();
     _ref = this._position(reference), left = _ref[0], top = _ref[1];
     _ref1 = this._limit(left, top), left = _ref1[0], top = _ref1[1];
-    left += this.quill.root.ownerDocument.defaultView.window.pageXOffset;
-    top += this.quill.root.ownerDocument.defaultView.window.pageYOffset;
+    win = dom(this.quill.root).window();
+    left += win.pageXOffset;
+    top += win.pageYOffset;
     this.container.style.left = "" + left + "px";
     this.container.style.top = "" + top + "px";
     return this.container.focus();
   };
 
   Tooltip.prototype._getBounds = function() {
-    var bounds, scrollX, scrollY;
+    var bounds, scrollX, scrollY, win;
     bounds = this.quill.root.getBoundingClientRect();
-    scrollX = this.quill.root.ownerDocument.defaultView.window.pageXOffset;
-    scrollY = this.quill.root.ownerDocument.defaultView.window.pageYOffset;
+    win = dom(this.quill.root).window();
+    scrollX = win.pageXOffset;
+    scrollY = win.pageYOffset;
     return {
       left: bounds.left + scrollX,
       right: bounds.right + scrollX,
@@ -8518,15 +8722,19 @@ Tooltip = (function() {
 
 })();
 
+Quill.registerModule('tooltip', Tooltip);
+
 module.exports = Tooltip;
 
 
-},{"../dom":15,"../normalizer":33,"lodash":"M4+//f"}],32:[function(_dereq_,module,exports){
-var Tandem, UndoManager, _;
+},{"../lib/normalizer":24,"../quill":36}],35:[function(_dereq_,module,exports){
+var Quill, Tandem, UndoManager, _;
 
-_ = _dereq_('lodash');
+Quill = _dereq_('../quill');
 
-Tandem = _dereq_('tandem-core');
+_ = Quill.require('lodash');
+
+Tandem = Quill.require('tandem-core');
 
 UndoManager = (function() {
   UndoManager.DEFAULTS = {
@@ -8662,262 +8870,32 @@ UndoManager = (function() {
 
 })();
 
+Quill.registerModule('undo-manager', UndoManager);
+
 module.exports = UndoManager;
 
 
-},{"lodash":"M4+//f","tandem-core":10}],33:[function(_dereq_,module,exports){
-var DOM, Normalizer, Utils, _;
-
-_ = _dereq_('lodash');
-
-DOM = _dereq_('./dom');
-
-Utils = _dereq_('./utils');
-
-Normalizer = {
-  ALIASES: {
-    'STRONG': 'B',
-    'EM': 'I',
-    'DEL': 'S',
-    'STRIKE': 'S'
-  },
-  ATTRIBUTES: {
-    'color': 'color',
-    'face': 'fontFamily',
-    'size': 'fontSize'
-  },
-  STYLES: {
-    'background-color': 'background-color',
-    'color': 'color',
-    'font-family': 'font-family',
-    'font-size': 'font-size',
-    'text-align': 'text-align'
-  },
-  TAGS: {
-    'DIV': 'DIV',
-    'BR': 'BR',
-    'SPAN': 'SPAN',
-    'B': 'B',
-    'I': 'I',
-    'S': 'S',
-    'U': 'U',
-    'A': 'A',
-    'IMG': 'IMG',
-    'OL': 'OL',
-    'UL': 'UL',
-    'LI': 'LI'
-  },
-  handleBreaks: function(lineNode) {
-    var breaks;
-    breaks = _.map(lineNode.querySelectorAll(DOM.DEFAULT_BREAK_TAG));
-    _.each(breaks, (function(_this) {
-      return function(br) {
-        if ((br.nextSibling != null) && (!DOM.isIE(10) || (br.previousSibling != null))) {
-          return Utils.splitAncestors(br.nextSibling, lineNode.parentNode);
-        }
-      };
-    })(this));
-    return lineNode;
-  },
-  normalizeLine: function(lineNode) {
-    lineNode = Normalizer.wrapInline(lineNode);
-    lineNode = Normalizer.handleBreaks(lineNode);
-    lineNode = Normalizer.pullBlocks(lineNode);
-    lineNode = Normalizer.normalizeNode(lineNode);
-    Normalizer.unwrapText(lineNode);
-    if ((lineNode != null) && (DOM.LIST_TAGS[lineNode.tagName] != null)) {
-      lineNode = lineNode.firstChild;
-    }
-    return lineNode;
-  },
-  normalizeNode: function(node) {
-    if (DOM.isTextNode(node)) {
-      return node;
-    }
-    _.each(Normalizer.ATTRIBUTES, function(style, attribute) {
-      var value;
-      if (node.hasAttribute(attribute)) {
-        value = node.getAttribute(attribute);
-        if (attribute === 'size') {
-          value = Utils.convertFontSize(value);
-        }
-        node.style[style] = value;
-        return node.removeAttribute(attribute);
-      }
-    });
-    Normalizer.whitelistStyles(node);
-    return Normalizer.whitelistTags(node);
-  },
-  optimizeLine: function(lineNode) {
-    var lineNodeLength, node, nodes, _results;
-    lineNodeLength = Utils.getNodeLength(lineNode);
-    nodes = DOM.getDescendants(lineNode);
-    _results = [];
-    while (nodes.length > 0) {
-      node = nodes.pop();
-      if ((node != null ? node.parentNode : void 0) == null) {
-        continue;
-      }
-      if (DOM.EMBED_TAGS[node.tagName] != null) {
-        continue;
-      }
-      if (node.tagName === DOM.DEFAULT_BREAK_TAG) {
-        if (lineNodeLength !== 0) {
-          _results.push(DOM.removeNode(node));
-        } else {
-          _results.push(void 0);
-        }
-      } else if (Utils.getNodeLength(node) === 0) {
-        nodes.push(node.nextSibling);
-        _results.push(DOM.unwrap(node));
-      } else if ((node.previousSibling != null) && node.tagName === node.previousSibling.tagName) {
-        if (_.isEqual(DOM.getAttributes(node), DOM.getAttributes(node.previousSibling))) {
-          nodes.push(node.firstChild);
-          _results.push(Utils.mergeNodes(node.previousSibling, node));
-        } else {
-          _results.push(void 0);
-        }
-      } else {
-        _results.push(void 0);
-      }
-    }
-    return _results;
-  },
-  pullBlocks: function(lineNode) {
-    var curNode;
-    curNode = lineNode.firstChild;
-    while (curNode != null) {
-      if ((DOM.BLOCK_TAGS[curNode.tagName] != null) && curNode.tagName !== 'LI') {
-        if (curNode.previousSibling != null) {
-          Utils.splitAncestors(curNode, lineNode.parentNode);
-        }
-        if (curNode.nextSibling != null) {
-          Utils.splitAncestors(curNode.nextSibling, lineNode.parentNode);
-        }
-        if ((DOM.LIST_TAGS[curNode.tagName] == null) || !curNode.firstChild) {
-          DOM.unwrap(curNode);
-          Normalizer.pullBlocks(lineNode);
-        } else {
-          DOM.unwrap(curNode.parentNode);
-          if (lineNode.parentNode == null) {
-            lineNode = curNode;
-          }
-        }
-        break;
-      }
-      curNode = curNode.nextSibling;
-    }
-    return lineNode;
-  },
-  stripComments: function(html) {
-    return html.replace(/<!--[\s\S]*?-->/g, '');
-  },
-  stripWhitespace: function(html) {
-    html = html.replace(/^\s+/, '').replace(/\s+$/, '');
-    html = html.replace(/\>\s+\</g, '><');
-    return html;
-  },
-  whitelistStyles: function(node) {
-    var original, styles;
-    original = DOM.getStyles(node);
-    styles = _.omit(original, function(value, key) {
-      return Normalizer.STYLES[key] == null;
-    });
-    if (_.keys(styles).length < _.keys(original).length) {
-      if (_.keys(styles).length > 0) {
-        return DOM.setStyles(node, styles);
-      } else {
-        return node.removeAttribute('style');
-      }
-    }
-  },
-  whitelistTags: function(node) {
-    if (!DOM.isElement(node)) {
-      return node;
-    }
-    if (Normalizer.ALIASES[node.tagName] != null) {
-      node = DOM.switchTag(node, Normalizer.ALIASES[node.tagName]);
-    }
-    if (Normalizer.TAGS[node.tagName] == null) {
-      if (DOM.BLOCK_TAGS[node.tagName] != null) {
-        node = DOM.switchTag(node, DOM.DEFAULT_BLOCK_TAG);
-      } else if (!node.hasAttributes() && (node.firstChild != null)) {
-        node = DOM.unwrap(node);
-      } else {
-        node = DOM.switchTag(node, DOM.DEFAULT_INLINE_TAG);
-      }
-    }
-    return node;
-  },
-  wrapInline: function(lineNode) {
-    var blockNode, nextNode;
-    if (DOM.BLOCK_TAGS[lineNode.tagName] != null) {
-      return lineNode;
-    }
-    blockNode = lineNode.ownerDocument.createElement(DOM.DEFAULT_BLOCK_TAG);
-    lineNode.parentNode.insertBefore(blockNode, lineNode);
-    while ((lineNode != null) && (DOM.BLOCK_TAGS[lineNode.tagName] == null)) {
-      nextNode = lineNode.nextSibling;
-      blockNode.appendChild(lineNode);
-      lineNode = nextNode;
-    }
-    return blockNode;
-  },
-  unwrapText: function(lineNode) {
-    var spans;
-    spans = _.map(lineNode.querySelectorAll(DOM.DEFAULT_INLINE_TAG));
-    return _.each(spans, function(span) {
-      var attributes;
-      attributes = DOM.getAttributes(span);
-      if (_.keys(attributes).length === 0) {
-        return DOM.unwrap(span);
-      }
-    });
-  }
-};
-
-module.exports = Normalizer;
-
-
-},{"./dom":15,"./utils":39,"lodash":"M4+//f"}],34:[function(_dereq_,module,exports){
-var DOM, Editor, EventEmitter2, Format, Modules, Quill, Range, Tandem, Themes, pkg, _,
+},{"../quill":36}],36:[function(_dereq_,module,exports){
+var Editor, EventEmitter2, Format, Quill, Range, Tandem, dom, pkg, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __slice = [].slice;
 
 _ = _dereq_('lodash');
 
-_.str = _dereq_('underscore.string');
-
 pkg = _dereq_('../package.json');
 
 EventEmitter2 = _dereq_('eventemitter2').EventEmitter2;
 
-DOM = _dereq_('./dom');
+dom = _dereq_('./lib/dom');
 
-Editor = _dereq_('./editor');
+Editor = _dereq_('./core/editor');
 
-Format = _dereq_('./format');
+Format = _dereq_('./core/format');
 
 Range = _dereq_('./lib/range');
 
 Tandem = _dereq_('tandem-core');
-
-Modules = {
-  Authorship: _dereq_('./modules/authorship'),
-  ImageTooltip: _dereq_('./modules/image-tooltip'),
-  Keyboard: _dereq_('./modules/keyboard'),
-  LinkTooltip: _dereq_('./modules/link-tooltip'),
-  MultiCursor: _dereq_('./modules/multi-cursor'),
-  PasteManager: _dereq_('./modules/paste-manager'),
-  Toolbar: _dereq_('./modules/toolbar'),
-  UndoManager: _dereq_('./modules/undo-manager')
-};
-
-Themes = {
-  Default: _dereq_('./themes/default'),
-  Snow: _dereq_('./themes/snow')
-};
 
 Quill = (function(_super) {
   __extends(Quill, _super);
@@ -8926,9 +8904,9 @@ Quill = (function(_super) {
 
   Quill.editors = [];
 
-  Quill.Module = Modules;
+  Quill.modules = [];
 
-  Quill.Theme = Themes;
+  Quill.themes = [];
 
   Quill.DEFAULTS = {
     formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list'],
@@ -8956,6 +8934,33 @@ Quill = (function(_super) {
     USER: 'user'
   };
 
+  Quill.registerModule = function(name, module) {
+    if (Quill.modules[name] != null) {
+      console.warn("Overwriting " + name + " module");
+    }
+    return Quill.modules[name] = module;
+  };
+
+  Quill.registerTheme = function(name, theme) {
+    if (Quill.themes[name] != null) {
+      console.warn("Overwriting " + name + " theme");
+    }
+    return Quill.themes[name] = theme;
+  };
+
+  Quill.require = function(name) {
+    switch (name) {
+      case 'lodash':
+        return _;
+      case 'dom':
+        return dom;
+      case 'tandem-core':
+        return Tandem;
+      default:
+        return null;
+    }
+  };
+
   function Quill(container, options) {
     var html, moduleOptions, themeClass;
     if (options == null) {
@@ -8978,8 +8983,11 @@ Quill = (function(_super) {
     this.root = this.editor.doc.root;
     Quill.editors.push(this);
     this.setHTML(html, Quill.sources.SILENT);
-    themeClass = _.str.capitalize(_.str.camelize(this.options.theme));
-    this.theme = new Quill.Theme[themeClass](this, this.options);
+    themeClass = Quill.themes[this.options.theme];
+    if (themeClass == null) {
+      throw new Error("Cannot load " + this.options.theme + " theme. Are you sure you registered it?");
+    }
+    this.theme = new themeClass(this, this.options);
     _.each(this.options.modules, (function(_this) {
       return function(option, name) {
         return _this.addModule(name, option);
@@ -8999,11 +9007,10 @@ Quill = (function(_super) {
   };
 
   Quill.prototype.addModule = function(name, options) {
-    var className, moduleClass;
-    className = _.str.capitalize(_.str.camelize(name));
-    moduleClass = Quill.Module[className];
+    var moduleClass;
+    moduleClass = Quill.modules[name];
     if (moduleClass == null) {
-      throw new Error("Cannot load " + name + " module. Are you sure you included it?");
+      throw new Error("Cannot load " + name + " module. Are you sure you registered it?");
     }
     if (!_.isObject(options)) {
       options = {};
@@ -9118,7 +9125,7 @@ Quill = (function(_super) {
   };
 
   Quill.prototype.insertEmbed = function(index, type, url, source) {
-    return this.insertText(index, DOM.EMBED_TEXT, type, url, source);
+    return this.insertText(index, dom.EMBED_TEXT, type, url, source);
   };
 
   Quill.prototype.insertText = function(index, text, name, value, source) {
@@ -9179,7 +9186,7 @@ Quill = (function(_super) {
       source = Quill.sources.API;
     }
     if (!html) {
-      html = "<" + DOM.DEFAULT_BLOCK_TAG + "><" + DOM.DEFAULT_BREAK_TAG + "></" + DOM.DEFAULT_BLOCK_TAG + ">";
+      html = "<" + dom.DEFAULT_BLOCK_TAG + "><" + dom.DEFAULT_BREAK_TAG + "></" + dom.DEFAULT_BLOCK_TAG + ">";
     }
     this.editor.doc.setHTML(html);
     return this.editor.checkUpdate(source);
@@ -9228,430 +9235,14 @@ Quill = (function(_super) {
 
 })(EventEmitter2);
 
+Quill.registerTheme('default', _dereq_('./themes/default'));
+
+Quill.registerTheme('snow', _dereq_('./themes/snow'));
+
 module.exports = Quill;
 
 
-},{"../package.json":13,"./dom":15,"./editor":16,"./format":17,"./lib/range":22,"./modules/authorship":24,"./modules/image-tooltip":25,"./modules/keyboard":26,"./modules/link-tooltip":27,"./modules/multi-cursor":28,"./modules/paste-manager":29,"./modules/toolbar":30,"./modules/undo-manager":32,"./themes/default":37,"./themes/snow":38,"eventemitter2":3,"lodash":"M4+//f","tandem-core":10,"underscore.string":12}],35:[function(_dereq_,module,exports){
-var DEFAULT_STYLES, DOM, LIST_STYLES, Normalizer, Renderer, Utils, rule, _;
-
-_ = _dereq_('lodash');
-
-DOM = _dereq_('./dom');
-
-Utils = _dereq_('./utils');
-
-Normalizer = _dereq_('./normalizer');
-
-DEFAULT_STYLES = {
-  'html': {
-    'height': '100%',
-    'width': '100%'
-  },
-  'body': {
-    'box-sizing': 'border-box',
-    'cursor': 'text',
-    'font-family': "'Helvetica', 'Arial', sans-serif",
-    'font-size': '13px',
-    'height': '100%',
-    'line-height': '1.42',
-    'margin': '0px',
-    'overflow-x': 'hidden',
-    'overflow-y': 'auto',
-    'padding': '12px 15px'
-  },
-  '.editor-container': {
-    'height': '100%',
-    'outline': 'none',
-    'position': 'relative',
-    'tab-size': '4',
-    'white-space': 'pre-wrap'
-  },
-  '.editor-container div': {
-    'margin': '0',
-    'padding': '0'
-  },
-  '.editor-container a': {
-    'text-decoration': 'underline'
-  },
-  '.editor-container b': {
-    'font-weight': 'bold'
-  },
-  '.editor-container i': {
-    'font-style': 'italic'
-  },
-  '.editor-container s': {
-    'text-decoration': 'line-through'
-  },
-  '.editor-container u': {
-    'text-decoration': 'underline'
-  },
-  '.editor-container img': {
-    'max-width': '100%'
-  },
-  '.editor-container blockquote': {
-    'margin': '0 0 0 2em',
-    'padding': '0'
-  },
-  '.editor-container ol': {
-    'margin': '0 0 0 2em',
-    'padding': '0',
-    'list-style-type': 'decimal'
-  },
-  '.editor-container ul': {
-    'margin': '0 0 0 2em',
-    'padding': '0',
-    'list-style-type': 'disc'
-  }
-};
-
-LIST_STYLES = ['decimal', 'lower-alpha', 'lower-roman'];
-
-rule = '.editor-container ol > li';
-
-_.each([1, 2, 3, 4, 5, 6, 7, 8, 9], function(i) {
-  rule += ' > ol';
-  DEFAULT_STYLES[rule] = {
-    'list-style-type': LIST_STYLES[i % 3]
-  };
-  return rule += ' > li';
-});
-
-if (Utils.isIE(10)) {
-  DEFAULT_STYLES[DOM.DEFAULT_BREAK_TAG] = {
-    'display': 'none'
-  };
-}
-
-Renderer = (function() {
-  Renderer.objToCss = function(obj) {
-    return _.map(obj, function(value, key) {
-      var innerStr;
-      innerStr = _.map(value, function(innerValue, innerKey) {
-        return "" + innerKey + ": " + innerValue + ";";
-      }).join(' ');
-      return "" + key + " { " + innerStr + " }";
-    }).join("\n");
-  };
-
-  Renderer.buildFrame = function(container) {
-    var iframe, iframeDoc, root;
-    iframe = container.ownerDocument.createElement('iframe');
-    DOM.setAttributes(iframe, {
-      frameBorder: '0',
-      height: '100%',
-      width: '100%',
-      title: 'Quill Rich Text Editor',
-      role: 'presentation'
-    });
-    container.appendChild(iframe);
-    iframeDoc = iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write('<!DOCTYPE html>');
-    iframeDoc.close();
-    root = iframeDoc.createElement('div');
-    iframeDoc.body.appendChild(root);
-    return [root, iframe];
-  };
-
-  function Renderer(container, options) {
-    var _ref;
-    this.container = container;
-    this.options = options != null ? options : {};
-    this.container.innerHTML = '';
-    _ref = Renderer.buildFrame(this.container), this.root = _ref[0], this.iframe = _ref[1];
-    this.root.setAttribute('id', this.options.id);
-    this.iframe.setAttribute('name', this.options.id);
-    DOM.addClass(this.root, 'editor-container');
-    DOM.addClass(this.container, 'ql-container');
-    DOM.addEventListener(this.container, 'focus', (function(_this) {
-      return function() {
-        return _this.root.focus();
-      };
-    })(this));
-    if (DOM.isIOS()) {
-      DOM.addStyles(this.container, {
-        'overflow': 'auto',
-        '-webkit-overflow-scrolling': 'touch'
-      });
-    }
-    this.addStyles(DEFAULT_STYLES);
-    if (this.options.styles != null) {
-      _.defer(_.bind(this.addStyles, this, this.options.styles));
-    }
-  }
-
-  Renderer.prototype.addContainer = function(className, before) {
-    var container, refNode;
-    if (before == null) {
-      before = false;
-    }
-    refNode = before ? this.root : null;
-    container = this.root.ownerDocument.createElement('div');
-    DOM.addClass(container, className);
-    this.root.parentNode.insertBefore(container, refNode);
-    return container;
-  };
-
-  Renderer.prototype.addStyles = function(css) {
-    var link, style;
-    if (typeof css === 'object') {
-      style = this.root.ownerDocument.createElement('style');
-      style.type = 'text/css';
-      css = Renderer.objToCss(css);
-      style.appendChild(this.root.ownerDocument.createTextNode(css));
-      return this.root.ownerDocument.head.appendChild(style);
-    } else if (typeof css === 'string') {
-      link = this.root.ownerDocument.createElement('link');
-      DOM.setAttributes(link, {
-        type: 'text/css',
-        rel: 'stylesheet',
-        href: css
-      });
-      return this.root.ownerDocument.head.appendChild(link);
-    }
-  };
-
-  return Renderer;
-
-})();
-
-module.exports = Renderer;
-
-
-},{"./dom":15,"./normalizer":33,"./utils":39,"lodash":"M4+//f"}],36:[function(_dereq_,module,exports){
-var DOM, Leaf, Normalizer, Range, Selection, Utils, _;
-
-_ = _dereq_('lodash');
-
-DOM = _dereq_('./dom');
-
-Leaf = _dereq_('./leaf');
-
-Normalizer = _dereq_('./normalizer');
-
-Range = _dereq_('./lib/range');
-
-Utils = _dereq_('./utils');
-
-Selection = (function() {
-  function Selection(doc, iframe, emitter) {
-    this.doc = doc;
-    this.iframe = iframe;
-    this.emitter = emitter;
-    this.document = this.doc.root.ownerDocument;
-    this.range = this.getRange();
-    this.nullDelay = false;
-  }
-
-  Selection.prototype.checkFocus = function() {
-    if (this.document.activeElement !== this.doc.root) {
-      return false;
-    }
-    if ((document.activeElement != null) && document.activeElement.tagName === 'IFRAME') {
-      return document.activeElement === this.iframe;
-    }
-    return true;
-  };
-
-  Selection.prototype.getRange = function() {
-    var end, nativeRange, start;
-    if (!this.checkFocus()) {
-      return null;
-    }
-    nativeRange = this._getNativeRange();
-    if (nativeRange == null) {
-      return null;
-    }
-    start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset);
-    if (nativeRange.startContainer === nativeRange.endContainer && nativeRange.startOffset === nativeRange.endOffset) {
-      end = start;
-    } else {
-      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset);
-    }
-    return new Range(Math.min(start, end), Math.max(start, end));
-  };
-
-  Selection.prototype.preserve = function(fn) {
-    var endNode, endOffset, nativeRange, startNode, startOffset, _ref, _ref1, _ref2, _ref3;
-    nativeRange = this._getNativeRange();
-    if ((nativeRange != null) && this.checkFocus()) {
-      _ref = this._encodePosition(nativeRange.startContainer, nativeRange.startOffset), startNode = _ref[0], startOffset = _ref[1];
-      _ref1 = this._encodePosition(nativeRange.endContainer, nativeRange.endOffset), endNode = _ref1[0], endOffset = _ref1[1];
-      fn();
-      _ref2 = this._decodePosition(startNode, startOffset), startNode = _ref2[0], startOffset = _ref2[1];
-      _ref3 = this._decodePosition(endNode, endOffset), endNode = _ref3[0], endOffset = _ref3[1];
-      return this._setNativeRange(startNode, startOffset, endNode, endOffset);
-    } else {
-      return fn();
-    }
-  };
-
-  Selection.prototype.setRange = function(range, source) {
-    var endNode, endOffset, startNode, startOffset, _ref, _ref1, _ref2;
-    if (range != null) {
-      _ref = this._indexToPosition(range.start), startNode = _ref[0], startOffset = _ref[1];
-      if (range.isCollapsed()) {
-        _ref1 = [startNode, startOffset], endNode = _ref1[0], endOffset = _ref1[1];
-      } else {
-        _ref2 = this._indexToPosition(range.end), endNode = _ref2[0], endOffset = _ref2[1];
-      }
-      this._setNativeRange(startNode, startOffset, endNode, endOffset);
-    } else {
-      this._setNativeRange(null);
-    }
-    return this.update(source);
-  };
-
-  Selection.prototype.shiftAfter = function(index, length, fn) {
-    var range;
-    range = this.getRange();
-    fn();
-    if (range != null) {
-      range.shift(index, length);
-      return this.setRange(range, 'silent');
-    }
-  };
-
-  Selection.prototype.update = function(source) {
-    var emit, range;
-    range = this.getRange();
-    emit = source !== 'silent' && !Range.compare(range, this.range);
-    if (range === null && source === 'user' && !this.nullDelay) {
-      return this.nullDelay = true;
-    } else {
-      this.nullDelay = false;
-      this.range = range;
-      if (emit) {
-        return this.emitter.emit(this.emitter.constructor.events.SELECTION_CHANGE, range, source);
-      }
-    }
-  };
-
-  Selection.prototype._decodePosition = function(node, offset) {
-    var childIndex;
-    if (DOM.isElement(node)) {
-      childIndex = _.indexOf(DOM.getChildNodes(node.parentNode), node);
-      offset += childIndex;
-      node = node.parentNode;
-    }
-    return [node, offset];
-  };
-
-  Selection.prototype._encodePosition = function(node, offset) {
-    var text;
-    while (true) {
-      if (DOM.isTextNode(node) || node.tagName === DOM.DEFAULT_BREAK_TAG || (DOM.EMBED_TAGS[node.tagName] != null)) {
-        return [node, offset];
-      } else if (offset < node.childNodes.length) {
-        node = node.childNodes[offset];
-        offset = 0;
-      } else if (node.childNodes.length === 0) {
-        if (Normalizer.TAGS[node.tagName] == null) {
-          text = node.ownerDocument.createTextNode('');
-          node.appendChild(text);
-          node = text;
-        }
-        return [node, 0];
-      } else {
-        node = node.lastChild;
-        if (DOM.isElement(node)) {
-          if (node.tagName === DOM.DEFAULT_BREAK_TAG || (DOM.EMBED_TAGS[node.tagName] != null)) {
-            return [node, 1];
-          } else {
-            offset = node.childNodes.length;
-          }
-        } else {
-          return [node, Utils.getNodeLength(node)];
-        }
-      }
-    }
-  };
-
-  Selection.prototype._getNativeSelection = function() {
-    if (this.document.getSelection != null) {
-      return this.document.getSelection();
-    } else {
-      return null;
-    }
-  };
-
-  Selection.prototype._getNativeRange = function() {
-    var selection;
-    selection = this._getNativeSelection();
-    if ((selection != null ? selection.rangeCount : void 0) > 0) {
-      return selection.getRangeAt(0);
-    } else {
-      return null;
-    }
-  };
-
-  Selection.prototype._indexToPosition = function(index) {
-    var leaf, offset, _ref;
-    if (this.doc.lines.length === 0) {
-      return [this.doc.root, 0];
-    }
-    _ref = this.doc.findLeafAt(index, true), leaf = _ref[0], offset = _ref[1];
-    return this._decodePosition(leaf.node, offset);
-  };
-
-  Selection.prototype._positionToIndex = function(node, offset) {
-    var leaf, leafNode, leafOffset, line, lineOffset, _ref;
-    _ref = this._encodePosition(node, offset), leafNode = _ref[0], offset = _ref[1];
-    line = this.doc.findLine(leafNode);
-    if (line == null) {
-      return 0;
-    }
-    leaf = line.findLeaf(leafNode);
-    lineOffset = 0;
-    while (line.prev != null) {
-      line = line.prev;
-      lineOffset += line.length;
-    }
-    if (leaf == null) {
-      return lineOffset;
-    }
-    leafOffset = 0;
-    while (leaf.prev != null) {
-      leaf = leaf.prev;
-      leafOffset += leaf.length;
-    }
-    return lineOffset + leafOffset + offset;
-  };
-
-  Selection.prototype._setNativeRange = function(startNode, startOffset, endNode, endOffset) {
-    var nativeRange, selection;
-    selection = this._getNativeSelection();
-    if (!selection) {
-      return;
-    }
-    if (startNode != null) {
-      this.doc.root.focus();
-      nativeRange = this._getNativeRange();
-      if ((nativeRange == null) || startNode !== nativeRange.startContainer || startOffset !== nativeRange.startOffset || endNode !== nativeRange.endContainer || endOffset !== nativeRange.endOffset) {
-        if (nativeRange != null) {
-          selection.removeAllRanges();
-        }
-        selection.removeAllRanges();
-        nativeRange = this.document.createRange();
-        nativeRange.setStart(startNode, startOffset);
-        nativeRange.setEnd(endNode, endOffset);
-        selection.addRange(nativeRange);
-        return this.doc.root.focus();
-      }
-    } else {
-      selection.removeAllRanges();
-      return this.doc.root.blur();
-    }
-  };
-
-  return Selection;
-
-})();
-
-module.exports = Selection;
-
-
-},{"./dom":15,"./leaf":18,"./lib/range":22,"./normalizer":33,"./utils":39,"lodash":"M4+//f"}],37:[function(_dereq_,module,exports){
+},{"../package.json":12,"./core/editor":14,"./core/format":15,"./lib/dom":22,"./lib/range":26,"./themes/default":37,"./themes/snow":38,"eventemitter2":3,"lodash":"M4+//f","tandem-core":10}],37:[function(_dereq_,module,exports){
 var DefaultTheme;
 
 DefaultTheme = (function() {
@@ -9671,7 +9262,7 @@ module.exports = DefaultTheme;
 
 
 },{}],38:[function(_dereq_,module,exports){
-var ColorPicker, DOM, DefaultTheme, Picker, SnowTheme, _,
+var ColorPicker, DefaultTheme, Picker, SnowTheme, dom, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -9681,7 +9272,7 @@ ColorPicker = _dereq_('../../lib/color-picker');
 
 DefaultTheme = _dereq_('../default');
 
-DOM = _dereq_('../../dom');
+dom = _dereq_('../../lib/dom');
 
 Picker = _dereq_('../../lib/picker');
 
@@ -9782,7 +9373,7 @@ SnowTheme = (function(_super) {
         }
       };
     })(this));
-    DOM.addClass(this.quill.root.ownerDocument.body, 'snow');
+    dom(this.quill.root.ownerDocument.body).addClass('snow');
     this.quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this));
     this.quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this));
   }
@@ -9815,7 +9406,7 @@ SnowTheme = (function(_super) {
             picker = new ColorPicker(select);
             _.each(picker.container.querySelectorAll('.ql-picker-item'), function(item, i) {
               if (i < 7) {
-                return DOM.addClass(item, 'ql-primary-color');
+                return dom(item).addClass('ql-primary-color');
               }
             });
         }
@@ -9824,9 +9415,9 @@ SnowTheme = (function(_super) {
         }
       };
     })(this));
-    return _.each(DOM.getTextNodes(module.container), function(node) {
-      if (DOM.getText(node).trim().length === 0) {
-        return DOM.removeNode(node);
+    return _.each(dom(module.container).textNodes(), function(node) {
+      if (dom(node).text().trim().length === 0) {
+        return dom(node).remove();
       }
     });
   };
@@ -9838,145 +9429,6 @@ SnowTheme = (function(_super) {
 module.exports = SnowTheme;
 
 
-},{"../../dom":15,"../../lib/color-picker":19,"../../lib/picker":21,"../default":37,"lodash":"M4+//f"}],39:[function(_dereq_,module,exports){
-var DOM, Utils, _;
-
-_ = _dereq_('lodash');
-
-DOM = _dereq_('./dom');
-
-Utils = {
-  convertFontSize: function(size) {
-    var i, s, sources, targets;
-    if (_.isString(size) && size.indexOf('px') > -1) {
-      sources = _.keys(DOM.FONT_SIZES);
-      targets = _.values(DOM.FONT_SIZES);
-    } else {
-      targets = _.keys(DOM.FONT_SIZES);
-      sources = _.values(DOM.FONT_SIZES);
-    }
-    for (i in sources) {
-      s = sources[i];
-      if (parseInt(size) <= parseInt(s)) {
-        return targets[i];
-      }
-    }
-    return _.last(targets);
-  },
-  getChildAtOffset: function(node, offset) {
-    var child, length;
-    child = node.firstChild;
-    length = Utils.getNodeLength(child);
-    while (child != null) {
-      if (offset < length) {
-        break;
-      }
-      offset -= length;
-      child = child.nextSibling;
-      length = Utils.getNodeLength(child);
-    }
-    if (child == null) {
-      child = node.lastChild;
-      offset = Utils.getNodeLength(child);
-    }
-    return [child, offset];
-  },
-  getNextLineNode: function(curNode, root) {
-    var nextNode;
-    nextNode = curNode.nextSibling;
-    if ((nextNode == null) && curNode.parentNode !== root) {
-      nextNode = curNode.parentNode.nextSibling;
-    }
-    if ((nextNode != null) && (DOM.LIST_TAGS[nextNode.tagName] != null)) {
-      nextNode = nextNode.firstChild;
-    }
-    return nextNode;
-  },
-  getNodeLength: function(node) {
-    var length;
-    if (node == null) {
-      return 0;
-    }
-    length = DOM.getText(node).length;
-    if (DOM.isElement(node)) {
-      length += node.querySelectorAll(_.keys(DOM.EMBED_TAGS).join(',')).length;
-    }
-    return length;
-  },
-  isIE: function(maxVersion) {
-    var version;
-    version = document.documentMode;
-    return version && maxVersion >= version;
-  },
-  mergeNodes: function(newNode, oldNode) {
-    var text;
-    if (DOM.isElement(newNode)) {
-      DOM.moveChildren(newNode, oldNode);
-      DOM.normalize(newNode);
-    } else {
-      text = DOM.getText(newNode) + DOM.getText(oldNode);
-      DOM.setText(newNode, text);
-    }
-    return DOM.removeNode(oldNode);
-  },
-  splitAncestors: function(refNode, root, force) {
-    var nextNode, parentClone, parentNode;
-    if (force == null) {
-      force = false;
-    }
-    if (refNode === root || refNode.parentNode === root) {
-      return refNode;
-    }
-    if ((refNode.previousSibling != null) || force) {
-      parentNode = refNode.parentNode;
-      parentClone = parentNode.cloneNode(false);
-      parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling);
-      while (refNode != null) {
-        nextNode = refNode.nextSibling;
-        parentClone.appendChild(refNode);
-        refNode = nextNode;
-      }
-      return Utils.splitAncestors(parentClone, root);
-    } else {
-      return Utils.splitAncestors(refNode.parentNode, root);
-    }
-  },
-  splitNode: function(node, offset, force) {
-    var after, child, childLeft, childRight, left, nextRight, nodeLength, right, _ref, _ref1;
-    if (force == null) {
-      force = false;
-    }
-    nodeLength = Utils.getNodeLength(node);
-    offset = Math.max(0, offset);
-    offset = Math.min(offset, nodeLength);
-    if (!(force || offset !== 0)) {
-      return [node.previousSibling, node, false];
-    }
-    if (!(force || offset !== nodeLength)) {
-      return [node, node.nextSibling, false];
-    }
-    if (node.nodeType === DOM.TEXT_NODE) {
-      after = node.splitText(offset);
-      return [node, after, true];
-    } else {
-      left = node;
-      right = node.cloneNode(false);
-      node.parentNode.insertBefore(right, left.nextSibling);
-      _ref = Utils.getChildAtOffset(node, offset), child = _ref[0], offset = _ref[1];
-      _ref1 = Utils.splitNode(child, offset), childLeft = _ref1[0], childRight = _ref1[1];
-      while (childRight !== null) {
-        nextRight = childRight.nextSibling;
-        right.appendChild(childRight);
-        childRight = nextRight;
-      }
-      return [left, right, true];
-    }
-  }
-};
-
-module.exports = Utils;
-
-
-},{"./dom":15,"lodash":"M4+//f"}]},{},[34])
-(34)
+},{"../../lib/color-picker":21,"../../lib/dom":22,"../../lib/picker":25,"../default":37,"lodash":"M4+//f"}]},{},[20])
+(20)
 });
