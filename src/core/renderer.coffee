@@ -17,7 +17,8 @@ DEFAULT_STYLES =
     'overflow-y'  : 'auto'
     'padding'     : '12px 15px'
   '.editor-container':
-    'height'      : '100%'
+    'min-height'  : '100%'
+    'overflow'    : 'hidden'
     'outline'     : 'none'
     'position'    : 'relative'
     'tab-size'    : '4'
