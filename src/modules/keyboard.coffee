@@ -52,17 +52,25 @@ class Keyboard
   _initEnter: ->
     this.addHotkey(DOM.KEYS.ENTER, =>
       range = @quill.getSelection()
-      leaves = @quill.editor.doc.findLeafAt(range.end, true)
-      toolbarInputs = @quill.modules.toolbar.inputs;
-      formats = @quill.options.formats;
       activeFormats = []
-      for format in formats 
-        if(toolbarInputs[format] and DOM.hasClass(toolbarInputs[format], "sc-active"))
-          activeFormats.push({format: format, value: true})
+      if !range.isCollapsed() 
+        return true;
+      if(!@quill.modules.toolbar)
+        leaves = @quill.editor.doc.findLeafAt(range.end, true)
+        for format of leaves[0].formats
+          activeFormats.push({format: format, value: leaves[0].formats[format]})
+      else
+        toolbarInputs = @quill.modules.toolbar.inputs;
+        formats = @quill.options.formats;
+        for format in formats 
+          if(toolbarInputs[format] and DOM.hasClass(toolbarInputs[format], "ql-active"))
+            activeFormats.push({format: format, value: true})
+      
       insertDelta = Tandem.Delta.makeInsertDelta(@quill.getLength(), range.end, '\n');
       @quill.editor.applyDelta(insertDelta, 'user')
       for format in activeFormats
         @quill.prepareFormat(format.format, format.value)
+      
       return false
     )
 
