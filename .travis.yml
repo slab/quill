@@ -12,17 +12,5 @@ env:
     - SAUCE_ACCESS_KEY=adc0c0cf-221b-46f1-81b9-a4429b722c2e
   matrix:
     - TEST=unit-mac-chrome
-    - TEST=unit-mac-firefox
-    - TEST=unit-mac-safari
-    - TEST=unit-windows-firefox
-    - TEST=unit-windows-chrome
-    - TEST=unit-windows-ie-11
-    - TEST=unit-windows-ie-10
-    - TEST=unit-windows-ie-9
-    - TEST=unit-linux-chrome
-    - TEST=unit-linux-firefox
-    - TEST=unit-ipad
-    - TEST=unit-iphone
-    - TEST=unit-android
 addons:
   sauce_connect: true
