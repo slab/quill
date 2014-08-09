@@ -14,8 +14,6 @@ exports.config = {
     wd: '../../test/wd/*.coffee'
   },
 
-  baseUrl: 'http://localhost:9000',
-
   onPrepare: function() {
     browser.ignoreSynchronization = true;
   },

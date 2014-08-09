@@ -18,6 +18,22 @@ module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
       configFile: 'config/karma.js'
+      files: [
+        'node_modules/jquery/dist/jquery.js'
+        "http://localhost:#{grunt.config('port')}/test/quill.js"
+
+        'test/fixtures/unit.html'
+        'test/helpers/inject.coffee'
+        'test/helpers/matchers.coffee'
+
+        { pattern: 'test/fixtures/*.css', included: false }
+
+        # We dont do **/*.coffee to control order of tests
+        'test/unit/lib/*.coffee'
+        'test/unit/core/*.coffee'
+        'test/unit/modules/*.coffee'
+        'test/unit/themes/*.coffee'
+      ]
     coverage:
       browserNoActivityTimeout: 30000
       browsers: ['PhantomJS']

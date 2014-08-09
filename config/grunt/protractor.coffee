@@ -2,46 +2,52 @@ _ = require('lodash')
 browsers = require('../browsers')
 sauce = require('../sauce')
 
-remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
-  return _.reduce(['e2e', 'wd'], (memo, test) ->
-    options =
-      configFile: 'config/protractor.js'
-      args:
-        capabilities:
-          name: "quill-#{test}"
-          platform: config[0]
-          browserName: config[1]
-          version: config[2]
-          build: sauce.build
-          'tunnel-identifier': sauce.tunnel
-        sauceUser: sauce.username
-        sauceKey: sauce.accessKey
-        specs: ['test/wd/*.coffee']
-      jasmineNodeOpts:
-        isVerbose: false
-    options.args.exclude = ['test/wd/e2e.coffee'] if test == 'wd'
-    memo["#{test}-#{browser}"] = { options: options }
-    return memo
-  , memo)
-, {})
-
 module.exports = (grunt) ->
+  baseUrl = 'http://localhost:' + grunt.config('port') + '/'
+
+  remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
+    return _.reduce(['e2e', 'wd'], (memo, test) ->
+      options =
+        args:
+          baseUrl: baseUrl
+          capabilities:
+            name: "quill-#{test}"
+            platform: config[0]
+            browserName: config[1]
+            version: config[2]
+            build: sauce.build
+            'tunnel-identifier': sauce.tunnel
+          sauceUser: sauce.username
+          sauceKey: sauce.accessKey
+          specs: ['test/wd/*.coffee']
+        jasmineNodeOpts:
+          isVerbose: false
+      options.args.exclude = ['test/wd/e2e.coffee'] if test == 'wd'
+      memo["#{test}-#{browser}"] = { options: options }
+      return memo
+    , memo)
+  , {})
+
   grunt.config('protractor', _.extend(remoteProtractor,
+    options:
+      configFile: 'config/protractor.js'
     coverage:
       options:
         configFile: 'config/protractor.coverage.js'
         args:
+          baseUrl: baseUrl
+          exclude: ['test/wd/e2e.coffee']
           specs: ['test/wd/*.coffee']
     test:
       options:
-        configFile: 'config/protractor.js'
         args:
+          baseUrl: baseUrl
           exclude: ['test/wd/e2e.coffee']
           specs: ['test/wd/*.coffee']
     e2e:
       options:
-        configFile: 'config/protractor.js'
         args:
+          baseUrl: baseUrl
           specs: ['test/wd/e2e.coffee']
   ))
 

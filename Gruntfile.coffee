@@ -9,6 +9,7 @@ module.exports = (grunt) ->
 
   grunt.initConfig(
     pkg: grunt.file.readJSON('package.json')
+    port: 9000
   )
 
   files = fs.readdirSync(GRUNT_DIR)
@@ -23,11 +24,11 @@ module.exports = (grunt) ->
 
   grunt.registerTask('server', ['connect:server:keepalive'])
 
-  grunt.registerTask('test', ['karma:test'])
+  grunt.registerTask('test', ['test:unit'])
 
-  grunt.registerTask('test:unit', ['karma:test'])
-  grunt.registerTask('test:wd', ['protractor:test'])
-  grunt.registerTask('test:e2e', ['protractor:e2e'])
+  grunt.registerTask('test:unit', ['connect:server', 'karma:test'])
+  grunt.registerTask('test:wd', ['connect:server', 'protractor:test'])
+  grunt.registerTask('test:e2e', ['connect:server', 'protractor:e2e'])
 
   grunt.registerTask('test:coverage', [
     'lodash', 'coffee:quill', 'istanbul:instrument'

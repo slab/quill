@@ -54,5 +54,10 @@ module.exports = (grunt) ->
       debug: true
     server:
       options:
-        port: 9000
+        port: grunt.config('port')
+        useAvailablePort: true
+  )
+
+  grunt.event.once('connect.server.listening', (host, port) ->
+    grunt.config.set('port', port)
   )
