@@ -1,6 +1,6 @@
 var _  = require('lodash');
-var os = require('os');
 var browsers = require('./browsers');
+var sauce = require('./sauce');
 
 var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
   memo[name] = {
@@ -48,20 +48,20 @@ module.exports = function(config) {
     autoWatch: false,
     singleRun: true,
     sauceLabs: {
-      startConnect: false,
       testName: 'quill-unit',
-      build: os.hostname() + '-' + _.random(16*16*16*16).toString(16),
       options: {
         'public': 'public',
         'record-screenshots': false
-      }
+      },
+      build: sauce.build,
+      username: sauce.username,
+      accessKey: sauce.accessKey,
+      tunnelIdentifier: sauce.tunnel
     },
     customLaunchers: customLaunchers
   })
 
   if (process.env.TRAVIS) {
     config.transports = ['xhr-polling'];
-    config.sauceLabs.build = 'travis-' + process.env.TRAVIS_BUILD_ID;
-    config.sauceLabs.tunnelIdentifier = process.env.TRAVIS_JOB_NUMBER;
   }
 }

@@ -1,6 +1,6 @@
 _ = require('lodash')
 browsers = require('../browsers')
-os = require('os')
+sauce = require('../sauce')
 
 remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
   return _.reduce(['e2e', 'wd'], (memo, test) ->
@@ -12,17 +12,14 @@ remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
           platform: config[0]
           browserName: config[1]
           version: config[2]
-        sauceUser: process.env.SAUCE_USERNAME
-        sauceKey: process.env.SAUCE_ACCESS_KEY
+          build: sauce.build
+          'tunnel-identifier': sauce.tunnel
+        sauceUser: sauce.username
+        sauceKey: sauce.accessKey
         specs: ['test/wd/*.coffee']
       jasmineNodeOpts:
         isVerbose: false
     options.args.exclude = ['test/wd/e2e.coffee'] if test == 'wd'
-    if process.env.TRAVIS
-      options.args.capabilities.build = 'travis-' + process.env.TRAVIS_BUILD_ID
-      options.args.capabilities['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER
-    else
-      options.args.capabilities.build = os.hostname() + '-' + _.random(16*16*16*16).toString(16)
     memo["#{test}-#{browser}"] = { options: options }
     return memo
   , memo)
@@ -47,6 +44,14 @@ module.exports = (grunt) ->
         args:
           specs: ['test/wd/e2e.coffee']
   ))
+
+  grunt.config('sauce_connect',
+    quill:
+      options:
+        username: sauce.username
+        accessKey: sauce.accessKey
+        tunnelIdentifier: sauce.tunnel
+  )
 
   grunt.registerMultiTask('webdriver-manager', 'Protractor webdriver manager', ->
     grunt.util.spawn(

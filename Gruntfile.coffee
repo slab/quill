@@ -37,6 +37,6 @@ module.exports = (grunt) ->
 
   _.each(browsers, (config, browser) ->
     grunt.registerTask("travis:unit-#{browser}", ['connect:server', "karma:#{browser}"])
-    grunt.registerTask("travis:wd-#{browser}", ['connect:server', "protractor:wd-#{browser}"])
-    grunt.registerTask("travis:e2e-#{browser}", ['connect:server', "protractor:e2e-#{browser}"])
+    grunt.registerTask("travis:wd-#{browser}", ['connect:server', 'sauce_connect:quill', "protractor:wd-#{browser}"])
+    grunt.registerTask("travis:e2e-#{browser}", ['connect:server', 'sauce_connect:quill', "protractor:e2e-#{browser}"])
   )
