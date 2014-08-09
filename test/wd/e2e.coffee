@@ -5,7 +5,7 @@ cleanLines = (html) ->
 
 
 describe('Editing text', ->
-  browser.get('http://localhost:9000/test/fixtures/e2e.html')
+  browser.get('/test/fixtures/e2e.html')
   startRange = element(By.id('start-range'))
   endRange = element(By.id('end-range'))
   deltaOutput = element(By.id('delta'))
