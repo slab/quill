@@ -7,9 +7,6 @@ before_install:
 before_script:
   - grunt lodash
 env:
-  global:
-    - SAUCE_USERNAME=quill
-    - SAUCE_ACCESS_KEY=adc0c0cf-221b-46f1-81b9-a4429b722c2e
   matrix:
     - TEST=unit-mac-chrome
     - TEST=unit-mac-firefox
@@ -24,5 +21,3 @@ env:
     - TEST=unit-ipad
     - TEST=unit-iphone
     - TEST=unit-android
-addons:
-  sauce_connect: true
