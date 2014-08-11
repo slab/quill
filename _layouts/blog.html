@@ -1,0 +1,10 @@
+---
+layout: default
+---
+
+<div id="blog-container" class="container">
+  {% if page.url != "/blog/" %}
+  <h1>{{ page.title }}</h1>
+  {% endif %}
+  {{ content }}
+</div>

@@ -57,7 +57,6 @@ Retrieves the string contents of the editor.
 | `start`   | _Number_ | Start index of text retrieval. Defaults to 0.
 | `end`     | _Number_ | End index of text retrieval. Defaults to end of the document.
 
-
 **Returns**
 
 - *String* contents of the editor

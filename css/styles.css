@@ -318,3 +318,8 @@ footer li {
 #examples-container #basic-editor, #examples-container #full-editor {
   height: 250px;
 }
+
+#blog-container {
+  max-width: 720px;
+  margin-bottom: 50px;
+}

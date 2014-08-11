@@ -14,11 +14,14 @@
     </div>
     <nav class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li{% if page.url contains "docs/" %} class="active"{% endif %}>
+        <li{% if page.url contains "/docs/" %} class="active"{% endif %}>
           <a href="/docs/quickstart/" title="Documentation">Documentation</a>
         </li>
-        <li{% if page.url contains "examples/" %} class="active"{% endif %}>
+        <li{% if page.url contains "/examples/" %} class="active"{% endif %}>
           <a href="/examples/" title="Examples">Examples</a>
+        </li>
+        <li{% if page.url contains "/blog/" %} class="active"{% endif %}>
+          <a href="/blog/" title="Blog">Blog</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

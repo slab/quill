@@ -1,0 +1,12 @@
+---
+layout: blog
+title: Blog - Quill Blog
+permalink: /blog/
+---
+
+{% for post in site.posts %}
+  <h3><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h3>
+  <div>{{ post.date | date_to_string }}</div>
+  <div>{{ post.content }}</div>
+  <a title="Read More" href="{{ post.url }}">Read more</a>
+{% endfor %}
