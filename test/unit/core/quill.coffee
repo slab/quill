@@ -13,7 +13,7 @@ describe('Quill', ->
     it('string container', ->
       @container.innerHTML = '<div id="target"></div>'
       quill = new Quill('#target')
-      expect(quill.editor.iframeContainer).toEqual(@container.firstChild)
+      expect(quill.editor.container).toEqual(@container.firstChild)
     )
 
     it('invalid container', ->

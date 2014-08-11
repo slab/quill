@@ -24,8 +24,21 @@ describe('Renderer', ->
     expect(root.innerHTML).toEqual('')
   )
 
+  it('buildRoot()', ->
+    root = Quill.Renderer.buildRoot(@container)
+    expect(@container.querySelectorAll('iframe').length).toEqual(0)
+    expect(@container.firstChild).toEqual(root)
+    expect(root.innerHTML).toEqual('')
+  )
+
   it('constructor', ->
     renderer = new Quill.Renderer(@container)
+    expect(@container.querySelectorAll('iframe').length).toEqual(0)
+    expect(renderer.root.id).not.toBe(null)
+  )
+
+  it('constructor with useIFrame', ->
+    renderer = new Quill.Renderer(@container, useIFrame: true)
     expect(@container.querySelectorAll('iframe').length).toEqual(1)
     expect(renderer.root.id).not.toBe(null)
   )
@@ -39,6 +52,20 @@ describe('Renderer', ->
       expect(renderer.root.firstChild.offsetHeight).toEqual(25)
       done()
     )
+  )
+
+  it('detached() with iframe', ->
+    renderer = new Quill.Renderer(@container, useIFrame: true)
+    expect(renderer.detached()).toBe(false)
+    renderer.iframe.parentNode.removeChild(renderer.iframe)
+    expect(renderer.detached()).toBe(true)
+  )
+
+  it('detached() without iframe', ->
+    renderer = new Quill.Renderer(@container)
+    expect(renderer.detached()).toBe(false)
+    renderer.root.parentNode.removeChild(renderer.root)
+    expect(renderer.detached()).toBe(true)
   )
 
   it('addStyles() object', (done) ->
