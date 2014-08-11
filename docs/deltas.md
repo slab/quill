@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Deltas - Quill
+title: Deltas
 permalink: /docs/deltas/
 redirect_from: /docs/editor/deltas/
 stability: yellow

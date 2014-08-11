@@ -1,12 +1,16 @@
 ---
 layout: blog
-title: Blog - Quill Blog
+title: Blog
 permalink: /blog/
 ---
 
 {% for post in site.posts %}
-  <h3><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h3>
-  <div>{{ post.date | date_to_string }}</div>
-  <div>{{ post.content }}</div>
-  <a title="Read More" href="{{ post.url }}">Read more</a>
+  <div class="post-item">
+    <h3><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h3>
+    <div class="post-meta">
+      <time>{{ post.date | date_to_string }}</time>
+      <span> - <a href="http://www.jasonchen.me/" title="Jason Chen">Jason Chen</a></span>
+    </div>
+    {{ post.content }}
+  </div>
 {% endfor %}

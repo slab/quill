@@ -1,5 +1,5 @@
 ---
-layout: blog
+layout: post
 permalink: /blog/hello-world/
 ---
 

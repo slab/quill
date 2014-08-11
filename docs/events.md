@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Events - Quill
+title: Events
 permalink: /docs/events/
 redirect_from: /docs/editor/events/
 ---

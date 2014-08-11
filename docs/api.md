@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: API - Quill
+title: API
 permalink: /docs/api/
 redirect_from: /docs/editor/api/
 ---
