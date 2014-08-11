@@ -1,4 +1,4 @@
-/*! Quill Editor v0.17.0
+/*! Quill Editor v0.17.2
  *  https://quilljs.com/
  *  Copyright (c) 2014, Jason Chen
  *  Copyright (c) 2013, salesforce.com
@@ -4743,7 +4743,7 @@ if (typeof module !== 'undefined') {
 },{}],12:[function(_dereq_,module,exports){
 module.exports={
   "name": "quilljs",
-  "version": "0.17.0",
+  "version": "0.17.2",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -4775,6 +4775,7 @@ module.exports={
     "grunt-karma": "~0.8.0",
     "grunt-lodash": "~0.3.0",
     "grunt-protractor-runner": "~1.1.0",
+    "grunt-sauce-connect-launcher": "~0.3.0",
     "harp": "~0.12.1",
     "istanbul": "~0.3.0",
     "jquery": "~2.1.1",
@@ -8225,12 +8226,13 @@ MultiCursor = (function(_super) {
   };
 
   MultiCursor.prototype._moveCursor = function(cursor, reference, side) {
-    var bounds, flag;
+    var bounds, flag, win;
     if (side == null) {
       side = 'left';
     }
+    win = dom(reference).window();
     bounds = reference.getBoundingClientRect();
-    cursor.elem.style.top = bounds.top + 'px';
+    cursor.elem.style.top = bounds.top + win.pageYOffset + 'px';
     cursor.elem.style.left = bounds[side] + 'px';
     cursor.elem.style.height = bounds.height + 'px';
     flag = cursor.elem.querySelector('.cursor-flag');
