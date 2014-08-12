@@ -24,7 +24,7 @@ The best way to get started is a simple example. Quill is initialized with a DOM
 </div>
 
 <!-- Include the Quill library -->
-<script src="http://quilljs.com/js/quill.js"></script>
+<script src="//cdn.quilljs.com/{{site.version}}/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
