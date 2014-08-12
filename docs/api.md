@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: API - Quill
+title: API
 permalink: /docs/api/
 redirect_from: /docs/editor/api/
 ---
@@ -56,7 +56,6 @@ Retrieves the string contents of the editor.
 |-----------|----------|------------
 | `start`   | _Number_ | Start index of text retrieval. Defaults to 0.
 | `end`     | _Number_ | End index of text retrieval. Defaults to end of the document.
-
 
 **Returns**
 

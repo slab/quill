@@ -1,6 +1,6 @@
 ---
 layout: examples
-title: Examples - Quill
+title: Examples
 permalink: /examples/
 stylesheet: '/css/quill.snow.css'
 ---

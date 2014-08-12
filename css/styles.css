@@ -318,3 +318,33 @@ footer li {
 #examples-container #basic-editor, #examples-container #full-editor {
   height: 250px;
 }
+
+#blog-container {
+  max-width: 720px;
+}
+
+#blog-container .post-list {
+  margin-bottom: 50px;
+}
+
+#blog-container .post-item h3 a, #blog-container .post-meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#blog-container .post-meta {
+  color: #999;
+  margin-bottom: 10px;
+}
+
+#blog-container .post {
+  margin-bottom: 50px;
+}
+
+#blog-container .post h1, #blog-container .post .post-meta {
+  text-align: center;
+}
+
+#blog-container .post .post-meta {
+  margin-bottom: 25px;
+}

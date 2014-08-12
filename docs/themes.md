@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Themes - Quill
+title: Themes
 permalink: /docs/themes/
 stability: yellow
 ---

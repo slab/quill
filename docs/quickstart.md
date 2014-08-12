@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Quickstart - Quill
+title: Quickstart
 permalink: /docs/quickstart/
 redirect_from: /docs/editor/
 ---

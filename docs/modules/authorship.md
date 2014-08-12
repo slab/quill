@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Authorship Module - Quill
+title: Authorship Module
 permalink: /docs/modules/authorship/
 stability: yellow
 ---

@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Cursors Module - Quill
+title: Cursors Module
 permalink: /docs/modules/multi-cursors/
 stability: yellow
 ---

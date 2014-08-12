@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Configuration - Quill
+title: Configuration
 permalink: /docs/configuration/
 redirect_from: /docs/editor/configuration/
 ---

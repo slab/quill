@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Modules - Quill
+title: Modules
 permalink: /docs/modules/
 stability: yellow
 ---

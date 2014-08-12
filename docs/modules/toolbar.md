@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Toolbar Module - Quill
+title: Toolbar Module
 permalink: /docs/modules/toolbar/
 stylesheet: '/css/quill.snow.css'
 ---

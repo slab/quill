@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Formats - Quill
+title: Formats
 permalink: /docs/formats/
 redirect_from: /docs/editor/formats/
 ---
