@@ -1,4 +1,4 @@
-name: Quill - Open Source Rich Text Editor
+name: Quill - A Rich Text Editor with an API
 timezone: America/Los_Angeles
 relative_permalinks: false
 highlighter: pygments
