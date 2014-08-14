@@ -30,7 +30,7 @@ A few common and officially supported modules are listed here:
 
 ## Custom Modules
 
-You can also build your own module. Simply register it with [Quill.registerModule](/docs/api/) and the module will be passed the corresponding Quill editor and options.
+You can also build your own module. Simply register it with [Quill.registerModule](/docs/api/) and the module will be passed the corresponding Quill editor and options. Check out the [Building a Custom Module](/blog/building-a-custom-module/) guide for a walkthrough.
 
 {% highlight javascript %}
 
