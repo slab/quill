@@ -14,16 +14,18 @@ At its core a word counter simply counts the number of words in the editor and d
 1. Count the number of words.
 1. Display this value.
 
+Let's jump straight in with a complete example!
+
 <!-- more -->
 
-Let's just in with a complete example:
-
-<div data-height="366" data-theme-id="7845" data-slug-hash="qkniF" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="406" data-theme-id="7845" data-slug-hash="qkniF" data-default-tab="js" class='codepen'><pre><code>
 // Implement and register module
 Quill.registerModule('counter', function(quill, options) {
   var container = document.querySelector('#counter');
   quill.on('text-change', function() {
     var text = quill.getText();
+    // There are a couple issues with counting
+    // this way but we'll fix this later
     container.innerHTML = text.split(/\s+/).length;
   });
 });
@@ -36,11 +38,11 @@ var quill = new Quill('#editor', {
 });
 </code></pre></div>
 
-That's all it takes to add a custom module to Quill. A function can be registered as a module and it will be passed the corresponding Quill editor object along with any options.
+That's all it takes to add a custom module to Quill! A function can be [registered](/docs/api/#quillregistermodule/) as a module and it will be passed the corresponding Quill editor object along with any options.
 
 ### Using Options
 
-Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container. Let's also customize the counter to either count words or characters:
+Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container instead of a hard-coded string. Let's also customize the counter to either count words or characters:
 
 <div data-height="466" data-theme-id="7845" data-slug-hash="eKIBb" data-default-tab="js" class='codepen'><pre><code>
 Quill.registerModule('counter', function(quill, options) {
@@ -67,7 +69,7 @@ var quill = new Quill('#editor', {
 
 ### Constructors
 
-Since any function can be registered as a Quill module, we could have implemented our counter as a constructor. This allows us to access and utilize the module directly. More complex modules may benefit from this design pattern.
+Since any function can be registered as a Quill module, we could have implemented our counter as a constructor. This allows us to access and utilize the module directly.
 
 <div data-height="666" data-theme-id="7845" data-slug-hash="zCIur" data-default-tab="js" class='codepen'><pre><code>
 var Counter = function(quill, options) {
@@ -104,7 +106,7 @@ console.log(counter.calculate(), 'words');
 
 ### Wrapping It All Up
 
-Now let's polish off the module and fix a couple bugs you may or may not have noticed.
+Now let's polish off the module and fix a few pesky bugs.
 
 <div data-height="766" data-theme-id="7845" data-slug-hash="wxtvI" data-default-tab="js" class='codepen'><pre><code>
 var Counter = function(quill, options) {
@@ -144,4 +146,4 @@ var counter = quill.addModule('counter', {
 });
 </code></pre></div>
 
-And that's all there is to it! Let us know what you think of this guide or [Quill](http://www.twitter.com/quilljs).
+That's all there is to it! Stay tuned for more guides on common types of modules you can build.
