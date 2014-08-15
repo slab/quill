@@ -16,9 +16,6 @@ class Leaf extends LinkedList.Node
     @text = dom(@node).text()
     @length = @text.length
 
-  getFormats: ->
-    return @formats
-
   deleteText: (offset, length) ->
     return unless length > 0
     @text = @text.slice(0, offset) + @text.slice(offset + length)
