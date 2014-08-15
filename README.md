@@ -51,9 +51,12 @@ Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Brow
 All tests assume the local server is running.
 
     grunt test - run tests with phantomjs
-    grunt test:karma - allows you to visit localhost:9876/debug.html for interactive testing
-    grunt test:remote - run tests on supported platforms on Sauce Labs
+    grunt test:unit - runs javascript test suite with phantomjs
+    grunt test:e2e - runs end to end tests with Webdriver + Chrome
     grunt test:coverage - run coverage tests using phantomjs
+    grunt test:karma - runs karma on port 9876
+
+Check out Gruntfile.coffee and config/grunt for more testing options.
 
 ## Community
 
