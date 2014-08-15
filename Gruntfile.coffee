@@ -32,7 +32,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('test:coverage', [
     'lodash', 'coffee:quill', 'istanbul:instrument'
-    'connect:server', 'karma:coverage', 'protractor:coverage', 'istanbul:report'
+    'connect:server', 'karma:coverage', 'istanbul:report'
     'clean:coffee', 'clean:coverage'
   ])
 
