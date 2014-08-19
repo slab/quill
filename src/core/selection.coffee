@@ -8,8 +8,10 @@ Range      = require('../lib/range')
 class Selection
   constructor: (@doc, @iframe, @emitter) ->
     @document = @doc.root.ownerDocument
-    @range = this.getRange()
+    @focus = false
+    @range = new Range(0, 0)
     @nullDelay = false
+    this.update('silent')
 
   checkFocus: ->
     return false unless @document.activeElement == @doc.root
@@ -17,16 +19,20 @@ class Selection
       return document.activeElement == @iframe
     return true
 
-  getRange: ->
-    return null unless this.checkFocus()
-    nativeRange = this._getNativeRange()
-    return null unless nativeRange?
-    start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset)
-    if nativeRange.startContainer == nativeRange.endContainer and nativeRange.startOffset == nativeRange.endOffset
-      end = start
+  getRange: (ignoreFocus = false) ->
+    if this.checkFocus()
+      nativeRange = this._getNativeRange()
+      return null unless nativeRange?
+      start = this._positionToIndex(nativeRange.startContainer, nativeRange.startOffset)
+      if nativeRange.startContainer == nativeRange.endContainer and nativeRange.startOffset == nativeRange.endOffset
+        end = start
+      else
+        end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset)
+      return new Range(Math.min(start, end), Math.max(start, end)) # Handle backwards ranges
+    else if ignoreFocus
+      return @range
     else
-      end = this._positionToIndex(nativeRange.endContainer, nativeRange.endOffset)
-    return new Range(Math.min(start, end), Math.max(start, end))
+      return null
 
   preserve: (fn) ->
     nativeRange = this._getNativeRange()
@@ -60,16 +66,19 @@ class Selection
       this.setRange(range, 'silent')
 
   update: (source) ->
-    range = this.getRange()
-    emit = source != 'silent' and !Range.compare(range, @range)
+    focus = this.checkFocus()
+    range = this.getRange(true)
+    emit = source != 'silent' and (!Range.compare(range, @range) or focus != @focus)
+    toEmit = if focus then range else null
     # If range changes to null, require two update cycles to update and emit
-    if range == null and source =='user' and !@nullDelay
+    if toEmit == null and source == 'user' and !@nullDelay
       @nullDelay = true
     else
       @nullDelay = false
       @range = range
+      @focus = focus
       # Set range before emitting to prevent infinite loop if listeners call quill.getSelection()
-      @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, range, source) if emit
+      @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, toEmit, source) if emit
 
   _decodePosition: (node, offset) ->
     if dom(node).isElement()
