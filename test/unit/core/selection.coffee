@@ -293,4 +293,27 @@ describe('Selection', ->
       )
     )
   )
+
+  describe('save / restore selection', ->
+    it('focus on another input', (done) ->
+      @container.innerHTML = '<input type="textbox"><div>0123</div>'
+      @quill = new Quill(@container.lastChild)
+      @quill.setSelection(2, 3)
+      @container.firstChild.focus()
+      _.defer( =>
+        expect(@quill.editor.selection.checkFocus()).not.toBeTruthy()
+        expect(@quill.getSelection()).not.toBeTruthy()
+        savedRange = @quill.editor.selection.getRange(true)
+        expect(savedRange).toBeTruthy()
+        expect(savedRange.start).toEqual(2)
+        expect(savedRange.end).toEqual(3)
+        @quill.focus()
+        range = @quill.getSelection()
+        expect(range).toBeTruthy()
+        expect(range.start).toEqual(2)
+        expect(range.end).toEqual(3)
+        done()
+      )
+    )
+  )
 )
