@@ -38,7 +38,7 @@ tags = _.reduce(Normalizer.TAGS, (tags, tag) ->
   tags.push(".editor-container #{tag.toLowerCase()}") unless dom.BLOCK_TAGS[tag]? or dom.VOID_TAGS[tag]?
   return tags
 , [])
-DEFAULT_STYLES[tags.join(', ')] = { 'display': 'inline-block' }
+DEFAULT_STYLES[tags.join(', ')] = { 'display': 'inline-block' } unless dom.isIE(11)
 
 LIST_STYLES = ['decimal', 'lower-alpha', 'lower-roman']
 rule = '.editor-container ol > li'
