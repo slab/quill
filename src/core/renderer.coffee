@@ -85,9 +85,6 @@ class Renderer
     @iframe.setAttribute('name', @options.id)
     dom(@root).addClass('editor-container')
     dom(@container).addClass('ql-container')
-    dom(@container).on('focus', =>
-      @root.focus()
-    )
     # Mobile Safari lets iframe content overflow
     if dom.isIOS()
       dom(@container).styles(

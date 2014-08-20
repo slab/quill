@@ -105,8 +105,7 @@ class Quill extends EventEmitter2
     super(Quill.events.POST_EVENT, eventName, args...)
 
   focus: ->
-    this.setSelection(@editor.selection.range) if dom.isIE(11)
-    @root.focus()
+    @editor.focus()
 
   formatLine: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)

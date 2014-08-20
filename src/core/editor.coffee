@@ -10,6 +10,7 @@ Tandem     = require('tandem-core')
 class Editor
   constructor: (@iframeContainer, @quill, @options = {}) ->
     @renderer = new Renderer(@iframeContainer, @options)
+    dom(@iframeContainer).on('focus', this.focus.bind(this))
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
@@ -55,6 +56,10 @@ class Editor
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = 'silent' if delta
     @selection.update(source)
+
+  focus: ->
+    @selection.setRange(@selection.range) if dom.isIE(11)
+    @root.focus()
 
   getDelta: ->
     return @delta
