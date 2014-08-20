@@ -7,7 +7,7 @@ Tandem = Quill.require('tandem-core')
 class Authorship
   @DEFAULTS:
     authorId: null
-    color: 'white'
+    color: 'transparent'
     enabled: false
 
   constructor: (@quill, @options) ->
