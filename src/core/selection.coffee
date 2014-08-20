@@ -14,10 +14,7 @@ class Selection
     this.update('silent')
 
   checkFocus: ->
-    return false unless @document.activeElement == @doc.root
-    if document.activeElement? and document.activeElement.tagName == 'IFRAME'
-      return document.activeElement == @iframe
-    return true
+    return @document.activeElement == @doc.root and document.activeElement == @iframe
 
   getRange: (ignoreFocus = false) ->
     if this.checkFocus()
