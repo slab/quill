@@ -196,4 +196,12 @@ describe('Format', ->
     format.remove(li)
     expect(@container).toEqualHTML('<ul><li>One</li></ul><div>Two</div><ul><li>Three</li></ul>')
   )
+
+  it('headers', ->
+    @container.innerHTML = '<div>One</div><h1>Two</h1><div>Three</div>'
+    format = new Quill.Format(document, type: Quill.Format.types.LINE, tag: 'H1')
+    line = @container.childNodes[1]
+    format.remove(line)
+    expect(@container).toEqualHTML('<div>One</div><div>Two</div><div>Three</div>')
+  )
 )

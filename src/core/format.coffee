@@ -145,8 +145,9 @@ class Format
       node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty style attribute
     if _.isString(@config.tag)
       if this.isType(Format.types.LINE)
-        dom(node).splitAncestors(node.parentNode.parentNode) if node.previousSibling?
-        dom(node.nextSibling).splitAncestors(node.parentNode.parentNode) if node.nextSibling?
+        if @config.parentTag
+          dom(node).splitAncestors(node.parentNode.parentNode) if node.previousSibling?
+          dom(node.nextSibling).splitAncestors(node.parentNode.parentNode) if node.nextSibling?
         node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
       else
         node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
