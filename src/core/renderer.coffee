@@ -33,13 +33,6 @@ DEFAULT_STYLES =
   '.editor-container ol'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'decimal' }
   '.editor-container ul'         : { 'margin': '0 0 0 2em', 'padding': '0', 'list-style-type': 'disc' }
 
-# Make inline tags inline-block
-tags = _.reduce(Normalizer.TAGS, (tags, tag) ->
-  tags.push(".editor-container #{tag.toLowerCase()}") unless dom.BLOCK_TAGS[tag]? or dom.VOID_TAGS[tag]?
-  return tags
-, [])
-DEFAULT_STYLES[tags.join(', ')] = { 'display': 'inline-block' } unless dom.isIE(11)
-
 LIST_STYLES = ['decimal', 'lower-alpha', 'lower-roman']
 rule = '.editor-container ol > li'
 _.each([1..9], (i) ->
