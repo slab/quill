@@ -204,4 +204,25 @@ describe('Format', ->
       expect(@container).toEqualHTML('<div>One</div><div>Two</div><div>Three</div>')
     )
   )
+
+  describe('removeConflicting()', ->
+    it('removes conflicting formats', ->
+      firstheader = new Quill.Format(document, Quill.Format.FORMATS.firstheader)
+      secondheader = new Quill.Format(document, Quill.Format.FORMATS.secondheader)
+      @container.innerHTML = '<h2>Hello</h2>'
+      formats = { firstheader, secondheader }
+      currentFormats = { secondheader: true }
+      firstheader.removeConflicting(@container.firstChild, formats, currentFormats)
+      expect(@container).toEqualHTML('<div>Hello</div>')
+      expect(currentFormats).toEqual({})
+    )
+  )
+
+  it('bullets', ->
+    @container.innerHTML = '<ul><li>One</li><li>Two</li><li>Three</li></ul>'
+    format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+    li = @container.firstChild.childNodes[1]
+    format.remove(li)
+    expect(@container).toEqualHTML('<ul><li>One</li></ul><div>Two</div><ul><li>Three</li></ul>')
+  )
 )

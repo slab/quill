@@ -59,13 +59,13 @@ class Format
 
     bullet:
       type: Format.types.LINE
-      exclude: 'list'
+      exclusive: true
       parentTag: 'UL'
       tag: 'LI'
 
     list:
       type: Format.types.LINE
-      exclude: 'bullet'
+      exclusive: true
       parentTag: 'OL'
       tag: 'LI'
 
@@ -156,6 +156,14 @@ class Format
       dom(node.parentNode).unwrap()
     if node.tagName == dom.DEFAULT_INLINE_TAG and !node.hasAttributes()
       node = dom(node).unwrap()
+    return node
+
+  removeConflicting: (node, conflicting, currentFormats) ->
+    _.each(conflicting, (format, name) =>
+      return if !format.config.exclusive or format == this
+      node = format.remove(node)
+      delete currentFormats[name]
+    )
     return node
 
   value: (node) ->
