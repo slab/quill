@@ -7,6 +7,24 @@ class Format
     LINE: 'line'
 
   @FORMATS:
+    firstheader:
+      type: Format.types.LINE
+      exclusive: true
+      tag: 'H1'
+      prepare: 'firstheader'
+
+    secondheader:
+      type: Format.types.LINE
+      exclusive: true
+      tag: 'H2'
+      prepare: 'secondheader'
+
+    thirdheader:
+      type: Format.types.LINE
+      exclusive: true
+      tag: 'H3'
+      prepare: 'thirdheader'
+
     bold:
       tag: 'B'
       prepare: 'bold'
