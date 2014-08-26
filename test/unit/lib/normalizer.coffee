@@ -244,7 +244,7 @@ describe('Normalizer', ->
         initial:  '<abbr>A</abbr>'
         expected:  'A'
       'switch block':
-        initial:  '<h1>Test</h1>'
+        initial:  '<article>Test</article>'
         expected: '<div>Test</div>'
 
     _.each(tests, (test, name) ->
