@@ -114,6 +114,9 @@ Normalizer =
   stripWhitespace: (html) ->
     # Remove leading and tailing whitespace
     html = html.replace(/^\s+/, '').replace(/\s+$/, '')
+    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
+    # Replace all newline characters
+    html = html.replace(/(\r?\n|\r)+/g, ' ')
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
     html = html.replace(/\>\s+\</g, '><')
     return html

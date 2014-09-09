@@ -183,13 +183,19 @@ describe('Normalizer', ->
 
   describe('stripWhitespace()', ->
     tests =
-      'newlines':
+      'newline between tags':
         initial:
          '<div>Test</div>
           <div>
             <br>
           </div>'
         expected: '<div>Test</div><div><br></div>'
+      'newlines in text':
+        initial: "<div>A\nB\r\nC\rD</div>"
+        expected: "<div>A B C D</div>"
+      'consecutive newlines in text':
+        initial: "<div>A\n\nB\r\n\rC</div>"
+        expected: "<div>A B C</div>"
       'preceding and trailing spaces':
         initial:  '  <div></div>  '
         expected: '<div></div>'
