@@ -9,7 +9,7 @@ class UndoManager
     maxStack: 100
 
   @hotkeys:
-    UNDO: { key: 'Z', metaKey: true, shiftKey: false }
+    UNDO: { key: 'Z', metaKey: true }
     REDO: { key: 'Z', metaKey: true, shiftKey: true }
 
   constructor: (@quill, @options = {}) ->

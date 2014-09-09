@@ -7,7 +7,7 @@ Tandem = Quill.require('tandem-core')
 class Keyboard
   @hotkeys:
     BOLD:       { key: 'B',          metaKey: true }
-    INDENT:     { key: dom.KEYS.TAB, shiftKey: false }
+    INDENT:     { key: dom.KEYS.TAB }
     ITALIC:     { key: 'I',          metaKey: true }
     OUTDENT:    { key: dom.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
@@ -68,8 +68,10 @@ class Keyboard
     dom(@quill.root).on('keydown', (event) =>
       prevent = false
       _.each(@hotkeys[event.which], (hotkey) =>
-        return if hotkey.metaKey? and (event.metaKey != hotkey.metaKey and event.ctrlKey != hotkey.metaKey)
-        return if hotkey.shiftKey? and event.shiftKey != hotkey.shiftKey
+        return if dom.isMac() and !!hotkey.metaKey != !!event.metaKey
+        return if !dom.isMac() and !!hotkey.metaKey != !!event.ctrlKey
+        return if !!hotkey.shiftKey != !!event.shiftKey
+        return if !!hotkey.altKey != !!event.altKey
         prevent = hotkey.callback(@quill.getSelection()) == false or prevent
       )
       return !prevent

@@ -448,6 +448,9 @@ dom = _.extend(dom,
 
   isIOS: ->
     return /iPhone|iPad/i.test(navigator.userAgent)
+
+  isMac: ->
+    return /Mac/i.test(navigator.platform)
 )
 
 
