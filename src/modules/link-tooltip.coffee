@@ -94,7 +94,7 @@ class LinkTooltip extends Tooltip
       @quill.formatText(range, 'link', false, 'user')
 
   _normalizeURL: (url) ->
-    url = 'http://' + url unless /^https?:\/\//.test(url)
+    url = 'http://' + url unless /^(https?:\/\/|mailto:)/.test(url)
     return url
 
   _suggestURL: (range) ->
