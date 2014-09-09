@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "async": "~0.9.0",
-    "coffee-script": "~1.7.1",
+    "coffee-script": "~1.8.0",
     "coffeeify": "~0.7.0",
     "glob": "~4.0.4",
     "grunt": "~0.4.3",
@@ -29,11 +29,11 @@
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-stylus": "~0.18.0",
     "grunt-contrib-uglify": "~0.5.0",
-    "grunt-karma": "~0.8.0",
+    "grunt-karma": "~0.9.0",
     "grunt-lodash": "~0.3.0",
     "grunt-protractor-runner": "~1.1.0",
     "grunt-sauce-connect-launcher": "~0.3.0",
-    "harp": "~0.12.1",
+    "harp": "~0.13.0",
     "istanbul": "~0.3.0",
     "jquery": "~2.1.1",
     "karma": "~0.12.0",
@@ -47,8 +47,8 @@
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
     "load-grunt-tasks": "~0.6.0",
-    "protractor": "1.0.0",
-    "stylus": "~0.47.1",
+    "protractor": "~1.1.1",
+    "stylus": "~0.48.1",
     "watchify": "~0.10.2"
   },
   "engines": {
