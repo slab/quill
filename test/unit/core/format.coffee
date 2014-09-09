@@ -187,21 +187,21 @@ describe('Format', ->
         expect(@container).toEqualHTML(test.missing)
       )
     )
-  )
 
-  it('bullets', ->
-    @container.innerHTML = '<ul><li>One</li><li>Two</li><li>Three</li></ul>'
-    format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
-    li = @container.firstChild.childNodes[1]
-    format.remove(li)
-    expect(@container).toEqualHTML('<ul><li>One</li></ul><div>Two</div><ul><li>Three</li></ul>')
-  )
+    it('line format with parentTag', ->
+      @container.innerHTML = '<ul><li>One</li><li>Two</li><li>Three</li></ul>'
+      format = new Quill.Format(document, Quill.Format.FORMATS.bullet)
+      li = @container.firstChild.childNodes[1]
+      format.remove(li)
+      expect(@container).toEqualHTML('<ul><li>One</li></ul><div>Two</div><ul><li>Three</li></ul>')
+    )
 
-  it('headers', ->
-    @container.innerHTML = '<div>One</div><h1>Two</h1><div>Three</div>'
-    format = new Quill.Format(document, type: Quill.Format.types.LINE, tag: 'H1')
-    line = @container.childNodes[1]
-    format.remove(line)
-    expect(@container).toEqualHTML('<div>One</div><div>Two</div><div>Three</div>')
+    it('line format without parentTag', ->
+      @container.innerHTML = '<div>One</div><h1>Two</h1><div>Three</div>'
+      format = new Quill.Format(document, type: Quill.Format.types.LINE, tag: 'H1')
+      line = @container.childNodes[1]
+      format.remove(line)
+      expect(@container).toEqualHTML('<div>One</div><div>Two</div><div>Three</div>')
+    )
   )
 )
