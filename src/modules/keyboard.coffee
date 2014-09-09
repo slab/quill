@@ -68,8 +68,8 @@ class Keyboard
     dom(@quill.root).on('keydown', (event) =>
       prevent = false
       _.each(@hotkeys[event.which], (hotkey) =>
-        return if dom.isMac() and !!hotkey.metaKey != !!event.metaKey
-        return if !dom.isMac() and !!hotkey.metaKey != !!event.ctrlKey
+        metaKey = if dom.isMac() then event.metaKey else event.metaKey or event.ctrlKey
+        return if !!hotkey.metaKey != !!metaKey
         return if !!hotkey.shiftKey != !!event.shiftKey
         return if !!hotkey.altKey != !!event.altKey
         prevent = hotkey.callback(@quill.getSelection()) == false or prevent
