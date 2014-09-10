@@ -25,6 +25,21 @@ describe('Format', ->
       existing: '<a href="http://quilljs.com">Text</a>'
       missing: 'Text'
       value: 'http://quilljs.com'
+    firstheader:
+      format: new Quill.Format(document, Quill.Format.FORMATS.firstheader)
+      existing: '<h1>Text</h1>'
+      missing: '<div>Text</div>'
+      value: true
+    secondheader:
+      format: new Quill.Format(document, Quill.Format.FORMATS.secondheader)
+      existing: '<h2>Text</h2>'
+      missing: '<div>Text</div>'
+      value: true
+    thirdheader:
+      format: new Quill.Format(document, Quill.Format.FORMATS.thirdheader)
+      existing: '<h3>Text</h3>'
+      missing: '<div>Text</div>'
+      value: true
     class:
       format: new Quill.Format(document, { class: 'author-' })
       existing: '<span class="author-jason">Text</span>'
@@ -186,6 +201,19 @@ describe('Format', ->
         test.format.remove(@container.firstChild)
         expect(@container).toEqualHTML(test.missing)
       )
+    )
+  )
+
+  describe('removeConflicting()', ->
+    it('removes conflicting formats', ->
+      firstheader = new Quill.Format(document, Quill.Format.FORMATS.firstheader)
+      secondheader = new Quill.Format(document, Quill.Format.FORMATS.secondheader)
+      @container.innerHTML = '<h2>Hello</h2>'
+      formats = { firstheader, secondheader }
+      currentFormats = { secondheader: true }
+      firstheader.removeConflicting(@container.firstChild, formats, currentFormats)
+      expect(@container).toEqualHTML('<div>Hello</div>')
+      expect(currentFormats).toEqual({})
     )
   )
 
