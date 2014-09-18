@@ -84,6 +84,18 @@ describe('Leaf', ->
     )
   )
 
+  describe('deleteText() with embed tags', ->
+    it('removes the embed tag and replaces it with an empty text node', ->
+      @container.innerHTML = '<img>'
+      leaf = new Quill.Leaf(@container.firstChild, {})
+
+      leaf.deleteText(0, 1)
+
+      expect(leaf.text).toEqualHTML('')
+      expect(dom(leaf.node).text()).toEqualHTML('')
+    )
+  )
+
   describe('insertText()', ->
     tests =
       'element with text node':
