@@ -22,7 +22,7 @@ class Leaf extends LinkedList.Node
     @length = @text.length
     if dom.EMBED_TAGS[@node.tagName]?
       textNode = @node.ownerDocument.createTextNode(@text)
-      @node = dom(@node).replace(@textNode)
+      @node = dom(@node).replace(textNode)
     else
       dom(@node).text(@text)
 
