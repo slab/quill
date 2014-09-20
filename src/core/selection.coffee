@@ -113,7 +113,12 @@ class Selection
 
   _getNativeRange: ->
     selection = this._getNativeSelection()
-    return if selection?.rangeCount > 0 then selection.getRangeAt(0) else null
+    if selection?.rangeCount > 0
+      range = selection.getRangeAt(0)
+      if dom(range.startContainer).isAncestor(@doc.root, true)
+        if range.startContainer == range.endContainer or dom(range.endContainer).isAncestor(@doc.root, true)
+          return range
+    return null
 
   _indexToPosition: (index) ->
     return [@doc.root, 0] if @doc.lines.length == 0
