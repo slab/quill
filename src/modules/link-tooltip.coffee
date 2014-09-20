@@ -66,8 +66,9 @@ class LinkTooltip extends Tooltip
   setMode: (url, edit = false) ->
     if edit
       @textbox.value = url
-      @textbox.focus()
       _.defer( =>
+        # Setting value and immediately focusing doesn't work on Chrome
+        @textbox.focus()
         @textbox.setSelectionRange(url.length, url.length)
       )
     else
