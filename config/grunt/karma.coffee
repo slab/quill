@@ -45,5 +45,5 @@ module.exports = (grunt) ->
       browsers: []
       singleRun: false
     test:
-      browsers: ['PhantomJS']
+      browsers: ['Chrome']
   ))
