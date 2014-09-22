@@ -59,7 +59,7 @@ class Editor
 
   focus: ->
     @selection.setRange(@selection.range) if dom.isIE(11)
-    @renderer.iframe.focus()  # Mobile Safari requires this
+    @renderer.iframe.focus() if dom.isIOS()
     @root.focus()
 
   getDelta: ->
