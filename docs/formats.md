@@ -34,6 +34,6 @@ To customize the supported formats, pass in a whitelist array of formats you wis
 
 {% highlight javascript %}
 var editor = new Quill('#editor', {
-  formats: ['bold', 'italic', 'fore-color']
+  formats: ['bold', 'italic', 'color']
 });
 {% endhighlight %}
