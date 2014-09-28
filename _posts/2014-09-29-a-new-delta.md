@@ -42,21 +42,21 @@ A side effect of having explicit deletes and defaulting to keeping text is that 
 
 ### Embed Support
 
-The new Delta format provides native support for embeds, which can be used to represent images, video, etc [2]. There is no support for this in the current format and implementation is hackily achieved by representing an ‘!’ with a src key in the attributes (which will break when video support is added).
+The new Delta format provides native support for embeds, which can be used to represent images, video, etc. There is no support for this in the current format and implementation is hackily achieved by representing an ‘!’ with a src key in the attributes (which will break when video support is added).
 
 {% highlight javascript %}
 var oldFormat = {
   startLength: 0,
   endLength: 1,
   ops: [{
-    text: “!”,
-    attributes: { src: ‘https://octodex.github.com/images/labtocat.png’ }
+    text: '!',
+    attributes: { src: 'https://octodex.github.com/images/labtocat.png' }
   }]
 };
 
 var newFormat = {
   ops: [{
-    insert: 1, attributes: { src: ‘https://octodex.github.com/images/labtocat.png’ }
+    insert: 1, attributes: { src: 'https://octodex.github.com/images/labtocat.png' }
   }]
 };
 {% endhighlight %}
@@ -64,6 +64,7 @@ var newFormat = {
 ### Forward
 
 This new format will be the finalized representation for changes and state in Quill going forward and is one of the major steps toward a 1.0 release (a topic for another post).
+
 
 [^1]: The ability be used in a collaborative system remains a good benchmark of the capabilities of an editor’s API.
 [^2]: Currently 28658 vs 9507 lines of code (though in practice is less relevant due to minification and gzip).

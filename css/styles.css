@@ -57,6 +57,17 @@ footer li {
   padding: 5px;
 }
 
+.footnotes {
+  font-style: italic;
+  margin-top: 50px;
+}
+.footnotes::before {
+  content: 'Notes';
+}
+.footnotes ol {
+  margin-top: 10px;
+}
+
 .github-button {
   height: 20px;
   margin: 15px 0px 0px 15px;
