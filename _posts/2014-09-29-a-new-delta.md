@@ -12,11 +12,14 @@ Documentation for the new Delta format can be found in its own [Github repositor
 
 ### Reduced Complexity
 
-Much of the design for the new Delta format is inspired by collaborative systems, which also deal with state and changes and how to represent the two. In fact the old Delta format and implementation was originally intended for an Operational Transform engine. Quill is not specifically built to be a collaborative editor[^1] and only deals with rich text, so the old Delta format added a lot of unnecessary functionality and complexity. The reduced scope of the new Delta format allows for a much tighter implementation[^2].
+When the Delta format was originally designed, it had ambitious goals of being general purpose and being able to represent any kind of document. The new format reduces the scope to just rich text documents, allowing for a much tighter implementation[^1].
+
+Quill is not specifically built to be a collaborative editor but the ability to be used as one is a good benchmark of the API. The new Delta format maintains this capability and fulfills the specifications of an [ottype](https://github.com/ottypes/docs), making it compatible with [ShareJS](https://github.com/share/ShareJS).
+
 
 ### Explicit Deletes
 
-In the current Delta format, a delete operation is implied by a lack of a retain operation. Basically everything is deleted unless you say it should be kept. This has some nice properties from an implementation perspective[^3] but was probably the largest source of confusion for users trying to work with Deltas and challenged the human-readability goal. It is very difficult to keep track of indexes to figure out what was not accounted for, to figure out what should be deleted.
+In the current Delta format, a delete operation is implied by a lack of a retain operation. Basically everything is deleted unless you say it should be kept. This has some nice properties from an implementation perspective[^2] but was probably the largest source of confusion for users trying to work with Deltas and challenged the human-readability goal. It is very difficult to keep track of indexes to figure out what was not accounted for, to figure out what should be deleted.
 
 The new format has an explicit delete operation and by default everything is kept. Here’s a comparison of the two formats both representing removing the ‘b’ in ‘abc’.
 
@@ -61,11 +64,10 @@ var newFormat = {
 };
 {% endhighlight %}
 
-### Forward
+### Going Forward
 
 This new format will be the finalized representation for changes and state in Quill going forward and is one of the major steps toward a 1.0 release (a topic for another post).
 
 
-[^1]: The ability be used in a collaborative system remains a good benchmark of the capabilities of an editor’s API.
-[^2]: Currently 28658 vs 9507 lines of code (though in practice is less relevant due to minification and gzip).
-[^3]: Minimizes number of operations to support, and easy to calculate the length of text of the resulting document which is useful for sanity checks.
+[^1]: Currently 28658 vs 9507 lines of code (though in practice is less relevant due to minification and gzip).
+[^2]: Minimizes number of operations to support, and easy to calculate the length of text of the resulting document which is useful for sanity checks.
