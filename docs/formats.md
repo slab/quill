@@ -27,6 +27,7 @@ Note that enabling a format is distinct from adding a control in the [toolbar](/
   - Link - `link`
   - Bullet - `bullet`
   - List - `list`
+  - Text Alignment - `align`
 
 ### Configuring
 
