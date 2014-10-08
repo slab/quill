@@ -1,11 +1,11 @@
 _             = require('lodash')
 pkg           = require('../package.json')
+Delta         = require('rich-text').Delta
 EventEmitter2 = require('eventemitter2').EventEmitter2
 dom           = require('./lib/dom')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Range         = require('./lib/range')
-Tandem        = require('tandem-core')
 
 
 class Quill extends EventEmitter2
@@ -49,8 +49,8 @@ class Quill extends EventEmitter2
   @require: (name) ->
     switch name
       when 'lodash' then return _
+      when 'delta' then return Delta
       when 'dom' then return dom
-      when 'tandem-core' then return Tandem
       else return null
 
 
@@ -96,7 +96,7 @@ class Quill extends EventEmitter2
   deleteText: (start, end, source = Quill.sources.API) ->
     [start, end, formats, source] = this._buildParams(start, end, {}, source)
     return unless end > start
-    delta = Tandem.Delta.makeDeleteDelta(this.getLength(), start, end - start)
+    delta = new Delta().retain(start).delete(end - start)
     @editor.applyDelta(delta, source)
 
   emit: (eventName, args...) ->
@@ -121,7 +121,7 @@ class Quill extends EventEmitter2
       formats[name] = null unless value and value != format.config.default     # false will be composed and kept in attributes
       return formats
     , formats)
-    delta = Tandem.Delta.makeRetainDelta(this.getLength(), start, end - start, formats)
+    delta = new Delta().retain(start).retain(end - start, formats)
     @editor.applyDelta(delta, source)
 
   getContents: (start = 0, end = null) ->
@@ -130,14 +130,13 @@ class Quill extends EventEmitter2
       start = start.start
     else
       end = this.getLength() unless end?
-    ops = @editor.getDelta().getOpsAt(start, end - start)
-    return new Tandem.Delta(0, ops)
+    return @editor.getDelta().slice(start, end)
 
   getHTML: ->
     return @root.innerHTML
 
   getLength: ->
-    return @editor.getDelta().endLength
+    return @editor.getDelta().length()
 
   getModule: (name) ->
     return @modules[name]
@@ -155,7 +154,7 @@ class Quill extends EventEmitter2
   insertText: (index, text, name, value, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
     return unless text.length > 0
-    delta = Tandem.Delta.makeInsertDelta(this.getLength(), index, text, formats)
+    delta = new Delta().retain(index).insert(text, formats)
     @editor.applyDelta(delta, source)
 
   onModuleLoad: (name, callback) ->
@@ -197,7 +196,6 @@ class Quill extends EventEmitter2
     @editor.selection.setRange(range, source)
 
   updateContents: (delta, source = Quill.sources.API) ->
-    delta = Tandem.Delta.makeDelta(delta)
     @editor.applyDelta(delta, source)
 
   # fn(Number start, Number end, String name, String value, String source)

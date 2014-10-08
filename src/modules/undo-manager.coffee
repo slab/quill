@@ -1,6 +1,6 @@
 Quill  = require('../quill')
 _      = Quill.require('lodash')
-Tandem = Quill.require('tandem-core')
+Delta  = Quill.require('delta')
 
 
 class UndoManager
@@ -30,7 +30,7 @@ class UndoManager
       )
     )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, origin) =>
-      if delta.isEqual(@emittedDelta)
+      if _.isEqual(delta, @emittedDelta)
         @emittedDelta = null
         return
       this.record(delta, @oldDelta)
@@ -44,7 +44,7 @@ class UndoManager
     @oldDelta = @quill.getContents()
 
   record: (changeDelta, oldDelta) ->
-    return if changeDelta.isIdentity()
+    return unless changeDelta.ops.length > 0
     @stack.redo = []
     try
       undoDelta = oldDelta.invert(changeDelta)

@@ -1,11 +1,11 @@
 _          = require('lodash')
+Delta      = require('rich-text').Delta
 dom        = require('../lib/dom')
 Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
 LinkedList = require('../lib/linked-list')
 Normalizer = require('../lib/normalizer')
-Tandem     = require('tandem-core')
 
 
 class Line extends LinkedList.Node
@@ -157,12 +157,12 @@ class Line extends LinkedList.Node
     @node.id = @id unless @node.id == @id
     @outerHTML = @node.outerHTML
     @length = 1
-    ops = _.map(@leaves.toArray(), (leaf) =>
+    @delta = new Delta()
+    @leaves.toArray().forEach((leaf) =>
       @length += leaf.length
-      return new Tandem.InsertOp(leaf.text, leaf.formats)
+      @delta.insert(leaf.text, leaf.formats)
     )
-    ops.push(new Tandem.InsertOp('\n', @formats))
-    @delta = new Tandem.Delta(0, @length, ops)
+    @delta.insert('\n', @formats)
 
 
 module.exports = Line

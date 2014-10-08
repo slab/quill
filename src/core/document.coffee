@@ -1,10 +1,10 @@
 _          = require('lodash')
+Delta      = require('rich-text').Delta
 dom        = require('../lib/dom')
 Format     = require('./format')
 Line       = require('./line')
 LinkedList = require('../lib/linked-list')
 Normalizer = require('../lib/normalizer')
-Tandem     = require('tandem-core')
 
 
 class Document
@@ -33,7 +33,7 @@ class Document
 
   findLineAt: (index) ->
     return [null, index] unless @lines.length > 0
-    length = this.toDelta().endLength     # TODO optimize
+    length = this.toDelta().length()     # TODO optimize
     return [@lines.last, @lines.last.length] if index == length
     return [null, index - length] if index > length
     curLine = @lines.first
@@ -128,7 +128,7 @@ class Document
     ops = _.flatten(_.map(lines, (line) ->
       return _.clone(line.delta.ops)
     ), true)
-    return new Tandem.Delta(0, ops)
+    return new Delta(ops)
 
 
 module.exports = Document

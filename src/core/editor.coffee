@@ -4,7 +4,6 @@ Document   = require('./document')
 Line       = require('./line')
 Renderer   = require('./renderer')
 Selection  = require('./selection')
-Tandem     = require('tandem-core')
 
 
 class Editor
@@ -16,9 +15,6 @@ class Editor
     @delta = @doc.toDelta()
     @selection = new Selection(@doc, @renderer.iframe, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
-    @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
-      @savedRange = range
-    )
     this.enable() unless @options.readOnly
 
   disable: ->
@@ -30,29 +26,40 @@ class Editor
   applyDelta: (delta, source) ->
     localDelta = this._update()
     if localDelta
-      tempDelta = localDelta
-      localDelta = localDelta.transform(delta, true)
-      delta = delta.transform(tempDelta, false)
-      @delta = @doc.toDelta()   # Only for our error check below, otherwise dont need to update yet
-    unless delta.isIdentity()   # Follows may have turned delta into the identity
-      if delta.startLength != @delta.endLength
-        console.warn("Trying to apply delta to incorrect doc length", delta, @delta)
+      tempDelta = localDelta.slice()
+      localDelta.transform(delta, true)
+      delta.transform(tempDelta, false)
+    if delta.ops.length > 0
       delta = this._trackDelta( =>
-        delta.apply(this._insertAt, this._deleteAt, this._formatAt, this)
+        index = 0
+        _.each(delta.ops, (op) =>
+          if _.isString(op.insert)
+            this._insertAt(index, op.insert, op.attributes)
+            index += op.insert.length;
+          else if _.isNumber(op.insert)
+            this._insertAt(index, '!', op.attributes)
+            index += 1;
+          else if _.isNumber(op.delete)
+            this._deleteAt(index, op.delete)
+          else if _.isNumber(op.retain)
+            _.each(op.attributes, (value, name) =>
+              this._formatAt(index, op.retain, name, value)
+            )
+            index += op.retain
+        )
         @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
       )
       @delta = @doc.toDelta()
       @innerHTML = @root.innerHTML
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != 'silent'
-    if localDelta and !localDelta.isIdentity() and source != 'silent'
+    if localDelta and localDelta.ops.length > 0 and source != 'silent'
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
 
   checkUpdate: (source = 'user') ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
     delta = this._update()
     if delta
-      oldDelta = @delta
-      @delta = oldDelta.compose(delta)
+      @delta.compose(delta)
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = 'silent' if delta
     @selection.update(source)
@@ -123,31 +130,11 @@ class Editor
     )
 
   _trackDelta: (fn) ->
-    oldIndex = @savedRange?.start
     fn()
     newDelta = @doc.toDelta()
-    try
-      newIndex = @selection.getRange()?.start
-      if oldIndex? and newIndex? and oldIndex <= @delta.endLength and newIndex <= newDelta.endLength
-        [oldLeftDelta, oldRightDelta] = @delta.split(oldIndex)
-        [newLeftDelta, newRightDelta] = newDelta.split(newIndex)
-        decomposeLeft = newLeftDelta.decompose(oldLeftDelta)
-        decomposeRight = newRightDelta.decompose(oldRightDelta)
-        decomposeA = decomposeLeft.merge(decomposeRight)
-    catch ignored
-    decomposeB = newDelta.decompose(@delta)
-    if decomposeA and decomposeB
-      # Choose delta with fewest insertions
-      [lengthA, lengthB] = _.map([decomposeA, decomposeB], (delta) ->
-        return _.reduce(delta.ops, (count, op) ->
-          count += op.value.length if op.value?
-          return count
-        , 0)
-      )
-      decompose = if lengthA < lengthA then decomposeA else decomposeB
-    else
-      decompose = decomposeA or decomposeB
-    return decompose
+    # TODO need to get this to prefer earlier insertions
+    delta = @delta.diff(newDelta)
+    return delta
 
   _update: ->
     return false if @innerHTML == @root.innerHTML
@@ -156,7 +143,7 @@ class Editor
       @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
     )
     @innerHTML = @root.innerHTML
-    return if delta.isIdentity() then false else delta
+    return if delta.ops.length > 0 then delta else false
 
 
 module.exports = Editor

@@ -92,12 +92,18 @@ class MultiCursor extends EventEmitter2
     )
 
   _applyDelta: (delta) ->
-    delta.apply((index, text, formatting) =>
-      this.shiftCursors(index, text.length, formatting['author'])
-    , (index, length) =>
-      this.shiftCursors(index, -1 * length, null)
-    , (index, length, name, value) =>
-      this.shiftCursors(index, 0, null)
+    index = 0
+    _.each(delta.ops, (op) =>
+      length = 0
+      if op.insert?
+        length = op.insert.length or 1
+        this.shiftCursors(index, length, op.attributes?['author'])
+      else if op.delete?
+        this.shiftCursors(index, -1*op.delete, null)
+      else if op.retain?
+        this.shiftCursors(index, 0, null)
+        length = op.retain
+      index += length
     )
     this.update()
 

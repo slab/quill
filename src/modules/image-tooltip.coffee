@@ -2,7 +2,7 @@ Quill   = require('../quill')
 Tooltip = require('./tooltip')
 _       = Quill.require('lodash')
 dom     = Quill.require('dom')
-Tandem  = Quill.require('tandem-core')
+Delta   = Quill.require('delta')
 
 
 class ImageTooltip extends Tooltip

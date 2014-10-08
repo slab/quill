@@ -1,7 +1,7 @@
 Quill  = require('../quill')
 _      = Quill.require('lodash')
 dom    = Quill.require('dom')
-Tandem = Quill.require('tandem-core')
+Delta  = Quill.require('delta')
 
 
 class Keyboard
