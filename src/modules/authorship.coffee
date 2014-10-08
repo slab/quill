@@ -1,7 +1,7 @@
 Quill  = require('../quill')
 _      = Quill.require('lodash')
 dom    = Quill.require('dom')
-Tandem = Quill.require('tandem-core')
+Delta  = Quill.require('delta')
 
 
 class Authorship
@@ -17,19 +17,18 @@ class Authorship
     return unless @options.authorId?
     @quill.on(@quill.constructor.events.PRE_EVENT, (eventName, delta, origin) =>
       if eventName == @quill.constructor.events.TEXT_CHANGE and origin == 'user'
-        # Add authorship to insert/format
+        authorDelta = new Delta()
+        authorFormat = { author: @options.authorId }
         _.each(delta.ops, (op) =>
-          if Tandem.InsertOp.isInsert(op) or _.keys(op.attributes).length > 0
-            op.attributes['author'] = @options.authorId
-        )
-        # Apply authorship to our own editor
-        authorDelta = new Tandem.Delta(delta.endLength, [new Tandem.RetainOp(0, delta.endLength)])
-        attribute = { author: @options.authorId }
-        delta.apply((index, text) =>
-          authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, text.length, attribute))
-        , (=>)
-        , (index, length, name, value) =>
-          authorDelta = authorDelta.compose(Tandem.Delta.makeRetainDelta(delta.endLength, index, length, attribute))
+          return if op.delete?
+          if op.insert? or (op.retain? and op.attributes?)
+            # Add authorship to insert/format
+            op.attributes or= {}
+            op.attributes.author = @options.authorId
+            # Apply authorship to our own editor
+            authorDelta.retain(op.retain or op.insert.length or 1, authorFormat)
+          else
+            authorDelta.retain(op.retain)
         )
         @quill.updateContents(authorDelta, 'silent')
     )

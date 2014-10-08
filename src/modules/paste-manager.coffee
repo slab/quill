@@ -2,7 +2,7 @@ Quill    = require('../quill')
 Document = require('../core/document')
 _        = Quill.require('lodash')
 dom      = Quill.require('dom')
-Tandem   = Quill.require('tandem-core')
+Delta    = Quill.require('delta')
 
 class PasteManager
   constructor: (@quill, @options) ->
@@ -27,13 +27,10 @@ class PasteManager
     _.defer( =>
       doc = new Document(@container, @quill.options)
       delta = doc.toDelta()
+      lengthAdded = delta.length() - 1
       # Need to remove trailing newline so paste is inline, losing format is expected and observed in Word
-      delta = delta.compose(Tandem.Delta.makeDeleteDelta(delta.endLength, delta.endLength - 1, 1))
-      lengthAdded = delta.endLength
-      delta.ops.unshift(new Tandem.RetainOp(0, range.start)) if range.start > 0
-      delta.ops.push(new Tandem.RetainOp(range.end, oldDocLength)) if range.end < oldDocLength
-      delta.endLength += (@quill.getLength() - (range.end - range.start))
-      delta.startLength = oldDocLength
+      delta.compose(new Delta().retain(lengthAdded).delete(1))
+      delta.ops.unshift({ retain: range.start }) if range.start > 0
       @quill.updateContents(delta, 'user')
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
       [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
