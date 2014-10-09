@@ -334,6 +334,10 @@ footer li {
   max-width: 720px;
 }
 
+#blog-container pre {
+  margin: 25px 0px;
+}
+
 #blog-container .post-list {
   margin-bottom: 100px;
 }
