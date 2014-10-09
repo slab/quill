@@ -3,188 +3,108 @@ layout: docs
 title: Deltas
 permalink: /docs/deltas/
 redirect_from: /docs/editor/deltas/
-stability: yellow
 ---
 
 # Deltas
 
-Deltas are objects used by Quill to represent changes to the editor's contents. In most cases directly dealing with Deltas can be avoided. But it is available to provide a powerful interface to Quill.
+Quill uses the [rich text](https://github.com/ottypes/rich-text) format to represent the editor's contents, as well as changes to those contents. In most cases directly dealing with Deltas can be avoided. But it is available to provide a powerful interface to Quill.
 
-Deltas can also be used to represent the contents of Quill. When used in this manner, think of it as the change from the blank editor.
-
-1. [Operations](#operations)
-1. [Delta.prototype.constructor](#deltaprototypeconstructor)
-1. [Delta.prototype.apply](#deltaprototypeapply)
-1. [Delta.prototype.compose](#deltaprototypecompose)
-1. [Delta.prototype.decompose](#deltaprototypedecompose)
-
-### Operations
-
-An Array of operations are used to represent a Delta. Two types of operations are recognized: [insertions](#insert) and [retains](#retain). Insertions dequill text to be inserted. Retains dequill text to be kept. A delta and its operations dequill the entire editor's contents, so the absence of a retain over a portion of contents implies its deletion.
-
-#### Insert
-
-- An insert operation is an Object with the following properties:
-
-| Parameter    | Type     | Description
-|--------------|----------|------------
-| `text`       | _String_ | The text to be inserted.
-| `attributes` | _Object_ | Key/value pairs of formats to apply to text.
-
-**Examples**
+A Delta representing the editor's contents looks something like this:
 
 {% highlight javascript %}
-// Insert a bold 'Hello'
-var insert = {
-  text: 'Hello!',
-  attributes: { bold: true }
-};
+{
+  ops:[
+    { insert: 'Gandalf', attributes: { bold: true } },
+    { insert: ' the ' },
+    { insert: 'Grey', attributes: { color: '#ccc' } }
+  ]
+)
 {% endhighlight %}
 
-#### Retain
-
-- A retain operation is an Object with the following properties:
-
-| Parameter    | Type     | Description
-|--------------|----------|------------
-| `start`      | _Number_ | The start index of text that should be kept.
-| `end`        | _Number_ | The exclusive end index of text that should be kept.
-| `attributes` | _Object_ | Key/value pairs of formats to apply to text.
-
-**Examples**
+A change looks something like this:
 
 {% highlight javascript %}
-// Keep the first 10 characters and apply the bold format to those characters
-var retain = {
-  start: 0,
-  end: 10,
-  attributes: { bold: true }
-};
+{
+  ops: [
+    { retain: 12 },
+    { delete: '4 ' },
+    { insert: 'White', attributes: { color: '#fff' } }
+  ]
+}
 {% endhighlight %}
 
-### Delta.prototype.constructor
+Note there's really no difference between the two; the contents representation is simply the change from an empty document.
 
-Constructor for creating Deltas.
 
-**Methods**
+## Operations
 
-- `Delta(startLength, endLength, ops)`
+Operations describe a singular change. They can be an [insert](#insert), [delete](#delete) or [retain](#retain). Note operations do not take an index. They always describe the change at the current index. Use retains to "keep" or "skip" certain parts of the document.
 
-**Parameters**
+### Insert
 
-| Parameter     | Type     | Description
-|---------------|----------|------------
-| `startLength` | _Number_ | Characters in document before applying operations.
-| `endLength`   | _Number_ | Characters in document after applying operations.
-| `ops`         | _Array_  | Operations to be applied. See [operations](#operations) for more details.
+Insert operations have an `insert` key defined. A String value represents inserting text. A Number value represents inserting an embed, with the value corresponding to an embed type (such as an image or video).
 
-**Examples**
+Quill recognizes the following embed types:
 
 {% highlight javascript %}
-var delta = new Delta(5, 13, [
-  { start: 0, end: 5 },                 // Keep the first 5 characters
-  { text: 'Quill', { bold: true } }     // Insert a bolded 'Quill'
-]);
+{
+  image: 1
+}
 {% endhighlight %}
 
-### Delta.prototype.apply
-
-Will call given insert, delete, and format functions based on the instructions of the current delta.
-
-**Methods**
-
-- `apply(insertFn)`
-- `apply(insertFn, deleteFn)`
-- `apply(insertFn, deleteFn, formatFn)`
-
-**Parameters**
-
-| Parameter                          | Type       | Description
-|------------------------------------|------------|------------
-| `insertFn(index, text, formats)`   | _Function_ | Called when text should be inserted.
-| `deleteFn(index, length)`          | _Function_ | Called when text should be deleted.
-| `formatFn(index, length, formats)` | _Function_ | Called when text should be formatted.
-
-**Examples**
+In both cases of text and embeds, an optional `attributes` key can be defined with an Object to describe additonal formatting information. A format on the newline character describes the format for the line. Formats can be changed by the [retain](#retain) operation.
 
 {% highlight javascript %}
-delta.apply(function(index, text, formats) {
-  // Insert text into editor
-}, function(index, length) {
-  // Delete text from editor
-}, function(index, length, formats) {
-  // Format text in editor
-});
+// Insert a bolded "Text"
+{ insert: "Text", attributes: { bold: true } }
+
+// Insert a link
+{ insert: "Google", attributes: { href: 'https://www.google.com' } }
+
+// Insert an image
+{
+  insert: 1,
+  attributes: {
+    alt: "Lab Octocat",
+    src: 'https://octodex.github.com/images/labtocat.png'
+  }
+}
+
+// Aligned text example
+{
+  ops:[
+    { insert: 'Right align' },
+    { insert: '\n', attributes: { align: 'right' } },
+    { insert: 'Center align' },
+    { insert: '\n', attributes: { align: 'center' } }
+  ]
+)
 {% endhighlight %}
 
+### Delete
+
+Delete operations have a Number `delete` key defined representing the number of characters to delete. All embeds have a length of 1.
+
 {% highlight javascript %}
-var editor = new Quill('#editor');
-delta.apply(editor.insertText, editor.deleteText, editor.formatText);
+// Delete the next 10 characters
+{ delete: 10 }
 {% endhighlight %}
 
-### Delta.prototype.compose
+### Retain
 
-Determines the combination of the current delta with another delta. Neither delta will be altered. The endLength of the current delta must be equal to the startLength of the delta to be combined.
+Retain operations have a Number `retain` key defined representing the number of characters to keep (other libraries might use the name keep or skip). An optional `attributes` key can be defined with an Object to describe formatting changes to the character range. A value of null in the `attributes` Object represents removal of that key.
 
-**Methods**
-
-- `compose(other)`
-
-**Parameter**
-
-| Parameter | Type    | Description
-|-----------|---------|------------
-| `other`   | _Delta_ | Delta to compose with.
-
-**Returns**
-
-- The resulting composed Delta.
-
-**Examples**
+*Note: It is not necessary to retain the last characters of a document as this is implied.*
 
 {% highlight javascript %}
-var deltaA = new Delta(0, 6, [
-  { text: 'Hello ' }
-]);
+// Keep the next 5 characters
+{ retain: 5 }
 
-var deltaB = new Delta(6, 12, [
-  { start: 0, end: 6 },
-  { text: 'World!' }
-]);
+// Keep and bold the next 5 characters
+{ retain: 5, attributes: { bold: true } }
 
-// Should equal new Delta(0, 12, [{ text: 'Hello World!' }])
-var composed = deltaA.compose(deltaB);
-{% endhighlight %}
-
-### Delta.prototype.decompose
-
-Determines the difference between the current delta with another delta. Neither delta will be altered. The composition of the other delta with the resulting decomposed delta should produce the current delta.
-
-**Methods**
-
-- `decompose(other)`
-
-**Parameter**
-
-| Parameter | Type    | Description
-|-----------|---------|------------
-| `other`   | _Delta_ | Delta to decompose with.
-
-**Returns**
-
-- The resulting decomposed Delta.
-
-**Examples**
-
-{% highlight javascript %}
-var deltaA = new Delta(0, 12, [
-  { text: 'Hello World!' }
-]);
-
-var deltaB = new Delta(0, 6, [
-  { text: 'Hello ' }
-]);
-
-// Should equal new Delta(6, 12, [{ start: 0, end: 6 }, { text: 'World!' }])
-var decomposed = deltaA.decompose(deltaB);
+// Keep and unbold the next 5 characters
+// More specifically, remove the bold key in the attributes Object
+// in the next 5 characters
+{ retain: 5, attributes: { bold: null } }
 {% endhighlight %}
