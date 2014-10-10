@@ -124,11 +124,11 @@ class Wrapper
   on: (eventName, listener) ->
     @node.addEventListener(eventName, (event) ->
       arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
-      propogate = listener(arg)
-      unless propogate
+      propagate = listener(arg)
+      unless propagate
         event.preventDefault()
         event.stopPropagation()
-      return propogate
+      return propagate
     )
     return this
 
