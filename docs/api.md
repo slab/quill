@@ -368,7 +368,9 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 **Methods**
 
 - `setSelection(start, end)`
+- `setSelection(start, end, source)`
 - `setSelection(range)`
+- `setSelection(range, source)`
 
 **Parameters**
 
@@ -377,6 +379,7 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 | `start`   | _Number_ | Start index of selection range.
 | `end`     | _Number_ | End index of selection range.
 | `range`   | _Object_ | Object with **start** and **end** keys indicating the corresponding indexes where the selection exists.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
 
 **Examples**
 
