@@ -143,7 +143,7 @@ describe('Editing text', ->
     )
     browser.switchTo().defaultContent()
     expectedDelta = {
-      ops: [{ insert: text, attributes: { size: '32px' } }]
+      ops: [{ attributes: { size: '32px' }, insert: text }]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
   )
@@ -164,8 +164,6 @@ describe('Editing text', ->
     )
     browser.switchTo().defaultContent()
     expectedDelta = {
-      startLength: 1530
-      endLength: 1530
       ops: [
         { retain: 10 }
         { retain: 20, attributes: { bold: true } }
@@ -189,8 +187,6 @@ describe('Editing text', ->
     )
     browser.switchTo().defaultContent()
     expectedDelta = {
-      startLength: 1530
-      endLength: 1530
       ops: [
         { retain: 9 }
         { retain: 1, attributes: { align: 'center' } }
