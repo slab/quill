@@ -47,17 +47,12 @@ class UndoManager
     return unless changeDelta.ops.length > 0
     @stack.redo = []
     try
-      undoDelta = oldDelta.invert(changeDelta)
+      undoDelta = @quill.getContents().diff(@oldDelta)
       timestamp = new Date().getTime()
       if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
         change = @stack.undo.pop()
-        if undoDelta.canCompose(change.undo) and change.redo.canCompose(changeDelta)
-          undoDelta = undoDelta.compose(change.undo)
-          changeDelta = change.redo.compose(changeDelta)
-        else
-          # TODO log warning
-          this.clear()
-          @lastRecorded = timestamp
+        undoDelta = undoDelta.compose(change.undo)
+        changeDelta = change.redo.compose(changeDelta)
       else
         @lastRecorded = timestamp
       @stack.undo.push({
