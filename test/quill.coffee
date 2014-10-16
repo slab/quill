@@ -2,7 +2,7 @@ global._ = require('lodash')
 
 Quill = require('../src/quill')
 
-Quill.Delta = require('tandem-core').Delta
+Quill.Delta = require('rich-text').Delta
 
 Quill.Document   = require('../src/core/document')
 Quill.Editor     = require('../src/core/editor')

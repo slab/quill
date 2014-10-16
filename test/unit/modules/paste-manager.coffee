@@ -14,16 +14,7 @@ describe('PasteManager', ->
       <div style="text-align: right;">Text</div>
     '
     quill.on(Quill.events.TEXT_CHANGE, (delta) ->
-      expect(delta).toEqualDelta(Quill.Delta.makeDelta({
-        startLength: 5
-        endLength: 16
-        ops: [
-          { start: 0, end: 2 }
-          { value: 'Pasted', attributes: { bold: true } }
-          { value: '\nText' }
-          { start: 2, end: 5 }
-        ]
-      }))
+      expect(delta).toEqualDelta(new Quill.Delta().retain(2).insert('Pasted', { bold: true }).insert('\nText'))
       _.defer( ->
         range = quill.getSelection()
         expect(range.start).toEqual(13)

@@ -70,7 +70,7 @@ describe('Quill', ->
       expect(@quill.root).toEqualHTML('<div>01<b>23</b></div><div>5678</div>', true)
       @quill.formatText(2, 4, 'bold', false)
       expect(@quill.root).toEqualHTML('<div>0123</div><div>5678</div>', true)
-      expect(@quill.getContents(0, 4)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '0123'))
+      expect(@quill.getContents(0, 4)).toEqualDelta(new Quill.Delta().insert('0123'))
     )
 
     it('formatText() default style', ->
@@ -109,18 +109,18 @@ describe('Quill', ->
     )
 
     it('updateContents()', ->
-      @quill.updateContents(Quill.Delta.makeInsertDelta(10, 2, 'A'))
+      @quill.updateContents(new Quill.Delta().retain(2).insert('A'))
       expect(@quill.root).toEqualHTML('<div>01A23</div><div>5678</div>', true)
     )
   )
 
   describe('retrievals', ->
     it('getContents() all', ->
-      expect(@quill.getContents()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '0123\n5678\n'))
+      expect(@quill.getContents()).toEqualDelta(new Quill.Delta().insert('0123\n5678\n'))
     )
 
     it('getContents() partial', ->
-      expect(@quill.getContents(2, 7)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23\n56'))
+      expect(@quill.getContents(2, 7)).toEqualDelta(new Quill.Delta().insert('23\n56'))
     )
 
     it('getHTML()', ->

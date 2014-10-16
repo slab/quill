@@ -77,12 +77,16 @@ class UndoManager
 
   _getLastChangeIndex: (delta) ->
     lastIndex = 0
-    delta.apply((index, text) ->
-      lastIndex = Math.max(index + text.length, lastIndex)
-    , (index, length) ->
-      lastIndex = Math.max(index, lastIndex)
-    , (index, length) ->
-      lastIndex = Math.max(index + length, lastIndex)
+    index = 0
+    delta.ops.forEach((op) ->
+      if op.insert?
+        lastIndex = Math.max(index + (op.insert.length or 1), lastIndex)
+      else if op.delete?
+        lastIndex = Math.max(index, lastIndex)
+      else if op.retain?
+        if op.attributes?
+          lastIndex = Math.max(index + op.retain, lastIndex)
+        index += op.retain
     )
     return lastIndex
 

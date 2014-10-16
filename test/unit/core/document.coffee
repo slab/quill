@@ -308,54 +308,44 @@ describe('Document', ->
     tests =
       'blank':
         initial:  ['']
-        expected: Quill.Delta.getInitial('')
+        expected: new Quill.Delta()
       'single line':
         initial:  ['<div>0123</div>']
-        expected: Quill.Delta.getInitial('0123\n')
+        expected: new Quill.Delta().insert('0123\n')
       'single newline':
         initial:  ['<div><br></div>']
-        expected: Quill.Delta.getInitial('\n')
+        expected: new Quill.Delta().insert('\n')
       'preceding newline':
         initial:  ['<div><br></div>', '<div>0</div>']
-        expected: Quill.Delta.getInitial('\n0\n')
+        expected: new Quill.Delta().insert('\n0\n')
       'explicit trailing newline':
         initial:  ['<div>0</div>', '<div><br></div>']
-        expected: Quill.Delta.getInitial('0\n\n')
+        expected: new Quill.Delta().insert('0\n\n')
       'multiple lines':
         initial:  ['<div>0</div>', '<div>1</div>']
-        expected: Quill.Delta.getInitial('0\n1\n')
+        expected: new Quill.Delta().insert('0\n1\n')
       'multiple newlines':
         initial:  ['<div><br></div>', '<div><br></div>']
-        expected: Quill.Delta.getInitial('\n\n')
+        expected: new Quill.Delta().insert('\n\n')
       'multiple preceding newlines':
         initial:  ['<div><br></div>', '<div><br></div>', '<div>0</div>']
-        expected: Quill.Delta.getInitial('\n\n0\n')
+        expected: new Quill.Delta().insert('\n\n0\n')
       'multiple explicit trailing newlines':
         initial:  ['<div>0</div>', '<div><br></div>', '<div><br></div>']
-        expected: Quill.Delta.getInitial('0\n\n\n')
+        expected: new Quill.Delta().insert('0\n\n\n')
       'lines separated by multiple newlines':
         initial:  ['<div>0</div>', '<div><br></div>', '<div>1</div>']
-        expected: Quill.Delta.getInitial('0\n\n1\n')
+        expected: new Quill.Delta().insert('0\n\n1\n')
       'tag format':
         initial:  ['<div><b>0123</b></div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '0123', attributes: { bold: true } }
-          { value: '\n' }
-        ]})
+        expected: new Quill.Delta().insert('0123', { bold: true }).insert('\n')
       'style format':
         initial:  ['<div><span style="color: teal;">0123</span></div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '0123', attributes: { color: 'teal' } }
-          { value: '\n' }
-        ]})
+        expected: new Quill.Delta().insert('0123', { color: 'teal' }).insert('\n')
       'bullets':
         initial:  ['<ul><li>One</li><li>Two</li></ul>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: 'One' }
-          { value: '\n', attributes: { bullet: true } }
-          { value: 'Two' }
-          { value: '\n', attributes: { bullet: true } }
-        ]})
+        expected: new Quill.Delta().insert('One').insert('\n', { bullet: true })
+                                   .insert('Two').insert('\n', { bullet: true })
 
     _.each(tests, (test, name) ->
       it(name, ->
@@ -381,32 +371,32 @@ describe('Document', ->
       lineNode.innerHTML = 'A'
       @doc.root.insertBefore(lineNode, @doc.root.lastChild)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '0123\nA\n5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(new Quill.Delta().insert('0123\nA\n5678\n'))
     )
 
     it('existing line changed', ->
       @doc.root.firstChild.innerHTML = '01A23'
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01A23\n5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(new Quill.Delta().insert('01A23\n5678\n'))
     )
 
     it('existing line removed', ->
       @doc.root.removeChild(@doc.root.firstChild)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(new Quill.Delta().insert('5678\n'))
     )
 
     it('existing line split', ->
       dom(@doc.root.firstChild).split(2)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01\n23\n5678\n'))
+      expect(@doc.toDelta()).toEqualDelta(new Quill.Delta().insert('01\n23\n5678\n'))
     )
 
     it('existing lines merged', ->
       dom(@doc.root.lastChild).moveChildren(@doc.root.firstChild)
       @doc.root.removeChild(@doc.root.lastChild)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01235678\n'))
+      expect(@doc.toDelta()).toEqualDelta(new Quill.Delta().insert('01235678\n'))
     )
 
     it('new lines appended', ->
@@ -414,7 +404,7 @@ describe('Document', ->
       lineNode.innerHTML = 'A'
       @doc.root.appendChild(lineNode)
       @doc.rebuild()
-      expect(@doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '0123\n5678\nA\n'))
+      expect(@doc.toDelta()).toEqualDelta(new Quill.Delta().insert('0123\n5678\nA\n'))
     )
   )
 )

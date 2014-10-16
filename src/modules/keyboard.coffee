@@ -82,14 +82,10 @@ class Keyboard
     # Behavior according to Google Docs + Word
     # When tab on one line, regardless if shift is down, delete selection and insert a tab
     # When tab on multiple lines, indent each line if possible, outdent if shift is down
-    delta = Tandem.Delta.makeDelta({
-      startLength: @quill.getLength()
-      ops: [
-        { start: 0, end: range.start }
-        { value: "\t" }
-        { start: range.end, end: @quill.getLength() }
-      ]
-    })
+    delta = new Delta().retain(range.start)
+                       .insert("\t")
+                       .delete(range.end - range.start)
+                       .retain(@quill.getLength() - range.end)
     @quill.updateContents(delta)
     @quill.setSelection(range.start + 1, range.start + 1)
 
