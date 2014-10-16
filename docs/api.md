@@ -64,7 +64,7 @@ Retrieves the string contents of the editor.
 **Examples**
 
 {% highlight javascript %}
-var length = editor.getText(0, 10);
+var text = editor.getText(0, 10);
 {% endhighlight %}
 
 
@@ -83,7 +83,7 @@ Retrieves the length of the editor contents.
 **Examples**
 
 {% highlight javascript %}
-var text = editor.getLength();
+var length = editor.getLength();
 {% endhighlight %}
 
 
