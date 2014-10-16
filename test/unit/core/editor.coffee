@@ -59,41 +59,27 @@ describe('Editor', ->
     tests =
       'part of line':
         initial:  ['<div>0123</div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '0' }
-          { value: '12', attributes: { bold: true } }
-          { value: '3\n' }
-        ]})
+        expected: new Quill.Delta().insert('0').insert('12', { bold: true }).insert('3\n')
         index: 1, length: 2, name: 'bold', value: true
       'trailing newline with normal format':
         initial:  ['<div>0123</div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '0123' }
-          { value: '\n', attributes: { bold: true } }
-        ]})
+        expected: new Quill.Delta().insert('0123').insert('\n', { bold: true })
         index: 4, length: 1, name: 'bold', value: true
       'trailing newline with line format':
         initial:  ['<div>0123</div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '0123' }
-          { value: '\n', attributes: { align: 'right' } }
-        ]})
+        expected: new Quill.Delta().insert('0123').insert('\n', { align: 'right' })
         index: 4, length: 1, name: 'align', value: 'right'
       'part of multiple lines':
         initial:  ['<div>0123</div>', '<div><b>5678</b></div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '01' }
-          { value: '23\n', attributes: { strike: true } }
-          { value: '56', attributes: { bold: true, strike: true } }
-          { value: '78', attributes: { bold: true } }
-          { value: '\n' }
-        ]})
+        expected: new Quill.Delta().insert('01')
+                                   .insert('23\n', { strike: true })
+                                   .insert('56', { bold: true, strike: true })
+                                   .insert('78', { bold: true })
+                                   .insert('\n')
         index: 2, length: 5, name: 'strike', value: true
       'line contents with line level format':
         initial:  ['<div>0123</div>']
-        expected: Quill.Delta.makeDelta({ startLength: 0, ops: [
-          { value: '0123\n' }
-        ]})
+        expected: new Quill.Delta().insert('0123\n')
         index: 1, length: 2, name: 'align', value: 'right'
 
     _.each(tests, (test, name) ->
@@ -137,14 +123,15 @@ describe('Editor', ->
         @editor._insertAt(0, 'A\n', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<div><b>A</b></div>', true)
-        expect(@editor.doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, 'A\n', { bold: true }))
+
+        expect(@editor.doc.toDelta()).toEqualDelta(new Quill.Delta().insert('A\n', { bold: true }))
       )
 
       it('multiple formatted newlines', ->
         @editor._insertAt(0, 'A\nB\n', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<div><b>A</b></div><div><b>B</b></div>', true)
-        expect(@editor.doc.toDelta()).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, 'A\nB\n', { bold: true }))
+        expect(@editor.doc.toDelta()).toEqualDelta(new Quill.Delta().insert('A\nB\n', { bold: true }))
       )
     )
 
@@ -198,14 +185,7 @@ describe('Editor', ->
         @editor._insertAt(2, '\n', { bold: true })
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<div>A</div><div><br></div>', true)
-        expect(@editor.doc.toDelta()).toEqualDelta(Quill.Delta.makeDelta({
-          startLength: 0
-          endLength: 3
-          ops: [
-            { value: 'A\n' }
-            { value: '\n', attributes: { bold: true } }
-          ]
-        }))
+        expect(@editor.doc.toDelta()).toEqualDelta(new Quill.Delta().insert('A\n').insert('\n', { bold: true }))
       )
 
       it('insert after image', ->
@@ -228,24 +208,18 @@ describe('Editor', ->
     tests =
       'insert formatted':
         initial: '<div>0123</div>'
-        delta: Quill.Delta.makeInsertDelta(5, 2, '|', { bold: true })
+        delta: new Quill.Delta().retain(2).insert('|', { bold: true })
         expected: '<div>01<b>|</b>23</div>'
       'multiple formats':
         initial: '<div>0123</div>'
-        delta: Quill.Delta.makeRetainDelta(5, 1, 2, { bold: true, italic: true })
+        delta: new Quill.Delta().retain(1).retain(2, { bold: true, italic: true })
         expected: '<div>0<b><i>12</i></b>3</div>'
       'multiple instructions':
         initial: '
           <div>0123</div>
           <div>5678</div>
           <div>abcd</div>'
-        delta: Quill.Delta.makeDelta({ startLength: 15, endLength: 17, ops: [
-          { start: 0, end: 4 }
-          { start: 5, end: 7 }
-          { value: '|\n|' }
-          { start: 7, end: 14 }
-          { start: 14, end: 15, attributes: { align: 'right' } }
-        ]})
+        delta: new Quill.Delta().retain(4).delete(1).retain(3).insert('|\n|').retain(7).retain(1, { align: 'right' })
         expected: '
           <div>012356|</div>
           <div>|78</div>
@@ -263,7 +237,7 @@ describe('Editor', ->
     it('local change', ->
       @editor.doc.setHTML('<div>0123</div>')
       @editor.checkUpdate()
-      delta = Quill.Delta.makeInsertDelta(5, 4, '|')
+      delta = new Quill.Delta().retain(4).insert('|')
       @editor.root.querySelector('div').innerHTML = '01a23'
       @editor.applyDelta(delta)
       expected = '<div>01a23|</div>'

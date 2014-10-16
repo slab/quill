@@ -32,7 +32,7 @@ beforeEach( ->
     toEqualDelta: ->
       return {
         compare: (actual, expected) ->
-          pass = actual.isEqual(expected)
+          pass = _.isEqual(actual, expected)
           if pass
             message = 'Deltas equal'
           else

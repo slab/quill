@@ -125,10 +125,13 @@ class Document
 
   toDelta: ->
     lines = @lines.toArray()
-    ops = _.flatten(_.map(lines, (line) ->
-      return _.clone(line.delta.ops)
-    ), true)
-    return new Delta(ops)
+    delta = new Delta()
+    lines.forEach((line) ->
+      line.delta.ops.forEach((op) ->
+        delta.push(op)
+      )
+    )
+    return delta
 
 
 module.exports = Document

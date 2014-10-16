@@ -22,28 +22,28 @@ describe('Toolbar', ->
       range = new Quill.Lib.Range(2, 4)
       @quill.setSelection(range)
       dom(@button).trigger('click')
-      expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23', { bold: true }))
+      expect(@quill.getContents(range)).toEqualDelta(new Quill.Delta().insert('23', { bold: true }))
     )
 
     it('button remove', ->
       range = new Quill.Lib.Range(0, 2)
       @quill.setSelection(range)
       dom(@button).trigger('click')
-      expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '01'))
+      expect(@quill.getContents(range)).toEqualDelta(new Quill.Delta().insert('01'))
     )
 
     it('dropdown add', ->
       range = new Quill.Lib.Range(2, 4)
       @quill.setSelection(range)
       dom(@select).option('18px')
-      expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '23', { size: '18px' }))
+      expect(@quill.getContents(range)).toEqualDelta(new Quill.Delta().insert('23', { size: '18px' }))
     )
 
     it('dropdown remove', ->
       range = new Quill.Lib.Range(6, 8)
       @quill.setSelection(range)
       dom(@select).reset()
-      expect(@quill.getContents(range)).toEqualDelta(Quill.Delta.makeInsertDelta(0, 0, '67'))
+      expect(@quill.getContents(range)).toEqualDelta(new Quill.Delta().insert('67'))
     )
   )
 
