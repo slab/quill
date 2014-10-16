@@ -26,9 +26,8 @@ class Editor
   applyDelta: (delta, source) ->
     localDelta = this._update()
     if localDelta
-      tempDelta = localDelta.slice()
-      localDelta.transform(delta, true)
-      delta.transform(tempDelta, false)
+      delta = localDelta.transform(delta, true)
+      localDelta = delta.transform(localDelta, false)
     if delta.ops.length > 0
       delta = this._trackDelta( =>
         index = 0
@@ -37,7 +36,8 @@ class Editor
             this._insertAt(index, op.insert, op.attributes)
             index += op.insert.length;
           else if _.isNumber(op.insert)
-            this._insertAt(index, '!', op.attributes)
+            # TODO embed needs native insert
+            this._insertAt(index, dom.EMBED_TEXT, op.attributes)
             index += 1;
           else if _.isNumber(op.delete)
             this._deleteAt(index, op.delete)

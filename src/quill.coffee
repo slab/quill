@@ -128,8 +128,6 @@ class Quill extends EventEmitter2
     if _.isObject(start)
       end = start.end
       start = start.start
-    else
-      end = this.getLength() unless end?
     return @editor.getDelta().slice(start, end)
 
   getHTML: ->
@@ -146,7 +144,9 @@ class Quill extends EventEmitter2
     return @editor.selection.getRange()
 
   getText: (start = 0, end = null) ->
-    return _.pluck(this.getContents(start, end).ops, 'value').join('')
+    return _.map(this.getContents(start, end).ops, (op) ->
+      return if _.isString(op.insert) then op.insert else ''
+    ).join('')
 
   insertEmbed: (index, type, url, source) ->
     this.insertText(index, dom.EMBED_TEXT, type, url, source)
@@ -175,11 +175,8 @@ class Quill extends EventEmitter2
 
   setContents: (delta, source = Quill.sources.API) ->
     if _.isArray(delta)
-      delta =
-        startLength: this.getLength()
-        ops: delta
-    else
-      delta.startLength = this.getLength()
+      delta = { ops: delta }
+    delta.ops.unshift({ delete: this.getLength() })
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->

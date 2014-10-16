@@ -31,7 +31,7 @@ class Keyboard
     else
       delta = @quill.getContents(range)
     value = delta.ops.length == 0 or !_.all(delta.ops, (op) ->
-      return op.attributes[format]
+      return op.attributes?[format]
     )
     if range.isCollapsed()
       @quill.prepareFormat(format, value)

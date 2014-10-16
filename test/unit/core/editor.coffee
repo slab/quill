@@ -219,7 +219,7 @@ describe('Editor', ->
           <div>0123</div>
           <div>5678</div>
           <div>abcd</div>'
-        delta: new Quill.Delta().retain(4).delete(1).retain(3).insert('|\n|').retain(7).retain(1, { align: 'right' })
+        delta: new Quill.Delta().retain(4).delete(1).retain(2).insert('|\n|').retain(7).retain(1, { align: 'right' })
         expected: '
           <div>012356|</div>
           <div>|78</div>
