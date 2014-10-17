@@ -117,8 +117,9 @@ Normalizer =
     html = html.replace(/^\s+/, '').replace(/\s+$/, '')
     # Replace all newline characters
     html = html.replace(/(\r?\n|\r)+/g, ' ')
-    # Remove whitespace between tags, requires &nbsp; for legitmate spaces
-    html = html.replace(/\>\s+\</g, '><')
+    # Remove whitespace between block level tags, 
+    # requires &nbsp; for legitmate spaces
+    html = html.replace(/\>\s+\<(?!\/?\s*(?:b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bd|br|img|map|object|q|script|span|sub|sub|sup|button|input|label|select|textarea))/g, '><')
     return html
 
   whitelistStyles: (node) ->
