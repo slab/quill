@@ -160,7 +160,11 @@ class Line extends LinkedList.Node
     @delta = new Delta()
     @leaves.toArray().forEach((leaf) =>
       @length += leaf.length
-      @delta.insert(leaf.text, leaf.formats)
+      # TODO use constant for embed type
+      if dom.EMBED_TAGS[leaf.node.tagName]?
+        @delta.insert(1, leaf.formats)
+      else
+        @delta.insert(leaf.text, leaf.formats)
     )
     @delta.insert('\n', @formats)
 
