@@ -22,7 +22,9 @@ class PasteManager
     return unless range?
     @container.innerHTML = ""
     iframe = dom(@quill.root).window()
-    scrollY = iframe.scrollY
+    iframeScrollY = iframe.scrollY
+    windowScrollX = window.scrollX
+    windowScrollY = window.scrollY
     @container.focus()
     _.defer( =>
       doc = new Document(@container, @quill.options)
@@ -36,9 +38,10 @@ class PasteManager
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
       [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
       lineBottom = line.node.offsetTop + line.node.offsetHeight
-      if lineBottom > scrollY + @quill.root.offsetHeight
-        scrollY = line.node.offsetTop - @quill.root.offsetHeight / 2
-      iframe.scrollTo(0, scrollY)
+      if lineBottom > iframeScrollY + @quill.root.offsetHeight
+        iframeScrollY = line.node.offsetTop - @quill.root.offsetHeight / 2
+      iframe.scrollTo(0, iframeScrollY)
+      window.scrollTo(windowScrollX, windowScrollY)
     )
 
 
