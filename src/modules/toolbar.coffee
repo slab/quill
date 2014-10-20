@@ -71,12 +71,13 @@ class Toolbar
     if input.tagName == 'SELECT'
       @triggering = true
       selectValue = $input.value(input)
-      value = '' if _.isArray(value)
+      value = $input.default()?.value unless value?
+      value = ' ' if _.isArray(value)
       if value != selectValue
         if value?
-          $input.option(value)
+          $input.option(value, false)
         else
-          $input.reset()
+          $input.reset(false)
       @triggering = false
     else
       $input.toggleClass('ql-active', value or false)
