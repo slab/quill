@@ -32,11 +32,7 @@ class Quill extends EventEmitter2
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
-  @sources:
-    API    : 'api'
-    SILENT : 'silent'
-    USER   : 'user'
-
+  @sources: Editor.sources
 
   @registerModule: (name, module) ->
     console.warn("Overwriting #{name} module") if Quill.modules[name]?

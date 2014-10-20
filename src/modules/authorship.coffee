@@ -30,7 +30,7 @@ class Authorship
           else
             authorDelta.retain(op.retain)
         )
-        @quill.updateContents(authorDelta, 'silent')
+        @quill.updateContents(authorDelta, Quill.sources.SILENT)
     )
     this.addAuthor(@options.authorId, @options.color)
 

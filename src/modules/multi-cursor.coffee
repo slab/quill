@@ -145,7 +145,7 @@ class MultiCursor extends EventEmitter2
     this._moveCursor(cursor, guide)
     dom(guide).remove()
     dom(leaf.node.parentNode).normalize() if didSplit
-    @quill.editor.selection.update('silent')
+    @quill.editor.selection.update(Quill.sources.SILENT)
 
 
 Quill.registerModule('multi-cursor', MultiCursor)

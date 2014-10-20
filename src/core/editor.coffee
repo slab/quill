@@ -7,6 +7,11 @@ Selection  = require('./selection')
 
 
 class Editor
+  @sources:
+    API    : 'api'
+    SILENT : 'silent'
+    USER   : 'user'
+
   constructor: (@iframeContainer, @quill, @options = {}) ->
     @renderer = new Renderer(@iframeContainer, @options)
     dom(@iframeContainer).on('focus', this.focus.bind(this))
@@ -51,9 +56,9 @@ class Editor
       )
       @delta = @doc.toDelta()
       @innerHTML = @root.innerHTML
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != 'silent'
-    if localDelta and localDelta.ops.length > 0 and source != 'silent'
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, 'user')
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != Editor.sources.SILENT
+    if localDelta and localDelta.ops.length > 0 and source != Editor.sources.SILENT
+      @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, Editor.sources.USER)
 
   checkUpdate: (source = 'user') ->
     return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
@@ -61,7 +66,7 @@ class Editor
     if delta
       @delta.compose(delta)
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
-    source = 'silent' if delta
+    source = Editor.sources.SILENT if delta
     @selection.update(source)
 
   focus: ->
