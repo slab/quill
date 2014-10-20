@@ -59,14 +59,14 @@ In both cases of text and embeds, an optional `attributes` key can be defined wi
 { insert: "Text", attributes: { bold: true } }
 
 // Insert a link
-{ insert: "Google", attributes: { href: 'https://www.google.com' } }
+{ insert: "Google", attributes: { link: 'https://www.google.com' } }
 
 // Insert an image
 {
   insert: 1,
   attributes: {
     alt: "Lab Octocat",
-    src: 'https://octodex.github.com/images/labtocat.png'
+    image: 'https://octodex.github.com/images/labtocat.png'
   }
 }
 

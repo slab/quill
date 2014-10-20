@@ -45,7 +45,7 @@ A side effect of having explicit deletes and defaulting to keeping text is that 
 
 ### Embed Support
 
-The new Delta format provides native support for embeds, which can be used to represent images, video, etc. There is no support for this in the current format and implementation is hackily achieved by representing an ‘!’ with a src key in the attributes (which will break when video support is added).
+The new Delta format provides native support for embeds, which can be used to represent images, video, etc. There is no support for this in the current format and implementation is hackily achieved by representing an ‘!’ with a image key in the attributes (which will break when video support is added).
 
 {% highlight javascript %}
 var oldFormat = {
@@ -53,13 +53,13 @@ var oldFormat = {
   endLength: 1,
   ops: [{
     text: '!',
-    attributes: { src: 'https://octodex.github.com/images/labtocat.png' }
+    attributes: { image: 'https://octodex.github.com/images/labtocat.png' }
   }]
 };
 
 var newFormat = {
   ops: [{
-    insert: 1, attributes: { src: 'https://octodex.github.com/images/labtocat.png' }
+    insert: 1, attributes: { image: 'https://octodex.github.com/images/labtocat.png' }
   }]
 };
 {% endhighlight %}
