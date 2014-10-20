@@ -94,6 +94,7 @@ class UndoManager
       @emittedDelta = null
       index = this._getLastChangeIndex(change[source])
       @quill.setSelection(index, index)
+      @oldDelta = @quill.getContents()
       @stack[dest].push(change)
 
 
