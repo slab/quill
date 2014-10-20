@@ -4,12 +4,14 @@ permalink: /blog/upgrading-to-rich-text-deltas/
 title: Upgrading to Rich Text Deltas
 ---
 
-The new rich text type is now being used in Quill and will be the way documents and changes are represented going forward. If you happened to be using and storing the old format (despite the warning on the Delta page), here's a short guide on how to upgrade.
+The new rich text type is now live and being used in Quill v0.18.0. It is a big step towards 1.0 and will be the way documents and changes are represented going forward. In most cases this update is non-disruptive and an upgrade can be a simple increment of the version number[^1].
 
-The main relevant differences are:
+However, if you happened to be storing the old Delta format, here's a short guide on how to migrate.
 
-1. Explicit deletes - Thus we need to go through the old Delta, find the implied deletes and insert explicit delete operations into the new Delta
-2. Support for embeds - If we see the hacky representation of embeds, and use the new Delta's representation
+The main relevant differences between the old and new Deltas are:
+
+1. Explicit deletes - We need to go through the old Delta, find the implied deletes and insert explicit delete operations into the new Delta
+2. Support for embeds - If we see the hacky representation of embeds, replace with the new representation
 
 <!-- more -->
 
@@ -25,6 +27,7 @@ oldDelta.ops.forEach(function (op) {
     if (op.value === '!' && op.attributes && _.isString(op.attributes.src)) {
       // Found the old hacky representation for an embed
       // Quill only supports images so far so we can be confident this is an image
+      // which is represented by 1
       newDelta.insert(1, op.attributes);
     } else {
       newDelta.insert(op.value, op.attributes);
@@ -88,3 +91,6 @@ function retainOp(opsArr, length, formats) {
 {% endhighlight %}
 
 There are some optimizations performed by rich-text such as excluding no-ops (delete 0 characters) and merging two adjacent operations of the same type (insert 'A' followed by insert 'B' is merged to be a single insert 'AB' operation). But you should not have to worry about these cases since the old Delta format had similar optimizations.
+
+
+[^1]: All it took to upgrade the examples on quilljs.com was: [2580c2](https://github.com/quilljs/quill/commit/2580c2a5d440622d226fbef407df7a5a5e9dcf61)
