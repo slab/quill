@@ -122,9 +122,9 @@ class Wrapper
     return this
 
   on: (eventName, listener) ->
-    @node.addEventListener(eventName, (event) ->
+    @node.addEventListener(eventName, (event) =>
       arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
-      propagate = listener(arg)
+      propagate = listener.call(@node, arg) # Native addEventListener binds this to event target
       unless propagate
         event.preventDefault()
         event.stopPropagation()
