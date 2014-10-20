@@ -108,11 +108,8 @@ class Selection
         else
           return [node, dom(node).length()]
 
-  _getNativeSelection: ->
-    return if @document.getSelection? then @document.getSelection() else null
-
   _getNativeRange: ->
-    selection = this._getNativeSelection()
+    selection = @document.getSelection()
     if selection?.rangeCount > 0
       range = selection.getRangeAt(0)
       if dom(range.startContainer).isAncestor(@doc.root, true)
@@ -143,7 +140,7 @@ class Selection
     return lineOffset + leafOffset + offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
-    selection = this._getNativeSelection()
+    selection = @document.getSelection()
     return unless selection
     if startNode?
       # Some reason need to focus before removing ranges otherwise cannot set them
