@@ -108,7 +108,7 @@ Normalizer =
       curNode = curNode.nextSibling
     return lineNode
 
-  removeBlockWhitespace = (html)->
+  removeBlockWhitespace: (html)->
     # Remove whitespace between block level tags, 
     # requires &nbsp; for legitimate spaces
 
