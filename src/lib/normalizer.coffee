@@ -108,10 +108,24 @@ Normalizer =
       curNode = curNode.nextSibling
     return lineNode
 
-  removeBlockWhitespace: (html) ->
+  removeBlockWhitespace = (html)->
     # Remove whitespace between block level tags, 
     # requires &nbsp; for legitimate spaces
-    return html.replace(/\>\s+\<(?!\/?\s*(?:b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bd|br|img|map|object|q|script|span|sub|sub|sup|button|input|label|select|textarea))/gi, '><')
+
+    # remove space before any opening block tag
+    tags = 'address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|noscript|ol|output|p|pre|section|table|tfoot|ul|video'
+    rgx = new RegExp('\\s+\\<(?=\\s*(?:'+tags+')\\b)', 'gi')
+    html = html.replace( rgx, '<')
+    
+    # remove space after any closing block tag
+    # using reversal to simulate lookbehind in regexp
+    html = html.split('').reverse().join('')
+    tags = tags.split('').reverse().join('')
+    rgx = new RegExp('\\s+\\>(?=\\s*(?:'+tags+')\\s*\\/)', 'gi')
+    html = html.replace( rgx, '>')
+    html = html.split('').reverse().join('')
+
+    return html
 
   replaceNewLines: (html) ->
     # Replace all newline characters
