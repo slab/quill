@@ -307,7 +307,12 @@ class SelectWrapper extends Wrapper
   option: (option, trigger = true) ->
     value = if _.isElement(option) then option.value else option
     if value
-      @node.value = value
+      value = value.replace(/[^\w]+/g, '')
+      for child,i in @node.children
+        console.log(child,i,child.value.replace(/[^\w]+/g, ''),value)
+        if child.value.replace(/[^\w]+/g, '') == value
+          @node.selectedIndex = i
+          break
     else
       @node.selectedIndex = -1  # PhantomJS
     this.trigger('change') if trigger
