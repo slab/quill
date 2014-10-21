@@ -145,7 +145,7 @@ Normalizer =
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
     html = html.replace(/\>\s+\</g, '><')
     return html
- 
+
   whitelistStyles: (node) ->
     original = dom(node).styles()
     styles = _.omit(original, (value, key) ->
