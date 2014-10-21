@@ -109,20 +109,20 @@ Normalizer =
     return lineNode
 
   removeBlockWhitespace: (html)->
-    # Remove whitespace between block level tags, 
+    # Remove whitespace adjacent to block level tags, 
     # requires &nbsp; for legitimate spaces
 
-    # remove space before any opening block tag
+    # remove space preceding any block tag
     tags = 'address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|li|noscript|ol|output|p|pre|section|table|tfoot|ul|video'
-    rgx = new RegExp('\\s+\\<(?=\\s*(?:'+tags+')\\b)', 'gi')
-    html = html.replace( rgx, '<')
+    rgx = new RegExp('>\\s+\\<(?=\\/?\\s*(?:'+tags+')\\b)', 'gi')
+    html = html.replace( rgx, '><')
     
-    # remove space after any closing block tag
+    # remove space following any block tag
     # using reversal to simulate lookbehind in regexp
     html = html.split('').reverse().join('')
     tags = tags.split('').reverse().join('')
-    rgx = new RegExp('\\s+\\>(?=\\s*(?:'+tags+')\\s*\\/)', 'gi')
-    html = html.replace( rgx, '>')
+    rgx = new RegExp('<\\s+\\>(?=(?:[^<]*\\s)?(?:'+tags+')\\s*\\/?<)', 'gi')
+    html = html.replace( rgx, '<>')
     html = html.split('').reverse().join('')
 
     return html
