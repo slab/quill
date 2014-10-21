@@ -44,11 +44,9 @@ class Keyboard
     toolbar.setActive(format, value) if toolbar?
 
   _initDeletes: ->
-    _.each([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (key) =>
-      this.addHotkey(key, =>
-        # Prevent deleting if editor is already blank (or just empty newline)
-        return @quill.getLength() > 1
-      )
+    this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], =>
+      # Prevent deleting if editor is already blank (or just empty newline)
+      return @quill.getLength() > 1
     )
 
   _initHotkeys: ->
