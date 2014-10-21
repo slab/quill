@@ -108,20 +108,30 @@ Normalizer =
       curNode = curNode.nextSibling
     return lineNode
 
+  removeBlockWhitespace: (html) ->
+    # Remove whitespace between block level tags, 
+    # requires &nbsp; for legitimate spaces
+    return html.replace(/\>\s+\<(?!\/?\s*(?:b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bd|br|img|map|object|q|script|span|sub|sub|sup|button|input|label|select|textarea))/gi, '><')
+
+  replaceNewLines: (html) ->
+    # Replace all newline characters
+    return html.replace(/(\r?\n|\r)+/g, ' ') 
+
+  strip: (html) ->
+    # Remove leading and tailing whitespace
+    # like default of python str.strip
+    return html.replace(/^\s+/, '').replace(/\s+$/, '')
+
   stripComments: (html) ->
     return html.replace(/<!--[\s\S]*?-->/g, '')
 
   stripWhitespace: (html) ->
-    # Remove leading and tailing whitespace
-    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
-    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
-    # Replace all newline characters
-    html = html.replace(/(\r?\n|\r)+/g, ' ')
-    # Remove whitespace between block level tags, 
-    # requires &nbsp; for legitmate spaces
-    html = html.replace(/\>\s+\<(?!\/?\s*(?:b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bd|br|img|map|object|q|script|span|sub|sub|sup|button|input|label|select|textarea))/g, '><')
+    html = Normalizer.strip(html)
+    html = Normalizer.replaceNewLines(html)
+    # Remove whitespace between tags, requires &nbsp; for legitmate spaces
+    html = html.replace(/\>\s+\</g, '><')
     return html
-
+ 
   whitelistStyles: (node) ->
     original = dom(node).styles()
     styles = _.omit(original, (value, key) ->

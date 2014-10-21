@@ -107,7 +107,9 @@ class Document
 
   setHTML: (html) ->
     html = Normalizer.stripComments(html)
-    html = Normalizer.stripWhitespace(html)
+    html = Normalizer.strip(html)
+    html = Normalizer.replaceNewLines(html)
+    html = Normalizer.removeBlockWhitespace(html)
     @root.innerHTML = html
     @lines = new LinkedList()
     @lineMap = {}
