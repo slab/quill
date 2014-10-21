@@ -309,7 +309,6 @@ class SelectWrapper extends Wrapper
     if value
       value = value.replace(/[^\w]+/g, '')
       for child,i in @node.children
-        console.log(child,i,child.value.replace(/[^\w]+/g, ''),value)
         if child.value.replace(/[^\w]+/g, '') == value
           @node.selectedIndex = i
           break

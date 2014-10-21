@@ -79,7 +79,7 @@ class Toolbar
       @triggering = true
       selectValue = $input.value(input)
       value = $input.default()?.value unless value?
-      value = ' ' if _.isArray(value)
+      value = '' if _.isArray(value)  # Must be a defined falsy value
       if value != selectValue
         if value?
           $input.option(value, false)
