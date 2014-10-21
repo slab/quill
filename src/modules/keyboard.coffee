@@ -18,12 +18,15 @@ class Keyboard
     this._initHotkeys()
     this._initDeletes()
 
-  addHotkey: (hotkey, callback) ->
-    hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
-    hotkey.callback = callback
-    which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.toUpperCase().charCodeAt(0)
-    @hotkeys[which] ?= []
-    @hotkeys[which].push(hotkey)
+  addHotkey: (hotkeys, callback) ->
+    hotkeys = [hotkeys] unless _.isArray(hotkeys)
+    _.each(hotkeys, (hotkey) =>
+      hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
+      hotkey.callback = callback
+      which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.toUpperCase().charCodeAt(0)
+      @hotkeys[which] ?= []
+      @hotkeys[which].push(hotkey)
+    )
 
   toggleFormat: (range, format) ->
     if range.isCollapsed()
@@ -73,6 +76,7 @@ class Keyboard
         return if !!hotkey.shiftKey != !!event.shiftKey
         return if !!hotkey.altKey != !!event.altKey
         prevent = hotkey.callback(@quill.getSelection()) == false or prevent
+        return true
       )
       return !prevent
     )
