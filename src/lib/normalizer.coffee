@@ -113,7 +113,7 @@ Normalizer =
     # requires &nbsp; for legitimate spaces
 
     # remove space before any opening block tag
-    tags = 'address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|noscript|ol|output|p|pre|section|table|tfoot|ul|video'
+    tags = 'address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|li|noscript|ol|output|p|pre|section|table|tfoot|ul|video'
     rgx = new RegExp('\\s+\\<(?=\\s*(?:'+tags+')\\b)', 'gi')
     html = html.replace( rgx, '<')
     
