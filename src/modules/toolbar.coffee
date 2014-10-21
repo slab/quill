@@ -30,7 +30,7 @@ class Toolbar
         else
           @quill.formatText(range, format, value, 'user')
         _.defer( =>
-          this.updateActive(range)  # Clear exclusive formats
+          this.updateActive(range, ['bullet', 'list'])  # Clear exclusive formats
           this.setActive(format, value)
         )
       )
@@ -82,11 +82,12 @@ class Toolbar
     else
       $input.toggleClass('ql-active', value or false)
 
-  updateActive: (range) ->
+  updateActive: (range, formats = null) ->
     return unless range? and !@preventUpdate
     activeFormats = this._getActive(range)
     _.each(@inputs, (input, format) =>
-      this.setActive(format, activeFormats[format])
+      if !_.isArray(formats) or formats.indexOf(format) > -1
+        this.setActive(format, activeFormats[format])
       return true
     )
 
