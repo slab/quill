@@ -35,7 +35,14 @@ class Toolbar
         )
       )
     )
-    @quill.on(@quill.constructor.events.SELECTION_CHANGE, _.bind(this.updateActive, this))
+    @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
+      this.updateActive(range) if range?
+    )
+    @quill.onModuleLoad('keyboard', (keyboard) =>
+      keyboard.addHotkey([dom.KEYS.BACKSPACE, dom.KEYS.DELETE, dom.KEYS.ENTER], =>
+        _.defer(_.bind(this.updateActive, this))
+      )
+    )
     dom(@container).addClass('ql-toolbar-container')
     dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
     if dom.isIE(11)
@@ -83,6 +90,7 @@ class Toolbar
       $input.toggleClass('ql-active', value or false)
 
   updateActive: (range, formats = null) ->
+    range or= @quill.getSelection()
     return unless range? and !@preventUpdate
     activeFormats = this._getActive(range)
     _.each(@inputs, (input, format) =>
