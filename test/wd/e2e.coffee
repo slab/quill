@@ -45,23 +45,39 @@ describe('Editing text', ->
   )
 
   it('enter', ->
+    editor.sendKeys(protractor.Key.RETURN)
+    expectedDelta = { ops: [{ retain: 10 }, { insert: '\n' }] }
+    browser.switchTo().defaultContent()
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.switchTo().frame('quill-1')
+
+    editor.sendKeys(protractor.Key.RETURN)
+    expectedDelta = { ops: [{ retain: 11 }, { insert: '\n' }] }
+    browser.switchTo().defaultContent()
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.switchTo().frame('quill-1')
+
     text = 'Chapter 1. Loomings.'
-    editor.sendKeys(protractor.Key.RETURN, protractor.Key.RETURN, text, protractor.Key.RETURN)
-    updateEditor()
+    editor.sendKeys(text)
+    updateEditor(false)
+    # The previous newline inserts was assumed to be appended since the insertion character matches
+    # the last character of the document. There is no such ambiguity here so the number of retains
+    # is the same as the last delta
+    expectedDelta = { ops: [{ retain: 11 }, { insert: "#{text}" }] }
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.switchTo().frame('quill-1')
+
+    editor.sendKeys(protractor.Key.RETURN)
+    expectedDelta = { ops: [{ retain: 32 }, { insert: '\n' }] }
+    browser.switchTo().defaultContent()
+    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.switchTo().frame('quill-1')
     expect(editor.getInnerHtml().then(cleanLines)).toEqual([
       '<div>The Whale</div>'
       '<div><br></div>'
       "<div>#{text}</div>"
       '<div><br></div>'
     ].join(''))
-    browser.switchTo().defaultContent()
-    expectedDelta = {
-      ops: [
-        { retain: 10 }
-        { insert: "\n#{text}\n\n" }
-      ]
-    }
-    expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
   )
 
   it('tab', ->
