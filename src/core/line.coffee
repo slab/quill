@@ -158,7 +158,7 @@ class Line extends LinkedList.Node
     @outerHTML = @node.outerHTML
     @length = 1
     @delta = new Delta()
-    @leaves.toArray().forEach((leaf) =>
+    _.each(@leaves.toArray(), (leaf) =>
       @length += leaf.length
       # TODO use constant for embed type
       if dom.EMBED_TAGS[leaf.node.tagName]?
