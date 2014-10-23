@@ -32,6 +32,29 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
+
+## Downloading Quill
+
+There are a number of ways to the latest or versioned copy of Quill.
+
+- npm: `npm install quilljs`
+- bower: `bower install quill`
+- tar: https://github.com/quilljs/quill/releases
+
+### CDN
+
+```html
+<link rel="stylesheet" href="//cdn.quilljs.com/0.16.0/quill.snow.css" />
+<script src="//cdn.quilljs.com/0.16.0/quill.min.js"></script>
+```
+
+You can also use “latest” as the version:
+
+```html
+<script src="//cdn.quilljs.com/latest/quill.min.js"></script>
+```
+
+
 ## Local Development
 
 Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Browserify](http://browserify.org/) to organize its files.
