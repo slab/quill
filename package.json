@@ -12,7 +12,7 @@
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",
-    "rich-text": "~1.0.2"
+    "rich-text": "~1.0.3"
   },
   "devDependencies": {
     "aliasify": "~1.4.0",
