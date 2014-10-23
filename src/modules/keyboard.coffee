@@ -19,7 +19,7 @@ class Keyboard
     this._initDeletes()
 
   addHotkey: (hotkeys, callback) ->
-    hotkeys = [hotkeys] unless _.isArray(hotkeys)
+    hotkeys = [hotkeys] unless Array.isArray(hotkeys)
     _.each(hotkeys, (hotkey) =>
       hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
       hotkey.callback = callback

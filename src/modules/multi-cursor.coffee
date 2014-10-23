@@ -43,7 +43,7 @@ class MultiCursor extends EventEmitter2
     @quill.on(@quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this))
 
   clearCursors: ->
-    _.each(_.keys(@cursors), _.bind(this.removeCursor, this))
+    _.each(Object.keys(@cursors), _.bind(this.removeCursor, this))
     @cursors = {}
 
   moveCursor: (userId, index) ->

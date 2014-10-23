@@ -57,7 +57,7 @@ class Wrapper
     if @node.classList?
       return @node.classList.contains(cssClass)
     else if @node.className?
-      return _.indexOf(this.classes(), cssClass) > -1
+      return this.classes().indexOf(cssClass) > -1
     return false
 
   isAncestor: (ancestor, inclusive = false) ->
@@ -78,7 +78,7 @@ class Wrapper
     return 0 unless @node?
     length = this.text().length
     if this.isElement()
-      length += @node.querySelectorAll(_.keys(dom.EMBED_TAGS).join(',')).length
+      length += @node.querySelectorAll(Object.keys(dom.EMBED_TAGS).join(',')).length
     return length
 
   merge: (node) ->
@@ -143,7 +143,7 @@ class Wrapper
       return @node.classList.remove(cssClass)
     else if @node.className?
       classArray = this.classes()
-      classArray.splice(_.indexOf(classArray, cssClass), 1)
+      classArray.splice(classArray.indexOf(cssClass), 1)
       @node.className = classArray.join(' ')
     return this
 
@@ -252,7 +252,7 @@ class Wrapper
     return this
 
   trigger: (eventName, options = {}) =>
-    if _.indexOf(['keypress', 'keydown', 'keyup'], eventName) < 0
+    if ['keypress', 'keydown', 'keyup'].indexOf(eventName) < 0
       event = @node.ownerDocument.createEvent('Event')
       event.initEvent(eventName, options.bubbles, options.cancelable)
     else
@@ -437,10 +437,10 @@ dom = _.extend(dom,
 
   convertFontSize: (size) ->
     if _.isString(size) and size.indexOf('px') > -1
-      sources = _.keys(dom.FONT_SIZES)
+      sources = Object.keys(dom.FONT_SIZES)
       targets = _.values(dom.FONT_SIZES)
     else
-      targets = _.keys(dom.FONT_SIZES)
+      targets = Object.keys(dom.FONT_SIZES)
       sources = _.values(dom.FONT_SIZES)
     for i,s of sources
       return targets[i] if parseInt(size) <= parseInt(s)

@@ -44,7 +44,7 @@ beforeEach( ->
       return {
         compare: (actual, expected, ignoreClassId) ->
           [div1, div2] = _.map([actual, expected], (html) ->
-            html = html.join('') if _.isArray(html)
+            html = html.join('') if Array.isArray(html)
             html = html.innerHTML if _.isElement(html)
             div = document.createElement('div')
             div.innerHTML = Quill.Lib.Normalizer.stripWhitespace(html)

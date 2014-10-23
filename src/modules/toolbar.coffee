@@ -79,7 +79,7 @@ class Toolbar
       @triggering = true
       selectValue = $input.value(input)
       value = $input.default()?.value unless value?
-      value = '' if _.isArray(value)  # Must be a defined falsy value
+      value = '' if Array.isArray(value)  # Must be a defined falsy value
       if value != selectValue
         if value?
           $input.option(value, false)
@@ -94,7 +94,7 @@ class Toolbar
     return unless range? and !@preventUpdate
     activeFormats = this._getActive(range)
     _.each(@inputs, (input, format) =>
-      if !_.isArray(formats) or formats.indexOf(format) > -1
+      if !Array.isArray(formats) or formats.indexOf(format) > -1
         this.setActive(format, activeFormats[format])
       return true
     )
@@ -128,22 +128,22 @@ class Toolbar
 
   _intersectFormats: (formatsArr) ->
     return _.reduce(formatsArr.slice(1), (activeFormats, formats) ->
-      activeKeys = _.keys(activeFormats)
-      formatKeys = _.keys(formats)
+      activeKeys = Object.keys(activeFormats)
+      formatKeys = if formats? then Object.keys(formats) else {}
       intersection = _.intersection(activeKeys, formatKeys)
       missing = _.difference(activeKeys, formatKeys)
       added = _.difference(formatKeys, activeKeys)
       _.each(intersection, (name) ->
         if Toolbar.formats.SELECT[name]?
-          if _.isArray(activeFormats[name])
-            activeFormats[name].push(formats[name]) if _.indexOf(activeFormats[name], formats[name]) < 0
+          if Array.isArray(activeFormats[name])
+            activeFormats[name].push(formats[name]) if activeFormats[name].indexOf(formats[name]) < 0
           else if activeFormats[name] != formats[name]
             activeFormats[name] = [activeFormats[name], formats[name]]
       )
       _.each(missing, (name) ->
         if Toolbar.formats.TOGGLE[name]?
           delete activeFormats[name]
-        else if Toolbar.formats.SELECT[name]? and !_.isArray(activeFormats[name])
+        else if Toolbar.formats.SELECT[name]? and !Array.isArray(activeFormats[name])
           activeFormats[name] = [activeFormats[name]]
       )
       _.each(added, (name) ->

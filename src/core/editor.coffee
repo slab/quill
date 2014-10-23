@@ -14,7 +14,7 @@ class Editor
 
   constructor: (@iframeContainer, @quill, @options = {}) ->
     @renderer = new Renderer(@iframeContainer, @options)
-    dom(@iframeContainer).on('focus', this.focus.bind(this))
+    dom(@iframeContainer).on('focus', _.bind(this.focus, this))
     @root = @renderer.root
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()

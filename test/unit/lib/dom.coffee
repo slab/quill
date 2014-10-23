@@ -63,12 +63,12 @@ describe('DOM', ->
     it('get attributes none', ->
       $(@container).html('<div></div>')
       attributes = dom(@container.firstChild).attributes()
-      expect(_.keys(attributes).length).toEqual(0)
+      expect(Object.keys(attributes).length).toEqual(0)
     )
 
     it('get attributes multiple', ->
       attributes = dom(@node).attributes()
-      expect(_.keys(attributes).length).toEqual(2)
+      expect(Object.keys(attributes).length).toEqual(2)
       expect(attributes['class']).toEqual('custom')
       expect(attributes['style'].toLowerCase()).toContain('color: red')
     )
