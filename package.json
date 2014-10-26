@@ -15,7 +15,6 @@
     "rich-text": "~1.0.3"
   },
   "devDependencies": {
-    "aliasify": "~1.4.0",
     "async": "~0.9.0",
     "browserify": "~6.1.0",
     "coffee-script": "~1.8.0",
