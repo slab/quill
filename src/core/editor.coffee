@@ -71,7 +71,7 @@ class Editor
 
   focus: ->
     @selection.setRange(@selection.range) if dom.isIE(11)
-    @renderer.iframe.focus() if dom.isIOS()
+    @renderer.iframe.focus()
     @root.focus()
 
   getDelta: ->

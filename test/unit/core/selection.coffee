@@ -309,7 +309,7 @@ describe('Selection', ->
         expect(savedRange.end).toEqual(3)
         @quill.focus()
         range = @quill.getSelection()
-        expect(range).toBeTruthy()
+        expect(range).not.toEqual(null)
         expect(range.start).toEqual(2)
         expect(range.end).toEqual(3)
         done()
