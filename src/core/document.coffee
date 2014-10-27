@@ -126,8 +126,8 @@ class Document
   toDelta: ->
     lines = @lines.toArray()
     delta = new Delta()
-    lines.forEach((line) ->
-      line.delta.ops.forEach((op) ->
+    _.each(lines, (line) ->
+      _.each(line.delta.ops, (op) ->
         delta.push(op)
       )
     )

@@ -170,7 +170,7 @@ class Quill extends EventEmitter2
       format.prepare(value)
 
   setContents: (delta, source = Quill.sources.API) ->
-    if _.isArray(delta)
+    if Array.isArray(delta)
       delta = { ops: delta }
     delta.ops.unshift({ delete: this.getLength() })
     this.updateContents(delta, source)

@@ -71,7 +71,7 @@ class UndoManager
   _getLastChangeIndex: (delta) ->
     lastIndex = 0
     index = 0
-    delta.ops.forEach((op) ->
+    _.each(delta.ops, (op) ->
       if op.insert?
         lastIndex = Math.max(index + (op.insert.length or 1), lastIndex)
       else if op.delete?

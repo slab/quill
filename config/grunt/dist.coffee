@@ -1,13 +1,11 @@
 module.exports = (grunt) ->
   grunt.config('browserify',
-    options:
-      alias: ['.build/lodash.js:lodash']
-      browserifyOptions:
-        extensions: ['.js', '.coffee']
-      bundleOptions:
-        standalone: 'Quill'
-      transform: ['coffeeify']
     quill:
+      options:
+        browserifyOptions:
+          extensions: ['.js', '.coffee']
+          standalone: 'Quill'
+        transform: ['coffeeify']
       files:
         'dist/quill.js': ['src/index.coffee']
   )
@@ -48,11 +46,11 @@ module.exports = (grunt) ->
     options:
       modifier: 'modern'
       include: [
-        'difference', 'flatten', 'intersection', 'last'
-        'all', 'each', 'indexOf', 'invoke', 'map', 'pluck', 'reduce'
+        'difference', 'intersection', 'last'
+        'all', 'each', 'invoke', 'map', 'reduce'
         'bind', 'defer', 'partial'
-        'clone', 'defaults', 'has', 'keys', 'omit', 'values'
-        'isArray', 'isElement', 'isEqual', 'isNumber', 'isObject', 'isString'
+        'clone', 'extend', 'defaults', 'omit', 'values'
+        'isElement', 'isEqual', 'isNumber', 'isObject', 'isString'
         'uniqueId'
       ]
       flags: ['debug']

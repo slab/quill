@@ -130,8 +130,8 @@ Normalizer =
     styles = _.omit(original, (value, key) ->
       return !Normalizer.STYLES[key]?
     )
-    if _.keys(styles).length < _.keys(original).length
-      if _.keys(styles).length > 0
+    if Object.keys(styles).length < Object.keys(original).length
+      if Object.keys(styles).length > 0
         dom(node).styles(styles, true)
       else
         node.removeAttribute('style')

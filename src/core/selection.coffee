@@ -79,7 +79,7 @@ class Selection
 
   _decodePosition: (node, offset) ->
     if dom(node).isElement()
-      childIndex = _.indexOf(dom(node.parentNode).childNodes(), node)
+      childIndex = dom(node.parentNode).childNodes().indexOf(node)
       offset += childIndex
       node = node.parentNode
     return [node, offset]

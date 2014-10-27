@@ -32,6 +32,29 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
+
+## Downloading Quill
+
+There are a number of ways to the latest or versioned copy of Quill.
+
+- npm: `npm install quilljs`
+- bower: `bower install quill`
+- tar: https://github.com/quilljs/quill/releases
+
+### CDN
+
+```html
+<link rel="stylesheet" href="//cdn.quilljs.com/0.16.0/quill.snow.css" />
+<script src="//cdn.quilljs.com/0.16.0/quill.min.js"></script>
+```
+
+You can also use “latest” as the version:
+
+```html
+<script src="//cdn.quilljs.com/latest/quill.min.js"></script>
+```
+
+
 ## Local Development
 
 Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Browserify](http://browserify.org/) to organize its files.
@@ -96,7 +119,7 @@ We welcome feature requests. Please make sure they are within scope of Quill's g
 
 Pull requests will not be accepted without adhering to the following:
 
-1. Conform to existing coding styles.
+1. Conform to existing [coding styles](doc/style-guide).
 2. New functionality are accompanied by tests.
 3. Serve a single atomic purpose (add one feature or fix one bug)
 4. Introduce only changes that further the PR's singular purpose (ex. do not tweak an unrelated config along with adding your feature).
