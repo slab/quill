@@ -148,7 +148,7 @@ Normalizer =
   # Wrap inline nodes with block tags
   wrapInline: (lineNode) ->
     return lineNode if dom.BLOCK_TAGS[lineNode.tagName]?
-    blockNode = lineNode.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG)
+    blockNode = document.createElement(dom.DEFAULT_BLOCK_TAG)
     lineNode.parentNode.insertBefore(blockNode, lineNode)
     while lineNode? and !dom.BLOCK_TAGS[lineNode.tagName]?
       nextNode = lineNode.nextSibling

@@ -100,7 +100,7 @@ class ImageTooltip extends Tooltip
     if @preview.firstChild.tagName == 'IMG'
       @preview.firstChild.setAttribute('src', @textbox.value)
     else
-      img = @preview.ownerDocument.createElement('img')
+      img = document.createElement('img')
       img.setAttribute('src', @textbox.value)
       @preview.replaceChild(img, @preview.firstChild)
 

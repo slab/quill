@@ -108,7 +108,7 @@ class MultiCursor extends EventEmitter2
     this.update()
 
   _buildCursor: (name, color) ->
-    cursor = @container.ownerDocument.createElement('span')
+    cursor = document.createElement('span')
     dom(cursor).addClass('cursor')
     cursor.innerHTML = @options.template
     cursorFlag = cursor.querySelector('.cursor-flag')
@@ -134,7 +134,7 @@ class MultiCursor extends EventEmitter2
   _updateCursor: (cursor) ->
     @quill.editor.checkUpdate()
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
-    guide = @container.ownerDocument.createElement('span')
+    guide = document.createElement('span')
     if leaf?
       [leftNode, rightNode, didSplit] = dom(leaf.node).split(offset)
       dom(guide).text(dom.ZERO_WIDTH_NOBREAK_SPACE)

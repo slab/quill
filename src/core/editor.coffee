@@ -115,7 +115,7 @@ class Editor
       _.each(lineTexts, (lineText, i) =>
         if !line? or line.length <= offset    # End of document
           if i < lineTexts.length - 1 or lineText.length > 0
-            line = @doc.appendLine(@root.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG))
+            line = @doc.appendLine(document.createElement(dom.DEFAULT_BLOCK_TAG))
             offset = 0
             line.insertText(offset, lineText, formatting)
             line.format(formatting)
