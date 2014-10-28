@@ -38,9 +38,6 @@ class Tooltip
   show: (reference) ->
     @range = @quill.getSelection()
     [left, top] = this._position(reference)
-    [left, top] = this._limit(left, top)
-    left += window.pageXOffset
-    top += window.pageYOffset
     @container.style.left = "#{left}px"
     @container.style.top = "#{top}px"
     @container.focus()
@@ -68,17 +65,21 @@ class Tooltip
     return [left, top]
 
   _position: (reference) ->
+    # Reference might be selection range so must use getBoundingClientRect()
     toolbarRect = @container.getBoundingClientRect()
-    editorRect = this._getBounds()
+    editorRect = @quill.root.getBoundingClientRect()
     if reference?
+      # Place tooltip under reference centered
       referenceBounds = reference.getBoundingClientRect()
       left = referenceBounds.left + referenceBounds.width/2 - toolbarRect.width/2
       top = referenceBounds.top + referenceBounds.height + @options.offset
       if top + toolbarRect.height > editorRect.bottom
         top = referenceBounds.top - toolbarRect.height - @options.offset
+      [left, top] = this._limit(left, top)
     else
-      left = editorRect.left + editorRect.width/2 - toolbarRect.width/2
-      top = editorRect.top + editorRect.height/2 - toolbarRect.height/2
+      # Place tooltip in middle of editor viewport
+      left = @quill.container.offsetWidth/2 - @container.offsetWidth/2
+      top = @quill.container.offsetHeight/2 - @container.offsetHeight/2
     return [left, top]
 
 
