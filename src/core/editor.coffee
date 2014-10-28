@@ -13,7 +13,7 @@ class Editor
 
   constructor: (container, @quill, @options = {}) ->
     @root = document.createElement('div')
-    container.setAttribute('id', @options.id)
+    @root.setAttribute('id', @options.id)
     container.appendChild(@root)
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
