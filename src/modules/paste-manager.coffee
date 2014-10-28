@@ -15,8 +15,6 @@ class PasteManager
     range = @quill.getSelection()
     return unless range?
     @container.innerHTML = ""
-    iframe = dom(@quill.root).window()
-    iframeScrollY = iframe.scrollY
     windowScrollX = window.scrollX
     windowScrollY = window.scrollY
     @container.focus()
@@ -34,7 +32,6 @@ class PasteManager
       lineBottom = line.node.offsetTop + line.node.offsetHeight
       if lineBottom > iframeScrollY + @quill.root.offsetHeight
         iframeScrollY = line.node.offsetTop - @quill.root.offsetHeight / 2
-      iframe.scrollTo(0, iframeScrollY)
       window.scrollTo(windowScrollX, windowScrollY)
     )
 

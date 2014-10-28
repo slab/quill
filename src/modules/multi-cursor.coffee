@@ -101,9 +101,8 @@ class MultiCursor extends EventEmitter2
     return cursor
 
   _moveCursor: (cursor, reference, side = 'left') ->
-    win = dom(reference).window()
     bounds = reference.getBoundingClientRect()
-    cursor.elem.style.top = bounds.top + win.pageYOffset + 'px'
+    cursor.elem.style.top = bounds.top + window.pageYOffset + 'px'
     cursor.elem.style.left = bounds[side] + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')

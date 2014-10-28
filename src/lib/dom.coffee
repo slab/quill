@@ -288,9 +288,6 @@ class Wrapper
     this.remove()
     return ret
 
-  window: ->
-    return window
-
   wrap: (wrapper) ->
     @node.parentNode.insertBefore(wrapper, @node) if @node.parentNode?
     parent = wrapper

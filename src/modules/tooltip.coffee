@@ -40,18 +40,16 @@ class Tooltip
     @range = @quill.getSelection()
     [left, top] = this._position(reference)
     [left, top] = this._limit(left, top)
-    win = dom(@quill.root).window()
-    left += win.pageXOffset
-    top += win.pageYOffset
+    left += window.pageXOffset
+    top += window.pageYOffset
     @container.style.left = "#{left}px"
     @container.style.top = "#{top}px"
     @container.focus()
 
   _getBounds: ->
     bounds = @quill.root.getBoundingClientRect()
-    win = dom(@quill.root).window()
-    scrollX = win.pageXOffset
-    scrollY = win.pageYOffset
+    scrollX = window.pageXOffset
+    scrollY = window.pageYOffset
     return {
       left:   bounds.left + scrollX
       right:  bounds.right + scrollX
