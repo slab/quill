@@ -12,7 +12,7 @@ class Tooltip
   @HIDE_MARGIN = '-10000px'
 
   constructor: (@quill, @options) ->
-    @container = @quill.addContainer('tooltip')
+    @container = @quill.addContainer('ql-tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
     @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker
     dom(@quill.root).on('focus', _.bind(this.hide, this))

@@ -18,7 +18,7 @@ class LinkTooltip extends Tooltip
   constructor: (@quill, @options) ->
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
-    dom(@container).addClass('link-tooltip-container')
+    dom(@container).addClass('ql-link-tooltip')
     @textbox = @container.querySelector('.input')
     @link = @container.querySelector('.url')
     this.initListeners()

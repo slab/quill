@@ -6,7 +6,7 @@ Delta    = Quill.require('delta')
 
 class PasteManager
   constructor: (@quill, @options) ->
-    @container = @quill.addContainer('paste-container')
+    @container = @quill.addContainer('ql-paste-manager')
     @container.setAttribute('contenteditable', true)
     dom(@quill.root).on('paste', _.bind(this._paste, this))
 

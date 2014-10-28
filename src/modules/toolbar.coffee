@@ -43,7 +43,7 @@ class Toolbar
         _.defer(_.bind(this.updateActive, this))
       )
     )
-    dom(@container).addClass('ql-toolbar-container')
+    dom(@container).addClass('ql-toolbar')
     dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
     if dom.isIE(11)
       dom(@container).on('mousedown', =>
