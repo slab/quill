@@ -23,6 +23,7 @@ class Quill extends EventEmitter2
       'undo-manager': true
     pollInterval: 100
     readOnly: false
+    styles: {}
     theme: 'base'
 
   @events:

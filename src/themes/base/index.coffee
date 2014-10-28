@@ -1,5 +1,6 @@
 _ = require('lodash')
 dom = require('../../lib/dom')
+baseStyles = require('./base.styl')
 
 
 class BaseTheme
@@ -13,25 +14,18 @@ class BaseTheme
       return "#{key} { #{innerStr} }"
     ).join("\n")
 
-  constructor: (@quill) ->
+  constructor: (@quill, @options) ->
     dom(@quill.root.parentNode).addClass('ql-container')
     dom(@quill.root).addClass('ql-editor-container')
+    if @options.styles
+      this.addStyles(baseStyles + BaseTheme.objToCss(@options.styles))
 
   addStyles: (css) ->
-    if _.isObject(css)
-      style = document.createElement('style')
-      style.type = 'text/css'
-      css = BaseTheme.objToCss(css)
-      style.appendChild(document.createTextNode(css))
-      document.head.appendChild(style)
-    else if _.isString(css)
-      link = document.createElement('link')
-      dom(link).attributes(
-        type: 'text/css'
-        rel: 'stylesheet'
-        href: css
-      )
-      document.head.appendChild(link)
+    css = BaseTheme.objToCss(css) if _.isObject(css)
+    style = document.createElement('style')
+    style.type = 'text/css'
+    style.appendChild(document.createTextNode(css))
+    document.head.appendChild(style)
 
 
 module.exports = BaseTheme

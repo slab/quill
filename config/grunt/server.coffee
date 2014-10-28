@@ -3,6 +3,7 @@ browserify = require('browserify')
 coffeeify = require('coffeeify')
 fs = require('fs')
 harp = require('harp')
+stylify = require('stylify')
 stylus = require('stylus')
 watchify = require('watchify')
 
@@ -53,6 +54,7 @@ module.exports = (grunt) ->
           b = browserify(file, browserifyOps)
           watchers[type] = watchify(b)
           watchers[type].transform(coffeeify)
+          watchers[type].transform(stylify)
           watchers[type].on('update', ->
             watchers[type].bundle() # Gotta call with no arguments
           )
