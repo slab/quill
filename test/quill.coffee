@@ -9,7 +9,6 @@ Quill.Editor     = require('../src/core/editor')
 Quill.Format     = require('../src/core/format')
 Quill.Leaf       = require('../src/core/leaf')
 Quill.Line       = require('../src/core/line')
-Quill.Renderer   = require('../src/core/renderer')
 Quill.Selection  = require('../src/core/selection')
 
 Quill.Lib =
@@ -33,7 +32,7 @@ Quill.Module =
   UndoManager   : require('../src/modules/undo-manager')
 
 Quill.Theme =
-  Default       : require('../src/themes/default')
+  Base          : require('../src/themes/base')
   Snow          : require('../src/themes/snow')
 
 

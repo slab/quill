@@ -1,6 +1,8 @@
 _ = require('lodash')
+dom = require('../../lib/dom')
 
-class DefaultTheme
+
+class BaseTheme
   @OPTIONS: {}
 
   @objToCss: (obj) ->
@@ -12,14 +14,14 @@ class DefaultTheme
     ).join("\n")
 
   constructor: (@quill) ->
-    @editor = @quill.editor
-    @editorContainer = @editor.root
+    dom(@quill.root.parentNode).addClass('ql-container')
+    dom(@quill.root).addClass('ql-editor-container')
 
   addStyles: (css) ->
     if _.isObject(css)
       style = document.createElement('style')
       style.type = 'text/css'
-      css = DefaultTheme.objToCss(css)
+      css = BaseTheme.objToCss(css)
       style.appendChild(document.createTextNode(css))
       document.head.appendChild(style)
     else if _.isString(css)
@@ -32,4 +34,4 @@ class DefaultTheme
       document.head.appendChild(link)
 
 
-module.exports = DefaultTheme
+module.exports = BaseTheme

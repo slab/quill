@@ -1,11 +1,11 @@
-_            = require('lodash')
-ColorPicker  = require('../../lib/color-picker')
-DefaultTheme = require('../default')
-dom          = require('../../lib/dom')
-Picker       = require('../../lib/picker')
+_           = require('lodash')
+ColorPicker = require('../../lib/color-picker')
+BaseTheme   = require('../base')
+dom         = require('../../lib/dom')
+Picker      = require('../../lib/picker')
 
 
-class SnowTheme extends DefaultTheme
+class SnowTheme extends BaseTheme
   @COLORS: [
     "#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff"
     "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff"

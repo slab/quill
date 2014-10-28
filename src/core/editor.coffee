@@ -1,9 +1,8 @@
-_          = require('lodash')
-dom        = require('../lib/dom')
-Document   = require('./document')
-Line       = require('./line')
-Renderer   = require('./renderer')
-Selection  = require('./selection')
+_         = require('lodash')
+dom       = require('../lib/dom')
+Document  = require('./document')
+Line      = require('./line')
+Selection = require('./selection')
 
 
 class Editor
@@ -12,7 +11,10 @@ class Editor
     SILENT : 'silent'
     USER   : 'user'
 
-  constructor: (@root, @quill, @options = {}) ->
+  constructor: (container, @quill, @options = {}) ->
+    @root = document.createElement('div')
+    container.setAttribute('id', @options.id)
+    container.appendChild(@root)
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
     @selection = new Selection(@doc, @quill)

@@ -23,7 +23,7 @@ class Quill extends EventEmitter2
       'undo-manager': true
     pollInterval: 100
     readOnly: false
-    theme: 'default'
+    theme: 'base'
 
   @events:
     MODULE_INIT      : 'module-init'
@@ -210,8 +210,8 @@ class Quill extends EventEmitter2
     return params
 
 
-Quill.registerTheme('default', require('./themes/default'))
-Quill.registerTheme('snow',    require('./themes/snow'))
+Quill.registerTheme('base', require('./themes/base'))
+Quill.registerTheme('snow', require('./themes/snow'))
 
 
 module.exports = Quill
