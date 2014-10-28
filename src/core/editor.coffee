@@ -12,13 +12,10 @@ class Editor
     SILENT : 'silent'
     USER   : 'user'
 
-  constructor: (@iframeContainer, @quill, @options = {}) ->
-    @renderer = new Renderer(@iframeContainer, @options)
-    dom(@iframeContainer).on('focus', _.bind(this.focus, this))
-    @root = @renderer.root
+  constructor: (@root, @quill, @options = {}) ->
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new Selection(@doc, @renderer.iframe, @quill)
+    @selection = new Selection(@doc, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 
@@ -61,7 +58,7 @@ class Editor
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, Editor.sources.USER)
 
   checkUpdate: (source = 'user') ->
-    return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
+    return clearInterval(@timer) unless @root.parentNode?
     delta = this._update()
     if delta
       @delta.compose(delta)
@@ -71,7 +68,6 @@ class Editor
 
   focus: ->
     @selection.setRange(@selection.range) if dom.isIE(11)
-    @renderer.iframe.focus()
     @root.focus()
 
   getDelta: ->

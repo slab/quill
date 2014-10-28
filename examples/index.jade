@@ -55,9 +55,7 @@ html
     script(type='text/javascript').
       var editor = new Quill('#editor-container', {
         modules: {
-          'toolbar': { container: '#formatting-container' },
-          'image-tooltip': true,
-          'link-tooltip': true
+          'toolbar': { container: '#formatting-container' }
         }
       });
       editor.on('selection-change', function(range) {

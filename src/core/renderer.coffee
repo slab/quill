@@ -96,20 +96,6 @@ class Renderer
     return container
 
   addStyles: (css) ->
-    if typeof css == 'object'
-      style = @root.ownerDocument.createElement('style')
-      style.type = 'text/css'
-      css = Renderer.objToCss(css)
-      style.appendChild(@root.ownerDocument.createTextNode(css))
-      @root.ownerDocument.head.appendChild(style)
-    else if typeof css == 'string'
-      link = @root.ownerDocument.createElement('link')
-      dom(link).attributes(
-        type: 'text/css'
-        rel: 'stylesheet'
-        href: css
-      )
-      @root.ownerDocument.head.appendChild(link)
 
 
 module.exports = Renderer

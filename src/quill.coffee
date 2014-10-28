@@ -72,7 +72,11 @@ class Quill extends EventEmitter2
     )
 
   addContainer: (className, before = false) ->
-    @editor.renderer.addContainer(className, before)
+    refNode = if before then @root else null
+    container = document.createElement('div')
+    dom(container).addClass(className)
+    @root.parentNode.insertBefore(container, refNode)
+    return container
 
   addFormat: (name, format) ->
     @editor.doc.addFormat(name, format)
@@ -86,8 +90,8 @@ class Quill extends EventEmitter2
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
-  addStyles: (styles) ->
-    @editor.renderer.addStyles(styles)
+  addStyles: (css) ->
+    @theme.addStyles(css)
 
   deleteText: (start, end, source = Quill.sources.API) ->
     [start, end, formats, source] = this._buildParams(start, end, {}, source)

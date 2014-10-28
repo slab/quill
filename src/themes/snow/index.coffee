@@ -82,7 +82,7 @@ class SnowTheme extends DefaultTheme
 
   constructor: (@quill) ->
     super
-    @quill.addStyles(SnowTheme.STYLES)
+    this.addStyles(SnowTheme.STYLES)
     @pickers = []
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       _.invoke(@pickers, 'close') if range?
