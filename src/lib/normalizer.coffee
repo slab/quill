@@ -36,6 +36,8 @@ Normalizer =
     'I'
     'S'
     'U'
+    'INS'
+    'DEL'
     'A'
     'IMG'
     'OL'
