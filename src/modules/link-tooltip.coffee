@@ -7,15 +7,6 @@ dom     = Quill.require('dom')
 class LinkTooltip extends Tooltip
   @DEFAULTS:
     maxLength: 50
-    styles:
-      '.link-tooltip-container':
-        'padding': '5px 10px'
-      '.link-tooltip-container input.input':
-        'width': '170px'
-      '.link-tooltip-container input.input, .link-tooltip-container a.done, .link-tooltip-container.editing a.url, .link-tooltip-container.editing a.change':
-        'display': 'none'
-      '.link-tooltip-container.editing input.input, .link-tooltip-container.editing a.done':
-        'display': 'inline-block'
     template:
      '<span class="title">Visit URL:&nbsp;</span>
       <a href="#" class="url" target="_blank" href="about:blank"></a>
@@ -25,7 +16,6 @@ class LinkTooltip extends Tooltip
       <a href="javascript:;" class="done">Done</a>'
 
   constructor: (@quill, @options) ->
-    @options.styles = _.defaults(@options.styles, Tooltip.DEFAULTS.styles)
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
     dom(@container).addClass('link-tooltip-container')

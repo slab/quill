@@ -7,22 +7,11 @@ dom        = Quill.require('dom')
 class Tooltip
   @DEFAULTS:
     offset: 10
-    styles:
-      '.tooltip':
-        'background-color': '#fff'
-        'border': '1px solid #000'
-        'top': '0px'
-        'white-space': 'nowrap'
-        'z-index': '2000'
-      '.tooltip a':
-        'cursor': 'pointer'
-        'text-decoration': 'none'
     template: ''
 
   @HIDE_MARGIN = '-10000px'
 
   constructor: (@quill, @options) ->
-    @quill.addStyles(@options.styles)
     @container = @quill.addContainer('tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
     @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker

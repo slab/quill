@@ -21,25 +21,6 @@ class MultiCursor extends EventEmitter2
   constructor: (@quill, @options) ->
     @cursors = {}
     @container = @quill.addContainer('cursor-container', true)
-    @quill.addStyles(
-      '.cursor-container': { 'position': 'absolute', 'left': '0', 'top': '0', 'z-index': '1000' }
-      '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
-      '.cursor-flag':
-        'bottom': '100%'
-        'position': 'absolute'
-        'white-space': 'nowrap'
-      '.cursor-name':
-        'display': 'inline-block'
-        'color': 'white'
-        'padding': '2px 8px'
-      '.cursor-caret':
-        'height': '100%'
-        'position': 'absolute'
-        'width': '2px'
-      '.cursor.hidden .cursor-flag': { 'display': 'none' }
-      '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
-      '.cursor.right > .cursor-flag': { 'right': '-2px' }
-    )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this))
 
   clearCursors: ->

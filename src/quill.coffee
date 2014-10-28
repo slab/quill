@@ -67,7 +67,7 @@ class Quill extends EventEmitter2
     this.setHTML(html, Quill.sources.SILENT)
     themeClass = Quill.themes[@options.theme]
     throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
-    @theme = new themeClass(this, @options)
+    @theme = new themeClass(this, container, @options)
     _.each(@options.modules, (option, name) =>
       this.addModule(name, option)
     )

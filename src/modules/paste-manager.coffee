@@ -8,12 +8,6 @@ class PasteManager
   constructor: (@quill, @options) ->
     @container = @quill.addContainer('paste-container')
     @container.setAttribute('contenteditable', true)
-    @quill.addStyles(
-      '.paste-container':
-        'left': '-10000px'
-        'position': 'absolute'
-        'top': '50%'
-    )
     dom(@quill.root).on('paste', _.bind(this._paste, this))
 
   _paste: ->

@@ -14,7 +14,7 @@ class BaseTheme
       return "#{key} { #{innerStr} }"
     ).join("\n")
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, container, @options) ->
     dom(@quill.root.parentNode).addClass('ql-container')
     dom(@quill.root).addClass('ql-editor-container')
     if @options.styles
