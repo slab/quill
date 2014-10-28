@@ -52,22 +52,22 @@ class Quill extends EventEmitter2
 
 
   constructor: (container, options = {}) ->
-    container = document.querySelector(container) if _.isString(container)
-    throw new Error('Invalid Quill container') unless container?
+    @container = document.querySelector(container) if _.isString(container)
+    throw new Error('Invalid Quill container') unless @container?
     moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
-    html = container.innerHTML
+    html = @container.innerHTML
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
     @options.id = @id = "quill-#{Quill.editors.length + 1}"
     @options.emitter = this
     @modules = {}
-    @editor = new Editor(container, this, @options)
+    @editor = new Editor(@container, this, @options)
     @root = @editor.doc.root
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
     themeClass = Quill.themes[@options.theme]
     throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
-    @theme = new themeClass(this, container, @options)
+    @theme = new themeClass(this, @container, @options)
     _.each(@options.modules, (option, name) =>
       this.addModule(name, option)
     )

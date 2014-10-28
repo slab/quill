@@ -102,8 +102,9 @@ class MultiCursor extends EventEmitter2
 
   _moveCursor: (cursor, reference, side = 'left') ->
     bounds = reference.getBoundingClientRect()
-    cursor.elem.style.top = bounds.top + window.pageYOffset + 'px'
-    cursor.elem.style.left = bounds[side] + 'px'
+    parentBounds = @quill.container.getBoundingClientRect()
+    cursor.elem.style.top = (bounds.top - parentBounds.top + @quill.container.scrollTop) + 'px'
+    cursor.elem.style.left = bounds[side] - parentBounds[side] + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')
     dom(cursor.elem).toggleClass('top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
