@@ -37,45 +37,26 @@ class Tooltip
 
   show: (reference) ->
     @range = @quill.getSelection()
-    [left, top] = this._position(reference)
+    [left, top] = this.position(reference)
     @container.style.left = "#{left}px"
     @container.style.top = "#{top}px"
     @container.focus()
 
-  _getBounds: ->
-    bounds = @quill.root.getBoundingClientRect()
-    scrollX = window.pageXOffset
-    scrollY = window.pageYOffset
-    return {
-      left:   bounds.left + scrollX
-      right:  bounds.right + scrollX
-      top:    bounds.top + scrollY
-      bottom: bounds.bottom + scrollY
-      width:  bounds.width
-      height: bounds.height
-    }
-
-  _limit: (left, top) ->
-    editorRect = this._getBounds()
-    toolbarRect = @container.getBoundingClientRect()
-    left = Math.min(editorRect.right - toolbarRect.width, left)   # right boundary
-    left = Math.max(editorRect.left, left)                        # left boundary
-    top = Math.min(editorRect.bottom - toolbarRect.height, top)   # bottom boundary
-    top = Math.max(editorRect.top, top)                           # top boundary
-    return [left, top]
-
-  _position: (reference) ->
-    # Reference might be selection range so must use getBoundingClientRect()
-    toolbarRect = @container.getBoundingClientRect()
-    editorRect = @quill.root.getBoundingClientRect()
+  position: (reference) ->
     if reference?
       # Place tooltip under reference centered
+      # reference might be selection range so must use getBoundingClientRect()
       referenceBounds = reference.getBoundingClientRect()
-      left = referenceBounds.left + referenceBounds.width/2 - toolbarRect.width/2
-      top = referenceBounds.top + referenceBounds.height + @options.offset
-      if top + toolbarRect.height > editorRect.bottom
-        top = referenceBounds.top - toolbarRect.height - @options.offset
-      [left, top] = this._limit(left, top)
+      parentBounds = @quill.container.getBoundingClientRect()
+      offsetLeft = referenceBounds.left - parentBounds.left
+      offsetTop = referenceBounds.top - parentBounds.top
+      offsetBottom = referenceBounds.bottom - parentBounds.bottom
+      left = offsetLeft + referenceBounds.width/2 - @container.offsetWidth/2
+      top = offsetTop + referenceBounds.height + @options.offset
+      if top + @container.offsetHeight > @quill.container.offsetHeight
+        top = offsetTop - @container.offsetHeight - @options.offset
+      left = Math.max(0, Math.min(left, @quill.container.offsetWidth - @container.offsetWidth))
+      top = Math.max(0, Math.min(top, @quill.container.offsetHeight - @container.offsetHeight))
     else
       # Place tooltip in middle of editor viewport
       left = @quill.container.offsetWidth/2 - @container.offsetWidth/2
