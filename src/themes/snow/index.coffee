@@ -24,9 +24,9 @@ class SnowTheme extends BaseTheme
         </span>
         <span class="cursor-caret"></span>'
 
-  constructor: (@quill, container, @options) ->
+  constructor: (@quill, @options) ->
     super
-    dom(container).addClass('ql-snow')
+    dom(@quill.container).addClass('ql-snow')
     @pickers = []
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       _.invoke(@pickers, 'close') if range?
