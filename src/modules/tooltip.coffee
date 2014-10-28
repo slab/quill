@@ -14,7 +14,6 @@ class Tooltip
   constructor: (@quill, @options) ->
     @container = @quill.addContainer('ql-tooltip')
     @container.innerHTML = Normalizer.stripWhitespace(@options.template)
-    @container.style.position = 'absolute'    # Set immediately so style.left has effect to avoid initial flicker
     dom(@quill.root).on('focus', _.bind(this.hide, this))
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
