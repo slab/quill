@@ -82,9 +82,9 @@ class Toolbar
       value = '' if Array.isArray(value)  # Must be a defined falsy value
       if value != selectValue
         if value?
-          $input.option(value, false)
+          $input.option(value)
         else
-          $input.reset(false)
+          $input.reset()
       @triggering = false
     else
       $input.toggleClass('ql-active', value or false)
