@@ -32,7 +32,7 @@ formatInput =
 formats = (bold italic underline strike link image list bullet authorship color background left right center justify)
 
 
-.ql-toolbar
+.ql-snow.ql-toolbar
   box-sizing: border-box
   padding: toolbarPadding
   user-select: none
@@ -62,123 +62,124 @@ formats = (bold italic underline strike link image list bullet authorship color 
     text-align: center
     width: inputSize
 
-.ql-picker
-  box-sizing: border-box
-  color: blackColor
-  display: inline-block
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
-  font-size: 14px
-  font-weight: 500
-  position: relative
-  .ql-picker-label
-    {formatInput}
-    background-color: whiteColor
-    background-position: right center
-    background-repeat: no-repeat
-    background-size: imageSize imageSize
-    border: 1px solid transparent
-    cursor: pointer
-    position: relative
-    width: 100%
-  .ql-picker-label.ql-active, .ql-picker-label:hover
-    color: blueColor
-  .ql-picker-options
-    background-color: whiteColor
-    border: 1px solid transparent
+  .ql-picker
     box-sizing: border-box
-    display: none
-    padding: 0.5*toolbarPadding toolbarPadding
-    position: absolute
-    width: 100%
-    .ql-picker-item
-      background-position: center center
+    color: blackColor
+    display: inline-block
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
+    font-size: 14px
+    font-weight: 500
+    position: relative
+    .ql-picker-label
+      {formatInput}
+      background-color: whiteColor
+      background-position: right center
       background-repeat: no-repeat
       background-size: imageSize imageSize
-      box-sizing: border-box
-      cursor: pointer
-      display: block
-      padding-bottom: inputPadding
-      padding-top: inputPadding
-    .ql-picker-item.ql-selected, .ql-picker-item:hover
-      color: blueColor
-.ql-picker.ql-expanded
-  .ql-picker-label
-    border-color: grayColor
-    color: grayColor
-    z-index: 2
-  .ql-picker-options
-    border-color: grayColor
-    box-shadow: rgba(0,0,0,0.2) 0 2px 8px
-    display: block
-    margin-top: -1px
-    z-index: 1
-
-.ql-picker.ql-color-picker
-  .ql-picker-label
-    background-position: center center
-    width: iconPickerWidth
-  .ql-picker-options
-    padding: inputPadding
-    width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
-    .ql-picker-item
       border: 1px solid transparent
-      float: left
-      height: colorItemWidth
-      margin: colorItemMargin
+      cursor: pointer
+      position: relative
+      width: 100%
+    .ql-picker-label.ql-active, .ql-picker-label:hover
+      color: blueColor
+    .ql-picker-options
+      background-color: whiteColor
+      border: 1px solid transparent
+      box-sizing: border-box
+      display: none
+      padding: 0.5*toolbarPadding toolbarPadding
+      position: absolute
+      width: 100%
+      .ql-picker-item
+        background-position: center center
+        background-repeat: no-repeat
+        background-size: imageSize imageSize
+        box-sizing: border-box
+        cursor: pointer
+        display: block
+        padding-bottom: inputPadding
+        padding-top: inputPadding
+      .ql-picker-item.ql-selected, .ql-picker-item:hover
+        color: blueColor
+  .ql-picker.ql-expanded
+    .ql-picker-label
+      border-color: grayColor
+      color: grayColor
+      z-index: 2
+    .ql-picker-options
+      border-color: grayColor
+      box-shadow: rgba(0,0,0,0.2) 0 2px 8px
+      display: block
+      margin-top: -1px
+      z-index: 1
+
+  .ql-picker.ql-color-picker
+    .ql-picker-label
+      background-position: center center
+      width: iconPickerWidth
+    .ql-picker-options
+      padding: inputPadding
+      width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
+      .ql-picker-item
+        border: 1px solid transparent
+        float: left
+        height: colorItemWidth
+        margin: colorItemMargin
+        padding: 0px
+        width: colorItemWidth
+      .ql-picker-item.ql-primary-color
+        margin-bottom: toolbarPadding
+      .ql-picker-item.ql-selected, .ql-picker-item:hover
+        border-color: #000
+
+  .ql-picker.ql-font
+    width: fontNamePickerWidth
+  .ql-picker.ql-size
+    width: fontSizePickerWidth
+  .ql-picker.ql-font, .ql-picker.ql-size
+    .ql-picker-label
+      padding-left: toolbarPadding
+      padding-right: toolbarPadding
+
+  .ql-picker.ql-align
+    .ql-picker-label
+      background-position: center center
+      width: iconPickerWidth
+    .ql-picker-item
+      {formatInput}
       padding: 0px
-      width: colorItemWidth
-    .ql-picker-item.ql-primary-color
-      margin-bottom: toolbarPadding
-    .ql-picker-item.ql-selected, .ql-picker-item:hover
-      border-color: #000
-
-.ql-picker.ql-font
-  width: fontNamePickerWidth
-.ql-picker.ql-size
-  width: fontSizePickerWidth
-.ql-picker.ql-font, .ql-picker.ql-size
-  .ql-picker-label
-    padding-left: toolbarPadding
-    padding-right: toolbarPadding
-
-.ql-picker.ql-align
-  .ql-picker-label
-    background-position: center center
-    width: iconPickerWidth
-  .ql-picker-item
-    {formatInput}
-    padding: 0px
-    width: iconPickerWidth
-  .ql-picker-options
-    padding: 4px 0px
+      width: iconPickerWidth
+    .ql-picker-options
+      padding: 4px 0px
 
 
 imageRules(retina)
   suffix = retina ? '@2x' : ''
-  .ql-toolbar .ql-picker .ql-picker-label
-    background-image: url('assets/dropdown' + suffix + '.png')
-  .ql-toolbar .ql-picker.ql-expanded .ql-picker-label
-    background-image: url('assets/inactive/dropdown' + suffix + '.png')
-  .ql-toolbar .ql-picker.ql-active:not(.ql-expanded) .ql-picker-label,
-  .ql-toolbar:not(.ios) .ql-picker:not(.ql-expanded) .ql-picker-label:hover
+  .ql-snow.ql-toolbar
+    .ql-picker .ql-picker-label
+      background-image: url('assets/dropdown' + suffix + '.png')
+    .ql-picker.ql-expanded .ql-picker-label
+      background-image: url('assets/inactive/dropdown' + suffix + '.png')
+  .ql-snow.ql-toolbar .ql-picker.ql-active:not(.ql-expanded) .ql-picker-label,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker:not(.ql-expanded) .ql-picker-label:hover
     background-image: url('assets/active/dropdown' + suffix + '.png')
 
   for format in formats
-    .ql-toolbar
+    .ql-snow.ql-toolbar
       .ql-format-button.ql-{format},
       .ql-picker.ql-{format} .ql-picker-label,
       .ql-picker .ql-picker-label[data-value={format}],
       .ql-picker .ql-picker-item[data-value={format}]
         background-image: url('assets/' + format + suffix + '.png')
 
-    .ql-toolbar .ql-format-button.ql-{format}.ql-active,
-    .ql-toolbar .ql-picker.ql-{format} .ql-picker-label.ql-active,
-    .ql-toolbar .ql-picker .ql-picker-label[data-value={format}].ql-active,
-    .ql-toolbar .ql-picker .ql-picker-item[data-value={format}].ql-selected,
-    .ql-toolbar:not(.ios) .ql-format-button.ql-{format}:hover,
-    .ql-toolbar:not(.ios) .ql-picker.ql-{format} .ql-picker-label:hover,
-    .ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value={format}]:hover,
-    .ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value={format}]:hover
+    .ql-snow.ql-toolbar .ql-format-button.ql-{format}.ql-active,
+    .ql-snow.ql-toolbar .ql-picker.ql-{format} .ql-picker-label.ql-active,
+    .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value={format}].ql-active,
+    .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value={format}].ql-selected,
+    .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-{format}:hover,
+    .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-{format} .ql-picker-label:hover,
+    .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value={format}]:hover,
+    .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value={format}]:hover
         background-image: url('assets/active/' + format + suffix + '.png')
 
 imageRules(false)

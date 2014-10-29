@@ -42,6 +42,7 @@ class SnowTheme extends BaseTheme
     )
 
   extendToolbar: (module) ->
+    dom(module.container).addClass('ql-snow')
     _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
       select = module.container.querySelector(".ql-#{format}")
       return unless select?
