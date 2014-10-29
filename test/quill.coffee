@@ -37,6 +37,7 @@ Quill.Theme =
 
 
 Quill.DEFAULTS.pollInterval = 10000000
+Quill.DEFAULTS.style = false
 
 
 module.exports = Quill
