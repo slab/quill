@@ -11,10 +11,9 @@ class Editor
     SILENT : 'silent'
     USER   : 'user'
 
-  constructor: (container, @quill, @options = {}) ->
-    @root = document.createElement('div')
+  constructor: (@quill, @options = {}) ->
+    @root = @quill.addContainer('ql-editor')
     @root.setAttribute('id', @options.id)
-    container.appendChild(@root)
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
     @selection = new Selection(@doc, @quill)

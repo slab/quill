@@ -51,17 +51,18 @@ class Quill extends EventEmitter2
       else return null
 
 
-  constructor: (container, options = {}) ->
-    @container = document.querySelector(container) if _.isString(container)
+  constructor: (@container, options = {}) ->
+    @container = document.querySelector(container) if _.isString(@container)
     throw new Error('Invalid Quill container') unless @container?
     moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
     html = @container.innerHTML
+    @container.innerHTML = ''
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
     @options.id = @id = "quill-#{Quill.editors.length + 1}"
     @options.emitter = this
     @modules = {}
-    @editor = new Editor(@container, this, @options)
+    @editor = new Editor(this, @options)
     @root = @editor.doc.root
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
@@ -76,7 +77,7 @@ class Quill extends EventEmitter2
     refNode = if before then @root else null
     container = document.createElement('div')
     dom(container).addClass(className)
-    @root.parentNode.insertBefore(container, refNode)
+    @container.insertBefore(container, refNode)
     return container
 
   addFormat: (name, format) ->

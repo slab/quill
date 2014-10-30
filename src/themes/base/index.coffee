@@ -16,7 +16,6 @@ class BaseTheme
 
   constructor: (@quill, @options) ->
     dom(@quill.root.parentNode).addClass('ql-container')
-    dom(@quill.root).addClass('ql-editor-container')
     if @options.styles
       this.addStyles(baseStyles + BaseTheme.objToCss(@options.styles))
 
