@@ -2,7 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('Leaf', ->
   beforeEach( ->
-    @container = $('#editor-container').html('').get(0)
+    @container = $('#test-container').html('').get(0)
   )
 
   describe('constructor', ->

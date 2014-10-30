@@ -35,13 +35,6 @@ class Tooltip
     @quill.setSelection(@range) if @range
     @range = null
 
-  show: (reference) ->
-    @range = @quill.getSelection()
-    [left, top] = this.position(reference)
-    @container.style.left = "#{left}px"
-    @container.style.top = "#{top}px"
-    @container.focus()
-
   position: (reference) ->
     if reference?
       # Place tooltip under reference centered
@@ -62,6 +55,13 @@ class Tooltip
       left = @quill.container.offsetWidth/2 - @container.offsetWidth/2
       top = @quill.container.offsetHeight/2 - @container.offsetHeight/2
     return [left, top]
+
+  show: (reference) ->
+    @range = @quill.getSelection()
+    [left, top] = this.position(reference)
+    @container.style.left = "#{left}px"
+    @container.style.top = "#{top}px"
+    @container.focus()
 
 
 Quill.registerModule('tooltip', Tooltip)

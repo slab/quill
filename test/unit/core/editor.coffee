@@ -1,6 +1,7 @@
 describe('Editor', ->
   beforeEach( ->
-    @container = $('#editor-container').html('<div></div>').get(0)
+    resetContainer()
+    @container = $('#test-container').html('<div></div>').get(0)
     Quill.Lib.EventEmitter2.events = Quill.events
     emitter = new Quill.Lib.EventEmitter2
     @editor = new Quill.Editor(@container.firstChild, emitter, { formats: Quill.DEFAULTS.formats })

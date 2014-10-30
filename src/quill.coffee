@@ -62,8 +62,8 @@ class Quill extends EventEmitter2
     @options.id = @id = "quill-#{Quill.editors.length + 1}"
     @options.emitter = this
     @modules = {}
-    @editor = new Editor(this, @options)
-    @root = @editor.doc.root
+    @root = this.addContainer('ql-editor')
+    @editor = new Editor(@root, this, @options)
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
     themeClass = Quill.themes[@options.theme]

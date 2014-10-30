@@ -11,8 +11,7 @@ class Editor
     SILENT : 'silent'
     USER   : 'user'
 
-  constructor: (@quill, @options = {}) ->
-    @root = @quill.addContainer('ql-editor')
+  constructor: (@root, @quill, @options = {}) ->
     @root.setAttribute('id', @options.id)
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
@@ -68,7 +67,7 @@ class Editor
     @selection.update(source)
 
   focus: ->
-    @selection.setRange(@selection.range) if dom.isIE(11)
+    @selection.setRange(@selection.range)
     @root.focus()
 
   getDelta: ->
