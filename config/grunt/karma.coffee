@@ -18,11 +18,16 @@ module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
       configFile: 'config/karma.js'
+      # Hack added for proxies to work the way we want:
+      # Change karma's lib/helpers.js isUrlAbsolute to:
+      # return url.indexOf('/local') === 0 || ABS_URL.test(url);
+      proxies:
+        '/local': "http://localhost:#{grunt.config('port')}"
       files: [
-        "http://localhost:#{grunt.config('port')}/quill.base.css"
+        "/local/quill.base.css"
+        "/local/test/quill.js"
 
         'node_modules/jquery/dist/jquery.js'
-        "http://localhost:#{grunt.config('port')}/test/quill.js"
 
         'test/fixtures/unit.html'
         'test/helpers/inject.coffee'
