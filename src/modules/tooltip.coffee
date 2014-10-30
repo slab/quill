@@ -54,6 +54,7 @@ class Tooltip
       # Place tooltip in middle of editor viewport
       left = @quill.container.offsetWidth/2 - @container.offsetWidth/2
       top = @quill.container.offsetHeight/2 - @container.offsetHeight/2
+    top += @quill.container.scrollTop
     return [left, top]
 
   show: (reference) ->
