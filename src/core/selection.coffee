@@ -142,9 +142,6 @@ class Selection
     selection = document.getSelection()
     return unless selection
     if startNode?
-      # Some reason need to focus before removing ranges otherwise cannot set them
-      unless this.checkFocus()
-        @doc.root.focus()
       nativeRange = this._getNativeRange()
       if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
         # IE9 requires removeAllRanges() regardless of value of

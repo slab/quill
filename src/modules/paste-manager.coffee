@@ -15,7 +15,6 @@ class PasteManager
     range = @quill.getSelection()
     return unless range?
     @container.innerHTML = ""
-    scrollTop = @quill.container.scrollTop
     @container.focus()
     _.defer( =>
       doc = new Document(@container, @quill.options)
@@ -27,11 +26,11 @@ class PasteManager
       delta.delete(range.end - range.start)
       @quill.updateContents(delta, 'user')
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
+      # Make sure bottom of pasted content is visible
       [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
       lineBottom = line.node.offsetTop + line.node.offsetHeight
-      if lineBottom > scrollTop + @quill.container.offsetHeight
-        scrollTop = line.node.offsetTop - @quill.container.offsetHeight / 2
-      @quill.container.scrollTop = scrollTop
+      editorBottom = @quill.container.scrollTop + @quill.container.offsetHeight
+      line.node.scrollIntoView(false) if lineBottom > editorBottom
     )
 
 
