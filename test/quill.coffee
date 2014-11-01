@@ -1,5 +1,3 @@
-global._ = require('lodash')
-
 Quill = require('../src/quill')
 
 Quill.Delta = require('rich-text').Delta

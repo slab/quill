@@ -24,10 +24,11 @@ module.exports = (grunt) ->
       proxies:
         '/local': "http://localhost:#{grunt.config('port')}"
       files: [
+        'node_modules/jquery/dist/jquery.js'
+        'node_modules/lodash/lodash.js'
+
         "/local/quill.base.css"
         "/local/test/quill.js"
-
-        'node_modules/jquery/dist/jquery.js'
 
         'test/fixtures/unit.html'
         'test/helpers/inject.coffee'
