@@ -5,7 +5,7 @@ LinkedList = require('../lib/linked-list')
 
 
 class Leaf extends LinkedList.Node
-  @ID_PREFIX: 'leaf-'
+  @ID_PREFIX: 'ql-leaf-'
 
   @isLeafNode: (node) ->
     return dom(node).isTextNode() or !node.firstChild?

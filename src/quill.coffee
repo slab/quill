@@ -59,7 +59,7 @@ class Quill extends EventEmitter2
     @container.innerHTML = ''
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
-    @options.id = @id = "quill-#{Quill.editors.length + 1}"
+    @options.id = @id = "ql-editor-#{Quill.editors.length + 1}"
     @options.emitter = this
     @modules = {}
     @root = this.addContainer('ql-editor')

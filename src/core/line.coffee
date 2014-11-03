@@ -9,8 +9,8 @@ Normalizer = require('../lib/normalizer')
 
 
 class Line extends LinkedList.Node
-  @CLASS_NAME : 'line'
-  @ID_PREFIX  : 'line-'
+  @CLASS_NAME : 'ql-line'
+  @ID_PREFIX  : 'ql-line-'
 
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Line.ID_PREFIX)
