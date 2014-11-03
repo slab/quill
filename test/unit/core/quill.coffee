@@ -90,15 +90,21 @@ describe('Quill', ->
     )
 
     it('setContents() with delta', ->
-      @quill.setContents({
+      delta = {
+        ops: [{ insert: 'A', attributes: { bold: true } }]
+      }
+      @quill.setContents(delta)
+      expect(@quill.root).toEqualHTML('<div><b>A</b></div>', true)
+      expect(delta).toEqual({
         ops: [{ insert: 'A', attributes: { bold: true } }]
       })
-      expect(@quill.root).toEqualHTML('<div><b>A</b></div>', true)
     )
 
     it('setContents() with ops', ->
-      @quill.setContents([{ insert: 'A', attributes: { bold: true } }])
+      ops = [{ insert: 'A', attributes: { bold: true } }]
+      @quill.setContents(ops)
       expect(@quill.root).toEqualHTML('<div><b>A</b></div>', true)
+      expect(ops).toEqual([{ insert: 'A', attributes: { bold: true } }])
     )
 
     it('setHTML()', ->

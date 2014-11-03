@@ -171,7 +171,9 @@ class Quill extends EventEmitter2
 
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
-      delta = { ops: delta }
+      delta = { ops: delta.slice() }
+    else
+      delta = { ops: delta.ops.slice() }
     delta.ops.unshift({ delete: this.getLength() })
     this.updateContents(delta, source)
 
