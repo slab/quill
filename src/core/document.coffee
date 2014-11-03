@@ -16,7 +16,7 @@ class Document
   addFormat: (name, config) ->
     config = Format.FORMATS[name] unless _.isObject(config)
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
-    @formats[name] = new Format(@root.ownerDocument, config)
+    @formats[name] = new Format(config)
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)

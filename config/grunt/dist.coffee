@@ -5,7 +5,7 @@ module.exports = (grunt) ->
         browserifyOptions:
           extensions: ['.js', '.coffee']
           standalone: 'Quill'
-        transform: ['coffeeify']
+        transform: ['coffeeify', 'stylify']
       files:
         'dist/quill.js': ['src/index.coffee']
   )
@@ -68,7 +68,7 @@ module.exports = (grunt) ->
         expand: true
         ext: '.css'
         flatten: true
-        src: 'src/themes/**/*.styl'
+        src: 'src/themes/*/*.styl'
         rename: (dest, src) ->
           return "dist/quill.#{src}"
       }]

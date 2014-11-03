@@ -1,5 +1,6 @@
 describe('Selection', ->
   beforeEach( ->
+    resetContainer()
     @container = $('#editor-container').get(0)
   )
 

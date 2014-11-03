@@ -20,6 +20,9 @@ module.exports = (grunt) ->
       configFile: 'config/karma.js'
       files: [
         'node_modules/jquery/dist/jquery.js'
+        'node_modules/lodash/lodash.js'
+
+        "http://localhost:#{grunt.config('port')}/quill.base.css"
         "http://localhost:#{grunt.config('port')}/test/quill.js"
 
         'test/fixtures/unit.html'

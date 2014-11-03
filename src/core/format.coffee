@@ -41,8 +41,8 @@ class Format
     size:
       style: 'fontSize'
       default: '13px'
-      prepare: (doc, value) ->
-        doc.execCommand('fontSize', false, dom.convertFontSize(value))
+      prepare: (value) ->
+        document.execCommand('fontSize', false, dom.convertFontSize(value))
 
     link:
       tag: 'A'
@@ -70,20 +70,20 @@ class Format
       tag: 'LI'
 
 
-  constructor: (@document, @config) ->
+  constructor: (, @config) ->
 
   add: (node, value) ->
     return this.remove(node) unless value
     return node if this.value(node) == value
     if _.isString(@config.parentTag)
-      parentNode = @document.createElement(@config.parentTag)
+      parentNode = document.createElement(@config.parentTag)
       dom(node).wrap(parentNode)
       if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
         dom(node.parentNode.previousSibling).merge(node.parentNode)
       if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
         dom(node.parentNode).merge(node.parentNode.nextSibling)
     if _.isString(@config.tag)
-      formatNode = @document.createElement(@config.tag)
+      formatNode = document.createElement(@config.tag)
       if dom.VOID_TAGS[formatNode.tagName]?
         dom(node).replace(formatNode) if node.parentNode?
         node = formatNode
@@ -96,7 +96,7 @@ class Format
       if _.isString(@config.class)
         node = this.remove(node)
       if dom(node).isTextNode()
-        inline = @document.createElement(dom.DEFAULT_INLINE_TAG)
+        inline = document.createElement(dom.DEFAULT_INLINE_TAG)
         dom(node).wrap(inline)
         node = inline
       if _.isString(@config.style)
@@ -128,9 +128,9 @@ class Format
 
   prepare: (value) ->
     if _.isString(@config.prepare)
-      @document.execCommand(@config.prepare, false, value)
+      document.execCommand(@config.prepare, false, value)
     else if _.isFunction(@config.prepare)
-      @config.prepare(@document, value)
+      @config.prepare(value)
 
   remove: (node) ->
     return node unless this.match(node)

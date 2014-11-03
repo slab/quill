@@ -2,7 +2,8 @@ dom = Quill.Lib.DOM
 
 describe('Line', ->
   beforeEach( ->
-    @container = $('#editor-container').html('<div></div>').get(0).firstChild
+    resetContainer()
+    @container = $('#test-container').html('<div></div>').get(0).firstChild
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
   )
 

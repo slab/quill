@@ -3,6 +3,7 @@ browserify = require('browserify')
 coffeeify = require('coffeeify')
 fs = require('fs')
 harp = require('harp')
+stylify = require('stylify')
 stylus = require('stylus')
 watchify = require('watchify')
 
@@ -27,11 +28,12 @@ serve = (connect, req, res, next) ->
     when '/test/quill.js'
       res.setHeader('Content-Type', 'application/javascript')
       watchers['test'].bundle().pipe(res)
-    when '/quill.snow.css'
+    when '/quill.snow.css', '/quill.base.css'
+      theme = req.url.slice(7, 11)
       res.setHeader('Content-Type', 'text/css')
-      fs.readFile('./src/themes/snow/snow.styl', (err, data) ->
+      fs.readFile("./src/themes/#{theme}/#{theme}.styl", (err, data) ->
         s = stylus(data.toString())
-        s.include('./src/themes/snow')
+        s.include("./src/themes/#{theme}")
         s.define('url', stylus.url())
         s.render((err, css) ->
           res.end(css)
@@ -53,6 +55,7 @@ module.exports = (grunt) ->
           b = browserify(file, browserifyOps)
           watchers[type] = watchify(b)
           watchers[type].transform(coffeeify)
+          watchers[type].transform(stylify)
           watchers[type].on('update', ->
             watchers[type].bundle() # Gotta call with no arguments
           )

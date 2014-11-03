@@ -1,5 +1,6 @@
 describe('Quill', ->
   beforeEach( ->
+    resetContainer()
     @container = $('#editor-container').html('
       <div>
         <div>0123</div>
@@ -13,7 +14,7 @@ describe('Quill', ->
     it('string container', ->
       @container.innerHTML = '<div id="target"></div>'
       quill = new Quill('#target')
-      expect(quill.editor.iframeContainer).toEqual(@container.firstChild)
+      expect(quill.container).toEqual(@container.firstChild)
     )
 
     it('invalid container', ->
@@ -26,7 +27,7 @@ describe('Quill', ->
   describe('modules', ->
     it('addContainer()', ->
       @quill.addContainer('test-container', true)
-      expect(@quill.root.parentNode.querySelector('.test-container')).toEqual(@quill.root.parentNode.firstChild)
+      expect(@quill.container.querySelector('.test-container')).toEqual(@quill.container.firstChild)
     )
 
     it('addModule()', ->
