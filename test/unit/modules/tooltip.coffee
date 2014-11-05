@@ -26,8 +26,6 @@ describe('Tooltip', ->
 
   describe('position()', ->
     beforeEach( ->
-      # @quill.container = makeContainer(50, 50, 600, 400)
-      # @tooltip.container = makeContainer(60, 60, 200, 100)
       $(@quill.container).css({ width: 600, height: 400 })
       $(@tooltip.container).css({ width: 200, height: 100 })
 

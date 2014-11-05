@@ -15,7 +15,7 @@ class BaseTheme
     ).join("\n")
 
   constructor: (@quill, @options) ->
-    dom(@quill.root.parentNode).addClass('ql-container')
+    dom(@quill.container).addClass('ql-container')
     if @options.styles
       this.addStyles(baseStyles + BaseTheme.objToCss(@options.styles))
     if dom.isIE(10)
