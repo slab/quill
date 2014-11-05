@@ -142,7 +142,9 @@ class Selection
     selection = document.getSelection()
     return unless selection
     if startNode?
-      nativeRange = this._getNativeRange()
+      # Need to focus before setting or else in IE9/10 later focus will cause a set on 0th index on line div
+      # to be set at 1st index
+      @doc.root.focus() unless this.checkFocus()
       if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
         # IE9 requires removeAllRanges() regardless of value of
         # nativeRange or else formatting from toolbar does not work
@@ -151,7 +153,6 @@ class Selection
         nativeRange.setStart(startNode, startOffset)
         nativeRange.setEnd(endNode, endOffset)
         selection.addRange(nativeRange)
-      @doc.root.focus() if nativeRange? and !this.checkFocus()
     else
       selection.removeAllRanges()
       @doc.root.blur()
