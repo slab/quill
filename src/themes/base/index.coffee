@@ -18,6 +18,9 @@ class BaseTheme
     dom(@quill.root.parentNode).addClass('ql-container')
     if @options.styles
       this.addStyles(baseStyles + BaseTheme.objToCss(@options.styles))
+    if dom.isIE(10)
+      version = if dom.isIE(9) then '9' else '10'
+      dom(@quill.root).addClass('ql-ie-' + version)
 
   addStyles: (css) ->
     css = BaseTheme.objToCss(css) if _.isObject(css)
