@@ -1,6 +1,6 @@
 cleanLines = (html) ->
-  html = html.replace(/\ class\="line"/g, '')
-  html = html.replace(/\ id\="line-\d+"/g, '')
+  html = html.replace(/\ class\="ql-line"/g, '')
+  html = html.replace(/\ id\="ql-line-\d+"/g, '')
   return html
 
 
