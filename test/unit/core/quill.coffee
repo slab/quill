@@ -108,6 +108,17 @@ describe('Quill', ->
       expect(ops).toEqual([{ insert: 'A', attributes: { bold: true } }])
     )
 
+    it('setContents() with newline', ->
+      delta = {
+        ops: [
+          { insert: 'A', attributes: { bold: true } },
+          { insert: '\n' }
+        ]
+      }
+      @quill.setContents(delta)
+      expect(@quill.root).toEqualHTML('<div><b>A</b></div>', true)
+    )
+
     it('setHTML()', ->
       @quill.setHTML('<div>A</div>')
       expect(@quill.root).toEqualHTML('<div>A</div>', true)
