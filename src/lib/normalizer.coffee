@@ -108,15 +108,40 @@ Normalizer =
       curNode = curNode.nextSibling
     return lineNode
 
+  removeBlockWhitespace: (html)->
+    # Remove whitespace adjacent to block level tags, 
+    # requires &nbsp; for legitimate spaces
+
+    # remove space preceding any block tag
+    tags = 'address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|li|noscript|ol|output|p|pre|section|table|tfoot|ul|video'
+    rgx = new RegExp('>\\s+\\<(?=\\/?\\s*(?:'+tags+')\\b)', 'gi')
+    html = html.replace( rgx, '><')
+    
+    # remove space following any block tag
+    # using reversal to simulate lookbehind in regexp
+    html = html.split('').reverse().join('')
+    tags = tags.split('').reverse().join('')
+    rgx = new RegExp('<\\s+\\>(?=(?:[^<]*\\s)?(?:'+tags+')\\s*\\/?<)', 'gi')
+    html = html.replace( rgx, '<>')
+    html = html.split('').reverse().join('')
+
+    return html
+
+  replaceNewLines: (html) ->
+    # Replace all newline characters
+    return html.replace(/(\r?\n|\r)+/g, ' ') 
+
+  strip: (html) ->
+    # Remove leading and tailing whitespace
+    # like default of python str.strip
+    return html.replace(/^\s+/, '').replace(/\s+$/, '')
+
   stripComments: (html) ->
     return html.replace(/<!--[\s\S]*?-->/g, '')
 
   stripWhitespace: (html) ->
-    # Remove leading and tailing whitespace
-    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
-    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
-    # Replace all newline characters
-    html = html.replace(/(\r?\n|\r)+/g, ' ')
+    html = Normalizer.strip(html)
+    html = Normalizer.replaceNewLines(html)
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
     html = html.replace(/\>\s+\</g, '><')
     return html
