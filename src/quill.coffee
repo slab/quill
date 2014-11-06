@@ -92,9 +92,6 @@ class Quill extends EventEmitter2
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
 
-  addStyles: (css) ->
-    @theme.addStyles(css)
-
   deleteText: (start, end, source = Quill.sources.API) ->
     [start, end, formats, source] = this._buildParams(start, end, {}, source)
     return unless end > start
