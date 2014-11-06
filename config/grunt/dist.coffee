@@ -1,3 +1,19 @@
+through = require('through')
+
+versionify = (file) ->
+  data = ''
+  write = (buf) ->
+    data += buf
+  end = ->
+    if file.indexOf('package.json') > -1
+      version = JSON.parse(data).version
+      this.queue(JSON.stringify({ version: version }))
+    else
+      this.queue(data)
+    this.queue(null)
+  return through(write, end)
+
+
 module.exports = (grunt) ->
   grunt.config('browserify',
     quill:
@@ -5,7 +21,7 @@ module.exports = (grunt) ->
         browserifyOptions:
           extensions: ['.js', '.coffee']
           standalone: 'Quill'
-        transform: ['coffeeify', 'stylify']
+        transform: ['coffeeify', 'stylify', versionify]
       files:
         'dist/quill.js': ['src/index.coffee']
   )
