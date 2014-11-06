@@ -133,10 +133,7 @@ class Quill extends EventEmitter2
     return @editor.getDelta().slice(start, end)
 
   getHTML: ->
-    html = @root.innerHTML
-    # Preserve spaces between tags
-    html = html.replace(/\>\s+\</g, '>&nbsp;<')
-    return html
+    @editor.doc.getHTML()
 
   getLength: ->
     return @editor.getDelta().length()

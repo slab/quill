@@ -43,6 +43,18 @@ class Document
       curLine = curLine.next
     return [null, index]    # Should never occur unless length calculation is off
 
+  getHTML: ->
+    html = @root.innerHTML
+    # Preserve spaces between tags
+    html = html.replace(/\>\s+\</g, '>&nbsp;<')
+    container = document.createElement('div')
+    container.innerHTML = html
+    _.each(container.querySelectorAll(".#{Line.CLASS_NAME}"), (node) ->
+      dom(node).removeClass(Line.CLASS_NAME)
+      node.removeAttribute('id')
+    )
+    return container.innerHTML
+
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
     if refLine?
