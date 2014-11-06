@@ -67,8 +67,10 @@ class Editor
     @selection.update(source)
 
   focus: ->
-    @selection.setRange(@selection.range)
-    @root.focus()
+    if @selection.range?
+      @selection.setRange(@selection.range)
+    else
+      @root.focus()
 
   getDelta: ->
     return @delta
