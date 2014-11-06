@@ -184,7 +184,7 @@ class Quill extends EventEmitter2
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
-    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html
+    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html.trim()
     @editor.doc.setHTML(html)
     @editor.checkUpdate(source)
 
