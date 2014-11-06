@@ -39,6 +39,7 @@ describe('DOM', ->
       $(@container).addClass('custom')
       dom(@container).removeClass('custom')
       expect($(@container).hasClass('custom')).toBe(false)
+      expect(@container.outerHTML).toEqual('<div></div>')
     )
 
     it('removeClass() nonexistent', ->

@@ -142,7 +142,6 @@ class Format
     if _.isString(@config.class)
       for c in dom(node).classes()
         dom(node).removeClass(c) if c.indexOf(@config.class) == 0
-      node.removeAttribute('class') unless node.getAttribute('class')  # Some browsers leave empty class attribute
     if _.isString(@config.tag)
       if this.isType(Format.types.LINE)
         if _.isString(@config.parentTag)

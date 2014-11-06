@@ -140,11 +140,12 @@ class Wrapper
   removeClass: (cssClass) ->
     return unless this.hasClass(cssClass)
     if @node.classList?
-      return @node.classList.remove(cssClass)
+      @node.classList.remove(cssClass)
     else if @node.className?
       classArray = this.classes()
       classArray.splice(classArray.indexOf(cssClass), 1)
       @node.className = classArray.join(' ')
+    @node.removeAttribute('class') unless @node.getAttribute('class')
     return this
 
   replace: (newNode) ->
