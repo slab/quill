@@ -36,7 +36,6 @@ Quill allows granular access to its contents.
 - [Quill.prototype.getModule](#quillprototypegetmodule)
 - [Quill.prototype.onModuleLoad](#quillprototypeonmoduleload)
 - [Quill.prototype.addFormat](#quillprototypeaddformat)
-- [Quill.prototype.addStyles](#quillprototypeaddstyles)
 - [Quill.prototype.addContainer](#quillprototypeaddcontainer)
 
 
@@ -547,36 +546,6 @@ Add a custom defined format to editor.
 
 {% highlight javascript %}
 editor.addFormat('strike', { tag: 'S', prepare: 'strikeThrough' });
-{% endhighlight %}
-
-
-### Quill.prototype.addStyles
-
-Add custom css styles to editor.
-
-**Methods**
-
-- `addStyles(rules)`
-- `addStyles(stylesheet)`
-
-**Parameters**
-
-| Parameter    | Type     | Description
-|--------------|----------|------------
-| `rules`      | _Object_ | Object containing CSS rules to add to the editor.
-| `stylesheet` | _String_ | URL of external stylesheet to include.
-
-**Examples**
-
-{% highlight javascript %}
-editor.addStyles({
-  'body': { 'font-family': "'Arial', san-serif" },
-  'a': { 'text-decoration': 'none' }
-});
-{% endhighlight %}
-
-{% highlight javascript %}
-editor.addStyles('css/styles.css');
 {% endhighlight %}
 
 
