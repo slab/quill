@@ -39,6 +39,7 @@ module.exports = (grunt) ->
       files:
         'dist/quill.js': ['dist/quill.js']
         'dist/quill.min.js': ['dist/quill.min.js']
+        'dist/quill.base.css': ['dist/quill.base.css']
         'dist/quill.snow.css': ['dist/quill.snow.css']
   )
 
