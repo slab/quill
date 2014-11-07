@@ -4,7 +4,7 @@ permalink: /blog/quill-v0-19-no-more-iframes/
 title: Quill v0.19 - No More Iframes
 ---
 
-Customizability is core to Quill's ethos and the new [v0.19 release](https://github.com/quilljs/quill/releases/tag/v0.19.0) is a big step towards fulfilling that mission. In previous versions Quill utilized an iframe to contain the editor. This unfortunately prevented expected browser behaviors and made it difficult for developers to access and extend Quill. Its removal is the biggest change in v0.19 and some rippling effects are expected. They, and other changes for v0.19, are summarized here.
+Customizability is core to Quill's ethos and the new [v0.19 release](https://github.com/quilljs/quill/releases/tag/v0.19.0) is a big step towards fulfilling that mission. In previous versions Quill utilized an iframe to contain the editor. This unfortunately prevented expected browser behaviors and made it difficult for developers to access and extend Quill[^1]. Its removal is the biggest change in v0.19 and some rippling effects are expected. They, and other changes for v0.19, are summarized here.
 
 
 ### Styles
@@ -44,3 +44,6 @@ Quill is now listed in npm as `quill` instead of `quilljs`. Quill was already li
 Finally, community contribution and involvement has been tremendous and both the project and everyone using it reaps the benefits. A short [style guide](https://github.com/quilljs/quill/blob/develop/docs/style-guide.md) has been added for Pull Requests to make the review process faster.
 
 A big thanks for all the contributions so far and keep them coming!
+
+
+[^1]: See [Editors and Iframes](http://www.jasonchen.me/editors-and-iframes/) for full details.
