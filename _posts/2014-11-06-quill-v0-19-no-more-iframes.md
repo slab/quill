@@ -15,8 +15,9 @@ You can now pass `false` into the [style config](/docs/configuration#styles) to 
 
 <!-- more -->
 
-
 Since adding and customizing styles is no longer inaccessible, the `addStyles` helper is no longer particularly useful and has been removed.
+
+All Quill containers' class names have changed to be prefixed with `ql-`. If your application was using these names in any way they will need to be updated.
 
 Quill is also no longer "protected" from external styles so it should be treated with the same caution as any other front end library. In particular, avoiding overly general css rules will help ensure a peaceful coexistence.
 
