@@ -92,7 +92,7 @@ footer li {
 .editor, .toolbar {
   visibility: hidden;
 }
-.editor.ql-container, .toolbar.ql-toolbar-container {
+.editor.ql-container, .toolbar.ql-toolbar {
   visibility: visible;
 }
 
