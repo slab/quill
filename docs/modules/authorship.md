@@ -27,14 +27,13 @@ module.addAuthor('tolkien', 'rgba(255,153,51,0.4)');
 module.enable();
 
 editor.setContents({
-  startLength: 0,
   ops: [
-    { value: 'The ', attributes: { author: 'tolkien' } },
-    { value: 'Balrog', attributes: { author: 'jrr' } },
-    { value: ' reached the bridge. ', attributes: { author: 'tolkien' } },
-    { value: 'Gandalf stood in the middle of the span, leaning on the staff in his left hand, but in his other hand Glamdring gleamed, cold and white. ', attributes: { author: 'tolkien' } },
-    { value: 'His enemy halted again, facing him, and the shadow about it reached out like two vast wings. It raised the whip, and the thongs whined and cracked. Fire came from its nostrils.', attributes: { author: 'jrr' } },
-    { value: ' But Gandalf stood firm.', attributes: { author: 'tolkien' } }
+    { insert: 'The ', attributes: { author: 'tolkien' } },
+    { insert: 'Balrog', attributes: { author: 'jrr' } },
+    { insert: ' reached the bridge. ', attributes: { author: 'tolkien' } },
+    { insert: 'Gandalf stood in the middle of the span, leaning on the staff in his left hand, but in his other hand Glamdring gleamed, cold and white. ', attributes: { author: 'tolkien' } },
+    { insert: 'His enemy halted again, facing him, and the shadow about it reached out like two vast wings. It raised the whip, and the thongs whined and cracked. Fire came from its nostrils.', attributes: { author: 'jrr' } },
+    { insert: ' But Gandalf stood firm.', attributes: { author: 'tolkien' } }
   ]
 });
 </script>
