@@ -551,7 +551,7 @@ editor.addFormat('strike', { tag: 'S', prepare: 'strikeThrough' });
 
 ### Quill.prototype.addContainer
 
-Add a div container inside the editor iframe, sibling to the editor itself. Remember to use the given container's ownerDocument to create additional DOM elements.
+Add a div container inside the Quill container, sibling to the editor itself. By convention, Quill modules should have a class name prefixed with `ql-`.
 
 **Methods**
 
@@ -571,5 +571,5 @@ Add a div container inside the editor iframe, sibling to the editor itself. Reme
 **Examples**
 
 {% highlight javascript %}
-var container = editor.addContainer('custom-container');
+var container = editor.addContainer('ql-custom');
 {% endhighlight %}
