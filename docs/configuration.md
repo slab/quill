@@ -64,9 +64,9 @@ The following keys are recognized:
 
 #### styles
 
-- Default: `null`
+- Default: `{}`
 
-- Object containing CSS rules to add to the Quill editor.
+- Object containing CSS rules to add to the Quill editor. Passing in `false` (not merely a falsy value) will prevent Quill from inserting any default styles. In this latter case it is assumed either the base stylesheet (`quill.base.css`) or a theme stylesheet is included manually.
 
 - **Example**
 
@@ -85,4 +85,4 @@ var editor = new Quill('#editor', {
 
 #### theme
 
-- Name of theme to use. See [Themes](/docs/themes/) for more information.
+- Name of theme to use. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.
