@@ -51,7 +51,7 @@ Simply create a container and the module to the Quill editor.
 </script>
 {% endhighlight %}
 
-The `ql-toolbar-container` class will be added to the toolbar container.
+The `ql-toolbar` class will be added to the toolbar container.
 
 A click handler will be added to any DOM element with the following classes:
 
