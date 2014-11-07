@@ -47,10 +47,10 @@ class Keyboard
     this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (range, hotkey) =>
       if range?
         if range.start != range.end
-          @quill.deleteText(range.start, range.end)
+          @quill.deleteText(range.start, range.end, Quill.sources.USER)
         else
           start = if (hotkey.key == dom.KEYS.BACKSPACE) then range.start - 1 else range.start
-          @quill.deleteText(start, start + 1)
+          @quill.deleteText(start, start + 1, Quill.sources.USER)
       return false
     )
 
