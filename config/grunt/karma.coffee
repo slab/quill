@@ -8,7 +8,7 @@ remoteKarma = _.reduce(browsers, (memo, config, browser) ->
   memo[browser] =
     browsers: [browser]
     browserDisconnectTimeout: 10000
-    browserDisconnectTolerance: 2
+    browserDisconnectTolerance: 4
     browserNoActivityTimeout: 60000
     reporters: remoteReporters
   return memo
