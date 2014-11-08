@@ -39,7 +39,7 @@ class Keyboard
     if range.isCollapsed()
       @quill.prepareFormat(format, value)
     else
-      @quill.formatText(range, format, value, 'user')
+      @quill.formatText(range, format, value, Quill.sources.USER)
     toolbar = @quill.getModule('toolbar')
     toolbar.setActive(format, value) if toolbar?
 
@@ -93,7 +93,7 @@ class Keyboard
                        .insert("\t")
                        .delete(range.end - range.start)
                        .retain(@quill.getLength() - range.end)
-    @quill.updateContents(delta)
+    @quill.updateContents(delta, Quill.sources.USER)
     @quill.setSelection(range.start + 1, range.start + 1)
 
 
