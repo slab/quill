@@ -19,15 +19,19 @@ browserifyOps =
   standalone: 'Quill'
 
 
+bundle = (watcher) ->
+  return watcher.bundle().on('error', console.error)
+
+
 serve = (connect, req, res, next) ->
   watchers = connect.watchers
   switch req.url
     when '/quill.js'
       res.setHeader('Content-Type', 'application/javascript')
-      watchers['src'].bundle().pipe(res)
+      bundle(watchers['src']).pipe(res)
     when '/test/quill.js'
       res.setHeader('Content-Type', 'application/javascript')
-      watchers['test'].bundle().pipe(res)
+      bundle(watchers['test']).pipe(res)
     when '/quill.snow.css', '/quill.base.css'
       theme = req.url.slice(7, 11)
       res.setHeader('Content-Type', 'text/css')
@@ -57,10 +61,8 @@ module.exports = (grunt) ->
           watchers[type] = watchify(b)
           watchers[type].transform(coffeeify)
           watchers[type].transform(stylify)
-          watchers[type].on('update', ->
-            watchers[type].bundle() # Gotta call with no arguments
-          )
-          watchers[type].bundle()
+          watchers[type].on('update', _.bind(bundle, watchers[type], watchers[type]))
+          bundle(watchers[type])
           return watchers
         , {})
       middleware: (connect, options, middlewares) ->
