@@ -51,6 +51,7 @@
     "protractor": "~1.4.0",
     "stylify": "~1.0.0",
     "stylus": "~0.49.2",
+    "through": "~2.3.6",
     "watchify": "~2.0.0"
   },
   "browser": {
