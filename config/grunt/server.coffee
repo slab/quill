@@ -36,6 +36,7 @@ serve = (connect, req, res, next) ->
         s.include("./src/themes/#{theme}")
         s.define('url', stylus.url())
         s.render((err, css) ->
+          console.error(err.name, err.message) if err?
           res.end(css)
         )
       )
