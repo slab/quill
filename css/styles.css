@@ -105,6 +105,7 @@ footer li {
   font-size: 24px;
 }
 #navigation-container .navbar-brand > img {
+  display: inline;
   margin-top: -8px;
 }
 #navigation-container .icon-bar {
