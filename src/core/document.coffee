@@ -1,5 +1,5 @@
 _          = require('lodash')
-Delta      = require('rich-text').Delta
+Delta      = require('rich-text/lib/delta')
 dom        = require('../lib/dom')
 Format     = require('./format')
 Line       = require('./line')

@@ -1,6 +1,6 @@
 Quill = require('../src/quill')
 
-Quill.Delta = require('rich-text').Delta
+Quill.Delta = require('rich-text/lib/delta')
 
 Quill.Document   = require('../src/core/document')
 Quill.Editor     = require('../src/core/editor')
