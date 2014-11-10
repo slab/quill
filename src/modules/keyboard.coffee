@@ -45,7 +45,7 @@ class Keyboard
 
   _initDeletes: ->
     this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (range, hotkey) =>
-      if range?
+      if range? and @quill.getLength() > 1
         if range.start != range.end
           @quill.deleteText(range.start, range.end, Quill.sources.USER)
         else
