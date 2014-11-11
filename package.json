@@ -54,9 +54,6 @@
     "through": "~2.3.6",
     "watchify": "~2.0.0"
   },
-  "browser": {
-    "lodash": ".build/lodash.js"
-  },
   "engines": {
     "node": ">=0.10"
   },
