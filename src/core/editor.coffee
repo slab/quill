@@ -109,7 +109,7 @@ class Editor
 
   _insertAt: (index, text, formatting = {}) ->
     @selection.shiftAfter(index, text.length, =>
-      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+      text = text.replace(/\r\n?/g, '\n')
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
       _.each(lineTexts, (lineText, i) =>
