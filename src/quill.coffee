@@ -73,6 +73,16 @@ class Quill extends EventEmitter2
       this.addModule(name, option)
     )
 
+  destroy: ->
+    html = this.getHTML()
+    _.each(@modules, (module, name) ->
+      module.destroy() if _.isFunction(module.destroy)
+    )
+    @editor.destroy()
+    this.removeAllListeners()
+    Quill.editors.splice(_.indexOf(Quill.editors, this), 1)
+    @container.innerHTML = html
+
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
     container = document.createElement('div')

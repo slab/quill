@@ -19,6 +19,9 @@ class Editor
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 
+  destroy: ->
+    clearInterval(@timer)
+
   disable: ->
     this.enable(false)
 

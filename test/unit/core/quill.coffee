@@ -199,4 +199,56 @@ describe('Quill', ->
       expect(source).toEqual('silent')
     )
   )
+
+  describe('destroy()', ->
+    htmlBeforeDestroying = null
+
+    beforeEach( ->
+      spyOn(@quill.editor, 'destroy')
+
+      Destroyable = ->
+        @destroy = jasmine.createSpy('destroy')
+        undefined
+
+      Quill.registerModule('destroyable', Destroyable)
+
+      @quill.addModule('destroyable')
+
+      @listener = jasmine.createSpy('listener')
+      @quill.on('some event', @listener)
+
+      @quill.insertText(0, 'Hello world!')
+      htmlBeforeDestroying = @quill.getHTML()
+
+      @quill.destroy()
+    )
+
+    afterEach( ->
+      delete Quill.modules.destroyable
+    )
+
+    it('destroys the editor', ->
+      expect(@quill.editor.destroy).toHaveBeenCalled()
+    )
+
+    it('sets the container innerHTML with the current editor html', ->
+      expect(@quill.container.innerHTML).toEqual(htmlBeforeDestroying)
+    )
+
+    it('removes the editor from the global list', ->
+      expect(Quill.editors.indexOf(@quill)).toEqual(-1)
+    )
+
+    it('destroys all modules that have a destroy() method', ->
+      _.each(@quill.modules, (module, name) ->
+        if _.isFunction(module.destroy)
+          expect(module.destroy).toHaveBeenCalled()
+      )
+    )
+
+    it('removes all listeners', ->
+      @quill.emit('some event')
+      expect(@listener).not.toHaveBeenCalled()
+    )
+  )
 )
