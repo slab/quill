@@ -19,6 +19,9 @@ class Editor
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 
+  destroy: ->
+    clearInterval(@timer)
+
   disable: ->
     this.enable(false)
 
@@ -109,7 +112,7 @@ class Editor
 
   _insertAt: (index, text, formatting = {}) ->
     @selection.shiftAfter(index, text.length, =>
-      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+      text = text.replace(/\r\n?/g, '\n')
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
       _.each(lineTexts, (lineText, i) =>

@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "async": "~0.9.0",
-    "browserify": "~6.1.0",
+    "browserify": "~6.3.2",
     "coffee-script": "~1.8.0",
     "coffeeify": "~0.7.0",
     "glob": "~4.0.4",
@@ -26,7 +26,7 @@
     "grunt-contrib-coffee": "~0.12.0",
     "grunt-contrib-compress": "~0.12.0",
     "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-connect": "~0.8.0",
+    "grunt-contrib-connect": "~0.9.0",
     "grunt-contrib-copy": "~0.7.0",
     "grunt-contrib-stylus": "~0.18.0",
     "grunt-contrib-uglify": "~0.6.0",
@@ -52,7 +52,7 @@
     "stylify": "~1.0.0",
     "stylus": "~0.49.2",
     "through": "~2.3.6",
-    "watchify": "~2.0.0"
+    "watchify": "~2.1.1"
   },
   "engines": {
     "node": ">=0.10"
