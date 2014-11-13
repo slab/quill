@@ -11,7 +11,7 @@ class LinkTooltip extends Tooltip
      '<span class="title">Visit URL:&nbsp;</span>
       <a href="#" class="url" target="_blank" href="about:blank"></a>
       <input class="input" type="text">
-      <span>&nbsp;&#45;&nbsp;</span>
+      <span>&nbsp;</span>
       <a href="javascript:;" class="change">Change</a>
       <a href="javascript:;" class="done">Done</a>'
 
@@ -90,7 +90,7 @@ class LinkTooltip extends Tooltip
 
   _suggestURL: (range) ->
     text = @quill.getText(range)
-    return this._normalizeURL(text)
+    return ''
 
 
 Quill.registerModule('link-tooltip', LinkTooltip)
