@@ -1,6 +1,6 @@
 describe('Normalizer', ->
   beforeEach( ->
-    @container = $('#editor-container').html('').get(0)
+    @container = $('#test-container').html('').get(0)
   )
 
   describe('handleBreaks()', ->
@@ -176,7 +176,7 @@ describe('Normalizer', ->
     )
 
     it('multiple lines', ->
-      html = "<div>Test</div>\n<!-- Comment -->\n<div>Test</div>"
+      html = "<div>Test</div>\n<!-- Comment \n More Comment -->\n<div>Test</div>"
       expect(Quill.Lib.Normalizer.stripComments(html)).toEqual("<div>Test</div>\n\n<div>Test</div>")
     )
   )

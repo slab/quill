@@ -6,14 +6,8 @@ Delta    = Quill.require('delta')
 
 class PasteManager
   constructor: (@quill, @options) ->
-    @container = @quill.addContainer('paste-container')
+    @container = @quill.addContainer('ql-paste-manager')
     @container.setAttribute('contenteditable', true)
-    @quill.addStyles(
-      '.paste-container':
-        'left': '-10000px'
-        'position': 'absolute'
-        'top': '50%'
-    )
     dom(@quill.root).on('paste', _.bind(this._paste, this))
 
   _paste: ->
@@ -21,10 +15,6 @@ class PasteManager
     range = @quill.getSelection()
     return unless range?
     @container.innerHTML = ""
-    iframe = dom(@quill.root).window()
-    iframeScrollY = iframe.scrollY
-    windowScrollX = window.scrollX
-    windowScrollY = window.scrollY
     @container.focus()
     _.defer( =>
       doc = new Document(@container, @quill.options)
@@ -36,12 +26,11 @@ class PasteManager
       delta.delete(range.end - range.start)
       @quill.updateContents(delta, 'user')
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
+      # Make sure bottom of pasted content is visible
       [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
       lineBottom = line.node.offsetTop + line.node.offsetHeight
-      if lineBottom > iframeScrollY + @quill.root.offsetHeight
-        iframeScrollY = line.node.offsetTop - @quill.root.offsetHeight / 2
-      iframe.scrollTo(0, iframeScrollY)
-      window.scrollTo(windowScrollX, windowScrollY)
+      editorBottom = @quill.container.scrollTop + @quill.container.offsetHeight
+      line.node.scrollIntoView(false) if lineBottom > editorBottom
     )
 
 

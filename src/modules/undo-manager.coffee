@@ -14,23 +14,25 @@ class UndoManager
 
   constructor: (@quill, @options = {}) ->
     @lastRecorded = 0
-    @emittedDelta = null
+    @ignoreChange = false
     this.clear()
     this.initListeners()
 
   initListeners: ->
     @quill.onModuleLoad('keyboard', (keyboard) =>
       keyboard.addHotkey(UndoManager.hotkeys.UNDO, =>
+        @quill.editor.checkUpdate()
         this.undo()
         return false
       )
       keyboard.addHotkey(UndoManager.hotkeys.REDO, =>
+        @quill.editor.checkUpdate()
         this.redo()
         return false
       )
     )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, origin) =>
-      return if _.isEqual(delta, @emittedDelta)
+      return if @ignoreChange
       this.record(delta, @oldDelta)
       @oldDelta = @quill.getContents()
     )
@@ -59,7 +61,7 @@ class UndoManager
       })
       @stack.undo.unshift() if @stack.undo.length > @options.maxStack
     catch ignored
-      # TODO log warning
+      console.warn('Could not record change... clearing undo stack.')
       this.clear()
 
   redo: ->
@@ -87,9 +89,9 @@ class UndoManager
     if @stack[source].length > 0
       change = @stack[source].pop()
       @lastRecorded = 0
-      @emittedDelta = change[source]
+      @ignoreChange = true
       @quill.updateContents(change[source], 'user')
-      @emittedDelta = null
+      @ignoreChange = false
       index = this._getLastChangeIndex(change[source])
       @quill.setSelection(index, index)
       @oldDelta = @quill.getContents()

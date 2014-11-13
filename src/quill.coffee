@@ -1,6 +1,6 @@
 _             = require('lodash')
 pkg           = require('../package.json')
-Delta         = require('rich-text').Delta
+Delta         = require('rich-text/lib/delta')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 dom           = require('./lib/dom')
 Editor        = require('./core/editor')
@@ -23,7 +23,8 @@ class Quill extends EventEmitter2
       'undo-manager': true
     pollInterval: 100
     readOnly: false
-    theme: 'default'
+    styles: {}
+    theme: 'base'
 
   @events:
     MODULE_INIT      : 'module-init'
@@ -50,18 +51,19 @@ class Quill extends EventEmitter2
       else return null
 
 
-  constructor: (container, options = {}) ->
-    container = document.querySelector(container) if _.isString(container)
-    throw new Error('Invalid Quill container') unless container?
+  constructor: (@container, options = {}) ->
+    @container = document.querySelector(container) if _.isString(@container)
+    throw new Error('Invalid Quill container') unless @container?
     moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
-    html = container.innerHTML
+    html = @container.innerHTML
+    @container.innerHTML = ''
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
-    @options.id = @id = "quill-#{Quill.editors.length + 1}"
+    @options.id = @id = "ql-editor-#{Quill.editors.length + 1}"
     @options.emitter = this
     @modules = {}
-    @editor = new Editor(container, this, @options)
-    @root = @editor.doc.root
+    @root = this.addContainer('ql-editor')
+    @editor = new Editor(@root, this, @options)
     Quill.editors.push(this)
     this.setHTML(html, Quill.sources.SILENT)
     themeClass = Quill.themes[@options.theme]
@@ -71,8 +73,22 @@ class Quill extends EventEmitter2
       this.addModule(name, option)
     )
 
+  destroy: ->
+    html = this.getHTML()
+    _.each(@modules, (module, name) ->
+      module.destroy() if _.isFunction(module.destroy)
+    )
+    @editor.destroy()
+    this.removeAllListeners()
+    Quill.editors.splice(_.indexOf(Quill.editors, this), 1)
+    @container.innerHTML = html
+
   addContainer: (className, before = false) ->
-    @editor.renderer.addContainer(className, before)
+    refNode = if before then @root else null
+    container = document.createElement('div')
+    dom(container).addClass(className)
+    @container.insertBefore(container, refNode)
+    return container
 
   addFormat: (name, format) ->
     @editor.doc.addFormat(name, format)
@@ -85,9 +101,6 @@ class Quill extends EventEmitter2
     @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
-
-  addStyles: (styles) ->
-    @editor.renderer.addStyles(styles)
 
   deleteText: (start, end, source = Quill.sources.API) ->
     [start, end, formats, source] = this._buildParams(start, end, {}, source)
@@ -127,7 +140,7 @@ class Quill extends EventEmitter2
     return @editor.getDelta().slice(start, end)
 
   getHTML: ->
-    return @root.innerHTML
+    @editor.doc.getHTML()
 
   getLength: ->
     return @editor.getDelta().length()
@@ -171,12 +184,14 @@ class Quill extends EventEmitter2
 
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
-      delta = { ops: delta }
-    delta.ops.unshift({ delete: this.getLength() })
+      delta = { ops: delta.slice() }
+    else
+      delta = { ops: delta.ops.slice() }
+    delta.ops.push({ delete: this.getLength() })
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
-    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html
+    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html.trim()
     @editor.doc.setHTML(html)
     @editor.checkUpdate(source)
 
@@ -206,8 +221,8 @@ class Quill extends EventEmitter2
     return params
 
 
-Quill.registerTheme('default', require('./themes/default'))
-Quill.registerTheme('snow',    require('./themes/snow'))
+Quill.registerTheme('base', require('./themes/base'))
+Quill.registerTheme('snow', require('./themes/snow'))
 
 
 module.exports = Quill

@@ -1,3 +1,19 @@
+through = require('through')
+
+versionify = (file) ->
+  data = ''
+  write = (buf) ->
+    data += buf
+  end = ->
+    if file.indexOf('package.json') > -1
+      version = JSON.parse(data).version
+      this.queue(JSON.stringify({ version: version }))
+    else
+      this.queue(data)
+    this.queue(null)
+  return through(write, end)
+
+
 module.exports = (grunt) ->
   grunt.config('browserify',
     quill:
@@ -5,7 +21,7 @@ module.exports = (grunt) ->
         browserifyOptions:
           extensions: ['.js', '.coffee']
           standalone: 'Quill'
-        transform: ['coffeeify']
+        transform: ['coffeeify', 'stylify', versionify]
       files:
         'dist/quill.js': ['src/index.coffee']
   )
@@ -39,6 +55,7 @@ module.exports = (grunt) ->
       files:
         'dist/quill.js': ['dist/quill.js']
         'dist/quill.min.js': ['dist/quill.min.js']
+        'dist/quill.base.css': ['dist/quill.base.css']
         'dist/quill.snow.css': ['dist/quill.snow.css']
   )
 
@@ -68,7 +85,7 @@ module.exports = (grunt) ->
         expand: true
         ext: '.css'
         flatten: true
-        src: 'src/themes/**/*.styl'
+        src: 'src/themes/*/*.styl'
         rename: (dest, src) ->
           return "dist/quill.#{src}"
       }]
