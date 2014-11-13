@@ -11,17 +11,9 @@ Normalizer =
   }
 
   ATTRIBUTES: {
-    'color': 'color'
-    'face' : 'fontFamily'
-    'size' : 'fontSize'
   }
 
   STYLES: {
-    'background-color'
-    'color'
-    'font-family'
-    'font-size'
-    'text-align'
   }
 
   TAGS: {
