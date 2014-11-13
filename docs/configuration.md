@@ -73,10 +73,10 @@ The following keys are recognized:
 {% highlight javascript %}
 var editor = new Quill('#editor', {
   styles: {
-    'body': {
+    '.ql-editor': {
       'font-family': "'Arial', san-serif"
     },
-    'a': {
+    '.ql-editor a': {
       'text-decoration': 'none'
     }
   }
