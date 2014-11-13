@@ -43,7 +43,7 @@ class Toolbar
         _.defer(_.bind(this.updateActive, this))
       )
     )
-    dom(@container).addClass('ql-toolbar-container')
+    dom(@container).addClass('ql-toolbar')
     dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
     if dom.isIE(11)
       dom(@container).on('mousedown', =>
@@ -82,9 +82,9 @@ class Toolbar
       value = '' if Array.isArray(value)  # Must be a defined falsy value
       if value != selectValue
         if value?
-          $input.option(value, false)
+          $input.option(value)
         else
-          $input.reset(false)
+          $input.reset()
       @triggering = false
     else
       $input.toggleClass('ql-active', value or false)

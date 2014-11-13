@@ -6,15 +6,14 @@ Range      = require('../lib/range')
 
 
 class Selection
-  constructor: (@doc, @iframe, @emitter) ->
-    @document = @doc.root.ownerDocument
+  constructor: (@doc, @emitter) ->
     @focus = false
     @range = new Range(0, 0)
     @nullDelay = false
     this.update('silent')
 
   checkFocus: ->
-    return @document.activeElement == @doc.root and document.activeElement == @iframe
+    return document.activeElement == @doc.root
 
   getRange: (ignoreFocus = false) ->
     if this.checkFocus()
@@ -94,7 +93,7 @@ class Selection
       else if node.childNodes.length == 0
         # TODO revisit fix for encoding edge case <p><em>|</em></p>
         unless Normalizer.TAGS[node.tagName]?
-          text = node.ownerDocument.createTextNode('')
+          text = document.createTextNode('')
           node.appendChild(text)
           node = text
         return [node, 0]
@@ -109,7 +108,7 @@ class Selection
           return [node, dom(node).length()]
 
   _getNativeRange: ->
-    selection = @document.getSelection()
+    selection = document.getSelection()
     if selection?.rangeCount > 0
       range = selection.getRangeAt(0)
       if dom(range.startContainer).isAncestor(@doc.root, true)
@@ -140,21 +139,20 @@ class Selection
     return lineOffset + leafOffset + offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
-    selection = @document.getSelection()
+    selection = document.getSelection()
     return unless selection
     if startNode?
-      # Some reason need to focus before removing ranges otherwise cannot set them
+      # Need to focus before setting or else in IE9/10 later focus will cause a set on 0th index on line div
+      # to be set at 1st index
       @doc.root.focus() unless this.checkFocus()
-      nativeRange = this._getNativeRange()
       if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
         # IE9 requires removeAllRanges() regardless of value of
         # nativeRange or else formatting from toolbar does not work
         selection.removeAllRanges()
-        nativeRange = @document.createRange()
+        nativeRange = document.createRange()
         nativeRange.setStart(startNode, startOffset)
         nativeRange.setEnd(endNode, endOffset)
         selection.addRange(nativeRange)
-        @doc.root.focus() unless this.checkFocus()
     else
       selection.removeAllRanges()
       @doc.root.blur()

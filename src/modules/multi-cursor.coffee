@@ -20,26 +20,7 @@ class MultiCursor extends EventEmitter2
 
   constructor: (@quill, @options) ->
     @cursors = {}
-    @container = @quill.addContainer('cursor-container', true)
-    @quill.addStyles(
-      '.cursor-container': { 'position': 'absolute', 'left': '0', 'top': '0', 'z-index': '1000' }
-      '.cursor': { 'margin-left': '-1px', 'position': 'absolute' }
-      '.cursor-flag':
-        'bottom': '100%'
-        'position': 'absolute'
-        'white-space': 'nowrap'
-      '.cursor-name':
-        'display': 'inline-block'
-        'color': 'white'
-        'padding': '2px 8px'
-      '.cursor-caret':
-        'height': '100%'
-        'position': 'absolute'
-        'width': '2px'
-      '.cursor.hidden .cursor-flag': { 'display': 'none' }
-      '.cursor.top > .cursor-flag': { 'bottom': 'auto', 'top': '100%' }
-      '.cursor.right > .cursor-flag': { 'right': '-2px' }
-    )
+    @container = @quill.addContainer('ql-multi-cursor', true)
     @quill.on(@quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this))
 
   clearCursors: ->
@@ -108,7 +89,7 @@ class MultiCursor extends EventEmitter2
     this.update()
 
   _buildCursor: (name, color) ->
-    cursor = @container.ownerDocument.createElement('span')
+    cursor = document.createElement('span')
     dom(cursor).addClass('cursor')
     cursor.innerHTML = @options.template
     cursorFlag = cursor.querySelector('.cursor-flag')
@@ -120,10 +101,10 @@ class MultiCursor extends EventEmitter2
     return cursor
 
   _moveCursor: (cursor, reference, side = 'left') ->
-    win = dom(reference).window()
     bounds = reference.getBoundingClientRect()
-    cursor.elem.style.top = bounds.top + win.pageYOffset + 'px'
-    cursor.elem.style.left = bounds[side] + 'px'
+    parentBounds = @quill.container.getBoundingClientRect()
+    cursor.elem.style.top = (bounds.top - parentBounds.top + @quill.container.scrollTop) + 'px'
+    cursor.elem.style.left = bounds[side] - parentBounds[side] + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')
     dom(cursor.elem).toggleClass('top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
@@ -134,7 +115,7 @@ class MultiCursor extends EventEmitter2
   _updateCursor: (cursor) ->
     @quill.editor.checkUpdate()
     [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
-    guide = @container.ownerDocument.createElement('span')
+    guide = document.createElement('span')
     if leaf?
       [leftNode, rightNode, didSplit] = dom(leaf.node).split(offset)
       dom(guide).text(dom.ZERO_WIDTH_NOBREAK_SPACE)

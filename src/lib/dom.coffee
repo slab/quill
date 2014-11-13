@@ -140,11 +140,12 @@ class Wrapper
   removeClass: (cssClass) ->
     return unless this.hasClass(cssClass)
     if @node.classList?
-      return @node.classList.remove(cssClass)
+      @node.classList.remove(cssClass)
     else if @node.className?
       classArray = this.classes()
       classArray.splice(classArray.indexOf(cssClass), 1)
       @node.className = classArray.join(' ')
+    @node.removeAttribute('class') unless @node.getAttribute('class')
     return this
 
   replace: (newNode) ->
@@ -213,7 +214,7 @@ class Wrapper
   switchTag: (newTag) ->
     newTag = newTag.toUpperCase()
     return this if @node.tagName == newTag
-    newNode = @node.ownerDocument.createElement(newTag)
+    newNode = document.createElement(newTag)
     attributes = this.attributes()
     this.moveChildren(newNode) unless dom.VOID_TAGS[newTag]?
     this.replace(newNode)
@@ -237,7 +238,7 @@ class Wrapper
         else return ""
 
   textNodes: ->
-    walker = @node.ownerDocument.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
+    walker = document.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
     textNodes = []
     while textNode = walker.nextNode()
       textNodes.push(textNode)
@@ -253,10 +254,10 @@ class Wrapper
 
   trigger: (eventName, options = {}) =>
     if ['keypress', 'keydown', 'keyup'].indexOf(eventName) < 0
-      event = @node.ownerDocument.createEvent('Event')
+      event = document.createEvent('Event')
       event.initEvent(eventName, options.bubbles, options.cancelable)
     else
-      event = @node.ownerDocument.createEvent('KeyboardEvent')
+      event = document.createEvent('KeyboardEvent')
       lastKeyEvent = _.clone(options)
       if _.isNumber(options.key)
         lastKeyEvent.which = options.key
@@ -270,11 +271,11 @@ class Wrapper
         modifiers.push('Control') if options.ctrlKey
         modifiers.push('Meta') if options.metaKey
         modifiers.push('Shift') if options.shiftKey
-        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, this.window(), 0, 0, modifiers.join(' '), null, null)
+        event.initKeyboardEvent(eventName, options.bubbles, options.cancelable, window, 0, 0, modifiers.join(' '), null, null)
       else
         # FF uses initKeyEvent, Webkit uses initKeyboardEvent
         initFn = if _.isFunction(event.initKeyboardEvent) then 'initKeyboardEvent' else 'initKeyEvent'
-        event[initFn](eventName, options.bubbles, options.cancelable, this.window(), options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
+        event[initFn](eventName, options.bubbles, options.cancelable, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
     @node.dispatchEvent(event)
     lastKeyEvent = null
     return this
@@ -287,9 +288,6 @@ class Wrapper
     )
     this.remove()
     return ret
-
-  window: ->
-    return @node.ownerDocument.defaultView or @node.ownerDocument.parentWindow
 
   wrap: (wrapper) ->
     @node.parentNode.insertBefore(wrapper, @node) if @node.parentNode?
@@ -343,7 +341,7 @@ dom = _.extend(dom,
   TEXT_NODE: 3
   ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
 
-  DEFAULT_BLOCK_TAG: 'P'
+  DEFAULT_BLOCK_TAG: 'DIV'
   DEFAULT_BREAK_TAG: 'BR'
   DEFAULT_INLINE_TAG: 'SPAN'
   EMBED_TEXT: '!' # No reason we picked ! besides it being one character (so delta cannot split it up)

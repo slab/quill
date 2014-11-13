@@ -1,6 +1,6 @@
 {
-  "name": "quilljs",
-  "version": "0.18.1",
+  "name": "quill",
+  "version": "0.19.3",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -15,19 +15,18 @@
     "rich-text": "~1.0.3"
   },
   "devDependencies": {
-    "aliasify": "~1.4.0",
     "async": "~0.9.0",
-    "browserify": "~6.1.0",
+    "browserify": "~6.3.2",
     "coffee-script": "~1.8.0",
     "coffeeify": "~0.7.0",
     "glob": "~4.0.4",
     "grunt": "~0.4.3",
-    "grunt-browserify": "~3.0.1",
+    "grunt-browserify": "~3.2.0",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-coffee": "~0.12.0",
     "grunt-contrib-compress": "~0.12.0",
     "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-connect": "~0.8.0",
+    "grunt-contrib-connect": "~0.9.0",
     "grunt-contrib-copy": "~0.7.0",
     "grunt-contrib-stylus": "~0.18.0",
     "grunt-contrib-uglify": "~0.6.0",
@@ -48,13 +47,12 @@
     "karma-phantomjs-launcher": "~0.1.2",
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.2",
-    "load-grunt-tasks": "~0.6.0",
-    "protractor": "~1.3.1",
+    "load-grunt-tasks": "~1.0.0",
+    "protractor": "~1.4.0",
+    "stylify": "~1.0.0",
     "stylus": "~0.49.2",
-    "watchify": "~2.0.0"
-  },
-  "browser": {
-    "lodash": ".build/lodash.js"
+    "through": "~2.3.6",
+    "watchify": "~2.1.1"
   },
   "engines": {
     "node": ">=0.10"

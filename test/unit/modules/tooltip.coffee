@@ -1,12 +1,13 @@
 describe('Tooltip', ->
-  makeBounder = (left, top, width, height) ->
+  makeBounder = (left, top, width, height, scrollTop = 0) ->
     return {
       getBoundingClientRect: ->
         return { left: left, top: top, right: left + width, bottom: top + height, width: width, height: height }
     }
 
   beforeEach( ->
-    @container = $('#editor-container').html('<div></div>').get(0)
+    resetContainer()
+    @container = $('#test-container').html('<div></div>').get(0)
     @quill = new Quill(@container.firstChild)
     @tooltip = @quill.addModule('tooltip', { offset: 20 })
   )
@@ -23,31 +24,33 @@ describe('Tooltip', ->
     )
   )
 
-  describe('_position()', ->
+  describe('position()', ->
     beforeEach( ->
-      @quill.root = makeBounder(50, 50, 600, 400)
-      @quill.root.ownerDocument = @tooltip.container.ownerDocument
-      @tooltip.container = makeBounder(60, 60, 200, 100)
+      $(@quill.container).css({ width: 600, height: 400 })
+      $(@tooltip.container).css({ width: 200, height: 100 })
+
     )
 
     it('no reference', ->
-      [left, top] = @tooltip._position()
-      expect(left).toEqual(250)
-      expect(top).toEqual(200)
+      [left, top] = @tooltip.position()
+      expect(left).toEqual(200)
+      expect(top).toEqual(150)
     )
 
     it('place below', ->
-      reference = makeBounder(100, 100, 100, 50)
-      [left, top] = @tooltip._position(reference)
-      expect(left).toEqual(50)
-      expect(top).toEqual(170)
+      reference = @quill.addContainer('ql-reference')
+      $(reference).css({ position: 'absolute', top: '100px', left: '200px', width: '100px', height: '50px' })
+      [left, top] = @tooltip.position(reference)
+      expect(left).toEqual(150)
+      expect(top).toEqual(170)    # ref top + ref height + offset
     )
 
     it('place above', ->
-      reference = makeBounder(100, 500, 100, 50)
-      [left, top] = @tooltip._position(reference)
-      expect(left).toEqual(50)
-      expect(top).toEqual(380)
+      reference = @quill.addContainer('ql-reference')
+      $(reference).css({ position: 'absolute', top: '350px', left: '200px', width: '100px', height: '50px' })
+      [left, top] = @tooltip.position(reference)
+      expect(left).toEqual(150)
+      expect(top).toEqual(230)    # ref top - tooltip height - offset
     )
   )
 )

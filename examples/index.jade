@@ -59,8 +59,8 @@ html
       var editor = new Quill('#editor-container', {
         modules: {
           'toolbar': { container: '#formatting-container' },
-          'image-tooltip': true,
-          'link-tooltip': true
+          'link-tooltip': true,
+          'image-tooltip': true
         }
       });
       editor.on('selection-change', function(range) {

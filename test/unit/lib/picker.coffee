@@ -2,7 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('Picker', ->
   beforeEach( ->
-    @container = $('#editor-container').html(Quill.Lib.Normalizer.stripWhitespace('
+    @container = $('#test-container').html(Quill.Lib.Normalizer.stripWhitespace('
       <select title="Font" class="ql-font">
         <option value="sans-serif" selected>Sans Serif</option>
         <option value="serif">Serif</option>

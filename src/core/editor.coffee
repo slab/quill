@@ -1,9 +1,8 @@
-_          = require('lodash')
-dom        = require('../lib/dom')
-Document   = require('./document')
-Line       = require('./line')
-Renderer   = require('./renderer')
-Selection  = require('./selection')
+_         = require('lodash')
+dom       = require('../lib/dom')
+Document  = require('./document')
+Line      = require('./line')
+Selection = require('./selection')
 
 
 class Editor
@@ -12,15 +11,16 @@ class Editor
     SILENT : 'silent'
     USER   : 'user'
 
-  constructor: (@iframeContainer, @quill, @options = {}) ->
-    @renderer = new Renderer(@iframeContainer, @options)
-    dom(@iframeContainer).on('focus', _.bind(this.focus, this))
-    @root = @renderer.root
+  constructor: (@root, @quill, @options = {}) ->
+    @root.setAttribute('id', @options.id)
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
-    @selection = new Selection(@doc, @renderer.iframe, @quill)
+    @selection = new Selection(@doc, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
+
+  destroy: ->
+    clearInterval(@timer)
 
   disable: ->
     this.enable(false)
@@ -61,7 +61,7 @@ class Editor
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, Editor.sources.USER)
 
   checkUpdate: (source = 'user') ->
-    return clearInterval(@timer) if !@renderer.iframe.parentNode? or !@root.parentNode?
+    return clearInterval(@timer) unless @root.parentNode?
     delta = this._update()
     if delta
       @delta.compose(delta)
@@ -70,9 +70,10 @@ class Editor
     @selection.update(source)
 
   focus: ->
-    @selection.setRange(@selection.range) if dom.isIE(11)
-    @renderer.iframe.focus() if dom.isIOS()
-    @root.focus()
+    if @selection.range?
+      @selection.setRange(@selection.range)
+    else
+      @root.focus()
 
   getDelta: ->
     return @delta
@@ -111,13 +112,13 @@ class Editor
 
   _insertAt: (index, text, formatting = {}) ->
     @selection.shiftAfter(index, text.length, =>
-      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+      text = text.replace(/\r\n?/g, '\n')
       lineTexts = text.split('\n')
       [line, offset] = @doc.findLineAt(index)
       _.each(lineTexts, (lineText, i) =>
         if !line? or line.length <= offset    # End of document
           if i < lineTexts.length - 1 or lineText.length > 0
-            line = @doc.appendLine(@root.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG))
+            line = @doc.appendLine(document.createElement(dom.DEFAULT_BLOCK_TAG))
             offset = 0
             line.insertText(offset, lineText, formatting)
             line.format(formatting)

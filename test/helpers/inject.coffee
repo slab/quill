@@ -1,4 +1,12 @@
 # Inject fixtures into DOM
-$(document.body).prepend(_.map(window.__html__, (html) ->
+html = _.map(window.__html__, (html) ->
   return html
-).join(''))
+).join('')
+
+$div = $('<div>').attr('id', 'test-container')
+$(document.body).prepend($div)
+
+window.resetContainer = ->
+  return $div.html(html).get(0)
+
+window.resetContainer()
