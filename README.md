@@ -48,12 +48,6 @@ There are a number of ways to the latest or versioned copy of Quill.
 <script src="//cdn.quilljs.com/0.16.0/quill.min.js"></script>
 ```
 
-You can also use “latest” as the version:
-
-```html
-<script src="//cdn.quilljs.com/latest/quill.min.js"></script>
-```
-
 
 ## Local Development
 
