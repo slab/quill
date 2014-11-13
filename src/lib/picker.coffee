@@ -7,12 +7,12 @@ class Picker
   @TEMPLATE: '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>'
 
   constructor: (@select) ->
-    @container = document.createElement('span')
+    @container = @select.ownerDocument.createElement('span')
     this.buildPicker()
     dom(@container).addClass('ql-picker')
     @select.style.display = 'none'
     @select.parentNode.insertBefore(@container, @select)
-    dom(document).on('click', =>
+    dom(@select.ownerDocument).on('click', =>
       this.close()
       return true
     )
@@ -31,7 +31,7 @@ class Picker
     )
 
   buildItem: (picker, option, index) ->
-    item = document.createElement('span')
+    item = @select.ownerDocument.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
     dom(item).addClass('ql-picker-item').text(dom(option).text()).on('click', =>
       this.selectItem(item, true)

@@ -118,7 +118,9 @@ Normalizer =
     return html.replace(/<!--[\s\S]*?-->/g, '')
 
   stripWhitespace: (html) ->
-    html = html.trim()
+    # Remove leading and tailing whitespace
+    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
+    html = html.replace(/^\s+/, '').replace(/\s+$/, '')
     # Replace all newline characters
     html = html.replace(/(\r?\n|\r)+/g, ' ')
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
@@ -152,7 +154,7 @@ Normalizer =
   # Wrap inline nodes with block tags
   wrapInline: (lineNode) ->
     return lineNode if dom.BLOCK_TAGS[lineNode.tagName]?
-    blockNode = document.createElement(dom.DEFAULT_BLOCK_TAG)
+    blockNode = lineNode.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG)
     lineNode.parentNode.insertBefore(blockNode, lineNode)
     while lineNode? and !dom.BLOCK_TAGS[lineNode.tagName]?
       nextNode = lineNode.nextSibling

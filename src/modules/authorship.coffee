@@ -37,7 +37,7 @@ class Authorship
   addAuthor: (id, color) ->
     styles = {}
     styles[".authorship .author-#{id}"] = { "background-color": "#{color}" }
-    @quill.theme.addStyles(styles)
+    @quill.addStyles(styles)
 
   attachButton: (button) ->
     $button = dom(button)

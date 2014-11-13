@@ -1,6 +1,6 @@
 describe('ColorPicker', ->
   it('constructor', ->
-    container = $('#test-container').html(Quill.Lib.Normalizer.stripWhitespace('
+    container = $('#editor-container').html(Quill.Lib.Normalizer.stripWhitespace('
       <select title="Text Color" class="ql-color">
         <option value="rgb(0, 0, 0)" selected></option>
         <option value="rgb(230, 0, 0)"></option>

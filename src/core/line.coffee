@@ -1,5 +1,5 @@
 _          = require('lodash')
-Delta      = require('rich-text/lib/delta')
+Delta      = require('rich-text').Delta
 dom        = require('../lib/dom')
 Format     = require('./format')
 Leaf       = require('./leaf')
@@ -9,8 +9,8 @@ Normalizer = require('../lib/normalizer')
 
 
 class Line extends LinkedList.Node
-  @CLASS_NAME : 'ql-line'
-  @ID_PREFIX  : 'ql-line-'
+  @CLASS_NAME : 'line'
+  @ID_PREFIX  : 'line-'
 
   constructor: (@doc, @node) ->
     @id = _.uniqueId(Line.ID_PREFIX)
@@ -118,7 +118,7 @@ class Line extends LinkedList.Node
     else
       node = _.reduce(formats, (node, value, name) =>
         return @doc.formats[name].add(node, value)
-      , document.createTextNode(text))
+      , @node.ownerDocument.createTextNode(text))
       [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
       nextNode = dom(nextNode).splitAncestors(@node).get() if nextNode
       @node.insertBefore(node, nextNode)
@@ -136,7 +136,7 @@ class Line extends LinkedList.Node
         return false
     @node = Normalizer.normalizeNode(@node)
     if dom(@node).length() == 0 and !@node.querySelector(dom.DEFAULT_BREAK_TAG)
-      @node.appendChild(document.createElement(dom.DEFAULT_BREAK_TAG))
+      @node.appendChild(@node.ownerDocument.createElement(dom.DEFAULT_BREAK_TAG))
     @leaves = new LinkedList()
     @formats = _.reduce(@doc.formats, (formats, format, name) =>
       if format.isType(Format.types.LINE)

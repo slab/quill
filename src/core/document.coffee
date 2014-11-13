@@ -1,5 +1,5 @@
 _          = require('lodash')
-Delta      = require('rich-text/lib/delta')
+Delta      = require('rich-text').Delta
 dom        = require('../lib/dom')
 Format     = require('./format')
 Line       = require('./line')
@@ -16,7 +16,7 @@ class Document
   addFormat: (name, config) ->
     config = Format.FORMATS[name] unless _.isObject(config)
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
-    @formats[name] = new Format(config)
+    @formats[name] = new Format(@root.ownerDocument, config)
 
   appendLine: (lineNode) ->
     return this.insertLineBefore(lineNode, null)
@@ -42,18 +42,6 @@ class Document
       index -= curLine.length
       curLine = curLine.next
     return [null, index]    # Should never occur unless length calculation is off
-
-  getHTML: ->
-    html = @root.innerHTML
-    # Preserve spaces between tags
-    html = html.replace(/\>\s+\</g, '>&nbsp;<')
-    container = document.createElement('div')
-    container.innerHTML = html
-    _.each(container.querySelectorAll(".#{Line.CLASS_NAME}"), (node) ->
-      dom(node).removeClass(Line.CLASS_NAME)
-      node.removeAttribute('id')
-    )
-    return container.innerHTML
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)

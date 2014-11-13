@@ -4,7 +4,6 @@ basicEditor = new Quill('.basic-wrapper .editor-container',
   modules:
     authorship: { authorId: 'basic' }
     toolbar: { container: '.basic-wrapper .toolbar-container' }
-  styles: false
 )
 
 advancedEditor = new Quill('.advanced-wrapper .editor-container',
@@ -14,7 +13,6 @@ advancedEditor = new Quill('.advanced-wrapper .editor-container',
     'link-tooltip': true
     'image-tooltip': true
     'multi-cursor': true
-  styles: false
   theme: 'snow'
 )
 

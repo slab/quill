@@ -2,7 +2,6 @@ dom = Quill.Lib.DOM
 
 describe('Toolbar', ->
   beforeEach( ->
-    resetContainer()
     @editorContainer = $('#editor-container').html('
       <div>
         <div>
@@ -16,11 +15,6 @@ describe('Toolbar', ->
     @toolbar = @quill.addModule('toolbar', { container: @toolbarContainer })
     @button = @toolbarContainer.querySelector('.ql-bold')
     @select = @toolbarContainer.querySelector('.ql-size')
-  )
-
-  afterEach((done) ->
-    clearInterval(@quill.editor.timer)
-    _.defer(done)
   )
 
   describe('format', ->

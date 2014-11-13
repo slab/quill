@@ -1,12 +1,15 @@
+global._ = require('lodash')
+
 Quill = require('../src/quill')
 
-Quill.Delta = require('rich-text/lib/delta')
+Quill.Delta = require('rich-text').Delta
 
 Quill.Document   = require('../src/core/document')
 Quill.Editor     = require('../src/core/editor')
 Quill.Format     = require('../src/core/format')
 Quill.Leaf       = require('../src/core/leaf')
 Quill.Line       = require('../src/core/line')
+Quill.Renderer   = require('../src/core/renderer')
 Quill.Selection  = require('../src/core/selection')
 
 Quill.Lib =
@@ -30,12 +33,11 @@ Quill.Module =
   UndoManager   : require('../src/modules/undo-manager')
 
 Quill.Theme =
-  Base          : require('../src/themes/base')
+  Default       : require('../src/themes/default')
   Snow          : require('../src/themes/snow')
 
 
 Quill.DEFAULTS.pollInterval = 10000000
-Quill.DEFAULTS.style = false
 
 
 module.exports = Quill

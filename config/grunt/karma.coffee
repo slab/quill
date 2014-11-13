@@ -8,7 +8,7 @@ remoteKarma = _.reduce(browsers, (memo, config, browser) ->
   memo[browser] =
     browsers: [browser]
     browserDisconnectTimeout: 10000
-    browserDisconnectTolerance: 4
+    browserDisconnectTolerance: 2
     browserNoActivityTimeout: 60000
     reporters: remoteReporters
   return memo
@@ -20,9 +20,6 @@ module.exports = (grunt) ->
       configFile: 'config/karma.js'
       files: [
         'node_modules/jquery/dist/jquery.js'
-        'node_modules/lodash/lodash.js'
-
-        "http://localhost:#{grunt.config('port')}/quill.base.css"
         "http://localhost:#{grunt.config('port')}/test/quill.js"
 
         'test/fixtures/unit.html'

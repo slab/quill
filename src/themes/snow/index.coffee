@@ -1,11 +1,11 @@
-_           = require('lodash')
-ColorPicker = require('../../lib/color-picker')
-BaseTheme   = require('../base')
-dom         = require('../../lib/dom')
-Picker      = require('../../lib/picker')
+_            = require('lodash')
+ColorPicker  = require('../../lib/color-picker')
+DefaultTheme = require('../default')
+dom          = require('../../lib/dom')
+Picker       = require('../../lib/picker')
 
 
-class SnowTheme extends BaseTheme
+class SnowTheme extends DefaultTheme
   @COLORS: [
     "#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff"
     "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff"
@@ -24,13 +24,70 @@ class SnowTheme extends BaseTheme
         </span>
         <span class="cursor-caret"></span>'
 
-  constructor: (@quill, @options) ->
+  @STYLES:
+    '.snow .image-tooltip-container a':
+      'border': '1px solid #06c'
+    '.snow .image-tooltip-container a.insert':
+      'background-color': '#06c'
+      'color': '#fff'
+    '.snow .cursor-name':
+      'border-radius': '4px'
+      'font-size': '11px'
+      'font-family': 'Arial'
+      'margin-left': '-50%'
+      'padding': '4px 10px'
+    '.snow .cursor-triangle':
+      'border-left': '4px solid transparent'
+      'border-right': '4px solid transparent'
+      'height': '0px'
+      'margin-left': '-3px'
+      'width': '0px'
+    '.snow .cursor.left .cursor-name':
+      'margin-left': '-8px'
+    '.snow .cursor.right .cursor-flag':
+      'right': 'auto'
+    '.snow .cursor.right .cursor-name':
+      'margin-left': '-100%'
+      'margin-right': '-8px'
+    '.snow .cursor-triangle.bottom':
+      'border-top': '4px solid transparent'
+      'display': 'block'
+      'margin-bottom': '-1px'
+    '.snow .cursor-triangle.top':
+      'border-bottom': '4px solid transparent'
+      'display': 'none'
+      'margin-top': '-1px'
+    '.snow .cursor.top .cursor-triangle.bottom':
+      'display': 'none'
+    '.snow .cursor.top .cursor-triangle.top':
+      'display': 'block'
+    '.snow a':
+      'color': '#06c'
+    '.snow .tooltip':
+      'border': '1px solid #ccc'
+      'box-shadow': '0px 0px 5px #ddd'
+      'color': '#222'
+    '.snow .tooltip a':
+      'color': '#06c'
+    '.snow .tooltip .input':
+      'border': '1px solid #ccc'
+      'margin': '0px'
+      'padding': '5px'
+    '.snow .image-tooltip-container .preview':
+      'border-color': '#ccc'
+      'color': '#ccc'
+    '.snow .link-tooltip-container a, .snow .link-tooltip-container span':
+      'display': 'inline-block'
+      'line-height': '25px'
+
+  constructor: (@quill) ->
     super
-    dom(@quill.container).addClass('ql-snow')
+    @quill.addStyles(SnowTheme.STYLES)
     @pickers = []
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       _.invoke(@pickers, 'close') if range?
     )
+    dom(@quill.root.ownerDocument.body).addClass('snow')
     @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
     @quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
 
@@ -42,7 +99,6 @@ class SnowTheme extends BaseTheme
     )
 
   extendToolbar: (module) ->
-    dom(module.container).addClass('ql-snow')
     _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
       select = module.container.querySelector(".ql-#{format}")
       return unless select?

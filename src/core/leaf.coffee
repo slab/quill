@@ -5,7 +5,7 @@ LinkedList = require('../lib/linked-list')
 
 
 class Leaf extends LinkedList.Node
-  @ID_PREFIX: 'ql-leaf-'
+  @ID_PREFIX: 'leaf-'
 
   @isLeafNode: (node) ->
     return dom(node).isTextNode() or !node.firstChild?
@@ -21,7 +21,7 @@ class Leaf extends LinkedList.Node
     @text = @text.slice(0, offset) + @text.slice(offset + length)
     @length = @text.length
     if dom.EMBED_TAGS[@node.tagName]?
-      textNode = document.createTextNode(@text)
+      textNode = @node.ownerDocument.createTextNode(@text)
       @node = dom(@node).replace(textNode)
     else
       dom(@node).text(@text)
@@ -31,7 +31,7 @@ class Leaf extends LinkedList.Node
     if dom(@node).isTextNode()
       dom(@node).text(@text)
     else
-      textNode = document.createTextNode(text)
+      textNode = @node.ownerDocument.createTextNode(text)
       if @node.tagName == dom.DEFAULT_BREAK_TAG
         @node = dom(@node).replace(textNode)
       else

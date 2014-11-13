@@ -3,7 +3,6 @@ browserify = require('browserify')
 coffeeify = require('coffeeify')
 fs = require('fs')
 harp = require('harp')
-stylify = require('stylify')
 stylus = require('stylus')
 watchify = require('watchify')
 
@@ -19,28 +18,22 @@ browserifyOps =
   standalone: 'Quill'
 
 
-bundle = (watcher) ->
-  return watcher.bundle().on('error', console.error)
-
-
 serve = (connect, req, res, next) ->
   watchers = connect.watchers
   switch req.url
     when '/quill.js'
       res.setHeader('Content-Type', 'application/javascript')
-      bundle(watchers['src']).pipe(res)
+      watchers['src'].bundle().pipe(res)
     when '/test/quill.js'
       res.setHeader('Content-Type', 'application/javascript')
-      bundle(watchers['test']).pipe(res)
-    when '/quill.snow.css', '/quill.base.css'
-      theme = req.url.slice(7, 11)
+      watchers['test'].bundle().pipe(res)
+    when '/quill.snow.css'
       res.setHeader('Content-Type', 'text/css')
-      fs.readFile("./src/themes/#{theme}/#{theme}.styl", (err, data) ->
+      fs.readFile('./src/themes/snow/snow.styl', (err, data) ->
         s = stylus(data.toString())
-        s.include("./src/themes/#{theme}")
+        s.include('./src/themes/snow')
         s.define('url', stylus.url())
         s.render((err, css) ->
-          console.error(err.name, err.message) if err?
           res.end(css)
         )
       )
@@ -60,9 +53,10 @@ module.exports = (grunt) ->
           b = browserify(file, browserifyOps)
           watchers[type] = watchify(b)
           watchers[type].transform(coffeeify)
-          watchers[type].transform(stylify)
-          watchers[type].on('update', _.bind(bundle, watchers[type], watchers[type]))
-          bundle(watchers[type])
+          watchers[type].on('update', ->
+            watchers[type].bundle() # Gotta call with no arguments
+          )
+          watchers[type].bundle()
           return watchers
         , {})
       middleware: (connect, options, middlewares) ->

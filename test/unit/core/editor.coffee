@@ -1,13 +1,9 @@
 describe('Editor', ->
   beforeEach( ->
-    @createEditor = (options) ->
-      resetContainer()
-      @container = $('#test-container').html('<div></div>').get(0)
-      Quill.Lib.EventEmitter2.events = Quill.events
-      emitter = new Quill.Lib.EventEmitter2
-      @editor = new Quill.Editor(@container.firstChild, emitter, options)
-
-    @createEditor({ formats: Quill.DEFAULTS.formats })
+    @container = $('#editor-container').html('<div></div>').get(0)
+    Quill.Lib.EventEmitter2.events = Quill.events
+    emitter = new Quill.Lib.EventEmitter2
+    @editor = new Quill.Editor(@container.firstChild, emitter, { formats: Quill.DEFAULTS.formats })
   )
 
   describe('_deleteAt()', ->
@@ -246,28 +242,6 @@ describe('Editor', ->
       @editor.applyDelta(delta)
       expected = '<div>01a23|</div>'
       expect(@editor.root).toEqualHTML(expected, true)
-    )
-  )
-
-  describe('destroy()', ->
-    beforeEach( ->
-      jasmine.clock().install()
-      # Mock checkUpdate() before creating the editor because it is bound
-      # in the constructor.
-      spyOn(Quill.Editor.prototype, 'checkUpdate')
-
-      @createEditor({ formats: Quill.DEFAULTS.formats, pollInterval: 100 })
-
-      @editor.destroy()
-    )
-
-    afterEach( ->
-      jasmine.clock().uninstall()
-    )
-
-    it('clears the update timer', ->
-      jasmine.clock().tick(5 * @editor.options.pollInterval)
-      expect(@editor.checkUpdate).not.toHaveBeenCalled()
     )
   )
 )

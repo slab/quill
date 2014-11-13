@@ -37,7 +37,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 There are a number of ways to the latest or versioned copy of Quill.
 
-- npm: `npm install quill`
+- npm: `npm install quilljs`
 - bower: `bower install quill`
 - tar: https://github.com/quilljs/quill/releases
 
@@ -119,16 +119,12 @@ We welcome feature requests. Please make sure they are within scope of Quill's g
 
 Pull requests will not be accepted without adhering to the following:
 
-1. Conform to existing [coding styles](docs/style-guide.md).
+1. Conform to existing [coding styles](doc/style-guide).
 2. New functionality are accompanied by tests.
 3. Serve a single atomic purpose (add one feature or fix one bug)
 4. Introduce only changes that further the PR's singular purpose (ex. do not tweak an unrelated config along with adding your feature).
 
 **Important:** By issuing a Pull Request you agree to allow the project owners to license your work under the terms of the [License](https://github.com/quilljs/quill/blob/master/LICENSE).
-
-## Thanks
-
-[Swift](https://github.com/theycallmeswift), for providing the npm package name. If you're looking for his blogging engine see [v0.1.5-1](https://www.npmjs.org/package/quill/0.1.5-1).
 
 ## License
 

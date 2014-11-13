@@ -39,19 +39,14 @@ class Keyboard
     if range.isCollapsed()
       @quill.prepareFormat(format, value)
     else
-      @quill.formatText(range, format, value, Quill.sources.USER)
+      @quill.formatText(range, format, value, 'user')
     toolbar = @quill.getModule('toolbar')
     toolbar.setActive(format, value) if toolbar?
 
   _initDeletes: ->
-    this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (range, hotkey) =>
-      if range? and @quill.getLength() > 1
-        if range.start != range.end
-          @quill.deleteText(range.start, range.end, Quill.sources.USER)
-        else
-          start = if (hotkey.key == dom.KEYS.BACKSPACE) then range.start - 1 else range.start
-          @quill.deleteText(start, start + 1, Quill.sources.USER)
-      return false
+    this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], =>
+      # Prevent deleting if editor is already blank (or just empty newline)
+      return @quill.getLength() > 1
     )
 
   _initHotkeys: ->
@@ -78,7 +73,7 @@ class Keyboard
         return if !!hotkey.metaKey != !!metaKey
         return if !!hotkey.shiftKey != !!event.shiftKey
         return if !!hotkey.altKey != !!event.altKey
-        prevent = hotkey.callback(@quill.getSelection(), hotkey, event) == false or prevent
+        prevent = hotkey.callback(@quill.getSelection()) == false or prevent
         return true
       )
       return !prevent
@@ -93,7 +88,7 @@ class Keyboard
                        .insert("\t")
                        .delete(range.end - range.start)
                        .retain(@quill.getLength() - range.end)
-    @quill.updateContents(delta, Quill.sources.USER)
+    @quill.updateContents(delta)
     @quill.setSelection(range.start + 1, range.start + 1)
 
 

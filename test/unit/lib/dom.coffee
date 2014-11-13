@@ -2,7 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('DOM', ->
   beforeEach( ->
-    @container = $('#test-container').html('<div></div>').get(0).firstChild
+    @container = $('#editor-container').html('<div></div>').get(0).firstChild
   )
 
   describe('classes', ->
@@ -39,7 +39,6 @@ describe('DOM', ->
       $(@container).addClass('custom')
       dom(@container).removeClass('custom')
       expect($(@container).hasClass('custom')).toBe(false)
-      expect(@container.outerHTML).toEqual('<div></div>')
     )
 
     it('removeClass() nonexistent', ->
@@ -226,7 +225,7 @@ describe('DOM', ->
 
   describe('access', ->
     beforeEach( ->
-      @container = $('#test-container').html('').get(0)
+      @container = $('#editor-container').html('').get(0)
     )
 
     describe('child at offset', ->
@@ -345,7 +344,7 @@ describe('DOM', ->
 
   describe('split + merge', ->
     beforeEach( ->
-      @container = $('#test-container').html('').get(0)
+      @container = $('#editor-container').html('').get(0)
     )
 
     describe('merge', ->
@@ -641,7 +640,7 @@ describe('DOM', ->
 
   describe('get next line node', ->
     it('iterate over standard lines', ->
-      container = $('#test-container').html(Quill.Lib.Normalizer.stripWhitespace('
+      container = $('#editor-container').html(Quill.Lib.Normalizer.stripWhitespace('
         <div id="line-1">Test</div>
         <div id="line-2"><br></div>
         <div id="line-3">Test</div>'
@@ -656,7 +655,7 @@ describe('DOM', ->
     )
 
     it('iterate over lists', ->
-      container = $('#test-container').html(Quill.Lib.Normalizer.stripWhitespace('
+      container = $('#editor-container').html(Quill.Lib.Normalizer.stripWhitespace('
         <div id="line-1">Test</div>
         <ul>
           <li id="line-2">One</li>
@@ -677,7 +676,7 @@ describe('DOM', ->
     )
 
     it('iterate with change', ->
-      container = $('#test-container').html('<div id="line-1">One</div><div id="line-2">Two</div>').get(0)
+      container = $('#editor-container').html('<div id="line-1">One</div><div id="line-2">Two</div>').get(0)
       lineNode = container.firstChild
       expect(lineNode.id).toEqual('line-1')
       dom(container.lastChild).switchTag('div')
