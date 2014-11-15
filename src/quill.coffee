@@ -203,6 +203,10 @@ class Quill extends EventEmitter2
       source = end or source
     @editor.selection.setRange(range, source)
 
+  setText: (text, source = Quill.sources.API) ->
+    delta = new Delta().insert(text)
+    this.setContents(delta, source)
+
   updateContents: (delta, source = Quill.sources.API) ->
     @editor.applyDelta(delta, source)
 
