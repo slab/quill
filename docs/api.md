@@ -23,6 +23,7 @@ Quill allows granular access to its contents.
 - [Quill.prototype.updateContents](#quillprototypeupdatecontents)
 - [Quill.prototype.setContents](#quillprototypesetcontents)
 - [Quill.prototype.setHTML](#quillprototypesethtml)
+- [Quill.prototype.setText](#quillprototypesettext)
 
 #### Selection
 - [Quill.prototype.getSelection](#quillprototypegetselection)
@@ -328,6 +329,27 @@ Sets contents of editor with given HTML. Note the editor will normalize the inpu
 
 {% highlight javascript %}
 editor.setHTML('<div>Hello</div>');
+{% endhighlight %}
+
+
+### Quill.prototype.setText
+
+Sets contents of editor with given text. Note Quill documents end with a newline so one will be added for you if omitted.
+
+**Methods**
+
+- `setText(text)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `text`    | _String_ | Text to set editor contents to.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setText('Hello\n');
 {% endhighlight %}
 
 
