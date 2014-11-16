@@ -64,7 +64,7 @@ class ImageTooltip extends Tooltip
       @preview.replaceChild(img, @preview.firstChild)
 
   _matchImageURL: (url) ->
-    return /^https?:\/\/.+\.(jp?g|gif|png)$/.test(url)
+    return /^https?:\/\/.+\.(jpe?g|gif|png)$/.test(url)
 
   _normalizeURL: (url) ->
     # For now identical to link-tooltip but will change when we allow data uri
