@@ -96,7 +96,7 @@ class Quill extends EventEmitter2
   addModule: (name, options) ->
     moduleClass = Quill.modules[name]
     throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
-    options = {} unless _.isObject(options)  # Allow for addModule('module', true)
+    options = {} if options == true   # Allow for addModule('module', true)
     options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
     @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
@@ -202,6 +202,10 @@ class Quill extends EventEmitter2
       range = start
       source = end or source
     @editor.selection.setRange(range, source)
+
+  setText: (text, source = Quill.sources.API) ->
+    delta = new Delta().insert(text)
+    this.setContents(delta, source)
 
   updateContents: (delta, source = Quill.sources.API) ->
     @editor.applyDelta(delta, source)

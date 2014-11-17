@@ -1,13 +1,13 @@
 var CHROME_VERSION = '38';
 var FIREFOX_VERSION = '33';
-var SAFARI_VERSION = '7';
-var IOS_VERSION = ' 8.0';       // Workaround for optimist converting to float
+var SAFARI_VERSION = '8';
+var IOS_VERSION = ' 8.1';       // Workaround for optimist converting to float
 var ANDROID_VERSION = ' 4.4';
 
 var browsers = {
-  'mac-chrome'  : ['Mac 10.9', 'chrome', CHROME_VERSION],
-  'mac-firefox' : ['Mac 10.9', 'firefox', FIREFOX_VERSION],
-  'mac-safari'  : ['Mac 10.9', 'safari', SAFARI_VERSION],
+  'mac-chrome'  : ['Mac 10.10', 'chrome', CHROME_VERSION],
+  'mac-firefox' : ['Mac 10.10', 'firefox', FIREFOX_VERSION],
+  'mac-safari'  : ['Mac 10.10', 'safari', SAFARI_VERSION],
 
   'windows-chrome'  : ['Windows 8.1', 'chrome', CHROME_VERSION],
   'windows-firefox' : ['Windows 8.1', 'firefox', FIREFOX_VERSION],

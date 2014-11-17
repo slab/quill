@@ -48,12 +48,6 @@ There are a number of ways to the latest or versioned copy of Quill.
 <script src="//cdn.quilljs.com/0.16.0/quill.min.js"></script>
 ```
 
-You can also use “latest” as the version:
-
-```html
-<script src="//cdn.quilljs.com/latest/quill.min.js"></script>
-```
-
 
 ## Local Development
 
@@ -81,6 +75,7 @@ All tests assume the local server is running.
 
 Check out Gruntfile.coffee and config/grunt for more testing options.
 
+
 ## Community
 
 Get help or stay up to date.
@@ -89,6 +84,7 @@ Get help or stay up to date.
 - Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quill)
 - Visit the [discussion group](http://discuss.quilljs.com)
 - If a private channel is required, you may also email support@quilljs.com
+
 
 ## Contributing
 
@@ -126,9 +122,11 @@ Pull requests will not be accepted without adhering to the following:
 
 **Important:** By issuing a Pull Request you agree to allow the project owners to license your work under the terms of the [License](https://github.com/quilljs/quill/blob/master/LICENSE).
 
+
 ## Thanks
 
 [Swift](https://github.com/theycallmeswift), for providing the npm package name. If you're looking for his blogging engine see [v0.1.5-1](https://www.npmjs.org/package/quill/0.1.5-1).
+
 
 ## License
 
