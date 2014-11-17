@@ -12,6 +12,7 @@ class Toolbar
     SELECT  : { 'align', 'background', 'color', 'font', 'size', }
     TOGGLE  : { 'firstheader', 'secondheader', 'thirdheader', 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
     TOOLTIP : { 'image', 'link' }
+    EXCLUSIVE : { 'firstheader', 'secondheader', 'thirdheader', 'bullet', 'list' }
 
   constructor: (@quill, @options) ->
     throw new Error('container required for toolbar', @options) unless @options.container?
@@ -30,7 +31,7 @@ class Toolbar
         else
           @quill.formatText(range, format, value, 'user')
         _.defer( =>
-          this.updateActive(range, ['bullet', 'list'])  # Clear exclusive formats
+          this.updateActive(range, Toolbar.formats.EXCLUSIVE)  # Clear exclusive formats
           this.setActive(format, value)
         )
       )
@@ -94,7 +95,7 @@ class Toolbar
     return unless range? and !@preventUpdate
     activeFormats = this._getActive(range)
     _.each(@inputs, (input, format) =>
-      if !Array.isArray(formats) or formats.indexOf(format) > -1
+      if !formats || formats[format]
         this.setActive(format, activeFormats[format])
       return true
     )
