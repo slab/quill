@@ -142,6 +142,7 @@ class Selection
     selection = document.getSelection()
     return unless selection
     if startNode?
+      nativeRange = this._getNativeRange()
       # Need to focus before setting or else in IE9/10 later focus will cause a set on 0th index on line div
       # to be set at 1st index
       @doc.root.focus() unless this.checkFocus()
