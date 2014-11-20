@@ -14,7 +14,6 @@ class PasteManager
     oldDocLength = @quill.getLength()
     range = @quill.getSelection()
     return unless range?
-    @container.innerHTML = ""
     @container.focus()
     _.defer( =>
       doc = new Document(@container, @quill.options)
@@ -31,6 +30,7 @@ class PasteManager
       lineBottom = line.node.offsetTop + line.node.offsetHeight
       editorBottom = @quill.container.scrollTop + @quill.container.offsetHeight
       line.node.scrollIntoView(false) if lineBottom > editorBottom
+      @container.innerHTML = ""
     )
 
 
