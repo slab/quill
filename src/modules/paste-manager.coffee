@@ -27,9 +27,9 @@ class PasteManager
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
       # Make sure bottom of pasted content is visible
       [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
-      lineBottom = line.node.offsetTop + line.node.offsetHeight
-      editorBottom = @quill.container.scrollTop + @quill.container.offsetHeight
-      line.node.scrollIntoView(false) if lineBottom > editorBottom
+      lineBottom = line.node.getBoundingClientRect().bottom
+      windowBottom = document.documentElement.clientHeight
+      line.node.scrollIntoView(false) if lineBottom > windowBottom
       @container.innerHTML = ""
     )
 
