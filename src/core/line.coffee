@@ -71,6 +71,7 @@ class Line extends LinkedList.Node
       formats[name] = value
     _.each(formats, (value, name) =>
       format = @doc.formats[name]
+      return unless format?
       # TODO reassigning @node might be dangerous...
       if format.isType(Format.types.LINE)
         if format.config.exclude and @formats[format.config.exclude]
@@ -120,7 +121,9 @@ class Line extends LinkedList.Node
       this.resetContent()
     else
       node = _.reduce(formats, (node, value, name) =>
-        return @doc.formats[name].add(node, value)
+        format = @doc.formats[name]
+        node = format.add(node, value) if format?
+        return node
       , document.createTextNode(text))
       [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
       nextNode = dom(nextNode).splitAncestors(@node).get() if nextNode
