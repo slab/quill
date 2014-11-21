@@ -286,7 +286,7 @@ describe('Editor', ->
         reference.large =
           height: @editor.root.firstChild.firstChild.offsetHeight
           width: @editor.root.firstChild.firstChild.offsetWidth
-      @editor.root.innerHTML = '<div>01<span style="font-size: 32px;">23</span>45</div>'
+      @editor.root.innerHTML = '<div>01</div><div>34<span style="font-size: 32px;">56</span>78</div>'
     )
 
     it('empty line', ->
@@ -305,9 +305,9 @@ describe('Editor', ->
     )
 
     it('end of line', ->
-      bounds = @editor.getBounds(6)
+      bounds = @editor.getBounds(2)
       expect(bounds.height).toBeApproximately(reference.normal.height, 1)
-      expect(bounds.left).toBeApproximately(4*reference.normal.width + 2*reference.large.width, 1)
+      expect(bounds.left).toBeApproximately(2*reference.normal.width, 1)
       expect(bounds.top).toBeApproximately(0, 1)
     )
 
@@ -319,32 +319,22 @@ describe('Editor', ->
     )
 
     it('middle of formatted text', ->
-      bounds = @editor.getBounds(3)
+      bounds = @editor.getBounds(6)
       expect(bounds.height).toBeApproximately(reference.large.height, 1)
-      expect(bounds.left).toBeApproximately(2*reference.normal.width + reference.large.width, 1)
-      expect(bounds.top).toBeApproximately(0, 1)
+      expect(bounds.left).toBeApproximately(2*reference.normal.width + reference.large.width, 2)
+      expect(bounds.top).toBeApproximately(reference.normal.height, 1)
     )
 
     it('end of plain text start of formatted text', ->
-      bounds = @editor.getBounds(2)
+      bounds = @editor.getBounds(5)
       expect(bounds.height).toBeApproximately(reference.normal.height, 1)
       expect(bounds.left).toBeApproximately(2*reference.normal.width, 1)
-      expect(bounds.top).toBeApproximately(0, 1)
     )
 
     it('end of formatted text start of plain text', ->
-      bounds = @editor.getBounds(4)
+      bounds = @editor.getBounds(7)
       expect(bounds.height).toBeApproximately(reference.large.height, 1)
-      expect(bounds.left).toBeApproximately(2*reference.normal.width + 2*reference.large.width, 1)
-      expect(bounds.top).toBeApproximately(0, 1)
-    )
-
-    it('second line', ->
-      @editor.root.innerHTML = "<div><br></div><div>0</div>"
-      bounds = @editor.getBounds(2)
-      expect(bounds.height).toBeApproximately(reference.normal.height, 1)
-      expect(bounds.left).toBeApproximately(0, 1)
-      expect(bounds.top).toBeApproximately(reference.normal.height, 1)
+      expect(bounds.left).toBeApproximately(2*reference.normal.width + 2*reference.large.width, 2)
     )
   )
 )
