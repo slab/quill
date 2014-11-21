@@ -322,7 +322,7 @@ describe('Editor', ->
       bounds = @editor.getBounds(6)
       expect(bounds.height).toBeApproximately(reference.large.height, 1)
       expect(bounds.left).toBeApproximately(2*reference.normal.width + reference.large.width, 2)
-      expect(bounds.top).toBeApproximately(reference.normal.height, 1)
+      expect(bounds.top).toBeApproximately(reference.normal.height, 2)
     )
 
     it('end of plain text start of formatted text', ->

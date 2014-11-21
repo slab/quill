@@ -102,7 +102,6 @@ class MultiCursor extends EventEmitter2
 
   _updateCursor: (cursor) ->
     bounds = @quill.getBounds(cursor.index)
-    console.log('update', cursor.index, bounds.top)
     cursor.elem.style.top = (bounds.top - @quill.container.scrollTop) + 'px'
     cursor.elem.style.left = bounds.left + 'px'
     cursor.elem.style.height = bounds.height + 'px'
