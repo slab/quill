@@ -13,6 +13,7 @@ class LinkTooltip extends Tooltip
       <input class="input" type="text">
       <span>&nbsp;</span>
       <a href="javascript:;" class="change">Change</a>
+      <a href="javascript:;" class="remove">Remove</a>
       <a href="javascript:;" class="done">Done</a>'
 
   constructor: (@quill, @options) ->
@@ -35,6 +36,9 @@ class LinkTooltip extends Tooltip
         this.hide()
     )
     dom(@container.querySelector('.done')).on('click', _.bind(this.saveLink, this))
+    dom(@container.querySelector('.remove')).on('click', =>
+      this.removeLink(@range)
+    )
     dom(@container.querySelector('.change')).on('click', =>
       this.setMode(@link.href, true)
     )
@@ -52,6 +56,15 @@ class LinkTooltip extends Tooltip
       else
         @quill.formatText(@range, 'link', url, 'user')
     this.setMode(url, false)
+
+  removeLink: (range) ->
+    # Expand range to the entire leaf
+    if range.isCollapsed()
+      [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
+      range =
+        start: range.start - offset
+        end: range.start - offset + leaf.length
+    @quill.formatText(range, 'link', false, 'user')
 
   setMode: (url, edit = false) ->
     if edit
@@ -76,13 +89,14 @@ class LinkTooltip extends Tooltip
     return null
 
   _onToolbar: (range, value) ->
-    return unless range and !range.isCollapsed()
-    if value
+    return unless range
+
+    if value and !range.isCollapsed()
       this.setMode(this._suggestURL(range), true)
       nativeRange = @quill.editor.selection._getNativeRange()
       this.show(nativeRange)
     else
-      @quill.formatText(range, 'link', false, 'user')
+      this.removeLink(range)
 
   _normalizeURL: (url) ->
     url = 'http://' + url unless /^(https?:\/\/|mailto:)/.test(url)
