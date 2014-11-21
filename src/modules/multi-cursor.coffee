@@ -100,33 +100,17 @@ class MultiCursor extends EventEmitter2
     @container.appendChild(cursor)
     return cursor
 
-  _moveCursor: (cursor, reference, side = 'left') ->
-    bounds = reference.getBoundingClientRect()
-    parentBounds = @quill.container.getBoundingClientRect()
-    cursor.elem.style.top = (bounds.top - parentBounds.top + @quill.container.scrollTop) + 'px'
-    cursor.elem.style.left = bounds[side] - parentBounds[side] + 'px'
+  _updateCursor: (cursor) ->
+    bounds = @quill.getBounds(cursor.index)
+    console.log('update', cursor.index, bounds.top)
+    cursor.elem.style.top = (bounds.top - @quill.container.scrollTop) + 'px'
+    cursor.elem.style.left = bounds.left + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')
     dom(cursor.elem).toggleClass('top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
                     .toggleClass('left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
                     .toggleClass('right', @quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
-
-  _updateCursor: (cursor) ->
-    @quill.editor.checkUpdate()
-    [leaf, offset] = @quill.editor.doc.findLeafAt(cursor.index, true)
-    guide = document.createElement('span')
-    if leaf?
-      [leftNode, rightNode, didSplit] = dom(leaf.node).split(offset)
-      dom(guide).text(dom.ZERO_WIDTH_NOBREAK_SPACE)
-      leaf.node.parentNode.insertBefore(guide, rightNode)
-    else
-      dom(guide).text(dom.NOBREAK_SPACE)
-      @quill.root.appendChild(guide)
-    this._moveCursor(cursor, guide)
-    dom(guide).remove()
-    dom(leaf.node.parentNode).normalize() if didSplit
-    @quill.editor.selection.update(Quill.sources.SILENT)
 
 
 Quill.registerModule('multi-cursor', MultiCursor)
