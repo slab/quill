@@ -75,6 +75,36 @@ class Editor
     else
       @root.focus()
 
+  getBounds: (index) ->
+    this.checkUpdate()
+    [leaf, offset] = @doc.findLeafAt(index, true)
+    throw new Error('Invalid position') unless leaf?
+    containerBounds = @root.parentNode.getBoundingClientRect()
+    if offset == 0
+      bounds = leaf.node.parentNode.getBoundingClientRect()
+      return {
+        height: bounds.height
+        left: bounds.left - containerBounds.left,
+        top: bounds.top - containerBounds.top
+      }
+    else if offset == leaf.length
+      bounds = leaf.node.parentNode.getBoundingClientRect()
+      return {
+        height: bounds.height
+        left: bounds.right - containerBounds.left,
+        top: bounds.top - containerBounds.top
+      }
+    else
+      range = document.createRange()
+      range.setStart(leaf.node, offset)
+      range.setEnd(leaf.node, offset + 1)
+      bounds = range.getBoundingClientRect()
+      return {
+        height: bounds.height
+        left: bounds.left - containerBounds.left,
+        top: bounds.top - containerBounds.top
+      }
+
   getDelta: ->
     return @delta
 

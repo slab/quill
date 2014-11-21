@@ -133,6 +133,9 @@ class Quill extends EventEmitter2
     delta = new Delta().retain(start).retain(end - start, formats)
     @editor.applyDelta(delta, source)
 
+  getBounds: (index) ->
+    return @editor.getBounds(index)
+
   getContents: (start = 0, end = null) ->
     if _.isObject(start)
       end = start.end
