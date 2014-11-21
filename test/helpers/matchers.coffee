@@ -60,5 +60,15 @@ beforeEach( ->
           return { message: message, pass: pass }
       }
 
+    toBeApproximately: ->
+      return {
+        compare: (actual, expected, tolerance) ->
+          pass = Math.abs(actual - expected) <= tolerance
+          return {
+            pass: pass
+            message: "#{actual} is #{if pass then '' else 'not'} approximately #{expected}"
+          }
+      }
+
   jasmine.addMatchers(matchers)
 )
