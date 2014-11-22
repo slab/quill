@@ -44,6 +44,7 @@ class LinkTooltip extends Tooltip
     )
     this.initTextbox(@textbox, this.saveLink, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
+      @toolbar = toolbar
       toolbar.initFormat('link', _.bind(this._onToolbar, this))
     )
 
@@ -62,6 +63,7 @@ class LinkTooltip extends Tooltip
     if range.isCollapsed()
       range = this._expandRange(range)
     @quill.formatText(range, 'link', false, 'user')
+    @toolbar.setActive('link', false) if @toolbar?
 
   setMode: (url, edit = false) ->
     if edit
