@@ -60,10 +60,7 @@ class LinkTooltip extends Tooltip
   removeLink: (range) ->
     # Expand range to the entire leaf
     if range.isCollapsed()
-      [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
-      range =
-        start: range.start - offset
-        end: range.start - offset + leaf.length
+      range = this._expandRange(range)
     @quill.formatText(range, 'link', false, 'user')
 
   setMode: (url, edit = false) ->
@@ -87,6 +84,12 @@ class LinkTooltip extends Tooltip
       return node if node.tagName == 'A'
       node = node.parentNode
     return null
+
+  _expandRange: (range) ->
+    [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
+    start = range.start - offset
+    end = start + leaf.length
+    return { start, end }
 
   _onToolbar: (range, value) ->
     return unless range
