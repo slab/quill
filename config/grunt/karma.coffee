@@ -18,6 +18,8 @@ module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
       configFile: 'config/karma.js'
+      proxies:
+        '/local': "http://localhost:#{grunt.config('port')}"
       files: [
         'node_modules/jquery/dist/jquery.js'
         'node_modules/lodash/lodash.js'
