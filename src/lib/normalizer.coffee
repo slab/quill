@@ -71,6 +71,7 @@ Normalizer =
 
   # Removes unnecessary tags but does not modify line contents
   optimizeLine: (lineNode) ->
+    lineNode.normalize()
     lineNodeLength = dom(lineNode).length()
     nodes = dom(lineNode).descendants()
     while nodes.length > 0
