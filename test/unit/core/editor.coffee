@@ -327,8 +327,12 @@ describe('Editor', ->
 
     it('end of plain text start of formatted text', ->
       bounds = @editor.getBounds(5)
-      expect(bounds.height).toBeApproximately(reference.normal.height, 1)
       expect(bounds.left).toBeApproximately(2*reference.normal.width, 1)
+      # IE takes height of line
+      if Quill.Lib.DOM.isIE(11)
+        expect(bounds.height).toBeApproximately(reference.large.height, 1)
+      else
+        expect(bounds.height).toBeApproximately(reference.normal.height, 1)
     )
 
     it('end of formatted text start of plain text', ->
