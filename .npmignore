@@ -3,9 +3,11 @@
 .git
 .travis.yml
 _*
-bower.json
 *.log
+bower.json
 config
+dist/quill.min.js
+docs
 examples
 src
 test

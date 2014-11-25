@@ -69,8 +69,8 @@
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
-    "prepublish": "grunt coffee:quill",
-    "postpublish": "grunt clean:coffee",
+    "prepublish": "grunt dist",
+    "postpublish": "grunt clean:all",
     "test": "grunt test"
   },
   "keywords": [
