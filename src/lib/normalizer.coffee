@@ -6,7 +6,6 @@ Normalizer =
   ALIASES: {
     'STRONG' : 'B'
     'EM'     : 'I'
-    'DEL'    : 'S'
     'STRIKE' : 'S'
   }
 
