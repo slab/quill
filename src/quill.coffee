@@ -6,6 +6,7 @@ dom           = require('./lib/dom')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Range         = require('./lib/range')
+Normalizer    = require('./lib.normalizer')
 
 
 class Quill extends EventEmitter2
@@ -48,6 +49,7 @@ class Quill extends EventEmitter2
       when 'lodash' then return _
       when 'delta' then return Delta
       when 'dom' then return dom
+      when 'normalizer' then return Normalizer
       else return null
 
 
