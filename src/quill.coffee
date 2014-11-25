@@ -6,7 +6,7 @@ dom           = require('./lib/dom')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Range         = require('./lib/range')
-Normalizer    = require('./lib.normalizer')
+Normalizer    = require('./lib/normalizer')
 
 
 class Quill extends EventEmitter2
