@@ -2,59 +2,49 @@ _   = require('lodash')
 dom = require('./dom')
 
 
-Normalizer =
-  ALIASES: {
-    'STRONG' : 'B'
-    'EM'     : 'I'
-    'DEL'    : 'S'
-    'STRIKE' : 'S'
-  }
-
-  ATTRIBUTES: {
+class Normalizer
+  @ATTRIBUTES: {
     'color': 'color'
     'face' : 'fontFamily'
     'size' : 'fontSize'
   }
 
-  STYLES: {
-    'background-color'
-    'color'
-    'font-family'
-    'font-size'
-    'text-align'
-  }
+  @stripComments: (html) ->
+    return html.replace(/<!--[\s\S]*?-->/g, '')
 
-  TAGS: {
-    'DIV'
-    'BR'
-    'SPAN'
-    'B'
-    'I'
-    'S'
-    'U'
-    'A'
-    'IMG'
-    'OL'
-    'UL'
-    'LI'
-  }
+  @stripWhitespace: (html) ->
+    html = html.trim()
+    # Replace all newline characters
+    html = html.replace(/(\r?\n|\r)+/g, ' ')
+    # Remove whitespace between tags, requires &nbsp; for legitmate spaces
+    html = html.replace(/\>\s+\</g, '><')
+    return html
 
-  # Make sure descendant break tags are not causing multiple lines to be rendered
-  handleBreaks: (lineNode) ->
-    breaks = _.map(lineNode.querySelectorAll(dom.DEFAULT_BREAK_TAG))
-    _.each(breaks, (br) =>
-      if br.nextSibling? and (!dom.isIE(10) or br.previousSibling?)
-        dom(br.nextSibling).splitAncestors(lineNode.parentNode)
-    )
-    return lineNode
+
+  constructor: () ->
+    @aliases = {}
+    @styles = {}
+    @tags = {}
+    @tags[dom.DEFAULT_BREAK_TAG] = true
+    @tags[dom.DEFAULT_BLOCK_TAG] = true
+    @tags[dom.DEFAULT_INLINE_TAG] = true
+
+  addFormat: (config) ->
+    @tags[config.tag] = true if config.tag?
+    @tags[config.parentTag] = true if config.parentTag?
+    @styles[config.style] = true if config.style?
+    _.each(config.aliasTags, (alias) =>
+      @aliases[alias] = config.tag
+    ) if config.aliasTags? and config.tag?
 
   normalizeLine: (lineNode) ->
-    lineNode = Normalizer.wrapInline(lineNode)
-    lineNode = Normalizer.handleBreaks(lineNode)
-    lineNode = Normalizer.pullBlocks(lineNode)
-    lineNode = Normalizer.normalizeNode(lineNode)
-    Normalizer.unwrapText(lineNode)
-    lineNode = lineNode.firstChild if lineNode? and dom.LIST_TAGS[lineNode.tagName]?
+    lineNode = this._wrapInline(lineNode)
+    lineNode = this._handleBreaks(lineNode)
+    lineNode = this._pullBlocks(lineNode)
+    lineNode = this.normalizeNode(lineNode)
+    this._unwrapText(lineNode)
+    if lineNode? and dom.LIST_TAGS[lineNode.tagName]?
+      lineNode = lineNode.firstChild
     return lineNode
 
   normalizeNode: (node) ->
@@ -66,8 +56,8 @@ Normalizer =
         node.style[style] = value
         node.removeAttribute(attribute)
     )
-    Normalizer.whitelistStyles(node)
-    return Normalizer.whitelistTags(node)
+    this._whitelistStyles(node)
+    return this._whitelistTags(node)
 
   # Removes unnecessary tags but does not modify line contents
   optimizeLine: (lineNode) ->
@@ -90,8 +80,17 @@ Normalizer =
           nodes.push(node.firstChild)
           dom(node.previousSibling).merge(node)
 
+  # Make sure descendant break tags are not causing multiple lines to be rendered
+  _handleBreaks: (lineNode) ->
+    breaks = _.map(lineNode.querySelectorAll(dom.DEFAULT_BREAK_TAG))
+    _.each(breaks, (br) =>
+      if br.nextSibling? and (!dom.isIE(10) or br.previousSibling?)
+        dom(br.nextSibling).splitAncestors(lineNode.parentNode)
+    )
+    return lineNode
+
   # Make sure descendants are all inline elements
-  pullBlocks: (lineNode) ->
+  _pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
     while curNode?
       if dom.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
@@ -101,7 +100,7 @@ Normalizer =
           dom(curNode.nextSibling).splitAncestors(lineNode.parentNode)
         if !dom.LIST_TAGS[curNode.tagName]? or !curNode.firstChild
           dom(curNode).unwrap()
-          Normalizer.pullBlocks(lineNode)
+          this._pullBlocks(lineNode)
         else
           dom(curNode.parentNode).unwrap()
           lineNode = curNode unless lineNode.parentNode?    # May have just unwrapped lineNode
@@ -109,21 +108,12 @@ Normalizer =
       curNode = curNode.nextSibling
     return lineNode
 
-  stripComments: (html) ->
-    return html.replace(/<!--[\s\S]*?-->/g, '')
-
-  stripWhitespace: (html) ->
-    html = html.trim()
-    # Replace all newline characters
-    html = html.replace(/(\r?\n|\r)+/g, ' ')
-    # Remove whitespace between tags, requires &nbsp; for legitmate spaces
-    html = html.replace(/\>\s+\</g, '><')
-    return html
-
-  whitelistStyles: (node) ->
+  _whitelistStyles: (node) ->
     original = dom(node).styles()
-    styles = _.omit(original, (value, key) ->
-      return !Normalizer.STYLES[key]?
+    styles = _.omit(original, (value, key) =>
+      # Convert to camelCase
+      key = key.replace(/-(.)/g, (match, c) -> c.toUpperCase());
+      return !@styles[key]?
     )
     if Object.keys(styles).length < Object.keys(original).length
       if Object.keys(styles).length > 0
@@ -131,11 +121,11 @@ Normalizer =
       else
         node.removeAttribute('style')
 
-  whitelistTags: (node) ->
+  _whitelistTags: (node) ->
     return node unless dom(node).isElement()
-    if Normalizer.ALIASES[node.tagName]?
-      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName])
-    else if !Normalizer.TAGS[node.tagName]?
+    if @aliases[node.tagName]?
+      node = dom(node).switchTag(@aliases[node.tagName])
+    else if !@tags[node.tagName]?
       if dom.BLOCK_TAGS[node.tagName]?
         node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
       else if !node.hasAttributes() and node.firstChild?
@@ -145,7 +135,7 @@ Normalizer =
     return node
 
   # Wrap inline nodes with block tags
-  wrapInline: (lineNode) ->
+  _wrapInline: (lineNode) ->
     return lineNode if dom.BLOCK_TAGS[lineNode.tagName]?
     blockNode = document.createElement(dom.DEFAULT_BLOCK_TAG)
     lineNode.parentNode.insertBefore(blockNode, lineNode)
@@ -155,7 +145,7 @@ Normalizer =
       lineNode = nextNode
     return blockNode
 
-  unwrapText: (lineNode) ->
+  _unwrapText: (lineNode) ->
     spans = _.map(lineNode.querySelectorAll(dom.DEFAULT_INLINE_TAG))
     _.each(spans, (span) ->
       dom(span).unwrap() if (!span.hasAttributes())
