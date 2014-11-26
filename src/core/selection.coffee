@@ -1,7 +1,6 @@
 _          = require('lodash')
 dom        = require('../lib/dom')
 Leaf       = require('./leaf')
-Normalizer = require('../lib/normalizer')
 Range      = require('../lib/range')
 
 
@@ -92,7 +91,7 @@ class Selection
         offset = 0
       else if node.childNodes.length == 0
         # TODO revisit fix for encoding edge case <p><em>|</em></p>
-        unless Normalizer.TAGS[node.tagName]?
+        unless @doc.normalizer.tags[node.tagName]?
           text = document.createTextNode('')
           node.appendChild(text)
           node = text

@@ -10,12 +10,14 @@ Normalizer = require('../lib/normalizer')
 class Document
   constructor: (@root, options = {}) ->
     @formats = {}
+    @normalizer = new Normalizer()
     _.each(options.formats, _.bind(this.addFormat, this))
     this.setHTML(@root.innerHTML)
 
   addFormat: (name, config) ->
     config = Format.FORMATS[name] unless _.isObject(config)
     console.warn('Overwriting format', name, @formats[name]) if @formats[name]?
+    @normalizer.addFormat(config)
     @formats[name] = new Format(config)
 
   appendLine: (lineNode) ->
@@ -90,7 +92,7 @@ class Document
       while line.node != lineNode
         if line.node.parentNode == @root or line.node.parentNode?.parentNode == @root
           # New line inserted
-          lineNode = Normalizer.normalizeLine(lineNode)
+          lineNode = @normalizer.normalizeLine(lineNode)
           newLine = this.insertLineBefore(lineNode, line)
           lineNode = dom(lineNode).nextLineNode(@root)
         else
@@ -98,13 +100,13 @@ class Document
           return this.removeLine(line)
       if line.outerHTML != lineNode.outerHTML
         # Existing line changed
-        line.node = Normalizer.normalizeLine(line.node)
+        line.node = @normalizer.normalizeLine(line.node)
         line.rebuild()
       lineNode = dom(lineNode).nextLineNode(@root)
     )
     # New lines appended
     while lineNode?
-      lineNode = Normalizer.normalizeLine(lineNode)
+      lineNode = @normalizer.normalizeLine(lineNode)
       this.appendLine(lineNode)
       lineNode = dom(lineNode).nextLineNode(@root)
 

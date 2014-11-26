@@ -6,6 +6,7 @@ dom           = require('./lib/dom')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Range         = require('./lib/range')
+Normalizer    = require('./lib/normalizer')
 
 
 class Quill extends EventEmitter2
@@ -16,7 +17,7 @@ class Quill extends EventEmitter2
   @themes: []
 
   @DEFAULTS:
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
+    formats: Object.keys(Format.FORMATS)
     modules:
       'keyboard': true
       'paste-manager': true
