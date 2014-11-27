@@ -42,7 +42,8 @@ class Picker
 
   buildPicker: ->
     _.each(dom(@select).attributes(), (value, name) =>
-      @container.setAttribute(name, value)
+      if name != 'data-reactid'
+        @container.setAttribute(name, value)
     )
     @container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE)
     @label = @container.querySelector('.ql-picker-label')
