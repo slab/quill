@@ -50,7 +50,7 @@ class Keyboard
           @quill.deleteText(range.start, range.end, Quill.sources.USER)
         else
           start = if (hotkey.key == dom.KEYS.BACKSPACE) then range.start - 1 else range.start
-          @quill.deleteText(start, start + 1, Quill.sources.USER)
+          @quill.deleteText(start, start + 1, Quill.sources.USER) if start >= 0
       return false
     )
 
