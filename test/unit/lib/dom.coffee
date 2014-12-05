@@ -316,7 +316,9 @@ describe('DOM', ->
 
     it('switchTag() to same', ->
       html = @container.innerHTML
+      node = dom(@container.firstChild).switchTag('div')
       expect(@container).toEqualHTML(html)
+      expect(node).toEqual(@container.firstChild)
     )
 
     it('switchTag() to void', ->
