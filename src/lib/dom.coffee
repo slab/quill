@@ -213,7 +213,7 @@ class Wrapper
 
   switchTag: (newTag) ->
     newTag = newTag.toUpperCase()
-    return this if @node.tagName == newTag
+    return @node if @node.tagName == newTag
     newNode = document.createElement(newTag)
     attributes = this.attributes()
     this.moveChildren(newNode) unless dom.VOID_TAGS[newTag]?
