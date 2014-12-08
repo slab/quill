@@ -1,4 +1,6 @@
+fs = require('fs')
 through = require('through')
+
 
 versionify = (file) ->
   data = ''
@@ -56,6 +58,16 @@ module.exports = (grunt) ->
         'dist/quill.min.js': ['dist/quill.min.js']
         'dist/quill.base.css': ['dist/quill.base.css']
         'dist/quill.snow.css': ['dist/quill.snow.css']
+  )
+
+  grunt.registerTask('derequire', ->
+    done = this.async()
+    grunt.util.spawn(
+      cmd: './node_modules/.bin/derequire'
+      args: ['dist/quill.js']
+    , (err, result, code) ->
+      fs.writeFile('dist/quill.js', result.stdout, done)
+    )
   )
 
   grunt.config('lodash',
