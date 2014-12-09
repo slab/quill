@@ -1,0 +1,905 @@
+/*! Quill Editor v0.19.8
+ *  https://quilljs.com/
+ *  Copyright (c) 2014, Jason Chen
+ *  Copyright (c) 2013, salesforce.com
+ */
+.ql-image-tooltip {
+  padding: 10px;
+  width: 300px;
+}
+.ql-image-tooltip:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.ql-image-tooltip a {
+  border: 1px solid #000;
+  box-sizing: border-box;
+  display: inline-block;
+  float: left;
+  padding: 5px;
+  text-align: center;
+  width: 50%;
+}
+.ql-image-tooltip img {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.ql-image-tooltip .input {
+  box-sizing: border-box;
+  width: 100%;
+}
+.ql-image-tooltip .preview {
+  margin: 10px 0px;
+  position: relative;
+  border: 1px dashed #000;
+  height: 200px;
+}
+.ql-image-tooltip .preview span {
+  display: inline-block;
+  position: absolute;
+  text-align: center;
+  top: 40%;
+  width: 100%;
+}
+.ql-link-tooltip {
+  padding: 5px 10px;
+}
+.ql-link-tooltip input.input {
+  width: 170px;
+}
+.ql-link-tooltip input.input,
+.ql-link-tooltip a.done {
+  display: none;
+}
+.ql-link-tooltip.editing input.input,
+.ql-link-tooltip.editing a.done {
+  display: inline-block;
+}
+.ql-link-tooltip.editing a.url,
+.ql-link-tooltip.editing a.change {
+  display: none;
+}
+.ql-multi-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+.ql-multi-cursor .cursor {
+  margin-left: -1px;
+  position: absolute;
+}
+.ql-multi-cursor .cursor-flag {
+  bottom: 100%;
+  position: absolute;
+  white-space: nowrap;
+}
+.ql-multi-cursor .cursor-name {
+  display: inline-block;
+  color: #fff;
+  padding: 2px 8px;
+}
+.ql-multi-cursor .cursor-caret {
+  height: 100%;
+  position: absolute;
+  width: 2px;
+}
+.ql-multi-cursor .cursor.hidden .cursor-flag {
+  display: none;
+}
+.ql-multi-cursor .cursor.top .cursor-flag {
+  bottom: auto;
+  top: 100%;
+}
+.ql-multi-cursor .cursor.right .cursor-flag {
+  right: -2px;
+}
+.ql-paste-manager {
+  left: -100000px;
+  position: absolute;
+  top: 50%;
+}
+.ql-toolbar {
+  box-sizing: border-box;
+}
+.ql-tooltip {
+  background-color: #fff;
+  border: 1px solid #000;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0px;
+  white-space: nowrap;
+  z-index: 2000;
+}
+.ql-tooltip a {
+  cursor: pointer;
+  text-decoration: none;
+}
+.ql-container {
+  box-sizing: border-box;
+  cursor: text;
+  font-family: Helvetica, 'Arial', sans-serif;
+  font-size: 13px;
+  height: 100%;
+  line-height: 1.42;
+  margin: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 12px 15px;
+  position: relative;
+}
+.ql-editor {
+  box-sizing: border-box;
+  min-height: 100%;
+  outline: none;
+  tab-size: 4;
+  white-space: pre-wrap;
+}
+.ql-editor div {
+  margin: 0;
+  padding: 0;
+}
+.ql-editor a {
+  text-decoration: underline;
+}
+.ql-editor b {
+  font-weight: bold;
+}
+.ql-editor i {
+  font-style: italic;
+}
+.ql-editor s {
+  text-decoration: line-through;
+}
+.ql-editor u {
+  text-decoration: underline;
+}
+.ql-editor img {
+  max-width: 100%;
+}
+.ql-editor blockquote,
+.ql-editor ol,
+.ql-editor ul {
+  margin: 0 0 0 2em;
+  padding: 0;
+}
+.ql-editor ol {
+  list-style-type: decimal;
+}
+.ql-editor ul {
+  list-style-type: disc;
+}
+.ql-editor.ql-ie-9 br,
+.ql-editor.ql-ie-10 br {
+  display: none;
+}
+.ql-snow .ql-image-tooltip a {
+  border: 1px solid #06c;
+}
+.ql-snow .ql-image-tooltip a.insert {
+  background-color: #06c;
+  color: #fff;
+}
+.ql-snow .ql-image-tooltip .preview {
+  border-color: #ccc;
+  color: #ccc;
+}
+.ql-snow .ql-link-tooltip a,
+.ql-snow .ql-link-tooltip span {
+  line-height: 25px;
+}
+.ql-snow .ql-multi-cursor .cursor-name {
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: Arial;
+  margin-left: -50%;
+  padding: 4px 10px;
+}
+.ql-snow .ql-multi-cursor .cursor-triangle {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  height: 0px;
+  margin-left: -3px;
+  width: 0px;
+}
+.ql-snow .ql-multi-cursor .cursor.left .cursor-name {
+  margin-left: -8px;
+}
+.ql-snow .ql-multi-cursor .cursor.right .cursor-flag {
+  right: auto;
+}
+.ql-snow .ql-multi-cursor .cursor.right .cursor-name {
+  margin-left: -100%;
+  margin-right: -8px;
+}
+.ql-snow .ql-multi-cursor .cursor-triangle.bottom {
+  border-top: 4px solid transparent;
+  display: block;
+  margin-bottom: -1px;
+}
+.ql-snow .ql-multi-cursor .cursor-triangle.top {
+  border-bottom: 4px solid transparent;
+  display: none;
+  margin-top: -1px;
+}
+.ql-snow .ql-multi-cursor .cursor.top .cursor-triangle.bottom {
+  display: none;
+}
+.ql-snow .ql-multi-cursor .cursor.top .cursor-triangle.top {
+  display: block;
+}
+.ql-snow.ql-toolbar {
+  box-sizing: border-box;
+  padding: 8px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.ql-snow.ql-toolbar .ql-format-group {
+  display: inline-block;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+.ql-snow.ql-toolbar .ql-format-separator {
+  box-sizing: border-box;
+  background-color: #ddd;
+  display: inline-block;
+  height: 14px;
+  margin-left: 4px;
+  margin-right: 4px;
+  vertical-align: middle;
+  width: 1px;
+}
+.ql-snow.ql-toolbar .ql-format-button {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  vertical-align: middle;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: center;
+  width: 24px;
+}
+.ql-snow.ql-toolbar .ql-picker {
+  box-sizing: border-box;
+  color: #444;
+  display: inline-block;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+}
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  vertical-align: middle;
+  background-color: #fff;
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+}
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label:hover {
+  color: #06c;
+}
+.ql-snow.ql-toolbar .ql-picker .ql-picker-options {
+  background-color: #fff;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  display: none;
+  padding: 4px 8px;
+  position: absolute;
+  width: 100%;
+}
+.ql-snow.ql-toolbar .ql-picker .ql-picker-options .ql-picker-item {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+.ql-snow.ql-toolbar .ql-picker .ql-picker-options .ql-picker-item.ql-selected,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-options .ql-picker-item:hover {
+  color: #06c;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+  border-color: #ccc;
+  color: #ccc;
+  z-index: 2;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-expanded .ql-picker-options {
+  border-color: #ccc;
+  box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
+  display: block;
+  margin-top: -1px;
+  z-index: 1;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-color-picker .ql-picker-label {
+  background-position: center center;
+  width: 28px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-color-picker .ql-picker-options {
+  padding: 5px;
+  width: 152px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-color-picker .ql-picker-options .ql-picker-item {
+  border: 1px solid transparent;
+  float: left;
+  height: 16px;
+  margin: 2px;
+  padding: 0px;
+  width: 16px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-color-picker .ql-picker-options .ql-picker-item.ql-primary-color {
+  margin-bottom: 8px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-color-picker .ql-picker-options .ql-picker-item.ql-selected,
+.ql-snow.ql-toolbar .ql-picker.ql-color-picker .ql-picker-options .ql-picker-item:hover {
+  border-color: #000;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-font {
+  width: 105px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-size {
+  width: 80px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-font .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker.ql-size .ql-picker-label {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-align .ql-picker-label {
+  background-position: center center;
+  width: 28px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-align .ql-picker-item {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  vertical-align: middle;
+  padding: 0px;
+  width: 28px;
+}
+.ql-snow.ql-toolbar .ql-picker.ql-align .ql-picker-options {
+  padding: 4px 0px;
+}
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAKlBMVEUAAABJSUlAQEBERERFRUVERERERERERERERERFRUVEREREREREREREREQJcW6NAAAADXRSTlMAFRzExcbLzM/Q0dLbKbcyLwAAADVJREFUCNdjYCAeMKYJQFnSdzdCWbl3r0NZvnev4tFre/cKlNV79yaUpXP3EJTFtEqBBHcAAHyoDQk0vM/lAAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAdElEQVR42mP4//8/VfBINGjVqlUMhw4dEj148OBpEAaxQWKkGgQz5BIQ/4fiSyAxkg2CuuQ/Gj5DjkFHsRh0jJwwwooHzCCQ145g8dpRcgw6j8WgCyQbtH//fhmgxttIhtwGiZETRjDDLoIwiA0UG820FGAA5b25+qRqGXcAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-picker.ql-active:not(.ql-expanded) .ql-picker-label,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker:not(.ql-expanded) .ql-picker-label:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAKlBMVEUAAAAAYc4AZMgAZcwAZs0AZs0AZs0AZ8wAZswAZs0AZswAZswAZswAZsx12LPhAAAADXRSTlMAFRzExcbLzM/Q0dLbKbcyLwAAADVJREFUCNdjYCAeMKYJQFnSdzdCWbl3r0NZvnev4tFre/cKlNV79yaUpXP3EJTFtEqBBHcAAHyoDQk0vM/lAAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-bold,
+.ql-snow.ql-toolbar .ql-picker.ql-bold .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bold],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bold] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAYFBMVEUAAACAgIBAQEA5OTlAQEBERERAQEBERERERERERERDQ0NERERERERERERDQ0NERERERERFRUVERERERERFRUVERERERERERERERERERERERERERERERERERERERERERESN6WzHAAAAH3RSTlMAAggJDA8cQEtTWHF/i4yTpau+xMXX3O7v8/f6+/z+qN9w2AAAAFZJREFUeNqlzMcSgCAMRVEsYO+9vv//S9FhNIYld5HFmSTCqQ66dazkRzA1lPSQGRZGIsDMKMxRW7+2yCIcyf/QUyUGSnc+dkaqoFumM32pf2BqY+HUBfQaCPgVIBc1AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-bold.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-bold .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bold].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bold].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-bold:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-bold .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=bold]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=bold]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAYFBMVEUAAAAAgP8AYL8AccYAatUAZswAZMgAZMsAZswAZcsAZcsAZssAZssAZ80AZswAZs0AZswAZ8wAZswAZcwAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsxCU9XcAAAAH3RSTlMAAggJDA8cQEtTWHF/i4yTpau+xMXX3O7v8/f6+/z+qN9w2AAAAFZJREFUeNqlzMcSgCAMRVEsYO+9vv//S9FhNIYld5HFmSTCqQ66dazkRzA1lPSQGRZGIsDMKMxRW7+2yCIcyf/QUyUGSnc+dkaqoFumM32pf2BqY+HUBfQaCPgVIBc1AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-italic,
+.ql-snow.ql-toolbar .ql-picker.ql-italic .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=italic],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=italic] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAi0lEQVR42mMYvoARl4SLi0sNkGoAYmY0qf+MjIztu3fvrkYWZGLADZhB8pS4CN1lQUBqLRDvAQJXHMqIstEISp8BEZQYZAIi/v//f5ZSg0xBBCMj4ymyDQKGjxKQEgLiV8DweUS2QUBXGEOZp0EEJV4zgdJnKDLo379/JsS6iJHSFA0DTDhT9CiAAQBbWyIY/pd4rQAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-italic.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-italic .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=italic].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=italic].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-italic:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-italic .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=italic]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=italic]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAk0lEQVR42u3SsQ3CMBBA0X/2BozACMQswg4EMQMUdOyQVdggdpagZAc4ihjJjYmU66K8xpZsfdnSsVxCzTFdEW6AB0oKcqdrLhQcNaK+PLc79QfapLTDgz8cU9Tv8ibZQqIBgI8OxhexH29KPz90jltgA7zownN+6C0Nowhg+JqEvCZbSDSHNDJBLBNdctWJXv18Ad5dJL0jVfDhAAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-underline,
+.ql-snow.ql-toolbar .ql-picker.ql-underline .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=underline],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=underline] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAM1BMVEUAAABLS0tFRUVDQ0NERERDQ0NFRUVFRUVERERDQ0NERERFRUVERERERERERERERERERESvCHKbAAAAEHRSTlMAERpMbW6Bgry9xMXh5PP51ZZfkwAAAEdJREFUeNq9yEEKgDAMRNHERDWq6dz/tFLBQUC6KfRtPnzpsh/sC2AHrcRUo0iuDXONI7gMxVW9wIQWPFb5sMgMk5YTdMmvGw2DA8yS9di7AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-underline.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-underline .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=underline].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=underline].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-underline:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-underline .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=underline]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=underline]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAM1BMVEUAAAAAadIAYs4AZc0AZcwAZswAZ84AZswAZs0AZ8wAZcwAZs0AZswAZswAZswAZswAZsycBlETAAAAEHRSTlMAERpMbW6Bgry9xMXh5PP51ZZfkwAAAEdJREFUeNq9yEEKgDAMRNHERDWq6dz/tFLBQUC6KfRtPnzpsh/sC2AHrcRUo0iuDXONI7gMxVW9wIQWPFb5sMgMk5YTdMmvGw2DA8yS9di7AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-strike,
+.ql-snow.ql-toolbar .ql-picker.ql-strike .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=strike],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=strike] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAn1BMVEUAAAAAAACAgIBAQEA7OztAQEBLS0tHR0dAQEBJSUlGRkZERERCQkJERERDQ0NERERERERDQ0NFRUVERERERERERERERERERERFRUVERERERERERERFRUVDQ0NFRUVERERFRUVFRUVERERFRUVFRUVFRUVERERFRUVFRUVERERERERERERERERERERERERERERERERERERERERERERERERfrjwTAAAANHRSTlMAAQIMDRAREhQVKCk6PEhLT1xkZWZ4e4CCg4SIiZucoaersLK2wcTFydLX2ODi5err8fX3BKZfrQAAAH5JREFUGBmlwOEWgTAYBuC3isgMxCYAmwRh++7/2qRzttP/HnQTZjdjilkALzhR4wBvQiaLk8WXOJwlHVHjYgxnSmbeR0swGEkpxWZ3vt7fL/w9P4/ist+KdZ7zYYiWiCnScFYiRq1HFo4mxaKIKdJw0ooaVQovkaW1pUzQyQ86Agx4yKmWPAAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-strike.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-strike .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=strike].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=strike].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-strike:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-strike .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=strike]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=strike]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAolBMVEUAAAAAAP8AgP8AatUAYsQAYM8AadIAY8YAZswAYc4AZswAZM0AZcoAZswAZ8oAZswAZMsAZ8oAZswAZcoAZ8sAZswAZssAZssAZs0AZswAZ8wAZs0AZ8wAZs0AZswAZ8wAZ8wAZs0AZ8wAZ8wAZs0AZs0AZs0AZcwAZs0AZcwAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsyiCU+yAAAANXRSTlMAAQIMDRAREhQVKCk6PEhLT1xkZWZ4e4CAgoOEiImbnKGnq7CytsHExcnS19jg4uXq6/H190B1i7AAAAB/SURBVBgZpcDhFoEwGAbgt4pIBmImAJsEYfvu/9ZU52yn/z3oxk/vWuczD453psYRzoR0GkaLHzFYSzqhwvgY1pT0vI8WbzASQvDt/nJ7fN6ovb7P/HrYrTdZxoY+WoJEkoK14iEqPTKwFMkkCBJJClZcUqOM4USiMKYQETr5A2SVDLpJv6ZtAAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-link,
+.ql-snow.ql-toolbar .ql-picker.ql-link .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=link],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=link] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAllBMVEUAAAD///9VVVVJSUk5OTlAQEBHR0dFRUVCQkJHR0dBQUFCQkJGRkZDQ0NGRkZFRUVCQkJDQ0NERERDQ0NERERFRUVERERFRUVDQ0NERERFRUVERERERERFRUVERERERERERERERERFRUVERERFRUVFRUVERERERERERERERERERERERERERERERERERERERERERERERETx5KUoAAAAMXRSTlMAAAYHCQwZGiMkJzIzOUJOYGNlfoCJl5ibnaCxtLa8xsfIycrQ1OHi5uvs7e/19vn8NGTYeAAAAJdJREFUeNqN0McOgkAARdGnFJWiKGBhEEFpSn3//3OGjMmQ6MK7PMuLxVe/CXDTPl5DJmk3cOTTmZE7MDQES11RyhBY5vQU9aOB2z3gWVFMsXywYx3t9Q9tXsyDjlOVLQlOyanOL1ibkqB7l5odM01QSJqK6GdXmGwUHVhowImJIr2iMI9sLUWwa5LtFjPCSjSJBUl//HoDlmQPy0DFuCkAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-link.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-link .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=link].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=link].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-link:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-link .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=link]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=link]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAmVBMVEUAAAD///8AVdUAbdsAccYAatUAZswAYs4AZswAY80AacsAZswAZM0AZ8kAZM0AZcsAZcoAZMsAZcoAZcoAZssAZs0AZs0AZ8wAZs0AZswAZs0AZswAZs0AZswAZs0AZs0AZs0AZ8wAZswAZcwAZs0AZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsy/jsjWAAAAMnRSTlMAAAYHCQwZGiMkJzIzOUJOYGNlfoCAiZeYm52gsbS2vMbHyMnK0NTh4ubr7O3v9fb5/BM/koAAAACXSURBVHjajdDbEoFQAIXhpROqiAjaSdGJSq33fzjTbDO7GS78l9/lj9lXvwnw0le8gEzSuufAhzshr2doCpaGopQhoOX0Fb0GE9fbnidFMYV2Z8c62hgfWj6Z7zqOVY4kuCXHuqBgbUmC4Z9rdsx0QSFpLGKQXWCxUbRloQNHJoqMisI6sLUVwalJtitMCHPRJDYk/fHrDdIHECSPJag6AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-image,
+.ql-snow.ql-toolbar .ql-picker.ql-image .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=image],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=image] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAElBMVEUAAABERERERERFRUVEREREREQbmEZBAAAABXRSTlMAeMTFxj7M9NAAAABBSURBVAjXY2DAD1RDQSAYyAqFABALLANmMRnAWMwODIIMUFnGUAEIS1A0NADMYgTqhLBY4SyEKXCTTcGMEAJuAgBa9RKl6Fva+wAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-image.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-image .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=image].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=image].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-image:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-image .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=image]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=image]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAElBMVEUAAAAAZswAZcwAZs0AZs0AZszYB6XUAAAABXRSTlMAeMTFxj7M9NAAAABBSURBVAjXY2DAD1RDQSAYyAqFABALLANmMRnAWMwODIIMUFnGUAEIS1A0NADMYgTqhLBY4SyEKXCTTcGMEAJuAgBa9RKl6Fva+wAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-list,
+.ql-snow.ql-toolbar .ql-picker.ql-list .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=list],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=list] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAS1BMVEUAAABCQkJFRUVGRkZFRUVCQkJFRUVDQ0NFRUVFRUVFRUVERERERERERERERERFRUVERERERERERERERERERERERERERERERERERET32eciAAAAGHRSTlMAMjRCQ0lOfYKQlJmaocTFxuHi5OXm9falfyKhAAAATElEQVR42mMgFnCKYIpJMDDwSUABP1yIHyYkABYRlBAmwngucV50IXZGIXTjmQTZ0I0XIcp4DjEedCFWFlF041mZRdCN5xDjZiAdAACXwgbrzvG+ZgAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-list.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-list .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=list].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=list].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-list:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-list .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=list]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=list]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAS1BMVEUAAAAAZswAZ8kAZM0AZ8oAZcsAZcsAZswAZswAZ80AZs0AZs0AZ80AZ8wAZcwAZs0AZs0AZswAZswAZswAZswAZswAZswAZswAZswCB3gJAAAAGHRSTlMAMjRCQ0lOfYKQlJmaocTFxuHi5OXm9falfyKhAAAATElEQVR42mMgFnCKYIpJMDDwSUABP1yIHyYkABYRlBAmwngucV50IXZGIXTjmQTZ0I0XIcp4DjEedCFWFlF041mZRdCN5xDjZiAdAACXwgbrzvG+ZgAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-bullet,
+.ql-snow.ql-toolbar .ql-picker.ql-bullet .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bullet],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bullet] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAABERERFRUVERERERETRGyWnAAAABHRSTlMAxMXG4b8ciAAAABxJREFUCNdjYMAPhBhdgMAJyFJmArGcGRgGXAcA/t0ImAOSO9kAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-bullet.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-bullet .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bullet].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bullet].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-bullet:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-bullet .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=bullet]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=bullet]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAAAAZcwAZs0AZs0AZsyEYJIjAAAABHRSTlMAxMXG4b8ciAAAABxJREFUCNdjYMAPhBhdgMAJyFJmArGcGRgGXAcA/t0ImAOSO9kAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-authorship,
+.ql-snow.ql-toolbar .ql-picker.ql-authorship .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=authorship],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=authorship] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAARVBMVEUAAABFRUVFRUUAAAAAAABERERDQ0NEREQAAABERERERERERERERERERERFRUVERERERERERERERERERERERERERERERERVeSBUAAAAFnRSTlMAMDtOT1JfYmassMfN09Ta6vD4+fz9w8DTTwAAAExJREFUGBmVwEkSgCAMBMBRQUEU4zb/f6oFF5KbNLp4EQ8rkxnWQ76whBRYkYwwxo08ZijDzWJBs7La0ZysLjSJVUKXKSgOhQuKw08fJOYE1SddZQoAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-authorship.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-authorship .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=authorship].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=authorship].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-authorship:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-authorship .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=authorship]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=authorship]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAARVBMVEUAAAAAZcoAaMsAZc4AZ8sAZ8oAZswAZcsAZ80AZs0AZ8wAZ8wAZswAZswAZswAZs0AZswAZswAZswAZswAZswAZswAZszAoUIuAAAAFnRSTlMAMDtOT1JfYmassMfN09Ta6vD4+fz9w8DTTwAAAExJREFUGBmVwEkSgCAMBMBRQUEU4zb/f6oFF5KbNLp4EQ8rkxnWQ76whBRYkYwwxo08ZijDzWJBs7La0ZysLjSJVUKXKSgOhQuKw08fJOYE1SddZQoAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-color,
+.ql-snow.ql-toolbar .ql-picker.ql-color .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=color],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=color] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAgVBMVEUAAAAAAACAgIBAQEBVVVVDQ0NGRkZGRkZFRUVERERDQ0NDQ0NDQ0NCQkIAAABFRUUAAABDQ0NEREREREREREQAAABDQ0NDQ0NERERFRUVERERERERERERDQ0NERERERERFRUVFRUVERERERERERERERERERERERERERERERERERERLPkdWAAAAKnRSTlMAAQIEBhMWISUtLkVMTU5OT1BTVlpmeX6OkJmdvL3GztTj5/Hy8/b3/f5utmv0AAAAX0lEQVR42pXIRQ6AQABDUdzd3bX3PyCWwAwr+Is2ecyvuKriXmQD5otKoKBFQz+sKkU5khQZKdK8yMoyiQTFOIseEbqLWv6mAPW+bAPvJmN0j/N7nfmTFRI5Jzk0fWwD4sYJPnqIyzwAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-color.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-color .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=color].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=color].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-color:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-color .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=color]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=color]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAgVBMVEUAAAAAAP8AgP8AgL8AVdUAa8kAaNEAZMkAZ8gAZswAZM0AZMsAZc0AZ8oAZcsAZc4AZ8sAZswAZcsAZc0AZswAZ80AZcoAZcoAZs0AZ80AZs0AZs0AZs0AZ8wAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsy3JBcuAAAAKnRSTlMAAQIEBhMWISUtLkVMTU5OT1BTVlpmeX6OkJmdvL3GztTj5/Hy8/b3/f5utmv0AAAAX0lEQVR42pXIRQ6AQABDUdzd3bX3PyCWwAwr+Is2ecyvuKriXmQB5otKoKBFQz+sKkU5khQZKdK8yMoyiQTFOIseEbqLWv6mAPW+bAPvJmN0j/N7nfmTHRI5Jzk0fWwD4foJPqgJbeoAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-background,
+.ql-snow.ql-toolbar .ql-picker.ql-background .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=background],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=background] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAnFBMVEUAAAAAAACAgIBAQEAAAABVVVUAAAAAAAAAAABDQ0MAAABGRkZGRkYAAABFRUVERERDQ0MAAAAAAAAAAAAAAABDQ0MAAABDQ0MAAABCQkJFRUVDQ0NERERERERERERDQ0NDQ0NERERFRUVERERERERERERDQ0NERERERERFRUVFRUVERERERERERERERERERERERERERERERERERETMTXVbAAAAM3RSTlMAAQIEBgYHCBMTFBYhIyUtLjE2N0JFS0xNTU5QU1ZaeX6OkJmdvL3GztTj5/Hy8/b3/f5Qd6EEAAAAf0lEQVR42o2PRw6DQBRDHVJISCUhvTd69/3vhgT6MLPDmoX15KfRR++c6mdKgVIOTRFoeJ6hE+tCnjXRgUv+oc02jJNyrYk/vj/8jhRxnheLVZHNupn1Yp3nVIgzjhoUDlvxQR/AIOBtKbNjerUB+x7vhZjARPkLyslbYIe+qQDqMQxGJwkBGwAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-background.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-background .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=background].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=background].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-background:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-background .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=background]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=background]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAllBMVEUAAAAAAP8AgP8AgL8AVdUAbbYAYL8Aa8kAZswAaNEAZMkAZswAZ8gAZswAZM0AaMsAaNAAZswAZM0AZMsAZswAZc0AZ8oAZ80AZcsAZswAZcsAZc0AZswAZcoAZcoAZs0AZ80AZs0AZs0AZs0AZ8wAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsy8dW5vAAAAMXRSTlMAAQIEBgcIExQWISMlLS4xNjdCRUtMTU1OUFNWWnl+jpCZnby9xs7U4+fx8vP29/3+dqGBzgAAAH5JREFUeNqNj0cOg0AUQx1CgFQS0nujd9//ckigDzM7rFlYT34afYzOuX2WFCjl0BWBRhAYOnEu5EkTPfjkH9pswzSr15r44/vDr6mI87JarKrCHmbOi22ethDPTDoUT3vxwRDAJOJtKbNjfnUB957uhVjATPkLyslbYIexaQB/ngudkm14XQAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-left,
+.ql-snow.ql-toolbar .ql-picker.ql-left .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=left],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=left] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAABERERFRUVERERERETRGyWnAAAABHRSTlMAxMXG4b8ciAAAAClJREFUCNdjYMAPRFxcnCAsFRcXZwYiAFCHC0STCpjlTJwOJwaYDoIaAKIACBBRNsu4AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-left.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-left .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=left].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=left].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-left:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-left .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=left]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=left]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAAAAZcwAZs0AZs0AZsyEYJIjAAAABHRSTlMAxMXG4b8ciAAAAClJREFUCNdjYMAPRFxcnCAsFRcXZwYiAFCHC0STCpjlTJwOJwaYDoIaAKIACBBRNsu4AAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-right,
+.ql-snow.ql-toolbar .ql-picker.ql-right .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=right],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=right] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAABERERFRUVERERERETRGyWnAAAABHRSTlMAxMXG4b8ciAAAAChJREFUCNdjYCAIRFxcnCAsFRcXZ2KUu0B0qIBZzgzEaXFigGkhpAMAmbwIEMJ9k/cAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-right.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-right .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=right].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=right].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-right:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-right .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=right]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=right]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAAAAZcwAZs0AZs0AZsyEYJIjAAAABHRSTlMAxMXG4b8ciAAAAChJREFUCNdjYCAIRFxcnCAsFRcXZ2KUu0B0qIBZzgzEaXFigGkhpAMAmbwIEMJ9k/cAAAAASUVORK5CYII=");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-center,
+.ql-snow.ql-toolbar .ql-picker.ql-center .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=center],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=center] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAABERERFRUVERERERETRGyWnAAAABHRSTlMAxMXG4b8ciAAAAC1JREFUCNdjYCAAGF1cXBTALCYgy4CBIBBxAQEnIEsFzHJmIMYKiCVMYBYhSwCyqQhMfft6AQAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-center.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-center .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=center].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=center].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-center:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-center .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=center]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=center]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAAAAZcwAZs0AZs0AZsyEYJIjAAAABHRSTlMAxMXG4b8ciAAAAC1JREFUCNdjYCAAGF1cXBTALCYgy4CBIBBxAQEnIEsFzHJmIMYKiCVMYBYhSwCyqQhMfft6AQAAAABJRU5ErkJggg==");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-justify,
+.ql-snow.ql-toolbar .ql-picker.ql-justify .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=justify],
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=justify] {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASBAMAAACk4JNkAAAAD1BMVEUAAABERERFRUVERERERETRGyWnAAAABHRSTlMAxMXG4b8ciAAAABpJREFUCNdjYMAPRFxAwAnIUgGznBkYBlwHAJGzCjB/C3owAAAAAElFTkSuQmCC");
+}
+.ql-snow.ql-toolbar .ql-format-button.ql-justify.ql-active,
+.ql-snow.ql-toolbar .ql-picker.ql-justify .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=justify].ql-active,
+.ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=justify].ql-selected,
+.ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-justify:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-justify .ql-picker-label:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=justify]:hover,
+.ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=justify]:hover {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAALklEQVR42mMYvoARzko9cwTIsyZR+zGGWcZgPUwIMUZGShwyGtijgT0a2EMMAADESwwWta/i5QAAAABJRU5ErkJggg==");
+}
+@media (-webkit-min-device-pixel-ratio: 2) {
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAIVBMVEUAAABCQkJDQ0NDQ0NERERERERERERERERERERERERERERehmmoAAAACnRSTlMATVRbaeXo6fz+NPhZJgAAAF9JREFUKM9jYBjkQC0JXYS5a4UBmpDFqlXN6IpWrUJTprEKCJpQhLJAQsswhZaiCImDhAJp5kMxkPGJZLjLEiQ0GUWIZdaqVSsdUM33XLVqCpqVLLPQFTEwmAcP9qQAAFUgKabkwE6gAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAJFBMVEWqqqr////AwMDAwMDAwMDBwcHBwcHBwcHBwcHBwcHBwcHBwcEexLCPAAAAC3RSTlMAAE1UW2nl6On8/tZA57EAAABxSURBVHjazc4hFkBAGMTxL3AAp+AGniYiyaLnBETHoKkknbc7l7OrzW7zhP3HX5mRxCskEsknEaZoU6VDNbAyRRugSqICpoVotnT7dBFllnpefPuHUpjGD78aSztRfAK65cUOOIQpPnXrkFSDEFFB0APtK1HCkKpz1wAAAABJRU5ErkJggg==");
+  }
+  .ql-snow.ql-toolbar .ql-picker.ql-active:not(.ql-expanded) .ql-picker-label,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker:not(.ql-expanded) .ql-picker-label:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAIVBMVEUAAAAAZ8oAZMsAZc0AZswAZswAZswAZswAZswAZswAZswhMkyGAAAACnRSTlMATVRbaeXo6fz+NPhZJgAAAF9JREFUKM9jYBjkQC0JXYS5a4UBmpDFqlXN6IpWrUJTprEKCJpQhLJAQsswhZaiCImDhAJp5kMxkPGJZLjLEiQ0GUWIZdaqVSsdUM33XLVqCpqVLLPQFTEwmAcP9qQAAFUgKabkwE6gAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-bold,
+  .ql-snow.ql-toolbar .ql-picker.ql-bold .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bold],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bold] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAxlBMVEUAAABVVVUzMzNVVVVJSUlGRkZAQEBJSUlAQEBAQEBAQEBHR0dCQkJGRkZAQEBGRkZCQkJERERDQ0NDQ0NGRkZERERDQ0NFRUVCQkJFRUVERERDQ0NDQ0NFRUVDQ0NERERERERERERERERERERERERERERERERERERFRUVDQ0NERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERfjmwgAAAAQXRSTlMAAwUGBwsMDhAUGBkbHSAhIykuOUJERUpNUVZYXGRne3yAi4+SmqWmq67R1tfY2dve5ujp7/Dy8/T19vf4+fv8/mUg1b0AAACrSURBVDjL5dPFDgJBEEXRxt3d3d11gPv/P8WCEAgZuno/b1WLk1TqJaWUI1Jc8852Mqz5bdHHALDK2CF+ckgYIHp/0GtypxpHYKlFSqkycJeQD7hIKADMJFQHulrkSrYs2MflCnZZgzKvo7RJmZeSAWIf1V3nihSGAG19BUq1gKmEQsBZQkHAklATmOuQN5zvP4COQQWnmIxuFfERWOTsXmrztWg8qHqUU/IEzOhNFx6Ncl4AAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-bold.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-bold .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bold].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bold].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-bold:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-bold .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=bold]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=bold]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAxlBMVEUAAAAAVaoAZswAVdUAbdsAXdEAatUAbcgAYM8AZswAasoAZswAaNAAasoAaMcAZMkAZswAZM0AZM0AZ8kAZM0AZcsAZMsAZMsAZ8oAZc0AZc0AZcsAZ8oAZswAZssAZssAZcwAZssAZ80AZs0AZ8wAZ80AZswAZ8wAZ8wAZ8wAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsyeO+aMAAAAQXRSTlMAAwUGBwsMDhAUGBkbHSAhIykuOUJERUpNUVZYXGRne3yAi4+SmqWmq67R1tfY2dve5ujp7/Dy8/T19vf4+fv8/mUg1b0AAACrSURBVDjL5dPFDgJBEEXRxt3d3d11gPv/P8WCEAgZuno/b1WLk1TqJaWUI1Jc8852Mqz5bdHHALDK2CF+ckgYIHp/0GtypxpHYKlFSqkycJeQD7hIKADMJFQHulrkSrYs2MflCnZZgzKvo7RJmZeSAWIf1V3nihSGAG19BUq1gKmEQsBZQkHAklATmOuQN5zvP4COQQWnmIxuFfERWOTsXmrztWg8qHqUU/IEzOhNFx6Ncl4AAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-italic,
+  .ql-snow.ql-toolbar .ql-picker.ql-italic .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=italic],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=italic] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAjVBMVEUAAAAAAACAgIBAQEBVVVVAQEBAQEBCQkJCQkJFRUVDQ0NBQUFDQ0NDQ0NDQ0NFRUVERERERERERERDQ0NERERDQ0NERERERERERERFRUVFRUVERERFRUVERERERERDQ0NERERERERERERDQ0NFRUVEREREREREREREREREREREREREREREREREREREREQUqV1+AAAALnRSTlMAAQIEBggMGyMlKisuUFhZXmJmb3R9hIiKjZGTlKWprrG0uL3BxObt8PL19/j9SqrrawAAAIJJREFUOMvl0jUOQgEQRVHc3d1dzv6XRwch+WRq4NYnmVdMKvU35RZXz+7LQiJqe6uXiDrvqJuI8vM7ALd14fOwIabR+i1agUmfUA1QGedMgJrYRZPGGEVoh0ZgMmeUAlTBMbrWwiZCEwwitEc9MNkLigGq4RBda2MVoRn6X/jfv9YDjuYgGnCpSqcAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-italic.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-italic .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=italic].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=italic].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-italic:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-italic .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=italic]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=italic]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAjVBMVEUAAAAAAP8AgP8AgL8AVdUAYL8AatUAaNAAZswAZ8gAZ8gAZcoAZM0AZswAZcsAZMsAZMsAZcsAZ8sAZcoAZcoAZswAZs0AZ8wAZs0AZ8wAZswAZs0AZs0AZswAZ8wAZ8wAZs0AZswAZ8wAZ8wAZs0AZcwAZswAZswAZswAZswAZswAZswAZswAZswAZsyyI9XbAAAALnRSTlMAAQIEBggMGyMlKisuUFhZXmJmb3R9hIiKjZGTlKWprrG0uL3BxObt8PL19/j9SqrrawAAAIJJREFUOMvl0jUOQgEQRVHc3d1dzv6XRwch+WRq4NYnmVdMKvU35RZXz+7LQiJqe6uXiDrvqJuI8vM7ALd14fOwIabR+i1agUmfUA1QGedMgJrYRZPGGEVoh0ZgMmeUAlTBMbrWwiZCEwwitEc9MNkLigGq4RBda2MVoRn6X/jfv9YDjuYgGnCpSqcAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-underline,
+  .ql-snow.ql-toolbar .ql-picker.ql-underline .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=underline],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=underline] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAWlBMVEUAAAAAAAAzMzNAQEBGRkZERERERERCQkJERERDQ0NFRUVERERERERFRUVERERERERERERFRUVERERERERERERDQ0NFRUVERERERERERERERERERERERERERET15sOLAAAAHXRSTlMAAQUMLC04TU9UVYePkJKkxMXG2Nrf4+jz9/n6/qlZ0HQAAACUSURBVHja7Y3BDsIgEAW3UCmCFatQxLL//5uuiQ0py1EPxs5tHhMW/oMhxoF5TUSMzGuQqH2PfiO60yiLStIHi260qqKKNLDI0XouOpI6Fh1f/x9W6xOpYZHwNM/9u5lJvACGzvSQRiWlOiUkNDSwuMFCi87mkmTbQRvt18aXWwxhXFiW4IyAr3LBJtMmmtrRFT7ME0B0HEswIOSJAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-underline.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-underline .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=underline].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=underline].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-underline:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-underline .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=underline]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=underline]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAWlBMVEUAAAAAAP8AZswAatUAaMsAZswAZM0AZ8oAZMsAZMsAZswAZswAZs0AZ80AZ8wAZ8wAZcwAZs0AZs0AZswAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZszogqY1AAAAHXRSTlMAAQUMLC04TU9UVYePkJKkxMXG2Nrf4+jz9/n6/qlZ0HQAAACUSURBVHja7Y3BDsIgEAW3UCmCFatQxLL//5uuiQ0py1EPxs5tHhMW/oMhxoF5TUSMzGuQqH2PfiO60yiLStIHi260qqKKNLDI0XouOpI6Fh1f/x9W6xOpYZHwNM/9u5lJvACGzvSQRiWlOiUkNDSwuMFCi87mkmTbQRvt18aXWwxhXFiW4IyAr3LBJtMmmtrRFT7ME0B0HEswIOSJAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-strike,
+  .ql-snow.ql-toolbar .ql-picker.ql-strike .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=strike],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=strike] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAABLFBMVEUAAACAgIBVVVVAQEAzMzNVVVVAQEA5OTlNTU1JSUlERERHR0dDQ0NGRkZDQ0NAQEBCQkJAQEBGRkZAQEBGRkZERERBQUFERERGRkZCQkJGRkZERERFRUVERERDQ0NFRUVERERDQ0NFRUVCQkJDQ0NFRUVCQkJDQ0NERERDQ0NERERERERDQ0NFRUVERERERERERERERERFRUVERERDQ0NFRUVERERERERFRUVERERERERDQ0NDQ0NFRUVERERERERFRUVERERERERFRUVERERERERDQ0NERERFRUVERERERERERERFRUVERERERERERERERERFRUVERERERERERERFRUVERERERERERERERERERERERERERERERERERERERERERERERERERERERET5TTiyAAAAY3RSTlMAAgMEBQYICQoODxITFhcYGxwdICEtLzEzNjc4P0BFRkdISk1YWWBjaWtsdHZ3f4CHiImKjJGSk5SVl5ufo6Smp625uru8vb/BwsPExcbMzs/Q0dPi4+Tl6+zv8PL19vf4+/z2SQ4sAAABE0lEQVQ4y2NgGDmAV8c5PCkxxFGDE6cSDuOEZCiI0WXGroY/OBkJeHJhU8Pkm4wCXBixKFIHyUTqibJzS5lEgNhqWBT5AMWD+CFsHg8gxxuLoniguCyMIwLkxGFRBPKZDKEw8gMqCuAloEgb7HADMTZ8ijisjHTUlCSFOdgFxeVUNPXM7Z38QmJ9EApQxFFCyxeuxhtFPC7U39nBQl9LVV5CiAMpiFDEOYQlldR0jGwM8DmOVVDRLBpkpDIBr/KBXOBKKNSEgYpiMUQjgaLChBQ5A0W94AHO6wXkumEoUgY5NcpUUYCFRUDBNAqHw22T0YAdNp9bo6qxZMLqI4VAhJIgBZwelzZ0D4uLC3M3lB5B5QgAFQdgZ6NzzvYAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-strike.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-strike .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=strike].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=strike].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-strike:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-strike .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=strike]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=strike]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAABLFBMVEUAAAAAgP8AVaoAgL8AZswAVdUAYL8AccYAZswAbcgAZswAY8YAa8kAaNEAZMgAasoAaNAAZMgAasoAaMcAZMkAZswAZ8kAaMsAZM0AaMsAZswAZM0AZcoAZMsAZMsAZswAZc0AZ8oAZMsAZ8oAZcsAZMsAZcoAZMsAZswAZssAZssAZcoAZssAZcwAZssAZs0AZswAZ8wAZs0AZs0AZswAZswAZ8wAZs0AZs0AZ80AZ8wAZswAZ8wAZs0AZ8wAZ8wAZs0AZs0AZswAZ8wAZs0AZs0AZ8wAZcwAZs0AZ8wAZswAZcwAZs0AZs0AZ8wAZswAZswAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswL5dPDAAAAY3RSTlMAAgMEBQYICQoODxITFhcYGxwdICEtLzEzNjc4P0BFRkdISk1YWWBjaWtsdHZ3f4CHiImKjJGSk5SVl5ufo6Smp625uru8vb/BwsPExcbMzs/Q0dPi4+Tl6+zv8PL19vf4+/z2SQ4sAAABE0lEQVQ4y2NgGDmAV8c5PCkxxFGDE6cSDuOEZCiI0WXGroY/OBkJeHJhU8Pkm4wCXBixKFIHyUTqibJzS5lEgNhqWBT5AMWD+CFsHg8gxxuLoniguCyMIwLkxGFRBPKZDKEw8gMqCuAloEgb7HADMTZ8ijisjHTUlCSFOdgFxeVUNPXM7Z38QmJ9EApQxFFCyxeuxhtFPC7U39nBQl9LVV5CiAMpiFDEOYQlldR0jGwM8DmOVVDRLBpkpDIBr/KBXOBKKNSEgYpiMUQjgaLChBQ5A0W94AHO6wXkumEoUgY5NcpUUYCFRUDBNAqHw22T0YAdNp9bo6qxZMLqI4VAhJIgBZwelzZ0D4uLC3M3lB5B5QgAFQdgZ6NzzvYAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-link,
+  .ql-snow.ql-toolbar .ql-picker.ql-link .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=link],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=link] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAABDlBMVEUAAAD///8AAACAgIBVVVVAQEAzMzNVVVVAQEBNTU1HR0dAQEBJSUlGRkZDQ0NAQEBERERHR0dGRkZDQ0NBQUFGRkZERERCQkJGRkZFRUVCQkJFRUVERERDQ0NDQ0NCQkJFRUVDQ0NERERDQ0NFRUVDQ0NFRUVFRUVFRUVFRUVERERDQ0NFRUVERERFRUVERERERERDQ0NFRUVFRUVERERERERERERERERFRUVERERERERERERFRUVDQ0NERERERERFRUVERERERERERERERERERERERERERERERERERERERERFRUVERERERERERERERERERERERERERERERERERERERERERERERERERERERESFPz0UAAAAWXRSTlMAAAECAwQFBggKEhQVFhccHiQoKissLTIzNDpGR0hMTU5QUlRVW12BgoaHjI2PmJmam5ygpKWosbKztLW6vcDD0NLT2Nna3N7g4eLj5Ofo6err7u/w8vn7/A90CXkAAAFqSURBVDjLzdTHUgJREIXho8yo6JgFc0LFjAkVMZAFJYrCzP/+L+JCtJipS5U7Patbt79Vd1dr6BfRHyBJUiie6dSSiwrEh2aeAPAO7cEoUqWXdHgQirQAOh7A46gZzVQBzsfmSgAnRhR6AjiS5OQAd9aE4t9GmqoCCRPKAGe9zzhQDxlQBzpjknab9c2RD2DBgGrgzUlqQnfrHlg3oGug6Eh1oFsAEtvLVhAteUBuSjseP2lfzQf6dARQjY/s9SncY9uH7DQA7+ky/XkI+8YSfvRVC6k3AO4s34BHT90+1N2yYq8A+/5V0Wyi0ac2NJkD3KgfSaGF9QRQ9oCC5JSAiyCStA2k9jzISooCFQNaBlpWrJBdkTThQsOA7DYQ+3pbKeDWgHQFvDiSNJwEWDWheRfIOZKVBLiRCekYoBiZSAHkx83IfgDABXielhkpfAcAkJ/WICTrwAXgZlyDkRS9rDRu1wJL98/u0yeVYHcP1mwWWgAAAABJRU5ErkJggg==");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-link.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-link .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=link].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=link].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-link:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-link .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=link]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=link]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAABDlBMVEUAAAD///8AAP8AgP8AVaoAgL8AZswAVdUAYL8AZswAY8YAZswAYc4AaNEAZMgAZMgAZswAY80AZswAZ8gAZcoAaMsAZswAZswAZM0AZ8kAZcoAZswAZc0AZ8oAZc0AZ8oAZcsAZswAZ8oAZMsAZswAZc0AZcsAZ84AZswAZ84AZswAZswAZ8wAZs0AZs0AZs0AZ80AZswAZ8wAZswAZ8wAZswAZs0AZs0AZs0AZ8wAZswAZ8wAZ8wAZ8wAZs0AZswAZs0AZswAZswAZswAZswAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsxCnEEHAAAAWXRSTlMAAAECAwQFBggKEhQVFhccHiQoKissLTIzNDpGR0hMTU5QUlRVW12BgoaHjI2PmJmam5ygpKWosbKztLW6vcDD0NLT2Nna3N7g4eLj5Ofo6err7u/w8vn7/A90CXkAAAFqSURBVDjLzdTHUgJREIXho8yo6JgFc0LFjAkVMZAFJYrCzP/+L+JCtJipS5U7Patbt79Vd1dr6BfRHyBJUiie6dSSiwrEh2aeAPAO7cEoUqWXdHgQirQAOh7A46gZzVQBzsfmSgAnRhR6AjiS5OQAd9aE4t9GmqoCCRPKAGe9zzhQDxlQBzpjknab9c2RD2DBgGrgzUlqQnfrHlg3oGug6Eh1oFsAEtvLVhAteUBuSjseP2lfzQf6dARQjY/s9SncY9uH7DQA7+ky/XkI+8YSfvRVC6k3AO4s34BHT90+1N2yYq8A+/5V0Wyi0ac2NJkD3KgfSaGF9QRQ9oCC5JSAiyCStA2k9jzISooCFQNaBlpWrJBdkTThQsOA7DYQ+3pbKeDWgHQFvDiSNJwEWDWheRfIOZKVBLiRCekYoBiZSAHkx83IfgDABXielhkpfAcAkJ/WICTrwAXgZlyDkRS9rDRu1wJL98/u0yeVYHcP1mwWWgAAAABJRU5ErkJggg==");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-image,
+  .ql-snow.ql-toolbar .ql-picker.ql-image .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=image],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=image] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAFVBMVEUAAABCQkJEREREREREREREREREREQL6X1nAAAABnRSTlMATXjl6OmAFiJpAAAAZklEQVR42sXQsQ3AIAxEUeQZoKdyzwg0DALo9h8hiCYXo4R0/MbSK1ycO5EHlScVpj4Jj97p/vtJPi9U+kptXIlMIY2r1b4XIBpSoDJJFIyYtKohAWBIV8Ke9kv8X7WwtEmBKbkDXfWkWdehkaSCAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-image.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-image .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=image].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=image].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-image:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-image .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=image]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=image]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAFVBMVEUAAAAAZ8oAZswAZswAZswAZswAZsx4QzxlAAAABnRSTlMATXjl6OmAFiJpAAAAZklEQVR42sXQsQ3AIAxEUeQZoKdyzwg0DALo9h8hiCYXo4R0/MbSK1ycO5EHlScVpj4Jj97p/vtJPi9U+kptXIlMIY2r1b4XIBpSoDJJFIyYtKohAWBIV8Ke9kv8X7WwtEmBKbkDXfWkWdehkaSCAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-list,
+  .ql-snow.ql-toolbar .ql-picker.ql-list .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=list],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=list] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAw1BMVEUAAAAAAABVVVVAQEBERERAQEBJSUlGRkZHR0dFRUVCQkJERERAQEBGRkZDQ0NFRUVDQ0NCQkJGRkZDQ0NCQkJERERDQ0NFRUVERERFRUVERERDQ0NERERERERDQ0NFRUVERERERERERERERERERERERERERERFRUVERERERERERERFRUVERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERESFbZw4AAAAQHRSTlMAAQYIDxAVFhkaGx4gKCo0NTY3OU10fYKIiYqMj56fo6SmqKmvtLe6vr/ExcbLz9fh4uXm5+jp7O/w8vP3+vv9Z7IwDAAAAK1JREFUOMvV0scOglAQQFGwYO+oiIq9YldEFPX+/1e5cGEii2FFdNY3b/JORlF+dAqNrS1GQyDEW+9Id/gaRw9EgQacMNEhuO4caD7rlgDS/2yAVWTiia53HWeEaMLzwUKIdvt08n4TxLMptc1UEo/38YqCuGZzKknimxDi6jpa8Vjn6I4kcQNgLkSmVSvjizeeb9ITbzxXxxLETatSxRfEWwAzicC4uANN+at5AdptTQ0Ubk4LAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-list.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-list .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=list].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=list].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-list:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-list .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=list]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=list]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAw1BMVEUAAAAAAP8AVdUAYL8AZswAYM8AYc4AaNEAZswAYs4AaNAAZswAaMcAZswAZ8gAZ8kAZcoAaMsAZswAZ8kAZ8oAZcoAZswAZswAZ8wAZs0AZs0AZswAZs0AZs0AZ8wAZs0AZ8wAZ8wAZs0AZ8wAZswAZswAZs0AZ8wAZswAZcwAZcwAZs0AZs0AZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZszno9YmAAAAQHRSTlMAAQYIDxAVFhkaGx4gKCo0NTY3OU10fYKIiYqMj56fo6SmqKmvtLe6vr/ExcbLz9fh4uXm5+jp7O/w8vP3+vv9Z7IwDAAAAK1JREFUOMvV0scOglAQQFGwYO+oiIq9YldEFPX+/1e5cGEii2FFdNY3b/JORlF+dAqNrS1GQyDEW+9Id/gaRw9EgQacMNEhuO4caD7rlgDS/2yAVWTiia53HWeEaMLzwUKIdvt08n4TxLMptc1UEo/38YqCuGZzKknimxDi6jpa8Vjn6I4kcQNgLkSmVSvjizeeb9ITbzxXxxLETatSxRfEWwAzicC4uANN+at5AdptTQ0Ubk4LAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-bullet,
+  .ql-snow.ql-toolbar .ql-picker.ql-bullet .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bullet],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bullet] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAABCQkJEREREREREREREREQc4xmxAAAABXRSTlMATeXo6UtNtyIAAAAzSURBVCjPY2AYACBsyCAcCgOGYCHTYAZTuFAwRCgISSgILCSiyCACF1JkGBgw6voBcj0AFsUtDasGrUcAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-bullet.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-bullet .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=bullet].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=bullet].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-bullet:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-bullet .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=bullet]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=bullet]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAAAAZ8oAZswAZswAZswAZsxixJGvAAAABXRSTlMATeXo6UtNtyIAAAAzSURBVCjPY2AYACBsyCAcCgOGYCHTYAZTuFAwRCgISSgILCSiyCACF1JkGBgw6voBcj0AFsUtDasGrUcAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-authorship,
+  .ql-snow.ql-toolbar .ql-picker.ql-authorship .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=authorship],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=authorship] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAllBMVEUAAACAgIBAQEBCQkIAAABCQkJAQEBGRkZERERERERCQkJGRkZDQ0NDQ0NDQ0MAAAAAAAAAAABDQ0NFRUVERERFRUVERERFRUVERERFRUVERERERERERERERERERERERERERERFRUVEREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREQe3JVeAAAAMXRSTlMAAhgbHx8gIS0xMjM5VFdcXWZyd3yChImPkKy4yMrO0tPj5ebq7e7v8PLz9/j6/P3+mEwo9QAAAJxJREFUGBnVwNcOgjAYBeCj4l7FjeAGUZzn/V9O0kikSftf44c/0A+Tc9iFqHll7tKEJKAWQLKjtockpZZC8qL2hiSjlkESUYsgmVNbQtKhNoCgNrwz95w14NTe8Os2gUP9wJ8p7NYsebRg06NhAZsVDRFstjQksMlogs2Rhhg2o5glpxGqz1O+g/JQUL6TQkH5TmMUPOU7jD1U1AdG8S1kERvjygAAAABJRU5ErkJggg==");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-authorship.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-authorship .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=authorship].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=authorship].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-authorship:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-authorship .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=authorship]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=authorship]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAllBMVEUAAAAAgP8AasoAaNAAY84AaMcAZMkAZswAaMsAZswAZM0AZ8kAZMsAZ8oAZ8oAZcsAZc4AZ80AZcwAZcwAZcwAZswAZs0AZs0AZs0AZ80AZs0AZ8wAZswAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsyCDIYeAAAAMXRSTlMAAhgbHyAhLTEyMzlUV1xdXWZyd3yChImPkKy4yMrO0tPj5ebq7e7v8PLz9/j6/P3+PxHOPAAAAJxJREFUGBnVwNcOgjAYBeCj1j0q7oEbRHGe9385SSORJu1/jR/+QGcdn9ctiNSVmYuCZEljCcmOxh6ShEYCyYvGG5KURgpJSCOEZEpjDkmTRheCSu/OzHNSg1djw6/bCB7VA3/GcFux4FGHS5uWGVwWtIRw2dISwyWlDS5HWiK49CMWnPooP6UDD62Q04GXRk4HXgPk1DDwGCiU1AcZWy1RmD8CRQAAAABJRU5ErkJggg==");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-color,
+  .ql-snow.ql-toolbar .ql-picker.ql-color .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=color],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=color] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAAz1BMVEUAAAAAAACAgIBVVVVAQEBVVVU5OTk7OztLS0tHR0dGRkZCQkIAAABERERDQ0NDQ0NDQ0NDQ0NGRkZERERERERCQkJFRUVERERFRUVEREQAAAAAAABDQ0NFRUVEREQAAABERERFRUVERERDQ0NDQ0NERERERERERERERERERERERERERERERERERERFRUVFRUVERERERERERERERERERERDQ0NERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERbYaT1AAAARHRSTlMAAQIDBAYJDRESFhsfIiYqNUFCREtNVVZZWlxdY2RlZm1zdXZ9hI6Tl6Sws7nExcnS09XY2d/g5ejp6+zt8PP09/n9/idH/qoAAADKSURBVBgZ1cDXUsJAAIXhg2KMGruxsGoUe8cWoij1f/9nYiZDGJjsLrfwaRHEWRZrhuAXWoH8zgBO5VVpADTktU9uVz5P5B7lsdUn19+U2x3w+gbcyilsA0cnwP+qXOpAWl1pAhdyqKZAXboGvpZkdwi0Q2m9CxzI7oUJz7LaYdJgWzYPTLmXxUaPKZ01ld0A7xXllr+BK5VlwLlGLoFPlWXQCjQSduBDZfFPM9bY8V+6p7kXmcTBRCqYxMmoYBKnmgqRSRxqkebUEKsKOlxMa6IbAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-color.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-color .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=color].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=color].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-color:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-color .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=color]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=color]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAA0lBMVEUAAAAAAP8AgP8AVaoAgL8AVdUAccYAYsQAadIAY8YAaNEAaNAAY84AacsAZckAZ8gAZcoAZswAZM0AZcsAZswAZ8oAZswAZc0AZMsAZswAZ8oAZcsAZc4AZMsAZswAZcoAZ80AZcwAZswAZssAZssAZswAZs0AZs0AZs0AZ8wAZ8wAZ8wAZ8wAZswAZcwAZs0AZcwAZswAZswAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswVaivDAAAARXRSTlMAAQIDBAYJDRESFhsfIiYqNUFCREtNVVZZWlxdXWNkZWZtc3V2fYSOk5eksLO5xMXJ0tPV2Nnf4OXo6evs7fDz9Pf5/f6Y2SWXAAAAy0lEQVQYGdXA11LCQACF4YNijBq7sbCWKPaOLURREPjf/5WYyRAGJrvLLXyaB3GWxZoi+IFWIL9TgBN5VRoADXntktuWzyO5B3ls9Mj11uV2C7y8AjdyCtvAwRHwtyyXOpBWl5rAuRyqKVCXroDPBdntA+1QWv0H9mT3zJgnWW0xrr8pm3sm3MlircuEzorKroG3inKLX8ClyjLgTEMXwIfKMmgFGgo78K6y+LsZa+TwN93RzItM4mAiFUziZFQwiVNNheg4cahFmlEDFzs7cwmPHM8AAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-background,
+  .ql-snow.ql-toolbar .ql-picker.ql-background .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=background],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=background] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAA4VBMVEUAAAAAAACAgIBVVVVAQEBVVVU5OTk7OztLS0tHR0dGRkZCQkJERERDQ0NDQ0NDQ0NDQ0NERERCQkJEREQAAAADAwMGBgZDQ0NEREQODg5ERERDQ0NFRUVERERERERERERDQ0MiIiJDQ0MmJiZEREQrKytEREREREQyMjIyMjJEREREREREREQ4ODhERERERERFRUVFRUVERERERERERERERERAQEBERERERERBQUFERERERERERERBQUFERERERERERERBQUFERERERERERERDQ0NERERERERDQ0NERERERESZD8GyAAAASnRSTlMAAQIDBAYJDRESFhsiJio1QURJS01QU1RWWVpjZGVtdXZ4fYCEiI6TnZ6ksLO3ucTFydLT193g4OLl5ebn6enq6+7w8vP39/n+/rihcb4AAADbSURBVHjazZPFDsMwEERdZkpTZmbmpszd//+grhpFSaS1e+khc1jbmrG1z7KZdSXLgvo79M9ziKCkKJIeoUPJA8AxKT6H5QGVE3dlmwJqKqaLwVdRIV1fDfVEdKGXGnoFBXQtDIwnWJp8uswd/XQWy8XD7aqD9srp2uJQ5NElVuiWGKvisLFz6Bpo3ryM+R84iXO6GoFBQ5ouAka9wyRdF0waUHSBpzl09xF0dTRmNnXu2OOiTNDtAKCg7W3jYk7QnQGObu0KvVeAJUFXU9aS/h5Sp0VFtui/s6w+XSJAbiVJ3G0AAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-background.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-background .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=background].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=background].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-background:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-background .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=background]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=background]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAMAAADW3miqAAAA5FBMVEUAAAAAAP8AgP8AVaoAgL8AZswAVdUAYL8AccYAYsQAadIAY8YAaNEAasoAZswAYsQAaNAAacsAZckAadEAZ8gAZcoAZswAZswAZMkAZM0AZcsAZ8sAZswAaM0AZ8oAZ80AZswAZc0AZMsAZswAZMsAZswAZcoAZcwAZswAZssAZssAZswAZs0AZs0AZs0AZ8wAZ8wAZ8wAZ8wAZswAZcwAZs0AZcwAZswAZswAZs0AZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZswAZsxJPDLdAAAAS3RSTlMAAQIDBAUGCAkNERIWGBkaGyImJyo1N0FCQkRFS0xNTVVWWVpjZGVtc3V2fYSOk5eksLO5xMXJ0tPV2Nnf4OXo6evs7fDz9Pf5/f60OfwzAAABG0lEQVR42s2T6VKDQBCEGyUJoqgSjcYg8dZ43/EieCUa5/3fx661qMAu7O98P4bZnq5lZlkwvXS7k1hf1BTdZFEsFpvUMU15IU7TuKiYJu9d5MODZZ8WcCBk39ZVAKcvpG+ZrgNsimIdTtV0TeBGFNewdBWORTFesUx3QcP9A8N59XT+kPWdPYavOQQVXfVYTtz6gI8jvfUsdRNWe8ApHy8z5ftgm8WhDyx8M4nKumoBd5LjVkkaAdYkz+8qpQLqtK+kwKU5XRPLP1JgNF8y3RkLjw4Us69cnMDb0qdLqR9myjEXz2brNPG2NSKQqOGPRJ5gEr8NYoT/9yHE7mfShoarovYptDw7kiWLyZTbNZBa9saK33tDWZlPK39U3ELkzhssBgAAAABJRU5ErkJggg==");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-left,
+  .ql-snow.ql-toolbar .ql-picker.ql-left .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=left],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=left] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAABCQkJEREREREREREREREQc4xmxAAAABXRSTlMATeXo6UtNtyIAAABCSURBVCjPY2AYACAcCgaGSEKmEKFgTKEgJCERiJAiw0ACqOuR/WCKLBSMKRSE7PqB9YMwuttRnBqMKRSEGvYD6HYAD8opyeJDvUUAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-left.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-left .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=left].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=left].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-left:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-left .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=left]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=left]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAAAAZ8oAZswAZswAZswAZsxixJGvAAAABXRSTlMATeXo6UtNtyIAAABCSURBVCjPY2AYACAcCgaGSEKmEKFgTKEgJCERiJAiw0ACqOuR/WCKLBSMKRSE7PqB9YMwuttRnBqMKRSEGvYD6HYAD8opyeJDvUUAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-right,
+  .ql-snow.ql-toolbar .ql-picker.ql-right .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=right],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=right] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAABCQkJEREREREREREREREQc4xmxAAAABXRSTlMATeXo6UtNtyIAAABCSURBVCjPY2AYMCAcCgaGSEKmEKFgTKEgJCERiJDiwLob2fWmyELBmEJByO4eWNejuN8QNZCRw94U3fUo7h8Q1wMAuRspyVIXC2UAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-right.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-right .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=right].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=right].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-right:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-right .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=right]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=right]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAAAAZ8oAZswAZswAZswAZsxixJGvAAAABXRSTlMATeXo6UtNtyIAAABCSURBVCjPY2AYMCAcCgaGSEKmEKFgTKEgJCERiJDiwLob2fWmyELBmEJByO4eWNejuN8QNZCRw94U3fUo7h8Q1wMAuRspyVIXC2UAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-center,
+  .ql-snow.ql-toolbar .ql-picker.ql-center .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=center],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=center] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAABCQkJEREREREREREREREQc4xmxAAAABXRSTlMATeXo6UtNtyIAAABCSURBVCjPY2AYGCAcCgaGSEKmEKFgTKEgJCERiJAiw4ABqNORPWCKLBSMKRSE7PQB9oAwuuNR3BqMKRSEGvID53gA5GspyQ9EElMAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-center.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-center .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=center].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=center].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-center:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-center .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=center]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=center]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAAAAZ8oAZswAZswAZswAZsxixJGvAAAABXRSTlMATeXo6UtNtyIAAABCSURBVCjPY2AYGCAcCgaGSEKmEKFgTKEgJCERiJAiw4ABqNORPWCKLBSMKRSE7PQB9oAwuuNR3BqMKRSEGvID53gA5GspyQ9EElMAAAAASUVORK5CYII=");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-justify,
+  .ql-snow.ql-toolbar .ql-picker.ql-justify .ql-picker-label,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=justify],
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=justify] {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAABCQkJEREREREREREREREQc4xmxAAAABXRSTlMATeXo6UtNtyIAAAAoSURBVCjPY2AYACAcigQMwUKmyELBmEJBYCERZCFFhoEBo64fINcDAAcQNGkJNhVcAAAAAElFTkSuQmCC");
+  }
+  .ql-snow.ql-toolbar .ql-format-button.ql-justify.ql-active,
+  .ql-snow.ql-toolbar .ql-picker.ql-justify .ql-picker-label.ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-label[data-value=justify].ql-active,
+  .ql-snow.ql-toolbar .ql-picker .ql-picker-item[data-value=justify].ql-selected,
+  .ql-snow.ql-toolbar:not(.ios) .ql-format-button.ql-justify:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker.ql-justify .ql-picker-label:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-label[data-value=justify]:hover,
+  .ql-snow.ql-toolbar:not(.ios) .ql-picker .ql-picker-item[data-value=justify]:hover {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkBAMAAAATLoWrAAAAElBMVEUAAAAAZ8oAZswAZswAZswAZsxixJGvAAAABXRSTlMATeXo6UtNtyIAAAAoSURBVCjPY2AYACAcigQMwUKmyELBmEJBYCERZCFFhoEBo64fINcDAAcQNGkJNhVcAAAAAElFTkSuQmCC");
+  }
+}
+.ql-snow .ql-tooltip {
+  border: 1px solid #ccc;
+  box-shadow: 0px 0px 5px #ddd;
+  color: #222;
+}
+.ql-snow .ql-tooltip a {
+  color: #06c;
+}
+.ql-snow .ql-tooltip .input {
+  border: 1px solid #ccc;
+  margin: 0px;
+  padding: 5px;
+}
+.ql-snow a {
+  color: #06c;
+}
