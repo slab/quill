@@ -363,7 +363,7 @@ Retrieves the user's selection range.
 
 **Returns**
 
-- *Range* contents of the editor
+- *Range* with keys `start` and `end` representing user's selection range
 
 **Examples**
 
