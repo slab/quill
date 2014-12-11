@@ -363,7 +363,7 @@ Retrieves the user's selection range.
 
 **Returns**
 
-- *String* contents of the editor
+- *Range* contents of the editor
 
 **Examples**
 
