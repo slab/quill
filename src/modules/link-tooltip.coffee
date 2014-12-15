@@ -15,6 +15,9 @@ class LinkTooltip extends Tooltip
       <a href="javascript:;" class="change">Change</a>
       <a href="javascript:;" class="done">Done</a>'
 
+  @hotkeys:
+    LINK: { key: 'K', metaKey: true }
+
   constructor: (@quill, @options) ->
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
@@ -41,6 +44,9 @@ class LinkTooltip extends Tooltip
     this.initTextbox(@textbox, this.saveLink, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
       toolbar.initFormat('link', _.bind(this._onToolbar, this))
+    )
+    @quill.onModuleLoad('keyboard', (keyboard) =>
+      keyboard.addHotkey(LinkTooltip.hotkeys.LINK, _.bind(this._onKeyboard, this))
     )
 
   saveLink: ->
@@ -76,8 +82,15 @@ class LinkTooltip extends Tooltip
     return null
 
   _onToolbar: (range, value) ->
-    return unless range and !range.isCollapsed()
-    if value
+    this._toggle(range, value)
+
+  _onKeyboard: ->
+    range = @quill.getSelection()
+    this._toggle(range, true)
+
+  _toggle: (range, value) ->
+    return unless range
+    if value and !range.isCollapsed()
       this.setMode(this._suggestURL(range), true)
       nativeRange = @quill.editor.selection._getNativeRange()
       this.show(nativeRange)
