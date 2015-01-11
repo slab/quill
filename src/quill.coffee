@@ -211,6 +211,7 @@ class Quill extends EventEmitter2
     this.setContents(delta, source)
 
   updateContents: (delta, source = Quill.sources.API) ->
+    delta = { ops: delta } if Array.isArray(delta)
     @editor.applyDelta(delta, source)
 
   # fn(Number start, Number end, String name, String value, String source)
