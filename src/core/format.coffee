@@ -70,7 +70,7 @@ class Format
       tag: 'LI'
 
 
-  constructor: (, @config) ->
+  constructor: (@config) ->
 
   add: (node, value) ->
     return this.remove(node) unless value
