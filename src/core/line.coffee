@@ -98,7 +98,7 @@ class Line extends LinkedList.Node
         targetNode = leaf.node
         # Identify node to modify
         if leaf.formats[name]?
-          dom(targetNode).splitAncestors(@node)
+          dom(targetNode).splitBefore(@node)
           while !format.match(targetNode)
             targetNode = targetNode.parentNode
         # Isolate target node
@@ -126,7 +126,7 @@ class Line extends LinkedList.Node
         return node
       , document.createTextNode(text))
       [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
-      nextNode = dom(nextNode).splitAncestors(@node).get() if nextNode
+      nextNode = dom(nextNode).splitBefore(@node).get() if nextNode
       @node.insertBefore(node, nextNode)
       this.rebuild()
 
