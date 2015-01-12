@@ -31,7 +31,7 @@
     "grunt-contrib-copy": "~0.7.0",
     "grunt-contrib-stylus": "~0.20.0",
     "grunt-contrib-uglify": "~0.7.0",
-    "grunt-karma": "~0.9.0",
+    "grunt-karma": "~0.10.1",
     "grunt-lodash": "~0.3.0",
     "grunt-protractor-runner": "~1.1.4",
     "grunt-sauce-connect-launcher": "~0.3.0",
