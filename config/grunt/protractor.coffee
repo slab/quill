@@ -36,14 +36,7 @@ module.exports = (grunt) ->
         configFile: 'config/protractor.coverage.js'
         args:
           baseUrl: baseUrl
-          exclude: ['test/wd/e2e.coffee']
-          specs: ['test/wd/*.coffee']
-    test:
-      options:
-        args:
-          baseUrl: baseUrl
-          exclude: ['test/wd/e2e.coffee']
-          specs: ['test/wd/*.coffee']
+          specs: ['test/wd/e2e.coffee']
     e2e:
       options:
         args:
