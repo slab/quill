@@ -92,7 +92,7 @@ class Selection
         offset = 0
       else if node.childNodes.length == 0
         # TODO revisit fix for encoding edge case <p><em>|</em></p>
-        unless Normalizer.TAGS[node.tagName]?
+        unless @doc.normalizer.whitelist.tags[node.tagName]?
           text = document.createTextNode('')
           node.appendChild(text)
           node = text

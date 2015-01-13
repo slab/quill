@@ -2,6 +2,13 @@ _   = require('lodash')
 dom = require('../lib/dom')
 
 
+camelize = (str) ->
+  str = str.replace(/(?:^|[-_])(\w)/g, (i, c) ->
+    return if c then c.toUpperCase() else ''
+  )
+  return str.charAt(0).toLowerCase() + str.slice(1)
+
+
 class Normalizer
   @ALIASES: {
     'STRONG' : 'B'
@@ -10,30 +17,56 @@ class Normalizer
     'STRIKE' : 'S'
   }
 
-  @STYLES: {
-    'background-color'
-    'color'
-    'font-family'
-    'font-size'
-    'text-align'
-  }
-
-  @TAGS: {
-    'DIV'
-    'BR'
-    'SPAN'
-    'B'
-    'I'
-    'S'
-    'U'
-    'A'
-    'IMG'
-    'OL'
-    'UL'
-    'LI'
-  }
-
   constructor: ->
+    @whitelist =
+      styles: {}
+      tags: {}
+    @whitelist.tags[dom.DEFAULT_BREAK_TAG] = true
+    @whitelist.tags[dom.DEFAULT_BLOCK_TAG] = true
+    @whitelist.tags[dom.DEFAULT_INLINE_TAG] = true
+
+  addFormat: (config) ->
+    @whitelist.tags[config.tag] = true if config.tag?
+    @whitelist.tags[config.parentTag] = true if config.parentTag?
+    @whitelist.styles[config.style] = true if config.style?
+
+  normalizeLine: (lineNode) ->
+    lineNode = Normalizer.wrapInline(lineNode)
+    lineNode = Normalizer.handleBreaks(lineNode)
+    lineNode = Normalizer.pullBlocks(lineNode)
+    lineNode = this.normalizeNode(lineNode)
+    Normalizer.unwrapText(lineNode)
+    lineNode = lineNode.firstChild if lineNode? and dom.LIST_TAGS[lineNode.tagName]?
+    return lineNode
+
+  normalizeNode: (node) ->
+    return node if dom(node).isTextNode()
+    this.whitelistStyles(node)
+    return this.whitelistTags(node)
+
+  whitelistStyles: (node) ->
+    original = dom(node).styles()
+    styles = _.omit(original, (value, key) =>
+      return !@whitelist.styles[camelize(key)]?
+    )
+    if Object.keys(styles).length < Object.keys(original).length
+      if Object.keys(styles).length > 0
+        dom(node).styles(styles, true)
+      else
+        node.removeAttribute('style')
+
+  whitelistTags: (node) ->
+    return node unless dom(node).isElement()
+    if Normalizer.ALIASES[node.tagName]?
+      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName])
+    else if !@whitelist.tags[node.tagName]?
+      if dom.BLOCK_TAGS[node.tagName]?
+        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
+      else if !node.hasAttributes() and node.firstChild?
+        node = dom(node).unwrap()
+      else
+        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
+    return node
 
   # Make sure descendant break tags are not causing multiple lines to be rendered
   @handleBreaks: (lineNode) ->
@@ -43,20 +76,6 @@ class Normalizer
         dom(br.nextSibling).splitBefore(lineNode.parentNode)
     )
     return lineNode
-
-  @normalizeLine: (lineNode) ->
-    lineNode = Normalizer.wrapInline(lineNode)
-    lineNode = Normalizer.handleBreaks(lineNode)
-    lineNode = Normalizer.pullBlocks(lineNode)
-    lineNode = Normalizer.normalizeNode(lineNode)
-    Normalizer.unwrapText(lineNode)
-    lineNode = lineNode.firstChild if lineNode? and dom.LIST_TAGS[lineNode.tagName]?
-    return lineNode
-
-  @normalizeNode: (node) ->
-    return node if dom(node).isTextNode()
-    Normalizer.whitelistStyles(node)
-    return Normalizer.whitelistTags(node)
 
   # Removes unnecessary tags but does not modify line contents
   @optimizeLine: (lineNode) ->
@@ -105,30 +124,6 @@ class Normalizer
     # Remove whitespace between tags, requires &nbsp; for legitmate spaces
     html = html.replace(/\>\s+\</g, '><')
     return html
-
-  @whitelistStyles: (node) ->
-    original = dom(node).styles()
-    styles = _.omit(original, (value, key) ->
-      return !Normalizer.STYLES[key]?
-    )
-    if Object.keys(styles).length < Object.keys(original).length
-      if Object.keys(styles).length > 0
-        dom(node).styles(styles, true)
-      else
-        node.removeAttribute('style')
-
-  @whitelistTags: (node) ->
-    return node unless dom(node).isElement()
-    if Normalizer.ALIASES[node.tagName]?
-      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName])
-    else if !Normalizer.TAGS[node.tagName]?
-      if dom.BLOCK_TAGS[node.tagName]?
-        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
-      else if !node.hasAttributes() and node.firstChild?
-        node = dom(node).unwrap()
-      else
-        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
-    return node
 
   # Wrap inline nodes with block tags
   @wrapInline: (lineNode) ->

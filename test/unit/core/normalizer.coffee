@@ -42,7 +42,8 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial
-        lineNode = Quill.Normalizer.normalizeLine(@container.firstChild)
+        @normalizer = new Quill.Normalizer()
+        lineNode = @normalizer.normalizeLine(@container.firstChild)
         expect(@container).toEqualHTML(test.expected)
         expect(lineNode).toEqual(@container.firstChild)
       )
@@ -51,14 +52,18 @@ describe('Normalizer', ->
 
   describe('normalizeNode()', ->
     it('whitelist style and tag', ->
+      @normalizer = new Quill.Normalizer()
+      @normalizer.whitelist.tags.B = true
+      @normalizer.whitelist.styles.color = true
       @container.innerHTML = '<strong style="color: red; display: inline;">Test</strong>'
-      Quill.Normalizer.normalizeNode(@container.firstChild)
+      @normalizer.normalizeNode(@container.firstChild)
       expect(@container).toEqualHTML('<b style="color: red;">Test</b>')
     )
 
     it('text node', ->
+      @normalizer = new Quill.Normalizer()
       @container.innerHTML = 'Test'
-      Quill.Normalizer.normalizeNode(@container.firstChild)
+      @normalizer.normalizeNode(@container.firstChild)
       expect(@container).toEqualHTML('Test')
     )
   )
@@ -206,6 +211,11 @@ describe('Normalizer', ->
   )
 
   describe('whitelistStyles()', ->
+    beforeEach( ->
+      @normalizer = new Quill.Normalizer()
+      @normalizer.whitelist.styles.color = true
+    )
+
     tests =
       'no styles':
         initial:  '<div></div>'
@@ -223,13 +233,18 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial
-        Quill.Normalizer.whitelistStyles(@container.firstChild)
+        @normalizer.whitelistStyles(@container.firstChild)
         expect(@container).toEqualHTML(test.expected)
       )
     )
   )
 
   describe('whitelistTags()', ->
+    beforeEach( ->
+      @normalizer = new Quill.Normalizer()
+      @normalizer.whitelist.tags.B = true
+    )
+
     tests =
       'not element':
         initial:  'Test'
@@ -250,7 +265,7 @@ describe('Normalizer', ->
     _.each(tests, (test, name) ->
       it(name, ->
         @container.innerHTML = test.initial
-        Quill.Normalizer.whitelistTags(@container.firstChild)
+        @normalizer.whitelistTags(@container.firstChild)
         expect(@container).toEqualHTML(test.expected)
       )
     )
