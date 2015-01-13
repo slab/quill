@@ -15,6 +15,7 @@ class Editor
     @root.setAttribute('id', @options.id)
     @doc = new Document(@root, @options)
     @delta = @doc.toDelta()
+    @length = @delta.length()
     @selection = new Selection(@doc, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
@@ -55,6 +56,7 @@ class Editor
         @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
       )
       @delta = @doc.toDelta()
+      @length = @delta.length()
       @innerHTML = @root.innerHTML
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != Editor.sources.SILENT
     if localDelta and localDelta.ops.length > 0 and source != Editor.sources.SILENT
@@ -65,6 +67,7 @@ class Editor
     delta = this._update()
     if delta
       @delta.compose(delta)
+      @length = @delta.length()
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = Editor.sources.SILENT if delta
     @selection.update(source)
@@ -98,9 +101,6 @@ class Editor
       left: bounds[side] - containerBounds.left,
       top: bounds.top - containerBounds.top
     }
-
-  getDelta: ->
-    return @delta
 
   _deleteAt: (index, length) ->
     return if length <= 0

@@ -142,13 +142,13 @@ class Quill extends EventEmitter2
     if _.isObject(start)
       end = start.end
       start = start.start
-    return @editor.getDelta().slice(start, end)
+    return @editor.delta.slice(start, end)
 
   getHTML: ->
     @editor.doc.getHTML()
 
   getLength: ->
-    return @editor.getDelta().length()
+    return @editor.length
 
   getModule: (name) ->
     return @modules[name]
