@@ -46,10 +46,11 @@ class Quill extends EventEmitter2
 
   @require: (name) ->
     switch name
-      when 'lodash' then return _
-      when 'delta' then return Delta
+      when 'lodash'     then return _
+      when 'delta'      then return Delta
       when 'normalizer' then return Normalizer
-      when 'dom' then return dom
+      when 'dom'        then return dom
+      when 'range'      then return Range
       else return null
 
 

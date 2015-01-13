@@ -3,6 +3,7 @@ Tooltip = require('./tooltip')
 _       = Quill.require('lodash')
 dom     = Quill.require('dom')
 Delta   = Quill.require('delta')
+Range   = Quill.require('range')
 
 
 class ImageTooltip extends Tooltip
