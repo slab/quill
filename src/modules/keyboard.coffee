@@ -37,7 +37,7 @@ class Keyboard
       return op.attributes?[format]
     )
     if range.isCollapsed()
-      @quill.prepareFormat(format, value)
+      @quill.prepareFormat(format, value, Quill.sources.USER)
     else
       @quill.formatText(range, format, value, Quill.sources.USER)
     toolbar = @quill.getModule('toolbar')

@@ -177,13 +177,13 @@ class Quill extends EventEmitter2
       callback(module) if moduleName == name
     )
 
-  prepareFormat: (name, value) ->
+  prepareFormat: (name, value, source = Quill.sources.API) ->
     format = @editor.doc.formats[name]
     return unless format?     # TODO warn
     range = this.getSelection()
     return unless range?.isCollapsed()
     if format.isType(Format.types.LINE)
-      this.formatLine(range, name, value, Quill.sources.USER)
+      this.formatLine(range, name, value, source)
     else
       format.prepare(value)
 

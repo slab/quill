@@ -25,7 +25,7 @@ class Toolbar
       this.initFormat(format, (range, value) =>
         return if @triggering
         if range.isCollapsed()
-          @quill.prepareFormat(format, value)
+          @quill.prepareFormat(format, value, 'user')
         else if Toolbar.formats.LINE[format]?
           @quill.formatLine(range, format, value, 'user')
         else
