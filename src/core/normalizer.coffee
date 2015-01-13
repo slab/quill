@@ -10,12 +10,6 @@ class Normalizer
     'STRIKE' : 'S'
   }
 
-  @ATTRIBUTES: {
-    'color': 'color'
-    'face' : 'fontFamily'
-    'size' : 'fontSize'
-  }
-
   @STYLES: {
     'background-color'
     'color'
@@ -61,13 +55,6 @@ class Normalizer
 
   @normalizeNode: (node) ->
     return node if dom(node).isTextNode()
-    _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
-      if node.hasAttribute(attribute)
-        value = node.getAttribute(attribute)
-        value = dom.convertFontSize(value) if attribute == 'size'
-        node.style[style] = value
-        node.removeAttribute(attribute)
-    )
     Normalizer.whitelistStyles(node)
     return Normalizer.whitelistTags(node)
 

@@ -56,12 +56,6 @@ describe('Normalizer', ->
       expect(@container).toEqualHTML('<b style="color: red;">Test</b>')
     )
 
-    it('convert size attribute', ->
-      @container.innerHTML = '<font size="3">Test</font>'
-      Quill.Normalizer.normalizeNode(@container.firstChild)
-      expect(@container).toEqualHTML('<span style="font-size: 16px;">Test</span>')
-    )
-
     it('text node', ->
       @container.innerHTML = 'Test'
       Quill.Normalizer.normalizeNode(@container.firstChild)
