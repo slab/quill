@@ -61,8 +61,10 @@ describe('Normalizer', ->
     )
 
     it('convert size attribute', ->
+      @normalizer = new Quill.Normalizer()
+      @normalizer.whitelist.styles.fontSize = true
       @container.innerHTML = '<font size="3">Test</font>'
-      Quill.Normalizer.normalizeNode(@container.firstChild)
+      @normalizer.normalizeNode(@container.firstChild)
       expect(@container).toEqualHTML('<span style="font-size: 16px;">Test</span>')
     )
 
