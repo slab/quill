@@ -20,8 +20,9 @@ browserifyOps =
 
 
 bundle = (watcher) ->
-  return watcher.bundle().on('error', console.error)
-
+  return watcher.bundle().on('error', (err) ->
+    console.error(err.name, err.message)
+  )
 
 serve = (connect, req, res, next) ->
   watchers = connect.watchers
