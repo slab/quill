@@ -1,22 +1,22 @@
 _   = require('lodash')
-dom = require('./dom')
+dom = require('../lib/dom')
 
 
-Normalizer =
-  ALIASES: {
+class Normalizer
+  @ALIASES: {
     'STRONG' : 'B'
     'EM'     : 'I'
     'DEL'    : 'S'
     'STRIKE' : 'S'
   }
 
-  ATTRIBUTES: {
+  @ATTRIBUTES: {
     'color': 'color'
     'face' : 'fontFamily'
     'size' : 'fontSize'
   }
 
-  STYLES: {
+  @STYLES: {
     'background-color'
     'color'
     'font-family'
@@ -24,7 +24,7 @@ Normalizer =
     'text-align'
   }
 
-  TAGS: {
+  @TAGS: {
     'DIV'
     'BR'
     'SPAN'
@@ -39,8 +39,10 @@ Normalizer =
     'LI'
   }
 
+  constructor: ->
+
   # Make sure descendant break tags are not causing multiple lines to be rendered
-  handleBreaks: (lineNode) ->
+  @handleBreaks: (lineNode) ->
     breaks = _.map(lineNode.querySelectorAll(dom.DEFAULT_BREAK_TAG))
     _.each(breaks, (br) =>
       if br.nextSibling? and (!dom.isIE(10) or br.previousSibling?)
@@ -48,7 +50,7 @@ Normalizer =
     )
     return lineNode
 
-  normalizeLine: (lineNode) ->
+  @normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)
     lineNode = Normalizer.handleBreaks(lineNode)
     lineNode = Normalizer.pullBlocks(lineNode)
@@ -57,7 +59,7 @@ Normalizer =
     lineNode = lineNode.firstChild if lineNode? and dom.LIST_TAGS[lineNode.tagName]?
     return lineNode
 
-  normalizeNode: (node) ->
+  @normalizeNode: (node) ->
     return node if dom(node).isTextNode()
     _.each(Normalizer.ATTRIBUTES, (style, attribute) ->
       if node.hasAttribute(attribute)
@@ -70,7 +72,7 @@ Normalizer =
     return Normalizer.whitelistTags(node)
 
   # Removes unnecessary tags but does not modify line contents
-  optimizeLine: (lineNode) ->
+  @optimizeLine: (lineNode) ->
     lineNode.normalize()
     lineNodeLength = dom(lineNode).length()
     nodes = dom(lineNode).descendants()
@@ -91,7 +93,7 @@ Normalizer =
           dom(node.previousSibling).merge(node)
 
   # Make sure descendants are all inline elements
-  pullBlocks: (lineNode) ->
+  @pullBlocks: (lineNode) ->
     curNode = lineNode.firstChild
     while curNode?
       if dom.BLOCK_TAGS[curNode.tagName]? and curNode.tagName != 'LI'
@@ -106,10 +108,10 @@ Normalizer =
       curNode = curNode.nextSibling
     return lineNode
 
-  stripComments: (html) ->
+  @stripComments: (html) ->
     return html.replace(/<!--[\s\S]*?-->/g, '')
 
-  stripWhitespace: (html) ->
+  @stripWhitespace: (html) ->
     html = html.trim()
     # Replace all newline characters
     html = html.replace(/(\r?\n|\r)+/g, ' ')
@@ -117,7 +119,7 @@ Normalizer =
     html = html.replace(/\>\s+\</g, '><')
     return html
 
-  whitelistStyles: (node) ->
+  @whitelistStyles: (node) ->
     original = dom(node).styles()
     styles = _.omit(original, (value, key) ->
       return !Normalizer.STYLES[key]?
@@ -128,7 +130,7 @@ Normalizer =
       else
         node.removeAttribute('style')
 
-  whitelistTags: (node) ->
+  @whitelistTags: (node) ->
     return node unless dom(node).isElement()
     if Normalizer.ALIASES[node.tagName]?
       node = dom(node).switchTag(Normalizer.ALIASES[node.tagName])
@@ -142,7 +144,7 @@ Normalizer =
     return node
 
   # Wrap inline nodes with block tags
-  wrapInline: (lineNode) ->
+  @wrapInline: (lineNode) ->
     return lineNode if dom.BLOCK_TAGS[lineNode.tagName]?
     blockNode = document.createElement(dom.DEFAULT_BLOCK_TAG)
     lineNode.parentNode.insertBefore(blockNode, lineNode)
@@ -152,7 +154,7 @@ Normalizer =
       lineNode = nextNode
     return blockNode
 
-  unwrapText: (lineNode) ->
+  @unwrapText: (lineNode) ->
     spans = _.map(lineNode.querySelectorAll(dom.DEFAULT_INLINE_TAG))
     _.each(spans, (span) ->
       dom(span).unwrap() if (!span.hasAttributes())

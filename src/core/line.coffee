@@ -5,7 +5,7 @@ Format     = require('./format')
 Leaf       = require('./leaf')
 Line       = require('./line')
 LinkedList = require('../lib/linked-list')
-Normalizer = require('../lib/normalizer')
+Normalizer = require('./normalizer')
 
 
 class Line extends LinkedList.Node

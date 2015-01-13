@@ -7,6 +7,7 @@ Quill.Editor     = require('../src/core/editor')
 Quill.Format     = require('../src/core/format')
 Quill.Leaf       = require('../src/core/leaf')
 Quill.Line       = require('../src/core/line')
+Quill.Normalizer = require('../src/core/normalizer')
 Quill.Selection  = require('../src/core/selection')
 
 Quill.Lib =
@@ -14,7 +15,6 @@ Quill.Lib =
   ColorPicker   : require('../src/lib/color-picker')
   DOM           : require('../src/lib/dom')
   LinkedList    : require('../src/lib/linked-list')
-  Normalizer    : require('../src/lib/normalizer')
   Picker        : require('../src/lib/picker')
   Range         : require('../src/lib/range')
 

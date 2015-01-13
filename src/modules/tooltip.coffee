@@ -1,7 +1,7 @@
 Quill      = require('../quill')
-Normalizer = require('../lib/normalizer')
 _          = Quill.require('lodash')
 dom        = Quill.require('dom')
+Normalizer = Quill.require('normalizer')
 
 
 class Tooltip

@@ -126,7 +126,7 @@ describe('Document', ->
 
   describe('manipulation', ->
     beforeEach( ->
-      @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace('
+      @container.innerHTML = Quill.Normalizer.stripWhitespace('
         <div>
           <div>Test</div>
           <div><i>Test</i></div>

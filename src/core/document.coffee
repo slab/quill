@@ -4,7 +4,7 @@ dom        = require('../lib/dom')
 Format     = require('./format')
 Line       = require('./line')
 LinkedList = require('../lib/linked-list')
-Normalizer = require('../lib/normalizer')
+Normalizer = require('./normalizer')
 
 
 class Document

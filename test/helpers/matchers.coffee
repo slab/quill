@@ -47,7 +47,7 @@ beforeEach( ->
             html = html.join('') if Array.isArray(html)
             html = html.innerHTML if _.isElement(html)
             div = document.createElement('div')
-            div.innerHTML = Quill.Lib.Normalizer.stripWhitespace(html)
+            div.innerHTML = Quill.Normalizer.stripWhitespace(html)
             return div
           )
           ignoredAttributes = if ignoreClassId then ['class', 'id'] else []

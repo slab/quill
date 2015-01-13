@@ -231,7 +231,7 @@ describe('DOM', ->
 
     describe('child at offset', ->
       beforeEach( ->
-        @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace('
+        @container.innerHTML = Quill.Normalizer.stripWhitespace('
           <span>111</span>
           <b>222</b>
           <br>
@@ -377,7 +377,7 @@ describe('DOM', ->
 
     describe('splitBefore()', ->
       beforeEach( ->
-        @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace('
+        @container.innerHTML = Quill.Normalizer.stripWhitespace('
           <div>
             <span>One</span>
             <b>Two</b>
@@ -540,7 +540,7 @@ describe('DOM', ->
 
       _.each(tests, (test, name) ->
         it(name, ->
-          @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace(test.initial)
+          @container.innerHTML = Quill.Normalizer.stripWhitespace(test.initial)
           [left, right, split] = dom(@container.firstChild).split(test.offset, test.force)
           expect(@container).toEqualHTML(test.expected)
           leftText = if left then dom(left).text() else null
@@ -600,7 +600,7 @@ describe('DOM', ->
 
       _.each(tests, (test, name) ->
         it(name, ->
-          @container.innerHTML = Quill.Lib.Normalizer.stripWhitespace('
+          @container.innerHTML = Quill.Normalizer.stripWhitespace('
             <div>
               <div>
                 <i>One</i>
@@ -705,7 +705,7 @@ describe('DOM', ->
 
   describe('get next line node', ->
     it('iterate over standard lines', ->
-      container = $('#test-container').html(Quill.Lib.Normalizer.stripWhitespace('
+      container = $('#test-container').html(Quill.Normalizer.stripWhitespace('
         <div id="line-1">Test</div>
         <div id="line-2"><br></div>
         <div id="line-3">Test</div>'
@@ -720,7 +720,7 @@ describe('DOM', ->
     )
 
     it('iterate over lists', ->
-      container = $('#test-container').html(Quill.Lib.Normalizer.stripWhitespace('
+      container = $('#test-container').html(Quill.Normalizer.stripWhitespace('
         <div id="line-1">Test</div>
         <ul>
           <li id="line-2">One</li>
