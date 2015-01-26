@@ -75,6 +75,7 @@ class Format
   add: (node, value) ->
     return this.remove(node) unless value
     return node if this.value(node) == value
+    return @config.add.call(this, node, value) if _.isFunction(@config.add)
     if _.isString(@config.parentTag)
       parentNode = document.createElement(@config.parentTag)
       dom(node).wrap(parentNode)
@@ -111,6 +112,7 @@ class Format
     return type == @config.type
 
   match: (node) ->
+    return @config.match.call(this, node) if _.isFunction(@config.match)
     return false unless dom(node).isElement()
     if _.isString(@config.parentTag) and node.parentNode?.tagName != @config.parentTag
       return false
@@ -130,10 +132,11 @@ class Format
     if _.isString(@config.prepare)
       document.execCommand(@config.prepare, false, value)
     else if _.isFunction(@config.prepare)
-      @config.prepare(value)
+      @config.prepare.call(this, value)
 
   remove: (node) ->
     return node unless this.match(node)
+    return @config.remove.call(this, node) if _.isFunction(@config.remove)
     if _.isString(@config.style)
       node.style[@config.style] = ''    # IE10 requires setting to '', other browsers can take null
       node.removeAttribute('style') unless node.getAttribute('style')  # Some browsers leave empty style attribute
@@ -159,6 +162,7 @@ class Format
 
   value: (node) ->
     return undefined unless this.match(node)
+    return @config.value.call(this, node) if _.isFunction(@config.value)
     if _.isString(@config.attribute)
       return node.getAttribute(@config.attribute) or undefined    # So "" does not get returned
     else if _.isString(@config.style)
