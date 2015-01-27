@@ -74,7 +74,7 @@ class Format
 
   add: (node, value) ->
     return this.remove(node) unless value
-    return node if this.value(node) == value
+    return node if _.isEqual(this.value(node), value)
     return @config.add.call(this, node, value) if _.isFunction(@config.add)
     if _.isString(@config.parentTag)
       parentNode = document.createElement(@config.parentTag)
