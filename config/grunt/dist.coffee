@@ -81,7 +81,7 @@ module.exports = (grunt) ->
         'isElement', 'isEqual', 'isNumber', 'isObject', 'isString'
         'uniqueId'
       ]
-      flags: ['debug']
+      flags: ['development']
     target:
       dest: '.build/lodash.js'
   )
