@@ -11,7 +11,7 @@
   "main": "index.js",
   "dependencies": {
     "eventemitter2": "~0.4.13",
-    "lodash": "~2.4.1",
+    "lodash": "~3.0.1",
     "rich-text": "~1.0.3"
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
     "grunt-contrib-stylus": "~0.20.0",
     "grunt-contrib-uglify": "~0.7.0",
     "grunt-karma": "~0.10.1",
-    "grunt-lodash": "~0.3.0",
+    "grunt-lodash": "~0.4.0",
     "grunt-protractor-runner": "~1.1.4",
     "grunt-sauce-connect-launcher": "~0.3.0",
     "harp": "~0.14.0",
@@ -48,7 +48,7 @@
     "karma-phantomjs-launcher": "~0.1.4",
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.10",
-    "load-grunt-tasks": "~2.0.0",
+    "load-grunt-tasks": "~3.1.0",
     "protractor": "~1.6.0",
     "stylify": "~1.0.0",
     "stylus": "~0.49.2",

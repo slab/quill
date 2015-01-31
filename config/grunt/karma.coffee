@@ -22,7 +22,7 @@ module.exports = (grunt) ->
         '/local': "http://localhost:#{grunt.config('port')}"
       files: [
         'node_modules/jquery/dist/jquery.js'
-        'node_modules/lodash/lodash.js'
+        'node_modules/lodash/index.js'
 
         "http://localhost:#{grunt.config('port')}/quill.base.css"
         "http://localhost:#{grunt.config('port')}/test/quill.js"
