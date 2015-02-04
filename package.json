@@ -9,6 +9,9 @@
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
   "main": "index.js",
+  "bin": {
+    "grunt": "grunt"
+  },
   "dependencies": {
     "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1",

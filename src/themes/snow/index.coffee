@@ -52,7 +52,7 @@ class SnowTheme extends BaseTheme
         when 'color', 'background'
           picker = new ColorPicker(select)
           _.each(picker.container.querySelectorAll('.ql-picker-item'), (item, i) ->
-            dom(item).addClass('ql-primary-color') if i < 7
+            dom(item).addClass('ql-primary-color') if i < 10
           )
       @pickers.push(picker) if picker?
     )
