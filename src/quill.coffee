@@ -28,6 +28,7 @@ class Quill extends EventEmitter2
     theme: 'base'
 
   @events:
+    FORMAT_INIT      : 'format-init'
     MODULE_INIT      : 'module-init'
     POST_EVENT       : 'post-event'
     PRE_EVENT        : 'pre-event'
@@ -94,6 +95,7 @@ class Quill extends EventEmitter2
 
   addFormat: (name, format) ->
     @editor.doc.addFormat(name, format)
+    this.emit(Quill.events.FORMAT_INIT, name, format)
 
   addModule: (name, options) ->
     moduleClass = Quill.modules[name]
