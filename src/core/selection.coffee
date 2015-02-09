@@ -157,6 +157,8 @@ class Selection
     else
       selection.removeAllRanges()
       @doc.root.blur()
+      # setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
+      document.body.focus() if dom.isIE(11) and !dom.isIE(9)
 
 
 module.exports = Selection
