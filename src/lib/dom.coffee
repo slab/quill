@@ -229,7 +229,8 @@ class Wrapper
       switch @node.nodeType
         when dom.ELEMENT_NODE
           @node.textContent = text
-        when dom.TEXT_NODE then @node.data = text
+        when dom.TEXT_NODE
+          @node.data = text
       return this
     else
       switch @node.nodeType

@@ -225,10 +225,6 @@ describe('DOM', ->
   )
 
   describe('access', ->
-    beforeEach( ->
-      @container = $('#test-container').html('').get(0)
-    )
-
     describe('child at offset', ->
       beforeEach( ->
         @container.innerHTML = Quill.Normalizer.stripWhitespace('
@@ -265,11 +261,11 @@ describe('DOM', ->
 
     describe('get node length', ->
       tests =
-        'element':
-          html: '<b>One</b>'
-          length: 3
         'text':
           html: 'One'
+          length: 3
+        'element':
+          html: '<b>One</b>'
           length: 3
         'many nodes':
           html: '<i><b><i>A</i>B<u>C<s>D</s></u></i>'
@@ -344,10 +340,6 @@ describe('DOM', ->
   )
 
   describe('merge', ->
-    beforeEach( ->
-      @container = $('#test-container').html('').get(0)
-    )
-
     it('nodes', ->
       @container.innerHTML = '<ul><li>One</li></ul><ul><li>Two</li></ul>'
       dom(@container.firstChild).merge(@container.lastChild)
@@ -375,10 +367,6 @@ describe('DOM', ->
   )
 
   describe('split', ->
-    beforeEach( ->
-      @container = $('#test-container').html('').get(0)
-    )
-
     describe('splitBefore()', ->
       beforeEach( ->
         @container.innerHTML = Quill.Normalizer.stripWhitespace('
