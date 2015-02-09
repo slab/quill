@@ -15,6 +15,7 @@ var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
 module.exports = function(config) {
   config.set({
     basePath: '../',
+    urlRoot: '/karma/',
     frameworks: ['jasmine'],
     coverageReporter: {
       type: 'json',
@@ -25,7 +26,6 @@ module.exports = function(config) {
       '**/*.coffee': ['coffee'],
       '**/*.html': ['html2js']
     },
-    port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,

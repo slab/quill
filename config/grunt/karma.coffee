@@ -18,14 +18,12 @@ module.exports = (grunt) ->
   grunt.config('karma', _.extend(remoteKarma,
     options:
       configFile: 'config/karma.js'
-      proxies:
-        '/local': "http://localhost:#{grunt.config('port')}"
       files: [
         'node_modules/jquery/dist/jquery.js'
         'node_modules/lodash/index.js'
 
-        "http://localhost:#{grunt.config('port')}/quill.base.css"
-        "http://localhost:#{grunt.config('port')}/test/quill.js"
+        grunt.config('baseUrl') + 'quill.base.css'
+        grunt.config('baseUrl') + 'test/quill.js'
 
         'test/fixtures/unit.html'
         'test/helpers/inject.coffee'
@@ -39,6 +37,7 @@ module.exports = (grunt) ->
         'test/unit/modules/*.coffee'
         'test/unit/themes/*.coffee'
       ]
+      port: grunt.config('karmaPort')
     coverage:
       browserNoActivityTimeout: 30000
       browsers: ['PhantomJS']

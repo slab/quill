@@ -3,13 +3,11 @@ browsers = require('../browsers')
 sauce = require('../sauce')
 
 module.exports = (grunt) ->
-  baseUrl = 'http://localhost:' + grunt.config('port') + '/'
-
   remoteProtractor = _.reduce(browsers, (memo, config, browser) ->
     return _.reduce(['e2e', 'wd'], (memo, test) ->
       options =
         args:
-          baseUrl: baseUrl
+          baseUrl: grunt.config('baseUrl')
           capabilities:
             name: "quill-#{test}"
             platform: config[0]
@@ -35,12 +33,12 @@ module.exports = (grunt) ->
       options:
         configFile: 'config/protractor.coverage.js'
         args:
-          baseUrl: baseUrl
+          baseUrl: grunt.config('baseUrl')
           specs: ['test/wd/e2e.coffee']
     e2e:
       options:
         args:
-          baseUrl: baseUrl
+          baseUrl: grunt.config('baseUrl')
           specs: ['test/wd/e2e.coffee']
   ))
 
