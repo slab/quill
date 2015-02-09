@@ -343,36 +343,40 @@ describe('DOM', ->
     )
   )
 
-  describe('split + merge', ->
+  describe('merge', ->
     beforeEach( ->
       @container = $('#test-container').html('').get(0)
     )
 
-    describe('merge', ->
-      it('merge nodes', ->
-        @container.innerHTML = '<ul><li>One</li></ul><ul><li>Two</li></ul>'
-        dom(@container.firstChild).merge(@container.lastChild)
-        expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li></ul>')
-      )
+    it('nodes', ->
+      @container.innerHTML = '<ul><li>One</li></ul><ul><li>Two</li></ul>'
+      dom(@container.firstChild).merge(@container.lastChild)
+      expect(@container).toEqualHTML('<ul><li>One</li><li>Two</li></ul>')
+    )
 
-      it('merge and normalize', ->
-        @container.innerHTML = '<span>One</span><span>Two</span>'
-        expect(@container.childNodes.length).toEqual(2)
-        dom(@container.firstChild).merge(@container.lastChild)
-        expect(@container).toEqualHTML('<span>OneTwo</span>')
-        expect(@container.childNodes.length).toEqual(1)
-        expect(@container.firstChild.childNodes.length).toEqual(1)
-      )
+    it('normalize', ->
+      @container.innerHTML = '<span>One</span><span>Two</span>'
+      expect(@container.childNodes.length).toEqual(2)
+      dom(@container.firstChild).merge(@container.lastChild)
+      expect(@container).toEqualHTML('<span>OneTwo</span>')
+      expect(@container.childNodes.length).toEqual(1)
+      expect(@container.firstChild.childNodes.length).toEqual(1)
+    )
 
-      it('merge text nodes', ->
-        @container.innerHTML = ''
-        @container.appendChild(document.createTextNode('One'))
-        @container.appendChild(document.createTextNode('Two'))
-        expect(@container.childNodes.length).toEqual(2)
-        dom(@container.firstChild).merge(@container.lastChild)
-        expect(@container).toEqualHTML('OneTwo')
-        expect(@container.childNodes.length).toEqual(1)
-      )
+    it('text nodes', ->
+      @container.innerHTML = ''
+      @container.appendChild(document.createTextNode('One'))
+      @container.appendChild(document.createTextNode('Two'))
+      expect(@container.childNodes.length).toEqual(2)
+      dom(@container.firstChild).merge(@container.lastChild)
+      expect(@container).toEqualHTML('OneTwo')
+      expect(@container.childNodes.length).toEqual(1)
+    )
+  )
+
+  describe('split', ->
+    beforeEach( ->
+      @container = $('#test-container').html('').get(0)
     )
 
     describe('splitBefore()', ->
