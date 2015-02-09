@@ -55,7 +55,7 @@ class Quill extends EventEmitter2
 
 
   constructor: (@container, options = {}) ->
-    @container = document.querySelector(container) if _.isString(@container)
+    @container = document.querySelector(@container) if _.isString(@container)
     throw new Error('Invalid Quill container') unless @container?
     moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
     html = @container.innerHTML
