@@ -128,7 +128,7 @@ class Toolbar
     return this._intersectFormats(formatsArr)
 
   _intersectFormats: (formatsArr) ->
-    return _.reduce(formatsArr.slice(1), (activeFormats, formats) ->
+    return _.reduce(formatsArr.slice(1), (activeFormats, formats = {}) ->
       activeKeys = Object.keys(activeFormats)
       formatKeys = if formats? then Object.keys(formats) else {}
       intersection = _.intersection(activeKeys, formatKeys)
