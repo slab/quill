@@ -1,6 +1,6 @@
 describe('Quill', ->
   beforeEach( ->
-    resetContainer()
+    jasmine.resetEditor()
     @container = $('#editor-container').html('
       <div>
         <div>0123</div>

@@ -2,7 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('Document', ->
   beforeEach( ->
-    @container = $('#test-container').html('').get(0)
+    @container = jasmine.clearContainer()
   )
 
   describe('constructor', ->

@@ -2,8 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('UndoManager', ->
   beforeEach( ->
-    resetContainer()
-    @container = $('#editor-container').get(0)
+    @container = jasmine.resetEditor()
     @container.innerHTML = '
       <div>
         <div>The lazy fox</div>

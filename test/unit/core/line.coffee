@@ -2,8 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('Line', ->
   beforeEach( ->
-    resetContainer()
-    @container = $('#test-container').html('<div></div>').get(0).firstChild
+    @container = jasmine.clearContainer()
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })
   )
 

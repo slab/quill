@@ -1,7 +1,6 @@
 describe('Format', ->
   beforeEach( ->
-    resetContainer()
-    @container = $('#test-container').html('').get(0)
+    @container = jasmine.clearContainer()
   )
 
   tests =

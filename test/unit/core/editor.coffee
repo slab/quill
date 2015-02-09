@@ -1,11 +1,10 @@
 describe('Editor', ->
   beforeEach( ->
     @createEditor = (options) ->
-      resetContainer()
-      @container = $('#test-container').html('<div></div>').get(0)
+      @container = jasmine.clearContainer()
       Quill.Lib.EventEmitter2.events = Quill.events
       emitter = new Quill.Lib.EventEmitter2
-      @editor = new Quill.Editor(@container.firstChild, emitter, options)
+      @editor = new Quill.Editor(@container, emitter, options)
 
     @createEditor({ formats: Quill.DEFAULTS.formats })
   )

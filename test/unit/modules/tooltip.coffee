@@ -6,9 +6,8 @@ describe('Tooltip', ->
     }
 
   beforeEach( ->
-    resetContainer()
-    @container = $('#test-container').html('<div></div>').get(0)
-    @quill = new Quill(@container.firstChild)
+    @container = jasmine.clearContainer()
+    @quill = new Quill(@container)
     @tooltip = @quill.addModule('tooltip', { offset: 20 })
   )
 

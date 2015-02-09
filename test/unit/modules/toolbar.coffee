@@ -2,7 +2,7 @@ dom = Quill.Lib.DOM
 
 describe('Toolbar', ->
   beforeEach( ->
-    resetContainer()
+    jasmine.resetEditor()
     @editorContainer = $('#editor-container').html('
       <div>
         <div>
