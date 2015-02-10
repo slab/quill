@@ -1,0 +1,15 @@
+{
+  "name": "quill",
+  "description": "A cross browser rich text editor with an API",
+  "version": "0.19.8",
+  "dependencies": {},
+  "main": "index.js",
+  "scripts": [
+    "index.js",
+    "dist/quill.js"
+  ],
+  "styles": [
+    "dist/quill.base.css",
+    "dist/quill.snow.css"
+  ]
+}
