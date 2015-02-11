@@ -26,7 +26,10 @@ class BaseTheme
     css = BaseTheme.objToCss(css) if _.isObject(css)
     style = document.createElement('style')
     style.type = 'text/css'
-    style.appendChild(document.createTextNode(css))
+    if style.styleSheet # IE 8
+      style.styleSheet.cssText = css
+    else # w3c
+      style.appendChild(document.createTextNode(css))
     document.head.appendChild(style)
 
 
