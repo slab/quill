@@ -47,6 +47,7 @@ html
           button.ql-format-button.ql-strike(title='Strikethrough') Strike
           button.ql-format-button.ql-link(title='Link') Link
           button.ql-format-button.ql-image(title='Image') Image
+          button.ql-format-button.ql-video(title='Video') Video
           button.ql-format-button.ql-bullet(title='Bullet') Bullet
           button.ql-format-button.ql-list(title='List') List
         #editor-container
@@ -57,7 +58,8 @@ html
         modules: {
           'toolbar': { container: '#formatting-container' },
           'link-tooltip': true,
-          'image-tooltip': true
+          'image-tooltip': true,
+          'video-tooltip': true
         }
       });
       editor.on('selection-change', function(range) {

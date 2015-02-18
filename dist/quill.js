@@ -5940,6 +5940,10 @@ Format = (function() {
       tag: 'IMG',
       attribute: 'src'
     },
+    video: {
+      tag: 'IFRAME',
+      attribute: 'src'
+    },
     align: {
       type: Format.types.LINE,
       style: 'textAlign',
@@ -6957,6 +6961,8 @@ _dereq_('./modules/authorship');
 
 _dereq_('./modules/image-tooltip');
 
+_dereq_('./modules/video-tooltip');
+
 _dereq_('./modules/keyboard');
 
 _dereq_('./modules/link-tooltip');
@@ -6975,7 +6981,7 @@ module.exports = _dereq_('./quill');
 
 
 
-},{"./modules/authorship":21,"./modules/image-tooltip":22,"./modules/keyboard":23,"./modules/link-tooltip":24,"./modules/multi-cursor":25,"./modules/paste-manager":26,"./modules/toolbar":27,"./modules/tooltip":28,"./modules/undo-manager":29,"./quill":30}],16:[function(_dereq_,module,exports){
+},{"./modules/authorship":21,"./modules/image-tooltip":22,"./modules/keyboard":23,"./modules/link-tooltip":24,"./modules/multi-cursor":25,"./modules/paste-manager":26,"./modules/toolbar":27,"./modules/tooltip":28,"./modules/undo-manager":29,"./modules/video-tooltip":30,"./quill":31}],16:[function(_dereq_,module,exports){
 var ColorPicker, Picker, dom,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __hasProp = {}.hasOwnProperty;
@@ -7603,6 +7609,7 @@ dom = _.extend(dom, {
     'H6': 'H6',
     'HEADER': 'HEADER',
     'HGROUP': 'HGROUP',
+    'IFRAME': 'IFRAME',
     'LI': 'LI',
     'OL': 'OL',
     'OUTPUT': 'OUTPUT',
@@ -8040,7 +8047,7 @@ module.exports = Authorship;
 
 
 
-},{"../quill":30}],22:[function(_dereq_,module,exports){
+},{"../quill":31}],22:[function(_dereq_,module,exports){
 var Delta, ImageTooltip, Quill, Range, Tooltip, dom, _,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __hasProp = {}.hasOwnProperty;
@@ -8155,7 +8162,7 @@ module.exports = ImageTooltip;
 
 
 
-},{"../quill":30,"./tooltip":28}],23:[function(_dereq_,module,exports){
+},{"../quill":31,"./tooltip":28}],23:[function(_dereq_,module,exports){
 var Delta, Keyboard, Quill, dom, _;
 
 Quill = _dereq_('../quill');
@@ -8325,7 +8332,7 @@ module.exports = Keyboard;
 
 
 
-},{"../quill":30}],24:[function(_dereq_,module,exports){
+},{"../quill":31}],24:[function(_dereq_,module,exports){
 var LinkTooltip, Quill, Tooltip, dom, _,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __hasProp = {}.hasOwnProperty;
@@ -8526,7 +8533,7 @@ module.exports = LinkTooltip;
 
 
 
-},{"../quill":30,"./tooltip":28}],25:[function(_dereq_,module,exports){
+},{"../quill":31,"./tooltip":28}],25:[function(_dereq_,module,exports){
 var EventEmitter2, MultiCursor, Quill, dom, _,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __hasProp = {}.hasOwnProperty;
@@ -8694,7 +8701,7 @@ module.exports = MultiCursor;
 
 
 
-},{"../quill":30,"eventemitter2":2}],26:[function(_dereq_,module,exports){
+},{"../quill":31,"eventemitter2":2}],26:[function(_dereq_,module,exports){
 var Delta, Document, PasteManager, Quill, dom, _;
 
 Quill = _dereq_('../quill');
@@ -8760,7 +8767,7 @@ module.exports = PasteManager;
 
 
 
-},{"../core/document":8,"../quill":30}],27:[function(_dereq_,module,exports){
+},{"../core/document":8,"../quill":31}],27:[function(_dereq_,module,exports){
 var Quill, Toolbar, dom, _;
 
 Quill = _dereq_('../quill');
@@ -9033,7 +9040,7 @@ module.exports = Toolbar;
 
 
 
-},{"../quill":30}],28:[function(_dereq_,module,exports){
+},{"../quill":31}],28:[function(_dereq_,module,exports){
 var Normalizer, Quill, Tooltip, dom, _;
 
 Quill = _dereq_('../quill');
@@ -9134,7 +9141,7 @@ module.exports = Tooltip;
 
 
 
-},{"../quill":30}],29:[function(_dereq_,module,exports){
+},{"../quill":31}],29:[function(_dereq_,module,exports){
 var Delta, Quill, UndoManager, _;
 
 Quill = _dereq_('../quill');
@@ -9286,7 +9293,125 @@ module.exports = UndoManager;
 
 
 
-},{"../quill":30}],30:[function(_dereq_,module,exports){
+},{"../quill":31}],30:[function(_dereq_,module,exports){
+var Delta, Quill, Range, Tooltip, VideoTooltip, dom, _,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __hasProp = {}.hasOwnProperty;
+
+Quill = _dereq_('../quill');
+
+Tooltip = _dereq_('./tooltip');
+
+_ = Quill.require('lodash');
+
+dom = Quill.require('dom');
+
+Delta = Quill.require('delta');
+
+Range = Quill.require('range');
+
+VideoTooltip = (function(_super) {
+  __extends(VideoTooltip, _super);
+
+  VideoTooltip.DEFAULTS = {
+    template: '<input class="input" type="textbox"> <div class="preview"> <span>Preview</span> </div> <a href="javascript:;" class="cancel">Cancel</a> <a href="javascript:;" class="insert">Insert</a>'
+  };
+
+  function VideoTooltip(_at_quill, _at_options) {
+    var config;
+    this.quill = _at_quill;
+    this.options = _at_options;
+    this.options = _.defaults(this.options, Tooltip.DEFAULTS);
+    VideoTooltip.__super__.constructor.call(this, this.quill, this.options);
+    this.preview = this.container.querySelector('.preview');
+    this.textbox = this.container.querySelector('.input');
+    dom(this.container).addClass('ql-video-tooltip');
+    config = {
+      tag: 'IFRAME',
+      attribute: 'src'
+    };
+    this.quill.addFormat('video', config);
+    this.initListeners();
+  }
+
+  VideoTooltip.prototype.initListeners = function() {
+    dom(this.container.querySelector('.insert')).on('click', _.bind(this.insertVideo, this));
+    dom(this.container.querySelector('.cancel')).on('click', _.bind(this.hide, this));
+    dom(this.textbox).on('input', _.bind(this._preview, this));
+    this.initTextbox(this.textbox, this.insertVideo, this.hide);
+    return this.quill.onModuleLoad('toolbar', (function(_this) {
+      return function(toolbar) {
+        return toolbar.initFormat('video', _.bind(_this._onToolbar, _this));
+      };
+    })(this));
+  };
+
+  VideoTooltip.prototype.insertVideo = function() {
+    var index, url;
+    url = this._normalizeURL(this.textbox.value);
+    if (this.range == null) {
+      this.range = new Range(0, 0);
+    }
+    if (this.range) {
+      this.preview.innerHTML = '<span>Preview</span>';
+      this.textbox.value = '';
+      index = this.range.end;
+      this.quill.insertEmbed(index, 'video', url, 'user');
+      this.quill.setSelection(index + 1, index + 1);
+    }
+    return this.hide();
+  };
+
+  VideoTooltip.prototype._onToolbar = function(range, value) {
+    if (value) {
+      if (!this.textbox.value) {
+        this.textbox.value = 'http://';
+      }
+      this.show();
+      this.textbox.focus();
+      return _.defer((function(_this) {
+        return function() {
+          return _this.textbox.setSelectionRange(_this.textbox.value.length, _this.textbox.value.length);
+        };
+      })(this));
+    } else {
+      return this.quill.deleteText(range, 'user');
+    }
+  };
+
+  VideoTooltip.prototype._preview = function() {
+    var img;
+    if (!this._matchVideoURL(this.textbox.value)) {
+      return;
+    }
+    if (this.preview.firstChild.tagName === 'IMG') {
+      return this.preview.firstChild.setAttribute('src', this.textbox.value);
+    } else {
+      img = document.createElement('img');
+      img.setAttribute('src', this.textbox.value);
+      return this.preview.replaceChild(img, this.preview.firstChild);
+    }
+  };
+
+  VideoTooltip.prototype._matchVideoURL = function(url) {
+    return true;
+  };
+
+  VideoTooltip.prototype._normalizeURL = function(url) {
+    return url;
+  };
+
+  return VideoTooltip;
+
+})(Tooltip);
+
+Quill.registerModule('video-tooltip', VideoTooltip);
+
+module.exports = VideoTooltip;
+
+
+
+},{"../quill":31,"./tooltip":28}],31:[function(_dereq_,module,exports){
 var Delta, Editor, EventEmitter2, Format, Normalizer, Quill, Range, dom, pkg, _,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __hasProp = {}.hasOwnProperty,
@@ -9697,9 +9822,9 @@ module.exports = Quill;
 
 
 
-},{"../package.json":7,"./core/editor":9,"./core/format":10,"./core/normalizer":13,"./lib/dom":17,"./lib/range":20,"./themes/base":32,"./themes/snow":33,"eventemitter2":2,"lodash":1,"rich-text/lib/delta":3}],31:[function(_dereq_,module,exports){
+},{"../package.json":7,"./core/editor":9,"./core/format":10,"./core/normalizer":13,"./lib/dom":17,"./lib/range":20,"./themes/base":33,"./themes/snow":34,"eventemitter2":2,"lodash":1,"rich-text/lib/delta":3}],32:[function(_dereq_,module,exports){
 module.exports = ".ql-image-tooltip{padding:10px;width:300px}.ql-image-tooltip:after{clear:both;content:\"\";display:table}.ql-image-tooltip a{border:1px solid #000;box-sizing:border-box;display:inline-block;float:left;padding:5px;text-align:center;width:50%}.ql-image-tooltip img{bottom:0;left:0;margin:auto;max-height:100%;max-width:100%;position:absolute;right:0;top:0}.ql-image-tooltip .input{box-sizing:border-box;width:100%}.ql-image-tooltip .preview{margin:10px 0;position:relative;border:1px dashed #000;height:200px}.ql-image-tooltip .preview span{display:inline-block;position:absolute;text-align:center;top:40%;width:100%}.ql-link-tooltip{padding:5px 10px}.ql-link-tooltip input.input{width:170px}.ql-link-tooltip a.done,.ql-link-tooltip input.input{display:none}.ql-link-tooltip a.change{margin-right:4px}.ql-link-tooltip.editing a.done,.ql-link-tooltip.editing input.input{display:inline-block}.ql-link-tooltip.editing a.change,.ql-link-tooltip.editing a.remove,.ql-link-tooltip.editing a.url{display:none}.ql-multi-cursor{position:absolute;left:0;top:0;z-index:1000}.ql-multi-cursor .cursor{margin-left:-1px;position:absolute}.ql-multi-cursor .cursor-flag{bottom:100%;position:absolute;white-space:nowrap}.ql-multi-cursor .cursor-name{display:inline-block;color:#fff;padding:2px 8px}.ql-multi-cursor .cursor-caret{height:100%;position:absolute;width:2px}.ql-multi-cursor .cursor.hidden .cursor-flag{display:none}.ql-multi-cursor .cursor.top .cursor-flag{bottom:auto;top:100%}.ql-multi-cursor .cursor.right .cursor-flag{right:-2px}.ql-paste-manager{left:-100000px;position:absolute;top:50%}.ql-toolbar{box-sizing:border-box}.ql-tooltip{background-color:#fff;border:1px solid #000;box-sizing:border-box;position:absolute;top:0;white-space:nowrap;z-index:2000}.ql-tooltip a{cursor:pointer;text-decoration:none}.ql-container{box-sizing:border-box;cursor:text;font-family:Helvetica,Arial,sans-serif;font-size:13px;height:100%;line-height:1.42;margin:0;overflow-x:hidden;overflow-y:auto;padding:12px 15px;position:relative}.ql-editor{box-sizing:border-box;min-height:100%;outline:0;tab-size:4;white-space:pre-wrap}.ql-editor div{margin:0;padding:0}.ql-editor a{text-decoration:underline}.ql-editor b{font-weight:700}.ql-editor i{font-style:italic}.ql-editor s{text-decoration:line-through}.ql-editor u{text-decoration:underline}.ql-editor img{max-width:100%}.ql-editor blockquote,.ql-editor ol,.ql-editor ul{margin:0 0 0 2em;padding:0}.ql-editor ol{list-style-type:decimal}.ql-editor ul{list-style-type:disc}.ql-editor.ql-ie-10 br,.ql-editor.ql-ie-9 br{display:none}";
-},{}],32:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
 var BaseTheme, baseStyles, dom, _;
 
 _ = _dereq_('lodash');
@@ -9754,7 +9879,7 @@ module.exports = BaseTheme;
 
 
 
-},{"../../lib/dom":17,"./base.styl":31,"lodash":1}],33:[function(_dereq_,module,exports){
+},{"../../lib/dom":17,"./base.styl":32,"lodash":1}],34:[function(_dereq_,module,exports){
 var BaseTheme, ColorPicker, Picker, SnowTheme, dom, _,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __hasProp = {}.hasOwnProperty;
@@ -9850,5 +9975,5 @@ module.exports = SnowTheme;
 
 
 
-},{"../../lib/color-picker":16,"../../lib/dom":17,"../../lib/picker":19,"../base":32,"lodash":1}]},{},[15])(15)
+},{"../../lib/color-picker":16,"../../lib/dom":17,"../../lib/picker":19,"../base":33,"lodash":1}]},{},[15])(15)
 });
