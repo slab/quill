@@ -388,6 +388,7 @@ dom = _.extend(dom,
     'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
     'HEADER'
     'HGROUP'
+    'IFRAME'
     'LI'
     'OL'
     'OUTPUT'
