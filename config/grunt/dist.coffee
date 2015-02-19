@@ -78,7 +78,7 @@ module.exports = (grunt) ->
         'all', 'each', 'invoke', 'map', 'reduce'
         'bind', 'defer', 'partial'
         'clone', 'extend', 'defaults', 'omit', 'values'
-        'isElement', 'isEqual', 'isNumber', 'isObject', 'isString'
+        'isElement', 'isEqual', 'isNumber', 'isObject', 'isString', 'isFunction'
         'uniqueId'
       ]
       flags: ['development']
