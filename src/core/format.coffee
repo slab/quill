@@ -44,6 +44,10 @@ class Format
       prepare: (value) ->
         document.execCommand('fontSize', false, dom.convertFontSize(value))
 
+    placeholder:
+      prepare: (value) ->
+        document.execCommand("insertText", false, value)
+
     link:
       tag: 'A'
       attribute: 'href'
