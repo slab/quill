@@ -43,11 +43,11 @@ class SnowTheme extends BaseTheme
 
   extendToolbar: (module) ->
     dom(module.container).addClass('ql-snow')
-    _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
+    _.each(['color', 'background', 'font', 'size', 'align', 'placeholder'], (format) =>
       select = module.container.querySelector(".ql-#{format}")
       return unless select?
       switch format
-        when 'font', 'size', 'align'
+        when 'font', 'size', 'align', 'placeholder'
           picker = new Picker(select)
         when 'color', 'background'
           picker = new ColorPicker(select)
