@@ -27,6 +27,8 @@ class Picker
         item = @container.querySelectorAll('.ql-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
       this.selectItem(item, false)
+      if @select.className = 'ql-placeholder'
+        @label.text(@select.title)
       dom(@label).toggleClass('ql-active', option != dom(@select).default())
     )
 
