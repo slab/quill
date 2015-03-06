@@ -23,11 +23,16 @@ class Tooltip
     )
 
   initTextbox: (textbox, enterCallback, escapeCallback) ->
-    dom(textbox).on('keyup', (event) =>
+    dom(textbox).on('keydown', (event) =>
       switch event.which
-        when dom.KEYS.ENTER  then enterCallback.call(this)
-        when dom.KEYS.ESCAPE then escapeCallback.call(this)
-        else return true
+        when dom.KEYS.ENTER
+          event.preventDefault()
+          enterCallback.call(this)
+        when dom.KEYS.ESCAPE
+          event.preventDefault()
+          escapeCallback.call(this)
+        else
+          return true
     )
 
   hide: ->
