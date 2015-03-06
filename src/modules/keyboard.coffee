@@ -46,18 +46,19 @@ class Keyboard
   _initDeletes: ->
     this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (range, hotkey) =>
       if range? and @quill.getLength() > 0
-        if range.start != range.end
-          @quill.deleteText(range.start, range.end, Quill.sources.USER)
+        { start, end } = range
+        if start != end
+          @quill.deleteText(start, end, Quill.sources.USER)
         else
           if hotkey.key == dom.KEYS.BACKSPACE
-            [line, offset] = @quill.editor.doc.findLineAt(range.start)
+            [line, offset] = @quill.editor.doc.findLineAt(start)
             if offset == 0 and (line.formats.bullet or line.formats.list)
               format = if line.format.bullet then 'bullet' else 'list'
-              @quill.formatLine(range.start, range.start, format, false)
-            else if range.start > 0
-              @quill.deleteText(range.start - 1, range.start, Quill.sources.USER)
-          else if range.start < @quill.getLength()
-            @quill.deleteText(range.start, range.start + 1, Quill.sources.USER)
+              @quill.formatLine(start, start, format, false)
+            else if start > 0
+              @quill.deleteText(start - 1, start, Quill.sources.USER)
+          else if start < @quill.getLength()
+            @quill.deleteText(start, start + 1, Quill.sources.USER)
       return false
     )
 
