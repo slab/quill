@@ -100,6 +100,7 @@ class Editor
       height: bounds.height
       left: bounds[side] - containerBounds.left,
       top: bounds.top - containerBounds.top
+      bottom: bounds.bottom
     }
 
   _deleteAt: (index, length) ->
