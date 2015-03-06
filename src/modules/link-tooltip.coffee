@@ -34,7 +34,7 @@ class LinkTooltip extends Tooltip
       if anchor
         this.setMode(anchor.href, false)
         this.show(anchor)
-      else
+      else if @container.style.left != Tooltip.HIDE_MARGIN
         @range = null   # Prevent restoring selection to last saved
         this.hide()
     )
