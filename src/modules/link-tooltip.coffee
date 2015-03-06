@@ -79,7 +79,7 @@ class LinkTooltip extends Tooltip
       _.defer( =>
         # Setting value and immediately focusing doesn't work on Chrome
         @textbox.focus()
-        @textbox.setSelectionRange(url.length, url.length)
+        @textbox.setSelectionRange(0, url.length)
       )
     else
       @link.href = url
