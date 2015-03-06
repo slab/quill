@@ -1,8 +1,8 @@
-Quill   = require('../quill')
-Tooltip = require('./tooltip')
-_       = Quill.require('lodash')
-dom     = Quill.require('dom')
-
+Quill    = require('../quill')
+Tooltip  = require('./tooltip')
+_        = Quill.require('lodash')
+dom      = Quill.require('dom')
+anchorEl = document.createElement('a')
 
 class LinkTooltip extends Tooltip
   @DEFAULTS:
@@ -119,7 +119,8 @@ class LinkTooltip extends Tooltip
 
   _normalizeURL: (url) ->
     url = 'http://' + url unless /^(https?:\/\/|mailto:)/.test(url)
-    return url
+    anchorEl.href = url
+    return anchorEl.href
 
   _suggestURL: (range) ->
     text = @quill.getText(range)
