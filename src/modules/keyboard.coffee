@@ -48,6 +48,10 @@ class Keyboard
       if range? and @quill.getLength() > 0
         { start, end } = range
         if start != end
+          # if the surrounding characters are both spaces,
+          # kill the preceding space to prevent leaving double-spaces
+          if ' ' == @quill.getText(start - 1, start) == @quill.getText(end, end + 1)
+            start = start - 1
           @quill.deleteText(start, end, Quill.sources.USER)
         else
           if hotkey.key == dom.KEYS.BACKSPACE
