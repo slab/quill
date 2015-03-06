@@ -21,10 +21,12 @@ class Toolbar
     @preventUpdate = false
     @triggering = false
     _.each(@quill.options.formats, (name) =>
-      this.initFormat(name)
+      return if Toolbar.formats.TOOLTIP[name]?
+      this.initFormat(name, _.bind(this._applyFormat, this, name))
     )
-    @quill.on(Quill.events.FORMAT_INIT, (name, format) =>
-      this.initFormat(name)
+    @quill.on(Quill.events.FORMAT_INIT, (name) =>
+      return if Toolbar.formats.TOOLTIP[name]?
+      this.initFormat(name, _.bind(this._applyFormat, this, name))
     )
     @quill.on(Quill.events.SELECTION_CHANGE, (range) =>
       this.updateActive(range) if range?
@@ -42,8 +44,7 @@ class Toolbar
         return false
       )
 
-  initFormat: (format) ->
-    return if Toolbar.formats.TOOLTIP[format]?
+  initFormat: (format, callback) ->
     selector = ".ql-#{format}"
     if Toolbar.formats.SELECT[format]?
       selector = "select#{selector}"    # Avoid selecting the picker container
@@ -58,7 +59,7 @@ class Toolbar
       @preventUpdate = true
       @quill.focus()
       range = @quill.getSelection()
-      this._applyFormat(format, range, value) if range?
+      callback(range, value) if range?
       @preventUpdate = false
       return true
     )
