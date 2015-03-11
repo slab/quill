@@ -89,12 +89,20 @@ class Editor
     else
       range = document.createRange()
       if offset < leaf.length
-        range.setStart(leaf.node, offset)
-        range.setEnd(leaf.node, offset + 1)
+        try
+          range.setStart(leaf.node, offset)
+          range.setEnd(leaf.node, offset + 1)
+        catch IndexSizeError
+          range.setStart(leaf.node, offset)
+          range.setEnd(leaf.node, offset)
       else
-        range.setStart(leaf.node, offset - 1)
-        range.setEnd(leaf.node, offset)
-        side = 'right'
+        try
+          side = 'right'
+          range.setStart(leaf.node, offset - 1)
+          range.setEnd(leaf.node, offset)
+        catch IndexSizeError
+          range.setStart(leaf.node, offset - 1)
+          range.setEnd(leaf.node, offset - 1)
       bounds = range.getBoundingClientRect()
     return {
       height: bounds.height

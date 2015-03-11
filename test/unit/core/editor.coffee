@@ -343,5 +343,29 @@ describe('Editor', ->
       expect(bounds.height).toBeApproximately(reference.large.height, 1)
       expect(bounds.left).toBeApproximately(2*reference.normal.width + 2*reference.large.width, 2)
     )
+
+    describe('with image', ->
+      beforeEach( ->
+        @editor.root.innerHTML = '<div><img src="data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7"/></div>'
+
+        reference.image =
+          height: @editor.root.firstChild.firstChild.offsetHeight
+          width: @editor.root.firstChild.firstChild.offsetWidth
+      )
+
+      it('directly before image', ->
+        bounds = @editor.getBounds(0)
+
+        expect(bounds.height).toBeApproximately(reference.image.height, 1)
+        expect(bounds.left).toBeApproximately(0, 1)
+      )
+
+      it('directly after image', ->
+        bounds = @editor.getBounds(1)
+
+        expect(bounds.height).toBeApproximately(reference.image.height, 1)
+        expect(bounds.left).toBeApproximately(reference.image.width, 1)
+      )
+    )
   )
 )
