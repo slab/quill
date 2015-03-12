@@ -104,6 +104,10 @@ class Editor
           range.setStart(leaf.node, offset - 1)
           range.setEnd(leaf.node, offset - 1)
       bounds = range.getBoundingClientRect()
+      # In FF and IE it seems that if you create a range with both start and end offset being 0
+      # then getBoundingClientRect on range does not return anything, we assume it is then the leaf positioning we need
+      if leaf.length == 1 and range.startOffset == 0 and range.endOffset == 0 and bounds.height == 0
+        bounds = leaf.node.getBoundingClientRect()
     return {
       height: bounds.height
       left: bounds[side] - containerBounds.left,
