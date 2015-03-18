@@ -122,9 +122,7 @@ class Selection
     return this._decodePosition(leaf.node, offset)
 
   _positionToIndex: (node, offset) ->
-    if dom.isIE(10) and node.innerHTML == '<br>' and offset == 1
-      offset = 0;
-
+    offset = 0 if dom.isIE(10) and node.tagName == 'BR' and offset == 1
     [leafNode, offset] = this._encodePosition(node, offset)
     line = @doc.findLine(leafNode)
     # TODO move to linked list
