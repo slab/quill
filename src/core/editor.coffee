@@ -89,13 +89,25 @@ class Editor
     else
       range = document.createRange()
       if offset < leaf.length
-        range.setStart(leaf.node, offset)
-        range.setEnd(leaf.node, offset + 1)
+        try
+          range.setStart(leaf.node, offset)
+          range.setEnd(leaf.node, offset + 1)
+        catch IndexSizeError
+          range.setStart(leaf.node, offset)
+          range.setEnd(leaf.node, offset)
       else
-        range.setStart(leaf.node, offset - 1)
-        range.setEnd(leaf.node, offset)
-        side = 'right'
+        try
+          side = 'right'
+          range.setStart(leaf.node, offset - 1)
+          range.setEnd(leaf.node, offset)
+        catch IndexSizeError
+          range.setStart(leaf.node, offset - 1)
+          range.setEnd(leaf.node, offset - 1)
       bounds = range.getBoundingClientRect()
+      # In FF and IE it seems that if you create a range with both start and end offset being 0
+      # then getBoundingClientRect on range does not return anything, we assume it is then the leaf positioning we need
+      if leaf.length == 1 and range.startOffset == 0 and range.endOffset == 0 and bounds.height == 0
+        bounds = leaf.node.getBoundingClientRect()
     return {
       height: bounds.height
       left: bounds[side] - containerBounds.left,
