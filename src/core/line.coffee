@@ -101,6 +101,7 @@ class Line extends LinkedList.Node
           dom(targetNode).splitBefore(@node)
           while !format.match(targetNode)
             targetNode = targetNode.parentNode
+          dom(targetNode).split(leaf.length)
         # Isolate target node
         if leafOffset > 0
           [leftNode, targetNode] = dom(targetNode).split(leafOffset)
