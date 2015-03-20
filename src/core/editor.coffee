@@ -84,8 +84,11 @@ class Editor
     throw new Error('Invalid index') unless leaf?
     containerBounds = @root.parentNode.getBoundingClientRect()
     side = 'left'
-    if leaf.length == 0
+    if leaf.length == 0   # BR case
       bounds = leaf.node.parentNode.getBoundingClientRect()
+    else if dom.VOID_TAGS[leaf.node.tagName]
+      bounds = leaf.node.getBoundingClientRect()
+      side = 'right' if offset == 1
     else
       range = document.createRange()
       if offset < leaf.length
@@ -98,7 +101,7 @@ class Editor
       bounds = range.getBoundingClientRect()
     return {
       height: bounds.height
-      left: bounds[side] - containerBounds.left,
+      left: bounds[side] - containerBounds.left
       top: bounds.top - containerBounds.top
     }
 
