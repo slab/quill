@@ -23,7 +23,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </div>
 
 <!-- Include the Quill library -->
-<script src="http://quilljs.com/js/quill.js"></script>
+<script src="http://cdn.quilljs.com/latest/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
