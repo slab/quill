@@ -194,6 +194,14 @@ describe('Selection', ->
         expect(range.start).toEqual(0)
         expect(range.end).toEqual(0)
       )
+
+      it('empty line', ->
+        @container.innerHTML = '<div><br></div>'
+        quill = new Quill(@container.firstChild)
+        quill.editor.selection.setRange(new Quill.Lib.Range(0, 0))
+        range = quill.editor.selection.getRange()
+        expect(range.start).toEqual(0)
+      )
     )
   )
 
