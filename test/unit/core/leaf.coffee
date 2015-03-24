@@ -95,33 +95,4 @@ describe('Leaf', ->
       expect(dom(leaf.node).text()).toEqualHTML('')
     )
   )
-
-  describe('insertText()', ->
-    tests =
-      'element with text node':
-        initial:  'Test'
-        expected: 'Te|st'
-        text: 'Test'
-      'element without text node':
-        initial:  '<b></b>'
-        expected: '<b>|</b>'
-      'break':
-        initial:  '<br>'
-        expected: '|'
-
-    _.each(tests, (test, name) ->
-      it(name, ->
-        @container.innerHTML = test.initial
-        leaf = new Quill.Leaf(@container.firstChild, {})
-        text = test.text or ''
-        length = text.length
-        expect(leaf.text).toEqual(text)
-        expect(leaf.length).toEqual(length)
-        leaf.insertText(length/2, '|')
-        expect(@container).toEqualHTML(test.expected)
-        expect(leaf.text).toEqual(dom(leaf.node).text())
-        expect(leaf.length).toEqual(length + 1)
-      )
-    )
-  )
 )

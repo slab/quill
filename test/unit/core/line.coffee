@@ -324,7 +324,7 @@ describe('Line', ->
       'inside leaf with multiple formats':
         initial: '<b><i>01</i></b>'
         expected: '<b><i>0|1</i></b>'
-        offset: 1, formats: { bold: true, italic: true }
+        offset: 1, formats: { italic: true, bold: true }
       'empty line':
         initial: '<br>'
         expected: '|'
@@ -335,11 +335,11 @@ describe('Line', ->
         offset: 1
       'format in empty line':
         initial: '<br>'
-        expected: '<b>|</b><br>'
+        expected: '<b>|</b>'
         offset: 0, formats: { bold: true }
       'void in empty line':
         initial: '<br>'
-        expected: '<img src="http://quilljs.com/images/cloud.png"><br>'
+        expected: '<img src="http://quilljs.com/images/cloud.png">'
         offset: 0, formats: { image: 'http://quilljs.com/images/cloud.png' }
       'void in middle of node':
         initial: '<b>01</b>'

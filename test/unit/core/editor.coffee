@@ -148,7 +148,7 @@ describe('Editor', ->
           index: 6, text: 'A'
         'insert formatted text with match':
           expected: ['<div>0123<b><i>45A67</i></b></div>']
-          index: 6, text: 'A', formats: { bold: true, italic: true }
+          index: 6, text: 'A', formats: { italic: true, bold: true }
         'prepend newline':
           expected: ['<div><br></div>', '<div>0123<b><i>4567</i></b></div>']
           index: 0, text: '\n'
