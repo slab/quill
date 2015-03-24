@@ -218,7 +218,7 @@ describe('Selection', ->
         quill.editor._insertAt(0, Quill.Lib.DOM.EMBED_TEXT, { image: 'http://quilljs.com/images/cloud.png' })
         quill.editor._formatAt(2, 4, 'bold', true)
         expect(quill.root).toEqualHTML('
-          <div><img src="http://quilljs.com/images/cloud.png"><br></div>
+          <div><img src="http://quilljs.com/images/cloud.png"></div>
           <div><b>1234</b></div>
         ', true)
         range = quill.editor.selection.getRange()

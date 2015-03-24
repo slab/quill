@@ -26,18 +26,5 @@ class Leaf extends LinkedList.Node
     else
       dom(@node).text(@text)
 
-  insertText: (offset, text) ->
-    @text = @text.slice(0, offset) + text + @text.slice(offset)
-    if dom(@node).isTextNode()
-      dom(@node).text(@text)
-    else
-      textNode = document.createTextNode(text)
-      if @node.tagName == dom.DEFAULT_BREAK_TAG
-        @node = dom(@node).replace(textNode)
-      else
-        @node.appendChild(textNode)
-        @node = textNode
-    @length = @text.length
-
 
 module.exports = Leaf
