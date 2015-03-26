@@ -117,7 +117,7 @@ class Line extends LinkedList.Node
     return unless text.length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
     # offset > 0 for multicursor
-    if _.isEqual(leaf.formats, formats)
+    if _.isEqual(leaf.formats, formats) and text != dom.EMBED_TEXT
       leaf.insertText(leafOffset, text)
       this.resetContent()
     else
