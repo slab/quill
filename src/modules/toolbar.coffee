@@ -20,23 +20,15 @@ class Toolbar
     @inputs = {}
     @preventUpdate = false
     @triggering = false
-    _.each(@quill.options.formats, (format) =>
-      return if Toolbar.formats.TOOLTIP[format]?
-      this.initFormat(format, (range, value) =>
-        return if @triggering
-        if range.isCollapsed()
-          @quill.prepareFormat(format, value, 'user')
-        else if Toolbar.formats.LINE[format]?
-          @quill.formatLine(range, format, value, 'user')
-        else
-          @quill.formatText(range, format, value, 'user')
-        _.defer( =>
-          this.updateActive(range, ['bullet', 'list'])  # Clear exclusive formats
-          this.setActive(format, value)
-        )
-      )
+    _.each(@quill.options.formats, (name) =>
+      return if Toolbar.formats.TOOLTIP[name]?
+      this.initFormat(name, _.bind(this._applyFormat, this, name))
     )
-    @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
+    @quill.on(Quill.events.FORMAT_INIT, (name) =>
+      return if Toolbar.formats.TOOLTIP[name]?
+      this.initFormat(name, _.bind(this._applyFormat, this, name))
+    )
+    @quill.on(Quill.events.SELECTION_CHANGE, (range) =>
       this.updateActive(range) if range?
     )
     @quill.onModuleLoad('keyboard', (keyboard) =>
@@ -98,6 +90,19 @@ class Toolbar
       if !Array.isArray(formats) or formats.indexOf(format) > -1
         this.setActive(format, activeFormats[format])
       return true
+    )
+
+  _applyFormat: (format, range, value) ->
+    return if @triggering
+    if range.isCollapsed()
+      @quill.prepareFormat(format, value, 'user')
+    else if Toolbar.formats.LINE[format]?
+      @quill.formatLine(range, format, value, 'user')
+    else
+      @quill.formatText(range, format, value, 'user')
+    _.defer( =>
+      this.updateActive(range, ['bullet', 'list'])  # Clear exclusive formats
+      this.setActive(format, value)
     )
 
   _getActive: (range) ->
