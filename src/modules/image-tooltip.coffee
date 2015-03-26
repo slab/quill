@@ -30,6 +30,7 @@ class ImageTooltip extends Tooltip
     dom(@textbox).on('input', _.bind(this._preview, this))
     this.initTextbox(@textbox, this.insertImage, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
+      @toolbar = toolbar
       toolbar.initFormat('image', _.bind(this._onToolbar, this))
     )
 
@@ -54,6 +55,7 @@ class ImageTooltip extends Tooltip
       )
     else
       @quill.deleteText(range, 'user')
+      @toolbar.setActive('image', false)
 
   _preview: ->
     return unless this._matchImageURL(@textbox.value)
