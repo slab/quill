@@ -55,15 +55,15 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    end = @range.end
     if @range?
+      end = @range.end
       if @range.isCollapsed()
         anchor = this._findAnchor(@range)
         anchor.href = url if anchor?
       else
         @quill.formatText(@range, 'link', url, 'user')
+      @quill.setSelection(end, end)
     this.setMode(url, false)
-    @quill.setSelection(end, end)
 
   removeLink: (range) ->
     # Expand range to the entire leaf
