@@ -91,7 +91,7 @@ class LinkTooltip extends Tooltip
   _findAnchor: (range) ->
     [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)
     node = leaf.node if leaf?
-    while node?
+    while node? and node != @quill.root
       return node if node.tagName == 'A'
       node = node.parentNode
     return null
