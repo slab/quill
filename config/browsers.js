@@ -1,8 +1,8 @@
-var CHROME_VERSION = '38';
-var FIREFOX_VERSION = '33';
+var CHROME_VERSION = '41';
+var FIREFOX_VERSION = '35';
 var SAFARI_VERSION = '8';
 var IOS_VERSION = ' 8.1';       // Workaround for optimist converting to float
-var ANDROID_VERSION = ' 4.4';
+var ANDROID_VERSION = ' 5.0';
 
 var browsers = {
   'mac-chrome'  : ['Mac 10.10', 'chrome', CHROME_VERSION],

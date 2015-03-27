@@ -25,11 +25,13 @@ class ImageTooltip extends Tooltip
     this.initListeners()
 
   initListeners: ->
+    dom(@quill.root).on('focus', _.bind(this.hide, this))
     dom(@container.querySelector('.insert')).on('click', _.bind(this.insertImage, this))
     dom(@container.querySelector('.cancel')).on('click', _.bind(this.hide, this))
     dom(@textbox).on('input', _.bind(this._preview, this))
     this.initTextbox(@textbox, this.insertImage, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
+      @toolbar = toolbar
       toolbar.initFormat('image', _.bind(this._onToolbar, this))
     )
 
@@ -54,6 +56,7 @@ class ImageTooltip extends Tooltip
       )
     else
       @quill.deleteText(range, 'user')
+      @toolbar.setActive('image', false)
 
   _preview: ->
     return unless this._matchImageURL(@textbox.value)

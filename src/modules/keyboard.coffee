@@ -52,7 +52,7 @@ class Keyboard
           if hotkey.key == dom.KEYS.BACKSPACE
             [line, offset] = @quill.editor.doc.findLineAt(range.start)
             if offset == 0 and (line.formats.bullet or line.formats.list)
-              format = if line.format.bullet then 'bullet' else 'list'
+              format = if line.formats.bullet then 'bullet' else 'list'
               @quill.formatLine(range.start, range.start, format, false)
             else if range.start > 0
               @quill.deleteText(range.start - 1, range.start, Quill.sources.USER)

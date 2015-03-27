@@ -198,6 +198,13 @@ describe('Editor', ->
         expect(@editor.root).toEqualHTML('<div><img src="http://quilljs.com/images/cloud.png"><b>A</b></div>', true)
       )
 
+      it('insert image after image', ->
+        @editor.doc.setHTML('<div><img src="http://quilljs.com/images/cloud.png"></div>')
+        @editor._insertAt(0, Quill.Lib.DOM.EMBED_TEXT, { image: "http://quilljs.com/images/cloud.png" })
+        @editor.doc.optimizeLines()
+        expect(@editor.root).toEqualHTML('<div><img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png"></div>', true)
+      )
+
       it('insert newline after bullet', ->
         @editor.doc.setHTML('<ul><li>One</li></ul>')
         @editor._insertAt(1, '\n')
