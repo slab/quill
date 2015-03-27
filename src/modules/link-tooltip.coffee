@@ -107,16 +107,16 @@ class LinkTooltip extends Tooltip
 
   _onKeyboard: ->
     range = @quill.getSelection()
-    this._toggle(range, true)
+    this._toggle(range, !this._findAnchor(range))
 
   _toggle: (range, value) ->
     return unless range
-    if value and !range.isCollapsed()
+    if !value
+      this.removeLink(range)
+    else if !range.isCollapsed()
       this.setMode(this._suggestURL(range), true)
       nativeRange = @quill.editor.selection._getNativeRange()
       this.show(nativeRange)
-    else
-      this.removeLink(range)
 
   _normalizeURL: (url) ->
     url = 'http://' + url unless /^(https?:\/\/|mailto:)/.test(url)
