@@ -50,7 +50,9 @@ class Keyboard
         if start != end
           # if the surrounding characters are both spaces,
           # kill the preceding space to prevent leaving double-spaces
-          if ' ' == @quill.getText(start - 1, start) == @quill.getText(end, end + 1)
+          before = @quill.getText(Math.max(start - 1, 0), start)
+          after = @quill.getText(end, Math.min(end + 1, @quill.getLength()))
+          if ' ' == before == after
             start = start - 1
           @quill.deleteText(start, end, Quill.sources.USER)
         else
