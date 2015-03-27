@@ -2,7 +2,6 @@ Quill    = require('../quill')
 Tooltip  = require('./tooltip')
 _        = Quill.require('lodash')
 dom      = Quill.require('dom')
-anchorEl = document.createElement('a')
 
 class LinkTooltip extends Tooltip
   @DEFAULTS:
@@ -84,6 +83,7 @@ class LinkTooltip extends Tooltip
       )
     else
       @link.href = url
+      url = @link.href # read back the url for further normalization
       text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
       dom(@link).text(text)
     dom(@container).toggleClass('editing', edit)
@@ -120,8 +120,7 @@ class LinkTooltip extends Tooltip
 
   _normalizeURL: (url) ->
     url = 'http://' + url unless /^(https?:\/\/|mailto:)/.test(url)
-    anchorEl.href = url
-    return anchorEl.href
+    return url
 
   _suggestURL: (range) ->
     text = @quill.getText(range)
