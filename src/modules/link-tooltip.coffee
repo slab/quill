@@ -1,7 +1,7 @@
-Quill    = require('../quill')
-Tooltip  = require('./tooltip')
-_        = Quill.require('lodash')
-dom      = Quill.require('dom')
+Quill   = require('../quill')
+Tooltip = require('./tooltip')
+_       = Quill.require('lodash')
+dom     = Quill.require('dom')
 
 class LinkTooltip extends Tooltip
   @DEFAULTS:
