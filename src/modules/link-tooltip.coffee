@@ -69,9 +69,9 @@ class LinkTooltip extends Tooltip
     # Expand range to the entire leaf
     if range.isCollapsed()
       range = this._expandRange(range)
+    this.hide()
     @quill.formatText(range, 'link', false, 'user')
     @toolbar.setActive('link', false) if @toolbar?
-    this.hide()
 
   setMode: (url, edit = false) ->
     if edit
