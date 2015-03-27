@@ -72,6 +72,7 @@ class LinkTooltip extends Tooltip
       range = this._expandRange(range)
     @quill.formatText(range, 'link', false, 'user')
     @toolbar.setActive('link', false) if @toolbar?
+    this.hide()
 
   setMode: (url, edit = false) ->
     if edit
