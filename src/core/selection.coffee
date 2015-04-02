@@ -145,7 +145,7 @@ class Selection
     if startNode?
       # Need to focus before setting or else in IE9/10 later focus will cause a set on 0th index on line div
       # to be set at 1st index
-      @doc.root.focus() unless this.checkFocus()
+      @doc.root.focus() if dom.isIE(10) and !this.checkFocus()
       nativeRange = this._getNativeRange()
       if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
         # IE9 requires removeAllRanges() regardless of value of
