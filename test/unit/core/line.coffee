@@ -181,11 +181,38 @@ describe('Line', ->
         initial: '<div><br></div>'
         expected: '<div><br></div>'
         formats: { bold: true }
+      'add bullet':
+        initial: '<div><br></div>'
+        expected: '<ul><li><br></li></ul>'
+        expectedIsParent: true
+        formats: { bullet: true }
+      'remove excluded style (string)':
+        initial: '<ul><li><br></li></ul>'
+        initialIsParent: true
+        expected: '<ol><li><br></li></ol>'
+        expectedIsParent: true
+        formats: { list: true }
+      'remove excluded style (array)':
+        custom:
+          h1:
+            tag: 'H1'
+            prepare: 'heading'
+            exclude: ['bullet', 'list']
+            type: 'line'
+        initial: '<ol><li><br></li></ol>'
+        initialIsParent: true
+        expected: '<h1><br></h1>'
+        formats: { h1: true }
 
     _.each(tests, (test, name) ->
       it(name, ->
+        if test.custom?
+          for k, v of test.custom
+            @doc.addFormat(k, v)
         @container.innerHTML = test.initial
         lineNode = @container.firstChild
+        if test.initialIsParent?
+          lineNode = lineNode.firstChild
         line = new Quill.Line(@doc, lineNode)
         expectedFormats = _.clone(test.formats)
         _.each(test.formats, (value, name) ->
@@ -193,7 +220,10 @@ describe('Line', ->
           delete expectedFormats[name] unless value
         )
         expect(line.formats).toEqual(expectedFormats)
-        expect(line.node.outerHTML).toEqualHTML(test.expected, true)
+        if test.expectedIsParent?
+          expect(line.node.parentNode.outerHTML).toEqualHTML(test.expected, true)
+        else
+          expect(line.node.outerHTML).toEqualHTML(test.expected, true)
       )
     )
   )
