@@ -155,6 +155,7 @@ class Selection
         nativeRange.setStart(startNode, startOffset)
         nativeRange.setEnd(endNode, endOffset)
         selection.addRange(nativeRange)
+      @doc.root.focus() if nativeRange? and !this.checkFocus()
     else
       selection.removeAllRanges()
       @doc.root.blur()
