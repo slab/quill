@@ -12,7 +12,7 @@ class Document
     @normalizer = new Normalizer()
     @formats = {}
     _.each(options.formats, _.bind(this.addFormat, this))
-    this.setHTML(@root.innerHTML)
+    this.setHTML(@root.innerHTML, true)
 
   addFormat: (name, config) ->
     config = Format.FORMATS[name] unless _.isObject(config)
@@ -119,9 +119,11 @@ class Document
     delete @lineMap[line.id]
     @lines.remove(line)
 
-  setHTML: (html) ->
+  setHTML: (html, shouldStripWhitespace) ->
     html = Normalizer.stripComments(html)
-    html = Normalizer.stripWhitespace(html)
+    if typeof shouldStripWhitespace == 'undefined' or shouldStripWhitespace == true
+      html = Normalizer.stripWhitespace(html)
+
     @root.innerHTML = html
     @lines = new LinkedList()
     @lineMap = {}

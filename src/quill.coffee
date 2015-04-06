@@ -68,7 +68,7 @@ class Quill extends EventEmitter2
     @root = this.addContainer('ql-editor')
     @editor = new Editor(@root, this, @options)
     Quill.editors.push(this)
-    this.setHTML(html, Quill.sources.SILENT)
+    this.setHTML(html, true, Quill.sources.SILENT)
     themeClass = Quill.themes[@options.theme]
     throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
     @theme = new themeClass(this, @options)
@@ -197,9 +197,9 @@ class Quill extends EventEmitter2
     delta.ops.push({ delete: this.getLength() })
     this.updateContents(delta, source)
 
-  setHTML: (html, source = Quill.sources.API) ->
+  setHTML: (html, shouldStripWhitespace, source = Quill.sources.API) ->
     html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html.trim()
-    @editor.doc.setHTML(html)
+    @editor.doc.setHTML(html, shouldStripWhitespace)
     @editor.checkUpdate(source)
 
   setSelection: (start, end, source = Quill.sources.API) ->
