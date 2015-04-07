@@ -271,18 +271,18 @@ Applies Delta to editor contents.
 **Examples**
 
 {% highlight javascript %}
-// Assuming editor currently contains [{ value: 'Hello World!' }]
-editor.update({
+// Assuming editor currently contains [{ insert: 'Hello World!' }]
+editor.updateContents({
   startLength: 12,
   endLength: 13,
   ops: [
-    { start: 0, end: 6 }, // Keep 'Hello '
-    { value: 'Quill' },   // Insert 'Quill'
-                          // Since there is no retain for index 6-10, 'World' is deleted
-    { start: 11, end: 12, attributes: { bold: true } }    // Apply bold to exclamation mark
+    { retain: 6 },        // Keep 'Hello '
+    { delete: 5 },        // 'World' is deleted
+    { insert: 'Quill' },  // Insert 'Quill'
+    { retain: 1, attributes: { bold: true } }    // Apply bold to exclamation mark
   ]
 });
-// Editor should now be [{ value: 'Hello Quill' }, { value: '!', attributes: { bold: true} }]
+// Editor should now be [{ insert: 'Hello Quill' }, { insert: '!', attributes: { bold: true} }]
 {% endhighlight %}
 
 
@@ -304,9 +304,9 @@ Overwrites editor with given contents.
 
 {% highlight javascript %}
 editor.setContents([
-  { value: 'Hello ' },
-  { value: 'World!', attributes: { bold: true } },
-  { value: '\n' }
+  { insert: 'Hello ' },
+  { insert: 'World!', attributes: { bold: true } },
+  { insert: '\n' }
 ]);
 {% endhighlight %}
 
