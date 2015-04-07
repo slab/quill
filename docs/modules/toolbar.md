@@ -32,10 +32,10 @@ Simply create a container and the module to the Quill editor.
 <div id="toolbar">
   <!-- Add font size dropdown -->
   <select class="ql-size">
-    <option value="small">Small</option>
-    <option value="normal" selected>Normal</option>
-    <option value="large">Large</option>
-    <option value="huge">Huge</option>
+    <option value="10px">Small</option>
+    <option value="13px" selected>Normal</option>
+    <option value="18px">Large</option>
+    <option value="32px">Huge</option>
   </select>
   <!-- Add a bold button -->
   <button class="ql-bold"></button>
