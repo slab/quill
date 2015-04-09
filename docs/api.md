@@ -273,8 +273,6 @@ Applies Delta to editor contents.
 {% highlight javascript %}
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
 editor.updateContents({
-  startLength: 12,
-  endLength: 13,
   ops: [
     { retain: 6 },        // Keep 'Hello '
     { delete: 5 },        // 'World' is deleted
