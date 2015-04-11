@@ -1,7 +1,6 @@
 Quill      = require('../quill')
 _          = Quill.require('lodash')
 dom        = Quill.require('dom')
-Normalizer = Quill.require('normalizer')
 
 
 class Tooltip
@@ -13,7 +12,7 @@ class Tooltip
 
   constructor: (@quill, @options) ->
     @container = @quill.addContainer('ql-tooltip')
-    @container.innerHTML = Normalizer.stripWhitespace(@options.template)
+    @container.innerHTML = @options.template
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
       if source == 'user' and @container.style.left != Tooltip.HIDE_MARGIN

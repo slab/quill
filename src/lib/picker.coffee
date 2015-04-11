@@ -1,6 +1,5 @@
 _          = require('lodash')
 dom        = require('./dom')
-Normalizer = require('../core/normalizer')
 
 
 class Picker
@@ -44,7 +43,7 @@ class Picker
     _.each(dom(@select).attributes(), (value, name) =>
       @container.setAttribute(name, value)
     )
-    @container.innerHTML = Normalizer.stripWhitespace(Picker.TEMPLATE)
+    @container.innerHTML = Picker.TEMPLATE
     @label = @container.querySelector('.ql-picker-label')
     picker = @container.querySelector('.ql-picker-options')
     _.each(@select.options, (option, i) =>
