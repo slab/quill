@@ -9,17 +9,13 @@
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
   "main": "index.js",
-  "dependencies": {
-    "eventemitter2": "~0.4.13",
-    "lodash": "~3.6.0",
-    "rich-text": "~1.1.0"
-  },
   "devDependencies": {
     "async": "~0.9.0",
     "browserify": "~9.0.3",
     "coffee-script": "~1.9.0",
     "coffeeify": "~1.0.0",
     "derequire": "~1.2.0",
+    "eventemitter2": "~0.4.13",
     "glob": "~5.0.3",
     "grunt": "~0.4.5",
     "grunt-browserify": "~3.5.0",
@@ -38,7 +34,7 @@
     "harp": "~0.14.0",
     "http-proxy": "~1.10.0",
     "istanbul": "~0.3.5",
-    "jquery": "~2.1.3",
+    "lodash": "~3.6.0",
     "karma": "~0.12.31",
     "karma-chrome-launcher": "~0.1.7",
     "karma-coffee-preprocessor": "~0.2.1",
@@ -51,6 +47,7 @@
     "karma-sauce-launcher": "~0.2.10",
     "load-grunt-tasks": "~3.1.0",
     "protractor": "~1.8.0",
+    "rich-text": "~1.1.0",
     "stylify": "~1.0.0",
     "stylus": "~0.50.0",
     "through": "~2.3.6",
