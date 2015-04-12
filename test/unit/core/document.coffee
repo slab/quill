@@ -65,19 +65,19 @@ describe('Document', ->
       node.innerHTML = 'Test'
       @doc.root.appendChild(node)
       line = @doc.findLine(node)
-      expect(line).toBe(null)
+      expect(line).toBeUndefined()
     )
 
     it('findLine() not in doc', ->
       line = @doc.findLine($('#test-container').get(0))
-      expect(line).toBe(null)
+      expect(line).toBeUndefined()
     )
 
     it('findLine() id false positive', ->
       clone = @doc.root.firstChild.cloneNode(true)
       @doc.root.appendChild(clone)
       line = @doc.findLine(clone)
-      expect(line).toBe(null)
+      expect(line).toBeUndefined()
     )
 
     it('findLine() leaf node', ->
@@ -119,7 +119,7 @@ describe('Document', ->
 
     it('findLineAt() beyond document', ->
       [line, offset] = @doc.findLineAt(12)
-      expect(line).toBe(null)
+      expect(line).toBeUndefined()
       expect(offset).toEqual(1)
     )
   )

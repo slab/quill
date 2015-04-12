@@ -92,7 +92,7 @@ describe('Line', ->
         if test.match
           expect(leaf.node).toEqual(queryNode)
         else
-          expect(leaf).toBe(null)
+          expect(leaf).toBe(undefined)
       )
     )
 

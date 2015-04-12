@@ -5,6 +5,8 @@ LinkedList = require('../lib/linked-list')
 
 
 class Leaf extends LinkedList.Node
+  @DATA_KEY: 'leaf'
+
   @isLeafNode: (node) ->
     return dom(node).isTextNode() or !node.firstChild?
 
@@ -12,6 +14,7 @@ class Leaf extends LinkedList.Node
     @formats = _.clone(formats)
     @text = dom(@node).text()
     @length = @text.length
+    dom(@node).data(Leaf.DATA_KEY, this)
 
   deleteText: (offset, length) ->
     return unless length > 0

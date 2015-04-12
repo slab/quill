@@ -43,11 +43,7 @@ class Line extends LinkedList.Node
     this.rebuild()
 
   findLeaf: (leafNode) ->
-    curLeaf = @leaves.first
-    while curLeaf?
-      return curLeaf if curLeaf.node == leafNode
-      curLeaf = curLeaf.next
-    return null
+    return if leafNode? then dom(leafNode).data(Leaf.DATA_KEY) else undefined
 
   findLeafAt: (offset, inclusive = false) ->
     # TODO exact same code as findLineAt
