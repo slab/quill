@@ -44,8 +44,8 @@ There are a number of ways to the latest or versioned copy of Quill.
 ### CDN
 
 ```html
-<link rel="stylesheet" href="//cdn.quilljs.com/0.16.0/quill.snow.css" />
-<script src="//cdn.quilljs.com/0.16.0/quill.min.js"></script>
+<link rel="stylesheet" href="//cdn.quilljs.com/0.19.10/quill.snow.css" />
+<script src="//cdn.quilljs.com/0.19.10/quill.min.js"></script>
 ```
 
 
@@ -81,7 +81,7 @@ Check out Gruntfile.coffee and config/grunt for more testing options.
 Get help or stay up to date.
 
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
-- Ask questions on [Stack Overflow](http://stackoverflow.com/) (tag with quill)
+- Ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/quill) (tag with quill)
 - Visit the [discussion group](http://discuss.quilljs.com)
 - If a private channel is required, you may also email support@quilljs.com
 
