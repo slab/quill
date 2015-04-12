@@ -69,7 +69,7 @@ describe('Document', ->
     )
 
     it('findLine() not in doc', ->
-      line = @doc.findLine($('#toolbar-container').get(0))
+      line = @doc.findLine($('#test-container').get(0))
       expect(line).toBe(null)
     )
 

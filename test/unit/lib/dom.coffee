@@ -142,7 +142,7 @@ describe('DOM', ->
     it('removed node', ->
       dom(@container).data('a', 1)
       elem = document.getElementById('test-data')
-      $(@container).remove()
+      dom(@container).remove()
       expect(dom(elem).data('a')).toEqual(1)
     )
   )

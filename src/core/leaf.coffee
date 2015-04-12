@@ -5,14 +5,11 @@ LinkedList = require('../lib/linked-list')
 
 
 class Leaf extends LinkedList.Node
-  @ID_PREFIX: 'ql-leaf-'
-
   @isLeafNode: (node) ->
     return dom(node).isTextNode() or !node.firstChild?
 
   constructor: (@node, formats) ->
     @formats = _.clone(formats)
-    @id = _.uniqueId(Leaf.ID_PREFIX)
     @text = dom(@node).text()
     @length = @text.length
 

@@ -30,7 +30,7 @@ class Document
   findLine: (node) ->
     while node? and !dom.BLOCK_TAGS[node.tagName]?
       node = node.parentNode
-    line = if node? then @lineMap[node.id] else null
+    line = if node? then dom(node).data(Line.DATA_KEY) else null
     return if line?.node == node then line else null
 
   findLineAt: (index) ->
@@ -46,16 +46,8 @@ class Document
     return [null, index]    # Should never occur unless length calculation is off
 
   getHTML: ->
-    html = @root.innerHTML
     # Preserve spaces between tags
-    html = html.replace(/\>\s+\</g, '>&nbsp;<')
-    container = document.createElement('div')
-    container.innerHTML = html
-    _.each(container.querySelectorAll(".#{Line.CLASS_NAME}"), (node) ->
-      dom(node).removeClass(Line.CLASS_NAME)
-      node.removeAttribute('id')
-    )
-    return container.innerHTML
+    return @root.innerHTML.replace(/\>\s+\</g, '>&nbsp;<')
 
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
@@ -65,7 +57,6 @@ class Document
     else
       @root.appendChild(newLineNode) unless dom(newLineNode.parentNode).isElement()
       @lines.append(line)
-    @lineMap[line.id] = line
     return line
 
   mergeLines: (line, lineToMerge) ->
@@ -116,7 +107,6 @@ class Document
         dom(line.node.parentNode).remove()
       else
         dom(line.node).remove()
-    delete @lineMap[line.id]
     @lines.remove(line)
 
   setHTML: (html) ->
@@ -124,7 +114,6 @@ class Document
     html = Normalizer.stripWhitespace(html)
     @root.innerHTML = html
     @lines = new LinkedList()
-    @lineMap = {}
     this.rebuild()
 
   splitLine: (line, offset) ->
