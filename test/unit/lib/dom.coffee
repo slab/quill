@@ -116,6 +116,37 @@ describe('DOM', ->
     )
   )
 
+  describe('data', ->
+    beforeEach( ->
+      @container.id = 'test-data'
+    )
+
+    it('get nonexistent value', ->
+      data = dom(@container).data('nonexistent')
+      expect(data).toBeUndefined()
+    )
+
+    it('get/set value', ->
+      dom(@container).data('a', 1).data('b', 2)
+      elem = document.getElementById('test-data')
+      expect(dom(elem).data('a')).toEqual(1)
+      expect(dom(elem).data('b')).toEqual(2)
+    )
+
+    it('overwrite value', ->
+      dom(@container).data('a', 1).data('a', 2)
+      elem = document.getElementById('test-data')
+      expect(dom(elem).data('a')).toEqual(2)
+    )
+
+    it('removed node', ->
+      dom(@container).data('a', 1)
+      elem = document.getElementById('test-data')
+      $(@container).remove()
+      expect(dom(elem).data('a')).toEqual(1)
+    )
+  )
+
   describe('events', ->
     describe('on()', ->
       beforeEach( ->

@@ -47,6 +47,14 @@ class Wrapper
   classes: ->
     return @node.className.split(/\s+/)
 
+  data: (key, value) ->
+    if value?
+      @node['ql-data'] = {} unless @node['ql-data']?
+      @node['ql-data'][key] = value
+      return this
+    else
+      return @node['ql-data']?[key]
+
   descendants: ->
     return _.map(@node.getElementsByTagName('*'))
 
