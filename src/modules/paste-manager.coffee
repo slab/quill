@@ -11,7 +11,7 @@ class PasteManager
     dom(@quill.root).on('paste', _.bind(this._paste, this))
 
   _paste: (event) ->
-    html = event.clipboardData.getData('text/html')
+    html = event?.clipboardData.getData('text/html')
     if html
       event.preventDefault()
       @range = @quill.getSelection()
