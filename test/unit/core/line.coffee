@@ -281,7 +281,7 @@ describe('Line', ->
         args: [0, 4, 'bold', false]
       'remove image':
         initial: '<b>01</b><img src="http://quilljs.com/images/cloud.png"><s>34</s>'
-        expected: "<b>01</b>#{dom.EMBED_TEXT}<s>34</s>"
+        expected: "<b>01</b><s>34</s>"
         args: [2, 1, 'image', false]
       'change format':
         initial: '<b style="color: red;">012</b>'

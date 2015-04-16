@@ -106,23 +106,37 @@ class Line extends LinkedList.Node
       leaf = nextLeaf
     this.rebuild()
 
+  _insert: (offset, node, formats) ->
+    [leaf, leafOffset] = this.findLeafAt(offset)
+    node = _.reduce(formats, (node, value, name) =>
+      format = @doc.formats[name]
+      node = format.add(node, value) if format?
+      return node
+    , node)
+    [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
+    nextNode = dom(nextNode).splitBefore(@node).get() if nextNode
+    @node.insertBefore(node, nextNode)
+    this.rebuild()
+
+  insertEmbed: (offset, attributes) ->
+    [leaf, leafOffset] = this.findLeafAt(offset)
+    [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
+    formatName = _.find(Object.keys(attributes), (name) =>
+      return @doc.formats[name].isType(Format.types.EMBED)
+    )
+    node = @doc.formats[formatName].add({}, attributes[formatName])  # TODO fix {} hack
+    attributes = _.clone(attributes)
+    delete attributes[formatName]
+    this._insert(offset, node, attributes)
+
   insertText: (offset, text, formats = {}) ->
     return unless text.length > 0
     [leaf, leafOffset] = this.findLeafAt(offset)
-    # offset > 0 for multicursor
-    if _.isEqual(leaf.formats, formats) and text != dom.EMBED_TEXT
+    if _.isEqual(leaf.formats, formats)
       leaf.insertText(leafOffset, text)
       this.resetContent()
     else
-      node = _.reduce(formats, (node, value, name) =>
-        format = @doc.formats[name]
-        node = format.add(node, value) if format?
-        return node
-      , document.createTextNode(text))
-      [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
-      nextNode = dom(nextNode).splitBefore(@node).get() if nextNode
-      @node.insertBefore(node, nextNode)
-      this.rebuild()
+      this._insert(offset, document.createTextNode(text), formats)
 
   optimize: ->
     Normalizer.optimizeLine(@node)

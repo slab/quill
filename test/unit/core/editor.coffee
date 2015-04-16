@@ -198,19 +198,42 @@ describe('Editor', ->
         expect(@editor.root).toEqualHTML('<div><img src="http://quilljs.com/images/cloud.png"><b>A</b></div>', true)
       )
 
-      it('insert image after image', ->
-        @editor.doc.setHTML('<div><img src="http://quilljs.com/images/cloud.png"></div>')
-        @editor._insertAt(0, Quill.Lib.DOM.EMBED_TEXT, { image: "http://quilljs.com/images/cloud.png" })
-        @editor.doc.optimizeLines()
-        expect(@editor.root).toEqualHTML('<div><img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png"></div>', true)
-      )
-
       it('insert newline after bullet', ->
         @editor.doc.setHTML('<ul><li>One</li></ul>')
         @editor._insertAt(1, '\n')
         @editor.doc.optimizeLines()
         expect(@editor.root).toEqualHTML('<div>O</div><ul><li>ne</li></ul>', true)
       )
+    )
+  )
+
+  describe('insertEmbed()', ->
+    it('insert image', ->
+      @editor.doc.setHTML('<div>A</div>')
+      @editor._insertEmbed(1, { image: "http://quilljs.com/images/cloud.png" })
+      @editor.doc.optimizeLines()
+      expect(@editor.root).toEqualHTML('<div>A<img src="http://quilljs.com/images/cloud.png"></div>', true)
+    )
+
+    it('insert link image', ->
+      @editor.doc.setHTML('<div>A</div>')
+      @editor._insertEmbed(1, { image: "http://quilljs.com/images/cloud.png", link: "#" })
+      @editor.doc.optimizeLines()
+      expect(@editor.root).toEqualHTML('<div>A<a href="#"><img src="http://quilljs.com/images/cloud.png"></a></div>', true)
+    )
+
+    it('insert link image merge', ->
+      @editor.doc.setHTML('<div><a href="#">A</a></div>')
+      @editor._insertEmbed(1, { image: "http://quilljs.com/images/cloud.png", link: "#" })
+      @editor.doc.optimizeLines()
+      expect(@editor.root).toEqualHTML('<div><a href="#">A<img src="http://quilljs.com/images/cloud.png"></a></div>', true)
+    )
+
+    it('insert image after image', ->
+      @editor.doc.setHTML('<div><img src="http://quilljs.com/images/cloud.png"></div>')
+      @editor._insertEmbed(1, { image: "http://quilljs.com/images/cloud.png" })
+      @editor.doc.optimizeLines()
+      expect(@editor.root).toEqualHTML('<div><img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png"></div>', true)
     )
   )
 

@@ -42,8 +42,7 @@ class Editor
             this._insertAt(index, op.insert, op.attributes)
             index += op.insert.length;
           else if _.isNumber(op.insert)
-            # TODO embed needs native insert
-            this._insertAt(index, dom.EMBED_TEXT, op.attributes)
+            this._insertEmbed(index, op.attributes)
             index += 1;
           else if _.isNumber(op.delete)
             this._deleteAt(index, op.delete)
@@ -135,6 +134,12 @@ class Editor
         length -= 1
         offset = 0
         line = line.next
+    )
+
+  _insertEmbed: (index, attributes) ->
+    @selection.shiftAfter(index, 1, =>
+      [line, offset] = @doc.findLineAt(index)
+      line.insertEmbed(offset, attributes)
     )
 
   _insertAt: (index, text, formatting = {}) ->

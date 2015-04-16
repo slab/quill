@@ -17,8 +17,8 @@ describe('Format', ->
     image:
       format: new Quill.Format(Quill.Format.FORMATS.image)
       existing: '<img src="http://quilljs.com/images/cloud.png">'
-      missing: 'Text'
-      removed: Quill.Lib.DOM.EMBED_TEXT
+      missing: '<br>'
+      removed: ''
       value: 'http://quilljs.com/images/cloud.png'
     link:
       format: new Quill.Format(Quill.Format.FORMATS.link)
@@ -119,7 +119,8 @@ describe('Format', ->
       it("#{name} add falsy value to existing", ->
         @container.innerHTML = test.existing
         test.format.add(@container.firstChild, false)
-        expect(@container).toEqualHTML(test.removed or test.missing)
+        expected = if test.removed? then test.removed else test.missing
+        expect(@container).toEqualHTML(expected)
       )
 
       it("#{name} add falsy value to missing", ->
@@ -178,7 +179,8 @@ describe('Format', ->
       it("#{name} existing", ->
         @container.innerHTML = test.existing
         test.format.remove(@container.firstChild)
-        expect(@container).toEqualHTML(test.removed or test.missing)
+        expected = if test.removed? then test.removed else test.missing
+        expect(@container).toEqualHTML(expected)
       )
 
       it("#{name} missing", ->
