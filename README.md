@@ -75,6 +75,12 @@ All tests assume the local server is running.
 
 Check out Gruntfile.coffee and config/grunt for more testing options.
 
+### Examples
+
+All examples assume the local server is running.
+
+  visit [localhost:9000/examples/index.html](http://localhost:9000/examples/index.html) or [localhost:9000/examples/advanced.html](http://localhost:9000/examples/advanced.html) 
+
 
 ## Community
 
