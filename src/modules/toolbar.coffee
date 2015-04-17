@@ -32,7 +32,7 @@ class Toolbar
       this.updateActive(range) if range?
     )
     @quill.onModuleLoad('keyboard', (keyboard) =>
-      keyboard.addHotkey([dom.KEYS.BACKSPACE, dom.KEYS.DELETE, dom.KEYS.ENTER], =>
+      keyboard.addHotkey([dom.KEYS.BACKSPACE, dom.KEYS.DELETE], =>
         _.defer(_.bind(this.updateActive, this))
       )
     )
