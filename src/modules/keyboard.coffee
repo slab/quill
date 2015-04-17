@@ -45,7 +45,11 @@ class Keyboard
     @toolbar.setActive(format, value) if @toolbar?
 
   _initEnter: ->
-    this.addHotkey(dom.KEYS.ENTER, (range, hotkey) =>
+    keys = [
+      { key: dom.KEYS.ENTER }
+      { key: dom.KEYS.ENTER, shiftKey: true }
+    ]
+    this.addHotkey(keys, (range, hotkey) =>
       return true unless range?
       [line, offset] = @quill.editor.doc.findLineAt(range.start)
       [leaf, offset] = line.findLeafAt(offset)
