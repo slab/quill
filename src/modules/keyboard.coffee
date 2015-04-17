@@ -16,7 +16,6 @@ class Keyboard
     @hotkeys = {}
     this._initListeners()
     this._initHotkeys()
-    this._initDeletes()
 
   addHotkey: (hotkeys, callback) ->
     hotkeys = [hotkeys] unless Array.isArray(hotkeys)
@@ -42,6 +41,19 @@ class Keyboard
       @quill.formatText(range, format, value, Quill.sources.USER)
     toolbar = @quill.getModule('toolbar')
     toolbar.setActive(format, value) if toolbar?
+
+  _initEnter: ->
+    this.addHotkey(dom.KEYS.ENTER, (range, hotkey) =>
+      return true unless range?
+      [line, offset] = @quill.editor.doc.findLineAt(range.start)
+      [leaf, offset] = line.findLeafAt(offset)
+      delta = new Delta().retain(range.start).insert('\n', line.formats).delete(range.end - range.start)
+      @quill.updateContents(delta, Quill.sources.USER)
+      _.each(leaf.formats, (format, key) =>
+        @quill.prepareFormat(key, format)
+      )
+      return false
+    )
 
   _initDeletes: ->
     this.addHotkey([dom.KEYS.DELETE, dom.KEYS.BACKSPACE], (range, hotkey) =>
@@ -76,6 +88,8 @@ class Keyboard
         return false
       )
     )
+    this._initDeletes()
+    this._initEnter()
 
   _initListeners: ->
     dom(@quill.root).on('keydown', (event) =>
