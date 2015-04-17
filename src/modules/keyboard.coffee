@@ -17,6 +17,7 @@ class Keyboard
     this._initListeners()
     this._initHotkeys()
     this._initDeletes()
+    this._initEnter()
 
   addHotkey: (hotkeys, callback) ->
     hotkeys = [hotkeys] unless Array.isArray(hotkeys)
@@ -58,6 +59,31 @@ class Keyboard
               @quill.deleteText(range.start - 1, range.start, Quill.sources.USER)
           else if range.start < @quill.getLength()
             @quill.deleteText(range.start, range.start + 1, Quill.sources.USER)
+      return false
+    )
+
+  _initEnter: ->
+    this.addHotkey(DOM.KEYS.ENTER, =>
+      range = @quill.getSelection()
+      activeFormats = []
+      if !range.isCollapsed() 
+        return true;
+      if(!@quill.modules.toolbar)
+        leaves = @quill.editor.doc.findLeafAt(range.end, true)
+        for format of leaves[0].formats
+          activeFormats.push({format: format, value: leaves[0].formats[format]})
+      else
+        toolbarInputs = @quill.modules.toolbar.inputs;
+        formats = @quill.options.formats;
+        for format in formats 
+          if(toolbarInputs[format] and DOM.hasClass(toolbarInputs[format], "ql-active"))
+            activeFormats.push({format: format, value: true})
+      
+      insertDelta = Tandem.Delta.makeInsertDelta(@quill.getLength(), range.end, '\n');
+      @quill.editor.applyDelta(insertDelta, 'user')
+      for format in activeFormats
+        @quill.prepareFormat(format.format, format.value)
+      
       return false
     )
 
