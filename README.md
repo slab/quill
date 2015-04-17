@@ -63,23 +63,22 @@ Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Brow
     grunt dist - compile and browserify
     grunt server - starts a local server that will build and serve assets on the fly
 
-### Testing
-
-All tests assume the local server is running.
-
-    grunt test - run tests with phantomjs
-    grunt test:unit - runs javascript test suite with phantomjs
-    grunt test:e2e - runs end to end tests with Webdriver + Chrome
-    grunt test:coverage - run coverage tests using phantomjs
-    grunt test:karma - runs karma on port 9876
-
-Check out Gruntfile.coffee and config/grunt for more testing options.
-
 ### Examples
 
-All examples assume the local server is running.
+With the local server (`grunt server`) running you can try out some minimal examples on:
 
-  visit [localhost:9000/examples/index.html](http://localhost:9000/examples/index.html) or [localhost:9000/examples/advanced.html](http://localhost:9000/examples/advanced.html) 
+- [localhost:9000/examples/index.html](http://localhost:9000/examples/index.html)
+- [localhost:9000/examples/advanced.html](http://localhost:9000/examples/advanced.html) 
+
+Quill [releases](https://github.com/quilljs/quill/releases) also contain these examples as built static files you can try without needing to run the local development server.
+
+### Testing
+
+    grunt test:unit - runs javascript test suite with chrome
+    grunt test:e2e - runs end to end tests with Webdriver + Chrome
+    grunt test:coverage - run coverage tests using phantomjs
+
+Tests are run by [Karma](http://karma-runner.github.io/) and [Protractor](https://github.com/angular/protractor) using [Jasmine](http://jasmine.github.io/). Check out `Gruntfile.coffee` and `config/grunt/` for more testing options.
 
 
 ## Community
