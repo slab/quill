@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{ page.title }}{% if page.url != "/index.html" %} - Quill{% endif %}</title>
     <meta name="viewport" content="width=device-width">
     {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
@@ -24,7 +24,7 @@
     <footer>
       <div class="container">
         <ul>
-          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&repo=quill&type=watch&count=true" title="Star on GitHub" width="100" height="20" allowtransparency="true" frameborder="0" scrolling="0"></iframe></li>
+          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true" title="Star on GitHub" width="100" height="20"></iframe></li>
           <li>
             {% if page.url contains '/blog/' and page.url != '/blog/' %}
             <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com{{ page.url }}" data-text="{{ page.title }}" data-via="quilljs">Tweet</a>
