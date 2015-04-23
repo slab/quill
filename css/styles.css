@@ -18,6 +18,11 @@ code {
   color: inherit;
 }
 
+iframe {
+  border: none;
+  overflow: hidden;
+}
+
 pre {
   background-color: #f8f8f8;
   border-color: #06c;
