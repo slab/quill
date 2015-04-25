@@ -65,6 +65,7 @@ class Toolbar
     )
 
   setActive: (format, value) ->
+    value = false if format == 'image'  # TODO generalize to all embeds
     input = @inputs[format]
     return unless input?
     $input = dom(input)
