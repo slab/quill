@@ -49,6 +49,7 @@ class Quill extends EventEmitter2
     switch name
       when 'lodash'     then return _
       when 'delta'      then return Delta
+      when 'format'     then return Format
       when 'normalizer' then return Normalizer
       when 'dom'        then return dom
       when 'range'      then return Range
