@@ -197,7 +197,7 @@ class Quill extends EventEmitter2
       delta = { ops: delta.slice() }
     else
       delta = { ops: delta.ops.slice() }
-    delta.ops.push({ delete: this.getLength() })
+    delta.ops.push({ delete: this.getLength() - 1 })
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->

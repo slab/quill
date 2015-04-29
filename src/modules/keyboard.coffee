@@ -75,7 +75,7 @@ class Keyboard
               @quill.formatLine(range.start, range.start, format, false)
             else if range.start > 0
               @quill.deleteText(range.start - 1, range.start, Quill.sources.USER)
-          else if range.start < @quill.getLength()
+          else if range.start < @quill.getLength() - 1
             @quill.deleteText(range.start, range.start + 1, Quill.sources.USER)
       return false
     )
