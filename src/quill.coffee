@@ -194,10 +194,14 @@ class Quill extends EventEmitter2
 
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
-      delta = { ops: delta.slice() }
+      delta = new Delta(delta.slice())
     else
-      delta = { ops: delta.ops.slice() }
-    delta.ops.push({ delete: this.getLength() - 1 })
+      delta = new Delta(delta.ops.slice())
+    # Retain trailing newline unless inserting one
+    lastOp = _.last(delta.slice(delta.length() - 1).ops)
+    delta.delete(this.getLength() - 1)
+    if _.isString(lastOp.insert) and _.last(lastOp.insert) == '\n'
+      delta.delete(1)
     this.updateContents(delta, source)
 
   setHTML: (html, source = Quill.sources.API) ->
