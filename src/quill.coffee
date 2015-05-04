@@ -200,7 +200,7 @@ class Quill extends EventEmitter2
     # Retain trailing newline unless inserting one
     lastOp = _.last(delta.slice(delta.length() - 1).ops)
     delta.delete(this.getLength() - 1)
-    if _.isString(lastOp.insert) and _.last(lastOp.insert) == '\n'
+    if lastOp? and _.isString(lastOp.insert) and _.last(lastOp.insert) == '\n'
       delta.delete(1)
     this.updateContents(delta, source)
 
