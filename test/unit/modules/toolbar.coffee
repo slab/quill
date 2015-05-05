@@ -136,60 +136,50 @@ describe('Toolbar', ->
     )
   )
 
-  describe('quill.deleteText()', ->
-    it('button', ->
+  describe('quill content methods', ->
+    beforeEach( ->
       @quill.setSelection(1, 1)
-      expect(dom(@button).hasClass('ql-active')).toBe(true)
+    )
 
+    it('deleteText()', ->
+      expect(dom(@button).hasClass('ql-active')).toBe(true)
       @quill.deleteText(0, 2)
       expect(dom(@button).hasClass('ql-active')).toBe(false)
     )
-  )
 
-  describe('quill content methods', ->
-    it('button', ->
+    it('insertEmbed()', ->
       @quill.addModule('image-tooltip', true)
       image = @toolbarContainer.querySelector('.ql-image')
-      @quill.setSelection(1, 1)
       expect(dom(@button).hasClass('ql-active')).toBe(true)
       expect(dom(image).hasClass('ql-active')).toBe(false)
-
       @quill.insertEmbed(1, 'image', 'http://quilljs.com/images/cloud.png')
       expect(dom(@button).hasClass('ql-active')).toBe(false)
       expect(dom(image).hasClass('ql-active')).toBe(false)
     )
 
-    it('button', ->
-      @quill.setSelection(1, 1)
+    it('insertText()', ->
       expect(dom(@button).hasClass('ql-active')).toBe(true)
-
       @quill.insertText(1, 'not-bold', 'bold', false)
       expect(dom(@button).hasClass('ql-active')).toBe(false)
     )
 
-    it('button', ->
-      @quill.setSelection(1, 1)
+    it('setText()', ->
       expect(dom(@button).hasClass('ql-active')).toBe(true)
-
       @quill.setText('plain text')
       expect(dom(@button).hasClass('ql-active')).toBe(false)
     )
 
-    it('button', ->
+    it('setHTML()', ->
       italic = @toolbarContainer.querySelector('.ql-italic')
-      @quill.setSelection(1, 1)
       expect(dom(@button).hasClass('ql-active')).toBe(true)
       expect(dom(italic).hasClass('ql-active')).toBe(false)
-
       @quill.setHTML('<i>italicized</i>')
       expect(dom(@button).hasClass('ql-active')).toBe(false)
       expect(dom(italic).hasClass('ql-active')).toBe(true)
     )
 
-    it('button', ->
-      @quill.setSelection(1, 1)
+    it('formatText()', ->
       expect(dom(@button).hasClass('ql-active')).toBe(true)
-
       @quill.formatText(0, 1, 'bold', false)
       expect(dom(@button).hasClass('ql-active')).toBe(false)
     )
