@@ -15,7 +15,7 @@ class Tooltip
     @container.innerHTML = @options.template
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
-      if source == 'user' and @container.style.left != Tooltip.HIDE_MARGIN
+      if @container.style.left != Tooltip.HIDE_MARGIN
         @range = null
         this.hide()
     )
