@@ -42,17 +42,17 @@ class Tooltip
     if reference?
       # Place tooltip under reference centered
       # reference might be selection range so must use getBoundingClientRect()
-      tooltipBounds = @container.getBoundingClientRect()
       referenceBounds = reference.getBoundingClientRect()
       parentBounds = @quill.container.getBoundingClientRect()
       offsetLeft = referenceBounds.left - parentBounds.left
       offsetTop = referenceBounds.top - parentBounds.top
-      left = offsetLeft + referenceBounds.width/2 - tooltipBounds.width/2
+      offsetBottom = referenceBounds.bottom - parentBounds.bottom
+      left = offsetLeft + referenceBounds.width/2 - @container.offsetWidth/2
       top = offsetTop + referenceBounds.height + @options.offset
-      if top + tooltipBounds.height > parentBounds.height
-        top = offsetTop - tooltipBounds.height - @options.offset
-      left = Math.max(-parentBounds.left, Math.min(left, parentBounds.width - tooltipBounds.width))
-      top = Math.max(-parentBounds.top, Math.min(top, parentBounds.height - tooltipBounds.height))
+      if top + @container.offsetHeight > @quill.container.offsetHeight
+        top = offsetTop - @container.offsetHeight - @options.offset
+      left = Math.max(0, Math.min(left, @quill.container.offsetWidth - @container.offsetWidth))
+      top = Math.max(0, Math.min(top, @quill.container.offsetHeight - @container.offsetHeight))
     else
       # Place tooltip in middle of editor viewport
       left = @quill.container.offsetWidth/2 - @container.offsetWidth/2
