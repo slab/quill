@@ -184,4 +184,16 @@ describe('Toolbar', ->
       expect(dom(@button).hasClass('ql-active')).toBe(false)
     )
   )
+
+  describe('embed button should become active when selecting', ->
+    it('an image', ->
+      @quill.addModule('image-tooltip', true)
+      image = @toolbarContainer.querySelector('.ql-image')
+
+      @quill.setSelection(0, 0)
+      @quill.insertEmbed(0, 'image', 'http://quilljs.com/images/cloud.png')
+      @quill.setSelection(0, 1)
+      expect(dom(image).hasClass('ql-active')).toBe(true)
+    )
+  )
 )

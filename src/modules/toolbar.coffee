@@ -1,6 +1,7 @@
 Quill = require('../quill')
-_     = Quill.require('lodash')
-dom   = Quill.require('dom')
+Format = require('../core/format')
+_ = Quill.require('lodash')
+dom = Quill.require('dom')
 
 
 class Toolbar
@@ -61,7 +62,6 @@ class Toolbar
     )
 
   setActive: (format, value) ->
-    value = false if format == 'image'  # TODO generalize to all embeds
     input = @inputs[format]
     return unless input?
     $input = dom(input)
@@ -117,7 +117,12 @@ class Toolbar
     else
       contents = @quill.getContents(range)
     formatsArr = _.map(contents.ops, 'attributes')
-    return this._intersectFormats(formatsArr)
+    activeFormats = this._intersectFormats(formatsArr)
+
+    if range.isCollapsed()
+      activeFormats = _.omit(activeFormats, (value, format) => return @quill.editor.doc.formats[format].isType(Format.types.EMBED))
+
+    return activeFormats
 
   _getLineActive: (range) ->
     formatsArr = []
