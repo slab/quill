@@ -68,7 +68,7 @@ Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Brow
 With the local server (`grunt server`) running you can try out some minimal examples on:
 
 - [localhost:9000/examples/index.html](http://localhost:9000/examples/index.html)
-- [localhost:9000/examples/advanced.html](http://localhost:9000/examples/advanced.html) 
+- [localhost:9000/examples/advanced.html](http://localhost:9000/examples/advanced.html)
 
 Quill [releases](https://github.com/quilljs/quill/releases) also contain these examples as built static files you can try without needing to run the local development server.
 
@@ -81,17 +81,15 @@ Quill [releases](https://github.com/quilljs/quill/releases) also contain these e
 Tests are run by [Karma](http://karma-runner.github.io/) and [Protractor](https://github.com/angular/protractor) using [Jasmine](http://jasmine.github.io/). Check out `Gruntfile.coffee` and `config/grunt/` for more testing options.
 
 
-## Community
+## Contributing
+
+### Community
 
 Get help or stay up to date.
 
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/quill) (tag with quill)
-- Visit the [discussion group](http://discuss.quilljs.com)
 - If a private channel is required, you may also email support@quilljs.com
-
-
-## Contributing
 
 ### Bug Reports
 
