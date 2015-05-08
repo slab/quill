@@ -340,7 +340,7 @@ describe('Editor', ->
     it('end of line', ->
       bounds = @editor.getBounds(2)
       expect(bounds.height).toBeApproximately(reference.normal.height, 1)
-      expect(bounds.left).toBeApproximately(2*reference.normal.width, 1)
+      expect(bounds.left).toBeApproximately(2*reference.normal.width, 2)
       expect(bounds.top).toBeApproximately(0, 1)
     )
 
@@ -360,7 +360,7 @@ describe('Editor', ->
 
     it('end of plain text start of formatted text', ->
       bounds = @editor.getBounds(5)
-      expect(bounds.left).toBeApproximately(2*reference.normal.width, 1)
+      expect(bounds.left).toBeApproximately(2*reference.normal.width, 2)
       # IE takes height of line
       if Quill.Lib.DOM.isIE(11)
         expect(bounds.height).toBeApproximately(reference.large.height, 1)
@@ -371,7 +371,7 @@ describe('Editor', ->
     it('end of formatted text start of plain text', ->
       bounds = @editor.getBounds(7)
       expect(bounds.height).toBeApproximately(reference.large.height, 1)
-      expect(bounds.left).toBeApproximately(2*reference.normal.width + 2*reference.large.width, 2)
+      expect(bounds.left).toBeApproximately(2*reference.normal.width + 2*reference.large.width, 3)
     )
 
     describe('with image', ->
