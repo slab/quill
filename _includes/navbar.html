@@ -20,13 +20,10 @@
         <li{% if page.url contains "/examples/" %} class="active"{% endif %}>
           <a href="/examples/" title="Examples">Examples</a>
         </li>
-        <li{% if page.url contains "/blog/" %} class="active"{% endif %}>
-          <a href="/blog/" title="Blog">Blog</a>
-        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="https://discuss.quilljs.com" title="Discuss">Discuss</a>
+        <li{% if page.url contains "/blog/" %} class="active"{% endif %}>
+          <a href="/blog/" title="Blog">Blog</a>
         </li>
         <li>
           <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true"></iframe>
