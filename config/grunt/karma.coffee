@@ -40,7 +40,7 @@ module.exports = (grunt) ->
       port: grunt.config('karmaPort')
     coverage:
       browserNoActivityTimeout: 30000
-      browsers: ['PhantomJS']
+      browsers: ['Chrome']
       reporters: ['coverage']
     local:
       browsers: ['Chrome', 'Firefox', 'Safari']
