@@ -35,7 +35,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ## Downloading Quill
 
-There are a number of ways to the latest or versioned copy of Quill.
+There are a number of ways to download the latest or versioned copy of Quill.
 
 - npm: `npm install quill`
 - bower: `bower install quill`
