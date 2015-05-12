@@ -16,9 +16,6 @@ class Keyboard
     @hotkeys = {}
     this._initListeners()
     this._initHotkeys()
-    @quill.onModuleLoad('toolbar', (toolbar) =>
-      @toolbar = toolbar
-    )
 
   addHotkey: (hotkeys, callback) ->
     hotkeys = [hotkeys] unless Array.isArray(hotkeys)
@@ -42,7 +39,6 @@ class Keyboard
       @quill.prepareFormat(format, value, Quill.sources.USER)
     else
       @quill.formatText(range, format, value, Quill.sources.USER)
-    @toolbar.setActive(format, value) if @toolbar?
 
   _initEnter: ->
     keys = [
@@ -57,7 +53,6 @@ class Keyboard
       @quill.updateContents(delta, Quill.sources.USER)
       _.each(leaf.formats, (value, format) =>
         @quill.prepareFormat(format, value)
-        @toolbar.setActive(format, value)
       )
       return false
     )
