@@ -31,6 +31,55 @@ describe('Keyboard', ->
     )
   )
 
+  describe('enter key', ->
+    beforeEach( ->
+      @container.innerHTML = '<div><div>01234</div></div>'
+      @quill = new Quill(@container.firstChild)
+      @keyboard = @quill.getModule('keyboard')
+      @enterKey = { key: dom.KEYS.ENTER }
+    )
+
+    it('inserts a newline', ->
+      @quill.setSelection(2, 2)
+      dom(@quill.root).trigger('keydown', @enterKey)
+      expect(@quill.root).toEqualHTML('<div>01</div><div>234</div>')
+    )
+
+    it('replaces selected text with a newline', ->
+      @quill.setSelection(2, 3)
+      dom(@quill.root).trigger('keydown', @enterKey)
+      expect(@quill.root).toEqualHTML('<div>01</div><div>34</div>')
+    )
+
+    it('inherits line formats when breaking a line in two', ->
+      @quill.formatText(5, 6, 'align', 'right')
+      @quill.setSelection(2, 2)
+      dom(@quill.root).trigger('keydown', @enterKey)
+      expect(@quill.root).toEqualHTML('<div style="text-align: right;">01</div><div style="text-align: right;">234</div>')
+    )
+
+    it('does not inherit line formats when inserting a blank line', ->
+      @quill.formatText(5, 6, 'align', 'right')
+      @quill.setSelection(5, 5)
+      dom(@quill.root).trigger('keydown', @enterKey)
+      expect(@quill.root).toEqualHTML('<div style="text-align: right;">01234</div><div><br></div>')
+    )
+
+    it('inherits line formats for formats with "inherit: true" specified', ->
+      @quill.formatText(5, 6, 'list', true)
+      @quill.setSelection(5, 5)
+      dom(@quill.root).trigger('keydown', @enterKey)
+      expect(@quill.root).toEqualHTML('<ol><li>01234</li><li><br></li></ol>')
+    )
+
+    it('removes the list format when starting from an empty line', ->
+      @quill.setHTML('<ol><li>one</li><li><br></li></ol>')
+      @quill.setSelection(4, 4)
+      dom(@quill.root).trigger('keydown', @enterKey)
+      expect(@quill.root).toEqualHTML('<ol><li>one</li></ol><div><br></div>')
+    )
+  )
+
   describe('hotkeys', ->
     beforeEach( ->
       @container.innerHTML = '<div><div>0123</div></div>'

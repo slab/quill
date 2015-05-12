@@ -55,19 +55,21 @@ class Keyboard
       [leaf, offset] = line.findLeafAt(offset)
       delta = new Delta().retain(range.start)
 
-      # hitting enter on an empty line formatted as a list should remove the format
+      # if on an empty line formatted as a list, remove the format
       if range.isCollapsed() and line.length == 1 and (line.formats.bullet or line.formats.list)
         delta.retain(1, { list: false, bullet: false })
       else
         delta.insert('\n', line.formats).delete(range.end - range.start)
 
+      # if creating a new empty line (was at the end of the old line),
       # remove line formats from the new line that should not be inherited
-      delta.retain(1, _.reduce(line.formats, (formats, value, name) =>
-        format = @quill.editor.doc.formats[name]
-        if format and format.isType('line') and !format.config.inherit
-          formats[name] = false
-        return formats
-      , {}))
+      if !leaf.next and offset == leaf.length
+        delta.retain(1, _.reduce(line.formats, (formats, value, name) =>
+          format = @quill.editor.doc.formats[name]
+          if format and format.isType('line') and !format.config.inherit
+            formats[name] = false
+          return formats
+        , {}))
 
       @quill.updateContents(delta, Quill.sources.USER)
       _.each(leaf.formats, (value, format) =>
