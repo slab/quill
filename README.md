@@ -74,9 +74,9 @@ Quill [releases](https://github.com/quilljs/quill/releases) also contain these e
 
 ### Testing
 
-    grunt test:unit - runs javascript test suite with chrome
+    grunt test:unit - runs javascript test suite with Chrome
     grunt test:e2e - runs end to end tests with Webdriver + Chrome
-    grunt test:coverage - run coverage tests using phantomjs
+    grunt test:coverage - run tests measuring coverage with Chrome
 
 Tests are run by [Karma](http://karma-runner.github.io/) and [Protractor](https://github.com/angular/protractor) using [Jasmine](http://jasmine.github.io/). Check out `Gruntfile.coffee` and `config/grunt/` for more testing options.
 
