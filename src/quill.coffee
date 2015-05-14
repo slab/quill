@@ -18,10 +18,10 @@ class Quill extends EventEmitter2
 
   @DEFAULTS:
     formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
-    modules:
-      'keyboard': true
-      'paste-manager': true
-      'undo-manager': true
+    modules: {}
+      # 'keyboard': true
+      # 'paste-manager': true
+      # 'undo-manager': true
     pollInterval: 100
     readOnly: false
     styles: {}
@@ -67,9 +67,10 @@ class Quill extends EventEmitter2
     @options.id = @id = "ql-editor-#{Quill.editors.length + 1}"
     @modules = {}
     @root = this.addContainer('ql-editor')
+    @root.innerHTML = html
     @editor = new Editor(@root, this, @options)
     Quill.editors.push(this)
-    this.setHTML(html, Quill.sources.SILENT)
+    # this.setHTML(html, Quill.sources.SILENT)
     themeClass = Quill.themes[@options.theme]
     throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
     @theme = new themeClass(this, @options)
@@ -108,10 +109,7 @@ class Quill extends EventEmitter2
     return @modules[name]
 
   deleteText: (start, end, source = Quill.sources.API) ->
-    [start, end, formats, source] = this._buildParams(start, end, {}, source)
-    return unless end > start
-    delta = new Delta().retain(start).delete(end - start)
-    @editor.applyDelta(delta, source)
+    @editor.deleteText(start, end - start, source)
 
   emit: (eventName, args...) ->
     super(Quill.events.PRE_EVENT, eventName, args...)
@@ -129,14 +127,7 @@ class Quill extends EventEmitter2
 
   formatText: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    formats = _.reduce(formats, (formats, value, name) =>
-      format = @editor.doc.formats[name]
-      # TODO warn if no format
-      formats[name] = null unless value and value != format.config.default     # false will be composed and kept in attributes
-      return formats
-    , formats)
-    delta = new Delta().retain(start).retain(end - start, formats)
-    @editor.applyDelta(delta, source)
+    @editor.formatText(start, end - start, name, value, source)
 
   getBounds: (index) ->
     return @editor.getBounds(index)
@@ -167,14 +158,12 @@ class Quill extends EventEmitter2
 
   insertEmbed: (index, type, url, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, type, url, source)
-    delta = new Delta().retain(index).insert(1, formats)
-    @editor.applyDelta(delta, source)
+    @editor.insertEmbed(index, type, url, source)
 
   insertText: (index, text, name, value, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
-    return unless text.length > 0
-    delta = new Delta().retain(index).insert(text, formats)
-    @editor.applyDelta(delta, source)
+    @editor.insertText(index, text, source)
+    # TODO formats
 
   onModuleLoad: (name, callback) ->
     if (@modules[name]) then return callback(@modules[name])
