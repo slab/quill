@@ -10,6 +10,7 @@ Italic = require('./formats/italic')
 Strike = require('./formats/strike')
 Underline = require('./formats/underline')
 
+Link = require('./formats/link')
 
 class Editor
   @sources:
