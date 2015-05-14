@@ -5,6 +5,11 @@ Line      = require('./line')
 Parchment = require('parchment')
 Selection = require('./selection')
 
+Bold = require('./formats/bold')
+Italic = require('./formats/italic')
+Strike = require('./formats/strike')
+Underline = require('./formats/underline')
+
 
 class Editor
   @sources:
@@ -32,7 +37,6 @@ class Editor
     @parchment.deleteAt(start, end - start)
 
   formatText: (start, end, name, value) ->
-    console.log('formatting', start, end, name, value)
     @parchment.formatAt(start, end - start, name, value)
 
   # destroy: ->

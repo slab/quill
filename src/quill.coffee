@@ -109,7 +109,7 @@ class Quill extends EventEmitter2
     return @modules[name]
 
   deleteText: (start, end, source = Quill.sources.API) ->
-    @editor.deleteText(start, end - start, source)
+    @editor.deleteText(start, end, source)
 
   emit: (eventName, args...) ->
     super(Quill.events.PRE_EVENT, eventName, args...)
@@ -127,7 +127,7 @@ class Quill extends EventEmitter2
 
   formatText: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    @editor.formatText(start, end - start, name, value, source)
+    @editor.formatText(start, end, name, value, source)
 
   getBounds: (index) ->
     return @editor.getBounds(index)
