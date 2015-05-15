@@ -65,7 +65,6 @@ In both cases of text and embeds, an optional `attributes` key can be defined wi
 {
   insert: 1,
   attributes: {
-    alt: "Lab Octocat",
     image: 'https://octodex.github.com/images/labtocat.png'
   }
 }
