@@ -119,7 +119,9 @@ footer li {
 #navigation-container a {
   color: #fff;
 }
-#navigation-container .nav > li.active > a, #navigation-container .nav > li > a:hover {
+#navigation-container .nav > li.active > a,
+#navigation-container .nav > li > a:hover,
+#navigation-container .nav > li > a:focus {
   background-color: #333;
 }
 
