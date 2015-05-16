@@ -10,7 +10,7 @@ class Toolbar
   @formats:
     LINE    : { 'align', 'bullet', 'list' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
-    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
+    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'subscript', 'superscript', 'underline' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
