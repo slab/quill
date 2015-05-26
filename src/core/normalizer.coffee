@@ -15,6 +15,7 @@ class Normalizer
     'EM'     : 'I'
     'DEL'    : 'S'
     'STRIKE' : 'S'
+    'CODE'   : 'CODE'
   }
 
   @ATTRIBUTES: {

@@ -24,6 +24,10 @@ class Format
       tag: 'S'
       prepare: 'strikeThrough'
 
+    code:
+      tag: 'CODE'
+      prepare: 'code'
+
     color:
       style: 'color'
       default: 'rgb(0, 0, 0)'
