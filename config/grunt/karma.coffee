@@ -47,6 +47,7 @@ module.exports = (grunt) ->
     server:
       autoWatch: true
       browsers: []
+      urlRoot: '/karma/'    # TODO move this back into karma.js as soon as urlRoot works for socket.io again
       singleRun: false
     test:
       browsers: ['Chrome']
