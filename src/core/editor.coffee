@@ -1,5 +1,6 @@
 _         = require('lodash')
 dom       = require('../lib/dom')
+Delta     = require('rich-text/lib/delta')
 Document  = require('./document')
 Line      = require('./line')
 Parchment = require('parchment')
@@ -9,7 +10,7 @@ Bold = require('./formats/bold')
 Italic = require('./formats/italic')
 Strike = require('./formats/strike')
 Underline = require('./formats/underline')
-
+Image = require('./formats/image')
 Link = require('./formats/link')
 
 class Editor
@@ -39,6 +40,24 @@ class Editor
 
   formatText: (start, end, name, value) ->
     @parchment.formatAt(start, end - start, name, value)
+
+  getContents: (start, end) ->
+    values = [].concat.apply([], @parchment.values())
+    formats = [].concat.apply([], @parchment.formats())
+    delta = new Delta()
+    return values.reduce((delta, value, index) ->
+      return delta.insert(value, formats[index])
+    , new Delta()).slice(start, end)
+
+  getLength: ->
+    return @parchment.length()
+
+  getText: (start, end) ->
+    values = [].concat.apply([], @parchment.values())
+    text = values.map((value) ->
+      return if _.isString(value) then value else dom.EMBED_TEXT
+    ).join('').slice(start, end)
+    return text
 
   # destroy: ->
   #   clearInterval(@timer)

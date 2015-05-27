@@ -9,13 +9,12 @@ class Image extends Parchment.Embed
     this.domNode.setAttribute('src', value.src)
     this.domNode.setAttribute('alt', value.alt) if value.alt?
 
+  formats: ->
+    format = super()
+    format.src = this.domNode.getAttribute('src')
+
   values: ->
-    value =
-      type: this.statics.nodeName
-      src: this.domNode.getAttribute('src')
-    if this.domNode.hasAttribute('alt')
-      value.alt = this.domNode.getAttribute('alt')
-    return value
+    return 1  # Quill embed type
 
 
 Parchment.define(Image)

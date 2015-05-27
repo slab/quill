@@ -132,17 +132,15 @@ class Quill extends EventEmitter2
   getBounds: (index) ->
     return @editor.getBounds(index)
 
-  getContents: (start = 0, end = null) ->
-    if _.isObject(start)
-      end = start.end
-      start = start.start
-    return @editor.delta.slice(start, end)
+  getContents: (start = 0, end = undefined) ->
+    [start, end] = this._buildParams(start, end)
+    return @editor.getContents(start, end)
 
   getHTML: ->
-    @editor.doc.getHTML()
+    @editor.getHTML()
 
   getLength: ->
-    return @editor.length
+    return @editor.getLength()
 
   getModule: (name) ->
     return @modules[name]
@@ -151,10 +149,9 @@ class Quill extends EventEmitter2
     @editor.checkUpdate()   # Make sure we access getRange with editor in consistent state
     return @editor.selection.getRange()
 
-  getText: (start = 0, end = null) ->
-    return _.map(this.getContents(start, end).ops, (op) ->
-      return if _.isString(op.insert) then op.insert else ''
-    ).join('')
+  getText: (start = 0, end = undefined) ->
+    [start, end] = this._buildParams(start, end)
+    return @editor.getText(start, end)
 
   insertEmbed: (index, type, url, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, type, url, source)
