@@ -3,6 +3,6 @@ Parchment = require('parchment')
 Underline = Parchment.define({
   nodeName: 'underline'
   tagName: 'U'
-}, Parchment.InlineNode)
+}, Parchment.Inline)
 
 module.exports = Underline

@@ -3,6 +3,6 @@ Parchment = require('parchment')
 Italic = Parchment.define({
   nodeName: 'italic'
   tagName: 'EM'
-}, Parchment.InlineNode)
+}, Parchment.Inline)
 
 module.exports = Italic

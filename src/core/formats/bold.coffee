@@ -3,6 +3,6 @@ Parchment = require('parchment')
 Bold = Parchment.define({
   nodeName: 'bold'
   tagName: 'STRONG'
-}, Parchment.InlineNode)
+}, Parchment.Inline)
 
 module.exports = Bold

@@ -4,11 +4,9 @@ Link = Parchment.define({
   nodeName: 'link'
   tagName: 'A'
   init: (value) ->
-    a = document.createElement(this.statics.tagName)
-    a.href = value
-    return a
+    this.domNode.href = value
   formats: ->
     return [this.domNode.href]
-}, Parchment.InlineNode)
+}, Parchment.Inline)
 
 module.exports = Link
