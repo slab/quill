@@ -2,9 +2,9 @@ Quill = require('../src/quill')
 
 Quill.Delta = require('rich-text/lib/delta')
 
-Quill.Editor     = require('../src/core/editor')
-Quill.Normalizer = require('../src/core/normalizer')
-Quill.Selection  = require('../src/core/selection')
+Quill.Editor     = require('../src/editor')
+Quill.Normalizer = require('../src/normalizer')
+Quill.Selection  = require('../src/selection')
 
 Quill.Lib =
   EventEmitter2 : require('eventemitter2').EventEmitter2

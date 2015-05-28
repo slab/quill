@@ -1,5 +1,5 @@
 _         = require('lodash')
-dom       = require('../lib/dom')
+dom       = require('./lib/dom')
 Delta     = require('rich-text/lib/delta')
 Parchment = require('parchment')
 Selection = require('./selection')

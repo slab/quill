@@ -3,8 +3,8 @@ pkg           = require('../package.json')
 Delta         = require('rich-text/lib/delta')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 dom           = require('./lib/dom')
-Editor        = require('./core/editor')
-Normalizer    = require('./core/normalizer')
+Editor        = require('./editor')
+Normalizer    = require('./normalizer')
 Range         = require('./lib/range')
 
 

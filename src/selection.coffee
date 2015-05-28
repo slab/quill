@@ -1,8 +1,8 @@
 _          = require('lodash')
-dom        = require('../lib/dom')
+dom        = require('./lib/dom')
 Normalizer = require('./normalizer')
 Parchment  = require('parchment')
-Range      = require('../lib/range')
+Range      = require('./lib/range')
 
 
 # TODO rename leaf/line to blot

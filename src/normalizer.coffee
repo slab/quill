@@ -1,5 +1,5 @@
 _   = require('lodash')
-dom = require('../lib/dom')
+dom = require('./lib/dom')
 
 
 camelize = (str) ->
