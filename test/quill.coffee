@@ -2,11 +2,7 @@ Quill = require('../src/quill')
 
 Quill.Delta = require('rich-text/lib/delta')
 
-Quill.Document   = require('../src/core/document')
 Quill.Editor     = require('../src/core/editor')
-Quill.Format     = require('../src/core/format')
-Quill.Leaf       = require('../src/core/leaf')
-Quill.Line       = require('../src/core/line')
 Quill.Normalizer = require('../src/core/normalizer')
 Quill.Selection  = require('../src/core/selection')
 

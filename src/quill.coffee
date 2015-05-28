@@ -4,7 +4,6 @@ Delta         = require('rich-text/lib/delta')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 dom           = require('./lib/dom')
 Editor        = require('./core/editor')
-Format        = require('./core/format')
 Normalizer    = require('./core/normalizer')
 Range         = require('./lib/range')
 
@@ -49,7 +48,6 @@ class Quill extends EventEmitter2
     switch name
       when 'lodash'     then return _
       when 'delta'      then return Delta
-      when 'format'     then return Format
       when 'normalizer' then return Normalizer
       when 'dom'        then return dom
       when 'range'      then return Range
