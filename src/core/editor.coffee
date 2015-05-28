@@ -10,8 +10,15 @@ Bold = require('./formats/bold')
 Italic = require('./formats/italic')
 Strike = require('./formats/strike')
 Underline = require('./formats/underline')
-Image = require('./formats/image')
 Link = require('./formats/link')
+
+Image = require('./formats/image')
+
+Background = require('./formats/background')
+Color = require('./formats/color')
+Font = require('./formats/font')
+Size = require('./formats/size')
+
 
 class Editor
   @sources:
