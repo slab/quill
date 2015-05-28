@@ -1,4 +1,5 @@
 _         = require('lodash')
+Delta     = require('rich-text/lib/delta')
 dom       = require('../lib/dom')
 Document  = require('./document')
 Line      = require('./line')
@@ -18,6 +19,10 @@ class Editor
     @length = @delta.length()
     @selection = new Selection(@doc, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
+    @savedRange = null;
+    @quill.on("selection-change", (range) =>
+      @savedRange = range
+    )
     this.enable() unless @options.readOnly
 
   destroy: ->
@@ -168,11 +173,22 @@ class Editor
     )
 
   _trackDelta: (fn) ->
+    oldIndex = @savedRange?.start
     fn()
     newDelta = @doc.toDelta()
-    # TODO need to get this to prefer earlier insertions
-    delta = @delta.diff(newDelta)
-    return delta
+    @savedRange = @selection.getRange()
+    newIndex = @savedRange?.start
+    try
+      if oldIndex? and newIndex? and oldIndex <= @delta.length() and newIndex <= newDelta.length()
+        oldLeftDelta = @delta.slice(0, oldIndex)
+        oldRightDelta = @delta.slice(oldIndex)
+        newLeftDelta = newDelta.slice(0, newIndex)
+        newRightDelta = newDelta.slice(newIndex)
+        diffLeft = oldLeftDelta.diff(newLeftDelta)
+        diffRight = oldRightDelta.diff(newRightDelta)
+        return new Delta(diffLeft.ops.concat(diffRight.ops))
+    catch ignored
+    return @delta.diff(newDelta)
 
   _update: ->
     return false if @innerHTML == @root.innerHTML
