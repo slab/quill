@@ -1,23 +1,21 @@
 _         = require('lodash')
 dom       = require('../lib/dom')
 Delta     = require('rich-text/lib/delta')
-Document  = require('./document')
-Line      = require('./line')
 Parchment = require('parchment')
 Selection = require('./selection')
 
-Bold = require('./formats/bold')
-Italic = require('./formats/italic')
-Strike = require('./formats/strike')
+Bold      = require('./formats/bold')
+Italic    = require('./formats/italic')
+Strike    = require('./formats/strike')
 Underline = require('./formats/underline')
-Link = require('./formats/link')
+Link      = require('./formats/link')
 
-Image = require('./formats/image')
+Image     = require('./formats/image')
 
 Background = require('./formats/background')
-Color = require('./formats/color')
-Font = require('./formats/font')
-Size = require('./formats/size')
+Color      = require('./formats/color')
+Font       = require('./formats/font')
+Size       = require('./formats/size')
 
 
 class Editor
@@ -29,24 +27,28 @@ class Editor
   constructor: (@root, @quill, @options = {}) ->
     @root.setAttribute('id', @options.id)
     @parchment = new Parchment(@root)
-    # @doc = new Document(@root, @options)
     # @delta = @doc.toDelta()
     # @length = @delta.length()
     @selection = new Selection(@parchment, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 
-  insertText: (index, text) ->
-    @parchment.insertAt(index, text)
+  insertText: (index, text, source) ->
+    @parchment.insertAt(index, text, source)
 
   insertEmbed: (index, embed, value) ->
     @parchment.insertAt(index, embed, value)
 
-  deleteText: (start, end) ->
+  deleteText: (start, end, source) ->
     @parchment.deleteAt(start, end - start)
 
-  formatText: (start, end, name, value) ->
-    @parchment.formatAt(start, end - start, name, value)
+  formatLine: (start, end, formats, source) ->
+    # TODO implement
+
+  formatText: (start, end, formats, source) ->
+    _.each(formats, (value, name) ->
+      @parchment.formatAt(start, end - start, name, value)
+    )
 
   getContents: (start, end) ->
     values = [].concat.apply([], @parchment.values())
@@ -93,30 +95,32 @@ class Editor
 
   getBounds: (index) ->
     # this.checkUpdate()
+    pos = _.last(@parchment.findPath(index))      # TODO inclusive
     # [leaf, offset] = @doc.findLeafAt(index, true)
-    # throw new Error('Invalid index') unless leaf?
-    # containerBounds = @root.parentNode.getBoundingClientRect()
-    # side = 'left'
-    # if leaf.length == 0   # BR case
-    #   bounds = leaf.node.parentNode.getBoundingClientRect()
-    # else if dom.VOID_TAGS[leaf.node.tagName]
-    #   bounds = leaf.node.getBoundingClientRect()
-    #   side = 'right' if offset == 1
-    # else
-    #   range = document.createRange()
-    #   if offset < leaf.length
-    #     range.setStart(leaf.node, offset)
-    #     range.setEnd(leaf.node, offset + 1)
-    #   else
-    #     range.setStart(leaf.node, offset - 1)
-    #     range.setEnd(leaf.node, offset)
-    #     side = 'right'
-    #   bounds = range.getBoundingClientRect()
-    # return {
-    #   height: bounds.height
-    #   left: bounds[side] - containerBounds.left
-    #   top: bounds.top - containerBounds.top
-    # }
+    throw new Error('Invalid index') unless pos?
+    leafNode = pos.blot.domNode
+    containerBounds = @root.parentNode.getBoundingClientRect()
+    side = 'left'
+    if pos.blot.length() == 0   # BR case
+      bounds = leafNode.parentNode.getBoundingClientRect()
+    else if dom.VOID_TAGS[leafNode.tagName]
+      bounds = leafNode.getBoundingClientRect()
+      side = 'right' if pos.offset == 1
+    else
+      range = document.createRange()
+      if pos.offset < pos.blot.length()
+        range.setStart(leafNode, pos.offset)
+        range.setEnd(leafNode, pos.offset + 1)
+      else
+        range.setStart(leafNode, pos.offset - 1)
+        range.setEnd(leafNode, pos.offset)
+        side = 'right'
+      bounds = range.getBoundingClientRect()
+    return {
+      height: bounds.height
+      left: bounds[side] - containerBounds.left
+      top: bounds.top - containerBounds.top
+    }
 
   # _trackDelta: (fn) ->
   #   fn()

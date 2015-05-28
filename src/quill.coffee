@@ -121,13 +121,11 @@ class Quill extends EventEmitter2
 
   formatLine: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    [line, offset] = @editor.doc.findLineAt(end)
-    end += (line.length - offset) if line?
-    this.formatText(start, end, formats, source)
+    @editor.formatLine(start, end, formats, source)
 
   formatText: (start, end, name, value, source) ->
     [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    @editor.formatText(start, end, name, value, source)
+    @editor.formatText(start, end, formats, source)
 
   getBounds: (index) ->
     return @editor.getBounds(index)
@@ -160,7 +158,7 @@ class Quill extends EventEmitter2
   insertText: (index, text, name, value, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
     @editor.insertText(index, text, source)
-    # TODO formats
+    @editor.formatText(index, index + text.length, formats, source)
 
   onModuleLoad: (name, callback) ->
     if (@modules[name]) then return callback(@modules[name])
