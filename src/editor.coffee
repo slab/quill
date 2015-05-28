@@ -43,7 +43,11 @@ class Editor
     @parchment.deleteAt(start, end - start)
 
   formatLine: (start, end, formats, source) ->
-    # TODO implement
+    @parchment.children.forEachAt(start, end - start, (line, offset) ->
+      _.each(formats, (value, name) ->
+        line.format(name, value)
+      )
+    )
 
   formatText: (start, end, formats, source) ->
     _.each(formats, (value, name) ->
