@@ -60,8 +60,7 @@ module.exports = (grunt) ->
     options:
       onCreateServer: (server, connect, options) ->
         connect.watchers = _.reduce(['src', 'test'], (watchers, type) ->
-          file = if type == 'src' then './src/index.coffee' else './test/quill.coffee'
-          b = browserify(file, browserifyOps)
+          b = browserify("./#{type}/quill.coffee", browserifyOps)
           watchers[type] = watchify(b)
           watchers[type].transform(coffeeify)
           watchers[type].transform(stylify)

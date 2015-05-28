@@ -7,6 +7,16 @@ Editor        = require('./editor')
 Normalizer    = require('./normalizer')
 Range         = require('./lib/range')
 
+require('./modules/authorship')
+require('./modules/image-tooltip')
+require('./modules/keyboard')
+require('./modules/link-tooltip')
+require('./modules/multi-cursor')
+require('./modules/paste-manager')
+require('./modules/toolbar')
+require('./modules/tooltip')
+require('./modules/undo-manager')
+
 
 class Quill extends EventEmitter2
   @version: pkg.version

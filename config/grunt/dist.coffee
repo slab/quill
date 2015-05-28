@@ -25,7 +25,7 @@ module.exports = (grunt) ->
           standalone: 'Quill'
         transform: ['coffeeify', 'stylify', versionify]
       files:
-        'dist/quill.js': ['src/index.coffee']
+        'dist/quill.js': ['src/quill.coffee']
   )
 
   grunt.config('clean',
