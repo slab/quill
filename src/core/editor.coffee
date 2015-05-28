@@ -32,7 +32,7 @@ class Editor
     # @doc = new Document(@root, @options)
     # @delta = @doc.toDelta()
     # @length = @delta.length()
-    # @selection = new Selection(@doc, @quill)
+    @selection = new Selection(@parchment, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 

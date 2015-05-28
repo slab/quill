@@ -1,19 +1,23 @@
 _          = require('lodash')
 dom        = require('../lib/dom')
-Leaf       = require('./leaf')
 Normalizer = require('./normalizer')
+Parchment  = require('parchment')
 Range      = require('../lib/range')
 
 
+# TODO rename leaf/line to blot
+
+
 class Selection
-  constructor: (@doc, @emitter) ->
+  constructor: (@parchment, @emitter) ->
+    @root = @parchment.domNode
     @focus = false
     @range = new Range(0, 0)
     @nullDelay = false
     this.update('silent')
 
   checkFocus: ->
-    return document.activeElement == @doc.root
+    return document.activeElement == @root
 
   getRange: (ignoreFocus = false) ->
     if this.checkFocus()
@@ -92,10 +96,10 @@ class Selection
         offset = 0
       else if node.childNodes.length == 0
         # TODO revisit fix for encoding edge case <p><em>|</em></p>
-        unless @doc.normalizer.whitelist.tags[node.tagName]?
-          text = document.createTextNode('')
-          node.appendChild(text)
-          node = text
+        # unless @doc.normalizer.whitelist.tags[node.tagName]?
+        #   text = document.createTextNode('')
+        #   node.appendChild(text)
+        #   node = text
         return [node, 0]
       else
         node = node.lastChild
@@ -111,32 +115,34 @@ class Selection
     selection = document.getSelection()
     if selection?.rangeCount > 0
       range = selection.getRangeAt(0)
-      if dom(range.startContainer).isAncestor(@doc.root, true)
-        if range.startContainer == range.endContainer or dom(range.endContainer).isAncestor(@doc.root, true)
+      if dom(range.startContainer).isAncestor(@root, true)
+        if range.startContainer == range.endContainer or dom(range.endContainer).isAncestor(@root, true)
           return range
     return null
 
   _indexToPosition: (index) ->
-    return [@doc.root, 0] if @doc.lines.length == 0
-    [leaf, offset] = @doc.findLeafAt(index, true)
-    return this._decodePosition(leaf.node, offset)
+    return [@root, 0] if @parchment.children.length == 0
+    pos = _.last(@parchment.findPath(index))
+    return this._decodePosition(pos.blot.domNode, pos.blot)
 
   _positionToIndex: (node, offset) ->
     offset = 0 if dom.isIE(10) and node.tagName == 'BR' and offset == 1
     [leafNode, offset] = this._encodePosition(node, offset)
-    line = @doc.findLine(leafNode)
+    leaf = Parchment.findBlot(leafNode)
+    line = leaf
+    while line.parent? and line.parent != @parchment
+      line = line.parent
     # TODO move to linked list
     return 0 unless line?   # Occurs on empty document
-    leaf = line.findLeaf(leafNode)
     lineOffset = 0
     while line.prev?
       line = line.prev
-      lineOffset += line.length
+      lineOffset += line.length()
     return lineOffset unless leaf?
     leafOffset = 0
     while leaf.prev?
       leaf = leaf.prev
-      leafOffset += leaf.length
+      leafOffset += leaf.length()
     return lineOffset + leafOffset + offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
@@ -145,7 +151,7 @@ class Selection
     if startNode?
       # Need to focus before setting or else in IE9/10 later focus will cause a set on 0th index on line div
       # to be set at 1st index
-      @doc.root.focus() unless this.checkFocus()
+      @root.focus() unless this.checkFocus()
       nativeRange = this._getNativeRange()
       if !nativeRange? or startNode != nativeRange.startContainer or startOffset != nativeRange.startOffset or endNode != nativeRange.endContainer or endOffset != nativeRange.endOffset
         # IE9 requires removeAllRanges() regardless of value of
@@ -157,7 +163,7 @@ class Selection
         selection.addRange(nativeRange)
     else
       selection.removeAllRanges()
-      @doc.root.blur()
+      @root.blur()
       # setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
       document.body.focus() if dom.isIE(11) and !dom.isIE(9)
 
