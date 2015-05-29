@@ -29,7 +29,8 @@ serve = (connect, req, res, next) ->
   watchers = connect.watchers
   if req.url.indexOf('/karma') == 0 or req.url.indexOf('/base') == 0
     return connect.karmaProxy.web(req, res)
-  switch req.url
+  url = if req.url.indexOf('/develop') == 0 then req.url.slice('/develop'.length) else req.url
+  switch url
     when '/quill.js'
       res.setHeader('Content-Type', 'application/javascript')
       bundle(watchers['src']).pipe(res)
@@ -37,7 +38,7 @@ serve = (connect, req, res, next) ->
       res.setHeader('Content-Type', 'application/javascript')
       bundle(watchers['test']).pipe(res)
     when '/quill.snow.css', '/quill.base.css'
-      theme = req.url.slice(7, 11)
+      theme = url.slice(7, 11)
       res.setHeader('Content-Type', 'text/css')
       fs.readFile("./src/themes/#{theme}/#{theme}.styl", (err, data) ->
         s = stylus(data.toString())
