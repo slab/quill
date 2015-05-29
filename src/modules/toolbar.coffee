@@ -39,11 +39,6 @@ class Toolbar
     )
     dom(@container).addClass('ql-toolbar')
     dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
-    if dom.isIE(11)
-      dom(@container).on('mousedown', =>
-        # IE destroys selection by default when we click away
-        return false
-      )
 
   initFormat: (format, callback) ->
     selector = ".ql-#{format}"
