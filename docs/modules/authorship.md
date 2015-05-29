@@ -13,7 +13,7 @@ The Authorship module highlights the background of text to show who wrote what.
   <div id="authorship-editor" class="editor"></div>
 </div>
 
-<script src="//cdn.quilljs.com/{{site.version}}/quill.js"></script>
+<script src="//{{site.cdn}}/{{site.version}}/quill.js"></script>
 <script>
 var editor = new Quill('#authorship-editor');
 

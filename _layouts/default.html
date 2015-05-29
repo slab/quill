@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/css/syntax.css">
     <link rel="stylesheet" href="/css/styles.css">
     {% if page.stylesheet %}
-    <link rel="stylesheet" href="{{ page.stylesheet | replace: '!site.version!', site.version }}">
+    <link rel="stylesheet" href="{{ page.stylesheet | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}">
     {% endif %}
     {% include analytics.html  %}
   </head>

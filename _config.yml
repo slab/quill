@@ -7,3 +7,4 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
 version: 0.19.12
+cdn: cdn.quilljs.com
