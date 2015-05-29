@@ -28,7 +28,7 @@ class Editor
     @root.setAttribute('id', @options.id)
     @parchment = new Parchment(@root)
     # @delta = @doc.toDelta()
-    # @length = @delta.length()
+    @length = @parchment.length()
     @selection = new Selection(@parchment, @quill)
     @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
@@ -92,10 +92,10 @@ class Editor
     # @selection.update(source)
 
   focus: ->
-    # if @selection.range?
-    #   @selection.setRange(@selection.range)
-    # else
-    #   @root.focus()
+    if @selection.range?
+      @selection.setRange(@selection.range)
+    else
+      @root.focus()
 
   getBounds: (index) ->
     # this.checkUpdate()
