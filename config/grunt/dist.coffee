@@ -70,6 +70,7 @@ module.exports = (grunt) ->
         'clone', 'extend', 'defaults', 'omit', 'values'
         'isElement', 'isEqual', 'isFunction', 'isNumber', 'isObject', 'isString'
         'uniqueId'
+        'omit'
       ]
       flags: ['development']
     target:
