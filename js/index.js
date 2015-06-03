@@ -10,9 +10,11 @@ $(document).ready(function() {
     theme: 'snow'
   });
 
-  $('.quill-wrapper').tooltip({ trigger: 'manual' });
+  // Bootstrap Toolbar has positioning but when showing manually when tooltip is offscreen
+  $('.quill-wrapper').tooltip({ trigger: 'manual', animation: false }).tooltip('show');
+  $('.quill-wrapper + .tooltip').hide();
   var tooltipTimer = setTimeout(function() {
-    $('.quill-wrapper').tooltip('show');
+    $('.quill-wrapper + .tooltip').fadeIn(1000);
   }, 2500);
 
   quill.once('selection-change', function(hasFocus) {
