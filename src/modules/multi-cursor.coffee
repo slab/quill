@@ -102,7 +102,7 @@ class MultiCursor extends EventEmitter2
 
   _updateCursor: (cursor) ->
     bounds = @quill.getBounds(cursor.index)
-    cursor.elem.style.top = (bounds.top - @quill.container.scrollTop) + 'px'
+    cursor.elem.style.top = (bounds.top + @quill.container.scrollTop) + 'px'
     cursor.elem.style.left = bounds.left + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')

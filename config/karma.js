@@ -15,7 +15,6 @@ var customLaunchers = _.reduce(browsers, function(memo, browser, name) {
 module.exports = function(config) {
   config.set({
     basePath: '../',
-    urlRoot: '/karma/',
     frameworks: ['jasmine'],
     coverageReporter: {
       type: 'json',
