@@ -18,6 +18,7 @@
     "glob": "~5.0.3",
     "grunt": "~0.4.5",
     "grunt-browserify": "~3.8.0",
+    "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-coffee": "~0.13.0",
     "grunt-contrib-compress": "~0.13.0",
