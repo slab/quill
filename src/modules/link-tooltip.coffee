@@ -6,6 +6,10 @@ dom     = Quill.require('dom')
 class LinkTooltip extends Tooltip
   @DEFAULTS:
     maxLength: 50
+    normalizeURL: (url) ->
+      if not /^(https?:\/\/|mailto:)/.test(url)
+        url = 'http://' + url
+      return url
     template:
      '<span class="title">Visit URL:&nbsp;</span>
       <a href="#" class="url" target="_blank" href="about:blank"></a>
@@ -54,7 +58,7 @@ class LinkTooltip extends Tooltip
     )
 
   saveLink: ->
-    url = this._normalizeURL(@textbox.value)
+    url = @options.normalizeURL(@textbox.value)
     if @range?
       end = @range.end
       if @range.isCollapsed()
@@ -118,13 +122,13 @@ class LinkTooltip extends Tooltip
       nativeRange = @quill.editor.selection._getNativeRange()
       this.show(nativeRange)
 
-  _normalizeURL: (url) ->
+  _defaultNormalizeURL: (url) ->
     url = 'http://' + url unless /^(https?:\/\/|mailto:)/.test(url)
     return url
 
   _suggestURL: (range) ->
     text = @quill.getText(range)
-    return this._normalizeURL(text)
+    return @options.normalizeURL(text)
 
 
 Quill.registerModule('link-tooltip', LinkTooltip)
