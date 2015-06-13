@@ -14,6 +14,7 @@
     "browserify": "~10.2.1",
     "coffee-script": "~1.9.0",
     "coffeeify": "~1.1.0",
+    "derequire": "~2.0.0",
     "eventemitter2": "~0.4.14",
     "glob": "~5.0.3",
     "grunt": "~0.4.5",
