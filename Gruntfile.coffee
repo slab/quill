@@ -25,7 +25,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('dev', ['connect:server', 'karma:server'])
 
-  grunt.registerTask('dist', ['clean', 'lodash', 'browserify', 'uglify', 'stylus', 'concat'])
+  grunt.registerTask('dist', ['clean', 'lodash', 'browserify', 'derequire', 'uglify', 'stylus', 'concat'])
   grunt.registerTask('release', ['dist', 'examples', 'copy', 'compress'])
 
   grunt.registerTask('server', ['connect:server:keepalive'])
