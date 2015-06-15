@@ -70,7 +70,7 @@ class Editor
     return clearInterval(@timer) unless @root.parentNode?
     delta = this._update()
     if delta
-      @delta.compose(delta)
+      @delta = @delta.compose(delta)
       @length = @delta.length()
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = Editor.sources.SILENT if delta

@@ -203,6 +203,19 @@ describe('Quill', ->
       bold.insertBefore(document.createTextNode('a'), bold.lastChild)
       @quill.editor.checkUpdate()
     )
+
+    it('immutability', (done) ->
+      @quill.setHTML('<div>123</div>')
+      expected = new Quill.Delta().insert('0')
+      @quill.once('text-change', (delta) =>
+        expect(delta).toEqualDelta(expected)
+        delta.compose(new Quill.Delta().insert('^'))
+      ).once('text-change', (delta) =>
+        expect(delta).toEqualDelta(expected)
+        done()
+      )
+      @quill.insertText(0, '0')
+    )
   )
 
   describe('_buildParams()', ->

@@ -21,7 +21,7 @@ class PasteManager
       lengthAdded = Math.max(0, delta.length() - 1)
       if lengthAdded > 0
         # Need to remove trailing newline so paste is inline, losing format is expected and observed in Word
-        delta.compose(new Delta().retain(lengthAdded).delete(1))
+        delta = delta.compose(new Delta().retain(lengthAdded).delete(1))
         delta.ops.unshift({ retain: range.start }) if range.start > 0
         delta.delete(range.end - range.start)
         @quill.updateContents(delta, 'user')

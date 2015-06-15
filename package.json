@@ -50,7 +50,7 @@
     "lodash": "~3.9.1",
     "lodash-cli": "~3.9.3",
     "protractor": "~1.8.0",
-    "rich-text": "~1.1.0",
+    "rich-text": "~2.0.0",
     "stylify": "~1.0.0",
     "stylus": "~0.51.1",
     "through": "~2.3.7",
