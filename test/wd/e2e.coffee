@@ -37,11 +37,11 @@ describe('Editing text', ->
 
   it('enter', ->
     editor.sendKeys(protractor.Key.RETURN)
-    expectedDelta = { ops: [{ retain: 10 }, { insert: '\n' }] }
+    expectedDelta = { ops: [{ retain: 9 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
 
     editor.sendKeys(protractor.Key.RETURN)
-    expectedDelta = { ops: [{ retain: 11 }, { insert: '\n' }] }
+    expectedDelta = { ops: [{ retain: 10 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
 
     text = 'Chapter 1. Loomings.'
@@ -54,7 +54,7 @@ describe('Editing text', ->
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
 
     editor.sendKeys(protractor.Key.RETURN)
-    expectedDelta = { ops: [{ retain: 32 }, { insert: '\n' }] }
+    expectedDelta = { ops: [{ retain: 31 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
     expect(editor.getInnerHtml().then(cleanLines)).toEqual([
       '<div>The Whale</div>'
