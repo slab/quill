@@ -178,6 +178,33 @@ describe('Quill', ->
     )
   )
 
+  describe('events', ->
+    it('format middle', (done) ->
+      @quill.setHTML('<div><b>a</b><i>b</i><u>c</u></div>')
+      @quill.editor.checkUpdate()
+      @quill.setSelection(1, 2)
+      @quill.on('text-change', (delta) ->
+        expect(delta).toEqualDelta(new Quill.Delta().retain(1).retain(1, { strike: true }))
+        done()
+      )
+      $('i', @quill.root).wrap('<s></s>')
+      @quill.editor.checkUpdate()
+    )
+
+    it('ambiguous insert', (done) ->
+      @quill.setHTML('<div><b>a</b><i>a</i><u>a</u></div>')
+      @quill.editor.checkUpdate()
+      @quill.setSelection(1, 1)
+      @quill.on('text-change', (delta) ->
+        expect(delta).toEqualDelta(new Quill.Delta().retain(1).insert('a', { bold: true }))
+        done()
+      )
+      bold = @quill.root.querySelector('b')
+      bold.insertBefore(document.createTextNode('a'), bold.lastChild)
+      @quill.editor.checkUpdate()
+    )
+  )
+
   describe('_buildParams()', ->
     tests =
       'index range string formats'  : [1, 3, 'bold', true]
