@@ -70,7 +70,7 @@ class Editor
     return clearInterval(@timer) unless @root.parentNode?
     delta = this._update()
     if delta
-      @delta.compose(delta)
+      @delta = @delta.compose(delta)
       @length = @delta.length()
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = Editor.sources.SILENT if delta
@@ -180,13 +180,12 @@ class Editor
     newIndex = @savedRange?.start
     try
       if oldIndex? and newIndex? and oldIndex <= @delta.length() and newIndex <= newDelta.length()
-        oldLeftDelta = @delta.slice(0, oldIndex)
         oldRightDelta = @delta.slice(oldIndex)
-        newLeftDelta = newDelta.slice(0, newIndex)
         newRightDelta = newDelta.slice(newIndex)
-        diffLeft = oldLeftDelta.diff(newLeftDelta)
-        diffRight = oldRightDelta.diff(newRightDelta)
-        return new Delta(diffLeft.ops.concat(diffRight.ops))
+        if _.isEqual(oldRightDelta.ops, newRightDelta.ops)
+          oldLeftDelta = @delta.slice(0, oldIndex)
+          newLeftDelta = newDelta.slice(0, newIndex)
+          return oldLeftDelta.diff(newLeftDelta)
     catch ignored
     return @delta.diff(newDelta)
 

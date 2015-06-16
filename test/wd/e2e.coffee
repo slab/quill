@@ -1,9 +1,3 @@
-cleanLines = (html) ->
-  html = html.replace(/\ class\="ql-line"/g, '')
-  html = html.replace(/\ id\="ql-line-\d+"/g, '')
-  return html
-
-
 describe('Editing text', ->
   browser.get('/test/fixtures/e2e.html')
   startRange = element(By.id('start-range'))
@@ -14,18 +8,27 @@ describe('Editing text', ->
   updateEditor = ->
     browser.executeScript('quill.editor.checkUpdate()')
 
+
+  ###
+  Not sure why a trailing `browser.call( -> )` is necessary but:
+    - Without it a click handler is not triggered before updateEditor's
+    - A browser call is necessary, element call is insufficient
+    - executeAsyncScript + timeouts do not work
+    - A click handler on a textarea that changes startRange to 0 works
+  ###
   it('initial focus', ->
     editor.click()
     updateEditor()
     expect(startRange.getText()).toEqual('0')
     expect(endRange.getText()).toEqual('0')
+    browser.call( -> )
   )
 
   it('simple characters', ->
     text = 'The Whale'
     editor.sendKeys(text)
     updateEditor()
-    expect(editor.getInnerHtml().then(cleanLines)).toEqual("<div>#{text}</div>")
+    expect(editor.getInnerHtml()).toEqual("<div>#{text}</div>")
     expectedDelta = {
       ops: [{ insert: text }]
     }
@@ -33,15 +36,16 @@ describe('Editing text', ->
     # Selection should not change due to typing
     expect(startRange.getText()).toEqual('0')
     expect(endRange.getText()).toEqual('0')
+    browser.call( -> )
   )
 
   it('enter', ->
     editor.sendKeys(protractor.Key.RETURN)
-    expectedDelta = { ops: [{ retain: 10 }, { insert: '\n' }] }
+    expectedDelta = { ops: [{ retain: 9 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
 
     editor.sendKeys(protractor.Key.RETURN)
-    expectedDelta = { ops: [{ retain: 11 }, { insert: '\n' }] }
+    expectedDelta = { ops: [{ retain: 10 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
 
     text = 'Chapter 1. Loomings.'
@@ -54,14 +58,15 @@ describe('Editing text', ->
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
 
     editor.sendKeys(protractor.Key.RETURN)
-    expectedDelta = { ops: [{ retain: 32 }, { insert: '\n' }] }
+    expectedDelta = { ops: [{ retain: 31 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
-    expect(editor.getInnerHtml().then(cleanLines)).toEqual([
+    expect(editor.getInnerHtml()).toEqual([
       '<div>The Whale</div>'
       '<div><br></div>'
       "<div>#{text}</div>"
       '<div><br></div>'
     ].join(''))
+    browser.call( -> )
   )
 
   it('tab', ->
@@ -70,7 +75,7 @@ describe('Editing text', ->
     editor.sendKeys(protractor.Key.RETURN, protractor.Key.TAB, text1)
     editor.sendKeys(protractor.Key.RETURN, protractor.Key.RETURN, text2)
     updateEditor()
-    expect(editor.getInnerHtml().then(cleanLines)).toEqual([
+    expect(editor.getInnerHtml()).toEqual([
       '<div>The Whale</div>'
       '<div><br></div>'
       '<div>Chapter 1. Loomings.</div>'
@@ -79,6 +84,7 @@ describe('Editing text', ->
       '<div><br></div>'
       "<div>#{text2}</div>"
     ].join(''))
+    browser.call( -> )
   )
 
   it('move cursor', ->
@@ -98,6 +104,7 @@ describe('Editing text', ->
     updateEditor()
     expect(startRange.getText()).toEqual('4')
     expect(endRange.getText()).toEqual('4')
+    browser.call( -> )
   )
 
   it('backspace', ->
@@ -106,7 +113,8 @@ describe('Editing text', ->
     )
     updateEditor()
     firstLine = element.all(By.css('.ql-editor div')).first()
-    expect(firstLine.getOuterHtml().then(cleanLines)).toEqual('<div>Whale</div>')
+    expect(firstLine.getOuterHtml()).toEqual('<div>Whale</div>')
+    browser.call( -> )
   )
 
   it('delete', ->
@@ -115,16 +123,18 @@ describe('Editing text', ->
     )
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
+    expect(lines.get(0).getOuterHtml()).toEqual('<div><br></div>')
+    expect(lines.get(1).getOuterHtml()).toEqual('<div><br></div>')
+    browser.call( -> )
   )
 
   it('delete newline', ->
     editor.sendKeys(protractor.Key.DELETE)
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div>Chapter 1. Loomings.</div>')
+    expect(lines.get(0).getOuterHtml()).toEqual('<div><br></div>')
+    expect(lines.get(1).getOuterHtml()).toEqual('<div>Chapter 1. Loomings.</div>')
+    browser.call( -> )
   )
 
   it('preformat', ->
@@ -134,13 +144,14 @@ describe('Editing text', ->
     editor.sendKeys(text)
     updateEditor()
     firstLine = element.all(By.css('.ql-editor div')).first()
-    expect(firstLine.getOuterHtml().then(cleanLines)).toEqual(
+    expect(firstLine.getOuterHtml()).toEqual(
       "<div><span style=\"font-size: 32px;\">#{text}</span></div>"
     )
     expectedDelta = {
       ops: [{ attributes: { size: '32px' }, insert: text }]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.call( -> )
   )
 
   it('hotkey format', ->
@@ -154,7 +165,7 @@ describe('Editing text', ->
     editor.sendKeys(protractor.Key.chord(protractor.Key.META, 'b'))
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual(
+    expect(lines.get(1).getOuterHtml()).toEqual(
       '<div><b>Chapter 1. Loomings.</b></div>'
     )
     expectedDelta = {
@@ -164,6 +175,7 @@ describe('Editing text', ->
       ]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.call( -> )
   )
 
   it('line format', ->
@@ -176,10 +188,10 @@ describe('Editing text', ->
     element(By.cssContainingText('.ql-align option', 'Center')).click()
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual(
+    expect(lines.get(0).getOuterHtml()).toEqual(
       '<div style="text-align: center;"><span style="font-size: 32px;">Moby Dick</span></div>'
     )
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual(
+    expect(lines.get(1).getOuterHtml()).toEqual(
       '<div style="text-align: center;"><b>Chapter 1. Loomings.</b></div>'
     )
     expectedDelta = {
@@ -191,6 +203,7 @@ describe('Editing text', ->
       ]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.call( -> )
   )
 
   it('blur', ->
@@ -199,5 +212,6 @@ describe('Editing text', ->
     updateEditor()
     expect(startRange.getText()).toEqual('')
     expect(endRange.getText()).toEqual('')
+    browser.call( -> )
   )
 )

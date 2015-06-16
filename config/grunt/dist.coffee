@@ -1,3 +1,4 @@
+derequire = require('derequire/plugin')
 fs = require('fs')
 through = require('through')
 
@@ -24,6 +25,7 @@ module.exports = (grunt) ->
           extensions: ['.js', '.coffee']
           standalone: 'Quill'
         transform: ['coffeeify', 'stylify', versionify]
+        plugin: [derequire]
       files:
         'dist/quill.js': ['src/index.coffee']
   )
