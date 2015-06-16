@@ -1,3 +1,5 @@
+_ = require('lodash')
+derequire = require('derequire/plugin')
 fs = require('fs')
 through = require('through')
 
@@ -17,15 +19,26 @@ versionify = (file) ->
 
 
 module.exports = (grunt) ->
+  browserifyOptions =
+    browserifyOptions:
+      extensions: ['.js', '.coffee']
+      standalone: 'Quill'
+    transform: ['coffeeify', 'stylify', versionify]
+    plugin: [derequire]
+
   grunt.config('browserify',
     quill:
-      options:
-        browserifyOptions:
-          extensions: ['.js', '.coffee']
-          standalone: 'Quill'
-        transform: ['coffeeify', 'stylify', versionify]
+      options: browserifyOptions
       files:
         'dist/quill.js': ['src/index.coffee']
+    bare:
+      options: ((options) ->
+          options = _.clone(options)
+          options.browserifyOptions = _.defaults({ bundleExternal: false }, options.browserifyOptions)
+          return options
+        )(browserifyOptions)
+      files:
+        'dist/quill.bare.js': ['src/index.coffee']
   )
 
   grunt.config('clean',
@@ -56,18 +69,10 @@ module.exports = (grunt) ->
       files:
         'dist/quill.js': ['dist/quill.js']
         'dist/quill.min.js': ['dist/quill.min.js']
+        'dist/quill.bare.js': ['dist/quill.bare.js']
+        'dist/quill.bare.min.js': ['dist/quill.bare.min.js']
         'dist/quill.base.css': ['dist/quill.base.css']
         'dist/quill.snow.css': ['dist/quill.snow.css']
-  )
-
-  grunt.registerTask('derequire', ->
-    done = this.async()
-    grunt.util.spawn(
-      cmd: './node_modules/.bin/derequire'
-      args: ['dist/quill.js']
-    , (err, result, code) ->
-      fs.writeFile('dist/quill.js', result.stdout, done)
-    )
   )
 
   grunt.config('lodash',
@@ -104,6 +109,8 @@ module.exports = (grunt) ->
 
   grunt.config('uglify',
     quill:
-      files: { 'dist/quill.min.js': ['dist/quill.js'] }
+      files:
+        'dist/quill.min.js': ['dist/quill.js']
+        'dist/quill.bare.min.js': ['dist/quill.bare.js']
   )
 
