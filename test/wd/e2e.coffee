@@ -14,11 +14,19 @@ describe('Editing text', ->
   updateEditor = ->
     browser.executeScript('quill.editor.checkUpdate()')
 
+
+  ###
+  Not sure why a trailing `browser.call( -> )` is necessary but:
+    - Without it a click handler is not triggered before updateEditor's
+    - A browser call is necessary, element call is insufficient
+    - A click handler on a textarea that changes startRange to 0 works
+  ###
   it('initial focus', ->
     editor.click()
     updateEditor()
     expect(startRange.getText()).toEqual('0')
     expect(endRange.getText()).toEqual('0')
+    browser.call( -> )
   )
 
   it('simple characters', ->
@@ -33,6 +41,7 @@ describe('Editing text', ->
     # Selection should not change due to typing
     expect(startRange.getText()).toEqual('0')
     expect(endRange.getText()).toEqual('0')
+    browser.call( -> )
   )
 
   it('enter', ->
@@ -62,6 +71,7 @@ describe('Editing text', ->
       "<div>#{text}</div>"
       '<div><br></div>'
     ].join(''))
+    browser.call( -> )
   )
 
   it('tab', ->
@@ -79,6 +89,7 @@ describe('Editing text', ->
       '<div><br></div>'
       "<div>#{text2}</div>"
     ].join(''))
+    browser.call( -> )
   )
 
   it('move cursor', ->
@@ -98,6 +109,7 @@ describe('Editing text', ->
     updateEditor()
     expect(startRange.getText()).toEqual('4')
     expect(endRange.getText()).toEqual('4')
+    browser.call( -> )
   )
 
   it('backspace', ->
@@ -107,6 +119,7 @@ describe('Editing text', ->
     updateEditor()
     firstLine = element.all(By.css('.ql-editor div')).first()
     expect(firstLine.getOuterHtml().then(cleanLines)).toEqual('<div>Whale</div>')
+    browser.call( -> )
   )
 
   it('delete', ->
@@ -117,6 +130,7 @@ describe('Editing text', ->
     lines = element.all(By.css('.ql-editor div'))
     expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
     expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
+    browser.call( -> )
   )
 
   it('delete newline', ->
@@ -125,6 +139,7 @@ describe('Editing text', ->
     lines = element.all(By.css('.ql-editor div'))
     expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
     expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div>Chapter 1. Loomings.</div>')
+    browser.call( -> )
   )
 
   it('preformat', ->
@@ -141,6 +156,7 @@ describe('Editing text', ->
       ops: [{ attributes: { size: '32px' }, insert: text }]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.call( -> )
   )
 
   it('hotkey format', ->
@@ -164,6 +180,7 @@ describe('Editing text', ->
       ]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.call( -> )
   )
 
   it('line format', ->
@@ -191,6 +208,7 @@ describe('Editing text', ->
       ]
     }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
+    browser.call( -> )
   )
 
   it('blur', ->
@@ -199,5 +217,6 @@ describe('Editing text', ->
     updateEditor()
     expect(startRange.getText()).toEqual('')
     expect(endRange.getText()).toEqual('')
+    browser.call( -> )
   )
 )
