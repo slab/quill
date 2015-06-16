@@ -19,6 +19,7 @@ describe('Editing text', ->
   Not sure why a trailing `browser.call( -> )` is necessary but:
     - Without it a click handler is not triggered before updateEditor's
     - A browser call is necessary, element call is insufficient
+    - executeAsyncScript + timeouts do not work
     - A click handler on a textarea that changes startRange to 0 works
   ###
   it('initial focus', ->
