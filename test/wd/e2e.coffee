@@ -1,9 +1,3 @@
-cleanLines = (html) ->
-  html = html.replace(/\ class\="ql-line"/g, '')
-  html = html.replace(/\ id\="ql-line-\d+"/g, '')
-  return html
-
-
 describe('Editing text', ->
   browser.get('/test/fixtures/e2e.html')
   startRange = element(By.id('start-range'))
@@ -34,7 +28,7 @@ describe('Editing text', ->
     text = 'The Whale'
     editor.sendKeys(text)
     updateEditor()
-    expect(editor.getInnerHtml().then(cleanLines)).toEqual("<div>#{text}</div>")
+    expect(editor.getInnerHtml()).toEqual("<div>#{text}</div>")
     expectedDelta = {
       ops: [{ insert: text }]
     }
@@ -66,7 +60,7 @@ describe('Editing text', ->
     editor.sendKeys(protractor.Key.RETURN)
     expectedDelta = { ops: [{ retain: 31 }, { insert: '\n' }] }
     expect(deltaOutput.getText()).toEqual(JSON.stringify(expectedDelta))
-    expect(editor.getInnerHtml().then(cleanLines)).toEqual([
+    expect(editor.getInnerHtml()).toEqual([
       '<div>The Whale</div>'
       '<div><br></div>'
       "<div>#{text}</div>"
@@ -81,7 +75,7 @@ describe('Editing text', ->
     editor.sendKeys(protractor.Key.RETURN, protractor.Key.TAB, text1)
     editor.sendKeys(protractor.Key.RETURN, protractor.Key.RETURN, text2)
     updateEditor()
-    expect(editor.getInnerHtml().then(cleanLines)).toEqual([
+    expect(editor.getInnerHtml()).toEqual([
       '<div>The Whale</div>'
       '<div><br></div>'
       '<div>Chapter 1. Loomings.</div>'
@@ -119,7 +113,7 @@ describe('Editing text', ->
     )
     updateEditor()
     firstLine = element.all(By.css('.ql-editor div')).first()
-    expect(firstLine.getOuterHtml().then(cleanLines)).toEqual('<div>Whale</div>')
+    expect(firstLine.getOuterHtml()).toEqual('<div>Whale</div>')
     browser.call( -> )
   )
 
@@ -129,8 +123,8 @@ describe('Editing text', ->
     )
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
+    expect(lines.get(0).getOuterHtml()).toEqual('<div><br></div>')
+    expect(lines.get(1).getOuterHtml()).toEqual('<div><br></div>')
     browser.call( -> )
   )
 
@@ -138,8 +132,8 @@ describe('Editing text', ->
     editor.sendKeys(protractor.Key.DELETE)
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual('<div><br></div>')
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual('<div>Chapter 1. Loomings.</div>')
+    expect(lines.get(0).getOuterHtml()).toEqual('<div><br></div>')
+    expect(lines.get(1).getOuterHtml()).toEqual('<div>Chapter 1. Loomings.</div>')
     browser.call( -> )
   )
 
@@ -150,7 +144,7 @@ describe('Editing text', ->
     editor.sendKeys(text)
     updateEditor()
     firstLine = element.all(By.css('.ql-editor div')).first()
-    expect(firstLine.getOuterHtml().then(cleanLines)).toEqual(
+    expect(firstLine.getOuterHtml()).toEqual(
       "<div><span style=\"font-size: 32px;\">#{text}</span></div>"
     )
     expectedDelta = {
@@ -171,7 +165,7 @@ describe('Editing text', ->
     editor.sendKeys(protractor.Key.chord(protractor.Key.META, 'b'))
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual(
+    expect(lines.get(1).getOuterHtml()).toEqual(
       '<div><b>Chapter 1. Loomings.</b></div>'
     )
     expectedDelta = {
@@ -194,10 +188,10 @@ describe('Editing text', ->
     element(By.cssContainingText('.ql-align option', 'Center')).click()
     updateEditor()
     lines = element.all(By.css('.ql-editor div'))
-    expect(lines.get(0).getOuterHtml().then(cleanLines)).toEqual(
+    expect(lines.get(0).getOuterHtml()).toEqual(
       '<div style="text-align: center;"><span style="font-size: 32px;">Moby Dick</span></div>'
     )
-    expect(lines.get(1).getOuterHtml().then(cleanLines)).toEqual(
+    expect(lines.get(1).getOuterHtml()).toEqual(
       '<div style="text-align: center;"><b>Chapter 1. Loomings.</b></div>'
     )
     expectedDelta = {
