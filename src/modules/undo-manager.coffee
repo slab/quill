@@ -51,8 +51,8 @@ class UndoManager
       timestamp = new Date().getTime()
       if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
         change = @stack.undo.pop()
-        undoDelta = undoDelta.compose(change.undo)
-        changeDelta = change.redo.compose(changeDelta)
+        undoDelta = new Delta().compose(undoDelta).compose(change.undo)
+        changeDelta = new Delta().compose(change.redo).compose(changeDelta)
       else
         @lastRecorded = timestamp
       @stack.undo.push({
