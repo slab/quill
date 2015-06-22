@@ -1,5 +1,5 @@
-var CHROME_VERSION = '42';
-var FIREFOX_VERSION = '37';
+var CHROME_VERSION = '43';
+var FIREFOX_VERSION = '38';
 var SAFARI_VERSION = '8';
 var IOS_VERSION = ' 8.2';       // Workaround for optimist converting to float
 var ANDROID_VERSION = ' 5.1';
@@ -19,8 +19,8 @@ var browsers = {
   'linux-chrome'    : ['Linux', 'chrome', CHROME_VERSION],
   'linux-firefox'   : ['Linux', 'firefox', FIREFOX_VERSION],
 
-  'iphone'  : ['Mac 10.9', 'iphone', IOS_VERSION],
-  'ipad'    : ['Mac 10.9', 'ipad', IOS_VERSION],
+  'iphone'  : ['Mac 10.10', 'iphone', IOS_VERSION],
+  'ipad'    : ['Mac 10.10', 'ipad', IOS_VERSION],
   'android' : ['Linux', 'android', ANDROID_VERSION]
 };
 
