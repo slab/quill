@@ -223,12 +223,8 @@ footer li {
 #features-container {
   background-color: inherit;
   font-size: 16px;
-  padding-bottom: 40px;
-  padding-top: 10px;
+  margin-top: 20px;
   text-align: center;
-}
-#features-container h3 {
-  margin-top: 10px;
 }
 #features-container hr {
   border-color: #e8e8e8;
@@ -236,12 +232,18 @@ footer li {
 #features-container img {
   margin: 0px auto 10px;
 }
-#features-container .container p {
+#features-container p {
   margin-left: 25px;
   margin-right: 25px;
 }
 
+#customer-container {
+  margin-bottom: 40px;
+  margin-top: 25px;
+}
+
 #download-container {
+  margin-bottom: 40px;
   margin-top: 40px;
 }
 #download-container .btn-lg {
