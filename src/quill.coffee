@@ -3,6 +3,7 @@ pkg           = require('../package.json')
 Delta         = require('rich-text/lib/delta')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 dom           = require('./lib/dom')
+Document      = require('./core/document')
 Editor        = require('./core/editor')
 Format        = require('./core/format')
 Normalizer    = require('./core/normalizer')
@@ -52,6 +53,7 @@ class Quill extends EventEmitter2
       when 'format'     then return Format
       when 'normalizer' then return Normalizer
       when 'dom'        then return dom
+      when 'document'   then return Document
       when 'range'      then return Range
       else return null
 
