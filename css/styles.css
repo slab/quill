@@ -223,6 +223,7 @@ footer li {
 #features-container {
   background-color: inherit;
   font-size: 16px;
+  margin-bottom: 50px;
   margin-top: 20px;
   text-align: center;
 }
@@ -236,13 +237,25 @@ footer li {
   margin-left: 25px;
   margin-right: 25px;
 }
-#features-container + .half-rule {
-  width: 25%;
+#features-container + .half-rule, #users-container + .half-rule {
+  width: 35%;
+}
+
+#users-container {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+#users-container h3 {
+  margin-bottom: 25px;
+}
+#users-container img {
+  margin: auto;
+  width: 150px;
 }
 
 #download-container {
-  margin-bottom: 40px;
-  margin-top: 40px;
+  margin-bottom: 75px;
+  margin-top: 75px;
 }
 #download-container .btn-lg {
   border: 1px solid #06c;
@@ -252,17 +265,6 @@ footer li {
 #download-container .btn-lg:hover {
   background-color: #06c;
   color: #fff;
-}
-
-#users-container {
-  margin-bottom: 40px;
-}
-#users-container h3 {
-  margin-bottom: 25px;
-}
-#users-container img {
-  margin: auto;
-  width: 150px;
 }
 
 #docs-container {
