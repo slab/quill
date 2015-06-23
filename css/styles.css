@@ -236,10 +236,8 @@ footer li {
   margin-left: 25px;
   margin-right: 25px;
 }
-
-#customer-container {
-  margin-bottom: 40px;
-  margin-top: 25px;
+#features-container + .half-rule {
+  width: 25%;
 }
 
 #download-container {
@@ -254,6 +252,17 @@ footer li {
 #download-container .btn-lg:hover {
   background-color: #06c;
   color: #fff;
+}
+
+#users-container {
+  margin-bottom: 40px;
+}
+#users-container h3 {
+  margin-bottom: 25px;
+}
+#users-container img {
+  margin: auto;
+  width: 150px;
 }
 
 #docs-container {
