@@ -66,5 +66,19 @@ describe('Keyboard', ->
       dom(@quill.root).trigger('keydown', Quill.Module.Keyboard.hotkeys.OUTDENT)
       expect(@quill.root).toEqualHTML('<div>0123</div>', true)
     )
+
+    it('retain formatting', ->
+      @quill.addModule('toolbar', { container: $('#toolbar-container').get(0) })
+      size = '18px'
+
+      @quill.setText('foo bar baz')
+      @quill.formatText(0, @quill.getLength(), { 'bold': true, 'size': size })
+
+      @quill.setSelection(@quill.getLength(), @quill.getLength())
+      dom(@quill.root).trigger('keydown', { key: dom.KEYS.ENTER })
+
+      expect(dom($('.ql-bold').get(0)).hasClass('ql-active')).toBe(true)
+      expect(dom($('.ql-size').get(0)).value()).toBe(size)
+    )
   )
 )
