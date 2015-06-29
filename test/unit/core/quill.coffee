@@ -150,6 +150,32 @@ describe('Quill', ->
     it('getText()', ->
       expect(@quill.getText()).toEqual('0123\n5678\n')
     )
+
+    it('getActiveFormats()', ->
+      @quill.formatText(0, 1, 'bold', true)
+      @quill.formatText(1, 3, 'italic', true)
+      @quill.formatText(0, 3, 'size', '18px')
+      @quill.formatLine(0, 0, 'align', 'right')
+
+      expect(@quill.getActiveFormats(1, 3)).toEqual({'italic': true, 'size': '18px', 'align': 'right'})
+      expect(@quill.getActiveFormats(0, 5)).toEqual({})
+      expect(@quill.getActiveFormats(9, 9)).toEqual({})
+    )
+
+    it('_getLeafFormats()', ->
+      @quill.formatText(0, 1, 'bold', true)
+      @quill.formatText(1, 3, 'italic', true)
+      @quill.formatText(0, 4, 'size', '18px')
+
+      expect(@quill._getLeafFormats(0, 0)).toEqual({'bold': true, 'size': '18px'})
+    )
+
+    it('_getLineFormats()', ->
+      @quill.formatLine(0, 0, 'align', 'right')
+      @quill.formatLine(6, 6, 'bullet', true)
+
+      expect(@quill._getLineFormats(7, 9)).toEqual({'bullet': true})
+    )
   )
 
   describe('selection', ->
