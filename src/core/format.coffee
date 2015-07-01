@@ -91,7 +91,7 @@ class Format
         dom(node.parentNode.previousSibling).merge(node.parentNode)
       if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
         dom(node.parentNode).merge(node.parentNode.nextSibling)
-    if _.isString(@config.tag)
+    if _.isString(@config.tag) and node.tagName != @config.tag
       formatNode = document.createElement(@config.tag)
       if dom.VOID_TAGS[formatNode.tagName]?
         dom(node).replace(formatNode) if node.parentNode?
