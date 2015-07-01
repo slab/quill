@@ -3,14 +3,12 @@ Quill = require('../src/quill')
 Quill.Delta = require('rich-text/lib/delta')
 
 Quill.Editor     = require('../src/editor')
-Quill.Normalizer = require('../src/normalizer')
 Quill.Selection  = require('../src/selection')
 
 Quill.Lib =
   EventEmitter2 : require('eventemitter2').EventEmitter2
   ColorPicker   : require('../src/lib/color-picker')
   DOM           : require('../src/lib/dom')
-  LinkedList    : require('../src/lib/linked-list')
   Picker        : require('../src/lib/picker')
   Range         : require('../src/lib/range')
 
