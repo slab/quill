@@ -1,8 +1,9 @@
 Parchment = require('parchment')
 
-Underline = Parchment.define({
-  nodeName: 'underline'
-  tagName: 'U'
-}, Parchment.Inline)
+class Underline extends Parchment.Inline
+  @nodeName: 'underline'
+  @tagName: 'U'
+
+Parchment.define(Underline)
 
 module.exports = Underline

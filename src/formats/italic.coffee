@@ -1,8 +1,9 @@
 Parchment = require('parchment')
 
-Italic = Parchment.define({
-  nodeName: 'italic'
-  tagName: 'EM'
-}, Parchment.Inline)
+class Italic extends Parchment.Inline
+  @nodeName: 'italic'
+  @tagName: 'EM'
+
+Parchment.define(Italic);
 
 module.exports = Italic

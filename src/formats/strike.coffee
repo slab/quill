@@ -1,8 +1,9 @@
 Parchment = require('parchment')
 
-Strike = Parchment.define({
-  nodeName: 'strike'
-  tagName: 'S'
-}, Parchment.Inline)
+class Strike extends Parchment.Inline
+  @nodeName: 'strike'
+  @tagName: 'S'
+
+Parchment.define(Strike)
 
 module.exports = Strike

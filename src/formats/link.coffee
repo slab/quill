@@ -1,12 +1,17 @@
 Parchment = require('parchment')
 
-Link = Parchment.define({
-  nodeName: 'link'
-  tagName: 'A'
-  init: (value) ->
-    this.domNode.href = value
+class Link extends Parchment.Inline
+  @nodeName: 'link'
+  @tagName: 'A'
+
+  constructor: (value) ->
+    super(value)
+    @domNode.href = value
+
   formats: ->
     return [this.domNode.href]
-}, Parchment.Inline)
+
+
+Parchment.define(Link)
 
 module.exports = Link

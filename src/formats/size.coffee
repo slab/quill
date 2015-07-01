@@ -1,8 +1,9 @@
 Parchment = require('parchment')
 
-Size = Parchment.define({
-  attrName: 'size'
-  styleName: 'fontSize'
-}, Parchment.Style)
+class Size extends Parchment.Style
+  @attrName: 'size'
+  @styleName: 'fontSize'
+
+Parchment.define(Size)
 
 module.exports = Size

@@ -1,8 +1,9 @@
 Parchment = require('parchment')
 
-Color = Parchment.define({
-  attrName: 'color'
-  styleName: 'color'
-}, Parchment.Style)
+class Color extends Parchment.Style
+  @attrName: 'color'
+  @styleName: 'color'
+
+Color = Parchment.define(Color)
 
 module.exports = Color
