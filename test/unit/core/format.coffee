@@ -137,6 +137,13 @@ describe('Format', ->
       expect(@container).toEqualHTML('<span style="color: red;">Text</span>')
     )
 
+    it('change value with given tag', ->
+      @container.innerHTML = '<a href="link1">a</a>'
+      format = new Quill.Format(Quill.Format.FORMATS.link)
+      format.add(@container.firstChild, 'link2')
+      expect(@container).toEqualHTML('<a href="link2">a</a>')
+    )
+
     it('default value', ->
       @container.innerHTML = '<span>Text</span>'
       format = new Quill.Format(Quill.Format.FORMATS.size)
