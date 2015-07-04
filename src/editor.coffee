@@ -28,11 +28,12 @@ class Editor
 
   constructor: (@root, @quill, @options = {}) ->
     @root.setAttribute('id', @options.id)
+    @root.innerHTML = @root.innerHTML.trim()
     @parchment = new Parchment(@root)
     # @delta = @doc.toDelta()
-    @length = @parchment.length()
+    @length = @parchment.getLength()
     @selection = new Selection(@parchment, @quill)
-    @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
+    # @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 
   insertText: (index, text, source) ->
@@ -65,7 +66,7 @@ class Editor
     , new Delta()).slice(start, end)
 
   getLength: ->
-    return @parchment.length()
+    return @parchment.getLength()
 
   getText: (start, end) ->
     values = [].concat.apply([], @parchment.values())
@@ -107,14 +108,14 @@ class Editor
     leafNode = pos.blot.domNode
     containerBounds = @root.parentNode.getBoundingClientRect()
     side = 'left'
-    if pos.blot.length() == 0   # BR case
+    if pos.blot.getLength() == 0   # BR case
       bounds = leafNode.parentNode.getBoundingClientRect()
     else if dom.VOID_TAGS[leafNode.tagName]
       bounds = leafNode.getBoundingClientRect()
       side = 'right' if pos.offset == 1
     else
       range = document.createRange()
-      if pos.offset < pos.blot.length()
+      if pos.offset < pos.blot.getLength()
         range.setStart(leafNode, pos.offset)
         range.setEnd(leafNode, pos.offset + 1)
       else

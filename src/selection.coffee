@@ -136,12 +136,12 @@ class Selection
     lineOffset = 0
     while line.prev?
       line = line.prev
-      lineOffset += line.length()
+      lineOffset += line.getLength()
     return lineOffset unless leaf?
     leafOffset = 0
     while leaf.prev?
       leaf = leaf.prev
-      leafOffset += leaf.length()
+      leafOffset += leaf.getLength()
     return lineOffset + leafOffset + offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
