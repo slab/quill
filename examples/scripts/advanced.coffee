@@ -1,13 +1,13 @@
 _ = Quill.require('lodash')
 
-basicEditor = new Quill('.basic-wrapper .editor-container',
+quillBasic = new Quill('.basic-wrapper .editor-container',
   modules:
     authorship: { authorId: 'basic' }
     toolbar: { container: '.basic-wrapper .toolbar-container' }
   styles: false
 )
 
-advancedEditor = new Quill('.advanced-wrapper .editor-container',
+quillAdvanced = new Quill('.advanced-wrapper .editor-container',
   modules:
     'authorship': { authorId: 'advanced', enabled: true }
     'toolbar': { container: '.advanced-wrapper .toolbar-container' }
@@ -18,35 +18,35 @@ advancedEditor = new Quill('.advanced-wrapper .editor-container',
   theme: 'snow'
 )
 
-authorship = advancedEditor.getModule('authorship')
+authorship = quillAdvanced.getModule('authorship')
 authorship.addAuthor('basic', 'rgba(255,153,51,0.4)')
 
-cursorManager = advancedEditor.getModule('multi-cursor')
+cursorManager = quillAdvanced.getModule('multi-cursor')
 cursorManager.setCursor('basic', 0, 'basic', 'rgba(255,153,51,0.9)')
 
-basicEditor.on('selection-change', (range) ->
+quillBasic.on('selection-change', (range) ->
   console.info 'basic', 'selection', range
   cursorManager.moveCursor('basic', range.end) if range?
 )
 
-basicEditor.on('text-change', (delta, source) ->
+quillBasic.on('text-change', (delta, source) ->
   return if source == 'api'
   console.info 'basic', 'text', delta, source
-  advancedEditor.updateContents(delta)
-  sourceDelta = basicEditor.getContents()
-  targetDelta = advancedEditor.getContents()
+  quillAdvanced.updateContents(delta)
+  sourceDelta = quillBasic.getContents()
+  targetDelta = quillAdvanced.getContents()
   console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", sourceDelta.ops, targetDelta.ops)
 )
 
-advancedEditor.on('selection-change', (range) ->
+quillAdvanced.on('selection-change', (range) ->
   console.info 'advanced', 'selection', range
 )
 
-advancedEditor.on('text-change', (delta, source) ->
+quillAdvanced.on('text-change', (delta, source) ->
   return if source == 'api'
   console.info 'advanced', 'text', delta, source
-  basicEditor.updateContents(delta)
-  sourceDelta = advancedEditor.getContents()
-  targetDelta = basicEditor.getContents()
+  quillBasic.updateContents(delta)
+  sourceDelta = quillAdvanced.getContents()
+  targetDelta = quillBasic.getContents()
   console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", sourceDelta.ops, targetDelta.ops)
 )
