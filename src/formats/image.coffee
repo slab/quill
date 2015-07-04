@@ -2,7 +2,7 @@ Parchment = require('parchment')
 
 
 class Image extends Parchment.Embed
-  @nodeName: 'image'
+  @blotName: 'image'
   @tagName: 'IMG'
 
   init: (value) ->

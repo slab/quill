@@ -1,7 +1,7 @@
 Parchment = require('parchment')
 
 class Underline extends Parchment.Inline
-  @nodeName: 'underline'
+  @blotName: 'underline'
   @tagName: 'U'
 
 Parchment.define(Underline)

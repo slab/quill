@@ -17,6 +17,8 @@ Color      = require('./formats/color')
 Font       = require('./formats/font')
 Size       = require('./formats/size')
 
+Block = require('./blots/block')
+
 
 class Editor
   @sources:
@@ -34,7 +36,7 @@ class Editor
     this.enable() unless @options.readOnly
 
   insertText: (index, text, source) ->
-    @parchment.insertAt(index, text, source)
+    @parchment.insertAt(index, text)
 
   insertEmbed: (index, embed, value) ->
     @parchment.insertAt(index, embed, value)
@@ -147,7 +149,6 @@ class Editor
   _update: ->
     return false if @innerHTML == @root.innerHTML
     @parchment = new Parchment(@root)
-    console.log(@parchment.length())
     @innerHTML = @root.innerHTML
   #   delta = this._trackDelta( =>
   #     @selection.preserve(_.bind(@doc.rebuild, @doc))

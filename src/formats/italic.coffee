@@ -1,7 +1,7 @@
 Parchment = require('parchment')
 
 class Italic extends Parchment.Inline
-  @nodeName: 'italic'
+  @blotName: 'italic'
   @tagName: 'EM'
 
 Parchment.define(Italic);

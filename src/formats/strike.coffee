@@ -1,7 +1,7 @@
 Parchment = require('parchment')
 
 class Strike extends Parchment.Inline
-  @nodeName: 'strike'
+  @blotName: 'strike'
   @tagName: 'S'
 
 Parchment.define(Strike)

@@ -1,9 +1,9 @@
 Parchment = require('parchment')
 
 class Bold extends Parchment.Inline
-  @nodeName: 'bold'
+  @blotName: 'bold'
   @tagName: 'STRONG'
 
-Bold = Parchment.define(Bold)
+Parchment.define(Bold)
 
 module.exports = Bold

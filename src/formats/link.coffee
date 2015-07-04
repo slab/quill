@@ -1,7 +1,7 @@
 Parchment = require('parchment')
 
 class Link extends Parchment.Inline
-  @nodeName: 'link'
+  @blotName: 'link'
   @tagName: 'A'
 
   constructor: (value) ->
