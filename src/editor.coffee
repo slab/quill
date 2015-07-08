@@ -18,6 +18,7 @@ Font       = require('./formats/font')
 Size       = require('./formats/size')
 
 Block = require('./blots/block')
+Break = require('./blots/break')
 
 
 class Editor
@@ -53,7 +54,7 @@ class Editor
     )
 
   formatText: (start, end, formats, source) ->
-    _.each(formats, (value, name) ->
+    _.each(formats, (value, name) =>
       @parchment.formatAt(start, end - start, name, value)
     )
 
