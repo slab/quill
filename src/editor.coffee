@@ -1,7 +1,7 @@
 _         = require('lodash')
 dom       = require('./lib/dom')
 Delta     = require('rich-text/lib/delta')
-Parchment = require('parchment')
+EventEmitter2 = require('eventemitter2').EventEmitter2
 Selection = require('./selection')
 
 Bold      = require('./formats/bold')
@@ -21,7 +21,7 @@ Block = require('./blots/block')
 Break = require('./blots/break')
 
 
-class Editor
+class Editor extends EventEmitter2
   @sources:
     API    : 'api'
     SILENT : 'silent'
@@ -31,32 +31,47 @@ class Editor
     @root.setAttribute('id', @options.id)
     @root.innerHTML = @root.innerHTML.trim()
     @parchment = new Parchment(@root)
-    # @delta = @doc.toDelta()
     @length = @parchment.getLength()
     @selection = new Selection(@parchment, @quill)
-    # @timer = setInterval(_.bind(this.checkUpdate, this), @options.pollInterval)
     this.enable() unless @options.readOnly
 
-  insertText: (index, text, source) ->
-    @parchment.insertAt(index, text)
-
-  insertEmbed: (index, embed, value) ->
-    @parchment.insertAt(index, embed, value)
+  applyDelta: (delta, source) ->
+    this.update()
+    # TODO implement
+    this.update(source)
 
   deleteText: (start, end, source) ->
+    this.update()
     @parchment.deleteAt(start, end - start)
+    this.update(source)
+
+  disable: ->
+    this.enable(false)
+
+  enable: (enabled = true) ->
+    @root.setAttribute('contenteditable', enabled)
+
+  focus: ->
+    if @selection.range?
+      @selection.setRange(@selection.range)
+    else
+      @root.focus()
 
   formatLine: (start, end, formats, source) ->
+    this.update()
     @parchment.children.forEachAt(start, end - start, (line, offset) ->
-      _.each(formats, (value, name) ->
-        line.format(name, value)
+      Object.keys(formats).forEach((name) ->
+        line.format(name, formats[name])
       )
     )
+    this.update(source)
 
   formatText: (start, end, formats, source) ->
+    this.update()
     _.each(formats, (value, name) =>
       @parchment.formatAt(start, end - start, name, value)
     )
+    this.update(source)
 
   getContents: (start, end) ->
     values = [].concat.apply([], @parchment.values())
@@ -76,88 +91,18 @@ class Editor
     ).join('').slice(start, end)
     return text
 
-  # destroy: ->
-  #   clearInterval(@timer)
+  insertEmbed: (index, embed, value) ->
+    this.update()
+    @parchment.insertAt(index, embed, value)
+    this.update(source)
 
-  disable: ->
-    this.enable(false)
+  insertText: (index, text, source) ->
+    this.update()
+    @parchment.insertAt(index, text)
+    this.update(source)
 
-  enable: (enabled = true) ->
-    @root.setAttribute('contenteditable', enabled)
-
-  checkUpdate: (source = 'user') ->
-    return clearInterval(@timer) unless @root.parentNode?
-    delta = this._update()
-    # if delta
-    #   @delta.compose(delta)
-    #   @length = @delta.length()
-    #   @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
-    # source = Editor.sources.SILENT if delta
-    # @selection.update(source)
-
-  focus: ->
-    if @selection.range?
-      @selection.setRange(@selection.range)
-    else
-      @root.focus()
-
-  getBounds: (index) ->
-    # this.checkUpdate()
-    pos = _.last(@parchment.findPath(index))      # TODO inclusive
-    # [leaf, offset] = @doc.findLeafAt(index, true)
-    throw new Error('Invalid index') unless pos?
-    leafNode = pos.blot.domNode
-    containerBounds = @root.parentNode.getBoundingClientRect()
-    side = 'left'
-    if pos.blot.getLength() == 0   # BR case
-      bounds = leafNode.parentNode.getBoundingClientRect()
-    else if dom.VOID_TAGS[leafNode.tagName]
-      bounds = leafNode.getBoundingClientRect()
-      side = 'right' if pos.offset == 1
-    else
-      range = document.createRange()
-      if pos.offset < pos.blot.getLength()
-        range.setStart(leafNode, pos.offset)
-        range.setEnd(leafNode, pos.offset + 1)
-      else
-        range.setStart(leafNode, pos.offset - 1)
-        range.setEnd(leafNode, pos.offset)
-        side = 'right'
-      bounds = range.getBoundingClientRect()
-    return {
-      height: bounds.height
-      left: bounds[side] - containerBounds.left
-      top: bounds.top - containerBounds.top
-    }
-
-  # _trackDelta: (fn) ->
-  #   oldIndex = @savedRange?.start
-  #   fn()
-  #   newDelta = @doc.toDelta()
-  #   @savedRange = @selection.getRange()
-  #   newIndex = @savedRange?.start
-  #   try
-  #     if oldIndex? and newIndex? and oldIndex <= @delta.length() and newIndex <= newDelta.length()
-  #       oldLeftDelta = @delta.slice(0, oldIndex)
-  #       oldRightDelta = @delta.slice(oldIndex)
-  #       newLeftDelta = newDelta.slice(0, newIndex)
-  #       newRightDelta = newDelta.slice(newIndex)
-  #       diffLeft = oldLeftDelta.diff(newLeftDelta)
-  #       diffRight = oldRightDelta.diff(newRightDelta)
-  #       return new Delta(diffLeft.ops.concat(diffRight.ops))
-  #   catch ignored
-  #   return @delta.diff(newDelta)
-
-  _update: ->
-    return false if @innerHTML == @root.innerHTML
-    @parchment = new Parchment(@root)
-    @innerHTML = @root.innerHTML
-  #   delta = this._trackDelta( =>
-  #     @selection.preserve(_.bind(@doc.rebuild, @doc))
-  #     @selection.shiftAfter(0, 0, _.bind(@doc.optimizeLines, @doc))
-  #   )
-  #   @innerHTML = @root.innerHTML
-  #   return if delta.ops.length > 0 then delta else false
+  update: (source = 'user') ->
+    @parchment.update(source)
 
 
 module.exports = Editor

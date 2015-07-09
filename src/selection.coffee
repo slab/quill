@@ -18,6 +18,34 @@ class Selection
   checkFocus: ->
     return document.activeElement == @root
 
+  getBounds: (index) ->
+    pos = _.last(@parchment.findPath(index))      # TODO inclusive
+    # [leaf, offset] = @doc.findLeafAt(index, true)
+    throw new Error('Invalid index') unless pos?
+    leafNode = pos.blot.domNode
+    containerBounds = @root.parentNode.getBoundingClientRect()
+    side = 'left'
+    if pos.blot.getLength() == 0   # BR case
+      bounds = leafNode.parentNode.getBoundingClientRect()
+    else if dom.VOID_TAGS[leafNode.tagName]
+      bounds = leafNode.getBoundingClientRect()
+      side = 'right' if pos.offset == 1
+    else
+      range = document.createRange()
+      if pos.offset < pos.blot.getLength()
+        range.setStart(leafNode, pos.offset)
+        range.setEnd(leafNode, pos.offset + 1)
+      else
+        range.setStart(leafNode, pos.offset - 1)
+        range.setEnd(leafNode, pos.offset)
+        side = 'right'
+      bounds = range.getBoundingClientRect()
+    return {
+      height: bounds.height
+      left: bounds[side] - containerBounds.left
+      top: bounds.top - containerBounds.top
+    }
+
   getRange: (ignoreFocus = false) ->
     if this.checkFocus()
       nativeRange = this._getNativeRange()

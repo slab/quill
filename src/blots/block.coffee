@@ -23,7 +23,7 @@ class Block extends Parchment.Block
       this.appendChild(Parchment.create('break'))
 
   getLength: ->
-    return super() + NEWLINE_LENGTH;
+    return super() + NEWLINE_LENGTH
 
   insertAt: (index, value, def) ->
     return super(index, value, def) if def?

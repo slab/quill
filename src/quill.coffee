@@ -126,7 +126,8 @@ class Quill extends EventEmitter2
     @editor.formatText(start, end, formats, source)
 
   getBounds: (index) ->
-    return @editor.getBounds(index)
+    @editor.update()
+    return @selection.getBounds(index)
 
   getContents: (start = 0, end = undefined) ->
     [start, end] = this._buildParams(start, end)
@@ -204,7 +205,7 @@ class Quill extends EventEmitter2
     this.setContents(delta, source)
 
   updateContents: (delta, source = Quill.sources.API) ->
-    delta = { ops: delta } if Array.isArray(delta)
+    delta = new Delta(delta) if Array.isArray(delta)
     @editor.applyDelta(delta, source)
 
   # fn(Number start, Number end, String name, String value, String source)
