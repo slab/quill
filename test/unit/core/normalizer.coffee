@@ -117,6 +117,9 @@ describe('Normalizer', ->
       'preserve similar images':
         initial:  '<img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png">'
         expected: '<img src="http://quilljs.com/images/cloud.png"><img src="http://quilljs.com/images/cloud.png">'
+      'preserve similar embed nodes':
+        initial:  '<span class="ql-node-embed">a</span><span class="ql-node-embed">b</span>'
+        expected: '<span class="ql-node-embed">a</span><span class="ql-node-embed">b</span>'
       'wrap orphaned text node':
         initial:  '<s><b>0</b></s><s><span>1</span></s>'
         expected: '<s><b>0</b><span>1</span></s>'

@@ -99,6 +99,7 @@ class Normalizer
       node = nodes.pop()
       continue unless node?.parentNode?
       continue if dom.EMBED_TAGS[node.tagName]?
+      continue if dom(node).hasClass("ql-node-embed")
       if node.tagName == dom.DEFAULT_BREAK_TAG
         # Remove unneeded BRs
         dom(node).remove() unless lineNodeLength == 0
