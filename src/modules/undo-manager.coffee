@@ -33,7 +33,10 @@ class UndoManager
     )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, origin) =>
       return if @ignoreChange
-      this.record(delta, @oldDelta)
+      if origin == 'user'
+        this.record(delta, @oldDelta)
+      else
+        this._transform(delta)
       @oldDelta = @quill.getContents()
     )
 
@@ -90,12 +93,21 @@ class UndoManager
       change = @stack[source].pop()
       @lastRecorded = 0
       @ignoreChange = true
-      @quill.updateContents(change[source], 'user')
+      @quill.updateContents(change[source], Quill.sources.USER)
       @ignoreChange = false
       index = this._getLastChangeIndex(change[source])
       @quill.setSelection(index, index)
       @oldDelta = @quill.getContents()
       @stack[dest].push(change)
+
+  _transform: (delta) ->
+    @oldDelta = delta.transform(@oldDelta, true)
+    for change in @stack.undo
+      change.undo = delta.transform(change.undo, true)
+      change.redo = delta.transform(change.redo, true)
+    for change in @stack.redo
+      change.undo = delta.transform(change.undo, true)
+      change.redo = delta.transform(change.redo, true)
 
 
 Quill.registerModule('undo-manager', UndoManager)
