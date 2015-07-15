@@ -31,9 +31,9 @@ class UndoManager
         return false
       )
     )
-    @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, origin) =>
+    @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
       return if @ignoreChange
-      if origin == 'user'
+      if source == Quill.sources.USER
         this.record(delta, @oldDelta)
       else
         this._transform(delta)
