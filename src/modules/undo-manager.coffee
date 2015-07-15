@@ -7,6 +7,7 @@ class UndoManager
   @DEFAULTS:
     delay: 1000
     maxStack: 100
+    userOnly: false
 
   @hotkeys:
     UNDO: { key: 'Z', metaKey: true }
@@ -33,7 +34,7 @@ class UndoManager
     )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
       return if @ignoreChange
-      if source == Quill.sources.USER
+      if !@options.userOnly or source == Quill.sources.USER
         this.record(delta, @oldDelta)
       else
         this._transform(delta)

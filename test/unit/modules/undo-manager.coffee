@@ -9,7 +9,7 @@ describe('UndoManager', ->
       </div>'
     @quill = new Quill(@container.firstChild, {
       modules: {
-        'undo-manager': { delay: 400 }
+        'undo-manager': { delay: 400, userOnly: true }
       }
     })
     @undoManager = @quill.getModule('undo-manager')
