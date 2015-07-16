@@ -6,7 +6,8 @@ describe('Picker', ->
       <select title="Font" class="ql-font">
         <option value="sans-serif" selected>Sans Serif</option>
         <option value="serif">Serif</option>
-        <option value="monospace">Monospace</option>
+        <option value="cursive" data-image-src="http://static.tinypic.com/i/tinypic-branding_@1x.png"></option>
+        <option value="monospace" data-image-src="http://static.tinypic.com/i/tinypic-branding_@1x.png">Monospace</option>
       </select>
     ')).get(0)
     @select = @container.querySelector('select')
@@ -20,7 +21,8 @@ describe('Picker', ->
         <span class="ql-picker-options">
           <span data-value="sans-serif" class="ql-picker-item ql-selected">Sans Serif</span>
           <span data-value="serif" class="ql-picker-item">Serif</span>
-          <span data-value="monospace" class="ql-picker-item">Monospace</span>
+          <span data-value="cursive" class="ql-picker-item"><img src="http://static.tinypic.com/i/tinypic-branding_@1x.png"/></span>
+          <span data-value="monospace" class="ql-picker-item"><img src="http://static.tinypic.com/i/tinypic-branding_@1x.png"/>Monospace</span>
         </span>
       </span>
     ')
@@ -44,7 +46,7 @@ describe('Picker', ->
     dom(@container.querySelector('.ql-picker-options').lastChild).trigger('click')
     expect(dom(@picker.label).text()).toEqual('Monospace')
     _.each(@container.querySelectorAll('.ql-picker-item'), (item, i) ->
-      expect(dom(item).hasClass('ql-selected')).toBe(i == 2)
+      expect(dom(item).hasClass('ql-selected')).toBe(i == 3)
     )
   )
 
