@@ -32,7 +32,15 @@ class Picker
   buildItem: (picker, option, index) ->
     item = document.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
-    dom(item).addClass('ql-picker-item').text(dom(option).text()).on('click', =>
+    dom(item).addClass('ql-picker-item').text(dom(option).text())
+    if (option.getAttribute('data-image-src'))
+      itemimg = document.createElement('img')
+      itemimg.setAttribute('src', option.getAttribute('data-image-src'))
+      if (item.firstChild)
+        item.insertBefore(itemimg, item.firstChild)
+      else
+        item.appendChild(itemimg);
+    dom(item).on('click', =>
       this.selectItem(item, true)
       this.close()
     )
@@ -60,7 +68,14 @@ class Picker
     if item?
       value = item.getAttribute('data-value')
       dom(item).addClass('ql-selected')
-      dom(@label).text(dom(item).text())
+
+      # Copy all the child nodes from the selected item and put them on the label
+      @label.removeChild(@label.firstChild) while @label.firstChild
+      _.each(item.childNodes, (element, index) =>
+        @label.appendChild(element.cloneNode())
+      )
+      #dom(@label).text(dom(item).text())
+
       dom(@select).option(value, trigger)
       @label.setAttribute('data-value', value)
     else
