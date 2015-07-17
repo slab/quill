@@ -108,5 +108,18 @@ describe('UndoManager', ->
       dom(@quill.root).trigger('keydown', Quill.Module.UndoManager.hotkeys.REDO)
       expect(@quill.getContents()).toEqualDelta(changed)
     )
+
+    it('api change transform', ->
+      @quill.getModule('undo-manager').options.userOnly = true
+      @quill.updateContents(new Quill.Delta().retain(12).insert('es'), Quill.sources.USER)
+      @quill.updateContents(new Quill.Delta().retain(4).delete(5), Quill.sources.API)
+      @quill.updateContents(new Quill.Delta().retain(9).insert('!'), Quill.sources.USER)
+      expect(@undoManager.stack.undo.length).toEqual(1)
+      expect(@quill.getContents()).toEqual(new Quill.Delta().insert('The foxes!\n'))
+      @undoManager.undo()
+      expect(@quill.getContents()).toEqual(new Quill.Delta().insert('The fox\n'))
+      @undoManager.redo()
+      expect(@quill.getContents()).toEqual(new Quill.Delta().insert('The foxes!\n'))
+    )
   )
 )
