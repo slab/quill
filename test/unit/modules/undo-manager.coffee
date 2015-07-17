@@ -9,7 +9,7 @@ describe('UndoManager', ->
       </div>'
     @quill = new Quill(@container.firstChild, {
       modules: {
-        'undo-manager': { delay: 400, userOnly: true }
+        'undo-manager': { delay: 400 }
       }
     })
     @undoManager = @quill.getModule('undo-manager')
@@ -42,7 +42,7 @@ describe('UndoManager', ->
   describe('undo/redo', ->
     _.each(tests, (test, name) ->
       it(name, ->
-        @quill.updateContents(test.delta, Quill.sources.USER)
+        @quill.updateContents(test.delta)
         changed = @quill.getContents()
         expect(changed).not.toEqualDelta(@original)
         @undoManager.undo()
@@ -65,9 +65,9 @@ describe('UndoManager', ->
 
     it('merge changes', ->
       expect(@undoManager.stack.undo.length).toEqual(0)
-      @quill.updateContents(new Quill.Delta().retain(12).insert('e'), Quill.sources.USER)
+      @quill.updateContents(new Quill.Delta().retain(12).insert('e'))
       expect(@undoManager.stack.undo.length).toEqual(1)
-      @quill.updateContents(new Quill.Delta().retain(13).insert('s'), Quill.sources.USER)
+      @quill.updateContents(new Quill.Delta().retain(13).insert('s'))
       expect(@undoManager.stack.undo.length).toEqual(1)
       @undoManager.undo()
       expect(@quill.getContents()).toEqual(@original)
@@ -76,10 +76,10 @@ describe('UndoManager', ->
 
     it('dont merge changes', (done) ->
       expect(@undoManager.stack.undo.length).toEqual(0)
-      @quill.updateContents(new Quill.Delta().retain(12).insert('e'), Quill.sources.USER)
+      @quill.updateContents(new Quill.Delta().retain(12).insert('e'))
       expect(@undoManager.stack.undo.length).toEqual(1)
       setTimeout( =>
-        @quill.updateContents(new Quill.Delta().retain(13).insert('s'), Quill.sources.USER)
+        @quill.updateContents(new Quill.Delta().retain(13).insert('s'))
         expect(@undoManager.stack.undo.length).toEqual(2)
         done()
       , @undoManager.options.delay * 1.25)
@@ -87,10 +87,10 @@ describe('UndoManager', ->
 
     it('multiple undos', (done) ->
       expect(@undoManager.stack.undo.length).toEqual(0)
-      @quill.updateContents(new Quill.Delta().retain(12).insert('e'), Quill.sources.USER)
+      @quill.updateContents(new Quill.Delta().retain(12).insert('e'))
       contents = @quill.getContents()
       setTimeout( =>
-        @quill.updateContents(new Quill.Delta().retain(13).insert('s'), Quill.sources.USER)
+        @quill.updateContents(new Quill.Delta().retain(13).insert('s'))
         @undoManager.undo()
         expect(@quill.getContents()).toEqual(contents)
         @undoManager.undo()
@@ -100,7 +100,7 @@ describe('UndoManager', ->
     )
 
     it('hotkeys', ->
-      @quill.updateContents(new Quill.Delta().insert('A'), Quill.sources.USER)
+      @quill.updateContents(new Quill.Delta().insert('A'))
       changed = @quill.getContents()
       expect(changed).not.toEqualDelta(@original)
       dom(@quill.root).trigger('keydown', Quill.Module.UndoManager.hotkeys.UNDO)
@@ -110,6 +110,7 @@ describe('UndoManager', ->
     )
 
     it('api change transform', ->
+      @quill.getModule('undo-manager').options.userOnly = true
       @quill.updateContents(new Quill.Delta().retain(12).insert('es'), Quill.sources.USER)
       @quill.updateContents(new Quill.Delta().retain(4).delete(5), Quill.sources.API)
       @quill.updateContents(new Quill.Delta().retain(9).insert('!'), Quill.sources.USER)
