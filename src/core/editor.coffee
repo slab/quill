@@ -85,7 +85,7 @@ class Editor
   getBounds: (index) ->
     this.checkUpdate()
     [leaf, offset] = @doc.findLeafAt(index, true)
-    throw new Error('Invalid index') unless leaf?
+    return null unless leaf?
     containerBounds = @root.parentNode.getBoundingClientRect()
     side = 'left'
     if leaf.length == 0   # BR case

@@ -101,10 +101,8 @@ class MultiCursor extends EventEmitter2
     return cursor
 
   _updateCursor: (cursor) ->
-    try
-      bounds = @quill.getBounds(cursor.index)
-    catch err
-      return this.removeCursor(cursor.userId)
+    bounds = @quill.getBounds(cursor.index)
+    return this.removeCursor(cursor.userId) unless bounds?
     cursor.elem.style.top = (bounds.top + @quill.container.scrollTop) + 'px'
     cursor.elem.style.left = bounds.left + 'px'
     cursor.elem.style.height = bounds.height + 'px'
