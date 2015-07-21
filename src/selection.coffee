@@ -21,7 +21,7 @@ class Selection
   getBounds: (index) ->
     pos = _.last(@parchment.findPath(index))      # TODO inclusive
     # [leaf, offset] = @doc.findLeafAt(index, true)
-    throw new Error('Invalid index') unless pos?
+    return null unless pos?
     leafNode = pos.blot.domNode
     containerBounds = @root.parentNode.getBoundingClientRect()
     side = 'left'
