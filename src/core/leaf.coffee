@@ -23,7 +23,7 @@ class Leaf extends LinkedList.Node
     if dom.EMBED_TAGS[@node.tagName]?
       textNode = document.createTextNode(@text)
       dom(textNode).data(Leaf.DATA_KEY, this)
-      @node = dom(@node).replace(textNode)
+      @node = dom(@node).replace(textNode).get()
     else
       dom(@node).text(@text)
 
@@ -35,7 +35,7 @@ class Leaf extends LinkedList.Node
       textNode = document.createTextNode(text)
       dom(textNode).data(Leaf.DATA_KEY, this)
       if @node.tagName == dom.DEFAULT_BREAK_TAG
-        @node = dom(@node).replace(textNode)
+        @node = dom(@node).replace(textNode).get()
       else
         @node.appendChild(textNode)
         @node = textNode

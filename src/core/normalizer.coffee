@@ -71,14 +71,14 @@ class Normalizer
   whitelistTags: (node) ->
     return node unless dom(node).isElement()
     if Normalizer.ALIASES[node.tagName]?
-      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName])
+      node = dom(node).switchTag(Normalizer.ALIASES[node.tagName]).get()
     else if !@whitelist.tags[node.tagName]?
       if dom.BLOCK_TAGS[node.tagName]?
-        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG)
+        node = dom(node).switchTag(dom.DEFAULT_BLOCK_TAG).get()
       else if !node.hasAttributes() and node.firstChild?
         node = dom(node).unwrap()
       else
-        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG)
+        node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG).get()
     return node
 
   # Make sure descendant break tags are not causing multiple lines to be rendered
