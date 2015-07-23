@@ -83,6 +83,18 @@ class Normalizer
         node = dom(node).switchTag(dom.DEFAULT_INLINE_TAG).get()
     return node
 
+  @flattenList: (listNode) ->
+    ref = listNode.nextSibling
+    innerItems = _.map(listNode.querySelectorAll('li'))
+    innerItems.forEach((item) ->
+      listNode.parentNode.insertBefore(item, ref)
+      ref = item.nextSibling
+    )
+    innerLists = _.map(listNode.querySelectorAll(Object.keys(dom.LIST_TAGS).join(',')))
+    innerLists.forEach((list) ->
+      dom(list).remove()
+    )
+
   # Make sure descendant break tags are not causing multiple lines to be rendered
   @handleBreaks: (lineNode) ->
     breaks = _.map(lineNode.querySelectorAll(dom.DEFAULT_BREAK_TAG))
@@ -128,18 +140,6 @@ class Normalizer
         break
       curNode = curNode.nextSibling
     return lineNode
-
-  @flattenList: (listNode) ->
-    ref = listNode.nextSibling
-    innerItems = _.map(listNode.querySelectorAll('li'))
-    innerItems.forEach((item) ->
-      listNode.parentNode.insertBefore(item, ref)
-      ref = item.nextSibling
-    )
-    innerLists = _.map(listNode.querySelectorAll(Object.keys(dom.LIST_TAGS).join(',')))
-    innerLists.forEach((list) ->
-      dom(list).remove()
-    )
 
   @stripComments: (html) ->
     return html.replace(/<!--[\s\S]*?-->/g, '')
