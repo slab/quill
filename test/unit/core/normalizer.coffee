@@ -139,7 +139,13 @@ describe('Normalizer', ->
         initial:  '<div></div>'
         expected: '<div></div>'
       'After block':
-        initial:  '<div>One<div>Two</div>'
+        initial:  '<div>One<div>Two</div></div>'
+        expected: '<div>One</div><div>Two</div>'
+      'Before inner block':
+        initial:  '<div><div>One<div>Two</div></div></div>'
+        expected: '<div>One</div><div>Two</div>'
+      'After inner block':
+        initial:  '<div><div><div>One</div>Two</div></div>'
         expected: '<div>One</div><div>Two</div>'
       'Middle block':
         initial:  '<div>One<div>Two</div>Three</div>'
