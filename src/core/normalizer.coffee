@@ -56,6 +56,10 @@ class Normalizer
         node.style[style] = value
         node.removeAttribute(attribute)
     )
+    # Chrome turns <b> into style in some cases
+    if (node.style.fontWeight == 'bold')
+      node.style.fontWeight = ''
+      dom(node).wrap(document.createElement('b'))
     this.whitelistStyles(node)
     return this.whitelistTags(node)
 
