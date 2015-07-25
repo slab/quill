@@ -85,8 +85,10 @@ class Format
     return this.remove(node) unless value
     return node if this.value(node) == value
     if _.isString(@config.parentTag)
-      parentNode = document.createElement(@config.parentTag)
-      dom(node).wrap(parentNode)
+      parentNode = node.parentNode;
+      if parentNode.tagName != @config.parentTag
+          parentNode = document.createElement(@config.parentTag)
+          dom(node).wrap(parentNode)
       if node.parentNode.tagName == node.parentNode.previousSibling?.tagName
         dom(node.parentNode.previousSibling).merge(node.parentNode)
       if node.parentNode.tagName == node.parentNode.nextSibling?.tagName
