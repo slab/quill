@@ -8,9 +8,9 @@ class Toolbar
     container: null
 
   @formats:
-    LINE    : { 'align', 'bullet', 'list' }
+    LINE    : { 'align', 'bullet', 'list', 'h1' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
-    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
+    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline', 'h1' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
@@ -85,6 +85,7 @@ class Toolbar
     activeFormats = this._getActive(range)
     _.each(@inputs, (input, format) =>
       if !Array.isArray(formats) or formats.indexOf(format) > -1
+        # debugger
         this.setActive(format, activeFormats[format])
       return true
     )
@@ -121,6 +122,8 @@ class Toolbar
 
   _getLineActive: (range) ->
     formatsArr = []
+    # debugger
+    console.log '_getLineActive'
     [firstLine, offset] = @quill.editor.doc.findLineAt(range.start)
     [lastLine, offset] = @quill.editor.doc.findLineAt(range.end)
     lastLine = lastLine.next if lastLine? and lastLine == firstLine

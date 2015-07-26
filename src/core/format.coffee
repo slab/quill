@@ -66,15 +66,21 @@ class Format
       style: 'textAlign'
       default: 'left'
 
+    h1:
+      type: Format.types.LINE
+      exclude: ['list','bullet']
+      # parentTag: 'UL'
+      tag: 'H1'
+
     bullet:
       type: Format.types.LINE
-      exclude: 'list'
+      exclude: ['list','h1']
       parentTag: 'UL'
       tag: 'LI'
 
     list:
       type: Format.types.LINE
-      exclude: 'bullet'
+      exclude: ['bullet','h1']
       parentTag: 'OL'
       tag: 'LI'
 
