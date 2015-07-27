@@ -67,14 +67,11 @@ class Line extends LinkedList.Node
       return unless format?
       # TODO reassigning @node might be dangerous...
       if format.isType(Format.types.LINE)
-        # if format.config.exclude and @formats[format.config.exclude]
-        # debugger
         if format.config.exclude and _.find(format.config.exclude, (candidateToExclude) => @formats[candidateToExclude])
           _.each format.config.exclude, (excludeFormatName) =>
             excludeFormat = @doc.formats[excludeFormatName]
             if excludeFormat?
               @node = excludeFormat.remove(@node)
-              console.log "delete format: #{format.config.exclude}"
               delete @formats[excludeFormatName]
         @node = format.add(@node, value)
       if value

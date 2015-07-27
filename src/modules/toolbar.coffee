@@ -1,6 +1,7 @@
-Quill = require('../quill')
-_     = Quill.require('lodash')
-dom   = Quill.require('dom')
+Quill  = require('../quill')
+_      = Quill.require('lodash')
+dom    = Quill.require('dom')
+Format = Quill.require('Format')
 
 
 class Toolbar
@@ -8,9 +9,9 @@ class Toolbar
     container: null
 
   @formats:
-    LINE    : { 'align', 'bullet', 'list', 'h1' }
+    LINE    : { 'align', 'bullet', 'list', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
-    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline', 'h1' }
+    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
@@ -85,7 +86,6 @@ class Toolbar
     activeFormats = this._getActive(range)
     _.each(@inputs, (input, format) =>
       if !Array.isArray(formats) or formats.indexOf(format) > -1
-        # debugger
         this.setActive(format, activeFormats[format])
       return true
     )
@@ -99,7 +99,7 @@ class Toolbar
     else
       @quill.formatText(range, format, value, 'user')
     _.defer( =>
-      this.updateActive(range, ['bullet', 'list'])  # Clear exclusive formats
+      this.updateActive(range, ['bullet', 'list', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])  # Clear exclusive formats
       this.setActive(format, value)
     )
 
@@ -122,8 +122,6 @@ class Toolbar
 
   _getLineActive: (range) ->
     formatsArr = []
-    # debugger
-    console.log '_getLineActive'
     [firstLine, offset] = @quill.editor.doc.findLineAt(range.start)
     [lastLine, offset] = @quill.editor.doc.findLineAt(range.end)
     lastLine = lastLine.next if lastLine? and lastLine == firstLine
