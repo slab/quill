@@ -68,12 +68,12 @@ class Format
 
     h1: ( ->
       headers = (lvl) ->
-        exclude = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'list','bullet']
-        exclude.slice(lvl-1, 1)
+        exclude = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'list', 'bullet']
+        exclude.splice(lvl-1, 1)
         {
           type: Format.types.LINE
           exclude: exclude
-          tag: "h#{lvl}"
+          tag: "H#{lvl}"
         }
       headers(1)
     )()
