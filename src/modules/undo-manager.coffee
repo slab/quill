@@ -26,7 +26,10 @@ class UndoManager
         this.undo()
         return false
       )
-      keyboard.addHotkey(UndoManager.hotkeys.REDO, =>
+      redoKey = [UndoManager.hotkeys.REDO]
+      if (navigator.platform.indexOf('Win') > -1)
+        redoKey.push({ key: 'Y', metaKey: true })
+      keyboard.addHotkey(redoKey, =>
         @quill.editor.checkUpdate()
         this.redo()
         return false
