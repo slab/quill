@@ -92,7 +92,8 @@ class Keyboard
     )
     _.each(['bold', 'italic', 'underline'], (format) =>
       this.addHotkey(Keyboard.hotkeys[format.toUpperCase()], (range) =>
-        this.toggleFormat(range, format)
+        if (@quill.options.formats.indexOf(format) > -1)
+          this.toggleFormat(range, format)
         return false
       )
     )
