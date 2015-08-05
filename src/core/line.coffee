@@ -110,7 +110,8 @@ class Line extends LinkedList.Node
     [leaf, leafOffset] = this.findLeafAt(offset)
     node = _.reduce(formats, (node, value, name) =>
       format = @doc.formats[name]
-      node = format.add(node, value) if format?
+      if format? and !format.isType(Format.types.LINE)
+        node = format.add(node, value)
       return node
     , node)
     [prevNode, nextNode] = dom(leaf.node).split(leafOffset)
