@@ -24,6 +24,10 @@ class Format
       tag: 'S'
       prepare: 'strikeThrough'
 
+    superscript:
+      tag: 'SUP'
+      prepare: 'superscript'
+
     color:
       style: 'color'
       default: 'rgb(0, 0, 0)'
