@@ -31,6 +31,12 @@ describe('Document', ->
       'list':
         initial:  '<div><ul><li>line</li></ul></div>'
         expected: '<ul><li>line</li></ul>'
+      'nested divs':
+        initial:  '<div><div>One<div><div>Alpha<div><div>I</div></div></div></div></div></div>'
+        expected: '<div>One</div><div>Alpha</div><div>I</div>'
+      'nested list':
+        initial:  '<ul><li>One<ul><li>Alpha<ul><li>I</li></ul></li></ul></li></ul>'
+        expected: '<ul><li>One</li><li>Alpha</li><li>I</li></ul>'
 
     _.each(tests, (test, name) ->
       it(name, ->

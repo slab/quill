@@ -345,6 +345,10 @@ describe('Line', ->
         initial: '<b>01</b>'
         expected: '<b>0</b><img src="http://quilljs.com/images/cloud.png"><b>1</b>'
         offset: 1, formats: { image: 'http://quilljs.com/images/cloud.png' }
+      'line formats ignored':
+        initial: 'ab'
+        expected: 'a<b>|</b>b'
+        offset: 1, formats: { list: true, bold: true }
 
     _.each(tests, (test, name) ->
       it(name, ->
