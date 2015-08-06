@@ -4,6 +4,6 @@ class Italic extends Parchment.Inline
   @blotName: 'italic'
   @tagName: 'EM'
 
-Parchment.define(Italic);
+Parchment.define(Italic)
 
 module.exports = Italic
