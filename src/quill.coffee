@@ -18,7 +18,7 @@ class Quill extends EventEmitter2
   @themes: []
 
   @DEFAULTS:
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'superscript', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
+    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'superscript', 'subscript', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
     modules:
       'keyboard': true
       'paste-manager': true

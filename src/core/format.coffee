@@ -28,6 +28,10 @@ class Format
       tag: 'SUP'
       prepare: 'superscript'
 
+    subscript:
+      tag: 'SUB'
+      prepare: 'subscript'
+
     color:
       style: 'color'
       default: 'rgb(0, 0, 0)'
