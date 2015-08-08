@@ -35,6 +35,7 @@ class Normalizer
     @whitelist.tags[config.tag] = true if config.tag?
     @whitelist.tags[config.parentTag] = true if config.parentTag?
     @whitelist.styles[config.style] = true if config.style?
+    config.exclude = [config.exclude] if _.isString(config.exclude)
 
   normalizeLine: (lineNode) ->
     lineNode = Normalizer.wrapInline(lineNode)

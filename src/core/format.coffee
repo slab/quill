@@ -1,6 +1,6 @@
 _   = require('lodash')
 dom = require('../lib/dom')
-
+headers = null
 
 class Format
   @types:
@@ -66,15 +66,32 @@ class Format
       style: 'textAlign'
       default: 'left'
 
+    h1: ( ->
+      headers = (lvl) ->
+        exclude = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'list', 'bullet']
+        exclude.splice(lvl-1, 1)
+        {
+          type: Format.types.LINE
+          exclude: exclude
+          tag: "H#{lvl}"
+        }
+      headers(1)
+    )()
+    h2: headers(2)
+    h3: headers(3)
+    h4: headers(4)
+    h5: headers(5)
+    h6: headers(6)
+
     bullet:
       type: Format.types.LINE
-      exclude: 'list'
+      exclude: ['list','h1', 'h2', 'h3', 'h4', 'h5', 'h6']
       parentTag: 'UL'
       tag: 'LI'
 
     list:
       type: Format.types.LINE
-      exclude: 'bullet'
+      exclude: ['bullet', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
       parentTag: 'OL'
       tag: 'LI'
 

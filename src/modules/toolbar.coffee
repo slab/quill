@@ -1,6 +1,7 @@
-Quill = require('../quill')
-_     = Quill.require('lodash')
-dom   = Quill.require('dom')
+Quill  = require('../quill')
+_      = Quill.require('lodash')
+dom    = Quill.require('dom')
+Format = Quill.require('format')
 
 
 class Toolbar
@@ -8,9 +9,9 @@ class Toolbar
     container: null
 
   @formats:
-    LINE    : { 'align', 'bullet', 'list' }
+    LINE    : { 'align', 'bullet', 'list', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' }
     SELECT  : { 'align', 'background', 'color', 'font', 'size' }
-    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline' }
+    TOGGLE  : { 'bold', 'bullet', 'image', 'italic', 'link', 'list', 'strike', 'underline', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' }
     TOOLTIP : { 'image', 'link' }
 
   constructor: (@quill, @options) ->
@@ -98,7 +99,9 @@ class Toolbar
     else
       @quill.formatText(range, format, value, 'user')
     _.defer( =>
-      this.updateActive(range, ['bullet', 'list'])  # Clear exclusive formats
+      exclude = @quill.editor.doc.formats[format].config.exclude
+      exclusive = if exclude then [].concat(exclude, format) else [format]
+      this.updateActive(range, exclusive)  # Clear exclusive formats
       this.setActive(format, value)
     )
 
