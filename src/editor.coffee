@@ -30,10 +30,7 @@ class Editor
   constructor: (@root, @quill, @options = {}) ->
     @root.setAttribute('id', @options.id)
     @root.innerHTML = @root.innerHTML.trim()
-    @doc = new Document(@root, {
-      onUpdate: (delta) =>
-        @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, Editor.sources.USER)
-    })
+    @doc = new Document(@root, @options)
     @length = @doc.getLength()
     @selection = new Selection(@doc, @quill)
     this.enable() unless @options.readOnly
@@ -100,9 +97,8 @@ class Editor
     this.update(source)
 
   update: (source = 'user') ->
-    @doc.update((delta) =>
+    if (delta = @doc.update())
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
-    )
 
 
 module.exports = Editor

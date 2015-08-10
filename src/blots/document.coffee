@@ -1,26 +1,19 @@
+Delta     = require('rich-text/lib/delta')
 Parchment = require('parchment')
 
 
-class Document extends Parchment.Container
+class Document extends Parchment.Root
   constructor: (domNode, @options) ->
     super(domNode)
     @delta = this.getDelta()
+    @timer = setInterval(this.update.bind(this), @options.pollInterval)
 
   getDelta: ->
     return @children.reduce((delta, child) ->
       return delta.concat(child.delta)  # TODO child.getDelta()?
     , new Delta())
 
-  observerHandler: (mutations) ->
-    super(mutations)
-    delta = convert(mutations)
-    @options.onUpdate(delta)
-
-  update: (source) ->
-    @updates = super()
-    # create delta
-    delta = new Delta()
-    this.onUpdate(delta)
+  update: ->
 
 
 module.exports = Document

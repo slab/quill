@@ -25,19 +25,19 @@ class Block extends Parchment.Block
       this.appendChild(Parchment.create('break'))
 
   getDelta: ->
-    formats = this.getFormats()
-    values = this.getValues()
+    formats = this.getFormat()
+    values = this.getValue()
     return values.reduce((delta, value, index) ->
       delta.insert(value, formats[index])
     , new Delta())
 
-  getFormats: ->
+  getFormat: ->
     return super().concat([@formats])
 
   getLength: ->
     return super() + NEWLINE_LENGTH
 
-  getValues: ->
+  getValue: ->
     return super().concat(['\n'])
 
   insertAt: (index, value, def) ->
