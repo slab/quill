@@ -11,6 +11,7 @@ class PasteManager
   constructor: (@quill, options) ->
     @container = @quill.addContainer('ql-paste-manager')
     @container.setAttribute('contenteditable', true)
+    @container.setAttribute('tabindex', '-1')
     dom(@quill.root).on('paste', _.bind(this._paste, this))
     @options = _.defaults(options, PasteManager.DEFAULTS)
     @options.onConvert ?= this._onConvert;
