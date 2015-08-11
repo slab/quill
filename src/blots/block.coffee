@@ -1,3 +1,4 @@
+_         = require('lodash')
 Delta     = require('rich-text/lib/delta')
 Parchment = require('parchment')
 
@@ -8,7 +9,6 @@ class Block extends Parchment.Block
   @tagName = 'P'
 
   constructor: (value) ->
-    @formats = {}
     super(value)
     this.ensureBreak()
     @delta = this.getDelta()
@@ -19,6 +19,11 @@ class Block extends Parchment.Block
       length -= NEWLINE_LENGTH
     super(index, length)
     this.ensureBreak()
+
+  formatAt: (index, length, name, value) ->
+    if index + length >= this.getLength() and length > 0
+      this.format(name, value)
+    super(index, length, name, value)
 
   ensureBreak: ->
     if this.getLength() == NEWLINE_LENGTH
@@ -32,7 +37,20 @@ class Block extends Parchment.Block
     , new Delta())
 
   getFormat: ->
-    return super().concat([@formats])
+    thisFormat = super()
+    collector = (blot) ->
+      format = blot.getFormat() || {}
+      if (blot instanceof Parchment.Parent)
+        return blot.children.reduce((memo, child) ->
+          return memo.concat(collector(child))
+        , []).map((childFormat) ->
+          return _.defaults(format, childFormat)
+        )
+      else
+        return [format]
+    return @children.reduce((memo, child) ->
+      return memo.concat(collector(child))
+    , []).concat([thisFormat])
 
   getLength: ->
     return super() + NEWLINE_LENGTH

@@ -1,9 +1,5 @@
 Parchment = require('parchment')
 
-class Background extends Parchment.Style
-  @attrName: 'background'
-  @styleName: 'backgroundColor'
+Background = new Parchment.Style('background', 'backgroundColor')
 
-Parchment.define(Background)
-
-module.exports = Background
+module.exports = Parchment.define(Background)

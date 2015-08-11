@@ -16,6 +16,8 @@ Color      = require('./formats/color')
 Font       = require('./formats/font')
 Size       = require('./formats/size')
 
+Align    = require('./formats/align')
+
 Document = require('./blots/document')
 Block    = require('./blots/block')
 Break    = require('./blots/break')

@@ -10,7 +10,7 @@ class Document extends Parchment.Root
 
   getDelta: ->
     return @children.reduce((delta, child) ->
-      return delta.concat(child.delta)  # TODO child.getDelta()?
+      return delta.concat(child.getDelta())
     , new Delta())
 
   update: ->

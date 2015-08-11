@@ -1,9 +1,5 @@
 Parchment = require('parchment')
 
-class Font extends Parchment.Style
-  @attrName: 'font'
-  @styleName: 'fontFamily'
+Font = new Parchment.Style('font', 'fontFamily')
 
-Parchment.define(Font)
-
-module.exports = Font
+module.exports = Parchment.define(Font)
