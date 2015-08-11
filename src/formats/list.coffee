@@ -42,16 +42,6 @@ class Item extends Block
   @blotName: 'item'
   @tagName: 'LI'
 
-  format: (name, value) ->
-    if Parchment.match(name, Parchment.types.ATTRIBUTE)
-      super(name, value)
-    else
-      name = 'block' unless value
-      offset = @parent.children.offset(this)
-      target = @parent.isolate(offset, this.getLength())
-      target.replace(name, value)
-      this.unwrap() unless @parent instanceof List
-
   getFormat: ->
     format = super()
     _.last(format)[@parent.statics.blotName] = true
