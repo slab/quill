@@ -9,6 +9,8 @@ Strike    = require('./formats/strike')
 Underline = require('./formats/underline')
 Link      = require('./formats/link')
 
+List      = require('./formats/list')
+
 Image     = require('./formats/image')
 
 Background = require('./formats/background')
@@ -31,7 +33,7 @@ class Editor
 
   constructor: (@root, @quill, @options = {}) ->
     @root.setAttribute('id', @options.id)
-    @root.innerHTML = @root.innerHTML.trim()
+    @root.innerHTML = @root.innerHTML.trim().replace(/\s/g, '')  # TODO fix
     @doc = new Document(@root, @options)
     @length = @doc.getLength()
     @selection = new Selection(@doc, @quill)

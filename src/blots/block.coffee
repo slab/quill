@@ -11,7 +11,6 @@ class Block extends Parchment.Block
   constructor: (value) ->
     super(value)
     this.ensureBreak()
-    @delta = this.getDelta()
 
   deleteAt: (index, length) ->
     if (index + length == this.getLength() and this.next?)
