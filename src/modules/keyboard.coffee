@@ -5,6 +5,14 @@ Delta  = Quill.require('delta')
 
 
 class Keyboard
+  @DEFAULTS:
+    enter: true
+    indent: true
+    outdent: true
+    bold: true
+    italic: true
+    underline: true
+
   @hotkeys:
     BOLD:       { key: 'B',          metaKey: true }
     INDENT:     { key: dom.KEYS.TAB }
@@ -12,7 +20,8 @@ class Keyboard
     OUTDENT:    { key: dom.KEYS.TAB, shiftKey: true }
     UNDERLINE:  { key: 'U',          metaKey: true }
 
-  constructor: (@quill, options) ->
+  constructor: (@quill, @options) ->
+    @options = _.defaults(@options, Keyboard.DEFAULTS)
     @hotkeys = {}
     this._initListeners()
     this._initHotkeys()
@@ -85,20 +94,20 @@ class Keyboard
     this.addHotkey(Keyboard.hotkeys.INDENT, (range) =>
       this._onTab(range, false)
       return false
-    )
+    ) if @options.indent
     this.addHotkey(Keyboard.hotkeys.OUTDENT, (range) =>
       # TODO implement when we implement multiline tabs
       return false
-    )
+    ) if @options.outdent
     _.each(['bold', 'italic', 'underline'], (format) =>
       this.addHotkey(Keyboard.hotkeys[format.toUpperCase()], (range) =>
         if (@quill.editor.doc.formats[format])
           this.toggleFormat(range, format)
         return false
-      )
+      ) if @options[format]
     )
     this._initDeletes()
-    this._initEnter()
+    this._initEnter() if @options.enter
 
   _initListeners: ->
     dom(@quill.root).on('keydown', (event) =>
