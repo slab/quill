@@ -52,11 +52,11 @@ describe('Document', ->
 
   describe('search', ->
     beforeEach( ->
-      @container.innerHTML = '
-        <div>
-          <div>0123</div>
-          <div><br></div>
-          <div><b>6789</b></div>
+      @container.innerHTML = '\
+        <div>\
+          <div>0123</div>\
+          <div><br></div>\
+          <div><b>6789</b></div>\
         </div>'
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
     )
@@ -132,70 +132,70 @@ describe('Document', ->
 
   describe('manipulation', ->
     beforeEach( ->
-      @container.innerHTML = Quill.Normalizer.stripWhitespace('
-        <div>
-          <div>Test</div>
-          <div><i>Test</i></div>
-          <div><br></div>
-          <div><br></div>
-          <div><b>Test</b></div>
+      @container.innerHTML = '\
+        <div>\
+          <div>Test</div>\
+          <div><i>Test</i></div>\
+          <div><br></div>\
+          <div><br></div>\
+          <div><b>Test</b></div>\
         </div>
-      ')
+      '
       @doc = new Quill.Document(@container.firstChild, { formats: Quill.DEFAULTS.formats })
       @lines = @doc.lines.toArray()
     )
 
     it('mergeLines() normal', ->
       @doc.mergeLines(@lines[0], @lines[1])
-      expect(@doc.root).toEqualHTML('
-        <div>Test<i>Test</i></div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test<i>Test</i></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('mergeLines() with newline', ->
       @doc.mergeLines(@lines[1], @lines[2])
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('mergeLines() from newline', ->
       @doc.mergeLines(@lines[3], @lines[4])
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('mergeLines() two newlines', ->
       @doc.mergeLines(@lines[2], @lines[3])
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('removeLine() existing', ->
       @doc.removeLine(@lines[1])
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
@@ -203,76 +203,76 @@ describe('Document', ->
     it('removeLine() lineNode missing', ->
       dom(@lines[1].node).remove()
       @doc.removeLine(@lines[1])
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length - 1)
     )
 
     it('splitLine() middle', ->
       @doc.splitLine(@lines[1], 2)
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Te</i></div>
-        <div><i>st</i></div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Te</i></div>\
+        <div><i>st</i></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() beginning', ->
       @doc.splitLine(@lines[1], 0)
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><br></div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><br></div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() end', ->
       @doc.splitLine(@lines[1], 4)
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() beyond end', ->
       @doc.splitLine(@lines[1], 5)
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
 
     it('splitLine() split break', ->
       @doc.splitLine(@lines[2], 0)
-      expect(@doc.root).toEqualHTML('
-        <div>Test</div>
-        <div><i>Test</i></div>
-        <div><br></div>
-        <div><br></div>
-        <div><br></div>
-        <div><b>Test</b></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>Test</div>\
+        <div><i>Test</i></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><br></div>\
+        <div><b>Test</b></div>\
       ', true)
       expect(@doc.lines.length).toEqual(@lines.length + 1)
     )
@@ -284,28 +284,28 @@ describe('Document', ->
     )
 
     it('setHTML() invalid', ->
-      @doc.setHTML('
-        <div>
-          <div>
-            <div>A</div>B<br>C</div>
-          </div>
-        </div>
-        <div>
-          <b></b>
-        </div>
+      @doc.setHTML('\
+        <div>\
+          <div>\
+            <div>A</div>B<br>C</div>\
+          </div>\
+        </div>\
+        <div>\
+          <b></b>\
+        </div>\
       ')
-      expect(@doc.root).toEqualHTML('
-        <div>A</div>
-        <div>B<br></div>
-        <div>C</div>
-        <div><b></b><br></div>
+      expect(@doc.root).toEqualHTML('\
+        <div>A</div>\
+        <div>B<br></div>\
+        <div>C</div>\
+        <div><b></b><br></div>\
       ', true)
     )
 
     it('setHTML() with comment', ->
-      @doc.setHTML('
-        <!-- HTML Comment -->
-        <div>Test</div>
+      @doc.setHTML('\
+        <!-- HTML Comment -->\
+        <div>Test</div>\
       ')
     )
   )
@@ -364,10 +364,10 @@ describe('Document', ->
 
   describe('rebuild()', ->
     beforeEach( ->
-      @container.innerHTML = '
-        <div>
-          <div>0123</div>
-          <div>5678</div>
+      @container.innerHTML = '\
+        <div>\
+          <div>0123</div>\
+          <div>5678</div>\
         </div>'
       @doc = new Quill.Document(@container)
     )

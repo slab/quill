@@ -7,9 +7,9 @@ dom           = Quill.require('dom')
 class MultiCursor extends EventEmitter2
   @DEFAULTS:
     template:
-     '<span class="cursor-flag">
-        <span class="cursor-name"></span>
-      </span>
+     '<span class="cursor-flag">\
+        <span class="cursor-name"></span>\
+      </span>\
       <span class="cursor-caret"></span>'
     timeout: 2500
 

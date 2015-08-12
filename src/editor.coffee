@@ -41,7 +41,25 @@ class Editor
 
   applyDelta: (delta, source) ->
     this.update()
-    # TODO implement
+    delta.ops.reduce((index, op) =>
+      if op.insert?
+        if _.isString(op.insert)
+          @doc.insertAt(index, op.insert)
+          length = op.insert.length
+        else
+          @doc.insertAt(index, op.attributes)
+          length = 1
+        # TODO handle attributes
+        return index + length
+      else if _.isNumber(op.delete)
+        @doc.deleteAt(index, op.delete)
+        return index
+      else if _.isNumber(op.retain)
+        _.each(op.attributes, (value, name) =>
+          @doc.formatAt(index, op.retain, name, value)
+        )
+        return index + op.retain
+    , 0)
     this.update(source)
 
   deleteText: (start, end, source) ->

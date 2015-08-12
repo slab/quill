@@ -2,27 +2,27 @@ dom = Quill.Lib.DOM
 
 describe('Picker', ->
   beforeEach( ->
-    @container = $('#test-container').html(Quill.Normalizer.stripWhitespace('
-      <select title="Font" class="ql-font">
-        <option value="sans-serif" selected>Sans Serif</option>
-        <option value="serif">Serif</option>
-        <option value="monospace">Monospace</option>
-      </select>
-    ')).get(0)
+    @container = $('#test-container').html('\
+      <select title="Font" class="ql-font">\
+        <option value="sans-serif" selected>Sans Serif</option>\
+        <option value="serif">Serif</option>\
+        <option value="monospace">Monospace</option>\
+      </select>\
+    ').get(0)
     @select = @container.querySelector('select')
     @picker = new Quill.Lib.Picker(@select)
   )
 
   it('constructor', ->
-    expect(@container.querySelector('.ql-picker').outerHTML).toEqualHTML('
-      <span title="Font" class="ql-font ql-picker">
-        <span data-value="sans-serif" class="ql-picker-label">Sans Serif</span>
-        <span class="ql-picker-options">
-          <span data-value="sans-serif" class="ql-picker-item ql-selected">Sans Serif</span>
-          <span data-value="serif" class="ql-picker-item">Serif</span>
-          <span data-value="monospace" class="ql-picker-item">Monospace</span>
-        </span>
-      </span>
+    expect(@container.querySelector('.ql-picker').outerHTML).toEqualHTML('\
+      <span title="Font" class="ql-font ql-picker">\
+        <span data-value="sans-serif" class="ql-picker-label">Sans Serif</span>\
+        <span class="ql-picker-options">\
+          <span data-value="sans-serif" class="ql-picker-item ql-selected">Sans Serif</span>\
+          <span data-value="serif" class="ql-picker-item">Serif</span>\
+          <span data-value="monospace" class="ql-picker-item">Monospace</span>\
+        </span>\
+      </span>\
     ')
   )
 

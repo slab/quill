@@ -28,35 +28,11 @@ class Wrapper
         attributes[attr.name] = attr.value
       return attributes
 
-  child: (offset) ->
-    child = @node.firstChild
-    length = dom(child).length()
-    while child?
-      break if offset < length
-      offset -= length
-      child = child.nextSibling
-      length = dom(child).length()
-    unless child?
-      child = @node.lastChild
-      offset = dom(child).length()
-    return [child, offset]
-
   childNodes: ->
     return _.map(@node.childNodes)
 
   classes: ->
     return @node.className.split(/\s+/)
-
-  data: (key, value) ->
-    if value?
-      @node['ql-data'] = {} unless @node['ql-data']?
-      @node['ql-data'][key] = value
-      return this
-    else
-      return @node['ql-data']?[key]
-
-  descendants: ->
-    return _.map(@node.getElementsByTagName('*'))
 
   get: ->
     return @node
@@ -82,58 +58,6 @@ class Wrapper
   isTextNode: ->
     return @node?.nodeType == dom.TEXT_NODE
 
-  isolate: (root) ->
-    dom(@node.nextSibling).splitBefore(root) if @node.nextSibling?
-    this.splitBefore(root)
-    return this
-
-  length: ->
-    return 0 unless @node?
-    length = this.text().length
-    if this.isElement()
-      length += @node.querySelectorAll(Object.keys(dom.EMBED_TAGS).join(',')).length
-    return length
-
-  merge: (node) ->
-    $node = dom(node)
-    if this.isElement()
-      $node.moveChildren(@node)
-      this.normalize()
-    else
-      this.text(this.text() + $node.text())
-    $node.remove()
-    return this
-
-  moveChildren: (newParent) ->
-    _.each(this.childNodes(), (child) ->
-      newParent.appendChild(child)
-    )
-    return this
-
-  nextLineNode: (root) ->
-    nextNode = @node.nextSibling
-    if !nextNode? and @node.parentNode != root
-      nextNode = @node.parentNode.nextSibling
-    if nextNode? and dom.LIST_TAGS[nextNode.tagName]?
-      nextNode = nextNode.firstChild
-    return nextNode
-
-  # IE normalize is broken
-  normalize: ->
-    curNode = @node.firstChild
-    while curNode?
-      nextNode = curNode.nextSibling
-      $node = dom(curNode)
-      if nextNode? and dom(nextNode).isTextNode()
-        if $node.text().length == 0
-          $node.remove()
-        else if $node.isTextNode()
-          followingNode = nextNode.nextSibling
-          $node.merge(nextNode)
-          nextNode = followingNode
-      curNode = nextNode
-    return this
-
   on: (eventName, listener) ->
     @node.addEventListener(eventName, (event) =>
       arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
@@ -145,11 +69,6 @@ class Wrapper
     )
     return this
 
-  remove: ->
-    @node.parentNode?.removeChild(@node)
-    @node = null
-    return null
-
   removeClass: (cssClass) ->
     return unless this.hasClass(cssClass)
     if @node.classList?
@@ -160,48 +79,6 @@ class Wrapper
       @node.className = classArray.join(' ')
     @node.removeAttribute('class') unless @node.getAttribute('class')
     return this
-
-  replace: (newNode) ->
-    @node.parentNode.replaceChild(newNode, @node)
-    @node = newNode
-    return this
-
-  splitBefore: (root, force = false) ->
-    return this if @node == root or @node.parentNode == root
-    if @node.previousSibling? or force
-      parentNode = @node.parentNode
-      parentClone = parentNode.cloneNode(false)
-      parentNode.parentNode.insertBefore(parentClone, parentNode.nextSibling)
-      refNode = @node
-      while refNode?
-        nextNode = refNode.nextSibling
-        parentClone.appendChild(refNode)
-        refNode = nextNode
-      return dom(parentClone).splitBefore(root)
-    else
-      return dom(@node.parentNode).splitBefore(root)
-
-  split: (offset, force = false) ->
-    # Check if split necessary
-    nodeLength = this.length()
-    offset = Math.max(0, offset)
-    offset = Math.min(offset, nodeLength)
-    return [@node.previousSibling, @node, false] unless force or offset != 0
-    return [@node, @node.nextSibling, false] unless force or offset != nodeLength
-    if @node.nodeType == dom.TEXT_NODE
-      after = @node.splitText(offset)
-      return [@node, after, true]
-    else
-      left = @node
-      right = @node.cloneNode(false)
-      @node.parentNode.insertBefore(right, left.nextSibling)
-      [child, offset] = this.child(offset)
-      [childLeft, childRight] = dom(child).split(offset)
-      while childRight != null
-        nextRight = childRight.nextSibling
-        right.appendChild(childRight)
-        childRight = nextRight
-      return [left, right, true]
 
   styles: (styles, overwrite = false) ->
     if styles
@@ -222,16 +99,6 @@ class Wrapper
         return styles
       , {})
       return obj
-
-  switchTag: (newTag) ->
-    newTag = newTag.toUpperCase()
-    return this if @node.tagName == newTag
-    newNode = document.createElement(newTag)
-    attributes = this.attributes()
-    this.moveChildren(newNode) unless dom.VOID_TAGS[newTag]?
-    this.replace(newNode)
-    @node = newNode
-    return this.attributes(attributes)
 
   text: (text) ->
     if text?
@@ -292,23 +159,6 @@ class Wrapper
         event[initFn](eventName, options.bubbles, options.cancelable, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, 0)
     @node.dispatchEvent(event)
     lastKeyEvent = null
-    return this
-
-  unwrap: ->
-    ret = @node.firstChild
-    next = @node.nextSibling
-    _.each(this.childNodes(), (child) =>
-      @node.parentNode.insertBefore(child, next)
-    )
-    this.remove()
-    return ret
-
-  wrap: (wrapper) ->
-    @node.parentNode.insertBefore(wrapper, @node) if @node.parentNode?
-    parent = wrapper
-    while parent.firstChild?
-      parent = wrapper.firstChild
-    parent.appendChild(@node)
     return this
 
 
@@ -446,17 +296,6 @@ dom = _.extend(dom,
     'TRACK'
     'WBR'
   }
-
-  convertFontSize: (size) ->
-    if _.isString(size) and size.indexOf('px') > -1
-      sources = Object.keys(dom.FONT_SIZES)
-      targets = _.values(dom.FONT_SIZES)
-    else
-      targets = Object.keys(dom.FONT_SIZES)
-      sources = _.values(dom.FONT_SIZES)
-    for i,s of sources
-      return targets[i] if parseInt(size) <= parseInt(s)
-    return _.last(targets)
 
   isIE: (maxVersion) ->
     version = document.documentMode
