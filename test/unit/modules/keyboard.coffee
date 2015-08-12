@@ -81,4 +81,13 @@ describe('Keyboard', ->
       expect(dom($('.ql-size').get(0)).value()).toBe(size)
     )
   )
+
+  describe('options', ->
+    it('does not set up handlers', ->
+      @container.innerHTML = '<div>abc</div>'
+      quill = new Quill(@container.firstChild, { modules: { keyboard: { enter: false } } })
+      keyboard = quill.getModule('keyboard')
+      expect(keyboard.hotkeys[Quill.Lib.DOM.KEYS.ENTER]).toBe(undefined)
+    )
+  )
 )
