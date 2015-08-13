@@ -81,19 +81,42 @@ describe('Keyboard', ->
       expect(dom($('.ql-size').get(0)).value()).toBe(size)
     )
 
-    it('removeHotkey by name', ->
-      fn = @quill.getModule('keyboard').removeHotkey('BOLD')
-      expect(typeof fn).toBe('function');
+    it('removeHotkeys by name', ->
+      counter = 0
+      fn = -> counter += 1
+      keyboard = @quill.getModule('keyboard')
+      keyboard.addHotkey('S', fn)
+      dom(@quill.root).trigger('keydown', { key: 'S' })
+      expect(counter).toBe(1)
+      result = keyboard.removeHotkeys('S', fn)
+      expect(result.length).toBe(1)
+      expect(result[0]).toBe(fn);
+      dom(@quill.root).trigger('keydown', { key: 'S' })
+      expect(counter).toBe(1)
     )
 
-    it('removeHotkey by number', ->
-      fn = @quill.getModule('keyboard').removeHotkey(13)
-      expect(typeof fn).toBe('function');
+    it('removeHotkeys by object', ->
+      counter = 0
+      fn = -> counter += 1
+      keyboard = @quill.getModule('keyboard')
+      keyboard.addHotkey({ key: 'S', metaKey: true }, fn)
+      dom(@quill.root).trigger('keydown', { key: 'S', metaKey: true })
+      result = keyboard.removeHotkeys({ key: 'S', metaKey: true })
+      expect(result.length).toBe(1)
+      expect(result[0]).toBe(fn)
+      dom(@quill.root).trigger('keydown', { key: 'S', metaKey: true })
+      expect(counter).toBe(1)
     )
 
-    it('removeHotkey by object', ->
-      fn = @quill.getModule('keyboard').removeHotkey({ key: 'B', metaKey: true })
-      expect(typeof fn).toBe('function');
+    it('removeHotKeys only the specified callback', ->
+      fn = ->
+      anotherFn = ->
+      keyboard = @quill.getModule('keyboard')
+      keyboard.addHotkey({ key: 'S', metaKey: true }, fn)
+      keyboard.addHotkey({ key: 'S', metaKey: true }, anotherFn)
+      result = keyboard.removeHotkeys({ key: 'S', metaKey: true }, fn)
+      expect(result.length).toBe(1)
+      expect(result[0]).toBe(fn)
     )
   )
 )
