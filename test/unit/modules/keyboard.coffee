@@ -80,5 +80,20 @@ describe('Keyboard', ->
       expect(dom($('.ql-bold').get(0)).hasClass('ql-active')).toBe(true)
       expect(dom($('.ql-size').get(0)).value()).toBe(size)
     )
+
+    it('removeHotkey by name', ->
+      fn = @quill.getModule('keyboard').removeHotkey('BOLD')
+      expect(typeof fn).toBe('function');
+    )
+
+    it('removeHotkey by number', ->
+      fn = @quill.getModule('keyboard').removeHotkey(13)
+      expect(typeof fn).toBe('function');
+    )
+
+    it('removeHotkey by object', ->
+      fn = @quill.getModule('keyboard').removeHotkey({ key: 'B', metaKey: true })
+      expect(typeof fn).toBe('function');
+    )
   )
 )
