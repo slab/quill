@@ -30,6 +30,13 @@ class Keyboard
       @hotkeys[which].push(hotkey)
     )
 
+  removeHotkey: (hotkey) ->
+    hotkey = if Keyboard.hotkeys[hotkey] then Keyboard.hotkeys[hotkey] else hotkey
+    hotkey = if _.isObject(hotkey) then hotkey else { key: hotkey }
+    which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.toUpperCase().charCodeAt(0)
+    for handler in @hotkeys[which] || []
+      return handler.callback if _.isEqual(hotkey, _.omit(handler, 'callback'))
+
   toggleFormat: (range, format) ->
     if range.isCollapsed()
       delta = @quill.getContents(Math.max(0, range.start-1), range.end)
