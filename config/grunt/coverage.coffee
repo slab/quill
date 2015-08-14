@@ -3,7 +3,7 @@ fs = require('fs')
 glob = require('glob')
 istanbul = require('istanbul')
 collector = new istanbul.Collector()
-reporter = new istanbul.Reporter(null, '.coverage/merged')
+reporter = new istanbul.Reporter(null, '.build/coverage/merged')
 
 module.exports = (grunt) ->
   grunt.registerTask('istanbul:instrument', ->
@@ -17,7 +17,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('istanbul:report', ->
     done = this.async()
-    glob('.coverage/**/*.json', (er, files) ->
+    glob('.build/coverage/**/*.json', (er, files) ->
       async.each(files, (file, callback) ->
         fs.readFile(file, 'utf8', (err, data) ->
           collector.add(JSON.parse(data))

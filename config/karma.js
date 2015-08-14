@@ -18,7 +18,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     coverageReporter: {
       type: 'json',
-      dir: '.coverage/karma/'
+      dir: '.build/coverage/karma/'
     },
     reporters: ['progress'],
     preprocessors: {

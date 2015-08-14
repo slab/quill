@@ -8,7 +8,7 @@ config.onPrepare = _.wrap(config.onPrepare, function(onPrepare) {
 });
 
 config.onComplete = function() {
-  var reporter = new istanbul.Reporter(null, '.coverage/protractor');
+  var reporter = new istanbul.Reporter(null, '.build/coverage/protractor');
   reporter.add('json');
   reporter.write(protractor.collector, false, function() {});
 };
