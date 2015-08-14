@@ -127,7 +127,7 @@ class Quill extends EventEmitter2
 
   getBounds: (index) ->
     @editor.update()
-    return @selection.getBounds(index)
+    return @editor.selection.getBounds(index)
 
   getContents: (start = 0, end = undefined) ->
     [start, end] = this._buildParams(start, end)
@@ -143,7 +143,7 @@ class Quill extends EventEmitter2
     return @modules[name]
 
   getSelection: ->
-    @editor.checkUpdate()   # Make sure we access getRange with editor in consistent state
+    @editor.update()   # Make sure we access getRange with editor in consistent state
     return @editor.selection.getRange()
 
   getText: (start = 0, end = undefined) ->
@@ -166,14 +166,14 @@ class Quill extends EventEmitter2
     )
 
   prepareFormat: (name, value, source = Quill.sources.API) ->
-    format = @editor.doc.formats[name]
+    format = Parchment.match(name)
     return unless format?     # TODO warn
     range = this.getSelection()
     return unless range?.isCollapsed()
-    if format.isType(Format.types.LINE)
+    if format instanceof Parchment.Block
       this.formatLine(range, name, value, source)
     else
-      format.prepare(value)
+      @editor.selection.prepare(value)
 
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
@@ -190,7 +190,7 @@ class Quill extends EventEmitter2
   setHTML: (html, source = Quill.sources.API) ->
     html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html.trim()
     @editor.doc.setHTML(html)
-    @editor.checkUpdate(source)
+    @editor.update(source)
 
   setSelection: (start, end, source = Quill.sources.API) ->
     if _.isNumber(start) and _.isNumber(end)

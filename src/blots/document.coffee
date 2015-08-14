@@ -3,6 +3,9 @@ Parchment = require('parchment')
 
 
 class Document extends Parchment.Root
+  @blotName = 'root'
+  @tagName = 'DIV'
+
   constructor: (domNode, @options) ->
     super(domNode)
     @delta = this.getDelta()

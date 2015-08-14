@@ -5,13 +5,13 @@ class Image extends Parchment.Embed
   @blotName: 'image'
   @tagName: 'IMG'
 
-  init: (value) ->
-    this.domNode.setAttribute('src', value.src)
-    this.domNode.setAttribute('alt', value.alt) if value.alt?
+  constructor: (value) ->
+    super(value)
+    @domNode.setAttribute('src', value) if typeof value == 'string'
 
   formats: ->
     format = super()
-    format.src = this.domNode.getAttribute('src')
+    format.src = @domNode.getAttribute('src')
 
   values: ->
     return 1  # Quill embed type

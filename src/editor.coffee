@@ -23,6 +23,7 @@ Align    = require('./formats/align')
 Document = require('./blots/document')
 Block    = require('./blots/block')
 Break    = require('./blots/break')
+Cursor   = require('./blots/cursor')
 
 
 class Editor
@@ -31,12 +32,12 @@ class Editor
     SILENT : 'silent'
     USER   : 'user'
 
-  constructor: (@root, @quill, @options = {}) ->
+  constructor: (@root, @emitter, @options = {}) ->
     @root.setAttribute('id', @options.id)
-    @root.innerHTML = @root.innerHTML.trim().replace(/\s/g, '')  # TODO fix
+    @root.innerHTML = @root.innerHTML.trim()  # TODO fix
     @doc = new Document(@root, @options)
     @length = @doc.getLength()
-    @selection = new Selection(@doc, @quill)
+    @selection = new Selection(@doc, @emitter)
     this.enable() unless @options.readOnly
 
   applyDelta: (delta, source) ->
@@ -108,7 +109,7 @@ class Editor
     ).join('').slice(start, end)
     return text
 
-  insertEmbed: (index, embed, value) ->
+  insertEmbed: (index, embed, value, source) ->
     this.update()
     @doc.insertAt(index, embed, value)
     this.update(source)
@@ -120,7 +121,7 @@ class Editor
 
   update: (source = 'user') ->
     if (delta = @doc.update())
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
+      @emitter.emit(@emitter.constructor.events.TEXT_CHANGE, delta, source)
 
 
 module.exports = Editor

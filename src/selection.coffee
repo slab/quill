@@ -8,8 +8,8 @@ Range     = require('./lib/range')
 
 
 class Selection
-  constructor: (@parchment, @emitter) ->
-    @root = @parchment.domNode
+  constructor: (@doc, @emitter) ->
+    @root = @doc.domNode
     @focus = false
     @range = new Range(0, 0)
     @nullDelay = false
@@ -18,9 +18,11 @@ class Selection
   checkFocus: ->
     return document.activeElement == @root
 
+  prepare: (format, value) ->
+    console.log(format, value)
+
   getBounds: (index) ->
-    pos = _.last(@parchment.findPath(index))      # TODO inclusive
-    # [leaf, offset] = @doc.findLeafAt(index, true)
+    pos = _.last(@doc.findPath(index))      # TODO inclusive
     return null unless pos?
     leafNode = pos.blot.domNode
     containerBounds = @root.parentNode.getBoundingClientRect()
@@ -136,7 +138,7 @@ class Selection
           else
             offset = node.childNodes.length
         else
-          return [node, dom(node).length()]
+          return [node, dom(node).text().length]
 
   _getNativeRange: ->
     selection = document.getSelection()
@@ -148,29 +150,20 @@ class Selection
     return null
 
   _indexToPosition: (index) ->
-    return [@root, 0] if @parchment.children.length == 0
-    pos = _.last(@parchment.findPath(index))
-    return this._decodePosition(pos.blot.domNode, pos.blot)
+    return [@root, 0] if @doc.children.length == 0
+    path = @doc.findPath(index)
+    pos = _.last(path)
+    return this._decodePosition(pos.blot.domNode, pos.offset)
 
   _positionToIndex: (node, offset) ->
     offset = 0 if dom.isIE(10) and node.tagName == 'BR' and offset == 1
     [leafNode, offset] = this._encodePosition(node, offset)
-    leaf = Parchment.findBlot(leafNode)
-    line = leaf
-    while line.parent? and line.parent != @parchment
-      line = line.parent
-    # TODO move to linked list
-    return 0 unless line?   # Occurs on empty document
-    lineOffset = 0
-    while line.prev?
-      line = line.prev
-      lineOffset += line.getLength()
-    return lineOffset unless leaf?
-    leafOffset = 0
-    while leaf.prev?
-      leaf = leaf.prev
-      leafOffset += leaf.getLength()
-    return lineOffset + leafOffset + offset
+    blot = Parchment.findBlot(leafNode)
+    return 0 unless blot?   # Occurs on empty document
+    while blot.domNode != @root
+      offset += blot.offset()
+      blot = blot.parent
+    return offset
 
   _setNativeRange: (startNode, startOffset, endNode, endOffset) ->
     selection = document.getSelection()
