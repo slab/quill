@@ -27,7 +27,7 @@ Size       = require('./formats/size')
 Align    = require('./formats/align')
 
 Block    = require('./blots/block')
-Block    = require('./blots/break')
+Break    = require('./blots/break')
 Cursor   = require('./blots/cursor')
 
 

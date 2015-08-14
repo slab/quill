@@ -8,8 +8,10 @@ class Link extends Parchment.Inline
     super(value)
     @domNode.href = value
 
-  formats: ->
-    return [this.domNode.href]
+  getFormat: ->
+    format = super()
+    format.link = this.domNode.href
+    return format
 
 
 Parchment.define(Link)

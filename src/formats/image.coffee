@@ -9,11 +9,12 @@ class Image extends Parchment.Embed
     super(value)
     @domNode.setAttribute('src', value) if typeof value == 'string'
 
-  formats: ->
+  getFormat: ->
     format = super()
-    format.src = @domNode.getAttribute('src')
+    format.image = @domNode.getAttribute('src')
+    return format
 
-  values: ->
+  getValue: ->
     return 1  # Quill embed type
 
 

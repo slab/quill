@@ -21,7 +21,10 @@ class Block extends Parchment.Block
 
   ensureBreak: ->
     if this.getLength() == NEWLINE_LENGTH
-      this.appendChild(Parchment.create('break'))
+      target = this
+      while target.children? && target.children.head instanceof Parchment.Parent
+        target = target.children.head
+      target.appendChild(Parchment.create('break'))
 
   findPath: (index) ->
     if index < this.getLength()
@@ -46,7 +49,7 @@ class Block extends Parchment.Block
         return blot.children.reduce((memo, child) ->
           return memo.concat(collector(child))
         , []).map((childFormat) ->
-          return _.defaults(format, childFormat)
+          return _.defaults({}, format, childFormat)
         )
       else
         return [format]
@@ -69,7 +72,7 @@ class Block extends Parchment.Block
     return if value.length == 0
     lines = value.split('\n')
     text = lines.shift()
-    this.insertAt(index, text)
+    super(index, text)
     if (lines.length > 0)
       next = this.split(index + text.length, true)
       next.insertAt(0, lines.join('\n'))
@@ -79,6 +82,12 @@ class Block extends Parchment.Block
       br = this.children.head
     super(blot, ref)
     br.remove() if br?
+
+  split: (index, force) ->
+    after = super(index, force)
+    this.ensureBreak()
+    after.ensureBreak()
+    return after
 
 
 Parchment.define(Block)

@@ -4,12 +4,11 @@ class Break extends Parchment.Embed
   @blotName = 'break'
   @tagName = 'BR'
 
-  constructor: (value) ->
-    @formats = {}
-    super(value)
-
   getLength: ->
     return 0
+
+  getValue: ->
+    return ''
 
   insertAt: (index, value, def) ->
     super(index, value, def)

@@ -44,7 +44,7 @@ class Item extends Block
 
   getFormat: ->
     format = super()
-    _.last(format)[@parent.statics.blotName] = true
+    format[@parent.statics.blotName] = true
     return format
 
 
