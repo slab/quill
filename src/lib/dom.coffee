@@ -415,7 +415,8 @@ dom = _.extend(dom,
   }
 
   EMBED_TAGS: {
-    'IMG'
+    'IMG',
+    'INPUT'
   }
 
   LINE_TAGS: {
