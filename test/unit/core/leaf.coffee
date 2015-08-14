@@ -1,6 +1,6 @@
 dom = Quill.Lib.DOM
 
-describe('Leaf', ->
+xdescribe('Leaf', ->
   beforeEach( ->
     @container = $('#test-container').html('').get(0)
   )

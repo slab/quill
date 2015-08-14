@@ -1,6 +1,6 @@
 dom = Quill.Lib.DOM
 
-describe('Document', ->
+xdescribe('Document', ->
   beforeEach( ->
     @container = jasmine.clearContainer()
   )

@@ -1,6 +1,6 @@
 dom = Quill.Lib.DOM
 
-describe('Line', ->
+xdescribe('Line', ->
   beforeEach( ->
     @container = jasmine.clearContainer()
     @doc = new Quill.Document(@container, { formats: Quill.DEFAULTS.formats })

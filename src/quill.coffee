@@ -7,23 +7,50 @@ Editor        = require('./editor')
 Parchment     = require('parchment')
 Range         = require('./lib/range')
 
+Selection = require('./selection')
+
+Bold      = require('./formats/bold')
+Italic    = require('./formats/italic')
+Strike    = require('./formats/strike')
+Underline = require('./formats/underline')
+Link      = require('./formats/link')
+
+List      = require('./formats/list')
+
+Image     = require('./formats/image')
+
+Background = require('./formats/background')
+Color      = require('./formats/color')
+Font       = require('./formats/font')
+Size       = require('./formats/size')
+
+Align    = require('./formats/align')
+
+Block    = require('./blots/block')
+Block    = require('./blots/break')
+Cursor   = require('./blots/cursor')
+
 
 class Quill extends EventEmitter2
   @version: pkg.version
-  @editors: []
 
-  @modules: []
-  @themes: []
+  @modules: {}
+  @themes: {}
 
   @DEFAULTS:
-    formats: ['align', 'bold', 'italic', 'strike', 'underline', 'color', 'background', 'font', 'size', 'link', 'image', 'bullet', 'list']
-    modules:
-      'keyboard': true
-      'paste-manager': true
-      'undo-manager': true
-    pollInterval: 100
+    formats: [
+      'align',
+      'bullet', 'list',
+      'bold', 'italic', 'strike', 'underline',
+      'link',
+      'background', 'color', 'font', 'size',
+      'image'
+    ]
+    modules: {}
+      # 'keyboard': true
+      # 'paste-manager': true
+      # 'undo-manager': true
     readOnly: false
-    styles: {}
     theme: 'base'
 
   @events:
@@ -34,7 +61,10 @@ class Quill extends EventEmitter2
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
 
-  @sources: Editor.sources
+  @sources:
+    API    : 'api'
+    SILENT : 'silent'
+    USER   : 'user'
 
   @registerModule: (name, module) ->
     console.warn("Overwriting #{name} module") if Quill.modules[name]?
@@ -62,29 +92,26 @@ class Quill extends EventEmitter2
     @container.innerHTML = ''
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
-    @options.id = @id = "ql-editor-#{Quill.editors.length + 1}"
+    @options.id = _.uniqueId('ql-editor-')
     @modules = {}
     @root = this.addContainer('ql-editor')
-    @root.innerHTML = html
-    @editor = new Editor(@root, this, @options)
-    Quill.editors.push(this)
-    # this.setHTML(html, Quill.sources.SILENT)
-    themeClass = Quill.themes[@options.theme]
-    throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?") unless themeClass?
-    @theme = new themeClass(this, @options)
-    _.each(@options.modules, (option, name) =>
-      this.addModule(name, option)
+    @root.innerHTML = html.trim()  # TODO fix
+    @root.setAttribute('id', @options.id)
+    @editor = new Editor(@root)
+    @selection = new Selection(@editor)
+    @editor.onUpdate = (delta) =>
+      this.emit(Quill.events.TEXT_CHANGE, delta, Quill.sources.USER)
+    @selection.onUpdate = (range) =>
+      this.emit(Quill.events.SELECTION_CHANGE, range, Quill.sources.USER)
+    if (themeClass = Quill.themes[@options.theme])
+      @theme = new themeClass(this, @options)
+    else
+      throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?")
+    # TODO should modules depend on theme?
+    Object.keys(@options.modules).forEach((name) =>
+      this.addModule(name, @options.modules[name])
     )
-
-  destroy: ->
-    html = this.getHTML()
-    _.each(@modules, (module, name) ->
-      module.destroy() if _.isFunction(module.destroy)
-    )
-    @editor.destroy()
-    this.removeAllListeners()
-    Quill.editors.splice(_.indexOf(Quill.editors, this), 1)
-    @container.innerHTML = html
+    this.enable() unless @options.readOnly
 
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
@@ -92,10 +119,6 @@ class Quill extends EventEmitter2
     dom(container).addClass(className)
     @container.insertBefore(container, refNode)
     return container
-
-  addFormat: (name, config) ->
-    @editor.doc.addFormat(name, config)
-    this.emit(Quill.events.FORMAT_INIT, name)
 
   addModule: (name, options) ->
     moduleClass = Quill.modules[name]
@@ -107,34 +130,53 @@ class Quill extends EventEmitter2
     return @modules[name]
 
   deleteText: (start, end, source = Quill.sources.API) ->
-    @editor.deleteText(start, end, source)
+    track.call(this, source, =>
+      @editor.deleteAt(start, end - start)
+    )
+
+  disable: ->
+    this.enable(false)
 
   emit: (eventName, args...) ->
     super(Quill.events.PRE_EVENT, eventName, args...)
     super(eventName, args...)
     super(Quill.events.POST_EVENT, eventName, args...)
 
+  enable: (enabled = true) ->
+    @root.setAttribute('contenteditable', enabled)
+
   focus: ->
-    @editor.focus()
+    @selection.focus()
 
   formatLine: (start, end, name, value, source) ->
-    [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    @editor.formatLine(start, end, formats, source)
+    [start, end, formats, source] = buildParams(start, end, name, value, source)
+    track.call(this, source, =>
+      # TODO handle lists
+      Object.keys(formats).forEach((format) =>
+        @editor.children.forEachAt(start, end - start, (line, offset) ->
+          line.format(name, value)
+        )
+      )
+    )
 
   formatText: (start, end, name, value, source) ->
-    [start, end, formats, source] = this._buildParams(start, end, name, value, source)
-    @editor.formatText(start, end, formats, source)
+    [start, end, formats, source] = buildParams(start, end, name, value, source)
+    track.call(this, source, =>
+      Object.keys(formats).forEach((format) =>
+        @editor.formatAt(start, end - start, name, value)
+      )
+    )
 
   getBounds: (index) ->
-    @editor.update()
-    return @editor.selection.getBounds(index)
+    return @selection.getBounds(index)
 
   getContents: (start = 0, end = undefined) ->
-    [start, end] = this._buildParams(start, end)
-    return @editor.getContents(start, end)
+    [start, end] = buildParams(start, end)
+    return @editor.getDelta().slice(start, end)
 
   getHTML: ->
-    @editor.getHTML()
+    # TODO fix
+    return @root.innerHTML
 
   getLength: ->
     return @editor.getLength()
@@ -143,21 +185,31 @@ class Quill extends EventEmitter2
     return @modules[name]
 
   getSelection: ->
-    @editor.update()   # Make sure we access getRange with editor in consistent state
-    return @editor.selection.getRange()
+    this.update()   # Make sure we access getRange with editor in consistent state
+    return @selection.getRange()
 
   getText: (start = 0, end = undefined) ->
-    [start, end] = this._buildParams(start, end)
-    return @editor.getText(start, end)
+    [start, end] = buildParams(start, end)
+    values = [].concat.apply([], @editor.getValue())
+    text = values.map((value) ->
+      return if _.isString(value) then value else dom.EMBED_TEXT
+    ).join('').slice(start, end)
+    return text
 
-  insertEmbed: (index, type, url, source) ->
-    [index, end, formats, source] = this._buildParams(index, 0, type, url, source)
-    @editor.insertEmbed(index, type, url, source)
+  insertEmbed: (index, embed, value, source) ->
+    [index, end, formats, source] = buildParams(index, 0, embed, value, source)
+    track.call(this, source, =>
+      @editor.insertEmbed(index, embed, value, source)
+    )
 
   insertText: (index, text, name, value, source) ->
-    [index, end, formats, source] = this._buildParams(index, 0, name, value, source)
-    @editor.insertText(index, text, source)
-    @editor.formatText(index, index + text.length, formats, source)
+    [index, end, formats, source] = buildParams(index, 0, name, value, source)
+    track.call(this, source, =>
+      @editor.insertText(index, text, source)
+      Object.keys(formats).forEach((format) =>
+        @editor.formatAt(index, text.length, name, value)
+      )
+    )
 
   onModuleLoad: (name, callback) ->
     if (@modules[name]) then return callback(@modules[name])
@@ -165,32 +217,18 @@ class Quill extends EventEmitter2
       callback(module) if moduleName == name
     )
 
-  prepareFormat: (name, value, source = Quill.sources.API) ->
-    format = Parchment.match(name)
-    return unless format?     # TODO warn
-    range = this.getSelection()
-    return unless range?.isCollapsed()
-    if format instanceof Parchment.Block
-      this.formatLine(range, name, value, source)
-    else
-      @editor.selection.prepare(value)
+  prepareFormat: (name, value) ->
+    @selection.prepare(name, value)
 
   setContents: (delta, source = Quill.sources.API) ->
     if Array.isArray(delta)
       delta = new Delta(delta.slice())
     else
-      delta = new Delta(delta.ops.slice())
-    # Retain trailing newline unless inserting one
-    lastOp = _.last(delta.slice(delta.length() - 1).ops)
-    delta.delete(this.getLength() - 1)
-    if lastOp? and _.isString(lastOp.insert) and _.last(lastOp.insert) == '\n'
-      delta.delete(1)
-    this.updateContents(delta, source)
-
-  setHTML: (html, source = Quill.sources.API) ->
-    html = "<#{dom.DEFAULT_BLOCK_TAG}><#{dom.DEFAULT_BREAK_TAG}></#{dom.DEFAULT_BLOCK_TAG}>" unless html.trim()
-    @editor.doc.setHTML(html)
-    @editor.update(source)
+      delta = delta.slice()
+    track.call(this, source, =>
+      @editor.deleteText(0, @editor.getLength())
+      applyDelta(@editor, delta)
+    )
 
   setSelection: (start, end, source = Quill.sources.API) ->
     if _.isNumber(start) and _.isNumber(end)
@@ -198,29 +236,65 @@ class Quill extends EventEmitter2
     else
       range = start
       source = end or source
-    @editor.selection.setRange(range, source)
+    @selection.setRange(range, source)
 
   setText: (text, source = Quill.sources.API) ->
     delta = new Delta().insert(text)
     this.setContents(delta, source)
 
   updateContents: (delta, source = Quill.sources.API) ->
-    delta = new Delta(delta) if Array.isArray(delta)
-    @editor.applyDelta(delta, source)
+    delta = new Delta(delta.slice()) if Array.isArray(delta)
+    track.call(this, source, =>
+      applyDelta(@editor, delta)
+    )
 
-  # fn(Number start, Number end, String name, String value, String source)
-  # fn(Number start, Number end, Object formats, String source)
-  # fn(Object range, String name, String value, String source)
-  # fn(Object range, Object formats, String source)
-  _buildParams: (params...) ->
-    if _.isObject(params[0])
-      params.splice(0, 1, params[0].start, params[0].end)
-    if _.isString(params[2])
-      formats = {}
-      formats[params[2]] = params[3]
-      params.splice(2, 2, formats)
-    params[3] ?= Quill.sources.API
-    return params
+  update: (source = Quill.sources.USER) ->
+    delta = @editor.update()
+    if delta.length() > 0
+      this.emit(Quill.events.TEXT_CHANGE, delta, source)
+    else if (range = @selection.update())
+      this.emit(Quill.events.SELECTION_CHANGE, range, source)
+
+
+applyDelta = (editor, delta) ->
+  delta.ops.reduce((index, op) =>
+    if op.insert?
+      if _.isString(op.insert)
+        editor.insertAt(index, op.insert)
+        length = op.insert.length
+      else
+        editor.insertAt(index, op.attributes)
+        length = 1
+      # TODO handle attributes
+      return index + length
+    else if _.isNumber(op.delete)
+      editor.deleteAt(index, op.delete)
+      return index
+    else if _.isNumber(op.retain)
+      _.each(op.attributes, (value, name) =>
+        editor.formatAt(index, op.retain, name, value)
+      )
+      return index + op.retain
+  , 0)
+
+# fn(Number start, Number end, String name, String value, String source)
+# fn(Number start, Number end, Object formats, String source)
+# fn(Object range, String name, String value, String source)
+# fn(Object range, Object formats, String source)
+buildParams = (params...) ->
+  if _.isObject(params[0])
+    params.splice(0, 1, params[0].start, params[0].end)
+  if _.isString(params[2])
+    formats = {}
+    formats[params[2]] = params[3]
+    params.splice(2, 2, formats)
+  params[3] ?= Quill.sources.API
+  return params
+
+track = (source, callback) ->
+  this.update()
+  callback.call(this)
+  this.update(source)
 
 
 Quill.registerTheme('base', require('./themes/base'))

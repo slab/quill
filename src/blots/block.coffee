@@ -19,6 +19,10 @@ class Block extends Parchment.Block
     super(index, length)
     this.ensureBreak()
 
+  ensureBreak: ->
+    if this.getLength() == NEWLINE_LENGTH
+      this.appendChild(Parchment.create('break'))
+
   findPath: (index) ->
     if index < this.getLength()
       return super(index, true)
@@ -35,19 +39,7 @@ class Block extends Parchment.Block
       this.format(name, value)
     super(index, length, name, value)
 
-  ensureBreak: ->
-    if this.getLength() == NEWLINE_LENGTH
-      this.appendChild(Parchment.create('break'))
-
   getDelta: ->
-    formats = this.getFormat()
-    values = this.getValue()
-    return values.reduce((delta, value, index) ->
-      delta.insert(value, formats[index])
-    , new Delta())
-
-  getFormat: ->
-    thisFormat = super()
     collector = (blot) ->
       format = blot.getFormat() || {}
       if (blot instanceof Parchment.Parent)
@@ -58,9 +50,13 @@ class Block extends Parchment.Block
         )
       else
         return [format]
-    return @children.reduce((memo, child) ->
+    formats = @children.reduce((memo, child) ->
       return memo.concat(collector(child))
-    , []).concat([thisFormat])
+    , []).concat(this.getFormat())
+    values = this.getValue()
+    return values.reduce((delta, value, index) ->
+      delta.insert(value, formats[index])
+    , new Delta())
 
   getLength: ->
     return super() + NEWLINE_LENGTH
