@@ -9,6 +9,10 @@
     "Keegan Poppen <keegan.poppen@gmail.com>"
   ],
   "main": "index.js",
+  "dependencies": {
+    "parchment": "~0.0.3",
+    "rich-text": "~2.1.0"
+  },
   "devDependencies": {
     "async": "~1.2.1",
     "browserify": "~10.2.1",
@@ -50,7 +54,6 @@
     "lodash": "~3.9.1",
     "lodash-cli": "~3.9.3",
     "protractor": "~2.1.0",
-    "rich-text": "~2.1.0",
     "stylify": "~1.0.0",
     "stylus": "~0.51.1",
     "through": "~2.3.7",
