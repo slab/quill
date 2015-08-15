@@ -11,21 +11,21 @@ describe('Editor', ->
       @container.innerHTML = ''
       editor = new Editor(@container)
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'))
-      expect(@container.innerHTML).toEqual('<p><br></p>')
+      expect(@container.innerHTML).toEqualHTML('<p><br></p>')
     )
 
     it('empty line', ->
       @container.innerHTML = '<p><br></p>'
       editor = new Editor(@container)
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'))
-      expect(@container.innerHTML).toEqual('<p><br></p>')
+      expect(@container.innerHTML).toEqualHTML('<p><br></p>')
     )
 
     it('empty line no break', ->
       @container.innerHTML = '<p></p>'
       editor = new Editor(@container)
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'))
-      expect(@container.innerHTML).toEqual('<p><br></p>')
+      expect(@container.innerHTML).toEqualHTML('<p><br></p>')
     )
 
     it('full document', ->
@@ -42,7 +42,7 @@ describe('Editor', ->
         </ul>\
         <p><br></p>\
         <p style="text-align: center;">\
-          <img src="http://quilljs.com/images/quill-photo.jpg" alt="Quill Pen">\
+          <img src="http://quilljs.com/images/quill-photo.jpg">\
         </p>\
         <p style="text-align: center;">\
           <a style="font-size: 32px;" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>\
@@ -69,7 +69,7 @@ describe('Editor', ->
         .insert('\n', { align: 'center' })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual(html)
+      expect(@container.innerHTML).toEqualHTML(html)
     )
   )
 
@@ -82,7 +82,7 @@ describe('Editor', ->
         .insert('01!!23', { bold: true })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual('<p><strong>01!!23</strong></p>')
+      expect(@container.innerHTML).toEqualHTML('<p><strong>01!!23</strong></p>')
     )
 
     it('embed', ->
@@ -95,7 +95,7 @@ describe('Editor', ->
         .insert('23', { bold: true })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual(
+      expect(@container.innerHTML).toEqualHTML(
         '<p><strong>01<img src="http://quilljs.com/images/cloud.png">23</strong></p>'
       )
     )
@@ -110,7 +110,7 @@ describe('Editor', ->
         .insert('23', { bold: true })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual('\
+      expect(@container.innerHTML).toEqualHTML('\
         <p><strong>01</strong></p>\
         <p><strong>23</strong></p>\
       ')
@@ -125,7 +125,7 @@ describe('Editor', ->
         .insert('0123', { bold: true })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual('\
+      expect(@container.innerHTML).toEqualHTML('\
         <p><strong><br></strong></p>\
         <p><strong>0123</strong></p>\
       ')
@@ -140,7 +140,7 @@ describe('Editor', ->
         .insert('0123', { bold: true })
         .insert('\n\n')
       )
-      expect(@container.innerHTML).toEqual('\
+      expect(@container.innerHTML).toEqualHTML('\
         <p><strong>0123</strong></p>\
         <p><strong><br></strong></p>\
       ')
@@ -155,7 +155,7 @@ describe('Editor', ->
         .insert('0123', { bold: true })
         .insert('\n\n')
       )
-      expect(@container.innerHTML).toEqual('\
+      expect(@container.innerHTML).toEqualHTML('\
         <p><strong>0123</strong></p>\
         <p><br></p>\
       ')
@@ -175,7 +175,7 @@ describe('Editor', ->
         .insert('23', { bold: true })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual('\
+      expect(@container.innerHTML).toEqualHTML('\
         <p><strong>01</strong></p>\
         <p><strong>!!</strong></p>\
         <p><strong>!!</strong></p>\
@@ -193,7 +193,7 @@ describe('Editor', ->
         .insert('23', { bold: true })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqual('\
+      expect(@container.innerHTML).toEqualHTML('\
         <p><strong>01</strong></p>\
         <p><strong><br></strong></p>\
         <p><strong>23</strong></p>\

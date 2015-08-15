@@ -1,27 +1,30 @@
-# compareNodes = (node1, node2, ignoredAttributes = []) ->
-#   return false unless node1.nodeType == node2.nodeType
-#   if dom(node1).isElement()
-#     return false unless dom(node2).isElement()
-#     return false unless node1.tagName == node2.tagName
-#     [attr1, attr2] = _.map([node1, node2], (node) ->
-#       attr = dom(node).attributes()
-#       _.each(ignoredAttributes, (name) ->
-#         delete attr[name]
-#       )
-#       attr.style = attr.style.trim() if attr.style?
-#       return attr
-#     )
-#     return false unless _.isEqual(attr1, attr2)
-#     return false unless node1.childNodes.length == node2.childNodes.length
-#     equal = true
-#     _.each(dom(node1).childNodes(), (child1, i) ->
-#       if !compareNodes(child1, node2.childNodes[i], ignoredAttributes)
-#         equal = false
-#         return false
-#     )
-#     return equal
-#   else
-#     return dom(node1).text() == dom(node2).text()
+compareNodes = (node1, node2, ignoredAttributes = []) ->
+  if node1.nodeType != node2.nodeType
+    return "Expected nodeType '#{node1.nodeType}' to equal '#{node2.nodeType}'"
+  if node1.nodeType == node1.ELEMENT_NODE
+    if node1.tagName != node2.tagName
+      return "Expected tagName '#{node1.tagName}' to equal '#{node2.tagName}'"
+    [attr1, attr2] = _.map([node1, node2], (node) ->
+      return _.reduce(node.attributes, (attr, elem) ->
+        if (ignoredAttributes.indexOf(elem.name) < 0)
+          attr[elem.name] = if elem.name == 'style' then elem.value.trim() else elem.value
+        return attr
+      , {})
+    )
+    if !_.isEqual(attr1, attr2)
+      return "Expected attributes #{jasmine.pp(attr1)} to equal #{jasmine.pp(attr2)}"
+    if node1.childNodes.length != node2.childNodes.length
+      return "Expected node childNodes length '#{node1.childNodes.length}' to equal '#{node2.childNodes.length}'"
+    return null if node1.childNodes.length == 0
+    message = ''
+    if _.any($(node1).contents(), (child1, i) ->
+      message = compareNodes(child1, node2.childNodes[i], ignoredAttributes)
+      return message
+    )
+      return message
+  else if $(node1).text() != $(node2).text()
+    return "Expected node text '#{$(node1).text()}' to equal '#{$(node2).text()}'"
+  return null
 
 
 beforeEach( ->
@@ -47,14 +50,14 @@ beforeEach( ->
             div.innerHTML = html
             return div
           )
-          ignoredAttributes = if ignoreClassId then ['class', 'id'] else []
-          ignoredAttributes = ignoredAttributes.concat(['width', 'height'])   # IE adds automatically
-          pass = compareNodes(div1, div2, ignoredAttributes)
-          if pass
-            message = 'HTMLs equal'
+          ignoredAttributes = ['width', 'height']   # IE adds automatically
+          ignoredAttributes = ignoredAttributes.concat(['class', 'id']) if ignoreClassId
+          if message = compareNodes(div1, div2, ignoredAttributes)
+            console.error(div1.innerHTML)
+            console.error(div2.innerHTML)
+            return { pass: false, message: message }
           else
-            message = "HTMLs unequal: \n#{jasmine.pp(div1.innerHTML)}\n\n#{jasmine.pp(div2.innerHTML)}\n"
-          return { message: message, pass: pass }
+            return { pass: true, message: 'HTMLs equal' }
       }
 
     toBeApproximately: ->
