@@ -30,6 +30,19 @@ class Keyboard
       @hotkeys[which].push(hotkey)
     )
 
+  removeHotkeys: (hotkey, callback) ->
+    hotkey = if _.isString(hotkey) then hotkey.toUpperCase() else hotkey
+    hotkey = if Keyboard.hotkeys[hotkey] then Keyboard.hotkeys[hotkey] else hotkey
+    hotkey = if _.isObject(hotkey) then hotkey else { key: hotkey }
+    which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.charCodeAt(0)
+    @hotkeys[which] ?= []
+    [removed, kept] = _.partition(@hotkeys[which], (handler) ->
+      _.isEqual(hotkey, _.omit(handler, 'callback')) and
+        (!callback or callback == handler.callback)
+    )
+    @hotkeys[which] = kept
+    return _.map(removed, 'callback')
+
   toggleFormat: (range, format) ->
     if range.isCollapsed()
       delta = @quill.getContents(Math.max(0, range.start-1), range.end)
