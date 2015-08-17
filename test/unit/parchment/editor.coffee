@@ -2,10 +2,6 @@ Delta = require('rich-text/lib/delta')
 Editor = require('../../../src/editor')
 
 describe('Editor', ->
-  beforeEach( ->
-    @container = jasmine.clearContainer()
-  )
-
   describe('toDelta()', ->
     it('empty', ->
       @container.innerHTML = ''
@@ -259,9 +255,5 @@ describe('Editor', ->
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('890', { italic: true }).insert('\n'))
       expect(@container.innerHTML).toEqualHTML('<p><em>890</em></p>')
     )
-  )
-
-  describe('formatAt()', ->
-
   )
 )
