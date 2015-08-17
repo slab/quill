@@ -10,8 +10,15 @@ class Editor extends Parchment.Root
     @observer = new MutationObserver(this.update.bind(this))
 
   deleteAt: (index, length) ->
+    [first, offset] = this.children.find(index)
+    [last, offset] = this.children.find(index + length)
     super(index, length)
-    ensureNewline()
+    if (last? && first != last)
+      lastChild = first.children.tail
+      last.moveChildren(first)
+      last.remove()
+      lastChild.merge() if lastChild?
+    this.ensureNewline()
 
   ensureNewline: ->
     if this.getLength() == 0
@@ -23,6 +30,11 @@ class Editor extends Parchment.Root
     , new Delta())
 
   onUpdate: (delta) ->
+
+  remove: ->
+    this.children.forEach((child) ->
+      child.remove()
+    )
 
   update: ->
 

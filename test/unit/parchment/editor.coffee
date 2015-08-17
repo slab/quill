@@ -202,7 +202,63 @@ describe('Editor', ->
   )
 
   describe('deleteAt()', ->
+    it('inner node', ->
+      @container.innerHTML = '<p><em><strong>0123</strong></em></p>'
+      editor = new Editor(@container)
+      editor.deleteAt(1, 2)
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('03', { bold: true, italic: true }).insert('\n'))
+      expect(@container.innerHTML).toEqualHTML('<p><em><strong>03</strong></em></p>')
+    )
 
+    it('parts of multiple lines', ->
+      @container.innerHTML = '\
+        <p><em>0123</em></p>\
+        <p><em>5678</em></p>\
+      '
+      editor = new Editor(@container)
+      editor.deleteAt(2, 5)
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('0178', { italic: true }).insert('\n'))
+      expect(@container.innerHTML).toEqualHTML('<p><em>0178</em></p>')
+    )
+
+    it('entire line keeping newline', ->
+      @container.innerHTML = '<p><em><strong>0123</strong></em></p>'
+      editor = new Editor(@container)
+      editor.deleteAt(0, 4)
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'))
+      expect(@container.innerHTML).toEqualHTML('<p><br></p>')
+    )
+
+    it('newline', ->
+      @container.innerHTML = '\
+        <p><em>0123</em></p>\
+        <p><em>5678</em></p>\
+      '
+      editor = new Editor(@container)
+      editor.deleteAt(4, 1)
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('01235678', { italic: true }).insert('\n'))
+      expect(@container.innerHTML).toEqualHTML('<p><em>01235678</em></p>')
+    )
+
+    it('entire document', ->
+      @container.innerHTML = '<p><em><strong>0123</strong></em></p>'
+      editor = new Editor(@container)
+      editor.deleteAt(0, 5)
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'))
+      expect(@container.innerHTML).toEqualHTML('<p><br></p>')
+    )
+
+    it('multiple lines', ->
+      @container.innerHTML = '\
+        <p><em>012</em></p>\
+        <p><em>456</em></p>\
+        <p><em>890</em></p>\
+      '
+      editor = new Editor(@container)
+      editor.deleteAt(0, 7)
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('890', { italic: true }).insert('\n'))
+      expect(@container.innerHTML).toEqualHTML('<p><em>890</em></p>')
+    )
   )
 
   describe('formatAt()', ->

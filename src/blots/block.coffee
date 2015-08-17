@@ -13,9 +13,6 @@ class Block extends Parchment.Block
     this.ensureBreak()
 
   deleteAt: (index, length) ->
-    if (index + length == this.getLength() and this.next?)
-      this.next.moveChildren(this)
-      length -= NEWLINE_LENGTH
     super(index, length)
     this.ensureBreak()
 
