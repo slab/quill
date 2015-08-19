@@ -324,4 +324,49 @@ describe('Selection', ->
       )
     )
   )
+
+  describe('scrollIntoView()', ->
+    beforeEach( ->
+      @container.innerHTML = '<div><span style="font-size: 36px;">a<br>b<br>c<br>d</span></div>'
+      @quill = new Quill(@container.firstChild)
+      @editor = @quill.editor
+      @selection = @editor.selection
+      @height = 80
+      @editor.root.parentNode.style.height = @height.toString() + "px"
+      @editor.root.parentNode.style.overflow = "auto"
+    )
+
+    it('scrolls down when cursor too low', ->
+      @selection.setRange(new Quill.Lib.Range(7, 7))
+      bounds = @editor.getBounds(7)
+      expect(bounds.top).toBeGreaterThan(@height)
+      @selection.scrollIntoView()
+      bounds = @editor.getBounds(7)
+      expect(bounds.top).not.toBeLessThan(0)
+      expect(bounds.top + bounds.height).not.toBeGreaterThan(@height)
+    )
+
+    it('scrolls up when cursor too high', ->
+      @selection.setRange(new Quill.Lib.Range(1, 1))
+      @editor.root.parentNode.scrollTop = 100
+      bounds = @editor.getBounds(1)
+      expect(bounds.top + bounds.height).toBeLessThan(0)
+      @selection.scrollIntoView()
+      bounds = @editor.getBounds(1)
+      expect(bounds.top).not.toBeLessThan(0)
+      expect(bounds.top + bounds.height).not.toBeGreaterThan(@height)
+    )
+
+    it('does not scroll if cursor in view', ->
+      @selection.setRange(new Quill.Lib.Range(1, 1))
+      bounds = @editor.getBounds(1)
+      expect(bounds.top).not.toBeLessThan(0)
+      expect(bounds.top + bounds.height).not.toBeGreaterThan(@height)
+      @selection.scrollIntoView()
+      newBounds = @editor.getBounds(1)
+      expect(bounds.top).toBeApproximately(newBounds.top, 1)
+      expect(bounds.height).toBeApproximately(newBounds.height, 1)
+      expect(bounds.left).toBeApproximately(newBounds.left, 1)
+    )
+  )
 )

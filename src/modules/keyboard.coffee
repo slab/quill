@@ -73,6 +73,7 @@ class Keyboard
         @toolbar.setActive(format, value) if @toolbar?
         return
       )
+      @quill.editor.selection.scrollIntoView()
       return false
     )
 
@@ -91,6 +92,7 @@ class Keyboard
               @quill.deleteText(range.start - 1, range.start, Quill.sources.USER)
           else if range.start < @quill.getLength() - 1
             @quill.deleteText(range.start, range.start + 1, Quill.sources.USER)
+      @quill.editor.selection.scrollIntoView()
       return false
     )
 

@@ -42,6 +42,20 @@ class Selection
     else
       fn()
 
+  scrollIntoView: () ->
+    return unless @range
+    editor = @emitter.editor
+    startBounds = editor.getBounds(@range.start)
+    endBounds = if @range.isCollapsed() then startBounds else editor.getBounds(@range.end)
+    containerBounds = editor.root.parentNode.getBoundingClientRect()
+    containerHeight = containerBounds.bottom - containerBounds.top
+    if containerHeight < endBounds.top + endBounds.height
+      [line, offset] = editor.doc.findLineAt(@range.end)
+      line.node.scrollIntoView(false)
+    else if startBounds.top < 0
+      [line, offset] = editor.doc.findLineAt(@range.start)
+      line.node.scrollIntoView()
+
   setRange: (range, source) ->
     if range?
       [startNode, startOffset] = this._indexToPosition(range.start)
