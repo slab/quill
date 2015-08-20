@@ -15,6 +15,7 @@ Formats =
   Inline  : require('./formats/inline')
   Block   : require('./formats/block')
   Image   : require('./formats/image')
+  Header  : require('./formats/header')
   List    : require('./formats/list')
 
 
