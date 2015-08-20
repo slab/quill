@@ -10,10 +10,6 @@ class Break extends Parchment.Embed
   getValue: ->
     return ''
 
-  insertAt: (index, value, def) ->
-    super(index, value, def)
-    this.remove() if @prev? or @next?
-
 
 Parchment.define(Break)
 

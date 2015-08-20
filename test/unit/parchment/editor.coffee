@@ -96,6 +96,14 @@ describe('Editor', ->
       )
     )
 
+    it('on empty line', ->
+      @container.innerHTML = '<p>0</p><p><br></p><p>3</p>'
+      editor = new Editor(@container)
+      editor.insertAt(2, '!')
+      expect(editor.getDelta()).toEqualDelta(new Delta().insert('0\n!\n3\n'))
+      expect(@container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>')
+    )
+
     it('newline splitting', ->
       @container.innerHTML = '<p><strong>0123</strong></p>'
       editor = new Editor(@container)
