@@ -14,6 +14,12 @@ Align = new BlockAttributor('align', 'textAlign', {
   whitelist: ['left', 'right', 'center', 'justify']
 })
 
+Direction = new BlockAttributor('direction', 'direction', {
+  default: 'ltr'
+  whitelist: ['ltr', 'rtl']
+})
+
 
 module.exports =
   Align: Parchment.define(Align)
+  Direction: Parchment.define(Direction)

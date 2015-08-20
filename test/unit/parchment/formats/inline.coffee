@@ -55,5 +55,31 @@ describe('Formats', ->
         <p><em><strong>56</strong>78</em></p>\
       ')
     )
+
+    xit('subscript exclusitivity', ->
+      @container.innerHTML = '<p><sub>0123</sub></p>'
+      editor = new Editor(@container)
+      editor.formatAt(1, 2, 'superscript', true)
+      expect(editor.getDelta()).toEqualDelta(new Delta()
+        .insert('0', { subscript: true })
+        .insert('12', { superscript: true })
+        .insert('3', { subscript: true })
+        .insert('\n')
+      )
+      expect(@container.innerHTML).toEqualHTML('<p><sub>0</sub><sup>12</sup><sub>3</sub></p>')
+    )
+
+    xit('superscript exclusitivity', ->
+      @container.innerHTML = '<p><sup>0123</sup></p>'
+      editor = new Editor(@container)
+      editor.formatAt(1, 2, 'subscript', true)
+      expect(editor.getDelta()).toEqualDelta(new Delta()
+        .insert('0', { superscript: true })
+        .insert('12', { subscript: true })
+        .insert('3', { superscript: true })
+        .insert('\n')
+      )
+      expect(@container.innerHTML).toEqualHTML('<p><sup>0</sup><sub>12</sub><sup>3</sup></p>')
+    )
   )
 )

@@ -30,6 +30,21 @@ class Link extends Parchment.Inline
     format.link = this.domNode.href
     return format
 
+class InlineCode extends Parchment.Inline
+  @blotName: 'inline-code'
+  @tagName: 'code'
+
+
+# TODO: implement exclusitivity
+
+class Subscript extends Parchment.Inline
+  @blotName: 'subscript'
+  @tagName: 'sub'
+
+class Superscript extends Parchment.Inline
+  @blotName: 'superscript'
+  @tagName: 'sup'
+
 
 Background = new Parchment.Style('background', 'backgroundColor')
 Color = new Parchment.Style('color', 'color')
@@ -44,6 +59,9 @@ module.exports =
   Underline   : Parchment.define(Underline)
 
   Link        : Parchment.define(Link)
+  InlineCode  : Parchment.define(InlineCode)
+  Subscript   : Parchment.define(Subscript)
+  Superscript : Parchment.define(Superscript)
 
   Background  : Parchment.define(Background)
   Color       : Parchment.define(Color)
