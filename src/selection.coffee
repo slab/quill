@@ -1,13 +1,11 @@
 _         = require('lodash')
 dom       = require('./lib/dom')
 Parchment = require('parchment')
-Range     = require('./lib/range')
-
-
-# TODO rename leaf/line to blot
 
 
 class Selection
+  @Range: Range
+
   constructor: (@doc, @emitter) ->
     @root = @doc.domNode
     @focus = false
@@ -101,7 +99,7 @@ class Selection
   update: (source) ->
     focus = this.checkFocus()
     range = this.getRange(true)
-    emit = source != 'silent' and (!Range.compare(range, @range) or focus != @focus)
+    emit = source != 'silent' and (_.isEqual(range, @range) or focus != @focus)
     toEmit = if focus then range else null
     # If range changes to null, require two update cycles to update and emit
     if toEmit == null and source == 'user' and !@nullDelay
@@ -190,6 +188,22 @@ class Selection
       @root.blur()
       # setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
       document.body.focus() if dom.isIE(11) and !dom.isIE(9)
+
+
+class Range
+  constructor: (@start, @end) ->
+
+  shift: (index, length) ->
+    [@start, @end] = _.map([@start, @end], (pos) ->
+      return pos if index > pos
+      if length >= 0
+        return pos + length
+      else
+        return Math.max(index, pos + length)
+    )
+
+  isCollapsed: ->
+    return @start == @end
 
 
 module.exports = Selection

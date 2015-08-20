@@ -8,6 +8,5 @@ class BlockAttributor extends Parchment.Style
     super(node, value)
 
 
-Align = new BlockAttributor('align', 'textAlign')
-
-module.exports = Parchment.define(Align)
+module.exports =
+  Align: Parchment.define(new BlockAttributor('align', 'textAlign'))

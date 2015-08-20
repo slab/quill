@@ -5,30 +5,17 @@ EventEmitter2 = require('eventemitter2').EventEmitter2
 dom           = require('./lib/dom')
 Editor        = require('./editor')
 Parchment     = require('parchment')
-Range         = require('./lib/range')
-
-Selection = require('./selection')
-
-Bold      = require('./formats/bold')
-Italic    = require('./formats/italic')
-Strike    = require('./formats/strike')
-Underline = require('./formats/underline')
-Link      = require('./formats/link')
-
-List      = require('./formats/list')
-
-Image     = require('./formats/image')
-
-Background = require('./formats/background')
-Color      = require('./formats/color')
-Font       = require('./formats/font')
-Size       = require('./formats/size')
-
-Align    = require('./formats/align')
+Selection     = require('./selection')
 
 Block    = require('./blots/block')
 Break    = require('./blots/break')
 Cursor   = require('./blots/cursor')
+
+Formats =
+  Inline  : require('./formats/inline')
+  Block   : require('./formats/block')
+  Image   : require('./formats/image')
+  List    : require('./formats/list')
 
 
 class Quill extends EventEmitter2
@@ -80,7 +67,7 @@ class Quill extends EventEmitter2
       when 'delta'     then return Delta
       when 'dom'       then return dom
       when 'parchment' then return Parchment
-      when 'range'     then return Range
+      when 'range'     then return Selection.Range
       else return null
 
 
@@ -232,7 +219,7 @@ class Quill extends EventEmitter2
 
   setSelection: (start, end, source = Quill.sources.API) ->
     if _.isNumber(start) and _.isNumber(end)
-      range = new Range(start, end)
+      range = new Selection.Range(start, end)
     else
       range = start
       source = end or source
