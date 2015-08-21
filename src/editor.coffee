@@ -20,6 +20,12 @@ class Editor extends Parchment.Root
       lastChild.merge() if lastChild?
     this.ensureNewline()
 
+  findPath: (index) ->
+    if index >= this.getLength()
+      return []
+    else
+      return super(index)
+
   ensureNewline: ->
     if this.getLength() == 0
       this.appendChild(Parchment.create('block'))

@@ -24,15 +24,7 @@ class Block extends Parchment.Block
       target.appendChild(Parchment.create('break'))
 
   findPath: (index) ->
-    if index < this.getLength()
-      return super(index, true)
-    else
-      blot = children.tail
-      offset = children.tail.getLength()
-      return [{
-        blot: blot,
-        offset: offset
-      }].conat(blot.findPath(offset, true))
+    return super(index, true)
 
   formatAt: (index, length, name, value) ->
     if index + length >= this.getLength() and length > 0
@@ -75,8 +67,8 @@ class Block extends Parchment.Block
       next.insertAt(0, lines.join('\n'))
 
   insertBefore: (blot, ref) ->
-    if this.children.head? && this.children.head.statics.blotName == 'break'
-      br = this.children.head
+    if @children.head? && @children.head.statics.blotName == 'break'
+      br = @children.head
     super(blot, ref)
     br.remove() if br?
 
