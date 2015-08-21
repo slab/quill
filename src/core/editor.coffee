@@ -35,10 +35,9 @@ class Editor
     @root.setAttribute('contenteditable', enabled)
 
   applyDelta: (delta, source) ->
-    localDelta = this._update()
+    localDelta = this.checkUpdate()
     if localDelta
       delta = localDelta.transform(delta, true)
-      localDelta = delta.transform(localDelta, false)
     if delta.ops.length > 0
       delta = this._trackDelta( =>
         index = 0
@@ -63,8 +62,6 @@ class Editor
       @length = @delta.length()
       @innerHTML = @root.innerHTML
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source) if delta and source != Editor.sources.SILENT
-    if localDelta and localDelta.ops.length > 0 and source != Editor.sources.SILENT
-      @quill.emit(@quill.constructor.events.TEXT_CHANGE, localDelta, Editor.sources.USER)
 
   checkUpdate: (source = 'user') ->
     return clearInterval(@timer) unless @root.parentNode?
@@ -75,6 +72,7 @@ class Editor
       @quill.emit(@quill.constructor.events.TEXT_CHANGE, delta, source)
     source = Editor.sources.SILENT if delta
     @selection.update(source)
+    return delta
 
   focus: ->
     if @selection.range?
