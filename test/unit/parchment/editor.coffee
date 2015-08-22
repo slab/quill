@@ -142,6 +142,21 @@ describe('Editor', ->
       path = editor.findPath(5)
       expect(path.length).toEqual(0)
     )
+
+    it('empty line', ->
+      @container.innerHTML = '<p><br></p>'
+      editor = new Editor(@container)
+      path = editor.findPath(0)
+      expected = [
+        { blot: 'block', offset: 0 }
+        { blot: 'break', offset: 0 }
+      ]
+      expect(path.length).toEqual(expected.length)
+      expected.forEach((pos, i) ->
+        expect(path[i].blot.statics.blotName).toEqual(pos.blot)
+        expect(path[i].offset).toEqual(pos.offset)
+      )
+    )
   )
 
   describe('insertAt()', ->
