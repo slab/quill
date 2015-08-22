@@ -56,27 +56,27 @@ describe('Formats', ->
       ')
     )
 
-    xit('subscript exclusitivity', ->
+    it('subscript exclusitivity', ->
       @container.innerHTML = '<p><sub>0123</sub></p>'
       editor = new Editor(@container)
-      editor.formatAt(1, 2, 'superscript', true)
+      editor.formatAt(1, 2, 'script', 'sup')
       expect(editor.getDelta()).toEqualDelta(new Delta()
-        .insert('0', { subscript: true })
-        .insert('12', { superscript: true })
-        .insert('3', { subscript: true })
+        .insert('0', { script: 'sub' })
+        .insert('12', { script: 'sup' })
+        .insert('3', { script: 'sub' })
         .insert('\n')
       )
       expect(@container.innerHTML).toEqualHTML('<p><sub>0</sub><sup>12</sup><sub>3</sub></p>')
     )
 
-    xit('superscript exclusitivity', ->
+    it('superscript exclusitivity', ->
       @container.innerHTML = '<p><sup>0123</sup></p>'
       editor = new Editor(@container)
-      editor.formatAt(1, 2, 'subscript', true)
+      editor.formatAt(1, 2, 'script', 'sub')
       expect(editor.getDelta()).toEqualDelta(new Delta()
-        .insert('0', { superscript: true })
-        .insert('12', { subscript: true })
-        .insert('3', { superscript: true })
+        .insert('0', { script: 'sup' })
+        .insert('12', { script: 'sub' })
+        .insert('3', { script: 'sup' })
         .insert('\n')
       )
       expect(@container.innerHTML).toEqualHTML('<p><sup>0</sup><sub>12</sub><sup>3</sup></p>')

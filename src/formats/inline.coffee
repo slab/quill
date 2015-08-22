@@ -37,13 +37,19 @@ class InlineCode extends Parchment.Inline
 
 # TODO: implement exclusitivity
 
-class Subscript extends Parchment.Inline
-  @blotName: 'subscript'
-  @tagName: 'sub'
+class Script extends Parchment.Inline
+  @blotName: 'script'
+  @tagName: ['sub', 'sup']
 
-class Superscript extends Parchment.Inline
-  @blotName: 'superscript'
-  @tagName: 'sup'
+  constructor: (value) ->
+    if (typeof value == 'string')
+      value = document.createElement(value)
+    super(value)
+
+  getFormat: ->
+    formats = super
+    formats['script'] = @domNode.tagName.toLowerCase()
+    return formats
 
 
 Background = new Parchment.Style('background', 'backgroundColor')
@@ -60,8 +66,7 @@ module.exports =
 
   Link        : Parchment.define(Link)
   InlineCode  : Parchment.define(InlineCode)
-  Subscript   : Parchment.define(Subscript)
-  Superscript : Parchment.define(Superscript)
+  Script      : Parchment.define(Script)
 
   Background  : Parchment.define(Background)
   Color       : Parchment.define(Color)
