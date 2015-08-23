@@ -8,10 +8,8 @@ class Selection
 
   constructor: (@doc, @emitter) ->
     @root = @doc.domNode
-    @focus = false
     @range = new Range(0, 0)
-    @nullDelay = false
-    this.update('silent')
+    this.update(@emitter.constructor.sources.SILENT)
 
   checkFocus: ->
     return document.activeElement == @root
@@ -99,17 +97,8 @@ class Selection
   update: (source) ->
     focus = this.checkFocus()
     range = this.getRange(true)
-    emit = source != 'silent' and (_.isEqual(range, @range) or focus != @focus)
-    toEmit = if focus then range else null
-    # If range changes to null, require two update cycles to update and emit
-    if toEmit == null and source == 'user' and !@nullDelay
-      @nullDelay = true
-    else
-      @nullDelay = false
-      @range = range
-      @focus = focus
-      # Set range before emitting to prevent infinite loop if listeners call quill.getSelection()
-      @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, toEmit, source) if emit
+    @range = range
+    @emitter.emit(@emitter.constructor.events.SELECTION_CHANGE, toEmit, source) if emit
 
   _decodePosition: (node, offset) ->
     if dom(node).isElement()
