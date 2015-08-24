@@ -27,7 +27,7 @@ A change looks something like this:
 {
   ops: [
     { retain: 12 },
-    { delete: '4 ' },
+    { delete: 4 },
     { insert: 'White', attributes: { color: '#fff' } }
   ]
 }
