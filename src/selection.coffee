@@ -3,6 +3,22 @@ dom       = require('./lib/dom')
 Parchment = require('parchment')
 
 
+class Range
+  constructor: (@start, @end) ->
+
+  shift: (index, length) ->
+    [@start, @end] = _.map([@start, @end], (pos) ->
+      return pos if index > pos
+      if length >= 0
+        return pos + length
+      else
+        return Math.max(index, pos + length)
+    )
+
+  isCollapsed: ->
+    return @start == @end
+
+
 class Selection
   @Range: Range
 
@@ -191,22 +207,6 @@ class Selection
       @root.blur()
       # setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
       document.body.focus() if dom.isIE(11) and !dom.isIE(9)
-
-
-class Range
-  constructor: (@start, @end) ->
-
-  shift: (index, length) ->
-    [@start, @end] = _.map([@start, @end], (pos) ->
-      return pos if index > pos
-      if length >= 0
-        return pos + length
-      else
-        return Math.max(index, pos + length)
-    )
-
-  isCollapsed: ->
-    return @start == @end
 
 
 module.exports = Selection
