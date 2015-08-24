@@ -30,6 +30,19 @@ class Keyboard
       @hotkeys[which].push(hotkey)
     )
 
+  removeHotkeys: (hotkey, callback) ->
+    hotkey = if _.isString(hotkey) then hotkey.toUpperCase() else hotkey
+    hotkey = if Keyboard.hotkeys[hotkey] then Keyboard.hotkeys[hotkey] else hotkey
+    hotkey = if _.isObject(hotkey) then hotkey else { key: hotkey }
+    which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.charCodeAt(0)
+    @hotkeys[which] ?= []
+    [removed, kept] = _.partition(@hotkeys[which], (handler) ->
+      _.isEqual(hotkey, _.omit(handler, 'callback')) and
+        (!callback or callback == handler.callback)
+    )
+    @hotkeys[which] = kept
+    return _.map(removed, 'callback')
+
   toggleFormat: (range, format) ->
     if range.isCollapsed()
       delta = @quill.getContents(Math.max(0, range.start-1), range.end)
@@ -60,6 +73,7 @@ class Keyboard
         @toolbar.setActive(format, value) if @toolbar?
         return
       )
+      @quill.editor.selection.scrollIntoView()
       return false
     )
 
@@ -78,6 +92,7 @@ class Keyboard
               @quill.deleteText(range.start - 1, range.start, Quill.sources.USER)
           else if range.start < @quill.getLength() - 1
             @quill.deleteText(range.start, range.start + 1, Quill.sources.USER)
+      @quill.editor.selection.scrollIntoView()
       return false
     )
 
@@ -92,7 +107,7 @@ class Keyboard
     )
     _.each(['bold', 'italic', 'underline'], (format) =>
       this.addHotkey(Keyboard.hotkeys[format.toUpperCase()], (range) =>
-        if (@quill.options.formats.indexOf(format) > -1)
+        if (@quill.editor.doc.formats[format])
           this.toggleFormat(range, format)
         return false
       )

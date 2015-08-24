@@ -10,6 +10,7 @@ class PasteManager
   constructor: (@quill, options) ->
     @container = @quill.addContainer('ql-paste-manager')
     @container.setAttribute('contenteditable', true)
+    @container.setAttribute('tabindex', '-1')
     dom(@quill.root).on('paste', _.bind(this._paste, this))
     @options = _.defaults(options, PasteManager.DEFAULTS)
     @options.onConvert ?= this._onConvert;
@@ -37,10 +38,7 @@ class PasteManager
       #   @quill.updateContents(delta, 'user')
       # @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
       # # Make sure bottom of pasted content is visible
-      # [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
-      # lineBottom = line.node.getBoundingClientRect().bottom
-      # windowBottom = document.documentElement.clientHeight
-      # line.node.scrollIntoView(false) if lineBottom > windowBottom
+      # @quill.editor.selection.scrollIntoView()
       # @container.innerHTML = ""
     )
 
