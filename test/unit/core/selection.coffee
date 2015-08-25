@@ -1,4 +1,4 @@
-fdescribe('Selection', ->
+describe('Selection', ->
   beforeEach( ->
     @container = jasmine.resetEditor()
   )

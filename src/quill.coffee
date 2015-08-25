@@ -99,7 +99,7 @@ class Quill extends EventEmitter2
     Object.keys(@options.modules).forEach((name) =>
       this.addModule(name, @options.modules[name])
     )
-    this.enable() unless @options.readOnly
+    this.disable() if @options.readOnly
 
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
@@ -123,15 +123,15 @@ class Quill extends EventEmitter2
     )
 
   disable: ->
-    this.enable(false)
+    @editor.enable(false)
+
+  enable: (enabled = true) ->
+    @editor.enable()
 
   emit: (eventName, args...) ->
     super(Quill.events.PRE_EVENT, eventName, args...)
     super(eventName, args...)
     super(Quill.events.POST_EVENT, eventName, args...)
-
-  enable: (enabled = true) ->
-    @root.setAttribute('contenteditable', enabled)
 
   focus: ->
     @selection.focus()

@@ -25,7 +25,7 @@ describe('Editor', ->
     )
 
     it('full document', ->
-      @container.innerHTML = html = '
+      @container.innerHTML = expected = '\
         <p><span style="font-size: 18px;">Quill Rich Text Editor</span></p>\
         <p><br></p>\
         <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web.</p>\
@@ -43,8 +43,7 @@ describe('Editor', ->
         <p style="text-align: center;">\
           <a style="font-size: 32px;" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>\
         </p>\
-        <p><br></p>\
-      '
+        <p><br></p>'
       editor = new Editor(@container)
       expect(editor.getDelta()).toEqualDelta(new Delta()
         .insert('Quill Rich Text Editor', { size: '18px' })
@@ -65,7 +64,7 @@ describe('Editor', ->
         .insert('\n', { align: 'center' })
         .insert('\n')
       )
-      expect(@container.innerHTML).toEqualHTML(html)
+      expect(@container.innerHTML).toEqualHTML(expected)
     )
   )
 
@@ -307,8 +306,7 @@ describe('Editor', ->
     it('parts of multiple lines', ->
       @container.innerHTML = '\
         <p><em>0123</em></p>\
-        <p><em>5678</em></p>\
-      '
+        <p><em>5678</em></p>'
       editor = new Editor(@container)
       editor.deleteAt(2, 5)
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('0178', { italic: true }).insert('\n'))
@@ -326,8 +324,7 @@ describe('Editor', ->
     it('newline', ->
       @container.innerHTML = '\
         <p><em>0123</em></p>\
-        <p><em>5678</em></p>\
-      '
+        <p><em>5678</em></p>'
       editor = new Editor(@container)
       editor.deleteAt(4, 1)
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('01235678', { italic: true }).insert('\n'))
@@ -346,8 +343,7 @@ describe('Editor', ->
       @container.innerHTML = '\
         <p><em>012</em></p>\
         <p><em>456</em></p>\
-        <p><em>890</em></p>\
-      '
+        <p><em>890</em></p>'
       editor = new Editor(@container)
       editor.deleteAt(0, 7)
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('890', { italic: true }).insert('\n'))

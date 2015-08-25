@@ -1,63 +1,210 @@
+Editor = require('../../../src/editor')
 Selection = require('../../../src/selection')
 
 
 describe('Selection', ->
-  describe('Range', ->
-    describe('shift()', ->
-      tests =
-        'before':
-          initial: [10, 20]
-          index: 5, length: 5
-          expected: [15, 25]
-        'between':
-          initial: [10, 20]
-          index: 15, length: 2
-          expected: [10, 22]
-        'after':
-          initial: [10, 20]
-          index: 25, length: 5
-          expected: [10, 20]
-        'on cursor':
-          initial: [10, 10]
-          index: 10, length: 5
-          expected: [15, 15]
-        'on start':
-          initial: [10, 20]
-          index: 10, length: 5
-          expected: [15, 25]
-        'on end':
-          initial: [10, 20]
-          index: 20, length: 5
-          expected: [10, 25]
-        'between remove':
-          initial: [10, 20]
-          index: 15, length: -2
-          expected: [10, 18]
-        'before remove beyond start':
-          initial: [10, 20]
-          index: 5, length: -10
-          expected: [5, 10]
-        'after remove':
-          initial: [10, 20]
-          index: 25, length: -20
-          expected: [10, 20]
-        'remove on cursor':
-          initial: [10, 10]
-          index: 10, length: -5
-          expected: [10, 10]
-        'after remove beyond start':
-          initial: [10, 10]
-          index: 5, length: -50
-          expected: [5, 5]
+  describe('getRange()', ->
+    it('empty document', ->
+      @container.innerHTML = ''
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(@container.querySelector('br'), 0)
+      range = selection.getRange()
+      expect(range.start).toEqual(0)
+      expect(range.end).toEqual(0)
+    )
 
-      _.each(tests, (test, name) ->
-        it(name, ->
-          range = new Selection.Range(test.initial[0], test.initial[1])
-          range.shift(test.index, test.length)
-          expect(range.start).toEqual(test.expected[0])
-          expect(range.end).toEqual(test.expected[1])
-        )
+    it('empty line', ->
+      @container.innerHTML = '\
+        <p>0</p>\
+        <p><br></p>\
+        <p>3</p>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(@container.querySelector('br'), 0)
+      range = selection.getRange()
+      expect(range.start).toEqual(2)
+      expect(range.end).toEqual(2)
+    )
+
+    it('text node', ->
+      @container.innerHTML = '<p>0123</p>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(@container.firstChild.firstChild, 1)
+      range = selection.getRange()
+      expect(range.start).toEqual(1)
+      expect(range.end).toEqual(1)
+    )
+
+    it('end of line', ->
+      @container.innerHTML = '\
+        <p><br></p>\
+        <p>12</p>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(@container.firstChild, 1, @container.lastChild, 1)
+      range = selection.getRange()
+      expect(range.start).toEqual(1)
+      expect(range.end).toEqual(4)
+    )
+
+    it('nested text node', ->
+      @container.innerHTML = '\
+        <p><em><strong>01</strong></em></p>\
+        <ul>\
+          <li><em><u>34</u></em></li>\
+        </ul>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(
+        @container.querySelector('strong').firstChild, 1,
+        @container.querySelector('u').firstChild, 1
       )
+      range = selection.getRange()
+      expect(range.start).toEqual(1)
+      expect(range.end).toEqual(4)
+    )
+
+    it('between embed', ->
+      @container.innerHTML = '\
+        <p>\
+          <img src="http://quilljs.com/images/cloud.png">\
+          <img src="http://quilljs.com/images/cloud.png">\
+        </p>\
+        <ul>\
+          <li>\
+            <img src="http://quilljs.com/images/cloud.png">\
+            <img src="http://quilljs.com/images/cloud.png">\
+          </li>\
+        </ul>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(
+        @container.firstChild, 1,
+        @container.lastChild.lastChild, 1
+      )
+      range = selection.getRange()
+      expect(range.start).toEqual(1)
+      expect(range.end).toEqual(4)
+    )
+
+    it('between inlines', ->
+      @container.innerHTML = '<p><em>01</em><s>23</s><u>45</u></p>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(@container.firstChild, 1, @container.firstChild, 2)
+      range = selection.getRange()
+      expect(range.start).toEqual(2)
+      expect(range.end).toEqual(4)
+    )
+
+    it('between blocks', ->
+      @container.innerHTML = '\
+        <p>01</p>\
+        <p><br></p>\
+        <ul>\
+          <li>45</li>\
+          <li>78</li>\
+        </ul>'
+      selection = new Selection(new Editor(@container))
+      selection.setNativeRange(@container, 1, @container.lastChild, 1)
+      range = selection.getRange()
+      expect(range.start).toEqual(3)
+      expect(range.end).toEqual(7)
+    )
+
+    it('no focus', ->
+      @container.innerHTML = ''
+      selection = new Selection(new Editor(@container))
+      range = selection.getRange()
+      expect(range).toEqual(null)
+    )
+
+    it('wrong input', ->
+      @container.innerHTML = '\
+        <textarea>Test</textarea>\
+        <div>\
+          <p>0123</p>\
+        </div>'
+      selection = new Selection(new Editor(@container.lastChild))
+      @container.firstChild.select()
+      range = selection.getRange()
+      expect(range).toEqual(null)
+    )
+  )
+)
+
+describe('Range', ->
+  describe('shift()', ->
+    it('before', ->
+      range = new Selection.Range(10, 20)
+      range.shift(5, 5)
+      expect(range.start).toEqual(10 + 5)
+      expect(range.end).toEqual(20 + 5)
+    )
+
+    it('between', ->
+      range = new Selection.Range(10, 20)
+      range.shift(15, 2)
+      expect(range.start).toEqual(10)
+      expect(range.end).toEqual(20 + 2)
+    )
+
+    it('after', ->
+      range = new Selection.Range(10, 20)
+      range.shift(25, 5)
+      expect(range.start).toEqual(10)
+      expect(range.end).toEqual(20)
+    )
+
+    it('on cursor', ->
+      range = new Selection.Range(10, 10)
+      range.shift(10, 5)
+      expect(range.start).toEqual(10 + 5)
+      expect(range.end).toEqual(10 + 5)
+    )
+
+    it('on start', ->
+      range = new Selection.Range(10, 20)
+      range.shift(10, 5)
+      expect(range.start).toEqual(10 + 5)
+      expect(range.end).toEqual(20 + 5)
+    )
+
+    it('on end', ->
+      range = new Selection.Range(10, 20)
+      range.shift(20, 5)
+      expect(range.start).toEqual(10)
+      expect(range.end).toEqual(20 + 5)
+    )
+
+    it('between remove', ->
+      range = new Selection.Range(10, 20)
+      range.shift(15, -2)
+      expect(range.start).toEqual(10)
+      expect(range.end).toEqual(20 - 2)
+    )
+
+    it('before remove beyond start', ->
+      range = new Selection.Range(10, 20)
+      range.shift(5, -10)
+      expect(range.start).toEqual(5)
+      expect(range.end).toEqual(20 - 10)
+    )
+
+    it('after remove', ->
+      range = new Selection.Range(10, 20)
+      range.shift(25, -20)
+      expect(range.start).toEqual(10)
+      expect(range.end).toEqual(20)
+    )
+
+    it('remove on cursor', ->
+      range = new Selection.Range(10, 10)
+      range.shift(10, -5)
+      expect(range.start).toEqual(10)
+      expect(range.end).toEqual(10)
+    )
+
+    it('after remove beyond start', ->
+      range = new Selection.Range(10, 10)
+      range.shift(5, -50)
+      expect(range.start).toEqual(5)
+      expect(range.end).toEqual(5)
     )
   )
 )

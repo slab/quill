@@ -3,9 +3,10 @@ Parchment = require('parchment')
 
 
 class Editor extends Parchment.Root
-  constructor: (domNode, @options) ->
+  constructor: (domNode) ->
     super(domNode)
     this.ensureNewline()
+    this.enable()
     @delta = this.getDelta()
     @observer = new MutationObserver(this.update.bind(this))
 
@@ -20,15 +21,18 @@ class Editor extends Parchment.Root
       lastChild.merge() if lastChild?
     this.ensureNewline()
 
+  enable: (enabled = true) ->
+    @domNode.setAttribute('contenteditable', enabled)
+
+  ensureNewline: ->
+    if this.getLength() == 0
+      this.appendChild(Parchment.create('block'))
+
   findPath: (index) ->
     if index >= this.getLength()
       return []
     else
       return super(index)
-
-  ensureNewline: ->
-    if this.getLength() == 0
-      this.appendChild(Parchment.create('block'))
 
   getDelta: ->
     return @children.reduce((delta, child) =>
