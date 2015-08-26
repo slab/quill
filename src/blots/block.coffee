@@ -33,7 +33,7 @@ class Block extends Parchment.Block
 
   getDelta: ->
     collector = (blot) ->
-      format = blot.getFormat() || {}
+      format = blot.getFormat()
       if (blot instanceof Parchment.Parent)
         return blot.children.reduce((memo, child) ->
           return memo.concat(collector(child))

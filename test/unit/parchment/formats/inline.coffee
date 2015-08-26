@@ -1,6 +1,7 @@
 Delta = require('rich-text/lib/delta')
 Editor = require('../../../../src/editor')
 
+
 describe('Formats', ->
   describe('Inline', ->
     it('inner node', ->

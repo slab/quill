@@ -1,4 +1,5 @@
 Parchment = require('parchment')
+StyleAttributor = require('./attributor')
 
 
 class Bold extends Parchment.Inline
@@ -52,10 +53,17 @@ class Script extends Parchment.Inline
     return formats
 
 
-Background = new Parchment.Style('background', 'backgroundColor')
-Color = new Parchment.Style('color', 'color')
-Font = new Parchment.Style('font', 'fontFamily')
-Size = new Parchment.Style('size', 'fontSize')
+class InlineAttributor extends StyleAttributor
+  add: (node, value) ->
+    blot = Parchment.findBlot(node)
+    return unless blot? and blot instanceof Parchment.Inline
+    super(node, value)
+
+
+Background = new InlineAttributor('background', 'backgroundColor')
+Color = new InlineAttributor('color', 'color')
+Font = new InlineAttributor('font', 'fontFamily')
+Size = new InlineAttributor('size', 'fontSize')
 
 
 module.exports =

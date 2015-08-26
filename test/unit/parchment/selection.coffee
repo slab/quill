@@ -12,6 +12,7 @@ describe('Selection', ->
         </div>'
       @selection = new Selection(new Editor(@container.lastChild))
       @textarea = @container.querySelector('textarea')
+      @textarea.focus()
       @textarea.select()
     )
 
@@ -24,6 +25,7 @@ describe('Selection', ->
     it('restore last range', ->
       range = new Selection.Range(1, 3)
       @selection.setRange(range)
+      @textarea.focus()
       @textarea.select()
       expect(@selection.checkFocus()).toBe(false)
       @selection.focus()
