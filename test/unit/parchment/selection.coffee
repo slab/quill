@@ -3,6 +3,35 @@ Selection = require('../../../src/selection')
 
 
 describe('Selection', ->
+  describe('focus()', ->
+    beforeEach( ->
+      @container.innerHTML = '\
+        <textarea>Test</textarea>\
+        <div>\
+          <p>0123</p>\
+        </div>'
+      @selection = new Selection(new Editor(@container.lastChild))
+      @textarea = @container.querySelector('textarea')
+      @textarea.select()
+    )
+
+    it('initial focus', ->
+      expect(@selection.checkFocus()).toBe(false)
+      @selection.focus()
+      expect(@selection.checkFocus()).toBe(true)
+    )
+
+    it('restore last range', ->
+      range = new Selection.Range(1, 3)
+      @selection.setRange(range)
+      @textarea.select()
+      expect(@selection.checkFocus()).toBe(false)
+      @selection.focus()
+      expect(@selection.checkFocus()).toBe(true)
+      expect(@selection.getRange()).toEqual(range)
+    )
+  )
+
   describe('getRange()', ->
     it('empty document', ->
       @container.innerHTML = ''

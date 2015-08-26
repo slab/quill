@@ -160,6 +160,7 @@ class Selection
     this.update(source)
 
   update: (source) ->
+    @range = this.getRange()
     # TODO implement
 
 
