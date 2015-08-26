@@ -49,7 +49,7 @@ serve = (connect, req, res, next) ->
           res.end(css)
         )
       )
-    when '/favicon.ico'
+    when '/favicon.ico', '/favicon.png'
       res.setHeader('Content-Type', 'image/png')
       res.end(FAVICON)
     else

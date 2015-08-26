@@ -64,13 +64,13 @@ describe('Selection', ->
     it('between embed', ->
       @container.innerHTML = '\
         <p>\
-          <img src="http://quilljs.com/images/cloud.png">\
-          <img src="http://quilljs.com/images/cloud.png">\
+          <img src="/favicon.png">\
+          <img src="/favicon.png">\
         </p>\
         <ul>\
           <li>\
-            <img src="http://quilljs.com/images/cloud.png">\
-            <img src="http://quilljs.com/images/cloud.png">\
+            <img src="/favicon.png">\
+            <img src="/favicon.png">\
           </li>\
         </ul>'
       selection = new Selection(new Editor(@container))
@@ -179,13 +179,13 @@ describe('Selection', ->
     it('between embeds', ->
       @container.innerHTML = '\
         <p>\
-          <img src="http://quilljs.com/images/cloud.png">\
-          <img src="http://quilljs.com/images/cloud.png">\
+          <img src="/favicon.png">\
+          <img src="/favicon.png">\
         </p>\
         <ul>\
           <li>\
-            <img src="http://quilljs.com/images/cloud.png">\
-            <img src="http://quilljs.com/images/cloud.png">\
+            <img src="/favicon.png">\
+            <img src="/favicon.png">\
           </li>\
         </ul>'
       expected = new Selection.Range(1, 4)
@@ -205,7 +205,7 @@ describe('Selection', ->
       selection.setRange(null)
       range = selection.getRange()
       expect(range).toEqual(null)
-      expect(selection.checkFocus()).not.toBe(true)
+      expect(selection.checkFocus()).toBe(false)
     )
   )
 )

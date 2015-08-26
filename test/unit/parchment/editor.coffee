@@ -173,15 +173,15 @@ describe('Editor', ->
     it('embed', ->
       @container.innerHTML = '<p><strong>0123</strong></p>'
       editor = new Editor(@container)
-      editor.insertAt(2, 'image', 'http://quilljs.com/images/cloud.png')
+      editor.insertAt(2, 'image', '/favicon.png')
       expect(editor.getDelta()).toEqualDelta(new Delta()
         .insert('01', { bold: true })
-        .insert(1, { image: 'http://quilljs.com/images/cloud.png', bold: true })
+        .insert(1, { image: '/favicon.png', bold: true })
         .insert('23', { bold: true })
         .insert('\n')
       )
       expect(@container.innerHTML).toEqualHTML(
-        '<p><strong>01<img src="http://quilljs.com/images/cloud.png">23</strong></p>'
+        '<p><strong>01<img src="/favicon.png">23</strong></p>'
       )
     )
 
