@@ -37,7 +37,7 @@ module.exports = (grunt) ->
   grunt.registerTask('test:e2e', ['connect:server', 'protractor:e2e'])
 
   grunt.registerTask('test:coverage', [
-    'lodash', 'coffee:quill', 'istanbul:instrument'
+    'lodash', 'coffee:quill', 'replace:istanbul', 'istanbul:instrument'
     'connect:server', 'karma:coverage', 'istanbul:report'
     'clean:coverage'
   ])

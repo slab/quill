@@ -6,6 +6,17 @@ collector = new istanbul.Collector()
 reporter = new istanbul.Reporter(null, '.build/coverage/merged')
 
 module.exports = (grunt) ->
+  grunt.config('replace',
+    'istanbul':
+      overwrite: true
+      src: ['lib/**/*.js']
+      replacements: [{
+        from: /\n  extend = function\(child, parent\) \{ for \(var key in parent\) \{ /
+        to: (match, index, full) ->
+          return match + '/* istanbul ignore next */ '
+      }]
+  )
+
   grunt.registerTask('istanbul:instrument', ->
     grunt.util.spawn(
       cmd: './node_modules/.bin/istanbul'
