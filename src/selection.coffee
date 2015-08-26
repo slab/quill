@@ -4,7 +4,7 @@ Parchment = require('parchment')
 
 
 class Range
-  constructor: (@start, @end) ->
+  constructor: (@start, @end = @start) ->
 
   isCollapsed: ->
     return @start == @end
@@ -115,6 +115,7 @@ class Selection
       # to be set at 1st index
       @root.focus() unless this.checkFocus()
       nativeRange = this.getNativeRange()
+      # TODO do we need to avoid setting on same range?
       if !nativeRange? or
          startNode != nativeRange.startContainer or
          startOffset != nativeRange.startOffset or
@@ -134,12 +135,19 @@ class Selection
       document.body.focus() if dom.isIE(11) and !dom.isIE(9)
 
   setRange: (range, source) ->
+    convert = (index) =>
+      pos = _.last(@doc.findPath(index)) # TODO inclusive
+      if pos.blot instanceof Parchment.Embed
+        node = pos.blot.domNode.parentNode
+        return [node, [].indexOf.call(node.childNodes, pos.blot.domNode) + pos.offset]
+      else
+        return [pos.blot.domNode, pos.offset]
     if range?
-      [startNode, startOffset] = _.last(@doc.findPath(range.start))
+      [startNode, startOffset] = convert(range.start)
       if range.isCollapsed()
         this.setNativeRange(startNode, startOffset)
       else
-        [endNode, endOffset] = _.last(@doc.findPath(range.end))
+        [endNode, endOffset] = convert(range.end)
         this.setNativeRange(startNode, startOffset, endNode, endOffset)
     else
       this.setNativeRange(null)

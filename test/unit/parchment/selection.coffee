@@ -126,6 +126,88 @@ describe('Selection', ->
       expect(range).toEqual(null)
     )
   )
+
+  describe('setRange()', ->
+    it('empty document', ->
+      @container.innerHTML = ''
+      expected = new Selection.Range(0)
+      selection = new Selection(new Editor(@container))
+      selection.setRange(expected)
+      range = selection.getRange()
+      expect(range).toEqual(expected)
+      expect(selection.checkFocus()).toBe(true)
+    )
+
+    it('empty lines', ->
+      @container.innerHTML = '\
+        <p><br></p>\
+        <ul>\
+          <li><br></li>\
+        </ul>'
+      selection = new Selection(new Editor(@container))
+      expected = new Selection.Range(0, 1)
+      selection.setRange(expected)
+      range = selection.getRange()
+      expect(range).toEqual(range)
+      expect(selection.checkFocus()).toBe(true)
+    )
+
+    it('nested text node', ->
+      @container.innerHTML = '\
+        <p><em><strong>01</strong></em></p>\
+        <ul>\
+          <li><em><u>34</u></em></li>\
+        </ul>'
+      selection = new Selection(new Editor(@container))
+      expected = new Selection.Range(1, 4)
+      selection.setRange(expected)
+      range = selection.getRange()
+      expect(range).toEqual(expected)
+      expect(selection.checkFocus()).toBe(true)
+    )
+
+    it('between inlines', ->
+      @container.innerHTML = '<p><em>01</em><s>23</s><u>45</u></p>'
+      selection = new Selection(new Editor(@container))
+      expected = new Selection.Range(2, 4)
+      selection.setRange(expected)
+      range = selection.getRange()
+      expect(range).toEqual(expected)
+      expect(selection.checkFocus()).toBe(true)
+    )
+
+    it('between embeds', ->
+      @container.innerHTML = '\
+        <p>\
+          <img src="http://quilljs.com/images/cloud.png">\
+          <img src="http://quilljs.com/images/cloud.png">\
+        </p>\
+        <ul>\
+          <li>\
+            <img src="http://quilljs.com/images/cloud.png">\
+            <img src="http://quilljs.com/images/cloud.png">\
+          </li>\
+        </ul>'
+      expected = new Selection.Range(1, 4)
+      selection = new Selection(new Editor(@container))
+      selection.setRange(expected)
+      range = selection.getRange()
+      expect(range).toEqual(expected)
+      expect(selection.checkFocus()).toBe(true)
+    )
+
+    it('null', ->
+      @container.innerHTML = '<p>0123</p>'
+      selection = new Selection(new Editor(@container))
+      selection.setRange(new Selection.Range(1))
+      range = selection.getRange()
+      expect(range).not.toEqual(null)
+      selection.setRange(null)
+      range = selection.getRange()
+      expect(range).toEqual(null)
+      expect(selection.checkFocus()).not.toBe(true)
+    )
+  )
 )
 
 describe('Range', ->
