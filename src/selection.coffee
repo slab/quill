@@ -39,18 +39,24 @@ class Selection
   getBounds: (index) ->
     pos = _.last(@doc.findPath(index))
     return null unless pos?
-    leafNode = pos.blot.domNode
     containerBounds = @root.parentNode.getBoundingClientRect()
-    range = document.createRange()
-    if pos.offset < pos.blot.getLength()
-      range.setStart(leafNode, pos.offset)
-      range.setEnd(leafNode, pos.offset + 1)
-      side = 'left'
+    side = 'left'
+    if pos.blot.getLength() == 0
+      bounds = pos.blot.parent.domNode.getBoundingClientRect()
+    else if pos.blot instanceof Parchment.Embed
+      bounds = pos.blot.domNode.getBoundingClientRect()
+      side = 'right' if pos.offset > 0
     else
-      range.setStart(leafNode, pos.offset - 1)
-      range.setEnd(leafNode, pos.offset)
-      side = 'right'
-    bounds = range.getBoundingClientRect()
+      range = document.createRange()
+      if pos.offset < pos.blot.getLength()
+        range.setStart(pos.blot.domNode, pos.offset)
+        range.setEnd(pos.blot.domNode, pos.offset + 1)
+        side = 'left'
+      else
+        range.setStart(pos.blot.domNode, pos.offset - 1)
+        range.setEnd(pos.blot.domNode, pos.offset)
+        side = 'right'
+      bounds = range.getBoundingClientRect()
     return {
       height: bounds.height
       left: bounds[side] - containerBounds.left

@@ -176,6 +176,16 @@ describe('Selection', ->
       expect(selection.checkFocus()).toBe(true)
     )
 
+    it('inclusive inline', ->
+      @container.innerHTML = '<p><em>01</em><s>23</s><u>45</u></p>'
+      selection = new Selection(new Editor(@container))
+      selection.setRange(new Selection.Range(2, 4))
+      range = selection.getNativeRange()
+      expect($(range.startContainer).text()).toEqual('01')
+      expect($(range.endContainer).text()).toEqual('23')
+      expect(selection.checkFocus()).toBe(true)
+    )
+
     it('between embeds', ->
       @container.innerHTML = '\
         <p>\
@@ -206,6 +216,95 @@ describe('Selection', ->
       range = selection.getRange()
       expect(range).toEqual(null)
       expect(selection.checkFocus()).toBe(false)
+    )
+  )
+
+  describe('getBounds()', ->
+    beforeEach( ->
+      $(@container).addClass('ql-editor')
+      @container.innerHTML = '<div></div>'
+      @div = @container.firstChild
+      return if @reference?
+      @div.innerHTML = '<p><span>0</span></p>'
+      @reference =
+        height: @div.firstChild.firstChild.offsetHeight
+        width: @div.firstChild.firstChild.offsetWidth
+      @div.innerHTML = ''
+    )
+
+    it('empty document', ->
+      @div.innerHTML = '<p><br></p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(0)
+      expect(bounds.height).toBeApproximately(@reference.height, 1)
+      expect(bounds.left).toBeApproximately(0, 1)
+      expect(bounds.top).toBeApproximately(0, 1)
+    )
+
+    it('empty line', ->
+      @div.innerHTML = '\
+        <p>0000</p>\
+        <p><br></p>\
+        <p>0000</p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(5)
+      expect(bounds.height).toBeApproximately(@reference.height, 1)
+      expect(bounds.left).toBeApproximately(0, 1)
+      expect(bounds.top).toBeApproximately(@reference.height, 1)
+    )
+
+    it('plain text', ->
+      @div.innerHTML = '<p>0123</p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(2)
+      expect(bounds.height).toBeApproximately(@reference.height, 1)
+      expect(bounds.left).toBeApproximately(@reference.width*2, 1)
+      expect(bounds.top).toBeApproximately(0, 1)
+    )
+
+    it('start of line', ->
+      @div.innerHTML = '\
+        <p>0000</p>\
+        <p>0000</p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(5)
+      expect(bounds.height).toBeApproximately(@reference.height, 1)
+      expect(bounds.left).toBeApproximately(0, 1)
+      expect(bounds.top).toBeApproximately(@reference.height, 1)
+    )
+
+    it('end of line', ->
+      @div.innerHTML = '\
+        <p>0000</p>\
+        <p>0000</p>\
+        <p>0000</p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(9)
+      expect(bounds.height).toBeApproximately(@reference.height, 1)
+      expect(bounds.left).toBeApproximately(@reference.width*4, 1)
+      expect(bounds.top).toBeApproximately(@reference.height, 1)
+    )
+
+    it('large text', ->
+      @div.innerHTML = '<p><span style="font-size: 32px;">0000</span></p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(2)
+      expect(bounds.height).toBeApproximately(@div.querySelector('span').offsetHeight, 1)
+      expect(bounds.left).toBeApproximately(@div.querySelector('span').offsetWidth/2, 1)
+      expect(bounds.top).toBeApproximately(0, 1)
+    )
+
+    it('image', ->
+      @div.innerHTML = '\
+        <p>\
+          <img src="/favicon.png" width="32px" height="32px">\
+          <img src="/favicon.png" width="32px" height="32px">\
+        </p>'
+      selection = new Selection(new Editor(@div))
+      bounds = selection.getBounds(1)
+      expect(bounds.height).toBeApproximately(32, 1)
+      expect(bounds.left).toBeApproximately(32, 1)
+      expect(bounds.top).toBeApproximately(0, 1)
     )
   )
 )
