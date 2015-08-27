@@ -33,14 +33,14 @@ class Link extends Parchment.Inline
 
 class InlineCode extends Parchment.Inline
   @blotName: 'inline-code'
-  @tagName: 'code'
+  @tagName: 'CODE'
 
 
 # TODO: implement exclusitivity
 
 class Script extends Parchment.Inline
   @blotName: 'script'
-  @tagName: ['sub', 'sup']
+  @tagName: ['SUB', 'SUP']
 
   constructor: (value) ->
     if (typeof value == 'string')
