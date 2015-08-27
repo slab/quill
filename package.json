@@ -10,7 +10,7 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "parchment": "~0.0.3",
+    "parchment": "~0.0.4",
     "rich-text": "~2.1.0"
   },
   "devDependencies": {
