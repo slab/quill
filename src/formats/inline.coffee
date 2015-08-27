@@ -41,13 +41,15 @@ class Script extends Parchment.Inline
   @tagName: ['SUB', 'SUP']
 
   constructor: (value) ->
-    if (typeof value == 'string')
-      value = document.createElement(value)
+    if (value == 'super')
+      value = document.createElement('sup')
+    else if (value == 'sub')
+      value = document.createElement('sub')
     super(value)
 
   getFormat: ->
     formats = super
-    formats.script = @domNode.tagName.toLowerCase()
+    formats.script = if @domNode.tagName == 'SUP' then 'super' else 'sub'
     return formats
 
 
