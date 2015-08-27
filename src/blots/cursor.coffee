@@ -3,16 +3,23 @@ Parchment = require('parchment')
 dom       = require('../lib/dom')
 
 
-class Cursor extends Parchment.Inline
-  @blotName = 'aaacursor'       # TODO create real inline compare function
-  @className = 'ql-cursor'
+class Cursor extends Parchment.Embed
+  @blotName = 'cursor'
+  @tagName = 'span'
 
-  constructor: (domNode) ->
-    super(domNode)
-    this.appendChild(Parchment.create('text', dom.ZERO_WIDTH_NOBREAK_SPACE))
-    dom(this.domNode).on('blur', =>
-      console.log(this)
-    )
+  constructor: (value) ->
+    super(value)
+    dom(this.domNode).addClass(Parchment.PREFIX + 'cursor')
+    this.domNode.appendChild(document.createTextNode(dom.ZERO_WIDTH_NOBREAK_SPACE))
 
+  getLength: ->
+    return 0
+
+  getValue: ->
+    return ''
+
+
+Parchment.define(Cursor)
+Parchment.define(Parchment.Inline)   # Redefine to overwrite cursor
 
 module.exports = Cursor
