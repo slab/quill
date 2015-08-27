@@ -36,8 +36,6 @@ class InlineCode extends Parchment.Inline
   @tagName: 'CODE'
 
 
-# TODO: implement exclusitivity
-
 class Script extends Parchment.Inline
   @blotName: 'script'
   @tagName: ['SUB', 'SUP']
@@ -49,7 +47,7 @@ class Script extends Parchment.Inline
 
   getFormat: ->
     formats = super
-    formats['script'] = @domNode.tagName.toLowerCase()
+    formats.script = @domNode.tagName.toLowerCase()
     return formats
 
 

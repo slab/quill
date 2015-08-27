@@ -338,6 +338,44 @@ describe('Selection', ->
       expect(bounds.top).toBeApproximately(0, 1)
     )
   )
+
+  describe('prepare()', ->
+    it('delta', ->
+
+    )
+
+    it('split nodes', ->
+
+    )
+
+    it('empty line', ->
+
+    )
+
+    it('split nodes', ->
+
+    )
+
+    it('multiple', ->
+
+    )
+
+    it('false', ->
+
+    )
+
+    it('preserve on enter', ->
+
+    )
+
+    it('remove on blur', ->
+
+    )
+
+    it('remove on backspace', ->
+
+    )
+  )
 )
 
 describe('Range', ->
