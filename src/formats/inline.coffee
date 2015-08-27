@@ -2,6 +2,22 @@ Parchment = require('parchment')
 StyleAttributor = require('./attributor')
 
 
+# Earlier means higher in the DOM tree
+order = [
+  'link'                # Must be earlier
+  'script', 'italic', 'bold', 'strike', 'underline', 'code'
+  'inline', 'cursor'    # Must be later
+]
+
+Parchment.Inline.compare = (self, other) ->
+  selfIndex = order.indexOf(self)
+  otherIndex = order.indexOf(other)
+  if (selfIndex != otherIndex)
+    return selfIndex >= otherIndex
+  else
+    return self >= other
+
+
 class Bold extends Parchment.Inline
   @blotName: 'bold'
   @tagName: 'STRONG'
