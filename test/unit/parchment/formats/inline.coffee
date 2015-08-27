@@ -62,6 +62,29 @@ describe('Formats', ->
       ')
     )
 
+    it('ordering', ->
+      @container.innerHTML = '<p>012</p><p>456</p>'
+      editor = new Editor(@container)
+      editor.formatAt(0, 2, 'bold', true)
+      editor.formatAt(1, 2, 'italic', true)
+      editor.formatAt(5, 2, 'italic', true)
+      editor.formatAt(4, 2, 'bold', true)
+      expect(editor.getDelta()).toEqualDelta(new Delta()
+        .insert('0', { bold: true })
+        .insert('1', { italic: true, bold: true })
+        .insert('2', { italic: true })
+        .insert('\n')
+        .insert('4', { bold: true })
+        .insert('5', { italic: true, bold: true })
+        .insert('6', { italic: true })
+        .insert('\n')
+      )
+      expect(@container.innerHTML).toEqualHTML('\
+        <p><strong>0</strong><em><strong>1</strong>2</em></p>\
+        <p><strong>4</strong><em><strong>5</strong>6</em></p>\
+      ')
+    )
+
     it('parts of multiple lines', ->
       @container.innerHTML = '\
         <p><em>0123</em></p>\
