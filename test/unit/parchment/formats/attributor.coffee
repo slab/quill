@@ -3,6 +3,18 @@ Editor = require('../../../../src/editor')
 
 
 describe('Attributor', ->
+  it('definition', ->
+    @container.innerHTML = '\
+      <p style="direction: rtl; text-align: center;">\
+        <span style="color: red; background-color: blue; font-size: 32px; font-family: monospace;">0123</span>\
+      </p>'
+    editor = new Editor(@container)
+    expect(editor.getDelta()).toEqualDelta(new Delta()
+      .insert('0123', { color: 'red', background: 'blue', size: '32px', font: 'monospace' })
+      .insert('\n', { direction: 'rtl', align: 'center' })
+    )
+  )
+
   it('add inline', ->
     @container.innerHTML = '<p>0123</p>'
     editor = new Editor(@container)

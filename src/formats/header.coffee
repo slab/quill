@@ -15,9 +15,7 @@ class Header extends Block
 
   getFormat: ->
     formats = super()
-    i = this.statics.tagName.indexOf(@domNode.tagName)
-    if i > -1
-      formats.header = i + 1
+    formats.header = this.statics.tagName.indexOf(@domNode.tagName) + 1
     return formats
 
 

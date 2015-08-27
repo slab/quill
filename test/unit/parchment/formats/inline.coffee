@@ -4,6 +4,32 @@ Editor = require('../../../../src/editor')
 
 describe('Formats', ->
   describe('Inline', ->
+    it('definition', ->
+      @container.innerHTML = '\
+        <p>\
+          <strong>0</strong>\
+          <em>1</em>\
+          <s>2</s>\
+          <u>3</u>\
+          <a href="http://quilljs.com/">4</a>\
+          <code>5</code>\
+          <sup>6</sup>\
+          <sub>7</sub>\
+        </p>'
+      editor = new Editor(@container)
+      expect(editor.getDelta()).toEqualDelta(new Delta()
+        .insert('0', { bold: true })
+        .insert('1', { italic: true })
+        .insert('2', { strike: true })
+        .insert('3', { underline: true })
+        .insert('4', { link: 'http://quilljs.com/' })
+        .insert('5', { 'inline-code': true })
+        .insert('6', { script: 'sup' })
+        .insert('7', { script: 'sub' })
+        .insert('\n')
+      )
+    )
+
     it('inner node', ->
       @container.innerHTML = '<p><em>0123</em></p>'
       editor = new Editor(@container)
