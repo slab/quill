@@ -9,7 +9,7 @@ class BlockAttributor extends StyleAttributor
     super(node, value)
 
 
-Align = new BlockAttributor('align', 'textAlign', {
+Align = new BlockAttributor('align', 'text-align', {
   default: 'left'
   whitelist: ['left', 'right', 'center', 'justify']
 })

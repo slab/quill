@@ -47,6 +47,7 @@ class Editor extends Parchment.Root
     )
 
   update: ->
+    return new Delta()
 
 
 module.exports = Editor

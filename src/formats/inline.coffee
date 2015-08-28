@@ -76,10 +76,10 @@ class InlineAttributor extends StyleAttributor
     super(node, value)
 
 
-Background = new InlineAttributor('background', 'backgroundColor')
+Background = new InlineAttributor('background', 'background-color')
 Color = new InlineAttributor('color', 'color')
-Font = new InlineAttributor('font', 'fontFamily')
-Size = new InlineAttributor('size', 'fontSize')
+Font = new InlineAttributor('font', 'font-family')
+Size = new InlineAttributor('size', 'font-size')
 
 
 module.exports =
