@@ -1,4 +1,4 @@
-Quill = require('../src/quill')
+Quill = require('../src/index')
 
 require('./unit/parchment/editor')
 require('./unit/parchment/selection')
