@@ -8,23 +8,25 @@ class Block extends Parchment.Block
   @blotName = 'block'
   @tagName = 'P'
 
-  constructor: (value) ->
-    super(value)
-    this.ensureBreak()
+  build: ->
+    super()
+    this.ensureChild()
 
   deleteAt: (index, length) ->
     super(index, length)
-    this.ensureBreak()
+    this.ensureChild()
 
-  ensureBreak: ->
-    if this.getLength() == NEWLINE_LENGTH
-      target = this
-      while target.children? && target.children.head instanceof Parchment.Parent
-        target = target.children.head
-      target.appendChild(Parchment.create('break'))
+  ensureChild: ->
+    if this.children.length == 0
+      this.appendChild(Parchment.create('break'))
 
   findPath: (index) ->
     return super(index, true)
+
+  format: (name, value) ->
+    if Parchment.match(name, Parchment.types.BLOT)?.prototype instanceof Parchment.Block ||
+       Parchment.match(name, Parchment.types.ATTRIBUTE)
+      super(name, value)
 
   formatAt: (index, length, name, value) ->
     if index + length >= this.getLength() and length > 0
@@ -32,23 +34,16 @@ class Block extends Parchment.Block
     super(index, length, name, value)
 
   getDelta: ->
-    collector = (blot) ->
-      format = blot.getFormat()
-      if (blot instanceof Parchment.Parent)
-        return blot.children.reduce((memo, child) ->
-          return memo.concat(collector(child))
-        , []).map((childFormat) ->
-          return _.defaults({}, format, childFormat)
-        )
-      else
-        return [format]
-    formats = @children.reduce((memo, child) ->
-      return memo.concat(collector(child))
-    , []).concat(this.getFormat())
-    values = this.getValue()
-    return values.reduce((delta, value, index) ->
-      delta.insert(value, formats[index])
-    , new Delta())
+    leaves = this.getDescendants(Parchment.Leaf)
+    return leaves.reduceRight((delta, leaf) =>
+      return delta if leaf.getLength() == 0
+      attributes = {}
+      value = leaf.getValue()
+      while (leaf != this)
+        attributes = _.extend(leaf.getFormat(), attributes)
+        leaf = leaf.parent
+      return new Delta().insert(value, attributes).concat(delta)
+    , new Delta().insert('\n', this.getFormat()))
 
   getLength: ->
     return super() + NEWLINE_LENGTH
@@ -71,12 +66,6 @@ class Block extends Parchment.Block
       br = @children.head
     super(blot, ref)
     br.remove() if br?
-
-  split: (index, force) ->
-    after = super(index, force)
-    this.ensureBreak()
-    after.ensureBreak()
-    return after
 
 
 Parchment.define(Block)

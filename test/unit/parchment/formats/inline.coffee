@@ -58,8 +58,8 @@ describe('Formats', ->
           <strong>0</strong>\
           <em><strong>12</strong></em>\
           <strong>3</strong>\
-        </p>\
-      ')
+        </p>'
+      )
     )
 
     it('ordering', ->
@@ -81,15 +81,14 @@ describe('Formats', ->
       )
       expect(@container.innerHTML).toEqualHTML('\
         <p><strong>0</strong><em><strong>1</strong>2</em></p>\
-        <p><strong>4</strong><em><strong>5</strong>6</em></p>\
-      ')
+        <p><strong>4</strong><em><strong>5</strong>6</em></p>'
+      )
     )
 
     it('parts of multiple lines', ->
       @container.innerHTML = '\
         <p><em>0123</em></p>\
-        <p><em>5678</em></p>\
-      '
+        <p><em>5678</em></p>'
       editor = new Editor(@container)
       editor.formatAt(2, 5, 'bold', true)
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -102,8 +101,8 @@ describe('Formats', ->
       )
       expect(@container.innerHTML).toEqualHTML('\
         <p><em>01<strong>23</strong></em></p>\
-        <p><em><strong>56</strong>78</em></p>\
-      ')
+        <p><em><strong>56</strong>78</em></p>'
+      )
     )
 
     it('subscript exclusitivity', ->

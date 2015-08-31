@@ -27,6 +27,7 @@ class List extends Parchment.Block
       @children.head.insertBefore(child)
 
   merge: (target = this.next) ->
+    return false
     console.log(@parent.domNode.outerHTML)
     if target? && this.statics.blotName == target.statics.blotName   # OL/UL should not have DOM attributes
       console.trace()
@@ -64,6 +65,7 @@ class Item extends Block
 
   getFormat: ->
     format = super()
+    delete format['item']
     format[@parent.statics.blotName] = true
     return format
 

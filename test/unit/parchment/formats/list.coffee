@@ -2,7 +2,7 @@ Delta = require('rich-text/lib/delta')
 Editor = require('../../../../src/editor')
 
 
-fdescribe('List', ->
+xdescribe('List', ->
   it('add', ->
     @container.innerHTML = '\
       <p>0123</p>\
@@ -41,13 +41,12 @@ fdescribe('List', ->
     )
   )
 
-  fit('add merge', ->
+  it('add merge', ->
     @container.innerHTML = '\
       <ol><li>0123</li></ol>\
       <p>5678</p>\
       <ol><li>0123</li></ol>'
     editor = new Editor(@container)
-    debugger
     editor.formatAt(9, 1, 'list', true)
     expect(editor.getDelta()).toEqualDelta(new Delta()
       .insert('0123')
