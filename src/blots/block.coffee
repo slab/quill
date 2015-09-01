@@ -24,7 +24,9 @@ class Block extends Parchment.Block
     return super(index, true)
 
   format: (name, value) ->
-    if Parchment.match(name, Parchment.types.BLOT)?.prototype instanceof Parchment.Block ||
+    blot = Parchment.match(name, Parchment.types.BLOT)
+    if blot? && blot.prototype instanceof Parchment.Block ||
+       blot.prototype instanceof Parchment.Container ||
        Parchment.match(name, Parchment.types.ATTRIBUTE)
       super(name, value)
 

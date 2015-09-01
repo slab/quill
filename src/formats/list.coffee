@@ -4,19 +4,9 @@ Parchment = require('parchment')
 Block     = require('../blots/block')
 
 
-class List extends Parchment.Block
+class List extends Parchment.Container
   @blotName: 'list'
   @tagName: 'OL'
-
-  format: (name, value) ->
-    console.log('I have to deal...')
-    debugger
-    super(name, value)
-
-  getDelta: ->
-    return @children.reduce((delta, child) ->
-      return delta.concat(child.getDelta())
-    , new Delta())
 
   insertBefore: (child, refBlot) ->
     if (child instanceof Item)
@@ -24,25 +14,15 @@ class List extends Parchment.Block
     else
       if !@children.head?
         this.appendChild(Parchment.create('item'))
-      @children.head.insertBefore(child)
+      @children.head.appendChild(child)
+      if child instanceof Parchment.Block
+        child.unwrap()
 
   merge: (target = this.next) ->
-    return false
-    console.log(@parent.domNode.outerHTML)
     if target? && this.statics.blotName == target.statics.blotName   # OL/UL should not have DOM attributes
-      console.trace()
-      console.log('yes', this.domNode.outerHTML, target.domNode.outerHTML)
       target.moveChildren(this)
-      console.log('after', this.domNode.outerHTML, target.domNode.outerHTML)
       target.remove()
-      # this.merge()
     return false
-
-
-###
-  - Intercept format
-  - Intercept replace
-###
 
 
 class Bullet extends List
