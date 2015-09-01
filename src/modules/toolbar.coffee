@@ -58,7 +58,7 @@ class Toolbar
       callback(range, value) if range?
       @quill.editor.selection.scrollIntoView() if dom.isIE(11)
       @preventUpdate = false
-      return true
+      return false
     )
 
   setActive: (format, value) ->
