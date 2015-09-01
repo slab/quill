@@ -167,6 +167,18 @@ class Quill extends EventEmitter2
       return if _.isString(op.insert) then op.insert else ''
     ).join('')
 
+  getActiveFormats: (start = null, end = null) ->
+    if start is null
+      start = this.getSelection()
+
+    if _.isObject(start)
+      end = start.end
+      start = start.start
+
+    leafFormats = this._getLeafFormats(start, end)
+    lineFormats = this._getLineFormats(start, end)
+    return _.defaults({}, leafFormats, lineFormats)
+
   insertEmbed: (index, type, url, source) ->
     [index, end, formats, source] = this._buildParams(index, 0, type, url, source)
     delta = new Delta().retain(index).insert(1, formats)
@@ -240,6 +252,36 @@ class Quill extends EventEmitter2
       params.splice(2, 2, formats)
     params[3] ?= Quill.sources.API
     return params
+
+  _getLeafFormats: (start, end) ->
+    if start == end
+      [line, offset] = @editor.doc.findLineAt(start)
+      if offset == 0
+        contents = this.getContents(start, end + 1)
+      else
+        contents = this.getContents(start - 1, end)
+    else
+      contents = this.getContents(start, end)
+    formats = _.map(contents.ops, 'attributes')
+    return this._intersectFormats(formats)
+
+  _getLineFormats: (start, end) ->
+    formats = []
+    [firstLine, offset] = @editor.doc.findLineAt(start)
+    [lastLine, offset] = @editor.doc.findLineAt(end)
+    currLine = firstLine
+    while true
+      formats.push(_.clone(currLine.formats))
+      break if currLine == lastLine
+      currLine = currLine.next
+    return this._intersectFormats(formats)
+
+  _intersectFormats: (formatGroups) ->
+    return _.reduce(formatGroups.slice(1), (inAll, formats) ->
+      _.omit(inAll, (value, name) ->
+        return !formats? or !formats[name]? or formats[name] != value
+      )
+    , formatGroups[0] or {})
 
 
 Quill.registerTheme('base', require('./themes/base'))
