@@ -37,14 +37,13 @@ class ImageTooltip extends Tooltip
 
   insertImage: ->
     url = this._normalizeURL(@textbox.value)
-    @range = new Range(0, 0) unless @range?   # If we lost the selection somehow, just put image at beginning of document
-    if @range
-      @preview.innerHTML = '<span>Preview</span>'
-      @textbox.value = ''
-      index = @range.end
-      @quill.insertEmbed(index, 'image', url, 'user')
-      @quill.setSelection(index + 1, index + 1)
+    @preview.innerHTML = '<span>Preview</span>'
+    @textbox.value = ''
     this.hide()
+    range = @quill.getSelection()
+    if range
+      @quill.insertEmbed(range.start, 'image', url, 'user')
+      @quill.setSelection(range.start + 1, range.start + 1)
 
   _onToolbar: (range, value) ->
     if value
