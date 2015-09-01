@@ -59,7 +59,7 @@ class Block extends Parchment.Block
     lines = value.split('\n')
     text = lines.shift()
     super(index, text)
-    if (lines.length > 0)
+    if lines.length > 0
       next = this.split(index + text.length, true)
       next.insertAt(0, lines.join('\n'))
 
@@ -68,6 +68,18 @@ class Block extends Parchment.Block
       br = @children.head
     super(blot, ref)
     br.remove() if br?
+
+  split: (index, force = false) ->
+    if force && (index == 0 || index >= this.getLength() - NEWLINE_LENGTH)
+      after = this.clone()
+      if index == 0
+        this.moveChildren(after)
+        this.ensureChild()
+      else
+        after.ensureChild()
+      @parent.insertBefore(after, @next)
+      return after
+    return super(index, force)
 
 
 Parchment.define(Block)

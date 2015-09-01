@@ -209,7 +209,7 @@ describe('Editor', ->
       ')
     )
 
-    xit('prepend newline', ->
+    it('prepend newline', ->
       @container.innerHTML = '<p><strong>0123</strong></p>'
       editor = new Editor(@container)
       editor.insertAt(0, '\n')
@@ -219,39 +219,23 @@ describe('Editor', ->
         .insert('\n')
       )
       expect(@container.innerHTML).toEqualHTML('\
-        <p>strong><br></strong></p>\
+        <p><br></p>\
         <p><strong>0123</strong></p>\
       ')
     )
 
-    xit('append newline', ->
+    it('append newline', ->
       @container.innerHTML = '<p><strong>0123</strong></p>'
       editor = new Editor(@container)
       editor.insertAt(4, '\n')
       expect(editor.getDelta()).toEqualDelta(new Delta()
-        .insert('\n')
         .insert('0123', { bold: true })
         .insert('\n\n')
       )
       expect(@container.innerHTML).toEqualHTML('\
         <p><strong>0123</strong></p>\
-        <p><strong><br></strong></p>\
-      ')
-    )
-
-    xit('end of document', ->
-      @container.innerHTML = '<p><strong>0123</strong></p>'
-      editor = new Editor(@container)
-      editor.insertAt(5, '\n')
-      expect(editor.getDelta()).toEqualDelta(new Delta()
-        .insert('\n')
-        .insert('0123', { bold: true })
-        .insert('\n\n')
+        <p><br></p>'
       )
-      expect(@container.innerHTML).toEqualHTML('\
-        <p><strong>0123</strong></p>\
-        <p><br></p>\
-      ')
     )
 
     it('multiline text', ->
@@ -272,11 +256,11 @@ describe('Editor', ->
         <p><strong>01</strong></p>\
         <p><strong>!!</strong></p>\
         <p><strong>!!</strong></p>\
-        <p><strong>23</strong></p>\
-      ')
+        <p><strong>23</strong></p>'
+      )
     )
 
-    xit('multiple newlines', ->
+    it('multiple newlines', ->
       @container.innerHTML = '<p><strong>0123</strong></p>'
       editor = new Editor(@container)
       editor.insertAt(2, '\n\n')
@@ -288,7 +272,7 @@ describe('Editor', ->
       )
       expect(@container.innerHTML).toEqualHTML('\
         <p><strong>01</strong></p>\
-        <p><strong><br></strong></p>\
+        <p><br></p>\
         <p><strong>23</strong></p>\
       ')
     )
