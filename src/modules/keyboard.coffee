@@ -66,7 +66,31 @@ class Keyboard
       return true unless range?
       [line, offset] = @quill.editor.doc.findLineAt(range.start)
       [leaf, offset] = line.findLeafAt(offset)
-      delta = new Delta().retain(range.start).insert('\n', line.formats).delete(range.end - range.start)
+      delta = new Delta().retain(range.start)
+      removeInheritedFormats = _.reduce(line.formats, (formats, value, name) =>
+        format = @quill.editor.doc.formats[name]
+        if format and format.isType('line') and format.config.inherit
+          formats[name] = false
+        return formats
+      , {})
+      removeNonInheritedFormats = _.reduce(line.formats, (formats, value, name) =>
+        format = @quill.editor.doc.formats[name]
+        if format and format.isType('line') and !format.config.inherit
+          formats[name] = false
+        return formats
+      , {})
+
+      # if on an empty line, remove the inheritable formats
+      if range.isCollapsed() and line.length == 1 and Object.keys(removeInheritedFormats).length > 0
+        delta.retain(1, removeInheritedFormats)
+      else
+        delta.insert('\n', line.formats).delete(range.end - range.start)
+
+      # if creating a new empty line (was at the end of the old line),
+      # remove line formats from the new line that should not be inherited
+      if !leaf.next and offset == leaf.length
+        delta.retain(1, removeNonInheritedFormats)
+
       @quill.updateContents(delta, Quill.sources.USER)
       _.each(leaf.formats, (value, format) =>
         @quill.prepareFormat(format, value)

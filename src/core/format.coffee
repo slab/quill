@@ -69,12 +69,14 @@ class Format
     bullet:
       type: Format.types.LINE
       exclude: 'list'
+      inherit: true
       parentTag: 'UL'
       tag: 'LI'
 
     list:
       type: Format.types.LINE
       exclude: 'bullet'
+      inherit: true
       parentTag: 'OL'
       tag: 'LI'
 
