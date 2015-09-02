@@ -60,6 +60,7 @@ class Editor extends Parchment.Container
     @delta = this.getDelta()
     change = oldDelta.diff(@delta)
     this.onUpdate(change) if change.length() > 0
-
+    @observer.takeRecords()  # Prevent changes from rebuilds
+    return change
 
 module.exports = Editor

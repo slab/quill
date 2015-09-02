@@ -49,6 +49,7 @@ class Quill extends EventEmitter2
     PRE_EVENT        : 'pre-event'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
+    DEBUG            : 'debug'
 
   @sources:
     API    : 'api'
@@ -56,11 +57,11 @@ class Quill extends EventEmitter2
     USER   : 'user'
 
   @registerModule: (name, module) ->
-    console.warn("Overwriting #{name} module") if Quill.modules[name]?
+    this.emit(Quill.events.DEBUG, 'warning', "Overwriting #{name} module") if Quill.module[name]?
     Quill.modules[name] = module
 
   @registerTheme: (name, theme) ->
-    console.warn("Overwriting #{name} theme") if Quill.themes[name]?
+    this.emit(Quill.events.DEBUG, 'warning', "Overwriting #{name} theme") if Quill.themes[name]?
     Quill.themes[name] = theme
 
   @require: (name) ->
@@ -232,18 +233,18 @@ class Quill extends EventEmitter2
     delta = new Delta().insert(text)
     this.setContents(delta, source)
 
-  updateContents: (delta, source = Quill.sources.API) ->
-    delta = new Delta(delta.slice()) if Array.isArray(delta)
-    track.call(this, source, =>
-      applyDelta(@editor, delta)
-    )
-
   update: (source = Quill.sources.USER) ->
     delta = @editor.update()
     if delta.length() > 0
       this.emit(Quill.events.TEXT_CHANGE, delta, source)
     else if (range = @selection.update())
       this.emit(Quill.events.SELECTION_CHANGE, range, source)
+
+  updateContents: (delta, source = Quill.sources.API) ->
+    delta = new Delta(delta.slice()) if Array.isArray(delta)
+    track.call(this, source, =>
+      applyDelta(@editor, delta)
+    )
 
 
 applyDelta = (editor, delta) ->

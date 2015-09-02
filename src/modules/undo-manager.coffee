@@ -68,7 +68,7 @@ class UndoManager
       })
       @stack.undo.unshift() if @stack.undo.length > @options.maxStack
     catch ignored
-      console.warn('Could not record change... clearing undo stack.')
+      @quill.emit(@quill.constructor.events.DEBUG, 'warning', 'Could not record change... clearing undo stack.')
       this.clear()
 
   redo: ->

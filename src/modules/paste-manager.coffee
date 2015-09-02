@@ -3,6 +3,7 @@ _        = Quill.require('lodash')
 dom      = Quill.require('dom')
 Delta    = Quill.require('delta')
 
+
 class PasteManager
   @DEFAULTS:
     onConvert: null

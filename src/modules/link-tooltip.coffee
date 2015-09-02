@@ -3,6 +3,7 @@ Tooltip = require('./tooltip')
 _       = Quill.require('lodash')
 dom     = Quill.require('dom')
 
+
 class LinkTooltip extends Tooltip
   @DEFAULTS:
     maxLength: 50
