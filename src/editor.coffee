@@ -9,6 +9,12 @@ class Editor extends Parchment.Container
     this.enable()
     @delta = this.getDelta()
     @observer = new MutationObserver(this.update.bind(this))
+    @observer.observe(@domNode,
+      attributes: true
+      characterData: true
+      childList: true
+      subtree: true
+    )
 
   deleteAt: (index, length) ->
     [first, firstOffset] = @children.find(index)
@@ -47,8 +53,13 @@ class Editor extends Parchment.Container
       child.remove()
     )
 
-  update: ->
-    return new Delta()
+  update: (mutations = @observer.takeRecords()) ->
+    return new Delta() unless mutations.length > 0
+    oldDelta = @delta
+    this.build()
+    @delta = this.getDelta()
+    change = oldDelta.diff(@delta)
+    this.onUpdate(change) if change.length() > 0
 
 
 module.exports = Editor
