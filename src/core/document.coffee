@@ -52,7 +52,18 @@ class Document
   insertLineBefore: (newLineNode, refLine) ->
     line = new Line(this, newLineNode)
     if refLine?
-      @root.insertBefore(newLineNode, refLine.node) unless dom(newLineNode.parentNode).isElement()  # Would prefer newLineNode.parentNode? but IE will have non-null object
+      parentNode = @root
+      refNode = refLine.node
+
+      if refLine.node.tagName == 'LI'
+        if newLineNode.tagName == 'LI'
+          parentNode = refLine.node.parentNode
+        else
+          refNode = refLine.node.parentNode
+          while refLine and refLine.prev and refLine.node.tagName != 'LI'
+            refLine = refLine.prev
+
+      parentNode.insertBefore(newLineNode, refNode) unless dom(newLineNode.parentNode).isElement()  # Would prefer newLineNode.parentNode? but IE will have non-null object
       @lines.insertAfter(refLine.prev, line)
     else
       @root.appendChild(newLineNode) unless dom(newLineNode.parentNode).isElement()

@@ -145,6 +145,33 @@ describe('Document', ->
       @lines = @doc.lines.toArray()
     )
 
+    describe('insertLineBefore() into list', ->
+      listNode = null
+      listItemLine = null
+
+      beforeEach( ->
+        listNode = @doc.root.ownerDocument.createElement('ul')
+        listNode.innerHTML = '<li>Item 1</li><li>Item 2</li>'
+        @doc.root.appendChild(listNode)
+        @doc.rebuild()
+        listItemLine = @doc.findLine(listNode.firstChild)
+      )
+
+      it('with list item', ->
+        newListItemNode = @doc.root.ownerDocument.createElement('li')
+        newListItemNode.innerHTML = 'Item 0'
+        @doc.insertLineBefore(newListItemNode, listItemLine)
+        expect(listItemLine.node.previousSibling).toBe(newListItemNode)
+      )
+
+      it('with standard line', ->
+        lineNode = @doc.root.ownerDocument.createElement(dom.DEFAULT_BLOCK_TAG)
+        lineNode.innerHTML = 'Line'
+        @doc.insertLineBefore(lineNode, listItemLine)
+        expect(listNode.previousSibling).toBe(lineNode)
+      )
+    )
+
     it('mergeLines() normal', ->
       @doc.mergeLines(@lines[0], @lines[1])
       expect(@doc.root).toEqualHTML('
