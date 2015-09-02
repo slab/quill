@@ -39,6 +39,7 @@ class Quill extends EventEmitter2
       # 'paste-manager': true
       # 'undo-manager': true
     readOnly: false
+    styles: {}
     theme: 'base'
 
   @events:
