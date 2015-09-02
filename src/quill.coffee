@@ -142,7 +142,7 @@ class Quill extends EventEmitter2
       # TODO handle lists
       Object.keys(formats).forEach((format) =>
         @editor.children.forEachAt(start, end - start, (line, offset) ->
-          line.format(name, value)
+          line.format(format, formats[format])
         )
       )
     )
@@ -151,7 +151,7 @@ class Quill extends EventEmitter2
     [start, end, formats, source] = buildParams(start, end, name, value, source)
     track.call(this, source, =>
       Object.keys(formats).forEach((format) =>
-        @editor.formatAt(start, end - start, name, value)
+        @editor.formatAt(start, end - start, format, formats[format])
       )
     )
 
@@ -172,7 +172,8 @@ class Quill extends EventEmitter2
   getModule: (name) ->
     return @modules[name]
 
-  getSelection: ->
+  getSelection: (focus = false) ->
+    this.focus() if focus
     this.update()   # Make sure we access getRange with editor in consistent state
     return @selection.getRange()
 
