@@ -244,6 +244,7 @@ class Quill extends EventEmitter2
 
 Quill.registerTheme('base', require('./themes/base'))
 Quill.registerTheme('snow', require('./themes/snow'))
+Quill.registerTheme('none', require('./themes/none'))
 
 
 module.exports = Quill
