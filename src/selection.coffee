@@ -98,7 +98,15 @@ class Selection
   onUpdate: (range) ->
 
   prepare: (format, value) ->
-    # TODO implement
+    this.update()
+    range = this.getRange()
+    pos = _.last(@doc.findPath(range.start))
+    target = pos.blot.split(pos.offset)
+    cursor = Parchment.create('cursor')
+    target.parent.insertBefore(cursor, target)
+    cursor.format(format, value)
+    # Cursor will not blink if we make selection
+    this.setNativeRange(cursor.domNode.firstChild, 1)
 
   scrollIntoView: ->
     return unless @range
