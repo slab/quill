@@ -1,4 +1,3 @@
-_ = require('lodash')
 dom = require('../../lib/dom')
 
 class BaseTheme
