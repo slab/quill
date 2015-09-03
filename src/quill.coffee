@@ -27,9 +27,9 @@ class Quill extends EventEmitter
 
   @DEFAULTS:
     formats: [
-      'align',
-      'bullet', 'list',
-      'bold', 'italic', 'strike', 'underline',
+      'align', 'direction',
+      'bullet', 'header', 'list',
+      'bold', 'code', 'italic', 'script', 'strike', 'underline',
       'link',
       'background', 'color', 'font', 'size',
       'image'
