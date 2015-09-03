@@ -29,7 +29,10 @@ class SnowTheme extends BaseTheme
     @quill.container.classList.add('ql-snow')
     @pickers = []
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
-      _.invoke(@pickers, 'close') if range?
+      return unless range?
+      @pickers.forEach((picker) ->
+        picker.close()
+      )
     )
     @quill.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
     @quill.onModuleLoad('toolbar', this.extendToolbar.bind(this))

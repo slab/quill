@@ -48,7 +48,7 @@ class Keyboard
       delta = @quill.getContents(Math.max(0, range.start-1), range.end)
     else
       delta = @quill.getContents(range)
-    value = delta.ops.length == 0 or !_.all(delta.ops, (op) ->
+    value = delta.ops.length == 0 or delta.ops.some((op) ->
       return op.attributes?[format]
     )
     if range.isCollapsed()

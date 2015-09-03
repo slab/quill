@@ -19,6 +19,8 @@ Formats =
   List    : require('./formats/list')
 
 
+counter = 0
+
 class Quill extends EventEmitter
   @version: pkg.version
 
@@ -87,7 +89,7 @@ class Quill extends EventEmitter
     @container.innerHTML = ''
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
-    @options.id = _.uniqueId('ql-editor-')
+    @options.id = 'ql-editor-' + (counter++)
     @modules = {}
     @root = this.addContainer('ql-editor')
     @root.innerHTML = html.trim()  # TODO fix
@@ -187,10 +189,9 @@ class Quill extends EventEmitter
   getText: (start = 0, end = undefined) ->
     [start, end] = buildParams(start, end)
     values = [].concat.apply([], @editor.getValue())
-    text = values.map((value) ->
-      return if typeof value == 'string' then value else dom.EMBED_TEXT
+    return values.map((value) ->
+      return if typeof value == 'string' then value else ''
     ).join('').slice(start, end)
-    return text
 
   insertEmbed: (index, embed, value, source) ->
     [index, end, formats, source] = buildParams(index, 0, embed, value, source)

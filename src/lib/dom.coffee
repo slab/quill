@@ -20,12 +20,6 @@ class Wrapper
         attributes[attr.name] = attr.value
       return attributes
 
-  isElement: ->
-    return @node?.nodeType == dom.ELEMENT_NODE
-
-  isTextNode: ->
-    return @node?.nodeType == dom.TEXT_NODE
-
   textNodes: ->
     walker = document.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
     textNodes = []
@@ -68,7 +62,7 @@ class SelectWrapper extends Wrapper
     return @node.querySelector('option[selected]')
 
   option: (option, trigger = true) ->
-    value = if _.isElement(option) then option.value else option
+    value = if option instanceof HTMLOptionElement then option.value else option
     if value
       value = value.replace(/[^\w]+/g, '')
       for child,i in @node.children
@@ -101,25 +95,6 @@ dom = (node) ->
 
 
 dom = _.extend(dom,
-  ELEMENT_NODE: 1
-  NOBREAK_SPACE:  "&nbsp;"
-  TEXT_NODE: 3
-  ZERO_WIDTH_NOBREAK_SPACE:  "\uFEFF"
-
-  DEFAULT_BLOCK_TAG: 'DIV'
-  DEFAULT_BREAK_TAG: 'BR'
-  DEFAULT_INLINE_TAG: 'SPAN'
-  EMBED_TEXT: '!' # No reason we picked ! besides it being one character (so delta cannot split it up)
-
-  FONT_SIZES:
-    '10px': 1
-    '13px': 2
-    '16px': 3
-    '18px': 4
-    '24px': 5
-    '32px': 6
-    '48px': 7
-
   KEYS:
     BACKSPACE : 8
     TAB       : 9
@@ -130,73 +105,6 @@ dom = _.extend(dom,
     RIGHT     : 39
     DOWN      : 40
     DELETE    : 46
-
-  BLOCK_TAGS: {
-    'ADDRESS'
-    'ARTICLE'
-    'ASIDE'
-    'AUDIO'
-    'BLOCKQUOTE'
-    'CANVAS'
-    'DD'
-    'DIV'
-    'DL'
-    'FIGCAPTION'
-    'FIGURE'
-    'FOOTER'
-    'FORM'
-    'H1', 'H2', 'H3', 'H4', 'H5', 'H6'
-    'HEADER'
-    'HGROUP'
-    'LI'
-    'OL'
-    'OUTPUT'
-    'P'
-    'PRE'
-    'SECTION'
-    'TABLE'
-    'TBODY'
-    'TD'
-    'TFOOT'
-    'TH'
-    'THEAD'
-    'TR'
-    'UL'
-    'VIDEO'
-  }
-
-  EMBED_TAGS: {
-    'IMG'
-  }
-
-  LINE_TAGS: {
-    'DIV'
-    'LI'
-  }
-
-  LIST_TAGS: {
-    'OL'
-    'UL'
-  }
-
-  VOID_TAGS: {
-    'AREA'
-    'BASE'
-    'BR'
-    'COL'
-    'COMMAND'
-    'EMBED'
-    'HR'
-    'IMG'
-    'INPUT'
-    'KEYGEN'
-    'LINK'
-    'META'
-    'PARAM'
-    'SOURCE'
-    'TRACK'
-    'WBR'
-  }
 
   isIE: (maxVersion) ->
     version = document.documentMode

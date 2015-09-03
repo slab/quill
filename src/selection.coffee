@@ -37,7 +37,7 @@ class Selection
       @root.focus()
 
   getBounds: (index) ->
-    pos = _.last(@doc.findPath(index))
+    pos = @doc.findPath(index).pop()
     return null unless pos?
     containerBounds = @root.parentNode.getBoundingClientRect()
     side = 'left'
@@ -100,7 +100,7 @@ class Selection
   prepare: (format, value) ->
     this.update()
     range = this.getRange()
-    pos = _.last(@doc.findPath(range.start))
+    pos = @doc.findPath(range.start).pop()
     target = pos.blot.split(pos.offset)
     cursor = Parchment.create('cursor')
     target.parent.insertBefore(cursor, target)
@@ -150,7 +150,7 @@ class Selection
 
   setRange: (range, source) ->
     convert = (index) =>
-      pos = _.last(@doc.findPath(index)) # TODO inclusive
+      pos = @doc.findPath(index).pop() # TODO inclusive
       if pos.blot instanceof Parchment.Embed
         node = pos.blot.domNode.parentNode
         return [node, [].indexOf.call(node.childNodes, pos.blot.domNode) + pos.offset]
