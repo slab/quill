@@ -56,8 +56,13 @@ class Quill extends EventEmitter2
     SILENT : 'silent'
     USER   : 'user'
 
+  @registerFormat: (format) ->
+    name = format.blotName || format.attrName
+    this.emit(Quill.events.DEBUG, 'warning', "Overwriting #{name} format") if Parchment.match(name)
+    Parchment.define(format)
+
   @registerModule: (name, module) ->
-    this.emit(Quill.events.DEBUG, 'warning', "Overwriting #{name} module") if Quill.module[name]?
+    this.emit(Quill.events.DEBUG, 'warning', "Overwriting #{name} module") if Quill.modules[name]?
     Quill.modules[name] = module
 
   @registerTheme: (name, theme) ->
@@ -128,7 +133,7 @@ class Quill extends EventEmitter2
     @editor.enable(false)
 
   enable: (enabled = true) ->
-    @editor.enable()
+    @editor.enable(enabled)
 
   emit: (eventName, args...) ->
     super(Quill.events.PRE_EVENT, eventName, args...)

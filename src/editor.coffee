@@ -63,4 +63,5 @@ class Editor extends Parchment.Container
     @observer.takeRecords()  # Prevent changes from rebuilds
     return change
 
+
 module.exports = Editor
