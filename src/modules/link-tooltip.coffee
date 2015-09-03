@@ -37,7 +37,7 @@ class LinkTooltip extends Tooltip
       else if @container.style.left != Tooltip.HIDE_MARGIN
         this.hide()
     )
-    dom(@container.querySelector('.done')).on('click', _.bind(this.saveLink, this))
+    dom(@container.querySelector('.done')).on('click', this.saveLink.bind(this))
     dom(@container.querySelector('.remove')).on('click', =>
       this.removeLink(@quill.getSelection())
     )
@@ -47,10 +47,10 @@ class LinkTooltip extends Tooltip
     this.initTextbox(@textbox, this.saveLink, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
       @toolbar = toolbar
-      toolbar.initFormat('link', _.bind(this._onToolbar, this))
+      toolbar.initFormat('link', this._onToolbar.bind(this))
     )
     @quill.onModuleLoad('keyboard', (keyboard) =>
-      keyboard.addHotkey(LinkTooltip.hotkeys.LINK, _.bind(this._onKeyboard, this))
+      keyboard.addHotkey(LinkTooltip.hotkeys.LINK, this._onKeyboard.bind(this))
     )
 
   saveLink: ->

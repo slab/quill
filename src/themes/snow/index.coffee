@@ -31,8 +31,8 @@ class SnowTheme extends BaseTheme
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       _.invoke(@pickers, 'close') if range?
     )
-    @quill.onModuleLoad('multi-cursor', _.bind(this.extendMultiCursor, this))
-    @quill.onModuleLoad('toolbar', _.bind(this.extendToolbar, this))
+    @quill.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this))
+    @quill.onModuleLoad('toolbar', this.extendToolbar.bind(this))
 
   extendMultiCursor: (module) ->
     module.on(module.constructor.events.CURSOR_ADDED, (cursor) ->
