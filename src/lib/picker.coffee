@@ -35,7 +35,8 @@ class Picker
     item = document.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
     item.classList.add('ql-picker-item')
-    dom(item).text(dom(option).text()).on('click', =>
+    item.textContent = option.textContent
+    dom(item).on('click', =>
       this.selectItem(item, true)
       this.close()
     )
@@ -63,7 +64,7 @@ class Picker
     if item?
       value = item.getAttribute('data-value')
       item.classList.add('ql-selected')
-      dom(@label).text(dom(item).text())
+      @label.textContent = item.textContent
       dom(@select).option(value, trigger)
       @label.setAttribute('data-value', value)
     else

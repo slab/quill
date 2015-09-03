@@ -87,7 +87,7 @@ class LinkTooltip extends Tooltip
       @link.href = url
       url = @link.href # read back the url for further normalization
       text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
-      dom(@link).text(text)
+      @link.textContent = text
     if @container.classList.contains('editing') != edit
       @container.classList.toggle('editing')
 

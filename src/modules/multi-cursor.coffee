@@ -98,7 +98,7 @@ class MultiCursor extends EventEmitter2
     cursor.innerHTML = @options.template
     cursorFlag = cursor.querySelector('.cursor-flag')
     cursorName = cursor.querySelector('.cursor-name')
-    dom(cursorName).text(name)
+    cursorName.textContent = name
     cursorCaret = cursor.querySelector('.cursor-caret')
     cursorCaret.style.backgroundColor = cursorName.style.backgroundColor = color
     @container.appendChild(cursor)

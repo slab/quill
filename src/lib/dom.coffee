@@ -71,24 +71,6 @@ class Wrapper
       , {})
       return obj
 
-  text: (text) ->
-    if text?
-      switch @node.nodeType
-        when dom.ELEMENT_NODE
-          @node.textContent = text
-        when dom.TEXT_NODE
-          @node.data = text
-      return this
-    else
-      switch @node.nodeType
-        when dom.ELEMENT_NODE
-          return "" if @node.tagName == dom.DEFAULT_BREAK_TAG
-          return dom.EMBED_TEXT if dom.EMBED_TAGS[@node.tagName]?
-          return @node.textContent if @node.textContent?
-          return ""
-        when dom.TEXT_NODE then return @node.data or ""
-        else return ""
-
   textNodes: ->
     walker = document.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
     textNodes = []
