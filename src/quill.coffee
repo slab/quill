@@ -1,7 +1,7 @@
 _             = require('lodash')
 pkg           = require('../package.json')
 Delta         = require('rich-text/lib/delta')
-EventEmitter2 = require('eventemitter2').EventEmitter2
+EventEmitter  = require('eventemitter3')
 dom           = require('./lib/dom')
 Editor        = require('./editor')
 Parchment     = require('parchment')
@@ -19,7 +19,7 @@ Formats =
   List    : require('./formats/list')
 
 
-class Quill extends EventEmitter2
+class Quill extends EventEmitter
   @version: pkg.version
 
   @modules: {}

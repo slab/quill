@@ -10,6 +10,7 @@
   ],
   "main": "index.js",
   "dependencies": {
+    "eventemitter3": "~1.1.1",
     "parchment": "~0.0.4",
     "rich-text": "~2.1.0"
   },
@@ -19,7 +20,6 @@
     "coffee-script": "~1.9.0",
     "coffeeify": "~1.1.0",
     "derequire": "~2.0.0",
-    "eventemitter2": "~0.4.14",
     "glob": "~5.0.3",
     "grunt": "~0.4.5",
     "grunt-browserify": "~3.8.0",

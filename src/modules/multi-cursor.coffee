@@ -21,7 +21,7 @@ class MultiCursor extends EventEmitter2
   constructor: (@quill, @options) ->
     @cursors = {}
     @container = @quill.addContainer('ql-multi-cursor', true)
-    @quill.on(@quill.constructor.events.TEXT_CHANGE, _.bind(this._applyDelta, this))
+    @quill.on(@quill.constructor.events.TEXT_CHANGE, this._applyDelta, this)
 
   clearCursors: ->
     _.each(Object.keys(@cursors), _.bind(this.removeCursor, this))
