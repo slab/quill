@@ -25,16 +25,21 @@ class Selection
   constructor: (@doc) ->
     @root = @doc.domNode
     @range = new Range(0, 0)
+    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) =>
+      @root.addEventListener(eventName, =>
+        this.update()  # Do not pass event handler params
+      )
+    )
     this.update()
 
   checkFocus: ->
     return document.activeElement == @root
 
   focus: ->
-    if @range?
+    return if this.checkFocus()
+    @root.focus()
+    if !this.getNativeRange() && @range?
       this.setRange(@range)
-    else
-      @root.focus()
 
   getBounds: (index) ->
     pos = @doc.findPath(index).pop()
@@ -167,9 +172,12 @@ class Selection
       this.setNativeRange(null)
     this.update(source)
 
-  update: (source) ->
+  update: (args...) ->
+    oldRange = @range
     @range = this.getRange()
-    # TODO implement
+    return if oldRange == @range
+    if oldRange == null || @range == null || oldRange.start != @range.start || oldRange.end != @range.end
+      this.onUpdate(@range, args...)
 
 
 module.exports = Selection

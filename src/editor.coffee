@@ -8,7 +8,9 @@ class Editor extends Parchment.Container
     this.ensureChild()
     this.enable()
     @delta = this.getDelta()
-    @observer = new MutationObserver(this.update.bind(this))
+    @observer = new MutationObserver((mutations) =>
+      this.update(mutations)  # Do not pass additional params from MutationObserver handler
+    )
     @observer.observe(@domNode,
       attributes: true
       characterData: true
@@ -20,7 +22,7 @@ class Editor extends Parchment.Container
     [first, firstOffset] = @children.find(index)
     [last, lastOffset] = @children.find(index + length)
     super(index, length)
-    if (last? && first != last && firstOffset > 0)
+    if last? && first != last && firstOffset > 0
       lastChild = first.children.tail
       last.moveChildren(first)
       last.remove()
@@ -53,13 +55,19 @@ class Editor extends Parchment.Container
       child.remove()
     )
 
-  update: (mutations = @observer.takeRecords()) ->
+  update: (args...) ->
+    if Array.isArray(args[0])
+      mutations = args[0]
+      args = args.slice(1)
+    else
+      mutations = @observer.takeRecords()
     return new Delta() unless mutations.length > 0
     oldDelta = @delta
+    # TODO optimize
     this.build()
     @delta = this.getDelta()
     change = oldDelta.diff(@delta)
-    this.onUpdate(change) if change.length() > 0
+    this.onUpdate(change, args...) if change.length() > 0
     @observer.takeRecords()  # Prevent changes from rebuilds
     return change
 

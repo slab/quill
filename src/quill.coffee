@@ -93,10 +93,10 @@ class Quill extends EventEmitter
     @root.setAttribute('id', @options.id)
     @editor = new Editor(@root)
     @selection = new Selection(@editor)
-    @editor.onUpdate = (delta) =>
-      this.emit(Quill.events.TEXT_CHANGE, delta, Quill.sources.USER)
-    @selection.onUpdate = (range) =>
-      this.emit(Quill.events.SELECTION_CHANGE, range, Quill.sources.USER)
+    @editor.onUpdate = (delta, source = Quill.sources.USER) =>
+      this.emit(Quill.events.TEXT_CHANGE, delta, source)
+    @selection.onUpdate = (range, source = Quill.sources.USER) =>
+      this.emit(Quill.events.SELECTION_CHANGE, range, source)
     if @options.theme == false
       @theme = new Quill.themes['base'](this, false)
     else if (themeClass = Quill.themes[@options.theme])
@@ -239,9 +239,9 @@ class Quill extends EventEmitter
     this.setContents(delta, source)
 
   update: (source = Quill.sources.USER) ->
-    delta = @editor.update()
-    if delta.length() == 0
-      @selection.update()
+    delta = @editor.update(source)
+    source = Quill.sources.SILENT if delta.length() > 0
+    @selection.update(source)
 
   updateContents: (delta, source = Quill.sources.API) ->
     delta = new Delta(delta.slice()) if Array.isArray(delta)
