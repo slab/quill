@@ -57,7 +57,7 @@ class SnowTheme extends BaseTheme
       @pickers.push(picker) if picker?
     )
     _.each(dom(module.container).textNodes(), (node) ->
-      node.textContent.trim().length == 0
+      if node.textContent.trim().length == 0
         dom(node).remove()
     )
 

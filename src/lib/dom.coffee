@@ -20,20 +20,6 @@ class Wrapper
         attributes[attr.name] = attr.value
       return attributes
 
-  childNodes: ->
-    return _.map(@node.childNodes)
-
-  get: ->
-    return @node
-
-  isAncestor: (ancestor, inclusive = false) ->
-    return inclusive if ancestor == @node
-    node = @node
-    while node
-      return true if node == ancestor
-      node = node.parentNode
-    return false
-
   isElement: ->
     return @node?.nodeType == dom.ELEMENT_NODE
 
@@ -50,26 +36,6 @@ class Wrapper
       return propagate
     )
     return this
-
-  styles: (styles, overwrite = false) ->
-    if styles
-      styles = _.defaults(styles, this.styles()) if !overwrite
-      styleString = _.map(styles, (style, name) ->
-        return "#{name}: #{style}"
-      ).join('; ') + ';'
-      @node.setAttribute('style', styleString)
-      return this
-    else
-      styleString = @node.getAttribute('style') or ''
-      obj = _.reduce(styleString.split(';'), (styles, str) ->
-        [name, value] = str.split(':')
-        if name and value
-          name = name.trim()
-          value = value.trim()
-          styles[name.toLowerCase()] = value
-        return styles
-      , {})
-      return obj
 
   textNodes: ->
     walker = document.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
