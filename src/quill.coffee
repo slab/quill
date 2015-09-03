@@ -240,10 +240,8 @@ class Quill extends EventEmitter
 
   update: (source = Quill.sources.USER) ->
     delta = @editor.update()
-    if delta.length() > 0
-      this.emit(Quill.events.TEXT_CHANGE, delta, source)
-    else if (range = @selection.update())
-      this.emit(Quill.events.SELECTION_CHANGE, range, source)
+    if delta.length() == 0
+      @selection.update()
 
   updateContents: (delta, source = Quill.sources.API) ->
     delta = new Delta(delta.slice()) if Array.isArray(delta)
