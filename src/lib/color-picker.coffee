@@ -5,7 +5,7 @@ Picker = require('./picker')
 class ColorPicker extends Picker
   constructor: ->
     super
-    dom(@container).addClass('ql-color-picker')
+    @container.classList.add('ql-color-picker')
 
   buildItem: (picker, option, index) ->
     item = super(picker, option, index)

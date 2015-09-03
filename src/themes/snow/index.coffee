@@ -17,16 +17,16 @@ class SnowTheme extends BaseTheme
   @OPTIONS:
     'multi-cursor':
       template:
-       '<span class="cursor-flag">
-          <span class="cursor-triangle top"></span>
-          <span class="cursor-name"></span>
-          <span class="cursor-triangle bottom"></span>
-        </span>
+       '<span class="cursor-flag">\
+          <span class="cursor-triangle top"></span>\
+          <span class="cursor-name"></span>\
+          <span class="cursor-triangle bottom"></span>\
+        </span>\
         <span class="cursor-caret"></span>'
 
   constructor: (@quill, @options) ->
     super
-    dom(@quill.container).addClass('ql-snow')
+    @quill.container.classList.add('ql-snow')
     @pickers = []
     @quill.on(@quill.constructor.events.SELECTION_CHANGE, (range) =>
       _.invoke(@pickers, 'close') if range?
@@ -42,7 +42,7 @@ class SnowTheme extends BaseTheme
     )
 
   extendToolbar: (module) ->
-    dom(module.container).addClass('ql-snow')
+    module.container.classList.add('ql-snow')
     _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
       select = module.container.querySelector(".ql-#{format}")
       return unless select?
@@ -52,7 +52,7 @@ class SnowTheme extends BaseTheme
         when 'color', 'background'
           picker = new ColorPicker(select)
           _.each(picker.container.querySelectorAll('.ql-picker-item'), (item, i) ->
-            dom(item).addClass('ql-primary-color') if i < 7
+            item.classList.add('ql-primary-color') if i < 7
           )
       @pickers.push(picker) if picker?
     )

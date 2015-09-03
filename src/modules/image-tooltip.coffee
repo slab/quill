@@ -21,7 +21,7 @@ class ImageTooltip extends Tooltip
     super(@quill, @options)
     @preview = @container.querySelector('.preview')
     @textbox = @container.querySelector('.input')
-    dom(@container).addClass('ql-image-tooltip')
+    @container.classList.add('ql-image-tooltip')
     this.initListeners()
 
   initListeners: ->

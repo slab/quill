@@ -22,7 +22,7 @@ class LinkTooltip extends Tooltip
   constructor: (@quill, @options) ->
     @options = _.defaults(@options, Tooltip.DEFAULTS)
     super(@quill, @options)
-    dom(@container).addClass('ql-link-tooltip')
+    @container.classList.add('ql-link-tooltip')
     @textbox = @container.querySelector('.input')
     @link = @container.querySelector('.url')
     this.initListeners()
@@ -88,7 +88,8 @@ class LinkTooltip extends Tooltip
       url = @link.href # read back the url for further normalization
       text = if url.length > @options.maxLength then url.slice(0, @options.maxLength) + '...' else url
       dom(@link).text(text)
-    dom(@container).toggleClass('editing', edit)
+    if @container.classList.contains('editing') != edit
+      @container.classList.toggle('editing')
 
   _findAnchor: (range) ->
     [leaf, offset] = @quill.editor.doc.findLeafAt(range.start, true)

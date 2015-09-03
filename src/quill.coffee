@@ -111,7 +111,7 @@ class Quill extends EventEmitter
   addContainer: (className, before = false) ->
     refNode = if before then @root else null
     container = document.createElement('div')
-    dom(container).addClass(className)
+    container.classList.add(className)
     @container.insertBefore(container, refNode)
     return container
 

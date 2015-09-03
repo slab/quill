@@ -9,7 +9,7 @@ class Cursor extends Parchment.Embed
 
   constructor: (value) ->
     super(value)
-    dom(this.domNode).addClass(Parchment.PREFIX + 'cursor')
+    this.domNode.classList.add(Parchment.PREFIX + 'cursor')
     this.domNode.appendChild(document.createTextNode(dom.ZERO_WIDTH_NOBREAK_SPACE))
 
   getLength: ->

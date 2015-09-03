@@ -6,14 +6,6 @@ lastKeyEvent = null    # Workaround for fact we can't dispatch keyboard event vi
 class Wrapper
   constructor: (@node) ->
 
-  addClass: (cssClass) ->
-    return if this.hasClass(cssClass)
-    if @node.classList?
-      @node.classList.add(cssClass)
-    else if @node.className?
-      @node.className = (@node.className + ' ' + cssClass).trim()
-    return this
-
   attributes: (attributes) ->
     if attributes
       _.each(attributes, (value, name) =>
@@ -31,18 +23,8 @@ class Wrapper
   childNodes: ->
     return _.map(@node.childNodes)
 
-  classes: ->
-    return @node.className.split(/\s+/)
-
   get: ->
     return @node
-
-  hasClass: (cssClass) ->
-    if @node.classList?
-      return @node.classList.contains(cssClass)
-    else if @node.className?
-      return this.classes().indexOf(cssClass) > -1
-    return false
 
   isAncestor: (ancestor, inclusive = false) ->
     return inclusive if ancestor == @node
@@ -67,17 +49,6 @@ class Wrapper
         event.stopPropagation()
       return propagate
     )
-    return this
-
-  removeClass: (cssClass) ->
-    return unless this.hasClass(cssClass)
-    if @node.classList?
-      @node.classList.remove(cssClass)
-    else if @node.className?
-      classArray = this.classes()
-      classArray.splice(classArray.indexOf(cssClass), 1)
-      @node.className = classArray.join(' ')
-    @node.removeAttribute('class') unless @node.getAttribute('class')
     return this
 
   styles: (styles, overwrite = false) ->
@@ -124,14 +95,6 @@ class Wrapper
     while textNode = walker.nextNode()
       textNodes.push(textNode)
     return textNodes
-
-  toggleClass: (className, state) ->
-    state = !this.hasClass(className) unless state?
-    if state
-      this.addClass(className)
-    else
-      this.removeClass(className)
-    return this
 
   trigger: (eventName, options = {}) =>
     if ['keypress', 'keydown', 'keyup'].indexOf(eventName) < 0

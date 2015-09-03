@@ -8,7 +8,7 @@ class Picker
   constructor: (@select) ->
     @container = document.createElement('span')
     this.buildPicker()
-    dom(@container).addClass('ql-picker')
+    @container.classList.add('ql-picker')
     @select.style.display = 'none'
     @select.parentNode.insertBefore(@container, @select)
     dom(document).on('click', =>
@@ -17,7 +17,7 @@ class Picker
     )
     dom(@label).on('click', =>
       _.defer( =>
-        dom(@container).toggleClass('ql-expanded')
+        @container.classList.toggle('ql-expanded')
       )
       return false
     )
@@ -26,13 +26,16 @@ class Picker
         item = @container.querySelectorAll('.ql-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
       this.selectItem(item, false)
-      dom(@label).toggleClass('ql-active', option != dom(@select).default())
+      active = option != dom(@select).default()
+      if @label.classList.contains('ql-active') != active
+        @label.classList.toggle('ql-active')
     )
 
   buildItem: (picker, option, index) ->
     item = document.createElement('span')
     item.setAttribute('data-value', option.getAttribute('value'))
-    dom(item).addClass('ql-picker-item').text(dom(option).text()).on('click', =>
+    item.classList.add('ql-picker-item')
+    dom(item).text(dom(option).text()).on('click', =>
       this.selectItem(item, true)
       this.close()
     )
@@ -52,14 +55,14 @@ class Picker
     )
 
   close: ->
-    dom(@container).removeClass('ql-expanded')
+    @container.classList.remove('ql-expanded')
 
   selectItem: (item, trigger) ->
     selected = @container.querySelector('.ql-selected')
-    dom(selected).removeClass('ql-selected') if selected?
+    selected.classList.remove('ql-selected') if selected?
     if item?
       value = item.getAttribute('data-value')
-      dom(item).addClass('ql-selected')
+      item.classList.add('ql-selected')
       dom(@label).text(dom(item).text())
       dom(@select).option(value, trigger)
       @label.setAttribute('data-value', value)

@@ -40,14 +40,14 @@ class Authorship
     @quill.theme.addStyles(styles)
 
   attachButton: (button) ->
-    $button = dom(button)
-    $button.on('click', =>
-      $button.toggleClass('ql-on')
-      this.enable($dom.hasClass('ql-on'))
+    dom(button).on('click', =>
+      button.classList.toggle('ql-on')
+      this.enable(button.classList.contains('ql-on'))
     )
 
   enable: (enabled = true) ->
-    dom(@quill.root).toggleClass('authorship', enabled)
+    return if enabled == @quill.root.classList.contains('authorship')
+    @quill.root.classList.toggle('authorship')
 
   disable: ->
     this.enable(false)

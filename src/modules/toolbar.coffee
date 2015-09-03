@@ -11,8 +11,8 @@ class Toolbar
     @options = { container: @options } if _.isString(@options) or _.isElement(@options)
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if _.isString(@options.container) then document.querySelector(@options.container) else @options.container
-    dom(@container).addClass('ql-toolbar')
-    dom(@container).addClass('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
+    @container.classList.add('ql-toolbar')
+    @container.classList.add('ios') if dom.isIOS()  # Fix for iOS not losing hover state after click
     this.initFormats()
 
   initFormats: ->
@@ -21,7 +21,7 @@ class Toolbar
       return unless input?
       eventName = if input.tagName == 'SELECT' then 'change' else 'click'
       dom(input).on(eventName, =>
-        value = if input.tagName == 'SELECT' then dom(input).value() else !dom(input).hasClass('ql-active')
+        value = if input.tagName == 'SELECT' then dom(input).value() else !input.classList.contains('ql-active')
         range = @quill.getSelection(true)
         if range?
           if range.isCollapsed()
@@ -31,7 +31,7 @@ class Toolbar
             @quill.setSelection(range)
             @quill.selection.scrollIntoView() if dom.isIE(11)
           if eventName == 'click'
-            dom(input).toggleClass('ql-active')
+            input.classList.toggle('ql-active')
         return false
       )
     )

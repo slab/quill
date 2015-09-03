@@ -30,10 +30,10 @@ class MultiCursor extends EventEmitter2
   moveCursor: (userId, index) ->
     cursor = @cursors[userId]
     cursor.index = index
-    dom(cursor.elem).removeClass('hidden')
+    cursor.elem.classList.remove('hidden')
     clearTimeout(cursor.timer)
     cursor.timer = setTimeout( =>
-      dom(cursor.elem).addClass('hidden')
+      cursor.elem.classList.add('hidden')
       cursor.timer = null
     , @options.timeout)
     this._updateCursor(cursor)
@@ -94,7 +94,7 @@ class MultiCursor extends EventEmitter2
 
   _buildCursor: (name, color) ->
     cursor = document.createElement('span')
-    dom(cursor).addClass('cursor')
+    cursor.classList.add('cursor')
     cursor.innerHTML = @options.template
     cursorFlag = cursor.querySelector('.cursor-flag')
     cursorName = cursor.querySelector('.cursor-name')
@@ -111,9 +111,15 @@ class MultiCursor extends EventEmitter2
     cursor.elem.style.left = bounds.left + 'px'
     cursor.elem.style.height = bounds.height + 'px'
     flag = cursor.elem.querySelector('.cursor-flag')
-    dom(cursor.elem).toggleClass('top', parseInt(cursor.elem.style.top) <= flag.offsetHeight)
-                    .toggleClass('left', parseInt(cursor.elem.style.left) <= flag.offsetWidth)
-                    .toggleClass('right', @quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth)
+    isTop = parseInt(cursor.elem.style.top) <= flag.offsetHeight
+    isLeft = parseInt(cursor.elem.style.top) <= flag.offsetHeight
+    isRight = @quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth
+    if cursor.elem.classList.contains('top') != isTop
+      cursor.elem.classList.toggle('top')
+    if cursor.elem.classList.contains('left') != isLeft
+      cursor.elem.classList.toggle('left')
+    if cursor.elem.classList.contains('right') != isRight
+      cursor.elem.classList.toggle('right')
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor)
 
 
