@@ -15,9 +15,7 @@ class Tooltip
     @container.innerHTML = @options.template
     this.hide()
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
-      if @container.style.left != Tooltip.HIDE_MARGIN
-        @range = null
-        this.hide()
+      this.hide() if @container.style.left != Tooltip.HIDE_MARGIN
     )
 
   initTextbox: (textbox, enterCallback, escapeCallback) ->
@@ -35,8 +33,7 @@ class Tooltip
 
   hide: ->
     @container.style.left = Tooltip.HIDE_MARGIN
-    @quill.setSelection(@range) if @range
-    @range = null
+    @quill.focus()
 
   position: (reference) ->
     if reference?
@@ -61,7 +58,6 @@ class Tooltip
     return [left, top]
 
   show: (reference) ->
-    @range = @quill.getSelection()
     [left, top] = this.position(reference)
     @container.style.left = "#{left}px"
     @container.style.top = "#{top}px"

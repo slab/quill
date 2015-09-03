@@ -35,12 +35,11 @@ class LinkTooltip extends Tooltip
         this.setMode(anchor.href, false)
         this.show(anchor)
       else if @container.style.left != Tooltip.HIDE_MARGIN
-        @range = null   # Prevent restoring selection to last saved
         this.hide()
     )
     dom(@container.querySelector('.done')).on('click', _.bind(this.saveLink, this))
     dom(@container.querySelector('.remove')).on('click', =>
-      this.removeLink(@range)
+      this.removeLink(@quill.getSelection())
     )
     dom(@container.querySelector('.change')).on('click', =>
       this.setMode(@link.href, true)
@@ -56,13 +55,15 @@ class LinkTooltip extends Tooltip
 
   saveLink: ->
     url = this._normalizeURL(@textbox.value)
-    if @range?
-      end = @range.end
-      if @range.isCollapsed()
-        anchor = this._findAnchor(@range)
+    @quill.focus()
+    range = @quill.getSelection()
+    if range?
+      end = range.end
+      if range.isCollapsed()
+        anchor = this._findAnchor(range)
         anchor.href = url if anchor?
       else
-        @quill.formatText(@range, 'link', url, 'user')
+        @quill.formatText(range, 'link', url, 'user')
       @quill.setSelection(end, end)
     this.setMode(url, false)
 
