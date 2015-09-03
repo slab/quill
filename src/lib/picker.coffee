@@ -13,9 +13,9 @@ class Picker
     @select.parentNode.insertBefore(@container, @select)
     document.body.addEventListener('click', this.close.bind(this))
     @label.addEventListener('click', (e) =>
-      _.defer( =>
+      setTimeout( =>
         @container.classList.toggle('ql-expanded')
-      )
+      , 0)
       e.preventDefault()
     )
     @select.addEventListener('change', =>
@@ -47,7 +47,7 @@ class Picker
     @container.innerHTML = Picker.TEMPLATE
     @label = @container.querySelector('.ql-picker-label')
     picker = @container.querySelector('.ql-picker-options')
-    _.each(@select.options, (option, i) =>
+    @select.options.forEach((options, i) =>
       item = this.buildItem(picker, option, i)
       picker.appendChild(item)
     )

@@ -19,8 +19,6 @@ Formats =
   List    : require('./formats/list')
 
 
-counter = 0
-
 class Quill extends EventEmitter
   @version: pkg.version
 
@@ -41,7 +39,6 @@ class Quill extends EventEmitter
       # 'paste-manager': true
       # 'undo-manager': true
     readOnly: false
-    styles: {}
     theme: 'base'
 
   @events:
@@ -89,7 +86,7 @@ class Quill extends EventEmitter
     @container.innerHTML = ''
     @options = _.defaults(options, Quill.DEFAULTS)
     @options.modules = moduleOptions
-    @options.id = 'ql-editor-' + (counter++)
+    @options.id = uniqueId('ql-editor-')
     @modules = {}
     @root = this.addContainer('ql-editor')
     @root.innerHTML = html.trim()  # TODO fix
@@ -100,7 +97,9 @@ class Quill extends EventEmitter
       this.emit(Quill.events.TEXT_CHANGE, delta, Quill.sources.USER)
     @selection.onUpdate = (range) =>
       this.emit(Quill.events.SELECTION_CHANGE, range, Quill.sources.USER)
-    if (themeClass = Quill.themes[@options.theme])
+    if @options.theme == false
+      @theme = new Quill.themes['base'](this, false)
+    else if (themeClass = Quill.themes[@options.theme])
       @theme = new themeClass(this, @options)
     else
       throw new Error("Cannot load #{@options.theme} theme. Are you sure you registered it?")
@@ -290,6 +289,10 @@ track = (source, callback) ->
   this.update()
   callback.call(this)
   this.update(source)
+
+uniqueId = (prefix) ->
+  this.counter = this.counter || 1
+  return (prefix) + (this.counter++)
 
 
 Quill.registerTheme('base', require('./themes/base'))

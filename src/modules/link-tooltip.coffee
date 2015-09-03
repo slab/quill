@@ -78,11 +78,11 @@ class LinkTooltip extends Tooltip
   setMode: (url, edit = false) ->
     if edit
       @textbox.value = url
-      _.defer( =>
+      setTimeout( =>
         # Setting value and immediately focusing doesn't work on Chrome
         @textbox.focus()
         @textbox.setSelectionRange(0, url.length)
-      )
+      , 0)
     else
       @link.href = url
       url = @link.href # read back the url for further normalization

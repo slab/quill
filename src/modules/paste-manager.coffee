@@ -30,7 +30,7 @@ class PasteManager
     range = @quill.getSelection()
     return unless range?
     @container.focus()
-    _.defer( =>
+    setTimeout( =>
       # delta = @options.onConvert(@container)
       # lengthAdded = delta.length()
       # if lengthAdded > 0
@@ -41,7 +41,8 @@ class PasteManager
       # # Make sure bottom of pasted content is visible
       # @quill.editor.selection.scrollIntoView()
       # @container.innerHTML = ""
-    )
+      return false
+    , 0)
 
 
 Quill.registerModule('paste-manager', PasteManager)

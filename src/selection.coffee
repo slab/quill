@@ -10,7 +10,7 @@ class Range
     return @start == @end
 
   shift: (index, length) ->
-    [@start, @end] = _.map([@start, @end], (pos) ->
+    [@start, @end] = [@start, @end].map((pos) ->
       return pos if index > pos
       if length >= 0
         return pos + length

@@ -54,9 +54,9 @@ class MultiCursor extends EventEmitter2
         elem: this._buildCursor(name, color)
       }
       this.emit(MultiCursor.events.CURSOR_ADDED, cursor)
-    _.defer( =>
+    setTimeout( =>
       this.moveCursor(userId, index)
-    )
+    , 0)
     return @cursors[userId]
 
   shiftCursors: (index, length, authorId = null) ->

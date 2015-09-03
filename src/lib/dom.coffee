@@ -8,8 +8,8 @@ class Wrapper
 
   attributes: (attributes) ->
     if attributes
-      _.each(attributes, (value, name) =>
-        @node.setAttribute(name, value)
+      Object.keys(attributes).forEach((name) ->
+        @node.setAttribute(name, attributes[name])
       )
       return this
     else

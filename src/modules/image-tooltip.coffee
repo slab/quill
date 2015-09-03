@@ -50,9 +50,9 @@ class ImageTooltip extends Tooltip
       @textbox.value = 'http://' unless @textbox.value
       this.show()
       @textbox.focus()
-      _.defer( =>
+      setTimeout( =>
         @textbox.setSelectionRange(@textbox.value.length, @textbox.value.length)
-      )
+      , 0)
     else
       @quill.deleteText(range, 'user')
       @toolbar.setActive('image', false)

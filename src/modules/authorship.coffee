@@ -19,7 +19,7 @@ class Authorship
       if eventName == @quill.constructor.events.TEXT_CHANGE and origin == 'user'
         authorDelta = new Delta()
         authorFormat = { author: @options.authorId }
-        _.each(delta.ops, (op) =>
+        delta.ops.forEach((op) =>
           return if op.delete?
           if op.insert? or (op.retain? and op.attributes?)
             # Add authorship to insert/format
@@ -35,9 +35,7 @@ class Authorship
     this.addAuthor(@options.authorId, @options.color)
 
   addAuthor: (id, color) ->
-    styles = {}
-    styles[".authorship .author-#{id}"] = { "background-color": "#{color}" }
-    @quill.theme.addStyles(styles)
+    @quill.theme.addStyles(".authorship .author-#{id} { \"background-color: #{color};\" }")
 
   attachButton: (button) ->
     button.addEventListener('click', =>
