@@ -11,17 +11,14 @@ class Picker
     @container.classList.add('ql-picker')
     @select.style.display = 'none'
     @select.parentNode.insertBefore(@container, @select)
-    dom(document).on('click', =>
-      this.close()
-      return true
-    )
-    dom(@label).on('click', =>
+    document.body.addEventListener('click', this.close.bind(this))
+    @label.addEventListener('click', (e) =>
       _.defer( =>
         @container.classList.toggle('ql-expanded')
       )
-      return false
+      e.preventDefault()
     )
-    dom(@select).on('change', =>
+    @select.addEventListener('change', =>
       if @select.selectedIndex > -1
         item = @container.querySelectorAll('.ql-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
@@ -36,7 +33,7 @@ class Picker
     item.setAttribute('data-value', option.getAttribute('value'))
     item.classList.add('ql-picker-item')
     item.textContent = option.textContent
-    dom(item).on('click', =>
+    item.addEventListener('click', =>
       this.selectItem(item, true)
       this.close()
     )

@@ -25,10 +25,10 @@ class ImageTooltip extends Tooltip
     this.initListeners()
 
   initListeners: ->
-    dom(@quill.root).on('focus', this.hide.bind(this))
-    dom(@container.querySelector('.insert')).on('click', this.insertImage.bind(this))
-    dom(@container.querySelector('.cancel')).on('click', this.hide.bind(this))
-    dom(@textbox).on('input', this._preview.bind(this))
+    @quill.root.addEventListener('focus', this.hide.bind(this))
+    @container.querySelector('.insert').addEventListener('click', this.insertImage.bind(this))
+    @container.querySelector('.cancel').addEventListener('click', this.hide.bind(this))
+    @textbox.addEventListener('input', this._preview.bind(this))
     this.initTextbox(@textbox, this.insertImage, this.hide)
     @quill.onModuleLoad('toolbar', (toolbar) =>
       @toolbar = toolbar

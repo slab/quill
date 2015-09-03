@@ -40,7 +40,7 @@ class Authorship
     @quill.theme.addStyles(styles)
 
   attachButton: (button) ->
-    dom(button).on('click', =>
+    button.addEventListener('click', =>
       button.classList.toggle('ql-on')
       this.enable(button.classList.contains('ql-on'))
     )

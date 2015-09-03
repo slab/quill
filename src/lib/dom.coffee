@@ -26,17 +26,6 @@ class Wrapper
   isTextNode: ->
     return @node?.nodeType == dom.TEXT_NODE
 
-  on: (eventName, listener) ->
-    @node.addEventListener(eventName, (event) =>
-      arg = if lastKeyEvent and (eventName == 'keydown' or eventName == 'keyup') then lastKeyEvent else event
-      propagate = listener.call(@node, arg) # Native addEventListener binds this to event target
-      unless propagate
-        event.preventDefault()
-        event.stopPropagation()
-      return propagate
-    )
-    return this
-
   textNodes: ->
     walker = document.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
     textNodes = []

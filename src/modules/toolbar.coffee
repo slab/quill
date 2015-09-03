@@ -20,7 +20,7 @@ class Toolbar
       input = @container.querySelector('.ql-' + format)
       return unless input?
       eventName = if input.tagName == 'SELECT' then 'change' else 'click'
-      dom(input).on(eventName, =>
+      input.addEventListener(eventName, =>
         value = if input.tagName == 'SELECT' then dom(input).value() else !input.classList.contains('ql-active')
         range = @quill.getSelection(true)
         if range?

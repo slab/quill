@@ -116,7 +116,7 @@ class Keyboard
     this._initEnter()
 
   _initListeners: ->
-    dom(@quill.root).on('keydown', (event) =>
+    @quill.root.addEventListener('keydown', (e) =>
       prevent = false
       _.each(@hotkeys[event.which], (hotkey) =>
         metaKey = if dom.isMac() then event.metaKey else event.metaKey or event.ctrlKey
@@ -126,7 +126,7 @@ class Keyboard
         prevent = hotkey.callback(@quill.getSelection(), hotkey, event) == false or prevent
         return true
       )
-      return !prevent
+      e.preventDefault() if prevent
     )
 
   _onTab: (range, shift = false) ->

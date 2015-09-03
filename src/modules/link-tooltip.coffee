@@ -37,11 +37,11 @@ class LinkTooltip extends Tooltip
       else if @container.style.left != Tooltip.HIDE_MARGIN
         this.hide()
     )
-    dom(@container.querySelector('.done')).on('click', this.saveLink.bind(this))
-    dom(@container.querySelector('.remove')).on('click', =>
+    @container.querySelector('.done').addEventListener('click', this.saveLink.bind(this))
+    @container.querySelector('.remove').addEventListener('click', =>
       this.removeLink(@quill.getSelection())
     )
-    dom(@container.querySelector('.change')).on('click', =>
+    @container.querySelector('.change').addEventListener('click', =>
       this.setMode(@link.href, true)
     )
     this.initTextbox(@textbox, this.saveLink, this.hide)
