@@ -67,10 +67,10 @@ module.exports = (grunt) ->
       modifier: 'modern'
       include: [
         'difference', 'intersection', 'last'
-        'all', 'each', 'find', 'invoke', 'map', 'reduce', 'partition',
+        'all', 'each', 'invoke', 'map', 'reduce', 'partition',
         'defer', 'partial'
         'clone', 'extend', 'defaults', 'omit', 'values'
-        'isElement', 'isEqual', 'isFunction', 'isNumber', 'isObject', 'isString'
+        'isElement', 'isEqual'
         'uniqueId'
       ]
       flags: ['development']

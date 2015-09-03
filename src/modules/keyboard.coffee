@@ -23,18 +23,18 @@ class Keyboard
   addHotkey: (hotkeys, callback) ->
     hotkeys = [hotkeys] unless Array.isArray(hotkeys)
     _.each(hotkeys, (hotkey) =>
-      hotkey = if _.isObject(hotkey) then _.clone(hotkey) else { key: hotkey }
+      hotkey = if typeof hotkey == 'object' then _.clone(hotkey) else { key: hotkey }
       hotkey.callback = callback
-      which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.toUpperCase().charCodeAt(0)
+      which = if typeof hotkey.key == 'number' then hotkey.key else hotkey.key.toUpperCase().charCodeAt(0)
       @hotkeys[which] ?= []
       @hotkeys[which].push(hotkey)
     )
 
   removeHotkeys: (hotkey, callback) ->
-    hotkey = if _.isString(hotkey) then hotkey.toUpperCase() else hotkey
+    hotkey = if typeof hotkey == 'string' then hotkey.toUpperCase() else hotkey
     hotkey = if Keyboard.hotkeys[hotkey] then Keyboard.hotkeys[hotkey] else hotkey
-    hotkey = if _.isObject(hotkey) then hotkey else { key: hotkey }
-    which = if _.isNumber(hotkey.key) then hotkey.key else hotkey.key.charCodeAt(0)
+    hotkey = if typeof hotkey == 'object' then hotkey else { key: hotkey }
+    which = if typeof hotkey.key == 'number' then hotkey.key else hotkey.key.charCodeAt(0)
     @hotkeys[which] ?= []
     [removed, kept] = _.partition(@hotkeys[which], (handler) ->
       _.isEqual(hotkey, _.omit(handler, 'callback')) and

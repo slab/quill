@@ -80,7 +80,7 @@ class Quill extends EventEmitter
 
 
   constructor: (@container, options = {}) ->
-    @container = document.querySelector(@container) if _.isString(@container)
+    @container = document.querySelector(@container) if typeof @container == 'string'
     throw new Error('Invalid Quill container') unless @container?
     moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
     html = @container.innerHTML
@@ -188,7 +188,7 @@ class Quill extends EventEmitter
     [start, end] = buildParams(start, end)
     values = [].concat.apply([], @editor.getValue())
     text = values.map((value) ->
-      return if _.isString(value) then value else dom.EMBED_TEXT
+      return if typeof value == 'string' then value else dom.EMBED_TEXT
     ).join('').slice(start, end)
     return text
 
@@ -227,7 +227,7 @@ class Quill extends EventEmitter
     )
 
   setSelection: (start, end, source = Quill.sources.API) ->
-    if _.isNumber(start) and _.isNumber(end)
+    if typeof start == 'number' and typeof end == 'number'
       range = new Selection.Range(start, end)
     else
       range = start
@@ -255,7 +255,7 @@ class Quill extends EventEmitter
 applyDelta = (editor, delta) ->
   delta.ops.reduce((index, op) =>
     if op.insert?
-      if _.isString(op.insert)
+      if typeof op.insert == 'string'
         editor.insertAt(index, op.insert)
         length = op.insert.length
       else
@@ -263,10 +263,10 @@ applyDelta = (editor, delta) ->
         length = 1
       # TODO handle attributes
       return index + length
-    else if _.isNumber(op.delete)
+    else if typeof op.delete == 'number'
       editor.deleteAt(index, op.delete)
       return index
-    else if _.isNumber(op.retain)
+    else if typeof op.retain == 'number'
       _.each(op.attributes, (value, name) =>
         editor.formatAt(index, op.retain, name, value)
       )
@@ -278,9 +278,9 @@ applyDelta = (editor, delta) ->
 # fn(Object range, String name, String value, String source)
 # fn(Object range, Object formats, String source)
 buildParams = (params...) ->
-  if _.isObject(params[0])
+  if typeof params[0] == 'object'
     params.splice(0, 1, params[0].start, params[0].end)
-  if _.isString(params[2])
+  if typeof params[2] == 'string'
     formats = {}
     formats[params[2]] = params[3]
     params.splice(2, 2, formats)

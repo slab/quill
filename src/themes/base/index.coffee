@@ -23,7 +23,7 @@ class BaseTheme
       @quill.root.classList.add('ql-ie-' + version)
 
   addStyles: (css) ->
-    css = BaseTheme.objToCss(css) if _.isObject(css)
+    css = BaseTheme.objToCss(css) if typeof css == 'object'
     style = document.createElement('style')
     style.type = 'text/css'
     style.appendChild(document.createTextNode(css))
