@@ -40,9 +40,8 @@ class Picker
     return item
 
   buildPicker: ->
-    attributes = dom(@select).attributes()
-    Object.keys(attributes).forEach((name) =>
-      @container.setAttribute(name, attributes[name])
+    Array.prototype.slice.call(@select.attributes).forEach((item) =>
+      @container.setAttribute(item.name, item.value)
     )
     @container.innerHTML = Picker.TEMPLATE
     @label = @container.querySelector('.ql-picker-label')

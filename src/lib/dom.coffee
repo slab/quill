@@ -8,20 +8,6 @@ lastKeyEvent = null    # Workaround for fact we can't dispatch keyboard event vi
 class Wrapper
   constructor: (@node) ->
 
-  attributes: (attributes) ->
-    if attributes
-      Object.keys(attributes).forEach((name) ->
-        @node.setAttribute(name, attributes[name])
-      )
-      return this
-    else
-      return {} unless @node.attributes?
-      attributes = {}
-      for value,i in @node.attributes
-        attr = @node.attributes[i]
-        attributes[attr.name] = attr.value
-      return attributes
-
   textNodes: ->
     walker = document.createTreeWalker(@node, NodeFilter.SHOW_TEXT, null, false)
     textNodes = []
