@@ -22,11 +22,7 @@ module.exports = (grunt) ->
         'node_modules/jquery/dist/jquery.js'
         'node_modules/lodash/index.js'
 
-        'test/fixtures/unit.html'
-        'test/helpers/inject.coffee'
         'test/helpers/matchers.coffee'
-
-        { pattern: 'test/fixtures/*.css', included: false }
 
         grunt.config('baseUrl') + 'quill.base.css'
         grunt.config('baseUrl') + 'test/quill.js'
