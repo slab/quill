@@ -24,7 +24,7 @@ class Selection
 
   constructor: (@doc) ->
     @root = @doc.domNode
-    @range = new Range(0, 0)
+    @lastRange = @savedRange = new Range(1, 1)  # savedRange is never null
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) =>
       @root.addEventListener(eventName, =>
         this.update()  # Do not pass event handler params
@@ -38,8 +38,7 @@ class Selection
   focus: ->
     return if this.checkFocus()
     @root.focus()
-    if !this.getNativeRange() && @range?
-      this.setRange(@range)
+    this.setRange(@savedRange)
 
   getBounds: (index) ->
     pos = @doc.findPath(index).pop()
@@ -153,7 +152,7 @@ class Selection
       # setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
       document.body.focus() if dom.isIE(11) and !dom.isIE(9)
 
-  setRange: (range, source) ->
+  setRange: (range) ->
     convert = (index) =>
       pos = @doc.findPath(index).pop() # TODO inclusive
       if pos.blot instanceof Parchment.Embed
@@ -170,14 +169,15 @@ class Selection
         this.setNativeRange(startNode, startOffset, endNode, endOffset)
     else
       this.setNativeRange(null)
-    this.update(source)
+    this.update()
 
   update: (args...) ->
-    oldRange = @range
-    @range = this.getRange()
-    return if oldRange == @range
-    if oldRange == null || @range == null || oldRange.start != @range.start || oldRange.end != @range.end
-      this.onUpdate(@range, args...)
+    oldRange = @lastRange
+    @lastRange = this.getRange()
+    @savedRange = @lastRange if @lastRange?
+    return if oldRange == @lastRange
+    if oldRange == null || @lastRange == null || oldRange.start != @lastRange.start || oldRange.end != @lastRange.end
+      this.onUpdate(@lastRange, args...)
 
 
 module.exports = Selection
