@@ -154,7 +154,7 @@ class Selection
 
   setRange: (range) ->
     convert = (index) =>
-      pos = @doc.findPath(index).pop() # TODO inclusive
+      pos = @doc.findPath(index).pop()
       if pos.blot instanceof Parchment.Embed
         node = pos.blot.domNode.parentNode
         return [node, [].indexOf.call(node.childNodes, pos.blot.domNode) + pos.offset]

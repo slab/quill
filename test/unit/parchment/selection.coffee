@@ -65,15 +65,15 @@ describe('Selection', ->
       expect(range.end).toEqual(1)
     )
 
-    it('end of line', ->
+    it('line boundaries', ->
       @container.innerHTML = '\
         <p><br></p>\
         <p>12</p>'
       selection = new Selection(new Editor(@container))
-      selection.setNativeRange(@container.firstChild, 1, @container.lastChild, 1)
+      selection.setNativeRange(@container.firstChild, 0, @container.lastChild.lastChild, 2)
       range = selection.getRange()
-      expect(range.start).toEqual(1)
-      expect(range.end).toEqual(4)
+      expect(range.start).toEqual(0)
+      expect(range.end).toEqual(3)
     )
 
     it('nested text node', ->
@@ -204,16 +204,6 @@ describe('Selection', ->
       selection.setRange(expected)
       range = selection.getRange()
       expect(range).toEqual(expected)
-      expect(selection.checkFocus()).toBe(true)
-    )
-
-    it('inclusive inline', ->
-      @container.innerHTML = '<p><em>01</em><s>23</s><u>45</u></p>'
-      selection = new Selection(new Editor(@container))
-      selection.setRange(new Selection.Range(2, 4))
-      range = selection.getNativeRange()
-      expect($(range.startContainer).text()).toEqual('01')
-      expect($(range.endContainer).text()).toEqual('23')
       expect(selection.checkFocus()).toBe(true)
     )
 
