@@ -1,5 +1,4 @@
 Quill = require('../quill')
-_     = Quill.require('lodash')
 dom   = Quill.require('dom')
 
 

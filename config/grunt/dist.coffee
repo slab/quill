@@ -23,6 +23,12 @@ module.exports = (grunt) ->
       options:
         browserifyOptions:
           extensions: ['.js', '.coffee']
+          noParse: [
+            './node_modules/clone/clone.js'
+            './node_modules/deep-equal/index.js'
+            './node_modules/eventemitter3/index.js'
+            './node_modules/extend/index.js'
+          ]
           standalone: 'Quill'
         transform: ['coffeeify', 'stylify', versionify]
         plugin: [derequire]
@@ -60,19 +66,6 @@ module.exports = (grunt) ->
         'dist/quill.min.js': ['dist/quill.min.js']
         'dist/quill.base.css': ['dist/quill.base.css']
         'dist/quill.snow.css': ['dist/quill.snow.css']
-  )
-
-  grunt.config('lodash',
-    options:
-      modifier: 'modern'
-      include: [
-        'each', 'map', 'partition',
-        'clone', 'extend', 'defaults', 'omit'
-        'isEqual'
-      ]
-      flags: ['development']
-    target:
-      dest: '.build/lodash.js'
   )
 
   grunt.config('stylus',

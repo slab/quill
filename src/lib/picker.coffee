@@ -1,5 +1,4 @@
-_          = require('lodash')
-dom        = require('./dom')
+dom = require('./dom')
 
 
 class Picker
@@ -41,8 +40,9 @@ class Picker
     return item
 
   buildPicker: ->
-    _.each(dom(@select).attributes(), (value, name) =>
-      @container.setAttribute(name, value)
+    attributes = dom(@select).attributes()
+    Object.keys(attributes).forEach((name) =>
+      @container.setAttribute(name, attributes[name])
     )
     @container.innerHTML = Picker.TEMPLATE
     @label = @container.querySelector('.ql-picker-label')

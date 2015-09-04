@@ -25,7 +25,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask('dev', ['connect:server', 'karma:server'])
 
-  grunt.registerTask('dist', ['clean', 'lodash', 'browserify', 'uglify', 'stylus', 'concat'])
+  grunt.registerTask('dist', ['clean', 'browserify', 'uglify', 'stylus', 'concat'])
   grunt.registerTask('release', ['dist', 'examples', 'copy', 'compress'])
 
   grunt.registerTask('server', ['connect:server:keepalive'])
@@ -37,7 +37,7 @@ module.exports = (grunt) ->
   grunt.registerTask('test:e2e', ['connect:server', 'protractor:e2e'])
 
   grunt.registerTask('test:coverage', [
-    'lodash', 'coffee:quill', 'replace:istanbul', 'istanbul:instrument'
+    'coffee:quill', 'replace:istanbul', 'istanbul:instrument'
     'connect:server', 'karma:coverage', 'istanbul:report'
     'clean:coverage'
   ])

@@ -16,6 +16,12 @@ browserifyOps =
   cache: {}
   extensions: ['.js', '.coffee']
   fullPaths: true
+  noParse: [
+    './node_modules/clone/clone.js'
+    './node_modules/deep-equal/index.js'
+    './node_modules/eventemitter3/index.js'
+    './node_modules/extend/index.js'
+  ]
   packageCache: {}
   standalone: 'Quill'
 

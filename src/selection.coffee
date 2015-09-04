@@ -1,5 +1,5 @@
-_         = require('lodash')
 dom       = require('./lib/dom')
+equal     = require('deep-equal')
 Parchment = require('parchment')
 
 
@@ -175,8 +175,7 @@ class Selection
     oldRange = @lastRange
     @lastRange = this.getRange()
     @savedRange = @lastRange if @lastRange?
-    return if oldRange == @lastRange
-    if oldRange == null || @lastRange == null || oldRange.start != @lastRange.start || oldRange.end != @lastRange.end
+    if !equal(oldRange, @lastRange)
       this.onUpdate(@lastRange, args...)
 
 

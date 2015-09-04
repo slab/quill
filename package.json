@@ -9,8 +9,10 @@
   ],
   "main": "index.js",
   "dependencies": {
+    "clone": "~1.0.2",
+    "deep-equal": "~1.0.1",
     "eventemitter3": "~1.1.1",
-    "lodash": "~3.10.1",
+    "extend": "~3.0.0",
     "parchment": "~0.0.5",
     "rich-text": "~2.1.0"
   },
@@ -52,15 +54,12 @@
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.2.10",
     "load-grunt-tasks": "~3.2.0",
-    "lodash-cli": "~3.9.3",
+    "lodash": "~3.10.1",
     "protractor": "~2.2.0",
     "stylify": "~1.0.0",
     "stylus": "~0.52.3",
     "through": "~2.3.7",
     "watchify": "~3.4.0"
-  },
-  "browser": {
-    "lodash": ".build/lodash.js"
   },
   "engines": {
     "node": ">=0.10"

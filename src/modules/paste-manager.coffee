@@ -1,5 +1,4 @@
 Quill     = require('../quill')
-_         = Quill.require('lodash')
 Delta     = Quill.require('delta')
 Parchment = Quill.require('parchment')
 
@@ -20,7 +19,7 @@ class PasteManager
     sanitize: sanitize
 
   constructor: (@quill, options = {}) ->
-    @options = _.defaults(options, PasteManager.DEFAULTS)
+    @options = extend({}, PasteManager.DEFAULTS, options)
     @container = @quill.addContainer('ql-paste-manager')
     @container.setAttribute('contenteditable', true)
     @container.setAttribute('tabindex', '-1')

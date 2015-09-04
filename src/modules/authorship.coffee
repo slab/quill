@@ -1,7 +1,6 @@
-Quill  = require('../quill')
-_      = Quill.require('lodash')
-dom    = Quill.require('dom')
-Delta  = Quill.require('delta')
+Quill = require('../quill')
+dom   = Quill.require('dom')
+Delta = Quill.require('delta')
 
 
 class Authorship

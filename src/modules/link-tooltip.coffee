@@ -1,6 +1,5 @@
 Quill   = require('../quill')
 Tooltip = require('./tooltip')
-_       = Quill.require('lodash')
 dom     = Quill.require('dom')
 
 
@@ -19,8 +18,8 @@ class LinkTooltip extends Tooltip
   @hotkeys:
     LINK: { key: 'K', metaKey: true }
 
-  constructor: (@quill, @options) ->
-    @options = _.defaults(@options, Tooltip.DEFAULTS)
+  constructor: (@quill, options) ->
+    @options = extend({}, LinkTooltip.DEFAULTS, options)
     super(@quill, @options)
     @container.classList.add('ql-link-tooltip')
     @textbox = @container.querySelector('.input')

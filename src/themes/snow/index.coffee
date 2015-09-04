@@ -1,4 +1,3 @@
-_           = require('lodash')
 ColorPicker = require('../../lib/color-picker')
 BaseTheme   = require('../base')
 dom         = require('../../lib/dom')
@@ -46,7 +45,7 @@ class SnowTheme extends BaseTheme
 
   extendToolbar: (module) ->
     module.container.classList.add('ql-snow')
-    _.each(['color', 'background', 'font', 'size', 'align'], (format) =>
+    ['color', 'background', 'font', 'size', 'align'].forEach((format) =>
       select = module.container.querySelector(".ql-#{format}")
       return unless select?
       switch format
@@ -54,12 +53,12 @@ class SnowTheme extends BaseTheme
           picker = new Picker(select)
         when 'color', 'background'
           picker = new ColorPicker(select)
-          _.each(picker.container.querySelectorAll('.ql-picker-item'), (item, i) ->
+          picker.container.querySelectorAll('.ql-picker-item').forEach((item, i) ->
             item.classList.add('ql-primary-color') if i < 7
           )
       @pickers.push(picker) if picker?
     )
-    _.each(dom(module.container).textNodes(), (node) ->
+    dom(module.container).textNodes().forEach((node) ->
       if node.textContent.trim().length == 0
         dom(node).remove()
     )

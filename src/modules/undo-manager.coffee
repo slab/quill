@@ -1,5 +1,4 @@
 Quill = require('../quill')
-_     = Quill.require('lodash')
 Delta = Quill.require('delta')
 
 

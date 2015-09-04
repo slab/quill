@@ -1,6 +1,6 @@
+extend  = require('extend')
 Quill   = require('../quill')
 Tooltip = require('./tooltip')
-_       = Quill.require('lodash')
 dom     = Quill.require('dom')
 Delta   = Quill.require('delta')
 Range   = Quill.require('range')
@@ -16,8 +16,8 @@ class ImageTooltip extends Tooltip
       <a href="javascript:;" class="cancel">Cancel</a>\
       <a href="javascript:;" class="insert">Insert</a>'
 
-  constructor: (@quill, @options) ->
-    @options = _.defaults(@options, Tooltip.DEFAULTS)
+  constructor: (@quill, options) ->
+    @options = extend({}, Tooltip.DEFAULTS, options)
     super(@quill, @options)
     @preview = @container.querySelector('.preview')
     @textbox = @container.querySelector('.input')

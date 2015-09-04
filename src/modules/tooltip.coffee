@@ -1,6 +1,5 @@
-Quill      = require('../quill')
-_          = Quill.require('lodash')
-dom        = Quill.require('dom')
+Quill = require('../quill')
+dom   = Quill.require('dom')
 
 
 class Tooltip

@@ -1,4 +1,6 @@
-_ = require('lodash')
+clone  = require('clone')
+extend = require('extend')
+
 
 lastKeyEvent = null    # Workaround for fact we can't dispatch keyboard event via javascript
 
@@ -33,7 +35,7 @@ class Wrapper
       event.initEvent(eventName, options.bubbles, options.cancelable)
     else
       event = document.createEvent('KeyboardEvent')
-      lastKeyEvent = _.clone(options)
+      lastKeyEvent = clone(options, false)
       if typeof options.key == 'number'
         lastKeyEvent.which = options.key
       else if typeof options.key == 'string'
@@ -94,7 +96,7 @@ dom = (node) ->
     return new Wrapper(node)
 
 
-dom = _.extend(dom,
+dom = extend(dom,
   KEYS:
     BACKSPACE : 8
     TAB       : 9

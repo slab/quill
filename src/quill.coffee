@@ -1,11 +1,10 @@
-_             = require('lodash')
-pkg           = require('../package.json')
-Delta         = require('rich-text/lib/delta')
-EventEmitter  = require('eventemitter3')
-dom           = require('./lib/dom')
-Editor        = require('./editor')
-Parchment     = require('parchment')
-Selection     = require('./selection')
+pkg          = require('../package.json')
+Delta        = require('rich-text/lib/delta')
+EventEmitter = require('eventemitter3')
+dom          = require('./lib/dom')
+Editor       = require('./editor')
+Parchment    = require('parchment')
+Selection    = require('./selection')
 
 Block    = require('./blots/block')
 Break    = require('./blots/break')
@@ -70,7 +69,6 @@ class Quill extends EventEmitter
 
   @require: (name) ->
     switch name
-      when 'lodash'    then return _
       when 'delta'     then return Delta
       when 'dom'       then return dom
       when 'parchment' then return Parchment
@@ -81,10 +79,10 @@ class Quill extends EventEmitter
   constructor: (@container, options = {}) ->
     @container = document.querySelector(@container) if typeof @container == 'string'
     throw new Error('Invalid Quill container') unless @container?
-    moduleOptions = _.defaults(options.modules or {}, Quill.DEFAULTS.modules)
+    moduleOptions = extend({}, options.modules or {}, Quill.DEFAULTS.modules)
     html = @container.innerHTML
     @container.innerHTML = ''
-    @options = _.defaults(options, Quill.DEFAULTS)
+    @options = extend({}, Quill.DEFAULTS, options)
     @options.modules = moduleOptions
     @options.id = uniqueId('ql-editor-')
     @modules = {}
@@ -120,7 +118,7 @@ class Quill extends EventEmitter
     moduleClass = Quill.modules[name]
     throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
     options = {} if options == true   # Allow for addModule('module', true)
-    options = _.defaults(options, @theme.constructor.OPTIONS[name] or {}, moduleClass.DEFAULTS or {})
+    options = extend(options, moduleClass.DEFAULTS or {}, @theme.constructor.OPTIONS[name])
     @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]
@@ -265,8 +263,8 @@ applyDelta = (editor, delta) ->
       editor.deleteAt(index, op.delete)
       return index
     else if typeof op.retain == 'number'
-      _.each(op.attributes, (value, name) =>
-        editor.formatAt(index, op.retain, name, value)
+      Object.keys(op.attributes).forEach((name) =>
+        editor.formatAt(index, op.retain, name, op.attributes[name])
       )
       return index + op.retain
   , 0)

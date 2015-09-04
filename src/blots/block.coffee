@@ -1,8 +1,10 @@
-_         = require('lodash')
 Delta     = require('rich-text/lib/delta')
 Parchment = require('parchment')
+extend    = require('extend')
+
 
 NEWLINE_LENGTH = 1
+
 
 class Block extends Parchment.Block
   @blotName = 'block'
@@ -42,7 +44,7 @@ class Block extends Parchment.Block
       attributes = {}
       value = leaf.getValue()
       while (leaf != this)
-        attributes = _.extend(leaf.getFormat(), attributes)
+        attributes = extend({}, leaf.getFormat(), attributes)
         leaf = leaf.parent
       return new Delta().insert(value, attributes).concat(delta)
     , new Delta().insert('\n', this.getFormat()))

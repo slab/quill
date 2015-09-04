@@ -1,14 +1,15 @@
-Quill  = require('../quill')
-_      = Quill.require('lodash')
-dom    = Quill.require('dom')
-Delta  = Quill.require('delta')
+Quill = require('../quill')
+clone = require('clone')
+equal = require('deep-equal')
+dom   = Quill.require('dom')
+Delta = Quill.require('delta')
 
 
 coerce = (hotkey) ->
   switch typeof hotkey
     when 'string'
       if Keyboard.hotkeys[hotkey.toUpperCase()]?
-        hotkey = _.clone(Keyboard.hotkeys[hotkey.toUpperCase()])
+        hotkey = clone(Keyboard.hotkeys[hotkey.toUpperCase()], false)
       else if hotkey.length == 1
         hotkey = { key: hotkey }
       else
@@ -16,7 +17,7 @@ coerce = (hotkey) ->
     when 'number'
       hotkey = { key: hotkey }
     when 'object'
-      hotkey = _.clone(hotkey)
+      hotkey = clone(hotkey, false)
     else
       return null
   if typeof hotkey.key == 'string'
@@ -63,7 +64,7 @@ class Keyboard
       query = coerce(query)
       if query? && @hotkeys[query.key]?
         @hotkeys[query.key] = @hotkeys[query.key].filter((target) ->
-          if _.isEqual(target[0], query) && (!callback? || callback == target[1])
+          if equal(target[0], query) && (!callback? || callback == target[1])
             removed.push(target[1])
             return false
           return true

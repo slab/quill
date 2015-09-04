@@ -1,4 +1,3 @@
-_         = require('lodash')
 Delta     = require('rich-text/lib/delta')
 Parchment = require('parchment')
 Block     = require('../blots/block')

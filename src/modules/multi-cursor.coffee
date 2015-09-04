@@ -1,10 +1,9 @@
-Quill         = require('../quill')
-EventEmitter2 = require('eventemitter2').EventEmitter2
-_             = Quill.require('lodash')
-dom           = Quill.require('dom')
+Quill        = require('../quill')
+EventEmitter = require('eventemitter3')
+dom          = Quill.require('dom')
 
 
-class MultiCursor extends EventEmitter2
+class MultiCursor extends EventEmitter
   @DEFAULTS:
     template:
      '<span class="cursor-flag">\
@@ -24,7 +23,7 @@ class MultiCursor extends EventEmitter2
     @quill.on(@quill.constructor.events.TEXT_CHANGE, this._applyDelta, this)
 
   clearCursors: ->
-    _.each(Object.keys(@cursors), this.removeCursor.bind(this))
+    Object.keys(@cursors).forEach(this.removeCursor.bind(this))
     @cursors = {}
 
   moveCursor: (userId, index) ->
@@ -60,25 +59,23 @@ class MultiCursor extends EventEmitter2
     return @cursors[userId]
 
   shiftCursors: (index, length, authorId = null) ->
-    _.each(@cursors, (cursor, id) =>
-      return unless cursor
-      shift = Math.max(length, index - cursor.index)
-      if cursor.userId == authorId
-        this.moveCursor(authorId, cursor.index + shift)
-      else if cursor.index > index
-        cursor.index += shift
+    Object.keys(@cursors).forEach((id) =>
+      return unless @cursors[id]
+      shift = Math.max(length, index - @cursors[id].index)
+      if @cursors[id].userId == authorId
+        this.moveCursor(authorId, @cursors[id].index + shift)
+      else if @cursors[id].index > index
+        @cursors[id].index += shift
     )
 
   update: ->
-    _.each(@cursors, (cursor, id) =>
-      return unless cursor?
-      this._updateCursor(cursor)
-      return true
+    Object.keys(@cursors).forEach((id) =>
+      this._updateCursor(@cursors[id]) if @cursors[id]?
     )
 
   _applyDelta: (delta) ->
     index = 0
-    _.each(delta.ops, (op) =>
+    delta.ops.forEach((op) =>
       length = 0
       if op.insert?
         length = op.insert.length or 1
