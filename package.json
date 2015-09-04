@@ -11,7 +11,7 @@
   "dependencies": {
     "eventemitter3": "~1.1.1",
     "lodash": "~3.10.1",
-    "parchment": "~0.0.4",
+    "parchment": "~0.0.5",
     "rich-text": "~2.1.0"
   },
   "devDependencies": {
