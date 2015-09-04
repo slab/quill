@@ -13,7 +13,7 @@ var browsers = {
   'windows-firefox' : ['Windows 10', 'firefox', FIREFOX_VERSION],
   'windows-ms-edge' : ['Windows 10', 'microsoftedge', '20.10240'],
   'windows-ie-11'   : ['Windows 8.1', 'internet explorer', '11'],
-  'windows-ie-10'   : ['Windows 8', 'internet explorer', '10'],
+  // 'windows-ie-10'   : ['Windows 8', 'internet explorer', '10'],
 
   'linux-chrome'    : ['Linux', 'chrome', CHROME_VERSION],
   'linux-firefox'   : ['Linux', 'firefox', FIREFOX_VERSION],
