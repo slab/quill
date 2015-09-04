@@ -1,6 +1,21 @@
-Quill  = require('../quill')
-_      = Quill.require('lodash')
-Delta  = Quill.require('delta')
+Quill = require('../quill')
+_     = Quill.require('lodash')
+Delta = Quill.require('delta')
+
+
+getLastChangeIndex: (delta) ->
+  index = lastIndex = 0
+  delta.ops.forEach((op) ->
+    if op.insert?
+      lastIndex = Math.max(index + (op.insert.length or 1), lastIndex)
+    else if op.delete?
+      lastIndex = Math.max(index, lastIndex)
+    else if op.retain?
+      if op.attributes?
+        lastIndex = Math.max(index + op.retain, lastIndex)
+      index += op.retain
+  )
+  return lastIndex
 
 
 class UndoManager
@@ -9,40 +24,30 @@ class UndoManager
     maxStack: 100
     userOnly: false
 
-  @hotkeys:
-    UNDO: { key: 'Z', metaKey: true }
-    REDO: { key: 'Z', metaKey: true, shiftKey: true }
-
   constructor: (@quill, @options = {}) ->
     @lastRecorded = 0
     @ignoreChange = false
     this.clear()
-    this.initListeners()
-
-  initListeners: ->
-    @quill.onModuleLoad('keyboard', (keyboard) =>
-      keyboard.addHotkey(UndoManager.hotkeys.UNDO, =>
-        @quill.editor.checkUpdate()
-        this.undo()
-        return false
-      )
-      redoKey = [UndoManager.hotkeys.REDO]
-      if (navigator.platform.indexOf('Win') > -1)
-        redoKey.push({ key: 'Y', metaKey: true })
-      keyboard.addHotkey(redoKey, =>
-        @quill.editor.checkUpdate()
-        this.redo()
-        return false
-      )
-    )
     @quill.on(@quill.constructor.events.TEXT_CHANGE, (delta, source) =>
       return if @ignoreChange
       if !@options.userOnly or source == Quill.sources.USER
         this.record(delta, @oldDelta)
       else
-        this._transform(delta)
+        this.transform(delta)
       @oldDelta = @quill.getContents()
     )
+
+  change: (source, dest) ->
+    return unless @stack[source].length > 0
+    change = @stack[source].pop()
+    @lastRecorded = 0
+    @ignoreChange = true
+    @quill.updateContents(change[source], Quill.sources.USER)
+    @ignoreChange = false
+    index = this.getLastChangeIndex(change[source])
+    @quill.setSelection(index, index)
+    @oldDelta = @quill.getContents()
+    @stack[dest].push(change)
 
   clear: ->
     @stack =
@@ -72,39 +77,9 @@ class UndoManager
       this.clear()
 
   redo: ->
-    this._change('redo', 'undo')
+    this.change('redo', 'undo')
 
-  undo: ->
-    this._change('undo', 'redo')
-
-  _getLastChangeIndex: (delta) ->
-    lastIndex = 0
-    index = 0
-    _.each(delta.ops, (op) ->
-      if op.insert?
-        lastIndex = Math.max(index + (op.insert.length or 1), lastIndex)
-      else if op.delete?
-        lastIndex = Math.max(index, lastIndex)
-      else if op.retain?
-        if op.attributes?
-          lastIndex = Math.max(index + op.retain, lastIndex)
-        index += op.retain
-    )
-    return lastIndex
-
-  _change: (source, dest) ->
-    if @stack[source].length > 0
-      change = @stack[source].pop()
-      @lastRecorded = 0
-      @ignoreChange = true
-      @quill.updateContents(change[source], Quill.sources.USER)
-      @ignoreChange = false
-      index = this._getLastChangeIndex(change[source])
-      @quill.setSelection(index, index)
-      @oldDelta = @quill.getContents()
-      @stack[dest].push(change)
-
-  _transform: (delta) ->
+  transform: (delta) ->
     @oldDelta = delta.transform(@oldDelta, true)
     for change in @stack.undo
       change.undo = delta.transform(change.undo, true)
@@ -112,6 +87,9 @@ class UndoManager
     for change in @stack.redo
       change.undo = delta.transform(change.undo, true)
       change.redo = delta.transform(change.redo, true)
+
+  undo: ->
+    this.change('undo', 'redo')
 
 
 Quill.registerModule('undo-manager', UndoManager)

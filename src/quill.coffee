@@ -34,10 +34,10 @@ class Quill extends EventEmitter
       'background', 'color', 'font', 'size',
       'image'
     ]
-    modules: {}
-      # 'keyboard': true
-      # 'paste-manager': true
-      # 'undo-manager': true
+    modules:
+      'keyboard': true
+      'paste-manager': true
+      'undo-manager': true
     readOnly: false
     theme: 'base'
 
