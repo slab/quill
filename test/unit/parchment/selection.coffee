@@ -288,7 +288,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(5)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
       expect(@bounds.left).toBeApproximately(0, 1)
-      expect(@bounds.top).toBeApproximately(@reference.height, 1)
+      expect(@bounds.top).toBeApproximately(@reference.height, 2)
     )
 
     it('plain text', ->
@@ -308,7 +308,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(5)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
       expect(@bounds.left).toBeApproximately(0, 1)
-      expect(@bounds.top).toBeApproximately(@reference.height, 1)
+      expect(@bounds.top).toBeApproximately(@reference.height, 2)
     )
 
     it('end of line', ->
@@ -320,7 +320,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(9)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
       expect(@bounds.left).toBeApproximately(@reference.width*4, 1)
-      expect(@bounds.top).toBeApproximately(@reference.height, 1)
+      expect(@bounds.top).toBeApproximately(@reference.height, 2)
     )
 
     it('large text', ->
