@@ -11,6 +11,6 @@ class Break extends Parchment.Embed
     return ''
 
 
-Parchment.define(Break)
+Parchment.register(Break)
 
 module.exports = Break

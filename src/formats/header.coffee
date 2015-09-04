@@ -19,4 +19,4 @@ class Header extends Block
     return formats
 
 
-module.exports = Parchment.define(Header)
+module.exports = Parchment.register(Header)

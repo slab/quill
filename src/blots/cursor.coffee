@@ -19,7 +19,7 @@ class Cursor extends Parchment.Embed
     return ''
 
 
-Parchment.define(Cursor)
-Parchment.define(Parchment.Inline)   # Redefine to overwrite cursor
+Parchment.register(Cursor)
+Parchment.register(Parchment.Inline)   # Redefine to overwrite cursor
 
 module.exports = Cursor

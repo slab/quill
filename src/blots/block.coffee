@@ -24,10 +24,10 @@ class Block extends Parchment.Block
     return super(index, true)
 
   format: (name, value) ->
-    blot = Parchment.match(name, Parchment.types.BLOT)
+    blot = Parchment.match(name, Parchment.Type.BLOT)
     if blot? && blot.prototype instanceof Parchment.Block ||
        blot.prototype instanceof Parchment.Container ||
-       Parchment.match(name, Parchment.types.ATTRIBUTE)
+       Parchment.match(name, Parchment.Type.ATTRIBUTE)
       super(name, value)
 
   formatAt: (index, length, name, value) ->
@@ -82,6 +82,6 @@ class Block extends Parchment.Block
     return super(index, force)
 
 
-Parchment.define(Block)
+Parchment.register(Block)
 
 module.exports = Block

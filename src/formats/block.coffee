@@ -21,5 +21,5 @@ Direction = new BlockAttributor('direction', 'direction', {
 
 
 module.exports =
-  Align: Parchment.define(Align)
-  Direction: Parchment.define(Direction)
+  Align: Parchment.register(Align)
+  Direction: Parchment.register(Direction)

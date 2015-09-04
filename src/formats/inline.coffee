@@ -83,16 +83,16 @@ Size = new InlineAttributor('size', 'font-size')
 
 
 module.exports =
-  Bold        : Parchment.define(Bold)
-  Italic      : Parchment.define(Italic)
-  Strike      : Parchment.define(Strike)
-  Underline   : Parchment.define(Underline)
+  Bold        : Parchment.register(Bold)
+  Italic      : Parchment.register(Italic)
+  Strike      : Parchment.register(Strike)
+  Underline   : Parchment.register(Underline)
 
-  Link        : Parchment.define(Link)
-  InlineCode  : Parchment.define(InlineCode)
-  Script      : Parchment.define(Script)
+  Link        : Parchment.register(Link)
+  InlineCode  : Parchment.register(InlineCode)
+  Script      : Parchment.register(Script)
 
-  Background  : Parchment.define(Background)
-  Color       : Parchment.define(Color)
-  Font        : Parchment.define(Font)
-  Size        : Parchment.define(Size)
+  Background  : Parchment.register(Background)
+  Color       : Parchment.register(Color)
+  Font        : Parchment.register(Font)
+  Size        : Parchment.register(Size)

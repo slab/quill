@@ -18,6 +18,6 @@ class Image extends Parchment.Embed
     return 1  # Quill embed type
 
 
-Parchment.define(Image)
+Parchment.register(Image)
 
 module.exports = Image

@@ -35,7 +35,7 @@ class Item extends Block
   @tagName: 'LI'
 
   format: (name, value) ->
-    if Parchment.match(name, Parchment.types.ATTRIBUTE)
+    if Parchment.match(name, Parchment.Type.ATTRIBUTE)
       super(name, value)
     else
       name = 'block' unless value
@@ -50,8 +50,8 @@ class Item extends Block
     return format
 
 
-Parchment.define(Bullet)
-Parchment.define(List)
-Parchment.define(Item)
+Parchment.register(Bullet)
+Parchment.register(List)
+Parchment.register(Item)
 
 module.exports = List
