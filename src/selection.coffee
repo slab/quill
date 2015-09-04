@@ -24,7 +24,7 @@ class Selection
 
   constructor: (@doc) ->
     @root = @doc.domNode
-    @lastRange = @savedRange = new Range(1, 1)  # savedRange is never null
+    @lastRange = @savedRange = new Range(0, 0)  # savedRange is never null
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) =>
       @root.addEventListener(eventName, =>
         this.update()  # Do not pass event handler params
