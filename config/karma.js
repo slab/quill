@@ -44,6 +44,6 @@ module.exports = function(config) {
   })
 
   if (process.env.TRAVIS) {
-    config.transports = ['xhr-polling'];
+    config.transports = ['polling'];
   }
 }
