@@ -2,6 +2,7 @@ pkg          = require('../package.json')
 Delta        = require('rich-text/lib/delta')
 EventEmitter = require('eventemitter3')
 dom          = require('./lib/dom')
+extend       = require('extend')
 Editor       = require('./editor')
 Parchment    = require('parchment')
 Selection    = require('./selection')
@@ -79,7 +80,7 @@ class Quill extends EventEmitter
   constructor: (@container, options = {}) ->
     @container = document.querySelector(@container) if typeof @container == 'string'
     throw new Error('Invalid Quill container') unless @container?
-    moduleOptions = extend({}, options.modules or {}, Quill.DEFAULTS.modules)
+    moduleOptions = extend({}, Quill.DEFAULTS.modules or {}, options.modules)
     html = @container.innerHTML
     @container.innerHTML = ''
     @options = extend({}, Quill.DEFAULTS, options)
@@ -118,7 +119,7 @@ class Quill extends EventEmitter
     moduleClass = Quill.modules[name]
     throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
     options = {} if options == true   # Allow for addModule('module', true)
-    options = extend(options, moduleClass.DEFAULTS or {}, @theme.constructor.OPTIONS[name])
+    options = extend(moduleClass.DEFAULTS or {}, @theme.constructor.OPTIONS[name], options)
     @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
     return @modules[name]

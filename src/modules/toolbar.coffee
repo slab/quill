@@ -6,7 +6,7 @@ class Toolbar
   @DEFAULTS:
     container: null
 
-  constructor: (@quill, @options) ->
+  constructor: (@quill, @options = {}) ->
     @options = { container: @options } if typeof @options == 'string' or @options instanceof HTMLElement
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container = if typeof @options.container == 'string' then document.querySelector(@options.container) else @options.container

@@ -1,5 +1,6 @@
-Quill = require('../quill')
-Delta = Quill.require('delta')
+Quill  = require('../quill')
+extend = require('extend')
+Delta  = Quill.require('delta')
 
 
 getLastChangeIndex: (delta) ->
@@ -23,7 +24,8 @@ class UndoManager
     maxStack: 100
     userOnly: false
 
-  constructor: (@quill, @options = {}) ->
+  constructor: (@quill, options = {}) ->
+    @options = extend({}, UndoManager.DEFAULTS, options)
     @lastRecorded = 0
     @ignoreChange = false
     this.clear()

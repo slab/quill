@@ -1,4 +1,5 @@
 Quill     = require('../quill')
+extend    = require('extend')
 Delta     = Quill.require('delta')
 Parchment = Quill.require('parchment')
 
