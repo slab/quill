@@ -55,9 +55,7 @@ html
     script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').
       var quill = new Quill('#editor-container', {
-        modules: {
-          'toolbar': { container: '#formatting-container' }
-        }
+        modules: { toolbar: '#formatting-container' }
       });
       quill.on('selection-change', function(range) {
         console.log('selection-change', range)

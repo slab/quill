@@ -42,13 +42,13 @@ class Quill extends EventEmitter
     theme: 'base'
 
   @events:
+    DEBUG            : 'debug'
     FORMAT_INIT      : 'format-init'
     MODULE_INIT      : 'module-init'
     POST_EVENT       : 'post-event'
     PRE_EVENT        : 'pre-event'
     SELECTION_CHANGE : 'selection-change'
     TEXT_CHANGE      : 'text-change'
-    DEBUG            : 'debug'
 
   @sources:
     API    : 'api'
@@ -115,10 +115,13 @@ class Quill extends EventEmitter
     @container.insertBefore(container, refNode)
     return container
 
-  addModule: (name, options) ->
+  addModule: (name, options = {}) ->
     moduleClass = Quill.modules[name]
     throw new Error("Cannot load #{name} module. Are you sure you registered it?") unless moduleClass?
-    options = {} if options == true   # Allow for addModule('module', true)
+    if options == true   # Allow for addModule('module', true)
+      options = {}
+    else if typeof options == 'string' || options instanceof HTMLElement
+      options = { container: options }
     options = extend(moduleClass.DEFAULTS or {}, @theme.constructor.OPTIONS[name], options)
     @modules[name] = new moduleClass(this, options)
     this.emit(Quill.events.MODULE_INIT, name, @modules[name])
