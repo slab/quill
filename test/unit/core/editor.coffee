@@ -270,11 +270,16 @@ describe('Editor', ->
     it('local change', ->
       @editor.doc.setHTML('<div>0123</div>')
       @editor.checkUpdate()
+      changes = []
+      @editor.quill.on('text-change', (d) -> changes.push(d))
       delta = new Quill.Delta().retain(4).insert('|')
       @editor.root.querySelector('div').innerHTML = '01a23'
       @editor.applyDelta(delta)
       expected = '<div>01a23|</div>'
       expect(@editor.root).toEqualHTML(expected, true)
+      expect(changes.length).toEqual(2)
+      expect(changes[0]).toEqual(new Quill.Delta().retain(2).insert('a'))
+      expect(changes[1]).toEqual(new Quill.Delta().retain(5).insert('|'))
     )
   )
 
@@ -393,6 +398,26 @@ describe('Editor', ->
         expect(bounds.height).toBeApproximately(reference.image.height, 1)
         expect(bounds.left).toBeApproximately(reference.image.width, 1)
       )
+    )
+  )
+
+  describe('checkUpdate()', ->
+    beforeEach(->
+      @changes = []
+      @editor.quill.on('text-change', (d) => @changes.push(d))
+    )
+
+    it('no changes', ->
+      result = @editor.checkUpdate()
+      expect(result).toEqual(false)
+    )
+
+    it('changed contents', ->
+      @editor.doc.setHTML('<div>abc</div>')
+      result = @editor.checkUpdate()
+      expected = new Quill.Delta().insert('abc\n')
+      expect(result).toEqual(expected)
+      expect(@changes).toEqual([expected])
     )
   )
 )
