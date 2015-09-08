@@ -19,6 +19,7 @@ Quill allows granular access to its contents.
 - [Quill.prototype.insertText](#quillprototypeinserttext)
 - [Quill.prototype.deleteText](#quillprototypedeletetext)
 - [Quill.prototype.formatText](#quillprototypeformattext)
+- [Quill.prototype.formatLine](#quillprototypeformatline)
 - [Quill.prototype.insertEmbed](#quillprototypeinsertembed)
 - [Quill.prototype.updateContents](#quillprototypeupdatecontents)
 - [Quill.prototype.setContents](#quillprototypesetcontents)
@@ -196,7 +197,7 @@ editor.deleteText(0, 10);
 
 ### Quill.prototype.formatText
 
-Formats text in the editor. See [formats](/docs/formats/) for a list of available formats.
+Formats text in the editor. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#quillprototypeformatline) helper. See [formats](/docs/formats/) for a list of available formats.
 
 **Methods**
 
@@ -220,12 +221,49 @@ Formats text in the editor. See [formats](/docs/formats/) for a list of availabl
 **Examples**
 
 {% highlight javascript %}
-editor.formatText(0, 10, 'bold', false);
+editor.setText('Hello\nWorld!\n');
 
-editor.formatText(5, 6, {
-  'italic': false,
+editor.formatText(0, 5, 'bold', true);      // bolds 'hello'
+
+editor.formatText(0, 5, {                   // unbolds 'hello' and set its color to blue
+  'bold': false,
   'color': 'rgb(0, 0, 255)'
 });
+
+editor.formatText(5, 6, 'align', 'right');  // right aligns the 'hello' line
+{% endhighlight %}
+
+
+### Quill.prototype.formatLine
+
+Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats.
+
+**Methods**
+
+- `formatLine(start, end)`
+- `formatLine(start, end, name, value)`
+- `formatLine(start, end, formats)`
+- `formatLine(start, end, source)`
+- `formatLine(start, end, name, value, source)`
+- `formatLine(start, end, formats, source)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `start`   | _Number_ | Start index of formatting range.
+| `end`     | _Number_ | End index of formatting range.
+| `name`    | _String_ | Name of format to apply to text.
+| `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setText('Hello\nWorld!\n');
+
+editor.formatLine(1, 3, 'align', 'right');   // right aligns the first line
+editor.formatLine(4, 8, 'align', 'center');  // center aligns both lines
 {% endhighlight %}
 
 
