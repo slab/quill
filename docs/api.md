@@ -31,6 +31,7 @@ Quill allows granular access to its contents.
 - [Quill.prototype.setSelection](#quillprototypesetselection)
 - [Quill.prototype.prepareFormat](#quillprototypeprepareformat)
 - [Quill.prototype.focus](#quillprototypefocus)
+- [Quill.prototype.getBounds](#quillprototypegetbounds)
 
 #### Customization
 - [Quill.registerModule](#quillregistermodule)
@@ -481,6 +482,32 @@ Focuses the editor.
 
 {% highlight javascript %}
 editor.focus();
+{% endhighlight %}
+
+
+### Quill.prototype.getBounds
+
+Retrieves the pixel position (relative to the editor container) and height of a cursor at a given index. The actual cursor need not be at that index. Useful for calculating where to place tooltips.
+
+**Methods**
+
+- `getBounds(index)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Index position to measure cursor bounds.
+
+**Returns**
+
+- *Object* Object with keys `height`, `left`, and `top`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setText('Hello\nWorld\n');
+editor.getBounds(7);    // Returns { height: 15, left: 27, top: 31 }
 {% endhighlight %}
 
 
