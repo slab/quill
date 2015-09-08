@@ -1,6 +1,5 @@
 ColorPicker = require('../../lib/color-picker')
 BaseTheme   = require('../base')
-dom         = require('../../lib/dom')
 Picker      = require('../../lib/picker')
 
 
@@ -53,14 +52,19 @@ class SnowTheme extends BaseTheme
           picker = new Picker(select)
         when 'color', 'background'
           picker = new ColorPicker(select)
-          picker.container.querySelectorAll('.ql-picker-item').forEach((item, i) ->
+          options = [].slice.call(picker.container.querySelectorAll('.ql-picker-item'))
+          options.forEach((item, i) ->
             item.classList.add('ql-primary-color') if i < 7
           )
       @pickers.push(picker) if picker?
     )
-    dom(module.container).textNodes().forEach((node) ->
+    walker = document.createTreeWalker(module.container, NodeFilter.SHOW_TEXT, null, false)
+    textNodes = []
+    while textNode = walker.nextNode()
+      textNodes.push(textNode)
+    textNodes.forEach((node) ->
       if node.textContent.trim().length == 0
-        dom(node).remove()
+        node.parentNode.removeChild(node)
     )
 
 

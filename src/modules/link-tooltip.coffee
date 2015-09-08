@@ -1,6 +1,6 @@
 Quill   = require('../quill')
 Tooltip = require('./tooltip')
-dom     = Quill.require('dom')
+extend  = require('extend')
 
 
 class LinkTooltip extends Tooltip

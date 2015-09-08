@@ -1,7 +1,7 @@
 Quill = require('../quill')
 clone = require('clone')
 equal = require('deep-equal')
-dom   = Quill.require('dom')
+platform = require('../lib/platform')
 Delta = Quill.require('delta')
 
 
@@ -25,7 +25,7 @@ coerce = (hotkey) ->
   return hotkey
 
 match = (e, hotkey) ->
-  metaKey = if dom.isMac() then e.metaKey else e.metaKey or e.ctrlKey
+  metaKey = if platform.isMac() then e.metaKey else e.metaKey or e.ctrlKey
   return false if hotkey.metaKey != metaKey && hotkey.metaKey != null
   return false if hotkey.shiftKey != e.shiftKey && hotkey.shiftKey != null
   return false if hotkey.altKey != e.altKey && hotkey.altKey != null

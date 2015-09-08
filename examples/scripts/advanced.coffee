@@ -1,10 +1,8 @@
-_ = Quill.require('lodash')
-
 quillBasic = new Quill('.basic-wrapper .editor-container',
   modules:
     authorship: { authorId: 'basic' }
     toolbar: { container: '.basic-wrapper .toolbar-container' }
-  styles: false
+  theme: false
 )
 
 quillAdvanced = new Quill('.advanced-wrapper .editor-container',

@@ -1,7 +1,6 @@
 Delta     = require('rich-text/lib/delta')
 Parchment = require('parchment')
 Block     = require('../blots/block')
-dom       = require('../lib/dom')
 
 
 class Header extends Block

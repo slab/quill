@@ -1,7 +1,6 @@
 pkg          = require('../package.json')
 Delta        = require('rich-text/lib/delta')
 EventEmitter = require('eventemitter3')
-dom          = require('./lib/dom')
 extend       = require('extend')
 Editor       = require('./editor')
 Parchment    = require('parchment')
@@ -71,7 +70,6 @@ class Quill extends EventEmitter
   @require: (name) ->
     switch name
       when 'delta'     then return Delta
-      when 'dom'       then return dom
       when 'parchment' then return Parchment
       when 'range'     then return Selection.Range
       else return null
@@ -267,7 +265,7 @@ applyDelta = (editor, delta) ->
       editor.deleteAt(index, op.delete)
       return index
     else if typeof op.retain == 'number'
-      Object.keys(op.attributes).forEach((name) =>
+      Object.keys(op.attributes || {}).forEach((name) =>
         editor.formatAt(index, op.retain, name, op.attributes[name])
       )
       return index + op.retain

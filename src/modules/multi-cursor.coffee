@@ -1,6 +1,5 @@
 Quill        = require('../quill')
 EventEmitter = require('eventemitter3')
-dom          = Quill.require('dom')
 
 
 class MultiCursor extends EventEmitter

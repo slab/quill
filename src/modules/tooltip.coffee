@@ -1,5 +1,5 @@
 Quill = require('../quill')
-dom   = Quill.require('dom')
+keys = require('../lib/keys')
 
 
 class Tooltip
@@ -19,13 +19,10 @@ class Tooltip
 
   initTextbox: (textbox, enterCallback, escapeCallback) ->
     textbox.addEventListener('keydown', (e) =>
-      switch e.which
-        when dom.KEYS.ENTER
-          e.preventDefault()
-          enterCallback.call(this)
-        when dom.KEYS.ESCAPE
-          e.preventDefault()
-          escapeCallback.call(this)
+      return unless e.which == keys.ENTER || e.which == keys.ESCAPE
+      fn = if e.which == keys.ENTER then enterCallback else escapeCallback
+      fn.call(this)
+      e.preventDefault()
     )
 
   hide: ->

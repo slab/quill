@@ -1,6 +1,3 @@
-dom = require('./dom')
-
-
 class Picker
   @TEMPLATE: '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>'
 
@@ -10,19 +7,18 @@ class Picker
     @container.classList.add('ql-picker')
     @select.style.display = 'none'
     @select.parentNode.insertBefore(@container, @select)
-    document.body.addEventListener('click', this.close.bind(this))
-    @label.addEventListener('click', (e) =>
-      setTimeout( =>
-        @container.classList.toggle('ql-expanded')
-      , 0)
-      e.preventDefault()
+    document.body.addEventListener('click', (e) =>
+      this.close() if e.target != @label
+    )
+    @label.addEventListener('click', =>
+      @container.classList.toggle('ql-expanded')
     )
     @select.addEventListener('change', =>
       if @select.selectedIndex > -1
         item = @container.querySelectorAll('.ql-picker-item')[@select.selectedIndex]
         option = @select.options[@select.selectedIndex]
       this.selectItem(item, false)
-      active = option != dom(@select).default()
+      active = option != @select.querySelector('option[selected]')
       if @label.classList.contains('ql-active') != active
         @label.classList.toggle('ql-active')
     )
@@ -36,19 +32,19 @@ class Picker
       this.selectItem(item, true)
       this.close()
     )
-    this.selectItem(item, false) if @select.selectedIndex == index
     return item
 
   buildPicker: ->
-    Array.prototype.slice.call(@select.attributes).forEach((item) =>
+    [].slice.call(@select.attributes).forEach((item) =>
       @container.setAttribute(item.name, item.value)
     )
     @container.innerHTML = Picker.TEMPLATE
     @label = @container.querySelector('.ql-picker-label')
     picker = @container.querySelector('.ql-picker-options')
-    @select.options.forEach((options, i) =>
+    [].slice.call(@select.options).forEach((option, i) =>
       item = this.buildItem(picker, option, i)
       picker.appendChild(item)
+      this.selectItem(item, false) if @select.selectedIndex == i
     )
 
   close: ->
@@ -61,8 +57,9 @@ class Picker
       value = item.getAttribute('data-value')
       item.classList.add('ql-selected')
       @label.textContent = item.textContent
-      dom(@select).option(value, trigger)
+      @select.selectedIndex = [].indexOf.call(item.parentNode.children, item)
       @label.setAttribute('data-value', value)
+      @select.dispatchEvent(new Event('change')) if trigger
     else
       @label.innerHTML = '&nbsp;'
       @label.removeAttribute('data-value')

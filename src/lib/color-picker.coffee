@@ -1,4 +1,3 @@
-dom    = require('./dom')
 Picker = require('./picker')
 
 

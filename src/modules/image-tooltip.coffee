@@ -1,7 +1,6 @@
 extend  = require('extend')
 Quill   = require('../quill')
 Tooltip = require('./tooltip')
-dom     = Quill.require('dom')
 Delta   = Quill.require('delta')
 Range   = Quill.require('range')
 

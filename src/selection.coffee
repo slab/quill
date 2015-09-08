@@ -1,6 +1,6 @@
-dom       = require('./lib/dom')
 equal     = require('deep-equal')
 Parchment = require('parchment')
+platform  = require('./lib/platform')
 
 
 class Range
@@ -150,7 +150,7 @@ class Selection
       selection.removeAllRanges()
       @root.blur()
       # setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
-      document.body.focus() if dom.isIE(11) and !dom.isIE(9)
+      document.body.focus() if platform.isIE()
 
   setRange: (range) ->
     convert = (index) =>

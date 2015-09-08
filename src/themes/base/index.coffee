@@ -1,5 +1,5 @@
-dom = require('../../lib/dom')
 baseStyles = require('./base.styl')
+platform = require('../../lib/platform')
 
 
 class BaseTheme
@@ -8,9 +8,7 @@ class BaseTheme
   constructor: (@quill, styles = true) ->
     @quill.container.classList.add('ql-container')
     this.addStyles(baseStyles) if styles
-    if dom.isIE(10)
-      version = if dom.isIE(9) then '9' else '10'
-      @quill.root.classList.add('ql-ie-' + version)
+    @quill.root.classList.add('ql-ie-10') if platform.isIE(10)
 
   addStyles: (css) ->
     style = document.createElement('style')
