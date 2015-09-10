@@ -15,6 +15,7 @@
     {% if page.stylesheet %}
     <link rel="stylesheet" href="{{ page.stylesheet | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}">
     {% endif %}
+    {% feed_meta %}
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>

@@ -6,5 +6,6 @@ markdown: kramdown
 gems:
   - jekyll-sitemap
   - jekyll-redirect-from
+  - jekyll-feed
 version: 0.20.0
 cdn: cdn.quilljs.com
