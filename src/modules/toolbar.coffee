@@ -6,8 +6,11 @@ class Toolbar
   @DEFAULTS:
     container: null
 
-  constructor: (@quill, @options = {}) ->
-    @container = if typeof @options.container == 'string' then document.querySelector(@options.container) else @options.container
+  constructor: (@quill, options = {}) ->
+    @options = extend({}, Toolbar.DEFAULTS, options)
+    if typeof @options.container == 'string'
+      @options.container = document.querySelector(@options.container)
+    @container = @options.container
     throw new Error('container required for toolbar', @options) unless @options.container?
     @container.classList.add('ql-toolbar')
     @container.classList.add('ios') if platform.isIOS()  # Fix for iOS not losing hover state after click
