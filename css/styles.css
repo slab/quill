@@ -412,3 +412,9 @@ footer li {
 #blog-container .post .cp_embed_iframe {
   margin: 10px 0px;
 }
+
+#blog-container .road-1-theme-preview {
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  margin: 14px 0px 14px 28px;
+}
