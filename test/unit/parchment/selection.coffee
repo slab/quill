@@ -261,6 +261,7 @@ describe('Selection', ->
       @reference =
         height: @div.firstChild.firstChild.offsetHeight
         width: @div.firstChild.firstChild.offsetWidth
+        top: @div.firstChild.firstChild.offsetTop
       @div.innerHTML = ''
     )
 
@@ -276,7 +277,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(0)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
       expect(@bounds.left).toBeApproximately(0, 1)
-      expect(@bounds.top).toBeApproximately(0, 1)
+      expect(@bounds.top).toBeApproximately(@reference.top, 1)
     )
 
     it('empty line', ->
@@ -288,7 +289,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(5)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
       expect(@bounds.left).toBeApproximately(0, 1)
-      expect(@bounds.top).toBeApproximately(@reference.height, 2)
+      expect(@bounds.top).toBeApproximately(@reference.top + @reference.height, 1)
     )
 
     it('plain text', ->
@@ -296,8 +297,8 @@ describe('Selection', ->
       selection = new Selection(new Editor(@div))
       @bounds = selection.getBounds(2)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
-      expect(@bounds.left).toBeApproximately(@reference.width*2, 1)
-      expect(@bounds.top).toBeApproximately(0, 1)
+      expect(@bounds.left).toBeApproximately(@reference.width*2, 2)
+      expect(@bounds.top).toBeApproximately(@reference.top, 1)
     )
 
     it('start of line', ->
@@ -308,7 +309,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(5)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
       expect(@bounds.left).toBeApproximately(0, 1)
-      expect(@bounds.top).toBeApproximately(@reference.height, 2)
+      expect(@bounds.top).toBeApproximately(@reference.top + @reference.height, 1)
     )
 
     it('end of line', ->
@@ -319,8 +320,8 @@ describe('Selection', ->
       selection = new Selection(new Editor(@div))
       @bounds = selection.getBounds(9)
       expect(@bounds.height).toBeApproximately(@reference.height, 1)
-      expect(@bounds.left).toBeApproximately(@reference.width*4, 1)
-      expect(@bounds.top).toBeApproximately(@reference.height, 2)
+      expect(@bounds.left).toBeApproximately(@reference.width*4, 4)
+      expect(@bounds.top).toBeApproximately(@reference.top + @reference.height, 1)
     )
 
     it('large text', ->
@@ -329,7 +330,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(2)
       expect(@bounds.height).toBeApproximately(@div.querySelector('span').offsetHeight, 1)
       expect(@bounds.left).toBeApproximately(@div.querySelector('span').offsetWidth/2, 1)
-      expect(@bounds.top).toBeApproximately(0, 1)
+      expect(@bounds.top).toBeApproximately(@reference.top, 1)
     )
 
     it('image', ->
@@ -342,7 +343,7 @@ describe('Selection', ->
       @bounds = selection.getBounds(1)
       expect(@bounds.height).toBeApproximately(32, 1)
       expect(@bounds.left).toBeApproximately(32, 1)
-      expect(@bounds.top).toBeApproximately(0, 1)
+      expect(@bounds.top).toBeApproximately(@reference.top, 1)
     )
   )
 

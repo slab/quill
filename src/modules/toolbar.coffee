@@ -1,4 +1,5 @@
 Quill = require('../quill')
+extend = require('extend')
 platform = require('../lib/platform')
 
 
