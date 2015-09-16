@@ -60,7 +60,10 @@ class Block extends Parchment.Block
     return if value.length == 0
     lines = value.split('\n')
     text = lines.shift()
-    super(index, text)
+    if index < this.getLength() - 1
+      super(index, text)
+    else
+      @children.tail.insertAt(@children.tail.getLength(), text)
     if lines.length > 0
       next = this.split(index + text.length, true)
       next.insertAt(0, lines.join('\n'))

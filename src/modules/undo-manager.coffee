@@ -3,7 +3,7 @@ extend = require('extend')
 Delta  = Quill.require('delta')
 
 
-getLastChangeIndex: (delta) ->
+getLastChangeIndex = (delta) ->
   index = lastIndex = 0
   delta.ops.forEach((op) ->
     if op.insert?
@@ -45,7 +45,7 @@ class UndoManager
     @ignoreChange = true
     @quill.updateContents(change[source], Quill.sources.USER)
     @ignoreChange = false
-    index = this.getLastChangeIndex(change[source])
+    index = getLastChangeIndex(change[source])
     @quill.setSelection(index, index)
     @oldDelta = @quill.getContents()
     @stack[dest].push(change)
@@ -59,23 +59,19 @@ class UndoManager
   record: (changeDelta, oldDelta) ->
     return unless changeDelta.ops.length > 0
     @stack.redo = []
-    try
-      undoDelta = @quill.getContents().diff(@oldDelta)
-      timestamp = new Date().getTime()
-      if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
-        change = @stack.undo.pop()
-        undoDelta = undoDelta.compose(change.undo)
-        changeDelta = change.redo.compose(changeDelta)
-      else
-        @lastRecorded = timestamp
-      @stack.undo.push({
-        redo: changeDelta
-        undo: undoDelta
-      })
-      @stack.undo.unshift() if @stack.undo.length > @options.maxStack
-    catch ignored
-      @quill.emit(@quill.constructor.events.DEBUG, 'warning', 'Could not record change... clearing undo stack.')
-      this.clear()
+    undoDelta = @quill.getContents().diff(@oldDelta)
+    timestamp = Date.now()
+    if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
+      change = @stack.undo.pop()
+      undoDelta = undoDelta.compose(change.undo)
+      changeDelta = change.redo.compose(changeDelta)
+    else
+      @lastRecorded = timestamp
+    @stack.undo.push({
+      redo: changeDelta
+      undo: undoDelta
+    })
+    @stack.undo.unshift() if @stack.undo.length > @options.maxStack
 
   redo: ->
     this.change('redo', 'undo')
