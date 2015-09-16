@@ -22,8 +22,8 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li{% if page.url contains "/blog/" %} class="active"{% endif %}>
-          <a href="/blog/" title="Blog">Blog</a>
+        <li {% if page.url contains "/blog/" %}class="active"{% endif %}>
+          <a {% if (site.posts.first.date | date: "%s") > ("now" | date: "%s" | minus : 604800) %}class="new-blog"{% endif %} href="/blog/" title="Blog">Blog</a>
         </li>
         <li>
           <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true"></iframe>

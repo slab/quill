@@ -116,6 +116,18 @@ footer li {
 #navigation-container .icon-bar {
   background-color: #fff;
 }
+#navigation-container .new-blog::after {
+  background-color: #c13928;
+  border-radius: 6px;
+  content: "1";
+  float: right;
+  font-size: 8px;
+  font-weight: bold;
+  height: 12px;
+  line-height: 12px;
+  text-align: center;
+  width: 12px;
+}
 #navigation-container a {
   color: #fff;
 }
