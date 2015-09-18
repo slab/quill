@@ -1,12 +1,8 @@
-.build
-.coverage
-.git
-.travis.yml
-_*
+.*
 *.log
 bower.json
 config
-dist/quill.min.js
+dist/*.min.js
 docs
 examples
 src
