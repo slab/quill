@@ -74,6 +74,7 @@
   "scripts": {
     "prepublish": "grunt dist",
     "postpublish": "grunt clean:all",
+    "start": "grunt dev",
     "test": "grunt test"
   },
   "keywords": [
