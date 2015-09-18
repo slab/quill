@@ -43,9 +43,12 @@ class Editor extends Parchment.Container
       return super(index).slice(1)
 
   getDelta: ->
-    return this.getDescendants(Parchment.Block).reduce((delta, child) =>
+    return this.getLines().reduce((delta, child) =>
       return delta.concat(child.getDelta())
     , new Delta())
+
+  getLines: (index = 0, length = this.getLength()) ->
+    return this.getDescendants(index, length, Parchment.Block)
 
   onUpdate: (delta) ->
 

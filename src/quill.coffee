@@ -147,9 +147,8 @@ class Quill extends EventEmitter
   formatLine: (start, end, name, value, source) ->
     [start, end, formats, source] = buildParams(start, end, name, value, source)
     track.call(this, source, =>
-      # TODO handle lists
       Object.keys(formats).forEach((format) =>
-        @editor.children.forEachAt(start, end - start, (line, offset) ->
+        @editor.getLines(start, end - start).forEach((line) ->
           line.format(format, formats[format])
         )
       )
@@ -198,10 +197,10 @@ class Quill extends EventEmitter
       @editor.insertEmbed(index, embed, value, source)
     )
 
-  insertText: (index, text, name, value, source) ->
+  insertText: (index, text, name, value, source = Quill.sources.API) ->
     [index, end, formats, source] = buildParams(index, 0, name, value, source)
     track.call(this, source, =>
-      @editor.insertText(index, text, source)
+      @editor.insertAt(index, text)
       Object.keys(formats).forEach((format) =>
         @editor.formatAt(index, text.length, name, value)
       )
