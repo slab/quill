@@ -19,14 +19,14 @@ module.exports = function(grunt) {
           },
           sauceUser: sauce.username,
           sauceKey: sauce.accessKey,
-          specs: ['test/wd/*.coffee']
+          specs: ['test/wd/*.js']
         },
         jasmineNodeOpts: {
           isVerbose: false
         }
       };
       if (test === 'wd') {
-        options.args.exclude = ['test/wd/e2e.coffee'];
+        options.args.exclude = ['test/wd/e2e.js'];
       }
       memo[test + "-" + browser] = {
         options: options
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         configFile: 'config/protractor.coverage.js',
         args: {
           baseUrl: grunt.config('baseUrl'),
-          specs: ['test/wd/e2e.coffee']
+          specs: ['test/wd/e2e.js']
         }
       }
     },
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       options: {
         args: {
           baseUrl: grunt.config('baseUrl'),
-          specs: ['test/wd/e2e.coffee']
+          specs: ['test/wd/e2e.js']
         }
       }
     }

@@ -22,7 +22,8 @@ module.exports = function(config) {
     },
     reporters: ['progress'],
     preprocessors: {
-      '**/*.coffee': ['coffee'],
+      'src/**/*.js': ['babel'],
+      'test/**/*.js': ['babel'],
       '**/*.html': ['html2js']
     },
     colors: true,

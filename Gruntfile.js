@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('dev', ['connect:server', 'karma:server']);
 
-  grunt.registerTask('dist', ['clean', 'browserify', 'uglify', 'stylus', 'concat']);
+  grunt.registerTask('dist', ['clean', 'browserify', 'uglify', 'stylus']);
   grunt.registerTask('release', ['dist', 'examples', 'copy', 'compress']);
 
   grunt.registerTask('server', ['connect:server:keepalive']);

@@ -1,6 +1,6 @@
 var _ = require('lodash');
+var babelify = require('babelify');
 var browserify = require('browserify');
-var coffeeify = require('coffeeify');
 var fs = require('fs');
 var harp = require('harp');
 var proxy = require('http-proxy');
@@ -12,7 +12,6 @@ var FAVICON = new Buffer('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACf0lEQV
 
 var browserifyOps = {
   cache: {},
-  extensions: ['.js', '.coffee'],
   fullPaths: true,
   noParse: ['./node_modules/clone/clone.js', './node_modules/deep-equal/index.js', './node_modules/eventemitter3/index.js', './node_modules/extend/index.js'],
   packageCache: {},
@@ -69,10 +68,10 @@ module.exports = function(grunt) {
     options: {
       onCreateServer: function(server, connect, options) {
         connect.watchers = _.reduce(['src', 'test'], function(watchers, type) {
-          var file = type === 'src' ? './src/index.coffee' : './test/quill.coffee';
+          var file = type === 'src' ? './src/index.js' : './test/quill.js';
           var b = browserify(file, browserifyOps);
           watchers[type] = watchify(b);
-          watchers[type].transform(coffeeify);
+          watchers[type].transform(babelify);
           watchers[type].transform(stylify);
           watchers[type].on('update', _.bind(bundle, watchers[type], watchers[type]));
           bundle(watchers[type]);

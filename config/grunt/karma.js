@@ -21,7 +21,16 @@ module.exports = function(grunt) {
   return grunt.config('karma', _.extend(remoteKarma, {
     options: {
       configFile: 'config/karma.js',
-      files: ['node_modules/jquery/dist/jquery.js', 'node_modules/lodash/index.js', 'test/helpers/inject.coffee', 'test/helpers/matchers.coffee', grunt.config('baseUrl') + 'quill.base.css', grunt.config('baseUrl') + 'test/quill.js'],
+      files: [
+        'node_modules/jquery/dist/jquery.js',
+        'node_modules/lodash/index.js',
+
+        'test/helpers/inject.js',
+        'test/helpers/matchers.js',
+
+        grunt.config('baseUrl') + 'quill.base.css',
+        grunt.config('baseUrl') + 'test/quill.js'
+      ],
       port: grunt.config('karmaPort')
     },
     coverage: {
