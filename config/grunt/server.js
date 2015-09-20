@@ -61,7 +61,6 @@ function serve(connect, req, res, next) {
       break;
     default:
       next();
-      break;
   }
 }
 

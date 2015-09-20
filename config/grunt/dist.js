@@ -44,15 +44,12 @@ module.exports = function(grunt) {
     coverage: ['lib', 'src/**/*.js']
   });
 
-  grunt.config('coffee', {
+  grunt.config('babel', {
     quill: {
-      options: {
-        bare: true
-      },
       cwd: 'src/',
       dest: 'lib/',
       expand: true,
-      src: ['**/*.coffee'],
+      src: ['**/*.js'],
       ext: '.js'
     }
   });
