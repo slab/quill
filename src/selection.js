@@ -1,6 +1,6 @@
 import Parchment from 'parchment';
 import equal from 'deep-equal';
-import platform from './lib/platform';
+import * as platform from './lib/platform';
 
 
 class Range {

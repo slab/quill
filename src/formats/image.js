@@ -4,7 +4,7 @@ import Parchment from 'parchment';
 class Image extends Parchment.Embed {
   constructor(value) {
     super(value);
-    if (typeof vlaue === 'string') {
+    if (typeof value === 'string') {
       this.domNode.setAttribute('src', value);
     }
   }

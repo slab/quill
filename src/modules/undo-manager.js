@@ -32,7 +32,7 @@ class UndoManager {
     this.ignoreChange = true;
     this.quill.updateContents(change[source], Quill.sources.USER);
     this.ignoreChange = false;
-    index = getLastChangeIndex(change[source]);
+    let index = getLastChangeIndex(change[source]);
     this.quill.setSelection(index, index);
     this.oldDelta = this.quill.getContents();
     this.stack[dest].push(change);

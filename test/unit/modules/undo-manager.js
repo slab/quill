@@ -1,6 +1,5 @@
 import Delta from 'rich-text/lib/delta';
 import Quill from '../../../src/quill';
-import UndoManager from '../../../src/modules/undo-manager';
 
 
 describe('UndoManager', function() {
@@ -93,7 +92,7 @@ describe('UndoManager', function() {
         this.undoManager.undo();
         expect(this.quill.getContents()).toEqual(contents);
         this.undoManager.undo();
-        expect(this.quill.getContents()).toEqual(_this.original);
+        expect(this.quill.getContents()).toEqual(this.original);
         done();
       }, this.undoManager.options.delay * 1.25);
     });

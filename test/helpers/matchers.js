@@ -25,7 +25,7 @@ beforeEach(function() {
               html = html.innerHTML;
             }
             let div = document.createElement('div');
-            div.innerHTML = html;
+            div.innerHTML = html.replace(/\n\s*/g, '');
             return div;
           });
           let ignoredAttributes = ['width', 'height'];
@@ -34,8 +34,8 @@ beforeEach(function() {
           }
           let message = compareNodes(div1, div2, ignoredAttributes)
           if (message != null) {
-            console.error(divs[0].innerHTML);
-            console.error(divs[1].innerHTML);
+            console.error(div1.innerHTML);
+            console.error(div2.innerHTML);
             return { pass: false, message: message };
           } else {
             return { pass: true, message: 'HTMLs equal' };

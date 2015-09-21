@@ -4,6 +4,10 @@ import Parchment from 'parchment';
 
 class Editor extends Parchment.Container {
   constructor(domNode) {
+    // TODO fix?
+    if (domNode.innerHTML.indexOf('\n') > -1) {
+      domNode.innerHTML = domNode.innerHTML.replace(/\n\s*/g, '');
+    }
     super(domNode);
     this.ensureChild();
     this.enable();

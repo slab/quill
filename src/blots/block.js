@@ -80,8 +80,8 @@ class Block extends Parchment.Block {
       this.children.tail.insertAt(this.children.tail.getLength(), text);
     }
     if (lines.length > 0) {
-      next = this.split(index + text.length, true);
-      return next.insertAt(0, lines.join('\n'));
+      let next = this.split(index + text.length, true);
+      next.insertAt(0, lines.join('\n'));
     }
   }
 

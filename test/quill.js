@@ -1,3 +1,5 @@
+import Quill from '../src/index';
+
 import EditorTests from './unit/editor';
 import SelectionTests from './unit/selection';
 import EventTests from './unit/events';

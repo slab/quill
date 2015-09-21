@@ -71,7 +71,7 @@ class Script extends Parchment.Inline {
   }
 
   getFormat() {
-    formats = super.getFormat();
+    let formats = super.getFormat();
     formats.script = this.domNode.tagName ? 'super' : 'sub';
     return formats;
   }

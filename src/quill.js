@@ -188,7 +188,7 @@ class Quill extends EventEmitter {
     return this.editor.getLength();
   }
 
-  getModule() {
+  getModule(name) {
     return this.modules[name];
   }
 
@@ -253,6 +253,7 @@ class Quill extends EventEmitter {
   }
 
   setSelection(start, end, source = Quill.sources.API) {
+    let range;
     if (typeof start === 'number' && typeof end === 'number') {
       range = new Selection.Range(start, end);
     } else {
