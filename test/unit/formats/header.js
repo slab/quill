@@ -7,7 +7,7 @@ describe('Formats', function() {
     it('init', function() {
       this.setContainer('<h1>Header</h1><h2>Subheader</h2><h3>Subsubheader</h3>');
       let editor = new Editor(this.container);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('Header')
         .insert('\n', { header: 1 })
         .insert('Subheader')
@@ -21,7 +21,7 @@ describe('Formats', function() {
       this.setContainer('<p><em>0123</em></p>');
       let editor = new Editor(this.container);
       editor.formatAt(4, 1, 'header', 1);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { italic: true })
         .insert('\n', { header: 1 })
       );
@@ -32,7 +32,7 @@ describe('Formats', function() {
       this.setContainer('<h1><em>0123</em></h1>');
       let editor = new Editor(this.container);
       editor.formatAt(4, 1, 'header', false);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { italic: true })
         .insert('\n')
       );
@@ -43,7 +43,7 @@ describe('Formats', function() {
       this.setContainer('<h1><em>0123</em></h1>');
       let editor = new Editor(this.container);
       editor.formatAt(4, 1, 'header', 2);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { italic: true })
         .insert('\n', { header: 2 })
       );

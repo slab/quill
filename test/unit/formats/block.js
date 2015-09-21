@@ -16,7 +16,7 @@ describe('Block', function() {
       </ol>`
     );
     let editor = new Editor(this.container);
-    return expect(editor.getDelta()).toEqualDelta(new Delta()
+    return expect(editor.getDelta()).toEqual(new Delta()
       .insert('0')
       .insert('\n', { header: 1 })
       .insert('2')

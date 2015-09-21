@@ -11,7 +11,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', true);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
       .insert('\n', { list: true })
       .insert('0123\n')
@@ -35,7 +35,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', false);
-    expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n5678\n0123\n'));
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123\n5678\n0123\n'));
     expect(this.container.innerHTML).toEqualHTML(`
       <p>0123</p>
       <p>5678</p>
@@ -53,7 +53,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'bullet', true);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
       .insert('\n', { bullet: true })
       .insert('0123\n')
@@ -79,7 +79,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', true);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: true })
       .insert('5678')
@@ -104,7 +104,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', true);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: true })
       .insert('5678')
@@ -129,7 +129,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.deleteAt(5, 5);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: true })
       .insert('0123')
@@ -153,7 +153,7 @@ describe('List', function() {
     );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'bullet', true);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: true })
       .insert('5678')

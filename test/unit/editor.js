@@ -7,21 +7,21 @@ describe('Editor', function() {
     it('empty', function() {
       this.setContainer('');
       let editor = new Editor(this.container);
-      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
+      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('empty line', function() {
       this.setContainer('<p><br></p>');
       let editor = new Editor(this.container);
-      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
+      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('empty line no break', function() {
       this.setContainer('<p></p>');
       let editor = new Editor(this.container);
-      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
+      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
@@ -47,7 +47,7 @@ describe('Editor', function() {
         <p><br></p>`
       );
       let editor = new Editor(this.container);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('Quill Rich Text Editor', { size: '18px' })
         .insert('\n\nQuill is a free, ')
         .insert('open source', { link: 'https://github.com/quilljs/quill/' })
@@ -164,7 +164,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '!!');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01!!23', { bold: true })
         .insert('\n')
       );
@@ -175,7 +175,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, 'image', '/favicon.png');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert(1, { image: '/favicon.png', bold: true })
         .insert('23', { bold: true })
@@ -188,7 +188,7 @@ describe('Editor', function() {
       this.setContainer('<p>0</p><p><br></p><p>3</p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '!');
-      expect(editor.getDelta()).toEqualDelta(new Delta().insert('0\n!\n3\n'));
+      expect(editor.getDelta()).toEqual(new Delta().insert('0\n!\n3\n'));
       return expect(this.container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
@@ -196,7 +196,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '\n');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert('\n')
         .insert('23', { bold: true })
@@ -212,7 +212,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(0, '\n');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('\n')
         .insert('0123', { bold: true })
         .insert('\n')
@@ -227,7 +227,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(4, '\n');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { bold: true })
         .insert('\n\n')
       );
@@ -241,7 +241,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '\n!!\n!!\n');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert('\n')
         .insert('!!', { bold: true })
@@ -262,7 +262,7 @@ describe('Editor', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '\n\n');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert('\n\n')
         .insert('23', { bold: true })
@@ -281,7 +281,7 @@ describe('Editor', function() {
       this.setContainer('<p><em><strong>0123</strong></em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(1, 2);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('03', { bold: true, italic: true })
         .insert('\n')
       );
@@ -292,7 +292,7 @@ describe('Editor', function() {
       this.setContainer('<p><em>0123</em></p><p><em>5678</em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(2, 5);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0178', { italic: true })
         .insert('\n')
       );
@@ -303,7 +303,7 @@ describe('Editor', function() {
       this.setContainer('<p><em><strong>0123</strong></em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(0, 4);
-      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
+      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
@@ -311,7 +311,7 @@ describe('Editor', function() {
       this.setContainer('<p><em>0123</em></p><p><em>5678</em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(4, 1);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01235678', { italic: true })
         .insert('\n')
       );
@@ -322,7 +322,7 @@ describe('Editor', function() {
       this.setContainer('<p><em><strong>0123</strong></em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(0, 5);
-      expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
+      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
@@ -330,7 +330,7 @@ describe('Editor', function() {
       this.setContainer('<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(0, 8);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('890', { italic: true })
         .insert('\n')
       );

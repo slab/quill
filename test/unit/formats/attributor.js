@@ -10,7 +10,7 @@ describe('Attributor', function() {
       </p>`
     );
     let editor = new Editor(this.container);
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123', { color: 'red', background: 'blue', size: '32px', font: 'monospace' })
       .insert('\n', { direction: 'rtl', align: 'center' })
     );
@@ -20,7 +20,7 @@ describe('Attributor', function() {
     this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(1, 2, 'color', 'red');
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0')
       .insert('12', { color: 'red' })
       .insert('3\n')
@@ -32,7 +32,7 @@ describe('Attributor', function() {
     this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'align', 'center');
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { align: 'center' })
     );
@@ -43,7 +43,7 @@ describe('Attributor', function() {
     this.setContainer('<p style="text-align: center;">0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'align', 'left');
-    expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n'));
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
   });
 
@@ -51,7 +51,7 @@ describe('Attributor', function() {
     let initial = this.setContainer('<p style="text-align: center;">0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'align', 'middle');
-    expect(editor.getDelta()).toEqualDelta(new Delta()
+    expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { align: 'center' })
     );
@@ -62,7 +62,7 @@ describe('Attributor', function() {
     let initial = this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(1, 2, 'align', 'center');
-    expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n'));
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML(initial);
   });
 
@@ -70,7 +70,7 @@ describe('Attributor', function() {
     let initial = this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'color', 'red');
-    expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n'));
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML(initial);
   });
 });

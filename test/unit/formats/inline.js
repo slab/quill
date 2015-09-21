@@ -18,7 +18,7 @@ describe('Formats', function() {
         </p>`
       );
       let editor = new Editor(this.container);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { bold: true })
         .insert('1', { italic: true })
         .insert('2', { strike: true })
@@ -35,7 +35,7 @@ describe('Formats', function() {
       this.setContainer('<p><em>0123</em></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'bold', true);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { italic: true })
         .insert('12', { italic: true, bold: true })
         .insert('3', { italic: true })
@@ -48,7 +48,7 @@ describe('Formats', function() {
       this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'italic', true);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { bold: true })
         .insert('12', { italic: true, bold: true })
         .insert('3', { bold: true })
@@ -70,7 +70,7 @@ describe('Formats', function() {
       editor.formatAt(1, 2, 'italic', true);
       editor.formatAt(5, 2, 'italic', true);
       editor.formatAt(4, 2, 'bold', true);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { bold: true })
         .insert('1', { italic: true, bold: true })
         .insert('2', { italic: true })
@@ -93,7 +93,7 @@ describe('Formats', function() {
       );
       let editor = new Editor(this.container);
       editor.formatAt(2, 5, 'bold', true);
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { italic: true })
         .insert('23', { italic: true, bold: true })
         .insert('\n')
@@ -111,7 +111,7 @@ describe('Formats', function() {
       this.setContainer('<p><sub>0123</sub></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'script', 'super');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { script: 'sub' })
         .insert('12', { script: 'super' })
         .insert('3', { script: 'sub' })
@@ -124,7 +124,7 @@ describe('Formats', function() {
       this.setContainer('<p><sup>0123</sup></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'script', 'sub');
-      expect(editor.getDelta()).toEqualDelta(new Delta()
+      expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { script: 'super' })
         .insert('12', { script: 'sub' })
         .insert('3', { script: 'super' })

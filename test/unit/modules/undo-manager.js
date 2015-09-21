@@ -42,11 +42,11 @@ describe('UndoManager', function() {
     //   it(name, ->
     //     @quill.updateContents(test.delta)
     //     changed = @quill.getContents()
-    //     expect(changed).not.toEqualDelta(@original)
+    //     expect(changed).not.toEqual(@original)
     //     @undoManager.undo()
-    //     expect(@quill.getContents()).toEqualDelta(@original)
+    //     expect(@quill.getContents()).toEqual(@original)
     //     @undoManager.redo()
-    //     expect(@quill.getContents()).toEqualDelta(changed)
+    //     expect(@quill.getContents()).toEqual(changed)
     //   )
     // )
 
@@ -54,11 +54,11 @@ describe('UndoManager', function() {
       this.quill.root.firstChild.innerHTML = 'The lazy foxes';
       this.quill.update();
       let changed = this.quill.getContents();
-      expect(changed).not.toEqualDelta(this.original);
+      expect(changed).not.toEqual(this.original);
       this.undoManager.undo();
-      expect(this.quill.getContents()).toEqualDelta(this.original);
+      expect(this.quill.getContents()).toEqual(this.original);
       this.undoManager.redo();
-      expect(this.quill.getContents()).toEqualDelta(changed);
+      expect(this.quill.getContents()).toEqual(changed);
     });
 
     it('merge changes', function() {

@@ -1,19 +1,5 @@
 beforeEach(function() {
   jasmine.addMatchers({
-    toEqualDelta: function() {
-      return {
-        compare: function(actual, expected) {
-          let message, pass = _.isEqual(actual, expected);
-          if (pass) {
-            message = 'Deltas equal';
-          } else {
-            message = `Deltas unequal: \n${jasmine.pp(actual)}\n\n${jasmine.pp(expected)}\n`;
-          }
-          return { message: message, pass: pass };
-        }
-      };
-    },
-
     toEqualHTML: function() {
       return {
         compare: function(actual, expected, ignoreClassId) {

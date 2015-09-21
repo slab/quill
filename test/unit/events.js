@@ -17,7 +17,7 @@ describe('Events', function() {
     it('insert text', function() {
       this.quill.insertText(2, '!');
       expect(this.spy.onText.calls.count()).toBe(1);
-      expect(this.spy.onText.calls.mostRecent().args[0]).toEqualDelta(
+      expect(this.spy.onText.calls.mostRecent().args[0]).toEqual(
         new Delta().retain(2).insert('!')
       );
       expect(this.spy.onText.calls.mostRecent().args[1]).toBe(Quill.sources.API);
