@@ -169,7 +169,7 @@ class Selection {
         // IE9 requires removeAllRanges() regardless of value of
         // nativeRange or else formatting from toolbar does not work
         selection.removeAllRanges();
-        range = document.createRange();
+        let range = document.createRange();
         range.setStart(startNode, startOffset);
         range.setEnd(endNode, endOffset);
         selection.addRange(range);

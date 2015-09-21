@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var babelify = require('babelify');
 var browserify = require('browserify');
 var fs = require('fs');
@@ -13,7 +12,12 @@ var FAVICON = new Buffer('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACf0lEQV
 var browserifyOps = {
   cache: {},
   fullPaths: true,
-  noParse: ['./node_modules/clone/clone.js', './node_modules/deep-equal/index.js', './node_modules/eventemitter3/index.js', './node_modules/extend/index.js'],
+  noParse: [
+    './node_modules/clone/clone.js',
+    './node_modules/deep-equal/index.js',
+    './node_modules/eventemitter3/index.js',
+    './node_modules/extend/index.js'
+  ],
   packageCache: {},
   standalone: 'Quill'
 };
@@ -67,17 +71,17 @@ module.exports = function(grunt) {
   grunt.config('connect', {
     options: {
       onCreateServer: function(server, connect, options) {
-        connect.watchers = _.reduce(['src', 'test'], function(watchers, type) {
+        connect.watchers = ['src', 'test'].reduce(function(watchers, type) {
           var file = type === 'src' ? './src/index.js' : './test/quill.js';
           var b = browserify(file, browserifyOps);
           watchers[type] = watchify(b);
           watchers[type].transform(babelify);
           watchers[type].transform(stylify);
-          watchers[type].on('update', _.bind(bundle, watchers[type], watchers[type]));
+          watchers[type].on('update', bundle.bind(watchers[type], watchers[type]));
           bundle(watchers[type]);
           return watchers;
         }, {});
-        return connect.karmaProxy = proxy.createProxyServer({
+        connect.karmaProxy = proxy.createProxyServer({
           target: "http://localhost:" + (grunt.config('karmaPort'))
         });
       },
@@ -86,7 +90,8 @@ module.exports = function(grunt) {
         middlewares.push(harp.mount(__dirname + '/../..'));
         return middlewares;
       },
-      debug: true
+      debug: true,
+      base: 'dist'
     },
     server: {
       options: {
