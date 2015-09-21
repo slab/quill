@@ -63,8 +63,8 @@ class Quill extends EventEmitter {
     if (this.container == null) {
       throw new Error('Invalid Quill container');
     }
-    moduleOptions = extend({}, Quill.DEFAULTS.modules || {}, options.modules);
-    html = this.container.innerHTML;
+    let moduleOptions = extend({}, Quill.DEFAULTS.modules || {}, options.modules);
+    let html = this.container.innerHTML;
     this.container.innerHTML = '';
     this.options = extend({}, Quill.DEFAULTS, options);
     this.options.modules = moduleOptions;
@@ -92,7 +92,7 @@ class Quill extends EventEmitter {
       }
     }
     Object.keys(this.options.modules).forEach((name) => {
-      this.addModule(name, this.options[name]);
+      this.addModule(name, this.options.modules[name]);
     });
     if (this.options.readOnly) {
       this.disable();
@@ -325,7 +325,7 @@ Quill.sources = {
 // TODO fix
 function buildParams() {
   let formats, params;
-  params = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+  params = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
   if (typeof params[0] === 'object') {
     params.splice(0, 1, params[0].start, params[0].end);
   }
@@ -347,8 +347,8 @@ function track(source, callback) {
 }
 
 function uniqueId(prefix) {
-  this.counter = this.counter || 1;
-  return prefix + (this.counter++);
+  uniqueId.counter = uniqueId.counter || 1;
+  return prefix + (uniqueId.counter++);
 }
 
 

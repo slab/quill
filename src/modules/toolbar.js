@@ -1,6 +1,6 @@
 import Quill from '../quill';
 import extend from 'extend';
-import platform from '../lib/platform';
+import * as platform from '../lib/platform';
 
 
 class Toolbar {

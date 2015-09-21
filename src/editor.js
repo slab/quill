@@ -106,7 +106,7 @@ class Editor extends Parchment.Container {
     this.build();
     this.delta = this.getDelta();
     let change = oldDelta.diff(this.delta);
-    if (change.length > 0) {
+    if (change.length() > 0) {
       this.onUpdate(change, ...args);
     }
     this.observer.takeRecords();  // Prevent changes from rebuilds

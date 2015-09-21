@@ -22,6 +22,7 @@ class BaseTheme {
     document.head.appendChild(style);
   }
 }
+BaseTheme.OPTIONS = {};
 
 
 export { BaseTheme as default };

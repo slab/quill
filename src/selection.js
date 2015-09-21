@@ -102,16 +102,17 @@ class Selection {
   getRange() {
     if (!this.checkFocus()) return null;
     let convert = (node, offset) => {
+      let blot;
       if (!(node instanceof Text)) {
         if (offset >= node.childNodes.length) {
-          let blot = Parchment.findBlot(node);
+          blot = Parchment.findBlot(node);
           return blot.offset(this.doc) + blot.getLength();
         } else {
           node = node.childNodes[offset];
           offset = 0;
         }
       }
-      let text = Parchment.findBlot(node);
+      blot = Parchment.findBlot(node);
       return blot.offset(this.doc) + offset;
     }
     let nativeRange = this.getNativeRange();
@@ -205,6 +206,17 @@ class Selection {
       this.setNativeRange(null);
     }
     this.update();
+  }
+
+  update(...args) {
+    let oldRange = this.lastRange;
+    this.lastRange = this.getRange();
+    if (this.lastRange != null) {
+      this.savedRange = this.lastRange;
+    }
+    if (!equal(oldRange, this.lastRange)) {
+      this.onUpdate(this.lastRange, ...args);
+    }
   }
 }
 Selection.Range = Range;

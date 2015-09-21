@@ -1,5 +1,6 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
+import extend from 'extend';
 
 
 const NEWLINE_LENGTH = 1;
