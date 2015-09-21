@@ -5,7 +5,7 @@ import Selection from '../../src/selection';
 describe('Selection', function() {
   describe('focus()', function() {
     beforeEach(function() {
-      this.container.innerHTML = '<textarea>Test</textarea><div><p>0123</p></div>';
+      this.setContainer('<textarea>Test</textarea><div><p>0123</p></div>');
       this.selection = new Selection(new Editor(this.container.lastChild));
       this.textarea = this.container.querySelector('textarea');
       this.textarea.focus();
@@ -32,7 +32,7 @@ describe('Selection', function() {
 
   describe('getRange()', function() {
     it('empty document', function() {
-      this.container.innerHTML = '';
+      this.setContainer('');
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container.querySelector('br'), 0);
       let range = selection.getRange();
@@ -41,7 +41,7 @@ describe('Selection', function() {
     });
 
     it('empty line', function() {
-      this.container.innerHTML = '<p>0</p><p><br></p><p>3</p>';
+      this.setContainer('<p>0</p><p><br></p><p>3</p>');
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container.querySelector('br'), 0);
       let range = selection.getRange();
@@ -50,7 +50,7 @@ describe('Selection', function() {
     });
 
     it('text node', function() {
-      this.container.innerHTML = '<p>0123</p>';
+      this.setContainer('<p>0123</p>');
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
       let range = selection.getRange();
@@ -59,7 +59,7 @@ describe('Selection', function() {
     });
 
     it('line boundaries', function() {
-      this.container.innerHTML = '<p><br></p><p>12</p>';
+      this.setContainer('<p><br></p><p>12</p>');
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container.firstChild, 0, this.container.lastChild.lastChild, 2);
       let range = selection.getRange();
@@ -68,11 +68,12 @@ describe('Selection', function() {
     });
 
     it('nested text node', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p><em><strong>01</strong></em></p>
         <ul>
           <li><em><u>34</u></em></li>
-        </ul>`;
+        </ul>`
+      );
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(
         this.container.querySelector('strong').firstChild, 1,
@@ -84,7 +85,7 @@ describe('Selection', function() {
     });
 
     it('between embed', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p>
           <img src="/favicon.png">
           <img src="/favicon.png">
@@ -94,7 +95,8 @@ describe('Selection', function() {
             <img src="/favicon.png">
             <img src="/favicon.png">
           </li>
-        </ul>`;
+        </ul>`
+      );
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container.firstChild, 1, this.container.lastChild.lastChild, 1);
       let range = selection.getRange();
@@ -103,7 +105,7 @@ describe('Selection', function() {
     });
 
     it('between inlines', function() {
-      this.container.innerHTML = '<p><em>01</em><s>23</s><u>45</u></p>';
+      this.setContainer('<p><em>01</em><s>23</s><u>45</u></p>');
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container.firstChild, 1, this.container.firstChild, 2);
       let range = selection.getRange();
@@ -112,13 +114,14 @@ describe('Selection', function() {
     });
 
     it('between blocks', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p>01</p>
         <p><br></p>
         <ul>
           <li>45</li>
           <li>78</li>
-        </ul>`;
+        </ul>`
+      );
       let selection = new Selection(new Editor(this.container));
       selection.setNativeRange(this.container, 1, this.container.lastChild, 1);
       let range = selection.getRange();
@@ -127,18 +130,19 @@ describe('Selection', function() {
     });
 
     it('no focus', function() {
-      this.container.innerHTML = '';
+      this.setContainer('');
       let selection = new Selection(new Editor(this.container));
       let range = selection.getRange();
       expect(range).toEqual(null);
     });
 
     it('wrong input', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <textarea>Test</textarea>
         <div>
           <p>0123</p>
-        </div>`;
+        </div>`
+      );
       let selection = new Selection(new Editor(this.container.lastChild));
       this.container.firstChild.select();
       let range = selection.getRange();
@@ -148,7 +152,7 @@ describe('Selection', function() {
 
   describe('setRange()', function() {
     it('empty document', function() {
-      this.container.innerHTML = '';
+      this.setContainer('');
       let expected = new Selection.Range(0);
       let selection = new Selection(new Editor(this.container));
       selection.setRange(expected);
@@ -158,11 +162,12 @@ describe('Selection', function() {
     });
 
     it('empty lines', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p><br></p>
         <ul>
           <li><br></li>
-        </ul>`;
+        </ul>`
+      );
       let selection = new Selection(new Editor(this.container));
       let expected = new Selection.Range(0, 1);
       selection.setRange(expected);
@@ -172,11 +177,12 @@ describe('Selection', function() {
     });
 
     it('nested text node', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p><em><strong>01</strong></em></p>
         <ul>
           <li><em><u>34</u></em></li>
-        </ul>`;
+        </ul>`
+      );
       let selection = new Selection(new Editor(this.container));
       let expected = new Selection.Range(1, 4);
       selection.setRange(expected);
@@ -186,7 +192,7 @@ describe('Selection', function() {
     });
 
     it('between inlines', function() {
-      this.container.innerHTML = '<p><em>01</em><s>23</s><u>45</u></p>';
+      this.setContainer('<p><em>01</em><s>23</s><u>45</u></p>');
       let selection = new Selection(new Editor(this.container));
       let expected = new Selection.Range(2, 4);
       selection.setRange(expected);
@@ -196,7 +202,7 @@ describe('Selection', function() {
     });
 
     it('between embeds', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p>
           <img src="/favicon.png">
           <img src="/favicon.png">
@@ -206,7 +212,8 @@ describe('Selection', function() {
             <img src="/favicon.png">
             <img src="/favicon.png">
           </li>
-        </ul>`;
+        </ul>`
+      );
       let expected = new Selection.Range(1, 4);
       let selection = new Selection(new Editor(this.container));
       selection.setRange(expected);
@@ -216,7 +223,7 @@ describe('Selection', function() {
     });
 
     return it('null', function() {
-      this.container.innerHTML = '<p>0123</p>';
+      this.setContainer('<p>0123</p>');
       let selection = new Selection(new Editor(this.container));
       selection.setRange(new Selection.Range(1));
       let range = selection.getRange();
@@ -235,7 +242,7 @@ describe('Selection', function() {
         fontFamily: 'monospace',
         position: 'relative'
       });
-      this.container.innerHTML = '<div></div><div>&nbsp;</div>';
+      this.setContainer('<div></div><div>&nbsp;</div>');
       this.div = this.container.firstChild;
       $(this.div).css('border', '1px solid #777');
       this.float = this.container.lastChild;
@@ -245,13 +252,13 @@ describe('Selection', function() {
         width: '1px'
       });
       if (this.reference != null) return;
-      this.div.innerHTML = '<p><span>0</span></p>';
+      this.setContainer('<p><span>0</span></p>', this.div);
       this.reference = {
         height: this.div.firstChild.firstChild.offsetHeight,
         width: this.div.firstChild.firstChild.offsetWidth,
         top: this.div.firstChild.firstChild.offsetTop
       };
-      this.div.innerHTML = '';
+      this.setContainer('', this.div);
     });
 
     afterEach(function() {
@@ -261,7 +268,7 @@ describe('Selection', function() {
     });
 
     it('empty document', function() {
-      this.div.innerHTML = '<p><br></p>';
+      this.setContainer('<p><br></p>', this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(0);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
@@ -270,10 +277,11 @@ describe('Selection', function() {
     });
 
     it('empty line', function() {
-      this.div.innerHTML = `
+      this.setContainer(`
         <p>0000</p>
         <p><br></p>
-        <p>0000</p>`;
+        <p>0000</p>`
+      , this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(5);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
@@ -282,7 +290,7 @@ describe('Selection', function() {
     });
 
     it('plain text', function() {
-      this.div.innerHTML = '<p>0123</p>';
+      this.setContainer('<p>0123</p>', this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(2);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
@@ -291,9 +299,10 @@ describe('Selection', function() {
     });
 
     it('start of line', function() {
-      this.div.innerHTML = `
+      this.setContainer(`
         <p>0000</p>
-        <p>0000</p>`;
+        <p>0000</p>`
+      , this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(5);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
@@ -302,10 +311,11 @@ describe('Selection', function() {
     });
 
     it('end of line', function() {
-      this.div.innerHTML = `
+      this.setContainer(`
         <p>0000</p>
         <p>0000</p>
-        <p>0000</p>`;
+        <p>0000</p>`
+      , this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(9);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
@@ -314,7 +324,7 @@ describe('Selection', function() {
     });
 
     it('large text', function() {
-      this.div.innerHTML = '<p><span style="font-size: 32px;">0000</span></p>';
+      this.setContainer('<p><span style="font-size: 32px;">0000</span></p>', this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(2);
       expect(this.bounds.height).toBeApproximately(this.div.querySelector('span').offsetHeight, 1);
@@ -323,11 +333,12 @@ describe('Selection', function() {
     });
 
     return it('image', function() {
-      this.div.innerHTML = `
+      this.setContainer(`
         <p>
           <img src="/favicon.png" width="32px" height="32px">
           <img src="/favicon.png" width="32px" height="32px">
-        </p>`;
+        </p>`
+      , this.div);
       let selection = new Selection(new Editor(this.div));
       this.bounds = selection.getBounds(1);
       expect(this.bounds.height).toBeApproximately(32, 1);

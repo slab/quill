@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         'node_modules/jquery/dist/jquery.js',
         'node_modules/lodash/index.js',
 
-        'test/helpers/inject.js',
+        'test/helpers/unit.js',
         'test/helpers/matchers.js',
 
         grunt.config('baseUrl') + 'quill.base.css',

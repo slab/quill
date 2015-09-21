@@ -5,28 +5,28 @@ import Editor from '../../src/editor';
 describe('Editor', function() {
   describe('toDelta()', function() {
     it('empty', function() {
-      this.container.innerHTML = '';
+      this.setContainer('');
       let editor = new Editor(this.container);
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('empty line', function() {
-      this.container.innerHTML = '<p><br></p>';
+      this.setContainer('<p><br></p>');
       let editor = new Editor(this.container);
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('empty line no break', function() {
-      this.container.innerHTML = '<p></p>';
+      this.setContainer('<p></p>');
       let editor = new Editor(this.container);
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('full document', function() {
-      let expected = this.container.innerHTML = `
+      let expected = this.setContainer(`
         <p><span style="font-size: 18px;">Quill Rich Text Editor</span></p>
         <p><br></p>
         <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web.</p>
@@ -44,7 +44,8 @@ describe('Editor', function() {
         <p style="text-align: center;">
           <a style="font-size: 32px;" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>
         </p>
-        <p><br></p>`;
+        <p><br></p>`
+      );
       let editor = new Editor(this.container);
       expect(editor.getDelta()).toEqualDelta(new Delta()
         .insert('Quill Rich Text Editor', { size: '18px' })
@@ -70,7 +71,7 @@ describe('Editor', function() {
 
   describe('findPath', function() {
     it('middle', function() {
-      this.container.innerHTML = '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>';
+      this.setContainer('<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
       let editor = new Editor(this.container);
       let path = editor.findPath(7);
       let expected = [
@@ -87,7 +88,7 @@ describe('Editor', function() {
     });
 
     it('inclusive default', function() {
-      this.container.innerHTML = '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>';
+      this.setContainer('<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
       let editor = new Editor(this.container);
       let path = editor.findPath(6);
       let expected = [
@@ -105,7 +106,7 @@ describe('Editor', function() {
     });
 
     it('end of line', function() {
-      this.container.innerHTML = '<p><em>01</em><strong>23</strong></p><h1>5</h1>';
+      this.setContainer('<p><em>01</em><strong>23</strong></p><h1>5</h1>');
       let editor = new Editor(this.container);
       let path = editor.findPath(4);
       let expected = [
@@ -121,7 +122,7 @@ describe('Editor', function() {
     });
 
     it('newline boundary', function() {
-      this.container.innerHTML = '<p><em>01</em><strong>23</strong></p><h1>5</h1>';
+      this.setContainer('<p><em>01</em><strong>23</strong></p><h1>5</h1>');
       let editor = new Editor(this.container);
       let path = editor.findPath(5);
       let expected = [
@@ -136,14 +137,14 @@ describe('Editor', function() {
     });
 
     it('beyond document', function() {
-      this.container.innerHTML = '<p><em>01</em><strong>23</strong></p>';
+      this.setContainer('<p><em>01</em><strong>23</strong></p>');
       let editor = new Editor(this.container);
       let path = editor.findPath(5);
       expect(path.length).toEqual(0);
     });
 
     it('empty line', function() {
-      this.container.innerHTML = '<p><br></p>';
+      this.setContainer('<p><br></p>');
       let editor = new Editor(this.container);
       let path = editor.findPath(0);
       let expected = [
@@ -160,7 +161,7 @@ describe('Editor', function() {
 
   describe('insertAt()', function() {
     it('text', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '!!');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -171,7 +172,7 @@ describe('Editor', function() {
     });
 
     it('embed', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, 'image', '/favicon.png');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -184,7 +185,7 @@ describe('Editor', function() {
     });
 
     it('on empty line', function() {
-      this.container.innerHTML = '<p>0</p><p><br></p><p>3</p>';
+      this.setContainer('<p>0</p><p><br></p><p>3</p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '!');
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('0\n!\n3\n'));
@@ -192,7 +193,7 @@ describe('Editor', function() {
     });
 
     it('newline splitting', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '\n');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -208,7 +209,7 @@ describe('Editor', function() {
     });
 
     it('prepend newline', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(0, '\n');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -223,7 +224,7 @@ describe('Editor', function() {
     });
 
     it('append newline', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(4, '\n');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -237,7 +238,7 @@ describe('Editor', function() {
     });
 
     it('multiline text', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '\n!!\n!!\n');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -258,7 +259,7 @@ describe('Editor', function() {
     });
 
     it('multiple newlines', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.insertAt(2, '\n\n');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -277,7 +278,7 @@ describe('Editor', function() {
 
   describe('deleteAt()', function() {
     it('inner node', function() {
-      this.container.innerHTML = '<p><em><strong>0123</strong></em></p>';
+      this.setContainer('<p><em><strong>0123</strong></em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(1, 2);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -288,7 +289,7 @@ describe('Editor', function() {
     });
 
     it('parts of multiple lines', function() {
-      this.container.innerHTML = '<p><em>0123</em></p><p><em>5678</em></p>';
+      this.setContainer('<p><em>0123</em></p><p><em>5678</em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(2, 5);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -299,7 +300,7 @@ describe('Editor', function() {
     });
 
     it('entire line keeping newline', function() {
-      this.container.innerHTML = '<p><em><strong>0123</strong></em></p>';
+      this.setContainer('<p><em><strong>0123</strong></em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(0, 4);
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
@@ -307,7 +308,7 @@ describe('Editor', function() {
     });
 
     it('newline', function() {
-      this.container.innerHTML = '<p><em>0123</em></p><p><em>5678</em></p>';
+      this.setContainer('<p><em>0123</em></p><p><em>5678</em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(4, 1);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -318,7 +319,7 @@ describe('Editor', function() {
     });
 
     it('entire document', function() {
-      this.container.innerHTML = '<p><em><strong>0123</strong></em></p>';
+      this.setContainer('<p><em><strong>0123</strong></em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(0, 5);
       expect(editor.getDelta()).toEqualDelta(new Delta().insert('\n'));
@@ -326,7 +327,7 @@ describe('Editor', function() {
     });
 
     it('multiple complete lines', function() {
-      this.container.innerHTML = '<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>';
+      this.setContainer('<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>');
       let editor = new Editor(this.container);
       editor.deleteAt(0, 8);
       expect(editor.getDelta()).toEqualDelta(new Delta()

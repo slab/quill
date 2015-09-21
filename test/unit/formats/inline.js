@@ -5,7 +5,7 @@ import Editor from '../../../src/editor';
 describe('Formats', function() {
   describe('Inline', function() {
     it('definition', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p>
           <strong>0</strong>
           <em>1</em>
@@ -15,7 +15,8 @@ describe('Formats', function() {
           <code>5</code>
           <sup>6</sup>
           <sub>7</sub>
-        </p>`;
+        </p>`
+      );
       let editor = new Editor(this.container);
       expect(editor.getDelta()).toEqualDelta(new Delta()
         .insert('0', { bold: true })
@@ -31,7 +32,7 @@ describe('Formats', function() {
     });
 
     it('inner node', function() {
-      this.container.innerHTML = '<p><em>0123</em></p>';
+      this.setContainer('<p><em>0123</em></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'bold', true);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -44,7 +45,7 @@ describe('Formats', function() {
     });
 
     it('outer node', function() {
-      this.container.innerHTML = '<p><strong>0123</strong></p>';
+      this.setContainer('<p><strong>0123</strong></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'italic', true);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -63,7 +64,7 @@ describe('Formats', function() {
     });
 
     it('ordering', function() {
-      this.container.innerHTML = '<p>012</p><p>456</p>';
+      this.setContainer('<p>012</p><p>456</p>');
       let editor = new Editor(this.container);
       editor.formatAt(0, 2, 'bold', true);
       editor.formatAt(1, 2, 'italic', true);
@@ -86,9 +87,10 @@ describe('Formats', function() {
     });
 
     it('parts of multiple lines', function() {
-      this.container.innerHTML = `
+      this.setContainer(`
         <p><em>0123</em></p>
-        <p><em>5678</em></p>`;
+        <p><em>5678</em></p>`
+      );
       let editor = new Editor(this.container);
       editor.formatAt(2, 5, 'bold', true);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -106,7 +108,7 @@ describe('Formats', function() {
     });
 
     it('subscript exclusitivity', function() {
-      this.container.innerHTML = '<p><sub>0123</sub></p>';
+      this.setContainer('<p><sub>0123</sub></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'script', 'super');
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -119,7 +121,7 @@ describe('Formats', function() {
     });
 
     it('superscript exclusitivity', function() {
-      this.container.innerHTML = '<p><sup>0123</sup></p>';
+      this.setContainer('<p><sup>0123</sup></p>');
       let editor = new Editor(this.container);
       editor.formatAt(1, 2, 'script', 'sub');
       expect(editor.getDelta()).toEqualDelta(new Delta()

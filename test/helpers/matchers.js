@@ -18,10 +18,7 @@ beforeEach(function() {
       return {
         compare: function(actual, expected, ignoreClassId) {
           let [div1, div2] = _.map([actual, expected], function(html) {
-            if (Array.isArray(html)) {
-              html = html.join('');
-            }
-            if (_.isElement(html)) {
+            if (html instanceof HTMLElement) {
               html = html.innerHTML;
             }
             let div = document.createElement('div');

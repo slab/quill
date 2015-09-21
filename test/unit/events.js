@@ -3,9 +3,9 @@ import Quill from '../../src/quill';
 
 
 describe('Events', function() {
-  describe('Editor', function() {
+  xdescribe('Editor', function() {
     beforeEach(function() {
-      this.container.innerHTML = '<p>0123</p>';
+      this.setContainer('<p>0123</p>');
       this.quill = new Quill(this.container);
       this.spy = {
         onText: function() {}

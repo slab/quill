@@ -3,7 +3,7 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 
 
-class Bullet extends Block {
+class Bullet extends Parchment.Container {
   insertBefore(child, refBlot) {
     if (child instanceof Item) {
       super.insertBefore(child, refBlot);
@@ -16,6 +16,15 @@ class Bullet extends Block {
         child.unwrap();
       }
     }
+  }
+
+  merge(target = this.next) {
+    if (target != null && this.statics.blotName === target.statics.blotName) {
+      // OL/UL should not have DOM attributes
+      target.moveChildren(this);
+      target.remove();
+    }
+    return false;
   }
 }
 Bullet.blotName = 'bullet';
@@ -38,7 +47,7 @@ class Item extends Block {
       } else {
         target.replace('block');
       }
-      if (!(this.parent instanceof List)) {
+      if (!(this.parent instanceof Bullet)) {
         this.unwrap();
       }
     }

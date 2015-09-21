@@ -4,10 +4,11 @@ import Editor from '../../../src/editor';
 
 describe('Attributor', function() {
   it('definition', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <p style="direction: rtl; text-align: center;">
         <span style="color: red; background-color: blue; font-size: 32px; font-family: monospace;">0123</span>
-      </p>`;
+      </p>`
+    );
     let editor = new Editor(this.container);
     expect(editor.getDelta()).toEqualDelta(new Delta()
       .insert('0123', { color: 'red', background: 'blue', size: '32px', font: 'monospace' })
@@ -16,7 +17,7 @@ describe('Attributor', function() {
   });
 
   it('add inline', function() {
-    this.container.innerHTML = '<p>0123</p>';
+    this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(1, 2, 'color', 'red');
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -28,7 +29,7 @@ describe('Attributor', function() {
   });
 
   it('add block', function() {
-    this.container.innerHTML = '<p>0123</p>';
+    this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'align', 'center');
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -39,7 +40,7 @@ describe('Attributor', function() {
   });
 
   it('default', function() {
-    this.container.innerHTML = '<p style="text-align: center;">0123</p>';
+    this.setContainer('<p style="text-align: center;">0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'align', 'left');
     expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n'));
@@ -47,7 +48,7 @@ describe('Attributor', function() {
   });
 
   it('whitelist', function() {
-    let initial = this.container.innerHTML = '<p style="text-align: center;">0123</p>';
+    let initial = this.setContainer('<p style="text-align: center;">0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'align', 'middle');
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -58,7 +59,7 @@ describe('Attributor', function() {
   });
 
   it('invalid block scope', function() {
-    let initial = this.container.innerHTML = '<p>0123</p>';
+    let initial = this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(1, 2, 'align', 'center');
     expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n'));
@@ -66,7 +67,7 @@ describe('Attributor', function() {
   });
 
   it('invalid inline scope', function() {
-    let initial = this.container.innerHTML = '<p>0123</p>';
+    let initial = this.setContainer('<p>0123</p>');
     let editor = new Editor(this.container);
     editor.formatAt(4, 1, 'color', 'red');
     expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n'));

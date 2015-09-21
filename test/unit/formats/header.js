@@ -5,7 +5,7 @@ import Editor from '../../../src/editor';
 describe('Formats', function() {
   describe('Header', function() {
     it('init', function() {
-      this.container.innerHTML = '<h1>Header</h1><h2>Subheader</h2><h3>Subsubheader</h3>';
+      this.setContainer('<h1>Header</h1><h2>Subheader</h2><h3>Subsubheader</h3>');
       let editor = new Editor(this.container);
       expect(editor.getDelta()).toEqualDelta(new Delta()
         .insert('Header')
@@ -18,7 +18,7 @@ describe('Formats', function() {
     });
 
     it('set', function() {
-      this.container.innerHTML = '<p><em>0123</em></p>';
+      this.setContainer('<p><em>0123</em></p>');
       let editor = new Editor(this.container);
       editor.formatAt(4, 1, 'header', 1);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -29,7 +29,7 @@ describe('Formats', function() {
     });
 
     it('remove', function() {
-      this.container.innerHTML = '<h1><em>0123</em></h1>';
+      this.setContainer('<h1><em>0123</em></h1>');
       let editor = new Editor(this.container);
       editor.formatAt(4, 1, 'header', false);
       expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -40,7 +40,7 @@ describe('Formats', function() {
     });
 
     it('change', function() {
-      this.container.innerHTML = '<h1><em>0123</em></h1>';
+      this.setContainer('<h1><em>0123</em></h1>');
       let editor = new Editor(this.container);
       editor.formatAt(4, 1, 'header', 2);
       expect(editor.getDelta()).toEqualDelta(new Delta()

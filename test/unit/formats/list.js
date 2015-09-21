@@ -4,10 +4,11 @@ import Editor from '../../../src/editor';
 
 describe('List', function() {
   it('format', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <p>0123</p>
       <p>5678</p>
-      <p>0123</p>`;
+      <p>0123</p>`
+    );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', true);
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -25,12 +26,13 @@ describe('List', function() {
   });
 
   it('remove', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <p>0123</p>
       <ol>
         <li>5678</li>
       </ol>
-      <p>0123</p>`;
+      <p>0123</p>`
+    );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', false);
     expect(editor.getDelta()).toEqualDelta(new Delta().insert('0123\n5678\n0123\n'));
@@ -42,12 +44,13 @@ describe('List', function() {
   });
 
   it('replace', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <p>0123</p>
       <ol>
         <li>5678</li>
       </ol>
-      <p>0123</p>`;
+      <p>0123</p>`
+    );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'bullet', true);
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -65,14 +68,15 @@ describe('List', function() {
   });
 
   it('format merge', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <ol>
         <li>0123</li>
       </ol>
       <p>5678</p>
       <ol>
         <li>0123</li>
-      </ol>`;
+      </ol>`
+    );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', true);
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -93,10 +97,11 @@ describe('List', function() {
   });
 
   it('replace merge', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <ol><li>0123</li></ol>
       <ul><li>5678</li></ul>
-      <ol><li>0123</li></ol>`;
+      <ol><li>0123</li></ol>`
+    );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'list', true);
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -117,10 +122,11 @@ describe('List', function() {
   });
 
   it('delete merge', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <ol><li>0123</li></ol>
       <p>5678</p>
-      <ol><li>0123</li></ol>`;
+      <ol><li>0123</li></ol>`
+    );
     let editor = new Editor(this.container);
     editor.deleteAt(5, 5);
     expect(editor.getDelta()).toEqualDelta(new Delta()
@@ -138,12 +144,13 @@ describe('List', function() {
   });
 
   it('replace split', function() {
-    this.container.innerHTML = `
+    this.setContainer(`
       <ol>
         <li>0123</li>
         <li>5678</li>
         <li>0123</li>
-      </ol>`;
+      </ol>`
+    );
     let editor = new Editor(this.container);
     editor.formatAt(9, 1, 'bullet', true);
     expect(editor.getDelta()).toEqualDelta(new Delta()

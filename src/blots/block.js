@@ -49,13 +49,13 @@ class Block extends Parchment.Block {
 
   getDelta() {
     let leaves = this.getDescendants(Parchment.Leaf);
-    return leaves.reduceRight((delta, leaf) => {
-      if (leaf.getLength() === 0) return delta;
+    return leaves.reduceRight((delta, blot) => {
+      if (blot.getLength() === 0) return delta;
       let attributes = {};
-      let value = leaf.getValue();
-      while (leaf != this) {
-        attributes = extend({}, leaf.getFormat(), attributes);
-        leaf = leaf.parent;
+      let value = blot.getValue();
+      while (blot !== this) {
+        attributes = extend({}, blot.getFormat(), attributes);
+        blot = blot.parent;
       }
       return new Delta().insert(value, attributes).concat(delta);
     }, new Delta().insert('\n', this.getFormat()));

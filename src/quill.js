@@ -13,10 +13,10 @@ import BlockBlot from './blots/block';
 import BreakBlot from './blots/break';
 import CursorBlot from './blots/cursor';
 
-import InlineFormat from './formats/inline';
 import BlockFormat from './formats/block';
-import ImageFormat from './formats/image';
 import HeaderFormat from './formats/header';
+import ImageFormat from './formats/image';
+import InlineFormat from './formats/inline';
 import ListFormat from './formats/list';
 
 
