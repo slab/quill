@@ -2,6 +2,7 @@ var _ = require('lodash');
 var babelify = require('babelify');
 var browserify = require('browserify');
 var gutil = require('gulp-util');
+var stylify = require('stylify');
 var watchify = require('watchify');
 
 
@@ -15,7 +16,7 @@ module.exports = function(entry) {
       './node_modules/parchment/dist/parchment.js'
     ],
     standalone: 'Quill',
-    transform: [babelify]
+    transform: [babelify, stylify]
   });
   var b = watchify(browserify(entry, opts));
   b.on('log', gutil.log.bind(gutil, '[Browserify] '));

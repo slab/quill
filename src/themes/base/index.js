@@ -1,5 +1,4 @@
-// TODO baseStyles = require('./base.styl');
-
+import baseStyles from './base.styl';
 import * as platform from '../../lib/platform';
 
 
@@ -8,7 +7,7 @@ class BaseTheme {
     this.quill = quill;
     this.quill.container.classList.add('ql-container');
     if (styles) {
-      this.addStyles('');
+      this.addStyles(baseStyles);
     }
     if (platform.isIE(10)) {
       this.quill.root.classList.add('ql-ie-10');

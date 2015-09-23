@@ -86,7 +86,7 @@
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
-    "prepublish": "gulp dist",
+    "prepublish": "gulp npm",
     "start": "gulp dev",
     "test": "gulp test"
   },
