@@ -49,20 +49,6 @@ function serve(req, res, next) {
       res.setHeader('Content-Type', 'application/javascript');
       bundle(testWatcher).pipe(res);
       break;
-    case '/quill.snow.css':
-    case '/quill.base.css':
-      var theme = url.slice(7, 11);
-      res.setHeader('Content-Type', 'text/css');
-      fs.readFile("./src/themes/" + theme + "/" + theme + ".styl", function(err, data) {
-        var s = stylus(data.toString());
-        s.include("./src/themes/" + theme);
-        s.define('url', stylus.url());
-        s.render(function(err, css) {
-          if (err != null) console.error(err.name, err.message);
-          res.end(css);
-        });
-      });
-      break;
     case '/favicon.ico':
     case '/favicon.png':
       res.setHeader('Content-Type', 'image/png');
