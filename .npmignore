@@ -2,7 +2,6 @@
 *.log
 bower.json
 config
-dist/*.min.js
 docs
 examples
 src

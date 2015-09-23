@@ -1,7 +1,6 @@
 var babelify = require('babelify');
 var browserify = require('browserify');
 var fs = require('fs');
-var harp = require('harp');
 var proxy = require('http-proxy');
 var stylify = require('stylify');
 var stylus = require('stylus');
