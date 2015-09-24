@@ -1,8 +1,18 @@
 var gulp = require('gulp');
 var runsequence = require('run-sequence');
-var build = require('./config/build.js');
-var server = require('./config/server.js');
-var test = require('./config/test.js');
+var buildTasks = require('./config/build.js');
+var serverTasks = require('./config/server.js');
+var testTasks = require('./config/test.js');
+
+var config = {
+  serverPort: 9000,
+  testPort: 9876
+};
+config.host = process.argv[3] || ('localhost:' + config.serverPort);
+
+buildTasks(config);
+serverTasks(config);
+testTasks(config);
 
 
 gulp.task('default', ['build']);
@@ -27,8 +37,7 @@ gulp.task('release', function(callback) {
 });
 
 gulp.task('test', ['test:unit']);
-// gulp.task('test:unit', ['server', 'karma:test']);
-// gulp.task('test:e2e', ['server', 'protractor:test']);
-// gulp.task('test:coverage', ['server'])
+gulp.task('test:unit', ['karma:test']);
+// gulp.task('test:coverage', ['server']);
 
-gulp.task('dev', ['server:keepalive', 'test:server', 'watch']);
+gulp.task('dev', ['build', 'server:keepalive', 'karma:server']);

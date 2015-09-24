@@ -19,6 +19,6 @@ module.exports = function(entry) {
     transform: [babelify, stylify]
   });
   var b = watchify(browserify(entry, opts));
-  b.on('log', gutil.log.bind(gutil, '[Browserify] '));
+  b.on('log', gutil.log.bind(gutil, '[browserify] '));
   return b;
 }

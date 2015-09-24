@@ -7,7 +7,7 @@
   "contributors": [
     "Byron Milligan <byronner@gmail.com>"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "dependencies": {
     "clone": "~1.0.2",
     "deep-equal": "~1.0.1",
@@ -24,7 +24,7 @@
     "del": "^2.0.2",
     "derequire": "^2.0.2",
     "glob": "^5.0.3",
-    "grunt": "^0.4.5",
+    "grunt": "~0.4.5",
     "grunt-babel": "^5.0.2",
     "grunt-browserify": "^4.0.1",
     "grunt-cli": "~0.1.13",
@@ -41,7 +41,7 @@
     "gulp": "^3.9.0",
     "gulp-connect": "^2.2.0",
     "gulp-derequire": "^2.1.0",
-    "gulp-flatten": "^0.2.0",
+    "gulp-flatten": "~0.2.0",
     "gulp-gzip": "^1.2.0",
     "gulp-header": "^1.7.1",
     "gulp-jade": "^1.1.0",
