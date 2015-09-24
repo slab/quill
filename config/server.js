@@ -48,7 +48,7 @@ module.exports = function(config) {
     },
     port: config.serverPort,
     root: '.build/quill/'
-  }
+  };
 
   gulp.task('server', function() {
     connect.server(common);

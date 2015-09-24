@@ -20,9 +20,6 @@ module.exports = function(config) {
       'http://' + config.host + '/test/quill.js'
     ],
     port: config.testPort,
-    proxies: {
-      '/static': 'http://' + config.host
-    },
 
     frameworks: ['jasmine'],
     reporters: ['progress'],
@@ -35,10 +32,6 @@ module.exports = function(config) {
     autoWatch: false,
     singleRun: true,
 
-    coverageReporter: {
-      type: 'json',
-      dir: '.build/coverage/karma/'
-    },
     sauceLabs: {
       testName: 'quill-unit',
       options: {
@@ -60,18 +53,6 @@ module.exports = function(config) {
       return memo;
     }, {})
   };
-
-  gulp.task('karma:coverage', ['server'], function(callback) {
-    var server = new karma.Server(_.assign({}, common, {
-      browserNoActivityTimeout: 30000,
-      browsers: ['Chrome'],
-      reporters: ['coverage']
-    }), function() {
-      connect.serverClose();
-      callback();
-      process.exit();   // fking karma
-    }).start();
-  });
 
   gulp.task('karma:server', function(callback) {
     var server = new karma.Server(_.assign({}, common, {

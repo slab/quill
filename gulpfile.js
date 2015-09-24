@@ -8,7 +8,7 @@ var config = {
   serverPort: 9000,
   testPort: 9876
 };
-config.host = process.argv[3] || ('localhost:' + config.serverPort);
+config.host = 'localhost:' + config.serverPort;
 
 buildTasks(config);
 serverTasks(config);
@@ -36,8 +36,6 @@ gulp.task('release', function(callback) {
   , callback);
 });
 
-gulp.task('test', ['test:unit']);
-gulp.task('test:unit', ['karma:test']);
-// gulp.task('test:coverage', ['server']);
+gulp.task('test', ['karma:test']);
 
 gulp.task('dev', ['build', 'server:keepalive', 'karma:server']);
