@@ -20,6 +20,9 @@ module.exports = function(config) {
       'http://' + config.host + '/test/quill.js'
     ],
     port: config.testPort,
+    proxies: {
+      '/favicon.png': 'http://' + config.host
+    },
 
     frameworks: ['jasmine'],
     reporters: ['progress'],
@@ -53,6 +56,9 @@ module.exports = function(config) {
       return memo;
     }, {})
   };
+  if (process.env.TRAVIS) {
+    common.transports = ['polling'];
+  }
 
   gulp.task('karma:server', function(callback) {
     var server = new karma.Server(_.assign({}, common, {
@@ -65,10 +71,30 @@ module.exports = function(config) {
   gulp.task('karma:test', ['server'], function(callback) {
     var server = new karma.Server(_.assign({}, common, {
       browsers: ['Chrome']
-    }), function() {
+    }), function(code) {
       connect.serverClose();
       callback();
-      process.exit();   // fking karma
+      process.exit(code);   // fking karma
     }).start();
+  });
+
+  Object.keys(browsers).forEach(function(browser) {
+    gulp.task('remote:unit-' + browser, ['build', 'server'], function(callback) {
+      var remote = {
+        browsers: [browser],
+        browserDisconnectTimeout: 10000,
+        browserDisconnectTolerance: 4,
+        browserNoActivityTimeout: 60000,
+        reporters: ['dots']
+      };
+      if (process.env.TRAVIS_BRANCH === 'master') {
+        remote.reporters.push('saucelabs');
+      }
+      var server = new karma.Server(_.assign({}, common, remote), function(code) {
+        connect.serverClose(code);
+        callback();
+        process.exit(code);   // fking karma
+      }).start();
+    });
   });
 };

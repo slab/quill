@@ -1,7 +1,7 @@
 language: node_js
 node_js: '0.12'
 script:
-  - grunt travis:$TEST
+  - gulp remote:$TEST
 sudo: false
 cache:
   directories:
