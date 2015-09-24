@@ -56,7 +56,7 @@ module.exports = function(config) {
 
   gulp.task('theme', function() {
     return gulp.src('src/themes/*/*.styl')
-      .pipe(stylus())
+      .pipe(stylus({ 'url': 'url' }))
       .pipe(rename({ prefix: 'quill.' }))
       .pipe(flatten())
       .pipe(gulp.dest('.build/quill/'))
