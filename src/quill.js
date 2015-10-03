@@ -125,7 +125,9 @@ class Quill extends EventEmitter {
   }
 
   deleteText(start, end, source = Quill.sources.API) {
-    track.call(this, source, () => {
+    let formats;
+    [start, end, formats, source] = this._buildParams(start, end, source);
+    this._track(source, () => {
       this.editor.deleteAt(start, end - start);
     });
   }
@@ -148,10 +150,10 @@ class Quill extends EventEmitter {
     this.selection.focus();
   }
 
-  formatLine(start, end, name, value, source = Quill.sources.API) {
+  formatLine(start, end, name, value, source) {
     let formats;
-    [start, end, formats, source] = buildParams(start, end, name, value, source);
-    track.call(this, source, () => {
+    [start, end, formats, source] = this._buildParams(start, end, name, value, source);
+    this._track(source, () => {
       Object.keys(formats).forEach((format) => {
         this.editor.getLines(start, end-start).forEach(function(lines) {
           line.format(format, formats[format]);
@@ -162,8 +164,8 @@ class Quill extends EventEmitter {
 
   formatText(start, end, name, value, source) {
     let formats;
-    [start, end, formats, source] = buildParams(start, end, name, value, source);
-    track.call(this, source, () => {
+    [start, end, formats, source] = this._buildParams(start, end, name, value, source);
+    this._track(source, () => {
       Object.keys(formats).forEach(function(format) {
         this.editor.formatAt(start, end-start, format, formats[format]);
       });
@@ -174,8 +176,8 @@ class Quill extends EventEmitter {
     return this.selection.getBounds(index);
   }
 
-  getContents(start = 0, end = null) {
-    [start, end] = buildParams(start, end);
+  getContents(start = 0, end = this.getLength()) {
+    [start, end] = this._buildParams(start, end);
     return this.editor.getDelta().slice(start, end);
   }
 
@@ -198,8 +200,8 @@ class Quill extends EventEmitter {
     return this.selection.getRange();
   }
 
-  getText(start = 0, end = null) {
-    [start, end] = buildParams(start, end);
+  getText(start = 0, end = this.getLength()) {
+    [start, end] = this._buildParams(start, end);
     let values = [].concat.apply([], this.editor.getValue());
     return values.map(function(value) {
       return typeof value === 'string' ? value : '';
@@ -208,16 +210,16 @@ class Quill extends EventEmitter {
 
   insertEmbed(index, embed, value, source) {
     let formats;
-    [index, , formats, source] = buildParams(index, 0, embed, value, source);
-    track.call(this, source, () => {
+    [index, , formats, source] = this._buildParams(index, 0, source);
+    this._track(source, () => {
       this.editor.insertEmbed(index, embed, value, source);
     });
   }
 
   insertText(index, text, name, value, source) {
     let formats;
-    [index, , formats, source] = buildParams(index, 0, name, value, source);
-    track.call(this, source, () => {
+    [index, , formats, source] = this._buildParams(index, 0, name, value, source);
+    this._track(source, () => {
       this.editor.insertAt(index, text);
       Object.keys(formats).forEach(function(format) {
         this.editor.formatAt(start, text.length, format, formats[format]);
@@ -246,7 +248,7 @@ class Quill extends EventEmitter {
     } else {
       delta = delta.slice();
     }
-    track.call(this, source, () => {
+    this._track(source, () => {
       this.editor.deleteText(0, this.editor.getLength());
       this.editor.applyDelta(delta);
     });
@@ -280,9 +282,46 @@ class Quill extends EventEmitter {
     if (Array.isArray(delta)) {
       delta = new Delta(delta.slice());
     }
-    track.call(this, source, () => {
+    this._track(source, () => {
       this.editor.applyDelta(delta);
     });
+  }
+
+
+  _buildParams(start, end, name, value, source) {
+    let formats = {};
+    // Handle start/end being indexes, range or excluded (to get current selection)
+    if (typeof start.start === 'number' && typeof start.end === 'number') {
+      // Allow for throwaway end (used by insertText/insertEmbed)
+      if (typeof end !== 'number') {
+        source = value, value = name, name = end, end = start.end, start = start.start;
+      } else {
+        end = start.end, start = start.start;
+      }
+    } else if (typeof start !== 'number') {
+      let range = this.getSelection(false) || new Range(0, 0);
+      source = name, value = end, name = start, end = range.end, start = range.start;
+    }
+    // Handle format being object, two format name/value strings or excluded
+    if (typeof name === 'object') {
+      formats = name;
+      source = value;
+    } else if (typeof name === 'string') {
+      if (value != null) {
+        formats[name] = value;
+      } else {
+        source = name;
+      }
+    }
+    // Handle optional source
+    source = source || Quill.sources.API;
+    return [start, end, formats, source];
+  }
+
+  _track(source, callback) {
+    this.update();
+    callback.call(this);
+    this.update(source);
   }
 }
 
@@ -322,30 +361,6 @@ Quill.sources = {
   USER   : 'user'
 };
 
-
-// TODO fix
-function buildParams() {
-  let formats, params;
-  params = 1 <= arguments.length ? [].slice.call(arguments, 0) : [];
-  if (typeof params[0] === 'object') {
-    params.splice(0, 1, params[0].start, params[0].end);
-  }
-  if (typeof params[2] === 'string') {
-    formats = {};
-    formats[params[2]] = params[3];
-    params.splice(2, 2, formats);
-  }
-  if (params[3] == null) {
-    params[3] = Quill.sources.API;
-  }
-  return params;
-}
-
-function track(source, callback) {
-  this.update();
-  callback.call(this);
-  this.update(source);
-}
 
 function uniqueId(prefix) {
   uniqueId.counter = uniqueId.counter || 1;
