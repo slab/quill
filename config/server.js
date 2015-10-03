@@ -66,5 +66,6 @@ module.exports = function(config) {
     gulp.watch('examples/scripts/*.js', ['examples:scripts']);
 
     gulp.watch('src/**/*.styl', ['theme']);
+    gulp.watch('src/**/*.js', ['source:watch']);
   });
 };

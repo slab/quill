@@ -25,7 +25,6 @@ var BANNER =
   ' */\n\n';
 
 var watcher = browserify('./src/index.js');
-watcher.on('update', bundle);
 function bundle() {
   return watcher.bundle()
     .on('error', function(err) {
