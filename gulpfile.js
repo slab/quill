@@ -38,4 +38,4 @@ gulp.task('release', function(callback) {
 
 gulp.task('test', ['karma:test']);
 
-gulp.task('dev', ['build', 'server:keepalive', 'karma:server']);
+gulp.task('dev', ['build', 'watch', 'server', 'karma:server']);

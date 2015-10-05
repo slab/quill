@@ -4,7 +4,6 @@ import EventEmitter from 'eventemitter3';
 import Parchment from 'parchment';
 import Selection from './selection';
 import extend from 'extend';
-import pkg from '../package.json';
 
 import BaseTheme from './themes/base';
 import SnowTheme from './themes/snow';
@@ -327,7 +326,7 @@ class Quill extends EventEmitter {
   }
 }
 
-Quill.version = pkg.version;
+Quill.version = QUILL_VERSION;
 Quill.modules = {};
 Quill.themes = {};
 

@@ -1,8 +1,6 @@
-var browserify = require('./browserify');
 var buffer = require('vinyl-buffer');
 var connect = require('gulp-connect');
 var del = require('del');
-var derequire = require('gulp-derequire');
 var flatten = require('gulp-flatten');
 var pkg = require('../package.json');
 var gulp = require('gulp');
@@ -15,6 +13,8 @@ var source = require('vinyl-source-stream');
 var stylus = require('gulp-stylus');
 var tar = require('gulp-tar');
 var uglify = require('gulp-uglify');
+var webpack = require('webpack');
+var webpackConfig = require('./webpack.conf');
 
 
 var BANNER =
@@ -24,22 +24,13 @@ var BANNER =
   ' *  Copyright (c) 2013, salesforce.com\n' +
   ' */\n\n';
 
-var watcher = browserify('./src/index.js');
-function bundle() {
-  return watcher.bundleWithError()
-    .pipe(source('quill.js'))
-    .pipe(buffer())
-    .pipe(derequire())
-    .pipe(gulp.dest('.build/quill/'))
-    .pipe(connect.reload());
-}
-
 
 module.exports = function(config) {
-  gulp.task('source:watch', bundle);
-
-  gulp.task('source', ['source:watch'], function() {
-    watcher.close();
+  gulp.task('source', function(callback) {
+    webpack(webpackConfig, function(err, stats) {
+      if (err) throw new gutil.PluginError('webpack', err);
+      callback();
+    });
   });
 
   gulp.task('minify', function() {

@@ -72,7 +72,6 @@ module.exports = function(config) {
     var server = new karma.Server(_.assign({}, common, {
       browsers: ['Chrome']
     }), function(code) {
-      connect.serverClose();
       callback();
       process.exit(code);   // fking karma
     }).start();
@@ -91,7 +90,6 @@ module.exports = function(config) {
         remote.reporters.push('saucelabs');
       }
       var server = new karma.Server(_.assign({}, common, remote), function(code) {
-        connect.serverClose(code);
         callback();
         process.exit(code);   // fking karma
       }).start();
