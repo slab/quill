@@ -20,5 +20,11 @@ module.exports = function(entry) {
   });
   var b = watchify(browserify(entry, opts));
   b.on('log', gutil.log.bind(gutil, '[browserify] '));
+  b.bundleWithError = function(bundle) {
+    return b.bundle().on('error', function(err) {
+      gutil.log(gutil.colors.red('[browserify]', err.name, err.message));
+      this.emit('end');
+    });
+  };
   return b;
 }

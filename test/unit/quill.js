@@ -8,7 +8,7 @@ describe('Quill', function() {
     this.quill = new Quill(this.container);
   });
 
-  fdescribe('_buildParams', function() {
+  describe('_buildParams', function() {
     it('(start:number, end:number)', function() {
       let [start, end, formats, source] = this.quill._buildParams(0, 1);
       expect(start).toBe(0);

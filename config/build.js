@@ -26,11 +26,7 @@ var BANNER =
 
 var watcher = browserify('./src/index.js');
 function bundle() {
-  return watcher.bundle()
-    .on('error', function(err) {
-      gutil.log(gutil.colors.red('[browserify]', err.name, err.message));
-      this.emit('end');
-    })
+  return watcher.bundleWithError()
     .pipe(source('quill.js'))
     .pipe(buffer())
     .pipe(derequire())

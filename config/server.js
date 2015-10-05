@@ -11,7 +11,7 @@ var FAVICON = new Buffer('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACf0lEQV
 
 var testWatcher = browserify('./test/quill.js');
 testWatcher.on('update', function() {
-  testWatcher.bundle();
+  testWatcher.bundleWithError();
 });
 
 
@@ -29,7 +29,7 @@ module.exports = function(config) {
     switch (url) {
       case '/test/quill.js':
         res.setHeader('Content-Type', 'application/javascript');
-        testWatcher.bundle().pipe(res);
+        testWatcher.bundleWithError().pipe(res);
         break;
       case '/favicon.ico':
       case '/favicon.png':
