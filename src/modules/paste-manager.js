@@ -32,7 +32,7 @@ class PasteManager {
         delta = delta.concat(pasteDelta);
         this.quill.updateContents(delta, Quill.sources.USER);
       }
-      this.quill.setSelection(range.start + lengthAdded, range.start + lengthAdded);
+      this.quill.setSelection(range.start + lengthAdded, range.start + lengthAdded, Quill.sources.SILENT);
       this.quill.scrollIntoView();
       this.container.innerHTML = "";
     }, 0);

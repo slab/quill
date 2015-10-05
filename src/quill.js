@@ -254,13 +254,15 @@ class Quill extends EventEmitter {
     });
   }
 
-  setSelection(start, end, source = Quill.sources.API) {
+  setSelection(start, end = start, source = Quill.sources.API) {
     let range;
+    if (typeof end === 'string') {
+      source = end, end = start;
+    }
     if (typeof start === 'number' && typeof end === 'number') {
       range = new Selection.Range(start, end);
     } else {
       range = start;
-      source = end || source;
     }
     this.selection.setRange(range, source);
   }

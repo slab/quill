@@ -44,7 +44,11 @@ module.exports = function(config) {
 
   gulp.task('minify', function() {
     return gulp.src('.build/quill/quill.js')
-      .pipe(uglify({ banner: BANNER }))
+      .pipe(uglify({
+        banner: BANNER,
+        compress: { screw_ie8: true },
+        mangle: { screw_ie8: true }
+      }))
       .pipe(rename({ extname: '.min.js' }))
       .pipe(gulp.dest('.build/quill/'));
   });
