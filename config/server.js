@@ -9,38 +9,36 @@ var FAVICON = new Buffer('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACf0lEQV
 
 
 module.exports = function(config) {
-  webpackConfig = _.clone(webpackConfig);
-  webpackConfig.entry = {
-    'quill': [webpackConfig.entry],  // webpack workaround issue #300
-    'test/quill': './test/quill.js'
-  };
-  webpackConfig.output = _.assign({}, webpackConfig.output, {
-    filename: '[name].js'
-  });
-  var compiler = webpack(webpackConfig);
-
-  var server = new WebpackDevServer(compiler, {
-    contentBase: '.build/quill/',
-    hot: false,
-    proxy: [{
-      path: /\/(base|karma)\/*/,
-      target: 'http://localhost:' + config.testPort
-    }, {
-      path: '/develop/*',
-      rewrite: function(req, opt) {
-        req.url = req.url.slice('/develop'.length);
-      },
-      target: 'http://localhost:' + config.serverPort
-    }],
-    quiet: true,
-    stats: { colors: true }
-  });
-  server.app.use('/favicon.png', function(req, res, next) {
-    res.setHeader('Content-Type', 'image/png');
-    res.end(FAVICON);
-  });
-
   gulp.task('server', function(callback) {
+    webpackConfig = _.clone(webpackConfig);
+    webpackConfig.entry = {
+      'quill': [webpackConfig.entry],  // webpack workaround issue #300
+      'test/quill': './test/quill.js'
+    };
+    webpackConfig.output = _.assign({}, webpackConfig.output, {
+      filename: '[name].js'
+    });
+    var compiler = webpack(webpackConfig);
+    var server = new WebpackDevServer(compiler, {
+      contentBase: '.build/quill/',
+      hot: false,
+      proxy: [{
+        path: /\/(base|karma)\/*/,
+        target: 'http://localhost:' + config.testPort
+      }, {
+        path: '/develop/*',
+        rewrite: function(req, opt) {
+          req.url = req.url.slice('/develop'.length);
+        },
+        target: 'http://localhost:' + config.serverPort
+      }],
+      quiet: true,
+      stats: { colors: true }
+    });
+    server.app.use('/favicon.png', function(req, res, next) {
+      res.setHeader('Content-Type', 'image/png');
+      res.end(FAVICON);
+    });
     server.listen(config.serverPort, 'localhost', function(err) {
       if (err) throw new gutil.PluginError("webpack-dev-server", err);
       gutil.log("[webpack-dev-server] listening on", config.serverPort);
