@@ -71,10 +71,7 @@ module.exports = function(config) {
   gulp.task('karma:test', ['server'], function(callback) {
     var server = new karma.Server(_.assign({}, common, {
       browsers: ['Chrome']
-    }), function(code) {
-      callback();
-      process.exit(code);   // fking karma
-    }).start();
+    }), callback).start();
   });
 
   Object.keys(browsers).forEach(function(browser) {
@@ -89,10 +86,7 @@ module.exports = function(config) {
       if (process.env.TRAVIS_BRANCH === 'master') {
         remote.reporters.push('saucelabs');
       }
-      var server = new karma.Server(_.assign({}, common, remote), function(code) {
-        callback();
-        process.exit(code);   // fking karma
-      }).start();
+      var server = new karma.Server(_.assign({}, common, remote), callback).start();
     });
   });
 };
