@@ -129,8 +129,12 @@ class Selection {
     let pos = this.doc.findPath(range.start).pop();
     let target = pos.blot.split(pos.offset);
     let cursor = Parchment.create('cursor');
-    target.parent.insertBefore(cursor, target);
-    cursor.format(format, value);
+    
+    if (target) {
+      target.parent.insertBefore(cursor, target);
+      cursor.format(format, value);
+    }
+    
     // Cursor will not blink if we make selection
     this.setNativeRange(cursor.domNode.firstChild, 1);
   }
