@@ -4,6 +4,5 @@ bower.json
 config
 docs
 examples
-src
 test
 Gruntfile.coffee
