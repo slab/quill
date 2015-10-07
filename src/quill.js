@@ -167,7 +167,7 @@ class Quill extends EventEmitter {
     this._track(source, () => {
       Object.keys(formats).forEach(function(format) {
         this.editor.formatAt(start, end-start, format, formats[format]);
-      });
+      }, this);
     });
   }
 
