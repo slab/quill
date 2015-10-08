@@ -26,7 +26,7 @@ gulp.task('npm', function(callback) {
     'dist'
   , callback);
 });
-gulp.task('release', function(callback) {
+gulp.task('build:release', function(callback) {
   runsequence(
     'clean',
     'build',
