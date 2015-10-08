@@ -32,8 +32,15 @@ module.exports = function(config) {
         },
         target: 'http://localhost:' + config.serverPort
       }],
-      quiet: true,
-      stats: { colors: true }
+      stats: {
+        assets: false,
+        chunks: false,
+        colors: true,
+        errorDetails: true,
+        hash: false,
+        timings: false,
+        version: false
+      }
     });
     server.app.use('/favicon.png', function(req, res, next) {
       res.setHeader('Content-Type', 'image/png');
