@@ -16,7 +16,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      parchment: path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment')
+      'babel-runtime': path.resolve(__dirname, '..', 'node_modules/babel-runtime'),
+      'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment')
     },
     extensions: ['', '.js', '.styl', '.ts']
   },
@@ -25,8 +26,8 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /parchment\/src\/.*\.ts$/, loader: 'babel-loader!ts-loader' },
-      { test: /(src|test)\/.*\.js$/, loader: 'babel-loader' },
+      { test: /parchment\/src\/.*\.ts$/, loader: 'babel-loader?optional[]=runtime!ts-loader' },
+      { test: /(src|test)\/.*\.js$/, loader: 'babel-loader?optional[]=runtime' },
       { test: /\.styl$/, loader: 'css-loader!stylus-loader' }
     ],
     noParse: [
