@@ -16,14 +16,12 @@ var uglify = require('gulp-uglify');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.conf');
 
-
 var BANNER =
   '/*! Quill Editor v${pkg.version}\n' +
   ' *  https://quilljs.com/\n' +
   ' *  Copyright (c) 2014, Jason Chen\n' +
   ' *  Copyright (c) 2013, salesforce.com\n' +
   ' */\n\n';
-
 
 module.exports = function(config) {
   gulp.task('source', function(callback) {
