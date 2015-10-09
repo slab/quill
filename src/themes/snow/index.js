@@ -48,7 +48,7 @@ class SnowTheme extends BaseTheme {
       }
     });
     let walker = document.createTreeWalker(module.container, NodeFilter.SHOW_TEXT, null, false);
-    let textNodes = [];
+    let textNodes = [], textNode;
     while (textNode = walker.nextNode()) {
       textNodes.push(textNode);
     }

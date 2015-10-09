@@ -21,7 +21,7 @@ import ListFormat from './formats/list';
 
 class Quill extends EventEmitter {
   static registerFormat(format) {
-    let name = format.blotName || formatAttrName;
+    let name = format.blotName || format.attrName;
     // TODO this is static cannot emit
     if (Parchment.match(name)) {
       this.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " format");
@@ -165,7 +165,7 @@ class Quill extends EventEmitter {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
     this._track(source, () => {
-      Object.keys(formats).forEach(function(format) {
+      Object.keys(formats).forEach((format) => {
         this.editor.formatAt(start, end-start, format, formats[format]);
       });
     });
@@ -248,7 +248,7 @@ class Quill extends EventEmitter {
       delta = delta.slice();
     }
     this._track(source, () => {
-      this.editor.deleteText(0, this.editor.getLength());
+      this.editor.deleteAt(0, this.editor.getLength());
       this.editor.applyDelta(delta);
     });
   }

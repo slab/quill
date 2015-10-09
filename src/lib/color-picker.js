@@ -2,8 +2,8 @@ import Picker from './picker';
 
 
 class ColorPicker extends Picker {
-  constructor() {
-    super();
+  constructor(select) {
+    super(select);
     this.container.classList.add('ql-color-picker');
   }
 

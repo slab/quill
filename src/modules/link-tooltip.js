@@ -1,5 +1,5 @@
 import Quill from '../quill';
-import Tooltip from '../quill';
+import Tooltip from './tooltip';
 import extend from 'extend';
 
 

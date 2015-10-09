@@ -18,7 +18,7 @@ class Picker {
       let item, option;
       if (this.select.selectedIndex > -1) {
         item = this.container.querySelectorAll('.ql-picker-item')[this.select.selectedIndex];
-        option = this.select.option[this.selectedIndex];
+        option = this.select.options[this.select.selectedIndex];
       }
       this.selectItem(item);
       let isActive = option !== this.select.querySelector('option[selected]');
