@@ -76,9 +76,14 @@ class Quill extends EventEmitter {
     this.selection = new Selection(this.editor);
     this.editor.onUpdate = (delta, source = Quill.sources.USER) => {
       this.emit(Quill.events.TEXT_CHANGE, delta, source);
+      if (delta.length() > 0) {
+        this.selection.update(Quill.sources.SILENT);
+      }
     };
     this.selection.onUpdate = (range, source = Quill.sources.USER) => {
-      this.emit(Quill.events.SELECTION_CHANGE, range, source);
+      if (source !== Quill.sources.SILENT) {
+        this.emit(Quill.events.SELECTION_CHANGE, range, source);
+      }
     };
     if (this.options.theme === false) {
       this.theme = new Quill.themes.base(this, false);
