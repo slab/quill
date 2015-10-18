@@ -17,7 +17,7 @@ module.exports = {
   resolve: {
     alias: {
       'babel-runtime': path.resolve(__dirname, '..', 'node_modules/babel-runtime'),
-      'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment')
+      'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/index')
     },
     extensions: ['', '.js', '.styl', '.ts']
   },
@@ -43,5 +43,6 @@ module.exports = {
     },
     silent: true
   },
-  plugins: [ constantPack ]
+  plugins: [ constantPack ],
+  devtool: 'source-map'
 };

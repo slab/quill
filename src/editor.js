@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 
 
-class Editor extends Parchment.Container {
+class Editor extends Parchment {
   constructor(domNode) {
     // TODO fix?
     if (domNode.innerHTML.indexOf('\n') > -1) {
@@ -12,15 +12,6 @@ class Editor extends Parchment.Container {
     this.ensureChild();
     this.enable();
     this.delta = this.getDelta();
-    this.observer = new MutationObserver((mutations) => {
-      this.update(mutations);   // Do not pass additional params from MutationObserver handler
-    });
-    this.observer.observe(this.domNode, {
-      attributes: true,
-      characterData: true,
-      childList: true,
-      subtree: true
-    });
   }
 
   applyDelta(delta) {
@@ -70,11 +61,11 @@ class Editor extends Parchment.Container {
     }
   }
 
-  findPath(index) {
+  findPath(index, inclusive = true) {
     if (index >= this.getLength()) {
       return [];
     } else {
-      return super.findPath(index).slice(1);  // Exclude self
+      return super.findPath(index, inclusive).slice(1);  // Exclude self
     }
   }
 
@@ -106,8 +97,7 @@ class Editor extends Parchment.Container {
     }
     if (mutations.length === 0) return new Delta();
     let oldDelta = this.delta;
-    // TODO optimize
-    this.build();
+    super.update(mutations);
     this.delta = this.getDelta();
     let change = oldDelta.diff(this.delta);
     if (change.length() > 0) {

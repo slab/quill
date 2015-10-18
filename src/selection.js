@@ -1,4 +1,5 @@
 import Parchment from 'parchment';
+import CursorBlot from './blots/cursor';
 import equal from 'deep-equal';
 import * as platform from './lib/platform';
 
@@ -104,14 +105,14 @@ class Selection {
       let blot;
       if (!(node instanceof Text)) {
         if (offset >= node.childNodes.length) {
-          blot = Parchment.findBlot(node);
+          blot = Parchment.findBlot(node, true);   // TODO potential bug?
           return blot.offset(this.doc) + blot.getLength();
         } else {
           node = node.childNodes[offset];
           offset = 0;
         }
       }
-      blot = Parchment.findBlot(node);
+      blot = Parchment.findBlot(node, true);  // TODO potential bug?
       return blot.offset(this.doc) + offset;
     }
     let nativeRange = this.getNativeRange();
@@ -126,13 +127,19 @@ class Selection {
   prepare(format, value) {
     this.update();
     let range = this.getRange();
-    let pos = this.doc.findPath(range.start).pop();
-    let target = pos.blot.split(pos.offset);
-    let cursor = Parchment.create('cursor');
-    target.parent.insertBefore(cursor, target);
-    cursor.format(format, value);
-    // Cursor will not blink if we make selection
-    this.setNativeRange(cursor.domNode.firstChild, 1);
+    let cursor, index = range.start;
+    let pos = this.doc.findPath(index).pop();
+    if (pos.blot instanceof CursorBlot) {
+      cursor = pos.blot;
+      index -= 1;
+    } else {
+      let target = pos.blot.split(pos.offset);
+      cursor = Parchment.create('cursor');
+      pos.blot.parent.insertBefore(cursor, target);
+    }
+    this.doc.formatAt(index, 1, format, value);
+    this.setNativeRange(cursor.textNode, 1);  // Cursor will not blink if we select cursor.textNode
+    this.update();
   }
 
   scrollIntoView() {
@@ -214,7 +221,22 @@ class Selection {
       this.savedRange = this.lastRange;
     }
     if (!equal(oldRange, this.lastRange)) {
+      if (this.lastRange != null) {
+        this._cleanCursors(this.lastRange);
+      }
       this.onUpdate(this.lastRange, ...args);
+    }
+  }
+
+  _cleanCursors(range) {
+    let cursor = Parchment.findBlot(this.root.querySelector(`.${Parchment.PREFIX}cursor`));
+    if (cursor == null) return;
+    let start = cursor.offset(this.doc);
+    let end = start + cursor.getLength();
+    if (!(start <= range.start && range.start <= end + 1)) {
+      cursor.textNode.data = cursor.textNode.data.split(CursorBlot.CONTENTS).join('');
+      cursor.parent.insertBefore(Parchment.create(cursor.textNode), cursor);
+      cursor.remove();
     }
   }
 }

@@ -6,11 +6,12 @@ class Cursor extends Parchment.Embed {
   constructor(value) {
     super(value);
     this.domNode.classList.add(Parchment.PREFIX + 'cursor');
-    this.domNode.appendChild(document.createTextNode("\uFEFF"));    // Zero width space
+    this.textNode = document.createTextNode(Cursor.CONTENTS);
+    this.domNode.appendChild(this.textNode);
   }
 
   getLength() {
-    return 0;
+    return 1;
   }
 
   getValue() {
@@ -19,6 +20,7 @@ class Cursor extends Parchment.Embed {
 }
 Cursor.blotName = 'cursor';
 Cursor.tagName = 'span';
+Cursor.CONTENTS = "\uFEFF";   // Zero width space
 
 
 Parchment.register(Cursor);
