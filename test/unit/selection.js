@@ -1,4 +1,7 @@
+import CursorBlot from '../../src/blots/cursor';
+import Delta from 'rich-text/lib/delta';
 import Editor from '../../src/editor';
+import Parchment from 'parchment';
 import Selection from '../../src/selection';
 
 
@@ -307,7 +310,7 @@ describe('Selection', function() {
       this.bounds = selection.getBounds(5);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(0, 1);
-      return expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
     });
 
     it('end of line', function() {
@@ -320,7 +323,7 @@ describe('Selection', function() {
       this.bounds = selection.getBounds(9);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.width * 4, 4);
-      return expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
     });
 
     it('large text', function() {
@@ -332,7 +335,7 @@ describe('Selection', function() {
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
-    return it('image', function() {
+    it('image', function() {
       this.setContainer(`
         <p>
           <img src="/favicon.png" width="32px" height="32px">
@@ -348,40 +351,82 @@ describe('Selection', function() {
   });
 
   describe('prepare()', function() {
-    it('delta', function() {
+    beforeEach(function() {
+      this.setup = (html, index) => {
+        this.setContainer(html);
+        this.selection = new Selection(new Editor(this.container));
+        this.selection.setRange(new Selection.Range(index, index));
+      };
+    });
 
+    it('trailing', function() {
+      this.setup(`<p>0123</p>`, 4);
+      this.selection.prepare('bold', true);
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p>0123<strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
+      `);
+      expect(this.selection.doc.getDelta()).toEqual(new Delta().insert('0123\n'));
     });
 
     it('split nodes', function() {
-
+      this.setup(`<p><strong>0123</strong></p>`, 2);
+      this.selection.prepare('italic', true);
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p>
+          <strong>01</strong>
+          <em><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></em>
+          <strong>23</strong>
+        </p>
+      `);
+      expect(this.selection.doc.getDelta()).toEqual(new Delta()
+        .insert('0123', { bold: true })
+        .insert('\n')
+      );
     });
 
     it('empty line', function() {
-
-    });
-
-    it('split nodes', function() {
-
+      this.setup(`<p><br></p>`, 0);
+      this.selection.prepare('bold', true);
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
+      `);
+      expect(this.selection.doc.getDelta()).toEqual(new Delta().insert('\n'));
     });
 
     it('multiple', function() {
-
+      this.setup(`<p>0123</p>`, 2);
+      this.selection.prepare('color', 'red');
+      this.selection.prepare('italic', true);
+      this.selection.prepare('underline', true);
+      this.selection.prepare('background', 'blue');
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p>
+          01
+          <em style='color: red; background-color: blue;'><u>
+            <span class="blot-cursor">${CursorBlot.CONTENTS}</span>
+          </u></em>
+          23
+        </p>
+      `);
+      expect(this.selection.doc.getDelta()).toEqual(new Delta().insert('0123\n'));
     });
 
-    it('false', function() {
-
-    });
-
-    it('preserve on enter', function() {
-
-    });
-
-    it('remove on blur', function() {
-
-    });
-
-    it('remove on backspace', function() {
-
+    it('remove format', function() {
+      this.setup(`<p><strong>0123</strong></p>`, 2);
+      this.selection.prepare('italic', true);
+      this.selection.prepare('underline', true);
+      this.selection.prepare('italic', false);
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p>
+          <strong>
+            01<u><span class="blot-cursor">${CursorBlot.CONTENTS}</span></u>23
+          </strong>
+        </p>
+      `);
+      expect(this.selection.doc.getDelta()).toEqual(new Delta()
+        .insert('0123', { bold: true })
+        .insert('\n')
+      );
     });
   });
 });

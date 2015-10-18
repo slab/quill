@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 
 
-class Cursor extends Parchment.Embed {
+class Cursor extends Parchment.Leaf {
   constructor(value) {
     super(value);
     this.domNode.classList.add(Parchment.PREFIX + 'cursor');
@@ -11,11 +11,11 @@ class Cursor extends Parchment.Embed {
   }
 
   getLength() {
-    return 1;
+    return this.textNode.data.length;
   }
 
   getValue() {
-    return '';
+    return this.textNode.data.replace(Cursor.CONTENTS, '');
   }
 }
 Cursor.blotName = 'cursor';

@@ -193,7 +193,9 @@ class Selection {
   setRange(range) {
     let convert = (index) => {
       let pos = this.doc.findPath(index).pop();
-      if (pos.blot instanceof Parchment.Embed) {
+      if (pos.blot instanceof CursorBlot) {
+        return [pos.blot.textNode, pos.offset];
+      } else if (pos.blot instanceof Parchment.Embed) {
         let node = pos.blot.domNode.parentNode;
         return [node, [].indexOf.call(node.childNodes, pos.blot.domNode) + pos.offset];
       } else {
@@ -230,14 +232,17 @@ class Selection {
 
   _cleanCursors(range) {
     let cursor = Parchment.findBlot(this.root.querySelector(`.${Parchment.PREFIX}cursor`));
-    if (cursor == null) return;
-    let start = cursor.offset(this.doc);
-    let end = start + cursor.getLength();
-    if (!(start <= range.start && range.start <= end + 1)) {
-      cursor.textNode.data = cursor.textNode.data.split(CursorBlot.CONTENTS).join('');
-      cursor.parent.insertBefore(Parchment.create(cursor.textNode), cursor);
-      cursor.remove();
-    }
+    if (cursor == null || cursor.domNode.innerHTML === CursorBlot.CONTENTS) return;
+    let start = this.doc.findPath(range.start).pop();
+    let end = range.isCollapsed() ? start : this.doc.findPath(range.end).pop();
+    let args = [];
+    [start, end].forEach(function(pos) {
+      args.push(cursor.textNode, (pos.blot === cursor ? pos.offset - 1 : pos.offset));
+    });
+    cursor.textNode.data = cursor.getValue();
+    cursor.parent.insertBefore(Parchment.create(cursor.textNode), cursor);
+    cursor.remove();
+    this.setNativeRange(...args);
   }
 }
 Selection.Range = Range;

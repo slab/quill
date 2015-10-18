@@ -61,7 +61,7 @@ class Editor extends Parchment {
     }
   }
 
-  findPath(index, inclusive = true) {
+  findPath(index, inclusive = false) {
     if (index >= this.getLength()) {
       return [];
     } else {
