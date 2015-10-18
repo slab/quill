@@ -89,7 +89,9 @@ class Editor extends Parchment {
 
   update(...args) {
     let mutations;
-    if (Array.isArray(args[0])) {
+    if (args[0] instanceof MutationRecord) {
+      return super.update(args[0]);
+    } else if (Array.isArray(args[0])) {
       mutations = args[0];
       args = args.slice(1);
     } else {
