@@ -225,7 +225,7 @@ describe('Selection', function() {
       expect(selection.checkFocus()).toBe(true);
     });
 
-    return it('null', function() {
+    it('null', function() {
       this.setContainer('<p>0123</p>');
       let selection = new Selection(new Editor(this.container));
       selection.setRange(new Selection.Range(1));

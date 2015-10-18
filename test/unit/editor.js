@@ -189,7 +189,7 @@ describe('Editor', function() {
       let editor = new Editor(this.container);
       editor.insertAt(2, '!');
       expect(editor.getDelta()).toEqual(new Delta().insert('0\n!\n3\n'));
-      return expect(this.container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
+      expect(this.container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
     it('newline splitting', function() {

@@ -196,7 +196,7 @@ describe('Editing text', function() {
     browser.call(function() {});
   });
 
-  return it('blur', function() {
+  it('blur', function() {
     startRange.click();   // Any element outside editor to lose focus
     updateEditor();       // Blur currently requires two update cycles to trigger
     updateEditor();
