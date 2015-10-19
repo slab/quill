@@ -51,7 +51,7 @@ module.exports = function(config) {
       gutil.log("[webpack-dev-server] listening on", config.serverPort);
       callback();
       gulp.on('stop', function() {
-        process.exit(1);  // webpack does not have close
+        server.close();
       });
     });
   });
