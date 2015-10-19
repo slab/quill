@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from './lib/delta';
 import Editor from './editor';
 import EventEmitter from 'eventemitter3';
 import Parchment from 'parchment';
@@ -186,8 +186,7 @@ class Quill extends EventEmitter {
   }
 
   getHTML() {
-    // TODO fix
-    return this.root.innerHTML;
+    return this.getContents().toHTML();
   }
 
   getLength() {

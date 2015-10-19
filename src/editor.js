@@ -4,9 +4,9 @@ import Parchment from 'parchment';
 
 class Editor extends Parchment {
   constructor(domNode) {
-    // TODO fix?
-    if (domNode.innerHTML.indexOf('\n') > -1) {
-      domNode.innerHTML = domNode.innerHTML.replace(/\n\s*/g, '');
+    let html = domNode.innerHTML.replace(/\n\s*/g, '');
+    if (html !== domNode.innerHTML) {
+      domNode.innerHTML = html;
     }
     super(domNode);
     this.ensureChild();
