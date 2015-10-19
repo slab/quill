@@ -102,17 +102,18 @@ class Selection {
   getRange() {
     if (!this.checkFocus()) return null;
     let convert = (node, offset) => {
+      // Does not handle custom parent blots with multiple non-blot children
       let blot;
       if (!(node instanceof Text)) {
-        if (offset >= node.childNodes.length) {
-          blot = Parchment.findBlot(node, true);   // TODO potential bug?
-          return blot.offset(this.doc) + blot.getLength();
-        } else {
+        if (offset < node.childNodes.length) {
           node = node.childNodes[offset];
           offset = 0;
+        } else {
+          blot = Parchment.findBlot(node, true);
+          return blot.offset(this.doc) + blot.getLength();
         }
       }
-      blot = Parchment.findBlot(node, true);  // TODO potential bug?
+      blot = Parchment.findBlot(node, true);
       return blot.offset(this.doc) + offset;
     }
     let nativeRange = this.getNativeRange();
