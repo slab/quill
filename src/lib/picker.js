@@ -22,9 +22,7 @@ class Picker {
       }
       this.selectItem(item);
       let isActive = option !== this.select.querySelector('option[selected]');
-      if (this.label.classList.contains('ql-active') !== isActive) {
-        this.label.classList.toggle('ql-active');  // IE10 does not support 2nd parameter;
-      }
+      this.label.classList.toggle('ql-active', isActive);
     });
   }
 

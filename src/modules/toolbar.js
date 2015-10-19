@@ -40,9 +40,6 @@ class Toolbar {
           } else {
             this.quill.formatText(range, format, value, Quill.sources.USER);
             this.quill.setSelection(range);
-            if (platform.isIE(10)) {
-              this.quill.selection.scrollIntoView();
-            }
           }
           if (eventName === 'click') {
             input.classList.toggle('ql-active');

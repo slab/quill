@@ -84,9 +84,7 @@ class LinkTooltip extends Tooltip {
       let text = url.length > this.options.maxLength ? url.slice(0, this.options.maxLength) + '...' : url;
       this.link.textContent = text;
     }
-    if (this.container.classList.contains('editing') !== edit) {
-      this.container.classList.toggle('editing');
-    }
+    this.container.classList.toggle('editing', edit);
   }
 
   _expandRange(range) {

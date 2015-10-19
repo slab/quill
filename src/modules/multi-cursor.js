@@ -120,15 +120,9 @@ class MultiCursor extends EventEmitter {
     let isTop = parseInt(cursor.elem.style.top) <= flag.offsetHeight;
     let isLeft = parseInt(cursor.elem.style.top) <= flag.offsetHeight;
     let isRight = this.quill.root.offsetWidth - parseInt(cursor.elem.style.left) <= flag.offsetWidth;
-    if (cursor.elem.classList.contains('top') !== isTop) {
-      cursor.elem.classList.toggle('top');
-    }
-    if (cursor.elem.classList.contains('left') !== isLeft) {
-      cursor.elem.classList.toggle('left');
-    }
-    if (cursor.elem.classList.contains('right') !== isRight) {
-      cursor.elem.classList.toggle('right');
-    }
+    cursor.elem.classList.toggle('top', isTop);
+    cursor.elem.classList.toggle('left', isLeft);
+    cursor.elem.classList.toggle('right', isRight);
     this.emit(MultiCursor.events.CURSOR_MOVED, cursor);
   };
 }

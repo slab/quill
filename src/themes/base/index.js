@@ -9,9 +9,6 @@ class BaseTheme {
     if (styles) {
       this.addStyles(baseStyles);
     }
-    if (platform.isIE(10)) {
-      this.quill.root.classList.add('ql-ie-10');
-    }
   }
 
   addStyles(css) {

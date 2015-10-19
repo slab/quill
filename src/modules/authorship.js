@@ -52,8 +52,7 @@ class Authorship {
   }
 
   enable(enabled = true) {
-    if (enabled === this.quill.root.classList.contains('authorship')) return;
-    this.quill.root.classList.toggle('authorship');
+    this.quill.root.classList.toggle('authorship', enabled);
   }
 }
 Authorship.DEFAULTS = {

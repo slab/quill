@@ -1,8 +1,5 @@
 export function isIE(target = [10, 11]) {
-  if (!Array.isArray(target)) {
-    target = [target];
-  }
-  return target.indexOf(document.documentMode) > -1;
+  return document.documentMode != null;
 }
 
 export function isIOS() {
