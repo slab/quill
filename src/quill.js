@@ -19,26 +19,27 @@ import InlineFormat from './formats/inline';
 import ListFormat from './formats/list';
 
 
+let sharedEmitter = new EventEmitter();
+
 class Quill extends EventEmitter {
   static registerFormat(format) {
     let name = format.blotName || format.attrName;
-    // TODO this is static cannot emit
     if (Parchment.match(name)) {
-      this.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " format");
+      sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " format");
     }
     Parchment.register(format);
   }
 
   static registerModule(name, module) {
     if (Quill.modules[name] != null) {
-      this.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " module");
+      sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " module");
     }
     Quill.modules[name] = module;
   }
 
   static registerTheme(name, theme) {
     if (Quill.themes[name] != null) {
-      this.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " theme");
+      sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " theme");
     }
     Quill.themes[name] = theme;
   }
@@ -58,6 +59,7 @@ class Quill extends EventEmitter {
 
   constructor(container, options = {}) {
     super();
+    sharedEmitter.on(Quill.events.DEBUG, this.emit.bind(this, Quill.events.DEBUG));
     this.container = typeof container === 'string' ? document.querySelector(container) : container;
     if (this.container == null) {
       throw new Error('Invalid Quill container');
