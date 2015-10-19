@@ -1,7 +1,7 @@
-var CHROME_VERSION = '45';
-var FIREFOX_VERSION = '40';
+var CHROME_VERSION = '46';
+var FIREFOX_VERSION = '41';
 var SAFARI_VERSION = '8.1';
-var IOS_VERSION = ' 9.0';       // Workaround for optimist converting to float
+var IOS_VERSION = ' 9.1';       // Workaround for optimist converting to float
 var ANDROID_VERSION = ' 5.1';
 
 var browsers = {
@@ -13,7 +13,6 @@ var browsers = {
   'windows-firefox' : ['Windows 10', 'firefox', FIREFOX_VERSION],
   'windows-ms-edge' : ['Windows 10', 'microsoftedge', '20.10240'],
   'windows-ie-11'   : ['Windows 8.1', 'internet explorer', '11'],
-  // 'windows-ie-10'   : ['Windows 8', 'internet explorer', '10'],
 
   'linux-chrome'    : ['Linux', 'chrome', CHROME_VERSION],
   'linux-firefox'   : ['Linux', 'firefox', FIREFOX_VERSION],
