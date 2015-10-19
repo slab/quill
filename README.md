@@ -125,12 +125,6 @@ Pull requests will not be accepted without adhering to the following:
 
 **Important:** By issuing a Pull Request you agree to allow the project owners to license your work under the terms of the [License](https://github.com/quilljs/quill/blob/master/LICENSE).
 
-
-## Thanks
-
-[Swift](https://github.com/theycallmeswift), for providing the npm package name. If you're looking for his blogging engine see [v0.1.5-1](https://www.npmjs.org/package/quill/0.1.5-1).
-
-
 ## License
 
 BSD 3-clause
