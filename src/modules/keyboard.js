@@ -16,6 +16,11 @@ class Keyboard {
     this.addBinding({ key: 'B', metaKey: true }, this._onFormat.bind(this, 'bold'));
     this.addBinding({ key: 'I', metaKey: true }, this._onFormat.bind(this, 'italic'));
     this.addBinding({ key: 'U', metaKey: true }, this._onFormat.bind(this, 'underline'));
+    this.addBinding({ key: keys.ENTER, shiftKey: null }, this._onEnter.bind(this));
+    // TODO manually handle CMD+delete
+    this.addBinding({ key: keys.BACKSPACE }, this._onDelete.bind(this, true));
+    this.addBinding({ key: keys.DELETE }, this._onDelete.bind(this, false));
+    this.addBinding({ key: keys.TAB }, this._onTab.bind(this));
     this.options.bindings.forEach((def) => {
       this.addBinding(def.binding, def.callback);
     });
@@ -57,15 +62,64 @@ class Keyboard {
     return removed;
   }
 
-  _onFormat(format, range, key, evt) {
+  _onDelete(backspace, range) {
+    // TODO handle being on CursorBlot
+    if (!range.isCollapsed()) {
+      this.quill.deleteText(range, Quill.sources.USER);
+    } else if (!backspace) {
+      this.quill.editor.deleteText(range.start, range.start + 1, Quill.sources.USER);
+    } else {
+      let pos = this.quill.editor.findLine(range.start);
+      if (pos != null && pos.offset === 0 && (formats['list'] || formats['bullet'])) {
+        let format = formats['list'] ? 'list' : 'bullet';
+        this.quill.formatLine(range, format, formats[format] - 1, Quill.sources.USER);
+      } else if (backspace) {
+        this.quill.editor.deleteText(range.start - 1, range.start, Quill.sources.USER);
+      } else {
+        this.quill.editor.deleteText(range.start, range.start + 1, Quill.sources.USER);
+      }
+    }
+    return false;
+  }
+
+  _onEnter(range) {
+    let pos = this.quill.editor.findLine(range.start);
+    if (pos == null) return false;
+    let delta = new Delta()
+      .retain(range.start)
+      .insert('\n', pos.blot.getFormats())
+      .delete(range.start - range.end);
+    this.quill.updateContents(delta, Quill.sources.USER);
+    return false;
+  }
+
+  _onFormat(format, range) {
     if (this.quill.options.formats.indexOf(format) < 0) return false;
     let formats = this.quill.getFormats(range);
     if (range.isCollapsed()) {
       this.quill.prepareFormat(format, !formats[format]);
     } else {
-      this.quill.formatText(range, format, !formats[format]);
+      this.quill.formatText(range, format, !formats[format], Quill.sources.USER);
     }
     return false;
+  }
+
+  _onTab(range, binding) {
+    let pos = this.quill.editor.findLine(range.start);
+    if (pos == null) return false;
+    let formats = this.quill.getFormats();
+    if (typeof formats['list'] === 'number' || typeof formats['bullet'] === 'number') {
+      let format = formats['list'] ? 'list' : 'bullet';
+      // We are in a list or bullet
+      if (!range.isCollapsed() || pos.offset === 0) {
+        let value = formats[format] + (binding.shiftKey ? 1 : -1);
+        this.quill.formatLine(range, format, value, Quill.sources.USER);
+        return false;
+      }
+    }
+    let delta = new Delta().retain(range.start).delete(range.end - range.start).insert('\t');
+    this.quill.updateContents(delta, Quill.sources.USER);
+    return false
   }
 }
 

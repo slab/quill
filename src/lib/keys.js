@@ -1,4 +1,4 @@
-export let keys = {
+let keys = {
   BACKSPACE: 8,
   TAB: 9,
   ENTER: 13,
@@ -9,3 +9,5 @@ export let keys = {
   DOWN: 40,
   DELETE: 46
 };
+
+export { keys as default };

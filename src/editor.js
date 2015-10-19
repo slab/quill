@@ -61,6 +61,16 @@ class Editor extends Parchment {
     }
   }
 
+  findLine(index, inclusive = false) {
+    let path = this.findPath(index, inclusive);
+    for (let pos in path) {
+      if (pos.blot instanceof Parchment.Block) {
+        return pos;
+      }
+    }
+    return null;
+  }
+
   findPath(index, inclusive = false) {
     if (index >= this.getLength()) {
       return [];
