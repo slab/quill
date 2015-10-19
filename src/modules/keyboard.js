@@ -1,23 +1,31 @@
 import Quill from '../quill';
 import clone from 'clone';
 import equal from 'deep-equal';
-import platform from '../lib/platform';
+import extend from 'extend';
+import keys from '../lib/keys';
+import * as platform from '../lib/platform';
 
 let Delta = Quill.require('delta');
 
 
 class Keyboard {
-  // TODO allow passing in hotkeys in options
   constructor(quill, options = {}) {
     this.quill = quill;
-    this.hotkeys = {};
+    this.options = extend({}, Keyboard.DEFAULTS, options);
+    this.bindings = {};
+    this.addBinding({ key: 'B', metaKey: true }, this._onFormat.bind(this, 'bold'));
+    this.addBinding({ key: 'I', metaKey: true }, this._onFormat.bind(this, 'italic'));
+    this.addBinding({ key: 'U', metaKey: true }, this._onFormat.bind(this, 'underline'));
+    this.options.bindings.forEach((def) => {
+      this.addBinding(def.binding, def.callback);
+    });
     this.quill.root.addEventListener('keydown', (evt) => {
       let which = evt.which || evt.keyCode;
       let range = this.quill.getSelection();
-      let prevent = (this.hotkeys[which] || []).reduce(function(prevent, hotkey) {
-        let [key, callback] = hotkey;
+      let prevent = (this.bindings[which] || []).reduce(function(prevent, binding) {
+        let [key, callback] = binding;
         if (!match(evt, key)) return prevent;
-        return callback(range, key, evt) || prevent;
+        return !callback(range, key, evt) || prevent;
       }, false);
       if (prevent) {
         return evt.preventDefault();
@@ -25,72 +33,79 @@ class Keyboard {
     });
   }
 
-  addHotkey(hotkeys, callback) {
-    if (!Array.isArray(hotkeys)) {
-      hotkeys = [hotkeys];
+  addBinding(binding, callback) {
+    binding = normalize(binding);
+    if (binding == null) {
+      return this.quill.emit(Quill.events.DEBUG, 'Attempted to add invalid keyboard binding', binding);
     }
-    hotkeys.forEach((hotkey) => {
-      hotkey = coerce(hotkey);
-      if (hotkey == null) {
-        return this.quill.emit(Quill.events.DEBUG, 'Attempted to add invalid hotkey', hotkey);
-      }
-      this.hotkeys[hotkey.key] = this.hotkeys[hotkey.key] || [];
-      this.hotkeys[hotkey.key].push([hotkey, callback]);
-    });
+    this.bindings[binding.key] = this.bindings[binding.key] || [];
+    this.bindings[binding.key].push([binding, callback]);
   }
 
-  removeHotkey(hotkeys, callback) {
-    if (!Array.isArray(hotkeys)) {
-      hotkeys = [hotkeys];
+  removeBinding(binding, callback = null) {
+    binding = normalize(binding);
+    let removed = [];
+    if ((binding != null) && (this.bindings[binding.key] != null)) {
+      this.bindings[binding.key] = this.bindings[binding.key].filter(function(target) {
+        if (equal(target[0], binding) && (callback == null || callback === target[1])) {
+          removed.push(callback);
+          return false;
+        }
+        return true;
+      });
     }
-    return hotkeys.reduce((removed, query) => {
-      query = coerce(query);
-      if ((query != null) && (this.hotkeys[query.key] != null)) {
-        this.hotkeys[query.key] = this.hotkeys[query.key].filter(function(target) {
-          if (equal(target[0], query) && ((callback == null) || callback === target[1])) {
-            removed.push(target[1]);
-            return false;
-          }
-          return true;
-        });
-      }
-      return removed;
-    });
+    return removed;
+  }
+
+  _onFormat(format, range, key, evt) {
+    if (this.quill.options.formats.indexOf(format) < 0) return false;
+    let formats = this.quill.getFormats(range);
+    if (range.isCollapsed()) {
+      this.quill.prepareFormat(format, !formats[format]);
+    } else {
+      this.quill.formatText(range, format, !formats[format]);
+    }
+    return false;
   }
 }
 
-function corce(hotkey) {
-  switch (typeof hotkey) {
+Keyboard.DEFAULTS = {
+  bindings: []
+};
+
+
+function match(evt, binding) {
+  let metaKey = platform.isMac() ? evt.metaKey : evt.metaKey || evt.ctrlKey;
+  if (!!binding.metaKey !== metaKey && binding.metaKey !== null) return false;
+  if (!!binding.shiftKey !== evt.shiftKey && binding.shiftKey !== null) return false;
+  if (!!binding.altKey !== evt.altKey && binding.altKey !== null) return false;
+  return true;
+}
+
+function normalize(binding) {
+  switch (typeof binding) {
     case 'string':
-      if (Keyboard.hotkeys[hotkey.toUpperCase()] != null) {
-        hotkey = clone(Keyboard.hotkeys[hotkey.toUpperCase()], false);
-      } else if (hotkey.length === 1) {
-        hotkey = { key: hotkey };
+      if (Keyboard.bindings[binding.toUpperCase()] != null) {
+        binding = clone(Keyboard.bindings[binding.toUpperCase()], false);
+      } else if (binding.length === 1) {
+        binding = { key: binding };
       } else {
         return null;
       }
       break;
     case 'number':
-      hotkey = { key: hotkey };
+      binding = { key: binding };
       break;
     case 'object':
-      hotkey = clone(hotkey, false);
+      binding = clone(binding, false);
       break;
     default:
       return null;
   }
-  if (typeof hotkey.key === 'string') {
-    hotkey.key = hotkey.key.toUpperCase().charCodeAt(0);
+  if (typeof binding.key === 'string') {
+    binding.key = binding.key.toUpperCase().charCodeAt(0);
   }
-  return hotkey;
-}
-
-function match(evt, hotkey) {
-  let metaKey = platform.isMac() ? evt.metaKey : evt.metaKey || evt.ctrlKey;
-  if (hotkey.metaKey !== metaKey && hotkey.metaKey !== null) return false;
-  if (hotkey.shiftKey !== evt.shiftKey && hotkey.shiftKey !== null) return false;
-  if (hotkey.altKey !== evt.altKey && hotkey.altKey !== null) return false;
-  return true;
+  return binding;
 }
 
 

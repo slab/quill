@@ -187,6 +187,13 @@ class Quill extends EventEmitter {
     return this.editor.getDelta().slice(start, end);
   }
 
+  getFormats(start, end) {
+    if (!(start instanceof Selection.Range)) {
+      start = new Range(start, end);
+    }
+    return this.selection.getFormats(start);
+  }
+
   getHTML() {
     return this.getContents().toHTML();
   }

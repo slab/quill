@@ -1,6 +1,7 @@
 import Parchment from 'parchment';
 import CursorBlot from './blots/cursor';
 import equal from 'deep-equal';
+import extend from 'extend';
 import * as platform from './lib/platform';
 
 
@@ -81,6 +82,34 @@ class Selection {
       left: bounds[side] - containerBounds.left,
       top: bounds.top - containerBounds.top
     };
+  }
+
+  getFormats(range) {
+    if (range.isCollapsed()) {
+      let path = this.doc.findPath(range.start, true);
+      return path.reduce(function(formats, pos) {
+        return extend(formats, pos.blot.getFormat());
+      }, {});
+    } else {
+      let delta = this.doc.getDelta().slice(range.start, range.end);
+      return reduce(delta.ops, function(formats, op) {
+        let attributes = op.attributes;
+        Object.keys(op.attributes).forEach(function(name) {
+          let value = op.attributes[name];
+          if (formats[name] != null && formats[name] !== value) {
+            if (!Array.isArray(formats[name])) {
+              formats[name] = [formats[name]];
+            }
+            if (formats[name].indexOf(value) < 0) {
+              formats[name].push(value);
+            }
+          } else {
+            formats[name] = value;
+          }
+        });
+        return formats;
+      }, {});
+    }
   }
 
   getNativeRange() {
