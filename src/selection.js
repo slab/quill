@@ -144,16 +144,16 @@ class Selection {
   }
 
   scrollIntoView() {
-    if (this.range == null) return;
-    let startBounds = this.getBounds(this.range.start);
-    let endBounds = this.range.isCollapsed() ? startBounds : this.getBounds(this.range.end);
+    if (this.lastRange == null) return;
+    let startBounds = this.getBounds(this.lastRange.start);
+    let endBounds = this.lastRange.isCollapsed() ? startBounds : this.getBounds(this.lastRange.end);
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let containerHeight = containerBounds.bottom - containerBounds.top;
     if (containerHeight < endBounds.top + endBounds.height) {
-      let [line, offset] = this.doc.findLineAt(this.range.end);
+      let [line, offset] = this.doc.findLineAt(this.lastRange.end);
       return line.node.scrollIntoView(false);
     } else if (startBounds.top < 0) {
-      let [line, offset] = this.doc.findLineAt(this.range.start);
+      let [line, offset] = this.doc.findLineAt(this.lastRange.start);
       return line.node.scrollIntoView();
     }
   }
@@ -162,23 +162,15 @@ class Selection {
     let selection = document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
-      // Need to focus before setting or else in IE9/10 later focus will cause a set on
-      // 0th index on line div to be set at 1st index
-      if (!this.checkFocus()) {
-        this.root.focus();
-      }
+      if (!this.checkFocus()) this.root.focus();
       let nativeRange = this.getNativeRange();
-      // TODO do we need to avoid setting on same range?
       if (nativeRange == null ||
           startNode !== nativeRange.startContainer || startOffset !== nativeRange.startOffset ||
           endNode !== nativeRange.endContainer || endOffset !== nativeRange.endOffset) {
-        // TODO no longer need this consideration for IE9
-        // IE9 requires removeAllRanges() regardless of value of
-        // nativeRange or else formatting from toolbar does not work
-        selection.removeAllRanges();
         let range = document.createRange();
         range.setStart(startNode, startOffset);
         range.setEnd(endNode, endOffset);
+        selection.removeAllRanges();
         selection.addRange(range);
       }
     } else {
