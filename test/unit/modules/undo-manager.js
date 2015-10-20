@@ -97,10 +97,10 @@ describe('UndoManager', function() {
       }, this.undoManager.options.delay * 1.25);
     });
 
-    it('api change transform', function() {
-      this.quill.getModule('undo-manager').options.userOnly = true;
+    it('transform api change', function() {
+      this.undoManager.options.userOnly = true;
       this.quill.updateContents(new Delta().retain(12).insert('es'), Quill.sources.USER);
-      this.quill.updateContents(new Delta().retain(4)["delete"](5), Quill.sources.API);
+      this.quill.updateContents(new Delta().retain(4).delete(5), Quill.sources.API);
       this.quill.updateContents(new Delta().retain(9).insert('!'), Quill.sources.USER);
       expect(this.undoManager.stack.undo.length).toEqual(1);
       expect(this.quill.getContents()).toEqual(new Delta().insert('The foxes!\n'));
@@ -108,6 +108,35 @@ describe('UndoManager', function() {
       expect(this.quill.getContents()).toEqual(new Delta().insert('The fox\n'));
       this.undoManager.redo();
       expect(this.quill.getContents()).toEqual(new Delta().insert('The foxes!\n'));
+    });
+
+    it('ignore remote changes', function() {
+      this.undoManager.options.delay = 0;
+      this.undoManager.options.userOnly = true;
+      this.quill.setText('\n');
+      this.quill.insertText(0, 'a', Quill.sources.USER);
+      this.quill.insertText(1, 'b', Quill.sources.API);
+      this.quill.insertText(2, 'c', Quill.sources.USER);
+      this.quill.insertText(3, 'd', Quill.sources.API);
+      this.quill.insertText(4, 'e', Quill.sources.USER);
+      this.quill.insertText(5, 'f', Quill.sources.API);
+      expect(this.quill.getText()).toEqual('abcdef\n');
+      this.undoManager.undo();
+      expect(this.quill.getText()).toEqual('abcdf\n');
+      this.undoManager.undo();
+      expect(this.quill.getText()).toEqual('abdf\n');
+      this.undoManager.undo();
+      expect(this.quill.getText()).toEqual('bdf\n');
+      this.undoManager.undo();
+      expect(this.quill.getText()).toEqual('bdf\n');
+      this.undoManager.redo();
+      expect(this.quill.getText()).toEqual('abdf\n');
+      this.undoManager.redo();
+      expect(this.quill.getText()).toEqual('abcdf\n');
+      this.undoManager.redo();
+      expect(this.quill.getText()).toEqual('abcdef\n');
+      this.undoManager.redo();
+      expect(this.quill.getText()).toEqual('abcdef\n');
     });
   });
 });
