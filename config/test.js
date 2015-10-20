@@ -2,7 +2,18 @@ var _ = require('lodash');
 var browsers = require('./browsers');
 var connect = require('gulp-connect');
 var gulp = require('gulp');
+
+// Hack for karma not allowing customization of retry limit
+// often exceeded by Sauce Labs
+var karmaRetryLauncher = require('karma/lib/launchers/retry');
+karmaRetryLauncher.decoratorFactory = function() {
+  return function(launcher) {
+    karmaRetryLauncher.call(launcher, 10);
+  }
+};
+
 var karma = require('karma');
+
 
 module.exports = function(config) {
   var common = {
