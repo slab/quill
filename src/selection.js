@@ -205,10 +205,7 @@ class Selection {
     } else {
       selection.removeAllRanges();
       this.root.blur();
-      // setRange(null) will fail to blur in IE10/11 on Travis+SauceLabs (but not local VMs)
-      if (platform.isIE()) {
-        document.body.focus();
-      }
+      document.body.focus();  // root.blur() not enough on IE11+Travis+SauceLabs (but not local VMs)
     }
   }
 
