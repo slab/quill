@@ -1,7 +1,9 @@
 var _ = require('lodash');
 var browsers = require('./browsers');
+var child_process = require('child_process');
 var connect = require('gulp-connect');
 var gulp = require('gulp');
+var protractor = require('gulp-protractor').protractor;
 
 // Hack for karma not allowing customization of retry limit
 // often exceeded by Sauce Labs
@@ -16,7 +18,7 @@ var karma = require('karma');
 
 
 module.exports = function(config) {
-  var common = {
+  var karmaCommon = {
     configFile: __dirname + '/karma.conf.js',
     files: [
       'node_modules/jquery/dist/jquery.js',
@@ -35,7 +37,7 @@ module.exports = function(config) {
   }
 
   gulp.task('karma:server', function(callback) {
-    var server = new karma.Server(_.assign({}, common, {
+    var server = new karma.Server(_.assign({}, karmaCommon, {
       autoWatch: true,
       browsers: [],
       singleRun: false
@@ -43,7 +45,7 @@ module.exports = function(config) {
   });
 
   gulp.task('karma:test', ['server'], function(callback) {
-    var server = new karma.Server(_.assign({}, common, {
+    var server = new karma.Server(_.assign({}, karmaCommon, {
       browsers: ['Chrome']
     }), callback).start();
   });
@@ -60,7 +62,23 @@ module.exports = function(config) {
       if (process.env.TRAVIS_BRANCH === 'master') {
         remote.reporters.push('saucelabs');
       }
-      var server = new karma.Server(_.assign({}, common, remote), callback).start();
+      var server = new karma.Server(_.assign({}, karmaCommon, remote), callback).start();
     });
+  });
+
+  gulp.task('protractor:install', function(callback) {
+    child_process.spawn('./node_modules/.bin/webdriver-manager', ['update'], {
+      stdio: 'inherit'
+    }).once('close', callback);
+  });
+
+  gulp.task('protractor:test', function() {
+    gulp.src(['test/wd/e2e.js'])
+      .pipe(protractor({
+        configFile: 'config/protractor.conf.js',
+        args: ['--baseUrl', 'http://' + config.host]
+      })).on('error', function(e) {
+        console.log(e)
+      });
   });
 };

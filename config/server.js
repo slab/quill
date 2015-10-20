@@ -1,6 +1,8 @@
 var _ = require('lodash');
+var fs = require('fs');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var path = require('path');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.conf');
 var WebpackDevServer = require('webpack-dev-server');
@@ -46,6 +48,10 @@ module.exports = function(config) {
       res.setHeader('Content-Type', 'image/png');
       res.end(FAVICON);
     });
+    server.app.use('/test/fixtures/*.html', function(req, res, next) {
+      res.setHeader('Content-Type', 'text/html');
+      fs.createReadStream(path.join(__dirname, '..', req.baseUrl)).pipe(res);
+    })
     server.listen(config.serverPort, 'localhost', function(err) {
       if (err) throw new gutil.PluginError("webpack-dev-server", err);
       gutil.log("[webpack-dev-server] listening on", config.serverPort);

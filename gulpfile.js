@@ -37,5 +37,6 @@ gulp.task('build:release', function(callback) {
 });
 
 gulp.task('test', ['karma:test']);
+gulp.task('test:e2e', ['protractor:test']);
 
 gulp.task('dev', ['build', 'watch', 'server', 'karma:server']);

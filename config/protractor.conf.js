@@ -8,12 +8,12 @@ exports.config = {
 
   suites: {
     helper: '../../test/helpers/matchers.js',
-    e2e: '../../test/e2e/*.js',
     wd: '../../test/wd/*.js'
   },
 
   onPrepare: function() {
     browser.ignoreSynchronization = true;
+    require('babel-core/register');
   },
 
   framework: 'jasmine',

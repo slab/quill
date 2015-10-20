@@ -5,7 +5,7 @@ describe('Editing text', function() {
   let deltaOutput = element(By.id('delta'));
   let editor = element(By.className('ql-editor'));
   function updateEditor() {
-    browser.executeScript('quill.editor.checkUpdate()');
+    browser.executeScript('quill.update()');
   }
 
   /*
@@ -129,7 +129,7 @@ describe('Editing text', function() {
 
   it('delete newline', function() {
     editor.sendKeys(protractor.Key.DELETE);
-    let updateEditor();
+    updateEditor();
     lines = element.all(By.css('.ql-editor div'));
     expect(lines.get(0).getOuterHtml()).toEqual('<div><br></div>');
     expect(lines.get(1).getOuterHtml()).toEqual('<div>Chapter 1. Loomings.</div>');
