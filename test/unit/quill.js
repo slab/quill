@@ -153,4 +153,26 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
   });
+
+  describe('setText()', function() {
+    it('overwrite', function() {
+      this.quill.setText('abc');
+      expect(this.quill.root.innerHTML).toEqualHTML('<p>abc</p>');
+    });
+
+    it('set to newline', function() {
+      this.quill.setText('\n');
+      expect(this.quill.root.innerHTML).toEqualHTML('<p><br></p>');
+    });
+
+    it('multiple newlines', function() {
+      this.quill.setText('\n\n');
+      expect(this.quill.root.innerHTML).toEqualHTML('<p><br></p><p><br></p>');
+    });
+
+    it('content with trailing newline', function() {
+      this.quill.setText('abc\n');
+      expect(this.quill.root.innerHTML).toEqualHTML('<p>abc</p>');
+    });
+  });
 });

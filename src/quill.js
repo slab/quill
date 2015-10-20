@@ -260,7 +260,7 @@ class Quill extends EventEmitter {
       delta = delta.slice();
     }
     this._track(source, () => {
-      this.editor.deleteAt(0, this.editor.getLength());
+      delta.delete(this.editor.getLength());
       this.editor.applyDelta(delta);
     });
   }

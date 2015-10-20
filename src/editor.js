@@ -107,7 +107,7 @@ class Editor extends Parchment {
     } else {
       mutations = this.observer.takeRecords();
     }
-    if (mutations.length === 0) return new Delta();
+    if (!this.dirty && mutations.length === 0) return new Delta();
     let oldDelta = this.delta;
     super.update(mutations);
     this.delta = this.getDelta();
