@@ -84,7 +84,8 @@ class Quill extends EventEmitter {
     };
     this.selection.onUpdate = (range, source = Quill.sources.USER) => {
       if (source !== Quill.sources.SILENT) {
-        this.emit(Quill.events.SELECTION_CHANGE, range, source);
+        let formats = this.getFormats(range);
+        this.emit(Quill.events.SELECTION_CHANGE, range, formats, source);
       }
     };
     if (this.options.theme === false) {
@@ -188,10 +189,8 @@ class Quill extends EventEmitter {
   }
 
   getFormats(start, end) {
-    if (!(start instanceof Selection.Range)) {
-      start = new Range(start, end);
-    }
-    return this.selection.getFormats(start);
+    [start, end] = this._buildParams(start, end);
+    return this.selection.getFormats(new Selection.Range(start, end));
   }
 
   getHTML() {

@@ -92,10 +92,10 @@ class Selection {
       }, {});
     } else {
       let delta = this.doc.getDelta().slice(range.start, range.end);
-      return reduce(delta.ops, function(formats, op) {
-        let attributes = op.attributes;
-        Object.keys(op.attributes).forEach(function(name) {
-          let value = op.attributes[name];
+      return delta.ops.reduce(function(formats, op) {
+        let attributes = op.attributes || {};
+        Object.keys(attributes).forEach(function(name) {
+          let value = attributes[name];
           if (formats[name] != null && formats[name] !== value) {
             if (!Array.isArray(formats[name])) {
               formats[name] = [formats[name]];

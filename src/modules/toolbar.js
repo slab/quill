@@ -18,10 +18,27 @@ class Toolbar {
     if (platform.isIOS()) {
       this.container.classList.add('ios');
     }
-    this.initFormats();
+    this._initFormats();
+    this.quill.on(Quill.events.SELECTION_CHANGE, (range, formats) => {
+      this.quill.options.formats.forEach((format) => {
+        this.setActive(format, formats[format]);
+      });
+    });
   }
 
-  initFormats() {
+  setActive(format, value) {
+    let input = this.container.querySelector('.ql-' + format);
+    if (input == null) return;
+    if (input.tagName !== 'SELECT') {
+      input.classList.toggle('ql-active', value);
+    } else if (value) {
+      input.value = value;
+    } else {
+      input.querySelector('option[selected]').selected = true;
+    }
+  }
+
+  _initFormats() {
     this.quill.options.formats.forEach((format) => {
       let input = this.container.querySelector('.ql-' + format);
       if (input == null) return;
@@ -29,7 +46,8 @@ class Toolbar {
       input.addEventListener(eventName, () => {
         let value;
         if (input.tagName === 'SELECT') {
-          value = input.selectedIndex > -1 ? input.options[input.selectedIndex].value : '';
+          if (input.selectedIndex < 0) return false;
+          value = input.options[input.selectedIndex].value;
         } else {
           value = !input.classList.contains('ql-active');
         }
@@ -39,10 +57,7 @@ class Toolbar {
             this.quill.prepareFormat(format, value);
           } else {
             this.quill.formatText(range, format, value, Quill.sources.USER);
-            this.quill.setSelection(range);
-          }
-          if (eventName === 'click') {
-            input.classList.toggle('ql-active');
+            this.quill.setSelection(range, Quill.sources.USER);
           }
         }
         return false;
