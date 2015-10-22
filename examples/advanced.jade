@@ -3,10 +3,36 @@
 doctype html
 html
   head
-    title Quill Pretty Editor Demo
-    link(rel='stylesheet', type='text/css', href='../quill.snow.css')
-    link(rel='stylesheet', type='text/css', href='styles/advanced.css')
+    title Quill Collaborative Demo
     meta(charset='utf-8')
+    link(rel='stylesheet', type='text/css', href='../quill.snow.css')
+    style.
+      .basic-wrapper, .advanced-wrapper {
+        border: 1px solid #ccc;
+        float: left;
+        margin-left: 3%;
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+      .basic-wrapper {
+        width: 40%;
+      }
+      .advanced-wrapper {
+        width: 50%;
+      }
+      .editor-container {
+        height: 400px;
+      }
+      .toolbar-container {
+        border-bottom: 1px solid #ccc;
+      }
+      .basic-wrapper .toolbar-container {
+        padding: 8px 14px;
+      }
+      .basic-wrapper .toolbar-container .ql-active, .basic-wrapper .toolbar-container button:active {
+        color: green;
+        font-weight: bold;
+      }
 
   body
     #content-container
@@ -73,4 +99,59 @@ html
     script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js')
     script(type='text/javascript', src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js')
     script(type='text/javascript', src='../quill.js')
-    script(type='text/javascript', src='scripts/advanced.js')
+    script(type='text/javascript').
+      var quillBasic = new Quill('.basic-wrapper .editor-container', {
+        modules: {
+          // authorship: { authorId: 'basic' },
+          toolbar: { container: '.basic-wrapper .toolbar-container' }
+        },
+        theme: false
+      });
+
+      var quillAdvanced = new Quill('.advanced-wrapper .editor-container', {
+        modules: {
+          // 'authorship': { authorId: 'advanced', enabled: true },
+          'toolbar': { container: '.advanced-wrapper .toolbar-container' },
+          // 'link-tooltip': true,
+          // 'image-tooltip': true,
+          // 'multi-cursor': true
+        },
+        styles: false,
+        theme: 'snow'
+      });
+
+      // var authorship = quillAdvanced.getModule('authorship');
+      // authorship.addAuthor('basic', 'rgba(255,153,51,0.4)');
+
+      // var cursorManager = quillAdvanced.getModule('multi-cursor');
+      // cursorManager.setCursor('basic', 0, 'basic', 'rgba(255,153,51,0.9)');
+
+      quillBasic.on('selection-change', function(range) {
+        console.info('basic', 'selection', range);
+        // if (range != null) {
+        //   cursorManager.moveCursor('basic', range.end);
+        // }
+      });
+
+      quillBasic.on('text-change', function(delta, source) {
+        if (source === 'api') return;
+        console.info('basic', 'text', delta, source);
+        quillAdvanced.updateContents(delta);
+        var sourceDelta = quillBasic.getContents();
+        var targetDelta = quillAdvanced.getContents();
+        console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", sourceDelta.ops, targetDelta.ops);
+      });
+
+      quillAdvanced.on('selection-change', function(range) {
+        console.info('advanced', 'selection', range);
+      });
+
+      quillAdvanced.on('text-change', function(delta, source) {
+        if (source === 'api') return;
+        console.info('advanced', 'text', delta, source);
+        quillBasic.updateContents(delta);
+        var sourceDelta = quillAdvanced.getContents();
+        var targetDelta = quillBasic.getContents();
+        console.assert(_.isEqual(sourceDelta, targetDelta), "Editor diversion!", sourceDelta.ops, targetDelta.ops);
+      });
+

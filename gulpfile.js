@@ -17,7 +17,6 @@ testTasks(config);
 
 gulp.task('default', ['build']);
 
-gulp.task('examples', ['examples:styles', 'examples:html', 'examples:scripts']);
 gulp.task('build', ['source', 'theme', 'examples']);
 gulp.task('npm', function(callback) {
   runsequence(

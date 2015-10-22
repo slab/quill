@@ -63,10 +63,7 @@ module.exports = function(config) {
   });
 
   gulp.task('watch', function() {
-    gulp.watch('examples/*.jade', ['examples:html']);
-    gulp.watch('examples/styles/*.styl', ['examples:styles']);
-    gulp.watch('examples/scripts/*.js', ['examples:scripts']);
-
+    gulp.watch('examples/*.jade', ['examples']);
     gulp.watch('src/**/*.styl', ['theme']);
   });
 };
