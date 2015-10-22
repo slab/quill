@@ -51,27 +51,12 @@ module.exports = function(config) {
       .pipe(connect.reload());
   });
 
-
-  gulp.task('examples:styles', function() {
-    return gulp.src('examples/styles/*.styl')
-      .pipe(stylus())
-      .pipe(gulp.dest('.build/quill/examples/styles/'))
-      .pipe(connect.reload());
-  });
-
-  gulp.task('examples:html', function() {
+  gulp.task('examples', function() {
     return gulp.src('examples/*.jade')
       .pipe(jade({ pretty: true }))
       .pipe(gulp.dest('.build/quill/examples/'))
       .pipe(connect.reload());
   });
-
-  gulp.task('examples:scripts', function() {
-    return gulp.src('examples/scripts/*.js')
-      .pipe(gulp.dest('.build/quill/examples/scripts/'))
-      .pipe(connect.reload());
-  });
-
 
   gulp.task('clean', function() {
     return del(['.build', 'dist']);

@@ -1,0 +1,83 @@
+- var colors = ["rgb(0, 0, 0)", "rgb(230, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 138, 0)", "rgb(0, 102, 204)", "rgb(153, 51, 255)", "rgb(255, 255, 255)", "rgb(250, 204, 204)", "rgb(255, 235, 204)", "rgb(255, 255, 204)", "rgb(204, 232, 204)", "rgb(204, 224, 245)", "rgb(235, 214, 255)", "rgb(187, 187, 187)", "rgb(240, 102, 102)", "rgb(255, 194, 102)", "rgb(255, 255, 102)", "rgb(102, 185, 102)", "rgb(102, 163, 224)", "rgb(194, 133, 255)", "rgb(136, 136, 136)", "rgb(161, 0, 0)", "rgb(178, 107, 0)", "rgb(178, 178, 0)", "rgb(0, 97, 0)", "rgb(0, 71, 178)", "rgb(107, 36, 178)", "rgb(68, 68, 68)", "rgb(92, 0, 0)", "rgb(102, 61, 0)", "rgb(102, 102, 0)", "rgb(0, 55, 0)", "rgb(0, 41, 102)", "rgb(61, 20, 102)"]
+
+doctype html
+html
+  head
+    title Quill Snow Theme
+    link(rel='stylesheet', type='text/css', href='../quill.snow.css')
+    meta(charset='utf-8')
+    style.
+      #content-container {
+        margin: auto;
+        padding: 25px;
+        width: 960px;
+      }
+      #formatting-container {
+        border-bottom: 1px solid #ccc;
+      }
+      #editor-container {
+        height: 500px;
+      }
+      #editor-wrapper {
+        border: 1px solid #aaa;
+        box-shadow: 0 0 2px 2px #ddd;
+      }
+
+  body
+    #content-container
+      #editor-wrapper
+        #formatting-container
+          span.ql-format-group
+            select.ql-font(title='Font')
+              option(value='sans-serif', selected) Sans Serif
+              option(value='Georgia, serif') Serif
+              option(value='Monaco, \'Courier New\', monospace') Monospace
+            select.ql-size(title='Size')
+              option(value='10px') Small
+              option(value='13px', selected) Normal
+              option(value='18px') Large
+              option(value='32px') Huge
+          span.ql-format-group
+            span.ql-format-button.ql-bold(title='Bold')
+            span.ql-format-separator
+            span.ql-format-button.ql-italic(title='Italic')
+            span.ql-format-separator
+            span.ql-format-button.ql-underline(title='Underline')
+            span.ql-format-separator
+            span.ql-format-button.ql-strike(title='Strikethrough')
+          span.ql-format-group
+            each c in ['ql-color', 'ql-background']
+              select(class=c, title=(c=='ql-color'?'Text Color':'Background Color'))
+                each color,i in colors
+                  option(value=color, selected=((c == 'ql-color' && color == 'rgb(0, 0, 0)') || (c == 'ql-background' && color == 'rgb(255, 255, 255)') ? true : false))
+              if c == 'ql-color'
+                span.ql-format-separator
+          span.ql-format-group
+            span.ql-format-button.ql-bullet(title='Bullet')
+            span.ql-format-separator
+            span.ql-format-button.ql-list(title='List')
+            span.ql-format-separator
+            select.ql-align(title='Text Alignment')
+              option(value='left', selected)
+              option(value='center')
+              option(value='right')
+              option(value='justify')
+          span.ql-format-group
+            span.ql-format-button.ql-link(title='Link')
+            span.ql-format-separator
+            span.ql-format-button.ql-image(title='Image')
+        #editor-container
+          p Test
+
+    script(type='text/javascript', src='../quill.js')
+    script(type='text/javascript').
+      var quill = new Quill('#editor-container', {
+        modules: { toolbar: '#formatting-container' },
+        theme: 'snow'
+      });
+      quill.on('selection-change', function(range) {
+        console.log('selection-change', range)
+      });
+      quill.on('text-change', function(delta, source) {
+        console.log('text-change', delta, source)
+      });

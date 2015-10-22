@@ -64,7 +64,7 @@ class Quill extends EventEmitter {
     if (this.container == null) {
       throw new Error('Invalid Quill container');
     }
-    let moduleOptions = extend({}, Quill.DEFAULTS.modules || {}, options.modules);
+    let moduleOptions = extend({}, Quill.DEFAULTS.modules, options.modules);
     let html = this.container.innerHTML;
     this.container.innerHTML = '';
     this.options = extend({}, Quill.DEFAULTS, options);

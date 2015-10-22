@@ -2,8 +2,33 @@ doctype html
 html
   head
     title Quill Editor Demo
-    link(rel='stylesheet', type='text/css', href='styles/style.css')
     meta(charset='utf-8')
+    style.
+      body {
+        font-family: 'Helvetica', 'Arial', san-serif;
+        font-size: 13px;
+        padding: 25px;
+      }
+      #content-container {
+        margin: auto;
+        width: 960px;
+      }
+      #formatting-container {
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #ccc;
+        padding: 5px 12px;
+      }
+      #formatting-container .ql-active, #formatting-container button:hover {
+        color: green;
+        font-weight: bold;
+      }
+      #editor-container {
+        height: 500px;
+      }
+      #editor-wrapper {
+        border: 1px solid #aaa;
+        box-shadow: 0 0 2px 2px #ddd;
+      }
 
   body
     #content-container
@@ -41,14 +66,14 @@ html
             option(value='center') Center
             option(value='right') Right
             option(value='justify') Justify
-          button.ql-format-button.ql-bold(title='Bold') Bold
-          button.ql-format-button.ql-italic(title='Italic') Italic
-          button.ql-format-button.ql-underline(title='Underline') Under
-          button.ql-format-button.ql-strike(title='Strikethrough') Strike
-          button.ql-format-button.ql-link(title='Link') Link
-          button.ql-format-button.ql-image(title='Image') Image
-          button.ql-format-button.ql-bullet(title='Bullet') Bullet
-          button.ql-format-button.ql-list(title='List') List
+          button.ql-bold(title='Bold') Bold
+          button.ql-italic(title='Italic') Italic
+          button.ql-underline(title='Underline') Under
+          button.ql-strike(title='Strikethrough') Strike
+          button.ql-link(title='Link') Link
+          button.ql-image(title='Image') Image
+          button.ql-bullet(title='Bullet') Bullet
+          button.ql-list(title='List') List
         #editor-container
           p Test
 
