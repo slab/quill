@@ -10,6 +10,8 @@ html
         padding: 25px;
       }
       #content-container {
+        border: 1px solid #aaa;
+        box-shadow: 0 0 2px 2px #ddd;
         margin: auto;
         width: 960px;
       }
@@ -25,57 +27,52 @@ html
       #editor-container {
         height: 500px;
       }
-      #editor-wrapper {
-        border: 1px solid #aaa;
-        box-shadow: 0 0 2px 2px #ddd;
-      }
 
   body
     #content-container
-      #editor-wrapper
-        #formatting-container
-          select.ql-font(title='Font')
-            option(value='sans-serif', selected) Sans Serif
-            option(value='Georgia, serif') Serif
-            option(value='Monaco, \'Courier New\', monospace') Monospace
-          select.ql-size(title='Size')
-            option(value='10px') Small
-            option(value='13px', selected) Normal
-            option(value='18px') Large
-            option(value='32px') Huge
-          select.ql-color(title='Text Color')
-            option(value='rgb(255, 255, 255)') White
-            option(value='rgb(0, 0, 0)', selected) Black
-            option(value='rgb(255, 0, 0)') Red
-            option(value='rgb(0, 0, 255)') Blue
-            option(value='rgb(0, 255, 0)') Lime
-            option(value='rgb(0, 128, 128)') Teal
-            option(value='rgb(255, 0, 255)') Magenta
-            option(value='rgb(255, 255, 0)') Yellow
-          select.ql-background(title='Background Color')
-            option(value='rgb(255, 255, 255)', selected) White
-            option(value='rgb(0, 0, 0)') Black
-            option(value='rgb(255, 0, 0)') Red
-            option(value='rgb(0, 0, 255)') Blue
-            option(value='rgb(0, 255, 0)') Lime
-            option(value='rgb(0, 128, 128)') Teal
-            option(value='rgb(255, 0, 255)') Magenta
-            option(value='rgb(255, 255, 0)') Yellow
-          select.ql-align(title='Text Alignment')
-            option(value='left', selected) Left
-            option(value='center') Center
-            option(value='right') Right
-            option(value='justify') Justify
-          button.ql-bold(title='Bold') Bold
-          button.ql-italic(title='Italic') Italic
-          button.ql-underline(title='Underline') Under
-          button.ql-strike(title='Strikethrough') Strike
-          button.ql-link(title='Link') Link
-          button.ql-image(title='Image') Image
-          button.ql-bullet(title='Bullet') Bullet
-          button.ql-list(title='List') List
-        #editor-container
-          p Test
+      #formatting-container
+        select.ql-font(title='Font')
+          option(value='sans-serif', selected) Sans Serif
+          option(value='Georgia, serif') Serif
+          option(value='Monaco, \'Courier New\', monospace') Monospace
+        select.ql-size(title='Size')
+          option(value='10px') Small
+          option(value='13px', selected) Normal
+          option(value='18px') Large
+          option(value='32px') Huge
+        select.ql-color(title='Text Color')
+          option(value='rgb(255, 255, 255)') White
+          option(value='rgb(0, 0, 0)', selected) Black
+          option(value='rgb(255, 0, 0)') Red
+          option(value='rgb(0, 0, 255)') Blue
+          option(value='rgb(0, 255, 0)') Lime
+          option(value='rgb(0, 128, 128)') Teal
+          option(value='rgb(255, 0, 255)') Magenta
+          option(value='rgb(255, 255, 0)') Yellow
+        select.ql-background(title='Background Color')
+          option(value='rgb(255, 255, 255)', selected) White
+          option(value='rgb(0, 0, 0)') Black
+          option(value='rgb(255, 0, 0)') Red
+          option(value='rgb(0, 0, 255)') Blue
+          option(value='rgb(0, 255, 0)') Lime
+          option(value='rgb(0, 128, 128)') Teal
+          option(value='rgb(255, 0, 255)') Magenta
+          option(value='rgb(255, 255, 0)') Yellow
+        select.ql-align(title='Text Alignment')
+          option(value='left', selected) Left
+          option(value='center') Center
+          option(value='right') Right
+          option(value='justify') Justify
+        button.ql-bold(title='Bold') Bold
+        button.ql-italic(title='Italic') Italic
+        button.ql-underline(title='Underline') Under
+        button.ql-strike(title='Strikethrough') Strike
+        button.ql-link(title='Link') Link
+        button.ql-image(title='Image') Image
+        button.ql-bullet(title='Bullet') Bullet
+        button.ql-list(title='List') List
+      #editor-container
+        p Test
 
     script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').

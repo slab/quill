@@ -35,9 +35,31 @@ html
       }
 
   body
-    #content-container
-      .basic-wrapper
-        .toolbar-container
+    .basic-wrapper
+      .toolbar-container
+        select.ql-font(title='Font')
+          option(value='sans-serif', selected) Sans Serif
+          option(value='Georgia, serif') Serif
+          option(value='Monaco, \'Courier New\', monospace') Monospace
+        select.ql-size(title='Size')
+          option(value='10px') Small
+          option(value='13px', selected) Normal
+          option(value='18px') Large
+          option(value='32px') Huge
+        select.ql-align(title='Text Alignment')
+          option(value='left', selected) Left
+          option(value='center') Center
+          option(value='right') Right
+          option(value='justify') Justify
+        button.ql-bold(title='Bold') Bold
+        button.ql-italic(title='Italic') Italic
+        button.ql-underline(title='Underline') Under
+        button.ql-list(title='List') List
+      .editor-container
+
+    .advanced-wrapper
+      .toolbar-container
+        span.ql-format-group
           select.ql-font(title='Font')
             option(value='sans-serif', selected) Sans Serif
             option(value='Georgia, serif') Serif
@@ -47,54 +69,31 @@ html
             option(value='13px', selected) Normal
             option(value='18px') Large
             option(value='32px') Huge
+        span.ql-format-group
+          span.ql-format-button.ql-bold(title='Bold')
+          span.ql-format-separator
+          span.ql-format-button.ql-italic(title='Italic')
+          span.ql-format-separator
+          span.ql-format-button.ql-underline(title='Underline')
+        span.ql-format-group
+          each c in ['ql-color', 'ql-background']
+            select(class=c, title=(c=='ql-color'?'Text Color':'Background Color'))
+              each color,i in colors
+                option(value=color, selected=((c == 'ql-color' && color == 'rgb(0, 0, 0)') || (c == 'ql-background' && color == 'rgb(255, 255, 255)') ? true : false))
+            if c == 'ql-color'
+            span.ql-format-separator
           select.ql-align(title='Text Alignment')
-            option(value='left', selected) Left
-            option(value='center') Center
-            option(value='right') Right
-            option(value='justify') Justify
-          button.ql-bold(title='Bold') Bold
-          button.ql-italic(title='Italic') Italic
-          button.ql-underline(title='Underline') Under
-          button.ql-list(title='List') List
-        .editor-container
-
-      .advanced-wrapper
-        .toolbar-container
-          span.ql-format-group
-            select.ql-font(title='Font')
-              option(value='sans-serif', selected) Sans Serif
-              option(value='Georgia, serif') Serif
-              option(value='Monaco, \'Courier New\', monospace') Monospace
-            select.ql-size(title='Size')
-              option(value='10px') Small
-              option(value='13px', selected) Normal
-              option(value='18px') Large
-              option(value='32px') Huge
-          span.ql-format-group
-            span.ql-format-button.ql-bold(title='Bold')
-            span.ql-format-separator
-            span.ql-format-button.ql-italic(title='Italic')
-            span.ql-format-separator
-            span.ql-format-button.ql-underline(title='Underline')
-          span.ql-format-group
-            each c in ['ql-color', 'ql-background']
-              select(class=c, title=(c=='ql-color'?'Text Color':'Background Color'))
-                each color,i in colors
-                  option(value=color, selected=((c == 'ql-color' && color == 'rgb(0, 0, 0)') || (c == 'ql-background' && color == 'rgb(255, 255, 255)') ? true : false))
-              if c == 'ql-color'
-              span.ql-format-separator
-            select.ql-align(title='Text Alignment')
-              option(value='left', selected)
-              option(value='center')
-              option(value='right')
-              option(value='justify')
-          span.ql-format-group
-            span.ql-format-button.ql-link(title='Link')
-            span.ql-format-separator
-            span.ql-format-button.ql-image(title='Image')
-            span.ql-format-separator
-            span.ql-format-button.ql-list(title='List')
-        .editor-container
+            option(value='left', selected)
+            option(value='center')
+            option(value='right')
+            option(value='justify')
+        span.ql-format-group
+          span.ql-format-button.ql-link(title='Link')
+          span.ql-format-separator
+          span.ql-format-button.ql-image(title='Image')
+          span.ql-format-separator
+          span.ql-format-button.ql-list(title='List')
+      .editor-container
 
     script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js')
     script(type='text/javascript', src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js')
