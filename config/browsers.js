@@ -1,6 +1,6 @@
 var CHROME_VERSION = '46';
 var FIREFOX_VERSION = '41';
-var SAFARI_VERSION = '8.1';
+var SAFARI_VERSION = '9';
 var IOS_VERSION = ' 9.1';       // Workaround for optimist converting to float
 var ANDROID_VERSION = ' 5.1';
 
