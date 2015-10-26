@@ -24,6 +24,7 @@
     "css-loader": "~0.20.2",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
+    "gulp-connect": "^2.2.0",
     "gulp-flatten": "~0.2.0",
     "gulp-gzip": "^1.2.0",
     "gulp-header": "^1.7.1",
