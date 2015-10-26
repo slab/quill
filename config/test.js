@@ -3,16 +3,6 @@ var browsers = require('./browsers');
 var child_process = require('child_process');
 var gulp = require('gulp');
 var protractor = require('gulp-protractor').protractor;
-
-// Hack for karma not allowing customization of retry limit
-// often exceeded by Sauce Labs
-var karmaRetryLauncher = require('karma/lib/launchers/retry');
-karmaRetryLauncher.decoratorFactory = function() {
-  return function(launcher) {
-    karmaRetryLauncher.call(launcher, 10);
-  }
-};
-
 var karma = require('karma');
 
 
