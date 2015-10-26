@@ -84,7 +84,7 @@ class Quill extends EventEmitter {
     };
     this.selection.onUpdate = (range, source = Quill.sources.USER) => {
       if (source !== Quill.sources.SILENT) {
-        let formats = this.getFormats(range);
+        let formats = range != null ? this.getFormats(range) : {};
         this.emit(Quill.events.SELECTION_CHANGE, range, formats, source);
       }
     };
