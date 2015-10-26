@@ -1,6 +1,6 @@
-import ColorPicker from '../../lib/color-picker';
+import ColorPicker from '../../ui/color-picker';
 import BaseTheme from '../base';
-import Picker from '../../lib/picker';
+import Picker from '../../ui/picker';
 
 
 class SnowTheme extends BaseTheme {
