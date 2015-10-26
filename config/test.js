@@ -2,6 +2,7 @@ var _ = require('lodash');
 var browsers = require('./browsers');
 var child_process = require('child_process');
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var protractor = require('gulp-protractor').protractor;
 var karma = require('karma');
 
@@ -67,7 +68,7 @@ module.exports = function(config) {
         configFile: 'config/protractor.conf.js',
         args: ['--baseUrl', 'http://' + config.host]
       })).on('error', function(e) {
-        console.log(e)
+        gutil.log(gutil.colors.red("[protractor] " + e.message));
       });
   });
 };
