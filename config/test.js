@@ -1,7 +1,6 @@
 var _ = require('lodash');
 var browsers = require('./browsers');
 var child_process = require('child_process');
-var connect = require('gulp-connect');
 var gulp = require('gulp');
 var protractor = require('gulp-protractor').protractor;
 

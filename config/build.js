@@ -1,5 +1,3 @@
-var buffer = require('vinyl-buffer');
-var connect = require('gulp-connect');
 var del = require('del');
 var flatten = require('gulp-flatten');
 var pkg = require('../package.json');
@@ -9,7 +7,6 @@ var gzip = require('gulp-gzip');
 var header = require('gulp-header');
 var jade = require('gulp-jade');
 var rename = require('gulp-rename');
-var source = require('vinyl-source-stream');
 var stylus = require('gulp-stylus');
 var tar = require('gulp-tar');
 var uglify = require('gulp-uglify');
@@ -47,15 +44,13 @@ module.exports = function(config) {
       .pipe(stylus({ 'url': 'url' }))
       .pipe(rename({ prefix: 'quill.' }))
       .pipe(flatten())
-      .pipe(gulp.dest('.build/quill/'))
-      .pipe(connect.reload());
+      .pipe(gulp.dest('.build/quill/'));
   });
 
   gulp.task('examples', function() {
     return gulp.src('examples/*.jade')
       .pipe(jade({ pretty: true }))
-      .pipe(gulp.dest('.build/quill/examples/'))
-      .pipe(connect.reload());
+      .pipe(gulp.dest('.build/quill/examples/'));
   });
 
   gulp.task('clean', function() {
