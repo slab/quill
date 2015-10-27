@@ -1,5 +1,5 @@
 import Quill from '../quill';
-let Delta = Quill.require('delta');
+let Delta = Quill.import('delta');
 
 
 class Authorship {

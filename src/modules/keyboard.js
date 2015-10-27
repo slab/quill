@@ -5,7 +5,7 @@ import extend from 'extend';
 import keys from '../lib/keys';
 import * as platform from '../lib/platform';
 
-let Delta = Quill.require('delta');
+let Delta = Quill.import('delta');
 
 
 class Keyboard {

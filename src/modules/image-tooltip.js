@@ -2,8 +2,8 @@ import Quill from '../quill';
 import Tooltip from '../ui/tooltip';
 import extend from 'extend';
 
-let Delta = Quill.require('delta');
-let Range = Quill.require('range');
+let Delta = Quill.import('delta');
+let Range = Quill.import('range');
 
 
 class ImageTooltip extends Tooltip {

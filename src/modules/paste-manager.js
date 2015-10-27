@@ -1,8 +1,8 @@
 import Quill from '../quill';
 import extend from 'extend';
 
-let Delta = Quill.require('delta');
-let Parchment = Quill.require('parchment');
+let Delta = Quill.import('delta');
+let Parchment = Quill.import('parchment');
 
 
 class PasteManager {

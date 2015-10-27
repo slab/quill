@@ -1,7 +1,7 @@
 import Quill from '../quill';
 import extend from 'extend';
 
-let Delta = Quill.require('delta');
+let Delta = Quill.import('delta');
 
 
 class UndoManager {

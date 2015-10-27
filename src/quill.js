@@ -44,7 +44,7 @@ class Quill extends EventEmitter {
     Quill.themes[name] = theme;
   }
 
-  static require(name) {
+  static import(name) {
     switch (name) {
       case 'delta':
         return Delta;
@@ -223,7 +223,7 @@ class Quill extends EventEmitter {
     let formats;
     [index, , formats, source] = this._buildParams(index, 0, source);
     this._track(source, () => {
-      this.editor.insertEmbed(index, embed, value, source);
+      this.editor.insertAt(index, embed, value, source);
     });
   }
 
@@ -232,8 +232,8 @@ class Quill extends EventEmitter {
     [index, , formats, source] = this._buildParams(index, 0, name, value, source);
     this._track(source, () => {
       this.editor.insertAt(index, text);
-      Object.keys(formats).forEach(function(format) {
-        this.editor.formatAt(start, text.length, format, formats[format]);
+      Object.keys(formats).forEach((format) => {
+        this.editor.formatAt(index, text.length, format, formats[format]);
       });
     });
   }
