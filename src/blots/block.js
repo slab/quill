@@ -74,10 +74,12 @@ class Block extends Parchment.Block {
     if (value.length === 0) return;
     let lines = value.split('\n');
     let text = lines.shift();
-    if (index < this.getLength() - 1) {
-      super.insertAt(index, text);
-    } else {
-      this.children.tail.insertAt(this.children.tail.getLength(), text);
+    if (text.length > 0) {
+      if (index < this.getLength() - 1) {
+        super.insertAt(index, text);
+      } else {
+        this.children.tail.insertAt(this.children.tail.getLength(), text);
+      }
     }
     if (lines.length > 0) {
       let next = this.split(index + text.length, true);
@@ -102,9 +104,8 @@ class Block extends Parchment.Block {
       if (index === 0) {
         this.moveChildren(after);
         this.ensureChild();
-      } else {
-        after.ensureChild();
       }
+      after.ensureChild();
       this.parent.insertBefore(after, this.next);
       return after;
     } else {

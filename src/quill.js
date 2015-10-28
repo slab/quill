@@ -84,7 +84,7 @@ class Quill extends EventEmitter {
     };
     this.selection.onUpdate = (range, source = Quill.sources.USER) => {
       if (source !== Quill.sources.SILENT) {
-        let formats = range != null ? this.getFormats(range) : {};
+        let formats = range != null ? this.getFormat(range) : {};
         this.emit(Quill.events.SELECTION_CHANGE, range, formats, source);
       }
     };
@@ -162,7 +162,7 @@ class Quill extends EventEmitter {
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
     this._track(source, () => {
       Object.keys(formats).forEach((format) => {
-        this.editor.getLines(start, end-start).forEach(function(lines) {
+        this.editor.getLines(start, end-start).forEach(function(line) {
           line.format(format, formats[format]);
         });
       });
@@ -188,9 +188,9 @@ class Quill extends EventEmitter {
     return this.editor.getDelta().slice(start, end);
   }
 
-  getFormats(start, end) {
+  getFormat(start, end) {
     [start, end] = this._buildParams(start, end);
-    return this.selection.getFormats(new Selection.Range(start, end));
+    return this.selection.getFormat(new Selection.Range(start, end));
   }
 
   getHTML() {

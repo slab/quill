@@ -1,6 +1,9 @@
 import Quill from '../quill';
 import extend from 'extend';
 import * as platform from '../lib/platform';
+import { BlockAttributor } from '../formats/block';
+
+let Parchment = Quill.import('parchment');
 
 
 class Toolbar {
@@ -59,7 +62,11 @@ class Toolbar {
           }
         };
         handler.call(this, input, range, (value) => {
-          if (range.isCollapsed()) {
+          let match = Parchment.match(format);
+          if ((match.prototype instanceof Parchment.Block) || (match instanceof BlockAttributor)) {
+            this.quill.formatLine(range.start, range.end + 1, format, value, Quill.sources.USER);
+            this.quill.setSelection(range, Quill.sources.USER);
+          } else if (range.isCollapsed()) {
             this.quill.prepareFormat(format, value);
           } else {
             this.quill.formatText(range, format, value, Quill.sources.USER);

@@ -67,35 +67,37 @@ class Keyboard {
     if (!range.isCollapsed()) {
       this.quill.deleteText(range, Quill.sources.USER);
     } else if (!backspace) {
-      this.quill.editor.deleteText(range.start, range.start + 1, Quill.sources.USER);
+      this.quill.deleteText(range.start, range.start + 1, Quill.sources.USER);
     } else {
       let pos = this.quill.editor.findLine(range.start);
+      let formats = this.quill.getFormat(range.start);
       if (pos != null && pos.offset === 0 && (formats['list'] || formats['bullet'])) {
         let format = formats['list'] ? 'list' : 'bullet';
         this.quill.formatLine(range, format, formats[format] - 1, Quill.sources.USER);
-      } else if (backspace) {
-        this.quill.editor.deleteText(range.start - 1, range.start, Quill.sources.USER);
       } else {
-        this.quill.editor.deleteText(range.start, range.start + 1, Quill.sources.USER);
+        this.quill.deleteText(range.start - 1, range.start, Quill.sources.USER);
+        range.shift(-1);
       }
     }
+    this.quill.setSelection(range.start, Quill.sources.SILENT);
     return false;
   }
 
   _onEnter(range) {
-    let pos = this.quill.editor.findLine(range.start);
+    let pos = this.quill.editor.findLine(range.start, true);
     if (pos == null) return false;
     let delta = new Delta()
       .retain(range.start)
-      .insert('\n', pos.blot.getFormats())
+      .insert('\n', pos.blot.getFormat())
       .delete(range.start - range.end);
     this.quill.updateContents(delta, Quill.sources.USER);
+    this.quill.setSelection(range.start + 1, Quill.sources.USER);
     return false;
   }
 
   _onFormat(format, range) {
     if (this.quill.options.formats.indexOf(format) < 0) return false;
-    let formats = this.quill.getFormats(range);
+    let formats = this.quill.getFormat(range);
     if (range.isCollapsed()) {
       this.quill.prepareFormat(format, !formats[format]);
     } else {
@@ -107,7 +109,7 @@ class Keyboard {
   _onTab(range, binding) {
     let pos = this.quill.editor.findLine(range.start);
     if (pos == null) return false;
-    let formats = this.quill.getFormats();
+    let formats = this.quill.getFormat();
     if (typeof formats['list'] === 'number' || typeof formats['bullet'] === 'number') {
       let format = formats['list'] ? 'list' : 'bullet';
       // We are in a list or bullet

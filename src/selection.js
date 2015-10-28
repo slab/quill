@@ -84,7 +84,7 @@ class Selection {
     };
   }
 
-  getFormats(range) {
+  getFormat(range) {
     if (range.isCollapsed()) {
       let path = this.doc.findPath(range.start, true);
       return path.reduce(function(formats, pos) {

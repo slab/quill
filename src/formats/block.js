@@ -24,4 +24,4 @@ let Direction = new BlockAttributor('direction', 'direction', {
 Parchment.register(Align);
 Parchment.register(Direction);
 
-export { Align, Direction };
+export { Align, Direction, BlockAttributor };

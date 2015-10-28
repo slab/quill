@@ -5,8 +5,8 @@ import Parchment from 'parchment';
 
 class Header extends Block {
   constructor(value) {
-    if (typeof value === 'number') {
-      value = document.createElement(Header.tagName[value - 1]);
+    if (!(value instanceof Node)) {
+      value = document.createElement(Header.tagName[parseInt(value) - 1]);
     }
     super(value);
   }
