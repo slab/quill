@@ -27,17 +27,17 @@ module.exports = function(config) {
   }
 
   gulp.task('karma:server', function(callback) {
-    var server = new karma.Server(_.assign({}, karmaCommon, {
+    var server = new karma.Server(_.defaults({
       autoWatch: true,
       browsers: [],
       singleRun: false
-    }), callback).start();
+    }, karmaCommon), callback).start();
   });
 
   gulp.task('karma:test', ['server'], function(callback) {
-    var server = new karma.Server(_.assign({}, karmaCommon, {
+    var server = new karma.Server(_.defaults({
       browsers: ['Chrome']
-    }), callback).start();
+    }, karmaCommon), callback).start();
   });
 
   Object.keys(browsers).forEach(function(browser) {
@@ -52,7 +52,7 @@ module.exports = function(config) {
       if (process.env.TRAVIS_BRANCH === 'master') {
         remote.reporters.push('saucelabs');
       }
-      var server = new karma.Server(_.assign({}, karmaCommon, remote), callback).start();
+      var server = new karma.Server(_.defaults(remote, karmaCommon), callback).start();
     });
   });
 

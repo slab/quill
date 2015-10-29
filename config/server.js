@@ -12,15 +12,14 @@ var FAVICON = new Buffer('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACf0lEQV
 
 module.exports = function(config) {
   gulp.task('server', function(callback) {
-    webpackConfig = _.clone(webpackConfig);
-    webpackConfig.entry = {
-      'quill': [webpackConfig.entry],  // webpack workaround issue #300
-      'test/quill': './test/quill.js'
-    };
-    webpackConfig.output = _.assign({}, webpackConfig.output, {
-      filename: '[name].js'
-    });
-    var compiler = webpack(webpackConfig);
+    var compiler = webpack(_.defaultsDeep({
+      entry: {
+        'test/quill': './test/quill.js'
+      },
+      output: {
+        filename: '[name].js'
+      }
+    }, webpackConfig));
     var server = new WebpackDevServer(compiler, {
       contentBase: '.build/quill/',
       hot: false,

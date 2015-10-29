@@ -7,7 +7,9 @@ var constantPack = new webpack.DefinePlugin({
 });
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    quill: ['./src/index.js']  // webpack workaround issue #300
+  },
   output: {
     filename: 'quill.js',
     library: 'Quill',
