@@ -5,7 +5,7 @@ import Quill from '../../src/quill';
 describe('Events', function() {
   describe('Editor', function() {
     beforeEach(function() {
-      this.setContainer('<p>0123</p>');
+      this.quilll = this.setContainer('<p>0123</p>');
       this.quill = new Quill(this.container);
       this.handler = function() {};
       this.quill.on(Quill.events.TEXT_CHANGE, (delta, source) => {

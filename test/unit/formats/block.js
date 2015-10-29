@@ -4,7 +4,7 @@ import Editor from '../../../src/editor';
 
 describe('Block', function() {
   it('definition', function() {
-    this.setContainer(`
+    let editor = this.setEditor(`
       <h1>0</h1>
       <h2>2</h2>
       <h3>4</h3>
@@ -15,7 +15,6 @@ describe('Block', function() {
         <li>8</li>
       </ol>`
     );
-    let editor = new Editor(this.container);
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0')
       .insert('\n', { header: 1 })

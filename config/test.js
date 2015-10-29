@@ -15,9 +15,6 @@ module.exports = function(config) {
       'node_modules/jquery/dist/jquery.js',
       'node_modules/lodash/index.js',
 
-      'test/helpers/unit.js',
-      'test/helpers/matchers.js',
-
       'http://' + config.host + '/quill.base.css',
       'http://' + config.host + '/test/quill.js'
     ],
