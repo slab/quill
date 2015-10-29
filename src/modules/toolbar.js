@@ -63,7 +63,9 @@ class Toolbar {
         };
         handler.call(this, input, range, (value) => {
           let match = Parchment.match(format);
-          if ((match.prototype instanceof Parchment.Block) || (match instanceof BlockAttributor)) {
+          if ((match.prototype instanceof Parchment.Block) ||
+              (match.prototype instanceof Parchment.Container) ||
+              (match instanceof BlockAttributor)) {
             this.quill.formatLine(range.start, range.end + 1, format, value, Quill.sources.USER);
             this.quill.setSelection(range, Quill.sources.USER);
           } else if (range.isCollapsed()) {

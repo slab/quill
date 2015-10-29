@@ -109,18 +109,20 @@ class Keyboard {
   _onTab(range, binding) {
     let pos = this.quill.editor.findLine(range.start);
     if (pos == null) return false;
-    let formats = this.quill.getFormat();
+    let formats = this.quill.getFormat(range.start);
     if (typeof formats['list'] === 'number' || typeof formats['bullet'] === 'number') {
       let format = formats['list'] ? 'list' : 'bullet';
       // We are in a list or bullet
       if (!range.isCollapsed() || pos.offset === 0) {
         let value = formats[format] + (binding.shiftKey ? 1 : -1);
         this.quill.formatLine(range, format, value, Quill.sources.USER);
+        this.quill.setSelection(range, Quill.sources.SILENT);
         return false;
       }
     }
-    let delta = new Delta().retain(range.start).delete(range.end - range.start).insert('\t');
+    let delta = new Delta().retain(range.start).insert('\t').delete(range.end - range.start);
     this.quill.updateContents(delta, Quill.sources.USER);
+    this.quill.setSelection(range.start + 1, Quill.sources.SILENT);
     return false
   }
 }
