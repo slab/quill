@@ -5,6 +5,7 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var protractor = require('gulp-protractor').protractor;
 var karma = require('karma');
+var webpackConfig = require('./webpack.conf');
 
 
 module.exports = function(config) {
@@ -20,11 +21,34 @@ module.exports = function(config) {
       'http://' + config.host + '/quill.base.css',
       'http://' + config.host + '/test/quill.js'
     ],
+    preprocessors: {
+      'test/helpers/*.js': ['babel'],
+      '**/*.html': ['html2js']
+    },
     port: config.testPort,
     proxies: {
       '/favicon.png': 'http://' + config.host
     }
   }
+
+  gulp.task('karma:coverage', ['server'], function(callback) {
+    var server = new karma.Server(_.defaultsDeep({
+      browsers: ['Chrome'],
+      files: karmaCommon.files.slice(0, -1).concat(['test/quill.js']),
+      preprocessors: {
+        'test/quill.js': ['webpack'],
+      },
+      reporters: ['coverage'],
+      webpack: _.defaultsDeep({
+        module: {
+          preLoaders: [{ test: /src\/.*\.js$/, loader: 'isparta' }]
+        }
+      }, webpackConfig),
+      webpackMiddleware: {
+        noInfo: true
+      }
+    }, karmaCommon), callback).start();
+  });
 
   gulp.task('karma:server', function(callback) {
     var server = new karma.Server(_.defaults({

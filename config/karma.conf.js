@@ -9,15 +9,17 @@ module.exports = function(config) {
 
     frameworks: ['jasmine'],
     reporters: ['progress'],
-    preprocessors: {
-      'src/**/*.js': ['babel'],
-      'test/**/*.js': ['babel'],
-      '**/*.html': ['html2js']
-    },
     colors: true,
     autoWatch: false,
     singleRun: true,
 
+    coverageReporter: {
+      dir: '.build/coverage',
+      reporters: [
+        { type: 'text' },
+        { type: 'html' }
+      ]
+    },
     sauceLabs: {
       testName: 'quill-unit',
       options: {
