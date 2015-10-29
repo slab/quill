@@ -48,6 +48,13 @@ There are a number of ways to download the latest or versioned copy of Quill.
 <script src="//cdn.quilljs.com/0.19.10/quill.min.js"></script>
 ```
 
+## Security
+It is extremely important to add server side sanitization when accepting any input from a user, quill it's self is unable of being exploited to inject XSS into your website. However, a malicous user could skip out quill and post malicous code with a HTML form for example.
+
+##### Here are some existing libraries
+- [sanitize-html (NodeJS)](https://www.npmjs.com/package/sanitize-html)
+- [htmLawed (PHP)](http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/)
+- [rgrove/sanitize (Ruby)](https://github.com/rgrove/sanitize)
 
 ## Local Development
 
