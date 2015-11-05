@@ -93,7 +93,7 @@ Toolbar.DEFAULTS = {
   formats: {
     image: function(input, range, callback) {
       let value = prompt('Enter image url:', 'http://');
-      this.quill.insertEmbed(range.start, 'image', value);
+      this.quill.insertEmbed(range.start, 'image', { url: value });
       if (!range.isCollapsed()) {
         this.quill.deleteText(range, Quill.sources.USER);
       }

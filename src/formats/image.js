@@ -4,25 +4,23 @@ import Parchment from 'parchment';
 class Image extends Parchment.Embed {
   constructor(value) {
     super(value);
-    if (typeof value === 'string') {
-      this.domNode.setAttribute('src', value);
+    if (typeof value === 'object') {
+      this.domNode.setAttribute('src', value.url);
     }
   }
 
-  getFormat() {
-    let formats = super.getFormat();
-    formats.image = this.domNode.getAttribute('src');
-    return formats;
-  }
-
   getValue() {
-    return 1;
+    return {
+      image: {
+        url: this.domNode.getAttribute('src')
+      }
+    };
   }
 }
 Image.blotName = 'image';
 Image.tagName = 'IMG';
 
 
-Parchment.register(Image)
+Parchment.register(Image);
 
 export { Image as default };
