@@ -80,22 +80,6 @@ Script.blotName = 'script';
 Script.tagName = ['SUB', 'SUP'];
 
 
-class InlineAttributor extends StyleAttributor {
-  add(node, value) {
-    let blot = Parchment.findBlot(node);
-    if (blot instanceof Parchment.Inline) {
-      super.add(node, value);
-    }
-  }
-}
-
-
-let Background = new InlineAttributor('background', 'background-color');
-let Color = new InlineAttributor('color', 'color');
-let Font = new InlineAttributor('font', 'font-family');
-let Size = new InlineAttributor('size', 'font-size');
-
-
 Parchment.register(Bold);
 Parchment.register(Italic);
 Parchment.register(Strike);
@@ -103,10 +87,6 @@ Parchment.register(Underline);
 Parchment.register(InlineCode);
 Parchment.register(Link);
 Parchment.register(Script);
-Parchment.register(Background);
-Parchment.register(Color);
-Parchment.register(Font);
-Parchment.register(Size);
 
 
-export { Bold, Italic, Strike, Underline, Link, InlineCode, Script, Background, Color, Font, Size };
+export { Bold, Italic, Strike, Underline, Link, InlineCode, Script };

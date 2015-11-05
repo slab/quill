@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 
 
-class Editor extends Parchment {
+class Editor extends Parchment.Container {
   constructor(domNode) {
     let html = domNode.innerHTML.replace(/\n\s*/g, '');
     if (html !== domNode.innerHTML) {

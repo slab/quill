@@ -19,7 +19,7 @@ module.exports = {
   resolve: {
     alias: {
       'babel-runtime': path.resolve(__dirname, '..', 'node_modules/babel-runtime'),
-      'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/index')
+      'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment')
     },
     extensions: ['', '.js', '.styl', '.ts']
   },

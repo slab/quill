@@ -12,11 +12,9 @@ import BlockBlot from './blots/block';
 import BreakBlot from './blots/break';
 import CursorBlot from './blots/cursor';
 
-import BlockFormat from './formats/block';
 import HeaderFormat from './formats/header';
 import ImageFormat from './formats/image';
 import InlineFormat from './formats/inline';
-import ListFormat from './formats/list';
 
 
 let sharedEmitter = new EventEmitter();

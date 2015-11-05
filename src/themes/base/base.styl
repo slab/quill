@@ -1,3 +1,9 @@
+LIST_STYLE = lower-roman decimal lower-alpha
+MAX_INDENT = 8
+
+list(arr)
+  unquote('list-' + join(' list-', arr))
+
 .ql-container
   box-sizing: border-box
   cursor: text
@@ -25,15 +31,25 @@
   outline: none
   tab-size: 4
   white-space: pre-wrap
+  img
+    max-width: 100%
   p
     margin: 0
     padding: 0
-  img
-    max-width: 100%
-  blockquote, ol, ul
-    margin: 0 0 0 2em
-    padding: 0
-  ol
-    list-style-type: decimal
-  ul
-    list-style-type: disc
+  p:not(.ql-list-ordered)
+    counter-reset: list(1..MAX_INDENT)
+  .ql-list-ordered:before
+    display: inline-block
+    margin-left: -40px
+    margin-right: 10px
+    text-align: right
+    width: 30px
+  for num in (1..MAX_INDENT)
+    .ql-indent-{num}
+      counter-increment: unquote('list-' + num)
+      padding-left: (40 * num)px
+    .ql-list-ordered.ql-indent-{num}:before
+      content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
+    if (num < MAX_INDENT)
+      .ql-list-ordered.ql-indent-{num}
+        counter-reset: list((num+1)..MAX_INDENT)

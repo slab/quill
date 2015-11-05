@@ -29,11 +29,8 @@ class Block extends Parchment.Block {
 
   format(name, value) {
     let blot = Parchment.match(name, Parchment.Type.BLOT);
-    if (blot != null) {
-      if (blot.prototype instanceof Parchment.Block ||
-          blot.prototype instanceof Parchment.Container) {
-        super.format(name, value);
-      }
+    if (blot != null && blot.prototype instanceof Parchment.Block) {
+      super.format(name, value);
     } else if (Parchment.match(name, Parchment.Type.ATTRIBUTE)) {
       super.format(name, value);
     }
