@@ -38,7 +38,9 @@ list(arr)
     padding: 0
   p:not(.ql-list-ordered)
     counter-reset: list(1..MAX_INDENT)
-  .ql-list-ordered:before
+  .ql-list-bullet:before
+    content: '\25CF\00a0'
+  .ql-list-bullet:before, .ql-list-ordered:before
     display: inline-block
     margin-left: -40px
     margin-right: 10px
@@ -46,8 +48,9 @@ list(arr)
     width: 30px
   for num in (1..MAX_INDENT)
     .ql-indent-{num}
-      counter-increment: unquote('list-' + num)
       padding-left: (40 * num)px
+    .ql-list-ordered.ql-indent-{num}
+      counter-increment: unquote('list-' + num)
     .ql-list-ordered.ql-indent-{num}:before
       content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)

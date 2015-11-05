@@ -34,47 +34,57 @@ class Toolbar {
 
   setActive(format, value) {
     // TODO make sure we are not triggering picker from setting to existing value
-    let input = this.container.querySelector(`.ql-${format}`);
-    if (input == null) return;
-    if (input.tagName !== 'SELECT') {
-      input.classList.toggle('ql-active', !!value);
-    } else if (value) {
-      input.value = value;
-    } else {
-      input.querySelector('option[selected]').selected = true;
-    }
+    let inputs = this.container.querySelectorAll(`.ql-${format}`);
+    [].forEach.call(inputs, function(input) {
+      if (input.tagName !== 'SELECT') {
+        let toggle = value === true || value === input.getAttribute('data-value')
+        input.classList.toggle('ql-active', toggle);
+      } else if (value) {
+        input.value = value;
+      } else {
+        input.querySelector('option[selected]').selected = true;
+      }
+    });
   }
 
   _initFormats() {
     Object.keys(this.formats).forEach((format) => {
-      let input = this.container.querySelector(`.ql-${format}`);
-      if (input == null) return;
-      let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
-      input.addEventListener(eventName, () => {
-        let range = this.quill.getSelection(true);
-        if (range == null) return false;
-        let handler = this.formats[format] || function(input, range, callback) {
-          if (input.tagName === 'SELECT') {
-            callback(input.options[input.selectedIndex].value);
-          } else {
-            callback(!input.classList.contains('ql-active'));
-          }
-        };
-        handler.call(this, input, range, (value) => {
-          let match = Parchment.match(format);
-          if ((match.prototype instanceof Parchment.Block) ||
-              (match.options.scope === Parchment.Block)) {  // TODO easier way to determine block
-            this.quill.formatLine(range.start, range.end + 1, format, value, Quill.sources.USER);
-            this.quill.setSelection(range, Quill.sources.USER);
-          } else if (range.isCollapsed()) {
-            this.quill.prepareFormat(format, value);
-          } else {
-            this.quill.formatText(range, format, value, Quill.sources.USER);
-            this.quill.setSelection(range, Quill.sources.USER);
-          }
+      let inputs = this.container.querySelectorAll(`.ql-${format}`);
+      [].forEach.call(inputs, (input) => {
+        let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
+        input.addEventListener(eventName, () => {
+          let range = this.quill.getSelection(true);
+          if (range == null) return false;
+          let handler = this.formats[format] || function(input, range, callback) {
+            if (input.tagName === 'SELECT') {
+              callback(input.options[input.selectedIndex].value);
+            } else {
+              if (input.classList.contains('ql-active')) {
+                callback(false);
+              } else {
+                callback(input.getAttribute('data-value') || true);
+              }
+            }
+          };
+          handler.call(this, input, range, (value) => {
+            if (Parchment.match(format, Parchment.Block)) {
+              let formatObj = {};
+              formatObj[format] = value;
+              if (format === 'list' && value) {
+                formatObj['indent'] = '1';
+              }
+              this.quill.formatLine(range.start, range.end + 1, formatObj, Quill.sources.USER);
+              this.quill.setSelection(range, Quill.sources.USER);
+            } else if (range.isCollapsed()) {
+              this.quill.prepareFormat(format, value);
+            } else {
+              this.quill.formatText(range, format, value, Quill.sources.USER);
+              this.quill.setSelection(range, Quill.sources.USER);
+            }
+          });
+          return false;
         });
-        return false;
-      });
+      })
     });
   }
 }
