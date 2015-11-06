@@ -3,6 +3,7 @@ html
   head
     title Quill Editor Demo
     meta(charset='utf-8')
+    link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css")
     style.
       body {
         font-family: 'Helvetica', 'Arial', san-serif;
@@ -73,11 +74,13 @@ html
         button.ql-strike(title='Strikethrough') Strike
         button.ql-link(title='Link') Link
         button.ql-image(title='Image') Image
+        button.ql-equation(title='Equation') Equation
         button.ql-list(title='Bullet' data-value='bullet') Bullet
         button.ql-list(title='List' data-value='ordered') List
       #editor-container
         p Test
 
+    script(type='text/javascript', src='//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js')
     script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').
       var quill = new Quill('#editor-container', {

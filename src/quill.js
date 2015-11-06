@@ -13,6 +13,7 @@ import BreakBlot from './blots/break';
 import CursorBlot from './blots/cursor';
 
 import HeaderFormat from './formats/header';
+import EquationFormat from './formats/equation';
 import ImageFormat from './formats/image';
 import InlineFormat from './formats/inline';
 
@@ -347,7 +348,7 @@ Quill.DEFAULTS = {
     'bold', 'code', 'italic', 'script', 'strike', 'underline',
     'link',
     'background', 'color', 'font', 'size',
-    'image'
+    'image', 'equation'
   ],
   modules: {
     'keyboard': true,

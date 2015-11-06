@@ -17,11 +17,13 @@ class Editor extends Parchment.Container {
   applyDelta(delta) {
     delta.ops.reduce((index, op) => {
       if (op.insert != null) {
+        // TODO handle insert with attributes
         if (typeof op.insert === 'string') {
           this.insertAt(index, op.insert);
           return index + op.insert.length;
         } else {
-          this.insertAt(index, op.attributes);
+          let key = Object.keys(op.insert)[0];
+          this.insertAt(index, key, op.insert[key]);
           return index + 1;
         }
       } else if (typeof op.delete === 'number') {

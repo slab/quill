@@ -91,13 +91,22 @@ class Toolbar {
 Toolbar.DEFAULTS = {
   container: null,
   formats: {
+    equation: function(input, range, callback) {
+      let value = prompt('Enter equation:');
+      this.quill.insertEmbed(range.start, 'equation', value, Quill.sources.USER);
+      this.quill.insertText(range.start + 1, ' ', Quill.sources.USER);
+      if (!range.isCollapsed()) {
+        this.quill.deleteText(range, Quill.sources.USER);
+      }
+      this.quill.setSelection(range.start + 2, range.start + 2, Quill.sources.SILENT);
+    },
     image: function(input, range, callback) {
       let value = prompt('Enter image url:', 'http://');
       this.quill.insertEmbed(range.start, 'image', { url: value });
       if (!range.isCollapsed()) {
         this.quill.deleteText(range, Quill.sources.USER);
       }
-      this.quill.setSelection(range.start + 1, range.start + 1, Quill.sources.USER);
+      this.quill.setSelection(range.start + 1, range.start + 1, Quill.sources.SILENT);
     },
     link: function(input, range, callback) {
       let value = prompt('Enter link url:', 'http://');

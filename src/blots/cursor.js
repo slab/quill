@@ -23,7 +23,6 @@ Cursor.tagName = 'span';
 Cursor.CONTENTS = "\uFEFF";   // Zero width space
 
 
-Parchment.register(Cursor);
-Parchment.register(Parchment.Inline);   // Redefine to overwrite cursor
+Parchment.register(Cursor, false);
 
 export { Cursor as default };
