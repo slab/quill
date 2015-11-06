@@ -94,7 +94,7 @@ Toolbar.DEFAULTS = {
     equation: function(input, range, callback) {
       let value = prompt('Enter equation:');
       this.quill.insertEmbed(range.start, 'equation', value, Quill.sources.USER);
-      this.quill.insertText(range.start + 1, ' ', Quill.sources.USER);
+      this.quill.insertText(range.start + 1, ' ', Quill.sources.USER);  // TODO bug if we do not insert a space after
       if (!range.isCollapsed()) {
         this.quill.deleteText(range, Quill.sources.USER);
       }
