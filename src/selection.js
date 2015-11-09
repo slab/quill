@@ -130,26 +130,18 @@ class Selection {
 
   getRange() {
     if (!this.checkFocus()) return null;
-    let convert = (node, offset) => {
-      // Does not handle custom parent blots with multiple non-blot children
-      let blot;
-      if (!(node instanceof Text)) {
-        if (offset < node.childNodes.length) {
-          node = node.childNodes[offset];
-          offset = 0;
-        } else {
-          blot = Parchment.findBlot(node, true);
-          return blot.offset(this.doc) + blot.getLength();
-        }
-      }
-      blot = Parchment.findBlot(node, true);
-      return blot.offset(this.doc) + offset;
-    }
     let nativeRange = this.getNativeRange();
     if (nativeRange == null) return null;
-    let start = convert(nativeRange.startContainer, nativeRange.startOffset);
-    let end = (nativeRange.collapsed) ? start : convert(nativeRange.endContainer, nativeRange.endOffset);
-    return new Range(Math.min(start, end), Math.max(start, end));
+    let positions = [[nativeRange.startContainer, nativeRange.startOffset]];
+    if (!nativeRange.collapsed) {
+      positions.push([nativeRange.endContainer, nativeRange.endContainer]);
+    }
+    let indexes = positions.map(function(position) {
+      let [container, offset] = position;
+      let blot = Parchment.findBlot(container, true);
+      return blot.findOffset(container) + offset;
+    });
+    return new Range(Math.min(...indexes), Math.max(...indexes));
   }
 
   onUpdate(range) { }
@@ -210,25 +202,18 @@ class Selection {
   }
 
   setRange(range) {
-    let convert = (index) => {
-      let pos = this.doc.findPath(index).pop();
-      if (pos.blot instanceof CursorBlot) {
-        return [pos.blot.textNode, pos.offset];
-      } else if (pos.blot instanceof Parchment.Embed) {
-        let node = pos.blot.domNode.parentNode;
-        return [node, [].indexOf.call(node.childNodes, pos.blot.domNode) + pos.offset];
-      } else {
-        return [pos.blot.domNode, pos.offset];
-      }
-    }
     if (range != null) {
-      let [startNode, startOffset] = convert(range.start);
-      if (range.isCollapsed()) {
-        this.setNativeRange(startNode, startOffset);
-      } else {
-        let [endNode, endOffset] = convert(range.end);
-        this.setNativeRange(startNode, startOffset, endNode, endOffset);
-      }
+      let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
+      let args = [];
+      indexes.map((index) => {
+        let [node, offset] = this.doc.findNode(index);
+        if (node instanceof Text) {
+          args.push(node, offset);
+        } else {
+          args.push(node.parentNode, [].indexOf.call(node.parentNode.childNodes, node) + offset);
+        }
+      });
+      this.setNativeRange(...args);
     } else {
       this.setNativeRange(null);
     }

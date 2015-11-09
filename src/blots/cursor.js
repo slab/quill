@@ -10,6 +10,14 @@ class Cursor extends Parchment.Leaf {
     this.domNode.appendChild(this.textNode);
   }
 
+  findNode(index) {
+    return [this.textNode, index];
+  }
+
+  findOffset(node) {
+    return (node === this.domNode || node === this.textNode) ? 0 : -1;
+  }
+
   getLength() {
     return this.textNode.data.length;
   }

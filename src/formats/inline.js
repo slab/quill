@@ -25,6 +25,10 @@ class Bold extends Parchment.Inline { }
 Bold.blotName = 'bold';
 Bold.tagName = 'STRONG';
 
+class Code extends Parchment.Inline { }
+Code.blotName = 'code';
+Code.tagName = 'CODE';
+
 class Italic extends Parchment.Inline { }
 Italic.blotName = 'italic';
 Italic.tagName = 'EM';
@@ -36,10 +40,6 @@ Strike.tagName = 'S';
 class Underline extends Parchment.Inline { }
 Underline.blotName = 'underline';
 Underline.tagName = 'U';
-
-class InlineCode extends Parchment.Inline { }
-InlineCode.blotName = 'inline-code';
-InlineCode.tagName = 'CODE';
 
 
 class Link extends Parchment.Inline {
@@ -81,12 +81,12 @@ Script.tagName = ['SUB', 'SUP'];
 
 
 Parchment.register(Bold);
+Parchment.register(Code);
 Parchment.register(Italic);
 Parchment.register(Strike);
 Parchment.register(Underline);
-Parchment.register(InlineCode);
 Parchment.register(Link);
 Parchment.register(Script);
 
 
-export { Bold, Italic, Strike, Underline, Link, InlineCode, Script };
+export { Bold, Italic, Strike, Underline, Link, Code, Script };

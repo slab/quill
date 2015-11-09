@@ -23,6 +23,13 @@ class Block extends Parchment.Block {
     }
   }
 
+  findNode(index) {
+    if (index === this.getLength()) {
+      return [this.children.tail, this.children.tail.getLength()];
+    }
+    return super.findNode(index);
+  }
+
   findPath(index) {
     return super.findPath(index, true);
   }
