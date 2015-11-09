@@ -22,12 +22,23 @@ class CodeBlock extends Block {
     hljs.highlightBlock(this.domNode);
   }
 
-  findNode() {
-    return [this.domNode, 0]
+  findNode(index) {
+    let node, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
+    while (node = walker.nextNode()) {
+      let length = node.data.length;
+      if (length > index) break;
+      index -= length;
+    }
+    return [node, index];
   }
 
-  findOffset() {
-
+  findOffset(node) {
+    let cur, offset = 0, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
+    while (cur = walker.nextNode()) {
+      if (cur === node) break;
+      offset += cur.data.length;
+    }
+    return offset;
   }
 
   format(name, value) {
