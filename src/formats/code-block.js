@@ -23,13 +23,15 @@ class CodeBlock extends Block {
   }
 
   findNode(index) {
-    let node, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
-    while (node = walker.nextNode()) {
+    let next, node, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
+    while (next = walker.nextNode()) {
+      node = next;
       let length = node.data.length;
-      if (length > index) break;
+      if (length > index) return [node, index];
       index -= length;
     }
-    return [node, index];
+    // We are now beyond end of code block
+    return [node, node.data.length];
   }
 
   findOffset(node) {
