@@ -134,7 +134,7 @@ class Selection {
     if (nativeRange == null) return null;
     let positions = [[nativeRange.startContainer, nativeRange.startOffset]];
     if (!nativeRange.collapsed) {
-      positions.push([nativeRange.endContainer, nativeRange.endContainer]);
+      positions.push([nativeRange.endContainer, nativeRange.endOffset]);
     }
     let indexes = positions.map(function(position) {
       let [container, offset] = position;
