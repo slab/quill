@@ -35,6 +35,7 @@ class CodeBlock extends Block {
   }
 
   findOffset(node) {
+    if (node === this.domNode) return 0;
     let cur, offset = 0, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
     while (cur = walker.nextNode()) {
       if (cur === node) break;
