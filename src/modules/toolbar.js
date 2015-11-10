@@ -93,6 +93,7 @@ Toolbar.DEFAULTS = {
   formats: {
     equation: function(input, range, callback) {
       let value = prompt('Enter equation:');
+      if (!value) return;
       this.quill.insertEmbed(range.start, 'equation', value, Quill.sources.USER);
       this.quill.insertText(range.start + 1, ' ', Quill.sources.USER);  // TODO bug if we do not insert a space after
       if (!range.isCollapsed()) {
@@ -102,6 +103,7 @@ Toolbar.DEFAULTS = {
     },
     image: function(input, range, callback) {
       let value = prompt('Enter image url:', 'http://');
+      if (!value) return;
       this.quill.insertEmbed(range.start, 'image', { url: value });
       if (!range.isCollapsed()) {
         this.quill.deleteText(range, Quill.sources.USER);
@@ -110,6 +112,7 @@ Toolbar.DEFAULTS = {
     },
     link: function(input, range, callback) {
       let value = prompt('Enter link url:', 'http://');
+      if (!value) return;
       if (range.isCollapsed()) {
         this.quill.insertText(range.start, value, { link: value }, Quill.sources.USER);
         this.quill.setSelection(range.start + value.length, range.start + value.length, Quill.sources.USER);
