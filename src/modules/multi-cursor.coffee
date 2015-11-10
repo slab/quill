@@ -29,6 +29,7 @@ class MultiCursor extends EventEmitter2
 
   moveCursor: (userId, index) ->
     cursor = @cursors[userId]
+    return unless cursor?
     cursor.index = index
     dom(cursor.elem).removeClass('hidden')
     clearTimeout(cursor.timer)
