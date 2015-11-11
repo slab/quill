@@ -7,5 +7,5 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
-version: 0.20.0
+version: 0.20.1
 cdn: cdn.quilljs.com
