@@ -136,10 +136,10 @@ class Selection {
     if (!nativeRange.collapsed) {
       positions.push([nativeRange.endContainer, nativeRange.endOffset]);
     }
-    let indexes = positions.map(function(position) {
+    let indexes = positions.map((position) => {
       let [container, offset] = position;
       let blot = Parchment.findBlot(container, true);
-      return blot.findOffset(container) + offset;
+      return blot.offset(this.doc) + blot.findOffset(container) + offset;
     });
     return new Range(Math.min(...indexes), Math.max(...indexes));
   }
@@ -152,15 +152,15 @@ class Selection {
     let cursor, index = range.start;
     let pos = this.doc.findPath(index).pop();
     if (pos.blot instanceof CursorBlot) {
-      cursor = pos.blot;
       index -= 1;
     } else {
-      let target = pos.blot.split(pos.offset);
-      cursor = Parchment.create('cursor');
-      pos.blot.parent.insertBefore(cursor, target);
+      pos.blot.insertAt(pos.offset, 'cursor', {});
+      pos = this.doc.findPath(index + 1).pop();
+      // pos can be null if insertAt was a noop
+      if (pos == null || !(pos.blot instanceof CursorBlot)) return;
     }
     this.doc.formatAt(index, 1, format, value);
-    this.setNativeRange(cursor.textNode, 1);  // Cursor will not blink if we select cursor.textNode
+    this.setNativeRange(pos.blot.textNode, 1);  // Cursor will not blink if we select cursor.textNode
     this.update();
   }
 

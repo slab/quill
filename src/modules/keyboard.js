@@ -27,7 +27,7 @@ class Keyboard {
     this.quill.root.addEventListener('keydown', (evt) => {
       let which = evt.which || evt.keyCode;
       let range = undefined;
-      let prevent = (this.bindings[which] || []).reduce(function(prevent, binding) {
+      let prevent = (this.bindings[which] || []).reduce((prevent, binding) => {
         let [key, callback] = binding;
         if (!match(evt, key)) return prevent;
         if (range === undefined) {
