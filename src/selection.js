@@ -165,8 +165,8 @@ class Selection {
       try {
         let nativeRange = document.body.createTextRange();
         nativeRange.moveToPoint(clientX, clientY);
-        let {commonAncestorContainer, startOffset} = nativeRange;
-        range = new Range(this.convertNativeRange(commonAncestorContainer, startOffset));
+        nativeRange.select();
+        range = this.getRange();
       } catch (e) { }
     }
     return range;
