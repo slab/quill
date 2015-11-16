@@ -33,6 +33,24 @@ describe('Selection', function() {
     });
   });
 
+  describe('getRangeFromPoint()', function() {
+    it('end of line', function () {
+      this.setContainer('<p>0123</p>');
+      let selection = new Selection(new Editor(this.container));
+      let range = selection.getRangeFromPoint(300,20);
+      expect(range.start).toEqual(4);
+      expect(range.start).toEqual(4);
+    });
+
+    it('beginning of line', function () {
+      this.setContainer('<p>0123</p>');
+      let selection = new Selection(new Editor(this.container));
+      let range = selection.getRangeFromPoint(10,20);
+      expect(range.start).toEqual(0);
+      expect(range.start).toEqual(0);
+    });
+  });
+
   describe('getRange()', function() {
     it('empty document', function() {
       this.setContainer('');

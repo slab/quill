@@ -128,28 +128,48 @@ class Selection {
     return nativeRange;
   }
 
+  convertNativeRange(node, offset) {
+    // Does not handle custom parent blots with multiple non-blot children
+    let blot;
+    if (!(node instanceof Text)) {
+      if (offset < node.childNodes.length) {
+        node = node.childNodes[offset];
+        offset = 0;
+      } else {
+        blot = Parchment.findBlot(node, true);
+        return blot.offset(this.doc) + blot.getLength();
+      }
+    }
+    blot = Parchment.findBlot(node, true);
+    return blot.offset(this.doc) + offset;
+  }
+
   getRange() {
     if (!this.checkFocus()) return null;
-    let convert = (node, offset) => {
-      // Does not handle custom parent blots with multiple non-blot children
-      let blot;
-      if (!(node instanceof Text)) {
-        if (offset < node.childNodes.length) {
-          node = node.childNodes[offset];
-          offset = 0;
-        } else {
-          blot = Parchment.findBlot(node, true);
-          return blot.offset(this.doc) + blot.getLength();
-        }
-      }
-      blot = Parchment.findBlot(node, true);
-      return blot.offset(this.doc) + offset;
-    }
     let nativeRange = this.getNativeRange();
     if (nativeRange == null) return null;
-    let start = convert(nativeRange.startContainer, nativeRange.startOffset);
-    let end = (nativeRange.collapsed) ? start : convert(nativeRange.endContainer, nativeRange.endOffset);
+    let start = this.convertNativeRange(nativeRange.startContainer, nativeRange.startOffset);
+    let end = (nativeRange.collapsed) ? start : this.convertNativeRange(nativeRange.endContainer, nativeRange.endOffset);
     return new Range(Math.min(start, end), Math.max(start, end));
+  }
+
+  getRangeFromPoint(clientX, clientY) {
+    let range;
+    if (document.caretPositionFromPoint) { // FF
+      let {offsetNode, offset} = document.caretPositionFromPoint(clientX, clientY);
+      range = new Range(this.convertNativeRange(offsetNode, offset));
+    } else if (document.caretRangeFromPoint) { // Chrome/Safari
+      let {commonAncestorContainer, startOffset} = document.caretRangeFromPoint(clientX, clientY);
+      range = new Range(this.convertNativeRange(commonAncestorContainer, startOffset));
+    } else if (document.body.createTextRange) { // IE
+      try {
+        let nativeRange = document.body.createTextRange();
+        nativeRange.moveToPoint(clientX, clientY);
+        nativeRange.select();
+        range = this.getRange();
+      } catch (e) { }
+    }
+    return range;
   }
 
   onUpdate(range) { }
