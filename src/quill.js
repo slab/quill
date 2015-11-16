@@ -264,6 +264,14 @@ class Quill extends EventEmitter {
     });
   }
 
+  setSelectionFromPoint(clientX, clientY, source = Quill.sources.API) {
+    let range = this.selection.getRangeFromPoint(clientX, clientY);
+    if (range) {
+      this.selection.setRange(range, source)
+    }
+    return range;
+  }
+
   setSelection(start, end = start, source = Quill.sources.API) {
     let range;
     if (typeof end === 'string') {
