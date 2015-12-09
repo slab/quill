@@ -27,27 +27,30 @@ $(document).ready(function() {
     clearTimeout(tooltipTimer);
   });
 
-  var users = [
-    'Asana',
-    'Blahsay',
-    'Intuit',
-    'Lever',
-    'MerchantCircle',
-    'RelateIQ',
-    'Respondly',
-    'Salesforce',
-    'ThemeXpert',
-    'Vox Media'
-  ];
+  var users = {
+    'Asana': 'https://asana.com/',
+    'Front': 'https://frontapp.com/',
+    'Intuit': 'https://www.intuit.com/',
+    'Lever': 'https://www.lever.co/',
+    'MerchantCircle': 'http://www.merchantcircle.com/',
+    'RelateIQ': 'https://www.relateiq.com/',
+    'Respondly': 'https://respond.ly/',
+    'Salesforce': 'http://www.salesforce.com/',
+    'ThemeXpert': 'https://www.themexpert.com/',
+    'Vox Media': 'http://www.voxmedia.com/',
+    'Writer': 'https://chrome.google.com/webstore/detail/writer/hlddiopdeghmcmdjjmpdegemnojihpib?hl=en'
+  };
 
+  var keys = Object.keys(users);
   // Show users randomly
-  $('#users-container img').each(function(i, elem) {
-    var index = Math.floor(Math.random() * users.length);
-    var user = users[index];
-    users.splice(index, 1);
-    $(elem).attr({
-      src: '/images/users/' + (user.toLowerCase().replace(/\s/g, '')) + '.png',
-      alt: user
+  $('#users-container a').each(function(i, link) {
+    var index = Math.floor(Math.random() * keys.length);
+    var key = keys[index];
+    keys.splice(index, 1);
+    $(link).attr({ href: users[key], title: key });
+    $('img', link).attr({
+      src: '/images/users/' + (key.toLowerCase().replace(/\s/g, '')) + '.png',
+      alt: key
     });
   });
 
