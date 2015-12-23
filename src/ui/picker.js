@@ -59,9 +59,9 @@ class Picker {
   }
 
   selectItem(item, trigger = false) {
-    let selected = this.container.querySelector('.ql-selected')
+    let selected = this.container.querySelector('.ql-selected');
     if (selected != null) {
-      selected.classList.remove('ql-selected')
+      selected.classList.remove('ql-selected');
     }
     if (item != null) {
       let value = item.getAttribute('data-value');

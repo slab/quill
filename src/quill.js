@@ -91,7 +91,7 @@ class Quill extends EventEmitter {
     if (this.options.theme === false) {
       this.theme = new Quill.themes.base(this, false);
     } else {
-      let themeClass = Quill.themes[this.options.theme]
+      let themeClass = Quill.themes[this.options.theme];
       if (themeClass != null) {
         this.theme = new themeClass(this, this.options);
       } else {
@@ -207,7 +207,7 @@ class Quill extends EventEmitter {
 
   getSelection(focus = false) {
     if (focus) this.focus();
-    this.update()   // Make sure we access getRange with editor in consistent state
+    this.update();  // Make sure we access getRange with editor in consistent state
     return this.selection.getRange();
   }
 

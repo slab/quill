@@ -41,7 +41,7 @@ class LinkTooltip extends Tooltip {
     });
   }
 
-  removeLink() {
+  removeLink(range) {
     // Expand range to the entire leaf
     if (range.isCollapsed()) {
       range = this._expandRange(range);
@@ -58,7 +58,7 @@ class LinkTooltip extends Tooltip {
     let range = this.quill.getSelection(true);
     if (range != null) {
       if (range.isCollapsed()) {
-        anchor = this._findAnchor(range);
+        let anchor = this._findAnchor(range);
         if (anchor != null) {
           anchor.href = url;
         }
@@ -80,9 +80,8 @@ class LinkTooltip extends Tooltip {
       }, 0);
     } else {
       this.link.href = url;
-      let url = this.link.href;
-      let text = url.length > this.options.maxLength ? url.slice(0, this.options.maxLength) + '...' : url;
-      this.link.textContent = text;
+      url = this.link.href;
+      this.link.textContent = url.length > this.options.maxLength ? url.slice(0, this.options.maxLength) + '...' : url;
     }
     this.container.classList.toggle('editing', edit);
   }
@@ -129,7 +128,7 @@ class LinkTooltip extends Tooltip {
       this.removeLink(range);
     } else if (!range.isCollapsed()) {
       this.setMode(this._suggestURL(range), true);
-      nativeRange = this.quill.editor.selection._getNativeRange();
+      let nativeRange = this.quill.editor.selection._getNativeRange();
       this.show(nativeRange);
     }
   }

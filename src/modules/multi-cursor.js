@@ -72,7 +72,7 @@ class MultiCursor extends EventEmitter {
     Object.keys(this.cursors).forEach((id) => {
       if (this.cursors[id] != null) {
         this._updateCursor(this.cursors[id]);
-      };
+      }
     });
   };
 
@@ -135,7 +135,7 @@ MultiCursor.DEFAULTS = {
   timeout: 2500
 };
 MultiCursor.events = {
-  CURSOR_ADDED: 'cursor-addded',
+  CURSOR_ADDED: 'cursor-added',
   CURSOR_MOVED: 'cursor-moved',
   CURSOR_REMOVED: 'cursor-removed'
 };
