@@ -16,7 +16,6 @@
     "examples",
     "src",
     "test",
-    "Gruntfile.coffee",
     "index.js",
     "package.json"
   ]
