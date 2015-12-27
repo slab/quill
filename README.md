@@ -51,21 +51,21 @@ There are a number of ways to download the latest or versioned copy of Quill.
 
 ## Local Development
 
-Quill's source is in [Coffeescript](http://coffeescript.org/) and utilizes [Browserify](http://browserify.org/) to organize its files.
+Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Browserify](http://browserify.org/) to organize its files.
 
 ### Installation
 
-    npm install -g grunt-cli
+    npm install -g gulp
     npm install
 
 ### Building
 
-    grunt dist - compile and browserify
-    grunt server - starts a local server that will build and serve assets on the fly
+    gulp dist - compile and browserify
+    gulp server - starts a local server that will build and serve assets on the fly
 
 ### Examples
 
-With the local server (`grunt server`) running you can try out some minimal examples on:
+With the local server (`gulp server`) running you can try out some minimal examples on:
 
 - [localhost:9000/examples/index.html](http://localhost:9000/examples/index.html)
 - [localhost:9000/examples/advanced.html](http://localhost:9000/examples/advanced.html)
@@ -74,11 +74,11 @@ Quill [releases](https://github.com/quilljs/quill/releases) also contain these e
 
 ### Testing
 
-    grunt test:unit - runs javascript test suite with Chrome
-    grunt test:e2e - runs end to end tests with Webdriver + Chrome
-    grunt test:coverage - run tests measuring coverage with Chrome
+    gulp test:unit - runs javascript test suite with Chrome
+    gulp test:e2e - runs end to end tests with Webdriver + Chrome
+    gulp test:coverage - run tests measuring coverage with Chrome
 
-Tests are run by [Karma](http://karma-runner.github.io/) and [Protractor](https://github.com/angular/protractor) using [Jasmine](http://jasmine.github.io/). Check out `Gruntfile.coffee` and `config/grunt/` for more testing options.
+Tests are run by [Karma](http://karma-runner.github.io/) and [Protractor](https://github.com/angular/protractor) using [Jasmine](http://jasmine.github.io/). Check out `gulpfile.js` and `config/test.js` for more testing options.
 
 
 ## Contributing

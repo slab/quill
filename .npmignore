@@ -5,4 +5,3 @@ config
 docs
 examples
 test
-Gruntfile.coffee
