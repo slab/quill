@@ -73,7 +73,7 @@ class ImageTooltip extends Tooltip {
     if (this.preview.firstChild.tagName === 'IMG') {
       this.preview.firstChild.setAttribute('src', this.textbox.value);
     } else {
-      img = document.createElement('img');
+      let img = document.createElement('img');
       img.setAttribute('src', this.textbox.value);
       this.preview.replaceChild(img, this.preview.firstChild);
     }

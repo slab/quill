@@ -43,7 +43,7 @@ class SnowTheme extends BaseTheme {
               return item.classList.add('ql-primary-color');
             }
           });
-          this.pickers.push(picker)
+          this.pickers.push(picker);
           break;
       }
     });
@@ -77,7 +77,7 @@ SnowTheme.OPTIONS = {
       <span class="cursor-caret"></span>
     `.replace(/\n\s+/g, '')
   }
-}
+};
 
 
 export { SnowTheme as default };

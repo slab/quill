@@ -105,7 +105,7 @@ function getLastChangeIndex(delta) {
     }
   });
   return lastIndex;
-};
+}
 
 
 Quill.registerModule('undo-manager', UndoManager);
