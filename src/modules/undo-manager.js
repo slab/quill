@@ -27,15 +27,15 @@ class UndoManager {
 
   change(source, dest) {
     if (this.stack[source].length === 0) return;
-    let change = this.stack[source].pop();
+    let delta = this.stack[source].pop();
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(change[source], Quill.sources.USER);
+    this.quill.updateContents(delta[source], Quill.sources.USER);
     this.ignoreChange = false;
-    let index = getLastChangeIndex(change[source]);
+    let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index, index);
     this.oldDelta = this.quill.getContents();
-    this.stack[dest].push(change);
+    this.stack[dest].push(delta);
   }
 
   clear() {
@@ -49,9 +49,9 @@ class UndoManager {
     let undoDelta = this.quill.getContents().diff(this.oldDelta);
     let timestamp = Date.now();
     if (this.lastRecorded + this.options.delay > timestamp && this.stack.undo.length > 0) {
-      let change = this.stack.undo.pop();
-      undoDelta = undoDelta.compose(change.undo);
-      changeDelta = change.redo.compose(changeDelta);
+      let delta = this.stack.undo.pop();
+      undoDelta = undoDelta.compose(delta.undo);
+      changeDelta = delta.redo.compose(changeDelta);
     } else {
       this.lastRecorded = timestamp;
     }

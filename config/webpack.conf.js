@@ -18,7 +18,6 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'babel-runtime': path.resolve(__dirname, '..', 'node_modules/babel-runtime'),
       'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment')
     },
     extensions: ['', '.js', '.styl', '.ts']
@@ -28,9 +27,10 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /parchment\/src\/.*\.ts$/, loader: 'babel-loader?optional[]=runtime!ts-loader' },
-      { test: /(src|test)\/.*\.js$/, loader: 'babel-loader?optional[]=runtime' },
-      { test: /\.styl$/, loader: 'css-loader!stylus-loader' }
+      { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },
+      { test: /\.styl$/, loader: 'css!stylus' }, {
+        test: /(src|test)\/.*\.js$/, loader: 'babel?presets[]=es2015&plugins[]=transform-runtime'
+      },
     ],
     noParse: [
       /\/node_modules\/clone\/clone\.js$/,
@@ -41,7 +41,8 @@ module.exports = {
   ts: {
     configFileName: 'nonexistent.json',   // Parchment tsconfig wants to build tests, we don't
     compilerOptions: {
-      target: 'es6'
+      target: 'es5',
+      module: 'commonjs'
     },
     silent: true
   },

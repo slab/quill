@@ -9,4 +9,5 @@ import UndoManager from './modules/undo-manager';
 
 import Quill from './quill';
 
-export { Quill as default };
+
+module.exports = Quill;   // ES6 default export will not expose us as global
