@@ -37,7 +37,7 @@ class Toolbar {
     let inputs = this.container.querySelectorAll(`.ql-${format}`);
     [].forEach.call(inputs, function(input) {
       if (input.tagName !== 'SELECT') {
-        let toggle = value === true || value === input.getAttribute('data-value')
+        let toggle = value === true || value === input.getAttribute('data-value');
         input.classList.toggle('ql-active', toggle);
       } else if (value) {
         input.value = value;
@@ -84,7 +84,7 @@ class Toolbar {
           });
           return false;
         });
-      })
+      });
     });
   }
 }

@@ -51,7 +51,7 @@ function sanitize(container) {
   // Need to remove trailing newline so paste is inline,
   // losing format is expected and observed in Word
   return delta.compose(new Delta().retain(lengthAdded - 1).delete(1));
-};
+}
 
 
 Quill.registerModule('paste-manager', PasteManager);

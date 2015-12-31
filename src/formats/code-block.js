@@ -7,7 +7,7 @@ class CodeBlock extends Block {
   constructor(value) {
     super(value);
     if (typeof value === 'string') {
-      this.domNode.setAttribute('data-language', value)
+      this.domNode.setAttribute('data-language', value);
     }
   }
 

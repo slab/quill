@@ -126,7 +126,7 @@ class Keyboard {
     let delta = new Delta().retain(range.start).insert('\t').delete(range.end - range.start);
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.start + 1, Quill.sources.SILENT);
-    return false
+    return false;
   }
 }
 
