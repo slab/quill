@@ -23,6 +23,17 @@ var BANNER =
 module.exports = function(config) {
   gulp.task('source', function(callback) {
     webpack(webpackConfig, function(err, stats) {
+      if (stats.hasWarnings()) {
+        stats.toJson().warnings.forEach((warning) => {
+          console.warn(warning)
+        });
+      }
+      if (stats.hasErrors()) {
+        stats.toJson().errors.forEach((error) => {
+          console.error(error)
+        });
+        throw new Error("webpack failed")
+      }
       if (err) throw new gutil.PluginError('webpack', err);
       callback();
     });
