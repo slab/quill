@@ -98,7 +98,7 @@ class Quill extends EventEmitter {
         throw new Error("Cannot load " + this.options.theme + " theme. Are you sure you registered it?");
       }
     }
-    Object.keys(this.options.modules).forEach((name) => {
+    Object.keys(this.options.modules).forEach(name => {
       this.addModule(name, this.options.modules[name]);
     });
     if (this.options.readOnly) {
@@ -161,7 +161,7 @@ class Quill extends EventEmitter {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
     this._track(source, () => {
-      Object.keys(formats).forEach((format) => {
+      Object.keys(formats).forEach(format => {
         this.editor.getLines(start, end-start).forEach(function(line) {
           line.format(format, formats[format]);
         });
@@ -173,7 +173,7 @@ class Quill extends EventEmitter {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
     this._track(source, () => {
-      Object.keys(formats).forEach((format) => {
+      Object.keys(formats).forEach(format => {
         this.editor.formatAt(start, end-start, format, formats[format]);
       });
     });
@@ -232,7 +232,7 @@ class Quill extends EventEmitter {
     [index, , formats, source] = this._buildParams(index, 0, name, value, source);
     this._track(source, () => {
       this.editor.insertAt(index, text);
-      Object.keys(formats).forEach((format) => {
+      Object.keys(formats).forEach(format => {
         this.editor.formatAt(index, text.length, format, formats[format]);
       });
     });

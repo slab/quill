@@ -21,10 +21,10 @@ class Keyboard {
     this.addBinding({ key: keys.BACKSPACE }, this._onDelete.bind(this, true));
     this.addBinding({ key: keys.DELETE }, this._onDelete.bind(this, false));
     this.addBinding({ key: keys.TAB }, this._onTab.bind(this));
-    this.options.bindings.forEach((def) => {
+    this.options.bindings.forEach(def => {
       this.addBinding(def.binding, def.callback);
     });
-    this.quill.root.addEventListener('keydown', (evt) => {
+    this.quill.root.addEventListener('keydown', evt => {
       let which = evt.which || evt.keyCode;
       let range = undefined;
       let prevent = (this.bindings[which] || []).reduce((prevent, binding) => {

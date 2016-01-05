@@ -19,7 +19,7 @@ class Tooltip {
   }
 
   initTextbox(textbox, enterCallback, escapeCallback) {
-    textbox.addEventListener('keydown', (evt) => {
+    textbox.addEventListener('keydown', evt => {
       if (evt.which !== keys.ENTER && evt.which !== keys.ESCAPE) return;
       let fn = evt.which === keys.ENTER ? enterCallback : escapeCallback;
       fn.call(this);

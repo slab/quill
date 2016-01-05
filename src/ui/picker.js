@@ -6,7 +6,7 @@ class Picker {
     this.container.classList.add('ql-picker');
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    document.body.addEventListener('click', (evt) => {
+    document.body.addEventListener('click', evt => {
       if (evt.target !== this.label) {
         this.close();
       }
@@ -39,7 +39,7 @@ class Picker {
   }
 
   buildPicker() {
-    [].slice.call(this.select.attributes).forEach((item) => {
+    [].slice.call(this.select.attributes).forEach(item => {
       this.container.setAttribute(item.name, item.value);
     });
     this.container.innerHTML = Picker.TEMPLATE;

@@ -14,7 +14,7 @@ class LinkTooltip extends Tooltip {
   }
 
   initListeners() {
-    this.quill.on(Quill.events.SELECTION_CHANGE, (range) => {
+    this.quill.on(Quill.events.SELECTION_CHANGE, range => {
       if (range == null || !range.isCollapsed()) return;
       let anchor = this._findAnchor(range);
       if (anchor != null) {
@@ -32,11 +32,11 @@ class LinkTooltip extends Tooltip {
       this.setMode(this.link.href, true);
     });
     this.initTextbox(this.textbox, this.saveLink, this.hide);
-    this.quill.onModuleLoad('toolbar', (toolbar) => {
+    this.quill.onModuleLoad('toolbar', toolbar => {
       this.toolbar = toolbar;
       toolbar.initFormat('link', this._onToolbar.bind(this));
     });
-    this.quill.onModuleLoad('keyboard', (keyboard) => {
+    this.quill.onModuleLoad('keyboard', keyboard => {
       keyboard.addHotkey(LinkTooltip.hotkeys.LINK, this._onKeyboard.bind(this));
     });
   }

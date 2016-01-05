@@ -33,7 +33,7 @@ class Selection {
     this.doc = doc;
     this.root = this.doc.domNode;
     this.lastRange = this.savedRange = new Range(0, 0);
-    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
+    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach(eventName => {
       this.root.addEventListener(eventName, () => {
         this.update();  // Do not pass event handler params
       });
@@ -136,7 +136,7 @@ class Selection {
     if (!nativeRange.collapsed) {
       positions.push([nativeRange.endContainer, nativeRange.endOffset]);
     }
-    let indexes = positions.map((position) => {
+    let indexes = positions.map(position => {
       let [container, offset] = position;
       let blot = Parchment.findBlot(container, true);
       return blot.offset(this.doc) + blot.findOffset(container) + offset;
@@ -205,7 +205,7 @@ class Selection {
     if (range != null) {
       let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
       let args = [];
-      indexes.map((index) => {
+      indexes.map(index => {
         let [node, offset] = this.doc.findNode(index);
         if (node instanceof Text) {
           args.push(node, offset);

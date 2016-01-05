@@ -26,7 +26,7 @@ class Toolbar {
     }, {});
     this._initFormats();
     this.quill.on(Quill.events.SELECTION_CHANGE, (range, formats) => {
-      Object.keys(this.formats).forEach((name) => {
+      Object.keys(this.formats).forEach(name => {
         this.setActive(name, formats[name]);
       });
     });
@@ -48,9 +48,9 @@ class Toolbar {
   }
 
   _initFormats() {
-    Object.keys(this.formats).forEach((format) => {
+    Object.keys(this.formats).forEach(format => {
       let inputs = this.container.querySelectorAll(`.ql-${format}`);
-      [].forEach.call(inputs, (input) => {
+      [].forEach.call(inputs, input => {
         let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
         input.addEventListener(eventName, () => {
           let range = this.quill.getSelection(true);
@@ -66,7 +66,7 @@ class Toolbar {
               }
             }
           };
-          handler.call(this, input, range, (value) => {
+          handler.call(this, input, range, value => {
             if (Parchment.match(format, Parchment.Block)) {
               let formatObj = {};
               formatObj[format] = value;
