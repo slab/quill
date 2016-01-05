@@ -30,7 +30,7 @@ class Editor extends Parchment.Container {
         this.deleteAt(index, op.delete);
         return index;
       } else if (typeof op.retain === 'number') {
-        Object.keys(op.attributes || {}).forEach((name) => {
+        Object.keys(op.attributes || {}).forEach(name => {
           this.formatAt(index, op.retain, name, op.attributes[name]);
         });
         return index + op.retain;

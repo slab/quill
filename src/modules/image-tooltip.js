@@ -22,7 +22,7 @@ class ImageTooltip extends Tooltip {
     this.container.querySelector('.cancel').addEventListener('click', this.hide.bind(this));
     this.textbox.addEventListener('input', this._preview.bind(this));
     this.initTextbox(this.textbox, this.insertImage, this.hide);
-    this.quill.onModuleLoad('toolbar', (toolbar) => {
+    this.quill.onModuleLoad('toolbar', toolbar => {
       this.toolbar = toolbar;
       toolbar.initFormat('image', this._onToolbar.bind(this));
     });

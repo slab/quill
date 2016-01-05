@@ -8,7 +8,7 @@ class SnowTheme extends BaseTheme {
     super(quill, false);
     this.quill.container.classList.add('ql-snow');
     this.pickers = [];
-    this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, (range) => {
+    this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, range => {
       if (range == null) return;
       this.pickers.forEach(function(picker) {
         picker.close();
@@ -28,7 +28,7 @@ class SnowTheme extends BaseTheme {
 
   extendToolbar(module) {
     module.container.classList.add('ql-snow');
-    ['color', 'background', 'font', 'size', 'align'].forEach((format) => {
+    ['color', 'background', 'font', 'size', 'align'].forEach(format => {
       let select = module.container.querySelector(".ql-" + format);
       if (select == null) return;
       switch (format) {

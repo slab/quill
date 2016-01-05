@@ -57,7 +57,7 @@ class MultiCursor extends EventEmitter {
   };
 
   shiftCursors(index, length, authorId = null) {
-    Object.keys(this.cursors).forEach((id) => {
+    Object.keys(this.cursors).forEach(id => {
       if (this.cursors[id] == null) return;
       let shift = Math.max(length, index - this.cursors[id].index);
       if (this.cursors[id].userId === authorId) {
@@ -69,7 +69,7 @@ class MultiCursor extends EventEmitter {
   };
 
   update() {
-    Object.keys(this.cursors).forEach((id) => {
+    Object.keys(this.cursors).forEach(id => {
       if (this.cursors[id] != null) {
         this._updateCursor(this.cursors[id]);
       }
@@ -78,7 +78,7 @@ class MultiCursor extends EventEmitter {
 
   _applyDelta(delta) {
     let index = 0;
-    delta.ops.forEach((op) => {
+    delta.ops.forEach(op => {
       let length = 0;
       if (op.insert != null) {
         length = op.insert.length || 1;
