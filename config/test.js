@@ -52,7 +52,12 @@ module.exports = function(config) {
       autoWatch: true,
       browsers: [],
       singleRun: false
-    }, karmaCommon), callback).start();
+    }, karmaCommon), function(exitCode) {
+      gutil.log("[karma server] has exited with", exitCode);
+      process.exit(exitCode);
+    });
+    server.start();
+    callback();
   });
 
   gulp.task('karma:test', ['server'], function(callback) {

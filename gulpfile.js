@@ -40,4 +40,9 @@ gulp.task('test:unit', ['karma:test']);
 gulp.task('test:e2e', ['protractor:test']);
 gulp.task('test:coverage', ['karma:coverage']);
 
-gulp.task('dev', ['build', 'watch', 'server', 'karma:server']);
+gulp.task('dev', function(callback) {
+  runsequence(
+    'build',
+    ['watch', 'server', 'karma:server']
+  , callback);
+});
