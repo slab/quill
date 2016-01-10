@@ -2,13 +2,6 @@ import Parchment from 'parchment';
 
 
 class Image extends Parchment.Embed {
-  constructor(value) {
-    super(value);
-    if (typeof value === 'object') {
-      this.domNode.setAttribute('src', value.url);
-    }
-  }
-
   getValue() {
     return {
       image: {
@@ -19,6 +12,11 @@ class Image extends Parchment.Embed {
 }
 Image.blotName = 'image';
 Image.tagName = 'IMG';
+Image.create = function(value) {
+  var node = Parchment.Embed.create();
+  node.setAttribute('src', value.url);
+  return node;
+};
 
 
 Parchment.register(Image);
