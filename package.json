@@ -7,7 +7,7 @@
   "contributors": [
     "Byron Milligan <byronner@gmail.com>"
   ],
-  "main": "dist/index.js",
+  "main": "dist/quill.js",
   "dependencies": {
     "clone": "~1.0.2",
     "deep-equal": "~1.0.1",
