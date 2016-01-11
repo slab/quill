@@ -1,7 +1,7 @@
 LIST_STYLE = lower-roman decimal lower-alpha
 MAX_INDENT = 8
 
-list(arr)
+makelist(arr)
   unquote('list-' + join(' list-', arr))
 
 .ql-container
@@ -37,7 +37,7 @@ list(arr)
     margin: 0
     padding: 0
   p:not(.ql-list-ordered)
-    counter-reset: list(1..MAX_INDENT)
+    counter-reset: makelist(1..MAX_INDENT)
   .ql-list-bullet:before
     content: '\25CF\00a0'
   .ql-list-bullet:before, .ql-list-ordered:before
@@ -55,4 +55,4 @@ list(arr)
       content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
     if (num < MAX_INDENT)
       .ql-list-ordered.ql-indent-{num}
-        counter-reset: list((num+1)..MAX_INDENT)
+        counter-reset: makelist((num+1)..MAX_INDENT)
