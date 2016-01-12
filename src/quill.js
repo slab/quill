@@ -1,9 +1,12 @@
 import Delta from './lib/delta';
 import Editor from './editor';
-import EventEmitter from 'eventemitter3';
+import Emitter from './emitter';
 import Parchment from 'parchment';
-import Selection from './selection';
+import Scroll from './scroll';
+import Selection, { Range } from './selection';
 import extend from 'extend';
+
+import EventEmitter from 'eventemitter3';
 
 import BaseTheme from './themes/base';
 import SnowTheme from './themes/snow';
@@ -21,7 +24,7 @@ import InlineFormat from './formats/inline';
 
 let sharedEmitter = new EventEmitter();
 
-class Quill extends EventEmitter {
+class Quill {
   static registerFormat(format) {
     let name = format.blotName || format.attrName;
     if (Parchment.match(name)) {
@@ -46,20 +49,15 @@ class Quill extends EventEmitter {
 
   static import(name) {
     switch (name) {
-      case 'delta':
-        return Delta;
-      case 'parchment':
-        return Parchment;
-      case 'range':
-        return Selection.Range;
-      default:
-        return null;
+      case 'delta'      : return Delta;
+      case 'parchment'  : return Parchment;
+      case 'range'      : return Range;
+      default           : return null;
     }
   }
 
   constructor(container, options = {}) {
-    super();
-    sharedEmitter.on(Quill.events.DEBUG, this.emit.bind(this, Quill.events.DEBUG));
+    // sharedEmitter.on(Quill.events.DEBUG, this.emit.bind(this, Quill.events.DEBUG));
     this.container = typeof container === 'string' ? document.querySelector(container) : container;
     if (this.container == null) {
       throw new Error('Invalid Quill container');
@@ -74,30 +72,15 @@ class Quill extends EventEmitter {
     this.root = this.addContainer('ql-editor');
     this.root.innerHTML = html.trim();
     this.root.setAttribute('id', this.options.id);
-    this.editor = new Editor(this.root);
-    this.selection = new Selection(this.editor);
-    this.editor.onUpdate = (delta, source = Quill.sources.USER) => {
-      this.emit(Quill.events.TEXT_CHANGE, delta, source);
-      if (delta.length() > 0) {
-        this.selection.update(Quill.sources.SILENT);
-      }
-    };
-    this.selection.onUpdate = (range, source = Quill.sources.USER) => {
-      if (source !== Quill.sources.SILENT) {
-        let formats = range != null ? this.getFormat(range) : {};
-        this.emit(Quill.events.SELECTION_CHANGE, range, formats, source);
-      }
-    };
-    if (this.options.theme === false) {
-      this.theme = new Quill.themes.base(this, false);
-    } else {
-      let themeClass = Quill.themes[this.options.theme];
-      if (themeClass != null) {
-        this.theme = new themeClass(this, this.options);
-      } else {
-        throw new Error("Cannot load " + this.options.theme + " theme. Are you sure you registered it?");
-      }
+    this.emitter = new Emitter();
+    this.scroll = new Scroll(this.root, this.emitter);
+    this.editor = new Editor(this.scroll, this.emitter);
+    // this.selection = new Selection(this.scroll, this.emitter);
+    let themeClass = Quill.themes[this.options.theme || 'base'];
+    if (themeClass == null) {
+      throw new Error("Cannot load " + this.options.theme + " theme. Are you sure you registered it?");
     }
+    this.theme = new themeClass(this, this.options);
     Object.keys(this.options.modules).forEach((name) => {
       this.addModule(name, this.options.modules[name]);
     });
@@ -127,7 +110,7 @@ class Quill extends EventEmitter {
     }
     options = extend(moduleClass.DEFAULTS || {}, this.theme.constructor.OPTIONS[name], options);
     this.modules[name] = new moduleClass(this, options);
-    this.emit(Quill.events.MODULE_INIT, name, this.modules[name]);
+    // this.emit(Quill.events.MODULE_INIT, name, this.modules[name]);
     return this.modules[name];
   }
 
@@ -145,12 +128,6 @@ class Quill extends EventEmitter {
 
   enable() {
     this.editor.enable();
-  }
-
-  emit(eventName, ...rest) {
-    super.emit(Quill.events.PRE_EVENT, eventName, ...rest);
-    super.emit(eventName, ...rest);
-    super.emit(Quill.events.POST_EVENT, eventName, ...rest);
   }
 
   focus() {
@@ -198,7 +175,7 @@ class Quill extends EventEmitter {
   }
 
   getLength() {
-    return this.editor.getLength();
+    return this.scroll.getLength();
   }
 
   getModule(name) {
@@ -230,12 +207,19 @@ class Quill extends EventEmitter {
   insertText(index, text, name, value, source) {
     let formats;
     [index, , formats, source] = this._buildParams(index, 0, name, value, source);
-    this._track(source, () => {
-      this.editor.insertAt(index, text);
-      Object.keys(formats).forEach((format) => {
-        this.editor.formatAt(index, text.length, format, formats[format]);
-      });
+    this.editor.insertAt(index, text, source);
+    Object.keys(formats).forEach((format) => {
+      this.editor.formatAt(index, text.length, format, formats[format]);
     });
+  }
+
+  // TODO what about other eventemitter functions
+  off(...args) {
+    this.emitter.off(...args)
+  }
+
+  on(...args) {
+    this.emitter.on(...args);
   }
 
   onModuleLoad(name, callback) {
@@ -259,10 +243,8 @@ class Quill extends EventEmitter {
     } else {
       delta = delta.slice();
     }
-    this._track(source, () => {
-      delta.delete(this.editor.getLength());
-      this.editor.applyDelta(delta);
-    });
+    delta.delete(this.editor.getLength());
+    this.editor.applyDelta(delta);
   }
 
   setSelection(start, end = start, source = Quill.sources.API) {
@@ -284,20 +266,14 @@ class Quill extends EventEmitter {
   }
 
   update(source = Quill.sources.USER) {
-    let delta = this.editor.update(source);
-    if (delta.length() > 0) {
-      source = Quill.sources.SILENT;
-    }
-    this.selection.update(source);
+    this.scroll.update(source);
   }
 
   updateContents(delta, source = Quill.sources.API) {
     if (Array.isArray(delta)) {
       delta = new Delta(delta.slice());
     }
-    this._track(source, () => {
-      this.editor.applyDelta(delta);
-    });
+    this.editor.applyDelta(delta);
   }
 
 

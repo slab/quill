@@ -53,8 +53,9 @@ module.exports = function(config) {
       browsers: [],
       singleRun: false
     }, karmaCommon), function(exitCode) {
-      gutil.log("[karma server] has exited with", exitCode);
-      process.exit(exitCode);
+      if (exitCode !== 0) {
+        gutil.log("[karma server] has exited with", exitCode);
+      }
     });
     server.start();
     callback();

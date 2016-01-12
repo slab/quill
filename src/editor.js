@@ -2,19 +2,15 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 
 
-class Editor extends Parchment.Container {
-  constructor(domNode) {
-    let html = domNode.innerHTML.replace(/\n\s*/g, '');
-    if (html !== domNode.innerHTML) {
-      domNode.innerHTML = html;
-    }
-    super(domNode);
-    this.ensureChild();
-    this.enable();
+class Editor {
+  constructor(scroll, emitter) {
+    this.scroll = scroll;
+    this.emitter = emitter;
+    this.emitter.on('scroll-update', this.update, this);
     this.delta = this.getDelta();
   }
 
-  applyDelta(delta) {
+  applyDelta(delta, source) {
     delta.ops.reduce((index, op) => {
       if (op.insert != null) {
         // TODO handle insert with attributes
@@ -36,87 +32,52 @@ class Editor extends Parchment.Container {
         return index + op.retain;
       }
     }, 0);
+    this.update(source);
   }
 
-  deleteAt(index, length) {
-    let [first, firstOffset] = this.children.find(index);
-    let [last, lastOffset] = this.children.find(index + length);
-    super.deleteAt(index, length);
-    if (last != null && first !== last && firstOffset > 0) {
-      let lastChild = first.children.tail;
-      last.moveChildren(first);
-      last.remove();
-      if (lastChild != null) {
-        lastChild.merge();
-      }
+  deleteAt(index, length, source) {
+    this.scroll.deleteAt(index, length);
+  }
+
+  insertAt(index, value, source) {
+    this.scroll.insertAt(index, value);
+    this.update(source);
+  }
+
+  formatAt(index, length, format, value) {
+    this.scroll.formatAt(index, length, format, value);
+  }
+
+  getText(start, end) {
+    // TODO optimize
+    let values = [].concat.apply([], this.scroll.getValue());
+    return values.map(function(value) {
+      return typeof value === 'string' ? value : '';   // Exclude embeds
+    }).join('').slice(start, end);
+  }
+
+  update(source) {
+    let oldDelta = this.delta;
+    this.delta = this.getDelta();
+    let change = oldDelta.diff(this.delta);
+    if (change.length() > 0) {
+      this.emitter.emit('text-change', change, source);
     }
-    this.ensureChild();
   }
 
   enable(enabled = true) {
-    this.domNode.setAttribute('contenteditable', enabled);
-  }
-
-  ensureChild() {
-    if (this.children.length === 0) {
-      this.appendChild(Parchment.create('block'));
-    }
-  }
-
-  findLine(index, inclusive = false) {
-    let path = this.findPath(index, inclusive);
-    for (let i = 0; i < path.length; i++) {
-      if (path[i].blot instanceof Parchment.Block) return path[i];
-    }
-    return null;
-  }
-
-  findPath(index, inclusive = false) {
-    if (index >= this.getLength()) {
-      return [];
-    } else {
-      return super.findPath(index, inclusive).slice(1);  // Exclude self
-    }
+    this.scroll.domNode.setAttribute('contenteditable', enabled);
   }
 
   getDelta() {
-    return this.getLines().reduce((delta, child) => {
+    return this.scroll.getLines().reduce((delta, child) => {
       return delta.concat(child.getDelta());
     }, new Delta());
   }
 
-  getLines(index = 0, length = this.getLength()) {
-    return this.getDescendants(index, length, Parchment.Block);
-  }
-
-  onUpdate(delta) { }
-
-  remove() {
-    this.children.forEach(function(child) {
-      child.remove();
-    });
-  }
-
-  update(...args) {
-    let mutations;
-    if (args[0] instanceof MutationRecord) {
-      return super.update(args[0]);
-    } else if (Array.isArray(args[0])) {
-      mutations = args[0];
-      args = args.slice(1);
-    } else {
-      mutations = this.observer.takeRecords();
-    }
-    if (!this.dirty && mutations.length === 0) return new Delta();
-    let oldDelta = this.delta;
-    super.update(mutations);
-    this.delta = this.getDelta();
-    let change = oldDelta.diff(this.delta);
-    if (change.length() > 0) {
-      this.onUpdate(change, ...args);
-    }
-    this.observer.takeRecords();  // Prevent changes from rebuilds
-    return change;
+  optimize(mutations) {
+    this.ensureChild();
+    super.optimize(mutations);
   }
 }
 

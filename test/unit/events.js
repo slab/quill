@@ -4,6 +4,7 @@ import Quill from '../../src/quill';
 
 describe('Events', function() {
   describe('Editor', function() {
+    // TODO change this to spies
     beforeEach(function() {
       this.quilll = this.setContainer('<p>0123</p>');
       this.quill = new Quill(this.container);
@@ -28,7 +29,7 @@ describe('Events', function() {
         expect(source).toBe(Quill.sources.USER);
         callback();
       };
-      $(this.quill.root.firstChild).text('01!23');
+      this.quill.root.firstChild.firstChild.data = '01!23';
     });
   });
 });

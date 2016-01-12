@@ -1,6 +1,7 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import extend from 'extend';
+import BreakBlot from './break';
 
 
 const NEWLINE_LENGTH = 1;
@@ -12,14 +13,9 @@ class Block extends Parchment.Block {
     this.ensureChild();
   }
 
-  deleteAt(index, length) {
-    super.deleteAt(index, length);
-    this.ensureChild();
-  }
-
   ensureChild() {
     if (this.children.length === 0) {
-      return this.appendChild(Parchment.create('break'));
+      this.appendChild(Parchment.create('break'));
     }
   }
 
@@ -92,14 +88,16 @@ class Block extends Parchment.Block {
   }
 
   insertBefore(blot, ref) {
-    let br;
-    if (this.children.head != null && this.children.head.statics.blotName === 'break') {
-      br = this.children.head;
+    if (this.children.head instanceof BreakBlot) {
+      if (ref === this.children.head) ref = null;
+      this.children.head.remove();
     }
     super.insertBefore(blot, ref);
-    if (br != null) {
-      br.remove();
-    }
+  }
+
+  optimize() {
+    super.optimize();
+    this.ensureChild();
   }
 
   split(index, force = false) {

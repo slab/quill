@@ -3,18 +3,14 @@ import Parchment from 'parchment';
 
 class Image extends Parchment.Embed {
   getValue() {
-    return {
-      image: {
-        url: this.domNode.getAttribute('src')
-      }
-    };
+    return { image: this.domNode.getAttribute('src') };
   }
 }
 Image.blotName = 'image';
 Image.tagName = 'IMG';
 Image.create = function(value) {
-  var node = Parchment.Embed.create();
-  node.setAttribute('src', value.url);
+  let node = Parchment.Embed.create.call(Image);    // TODO Babel does not bind for us?
+  node.setAttribute('src', value);
   return node;
 };
 

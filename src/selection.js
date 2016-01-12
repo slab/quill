@@ -249,7 +249,6 @@ class Selection {
     this.setNativeRange(...args);
   }
 }
-Selection.Range = Range;
 
 
 export { Range, Selection as default };
