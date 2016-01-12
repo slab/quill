@@ -84,34 +84,6 @@ class Selection {
     };
   }
 
-  getFormat(range) {
-    if (range.isCollapsed()) {
-      let path = this.doc.findPath(range.start, true);
-      return path.reduce(function(formats, pos) {
-        return extend(formats, pos.blot.getFormat());
-      }, {});
-    } else {
-      let delta = this.doc.getDelta().slice(range.start, range.end);
-      return delta.ops.reduce(function(formats, op) {
-        let attributes = op.attributes || {};
-        Object.keys(attributes).forEach(function(name) {
-          let value = attributes[name];
-          if (formats[name] != null && formats[name] !== value) {
-            if (!Array.isArray(formats[name])) {
-              formats[name] = [formats[name]];
-            }
-            if (formats[name].indexOf(value) < 0) {
-              formats[name].push(value);
-            }
-          } else {
-            formats[name] = value;
-          }
-        });
-        return formats;
-      }, {});
-    }
-  }
-
   getNativeRange() {
     let selection = document.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;

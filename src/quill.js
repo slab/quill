@@ -24,7 +24,16 @@ import InlineFormat from './formats/inline';
 
 let sharedEmitter = new EventEmitter();
 
-class Quill {
+class Quill extends EventEmitter {
+  static import(name) {
+    switch (name) {
+      case 'delta'      : return Delta;
+      case 'parchment'  : return Parchment;
+      case 'range'      : return Range;
+      default           : return null;
+    }
+  }
+
   static registerFormat(format) {
     let name = format.blotName || format.attrName;
     if (Parchment.match(name)) {
@@ -45,15 +54,6 @@ class Quill {
       sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " theme");
     }
     Quill.themes[name] = theme;
-  }
-
-  static import(name) {
-    switch (name) {
-      case 'delta'      : return Delta;
-      case 'parchment'  : return Parchment;
-      case 'range'      : return Range;
-      default           : return null;
-    }
   }
 
   constructor(container, options = {}) {
@@ -115,15 +115,18 @@ class Quill {
   }
 
   deleteText(start, end, source = Quill.sources.API) {
-    let formats;
-    [start, end, formats, source] = this._buildParams(start, end, source);
-    this._track(source, () => {
-      this.editor.deleteAt(start, end - start);
-    });
+    [start, end, , source] = this._buildParams(start, end, source);
+    this.editor.deleteText(start, end);
   }
 
   disable() {
     this.editor.enable(false);
+  }
+
+  emit(eventName, ...rest) {
+    super.emit(Quill.events.PRE_EVENT, eventName, ...rest);
+    super.emit(eventName, ...rest);
+    super.emit(Quill.events.POST_EVENT, eventName, ...rest);
   }
 
   enable() {
@@ -137,23 +140,13 @@ class Quill {
   formatLine(start, end, name, value, source) {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
-    this._track(source, () => {
-      Object.keys(formats).forEach((format) => {
-        this.editor.getLines(start, end-start).forEach(function(line) {
-          line.format(format, formats[format]);
-        });
-      });
-    });
+    this.editor.formatLine(start, end, formats, source);
   }
 
   formatText(start, end, name, value, source) {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
-    this._track(source, () => {
-      Object.keys(formats).forEach((format) => {
-        this.editor.formatAt(start, end-start, format, formats[format]);
-      });
-    });
+    this.editor.formatText(start, end, formats, source);
   }
 
   getBounds(index) {
@@ -162,16 +155,7 @@ class Quill {
 
   getContents(start = 0, end = this.getLength()) {
     [start, end] = this._buildParams(start, end);
-    return this.editor.getDelta().slice(start, end);
-  }
-
-  getFormat(start, end) {
-    [start, end] = this._buildParams(start, end);
-    return this.selection.getFormat(new Selection.Range(start, end));
-  }
-
-  getHTML() {
-    return this.getContents().toHTML();
+    this.editor.getContents(start, end);
   }
 
   getLength() {
@@ -190,30 +174,21 @@ class Quill {
 
   getText(start = 0, end = this.getLength()) {
     [start, end] = this._buildParams(start, end);
-    let values = [].concat.apply([], this.editor.getValue());
-    return values.map(function(value) {
-      return typeof value === 'string' ? value : '';
-    }).join('').slice(start, end);
+    return this.editor.getText(start, end);
   }
 
   insertEmbed(index, embed, value, source) {
     let formats;
     [index, , formats, source] = this._buildParams(index, 0, source);
-    this._track(source, () => {
-      this.editor.insertAt(index, embed, value, source);
-    });
+    this.editor.insertEmbed(index, embed, value, source);
   }
 
   insertText(index, text, name, value, source) {
     let formats;
     [index, , formats, source] = this._buildParams(index, 0, name, value, source);
-    this.editor.insertAt(index, text, source);
-    Object.keys(formats).forEach((format) => {
-      this.editor.formatAt(index, text.length, format, formats[format]);
-    });
+    this.editor.insertText(index, text, formats, source);
   }
 
-  // TODO what about other eventemitter functions
   off(...args) {
     this.emitter.off(...args)
   }
@@ -248,16 +223,8 @@ class Quill {
   }
 
   setSelection(start, end = start, source = Quill.sources.API) {
-    let range;
-    if (typeof end === 'string') {
-      source = end, end = start;
-    }
-    if (typeof start === 'number' && typeof end === 'number') {
-      range = new Selection.Range(start, end);
-    } else {
-      range = start;
-    }
-    this.selection.setRange(range, source);
+    [start, end, , source] = this._buildParams(start, end, source);
+    this.selection.setRange(new Range(start, end), source);
   }
 
   setText(text, source = Quill.sources.API) {
@@ -273,7 +240,7 @@ class Quill {
     if (Array.isArray(delta)) {
       delta = new Delta(delta.slice());
     }
-    this.editor.applyDelta(delta);
+    this.editor.applyDelta(delta, source);
   }
 
 
@@ -305,12 +272,6 @@ class Quill {
     // Handle optional source
     source = source || Quill.sources.API;
     return [start, end, formats, source];
-  }
-
-  _track(source, callback) {
-    this.update();
-    callback.call(this);
-    this.update(source);
   }
 }
 

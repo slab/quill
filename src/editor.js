@@ -12,40 +12,63 @@ class Editor {
 
   applyDelta(delta, source) {
     delta.ops.reduce((index, op) => {
-      if (op.insert != null) {
-        // TODO handle insert with attributes
-        if (typeof op.insert === 'string') {
-          this.insertAt(index, op.insert);
-          return index + op.insert.length;
-        } else {
-          let key = Object.keys(op.insert)[0];
-          this.insertAt(index, key, op.insert[key]);
-          return index + 1;
-        }
-      } else if (typeof op.delete === 'number') {
-        this.deleteAt(index, op.delete);
+      if (typeof op.delete === 'number') {
+        this.scroll.deleteAt(index, op.delete);
         return index;
-      } else if (typeof op.retain === 'number') {
-        Object.keys(op.attributes || {}).forEach((name) => {
-          this.formatAt(index, op.retain, name, op.attributes[name]);
-        });
-        return index + op.retain;
       }
+      let length = op.retain || op.insert.length || 1;
+      if (typeof op.insert === 'string') {
+        this.scroll.insertAt(index, op.insert);
+      } else if (typeof op.insert === 'object') {
+        let key = Object.keys(op.insert)[0];
+        this.scroll.insertAt(index, key, op.insert[key]);
+      }
+      Object.keys(op.attributes || {}).forEach((name) => {
+        this.scroll.formatAt(index, op.retain, name, op.attributes[name]);
+      });
+      return index + length;
     }, 0);
     this.update(source);
   }
 
-  deleteAt(index, length, source) {
+  deleteText(start, end, source) {
     this.scroll.deleteAt(index, length);
-  }
-
-  insertAt(index, value, source) {
-    this.scroll.insertAt(index, value);
     this.update(source);
   }
 
-  formatAt(index, length, format, value) {
-    this.scroll.formatAt(index, length, format, value);
+  enable(enabled = true) {
+    this.scroll.domNode.setAttribute('contenteditable', enabled);
+  }
+
+  formatLine(start, end, formats, source) {
+    Object.keys(formats).forEach((format) => {
+      this.scroll.getLines(start, end - start).forEach(function(line) {
+        line.format(format, formats[format]);
+      });
+    });
+    this.update(source);
+  }
+
+  formatText(start, end, formats, source) {
+    Object.keys(formats).forEach((format) => {
+      this.scroll.formatAt(start, end - start, format, formats[format]);
+    });
+    this.update(source);
+  }
+
+  getContents(start, end) {
+    return this.delta.slice(start, end);
+  }
+
+  getDelta() {
+    return this.scroll.getLines().reduce((delta, child) => {
+      // TODO implement without block knowing about deltas
+      return delta.concat(child.getDelta());
+    }, new Delta());
+  }
+
+  getHTML() {
+    return this.delta.toHTML();
   }
 
   getText(start, end) {
@@ -56,6 +79,16 @@ class Editor {
     }).join('').slice(start, end);
   }
 
+  insertEmbed(index, embed, value, formats, source) {
+    this.scroll.insertAt(index, embed, value);
+    this.formatText(index, index + 1, formats, source);
+  }
+
+  insertText(index, text, formats, source) {
+    this.scroll.insertAt(index, text);
+    this.formatText(index, index + text.length, formats, source);
+  }
+
   update(source) {
     let oldDelta = this.delta;
     this.delta = this.getDelta();
@@ -63,21 +96,6 @@ class Editor {
     if (change.length() > 0) {
       this.emitter.emit('text-change', change, source);
     }
-  }
-
-  enable(enabled = true) {
-    this.scroll.domNode.setAttribute('contenteditable', enabled);
-  }
-
-  getDelta() {
-    return this.scroll.getLines().reduce((delta, child) => {
-      return delta.concat(child.getDelta());
-    }, new Delta());
-  }
-
-  optimize(mutations) {
-    this.ensureChild();
-    super.optimize(mutations);
   }
 }
 
