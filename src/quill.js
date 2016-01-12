@@ -5,6 +5,7 @@ import Parchment from 'parchment';
 import Scroll from './scroll';
 import Selection, { Range } from './selection';
 import extend from 'extend';
+import logger from './lib/logger';
 
 import EventEmitter from 'eventemitter3';
 
@@ -22,9 +23,14 @@ import ImageFormat from './formats/image';
 import InlineFormat from './formats/inline';
 
 
-let sharedEmitter = new EventEmitter();
+let debug = logger('quill');
 
-class Quill extends EventEmitter {
+
+class Quill {
+  static debug(limit) {
+    logger.level(limit);
+  }
+
   static import(name) {
     switch (name) {
       case 'delta'      : return Delta;
@@ -37,30 +43,29 @@ class Quill extends EventEmitter {
   static registerFormat(format) {
     let name = format.blotName || format.attrName;
     if (Parchment.match(name)) {
-      sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " format");
+      debug.warn(`Overwriting ${name} format`);
     }
     Parchment.register(format);
   }
 
   static registerModule(name, module) {
     if (Quill.modules[name] != null) {
-      sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " module");
+      debug.warn(`Overwriting ${name} module`);
     }
     Quill.modules[name] = module;
   }
 
   static registerTheme(name, theme) {
     if (Quill.themes[name] != null) {
-      sharedEmitter.emit(Quill.events.DEBUG, 'warning', "Overwriting " + name + " theme");
+      debug.warn(`Overwriting ${name} theme`);
     }
     Quill.themes[name] = theme;
   }
 
   constructor(container, options = {}) {
-    // sharedEmitter.on(Quill.events.DEBUG, this.emit.bind(this, Quill.events.DEBUG));
     this.container = typeof container === 'string' ? document.querySelector(container) : container;
     if (this.container == null) {
-      throw new Error('Invalid Quill container');
+      return debug.error('Invalid Quill container', container);
     }
     let moduleOptions = extend({}, Quill.DEFAULTS.modules, options.modules);
     let html = this.container.innerHTML;
@@ -78,7 +83,7 @@ class Quill extends EventEmitter {
     // this.selection = new Selection(this.scroll, this.emitter);
     let themeClass = Quill.themes[this.options.theme || 'base'];
     if (themeClass == null) {
-      throw new Error("Cannot load " + this.options.theme + " theme. Are you sure you registered it?");
+      return debug.error(`Cannot load ${this.options.theme} theme. Are you sure you registered it?`);
     }
     this.theme = new themeClass(this, this.options);
     Object.keys(this.options.modules).forEach((name) => {
@@ -100,7 +105,7 @@ class Quill extends EventEmitter {
   addModule(name, options = {}) {
     let moduleClass = Quill.modules[name];
     if (moduleClass == null) {
-      throw new Error("Cannot load " + name + " module. Are you sure you registered it?");
+      return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
     }
     if (options === true) {  // Allow addModule('module', true)
       options = {};
@@ -297,7 +302,6 @@ Quill.DEFAULTS = {
   theme: 'base'
 };
 Quill.events = {
-  DEBUG             : 'debug',
   FORMAT_INIT       : 'format-init',
   MODULE_INIT       : 'module-init',
   POST_EVENT        : 'post-event',
