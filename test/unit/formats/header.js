@@ -38,7 +38,7 @@ describe('Formats', function() {
 
     it('change', function() {
       let editor = this.setEditor('<h1><em>0123</em></h1>');
-      editor.formatAt(4, 5, { header: 2 });
+      editor.formatText(4, 5, { header: 2 });
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { italic: true })
         .insert('\n', { header: 2 })

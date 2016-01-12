@@ -30,15 +30,6 @@ class Block extends Parchment.Block {
     return super.findPath(index, true);
   }
 
-  format(name, value) {
-    let blot = Parchment.match(name, Parchment.Type.BLOT);
-    if (blot != null && blot.prototype instanceof Parchment.Block) {
-      super.format(name, value);
-    } else if (Parchment.match(name, Parchment.Type.ATTRIBUTE)) {
-      super.format(name, value);
-    }
-  }
-
   formatAt(index, length, name, value) {
     if (length <= 0) return;
     if (index + length >= this.getLength()) {

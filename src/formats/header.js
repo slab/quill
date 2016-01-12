@@ -4,13 +4,6 @@ import Parchment from 'parchment';
 
 
 class Header extends Block {
-  constructor(value) {
-    if (!(value instanceof Node)) {
-      value = document.createElement(Header.tagName[parseInt(value) - 1]);
-    }
-    super(value);
-  }
-
   getFormat() {
     let formats = super.getFormat();
     formats.header = Header.tagName.indexOf(this.domNode.tagName) + 1;
