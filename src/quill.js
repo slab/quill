@@ -7,8 +7,6 @@ import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './lib/logger';
 
-import EventEmitter from 'eventemitter3';
-
 import BaseTheme from './themes/base';
 import SnowTheme from './themes/snow';
 
@@ -72,18 +70,18 @@ class Quill {
     this.container.innerHTML = '';
     this.options = extend({}, Quill.DEFAULTS, options);
     this.options.modules = moduleOptions;
-    this.options.id = uniqueId('ql-editor-');
     this.modules = {};
+    // TODO scroll will reset innerHTML as well, do not do twice
     this.root = this.addContainer('ql-editor');
     this.root.innerHTML = html.trim();
-    this.root.setAttribute('id', this.options.id);
     this.emitter = new Emitter();
     this.scroll = new Scroll(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
     // this.selection = new Selection(this.scroll, this.emitter);
     let themeClass = Quill.themes[this.options.theme || 'base'];
     if (themeClass == null) {
-      return debug.error(`Cannot load ${this.options.theme} theme. Are you sure you registered it?`);
+      debug.error(`Cannot load ${this.options.theme} theme. It may not be registered. Loading default theme.`);
+      themeClass = Quill.themes['base'];
     }
     this.theme = new themeClass(this, this.options);
     Object.keys(this.options.modules).forEach((name) => {
@@ -102,6 +100,10 @@ class Quill {
     return container;
   }
 
+  addListener() {
+    return this.emitter.addListener.apply(this.emitter, arguments);
+  }
+
   addModule(name, options = {}) {
     let moduleClass = Quill.modules[name];
     if (moduleClass == null) {
@@ -115,7 +117,7 @@ class Quill {
     }
     options = extend(moduleClass.DEFAULTS || {}, this.theme.constructor.OPTIONS[name], options);
     this.modules[name] = new moduleClass(this, options);
-    // this.emit(Quill.events.MODULE_INIT, name, this.modules[name]);
+    this.emitter.emit(Emitter.events.MODULE_INIT, name, this.modules[name]);
     return this.modules[name];
   }
 
@@ -126,12 +128,6 @@ class Quill {
 
   disable() {
     this.editor.enable(false);
-  }
-
-  emit(eventName, ...rest) {
-    super.emit(Quill.events.PRE_EVENT, eventName, ...rest);
-    super.emit(eventName, ...rest);
-    super.emit(Quill.events.POST_EVENT, eventName, ...rest);
   }
 
   enable() {
@@ -194,27 +190,40 @@ class Quill {
     this.editor.insertText(index, text, formats, source);
   }
 
-  off(...args) {
-    this.emitter.off(...args)
+  off() {
+    return this.emitter.off.apply(this.emitter, arguments);
   }
 
-  on(...args) {
-    this.emitter.on(...args);
+  on() {
+    return this.emitter.on.apply(this.emitter, arguments);
+  }
+
+  once() {
+    return this.emitter.once.apply(this.emitter, arguments);
   }
 
   onModuleLoad(name, callback) {
     if (this.modules[name]) {   // Module already loaded
       callback(this.modules[name]);
     }
-    this.on(Quill.events.MODULE_INIT, function(moduleName, module) {
+    this.on(Editor.events.MODULE_INIT, function(moduleName, module) {
       if (moduleName === name) {
         return callback(module);
       }
     });
   }
 
+  // TODO better name
   prepareFormat(name, value) {
     this.selection.prepare(name, value);
+  }
+
+  removeAllListeners() {
+    return this.emitter.removeAllListeners.apply(this.emitter, arguments);
+  }
+
+  removeListener() {
+    return this.emitter.removeListener.apply(this.emitter, arguments);
   }
 
   setContents(delta, source = Quill.sources.API) {
@@ -223,7 +232,7 @@ class Quill {
     } else {
       delta = delta.slice();
     }
-    delta.delete(this.editor.getLength());
+    delta.delete(this.getLength());
     this.editor.applyDelta(delta);
   }
 
@@ -280,6 +289,7 @@ class Quill {
   }
 }
 
+
 Quill.version = QUILL_VERSION;
 Quill.modules = {};
 Quill.themes = {};
@@ -301,25 +311,8 @@ Quill.DEFAULTS = {
   readOnly: false,
   theme: 'base'
 };
-Quill.events = {
-  FORMAT_INIT       : 'format-init',
-  MODULE_INIT       : 'module-init',
-  POST_EVENT        : 'post-event',
-  PRE_EVENT         : 'pre-event',
-  SELECTION_CHANGE  : 'selection-change',
-  TEXT_CHANGE       : 'text-change'
-};
-Quill.sources = {
-  API    : 'api',
-  SILENT : 'silent',
-  USER   : 'user'
-};
-
-
-function uniqueId(prefix) {
-  uniqueId.counter = uniqueId.counter || 1;
-  return prefix + (uniqueId.counter++);
-}
+Quill.events = Emitter.events;
+Quill.sources = Emitter.sources;
 
 
 Quill.registerTheme('base', BaseTheme);

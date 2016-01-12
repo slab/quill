@@ -1,35 +1,27 @@
 import Delta from 'rich-text/lib/delta';
-import Quill from '../../src/quill';
+import Emitter from '../../src/emitter';
 
 
 describe('Events', function() {
   describe('Editor', function() {
-    // TODO change this to spies
     beforeEach(function() {
-      this.quilll = this.setContainer('<p>0123</p>');
-      this.quill = new Quill(this.container);
-      this.handler = function() {};
-      this.quill.on(Quill.events.TEXT_CHANGE, (delta, source) => {
-        this.handler(delta, source);
-      });
+      this.editor = this.setEditor('<p>0123</p>');
+      spyOn(this.editor.emitter, 'emit').and.callThrough();
     });
 
-    it('api text insert', function(callback) {
-      this.handler = function(delta, source) {
-        expect(delta).toEqual(new Delta().retain(2).insert('!'));
-        expect(source).toBe(Quill.sources.API);
-        callback();
-      }
-      this.quill.insertText(2, '!');
+    it('api text insert', function() {
+      this.editor.insertText(2, '!');
+      let delta = new Delta().retain(2).insert('!');
+      expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, Emitter.sources.API);
     });
 
     it('user text insert', function(callback) {
-      this.handler = function(delta, source) {
-        expect(delta).toEqual(new Delta().retain(2).insert('!'));
-        expect(source).toBe(Quill.sources.USER);
+      this.container.firstChild.firstChild.data = '01!23';
+      setTimeout(() => {
+        let delta = new Delta().retain(2).insert('!');
+        expect(this.editor.emitter.emit.calls.mostRecent().args).toEqual([Emitter.events.TEXT_CHANGE, delta, Emitter.sources.USER]);
         callback();
-      };
-      this.quill.root.firstChild.firstChild.data = '01!23';
+      }, 1000);
     });
   });
 });

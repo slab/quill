@@ -2,6 +2,7 @@ import Quill from '../src/index';
 
 import {} from './helpers/unit.js';
 
+import ScrollTests from './unit/scroll';
 import EditorTests from './unit/editor';
 import SelectionTests from './unit/selection';
 import EventTests from './unit/events';

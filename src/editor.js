@@ -1,4 +1,5 @@
 import Delta from 'rich-text/lib/delta';
+import Emitter from './emitter';
 import Parchment from 'parchment';
 
 
@@ -6,11 +7,11 @@ class Editor {
   constructor(scroll, emitter) {
     this.scroll = scroll;
     this.emitter = emitter;
-    this.emitter.on('scroll-update', this.update, this);
+    this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update, this);
     this.delta = this.getDelta();
   }
 
-  applyDelta(delta, source) {
+  applyDelta(delta, source = Emitter.sources.API) {
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
@@ -31,8 +32,8 @@ class Editor {
     this.update(source);
   }
 
-  deleteText(start, end, source) {
-    this.scroll.deleteAt(index, length);
+  deleteText(start, end, source = Emitter.sources.API) {
+    this.scroll.deleteAt(start, end - start);
     this.update(source);
   }
 
@@ -40,7 +41,7 @@ class Editor {
     this.scroll.domNode.setAttribute('contenteditable', enabled);
   }
 
-  formatLine(start, end, formats, source) {
+  formatLine(start, end, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
       this.scroll.getLines(start, end - start).forEach(function(line) {
         line.format(format, formats[format]);
@@ -49,7 +50,7 @@ class Editor {
     this.update(source);
   }
 
-  formatText(start, end, formats, source) {
+  formatText(start, end, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(start, end - start, format, formats[format]);
     });
@@ -79,22 +80,22 @@ class Editor {
     }).join('').slice(start, end);
   }
 
-  insertEmbed(index, embed, value, formats, source) {
+  insertEmbed(index, embed, value, formats = {}, source = Emitter.sources.API) {
     this.scroll.insertAt(index, embed, value);
     this.formatText(index, index + 1, formats, source);
   }
 
-  insertText(index, text, formats, source) {
+  insertText(index, text, formats = {}, source = Emitter.sources.API) {
     this.scroll.insertAt(index, text);
     this.formatText(index, index + text.length, formats, source);
   }
 
-  update(source) {
+  update(source = Emitter.sources.USER) {
     let oldDelta = this.delta;
     this.delta = this.getDelta();
     let change = oldDelta.diff(this.delta);
     if (change.length() > 0) {
-      this.emitter.emit('text-change', change, source);
+      this.emitter.emit(Emitter.events.TEXT_CHANGE, change, source);
     }
   }
 }

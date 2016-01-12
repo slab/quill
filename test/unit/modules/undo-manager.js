@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Quill from '../../../src/quill';
 
 
-describe('UndoManager', function() {
+xdescribe('UndoManager', function() {
   beforeEach(function() {
     this.setContainer('<div><p>The lazy fox</p></div>');
     this.quill = new Quill(this.container.firstChild, {

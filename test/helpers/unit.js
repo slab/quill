@@ -1,4 +1,7 @@
 import Editor from '../../src/editor';
+import Emitter from '../../src/emitter';
+import Scroll from '../../src/scroll';
+
 
 let $div = $('<div>').attr('id', 'test-container');
 $(document.body).prepend($div);
@@ -53,7 +56,9 @@ beforeEach(function() {
 
   this.setEditor = (html, container = this.container) => {
     this.setContainer(html, container);
-    return new Editor(container);
+    let emitter = new Emitter();
+    let scroll = new Scroll(container, emitter);
+    return new Editor(scroll, emitter);
   }
 });
 

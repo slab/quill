@@ -1,3 +1,4 @@
+import Emitter from './emitter';
 import Parchment from 'parchment';
 
 
@@ -52,7 +53,7 @@ class Scroll extends Parchment.Container {
   }
 
   update(mutations) {
-    let source = 'user';
+    let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
       source = mutations;
     }
@@ -61,7 +62,7 @@ class Scroll extends Parchment.Container {
     }
     super.update(mutations);
     if (mutations.length > 0) {
-      this.emitter.emit('scroll-update', source);
+      this.emitter.emit(Emitter.events.SCROLL_UPDATE, source);
     }
   }
 }

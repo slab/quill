@@ -3,7 +3,7 @@ import Editor from '../../src/editor';
 
 
 describe('Editor', function() {
-  describe('toDelta()', function() {
+  describe('delta', function() {
     it('empty', function() {
       let editor = this.setEditor('');
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
@@ -67,94 +67,10 @@ describe('Editor', function() {
     });
   });
 
-  describe('findPath', function() {
-    it('middle', function() {
-      let editor = this.setEditor('<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
-      let path = editor.findPath(7);
-      let expected = [
-        { blot: 'block', offset: 0 },
-        { blot: 'italic', offset: 2 },
-        { blot: 'bold', offset: 4 },
-        { blot: 'text', offset: 1 }
-      ];
-      expect(path.length).toEqual(expected.length);
-      expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
-      });
-    });
-
-    it('inclusive default', function() {
-      let editor = this.setEditor('<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
-      let path = editor.findPath(6);
-      let expected = [
-        { blot: 'block', offset: 0 },
-        { blot: 'italic', offset: 2 },
-        { blot: 'bold', offset: 2 },
-        { blot: 'underline', offset: 0 },
-        { blot: 'text', offset: 2 }
-      ];
-      expect(path.length).toEqual(expected.length);
-      expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
-      });
-    });
-
-    it('end of line', function() {
-      let editor = this.setEditor('<p><em>01</em><strong>23</strong></p><h1>5</h1>');
-      let path = editor.findPath(4);
-      let expected = [
-        { blot: 'block', offset: 2 },
-        { blot: 'bold', offset: 0 },
-        { blot: 'text', offset: 2 }
-      ];
-      expect(path.length).toEqual(expected.length);
-      expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
-      });
-    });
-
-    it('newline boundary', function() {
-      let editor = this.setEditor('<p><em>01</em><strong>23</strong></p><h1>5</h1>');
-      let path = editor.findPath(5);
-      let expected = [
-        { blot: 'header', offset: 0 },
-        { blot: 'text', offset: 0 }
-      ];
-      expect(path.length).toEqual(expected.length);
-      expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
-      });
-    });
-
-    it('beyond document', function() {
-      let editor = this.setEditor('<p><em>01</em><strong>23</strong></p>');
-      let path = editor.findPath(5);
-      expect(path.length).toEqual(0);
-    });
-
-    it('empty line', function() {
-      let editor = this.setEditor('<p><br></p>');
-      let path = editor.findPath(0);
-      let expected = [
-        { blot: 'block', offset: 0 },
-        { blot: 'break', offset: 0 }
-      ];
-      expect(path.length).toEqual(expected.length);
-      expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
-      });
-    });
-  });
-
-  describe('insertAt()', function() {
+  describe('insert', function() {
     it('text', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(2, '!!');
+      editor.insertText(2, '!!');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01!!23', { bold: true })
         .insert('\n')
@@ -164,7 +80,7 @@ describe('Editor', function() {
 
     it('embed', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(2, 'image', '/favicon.png');
+      editor.insertEmbed(2, 'image', '/favicon.png');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert({ image: '/favicon.png'}, { bold: true })
@@ -176,14 +92,14 @@ describe('Editor', function() {
 
     it('on empty line', function() {
       let editor = this.setEditor('<p>0</p><p><br></p><p>3</p>');
-      editor.insertAt(2, '!');
+      editor.insertText(2, '!');
       expect(editor.getDelta()).toEqual(new Delta().insert('0\n!\n3\n'));
       expect(this.container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
     it('newline splitting', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(2, '\n');
+      editor.insertText(2, '\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert('\n')
@@ -198,7 +114,7 @@ describe('Editor', function() {
 
     it('prepend newline', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(0, '\n');
+      editor.insertText(0, '\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('\n')
         .insert('0123', { bold: true })
@@ -212,7 +128,7 @@ describe('Editor', function() {
 
     it('append newline', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(4, '\n');
+      editor.insertText(4, '\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { bold: true })
         .insert('\n\n')
@@ -225,7 +141,7 @@ describe('Editor', function() {
 
     it('multiline text', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(2, '\n!!\n!!\n');
+      editor.insertText(2, '\n!!\n!!\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert('\n')
@@ -245,7 +161,7 @@ describe('Editor', function() {
 
     it('multiple newlines', function() {
       let editor = this.setEditor('<p><strong>0123</strong></p>');
-      editor.insertAt(2, '\n\n');
+      editor.insertText(2, '\n\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
         .insert('\n\n')
@@ -260,10 +176,10 @@ describe('Editor', function() {
     });
   });
 
-  describe('deleteAt()', function() {
+  describe('delete', function() {
     it('inner node', function() {
       let editor = this.setEditor('<p><em><strong>0123</strong></em></p>');
-      editor.deleteAt(1, 2);
+      editor.deleteText(1, 3);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('03', { bold: true, italic: true })
         .insert('\n')
@@ -273,7 +189,7 @@ describe('Editor', function() {
 
     it('parts of multiple lines', function() {
       let editor = this.setEditor('<p><em>0123</em></p><p><em>5678</em></p>');
-      editor.deleteAt(2, 5);
+      editor.deleteText(2, 7);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0178', { italic: true })
         .insert('\n')
@@ -283,14 +199,14 @@ describe('Editor', function() {
 
     it('entire line keeping newline', function() {
       let editor = this.setEditor('<p><em><strong>0123</strong></em></p>');
-      editor.deleteAt(0, 4);
+      editor.deleteText(0, 4);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('newline', function() {
       let editor = this.setEditor('<p><em>0123</em></p><p><em>5678</em></p>');
-      editor.deleteAt(4, 1);
+      editor.deleteText(4, 5);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01235678', { italic: true })
         .insert('\n')
@@ -300,14 +216,14 @@ describe('Editor', function() {
 
     it('entire document', function() {
       let editor = this.setEditor('<p><em><strong>0123</strong></em></p>');
-      editor.deleteAt(0, 5);
+      editor.deleteText(0, 5);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('multiple complete lines', function() {
       let editor = this.setEditor('<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>');
-      editor.deleteAt(0, 8);
+      editor.deleteText(0, 8);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('890', { italic: true })
         .insert('\n')
