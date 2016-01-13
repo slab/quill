@@ -1,7 +1,7 @@
-var CHROME_VERSION = '46';
-var FIREFOX_VERSION = '41';
+var CHROME_VERSION = '47';
+var FIREFOX_VERSION = '43';
 var SAFARI_VERSION = '9';
-var IOS_VERSION = '9.1';      // Add space prefix when decimal is 0
+var IOS_VERSION = '9.2';      // Add space prefix when decimal is 0
 var ANDROID_VERSION = '5.1';  // Workaround for optimist converting to float
 
 var browsers = {
