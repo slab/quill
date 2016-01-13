@@ -13,7 +13,7 @@ module.exports = function(config) {
     configFile: __dirname + '/karma.conf.js',
     files: [
       'node_modules/jquery/dist/jquery.js',
-      'node_modules/lodash/index.js',
+      'node_modules/lodash/lodash.js',
 
       'http://' + config.host + '/quill.base.css',
       'http://' + config.host + '/test/quill.js'
@@ -76,10 +76,9 @@ module.exports = function(config) {
         browserNoActivityTimeout: 60000,
         reporters: ['dots']
       };
-      if (process.env.TRAVIS_BRANCH === 'master') {
-        remote.reporters.push('saucelabs');
-      }
-      var server = new karma.Server(_.defaults(remote, karmaCommon), callback).start();
+      var server = new karma.Server(_.defaults(remote, karmaCommon));
+      server.start();
+      callback();
     });
   });
 

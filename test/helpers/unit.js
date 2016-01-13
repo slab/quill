@@ -92,7 +92,7 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
     }
     if (node1.childNodes.length === 0) return null;
     let message = '';
-    if (_.any($(node1).contents(), function(child1, i) {
+    if (_.some($(node1).contents(), function(child1, i) {
       message = compareNodes(child1, node2.childNodes[i], ignoredAttributes);
       return message;
     })) {
