@@ -77,7 +77,7 @@ Quill [releases](https://github.com/quilljs/quill/releases) also contain these e
 
 With the dev server (`gulp dev`) you can also run the unit tests with your browser:
 
-- [localhost:9000/karma/debug.html](localhost:9000/karma/debug.html)
+- [localhost:9000/karma/debug.html](http://localhost:9000/karma/debug.html)
 
 ### Testing
 
