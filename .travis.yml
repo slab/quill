@@ -1,5 +1,11 @@
 language: node_js
-node_js: '0.12'
+node_js: '4'
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
 script:
   - gulp remote:$TEST
 sudo: false
