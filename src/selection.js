@@ -1,4 +1,5 @@
 import Parchment from 'parchment';
+import Emitter from './emitter';
 import CursorBlot from './blots/cursor';
 import equal from 'deep-equal';
 import extend from 'extend';
@@ -35,11 +36,12 @@ class Selection {
     this.root = this.scroll.domNode;
     this.lastRange = this.savedRange = new Range(0, 0);
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
-      this.root.addEventListener(eventName, () => {
-        this.update();  // Do not pass event handler params
-      });
+      this.root.addEventListener(eventName, this.update.bind(this, Emitter.sources.USER));
     });
-    this.update();
+    this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
+      if (delta.length > 0) this.update(Emitter.sources.SILENT);
+    });
+    this.update(Emitter.sources.SILENT);
   }
 
   checkFocus() {
@@ -117,9 +119,8 @@ class Selection {
     return new Range(Math.min(...indexes), Math.max(...indexes));
   }
 
-  onUpdate(range) { }
-
   prepare(format, value) {
+    return;
     this.update();
     let range = this.getRange();
     let cursor, index = range.start;
@@ -174,7 +175,7 @@ class Selection {
     }
   }
 
-  setRange(range) {
+  setRange(range, source = Emitter.sources.API) {
     if (range != null) {
       let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
       let args = [];
@@ -190,10 +191,10 @@ class Selection {
     } else {
       this.setNativeRange(null);
     }
-    this.update();
+    this.update(source);
   }
 
-  update(...args) {
+  update(source = Emitter.sources.USER) {
     let oldRange = this.lastRange;
     this.lastRange = this.getRange();
     if (this.lastRange != null) {
@@ -203,7 +204,7 @@ class Selection {
       if (this.lastRange != null) {
         this._cleanCursors(this.lastRange);
       }
-      this.onUpdate(this.lastRange, ...args);
+      this.emitter.emit(Emitter.events.SELECTION_CHANGE, this.lastRange, source);
     }
   }
 

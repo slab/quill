@@ -87,9 +87,7 @@ class Quill {
     Object.keys(this.options.modules).forEach((name) => {
       this.addModule(name, this.options.modules[name]);
     });
-    if (this.options.readOnly) {
-      this.disable();
-    }
+    this.enable(!this.options.readOnly);
   }
 
   addContainer(className, before = false) {
@@ -130,8 +128,8 @@ class Quill {
     this.editor.enable(false);
   }
 
-  enable() {
-    this.editor.enable();
+  enable(enabled = true) {
+    this.editor.enable(enabled);
   }
 
   focus() {
@@ -247,7 +245,8 @@ class Quill {
   }
 
   update(source = Quill.sources.USER) {
-    this.scroll.update(source);
+    this.scroll.update(source);       // Will update selection before selection.update() does if text changes
+    this.selection.update(source);
   }
 
   updateContents(delta, source = Quill.sources.API) {
