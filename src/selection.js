@@ -29,9 +29,10 @@ class Range {
 
 
 class Selection {
-  constructor(doc) {
-    this.doc = doc;
-    this.root = this.doc.domNode;
+  constructor(scroll, emitter) {
+    this.emitter = emitter;
+    this.scroll = scroll;
+    this.root = this.scroll.domNode;
     this.lastRange = this.savedRange = new Range(0, 0);
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
       this.root.addEventListener(eventName, () => {
@@ -52,7 +53,7 @@ class Selection {
   }
 
   getBounds(index) {
-    let pos = this.doc.findPath(index).pop();
+    let pos = this.scroll.findPath(index).pop();
     if (pos == null) return null;
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let side = 'left';
@@ -111,7 +112,7 @@ class Selection {
     let indexes = positions.map((position) => {
       let [container, offset] = position;
       let blot = Parchment.findBlot(container, true);
-      return blot.offset(this.doc) + blot.findOffset(container) + offset;
+      return blot.offset(this.scroll) + blot.findOffset(container) + offset;
     });
     return new Range(Math.min(...indexes), Math.max(...indexes));
   }
@@ -122,16 +123,16 @@ class Selection {
     this.update();
     let range = this.getRange();
     let cursor, index = range.start;
-    let pos = this.doc.findPath(index).pop();
+    let pos = this.scroll.findPath(index).pop();
     if (pos.blot instanceof CursorBlot) {
       index -= 1;
     } else {
       pos.blot.insertAt(pos.offset, 'cursor', {});
-      pos = this.doc.findPath(index + 1).pop();
+      pos = this.scroll.findPath(index + 1).pop();
       // pos can be null if insertAt was a noop
       if (pos == null || !(pos.blot instanceof CursorBlot)) return;
     }
-    this.doc.formatAt(index, 1, format, value);
+    this.scroll.formatAt(index, 1, format, value);
     this.setNativeRange(pos.blot.textNode, 1);  // Cursor will not blink if we select cursor.textNode
     this.update();
   }
@@ -143,10 +144,10 @@ class Selection {
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let containerHeight = containerBounds.bottom - containerBounds.top;
     if (containerHeight < endBounds.top + endBounds.height) {
-      let [line, offset] = this.doc.findLineAt(this.lastRange.end);
+      let [line, offset] = this.scroll.findLine(this.lastRange.end);
       return line.node.scrollIntoView(false);
     } else if (startBounds.top < 0) {
-      let [line, offset] = this.doc.findLineAt(this.lastRange.start);
+      let [line, offset] = this.scroll.findLine(this.lastRange.start);
       return line.node.scrollIntoView();
     }
   }
@@ -178,7 +179,7 @@ class Selection {
       let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
       let args = [];
       indexes.map((index) => {
-        let [node, offset] = this.doc.findNode(index);
+        let [node, offset] = this.scroll.findNode(index);
         if (node instanceof Text) {
           args.push(node, offset);
         } else {
@@ -209,8 +210,8 @@ class Selection {
   _cleanCursors(range) {
     let cursor = Parchment.findBlot(this.root.querySelector(`.${Parchment.PREFIX}cursor`));
     if (cursor == null || cursor.domNode.innerHTML === CursorBlot.CONTENTS) return;
-    let start = this.doc.findPath(range.start).pop();
-    let end = range.isCollapsed() ? start : this.doc.findPath(range.end).pop();
+    let start = this.scroll.findPath(range.start).pop();
+    let end = range.isCollapsed() ? start : this.scroll.findPath(range.end).pop();
     let args = [];
     [start, end].forEach(function(pos) {
       args.push(cursor.textNode, (pos.blot === cursor ? pos.offset - 1 : pos.offset));

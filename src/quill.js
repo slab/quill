@@ -77,7 +77,7 @@ class Quill {
     this.emitter = new Emitter();
     this.scroll = new Scroll(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
-    // this.selection = new Selection(this.scroll, this.emitter);
+    this.selection = new Selection(this.scroll, this.emitter);
     let themeClass = Quill.themes[this.options.theme || 'base'];
     if (themeClass == null) {
       debug.error(`Cannot load ${this.options.theme} theme. It may not be registered. Loading default theme.`);
