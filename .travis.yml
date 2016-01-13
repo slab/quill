@@ -14,15 +14,15 @@ cache:
     - node_modules
 env:
   matrix:
-    - TEST=unit-mac-chrome
-    - TEST=unit-mac-firefox
-    - TEST=unit-mac-safari
-    - TEST=unit-windows-chrome
-    - TEST=unit-windows-firefox
-    - TEST=unit-windows-ms-edge
-    - TEST=unit-windows-ie-11
-    - TEST=unit-linux-chrome
-    - TEST=unit-linux-firefox
-    - TEST=unit-ipad
-    - TEST=unit-iphone
-    - TEST=unit-android
+    - CXX=g++-4.8 TEST=unit-mac-chrome
+    - CXX=g++-4.8 TEST=unit-mac-firefox
+    - CXX=g++-4.8 TEST=unit-mac-safari
+    - CXX=g++-4.8 TEST=unit-windows-chrome
+    - CXX=g++-4.8 TEST=unit-windows-firefox
+    - CXX=g++-4.8 TEST=unit-windows-ms-edge
+    - CXX=g++-4.8 TEST=unit-windows-ie-11
+    - CXX=g++-4.8 TEST=unit-linux-chrome
+    - CXX=g++-4.8 TEST=unit-linux-firefox
+    - CXX=g++-4.8 TEST=unit-ipad
+    - CXX=g++-4.8 TEST=unit-iphone
+    - CXX=g++-4.8 TEST=unit-android
