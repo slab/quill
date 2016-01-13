@@ -19,6 +19,8 @@ Equation.blotName = 'equation';
 Equation.tagName = 'SPAN';
 
 
-Parchment.register(Equation, false);
+Parchment.register(Equation);     // TODO figure out interface/API
+Parchment.register(Parchment.Inline);
+
 
 export { Equation as default };

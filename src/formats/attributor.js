@@ -2,32 +2,32 @@ import Parchment from 'parchment';
 
 
 let Align = new Parchment.Attributor.Style('align', 'text-align', {
-  scope: Parchment.Block,
+  scope: Parchment.Scope.BLOCK,
   whitelist: ['left', 'right', 'center', 'justify']
 });
 let Direction = new Parchment.Attributor.Style('direction', 'direction', {
-  scope: Parchment.Block,
+  scope: Parchment.Scope.BLOCK,
   whitelist: ['ltr', 'rtl']
 });
 let Indent = new Parchment.Attributor.Class('indent', 'ql-indent', {
-  scope: Parchment.Block
+  scope: Parchment.Scope.BLOCK
 });
 let List = new Parchment.Attributor.Class('list', 'ql-list', {
-  scope: Parchment.Block,
+  scope: Parchment.Scope.BLOCK,
   whitelist: ['bullet', 'ordered']
 });
 
 let Background = new Parchment.Attributor.Style('background', 'background-color', {
-  scope: Parchment.Inline
+  scope: Parchment.Scope.INLINE
 });
 let Color = new Parchment.Attributor.Style('color', 'color', {
-  scope: Parchment.Inline
+  scope: Parchment.Scope.INLINE
 });
 let Font = new Parchment.Attributor.Style('font', 'font-family', {
-  scope: Parchment.Inline
+  scope: Parchment.Scope.INLINE
 });
 let Size = new Parchment.Attributor.Style('size', 'font-size', {
-  scope: Parchment.Inline
+  scope: Parchment.Scope.INLINE
 });
 
 Parchment.register(Align);

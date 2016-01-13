@@ -62,11 +62,6 @@ Link.tagName = 'A';
 
 class Script extends Parchment.Inline {
   constructor(value) {
-    if (value === 'super') {
-      value = document.createElement('sup');
-    } else if (value === 'sub') {
-      value = document.createElement('sub');
-    }
     super(value);
   }
 
@@ -78,6 +73,15 @@ class Script extends Parchment.Inline {
 }
 Script.blotName = 'script';
 Script.tagName = ['SUB', 'SUP'];
+Script.create = function(value) {
+  if (value === 'super') {
+    return document.createElement('sup');
+  } else if (value === 'sub') {
+    return document.createElement('sub');
+  } else {
+    return Parchment.Inline.create(value);
+  }
+}
 
 
 Parchment.register(Bold);

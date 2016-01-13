@@ -23,7 +23,7 @@ describe('Formats', function() {
         .insert('2', { strike: true })
         .insert('3', { underline: true })
         .insert('4', { link: 'http://quilljs.com/' })
-        .insert('5', { 'inline-code': true })
+        .insert('5', { code: true })
         .insert('6', { script: 'super' })
         .insert('7', { script: 'sub' })
         .insert('\n')
@@ -60,12 +60,27 @@ describe('Formats', function() {
       );
     });
 
+    it('overlap', function() {
+      let editor = this.setEditor('<p>012</p>');
+      editor.formatText(0, 2, { bold: true });
+      editor.formatText(1, 3, { italic: true });
+      expect(editor.getDelta()).toEqual(new Delta()
+        .insert('0', { bold: true })
+        .insert('1', { bold: true, italic: true })
+        .insert('2', { italic: true })
+        .insert('\n')
+      );
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p><strong>0</strong><em><strong>1</strong>2</em></p>
+      `);
+    });
+
     it('ordering', function() {
       let editor = this.setEditor('<p>012</p><p>456</p>');
-      editor.formatText(0, 2, { italic: true });
-      editor.formatText(1, 3, { bold: true });
-      editor.formatText(5, 7, { bold: true });
-      editor.formatText(4, 6, { italic: true });
+      editor.formatText(0, 2, { bold: true });
+      editor.formatText(1, 3, { italic: true });
+      editor.formatText(5, 7, { italic: true });
+      editor.formatText(4, 6, { bold: true });
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { bold: true })
         .insert('1', { italic: true, bold: true })

@@ -3,7 +3,7 @@ import Editor from '../../../src/editor';
 
 
 describe('Block', function() {
-  it('definition', function() {
+  xit('definition', function() {
     let editor = this.setEditor(`
       <h1>0</h1>
       <h2>2</h2>

@@ -17,7 +17,7 @@ describe('Attributor', function() {
 
   it('add inline', function() {
     let editor = this.setEditor('<p>0123</p>');
-    editor.formatAt(1, 2, 'color', 'red');
+    editor.formatText(1, 3, { color:  'red' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0')
       .insert('12', { color: 'red' })
@@ -28,7 +28,7 @@ describe('Attributor', function() {
 
   it('add block', function() {
     let editor = this.setEditor('<p>0123</p>');
-    editor.formatAt(4, 1, 'align', 'center');
+    editor.formatText(4, 5, { align: 'center' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { align: 'center' })
@@ -36,17 +36,17 @@ describe('Attributor', function() {
     expect(this.container.innerHTML).toEqualHTML('<p style="text-align: center;">0123</p>');
   });
 
-  it('default', function() {
+  it('removal', function() {
     let editor = this.setEditor('<p style="text-align: center;">0123</p>');
-    editor.formatAt(4, 1, 'align', 'left');
+    editor.formatText(4, 5, { align: false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
   });
 
   it('whitelist', function() {
     let editor = this.setEditor('<p style="text-align: center;">0123</p>')
-    let initial = editor.domNode.innerHTML;
-    editor.formatAt(4, 1, 'align', 'middle');
+    let initial = editor.scroll.domNode.innerHTML;
+    editor.formatText(4, 5, { align: 'middle' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { align: 'center' })
@@ -54,14 +54,19 @@ describe('Attributor', function() {
     expect(this.container.innerHTML).toEqualHTML(initial);
   });
 
-  it('invalid scope', function() {
+  it('invalid inline scope', function() {
     let editor = this.setEditor('<p>0123</p>');
-    let initial = editor.domNode.innerHTML;
-    editor.formatAt(4, 1, 'color', 'red');
-    expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
-    expect(this.container.innerHTML).toEqualHTML(initial);
-    editor.formatAt(1, 2, 'align', 'center');
+    let initial = editor.scroll.domNode.innerHTML;
+    editor.formatText(4, 5, { color: 'red' });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML(initial);
   });
+
+  it('invalid block scope', function() {
+    let editor = this.setEditor('<p>0123</p>');
+    let initial = editor.scroll.domNode.innerHTML;
+    editor.formatText(1, 3, { align: 'center' });
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
+    expect(this.container.innerHTML).toEqualHTML(initial);
+  })
 });

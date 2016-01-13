@@ -156,7 +156,7 @@ class Quill {
 
   getContents(start = 0, end = this.getLength()) {
     [start, end] = this._buildParams(start, end);
-    this.editor.getContents(start, end);
+    return this.editor.getContents(start, end);
   }
 
   getLength() {

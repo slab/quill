@@ -52,6 +52,13 @@ class Scroll extends Parchment.Container {
     super.optimize(mutations);
   }
 
+  remove() {
+    this.children.forEach(function(child) {
+      child.remove();
+    });
+    this.ensureChild();
+  }
+
   update(mutations) {
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
