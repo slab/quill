@@ -87,7 +87,9 @@ class Quill {
     Object.keys(this.options.modules).forEach((name) => {
       this.addModule(name, this.options.modules[name]);
     });
-    this.enable(!this.options.readOnly);
+    if (this.options.readOnly) {
+      this.disable();
+    }
   }
 
   addContainer(className, before = false) {

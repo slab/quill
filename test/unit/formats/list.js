@@ -4,7 +4,7 @@ import Editor from '../../../src/editor';
 
 xdescribe('List', function() {
   it('format', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <p>0123</p>
       <p>5678</p>
       <p>0123</p>`
@@ -25,7 +25,7 @@ xdescribe('List', function() {
   });
 
   it('remove', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <p>0123</p>
       <ol>
         <li>5678</li>
@@ -42,7 +42,7 @@ xdescribe('List', function() {
   });
 
   it('replace', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <p>0123</p>
       <ol>
         <li>5678</li>
@@ -65,7 +65,7 @@ xdescribe('List', function() {
   });
 
   it('format merge', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <ol>
         <li>0123</li>
       </ol>
@@ -93,7 +93,7 @@ xdescribe('List', function() {
   });
 
   it('replace merge', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <ol><li>0123</li></ol>
       <ul><li>5678</li></ul>
       <ol><li>0123</li></ol>`
@@ -117,7 +117,7 @@ xdescribe('List', function() {
   });
 
   it('delete merge', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <ol><li>0123</li></ol>
       <p>5678</p>
       <ol><li>0123</li></ol>`
@@ -138,7 +138,7 @@ xdescribe('List', function() {
   });
 
   it('replace split', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <ol>
         <li>0123</li>
         <li>5678</li>

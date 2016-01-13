@@ -5,7 +5,7 @@ import Editor from '../../../src/editor';
 describe('Formats', function() {
   describe('Inline', function() {
     it('definition', function() {
-      let editor = this.setEditor(`
+      let editor = this.initialize(Editor, `
         <p>
           <strong>0</strong>
           <em>1</em>
@@ -31,7 +31,7 @@ describe('Formats', function() {
     });
 
     it('inner node', function() {
-      let editor = this.setEditor('<p><em>0123</em></p>');
+      let editor = this.initialize(Editor, '<p><em>0123</em></p>');
       editor.formatText(1, 3, { bold: true });
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { italic: true })
@@ -43,7 +43,7 @@ describe('Formats', function() {
     });
 
     it('outer node', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.formatText(1, 3, { italic: true });
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { bold: true })
@@ -61,7 +61,7 @@ describe('Formats', function() {
     });
 
     it('overlap', function() {
-      let editor = this.setEditor('<p>012</p>');
+      let editor = this.initialize(Editor, '<p>012</p>');
       editor.formatText(0, 2, { bold: true });
       editor.formatText(1, 3, { italic: true });
       expect(editor.getDelta()).toEqual(new Delta()
@@ -76,7 +76,7 @@ describe('Formats', function() {
     });
 
     it('ordering', function() {
-      let editor = this.setEditor('<p>012</p><p>456</p>');
+      let editor = this.initialize(Editor, '<p>012</p><p>456</p>');
       editor.formatText(0, 2, { bold: true });
       editor.formatText(1, 3, { italic: true });
       editor.formatText(5, 7, { italic: true });
@@ -98,7 +98,7 @@ describe('Formats', function() {
     });
 
     it('parts of multiple lines', function() {
-      let editor = this.setEditor(`
+      let editor = this.initialize(Editor, `
         <p><em>0123</em></p>
         <p><em>5678</em></p>`
       );
@@ -118,7 +118,7 @@ describe('Formats', function() {
     });
 
     it('subscript exclusitivity', function() {
-      let editor = this.setEditor('<p><sub>0123</sub></p>');
+      let editor = this.initialize(Editor, '<p><sub>0123</sub></p>');
       editor.formatText(1, 3, { script: 'super' });
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { script: 'sub' })
@@ -130,7 +130,7 @@ describe('Formats', function() {
     });
 
     it('superscript exclusitivity', function() {
-      let editor = this.setEditor('<p><sup>0123</sup></p>');
+      let editor = this.initialize(Editor, '<p><sup>0123</sup></p>');
       editor.formatText(1, 3, { script: 'sub' });
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0', { script: 'super' })

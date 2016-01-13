@@ -5,26 +5,26 @@ import Editor from '../../src/editor';
 describe('Editor', function() {
   describe('delta', function() {
     it('empty', function() {
-      let editor = this.setEditor('');
+      let editor = this.initialize(Editor, '');
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('empty line', function() {
-      let editor = this.setEditor('<p><br></p>');
+      let editor = this.initialize(Editor, '<p><br></p>');
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('empty line no break', function() {
-      let editor = this.setEditor('<p></p>');
+      let editor = this.initialize(Editor, '<p></p>');
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     // TODO enable when reimplement list
     xit('full document', function() {
-      let editor = this.setEditor(`
+      let editor = this.initialize(Editor, `
         <p><span style="font-size: 18px;">Quill Rich Text Editor</span></p>
         <p><br></p>
         <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web.</p>
@@ -69,7 +69,7 @@ describe('Editor', function() {
 
   describe('insert', function() {
     it('text', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(2, '!!');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01!!23', { bold: true })
@@ -79,7 +79,7 @@ describe('Editor', function() {
     });
 
     it('embed', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertEmbed(2, 'image', '/favicon.png');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
@@ -91,14 +91,14 @@ describe('Editor', function() {
     });
 
     it('on empty line', function() {
-      let editor = this.setEditor('<p>0</p><p><br></p><p>3</p>');
+      let editor = this.initialize(Editor, '<p>0</p><p><br></p><p>3</p>');
       editor.insertText(2, '!');
       expect(editor.getDelta()).toEqual(new Delta().insert('0\n!\n3\n'));
       expect(this.container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
     it('newline splitting', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(2, '\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
@@ -113,7 +113,7 @@ describe('Editor', function() {
     });
 
     it('prepend newline', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(0, '\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('\n')
@@ -127,7 +127,7 @@ describe('Editor', function() {
     });
 
     it('append newline', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(4, '\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0123', { bold: true })
@@ -140,7 +140,7 @@ describe('Editor', function() {
     });
 
     it('multiline text', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(2, '\n!!\n!!\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
@@ -160,7 +160,7 @@ describe('Editor', function() {
     });
 
     it('multiple newlines', function() {
-      let editor = this.setEditor('<p><strong>0123</strong></p>');
+      let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(2, '\n\n');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
@@ -178,7 +178,7 @@ describe('Editor', function() {
 
   describe('delete', function() {
     it('inner node', function() {
-      let editor = this.setEditor('<p><em><strong>0123</strong></em></p>');
+      let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
       editor.deleteText(1, 3);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('03', { bold: true, italic: true })
@@ -188,7 +188,7 @@ describe('Editor', function() {
     });
 
     it('parts of multiple lines', function() {
-      let editor = this.setEditor('<p><em>0123</em></p><p><em>5678</em></p>');
+      let editor = this.initialize(Editor, '<p><em>0123</em></p><p><em>5678</em></p>');
       editor.deleteText(2, 7);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0178', { italic: true })
@@ -198,14 +198,14 @@ describe('Editor', function() {
     });
 
     it('entire line keeping newline', function() {
-      let editor = this.setEditor('<p><em><strong>0123</strong></em></p>');
+      let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
       editor.deleteText(0, 4);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('newline', function() {
-      let editor = this.setEditor('<p><em>0123</em></p><p><em>5678</em></p>');
+      let editor = this.initialize(Editor, '<p><em>0123</em></p><p><em>5678</em></p>');
       editor.deleteText(4, 5);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01235678', { italic: true })
@@ -215,14 +215,14 @@ describe('Editor', function() {
     });
 
     it('entire document', function() {
-      let editor = this.setEditor('<p><em><strong>0123</strong></em></p>');
+      let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
       editor.deleteText(0, 5);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
     it('multiple complete lines', function() {
-      let editor = this.setEditor('<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>');
+      let editor = this.initialize(Editor, '<p><em>012</em></p><p><em>456</em></p><p><em>890</em></p>');
       editor.deleteText(0, 8);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('890', { italic: true })

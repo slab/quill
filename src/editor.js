@@ -9,6 +9,7 @@ class Editor {
     this.emitter = emitter;
     this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update, this);
     this.delta = this.getDelta();
+    this.enable();
   }
 
   applyDelta(delta, source = Emitter.sources.API) {

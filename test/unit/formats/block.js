@@ -4,7 +4,7 @@ import Editor from '../../../src/editor';
 
 describe('Block', function() {
   xit('definition', function() {
-    let editor = this.setEditor(`
+    let editor = this.initialize(Editor, `
       <h1>0</h1>
       <h2>2</h2>
       <h3>4</h3>

@@ -4,7 +4,7 @@ import Quill from '../../../src/quill';
 
 describe('UndoManager', function() {
   beforeEach(function() {
-    this.setContainer('<div><p>The lazy fox</p></div>');
+    this.initialize(HTMLElement, '<div><p>The lazy fox</p></div>');
     this.quill = new Quill(this.container.firstChild, {
       modules: {
         'undo-manager': { delay: 400 }

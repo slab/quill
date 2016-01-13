@@ -1,11 +1,12 @@
 import Delta from 'rich-text/lib/delta';
+import Editor from '../../src/editor';
 import Emitter from '../../src/emitter';
 
 
 describe('Events', function() {
   describe('Editor', function() {
     beforeEach(function() {
-      this.editor = this.setEditor('<p>0123</p>');
+      this.editor = this.initialize(Editor, '<p>0123</p>');
       spyOn(this.editor.emitter, 'emit').and.callThrough();
     });
 

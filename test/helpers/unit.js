@@ -1,6 +1,8 @@
 import Editor from '../../src/editor';
 import Emitter from '../../src/emitter';
+import Selection from '../../src/selection';
 import Scroll from '../../src/scroll';
+import Quill from '../../src/quill';
 
 
 let $div = $('<div>').attr('id', 'test-container');
@@ -50,15 +52,17 @@ beforeEach(function() {
 
   this.container = $div.html('<div></div>').get(0).firstChild;
   // Defining in a beforeAll does not work, seems this is cloned or something
-  this.setContainer = (html, container = this.container) => {
-    return container.innerHTML = html.replace(/\n\s*/g, '');
-  };
-
-  this.setEditor = (html, container = this.container) => {
-    this.setContainer(html, container);
+  this.initialize = (klass, html, container = this.container) => {
+    container.innerHTML = html.replace(/\n\s*/g, '');
+    if (container instanceof klass) return container;
+    if (klass === Quill) return new Quill(container);
     let emitter = new Emitter();
     let scroll = new Scroll(container, emitter);
-    return new Editor(scroll, emitter);
+    if (klass === Scroll) return scroll;
+    let editor = new Editor(scroll, emitter);
+    if (klass === Editor) return editor;
+    let selection = new Selection(scroll, emitter);
+    if (klass === Selection) return selection;
   }
 });
 

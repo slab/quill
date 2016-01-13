@@ -1,8 +1,11 @@
+import Scroll from '../../src/scroll';
+
+
 describe('Scroll', function() {
   describe('findPath()', function() {
     it('middle', function() {
-      let editor = this.setEditor('<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
-      let path = editor.scroll.findPath(7);
+      let scroll = this.initialize(Scroll, '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
+      let path = scroll.findPath(7);
       let expected = [
         { blot: 'block', offset: 0 },
         { blot: 'italic', offset: 2 },
@@ -17,8 +20,8 @@ describe('Scroll', function() {
     });
 
     it('inclusive default', function() {
-      let editor = this.setEditor('<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
-      let path = editor.scroll.findPath(6);
+      let scroll = this.initialize(Scroll, '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
+      let path = scroll.findPath(6);
       let expected = [
         { blot: 'block', offset: 0 },
         { blot: 'italic', offset: 2 },
@@ -34,8 +37,8 @@ describe('Scroll', function() {
     });
 
     it('end of line', function() {
-      let editor = this.setEditor('<p><em>01</em><strong>23</strong></p><h1>5</h1>');
-      let path = editor.scroll.findPath(4);
+      let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p><h1>5</h1>');
+      let path = scroll.findPath(4);
       let expected = [
         { blot: 'block', offset: 2 },
         { blot: 'bold', offset: 0 },
@@ -49,8 +52,8 @@ describe('Scroll', function() {
     });
 
     it('newline boundary', function() {
-      let editor = this.setEditor('<p><em>01</em><strong>23</strong></p><h1>5</h1>');
-      let path = editor.scroll.findPath(5);
+      let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p><h1>5</h1>');
+      let path = scroll.findPath(5);
       let expected = [
         { blot: 'header', offset: 0 },
         { blot: 'text', offset: 0 }
@@ -63,14 +66,14 @@ describe('Scroll', function() {
     });
 
     it('beyond document', function() {
-      let editor = this.setEditor('<p><em>01</em><strong>23</strong></p>');
-      let path = editor.scroll.findPath(5);
+      let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p>');
+      let path = scroll.findPath(5);
       expect(path.length).toEqual(0);
     });
 
     it('empty line', function() {
-      let editor = this.setEditor('<p><br></p>');
-      let path = editor.scroll.findPath(0);
+      let scroll = this.initialize(Scroll, '<p><br></p>');
+      let path = scroll.findPath(0);
       let expected = [
         { blot: 'block', offset: 0 },
         { blot: 'break', offset: 0 }

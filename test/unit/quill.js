@@ -4,8 +4,7 @@ import { Range } from '../../src/selection';
 
 describe('Quill', function() {
   beforeEach(function() {
-    this.setContainer('<p>01234567</p>');
-    this.quill = new Quill(this.container);
+    this.quill = this.initialize(Quill, '<p>01234567</p>');
   });
 
   describe('_buildParams', function() {
