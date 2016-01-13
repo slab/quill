@@ -36,7 +36,6 @@
     "gulp-tar": "^1.8.0",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
-    "install": "^0.4.1",
     "isparta-loader": "^2.0.0",
     "jasmine-core": "^2.4.1",
     "jquery": "^2.2.0",

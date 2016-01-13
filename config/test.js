@@ -44,11 +44,15 @@ module.exports = function(config) {
       webpackMiddleware: {
         noInfo: true
       }
-    }, karmaCommon), callback).start();
+    }, karmaCommon));
+    server.once('browser_start', function() {
+      callback();
+    });
+    server.start();
   });
 
   gulp.task('karma:server', function(callback) {
-    var server = new karma.Server(_.defaults({
+    new karma.Server(_.defaults({
       autoWatch: true,
       browsers: [],
       singleRun: false
@@ -56,28 +60,26 @@ module.exports = function(config) {
       if (exitCode !== 0) {
         gutil.log("[karma server] has exited with", exitCode);
       }
-    });
-    server.start();
+    }).start();
     callback();
   });
 
   gulp.task('karma:test', ['server'], function(callback) {
-    var server = new karma.Server(_.defaults({
+    new karma.Server(_.defaults({
       browsers: ['Chrome']
-    }, karmaCommon), callback).start();
+    }, karmaCommon)).start();
+    callback();
   });
 
   Object.keys(browsers).forEach(function(browser) {
     gulp.task('remote:unit-' + browser, ['build', 'server'], function(callback) {
-      var remote = {
+      new karma.Server(_.defaults({
         browsers: [browser],
         browserDisconnectTimeout: 10000,
         browserDisconnectTolerance: 4,
         browserNoActivityTimeout: 60000,
         reporters: ['dots']
-      };
-      var server = new karma.Server(_.defaults(remote, karmaCommon));
-      server.start();
+      }, karmaCommon)).start();
       callback();
     });
   });

@@ -25,6 +25,10 @@ module.exports = {
   resolveLoader: {
     root: path.resolve(__dirname, '..', 'node_modules')
   },
+  babel: {
+    // for isparta
+    presets: ['es2015']
+  },
   module: {
     loaders: [
       { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },
