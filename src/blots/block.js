@@ -8,15 +8,9 @@ const NEWLINE_LENGTH = 1;
 
 
 class Block extends Parchment.Block {
-  build() {
-    super.build();
-    this.ensureChild();
-  }
-
-  ensureChild() {
-    if (this.children.length === 0) {
-      this.appendChild(Parchment.create('break'));
-    }
+  constructor(domNode) {
+    super(domNode);
+    this.optimize();
   }
 
   findNode(index) {
@@ -86,27 +80,23 @@ class Block extends Parchment.Block {
     super.insertBefore(blot, ref);
   }
 
-  optimize() {
-    super.optimize();
-    this.ensureChild();
-  }
-
   split(index, force = false) {
     if (force && (index === 0 || index >= this.getLength() - NEWLINE_LENGTH)) {
-      let after = this.clone();
+      let clone = this.clone();
       if (index === 0) {
-        this.moveChildren(after);
-        this.ensureChild();
+        this.parent.insertBefore(clone, this);
+        return this;
+      } else {
+        this.parent.insertBefore(clone, this.next);
+        return clone;
       }
-      after.ensureChild();
-      this.parent.insertBefore(after, this.next);
-      return after;
     } else {
       return super.split(index, force);
     }
   }
 }
 Block.blotName = 'block';
+Block.child = 'break';
 Block.tagName = 'P';
 
 

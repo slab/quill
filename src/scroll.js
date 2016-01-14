@@ -6,7 +6,7 @@ class Scroll extends Parchment.Container {
   constructor(domNode, emitter) {
     super(domNode);
     this.emitter = emitter;
-    this.ensureChild();
+    this.optimize();
   }
 
   deleteAt(index, length) {
@@ -47,16 +47,11 @@ class Scroll extends Parchment.Container {
     return this.getDescendants(index, length, Parchment.Block);
   }
 
-  optimize(mutations) {
-    this.ensureChild();
-    super.optimize(mutations);
-  }
-
   remove() {
     this.children.forEach(function(child) {
       child.remove();
     });
-    this.ensureChild();
+    this.optimize();
   }
 
   update(mutations) {
@@ -73,6 +68,11 @@ class Scroll extends Parchment.Container {
     }
   }
 }
+Scroll.blotName = 'scroll';
+Scroll.child = 'block';
+Scroll.tagName = 'DIV';
 
+
+Parchment.register(Scroll);
 
 export { Scroll as default };
