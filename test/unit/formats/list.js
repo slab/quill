@@ -160,4 +160,13 @@ describe('List', function() {
       <ol><li>0123</li></ol>`
     );
   });
+
+  it('empty line interop', function() {
+    let editor = this.initialize(Editor, '<ol><li></li></ol>');
+    expect(this.container.innerHTML).toEqualHTML('<ol><li><br></li></ol>');
+    editor.insertText(0, 'Test');
+    expect(this.container.innerHTML).toEqualHTML('<ol><li>Test</li></ol>');
+    editor.deleteText(0, 4);
+    expect(this.container.innerHTML).toEqualHTML('<ol><li><br></li></ol>');
+  });
 });
