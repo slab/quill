@@ -17,6 +17,7 @@ import CursorBlot from './blots/cursor';
 import CodeBlockFormat from './formats/code-block';
 import EquationFormat from './formats/equation';
 import HeaderFormat from './formats/header';
+import ListFormat from './formats/list';
 import ImageFormat from './formats/image';
 import InlineFormat from './formats/inline';
 

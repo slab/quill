@@ -12,10 +12,6 @@ let Direction = new Parchment.Attributor.Style('direction', 'direction', {
 let Indent = new Parchment.Attributor.Class('indent', 'ql-indent', {
   scope: Parchment.Scope.BLOCK
 });
-let List = new Parchment.Attributor.Class('list', 'ql-list', {
-  scope: Parchment.Scope.BLOCK,
-  whitelist: ['bullet', 'ordered']
-});
 
 let Background = new Parchment.Attributor.Style('background', 'background-color', {
   scope: Parchment.Scope.INLINE
@@ -33,10 +29,9 @@ let Size = new Parchment.Attributor.Style('size', 'font-size', {
 Parchment.register(Align);
 Parchment.register(Direction);
 Parchment.register(Indent);
-Parchment.register(List);
 Parchment.register(Background);
 Parchment.register(Color);
 Parchment.register(Font);
 Parchment.register(Size);
 
-export { Align, Direction, Indent, List, Background, Color, Font, Size };
+export { Align, Direction, Indent, Background, Color, Font, Size };

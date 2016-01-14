@@ -3,7 +3,7 @@ import Editor from '../../../src/editor';
 
 
 describe('Block', function() {
-  xit('definition', function() {
+  it('definition', function() {
     let editor = this.initialize(Editor, `
       <h1>0</h1>
       <h2>2</h2>
@@ -23,9 +23,9 @@ describe('Block', function() {
       .insert('4')
       .insert('\n', { header: 3 })
       .insert('6')
-      .insert('\n', { bullet: true })
+      .insert('\n', { list: 'bullet' })
       .insert('8')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
     );
   });
 });

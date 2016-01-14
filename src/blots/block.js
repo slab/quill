@@ -1,6 +1,5 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import extend from 'extend';
 import BreakBlot from './break';
 
 
@@ -30,20 +29,6 @@ class Block extends Parchment.Block {
       this.format(name, value);
     }
     super.formatAt(index, Math.min(length, this.getLength() - index - 1), name, value);
-  }
-
-  getDelta() {
-    let leaves = this.getDescendants(Parchment.Leaf);
-    return leaves.reduceRight((delta, blot) => {
-      if (blot.getLength() === 0) return delta;
-      let attributes = {};
-      let value = blot.getValue();
-      while (blot !== this) {
-        attributes = extend({}, blot.getFormat(), attributes);
-        blot = blot.parent;
-      }
-      return new Delta().insert(value, attributes).concat(delta);
-    }, new Delta().insert('\n', this.getFormat()));
   }
 
   getLength() {

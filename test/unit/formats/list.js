@@ -2,17 +2,17 @@ import Delta from 'rich-text/lib/delta';
 import Editor from '../../../src/editor';
 
 
-xdescribe('List', function() {
+describe('List', function() {
   it('format', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>
       <p>5678</p>
       <p>0123</p>`
     );
-    editor.formatAt(9, 1, 'list', true);
+    editor.formatText(9, 10, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('0123\n')
     );
     expect(this.container.innerHTML).toEqualHTML(`
@@ -32,7 +32,7 @@ xdescribe('List', function() {
       </ol>
       <p>0123</p>`
     );
-    editor.formatAt(9, 1, 'list', false);
+    editor.formatText(9, 10, { list: null });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n5678\n0123\n'));
     expect(this.container.innerHTML).toEqualHTML(`
       <p>0123</p>
@@ -49,10 +49,10 @@ xdescribe('List', function() {
       </ol>
       <p>0123</p>`
     );
-    editor.formatAt(9, 1, 'bullet', true);
+    editor.formatText(9, 10, { list: 'bullet' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
-      .insert('\n', { bullet: true })
+      .insert('\n', { list: 'bullet' })
       .insert('0123\n')
     );
     expect(this.container.innerHTML).toEqualHTML(`
@@ -74,14 +74,14 @@ xdescribe('List', function() {
         <li>0123</li>
       </ol>`
     );
-    editor.formatAt(9, 1, 'list', true);
+    editor.formatText(9, 10, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('5678')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
     );
     expect(this.container.innerHTML).toEqualHTML(`
       <ol>
@@ -98,14 +98,14 @@ xdescribe('List', function() {
       <ul><li>5678</li></ul>
       <ol><li>0123</li></ol>`
     );
-    editor.formatAt(9, 1, 'list', true);
+    editor.formatText(9, 10, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('5678')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
     );
     expect(this.container.innerHTML).toEqualHTML(`
       <ol>
@@ -122,12 +122,12 @@ xdescribe('List', function() {
       <p>5678</p>
       <ol><li>0123</li></ol>`
     );
-    editor.deleteAt(5, 5);
+    editor.deleteText(5, 10);
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
     );
     expect(this.container.innerHTML).toEqualHTML(`
       <ol>
@@ -145,14 +145,14 @@ xdescribe('List', function() {
         <li>0123</li>
       </ol>`
     );
-    editor.formatAt(9, 1, 'bullet', true);
+    editor.formatText(9, 10,  { list: 'bullet' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
       .insert('5678')
-      .insert('\n', { bullet: true })
+      .insert('\n', { list: 'bullet' })
       .insert('0123')
-      .insert('\n', { list: true })
+      .insert('\n', { list: 'ordered' })
     );
     expect(this.container.innerHTML).toEqualHTML(`
       <ol><li>0123</li></ol>

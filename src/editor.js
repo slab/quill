@@ -1,6 +1,7 @@
 import Delta from 'rich-text/lib/delta';
 import Emitter from './emitter';
 import Parchment from 'parchment';
+import extend from 'extend';
 
 
 class Editor {
@@ -63,9 +64,18 @@ class Editor {
   }
 
   getDelta() {
-    return this.scroll.getLines().reduce((delta, child) => {
-      // TODO implement without block knowing about deltas
-      return delta.concat(child.getDelta());
+    return this.scroll.getLines().reduce((delta, line) => {
+      line.getDescendants(Parchment.Leaf).forEach((blot) => {
+        if (blot.getLength() === 0) return delta;
+        let attributes = {};
+        let value = blot.getValue();
+        while (blot != line) {
+          attributes = extend({}, blot.getFormat(), attributes);
+          blot = blot.parent;
+        }
+        delta.insert(value, attributes);
+      });
+      return delta.insert('\n', line.getFormat());
     }, new Delta());
   }
 

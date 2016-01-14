@@ -22,8 +22,7 @@ describe('Editor', function() {
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
-    // TODO enable when reimplement list
-    xit('full document', function() {
+    it('full document', function() {
       let editor = this.initialize(Editor, `
         <p><span style="font-size: 18px;">Quill Rich Text Editor</span></p>
         <p><br></p>
@@ -44,19 +43,19 @@ describe('Editor', function() {
         </p>
         <p><br></p>`
       );
-      let expected = editor.domNode.innerHTML;
+      let expected = editor.scroll.domNode.innerHTML;
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('Quill Rich Text Editor', { size: '18px' })
         .insert('\n\nQuill is a free, ')
         .insert('open source', { link: 'https://github.com/quilljs/quill/' })
         .insert(' WYSIWYG editor built for the modern web.\n\nFast and lightweight')
-        .insert('\n', { bullet: true })
+        .insert('\n', { list: 'bullet' })
         .insert('Semantic markup')
-        .insert('\n', { bullet: true })
+        .insert('\n', { list: 'bullet' })
         .insert('Standardized HTML between browsers')
-        .insert('\n', { bullet: true })
+        .insert('\n', { list: 'bullet' })
         .insert('Cross browser support including Chrome, Firefox, Safari, and IE 9+')
-        .insert('\n', { bullet: true })
+        .insert('\n', { list: 'bullet' })
         .insert('\n')
         .insert({ image: 'http://quilljs.com/images/quill-photo.jpg' })
         .insert('\n', { align: 'center' })

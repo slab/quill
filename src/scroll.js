@@ -1,3 +1,4 @@
+import Block from './blots/block';
 import Emitter from './emitter';
 import Parchment from 'parchment';
 
@@ -44,7 +45,7 @@ class Scroll extends Parchment.Container {
   }
 
   getLines(index = 0, length = this.getLength()) {
-    return this.getDescendants(index, length, Parchment.Block);
+    return this.getDescendants(index, length, Block);
   }
 
   remove() {
