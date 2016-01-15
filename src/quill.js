@@ -171,7 +171,7 @@ class Quill {
   getSelection(focus = false) {
     if (focus) this.focus();
     this.update();  // Make sure we access getRange with editor in consistent state
-    return this.selection.getRange();
+    return this.selection.getRange()[0];
   }
 
   getText(start = 0, end = this.getLength()) {

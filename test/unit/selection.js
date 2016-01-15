@@ -27,7 +27,7 @@ describe('Selection', function() {
       expect(this.selection.checkFocus()).toBe(false);
       this.selection.focus();
       expect(this.selection.checkFocus()).toBe(true);
-      expect(this.selection.getRange()).toEqual(range);
+      expect(this.selection.getRange()[0]).toEqual(range);
     });
   });
 
@@ -35,7 +35,7 @@ describe('Selection', function() {
     it('empty document', function() {
       let selection = this.initialize(Selection, '');
       selection.setNativeRange(this.container.querySelector('br'), 0);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(0);
       expect(range.end).toEqual(0);
     });
@@ -43,7 +43,7 @@ describe('Selection', function() {
     it('empty line', function() {
       let selection = this.initialize(Selection, '<p>0</p><p><br></p><p>3</p>');
       selection.setNativeRange(this.container.querySelector('br'), 0);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(2);
       expect(range.end).toEqual(2);
     });
@@ -51,7 +51,7 @@ describe('Selection', function() {
     it('text node', function() {
       let selection = this.initialize(Selection, '<p>0123</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(1);
       expect(range.end).toEqual(1);
     });
@@ -59,7 +59,7 @@ describe('Selection', function() {
     it('line boundaries', function() {
       let selection = this.initialize(Selection, '<p><br></p><p>12</p>');
       selection.setNativeRange(this.container.firstChild, 0, this.container.lastChild.lastChild, 2);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(0);
       expect(range.end).toEqual(3);
     });
@@ -75,7 +75,7 @@ describe('Selection', function() {
         this.container.querySelector('strong').firstChild, 1,
         this.container.querySelector('u').firstChild, 1
       );
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(1);
       expect(range.end).toEqual(4);
     });
@@ -94,7 +94,7 @@ describe('Selection', function() {
         </ul>`
       );
       selection.setNativeRange(this.container.firstChild, 1, this.container.lastChild.lastChild, 1);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(1);
       expect(range.end).toEqual(4);
     });
@@ -102,7 +102,7 @@ describe('Selection', function() {
     it('between inlines', function() {
       let selection = this.initialize(Selection, '<p><em>01</em><s>23</s><u>45</u></p>');
       selection.setNativeRange(this.container.firstChild, 1, this.container.firstChild, 2);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(2);
       expect(range.end).toEqual(4);
     });
@@ -117,14 +117,14 @@ describe('Selection', function() {
         </ul>`
       );
       selection.setNativeRange(this.container, 1, this.container.lastChild, 1);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range.start).toEqual(3);
       expect(range.end).toEqual(7);
     });
 
     it('no focus', function() {
       let selection = this.initialize(Selection, '');
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(null);
     });
 
@@ -136,7 +136,7 @@ describe('Selection', function() {
         </div>`
       );
       this.container.firstChild.select();
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(null);
     });
   });
@@ -146,7 +146,7 @@ describe('Selection', function() {
       let selection = this.initialize(Selection, '');
       let expected = new Range(0);
       selection.setRange(expected);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.checkFocus()).toBe(true);
     });
@@ -160,7 +160,7 @@ describe('Selection', function() {
       );
       let expected = new Range(0, 1);
       selection.setRange(expected);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(range);
       expect(selection.checkFocus()).toBe(true);
     });
@@ -174,7 +174,7 @@ describe('Selection', function() {
       );
       let expected = new Range(1, 4);
       selection.setRange(expected);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.checkFocus()).toBe(true);
     });
@@ -183,7 +183,7 @@ describe('Selection', function() {
       let selection = this.initialize(Selection, '<p><em>01</em><s>23</s><u>45</u></p>');
       let expected = new Range(2, 4);
       selection.setRange(expected);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.checkFocus()).toBe(true);
     });
@@ -203,7 +203,7 @@ describe('Selection', function() {
       );
       let expected = new Range(1, 4);
       selection.setRange(expected);
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
       expect(selection.checkFocus()).toBe(true);
     });
@@ -211,10 +211,10 @@ describe('Selection', function() {
     it('null', function() {
       let selection = this.initialize(Selection, '<p>0123</p>');
       selection.setRange(new Range(1));
-      let range = selection.getRange();
+      let [range, ] = selection.getRange();
       expect(range).not.toEqual(null);
       selection.setRange(null);
-      range = selection.getRange();
+      [range, ] = selection.getRange();
       expect(range).toEqual(null);
       expect(selection.checkFocus()).toBe(false);
     });
@@ -336,6 +336,7 @@ describe('Selection', function() {
     it('trailing', function() {
       this.setup(`<p>0123</p>`, 4);
       this.selection.prepare('bold', true);
+      expect(this.selection.getRange()[0].start).toEqual(4);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>0123<strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
@@ -344,6 +345,7 @@ describe('Selection', function() {
     it('split nodes', function() {
       this.setup(`<p><strong>0123</strong></p>`, 2);
       this.selection.prepare('italic', true);
+      expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           <strong>01</strong>
@@ -356,6 +358,7 @@ describe('Selection', function() {
     it('empty line', function() {
       this.setup(`<p><br></p>`, 0);
       this.selection.prepare('bold', true);
+      expect(this.selection.getRange()[0].start).toEqual(0);
       expect(this.container.innerHTML).toEqualHTML(`
         <p><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
@@ -367,6 +370,7 @@ describe('Selection', function() {
       this.selection.prepare('italic', true);
       this.selection.prepare('underline', true);
       this.selection.prepare('background', 'blue');
+      expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           01
@@ -383,6 +387,7 @@ describe('Selection', function() {
       this.selection.prepare('italic', true);
       this.selection.prepare('underline', true);
       this.selection.prepare('italic', false);
+      expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           <strong>
@@ -391,6 +396,34 @@ describe('Selection', function() {
         </p>
       `);
     });
+
+    it('selection change cleanup', function() {
+      this.setup(`<p>0123</p>`, 2);
+      this.selection.prepare('italic', true);
+      this.selection.setRange(new Range(0, 0));
+      this.selection.scroll.update();
+      expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
+    });
+
+    it('text change cleanup', function() {
+      this.setup(`<p>0123</p>`, 2);
+      this.selection.prepare('italic', true);
+      this.selection.cursor.textNode.data = CursorBlot.CONTENTS + '|';
+      this.selection.setNativeRange(this.selection.cursor.textNode, 2);
+      this.selection.scroll.update();
+      expect(this.container.innerHTML).toEqualHTML('<p>01<em>|</em>23</p>');
+    });
+
+    it('no cleanup', function() {
+      this.setup('<p>0123</p><p><br></p>', 2);
+      this.selection.prepare('italic', true);
+      this.container.removeChild(this.container.lastChild);
+      this.selection.scroll.update();
+      expect(this.selection.getRange()[0].start).toEqual(2);
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p>01<em><span class="blot-cursor">${CursorBlot.CONTENTS}</span></em>23</p>
+      `);
+    })
   });
 });
 

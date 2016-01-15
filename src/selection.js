@@ -40,7 +40,9 @@ class Selection {
       this.root.addEventListener(eventName, this.update.bind(this, Emitter.sources.USER));
     });
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
-      if (delta.length > 0) this.update(Emitter.sources.SILENT);
+      if (delta.length() > 0) {
+        this.update(Emitter.sources.SILENT);
+      }
     });
     this.update(Emitter.sources.SILENT);
   }
@@ -105,9 +107,9 @@ class Selection {
   }
 
   getRange() {
-    if (!this.checkFocus()) return null;
+    if (!this.checkFocus()) return [null, null];
     let nativeRange = this.getNativeRange();
-    if (nativeRange == null) return null;
+    if (nativeRange == null) return [null, null];
     let positions = [[nativeRange.startContainer, nativeRange.startOffset]];
     if (!nativeRange.collapsed) {
       positions.push([nativeRange.endContainer, nativeRange.endOffset]);
@@ -128,7 +130,7 @@ class Selection {
         return index + offset;
       }
     });
-    return new Range(Math.min(...indexes), Math.max(...indexes));
+    return [new Range(Math.min(...indexes), Math.max(...indexes)), nativeRange];
   }
 
   prepare(format, value) {
@@ -146,8 +148,8 @@ class Selection {
       }
     }
     this.cursor.format(format, value);
-    this.setNativeRange(this.cursor.textNode, 1);
     this.scroll.optimize();
+    this.setNativeRange(this.cursor.textNode, 1);
     this.update();
   }
 
@@ -208,12 +210,16 @@ class Selection {
   }
 
   update(source = Emitter.sources.USER) {
-    let oldRange = this.lastRange;
-    this.lastRange = this.getRange();
+    let nativeRange, oldRange = this.lastRange;
+    [this.lastRange, nativeRange] = this.getRange();
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;
     }
     if (!equal(oldRange, this.lastRange)) {
+      if (nativeRange != null && nativeRange.collapsed && nativeRange.startContainer !== this.cursor.textNode) {
+        this.cursor.detach();
+      }
+      if (source === Emitter.sources.SILENT) return;
       this.emitter.emit(Emitter.events.SELECTION_CHANGE, this.lastRange, source);
     }
   }

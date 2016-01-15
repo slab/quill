@@ -11,6 +11,19 @@ class Cursor extends Parchment.Leaf {
     this.length = 0;
   }
 
+  detach() {
+    if (this.parent == null) return;
+    let text = this.textNode.data;
+    if (text.length !== Cursor.CONTENTS) {
+      this.textNode.data = text.split(Cursor.CONTENTS).join('');
+      this.parent.insertBefore(Parchment.create(this.textNode), this);
+      this.textNode = document.createTextNode(Cursor.CONTENTS);
+      this.domNode.appendChild(this.textNode);
+    }
+    this.remove();
+    this.parent = null;
+  }
+
   format(name, value) {
     if (this.length !== 0) {
       return super.format(name, value);
@@ -33,6 +46,19 @@ class Cursor extends Parchment.Leaf {
 
   getValue() {
     return '';
+  }
+
+  // remove() {
+  //   super.remove();
+  //   this.textNode.data = Cursor.CONTENTS;
+  // }
+
+  update(mutations) {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'characterData' && mutation.target === this.textNode) {
+        this.detach();
+      }
+    });
   }
 }
 Cursor.blotName = 'cursor';
