@@ -31,7 +31,7 @@ describe('Selection', function() {
     });
   });
 
-  xdescribe('getRange()', function() {
+  describe('getRange()', function() {
     it('empty document', function() {
       let selection = this.initialize(Selection, '');
       selection.setNativeRange(this.container.querySelector('br'), 0);
@@ -141,7 +141,7 @@ describe('Selection', function() {
     });
   });
 
-  xdescribe('setRange()', function() {
+  describe('setRange()', function() {
     it('empty document', function() {
       let selection = this.initialize(Selection, '');
       let expected = new Range(0);

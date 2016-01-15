@@ -114,8 +114,19 @@ class Selection {
     }
     let indexes = positions.map((position) => {
       let [container, offset] = position;
+      if (0 < offset && offset < container.childNodes.length) {
+        if (offset === container.childNodes.length) {
+          var endBoundary = true;
+        }
+        container = container.childNodes[offset];
+        offset = 0;
+      }
       let blot = Parchment.findBlot(container, true);
-      return blot.offset(this.scroll) + blot.findOffset(container) + offset;
+      let index = blot.offset(this.scroll) + blot.findOffset(container) + offset;
+      if (endBoundary) {
+        index += blot.getLength();
+      }
+      return index;
     });
     return new Range(Math.min(...indexes), Math.max(...indexes));
   }
