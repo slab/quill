@@ -18,11 +18,11 @@ describe('Events', function() {
 
     it('user text insert', function(callback) {
       this.container.firstChild.firstChild.data = '01!23';
-      setTimeout(() => {
-        let delta = new Delta().retain(2).insert('!');
-        expect(this.editor.emitter.emit.calls.mostRecent().args).toEqual([Emitter.events.TEXT_CHANGE, delta, Emitter.sources.USER]);
+      this.editor.emitter.on(Emitter.events.TEXT_CHANGE, function(delta, source) {
+        expect(delta).toEqual(new Delta().retain(2).insert('!'));
+        expect(source).toEqual(Emitter.sources.USER);
         callback();
-      }, 1000);
+      });
     });
   });
 });
