@@ -214,7 +214,7 @@ class Quill {
     });
   }
 
-  // TODO better name
+  // TODO better name, formatCursor?
   prepareFormat(name, value) {
     this.selection.prepare(name, value);
   }

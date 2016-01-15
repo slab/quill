@@ -100,7 +100,7 @@ class Keyboard {
 
   _onFormat(format, range) {
     if (this.quill.options.formats.indexOf(format) < 0) return false;
-    let formats = this.quill.getFormat(range);
+    let formats = {};// this.quill.getFormat(range);
     if (range.isCollapsed()) {
       this.quill.prepareFormat(format, !formats[format]);
     } else {

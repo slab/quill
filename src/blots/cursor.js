@@ -3,27 +3,19 @@ import Parchment from 'parchment';
 
 
 class Cursor extends Parchment.Leaf {
-  constructor(value) {
-    super(value);
+  constructor(domNode) {
+    super(domNode);
     this.domNode.classList.add(Parchment.PREFIX + 'cursor');
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
   }
 
-  findNode(index) {
-    return [this.textNode, index];
-  }
-
-  findOffset(node) {
-    return (node === this.domNode || node === this.textNode) ? 0 : -1;
-  }
-
   getLength() {
-    return this.textNode.data.length;
+    return 0;
   }
 
   getValue() {
-    return this.textNode.data.replace(Cursor.CONTENTS, '');
+    return '';
   }
 }
 Cursor.blotName = 'cursor';

@@ -34,6 +34,7 @@ class Selection {
     this.emitter = emitter;
     this.scroll = scroll;
     this.root = this.scroll.domNode;
+    this.cursor = Parchment.create('cursor');
     this.lastRange = this.savedRange = new Range(0, 0);
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
       this.root.addEventListener(eventName, this.update.bind(this, Emitter.sources.USER));
@@ -120,21 +121,17 @@ class Selection {
   }
 
   prepare(format, value) {
-    return;
-    this.update();
-    let range = this.getRange();
-    let cursor, index = range.start;
-    let pos = this.scroll.findPath(index).pop();
-    if (pos.blot instanceof CursorBlot) {
-      index -= 1;
-    } else {
-      pos.blot.insertAt(pos.offset, 'cursor', {});
-      pos = this.scroll.findPath(index + 1).pop();
-      // pos can be null if insertAt was a noop
-      if (pos == null || !(pos.blot instanceof CursorBlot)) return;
+    this.scroll.update();
+    let nativeRange = this.getNativeRange();
+    if (!nativeRange.collapsed) return;
+    if (nativeRange.startContainer != this.cursor.textNode) {
+      let blot = Parchment.findBlot(nativeRange.startContainer, false);
+      if (blot == null) return;
+      let after = blot.split(nativeRange.startOffset);
+      blot.parent.insertBefore(this.cursor, after);
     }
-    this.scroll.formatAt(index, 1, format, value);
-    this.setNativeRange(pos.blot.textNode, 1);  // Cursor will not blink if we select cursor.textNode
+    this.cursor.format(format, value);
+    this.setNativeRange(this.cursor.textNode, 1);
     this.update();
   }
 
@@ -201,26 +198,8 @@ class Selection {
       this.savedRange = this.lastRange;
     }
     if (!equal(oldRange, this.lastRange)) {
-      if (this.lastRange != null) {
-        this._cleanCursors(this.lastRange);
-      }
       this.emitter.emit(Emitter.events.SELECTION_CHANGE, this.lastRange, source);
     }
-  }
-
-  _cleanCursors(range) {
-    let cursor = Parchment.findBlot(this.root.querySelector(`.${Parchment.PREFIX}cursor`));
-    if (cursor == null || cursor.domNode.innerHTML === CursorBlot.CONTENTS) return;
-    let start = this.scroll.findPath(range.start).pop();
-    let end = range.isCollapsed() ? start : this.scroll.findPath(range.end).pop();
-    let args = [];
-    [start, end].forEach(function(pos) {
-      args.push(cursor.textNode, (pos.blot === cursor ? pos.offset - 1 : pos.offset));
-    });
-    cursor.textNode.data = cursor.getValue();
-    cursor.parent.insertBefore(Parchment.create(cursor.textNode), cursor);
-    cursor.remove();
-    this.setNativeRange(...args);
   }
 }
 
