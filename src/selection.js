@@ -114,19 +114,19 @@ class Selection {
     }
     let indexes = positions.map((position) => {
       let [container, offset] = position;
-      if (0 < offset && offset < container.childNodes.length) {
-        if (offset === container.childNodes.length) {
-          var endBoundary = true;
-        }
-        container = container.childNodes[offset];
-        offset = 0;
-      }
       let blot = Parchment.findBlot(container, true);
-      let index = blot.offset(this.scroll) + blot.findOffset(container) + offset;
-      if (endBoundary) {
-        index += blot.getLength();
+      let index = blot.offset(this.scroll) + blot.findOffset(container);
+      // TODO handle for code
+      if (!(blot instanceof Parchment.Leaf)) {
+        let child = Parchment.findBlot(container.childNodes[offset]);
+        if (child != null) {
+          return index + child.offset(blot);
+        } else {
+          return index + blot.getLength();
+        }
+      } else {
+        return index + offset;
       }
-      return index;
     });
     return new Range(Math.min(...indexes), Math.max(...indexes));
   }
@@ -135,14 +135,19 @@ class Selection {
     this.scroll.update();
     let nativeRange = this.getNativeRange();
     if (!nativeRange.collapsed) return;
-    if (nativeRange.startContainer != this.cursor.textNode) {
+    if (nativeRange.startContainer !== this.cursor.textNode) {
       let blot = Parchment.findBlot(nativeRange.startContainer, false);
       if (blot == null) return;
-      let after = blot.split(nativeRange.startOffset);
-      blot.parent.insertBefore(this.cursor, after);
+      if (blot instanceof Parchment.Leaf) {
+        let after = blot.split(nativeRange.startOffset);
+        blot.parent.insertBefore(this.cursor, after);
+      } else {
+        blot.insertBefore(this.cursor, Parchment.findBlot(nativeRange.startContainer[nativeRange.startOffset]));
+      }
     }
     this.cursor.format(format, value);
     this.setNativeRange(this.cursor.textNode, 1);
+    this.scroll.optimize();
     this.update();
   }
 

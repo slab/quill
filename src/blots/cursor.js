@@ -8,10 +8,27 @@ class Cursor extends Parchment.Leaf {
     this.domNode.classList.add(Parchment.PREFIX + 'cursor');
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
+    this.length = 0;
+  }
+
+  format(name, value) {
+    if (this.length !== 0) {
+      return super.format(name, value);
+    }
+    let target = this, index = 0;
+    this.length = 1;
+    while (target != null && !(target instanceof Parchment.Block)) {
+      index += target.offset(target.parent);
+      target = target.parent;
+    }
+    if (target != null) {
+      target.formatAt(index, 1, name, value);
+    }
+    this.length = 0;
   }
 
   getLength() {
-    return 0;
+    return this.length;
   }
 
   getValue() {

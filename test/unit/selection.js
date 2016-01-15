@@ -325,7 +325,7 @@ describe('Selection', function() {
     });
   });
 
-  xdescribe('prepare()', function() {
+  describe('prepare()', function() {
     beforeEach(function() {
       this.setup = (html, index) => {
         this.selection = this.initialize(Selection, html);
@@ -339,7 +339,6 @@ describe('Selection', function() {
       expect(this.container.innerHTML).toEqualHTML(`
         <p>0123<strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
-      expect(this.selection.doc.getDelta()).toEqual(new Delta().insert('0123\n'));
     });
 
     it('split nodes', function() {
@@ -352,10 +351,6 @@ describe('Selection', function() {
           <strong>23</strong>
         </p>
       `);
-      expect(this.selection.doc.getDelta()).toEqual(new Delta()
-        .insert('0123', { bold: true })
-        .insert('\n')
-      );
     });
 
     it('empty line', function() {
@@ -364,7 +359,6 @@ describe('Selection', function() {
       expect(this.container.innerHTML).toEqualHTML(`
         <p><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
-      expect(this.selection.doc.getDelta()).toEqual(new Delta().insert('\n'));
     });
 
     it('multiple', function() {
@@ -382,7 +376,6 @@ describe('Selection', function() {
           23
         </p>
       `);
-      expect(this.selection.doc.getDelta()).toEqual(new Delta().insert('0123\n'));
     });
 
     it('remove format', function() {
@@ -397,10 +390,6 @@ describe('Selection', function() {
           </strong>
         </p>
       `);
-      expect(this.selection.doc.getDelta()).toEqual(new Delta()
-        .insert('0123', { bold: true })
-        .insert('\n')
-      );
     });
   });
 });
