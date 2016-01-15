@@ -101,11 +101,7 @@ class Keyboard {
   _onFormat(format, range) {
     if (this.quill.options.formats.indexOf(format) < 0) return false;
     let formats = {};// this.quill.getFormat(range);
-    if (range.isCollapsed()) {
-      this.quill.prepareFormat(format, !formats[format]);
-    } else {
-      this.quill.formatText(range, format, !formats[format], Quill.sources.USER);
-    }
+    this.quill.formatCursor(format, !formats[format], Quill.sources.USER);
     return false;
   }
 

@@ -325,7 +325,7 @@ describe('Selection', function() {
     });
   });
 
-  describe('prepare()', function() {
+  describe('format()', function() {
     beforeEach(function() {
       this.setup = (html, index) => {
         this.selection = this.initialize(Selection, html);
@@ -335,7 +335,7 @@ describe('Selection', function() {
 
     it('trailing', function() {
       this.setup(`<p>0123</p>`, 4);
-      this.selection.prepare('bold', true);
+      this.selection.format('bold', true);
       expect(this.selection.getRange()[0].start).toEqual(4);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>0123<strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
@@ -344,7 +344,7 @@ describe('Selection', function() {
 
     it('split nodes', function() {
       this.setup(`<p><strong>0123</strong></p>`, 2);
-      this.selection.prepare('italic', true);
+      this.selection.format('italic', true);
       expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
@@ -357,7 +357,7 @@ describe('Selection', function() {
 
     it('empty line', function() {
       this.setup(`<p><br></p>`, 0);
-      this.selection.prepare('bold', true);
+      this.selection.format('bold', true);
       expect(this.selection.getRange()[0].start).toEqual(0);
       expect(this.container.innerHTML).toEqualHTML(`
         <p><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
@@ -366,10 +366,10 @@ describe('Selection', function() {
 
     it('multiple', function() {
       this.setup(`<p>0123</p>`, 2);
-      this.selection.prepare('color', 'red');
-      this.selection.prepare('italic', true);
-      this.selection.prepare('underline', true);
-      this.selection.prepare('background', 'blue');
+      this.selection.format('color', 'red');
+      this.selection.format('italic', true);
+      this.selection.format('underline', true);
+      this.selection.format('background', 'blue');
       expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
@@ -384,9 +384,9 @@ describe('Selection', function() {
 
     it('remove format', function() {
       this.setup(`<p><strong>0123</strong></p>`, 2);
-      this.selection.prepare('italic', true);
-      this.selection.prepare('underline', true);
-      this.selection.prepare('italic', false);
+      this.selection.format('italic', true);
+      this.selection.format('underline', true);
+      this.selection.format('italic', false);
       expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
@@ -399,7 +399,7 @@ describe('Selection', function() {
 
     it('selection change cleanup', function() {
       this.setup(`<p>0123</p>`, 2);
-      this.selection.prepare('italic', true);
+      this.selection.format('italic', true);
       this.selection.setRange(new Range(0, 0));
       this.selection.scroll.update();
       expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
@@ -407,7 +407,7 @@ describe('Selection', function() {
 
     it('text change cleanup', function() {
       this.setup(`<p>0123</p>`, 2);
-      this.selection.prepare('italic', true);
+      this.selection.format('italic', true);
       this.selection.cursor.textNode.data = CursorBlot.CONTENTS + '|';
       this.selection.setNativeRange(this.selection.cursor.textNode, 2);
       this.selection.scroll.update();
@@ -416,14 +416,14 @@ describe('Selection', function() {
 
     it('no cleanup', function() {
       this.setup('<p>0123</p><p><br></p>', 2);
-      this.selection.prepare('italic', true);
+      this.selection.format('italic', true);
       this.container.removeChild(this.container.lastChild);
       this.selection.scroll.update();
       expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>01<em><span class="blot-cursor">${CursorBlot.CONTENTS}</span></em>23</p>
       `);
-    })
+    });
   });
 });
 

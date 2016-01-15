@@ -139,6 +139,18 @@ class Quill {
     this.selection.focus();
   }
 
+  formatCursor(name, value, source = Emitter.source.API) {
+    let range = this.getSelection();
+    if (range == null) return;
+    if (Parchment.match(name, Parchment.Scope.BLOCK)) {
+      this.formatLine(range, name, value, source);
+    } else if (range.isCollapsed()) {
+      this.selection.format(name, value);
+    } else {
+      this.formatText(range, name, value, source);
+    }
+  }
+
   formatLine(start, end, name, value, source) {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
@@ -207,16 +219,11 @@ class Quill {
     if (this.modules[name]) {   // Module already loaded
       callback(this.modules[name]);
     }
-    this.on(Editor.events.MODULE_INIT, function(moduleName, module) {
+    this.on(Emitter.events.MODULE_INIT, function(moduleName, module) {
       if (moduleName === name) {
         return callback(module);
       }
     });
-  }
-
-  // TODO better name, formatCursor?
-  prepareFormat(name, value) {
-    this.selection.prepare(name, value);
   }
 
   removeAllListeners() {

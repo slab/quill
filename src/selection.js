@@ -57,6 +57,26 @@ class Selection {
     this.setRange(this.savedRange);
   }
 
+  format(format, value) {
+    this.scroll.update();
+    let nativeRange = this.getNativeRange();
+    if (nativeRange == null || !nativeRange.collapsed || Parchment.match(format, Parchment.Scope.BLOCK)) return;
+    if (nativeRange.startContainer !== this.cursor.textNode) {
+      let blot = Parchment.findBlot(nativeRange.startContainer, false);
+      if (blot == null) return;
+      if (blot instanceof Parchment.Leaf) {
+        let after = blot.split(nativeRange.startOffset);
+        blot.parent.insertBefore(this.cursor, after);
+      } else {
+        blot.insertBefore(this.cursor, Parchment.findBlot(nativeRange.startContainer[nativeRange.startOffset]));
+      }
+    }
+    this.cursor.format(format, value);
+    this.scroll.optimize();
+    this.setNativeRange(this.cursor.textNode, 1);
+    this.update();
+  }
+
   getBounds(index) {
     let pos = this.scroll.findPath(index).pop();
     if (pos == null) return null;
@@ -131,26 +151,6 @@ class Selection {
       }
     });
     return [new Range(Math.min(...indexes), Math.max(...indexes)), nativeRange];
-  }
-
-  prepare(format, value) {
-    this.scroll.update();
-    let nativeRange = this.getNativeRange();
-    if (!nativeRange.collapsed) return;
-    if (nativeRange.startContainer !== this.cursor.textNode) {
-      let blot = Parchment.findBlot(nativeRange.startContainer, false);
-      if (blot == null) return;
-      if (blot instanceof Parchment.Leaf) {
-        let after = blot.split(nativeRange.startOffset);
-        blot.parent.insertBefore(this.cursor, after);
-      } else {
-        blot.insertBefore(this.cursor, Parchment.findBlot(nativeRange.startContainer[nativeRange.startOffset]));
-      }
-    }
-    this.cursor.format(format, value);
-    this.scroll.optimize();
-    this.setNativeRange(this.cursor.textNode, 1);
-    this.update();
   }
 
   scrollIntoView() {

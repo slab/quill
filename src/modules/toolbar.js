@@ -67,20 +67,7 @@ class Toolbar {
             }
           };
           handler.call(this, input, range, (value) => {
-            if (Parchment.match(format, Parchment.Block)) {
-              let formatObj = {};
-              formatObj[format] = value;
-              if (format === 'list' && value) {
-                formatObj['indent'] = '1';
-              }
-              this.quill.formatLine(range.start, range.end + 1, formatObj, Quill.sources.USER);
-              this.quill.setSelection(range, Quill.sources.USER);
-            } else if (range.isCollapsed()) {
-              this.quill.prepareFormat(format, value);
-            } else {
-              this.quill.formatText(range, format, value, Quill.sources.USER);
-              this.quill.setSelection(range, Quill.sources.USER);
-            }
+            this.quill.formatCursor(format, value, Quill.sources.USER);
           });
           return false;
         });
