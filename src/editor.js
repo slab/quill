@@ -80,8 +80,45 @@ class Editor {
   }
 
   getFormat(start, end) {
-    // TODO implement
-    return {};
+    let blockFormats = {}, inlineFormats = {};
+    let combine = function(formats1, formats2) {
+      return Object.keys(formats2).reduce(function(formats2, name) {
+        if (formats1[name] != null && formats1[name] !== formats2[name]) {
+          if (Array.isArray(formats1[name])) {
+            if (formats1[name].indexOf(formats2[name]) < 0) {
+              formats1[name].push(formats2[name]);
+            }
+          } else {
+            formats1[name] = [formats1[name], formats2[name]];
+          }
+        }
+        return formats2;
+      }, formats2);
+    }
+    this.scroll.getLines().every(function(line, i) {
+      if (i === 0) {
+        blockFormats = line.getFormat();
+      } else if (Object.keys(lineFormats).length > 0) {
+        blockFormats = combine(line.getFormat(), blockFormats);
+      }
+      if (i == 0 || Object.keys(inlineFormats).length > 0) {
+        line.getDescendants(Parchment.Leaf).every(function(leafFormats, blot, j) {
+          let formats = {};
+          while (blot.parent instanceof Parchment.Inline) {
+            formats = extend(format, blot.parent.getFormat());
+            blot = blot.parent;
+          }
+          if (i === 0 && j === 0) {
+            inlineFormats = formats;
+          } else {
+            inlineFormats = combine(formats, inlineFormats);
+          }
+          return Object.keys(inlineFormats).length > 0;
+        });
+      }
+      return Object.keys(blockFormats).length !== 0 && Object.keys(inlineFormats).length !== 0;
+    });
+    return extend(blockFormats, inlineFormats);
   }
 
   getHTML() {
