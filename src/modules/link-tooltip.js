@@ -11,6 +11,7 @@ class LinkTooltip extends Tooltip {
     this.textbox = this.container.querySelector('.input');
     this.link = this.container.querySelector('.url');
     this.initListeners();
+    quill.keyboard.addBinding({ key: 'K', metaKey: true}, this._onKeyboard.bind(this));
   }
 
   initListeners() {
@@ -35,9 +36,6 @@ class LinkTooltip extends Tooltip {
     this.quill.onModuleLoad('toolbar', (toolbar) => {
       this.toolbar = toolbar;
       toolbar.initFormat('link', this._onToolbar.bind(this));
-    });
-    this.quill.onModuleLoad('keyboard', (keyboard) => {
-      keyboard.addHotkey(LinkTooltip.hotkeys.LINK, this._onKeyboard.bind(this));
     });
   }
 

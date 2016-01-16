@@ -79,6 +79,11 @@ class Editor {
     }, new Delta());
   }
 
+  getFormat(start, end) {
+    // TODO implement
+    return {};
+  }
+
   getHTML() {
     return this.delta.toHTML();
   }

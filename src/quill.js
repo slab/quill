@@ -1,6 +1,7 @@
 import Delta from './lib/delta';
 import Editor from './editor';
 import Emitter from './emitter';
+import Keyboard from './keyboard';
 import Parchment from 'parchment';
 import Scroll from './scroll';
 import Selection, { Range } from './selection';
@@ -79,6 +80,7 @@ class Quill {
     this.scroll = new Scroll(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
+    this.keyboard = new Keyboard();
     let themeClass = Quill.themes[this.options.theme || 'base'];
     if (themeClass == null) {
       debug.error(`Cannot load ${this.options.theme} theme. It may not be registered. Loading default theme.`);
@@ -170,6 +172,14 @@ class Quill {
   getContents(start = 0, end = this.getLength()) {
     [start, end] = this._buildParams(start, end);
     return this.editor.getContents(start, end);
+  }
+
+  getFormat(start = this.getSelection(), end = start) {
+    if (typeof start === 'number') {
+      return this.editor.getFormat(start, end);
+    } else {
+      return this.editor.getFormat(start.start, start.end);
+    }
   }
 
   getLength() {

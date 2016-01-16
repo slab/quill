@@ -31,7 +31,7 @@ class Scroll extends Parchment.Container {
   findLine(index, inclusive = false) {
     let path = this.findPath(index, inclusive);
     for (let i = 0; i < path.length; i++) {
-      if (path[i].blot instanceof Parchment.Block) return path[i];
+      if (path[i].blot instanceof Block) return path[i];
     }
     return null;
   }

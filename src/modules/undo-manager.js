@@ -5,11 +5,8 @@ let Delta = Quill.import('delta');
 
 
 class UndoManager {
-  constructor(quill, options) {
+  constructor(quill, options = {}) {
     this.quill = quill;
-    if (options == null) {
-      options = {};
-    }
     this.options = extend({}, UndoManager.DEFAULTS, options);
     this.lastRecorded = 0;
     this.ignoreChange = false;
@@ -23,6 +20,8 @@ class UndoManager {
       }
       this.oldDelta = this.quill.getContents();
     });
+    this.quill.keyboard.addBinding({ key: 'Z', metaKey: true }, this.undo.bind(this));
+    this.quill.keyboard.addBinding({ key: 'Z', metaKey: true, shiftKey: true }, this.redo.bind(this));
   }
 
   change(source, dest) {
