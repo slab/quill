@@ -1,9 +1,10 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
-import * as platform from '../lib/platform';
+import * as platform from './lib/platform';
 import Delta from './lib/delta';
 import Emitter from './emitter';
+import logger from './lib/logger';
 import { Range } from './selection';
 
 
@@ -12,7 +13,7 @@ let debug = logger('quill:keyboard');
 
 class Keyboard {
   constructor(quill) {
-    this.quill = qull;
+    this.quill = quill;
     this.bindings = {};
     this.addBinding({ key: 'B', metaKey: true }, this.onFormat.bind(this, 'bold'));
     this.addBinding({ key: 'I', metaKey: true }, this.onFormat.bind(this, 'italic'));
@@ -28,9 +29,9 @@ class Keyboard {
       let which = evt.which || evt.keyCode;
       let handlers = (this.bindings[which] || []).reduce(function(handlers, binding) {
         let [key, handler] = binding;
-        if match(evt, key) handlers.push(handler);
+        if (match(evt, key)) handlers.push(handler);
         return handlers;
-      });
+      }, []);
       if (handlers.length > 0) {
         let range = this.quill.getSelection();
         handlers.forEach((handler) => {
@@ -47,7 +48,7 @@ class Keyboard {
       return debug.warn('Attempted to add invalid keyboard binding', binding);
     }
     this.bindings[binding.key] = this.bindings[binding.key] || [];
-    this.bindings[binding.key].push([binding, callback]);
+    this.bindings[binding.key].push([binding, handler]);
   }
 
   onDelete(backspace, range) {

@@ -80,7 +80,7 @@ class Quill {
     this.scroll = new Scroll(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.keyboard = new Keyboard();
+    this.keyboard = new Keyboard(this);
     let themeClass = Quill.themes[this.options.theme || 'base'];
     if (themeClass == null) {
       debug.error(`Cannot load ${this.options.theme} theme. It may not be registered. Loading default theme.`);
@@ -323,7 +323,6 @@ Quill.DEFAULTS = {
     'image', 'equation'
   ],
   modules: {
-    'keyboard': true,
     'paste-manager': true,
     'undo-manager': true
   },
