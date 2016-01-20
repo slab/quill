@@ -44,8 +44,12 @@ class Scroll extends Parchment.Container {
     }
   }
 
-  getLines(index = 0, length = this.getLength()) {
-    return this.getDescendants(index, length, Block);
+  getLeaves(start = 0, end = this.getLength()) {
+    return this.getDescendants(start, end - start, Parchment.Leaf);
+  }
+
+  getLines(start = 0, end = this.getLength()) {
+    return this.getDescendants(start, end - start, Block);
   }
 
   remove() {

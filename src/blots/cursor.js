@@ -48,11 +48,6 @@ class Cursor extends Parchment.Leaf {
     return '';
   }
 
-  // remove() {
-  //   super.remove();
-  //   this.textNode.data = Cursor.CONTENTS;
-  // }
-
   update(mutations) {
     mutations.forEach((mutation) => {
       if (mutation.type === 'characterData' && mutation.target === this.textNode) {

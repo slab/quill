@@ -54,7 +54,7 @@ beforeEach(function() {
   // Defining in a beforeAll does not work, seems this is cloned or something
   this.initialize = (klass, html, container = this.container) => {
     container.innerHTML = html.replace(/\n\s*/g, '');
-    if (container instanceof klass) return container;
+    if (container === HTMLElement) return container;
     if (klass === Quill) return new Quill(container);
     let emitter = new Emitter();
     let scroll = new Scroll(container, emitter);
@@ -63,6 +63,7 @@ beforeEach(function() {
     if (klass === Editor) return editor;
     let selection = new Selection(scroll, emitter);
     if (klass === Selection) return selection;
+    if (klass[0] === Editor && klass[1] === Selection) return [editor, selection];
   }
 });
 

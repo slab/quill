@@ -35,10 +35,6 @@ class Block extends Parchment.Block {
     return super.getLength() + NEWLINE_LENGTH;
   }
 
-  getValue() {
-    return super.getValue().concat('\n');
-  }
-
   insertAt(index, value, def) {
     if (def != null) return super.insertAt(index, value, def);
     if (value.length === 0) return;

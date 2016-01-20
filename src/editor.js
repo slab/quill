@@ -4,6 +4,40 @@ import Parchment from 'parchment';
 import extend from 'extend';
 
 
+/**
+
+Leaf/Line Iterator
+
+leafFormats = function(leaf) {}
+
+===
+
+let it = new Iterator(start, end);
+let delta = new Delta();
+while (line = it.nextLine()) {
+  while (leaf = it.nextLeaf()) {
+    if (leaf.getLength() > 0) {
+      delta.insert(leaf.getValue(), leafFormats(leaf));
+    }
+  }
+  delta.insert('\n', line.getFormat());
+}
+
+===
+
+let it = new Iterator(start, end);
+let blockFormats = {}, inlineFormats = {};
+while (line = it.nextLine() && (Object.keys(blockFormats).length > 0 || Object.keys(inlineFormats).length > 0)) {
+  while (leaf = it.nextLeaf() && Object.keys(inlineFormats).length > 0) {
+    combine(inlineFormats, leafFormats(leaf));
+  }
+  combine(blockFormats, line.getFormat());
+}
+return extend(blockFormats, inlineFormats);
+
+**/
+
+
 class Editor {
   constructor(scroll, emitter) {
     this.scroll = scroll;
@@ -80,43 +114,42 @@ class Editor {
   }
 
   getFormat(start, end) {
-    let blockFormats = {}, inlineFormats = {};
     let combine = function(formats1, formats2) {
-      return Object.keys(formats2).reduce(function(formats2, name) {
+      return Object.keys(formats2).reduce(function(formats1, name) {
         if (formats1[name] != null && formats1[name] !== formats2[name]) {
           if (Array.isArray(formats1[name])) {
             if (formats1[name].indexOf(formats2[name]) < 0) {
               formats1[name].push(formats2[name]);
             }
           } else {
-            formats1[name] = [formats1[name], formats2[name]];
+            formats1[name] = [formats2[name], formats1[name]];
           }
         }
-        return formats2;
-      }, formats2);
+        return formats1;
+      }, formats1);
     }
-    this.scroll.getLines().every(function(line, i) {
-      if (i === 0) {
-        blockFormats = line.getFormat();
-      } else if (Object.keys(lineFormats).length > 0) {
-        blockFormats = combine(line.getFormat(), blockFormats);
+    let getLeafFormats = function(blot) {
+      let formats = {};
+      while (blot.parent instanceof Parchment.Inline) {
+        formats = extend(formats, blot.parent.getFormat());
+        blot = blot.parent;
       }
-      if (i == 0 || Object.keys(inlineFormats).length > 0) {
-        line.getDescendants(Parchment.Leaf).every(function(leafFormats, blot, j) {
-          let formats = {};
-          while (blot.parent instanceof Parchment.Inline) {
-            formats = extend(format, blot.parent.getFormat());
-            blot = blot.parent;
-          }
-          if (i === 0 && j === 0) {
-            inlineFormats = formats;
-          } else {
-            inlineFormats = combine(formats, inlineFormats);
-          }
-          return Object.keys(inlineFormats).length > 0;
-        });
-      }
-      return Object.keys(blockFormats).length !== 0 && Object.keys(inlineFormats).length !== 0;
+      return formats;
+    }
+    let lines = this.scroll.getLines(start, end);
+    let leaves = this.scroll.getLeaves(start, end);
+    let firstLine = lines.shift() || this.scroll.findLine(start).blot;
+    let firstLeaf = leaves.shift() || this.scroll.findPath(start).pop();
+    let blockFormats = firstLine.getFormat();
+    let inlineFormats = getLeafFormats(firstLeaf);
+    console.log(firstLeaf, leaves)
+    lines.every(function(line, i) {
+      blockFormats = combine(line.getFormat(), blockFormats);
+      return Object.keys(blockFormats).length > 0;
+    });
+    leaves.every(function(leaf, i) {
+      inlineFormats = combine(getLeafFormats(leaf), inlineFormats);
+      return Object.keys(inlineFormats).length > 0;
     });
     return extend(blockFormats, inlineFormats);
   }
@@ -127,7 +160,7 @@ class Editor {
 
   getText(start, end) {
     // TODO optimize
-    let values = [].concat.apply([], this.scroll.getValue());
+    let values = [].concat.apply([], this.scroll.getLeaves());
     return values.map(function(value) {
       return typeof value === 'string' ? value : '';   // Exclude embeds
     }).join('').slice(start, end);
