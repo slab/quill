@@ -1,15 +1,8 @@
 import Parchment from 'parchment';
+import Embed from '../blots/embed';
 
 
-class Image extends Parchment.Embed {
-  format(name, value) {
-    // TODO implement
-  }
-
-  formats() {
-    return {};
-  }
-
+class Image extends Embed {
   value() {
     return this.domNode.getAttribute('src') || true;
   }
@@ -27,4 +20,4 @@ Image.create = function(value) {
 
 Parchment.register(Image);
 
-export { Image as default };
+export default Image;

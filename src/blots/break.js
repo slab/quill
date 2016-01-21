@@ -1,7 +1,8 @@
 import Parchment from 'parchment';
+import Embed from '../blots/embed';
 
 
-class Break extends Parchment.Embed {
+class Break extends Embed {
   length() {
     return 0;
   }

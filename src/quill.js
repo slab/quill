@@ -11,10 +11,6 @@ import logger from './lib/logger';
 import BaseTheme from './themes/base';
 import SnowTheme from './themes/snow';
 
-import BlockBlot from './blots/block';
-import BreakBlot from './blots/break';
-import CursorBlot from './blots/cursor';
-
 import CodeBlockFormat from './formats/code-block';
 import EquationFormat from './formats/equation';
 import HeaderFormat from './formats/header';
@@ -22,8 +18,12 @@ import ListFormat from './formats/list';
 import ImageFormat from './formats/image';
 import InlineFormat from './formats/inline';
 
+import CursorBlot from './blots/cursor';
+import BlockBlot from './blots/block';
+import InlineBlot from './blots/inline';
+import BreakBlot from './blots/break';
 
-Parchment.register(Parchment.Inline);
+
 Parchment.register(Parchment.Text);
 let debug = logger('quill');
 

@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Editor from '../../../src/editor';
 
 
-xdescribe('Formats', function() {
+describe('Formats', function() {
   describe('Inline', function() {
     it('definition', function() {
       let editor = this.initialize(Editor, `

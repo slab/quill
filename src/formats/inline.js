@@ -1,48 +1,30 @@
+import Inline from '../blots/inline';
 import Parchment from 'parchment';
 import StyleAttributor from './attributor';
 
 
-// Earlier means higher in the DOM tree
-let order = [
-  'link',               // Must be earlier
-  'script', 'italic', 'bold', 'strike', 'underline', 'code',
-  'inline', 'cursor'    // Must be later
-];
-
-
-Parchment.Inline.compare = function(self, other) {
-  let selfIndex = order.indexOf(self);
-  let otherIndex = order.indexOf(other);
-  if (selfIndex !== otherIndex) {
-    return selfIndex >= otherIndex;
-  } else {
-    return self >= other;
-  }
-};
-
-
-class Bold extends Parchment.Inline { }
+class Bold extends Inline { }
 Bold.blotName = 'bold';
 Bold.tagName = 'STRONG';
 
-class Code extends Parchment.Inline { }
+class Code extends Inline { }
 Code.blotName = 'code';
 Code.tagName = 'CODE';
 
-class Italic extends Parchment.Inline { }
+class Italic extends Inline { }
 Italic.blotName = 'italic';
 Italic.tagName = 'EM';
 
-class Strike extends Parchment.Inline { }
+class Strike extends Inline { }
 Strike.blotName = 'strike';
 Strike.tagName = 'S';
 
-class Underline extends Parchment.Inline { }
+class Underline extends Inline { }
 Underline.blotName = 'underline';
 Underline.tagName = 'U';
 
 
-class Link extends Parchment.Inline {
+class Link extends Inline {
   formats() {
     let format = super.formats();
     format.link = this.domNode.getAttribute('href') || true;
@@ -60,7 +42,7 @@ Link.create = function(value) {
 }
 
 
-class Script extends Parchment.Inline {
+class Script extends Inline {
   formats() {
     let format = super.formats();
     format.script = this.domNode.tagName === 'SUP' ? 'super' : 'sub';

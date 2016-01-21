@@ -98,4 +98,4 @@ Block.tagName = 'P';
 
 Parchment.register(Block);
 
-export { Block as default };
+export default Block;

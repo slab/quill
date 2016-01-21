@@ -1,7 +1,8 @@
 import Parchment from 'parchment';
+import Embed from '../blots/embed';
 
 
-class Equation extends Parchment.Embed {
+class Equation extends Embed {
   value() {
     return this.domNode.getAttribute('data-value') || true;
   }
@@ -21,4 +22,4 @@ Equation.create = function(value) {
 
 Parchment.register(Equation);
 
-export { Equation as default };
+export default Equation;
