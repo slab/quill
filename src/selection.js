@@ -1,6 +1,7 @@
 import Parchment from 'parchment';
 import Emitter from './emitter';
 import CursorBlot from './blots/cursor';
+import EmbedBlot from './blots/embed';
 import equal from 'deep-equal';
 import extend from 'extend';
 import * as platform from './lib/platform';
@@ -60,7 +61,7 @@ class Selection {
   format(format, value) {
     this.scroll.update();
     let nativeRange = this.getNativeRange();
-    if (nativeRange == null || !nativeRange.collapsed || Parchment.match(format, Parchment.Scope.BLOCK)) return;
+    if (nativeRange == null || !nativeRange.collapsed || Parchment.query(format, Parchment.Scope.BLOCK)) return;
     if (nativeRange.startContainer !== this.cursor.textNode) {
       let blot = Parchment.find(nativeRange.startContainer, false);
       if (blot == null) return;
@@ -85,7 +86,7 @@ class Selection {
     let bounds;
     if (pos.blot.length() === 0) {
       bounds = pos.blot.parent.domNode.getBoundingClientRect();
-    } else if (pos.blot instanceof Parchment.Embed) {
+    } else if (pos.blot instanceof Embed) {
       bounds = pos.blot.domNode.getBoundingClientRect();
       if (pos.offset > 0) {
         side = 'right';

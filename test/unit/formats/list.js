@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Editor from '../../../src/editor';
 
 
-xdescribe('List', function() {
+describe('List', function() {
   it('format', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>

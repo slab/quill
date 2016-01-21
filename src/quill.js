@@ -50,7 +50,7 @@ class Quill {
 
   static registerFormat(format) {
     let name = format.blotName || format.attrName;
-    if (Parchment.match(name)) {
+    if (Parchment.query(name)) {
       debug.warn(`Overwriting ${name} format`);
     }
     Parchment.register(format);
@@ -152,7 +152,7 @@ class Quill {
   formatCursor(name, value, source = Emitter.source.API) {
     let range = this.getSelection();
     if (range == null) return;
-    if (Parchment.match(name, Parchment.Scope.BLOCK)) {
+    if (Parchment.query(name, Parchment.Scope.BLOCK)) {
       this.formatLine(range, name, value, source);
     } else if (range.isCollapsed()) {
       this.selection.format(name, value);

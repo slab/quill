@@ -9,18 +9,7 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 
 
-class List extends Parchment.Block {
-  format(name, value) {
-    if (this.children.tail != null) {
-      this.children.tail.format(name, value);
-    }
-  }
-
-  formats() {
-    let format = this.domNode.tagName === 'OL' ? 'ordered' : 'bullet'
-    return extend({}, super.formats(), { list: format });
-  }
-
+class List extends Parchment.Container {
   optimize(mutations) {
     super.optimize();
     let next = this.next;
@@ -38,6 +27,7 @@ class List extends Parchment.Block {
   }
 }
 List.blotName = 'list';
+List.scope = Parchment.Scope.BLOCK_BLOT;
 List.tagName = ['OL', 'UL'];
 List.create = function(value) {
   if (value === 'ordered') {
@@ -50,8 +40,18 @@ List.create = function(value) {
 
 
 class ListItem extends Block {
+  format(name, value) {
+    if (name === 'list' && !value) {
+      this.replaceWith(Parchment.create(this.statics.scope));
+    } else {
+      super.format(name, value);
+    }
+  }
+
   formats() {
-    let format = extend({}, super.formats(), this.parent.formats());
+    let format = extend({}, super.formats(), {
+      list: this.parent.domNode.tagName === 'OL' ? 'ordered' : 'bullet'
+    });
     delete format[this.statics.blotName];
     return format;
   }

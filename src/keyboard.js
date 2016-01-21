@@ -76,7 +76,7 @@ class Keyboard {
   onEnter(range) {
     let formats = this.quill.getFormat(range);
     let lineFormats = Object.keys(formats, function(lineFormats, format) {
-      if (Parchment.match(format, Parchment.Scope.BLOCK)) {
+      if (Parchment.query(format, Parchment.Scope.BLOCK)) {
         lineFormats[name] = formats[name];
       }
       return lineFormats;
