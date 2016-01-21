@@ -2,11 +2,11 @@ import Parchment from 'parchment';
 
 
 class Break extends Parchment.Embed {
-  getLength() {
+  length() {
     return 0;
   }
 
-  getValue() {
+  value() {
     return '';
   }
 }

@@ -4,10 +4,10 @@ import Parchment from 'parchment';
 
 
 class Header extends Block {
-  getFormat() {
-    let formats = super.getFormat();
-    formats.header = Header.tagName.indexOf(this.domNode.tagName) + 1;
-    return formats;
+  formats() {
+    let format = super.formats();
+    format.header = Header.tagName.indexOf(this.domNode.tagName) + 1;
+    return format;
   }
 }
 Header.blotName = 'header';

@@ -3,7 +3,7 @@ import Emitter from './emitter';
 import Parchment from 'parchment';
 
 
-class Scroll extends Parchment.Container {
+class Scroll extends Parchment.Scroll {
   constructor(domNode, emitter) {
     super(domNode);
     this.emitter = emitter;
@@ -22,41 +22,28 @@ class Scroll extends Parchment.Container {
     this.optimize();
   }
 
-  ensureChild() {
-    if (this.children.length === 0) {
-      this.appendChild(Parchment.create('block'));
-    }
-  }
-
-  findLine(index, inclusive = false) {
-    let path = this.findPath(index, inclusive);
+  findLine(index) {
+    let path = this.path(index);
     for (let i = 0; i < path.length; i++) {
       if (path[i].blot instanceof Block) return path[i];
     }
     return null;
   }
 
-  findPath(index, inclusive = false) {
-    if (index >= this.getLength()) {
+  getLeaves(start = 0, end = this.length()) {
+    return this.descendants(Parchment.Leaf, start, end - start);
+  }
+
+  getLines(start = 0, end = this.length()) {
+    return this.descendants(Block, start, end - start);
+  }
+
+  path(index) {
+    if (index >= this.length()) {
       return [];
     } else {
-      return super.findPath(index, inclusive).slice(1);  // Exclude self
+      return super.path(index).slice(1);  // Exclude self
     }
-  }
-
-  getLeaves(start = 0, end = this.getLength()) {
-    return this.getDescendants(start, end - start, Parchment.Leaf);
-  }
-
-  getLines(start = 0, end = this.getLength()) {
-    return this.getDescendants(start, end - start, Block);
-  }
-
-  remove() {
-    this.children.forEach(function(child) {
-      child.remove();
-    });
-    this.optimize();
   }
 
   update(mutations) {

@@ -13,26 +13,21 @@ class Block extends Parchment.Block {
   }
 
   findNode(index) {
-    if (index === this.getLength()) {
-      return [this.children.tail.domNode, this.children.tail.getLength()];
+    if (index === this.length()) {
+      return [this.children.tail.domNode, this.children.tail.length()];
     }
     return super.findNode(index);
   }
 
-  findPath(index) {
-    return super.findPath(index, true);
-  }
-
   formatAt(index, length, name, value) {
     if (length <= 0) return;
-    if (index + length >= this.getLength()) {
-      this.format(name, value);
+    if (Parchment.query(name, Parchment.Scope.BLOCK)) {
+      if (index + length === this.length()) {
+        this.format(name, value);
+      }
+    } else {
+      super.formatAt(index, Math.min(length, this.length() - index - 1), name, value);
     }
-    super.formatAt(index, Math.min(length, this.getLength() - index - 1), name, value);
-  }
-
-  getLength() {
-    return super.getLength() + NEWLINE_LENGTH;
   }
 
   insertAt(index, value, def) {
@@ -41,10 +36,10 @@ class Block extends Parchment.Block {
     let lines = value.split('\n');
     let text = lines.shift();
     if (text.length > 0) {
-      if (index < this.getLength() - 1) {
+      if (index < this.length() - 1) {
         super.insertAt(index, text);
       } else {
-        this.children.tail.insertAt(this.children.tail.getLength(), text);
+        this.children.tail.insertAt(this.children.tail.length(), text);
       }
     }
     if (lines.length > 0) {
@@ -61,8 +56,28 @@ class Block extends Parchment.Block {
     super.insertBefore(blot, ref);
   }
 
+  length() {
+    return super.length() + NEWLINE_LENGTH;
+  }
+
+  path(index) {
+    if (index < this.length() - 1) return super.path(index);
+    let blot = this, position = [];
+    do {
+      if (blot instanceof Parchment.Container) {
+        let offset = blot.children.offset(blot.children.tail);
+        position.push([blot, offset]);
+        blot = blot.children.tail;
+      } else {
+        position.push([blot, blot.length()]);
+        break;
+      }
+    } while (blot != null);
+    return position;
+  }
+
   split(index, force = false) {
-    if (force && (index === 0 || index >= this.getLength() - NEWLINE_LENGTH)) {
+    if (force && (index === 0 || index >= this.length() - NEWLINE_LENGTH)) {
       let clone = this.clone();
       if (index === 0) {
         this.parent.insertBefore(clone, this);

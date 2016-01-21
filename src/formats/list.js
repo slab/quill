@@ -16,9 +16,9 @@ class List extends Parchment.Block {
     }
   }
 
-  getFormat() {
+  formats() {
     let format = this.domNode.tagName === 'OL' ? 'ordered' : 'bullet'
-    return extend({}, super.getFormat(), { list: format });
+    return extend({}, super.formats(), { list: format });
   }
 
   optimize(mutations) {
@@ -50,14 +50,14 @@ List.create = function(value) {
 
 
 class ListItem extends Block {
-  getFormat() {
-    let format = extend({}, super.getFormat(), this.parent.getFormat());
-    delete format['list-item'];
+  formats() {
+    let format = extend({}, super.formats(), this.parent.formats());
+    delete format[this.statics.blotName];
     return format;
   }
 
   replaceWith(name, value) {
-    this.parent.isolate(this.offset(this.parent), this.getLength());
+    this.parent.isolate(this.offset(this.parent), this.length());
     let replacement = super.replaceWith(name, value);
     replacement.parent.unwrap();
     return replacement;

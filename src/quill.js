@@ -23,6 +23,8 @@ import ImageFormat from './formats/image';
 import InlineFormat from './formats/inline';
 
 
+Parchment.register(Parchment.Inline);
+Parchment.register(Parchment.Text);
 let debug = logger('quill');
 
 
@@ -183,7 +185,7 @@ class Quill {
   }
 
   getLength() {
-    return this.scroll.getLength();
+    return this.scroll.length();
   }
 
   getModule(name) {

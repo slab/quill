@@ -62,13 +62,13 @@ class Selection {
     let nativeRange = this.getNativeRange();
     if (nativeRange == null || !nativeRange.collapsed || Parchment.match(format, Parchment.Scope.BLOCK)) return;
     if (nativeRange.startContainer !== this.cursor.textNode) {
-      let blot = Parchment.findBlot(nativeRange.startContainer, false);
+      let blot = Parchment.find(nativeRange.startContainer, false);
       if (blot == null) return;
       if (blot instanceof Parchment.Leaf) {
         let after = blot.split(nativeRange.startOffset);
         blot.parent.insertBefore(this.cursor, after);
       } else {
-        blot.insertBefore(this.cursor, Parchment.findBlot(nativeRange.startContainer[nativeRange.startOffset]));
+        blot.insertBefore(this.cursor, Parchment.find(nativeRange.startContainer[nativeRange.startOffset]));
       }
     }
     this.cursor.format(format, value);
@@ -78,12 +78,12 @@ class Selection {
   }
 
   getBounds(index) {
-    let pos = this.scroll.findPath(index).pop();
+    let pos = this.scroll.path(index).pop();
     if (pos == null) return null;
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let side = 'left';
     let bounds;
-    if (pos.blot.getLength() === 0) {
+    if (pos.blot.length() === 0) {
       bounds = pos.blot.parent.domNode.getBoundingClientRect();
     } else if (pos.blot instanceof Parchment.Embed) {
       bounds = pos.blot.domNode.getBoundingClientRect();
@@ -92,7 +92,7 @@ class Selection {
       }
     } else {
       let range = document.createRange();
-      if (pos.offset < pos.blot.getLength()) {
+      if (pos.offset < pos.blot.length()) {
         range.setStart(pos.blot.domNode, pos.offset);
         range.setEnd(pos.blot.domNode, pos.offset + 1);
         side = 'left';
@@ -136,15 +136,15 @@ class Selection {
     }
     let indexes = positions.map((position) => {
       let [container, offset] = position;
-      let blot = Parchment.findBlot(container, true);
+      let blot = Parchment.find(container, true);
       let index = blot.offset(this.scroll) + blot.findOffset(container);
       // TODO handle for code
       if (!(blot instanceof Parchment.Leaf)) {
-        let child = Parchment.findBlot(container.childNodes[offset]);
+        let child = Parchment.find(container.childNodes[offset]);
         if (child != null) {
           return index + child.offset(blot);
         } else {
-          return index + blot.getLength();
+          return index + blot.length();
         }
       } else {
         return index + offset;

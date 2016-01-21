@@ -43,32 +43,28 @@ Underline.tagName = 'U';
 
 
 class Link extends Parchment.Inline {
-  constructor(value) {
-    super(value);
-    if (typeof value === 'string') {
-      this.domNode.setAttribute('href', value);
-    }
-  }
-
-  getFormat() {
-    let formats = super.getFormat();
-    formats.link = this.domNode.getAttribute('href');
-    return formats;
+  formats() {
+    let format = super.formats();
+    format.link = this.domNode.getAttribute('href') || true;
+    return format;
   }
 }
 Link.blotName = 'link';
 Link.tagName = 'A';
+Link.create = function(value) {
+  let node = Parchment.Inline.create.call();
+  if (typeof value === 'string') {
+    this.domNode.setAttribute('href', value);
+  }
+  return node;
+}
 
 
 class Script extends Parchment.Inline {
-  constructor(value) {
-    super(value);
-  }
-
-  getFormat() {
-    let formats = super.getFormat();
-    formats.script = this.domNode.tagName === 'SUP' ? 'super' : 'sub';
-    return formats;
+  formats() {
+    let format = super.formats();
+    format.script = this.domNode.tagName === 'SUP' ? 'super' : 'sub';
+    return format;
   }
 }
 Script.blotName = 'script';
@@ -91,6 +87,5 @@ Parchment.register(Strike);
 Parchment.register(Underline);
 Parchment.register(Link);
 Parchment.register(Script);
-
 
 export { Bold, Italic, Strike, Underline, Link, Code, Script };

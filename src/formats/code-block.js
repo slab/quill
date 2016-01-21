@@ -52,18 +52,10 @@ class CodeBlock extends Block {
 
   }
 
-  getFormat() {
+  formats() {
     return {
       'code-block': this.domNode.getAttribute('data-language') || true
     };
-  }
-
-  getLength() {
-    return this.getValue().length;
-  }
-
-  getValue() {
-    return this.domNode.innerText + '\n';
   }
 
   insertAt(index, value, def) {
@@ -74,22 +66,30 @@ class CodeBlock extends Block {
   }
 
   insertBefore(blot, ref) {
-    let values = blot.getValue();
+    let values = blot.value();
     if (!Array.isArray(values)) values = [values];
     let text = values.map(function(value) {
       return (typeof value === 'string') ? value : '';
     }).join('');
-    this.insertAt(this.getLength() - 1, text);
+    this.insertAt(this.length() - 1, text);
   }
 
-  update(mutation) {
+  length() {
+    return this.value().length;
+  }
 
+  update(mutations) {
+
+  }
+
+  value() {
+    return this.domNode.innerText + '\n';
   }
 }
 CodeBlock.blotName = 'code-block';
 CodeBlock.tagName = 'PRE';
 
-
 Parchment.register(CodeBlock);
+
 
 export { CodeBlock as default };

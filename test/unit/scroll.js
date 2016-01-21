@@ -2,86 +2,69 @@ import Scroll from '../../src/scroll';
 
 
 describe('Scroll', function() {
-  describe('findPath()', function() {
+  describe('path()', function() {
     it('middle', function() {
       let scroll = this.initialize(Scroll, '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
-      let path = scroll.findPath(7);
+      let path = scroll.path(7);
       let expected = [
-        { blot: 'block', offset: 0 },
-        { blot: 'italic', offset: 2 },
-        { blot: 'bold', offset: 4 },
-        { blot: 'text', offset: 1 }
+        [ 'block', 0 ],
+        [ 'italic', 2 ],
+        [ 'bold', 4 ],
+        [ 'text', 1 ]
       ];
       expect(path.length).toEqual(expected.length);
       expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
-      });
-    });
-
-    it('inclusive default', function() {
-      let scroll = this.initialize(Scroll, '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
-      let path = scroll.findPath(6);
-      let expected = [
-        { blot: 'block', offset: 0 },
-        { blot: 'italic', offset: 2 },
-        { blot: 'bold', offset: 2 },
-        { blot: 'underline', offset: 0 },
-        { blot: 'text', offset: 2 }
-      ];
-      expect(path.length).toEqual(expected.length);
-      expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
+        expect(path[i][0].statics.blotName).toEqual(pos[0]);
+        expect(path[i][1]).toEqual(pos[1]);
       });
     });
 
     it('end of line', function() {
       let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p><h1>5</h1>');
-      let path = scroll.findPath(4);
+      let path = scroll.path(4);
       let expected = [
-        { blot: 'block', offset: 2 },
-        { blot: 'bold', offset: 0 },
-        { blot: 'text', offset: 2 }
+        [ 'block', 2 ],
+        [ 'bold', 0 ],
+        [ 'text', 2 ]
       ];
       expect(path.length).toEqual(expected.length);
       expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
+        expect(path[i][0].statics.blotName).toEqual(pos[0]);
+        expect(path[i][1]).toEqual(pos[1]);
       });
     });
 
     it('newline boundary', function() {
       let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p><h1>5</h1>');
-      let path = scroll.findPath(5);
+      let path = scroll.path(5);
       let expected = [
-        { blot: 'header', offset: 0 },
-        { blot: 'text', offset: 0 }
+        [ 'header', 0 ],
+        [ 'text', 0 ]
       ];
       expect(path.length).toEqual(expected.length);
       expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
+        expect(path[i][0].statics.blotName).toEqual(pos[0]);
+        expect(path[i][1]).toEqual(pos[1]);
       });
     });
 
     it('beyond document', function() {
       let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p>');
-      let path = scroll.findPath(5);
+      let path = scroll.path(5);
       expect(path.length).toEqual(0);
     });
 
     it('empty line', function() {
       let scroll = this.initialize(Scroll, '<p><br></p>');
-      let path = scroll.findPath(0);
+      let path = scroll.path(0);
       let expected = [
-        { blot: 'block', offset: 0 },
-        { blot: 'break', offset: 0 }
+        [ 'block', 0 ],
+        [ 'break', 0 ]
       ];
       expect(path.length).toEqual(expected.length);
       expected.forEach(function(pos, i) {
-        expect(path[i].blot.statics.blotName).toEqual(pos.blot);
-        expect(path[i].offset).toEqual(pos.offset);
+        expect(path[i][0].statics.blotName).toEqual(pos[0]);
+        expect(path[i][1]).toEqual(pos[1]);
       });
     });
   });

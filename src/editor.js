@@ -16,11 +16,11 @@ let it = new Iterator(start, end);
 let delta = new Delta();
 while (line = it.nextLine()) {
   while (leaf = it.nextLeaf()) {
-    if (leaf.getLength() > 0) {
-      delta.insert(leaf.getValue(), leafFormats(leaf));
+    if (leaf.length() > 0) {
+      delta.insert(leaf.value(), leafFormats(leaf));
     }
   }
-  delta.insert('\n', line.getFormat());
+  delta.insert('\n', line.formats());
 }
 
 ===
@@ -31,7 +31,7 @@ while (line = it.nextLine() && (Object.keys(blockFormats).length > 0 || Object.k
   while (leaf = it.nextLeaf() && Object.keys(inlineFormats).length > 0) {
     combine(inlineFormats, leafFormats(leaf));
   }
-  combine(blockFormats, line.getFormat());
+  combine(blockFormats, line.formats());
 }
 return extend(blockFormats, inlineFormats);
 
@@ -99,17 +99,24 @@ class Editor {
 
   getDelta() {
     return this.scroll.getLines().reduce((delta, line) => {
-      line.getDescendants(Parchment.Leaf).forEach((blot) => {
-        if (blot.getLength() === 0) return delta;
-        let attributes = {};
-        let value = blot.getValue();
-        while (blot != line) {
-          attributes = extend({}, blot.getFormat(), attributes);
+      line.descendants(Parchment.Leaf).forEach((blot) => {
+        if (blot.length() === 0) return delta;
+        let attributes, value;
+        if (blot instanceof Parchment.Text) {
+          attributes = {};
+          value = blot.value();
+        } else {
+          value = {};
+          value[blot.statics.blotName] = blot.value();
+          attributes = blot.formats();
+        }
+        while (blot.parent != line) {
+          attributes = extend(attributes, blot.parent.formats());
           blot = blot.parent;
         }
         delta.insert(value, attributes);
       });
-      return delta.insert('\n', line.getFormat());
+      return delta.insert('\n', line.formats());
     }, new Delta());
   }
 
@@ -131,7 +138,7 @@ class Editor {
     let getLeafFormats = function(blot) {
       let formats = {};
       while (blot.parent instanceof Parchment.Inline) {
-        formats = extend(formats, blot.parent.getFormat());
+        formats = extend(formats, blot.parent.formats());
         blot = blot.parent;
       }
       return formats;
@@ -139,12 +146,12 @@ class Editor {
     let lines = this.scroll.getLines(start, end);
     let leaves = this.scroll.getLeaves(start, end);
     let firstLine = lines.shift() || this.scroll.findLine(start).blot;
-    let firstLeaf = leaves.shift() || this.scroll.findPath(start).pop();
-    let blockFormats = firstLine.getFormat();
+    let firstLeaf = leaves.shift() || this.scroll.path(start).pop();
+    let blockFormats = firstLine.formats();
     let inlineFormats = getLeafFormats(firstLeaf);
     console.log(firstLeaf, leaves)
     lines.every(function(line, i) {
-      blockFormats = combine(line.getFormat(), blockFormats);
+      blockFormats = combine(line.formats(), blockFormats);
       return Object.keys(blockFormats).length > 0;
     });
     leaves.every(function(leaf, i) {

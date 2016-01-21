@@ -3,7 +3,7 @@ import Delta from 'rich-text/lib/delta';
 import Selection, { Range } from '../../src/selection';
 
 
-describe('Selection', function() {
+xdescribe('Selection', function() {
   describe('focus()', function() {
     beforeEach(function() {
       this.initialize(HTMLElement, '<textarea>Test</textarea><div></div>');

@@ -232,13 +232,13 @@ describe('Editor', function() {
     });
   });
 
-  fdescribe('getFormat', function() {
+  xdescribe('getFormat', function() {
     it('cursor', function() {
       let editor = this.initialize(Editor, '<h1><em><strong>0123</strong></em></h1><h2><u>5678</u></h2>');
       expect(editor.getFormat(2, 2)).toEqual({ bold: true, italic: true, header: 1 });
     });
 
-    fit('cursor with preformat', function() {
+    it('cursor with preformat', function() {
       let [editor, selection] = this.initialize([Editor, Selection], '<h1><em><strong>0123</strong></em></h1>');
       selection.setRange(new Range(2));
       selection.format('underline', true);

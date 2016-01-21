@@ -2,25 +2,23 @@ import Parchment from 'parchment';
 
 
 class Equation extends Parchment.Embed {
-  constructor(value) {
-    super(value);
-    if (typeof value === 'string') {
-      katex.render(value, this.domNode);
-      this.domNode.setAttribute('data-value', value);
-    }
-    this.domNode.setAttribute('contenteditable', false);
-  }
-
-  getValue() {
-    return { equation: this.domNode.getAttribute('data-value') };
+  value() {
+    return this.domNode.getAttribute('data-value') || true;
   }
 }
 Equation.blotName = 'equation';
 Equation.tagName = 'SPAN';
+Equation.create = function(value) {
+  let node = Parchment.Embed.create.call(Equation);
+  if (typeof value === 'string') {
+    katex.render(value, node);
+    node.setAttribute('data-value', value);
+  }
+  node.setAttribute('contenteditable', false);
+  return node;
+}
 
 
-Parchment.register(Equation);     // TODO figure out interface/API
-Parchment.register(Parchment.Inline);
-
+Parchment.register(Equation);
 
 export { Equation as default };
