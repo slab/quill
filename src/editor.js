@@ -149,7 +149,6 @@ class Editor {
     let firstLeaf = leaves.shift() || this.scroll.path(start).pop();
     let blockFormats = firstLine.formats();
     let inlineFormats = getLeafFormats(firstLeaf);
-    console.log(firstLeaf, leaves)
     lines.every(function(line, i) {
       blockFormats = combine(line.formats(), blockFormats);
       return Object.keys(blockFormats).length > 0;

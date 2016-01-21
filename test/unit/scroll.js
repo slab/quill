@@ -19,6 +19,23 @@ describe('Scroll', function() {
       });
     });
 
+    it('inclusive default', function() {
+      let scroll = this.initialize(Scroll, '<p><em>01<strong>23<u>45</u>67</strong>89</em></p>');
+      let path = scroll.path(6);
+      let expected = [
+        [ 'block', 0 ],
+        [ 'italic', 2 ],
+        [ 'bold', 2 ],
+        [ 'underline', 0 ],
+        [ 'text', 2 ]
+      ];
+      expect(path.length).toEqual(expected.length);
+      expected.forEach(function(pos, i) {
+        expect(path[i][0].statics.blotName).toEqual(pos[0]);
+        expect(path[i][1]).toEqual(pos[1]);
+      });
+    });
+
     it('end of line', function() {
       let scroll = this.initialize(Scroll, '<p><em>01</em><strong>23</strong></p><h1>5</h1>');
       let path = scroll.path(4);

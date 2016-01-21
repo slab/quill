@@ -12,11 +12,11 @@ class Block extends Parchment.Block {
     this.optimize();
   }
 
-  findNode(index) {
-    if (index === this.length()) {
-      return [this.children.tail.domNode, this.children.tail.length()];
+  findNode(index, inclusive = true) {
+    if (index == this.length()) {
+      return this.children.tail.findNode(index - this.children.offset(this.children.tail), inclusive);
     }
-    return super.findNode(index);
+    return super.findNode(index, inclusive);
   }
 
   formatAt(index, length, name, value) {
@@ -61,19 +61,7 @@ class Block extends Parchment.Block {
   }
 
   path(index) {
-    if (index < this.length() - 1) return super.path(index);
-    let blot = this, position = [];
-    do {
-      if (blot instanceof Parchment.Container) {
-        let offset = blot.children.offset(blot.children.tail);
-        position.push([blot, offset]);
-        blot = blot.children.tail;
-      } else {
-        position.push([blot, blot.length()]);
-        break;
-      }
-    } while (blot != null);
-    return position;
+    return super.path(index, true);
   }
 
   split(index, force = false) {

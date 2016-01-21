@@ -3,7 +3,7 @@ import Delta from 'rich-text/lib/delta';
 import Selection, { Range } from '../../src/selection';
 
 
-xdescribe('Selection', function() {
+describe('Selection', function() {
   describe('focus()', function() {
     beforeEach(function() {
       this.initialize(HTMLElement, '<textarea>Test</textarea><div></div>');
@@ -352,6 +352,15 @@ xdescribe('Selection', function() {
           <em><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></em>
           <strong>23</strong>
         </p>
+      `);
+    });
+
+    it('between characters', function() {
+      this.setup(`<p><em>0</em><strong>1</strong></p>`, 1);
+      this.selection.format('underline', true);
+      expect(this.selection.getRange()[0].start).toEqual(1);
+      expect(this.container.innerHTML).toEqualHTML(`
+        <p><em>0<u><span class="blot-cursor">${CursorBlot.CONTENTS}</span></u></em><strong>1</strong></p>
       `);
     });
 

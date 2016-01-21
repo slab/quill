@@ -83,23 +83,23 @@ class Selection {
     if (pos == null) return null;
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let side = 'left';
-    let bounds;
-    if (pos.blot.length() === 0) {
-      bounds = pos.blot.parent.domNode.getBoundingClientRect();
-    } else if (pos.blot instanceof Embed) {
-      bounds = pos.blot.domNode.getBoundingClientRect();
-      if (pos.offset > 0) {
+    let bounds, blot = pos[0], offset = pos[1];
+    if (blot.length() === 0) {
+      bounds = blot.parent.domNode.getBoundingClientRect();
+    } else if (blot instanceof EmbedBlot) {
+      bounds = blot.domNode.getBoundingClientRect();
+      if (offset > 0) {
         side = 'right';
       }
     } else {
       let range = document.createRange();
-      if (pos.offset < pos.blot.length()) {
-        range.setStart(pos.blot.domNode, pos.offset);
-        range.setEnd(pos.blot.domNode, pos.offset + 1);
+      if (offset < blot.length()) {
+        range.setStart(blot.domNode, offset);
+        range.setEnd(blot.domNode, offset + 1);
         side = 'left';
       } else {
-        range.setStart(pos.blot.domNode, pos.offset - 1);
-        range.setEnd(pos.blot.domNode, pos.offset);
+        range.setStart(blot.domNode, offset - 1);
+        range.setEnd(blot.domNode, offset);
         side = 'right';
       }
       bounds = range.getBoundingClientRect();
@@ -196,7 +196,7 @@ class Selection {
       let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
       let args = [];
       indexes.map((index) => {
-        let [node, offset] = this.scroll.findNode(index);
+        let [node, offset] = this.scroll.findNode(index, true);
         if (node instanceof Text) {
           args.push(node, offset);
         } else {

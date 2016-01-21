@@ -1,14 +1,15 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
+import Embed from './embed';
 
 
-class Cursor extends Parchment.Embed {
+class Cursor extends Embed {
   constructor(domNode) {
     super(domNode);
     this.domNode.classList.add(Parchment.PREFIX + 'cursor');
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
-    this.length = 0;
+    this._length = 0;
   }
 
   detach() {
@@ -25,11 +26,11 @@ class Cursor extends Parchment.Embed {
   }
 
   format(name, value) {
-    if (this.length !== 0) {
+    if (this._length !== 0) {
       return super.format(name, value);
     }
     let target = this, index = 0;
-    this.length = 1;
+    this._length = 1;
     while (target != null && !(target instanceof Parchment.Block)) {
       index += target.offset(target.parent);
       target = target.parent;
@@ -37,11 +38,11 @@ class Cursor extends Parchment.Embed {
     if (target != null) {
       target.formatAt(index, 1, name, value);
     }
-    this.length = 0;
+    this._length = 0;
   }
 
   length() {
-    return this.length;
+    return this._length;
   }
 
   update(mutations) {

@@ -2,8 +2,8 @@ import Parchment from 'parchment';
 
 // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
 let order = [
-  'inline', 'cursor',   // Must be lower
-  'script', 'bold', 'italic', 'strike', 'underline', 'code',
+  'cursor', 'inline',   // Must be lower
+  'code', 'underline', 'strike', 'bold', 'italic', 'script',
   'link'                // Must be higher
 ];
 
