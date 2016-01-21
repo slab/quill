@@ -67,8 +67,5 @@ ListItem.blotName = 'list-item';
 ListItem.tagName = 'LI';
 
 
-Parchment.register(List);
-Parchment.register(ListItem);
-
-export { List as default };
+export { ListItem, List as default };
 

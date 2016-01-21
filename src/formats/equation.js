@@ -20,6 +20,4 @@ Equation.create = function(value) {
 }
 
 
-Parchment.register(Equation);
-
 export default Equation;

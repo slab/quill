@@ -26,12 +26,5 @@ let Size = new Parchment.Attributor.Style('size', 'font-size', {
   scope: Parchment.Scope.INLINE
 });
 
-Parchment.register(Align);
-Parchment.register(Direction);
-Parchment.register(Indent);
-Parchment.register(Background);
-Parchment.register(Color);
-Parchment.register(Font);
-Parchment.register(Size);
 
 export { Align, Direction, Indent, Background, Color, Font, Size };

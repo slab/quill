@@ -1,9 +1,13 @@
 import Parchment from 'parchment';
+import logger from '../lib/logger';
+
+
+let debug = logger('quill:embed');
 
 
 class Embed extends Parchment.Embed {
   formats(name, value) {
-    // Ignore by default
+    debug.warn('Ignoring formatting embed with', name, value);
   }
 
   formats() {

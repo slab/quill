@@ -23,6 +23,4 @@ Inline.compare = function(self, other) {
 }
 
 
-Parchment.register(Inline);
-
 export default Inline;

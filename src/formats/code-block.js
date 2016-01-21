@@ -89,7 +89,5 @@ class CodeBlock extends Block {
 CodeBlock.blotName = 'code-block';
 CodeBlock.tagName = 'PRE';
 
-Parchment.register(CodeBlock);
 
-
-export { CodeBlock as default };
+export default CodeBlock;

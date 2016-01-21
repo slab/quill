@@ -15,6 +15,4 @@ Break.blotName = 'break';
 Break.tagName = 'BR';
 
 
-Parchment.register(Break);
-
-export { Break as default };
+export default Break;

@@ -67,4 +67,4 @@ Scroll.tagName = 'DIV';
 
 Parchment.register(Scroll);
 
-export { Scroll as default };
+export default Scroll;

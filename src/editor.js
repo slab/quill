@@ -194,4 +194,4 @@ class Editor {
 }
 
 
-export { Editor as default };
+export default Editor;

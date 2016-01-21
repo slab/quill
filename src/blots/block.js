@@ -96,6 +96,4 @@ Block.child = 'break';
 Block.tagName = 'P';
 
 
-Parchment.register(Block);
-
 export default Block;

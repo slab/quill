@@ -61,7 +61,4 @@ Cursor.tagName = 'span';
 Cursor.CONTENTS = "\uFEFF";   // Zero width space
 
 
-Parchment.register(Cursor);
-Parchment.register(Parchment.Inline);   // Workaround from Cursor matching span
-
-export { Cursor as default };
+export default Cursor;

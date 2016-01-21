@@ -5,4 +5,4 @@ Delta.prototype.toHTML = function() {
   throw new Error('Not implemented');
 };
 
-export { Delta as default };
+export default Delta;

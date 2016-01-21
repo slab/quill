@@ -14,6 +14,4 @@ Header.blotName = 'header';
 Header.tagName = ['H1', 'H2', 'H3'];
 
 
-Parchment.register(Header);
-
-export { Header as default };
+export default Header;

@@ -32,4 +32,4 @@ Emitter.sources = {
 };
 
 
-export { Emitter as default };
+export default Emitter;

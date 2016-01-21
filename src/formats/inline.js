@@ -62,12 +62,4 @@ Script.create = function(value) {
 }
 
 
-Parchment.register(Bold);
-Parchment.register(Code);
-Parchment.register(Italic);
-Parchment.register(Strike);
-Parchment.register(Underline);
-Parchment.register(Link);
-Parchment.register(Script);
-
 export { Bold, Italic, Strike, Underline, Link, Code, Script };

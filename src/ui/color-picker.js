@@ -15,4 +15,4 @@ class ColorPicker extends Picker {
 }
 
 
-export { ColorPicker as default };
+export default ColorPicker;

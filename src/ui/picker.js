@@ -81,4 +81,4 @@ class Picker {
 Picker.TEMPLATE = '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>';
 
 
-export { Picker as default };
+export default Picker;

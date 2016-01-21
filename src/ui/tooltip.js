@@ -70,4 +70,4 @@ Tooltip.DEFAULTS = {
 
 Quill.registerModule('tooltip', Tooltip);
 
-export { Tooltip as default };
+export default Tooltip;

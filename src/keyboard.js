@@ -190,4 +190,4 @@ function normalize(binding) {
 }
 
 
-export { Keyboard as default };
+export default Keyboard;

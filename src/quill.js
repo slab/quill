@@ -11,20 +11,26 @@ import logger from './lib/logger';
 import BaseTheme from './themes/base';
 import SnowTheme from './themes/snow';
 
-import CodeBlockFormat from './formats/code-block';
-import EquationFormat from './formats/equation';
-import HeaderFormat from './formats/header';
-import ListFormat from './formats/list';
-import ImageFormat from './formats/image';
-import InlineFormat from './formats/inline';
+import CodeBlock from './formats/code-block';
+import Equation from './formats/equation';
+import Header from './formats/header';
+import Image from './formats/image';
+import List, { ListItem } from './formats/list';
+import { Bold, Italic, Strike, Underline, Link, Code, Script } from './formats/inline';
+import { Align, Direction, Indent, Background, Color, Font, Size } from './formats/attributor';
 
-import CursorBlot from './blots/cursor';
-import BlockBlot from './blots/block';
-import InlineBlot from './blots/inline';
-import BreakBlot from './blots/break';
+import Cursor from './blots/cursor';
+import Block from './blots/block';
+import Inline from './blots/inline';
+import Break from './blots/break';
 
 
-Parchment.register(Parchment.Text);
+[ CodeBlock, Equation, Header, Image, List, ListItem,
+  Bold, Italic, Strike, Underline, Link, Code, Script,
+  Align, Direction, Indent, Background, Color, Font, Size,
+  Cursor, Block, Inline, Break, Parchment.Text
+].forEach(Parchment.register);
+
 let debug = logger('quill');
 
 
@@ -339,4 +345,4 @@ Quill.registerTheme('base', BaseTheme);
 Quill.registerTheme('snow', SnowTheme);
 
 
-export { Quill as default };
+export default Quill;

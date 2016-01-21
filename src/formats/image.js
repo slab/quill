@@ -18,6 +18,4 @@ Image.create = function(value) {
 };
 
 
-Parchment.register(Image);
-
 export default Image;
