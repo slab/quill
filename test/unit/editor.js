@@ -232,7 +232,17 @@ describe('Editor', function() {
     });
   });
 
-  xdescribe('getFormat', function() {
+  describe('getFormat', function() {
+    it('unformatted', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      expect(editor.getFormat(1, 2)).toEqual({});
+    })
+
+    it('formatted', function() {
+      let editor = this.initialize(Editor, '<h1><em>0123</em></h1>');
+      expect(editor.getFormat(1, 2)).toEqual({ header: 1, italic: true });
+    })
+
     it('cursor', function() {
       let editor = this.initialize(Editor, '<h1><em><strong>0123</strong></em></h1><h2><u>5678</u></h2>');
       expect(editor.getFormat(2, 2)).toEqual({ bold: true, italic: true, header: 1 });
@@ -243,7 +253,6 @@ describe('Editor', function() {
       selection.setRange(new Range(2));
       selection.format('underline', true);
       selection.format('color', 'red');
-      console.log('getter', editor.scroll.domNode.innerHTML)
       expect(editor.getFormat(2, 2)).toEqual({ bold: true, italic: true, header: 1, color: 'red', underline: true });
     });
 
@@ -251,10 +260,11 @@ describe('Editor', function() {
       let editor = this.initialize(Editor, `
         <h1>
           <em style="font-size: 24px;"><strong>01</strong></em>
-          <strong style="font-size: 36px;">23</strong>
+          <strong style="font-size: 36px;"><u>23</u></strong>
+          <strong style="font-size: 48px;"><u>45</u></strong>
         </h1>
       `);
-      expect(editor.getFormat(1, 3)).toEqual({ bold: true, header: 1, size: ['24px', '36px'] });
+      expect(editor.getFormat(1, 5)).toEqual({ bold: true, header: 1, size: ['24px', '36px', '48px'] });
     });
 
     it('across lines', function() {

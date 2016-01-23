@@ -31,8 +31,8 @@ class Scroll extends Parchment.Scroll {
     return null;
   }
 
-  getLines(start = 0, end = Number.MAX_SAFE_INTEGER) {
-    return this.descendants(Block, start, end - start);
+  getLines(index = 0, length = Number.MAX_SAFE_INTEGER) {
+    return this.descendants(Block, index, length);
   }
 
   length() {

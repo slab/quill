@@ -30,8 +30,8 @@ class Block extends Parchment.Block {
     }
   }
 
-  getLeaves(start, end) {
-    return this.descendants(Parchment.Leaf, start, end);
+  getLeaves(index, length) {
+    return this.descendants(Parchment.Leaf, index, length);
   }
 
   insertAt(index, value, def) {

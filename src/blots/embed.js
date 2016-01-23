@@ -6,7 +6,7 @@ let debug = logger('quill:embed');
 
 
 class Embed extends Parchment.Embed {
-  formats(name, value) {
+  format(name, value) {
     debug.warn('Ignoring formatting embed with', name, value);
   }
 
