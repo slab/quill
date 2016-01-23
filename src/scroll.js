@@ -23,6 +23,7 @@ class Scroll extends Parchment.Scroll {
   }
 
   findLine(index) {
+    // TODO more efficient...
     let path = this.path(index);
     for (let i = 0; i < path.length; i++) {
       if (path[i].blot instanceof Block) return path[i];
@@ -30,12 +31,14 @@ class Scroll extends Parchment.Scroll {
     return null;
   }
 
-  getLeaves(start = 0, end = this.length()) {
-    return this.descendants(Parchment.Leaf, start, end - start);
+  getLines(start = 0, end = Number.MAX_SAFE_INTEGER) {
+    return this.descendants(Block, start, end - start);
   }
 
-  getLines(start = 0, end = this.length()) {
-    return this.descendants(Block, start, end - start);
+  length() {
+    return this.getLines().reduce(function(length, line) {
+      return length + line.length();
+    }, 0);
   }
 
   path(index) {

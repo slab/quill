@@ -1,6 +1,7 @@
 import Delta from 'rich-text/lib/delta';
 import Emitter from './emitter';
 import Parchment from 'parchment';
+import Block from './blots/block';
 import extend from 'extend';
 
 
@@ -99,7 +100,7 @@ class Editor {
 
   getDelta() {
     return this.scroll.getLines().reduce((delta, line) => {
-      line.descendants(Parchment.Leaf).forEach((blot) => {
+      line.getLeaves().forEach((blot) => {
         if (blot.length() === 0) return delta;
         let attributes, value;
         if (blot instanceof Parchment.Text) {
@@ -166,10 +167,12 @@ class Editor {
 
   getText(start, end) {
     // TODO optimize
-    let values = [].concat.apply([], this.scroll.getLeaves());
-    return values.map(function(value) {
-      return typeof value === 'string' ? value : '';   // Exclude embeds
-    }).join('').slice(start, end);
+    return this.scroll.getLines().map(function(line) {
+      return line.getLeaves().map(function(leaf) {
+        let value = leaf.value();
+        return typeof value === 'string' ? value : '';
+      }).join('') + '\n';
+    }).join('').slice(start, end-start);
   }
 
   insertEmbed(index, embed, value, formats = {}, source = Emitter.sources.API) {
