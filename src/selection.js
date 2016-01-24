@@ -197,11 +197,11 @@ class Selection {
       let args = [];
       indexes.map((index) => {
         let [line, lineOffset] = this.scroll.findLine(index);
-        let [node, offset] = line.findNode(lineOffset, true);
+        let [node, leafOffset] = line.findNode(lineOffset, true);
         if (node instanceof Text) {
-          args.push(node, offset);
+          args.push(node, leafOffset);
         } else {
-          args.push(node.parentNode, [].indexOf.call(node.parentNode.childNodes, node) + offset);
+          args.push(node.parentNode, [].indexOf.call(node.parentNode.childNodes, node) + leafOffset);
         }
       });
       this.setNativeRange(...args);

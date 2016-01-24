@@ -57,9 +57,9 @@ class Keyboard {
     } else if (!backspace) {
       this.quill.deleteAt(range.start, range.start + 1, Quill.sources.USER);
     } else {
-      let pos = this.scroll.findLine(range.start);
+      let [line, offset] = this.quill.scroll.findLine(range.start);
       let formats = this.quill.getFormat(range.start, range.end);
-      if (pos != null && pos.offset === 0 && formats['list'] != null) {
+      if (line != null && offset === 0 && formats['list'] != null) {
         if (formats['indent'] != null) {
           this.quill.formatLine(range, 'indent', formats['indent'] - 1, Emitter.sources.USER);
         } else {
@@ -97,29 +97,29 @@ class Keyboard {
   onFormat(format, range) {
     let formats = this.quill.getFormat(range.start, range.end);
     this.quill.formatCursor(format, !formats[format], Quill.sources.USER);
+    this.quill.setSelection(range, Quill.sources.SILENT);
   }
 
   onTab(range, evt) {
-    let pos = this.scroll.findLine(range.start);
-    if (pos == null) return false;
-    let lines = this.scroll.getLines(range.start, range.end - range.start);
+    let lines = this.quill.scroll.getLines(range.start, range.end - range.start);
     let indents = [];
     let highlightingList = lines.every(function(line) {
-      let format = line.getFormat();
+      let format = line.formats();
       indents.push(format['indent']);
       return format['list'] != null;
     });
     if (range.isCollapsed() || !highlightingList) {
       let delta = new Delta().retain(range.start).insert('\t').delete(range.end - range.start);
       this.quill.updateContents(delta, Quill.sources.USER);
+      this.quill.setSelection(range.start + 1, Emitter.sources.SILENT);
     } else {
       let modifier = evt.shiftKey ? -1 : 1;
       lines.forEach(function(line, i) {
         line.format('indent', Math.max(0, indents[i] + modifier));
       });
       this.quill.update(Quill.sources.USER);
+      this.quill.setSelection(range, Emitter.sources.SILENT);
     }
-    this.selection.setRange(new Range(range.start), Emitter.sources.SILENT);
   }
 
   removeBinding(binding, handler) {
