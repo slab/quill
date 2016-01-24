@@ -15,7 +15,7 @@ var desktop = {
     '8.0': ['Mac 10.10']
   },
   'internet explorer': {
-    '11.0': ['Windows 10']
+    '11.0': ['Windows 8.1']
   },
   'microsoftedge': {
     '20.10240': ['Windows 10']
@@ -28,8 +28,8 @@ var mobile = {
     '9.1': ['iPhone 6 Plus', 'Safari']
   },
   'Android': {
-    '4.4': ['Google Nexus 7 HD Emulator', 'Browser'],
-    '4.3': ['Google Nexus 7 HD Emulator', 'Browser']
+    '5.1': ['Android Emulator', 'Browser'],
+    '5.0': ['Android Emulator', 'Browser']
   }
 };
 
