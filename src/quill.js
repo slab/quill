@@ -298,6 +298,8 @@ class Quill {
     } else if (typeof start !== 'number') {
       let range = this.getSelection(false) || new Range(0, 0);
       source = name, value = end, name = start, end = range.end, start = range.start;
+    } else if (typeof end !== 'number') {
+      source = value, value = name, name = end, end = start;
     }
     // Handle format being object, two format name/value strings or excluded
     if (typeof name === 'object') {

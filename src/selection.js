@@ -196,7 +196,8 @@ class Selection {
       let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
       let args = [];
       indexes.map((index) => {
-        let [node, offset] = this.scroll.findNode(index, true);
+        let [line, lineOffset] = this.scroll.findLine(index);
+        let [node, offset] = line.findNode(lineOffset, true);
         if (node instanceof Text) {
           args.push(node, offset);
         } else {

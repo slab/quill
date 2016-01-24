@@ -64,6 +64,14 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
 
+    it('(start:number, source:string)', function() {
+      let [start, end, formats, source] = this.quill._buildParams(0, Quill.sources.USER);
+      expect(start).toBe(0);
+      expect(end).toBe(0);
+      expect(formats).toEqual({});
+      expect(source).toBe(Quill.sources.USER);
+    });
+
     it('(range:range)', function() {
       let [start, end, formats, source] = this.quill._buildParams(new Range(0, 1));
       expect(start).toBe(0);

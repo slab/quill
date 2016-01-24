@@ -26,9 +26,9 @@ class Scroll extends Parchment.Scroll {
     // TODO more efficient...
     let path = this.path(index);
     for (let i = 0; i < path.length; i++) {
-      if (path[i].blot instanceof Block) return path[i];
+      if (path[i][0] instanceof Block) return path[i];
     }
-    return null;
+    return [null, -1];
   }
 
   getLines(index = 0, length = Number.MAX_SAFE_INTEGER) {
@@ -41,12 +41,8 @@ class Scroll extends Parchment.Scroll {
     }, 0);
   }
 
-  path(index) {
-    if (index >= this.length()) {
-      return [];
-    } else {
-      return super.path(index).slice(1);  // Exclude self
-    }
+  path(index, inclusive) {
+    return super.path(index, inclusive).slice(1);  // Exclude self
   }
 
   update(mutations) {
