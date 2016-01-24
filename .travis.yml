@@ -20,7 +20,7 @@ env:
     - CXX=g++-4.8 TEST=windows-chrome-latest
     - CXX=g++-4.8 TEST=windows-firefox-latest
     - CXX=g++-4.8 TEST=windows-microsoftedge-latest
-    - CXX=g++-4.8 TEST=windows-ie-latest
+    - CXX=g++-4.8 TEST=windows-internet-explorer-latest
     - CXX=g++-4.8 TEST=linux-chrome-latest
     - CXX=g++-4.8 TEST=linux-firefox-latest
     - CXX=g++-4.8 TEST=ios-latest
