@@ -149,7 +149,7 @@ class Quill {
     this.selection.focus();
   }
 
-  formatCursor(name, value, source = Emitter.source.API) {
+  formatCursor(name, value, source = Emitter.sources.API) {
     let range = this.getSelection();
     if (range == null) return;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {

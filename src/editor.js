@@ -83,15 +83,10 @@ class Editor {
   getFormat(start, end) {
     let lines, leaves;
     if (start === end) {
-      let path = this.scroll.path(start, true);
-      leaves = [path.pop()[0]];
-      while (path.length > 0) {
-        let position = path.pop();
-        if (position[0] instanceof Block) {
-          lines = [position[0]];
-          break;
-        }
-      }
+      let [line, offset] = this.scroll.findLine(start);
+      let position = line.path(offset, true).pop();
+      lines = [line];
+      leaves = [position[0]];
     } else {
       lines = this.scroll.getLines(start, end-start);
       leaves = this.scroll.descendants(Parchment.Leaf, start, end-start);
