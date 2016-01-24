@@ -53,7 +53,7 @@
     "protractor": "^3.0.0",
     "run-sequence": "^1.1.5",
     "stylus-loader": "^1.4.3",
-    "ts-loader": "~0.7.2",
+    "ts-loader": "~0.8.0",
     "typescript": "^1.7.5",
     "webpack": "^1.12.11",
     "webpack-dev-server": "^1.14.1"

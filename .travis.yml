@@ -1,5 +1,5 @@
 language: node_js
-node_js: '4'
+node_js: '5'
 addons:
   apt:
     sources:
