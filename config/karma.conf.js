@@ -31,15 +31,7 @@ module.exports = function(config) {
       accessKey: sauce.accessKey,
       tunnelIdentifier: sauce.tunnel
     },
-    customLaunchers: _.reduce(browsers, function(memo, browser, name) {
-      memo[name] = {
-        base: 'SauceLabs',
-        platform: browser[0],
-        browserName: browser[1],
-        version: browser[2]
-      };
-      return memo;
-    }, {})
+    customLaunchers: browsers
   });
   if (process.env.TRAVIS) {
     config.transports = ['polling'];

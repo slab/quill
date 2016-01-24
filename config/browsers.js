@@ -1,25 +1,66 @@
-var CHROME_VERSION = '47';
-var FIREFOX_VERSION = '43';
-var SAFARI_VERSION = '9';
-var IOS_VERSION = '9.2';      // Add space prefix when decimal is 0
-var ANDROID_VERSION = '5.1';  // Workaround for optimist converting to float
+var _ = require('lodash');
 
-var browsers = {
-  'mac-chrome'  : ['Mac 10.11', 'chrome', CHROME_VERSION],
-  'mac-firefox' : ['Mac 10.11', 'firefox', FIREFOX_VERSION],
-  'mac-safari'  : ['Mac 10.11', 'safari', SAFARI_VERSION],
 
-  'windows-chrome'  : ['Windows 10', 'chrome', CHROME_VERSION],
-  'windows-firefox' : ['Windows 10', 'firefox', FIREFOX_VERSION],
-  'windows-ms-edge' : ['Windows 10', 'microsoftedge', '20.10240'],
-  'windows-ie-11'   : ['Windows 8.1', 'internet explorer', '11'],
-
-  'linux-chrome'    : ['Linux', 'chrome', CHROME_VERSION],
-  'linux-firefox'   : ['Linux', 'firefox', FIREFOX_VERSION],
-
-  'iphone'  : ['Mac 10.10', 'iphone', IOS_VERSION],
-  'ipad'    : ['Mac 10.10', 'ipad', IOS_VERSION],
-  'android' : ['Linux', 'android', ANDROID_VERSION]
+var desktop = {
+  'chrome': {
+    '47.0': ['Mac 10.11', 'Windows 10', 'Linux'],
+    '46.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
+  },
+  'firefox': {
+    '43.0': ['Mac 10.11', 'Windows 10', 'Linux'],
+    '42.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
+  },
+  'safari': {
+    '9.0': ['Mac 10.11'],
+    '8.0': ['Mac 10.10']
+  },
+  'internet explorer': {
+    '11.0': ['Windows 10']
+  },
+  'microsoftedge': {
+    '20.10240': ['Windows 10']
+  }
 };
 
-module.exports = browsers;
+var mobile = {
+  'iOS': {
+    '9.2': ['iPhone 6 Plus', 'Safari'],
+    '9.1': ['iPhone 6 Plus', 'Safari']
+  },
+  'Android': {
+    '4.4': ['Google Nexus 7 HD Emulator', 'Browser'],
+    '4.3': ['Google Nexus 7 HD Emulator', 'Browser']
+  }
+};
+
+var desktopCapabilities = _.forEach(desktop, function(config, browser) {
+  _.forEach(_.keys(config), function(version, i) {
+    var descriptor = i === 0 ? 'latest' : 'previous';
+    _.forEach(config[version], function(platform) {
+      var key = _.kebabCase([platform.split(' ')[0], browser, descriptor].join('-').toLowerCase());
+      module.exports[key] = {
+        base: 'SauceLabs',
+        browserName: browser,
+        version: version,
+        platform: platform
+      }
+    });
+  });
+});
+
+var mobileCapabilities = _.forEach(mobile, function(config, platform) {
+  _.forEach(Object.keys(config), function(version, i) {
+    var device = config[version][0], browser = config[version][1];
+    var descriptor = i === 0 ? 'latest' : 'previous';
+    var key = _.kebabCase([platform, descriptor].join('-').toLowerCase());
+    module.exports[key] = {
+      base: 'SauceLabs',
+      browserName: browser,
+      appiumVersion: '1.4.16',
+      deviceName: device,
+      deviceOrientation: 'portrait',
+      platformVersion: version,
+      platformName: platform
+    };
+  });
+});

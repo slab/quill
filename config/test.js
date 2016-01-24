@@ -72,7 +72,7 @@ module.exports = function(config) {
   });
 
   Object.keys(browsers).forEach(function(browser) {
-    gulp.task('remote:unit-' + browser, ['build', 'server'], function(callback) {
+    gulp.task('remote:' + browser, ['build', 'server'], function(callback) {
       new karma.Server(_.defaults({
         browsers: [browser],
         browserDisconnectTimeout: 10000,
