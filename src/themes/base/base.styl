@@ -1,4 +1,4 @@
-LIST_STYLE = lower-roman decimal lower-alpha
+LIST_STYLE = decimal lower-alpha lower-roman
 MAX_INDENT = 8
 
 resets(arr)
@@ -36,23 +36,26 @@ resets(arr)
   p
     margin: 0
     padding: 0
-  p:not(.ql-list-ordered)
+  p, ol, ul, pre, blockquote
     counter-reset: resets(1..MAX_INDENT)
-  .ql-list-bullet:before
-    content: '\25CF\00a0'
-  .ql-list-bullet:before, .ql-list-ordered:before
-    display: inline-block
-    margin-left: -40px
-    margin-right: 10px
-    text-align: right
-    width: 30px
-  for num in (1..MAX_INDENT)
-    .ql-indent-{num}
-      padding-left: (40 * num)px
-    .ql-list-ordered.ql-indent-{num}
+  ol
+    list-style-type: none
+    li
       counter-increment: unquote('list-' + num)
-    .ql-list-ordered.ql-indent-{num}:before
-      content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
-    if (num < MAX_INDENT)
-      .ql-list-ordered.ql-indent-{num}
-        counter-reset: resets((num+1)..MAX_INDENT)
+      &:before
+        content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
+      counter-reset: resets(1..MAX_INDENT)
+    for num in (1..MAX_INDENT)
+      li.indent-{num}
+        counter-increment: unquote('list-' + num)
+        &:before
+          content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
+      if (num < MAX_INDENT)
+        li.indent-{num}
+          counter-reset: resets((num+1)..MAX_INDENT)
+  ol, ul
+    margin: 0
+    padding-left: 20px
+    for num in (1..MAX_INDENT)
+      li.indent-{num}
+        padding-left: (40 * num)px
