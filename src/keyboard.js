@@ -59,11 +59,11 @@ class Keyboard {
     } else {
       let [line, offset] = this.quill.scroll.findLine(range.start);
       let formats = this.quill.getFormat(range.start, range.end);
-      if (line != null && offset === 0 && formats['list'] != null) {
+      if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
         if (formats['indent'] != null) {
-          this.quill.formatLine(range, 'indent', parseInt(formats['indent']) - 1, Emitter.sources.USER);
+          line.format('indent', parseInt(formats['indent']) - 1, Emitter.sources.USER);
         } else {
-          this.quill.formatLine(range, 'list', false, Emitter.sources.USER);
+          line.format('list', false);
         }
       } else {
         this.quill.deleteText(range.start - 1, range.start, Quill.sources.USER);
