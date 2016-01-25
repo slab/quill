@@ -3,9 +3,25 @@ import Emitter from './emitter';
 import Parchment from 'parchment';
 
 
+function clean(container) {
+  let walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+  let node, textNodes = [];
+  while(node = walker.nextNode()) {
+    textNodes.push(node);
+  }
+  textNodes.forEach(function(textNode) {
+    if (Parchment.query(textNode.previousSibling, Parchment.Scope.BLOCK) ||
+        Parchment.query(textNode.nextSibling, Parchment.Scope.BLOCK)) {
+      textNode.parentNode.removeChild(textNode);
+    }
+  });
+  return container;
+}
+
+
 class Scroll extends Parchment.Scroll {
   constructor(domNode, emitter) {
-    super(domNode);
+    super(clean(domNode));
     this.emitter = emitter;
     this.optimize();
   }

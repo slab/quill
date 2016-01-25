@@ -28,7 +28,7 @@ import Break from './blots/break';
 [ CodeBlock, Equation, Header, Image, List, ListItem,
   Bold, Italic, Strike, Underline, Link, Code, Script,
   Align, Direction, Indent, Background, Color, Font, Size,
-  Cursor, Block, Inline, Break, Parchment.Text
+  Cursor, Scroll, Block, Inline, Break, Parchment.Text
 ].forEach(Parchment.register);
 
 let debug = logger('quill');
@@ -85,7 +85,7 @@ class Quill {
     this.root = this.addContainer('ql-editor');
     this.root.innerHTML = html.trim();
     this.emitter = new Emitter();
-    this.scroll = new Scroll(this.root, this.emitter);
+    this.scroll = Parchment.create(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
     this.keyboard = new Keyboard(this);

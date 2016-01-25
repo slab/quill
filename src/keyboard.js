@@ -105,7 +105,7 @@ class Keyboard {
     let indents = [];
     let highlightingList = lines.every(function(line) {
       let format = line.formats();
-      indents.push(format['indent']);
+      indents.push(format['indent'] || 0);
       return format['list'] != null;
     });
     if (range.isCollapsed() || !highlightingList) {
