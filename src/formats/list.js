@@ -1,8 +1,3 @@
-// Format list into something else
-
-// Format paragraph into list
-
-
 import extend from 'extend';
 import Block from '../blots/block';
 import Delta from 'rich-text/lib/delta';

@@ -10,7 +10,8 @@ let Direction = new Parchment.Attributor.Style('direction', 'direction', {
   whitelist: ['ltr', 'rtl']
 });
 let Indent = new Parchment.Attributor.Class('indent', 'ql-indent', {
-  scope: Parchment.Scope.BLOCK
+  scope: Parchment.Scope.BLOCK,
+  whitelist: [1, 2, 3, 4, 5, 6, 7, 8]
 });
 
 let Background = new Parchment.Attributor.Style('background', 'background-color', {

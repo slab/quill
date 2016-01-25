@@ -46,16 +46,16 @@ resets(arr)
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
       counter-reset: resets(1..MAX_INDENT)
     for num in (1..MAX_INDENT)
-      li.indent-{num}
+      li.ql-indent-{num}
         counter-increment: unquote('list-' + num)
         &:before
           content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
       if (num < MAX_INDENT)
-        li.indent-{num}
+        li.ql-indent-{num}
           counter-reset: resets((num+1)..MAX_INDENT)
   ol, ul
     margin: 0
     padding-left: 20px
     for num in (1..MAX_INDENT)
-      li.indent-{num}
+      li.ql-indent-{num}
         padding-left: (40 * num)px

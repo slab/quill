@@ -24,7 +24,7 @@ class Keyboard {
     // TODO implement
     // this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDeleteWord.bind(this, true));
     // this.addBinding({ key: Keyboard.keys.DELETE }, this.onDeleteWord.bind(this, false));
-    this.addBinding({ key: Keyboard.keys.TAB }, this.onTab.bind(this));
+    this.addBinding({ key: Keyboard.keys.TAB, shiftKey: null }, this.onTab.bind(this));
     this.quill.root.addEventListener('keydown', (evt) => {
       let which = evt.which || evt.keyCode;
       let handlers = (this.bindings[which] || []).reduce(function(handlers, binding) {
@@ -61,7 +61,7 @@ class Keyboard {
       let formats = this.quill.getFormat(range.start, range.end);
       if (line != null && offset === 0 && formats['list'] != null) {
         if (formats['indent'] != null) {
-          this.quill.formatLine(range, 'indent', formats['indent'] - 1, Emitter.sources.USER);
+          this.quill.formatLine(range, 'indent', parseInt(formats['indent']) - 1, Emitter.sources.USER);
         } else {
           this.quill.formatLine(range, 'list', false, Emitter.sources.USER);
         }
@@ -101,21 +101,16 @@ class Keyboard {
   }
 
   onTab(range, evt) {
-    let lines = this.quill.scroll.getLines(range.start, range.end - range.start);
-    let indents = [];
-    let highlightingList = lines.every(function(line) {
-      let format = line.formats();
-      indents.push(format['indent'] || 0);
-      return format['list'] != null;
-    });
-    if (range.isCollapsed() || !highlightingList) {
+    if (range.isCollapsed()) {
       let delta = new Delta().retain(range.start).insert('\t').delete(range.end - range.start);
       this.quill.updateContents(delta, Quill.sources.USER);
       this.quill.setSelection(range.start + 1, Emitter.sources.SILENT);
     } else {
       let modifier = evt.shiftKey ? -1 : 1;
-      lines.forEach(function(line, i) {
-        line.format('indent', Math.max(0, indents[i] + modifier));
+      this.quill.scroll.getLines(range.start, range.end - range.start).forEach(function(line) {
+        let format = line.formats();
+        let indent = parseInt(format['indent'] || 0);
+        line.format('indent', Math.max(0, indent + modifier));
       });
       this.quill.update(Quill.sources.USER);
       this.quill.setSelection(range, Emitter.sources.SILENT);
