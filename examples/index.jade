@@ -39,13 +39,13 @@ html
           option(value='', selected) Paragraph
         select.ql-font(title='Font')
           option(value='', selected) Sans Serif
-          option(value='Georgia, serif') Serif
-          option(value='Monaco, \'Courier New\', monospace') Monospace
+          option(value='serif') Serif
+          option(value='monospace') Monospace
         select.ql-size(title='Size')
-          option(value='10px') Small
+          option(value='small') Small
           option(value='', selected) Normal
-          option(value='18px') Large
-          option(value='32px') Huge
+          option(value='large') Large
+          option(value='huge') Huge
         select.ql-color(title='Text Color')
           option(value='rgb(255, 255, 255)') White
           option(value='', selected) Black
@@ -80,7 +80,7 @@ html
         button.ql-list(title='Bullet' data-value='bullet') Bullet
         button.ql-list(title='List' data-value='ordered') List
       #editor-container
-        p var test = 1 + 1;
+        p Test
 
     script(type='text/javascript', src='//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js')
     script(type='text/javascript', src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js')

@@ -6,11 +6,11 @@ describe('Attributor', function() {
   it('definition', function() {
     let editor = this.initialize(Editor, `
       <p style="direction: rtl; text-align: center;">
-        <span style="color: red; background-color: blue; font-size: 32px; font-family: monospace;">0123</span>
+        <span style="color: red; background-color: blue;" class="ql-font-monospace ql-size-large">0123</span>
       </p>`
     );
     expect(editor.getDelta()).toEqual(new Delta()
-      .insert('0123', { color: 'red', background: 'blue', size: '32px', font: 'monospace' })
+      .insert('0123', { color: 'red', background: 'blue', size: 'large', font: 'monospace' })
       .insert('\n', { direction: 'rtl', align: 'center' })
     );
   });

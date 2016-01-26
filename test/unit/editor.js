@@ -25,7 +25,7 @@ describe('Editor', function() {
 
     it('full document', function() {
       let editor = this.initialize(Editor, `
-        <p><span style="font-size: 18px;">Quill Rich Text Editor</span></p>
+        <h1>Quill Rich Text Editor</h1>
         <p><br></p>
         <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web.</p>
         <p><br></p>
@@ -40,14 +40,15 @@ describe('Editor', function() {
           <img src="http://quilljs.com/images/quill-photo.jpg">
         </p>
         <p style="text-align: center;">
-          <a style="font-size: 32px;" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>
+          <a class="ql-size-large" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>
         </p>
         <p><br></p>`
       );
       let expected = editor.scroll.domNode.innerHTML;
       expect(editor.getDelta()).toEqual(new Delta()
-        .insert('Quill Rich Text Editor', { size: '18px' })
-        .insert('\n\nQuill is a free, ')
+        .insert('Quill Rich Text Editor')
+        .insert('\n', { header: 1 })
+        .insert('\nQuill is a free, ')
         .insert('open source', { link: 'https://github.com/quilljs/quill/' })
         .insert(' WYSIWYG editor built for the modern web.\n\nFast and lightweight')
         .insert('\n', { list: 'bullet' })
@@ -60,7 +61,7 @@ describe('Editor', function() {
         .insert('\n')
         .insert({ image: 'http://quilljs.com/images/quill-photo.jpg' })
         .insert('\n', { align: 'center' })
-        .insert('Download Quill', { size: '32px', link: 'https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz' })
+        .insert('Download Quill', { size: 'large', link: 'https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz' })
         .insert('\n', { align: 'center' })
         .insert('\n'));
       expect(this.container.innerHTML).toEqualHTML(expected);
@@ -259,12 +260,12 @@ describe('Editor', function() {
     it('across leaves', function() {
       let editor = this.initialize(Editor, `
         <h1>
-          <em style="font-size: 24px;"><strong>01</strong></em>
-          <strong style="font-size: 36px;"><u>23</u></strong>
-          <strong style="font-size: 48px;"><u>45</u></strong>
+          <em class="ql-size-small"><strong>01</strong></em>
+          <strong class="ql-size-large"><u>23</u></strong>
+          <strong class="ql-size-huge"><u>45</u></strong>
         </h1>
       `);
-      expect(editor.getFormat(1, 5)).toEqual({ bold: true, header: 1, size: ['24px', '36px', '48px'] });
+      expect(editor.getFormat(1, 5)).toEqual({ bold: true, header: 1, size: ['small', 'large', 'huge'] });
     });
 
     it('across lines', function() {
