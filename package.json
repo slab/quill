@@ -13,7 +13,7 @@
     "deep-equal": "~1.0.1",
     "eventemitter3": "~1.1.1",
     "extend": "~3.0.0",
-    "parchment": "quilljs/parchment.git#402a17ae997bc08cd500eea76c4c112299bda10a",
+    "parchment": "quilljs/parchment.git#7c4035a95948c901015c163fded507d4fe07a166",
     "rich-text": "~2.1.0"
   },
   "devDependencies": {
