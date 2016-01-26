@@ -14,8 +14,8 @@ class List extends Parchment.Container {
     }
   }
 
-  replace(victim) {
-    super.replace(victim);
+  replace(target) {
+    super.replace(target);
     let item = Parchment.create('list-item');
     this.moveChildren(item);
     this.appendChild(item);

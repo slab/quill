@@ -16,6 +16,7 @@ import Equation from './formats/equation';
 import Header from './formats/header';
 import Image from './formats/image';
 import List, { ListItem } from './formats/list';
+import Table, { TableSection, TableRow, TableCell } from './formats/table';
 import { Bold, Italic, Strike, Underline, Link, Code, Script } from './formats/inline';
 import { Align, Direction, Indent, Background, Color, Font, Size } from './formats/attributor';
 
@@ -25,10 +26,13 @@ import Inline from './blots/inline';
 import Break from './blots/break';
 
 
-[ CodeBlock, Equation, Header, Image, List, ListItem,
+[ CodeBlock, Header,
+  List, ListItem, Table, TableSection, TableRow, TableCell,
   Bold, Italic, Strike, Underline, Link, Code, Script,
+  Image, Equation,
   Align, Direction, Indent, Background, Color, Font, Size,
-  Cursor, Scroll, Block, Inline, Break, Parchment.Text
+  Cursor,
+  Scroll, Block, Inline, Break, Parchment.Text
 ].forEach(Parchment.register);
 
 let debug = logger('quill');

@@ -141,9 +141,11 @@ class Editor {
 function bubbleFormats(blot) {
   if (blot instanceof Block) return blot.formats();
   let formats = typeof blot.formats === 'function' ? blot.formats() : {};
-  while (blot.parent instanceof Parchment.Inline) {
-    formats = extend(formats, blot.parent.formats());
+  while (blot.parent != null && blot.parent.statics.scope === Parchment.Scope.INLINE_BLOT) {
     blot = blot.parent;
+    if (typeof blot.formats === 'function') {
+      formats = extend(formats, blot.formats());
+    }
   }
   return formats;
 }
