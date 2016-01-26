@@ -53,9 +53,9 @@ class Keyboard {
 
   onDelete(backspace, range) {
     if (!range.isCollapsed()) {
-      this.quill.deleteAt(range.start, range.end, Quill.sources.USER);
+      this.quill.deleteText(range.start, range.end, Quill.sources.USER);
     } else if (!backspace) {
-      this.quill.deleteAt(range.start, range.start + 1, Quill.sources.USER);
+      this.quill.deleteText(range.start, range.start + 1, Quill.sources.USER);
     } else {
       let [line, offset] = this.quill.scroll.findLine(range.start);
       let formats = this.quill.getFormat(range.start, range.end);
@@ -117,10 +117,6 @@ class Keyboard {
     }
   }
 
-  removeBinding(binding, handler) {
-    this.removeAllBindings(binding, handler);
-  }
-
   removeAllBindings(binding, handler = null) {
     binding = normalize(binding);
     if (binding == null || this.bindings[binding.key] == null) return [];
@@ -134,6 +130,10 @@ class Keyboard {
       return true;
     });
     return removed;
+  }
+
+  removeBinding(binding, handler) {
+    this.removeAllBindings(binding, handler);
   }
 }
 
