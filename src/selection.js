@@ -16,17 +16,6 @@ class Range {
   get collapsed() {
     return this.start === this.end;
   }
-
-  shift(index, length) {
-    [this.start, this.end] = [this.start, this.end].map(function(pos) {
-      if (index > pos) return pos;
-      if (length >= 0) {
-        return pos + length;
-      } else {
-        return Math.max(index, pos + length);
-      }
-    });
-  }
 }
 
 
