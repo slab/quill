@@ -16,7 +16,7 @@ class LinkTooltip extends Tooltip {
 
   initListeners() {
     this.quill.on(Quill.events.SELECTION_CHANGE, (range) => {
-      if (range == null || !range.isCollapsed()) return;
+      if (range == null || !range.collapsed) return;
       let anchor = this._findAnchor(range);
       if (anchor != null) {
         this.setMode(anchor.href, false);
@@ -41,7 +41,7 @@ class LinkTooltip extends Tooltip {
 
   removeLink(range) {
     // Expand range to the entire leaf
-    if (range.isCollapsed()) {
+    if (range.collapsed) {
       range = this._expandRange(range);
     }
     this.hide();
@@ -55,7 +55,7 @@ class LinkTooltip extends Tooltip {
     let url = this._normalizeURL(this.textbox.value);
     let range = this.quill.getSelection(true);
     if (range != null) {
-      if (range.isCollapsed()) {
+      if (range.collapsed) {
         let anchor = this._findAnchor(range);
         if (anchor != null) {
           anchor.href = url;
@@ -124,7 +124,7 @@ class LinkTooltip extends Tooltip {
     if (range == null) return;
     if (!value) {
       this.removeLink(range);
-    } else if (!range.isCollapsed()) {
+    } else if (!range.collapsed) {
       this.setMode(this._suggestURL(range), true);
       let nativeRange = this.quill.editor.selection._getNativeRange();
       this.show(nativeRange);

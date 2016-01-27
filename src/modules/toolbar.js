@@ -83,7 +83,7 @@ Toolbar.DEFAULTS = {
       if (!value) return;
       this.quill.insertEmbed(range.start, 'equation', value, Quill.sources.USER);
       this.quill.insertText(range.start + 1, ' ', Quill.sources.USER);  // TODO bug if we do not insert a space after
-      if (!range.isCollapsed()) {
+      if (!range.collapsed) {
         this.quill.deleteText(range, Quill.sources.USER);
       }
       this.quill.setSelection(range.start + 2, range.start + 2, Quill.sources.SILENT);
@@ -92,7 +92,7 @@ Toolbar.DEFAULTS = {
       let value = prompt('Enter image url:', 'http://');
       if (!value) return;
       this.quill.insertEmbed(range.start, 'image', { url: value });
-      if (!range.isCollapsed()) {
+      if (!range.collapsed) {
         this.quill.deleteText(range, Quill.sources.USER);
       }
       this.quill.setSelection(range.start + 1, range.start + 1, Quill.sources.SILENT);
@@ -100,7 +100,7 @@ Toolbar.DEFAULTS = {
     link: function(input, range, callback) {
       let value = prompt('Enter link url:', 'http://');
       if (!value) return;
-      if (range.isCollapsed()) {
+      if (range.collapsed) {
         this.quill.insertText(range.start, value, { link: value }, Quill.sources.USER);
         this.quill.setSelection(range.start + value.length, range.start + value.length, Quill.sources.USER);
       } else {

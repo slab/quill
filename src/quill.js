@@ -158,7 +158,7 @@ class Quill {
     if (range == null) return;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
       this.formatLine(range, name, value, source);
-    } else if (range.isCollapsed()) {
+    } else if (range.collapsed) {
       this.selection.format(name, value);
     } else {
       this.formatText(range, name, value, source);

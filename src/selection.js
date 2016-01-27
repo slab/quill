@@ -13,7 +13,7 @@ class Range {
     this.end = end;
   }
 
-  isCollapsed() {
+  get collapsed() {
     return this.start === this.end;
   }
 
@@ -157,7 +157,7 @@ class Selection {
   scrollIntoView() {
     if (this.lastRange == null) return;
     let startBounds = this.getBounds(this.lastRange.start);
-    let endBounds = this.lastRange.isCollapsed() ? startBounds : this.getBounds(this.lastRange.end);
+    let endBounds = this.lastRange.collapsed ? startBounds : this.getBounds(this.lastRange.end);
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let containerHeight = containerBounds.bottom - containerBounds.top;
     if (containerHeight < endBounds.top + endBounds.height) {
@@ -193,7 +193,7 @@ class Selection {
 
   setRange(range, source = Emitter.sources.API) {
     if (range != null) {
-      let indexes = range.isCollapsed() ? [range.start] : [range.start, range.end];
+      let indexes = range.collapsed ? [range.start] : [range.start, range.end];
       let args = [];
       indexes.map((index) => {
         let [line, lineOffset] = this.scroll.findLine(index);

@@ -52,7 +52,7 @@ class Keyboard {
   }
 
   onDelete(backspace, range) {
-    if (!range.isCollapsed()) {
+    if (!range.collapsed) {
       this.quill.deleteText(range.start, range.end, Quill.sources.USER);
     } else if (!backspace) {
       this.quill.deleteText(range.start, range.start + 1, Quill.sources.USER);
@@ -101,7 +101,7 @@ class Keyboard {
   }
 
   onTab(range, evt) {
-    if (range.isCollapsed()) {
+    if (range.collapsed) {
       let delta = new Delta().retain(range.start).insert('\t').delete(range.end - range.start);
       this.quill.updateContents(delta, Quill.sources.USER);
       this.quill.setSelection(range.start + 1, Emitter.sources.SILENT);
