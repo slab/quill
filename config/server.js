@@ -54,10 +54,10 @@ module.exports = function(config) {
     server.listen(config.serverPort, 'localhost', function(err) {
       if (err) throw new gutil.PluginError("webpack-dev-server", err);
       gutil.log("[webpack-dev-server] listening on", config.serverPort);
-      callback();
-      gulp.on('stop', function() {
-        server.close();
-      });
+    });
+    process.on('SIGINT', function() {
+      server.close();
+      process.exit(0);
     });
   });
 
