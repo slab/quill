@@ -11,7 +11,7 @@ class Tooltip {
     this.container = this.quill.addContainer('ql-tooltip');
     this.container.innerHTML = this.options.template;
     this.hide();
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta, source) => {
+    this.quill.on(Quill.events.TEXT_CHANGE, (delta) => {
       if (this.container.style.left !== HIDE_MARGIN) {
         this.hide();
       }

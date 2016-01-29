@@ -132,7 +132,7 @@ class Editor {
     this.delta = this.getDelta();
     let change = oldDelta.diff(this.delta);
     if (change.length() > 0) {
-      this.emitter.emit(Emitter.events.TEXT_CHANGE, change, source);
+      this.emitter.emit(Emitter.events.TEXT_CHANGE, change, oldDelta, source);
     }
   }
 }

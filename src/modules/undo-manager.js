@@ -11,14 +11,13 @@ class UndoManager {
     this.lastRecorded = 0;
     this.ignoreChange = false;
     this.clear();
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta, source) => {
+    this.quill.on(Quill.events.TEXT_CHANGE, (delta, oldDelta, source) => {
       if (this.ignoreChange) return;
       if (!this.options.userOnly || source === Quill.sources.USER) {
-        this.record(delta, this.oldDelta);
+        this.record(delta, oldDelta);
       } else {
         this.transform(delta);
       }
-      this.oldDelta = this.quill.getContents();
     });
     this.quill.keyboard.addBinding({ key: 'Z', metaKey: true }, this.undo.bind(this));
     this.quill.keyboard.addBinding({ key: 'Z', metaKey: true, shiftKey: true }, this.redo.bind(this));
@@ -33,19 +32,17 @@ class UndoManager {
     this.ignoreChange = false;
     let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index, index);
-    this.oldDelta = this.quill.getContents();
     this.stack[dest].push(delta);
   }
 
   clear() {
     this.stack = { undo: [], redo: [] };
-    this.oldDelta = this.quill.getContents();
   }
 
   record(changeDelta, oldDelta) {
     if (changeDelta.ops.length === 0) return;
     this.stack.redo = [];
-    let undoDelta = this.quill.getContents().diff(this.oldDelta);
+    let undoDelta = this.quill.getContents().diff(oldDelta);
     let timestamp = Date.now();
     if (this.lastRecorded + this.options.delay > timestamp && this.stack.undo.length > 0) {
       let delta = this.stack.undo.pop();
@@ -68,7 +65,6 @@ class UndoManager {
   }
 
   transform(delta) {
-    this.oldDelta = delta.transform(this.oldDelta, true);
     this.stack.undo.forEach(function(change) {
       change.undo = delta.transform(change.undo, true);
       change.redo = delta.transform(change.redo, true);
