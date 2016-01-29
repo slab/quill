@@ -6,6 +6,7 @@ import Delta from './lib/delta';
 import Emitter from './emitter';
 import logger from './lib/logger';
 import { Range } from './selection';
+import Block from './blots/block';
 
 
 let debug = logger('quill:keyboard');
@@ -57,7 +58,7 @@ class Keyboard {
     } else if (!backspace) {
       this.quill.deleteText(range.start, range.start + 1, Quill.sources.USER);
     } else {
-      let [line, offset] = this.quill.scroll.findLine(range.start);
+      let [line, offset] = this.quill.scroll.descendant(Block, range.start);
       let formats = this.quill.getFormat(range.start, range.end);
       if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
         if (formats['indent'] != null) {
@@ -107,7 +108,7 @@ class Keyboard {
       this.quill.setSelection(range.start + 1, Emitter.sources.SILENT);
     } else {
       let modifier = evt.shiftKey ? -1 : 1;
-      this.quill.scroll.getLines(range.start, range.end - range.start).forEach(function(line) {
+      this.quill.scroll.descendants(Block, range.start, range.end - range.start).forEach(function(line) {
         let format = line.formats();
         let indent = parseInt(format['indent'] || 0);
         line.format('indent', Math.max(0, indent + modifier));

@@ -38,21 +38,8 @@ class Scroll extends Parchment.Scroll {
     this.optimize();
   }
 
-  findLine(index) {
-    // TODO more efficient...
-    let path = this.path(index);
-    for (let i = 0; i < path.length; i++) {
-      if (path[i][0] instanceof Block) return path[i];
-    }
-    return [null, -1];
-  }
-
-  getLines(index = 0, length = Number.MAX_SAFE_INTEGER) {
-    return this.descendants(Block, index, length);
-  }
-
   length() {
-    return this.getLines().reduce(function(length, line) {
+    return this.descendants(Block).reduce(function(length, line) {
       return length + line.length();
     }, 0);
   }

@@ -12,14 +12,17 @@ class Block extends Parchment.Block {
     this.optimize();
   }
 
-  findNode(index, inclusive) {
-    let length = this.length();
-    if (length === NEWLINE_LENGTH) {
-      return [this.domNode.firstChild, 0];
-    } else if (index >= length - 1) {
-      return this.children.tail.findNode(this.children.tail.length(), true);
+  descendant(type, index, inclusive) {
+    if (index >= this.length() - 1) {
+      if (this.children.tail instanceof type) {
+        return [this.children.tail, this.children.tail.length()];
+      } else if (this.children.tail instanceof Parchment.Container) {
+        return this.children.tail.descendant(type, index, true);
+      } else {
+        return [null, -1];
+      }
     } else {
-      return super.findNode(index, inclusive);
+      return super.descendant(type, index, inclusive);
     }
   }
 

@@ -46,7 +46,7 @@ class Editor {
 
   formatLine(start, end, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
-      this.scroll.getLines(start, end - start).forEach(function(line) {
+      this.scroll.descendants(start, end - start).forEach(function(line) {
         line.format(format, formats[format]);
       });
     });
@@ -65,7 +65,7 @@ class Editor {
   }
 
   getDelta() {
-    return this.scroll.getLines().reduce((delta, line) => {
+    return this.scroll.descendants(Block).reduce((delta, line) => {
       line.getLeaves().forEach((blot) => {
         if (blot.length() === 0) return delta;
         if (blot instanceof Parchment.Text) {
@@ -83,12 +83,12 @@ class Editor {
   getFormat(start, end) {
     let lines, leaves;
     if (start === end) {
-      let [line, offset] = this.scroll.findLine(start);
+      let [line, offset] = this.scroll.descendant(Block, start);
       let position = line.path(offset, true).pop();
       lines = [line];
       leaves = [position[0]];
     } else {
-      lines = this.scroll.getLines(start, end-start);
+      lines = this.scroll.descendants(Block, start, end-start);
       leaves = this.scroll.descendants(Parchment.Leaf, start, end-start);
     }
     let formatsArr = [lines, leaves].map(function(blots) {
@@ -109,7 +109,7 @@ class Editor {
 
   getText(start, end) {
     // TODO optimize
-    return this.scroll.getLines().map(function(line) {
+    return this.scroll.descendants(Block).map(function(line) {
       return line.getLeaves().map(function(leaf) {
         let value = leaf.value();
         return typeof value === 'string' ? value : '';

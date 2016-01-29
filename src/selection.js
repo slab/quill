@@ -126,18 +126,18 @@ class Selection {
     }
     let indexes = positions.map((position) => {
       let [container, offset] = position;
-      let blot = Parchment.find(container, true);
-      let index = blot.offset(this.scroll) + blot.findOffset(container);
-      // TODO handle for code
-      if (!(blot instanceof Parchment.Leaf)) {
+      if (container.childNodes.length > offset) {
         let child = Parchment.find(container.childNodes[offset]);
-        if (child != null) {
-          return index + child.offset(blot);
-        } else {
-          return index + blot.length();
-        }
+        return child.offset(this.scroll);
+      }
+      let blot = Parchment.find(container, true);
+      let index = blot.offset(this.scroll);
+      if (offset === 0) {
+        return index;
+      } else if (blot instanceof Parchment.Container) {
+        return index + blot.length();
       } else {
-        return index + offset;
+        return index + blot.index(container, offset);
       }
     });
     return [new Range(Math.min(...indexes), Math.max(...indexes)), nativeRange];
@@ -150,10 +150,10 @@ class Selection {
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let containerHeight = containerBounds.bottom - containerBounds.top;
     if (containerHeight < endBounds.top + endBounds.height) {
-      let [line, offset] = this.scroll.findLine(this.lastRange.end);
+      let [line, offset] = this.scroll.descendant(Block, this.lastRange.end);
       return line.node.scrollIntoView(false);
     } else if (startBounds.top < 0) {
-      let [line, offset] = this.scroll.findLine(this.lastRange.start);
+      let [line, offset] = this.scroll.descendant(Block, this.lastRange.start);
       return line.node.scrollIntoView();
     }
   }
@@ -184,14 +184,9 @@ class Selection {
     if (range != null) {
       let indexes = range.collapsed ? [range.start] : [range.start, range.end];
       let args = [];
-      indexes.map((index) => {
-        let [line, lineOffset] = this.scroll.findLine(index);
-        let [node, leafOffset] = line.findNode(lineOffset, true);
-        if (node instanceof Text) {
-          args.push(node, leafOffset);
-        } else {
-          args.push(node.parentNode, [].indexOf.call(node.parentNode.childNodes, node) + leafOffset);
-        }
+      indexes.map((index, i) => {
+        let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, index, true);
+        args.push.apply(args, leaf.position(offset, i !== 0));
       });
       this.setNativeRange(...args);
     } else {

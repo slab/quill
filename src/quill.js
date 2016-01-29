@@ -13,6 +13,7 @@ import SnowTheme from './themes/snow';
 
 import CodeBlock from './formats/code-block';
 import Equation from './formats/equation';
+import Mention from './formats/mention';
 import Header from './formats/header';
 import Image from './formats/image';
 import List, { ListItem } from './formats/list';
@@ -27,9 +28,9 @@ import Break from './blots/break';
 
 
 [ CodeBlock, Header,
+  Image, Equation, Mention,
   List, ListItem, Table, TableSection, TableRow, TableCell,
   Bold, Italic, Strike, Underline, Link, Code, Script,
-  Image, Equation,
   Align, Direction, Indent, Background, Color, Font, Size,
   Cursor,
   Scroll, Block, Inline, Break, Parchment.Text

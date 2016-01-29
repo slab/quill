@@ -41,6 +41,11 @@ class Cursor extends Embed {
     this._length = 0;
   }
 
+  index(node, offset) {
+    if (node === this.textNode) return 0;
+    return super.index(node, offset);
+  }
+
   length() {
     return this._length;
   }
