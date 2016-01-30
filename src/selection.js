@@ -54,6 +54,7 @@ class Selection {
     if (nativeRange.startContainer !== this.cursor.textNode) {
       let blot = Parchment.find(nativeRange.startContainer, false);
       if (blot == null) return;
+      // TODO Give blot ability to not split
       if (blot instanceof Parchment.Leaf) {
         let after = blot.split(nativeRange.startOffset);
         blot.parent.insertBefore(this.cursor, after);

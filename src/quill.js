@@ -11,7 +11,7 @@ import logger from './lib/logger';
 import BaseTheme from './themes/base';
 import SnowTheme from './themes/snow';
 
-import CodeBlock from './formats/code-block';
+import CodeBlock, { CodeToken } from './formats/code-block';
 import Equation from './formats/equation';
 import Mention from './formats/mention';
 import Header from './formats/header';
@@ -31,7 +31,7 @@ import Break from './blots/break';
   Image, Equation, Mention,
   List, ListItem, Table, TableSection, TableRow, TableCell,
   Bold, Italic, Strike, Underline, Link, Code, Script,
-  Align, Direction, Indent, Background, Color, Font, Size,
+  Align, Direction, Indent, Background, Color, Font, Size, CodeToken,
   Cursor,
   Scroll, Block, Inline, Break, Parchment.Text
 ].forEach(Parchment.register);

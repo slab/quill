@@ -66,17 +66,19 @@ class Editor {
 
   getDelta() {
     return this.scroll.descendants(Block).reduce((delta, line) => {
-      line.getLeaves().forEach((blot) => {
-        if (blot.length() === 0) return delta;
-        if (blot instanceof Parchment.Text) {
-          var value = blot.value();
-        } else {
+      if (typeof line.getDelta === 'function') {
+        return delta.concat(line.getDelta());
+      }
+      return line.getLeaves().reduce((delta, leaf) => {
+        if (leaf.length() === 0) return delta;
+        if (leaf instanceof Parchment.Embed) {
           var value = {};
-          value[blot.statics.blotName] = blot.value();
+          value[leaf.statics.blotName] = leaf.value();
+        } else {
+          var value = leaf.value();
         }
-        delta.insert(value, bubbleFormats(blot));
-      });
-      return delta.insert('\n', line.formats());
+        return delta.insert(value, bubbleFormats(leaf));
+      }, delta).insert('\n', line.formats());
     }, new Delta());
   }
 
@@ -108,13 +110,9 @@ class Editor {
   }
 
   getText(start, end) {
-    // TODO optimize
-    return this.scroll.descendants(Block).map(function(line) {
-      return line.getLeaves().map(function(leaf) {
-        let value = leaf.value();
-        return typeof value === 'string' ? value : '';
-      }).join('') + '\n';
-    }).join('').slice(start, end-start);
+    return this.getContents(start, end).ops.map(function(op) {
+      return (typeof op.insert === 'string') ? op.insert : '';
+    }).join('');
   }
 
   insertEmbed(index, embed, value, formats = {}, source = Emitter.sources.API) {

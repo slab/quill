@@ -1,55 +1,31 @@
 import Block from '../blots/block';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
+import logger from '../lib/logger';
+
+
+let debug = logger('quill:code-block');
+
+
+class TokenAttributor extends Parchment.Attributor.Class {
+  value(domNode) {
+    return undefined;
+  }
+}
+
+let CodeToken = new TokenAttributor('token', 'hljs', {
+  scope: Parchment.Scope.INLINE
+});
 
 
 class CodeBlock extends Block {
-  constructor(value) {
-    super(value);
-    if (typeof value === 'string') {
-      this.domNode.setAttribute('data-language', value);
-    }
-  }
-
-  build() {
-    this.domNode.innerHTML = this.domNode.innerText;
-    hljs.highlightBlock(this.domNode);
-  }
-
-  deleteAt(index, length) {
-    let text = this.domNode.innerText;
-    this.domNode.innerText = text.slice(0, index) + text.slice(index + length);
-    hljs.highlightBlock(this.domNode);
-  }
-
-  findNode(index) {
-    let next, node, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
-    while (next = walker.nextNode()) {
-      node = next;
-      let length = node.data.length;
-      if (length > index) return [node, index];
-      index -= length;
-    }
-    // We are now beyond end of code block
-    return [node, node.data.length];
-  }
-
-  findOffset(node) {
-    if (node === this.domNode) return 0;
-    let cur, offset = 0, walker = document.createTreeWalker(this.domNode, NodeFilter.SHOW_TEXT, null, false);
-    while (cur = walker.nextNode()) {
-      if (cur === node) break;
-      offset += cur.data.length;
-    }
-    return offset;
-  }
-
   format(name, value) {
-
+    // TODO allow changing language
+    debug.warn(`format(${name}, ${value}) called on code block`);
   }
 
   formatAt(index, length, name, value) {
-
+    debug.warn(`formatAt(${index}, ${length}, ${name}, ${value}) called on code block`);
   }
 
   formats() {
@@ -58,36 +34,27 @@ class CodeBlock extends Block {
     };
   }
 
-  insertAt(index, value, def) {
-    if (def != null || typeof value !== 'string') return;
-    let text = this.domNode.innerText;
-    this.domNode.innerText = text.slice(0, index) + value + text.slice(index);
+  getDelta() {
+    return this.domNode.innerText.split('\n').reduce((delta, text) => {
+      return delta.insert(text).insert('\n', this.formats());
+    }, new Delta());
+  }
+
+  highlight() {
+    if (this.domNode.innerHTML === this.html) return;
+    this.domNode.innerHTML = this.domNode.innerText;
     hljs.highlightBlock(this.domNode);
+    this.build();
+    this.html = this.domNode.innerHTML;
   }
 
-  insertBefore(blot, ref) {
-    let values = blot.value();
-    if (!Array.isArray(values)) values = [values];
-    let text = values.map(function(value) {
-      return (typeof value === 'string') ? value : '';
-    }).join('');
-    this.insertAt(this.length() - 1, text);
-  }
-
-  length() {
-    return this.value().length;
-  }
-
-  update(mutations) {
-
-  }
-
-  value() {
-    return this.domNode.innerText + '\n';
+  optimize(mutations) {
+    super.optimize(mutations);
+    this.highlight();
   }
 }
 CodeBlock.blotName = 'code-block';
 CodeBlock.tagName = 'PRE';
 
 
-export default CodeBlock;
+export { CodeToken, CodeBlock as default };
