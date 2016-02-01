@@ -1,8 +1,9 @@
 name: Quill - A Rich Text Editor with an API
 timezone: America/Los_Angeles
-relative_permalinks: false
-highlighter: pygments
 markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
 gems:
   - jekyll-sitemap
   - jekyll-redirect-from
