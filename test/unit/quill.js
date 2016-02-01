@@ -161,6 +161,33 @@ describe('Quill', function() {
     });
   });
 
+  describe('selection preservation', function() {
+    beforeEach(function() {
+      this.quill = this.initialize(Quill, '<p><strong>0123</strong><em>4567</em></p>');
+    });
+
+    it('format surround', function() {
+      this.quill.setSelection(1, 3);
+      this.quill.formatText(0, 4, 'italic', true);
+      expect(this.quill.getSelection()).toEqual(new Range(1, 3));
+    });
+
+    it('user text change', function() {
+      this.quill.setSelection(1, 3);
+      let text = document.createTextNode('!');
+      this.quill.scroll.domNode.firstChild.firstChild.appendChild(text);
+      expect(this.quill.getSelection()).toEqual(new Range(1, 3));
+    });
+
+    it('user dom text change', function() {
+      this.quill.setSelection(2, 3);
+      let textNode = this.quill.scroll.domNode.firstChild.firstChild.firstChild;
+      textNode.splitText(1);
+      textNode.parentNode.removeChild(textNode);
+      expect(this.quill.getSelection()).toEqual(new Range(1, 2));
+    });
+  });
+
   describe('setText()', function() {
     it('overwrite', function() {
       this.quill.setText('abc');

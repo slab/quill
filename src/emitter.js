@@ -21,6 +21,7 @@ Emitter.events = {
   MODULE_INIT       : 'module-init',
   POST_EVENT        : 'post-event',
   PRE_EVENT         : 'pre-event',
+  SCROLL_OPTIMIZE   : 'scroll-optimize',
   SCROLL_UPDATE     : 'scroll-update',
   SELECTION_CHANGE  : 'selection-change',
   TEXT_CHANGE       : 'text-change'

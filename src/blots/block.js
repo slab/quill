@@ -17,7 +17,7 @@ class Block extends Parchment.Block {
       if (this.children.tail instanceof type) {
         return [this.children.tail, this.children.tail.length()];
       } else if (this.children.tail instanceof Parchment.Container) {
-        return this.children.tail.descendant(type, index, true);
+        return this.children.tail.descendant(type, index - this.children.offset(this.children.tail), true);
       } else {
         return [null, -1];
       }

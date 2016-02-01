@@ -44,6 +44,11 @@ class Scroll extends Parchment.Scroll {
     }, 0);
   }
 
+  optimize(mutations = []) {
+    super.optimize(mutations);
+    this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE);
+  }
+
   path(index, inclusive) {
     return super.path(index, inclusive).slice(1);  // Exclude self
   }
@@ -60,6 +65,7 @@ class Scroll extends Parchment.Scroll {
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_UPDATE, source);
     }
+    this.optimize(mutations, source);
   }
 }
 Scroll.blotName = 'scroll';

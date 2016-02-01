@@ -4,6 +4,13 @@ import Selection, { Range } from '../../src/selection';
 
 
 describe('Selection', function() {
+  beforeEach(function() {
+    this.setup = (html, index) => {
+      this.selection = this.initialize(Selection, html);
+      this.selection.setRange(new Range(index, index));
+    };
+  });
+
   describe('focus()', function() {
     beforeEach(function() {
       this.initialize(HTMLElement, '<textarea>Test</textarea><div></div>');
@@ -129,13 +136,12 @@ describe('Selection', function() {
     });
 
     it('wrong input', function() {
-      let selection = this.initialize(Selection, `
+      let container = this.initialize(HTMLElement, `
         <textarea>Test</textarea>
-        <div>
-          <p>0123</p>
-        </div>`
+        <div></div>`
       );
-      this.container.firstChild.select();
+      let selection = this.initialize(Selection, '<p>0123</p>', container.lastChild);
+      container.firstChild.select();
       let [range, ] = selection.getRange();
       expect(range).toEqual(null);
     });
@@ -326,13 +332,6 @@ describe('Selection', function() {
   });
 
   describe('format()', function() {
-    beforeEach(function() {
-      this.setup = (html, index) => {
-        this.selection = this.initialize(Selection, html);
-        this.selection.setRange(new Range(index, index));
-      };
-    });
-
     it('trailing', function() {
       this.setup(`<p>0123</p>`, 4);
       this.selection.format('bold', true);
