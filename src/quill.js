@@ -1,4 +1,4 @@
-import Delta from './lib/delta';
+import Delta from 'rich-text/lib/delta';
 import Editor from './editor';
 import Emitter from './emitter';
 import Keyboard from './keyboard';

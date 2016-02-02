@@ -105,10 +105,6 @@ class Editor {
     return extend.apply(extend, formatsArr);
   }
 
-  getHTML() {
-    return this.delta.toHTML();
-  }
-
   getText(start, end) {
     return this.getContents(start, end).ops.map(function(op) {
       return (typeof op.insert === 'string') ? op.insert : '';

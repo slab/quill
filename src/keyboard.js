@@ -2,7 +2,7 @@ import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
 import * as platform from './lib/platform';
-import Delta from './lib/delta';
+import Delta from 'rich-text/lib/delta';
 import Emitter from './emitter';
 import logger from './lib/logger';
 import { Range } from './selection';
