@@ -1,5 +1,8 @@
-import Quill from '../quill';
 import extend from 'extend';
+import Editor from '../editor';
+import Emitter from '../emitter';
+import Quill from '../quill';
+
 
 let Delta = Quill.import('delta');
 let Parchment = Quill.import('parchment');
@@ -10,18 +13,19 @@ class PasteManager {
     this.quill = quill;
     this.options = extend({}, PasteManager.DEFAULTS, options);
     this.container = this.quill.addContainer('ql-paste-manager');
-    this.container.setAttribute('contenteditable', true);
-    this.container.setAttribute('tabindex', '-1');
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
   }
 
   onPaste() {
     let range = this.quill.getSelection();
     if (range == null) return;
+    let container = this.quill.addContainer('ql-paste-manager');
+    container.setAttribute('contenteditable', true);
     let oldDocLength = this.quill.getLength();
-    this.container.focus();
+    container.focus();
     setTimeout(() => {
-      let pasteDelta = this.options.sanitize(this.container);
+      let pasteDelta = this.options.sanitize(container);
+      container.parentNode.removeChild(container);
       let lengthAdded = pasteDelta.length();
       if (lengthAdded > 0) {
         let delta = new Delta();
@@ -33,8 +37,7 @@ class PasteManager {
         this.quill.updateContents(delta, Quill.sources.USER);
       }
       this.quill.setSelection(range.start + lengthAdded, range.start + lengthAdded, Quill.sources.SILENT);
-      this.quill.scrollIntoView();
-      this.container.innerHTML = "";
+      this.quill.selection.scrollIntoView();
     }, 0);
   }
 }
@@ -43,14 +46,16 @@ PasteManager.DEFAULTS = {
 };
 
 function sanitize(container) {
-  // TODO this needs to be Editor for getDelta to work
-  let doc = new Parchment.Container(container);
-  let delta = doc.getDelta();
-  let lengthAdded = delta.length();
-  if (lengthAdded === 0) return delta;
-  // Need to remove trailing newline so paste is inline,
-  // losing format is expected and observed in Word
-  return delta.compose(new Delta().retain(lengthAdded - 1).delete(1));
+  return new Delta().insert(container.innerText);
+  // let emitter = new Emitter();
+  // let scroll = Parchment.create(container, emitter);
+  // let editor = new Editor(scroll, emitter);
+  // let delta = editor.getDelta();
+  // let lengthAdded = delta.length();
+  // if (lengthAdded === 0) return delta;
+  // // Need to remove trailing newline so paste is inline,
+  // // losing format is expected and observed in Word
+  // return delta.compose(new Delta().retain(lengthAdded - 1).delete(1));
 }
 
 
