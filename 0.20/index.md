@@ -1,68 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="language" content="english">
-    <title>Quill - A Rich Text WYSIWYG Editor with an API - Quill</title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="description" content="Quill is a free, open source WYSIWYG editor built for the modern web. With its expressive API, you can completely customize it to fulfill your needs.">
-    <meta property="og:image" content="http://quilljs.com/assets/images/cloud-large.png">
-    <link rel="icon" type="image/png" href="/0.20/assets/images/favicon.png?v=2">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/0.20/assets/css/syntax.css">
-    <link rel="stylesheet" href="/0.20/assets/css/styles.css">
-
-    <link rel="stylesheet" href="//cdn.quilljs.com/0.20.1/quill.snow.css">
-
-    <link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Quill - A Rich Text Editor with an API" />
-    <script type="text/javascript">
-!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
-analytics.load("MlGQJF3xDeH6h96WLvO6fUDbQB0ApRgG");
-analytics.page()
-}}();
-</script>
-
-  </head>
-  <body class="home">
-    <a class="version-warning" href="/latest/"><strong>Yeaaah!</strong> A newer version <strong>Quill 1.0</strong> is out! You are viewing docs for <strong>v0.20</strong>.</a>
-<header id="navigation-container" class="navbar">
-  <div class="container">
-    <div class="navbar-header">
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle Navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/0.20/" title="Quill">
-        <img src="/0.20/assets/images/icon.png" alt="Quill">
-        <span>Quill</span>
-      </a>
-    </div>
-    <nav class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/0.20/docs/quickstart/" title="Documentation">Documentation</a>
-        </li>
-        <li>
-          <a href="/0.20/examples/" title="Examples">Examples</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li >
-          <a href="/blog/" title="Blog">Blog</a>
-        </li>
-        <li>
-          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true"></iframe>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-
-    <div id="demo-container">
+---
+layout: v0.20
+permalink: /0.20/
+title: Quill - A Rich Text WYSIWYG Editor with an API
+---
+<div id="demo-container">
   <div class="quill-wrapper" data-toggle="tooltip" data-placement="left" title="Try me out!">
     <div id="toolbar" class="toolbar">
       <span class="ql-format-group">
@@ -269,34 +210,7 @@ analytics.page()
     <a href="https://github.com/quilljs/quill/releases/download/v0.20.1/quill.tar.gz" class="btn-lg btn" title="Quill v0.20.1" onclick="ga('send','event','download',this.href);">Download Quill</a>
   </div>
 </div>
-
 <script type="text/javascript" src="//cdn.quilljs.com/0.20.1/quill.js"></script>
-
-
-
-    <footer>
-      <div class="container">
-        <ul>
-          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true" title="Star on GitHub" width="100" height="20"></iframe></li>
-          <li>
-
-            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com" data-text="Quill - A Rich Text Editor with an API" data-via="quilljs">Tweet</a>
-
-          </li>
-        </ul>
-        <div>
-          Quill is open source under
-          <a title="BSD" href="https://github.com/quilljs/quill#license">BSD</a>.
-          The latest version is currently
-          <a title="Version 0.20.1" href="https://github.com/quilljs/quill/releases/tag/v0.20.1">v0.20.1</a>
-        </div>
-      </div>
-    </footer>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="/0.20/assets/js/index.js"></script>
-
-    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </body>
-</html>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/0.20/assets/js/index.js"></script>
