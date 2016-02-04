@@ -49,7 +49,7 @@ $(document).ready(function() {
     keys.splice(index, 1);
     $(link).attr({ href: users[key], title: key });
     $('img', link).attr({
-      src: '/images/users/' + (key.toLowerCase().replace(/\s/g, '')) + '.png',
+      src: '/assets/images/users/' + (key.toLowerCase().replace(/\s/g, '')) + '.png',
       alt: key
     });
   });

@@ -7,11 +7,11 @@
     <title>{{ page.title }}{% if page.url != "/index.html" %} - Quill{% endif %}</title>
     <meta name="viewport" content="width=device-width">
     {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
-    <meta property="og:image" content="http://quilljs.com/images/cloud-large.png">
-    <link rel="icon" type="image/png" href="/images/favicon.png?v=2">
+    <meta property="og:image" content="http://quilljs.com/assets/images/cloud-large.png">
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png?v=2">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/syntax.css">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     {% if page.stylesheet %}
     <link rel="stylesheet" href="{{ page.stylesheet | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}">
     {% endif %}
