@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="language" content="english">
+    <title>Toolbar Module - Quill</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta property="og:image" content="http://quilljs.com/assets/images/cloud-large.png">
+    <link rel="icon" type="image/png" href="/0.20/assets/images/favicon.png?v=2">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/0.20/assets/css/syntax.css">
+    <link rel="stylesheet" href="/0.20/assets/css/styles.css">
+    
+    <link rel="stylesheet" href="//cdn.quilljs.com/0.20.1/quill.snow.css">
+    
+    <link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Quill - A Rich Text Editor with an API" />
+    <script type="text/javascript">
+!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+analytics.load("MlGQJF3xDeH6h96WLvO6fUDbQB0ApRgG");
+analytics.page()
+}}();
+</script>
+
+  </head>
+  <body>
+    <a class="version-warning" href="/latest/"><strong>Yeaaah!</strong> A newer version <strong>Quill 1.0</strong> is out! You are viewing docs for <strong>v0.20</strong>.</a>
+<header id="navigation-container" class="navbar">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/0.20/" title="Quill">
+        <img src="/0.20/assets/images/icon.png" alt="Quill">
+        <span>Quill</span>
+      </a>
+    </div>
+    <nav class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href="/0.20/docs/quickstart/" title="Documentation">Documentation</a>
+        </li>
+        <li>
+          <a href="/0.20/examples/" title="Examples">Examples</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li >
+          <a href="/blog/" title="Blog">Blog</a>
+        </li>
+        <li>
+          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true"></iframe>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="container">
+  <div id="sidebar-dropdown">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Navigate the Docs... <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        
+<li>
+  <a href="/0.20/docs/quickstart/">Quickstart</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/configuration/">Configuration</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/formats/">Formats</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/api/">API</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/events/">Events</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/deltas/">Deltas</a>
+  
+</li>
+
+<li class="active">
+  <a href="/0.20/docs/modules/">Modules</a>
+  
+  <ul >
+    
+    <li class="active">
+      <a href="/0.20/docs/modules/toolbar/">Toolbar</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/authorship/">Authorship</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/multi-cursors/">Multiple Cursors</a>
+    </li>
+    
+  </ul>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/themes/">Themes</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/examples/">Examples</a>
+  
+</li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="docs-container" class="col-sm-9">
+      
+
+      <h1 id="toolbar">Toolbar</h1>
+
+<p>The Toolbar module allow users to easily format Quill’s contents.</p>
+
+<div class="quill-wrapper">
+  <div id="toolbar-toolbar" class="toolbar">
+  <span class="ql-format-group">
+  <select title="Font" class="ql-font">
+    <option value="sans-serif" selected="">Sans Serif</option>
+    <option value="serif">Serif</option>
+    <option value="monospace">Monospace</option>
+  </select>
+  <select title="Size" class="ql-size">
+    <option value="10px">Small</option>
+    <option value="13px" selected="">Normal</option>
+    <option value="18px">Large</option>
+    <option value="32px">Huge</option>
+  </select>
+</span>
+<span class="ql-format-group">
+  <span title="Bold" class="ql-format-button ql-bold"></span>
+  <span class="ql-format-separator"></span>
+  <span title="Italic" class="ql-format-button ql-italic"></span>
+  <span class="ql-format-separator"></span>
+  <span title="Underline" class="ql-format-button ql-underline"></span>
+  <span class="ql-format-separator"></span>
+  <span title="Strikethrough" class="ql-format-button ql-strike"></span>
+</span>
+<span class="ql-format-group">
+  <select title="Text Color" class="ql-color">
+    <option value="rgb(0, 0, 0)" label="rgb(0, 0, 0)" selected=""></option>
+    <option value="rgb(230, 0, 0)" label="rgb(230, 0, 0)"></option>
+    <option value="rgb(255, 153, 0)" label="rgb(255, 153, 0)"></option>
+    <option value="rgb(255, 255, 0)" label="rgb(255, 255, 0)"></option>
+    <option value="rgb(0, 138, 0)" label="rgb(0, 138, 0)"></option>
+    <option value="rgb(0, 102, 204)" label="rgb(0, 102, 204)"></option>
+    <option value="rgb(153, 51, 255)" label="rgb(153, 51, 255)"></option>
+    <option value="rgb(255, 255, 255)" label="rgb(255, 255, 255)"></option>
+    <option value="rgb(250, 204, 204)" label="rgb(250, 204, 204)"></option>
+    <option value="rgb(255, 235, 204)" label="rgb(255, 235, 204)"></option>
+    <option value="rgb(255, 255, 204)" label="rgb(255, 255, 204)"></option>
+    <option value="rgb(204, 232, 204)" label="rgb(204, 232, 204)"></option>
+    <option value="rgb(204, 224, 245)" label="rgb(204, 224, 245)"></option>
+    <option value="rgb(235, 214, 255)" label="rgb(235, 214, 255)"></option>
+    <option value="rgb(187, 187, 187)" label="rgb(187, 187, 187)"></option>
+    <option value="rgb(240, 102, 102)" label="rgb(240, 102, 102)"></option>
+    <option value="rgb(255, 194, 102)" label="rgb(255, 194, 102)"></option>
+    <option value="rgb(255, 255, 102)" label="rgb(255, 255, 102)"></option>
+    <option value="rgb(102, 185, 102)" label="rgb(102, 185, 102)"></option>
+    <option value="rgb(102, 163, 224)" label="rgb(102, 163, 224)"></option>
+    <option value="rgb(194, 133, 255)" label="rgb(194, 133, 255)"></option>
+    <option value="rgb(136, 136, 136)" label="rgb(136, 136, 136)"></option>
+    <option value="rgb(161, 0, 0)" label="rgb(161, 0, 0)"></option>
+    <option value="rgb(178, 107, 0)" label="rgb(178, 107, 0)"></option>
+    <option value="rgb(178, 178, 0)" label="rgb(178, 178, 0)"></option>
+    <option value="rgb(0, 97, 0)" label="rgb(0, 97, 0)"></option>
+    <option value="rgb(0, 71, 178)" label="rgb(0, 71, 178)"></option>
+    <option value="rgb(107, 36, 178)" label="rgb(107, 36, 178)"></option>
+    <option value="rgb(68, 68, 68)" label="rgb(68, 68, 68)"></option>
+    <option value="rgb(92, 0, 0)" label="rgb(92, 0, 0)"></option>
+    <option value="rgb(102, 61, 0)" label="rgb(102, 61, 0)"></option>
+    <option value="rgb(102, 102, 0)" label="rgb(102, 102, 0)"></option>
+    <option value="rgb(0, 55, 0)" label="rgb(0, 55, 0)"></option>
+    <option value="rgb(0, 41, 102)" label="rgb(0, 41, 102)"></option>
+    <option value="rgb(61, 20, 102)" label="rgb(61, 20, 102)"></option>
+  </select>
+  <span class="ql-format-separator"></span>
+  <select title="Background Color" class="ql-background">
+    <option value="rgb(0, 0, 0)" label="rgb(0, 0, 0)"></option>
+    <option value="rgb(230, 0, 0)" label="rgb(230, 0, 0)"></option>
+    <option value="rgb(255, 153, 0)" label="rgb(255, 153, 0)"></option>
+    <option value="rgb(255, 255, 0)" label="rgb(255, 255, 0)"></option>
+    <option value="rgb(0, 138, 0)" label="rgb(0, 138, 0)"></option>
+    <option value="rgb(0, 102, 204)" label="rgb(0, 102, 204)"></option>
+    <option value="rgb(153, 51, 255)" label="rgb(153, 51, 255)"></option>
+    <option value="rgb(255, 255, 255)" label="rgb(255, 255, 255)" selected=""></option>
+    <option value="rgb(250, 204, 204)" label="rgb(250, 204, 204)"></option>
+    <option value="rgb(255, 235, 204)" label="rgb(255, 235, 204)"></option>
+    <option value="rgb(255, 255, 204)" label="rgb(255, 255, 204)"></option>
+    <option value="rgb(204, 232, 204)" label="rgb(204, 232, 204)"></option>
+    <option value="rgb(204, 224, 245)" label="rgb(204, 224, 245)"></option>
+    <option value="rgb(235, 214, 255)" label="rgb(235, 214, 255)"></option>
+    <option value="rgb(187, 187, 187)" label="rgb(187, 187, 187)"></option>
+    <option value="rgb(240, 102, 102)" label="rgb(240, 102, 102)"></option>
+    <option value="rgb(255, 194, 102)" label="rgb(255, 194, 102)"></option>
+    <option value="rgb(255, 255, 102)" label="rgb(255, 255, 102)"></option>
+    <option value="rgb(102, 185, 102)" label="rgb(102, 185, 102)"></option>
+    <option value="rgb(102, 163, 224)" label="rgb(102, 163, 224)"></option>
+    <option value="rgb(194, 133, 255)" label="rgb(194, 133, 255)"></option>
+    <option value="rgb(136, 136, 136)" label="rgb(136, 136, 136)"></option>
+    <option value="rgb(161, 0, 0)" label="rgb(161, 0, 0)"></option>
+    <option value="rgb(178, 107, 0)" label="rgb(178, 107, 0)"></option>
+    <option value="rgb(178, 178, 0)" label="rgb(178, 178, 0)"></option>
+    <option value="rgb(0, 97, 0)" label="rgb(0, 97, 0)"></option>
+    <option value="rgb(0, 71, 178)" label="rgb(0, 71, 178)"></option>
+    <option value="rgb(107, 36, 178)" label="rgb(107, 36, 178)"></option>
+    <option value="rgb(68, 68, 68)" label="rgb(68, 68, 68)"></option>
+    <option value="rgb(92, 0, 0)" label="rgb(92, 0, 0)"></option>
+    <option value="rgb(102, 61, 0)" label="rgb(102, 61, 0)"></option>
+    <option value="rgb(102, 102, 0)" label="rgb(102, 102, 0)"></option>
+    <option value="rgb(0, 55, 0)" label="rgb(0, 55, 0)"></option>
+    <option value="rgb(0, 41, 102)" label="rgb(0, 41, 102)"></option>
+    <option value="rgb(61, 20, 102)" label="rgb(61, 20, 102)"></option>
+  </select>
+</span>
+<span class="ql-format-group">
+  <span title="List" class="ql-format-button ql-list"></span>
+  <span class="ql-format-separator"></span>
+  <span title="Bullet" class="ql-format-button ql-bullet"></span>
+  <span class="ql-format-separator"></span>
+  <select title="Text Alignment" class="ql-align">
+    <option value="left" label="Left" selected=""></option>
+    <option value="center" label="Center"></option>
+    <option value="right" label="Right"></option>
+    <option value="justify" label="Justify"></option>
+  </select>
+</span>
+  </div>
+  <div id="toolbar-editor" class="editor"></div>
+</div>
+<script src="//cdn.quilljs.com/0.20.1/quill.js"></script>
+
+<script>
+  var editor = new Quill('#toolbar-editor', {
+    modules: {
+      toolbar: { container: '#toolbar-toolbar' }
+    },
+    theme: 'snow'
+  });
+</script>
+
+<p>Simply create a container and the module to the Quill editor.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="c">&lt;!-- Create toolbar container --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"toolbar"</span><span class="nt">&gt;</span>
+  <span class="c">&lt;!-- Add font size dropdown --&gt;</span>
+  <span class="nt">&lt;select</span> <span class="na">class=</span><span class="s">"ql-size"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"10px"</span><span class="nt">&gt;</span>Small<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"13px"</span> <span class="na">selected</span><span class="nt">&gt;</span>Normal<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"18px"</span><span class="nt">&gt;</span>Large<span class="nt">&lt;/option&gt;</span>
+    <span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">"32px"</span><span class="nt">&gt;</span>Huge<span class="nt">&lt;/option&gt;</span>
+  <span class="nt">&lt;/select&gt;</span>
+  <span class="c">&lt;!-- Add a bold button --&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">"ql-bold"</span><span class="nt">&gt;&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"editor"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+<span class="c">&lt;!-- Initialize editor and toolbar --&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+  <span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Quill</span><span class="p">(</span><span class="s1">'#editor'</span><span class="p">);</span>
+  <span class="nx">editor</span><span class="p">.</span><span class="nx">addModule</span><span class="p">(</span><span class="s1">'toolbar'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">container</span><span class="p">:</span> <span class="s1">'#toolbar'</span>     <span class="c1">// Selector for toolbar container</span>
+  <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span></code></pre></figure>
+
+<p>The <code class="highlighter-rouge">ql-toolbar</code> class will be added to the toolbar container.</p>
+
+<p>A click handler will be added to any DOM element with the following classes:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">ql-bold</code></li>
+  <li><code class="highlighter-rouge">ql-italic</code></li>
+  <li><code class="highlighter-rouge">ql-strike</code></li>
+  <li><code class="highlighter-rouge">ql-underline</code></li>
+  <li><code class="highlighter-rouge">ql-link</code></li>
+</ul>
+
+<p>A change (DOM <code class="highlighter-rouge">change</code> event) handler will be added to any DOM element with the following classes:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">ql-background</code></li>
+  <li><code class="highlighter-rouge">ql-color</code></li>
+  <li><code class="highlighter-rouge">ql-font</code></li>
+  <li><code class="highlighter-rouge">ql-size</code></li>
+</ul>
+
+<p>The toolbar will also listen to cursor movements and will add an <code class="highlighter-rouge">ql-active</code> class to elements in the toolbar that corresponds to the format of the text the cursor is on.</p>
+
+<p>The following classes are also recognized by the toolbar but largely used by <a href="/0.20/docs/themes/">Themes</a> for styling:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">ql-format-button</code></li>
+  <li><code class="highlighter-rouge">ql-format-group</code></li>
+  <li><code class="highlighter-rouge">ql-format-separator</code></li>
+</ul>
+
+    </div>
+    <div id="sidebar-container" class="col-sm-3">
+      <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
+        <ul class="nav">
+          
+          
+<li>
+  <a href="/0.20/docs/quickstart/">Quickstart</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/configuration/">Configuration</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/formats/">Formats</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/api/">API</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/events/">Events</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/deltas/">Deltas</a>
+  
+</li>
+
+<li class="active">
+  <a href="/0.20/docs/modules/">Modules</a>
+  
+  <ul class="nav">
+    
+    <li class="active">
+      <a href="/0.20/docs/modules/toolbar/">Toolbar</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/authorship/">Authorship</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/multi-cursors/">Multiple Cursors</a>
+    </li>
+    
+  </ul>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/themes/">Themes</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/examples/">Examples</a>
+  
+</li>
+
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+      <div class="container">
+        <ul>
+          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true" title="Star on GitHub" width="100" height="20"></iframe></li>
+          <li>
+            
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com" data-text="Quill - A Rich Text Editor with an API" data-via="quilljs">Tweet</a>
+            
+          </li>
+        </ul>
+        <div>
+          Quill is open source under
+          <a title="BSD" href="https://github.com/quilljs/quill#license">BSD</a>.
+          The latest version is currently
+          <a title="Version 0.20.1" href="https://github.com/quilljs/quill/releases/tag/v0.20.1">v0.20.1</a>
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </body>
+</html>

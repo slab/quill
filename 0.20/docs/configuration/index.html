@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="language" content="english">
+    <title>Configuration - Quill</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta property="og:image" content="http://quilljs.com/assets/images/cloud-large.png">
+    <link rel="icon" type="image/png" href="/0.20/assets/images/favicon.png?v=2">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/0.20/assets/css/syntax.css">
+    <link rel="stylesheet" href="/0.20/assets/css/styles.css">
+    
+    <link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Quill - A Rich Text Editor with an API" />
+    <script type="text/javascript">
+!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+analytics.load("MlGQJF3xDeH6h96WLvO6fUDbQB0ApRgG");
+analytics.page()
+}}();
+</script>
+
+  </head>
+  <body>
+    <a class="version-warning" href="/latest/"><strong>Yeaaah!</strong> A newer version <strong>Quill 1.0</strong> is out! You are viewing docs for <strong>v0.20</strong>.</a>
+<header id="navigation-container" class="navbar">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/0.20/" title="Quill">
+        <img src="/0.20/assets/images/icon.png" alt="Quill">
+        <span>Quill</span>
+      </a>
+    </div>
+    <nav class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href="/0.20/docs/quickstart/" title="Documentation">Documentation</a>
+        </li>
+        <li>
+          <a href="/0.20/examples/" title="Examples">Examples</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li >
+          <a href="/blog/" title="Blog">Blog</a>
+        </li>
+        <li>
+          <iframe class="github-button" src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true"></iframe>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="container">
+  <div id="sidebar-dropdown">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Navigate the Docs... <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        
+<li>
+  <a href="/0.20/docs/quickstart/">Quickstart</a>
+  
+</li>
+
+<li class="active">
+  <a href="/0.20/docs/configuration/">Configuration</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/formats/">Formats</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/api/">API</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/events/">Events</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/deltas/">Deltas</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/modules/">Modules</a>
+  
+  <ul >
+    
+    <li>
+      <a href="/0.20/docs/modules/toolbar/">Toolbar</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/authorship/">Authorship</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/multi-cursors/">Multiple Cursors</a>
+    </li>
+    
+  </ul>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/themes/">Themes</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/examples/">Examples</a>
+  
+</li>
+
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="docs-container" class="col-sm-9">
+      
+
+      <h1 id="configuration">Configuration</h1>
+
+<p>Quill allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the <a href="/0.20/docs/modules/">Modules</a> section for adding new functionality and the <a href="/0.20/docs/themes/">Themes</a> section for styling.</p>
+
+<h3 id="container">Container</h3>
+
+<p>Quill requires an container where the editor will be appended. You can either pass in a CSS selector or a DOM object.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Quill</span><span class="p">(</span><span class="s1">'.editor'</span><span class="p">);</span>  <span class="c1">// The first result of the selector will be used</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'editor'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Quill</span><span class="p">(</span><span class="nx">container</span><span class="p">);</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'.editor'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Quill</span><span class="p">(</span><span class="nx">container</span><span class="p">);</span></code></pre></figure>
+
+<h3 id="options">Options</h3>
+
+<p>To configure Quill, pass in an options object:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">configs</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">readOnly</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="na">theme</span><span class="p">:</span> <span class="s1">'snow'</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Quill</span><span class="p">(</span><span class="s1">'#editor'</span><span class="p">,</span> <span class="nx">configs</span><span class="p">);</span></code></pre></figure>
+
+<p>The following keys are recognized:</p>
+
+<h4 id="formats">formats</h4>
+
+<ul>
+  <li>Formats recognized by the editor. See <a href="/0.20/docs/formats/">Formats</a> for more information.</li>
+</ul>
+
+<h4 id="modules">modules</h4>
+
+<ul>
+  <li>Collection of modules to include. See <a href="/0.20/docs/modules/">Modules</a> for more information.</li>
+</ul>
+
+<h4 id="pollinterval">pollInterval</h4>
+
+<ul>
+  <li>
+    <p>Default: <code class="highlighter-rouge">100</code></p>
+  </li>
+  <li>
+    <p>Number of milliseconds between checking for local changes in the editor. Note that certain actions or API calls may prompt immediate checking.</p>
+  </li>
+</ul>
+
+<h4 id="readonly">readOnly</h4>
+
+<ul>
+  <li>
+    <p>Default: <code class="highlighter-rouge">false</code></p>
+  </li>
+  <li>
+    <p>Whether to instantiate the editor to read-only mode.</p>
+  </li>
+</ul>
+
+<h4 id="styles">styles</h4>
+
+<ul>
+  <li>
+    <p>Default: <code class="highlighter-rouge"><span class="p">{}</span></code></p>
+  </li>
+  <li>
+    <p>Object containing CSS rules to add to the Quill editor. Passing in <code class="highlighter-rouge">false</code> (not merely a falsy value) will prevent Quill from inserting any default styles. In this latter case it is assumed either the base stylesheet (<code class="highlighter-rouge">quill.base.css</code>) or a theme stylesheet is included manually.</p>
+  </li>
+  <li>
+    <p><strong>Example</strong></p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">editor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Quill</span><span class="p">(</span><span class="s1">'#editor'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">styles</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'.ql-editor'</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s1">'font-family'</span><span class="p">:</span> <span class="s2">"'Arial', san-serif"</span>
+    <span class="p">},</span>
+    <span class="s1">'.ql-editor a'</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s1">'text-decoration'</span><span class="p">:</span> <span class="s1">'none'</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span></code></pre></figure>
+
+<h4 id="theme">theme</h4>
+
+<ul>
+  <li>Name of theme to use. Note the theme’s specific stylesheet still needs to be included manually. See <a href="/0.20/docs/themes/">Themes</a> for more information.</li>
+</ul>
+
+    </div>
+    <div id="sidebar-container" class="col-sm-3">
+      <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
+        <ul class="nav">
+          
+          
+<li>
+  <a href="/0.20/docs/quickstart/">Quickstart</a>
+  
+</li>
+
+<li class="active">
+  <a href="/0.20/docs/configuration/">Configuration</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/formats/">Formats</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/api/">API</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/events/">Events</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/deltas/">Deltas</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/modules/">Modules</a>
+  
+  <ul class="nav">
+    
+    <li>
+      <a href="/0.20/docs/modules/toolbar/">Toolbar</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/authorship/">Authorship</a>
+    </li>
+    
+    <li>
+      <a href="/0.20/docs/modules/multi-cursors/">Multiple Cursors</a>
+    </li>
+    
+  </ul>
+  
+</li>
+
+<li>
+  <a href="/0.20/docs/themes/">Themes</a>
+  
+</li>
+
+<li>
+  <a href="/0.20/examples/">Examples</a>
+  
+</li>
+
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <footer>
+      <div class="container">
+        <ul>
+          <li><iframe src="http://ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true" title="Star on GitHub" width="100" height="20"></iframe></li>
+          <li>
+            
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com" data-text="Quill - A Rich Text Editor with an API" data-via="quilljs">Tweet</a>
+            
+          </li>
+        </ul>
+        <div>
+          Quill is open source under
+          <a title="BSD" href="https://github.com/quilljs/quill#license">BSD</a>.
+          The latest version is currently
+          <a title="Version 0.20.1" href="https://github.com/quilljs/quill/releases/tag/v0.20.1">v0.20.1</a>
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </body>
+</html>
