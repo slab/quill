@@ -7,10 +7,6 @@ class Bold extends Inline { }
 Bold.blotName = 'bold';
 Bold.tagName = 'STRONG';
 
-class Code extends Inline { }
-Code.blotName = 'code';
-Code.tagName = 'CODE';
-
 class Italic extends Inline { }
 Italic.blotName = 'italic';
 Italic.tagName = 'EM';
@@ -22,25 +18,6 @@ Strike.tagName = 'S';
 class Underline extends Inline { }
 Underline.blotName = 'underline';
 Underline.tagName = 'U';
-
-
-class Link extends Inline {
-  formats() {
-    let format = super.formats();
-    format.link = this.domNode.getAttribute('href') || true;
-    return format;
-  }
-}
-Link.blotName = 'link';
-Link.tagName = 'A';
-Link.create = function(value) {
-  let node = Parchment.Inline.create.call();
-  if (typeof value === 'string') {
-    this.domNode.setAttribute('href', value);
-  }
-  return node;
-}
-
 
 class Script extends Inline {
   formats() {
@@ -62,4 +39,4 @@ Script.create = function(value) {
 }
 
 
-export { Bold, Italic, Strike, Underline, Link, Code, Script };
+export { Bold, Italic, Script, Strike, Underline };
