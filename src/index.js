@@ -1,11 +1,4 @@
-import Authorship from './modules/authorship';
-import ImageTooltip from './modules/image-tooltip';
-import LinkTooltip from './modules/link-tooltip';
-import MultiCursor from './modules/multi-cursor';
-import PasteManager from './modules/paste-manager';
-import Toolbar from './modules/toolbar';
-import UndoManager from './modules/undo-manager';
-
+// TODO is this file still necessary
 import Quill from './quill';
 
 

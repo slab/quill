@@ -3,11 +3,11 @@ import Parchment from 'parchment';
 
 let Align = new Parchment.Attributor.Style('align', 'text-align', {
   scope: Parchment.Scope.BLOCK,
-  whitelist: ['left', 'right', 'center', 'justify']
+  whitelist: ['right', 'center', 'justify']
 });
 let Direction = new Parchment.Attributor.Style('direction', 'direction', {
   scope: Parchment.Scope.BLOCK,
-  whitelist: ['ltr', 'rtl']
+  whitelist: ['rtl']
 });
 let Indent = new Parchment.Attributor.Class('indent', 'ql-indent', {
   scope: Parchment.Scope.BLOCK,

@@ -1,24 +1,20 @@
 import Delta from 'rich-text/lib/delta';
 import Editor from './editor';
 import Emitter from './emitter';
-import Keyboard from './keyboard';
 import Parchment from 'parchment';
 import Scroll from './scroll';
 import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './lib/logger';
 
-import BaseTheme from './themes/base';
-import SnowTheme from './themes/snow';
+import Theme from './theme';
+import Module from './modules/module';
+import Keyboard from './modules/keyboard';
+import PasteManager from './modules/paste-manager';
+import UndoManager from './modules/undo-manager';
 
-import CodeBlock, { CodeToken } from './formats/code-block';
-import Equation from './formats/equation';
-import Mention from './formats/mention';
 import Header from './formats/header';
-import Image from './formats/image';
-import List, { ListItem } from './formats/list';
-import Table, { TableSection, TableRow, TableCell } from './formats/table';
-import { Bold, Italic, Strike, Underline, Link, Code, Script } from './formats/inline';
+import { Bold, Italic, Script, Strike, Underline } from './formats/inline';
 import { Align, Direction, Indent, Background, Color, Font, Size } from './formats/attributor';
 
 import Cursor from './blots/cursor';
@@ -27,11 +23,9 @@ import Inline from './blots/inline';
 import Break from './blots/break';
 
 
-[ CodeBlock, Header,
-  Image, Equation, Mention,
-  List, ListItem, Table, TableSection, TableRow, TableCell,
-  Bold, Italic, Strike, Underline, Link, Code, Script,
-  Align, Direction, Indent, Background, Color, Font, Size, CodeToken,
+[ Header,
+  Bold, Italic, Strike, Underline, Script,
+  Align, Direction, Indent, Background, Color, Font, Size,
   Cursor,
   Scroll, Block, Inline, Break, Parchment.Text
 ].forEach(Parchment.register);
@@ -93,13 +87,15 @@ class Quill {
     this.scroll = Parchment.create(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.keyboard = new Keyboard(this);
     let themeClass = Quill.themes[this.options.theme || 'base'];
     if (themeClass == null) {
       debug.error(`Cannot load ${this.options.theme} theme. It may not be registered. Loading default theme.`);
       themeClass = Quill.themes['base'];
     }
     this.theme = new themeClass(this, this.options);
+    this.keyboard = new Keyboard(this, this.options.modules['keyboard']);
+    this.pasteManager = new PasteManager(this, this.options.modules['paste-manager']);
+    this.undoManager = new UndoManager(this, this.options.modules['undo-manager']);
     Object.keys(this.options.modules).forEach((name) => {
       this.addModule(name, this.options.modules[name]);
     });
@@ -337,10 +333,7 @@ Quill.DEFAULTS = {
     'background', 'color', 'font', 'size',
     'image', 'equation'
   ],
-  modules: {
-    'paste-manager': true,
-    'undo-manager': true
-  },
+  modules: {},
   readOnly: false,
   theme: 'base'
 };
@@ -348,6 +341,9 @@ Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
 
 
+Quill.registerModule('keyboard', Keyboard);
+Quill.registerModule('paste-manager', PasteManager);
+Quill.registerModule('undo-manager', UndoManager);
 Quill.registerTheme('base', BaseTheme);
 Quill.registerTheme('snow', SnowTheme);
 

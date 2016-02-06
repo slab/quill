@@ -1,19 +1,18 @@
-import Quill from '../quill';
+import Delta from 'rich-text/lib/delta';
+import Emitter from '../emitter';
+import Module from './module';
 import extend from 'extend';
 
-let Delta = Quill.import('delta');
 
-
-class UndoManager {
-  constructor(quill, options = {}) {
-    this.quill = quill;
-    this.options = extend({}, UndoManager.DEFAULTS, options);
+class UndoManager extends Module {
+  constructor(quill, options) {
+    super(quill, options);
     this.lastRecorded = 0;
     this.ignoreChange = false;
     this.clear();
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta, oldDelta, source) => {
+    this.quill.on(Emitter.events.TEXT_CHANGE, (delta, oldDelta, source) => {
       if (this.ignoreChange) return;
-      if (!this.options.userOnly || source === Quill.sources.USER) {
+      if (!this.options.userOnly || source === Emitter.sources.USER) {
         this.record(delta, oldDelta);
       } else {
         this.transform(delta);
@@ -102,7 +101,5 @@ function getLastChangeIndex(delta) {
   return lastIndex;
 }
 
-
-Quill.registerModule('undo-manager', UndoManager);
 
 export { UndoManager as default };
