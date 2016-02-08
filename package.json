@@ -8,6 +8,11 @@
     "Byron Milligan <byronner@gmail.com>"
   ],
   "main": "dist/quill.js",
+  "files": [
+    "assets",
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "clone": "~1.0.2",
     "deep-equal": "~1.0.1",
