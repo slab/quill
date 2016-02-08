@@ -11,6 +11,23 @@ class Italic extends Inline { }
 Italic.blotName = 'italic';
 Italic.tagName = 'EM';
 
+class Link extends Inline {
+  formats() {
+    let format = super.formats();
+    format.link = this.domNode.getAttribute('href') || true;
+    return format;
+  }
+}
+Link.blotName = 'link';
+Link.tagName = 'A';
+Link.create = function(value) {
+  let node = Parchment.Inline.create.call();
+  if (typeof value === 'string') {
+    this.domNode.setAttribute('href', value);
+  }
+  return node;
+}
+
 class Strike extends Inline { }
 Strike.blotName = 'strike';
 Strike.tagName = 'S';
@@ -39,4 +56,4 @@ Script.create = function(value) {
 }
 
 
-export { Bold, Italic, Script, Strike, Underline };
+export { Bold, Italic, Link, Script, Strike, Underline };

@@ -14,7 +14,7 @@ import PasteManager from './modules/paste-manager';
 import UndoManager from './modules/undo-manager';
 
 import Header from './formats/header';
-import { Bold, Italic, Script, Strike, Underline } from './formats/inline';
+import { Bold, Italic, Link, Script, Strike, Underline } from './formats/inline';
 import { Align, Direction, Indent, Background, Color, Font, Size } from './formats/attributor';
 
 import Cursor from './blots/cursor';
@@ -24,7 +24,7 @@ import Break from './blots/break';
 
 
 [ Header,
-  Bold, Italic, Strike, Underline, Script,
+  Bold, Italic, Link, Strike, Underline, Script,
   Align, Direction, Indent, Background, Color, Font, Size,
   Cursor,
   Scroll, Block, Inline, Break, Parchment.Text
@@ -41,6 +41,7 @@ class Quill {
   static import(name) {
     switch (name) {
       case 'delta'      : return Delta;
+      case 'logger'     : return logger;
       case 'parchment'  : return Parchment;
       case 'range'      : return Range;
       default           : return null;
@@ -162,6 +163,7 @@ class Quill {
     }
   }
 
+  // TODO is this necessary given formatText
   formatLine(start, end, name, value, source) {
     let formats;
     [start, end, formats, source] = this._buildParams(start, end, name, value, source);
@@ -344,7 +346,7 @@ Quill.sources = Emitter.sources;
 Quill.registerModule('keyboard', Keyboard);
 Quill.registerModule('paste-manager', PasteManager);
 Quill.registerModule('undo-manager', UndoManager);
-Quill.registerTheme('base', BaseTheme);
+Quill.registerTheme('base', Theme);
 Quill.registerTheme('snow', SnowTheme);
 
 

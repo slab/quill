@@ -1,12 +1,5 @@
 import Parchment from 'parchment';
 
-// Lower index means deeper in the DOM tree, since not found (-1) is for embeds
-let order = [
-  'cursor', 'inline',   // Must be lower
-  'code', 'underline', 'strike', 'bold', 'italic', 'script',
-  'link'                // Must be higher
-];
-
 
 class Inline extends Parchment.Inline {
   formatAt(index, length, name, value) {
@@ -18,9 +11,17 @@ class Inline extends Parchment.Inline {
     }
   }
 }
+
 Inline.compare = function(self, other) {
-  return order.indexOf(self) - order.indexOf(other);
-}
+  return Inline.order.indexOf(self) - Inline.order.indexOf(other);
+};
+
+// Lower index means deeper in the DOM tree, since not found (-1) is for embeds
+Inline.order = [
+  'cursor', 'inline',   // Must be lower
+  'code', 'underline', 'strike', 'bold', 'italic', 'script',
+  'link'                // Must be higher
+];
 
 
 export default Inline;

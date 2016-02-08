@@ -8,13 +8,13 @@ var constantPack = new webpack.DefinePlugin({
 
 module.exports = {
   entry: {
-    quill: ['./src/index.js']  // webpack workaround issue #300
+    quill: './src/index.js'
   },
   output: {
     filename: 'quill.js',
     library: 'Quill',
     libraryTarget: 'umd',
-    path: path.resolve(__dirname, '..', '.build/quill/')
+    path: path.resolve(__dirname, '..', 'dist/')
   },
   resolve: {
     alias: {

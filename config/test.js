@@ -83,20 +83,4 @@ module.exports = function(config) {
       callback();
     });
   });
-
-  gulp.task('protractor:install', function(callback) {
-    child_process.spawn('./node_modules/.bin/webdriver-manager', ['update'], {
-      stdio: 'inherit'
-    }).once('close', callback);
-  });
-
-  gulp.task('protractor:test', function() {
-    gulp.src(['test/wd/e2e.js'])
-      .pipe(protractor({
-        configFile: 'config/protractor.conf.js',
-        args: ['--baseUrl', 'http://' + config.host]
-      })).on('error', function(e) {
-        gutil.log(gutil.colors.red("[protractor] " + e.message));
-      });
-  });
 };

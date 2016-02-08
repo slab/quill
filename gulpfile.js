@@ -16,29 +16,10 @@ testTasks(config);
 
 
 gulp.task('default', ['build']);
-
-gulp.task('build', ['source', 'theme', 'examples']);
-gulp.task('npm', function(callback) {
-  runsequence(
-    'clean',
-    ['source', 'theme'],
-    'dist'
-  , callback);
-});
-gulp.task('build:release', function(callback) {
-  runsequence(
-    'clean',
-    'build',
-    'minify',
-    'dist',
-    'compress'
-  , callback);
-});
+gulp.task('build', ['source', 'assets']);
 
 gulp.task('test', ['karma:test']);
-gulp.task('test:unit', ['karma:test']);
-gulp.task('test:e2e', ['protractor:test']);
-gulp.task('test:coverage', ['karma:coverage']);
+// gulp.task('test:coverage', ['karma:coverage']);
 
 gulp.task('dev', function(callback) {
   runsequence(
