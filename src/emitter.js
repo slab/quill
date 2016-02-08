@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import logger from './lib/logger';
+import logger from './logger';
 
 let debug = logger('quill:events');
 
@@ -17,8 +17,7 @@ class Emitter extends EventEmitter {
 }
 
 Emitter.events = {
-  FORMAT_INIT       : 'format-init',
-  MODULE_INIT       : 'module-init',
+  MODULE_LOAD       : 'module-load',
   POST_EVENT        : 'post-event',
   PRE_EVENT         : 'pre-event',
   SCROLL_OPTIMIZE   : 'scroll-optimize',

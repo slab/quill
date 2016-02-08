@@ -1,4 +1,4 @@
-import Quill from '../quill';
+import Quill from '../core';
 import Keyboard from '../keyboard';
 
 

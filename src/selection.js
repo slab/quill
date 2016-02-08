@@ -4,7 +4,6 @@ import CursorBlot from './blots/cursor';
 import EmbedBlot from './blots/embed';
 import equal from 'deep-equal';
 import extend from 'extend';
-import * as platform from './lib/platform';
 
 
 class Range {

@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Embed from '../blots/embed';
+import Embed from './embed';
 
 
 class Break extends Embed {
