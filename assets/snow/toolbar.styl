@@ -1,0 +1,151 @@
+blackColor = #444
+blueColor = #06c
+grayColor = #ccc
+lightGrayColor = #ddd
+whiteColor = #fff
+
+fontNamePickerWidth = 105px
+fontSizePickerWidth = 80px
+iconPickerWidth = 28px
+
+inputHeight = 14px
+inputPadding = 5px
+separatorMargin = 4px
+inputSize = inputHeight + 2*inputPadding
+toolbarPadding = 8px
+
+imageSize = 18px
+
+colorItemMargin = 2px
+colorItemWidth = 16px
+colorItemsPerRow = 7
+
+formatGroupMargin = 15px
+
+formatInput =
+  box-sizing: border-box
+  display: inline-block
+  height: inputSize
+  line-height: inputSize
+  vertical-align: middle
+
+.ql-snow.ql-toolbar
+  box-sizing: border-box
+  padding: toolbarPadding
+  user-select: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  .ql-format-group
+    display: inline-block
+    margin-right: formatGroupMargin
+    vertical-align: middle
+  .ql-format-separator
+    box-sizing: border-box
+    background-color: lightGrayColor
+    display: inline-block
+    height: inputHeight
+    margin-left: separatorMargin
+    margin-right: separatorMargin
+    vertical-align: middle
+    width: 1px
+  .ql-format-button
+    {formatInput}
+    background-position: center center
+    background-repeat: no-repeat
+    background-size: imageSize imageSize
+    box-sizing: border-box
+    cursor: pointer
+    text-align: center
+    width: inputSize
+
+  .ql-picker
+    box-sizing: border-box
+    color: blackColor
+    display: inline-block
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
+    font-size: 14px
+    font-weight: 500
+    position: relative
+    .ql-picker-label
+      {formatInput}
+      background-color: whiteColor
+      background-position: right center
+      background-repeat: no-repeat
+      background-size: imageSize imageSize
+      border: 1px solid transparent
+      cursor: pointer
+      position: relative
+      width: 100%
+    .ql-picker-label.ql-active, .ql-picker-label:hover
+      color: blueColor
+    .ql-picker-options
+      background-color: whiteColor
+      border: 1px solid transparent
+      box-sizing: border-box
+      display: none
+      padding: 0.5*toolbarPadding toolbarPadding
+      position: absolute
+      width: 100%
+      .ql-picker-item
+        background-position: center center
+        background-repeat: no-repeat
+        background-size: imageSize imageSize
+        box-sizing: border-box
+        cursor: pointer
+        display: block
+        padding-bottom: inputPadding
+        padding-top: inputPadding
+      .ql-picker-item.ql-selected, .ql-picker-item:hover
+        color: blueColor
+  .ql-picker.ql-expanded
+    .ql-picker-label
+      border-color: grayColor
+      color: grayColor
+      z-index: 2
+    .ql-picker-options
+      border-color: grayColor
+      box-shadow: rgba(0,0,0,0.2) 0 2px 8px
+      display: block
+      margin-top: -1px
+      z-index: 1
+
+  .ql-picker.ql-color-picker
+    .ql-picker-label
+      background-position: center center
+      width: iconPickerWidth
+    .ql-picker-options
+      padding: inputPadding
+      width: (colorItemWidth + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
+      .ql-picker-item
+        border: 1px solid transparent
+        float: left
+        height: colorItemWidth
+        margin: colorItemMargin
+        padding: 0px
+        width: colorItemWidth
+      .ql-picker-item.ql-primary-color
+        margin-bottom: toolbarPadding
+      .ql-picker-item.ql-selected, .ql-picker-item:hover
+        border-color: #000
+
+  .ql-picker.ql-font
+    width: fontNamePickerWidth
+  .ql-picker.ql-size
+    width: fontSizePickerWidth
+  .ql-picker.ql-font, .ql-picker.ql-size
+    .ql-picker-label
+      padding-left: toolbarPadding
+      padding-right: toolbarPadding
+
+  .ql-picker.ql-align
+    .ql-picker-label
+      background-position: center center
+      width: iconPickerWidth
+    .ql-picker-item
+      {formatInput}
+      padding: 0px
+      width: iconPickerWidth
+    .ql-picker-options
+      padding: 4px 0px
+

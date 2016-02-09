@@ -11,14 +11,7 @@
   },
   "devDependencies": {
     "async": "^1.5.2",
-    "del": "^2.2.0",
-    "gulp": "^3.9.0",
-    "gulp-protractor": "^2.1.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-stylus": "^2.2.0",
-    "gulp-tar": "^1.8.0",
-    "gulp-uglify": "^1.5.1",
-    "gulp-util": "^3.0.7",
+    "extract-text-webpack-plugin": "^1.0.1",
     "jasmine-core": "^2.4.1",
     "karma": "~0.13.19",
     "karma-chrome-launcher": "~0.2.2",
@@ -31,6 +24,7 @@
     "lodash": "^4.0.0",
     "protractor": "^3.0.0",
     "run-sequence": "^1.1.5",
+    "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.3",
     "ts-loader": "~0.8.0",
     "typescript": "^1.7.5",
@@ -38,7 +32,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "start": "foreman start -f dev/procfile"
+    "build": "gulp source --gulpfile _develop/gulpfile.js",
+    "start": "foreman start -f _develop/procfile"
   },
   "private": true
 }

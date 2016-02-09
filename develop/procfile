@@ -1,3 +1,0 @@
-jekyll:   jekyll serve -s ../quilljs.github.io -w
-karma:
-webpack:
