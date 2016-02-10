@@ -34,18 +34,6 @@ resets(arr)
     margin: 0
     padding: 0
 
-  .ql-font-serif
-    font-family: Times New Roman, serif;
-  .ql-font-monospace
-    font-family: Monaco, Courier New, monospace;
-
-  .ql-size-small
-    font-size: 10px;
-  .ql-size-large
-    font-size: 18px;
-  .ql-size-huge
-    font-size: 32px;
-
   p, ol, ul, pre, blockquote
     counter-reset: resets(1..MAX_INDENT)
   ol
@@ -70,3 +58,44 @@ resets(arr)
     .ql-indent-{num}
       padding-left: (40 * num)px
 
+  .ql-bg-black
+    background-color: rgb(0,0,0);
+  .ql-bg-red
+    background-color: rgb(230,0,0);
+  .ql-bg-orange
+    background-color: rgb(255,153,0);
+  .ql-bg-yellow
+    background-color: rgb(255,255,0);
+  .ql-bg-green
+    background-color: rgb(0,138,0);
+  .ql-bg-blue
+    background-color: rgb(0,102,204);
+  .ql-bg-purple
+    background-color: rgb(153,51,255);
+
+  .ql-color-white
+    color: rgb(255,255,255);
+  .ql-color-red
+    color: rgb(230,0,0);
+  .ql-color-orange
+    color: rgb(255,153,0);
+  .ql-color-yellow
+    color: rgb(255,255,0);
+  .ql-color-green
+    color: rgb(0,138,0);
+  .ql-color-blue
+    color: rgb(0,102,204);
+  .ql-color-purple
+    color: rgb(153,51,255);
+
+  .ql-font-serif
+    font-family: Times New Roman, serif;
+  .ql-font-monospace
+    font-family: Monaco, Courier New, monospace;
+
+  .ql-size-small
+    font-size: 10px;
+  .ql-size-large
+    font-size: 18px;
+  .ql-size-huge
+    font-size: 32px;

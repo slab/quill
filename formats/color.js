@@ -1,7 +1,10 @@
 import Parchment from 'parchment';
 
-let Color = new Parchment.Attributor.Style('color', 'color', {
+let ColorClass = new Parchment.Attributor.Class('color', 'ql-color', {
+  scope: Parchment.Scope.INLINE
+});
+let ColorStyle = new Parchment.Attributor.Style('color', 'color', {
   scope: Parchment.Scope.INLINE
 });
 
-export default Color;
+export { ColorClass, ColorStyle };

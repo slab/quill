@@ -34,7 +34,7 @@ module.exports = {
     loaders: [
       { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },
       { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
-      { test: /\.js$/, loader: 'babel?presets[]=es2015&plugins[]=transform-runtime' },
+      { test:/(?!node_modules)\/.*\.js$/, loader: 'babel?presets[]=es2015' },
     ],
     noParse: [
       /\/node_modules\/clone\/clone\.js$/,
@@ -54,11 +54,15 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     hot: false,
-    noInfo: true,
-    assets: false,
-    errorDetails: true,
-    hash: false,
-    timings: false,
-    version: false
+    stats: {
+      assets: false,
+      chunks: false,
+      errors: true,
+      errorDetails: true,
+      warnings: true,
+      hash: false,
+      timings: false,
+      version: false
+    }
   }
 };

@@ -1,8 +1,11 @@
 import Parchment from 'parchment';
 
-let Direction = new Parchment.Attributor.Style('direction', 'direction', {
+let config = {
   scope: Parchment.Scope.BLOCK,
   whitelist: ['rtl']
-});
+};
 
-export default Direction;
+let DirectionClass = new Parchment.Attributor.Class('direction', 'ql-direction', config);
+let DirectionStyle = new Parchment.Attributor.Style('direction', 'direction', config);
+
+export { DirectionClass, DirectionStyle };

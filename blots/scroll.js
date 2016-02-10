@@ -73,6 +73,4 @@ Scroll.child = 'block';
 Scroll.tagName = 'DIV';
 
 
-Parchment.register(Scroll);
-
 export default Scroll;

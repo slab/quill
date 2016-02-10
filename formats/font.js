@@ -1,8 +1,11 @@
 import Parchment from 'parchment';
 
-let Font = new Parchment.Attributor.Class('font', 'ql-font', {
+let config = {
   scope: Parchment.Scope.INLINE,
   whitelist: ['serif', 'monospace']
-});
+};
 
-export default Font;
+let FontClass = new Parchment.Attributor.Class('font', 'ql-font', config);
+let FontStyle = new Parchment.Attributor.Style('font', 'font-family', config);
+
+export { FontStyle, FontClass };

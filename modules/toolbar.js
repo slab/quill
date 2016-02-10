@@ -71,11 +71,10 @@ class Toolbar {
     });
   }
 }
+Toolbar.moduleName = 'toolbar';
 Toolbar.DEFAULTS = {
   container: null
 };
 
-
-Quill.registerModule('toolbar', Toolbar);
 
 export { Toolbar as default };

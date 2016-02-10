@@ -9,36 +9,35 @@ import logger from './logger';
 import Keyboard from './keyboard';
 import Clipboard from './clipboard';
 import UndoManager from './undo-manager';
+import Theme from './theme';
 
+let debug = logger('[quill]');
+let _modules = {};
+let _themes = {
+  base: Theme
+};
 
-let debug = logger('quill');
-let _modules = {}, _themes = {};
 
 class Quill {
   static debug(limit) {
     logger.level(limit);
   }
 
-  static registerFormat(format) {
-    let name = format.blotName || format.attrName;
-    if (Parchment.query(name)) {
-      debug.warn(`Overwriting ${name} format`);
+  static register(name, target) {
+    if (typeof name === 'string') {
+      if (target.constructor instanceof Theme) {
+        if (_themes[name] != null) debug.warn(`overwriting ${name} theme`);
+        _themes[name] = target;
+      } else {
+        if (_modules[name] != null) debug.warn(`overwriting ${name} module`);
+        _modules[name] = target;
+      }
+    } else {
+      let format = name;
+      name = format.attrName || format.blotName;
+      if (Parchment.query(name)) debug.warn(`Overwriting ${name} format`);
+      Parchment.register(format);
     }
-    Parchment.register(format);
-  }
-
-  static registerModule(name, module) {
-    if (_modules[name] != null) {
-      debug.warn(`Overwriting ${name} module`);
-    }
-    _modules[name] = module;
-  }
-
-  static registerTheme(name, theme) {
-    if (_themes[name] != null) {
-      debug.warn(`Overwriting ${name} theme`);
-    }
-    Quill._themes[name] = theme;
   }
 
   constructor(container, options = {}) {
@@ -61,13 +60,13 @@ class Quill {
     this.selection = new Selection(this.scroll, this.emitter);
     let themeClass = _themes[options.theme];
     if (themeClass == null) {
-      return debug.error(`Cannot load ${this.options.theme} theme. It may not be registered. Loading default theme.`);
+      return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
     }
     this.theme = new themeClass(this, options);
     this.keyboard = new Keyboard(this, options.modules['keyboard']);
     this.clipboard = new Clipboard(this, options.modules['clipboard']);
     this.undoManager = new UndoManager(this, options.modules['undo-manager']);
-    Object.keys(this.options.modules).forEach((name) => {
+    Object.keys(options.modules).forEach((name) => {
       if (['clipboard', 'keybard', 'undo-manager'].indexOf(name) > -1) return;
       this.addModule(name, options.modules[name]);
     });
@@ -268,6 +267,14 @@ class Quill {
     return [start, end, formats, source];
   }
 }
+Quill.DEFAULTS = {
+  formats: [],
+  modules: {},
+  readOnly: false,
+  theme: 'base'
+};
+Quill.events = Emitter.events;
+Quill.sources = Emitter.sources;
 Quill.version = QUILL_VERSION;
 
 
