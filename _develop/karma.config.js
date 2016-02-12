@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var browsers = require('./browsers');
+// var browsers = require('./browsers');
 var sauce = require('./sauce');
 
 module.exports = function(config) {
@@ -7,11 +7,18 @@ module.exports = function(config) {
     basePath: '../',
     urlRoot: '/karma/',
 
+    files: [
+      'http://cdn.dev.quilljs.com/unit.js',
+      'http://cdn.dev.quilljs.com/quill.css',
+    ],
+
     frameworks: ['jasmine'],
     reporters: ['progress'],
     colors: true,
     autoWatch: false,
     singleRun: true,
+
+    // browsers: ['Chrome'],
 
     coverageReporter: {
       dir: '.build/coverage',
@@ -31,7 +38,7 @@ module.exports = function(config) {
       accessKey: sauce.accessKey,
       tunnelIdentifier: sauce.tunnel
     },
-    customLaunchers: browsers
+    // customLaunchers: browsers
   });
   if (process.env.TRAVIS) {
     config.transports = ['polling'];

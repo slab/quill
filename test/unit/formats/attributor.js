@@ -1,5 +1,5 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from '../../../src/editor';
+import Editor from '../../../core/editor';
 
 
 describe('Attributor', function() {

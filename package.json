@@ -33,7 +33,8 @@
   },
   "scripts": {
     "build": "gulp source --gulpfile _develop/gulpfile.js",
-    "start": "foreman start -f _develop/procfile"
+    "start": "foreman start -f _develop/procfile",
+    "test": "karma start _develop/karma.config.js"
   },
   "private": true
 }

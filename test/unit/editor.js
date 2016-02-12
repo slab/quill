@@ -1,6 +1,6 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from '../../src/editor';
-import Selection, { Range } from '../../src/selection';
+import Editor from '../../core/editor';
+import Selection, { Range } from '../../core/selection';
 
 
 describe('Editor', function() {

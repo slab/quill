@@ -1,6 +1,6 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from '../../src/editor';
-import Emitter from '../../src/emitter';
+import Editor from '../../core/editor';
+import Emitter from '../../core/emitter';
 
 
 describe('Events', function() {

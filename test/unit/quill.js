@@ -1,5 +1,5 @@
-import Quill from '../../src/quill';
-import { Range } from '../../src/selection';
+import Quill from '../../core/quill';
+import { Range } from '../../core/selection';
 
 
 describe('Quill', function() {

@@ -10,9 +10,10 @@ var constantPack = new webpack.DefinePlugin({
 module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
-    'quill.js': './quill.js',
+    'quill.js': ['./quill.js'],
     'quill.css': './assets/core.styl',
-    'quill.snow.css': './assets/snow.styl'
+    'quill.snow.css': './assets/snow.styl',
+    'unit.js': './test/unit.js'
   },
   output: {
     filename: '[name]',

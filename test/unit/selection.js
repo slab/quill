@@ -1,6 +1,6 @@
-import CursorBlot from '../../src/blots/cursor';
+import CursorBlot from '../../blots/cursor';
 import Delta from 'rich-text/lib/delta';
-import Selection, { Range } from '../../src/selection';
+import Selection, { Range } from '../../core/selection';
 
 
 describe('Selection', function() {

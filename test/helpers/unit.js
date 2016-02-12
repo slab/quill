@@ -1,19 +1,22 @@
-import Editor from '../../src/editor';
-import Emitter from '../../src/emitter';
-import Selection from '../../src/selection';
-import Scroll from '../../src/scroll';
-import Quill from '../../src/quill';
+import Editor from '../../core/editor';
+import Emitter from '../../core/emitter';
+import Selection from '../../core/selection';
+import Scroll from '../../blots/scroll';
+import Quill from '../../core/quill';
+import equal from 'deep-equal';
 
 
-let $div = $('<div>').attr('id', 'test-container');
-$(document.body).prepend($div);
+let div = document.createElement('div');
+div.id = 'test-container';
+document.body.appendChild(div);
+
 
 beforeEach(function() {
   jasmine.addMatchers({
     toEqualHTML: function() {
       return {
         compare: function(actual, expected, ignoreClassId) {
-          let [div1, div2] = _.map([actual, expected], function(html) {
+          let [div1, div2] = [actual, expected].map(function(html) {
             if (html instanceof HTMLElement) {
               html = html.innerHTML;
             }
@@ -50,7 +53,8 @@ beforeEach(function() {
     }
   });
 
-  this.container = $div.html('<div></div>').get(0).firstChild;
+  div.innerHTML = '<div></div>';
+  this.container = div.firstChild;
   // Defining in a beforeAll does not work, seems this is cloned or something
   this.initialize = (klass, html, container = this.container) => {
     container.innerHTML = html.replace(/\n\s*/g, '');
@@ -77,30 +81,30 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
     if (node1.tagName !== node2.tagName) {
       return `Expected tagName '${node1.tagName}' to equal '${node2.tagName}'`;
     }
-    let [attr1, attr2] = _.map([node1, node2], function(node) {
-      return _.reduce(node.attributes, function(attr, elem) {
+    let [attr1, attr2] = [node1, node2].map(function(node) {
+      return [].reduce.call(node.attributes, function(attr, elem) {
         if (ignoredAttributes.indexOf(elem.name) < 0) {
           attr[elem.name] = elem.name === 'style' ? elem.value.trim() : elem.value;
         }
         return attr;
       }, {});
     });
-    if (!_.isEqual(attr1, attr2)) {
+    if (!equal(attr1, attr2)) {
       return `Expected attributes ${jasmine.pp(attr1)} to equal ${jasmine.pp(attr2)}`;
     }
     if (node1.childNodes.length !== node2.childNodes.length) {
-      return `Expected node childNodes length '#{node1.childNodes.length}' to equal '#{node2.childNodes.length}'`;
+      return `Expected node childNodes length '${node1.childNodes.length}' to equal '${node2.childNodes.length}'`;
     }
     if (node1.childNodes.length === 0) return null;
     let message = '';
-    if (_.some($(node1).contents(), function(child1, i) {
+    if ([].some.call(node1.childNodes, function(child1, i) {
       message = compareNodes(child1, node2.childNodes[i], ignoredAttributes);
       return message;
     })) {
       return message;
     }
-  } else if ($(node1).text() !== $(node2).text()) {
-    return `Expected node text '#{$(node1).text()}' to equal '#{$(node2).text()}'`;
+  } else if (node1.data !== node2.data) {
+    return `Expected node text '${node1.data}' to equal '${node2.data}'`;
   }
   return null;
 }

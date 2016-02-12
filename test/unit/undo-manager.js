@@ -1,5 +1,5 @@
 import Delta from 'rich-text/lib/delta';
-import Quill from '../../../src/quill';
+import Quill from '../../../core/quill';
 
 
 describe('UndoManager', function() {
