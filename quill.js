@@ -11,7 +11,7 @@ import { FontClass } from './formats/font';
 import HeaderFormat from './formats/header';
 import { IndentClass } from './formats/indent';
 import ItalicFormat from './formats/italic';
-import ListFormat from './formats/list';
+import ListFormat, { ListItem } from './formats/list';
 import ScriptFormat from './formats/script';
 import { SizeClass } from './formats/size';
 import StrikeFormat from './formats/strike';
@@ -47,6 +47,7 @@ Quill.register(StrikeFormat);
 Quill.register(UnderlineFormat);
 
 Quill.register(BlockBlot);
+Quill.register(ListItem);
 Quill.register(BreakBlot);
 Quill.register(CursorBlot);
 Quill.register(InlineBlot);

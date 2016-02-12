@@ -27,7 +27,7 @@ class UndoManager extends Module {
     let delta = this.stack[source].pop();
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(delta[source], Quill.sources.USER);
+    this.quill.updateContents(delta[source], Emitter.sources.USER);
     this.ignoreChange = false;
     let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index, index);

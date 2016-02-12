@@ -1,5 +1,5 @@
 import Delta from 'rich-text/lib/delta';
-import Quill from '../../../core/quill';
+import Quill from '../../core/quill';
 
 
 describe('UndoManager', function() {
@@ -10,7 +10,6 @@ describe('UndoManager', function() {
         'undo-manager': { delay: 400 }
       }
     });
-    this.undoManager = this.quill.getModule('undo-manager');
     this.original = this.quill.getContents();
   });
 
@@ -55,64 +54,64 @@ describe('UndoManager', function() {
       this.quill.update();
       let changed = this.quill.getContents();
       expect(changed).not.toEqual(this.original);
-      this.undoManager.undo();
+      this.quill.undoManager.undo();
       expect(this.quill.getContents()).toEqual(this.original);
-      this.undoManager.redo();
+      this.quill.undoManager.redo();
       expect(this.quill.getContents()).toEqual(changed);
     });
 
     it('merge changes', function() {
-      expect(this.undoManager.stack.undo.length).toEqual(0);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(0);
       this.quill.updateContents(new Delta().retain(12).insert('e'));
-      expect(this.undoManager.stack.undo.length).toEqual(1);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(1);
       this.quill.updateContents(new Delta().retain(13).insert('s'));
-      expect(this.undoManager.stack.undo.length).toEqual(1);
-      this.undoManager.undo();
+      expect(this.quill.undoManager.stack.undo.length).toEqual(1);
+      this.quill.undoManager.undo();
       expect(this.quill.getContents()).toEqual(this.original);
-      expect(this.undoManager.stack.undo.length).toEqual(0);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(0);
     });
 
     it('dont merge changes', function(done) {
-      expect(this.undoManager.stack.undo.length).toEqual(0);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(0);
       this.quill.updateContents(new Delta().retain(12).insert('e'));
-      expect(this.undoManager.stack.undo.length).toEqual(1);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(1);
       setTimeout(() => {
         this.quill.updateContents(new Delta().retain(13).insert('s'));
-        expect(this.undoManager.stack.undo.length).toEqual(2);
+        expect(this.quill.undoManager.stack.undo.length).toEqual(2);
         done();
-      }, this.undoManager.options.delay * 1.25);
+      }, this.quill.undoManager.options.delay * 1.25);
     });
 
     it('multiple undos', function(done) {
-      expect(this.undoManager.stack.undo.length).toEqual(0);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(0);
       this.quill.updateContents(new Delta().retain(12).insert('e'));
       let contents = this.quill.getContents();
       setTimeout(() => {
         this.quill.updateContents(new Delta().retain(13).insert('s'));
-        this.undoManager.undo();
+        this.quill.undoManager.undo();
         expect(this.quill.getContents()).toEqual(contents);
-        this.undoManager.undo();
+        this.quill.undoManager.undo();
         expect(this.quill.getContents()).toEqual(this.original);
         done();
-      }, this.undoManager.options.delay * 1.25);
+      }, this.quill.undoManager.options.delay * 1.25);
     });
 
     it('transform api change', function() {
-      this.undoManager.options.userOnly = true;
+      this.quill.undoManager.options.userOnly = true;
       this.quill.updateContents(new Delta().retain(12).insert('es'), Quill.sources.USER);
       this.quill.updateContents(new Delta().retain(4).delete(5), Quill.sources.API);
       this.quill.updateContents(new Delta().retain(9).insert('!'), Quill.sources.USER);
-      expect(this.undoManager.stack.undo.length).toEqual(1);
+      expect(this.quill.undoManager.stack.undo.length).toEqual(1);
       expect(this.quill.getContents()).toEqual(new Delta().insert('The foxes!\n'));
-      this.undoManager.undo();
+      this.quill.undoManager.undo();
       expect(this.quill.getContents()).toEqual(new Delta().insert('The fox\n'));
-      this.undoManager.redo();
+      this.quill.undoManager.redo();
       expect(this.quill.getContents()).toEqual(new Delta().insert('The foxes!\n'));
     });
 
     it('ignore remote changes', function() {
-      this.undoManager.options.delay = 0;
-      this.undoManager.options.userOnly = true;
+      this.quill.undoManager.options.delay = 0;
+      this.quill.undoManager.options.userOnly = true;
       this.quill.setText('\n');
       this.quill.insertText(0, 'a', Quill.sources.USER);
       this.quill.insertText(1, 'b', Quill.sources.API);
@@ -121,21 +120,21 @@ describe('UndoManager', function() {
       this.quill.insertText(4, 'e', Quill.sources.USER);
       this.quill.insertText(5, 'f', Quill.sources.API);
       expect(this.quill.getText()).toEqual('abcdef\n');
-      this.undoManager.undo();
+      this.quill.undoManager.undo();
       expect(this.quill.getText()).toEqual('abcdf\n');
-      this.undoManager.undo();
+      this.quill.undoManager.undo();
       expect(this.quill.getText()).toEqual('abdf\n');
-      this.undoManager.undo();
+      this.quill.undoManager.undo();
       expect(this.quill.getText()).toEqual('bdf\n');
-      this.undoManager.undo();
+      this.quill.undoManager.undo();
       expect(this.quill.getText()).toEqual('bdf\n');
-      this.undoManager.redo();
+      this.quill.undoManager.redo();
       expect(this.quill.getText()).toEqual('abdf\n');
-      this.undoManager.redo();
+      this.quill.undoManager.redo();
       expect(this.quill.getText()).toEqual('abcdf\n');
-      this.undoManager.redo();
+      this.quill.undoManager.redo();
       expect(this.quill.getText()).toEqual('abcdef\n');
-      this.undoManager.redo();
+      this.quill.undoManager.redo();
       expect(this.quill.getText()).toEqual('abcdef\n');
     });
   });

@@ -228,20 +228,16 @@ describe('Selection', function() {
 
   describe('getBounds()', function() {
     beforeEach(function() {
-      $(this.container).addClass('ql-editor');
-      $(this.container).css({
-        fontFamily: 'monospace',
-        position: 'relative'
-      });
+      this.container.classList.add('ql-editor');
+      this.container.style.fontFamily = 'monospace';
+      this.container.style.position = 'relative';
       this.initialize(HTMLElement, '<div></div><div>&nbsp;</div>');
       this.div = this.container.firstChild;
-      $(this.div).css('border', '1px solid #777');
+      this.div.style.border = '1px solid #777';
       this.float = this.container.lastChild;
-      $(this.float).css({
-        backgroundColor: 'red',
-        position: 'absolute',
-        width: '1px'
-      });
+      this.float.style.backgroundColor = 'red';
+      this.float.style.position = 'absolute';
+      this.float.style.width = '1px';
       if (this.reference != null) return;
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
       this.reference = {

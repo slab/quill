@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Editor from '../../../core/editor';
 
 
-describe('Attributor', function() {
+xdescribe('Attributor', function() {
   it('definition', function() {
     let editor = this.initialize(Editor, `
       <p style="direction: rtl; text-align: center;">
