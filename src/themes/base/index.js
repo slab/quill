@@ -13,9 +13,12 @@ class BaseTheme {
 
   addStyles(css) {
     let style = document.createElement('style');
+    style.id = 'quill-inline-css';
     style.type = 'text/css';
     style.appendChild(document.createTextNode(css));
-    document.head.appendChild(style);
+    if (!document.getElementById('quill-inline-css')) {
+      document.head.appendChild(style);
+    }
   }
 }
 BaseTheme.OPTIONS = {};
