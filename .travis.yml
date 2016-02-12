@@ -1,23 +1,27 @@
 language: node_js
-node_js: '0.12'
+node_js: '5'
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
 script:
-  - grunt travis:$TEST
+  - gulp remote:$TEST
 sudo: false
 cache:
   directories:
     - node_modules
 env:
   matrix:
-    - TEST=unit-mac-chrome
-    - TEST=unit-mac-firefox
-    - TEST=unit-mac-safari
-    - TEST=unit-windows-firefox
-    - TEST=unit-windows-chrome
-    - TEST=unit-windows-ie-11
-    - TEST=unit-windows-ie-10
-    - TEST=unit-windows-ie-9
-    - TEST=unit-linux-chrome
-    - TEST=unit-linux-firefox
-    - TEST=unit-ipad
-    - TEST=unit-iphone
-    - TEST=unit-android
+    - CXX=g++-4.8 TEST=mac-chrome-latest
+    - CXX=g++-4.8 TEST=mac-firefox-latest
+    - CXX=g++-4.8 TEST=mac-safari-latest
+    - CXX=g++-4.8 TEST=windows-chrome-latest
+    - CXX=g++-4.8 TEST=windows-firefox-latest
+    - CXX=g++-4.8 TEST=windows-microsoftedge-latest
+    - CXX=g++-4.8 TEST=windows-internet-explorer-latest
+    - CXX=g++-4.8 TEST=linux-chrome-latest
+    - CXX=g++-4.8 TEST=linux-firefox-latest
+    - CXX=g++-4.8 TEST=ios-latest
+    - CXX=g++-4.8 TEST=android-latest

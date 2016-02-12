@@ -2,67 +2,96 @@ doctype html
 html
   head
     title Quill Editor Demo
-    link(rel='stylesheet', type='text/css', href='styles/style.css')
     meta(charset='utf-8')
+    link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css")
+    link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/tomorrow-night.min.css")
+    style.
+      body {
+        font-family: 'Helvetica', 'Arial', san-serif;
+        font-size: 13px;
+        padding: 25px;
+      }
+      #content-container {
+        border: 1px solid #aaa;
+        box-shadow: 0 0 2px 2px #ddd;
+        margin: auto;
+        width: 960px;
+      }
+      #formatting-container {
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #ccc;
+        padding: 5px 12px;
+      }
+      #formatting-container .ql-active, #formatting-container button:hover {
+        color: green;
+        font-weight: bold;
+      }
+      #editor-container {
+        height: 500px;
+      }
 
   body
     #content-container
-      #editor-wrapper
-        #formatting-container
-          select.ql-font(title='Font')
-            option(value='sans-serif', selected) Sans Serif
-            option(value='Georgia, serif') Serif
-            option(value='Monaco, \'Courier New\', monospace') Monospace
-          select.ql-size(title='Size')
-            option(value='10px') Small
-            option(value='13px', selected) Normal
-            option(value='18px') Large
-            option(value='32px') Huge
-          select.ql-color(title='Text Color')
-            option(value='rgb(255, 255, 255)') White
-            option(value='rgb(0, 0, 0)', selected) Black
-            option(value='rgb(255, 0, 0)') Red
-            option(value='rgb(0, 0, 255)') Blue
-            option(value='rgb(0, 255, 0)') Lime
-            option(value='rgb(0, 128, 128)') Teal
-            option(value='rgb(255, 0, 255)') Magenta
-            option(value='rgb(255, 255, 0)') Yellow
-          select.ql-background(title='Background Color')
-            option(value='rgb(255, 255, 255)', selected) White
-            option(value='rgb(0, 0, 0)') Black
-            option(value='rgb(255, 0, 0)') Red
-            option(value='rgb(0, 0, 255)') Blue
-            option(value='rgb(0, 255, 0)') Lime
-            option(value='rgb(0, 128, 128)') Teal
-            option(value='rgb(255, 0, 255)') Magenta
-            option(value='rgb(255, 255, 0)') Yellow
-          select.ql-align(title='Text Alignment')
-            option(value='left', selected) Left
-            option(value='center') Center
-            option(value='right') Right
-            option(value='justify') Justify
-          button.ql-format-button.ql-bold(title='Bold') Bold
-          button.ql-format-button.ql-italic(title='Italic') Italic
-          button.ql-format-button.ql-underline(title='Underline') Under
-          button.ql-format-button.ql-strike(title='Strikethrough') Strike
-          button.ql-format-button.ql-link(title='Link') Link
-          button.ql-format-button.ql-image(title='Image') Image
-          button.ql-format-button.ql-bullet(title='Bullet') Bullet
-          button.ql-format-button.ql-list(title='List') List
-        #editor-container
+      #formatting-container
+        select.ql-header(title='Header')
+          option(value='1') Header
+          option(value='2') Subheader
+          option(value='', selected) Paragraph
+        select.ql-font(title='Font')
+          option(value='', selected) Sans Serif
+          option(value='serif') Serif
+          option(value='monospace') Monospace
+        select.ql-size(title='Size')
+          option(value='small') Small
+          option(value='', selected) Normal
+          option(value='large') Large
+          option(value='huge') Huge
+        select.ql-color(title='Text Color')
+          option(value='rgb(255, 255, 255)') White
+          option(value='', selected) Black
+          option(value='rgb(255, 0, 0)') Red
+          option(value='rgb(0, 0, 255)') Blue
+          option(value='rgb(0, 255, 0)') Lime
+          option(value='rgb(0, 128, 128)') Teal
+          option(value='rgb(255, 0, 255)') Magenta
+          option(value='rgb(255, 255, 0)') Yellow
+        select.ql-background(title='Background Color')
+          option(value='', selected) White
+          option(value='rgb(0, 0, 0)') Black
+          option(value='rgb(255, 0, 0)') Red
+          option(value='rgb(0, 0, 255)') Blue
+          option(value='rgb(0, 255, 0)') Lime
+          option(value='rgb(0, 128, 128)') Teal
+          option(value='rgb(255, 0, 255)') Magenta
+          option(value='rgb(255, 255, 0)') Yellow
+        select.ql-align(title='Text Alignment')
+          option(value='', selected) Left
+          option(value='center') Center
+          option(value='right') Right
+          option(value='justify') Justify
+        button.ql-bold(title='Bold') Bold
+        button.ql-italic(title='Italic') Italic
+        button.ql-underline(title='Underline') Under
+        button.ql-strike(title='Strikethrough') Strike
+        button.ql-link(title='Link') Link
+        button.ql-image(title='Image') Image
+        button.ql-code-block(title='Code Block') Code
+        button.ql-equation(title='Equation') Equation
+        button.ql-list(title='Bullet' data-value='bullet') Bullet
+        button.ql-list(title='List' data-value='ordered') List
+      #editor-container
+        p Test
 
+    script(type='text/javascript', src='//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js')
+    script(type='text/javascript', src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js')
     script(type='text/javascript', src='../quill.js')
     script(type='text/javascript').
-      var editor = new Quill('#editor-container', {
-        modules: {
-          'toolbar': { container: '#formatting-container' },
-          'link-tooltip': true,
-          'image-tooltip': true
-        }
+      var quill = new Quill('#editor-container', {
+        modules: { toolbar: '#formatting-container' }
       });
-      editor.on('selection-change', function(range) {
+      quill.on('selection-change', function(range) {
         console.log('selection-change', range)
       });
-      editor.on('text-change', function(delta, source) {
+      quill.on('text-change', function(delta, source) {
         console.log('text-change', delta, source)
       });

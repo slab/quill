@@ -1,14 +1,7 @@
-.build
-.coverage
-.git
-.travis.yml
-_*
+.*
 *.log
 bower.json
 config
-dist/quill.min.js
 docs
 examples
-src
 test
-Gruntfile.coffee

@@ -1,5 +1,8 @@
-// Make sure relative modules folder is included in both base and custom theme
-@import '../base/modules/*'
+LIST_STYLE = decimal lower-alpha lower-roman
+MAX_INDENT = 8
+
+resets(arr)
+  unquote('list-' + join(' list-', arr))
 
 .ql-container
   box-sizing: border-box
@@ -14,37 +17,57 @@
   padding: 12px 15px
   position: relative
 
+.ql-paste-manager
+  left: -100000px
+  position: absolute
+  top: 50%
+
+.ql-toolbar
+  box-sizing: border-box
+
 .ql-editor
   box-sizing: border-box
   min-height: 100%
   outline: none
   tab-size: 4
   white-space: pre-wrap
-  div
-    margin: 0
-    padding: 0
-  a
-    text-decoration: underline
-  b
-    font-weight: bold
-  i
-    font-style: italic
-  s
-    text-decoration: line-through
-  u
-    text-decoration: underline
-  a, b, i, s, u, span
-    background-color: inherit
   img
     max-width: 100%
-  blockquote, ol, ul
-    margin: 0 0 0 2em
+  p
+    margin: 0
     padding: 0
+  p, ol, ul, pre, blockquote
+    counter-reset: resets(1..MAX_INDENT)
   ol
-    list-style-type: decimal
-  ul
-    list-style-type: disc
+    list-style-type: none
+    li
+      counter-increment: unquote('list-' + num)
+      &:before
+        content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
+      counter-reset: resets(1..MAX_INDENT)
+    for num in (1..MAX_INDENT)
+      li.ql-indent-{num}
+        counter-increment: unquote('list-' + num)
+        &:before
+          content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
+      if (num < MAX_INDENT)
+        li.ql-indent-{num}
+          counter-reset: resets((num+1)..MAX_INDENT)
+  ol, ul
+    margin: 0
+    padding-left: 20px
+  for num in (1..MAX_INDENT)
+    .ql-indent-{num}
+      padding-left: (40 * num)px
 
-.ql-editor.ql-ie-9, .ql-editor.ql-ie-10
-  br
-    display: none
+  .ql-font-serif
+    font-family: Times New Roman, serif;
+  .ql-font-monospace
+    font-family: Monaco, Courier New, monospace;
+
+  .ql-size-small
+    font-size: 10px;
+  .ql-size-large
+    font-size: 18px;
+  .ql-size-huge
+    font-size: 32px;
