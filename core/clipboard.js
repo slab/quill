@@ -15,8 +15,8 @@ class Clipboard extends Module {
     let range = this.quill.getSelection();
     if (range == null) return;
     let updateDelta = new Delta().retain(range.start).delete(range.end - range.start);
-    container.setAttribute('contenteditable', true);
-    container.focus();
+    this.container.setAttribute('contenteditable', true);
+    this.container.focus();
     setTimeout(() => {
       let pasteDelta = this.options.sanitize(this.container);
       this.container.innerHTML = '';

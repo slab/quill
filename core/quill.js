@@ -25,7 +25,7 @@ class Quill {
 
   static register(name, target) {
     if (typeof name === 'string') {
-      if (target.constructor instanceof Theme) {
+      if (target.prototype instanceof Theme) {
         if (_themes[name] != null) debug.warn(`overwriting ${name} theme`);
         _themes[name] = target;
       } else {

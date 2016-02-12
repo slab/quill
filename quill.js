@@ -57,6 +57,7 @@ Quill.register(Parchment.Text);
 // Quill.register('link', LinkModule);
 Quill.register('toolbar', ToolbarModule);
 
+
 Quill.register('snow', SnowTheme);
 
 

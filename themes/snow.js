@@ -14,8 +14,8 @@ class SnowTheme extends Theme {
         picker.close();
       });
     });
-    this.quill.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this));
-    this.quill.onModuleLoad('toolbar', this.extendToolbar.bind(this));
+    this.onModuleLoad('multi-cursor', this.extendMultiCursor.bind(this));
+    this.onModuleLoad('toolbar', this.extendToolbar.bind(this));
   }
 
   extendMultiCursor(module) {
