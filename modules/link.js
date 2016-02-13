@@ -3,25 +3,6 @@ import Inline from '../blots/inline';
 import Tooltip from '../ui/tooltip';
 
 
-class Link extends Inline {
-  static create(value) {
-    let node = super.create(value);
-    if (typeof value === 'string') {
-      this.domNode.setAttribute('href', value);
-    }
-    return node;
-  }
-
-  formats() {
-    let format = super.formats();
-    format.link = this.domNode.getAttribute('href') || true;
-    return format;
-  }
-}
-Link.blotName = 'link';
-Link.tagName = 'A';
-
-
 class LinkTooltip extends Tooltip {
   constructor(quill, options = {}) {
     options = extend({}, LinkTooltip.DEFAULTS, options);

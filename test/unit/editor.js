@@ -23,7 +23,7 @@ describe('Editor', function() {
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
     });
 
-    xit('full document', function() {
+    it('full document', function() {
       let editor = this.initialize(Editor, `
         <h1>Quill Rich Text Editor</h1>
         <p><br></p>
@@ -36,10 +36,10 @@ describe('Editor', function() {
           <li>Cross browser support including Chrome, Firefox, Safari, and IE 9+</li>
         </ul>
         <p><br></p>
-        <p style="text-align: center;">
+        <p class="ql-align-center">
           <img src="http://quilljs.com/images/quill-photo.jpg">
         </p>
-        <p style="text-align: center;">
+        <p class="ql-align-center">
           <a class="ql-size-large" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>
         </p>
         <p><br></p>`
@@ -270,8 +270,8 @@ describe('Editor', function() {
 
     it('across lines', function() {
       let editor = this.initialize(Editor, `
-        <h1 style="text-align: right;"><em>01</em></h1>
-        <h1 style="text-align: center;"><em>34</em></h1>
+        <h1 class="ql-align-right"><em>01</em></h1>
+        <h1 class="ql-align-center"><em>34</em></h1>
       `);
       expect(editor.getFormat(1, 4)).toEqual({ italic: true, header: 1, align: ['right', 'center'] });
     });

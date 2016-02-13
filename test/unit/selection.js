@@ -306,7 +306,7 @@ describe('Selection', function() {
     });
 
     it('large text', function() {
-      let selection = this.initialize(Selection, '<p><span style="font-size: 32px;">0000</span></p>', this.div);
+      let selection = this.initialize(Selection, '<p><span class="ql-size-large">0000</span></p>', this.div);
       this.bounds = selection.getBounds(2);
       expect(this.bounds.height).toBeApproximately(this.div.querySelector('span').offsetHeight, 1);
       expect(this.bounds.left).toBeApproximately(this.div.querySelector('span').offsetWidth / 2, 1);
@@ -378,7 +378,7 @@ describe('Selection', function() {
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           01
-          <em style='color: red; background-color: blue;'><u>
+          <em class="ql-color-red ql-bg-blue"><u>
             <span class="blot-cursor">${CursorBlot.CONTENTS}</span>
           </u></em>
           23

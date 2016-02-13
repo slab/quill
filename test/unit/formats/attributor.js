@@ -2,11 +2,11 @@ import Delta from 'rich-text/lib/delta';
 import Editor from '../../../core/editor';
 
 
-xdescribe('Attributor', function() {
+describe('Attributor', function() {
   it('definition', function() {
     let editor = this.initialize(Editor, `
-      <p style="direction: rtl; text-align: center;">
-        <span style="color: red; background-color: blue;" class="ql-font-monospace ql-size-large">0123</span>
+      <p class="ql-direction-rtl ql-align-center">
+        <span class="ql-color-red ql-bg-blue ql-font-monospace ql-size-large">0123</span>
       </p>`
     );
     expect(editor.getDelta()).toEqual(new Delta()
@@ -23,7 +23,7 @@ xdescribe('Attributor', function() {
       .insert('12', { color: 'red' })
       .insert('3\n')
     );
-    expect(this.container.innerHTML).toEqualHTML('<p>0<span style="color: red;">12</span>3</p>');
+    expect(this.container.innerHTML).toEqualHTML('<p>0<span class="ql-color-red">12</span>3</p>');
   });
 
   it('add block', function() {
@@ -33,18 +33,18 @@ xdescribe('Attributor', function() {
       .insert('0123')
       .insert('\n', { align: 'center' })
     );
-    expect(this.container.innerHTML).toEqualHTML('<p style="text-align: center;">0123</p>');
+    expect(this.container.innerHTML).toEqualHTML('<p class="ql-align-center">0123</p>');
   });
 
   it('removal', function() {
-    let editor = this.initialize(Editor, '<p style="text-align: center;">0123</p>');
+    let editor = this.initialize(Editor, '<p class="ql-align-center">0123</p>');
     editor.formatText(4, 5, { align: false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
   });
 
   it('whitelist', function() {
-    let editor = this.initialize(Editor, '<p style="text-align: center;">0123</p>')
+    let editor = this.initialize(Editor, '<p class="ql-align-center">0123</p>')
     let initial = editor.scroll.domNode.innerHTML;
     editor.formatText(4, 5, { align: 'middle' });
     expect(editor.getDelta()).toEqual(new Delta()

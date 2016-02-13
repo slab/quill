@@ -17,17 +17,17 @@ describe('Formats', function() {
           <sub>7</sub>
         </p>`
       );
-      expect(editor.getDelta()).toEqual(new Delta()
+      let expected = new Delta()
         .insert('0', { bold: true })
         .insert('1', { italic: true })
         .insert('2', { strike: true })
         .insert('3', { underline: true })
         .insert('4', { link: 'http://quilljs.com/' })
-        .insert('5', { code: true })
+        .insert('5', { 'code-inline': true })
         .insert('6', { script: 'super' })
         .insert('7', { script: 'sub' })
-        .insert('\n')
-      );
+        .insert('\n');
+      expect(editor.getDelta()).toEqual(expected);
     });
 
     it('inner node', function() {
