@@ -6,18 +6,16 @@ var FAVICON = new Buffer('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACf0lEQV
 var proxy = httpProxy.createProxyServer({});
 
 var server = http.createServer(function(req, res) {
-  var parts = req.url.split('/');
-  var first = parts[1];
-  if (first === 'favicon.png') {
+  if (req.url === '/favicon.png') {
     res.setHeader('Content-Type', 'image/png');
     res.end(FAVICON);
-  } else if (first === 'karma') {
-    proxy.web(req, res, { ignorePath: false, target: { port: 9876 } });
-  } else if (/\d+\.\d+\.\d+/.test(first) || first === 'webpack') {
+  } else if (/\/\d+\.\d+\.\d+/.test(req.url) || req.url.startsWith('/karma/base/dist')) {
     proxy.web(req, res, {
       ignorePath: true,
-      target: 'http://localhost:9080/' + parts.slice(2).join('/')
+      target: 'http://localhost:9080/' + req.url.split('/').pop()
     });
+  } else if (req.url.startsWith('/karma')) {
+    proxy.web(req, res, { ignorePath: false, target: { port: 9876 } });
   } else {
     proxy.web(req, res, { ignorePath: false, target: { port: 4000 } });
   }

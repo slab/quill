@@ -10,8 +10,8 @@ module.exports = function(config) {
     port: 9876,
 
     files: [
-      'http://localhost:9000/webpack/quill.css',
-      'http://localhost:9000/webpack/unit.js'
+      'dist/quill.css',
+      'dist/unit.js'
     ],
 
     frameworks: ['jasmine'],
