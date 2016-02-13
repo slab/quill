@@ -90,13 +90,13 @@ describe('Selection', function() {
     it('between embed', function() {
       let selection = this.initialize(Selection, `
         <p>
-          <img src="/favicon.png">
-          <img src="/favicon.png">
+          <img src="/assets/favicon.png">
+          <img src="/assets/favicon.png">
         </p>
         <ul>
           <li>
-            <img src="/favicon.png">
-            <img src="/favicon.png">
+            <img src="/assets/favicon.png">
+            <img src="/assets/favicon.png">
           </li>
         </ul>`
       );
@@ -197,13 +197,13 @@ describe('Selection', function() {
     it('between embeds', function() {
       let selection = this.initialize(Selection, `
         <p>
-          <img src="/favicon.png">
-          <img src="/favicon.png">
+          <img src="/assets/favicon.png">
+          <img src="/assets/favicon.png">
         </p>
         <ul>
           <li>
-            <img src="/favicon.png">
-            <img src="/favicon.png">
+            <img src="/assets/favicon.png">
+            <img src="/assets/favicon.png">
           </li>
         </ul>`
       );
@@ -316,8 +316,8 @@ describe('Selection', function() {
     it('image', function() {
       let selection = this.initialize(Selection, `
         <p>
-          <img src="/favicon.png" width="32px" height="32px">
-          <img src="/favicon.png" width="32px" height="32px">
+          <img src="/assets/favicon.png" width="32px" height="32px">
+          <img src="/assets/favicon.png" width="32px" height="32px">
         </p>`
       , this.div);
       this.bounds = selection.getBounds(1);

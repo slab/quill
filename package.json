@@ -1,6 +1,6 @@
 {
   "name": "quill",
-  "version": "0.20.0",
+  "version": "1.0.0",
   "dependencies": {
     "clone": "~1.0.2",
     "deep-equal": "~1.0.1",
@@ -32,7 +32,7 @@
     "build": "webpack --config _develop/webpack.config.js",
     "start": "foreman start -f _develop/procfile",
     "test": "karma start _develop/karma.config.js --single-run --browsers Chrome",
-    "travis": "karma start _develop/karma.config.js --single-run"
+    "travis": "karma start _develop/karma.config.js --single-run --reporters dots,saucelabs"
   },
   "private": true
 }

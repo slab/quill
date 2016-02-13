@@ -11,8 +11,13 @@ module.exports = function(config) {
 
     files: [
       'dist/quill.css',
-      'dist/unit.js'
+      'dist/unit.js',
+      { pattern: 'dist/*.map', included: false, served: true },
+      { pattern: 'assets/favicon.png', included: false, served: true }
     ],
+    proxies: {
+      '/assets/': '/karma/base/assets/'
+    },
 
     frameworks: ['jasmine'],
     reporters: ['progress'],

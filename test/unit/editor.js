@@ -81,14 +81,14 @@ describe('Editor', function() {
 
     it('embed', function() {
       let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
-      editor.insertEmbed(2, 'image', '/favicon.png');
+      editor.insertEmbed(2, 'image', '/assets/favicon.png');
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01', { bold: true })
-        .insert({ image: '/favicon.png'}, { bold: true })
+        .insert({ image: '/assets/favicon.png'}, { bold: true })
         .insert('23', { bold: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01<img src="/favicon.png">23</strong></p>');
+      expect(this.container.innerHTML).toEqualHTML('<p><strong>01<img src="/assets/favicon.png">23</strong></p>');
     });
 
     it('on empty line', function() {
