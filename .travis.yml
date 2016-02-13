@@ -7,6 +7,7 @@ addons:
     packages:
       - g++-4.8
 script:
+  - npm run build
   - npm run travis
 sudo: false
 cache:
