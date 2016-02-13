@@ -19,6 +19,7 @@ module.exports = function(config) {
     colors: true,
     autoWatch: false,
     singleRun: false,
+    browsers: [],
 
     coverageReporter: {
       dir: '.build/coverage',
@@ -42,5 +43,6 @@ module.exports = function(config) {
   });
   if (process.env.TRAVIS) {
     config.transports = ['polling'];
+    config.browsers = [process.env.BROWSER];
   }
 };

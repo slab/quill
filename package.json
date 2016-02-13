@@ -31,7 +31,8 @@
   "scripts": {
     "build": "webpack --config _develop/webpack.config.js",
     "start": "foreman start -f _develop/procfile",
-    "test": "karma start _develop/karma.config.js --single-run --browsers Chrome"
+    "test": "karma start _develop/karma.config.js --single-run --browsers Chrome",
+    "travis": "karma start _develop/karma.config.js --single-run"
   },
   "private": true
 }

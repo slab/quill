@@ -28,8 +28,7 @@ module.exports = {
     extensions: ['', '.js', '.styl', '.ts']
   },
   babel: {
-    // for isparta
-    presets: ['es2015']
+    presets: ['es2015']   // for isparta
   },
   module: {
     loaders: [

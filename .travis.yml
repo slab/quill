@@ -7,21 +7,21 @@ addons:
     packages:
       - g++-4.8
 script:
-  - gulp remote:$TEST
+  - npm run travis
 sudo: false
 cache:
   directories:
     - node_modules
 env:
   matrix:
-    - CXX=g++-4.8 TEST=mac-chrome-latest
-    - CXX=g++-4.8 TEST=mac-firefox-latest
-    - CXX=g++-4.8 TEST=mac-safari-latest
-    - CXX=g++-4.8 TEST=windows-chrome-latest
-    - CXX=g++-4.8 TEST=windows-firefox-latest
-    - CXX=g++-4.8 TEST=windows-microsoftedge-latest
-    - CXX=g++-4.8 TEST=windows-internet-explorer-latest
-    - CXX=g++-4.8 TEST=linux-chrome-latest
-    - CXX=g++-4.8 TEST=linux-firefox-latest
-    - CXX=g++-4.8 TEST=ios-latest
-    - CXX=g++-4.8 TEST=android-latest
+    - CXX=g++-4.8 BROWSER=mac-chrome-latest
+    - CXX=g++-4.8 BROWSER=mac-firefox-latest
+    - CXX=g++-4.8 BROWSER=mac-safari-latest
+    - CXX=g++-4.8 BROWSER=windows-chrome-latest
+    - CXX=g++-4.8 BROWSER=windows-firefox-latest
+    - CXX=g++-4.8 BROWSER=windows-microsoftedge-latest
+    - CXX=g++-4.8 BROWSER=windows-internet-explorer-latest
+    - CXX=g++-4.8 BROWSER=linux-chrome-latest
+    - CXX=g++-4.8 BROWSER=linux-firefox-latest
+    - CXX=g++-4.8 BROWSER=ios-latest
+    - CXX=g++-4.8 BROWSER=android-latest
