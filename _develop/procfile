@@ -1,2 +1,4 @@
 jekyll:   jekyll serve -s ../../quilljs.github.io -d ../../quilljs.github.io/_site -p 4000 -w
-webpack:  webpack-dev-server --config webpack.config.js --port 9000
+karma:    karma start karma.config.js
+webpack:  webpack-dev-server --config webpack.config.js
+proxy:    node proxy.js

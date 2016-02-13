@@ -16,13 +16,12 @@
     "karma": "~0.13.19",
     "karma-chrome-launcher": "~0.2.2",
     "karma-coverage": "~0.5.3",
-    "karma-firefox-launcher": "~0.1.7",
     "karma-jasmine": "~0.3.6",
-    "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "~0.3.0",
     "lodash": "^4.3.0",
+    "node-http-proxy": "~0.2.3",
     "protractor": "^3.1.1",
-    "style-loader": "^0.13.0",
+    "style-loader": "~0.13.0",
     "stylus-loader": "^1.5.1",
     "ts-loader": "~0.8.0",
     "typescript": "^1.7.5",
@@ -30,7 +29,6 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "build": "gulp source --gulpfile _develop/gulpfile.js",
     "start": "foreman start -f _develop/procfile",
     "test": "karma start _develop/karma.config.js"
   },
