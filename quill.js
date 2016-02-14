@@ -25,9 +25,12 @@ import CursorBlot from './blots/cursor';
 import InlineBlot from './blots/inline';
 import ScrollBlot from './blots/scroll';
 
+import ClipboardModule from './modules/clipboard';
 // import ImageModule, { ImageBlot } from './modules/image';
+import KeyboardModule from './modules/keyboard';
 // import LinkModule, { LinkBlot } from './modules/link';
 import ToolbarModule from './modules/toolbar';
+import UndoManagerModule from './modules/undo-manager';
 
 import SnowTheme from './themes/snow';
 
@@ -59,9 +62,12 @@ Quill.register(InlineBlot);
 Quill.register(ScrollBlot);
 Quill.register(Parchment.Text);
 
+Quill.register('clipboard', ClipboardModule);
 // Quill.register('image', ImageModule);
+Quill.register('keyboard', KeyboardModule);
 // Quill.register('link', LinkModule);
 Quill.register('toolbar', ToolbarModule);
+Quill.register('undo-manager', UndoManagerModule);
 
 
 Quill.register('snow', SnowTheme);

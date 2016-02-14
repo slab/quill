@@ -6,17 +6,12 @@ import Scroll from '../blots/scroll';
 import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';
-import Keyboard from './keyboard';
-import Clipboard from './clipboard';
-import UndoManager from './undo-manager';
 import Theme from './theme';
 
 let debug = logger('[quill]');
 let _modules = {};
-let _themes = {
-  base: Theme
-};
-
+let _themes = { base: Theme };
+const REQUIRED_MODULES = ['keyboard', 'clipboard', 'undo-manager'];
 
 class Quill {
   static debug(limit) {
@@ -63,11 +58,14 @@ class Quill {
       return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
     }
     this.theme = new themeClass(this, options);
-    this.keyboard = new Keyboard(this, options.modules['keyboard']);
-    this.clipboard = new Clipboard(this, options.modules['clipboard']);
-    this.undoManager = new UndoManager(this, options.modules['undo-manager']);
+    REQUIRED_MODULES.forEach((name) => {    // Required modules
+      let camelCase = name.replace(/[-](\w|$)/g, function(_, next) {
+        return next.toUpperCase();
+      });
+      this[camelCase] = this.addModule(name, options.modules[name]);
+    });
     Object.keys(options.modules).forEach((name) => {
-      if (['clipboard', 'keybard', 'undo-manager'].indexOf(name) > -1) return;
+      if (REQUIRED_MODULES.indexOf(name) > -1) return;
       this.addModule(name, options.modules[name]);
     });
     if (options.readOnly) {

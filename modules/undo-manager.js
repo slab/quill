@@ -1,6 +1,6 @@
 import Delta from 'rich-text/lib/delta';
-import Emitter from './emitter';
-import Module from './module';
+import Emitter from '../core/emitter';
+import Module from '../core/module';
 import extend from 'extend';
 
 
@@ -102,4 +102,4 @@ function getLastChangeIndex(delta) {
 }
 
 
-export { UndoManager as default };
+export default UndoManager;

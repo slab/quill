@@ -2,17 +2,18 @@ import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
-import Emitter from './emitter';
-import logger from './logger';
-import { Range } from './selection';
+import Emitter from '../core/emitter';
+import logger from '../core/logger';
+import Module from '../core/module';
+import { Range } from '../core/selection';
 import Block from '../blots/block';
 
 let debug = logger('quill:keyboard');
 
 
-class Keyboard {
-  constructor(quill) {
-    this.quill = quill;
+class Keyboard extends Module {
+  constructor(quill, options) {
+    super(quill, options);
     this.bindings = {};
     this.addBinding({ key: 'B', metaKey: true }, this.onFormat.bind(this, 'bold'));
     this.addBinding({ key: 'I', metaKey: true }, this.onFormat.bind(this, 'italic'));

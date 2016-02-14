@@ -1,7 +1,7 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from './editor';
-import Emitter from './emitter';
-import Module from './module';
+import Editor from '../core/editor';
+import Emitter from '../core/emitter';
+import Module from '../core/module';
 
 
 class Clipboard extends Module {
