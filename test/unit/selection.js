@@ -368,6 +368,14 @@ describe('Selection', function() {
       `);
     });
 
+    it('cursor interference', function() {
+      this.setup(`<p>0123</p>`, 2);
+      this.selection.format('underline', true);
+      this.selection.scroll.update();
+      let native = this.selection.getNativeRange();
+      expect(native.startContainer).toEqual(this.selection.cursor.textNode);
+    });
+
     it('multiple', function() {
       this.setup(`<p>0123</p>`, 2);
       this.selection.format('color', 'red');

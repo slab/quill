@@ -1,5 +1,6 @@
 import Parchment from 'parchment';
 import Emitter from './emitter';
+import BlockBlot from '../blots/block';
 import CursorBlot from '../blots/cursor';
 import EmbedBlot from '../blots/embed';
 import equal from 'deep-equal';
@@ -33,9 +34,9 @@ class Selection {
         this.update(Emitter.sources.SILENT);
       }
     });
-    this.emitter.on(Emitter.events.SCROLL_OPTIMIZE, () => {
-      this.setRange(this.savedRange);
-    });
+    // this.emitter.on(Emitter.events.SCROLL_OPTIMIZE, () => {
+    //   this.setRange(this.savedRange);
+    // });
     this.update(Emitter.sources.SILENT);
   }
 
@@ -188,7 +189,8 @@ class Selection {
       let indexes = range.collapsed ? [range.start] : [range.start, range.end];
       let args = [];
       indexes.map((index, i) => {
-        let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, index, true);
+        let leaf, [line, offset] = this.scroll.descendant(BlockBlot, index);
+        [leaf, offset] = line.descendant(Parchment.Leaf, offset, true);
         args.push.apply(args, leaf.position(offset, i !== 0));
       });
       this.setNativeRange(...args);

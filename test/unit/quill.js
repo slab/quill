@@ -161,7 +161,7 @@ describe('Quill', function() {
     });
   });
 
-  describe('selection preservation', function() {
+  xdescribe('selection preservation', function() {
     beforeEach(function() {
       this.quill = this.initialize(Quill, '<p><strong>0123</strong><em>4567</em></p>');
     });

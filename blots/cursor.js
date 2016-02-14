@@ -30,13 +30,13 @@ class Cursor extends Embed {
       return super.format(name, value);
     }
     let target = this, index = 0;
-    this._length = 1;
+    this._length = Cursor.CONTENTS.length;
     while (target != null && !(target instanceof Parchment.Block)) {
       index += target.offset(target.parent);
       target = target.parent;
     }
     if (target != null) {
-      target.formatAt(index, 1, name, value);
+      target.formatAt(index, Cursor.CONTENTS.length, name, value);
     }
     this._length = 0;
   }
