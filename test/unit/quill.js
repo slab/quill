@@ -7,7 +7,7 @@ describe('Quill', function() {
     this.quill = this.initialize(Quill, '<p>01234567</p>');
   });
 
-  describe('overload', function() {
+  fdescribe('overload', function() {
     it('(start:number, end:number)', function() {
       let [start, end, formats, source] = overload(0, 1);
       expect(start).toBe(0);

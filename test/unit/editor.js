@@ -180,7 +180,7 @@ describe('Editor', function() {
   describe('delete', function() {
     it('inner node', function() {
       let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
-      editor.deleteText(1, 3);
+      editor.deleteText(1, 2);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('03', { bold: true, italic: true })
         .insert('\n')
@@ -190,7 +190,7 @@ describe('Editor', function() {
 
     it('parts of multiple lines', function() {
       let editor = this.initialize(Editor, '<p><em>0123</em></p><p><em>5678</em></p>');
-      editor.deleteText(2, 7);
+      editor.deleteText(2, 5);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('0178', { italic: true })
         .insert('\n')
@@ -207,7 +207,7 @@ describe('Editor', function() {
 
     it('newline', function() {
       let editor = this.initialize(Editor, '<p><em>0123</em></p><p><em>5678</em></p>');
-      editor.deleteText(4, 5);
+      editor.deleteText(4, 1);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('01235678', { italic: true })
         .insert('\n')
@@ -236,17 +236,17 @@ describe('Editor', function() {
   describe('getFormat', function() {
     it('unformatted', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
-      expect(editor.getFormat(1, 2)).toEqual({});
+      expect(editor.getFormat(1)).toEqual({});
     })
 
     it('formatted', function() {
       let editor = this.initialize(Editor, '<h1><em>0123</em></h1>');
-      expect(editor.getFormat(1, 2)).toEqual({ header: 1, italic: true });
+      expect(editor.getFormat(1)).toEqual({ header: 1, italic: true });
     })
 
     it('cursor', function() {
       let editor = this.initialize(Editor, '<h1><em><strong>0123</strong></em></h1><h2><u>5678</u></h2>');
-      expect(editor.getFormat(2, 2)).toEqual({ bold: true, italic: true, header: 1 });
+      expect(editor.getFormat(2)).toEqual({ bold: true, italic: true, header: 1 });
     });
 
     it('cursor with preformat', function() {
@@ -254,7 +254,7 @@ describe('Editor', function() {
       selection.setRange(new Range(2));
       selection.format('underline', true);
       selection.format('color', 'red');
-      expect(editor.getFormat(2, 2)).toEqual({ bold: true, italic: true, header: 1, color: 'red', underline: true });
+      expect(editor.getFormat(2)).toEqual({ bold: true, italic: true, header: 1, color: 'red', underline: true });
     });
 
     it('across leaves', function() {
@@ -265,7 +265,7 @@ describe('Editor', function() {
           <strong class="ql-size-huge"><u>45</u></strong>
         </h1>
       `);
-      expect(editor.getFormat(1, 5)).toEqual({ bold: true, header: 1, size: ['small', 'large', 'huge'] });
+      expect(editor.getFormat(1, 4)).toEqual({ bold: true, header: 1, size: ['small', 'large', 'huge'] });
     });
 
     it('across lines', function() {
@@ -273,7 +273,7 @@ describe('Editor', function() {
         <h1 class="ql-align-right"><em>01</em></h1>
         <h1 class="ql-align-center"><em>34</em></h1>
       `);
-      expect(editor.getFormat(1, 4)).toEqual({ italic: true, header: 1, align: ['right', 'center'] });
+      expect(editor.getFormat(1, 3)).toEqual({ italic: true, header: 1, align: ['right', 'center'] });
     });
   });
 });

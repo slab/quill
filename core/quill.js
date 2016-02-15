@@ -97,9 +97,9 @@ class Quill {
     return this.modules[name];
   }
 
-  deleteText(start, end, source = Emitter.sources.API) {
-    [start, end, , source] = overload(start, end, source);
-    this.editor.deleteText(start, end);
+  deleteText(index, length, source = Emitter.sources.API) {
+    [index, length, , source] = overload(index, length, source);
+    this.editor.deleteText(index, length);
   }
 
   disable() {
@@ -119,7 +119,7 @@ class Quill {
     if (range == null) return;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
       this.formatLine(range, name, value, source);
-    } else if (range.collapsed) {
+    } else if (range.length === 0) {
       this.selection.format(name, value);
     } else {
       this.formatText(range, name, value, source);
@@ -127,32 +127,32 @@ class Quill {
   }
 
   // TODO is this necessary given formatText
-  formatLine(start, end, name, value, source) {
+  formatLine(index, length, name, value, source) {
     let formats;
-    [start, end, formats, source] = overload(start, end, name, value, source);
-    this.editor.formatLine(start, end, formats, source);
+    [index, length, formats, source] = overload(index, length, name, value, source);
+    this.editor.formatLine(index, length, formats, source);
   }
 
-  formatText(start, end, name, value, source) {
+  formatText(index, length, name, value, source) {
     let formats;
-    [start, end, formats, source] = overload(start, end, name, value, source);
-    this.editor.formatText(start, end, formats, source);
+    [index, length, formats, source] = overload(index, length, name, value, source);
+    this.editor.formatText(index, length, formats, source);
   }
 
   getBounds(index) {
     return this.selection.getBounds(index);
   }
 
-  getContents(start = 0, end = this.getLength()) {
-    [start, end] = overload(start, end);
-    return this.editor.getContents(start, end);
+  getContents(index = 0, length = this.getLength() - index) {
+    [index, length] = overload(index, length);
+    return this.editor.getContents(index, length);
   }
 
-  getFormat(start = this.getSelection(), end = start) {
-    if (typeof start === 'number') {
-      return this.editor.getFormat(start, end);
+  getFormat(index = this.getSelection(), length = 0) {
+    if (typeof index === 'number') {
+      return this.editor.getFormat(index, length);
     } else {
-      return this.editor.getFormat(start.start, start.end);
+      return this.editor.getFormat(index.index, index.length);
     }
   }
 
@@ -170,9 +170,9 @@ class Quill {
     return this.selection.getRange()[0];
   }
 
-  getText(start = 0, end = this.getLength()) {
-    [start, end] = overload(start, end);
-    return this.editor.getText(start, end);
+  getText(index = 0, length = this.getLength() - index) {
+    [index, length] = overload(index, length);
+    return this.editor.getText(index, length);
   }
 
   insertEmbed(index, embed, value, source) {
@@ -209,9 +209,9 @@ class Quill {
     this.editor.applyDelta(delta);
   }
 
-  setSelection(start, end = start, source = Emitter.sources.API) {
-    [start, end, , source] = overload(start, end, source);
-    this.selection.setRange(new Range(start, end), source);
+  setSelection(index, length = 0, source = Emitter.sources.API) {
+    [index, length, , source] = overload(index, length, source);
+    this.selection.setRange(new Range(index, length), source);
   }
 
   setText(text, source = Emitter.sources.API) {
@@ -242,18 +242,17 @@ Quill.sources = Emitter.sources;
 Quill.version = QUILL_VERSION;
 
 
-function overload(start, end, name, value, source) {
+function overload(index, length, name, value, source) {
   let formats = {};
-  // Handle start/end being indexes, range or excluded (to get current selection)
-  if (typeof start.start === 'number' && typeof start.end === 'number') {
+  if (typeof index.index === 'number' && typeof index.length === 'number') {
     // Allow for throwaway end (used by insertText/insertEmbed)
-    if (typeof end !== 'number') {
-      source = value, value = name, name = end, end = start.end, start = start.start;
+    if (typeof length !== 'number') {
+      source = value, value = name, name = length, length = index.length, index = index.index;
     } else {
-      end = start.end, start = start.start;
+      length = index.length, index = index.index;
     }
-  } else if (typeof end !== 'number') {
-    source = value, value = name, name = end, end = start;
+  } else if (typeof length !== 'number') {
+    source = value, value = name, name = length, length = 0;
   }
   // Handle format being object, two format name/value strings or excluded
   if (typeof name === 'object') {
@@ -268,7 +267,7 @@ function overload(start, end, name, value, source) {
   }
   // Handle optional source
   source = source || Emitter.sources.API;
-  return [start, end, formats, source];
+  return [index, length, formats, source];
 }
 
 

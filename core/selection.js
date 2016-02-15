@@ -7,13 +7,9 @@ import equal from 'deep-equal';
 
 
 class Range {
-  constructor(start, end = start) {
-    this.start = start;
-    this.end = end;
-  }
-
-  get collapsed() {
-    return this.start === this.end;
+  constructor(index, length = 0) {
+    this.index = index;
+    this.length = length;
   }
 }
 
@@ -160,7 +156,8 @@ class Selection {
         return index + blot.index(node, offset);
       }
     });
-    return [new Range(Math.min(...indexes), Math.max(...indexes)), range];
+    let start = Math.min(...indexes), end = Math.max(...indexes);
+    return [new Range(start, end-start), range];
   }
 
   scrollIntoView() {
@@ -202,7 +199,7 @@ class Selection {
 
   setRange(range, source = Emitter.sources.API) {
     if (range != null) {
-      let indexes = range.collapsed ? [range.start] : [range.start, range.end];
+      let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
       let args = [];
       indexes.map((index, i) => {
         let leaf, [line, offset] = this.scroll.descendant(BlockBlot, index);

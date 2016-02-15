@@ -7,7 +7,7 @@ describe('Selection', function() {
   beforeEach(function() {
     this.setup = (html, index) => {
       this.selection = this.initialize(Selection, html);
-      this.selection.setRange(new Range(index, index));
+      this.selection.setRange(new Range(index));
     };
   });
 
@@ -27,7 +27,7 @@ describe('Selection', function() {
     });
 
     it('restore last range', function() {
-      let range = new Range(1, 3);
+      let range = new Range(1, 2);
       this.selection.setRange(range);
       this.textarea.focus();
       this.textarea.select();
@@ -43,40 +43,40 @@ describe('Selection', function() {
       let selection = this.initialize(Selection, '');
       selection.setNativeRange(this.container.querySelector('br'), 0);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(0);
-      expect(range.end).toEqual(0);
+      expect(range.index).toEqual(0);
+      expect(range.length).toEqual(0);
     });
 
     it('empty line', function() {
       let selection = this.initialize(Selection, '<p>0</p><p><br></p><p>3</p>');
       selection.setNativeRange(this.container.querySelector('br'), 0);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(2);
-      expect(range.end).toEqual(2);
+      expect(range.index).toEqual(2);
+      expect(range.length).toEqual(0);
     });
 
     it('end of line', function() {
       let selection = this.initialize(Selection, '<p>0</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(1);
-      expect(range.end).toEqual(1);
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(0);
     });
 
     it('text node', function() {
       let selection = this.initialize(Selection, '<p>0123</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(1);
-      expect(range.end).toEqual(1);
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(0);
     });
 
     it('line boundaries', function() {
       let selection = this.initialize(Selection, '<p><br></p><p>12</p>');
       selection.setNativeRange(this.container.firstChild, 0, this.container.lastChild.lastChild, 2);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(0);
-      expect(range.end).toEqual(3);
+      expect(range.index).toEqual(0);
+      expect(range.length).toEqual(3);
     });
 
     it('nested text node', function() {
@@ -91,8 +91,8 @@ describe('Selection', function() {
         this.container.querySelector('u').firstChild, 1
       );
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(1);
-      expect(range.end).toEqual(4);
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(3);
     });
 
     it('between embed', function() {
@@ -110,16 +110,16 @@ describe('Selection', function() {
       );
       selection.setNativeRange(this.container.firstChild, 1, this.container.lastChild.lastChild, 1);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(1);
-      expect(range.end).toEqual(4);
+      expect(range.index).toEqual(1);
+      expect(range.length).toEqual(3);
     });
 
     it('between inlines', function() {
       let selection = this.initialize(Selection, '<p><em>01</em><s>23</s><u>45</u></p>');
       selection.setNativeRange(this.container.firstChild, 1, this.container.firstChild, 2);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(2);
-      expect(range.end).toEqual(4);
+      expect(range.index).toEqual(2);
+      expect(range.length).toEqual(2);
     });
 
     it('between blocks', function() {
@@ -133,8 +133,8 @@ describe('Selection', function() {
       );
       selection.setNativeRange(this.container, 1, this.container.lastChild, 1);
       let [range, ] = selection.getRange();
-      expect(range.start).toEqual(3);
-      expect(range.end).toEqual(7);
+      expect(range.index).toEqual(3);
+      expect(range.length).toEqual(4);
     });
 
     it('no focus', function() {
@@ -186,7 +186,7 @@ describe('Selection', function() {
           <li><em><u>34</u></em></li>
         </ul>`
       );
-      let expected = new Range(1, 4);
+      let expected = new Range(1, 3);
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
@@ -195,7 +195,7 @@ describe('Selection', function() {
 
     it('between inlines', function() {
       let selection = this.initialize(Selection, '<p><em>01</em><s>23</s><u>45</u></p>');
-      let expected = new Range(2, 4);
+      let expected = new Range(2, 2);
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
@@ -215,7 +215,7 @@ describe('Selection', function() {
           </li>
         </ul>`
       );
-      let expected = new Range(1, 4);
+      let expected = new Range(1, 3);
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
@@ -339,7 +339,7 @@ describe('Selection', function() {
     it('trailing', function() {
       this.setup(`<p>0123</p>`, 4);
       this.selection.format('bold', true);
-      expect(this.selection.getRange()[0].start).toEqual(4);
+      expect(this.selection.getRange()[0].index).toEqual(4);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>0123<strong><span class="ql-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
@@ -348,7 +348,7 @@ describe('Selection', function() {
     it('split nodes', function() {
       this.setup(`<p><strong>0123</strong></p>`, 2);
       this.selection.format('italic', true);
-      expect(this.selection.getRange()[0].start).toEqual(2);
+      expect(this.selection.getRange()[0].index).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           <strong>01</strong>
@@ -361,7 +361,7 @@ describe('Selection', function() {
     it('between characters', function() {
       this.setup(`<p><em>0</em><strong>1</strong></p>`, 1);
       this.selection.format('underline', true);
-      expect(this.selection.getRange()[0].start).toEqual(1);
+      expect(this.selection.getRange()[0].index).toEqual(1);
       expect(this.container.innerHTML).toEqualHTML(`
         <p><em>0<u><span class="ql-cursor">${CursorBlot.CONTENTS}</span></u></em><strong>1</strong></p>
       `);
@@ -370,7 +370,7 @@ describe('Selection', function() {
     it('empty line', function() {
       this.setup(`<p><br></p>`, 0);
       this.selection.format('bold', true);
-      expect(this.selection.getRange()[0].start).toEqual(0);
+      expect(this.selection.getRange()[0].index).toEqual(0);
       expect(this.container.innerHTML).toEqualHTML(`
         <p><strong><span class="ql-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
@@ -390,7 +390,7 @@ describe('Selection', function() {
       this.selection.format('italic', true);
       this.selection.format('underline', true);
       this.selection.format('background', 'blue');
-      expect(this.selection.getRange()[0].start).toEqual(2);
+      expect(this.selection.getRange()[0].index).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           01
@@ -407,7 +407,7 @@ describe('Selection', function() {
       this.selection.format('italic', true);
       this.selection.format('underline', true);
       this.selection.format('italic', false);
-      expect(this.selection.getRange()[0].start).toEqual(2);
+      expect(this.selection.getRange()[0].index).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           <strong>
@@ -439,7 +439,7 @@ describe('Selection', function() {
       this.selection.format('italic', true);
       this.container.removeChild(this.container.lastChild);
       this.selection.scroll.update();
-      expect(this.selection.getRange()[0].start).toEqual(2);
+      expect(this.selection.getRange()[0].index).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
         <p>01<em><span class="ql-cursor">${CursorBlot.CONTENTS}</span></em>23</p>
       `);

@@ -35,8 +35,8 @@ class Editor {
     this.update(source);
   }
 
-  deleteText(start, end, source = Emitter.sources.API) {
-    this.scroll.deleteAt(start, end - start);
+  deleteText(index, length, source = Emitter.sources.API) {
+    this.scroll.deleteAt(index, length);
     this.update(source);
   }
 
@@ -44,24 +44,24 @@ class Editor {
     this.scroll.domNode.setAttribute('contenteditable', enabled);
   }
 
-  formatLine(start, end, formats = {}, source = Emitter.sources.API) {
+  formatLine(index, length, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
-      this.scroll.descendants(start, end - start).forEach(function(line) {
+      this.scroll.descendants(index, length).forEach(function(line) {
         line.format(format, formats[format]);
       });
     });
     this.update(source);
   }
 
-  formatText(start, end, formats = {}, source = Emitter.sources.API) {
+  formatText(index, length, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
-      this.scroll.formatAt(start, end - start, format, formats[format]);
+      this.scroll.formatAt(index, length, format, formats[format]);
     });
     this.update(source);
   }
 
-  getContents(start, end) {
-    return this.delta.slice(start, end);
+  getContents(index, length) {
+    return this.delta.slice(index, index + length);
   }
 
   getDelta() {
@@ -82,15 +82,15 @@ class Editor {
     }, new Delta());
   }
 
-  getFormat(start, end) {
+  getFormat(index, length = 0) {
     let lines, leaves;
-    if (start === end) {
-      let leaf, [line, offset] = this.scroll.descendant(Block, start);
+    if (length === 0) {
+      let leaf, [line, offset] = this.scroll.descendant(Block, index);
       [leaf, offset] = line.descendant(Parchment.Leaf, offset, true);
       lines = [line], leaves = [leaf];
     } else {
-      lines = this.scroll.descendants(Block, start, end-start);
-      leaves = this.scroll.descendants(Parchment.Leaf, start, end-start);
+      lines = this.scroll.descendants(Block, index, length);
+      leaves = this.scroll.descendants(Parchment.Leaf, index, length);
     }
     let formatsArr = [lines, leaves].map(function(blots) {
       if (blots.length === 0) return {};
@@ -104,8 +104,8 @@ class Editor {
     return extend.apply(extend, formatsArr);
   }
 
-  getText(start, end) {
-    return this.getContents(start, end).ops.map(function(op) {
+  getText(index, length) {
+    return this.getContents(index, length).ops.map(function(op) {
       return (typeof op.insert === 'string') ? op.insert : '';
     }).join('');
   }

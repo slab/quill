@@ -13,7 +13,7 @@ class Clipboard extends Module {
   onPaste() {
     let range = this.quill.getSelection();
     if (range == null) return;
-    let updateDelta = new Delta().retain(range.start).delete(range.end - range.start);
+    let updateDelta = new Delta().retain(range.index).delete(range.length);
     this.container.setAttribute('contenteditable', true);
     this.container.focus();
     setTimeout(() => {
@@ -23,7 +23,7 @@ class Clipboard extends Module {
       if (lengthAdded > 0) {
         this.quill.updateContents(updateDelta.concat(pasteDelta), Emitter.sources.USER);
       }
-      this.quill.setSelection(range.start + lengthAdded, range.start + lengthAdded, Emitter.sources.SILENT);
+      this.quill.setSelection(range.index + lengthAdded, Emitter.sources.SILENT);
       this.quill.selection.scrollIntoView();
     }, 0);
   }

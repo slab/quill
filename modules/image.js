@@ -33,8 +33,8 @@ class ImageTooltip extends Tooltip {
     this.hide();
     let range = this.quill.getSelection();
     if (range != null) {
-      this.quill.insertEmbed(range.start, 'image', url, 'user');
-      this.quill.setSelection(range.start + 1, range.start + 1);
+      this.quill.insertEmbed(range.index, 'image', url, 'user');
+      this.quill.setSelection(range.index + 1, range.index + 1);
     }
   }
 

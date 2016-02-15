@@ -17,7 +17,7 @@ describe('Attributor', function() {
 
   it('add inline', function() {
     let editor = this.initialize(Editor, '<p>0123</p>');
-    editor.formatText(1, 3, { color:  'red' });
+    editor.formatText(1, 2, { color:  'red' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0')
       .insert('12', { color: 'red' })
@@ -28,7 +28,7 @@ describe('Attributor', function() {
 
   it('add block', function() {
     let editor = this.initialize(Editor, '<p>0123</p>');
-    editor.formatText(4, 5, { align: 'center' });
+    editor.formatText(4, 1, { align: 'center' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { align: 'center' })
@@ -38,7 +38,7 @@ describe('Attributor', function() {
 
   it('removal', function() {
     let editor = this.initialize(Editor, '<p class="ql-align-center">0123</p>');
-    editor.formatText(4, 5, { align: false });
+    editor.formatText(4, 1, { align: false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
   });
@@ -46,7 +46,7 @@ describe('Attributor', function() {
   it('whitelist', function() {
     let editor = this.initialize(Editor, '<p class="ql-align-center">0123</p>')
     let initial = editor.scroll.domNode.innerHTML;
-    editor.formatText(4, 5, { align: 'middle' });
+    editor.formatText(4, 1, { align: 'middle' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { align: 'center' })
@@ -57,7 +57,7 @@ describe('Attributor', function() {
   it('invalid inline scope', function() {
     let editor = this.initialize(Editor, '<p>0123</p>');
     let initial = editor.scroll.domNode.innerHTML;
-    editor.formatText(4, 5, { color: 'red' });
+    editor.formatText(4, 1, { color: 'red' });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML(initial);
   });
@@ -65,7 +65,7 @@ describe('Attributor', function() {
   it('invalid block scope', function() {
     let editor = this.initialize(Editor, '<p>0123</p>');
     let initial = editor.scroll.domNode.innerHTML;
-    editor.formatText(1, 3, { align: 'center' });
+    editor.formatText(1, 2, { align: 'center' });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(this.container.innerHTML).toEqualHTML(initial);
   })

@@ -16,7 +16,7 @@ class LinkTooltip extends Tooltip {
 
   initListeners() {
     this.quill.on(Quill.events.SELECTION_CHANGE, (range) => {
-      if (range == null || !range.collapsed) return;
+      if (range == null || range.length > 0) return;
       let anchor = this._findAnchor(range);
       if (anchor != null) {
         this.setMode(anchor.href, false);
@@ -41,7 +41,7 @@ class LinkTooltip extends Tooltip {
 
   removeLink(range) {
     // Expand range to the entire leaf
-    if (range.collapsed) {
+    if (range.length === 0) {
       range = this._expandRange(range);
     }
     this.hide();
@@ -55,7 +55,7 @@ class LinkTooltip extends Tooltip {
     let url = this._normalizeURL(this.textbox.value);
     let range = this.quill.getSelection(true);
     if (range != null) {
-      if (range.collapsed) {
+      if (range.length > 0) {
         let anchor = this._findAnchor(range);
         if (anchor != null) {
           anchor.href = url;
@@ -85,15 +85,15 @@ class LinkTooltip extends Tooltip {
   }
 
   _expandRange(range) {
-    let [leaf, offset] = this.quill.editor.doc.findLeafAt(range.start, true);
-    let start = range.start - offset;
-    let end = start + leaf.length;
-    return { start: start, end: end };
+    let [leaf, offset] = this.quill.editor.doc.findLeafAt(range.index, true);
+    let index = range.index - offset;
+    let length = leaf.length;
+    return { index: index, length: length };
   }
 
   _findAnchor(range) {
     let node;
-    let [leaf, offset] = this.quill.editor.doc.findLeafAt(range.start, true);
+    let [leaf, offset] = this.quill.editor.doc.findLeafAt(range.index, true);
     if (leaf != null) {
       node = leaf.node;
     }
@@ -124,7 +124,7 @@ class LinkTooltip extends Tooltip {
     if (range == null) return;
     if (!value) {
       this.removeLink(range);
-    } else if (!range.collapsed) {
+    } else if (range.length > 0) {
       this.setMode(this._suggestURL(range), true);
       let nativeRange = this.quill.editor.selection._getNativeRange();
       this.show(nativeRange);

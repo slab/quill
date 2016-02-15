@@ -51,13 +51,13 @@ class Keyboard extends Module {
   }
 
   onDelete(backspace, range) {
-    if (!range.collapsed) {
-      this.quill.deleteText(range.start, range.end, Quill.sources.USER);
+    if (range.length > 0) {
+      this.quill.deleteText(range, Quill.sources.USER);
     } else if (!backspace) {
-      this.quill.deleteText(range.start, range.start + 1, Quill.sources.USER);
+      this.quill.deleteText(range.index, 1, Quill.sources.USER);
     } else {
-      let [line, offset] = this.quill.scroll.descendant(Block, range.start);
-      let formats = this.quill.getFormat(range.start, range.end);
+      let [line, offset] = this.quill.scroll.descendant(Block, range.index);
+      let formats = this.quill.getFormat(range);
       if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
         if (formats['indent'] != null) {
           line.format('indent', parseInt(formats['indent']) - 1, Emitter.sources.USER);
@@ -65,11 +65,11 @@ class Keyboard extends Module {
           line.format('list', false);
         }
       } else {
-        this.quill.deleteText(range.start - 1, range.start, Quill.sources.USER);
-        range = new Range(Math.max(0, range.start - 1));
+        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+        range = new Range(Math.max(0, range.index - 1));
       }
     }
-    this.quill.setSelection(range.start, Quill.sources.SILENT);
+    this.quill.setSelection(range.index, Quill.sources.SILENT);
   }
 
   onEnter(range) {
@@ -81,11 +81,11 @@ class Keyboard extends Module {
       return lineFormats;
     }, {});
     let delta = new Delta()
-      .retain(range.start)
+      .retain(range.index)
       .insert('\n', lineFormats)
-      .delete(range.start - range.end);
+      .delete(range.length);
     this.quill.updateContents(delta, Quill.sources.USER);
-    this.quill.setSelection(range.start + 1, Quill.sources.SILENT);
+    this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     Object.keys(formats).forEach((name) => {
       if (lineFormats[name] == null) {
         this.quill.formatCursor(name, formats[name]);
@@ -94,18 +94,21 @@ class Keyboard extends Module {
   }
 
   onFormat(format, range) {
-    let formats = this.quill.getFormat(range.start, range.end);
+    let formats = this.quill.getFormat(range);
     this.quill.formatCursor(format, !formats[format], Quill.sources.USER);
+    if (range.length !== 0) {
+      this.quill.setSelection(range, Quill.sources.SILENT);
+    }
   }
 
   onTab(range, evt) {
-    if (range.collapsed) {
-      let delta = new Delta().retain(range.start).insert('\t').delete(range.end - range.start);
+    if (range.length === 0) {
+      let delta = new Delta().retain(range.index).insert('\t').delete(range.length);
       this.quill.updateContents(delta, Quill.sources.USER);
-      this.quill.setSelection(range.start + 1, Emitter.sources.SILENT);
+      this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
     } else {
       let modifier = evt.shiftKey ? -1 : 1;
-      this.quill.scroll.descendants(Block, range.start, range.end - range.start).forEach(function(line) {
+      this.quill.scroll.descendants(Block, range.index, range.length).forEach(function(line) {
         let format = line.formats();
         let indent = parseInt(format['indent'] || 0);
         line.format('indent', Math.max(0, indent + modifier));

@@ -9,7 +9,7 @@ describe('List', function() {
       <p>5678</p>
       <p>0123</p>`
     );
-    editor.formatText(9, 10, { list: 'ordered' });
+    editor.formatText(9, 1, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
       .insert('\n', { list: 'ordered' })
@@ -32,7 +32,7 @@ describe('List', function() {
       </ol>
       <p>0123</p>`
     );
-    editor.formatText(9, 10, { list: null });
+    editor.formatText(9, 1, { list: null });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n5678\n0123\n'));
     expect(this.container.innerHTML).toEqualHTML(`
       <p>0123</p>
@@ -49,7 +49,7 @@ describe('List', function() {
       </ol>
       <p>0123</p>`
     );
-    editor.formatText(9, 10, { list: 'bullet' });
+    editor.formatText(9, 1, { list: 'bullet' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
       .insert('\n', { list: 'bullet' })
@@ -74,7 +74,7 @@ describe('List', function() {
         <li>0123</li>
       </ol>`
     );
-    editor.formatText(9, 10, { list: 'ordered' });
+    editor.formatText(9, 1, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: 'ordered' })
@@ -98,7 +98,7 @@ describe('List', function() {
       <ul><li>5678</li></ul>
       <ol><li>0123</li></ol>`
     );
-    editor.formatText(9, 10, { list: 'ordered' });
+    editor.formatText(9, 1, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: 'ordered' })
@@ -122,7 +122,7 @@ describe('List', function() {
       <p>5678</p>
       <ol><li>0123</li></ol>`
     );
-    editor.deleteText(5, 10);
+    editor.deleteText(5, 5);
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: 'ordered' })
@@ -145,7 +145,7 @@ describe('List', function() {
         <li>0123</li>
       </ol>`
     );
-    editor.formatText(9, 10,  { list: 'bullet' });
+    editor.formatText(9, 1,  { list: 'bullet' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
       .insert('\n', { list: 'ordered' })

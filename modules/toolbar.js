@@ -48,10 +48,11 @@ class Toolbar extends Module {
   }
 
   handle(range, format, value) {
-    if (range.collapsed) {
+    if (range.length === 0) {
       this.quill.formatCursor(format, value, Quill.sources.USER);
     } else {
       this.quill.formatText(range, format, value, Quill.sources.USER);
+      this.quill.setSelection(range, Quill.sources.SILENT);
     }
   }
 
