@@ -3,12 +3,12 @@ var _ = require('lodash');
 
 var desktop = {
   'chrome': {
-    '47.0': ['Mac 10.11', 'Windows 10', 'Linux'],
-    '46.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
+    '48.0': ['Mac 10.11', 'Windows 10', 'Linux'],
+    '47.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
   },
   'firefox': {
-    '43.0': ['Mac 10.11', 'Windows 10', 'Linux'],
-    '42.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
+    '44.0': ['Mac 10.11', 'Windows 10', 'Linux'],
+    '43.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
   },
   'safari': {
     '9.0': ['Mac 10.11'],
