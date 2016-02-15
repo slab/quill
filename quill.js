@@ -39,6 +39,7 @@ Quill.register(IndentClass);
 Quill.register(ItalicFormat);
 Quill.register(LinkFormat);
 Quill.register(ListFormat);
+Quill.register(ListItem);
 Quill.register(ScriptFormat);
 Quill.register(SizeClass);
 Quill.register(StrikeFormat);

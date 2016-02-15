@@ -55,7 +55,7 @@ describe('Selection', function() {
       expect(range.end).toEqual(2);
     });
 
-    fit('end of line', function() {
+    it('end of line', function() {
       let selection = this.initialize(Selection, '<p>0</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
       let [range, ] = selection.getRange();
@@ -341,7 +341,7 @@ describe('Selection', function() {
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].start).toEqual(4);
       expect(this.container.innerHTML).toEqualHTML(`
-        <p>0123<strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
+        <p>0123<strong><span class="ql-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
     });
 
@@ -352,7 +352,7 @@ describe('Selection', function() {
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           <strong>01</strong>
-          <em><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></em>
+          <em><strong><span class="ql-cursor">${CursorBlot.CONTENTS}</span></strong></em>
           <strong>23</strong>
         </p>
       `);
@@ -363,7 +363,7 @@ describe('Selection', function() {
       this.selection.format('underline', true);
       expect(this.selection.getRange()[0].start).toEqual(1);
       expect(this.container.innerHTML).toEqualHTML(`
-        <p><em>0<u><span class="blot-cursor">${CursorBlot.CONTENTS}</span></u></em><strong>1</strong></p>
+        <p><em>0<u><span class="ql-cursor">${CursorBlot.CONTENTS}</span></u></em><strong>1</strong></p>
       `);
     });
 
@@ -372,7 +372,7 @@ describe('Selection', function() {
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].start).toEqual(0);
       expect(this.container.innerHTML).toEqualHTML(`
-        <p><strong><span class="blot-cursor">${CursorBlot.CONTENTS}</span></strong></p>
+        <p><strong><span class="ql-cursor">${CursorBlot.CONTENTS}</span></strong></p>
       `);
     });
 
@@ -381,7 +381,7 @@ describe('Selection', function() {
       this.selection.format('underline', true);
       this.selection.scroll.update();
       let native = this.selection.getNativeRange();
-      expect(native.startContainer).toEqual(this.selection.cursor.textNode);
+      expect(native.start.node).toEqual(this.selection.cursor.textNode);
     });
 
     it('multiple', function() {
@@ -395,7 +395,7 @@ describe('Selection', function() {
         <p>
           01
           <em class="ql-color-red ql-bg-blue"><u>
-            <span class="blot-cursor">${CursorBlot.CONTENTS}</span>
+            <span class="ql-cursor">${CursorBlot.CONTENTS}</span>
           </u></em>
           23
         </p>
@@ -411,7 +411,7 @@ describe('Selection', function() {
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           <strong>
-            01<u><span class="blot-cursor">${CursorBlot.CONTENTS}</span></u>23
+            01<u><span class="ql-cursor">${CursorBlot.CONTENTS}</span></u>23
           </strong>
         </p>
       `);
@@ -441,7 +441,7 @@ describe('Selection', function() {
       this.selection.scroll.update();
       expect(this.selection.getRange()[0].start).toEqual(2);
       expect(this.container.innerHTML).toEqualHTML(`
-        <p>01<em><span class="blot-cursor">${CursorBlot.CONTENTS}</span></em>23</p>
+        <p>01<em><span class="ql-cursor">${CursorBlot.CONTENTS}</span></em>23</p>
       `);
     });
   });
