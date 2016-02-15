@@ -98,7 +98,7 @@ class Quill {
   }
 
   deleteText(start, end, source = Emitter.sources.API) {
-    [start, end, , source] = this._buildParams(start, end, source);
+    [start, end, , source] = overload(start, end, source);
     this.editor.deleteText(start, end);
   }
 
@@ -129,13 +129,13 @@ class Quill {
   // TODO is this necessary given formatText
   formatLine(start, end, name, value, source) {
     let formats;
-    [start, end, formats, source] = this._buildParams(start, end, name, value, source);
+    [start, end, formats, source] = overload(start, end, name, value, source);
     this.editor.formatLine(start, end, formats, source);
   }
 
   formatText(start, end, name, value, source) {
     let formats;
-    [start, end, formats, source] = this._buildParams(start, end, name, value, source);
+    [start, end, formats, source] = overload(start, end, name, value, source);
     this.editor.formatText(start, end, formats, source);
   }
 
@@ -144,7 +144,7 @@ class Quill {
   }
 
   getContents(start = 0, end = this.getLength()) {
-    [start, end] = this._buildParams(start, end);
+    [start, end] = overload(start, end);
     return this.editor.getContents(start, end);
   }
 
@@ -171,19 +171,19 @@ class Quill {
   }
 
   getText(start = 0, end = this.getLength()) {
-    [start, end] = this._buildParams(start, end);
+    [start, end] = overload(start, end);
     return this.editor.getText(start, end);
   }
 
   insertEmbed(index, embed, value, source) {
     let formats;
-    [index, , formats, source] = this._buildParams(index, 0, source);
+    [index, , formats, source] = overload(index, 0, source);
     this.editor.insertEmbed(index, embed, value, source);
   }
 
   insertText(index, text, name, value, source) {
     let formats;
-    [index, , formats, source] = this._buildParams(index, 0, name, value, source);
+    [index, , formats, source] = overload(index, 0, name, value, source);
     this.editor.insertText(index, text, formats, source);
   }
 
@@ -210,7 +210,7 @@ class Quill {
   }
 
   setSelection(start, end = start, source = Emitter.sources.API) {
-    [start, end, , source] = this._buildParams(start, end, source);
+    [start, end, , source] = overload(start, end, source);
     this.selection.setRange(new Range(start, end), source);
   }
 
@@ -230,39 +230,6 @@ class Quill {
     }
     this.editor.applyDelta(delta, source);
   }
-
-
-  _buildParams(start, end, name, value, source) {
-    let formats = {};
-    // Handle start/end being indexes, range or excluded (to get current selection)
-    if (typeof start.start === 'number' && typeof start.end === 'number') {
-      // Allow for throwaway end (used by insertText/insertEmbed)
-      if (typeof end !== 'number') {
-        source = value, value = name, name = end, end = start.end, start = start.start;
-      } else {
-        end = start.end, start = start.start;
-      }
-    } else if (typeof start !== 'number') {
-      let range = this.getSelection(false) || new Range(0, 0);
-      source = name, value = end, name = start, end = range.end, start = range.start;
-    } else if (typeof end !== 'number') {
-      source = value, value = name, name = end, end = start;
-    }
-    // Handle format being object, two format name/value strings or excluded
-    if (typeof name === 'object') {
-      formats = name;
-      source = value;
-    } else if (typeof name === 'string') {
-      if (value != null) {
-        formats[name] = value;
-      } else {
-        source = name;
-      }
-    }
-    // Handle optional source
-    source = source || Emitter.sources.API;
-    return [start, end, formats, source];
-  }
 }
 Quill.DEFAULTS = {
   formats: [],
@@ -275,4 +242,34 @@ Quill.sources = Emitter.sources;
 Quill.version = QUILL_VERSION;
 
 
-export default Quill;
+function overload(start, end, name, value, source) {
+  let formats = {};
+  // Handle start/end being indexes, range or excluded (to get current selection)
+  if (typeof start.start === 'number' && typeof start.end === 'number') {
+    // Allow for throwaway end (used by insertText/insertEmbed)
+    if (typeof end !== 'number') {
+      source = value, value = name, name = end, end = start.end, start = start.start;
+    } else {
+      end = start.end, start = start.start;
+    }
+  } else if (typeof end !== 'number') {
+    source = value, value = name, name = end, end = start;
+  }
+  // Handle format being object, two format name/value strings or excluded
+  if (typeof name === 'object') {
+    formats = name;
+    source = value;
+  } else if (typeof name === 'string') {
+    if (value != null) {
+      formats[name] = value;
+    } else {
+      source = name;
+    }
+  }
+  // Handle optional source
+  source = source || Emitter.sources.API;
+  return [start, end, formats, source];
+}
+
+
+export { overload, Quill as default };
