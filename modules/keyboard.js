@@ -1,6 +1,5 @@
 import clone from 'clone';
 import equal from 'deep-equal';
-import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Emitter from '../core/emitter';
 import logger from '../core/logger';

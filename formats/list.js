@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
@@ -45,9 +44,8 @@ class ListItem extends Block {
   }
 
   formats() {
-    let format = extend({}, super.formats(), {
-      list: this.parent.domNode.tagName === 'OL' ? 'ordered' : 'bullet'
-    });
+    let format = super.formats();
+    format['list'] = this.parent.domNode.tagName === 'OL' ? 'ordered' : 'bullet';
     delete format[this.statics.blotName];
     return format;
   }

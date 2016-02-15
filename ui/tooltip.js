@@ -1,4 +1,4 @@
-import Keyboard from '../core/keyboard';
+import Keyboard from '../modules/keyboard';
 
 
 const HIDE_MARGIN = '-10000px';

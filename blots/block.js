@@ -1,4 +1,3 @@
-import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import BreakBlot from './break';
 

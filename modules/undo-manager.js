@@ -1,7 +1,5 @@
-import Delta from 'rich-text/lib/delta';
 import Emitter from '../core/emitter';
 import Module from '../core/module';
-import extend from 'extend';
 
 
 class UndoManager extends Module {

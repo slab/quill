@@ -1,4 +1,3 @@
-import Parchment from 'parchment';
 import Embed from './embed';
 
 

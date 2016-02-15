@@ -1,13 +1,13 @@
 import extend from 'extend';
+import Module from '../core/module';
 import logger from '../core/logger';
 
 let debug = logger('quill:toolbar');
 
 
-class Toolbar {
-  constructor(quill, options = {}) {
-    this.quill = quill;
-    this.options = extend({}, Toolbar.DEFAULTS, options);
+class Toolbar extends Module {
+  constructor(quill, options) {
+    super(quill, options);
     if (typeof this.options.container === 'string') {
       this.options.container = document.querySelector(this.options.container);
     }
