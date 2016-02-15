@@ -23,7 +23,7 @@ class Selection {
     this.emitter = emitter;
     this.scroll = scroll;
     this.root = this.scroll.domNode;
-    this.cursor = Parchment.create('cursor');
+    this.cursor = Parchment.create('cursor', this);
     this.lastRange = this.savedRange = new Range(0, 0);
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
       this.root.addEventListener(eventName, this.update.bind(this, Emitter.sources.USER));
@@ -52,6 +52,7 @@ class Selection {
   format(format, value) {
     this.scroll.update();
     let nativeRange = this.getNativeRange();
+    if (nativeRange != null) nativeRange = nativeRange.native;  // TODO remove
     if (nativeRange == null || !nativeRange.collapsed || Parchment.query(format, Parchment.Scope.BLOCK)) return;
     if (nativeRange.startContainer !== this.cursor.textNode) {
       let blot = Parchment.find(nativeRange.startContainer, false);
@@ -116,13 +117,35 @@ class Selection {
         !(nativeRange.endContainer.compareDocumentPosition(this.root) & Node.DOCUMENT_POSITION_CONTAINS)) {
       return null;
     }
-    return nativeRange;
+    if (nativeRange == null) return null;
+    let range = {
+      start: { node: nativeRange.startContainer, offset: nativeRange.startOffset },
+      end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },
+      native: nativeRange
+    };
+    [range.start, range.end].forEach(function(position) {
+      let node = position.node, offset = position.offset;
+      while (!(node instanceof Text) && node.childNodes.length > 0) {
+        if (node.childNodes.length > offset) {
+          node = node.childNodes[offset];
+          offset = 0;
+        } else if (node.childNodes.length === offset) {
+          node = node.lastChild;
+          offset = node instanceof Text ? node.data.length : node.childNodes.length;
+        } else {
+          break;
+        }
+      }
+      position.node = node, position.offset = offset;
+    });
+    return range;
   }
 
   getRange() {
     if (!this.checkFocus()) return [null, null];
     let nativeRange = this.getNativeRange();
     if (nativeRange == null) return [null, null];
+    nativeRange = nativeRange.native; // TODO remove
     let positions = [[nativeRange.startContainer, nativeRange.startOffset]];
     if (!nativeRange.collapsed) {
       positions.push([nativeRange.endContainer, nativeRange.endOffset]);
@@ -167,6 +190,7 @@ class Selection {
     if (startNode != null) {
       if (!this.checkFocus()) this.root.focus();
       let nativeRange = this.getNativeRange();
+      if (nativeRange != null) nativeRange = nativeRange.native;  // TODO remove
       if (nativeRange == null ||
           startNode !== nativeRange.startContainer || startOffset !== nativeRange.startOffset ||
           endNode !== nativeRange.endContainer || endOffset !== nativeRange.endOffset) {

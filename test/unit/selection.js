@@ -55,6 +55,14 @@ describe('Selection', function() {
       expect(range.end).toEqual(2);
     });
 
+    fit('end of line', function() {
+      let selection = this.initialize(Selection, '<p>0</p>');
+      selection.setNativeRange(this.container.firstChild.firstChild, 1);
+      let [range, ] = selection.getRange();
+      expect(range.start).toEqual(1);
+      expect(range.end).toEqual(1);
+    });
+
     it('text node', function() {
       let selection = this.initialize(Selection, '<p>0123</p>');
       selection.setNativeRange(this.container.firstChild.firstChild, 1);
