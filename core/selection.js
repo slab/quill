@@ -52,17 +52,16 @@ class Selection {
   format(format, value) {
     this.scroll.update();
     let nativeRange = this.getNativeRange();
-    if (nativeRange != null) nativeRange = nativeRange.native;  // TODO remove
-    if (nativeRange == null || !nativeRange.collapsed || Parchment.query(format, Parchment.Scope.BLOCK)) return;
-    if (nativeRange.startContainer !== this.cursor.textNode) {
-      let blot = Parchment.find(nativeRange.startContainer, false);
+    if (nativeRange == null || !nativeRange.native.collapsed || Parchment.query(format, Parchment.Scope.BLOCK)) return;
+    if (nativeRange.start.node !== this.cursor.textNode) {
+      let blot = Parchment.find(nativeRange.start.node, false);
       if (blot == null) return;
       // TODO Give blot ability to not split
       if (blot instanceof Parchment.Leaf) {
-        let after = blot.split(nativeRange.startOffset);
+        let after = blot.split(nativeRange.start.offset);
         blot.parent.insertBefore(this.cursor, after);
       } else {
-        blot.insertBefore(this.cursor, Parchment.find(nativeRange.startContainer[nativeRange.startOffset]));
+        blot.insertBefore(this.cursor, nativeRange.start.node);  // Should never happen
       }
     }
     this.cursor.format(format, value);
@@ -143,30 +142,25 @@ class Selection {
 
   getRange() {
     if (!this.checkFocus()) return [null, null];
-    let nativeRange = this.getNativeRange();
-    if (nativeRange == null) return [null, null];
-    nativeRange = nativeRange.native; // TODO remove
-    let positions = [[nativeRange.startContainer, nativeRange.startOffset]];
-    if (!nativeRange.collapsed) {
-      positions.push([nativeRange.endContainer, nativeRange.endOffset]);
+    let range = this.getNativeRange();
+    if (range == null) return [null, null];
+    let positions = [[range.start.node, range.start.offset]];
+    if (!range.native.collapsed) {
+      positions.push([range.end.node, range.end.offset]);
     }
     let indexes = positions.map((position) => {
-      let [container, offset] = position;
-      if (container.childNodes.length > offset) {
-        let child = Parchment.find(container.childNodes[offset]);
-        return child.offset(this.scroll);
-      }
-      let blot = Parchment.find(container, true);
+      let [node, offset] = position;
+      let blot = Parchment.find(node, true);
       let index = blot.offset(this.scroll);
       if (offset === 0) {
         return index;
       } else if (blot instanceof Parchment.Container) {
         return index + blot.length();
       } else {
-        return index + blot.index(container, offset);
+        return index + blot.index(node, offset);
       }
     });
-    return [new Range(Math.min(...indexes), Math.max(...indexes)), nativeRange];
+    return [new Range(Math.min(...indexes), Math.max(...indexes)), range];
   }
 
   scrollIntoView() {
@@ -190,10 +184,9 @@ class Selection {
     if (startNode != null) {
       if (!this.checkFocus()) this.root.focus();
       let nativeRange = this.getNativeRange();
-      if (nativeRange != null) nativeRange = nativeRange.native;  // TODO remove
       if (nativeRange == null ||
-          startNode !== nativeRange.startContainer || startOffset !== nativeRange.startOffset ||
-          endNode !== nativeRange.endContainer || endOffset !== nativeRange.endOffset) {
+          startNode !== nativeRange.start.node || startOffset !== nativeRange.start.offset ||
+          endNode !== nativeRange.end.node || endOffset !== nativeRange.end.offset) {
         let range = document.createRange();
         range.setStart(startNode, startOffset);
         range.setEnd(endNode, endOffset);
@@ -230,7 +223,7 @@ class Selection {
       this.savedRange = this.lastRange;
     }
     if (!equal(oldRange, this.lastRange)) {
-      if (nativeRange != null && nativeRange.collapsed && nativeRange.startContainer !== this.cursor.textNode) {
+      if (nativeRange != null && nativeRange.native.collapsed && nativeRange.start.node !== this.cursor.textNode) {
         this.cursor.detach();
       }
       if (source === Emitter.sources.SILENT) return;
