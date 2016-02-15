@@ -1,5 +1,4 @@
-import Quill from './core/quill';
-import Parchment from 'parchment';
+import Quill from './core';
 
 import { AlignClass } from './formats/align';
 import { BackgroundClass } from './formats/background';
@@ -19,18 +18,9 @@ import { SizeClass } from './formats/size';
 import StrikeFormat from './formats/strike';
 import UnderlineFormat from './formats/underline';
 
-import BlockBlot from './blots/block';
-import BreakBlot from './blots/break';
-import CursorBlot from './blots/cursor';
-import InlineBlot from './blots/inline';
-import ScrollBlot from './blots/scroll';
-
-import ClipboardModule from './modules/clipboard';
 // import ImageModule, { ImageBlot } from './modules/image';
-import KeyboardModule from './modules/keyboard';
 // import LinkModule, { LinkBlot } from './modules/link';
 import ToolbarModule from './modules/toolbar';
-import UndoManagerModule from './modules/undo-manager';
 
 import SnowTheme from './themes/snow';
 
@@ -54,21 +44,9 @@ Quill.register(SizeClass);
 Quill.register(StrikeFormat);
 Quill.register(UnderlineFormat);
 
-Quill.register(BlockBlot);
-Quill.register(ListItem);
-Quill.register(BreakBlot);
-Quill.register(CursorBlot);
-Quill.register(InlineBlot);
-Quill.register(ScrollBlot);
-Quill.register(Parchment.Text);
-
-Quill.register('clipboard', ClipboardModule);
 // Quill.register('image', ImageModule);
-Quill.register('keyboard', KeyboardModule);
 // Quill.register('link', LinkModule);
 Quill.register('toolbar', ToolbarModule);
-Quill.register('undo-manager', UndoManagerModule);
-
 
 Quill.register('snow', SnowTheme);
 

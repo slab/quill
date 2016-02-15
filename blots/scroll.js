@@ -69,6 +69,7 @@ class Scroll extends Parchment.Scroll {
   }
 }
 Scroll.blotName = 'scroll';
+Scroll.className = 'ql-editor';
 Scroll.child = 'block';
 Scroll.tagName = 'DIV';
 

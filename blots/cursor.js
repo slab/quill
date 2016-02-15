@@ -5,7 +5,6 @@ import Embed from './embed';
 class Cursor extends Embed {
   constructor(domNode) {
     super(domNode);
-    this.domNode.classList.add(Parchment.PREFIX + 'cursor');
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
     this._length = 0;
@@ -62,6 +61,7 @@ class Cursor extends Embed {
   }
 }
 Cursor.blotName = 'cursor';
+Cursor.className = 'ql-cursor';
 Cursor.tagName = 'span';
 Cursor.CONTENTS = "\uFEFF";   // Zero width space
 

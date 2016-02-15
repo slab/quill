@@ -2,7 +2,6 @@ import Delta from 'rich-text/lib/delta';
 import Editor from './editor';
 import Emitter from './emitter';
 import Parchment from 'parchment';
-import Scroll from '../blots/scroll';
 import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';

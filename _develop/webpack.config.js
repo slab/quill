@@ -58,12 +58,12 @@ module.exports = {
     stats: {
       assets: false,
       chunks: false,
-      errors: true,
       errorDetails: true,
-      warnings: true,
+      errors: true,
       hash: false,
       timings: false,
-      version: false
+      version: false,
+      warnings: true
     }
   }
 };
