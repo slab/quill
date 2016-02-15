@@ -4,7 +4,6 @@ import Emitter from './emitter';
 class Theme {
   constructor(quill) {
     this.quill = quill;
-    this.quill.container.classList.add('ql-container');
   }
 
   onModuleLoad(name, callback) {

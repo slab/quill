@@ -10,6 +10,9 @@ class Toolbar extends Module {
     super(quill, options);
     if (typeof this.options.container === 'string') {
       this.options.container = document.querySelector(this.options.container);
+    } else if (Array.isArray(this.options.container)) {
+      this.options.container = this.quill.addContainer('ql-toolbar', this.quill.root);
+      addControls(this.options.container);
     }
     if (this.options.container == null) {
       return debug.error('Container required for toolbar', this.options);
@@ -74,10 +77,55 @@ class Toolbar extends Module {
     });
   }
 }
-Toolbar.moduleName = 'toolbar';
 Toolbar.DEFAULTS = {
   container: null
 };
 
 
-export { Toolbar as default };
+function addControls(container, controls) {
+  controls.forEach(function(control) {
+    if (Array.isArray(control)) {
+      let group = document.createElement('span');
+      group.classList.add('ql-formats');
+      addControls(group, control);
+      container.appendChild(group);
+    } else if (typeof control === 'string') {
+      addButton(container, control);
+    } else {
+      let format = Object.keys(control)[0];
+      let value = control[format];
+      if (typeof value === 'string') {
+        addButton(container, format, value);
+      } else {
+        addSelect(container, format, value);
+      }
+    }
+  });
+}
+
+function addButton(container, format, value) {
+  let input = document.createElement('button');
+  input.classList.add('ql-' + format);
+  if (value != null) {
+    input.setAttribute('data-value', value);
+  }
+  container.appendChild(input);
+}
+
+function addSelect(container, format, values) {
+  let input = document.createElement('select');
+  input.classList.add('ql-' + format);
+  values.forEach(function(value) {
+    let option = document.createElement('option');
+    if (value !== false) {
+      option.setAttribute('value', value);
+    } else {
+      option.setAttribute('selected', 'selected');
+    }
+    input.appendChild(option);
+  });
+  container.appendChild(input);
+}
+
+
+export { Toolbar as default, addControls };

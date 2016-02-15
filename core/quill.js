@@ -43,6 +43,7 @@ class Quill {
     options = extend({}, Quill.DEFAULTS, options);
     options.modules = moduleOptions;
     let html = this.container.innerHTML;
+    this.container.classList.add('ql-container');
     this.container.innerHTML = '';
     this.modules = {};
     // TODO scroll will reset innerHTML as well, do not do twice
@@ -72,8 +73,7 @@ class Quill {
     }
   }
 
-  addContainer(className, before = false) {
-    let refNode = before ? this.root : null;
+  addContainer(className, refNode = null) {
     let container = document.createElement('div');
     container.classList.add(className);
     this.container.insertBefore(container, refNode);

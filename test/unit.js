@@ -15,6 +15,7 @@ import AttributorTests from './unit/formats/attributor';
 import HeaderTests from './unit/formats/header';
 import ListTests from './unit/formats/list';
 
+import ToolbarTests from './unit/modules/toolbar';
 import UndoManagerTests from './unit/undo-manager';
 
 
