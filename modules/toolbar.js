@@ -56,7 +56,9 @@ class Toolbar extends Module {
   }
 
   update() {
-    let formats = this.quill.getFormat();
+    let range = this.quill.getSelection();
+    if (range == null) return;
+    let formats = this.quill.getFormat(range);
     this.controls.forEach(function(pair) {
       let [format, input] = pair;
       if (input.tagName === 'SELECT') {
