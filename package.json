@@ -29,7 +29,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "build": "webpack --config _develop/webpack.config.js",
+    "build": "webpack --config _develop/webpack.config.js --devtool hidden-source-map",
     "start": "foreman start -f _develop/procfile",
     "test": "karma start _develop/karma.config.js --single-run --browsers Chrome",
     "travis": "karma start _develop/karma.config.js --single-run --reporters dots,saucelabs"
