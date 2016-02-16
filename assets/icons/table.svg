@@ -1,1 +1,15 @@
-<svg id="Table" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><defs><style>.cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}.cls-3{opacity:0.4;}</style></defs><title>Icons-</title><rect class="cls-1" x="3" y="3" width="12" height="12"/><rect class="cls-2" x="5" y="5" width="3" height="2"/><rect class="cls-2" x="9" y="5" width="4" height="2"/><g class="cls-3"><rect class="cls-2" x="5" y="8" width="3" height="2"/><rect class="cls-2" x="9" y="8" width="4" height="2"/><rect class="cls-2" x="5" y="11" width="3" height="2"/><rect class="cls-2" x="9" y="11" width="4" height="2"/></g></svg>
+<svg id="Table" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}.cls-3{opacity:0.4;}
+  </style>
+</defs>
+<rect class="cls-1" height="12" width="12" x="3" y="3"></rect>
+<rect class="cls-2" height="2" width="3" x="5" y="5"></rect>
+<rect class="cls-2" height="2" width="4" x="9" y="5"></rect>
+<g class="cls-3">
+  <rect class="cls-2" height="2" width="3" x="5" y="8"></rect>
+  <rect class="cls-2" height="2" width="4" x="9" y="8"></rect>
+  <rect class="cls-2" height="2" width="3" x="5" y="11"></rect>
+  <rect class="cls-2" height="2" width="4" x="9" y="11"></rect>
+</g></svg>

@@ -1,1 +1,9 @@
-<svg id="Text_Align_Justify" data-name="Text Align Justify" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><defs><style>.cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title>Icons-</title><line class="cls-1" x1="15" y1="9" x2="3" y2="9"/><line class="cls-1" x1="15" y1="14" x2="3" y2="14"/><line class="cls-1" x1="15" y1="4" x2="3" y2="4"/></svg>
+<svg data-name="Text Align Justify" id="Text_Align_Justify" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}
+  </style>
+</defs>
+<line class="cls-1" x1="15" x2="3" y1="9" y2="9"></line>
+<line class="cls-1" x1="15" x2="3" y1="14" y2="14"></line>
+<line class="cls-1" x1="15" x2="3" y1="4" y2="4"></line></svg>

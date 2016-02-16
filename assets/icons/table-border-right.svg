@@ -1,1 +1,70 @@
-<svg id="Border_Right" data-name="Border Right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><defs><style>.cls-1{opacity:0.4;}.cls-2{fill:#444;}.cls-3{fill:none;stroke:#444;stroke-miterlimit:10;stroke-width:2px;}</style></defs><title>Icons-</title><g class="cls-1"><rect class="cls-2" x="2" y="2" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="5" y="2" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="8" y="2" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="14" y="2" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="11" y="2" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="2" y="14" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="5" y="14" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="8" y="14" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="14" y="14" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="11" y="14" width="2" height="2"/></g><line class="cls-3" x1="15" y1="16" x2="15" y2="2"/><g class="cls-1"><rect class="cls-2" x="2" y="11" width="2" height="2" transform="translate(-9 15) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="2" y="8" width="2" height="2" transform="translate(-6 12) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="2" y="5" width="2" height="2" transform="translate(-3 9) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="14" y="11" width="2" height="2" transform="translate(3 27) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="14" y="8" width="2" height="2" transform="translate(6 24) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="11" y="8" width="2" height="2" transform="translate(3 21) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="8" y="8" width="2" height="2" transform="translate(0 18) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="5" y="8" width="2" height="2" transform="translate(-3 15) rotate(-90)"/></g><g class="cls-1"><rect class="cls-2" x="8" y="11" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="8" y="5" width="2" height="2"/></g><g class="cls-1"><rect class="cls-2" x="14" y="5" width="2" height="2" transform="translate(9 21) rotate(-90)"/></g></svg>
+<svg data-name="Border Right" id="Border_Right" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+  .cls-1{opacity:0.4;}.cls-2{fill:#444;}.cls-3{fill:none;stroke:#444;stroke-miterlimit:10;stroke-width:2px;}
+  </style>
+</defs>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="2" y="2"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="5" y="2"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="8" y="2"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="14" y="2"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="11" y="2"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="2" y="14"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="5" y="14"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="8" y="14"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="14" y="14"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="11" y="14"></rect>
+</g>
+<line class="cls-3" x1="15" x2="15" y1="16" y2="2"></line>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(-9 15) rotate(-90)" width="2" x="2" y="11"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(-6 12) rotate(-90)" width="2" x="2" y="8"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(-3 9) rotate(-90)" width="2" x="2" y="5"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(3 27) rotate(-90)" width="2" x="14" y="11"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(6 24) rotate(-90)" width="2" x="14" y="8"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(3 21) rotate(-90)" width="2" x="11" y="8"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(0 18) rotate(-90)" width="2" x="8" y="8"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(-3 15) rotate(-90)" width="2" x="5" y="8"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="8" y="11"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" width="2" x="8" y="5"></rect>
+</g>
+<g class="cls-1">
+  <rect class="cls-2" height="2" transform="translate(9 21) rotate(-90)" width="2" x="14" y="5"></rect>
+</g></svg>

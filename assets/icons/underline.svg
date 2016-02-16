@@ -1,1 +1,8 @@
-<svg id="Underline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><defs><style>.cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}</style></defs><title>Icons-</title><path class="cls-1" d="M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3"/><rect class="cls-2" x="3" y="15" width="12" height="1" rx="0.5" ry="0.5"/></svg>
+<svg id="Underline" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}
+  </style>
+</defs>
+<path class="cls-1" d="M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3"></path>
+<rect class="cls-2" height="1" rx="0.5" ry="0.5" width="12" x="3" y="15"></rect></svg>

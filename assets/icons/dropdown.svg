@@ -1,1 +1,8 @@
-<svg id="Dropdown" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><defs><style>.cls-1{fill:#444;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title>Icons-</title><polygon class="cls-1" points="7 11 9 13 11 11 7 11"/><polygon class="cls-1" points="7 7 9 5 11 7 7 7"/></svg>
+<svg id="Dropdown" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+  .cls-1{fill:#444;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}
+  </style>
+</defs>
+<polygon class="cls-1" points="7 11 9 13 11 11 7 11"></polygon>
+<polygon class="cls-1" points="7 7 9 5 11 7 7 7"></polygon></svg>

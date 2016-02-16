@@ -1,1 +1,9 @@
-<svg id="Italic" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><defs><style>.cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title>Icons-</title><line class="cls-1" x1="7" y1="4" x2="13" y2="4"/><line class="cls-1" x1="5" y1="14" x2="11" y2="14"/><line class="cls-1" x1="8" y1="14" x2="10" y2="4"/></svg>
+<svg id="Italic" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>
+  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}
+  </style>
+</defs>
+<line class="cls-1" x1="7" x2="13" y1="4" y2="4"></line>
+<line class="cls-1" x1="5" x2="11" y1="14" y2="14"></line>
+<line class="cls-1" x1="8" x2="10" y1="14" y2="4"></line></svg>
