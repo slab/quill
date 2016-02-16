@@ -1,0 +1,13 @@
+<svg viewbox="0 0 18 18">
+  <g class="ql-fill ql-transparent">
+    <path d="M11,11h4V9a1,1,0,0,0-1-1H11v3Z"></path>
+    <path d="M10,11V8H7A1,1,0,0,0,6,9v2h4Z"></path>
+    <path d="M10,12H6v2a1,1,0,0,0,1,1h3V12Z"></path>
+    <path d="M11,12v3h3a1,1,0,0,0,1-1V12H11Z"></path>
+    <path d="M11,6h3a1,1,0,0,0,1-1V3a1,1,0,0,0-1-1H11V6Z"></path>
+    <path d="M7,6h3V2H7A1,1,0,0,0,6,3V5A1,1,0,0,0,7,6Z"></path>
+  </g>
+  <path class="ql-fill" d="M5,6H4V5a0.5,0.5,0,0,0-.854-0.354l-2,2a0.5,0.5,0,0,0,0,.707l2,2A0.5,0.5,0,0,0,3.5,9.5a0.494,0.494,0,0,0,.191-0.038A0.5,0.5,0,0,0,4,9V8H5A1,1,0,0,0,5,6Z"></path>
+  <path class="ql-fill" d="M15,5H12V9h3a1,1,0,0,0,1-1V6A1,1,0,0,0,15,5Z"></path>
+  <path class="ql-fill" d="M11,5H8A1,1,0,0,0,7,6V8A1,1,0,0,0,8,9h3V5Z"></path>
+</svg>
