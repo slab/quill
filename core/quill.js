@@ -91,7 +91,6 @@ class Quill {
       // Allow addModule('toolbar', '#toolbar');
       options = { container: options };
     }
-    options = extend(moduleClass.DEFAULTS || {}, this.theme.constructor.OPTIONS[name], options);
     this.modules[name] = new moduleClass(this, options);
     this.emitter.emit(Emitter.events.MODULE_LOAD, name, this.modules[name]);
     return this.modules[name];

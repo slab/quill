@@ -10,7 +10,7 @@ module.exports = function(config) {
     port: 9876,
 
     files: [
-      { pattern: 'dist/quill.css', nocache: true },
+      { pattern: 'dist/quill.snow.css', nocache: true },
       { pattern: 'dist/unit.js', nocache: true },
       { pattern: 'dist/*.map', included: false, served: true, nocache: true },
       { pattern: 'assets/favicon.png', included: false, served: true }

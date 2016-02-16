@@ -1,9 +1,5 @@
-<svg data-name="Decrease Text Size" id="Decrease_Text_Size" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}
-  </style>
-</defs>
-<polyline class="cls-1" points="3.5 14 7 4 10.5 14"></polyline>
-<line class="cls-1" x1="9.45" x2="4.55" y1="11" y2="11"></line>
-<rect class="cls-2" height="5" rx="0.5" ry="0.5" transform="translate(20 -7) rotate(90)" width="1" x="13" y="4"></rect></svg>
+<svg viewbox="0 0 18 18">
+  <polyline class="ql-stroke" points="3.5 14 7 4 10.5 14"></polyline>
+  <line class="ql-stroke" x1="9.45" x2="4.55" y1="11" y2="11"></line>
+  <rect class="ql-fill" height="5" rx="0.5" ry="0.5" transform="translate(20 -7) rotate(90)" width="1" x="13" y="4"></rect>
+</svg>

@@ -18,5 +18,7 @@ import ListTests from './unit/formats/list';
 import ToolbarTests from './unit/modules/toolbar';
 import UndoManagerTests from './unit/undo-manager';
 
+import SnowTests from './unit/themes/snow';
+
 
 export default Quill;

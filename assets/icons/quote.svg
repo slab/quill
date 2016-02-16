@@ -1,10 +1,6 @@
-<svg id="Quote" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1,.cls-2{fill:#444;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill-rule:evenodd;}
-  </style>
-</defs>
-<rect class="cls-1" height="3" width="3" x="4" y="5"></rect>
-<rect class="cls-1" height="3" width="3" x="11" y="5"></rect>
-<path class="cls-2" d="M7,8c0,4.031-3,5-3,5"></path>
-<path class="cls-2" d="M14,8c0,4.031-3,5-3,5"></path></svg>
+<svg viewbox="0 0 18 18">
+  <rect class="ql-fill ql-stroke" height="3" width="3" x="4" y="5"></rect>
+  <rect class="ql-fill ql-stroke" height="3" width="3" x="11" y="5"></rect>
+  <path class="ql-even ql-fill ql-stroke" d="M7,8c0,4.031-3,5-3,5"></path>
+  <path class="ql-even ql-fill ql-stroke" d="M14,8c0,4.031-3,5-3,5"></path>
+</svg>

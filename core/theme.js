@@ -17,7 +17,6 @@ class Theme {
     });
   }
 }
-Theme.OPTIONS = {};
 
 
 export default Theme;

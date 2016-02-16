@@ -1,10 +1,6 @@
-<svg data-name="Speech Dictation" id="Speech_Dictation" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}
-  </style>
-</defs>
-<path class="cls-1" d="M5,8a4,4,0,0,0,8,0"></path>
-<line class="cls-1" x1="6" x2="12" y1="15" y2="15"></line>
-<line class="cls-1" x1="9" x2="9" y1="12" y2="15"></line>
-<rect class="cls-2" height="8" rx="2" ry="2" width="4" x="7" y="2"></rect></svg>
+<svg viewbox="0 0 18 18">
+  <path class="ql-stroke" d="M5,8a4,4,0,0,0,8,0"></path>
+  <line class="ql-stroke" x1="6" x2="12" y1="15" y2="15"></line>
+  <line class="ql-stroke" x1="9" x2="9" y1="12" y2="15"></line>
+  <rect class="ql-fill" height="8" rx="2" ry="2" width="4" x="7" y="2"></rect>
+</svg>

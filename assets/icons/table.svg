@@ -1,15 +1,11 @@
-<svg id="Table" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#444;}.cls-3{opacity:0.4;}
-  </style>
-</defs>
-<rect class="cls-1" height="12" width="12" x="3" y="3"></rect>
-<rect class="cls-2" height="2" width="3" x="5" y="5"></rect>
-<rect class="cls-2" height="2" width="4" x="9" y="5"></rect>
-<g class="cls-3">
-  <rect class="cls-2" height="2" width="3" x="5" y="8"></rect>
-  <rect class="cls-2" height="2" width="4" x="9" y="8"></rect>
-  <rect class="cls-2" height="2" width="3" x="5" y="11"></rect>
-  <rect class="cls-2" height="2" width="4" x="9" y="11"></rect>
-</g></svg>
+<svg viewbox="0 0 18 18">
+  <rect class="ql-stroke" height="12" width="12" x="3" y="3"></rect>
+  <rect class="ql-fill" height="2" width="3" x="5" y="5"></rect>
+  <rect class="ql-fill" height="2" width="4" x="9" y="5"></rect>
+  <g class="ql-fill ql-transparent">
+    <rect height="2" width="3" x="5" y="8"></rect>
+    <rect height="2" width="4" x="9" y="8"></rect>
+    <rect height="2" width="3" x="5" y="11"></rect>
+    <rect height="2" width="4" x="9" y="11"></rect>
+  </g>
+</svg>

@@ -1,11 +1,7 @@
-<svg data-name="Text Direction Right" id="Text_Direction_Right" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1,.cls-2{fill:#444;}.cls-1{stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}
-  </style>
-</defs>
-<polygon class="cls-1" points="15 12 13 10 15 8 15 12"></polygon>
-<line class="cls-1" x1="9" x2="5" y1="4" y2="4"></line>
-<path class="cls-2" d="M5,3A3,3,0,0,0,5,9H6V3H5Z"></path>
-<rect class="cls-2" height="11" width="1" x="5" y="4"></rect>
-<rect class="cls-2" height="11" width="1" x="7" y="4"></rect></svg>
+<svg viewbox="0 0 18 18">
+  <polygon class="ql-stroke ql-fill" points="15 12 13 10 15 8 15 12"></polygon>
+  <line class="ql-stroke ql-fill" x1="9" x2="5" y1="4" y2="4"></line>
+  <path class="ql-fill" d="M5,3A3,3,0,0,0,5,9H6V3H5Z"></path>
+  <rect class="ql-fill" height="11" width="1" x="5" y="4"></rect>
+  <rect class="ql-fill" height="11" width="1" x="7" y="4"></rect>
+</svg>

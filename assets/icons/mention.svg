@@ -1,8 +1,4 @@
-<svg data-name="At Mention" id="At_Mention" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}
-  </style>
-</defs>
-<circle class="cls-1" cx="9" cy="9" r="2"></circle>
-<path class="cls-1" d="M11,14.651A6,6,0,1,1,15,9a2,2,0,0,1-4,0V7"></path></svg>
+<svg viewbox="0 0 18 18">
+  <circle class="ql-stroke" cx="9" cy="9" r="2"></circle>
+  <path class="ql-stroke" d="M11,14.651A6,6,0,1,1,15,9a2,2,0,0,1-4,0V7"></path>
+</svg>

@@ -1,8 +1,4 @@
-<svg id="Undo" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{fill:#444;}.cls-1,.cls-2{stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:none;}
-  </style>
-</defs>
-<polygon class="cls-1" points="6 10 4 12 2 10 6 10"></polygon>
-<path class="cls-2" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path></svg>
+<svg viewbox="0 0 18 18">
+  <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
+  <path class="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path>
+</svg>

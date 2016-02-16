@@ -7,12 +7,15 @@ let debug = logger('quill:toolbar');
 
 class Toolbar extends Module {
   constructor(quill, options) {
+    if (Array.isArray(options)) {
+      let container = document.createElement('div');
+      addControls(container, options);
+      quill.container.parentNode.insertBefore(container, quill.container);
+      options = { container: container };
+    }
     super(quill, options);
     if (typeof this.options.container === 'string') {
       this.options.container = document.querySelector(this.options.container);
-    } else if (Array.isArray(this.options.container)) {
-      this.options.container = this.quill.addContainer('ql-toolbar', this.quill.root);
-      addControls(this.options.container);
     }
     if (this.options.container == null) {
       return debug.error('Container required for toolbar', this.options);

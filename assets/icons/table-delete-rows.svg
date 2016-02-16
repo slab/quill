@@ -1,13 +1,9 @@
-<svg data-name="Delete Rows" id="Delete_Rows" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{opacity:0.4;}.cls-2{fill:#444;}.cls-2,.cls-3{stroke:#444;stroke-linecap:round;stroke-linejoin:round;}.cls-3{fill:none;}
-  </style>
-</defs>
-<g class="cls-1">
-  <rect class="cls-2" height="3" rx="0.5" ry="0.5" width="7" x="4.5" y="2.5"></rect>
-  <rect class="cls-2" height="3" rx="0.5" ry="0.5" width="7" x="4.5" y="12.5"></rect>
-</g>
-<rect class="cls-2" height="3" rx="0.5" ry="0.5" width="7" x="8.5" y="7.5"></rect>
-<line class="cls-3" x1="6.5" x2="3.5" y1="7.5" y2="10.5"></line>
-<line class="cls-3" x1="3.5" x2="6.5" y1="7.5" y2="10.5"></line></svg>
+<svg viewbox="0 0 18 18">
+  <g class="ql-fill ql-stroke ql-thin ql-transparent">
+    <rect height="3" rx="0.5" ry="0.5" width="7" x="4.5" y="2.5"></rect>
+    <rect height="3" rx="0.5" ry="0.5" width="7" x="4.5" y="12.5"></rect>
+  </g>
+  <rect class="ql-fill ql-stroke ql-thin" height="3" rx="0.5" ry="0.5" width="7" x="8.5" y="7.5"></rect>
+  <line class="ql-stroke ql-thin" x1="6.5" x2="3.5" y1="7.5" y2="10.5"></line>
+  <line class="ql-stroke ql-thin" x1="3.5" x2="6.5" y1="7.5" y2="10.5"></line>
+</svg>

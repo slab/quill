@@ -1,9 +1,5 @@
-<svg id="Image" viewbox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>
-  .cls-1{fill:none;stroke:#444;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2,.cls-3{fill:#444;}.cls-3{fill-rule:evenodd;}
-  </style>
-</defs>
-<rect class="cls-1" height="10" width="12" x="3" y="4"></rect>
-<circle class="cls-2" cx="6" cy="7" r="1"></circle>
-<polyline class="cls-3" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline></svg>
+<svg viewbox="0 0 18 18">
+  <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
+  <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
+  <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
+</svg>
