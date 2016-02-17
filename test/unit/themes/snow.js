@@ -51,7 +51,7 @@ let icons = {
   'table-delete-cells'   : require('../../../assets/icons/table-delete-cells.svg'),
   'table-delete-columns' : require('../../../assets/icons/table-delete-columns.svg'),
   'table-delete-rows'    : require('../../../assets/icons/table-delete-rows.svg'),
-  'table-insert-cells'    : require('../../../assets/icons/table-delete-cells.svg'),
+  'table-insert-cells'   : require('../../../assets/icons/table-delete-cells.svg'),
   'table-insert-columns' : require('../../../assets/icons/table-insert-columns.svg'),
   'table-insert-rows'    : require('../../../assets/icons/table-insert-rows.svg'),
   'table-merge-cells'    : require('../../../assets/icons/table-merge-cells.svg'),
@@ -68,10 +68,11 @@ describe('Themes', function() {
     it('icons', function() {
       this.container.classList.add('ql-snow');
       this.container.classList.add('ql-toolbar');
+      this.container.innerHTML = '<span class="ql-formats"></span>';
       Object.keys(icons).forEach((icon) => {
         let button = document.createElement('button');
         button.innerHTML = icons[icon];
-        this.container.appendChild(button);
+        this.container.firstChild.appendChild(button);
       });
     });
   });

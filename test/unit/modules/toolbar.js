@@ -6,8 +6,10 @@ describe('Toolbar', function() {
     it('single level', function() {
       addControls(this.container, ['bold', 'italic']);
       expect(this.container.innerHTML).toEqualHTML(`
-        <button class='ql-bold'></button>
-        <button class='ql-italic'></button>
+        <span class="ql-formats">
+          <button class='ql-bold'></button>
+          <button class='ql-italic'></button>
+        </span>
       `);
     });
 
@@ -28,20 +30,24 @@ describe('Toolbar', function() {
     it('button value', function() {
       addControls(this.container, ['bold', { header: '2' }]);
       expect(this.container.innerHTML).toEqualHTML(`
-        <button class="ql-bold"></button>
-        <button class="ql-header" data-value="2"></button>
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-header" data-value="2"></button>
+        </span>
       `);
     });
 
     it('select', function() {
       addControls(this.container, [{ size: ['10px', false, '18px', '32px'] }]);
       expect(this.container.innerHTML).toEqualHTML(`
-        <select class="ql-size">
-          <option value="10px"></option>
-          <option selected="selected"></option>
-          <option value="18px"></option>
-          <option value="32px"></option>
-        </select>
+        <span class="ql-formats">
+          <select class="ql-size">
+            <option value="10px"></option>
+            <option selected="selected"></option>
+            <option value="18px"></option>
+            <option value="32px"></option>
+          </select>
+        </span>
       `);
     });
 

@@ -85,25 +85,32 @@ Toolbar.DEFAULTS = {
 };
 
 
-function addControls(container, controls) {
-  controls.forEach(function(control) {
-    if (Array.isArray(control)) {
-      let group = document.createElement('span');
-      group.classList.add('ql-formats');
-      addControls(group, control);
-      container.appendChild(group);
-    } else if (typeof control === 'string') {
-      addButton(container, control);
-    } else {
-      let format = Object.keys(control)[0];
-      let value = control[format];
-      if (typeof value === 'string') {
-        addButton(container, format, value);
+function addControls(container, groups) {
+  if (!Array.isArray(groups[0])) {
+    groups = [groups];
+  }
+  groups.forEach(function(controls) {
+    let group = document.createElement('span');
+    group.classList.add('ql-formats');
+    controls.forEach(function(control) {
+      if (typeof control === 'string') {
+        addButton(group, control);
       } else {
-        addSelect(container, format, value);
+        let format = Object.keys(control)[0];
+        let value = control[format];
+        if (typeof value === 'string') {
+          addButton(group, format, value);
+        } else {
+          addSelect(group, format, value);
+        }
       }
-    }
+    });
+    container.appendChild(group);
   });
+}
+
+function addGroup(container, controls) {
+
 }
 
 function addButton(container, format, value) {
