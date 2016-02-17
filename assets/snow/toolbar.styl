@@ -1,43 +1,154 @@
-blackColor = #444
-blueColor = #06c
-grayColor = #ccc
-lightGrayColor = #ddd
-whiteColor = #fff
+controlHeight = 24px
+iconPadding = 3px
+
 
 .ql-toolbar.ql-snow
-  border: 1px solid grayColor
+  border: 1px solid borderColor
+  box-sizing: border-box
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
   padding: 8px
+
+  *
+    box-sizing: border-box
+
+  .ql-formats
+    display: inline-block
+    margin-right: 15px
+    vertical-align: middle
 
   button
     background: none
+    // background-color: yellow // TODO remove
     border: none
-    height: 24px
+    cursor: pointer
+    display: inline-block
+    float: left
+    height: controlHeight
     outline: none
-    padding: 3px
-    width: 24px
+    padding: iconPadding
 
-    .ql-stroke
-      fill: none
-      stroke: blackColor
-      stroke-linecap: round
-      stroke-linejoin: round
-      stroke-width: 2
-    .ql-stroke-mitter
-      fill: none
-      stroke: blackColor
-      stroke-mitterlimit: 10
-      stroke-width: 2
+    svg
+      height: 100%
 
-    .ql-empty
-      fill: none
-    .ql-even
-      fill-rule: evenodd
+  button:hover, button.ql-active,
+  .ql-picker-label:hover, .ql-picker-label.ql-active,
+  .ql-picker-item:hover, .ql-picker-item.ql-selected
+    color: activeColor
     .ql-fill, .ql-stroke.ql-fill
-      fill: blackColor
-    .ql-thin, .ql-stroke.ql-thin
-      stroke-width: 1
-    .ql-transparent
-      opacity: 0.4
+      fill: activeColor
+    .ql-stroke, .ql-stroke-mitter
+      stroke: activeColor
+
+  .ql-stroke
+    fill: none
+    stroke: darkColor
+    stroke-linecap: round
+    stroke-linejoin: round
+    stroke-width: 2
+  .ql-stroke-mitter
+    fill: none
+    stroke: darkColor
+    stroke-mitterlimit: 10
+    stroke-width: 2
+
+  .ql-empty
+    fill: none
+  .ql-even
+    fill-rule: evenodd
+  .ql-fill, .ql-stroke.ql-fill
+    fill: darkColor
+  .ql-thin, .ql-stroke.ql-thin
+    stroke-width: 1
+  .ql-transparent
+    opacity: 0.4
+
+  .ql-picker
+    // background-color: yellow    // TODO remove
+    color: darkColor
+    display: inline-block
+    float: left
+    font-size: 14px
+    font-weight: 500
+    height: controlHeight
+    position: relative
+    vertical-align: middle
+  .ql-picker-label
+    border: 1px solid transparent
+    cursor: pointer
+    display: inline-block
+    line-height: controlHeight - 4
+    padding-left: 8px
+    padding-right: 2px
+    position: relative
+    width: 100%
+    svg
+      float: right
+      height: 18px
+      margin-top: 2px
+  .ql-picker-label::before
+    vertical-align: middle
+  .ql-picker-options
+    background-color: whiteColor
+    border: 1px solid transparent
+    display: none
+    padding: 4px 8px
+    position: absolute
+    width: 100%
+    .ql-picker-item
+      cursor: pointer
+      display: block
+      padding-bottom: 5px
+      padding-top: 5px
+  .ql-picker.ql-expanded
+    .ql-picker-label
+      border-color: borderColor
+      color: borderColor
+      z-index: 2
+    .ql-picker-options
+      border-color: borderColor
+      box-shadow: rgba(0,0,0,0.2) 0 2px 8px
+      display: block
+      margin-top: -1px
+      z-index: 1
+    .ql-stroke
+      stroke: borderColor
+
+  .ql-picker.ql-font
+    width: 108px
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Sans Serif'
+    .ql-picker-label[data-value=serif]::before,
+    .ql-picker-item[data-value=serif]::before
+      content: 'Serif'
+    .ql-picker-label[data-value=monospace]::before,
+    .ql-picker-item[data-value=monospace]::before
+      content: 'Monospace'
+    .ql-picker-item[data-value=serif]::before
+      font-family: Georgia, Times New Roman, serif;
+    .ql-picker-item[data-value=monospace]::before
+      font-family: Monaco, Courier New, monospace;
+
+  .ql-picker.ql-size
+    width: 98px
+    .ql-picker-label::before,
+    .ql-picker-options > span::before
+      content: 'Normal'
+    .ql-picker-label[data-value=small]::before,
+    .ql-picker-item[data-value=small]::before
+      content: 'Small'
+    .ql-picker-label[data-value=large]::before,
+    .ql-picker-item[data-value=large]::before
+      content: 'Large'
+    .ql-picker-label[data-value=huge]::before,
+    .ql-picker-item[data-value=huge]::before
+      content: 'Huge'
+    .ql-picker-item[data-value=small]::before
+      font-size: 10px
+    .ql-picker-item[data-value=large]::before
+      font-size: 18px
+    .ql-picker-item[data-value=huge]::before
+      font-size: 32px
 
 .ql-toolbar.ql-snow + .ql-container.ql-snow
   border-top: 0px;

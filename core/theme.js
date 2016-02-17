@@ -4,15 +4,12 @@ import Emitter from './emitter';
 class Theme {
   constructor(quill) {
     this.quill = quill;
-  }
-
-  onModuleLoad(name, callback) {
-    if (this.quill.modules[name]) {   // Module already loaded
-      callback(this.quill.modules[name]);
-    }
-    this.quill.on(Emitter.events.MODULE_LOAD, function(moduleName, module) {
-      if (moduleName === name) {
-        return callback(module);
+    this.quill.on(Emitter.events.MODULE_LOAD, (name, module) => {
+      let capitalCase = name.split('-').map(function(word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join('');
+      if (typeof this['extend' + capitalCase] === 'function') {
+        this['extend' + capitalCase](module);
       }
     });
   }

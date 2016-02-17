@@ -2,6 +2,15 @@ import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
 import Picker from '../ui/picker';
 
+let icons = {
+  'bold'      : require('../assets/icons/bold.svg'),
+  'italic'    : require('../assets/icons/italic.svg'),
+  'image'     : require('../assets/icons/image.svg'),
+  'link'      : require('../assets/icons/link.svg'),
+  'strike'    : require('../assets/icons/strike.svg'),
+  'underline' : require('../assets/icons/underline.svg')
+};
+
 
 const COLORS = [
   "#000000", "#e60000", "#ff9900", "#ffff00", "#008A00", "#0066cc", "#9933ff",
@@ -22,8 +31,6 @@ class SnowTheme extends Theme {
         picker.close();
       });
     });
-    // TODO modules are never loaded before themes
-    this.onModuleLoad('toolbar', this.extendToolbar.bind(this));
   }
 
   extendToolbar(toolbar) {
@@ -56,10 +63,15 @@ class SnowTheme extends Theme {
         this.pickers.push(new Picker(select));
       }
     });
-    // [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
-    //   let format = 'bold';
-    //   button.innerHTML = icons[format];
-    // });
+    [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
+      let names = button.className.split(/\s+/);
+      for (let i in names) {
+        let format = names[i].slice('ql-'.length);
+        if (icons[format] != null) {
+          button.innerHTML = icons[format];
+        }
+      }
+    });
   }
 }
 

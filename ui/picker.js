@@ -1,3 +1,6 @@
+import DropdownIcon from '../assets/icons/dropdown.svg';
+
+
 class Picker {
   constructor(select) {
     this.select = select;
@@ -6,11 +9,6 @@ class Picker {
     this.container.classList.add('ql-picker');
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    document.body.addEventListener('click', (evt) => {
-      if (evt.target !== this.label) {
-        this.close();
-      }
-    });
     this.label.addEventListener('click', () => {
       this.container.classList.toggle('ql-expanded');
     });
@@ -28,13 +26,11 @@ class Picker {
 
   buildItem(picker, option, index) {
     let item = document.createElement('span');
-    item.setAttribute('data-value', option.getAttribute('value'));
     item.classList.add('ql-picker-item');
-    item.textContent = option.textContent;
-    item.addEventListener('click', () => {
-      this.selectItem(item, true);
-      this.close();
-    });
+    if (option.hasAttribute('value')) {
+      item.setAttribute('data-value', option.getAttribute('value'));
+    }
+    item.addEventListener('click', this.selectItem.bind(this, item, true));
     return item;
   }
 
@@ -66,19 +62,17 @@ class Picker {
     if (item != null) {
       let value = item.getAttribute('data-value');
       item.classList.add('ql-selected');
-      this.label.textContent = item.textContent;
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      this.label.setAttribute('data-value', value);
+      this.label.setAttribute('data-value', value || '');
       if (trigger) {
         this.select.dispatchEvent(new Event('change'));
       }
     } else {
-      this.label.innerHTML = '&nbsp;';
       this.label.removeAttribute('data-value');
     }
   }
 }
-Picker.TEMPLATE = '<span class="ql-picker-label"></span><span class="ql-picker-options"></span>';
+Picker.TEMPLATE = `<span class="ql-picker-label">${DropdownIcon}</span><span class="ql-picker-options"></span>`;
 
 
 export default Picker;
