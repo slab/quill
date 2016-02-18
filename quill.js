@@ -1,10 +1,10 @@
 import Quill from './core';
 
 import { AlignClass } from './formats/align';
-import { BackgroundClass } from './formats/background';
+import { BackgroundStyle } from './formats/background';
 import BoldFormat from './formats/bold';
 import CodeFormat, { CodeInline } from './formats/code';
-import { ColorClass } from './formats/color';
+import { ColorStyle } from './formats/color';
 import { DirectionClass } from './formats/direction';
 import { FontClass } from './formats/font';
 import HeaderFormat from './formats/header';
@@ -26,11 +26,11 @@ import SnowTheme from './themes/snow';
 
 
 Quill.register(AlignClass);
-Quill.register(BackgroundClass);
+Quill.register(BackgroundStyle);
 Quill.register(BoldFormat);
 Quill.register(CodeInline);
 Quill.register(CodeFormat);
-Quill.register(ColorClass);
+Quill.register(ColorStyle);
 Quill.register(DirectionClass);
 Quill.register(FontClass);
 Quill.register(HeaderFormat);

@@ -3,6 +3,7 @@ import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 
+
 let icons = {
   'align': {
     ''        : require('../assets/icons/align-left.svg'),
@@ -10,7 +11,9 @@ let icons = {
     'right'   : require('../assets/icons/align-right.svg'),
     'justify' : require('../assets/icons/align-justify.svg')
   },
+  'background': require('../assets/icons/background.svg'),
   'bold'      : require('../assets/icons/bold.svg'),
+  'color'     : require('../assets/icons/color.svg'),
   'italic'    : require('../assets/icons/italic.svg'),
   'image'     : require('../assets/icons/image.svg'),
   'link'      : require('../assets/icons/link.svg'),
@@ -53,8 +56,9 @@ class SnowTheme extends Theme {
       if (select.classList.contains('ql-align')) {
         this.pickers.push(new IconPicker(select, icons.align));
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
+        let format = select.classList.contains('ql-background') ? 'background' : 'color';
         if (select.querySelector('option') == null) {
-          let defaultColor = select.classList.contains('ql-background') ? '#ffffff' : '#000000';
+          let defaultColor = format === 'background' ? '#ffffff' : '#000000';
           COLORS.forEach(function(color) {
             let option = document.createElement('option');
             if (color === defaultColor) {
@@ -65,11 +69,7 @@ class SnowTheme extends Theme {
             select.appendChild(option);
           });
         }
-        let picker = new ColorPicker(select);
-        let options = [].slice.call(picker.container.querySelectorAll('.ql-picker-item'), 0, 7);
-        options.forEach(function(item) {
-          item.classList.add('ql-primary');
-        });
+        let picker = new ColorPicker(select, icons[format]);
         this.pickers.push(picker);
       } else if (select.classList.contains('ql-font')) {
         this.pickers.push(new Picker(select));
@@ -81,14 +81,13 @@ class SnowTheme extends Theme {
       let names = button.className.split(/\s+/);
       for (let i in names) {
         let name = names[i].slice('ql-'.length);
-        if (icons[name] != null) {
-          if (typeof icons[name] === 'string') {
-            button.innerHTML = icons[name];
-          } else {
-            let value = button.getAttribute('data-value') || '';
-            if (value != null && icons[name][value]) {
-              button.innerHTML = icons[name][value];
-            }
+        if (icons[name] == null) return;
+        if (typeof icons[name] === 'string') {
+          button.innerHTML = icons[name];
+        } else {
+          let value = button.getAttribute('data-value') || '';
+          if (value != null && icons[name][value]) {
+            button.innerHTML = icons[name][value];
           }
         }
       }
