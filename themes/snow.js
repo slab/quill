@@ -25,12 +25,13 @@ class SnowTheme extends Theme {
     super(quill);
     this.quill.container.classList.add('ql-snow');
     this.pickers = [];
-    this.quill.on(this.quill.constructor.events.SELECTION_CHANGE, (range) => {
-      if (range == null) return;
+    document.body.addEventListener('click', (e) => {
       this.pickers.forEach(function(picker) {
-        picker.close();
+        if (picker.container !== e.target.parentNode) {
+          picker.close();
+        }
       });
-    });
+    })
   }
 
   extendToolbar(toolbar) {

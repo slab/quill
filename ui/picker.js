@@ -70,6 +70,7 @@ class Picker {
     } else {
       this.label.removeAttribute('data-value');
     }
+    this.close();
   }
 }
 Picker.TEMPLATE = `<span class="ql-picker-label">${DropdownIcon}</span><span class="ql-picker-options"></span>`;
