@@ -1,4 +1,4 @@
-jekyll:   jekyll serve -s ../node_modules/quill-docs -d ../node_modules/quill-docs/_site -p 4000 -w
+jekyll:   jekyll serve -s ../node_modules/quill-docs -d ../node_modules/quill-docs/_site -p 4000 -w --config ../node_modules/quill-docs/_config.yml,jekyll.yml
 karma:    karma start karma.config.js
 webpack:  webpack-dev-server --config webpack.config.js
 proxy:    node proxy.js
