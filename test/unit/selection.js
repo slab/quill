@@ -234,7 +234,7 @@ describe('Selection', function() {
     });
   });
 
-  describe('getBounds()', function() {
+  xdescribe('getBounds()', function() {
     beforeEach(function() {
       this.container.classList.add('ql-editor');
       this.container.style.fontFamily = 'monospace';
