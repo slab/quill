@@ -11,6 +11,10 @@
   },
   "devDependencies": {
     "async": "^1.5.2",
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.3",
+    "babel-preset-es2015": "^6.5.0",
+    "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-loader": "~0.4.3",
     "jasmine-core": "^2.4.1",
