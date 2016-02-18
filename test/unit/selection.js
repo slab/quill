@@ -395,7 +395,7 @@ describe('Selection', function() {
       expect(this.container.innerHTML).toEqualHTML(`
         <p>
           01
-          <em class="ql-color-red ql-bg-blue"><u>
+          <em style="color: red; background-color: blue;"><u>
             <span class="ql-cursor">${CursorBlot.CONTENTS}</span>
           </u></em>
           23

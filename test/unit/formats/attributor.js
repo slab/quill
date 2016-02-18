@@ -6,7 +6,7 @@ describe('Attributor', function() {
   it('definition', function() {
     let editor = this.initialize(Editor, `
       <p class="ql-direction-rtl ql-align-center">
-        <span class="ql-color-red ql-bg-blue ql-font-monospace ql-size-large">0123</span>
+        <span class="ql-font-monospace ql-size-large" style="color: red; background-color: blue;">0123</span>
       </p>`
     );
     expect(editor.getDelta()).toEqual(new Delta()
@@ -23,7 +23,7 @@ describe('Attributor', function() {
       .insert('12', { color: 'red' })
       .insert('3\n')
     );
-    expect(this.container.innerHTML).toEqualHTML('<p>0<span class="ql-color-red">12</span>3</p>');
+    expect(this.container.innerHTML).toEqualHTML('<p>0<span style="color: red;">12</span>3</p>');
   });
 
   it('add block', function() {
