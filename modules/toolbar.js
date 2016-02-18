@@ -49,8 +49,8 @@ class Toolbar extends Module {
         handler.call(this, range, format, value);
       }
       this.update();
-      return false;
     });
+    // TODO use weakmap
     this.controls.push([format, input]);
   }
 

@@ -12,16 +12,7 @@ class Picker {
     this.label.addEventListener('click', () => {
       this.container.classList.toggle('ql-expanded');
     });
-    this.select.addEventListener('change', () => {
-      let item, option;
-      if (this.select.selectedIndex > -1) {
-        item = this.container.querySelectorAll('.ql-picker-item')[this.select.selectedIndex];
-        option = this.select.options[this.select.selectedIndex];
-      }
-      this.selectItem(item);
-      let isActive = option !== this.select.querySelector('option[selected]');
-      this.label.classList.toggle('ql-active', isActive);
-    });
+    this.select.addEventListener('change', this.update.bind(this));
   }
 
   buildItem(picker, option, index) {
@@ -71,6 +62,17 @@ class Picker {
       this.label.removeAttribute('data-value');
     }
     this.close();
+  }
+
+  update() {
+    let item, option;
+    if (this.select.selectedIndex > -1) {
+      item = this.container.querySelectorAll('.ql-picker-item')[this.select.selectedIndex];
+      option = this.select.options[this.select.selectedIndex];
+    }
+    this.selectItem(item);
+    let isActive = option !== this.select.querySelector('option[selected]');
+    this.label.classList.toggle('ql-active', isActive);
   }
 }
 Picker.TEMPLATE = `<span class="ql-picker-label">${DropdownIcon}</span><span class="ql-picker-options"></span>`;

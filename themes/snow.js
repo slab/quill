@@ -31,7 +31,9 @@ class SnowTheme extends Theme {
           picker.close();
         }
       });
-    })
+    });
+    this.quill.on(Quill.events.SELECTION_CHANGE, this.updatePickers, this)
+              .on(Quill.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
   extendToolbar(toolbar) {
@@ -72,6 +74,12 @@ class SnowTheme extends Theme {
           button.innerHTML = icons[format];
         }
       }
+    });
+  }
+
+  updatePickers() {
+    this.pickers.forEach(function(picker) {
+      picker.update();
     });
   }
 }
