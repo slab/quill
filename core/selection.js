@@ -67,19 +67,17 @@ class Selection {
   }
 
   getBounds(index) {
-    let pos = this.scroll.path(index).pop();
-    if (pos == null) return null;
+    let blot, [line, offset] = this.scroll.descendant(BlockBlot, index);
+    [blot, offset] = line.descendant(Parchment.Leaf, offset, true);
+    if (blot == null) return null;
     let containerBounds = this.root.parentNode.getBoundingClientRect();
-    let side = 'left';
-    let bounds, blot = pos[0], offset = pos[1];
-    if (blot.length() === 0) {
-      bounds = blot.parent.domNode.getBoundingClientRect();
-    } else if (blot instanceof EmbedBlot) {
+    let bounds, side = 'left';
+    if (blot instanceof EmbedBlot) {
       bounds = blot.domNode.getBoundingClientRect();
       if (offset > 0) {
         side = 'right';
       }
-    } else {
+    } else if (blot instanceof Parchment.Text) {
       let range = document.createRange();
       if (offset < blot.length()) {
         range.setStart(blot.domNode, offset);
@@ -91,6 +89,9 @@ class Selection {
         side = 'right';
       }
       bounds = range.getBoundingClientRect();
+    } else {
+      // TODO handle
+      return null;
     }
     return {
       height: bounds.height,

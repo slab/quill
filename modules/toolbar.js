@@ -1,4 +1,5 @@
 import extend from 'extend';
+import Parchment from 'parchment';
 import Module from '../core/module';
 import logger from '../core/logger';
 
@@ -57,7 +58,11 @@ class Toolbar extends Module {
     if (range.length === 0) {
       this.quill.formatCursor(format, value, Quill.sources.USER);
     } else {
-      this.quill.formatText(range, format, value, Quill.sources.USER);
+      if (Parchment.query(format, Parchment.Scope.BLOCK)) {
+        this.quill.formatLine(range, format, value, Quill.sources.USER);
+      } else {
+        this.quill.formatText(range, format, value, Quill.sources.USER);
+      }
       this.quill.setSelection(range, Quill.sources.SILENT);
     }
   }
@@ -72,7 +77,8 @@ class Toolbar extends Module {
         if (formats[format] == null) {
           input.querySelector('option[selected]').selected = true;
         } else {
-          input.value = Array.isArray(formats[format]) ? '' : value;
+          // TODO never reports array
+          input.value = Array.isArray(formats[format]) ? '' : formats[format];
         }
       } else {
         input.classList.toggle('ql-active', formats[format]);
@@ -107,10 +113,6 @@ function addControls(container, groups) {
     });
     container.appendChild(group);
   });
-}
-
-function addGroup(container, controls) {
-
 }
 
 function addButton(container, format, value) {

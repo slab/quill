@@ -250,6 +250,7 @@ describe('Selection', function() {
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
       this.reference = {
         height: this.div.firstChild.firstChild.offsetHeight,
+        lineHeight: this.div.firstChild.offsetHeight,
         width: this.div.firstChild.firstChild.offsetWidth,
         top: this.div.firstChild.firstChild.offsetTop
       };
@@ -279,7 +280,7 @@ describe('Selection', function() {
       this.bounds = selection.getBounds(5);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(0, 1);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
 
     it('plain text', function() {
@@ -298,7 +299,7 @@ describe('Selection', function() {
       this.bounds = selection.getBounds(5);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(0, 1);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
 
     it('end of line', function() {
@@ -310,7 +311,7 @@ describe('Selection', function() {
       this.bounds = selection.getBounds(9);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.width * 4, 4);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
 
     it('large text', function() {

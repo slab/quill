@@ -125,7 +125,6 @@ class Quill {
     }
   }
 
-  // TODO is this necessary given formatText
   formatLine(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);

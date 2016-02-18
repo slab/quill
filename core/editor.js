@@ -46,7 +46,7 @@ class Editor {
 
   formatLine(index, length, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
-      this.scroll.descendants(index, length).forEach(function(line) {
+      this.scroll.descendants(Block, index, Math.max(length, 1)).forEach(function(line) {
         line.format(format, formats[format]);
       });
     });
