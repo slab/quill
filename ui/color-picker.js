@@ -16,6 +16,19 @@ class ColorPicker extends Picker {
     item.style.backgroundColor = option.getAttribute('value') || '';
     return item;
   }
+
+  selectItem(item, trigger) {
+    super.selectItem(item, trigger);
+    // let colorLabel = this.label.querySelector('.ql-color-label');
+    // let value = item ? item.getAttribute('data-value') : '';
+    // if (colorLabel) {
+    //   if (colorLabel.tagName === 'line') {
+    //     colorLabel.style.stroke = value;
+    //   } else {
+    //     colorLabel.style.fill = value;
+    //   }
+    // }
+  }
 }
 
 
