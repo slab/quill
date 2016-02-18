@@ -22,6 +22,7 @@
     "lodash": "^4.3.0",
     "node-http-proxy": "~0.2.3",
     "protractor": "^3.1.1",
+    "quill-docs": "quilljs/quilljs.github.io.git#2e9660d37eb63057f178fe2da57cdded77a58a91",
     "style-loader": "~0.13.0",
     "stylus-loader": "^1.5.1",
     "ts-loader": "~0.8.0",
