@@ -76,7 +76,7 @@ iconPadding = 3px
     border: 1px solid transparent
     cursor: pointer
     display: inline-block
-    line-height: controlHeight - 4
+    height: 100%
     padding-left: 8px
     padding-right: 2px
     position: relative
@@ -104,14 +104,29 @@ iconPadding = 3px
       border-color: borderColor
       color: borderColor
       z-index: 2
+      .ql-stroke
+        stroke: borderColor
     .ql-picker-options
       border-color: borderColor
       box-shadow: rgba(0,0,0,0.2) 0 2px 8px
       display: block
       margin-top: -1px
       z-index: 1
-    .ql-stroke
-      stroke: borderColor
+
+  .ql-icon-picker
+    width: controlHeight + 4
+    .ql-picker-label
+      padding: 2px 4px
+      svg
+        margin-top: 0px
+    .ql-picker-options
+      padding: 4px 0px
+    .ql-picker-item
+      height: controlHeight
+      padding: 2px 4px
+  .ql-icon-picker.ql-expanded
+    .ql-picker-options
+      margin-top: -4px
 
   .ql-picker.ql-font
     width: 108px

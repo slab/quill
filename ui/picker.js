@@ -2,11 +2,10 @@ import DropdownIcon from '../assets/icons/dropdown.svg';
 
 
 class Picker {
-  constructor(select, container = Picker.TEMPLATE.cloneNode(true)) {
+  constructor(select) {
     this.select = select;
-    this.container = container;
+    this.container = document.createElement('span');
     this.buildPicker();
-    this.container.classList.add('ql-picker');
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
     this.label.addEventListener('click', () => {
@@ -25,12 +24,17 @@ class Picker {
     return item;
   }
 
-  buildPicker() {
-    [].slice.call(this.select.attributes).forEach((item) => {
-      this.container.setAttribute(item.name, item.value);
-    });
-    this.label = this.container.querySelector('.ql-picker-label');
-    let options = this.container.querySelector('.ql-picker-options');
+  buildLabel() {
+    let label = document.createElement('span');
+    label.classList.add('ql-picker-label');
+    label.innerHTML = DropdownIcon;
+    this.container.appendChild(label);
+    return label;
+  }
+
+  buildOptions() {
+    let options = document.createElement('span');
+    options.classList.add('ql-picker-options');
     [].slice.call(this.select.options).forEach((option) => {
       let item = this.buildItem(option);
       options.appendChild(item);
@@ -38,6 +42,16 @@ class Picker {
         this.selectItem(item);
       }
     });
+    this.container.appendChild(options);
+  }
+
+  buildPicker() {
+    [].slice.call(this.select.attributes).forEach((item) => {
+      this.container.setAttribute(item.name, item.value);
+    });
+    this.container.classList.add('ql-picker');
+    this.label = this.buildLabel();
+    this.buildOptions();
   }
 
   close() {
@@ -74,12 +88,6 @@ class Picker {
     this.label.classList.toggle('ql-active', isActive);
   }
 }
-Picker.TEMPLATE = function() {
-  let container = document.createElement('span');
-  container.classList.add('ql-picker');
-  container.innerHTML = `<span class="ql-picker-label">${DropdownIcon}</span><span class="ql-picker-options"></span>`;
-  return container;
-}();
 
 
 export default Picker;

@@ -1,14 +1,25 @@
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
+import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 
 let icons = {
+  'align': {
+    ''        : require('../assets/icons/align-left.svg'),
+    'center'  : require('../assets/icons/align-center.svg'),
+    'right'   : require('../assets/icons/align-right.svg'),
+    'justify' : require('../assets/icons/align-justify.svg')
+  },
   'bold'      : require('../assets/icons/bold.svg'),
   'italic'    : require('../assets/icons/italic.svg'),
   'image'     : require('../assets/icons/image.svg'),
   'link'      : require('../assets/icons/link.svg'),
   'strike'    : require('../assets/icons/strike.svg'),
-  'underline' : require('../assets/icons/underline.svg')
+  'underline' : require('../assets/icons/underline.svg'),
+  'list': {
+    'ordered' : require('../assets/icons/list-ordered.svg'),
+    'bullet'  : require('../assets/icons/list-bullet.svg')
+  }
 };
 
 
@@ -27,7 +38,7 @@ class SnowTheme extends Theme {
     this.pickers = [];
     document.body.addEventListener('click', (e) => {
       this.pickers.forEach(function(picker) {
-        if (picker.container !== e.target.parentNode) {
+        if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {
           picker.close();
         }
       });
@@ -40,7 +51,7 @@ class SnowTheme extends Theme {
     toolbar.container.classList.add('ql-snow');
     [].forEach.call(toolbar.container.querySelectorAll('select'), (select) => {
       if (select.classList.contains('ql-align')) {
-        this.pickers.push(new Picker(select));
+        this.pickers.push(new IconPicker(select, icons.align));
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
         if (select.querySelector('option') == null) {
           let defaultColor = select.classList.contains('ql-background') ? '#ffffff' : '#000000';
@@ -69,9 +80,16 @@ class SnowTheme extends Theme {
     [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
       let names = button.className.split(/\s+/);
       for (let i in names) {
-        let format = names[i].slice('ql-'.length);
-        if (icons[format] != null) {
-          button.innerHTML = icons[format];
+        let name = names[i].slice('ql-'.length);
+        if (icons[name] != null) {
+          if (typeof icons[name] === 'string') {
+            button.innerHTML = icons[name];
+          } else {
+            let value = button.getAttribute('data-value') || '';
+            if (value != null && icons[name][value]) {
+              button.innerHTML = icons[name][value];
+            }
+          }
         }
       }
     });
