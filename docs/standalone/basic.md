@@ -6,7 +6,7 @@ permalink: /standalone/basic/
 <link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.css">
 <style>
   body {
-    margin: 25px;
+    padding: 25px;
   }
   #toolbar-container {
     border-top: 1px solid #ccc;

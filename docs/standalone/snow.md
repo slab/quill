@@ -6,7 +6,7 @@ permalink: /standalone/snow/
 <link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.snow.css">
 <style>
   body {
-    margin: 25px;
+    padding: 25px;
   }
   #editor-container {
     height: 250px;
@@ -22,9 +22,8 @@ permalink: /standalone/snow/
       toolbar: [
         [{ font: [false, 'serif', 'monospace'] }, { size: ['small', false, 'large', 'huge'] }],
         ['bold', 'italic', 'underline', 'strike'],
-        ['bold', 'italic', 'underline', 'strike'],
-        // [{ color: [] }, { background: [] }],
-        // [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],
+        [{ color: [] }, { background: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],
         ['link', 'image']
       ]
     },
