@@ -2,9 +2,9 @@ import DropdownIcon from '../assets/icons/dropdown.svg';
 
 
 class Picker {
-  constructor(select) {
+  constructor(select, container = Picker.TEMPLATE.cloneNode(true)) {
     this.select = select;
-    this.container = document.createElement('span');
+    this.container = container;
     this.buildPicker();
     this.container.classList.add('ql-picker');
     this.select.style.display = 'none';
@@ -15,7 +15,7 @@ class Picker {
     this.select.addEventListener('change', this.update.bind(this));
   }
 
-  buildItem(picker, option, index) {
+  buildItem(option) {
     let item = document.createElement('span');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
@@ -29,13 +29,12 @@ class Picker {
     [].slice.call(this.select.attributes).forEach((item) => {
       this.container.setAttribute(item.name, item.value);
     });
-    this.container.innerHTML = Picker.TEMPLATE;
     this.label = this.container.querySelector('.ql-picker-label');
-    let picker = this.container.querySelector('.ql-picker-options');
-    [].slice.call(this.select.options).forEach((option, i) => {
-      let item = this.buildItem(picker, option, i);
-      picker.appendChild(item);
-      if (this.select.selectedIndex === i) {
+    let options = this.container.querySelector('.ql-picker-options');
+    [].slice.call(this.select.options).forEach((option) => {
+      let item = this.buildItem(option);
+      options.appendChild(item);
+      if (option.hasAttribute('selected')) {
         this.selectItem(item);
       }
     });
@@ -75,7 +74,12 @@ class Picker {
     this.label.classList.toggle('ql-active', isActive);
   }
 }
-Picker.TEMPLATE = `<span class="ql-picker-label">${DropdownIcon}</span><span class="ql-picker-options"></span>`;
+Picker.TEMPLATE = function() {
+  let container = document.createElement('span');
+  container.classList.add('ql-picker');
+  container.innerHTML = `<span class="ql-picker-label">${DropdownIcon}</span><span class="ql-picker-options"></span>`;
+  return container;
+}();
 
 
 export default Picker;

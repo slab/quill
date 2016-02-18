@@ -91,6 +91,15 @@ Toolbar.DEFAULTS = {
 };
 
 
+function addButton(container, format, value) {
+  let input = document.createElement('button');
+  input.classList.add('ql-' + format);
+  if (value != null) {
+    input.setAttribute('data-value', value);
+  }
+  container.appendChild(input);
+}
+
 function addControls(container, groups) {
   if (!Array.isArray(groups[0])) {
     groups = [groups];
@@ -113,15 +122,6 @@ function addControls(container, groups) {
     });
     container.appendChild(group);
   });
-}
-
-function addButton(container, format, value) {
-  let input = document.createElement('button');
-  input.classList.add('ql-' + format);
-  if (value != null) {
-    input.setAttribute('data-value', value);
-  }
-  container.appendChild(input);
 }
 
 function addSelect(container, format, values) {

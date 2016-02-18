@@ -7,8 +7,8 @@ class ColorPicker extends Picker {
     this.container.classList.add('ql-color-picker');
   }
 
-  buildItem(picker, option, index) {
-    let item = super.buildItem(picker, option, index);
+  buildItem(option) {
+    let item = super.buildItem(option);
     item.style.backgoundColor = option.value;
     return item;
   }
