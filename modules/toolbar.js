@@ -45,7 +45,7 @@ class Toolbar extends Module {
       if (input.tagName === 'SELECT') {
         handler.call(this, range, format, input.options[input.selectedIndex].value || false);
       } else {
-        let value = input.classList.contains('.ql-active') ? false : input.getAttribute('data-value') || true;
+        let value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
         handler.call(this, range, format, value);
       }
       this.update();
