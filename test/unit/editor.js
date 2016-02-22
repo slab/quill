@@ -183,11 +183,13 @@ describe('Editor', function() {
       editor.applyDelta(new Delta().insert('03'));
       expect(this.container.innerHTML).toEqualHTML('<p>03</p>');
     });
+
     it('should apply a delta with only inserts and attributes in it', function() {
       let editor = this.initialize(Editor, '<p></p>');
       editor.applyDelta(new Delta().insert('03', { bold: true }));
       expect(this.container.innerHTML).toEqualHTML('<p><strong>03</strong></p>');
     });
+
     it('should apply a delta with retains and attributes in it', function() {
       let editor = this.initialize(Editor, '<p>03</p>');
       editor.applyDelta(new Delta().retain(2, { bold: true }));
