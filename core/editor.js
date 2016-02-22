@@ -28,7 +28,7 @@ class Editor {
         this.scroll.insertAt(index, key, op.insert[key]);
       }
       Object.keys(op.attributes || {}).forEach((name) => {
-        this.scroll.formatAt(index, op.retain, name, op.attributes[name]);
+        this.scroll.formatAt(index, length, name, op.attributes[name]);
       });
       return index + length;
     }, 0);
