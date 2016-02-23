@@ -101,7 +101,7 @@ class Quill {
 
   deleteText(index, length, source = Emitter.sources.API) {
     [index, length, , source] = overload(index, length, source);
-    this.editor.deleteText(index, length);
+    this.editor.deleteText(index, length, source);
   }
 
   disable() {

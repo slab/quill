@@ -9,6 +9,45 @@ describe('Quill', function() {
     this.quill = this.initialize(Quill, '<p>01234567</p>');
   });
 
+  describe('deleteText', function() {
+    it('should delete text at given index and length', function() {
+      this.quill.deleteText(1, 2);
+      expect(this.container.firstChild.innerHTML).toEqualHTML('<p>034567</p>');
+    });
+
+    it('should emit a TEXT_CHANGE event with the diff delta', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(change).toEqual(new Delta().retain(1).delete(2));
+        done();
+      });
+      this.quill.deleteText(1, 2);
+    });
+
+    it('should emit a TEXT_CHANGE event with the old delta', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(oldDelta).toEqual(new Delta().insert('01234567\n'));
+        done();
+      });
+      this.quill.deleteText(1, 2);
+    });
+
+    it('should mark the delete with a default source', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(source).toEqual(Emitter.sources.API);
+        done();
+      });
+      this.quill.deleteText(1, 2);
+    });
+
+    it('should mark the delete with the passed in source', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(source).toEqual('bob');
+        done();
+      });
+      this.quill.deleteText(1, 2, 'bob');
+    });
+  });
+
   describe('overload', function() {
     it('(start:number, end:number)', function() {
       let [start, end, formats, source] = overload(0, 1);
