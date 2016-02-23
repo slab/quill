@@ -1,4 +1,44 @@
+linkTooltipMargin = 8px
+
 .ql-snow
+  .ql-link-tooltip::before
+    content: "Visit URL:"
+    line-height: 26px
+    margin-right: linkTooltipMargin
+  .ql-link-tooltip::after
+    content: "-"
+    line-height: 26px
+    margin-left: linkTooltipMargin
   .ql-link-tooltip
-    a, span
-      line-height: 25px
+    padding: 5px 12px
+    input[type=text]
+      display: none
+      height: 18px
+      width: 170px
+    a.preview
+      display: inline-block
+      max-width: 200px
+      overflow-x: hidden
+      text-overflow: ellipsis
+      vertical-align: top
+    a.action, a.remove
+      float: right
+    a.action::before
+      border-right: 1px solid borderColor
+      content: 'Edit'
+      margin-left: linkTooltipMargin
+      padding-right: linkTooltipMargin
+    a.remove::before
+      content: 'Remove'
+      margin-left: linkTooltipMargin
+    a
+      line-height: 26px
+  .ql-link-tooltip.ql-editing
+    a.preview, a.remove
+      display: none
+    input[type=text]
+      display: inline-block
+    a.action::before
+      border-right: 0px
+      content: 'Save'
+      padding-right: 0px
