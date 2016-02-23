@@ -1,5 +1,7 @@
 import Quill, { overload } from '../../core/quill';
 import { Range } from '../../core/selection';
+import Emitter from '../../core/emitter';
+import Delta from 'rich-text/lib/delta';
 
 
 describe('Quill', function() {
@@ -185,6 +187,24 @@ describe('Quill', function() {
       textNode.splitText(1);
       textNode.parentNode.removeChild(textNode);
       expect(this.quill.getSelection()).toEqual(new Range(1, 2));
+    });
+  });
+
+  describe('setContents()', function() {
+    it('should accept a delta', function() {
+      let delta = new Delta().insert('test\n');
+      this.quill.setContents(delta);
+      expect(this.quill.getContents()).toEqual(delta);
+    });
+    it('should accept an array of operations', function() {
+      let delta = new Delta().insert('test').insert('123', {bold: true}).insert('\n');
+      this.quill.setContents(delta.ops);
+      expect(this.quill.getContents()).toEqual(delta);
+    });
+    it('should accept a json representation of a delta', function() {
+      let delta = { ops: [{ insert: 'test\n'}] };
+      this.quill.setContents(delta);
+      expect(this.quill.getContents()).toEqual(new Delta(delta));
     });
   });
 
