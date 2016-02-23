@@ -1,5 +1,7 @@
 import Quill, { overload } from '../../core/quill';
 import { Range } from '../../core/selection';
+import Emitter from '../../core/emitter';
+import Delta from 'rich-text/lib/delta';
 
 
 describe('Quill', function() {
@@ -207,6 +209,53 @@ describe('Quill', function() {
     it('content with trailing newline', function() {
       this.quill.setText('abc\n');
       expect(this.quill.root.innerHTML).toEqualHTML('<p>abc</p>');
+    });
+  });
+
+  describe('insertEmbed', function() {
+    it('should insert an embed into the contents at index', function() {
+      this.quill.insertEmbed(0, 'image', '/assets/favicon.png');
+      expect(this.quill.getContents()).toEqual(new Delta()
+        .insert({ image: '/assets/favicon.png'})
+        .insert('01234567\n')
+      );
+    });
+
+    it('should insert an embed into the dom', function() {
+      this.quill.insertEmbed(0, 'image', '/assets/favicon.png');
+      expect(this.container.firstChild.innerHTML).toEqualHTML('<p><img src="/assets/favicon.png">01234567</p>');
+    });
+
+    it('should emit a TEXT_CHANGE event with the diff delta', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(change).toEqual(new Delta().insert({ image: '/assets/favicon.png'}));
+        done();
+      });
+      this.quill.insertEmbed(0, 'image', '/assets/favicon.png');
+    });
+
+    it('should emit a TEXT_CHANGE event with the old delta', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(oldDelta).toEqual(new Delta().insert('01234567\n'));
+        done();
+      });
+      this.quill.insertEmbed(0, 'image', '/assets/favicon.png');
+    });
+
+    it('should emit a TEXT_CHANGE event with a default source', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(source).toEqual(Emitter.sources.API);
+        done();
+      });
+      this.quill.insertEmbed(0, 'image', '/assets/favicon.png');
+    });
+
+    it('should emit a TEXT_CHANGE event with a passed in source', function(done) {
+      this.quill.emitter.on(Emitter.events.TEXT_CHANGE, function(change, oldDelta, source) {
+        expect(source).toEqual('bob');
+        done();
+      });
+      this.quill.insertEmbed(0, 'image', '/assets/favicon.png', 'bob');
     });
   });
 });

@@ -174,8 +174,6 @@ class Quill {
   }
 
   insertEmbed(index, embed, value, source) {
-    let formats;
-    [index, , formats, source] = overload(index, 0, source);
     this.editor.insertEmbed(index, embed, value, source);
   }
 
