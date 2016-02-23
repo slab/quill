@@ -6,7 +6,7 @@
     "deep-equal": "~1.0.1",
     "eventemitter3": "~1.1.1",
     "extend": "~3.0.0",
-    "parchment": "quilljs/parchment.git#08b63557d39289830148d66717f907b6957c3cbb",
+    "parchment": "quilljs/parchment.git#2517221781acb90030a78930fa32c645ac01a71b",
     "rich-text": "~2.1.1"
   },
   "devDependencies": {
@@ -17,6 +17,7 @@
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-loader": "~0.4.3",
+    "http-proxy": "^1.13.2",
     "jasmine-core": "^2.4.1",
     "karma": "~0.13.19",
     "karma-chrome-launcher": "~0.2.2",
@@ -24,7 +25,6 @@
     "karma-jasmine": "~0.3.6",
     "karma-sauce-launcher": "~0.3.0",
     "lodash": "^4.3.0",
-    "node-http-proxy": "~0.2.3",
     "protractor": "^3.1.1",
     "quill-docs": "quilljs/quilljs.github.io.git#gh-pages-1",
     "style-loader": "~0.13.0",
