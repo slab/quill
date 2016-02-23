@@ -150,6 +150,20 @@ Keyboard.keys = {
   DELETE: 46
 }
 
+function bindKeys(target, keys) {
+  target.addEventListener('keydown', function(evt) {
+    if (Object.keys(keys).some(function(key) {
+      let which = evt.which || evt.keyCode;
+      if (which === key || which === Keyboard.keys[key.toUpperCase()]) {
+        keys[key]();
+        return true;
+      }
+      return false;
+    })) {
+      event.preventDefault();
+    }
+  });
+}
 
 function match(evt, binding) {
   let metaKey = /Mac/i.test(navigator.platform) ? evt.metaKey : evt.metaKey || evt.ctrlKey;
@@ -162,8 +176,8 @@ function match(evt, binding) {
 function normalize(binding) {
   switch (typeof binding) {
     case 'string':
-      if (Keyboard.bindings[binding.toUpperCase()] != null) {
-        binding = clone(Keyboard.bindings[binding.toUpperCase()], false);
+      if (Keyboard.keys[binding.toUpperCase()] != null) {
+        binding = clone(Keyboard.keys[binding.toUpperCase()], false);
       } else if (binding.length === 1) {
         binding = { key: binding };
       } else {
@@ -186,4 +200,4 @@ function normalize(binding) {
 }
 
 
-export default Keyboard;
+export { Keyboard as default, bindKeys };

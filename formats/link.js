@@ -10,6 +10,11 @@ class Link extends Inline {
     return node;
   }
 
+  format(name, value) {
+    if (name !== 'link' || !value) return super.format(name, value);
+    this.domNode.setAttribute('href', value);
+  }
+
   formats() {
     let format = super.formats();
     format.link = this.domNode.getAttribute('href') || true;

@@ -1,158 +1,88 @@
 import extend from 'extend';
-import Inline from '../blots/inline';
+import { bindKeys } from './keyboard';
+import LinkFormat from '../formats/link';
+import Module from '../core/module';
 import Tooltip from '../ui/tooltip';
 
 
-class LinkTooltip extends Tooltip {
+class LinkTooltip extends Module {
   constructor(quill, options = {}) {
-    options = extend({}, LinkTooltip.DEFAULTS, options);
     super(quill, options);
-    this.container.classList.add('ql-link-tooltip');
-    this.textbox = this.container.querySelector('.input');
-    this.link = this.container.querySelector('.url');
-    this.initListeners();
-    quill.keyboard.addBinding({ key: 'K', metaKey: true}, this._onKeyboard.bind(this));
-  }
-
-  initListeners() {
-    this.quill.on(Quill.events.SELECTION_CHANGE, (range) => {
-      if (range == null || range.length > 0) return;
-      let anchor = this._findAnchor(range);
-      if (anchor != null) {
-        this.setMode(anchor.href, false);
-        this.show(anchor);
-      } else if (this.container.style.left != Tooltip.HIDE_MARGIN) {
-        this.hide();
-      }
+    this.container = this.quill.addContainer('ql-link-tooltip');
+    this.tooltip = new Tooltip(this.container);
+    this.container.innerHTML = this.options.template;
+    this.preview = this.container.querySelector('a.preview');
+    this.textbox = this.container.querySelector('input[type=text]');
+    bindKeys(this.textbox, {
+      'enter': this.save.bind(this),
+      'escape': this.tooltip.hide.bind(this.tooltip)
     });
-    this.container.querySelector('.done').addEventListener('click', this.saveLink.bind(this));
-    this.container.querySelector('.remove').addEventListener('click', () => {
-      this.removeLink(this.quill.getSelection());
-    });
-    this.container.querySelector('.change').addEventListener('click', () => {
-      this.setMode(this.link.href, true);
-    });
-    this.initTextbox(this.textbox, this.saveLink, this.hide);
-    this.quill.onModuleLoad('toolbar', (toolbar) => {
-      this.toolbar = toolbar;
-      toolbar.initFormat('link', this._onToolbar.bind(this));
-    });
-  }
-
-  removeLink(range) {
-    // Expand range to the entire leaf
-    if (range.length === 0) {
-      range = this._expandRange(range);
-    }
-    this.hide();
-    this.quill.formatText(range, 'link', false, Quill.sources.USER);
-    if (this.toolbar != null) {
-      this.toolbar.setActive('link', false);
-    }
-  }
-
-  saveLink() {
-    let url = this._normalizeURL(this.textbox.value);
-    let range = this.quill.getSelection(true);
-    if (range != null) {
-      if (range.length > 0) {
-        let anchor = this._findAnchor(range);
-        if (anchor != null) {
-          anchor.href = url;
-        }
+    this.container.querySelector('a.action').addEventListener('click', () => {
+      if (this.container.classList.contains('ql-editing')) {
+        this.save();
       } else {
-        this.quill.formatText(range, 'link', url, Quill.sources.USER);
+        this.edit();
       }
-      this.quill.setSelection(range.end, range.end);
-    }
-    this.setMode(url, false);
+    });
+    this.container.querySelector('a.remove').addEventListener('click', this.remove.bind(this));
+    quill.keyboard.addBinding({ key: 'K', metaKey: true}, this.toggle.bind(this));
+    quill.on(Quill.events.SELECTION_CHANGE, this.toggle.bind(this));
   }
 
-  setMode(url, edit = false) {
-    if (edit) {
-      this.textbox.value = url;
-      setTimeout(() => {
-        // Setting value and immediately focusing doesn't work on Chrome
-        this.textbox.focus();
-        this.textbox.setSelectionRange(0, url.length);
-      }, 0);
+  edit() {
+    this.container.classList.add('ql-editing');
+    this.textbox.focus();
+    this.textbox.setSelectionRange(0, this.textbox.value.length);
+  }
+
+  remove() {
+    this.link.format('link', null);
+    this.tooltip.hide();
+  }
+
+  save() {
+    let url = this.options.sanitize(this.textbox.value);
+    this.link.format('link', url);
+    this.preview.textContent = this.link.formats()['link'];
+    this.show();
+  }
+
+  show() {
+    this.container.classList.remove('ql-editing');
+    let url = this.options.sanitize(this.link.domNode.getAttribute('href'));
+    this.textbox.value = url;
+    this.preview.textContent = url;
+    let [left, top] = this.tooltip.position(this.link.domNode, this.quill.container, this.options.offset);
+    this.tooltip.show(left, top);
+  }
+
+  toggle(range) {
+    if (range == null || range.length > 0) return;
+    let [link, ] = this.quill.scroll.descendant(LinkFormat, range.index, true);
+    if (link != null) {
+      this.link = link;
+      this.show();
     } else {
-      this.link.href = url;
-      url = this.link.href;
-      this.link.textContent = url.length > this.options.maxLength ? url.slice(0, this.options.maxLength) + '...' : url;
+      this.tooltip.hide();
+      this.quill.focus();
     }
-    this.container.classList.toggle('editing', edit);
   }
-
-  _expandRange(range) {
-    let [leaf, offset] = this.quill.editor.doc.findLeafAt(range.index, true);
-    let index = range.index - offset;
-    let length = leaf.length;
-    return { index: index, length: length };
-  }
-
-  _findAnchor(range) {
-    let node;
-    let [leaf, offset] = this.quill.editor.doc.findLeafAt(range.index, true);
-    if (leaf != null) {
-      node = leaf.node;
-    }
-    while (node != null && node !== this.quill.root) {
-      if (node.tagName === 'A') return node;
-      node = node.parentNode;
-    }
-    return null;
-  }
-
-  _normalizeURL(url) {
+}
+LinkTooltip.DEFAULTS = {
+  offset: 10,
+  sanitize: function(url) {
     if (!/^(https?:\/\/|mailto:)/.test(url)) {
       url = 'http://' + url;
     }
     return url;
-  };
-
-  _onKeyboard() {
-    let range = this.quill.getSelection();
-    this._toggle(range, !this._findAnchor(range));
-  }
-
-  _onToolbar(range, value) {
-    this._toggle(range, value);
-  }
-
-  _toggle(range, value) {
-    if (range == null) return;
-    if (!value) {
-      this.removeLink(range);
-    } else if (range.length > 0) {
-      this.setMode(this._suggestURL(range), true);
-      let nativeRange = this.quill.editor.selection._getNativeRange();
-      this.show(nativeRange);
-    }
-  }
-
-  _suggestURL(range) {
-    let text = this.quill.getText(range);
-    return this._normalizeURL(text);
-  };
-}
-LinkTooltip.DEFAULTS = {
-  maxLength: 50,
-  template: `
-    <span class="title">Visit URL:&nbsp;</span>
-    <a href="#" class="url" target="_blank" href="about:blank"></a>
-    <input class="input" type="text">
-    <span>&nbsp;&#45;&nbsp;</span>
-    <a href="javascript:;" class="change">Change</a>
-    <a href="javascript:;" class="remove">Remove</a>
-    <a href="javascript:;" class="done">Done</a>`
-};
-LinkTooltip.hotkeys = {
-  LINK: {
-    key: 'K',
-    metaKey: true
-  }
+  },
+  template: [
+    '<a class="preview" target="_blank" href="about:blank"></a>',
+    '<input type="text">',
+    '<a class="remove"></a>',
+    '<a class="action"></a>'
+  ].join('')
 };
 
 
-export { LinkTooltip as default };
+export default LinkTooltip;

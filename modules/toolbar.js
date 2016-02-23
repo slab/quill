@@ -32,22 +32,24 @@ class Toolbar extends Module {
               .on(Quill.events.TEXT_CHANGE, this.update, this);
   }
 
-  attach(input, handler = this.handle) {
+  attach(input) {
     let format = [].find.call(input.classList, (className) => {
       return className.indexOf('ql-') === 0;
     });
     if (!format) return;
     format = format.slice('ql-'.length);
+    // if (this.quill.options.formats.indexOf(format) < 0) return;  // TODO enable
     let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
     input.addEventListener(eventName, () => {
       let range = this.quill.getSelection(true);
       if (range == null) return false;
+      let value;
       if (input.tagName === 'SELECT') {
-        handler.call(this, range, format, input.options[input.selectedIndex].value || false);
+        value = input.options[input.selectedIndex].value || false;
       } else {
-        let value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
-        handler.call(this, range, format, value);
+        value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
       }
+      handler.call(this, range, format, value);
       this.update();
     });
     // TODO use weakmap
@@ -64,6 +66,10 @@ class Toolbar extends Module {
       this.quill.formatText(range, format, value, Quill.sources.USER);
     }
     this.quill.setSelection(range, Quill.sources.SILENT);
+  }
+
+  on(format, handler) {
+    this.handlers[format] = handler;
   }
 
   update() {

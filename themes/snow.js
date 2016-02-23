@@ -50,6 +50,13 @@ class SnowTheme extends Theme {
               .on(Quill.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
+  extendLinkTooltip(tooltip) {
+    console.log('hey!');
+    this.onModule('toolbar', function(toolbar) {
+      toolbar.on('link', tooltip.show());
+    });
+  }
+
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
     [].forEach.call(toolbar.container.querySelectorAll('select'), (select) => {
@@ -78,7 +85,8 @@ class SnowTheme extends Theme {
       }
     });
     [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
-      let names = button.className.split(/\s+/);
+      let className = button.getAttribute('class') || '';
+      let names = className.split(/\s+/);
       for (let i in names) {
         let name = names[i].slice('ql-'.length);
         if (icons[name] == null) return;

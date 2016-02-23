@@ -73,9 +73,12 @@ class Quill {
     }
   }
 
-  addContainer(className, refNode = null) {
-    let container = document.createElement('div');
-    container.classList.add(className);
+  addContainer(container, refNode = null) {
+    if (typeof container === 'string') {
+      let className = container;
+      container = document.createElement('div');
+      container.classList.add(className);
+    }
     this.container.insertBefore(container, refNode);
     return container;
   }

@@ -19,7 +19,7 @@ import StrikeFormat from './formats/strike';
 import UnderlineFormat from './formats/underline';
 
 // import ImageModule, { ImageBlot } from './modules/image';
-// import LinkModule, { LinkBlot } from './modules/link';
+import LinkModule from './modules/link';
 import ToolbarModule from './modules/toolbar';
 
 import SnowTheme from './themes/snow';
@@ -46,7 +46,7 @@ Quill.register(StrikeFormat);
 Quill.register(UnderlineFormat);
 
 // Quill.register('image', ImageModule);
-// Quill.register('link', LinkModule);
+Quill.register('link-tooltip', LinkModule);
 Quill.register('toolbar', ToolbarModule);
 
 Quill.register('snow', SnowTheme);

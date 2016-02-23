@@ -1,70 +1,45 @@
-import Keyboard from '../modules/keyboard';
-
-
 const HIDE_MARGIN = '-10000px';
 
 class Tooltip {
-  constructor(quill, options = {}) {
-    this.quill = quill;
-    this.options = options;
-    this.container = this.quill.addContainer('ql-tooltip');
-    this.container.innerHTML = this.options.template;
+  constructor(container) {
+    this.container = container;
+    this.container.classList.add('ql-tooltip');
     this.hide();
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta) => {
-      if (this.container.style.left !== HIDE_MARGIN) {
-        this.hide();
-      }
-    });
   }
 
-  initTextbox(textbox, enterCallback, escapeCallback) {
-    textbox.addEventListener('keydown', (evt) => {
-      if (evt.which !== Keyboard.keys.ENTER && evt.which !== keys.ESCAPE) return;
-      let fn = evt.which === Keyboard.keys.ENTER ? enterCallback : escapeCallback;
-      fn.call(this);
-      evt.preventDefault();
-    });
+  center(target, container) {
+    let left = container.offsetWidth / 2 - target.offsetWidth / 2;
+    let top = container.offsetHeight / 2 - target.offsetHeight / 2;
+    return [left, top];
   }
 
   hide() {
     this.container.style.left = HIDE_MARGIN;
-    this.quill.focus();
   }
 
-  position(reference) {
-    let left, top;
-    if (reference != null) {
-      let referenceBounds = reference.getBoundingClientRect();
-      let parentBounds = this.quill.container.getBoundingClientRect();
-      let offsetLeft = referenceBounds.left - parentBounds.left;
-      let offsetTop = referenceBounds.top - parentBounds.top;
-      let offsetBottom = referenceBounds.bottom - parentBounds.bottom;
-      left = offsetLeft + referenceBounds.width / 2 - this.container.offsetWidth / 2;
-      top = offsetTop + referenceBounds.height + this.options.offset;
-      if (top + this.container.offsetHeight > this.quill.container.offsetHeight) {
-        top = offsetTop - this.container.offsetHeight - this.options.offset;
-      }
-      left = Math.max(0, Math.min(left, this.quill.container.offsetWidth - this.container.offsetWidth));
-      top = Math.max(0, Math.min(top, this.quill.container.offsetHeight - this.container.offsetHeight));
-    } else {
-      left = this.quill.container.offsetWidth / 2 - this.container.offsetWidth / 2;
-      top = this.quill.container.offsetHeight / 2 - this.container.offsetHeight / 2;
+  position(target, container, offset = 10) {
+    let targetBounds = target.getBoundingClientRect();
+    let containerBounds = container.getBoundingClientRect();
+    let offsetLeft = targetBounds.left - containerBounds.left;
+    let offsetTop = targetBounds.top - containerBounds.top;
+    let offsetBottom = targetBounds.bottom - containerBounds.bottom;
+    let left = offsetLeft + targetBounds.width / 2 - this.container.offsetWidth / 2;
+    let top = offsetTop + targetBounds.height + offset;
+    if (top + this.container.offsetHeight > container.offsetHeight) {
+      top = offsetTop - this.container.offsetHeight - offset;
     }
-    top += this.quill.container.scrollTop;
+    left = Math.max(0, Math.min(left, container.offsetWidth - this.container.offsetWidth));
+    top = Math.max(0, Math.min(top, container.offsetHeight - this.container.offsetHeight));
+    top += container.scrollTop;
     return [left, top];
   }
 
-  show(reference) {
-    let [left, top] = this.position(reference);
+  show(left, top) {
     this.container.style.left = left + "px";
     this.container.style.top = top + "px";
     this.container.focus();
   }
 }
-Tooltip.DEFAULTS = {
-  offset: 10,
-  template: ''
-};
 
 
 export default Tooltip;
