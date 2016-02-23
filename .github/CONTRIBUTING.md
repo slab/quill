@@ -49,7 +49,7 @@ A proxy is also provided for a single point of access to jekyll, karma, and webp
 ### Setup
 
     npm install
-    gem install foreman jekyll kramdown rouge
+    gem install foreman jekyll kramdown rouge jekyll-sitemap jekyll-redirect-from jekyll-feed
     npm run build
 
 Note: While built files in dist/ are not normally used/served for development, karma still requires their existence.
