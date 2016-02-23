@@ -49,7 +49,7 @@ class Toolbar extends Module {
       } else {
         value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
       }
-      handler.call(this, range, format, value);
+      this.handle(range, format, value);
       this.update();
     });
     // TODO use weakmap
@@ -66,10 +66,6 @@ class Toolbar extends Module {
       this.quill.formatText(range, format, value, Quill.sources.USER);
     }
     this.quill.setSelection(range, Quill.sources.SILENT);
-  }
-
-  on(format, handler) {
-    this.handlers[format] = handler;
   }
 
   update() {

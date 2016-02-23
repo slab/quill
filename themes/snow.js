@@ -50,12 +50,11 @@ class SnowTheme extends Theme {
               .on(Quill.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
-  extendLinkTooltip(tooltip) {
-    console.log('hey!');
-    this.onModule('toolbar', function(toolbar) {
-      toolbar.on('link', tooltip.show());
-    });
-  }
+  // extendLinkTooltip(tooltip) {
+  //   this.onModule('toolbar', function(toolbar) {
+  //     toolbar.on('link', tooltip.show());
+  //   });
+  // }
 
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
