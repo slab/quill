@@ -18,8 +18,8 @@ import { SizeClass } from './formats/size';
 import StrikeFormat from './formats/strike';
 import UnderlineFormat from './formats/underline';
 
-// import ImageModule, { ImageBlot } from './modules/image';
-import LinkModule from './modules/link';
+import ImageTooltip from './modules/image';
+import LinkTooltip from './modules/link';
 import ToolbarModule from './modules/toolbar';
 
 import SnowTheme from './themes/snow';
@@ -45,8 +45,8 @@ Quill.register(SizeClass);
 Quill.register(StrikeFormat);
 Quill.register(UnderlineFormat);
 
-// Quill.register('image', ImageModule);
-Quill.register('link-tooltip', LinkModule);
+Quill.register('image-tooltip', ImageTooltip);
+Quill.register('link-tooltip', LinkTooltip);
 Quill.register('toolbar', ToolbarModule);
 
 Quill.register('snow', SnowTheme);

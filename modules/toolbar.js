@@ -49,7 +49,7 @@ class Toolbar extends Module {
       } else {
         value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
       }
-      let handler = this.quill.controls[format] || this.handle.bind(range);
+      let handler = this.quill.controls[format] || this.handle.bind(this);
       handler(range, format, value);
       this.update();
     });

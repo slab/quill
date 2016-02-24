@@ -1,91 +1,83 @@
 import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
-import { Range } from '../core/selection';
+import Emitter from '../core/emitter';
+import ImageBlot from '../formats/image';
+import { bindKeys } from './keyboard';
 import Tooltip from '../ui/tooltip';
+import Module from '../core/module';
 
 
-class ImageTooltip extends Tooltip {
-  constructor(quill, options = {}) {
-    options = extend({}, Tooltip.DEFAULTS, options);
+class ImageTooltip extends Module {
+  constructor(quill, options) {
     super(quill, options);
-    this.preview = this.container.querySelector('.preview');
-    this.textbox = this.container.querySelector('.input');
-    this.container.classList.add('ql-image-tooltip');
-    this.initListeners();
-  }
-
-  initListeners() {
-    this.quill.root.addEventListener('focus', this.hide.bind(this));
-    this.container.querySelector('.insert').addEventListener('click', this.insertImage.bind(this));
-    this.container.querySelector('.cancel').addEventListener('click', this.hide.bind(this));
-    this.textbox.addEventListener('input', this._preview.bind(this));
-    this.initTextbox(this.textbox, this.insertImage, this.hide);
-    this.quill.onModuleLoad('toolbar', (toolbar) => {
-      this.toolbar = toolbar;
-      toolbar.initFormat('image', this._onToolbar.bind(this));
+    this.container = this.quill.addContainer('ql-image-tooltip');
+    this.tooltip = new Tooltip(this.container);
+    this.container.innerHTML = this.options.template;
+    this.preview = this.container.querySelector('.ql-preview');
+    this.textbox = this.container.querySelector('input[type=text]');
+    bindKeys(this.textbox, {
+      'enter': this.save.bind(this),
+      'escape': this.tooltip.hide.bind(this.tooltip)
     });
-  }
-
-  insertImage() {
-    let url = this._normalizeURL(this.textbox.value);
-    this.preview.innerHTML = '<span>Preview</span>';
-    this.textbox.value = '';
-    this.hide();
-    let range = this.quill.getSelection();
-    if (range != null) {
-      this.quill.insertEmbed(range.index, 'image', url, 'user');
-      this.quill.setSelection(range.index + 1, range.index + 1);
-    }
-  }
-
-  _matchImageURL(url) {
-    return /^https?:\/\/.+\.(jpe?g|gif|png)$/.test(url);
-  }
-
-  _normalizeURL(url) {
-    // For now identical to link-tooltip but will change when we allow data uri
-    if (!/^https?:\/\//.test(url)) {
-      url = 'http://' + url;
-    }
-    return url;
-  }
-
-  _onToolbar(range, value) {
-    if (value) {
-      if (this.textbox.value.length === 0) {
-        this.textbox.value = 'http://';
-      }
+    this.container.querySelector('a.ql-action').addEventListener('click', this.save.bind(this));
+    this.container.querySelector('a.ql-cancel').addEventListener('click', this.hide.bind(this));
+    this.textbox.addEventListener('input', this.update.bind(this));
+    quill.controls.image = (range, format, value) => {
       this.show();
-      this.textbox.focus();
-      setTimeout(() => {
-        this.textbox.setSelectionRange(this.textbox.value.length, this.textbox.value.length);
-      }, 0);
-    } else {
-      this.quill.deleteText(range, 'user');
-      this.toolbar.setActive('image', false);
-    }
+    };
   }
 
-  _preview() {
-    if (!this._matchImageURL(this.textbox.value)) return;
-    if (this.preview.firstChild.tagName === 'IMG') {
-      this.preview.firstChild.setAttribute('src', this.textbox.value);
+  hide() {
+    this.tooltip.hide();
+    if (this.preview.firstChild != null) {
+      this.preview.removeChild(this.preview.firstChild);
+      this.preview.classList.add('ql-empty');
+    }
+    this.quill.focus();
+  }
+
+  save() {
+    // TODO insert at correct location
+    let url = this.options.sanitize(this.textbox.value);
+    this.quill.insertEmbed(0, ImageBlot.blotName, url, Emitter.sources.USER);
+    this.quill.setSelection(1, 1, Emitter.sources.SILENT);
+    this.hide();
+  }
+
+  show() {
+    let [left, top] = this.tooltip.center(this.container, this.quill.container);
+    this.tooltip.show(left, top);
+  }
+
+  update() {
+    if (!this.options.match(this.textbox.value)) return;
+    let url = this.options.sanitize(this.textbox.value);
+    if (this.preview.firstChild != null) {
+      this.preview.firstChild.setAttribute('src', url);
     } else {
       let img = document.createElement('img');
-      img.setAttribute('src', this.textbox.value);
-      this.preview.replaceChild(img, this.preview.firstChild);
+      img.setAttribute('src', url);
+      this.preview.appendChild(img);
+      this.preview.classList.remove('ql-empty');
     }
   }
 }
 ImageTooltip.DEFAULTS = {
-  template: `
-    <input class="input" type="textbox">
-    <div class="preview">
-      <span>Preview</span>
-    </div>
-    <a href="javascript:;" class="cancel">Cancel</a>
-    <a href="javascript:;" class="insert">Insert</a>`
+  match: function(url) {
+    return /^https?:\/\/.+\.(jpe?g|gif|png)$/.test(url);
+  },
+  sanitize: function(url) {
+    if (!/^https?:\/\//.test(url)) {
+      url = 'http://' + url;
+    }
+    return url;
+  },
+  template: [
+    '<input class="input" type="text">',
+    '<div class="ql-empty ql-preview"></div>',
+    '<a class="ql-cancel"></a>',
+    '<a class="ql-action"></a>'
+  ].join('')
 };
 
 
-export { ImageTooltip as default };
+export default ImageTooltip;

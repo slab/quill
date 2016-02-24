@@ -1,10 +1,42 @@
 .ql-snow
   .ql-image-tooltip
-    a
+    padding: 10px
+    text-align: center
+    width: 300px
+    input[type=text]
+      height: 30px
+      width: 100%
+    a.ql-cancel, a.ql-action
       border: 1px solid activeColor
-    a.insert
+      display: inline-block
+      float: left
+      line-height: 18px
+      padding: 5px
+      width: 50%
+    a.ql-cancel::before
+      color: activeColor
+      content: 'Cancel'
+    a.ql-action
       background-color: activeColor
+    a.ql-action::before
       color: whiteColor
-    .preview
-      border-color: borderColor
+      content: 'Insert'
+    .ql-preview
+      height: 200px
+      margin: 10px 0px
+      position: relative
+      img
+        bottom: 0
+        left: 0
+        margin: auto
+        max-height: 100%
+        max-width: 100%
+        position: absolute
+        right: 0
+        top: 0
+    .ql-empty.ql-preview::before
+      border: 1px dashed borderColor
       color: borderColor
+      content: 'Preview'
+      display: block
+      line-height: 200px
