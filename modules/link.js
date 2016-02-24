@@ -16,20 +16,20 @@ class LinkTooltip extends Module {
     this.container = this.quill.addContainer('ql-link-tooltip');
     this.tooltip = new Tooltip(this.container);
     this.container.innerHTML = this.options.template;
-    this.preview = this.container.querySelector('a.preview');
+    this.preview = this.container.querySelector('a.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
     bindKeys(this.textbox, {
       'enter': this.save.bind(this),
       'escape': this.tooltip.hide.bind(this.tooltip)
     });
-    this.container.querySelector('a.action').addEventListener('click', () => {
+    this.container.querySelector('a.ql-action').addEventListener('click', () => {
       if (this.container.classList.contains('ql-editing')) {
         this.save();
       } else {
         this.edit();
       }
     });
-    this.container.querySelector('a.remove').addEventListener('click', this.remove.bind(this));
+    this.container.querySelector('a.ql-remove').addEventListener('click', this.remove.bind(this));
     // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
     quill.on(Quill.events.SELECTION_CHANGE, (range) => {
       if (range == null || range.length > 0) {
@@ -113,10 +113,10 @@ LinkTooltip.DEFAULTS = {
     return url;
   },
   template: [
-    '<a class="preview" target="_blank" href="about:blank"></a>',
+    '<a class="ql-preview" target="_blank" href="about:blank"></a>',
     '<input type="text">',
-    '<a class="remove"></a>',
-    '<a class="action"></a>'
+    '<a class="ql-remove"></a>',
+    '<a class="ql-action"></a>'
   ].join('')
 };
 
