@@ -4,7 +4,10 @@ import BlockBlot from '../blots/block';
 import CursorBlot from '../blots/cursor';
 import EmbedBlot from '../blots/embed';
 import equal from 'deep-equal';
+import logger from './logger';
 
+
+let debug = logger('[quill:selection]');
 
 class Range {
   constructor(index, length = 0) {
@@ -66,37 +69,51 @@ class Selection {
     this.update();
   }
 
-  getBounds(index) {
-    let blot, [line, offset] = this.scroll.descendant(BlockBlot, index);
-    [blot, offset] = line.descendant(Parchment.Leaf, offset, true);
-    if (blot == null) return null;
-    let containerBounds = this.root.parentNode.getBoundingClientRect();
-    let bounds, side = 'left';
-    if (blot instanceof EmbedBlot) {
-      bounds = blot.domNode.getBoundingClientRect();
-      if (offset > 0) {
-        side = 'right';
-      }
-    } else if (blot instanceof Parchment.Text) {
-      let range = document.createRange();
-      if (offset < blot.length()) {
-        range.setStart(blot.domNode, offset);
-        range.setEnd(blot.domNode, offset + 1);
-        side = 'left';
-      } else {
-        range.setStart(blot.domNode, offset - 1);
-        range.setEnd(blot.domNode, offset);
-        side = 'right';
-      }
+  getBounds(index, length = 0) {
+    let bounds, node, leaf, [line, offset] = this.scroll.descendant(BlockBlot, index);
+    [leaf, offset] = line.descendant(Parchment.Leaf, offset, true);
+    if (leaf == null) return null;
+    [node, offset] = leaf.position(offset, true);
+    let range = document.createRange();
+    if (length > 0) {
+      range.setStart(node, offset);
+      [line, offset] = this.scroll.descendant(BlockBlot, index + length);
+      [leaf, offset] = line.descendant(Parchment.Leaf, offset, true);
+      if (leaf == null) return null;
+      [node, offset] = leaf.position(offset, true);
+      range.setEnd(node, offset);
       bounds = range.getBoundingClientRect();
     } else {
-      // TODO handle
-      return null;
+      let side = 'left';
+      if (node instanceof Text) {
+        if (offset < node.data.length) {
+          range.setStart(node, offset);
+          range.setEnd(node, offset + 1);
+        } else {
+          range.setStart(node, offset - 1);
+          range.setEnd(node, offset);
+          side = 'right';
+        }
+        let rect = range.getBoundingClientRect();
+        bounds = {
+          height: rect.height,
+          left: rect[side],
+          width: 0,
+          top: rect.top
+        };
+      } else {
+        bounds = leaf.domNode.getBoundingClientRect();
+        if (offset > 0) side = 'right';
+      }
     }
+    let containerBounds = this.root.parentNode.getBoundingClientRect();
     return {
+      left: bounds.left - containerBounds.left,
+      right: bounds.left + bounds.width - containerBounds.left,
+      top: bounds.top - containerBounds.top,
+      bottom: bounds.top + bounds.height - containerBounds.top,
       height: bounds.height,
-      left: bounds[side] - containerBounds.left,
-      top: bounds.top - containerBounds.top
+      width: bounds.width
     };
   }
 

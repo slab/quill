@@ -17,14 +17,14 @@ class Tooltip {
     this.container.style.left = HIDE_MARGIN;
   }
 
-  position(target, container, offset = 10) {
-    let targetBounds = target.getBoundingClientRect();
+  position(bounds, container, offset = 10) {
+    return [100, 100];    // TODO implement
     let containerBounds = container.getBoundingClientRect();
-    let offsetLeft = targetBounds.left - containerBounds.left;
-    let offsetTop = targetBounds.top - containerBounds.top;
-    let offsetBottom = targetBounds.bottom - containerBounds.bottom;
-    let left = offsetLeft + targetBounds.width / 2 - this.container.offsetWidth / 2;
-    let top = offsetTop + targetBounds.height + offset;
+    let offsetLeft = bounds.left - containerBounds.left;
+    let offsetTop = bounds.top - containerBounds.top;
+    let offsetBottom = bounds.bottom - containerBounds.bottom;
+    let left = offsetLeft + bounds.width / 2 - this.container.offsetWidth / 2;
+    let top = offsetTop + bounds.height + offset;
     if (top + this.container.offsetHeight > container.offsetHeight) {
       top = offsetTop - this.container.offsetHeight - offset;
     }

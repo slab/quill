@@ -49,7 +49,8 @@ class Toolbar extends Module {
       } else {
         value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
       }
-      this.handle(range, format, value);
+      let handler = this.quill.controls[format] || this.handle.bind(range);
+      handler(range, format, value);
       this.update();
     });
     // TODO use weakmap

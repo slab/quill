@@ -45,6 +45,7 @@ class Quill {
     let html = this.container.innerHTML;
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
+    this.controls = {};
     this.modules = {};
     // TODO scroll will reset innerHTML as well, do not do twice
     this.root = this.addContainer('ql-editor');
@@ -140,8 +141,12 @@ class Quill {
     this.editor.formatText(index, length, formats, source);
   }
 
-  getBounds(index) {
-    return this.selection.getBounds(index);
+  getBounds(index, length = 0) {
+    if (typeof index === 'number') {
+      return this.selection.getBounds(index, length);
+    } else {
+      return this.selection.getBounds(index.index, index.length);
+    }
   }
 
   getContents(index = 0, length = this.getLength() - index) {
