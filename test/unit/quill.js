@@ -196,11 +196,13 @@ describe('Quill', function() {
       this.quill.setContents(delta);
       expect(this.quill.getContents()).toEqual(delta);
     });
+
     it('should accept an array of operations', function() {
       let delta = new Delta().insert('test').insert('123', {bold: true}).insert('\n');
       this.quill.setContents(delta.ops);
       expect(this.quill.getContents()).toEqual(delta);
     });
+
     it('should accept a json representation of a delta', function() {
       let delta = { ops: [{ insert: 'test\n'}] };
       this.quill.setContents(delta);
