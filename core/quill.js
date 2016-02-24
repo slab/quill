@@ -201,11 +201,7 @@ class Quill {
   }
 
   setContents(delta, source = Emitter.sources.API) {
-    if (Array.isArray(delta)) {
-      delta = new Delta(delta.slice());
-    } else {
-      delta = delta.slice();
-    }
+    delta = new Delta(delta).slice();
     delta.delete(this.getLength());
     this.editor.applyDelta(delta);
   }
