@@ -15,24 +15,28 @@ class Editor {
   }
 
   applyDelta(delta, source = Emitter.sources.API) {
+    this.applyDeltaToScroll(this.scroll, delta);
+    this.update(source);
+  }
+
+  applyDeltaToScroll(scroll, delta) {
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
-        this.scroll.deleteAt(index, op.delete);
+        scroll.deleteAt(index, op.delete);
         return index;
       }
       let length = op.retain || op.insert.length || 1;
       if (typeof op.insert === 'string') {
-        this.scroll.insertAt(index, op.insert);
+        scroll.insertAt(index, op.insert);
       } else if (typeof op.insert === 'object') {
         let key = Object.keys(op.insert)[0];
-        this.scroll.insertAt(index, key, op.insert[key]);
+        scroll.insertAt(index, key, op.insert[key]);
       }
       Object.keys(op.attributes || {}).forEach((name) => {
-        this.scroll.formatAt(index, length, name, op.attributes[name]);
+        scroll.formatAt(index, length, name, op.attributes[name]);
       });
       return index + length;
     }, 0);
-    this.update(source);
   }
 
   deleteText(index, length, source = Emitter.sources.API) {
@@ -58,6 +62,13 @@ class Editor {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
     this.update(source);
+  }
+
+  getHTML(index, length) {
+    let scroll = Parchment.create(document.createElement('div'), new Emitter());
+    let delta = this.getContents(index, length);
+    this.applyDeltaToScroll(scroll, delta);
+    return scroll.domNode.innerHTML;
   }
 
   getContents(index, length) {

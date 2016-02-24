@@ -1,6 +1,8 @@
 import Delta from 'rich-text/lib/delta';
 import Editor from '../../core/editor';
 import Selection, { Range } from '../../core/selection';
+import Parchment from 'parchment';
+import Emitter from '../../core/emitter';
 
 
 describe('Editor', function() {
@@ -194,6 +196,38 @@ describe('Editor', function() {
       let editor = this.initialize(Editor, '<p>03</p>');
       editor.applyDelta(new Delta().retain(2, { bold: true }));
       expect(this.container.innerHTML).toEqualHTML('<p><strong>03</strong></p>');
+    });
+  });
+
+  describe('applyDeltaToScroll', function() {
+    it('should apply a delta to the scroll with only inserts in it', function() {
+      let editor = this.initialize(Editor, '<p></p>');
+      let scroll = Parchment.create(document.createElement('div'), new Emitter());
+      editor.applyDeltaToScroll(scroll, new Delta().insert('03'));
+      expect(scroll.domNode.innerHTML).toEqualHTML('<p>03</p>');
+    });
+
+    it('should apply a delta to the scroll with only inserts and attributes in it', function() {
+      let editor = this.initialize(Editor, '<p></p>');
+      let scroll = Parchment.create(document.createElement('div'), new Emitter());
+      editor.applyDeltaToScroll(scroll, new Delta().insert('03', { bold: true }));
+      expect(scroll.domNode.innerHTML).toEqualHTML('<p><strong>03</strong></p>');
+    });
+
+    it('should apply a delta to the scroll with retains and attributes in it', function() {
+      let editor = this.initialize(Editor, '<p>03</p>');
+      let node = document.createElement('div')
+      node.innerHTML = '<p>03</p>';
+      let scroll = Parchment.create(node, new Emitter());
+      editor.applyDeltaToScroll(scroll, new Delta().retain(2, { bold: true }));
+      expect(scroll.domNode.innerHTML).toEqualHTML('<p><strong>03</strong></p>');
+    });
+  });
+
+  describe('getHTML()', function() {
+    it('should return the a fragment of html when given index and length', function() {
+      let editor = this.initialize(Editor, '<p>0123<strong>4567</strong></p>');
+      expect(editor.getHTML(2, 4)).toEqualHTML('<p>23<strong>45</strong></p>');
     });
   });
 
