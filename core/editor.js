@@ -110,9 +110,9 @@ class Editor {
     }).join('');
   }
 
-  insertEmbed(index, embed, value, formats = {}, source = Emitter.sources.API) {
+  insertEmbed(index, embed, value, source = Emitter.sources.API) {
     this.scroll.insertAt(index, embed, value);
-    this.formatText(index, index + 1, formats, source);
+    this.update(source);
   }
 
   insertText(index, text, formats = {}, source = Emitter.sources.API) {
