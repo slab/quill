@@ -154,6 +154,11 @@ class Quill {
     return this.editor.getContents(index, length);
   }
 
+  getHTML(index = 0, length = this.getLength() - index) {
+    [index, length] = overload(index, length);
+    return this.editor.getHTML(index, length);
+  }
+
   getFormat(index = this.getSelection(), length = 0) {
     if (typeof index === 'number') {
       return this.editor.getFormat(index, length);

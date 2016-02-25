@@ -203,6 +203,20 @@ describe('Quill', function() {
     });
   });
 
+  describe('getHTML()', function() {
+    it('should return the whole html with no parameters', function() {
+      expect(this.quill.getHTML()).toEqualHTML('<p>01234567</p><p><br></p>');
+    });
+
+    it('should return the a fragment of html when given index and length', function() {
+      expect(this.quill.getHTML(2, 4)).toEqualHTML('<p>2345</p>');
+    });
+
+    it('should return the a fragment of html when given a range', function() {
+      expect(this.quill.getHTML({index: 2, length: 4})).toEqualHTML('<p>2345</p>');
+    });
+  });
+
   describe('setContents()', function() {
     it('should accept a delta', function() {
       let delta = new Delta().insert('test\n');
