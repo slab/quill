@@ -4,8 +4,8 @@ $(document).ready(function() {
   quill = new Quill('#editor', {
     modules: {
       'toolbar': { container: '#toolbar' },
-      'image-tooltip': true,
-      'link-tooltip': true
+      'link-tooltip': true,
+      'image-tooltip': true
     },
     theme: 'snow'
   });

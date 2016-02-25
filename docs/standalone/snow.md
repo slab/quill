@@ -9,7 +9,7 @@ permalink: /standalone/snow/
     padding: 25px;
   }
   #editor-container {
-    height: 250px;
+    height: 400px;
   }
 </style>
 <!-- section -->
@@ -19,6 +19,8 @@ permalink: /standalone/snow/
   var quill = new Quill('#editor-container', {
     debug: 'info',
     modules: {
+      'image-tooltip': true,
+      'link-tooltip': true,
       toolbar: [
         [{ font: [false, 'serif', 'monospace'] }, { size: ['small', false, 'large', 'huge'] }],
         ['bold', 'italic', 'underline', 'strike'],

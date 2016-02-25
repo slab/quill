@@ -11,37 +11,45 @@ redirect_from: /latest/
 <div id="demo-container">
   <div class="quill-wrapper" data-toggle="tooltip" data-placement="left" title="Try me out!">
     <div id="toolbar" class="toolbar">
-      {% include full-toolbar.html %}
-      <span class="ql-format-group">
-        <span title="Link" class="ql-format-button ql-link"></span>
-        <span class="ql-format-separator"></span>
-        <span title="Image" class="ql-format-button ql-image"></span>
+      <span class="ql-formats">
+        <select class="ql-font">
+          <option selected></option>
+          <option value="serif"></option>
+          <option value="monospace"></option>
+        </select>
+        <select class="ql-size">
+          <option value="small"></option>
+          <option selected></option>
+          <option value="large"></option>
+          <option value="huge"></option>
+        </select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <button class="ql-strike"></button>
+      </span>
+      <span class="ql-formats">
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-list" data-value="ordered"></button>
+        <button class="ql-list" data-value="bullet"></button>
+        <select class="ql-align">
+          <option selected></option>
+          <option value="center"></option>
+          <option value="right"></option>
+          <option value="justify"></option>
+        </select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-link"></button>
+        <button class="ql-image"></button>
       </span>
     </div>
-    <div id="editor" class="editor">
-      <div><span style="font-size: 18px;">Quill Rich Text Editor</span></div>
-      <div><br></div>
-      <div>
-        <span>Quill is a free, </span>
-        <a href="https://github.com/quilljs/quill/">open source</a>
-        <span> WYSIWYG editor built for the modern web. With its </span>
-        <a href="http://quilljs.com/docs/modules/">extensible architecture</a>
-        <span> and a </span>
-        <a href="http://quilljs.com/docs/api/">expressive API</a>
-        <span> you can completely customize it to fulfill your needs. Some built in features include:</span>
-      </div>
-      <div><br></div>
-      <ul>
-        <li>Fast and lightweight</li>
-        <li>Semantic markup</li>
-        <li>Standardized HTML between browsers</li>
-        <li>Cross browser support including Chrome, Firefox, Safari, and IE 9+</li>
-      </ul>
-      <div><br></div>
-      <div style="text-align: center;"><img src="/assets/images/quill-photo.jpg" alt="Quill Pen"></div>
-      <div style="text-align: center;"><a style="font-size: 32px;" href="https://github.com/quilljs/quill/releases/download/v{{ site.version }}/quill.tar.gz">Download Quill</a></div>
-      <div><br></div>
-    </div>
+    <div id="editor" class="editor"><p>Quill</p></div>
   </div>
 </div>
 
