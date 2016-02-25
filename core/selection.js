@@ -38,12 +38,8 @@ class Selection {
     this.update(Emitter.sources.SILENT);
   }
 
-  checkFocus() {
-    return document.activeElement === this.root;
-  }
-
   focus() {
-    if (this.checkFocus()) return;
+    if (this.hasFocus()) return;
     this.root.focus();
     this.setRange(this.savedRange);
   }
@@ -155,7 +151,7 @@ class Selection {
   }
 
   getRange() {
-    if (!this.checkFocus()) return [null, null];
+    if (!this.hasFocus()) return [null, null];
     let range = this.getNativeRange();
     if (range == null) return [null, null];
     let positions = [[range.start.node, range.start.offset]];
@@ -178,6 +174,10 @@ class Selection {
     return [new Range(start, end-start), range];
   }
 
+  hasFocus() {
+    return document.activeElement === this.root;
+  }
+
   scrollIntoView() {
     if (this.lastRange == null) return;
     let startBounds = this.getBounds(this.lastRange.start);
@@ -197,7 +197,7 @@ class Selection {
     let selection = document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
-      if (!this.checkFocus()) this.root.focus();
+      if (!this.hasFocus()) this.root.focus();
       let nativeRange = this.getNativeRange();
       if (nativeRange == null ||
           startNode !== nativeRange.start.node || startOffset !== nativeRange.start.offset ||

@@ -52,9 +52,9 @@ class Keyboard extends Module {
 
   onDelete(backspace, range) {
     if (range.length > 0) {
-      this.quill.deleteText(range, Quill.sources.USER);
+      this.quill.deleteText(range, Emitter.sources.USER);
     } else if (!backspace) {
-      this.quill.deleteText(range.index, 1, Quill.sources.USER);
+      this.quill.deleteText(range.index, 1, Emitter.sources.USER);
     } else {
       let [line, offset] = this.quill.scroll.descendant(Block, range.index);
       let formats = this.quill.getFormat(range);
@@ -65,11 +65,11 @@ class Keyboard extends Module {
           line.format('list', false);
         }
       } else {
-        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+        this.quill.deleteText(range.index - 1, 1, Emitter.sources.USER);
         range = new Range(Math.max(0, range.index - 1));
       }
     }
-    this.quill.setSelection(range.index, Quill.sources.SILENT);
+    this.quill.setSelection(range.index, Emitter.sources.SILENT);
   }
 
   onEnter(range) {
@@ -84,8 +84,8 @@ class Keyboard extends Module {
       .retain(range.index)
       .insert('\n', lineFormats)
       .delete(range.length);
-    this.quill.updateContents(delta, Quill.sources.USER);
-    this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    this.quill.updateContents(delta, Emitter.sources.USER);
+    this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
     Object.keys(formats).forEach((name) => {
       if (lineFormats[name] == null) {
         this.quill.formatCursor(name, formats[name]);
@@ -95,16 +95,13 @@ class Keyboard extends Module {
 
   onFormat(format, range) {
     let formats = this.quill.getFormat(range);
-    this.quill.formatCursor(format, !formats[format], Quill.sources.USER);
-    if (range.length !== 0) {
-      this.quill.setSelection(range, Quill.sources.SILENT);
-    }
+    this.quill.format(format, formats[format], Emitter.sources.USER);
   }
 
   onTab(range, evt) {
     if (range.length === 0) {
       let delta = new Delta().retain(range.index).insert('\t').delete(range.length);
-      this.quill.updateContents(delta, Quill.sources.USER);
+      this.quill.updateContents(delta, Emitter.sources.USER);
       this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
     } else {
       let modifier = evt.shiftKey ? -1 : 1;
@@ -113,7 +110,7 @@ class Keyboard extends Module {
         let indent = parseInt(format['indent'] || 0);
         line.format('indent', Math.max(0, indent + modifier));
       });
-      this.quill.update(Quill.sources.USER);
+      this.quill.update(Emitter.sources.USER);
       this.quill.setSelection(range, Emitter.sources.SILENT);
     }
   }

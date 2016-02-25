@@ -45,7 +45,7 @@ class Quill {
     let html = this.container.innerHTML;
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
-    this.controls = {};
+    this.controls = {};   // TODO make into API
     this.modules = {};
     // TODO scroll will reset innerHTML as well, do not do twice
     this.root = this.addContainer('ql-editor');
@@ -117,16 +117,17 @@ class Quill {
     this.selection.focus();
   }
 
-  formatCursor(name, value, source = Emitter.sources.API) {
+  format(name, value, source = Emitter.sources.API) {
     let range = this.getSelection();
     if (range == null) return;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
       this.formatLine(range, name, value, source);
     } else if (range.length === 0) {
-      this.selection.format(name, value);
+      return this.selection.format(name, value);
     } else {
       this.formatText(range, name, value, source);
     }
+    this.setSelection(range, Emitter.sources.SILENT);
   }
 
   formatLine(index, length, name, value, source) {
@@ -179,6 +180,10 @@ class Quill {
   getText(index = 0, length = this.getLength() - index) {
     [index, length] = overload(index, length);
     return this.editor.getText(index, length);
+  }
+
+  hasFocus() {
+    return this.selection.hasFocus();
   }
 
   insertEmbed(index, embed, value, source) {

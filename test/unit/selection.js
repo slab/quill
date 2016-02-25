@@ -21,9 +21,9 @@ describe('Selection', function() {
     });
 
     it('initial focus', function() {
-      expect(this.selection.checkFocus()).toBe(false);
+      expect(this.selection.hasFocus()).toBe(false);
       this.selection.focus();
-      expect(this.selection.checkFocus()).toBe(true);
+      expect(this.selection.hasFocus()).toBe(true);
     });
 
     it('restore last range', function() {
@@ -31,9 +31,9 @@ describe('Selection', function() {
       this.selection.setRange(range);
       this.textarea.focus();
       this.textarea.select();
-      expect(this.selection.checkFocus()).toBe(false);
+      expect(this.selection.hasFocus()).toBe(false);
       this.selection.focus();
-      expect(this.selection.checkFocus()).toBe(true);
+      expect(this.selection.hasFocus()).toBe(true);
       expect(this.selection.getRange()[0]).toEqual(range);
     });
   });
@@ -162,7 +162,7 @@ describe('Selection', function() {
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
-      expect(selection.checkFocus()).toBe(true);
+      expect(selection.hasFocus()).toBe(true);
     });
 
     it('empty lines', function() {
@@ -176,7 +176,7 @@ describe('Selection', function() {
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(range);
-      expect(selection.checkFocus()).toBe(true);
+      expect(selection.hasFocus()).toBe(true);
     });
 
     it('nested text node', function() {
@@ -190,7 +190,7 @@ describe('Selection', function() {
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
-      expect(selection.checkFocus()).toBe(true);
+      expect(selection.hasFocus()).toBe(true);
     });
 
     it('between inlines', function() {
@@ -199,7 +199,7 @@ describe('Selection', function() {
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
-      expect(selection.checkFocus()).toBe(true);
+      expect(selection.hasFocus()).toBe(true);
     });
 
     it('between embeds', function() {
@@ -219,7 +219,7 @@ describe('Selection', function() {
       selection.setRange(expected);
       let [range, ] = selection.getRange();
       expect(range).toEqual(expected);
-      expect(selection.checkFocus()).toBe(true);
+      expect(selection.hasFocus()).toBe(true);
     });
 
     it('null', function() {
@@ -230,7 +230,7 @@ describe('Selection', function() {
       selection.setRange(null);
       [range, ] = selection.getRange();
       expect(range).toEqual(null);
-      expect(selection.checkFocus()).toBe(false);
+      expect(selection.hasFocus()).toBe(false);
     });
   });
 

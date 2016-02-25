@@ -1,4 +1,5 @@
 import extend from 'extend';
+import Emitter from '../core/emitter';
 import Parchment from 'parchment';
 import Module from '../core/module';
 import logger from '../core/logger';
@@ -41,32 +42,21 @@ class Toolbar extends Module {
     // if (this.quill.options.formats.indexOf(format) < 0) return;  // TODO enable
     let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
     input.addEventListener(eventName, () => {
-      let range = this.quill.getSelection(true);
-      if (range == null) return false;
+      this.quill.focus();
       let value;
       if (input.tagName === 'SELECT') {
         value = input.options[input.selectedIndex].value || false;
       } else {
         value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
       }
-      let handler = this.quill.controls[format] || this.handle.bind(this);
-      handler(range, format, value);
-      this.update();
+      if (this.quill.controls[format]) {
+        this.quill.controls[format](format, value);
+      } else {
+        this.quill.format(format, value, Emitter.sources.USER);
+      }
     });
     // TODO use weakmap
     this.controls.push([format, input]);
-  }
-
-  handle(range, format, value) {
-    if (Parchment.query(format, Parchment.Scope.BLOCK)) {
-      this.quill.formatLine(range, format, value, Quill.sources.USER);
-    } else if (range.length === 0) {
-      this.quill.formatCursor(format, value, Quill.sources.USER);
-      return;
-    } else {
-      this.quill.formatText(range, format, value, Quill.sources.USER);
-    }
-    this.quill.setSelection(range, Quill.sources.SILENT);
   }
 
   update() {
