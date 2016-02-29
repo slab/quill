@@ -32,9 +32,6 @@ class Selection {
         this.update(Emitter.sources.SILENT);
       }
     });
-    // this.emitter.on(Emitter.events.SCROLL_OPTIMIZE, () => {
-    //   this.setRange(this.savedRange);
-    // });
     this.update(Emitter.sources.SILENT);
   }
 
