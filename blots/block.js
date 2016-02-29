@@ -70,10 +70,6 @@ class Block extends Parchment.Block {
     return super.length() + NEWLINE_LENGTH;
   }
 
-  path(index) {
-    return super.path(index, true);
-  }
-
   split(index, force = false) {
     if (force && (index === 0 || index >= this.length() - NEWLINE_LENGTH)) {
       let clone = this.clone();
