@@ -86,7 +86,7 @@ class Block extends Parchment.Block {
   }
 }
 Block.blotName = 'block';
-Block.child = 'break';
+Block.childless = 'break';
 Block.tagName = 'P';
 
 
