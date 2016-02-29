@@ -20,5 +20,9 @@ server.on('upgrade', function (req, socket, head) {
   proxy.ws(req, socket, head);
 });
 
+proxy.on('error', function(e) {
+  console.error(e);
+});
+
 console.log('Proxy listening on 9000');
 server.listen(9000);
