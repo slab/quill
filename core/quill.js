@@ -17,8 +17,9 @@ class Quill {
     logger.level(limit);
   }
 
-  static register(name, target) {
-    if (typeof name === 'string') {
+  static register(...args) {
+    if (typeof args[0] === 'string') {
+      let [name, target] = args;
       if (target.prototype instanceof Theme) {
         if (_themes[name] != null) debug.warn(`overwriting ${name} theme`);
         _themes[name] = target;
@@ -27,10 +28,11 @@ class Quill {
         _modules[name] = target;
       }
     } else {
-      let format = name;
-      name = format.attrName || format.blotName;
-      if (Parchment.query(name)) debug.warn(`Overwriting ${name} format`);
-      Parchment.register(format);
+      args.forEach(function(format) {
+        let name = format.attrName || format.blotName;
+        if (Parchment.query(name)) debug.warn(`Overwriting ${name} format`);
+        Parchment.register(format);
+      });
     }
   }
 

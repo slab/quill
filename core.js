@@ -1,26 +1,21 @@
 import Quill from './core/quill';
 import Parchment from 'parchment';
 
-import BlockBlot from './blots/block';
-import BreakBlot from './blots/break';
-import CursorBlot from './blots/cursor';
-import InlineBlot from './blots/inline';
-import ScrollBlot from './blots/scroll';
+import Block from './blots/block';
+import Break from './blots/break';
+import Cursor from './blots/cursor';
+import Inline from './blots/inline';
+import Scroll from './blots/scroll';
 
-import ClipboardModule from './modules/clipboard';
-import KeyboardModule from './modules/keyboard';
-import UndoManagerModule from './modules/undo-manager';
+import Clipboard from './modules/clipboard';
+import Keyboard from './modules/keyboard';
+import UndoManager from './modules/undo-manager';
 
-Quill.register(BlockBlot);
-Quill.register(BreakBlot);
-Quill.register(CursorBlot);
-Quill.register(InlineBlot);
-Quill.register(ScrollBlot);
-Quill.register(Parchment.Text);
+Quill.register(Block, Break, Cursor, Inline, Scroll, Parchment.Text);
 
-Quill.register('clipboard', ClipboardModule);
-Quill.register('keyboard', KeyboardModule);
-Quill.register('undo-manager', UndoManagerModule);
+Quill.register('clipboard', Clipboard);
+Quill.register('keyboard', Keyboard);
+Quill.register('undo-manager', UndoManager);
 
 
 export default Quill;

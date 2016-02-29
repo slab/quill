@@ -1,22 +1,22 @@
 import Quill from './core';
 
-import { AlignClass } from './formats/align';
-import { BackgroundStyle } from './formats/background';
-import BoldFormat from './formats/bold';
-import CodeFormat, { CodeInline } from './formats/code';
-import { ColorStyle } from './formats/color';
-import { DirectionClass } from './formats/direction';
-import { FontClass } from './formats/font';
-import HeaderFormat from './formats/header';
-import { IndentClass } from './formats/indent';
-import ImageFormat from './formats/image';
-import ItalicFormat from './formats/italic';
-import LinkFormat from './formats/link';
-import ListFormat, { ListItem } from './formats/list';
-import ScriptFormat from './formats/script';
-import { SizeClass } from './formats/size';
-import StrikeFormat from './formats/strike';
-import UnderlineFormat from './formats/underline';
+import { AlignClass as Align } from './formats/align';
+import { BackgroundStyle as Background } from './formats/background';
+import Bold from './formats/bold';
+import CodeBlock, { CodeInline } from './formats/code';
+import { ColorStyle as Color } from './formats/color';
+import { DirectionClass as Direction } from './formats/direction';
+import { FontClass as Font } from './formats/font';
+import Header from './formats/header';
+import { IndentClass as Indent } from './formats/indent';
+import Image from './formats/image';
+import Italic from './formats/italic';
+import Link from './formats/link';
+import List, { ListItem } from './formats/list';
+import Script from './formats/script';
+import { SizeClass as Size } from './formats/size';
+import Strike from './formats/strike';
+import Underline from './formats/underline';
 
 import ImageTooltip from './modules/image';
 import LinkTooltip from './modules/link';
@@ -25,25 +25,9 @@ import ToolbarModule from './modules/toolbar';
 import SnowTheme from './themes/snow';
 
 
-Quill.register(AlignClass);
-Quill.register(BackgroundStyle);
-Quill.register(BoldFormat);
-Quill.register(CodeInline);
-Quill.register(CodeFormat);
-Quill.register(ColorStyle);
-Quill.register(DirectionClass);
-Quill.register(FontClass);
-Quill.register(HeaderFormat);
-Quill.register(ImageFormat);
-Quill.register(IndentClass);
-Quill.register(ItalicFormat);
-Quill.register(LinkFormat);
-Quill.register(ListFormat);
-Quill.register(ListItem);
-Quill.register(ScriptFormat);
-Quill.register(SizeClass);
-Quill.register(StrikeFormat);
-Quill.register(UnderlineFormat);
+Quill.register(Align, CodeBlock, Direction, Header, Indent, List, ListItem);
+Quill.register(Background, Bold, CodeInline, Color, Font, Italic, Link, Script, Size, Strike, Underline);
+Quill.register(Image);
 
 Quill.register('image-tooltip', ImageTooltip);
 Quill.register('link-tooltip', LinkTooltip);
