@@ -27,9 +27,6 @@ module.exports = {
     },
     extensions: ['', '.js', '.styl', '.ts']
   },
-  babel: {
-    presets: ['es2015']   // for isparta
-  },
   module: {
     loaders: [
       { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },

@@ -18,6 +18,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "html-loader": "~0.4.3",
     "http-proxy": "^1.13.2",
+    "isparta-loader": "^2.0.0",
     "jasmine-core": "^2.4.1",
     "karma": "~0.13.19",
     "karma-chrome-launcher": "~0.2.2",
@@ -36,9 +37,9 @@
   },
   "scripts": {
     "build": "webpack --config _develop/webpack.config.js --devtool hidden-source-map",
-    "prestart": "npm run build",
-    "start": "foreman start -f _develop/procfile",
-    "test": "karma start _develop/karma.config.js --single-run --browsers Chrome",
+    "start": "npm run build; foreman start -f _develop/procfile",
+    "test": "npm run build; karma start _develop/karma.config.js --single-run --browsers Chrome",
+    "test:coverage": "webpack --config _develop/webpack.coverage.js; karma start _develop/karma.config.js --single-run --reporters coverage,progress --browsers Chrome",
     "travis": "karma start _develop/karma.config.js --single-run --reporters dots,saucelabs"
   },
   "private": true
