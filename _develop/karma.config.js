@@ -23,8 +23,8 @@ module.exports = function(config) {
     reporters: ['progress'],
     colors: true,
     autoWatch: false,
-    singleRun: false,
-    browsers: [],
+    singleRun: true,
+    browsers: ['Chrome'],
 
     coverageReporter: {
       dir: '.coverage',
