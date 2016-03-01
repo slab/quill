@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Editor from '../../../core/editor';
 
 
-describe('Block', function() {
+describe('Block Attributor', function() {
   it('definition', function() {
     let editor = this.initialize(Editor, `
       <h1>0</h1>

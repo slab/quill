@@ -1,6 +1,6 @@
-import Quill, { overload } from '../../core/quill';
-import { Range } from '../../core/selection';
-import Emitter from '../../core/emitter';
+import Quill, { overload } from '../../../core/quill';
+import { Range } from '../../../core/selection';
+import Emitter from '../../../core/emitter';
 import Delta from 'rich-text/lib/delta';
 
 

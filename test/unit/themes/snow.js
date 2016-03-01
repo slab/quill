@@ -63,17 +63,15 @@ let icons = {
 };
 
 
-describe('Themes', function() {
-  describe('Snow', function() {
-    it('icons', function() {
-      this.container.classList.add('ql-snow');
-      this.container.classList.add('ql-toolbar');
-      this.container.innerHTML = '<span class="ql-formats"></span>';
-      Object.keys(icons).forEach((icon) => {
-        let button = document.createElement('button');
-        button.innerHTML = icons[icon];
-        this.container.firstChild.appendChild(button);
-      });
+describe('Snow', function() {
+  it('icons', function() {
+    this.container.classList.add('ql-snow');
+    this.container.classList.add('ql-toolbar');
+    this.container.innerHTML = '<span class="ql-formats"></span>';
+    Object.keys(icons).forEach((icon) => {
+      let button = document.createElement('button');
+      button.innerHTML = icons[icon];
+      this.container.firstChild.appendChild(button);
     });
   });
 });
