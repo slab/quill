@@ -6,14 +6,16 @@ permalink: /standalone/snow/
 <link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.snow.css">
 <style>
   body {
-    padding: 25px;
+    margin: auto;
+    padding: 50px;
+    width: 720px;
   }
   #editor-container {
     height: 400px;
   }
 </style>
 <!-- section -->
-<div id="editor-container"><p>Test</p></div>
+<div id="editor-container"><p><a href="google.com">Googe</a></p></div>
 <script type="text/javascript" src="//{{site.cdn}}/{{site.version}}/quill.js"></script>
 <script>
   var quill = new Quill('#editor-container', {
