@@ -208,6 +208,12 @@ describe('Editor', function() {
       expect(this.container.innerHTML).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
     });
 
+    it('unformatted newline', function() {
+      let editor = this.initialize(Editor, '<h1>01</h1>');
+      editor.applyDelta(new Delta().retain(2).insert('\n'));
+      expect(this.container.innerHTML).toEqualHTML('<p>01</p><h1><br></h1>');
+    });
+
     it('formatted embed', function() {
       let editor = this.initialize(Editor, '<p></p>');
       editor.applyDelta(new Delta().insert({ image: '/assets/favicon.png'}, { italic: true }));

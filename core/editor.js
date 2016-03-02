@@ -29,7 +29,7 @@ class Editor {
           this.scroll.insertAt(index, op.insert);
           let leaf, [line, offset] = this.scroll.descendant(Block, index);
           [leaf, offset] = line.descendant(Parchment.Leaf, offset);
-          let formats = bubbleFormats(leaf);
+          let formats = extend({}, line.formats(), bubbleFormats(leaf));
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];
