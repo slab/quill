@@ -1,7 +1,9 @@
 import Delta from 'rich-text/lib/delta';
+import DeltaOp from 'rich-text/lib/op';
 import Emitter from './emitter';
 import Parchment from 'parchment';
 import Block from '../blots/block';
+import clone from 'clone';
 import extend from 'extend';
 
 
@@ -21,14 +23,23 @@ class Editor {
         return index;
       }
       let length = op.retain || op.insert.length || 1;
-      if (typeof op.insert === 'string') {
-        this.scroll.insertAt(index, op.insert);
-      } else if (typeof op.insert === 'object') {
-        let key = Object.keys(op.insert)[0];
-        this.scroll.insertAt(index, key, op.insert[key]);
+      let attributes = op.attributes || {};
+      if (op.insert != null) {
+        if (typeof op.insert === 'string') {
+          this.scroll.insertAt(index, op.insert);
+          let leaf, [line, offset] = this.scroll.descendant(Block, index);
+          [leaf, offset] = line.descendant(Parchment.Leaf, offset);
+          let formats = bubbleFormats(leaf);
+          attributes = DeltaOp.attributes.diff(formats, attributes) || {};
+        } else if (typeof op.insert === 'object') {
+          let key = Object.keys(op.insert)[0];
+          this.scroll.insertAt(index, key, op.insert[key]);
+          attributes = clone(attributes);
+          delete attributes[key];
+        }
       }
-      Object.keys(op.attributes || {}).forEach((name) => {
-        this.scroll.formatAt(index, length, name, op.attributes[name]);
+      Object.keys(attributes).forEach((name) => {
+        this.scroll.formatAt(index, length, name, attributes[name]);
       });
       return index + length;
     }, 0);

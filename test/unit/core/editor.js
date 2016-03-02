@@ -25,7 +25,7 @@ describe('Editor', function() {
 
     it('full document', function() {
       let editor = this.initialize(Editor, `
-        <h1>Quill Rich Text Editor</h1>
+        <h2>Quill Rich Text Editor</h2>
         <p><br></p>
         <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web.</p>
         <p><br></p>
@@ -47,7 +47,7 @@ describe('Editor', function() {
       let expected = editor.scroll.domNode.innerHTML;
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('Quill Rich Text Editor')
-        .insert('\n', { header: 1 })
+        .insert('\n', { header: 2 })
         .insert('\nQuill is a free, ')
         .insert('open source', { link: 'https://github.com/quilljs/quill/' })
         .insert(' WYSIWYG editor built for the modern web.\n\nFast and lightweight')
@@ -59,7 +59,7 @@ describe('Editor', function() {
         .insert('Cross browser support including Chrome, Firefox, Safari, and IE 9+')
         .insert('\n', { list: 'bullet' })
         .insert('\n')
-        .insert({ image: 'http://quilljs.com/images/quill-photo.jpg' })
+        .insert({ image: '/images/quill-photo.jpg' })
         .insert('\n', { align: 'center' })
         .insert('Download Quill', { size: 'large', link: 'https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz' })
         .insert('\n', { align: 'center' })
@@ -178,22 +178,40 @@ describe('Editor', function() {
   });
 
   describe('applyDelta', function() {
-    it('should apply a delta with only inserts in it', function() {
+    it('inserts', function() {
       let editor = this.initialize(Editor, '<p></p>');
-      editor.applyDelta(new Delta().insert('03'));
-      expect(this.container.innerHTML).toEqualHTML('<p>03</p>');
+      editor.applyDelta(new Delta().insert('01'));
+      expect(this.container.innerHTML).toEqualHTML('<p>01</p>');
     });
 
-    it('should apply a delta with only inserts and attributes in it', function() {
+    it('attributed insert', function() {
       let editor = this.initialize(Editor, '<p></p>');
-      editor.applyDelta(new Delta().insert('03', { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>03</strong></p>');
+      editor.applyDelta(new Delta().insert('01', { bold: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
     });
 
-    it('should apply a delta with retains and attributes in it', function() {
-      let editor = this.initialize(Editor, '<p>03</p>');
+    it('format', function() {
+      let editor = this.initialize(Editor, '<p>01</p>');
       editor.applyDelta(new Delta().retain(2, { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>03</strong></p>');
+      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
+    });
+
+    it('unformatted insert', function() {
+      let editor = this.initialize(Editor, '<p><em>01</em></p>');
+      editor.applyDelta(new Delta().retain(1).insert('|'));
+      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
+    });
+
+    it('insert at format boundary', function() {
+      let editor = this.initialize(Editor, '<p><em>0</em><u>1</u></p>');
+      editor.applyDelta(new Delta().retain(1).insert('|', { strike: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
+    });
+
+    it('formatted embed', function() {
+      let editor = this.initialize(Editor, '<p></p>');
+      editor.applyDelta(new Delta().insert({ image: '/assets/favicon.png'}, { italic: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
   });
 
