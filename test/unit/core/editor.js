@@ -59,7 +59,7 @@ describe('Editor', function() {
         .insert('Cross browser support including Chrome, Firefox, Safari, and IE 9+')
         .insert('\n', { list: 'bullet' })
         .insert('\n')
-        .insert({ image: '/images/quill-photo.jpg' })
+        .insert({ image: 'http://quilljs.com/images/quill-photo.jpg' })
         .insert('\n', { align: 'center' })
         .insert('Download Quill', { size: 'large', link: 'https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz' })
         .insert('\n', { align: 'center' })
