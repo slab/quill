@@ -8,13 +8,13 @@ class Clipboard extends Module {
     super(quill, options);
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');
+    this.container.setAttribute('contenteditable', true);
   }
 
   onPaste() {
     let range = this.quill.getSelection();
     if (range == null) return;
     let updateDelta = new Delta().retain(range.index).delete(range.length);
-    this.container.setAttribute('contenteditable', true);
     this.container.focus();
     setTimeout(() => {
       let pasteDelta = this.options.sanitize(this.container);
