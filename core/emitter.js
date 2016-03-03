@@ -17,9 +17,7 @@ class Emitter extends EventEmitter {
 }
 
 Emitter.events = {
-  MODULE_LOAD       : 'module-load',
-  POST_EVENT        : 'post-event',
-  PRE_EVENT         : 'pre-event',
+  READY             : 'ready',
   SCROLL_UPDATE     : 'scroll-update',
   SELECTION_CHANGE  : 'selection-change',
   TEXT_CHANGE       : 'text-change'

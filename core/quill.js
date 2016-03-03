@@ -8,9 +8,7 @@ import logger from './logger';
 import Theme from './theme';
 
 let debug = logger('[quill]');
-let _modules = {};
-let _themes = { base: Theme };
-const REQUIRED_MODULES = ['keyboard', 'clipboard', 'undo-manager'];
+
 
 class Quill {
   static debug(limit) {
@@ -21,11 +19,11 @@ class Quill {
     if (typeof args[0] === 'string') {
       let [name, target] = args;
       if (target.prototype instanceof Theme) {
-        if (_themes[name] != null) debug.warn(`overwriting ${name} theme`);
-        _themes[name] = target;
+        if (Theme.themes[name] != null) debug.warn(`overwriting ${name} theme`);
+        Theme.themes[name] = target;
       } else {
-        if (_modules[name] != null) debug.warn(`overwriting ${name} module`);
-        _modules[name] = target;
+        if (Theme.modules[name] != null) debug.warn(`overwriting ${name} module`);
+        Theme.modules[name] = target;
       }
     } else {
       args.forEach(function(format) {
@@ -41,7 +39,7 @@ class Quill {
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
-    let themeClass = _themes[options.theme];
+    let themeClass = Theme.themes[options.theme || Quill.DEFAULTS.theme];
     if (themeClass == null) {
       return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
     }
@@ -50,7 +48,6 @@ class Quill {
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
     this.controls = {};   // TODO make into API
-    this.modules = {};
     // TODO scroll will reset innerHTML as well, do not do twice
     this.root = this.addContainer('ql-editor');
     this.root.innerHTML = html.trim();
@@ -59,19 +56,13 @@ class Quill {
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
     this.theme = new themeClass(this, options);
-    REQUIRED_MODULES.forEach((name) => {    // Required modules
-      let camelCase = name.replace(/[-](\w|$)/g, function(_, next) {
-        return next.toUpperCase();
-      });
-      this[camelCase] = this.addModule(name, options.modules[name]);
-    });
-    Object.keys(options.modules).forEach((name) => {
-      if (REQUIRED_MODULES.indexOf(name) > -1) return;
-      this.addModule(name, options.modules[name]);
-    });
+    this.keyboard = this.theme.addModule('keyboard');
+    this.clipboard = this.theme.addModule('clipboard');
+    this.undoManager = this.theme.addModule('undo-manager');
     if (options.readOnly) {
       this.disable();
     }
+    this.emitter.emit(Emitter.events.READY);
   }
 
   addContainer(container, refNode = null) {
@@ -82,22 +73,6 @@ class Quill {
     }
     this.container.insertBefore(container, refNode);
     return container;
-  }
-
-  addModule(name, options = {}) {
-    let moduleClass = _modules[name];
-    if (moduleClass == null) {
-      return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
-    }
-    if (options === true) {  // Allow addModule('module', true)
-      options = {};
-    } else if (typeof options === 'string' || options instanceof HTMLElement) {
-      // Allow addModule('toolbar', '#toolbar');
-      options = { container: options };
-    }
-    this.modules[name] = new moduleClass(this, options);
-    this.emitter.emit(Emitter.events.MODULE_LOAD, name, this.modules[name]);
-    return this.modules[name];
   }
 
   deleteText(index, length, source = Emitter.sources.API) {
@@ -168,7 +143,7 @@ class Quill {
   }
 
   getModule(name) {
-    return this.modules[name];
+    return Theme.modules[name];
   }
 
   getSelection(focus = false) {

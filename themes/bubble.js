@@ -8,7 +8,7 @@ import { bindKeys } from '../modules/keyboard';
 
 class BubbleTheme extends Theme {
   constructor(quill, options) {
-    super(quill);
+    super(quill, options);
     this.quill.container.classList.add('ql-bubble');
   }
 

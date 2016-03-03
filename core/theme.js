@@ -1,19 +1,46 @@
 import Emitter from './emitter';
+import logger from './logger';
+
+let debug = logger('[quill:theme]');
 
 
 class Theme {
-  constructor(quill) {
+  constructor(quill, options) {
     this.quill = quill;
-    this.quill.on(Emitter.events.MODULE_LOAD, (name, module) => {
-      let capitalCase = name.split('-').map(function(word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }).join('');
-      if (typeof this['extend' + capitalCase] === 'function') {
-        this['extend' + capitalCase](module);
+    this.options = options;
+    this.modules = {};
+    this.quill.once(Emitter.events.READY, this.init.bind(this));
+  }
+
+  init() {
+    Object.keys(this.options.modules).forEach((name) => {
+      if (this.modules[name] == null) {
+        this.addModule(name);
       }
     });
   }
+
+  addModule(name, options) {
+    let moduleClass = Theme.modules[name];
+    if (moduleClass == null) {
+      return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
+    }
+    options = options || this.options.modules[name];
+    if (options === true) {  // Allow addModule('module', true)
+      options = {};
+    } else if (typeof options === 'string' || options instanceof HTMLElement) {
+      // Allow addModule('toolbar', '#toolbar');
+      options = { container: options };
+    }
+    this.modules[name] = new moduleClass(this.quill, options);
+    return this.modules[name];
+  }
 }
+Theme.DEFAULTS = {};
+Theme.themes = {
+  base: Theme
+};
+Theme.modules = {};
 
 
 export default Theme;

@@ -15,7 +15,7 @@ const COLORS = [
 
 class SnowTheme extends Theme {
   constructor(quill, options) {
-    super(quill);
+    super(quill, options);
     this.quill.container.classList.add('ql-snow');
     this.pickers = [];
     document.body.addEventListener('click', (e) => {
@@ -29,11 +29,13 @@ class SnowTheme extends Theme {
               .on(Quill.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
-  // extendLinkTooltip(tooltip) {
-  //   this.onModule('toolbar', function(toolbar) {
-  //     toolbar.on('link', tooltip.show());
-  //   });
-  // }
+  addModule(name, options) {
+    let module = super.addModule(name, options);
+    if (name === 'toolbar') {
+      this.extendToolbar(module);
+    }
+    return module;
+  }
 
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
