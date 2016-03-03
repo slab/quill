@@ -38,7 +38,7 @@ class Theme {
 }
 Theme.DEFAULTS = {};
 Theme.themes = {
-  base: Theme
+  'default': Theme
 };
 Theme.modules = {};
 

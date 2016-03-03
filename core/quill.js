@@ -47,7 +47,6 @@ class Quill {
     let html = this.container.innerHTML;
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
-    this.controls = {};   // TODO make into API
     // TODO scroll will reset innerHTML as well, do not do twice
     this.root = this.addContainer('ql-editor');
     this.root.innerHTML = html.trim();
@@ -215,7 +214,7 @@ Quill.DEFAULTS = {
   formats: [],
   modules: {},
   readOnly: false,
-  theme: 'base'
+  theme: 'default'
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;

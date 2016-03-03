@@ -1,56 +1,62 @@
+import BaseTheme from './base';
 import Emitter from '../core/emitter';
-import Theme from '../core/theme';
-import Picker from '../ui/picker';
-import Tooltip from '../ui/tooltip';
 import icons from '../ui/icons';
 import { bindKeys } from '../modules/keyboard';
 
 
-class BubbleTheme extends Theme {
+class BubbleTheme extends BaseTheme {
   constructor(quill, options) {
     super(quill, options);
     this.quill.container.classList.add('ql-bubble');
   }
 
-  extendToolbar(toolbar) {
-    let container = this.quill.addContainer('ql-tooltip', this.quill.root);
-    let tooltip = new Tooltip(container);
-    container.innerHTML = '<div class="ql-link-editor"><input type="text"><a></a></div>';
-    container.appendChild(toolbar.container);
-    [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
-      let className = button.getAttribute('class') || '';
-      let names = className.split(/\s+/);
-      for (let i in names) {
-        let name = names[i].slice('ql-'.length);
-        if (icons[name] == null) return;
-        if (typeof icons[name] === 'string') {
-          button.innerHTML = icons[name];
-        } else {
-          let value = button.getAttribute('data-value') || '';
-          if (value != null && icons[name][value]) {
-            button.innerHTML = icons[name][value];
-          }
-        }
-      }
-    });
-    container.classList.add('ql-hidden');
+  buildLinkEditor(toolbar) {
+    let container = document.createElement('div');
+    container.classList.add('ql-link-editor');
+    let input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    let close = document.createElement('a');
+    container.appendChild(input);
+    container.appendChild(close);
+    this.tooltip.appendChild(container);
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length > 0) {
-        container.classList.remove('ql-hidden');
+        this.tooltip.classList.remove('ql-editing');
+        this.tooltip.classList.remove('ql-hidden');
         let bounds = this.quill.getBounds(range);
-        container.style.left = (bounds.left + bounds.width/2 - container.offsetWidth/2) + 'px';
-        container.style.top = (bounds.bottom + 10) + 'px';
-      } else {
-        container.classList.add('ql-hidden');
+        this.tooltip.style.left = (bounds.left + bounds.width/2 - this.tooltip.offsetWidth/2) + 'px';
+        this.tooltip.style.top = (bounds.bottom + 10) + 'px';
+      } else if (document.activeElement !== input) {
+        this.tooltip.classList.add('ql-hidden');
       }
     });
-    this.quill.controls['link'] = function(format, value) {
-      if (value) {
-        console.log('remove link');
-      } else {
-        console.log('toggle editor');
-      }
+    toolbar.handlers['link'] = (value) => {
+      if (!value) return false;
+      this.tooltip.classList.add('ql-editing');
+      input.focus();
     };
+    close.addEventListener('click', () => {
+      this.tooltip.classList.remove('ql-editing');
+    });
+    bindKeys(input, {
+      'enter': () => {
+        this.quill.focus();
+        this.quill.format('link', input.value);
+        this.tooltip.classList.add('ql-hidden');
+        input.value = '';
+      },
+      'escape': () => {
+        this.tooltip.classList.remove('ql-editing');
+      }
+    });
+  }
+
+  extendToolbar(toolbar) {
+    this.tooltip = this.quill.addContainer('ql-tooltip', this.quill.root);
+    this.buildLinkEditor(toolbar);
+    this.tooltip.appendChild(toolbar.container);
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
+    this.tooltip.classList.add('ql-hidden');
   }
 }
 BubbleTheme.DEFAULTS = {

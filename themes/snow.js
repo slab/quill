@@ -1,4 +1,4 @@
-import Theme from '../core/theme';
+import BaseTheme from './base';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
@@ -13,7 +13,7 @@ const COLORS = [
   "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466"
 ];
 
-class SnowTheme extends Theme {
+class SnowTheme extends BaseTheme {
   constructor(quill, options) {
     super(quill, options);
     this.quill.container.classList.add('ql-snow');
@@ -29,17 +29,8 @@ class SnowTheme extends Theme {
               .on(Quill.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
-  addModule(name, options) {
-    let module = super.addModule(name, options);
-    if (name === 'toolbar') {
-      this.extendToolbar(module);
-    }
-    return module;
-  }
-
-  extendToolbar(toolbar) {
-    toolbar.container.classList.add('ql-snow');
-    [].forEach.call(toolbar.container.querySelectorAll('select'), (select) => {
+  buildPickers(selects) {
+    selects.forEach((select) => {
       if (select.classList.contains('ql-align')) {
         this.pickers.push(new IconPicker(select, icons.align));
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
@@ -64,22 +55,12 @@ class SnowTheme extends Theme {
         this.pickers.push(new Picker(select));
       }
     });
-    [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
-      let className = button.getAttribute('class') || '';
-      let names = className.split(/\s+/);
-      for (let i in names) {
-        let name = names[i].slice('ql-'.length);
-        if (icons[name] == null) return;
-        if (typeof icons[name] === 'string') {
-          button.innerHTML = icons[name];
-        } else {
-          let value = button.getAttribute('data-value') || '';
-          if (value != null && icons[name][value]) {
-            button.innerHTML = icons[name][value];
-          }
-        }
-      }
-    });
+  }
+
+  extendToolbar(toolbar) {
+    toolbar.container.classList.add('ql-snow');
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
+    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
   }
 
   updatePickers() {
@@ -90,8 +71,8 @@ class SnowTheme extends Theme {
 }
 SnowTheme.DEFAULTS = {
   modules: {
-    'image-tooltip': true,
-    'link-tooltip': true,
+    // 'link-tooltip': true,
+    // 'image-tooltip': true,
     'toolbar': [
       [{ font: [false, 'serif', 'monospace'] }, { size: ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],

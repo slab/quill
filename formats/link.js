@@ -6,6 +6,7 @@ class Link extends Inline {
     let node = super.create(value);
     if (typeof value === 'string') {
       node.setAttribute('href', value);
+      node.setAttribute('title', value);
     }
     return node;
   }
@@ -13,6 +14,7 @@ class Link extends Inline {
   format(name, value) {
     if (name !== 'link' || !value) return super.format(name, value);
     this.domNode.setAttribute('href', value);
+    this.domNode.setAttribute('title', value);
   }
 
   formats() {

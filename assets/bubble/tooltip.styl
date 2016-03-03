@@ -17,11 +17,14 @@ arrowWidth = 6px
       position: absolute
       top: -1 * arrowWidth
 
-  .ql-tooltip //.ql-editing
+  .ql-tooltip.ql-editing
+    .ql-link-editor
+      display: block
     button
       visibility: hidden
 
   .ql-link-editor
+    display: none
     input[type=text]
       background: transparent
       border: none

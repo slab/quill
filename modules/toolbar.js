@@ -26,6 +26,7 @@ class Toolbar extends Module {
     this.container.classList.add('ql-toolbar');
     this.container.classList.toggle('ios', /iPhone|iPad/i.test(navigator.userAgent));
     this.controls = [];
+    this.handlers = {};
     [].forEach.call(this.container.querySelectorAll('a, button, input[type=button], select'), (input) => {
       this.attach(input);
     });
@@ -49,11 +50,10 @@ class Toolbar extends Module {
       } else {
         value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
       }
-      if (this.quill.controls[format]) {
-        this.quill.controls[format](format, value);
-      } else {
-        this.quill.format(format, value, Emitter.sources.USER);
+      if (this.handlers[format]) {
+        if (this.handlers[format](value)) return;
       }
+      this.quill.format(format, value, Emitter.sources.USER);
     });
     // TODO use weakmap
     this.controls.push([format, input]);
