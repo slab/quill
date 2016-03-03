@@ -21,6 +21,8 @@ import Underline from './formats/underline';
 import ImageTooltip from './modules/image';
 import LinkTooltip from './modules/link';
 import ToolbarModule from './modules/toolbar';
+import Parchment from 'parchment';
+import Module from './core/module';
 
 import SnowTheme from './themes/snow';
 
@@ -35,5 +37,7 @@ Quill.register('toolbar', ToolbarModule);
 
 Quill.register('snow', SnowTheme);
 
+Quill.Parchment = Parchment;
+Quill.Module = Module;
 
 module.exports = Quill;
