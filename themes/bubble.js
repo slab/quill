@@ -1,7 +1,9 @@
 import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import Picker from '../ui/picker';
+import Tooltip from '../ui/tooltip';
 import icons from '../ui/icons';
+import { bindKeys } from '../modules/keyboard';
 
 
 class BubbleTheme extends Theme {
@@ -11,7 +13,10 @@ class BubbleTheme extends Theme {
   }
 
   extendToolbar(toolbar) {
-    this.quill.addContainer(toolbar.container, this.quill.root);
+    let container = this.quill.addContainer('ql-tooltip', this.quill.root);
+    let tooltip = new Tooltip(container);
+    container.innerHTML = '<div class="ql-link-editor"><input type="text"><a></a></div>';
+    container.appendChild(toolbar.container);
     [].forEach.call(toolbar.container.querySelectorAll('button'), (button) => {
       let className = button.getAttribute('class') || '';
       let names = className.split(/\s+/);
@@ -28,17 +33,24 @@ class BubbleTheme extends Theme {
         }
       }
     });
-    toolbar.container.classList.add('ql-hidden');
+    container.classList.add('ql-hidden');
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length > 0) {
-        toolbar.container.classList.remove('ql-hidden');
+        container.classList.remove('ql-hidden');
         let bounds = this.quill.getBounds(range);
-        toolbar.container.style.left = (bounds.left + bounds.width/2 - toolbar.container.offsetWidth/2) + 'px';
-        toolbar.container.style.top = (bounds.bottom + 10) + 'px';
+        container.style.left = (bounds.left + bounds.width/2 - container.offsetWidth/2) + 'px';
+        container.style.top = (bounds.bottom + 10) + 'px';
       } else {
-        toolbar.container.classList.add('ql-hidden');
+        container.classList.add('ql-hidden');
       }
     });
+    this.quill.controls['link'] = function(format, value) {
+      if (value) {
+        console.log('remove link');
+      } else {
+        console.log('toggle editor');
+      }
+    };
   }
 }
 BubbleTheme.DEFAULTS = {
