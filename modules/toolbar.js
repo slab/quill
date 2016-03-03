@@ -105,10 +105,10 @@ function addControls(container, groups) {
       } else {
         let format = Object.keys(control)[0];
         let value = control[format];
-        if (typeof value === 'string') {
-          addButton(group, format, value);
-        } else {
+        if (Array.isArray(value)) {
           addSelect(group, format, value);
+        } else {
+          addButton(group, format, value);
         }
       }
     });

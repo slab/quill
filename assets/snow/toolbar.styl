@@ -1,7 +1,3 @@
-controlHeight = 24px
-inputPadding = 5px
-iconPadding = 3px inputPadding
-
 colorItemMargin = 2px
 colorItemSize = 16px
 colorItemsPerRow = 7
@@ -21,20 +17,6 @@ colorItemsPerRow = 7
     margin-right: 15px
     vertical-align: middle
 
-  button
-    background: none
-    // background-color: yellow // TODO remove
-    border: none
-    cursor: pointer
-    display: inline-block
-    float: left
-    height: controlHeight
-    outline: none
-    padding: iconPadding
-
-    svg
-      height: 100%
-
   button:hover, button.ql-active,
   .ql-picker-label:hover, .ql-picker-label.ql-active,
   .ql-picker-item:hover, .ql-picker-item.ql-selected
@@ -45,31 +27,16 @@ colorItemsPerRow = 7
       stroke: activeColor
 
   .ql-stroke
-    fill: none
-    stroke: darkColor
-    stroke-linecap: round
-    stroke-linejoin: round
-    stroke-width: 2
+    stroke: inactiveColor
   .ql-stroke-mitter
-    fill: none
-    stroke: darkColor
-    stroke-mitterlimit: 10
-    stroke-width: 2
+    stroke: inactiveColor
 
-  .ql-empty
-    fill: none
-  .ql-even
-    fill-rule: evenodd
   .ql-fill, .ql-stroke.ql-fill
-    fill: darkColor
-  .ql-thin, .ql-stroke.ql-thin
-    stroke-width: 1
-  .ql-transparent
-    opacity: 0.4
+    fill: inactiveColor
 
   .ql-picker
     // background-color: yellow    // TODO remove
-    color: darkColor
+    color: inactiveColor
     display: inline-block
     float: left
     font-size: 14px
@@ -93,7 +60,7 @@ colorItemsPerRow = 7
   .ql-picker-label::before
     vertical-align: middle
   .ql-picker-options
-    background-color: whiteColor
+    background-color: backgroundColor
     border: 1px solid transparent
     display: none
     padding: 4px 8px

@@ -12,6 +12,7 @@ module.exports = {
   entry: {
     'quill.js': ['./quill.js'],
     'quill.css': './assets/core.styl',
+    'quill.bubble.css': './assets/bubble.styl',
     'quill.snow.css': './assets/snow.styl',
     'unit.js': './test/unit.js'
   },

@@ -41,9 +41,11 @@ class Quill {
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
-    let moduleOptions = extend({}, Quill.DEFAULTS.modules, options.modules);
-    options = extend({}, Quill.DEFAULTS, options);
-    options.modules = moduleOptions;
+    let themeClass = _themes[options.theme];
+    if (themeClass == null) {
+      return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
+    }
+    options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
     let html = this.container.innerHTML;
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
@@ -56,10 +58,6 @@ class Quill {
     this.scroll = Parchment.create(this.root, this.emitter);
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
-    let themeClass = _themes[options.theme];
-    if (themeClass == null) {
-      return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
-    }
     this.theme = new themeClass(this, options);
     REQUIRED_MODULES.forEach((name) => {    // Required modules
       let camelCase = name.replace(/[-](\w|$)/g, function(_, next) {

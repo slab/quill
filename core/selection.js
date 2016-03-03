@@ -23,6 +23,7 @@ class Selection {
     this.scroll = scroll;
     this.root = this.scroll.domNode;
     this.cursor = Parchment.create('cursor', this);
+    // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
     ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
       this.root.addEventListener(eventName, this.update.bind(this, Emitter.sources.USER));

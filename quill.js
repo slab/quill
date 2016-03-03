@@ -22,6 +22,7 @@ import ImageTooltip from './modules/image';
 import LinkTooltip from './modules/link';
 import ToolbarModule from './modules/toolbar';
 
+import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
 
 
@@ -33,6 +34,7 @@ Quill.register('image-tooltip', ImageTooltip);
 Quill.register('link-tooltip', LinkTooltip);
 Quill.register('toolbar', ToolbarModule);
 
+Quill.register('bubble', BubbleTheme);
 Quill.register('snow', SnowTheme);
 
 

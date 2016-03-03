@@ -1,6 +1,11 @@
 LIST_STYLE = decimal lower-alpha lower-roman
 MAX_INDENT = 8
 
+controlHeight = 24px
+inputPadding = 5px
+iconPadding = 3px inputPadding
+
+
 resets(arr)
   unquote('list-' + join(' list-', arr))
 
@@ -20,6 +25,39 @@ resets(arr)
   position: absolute
   top: 50%
 
+.ql-toolbar
+  button
+    background: none
+    border: none
+    cursor: pointer
+    display: inline-block
+    float: left
+    height: controlHeight
+    outline: none
+    padding: iconPadding
+
+    svg
+      height: 100%
+
+  .ql-stroke
+    fill: none
+    stroke-linecap: round
+    stroke-linejoin: round
+    stroke-width: 2
+  .ql-stroke-mitter
+    fill: none
+    stroke-mitterlimit: 10
+    stroke-width: 2
+
+  .ql-empty
+    fill: none
+  .ql-even
+    fill-rule: evenodd
+  .ql-thin, .ql-stroke.ql-thin
+    stroke-width: 1
+  .ql-transparent
+    opacity: 0.4
+
 .ql-editor
   box-sizing: border-box
   cursor: text
@@ -29,6 +67,8 @@ resets(arr)
   tab-size: 4
   white-space: pre-wrap
 
+  a
+    text-decoration: underline
   img
     max-width: 100%
   p, ol, ul, pre, blockquote, h1, h2, h3, h4, h5, h6
