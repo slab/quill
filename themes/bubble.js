@@ -1,3 +1,4 @@
+import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import Picker from '../ui/picker';
 import icons from '../ui/icons';
@@ -27,13 +28,24 @@ class BubbleTheme extends Theme {
         }
       }
     });
+    toolbar.container.classList.add('ql-hidden');
+    this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
+      if (range != null && range.length > 0) {
+        toolbar.container.classList.remove('ql-hidden');
+        let bounds = this.quill.getBounds(range);
+        toolbar.container.style.left = (bounds.left + bounds.width/2 - toolbar.container.offsetWidth/2) + 'px';
+        toolbar.container.style.top = (bounds.bottom + 10) + 'px';
+      } else {
+        toolbar.container.classList.add('ql-hidden');
+      }
+    });
   }
 }
 BubbleTheme.DEFAULTS = {
   modules: {
     toolbar: [
       ['bold', 'italic', 'link'],
-      [{ header: 1 }, { header: 2 }, 'quote']
+      [{ header: 1 }, { header: 2 }, 'blockquote']
     ]
   }
 }

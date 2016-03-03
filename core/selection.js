@@ -25,7 +25,7 @@ class Selection {
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
-    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave'].forEach((eventName) => {
+    ['keyup', 'mouseup', 'touchend', 'touchleave'].forEach((eventName) => {
       this.root.addEventListener(eventName, this.update.bind(this, Emitter.sources.USER));
     });
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
@@ -115,6 +115,7 @@ class Selection {
     let selection = document.getSelection();
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
+    if (nativeRange == null) return null;
     if (nativeRange.startContainer !== this.root &&
         !(nativeRange.startContainer.compareDocumentPosition(this.root) & Node.DOCUMENT_POSITION_CONTAINS)) {
       return null;
@@ -124,7 +125,6 @@ class Selection {
         !(nativeRange.endContainer.compareDocumentPosition(this.root) & Node.DOCUMENT_POSITION_CONTAINS)) {
       return null;
     }
-    if (nativeRange == null) return null;
     let range = {
       start: { node: nativeRange.startContainer, offset: nativeRange.startOffset },
       end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },

@@ -6,7 +6,7 @@ module.exports = {
     'justify' : require('../assets/icons/align-justify.svg')
   },
   'background': require('../assets/icons/background.svg'),
-  'blockquote': require('../assets/icons/quote.svg'),
+  'blockquote': require('../assets/icons/blockquote.svg'),
   'bold'      : require('../assets/icons/bold.svg'),
   'color'     : require('../assets/icons/color.svg'),
   'italic'    : require('../assets/icons/italic.svg'),
@@ -20,7 +20,6 @@ module.exports = {
     'ordered' : require('../assets/icons/list-ordered.svg'),
     'bullet'  : require('../assets/icons/list-bullet.svg')
   },
-  'quote'     : require('../assets/icons/quote.svg'),
   'strike'    : require('../assets/icons/strike.svg'),
   'underline' : require('../assets/icons/underline.svg')
 };
