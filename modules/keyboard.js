@@ -95,7 +95,7 @@ class Keyboard extends Module {
 
   onFormat(format, range) {
     let formats = this.quill.getFormat(range);
-    this.quill.format(format, formats[format], Emitter.sources.USER);
+    this.quill.format(format, !formats[format], Emitter.sources.USER);
   }
 
   onTab(range, evt) {
