@@ -23,13 +23,12 @@ class BubbleTheme extends BaseTheme {
       if (range != null && range.length > 0) {
         this.tooltip.classList.remove('ql-editing');
         this.tooltip.classList.remove('ql-hidden');
-        let bounds = this.quill.getBounds(range);
-        this.tooltip.style.left = (bounds.left + bounds.width/2 - this.tooltip.offsetWidth/2) + 'px';
-        this.tooltip.style.top = (bounds.bottom + 10) + 'px';
+        this.position(this.quill.getBounds(range));
       } else if (document.activeElement !== input) {
         this.tooltip.classList.add('ql-hidden');
       }
     });
+    // TODO handle line height changing like with header formatting
     toolbar.handlers['link'] = (value) => {
       if (!value) return false;
       this.tooltip.classList.add('ql-editing');
@@ -57,6 +56,11 @@ class BubbleTheme extends BaseTheme {
     this.tooltip.appendChild(toolbar.container);
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
     this.tooltip.classList.add('ql-hidden');
+  }
+
+  position(bounds) {
+    this.tooltip.style.left = (bounds.left + bounds.width/2 - this.tooltip.offsetWidth/2) + 'px';
+    this.tooltip.style.top = (bounds.bottom + 10) + 'px';
   }
 }
 BubbleTheme.DEFAULTS = {
