@@ -72,8 +72,13 @@ class LinkTooltip extends Module {
     this.tooltip.hide();
   }
 
+  position() {
+    // this.tooltip.style.left = (bounds.left + bounds.width/2 - this.tooltip.offsetWidth/2) + 'px';
+    // this.tooltip.style.top = (bounds.bottom + 10) + 'px';
+  }
+
   save() {
-    let url = this.options.sanitize(this.textbox.value);
+    let url = this.textbox.value;
     if (this.target instanceof LinkBlot) {
       target.format(LinkBlot.blotName, url);
     } else if (this.target instanceof Range) {
@@ -100,18 +105,12 @@ class LinkTooltip extends Module {
       debug.error('show can only be called with link or range');
     }
     let [left, top] = this.tooltip.position(bounds, this.container, this.options.offset);
-    this.preview.textContent = this.textbox.value = this.options.sanitize(preview);
+    this.preview.textContent = this.textbox.value = preview;
     this.tooltip.show(left, top);
   }
 }
 LinkTooltip.DEFAULTS = {
   offset: 10,
-  sanitize: function(url) {
-    if (!/^(https?:\/\/|mailto:)/.test(url)) {
-      url = 'http://' + url;
-    }
-    return url;
-  },
   template: [
     '<a class="ql-preview" target="_blank" href="about:blank"></a>',
     '<input type="text">',

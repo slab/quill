@@ -5,9 +5,20 @@ class Image extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
-      node.setAttribute('src', value);
+      node.setAttribute('src', this.sanitize(value));
     }
     return node;
+  }
+
+  static match(url) {
+    return /^https?:\/\/.+\.(jpe?g|gif|png)$/.test(url);
+  }
+
+  static sanitize(url) {
+    if (!/^https?:\/\//.test(url)) {
+      url = 'http://' + url;
+    }
+    return url;
   }
 
   value() {

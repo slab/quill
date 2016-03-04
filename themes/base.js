@@ -33,6 +33,7 @@ class BaseTheme extends Theme {
     });
   }
 }
+BaseTheme.DEFAULTS = {};
 
 
 export default BaseTheme;

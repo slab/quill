@@ -65,10 +65,12 @@ class BubbleTheme extends BaseTheme {
 }
 BubbleTheme.DEFAULTS = {
   modules: {
-    toolbar: [
-      ['bold', 'italic', 'link'],
-      [{ header: 1 }, { header: 2 }, 'blockquote']
-    ]
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'link'],
+        [{ header: 1 }, { header: 2 }, 'blockquote']
+      ]
+    }
   }
 }
 

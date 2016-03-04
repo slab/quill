@@ -61,6 +61,9 @@ class SnowTheme extends BaseTheme {
     toolbar.container.classList.add('ql-snow');
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
+    this.imageTooltip = this.addModule('image-tooltip');
+    toolbar.handlers['image'] = this.imageTooltip.show.bind(this.imageTooltip);
+    // this.linkTooltip = this.addModule('link-tooltip');
   }
 
   updatePickers() {
@@ -71,15 +74,15 @@ class SnowTheme extends BaseTheme {
 }
 SnowTheme.DEFAULTS = {
   modules: {
-    // 'link-tooltip': true,
-    // 'image-tooltip': true,
-    'toolbar': [
-      [{ font: [false, 'serif', 'monospace'] }, { size: ['small', false, 'large', 'huge'] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ color: [] }, { background: [] }],
-      [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],
-      ['link', 'image']
-    ]
+    'toolbar': {
+      container: [
+        [{ font: [false, 'serif', 'monospace'] }, { size: ['small', false, 'large', 'huge'] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],
+        ['link', 'image']
+      ]
+    }
   }
 }
 

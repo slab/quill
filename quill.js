@@ -18,8 +18,8 @@ import { SizeClass as Size } from './formats/size';
 import Strike from './formats/strike';
 import Underline from './formats/underline';
 
-import ImageTooltip from './modules/image';
-import LinkTooltip from './modules/link';
+import ImageTooltip from './modules/image-tooltip';
+import LinkTooltip from './modules/link-tooltip';
 import ToolbarModule from './modules/toolbar';
 
 import BubbleTheme from './themes/bubble';
