@@ -1,9 +1,9 @@
 ---
 layout: standalone
-title: Snow Theme
-permalink: /standalone/snow/
+title: Bubble Theme
+permalink: /standalone/bubble/
 ---
-<link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.snow.css">
+<link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.bubble.css">
 <style>
   body {
     margin: auto;
@@ -15,11 +15,11 @@ permalink: /standalone/snow/
   }
 </style>
 <!-- section -->
-<div id="editor-container"><p><a href="google.com">Googe</a></p></div>
+<div id="editor-container"><p>Test</p></div>
 <script type="text/javascript" src="//{{site.cdn}}/{{site.version}}/quill.js"></script>
 <script>
   var quill = new Quill('#editor-container', {
     debug: 'info',
-    theme: 'snow'
+    theme: 'bubble'
   });
 </script>
