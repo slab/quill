@@ -11,20 +11,6 @@ class Block extends Parchment.Block {
     this.optimize();
   }
 
-  descendant(type, index, inclusive) {
-    if (index >= this.length() - 1) {
-      if (this.children.tail instanceof type) {
-        return [this.children.tail, this.children.tail.length()];
-      } else if (this.children.tail instanceof Parchment.Container) {
-        return this.children.tail.descendant(type, index - this.children.offset(this.children.tail), true);
-      } else {
-        return [null, -1];
-      }
-    } else {
-      return super.descendant(type, index, inclusive);
-    }
-  }
-
   formatAt(index, length, name, value) {
     if (length <= 0) return;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
@@ -38,6 +24,10 @@ class Block extends Parchment.Block {
 
   getLeaves(index, length) {
     return this.descendants(Parchment.Leaf, index, length);
+  }
+
+  path(index) {
+    return super.path(index, true);
   }
 
   insertAt(index, value, def) {

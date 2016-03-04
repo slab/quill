@@ -94,11 +94,16 @@ class Editor {
   }
 
   getFormat(index, length = 0) {
-    let lines, leaves;
+    let lines = [], leaves = [];
     if (length === 0) {
-      let leaf, [line, offset] = this.scroll.descendant(Block, index);
-      [leaf, offset] = line.descendant(Parchment.Leaf, offset, true);
-      lines = [line], leaves = [leaf];
+      this.scroll.path(index).forEach(function(path) {
+        let [blot, offset] = path;
+        if (blot instanceof Block) {
+          lines.push(blot);
+        } else if (blot instanceof Parchment.Leaf) {
+          leaves.push(blot);
+        }
+      });
     } else {
       lines = this.scroll.descendants(Block, index, length);
       leaves = this.scroll.descendants(Parchment.Leaf, index, length);
@@ -143,6 +148,7 @@ class Editor {
 
 
 function bubbleFormats(blot) {
+  if (blot == null) return {};
   if (blot instanceof Block) return blot.formats();
   let formats = typeof blot.formats === 'function' ? blot.formats() : {};
   while (blot.parent != null && blot.parent.statics.scope === Parchment.Scope.INLINE_BLOT) {

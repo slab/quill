@@ -3,6 +3,7 @@ import Quill from '../quill.js';
 import './helpers/unit.js';
 
 import './unit/blots/block.js';
+import './unit/blots/scroll.js';
 
 import './unit/core/editor';
 import './unit/core/selection';

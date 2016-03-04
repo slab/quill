@@ -44,6 +44,10 @@ class Scroll extends Parchment.Scroll {
     }, 0);
   }
 
+  path(index) {
+    return super.path(index).slice(1);  // Exclude self
+  }
+
   update(mutations) {
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
