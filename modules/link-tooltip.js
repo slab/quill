@@ -1,26 +1,22 @@
-import extend from 'extend';
 import Emitter from '../core/emitter';
 import { bindKeys } from './keyboard';
 import LinkBlot from '../formats/link';
-import logger from '../core/logger';
 import Module from '../core/module';
 import { Range } from '../core/selection';
-import Tooltip from '../ui/tooltip';
 
-
-let debug = logger('[quill:link-toolitp]');
 
 class LinkTooltip extends Module {
   constructor(quill, options = {}) {
     super(quill, options);
     this.container = this.quill.addContainer('ql-link-tooltip');
-    this.tooltip = new Tooltip(this.container);
+    this.container.classList.add('ql-tooltip');
+    this.hide();
     this.container.innerHTML = this.options.template;
     this.preview = this.container.querySelector('a.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
     bindKeys(this.textbox, {
       'enter': this.save.bind(this),
-      'escape': this.tooltip.hide.bind(this.tooltip)
+      'escape': this.hide.bind(this)
     });
     this.container.querySelector('a.ql-action').addEventListener('click', () => {
       if (this.container.classList.contains('ql-editing')) {
@@ -32,25 +28,16 @@ class LinkTooltip extends Module {
     this.container.querySelector('a.ql-remove').addEventListener('click', this.remove.bind(this));
     // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
     quill.on(Quill.events.SELECTION_CHANGE, (range) => {
-      if (range == null || range.length > 0) {
-        this.hide();
-      } else {
-        [this.target, ] = this.quill.scroll.descendant(LinkBlot, range.index, true);
-        this.show();
+      if (range != null && range.length === 0) {
+        let offset;
+        [this.link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
+        if (this.link != null) {
+          this.range = new Range(range.index - offset, this.link.length());
+          return this.show();
+        }
       }
+      this.hide();
     });
-    quill.controls.link = (range, format, value) => {
-      if (value === false) {
-        // TODO handle highlight multiple links
-        [this.target, ] = this.quill.scroll.descendant(LinkBlot, range.index, true);
-        this.remove();
-        this.quill.setSelection(range, Quill.events.SILENT);
-      } else {
-        this.target = range;
-        this.show();
-        this.edit();
-      }
-    };
   }
 
   edit() {
@@ -59,54 +46,48 @@ class LinkTooltip extends Module {
     this.textbox.setSelectionRange(0, this.textbox.value.length);
   }
 
+  open() {
+    this.range = new Range(this.quill.selection.savedRange.index, this.quill.selection.savedRange.length);
+    this.show();
+    this.edit();
+  }
+
   hide() {
-    this.tooltip.hide();
-    this.quill.focus();
+    this.range = this.link = null;
+    this.container.classList.add('ql-hidden');
+  }
+
+  position(bounds) {
+    this.container.style.left = (bounds.left + bounds.width/2 - this.container.offsetWidth/2) + 'px';
+    this.container.style.top = (bounds.bottom + this.options.offset) + 'px';
   }
 
   remove() {
-    if (this.target instanceof LinkBlot) {
-      this.target.format(LinkBlot.blotName, null);
-      this.quill.scroll.update();
-    }
-    this.tooltip.hide();
-  }
-
-  position() {
-    // this.tooltip.style.left = (bounds.left + bounds.width/2 - this.tooltip.offsetWidth/2) + 'px';
-    // this.tooltip.style.top = (bounds.bottom + 10) + 'px';
+    this.quill.formatText(this.range, 'link', false, Emitter.sources.USER);
+    this.quill.setSelection(this.range, Emitter.sources.SILENT);
+    this.hide();
   }
 
   save() {
     let url = this.textbox.value;
-    if (this.target instanceof LinkBlot) {
-      target.format(LinkBlot.blotName, url);
-    } else if (this.target instanceof Range) {
-      this.quill.formatText(this.target, LinkBlot.blotName, url, Emitter.sources.USER);
-      this.target = this.quill.scroll.descendant(LinkBlot, this.target.index + this.target.length, true);
-    } else {
-      debug.error('save can only be called with link or range');
-    }
-    this.preview.textContent = this.target.formats()[LinkBlot.blotName];
-    this.show();
+    this.quill.formatText(this.range, 'link', url, Emitter.sources.USER);
+    this.quill.setSelection(this.range, Emitter.sources.SILENT);
+    this.hide();
   }
 
   show() {
-    if (this.target == null) return this.hide();
     this.container.classList.remove('ql-editing');
+    this.container.classList.remove('ql-hidden');
     let preview, bounds;
-    if (this.target instanceof LinkBlot) {
-      preview = this.target.domNode.getAttribute('href');
-      bounds = this.target.domNode.getBoundingClientRect();
-    } else if (this.target instanceof Range) {
-      preview = this.quill.getText(this.target);
-      bounds = this.quill.getBounds(this.target);
+    let range = this.quill.selection.savedRange;
+    if (this.link != null) {
+      preview = this.link.formats()['link'];
     } else {
-      debug.error('show can only be called with link or range');
+      preview = this.quill.getText(range);
     }
-    let [left, top] = this.tooltip.position(bounds, this.container, this.options.offset);
     this.preview.textContent = this.textbox.value = preview;
-    this.tooltip.show(left, top);
+    this.preview.setAttribute('href', preview);
+    this.position(this.quill.getBounds(this.range));
   }
 }
 LinkTooltip.DEFAULTS = {
@@ -114,8 +95,8 @@ LinkTooltip.DEFAULTS = {
   template: [
     '<a class="ql-preview" target="_blank" href="about:blank"></a>',
     '<input type="text">',
-    '<a class="ql-remove"></a>',
-    '<a class="ql-action"></a>'
+    '<a class="ql-action"></a>',
+    '<a class="ql-remove"></a>'
   ].join('')
 };
 

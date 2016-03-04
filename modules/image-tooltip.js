@@ -7,28 +7,28 @@ import Module from '../core/module';
 class ImageTooltip extends Module {
   constructor(quill, options) {
     super(quill, options);
-    this.tooltip = this.quill.addContainer('ql-image-tooltip');
-    this.tooltip.classList.add('ql-hidden');
-    this.tooltip.classList.add('ql-tooltip');
-    this.tooltip.innerHTML = options.template;
-    this.preview = this.tooltip.querySelector('.ql-preview');
-    this.textbox = this.tooltip.querySelector('input[type=text]');
+    this.container = this.quill.addContainer('ql-image-tooltip');
+    this.container.classList.add('ql-hidden');
+    this.container.classList.add('ql-tooltip');
+    this.container.innerHTML = options.template;
+    this.preview = this.container.querySelector('.ql-preview');
+    this.textbox = this.container.querySelector('input[type=text]');
     bindKeys(this.textbox, {
       'enter': this.save.bind(this),
       'escape': this.hide.bind(this)
     });
-    this.tooltip.querySelector('a.ql-action').addEventListener('click', this.save.bind(this));
-    this.tooltip.querySelector('a.ql-cancel').addEventListener('click', this.hide.bind(this));
+    this.container.querySelector('a.ql-action').addEventListener('click', this.save.bind(this));
+    this.container.querySelector('a.ql-cancel').addEventListener('click', this.hide.bind(this));
     this.textbox.addEventListener('input', this.update.bind(this));
   }
 
   center() {
-    this.tooltip.style.left = (this.quill.container.offsetWidth/2 - this.tooltip.offsetWidth/2) + 'px';
-    this.tooltip.style.top = (this.quill.container.offsetHeight/2 - this.tooltip.offsetHeight/2) + 'px';
+    this.container.style.left = (this.quill.container.offsetWidth/2 - this.container.offsetWidth/2) + 'px';
+    this.container.style.top = (this.quill.container.offsetHeight/2 - this.container.offsetHeight/2) + 'px';
   }
 
   hide() {
-    this.tooltip.classList.add('ql-hidden');
+    this.container.classList.add('ql-hidden');
     if (this.preview.firstChild != null) {
       this.preview.removeChild(this.preview.firstChild);
       this.preview.classList.add('ql-empty');
@@ -45,7 +45,7 @@ class ImageTooltip extends Module {
   }
 
   show() {
-    this.tooltip.classList.remove('ql-hidden');
+    this.container.classList.remove('ql-hidden');
     this.textbox.focus();
     this.center();
     return true;

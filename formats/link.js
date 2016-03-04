@@ -13,10 +13,7 @@ class Link extends Inline {
   }
 
   static sanitize(url) {
-    if (!/^(https?:\/\/|mailto:)/.test(url)) {
-      url = 'http://' + url;
-    }
-    return url;
+    return url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, '');
   }
 
   format(name, value) {

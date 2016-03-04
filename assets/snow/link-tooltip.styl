@@ -5,12 +5,9 @@ linkTooltipMargin = 8px
     content: "Visit URL:"
     line-height: 26px
     margin-right: linkTooltipMargin
-  .ql-link-tooltip::after
-    content: "-"
-    line-height: 26px
-    margin-left: linkTooltipMargin
   .ql-link-tooltip
     padding: 5px 12px
+    white-space: nowrap
     input[type=text]
       display: none
       height: 26px
@@ -21,9 +18,12 @@ linkTooltipMargin = 8px
       overflow-x: hidden
       text-overflow: ellipsis
       vertical-align: top
-    a.ql-action, a.ql-remove
-      float: right
     a.ql-action::before
+      color: textColor
+      content: '-'
+      line-height: 26px
+      margin-left: linkTooltipMargin
+    a.ql-action::after
       border-right: 1px solid borderColor
       content: 'Edit'
       margin-left: linkTooltipMargin
@@ -38,7 +38,7 @@ linkTooltipMargin = 8px
       display: none
     input[type=text]
       display: inline-block
-    a.ql-action::before
+    a.ql-action::after
       border-right: 0px
       content: 'Save'
       padding-right: 0px

@@ -1,4 +1,5 @@
 import Embed from '../blots/embed';
+import Link from './link';
 
 
 class Image extends Embed {
@@ -15,10 +16,7 @@ class Image extends Embed {
   }
 
   static sanitize(url) {
-    if (!/^https?:\/\//.test(url)) {
-      url = 'http://' + url;
-    }
-    return url;
+    return Link.sanitize(url);
   }
 
   value() {
