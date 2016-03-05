@@ -1,6 +1,7 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import Delta from 'rich-text/lib/delta';
+import Parchment from 'parchment';
 import Emitter from '../core/emitter';
 import logger from '../core/logger';
 import Module from '../core/module';
@@ -74,9 +75,9 @@ class Keyboard extends Module {
 
   onEnter(range) {
     let formats = this.quill.getFormat(range);
-    let lineFormats = Object.keys(formats, function(lineFormats, format) {
+    let lineFormats = Object.keys(formats).reduce(function(lineFormats, format) {
       if (Parchment.query(format, Parchment.Scope.BLOCK)) {
-        lineFormats[name] = formats[name];
+        lineFormats[format] = formats[format];
       }
       return lineFormats;
     }, {});
@@ -88,7 +89,7 @@ class Keyboard extends Module {
     this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
     Object.keys(formats).forEach((name) => {
       if (lineFormats[name] == null) {
-        this.quill.formatCursor(name, formats[name]);
+        this.quill.format(name, formats[name]);
       }
     });
   }
