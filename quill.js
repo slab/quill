@@ -2,6 +2,7 @@ import Quill from './core';
 
 import { AlignClass as Align } from './formats/align';
 import { BackgroundStyle as Background } from './formats/background';
+import Blockquote from './formats/blockquote';
 import Bold from './formats/bold';
 import CodeBlock, { CodeInline } from './formats/code';
 import { ColorStyle as Color } from './formats/color';
@@ -26,7 +27,7 @@ import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
 
 
-Quill.register(Align, CodeBlock, Direction, Header, Indent, List, ListItem);
+Quill.register(Align, Blockquote, CodeBlock, Direction, Header, Indent, List, ListItem);
 Quill.register(Background, Bold, CodeInline, Color, Font, Italic, Link, Script, Size, Strike, Underline);
 Quill.register(Image);
 
