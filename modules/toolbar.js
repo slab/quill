@@ -71,6 +71,8 @@ class Toolbar extends Module {
           // TODO never reports array
           input.value = Array.isArray(formats[format]) ? '' : formats[format];
         }
+      } if (input.hasAttribute('data-value')) {
+        input.classList.toggle('ql-active', input.getAttribute('data-value') == formats[format]);  // Intentional ==
       } else {
         input.classList.toggle('ql-active', formats[format]);
       }
