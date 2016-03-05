@@ -277,6 +277,16 @@ describe('Editor', function() {
     });
   });
 
+  describe('formatLine', function() {
+    it('header', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.formatLine(1, 1, { header: 1 });
+      expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
+      editor.scroll.update();
+      expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
+    });
+  });
+
   describe('getFormat', function() {
     it('unformatted', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
