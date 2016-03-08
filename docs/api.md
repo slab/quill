@@ -9,106 +9,37 @@ redirect_from: /docs/editor/api/
 
 Quill allows granular access to its contents.
 
-#### Retrieval
-- [Quill.prototype.getContents](#quillprototypegetcontents)
-- [Quill.prototype.getLength](#quillprototypegetlength)
-- [Quill.prototype.getText](#quillprototypegettext)
-
 #### Manipulation
 - [Quill.prototype.deleteText](#quillprototypedeletetext)
 - [Quill.prototype.formatLine](#quillprototypeformatline)
 - [Quill.prototype.formatText](#quillprototypeformattext)
-- [Quill.prototype.insertText](#quillprototypeinserttext)
 - [Quill.prototype.insertEmbed](#quillprototypeinsertembed)
+- [Quill.prototype.insertText](#quillprototypeinserttext)
 - [Quill.prototype.setContents](#quillprototypesetcontents)
 - [Quill.prototype.setText](#quillprototypesettext)
 - [Quill.prototype.updateContents](#quillprototypeupdatecontents)
 
+#### Editor
+- [Quill.prototype.disable](#quillprototypedisable)
+- [Quill.prototype.enable](#quillprototypeenable)
+- [Quill.prototype.getContents](#quillprototypegetcontents)
+- [Quill.prototype.getLength](#quillprototypegetlength)
+- [Quill.prototype.getFormat](#quillprototypegetformat)
+- [Quill.prototype.getText](#quillprototypegettext)
+- [Quill.prototype.update](#quillprototypeupdate)
+
 #### Selection
 - [Quill.prototype.focus](#quillprototypefocus)
+- [Quill.prototype.format](#quillprototypeformat)
 - [Quill.prototype.getBounds](#quillprototypegetbounds)
 - [Quill.prototype.getSelection](#quillprototypegetselection)
+- [Quill.prototype.hasFocus](#quillprototypehasfocus)
 - [Quill.prototype.setSelection](#quillprototypesetselection)
 
 #### Customization
-- [Quill.register](#quillregistermodule)
-- [Quill.prototype.getModule](#quillprototypegetmodule)
+- [Quill.register](#quillregister)
 - [Quill.prototype.addContainer](#quillprototypeaddcontainer)
-
-
-### Quill.prototype.getContents
-
-Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/deltas/) object.
-
-**Methods**
-
-- `getContents()`
-- `getContents(index)`
-- `getContents(index, length)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of retrieval. Defaults to 0.
-| `length`  | _Number_ | Length of content to retrieve. Defaults to the rest of the document.
-
-**Returns**
-
-- _Delta_ contents of the editor.
-
-**Examples**
-
-{% highlight javascript %}
-var delta = editor.getContents();
-{% endhighlight %}
-
-
-### Quill.prototype.getLength
-
-Retrieves the length of the editor contents.
-
-**Methods**
-
-- `getLength()`
-
-**Returns**
-
-- *Number* of characters in the editor.
-
-**Examples**
-
-{% highlight javascript %}
-var length = editor.getLength();
-{% endhighlight %}
-
-
-### Quill.prototype.getText
-
-Retrieves the string contents of the editor.
-
-**Methods**
-
-- `getText()`
-- `getText(index)`
-- `getText(index, length)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of text retrieval. Defaults to 0.
-| `length`  | _Number_ | Length of text to retrieve. Defaults to end of the document.
-
-**Returns**
-
-- *String* contents of the editor
-
-**Examples**
-
-{% highlight javascript %}
-var text = editor.getText(0, 10);
-{% endhighlight %}
+- [Quill.prototype.getModule](#quillprototypegetmodule)
 
 
 ### Quill.prototype.deleteText
@@ -207,6 +138,31 @@ editor.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 {% endhighlight %}
 
 
+### Quill.prototype.insertEmbed
+
+Insert embedded content into the editor.
+
+**Methods**
+
+- `insertEmbed(index, type, value)`
+- `insertEmbed(index, type, value, source)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Index where content should be inserted.
+| `type`    | _String_ | Type of embed.
+| `value`   | _String_ | Value of embed.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
+{% endhighlight %}
+
+
 ### Quill.prototype.insertText
 
 Inserts text into the editor. See [formats](/docs/formats/) for a list of available formats.
@@ -240,31 +196,6 @@ editor.insertText(5, 'Quill', {
   'italic': true,
   'fore-color': '#ffff00'
 });
-{% endhighlight %}
-
-
-### Quill.prototype.insertEmbed
-
-Insert embedded content into the editor.
-
-**Methods**
-
-- `insertEmbed(index, type, url)`
-- `insertEmbed(index, type, url, source)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Index where content should be inserted.
-| `type`    | _String_ | Type of embed.
-| `value`   | _String_ | Value of embed.
-| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
-
-**Examples**
-
-{% highlight javascript %}
-editor.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
 {% endhighlight %}
 
 
@@ -344,6 +275,176 @@ editor.updateContents({
 {% endhighlight %}
 
 
+### Quill.prototype.disable
+
+Shorthand for [`enable(false)`](#quillprototypeenable).
+
+
+### Quill.prototype.enable
+
+Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls.
+
+**Methods**
+
+- `enable()`
+- `enable(value)`
+
+**Parameters**
+
+| Parameter | Type      | Description
+|-----------|-----------|------------
+| `value`   | _Boolean_ | Whether to enable or disable user input.
+
+**Examples**
+
+{% highlight javascript %}
+editor.enable();
+editor.enable(false);   // Disables user input
+{% endhighlight %}
+
+
+### Quill.prototype.getContents
+
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/deltas/) object.
+
+**Methods**
+
+- `getContents()`
+- `getContents(index)`
+- `getContents(index, length)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Start index of retrieval. Defaults to 0.
+| `length`  | _Number_ | Length of content to retrieve. Defaults to the rest of the document.
+
+**Returns**
+
+- _Delta_ contents of the editor.
+
+**Examples**
+
+{% highlight javascript %}
+var delta = editor.getContents();
+{% endhighlight %}
+
+
+### Quill.prototype.getFormat
+
+Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a value. If there are different values, an array with all values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor.
+
+**Methods**
+
+- `getFormat()`
+- `getFormat(index)`
+- `getFormat(index, length)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Start index of retrieval.
+| `length`  | _Number_ | Length of range.
+
+**Returns**
+
+- _Object_ Formats common to the range.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setText('Hello World!');
+editor.formatText(0, 2, 'bold', true);
+editor.formatText(1, 2, 'italic', true);
+editor.getFormat(0, 2);   // { bold: true }
+editor.getFormat(1, 1);   // { bold: true, italic: true }
+
+editor.formatText(0, 2, 'color', 'red');
+editor.formatText(2, 1, 'color', 'blue');
+editor.getFormat(0, 3);   // { color: ['red', 'blue'] }
+
+editor.setSelection(3);
+editor.getFormat();       // { italic: true, color: 'blue' }
+
+editor.format('underline', true);
+editor.getFormat();       // { italic: true, color: 'blue', underline: 'true' }
+
+editor.formatLine(0, 1, 'align', 'right');
+editor.getFormat();       // { italic: true, color: 'blue', underline: 'true', align: 'right' }
+{% endhighlight %}
+
+
+### Quill.prototype.getLength
+
+Retrieves the length of the editor contents.
+
+**Methods**
+
+- `getLength()`
+
+**Returns**
+
+- *Number* of characters in the editor.
+
+**Examples**
+
+{% highlight javascript %}
+var length = editor.getLength();
+{% endhighlight %}
+
+
+### Quill.prototype.getText
+
+Retrieves the string contents of the editor.
+
+**Methods**
+
+- `getText()`
+- `getText(index)`
+- `getText(index, length)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Start index of text retrieval. Defaults to 0.
+| `length`  | _Number_ | Length of text to retrieve. Defaults to end of the document.
+
+**Returns**
+
+- *String* contents of the editor
+
+**Examples**
+
+{% highlight javascript %}
+var text = editor.getText(0, 10);
+{% endhighlight %}
+
+
+### Quill.prototype.update
+
+Synchronously check editor for user updates and fires events, if changes have occurred.
+
+**Methods**
+
+- `update()`
+- `update(source)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `user`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.update();
+{% endhighlight %}
+
+
 ### Quill.prototype.focus
 
 Focuses the editor.
@@ -356,6 +457,31 @@ Focuses the editor.
 
 {% highlight javascript %}
 editor.focus();
+{% endhighlight %}
+
+
+### Quill.prototype.format
+
+Format text at user's current selection. If the user's selection length is 0, i.e. it is a cursor, the format will be set, so next character user types will have that formatting.
+
+**Methods**
+
+- `format(name, value)`
+- `format(name, value, source)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `name`    | _String_ | Name of format to apply.
+| `value`   | _String_ | Value of format to apply. A falsy value will remove the format.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.format('color', 'red');
+editor.format('align', 'right');
 {% endhighlight %}
 
 
@@ -421,6 +547,25 @@ if (range) {
 {% endhighlight %}
 
 
+### Quill.prototype.hasFocus
+
+Checks if editor has focus. Note focus on toolbar, tooltips, does not count as the editor.
+
+**Methods**
+
+- `hasFocus()`
+
+**Returns**
+
+- *Boolean* Whether editor has focus.
+
+**Examples**
+
+{% highlight javascript %}
+editor.hasFocus();
+{% endhighlight %}
+
+
 ### Quill.prototype.setSelection
 
 Sets user selection to given range. Will also focus the editor. If `null`, will blur the editor.
@@ -448,6 +593,63 @@ editor.setSelection(0, 5);
 {% endhighlight %}
 
 
+### Quill.register
+
+Registers a module, theme, format or formats, making them available to be added to an editor. See their respective documentation for more details on definitions.
+
+**Methods**
+
+- `register(name, module)`
+- `register(name, theme)`
+- `register(format)`
+- `register(format1, format2, ...formatN)`
+
+**Parameters**
+
+| Parameter | Type       | Description
+|-----------|------------|------------
+| `name`    | _String_   | Name of theme or module to register.
+| `module`  | _Function_ | Module to register.
+| `theme`   | _Function_ | Theme to register.
+| `format`  | _Function_ | Format to register
+
+**Examples**
+
+{% highlight javascript %}
+Quill.register('custom-module', function(quill, options) {
+  console.log(options);
+});
+{% endhighlight %}
+
+
+### Quill.prototype.addContainer
+
+Adds a container inside the Quill container, sibling to the editor itself. By convention, Quill modules should have a class name prefixed with `ql-`.
+
+**Methods**
+
+- `addContainer(className, refNode)`
+- `addContainer(domNode, refNode)`
+
+**Parameters**
+
+| Parameter   | Type          | Description
+|-------------|---------------|------------
+| `className` | _String_      | Class name to add to created container.
+| `domNode`   | _HTMLElement_ | Container to be inserted.
+| `refNode`   | _HTMLElement_ | Insert container before this reference node, if null container will be appended.
+
+**Returns**
+
+- *DOMElement* Container that was inserted.
+
+**Examples**
+
+{% highlight javascript %}
+var container = editor.addContainer('ql-custom');
+{% endhighlight %}
+
+
 ### Quill.prototype.getModule
 
 Retrieves a module that has been added to the editor.
@@ -470,30 +672,4 @@ Retrieves a module that has been added to the editor.
 
 {% highlight javascript %}
 var toolbar = editor.getModule('toolbar');
-{% endhighlight %}
-
-
-### Quill.prototype.addContainer
-
-Add a div container inside the Quill container, sibling to the editor itself. By convention, Quill modules should have a class name prefixed with `ql-`.
-
-**Methods**
-
-- `addContainer(cssClass, before)`
-
-**Parameters**
-
-| Parameter  | Type      | Description
-|------------|-----------|------------
-| `cssClass` | _String_  | CSS class to add to created container.
-| `before`   | _Boolean_ | If `true`, will insert before the editor container, otherwise it will be appended after.
-
-**Returns**
-
-- *DOMElement* DIV container that was added.
-
-**Examples**
-
-{% highlight javascript %}
-var container = editor.addContainer('ql-custom');
 {% endhighlight %}
