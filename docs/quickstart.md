@@ -18,9 +18,9 @@ The best way to get started is a simple example. Quill is initialized with a DOM
 
 <!-- Create the editor container -->
 <div id="editor">
-  <div>Hello World!</div>
-  <div>Some initial <b>bold</b> text</div>
-  <div><br></div>
+  <p>Hello World!</p>
+  <p>Some initial <strong>bold</strong> text</p>
+  <p><br></p>
 </div>
 
 <!-- Include the Quill library -->
@@ -28,8 +28,11 @@ The best way to get started is a simple example. Quill is initialized with a DOM
 
 <!-- Initialize Quill editor -->
 <script>
-  var quill = new Quill('#editor');
-  quill.addModule('toolbar', { container: '#toolbar' });
+  var quill = new Quill('#editor', {
+    modules: {
+      toolbar: '#toolbar'
+    }
+  });
 </script>
 {% endhighlight %}
 

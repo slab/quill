@@ -33,55 +33,24 @@ var editor = new Quill(container);
 To configure Quill, pass in an options object:
 
 {% highlight javascript %}
-var configs = {
+var options = {
   readOnly: true,
   theme: 'snow'
 };
-var editor = new Quill('#editor', configs);
+var editor = new Quill('#editor', options);
 {% endhighlight %}
 
 The following keys are recognized:
 
-#### formats
-
-- Formats recognized by the editor. See [Formats](/docs/formats/) for more information.
-
 #### modules
 
-- Collection of modules to include. See [Modules](/docs/modules/) for more information.
-
-#### pollInterval
-
-- Default: `100`
-
-- Number of milliseconds between checking for local changes in the editor. Note that certain actions or API calls may prompt immediate checking.
+- Collection of modules to include and respective options. See [Modules](/docs/modules/) for more information.
 
 #### readOnly
 
 - Default: `false`
 
 - Whether to instantiate the editor to read-only mode.
-
-#### styles
-
-- Default: `{}`
-
-- Object containing CSS rules to add to the Quill editor. Passing in `false` (not merely a falsy value) will prevent Quill from inserting any default styles. In this latter case it is assumed either the base stylesheet (`quill.base.css`) or a theme stylesheet is included manually.
-
-- **Example**
-
-{% highlight javascript %}
-var editor = new Quill('#editor', {
-  styles: {
-    '.ql-editor': {
-      'font-family': "'Arial', san-serif"
-    },
-    '.ql-editor a': {
-      'text-decoration': 'none'
-    }
-  }
-});
-{% endhighlight %}
 
 #### theme
 

@@ -1,4 +1,3 @@
-var basicEditor = new Quill('#basic-editor');
-basicEditor.addModule('toolbar', {
-  container: '#basic-toolbar'
+var basicEditor = new Quill('#basic-editor', {
+  modules: { 'toolbar': '#basic-toolbar' }
 });

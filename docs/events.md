@@ -7,7 +7,7 @@ redirect_from: /docs/editor/events/
 
 # Events
 
-Quill inherits from [EventEmitter](https://github.com/asyncly/EventEmitter2) and allows you access to listen to the following events:
+Quill exposes `on`, `once`, and `off` of its [EventEmitter](https://github.com/primus/eventemitter3) and allows you access to the following events:
 
 1. [text-change](#text-change)
 1. [selection-change](#selection-change)
@@ -25,15 +25,16 @@ Changes may occur through an API but as long as they originate from the user, th
 
 **Callback Parameters**
 
-| Parameter | Type                     | Description
-|-----------|--------------------------|------------
-| `delta`   | [_Delta_](/docs/deltas/) | Represention of change.
-| `source`  | _String_                 | Source of change. Will be either `"user"` or `"api"`.
+| Parameter  | Type                       | Description
+|------------|----------------------------|------------
+| `delta`    | [_Delta_](/docs/deltas/)   | Represention of change.
+| `oldDelta` | [_Delta_](/docs/deltas/)   | Represention of old document.
+| `source`   | _String_                   | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 
 {% highlight javascript %}
-editor.on('text-change', function(delta, source) {
+editor.on('text-change', function(delta, oldDelta, source) {
   if (source == 'api') {
     console.log("An API call triggered this change.");
   } else if (source == 'user') {
@@ -50,15 +51,16 @@ You can also use this event as a focus change event by just checking if the emit
 
 **Callback Parameters**
 
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `range`   | _Object_ | Object with **start** and **end** keys indicating the corresponding indexes where the selection exists.
-| `source`  | _String_ | Source of change. Will be either `"user"` or `"api"`.
+| Parameter  | Type     | Description
+|------------|----------|------------
+| `range`    | _Object_ | Object with **index** and **length** keys indicating where the selection exists.
+| `oldRange` | _Object_ | Object with **index** and **length** keys indicating where the previous selection was.
+| `source`   | _String_ | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
 
 {% highlight javascript %}
-editor.on('selection-change', function(range) {
+editor.on('selection-change', function(range, oldRange, source) {
   if (range) {
     if (range.start == range.end) {
       console.log('User cursor is on', range.start);

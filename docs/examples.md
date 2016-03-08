@@ -44,9 +44,6 @@ Uses all the features of Quill, including [Modules](/docs/modules/) and [Themes]
 <div class="quill-wrapper">
   <div id="full-toolbar" class="toolbar">
     {% include full-toolbar.html %}
-    <span class="ql-format-group">
-      <span title="Link" class="ql-format-button ql-link"></span>
-    </span>
   </div>
   <div id="full-editor" class="editor">
   {% include lotr.html %}

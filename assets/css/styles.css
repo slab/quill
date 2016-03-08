@@ -86,7 +86,7 @@ footer li {
   box-shadow: 0px 0px 10px #ccc;
   margin-left: auto;
   margin-right: auto;
-  max-width: 600px;
+  max-width: 650px;
   min-width: 320px;
   width: 100%;
 }
@@ -283,48 +283,48 @@ footer li {
   margin-top: 20px;
   padding-bottom: 80px;
 }
-#docs-container pre, #docs-container table, #docs-container ul {
+#docs-container > pre, #docs-container > table, #docs-container > ul {
   margin-left: 20px;
 }
-#docs-container table {
+#docs-container > table {
   margin-bottom: 10px;
 }
-#docs-container table thead {
+#docs-container > table thead {
   display: none;
 }
-#docs-container table td {
+#docs-container > table td {
   padding-right: 12px;
   vertical-align: top;
 }
-#docs-container ul code, #docs-container table code {
+#docs-container > ul code, #docs-container > table code {
   background-color: #fff;
   border: none;
   padding: 0px;
 }
-#docs-container h1 {
+#docs-container > h1 {
   font-size: 32px;
   margin-top: 0px;
 }
-#docs-container h2 {
+#docs-container > h2 {
   font-size: 24px
 }
-#docs-container h3 {
+#docs-container > h3 {
   border-bottom: 1px solid #ddd;
   padding-bottom: 8px;
 }
-#docs-container h4 {
+#docs-container > h4 {
   margin-top: 20px;
 }
-#docs-container h2, #docs-container h3 {
+#docs-container > h2, #docs-container > h3 {
   margin-top: 60px;
 }
-#docs-container ol {
+#docs-container > ol {
   list-style: none;
 }
-#docs-container ol, #docs-container ul {
+#docs-container > ol, #docs-container > ul {
   padding: 0px;
 }
-#docs-container p > strong {
+#docs-container > p > strong {
   text-decoration: underline;
 }
 #docs-container .quill-wrapper {
