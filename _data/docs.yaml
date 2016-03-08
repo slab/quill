@@ -15,10 +15,6 @@
   children:
     - title: Toolbar
       url: /docs/modules/toolbar/
-    - title: Authorship
-      url: /docs/modules/authorship/
-    - title: Multiple Cursors
-      url: /docs/modules/multi-cursors/
 - title: Themes
   url: /docs/themes/
 - title: Examples
