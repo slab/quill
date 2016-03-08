@@ -10,77 +10,30 @@ redirect_from: /docs/editor/api/
 Quill allows granular access to its contents.
 
 #### Retrieval
-- [Quill.prototype.getText](#quillprototypegettext)
-- [Quill.prototype.getLength](#quillprototypegetlength)
 - [Quill.prototype.getContents](#quillprototypegetcontents)
+- [Quill.prototype.getLength](#quillprototypegetlength)
+- [Quill.prototype.getText](#quillprototypegettext)
 
 #### Manipulation
-- [Quill.prototype.insertText](#quillprototypeinserttext)
 - [Quill.prototype.deleteText](#quillprototypedeletetext)
-- [Quill.prototype.formatText](#quillprototypeformattext)
 - [Quill.prototype.formatLine](#quillprototypeformatline)
+- [Quill.prototype.formatText](#quillprototypeformattext)
+- [Quill.prototype.insertText](#quillprototypeinserttext)
 - [Quill.prototype.insertEmbed](#quillprototypeinsertembed)
-- [Quill.prototype.updateContents](#quillprototypeupdatecontents)
 - [Quill.prototype.setContents](#quillprototypesetcontents)
 - [Quill.prototype.setText](#quillprototypesettext)
+- [Quill.prototype.updateContents](#quillprototypeupdatecontents)
 
 #### Selection
-- [Quill.prototype.getSelection](#quillprototypegetselection)
-- [Quill.prototype.setSelection](#quillprototypesetselection)
 - [Quill.prototype.focus](#quillprototypefocus)
 - [Quill.prototype.getBounds](#quillprototypegetbounds)
+- [Quill.prototype.getSelection](#quillprototypegetselection)
+- [Quill.prototype.setSelection](#quillprototypesetselection)
 
 #### Customization
-- [Quill.registerModule](#quillregistermodule)
+- [Quill.register](#quillregistermodule)
 - [Quill.prototype.getModule](#quillprototypegetmodule)
 - [Quill.prototype.addContainer](#quillprototypeaddcontainer)
-
-
-### Quill.prototype.getText
-
-Retrieves the string contents of the editor.
-
-**Methods**
-
-- `getText()`
-- `getText(index)`
-- `getText(index, length)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of text retrieval. Defaults to 0.
-| `length`  | _Number_ | Length of text to retrieve. Defaults to end of the document.
-
-**Returns**
-
-- *String* contents of the editor
-
-**Examples**
-
-{% highlight javascript %}
-var text = editor.getText(0, 10);
-{% endhighlight %}
-
-
-### Quill.prototype.getLength
-
-Retrieves the length of the editor contents.
-
-**Methods**
-
-- `getLength()`
-
-**Returns**
-
-- *Number* of characters in the editor.
-
-**Examples**
-
-{% highlight javascript %}
-var length = editor.getLength();
-{% endhighlight %}
 
 
 ### Quill.prototype.getContents
@@ -111,39 +64,50 @@ var delta = editor.getContents();
 {% endhighlight %}
 
 
-### Quill.prototype.insertText
+### Quill.prototype.getLength
 
-Inserts text into the editor. See [formats](/docs/formats/) for a list of available formats.
+Retrieves the length of the editor contents.
 
 **Methods**
 
-- `insertText(index, text)`
-- `insertText(index, text, name, value)`
-- `insertText(index, text, formats)`
-- `insertText(index, text, source)`
-- `insertText(index, text, name, value, source)`
-- `insertText(index, text, formats, source)`
+- `getLength()`
+
+**Returns**
+
+- *Number* of characters in the editor.
+
+**Examples**
+
+{% highlight javascript %}
+var length = editor.getLength();
+{% endhighlight %}
+
+
+### Quill.prototype.getText
+
+Retrieves the string contents of the editor.
+
+**Methods**
+
+- `getText()`
+- `getText(index)`
+- `getText(index, length)`
 
 **Parameters**
 
 | Parameter | Type     | Description
 |-----------|----------|------------
-| `index`   | _Number_ | Index where text should be inserted.
-| `text`    | _String_ | Text to be inserted.
-| `name`    | _String_ | Name of format to apply to inserted text.
-| `value`   | _String_ | Value of format to apply to inserted text.
-| `formats` | _Object_ | Key/value pairs of formats to apply to inserted text.
-| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
+| `index`   | _Number_ | Start index of text retrieval. Defaults to 0.
+| `length`  | _Number_ | Length of text to retrieve. Defaults to end of the document.
+
+**Returns**
+
+- *String* contents of the editor
 
 **Examples**
 
 {% highlight javascript %}
-editor.insertText(0, 'Hello', 'bold', true);
-
-editor.insertText(5, 'Quill', {
-  'italic': true,
-  'fore-color': '#ffff00'
-});
+var text = editor.getText(0, 10);
 {% endhighlight %}
 
 
@@ -168,6 +132,39 @@ Deletes text from the editor.
 
 {% highlight javascript %}
 editor.deleteText(0, 10);
+{% endhighlight %}
+
+
+### Quill.prototype.formatLine
+
+Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats.
+
+**Methods**
+
+- `formatLine(index, length)`
+- `formatLine(index, length, name, value)`
+- `formatLine(index, length, formats)`
+- `formatLine(index, length, source)`
+- `formatLine(index, length, name, value, source)`
+- `formatLine(index, length, formats, source)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Start index of formatting range.
+| `length`  | _Number_ | Length of formatting range.
+| `name`    | _String_ | Name of format to apply to text.
+| `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
+| `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setText('Hello\nWorld!\n');
+
+editor.formatLine(1, 2, 'align', 'right');   // right aligns the first line
+editor.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 {% endhighlight %}
 
 
@@ -210,36 +207,39 @@ editor.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 {% endhighlight %}
 
 
-### Quill.prototype.formatLine
+### Quill.prototype.insertText
 
-Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats.
+Inserts text into the editor. See [formats](/docs/formats/) for a list of available formats.
 
 **Methods**
 
-- `formatLine(index, length)`
-- `formatLine(index, length, name, value)`
-- `formatLine(index, length, formats)`
-- `formatLine(index, length, source)`
-- `formatLine(index, length, name, value, source)`
-- `formatLine(index, length, formats, source)`
+- `insertText(index, text)`
+- `insertText(index, text, name, value)`
+- `insertText(index, text, formats)`
+- `insertText(index, text, source)`
+- `insertText(index, text, name, value, source)`
+- `insertText(index, text, formats, source)`
 
 **Parameters**
 
 | Parameter | Type     | Description
 |-----------|----------|------------
-| `index`   | _Number_ | Start index of formatting range.
-| `length`  | _Number_ | Length of formatting range.
-| `name`    | _String_ | Name of format to apply to text.
-| `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
+| `index`   | _Number_ | Index where text should be inserted.
+| `text`    | _String_ | Text to be inserted.
+| `name`    | _String_ | Name of format to apply to inserted text.
+| `value`   | _String_ | Value of format to apply to inserted text.
+| `formats` | _Object_ | Key/value pairs of formats to apply to inserted text.
 | `source`  | _String_ | [Source](/docs/events/#text-change) to be emitted. Defaults to `api`.
 
 **Examples**
 
 {% highlight javascript %}
-editor.setText('Hello\nWorld!\n');
+editor.insertText(0, 'Hello', 'bold', true);
 
-editor.formatLine(1, 2, 'align', 'right');   // right aligns the first line
-editor.formatLine(4, 4, 'align', 'center');  // center aligns both lines
+editor.insertText(5, 'Quill', {
+  'italic': true,
+  'fore-color': '#ffff00'
+});
 {% endhighlight %}
 
 
@@ -265,36 +265,6 @@ Insert embedded content into the editor.
 
 {% highlight javascript %}
 editor.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
-{% endhighlight %}
-
-
-### Quill.prototype.updateContents
-
-Applies Delta to editor contents.
-
-**Methods**
-
-- `updateContents(delta)`
-
-**Parameters**
-
-| Parameter | Type                     | Description
-|-----------|--------------------------|------------
-| `delta`   | [_Delta_](/docs/deltas/) | Delta that will be applied.
-
-**Examples**
-
-{% highlight javascript %}
-// Assuming editor currently contains [{ insert: 'Hello World!' }]
-editor.updateContents({
-  ops: [
-    { retain: 6 },        // Keep 'Hello '
-    { delete: 5 },        // 'World' is deleted
-    { insert: 'Quill' },  // Insert 'Quill'
-    { retain: 1, attributes: { bold: true } }    // Apply bold to exclamation mark
-  ]
-});
-// Editor should now be [{ insert: 'Hello Quill' }, { insert: '!', attributes: { bold: true} }]
 {% endhighlight %}
 
 
@@ -341,6 +311,78 @@ Sets contents of editor with given text. Note Quill documents end with a newline
 
 {% highlight javascript %}
 editor.setText('Hello\n');
+{% endhighlight %}
+
+
+### Quill.prototype.updateContents
+
+Applies Delta to editor contents.
+
+**Methods**
+
+- `updateContents(delta)`
+
+**Parameters**
+
+| Parameter | Type                     | Description
+|-----------|--------------------------|------------
+| `delta`   | [_Delta_](/docs/deltas/) | Delta that will be applied.
+
+**Examples**
+
+{% highlight javascript %}
+// Assuming editor currently contains [{ insert: 'Hello World!' }]
+editor.updateContents({
+  ops: [
+    { retain: 6 },        // Keep 'Hello '
+    { delete: 5 },        // 'World' is deleted
+    { insert: 'Quill' },  // Insert 'Quill'
+    { retain: 1, attributes: { bold: true } }    // Apply bold to exclamation mark
+  ]
+});
+// Editor should now be [{ insert: 'Hello Quill' }, { insert: '!', attributes: { bold: true} }]
+{% endhighlight %}
+
+
+### Quill.prototype.focus
+
+Focuses the editor.
+
+**Methods**
+
+- `focus()`
+
+**Examples**
+
+{% highlight javascript %}
+editor.focus();
+{% endhighlight %}
+
+
+### Quill.prototype.getBounds
+
+Retrieves the pixel position (relative to the editor container) and boundaries of a selection at a given location. The actual selection need not be at that index. Useful for calculating where to place tooltips.
+
+**Methods**
+
+- `getBounds(index, length = 0)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Index position to measure selection bounds.
+| `length`  | _Number_ | Length of selection range. Defaults to 0 to represent cursor.
+
+**Returns**
+
+- *Object* Object with keys `height`, `width`, `left`, and `top`.
+
+**Examples**
+
+{% highlight javascript %}
+editor.setText('Hello\nWorld\n');
+editor.getBounds(7);    // Returns { height: 15, width: 0, left: 27, top: 31 }
 {% endhighlight %}
 
 
@@ -403,48 +445,6 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 
 {% highlight javascript %}
 editor.setSelection(0, 5);
-{% endhighlight %}
-
-
-### Quill.prototype.focus
-
-Focuses the editor.
-
-**Methods**
-
-- `focus()`
-
-**Examples**
-
-{% highlight javascript %}
-editor.focus();
-{% endhighlight %}
-
-
-### Quill.prototype.getBounds
-
-Retrieves the pixel position (relative to the editor container) and boundaries of a selection at a given location. The actual selection need not be at that index. Useful for calculating where to place tooltips.
-
-**Methods**
-
-- `getBounds(index, length = 0)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Index position to measure selection bounds.
-| `length`  | _Number_ | Length of selection range. Defaults to 0 to represent cursor.
-
-**Returns**
-
-- *Object* Object with keys `height`, `width`, `left`, and `top`.
-
-**Examples**
-
-{% highlight javascript %}
-editor.setText('Hello\nWorld\n');
-editor.getBounds(7);    // Returns { height: 15, width: 0, left: 27, top: 31 }
 {% endhighlight %}
 
 
