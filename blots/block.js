@@ -26,10 +26,6 @@ class Block extends Parchment.Block {
     return this.descendants(Parchment.Leaf, index, length);
   }
 
-  path(index) {
-    return super.path(index, true);
-  }
-
   insertAt(index, value, def) {
     if (def != null) return super.insertAt(index, value, def);
     if (value.length === 0) return;
@@ -58,6 +54,10 @@ class Block extends Parchment.Block {
 
   length() {
     return super.length() + NEWLINE_LENGTH;
+  }
+
+  path(index) {
+    return super.path(index, true);
   }
 
   split(index, force = false) {

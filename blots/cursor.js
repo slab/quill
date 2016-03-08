@@ -11,26 +11,6 @@ class Cursor extends Embed {
     this._length = 0;
   }
 
-  detach() {
-    if (this.parent == null) return;
-    let text = this.textNode.data;
-    let restore = function() {};
-    let range = this.selection.getNativeRange();
-    if (range != null && range.start.node === this.textNode && range.end.node === this.textNode) {
-      restore = this.selection.setNativeRange.bind(this.selection, this.textNode, Math.max(0, range.start.offset - 1), this.textNode, Math.max(0, range.end.offset - 1));
-    }
-    if (text !== Cursor.CONTENTS) {
-      let native = this.selection.getNativeRange();
-      this.textNode.data = text.split(Cursor.CONTENTS).join('');
-      this.parent.insertBefore(Parchment.create(this.textNode), this);
-      this.textNode = document.createTextNode(Cursor.CONTENTS);
-      this.domNode.appendChild(this.textNode);
-    }
-    this.remove();
-    this.parent = null;
-    restore();
-  }
-
   format(name, value) {
     if (this._length !== 0) {
       return super.format(name, value);
@@ -56,10 +36,32 @@ class Cursor extends Embed {
     return this._length;
   }
 
+  remove() {
+    super.remove();
+    this.parent = null;
+  }
+
+  restore() {
+    if (this.parent == null) return;
+    let textNode = this.textNode;
+    let range = this.selection.getNativeRange();
+    if (this.textNode.data !== Cursor.CONTENTS) {
+      let native = this.selection.getNativeRange();
+      this.textNode.data = this.textNode.data.split(Cursor.CONTENTS).join('');
+      this.parent.insertBefore(Parchment.create(this.textNode), this);
+      this.textNode = document.createTextNode(Cursor.CONTENTS);
+      this.domNode.appendChild(this.textNode);
+    }
+    this.remove();
+    if (range != null && range.start.node === textNode && range.end.node === textNode) {
+      this.selection.setNativeRange(textNode, Math.max(0, range.start.offset - 1), textNode, Math.max(0, range.end.offset - 1));
+    }
+  }
+
   update(mutations) {
     mutations.forEach((mutation) => {
       if (mutation.type === 'characterData' && mutation.target === this.textNode) {
-        this.detach();
+        this.restore();
       }
     });
   }
