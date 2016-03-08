@@ -1,3 +1,4 @@
+import Emitter from '../core/emitter';
 import BaseTheme from './base';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
@@ -25,8 +26,8 @@ class SnowTheme extends BaseTheme {
         }
       });
     });
-    this.quill.on(Quill.events.SELECTION_CHANGE, this.updatePickers, this)
-              .on(Quill.events.TEXT_CHANGE, this.updatePickers, this);
+    this.quill.on(Emitter.events.SELECTION_CHANGE, this.updatePickers, this)
+              .on(Emitter.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
   buildPickers(selects) {
