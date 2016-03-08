@@ -6,8 +6,8 @@ import { bindKeys } from '../modules/keyboard';
 
 
 class BaseTheme extends Theme {
-  addModule(name, options) {
-    let module = super.addModule(name, options);
+  addModule(name) {
+    let module = super.addModule(name);
     if (name === 'toolbar') {
       this.extendToolbar(module);
     }
