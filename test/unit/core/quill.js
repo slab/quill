@@ -23,154 +23,154 @@ describe('Quill', function() {
   });
 
   describe('overload', function() {
-    it('(start:number, end:number)', function() {
-      let [start, end, formats, source] = overload(0, 1);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number)', function() {
+      let [index, length, formats, source] = overload(0, 1);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(start:number, end:number, format:string, value:boolean, source:string)', function() {
-      let [start, end, formats, source] = overload(0, 1, 'bold', true, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number, format:string, value:boolean, source:string)', function() {
+      let [index, length, formats, source] = overload(0, 1, 'bold', true, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(start:number, end:number, format:string, value:string, source:string)', function() {
-      let [start, end, formats, source] = overload(0, 1, 'color', Quill.sources.USER, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number, format:string, value:string, source:string)', function() {
+      let [index, length, formats, source] = overload(0, 1, 'color', Quill.sources.USER, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ color: Quill.sources.USER });
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(start:number, end:number, format:string, value:string)', function() {
-      let [start, end, formats, source] = overload(0, 1, 'color', Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number, format:string, value:string)', function() {
+      let [index, length, formats, source] = overload(0, 1, 'color', Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ color: Quill.sources.USER });
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(start:number, end:number, format:object)', function() {
-      let [start, end, formats, source] = overload(0, 1, { bold: true });
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number, format:object)', function() {
+      let [index, length, formats, source] = overload(0, 1, { bold: true });
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.API);
     });
 
-    it('(start:number, end:number, format:object, source:string)', function() {
-      let [start, end, formats, source] = overload(0, 1, { bold: true }, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number, format:object, source:string)', function() {
+      let [index, length, formats, source] = overload(0, 1, { bold: true }, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(start:number, end:number, source:string)', function() {
-      let [start, end, formats, source] = overload(0, 1, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+    it('(index:number, length:number, source:string)', function() {
+      let [index, length, formats, source] = overload(0, 1, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.USER);
     });
 
-    it('(start:number, source:string)', function() {
-      let [start, end, formats, source] = overload(0, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(0);
+    it('(index:number, source:string)', function() {
+      let [index, length, formats, source] = overload(0, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(0);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.USER);
     });
 
     it('(range:range)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1));
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1));
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.API);
     });
 
     it('(range:range, format:string, value:boolean, source:string)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1), 'bold', true, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1), 'bold', true, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.USER);
     });
 
     it('(range:range, format:string, value:string, source:string)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1), 'color', Quill.sources.USER, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1), 'color', Quill.sources.USER, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ color: Quill.sources.USER });
       expect(source).toBe(Quill.sources.USER);
     });
 
     it('(range:range, format:string, value:string)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1), 'color', Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1), 'color', Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ color: Quill.sources.USER });
       expect(source).toBe(Quill.sources.API);
     });
 
     it('(range:range, format:object)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1), { bold: true });
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1), { bold: true });
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.API);
     });
 
     it('(range:range, format:object, source:string)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1), { bold: true }, Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1), { bold: true }, Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.USER);
     });
 
     it('(range:range, source:string)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1), Quill.sources.USER);
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1), Quill.sources.USER);
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.USER);
     });
 
     it('(range:range)', function() {
-      let [start, end, formats, source] = overload(new Range(0, 1));
-      expect(start).toBe(0);
-      expect(end).toBe(1);
+      let [index, length, formats, source] = overload(new Range(0, 1));
+      expect(index).toBe(0);
+      expect(length).toBe(1);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.API);
     });
 
     it('(range:range, dummy:number)', function() {
-      let [start, end, formats, source] = overload(new Range(10, 11), 0);
-      expect(start).toBe(10);
-      expect(end).toBe(11);
+      let [index, length, formats, source] = overload(new Range(10, 1), 0);
+      expect(index).toBe(10);
+      expect(length).toBe(1);
       expect(formats).toEqual({});
       expect(source).toBe(Quill.sources.API);
     });
 
     it('(range:range, dummy:number, format:string, value:boolean)', function() {
-      let [start, end, formats, source] = overload(new Range(10, 11), 0, 'bold', true);
-      expect(start).toBe(10);
-      expect(end).toBe(11);
+      let [index, length, formats, source] = overload(new Range(10, 1), 0, 'bold', true);
+      expect(index).toBe(10);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.API);
     });
 
     it('(range:range, dummy:number, format:object, source:string)', function() {
-      let [start, end, formats, source] = overload(new Range(10, 11), 0, { bold: true }, Quill.sources.USER);
-      expect(start).toBe(10);
-      expect(end).toBe(11);
+      let [index, length, formats, source] = overload(new Range(10, 1), 0, { bold: true }, Quill.sources.USER);
+      expect(index).toBe(10);
+      expect(length).toBe(1);
       expect(formats).toEqual({ bold: true });
       expect(source).toBe(Quill.sources.USER);
     });
