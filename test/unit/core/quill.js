@@ -104,10 +104,10 @@ describe('Quill', function() {
     });
 
     it('(range:range, format:string, value:string, source:string)', function() {
-      let [index, length, formats, source] = overload(new Range(0, 1), 'color', Quill.sources.USER, Quill.sources.USER);
+      let [index, length, formats, source] = overload(new Range(0, 1), 'color', Quill.sources.API, Quill.sources.USER);
       expect(index).toBe(0);
       expect(length).toBe(1);
-      expect(formats).toEqual({ color: Quill.sources.USER });
+      expect(formats).toEqual({ color: Quill.sources.API });
       expect(source).toBe(Quill.sources.USER);
     });
 
