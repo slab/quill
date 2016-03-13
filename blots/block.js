@@ -22,10 +22,6 @@ class Block extends Parchment.Block {
     }
   }
 
-  getLeaves(index, length) {
-    return this.descendants(Parchment.Leaf, index, length);
-  }
-
   insertAt(index, value, def) {
     if (def != null) return super.insertAt(index, value, def);
     if (value.length === 0) return;

@@ -80,7 +80,7 @@ class Editor {
       if (typeof line.getDelta === 'function') {
         return delta.concat(line.getDelta());
       }
-      return line.getLeaves().reduce((delta, leaf) => {
+      return line.descendants(Parchment.Leaf).reduce((delta, leaf) => {
         if (leaf.length() === 0) return delta;
         if (leaf instanceof Parchment.Embed) {
           var value = {};

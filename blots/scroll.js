@@ -3,6 +3,7 @@ import Emitter from '../core/emitter';
 import Parchment from 'parchment';
 
 
+// TODO move
 function clean(container) {
   let walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
   let node, textNodes = [];
@@ -36,12 +37,6 @@ class Scroll extends Parchment.Scroll {
       last.remove();
     }
     this.optimize();
-  }
-
-  length() {
-    return this.descendants(Block).reduce(function(length, line) {
-      return length + line.length();
-    }, 0);
   }
 
   path(index) {
