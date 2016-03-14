@@ -49,5 +49,9 @@ module.exports = function(config) {
   if (process.env.TRAVIS) {
     config.transports = ['polling'];
     config.browsers = [process.env.BROWSER];
+    config.browserDisconnectTimeout = 10000;
+    config.browserDisconnectTolerance = 3;
+    config.browserNoActivityTimeout = 60000;
+    config.captureTimeout = 120000;
   }
 };
