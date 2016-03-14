@@ -26,6 +26,10 @@ module.exports = function(config) {
     singleRun: true,
     browsers: ['Chrome'],
 
+    client: {
+      useIframe: false
+    },
+
     coverageReporter: {
       dir: '.coverage',
       reporters: [
