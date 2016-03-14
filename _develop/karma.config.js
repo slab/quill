@@ -57,5 +57,8 @@ module.exports = function(config) {
     config.browserDisconnectTolerance = 3;
     config.browserNoActivityTimeout = 60000;
     config.captureTimeout = 120000;
+    if (process.env.BROWSER === 'ios-latest' || process.env.BROWSER === 'android-latest') {
+      config.client.useIframe = true;
+    }
   }
 };
