@@ -38,10 +38,10 @@ class Video extends EmbedBlock {
   }
 
   formats() {
-    return {
-      height: this.domNode.getAttribute('height') || undefined,
-      width: this.domNode.getAttribute('width') || undefined
-    };
+    let formats = {};
+    if (this.domNode.hasAttribute('height')) formats['height'] = this.domNode.getAttribute('height');
+    if (this.domNode.hasAttribute('width')) formats['width'] = this.domNode.getAttribute('width');
+    return formats;
   }
 
   value() {

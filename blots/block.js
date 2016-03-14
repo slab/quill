@@ -20,6 +20,7 @@ class EmbedBlock extends Parchment.Embed {
   }
 }
 EmbedBlock.scope = Parchment.Scope.BLOCK_BLOT;
+// It is important for cursor behavior EmbedBlocks use tags that are block level elements
 
 
 class Block extends Parchment.Block {

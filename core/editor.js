@@ -27,8 +27,12 @@ class Editor {
       if (op.insert != null) {
         if (typeof op.insert === 'string') {
           this.scroll.insertAt(index, op.insert);
-          let leaf, [line, offset] = this.scroll.descendant(Block, index);
-          [leaf, offset] = line.descendant(Parchment.Leaf, offset);
+          let leaf, [line, offset] = this.scroll.line(index);
+          if (line instanceof Parchment.Leaf) {
+            leaf = line;
+          } else {
+            [leaf, offset] = line.descendant(Parchment.Leaf, offset);
+          }
           let formats = extend({}, line.formats(), bubbleFormats(leaf));
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
@@ -57,7 +61,7 @@ class Editor {
 
   formatLine(index, length, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
-      this.scroll.descendants(Block, index, Math.max(length, 1)).forEach(function(line) {
+      this.scroll.lines(index, Math.max(length, 1)).forEach(function(line) {
         line.format(format, formats[format]);
       });
     });
@@ -76,7 +80,7 @@ class Editor {
   }
 
   getDelta() {
-    return this.scroll.descendants(Block).reduce((delta, line) => {
+    return this.scroll.lines().reduce((delta, line) => {
       return delta.concat(line.delta());
     }, new Delta());
   }
@@ -93,7 +97,7 @@ class Editor {
         }
       });
     } else {
-      lines = this.scroll.descendants(Block, index, length);
+      lines = this.scroll.lines(index, length);
       leaves = this.scroll.descendants(Parchment.Leaf, index, length);
     }
     let formatsArr = [lines, leaves].map(function(blots) {

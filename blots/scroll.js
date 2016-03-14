@@ -1,4 +1,5 @@
 import Emitter from '../core/emitter';
+import Block, { EmbedBlock } from './block';
 import Parchment from 'parchment';
 
 
@@ -16,6 +17,10 @@ function clean(container) {
     }
   });
   return container;
+}
+
+function isLine(blot) {
+  return (blot instanceof Block || blot instanceof EmbedBlock);
 }
 
 
@@ -36,6 +41,14 @@ class Scroll extends Parchment.Scroll {
       last.remove();
     }
     this.optimize();
+  }
+
+  line(index) {
+    return this.descendant(isLine, index);
+  }
+
+  lines(index, length) {
+    return this.descendants(isLine, index, length);
   }
 
   path(index) {

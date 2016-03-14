@@ -185,10 +185,10 @@ class Selection {
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     let containerHeight = containerBounds.bottom - containerBounds.top;
     if (containerHeight < endBounds.top + endBounds.height) {
-      let [line, offset] = this.scroll.descendant(Block, this.lastRange.end);
+      let [line, offset] = this.scroll.line(this.lastRange.end);
       return line.node.scrollIntoView(false);
     } else if (startBounds.top < 0) {
-      let [line, offset] = this.scroll.descendant(Block, this.lastRange.start);
+      let [line, offset] = this.scroll.line(this.lastRange.start);
       return line.node.scrollIntoView();
     }
   }
