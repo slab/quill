@@ -122,4 +122,4 @@ function bubbleFormats(blot) {
 }
 
 
-export { EmbedBlock, Block as default };
+export { bubbleFormats, EmbedBlock, Block as default };

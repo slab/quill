@@ -2,7 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import DeltaOp from 'rich-text/lib/op';
 import Emitter from './emitter';
 import Parchment from 'parchment';
-import Block from '../blots/block';
+import Block, { bubbleFormats } from '../blots/block';
 import clone from 'clone';
 import extend from 'extend';
 
@@ -138,19 +138,6 @@ class Editor {
   }
 }
 
-
-function bubbleFormats(blot) {
-  if (blot == null) return {};
-  if (blot instanceof Block) return blot.formats();
-  let formats = typeof blot.formats === 'function' ? blot.formats() : {};
-  while (blot.parent != null && blot.parent.statics.scope === Parchment.Scope.INLINE_BLOT) {
-    blot = blot.parent;
-    if (typeof blot.formats === 'function') {
-      formats = extend(formats, blot.formats());
-    }
-  }
-  return formats;
-}
 
 function combineFormats(formats, combined) {
   return Object.keys(combined).reduce(function(merged, name) {
