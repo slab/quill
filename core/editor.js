@@ -77,19 +77,7 @@ class Editor {
 
   getDelta() {
     return this.scroll.descendants(Block).reduce((delta, line) => {
-      if (typeof line.getDelta === 'function') {
-        return delta.concat(line.getDelta());
-      }
-      return line.descendants(Parchment.Leaf).reduce((delta, leaf) => {
-        if (leaf.length() === 0) return delta;
-        if (leaf instanceof Parchment.Embed) {
-          var value = {};
-          value[leaf.statics.blotName] = leaf.value();
-        } else {
-          var value = leaf.value();
-        }
-        return delta.insert(value, bubbleFormats(leaf));
-      }, delta).insert('\n', line.formats());
+      return delta.concat(line.delta());
     }, new Delta());
   }
 

@@ -1,14 +1,44 @@
+import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import BreakBlot from './break';
+import extend from 'extend';
 
 
 const NEWLINE_LENGTH = 1;
+
+
+class EmbedBlock extends Parchment.Embed {
+  attach() {
+    super.attach();
+    this.attributes = new Parchment.Attributor.Store(this.domNode);
+  }
+
+  delta() {
+    let value = {};
+    value[this.statics.blotName] = this.value();
+    return new Delta().insert(value, this.formats()).insert('\n', this.attributes.values());
+  }
+}
+EmbedBlock.scope = Parchment.Scope.BLOCK_BLOT;
 
 
 class Block extends Parchment.Block {
   constructor(domNode) {
     super(domNode);
     this.optimize();
+  }
+
+  delta() {
+    return this.descendants(Parchment.Leaf).reduce((delta, leaf) => {
+      if (leaf.length() === 0) return delta;
+      if (leaf instanceof Parchment.Embed) {
+        var value = {};
+        value[leaf.statics.blotName] = leaf.value();
+      } else {
+        var value = leaf.value();
+      }
+      return delta.insert(value, bubbleFormats(leaf));
+    }, new Delta()).insert('\n', this.formats());
   }
 
   formatAt(index, length, name, value) {
@@ -76,4 +106,19 @@ Block.childless = 'break';
 Block.tagName = 'P';
 
 
-export default Block;
+// TODO remove duplicate
+function bubbleFormats(blot) {
+  if (blot == null) return {};
+  if (blot instanceof Block) return blot.formats();
+  let formats = typeof blot.formats === 'function' ? blot.formats() : {};
+  while (blot.parent != null && blot.parent.statics.scope === Parchment.Scope.INLINE_BLOT) {
+    blot = blot.parent;
+    if (typeof blot.formats === 'function') {
+      formats = extend(formats, blot.formats());
+    }
+  }
+  return formats;
+}
+
+
+export { EmbedBlock, Block as default };

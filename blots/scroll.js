@@ -1,4 +1,3 @@
-import Block from './block';
 import Emitter from '../core/emitter';
 import Parchment from 'parchment';
 

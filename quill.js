@@ -18,6 +18,7 @@ import Script from './formats/script';
 import { SizeClass as Size } from './formats/size';
 import Strike from './formats/strike';
 import Underline from './formats/underline';
+import Video from './formats/video';
 
 import ImageTooltip from './modules/image-tooltip';
 import LinkTooltip from './modules/link-tooltip';
@@ -29,7 +30,7 @@ import SnowTheme from './themes/snow';
 
 Quill.register(Align, Blockquote, CodeBlock, Direction, Header, Indent, List, ListItem);
 Quill.register(Background, Bold, CodeInline, Color, Font, Italic, Link, Script, Size, Strike, Underline);
-Quill.register(Image);
+Quill.register(Image, Video);
 
 Quill.register('image-tooltip', ImageTooltip);
 Quill.register('link-tooltip', LinkTooltip);

@@ -17,7 +17,7 @@ class Cursor extends Embed {
     }
     let target = this, index = 0;
     this._length = Cursor.CONTENTS.length;
-    while (target != null && !(target instanceof Parchment.Block)) {
+    while (target != null && target.statics.scope !== Parchment.Scope.BLOCK_BLOT) {
       index += target.offset(target.parent);
       target = target.parent;
     }
