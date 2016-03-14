@@ -56,7 +56,7 @@ var mobileCapabilities = _.forEach(mobile, function(config, platform) {
     module.exports[key] = {
       base: 'SauceLabs',
       browserName: browser,
-      appiumVersion: '1.4.16',
+      appiumVersion: '1.5.0',
       deviceName: device,
       deviceOrientation: 'portrait',
       platformVersion: version,
