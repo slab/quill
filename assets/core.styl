@@ -82,24 +82,23 @@ resets(arr)
     counter-reset: resets(1..MAX_INDENT)
   a
     text-decoration: underline
-  :not(pre) > code
-    background-color: #f0f0f0
-    border-radius: 3px
-    font-size: 85%
-    padding-bottom: 2px
-    padding-top: 2px
-    &:before, &:after
-      content: "\00a0"
-      letter-spacing: -2px
   blockquote
     border-left: 4px solid #ccc
     font-style: italic
     margin-bottom: 5px
     margin-top: 5px
     padding-left: 16px
-  pre
+  code, pre
     background-color: #f0f0f0
     border-radius: 3px
+  code
+    font-size: 85%
+    padding-bottom: 2px
+    padding-top: 2px
+    &:before, &:after
+      content: "\00a0"
+      letter-spacing: -2px
+  pre
     margin-bottom: 5px
     margin-top: 5px
     padding: 5px 10px

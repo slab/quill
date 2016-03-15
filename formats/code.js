@@ -4,11 +4,7 @@ import Block from '../blots/block';
 import Inline from '../blots/inline';
 
 
-class Code extends Inline {
-  formats() {
-    return this.parent instanceof CodeBlock ? {} : super.formats();
-  }
-}
+class Code extends Inline {}
 Code.blotName = 'code';
 Code.tagName = 'CODE';
 
@@ -32,12 +28,24 @@ class CodeBlock extends Block {
 
   insertAt(index, value, def) {
     if (def != null) return;  // Cannot insert embeds into code
-    let [child, offset] = this.children.find(index);
-    child.insertAt(offset, value);
+    if (index < this.length() - 1) {
+      let [child, offset] = this.children.find(index);
+      child.insertAt(offset, value);
+    } else {
+      this.children.tail.insertAt(this.children.tail.length(), value);
+    }
+  }
+
+  optimize(mutations) {
+    super.optimize(mutations);
+    let next = this.next;
+    if (next instanceof CodeBlock && next.prev === this) {
+      next.moveChildren(this);
+      next.remove();
+    }
   }
 }
 CodeBlock.blotName = 'code-block';
-CodeBlock.childless = 'code';
 CodeBlock.tagName = 'PRE';
 
 

@@ -81,12 +81,24 @@ class Keyboard extends Module {
       }
       return lineFormats;
     }, {});
+    let added = 1;
     let delta = new Delta()
       .retain(range.index)
-      .insert('\n', lineFormats)
-      .delete(range.length);
+      .insert('\n', lineFormats);
+    if (range.length === 0) {
+      let [line, offset] = quill.scroll.line(range.index);
+      // Browsers do not display a newline with just <pre>\n</pre>
+      if (line.statics.blotName === 'code-block' &&
+          offset >= line.length() - 1 &&
+          this.quill.getText(range.index - 1, 1) !== '\n') {
+        delta.insert('\n', lineFormats);
+        added += 1;
+      }
+    } else {
+      delta.delete(range.length);
+    }
     this.quill.updateContents(delta, Emitter.sources.USER);
-    this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
+    this.quill.setSelection(range.index + added, Emitter.sources.SILENT);
     Object.keys(formats).forEach((name) => {
       if (lineFormats[name] == null) {
         this.quill.format(name, formats[name]);
