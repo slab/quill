@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="language" content="english">
   <title>{{ page.title }}{% if page.path != "/index.html" %} - Quill{% endif %}</title>
-  <meta name="viewport" content="width=device-width">
-  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  {% include meta.html %}
   {{ content | split: '<!-- section -->' | first }}
 </head>
 <body>

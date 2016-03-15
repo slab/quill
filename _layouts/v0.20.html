@@ -1,26 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="language" content="english">
   <title>{{ page.title }}</title>
-  <meta name="viewport" content="width=device-width">
   <meta name="description" content="Quill is a free, open source WYSIWYG editor built for the modern web. With its expressive API, you can completely customize it to fulfill your needs.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@quilljs">
-  <meta name="twitter:title" content="Quill">
-  <meta name="twitter:description" content="A Rich Text Editor with an API">
-  <meta name="twitter:image" content="http://quilljs.com/0.20/assets/images/cloud-large.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="http://quilljs.com{{ page.url }}">
-  <meta property="og:image" content="http://quilljs.com/0.20/assets/images/cloud-large.png">
-  <link rel="icon" type="image/png" href="/0.20/assets/images/favicon.png">
+  {% include meta.html %}
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="/0.20/assets/css/syntax.css">
   <link rel="stylesheet" href="/0.20/assets/css/styles.css">
   <link rel="stylesheet" href="//cdn.quilljs.com/0.20.1/quill.snow.css">
-  {% feed_meta %}
   {% include analytics.html  %}
 </head>
 <body{% if page.path == '0.20/index.md' %} class="home"{% endif%}>

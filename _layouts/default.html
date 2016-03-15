@@ -1,28 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="language" content="english">
     <title>{{ page.title }}{% if page.path != "/index.html" %} - Quill{% endif %}</title>
-    <meta name="viewport" content="width=device-width">
     {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@quilljs">
-    <meta name="twitter:title" content="Quill">
-    <meta name="twitter:description" content="A Rich Text Editor with an API">
-    <meta name="twitter:image" content="http://quilljs.com/assets/images/cloud-large.png">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="http://quilljs.com{{ page.url }}">
-    <meta property="og:image" content="http://quilljs.com/assets/images/cloud-large.png">
-    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+    {% include meta.html %}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
     <link rel="stylesheet" href="/assets/css/styles.css">
     {% if page.stylesheet %}
     <link rel="stylesheet" href="{{ page.stylesheet | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}">
     {% endif %}
-    {% feed_meta %}
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
