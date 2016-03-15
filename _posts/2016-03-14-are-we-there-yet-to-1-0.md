@@ -8,6 +8,8 @@ When Quill laid out its [1.0 roadmap](/blog/the-road-to-1-0/), core to its journ
 
 What this means is its design and API is reasonably stable and the adventurous can now take an early look. The latest Quill source is already using Parchment to implement its formatting and content capabilities, and its [integration](https://github.com/quilljs/quill/tree/develop/formats) would be a helpful example of Parchment in action. Of course, this is in addition to Parchment’s own [documentation](https://github.com/quilljs/parchment/blob/master/README.md).
 
+<!-- more -->
+
 
 ### New Formats
 
