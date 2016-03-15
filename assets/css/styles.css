@@ -79,6 +79,16 @@ footer li {
   width: 100px;
 }
 
+.home .quill-wrapper {
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom: 0px;
+}
+
+.home .quill-wrapper #editor {
+  border-bottom: 0px;
+}
+
 .quill-wrapper {
   background-color: #fff;
   border-left: 1px solid #ccc;
