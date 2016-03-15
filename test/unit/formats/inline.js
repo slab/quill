@@ -23,7 +23,7 @@ describe('Formats', function() {
         .insert('2', { strike: true })
         .insert('3', { underline: true })
         .insert('4', { link: 'http://quilljs.com/' })
-        .insert('5', { 'code-inline': true })
+        .insert('5', { code: true })
         .insert('6', { script: 'super' })
         .insert('7', { script: 'sub' })
         .insert('\n');

@@ -8,9 +8,9 @@ import Inline from '../blots/inline';
 let debug = logger('quill:code');
 
 
-class CodeInline extends Inline { }
-CodeInline.blotName = 'code-inline';
-CodeInline.tagName = 'CODE';
+class Code extends Inline { }
+Code.blotName = 'code';
+Code.tagName = 'CODE';
 
 
 class TokenAttributor extends Parchment.Attributor.Class {
@@ -63,10 +63,4 @@ CodeBlock.blotName = 'code-block';
 CodeBlock.tagName = 'PRE';
 
 
-// TODO fix
-// Quill.registerFormat(Code);
-// Quill.registerFormat(CodeBlock);
-// Quill.registerFormat(CodeToken);
-
-
-export { CodeToken, CodeInline, CodeBlock as default };
+export { CodeToken, Code, CodeBlock as default };
