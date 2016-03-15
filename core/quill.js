@@ -6,6 +6,7 @@ import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';
 import Theme from './theme';
+import Module from './module';
 
 let debug = logger('[quill]');
 
@@ -13,6 +14,15 @@ let debug = logger('[quill]');
 class Quill {
   static debug(limit) {
     logger.level(limit);
+  }
+
+  static get imports() {
+    return {
+      Delta,
+      Module,
+      Parchment,
+      Theme
+    };
   }
 
   static register(...args) {

@@ -2,11 +2,24 @@ import Quill, { overload } from '../../../core/quill';
 import { Range } from '../../../core/selection';
 import Emitter from '../../../core/emitter';
 import Delta from 'rich-text/lib/delta';
-
+import Theme from '../../../core/theme';
+import Module from '../../../core/module';
+import Parchment from 'parchment';
 
 describe('Quill', function() {
   beforeEach(function() {
     this.quill = this.initialize(Quill, '<p>01234567</p>');
+  });
+
+  describe('imports', function() {
+    it('should expose Theme, Parchment, Delta, Module', function() {
+      expect(Quill.imports).toEqual({
+        Delta,
+        Module,
+        Parchment,
+        Theme
+      });
+    });
   });
 
   describe('deleteText', function() {
