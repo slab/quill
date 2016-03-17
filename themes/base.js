@@ -18,8 +18,8 @@ class BaseTheme extends Theme {
     buttons.forEach(function(button) {
       let className = button.getAttribute('class') || '';
       let names = className.split(/\s+/);
-      for (let i in names) {
-        let name = names[i].slice('ql-'.length);
+      names.forEach((name) => {
+        name = name.slice('ql-'.length);
         if (icons[name] == null) return;
         if (typeof icons[name] === 'string') {
           button.innerHTML = icons[name];
@@ -29,7 +29,7 @@ class BaseTheme extends Theme {
             button.innerHTML = icons[name][value];
           }
         }
-      }
+      });
     });
   }
 }
