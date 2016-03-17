@@ -9,6 +9,8 @@ class Clipboard extends Module {
     this.quill.root.addEventListener('copy', this.onCopy.bind(this));
     this.quill.root.addEventListener('cut', this.onCut.bind(this));
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
+    this.container = this.quill.addContainer('ql-clipboard');
+    this.container.setAttribute('contenteditable', true);
   }
 
   onCopy(e) {
@@ -35,24 +37,33 @@ class Clipboard extends Module {
     let range = this.quill.getSelection();
     let clipboard = e.clipboardData || window.clipboardData;
     let delta = new Delta().retain(range.index).delete(range.length);
-    let text = clipboard.getData('text');
+    let callback = (delta) => {
+      this.quill.updateContents(delta, Emitter.sources.USER);
+      // range.length contributes to delta.length()
+      this.quill.setSelection(delta.length() - range.length*2, Emitter.sources.SILENT);
+      this.quill.selection.scrollIntoView();
+    };
+    let intercept = (delta) => {
+      this.container.focus();
+      setTimeout(() => {
+        delta.insert(this.container.innerText);
+        this.container.innerHTML = '';
+        callback(delta);
+      }, 1);
+    };
     // Firefox types is in iterable, not array
-    // IE11 types is null
+    // IE11 types can be null
     if ([].indexOf.call(clipboard.types || [], 'application/json') > -1) {
       try {
         let pasteJSON = JSON.parse(clipboard.getData('application/json'));
-        delta = delta.concat(pasteJSON);
-      } catch(e) {
-        delta.insert(text);
+        callback(delta.concat(pasteJSON));
+      } catch(err) {
+        intercept(delta);
       }
-    } else {
-      delta.insert(text);
+      e.preventDefault();
+      return;
     }
-    this.quill.updateContents(delta, Emitter.sources.USER);
-    // range.length contributes to delta.length()
-    this.quill.setSelection(delta.length() - range.length*2, Emitter.sources.SILENT);
-    this.quill.selection.scrollIntoView();
-    e.preventDefault();
+    intercept(delta);
   }
 }
 
