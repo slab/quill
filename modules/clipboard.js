@@ -13,59 +13,48 @@ class Clipboard extends Module {
 
   onCopy(e) {
     let range = this.quill.getSelection();
-    if (!range.length || e.defaultPrevented) {
-      return;
+    if (range == null || range.length === 0 || e.defaultPrevented) return;
+    let clipboard = e.clipboardData || window.clipboardData;
+    clipboard.setData('text', this.quill.getText(range))
+    if (e.clipboardData) {  // IE11 does not let us set non-text data
+      clipboard.setData('application/json', JSON.stringify(this.quill.getContents(range)));
     }
-    e.clipboardData.setData('text', this.quill.getText(range));
-    e.clipboardData.setData('application/json', JSON.stringify(this.quill.getContents(range)));
     e.preventDefault();
   }
 
   onCut(e) {
-    if (e.defaultPrevented) {
-      return;
-    }
+    if (e.defaultPrevented) return;
     this.onCopy(e);
-    this.quill.deleteText(this.quill.getSelection(), Emitter.sources.USER);
+    let range = this.quill.getSelection();
+    this.quill.deleteText(range, Emitter.sources.USER);
+    this.quill.setSelection(range.index, Emitter.sources.SILENT);
   }
 
   onPaste(e) {
-    if (e.defaultPrevented) {
-      return;
-    }
+    if (e.defaultPrevented) return;
     let range = this.quill.getSelection();
-    let delta = new Delta().retain(range.index);
-    if (range.length > 0) {
-      delta.delete(range.length);
-    }
-    if (e.clipboardData.types.indexOf('application/json') !== -1) {
-      let deltaJsonStr = e.clipboardData.getData('application/json');
-      let deltaJson = JSON.parse(deltaJsonStr);
-      if (Array.isArray(deltaJson.ops)) { // isDelta?
-        delta = delta.concat(deltaJson);
-      } else {
-        delta.insert(deltaJsonStr);
+    let clipboard = e.clipboardData || window.clipboardData;
+    let delta = new Delta().retain(range.index).delete(range.length);
+    let text = clipboard.getData('text');
+    // Firefox types is in iterable, not array
+    // IE11 types is null
+    if ([].indexOf.call(clipboard.types || [], 'application/json') > -1) {
+      try {
+        let pasteJSON = JSON.parse(clipboard.getData('application/json'));
+        delta = delta.concat(pasteJSON);
+      } catch(e) {
+        delta.insert(text);
       }
     } else {
-      delta.insert(e.clipboardData.getData('text'));
+      delta.insert(text);
     }
     this.quill.editor.applyDelta(delta, Emitter.sources.USER);
-    this.quill.setSelection(this.length(delta), Emitter.sources.SILENT);
-    this.quill.selection.scrollIntoView();
+    // range.length contributes to delta.length()
+    this.quill.setSelection(delta.length() - range.length*2, Emitter.sources.SILENT);
+    // this.quill.selection.scrollIntoView();
     e.preventDefault();
   }
-
-  length(delta) {
-    return delta.ops.reduce((memo, op) => {
-      if (typeof op['delete'] === 'number') {
-        return memo - op['delete'];
-      } else if (typeof op.retain === 'number') {
-        return memo + op.retain;
-      } else {
-        return memo + (typeof op.insert === 'string' ? op.insert.length : 1);
-      }
-    }, 0);
-  }
 }
+
 
 export default Clipboard;
