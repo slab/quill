@@ -86,7 +86,7 @@ class Keyboard extends Module {
       .retain(range.index)
       .insert('\n', lineFormats);
     if (range.length === 0) {
-      let [line, offset] = quill.scroll.line(range.index);
+      let [line, offset] = this.quill.scroll.line(range.index);
       // Browsers do not display a newline with just <pre>\n</pre>
       if (line.statics.blotName === 'code-block' &&
           offset >= line.length() - 1 &&
