@@ -48,10 +48,10 @@ class Clipboard extends Module {
     } else {
       delta.insert(text);
     }
-    this.quill.editor.applyDelta(delta, Emitter.sources.USER);
+    this.quill.updateContents(delta, Emitter.sources.USER);
     // range.length contributes to delta.length()
     this.quill.setSelection(delta.length() - range.length*2, Emitter.sources.SILENT);
-    // this.quill.selection.scrollIntoView();
+    this.quill.selection.scrollIntoView();
     e.preventDefault();
   }
 }

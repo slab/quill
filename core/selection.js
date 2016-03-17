@@ -177,16 +177,13 @@ class Selection {
 
   scrollIntoView() {
     if (this.lastRange == null) return;
-    let startBounds = this.getBounds(this.lastRange.start);
-    let endBounds = this.lastRange.collapsed ? startBounds : this.getBounds(this.lastRange.end);
-    let containerBounds = this.root.parentNode.getBoundingClientRect();
-    let containerHeight = containerBounds.bottom - containerBounds.top;
-    if (containerHeight < endBounds.top + endBounds.height) {
-      let [line, offset] = this.scroll.line(this.lastRange.end);
-      return line.node.scrollIntoView(false);
-    } else if (startBounds.top < 0) {
-      let [line, offset] = this.scroll.line(this.lastRange.start);
-      return line.node.scrollIntoView();
+    let bounds = this.getBounds(this.lastRange.index, this.lastRange.length);
+    if (this.root.offsetHeight < bounds.bottom) {
+      let [line, offset] = this.scroll.line(this.lastRange.index + this.lastRange.length);
+      line.domNode.scrollIntoView(false);
+    } else if (bounds.top < 0) {
+      let [line, offset] = this.scroll.line(this.lastRange.index);
+      line.domNode.scrollIntoView();
     }
   }
 
