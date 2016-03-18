@@ -4,48 +4,38 @@ import Module from '../core/module';
 import Parchment from 'parchment';
 
 
-function textSanitize(node, delta) {
-  if (node instanceof Text) {
-    let text = node.data.replace(/\s\s+/g, ' ');
-    delta.insert(text);
-  }
-  return delta;
-}
-
-function newlineSanitize(node, delta) {
-  if (['P', 'DIV', 'VIDEO', 'BR'].indexOf(node.tagName) > -1) {
-    delta.insert('\n');
-  }
-  return delta;
-}
-
-function blotSanitize(node, delta) {
-  let match = Parchment.query(node);
-  if (match == null) return delta;
-  if (match instanceof Parchment.Embed) {
-    let embed = {};
-    embed[match.blotName] = match.value(node);
-    delta.insert(embed, match.formats(node));
-  } else if (typeof match.formats === 'function') {
-    delta = delta.compose(new Delta().retain(delta.length(), match.formats(node)));
-  }
-  return delta;
-}
-
-let matchers = [
-  textSanitize,
-  newlineSanitize,
-  blotSanitize,
-];
-
-function sanitize(node) {  // Post-order traversal
-  return [].reduce.call(node.childNodes || [], function(delta, childNode) {
-    let childrenDelta = matchers.reduce(function(childrenDelta, matcher) {
-      return matcher(childNode, childrenDelta);
-    }, sanitize(childNode));
-    return delta.concat(childrenDelta);
-  }, new Delta());
-}
+const DOM_KEY = '__ql-matcher';
+const BLOCK_ELEMENTS = {
+  'ADDRESS': true,
+  'ARTICLE': true,
+  'ASIDE': true,
+  'BLOCKQUOTE': true,
+  'CANVAS': true,
+  'DIV': true,
+  'DL': true,
+  'FIELDSET': true,
+  'FIGCAPTION': true,
+  'FIGURE': true,
+  'FOOTER': true,
+  'FORM': true,
+  'HEADER': true,
+  'H1': true, 'H2': true, 'H3': true, 'H4': true, 'H5': true, 'H6': true,
+  'HGROUP': true,
+  'HR': true,
+  'LI': true,
+  'MAIN': true,
+  'NAV': true,
+  'NOSCRIPT': true,
+  'OL': true,
+  'OUTPUT': true,
+  'P': true,
+  'PRE': true,
+  'SECTION': true,
+  'TABLE': true,
+  'TFOOT': true,
+  'UL': true,
+  'VIDEO': true
+};
 
 
 class Clipboard extends Module {
@@ -56,6 +46,41 @@ class Clipboard extends Module {
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
+    this.matchers = [
+      [true, matchText],
+      [true, matchNewline],
+      [true, matchBlot]
+    ];
+  }
+
+  addMatcher(selector, matcher) {
+    this.matchers.push([selector, matcher]);
+  }
+
+  convert(container) {
+    let globalMatchers = [];
+    this.matchers.forEach(function(pair) {
+      let [selector, matcher] = pair;
+      if (selector === true) {
+        globalMatchers.push(matcher);
+      } else {
+        [].forEach.call(container.querySelectorAll(selector), function(node) {
+          // TODO use weakmap
+          node[DOM_KEY] = node[DOM_KEY] || [];
+          node[DOM_KEY].push(this.matchers[selector]);
+        });
+      }
+    });
+    let traverse = function(node) {  // Post-order
+      return [].reduce.call(node.childNodes || [], function(delta, childNode) {
+        let matchers = globalMatchers.concat(childNode[DOM_KEY] || []);
+        let childrenDelta = matchers.reduce(function(childrenDelta, matcher) {
+          return matcher(childNode, childrenDelta);
+        }, traverse(childNode));
+        return delta.concat(childrenDelta);
+      }, new Delta());
+    };
+    return traverse(container);
   }
 
   onCopy(e) {
@@ -91,12 +116,12 @@ class Clipboard extends Module {
     let intercept = (delta) => {
       this.container.focus();
       setTimeout(() => {
-        delta = delta.concat(sanitize(this.container));
+        delta = delta.concat(this.convert(this.container));
         this.container.innerHTML = '';
         callback(delta);
       }, 1);
     };
-    // Firefox types is in iterable, not array
+    // Firefox types is an iterable, not array
     // IE11 types can be null
     if ([].indexOf.call(clipboard.types || [], 'application/json') > -1) {
       try {
@@ -110,6 +135,40 @@ class Clipboard extends Module {
     }
     intercept(delta);
   }
+}
+
+
+function matchBlot(node, delta) {
+  let match = Parchment.query(node);
+  if (match == null) return delta;
+  if (match.prototype instanceof Parchment.Embed) {
+    let embed = {};
+    embed[match.blotName] = match.value(node);
+    delta.insert(embed, match.formats(node));
+  } else if (typeof match.formats === 'function') {
+    delta = delta.compose(new Delta().retain(delta.length(), match.formats(node)));
+  }
+  return delta;
+}
+
+function matchNewline(node, delta) {
+  if (!(node instanceof HTMLElement)) return delta;
+  if (BLOCK_ELEMENTS[node.tagName] || node.style.display === 'block') {
+    // TODO do not insert when nested
+    delta.insert('\n');
+    if (node.style.paddingBottom) {
+      delta.insert('\n');
+    }
+  }
+  return delta;
+}
+
+function matchText(node, delta) {
+  if (node instanceof Text) {
+    let text = node.data.replace(/\s\s+/g, ' ');
+    delta.insert(text);
+  }
+  return delta;
 }
 
 
