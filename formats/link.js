@@ -12,21 +12,23 @@ class Link extends Inline {
     return node;
   }
 
+  static formats(domNode) {
+    let formats = {};
+    if (domNode.hasAttribute('href')) {
+      formats[this.blotName] = domNode.getAttribute('href')
+    }
+    return formats;
+  }
+
   static sanitize(url) {
     return url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, '');
   }
 
   format(name, value) {
-    if (name !== 'link' || !value) return super.format(name, value);
+    if (name !== this.statics.blotName || !value) return super.format(name, value);
     value = this.constructor.sanitize(value);
     this.domNode.setAttribute('href', value);
     this.domNode.setAttribute('title', value);
-  }
-
-  formats() {
-    let format = super.formats();
-    format.link = this.domNode.getAttribute('href') || true;
-    return format;
   }
 }
 Link.blotName = 'link';

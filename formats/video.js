@@ -11,8 +11,19 @@ class Video extends EmbedBlock {
     return node;
   }
 
+  static formats(domNode) {
+    let formats = super.formats();
+    if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
+    if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
+    return formats;
+  }
+
   static sanitize(url) {
     return Link.sanitize(url);
+  }
+
+  static value(domNode) {
+    return domNode.getAttribute('src');
   }
 
   constructor(domNode) {
@@ -35,17 +46,6 @@ class Video extends EmbedBlock {
     } else {
       super.format(name, value);
     }
-  }
-
-  formats() {
-    let formats = {};
-    if (this.domNode.hasAttribute('height')) formats['height'] = this.domNode.getAttribute('height');
-    if (this.domNode.hasAttribute('width')) formats['width'] = this.domNode.getAttribute('width');
-    return formats;
-  }
-
-  value() {
-    return this.domNode.getAttribute('src') || true;
   }
 }
 Video.blotName = 'video';

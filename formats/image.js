@@ -19,8 +19,8 @@ class Image extends Parchment.Embed {
     return Link.sanitize(url);
   }
 
-  value() {
-    return this.domNode.getAttribute('src') || true;
+  static value(domNode) {
+    return domNode.getAttribute('src');
   }
 }
 Image.blotName = 'image';

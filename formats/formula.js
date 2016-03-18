@@ -12,8 +12,8 @@ class Formula extends Parchment.Embed {
     return node;
   }
 
-  value() {
-    return this.domNode.getAttribute('data-value') || true;
+  static value(domNode) {
+    return domNode.getAttribute('data-value');
   }
 }
 Formula.blotName = 'formula';
