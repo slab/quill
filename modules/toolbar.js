@@ -74,7 +74,7 @@ class Toolbar extends Module {
       } if (input.hasAttribute('data-value')) {
         input.classList.toggle('ql-active', input.getAttribute('data-value') == formats[format]);  // Intentional ==
       } else {
-        input.classList.toggle('ql-active', formats[format]);
+        input.classList.toggle('ql-active', formats[format] || false);
       }
     });
   }
