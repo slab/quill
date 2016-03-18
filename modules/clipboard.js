@@ -150,7 +150,7 @@ function matchAliases(node, delta) {
       break;
     default: return delta;
   }
-  return delta.compose(new Delta().retain(delta.length(), { bold: true }));
+  return delta.compose(new Delta().retain(delta.length(), formats));
 }
 
 function matchBlot(node, delta) {
