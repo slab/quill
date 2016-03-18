@@ -169,9 +169,12 @@ function matchBlot(node, delta) {
 function matchNewline(node, delta) {
   if (!(node instanceof HTMLElement)) return delta;
   if (BLOCK_ELEMENTS[node.tagName] || node.style.display === 'block') {
-    // TODO do not insert when nested
-    delta.insert('\n');
-    if (node.style.paddingBottom) {
+    let lastOp = delta.ops[delta.ops.length - 1];
+    let endText = (lastOp == null || typeof lastOp.insert !== 'string') ? '' : lastOp.insert;
+    if (!endText.endsWith('\n')) {
+      delta.insert('\n');
+    }
+    if (node.style.paddingBottom || (node.style.marginBottom && !endText.endsWith('\n\n'))) {
       delta.insert('\n');
     }
   }
