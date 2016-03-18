@@ -49,7 +49,8 @@ class Clipboard extends Module {
     this.matchers = [
       [true, matchText],
       [true, matchNewline],
-      [true, matchBlot]
+      [true, matchBlot],
+      [true, matchAliases]
     ];
   }
 
@@ -137,6 +138,20 @@ class Clipboard extends Module {
   }
 }
 
+
+function matchAliases(node, delta) {
+  let formats = {};
+  switch(node.tagName) {
+    case 'B':
+      formats = { bold: true };
+      break;
+    case 'I':
+      formats = { italic: true };
+      break;
+    default: return delta;
+  }
+  return delta.compose(new Delta().retain(delta.length(), { bold: true }));
+}
 
 function matchBlot(node, delta) {
   let match = Parchment.query(node);
