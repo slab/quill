@@ -34,6 +34,10 @@ class Quill {
     }
   }
 
+  static getModule(name) {
+    return Theme.modules[name];
+  }
+
   constructor(container, options = {}) {
     this.container = typeof container === 'string' ? document.querySelector(container) : container;
     if (this.container == null) {
@@ -142,7 +146,7 @@ class Quill {
   }
 
   getModule(name) {
-    return Theme.modules[name];
+    return this.theme.modules[name];
   }
 
   getSelection(focus = false) {
