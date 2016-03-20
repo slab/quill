@@ -30,7 +30,7 @@ class Toolbar extends Module {
       this.attach(input);
     });
     this.quill.on(Emitter.events.SELECTION_CHANGE, this.update, this)
-              .on(Emitter.events.TEXT_CHANGE, this.update, this);
+              .on(Emitter.events.SCROLL_OPTIMIZE, this.update, this);
   }
 
   attach(input) {
@@ -59,7 +59,7 @@ class Toolbar extends Module {
   }
 
   update() {
-    let range = this.quill.getSelection();
+    let [range, ] = this.quill.selection.getRange();  // quill.getSelection triggers update
     if (range == null) return;
     let formats = this.quill.getFormat(range);
     this.controls.forEach(function(pair) {
