@@ -29,6 +29,8 @@ import CodeBlock, { Code } from './formats/code';
 import ImageTooltip from './modules/image-tooltip';
 import LinkTooltip from './modules/link-tooltip';
 import ToolbarModule from './modules/toolbar';
+import Parchment from 'parchment';
+import Module from './core/module';
 
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
@@ -45,5 +47,7 @@ Quill.register('toolbar', ToolbarModule);
 Quill.register('bubble', BubbleTheme);
 Quill.register('snow', SnowTheme);
 
+Quill.Parchment = Parchment;
+Quill.Module = Module;
 
 module.exports = Quill;
