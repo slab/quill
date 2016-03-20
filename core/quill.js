@@ -1,6 +1,7 @@
 import Delta from 'rich-text/lib/delta';
 import Editor from './editor';
 import Emitter from './emitter';
+import Module from './module';
 import Parchment from 'parchment';
 import Selection, { Range } from './selection';
 import extend from 'extend';
@@ -13,6 +14,20 @@ let debug = logger('[quill]');
 class Quill {
   static debug(limit) {
     logger.level(limit);
+  }
+
+  static getModule(name) {
+    return Theme.modules[name];
+  }
+
+  static import(name) {
+    switch(name) {
+      case 'delta': return Delta;
+      case 'module': return Module;
+      case 'parchment': return Parchment;
+      case 'theme': return Theme;
+      default: return undefined;
+    }
   }
 
   static register(...args) {
@@ -32,10 +47,6 @@ class Quill {
         Parchment.register(format);
       });
     }
-  }
-
-  static getModule(name) {
-    return Theme.modules[name];
   }
 
   constructor(container, options = {}) {
