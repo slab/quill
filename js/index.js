@@ -34,6 +34,7 @@ $(document).ready(function() {
     'Lever': 'https://www.lever.co/',
     'MerchantCircle': 'http://www.merchantcircle.com/',
     'RelateIQ': 'https://www.relateiq.com/',
+    'Reedsy': 'https://reedsy.com/',
     'Respondly': 'https://respond.ly/',
     'Salesforce': 'http://www.salesforce.com/',
     'ThemeXpert': 'https://www.themexpert.com/',
