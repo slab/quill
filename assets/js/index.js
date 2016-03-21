@@ -33,6 +33,7 @@ $(document).ready(function() {
     'Intuit': 'https://www.intuit.com/',
     'Lever': 'https://www.lever.co/',
     'MerchantCircle': 'http://www.merchantcircle.com/',
+    'Reedsy': 'https://reedsy.com/',
     'RelateIQ': 'https://www.relateiq.com/',
     'Respondly': 'https://respond.ly/',
     'Salesforce': 'http://www.salesforce.com/',
