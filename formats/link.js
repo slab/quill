@@ -21,7 +21,13 @@ class Link extends Inline {
   }
 
   static sanitize(url) {
-    return url.replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, '');
+    let anchor = document.createElement('a');
+    anchor.href = url;
+    if (['http:', 'https:', 'mailto:'].indexOf(anchor.protocol) > -1) {
+      return url;
+    } else {
+      return '#';
+    }
   }
 
   format(name, value) {
