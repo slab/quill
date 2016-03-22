@@ -12,7 +12,7 @@ class Image extends Parchment.Embed {
   }
 
   static match(url) {
-    return /^https?:\/\/.+\.(jpe?g|gif|png)$/.test(url);
+    return /\.(jpe?g|gif|png)$/.test(url);
   }
 
   static sanitize(url) {
