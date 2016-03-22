@@ -24,23 +24,27 @@ import Formula from './formats/formula';
 import Image from './formats/image';
 import Video from './formats/video';
 
-import CodeBlock, { Code } from './formats/code';
+import { Code as InlineCode } from './formats/code';
 
 import ImageTooltip from './modules/image-tooltip';
 import LinkTooltip from './modules/link-tooltip';
 import ToolbarModule from './modules/toolbar';
+import CodeHighlighter, { CodeBlock, CodeToken } from './modules/code-highlighter';
 
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
 
 
-Quill.register(Align, Blockquote, CodeBlock, Direction, Header, Indent, List, ListItem);
-Quill.register(Background, Bold, Code, Color, Font, Italic, Link, Script, Size, Strike, Underline);
+Quill.register(Align, Blockquote, Direction, Header, Indent, List, ListItem);
+Quill.register(Background, Bold, Color, Font, Italic, InlineCode, Link, Script, Size, Strike, Underline);
 Quill.register(Formula, Image, Video);
 
 Quill.register('image-tooltip', ImageTooltip);
 Quill.register('link-tooltip', LinkTooltip);
 Quill.register('toolbar', ToolbarModule);
+
+Quill.register(CodeToken, CodeBlock)
+Quill.register('code-highlighter', CodeHighlighter);
 
 Quill.register('bubble', BubbleTheme);
 Quill.register('snow', SnowTheme);

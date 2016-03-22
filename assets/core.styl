@@ -88,8 +88,9 @@ resets(arr)
     margin-bottom: 5px
     margin-top: 5px
     padding-left: 16px
-  code, pre
+  code, pre:not(.hljs)    // TODO core should not be aware of hljs
     background-color: #f0f0f0
+  code, pre
     border-radius: 3px
   code
     font-size: 85%
