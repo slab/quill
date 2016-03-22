@@ -25,21 +25,36 @@ class Keyboard extends Module {
     // this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDeleteWord.bind(this, true));
     // this.addBinding({ key: Keyboard.keys.DELETE }, this.onDeleteWord.bind(this, false));
     this.addBinding({ key: Keyboard.keys.TAB, shiftKey: null }, this.onTab.bind(this));
-    this.quill.root.addEventListener('keydown', (evt) => {
-      let which = evt.which || evt.keyCode;
-      let handlers = (this.bindings[which] || []).reduce(function(handlers, binding) {
-        let [key, handler] = binding;
-        if (match(evt, key)) handlers.push(handler);
-        return handlers;
-      }, []);
-      if (handlers.length > 0) {
-        let range = this.quill.getSelection();
-        handlers.forEach((handler) => {
-          handler(range, evt);
-        });
-        evt.preventDefault();
-      }
-    });
+    this.keydownHandler = this.keydownHandler.bind(this);
+    this.bind();
+  }
+
+  bind() {
+    this.quill.root.addEventListener('keydown', this.keydownHandler);
+  }
+
+  unbind() {
+    this.quill.root.removeEventListener('keydown', this.keydownHandler);
+  }
+
+  destroy() {
+    this.unbind();
+  }
+
+  keydownHandler(evt) {
+    let which = evt.which || evt.keyCode;
+    let handlers = (this.bindings[which] || []).reduce(function(handlers, binding) {
+      let [key, handler] = binding;
+      if (match(evt, key)) handlers.push(handler);
+      return handlers;
+    }, []);
+    if (handlers.length > 0) {
+      let range = this.quill.getSelection();
+      handlers.forEach((handler) => {
+        handler(range, evt);
+      });
+      evt.preventDefault();
+    }
   }
 
   addBinding(binding, handler) {

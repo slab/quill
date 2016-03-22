@@ -2,7 +2,6 @@ import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import Picker from '../ui/picker';
 import icons from '../ui/icons';
-import { bindKeys } from '../modules/keyboard';
 
 
 class BaseTheme extends Theme {

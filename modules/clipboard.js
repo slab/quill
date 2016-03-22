@@ -44,9 +44,10 @@ const BLOCK_ELEMENTS = {
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
-    this.quill.root.addEventListener('copy', this.onCopy.bind(this));
-    this.quill.root.addEventListener('cut', this.onCut.bind(this));
-    this.quill.root.addEventListener('paste', this.onPaste.bind(this));
+    this.onCopy = this.onCopy.bind(this);
+    this.onCut = this.onCut.bind(this);
+    this.onPaste = this.onPaste.bind(this);
+    this.bind();
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
     this.matchers = [
@@ -56,6 +57,22 @@ class Clipboard extends Module {
       [Node.ELEMENT_NODE, matchSpacing],
       ['b, i', matchAliases]
     ];
+  }
+
+  bind() {
+    this.quill.root.addEventListener('copy', this.onCopy);
+    this.quill.root.addEventListener('cut', this.onCut);
+    this.quill.root.addEventListener('paste', this.onPaste);
+  }
+
+  unbind() {
+    this.quill.root.removeEventListener('copy', this.onCopy);
+    this.quill.root.removeEventListener('cut', this.onCut);
+    this.quill.root.removeEventListener('paste', this.onPaste);
+  }
+
+  destroy() {
+    this.unbind();
   }
 
   addMatcher(selector, matcher) {

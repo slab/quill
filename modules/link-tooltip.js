@@ -18,14 +18,9 @@ class LinkTooltip extends Module {
       'enter': this.save.bind(this),
       'escape': this.hide.bind(this)
     });
-    this.container.querySelector('a.ql-action').addEventListener('click', () => {
-      if (this.container.classList.contains('ql-editing')) {
-        this.save();
-      } else {
-        this.edit();
-      }
-    });
-    this.container.querySelector('a.ql-remove').addEventListener('click', this.remove.bind(this));
+    this.clickHandler = this.clickHandler.bind(this);
+    this.remove = this.remove.bind(this);
+    this.bind();
     // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
     quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length === 0) {
@@ -38,6 +33,28 @@ class LinkTooltip extends Module {
       }
       this.hide();
     });
+  }
+
+  bind() {
+    this.container.querySelector('a.ql-action').addEventListener('click', this.clickHandler);
+    this.container.querySelector('a.ql-remove').addEventListener('click', this.remove);
+  }
+
+  unbind() {
+    this.container.querySelector('a.ql-action').removeEventListener('click', this.clickHandler);
+    this.container.querySelector('a.ql-remove').removeEventListener('click', this.remove);
+  }
+
+  destroy() {
+    this.unbind();
+  }
+
+  clickHandler() {
+    if (this.container.classList.contains('ql-editing')) {
+      this.save();
+    } else {
+      this.edit();
+    }
   }
 
   edit() {
