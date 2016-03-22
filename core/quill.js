@@ -7,6 +7,7 @@ import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';
 import Theme from './theme';
+import {EmbedBlock} from '../blots/block';
 
 let debug = logger('[quill]');
 
@@ -26,6 +27,7 @@ class Quill {
       case 'module': return Module;
       case 'parchment': return Parchment;
       case 'theme': return Theme;
+      case 'embedblock': return EmbedBlock;
       default: return undefined;
     }
   }
