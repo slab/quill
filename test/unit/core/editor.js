@@ -283,7 +283,7 @@ describe('Editor', function() {
       editor.formatLine(1, 1, { header: 1 });
       expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
       editor.scroll.update();
-      expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
+      expect(editor.scroll.domNode).toEqualHTML('<h1 id="0123">0123</h1>');
     });
   });
 

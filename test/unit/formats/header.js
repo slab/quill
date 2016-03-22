@@ -23,7 +23,7 @@ describe('Formats', function() {
         .insert('0123', { italic: true })
         .insert('\n', { header: 1 })
       );
-      expect(this.container.innerHTML).toEqualHTML('<h1><em>0123</em></h1>');
+      expect(this.container.innerHTML).toEqualHTML('<h1 id ="0123"><em>0123</em></h1>');
     });
 
     it('remove', function() {
@@ -43,7 +43,7 @@ describe('Formats', function() {
         .insert('0123', { italic: true })
         .insert('\n', { header: 2 })
       );
-      expect(this.container.innerHTML).toEqualHTML('<h2><em>0123</em></h2>');
+      expect(this.container.innerHTML).toEqualHTML('<h2 id="0123"><em>0123</em></h2>');
     });
   });
 });
