@@ -2,6 +2,9 @@ import Delta from 'rich-text/lib/delta';
 import Emitter from '../core/emitter';
 import Module from '../core/module';
 import Parchment from 'parchment';
+import logger from '../core/logger';
+
+let debug = logger('quill:clipboard');
 
 
 const DOM_KEY = '__ql-matcher';
@@ -47,10 +50,11 @@ class Clipboard extends Module {
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
     this.matchers = [
-      [true, matchText],
-      [true, matchNewline],
-      [true, matchBlot],
-      [true, matchAliases]
+      [Node.TEXT_NODE, matchText],
+      [Node.ELEMENT_NODE, matchNewline],
+      [Node.ELEMENT_NODE, matchBlot],
+      [Node.ELEMENT_NODE, matchSpacing],
+      [Node.ELEMENT_NODE, matchAliases]
     ];
   }
 
@@ -59,12 +63,9 @@ class Clipboard extends Module {
   }
 
   convert(container) {
-    let globalMatchers = [];
     this.matchers.forEach(function(pair) {
       let [selector, matcher] = pair;
-      if (selector === true) {
-        globalMatchers.push(matcher);
-      } else {
+      if (typeof selector === 'string') {
         [].forEach.call(container.querySelectorAll(selector), function(node) {
           // TODO use weakmap
           node[DOM_KEY] = node[DOM_KEY] || [];
@@ -72,12 +73,19 @@ class Clipboard extends Module {
         });
       }
     });
-    let traverse = function(node) {  // Post-order
-      return [].reduce.call(node.childNodes || [], function(delta, childNode) {
-        let matchers = globalMatchers.concat(childNode[DOM_KEY] || []);
-        let childrenDelta = matchers.reduce(function(childrenDelta, matcher) {
+    let traverse = (node) => {  // Post-order
+      return [].reduce.call(node.childNodes || [], (delta, childNode) => {
+        let childrenDelta = traverse(childNode);
+        childrenDelta = this.matchers.reduce(function(childrenDelta, pair) {
+          let [type, matcher] = pair;
+          if (type === true || childNode.nodeType === type) {
+            childrenDelta = matcher(childNode, childrenDelta);
+          }
+          return childrenDelta;
+        }, childrenDelta);
+        childrenDelta = (childNode[DOM_KEY] || []).reduce(function(childrenDelta, matcher) {
           return matcher(childNode, childrenDelta);
-        }, traverse(childNode));
+        }, childrenDelta);
         return delta.concat(childrenDelta);
       }, new Delta());
     };
@@ -118,6 +126,7 @@ class Clipboard extends Module {
       this.container.focus();
       setTimeout(() => {
         delta = delta.concat(this.convert(this.container));
+        debug.info('paste', this.container.innerHTML, delta);
         this.container.innerHTML = '';
         callback(delta);
       }, 1);
@@ -138,6 +147,12 @@ class Clipboard extends Module {
   }
 }
 
+
+function deltaEndsWith(delta, text) {
+  let lastOp = delta.ops[delta.ops.length - 1];
+  let endText = (lastOp == null || typeof lastOp.insert !== 'string') ? '' : lastOp.insert;
+  return endText.endsWith(text);
+}
 
 function matchAliases(node, delta) {
   let formats = {};
@@ -167,26 +182,24 @@ function matchBlot(node, delta) {
 }
 
 function matchNewline(node, delta) {
-  if (!(node instanceof HTMLElement)) return delta;
   if (BLOCK_ELEMENTS[node.tagName] || node.style.display === 'block') {
-    let lastOp = delta.ops[delta.ops.length - 1];
-    let endText = (lastOp == null || typeof lastOp.insert !== 'string') ? '' : lastOp.insert;
-    if (!endText.endsWith('\n')) {
-      delta.insert('\n');
-    }
-    if (node.style.paddingBottom || (node.style.marginBottom && !endText.endsWith('\n\n'))) {
+    if (!deltaEndsWith(delta, '\n')) {
       delta.insert('\n');
     }
   }
   return delta;
 }
 
-function matchText(node, delta) {
-  if (node instanceof Text) {
-    let text = node.data.replace(/\s\s+/g, ' ');
-    delta.insert(text);
+function matchSpacing(node, delta) {
+  if (node.style.paddingBottom || (node.style.marginBottom && !deltaEndsWith(delta, '\n\n'))) {
+    delta.insert('\n');
   }
   return delta;
+}
+
+function matchText(node, delta) {
+  let text = node.data.replace(/\s\s+/g, ' ');
+  return delta.insert(text);
 }
 
 
