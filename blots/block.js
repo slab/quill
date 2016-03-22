@@ -18,6 +18,10 @@ class EmbedBlock extends Parchment.Embed {
     value[this.statics.blotName] = this.value();
     return new Delta().insert(value, this.formats()).insert('\n', this.attributes.values());
   }
+
+  length() {
+    return super.length() + NEWLINE_LENGTH;
+  }
 }
 EmbedBlock.scope = Parchment.Scope.BLOCK_BLOT;
 // It is important for cursor behavior EmbedBlocks use tags that are block level elements
