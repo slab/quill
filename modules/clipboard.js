@@ -54,7 +54,7 @@ class Clipboard extends Module {
       [Node.ELEMENT_NODE, matchNewline],
       [Node.ELEMENT_NODE, matchBlot],
       [Node.ELEMENT_NODE, matchSpacing],
-      [Node.ELEMENT_NODE, matchAliases]
+      ['b, i', matchAliases]
     ];
   }
 
@@ -63,13 +63,13 @@ class Clipboard extends Module {
   }
 
   convert(container) {
-    this.matchers.forEach(function(pair) {
+    this.matchers.forEach((pair) => {
       let [selector, matcher] = pair;
       if (typeof selector === 'string') {
-        [].forEach.call(container.querySelectorAll(selector), function(node) {
+        [].forEach.call(container.querySelectorAll(selector), (node) => {
           // TODO use weakmap
           node[DOM_KEY] = node[DOM_KEY] || [];
-          node[DOM_KEY].push(this.matchers[selector]);
+          node[DOM_KEY].push(matcher);
         });
       }
     });
@@ -150,8 +150,9 @@ class Clipboard extends Module {
 
 function deltaEndsWith(delta, text) {
   let lastOp = delta.ops[delta.ops.length - 1];
+  // TODO fix case where delta lastOp length < text.length
   let endText = (lastOp == null || typeof lastOp.insert !== 'string') ? '' : lastOp.insert;
-  return endText.endsWith(text);
+  return endText.slice(-1*text.length) === text;
 }
 
 function matchAliases(node, delta) {
