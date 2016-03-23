@@ -23,7 +23,8 @@ class Link extends Inline {
   static sanitize(url) {
     let anchor = document.createElement('a');
     anchor.href = url;
-    if (['http:', 'https:', 'mailto:'].indexOf(anchor.protocol) > -1) {
+    let protocol = anchor.href.slice(0, anchor.href.indexOf(':'));
+    if (['http', 'https', 'mailto'].indexOf(protocol) > -1) {
       return url;
     } else {
       return '#';
