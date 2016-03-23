@@ -197,6 +197,11 @@ class Quill {
     return this.emitter.once.apply(this.emitter, arguments);
   }
 
+  removeFormat(index, length, source) {
+    [index, length, , source] = overload(index, length, source);
+    this.editor.removeFormat(index, length, source);
+  }
+
   setContents(delta, source = Emitter.sources.API) {
     delta = new Delta(delta).slice();
     let lastOp = delta.ops[delta.ops.length - 1];

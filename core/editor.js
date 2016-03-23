@@ -128,6 +128,14 @@ class Editor {
     this.formatText(index, index + text.length, formats, source);
   }
 
+  removeFormat(index, length) {
+    let text = this.getText(index, length);
+    let delta = new Delta().retain(index).insert(text).delete(length);
+    let [line, offset] = this.scroll.line(index + length);
+    delta.retain(line.length() - offset - 1).delete(1).insert('\n');
+    this.applyDelta(delta);
+  }
+
   update(source = Emitter.sources.USER) {
     let oldDelta = this.delta;
     this.delta = this.getDelta();
