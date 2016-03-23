@@ -10,7 +10,7 @@ class Header extends Block {
 
   optimize(mutations) {
     super.optimize(mutations);
-    let text = this.domNode.innerText.toLowerCase();
+    let text = this.domNode.textContent.toLowerCase();
     let id = text.replace(/[^a-z0-9]+/g, '-').replace(/^\-/, '').replace(/\-$/, '');
     if (this.domNode.id !== id) {
       if (id.length === 0) {

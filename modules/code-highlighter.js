@@ -7,7 +7,7 @@ import Parchment from 'parchment';
 class HighlightCodeBlock extends CodeBlock {
   highlight() {
     if (this.cachedHTML !== this.domNode.innerHTML) {
-      this.domNode.innerText = this.domNode.innerText;
+      this.domNode.textContent = this.domNode.textContent;
       hljs.highlightBlock(this.domNode);
       this.attach();
       this.cachedHTML = this.domNode.innerHTML;

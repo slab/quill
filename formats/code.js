@@ -11,7 +11,7 @@ Code.tagName = 'CODE';
 
 class CodeBlock extends Block {
   delta() {
-    return this.domNode.innerText.split('\n').reduce((delta, text) => {
+    return this.domNode.textContent.split('\n').reduce((delta, text) => {
       return delta.insert(text).insert('\n', this.formats());
     }, new Delta());
   }
