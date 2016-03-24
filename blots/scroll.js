@@ -45,7 +45,7 @@ class Scroll extends Parchment.Scroll {
 
   insertBefore(childBlot, refBlot) {
     if (childBlot.scope & Parchment.Scope.INLINE) {
-      let block = Parchment.create(this.statics.childless);
+      let block = Parchment.create(Parchment.Scope.BLOCK);
       block.insertBefore(childBlot);
       childBlot = block;
     }
