@@ -43,6 +43,15 @@ class Scroll extends Parchment.Scroll {
     this.optimize();
   }
 
+  insertBefore(childBlot, refBlot) {
+    if (!isLine(childBlot)) {
+      let block = Parchment.create(this.statics.childless);
+      block.insertBefore(childBlot);
+      childBlot = block;
+    }
+    super.insertBefore(childBlot, refBlot);
+  }
+
   line(index) {
     return this.descendant(isLine, index);
   }
