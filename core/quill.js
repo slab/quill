@@ -66,7 +66,10 @@ class Quill {
     this.root = this.addContainer('ql-editor');
     this.root.innerHTML = html.trim();
     this.emitter = new Emitter();
-    this.scroll = Parchment.create(this.root, this.emitter);
+    this.scroll = Parchment.create(this.root, {
+      emitter: this.emitter,
+      whitelist: options.formats
+    });
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
     this.theme = new themeClass(this, options);
@@ -236,7 +239,7 @@ class Quill {
   }
 }
 Quill.DEFAULTS = {
-  formats: [],
+  formats: null,
   modules: {},
   readOnly: false,
   theme: 'default'

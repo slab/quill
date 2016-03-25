@@ -61,7 +61,7 @@ beforeEach(function() {
     if (klass === HTMLElement) return container;
     if (klass === Quill) return new Quill(container);
     let emitter = new Emitter();
-    let scroll = new Scroll(container, emitter);
+    let scroll = new Scroll(container, { emitter: emitter });
     if (klass === Scroll) return scroll;
     let editor = new Editor(scroll, emitter);
     if (klass === Editor) return editor;

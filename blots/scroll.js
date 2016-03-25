@@ -1,4 +1,6 @@
 import Emitter from '../core/emitter';
+import BreakBlot from '../blots/break';
+import CursorBlot from '../blots/cursor';
 import Block, { EmbedBlock } from './block';
 import Parchment from 'parchment';
 
@@ -24,10 +26,22 @@ function isLine(blot) {
 }
 
 
+const REQUIRED_TYPES = [
+  BreakBlot.blotName,
+  CursorBlot.blotName
+];
+
+
 class Scroll extends Parchment.Scroll {
-  constructor(domNode, emitter) {
+  constructor(domNode, config) {
     super(clean(domNode));
-    this.emitter = emitter;
+    this.emitter = config.emitter;
+    if (Array.isArray(config.whitelist)) {
+      this.whitelist = {};
+      config.whitelist.concat(REQUIRED_TYPES).forEach((name) => {
+        this.whitelist[name] = true;
+      });
+    }
     this.optimize();
   }
 
@@ -41,6 +55,16 @@ class Scroll extends Parchment.Scroll {
       last.remove();
     }
     this.optimize();
+  }
+
+  formatAt(index, length, format, value) {
+    if (this.whitelist != null && !this.whitelist[format]) return;
+    super.formatAt(index, length, format, value);
+  }
+
+  insertAt(index, value, def) {
+    if (def != null && this.whitelist != null && !this.whitelist[value]) return;
+    super.insertAt(index, value, def);
   }
 
   insertBefore(childBlot, refBlot) {
