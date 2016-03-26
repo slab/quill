@@ -1,5 +1,3 @@
-**Note: This branch and README is intended for the upcoming 1.0 release which has made many changes to the development toolchain. Some instructions here may be out of date or become out of date as development on 1.0 progresses.**
-
 # [Quill Rich Text Editor](http://quilljs.com/) [![Build Status](https://travis-ci.org/quilljs/quill.svg?branch=master)](http://travis-ci.org/quilljs/quill)
 
 [![Test Status](https://cdn.quilljs.com/badge.svg)](https://saucelabs.com/u/quill)
@@ -21,7 +19,7 @@ To get started, check out the [Quill Github Page](http://quilljs.com/) or jump s
 Instantiate a new Quill object with a css selector for the div that should become the editor.
 
 ```html
-<!-- Include a Quill theme (optional) -->
+<!-- Include Quill stylesheet -->
 <link href="http://cdn.quilljs.com/latest/quill.snow.css" rel="stylesheet">
 
 <!-- Create the toolbar container -->
@@ -56,8 +54,10 @@ Instantiate a new Quill object with a css selector for the div that should becom
 ### CDN
 
 ```html
-<link rel="stylesheet" href="//cdn.quilljs.com/0.19.10/quill.snow.css" />
-<script src="//cdn.quilljs.com/0.19.10/quill.min.js"></script>
+<link href="//cdn.quilljs.com/0.19.10/quill.css" rel="stylesheet" />
+<link href="//cdn.quilljs.com/0.19.10/quill.snow.css" rel="stylesheet" />
+<script src="//cdn.quilljs.com/0.19.10/quill.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/0.19.10/quill.min.js" type="text/javascript"></script>
   ```
 
 
@@ -65,6 +65,8 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 Get help or stay up to date.
 
+- Submit bugs or feature requests on [Issues](https://github.com/quilljs/quill/issues)
+- Comment or help others on [Issues](https://github.com/quilljs/quill/issues)
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/quill)
 - If privacy is required, email support@quilljs.com
