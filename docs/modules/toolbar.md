@@ -2,7 +2,7 @@
 layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
-stylesheet: '//!site.cdn!/!site.version!/quill.snow.css'
+stylesheet: '!site.cdn!!site.version!/quill.snow.css'
 ---
 
 # Toolbar
@@ -15,7 +15,7 @@ The Toolbar module allow users to easily format Quill's contents.
   </div>
   <div id="toolbar-editor" class="editor"></div>
 </div>
-<script src="//{{site.cdn}}/{{site.version}}/quill.js"></script>
+<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
   var editor = new Quill('#toolbar-editor', {
     modules: {

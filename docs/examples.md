@@ -2,7 +2,7 @@
 layout: examples
 title: Examples
 permalink: /examples/
-stylesheet: '//!site.cdn!/!site.version!/quill.snow.css'
+stylesheet: '!site.cdn!!site.version!/quill.snow.css'
 ---
 
 # Examples
@@ -58,7 +58,7 @@ Uses all the features of Quill, including [Modules](/docs/modules/) and [Themes]
 {% endhighlight %}
 </div>
 
-<script src="//{{site.cdn}}/{{site.version}}/quill.js"></script>
+<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
 {% include basic-editor.html %}
 {% include full-editor.html %}

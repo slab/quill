@@ -9,4 +9,4 @@ gems:
   - jekyll-redirect-from
   - jekyll-feed
 version: 0.20.1
-cdn: cdn.quilljs.com
+cdn: //cdn.quilljs.com/

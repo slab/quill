@@ -12,7 +12,7 @@ Themes allow you to easily make your Quill editor look good with minimal effort.
 To use a custom theme, simply add its stylesheet in the `<head>`:
 
 {% highlight html %}
-<link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.snow.css" />
+<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css" />
 {% endhighlight %}
 
 and specify its usage at initialization:

@@ -3,7 +3,7 @@ layout: standalone
 title: Bubble Theme
 permalink: /standalone/bubble/
 ---
-<link rel="stylesheet" href="//{{site.cdn}}/{{site.version}}/quill.bubble.css">
+<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.bubble.css">
 <style>
   body {
     margin: auto;
@@ -16,7 +16,7 @@ permalink: /standalone/bubble/
 </style>
 <!-- section -->
 <div id="editor-container"><p>Test</p></div>
-<script type="text/javascript" src="//{{site.cdn}}/{{site.version}}/quill.js"></script>
+<script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
   var quill = new Quill('#editor-container', {
     debug: 'info',
