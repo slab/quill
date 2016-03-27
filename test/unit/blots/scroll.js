@@ -28,7 +28,7 @@ describe('Scroll', function() {
 
     it('embed', function() {
       let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, 7);
-      expect(leaf.value()).toEqual(true);
+      expect(leaf.value()).toEqual({ image: true });
       expect(offset).toEqual(0);
     });
 

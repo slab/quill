@@ -59,12 +59,10 @@ class Quill {
       return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
     }
     options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
-    let html = this.container.innerHTML;
+    let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
-    // TODO scroll will reset innerHTML as well, do not do twice
     this.root = this.addContainer('ql-editor');
-    this.root.innerHTML = html.trim();
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
@@ -76,6 +74,10 @@ class Quill {
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.undoManager = this.theme.addModule('undo-manager');
+    this.clipboard.container.innerHTML = html;
+    let contents = this.clipboard.convert(this.clipboard.container);
+    this.clipboard.container.innerHTML = '';
+    this.setContents(contents);
     if (options.readOnly) {
       this.disable();
     }

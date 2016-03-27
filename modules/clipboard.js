@@ -159,10 +159,10 @@ function matchAliases(node, delta) {
   let formats = {};
   switch(node.tagName) {
     case 'B':
-      formats = { bold: true };
+      formats['bold'] = true;
       break;
     case 'I':
-      formats = { italic: true };
+      formats['italic'] = true;
       break;
     default: return delta;
   }
@@ -183,7 +183,7 @@ function matchBlot(node, delta) {
 }
 
 function matchNewline(node, delta) {
-  if (BLOCK_ELEMENTS[node.tagName] || node.style.display === 'block') {
+  if (BLOCK_ELEMENTS[node.tagName] || node.tagName === 'BR' || node.style.display === 'block') {
     if (!deltaEndsWith(delta, '\n')) {
       delta.insert('\n');
     }

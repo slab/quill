@@ -14,9 +14,7 @@ class EmbedBlock extends Parchment.Embed {
   }
 
   delta() {
-    let value = {};
-    value[this.statics.blotName] = this.value();
-    return new Delta().insert(value, this.formats()).insert('\n', this.attributes.values());
+    return new Delta().insert(this.value()).insert('\n', this.attributes.values());
   }
 
   length() {
@@ -35,14 +33,11 @@ class Block extends Parchment.Block {
 
   delta() {
     return this.descendants(Parchment.Leaf).reduce((delta, leaf) => {
-      if (leaf.length() === 0) return delta;
-      if (leaf instanceof Parchment.Embed) {
-        var value = {};
-        value[leaf.statics.blotName] = leaf.value();
+      if (leaf.length() === 0) {
+        return delta;
       } else {
-        var value = leaf.value();
+        return delta.insert(leaf.value(), bubbleFormats(leaf));
       }
-      return delta.insert(value, bubbleFormats(leaf));
     }, new Delta()).insert('\n', this.formats());
   }
 
@@ -111,7 +106,6 @@ Block.childless = 'break';
 Block.tagName = 'P';
 
 
-// TODO remove duplicate
 function bubbleFormats(blot) {
   if (blot == null) return {};
   if (blot instanceof Block) return blot.formats();

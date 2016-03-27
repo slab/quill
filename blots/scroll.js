@@ -5,22 +5,6 @@ import Block, { EmbedBlock } from './block';
 import Parchment from 'parchment';
 
 
-// TODO move
-function clean(container) {
-  let walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
-  let node, textNodes = [];
-  while(node = walker.nextNode()) {
-    textNodes.push(node);
-  }
-  textNodes.forEach(function(textNode) {
-    if (Parchment.query(textNode.previousSibling, Parchment.Scope.BLOCK) ||
-        Parchment.query(textNode.nextSibling, Parchment.Scope.BLOCK)) {
-      textNode.parentNode.removeChild(textNode);
-    }
-  });
-  return container;
-}
-
 function isLine(blot) {
   return (blot instanceof Block || blot instanceof EmbedBlock);
 }
@@ -34,7 +18,7 @@ const REQUIRED_TYPES = [
 
 class Scroll extends Parchment.Scroll {
   constructor(domNode, config) {
-    super(clean(domNode));
+    super(domNode);
     this.emitter = config.emitter;
     if (Array.isArray(config.whitelist)) {
       this.whitelist = {};
