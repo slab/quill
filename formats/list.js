@@ -1,6 +1,7 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
+import extend from 'extend';
 
 
 class List extends Parchment.Container {
@@ -35,6 +36,12 @@ List.tagName = ['OL', 'UL'];
 
 
 class ListItem extends Block {
+  static formats(domNode) {
+    let format = {};
+    format['list'] = domNode.parentNode.tagName === 'OL' ? 'ordered' : 'bullet';
+    return format;
+  }
+
   format(name, value) {
     if (name === 'list' && !value) {
       this.replaceWith(Parchment.create(this.statics.scope));
@@ -45,9 +52,8 @@ class ListItem extends Block {
 
   formats() {
     let format = super.formats();
-    format['list'] = this.parent.domNode.tagName === 'OL' ? 'ordered' : 'bullet';
     delete format[this.statics.blotName];
-    return format;
+    return extend(this.statics.formats(this.domNode), format)
   }
 
   replaceWith(name, value) {

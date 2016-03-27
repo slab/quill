@@ -7,40 +7,6 @@ import logger from '../core/logger';
 let debug = logger('quill:clipboard');
 
 
-const DOM_KEY = '__ql-matcher';
-const BLOCK_ELEMENTS = {
-  'ADDRESS': true,
-  'ARTICLE': true,
-  'ASIDE': true,
-  'BLOCKQUOTE': true,
-  'CANVAS': true,
-  'DIV': true,
-  'DL': true,
-  'FIELDSET': true,
-  'FIGCAPTION': true,
-  'FIGURE': true,
-  'FOOTER': true,
-  'FORM': true,
-  'HEADER': true,
-  'H1': true, 'H2': true, 'H3': true, 'H4': true, 'H5': true, 'H6': true,
-  'HGROUP': true,
-  'HR': true,
-  'LI': true,
-  'MAIN': true,
-  'NAV': true,
-  'NOSCRIPT': true,
-  'OL': true,
-  'OUTPUT': true,
-  'P': true,
-  'PRE': true,
-  'SECTION': true,
-  'TABLE': true,
-  'TFOOT': true,
-  'UL': true,
-  'VIDEO': true
-};
-
-
 class Clipboard extends Module {
   constructor(quill, options) {
     super(quill, options);
@@ -54,6 +20,7 @@ class Clipboard extends Module {
       [Node.ELEMENT_NODE, matchNewline],
       [Node.ELEMENT_NODE, matchBlot],
       [Node.ELEMENT_NODE, matchSpacing],
+      [Node.ELEMENT_NODE, matchAttributor],
       ['b, i', matchAliases]
     ];
   }
@@ -62,11 +29,15 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
-  convert(container) {
+  convert(html) {
+    const DOM_KEY = '__ql-matcher';
+    if (typeof html === 'string') {
+      this.container.innerHTML = html;
+    }
     this.matchers.forEach((pair) => {
       let [selector, matcher] = pair;
       if (typeof selector === 'string') {
-        [].forEach.call(container.querySelectorAll(selector), (node) => {
+        [].forEach.call(this.container.querySelectorAll(selector), (node) => {
           // TODO use weakmap
           node[DOM_KEY] = node[DOM_KEY] || [];
           node[DOM_KEY].push(matcher);
@@ -89,7 +60,10 @@ class Clipboard extends Module {
         return delta.concat(childrenDelta);
       }, new Delta());
     };
-    return traverse(container);
+    let delta = traverse(this.container);
+    debug.info('convert', this.container.innerHTML, delta);
+    this.container.innerHTML = '';
+    return delta;
   }
 
   onCopy(e) {
@@ -125,9 +99,8 @@ class Clipboard extends Module {
     let intercept = (delta) => {
       this.container.focus();
       setTimeout(() => {
-        delta = delta.concat(this.convert(this.container));
-        debug.info('paste', this.container.innerHTML, delta);
-        this.container.innerHTML = '';
+        let html = this.container.innerHTML;
+        delta = delta.concat(this.convert());
         callback(delta);
       }, 1);
     };
@@ -147,6 +120,11 @@ class Clipboard extends Module {
   }
 }
 
+function computeStyle(node) {
+  if (node.nodeType !== Node.ELEMENT_NODE) return {};
+  const DOM_KEY = '__ql-computed-style';
+  return node[DOM_KEY] || (node[DOM_KEY] = window.getComputedStyle(node));
+}
 
 function deltaEndsWith(delta, text) {
   let endText = "";
@@ -156,6 +134,11 @@ function deltaEndsWith(delta, text) {
     endText = op.insert + endText;
   }
   return endText.slice(-1*text.length) === text;
+}
+
+function isLine(node) {
+  let style = computeStyle(node);
+  return ['block', 'list-item'].indexOf(style.display) > -1;
 }
 
 function matchAliases(node, delta) {
@@ -172,6 +155,23 @@ function matchAliases(node, delta) {
   return delta.compose(new Delta().retain(delta.length(), formats));
 }
 
+function matchAttributor(node, delta) {
+  let attributes = Parchment.Attributor.Attribute.keys(node);
+  let classes = Parchment.Attributor.Class.keys(node);
+  let styles = Parchment.Attributor.Style.keys(node);
+  let formats = {};
+  attributes.concat(classes).concat(styles).forEach((name) => {
+    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE);
+    if (attr != null) {
+      formats[attr.attrName] = attr.value(node);
+    }
+  });
+  if (Object.keys(formats).length > 0) {
+    delta = delta.compose(new Delta().retain(delta.length(), formats));
+  }
+  return delta;
+}
+
 function matchBlot(node, delta) {
   let match = Parchment.query(node);
   if (match == null) return delta;
@@ -186,16 +186,16 @@ function matchBlot(node, delta) {
 }
 
 function matchNewline(node, delta) {
-  if (BLOCK_ELEMENTS[node.tagName] || node.tagName === 'BR' || node.style.display === 'block') {
-    if (!deltaEndsWith(delta, '\n')) {
-      delta.insert('\n');
-    }
+  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
+    delta.insert('\n');
   }
   return delta;
 }
 
 function matchSpacing(node, delta) {
-  if (node.style.paddingBottom || (node.style.marginBottom && !deltaEndsWith(delta, '\n\n'))) {
+  if (node.nextSibling != null &&
+      node.nextSibling.offsetTop > node.offsetTop + node.offsetHeight &&
+      !deltaEndsWith(delta, '\n\n')) {
     delta.insert('\n');
   }
   return delta;
@@ -203,6 +203,12 @@ function matchSpacing(node, delta) {
 
 function matchText(node, delta) {
   let text = node.data.replace(/\s\s+/g, ' ');
+  if (node.previousSibling == null || isLine(node.previousSibling)) {
+    text = text.replace(/^\s+/, '');
+  }
+  if (node.nextSibling == null || isLine(node.nextSibling)) {
+    text = text.replace(/\s+$/, '');
+  }
   return delta.insert(text);
 }
 
