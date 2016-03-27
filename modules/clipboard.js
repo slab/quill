@@ -149,9 +149,12 @@ class Clipboard extends Module {
 
 
 function deltaEndsWith(delta, text) {
-  let lastOp = delta.ops[delta.ops.length - 1];
-  // TODO fix case where delta lastOp length < text.length
-  let endText = (lastOp == null || typeof lastOp.insert !== 'string') ? '' : lastOp.insert;
+  let endText = "";
+  for (let i = delta.ops.length - 1; i >= 0 && endText.length < text.length; --i) {
+    let op  = delta.ops[i];
+    if (typeof op.insert !== 'string') break;
+    endText = op.insert + endText;
+  }
   return endText.slice(-1*text.length) === text;
 }
 

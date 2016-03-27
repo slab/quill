@@ -28,7 +28,6 @@ class BubbleTheme extends BaseTheme {
         this.tooltip.classList.add('ql-hidden');
       }
     });
-    // TODO handle line height changing like with header formatting
     toolbar.handlers['link'] = (value) => {
       if (!value) return false;
       this.tooltip.classList.add('ql-editing');

@@ -39,7 +39,6 @@ class Toolbar extends Module {
     });
     if (!format) return;
     format = format.slice('ql-'.length);
-    // if (this.quill.options.formats.indexOf(format) < 0) return;  // TODO enable
     let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
     input.addEventListener(eventName, () => {
       this.quill.focus();
@@ -68,7 +67,6 @@ class Toolbar extends Module {
         if (formats[format] == null) {
           input.querySelector('option[selected]').selected = true;
         } else {
-          // TODO never reports array
           input.value = Array.isArray(formats[format]) ? '' : formats[format];
         }
       } if (input.hasAttribute('data-value')) {
