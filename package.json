@@ -27,7 +27,7 @@
     "karma-sauce-launcher": "~0.3.1",
     "lodash": "^4.6.1",
     "protractor": "^3.1.1",
-    "quill-docs": "quilljs/quilljs.github.io.git#gh-pages-1",
+    "quill-docs": "quilljs/quilljs.github.io.git#1.0",
     "style-loader": "~0.13.0",
     "stylus-loader": "^1.5.1",
     "ts-loader": "~0.8.1",
