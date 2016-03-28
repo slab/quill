@@ -66,8 +66,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 Get help or stay up to date.
 
-- Submit bugs or feature requests on [Issues](https://github.com/quilljs/quill/issues)
-- Comment or help others on [Issues](https://github.com/quilljs/quill/issues)
+- [Contribute](https://github.com/quilljs/quill/blob/develop/.github/CONTRIBUTING.md) on [Issues](https://github.com/quilljs/quill/issues)
 - Follow [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/quill)
 - If privacy is required, email support@quilljs.com
