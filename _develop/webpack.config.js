@@ -36,14 +36,6 @@ module.exports = {
     },
     extensions: ['', '.js', '.styl', '.ts']
   },
-  // TODO remove
-  isparta: {
-    embedSource: true,
-    noAutoWrap: true,
-    babel: {
-      presets: ['es2015']
-    }
-  },
   module: {
     loaders: [
       { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },
