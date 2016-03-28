@@ -38,7 +38,9 @@ List.tagName = ['OL', 'UL'];
 class ListItem extends Block {
   static formats(domNode) {
     let format = {};
-    format['list'] = domNode.parentNode.tagName === 'OL' ? 'ordered' : 'bullet';
+    if (domNode.parentNode != null) {
+      format['list'] = domNode.parentNode.tagName === 'OL' ? 'ordered' : 'bullet';
+    }
     return format;
   }
 
