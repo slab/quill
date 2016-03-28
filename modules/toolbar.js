@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Emitter from '../core/emitter';
 import Parchment from 'parchment';
 import Module from '../core/module';

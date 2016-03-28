@@ -18,7 +18,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "html-loader": "~0.4.3",
     "http-proxy": "^1.13.2",
-    "istanbul-instrumenter-loader": "^0.2.0",
+    "istanbul-instrumenter-loader": "~0.2.0",
     "jasmine-core": "^2.4.1",
     "karma": "~0.13.22",
     "karma-chrome-launcher": "~0.2.3",

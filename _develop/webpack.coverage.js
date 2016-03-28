@@ -3,7 +3,7 @@ var path = require('path');
 
 config.module.postLoaders = [{
   test: /\.js$/,
-  loader: 'isparta',
+  loader: 'istanbul-instrumenter',
   exclude: [
     path.resolve(__dirname, '..', 'node_modules'),
     path.resolve(__dirname, '..', 'test')
