@@ -1,5 +1,5 @@
-import Emitter from '../core/emitter';
-import Module from '../core/module';
+import Emitter from 'quill/emitter';
+import Module from 'quill/module';
 
 
 class UndoManager extends Module {

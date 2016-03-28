@@ -1,7 +1,7 @@
-import CodeBlock from '../formats/code';
-import Emitter from '../core/emitter';
-import Module from '../core/module';
 import Parchment from 'parchment';
+import Emitter from 'quill/emitter';
+import Module from 'quill/module';
+import CodeBlock from 'quill/formats/code';
 
 
 class HighlightCodeBlock extends CodeBlock {

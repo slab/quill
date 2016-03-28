@@ -1,7 +1,7 @@
-import Emitter from '../core/emitter';
-import ImageBlot from '../formats/image';
-import { bindKeys } from './keyboard';
-import Module from '../core/module';
+import Emitter from 'quill/emitter';
+import Module from 'quill/module';
+import ImageBlot from 'quill/formats/image';
+import { bindKeys } from 'quill/modules/keyboard';
 
 
 class ImageTooltip extends Module {

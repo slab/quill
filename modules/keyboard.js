@@ -2,11 +2,11 @@ import clone from 'clone';
 import equal from 'deep-equal';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Emitter from '../core/emitter';
-import logger from '../core/logger';
-import Module from '../core/module';
-import { Range } from '../core/selection';
-import Block from '../blots/block';
+import Emitter from 'quill/emitter';
+import logger from 'quill/logger';
+import Module from 'quill/module';
+import { Range } from 'quill/selection';
+import Block from 'quill/blots/block';
 
 let debug = logger('quill:keyboard');
 

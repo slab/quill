@@ -1,7 +1,7 @@
+import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Block from '../blots/block';
-import extend from 'extend';
+import Block from 'quill/blots/block';
 
 
 class List extends Parchment.Container {
@@ -55,7 +55,7 @@ class ListItem extends Block {
   formats() {
     let format = super.formats();
     delete format[this.statics.blotName];
-    return extend(this.statics.formats(this.domNode), format)
+    return extend(this.statics.formats(this.domNode), format);
   }
 
   replaceWith(name, value) {

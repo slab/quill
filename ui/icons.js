@@ -1,25 +1,25 @@
 module.exports = {
   'align': {
-    ''        : require('../assets/icons/align-left.svg'),
-    'center'  : require('../assets/icons/align-center.svg'),
-    'right'   : require('../assets/icons/align-right.svg'),
-    'justify' : require('../assets/icons/align-justify.svg')
+    ''        : require('quill/assets/icons/align-left.svg'),
+    'center'  : require('quill/assets/icons/align-center.svg'),
+    'right'   : require('quill/assets/icons/align-right.svg'),
+    'justify' : require('quill/assets/icons/align-justify.svg')
   },
-  'background': require('../assets/icons/background.svg'),
-  'blockquote': require('../assets/icons/blockquote.svg'),
-  'bold'      : require('../assets/icons/bold.svg'),
-  'color'     : require('../assets/icons/color.svg'),
-  'italic'    : require('../assets/icons/italic.svg'),
+  'background': require('quill/assets/icons/background.svg'),
+  'blockquote': require('quill/assets/icons/blockquote.svg'),
+  'bold'      : require('quill/assets/icons/bold.svg'),
+  'color'     : require('quill/assets/icons/color.svg'),
+  'italic'    : require('quill/assets/icons/italic.svg'),
   'header': {
-    '1'       : require('../assets/icons/header.svg'),
-    '2'       : require('../assets/icons/header-2.svg')
+    '1'       : require('quill/assets/icons/header.svg'),
+    '2'       : require('quill/assets/icons/header-2.svg')
   },
-  'image'     : require('../assets/icons/image.svg'),
-  'link'      : require('../assets/icons/link.svg'),
+  'image'     : require('quill/assets/icons/image.svg'),
+  'link'      : require('quill/assets/icons/link.svg'),
   'list': {
-    'ordered' : require('../assets/icons/list-ordered.svg'),
-    'bullet'  : require('../assets/icons/list-bullet.svg')
+    'ordered' : require('quill/assets/icons/list-ordered.svg'),
+    'bullet'  : require('quill/assets/icons/list-bullet.svg')
   },
-  'strike'    : require('../assets/icons/strike.svg'),
-  'underline' : require('../assets/icons/underline.svg')
+  'strike'    : require('quill/assets/icons/strike.svg'),
+  'underline' : require('quill/assets/icons/underline.svg')
 };

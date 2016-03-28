@@ -1,8 +1,8 @@
-import Emitter from '../core/emitter';
-import { bindKeys } from './keyboard';
-import LinkBlot from '../formats/link';
-import Module from '../core/module';
-import { Range } from '../core/selection';
+import Emitter from 'quill/emitter';
+import Module from 'quill/module';
+import { Range } from 'quill/selection';
+import LinkBlot from 'quill/formats/link';
+import { bindKeys } from 'quill/modules/keyboard';
 
 
 class LinkTooltip extends Module {

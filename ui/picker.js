@@ -1,4 +1,4 @@
-import DropdownIcon from '../assets/icons/dropdown.svg';
+import DropdownIcon from 'quill/assets/icons/dropdown.svg';
 
 
 class Picker {

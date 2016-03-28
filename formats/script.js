@@ -1,4 +1,4 @@
-import Inline from '../blots/inline';
+import Inline from 'quill/blots/inline';
 
 class Script extends Inline {
   static create(value) {

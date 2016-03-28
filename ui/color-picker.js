@@ -1,4 +1,4 @@
-import Picker from './picker';
+import Picker from 'quill/ui/picker';
 
 
 class ColorPicker extends Picker {

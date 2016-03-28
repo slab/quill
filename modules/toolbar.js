@@ -1,7 +1,7 @@
-import Emitter from '../core/emitter';
 import Parchment from 'parchment';
-import Module from '../core/module';
-import logger from '../core/logger';
+import Emitter from 'quill/emitter';
+import logger from 'quill/logger';
+import Module from 'quill/module';
 
 let debug = logger('quill:toolbar');
 

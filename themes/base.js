@@ -1,8 +1,8 @@
-import Emitter from '../core/emitter';
-import Theme from '../core/theme';
-import Picker from '../ui/picker';
-import icons from '../ui/icons';
-import { bindKeys } from '../modules/keyboard';
+import Emitter from 'quill/emitter';
+import Theme from 'quill/theme';
+import { bindKeys } from 'quill/modules/keyboard';
+import Picker from 'quill/ui/picker';
+import icons from 'quill/ui/icons';
 
 
 class BaseTheme extends Theme {

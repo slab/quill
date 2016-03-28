@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Link from './link';
+import Link from 'quill/formats/link';
 
 
 class Image extends Parchment.Embed {

@@ -1,7 +1,7 @@
+import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import BreakBlot from './break';
-import extend from 'extend';
+import BreakBlot from 'quill/blots/break';
 
 
 const NEWLINE_LENGTH = 1;

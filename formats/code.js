@@ -1,7 +1,7 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Block from '../blots/block';
-import Inline from '../blots/inline';
+import Block from 'quill/blots/block';
+import Inline from 'quill/blots/inline';
 
 
 class Code extends Inline {}

@@ -1,4 +1,4 @@
-import Block from '../blots/block';
+import Block from 'quill/blots/block';
 
 
 class Header extends Block {

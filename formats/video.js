@@ -1,5 +1,5 @@
-import { EmbedBlock } from '../blots/block';
-import Link from './link';
+import { EmbedBlock } from 'quill/blots/block';
+import Link from 'quill/formats/link';
 
 
 class Video extends EmbedBlock {
