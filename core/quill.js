@@ -76,6 +76,7 @@ class Quill {
     this.undoManager = this.theme.addModule('undo-manager');
     let contents = this.clipboard.convert(`<div class='ql-editor'>${html}</div>`);
     this.setContents(contents);
+    this.undoManager.clear();
     if (options.readOnly) {
       this.disable();
     }
