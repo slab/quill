@@ -83,6 +83,11 @@ class Quill {
     this.emitter.emit(Emitter.events.READY);
   }
 
+  destroy() {
+    this.scroll.detach();
+    this.theme.destroy();
+  }
+
   addContainer(container, refNode = null) {
     if (typeof container === 'string') {
       let className = container;

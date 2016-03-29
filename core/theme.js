@@ -21,6 +21,15 @@ class Theme {
     });
   }
 
+  destroy() {
+    Object.keys(this.modules).forEach((name) => {
+      let module = this.modules[name];
+      if (typeof module.destroy === 'function') {
+        module.destroy();
+      }
+    });
+  }
+
   addModule(name) {
     let moduleClass = Theme.modules[name];
     if (moduleClass == null) {
