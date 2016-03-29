@@ -87,17 +87,17 @@ class Selection {
           range.setEnd(node, offset);
           side = 'right';
         }
-        let rect = range.getBoundingClientRect();
-        bounds = {
-          height: rect.height,
-          left: rect[side],
-          width: 0,
-          top: rect.top
-        };
+        var rect = range.getBoundingClientRect();
       } else {
-        bounds = leaf.domNode.getBoundingClientRect();
+        var rect = leaf.domNode.getBoundingClientRect();
         if (offset > 0) side = 'right';
       }
+      bounds = {
+        height: rect.height,
+        left: rect[side],
+        width: 0,
+        top: rect.top
+      };
     }
     let containerBounds = this.root.parentNode.getBoundingClientRect();
     return {

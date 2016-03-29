@@ -43,7 +43,7 @@ Quill.register('image-tooltip', ImageTooltip);
 Quill.register('link-tooltip', LinkTooltip);
 Quill.register('toolbar', ToolbarModule);
 
-Quill.register(CodeToken, CodeBlock)
+Quill.register(CodeToken, CodeBlock);
 Quill.register('code-highlighter', CodeHighlighter);
 
 Quill.register('bubble', BubbleTheme);
