@@ -287,12 +287,13 @@ describe('Selection', function() {
       this.float.style.width = '1px';
       if (this.reference != null) return;
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
+      let text = this.div.firstChild.firstChild;
       this.reference = {
-        height: this.div.firstChild.firstChild.offsetHeight,
-        left: this.div.firstChild.firstChild.offsetLeft,
-        lineHeight: this.div.firstChild.offsetHeight,
-        width: this.div.firstChild.firstChild.offsetWidth,
-        top: this.div.firstChild.firstChild.offsetTop
+        height: text.offsetHeight,
+        left: text.offsetLeft,
+        lineHeight: text.parentNode.offsetHeight,
+        width: text.offsetWidth,
+        top: text.offsetTop,
       };
       this.initialize(HTMLElement, '', this.div);
     });
@@ -306,8 +307,8 @@ describe('Selection', function() {
     it('empty document', function() {
       let selection = this.initialize(Selection, '<p><br></p>', this.div);
       this.bounds = selection.getBounds(0);
-      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
@@ -318,16 +319,17 @@ describe('Selection', function() {
         <p>0000</p>`
       , this.div);
       this.bounds = selection.getBounds(5);
-      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
 
     it('plain text', function() {
       let selection = this.initialize(Selection, '<p>0123</p>', this.div);
       this.bounds = selection.getBounds(2);
-      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 2, 2);
+      if (/Trident/i.test(navigator.userAgent)) return;
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
@@ -337,8 +339,9 @@ describe('Selection', function() {
         <p>0000</p>`
       , this.div);
       this.bounds = selection.getBounds(5);
-      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
+      if (/Trident/i.test(navigator.userAgent)) return;
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
 
@@ -349,16 +352,18 @@ describe('Selection', function() {
         <p>0000</p>`
       , this.div);
       this.bounds = selection.getBounds(9);
-      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 4, 4);
+      if (/Trident/i.test(navigator.userAgent)) return;
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
 
     it('large text', function() {
       let selection = this.initialize(Selection, '<p><span class="ql-size-large">0000</span></p>', this.div);
       this.bounds = selection.getBounds(2);
-      expect(this.bounds.height).toBeApproximately(this.div.querySelector('span').offsetHeight, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.div.querySelector('span').offsetWidth / 2, 1);
+      if (/Trident/i.test(navigator.userAgent)) return;
+      expect(this.bounds.height).toBeApproximately(this.div.querySelector('span').offsetHeight, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
@@ -370,8 +375,9 @@ describe('Selection', function() {
         </p>`
       , this.div);
       this.bounds = selection.getBounds(1);
-      expect(this.bounds.height).toBeApproximately(32, 1);
       expect(this.bounds.left).toBeApproximately(this.reference.left + 32, 1);
+      if (/Trident/i.test(navigator.userAgent)) return;
+      expect(this.bounds.height).toBeApproximately(32, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
   });
