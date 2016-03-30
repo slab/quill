@@ -40,6 +40,7 @@ class CodeBlock extends Block {
     super.optimize(mutations);
     let next = this.next;
     if (next instanceof CodeBlock && next.prev === this) {
+      this.appendChild(Parchment.create('text', '\n'));
       next.moveChildren(this);
       next.remove();
     }
