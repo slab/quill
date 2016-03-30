@@ -9,5 +9,8 @@ config.module.postLoaders = [{
     path.resolve(__dirname, '..', 'test')
   ]
 }];
+config.module.loaders[3].query = {
+  plugins: ['transform-es2015-modules-commonjs']
+};
 
 module.exports = config;

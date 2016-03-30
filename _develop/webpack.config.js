@@ -40,8 +40,14 @@ module.exports = {
     loaders: [
       { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },
       { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
-      { test: /(?!node_modules)\/.*\.js$/, loader: 'babel?presets[]=es2015' },
-      { test: /\.svg$/, loader: 'html?minimize=true' }
+      { test: /\.svg$/, loader: 'html?minimize=true' },
+      {
+        test: /(?!node_modules)\/.*\.js$/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015']
+        }
+      }
     ],
     noParse: [
       /\/node_modules\/clone\/clone\.js$/,
