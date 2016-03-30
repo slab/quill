@@ -10,7 +10,7 @@ import './unit/core/editor';
 import './unit/core/selection';
 import './unit/core/quill';
 
-// import './unit/formats/inline';
+import './unit/formats/color';
 // import './unit/formats/block';
 import './unit/formats/align';
 // import './unit/formats/header';
