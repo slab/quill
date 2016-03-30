@@ -273,7 +273,7 @@ describe('Selection', function() {
     });
   });
 
-  describe('getBounds()', function() {
+  xdescribe('getBounds()', function() {
     beforeEach(function() {
       this.container.classList.add('ql-editor');
       this.container.style.fontFamily = 'monospace';
@@ -328,7 +328,6 @@ describe('Selection', function() {
       let selection = this.initialize(Selection, '<p>0123</p>', this.div);
       this.bounds = selection.getBounds(2);
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 2, 2);
-      if (/Trident/i.test(navigator.userAgent)) return;
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
@@ -340,7 +339,6 @@ describe('Selection', function() {
       , this.div);
       this.bounds = selection.getBounds(5);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
-      if (/Trident/i.test(navigator.userAgent)) return;
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
@@ -353,7 +351,6 @@ describe('Selection', function() {
       , this.div);
       this.bounds = selection.getBounds(9);
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 4, 4);
-      if (/Trident/i.test(navigator.userAgent)) return;
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
     });
@@ -362,7 +359,6 @@ describe('Selection', function() {
       let selection = this.initialize(Selection, '<p><span class="ql-size-large">0000</span></p>', this.div);
       this.bounds = selection.getBounds(2);
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.div.querySelector('span').offsetWidth / 2, 1);
-      if (/Trident/i.test(navigator.userAgent)) return;
       expect(this.bounds.height).toBeApproximately(this.div.querySelector('span').offsetHeight, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
@@ -376,7 +372,6 @@ describe('Selection', function() {
       , this.div);
       this.bounds = selection.getBounds(1);
       expect(this.bounds.left).toBeApproximately(this.reference.left + 32, 1);
-      if (/Trident/i.test(navigator.userAgent)) return;
       expect(this.bounds.height).toBeApproximately(32, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
