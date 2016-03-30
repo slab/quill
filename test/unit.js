@@ -12,7 +12,7 @@ import './unit/core/quill';
 
 // import './unit/formats/inline';
 // import './unit/formats/block';
-// import './unit/formats/attributor';
+import './unit/formats/align';
 // import './unit/formats/header';
 import './unit/formats/list';
 
