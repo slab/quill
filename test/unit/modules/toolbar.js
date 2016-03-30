@@ -1,4 +1,4 @@
-import Toolbar, { addControls } from '../../../modules/toolbar';
+import Toolbar, { addControls } from 'quill/modules/toolbar';
 
 
 describe('Toolbar', function() {

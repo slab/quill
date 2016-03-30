@@ -8,7 +8,6 @@ import './unit/blots/inline.js';
 
 import './unit/core/editor';
 import './unit/core/selection';
-// import './unit/core/events';
 import './unit/core/quill';
 
 // import './unit/formats/inline';
@@ -17,7 +16,7 @@ import './unit/core/quill';
 // import './unit/formats/header';
 // import './unit/formats/list';
 
-// import './unit/modules/toolbar';
+import './unit/modules/toolbar';
 // import './unit/modules/undo-manager';
 
 // import './unit/themes/snow';
