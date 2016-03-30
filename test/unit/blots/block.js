@@ -51,6 +51,12 @@ describe('Block', function() {
     expect(scroll.domNode).toEqualHTML('<h1 id="helloworld">HelloWorld!</h1>');
   });
 
+  it('join empty lines', function() {
+    let scroll = this.initialize(Scroll, '<h1><br></h1><p><br></p>');
+    scroll.deleteAt(1, 1);
+    expect(scroll.domNode).toEqualHTML('<h1><br></h1>');
+  });
+
   it('format empty', function() {
     let scroll = this.initialize(Scroll, '<p><br></p>');
     scroll.formatAt(0, 1, 'header', 1);
