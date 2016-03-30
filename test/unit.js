@@ -11,6 +11,7 @@ import './unit/core/selection';
 import './unit/core/quill';
 
 import './unit/formats/color';
+import './unit/formats/script';
 // import './unit/formats/block';
 import './unit/formats/align';
 // import './unit/formats/header';
