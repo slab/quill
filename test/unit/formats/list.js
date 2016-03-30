@@ -1,9 +1,9 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from '../../../core/editor';
+import Editor from 'quill/editor';
 
 
 describe('List', function() {
-  it('format', function() {
+  it('add', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>
       <p>5678</p>

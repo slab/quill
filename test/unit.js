@@ -14,7 +14,7 @@ import './unit/core/quill';
 // import './unit/formats/block';
 // import './unit/formats/attributor';
 // import './unit/formats/header';
-// import './unit/formats/list';
+import './unit/formats/list';
 
 import './unit/modules/toolbar';
 // import './unit/modules/undo-manager';
