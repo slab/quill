@@ -1,5 +1,6 @@
 import Delta from 'rich-text/lib/delta';
 import Editor from 'quill/editor';
+import Emitter from 'quill/emitter';
 import Selection, { Range } from 'quill/selection';
 
 
@@ -115,13 +116,13 @@ describe('Editor', function() {
 
   describe('delete', function() {
     it('inner node', function() {
-      let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
+      let editor = this.initialize(Editor, '<p><strong><em>0123</em></strong></p>');
       editor.deleteText(1, 2);
       expect(editor.getDelta()).toEqual(new Delta()
         .insert('03', { bold: true, italic: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><em><strong>03</strong></em></p>');
+      expect(this.container.innerHTML).toEqualHTML('<p><strong><em>03</em></strong></p>');
     });
 
     it('parts of multiple lines', function() {
@@ -135,7 +136,7 @@ describe('Editor', function() {
     });
 
     it('entire line keeping newline', function() {
-      let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
+      let editor = this.initialize(Editor, '<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 4);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
@@ -152,7 +153,7 @@ describe('Editor', function() {
     });
 
     it('entire document', function() {
-      let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
+      let editor = this.initialize(Editor, '<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 5);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
       expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
@@ -264,6 +265,31 @@ describe('Editor', function() {
         <h1 class="ql-align-center"><em>34</em></h1>
       `);
       expect(editor.getFormat(1, 3)).toEqual({ italic: true, header: 1, align: ['right', 'center'] });
+    });
+  });
+
+  describe('events', function() {
+    beforeEach(function() {
+      this.editor = this.initialize(Editor, '<p>0123</p>');
+      this.editor.update();
+      spyOn(this.editor.emitter, 'emit').and.callThrough();
+    });
+
+    it('api text insert', function() {
+      let old = this.editor.getDelta();
+      this.editor.insertText(2, '!');
+      let delta = new Delta().retain(2).insert('!');
+      expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.API);
+    });
+
+    it('user text insert', function(done) {
+      let old = this.editor.getDelta();
+      this.container.firstChild.firstChild.data = '01!23';
+      let delta = new Delta().retain(2).insert('!');
+      setTimeout(() => {
+        expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER);
+        done();
+      }, 1);
     });
   });
 });

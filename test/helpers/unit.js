@@ -11,33 +11,6 @@ let div = document.createElement('div');
 div.id = 'test-container';
 document.body.appendChild(div);
 
-let initialStates = {
-  'empty':  {
-    delta: new Delta().insert('\n'),
-    html: '<p><br></p>'
-  },
-  'single line': {
-    delta: new Delta().insert('Hello World!\n'),
-    html: '<p>Hello World!</p>'
-  },
-  'multiple lines': {
-    delta: new Delta().insert('Hello\n\nWorld!\n'),
-    html: '<p>Hello</p><p><br></p><p>World!</p>'
-  },
-  'basic formats': {
-    delta: new Delta().insert('Welcome').insert('\n', { header: 1 })
-                      .insert('Hello\n')
-                      .insert('World')
-                      .insert('!', { bold: true })
-                      .insert('\n'),
-    html: [
-      '<h1 id="welcome">Welcome</h1>',
-      '<p>Hello</p>',
-      '<p>World<strong>!</strong></p>'
-    ].join('')
-  }
-};
-
 
 beforeEach(function() {
   jasmine.addMatchers({
@@ -52,8 +25,6 @@ beforeEach(function() {
   div.innerHTML = '<div></div>';
   this.container = div.firstChild;
   this.initialize = initialize.bind(this);
-
-  this.initialStates = initialStates;
 });
 
 

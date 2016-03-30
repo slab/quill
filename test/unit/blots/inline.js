@@ -3,7 +3,7 @@ import Scroll from 'quill/blots/scroll';
 
 describe('Inline', function() {
   it('format order', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['single line']);
+    let scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     scroll.formatAt(0, 1, 'bold', true);
     scroll.formatAt(0, 1, 'italic', true);
     scroll.formatAt(2, 1, 'italic', true);

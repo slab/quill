@@ -52,7 +52,7 @@ describe('Block', function() {
   });
 
   it('format empty', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['empty']);
+    let scroll = this.initialize(Scroll, '<p><br></p>');
     scroll.formatAt(0, 1, 'header', 1);
     expect(scroll.domNode).toEqualHTML('<h1><br></h1>');
   });

@@ -10,18 +10,19 @@ describe('Scroll', function() {
   });
 
   it('api change', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['single line']);
+    let scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     spyOn(scroll.emitter, 'emit').and.callThrough();
     scroll.insertAt(5, '!');
-    expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_CHANGE);
+    expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_OPTIMIZE);
   });
 
   it('user change', function(done) {
-    let scroll = this.initialize(Scroll, this.initialStates['single line']);
+    let scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     spyOn(scroll.emitter, 'emit').and.callThrough();
     scroll.domNode.firstChild.appendChild(document.createTextNode('!'));
     setTimeout(function() {
-      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_CHANGE);
+      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_OPTIMIZE);
+      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_UPDATE, Emitter.sources.USER);
       done();
     }, 1);
   });
