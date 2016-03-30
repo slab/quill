@@ -15,13 +15,13 @@ describe('Block', function() {
   });
 
   it('insert newlines', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['empty']);
+    let scroll = this.initialize(Scroll, '<p><br></p>');
     scroll.insertAt(0, '\n\n\n');
     expect(scroll.domNode).toEqualHTML('<p><br></p><p><br></p><p><br></p><p><br></p>');
   });
 
   it('insert multiline', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['single line']);
+    let scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     scroll.insertAt(6, 'pardon\nthis\n\ninterruption\n');
     expect(scroll.domNode).toEqualHTML(`
       <p>Hello pardon</p>
@@ -33,24 +33,22 @@ describe('Block', function() {
   });
 
   it('insert into formatted', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['basic formats']);
+    let scroll = this.initialize(Scroll, '<h1>Welcome</h1>');
     scroll.insertAt(3, 'l\n');
     expect(scroll.domNode.firstChild.outerHTML).toEqualHTML('<h1 id="well">Well</h1>');
     expect(scroll.domNode.childNodes[1].outerHTML).toEqualHTML('<h1 id="come">come</h1>');
   });
 
-  it('delete all', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['multiple lines']);
+  it('delete line contents', function() {
+    let scroll = this.initialize(Scroll, '<p>Hello</p><p>World!</p>');
     scroll.deleteAt(0, 5);
-    expect(scroll.domNode).toEqualHTML('<p><br></p><p><br></p><p>World!</p>');
+    expect(scroll.domNode).toEqualHTML('<p><br></p><p>World!</p>');
   });
 
   it('join lines', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['basic formats']);
-    scroll.deleteAt(7, 1);
-    expect(scroll.domNode.firstChild.outerHTML).toEqualHTML(
-      '<h1 id="welcomehello">WelcomeHello</h1>'
-    );
+    let scroll = this.initialize(Scroll, '<h1>Hello</h1><h2>World!</h2>');
+    scroll.deleteAt(5, 1);
+    expect(scroll.domNode).toEqualHTML('<h1 id="helloworld">HelloWorld!</h1>');
   });
 
   it('format empty', function() {
@@ -60,8 +58,8 @@ describe('Block', function() {
   });
 
   it('format newline', function() {
-    let scroll = this.initialize(Scroll, this.initialStates['multiple lines']);
+    let scroll = this.initialize(Scroll, '<h1>Hello</h1>');
     scroll.formatAt(5, 1, 'header', 2);
-    expect(scroll.domNode.firstChild.outerHTML).toEqualHTML('<h2 id="hello">Hello</h2>');
+    expect(scroll.domNode).toEqualHTML('<h2 id="hello">Hello</h2>');
   });
 });

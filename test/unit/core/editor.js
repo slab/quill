@@ -1,73 +1,9 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from '../../../core/editor';
-import Selection, { Range } from '../../../core/selection';
+import Editor from 'quill/editor';
+import Selection, { Range } from 'quill/selection';
 
 
 describe('Editor', function() {
-  describe('delta', function() {
-    it('empty', function() {
-      let editor = this.initialize(Editor, '');
-      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
-    });
-
-    it('empty line', function() {
-      let editor = this.initialize(Editor, '<p><br></p>');
-      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
-    });
-
-    it('empty line no break', function() {
-      let editor = this.initialize(Editor, '<p></p>');
-      expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
-    });
-
-    it('full document', function() {
-      let editor = this.initialize(Editor, `
-        <h2>Quill Rich Text Editor</h2>
-        <p><br></p>
-        <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web.</p>
-        <p><br></p>
-        <ul>
-          <li>Fast and lightweight</li>
-          <li>Semantic markup</li>
-          <li>Standardized HTML between browsers</li>
-          <li>Cross browser support including Chrome, Firefox, Safari, and IE 9+</li>
-        </ul>
-        <p><br></p>
-        <p class="ql-align-center">
-          <img src="http://quilljs.com/images/quill-photo.jpg">
-        </p>
-        <p class="ql-align-center">
-          <a class="ql-size-large" href="https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz">Download Quill</a>
-        </p>
-        <p><br></p>`
-      );
-      let expected = editor.scroll.domNode.innerHTML;
-      expect(editor.getDelta()).toEqual(new Delta()
-        .insert('Quill Rich Text Editor')
-        .insert('\n', { header: 2 })
-        .insert('\nQuill is a free, ')
-        .insert('open source', { link: 'https://github.com/quilljs/quill/' })
-        .insert(' WYSIWYG editor built for the modern web.\n\nFast and lightweight')
-        .insert('\n', { list: 'bullet' })
-        .insert('Semantic markup')
-        .insert('\n', { list: 'bullet' })
-        .insert('Standardized HTML between browsers')
-        .insert('\n', { list: 'bullet' })
-        .insert('Cross browser support including Chrome, Firefox, Safari, and IE 9+')
-        .insert('\n', { list: 'bullet' })
-        .insert('\n')
-        .insert({ image: 'http://quilljs.com/images/quill-photo.jpg' })
-        .insert('\n', { align: 'center' })
-        .insert('Download Quill', { size: 'large', link: 'https://github.com/quilljs/quill/releases/download/v0.20.0/quill.tar.gz' })
-        .insert('\n', { align: 'center' })
-        .insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML(expected);
-    });
-  });
-
   describe('insert', function() {
     it('text', function() {
       let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
@@ -177,50 +113,6 @@ describe('Editor', function() {
     });
   });
 
-  describe('applyDelta', function() {
-    it('inserts', function() {
-      let editor = this.initialize(Editor, '<p></p>');
-      editor.applyDelta(new Delta().insert('01'));
-      expect(this.container.innerHTML).toEqualHTML('<p>01</p>');
-    });
-
-    it('attributed insert', function() {
-      let editor = this.initialize(Editor, '<p></p>');
-      editor.applyDelta(new Delta().insert('01', { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
-    });
-
-    it('format', function() {
-      let editor = this.initialize(Editor, '<p>01</p>');
-      editor.applyDelta(new Delta().retain(2, { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
-    });
-
-    it('unformatted insert', function() {
-      let editor = this.initialize(Editor, '<p><em>01</em></p>');
-      editor.applyDelta(new Delta().retain(1).insert('|'));
-      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
-    });
-
-    it('insert at format boundary', function() {
-      let editor = this.initialize(Editor, '<p><em>0</em><u>1</u></p>');
-      editor.applyDelta(new Delta().retain(1).insert('|', { strike: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
-    });
-
-    it('unformatted newline', function() {
-      let editor = this.initialize(Editor, '<h1>01</h1>');
-      editor.applyDelta(new Delta().retain(2).insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p>01</p><h1><br></h1>');
-    });
-
-    it('formatted embed', function() {
-      let editor = this.initialize(Editor, '<p></p>');
-      editor.applyDelta(new Delta().insert({ image: '/assets/favicon.png'}, { italic: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
-    });
-  });
-
   describe('delete', function() {
     it('inner node', function() {
       let editor = this.initialize(Editor, '<p><em><strong>0123</strong></em></p>');
@@ -277,8 +169,8 @@ describe('Editor', function() {
     });
   });
 
-  describe('formatLine', function() {
-    it('header', function() {
+  describe('format', function() {
+    it('line', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.formatLine(1, 1, { header: 1 });
       expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
@@ -287,7 +179,51 @@ describe('Editor', function() {
     });
   });
 
-  describe('getFormat', function() {
+  describe('applyDelta', function() {
+    it('inserts', function() {
+      let editor = this.initialize(Editor, '<p></p>');
+      editor.applyDelta(new Delta().insert('01'));
+      expect(this.container.innerHTML).toEqualHTML('<p>01</p>');
+    });
+
+    it('attributed insert', function() {
+      let editor = this.initialize(Editor, '<p></p>');
+      editor.applyDelta(new Delta().insert('01', { bold: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
+    });
+
+    it('format', function() {
+      let editor = this.initialize(Editor, '<p>01</p>');
+      editor.applyDelta(new Delta().retain(2, { bold: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
+    });
+
+    it('unformatted insert', function() {
+      let editor = this.initialize(Editor, '<p><em>01</em></p>');
+      editor.applyDelta(new Delta().retain(1).insert('|'));
+      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
+    });
+
+    it('insert at format boundary', function() {
+      let editor = this.initialize(Editor, '<p><em>0</em><u>1</u></p>');
+      editor.applyDelta(new Delta().retain(1).insert('|', { strike: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
+    });
+
+    it('unformatted newline', function() {
+      let editor = this.initialize(Editor, '<h1>01</h1>');
+      editor.applyDelta(new Delta().retain(2).insert('\n'));
+      expect(this.container.innerHTML).toEqualHTML('<p>01</p><h1><br></h1>');
+    });
+
+    it('formatted embed', function() {
+      let editor = this.initialize(Editor, '<p></p>');
+      editor.applyDelta(new Delta().insert({ image: '/assets/favicon.png'}, { italic: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
+    });
+  });
+
+  describe('getFormat()', function() {
     it('unformatted', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       expect(editor.getFormat(1)).toEqual({});
@@ -299,12 +235,12 @@ describe('Editor', function() {
     })
 
     it('cursor', function() {
-      let editor = this.initialize(Editor, '<h1><em><strong>0123</strong></em></h1><h2><u>5678</u></h2>');
+      let editor = this.initialize(Editor, '<h1><strong><em>0123</em></strong></h1><h2><u>5678</u></h2>');
       expect(editor.getFormat(2)).toEqual({ bold: true, italic: true, header: 1 });
     });
 
     it('cursor with preformat', function() {
-      let [editor, selection] = this.initialize([Editor, Selection], '<h1><em><strong>0123</strong></em></h1>');
+      let [editor, selection] = this.initialize([Editor, Selection], '<h1><strong><em>0123</em></strong></h1>');
       selection.setRange(new Range(2));
       selection.format('underline', true);
       selection.format('color', 'red');
@@ -314,12 +250,12 @@ describe('Editor', function() {
     it('across leaves', function() {
       let editor = this.initialize(Editor, `
         <h1>
-          <em class="ql-size-small"><strong>01</strong></em>
-          <strong class="ql-size-large"><u>23</u></strong>
-          <strong class="ql-size-huge"><u>45</u></strong>
+          <strong class="ql-size-small"><em>01</em></strong>
+          <em class="ql-size-large"><u>23</u></em>
+          <em class="ql-size-huge"><u>45</u></em>
         </h1>
       `);
-      expect(editor.getFormat(1, 4)).toEqual({ bold: true, header: 1, size: ['small', 'large', 'huge'] });
+      expect(editor.getFormat(1, 4)).toEqual({ italic: true, header: 1, size: ['small', 'large', 'huge'] });
     });
 
     it('across lines', function() {

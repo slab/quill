@@ -6,7 +6,7 @@ import './unit/blots/scroll.js';
 import './unit/blots/block.js';
 import './unit/blots/inline.js';
 
-// import './unit/core/editor';
+import './unit/core/editor';
 // import './unit/core/selection';
 // import './unit/core/events';
 import './unit/core/quill';
