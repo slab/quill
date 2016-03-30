@@ -70,25 +70,11 @@ class Scroll extends Parchment.Scroll {
 
   optimize(mutations) {
     super.optimize(mutations);
-    this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE);
+    this.emitter.emit(Emitter.events.SCROLL_CHANGE);
   }
 
   path(index) {
     return super.path(index).slice(1);  // Exclude self
-  }
-
-  update(mutations) {
-    let source = Emitter.sources.USER;
-    if (typeof mutations === 'string') {
-      source = mutations;
-    }
-    if (!Array.isArray(mutations)) {
-      mutations = this.observer.takeRecords();
-    }
-    super.update(mutations);
-    if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_UPDATE, source);
-    }
   }
 }
 Scroll.blotName = 'scroll';

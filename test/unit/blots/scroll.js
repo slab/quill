@@ -1,41 +1,36 @@
 import Parchment from 'parchment';
-import Scroll from '../../../blots/scroll';
+import Emitter from 'quill/emitter';
+import Scroll from 'quill/blots/scroll';
 
 
 describe('Scroll', function() {
-  describe('descendant()', function() {
-    beforeEach(function() {
-      this.scroll = this.initialize(Scroll, '<h1>01<em>23</em></h1><p><u>56</u><img></p>');
-    });
+  it('initialize empty document', function() {
+    let scroll = this.initialize(Scroll, '');
+    expect(scroll.domNode).toEqualHTML('<p><br></p>');
+  });
 
-    it('text', function() {
-      let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, 1);
-      expect(leaf.value()).toEqual('01');
-      expect(offset).toEqual(1);
-    });
+  it('api change', function() {
+    let scroll = this.initialize(Scroll, this.initialStates['single line']);
+    spyOn(scroll.emitter, 'emit').and.callThrough();
+    scroll.insertAt(5, '!');
+    expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_CHANGE);
+  });
 
-    it('newline', function() {
-      let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, 4);
-      expect(leaf).toEqual(null);
-      expect(offset).toEqual(-1);
-    });
+  it('user change', function(done) {
+    let scroll = this.initialize(Scroll, this.initialStates['single line']);
+    spyOn(scroll.emitter, 'emit').and.callThrough();
+    scroll.domNode.firstChild.appendChild(document.createTextNode('!'));
+    setTimeout(function() {
+      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_CHANGE);
+      done();
+    }, 1);
+  });
 
-    it('next line', function() {
-      let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, 5);
-      expect(leaf.value()).toEqual('56');
-      expect(offset).toEqual(0);
-    });
-
-    it('embed', function() {
-      let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, 7);
-      expect(leaf.value()).toEqual({ image: true });
-      expect(offset).toEqual(0);
-    });
-
-    it('end of document', function() {
-      let [leaf, offset] = this.scroll.descendant(Parchment.Leaf, 9);
-      expect(leaf).toEqual(null);
-      expect(offset).toEqual(-1);
-    });
+  it('whitelist', function() {
+    let scroll = Parchment.create('scroll', { emitter: new Emitter(), whitelist: ['bold'] });
+    scroll.insertAt(0, 'Hello World!');
+    scroll.formatAt(0, 5, 'bold', true);
+    scroll.formatAt(6, 5, 'italic', true);
+    expect(scroll.domNode.firstChild).toEqualHTML('<strong>Hello</strong> World!');
   });
 });

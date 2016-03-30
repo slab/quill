@@ -228,7 +228,7 @@ class Quill {
   }
 
   update(source = Emitter.sources.USER) {
-    this.scroll.update(source);       // Will update selection before selection.update() does if text changes
+    this.scroll.update();       // Will update selection before selection.update() does if text changes
     this.selection.update(source);
   }
 

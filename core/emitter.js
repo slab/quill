@@ -18,8 +18,7 @@ class Emitter extends EventEmitter {
 
 Emitter.events = {
   READY             : 'ready',
-  SCROLL_OPTIMIZE   : 'scroll-optimize',
-  SCROLL_UPDATE     : 'scroll-update',
+  SCROLL_CHANGE     : 'scroll-change',
   SELECTION_CHANGE  : 'selection-change',
   TEXT_CHANGE       : 'text-change'
 };

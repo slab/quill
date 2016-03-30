@@ -25,7 +25,7 @@ class CodeHighlighter extends Module {
   constructor(quill, options) {
     super(quill, options);
     let timer = null;
-    this.quill.on(Emitter.events.SCROLL_OPTIMIZE, () => {
+    this.quill.on(Emitter.events.SCROLL_CHANGE, () => {
       if (timer != null) return;
       timer = setTimeout(() => {
         this.highlight();

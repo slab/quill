@@ -29,7 +29,7 @@ class Toolbar extends Module {
       this.attach(input);
     });
     this.quill.on(Emitter.events.SELECTION_CHANGE, this.update, this)
-              .on(Emitter.events.SCROLL_OPTIMIZE, this.update, this);
+              .on(Emitter.events.SCROLL_CHANGE, this.update, this);
   }
 
   attach(input) {
