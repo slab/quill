@@ -19,7 +19,7 @@ describe('Quill', function() {
     });
   });
 
-  fdescribe('manipulation', function() {
+  describe('manipulation', function() {
     beforeEach(function() {
       this.quill = this.initialize(Quill, '<p>01234567</p>');
       this.oldDelta = this.quill.getContents();
