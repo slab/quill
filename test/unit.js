@@ -11,10 +11,10 @@ import './unit/core/selection';
 import './unit/core/quill';
 
 import './unit/formats/color';
+import './unit/formats/link';
 import './unit/formats/script';
-// import './unit/formats/block';
 import './unit/formats/align';
-// import './unit/formats/header';
+import './unit/formats/header';
 import './unit/formats/list';
 
 import './unit/modules/toolbar';

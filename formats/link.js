@@ -4,16 +4,14 @@ import Inline from 'quill/blots/inline';
 class Link extends Inline {
   static create(value) {
     let node = super.create(value);
-    if (typeof value === 'string') {
-      value = this.sanitize(value);
-      node.setAttribute('href', value);
-      node.setAttribute('title', value);
-    }
+    value = this.sanitize(value);
+    node.setAttribute('href', value);
+    node.setAttribute('target', '_blank');
     return node;
   }
 
   static formats(domNode) {
-    let formats = {};
+    let formats = super.formats(domNode);
     if (domNode.hasAttribute('href')) {
       formats[this.blotName] = domNode.getAttribute('href')
     }
@@ -27,7 +25,7 @@ class Link extends Inline {
     if (['http', 'https', 'mailto'].indexOf(protocol) > -1) {
       return url;
     } else {
-      return '#';
+      return this.SANITIZED_URL;
     }
   }
 
@@ -35,11 +33,11 @@ class Link extends Inline {
     if (name !== this.statics.blotName || !value) return super.format(name, value);
     value = this.constructor.sanitize(value);
     this.domNode.setAttribute('href', value);
-    this.domNode.setAttribute('title', value);
   }
 }
 Link.blotName = 'link';
 Link.tagName = 'A';
+Link.SANITIZED_URL = 'about:blank';
 
 
 export default Link;
