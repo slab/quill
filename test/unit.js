@@ -20,7 +20,7 @@ import './unit/formats/list';
 import './unit/modules/toolbar';
 // import './unit/modules/undo-manager';
 
-// import './unit/themes/snow';
+import './unit/themes/snow';
 
 
 export default Quill;
