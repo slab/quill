@@ -26,14 +26,14 @@ class Theme {
     if (moduleClass == null) {
       return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
     }
+
     let options = this.options.modules[name];
-    if (options === true) {  // Allow addModule('module', true)
+    if (options === true) {
+      // Allow addModule('module', true)
       options = {};
-    } else if (typeof options !== 'object' && !(options instanceof HTMLElement)) {
-      // Allow addModule('toolbar', '#toolbar');
-      options = { container: options };
     }
-    options = extend(true, {}, moduleClass.DEFAULTS || {}, options);
+
+    options = typeof options === 'object' || !options ? extend(true, {}, moduleClass.DEFAULTS || {}, options) : options;
     this.modules[name] = new moduleClass(this.quill, options);
     return this.modules[name];
   }

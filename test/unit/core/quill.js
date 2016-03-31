@@ -291,4 +291,27 @@ describe('Quill', function() {
       expect(source).toBe(Quill.sources.USER);
     });
   });
+
+  describe('placeholder', function() {
+    beforeEach(function() {
+      this.initialize(HTMLElement, '<div><p></p></div>');
+      this.quill = new Quill(this.container.firstChild, {
+        'placeholder': 'a great day to be a placeholder'
+      });
+      this.original = this.quill.getContents();
+    });
+
+    it('editor has placeholder dataset', function() {
+      expect(this.quill.root.dataset.placeholder).toEqual('a great day to be a placeholder');
+    });
+
+    it('editor has empty class', function() {
+      expect(this.quill.root.classList).toContain('ql-empty');
+    });
+
+    it('empty class should be removed', function() {
+      this.quill.setText('test');
+      expect(this.quill.root.classList).not.toContain('ql-empty');
+    });
+  });
 });
