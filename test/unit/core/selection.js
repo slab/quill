@@ -393,19 +393,20 @@ describe('Selection', function() {
       this.initialize(HTMLElement, '<div></div><div>&nbsp;</div>');
       this.div = this.container.firstChild;
       this.div.style.border = '1px solid #777';
+      // this.float is for visually a check, does not affect test itself
       this.float = this.container.lastChild;
       this.float.style.backgroundColor = 'red';
       this.float.style.position = 'absolute';
       this.float.style.width = '1px';
       if (this.reference != null) return;
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
-      let text = this.div.firstChild.firstChild;
+      let span = this.div.firstChild.firstChild;
       this.reference = {
-        height: text.offsetHeight,
-        left: text.offsetLeft,
-        lineHeight: text.parentNode.offsetHeight,
-        width: text.offsetWidth,
-        top: text.offsetTop,
+        height: span.offsetHeight,
+        left: span.offsetLeft,
+        lineHeight: span.parentNode.offsetHeight,
+        width: span.offsetWidth,
+        top: span.offsetTop,
       };
       this.initialize(HTMLElement, '', this.div);
     });
@@ -444,6 +445,15 @@ describe('Selection', function() {
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
+    it('multiple characters', function() {
+      let selection = this.initialize(Selection, '<p>0123</p>', this.div);
+      this.bounds = selection.getBounds(1, 2);
+      expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width, 2);
+      expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
+      expect(this.bounds.width).toBeApproximately(this.reference.width*2, 1);
+    });
+
     it('start of line', function() {
       let selection = this.initialize(Selection, `
         <p>0000</p>
@@ -465,6 +475,19 @@ describe('Selection', function() {
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width * 4, 4);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
+    });
+
+    it('multiple lines', function() {
+      let selection = this.initialize(Selection, `
+        <p>0000</p>
+        <p>0000</p>
+        <p>0000</p>`
+      , this.div);
+      this.bounds = selection.getBounds(2, 4);
+      expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
+      expect(this.bounds.height).toBeApproximately(this.reference.height*2, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
+      expect(this.bounds.width).toBeGreaterThan(3*this.reference.width);
     });
 
     it('large text', function() {
