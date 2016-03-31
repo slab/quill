@@ -18,7 +18,7 @@ import './unit/formats/header';
 import './unit/formats/list';
 
 import './unit/modules/toolbar';
-// import './unit/modules/undo-manager';
+import './unit/modules/undo-manager';
 
 import './unit/themes/snow';
 
