@@ -388,8 +388,8 @@ describe('Selection', function() {
     beforeEach(function() {
       this.container.classList.add('ql-editor');
       this.container.style.fontFamily = 'monospace';
+      this.container.style.lineHeight = /Trident/i.test(navigator.userAgent) ? '18px' : 'initial';
       this.container.style.position = 'relative';
-      this.container.style.lineHeight = 'initial';
       this.initialize(HTMLElement, '<div></div><div>&nbsp;</div>');
       this.div = this.container.firstChild;
       this.div.style.border = '1px solid #777';
@@ -401,6 +401,7 @@ describe('Selection', function() {
       if (this.reference != null) return;
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
       let span = this.div.firstChild.firstChild;
+      span.style.display = 'inline-block';    // IE11 needs this to respect line height
       this.reference = {
         height: span.offsetHeight,
         left: span.offsetLeft,
@@ -492,9 +493,13 @@ describe('Selection', function() {
 
     it('large text', function() {
       let selection = this.initialize(Selection, '<p><span class="ql-size-large">0000</span></p>', this.div);
+      let span = this.div.querySelector('span');
+      if (/Trident/i.test(navigator.userAgent)) {
+        span.style.lineHeight = '21px';
+      }
       this.bounds = selection.getBounds(2);
-      expect(this.bounds.left).toBeApproximately(this.reference.left + this.div.querySelector('span').offsetWidth / 2, 1);
-      expect(this.bounds.height).toBeApproximately(this.div.querySelector('span').offsetHeight, 1);
+      expect(this.bounds.left).toBeApproximately(this.reference.left + span.offsetWidth / 2, 1);
+      expect(this.bounds.height).toBeApproximately(span.offsetHeight, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
 
