@@ -125,7 +125,7 @@ class Editor {
 
   insertText(index, text, formats = {}, source = Emitter.sources.API) {
     this.scroll.insertAt(index, text);
-    this.formatText(index, index + text.length, formats, source);
+    this.formatText(index, text.length, formats, source);
   }
 
   removeFormat(index, length) {

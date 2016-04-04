@@ -21,32 +21,103 @@ describe('Quill', function() {
 
   describe('manipulation', function() {
     beforeEach(function() {
-      this.quill = this.initialize(Quill, '<p>01234567</p>');
+      this.quill = this.initialize(Quill, '<p>0123<em>45</em>67</p>');
       this.oldDelta = this.quill.getContents();
       spyOn(this.quill.emitter, 'emit').and.callThrough();
     });
 
     it('deleteText()', function() {
-      this.quill.deleteText(1, 2);
-      expect(this.quill.root).toEqualHTML('<p>034567</p>');
-      let change = new Delta().retain(1).delete(2);
+      this.quill.deleteText(3, 2);
+      let change = new Delta().retain(3).delete(2);
+      expect(this.quill.root).toEqualHTML('<p>012<em>5</em>67</p>');
       expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
     });
 
     it('format', function() {
-      this.quill.setSelection(2, 4);
+      this.quill.setSelection(3, 2);
       this.quill.format('bold', true);
-      let change = new Delta().retain(2).retain(4, { bold: true });
-      expect(this.quill.root).toEqualHTML('<p>01<strong>2345</strong>67</p>');
+      let change = new Delta().retain(3).retain(2, { bold: true });
+      expect(this.quill.root).toEqualHTML('<p>012<strong>3<em>4</em></strong><em>5</em>67</p>');
       expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
-      expect(this.quill.getSelection()).toEqual(new Range(2, 4));
+      expect(this.quill.getSelection()).toEqual(new Range(3, 2));
+    });
+
+    it('formatLine()', function() {
+      this.quill.formatLine(1, 1, 'header', 2);
+      let change = new Delta().retain(8).retain(1, { header: 2});
+      expect(this.quill.root).toEqualHTML('<h2>0123<em>45</em>67</h2>');
+      expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('formatText()', function() {
+      this.quill.formatText(3, 2, 'bold', true);
+      let change = new Delta().retain(3).retain(2, { bold: true });
+      expect(this.quill.root).toEqualHTML('<p>012<strong>3<em>4</em></strong><em>5</em>67</p>');
+      expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
     });
 
     it('insertEmbed()', function() {
-      this.quill.insertEmbed(0, 'image', '/assets/favicon.png');
-      let change = new Delta().insert({ image: '/assets/favicon.png'});
-      expect(this.quill.root).toEqualHTML('<p><img src="/assets/favicon.png">01234567</p>');
+      this.quill.insertEmbed(5, 'image', '/assets/favicon.png');
+      let change = new Delta().retain(5).insert({ image: '/assets/favicon.png'}, { italic: true });
+      expect(this.quill.root).toEqualHTML('<p>0123<em>4<img src="/assets/favicon.png">5</em>67</p>');
       expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('insertText()', function() {
+      this.quill.insertText(5, '|', 'bold', true);
+      let change = new Delta().retain(5).insert('|', { bold: true, italic: true });
+      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em><strong><em>|</em></strong><em>5</em>67</p>');
+      expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('enable/disable', function() {
+      this.quill.disable();
+      expect(this.quill.root.getAttribute('contenteditable')).toEqual('false');
+      this.quill.enable();
+      expect(this.quill.root.getAttribute('contenteditable')).toBeTruthy();
+    });
+
+    it('getBounds() index', function() {
+      let bounds = this.quill.selection.getBounds(1);
+      expect(this.quill.getBounds(1)).toEqual(bounds);
+    });
+
+    it('getBounds() range', function() {
+      let bounds = this.quill.selection.getBounds(3, 4);
+      expect(this.quill.getBounds(new Range(3, 4))).toEqual(bounds);
+    });
+
+    it('getFormat()', function() {
+      let formats = this.quill.getFormat(5);
+      expect(formats).toEqual({ italic: true });
+    });
+
+    it('getSelection()', function() {
+      expect(this.quill.getSelection()).toEqual(null);
+      let range = new Range(1, 2);
+      this.quill.setSelection(range);
+      expect(this.quill.getSelection()).toEqual(range);
+    });
+
+    it('removeFormat()', function() {
+      this.quill.removeFormat(5, 1);
+      let change = new Delta().retain(5).retain(1, { italic: null });
+      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>567</p>');
+      expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('updateContents() delta', function() {
+      let delta = new Delta().retain(5).insert('|');
+      this.quill.updateContents(delta);
+      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>|<em>5</em>67</p>');
+      expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('updateContents() ops array', function() {
+      let delta = new Delta().retain(5).insert('|');
+      this.quill.updateContents(delta.ops);
+      expect(this.quill.root).toEqualHTML('<p>0123<em>4</em>|<em>5</em>67</p>');
+      expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, this.oldDelta, Emitter.sources.API);
     });
   });
 

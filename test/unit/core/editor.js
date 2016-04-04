@@ -181,16 +181,16 @@ describe('Editor', function() {
   });
 
   describe('applyDelta', function() {
-    it('inserts', function() {
+    it('insert', function() {
       let editor = this.initialize(Editor, '<p></p>');
       editor.applyDelta(new Delta().insert('01'));
       expect(this.container.innerHTML).toEqualHTML('<p>01</p>');
     });
 
     it('attributed insert', function() {
-      let editor = this.initialize(Editor, '<p></p>');
-      editor.applyDelta(new Delta().insert('01', { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(2).insert('|', { bold: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p>01<strong>|</strong>23</p>');
     });
 
     it('format', function() {
