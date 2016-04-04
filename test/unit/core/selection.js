@@ -434,7 +434,7 @@ describe('Selection', function() {
       this.bounds = selection.getBounds(5);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
-      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 1);
+      expect(this.bounds.top).toBeApproximately(this.reference.top + this.reference.lineHeight, 2);
     });
 
     it('plain text', function() {
@@ -451,7 +451,7 @@ describe('Selection', function() {
       expect(this.bounds.left).toBeApproximately(this.reference.left + this.reference.width, 2);
       expect(this.bounds.height).toBeApproximately(this.reference.height, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
-      expect(this.bounds.width).toBeApproximately(this.reference.width*2, 1);
+      expect(this.bounds.width).toBeApproximately(this.reference.width*2, 2);
     });
 
     it('start of line', function() {
@@ -485,7 +485,7 @@ describe('Selection', function() {
       , this.div);
       this.bounds = selection.getBounds(2, 4);
       expect(this.bounds.left).toBeApproximately(this.reference.left, 1);
-      expect(this.bounds.height).toBeApproximately(this.reference.height*2, 1);
+      expect(this.bounds.height).toBeApproximately(this.reference.height*2, 2);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
       expect(this.bounds.width).toBeGreaterThan(3*this.reference.width);
     });
