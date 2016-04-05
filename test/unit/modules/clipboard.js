@@ -57,4 +57,58 @@ describe('Clipboard', function() {
       }, 2);
     });
   });
+
+  describe('convert', function() {
+    beforeEach(function() {
+      let quill = this.initialize(Quill, '');
+      this.clipboard = quill.clipboard;
+    });
+
+    it('plain text', function() {
+      let delta = this.clipboard.convert('simple plain text');
+      expect(delta).toEqual(new Delta().insert('simple plain text'));
+    });
+
+    it('whitespace', function() {
+      let html = '<div> 0 </div> <div> <div> 1 2 <span> 3 </span> 4 </div> </div>';
+      let delta = this.clipboard.convert(html);
+      expect(delta).toEqual(new Delta().insert('0\n1 2 3 4'));
+    });
+
+    it('alias', function() {
+      let delta = this.clipboard.convert('<b>Bold</b><i>Italic</i>');
+      expect(delta).toEqual(new Delta().insert('Bold', { bold: true }).insert('Italic', { italic: true }));
+    });
+
+    it('pre', function() {
+      let html = '<div style="whitespace: pre;"> 01 \n 23 </div>';
+      let delta = this.clipboard.convert(html);
+      expect(delta).toEqual(new Delta().insert('01 \n 23'));
+    });
+
+    it('embeds', function() {
+      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png">34</div>');
+      expect(delta).toEqual(new Delta().insert('01').insert({ image: '/assets/favicon.png' }).insert('34'));
+    });
+
+    it('custom matcher', function() {
+      this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
+        let index = 0;
+        let regex = /https?:\/\/[^\s]+/g;
+        let match = null;
+        let composer = new Delta();
+        while ((match = regex.exec(node.data)) !== null) {
+          composer.retain(match.index - index);
+          index = regex.lastIndex;
+          composer.retain(match[0].length, { link: match[0] });
+        }
+        return delta.compose(composer);
+      });
+      let delta = this.clipboard.convert('http://github.com https://quilljs.com');
+      let expected = new Delta().insert('http://github.com', { link: 'http://github.com' })
+                                .insert(' ')
+                                .insert('https://quilljs.com', { link: 'https://quilljs.com' });
+      expect(delta).toEqual(expected);
+    });
+  });
 });

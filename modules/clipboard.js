@@ -61,6 +61,10 @@ class Clipboard extends Module {
       }, new Delta());
     };
     let delta = traverse(this.container);
+    // Remove trailing newline
+    if (deltaEndsWith(delta, '\n')) {
+      delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
+    }
     debug.info('convert', this.container.innerHTML, delta);
     this.container.innerHTML = '';
     return delta;
@@ -193,8 +197,8 @@ function matchNewline(node, delta) {
 }
 
 function matchSpacing(node, delta) {
-  if (node.nextSibling != null &&
-      node.nextSibling.offsetTop > node.offsetTop + node.offsetHeight &&
+  if (node.nextElementSibling != null &&
+      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight &&
       !deltaEndsWith(delta, '\n\n')) {
     delta.insert('\n');
   }
@@ -202,7 +206,10 @@ function matchSpacing(node, delta) {
 }
 
 function matchText(node, delta) {
-  let text = node.data.replace(/\s\s+/g, ' ');
+  let text = node.data;
+  if (computeStyle(node.parentNode).whiteSpace.slice(0, 3) === 'pre') {
+    text = text.replace(/\s\s+/g, ' ');
+  }
   if (node.previousSibling == null || isLine(node.previousSibling)) {
     text = text.replace(/^\s+/, '');
   }
