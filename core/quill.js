@@ -1,3 +1,4 @@
+import './polyfill';
 import Delta from 'rich-text/lib/delta';
 import Editor from './editor';
 import Emitter from './emitter';
