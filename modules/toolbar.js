@@ -9,7 +9,11 @@ let debug = logger('quill:toolbar');
 class Toolbar extends Module {
   constructor(quill, options) {
     super(quill, options);
-    if (typeof this.options.container === 'string') {
+    if (typeof this.options === 'string') {
+      this.options = {
+        container: document.querySelector(this.options)
+      }
+    } else if (typeof this.options.container === 'string') {
       this.options.container = document.querySelector(this.options.container);
     } else if (Array.isArray(this.options.container)) {
       let container = document.createElement('div');

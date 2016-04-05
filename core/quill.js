@@ -64,6 +64,9 @@ class Quill {
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
     this.root = this.addContainer('ql-editor');
+    if (options.placeholder) {
+      this.root.setAttribute('data-placeholder', options.placeholder);
+    }
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
@@ -82,6 +85,10 @@ class Quill {
       this.disable();
     }
     this.emitter.emit(Emitter.events.READY);
+    this.root.classList.toggle('ql-empty', this.getLength() <= 1);
+    this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
+      this.root.classList.toggle('ql-empty', this.getLength() <= 1);
+    });
   }
 
   addContainer(container, refNode = null) {
