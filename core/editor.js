@@ -60,11 +60,13 @@ class Editor {
   }
 
   formatLine(index, length, formats = {}, source = Emitter.sources.API) {
+    this.scroll.update();
     Object.keys(formats).forEach((format) => {
       this.scroll.lines(index, Math.max(length, 1)).forEach(function(line) {
         line.format(format, formats[format]);
       });
     });
+    this.scroll.optimize();
     this.update(source);
   }
 
