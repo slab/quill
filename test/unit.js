@@ -17,6 +17,7 @@ import './unit/formats/align';
 import './unit/formats/header';
 import './unit/formats/list';
 
+import './unit/modules/clipboard';
 import './unit/modules/toolbar';
 import './unit/modules/undo-manager';
 

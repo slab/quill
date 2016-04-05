@@ -90,13 +90,13 @@ class Clipboard extends Module {
     let range = this.quill.getSelection();
     let clipboard = e.clipboardData || window.clipboardData;
     let delta = new Delta().retain(range.index).delete(range.length);
-    let callback = (delta) => {
+    let done = (delta) => {
       this.quill.updateContents(delta, Emitter.sources.USER);
       // range.length contributes to delta.length()
-      this.quill.setSelection(delta.length() - range.length*2, Emitter.sources.SILENT);
+      this.quill.setSelection(delta.length() - range.length, Emitter.sources.SILENT);
       this.quill.selection.scrollIntoView();
     };
-    let intercept = (delta) => {
+    let intercept = (delta, callback) => {
       this.container.focus();
       setTimeout(() => {
         let html = this.container.innerHTML;
@@ -109,14 +109,14 @@ class Clipboard extends Module {
     if ([].indexOf.call(clipboard.types || [], 'application/json') > -1) {
       try {
         let pasteJSON = JSON.parse(clipboard.getData('application/json'));
-        callback(delta.concat(pasteJSON));
+        done(delta.concat(pasteJSON));
       } catch(err) {
-        intercept(delta);
+        intercept(delta, done);
       }
       e.preventDefault();
-      return;
+    } else {
+      intercept(delta, done);
     }
-    intercept(delta);
   }
 }
 
