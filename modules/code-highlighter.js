@@ -7,9 +7,12 @@ import CodeBlock from 'quill/formats/code';
 class HighlightCodeBlock extends CodeBlock {
   highlight() {
     if (this.cachedHTML !== this.domNode.innerHTML) {
-      this.domNode.textContent = this.domNode.textContent;
-      hljs.highlightBlock(this.domNode);
-      this.attach();
+      let text = this.domNode.textContent;
+      if (text.trim().length > 0) {
+        this.domNode.textContent = this.domNode.textContent;
+        hljs.highlightBlock(this.domNode);
+        this.attach();
+      }
       this.cachedHTML = this.domNode.innerHTML;
     }
   }
