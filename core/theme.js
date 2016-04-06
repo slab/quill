@@ -22,7 +22,7 @@ class Theme {
   }
 
   addModule(name) {
-    let moduleClass = Theme.modules[name];
+    let moduleClass = this.quill.constructor.import(`modules/${name}`);
     if (moduleClass == null) {
       return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
     }
@@ -42,7 +42,6 @@ Theme.DEFAULTS = {};
 Theme.themes = {
   'default': Theme
 };
-Theme.modules = {};
 
 
 export default Theme;

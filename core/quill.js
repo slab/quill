@@ -17,36 +17,26 @@ class Quill {
     logger.level(limit);
   }
 
-  static getModule(name) {
-    return Theme.modules[name];
-  }
-
   static import(name) {
-    switch(name) {
-      case 'delta': return Delta;
-      case 'module': return Module;
-      case 'parchment': return Parchment;
-      case 'theme': return Theme;
-      default: return undefined;
+    if (this.imports[name] == null) {
+      debug.error(`Cannot import ${name}. Are you sure it was registered?`);
     }
+    return this.imports[name];
   }
 
-  static register(...args) {
-    if (typeof args[0] === 'string') {
-      let [name, target] = args;
-      if (target.prototype instanceof Theme) {
-        if (Theme.themes[name] != null) debug.warn(`overwriting ${name} theme`);
-        Theme.themes[name] = target;
-      } else {
-        if (Theme.modules[name] != null) debug.warn(`overwriting ${name} module`);
-        Theme.modules[name] = target;
-      }
-    } else {
-      args.forEach(function(format) {
-        let name = format.attrName || format.blotName;
-        if (Parchment.query(name)) debug.warn(`Overwriting ${name} format`);
-        Parchment.register(format);
+  static register(path, target, overwrite = false) {
+    if (typeof path === 'object') {
+      Object.keys(path).forEach((key) => {
+        this.register(key, path[key], target);
       });
+    } else {
+      if (this.imports[path] != null && !overwrite) {
+        debug.warn(`Overwriting ${path} with`, target);
+      }
+      this.imports[path] = target;
+      if (path.startsWith('formats/')) {
+        Parchment.register(target);
+      }
     }
   }
 
@@ -55,9 +45,9 @@ class Quill {
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
-    let themeClass = Theme.themes[options.theme || Quill.DEFAULTS.theme];
-    if (themeClass == null) {
-      return debug.error(`Cannot load ${options.theme} theme. It may not be registered. Loading default theme.`);
+    let themeClass = Theme;
+    if (options.theme != null && options.theme !== Quill.DEFAULTS.theme) {
+      themeClass = Quill.import(`themes/${options.theme}`);
     }
     options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
     let html = this.container.innerHTML.trim();
@@ -256,6 +246,13 @@ Quill.DEFAULTS = {
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
 Quill.version = QUILL_VERSION;
+
+Quill.imports = {
+  'delta'       : Delta,
+  'parchment'   : Parchment,
+  'core/module' : Module,
+  'core/theme'  : Theme
+};
 
 
 function overload(index, length, name, value, source) {

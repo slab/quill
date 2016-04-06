@@ -28,26 +28,61 @@ import { Code as InlineCode } from 'quill/formats/code';
 
 import ImageTooltip from 'quill/modules/image-tooltip';
 import LinkTooltip from 'quill/modules/link-tooltip';
-import ToolbarModule from 'quill/modules/toolbar';
+import Toolbar from 'quill/modules/toolbar';
 import CodeHighlighter, { CodeBlock, CodeToken } from 'quill/modules/code-highlighter';
+
+import Icons from 'quill/ui/icons';
+import Picker from 'quill/ui/picker';
+import ColorPicker from 'quill/ui/color-picker';
+import IconPicker from 'quill/ui/icon-picker';
 
 import BubbleTheme from 'quill/themes/bubble';
 import SnowTheme from 'quill/themes/snow';
 
 
-Quill.register(Align, Blockquote, Direction, Header, Indent, List, ListItem);
-Quill.register(Background, Bold, Color, Font, Italic, InlineCode, Link, Script, Size, Strike, Underline);
-Quill.register(Formula, Image, Video);
+Quill.register({
+  'formats/align': Align,
+  'formats/direction': Direction,
+  'formats/indent': Indent,
 
-Quill.register('image-tooltip', ImageTooltip);
-Quill.register('link-tooltip', LinkTooltip);
-Quill.register('toolbar', ToolbarModule);
+  'formats/background': Background,
+  'formats/color': Color,
+  'formats/font': Font,
+  'formats/size': Size,
 
-Quill.register(CodeToken, CodeBlock);
-Quill.register('code-highlighter', CodeHighlighter);
+  'formats/blockquote': Blockquote,
+  'formats/code-block': CodeBlock,
+  'formats/header': Header,
+  'formats/list': List,
 
-Quill.register('bubble', BubbleTheme);
-Quill.register('snow', SnowTheme);
+  'formats/bold': Bold,
+  'formats/code': InlineCode,
+  'formats/italic': Italic,
+  'formats/link': Link,
+  'formats/script': Script,
+  'formats/strike': Strike,
+  'formats/underline': Underline,
+
+  'formats/formula': Formula,
+  'formats/image': Image,
+  'formats/video': Video,
+
+  'formats/code-block/token': CodeToken,
+  'formats/list/item': ListItem,
+
+  'modules/code-highlighter': CodeHighlighter,
+  'modules/image-tooltip': ImageTooltip,
+  'modules/link-tooltip': LinkTooltip,
+  'modules/toolbar': Toolbar,
+
+  'themes/bubble': BubbleTheme,
+  'themes/snow': SnowTheme,
+
+  'ui/icons': Icons,
+  'ui/picker': Picker,
+  'ui/icon-picker': IconPicker,
+  'ui/color-picker': ColorPicker
+});
 
 
 module.exports = Quill;
