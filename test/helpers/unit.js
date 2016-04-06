@@ -1,9 +1,9 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from 'quill/editor';
-import Emitter from 'quill/emitter';
-import Selection from 'quill/selection';
+import Editor from 'quill/core/editor';
+import Emitter from 'quill/core/emitter';
+import Selection from 'quill/core/selection';
 import Scroll from 'quill/blots/scroll';
-import Quill from 'quill/quill';
+import Quill from 'quill/core';
 import equal from 'deep-equal';
 
 

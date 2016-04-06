@@ -1,7 +1,7 @@
 import Parchment from 'parchment';
-import Emitter from 'quill/emitter';
-import logger from 'quill/logger';
-import Module from 'quill/module';
+import Quill from 'quill/core';
+import logger from 'quill/core/logger';
+import Module from 'quill/core/module';
 
 let debug = logger('quill:toolbar');
 
@@ -32,8 +32,8 @@ class Toolbar extends Module {
     [].forEach.call(this.container.querySelectorAll('a, button, input[type=button], select'), (input) => {
       this.attach(input);
     });
-    this.quill.on(Emitter.events.SELECTION_CHANGE, this.update, this)
-              .on(Emitter.events.SCROLL_CHANGE, this.update, this);
+    this.quill.on(Quill.events.SELECTION_CHANGE, this.update, this)
+              .on(Quill.events.SCROLL_CHANGE, this.update, this);
   }
 
   attach(input) {
@@ -54,7 +54,7 @@ class Toolbar extends Module {
       if (this.handlers[format]) {
         if (this.handlers[format](value)) return;
       }
-      this.quill.format(format, value, Emitter.sources.USER);
+      this.quill.format(format, value, Quill.sources.USER);
     });
     // TODO use weakmap
     this.controls.push([format, input]);

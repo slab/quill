@@ -25,14 +25,14 @@ module.exports = {
   resolve: {
     alias: {
       'parchment'     : path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment'),
-      'quill/core'    : path.resolve(__dirname, '..', 'core.js'),
+      'quill/core$'   : path.resolve(__dirname, '..', 'core.js'),
+      'quill/core'    : path.resolve(__dirname, '..', 'core'),
       'quill/assets'  : path.resolve(__dirname, '..', 'assets'),
       'quill/blots'   : path.resolve(__dirname, '..', 'blots'),
       'quill/formats' : path.resolve(__dirname, '..', 'formats'),
       'quill/modules' : path.resolve(__dirname, '..', 'modules'),
       'quill/themes'  : path.resolve(__dirname, '..', 'themes'),
-      'quill/ui'      : path.resolve(__dirname, '..', 'ui'),
-      'quill'         : path.resolve(__dirname, '..', 'core')
+      'quill/ui'      : path.resolve(__dirname, '..', 'ui')
     },
     extensions: ['', '.js', '.styl', '.ts']
   },

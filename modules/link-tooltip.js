@@ -1,6 +1,6 @@
-import Emitter from 'quill/emitter';
-import Module from 'quill/module';
-import { Range } from 'quill/selection';
+import Quill from 'quill/core';
+import Module from 'quill/core/module';
+import { Range } from 'quill/core/selection';
 import LinkBlot from 'quill/formats/link';
 import { bindKeys } from 'quill/modules/keyboard';
 
@@ -27,7 +27,7 @@ class LinkTooltip extends Module {
     });
     this.container.querySelector('a.ql-remove').addEventListener('click', this.remove.bind(this));
     // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
-    quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
+    quill.on(Quill.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length === 0) {
         let offset;
         [this.link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
@@ -63,15 +63,15 @@ class LinkTooltip extends Module {
   }
 
   remove() {
-    this.quill.formatText(this.range, 'link', false, Emitter.sources.USER);
-    this.quill.setSelection(this.range, Emitter.sources.SILENT);
+    this.quill.formatText(this.range, 'link', false, Quill.sources.USER);
+    this.quill.setSelection(this.range, Quill.sources.SILENT);
     this.hide();
   }
 
   save() {
     let url = this.textbox.value;
-    this.quill.formatText(this.range, 'link', url, Emitter.sources.USER);
-    this.quill.setSelection(this.range, Emitter.sources.SILENT);
+    this.quill.formatText(this.range, 'link', url, Quill.sources.USER);
+    this.quill.setSelection(this.range, Quill.sources.SILENT);
     this.hide();
   }
 

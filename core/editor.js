@@ -1,8 +1,8 @@
 import Delta from 'rich-text/lib/delta';
 import DeltaOp from 'rich-text/lib/op';
-import Emitter from './emitter';
+import Emitter from 'quill/core/emitter';
 import Parchment from 'parchment';
-import Block, { bubbleFormats } from '../blots/block';
+import Block, { bubbleFormats } from 'quill/blots/block';
 import clone from 'clone';
 import extend from 'extend';
 

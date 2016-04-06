@@ -1,13 +1,13 @@
-import './polyfill';
+import 'quill/core/polyfill';
 import Delta from 'rich-text/lib/delta';
-import Editor from './editor';
-import Emitter from './emitter';
-import Module from './module';
+import Editor from 'quill/core/editor';
+import Emitter from 'quill/core/emitter';
+import Module from 'quill/core/module';
 import Parchment from 'parchment';
-import Selection, { Range } from './selection';
+import Selection, { Range } from 'quill/core/selection';
 import extend from 'extend';
-import logger from './logger';
-import Theme from './theme';
+import logger from 'quill/core/logger';
+import Theme from 'quill/core/theme';
 
 let debug = logger('[quill]');
 

@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Emitter from 'quill/emitter';
+import Emitter from 'quill/core/emitter';
 import Scroll from 'quill/blots/scroll';
 
 

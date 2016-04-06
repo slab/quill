@@ -1,5 +1,5 @@
-import Emitter from 'quill/emitter';
-import Module from 'quill/module';
+import Quill from 'quill/core';
+import Module from 'quill/core/module';
 
 
 class UndoManager extends Module {
@@ -8,9 +8,9 @@ class UndoManager extends Module {
     this.lastRecorded = 0;
     this.ignoreChange = false;
     this.clear();
-    this.quill.on(Emitter.events.TEXT_CHANGE, (delta, oldDelta, source) => {
+    this.quill.on(Quill.events.TEXT_CHANGE, (delta, oldDelta, source) => {
       if (this.ignoreChange) return;
-      if (!this.options.userOnly || source === Emitter.sources.USER) {
+      if (!this.options.userOnly || source === Quill.sources.USER) {
         this.record(delta, oldDelta);
       } else {
         this.transform(delta);
@@ -25,7 +25,7 @@ class UndoManager extends Module {
     let delta = this.stack[source].pop();
     this.lastRecorded = 0;
     this.ignoreChange = true;
-    this.quill.updateContents(delta[source], Emitter.sources.USER);
+    this.quill.updateContents(delta[source], Quill.sources.USER);
     this.ignoreChange = false;
     let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index);

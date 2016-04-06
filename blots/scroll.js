@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Emitter from 'quill/emitter';
+import Emitter from 'quill/core/emitter';
 import BreakBlot from 'quill/blots/break';
 import Block, { EmbedBlock } from 'quill/blots/block';
 import CursorBlot from 'quill/blots/cursor';

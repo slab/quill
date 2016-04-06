@@ -1,4 +1,4 @@
-import Emitter from 'quill/emitter';
+import Emitter from 'quill/core/emitter';
 import { bindKeys } from 'quill/modules/keyboard';
 import BaseTheme from 'quill/themes/base';
 import icons from 'quill/ui/icons';

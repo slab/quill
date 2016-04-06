@@ -2,10 +2,10 @@ import clone from 'clone';
 import equal from 'deep-equal';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Emitter from 'quill/emitter';
-import logger from 'quill/logger';
-import Module from 'quill/module';
-import { Range } from 'quill/selection';
+import Quill from 'quill/core';
+import logger from 'quill/core/logger';
+import Module from 'quill/core/module';
+import { Range } from 'quill/core/selection';
 import Block from 'quill/blots/block';
 
 let debug = logger('quill:keyboard');
@@ -53,24 +53,24 @@ class Keyboard extends Module {
 
   onDelete(backspace, range) {
     if (range.length > 0) {
-      this.quill.deleteText(range, Emitter.sources.USER);
+      this.quill.deleteText(range, Quill.sources.USER);
     } else if (!backspace) {
-      this.quill.deleteText(range.index, 1, Emitter.sources.USER);
+      this.quill.deleteText(range.index, 1, Quill.sources.USER);
     } else {
       let [line, offset] = this.quill.scroll.descendant(Block, range.index);
       let formats = this.quill.getFormat(range);
       if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
         if (formats['indent'] != null) {
-          line.format('indent', parseInt(formats['indent']) - 1, Emitter.sources.USER);
+          line.format('indent', parseInt(formats['indent']) - 1, Quill.sources.USER);
         } else {
           line.format('list', false);
         }
       } else {
-        this.quill.deleteText(range.index - 1, 1, Emitter.sources.USER);
+        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
         range = new Range(Math.max(0, range.index - 1));
       }
     }
-    this.quill.setSelection(range.index, Emitter.sources.SILENT);
+    this.quill.setSelection(range.index, Quill.sources.SILENT);
   }
 
   onEnter(range) {
@@ -97,8 +97,8 @@ class Keyboard extends Module {
     } else {
       delta.delete(range.length);
     }
-    this.quill.updateContents(delta, Emitter.sources.USER);
-    this.quill.setSelection(range.index + added, Emitter.sources.SILENT);
+    this.quill.updateContents(delta, Quill.sources.USER);
+    this.quill.setSelection(range.index + added, Quill.sources.SILENT);
     Object.keys(formats).forEach((name) => {
       if (lineFormats[name] == null) {
         this.quill.format(name, formats[name]);
@@ -108,14 +108,14 @@ class Keyboard extends Module {
 
   onFormat(format, range) {
     let formats = this.quill.getFormat(range);
-    this.quill.format(format, !formats[format], Emitter.sources.USER);
+    this.quill.format(format, !formats[format], Quill.sources.USER);
   }
 
   onTab(range, evt) {
     if (range.length === 0) {
       let delta = new Delta().retain(range.index).insert('\t').delete(range.length);
-      this.quill.updateContents(delta, Emitter.sources.USER);
-      this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
+      this.quill.updateContents(delta, Quill.sources.USER);
+      this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     } else {
       let modifier = evt.shiftKey ? -1 : 1;
       this.quill.scroll.descendants(Block, range.index, range.length).forEach(function(line) {
@@ -123,8 +123,8 @@ class Keyboard extends Module {
         let indent = parseInt(format['indent'] || 0);
         line.format('indent', Math.max(0, indent + modifier));
       });
-      this.quill.update(Emitter.sources.USER);
-      this.quill.setSelection(range, Emitter.sources.SILENT);
+      this.quill.update(Quill.sources.USER);
+      this.quill.setSelection(range, Quill.sources.SILENT);
     }
   }
 

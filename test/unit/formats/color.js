@@ -1,5 +1,5 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from 'quill/editor';
+import Editor from 'quill/core/editor';
 
 
 describe('Color', function() {

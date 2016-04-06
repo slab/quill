@@ -1,4 +1,4 @@
-import Quill from 'quill/quill';
+import Quill from 'quill/core/quill';
 import Parchment from 'parchment';
 
 import Block from 'quill/blots/block';

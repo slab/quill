@@ -1,8 +1,8 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Emitter from 'quill/emitter';
-import logger from 'quill/logger';
-import Module from 'quill/module';
+import Quill from 'quill/core';
+import logger from 'quill/core/logger';
+import Module from 'quill/core/module';
 
 let debug = logger('quill:clipboard');
 
@@ -85,8 +85,8 @@ class Clipboard extends Module {
     if (e.defaultPrevented) return;
     this.onCopy(e);
     let range = this.quill.getSelection();
-    this.quill.deleteText(range, Emitter.sources.USER);
-    this.quill.setSelection(range.index, Emitter.sources.SILENT);
+    this.quill.deleteText(range, Quill.sources.USER);
+    this.quill.setSelection(range.index, Quill.sources.SILENT);
   }
 
   onPaste(e) {
@@ -95,9 +95,9 @@ class Clipboard extends Module {
     let clipboard = e.clipboardData || window.clipboardData;
     let delta = new Delta().retain(range.index).delete(range.length);
     let done = (delta) => {
-      this.quill.updateContents(delta, Emitter.sources.USER);
+      this.quill.updateContents(delta, Quill.sources.USER);
       // range.length contributes to delta.length()
-      this.quill.setSelection(delta.length() - range.length, Emitter.sources.SILENT);
+      this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
       this.quill.selection.scrollIntoView();
     };
     let intercept = (delta, callback) => {

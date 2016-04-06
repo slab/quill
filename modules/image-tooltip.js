@@ -1,5 +1,5 @@
-import Emitter from 'quill/emitter';
-import Module from 'quill/module';
+import Quill from 'quill/core';
+import Module from 'quill/core/module';
 import ImageBlot from 'quill/formats/image';
 import { bindKeys } from 'quill/modules/keyboard';
 
@@ -39,8 +39,8 @@ class ImageTooltip extends Module {
   save() {
     let range = this.quill.getSelection(true);
     let index = range.index + range.length;
-    this.quill.insertEmbed(index, ImageBlot.blotName, this.textbox.value, Emitter.sources.USER);
-    this.quill.setSelection(index + 1, Emitter.sources.SILENT);
+    this.quill.insertEmbed(index, ImageBlot.blotName, this.textbox.value, Quill.sources.USER);
+    this.quill.setSelection(index + 1, Quill.sources.SILENT);
     this.hide();
   }
 

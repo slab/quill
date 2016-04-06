@@ -1,10 +1,10 @@
 import Parchment from 'parchment';
-import Emitter from './emitter';
 import equal from 'deep-equal';
-import logger from './logger';
-
+import Emitter from 'quill/core/emitter';
+import logger from 'quill/core/logger';
 
 let debug = logger('[quill:selection]');
+
 
 class Range {
   constructor(index, length = 0) {

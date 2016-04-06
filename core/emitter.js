@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import logger from './logger';
+import logger from 'quill/core/logger';
 
 let debug = logger('quill:events');
 

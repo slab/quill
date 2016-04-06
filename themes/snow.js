@@ -1,4 +1,4 @@
-import Emitter from 'quill/emitter';
+import Emitter from 'quill/core/emitter';
 import BaseTheme from 'quill/themes/base';
 import ColorPicker from 'quill/ui/color-picker';
 import IconPicker from 'quill/ui/icon-picker';

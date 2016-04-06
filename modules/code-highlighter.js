@@ -1,6 +1,6 @@
 import Parchment from 'parchment';
-import Emitter from 'quill/emitter';
-import Module from 'quill/module';
+import Quill from 'quill/core';
+import Module from 'quill/core/module';
 import CodeBlock from 'quill/formats/code';
 
 
@@ -28,7 +28,7 @@ class CodeHighlighter extends Module {
   constructor(quill, options) {
     super(quill, options);
     let timer = null;
-    this.quill.on(Emitter.events.SCROLL_OPTIMIZE, () => {
+    this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
       if (timer != null) return;
       timer = setTimeout(() => {
         this.highlight();
@@ -44,7 +44,7 @@ class CodeHighlighter extends Module {
       code.highlight();
     });
     if (range != null) {
-      this.quill.setSelection(range, Emitter.sources.SILENT);
+      this.quill.setSelection(range, Quill.sources.SILENT);
     }
   }
 }
