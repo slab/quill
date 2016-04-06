@@ -25,6 +25,15 @@ class Editor {
       let length = op.retain || op.insert.length || 1;
       let attributes = op.attributes || {};
       if (op.insert != null) {
+        // Support old embed format
+        if (op.insert === 1) {
+          attributes = clone(attributes);
+          op = {
+            insert: { image: attributes.image },
+            attributes: attributes
+          };
+          delete attributes['image'];
+        }
         if (typeof op.insert === 'string') {
           this.scroll.insertAt(index, op.insert);
           let leaf, [line, offset] = this.scroll.line(index);

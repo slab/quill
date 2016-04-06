@@ -216,8 +216,14 @@ describe('Editor', function() {
     });
 
     it('formatted embed', function() {
-      let editor = this.initialize(Editor, '<p></p>');
+      let editor = this.initialize(Editor, '');
       editor.applyDelta(new Delta().insert({ image: '/assets/favicon.png'}, { italic: true }));
+      expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
+    });
+
+    it('old embed', function() {
+      let editor = this.initialize(Editor, '');
+      editor.applyDelta(new Delta().insert(1, { image: '/assets/favicon.png', italic: true }));
       expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
   });
