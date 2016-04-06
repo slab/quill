@@ -3,7 +3,7 @@ import equal from 'deep-equal';
 import Emitter from 'quill/core/emitter';
 import logger from 'quill/core/logger';
 
-let debug = logger('[quill:selection]');
+let debug = logger('quill:selection');
 
 
 class Range {

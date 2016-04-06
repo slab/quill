@@ -1,6 +1,5 @@
 import Emitter from 'quill/core/emitter';
 import Theme from 'quill/core/theme';
-import { bindKeys } from 'quill/modules/keyboard';
 import Picker from 'quill/ui/picker';
 import icons from 'quill/ui/icons';
 

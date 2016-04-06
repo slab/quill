@@ -1,7 +1,7 @@
 import Quill from 'quill/core';
 import Module from 'quill/core/module';
 import ImageBlot from 'quill/formats/image';
-import { bindKeys } from 'quill/modules/keyboard';
+import Keyboard from 'quill/modules/keyboard';
 
 
 class ImageTooltip extends Module {
@@ -13,9 +13,12 @@ class ImageTooltip extends Module {
     this.container.innerHTML = options.template;
     this.preview = this.container.querySelector('.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
-    bindKeys(this.textbox, {
-      'enter': this.save.bind(this),
-      'escape': this.hide.bind(this)
+    this.textbox.addEventListener('keydown', (evt) => {
+      if (Keyboard.match(evt, 'enter')) {
+        this.save();
+      } else if (Keyboard.match(evt, 'escape')) {
+        this.hide();
+      }
     });
     this.container.querySelector('a.ql-action').addEventListener('click', this.save.bind(this));
     this.container.querySelector('a.ql-cancel').addEventListener('click', this.hide.bind(this));

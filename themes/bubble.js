@@ -1,5 +1,5 @@
 import Emitter from 'quill/core/emitter';
-import { bindKeys } from 'quill/modules/keyboard';
+import Keyboard from 'quill/modules/keyboard';
 import BaseTheme from 'quill/themes/base';
 import icons from 'quill/ui/icons';
 
@@ -36,14 +36,13 @@ class BubbleTheme extends BaseTheme {
     close.addEventListener('click', () => {
       this.tooltip.classList.remove('ql-editing');
     });
-    bindKeys(input, {
-      'enter': () => {
+    input.addEventListener('keydown', (evt) => {
+      if (Keyboard.match(evt, 'enter')) {
         this.quill.focus();
         this.quill.format('link', input.value);
         this.tooltip.classList.add('ql-hidden');
         input.value = '';
-      },
-      'escape': () => {
+      } else if (Keyboard.match(evt, 'escape')) {
         this.tooltip.classList.remove('ql-editing');
       }
     });

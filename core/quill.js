@@ -9,7 +9,7 @@ import extend from 'extend';
 import logger from 'quill/core/logger';
 import Theme from 'quill/core/theme';
 
-let debug = logger('[quill]');
+let debug = logger('quill');
 
 
 class Quill {
@@ -54,9 +54,6 @@ class Quill {
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
     this.root = this.addContainer('ql-editor');
-    if (options.placeholder) {
-      this.root.setAttribute('data-placeholder', options.placeholder);
-    }
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
@@ -74,11 +71,14 @@ class Quill {
     if (options.readOnly) {
       this.disable();
     }
-    this.emitter.emit(Emitter.events.READY);
+    if (options.placeholder) {
+      this.root.setAttribute('data-placeholder', options.placeholder);
+    }
     this.root.classList.toggle('ql-empty', this.getLength() <= 1);
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       this.root.classList.toggle('ql-empty', this.getLength() <= 1);
     });
+    this.emitter.emit(Emitter.events.READY);
   }
 
   addContainer(container, refNode = null) {

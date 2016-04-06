@@ -2,7 +2,7 @@ import Quill from 'quill/core';
 import Module from 'quill/core/module';
 import { Range } from 'quill/core/selection';
 import LinkBlot from 'quill/formats/link';
-import { bindKeys } from 'quill/modules/keyboard';
+import Keyboard from 'quill/modules/keyboard';
 
 
 class LinkTooltip extends Module {
@@ -14,9 +14,12 @@ class LinkTooltip extends Module {
     this.container.innerHTML = this.options.template;
     this.preview = this.container.querySelector('a.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
-    bindKeys(this.textbox, {
-      'enter': this.save.bind(this),
-      'escape': this.hide.bind(this)
+    this.textbox.addEventListener('keydown', (evt) => {
+      if (Keyboard.match(evt, 'enter')) {
+        this.save();
+      } else if (Keyboard.match(evt, 'escape')) {
+        this.hide();
+      }
     });
     this.container.querySelector('a.ql-action').addEventListener('click', () => {
       if (this.container.classList.contains('ql-editing')) {

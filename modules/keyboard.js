@@ -12,6 +12,15 @@ let debug = logger('quill:keyboard');
 
 
 class Keyboard extends Module {
+  static match(evt, binding) {
+    binding = normalize(binding);
+    let metaKey = /Mac/i.test(navigator.platform) ? evt.metaKey : evt.metaKey || evt.ctrlKey;
+    if (!!binding.metaKey !== metaKey && binding.metaKey !== null) return false;
+    if (!!binding.shiftKey !== evt.shiftKey && binding.shiftKey !== null) return false;
+    if (!!binding.altKey !== evt.altKey && binding.altKey !== null) return false;
+    return true;
+  }
+
   constructor(quill, options) {
     super(quill, options);
     this.bindings = {};
@@ -29,7 +38,7 @@ class Keyboard extends Module {
       let which = evt.which || evt.keyCode;
       let handlers = (this.bindings[which] || []).reduce(function(handlers, binding) {
         let [key, handler] = binding;
-        if (match(evt, key)) handlers.push(handler);
+        if (Keyboard.match(evt, key)) handlers.push(handler);
         return handlers;
       }, []);
       if (handlers.length > 0) {
@@ -160,29 +169,6 @@ Keyboard.keys = {
   DELETE: 46
 }
 
-function bindKeys(target, keys) {
-  target.addEventListener('keydown', function(evt) {
-    if (Object.keys(keys).some(function(key) {
-      let which = evt.which || evt.keyCode;
-      if (which === key || which === Keyboard.keys[key.toUpperCase()]) {
-        keys[key]();
-        return true;
-      }
-      return false;
-    })) {
-      event.preventDefault();
-    }
-  });
-}
-
-function match(evt, binding) {
-  let metaKey = /Mac/i.test(navigator.platform) ? evt.metaKey : evt.metaKey || evt.ctrlKey;
-  if (!!binding.metaKey !== metaKey && binding.metaKey !== null) return false;
-  if (!!binding.shiftKey !== evt.shiftKey && binding.shiftKey !== null) return false;
-  if (!!binding.altKey !== evt.altKey && binding.altKey !== null) return false;
-  return true;
-}
-
 function normalize(binding) {
   switch (typeof binding) {
     case 'string':
@@ -210,4 +196,4 @@ function normalize(binding) {
 }
 
 
-export { Keyboard as default, bindKeys };
+export default Keyboard;
