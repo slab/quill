@@ -65,7 +65,7 @@ class Quill {
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.undoManager = this.theme.addModule('undo-manager');
-    let contents = this.clipboard.convert(`<div class='ql-editor'>${html}</div>`);
+    let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}</div>`);
     this.setContents(contents);
     this.undoManager.clear();
     if (options.readOnly) {
