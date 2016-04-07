@@ -67,7 +67,7 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     hot: false,
-    port: 9080,
+    port: process.env.npm_package_config_ports_webpack,
     stats: {
       assets: false,
       chunks: false,

@@ -16,6 +16,14 @@
     "core.js",
     "quill.js"
   ],
+  "config": {
+    "ports": {
+      "proxy": "9000",
+      "jekyll": "4000",
+      "karma": "9876",
+      "webpack": "9080"
+    }
+  },
   "dependencies": {
     "clone": "~1.0.2",
     "deep-equal": "~1.0.1",

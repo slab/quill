@@ -7,7 +7,7 @@ module.exports = function(config) {
   config.set({
     basePath: '../',
     urlRoot: '/karma/',
-    port: 9876,
+    port: process.env.npm_package_config_ports_karma,
 
     files: [
       { pattern: 'dist/quill.snow.css', nocache: true },
