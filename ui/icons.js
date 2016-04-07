@@ -8,6 +8,7 @@ module.exports = {
   'background': require('quill/assets/icons/background.svg'),
   'blockquote': require('quill/assets/icons/blockquote.svg'),
   'bold'      : require('quill/assets/icons/bold.svg'),
+  'clean'     : require('quill/assets/icons/clean.svg'),
   'color'     : require('quill/assets/icons/color.svg'),
   'italic'    : require('quill/assets/icons/italic.svg'),
   'header': {

@@ -83,10 +83,9 @@ SnowTheme.DEFAULTS = {
     'toolbar': {
       container: [
         [{ header: ['1', '2', '3', false] }],
-        [{ align: [false, 'center', 'right', 'justify'] }],
-        ['bold', 'italic', 'underline', 'strike'],
+        ['bold', 'italic', 'underline', 'link'],
         [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'remove']
+        ['clean']
       ]
     }
   }

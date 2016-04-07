@@ -28,7 +28,16 @@ class Toolbar extends Module {
     this.container.classList.add('ql-toolbar');
     this.container.classList.toggle('ios', /iPhone|iPad/i.test(navigator.userAgent));
     this.controls = [];
-    this.handlers = {};
+    this.handlers = {
+      'clean': () => {
+        let range = this.quill.getSelection();
+        if (range != null) {
+          this.quill.removeFormat(range);
+          this.quill.setSelection(range);
+        }
+        return true;
+      }
+    };
     [].forEach.call(this.container.querySelectorAll('a, button, input[type=button], select'), (input) => {
       this.attach(input);
     });
