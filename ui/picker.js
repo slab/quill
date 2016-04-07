@@ -78,13 +78,15 @@ class Picker {
   }
 
   update() {
-    let item, option;
+    let option;
     if (this.select.selectedIndex > -1) {
-      item = this.container.querySelectorAll('.ql-picker-item')[this.select.selectedIndex];
+      let item = this.container.querySelector('.ql-picker-options').children[this.select.selectedIndex]
       option = this.select.options[this.select.selectedIndex];
+      this.selectItem(item);
+    } else {
+      this.selectItem(null);
     }
-    this.selectItem(item);
-    let isActive = option !== this.select.querySelector('option[selected]');
+    let isActive = option != null && option !== this.select.querySelector('option[selected]');
     this.label.classList.toggle('ql-active', isActive);
   }
 }

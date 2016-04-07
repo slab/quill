@@ -119,6 +119,7 @@ class Editor {
         if (blot == null) return formats;
         formats = combineFormats(bubbleFormats(blot), formats);
       }
+      return formats;
     });
     return extend.apply(extend, formatsArr);
   }

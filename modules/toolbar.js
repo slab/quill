@@ -56,6 +56,7 @@ class Toolbar extends Module {
       this.quill.focus();
       let value;
       if (input.tagName === 'SELECT') {
+        if (input.selectedIndex < 0) return;
         value = input.options[input.selectedIndex].value || false;
       } else {
         value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
@@ -76,11 +77,21 @@ class Toolbar extends Module {
     this.controls.forEach(function(pair) {
       let [format, input] = pair;
       if (input.tagName === 'SELECT') {
+        let option;
         if (formats[format] == null) {
-          input.querySelector('option[selected]').selected = true;
-        } else {
-          input.value = Array.isArray(formats[format]) ? '' : formats[format];
+          option = input.querySelector('option[selected]');
+        } else if (!Array.isArray(formats[format])) {
+          option = input.querySelector(`option[value="${formats[format]}"]`);
         }
+        if (option == null) {
+          input.value = '';   // TODO make configurable?
+          input.selectedIndex = -1;
+        } else {
+          option.selected = true;
+        }
+        let event = document.createEvent('Event');
+        event.initEvent('change');
+        input.dispatchEvent(event);
       } if (input.hasAttribute('data-value')) {
         input.classList.toggle('ql-active', input.getAttribute('data-value') == formats[format]);  // Intentional ==
       } else {
