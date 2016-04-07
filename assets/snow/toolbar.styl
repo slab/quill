@@ -63,9 +63,10 @@ colorItemsPerRow = 7
     background-color: backgroundColor
     border: 1px solid transparent
     display: none
+    min-width: 100%
     padding: 4px 8px
     position: absolute
-    width: 100%
+    white-space: nowrap
     .ql-picker-item
       cursor: pointer
       display: block
@@ -117,6 +118,28 @@ colorItemsPerRow = 7
       margin-bottom: toolbarPadding
     .ql-picker-item.ql-selected, .ql-picker-item:hover
       border-color: #000
+
+  .ql-picker.ql-header
+    width: 98px
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Normal'
+    for num in (1..6)
+      .ql-picker-label[data-value=\"{num}\"]::before,
+      .ql-picker-item[data-value=\"{num}\"]::before
+        content: 'Heading ' + num
+    .ql-picker-item[data-value="1"]::before
+      font-size: 36px
+    .ql-picker-item[data-value="2"]::before
+      font-size: 30px
+    .ql-picker-item[data-value="3"]::before
+      font-size: 24px
+    .ql-picker-item[data-value="4"]::before
+      font-size: 18px
+    .ql-picker-item[data-value="5"]::before
+      font-size: 14px
+    .ql-picker-item[data-value="6"]::before
+      font-size: 12px
 
   .ql-picker.ql-font
     width: 108px

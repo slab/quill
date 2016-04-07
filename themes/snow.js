@@ -50,9 +50,9 @@ class SnowTheme extends BaseTheme {
         }
         let picker = new ColorPicker(select, icons[format]);
         this.pickers.push(picker);
-      } else if (select.classList.contains('ql-font')) {
-        this.pickers.push(new Picker(select));
-      } else if (select.classList.contains('ql-size')) {
+      } else if (select.classList.contains('ql-font') ||
+                 select.classList.contains('ql-size') ||
+                 select.classList.contains('ql-header')) {
         this.pickers.push(new Picker(select));
       }
     });
@@ -82,11 +82,11 @@ SnowTheme.DEFAULTS = {
   modules: {
     'toolbar': {
       container: [
-        [{ font: [false, 'serif', 'monospace'] }, { size: ['small', false, 'large', 'huge'] }],
+        [{ header: ['1', '2', '3', false] }],
+        [{ align: [false, 'center', 'right', 'justify'] }],
         ['bold', 'italic', 'underline', 'strike'],
-        [{ color: [] }, { background: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],
-        ['link', 'image']
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link', 'remove']
       ]
     }
   }
