@@ -1,6 +1,21 @@
 {
   "name": "quill",
   "version": "1.0.0",
+  "description": "Cross browser rich text editor",
+  "author": "Jason Chen <jhchen7@gmail.com>",
+  "homepage": "http://quilljs.com",
+  "main": "dist/quill.js",
+  "files": [
+    "assets", "blots", "core", "formats", "modules", "themes", "ui",
+    "dist/quill.bubble.css",
+    "dist/quill.snow.css",
+    "dist/quill.css",
+    "dist/quill.js",
+    "dist/quill.min.js.map",
+    "dist/quill.min.js",
+    "core.js",
+    "quill.js"
+  ],
   "dependencies": {
     "clone": "~1.0.2",
     "deep-equal": "~1.0.1",
@@ -36,6 +51,14 @@
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
   },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quilljs/quill"
+  },
+  "bugs": {
+    "url": "https://github.com/quilljs/quill/issues"
+  },
   "scripts": {
     "build": "webpack --config _develop/webpack.config.js --devtool hidden-source-map",
     "start": "npm run build; foreman start -f _develop/procfile",
@@ -43,5 +66,9 @@
     "test:coverage": "webpack --config _develop/webpack.coverage.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs"
   },
-  "private": true
+  "keywords": [
+    "editor",
+    "rich text",
+    "wysiwyg"
+  ]
 }
