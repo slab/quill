@@ -19,7 +19,7 @@ Let's jump straight in with a complete example!
 
 <!-- more -->
 
-<div data-height="406" data-theme-id="7845" data-slug-hash="qkniF" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="406" data-theme-id="23270" data-slug-hash="qkniF" data-default-tab="js" class='codepen'><pre><code>
 // Implement and register module
 Quill.registerModule('counter', function(quill, options) {
   var container = document.querySelector('#counter');
@@ -45,7 +45,7 @@ That's all it takes to add a custom module to Quill! A function can be [register
 
 Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container instead of a hard-coded string. Let's also customize the counter to either count words or characters:
 
-<div data-height="466" data-theme-id="7845" data-slug-hash="eKIBb" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="466" data-theme-id="23270" data-slug-hash="eKIBb" data-default-tab="js" class='codepen'><pre><code>
 Quill.registerModule('counter', function(quill, options) {
   var container = document.querySelector(options.container);
   quill.on('text-change', function() {
@@ -72,7 +72,7 @@ var quill = new Quill('#editor', {
 
 Since any function can be registered as a Quill module, we could have implemented our counter as a constructor. This allows us to access and utilize the module directly.
 
-<div data-height="666" data-theme-id="7845" data-slug-hash="zCIur" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="666" data-theme-id="23270" data-slug-hash="zCIur" data-default-tab="js" class='codepen'><pre><code>
 var Counter = function(quill, options) {
   this.quill = quill;
   this.options = options;
@@ -109,7 +109,7 @@ console.log(counter.calculate(), 'words');
 
 Now let's polish off the module and fix a few pesky bugs.
 
-<div data-height="766" data-theme-id="7845" data-slug-hash="wxtvI" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="766" data-theme-id="23270" data-slug-hash="wxtvI" data-default-tab="js" class='codepen'><pre><code>
 var Counter = function(quill, options) {
   this.quill = quill;
   this.options = options;
