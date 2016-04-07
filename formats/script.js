@@ -11,10 +11,14 @@ class Script extends Inline {
     }
   }
 
-  formats() {
-    let format = super.formats();
-    format.script = this.domNode.tagName === 'SUP' ? 'super' : 'sub';
-    return format;
+  static formats(domNode) {
+    let formats = {};
+    if (domNode.tagName === 'SUB') {
+      formats['script'] = 'sub';
+    } else if (domNode.tagName === 'SUP') {
+      formats['script'] = 'super';
+    }
+    return formats;
   }
 }
 Script.blotName = 'script';

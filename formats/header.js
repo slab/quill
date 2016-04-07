@@ -2,10 +2,13 @@ import Block from 'quill/blots/block';
 
 
 class Header extends Block {
-  formats() {
-    let format = super.formats();
-    format.header = Header.tagName.indexOf(this.domNode.tagName) + 1;
-    return format;
+  static formats(domNode) {
+    let formats = {};
+    let index = this.tagName.indexOf(domNode.tagName);
+    if (index > -1) {
+      formats[this.blotName] = index + 1;
+    }
+    return formats;
   }
 
   optimize(mutations) {
