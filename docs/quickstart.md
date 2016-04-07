@@ -2,7 +2,6 @@
 layout: docs
 title: Quickstart
 permalink: /docs/quickstart/
-redirect_from: /docs/editor/
 ---
 
 # Quickstart

@@ -16,7 +16,7 @@ permalink: /standalone/snow/
     height: 350px;
   }
 </style>
-<!-- section -->
+<!-- head -->
 <div id="editor-container"><pre>var test = true;
 var no = false;</pre></div>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>

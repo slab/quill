@@ -2,7 +2,8 @@
 layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
-stylesheet: '!site.cdn!!site.version!/quill.snow.css'
+stylesheets:
+  - '!site.cdn!!site.version!/quill.snow.css'
 ---
 
 # Toolbar

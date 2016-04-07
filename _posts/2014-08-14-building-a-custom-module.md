@@ -1,7 +1,8 @@
 ---
 layout: post
 permalink: /blog/building-a-custom-module/
-javascript: //codepen.io/assets/embed/ei.js
+javascripts:
+  - '//codepen.io/assets/embed/ei.js'
 ---
 
 Quill's core strength as an editor is its rich API and powerful customization capabilities. One of the best ways to customize Quill is with a module. A module is a simple way to augment Quill's functionality. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.

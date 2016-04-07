@@ -3,9 +3,9 @@
 <head>
   <title>{{ page.title }}{% if page.path != "/index.html" %} - Quill{% endif %}</title>
   {% include meta.html %}
-  {{ content | split: '<!-- section -->' | first }}
+  {{ content | split: '<!-- head -->' | first }}
 </head>
 <body>
-  {{ content | split: '<!-- section -->' | last }}
+  {{ content | split: '<!-- head -->' | last }}
 </body>
 </html>

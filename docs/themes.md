@@ -2,7 +2,6 @@
 layout: docs
 title: Themes
 permalink: /docs/themes/
-stability: yellow
 ---
 
 # Themes

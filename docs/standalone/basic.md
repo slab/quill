@@ -19,7 +19,7 @@ permalink: /standalone/basic/
     height: 250px;
   }
 </style>
-<!-- section -->
+<!-- head -->
 <div id="toolbar-container">
   <select class="ql-font" title="Font">
     <option selected>Sans Serif</option>

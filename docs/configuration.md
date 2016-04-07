@@ -2,7 +2,6 @@
 layout: docs
 title: Configuration
 permalink: /docs/configuration/
-redirect_from: /docs/editor/configuration/
 ---
 
 TODO: Review

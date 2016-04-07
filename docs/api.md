@@ -2,7 +2,6 @@
 layout: docs
 title: API
 permalink: /docs/api/
-redirect_from: /docs/editor/api/
 ---
 
 # API

@@ -2,8 +2,11 @@
 layout: default
 title: Quill - A Rich Text WYSIWYG Editor with an API
 description: Quill is a free, open source WYSIWYG editor built for the modern web. With its expressive API, you can completely customize it to fulfill your needs.
-stylesheet: '!site.cdn!!site.version!/quill.snow.css'
-javascript: '/assets/js/index.js'
+stylesheets:
+  - '!site.cdn!!site.version!/quill.snow.css'
+javascripts:
+  - '/assets/js/index.js'
+  - '!site.cdn!!site.version!/quill.js'
 bodyClass: 'home'
 redirect_from: /latest/
 ---
@@ -132,5 +135,3 @@ redirect_from: /latest/
     <a href="https://github.com/quilljs/quill/releases/download/v{{ site.version }}/quill.tar.gz" class="btn-lg btn" title="Quill v{{ site.version }}" onclick="ga('send','event','download',this.href);">Download Quill</a>
   </div>
 </div>
-
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>

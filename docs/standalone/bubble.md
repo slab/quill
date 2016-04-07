@@ -14,7 +14,7 @@ permalink: /standalone/bubble/
     height: 350px;
   }
 </style>
-<!-- section -->
+<!-- head -->
 <div id="editor-container"><p>Test</p></div>
 <script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
