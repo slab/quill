@@ -55,9 +55,9 @@ Instantiate a new Quill object with a css selector for the div that should becom
 ### CDN
 
 ```html
-<link href="//cdn.quilljs.com/0.19.10/quill.css" rel="stylesheet" />
-<link href="//cdn.quilljs.com/0.19.10/quill.snow.css" rel="stylesheet" />
-<link href="//cdn.quilljs.com/0.19.10/quill.bubble.css" rel="stylesheet" />
+<link href="//cdn.quilljs.com/0.19.10/quill.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/0.19.10/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/0.19.10/quill.bubble.css" rel="stylesheet">
 <script src="//cdn.quilljs.com/0.19.10/quill.js" type="text/javascript"></script>
 <script src="//cdn.quilljs.com/0.19.10/quill.min.js" type="text/javascript"></script>
   ```
