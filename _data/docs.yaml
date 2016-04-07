@@ -6,16 +6,32 @@
   url: /docs/formats/
 - title: API
   url: /docs/api/
-- title: Events
-  url: /docs/events/
-- title: Deltas
-  url: /docs/deltas/
+  children:
+    - title: Content
+      url: /docs/api/#content
+    - title: Selection
+      url: /docs/api/#selection
+    - title: Events
+      url: /docs/api/#events
+    - title: Extension
+      url: /docs/api/#extension
 - title: Modules
   url: /docs/modules/
   children:
+    - title: Clipboard
+      url: /docs/modules/clipboard/
+    - title: Keyboard
+      url: /docs/modules/keyboard/
+    - title: Undo Manager
+      url: /docs/modules/undo-manager/
     - title: Toolbar
       url: /docs/modules/toolbar/
+    - title: Code Highlighter
+      url: /docs/modules/code-highlighter/
 - title: Themes
   url: /docs/themes/
-- title: Examples
-  url: /examples/
+  children:
+    - title: Snow
+      url: /docs/themes/snow/
+    - title: Bubble
+      url: /docs/themes/bubble/

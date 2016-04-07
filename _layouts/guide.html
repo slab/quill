@@ -6,22 +6,22 @@ layout: default
   <div id="sidebar-dropdown">
     <div class="btn-group">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        Navigate the Docs... <span class="caret"></span>
+        Navigate the Guides... <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        {% include sidebar.html items=site.data.docs %}
+        {% include sidebar.html items=site.data.guides %}
       </ul>
     </div>
   </div>
 
   <div class="row">
-    <div id="docs-container" class="col-sm-9">
+    <div id="guide-container" class="col-sm-9">
       {{ content }}
     </div>
     <div id="sidebar-container" class="col-sm-3">
       <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
         <ul class="nav">
-          {% include sidebar.html navClass="nav" items=site.data.docs %}
+          {% include sidebar.html navClass="nav" items=site.data.guides %}
         </ul>
       </div>
     </div>

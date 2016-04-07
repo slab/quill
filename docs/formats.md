@@ -5,6 +5,8 @@ permalink: /docs/formats/
 redirect_from: /docs/editor/formats/
 ---
 
+TODO: Review
+
 # Formats
 
 Quill currently supports a number of formats. Enabling a format:

@@ -2,10 +2,11 @@
 layout: docs
 title: Modules
 permalink: /docs/modules/
-stability: yellow
 ---
 
 # Modules
+
+TODO: Review
 
 Modules allow Quill's behavior and functionality to customized. To enable a module, simply add it to the editor at initialization:
 
@@ -18,4 +19,3 @@ var editor = new Quill('#editor', {
 A few common and officially supported modules are listed here:
 
 - [Toolbar](/docs/modules/toolbar/)
-

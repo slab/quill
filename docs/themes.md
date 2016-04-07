@@ -7,6 +7,8 @@ stability: yellow
 
 # Themes
 
+TODO: Review
+
 Themes allow you to easily make your Quill editor look good with minimal effort.
 
 To use a custom theme, simply add its stylesheet in the `<head>`:
