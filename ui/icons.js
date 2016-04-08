@@ -9,7 +9,9 @@ module.exports = {
   'blockquote': require('quill/assets/icons/blockquote.svg'),
   'bold'      : require('quill/assets/icons/bold.svg'),
   'clean'     : require('quill/assets/icons/clean.svg'),
+  'code-block': require('quill/assets/icons/code.svg'),
   'color'     : require('quill/assets/icons/color.svg'),
+  'formula'   : require('quill/assets/icons/formula.svg'),
   'italic'    : require('quill/assets/icons/italic.svg'),
   'header': {
     '1'       : require('quill/assets/icons/header.svg'),
@@ -22,5 +24,6 @@ module.exports = {
     'bullet'  : require('quill/assets/icons/list-bullet.svg')
   },
   'strike'    : require('quill/assets/icons/strike.svg'),
-  'underline' : require('quill/assets/icons/underline.svg')
+  'underline' : require('quill/assets/icons/underline.svg'),
+  'video'     : require('quill/assets/icons/video.svg')
 };
