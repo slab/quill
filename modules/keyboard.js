@@ -27,7 +27,7 @@ class Keyboard extends Module {
     this.addBinding({ key: 'B', metaKey: true }, this.onFormat.bind(this, 'bold'));
     this.addBinding({ key: 'I', metaKey: true }, this.onFormat.bind(this, 'italic'));
     this.addBinding({ key: 'U', metaKey: true }, this.onFormat.bind(this, 'underline'));
-    this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
+    // this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDelete.bind(this, true));
     this.addBinding({ key: Keyboard.keys.DELETE }, this.onDelete.bind(this, false));
     // TODO implement
@@ -75,7 +75,9 @@ class Keyboard extends Module {
           line.format('list', false);
         }
       } else {
+        console.log('1', this.quill.root.innerHTML);
         this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+        console.log('2', this.quill.root.innerHTML);
         range = new Range(Math.max(0, range.index - 1));
       }
     }

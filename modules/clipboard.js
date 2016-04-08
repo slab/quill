@@ -190,7 +190,8 @@ function matchBlot(node, delta) {
 }
 
 function matchNewline(node, delta) {
-  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
+  if (!isLine(node)) return delta;
+  if (computeStyle(node).whiteSpace.startsWith('pre') || !deltaEndsWith(delta, '\n')) {
     delta.insert('\n');
   }
   return delta;
@@ -207,14 +208,14 @@ function matchSpacing(node, delta) {
 
 function matchText(node, delta) {
   let text = node.data;
-  if (computeStyle(node.parentNode).whiteSpace.slice(0, 3) === 'pre') {
+  if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     text = text.replace(/\s\s+/g, ' ');
-  }
-  if (node.previousSibling == null || isLine(node.previousSibling)) {
-    text = text.replace(/^\s+/, '');
-  }
-  if (node.nextSibling == null || isLine(node.nextSibling)) {
-    text = text.replace(/\s+$/, '');
+    if (node.previousSibling == null || isLine(node.previousSibling)) {
+      text = text.replace(/^\s+/, '');
+    }
+    if (node.nextSibling == null || isLine(node.nextSibling)) {
+      text = text.replace(/\s+$/, '');
+    }
   }
   return delta.insert(text);
 }
