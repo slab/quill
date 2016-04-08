@@ -18,22 +18,12 @@ class SnowTheme extends BaseTheme {
   constructor(quill, options) {
     super(quill, options);
     this.quill.container.classList.add('ql-snow');
-    this.pickers = [];
-    document.body.addEventListener('click', (e) => {
-      this.pickers.forEach(function(picker) {
-        if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {
-          picker.close();
-        }
-      });
-    });
-    this.quill.on(Emitter.events.SELECTION_CHANGE, this.updatePickers, this)
-              .on(Emitter.events.TEXT_CHANGE, this.updatePickers, this);
   }
 
   buildPickers(selects) {
-    selects.forEach((select) => {
+    let pickers = selects.map((select) => {
       if (select.classList.contains('ql-align')) {
-        this.pickers.push(new IconPicker(select, icons.align));
+        return new IconPicker(select, icons.align);
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
         let format = select.classList.contains('ql-background') ? 'background' : 'color';
         if (select.querySelector('option') == null) {
@@ -48,13 +38,26 @@ class SnowTheme extends BaseTheme {
             select.appendChild(option);
           });
         }
-        let picker = new ColorPicker(select, icons[format]);
-        this.pickers.push(picker);
+        return new ColorPicker(select, icons[format]);
       } else if (select.classList.contains('ql-font') ||
                  select.classList.contains('ql-size') ||
                  select.classList.contains('ql-header')) {
-        this.pickers.push(new Picker(select));
+        return new Picker(select);
       }
+    });
+    let update = function() {
+      pickers.forEach(function(picker) {
+        picker.update();
+      });
+    };
+    this.quill.on(Emitter.events.SELECTION_CHANGE, update)
+              .on(Emitter.events.TEXT_CHANGE, update);
+    document.body.addEventListener('click', (e) => {
+      pickers.forEach(function(picker) {
+        if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {
+          picker.close();
+        }
+      });
     });
   }
 
@@ -70,12 +73,6 @@ class SnowTheme extends BaseTheme {
       this.linkTooltip.open(this.quill.selection.savedRange);
       return true;
     }
-  }
-
-  updatePickers() {
-    this.pickers.forEach(function(picker) {
-      picker.update();
-    });
   }
 }
 SnowTheme.DEFAULTS = {
