@@ -18,8 +18,8 @@ import './unit/formats/header';
 import './unit/formats/list';
 
 import './unit/modules/clipboard';
+import './unit/modules/history';
 import './unit/modules/toolbar';
-import './unit/modules/undo-manager';
 
 import './unit/themes/snow';
 

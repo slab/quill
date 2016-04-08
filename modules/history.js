@@ -2,7 +2,7 @@ import Quill from 'quill/core';
 import Module from 'quill/core/module';
 
 
-class UndoManager extends Module {
+class History extends Module {
   constructor(quill, options) {
     super(quill, options);
     this.lastRecorded = 0;
@@ -76,7 +76,7 @@ class UndoManager extends Module {
     this.change('undo', 'redo');
   }
 }
-UndoManager.DEFAULTS = {
+History.DEFAULTS = {
   delay: 1000,
   maxStack: 100,
   userOnly: false
@@ -100,4 +100,4 @@ function getLastChangeIndex(delta) {
 }
 
 
-export default UndoManager;
+export default History;
