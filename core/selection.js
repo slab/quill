@@ -1,5 +1,6 @@
 import Parchment from 'parchment';
 import equal from 'deep-equal';
+import BreakBlot from 'quill/blots/break';
 import Emitter from 'quill/core/emitter';
 import logger from 'quill/core/logger';
 
@@ -89,7 +90,11 @@ class Selection {
         }
         var rect = range.getBoundingClientRect();
       } else {
-        var rect = leaf.domNode.getBoundingClientRect();
+        if (leaf instanceof BreakBlot) {
+          var rect = leaf.parent.domNode.getBoundingClientRect();
+        } else {
+          var rect = leaf.domNode.getBoundingClientRect();
+        }
         if (offset > 0) side = 'right';
       }
       bounds = {
