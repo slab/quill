@@ -62,7 +62,7 @@ class Clipboard extends Module {
     };
     let delta = traverse(this.container);
     // Remove trailing newline
-    if (deltaEndsWith(delta, '\n')) {
+    if (deltaEndsWith(delta, '\n') && delta.ops[delta.ops.length - 1].attributes == null) {
       delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
     debug.info('convert', this.container.innerHTML, delta);
