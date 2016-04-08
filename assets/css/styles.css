@@ -89,6 +89,15 @@ footer li {
   border-bottom: 0px;
 }
 
+.home .ql-toolbar.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+.home .ql-toolbar.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+  content: "Heading";
+}
+.home .ql-toolbar.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+.home .ql-toolbar.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+  content: "Subheading";
+}
+
 .quill-wrapper {
   background-color: #fff;
   border-left: 1px solid #ccc;

@@ -3,9 +3,7 @@ var quill;   // Expose as global so people can easily try out the API
 $(document).ready(function() {
   quill = new Quill('#editor', {
     modules: {
-      'toolbar': { container: '#toolbar' },
-      'link-tooltip': true,
-      'image-tooltip': true
+      'toolbar': { container: '#toolbar' }
     },
     theme: 'snow'
   });
@@ -13,6 +11,9 @@ $(document).ready(function() {
   // Bootstrap Toolbar has positioning but when showing manually when tooltip is offscreen
   $('.quill-wrapper').tooltip({ trigger: 'manual', animation: false }).tooltip('show');
   $('.quill-wrapper + .tooltip').hide();
+  $(window).one('resize', function() {
+    $('.quill-wrapper').tooltip('destroy');
+  });
   var tooltipTimer = setTimeout(function() {
     $('.quill-wrapper + .tooltip').fadeIn(1000);
   }, 2500);

@@ -16,23 +16,21 @@ redirect_from: /latest/
   <div class="quill-wrapper" data-toggle="tooltip" data-placement="left" title="Try me out!">
     <div id="toolbar" class="toolbar">
       <span class="ql-formats">
-        <select class="ql-font">
-          <option selected></option>
-          <option value="serif"></option>
-          <option value="monospace"></option>
+        <select class="ql-header">
+          <option value="1">Heading</option>
+          <option value="2">Subheading</option>
+          <option selected>Normal</option>
         </select>
-        <select class="ql-size">
-          <option value="small"></option>
-          <option selected></option>
-          <option value="large"></option>
-          <option value="huge"></option>
+        <select class="ql-font">
+          <option selected>Sans Serif</option>
+          <option value="serif">Serif</option>
+          <option value="monospace">Monospace</option>
         </select>
       </span>
       <span class="ql-formats">
         <button class="ql-bold"></button>
         <button class="ql-italic"></button>
         <button class="ql-underline"></button>
-        <button class="ql-strike"></button>
       </span>
       <span class="ql-formats">
         <select class="ql-color"></select>
@@ -51,10 +49,18 @@ redirect_from: /latest/
       <span class="ql-formats">
         <button class="ql-link"></button>
         <button class="ql-image"></button>
+        <button class="ql-video"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-formula"></button>
+        <button class="ql-code-block"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-clean"></button>
       </span>
     </div>
     <div id="editor" class="editor">
-      <h2>Quill Rich Text Editor</h2>
+      <h1>Quill Rich Text Editor</h1>
       <p><br></p>
       <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">extensible architecture</a> and an <a href="https://quilljs.com/docs/api/">expressive API</a> you can completely customize it to fulfill your needs. Some built in features include:</p>
       <p><br></p>
