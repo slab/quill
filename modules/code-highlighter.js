@@ -59,6 +59,7 @@ class CodeHighlighter extends Module {
     this.quill.scroll.descendants(HighlightCodeBlock).forEach(function(code) {
       code.highlight();
     });
+    this.quill.update(Quill.sources.SILENT);
     if (range != null) {
       this.quill.setSelection(range, Quill.sources.SILENT);
     }
