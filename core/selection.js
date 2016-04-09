@@ -193,6 +193,7 @@ class Selection {
   }
 
   setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset) {
+    debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
     let selection = document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
@@ -215,6 +216,7 @@ class Selection {
   }
 
   setRange(range, source = Emitter.sources.API) {
+    debug.info('setRange', range);
     if (range != null) {
       let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
       let args = [];

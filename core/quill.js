@@ -74,6 +74,9 @@ class Quill {
     if (options.placeholder) {
       this.root.setAttribute('data-placeholder', options.placeholder);
     }
+    if (options.debug) {
+      Quill.debug(options.debug);
+    }
     this.root.classList.toggle('ql-empty', this.getLength() <= 1);
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       this.root.classList.toggle('ql-empty', this.getLength() <= 1);
