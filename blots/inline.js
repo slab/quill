@@ -1,3 +1,4 @@
+import extend from 'extend';
 import Parchment from 'parchment';
 
 

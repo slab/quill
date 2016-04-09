@@ -184,7 +184,9 @@ function matchBlot(node, delta) {
     embed[match.blotName] = match.value(node);
     delta.insert(embed, match.formats(node));
   } else if (typeof match.formats === 'function') {
-    delta = delta.compose(new Delta().retain(delta.length(), match.formats(node)));
+    let formats = {};
+    formats[match.blotName] = match.formats(node);
+    delta = delta.compose(new Delta().retain(delta.length(), formats));
   }
   return delta;
 }
@@ -210,12 +212,12 @@ function matchText(node, delta) {
   let text = node.data;
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     text = text.replace(/\s\s+/g, ' ');
-    if (node.previousSibling == null || isLine(node.previousSibling)) {
-      text = text.replace(/^\s+/, '');
-    }
-    if (node.nextSibling == null || isLine(node.nextSibling)) {
-      text = text.replace(/\s+$/, '');
-    }
+  }
+  if (node.previousSibling == null || isLine(node.previousSibling)) {
+    text = text.replace(/^\s+/, '');
+  }
+  if (node.nextSibling == null || isLine(node.nextSibling)) {
+    text = text.replace(/\s+$/, '');
   }
   return delta.insert(text);
 }

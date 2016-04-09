@@ -1,12 +1,12 @@
 import Parchment from 'parchment';
 import Emitter from 'quill/core/emitter';
 import BreakBlot from 'quill/blots/break';
-import Block, { EmbedBlock } from 'quill/blots/block';
+import Block, { BlockEmbed } from 'quill/blots/block';
 import CursorBlot from 'quill/blots/cursor';
 
 
 function isLine(blot) {
-  return (blot instanceof Block || blot instanceof EmbedBlock);
+  return (blot instanceof Block || blot instanceof BlockEmbed);
 }
 
 

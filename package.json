@@ -6,7 +6,13 @@
   "homepage": "http://quilljs.com",
   "main": "dist/quill.js",
   "files": [
-    "assets", "blots", "core", "formats", "modules", "themes", "ui",
+    "assets",
+    "blots",
+    "core",
+    "formats",
+    "modules",
+    "themes",
+    "ui",
     "dist/quill.bubble.css",
     "dist/quill.snow.css",
     "dist/quill.css",
@@ -29,7 +35,7 @@
     "deep-equal": "~1.0.1",
     "eventemitter3": "~1.2.0",
     "extend": "~3.0.0",
-    "parchment": "quilljs/parchment.git#f043b21f2c7a10a33e6eeb89bf2006f9e369cb8e",
+    "parchment": "quilljs/parchment.git#3a93f80b1cef25ec28bdc2b1534812b4bf55afc8",
     "rich-text": "~2.1.1"
   },
   "devDependencies": {
