@@ -220,9 +220,10 @@ class Selection {
     if (range != null) {
       let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
       let args = [];
-      indexes.map((index, i) => {
-        let [leaf, offset] = findLeaf(this.scroll, index);
-        args.push.apply(args, leaf.position(offset, i !== 0));
+      indexes.forEach((index, i) => {
+        let node, [leaf, offset] = findLeaf(this.scroll, index);
+        [node, offset] = leaf.position(offset, i !== 0);
+        args.push(node, offset);
       });
       this.setNativeRange(...args);
     } else {

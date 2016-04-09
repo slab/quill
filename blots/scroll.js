@@ -87,9 +87,9 @@ class Scroll extends Parchment.Scroll {
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
-    super.update(mutations);
+    super.update(mutations.concat([]));
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_UPDATE, source);
+      this.emitter.emit(Emitter.events.SCROLL_UPDATE, source, mutations);
     }
   }
 }
