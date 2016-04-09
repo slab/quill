@@ -11,11 +11,7 @@ class Link extends Inline {
   }
 
   static formats(domNode) {
-    let formats = super.formats(domNode);
-    if (domNode.hasAttribute('href')) {
-      formats[this.blotName] = domNode.getAttribute('href')
-    }
-    return formats;
+    return domNode.getAttribute('href');
   }
 
   static sanitize(url) {

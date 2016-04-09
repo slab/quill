@@ -7,7 +7,7 @@ import BreakBlot from 'quill/blots/break';
 const NEWLINE_LENGTH = 1;
 
 
-class EmbedBlock extends Parchment.Embed {
+class BlockEmbed extends Parchment.Embed {
   attach() {
     super.attach();
     this.attributes = new Parchment.Attributor.Store(this.domNode);
@@ -21,8 +21,36 @@ class EmbedBlock extends Parchment.Embed {
     return super.length() + NEWLINE_LENGTH;
   }
 }
-EmbedBlock.scope = Parchment.Scope.BLOCK_BLOT;
-// It is important for cursor behavior EmbedBlocks use tags that are block level elements
+BlockEmbed.scope = Parchment.Scope.BLOCK_BLOT;
+// It is important for cursor behavior BlockEmbeds use tags that are block level elements
+
+
+class BlockContainer extends Parchment.Container {
+  formats() {
+    let formats = {};
+    formats[this.statics.blotName] = this.statics.formats(this.domNode);
+    return formats;
+  }
+
+  optimize(mutations) {
+    super.optimize();
+    let next = this.next;
+    if (next != null && next.prev === this &&
+        next.statics.blotName === this.statics.blotName &&
+        next.domNode.tagName === this.domNode.tagName) {
+      next.moveChildren(this);
+      next.remove();
+    }
+  }
+
+  replace(target) {
+    super.replace(target);
+    let item = Parchment.create(this.statics.childless);
+    this.moveChildren(item);
+    this.appendChild(item);
+  }
+}
+BlockContainer.scope = Parchment.Scope.BLOCK_BLOT;
 
 
 class Block extends Parchment.Block {
@@ -38,7 +66,7 @@ class Block extends Parchment.Block {
       } else {
         return delta.insert(leaf.value(), bubbleFormats(leaf));
       }
-    }, new Delta()).insert('\n', this.formats());
+    }, new Delta()).insert('\n', bubbleFormats(this));
   }
 
   formatAt(index, length, name, value) {
@@ -106,18 +134,16 @@ Block.childless = 'break';
 Block.tagName = 'P';
 
 
-function bubbleFormats(blot) {
-  if (blot == null) return {};
-  if (blot instanceof Block) return blot.formats();
-  let formats = typeof blot.formats === 'function' ? blot.formats() : {};
-  while (blot.parent != null && blot.parent.statics.scope === Parchment.Scope.INLINE_BLOT) {
-    blot = blot.parent;
-    if (typeof blot.formats === 'function') {
-      formats = extend(formats, blot.formats());
-    }
+function bubbleFormats(blot, formats = {}) {
+  if (blot == null) return formats;
+  if (typeof blot.formats === 'function') {
+    formats = extend(formats, blot.formats());
   }
-  return formats;
+  if (blot.parent == null || blot.parent.blotName == 'scroll' || blot.parent.statics.scope !== blot.statics.scope) {
+    return formats;
+  }
+  return bubbleFormats(blot.parent, formats);
 }
 
 
-export { bubbleFormats, EmbedBlock, Block as default };
+export { bubbleFormats, BlockEmbed, BlockContainer, Block as default };

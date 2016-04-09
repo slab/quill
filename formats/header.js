@@ -3,12 +3,7 @@ import Block from 'quill/blots/block';
 
 class Header extends Block {
   static formats(domNode) {
-    let formats = {};
-    let index = this.tagName.indexOf(domNode.tagName);
-    if (index > -1) {
-      formats[this.blotName] = index + 1;
-    }
-    return formats;
+    return this.tagName.indexOf(domNode.tagName) + 1;
   }
 
   optimize(mutations) {

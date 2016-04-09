@@ -184,13 +184,16 @@ function matchBlot(node, delta) {
     embed[match.blotName] = match.value(node);
     delta.insert(embed, match.formats(node));
   } else if (typeof match.formats === 'function') {
-    delta = delta.compose(new Delta().retain(delta.length(), match.formats(node)));
+    let formats = {};
+    formats[match.blotName] = match.formats(node);
+    delta = delta.compose(new Delta().retain(delta.length(), formats));
   }
   return delta;
 }
 
 function matchNewline(node, delta) {
-  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
+  if (!isLine(node)) return delta;
+  if (computeStyle(node).whiteSpace.startsWith('pre') || !deltaEndsWith(delta, '\n')) {
     delta.insert('\n');
   }
   return delta;
@@ -207,7 +210,7 @@ function matchSpacing(node, delta) {
 
 function matchText(node, delta) {
   let text = node.data;
-  if (computeStyle(node.parentNode).whiteSpace.slice(0, 3) === 'pre') {
+  if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     text = text.replace(/\s\s+/g, ' ');
   }
   if (node.previousSibling == null || isLine(node.previousSibling)) {

@@ -27,7 +27,7 @@ class Keyboard extends Module {
     this.addBinding({ key: 'B', metaKey: true }, this.onFormat.bind(this, 'bold'));
     this.addBinding({ key: 'I', metaKey: true }, this.onFormat.bind(this, 'italic'));
     this.addBinding({ key: 'U', metaKey: true }, this.onFormat.bind(this, 'underline'));
-    this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
+    // this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDelete.bind(this, true));
     this.addBinding({ key: Keyboard.keys.DELETE }, this.onDelete.bind(this, false));
     // TODO implement
@@ -94,18 +94,7 @@ class Keyboard extends Module {
     let delta = new Delta()
       .retain(range.index)
       .insert('\n', lineFormats);
-    if (range.length === 0) {
-      let [line, offset] = this.quill.scroll.line(range.index);
-      // Browsers do not display a newline with just <pre>\n</pre>
-      if (line.statics.blotName === 'code-block' &&
-          offset >= line.length() - 1 &&
-          this.quill.getText(range.index - 1, 1) !== '\n') {
-        delta.insert('\n', lineFormats);
-        added += 1;
-      }
-    } else {
-      delta.delete(range.length);
-    }
+    delta.delete(range.length);
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index + added, Quill.sources.SILENT);
     Object.keys(formats).forEach((name) => {

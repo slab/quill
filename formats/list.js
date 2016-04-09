@@ -1,10 +1,10 @@
 import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Block from 'quill/blots/block';
+import Block, { BlockContainer } from 'quill/blots/block';
 
 
-class List extends Parchment.Container {
+class List extends BlockContainer {
   static create(value) {
     if (value === 'ordered') {
       value = 'OL';
@@ -14,34 +14,20 @@ class List extends Parchment.Container {
     return super.create(value);
   }
 
-  optimize(mutations) {
-    super.optimize();
-    let next = this.next;
-    if (next instanceof List && next.prev === this && next.domNode.tagName === this.domNode.tagName) {
-      next.moveChildren(this);
-      next.remove();
-    }
-  }
-
-  replace(target) {
-    super.replace(target);
-    let item = Parchment.create('list-item');
-    this.moveChildren(item);
-    this.appendChild(item);
+  static formats(domNode) {
+    if (domNode.tagName === 'OL') return 'ordered';
+    if (domNode.tagName === 'UL') return 'bullet';
+    return undefined;
   }
 }
 List.blotName = 'list';
-List.scope = Parchment.Scope.BLOCK_BLOT;
+List.childless = 'list-item';
 List.tagName = ['OL', 'UL'];
 
 
 class ListItem extends Block {
   static formats(domNode) {
-    let format = {};
-    if (domNode.parentNode != null) {
-      format['list'] = domNode.parentNode.tagName === 'OL' ? 'ordered' : 'bullet';
-    }
-    return format;
+    return domNode.tagName === ListItem.tagName ? undefined : super.formats(domNode);
   }
 
   format(name, value) {
@@ -50,12 +36,6 @@ class ListItem extends Block {
     } else {
       super.format(name, value);
     }
-  }
-
-  formats() {
-    let format = super.formats();
-    delete format[this.statics.blotName];
-    return extend(this.statics.formats(this.domNode), format);
   }
 
   replaceWith(name, value) {

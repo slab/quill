@@ -12,13 +12,9 @@ class Script extends Inline {
   }
 
   static formats(domNode) {
-    let formats = {};
-    if (domNode.tagName === 'SUB') {
-      formats['script'] = 'sub';
-    } else if (domNode.tagName === 'SUP') {
-      formats['script'] = 'super';
-    }
-    return formats;
+    if (domNode.tagName === 'SUB') return 'sub';
+    if (domNode.tagName === 'SUP') return 'super';
+    return undefined;
   }
 }
 Script.blotName = 'script';
