@@ -22,7 +22,6 @@ class List extends BlockContainer {
 }
 List.blotName = 'list';
 List.childless = 'list-item';
-List.scope = Parchment.Scope.BLOCK_BLOT;
 List.tagName = ['OL', 'UL'];
 
 

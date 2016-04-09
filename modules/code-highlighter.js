@@ -5,10 +5,25 @@ import CodeBlock from 'quill/formats/code';
 
 
 class HighlightCodeBlock extends CodeBlock {
+  static create(value) {
+    let domNode = super.create(domNode);
+    if (typeof value === 'string') {
+      domNode.dataset.language = value;
+    } else {
+      domNode.dataset.language = HighlightCodeBlock.DEFAULT_LANGUAGE;
+    }
+    domNode.classList.add(domNode.dataset.language);
+    return domNode;
+  }
+
+  static formats(domNode) {
+    return domNode.dataset.language || HighlightCodeBlock.DEFAULT_LANGUAGE;
+  }
+
   highlight() {
     if (this.cachedHTML !== this.domNode.innerHTML) {
       let text = this.domNode.textContent;
-      if (text.trim().length > 0) {
+      if (text.trim().length > 0 || this.cachedHTML == null) {
         this.domNode.textContent = this.domNode.textContent;
         hljs.highlightBlock(this.domNode);
         this.attach();
@@ -17,6 +32,7 @@ class HighlightCodeBlock extends CodeBlock {
     }
   }
 }
+HighlightCodeBlock.DEFAULT_LANGUAGE = 'javascript';
 
 
 let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {

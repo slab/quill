@@ -50,6 +50,7 @@ class BlockContainer extends Parchment.Container {
     this.appendChild(item);
   }
 }
+BlockContainer.scope = Parchment.Scope.BLOCK_BLOT;
 
 
 class Block extends Parchment.Block {

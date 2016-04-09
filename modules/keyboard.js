@@ -75,9 +75,7 @@ class Keyboard extends Module {
           line.format('list', false);
         }
       } else {
-        console.log('1', this.quill.root.innerHTML);
         this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
-        console.log('2', this.quill.root.innerHTML);
         range = new Range(Math.max(0, range.index - 1));
       }
     }
@@ -96,18 +94,7 @@ class Keyboard extends Module {
     let delta = new Delta()
       .retain(range.index)
       .insert('\n', lineFormats);
-    if (range.length === 0) {
-      let [line, offset] = this.quill.scroll.line(range.index);
-      // Browsers do not display a newline with just <pre>\n</pre>
-      if (line.statics.blotName === 'code-block' &&
-          offset >= line.length() - 1 &&
-          this.quill.getText(range.index - 1, 1) !== '\n') {
-        delta.insert('\n', lineFormats);
-        added += 1;
-      }
-    } else {
-      delta.delete(range.length);
-    }
+    delta.delete(range.length);
     this.quill.updateContents(delta, Quill.sources.USER);
     this.quill.setSelection(range.index + added, Quill.sources.SILENT);
     Object.keys(formats).forEach((name) => {

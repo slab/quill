@@ -113,10 +113,15 @@ resets(arr)
     &:before, &:after
       content: "\00a0"
       letter-spacing: -2px
-  pre
-    margin-bottom: 5px
+  *:not(pre) + pre
     margin-top: 5px
-    padding: 5px 10px
+    padding-top: 5px
+  pre
+    border-radius: 3px
+    margin-bottom: 5px
+    padding: 0px 10px 5px
+  pre + pre
+    margin-top: -10px
   img
     max-width: 100%
   ol
