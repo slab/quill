@@ -13,7 +13,7 @@ describe('Scroll', function() {
     let scroll = this.initialize(Scroll, '<p>Hello World!</p>');
     spyOn(scroll.emitter, 'emit').and.callThrough();
     scroll.insertAt(5, '!');
-    expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_OPTIMIZE);
+    expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_OPTIMIZE, jasmine.any(Array));
   });
 
   it('user change', function(done) {
@@ -21,8 +21,8 @@ describe('Scroll', function() {
     spyOn(scroll.emitter, 'emit').and.callThrough();
     scroll.domNode.firstChild.appendChild(document.createTextNode('!'));
     setTimeout(function() {
-      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_OPTIMIZE);
-      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_UPDATE, Emitter.sources.USER);
+      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_OPTIMIZE, jasmine.any(Array));
+      expect(scroll.emitter.emit).toHaveBeenCalledWith(Emitter.events.SCROLL_UPDATE, Emitter.sources.USER, jasmine.any(Array));
       done();
     }, 1);
   });
