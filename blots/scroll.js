@@ -10,21 +10,15 @@ function isLine(blot) {
 }
 
 
-const REQUIRED_TYPES = [
-  BreakBlot.blotName,
-  CursorBlot.blotName
-];
-
-
 class Scroll extends Parchment.Scroll {
   constructor(domNode, config) {
     super(domNode);
     this.emitter = config.emitter;
     if (Array.isArray(config.whitelist)) {
-      this.whitelist = {};
-      config.whitelist.concat(REQUIRED_TYPES).forEach((name) => {
-        this.whitelist[name] = true;
-      });
+      this.whitelist = config.whitelist.reduce(function(whitelist, format) {
+        whitelist[format] = true;
+        return whitelist;
+      }, {});
     }
     this.optimize();
   }
