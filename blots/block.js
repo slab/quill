@@ -99,10 +99,11 @@ class Block extends Parchment.Block {
   }
 
   insertBefore(blot, ref) {
+    let head = this.children.head;
     super.insertBefore(blot, ref);
-    this.descendants(BreakBlot).forEach(function(breakBlot) {
-      breakBlot.remove()
-    });
+    if (head instanceof BreakBlot) {
+      head.remove();
+    }
   }
 
   length() {
