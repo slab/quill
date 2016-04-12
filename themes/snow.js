@@ -63,7 +63,7 @@ class SnowTheme extends BaseTheme {
 
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
-    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button, div, span, a, input[type=button]')));
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
     this.imageTooltip = this.addModule('image-tooltip');
     this.linkTooltip = this.addModule('link-tooltip');
