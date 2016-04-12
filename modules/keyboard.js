@@ -27,7 +27,7 @@ class Keyboard extends Module {
     this.addBinding({ key: 'B', metaKey: true }, this.onFormat.bind(this, 'bold'));
     this.addBinding({ key: 'I', metaKey: true }, this.onFormat.bind(this, 'italic'));
     this.addBinding({ key: 'U', metaKey: true }, this.onFormat.bind(this, 'underline'));
-    // this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
+    this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDelete.bind(this, true));
     this.addBinding({ key: Keyboard.keys.DELETE }, this.onDelete.bind(this, false));
     // TODO implement
