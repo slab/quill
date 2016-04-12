@@ -58,6 +58,7 @@ class Selection {
       } else {
         blot.insertBefore(this.cursor, nativeRange.start.node);  // Should never happen
       }
+      this.cursor.attach();
     }
     this.cursor.format(format, value);
     this.scroll.optimize();
