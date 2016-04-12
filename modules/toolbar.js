@@ -45,7 +45,7 @@ class Toolbar extends Module {
       this.attach(input);
     });
     this.quill.on(Quill.events.SELECTION_CHANGE, this.update, this);
-    this.quill.on(Quill.events.SCROLL_CHANGE, () => {
+    this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
       let [range, ] = this.quill.selection.getRange();  // quill.getSelection triggers update
       this.update(range);
     });
