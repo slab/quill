@@ -201,7 +201,7 @@ function matchNewline(node, delta) {
 
 function matchSpacing(node, delta) {
   if (node.nextElementSibling != null &&
-      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight &&
+      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.25 &&
       !deltaEndsWith(delta, '\n\n')) {
     delta.insert('\n');
   }
