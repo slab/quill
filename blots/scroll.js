@@ -24,8 +24,8 @@ class Scroll extends Parchment.Scroll {
   }
 
   deleteAt(index, length) {
-    let [first, firstOffset] = this.children.find(index);
-    let [last, lastOffset] = this.children.find(index + length);
+    let [first, firstOffset] = this.line(index);
+    let [last, lastOffset] = this.line(index + length);
     super.deleteAt(index, length);
     if (last != null && first !== last && firstOffset > 0) {
       let lastChild = first.children.tail;

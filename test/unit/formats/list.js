@@ -169,4 +169,30 @@ describe('List', function() {
     editor.deleteText(0, 4);
     expect(this.container.innerHTML).toEqualHTML('<ol><li><br></li></ol>');
   });
+
+  it('delete multiple items', function() {
+    let editor = this.initialize(Editor, `
+      <ol>
+        <li>0123</li>
+        <li>5678</li>
+        <li>0123</li>
+      </ol>`
+    );
+    editor.deleteText(2, 5);
+    expect(this.container).toEqualHTML(`
+      <ol>
+        <li>0178</li>
+        <li>0123</li>
+      </ol>`
+    );
+  });
+
+  it('delete across last item', function() {
+    let editor = this.initialize(Editor, `
+      <ol><li>0123</li></ol>
+      <p>5678</p>`
+    );
+    editor.deleteText(2, 5);
+    expect(this.container).toEqualHTML('<ol><li>0178</li></ol>');
+  });
 });
