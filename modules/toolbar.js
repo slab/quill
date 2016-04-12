@@ -32,8 +32,11 @@ class Toolbar extends Module {
       'clean': () => {
         let range = this.quill.getSelection();
         if (range != null) {
+          let startLength = this.quill.getLength();
           this.quill.removeFormat(range);
-          this.quill.setSelection(range);
+          let endLength = this.quill.getLength();
+          // account for embed removals
+          this.quill.setSelection(range.index, range.length - (startLength-endLength));
         }
         return true;
       }
