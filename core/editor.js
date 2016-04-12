@@ -42,7 +42,7 @@ class Editor {
           } else {
             [leaf, offset] = line.descendant(Parchment.Leaf, offset);
           }
-          let formats = extend({}, line.formats(), bubbleFormats(leaf));
+          let formats = extend({}, bubbleFormats(line), bubbleFormats(leaf));
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];
@@ -141,10 +141,10 @@ class Editor {
   }
 
   removeFormat(index, length) {
+    let contents = this.getContents(index, length);
     let text = this.getText(index, length);
-    let delta = new Delta().retain(index).insert(text).delete(length);
-    let [line, offset] = this.scroll.line(index + length);
-    delta.retain(line.length() - offset - 1).delete(1).insert('\n');
+    let diff = contents.diff(new Delta().insert(text));
+    let delta = new Delta().retain(index).concat(diff);
     this.applyDelta(delta);
   }
 

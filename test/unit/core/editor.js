@@ -178,53 +178,95 @@ describe('Editor', function() {
     });
   });
 
+  describe('removeFormat', function() {
+    it('unwrap', function() {
+      let editor = this.initialize(Editor, '<p>0<em>12</em>3</p>');
+      editor.removeFormat(1, 2);
+      expect(this.container).toEqualHTML('<p>0123</p>');
+    });
+
+    it('split inline', function() {
+      let editor = this.initialize(Editor, '<p>0<strong><em>12</em></strong>3</p>');
+      editor.removeFormat(1, 1);
+      expect(this.container).toEqualHTML('<p>01<strong><em>2</em></strong>3</p>');
+    });
+
+    it('partial line', function() {
+      let editor = this.initialize(Editor, '<ul><li>01</li></ul><ol><li>34</li></ol>');
+      editor.removeFormat(1, 3);
+      expect(this.container).toEqualHTML('<p>01</p><ol><li>34</li></ol>');
+    });
+
+    it('remove embed', function() {
+      let editor = this.initialize(Editor, '<p>0<img src="/assets/favicon.png">2</p>')
+      editor.removeFormat(1, 1);
+      expect(this.container).toEqualHTML('<p>02</p>');
+    });
+
+    it('combined', function() {
+      let editor = this.initialize(Editor, `
+        <ul>
+          <li>01<img src="/assets/favicon.png">3</li>
+        </ul>
+        <ol>
+          <li>5<strong>6<em>78</em>9</strong>0</li>
+        </ol>
+      `);
+      editor.removeFormat(1, 7);
+      expect(this.container).toEqualHTML(`
+        <p>013</p>
+        <ol><li>567<strong><em>8</em>9</strong>0</li></ol>
+      `);
+    });
+  });
+
   describe('applyDelta', function() {
     it('insert', function() {
       let editor = this.initialize(Editor, '<p></p>');
       editor.applyDelta(new Delta().insert('01'));
-      expect(this.container.innerHTML).toEqualHTML('<p>01</p>');
+      expect(this.container).toEqualHTML('<p>01</p>');
     });
 
     it('attributed insert', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert('|', { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p>01<strong>|</strong>23</p>');
+      expect(this.container).toEqualHTML('<p>01<strong>|</strong>23</p>');
     });
 
     it('format', function() {
       let editor = this.initialize(Editor, '<p>01</p>');
       editor.applyDelta(new Delta().retain(2, { bold: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01</strong></p>');
+      expect(this.container).toEqualHTML('<p><strong>01</strong></p>');
     });
 
     it('unformatted insert', function() {
       let editor = this.initialize(Editor, '<p><em>01</em></p>');
       editor.applyDelta(new Delta().retain(1).insert('|'));
-      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
+      expect(this.container).toEqualHTML('<p><em>0</em>|<em>1</em></p>');
     });
 
     it('insert at format boundary', function() {
       let editor = this.initialize(Editor, '<p><em>0</em><u>1</u></p>');
       editor.applyDelta(new Delta().retain(1).insert('|', { strike: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
+      expect(this.container).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
     });
 
     it('unformatted newline', function() {
       let editor = this.initialize(Editor, '<h1>01</h1>');
       editor.applyDelta(new Delta().retain(2).insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p>01</p><h1><br></h1>');
+      expect(this.container).toEqualHTML('<p>01</p><h1><br></h1>');
     });
 
     it('formatted embed', function() {
       let editor = this.initialize(Editor, '');
       editor.applyDelta(new Delta().insert({ image: '/assets/favicon.png'}, { italic: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
+      expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
 
     it('old embed', function() {
       let editor = this.initialize(Editor, '');
       editor.applyDelta(new Delta().insert(1, { image: '/assets/favicon.png', italic: true }));
-      expect(this.container.innerHTML).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
+      expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
   });
 
