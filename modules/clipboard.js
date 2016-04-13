@@ -3,6 +3,7 @@ import Parchment from 'parchment';
 import Quill from 'quill/core';
 import logger from 'quill/core/logger';
 import Module from 'quill/core/module';
+import { BlockEmbed } from 'quill/blots/block';
 
 let debug = logger('quill:clipboard');
 
@@ -141,6 +142,7 @@ function deltaEndsWith(delta, text) {
 }
 
 function isLine(node) {
+  if (node.childNodes.length === 0) return false;   // Exclude embed blocks
   let style = computeStyle(node);
   return ['block', 'list-item'].indexOf(style.display) > -1;
 }
@@ -183,6 +185,10 @@ function matchBlot(node, delta) {
     let embed = {};
     embed[match.blotName] = match.value(node);
     delta.insert(embed, match.formats(node));
+    if (match.prototype instanceof BlockEmbed) {
+      let newlineDelta = matchAttributor(node, new Delta().insert('\n'));
+      delta = delta.concat(newlineDelta);
+    }
   } else if (typeof match.formats === 'function') {
     let formats = {};
     formats[match.blotName] = match.formats(node);
@@ -201,7 +207,7 @@ function matchNewline(node, delta) {
 
 function matchSpacing(node, delta) {
   if (node.nextElementSibling != null &&
-      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.25 &&
+      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.4 &&
       !deltaEndsWith(delta, '\n\n')) {
     delta.insert('\n');
   }
@@ -212,12 +218,12 @@ function matchText(node, delta) {
   let text = node.data;
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     text = text.replace(/\s\s+/g, ' ');
-  }
-  if (node.previousSibling == null || isLine(node.previousSibling)) {
-    text = text.replace(/^\s+/, '');
-  }
-  if (node.nextSibling == null || isLine(node.nextSibling)) {
-    text = text.replace(/\s+$/, '');
+    if (node.previousSibling == null || isLine(node.previousSibling)) {
+      text = text.replace(/^\s+/, '');
+    }
+    if (node.nextSibling == null || isLine(node.nextSibling)) {
+      text = text.replace(/\s+$/, '');
+    }
   }
   return delta.insert(text);
 }

@@ -14,7 +14,26 @@ class BlockEmbed extends Parchment.Embed {
   }
 
   delta() {
-    return new Delta().insert(this.value()).insert('\n', this.attributes.values());
+    return new Delta().insert(this.value(), this.formats()).insert('\n', this.attributes.values());
+  }
+
+  formatAt(index, length, format, value) {
+    if (index + length === this.length()) {
+      let attribute = Parchment.query(format, Parchment.Scope.ATTRIBUTE);
+      if (attribute != null) {
+        this.attributes.attribute(attribute, value);
+      }
+      if (length <= 1) return;
+    }
+    this.format(format, value);
+  }
+
+  insertAt(index, value, def) {
+    if (typeof value === 'string' && value.startsWith('\n')) {
+      let block = Parchment.create('block');
+      this.parent.insertBefore(block, index === 0 ? this : this.next);
+      block.insertAt(0, value.slice(1));
+    }
   }
 
   length() {
