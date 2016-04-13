@@ -278,7 +278,7 @@ describe('Selection', function() {
       this.setup(`<p>0123</p>`, 4);
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].index).toEqual(4);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p>0123<strong><span class="ql-cursor">${Cursor.CONTENTS}</span></strong></p>
       `);
     });
@@ -287,7 +287,7 @@ describe('Selection', function() {
       this.setup(`<p><em>0123</em></p>`, 2);
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].index).toEqual(2);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p>
           <em>01</em>
           <strong><em><span class="ql-cursor">${Cursor.CONTENTS}</span></em></strong>
@@ -300,7 +300,7 @@ describe('Selection', function() {
       this.setup(`<p><em>0</em><strong>1</strong></p>`, 1);
       this.selection.format('underline', true);
       expect(this.selection.getRange()[0].index).toEqual(1);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><em>0<u><span class="ql-cursor">${Cursor.CONTENTS}</span></u></em><strong>1</strong></p>
       `);
     });
@@ -309,7 +309,7 @@ describe('Selection', function() {
       this.setup(`<p><br></p>`, 0);
       this.selection.format('bold', true);
       expect(this.selection.getRange()[0].index).toEqual(0);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><strong><span class="ql-cursor">${Cursor.CONTENTS}</span></strong></p>
       `);
     });
@@ -329,7 +329,7 @@ describe('Selection', function() {
       this.selection.format('underline', true);
       this.selection.format('background', 'blue');
       expect(this.selection.getRange()[0].index).toEqual(2);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p>
           01
           <em style="color: red; background-color: blue;"><u>
@@ -346,7 +346,7 @@ describe('Selection', function() {
       this.selection.format('underline', true);
       this.selection.format('italic', false);
       expect(this.selection.getRange()[0].index).toEqual(2);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p>
           <strong>
             01<u><span class="ql-cursor">${Cursor.CONTENTS}</span></u>23
@@ -360,7 +360,7 @@ describe('Selection', function() {
       this.selection.format('italic', true);
       this.selection.setRange(new Range(0, 0));
       this.selection.scroll.update();
-      expect(this.container.innerHTML).toEqualHTML('<p>0123</p>');
+      expect(this.container).toEqualHTML('<p>0123</p>');
     });
 
     it('text change cleanup', function() {
@@ -369,7 +369,7 @@ describe('Selection', function() {
       this.selection.cursor.textNode.data = Cursor.CONTENTS + '|';
       this.selection.setNativeRange(this.selection.cursor.textNode, 2);
       this.selection.scroll.update();
-      expect(this.container.innerHTML).toEqualHTML('<p>01<em>|</em>23</p>');
+      expect(this.container).toEqualHTML('<p>01<em>|</em>23</p>');
     });
 
     it('no cleanup', function() {
@@ -378,7 +378,7 @@ describe('Selection', function() {
       this.container.removeChild(this.container.lastChild);
       this.selection.scroll.update();
       expect(this.selection.getRange()[0].index).toEqual(2);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p>01<em><span class="ql-cursor">${Cursor.CONTENTS}</span></em>23</p>
       `);
     });

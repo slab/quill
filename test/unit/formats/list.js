@@ -15,7 +15,7 @@ describe('List', function() {
       .insert('\n', { list: 'ordered' })
       .insert('0123\n')
     );
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <p>0123</p>
       <ol><li>5678</li></ol>
       <p>0123</p>
@@ -30,7 +30,7 @@ describe('List', function() {
     `);
     editor.formatText(9, 1, { list: null });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n5678\n0123\n'));
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <p>0123</p>
       <p>5678</p>
       <p>0123</p>
@@ -49,7 +49,7 @@ describe('List', function() {
       .insert('\n', { list: 'bullet' })
       .insert('0123\n')
     );
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <p>0123</p>
       <ul><li>5678</li></ul>
       <p>0123</p>
@@ -80,7 +80,7 @@ describe('List', function() {
       .insert('0123')
       .insert('\n', { list: 'ordered' })
     );
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <ol>
         <li>0123</li>
         <li>5678</li>
@@ -104,7 +104,7 @@ describe('List', function() {
       .insert('0123')
       .insert('\n', { list: 'ordered' })
     );
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <ol>
         <li>0123</li>
         <li>5678</li>
@@ -126,7 +126,7 @@ describe('List', function() {
       .insert('0123')
       .insert('\n', { list: 'ordered' })
     );
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <ol>
         <li>0123</li>
         <li>0123</li>
@@ -151,7 +151,7 @@ describe('List', function() {
       .insert('0123')
       .insert('\n', { list: 'ordered' })
     );
-    expect(this.container.innerHTML).toEqualHTML(`
+    expect(this.container).toEqualHTML(`
       <ol><li>0123</li></ol>
       <ul><li>5678</li></ul>
       <ol><li>0123</li></ol>`
@@ -161,9 +161,9 @@ describe('List', function() {
   it('empty line interop', function() {
     let editor = this.initialize(Editor, '<ol><li><br></li></ol>');
     editor.insertText(0, 'Test');
-    expect(this.container.innerHTML).toEqualHTML('<ol><li>Test</li></ol>');
+    expect(this.container).toEqualHTML('<ol><li>Test</li></ol>');
     editor.deleteText(0, 4);
-    expect(this.container.innerHTML).toEqualHTML('<ol><li><br></li></ol>');
+    expect(this.container).toEqualHTML('<ol><li><br></li></ol>');
   });
 
   it('delete multiple items', function() {

@@ -13,7 +13,7 @@ describe('Editor', function() {
         .insert('01!!23', { bold: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01!!23</strong></p>');
+      expect(this.container).toEqualHTML('<p><strong>01!!23</strong></p>');
     });
 
     it('embed', function() {
@@ -25,14 +25,14 @@ describe('Editor', function() {
         .insert('23', { bold: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><strong>01<img src="/assets/favicon.png">23</strong></p>');
+      expect(this.container).toEqualHTML('<p><strong>01<img src="/assets/favicon.png">23</strong></p>');
     });
 
     it('on empty line', function() {
       let editor = this.initialize(Editor, '<p>0</p><p><br></p><p>3</p>');
       editor.insertText(2, '!');
       expect(editor.getDelta()).toEqual(new Delta().insert('0\n!\n3\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
+      expect(this.container).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
     it('newline splitting', function() {
@@ -44,7 +44,7 @@ describe('Editor', function() {
         .insert('23', { bold: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><strong>01</strong></p>
         <p><strong>23</strong></p>`
       );
@@ -58,7 +58,7 @@ describe('Editor', function() {
         .insert('0123', { bold: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><br></p>
         <p><strong>0123</strong></p>`
       );
@@ -71,7 +71,7 @@ describe('Editor', function() {
         .insert('0123', { bold: true })
         .insert('\n\n')
       );
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><strong>0123</strong></p>
         <p><br></p>`
       );
@@ -89,7 +89,7 @@ describe('Editor', function() {
         .insert('\n')
         .insert('23', { bold: true })
         .insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><strong>01</strong></p>
         <p><strong>!!</strong></p>
         <p><strong>!!</strong></p>
@@ -106,7 +106,7 @@ describe('Editor', function() {
         .insert('23', { bold: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <p><strong>01</strong></p>
         <p><br></p>
         <p><strong>23</strong></p>`
@@ -122,7 +122,7 @@ describe('Editor', function() {
         .insert('03', { bold: true, italic: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><strong><em>03</em></strong></p>');
+      expect(this.container).toEqualHTML('<p><strong><em>03</em></strong></p>');
     });
 
     it('parts of multiple lines', function() {
@@ -132,14 +132,14 @@ describe('Editor', function() {
         .insert('0178', { italic: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><em>0178</em></p>');
+      expect(this.container).toEqualHTML('<p><em>0178</em></p>');
     });
 
     it('entire line keeping newline', function() {
       let editor = this.initialize(Editor, '<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 4);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
+      expect(this.container).toEqualHTML('<p><br></p>');
     });
 
     it('newline', function() {
@@ -149,14 +149,14 @@ describe('Editor', function() {
         .insert('01235678', { italic: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><em>01235678</em></p>');
+      expect(this.container).toEqualHTML('<p><em>01235678</em></p>');
     });
 
     it('entire document', function() {
       let editor = this.initialize(Editor, '<p><strong><em>0123</em></strong></p>');
       editor.deleteText(0, 5);
       expect(editor.getDelta()).toEqual(new Delta().insert('\n'));
-      expect(this.container.innerHTML).toEqualHTML('<p><br></p>');
+      expect(this.container).toEqualHTML('<p><br></p>');
     });
 
     it('multiple complete lines', function() {
@@ -166,7 +166,7 @@ describe('Editor', function() {
         .insert('890', { italic: true })
         .insert('\n')
       );
-      expect(this.container.innerHTML).toEqualHTML('<p><em>890</em></p>');
+      expect(this.container).toEqualHTML('<p><em>890</em></p>');
     });
   });
 

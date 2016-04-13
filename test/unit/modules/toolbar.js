@@ -5,7 +5,7 @@ describe('Toolbar', function() {
   describe('add controls', function() {
     it('single level', function() {
       addControls(this.container, ['bold', 'italic']);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <span class="ql-formats">
           <button class='ql-bold'></button>
           <button class='ql-italic'></button>
@@ -15,7 +15,7 @@ describe('Toolbar', function() {
 
     it('nested group', function() {
       addControls(this.container, [['bold', 'italic'], ['underline', 'strike']]);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <span class="ql-formats">
           <button class="ql-bold"></button>
           <button class="ql-italic"></button>
@@ -29,7 +29,7 @@ describe('Toolbar', function() {
 
     it('button value', function() {
       addControls(this.container, ['bold', { header: '2' }]);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <span class="ql-formats">
           <button class="ql-bold"></button>
           <button class="ql-header" data-value="2"></button>
@@ -39,7 +39,7 @@ describe('Toolbar', function() {
 
     it('select', function() {
       addControls(this.container, [{ size: ['10px', false, '18px', '32px'] }]);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <span class="ql-formats">
           <select class="ql-size">
             <option value="10px"></option>
@@ -58,7 +58,7 @@ describe('Toolbar', function() {
         [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],
         ['link', 'image']
       ]);
-      expect(this.container.innerHTML).toEqualHTML(`
+      expect(this.container).toEqualHTML(`
         <span class="ql-formats">
           <select class="ql-font">
             <option selected="selected"></option>
