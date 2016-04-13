@@ -46,6 +46,7 @@ module.exports = {
         loader: 'babel',
         query: {
           presets: ['es2015']
+          // plugins: ['transform-es2015-modules-commonjs']
         }
       }
     ],

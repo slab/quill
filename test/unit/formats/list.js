@@ -17,38 +17,32 @@ describe('List', function() {
     );
     expect(this.container.innerHTML).toEqualHTML(`
       <p>0123</p>
-      <ol>
-        <li>5678</li>
-      </ol>
-      <p>0123</p>`
-    );
+      <ol><li>5678</li></ol>
+      <p>0123</p>
+    `);
   });
 
   it('remove', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>
-      <ol>
-        <li>5678</li>
-      </ol>
-      <p>0123</p>`
-    );
+      <ol><li>5678</li></ol>
+      <p>0123</p>
+    `);
     editor.formatText(9, 1, { list: null });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n5678\n0123\n'));
     expect(this.container.innerHTML).toEqualHTML(`
       <p>0123</p>
       <p>5678</p>
-      <p>0123</p>`
-    );
+      <p>0123</p>
+    `);
   });
 
   it('replace', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>
-      <ol>
-        <li>5678</li>
-      </ol>
-      <p>0123</p>`
-    );
+      <ol><li>5678</li></ol>
+      <p>0123</p>
+    `);
     editor.formatText(9, 1, { list: 'bullet' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123\n5678')
@@ -57,23 +51,26 @@ describe('List', function() {
     );
     expect(this.container.innerHTML).toEqualHTML(`
       <p>0123</p>
-      <ul>
-        <li>5678</li>
-      </ul>
-      <p>0123</p>`
+      <ul><li>5678</li></ul>
+      <p>0123</p>
+    `);
+  });
+
+  it('replace with attributes', function() {
+    let editor = this.initialize(Editor, '<ol><li class="ql-align-center">0123</li></ol>');
+    editor.formatText(4, 1, { list: 'bullet' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123').insert('\n', { align: 'center', list: 'bullet' })
     );
+    expect(this.container).toEqualHTML('<ul><li class="ql-align-center">0123</li></ul>');
   });
 
   it('format merge', function() {
     let editor = this.initialize(Editor, `
-      <ol>
-        <li>0123</li>
-      </ol>
+      <ol><li>0123</li></ol>
       <p>5678</p>
-      <ol>
-        <li>0123</li>
-      </ol>`
-    );
+      <ol><li>0123</li></ol>
+    `);
     editor.formatText(9, 1, { list: 'ordered' });
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0123')
@@ -162,8 +159,7 @@ describe('List', function() {
   });
 
   it('empty line interop', function() {
-    let editor = this.initialize(Editor, '<ol><li></li></ol>');
-    expect(this.container.innerHTML).toEqualHTML('<ol><li><br></li></ol>');
+    let editor = this.initialize(Editor, '<ol><li><br></li></ol>');
     editor.insertText(0, 'Test');
     expect(this.container.innerHTML).toEqualHTML('<ol><li>Test</li></ol>');
     editor.deleteText(0, 4);
@@ -194,5 +190,23 @@ describe('List', function() {
     );
     editor.deleteText(2, 5);
     expect(this.container).toEqualHTML('<ol><li>0178</li></ol>');
+  });
+
+  it('nested list replacement', function() {
+    let editor = this.initialize(Editor, `
+      <ol>
+        <li>One</li>
+        <li class='ql-indent-1'>Alpha</li>
+        <li>Two</li>
+      </ol>
+    `);
+    editor.formatLine(1, 10, { list: 'bullet' });
+    expect(this.container).toEqualHTML(`
+      <ul>
+        <li>One</li>
+        <li class='ql-indent-1'>Alpha</li>
+        <li>Two</li>
+      </ul>
+    `);
   });
 });

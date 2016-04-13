@@ -25,40 +25,7 @@ BlockEmbed.scope = Parchment.Scope.BLOCK_BLOT;
 // It is important for cursor behavior BlockEmbeds use tags that are block level elements
 
 
-class BlockContainer extends Parchment.Container {
-  formats() {
-    let formats = {};
-    formats[this.statics.blotName] = this.statics.formats(this.domNode);
-    return formats;
-  }
-
-  optimize(mutations) {
-    super.optimize();
-    let next = this.next;
-    if (next != null && next.prev === this &&
-        next.statics.blotName === this.statics.blotName &&
-        next.domNode.tagName === this.domNode.tagName) {
-      next.moveChildren(this);
-      next.remove();
-    }
-  }
-
-  replace(target) {
-    super.replace(target);
-    let item = Parchment.create(this.statics.childless);
-    this.moveChildren(item);
-    this.appendChild(item);
-  }
-}
-BlockContainer.scope = Parchment.Scope.BLOCK_BLOT;
-
-
 class Block extends Parchment.Block {
-  constructor(domNode) {
-    super(domNode);
-    this.optimize();
-  }
-
   delta() {
     return this.descendants(Parchment.Leaf).reduce((delta, leaf) => {
       if (leaf.length() === 0) {
@@ -86,8 +53,8 @@ class Block extends Parchment.Block {
     let lines = value.split('\n');
     let text = lines.shift();
     if (text.length > 0) {
-      if (index < this.length() - 1) {
-        super.insertAt(index, text);
+      if (index < this.length() - 1 || this.children.tail == null) {
+        super.insertAt(Math.min(index, this.length() - 1), text);
       } else {
         this.children.tail.insertAt(this.children.tail.length(), text);
       }
@@ -146,4 +113,4 @@ function bubbleFormats(blot, formats = {}) {
 }
 
 
-export { bubbleFormats, BlockEmbed, BlockContainer, Block as default };
+export { bubbleFormats, BlockEmbed, Block as default };

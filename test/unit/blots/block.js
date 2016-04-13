@@ -5,6 +5,7 @@ import Scroll from 'quill/blots/scroll';
 describe('Block', function() {
   it('childless', function() {
     let block = Parchment.create('block');
+    block.optimize();
     expect(block.domNode).toEqualHTML('<br>');
   });
 

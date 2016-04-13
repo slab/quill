@@ -6,8 +6,8 @@ class Header extends Block {
     return this.tagName.indexOf(domNode.tagName) + 1;
   }
 
-  optimize(mutations) {
-    super.optimize(mutations);
+  optimize() {
+    super.optimize();
     let text = this.domNode.textContent.toLowerCase();
     let id = text.replace(/[^a-z0-9]+/g, '-').replace(/^\-/, '').replace(/\-$/, '');
     if (this.domNode.id !== id) {
