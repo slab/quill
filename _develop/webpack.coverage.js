@@ -6,7 +6,10 @@ config.module.postLoaders = [{
   loader: 'istanbul-instrumenter',
   exclude: [
     path.resolve(__dirname, '..', 'node_modules'),
-    path.resolve(__dirname, '..', 'test')
+    path.resolve(__dirname, '..', 'test'),
+    path.resolve(__dirname, '..', 'core/polyfill.js'),
+    path.resolve(__dirname, '..', 'core.js'),
+    path.resolve(__dirname, '..', 'quill.js')
   ]
 }];
 config.module.loaders[3].query = {
