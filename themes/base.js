@@ -16,9 +16,8 @@ class BaseTheme extends Theme {
   buildButtons(buttons) {
     buttons.forEach(function(button) {
       let className = button.getAttribute('class') || '';
-      className.split(/\s+/).forEach((name) => {
-        name = name.slice('ql-'.length);
-        if (icons[name] == null) return;
+      className.split(/\s+/).map((n) => n.indexOf('ql-') === 0 ? n.slice('ql-'.length) : null).forEach((name) => {
+        if ((name == null) || (icons[name] == null)) return;
         if (typeof icons[name] === 'string') {
           button.innerHTML = icons[name];
         } else {

@@ -41,7 +41,7 @@ class Toolbar extends Module {
         return true;
       }
     };
-    [].forEach.call(this.container.querySelectorAll('a, button, input[type=button], select'), (input) => {
+    [].forEach.call(this.container.querySelectorAll('a, button, input[type=button], select, span, div'), (input) => {
       this.attach(input);
     });
     this.quill.on(Quill.events.SELECTION_CHANGE, this.update, this);
