@@ -6,7 +6,7 @@ import CodeBlock from 'quill/formats/code';
 
 class HighlightCodeBlock extends CodeBlock {
   static create(value) {
-    let domNode = super.create(domNode);
+    let domNode = super.create(value);
     if (typeof value === 'string') {
       domNode.dataset.language = value;
     } else {
