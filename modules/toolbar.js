@@ -94,7 +94,6 @@ class Toolbar extends Module {
         } else {
           option.selected = true;
         }
-        // input.dispatchEvent(new Event('change'));
       } if (input.hasAttribute('data-value')) {
         input.classList.toggle('ql-active', input.getAttribute('data-value') == formats[format]);  // Intentional ==
       } else {

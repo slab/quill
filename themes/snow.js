@@ -39,9 +39,7 @@ class SnowTheme extends BaseTheme {
           });
         }
         return new ColorPicker(select, icons[format]);
-      } else if (select.classList.contains('ql-font') ||
-                 select.classList.contains('ql-size') ||
-                 select.classList.contains('ql-header')) {
+      } else {
         return new Picker(select);
       }
     });
