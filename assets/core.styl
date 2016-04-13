@@ -131,12 +131,13 @@ resets(arr)
     list-style: disc inside
   ol
     list-style-type: none
+    position: relative
     li
       counter-reset: resets(1..MAX_INDENT)
       counter-increment: unquote('list-' + num)
       &:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
-        margin-right: -28px
+        margin-right: -16px
         position: absolute
         right: 100%
         text-align: right
@@ -145,7 +146,7 @@ resets(arr)
         counter-increment: unquote('list-' + num)
         &:before
           content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
-          margin-right: (-40*num - 28)px
+          margin-right: (-40*num - 16)px
       if (num < MAX_INDENT)
         li.ql-indent-{num}
           counter-reset: resets((num+1)..MAX_INDENT)
