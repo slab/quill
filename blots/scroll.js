@@ -46,7 +46,7 @@ class Scroll extends Parchment.Scroll {
   }
 
   insertBefore(childBlot, refBlot) {
-    if (childBlot.scope & Parchment.Scope.INLINE) {
+    if (childBlot.statics.scope === Parchment.Scope.INLINE_BLOT) {
       let block = Parchment.create(Parchment.Scope.BLOCK);
       block.insertBefore(childBlot);
       childBlot = block;
@@ -81,7 +81,7 @@ class Scroll extends Parchment.Scroll {
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
-    super.update(mutations.concat([]));
+    super.update(mutations.concat([]));   // pass copy
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_UPDATE, source, mutations);
     }

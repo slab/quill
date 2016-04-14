@@ -7,7 +7,6 @@ class Video extends BlockEmbed {
     let node = super.create(value);
     node.setAttribute('src', this.sanitize(value));
     node.setAttribute('controls', true);
-    node.setAttribute('contenteditable', false);
     return node;
   }
 
