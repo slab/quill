@@ -121,13 +121,8 @@ class Selection {
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
-    if (nativeRange.startContainer !== this.root &&
-        !(nativeRange.startContainer.compareDocumentPosition(this.root) & Node.DOCUMENT_POSITION_CONTAINS)) {
-      return null;
-    }
-    if (!nativeRange.collapsed &&   // save a call to compareDocumentPosition
-        nativeRange.endContainer !== this.root &&
-        !(nativeRange.endContainer.compareDocumentPosition(this.root) & Node.DOCUMENT_POSITION_CONTAINS)) {
+    if (!this.root.contains(nativeRange.startContainer) ||
+        (!nativeRange.collapsed && !this.root.contains(nativeRange.endContainer))) {
       return null;
     }
     let range = {

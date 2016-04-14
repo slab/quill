@@ -8,7 +8,6 @@ class ColorAttributor extends Parchment.Attributor.Style {
     return '#' + value.split(',').map(function(component) {
       return ('00' + parseInt(component).toString(16)).slice(-2);
     }).join('');
-    return v;
   }
 }
 
