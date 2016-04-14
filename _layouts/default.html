@@ -6,12 +6,12 @@
     {% include meta.html %}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
-    <link rel="stylesheet" href="/assets/css/styles.css">
     {% if page.stylesheets %}
       {% for css in page.stylesheets %}
       <link rel="stylesheet" href="{{ css | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}">
       {% endfor %}
     {% endif %}
+    <link rel="stylesheet" href="/assets/css/styles.css">
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>

@@ -23,7 +23,7 @@ iframe {
   overflow: hidden;
 }
 
-pre {
+#docs-container pre, #blog-container pre {
   background-color: #f8f8f8;
   border-color: #06c;
   border-radius: 0px;
@@ -32,7 +32,7 @@ pre {
   padding: 10px 14px;
 }
 
-pre code {
+pre code, pre {
   border: none;
 }
 
