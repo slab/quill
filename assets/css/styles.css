@@ -228,16 +228,16 @@ footer li {
 }
 #demo-container .quill-wrapper {
   width: 66%;
-  max-width: none;
+  max-width: 800px;
 }
 #demo-container #editor {
-  height: 400px;
+  height: 325px;
   -webkit-transition: height 500ms ease-out;
   -moz-transition: height 500ms ease-out;
   transition: height 500ms ease-out;
 }
 #demo-container #editor.focus {
-  height: 448px;
+  height: 500px;
   -webkit-transition: height 800ms ease-out;
   -moz-transition: height 800ms ease-out;
   transition: height 800ms ease-out;
