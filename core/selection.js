@@ -1,8 +1,8 @@
 import Parchment from 'parchment';
 import equal from 'deep-equal';
-import BreakBlot from 'quill/blots/break';
-import Emitter from 'quill/core/emitter';
-import logger from 'quill/core/logger';
+import BreakBlot from '../blots/break';
+import Emitter from './emitter';
+import logger from './logger';
 
 let debug = logger('quill:selection');
 

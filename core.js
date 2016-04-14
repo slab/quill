@@ -1,15 +1,15 @@
 import Parchment from 'parchment';
-import Quill from 'quill/core/quill';
+import Quill from './core/quill';
 
-import Block, { EmbedBlock } from 'quill/blots/block';
-import Break from 'quill/blots/break';
-import Cursor from 'quill/blots/cursor';
-import Inline from 'quill/blots/inline';
-import Scroll from 'quill/blots/scroll';
+import Block, { EmbedBlock } from './blots/block';
+import Break from './blots/break';
+import Cursor from './blots/cursor';
+import Inline from './blots/inline';
+import Scroll from './blots/scroll';
 
-import Clipboard from 'quill/modules/clipboard';
-import History from 'quill/modules/history';
-import Keyboard from 'quill/modules/keyboard';
+import Clipboard from './modules/clipboard';
+import History from './modules/history';
+import Keyboard from './modules/keyboard';
 
 Quill.register({
   'blots/block'        : Block,

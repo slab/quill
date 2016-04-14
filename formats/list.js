@@ -1,7 +1,7 @@
 import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Block from 'quill/blots/block';
+import Block from '../blots/block';
 
 
 class List extends Parchment.Container {

@@ -1,7 +1,7 @@
 import Parchment from 'parchment';
-import Quill from 'quill/core';
-import logger from 'quill/core/logger';
-import Module from 'quill/core/module';
+import Quill from '../core/quill';
+import logger from '../core/logger';
+import Module from '../core/module';
 
 let debug = logger('quill:toolbar');
 

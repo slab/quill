@@ -1,7 +1,7 @@
-import Emitter from 'quill/core/emitter';
-import Keyboard from 'quill/modules/keyboard';
-import BaseTheme from 'quill/themes/base';
-import icons from 'quill/ui/icons';
+import Emitter from '../core/emitter';
+import Keyboard from '../modules/keyboard';
+import BaseTheme from './base';
+import icons from '../ui/icons';
 
 
 class BubbleTheme extends BaseTheme {

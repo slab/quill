@@ -1,8 +1,8 @@
-import Quill from 'quill/core';
-import Module from 'quill/core/module';
-import { Range } from 'quill/core/selection';
-import LinkBlot from 'quill/formats/link';
-import Keyboard from 'quill/modules/keyboard';
+import Quill from '../core/quill';
+import Module from '../core/module';
+import { Range } from '../core/selection';
+import LinkBlot from '../formats/link';
+import Keyboard from './keyboard';
 
 
 class LinkTooltip extends Module {

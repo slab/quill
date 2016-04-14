@@ -1,6 +1,6 @@
 import Delta from 'rich-text/lib/delta';
-import { Range } from 'quill/core/selection';
-import Quill from 'quill/core';
+import { Range } from '../../../core/selection';
+import Quill from '../../../core';
 
 
 describe('Clipboard', function() {

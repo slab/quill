@@ -1,6 +1,6 @@
 import extend from 'extend';
-import Emitter from 'quill/core/emitter';
-import logger from 'quill/core/logger';
+import Emitter from './emitter';
+import logger from './logger';
 
 let debug = logger('[quill:theme]');
 

@@ -1,43 +1,43 @@
-import Quill from 'quill/core';
+import Quill from './core';
 
-import { AlignClass as Align } from 'quill/formats/align';
-import { DirectionClass as Direction } from 'quill/formats/direction';
-import { IndentClass as Indent } from 'quill/formats/indent';
+import { AlignClass as Align } from './formats/align';
+import { DirectionClass as Direction } from './formats/direction';
+import { IndentClass as Indent } from './formats/indent';
 
-import Blockquote from 'quill/formats/blockquote';
-import Header from 'quill/formats/header';
-import List, { ListItem } from 'quill/formats/list';
+import Blockquote from './formats/blockquote';
+import Header from './formats/header';
+import List, { ListItem } from './formats/list';
 
-import { BackgroundStyle as Background } from 'quill/formats/background';
-import { ColorStyle as Color } from 'quill/formats/color';
-import { FontClass as Font } from 'quill/formats/font';
-import { SizeClass as Size } from 'quill/formats/size';
+import { BackgroundStyle as Background } from './formats/background';
+import { ColorStyle as Color } from './formats/color';
+import { FontClass as Font } from './formats/font';
+import { SizeClass as Size } from './formats/size';
 
-import Bold from 'quill/formats/bold';
-import Italic from 'quill/formats/italic';
-import Link from 'quill/formats/link';
-import Script from 'quill/formats/script';
-import Strike from 'quill/formats/strike';
-import Underline from 'quill/formats/underline';
+import Bold from './formats/bold';
+import Italic from './formats/italic';
+import Link from './formats/link';
+import Script from './formats/script';
+import Strike from './formats/strike';
+import Underline from './formats/underline';
 
-import Formula from 'quill/formats/formula';
-import Image from 'quill/formats/image';
-import Video from 'quill/formats/video';
+import Formula from './formats/formula';
+import Image from './formats/image';
+import Video from './formats/video';
 
-import { Code as InlineCode } from 'quill/formats/code';
+import { Code as InlineCode } from './formats/code';
 
-import ImageTooltip from 'quill/modules/image-tooltip';
-import LinkTooltip from 'quill/modules/link-tooltip';
-import Toolbar from 'quill/modules/toolbar';
-import CodeHighlighter, { CodeBlock, CodeToken } from 'quill/modules/code-highlighter';
+import ImageTooltip from './modules/image-tooltip';
+import LinkTooltip from './modules/link-tooltip';
+import Toolbar from './modules/toolbar';
+import CodeHighlighter, { CodeBlock, CodeToken } from './modules/code-highlighter';
 
-import Icons from 'quill/ui/icons';
-import Picker from 'quill/ui/picker';
-import ColorPicker from 'quill/ui/color-picker';
-import IconPicker from 'quill/ui/icon-picker';
+import Icons from './ui/icons';
+import Picker from './ui/picker';
+import ColorPicker from './ui/color-picker';
+import IconPicker from './ui/icon-picker';
 
-import BubbleTheme from 'quill/themes/bubble';
-import SnowTheme from 'quill/themes/snow';
+import BubbleTheme from './themes/bubble';
+import SnowTheme from './themes/snow';
 
 
 Quill.register({

@@ -1,7 +1,7 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from 'quill/core/editor';
-import Emitter from 'quill/core/emitter';
-import Selection, { Range } from 'quill/core/selection';
+import Editor from '../../../core/editor';
+import Emitter from '../../../core/emitter';
+import Selection, { Range } from '../../../core/selection';
 
 
 describe('Editor', function() {

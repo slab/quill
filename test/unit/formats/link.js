@@ -1,6 +1,6 @@
 import Delta from 'rich-text/lib/delta';
-import Editor from 'quill/core/editor';
-import Link from 'quill/formats/link';
+import Editor from '../../../core/editor';
+import Link from '../../../formats/link';
 
 
 describe('Link', function() {

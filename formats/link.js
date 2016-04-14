@@ -1,4 +1,4 @@
-import Inline from 'quill/blots/inline';
+import Inline from '../blots/inline';
 
 
 class Link extends Inline {

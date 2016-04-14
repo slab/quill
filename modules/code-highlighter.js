@@ -1,7 +1,7 @@
 import Parchment from 'parchment';
-import Quill from 'quill/core';
-import Module from 'quill/core/module';
-import CodeBlock from 'quill/formats/code';
+import Quill from '../core/quill';
+import Module from '../core/module';
+import CodeBlock from '../formats/code';
 
 
 class HighlightCodeBlock extends CodeBlock {

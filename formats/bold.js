@@ -1,4 +1,4 @@
-import Inline from 'quill/blots/inline';
+import Inline from '../blots/inline';
 
 class Bold extends Inline { }
 Bold.blotName = 'bold';

@@ -1,5 +1,5 @@
-import Quill from 'quill/core';
-import Module from 'quill/core/module';
+import Quill from '../core/quill';
+import Module from '../core/module';
 
 
 class History extends Module {

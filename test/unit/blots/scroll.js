@@ -1,6 +1,6 @@
 import Parchment from 'parchment';
-import Emitter from 'quill/core/emitter';
-import Scroll from 'quill/blots/scroll';
+import Emitter from '../../../core/emitter';
+import Scroll from '../../../blots/scroll';
 
 
 describe('Scroll', function() {

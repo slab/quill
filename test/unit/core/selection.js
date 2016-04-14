@@ -1,7 +1,7 @@
 import Delta from 'rich-text/lib/delta';
-import Selection, { Range, findLeaf } from 'quill/core/selection';
-import Cursor from 'quill/blots/cursor';
-import Scroll from 'quill/blots/scroll';
+import Selection, { Range, findLeaf } from '../../../core/selection';
+import Cursor from '../../../blots/cursor';
+import Scroll from '../../../blots/scroll';
 
 
 describe('Selection', function() {

@@ -1,7 +1,7 @@
 import Delta from 'rich-text/lib/delta';
-import Quill, { overload } from 'quill/core/quill';
-import Emitter from 'quill/core/emitter';
-import { Range } from 'quill/core/selection';
+import Quill, { overload } from '../../../core/quill';
+import Emitter from '../../../core/emitter';
+import { Range } from '../../../core/selection';
 
 
 describe('Quill', function() {

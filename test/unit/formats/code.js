@@ -1,7 +1,7 @@
 import Parchment from 'parchment';
 import Delta from 'rich-text/lib/delta';
-import Editor from 'quill/core/editor';
-import CodeBlock from 'quill/formats/code';
+import Editor from '../../../core/editor';
+import CodeBlock from '../../../formats/code';
 
 
 describe('Code', function() {

@@ -1,8 +1,8 @@
 import Parchment from 'parchment';
-import Emitter from 'quill/core/emitter';
-import BreakBlot from 'quill/blots/break';
-import Block, { BlockEmbed } from 'quill/blots/block';
-import CursorBlot from 'quill/blots/cursor';
+import Emitter from '../core/emitter';
+import BreakBlot from './break';
+import Block, { BlockEmbed } from './block';
+import CursorBlot from './cursor';
 
 
 function isLine(blot) {

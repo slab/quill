@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import { ColorAttributor } from 'quill/formats/color';
+import { ColorAttributor } from './color';
 
 let BackgroundClass = new Parchment.Attributor.Class('background', 'ql-bg', {
   scope: Parchment.Scope.INLINE

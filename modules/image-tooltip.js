@@ -1,7 +1,7 @@
-import Quill from 'quill/core';
-import Module from 'quill/core/module';
-import ImageBlot from 'quill/formats/image';
-import Keyboard from 'quill/modules/keyboard';
+import Quill from '../core/quill';
+import Module from '../core/module';
+import ImageBlot from '../formats/image';
+import Keyboard from './keyboard';
 
 
 class ImageTooltip extends Module {

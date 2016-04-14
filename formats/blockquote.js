@@ -1,4 +1,4 @@
-import Block from 'quill/blots/block';
+import Block from '../blots/block';
 
 
 class Blockquote extends Block {}

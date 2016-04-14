@@ -1,9 +1,9 @@
-import Emitter from 'quill/core/emitter';
-import BaseTheme from 'quill/themes/base';
-import ColorPicker from 'quill/ui/color-picker';
-import IconPicker from 'quill/ui/icon-picker';
-import icons from 'quill/ui/icons';
-import Picker from 'quill/ui/picker';
+import Emitter from '../core/emitter';
+import BaseTheme from './base';
+import ColorPicker from '../ui/color-picker';
+import IconPicker from '../ui/icon-picker';
+import icons from '../ui/icons';
+import Picker from '../ui/picker';
 
 
 const COLORS = [

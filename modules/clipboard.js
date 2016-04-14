@@ -1,9 +1,9 @@
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import Quill from 'quill/core';
-import logger from 'quill/core/logger';
-import Module from 'quill/core/module';
-import { BlockEmbed } from 'quill/blots/block';
+import Quill from '../core/quill';
+import logger from '../core/logger';
+import Module from '../core/module';
+import { BlockEmbed } from '../blots/block';
 
 let debug = logger('quill:clipboard');
 

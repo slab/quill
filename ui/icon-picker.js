@@ -1,4 +1,4 @@
-import Picker from 'quill/ui/picker';
+import Picker from './picker';
 
 
 class IconPicker extends Picker {

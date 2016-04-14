@@ -1,7 +1,7 @@
-import Emitter from 'quill/core/emitter';
-import Theme from 'quill/core/theme';
-import Picker from 'quill/ui/picker';
-import icons from 'quill/ui/icons';
+import Emitter from '../core/emitter';
+import Theme from '../core/theme';
+import Picker from '../ui/picker';
+import icons from '../ui/icons';
 
 
 class BaseTheme extends Theme {

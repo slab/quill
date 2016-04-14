@@ -1,5 +1,5 @@
 import Delta from 'rich-text/lib/delta';
-import Quill from 'quill/core';
+import Quill from '../../../core';
 
 
 describe('History', function() {

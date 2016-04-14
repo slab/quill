@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Scroll from 'quill/blots/scroll';
+import Scroll from '../../../blots/scroll';
 
 
 describe('Block', function() {
