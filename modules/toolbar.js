@@ -65,7 +65,7 @@ class Toolbar extends Module {
         if (input.selectedIndex < 0) return;
         value = input.options[input.selectedIndex].value || false;
       } else {
-        value = input.classList.contains('ql-active') ? false : input.getAttribute('data-value') || true;
+        value = input.classList.contains('ql-active') ? false : input.dataset.value || true;
       }
       if (this.handlers[format]) {
         if (this.handlers[format](value)) return;
@@ -94,8 +94,8 @@ class Toolbar extends Module {
         } else {
           option.selected = true;
         }
-      } if (input.hasAttribute('data-value')) {
-        input.classList.toggle('ql-active', input.getAttribute('data-value') == formats[format]);  // Intentional ==
+      } if (input.dataset.value) {
+        input.classList.toggle('ql-active', input.dataset.value == formats[format]);  // Intentional ==
       } else {
         input.classList.toggle('ql-active', formats[format] || false);
       }
@@ -111,7 +111,7 @@ function addButton(container, format, value) {
   let input = document.createElement('button');
   input.classList.add('ql-' + format);
   if (value != null) {
-    input.setAttribute('data-value', value);
+    input.dataset.value = value;
   }
   container.appendChild(input);
 }

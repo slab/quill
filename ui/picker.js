@@ -18,7 +18,7 @@ class Picker {
     let item = document.createElement('span');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
-      item.setAttribute('data-value', option.getAttribute('value'));
+      item.dataset.value = option.getAttribute('value');
     }
     item.addEventListener('click', this.selectItem.bind(this, item, true));
     return item;
@@ -64,15 +64,15 @@ class Picker {
       selected.classList.remove('ql-selected');
     }
     if (item != null) {
-      let value = item.getAttribute('data-value');
+      let value = item.dataset.value;
       item.classList.add('ql-selected');
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      this.label.setAttribute('data-value', value || '');
+      this.label.dataset.value = value || '';
       if (trigger) {
         this.select.dispatchEvent(new Event('change'));
       }
     } else {
-      this.label.removeAttribute('data-value');
+      delete this.label.dataset.value;
     }
     this.close();
   }

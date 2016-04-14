@@ -72,7 +72,7 @@ class Quill {
       this.disable();
     }
     if (options.placeholder) {
-      this.root.setAttribute('data-placeholder', options.placeholder);
+      this.root.dataset.placeholder = options.placeholder;
     }
     if (options.debug) {
       Quill.debug(options.debug);
