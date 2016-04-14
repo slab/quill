@@ -8,24 +8,12 @@ $(document).ready(function() {
     theme: 'snow'
   });
 
-  // Bootstrap Toolbar has positioning but when showing manually when tooltip is offscreen
-  $('.quill-wrapper').tooltip({ trigger: 'manual', animation: false }).tooltip('show');
-  $('.quill-wrapper + .tooltip').hide();
-  $(window).one('resize', function() {
-    $('.quill-wrapper').tooltip('destroy');
-  });
-  var tooltipTimer = setTimeout(function() {
-    $('.quill-wrapper + .tooltip').fadeIn(1000);
-  }, 2500);
-
   quill.once('selection-change', function(hasFocus) {
     $('#editor').toggleClass('focus', hasFocus);
     // Hack for inability to scroll on mobile
     if (/mobile/i.test(navigator.userAgent)) {
       $('#editor').css('height', quill.root.scrollHeight + 30)   // 30 for padding
     }
-    $('.quill-wrapper').tooltip('destroy');
-    clearTimeout(tooltipTimer);
   });
 
   var users = {
