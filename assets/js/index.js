@@ -1,9 +1,9 @@
-var quill;   // Expose as global so people can easily try out the API
-
 $(document).ready(function() {
-  quill = new Quill('#editor', {
+  // Expose as global so people can easily try out the API
+  var quill = window.quill = new Quill('#editor', {
     modules: {
-      'toolbar': { container: '#toolbar' }
+      'code-highlighter': true,
+      'toolbar': '#toolbar'
     },
     theme: 'snow'
   });
@@ -56,5 +56,5 @@ $(document).ready(function() {
     });
   });
 
-  console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(6, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
+  console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
 });
