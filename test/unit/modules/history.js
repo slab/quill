@@ -46,8 +46,13 @@ describe('History', function() {
     });
 
     it('insert newline', function() {
-      let delta = new Delta().retain(4).insert('\n');
-      expect(getLastChangeIndex(delta)).toEqual(4);
+      let delta = new Delta().retain(4).insert('a\n');
+      expect(getLastChangeIndex(delta)).toEqual(5);
+    });
+
+    it('mutliple newline inserts', function() {
+      let delta = new Delta().retain(4).insert('ab\n\n');
+      expect(getLastChangeIndex(delta)).toEqual(7);
     });
   });
 

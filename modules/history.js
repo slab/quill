@@ -1,3 +1,4 @@
+import Parchment from 'parchment';
 import Quill from '../core/quill';
 import Module from '../core/module';
 
@@ -82,13 +83,30 @@ History.DEFAULTS = {
   userOnly: false
 };
 
+function endsWithNewlineChange(delta) {
+  let lastOp = delta.ops[delta.ops.length - 1];
+  if (lastOp == null) return false;
+  if (lastOp.insert != null) {
+    return typeof lastOp.insert === 'string' && lastOp.insert.endsWith('\n');
+  }
+  if (lastOp.attributes != null) {
+    return Object.keys(lastOp.attributes).some(function(attr) {
+      return Parchment.query(attr, Parchment.Scope.BLOCK) != null;
+    });
+  }
+  return false;
+}
+
 function getLastChangeIndex(delta) {
-  let totalLength = delta.length();
   let deleteLength = delta.ops.reduce(function(length, op) {
     length += (op.delete || 0);
     return length;
   }, 0);
-  return totalLength - deleteLength;
+  let changeIndex = delta.length() - deleteLength;
+  if (endsWithNewlineChange(delta)) {
+    changeIndex -= 1;
+  }
+  return changeIndex;
 }
 
 
