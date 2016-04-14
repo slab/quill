@@ -49,8 +49,8 @@ class ImageTooltip extends Module {
 
   show() {
     this.container.classList.remove('ql-hidden');
-    this.textbox.focus();
     this.center();
+    this.textbox.focus();
     return true;
   }
 
