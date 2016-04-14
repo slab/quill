@@ -83,21 +83,13 @@ History.DEFAULTS = {
 };
 
 function getLastChangeIndex(delta) {
-  let index = 0, lastIndex = 0;
-  delta.ops.forEach(function(op) {
-    if (op.insert != null) {
-      lastIndex = Math.max(index + (op.insert.length || 1), lastIndex);
-    } else if (op["delete"] != null) {
-      lastIndex = Math.max(index, lastIndex);
-    } else if (op.retain != null) {
-      if (op.attributes != null) {
-        lastIndex = Math.max(index + op.retain, lastIndex);
-      }
-      index += op.retain;
-    }
-  });
-  return lastIndex;
+  let totalLength = delta.length();
+  let deleteLength = delta.ops.reduce(function(length, op) {
+    length += (op.delete || 0);
+    return length;
+  }, 0);
+  return totalLength - deleteLength;
 }
 
 
-export default History;
+export { History as default, getLastChangeIndex };
