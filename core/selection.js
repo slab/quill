@@ -121,8 +121,8 @@ class Selection {
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
-    if (!this.root.contains(nativeRange.startContainer) ||
-        (!nativeRange.collapsed && !this.root.contains(nativeRange.endContainer))) {
+    if (!contains(this.root, nativeRange.startContainer) ||
+        (!nativeRange.collapsed && !contains(this.root, nativeRange.endContainer))) {
       return null;
     }
     let range = {
@@ -244,6 +244,15 @@ class Selection {
   }
 }
 
+
+function contains(parent, descendant) {
+  // IE11 has bug with Text nodes
+  // https://connect.microsoft.com/IE/feedback/details/780874/node-contains-is-incorrect
+  if (descendant instanceof Text) {
+    descendant = descendant.parentNode;
+  }
+  return parent.contains(descendant);
+}
 
 function findLeaf(blot, index) {
   let path = blot.path(index);
