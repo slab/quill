@@ -176,14 +176,14 @@ class Selection {
     return document.activeElement === this.root;
   }
 
-  scrollIntoView() {
-    if (this.lastRange == null) return;
-    let bounds = this.getBounds(this.lastRange.index, this.lastRange.length);
+  scrollIntoView(range = this.lastRange) {
+    if (range == null) return;
+    let bounds = this.getBounds(range.index, range.length);
     if (this.root.offsetHeight < bounds.bottom) {
-      let [line, offset] = this.scroll.line(this.lastRange.index + this.lastRange.length);
+      let [line, offset] = this.scroll.line(range.index + range.length);
       line.domNode.scrollIntoView(false);
     } else if (bounds.top < 0) {
-      let [line, offset] = this.scroll.line(this.lastRange.index);
+      let [line, offset] = this.scroll.line(range.index);
       line.domNode.scrollIntoView();
     }
   }
