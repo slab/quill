@@ -26,9 +26,15 @@ class Quill {
 
   static register(path, target, overwrite = false) {
     if (typeof path === 'object') {
-      Object.keys(path).forEach((key) => {
-        this.register(key, path[key], target);
-      });
+      let name = path.attrName || path.blotName;
+      if (typeof name === 'string') {
+        // register(Blot | Attributor, overwrite)
+        this.register('formats/' + name, path, target);
+      } else {
+        Object.keys(path).forEach((key) => {
+          this.register(key, path[key], target);
+        });
+      }
     } else {
       if (this.imports[path] != null && !overwrite) {
         debug.warn(`Overwriting ${path} with`, target);
