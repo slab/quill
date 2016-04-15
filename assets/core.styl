@@ -1,10 +1,7 @@
+// Styles necessary for Quill
+
 LIST_STYLE = decimal lower-alpha lower-roman
 MAX_INDENT = 8
-
-controlHeight = 24px
-inputPadding = 5px
-iconPadding = 3px inputPadding
-
 
 resets(arr)
   unquote('list-' + join(' list-', arr))
@@ -17,53 +14,10 @@ resets(arr)
   margin: 0px
   position: relative
 
-.ql-hidden
-  display: none
-
 .ql-clipboard
   left: -100000px
   position: absolute
   top: 50%
-
-.ql-tooltip
-  position: absolute
-  a
-    cursor: pointer
-    text-decoration: none
-
-.ql-toolbar
-  button
-    background: none
-    border: none
-    cursor: pointer
-    display: inline-block
-    float: left
-    height: controlHeight
-    outline: none
-    padding: iconPadding
-    width: controlHeight
-
-    svg
-      height: 100%
-
-  .ql-stroke
-    fill: none
-    stroke-linecap: round
-    stroke-linejoin: round
-    stroke-width: 2
-  .ql-stroke-mitter
-    fill: none
-    stroke-mitterlimit: 10
-    stroke-width: 2
-
-  .ql-empty
-    fill: none
-  .ql-even
-    fill-rule: evenodd
-  .ql-thin, .ql-stroke.ql-thin
-    stroke-width: 1
-  .ql-transparent
-    opacity: 0.4
 
 .ql-editor
   box-sizing: border-box
@@ -80,49 +34,6 @@ resets(arr)
     margin: 0
     padding: 0
     counter-reset: resets(1..MAX_INDENT)
-  h1
-    font-size: 2em
-  h2
-    font-size: 1.5em
-  h3
-    font-size: 1.17em
-  h4
-    font-size: 1em
-  h5
-    font-size: 0.83em
-  h6
-    font-size: 0.67em
-  pre
-    white-space: pre-wrap
-  a
-    text-decoration: underline
-  blockquote
-    border-left: 4px solid #ccc
-    font-style: italic
-    margin-bottom: 5px
-    margin-top: 5px
-    padding-left: 16px
-  code, pre:not(.hljs)    // TODO core should not be aware of hljs
-    background-color: #f0f0f0
-  code, pre
-    border-radius: 3px
-  code
-    font-size: 85%
-    padding-bottom: 2px
-    padding-top: 2px
-    &:before, &:after
-      content: "\00a0"
-      letter-spacing: -2px
-  *:not(pre) + pre, pre:first-of-type
-    margin-top: 5px
-    padding-top: 5px
-  pre
-    margin-bottom: 5px
-    padding: 0px 10px 5px
-  pre + pre
-    margin-top: -10px
-  img
-    max-width: 100%
   ol
     padding-left: 20px
   ul
