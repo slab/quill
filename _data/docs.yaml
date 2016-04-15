@@ -20,10 +20,10 @@
   children:
     - title: Clipboard
       url: /docs/modules/clipboard/
+    - title: History
+      url: /docs/modules/history/
     - title: Keyboard
       url: /docs/modules/keyboard/
-    - title: Undo Manager
-      url: /docs/modules/undo-manager/
     - title: Toolbar
       url: /docs/modules/toolbar/
     - title: Code Highlighter
