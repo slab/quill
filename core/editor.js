@@ -45,10 +45,10 @@ class Editor {
           let formats = extend({}, bubbleFormats(line), bubbleFormats(leaf));
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
-          let key = Object.keys(op.insert)[0];
-          this.scroll.insertAt(index, key, op.insert[key]);
-          attributes = clone(attributes);
-          delete attributes[key];
+          let key = Object.keys(op.insert)[0];  // There should only be one key
+          if (key != null) {
+            this.scroll.insertAt(index, key, op.insert[key]);
+          }
         }
       }
       Object.keys(attributes).forEach((name) => {
