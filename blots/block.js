@@ -1,13 +1,16 @@
 import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
-import BreakBlot from './break';
+import Break from './break';
+import Embed from './embed';
+import Inline from './inline';
+import TextBlot from './text';
 
 
 const NEWLINE_LENGTH = 1;
 
 
-class BlockEmbed extends Parchment.Embed {
+class BlockEmbed extends Embed {
   attach() {
     super.attach();
     this.attributes = new Parchment.Attributor.Store(this.domNode);
@@ -87,7 +90,7 @@ class Block extends Parchment.Block {
   insertBefore(blot, ref) {
     let head = this.children.head;
     super.insertBefore(blot, ref);
-    if (head instanceof BreakBlot) {
+    if (head instanceof Break) {
       head.remove();
     }
   }
@@ -117,6 +120,7 @@ class Block extends Parchment.Block {
 }
 Block.blotName = 'block';
 Block.childless = 'break';
+Block.children = [Inline, Embed, TextBlot];
 Block.tagName = 'P';
 
 

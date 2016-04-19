@@ -1,7 +1,7 @@
-import Parchment from 'parchment';
+import Embed from './embed';
 
 
-class Break extends Parchment.Leaf {
+class Break extends Embed {
   insertInto(parent, ref) {
     if (parent.children.length === 0) {
       super.insertInto(parent, ref);

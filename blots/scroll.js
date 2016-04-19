@@ -1,8 +1,11 @@
 import Parchment from 'parchment';
 import Emitter from '../core/emitter';
-import BreakBlot from './break';
+import logger from '../core/logger';
 import Block, { BlockEmbed } from './block';
-import CursorBlot from './cursor';
+import Container from './container';
+
+
+let debug = logger('quill:scroll');
 
 
 function isLine(blot) {
@@ -45,15 +48,6 @@ class Scroll extends Parchment.Scroll {
     super.insertAt(index, value, def);
   }
 
-  insertBefore(childBlot, refBlot) {
-    if (childBlot.statics.scope === Parchment.Scope.INLINE_BLOT) {
-      let block = Parchment.create(Parchment.Scope.BLOCK);
-      block.insertBefore(childBlot);
-      childBlot = block;
-    }
-    super.insertBefore(childBlot, refBlot);
-  }
-
   line(index) {
     return this.descendant(isLine, index);
   }
@@ -90,6 +84,7 @@ class Scroll extends Parchment.Scroll {
 Scroll.blotName = 'scroll';
 Scroll.className = 'ql-editor';
 Scroll.childless = 'block';
+Scroll.children = [Block, BlockEmbed, Container];
 Scroll.tagName = 'DIV';
 
 

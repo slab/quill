@@ -1,8 +1,8 @@
-import Parchment from 'parchment';
+import Embed from '../blots/embed';
 import Link from '../formats/link';
 
 
-class Image extends Parchment.Embed {
+class Image extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {

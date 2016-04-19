@@ -1,7 +1,7 @@
-import Parchment from 'parchment';
+import Embed from '../blots/embed';
 
 
-class Formula extends Parchment.Embed {
+class Formula extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {

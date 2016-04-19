@@ -3,9 +3,12 @@ import Quill from './core/quill';
 
 import Block, { EmbedBlock } from './blots/block';
 import Break from './blots/break';
+import Container from './blots/container';
 import Cursor from './blots/cursor';
+import Embed from './blots/embed';
 import Inline from './blots/inline';
 import Scroll from './blots/scroll';
+import TextBlot from './blots/text';
 
 import Clipboard from './modules/clipboard';
 import History from './modules/history';
@@ -15,18 +18,19 @@ Quill.register({
   'blots/block'        : Block,
   'blots/block/embed'  : EmbedBlock,
   'blots/break'        : Break,
+  'blots/container'    : Container,
   'blots/cursor'       : Cursor,
-  'blots/embed'        : Parchment.Embed,
+  'blots/embed'        : Embed,
   'blots/inline'       : Inline,
   'blots/scroll'       : Scroll,
-  'blots/text'         : Parchment.Text,
+  'blots/text'         : TextBlot,
 
   'modules/clipboard'  : Clipboard,
   'modules/history'    : History,
   'modules/keyboard'   : Keyboard
 });
 
-Parchment.register(Block, Break, Cursor, Inline, Scroll, Parchment.Text);
+Parchment.register(Block, Break, Cursor, Inline, Scroll, TextBlot);
 
 
 export default Quill;

@@ -2,9 +2,38 @@ import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
+import Container from '../blots/container';
 
 
-class List extends Parchment.Container {
+class ListItem extends Block {
+  static formats(domNode) {
+    return domNode.tagName === ListItem.tagName ? undefined : super.formats(domNode);
+  }
+
+  format(name, value) {
+    if (name === List.blotName && !value) {
+      this.replaceWith(Parchment.create(this.statics.scope));
+    } else {
+      super.format(name, value);
+    }
+  }
+
+  replaceWith(name, value) {
+    this.parent.isolate(this.offset(this.parent), this.length());
+    if (name === List.blotName) {
+      this.parent.replaceWith(name, value);
+      return this;
+    } else {
+      this.parent.unwrap();
+      return super.replaceWith(name, value);
+    }
+  }
+}
+ListItem.blotName = 'list-item';
+ListItem.tagName = 'LI';
+
+
+class List extends Container {
   static create(value) {
     if (value === 'ordered') {
       value = 'OL';
@@ -39,47 +68,19 @@ class List extends Parchment.Container {
   }
 
   replace(target) {
-    super.replace(target);
     if (target.statics.blotName !== this.statics.blotName) {
       let item = Parchment.create(this.statics.childless);
-      this.moveChildren(item);
+      target.moveChildren(item);
       this.appendChild(item);
     }
+    super.replace(target);
   }
 }
 List.blotName = 'list';
 List.childless = 'list-item';
+List.children = [ListItem];
 List.scope = Parchment.Scope.BLOCK_BLOT;
 List.tagName = ['OL', 'UL'];
-
-
-class ListItem extends Block {
-  static formats(domNode) {
-    return domNode.tagName === ListItem.tagName ? undefined : super.formats(domNode);
-  }
-
-  format(name, value) {
-    if (name === List.blotName && !value) {
-      this.replaceWith(Parchment.create(this.statics.scope));
-    } else {
-      super.format(name, value);
-    }
-  }
-
-  replaceWith(name, value) {
-    this.parent.isolate(this.offset(this.parent), this.length());
-    if (name === List.blotName) {
-      this.parent.replaceWith(name, value);
-      return this;
-    } else {
-      let replacement = super.replaceWith(name, value);
-      replacement.parent.unwrap();
-      return replacement;
-    }
-  }
-}
-ListItem.blotName = 'list-item';
-ListItem.tagName = 'LI';
 
 
 export { ListItem, List as default };

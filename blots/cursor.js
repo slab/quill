@@ -1,7 +1,8 @@
 import Parchment from 'parchment';
+import Embed from './embed';
 
 
-class Cursor extends Parchment.Leaf {
+class Cursor extends Embed {
   constructor(domNode, selection) {
     super(domNode);
     this.selection = selection;
