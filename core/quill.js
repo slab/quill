@@ -25,7 +25,7 @@ class Quill {
   }
 
   static register(path, target, overwrite = false) {
-    if (typeof path === 'object') {
+    if (typeof path !== 'string') {
       let name = path.attrName || path.blotName;
       if (typeof name === 'string') {
         // register(Blot | Attributor, overwrite)
