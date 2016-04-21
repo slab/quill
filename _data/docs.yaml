@@ -8,13 +8,15 @@
   url: /docs/api/
   children:
     - title: Content
-      url: /docs/api/#content
+      url: /docs/api/#content-1
+    - title: Formatting
+      url: /docs/api/#formatting-1
     - title: Selection
-      url: /docs/api/#selection
+      url: /docs/api/#selection-1
     - title: Events
-      url: /docs/api/#events
+      url: /docs/api/#events-1
     - title: Extension
-      url: /docs/api/#extension
+      url: /docs/api/#extension-1
 - title: Modules
   url: /docs/modules/
   children:
