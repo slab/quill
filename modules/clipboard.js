@@ -229,4 +229,4 @@ function matchText(node, delta) {
 }
 
 
-export default Clipboard;
+export { Clipboard as default, matchAttributor, matchBlot, matchNewline, matchSpacing, matchText };
