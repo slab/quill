@@ -83,9 +83,9 @@ class Scroll extends Parchment.Scroll {
 }
 Scroll.blotName = 'scroll';
 Scroll.className = 'ql-editor';
-Scroll.childless = 'block';
-Scroll.children = [Block, BlockEmbed, Container];
 Scroll.tagName = 'DIV';
+Scroll.defaultChild = 'block';
+Scroll.allowedChildren = [Block, BlockEmbed, Container];
 
 
 export default Scroll;

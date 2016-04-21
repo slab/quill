@@ -69,7 +69,7 @@ class List extends Container {
 
   replace(target) {
     if (target.statics.blotName !== this.statics.blotName) {
-      let item = Parchment.create(this.statics.childless);
+      let item = Parchment.create(this.statics.defaultChild);
       target.moveChildren(item);
       this.appendChild(item);
     }
@@ -77,10 +77,10 @@ class List extends Container {
   }
 }
 List.blotName = 'list';
-List.childless = 'list-item';
-List.children = [ListItem];
 List.scope = Parchment.Scope.BLOCK_BLOT;
 List.tagName = ['OL', 'UL'];
+List.defaultChild = 'list-item';
+List.allowedChilren = [ListItem];
 
 
 export { ListItem, List as default };

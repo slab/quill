@@ -119,9 +119,9 @@ class Block extends Parchment.Block {
   }
 }
 Block.blotName = 'block';
-Block.childless = 'break';
-Block.children = [Inline, Embed, TextBlot];
 Block.tagName = 'P';
+Block.defaultChild = 'break';
+Block.allowedChildren = [Inline, Embed, TextBlot];
 
 
 function bubbleFormats(blot, formats = {}) {

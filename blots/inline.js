@@ -18,7 +18,7 @@ class Inline extends Parchment.Inline {
     }
   }
 }
-Inline.children = [Inline, Embed, Text];
+Inline.allowedChilren = [Inline, Embed, Text];
 // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
 Inline.order = [
   'cursor', 'inline',   // Must be lower
