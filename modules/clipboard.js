@@ -183,11 +183,14 @@ function matchBlot(node, delta) {
   if (match == null) return delta;
   if (match.prototype instanceof Parchment.Embed) {
     let embed = {};
-    embed[match.blotName] = match.value(node);
-    delta.insert(embed, match.formats(node));
-    if (match.prototype instanceof BlockEmbed) {
-      let newlineDelta = matchAttributor(node, new Delta().insert('\n'));
-      delta = delta.concat(newlineDelta);
+    let value = match.value(node);
+    if (value != null) {
+      embed[match.blotName] = value;
+      delta.insert(embed, match.formats(node));
+      if (match.prototype instanceof BlockEmbed) {
+        let newlineDelta = matchAttributor(node, new Delta().insert('\n'));
+        delta = delta.concat(newlineDelta);
+      }
     }
   } else if (typeof match.formats === 'function') {
     let formats = {};

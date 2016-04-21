@@ -3,6 +3,10 @@ import Embed from './embed';
 
 
 class Cursor extends Embed {
+  static value(domNode) {
+    return undefined;
+  }
+
   constructor(domNode, selection) {
     super(domNode);
     this.selection = selection;

@@ -35,6 +35,30 @@ describe('Editor', function() {
       expect(this.container).toEqualHTML('<p>0</p><p>!</p><p>3</p>');
     });
 
+    it('end of document', function() {
+      let editor = this.initialize(Editor, '<p>Hello</p>');
+      editor.insertText(6, 'World!');
+      expect(editor.getDelta()).toEqual(new Delta().insert('Hello\nWorld!\n'));
+      expect(this.container).toEqualHTML('<p>Hello</p><p>World!</p>');
+    });
+
+    it('end of document with newline', function() {
+      let editor = this.initialize(Editor, '<p>Hello</p>');
+      editor.insertText(6, 'World!\n');
+      expect(editor.getDelta()).toEqual(new Delta().insert('Hello\nWorld!\n'));
+      expect(this.container).toEqualHTML('<p>Hello</p><p>World!</p>');
+    });
+
+    it('embed at end of document with newline', function() {
+      let editor = this.initialize(Editor, '<p>Hello</p>');
+      editor.insertEmbed(6, 'image', '/assets/favicon.png');
+      expect(editor.getDelta()).toEqual(new Delta()
+        .insert('Hello\n')
+        .insert({ image: '/assets/favicon.png' })
+        .insert('\n'));
+      expect(this.container).toEqualHTML('<p>Hello</p><p><img src="/assets/favicon.png"></p>');
+    });
+
     it('newline splitting', function() {
       let editor = this.initialize(Editor, '<p><strong>0123</strong></p>');
       editor.insertText(2, '\n');
