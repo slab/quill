@@ -37,8 +37,8 @@ Simply create a container and the module to the Quill editor.
 
 <!-- Initialize editor and toolbar -->
 <script>
-  var editor = new Quill('#editor');
-  editor.addModule('toolbar', {
+  var quill = new Quill('#editor');
+  quill.addModule('toolbar', {
     container: '#toolbar'     // Selector for toolbar container
   });
 </script>
@@ -72,7 +72,7 @@ The following classes are also recognized by the toolbar but largely used by [Th
 <!-- script -->
 <script src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
-  var editor = new Quill('#toolbar-editor', {
+  var quill = new Quill('#toolbar-editor', {
     modules: {
       toolbar: { container: '#toolbar-toolbar' }
     },

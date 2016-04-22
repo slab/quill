@@ -26,8 +26,8 @@ function handler() {
   console.log('Hello!');
 }
 
-editor.on('text-change', handler);
-editor.off('text-change', handler);
+quill.on('text-change', handler);
+quill.off('text-change', handler);
 {% endhighlight %}
 
 
@@ -53,7 +53,7 @@ Adds event handler.
 **Examples**
 
 {% highlight javascript %}
-editor.on('text-change', function() {
+quill.on('text-change', function() {
   console.log('Text change!');
 });
 {% endhighlight %}
@@ -81,7 +81,7 @@ Adds handler for one emission of an event.
 **Examples**
 
 {% highlight javascript %}
-editor.once('text-change', function() {
+quill.once('text-change', function() {
   console.log('First text change!');
 });
 {% endhighlight %}
@@ -109,7 +109,7 @@ Changes may occur through an API but as long as they originate from the user, th
 **Examples**
 
 {% highlight javascript %}
-editor.on('text-change', function(delta, oldDelta, source) {
+quill.on('text-change', function(delta, oldDelta, source) {
   if (source == 'api') {
     console.log("An API call triggered this change.");
   } else if (source == 'user') {
@@ -136,12 +136,12 @@ You can also use this event as a focus change event by just checking if the emit
 **Examples**
 
 {% highlight javascript %}
-editor.on('selection-change', function(range, oldRange, source) {
+quill.on('selection-change', function(range, oldRange, source) {
   if (range) {
     if (range.start == range.end) {
       console.log('User cursor is on', range.start);
     } else {
-      var text = editor.getText(range.start, range.end);
+      var text = quill.getText(range.start, range.end);
       console.log('User has highlighted', text);
     }
   } else {

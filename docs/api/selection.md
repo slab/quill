@@ -37,8 +37,8 @@ Retrieves the pixel position (relative to the editor container) and boundaries o
 **Examples**
 
 {% highlight javascript %}
-editor.setText('Hello\nWorld\n');
-editor.getBounds(7);    // Returns { height: 15, width: 0, left: 27, top: 31 }
+quill.setText('Hello\nWorld\n');
+quill.getBounds(7);    // Returns { height: 15, width: 0, left: 27, top: 31 }
 {% endhighlight %}
 
 
@@ -63,12 +63,12 @@ Retrieves the user's selection range.
 **Examples**
 
 {% highlight javascript %}
-var range = editor.getSelection();
+var range = quill.getSelection();
 if (range) {
   if (range.index == range.length) {
     console.log('User cursor is at index', range.index);
   } else {
-    var text = editor.getText(range.index, range.length);
+    var text = quill.getText(range.index, range.length);
     console.log('User has highlighted: ', text);
   }
 } else {
@@ -92,7 +92,7 @@ Checks if editor has focus. Note focus on toolbar, tooltips, does not count as t
 **Examples**
 
 {% highlight javascript %}
-editor.hasFocus();
+quill.hasFocus();
 {% endhighlight %}
 
 
@@ -119,5 +119,5 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 **Examples**
 
 {% highlight javascript %}
-editor.setSelection(0, 5);
+quill.setSelection(0, 5);
 {% endhighlight %}

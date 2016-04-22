@@ -20,8 +20,8 @@ Format text at user's current selection. If the user's selection length is 0, i.
 **Examples**
 
 {% highlight javascript %}
-editor.format('color', 'red');
-editor.format('align', 'right');
+quill.format('color', 'red');
+quill.format('align', 'right');
 {% endhighlight %}
 
 
@@ -51,10 +51,10 @@ Formats all lines in given range. See [formats](/docs/formats/) for a list of av
 **Examples**
 
 {% highlight javascript %}
-editor.setText('Hello\nWorld!\n');
+quill.setText('Hello\nWorld!\n');
 
-editor.formatLine(1, 2, 'align', 'right');   // right aligns the first line
-editor.formatLine(4, 4, 'align', 'center');  // center aligns both lines
+quill.formatLine(1, 2, 'align', 'right');   // right aligns the first line
+quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 {% endhighlight %}
 
 
@@ -84,16 +84,16 @@ Formats text in the editor. For line level formats, such as text alignment, targ
 **Examples**
 
 {% highlight javascript %}
-editor.setText('Hello\nWorld!\n');
+quill.setText('Hello\nWorld!\n');
 
-editor.formatText(0, 5, 'bold', true);      // bolds 'hello'
+quill.formatText(0, 5, 'bold', true);      // bolds 'hello'
 
-editor.formatText(0, 5, {                   // unbolds 'hello' and set its color to blue
+quill.formatText(0, 5, {                   // unbolds 'hello' and set its color to blue
   'bold': false,
   'color': 'rgb(0, 0, 255)'
 });
 
-editor.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
+quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 {% endhighlight %}
 
 
@@ -121,24 +121,24 @@ Retrieves common formatting of the text in the given range. For a format to be r
 **Examples**
 
 {% highlight javascript %}
-editor.setText('Hello World!');
-editor.formatText(0, 2, 'bold', true);
-editor.formatText(1, 2, 'italic', true);
-editor.getFormat(0, 2);   // { bold: true }
-editor.getFormat(1, 1);   // { bold: true, italic: true }
+quill.setText('Hello World!');
+quill.formatText(0, 2, 'bold', true);
+quill.formatText(1, 2, 'italic', true);
+quill.getFormat(0, 2);   // { bold: true }
+quill.getFormat(1, 1);   // { bold: true, italic: true }
 
-editor.formatText(0, 2, 'color', 'red');
-editor.formatText(2, 1, 'color', 'blue');
-editor.getFormat(0, 3);   // { color: ['red', 'blue'] }
+quill.formatText(0, 2, 'color', 'red');
+quill.formatText(2, 1, 'color', 'blue');
+quill.getFormat(0, 3);   // { color: ['red', 'blue'] }
 
-editor.setSelection(3);
-editor.getFormat();       // { italic: true, color: 'blue' }
+quill.setSelection(3);
+quill.getFormat();       // { italic: true, color: 'blue' }
 
-editor.format('underline', true);
-editor.getFormat();       // { italic: true, color: 'blue', underline: 'true' }
+quill.format('underline', true);
+quill.getFormat();       // { italic: true, color: 'blue', underline: 'true' }
 
-editor.formatLine(0, 1, 'align', 'right');
-editor.getFormat();       // { italic: true, color: 'blue', underline: 'true', align: 'right' }
+quill.formatLine(0, 1, 'align', 'right');
+quill.getFormat();       // { italic: true, color: 'blue', underline: 'true', align: 'right' }
 {% endhighlight %}
 
 
@@ -162,7 +162,7 @@ Removes all formatting and embeds within given range. Line formatting will be re
 **Examples**
 
 {% highlight javascript %}
-editor.setContents([
+quill.setContents([
   { insert: 'Hello', { bold: true } },
   { insert: '\n', { align: 'center' } },
   { insert: { formula: 'x^2' } },
@@ -171,7 +171,7 @@ editor.setContents([
   { insert: '\n', { align: 'center' } }
 ]);
 
-editor.removeFormat(3, 7);
+quill.removeFormat(3, 7);
 // Editor contents are now
 // [
 //   { insert: 'Hel', { bold: true } },

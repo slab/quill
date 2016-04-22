@@ -106,7 +106,7 @@ Adds a container inside the Quill container, sibling to the editor itself. By co
 **Examples**
 
 {% highlight javascript %}
-var container = editor.addContainer('ql-custom');
+var container = quill.addContainer('ql-custom');
 {% endhighlight %}
 
 
@@ -131,7 +131,7 @@ Retrieves a module that has been added to the editor.
 **Examples**
 
 {% highlight javascript %}
-var toolbar = editor.getModule('toolbar');
+var toolbar = quill.getModule('toolbar');
 {% endhighlight %}
 
 
@@ -158,8 +158,8 @@ Set ability for user to edit, via input devices like the mouse or keyboard. Does
 **Examples**
 
 {% highlight javascript %}
-editor.enable();
-editor.enable(false);   // Disables user input
+quill.enable();
+quill.enable(false);   // Disables user input
 {% endhighlight %}
 
 
@@ -181,5 +181,5 @@ Synchronously check editor for user updates and fires events, if changes have oc
 **Examples**
 
 {% highlight javascript %}
-editor.update();
+quill.update();
 {% endhighlight %}

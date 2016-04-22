@@ -20,7 +20,7 @@ Deletes text from the editor.
 **Examples**
 
 {% highlight javascript %}
-editor.deleteText(6, 4);
+quill.deleteText(6, 4);
 {% endhighlight %}
 
 
@@ -48,7 +48,7 @@ Retrieves contents of the editor, with formatting data, represented by a [Delta]
 **Examples**
 
 {% highlight javascript %}
-var delta = editor.getContents();
+var delta = quill.getContents();
 {% endhighlight %}
 
 
@@ -67,7 +67,7 @@ Retrieves the length of the editor contents.
 **Examples**
 
 {% highlight javascript %}
-var length = editor.getLength();
+var length = quill.getLength();
 {% endhighlight %}
 
 
@@ -95,7 +95,7 @@ Retrieves the string contents of the editor.
 **Examples**
 
 {% highlight javascript %}
-var text = editor.getText(0, 10);
+var text = quill.getText(0, 10);
 {% endhighlight %}
 
 
@@ -120,7 +120,7 @@ Insert embedded content into the editor.
 **Examples**
 
 {% highlight javascript %}
-editor.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
+quill.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
 {% endhighlight %}
 
 
@@ -151,9 +151,9 @@ Inserts text into the editor. See [formats](/docs/formats/) for a list of availa
 **Examples**
 
 {% highlight javascript %}
-editor.insertText(0, 'Hello', 'bold', true);
+quill.insertText(0, 'Hello', 'bold', true);
 
-editor.insertText(5, 'Quill', {
+quill.insertText(5, 'Quill', {
   'italic': true,
   'fore-color': '#ffff00'
 });
@@ -177,7 +177,7 @@ Overwrites editor with given contents. Contents should end with a newline (see [
 **Examples**
 
 {% highlight javascript %}
-editor.setContents([
+quill.setContents([
   { insert: 'Hello ' },
   { insert: 'World!', attributes: { bold: true } },
   { insert: '\n' }
@@ -202,7 +202,7 @@ Sets contents of editor with given text. Note Quill documents must end with a ne
 **Examples**
 
 {% highlight javascript %}
-editor.setText('Hello\n');
+quill.setText('Hello\n');
 {% endhighlight %}
 
 
@@ -224,7 +224,7 @@ Applies Delta to editor contents.
 
 {% highlight javascript %}
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
-editor.updateContents({
+quill.updateContents({
   ops: [
     { retain: 6 },        // Keep 'Hello '
     { delete: 5 },        // 'World' is deleted

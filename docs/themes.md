@@ -17,7 +17,7 @@ To use a custom theme, simply add its stylesheet in the `<head>`:
 and specify its usage at initialization:
 
 {% highlight javascript %}
-var editor = new Quill('#editor', {
+var quill = new Quill('#editor', {
   theme: 'snow'
 });
 {% endhighlight %}
