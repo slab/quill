@@ -6,8 +6,6 @@ stylesheets:
   - '!site.cdn!!site.version!/quill.snow.css'
 ---
 
-# Toolbar
-
 TODO: Review
 
 The Toolbar module allow users to easily format Quill's contents.

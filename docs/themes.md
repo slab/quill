@@ -4,8 +4,6 @@ title: Themes
 permalink: /docs/themes/
 ---
 
-# Themes
-
 TODO: Review
 
 Themes allow you to easily make your Quill editor look good with minimal effort.

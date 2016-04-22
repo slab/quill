@@ -4,8 +4,6 @@ title: API
 permalink: /docs/api/
 ---
 
-# API
-
 #### Content
 - [deleteText](#deletetext)
 - [getContents](#getcontents)

@@ -305,6 +305,13 @@ footer li {
   margin-top: 20px;
   padding-bottom: 80px;
 }
+#docs-container .edit-link {
+  display: inline-block;
+  line-height: 32px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  vertical-align: middle;
+}
 #docs-container > pre, #docs-container > table, #docs-container > ul {
   margin-left: 20px;
 }
@@ -322,6 +329,9 @@ footer li {
   background-color: #fff;
   border: none;
   padding: 0px;
+}
+#docs-container > h1:first-of-type {
+  display: inline-block;
 }
 #docs-container > h1 {
   font-size: 32px;

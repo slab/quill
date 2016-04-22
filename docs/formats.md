@@ -6,8 +6,6 @@ permalink: /docs/formats/
 
 TODO: Review
 
-# Formats
-
 Quill currently supports a number of formats. Enabling a format:
 
 - \- Allows the Quill Editor to recognize the format

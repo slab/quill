@@ -4,8 +4,6 @@ title: Quickstart
 permalink: /docs/quickstart/
 ---
 
-# Quickstart
-
 TODO: Review
 
 The best way to get started is a simple example. Quill is initialized with a DOM element to contain the editor. The contents of that element will become the initial contents of Quill.
