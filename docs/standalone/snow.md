@@ -17,8 +17,7 @@ permalink: /standalone/snow/
   }
 </style>
 <!-- head -->
-<div id="editor-container"><pre>var test = true;
-var no = false;</pre></div>
+<div id="editor-container"></div>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
 <script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>

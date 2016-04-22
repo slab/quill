@@ -15,8 +15,11 @@ permalink: /standalone/bubble/
   }
 </style>
 <!-- head -->
-<div id="editor-container"><p>Test</p></div>
+<div id="editor-container"></div>
 <script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
-  var quill = new Quill('#editor-container', { theme: 'bubble' });
+  var quill = new Quill('#editor-container', {
+    placeholder: 'Compose an epic...',
+    theme: 'bubble'
+  });
 </script>
