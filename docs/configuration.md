@@ -4,8 +4,6 @@ title: Configuration
 permalink: /docs/configuration/
 ---
 
-TODO: Review
-
 # Configuration
 
 Quill allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules](/docs/modules/) section for adding new functionality and the [Themes](/docs/themes/) section for styling.
@@ -35,6 +33,11 @@ To configure Quill, pass in an options object:
 
 {% highlight javascript %}
 var options = {
+  debug: 'info',
+  modules: {
+    toolbar: '#toolbar'
+  },
+  placeholder: 'Compose an epic...',
   readOnly: true,
   theme: 'snow'
 };
@@ -43,9 +46,27 @@ var editor = new Quill('#editor', options);
 
 The following keys are recognized:
 
+#### debug
+
+- Default: `false`
+
+- Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Debugging messages are disabled by default.
+
+#### formats
+
+- Default: All formats
+
+- Whitelist of formats to allow in the editor. See [formats](/docs/formats/) for a complete list.
+
 #### modules
 
 - Collection of modules to include and respective options. See [Modules](/docs/modules/) for more information.
+
+#### placeholder
+
+- Default: ''
+
+- Placeholder text to show when editor is empty.
 
 #### readOnly
 
