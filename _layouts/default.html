@@ -6,7 +6,10 @@
     {% include meta.html %}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
-    {{ content | split: '<!-- head -->' | first }}
+    {% assign heads = content | split: '<!-- head -->' %}
+    {% if heads.size > 1 %}
+    {{ heads[0] }}
+    {% endif %}
     <link rel="stylesheet" href="/assets/css/styles.css">
     {% include analytics.html  %}
   </head>
@@ -37,7 +40,10 @@
     </footer>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    {{ content | split: '<!-- script -->' | last }}
+    {% assign scripts = content | split: '<!-- script -->' %}
+    {% if scripts.size > 1 %}
+    {{ scripts[1] }}
+    {% endif %}
     <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 </html>

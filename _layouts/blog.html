@@ -1,9 +1,18 @@
 ---
 layout: default
 ---
-
+{% assign heads = content | split: '<!-- head -->' %}
+{% if heads.size > 1 %}
+{{ heads[0] }}
+{% endif %}
+<!-- head -->
 <div id="blog-container" class="container">
   <div class="post-list">
     {{ content }}
   </div>
 </div>
+<!-- script -->
+{% assign scripts = content | split: '<!-- script -->' %}
+{% if scripts.size > 1 %}
+{{ scripts[1] }}
+{% endif %}
