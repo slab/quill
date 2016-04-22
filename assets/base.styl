@@ -16,6 +16,13 @@ iconPadding = 3px inputPadding
     text-decoration: none
 
 .ql-toolbar
+  // clearfix
+  &:before, &:after
+    content: ' '
+    display: table
+  &:after
+    clear: both
+
   button
     background: none
     border: none

@@ -249,6 +249,7 @@ class Quill {
 Quill.DEFAULTS = {
   formats: null,
   modules: {},
+  placeholder: '',
   readOnly: false,
   theme: 'default'
 };
