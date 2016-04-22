@@ -2,9 +2,10 @@
 layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
-stylesheets:
-  - '!site.cdn!!site.version!/quill.snow.css'
 ---
+
+<link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
+<!-- head -->
 
 TODO: Review
 
@@ -16,15 +17,6 @@ The Toolbar module allow users to easily format Quill's contents.
   </div>
   <div id="toolbar-editor" class="editor"></div>
 </div>
-<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
-<script>
-  var editor = new Quill('#toolbar-editor', {
-    modules: {
-      toolbar: { container: '#toolbar-toolbar' }
-    },
-    theme: 'snow'
-  });
-</script>
 
 Simply create a container and the module to the Quill editor.
 
@@ -76,3 +68,14 @@ The following classes are also recognized by the toolbar but largely used by [Th
 - `ql-format-button`
 - `ql-format-group`
 - `ql-format-separator`
+
+<!-- script -->
+<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
+<script>
+  var editor = new Quill('#toolbar-editor', {
+    modules: {
+      toolbar: { container: '#toolbar-toolbar' }
+    },
+    theme: 'snow'
+  });
+</script>

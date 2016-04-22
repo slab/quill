@@ -6,18 +6,14 @@
     {% include meta.html %}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
-    {% if page.stylesheets %}
-      {% for css in page.stylesheets %}
-      <link rel="stylesheet" href="{{ css | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}">
-      {% endfor %}
-    {% endif %}
+    {{ content | split: '<!-- head -->' | first }}
     <link rel="stylesheet" href="/assets/css/styles.css">
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
     {% include navbar.html %}
 
-    {{ content }}
+    {{ content | split: '<!-- head -->' | last | split: '<!-- script -->' | first }}
 
     <footer>
       <div class="container">
@@ -41,11 +37,7 @@
     </footer>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    {% if page.javascripts %}
-      {% for js in page.javascripts %}
-      <script type="text/javascript" src="{{ js | replace: '!site.cdn!', site.cdn | replace: '!site.version!', site.version }}"></script>
-      {% endfor %}
-    {% endif %}
+    {{ content | split: '<!-- script -->' | last }}
     <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 </html>

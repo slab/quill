@@ -2,18 +2,13 @@
 layout: default
 title: Quill - A Rich Text WYSIWYG Editor with an API
 description: Quill is a free, open source WYSIWYG editor built for the modern web. With its expressive API, you can completely customize it to fulfill your needs.
-stylesheets:
-  - 'http://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css'
-  - 'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/monokai-sublime.min.css'
-  - '!site.cdn!!site.version!/quill.snow.css'
-javascripts:
-  - 'http://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js'
-  - 'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js'
-  - '/assets/js/index.js'
-  - '!site.cdn!!site.version!/quill.js'
 bodyClass: 'home'
 redirect_from: /latest/
 ---
+<link href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css" rel="stylesheet">
+<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/monokai-sublime.min.css" rel="stylesheet">
+<link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
+<!-- head -->
 
 <div id="demo-container">
   <div class="quill-wrapper">
@@ -152,3 +147,58 @@ redirect_from: /latest/
     <a href="https://github.com/quilljs/quill/releases/download/v{{ site.version }}/quill.tar.gz" class="btn-lg btn" title="Quill v{{ site.version }}" onclick="ga('send','event','download',this.href);">Download Quill</a>
   </div>
 </div>
+
+<!-- script -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js" type="text/javascript"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js" type="text/javascript"></script>
+<script src="{{ site.cdn }}{{ site.version }}/quill.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  // Expose as global so people can easily try out the API
+  var quill = window.quill = new Quill('#editor', {
+    modules: {
+      'code-highlighter': true,
+      'toolbar': '#toolbar'
+    },
+    theme: 'snow'
+  });
+
+  quill.once('selection-change', function(hasFocus) {
+    $('#editor').toggleClass('focus', hasFocus);
+    // Hack for inability to scroll on mobile
+    if (/mobile/i.test(navigator.userAgent)) {
+      $('#editor').css('height', quill.root.scrollHeight + 30)   // 30 for padding
+    }
+  });
+
+  var users = {
+    'Asana': 'https://asana.com/',
+    'Front': 'https://frontapp.com/',
+    'Intuit': 'https://www.intuit.com/',
+    'Lever': 'https://www.lever.co/',
+    'MerchantCircle': 'http://www.merchantcircle.com/',
+    'Reedsy': 'https://reedsy.com/',
+    'RelateIQ': 'https://www.relateiq.com/',
+    'Respondly': 'https://respond.ly/',
+    'Salesforce': 'http://www.salesforce.com/',
+    'ThemeXpert': 'https://www.themexpert.com/',
+    'Vox Media': 'http://www.voxmedia.com/',
+    'Writer': 'https://chrome.google.com/webstore/detail/writer/hlddiopdeghmcmdjjmpdegemnojihpib?hl=en'
+  };
+
+  var keys = Object.keys(users);
+  // Show users randomly
+  $('#users-container a').each(function(i, link) {
+    var index = Math.floor(Math.random() * keys.length);
+    var key = keys[index];
+    keys.splice(index, 1);
+    $(link).attr({ href: users[key], title: key });
+    $('img', link).attr({
+      src: '/assets/images/users/' + (key.toLowerCase().replace(/\s/g, '')) + '.png',
+      alt: key
+    });
+  });
+
+  console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
+  });
+</script>

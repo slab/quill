@@ -18,8 +18,5 @@ permalink: /standalone/bubble/
 <div id="editor-container"><p>Test</p></div>
 <script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
-  var quill = new Quill('#editor-container', {
-    debug: 'info',
-    theme: 'bubble'
-  });
+  var quill = new Quill('#editor-container', { theme: 'bubble' });
 </script>

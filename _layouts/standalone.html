@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{ page.title }}{% if page.path != "/index.html" %} - Quill{% endif %}</title>
+  <title>{{ page.title }} - Quill</title>
   {% include meta.html %}
   {{ content | split: '<!-- head -->' | first }}
 </head>
