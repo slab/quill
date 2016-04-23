@@ -15,7 +15,7 @@ The main relevant differences between the old and new Deltas are:
 
 <!-- more -->
 
-{% highlight javascript %}
+```javascript
 var richText = require('rich-text');
 
 var newDelta = new richText.Delta();
@@ -54,11 +54,11 @@ if (oldDelta.endLength < oldDelta.startLength + changeLength) {
   var length = oldDelta.startLength + changeLength - oldDelta.endLength;
   newDelta.delete(length);
 }
-{% endhighlight %}
+```
 
 If you cannot use the rich-text module or if you are using this as a general guide for another language, the following might be helpful in crafting insert, delete and retain operations.
 
-{% highlight javascript %}
+```javascript
 
 var nweDelta = { ops: [] };
 oldDelta.ops.forEach(function () {
@@ -88,7 +88,7 @@ function retainOp(opsArr, length, formats) {
   }
   opsArr.push(op);
 }
-{% endhighlight %}
+```
 
 There are some optimizations performed by rich-text such as excluding no-ops (delete 0 characters) and merging two adjacent operations of the same type (insert 'A' followed by insert 'B' is merged to be a single insert 'AB' operation). But you should not have to worry about these cases since the old Delta format had similar optimizations.
 

@@ -20,7 +20,7 @@ The Toolbar module allow users to easily format Quill's contents.
 
 Simply create a container and the module to the Quill editor.
 
-{% highlight html %}
+```html
 <!-- Create toolbar container -->
 <div id="toolbar">
   <!-- Add font size dropdown -->
@@ -42,7 +42,7 @@ Simply create a container and the module to the Quill editor.
     container: '#toolbar'     // Selector for toolbar container
   });
 </script>
-{% endhighlight %}
+```
 
 The `ql-toolbar` class will be added to the toolbar container.
 

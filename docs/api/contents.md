@@ -19,9 +19,9 @@ Deletes text from the editor.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.deleteText(6, 4);
-{% endhighlight %}
+```
 
 
 ### getContents
@@ -47,9 +47,9 @@ Retrieves contents of the editor, with formatting data, represented by a [Delta]
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var delta = quill.getContents();
-{% endhighlight %}
+```
 
 
 ### getLength
@@ -66,9 +66,9 @@ Retrieves the length of the editor contents.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var length = quill.getLength();
-{% endhighlight %}
+```
 
 
 ### getText
@@ -94,9 +94,9 @@ Retrieves the string contents of the editor.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var text = quill.getText(0, 10);
-{% endhighlight %}
+```
 
 
 ### insertEmbed
@@ -119,9 +119,9 @@ Insert embedded content into the editor.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
-{% endhighlight %}
+```
 
 
 ### insertText
@@ -150,14 +150,14 @@ Inserts text into the editor. See [formats](/docs/formats/) for a list of availa
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.insertText(0, 'Hello', 'bold', true);
 
 quill.insertText(5, 'Quill', {
   'italic': true,
   'fore-color': '#ffff00'
 });
-{% endhighlight %}
+```
 
 
 ### setContents
@@ -176,13 +176,13 @@ Overwrites editor with given contents. Contents should end with a newline (see [
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.setContents([
   { insert: 'Hello ' },
   { insert: 'World!', attributes: { bold: true } },
   { insert: '\n' }
 ]);
-{% endhighlight %}
+```
 
 
 ### setText
@@ -201,9 +201,9 @@ Sets contents of editor with given text. Note Quill documents must end with a ne
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.setText('Hello\n');
-{% endhighlight %}
+```
 
 
 ### updateContents
@@ -222,7 +222,7 @@ Applies Delta to editor contents.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
 quill.updateContents({
   ops: [
@@ -233,4 +233,4 @@ quill.updateContents({
   ]
 });
 // Editor should now be [{ insert: 'Hello Quill' }, { insert: '!', attributes: { bold: true} }]
-{% endhighlight %}
+```

@@ -11,25 +11,25 @@ Quill allows several ways to customize it to suit your needs. This section is de
 
 Quill requires an container where the editor will be appended. You can either pass in a CSS selector or a DOM object.
 
-{% highlight javascript %}
+```javascript
 var editor = new Quill('.editor');  // The first result of the selector will be used
-{% endhighlight %}
+```
 
-{% highlight javascript %}
+```javascript
 var container = document.getElementById('editor');
 var editor = new Quill(container);
-{% endhighlight %}
+```
 
-{% highlight javascript %}
+```javascript
 var container = $('.editor').get(0);
 var editor = new Quill(container);
-{% endhighlight %}
+```
 
 ### Options
 
 To configure Quill, pass in an options object:
 
-{% highlight javascript %}
+```javascript
 var options = {
   debug: 'info',
   modules: {
@@ -40,7 +40,7 @@ var options = {
   theme: 'snow'
 };
 var editor = new Quill('#editor', options);
-{% endhighlight %}
+```
 
 The following keys are recognized:
 

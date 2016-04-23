@@ -16,9 +16,9 @@ Enable logging messages for given debug level.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 Quill.debug('info');
-{% endhighlight %}
+```
 
 
 ### import
@@ -41,14 +41,14 @@ Return Quill library, format, module, or theme. In general the path should map e
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var Parchment = Quill.import('parchment');
 var Delta = Quill.import('delta');
 
 var Link = Quill.import('formats/link');
 var Toolbar = Quill.import('modules/toolbar');
 // Similar to import Link from 'quill/formats/link';
-{% endhighlight %}
+```
 
 
 ### register
@@ -73,13 +73,13 @@ Registers a module, theme, or format(s), making them available to be added to an
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var Module = Quill.import('core/module');
 
 class CustomModule extends Module {}
 
 Quill.register('modules/custom-module', Module);
-{% endhighlight %}
+```
 
 
 ### addContainer
@@ -105,9 +105,9 @@ Adds a container inside the Quill container, sibling to the editor itself. By co
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var container = quill.addContainer('ql-custom');
-{% endhighlight %}
+```
 
 
 ### getModule
@@ -130,9 +130,9 @@ Retrieves a module that has been added to the editor.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var toolbar = quill.getModule('toolbar');
-{% endhighlight %}
+```
 
 
 ### disable
@@ -157,10 +157,10 @@ Set ability for user to edit, via input devices like the mouse or keyboard. Does
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.enable();
 quill.enable(false);   // Disables user input
-{% endhighlight %}
+```
 
 
 ### update
@@ -180,6 +180,6 @@ Synchronously check editor for user updates and fires events, if changes have oc
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.update();
-{% endhighlight %}
+```

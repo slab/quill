@@ -10,17 +10,17 @@ Themes allow you to easily make your Quill editor look good with minimal effort.
 
 To use a custom theme, simply add its stylesheet in the `<head>`:
 
-{% highlight html %}
+```html
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css" />
-{% endhighlight %}
+```
 
 and specify its usage at initialization:
 
-{% highlight javascript %}
+```javascript
 var quill = new Quill('#editor', {
   theme: 'snow'
 });
-{% endhighlight %}
+```
 
 There is currently only one predefined theme `snow` for Quill.
 

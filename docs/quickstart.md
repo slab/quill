@@ -8,7 +8,7 @@ TODO: Review
 
 The best way to get started is a simple example. Quill is initialized with a DOM element to contain the editor. The contents of that element will become the initial contents of Quill.
 
-{% highlight html %}
+```html
 <!-- Create the toolbar container -->
 <div id="toolbar">
   <button class="ql-bold">Bold</button>
@@ -33,11 +33,11 @@ The best way to get started is a simple example. Quill is initialized with a DOM
     }
   });
 </script>
-{% endhighlight %}
+```
 
 Quill also supports a powerful [API](/docs/api/) for fine grain access and manipulation of the editor contents.
 
-{% highlight html %}
+```html
 <script>
   quill.on('text-change', function(delta, source) {
     console.log('Editor contents have changed', delta);
@@ -46,7 +46,7 @@ Quill also supports a powerful [API](/docs/api/) for fine grain access and manip
   quill.insertText(11, ' Bilbo');
   console.log(quill.getText());   // Should output "Hello World Bilbo!\nSome initial bold text";
 </script>
-{% endhighlight %}
+```
 
 ### Next Steps ###
 

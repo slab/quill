@@ -10,9 +10,9 @@ Focuses the editor and restores its last range.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 editor.focus();
-{% endhighlight %}
+```
 
 
 ### getBounds
@@ -36,10 +36,10 @@ Retrieves the pixel position (relative to the editor container) and boundaries o
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.setText('Hello\nWorld\n');
 quill.getBounds(7);    // Returns { height: 15, width: 0, left: 27, top: 31 }
-{% endhighlight %}
+```
 
 
 ### getSelection
@@ -62,7 +62,7 @@ Retrieves the user's selection range.
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 var range = quill.getSelection();
 if (range) {
   if (range.index == range.length) {
@@ -74,7 +74,7 @@ if (range) {
 } else {
   console.log('User cursor is not in editor');
 }
-{% endhighlight %}
+```
 
 
 ### hasFocus
@@ -91,9 +91,9 @@ Checks if editor has focus. Note focus on toolbar, tooltips, does not count as t
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.hasFocus();
-{% endhighlight %}
+```
 
 
 ### setSelection
@@ -118,6 +118,6 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 
 **Examples**
 
-{% highlight javascript %}
+```javascript
 quill.setSelection(0, 5);
-{% endhighlight %}
+```

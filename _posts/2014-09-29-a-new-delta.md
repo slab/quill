@@ -23,7 +23,7 @@ In the current Delta format, a delete operation is implied by a lack of a retain
 
 The new format has an explicit delete operation and by default everything is kept. Here’s a comparison of the two formats both representing removing the ‘b’ in ‘abc’.
 
-{% highlight javascript %}
+```javascript
 var oldFormat = {
   startLength: 3,
   endLength: 2,
@@ -39,7 +39,7 @@ var newFormat = {
     { delete: 1 }
   ]
 };
-{% endhighlight %}
+```
 
 A side effect of having explicit deletes and defaulting to keeping text is that in practice the representation for new Deltas will usually be smaller.
 
@@ -47,7 +47,7 @@ A side effect of having explicit deletes and defaulting to keeping text is that 
 
 The new Delta format provides native support for embeds, which can be used to represent images, video, etc. There is no support for this in the current format and implementation is hackily achieved by representing an ‘!’ with a image key in the attributes (which will break when video support is added).
 
-{% highlight javascript %}
+```javascript
 var oldFormat = {
   startLength: 0,
   endLength: 1,
@@ -62,7 +62,7 @@ var newFormat = {
     insert: 1, attributes: { image: 'https://octodex.github.com/images/labtocat.png' }
   }]
 };
-{% endhighlight %}
+```
 
 ### Going Forward
 
