@@ -44,6 +44,7 @@ class Keyboard extends Module {
       if (handlers.length > 0) {
         let range = this.quill.getSelection();
         handlers.forEach((handler) => {
+          if (evt.defaultPrevented) return;
           handler(range, evt);
         });
         evt.preventDefault();
