@@ -220,12 +220,16 @@ function matchSpacing(node, delta) {
 function matchText(node, delta) {
   let text = node.data;
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
-    text = text.replace(/\s\s+/g, ' ');
+    function replacer(collapse, match) {
+      match = match.replace(/[^\u00a0]/g, '');    // \u00a0 is nbsp;
+      return match.length < 1 && collapse ? ' ' : match;
+    }
+    text = text.replace(/\s\s+/g, replacer.bind(replacer, true));
     if (node.previousSibling == null || isLine(node.previousSibling)) {
-      text = text.replace(/^\s+/, '');
+      text = text.replace(/^\s+/, replacer.bind(replacer, false));
     }
     if (node.nextSibling == null || isLine(node.nextSibling)) {
-      text = text.replace(/\s+$/, '');
+      text = text.replace(/\s+$/, replacer.bind(replacer, false));
     }
   }
   return delta.insert(text);

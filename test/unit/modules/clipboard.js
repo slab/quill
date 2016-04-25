@@ -75,6 +75,24 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('0\n1 2 3 4'));
     });
 
+    it('inline whitespace', function() {
+      let html = '<p>0 <strong>1</strong> 2</p>';
+      let delta = this.clipboard.convert(html);
+      expect(delta).toEqual(new Delta().insert('0 ').insert('1', { bold: true }).insert(' 2'));
+    });
+
+    it('intentional whitespace', function() {
+      let html = '0&nbsp;<strong>1</strong>&nbsp;2';
+      let delta = this.clipboard.convert(html);
+      expect(delta).toEqual(new Delta().insert('0\u00a0').insert('1', { bold: true }).insert('\u00a02'));
+    });
+
+    it('consecutive intentional whitespace', function() {
+      let html = '<strong>&nbsp;&nbsp;1&nbsp;&nbsp;</strong>';
+      let delta = this.clipboard.convert(html);
+      expect(delta).toEqual(new Delta().insert('\u00a0\u00a01\u00a0\u00a0', { bold: true }));
+    });
+
     it('alias', function() {
       let delta = this.clipboard.convert('<b>Bold</b><i>Italic</i>');
       expect(delta).toEqual(new Delta().insert('Bold', { bold: true }).insert('Italic', { italic: true }));
