@@ -66,7 +66,7 @@ Registers a module, theme, or format(s), making them available to be added to an
 |-------------|------------|------------
 | `path`      | _String_   | Path with parts made up of type and name of what to register.
 | `def`       | _Function_ | What to register.
-| `defs`      | _Function_ | Map of path:def keypairs for mass registration.
+| `defs`      | _Function_ | Map of path and def keypairs for mass registration.
 | `overwrite` | _Function_ | Intentionally overwriting definition (will prevent warning). Defaults to false.
 
 
