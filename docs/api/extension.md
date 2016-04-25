@@ -53,23 +53,22 @@ var Toolbar = Quill.import('modules/toolbar');
 
 ### register
 
-Registers a module, theme, or format(s), making them available to be added to an editor. Can later be retrieved with [`Quill.import`](/docs/api/#import). See their respective documentation for more details on definitions. Will overwrite existing definitions for the same path.
+Registers a module, theme, or format(s), making them available to be added to an editor. Can later be retrieved with [`Quill.import`](/docs/api/#import). Use the path prefix of 'formats/', 'modules/', or 'themes/' for registering formats, modules or themes, respectively. Will overwrite existing definitions with the same path.
 
 **Methods**
 
-- `Quill.register(path, module)`
-- `Quill.register(path, theme)`
-- `Quill.register(format)`
-- `Quill.register(format1, format2, ...formatN)`
+- `Quill.register(path, def, overwrite)`
+- `Quill.register(defs, overwrite)`
 
 **Parameters**
 
-| Parameter | Type       | Description
-|-----------|------------|------------
-| `name`    | _String_   | Name of theme or module to register.
-| `module`  | _Function_ | Module to register.
-| `theme`   | _Function_ | Theme to register.
-| `format`  | _Function_ | Format to register
+| Parameter   | Type       | Description
+|-------------|------------|------------
+| `path`      | _String_   | Path with parts made up of type and name of what to register.
+| `def`       | _Function_ | What to register.
+| `defs`      | _Function_ | Map of path:def keypairs for mass registration.
+| `overwrite` | _Function_ | Intentionally overwriting definition (will prevent warning). Defaults to false.
+
 
 **Examples**
 
@@ -81,6 +80,13 @@ class CustomModule extends Module {}
 Quill.register('modules/custom-module', Module);
 ```
 
+```javascript
+Quill.register({
+  'formats/custom-format': CustomFormat,
+  'modules/custom-module-a': CustomModuleA,
+  'modules/custom-module-b': CustomModuleB,
+});
+```
 
 ### addContainer
 
