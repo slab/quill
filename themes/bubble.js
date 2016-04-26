@@ -2,6 +2,7 @@ import Emitter from '../core/emitter';
 import Keyboard from '../modules/keyboard';
 import BaseTheme from './base';
 import icons from '../ui/icons';
+import Tooltip from '../ui/tooltip';
 
 
 class BubbleTheme extends BaseTheme {
@@ -20,30 +21,29 @@ class BubbleTheme extends BaseTheme {
     let close = document.createElement('a');
     container.appendChild(input);
     container.appendChild(close);
-    this.tooltip.appendChild(arrow);
-    this.tooltip.appendChild(container);
+    this.tooltip.root.appendChild(arrow);
+    this.tooltip.root.appendChild(container);
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length > 0) {
-        this.tooltip.classList.remove('ql-editing');
-        this.tooltip.classList.remove('ql-hidden');
-        this.position(this.quill.getBounds(range));
+        this.tooltip.root.classList.remove('ql-editing');
+        this.tooltip.show(this.quill.getBounds(range));
       } else if (document.activeElement !== input) {
-        this.tooltip.classList.add('ql-hidden');
+        this.tooltip.hide();
       }
     });
     toolbar.handlers['link'] = (value) => {
       if (!value) return false;
-      this.tooltip.classList.add('ql-editing');
+      this.tooltip.root.classList.add('ql-editing');
       input.focus();
     };
     close.addEventListener('click', () => {
-      this.tooltip.classList.remove('ql-editing');
+      this.tooltip.root.classList.remove('ql-editing');
     });
     input.addEventListener('keydown', (evt) => {
       if (Keyboard.match(evt, 'enter')) {
         this.quill.focus();
         this.quill.format('link', input.value);
-        this.tooltip.classList.add('ql-hidden');
+        this.tooltip.hide();
         input.value = '';
       } else if (Keyboard.match(evt, 'escape')) {
         this.tooltip.classList.remove('ql-editing');
@@ -52,38 +52,12 @@ class BubbleTheme extends BaseTheme {
   }
 
   extendToolbar(toolbar) {
-    this.tooltip = this.quill.addContainer('ql-tooltip', this.quill.root);
+    let container = this.quill.addContainer('ql-tooltip', this.quill.root);
+    this.tooltip = new Tooltip(container, this.options.bounds);
     this.buildLinkEditor(toolbar);
-    this.tooltip.appendChild(toolbar.container);
+    container.appendChild(toolbar.container);
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
-    this.tooltip.classList.add('ql-hidden');
-  }
-
-  position(reference) {
-    let arrow = this.tooltip.querySelector('.ql-tooltip-arrow');
-    let left = reference.left + reference.width/2 - this.tooltip.offsetWidth/2;
-    let top = reference.bottom + 10;
-    arrow.style.marginLeft = '';
-    // Lock our width since we can expand beyond our offsetParent
-    this.tooltip.style.left = '0px';
-    this.tooltip.style.width = '';
-    this.tooltip.style.width = this.tooltip.offsetWidth + 'px';
-    this.tooltip.style.left = left + 'px';
-    this.tooltip.style.top = top + 'px';
-    let containerBounds = this.options.bounds.getBoundingClientRect();
-    let tooltipBounds = this.tooltip.getBoundingClientRect();
-    let shift = 0;
-    if (tooltipBounds.right > containerBounds.right) {
-      shift = containerBounds.right - tooltipBounds.right;
-      this.tooltip.style.left = (left + shift) + 'px';
-    }
-    if (tooltipBounds.left < containerBounds.left) {
-      shift = containerBounds.left - tooltipBounds.left;
-      this.tooltip.style.left = (left + shift) + 'px';
-    }
-    if (shift !== 0) {
-      arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
-    }
+    this.tooltip.hide();
   }
 }
 BubbleTheme.DEFAULTS = {
