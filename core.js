@@ -1,7 +1,7 @@
 import Parchment from 'parchment';
 import Quill from './core/quill';
 
-import Block, { EmbedBlock } from './blots/block';
+import Block, { BlockEmbed } from './blots/block';
 import Break from './blots/break';
 import Container from './blots/container';
 import Cursor from './blots/cursor';
@@ -16,7 +16,7 @@ import Keyboard from './modules/keyboard';
 
 Quill.register({
   'blots/block'        : Block,
-  'blots/block/embed'  : EmbedBlock,
+  'blots/block/embed'  : BlockEmbed,
   'blots/break'        : Break,
   'blots/container'    : Container,
   'blots/cursor'       : Cursor,

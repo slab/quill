@@ -5,6 +5,12 @@ import { Range } from '../../../core/selection';
 
 
 describe('Quill', function() {
+  it('imports', function() {
+    Object.keys(Quill.imports).forEach(function(path) {
+      expect(Quill.import(path)).toBeTruthy();
+    });
+  });
+
   describe('construction', function() {
     it('empty', function() {
       let quill = this.initialize(Quill, '');
