@@ -44,6 +44,13 @@ var editor = new Quill('#editor', options);
 
 The following keys are recognized:
 
+#### bounds
+
+- Default: document.body
+
+- DOM Element that editor ui elements, such as tooltips, should be confined within. Currently only considers left and right boundaries.
+
+
 #### debug
 
 - Default: `false`
