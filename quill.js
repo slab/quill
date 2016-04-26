@@ -35,6 +35,7 @@ import Icons from './ui/icons';
 import Picker from './ui/picker';
 import ColorPicker from './ui/color-picker';
 import IconPicker from './ui/icon-picker';
+import Tooltip from './ui/tooltip';
 
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
@@ -81,7 +82,8 @@ Quill.register({
   'ui/icons': Icons,
   'ui/picker': Picker,
   'ui/icon-picker': IconPicker,
-  'ui/color-picker': ColorPicker
+  'ui/color-picker': ColorPicker,
+  'ui/tooltip': Tooltip
 });
 
 

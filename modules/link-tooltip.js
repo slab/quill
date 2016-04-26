@@ -3,15 +3,16 @@ import Module from '../core/module';
 import { Range } from '../core/selection';
 import LinkBlot from '../formats/link';
 import Keyboard from './keyboard';
+import Tooltip from '../ui/tooltip';
 
 
 class LinkTooltip extends Module {
   constructor(quill, options = {}) {
     super(quill, options);
     this.container = this.quill.addContainer('ql-link-tooltip');
-    this.container.classList.add('ql-tooltip');
-    this.hide();
     this.container.innerHTML = this.options.template;
+    this.tooltip = new Tooltip(this.container, quill.theme.options.bounds);
+    this.hide();
     this.preview = this.container.querySelector('a.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
     this.textbox.addEventListener('keydown', (evt) => {
@@ -57,12 +58,7 @@ class LinkTooltip extends Module {
 
   hide() {
     this.range = this.link = null;
-    this.container.classList.add('ql-hidden');
-  }
-
-  position(bounds) {
-    this.container.style.left = (bounds.left + bounds.width/2 - this.container.offsetWidth/2) + 'px';
-    this.container.style.top = (bounds.bottom + this.options.offset) + 'px';
+    this.tooltip.hide();
   }
 
   remove() {
@@ -80,7 +76,7 @@ class LinkTooltip extends Module {
 
   show() {
     this.container.classList.remove('ql-editing');
-    this.container.classList.remove('ql-hidden');
+    this.tooltip.show();
     let preview, bounds;
     let range = this.quill.selection.savedRange;
     if (this.link != null) {
@@ -90,7 +86,7 @@ class LinkTooltip extends Module {
     }
     this.preview.textContent = this.textbox.value = preview;
     this.preview.setAttribute('href', preview);
-    this.position(this.quill.getBounds(this.range));
+    this.tooltip.position(this.quill.getBounds(this.range));
   }
 }
 LinkTooltip.DEFAULTS = {

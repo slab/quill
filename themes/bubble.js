@@ -26,7 +26,11 @@ class BubbleTheme extends BaseTheme {
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length > 0) {
         this.tooltip.root.classList.remove('ql-editing');
-        this.tooltip.show(this.quill.getBounds(range));
+        this.tooltip.show();
+        // Lock our width so we will expand beyond our offsetParent boundaries
+        this.tooltip.root.style.width = '';
+        this.tooltip.root.style.width = this.root.offsetWidth + 'px';
+        this.tooltip.position(this.quill.getBounds(range));
       } else if (document.activeElement !== input) {
         this.tooltip.hide();
       }

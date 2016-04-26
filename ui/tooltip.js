@@ -2,15 +2,13 @@ class Tooltip {
   constructor(root, container) {
     this.container = container;
     this.root = root;
+    this.root.classList.add('ql-tooltip');
   }
 
   position(reference) {
     let left = reference.left + reference.width/2 - this.root.offsetWidth/2;
     let top = reference.bottom + 10;
-    // Lock our width so we will expand beyond our offsetParent boundaries
     this.root.style.left = '0px';
-    this.root.style.width = '';
-    this.root.style.width = this.root.offsetWidth + 'px';
     this.root.style.left = left + 'px';
     this.root.style.top = top + 'px';
     let containerBounds = this.container.getBoundingClientRect();
@@ -32,11 +30,8 @@ class Tooltip {
     }
   }
 
-  show(reference) {
+  show() {
     this.root.classList.remove('ql-hidden');
-    if (reference != null) {
-      this.position(reference);
-    }
   }
 
   hide() {
