@@ -5,12 +5,12 @@ class Tooltip {
     this.root.classList.add('ql-tooltip');
   }
 
-  position(reference) {
+  position(reference, offset = 10) {
     let left = reference.left + reference.width/2 - this.root.offsetWidth/2;
-    let top = reference.bottom + 10;
-    this.root.style.left = '0px';
+    let top = reference.bottom + offset;
     this.root.style.left = left + 'px';
     this.root.style.top = top + 'px';
+    if (!(this.container instanceof HTMLElement)) return;
     let containerBounds = this.container.getBoundingClientRect();
     let rootBounds = this.root.getBoundingClientRect();
     let shift = 0;

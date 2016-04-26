@@ -86,7 +86,7 @@ class LinkTooltip extends Module {
     }
     this.preview.textContent = this.textbox.value = preview;
     this.preview.setAttribute('href', preview);
-    this.tooltip.position(this.quill.getBounds(this.range));
+    this.tooltip.position(this.quill.getBounds(this.range), this.options.offset);
   }
 }
 LinkTooltip.DEFAULTS = {
