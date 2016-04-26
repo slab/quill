@@ -6,18 +6,35 @@
     {% include meta.html %}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
-    {% assign heads = content | split: '<!-- head -->' %}
-    {% if heads.size > 1 %}
-    {{ heads[0] }}
-    {% endif %}
+    {% assign sections = content | split: '<!-- head -->' %}
+    {% for section in sections %}
+      {% assign mod = forloop.index | modulo: 2 %}
+      {% if mod == 0 %}
+        {{ section | strip }}
+      {% endif %}
+    {% endfor %}
     <link rel="stylesheet" href="/assets/css/styles.css">
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
     {% include navbar.html %}
-
-    {{ content | split: '<!-- head -->' | last | split: '<!-- script -->' | first }}
-
+    {% assign heads = content | split: '<!-- head -->' %}
+    {% for head in heads %}
+      {% if forloop.last != true %}
+        {% assign headMod = forloop.index | modulo: 2 %}
+        {% if headMod == 1 %}
+          {{ head | strip }}
+        {% endif %}
+      {% else %}
+        {% assign scripts = head | split: '<!-- script -->' %}
+        {% for script in scripts %}
+          {% assign scriptMod = forloop.index | modulo: 2 %}
+          {% if scriptMod == 1 %}
+            {{ script | strip }}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
     <footer>
       <div class="container">
         <ul>
@@ -40,10 +57,13 @@
     </footer>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    {% assign scripts = content | split: '<!-- script -->' %}
-    {% if scripts.size > 1 %}
-    {{ scripts[1] }}
-    {% endif %}
+    {% assign sections = content | split: '<!-- script -->' %}
+    {% for section in sections %}
+      {% assign mod = forloop.index | modulo: 2 %}
+      {% if mod == 0 %}
+        {{ section | strip }}
+      {% endif %}
+    {% endfor %}
     <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 </html>

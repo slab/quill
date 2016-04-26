@@ -3,9 +3,12 @@
 <head>
   <title>{{ page.title }} - Quill</title>
   {% include meta.html %}
-  {{ content | split: '<!-- head -->' | first }}
+  {% assign heads = content | split: '<!-- head -->' %}
+  {{ heads[1] }}
 </head>
 <body>
-  {{ content | split: '<!-- head -->' | last }}
+  {{ content | split: '<!-- head -->' | last | split: '<!-- script -->' | first }}
+  {% assign scripts = content | split: '<!-- script -->' %}
+  {{ scripts[1] }}
 </body>
 </html>

@@ -3,7 +3,7 @@ layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
 ---
-
+<!-- head -->
 <link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
 <!-- head -->
 
@@ -79,3 +79,4 @@ The following classes are also recognized by the toolbar but largely used by [Th
     theme: 'snow'
   });
 </script>
+<!-- script -->

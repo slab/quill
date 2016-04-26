@@ -4,4 +4,5 @@ title: Bubble Theme
 permalink: /docs/themes/bubble/
 ---
 
-TODO: Write
+{% include standalone/bubble.html %}
+<a href="/standalone/bubble">Standalone</a>

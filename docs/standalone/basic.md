@@ -3,6 +3,7 @@ layout: standalone
 title: Basic Example
 permalink: /standalone/basic/
 ---
+<!-- head -->
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.css">
 <style>
   body {
@@ -68,6 +69,7 @@ permalink: /standalone/basic/
   <button class="ql-list" title='List' data-value="ordered">List</button>
 </div>
 <div id="editor-container"></div>
+<!-- script -->
 <script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
 <script>
   var quill = new Quill('#editor-container', {
@@ -77,3 +79,4 @@ permalink: /standalone/basic/
     }
   });
 </script>
+<!-- script -->

@@ -1,12 +1,6 @@
 ---
 layout: default
 ---
-{% assign heads = content | split: '<!-- head -->' %}
-{% if heads.size > 1 %}
-{{ heads[0] }}
-{% endif %}
-<!-- head -->
-
 <div class="container">
   <div id="sidebar-dropdown">
     <div class="btn-group">
@@ -23,7 +17,7 @@ layout: default
     <div id="docs-container" class="col-sm-9">
       <h1 id="{{ page.title | handelize | downcase }}">{{ page.title }}</h1>
       <a class="edit-link" href="{{site.github}}/{{page.path}}" target="_blank" title="Edit on Github">Edit</a>
-      {{ content | split: '<!-- head -->' | last | split: '<!-- script -->' | first }}
+      {{ content }}
     </div>
     <div id="sidebar-container" class="col-sm-3">
       <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
@@ -34,9 +28,3 @@ layout: default
     </div>
   </div>
 </div>
-
-<!-- script -->
-{% assign scripts = content | split: '<!-- script -->' %}
-{% if scripts.size > 1 %}
-{{ scripts[1] }}
-{% endif %}
