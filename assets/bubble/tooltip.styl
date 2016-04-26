@@ -5,17 +5,16 @@ arrowWidth = 6px
     background-color: backgroundColor
     border-radius: 25px
     color: textColor
+  .ql-tooltip-arrow
+    border-bottom: arrowWidth solid backgroundColor
+    border-left: arrowWidth solid transparent
+    border-right: arrowWidth solid transparent
+    content: " "
+    display: block
+    left: 50%
+    margin-left: -1 * arrowWidth
     position: absolute
-    &:before
-      border-bottom: arrowWidth solid backgroundColor
-      border-left: arrowWidth solid transparent
-      border-right: arrowWidth solid transparent
-      content: " "
-      display: block
-      left: 50%
-      margin-left: -1 * arrowWidth
-      position: absolute
-      top: -1 * arrowWidth
+    top: -1 * arrowWidth
 
   .ql-tooltip.ql-editing
     .ql-link-editor

@@ -247,6 +247,7 @@ class Quill {
   }
 }
 Quill.DEFAULTS = {
+  bounds: document.body,
   formats: null,
   modules: {},
   placeholder: '',

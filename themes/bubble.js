@@ -13,11 +13,14 @@ class BubbleTheme extends BaseTheme {
   buildLinkEditor(toolbar) {
     let container = document.createElement('div');
     container.classList.add('ql-link-editor');
+    let arrow = document.createElement('span');
+    arrow.classList.add('ql-tooltip-arrow');
     let input = document.createElement('input');
     input.setAttribute('type', 'text');
     let close = document.createElement('a');
     container.appendChild(input);
     container.appendChild(close);
+    this.tooltip.appendChild(arrow);
     this.tooltip.appendChild(container);
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length > 0) {
@@ -56,9 +59,31 @@ class BubbleTheme extends BaseTheme {
     this.tooltip.classList.add('ql-hidden');
   }
 
-  position(bounds) {
-    this.tooltip.style.left = (bounds.left + bounds.width/2 - this.tooltip.offsetWidth/2) + 'px';
-    this.tooltip.style.top = (bounds.bottom + 10) + 'px';
+  position(reference) {
+    let arrow = this.tooltip.querySelector('.ql-tooltip-arrow');
+    let left = reference.left + reference.width/2 - this.tooltip.offsetWidth/2;
+    let top = reference.bottom + 10;
+    arrow.style.marginLeft = '';
+    // Lock our width since we can expand beyond our offsetParent
+    this.tooltip.style.left = '0px';
+    this.tooltip.style.width = '';
+    this.tooltip.style.width = this.tooltip.offsetWidth + 'px';
+    this.tooltip.style.left = left + 'px';
+    this.tooltip.style.top = top + 'px';
+    let containerBounds = this.options.bounds.getBoundingClientRect();
+    let tooltipBounds = this.tooltip.getBoundingClientRect();
+    let shift = 0;
+    if (tooltipBounds.right > containerBounds.right) {
+      shift = containerBounds.right - tooltipBounds.right;
+      this.tooltip.style.left = (left + shift) + 'px';
+    }
+    if (tooltipBounds.left < containerBounds.left) {
+      shift = containerBounds.left - tooltipBounds.left;
+      this.tooltip.style.left = (left + shift) + 'px';
+    }
+    if (shift !== 0) {
+      arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
+    }
   }
 }
 BubbleTheme.DEFAULTS = {
