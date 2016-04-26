@@ -368,11 +368,21 @@ footer li {
 #docs-container #toolbar-editor {
   display: none;
 }
-#docs-container #authorship-editor {
-  height: 120px;
+
+#docs-container #standalone-container {
+  margin: 25px 50px 10px;
+  max-width: 100%;
 }
-#docs-container #multi-cursor-editor {
-  height: 150px;
+#docs-container #standalone-container .ql-bubble {
+  border: 1px solid #ccc;
+}
+#docs-container .standalone-link {
+  display: block;
+  max-width: 100%;
+  margin-left: 50px;
+  margin-right: 50px;
+  text-align: right;
+  width: 720px;
 }
 
 #playground-container {

@@ -5,6 +5,7 @@ permalink: /docs/themes/snow/
 ---
 
 <p>Clean, flat toolbar theme.</p>
-
 {% include standalone/snow.html %}
-<a href="/standalone/snow">Standalone</a>
+<p>
+  <a class="standalone-link" href="/standalone/snow">Standalone</a>
+</p>

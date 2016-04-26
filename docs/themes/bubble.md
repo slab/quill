@@ -4,5 +4,8 @@ title: Bubble Theme
 permalink: /docs/themes/bubble/
 ---
 
+<p>Simple tooltip based theme.</p>
 {% include standalone/bubble.html %}
-<a href="/standalone/bubble">Standalone</a>
+<p>
+  <a class="standalone-link" href="/standalone/snow">Standalone</a>
+</p>
