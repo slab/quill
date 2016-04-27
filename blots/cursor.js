@@ -40,6 +40,10 @@ class Cursor extends Embed {
     return this._length;
   }
 
+  position(index) {
+    return [this.textNode, 1];
+  }
+
   remove() {
     super.remove();
     this.parent = null;
@@ -77,7 +81,7 @@ class Cursor extends Embed {
 Cursor.blotName = 'cursor';
 Cursor.className = 'ql-cursor';
 Cursor.tagName = 'span';
-Cursor.CONTENTS = "\uFEFF";   // Zero width space
+Cursor.CONTENTS = "\uFEFF";   // Zero width no break space
 
 
 export default Cursor;

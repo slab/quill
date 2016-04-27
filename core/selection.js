@@ -62,7 +62,7 @@ class Selection {
     }
     this.cursor.format(format, value);
     this.scroll.optimize();
-    this.setNativeRange(this.cursor.textNode, 1);
+    this.setNativeRange(this.cursor.textNode, this.cursor.textNode.data.length);
     this.update();
   }
 
