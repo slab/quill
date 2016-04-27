@@ -103,6 +103,7 @@ class Keyboard extends Module {
         this.quill.format(name, formats[name]);
       }
     });
+    this.quill.selection.scrollIntoView();
   }
 
   onFormat(format, range) {
