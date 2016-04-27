@@ -35,7 +35,9 @@ class Editor {
           delete attributes['image'];
         }
         if (typeof op.insert === 'string') {
-          this.scroll.insertAt(index, op.insert);
+          let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+          length = text.length;
+          this.scroll.insertAt(index, text);
           let leaf, [line, offset] = this.scroll.line(index);
           if (line instanceof Parchment.Leaf) {
             leaf = line;
@@ -136,6 +138,7 @@ class Editor {
   }
 
   insertText(index, text, formats = {}, source = Emitter.sources.API) {
+    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     this.scroll.insertAt(index, text);
     this.formatText(index, text.length, formats, source);
   }

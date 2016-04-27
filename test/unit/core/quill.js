@@ -213,6 +213,18 @@ describe('Quill', function() {
       quill.setText('abc\n');
       expect(quill.root).toEqualHTML('<p>abc</p>');
     });
+
+    it('return carriage', function() {
+      let quill = this.initialize(Quill, '<p>Test</p>');
+      quill.setText('\r');
+      expect(quill.root).toEqualHTML('<p><br></p>');
+    });
+
+    it('return carriage newline', function() {
+      let quill = this.initialize(Quill, '<p>Test</p>');
+      quill.setText('\r\n');
+      expect(quill.root).toEqualHTML('<p><br></p>');
+    });
   });
 
   describe('overload', function() {
