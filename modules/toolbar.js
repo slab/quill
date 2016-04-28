@@ -9,22 +9,18 @@ let debug = logger('quill:toolbar');
 class Toolbar extends Module {
   constructor(quill, options) {
     super(quill, options);
-    if (typeof this.options === 'string') {
-      this.options = {
-        container: document.querySelector(this.options)
-      }
-    } else if (typeof this.options.container === 'string') {
-      this.options.container = document.querySelector(this.options.container);
-    } else if (Array.isArray(this.options.container)) {
+    this.container = this.options.container || this.options;
+    if (typeof this.container === 'string') {
+      this.container = document.querySelector(this.container);
+    } else if (Array.isArray(this.container)) {
       let container = document.createElement('div');
-      addControls(container, options.container);
+      addControls(container, this.container);
       quill.container.parentNode.insertBefore(container, quill.container);
-      this.options.container = container;
+      this.container = container;
     }
-    if (!(this.options.container instanceof HTMLElement)) {
+    if (!(this.container instanceof HTMLElement)) {
       return debug.error('Container required for toolbar', this.options);
     }
-    this.container = this.options.container;
     this.container.classList.add('ql-toolbar');
     this.container.classList.toggle('ios', /iPhone|iPad/i.test(navigator.userAgent));
     this.controls = [];
@@ -102,9 +98,7 @@ class Toolbar extends Module {
     });
   }
 }
-Toolbar.DEFAULTS = {
-  container: null
-};
+Toolbar.DEFAULTS = {};
 
 
 function addButton(container, format, value) {

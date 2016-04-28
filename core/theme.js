@@ -26,15 +26,16 @@ class Theme {
     if (moduleClass == null) {
       return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
     }
-
-    let options = this.options.modules[name];
-    if (options === true) {
-      // Allow addModule('module', true)
-      options = {};
+    let userOptions = this.options.modules[name] || {};
+    if (userOptions === true) {
+      // allow new Quill('#editor', { modules: { myModule: true }});
+      userOptions = {};
     }
-
-    options = typeof options === 'object' || !options ? extend(true, {}, moduleClass.DEFAULTS || {}, options) : options;
-    this.modules[name] = new moduleClass(this.quill, options);
+    if (typeof userOptions === 'object' && userOptions.constructor === Object) {
+      let themeOptions = (this.constructor.DEFAULTS.modules || {})[name];
+      userOptions = extend({}, moduleClass.DEFAULTS || {}, themeOptions, userOptions);
+    }
+    this.modules[name] = new moduleClass(this.quill, userOptions);
     return this.modules[name];
   }
 }
