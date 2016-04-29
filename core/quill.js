@@ -71,8 +71,7 @@ class Quill {
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
-    let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}</div>`);
-    this.setContents(contents);
+    this.pasteHTML(`<div class='ql-editor' style="white-space: normal;">${html}</div>`);
     this.history.clear();
     if (options.readOnly) {
       this.disable();
@@ -206,6 +205,15 @@ class Quill {
 
   once() {
     return this.emitter.once.apply(this.emitter, arguments);
+  }
+
+  pasteHTML(index, html) {
+    if (typeof index === 'string') {
+      this.setContents(this.clipboard.convert(index));
+    } else {
+      let paste = this.clipboard.convert(html);
+      this.updateContents(new Delta().retain(index).concat(paste));
+    }
   }
 
   removeFormat(index, length, source) {
