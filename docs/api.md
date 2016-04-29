@@ -11,6 +11,7 @@ permalink: /docs/api/
 - [getText](#gettext)
 - [insertEmbed](#insertembed)
 - [insertText](#inserttext)
+- [pasteHTML](#pastehtml)
 - [setContents](#setcontents)
 - [setText](#settext)
 - [updateContents](#updatecontents)

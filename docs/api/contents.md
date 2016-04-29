@@ -160,6 +160,33 @@ quill.insertText(5, 'Quill', {
 ```
 
 
+### pasteHTML
+
+Inserts content into editor at a given index from an HTML snippet. The snippet is interpretted and cleaned by the [clipboard](/docs/modules/clipboard/) before being inserted into Quill. If no insertion index is provided, the editor will be overwritten.
+
+**Methods**
+
+- `pasteHTML(html)`
+- `pasteHTML(index, html)`
+
+**Parameters**
+
+| Parameter | Type     | Description
+|-----------|----------|------------
+| `index`   | _Number_ | Index where text should be inserted. If omitted, editor will be overwritten.
+| `html`    | _String_ | HTML to convert into content by [clipboard](/docs/modules/clipboard/) and inserted into editor.
+
+**Examples**
+
+```javascript
+quill.setText('Hello!');
+
+quill.pasteHTML(5, '&nbsp;<b>World</b>');
+// Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>';
+
+```
+
+
 ### setContents
 
 Overwrites editor with given contents. Contents should end with a newline (see [Working with Deltas](/guides/working-with-deltas/)).
