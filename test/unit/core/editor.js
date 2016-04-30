@@ -292,6 +292,74 @@ describe('Editor', function() {
       editor.applyDelta(new Delta().insert(1, { image: '/assets/favicon.png', italic: true }));
       expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
+
+    it('insert block embed', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(2).insert('\n').insert({ video: '#' }).insert('\n'));
+      expect(this.container).toEqualHTML('<p>01</p><video src="#" controls="true"></video><p>23</p>');
+    });
+
+    it('append formatted block embed', function() {
+      let editor = this.initialize(Editor, '<p>0123</p><p><br></p>');
+      editor.applyDelta(new Delta()
+        .retain(5)
+        .insert({ video: '#' })
+        .retain(1, { align: 'right' })    // Valid delta where newline does not follow block embed
+        .insert('\n')
+      );
+      expect(this.container).toEqualHTML('<p>0123</p><video src="#" controls="true" class="ql-align-right"></video><p><br></p>');
+    });
+
+    it('append', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5).insert('5678'));
+      expect(this.container).toEqualHTML('<p>0123</p><p>5678</p>');
+    });
+
+    it('append newline', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5).insert('\n', { header: 2 }));
+      expect(this.container).toEqualHTML('<p>0123</p><h2><br></h2>');
+    })
+
+    it('append text with newline', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5).insert('5678').insert('\n', { header: 2 }));
+      expect(this.container).toEqualHTML('<p>0123</p><h2 id="5678">5678</h2>');
+    });
+
+    it('append non-isolated newline', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5).insert('5678\n', { header: 2 }));
+      expect(this.container).toEqualHTML('<p>0123</p><h2 id="5678">5678</h2>');
+    });
+
+    it('eventual append', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(2).insert('ab\n', { header: 1 }).retain(3).insert('cd\n', { header: 2 }));
+      expect(this.container).toEqualHTML('<h1 id="01ab">01ab</h1><p>23</p><h2 id="cd">cd</h2>');
+    });
+
+    it('append text, embed and newline', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5).insert('5678').insert({ image: '/assets/favicon.png' }).insert('\n', { header: 2 }));
+      expect(this.container).toEqualHTML('<p>0123</p><h2 id="5678">5678<img src="/assets/favicon.png"></h2>');
+    });
+
+    it('append multiple lines', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5)
+        .insert('56').insert('\n', { header: 1 })
+        .insert('89').insert('\n', { header: 2 })
+      );
+      expect(this.container).toEqualHTML('<p>0123</p><h1 id="56">56</h1><h2 id="89">89</h2>');
+    });
+
+    it('append block embed', function() {
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.applyDelta(new Delta().retain(5).insert({ video: '#' }).insert('\n'));
+      expect(this.container).toEqualHTML('<p>0123</p><video src="#" controls="true"></video>');
+    });
   });
 
   describe('getFormat()', function() {

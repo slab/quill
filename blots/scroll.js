@@ -46,12 +46,17 @@ class Scroll extends Parchment.Scroll {
   insertAt(index, value, def) {
     if (def != null && this.whitelist != null && !this.whitelist[value]) return;
     if (index >= this.length()) {
-      let blot = Parchment.create(this.statics.defaultChild);
-      this.appendChild(blot);
-      if (def == null && value.endsWith('\n')) {
-        value = value.slice(0, -1);
+      if (def == null || Parchment.query(value, Parchment.Scope.BLOCK) == null) {
+        let blot = Parchment.create(this.statics.defaultChild);
+        this.appendChild(blot);
+        if (def == null && value.endsWith('\n')) {
+          value = value.slice(0, -1);
+        }
+        blot.insertAt(0, value, def);
+      } else {
+        let embed = Parchment.create(value, def);
+        this.appendChild(embed);
       }
-      blot.insertAt(0, value, def);
     } else {
       super.insertAt(index, value, def);
     }

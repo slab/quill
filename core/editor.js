@@ -17,6 +17,7 @@ class Editor {
   }
 
   applyDelta(delta, source = Emitter.sources.API) {
+    let consumeNextNewline = false;
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
@@ -37,6 +38,13 @@ class Editor {
         if (typeof op.insert === 'string') {
           let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
           length = text.length;
+          if (text.endsWith('\n') && consumeNextNewline) {
+            consumeNextNewline = false;
+            text = text.slice(0, -1);
+          }
+          if (index >= this.scroll.length() && !text.endsWith('\n')) {
+            consumeNextNewline = true;
+          }
           this.scroll.insertAt(index, text);
           let leaf, [line, offset] = this.scroll.line(index);
           if (line instanceof Parchment.Leaf) {
@@ -50,6 +58,10 @@ class Editor {
           let key = Object.keys(op.insert)[0];  // There should only be one key
           if (key != null) {
             this.scroll.insertAt(index, key, op.insert[key]);
+            // Block embeds themselves already represent newline
+            if (Parchment.query(key, Parchment.Scope.BLOCK) != null) {
+              consumeNextNewline = true;
+            }
           }
         }
       }
