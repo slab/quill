@@ -35,6 +35,16 @@ class Selection {
         this.update(Emitter.sources.SILENT);
       }
     });
+    this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
+      let native = this.getNativeRange();
+      if (native == null) return;
+      // TODO unclear if this has negative side effects
+      this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
+        try {
+          this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offsetTop);
+        } catch (ignored) {}
+      });
+    });
     this.update(Emitter.sources.SILENT);
   }
 

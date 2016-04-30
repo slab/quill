@@ -17,11 +17,12 @@ class Emitter extends EventEmitter {
 }
 
 Emitter.events = {
-  READY             : 'ready',
-  SCROLL_OPTIMIZE   : 'scroll-optimize',
-  SCROLL_UPDATE     : 'scroll-update',
-  SELECTION_CHANGE  : 'selection-change',
-  TEXT_CHANGE       : 'text-change'
+  READY                : 'ready',
+  SCROLL_OPTIMIZE      : 'scroll-optimize',
+  SCROLL_BEFORE_UPDATE : 'scroll-before-update',
+  SCROLL_UPDATE        : 'scroll-update',
+  SELECTION_CHANGE     : 'selection-change',
+  TEXT_CHANGE          : 'text-change'
 };
 Emitter.sources = {
   API    : 'api',
