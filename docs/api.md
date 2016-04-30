@@ -4,7 +4,8 @@ title: API
 permalink: /docs/api/
 ---
 
-#### Content
+<h4>Content</h4>
+
 - [deleteText](#deletetext)
 - [getContents](#getcontents)
 - [getLength](#getlength)
@@ -16,28 +17,36 @@ permalink: /docs/api/
 - [setText](#settext)
 - [updateContents](#updatecontents)
 
-#### Formatting
+
+<h4>Formatting</h4>
+
 - [format](#format)
 - [formatLine](#formatline)
 - [formatText](#formattext)
 - [getFormat](#getformat)
 - [removeFormat](#removeFormat)
 
-#### Selection
+
+<h4>Selection</h4>
+
 - [focus](#focus)
 - [getBounds](#getbounds)
 - [getSelection](#getselection)
 - [hasFocus](#hasfocus)
 - [setSelection](#setselection)
 
-#### Events
+
+<h4>Events</h4>
+
 - [off](#off)
 - [on](#on)
 - [once](#once)
 - [selection-change](#selectionchange)
 - [text-change](#textchange)
 
-#### Extension
+
+<h4>Extension</h4>
+
 - [debug](#debug)
 - [import](#import)
 - [register](#register)
