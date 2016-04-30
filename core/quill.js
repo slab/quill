@@ -71,7 +71,8 @@ class Quill {
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
-    this.pasteHTML(`<div class='ql-editor' style="white-space: normal;">${html}</div>`);
+    // Setting would truncate a newline at the end
+    this.pasteHTML(0, `<div class='ql-editor' style="white-space: normal;">${html}</div>`);
     this.history.clear();
     if (options.readOnly) {
       this.disable();

@@ -23,6 +23,12 @@ describe('Quill', function() {
       expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
       expect(quill.root).toEqualHTML('<p>0123</p>');
     });
+
+    it('newlines', function() {
+      let quill = this.initialize(Quill, '<p><br></p><p><br></p><p><br></p>');
+      expect(quill.getContents()).toEqual(new Delta().insert('\n\n\n'));
+      expect(quill.root).toEqualHTML('<p><br></p><p><br></p><p><br></p>');
+    });
   });
 
   describe('api', function() {
