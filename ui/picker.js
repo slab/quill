@@ -69,7 +69,13 @@ class Picker {
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
       this.label.dataset.value = value || '';
       if (trigger) {
-        this.select.dispatchEvent(new Event('change'));
+        if (typeof Event === 'function') {
+          this.select.dispatchEvent(new Event('change'));
+        } else if (typeof Event === 'object') {     // IE11
+          let event = document.createEvent('Event');
+          event.initEvent('change', true, true);
+          this.select.dispatchEvent(event);
+        }
       }
     } else {
       delete this.label.dataset.value;
