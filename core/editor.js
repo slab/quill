@@ -26,15 +26,7 @@ class Editor {
       let length = op.retain || op.insert.length || 1;
       let attributes = op.attributes || {};
       if (op.insert != null) {
-        // Support old embed format
-        if (op.insert === 1) {
-          attributes = clone(attributes);
-          op = {
-            insert: { image: attributes.image },
-            attributes: attributes
-          };
-          delete attributes['image'];
-        }
+        [op, attributes] = handleOldEmbed(op, attributes);
         if (typeof op.insert === 'string') {
           let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
           length = text.length;
@@ -46,13 +38,12 @@ class Editor {
             consumeNextNewline = true;
           }
           this.scroll.insertAt(index, text);
-          let leaf, [line, offset] = this.scroll.line(index);
-          if (line instanceof Parchment.Leaf) {
-            leaf = line;
-          } else {
-            [leaf, offset] = line.descendant(Parchment.Leaf, offset);
+          let [line, offset] = this.scroll.line(index);
+          let formats = extend({}, bubbleFormats(line));
+          if (line instanceof Block) {
+            let [leaf, ] = line.descendant(Parchment.Leaf, offset);
+            formats = extend(formats, bubbleFormats(leaf));
           }
-          let formats = extend({}, bubbleFormats(line), bubbleFormats(leaf));
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
@@ -188,6 +179,18 @@ function combineFormats(formats, combined) {
     }
     return merged;
   }, {});
+}
+
+function handleOldEmbed(op, attributes) {
+  if (op.insert === 1) {
+    attributes = clone(attributes);
+    op = {
+      insert: { image: attributes.image },
+      attributes: attributes
+    };
+    delete attributes['image'];
+  }
+  return [op, attributes];
 }
 
 
