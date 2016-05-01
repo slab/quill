@@ -2,17 +2,13 @@
 layout: docs
 title: Quickstart
 permalink: /docs/quickstart/
-stability: review
 ---
 
-The best way to get started is a simple example. Quill is initialized with a DOM element to contain the editor. The contents of that element will become the initial contents of Quill.
+The best way to get started is try a simple example. Quill is initialized with a DOM element to contain the editor. The contents of that element will become the initial contents of Quill.
 
 ```html
-<!-- Create the toolbar container -->
-<div id="toolbar">
-  <button class="ql-bold">Bold</button>
-  <button class="ql-italic">Italic</button>
-</div>
+<!-- Include stylesheet -->
+<link href="https://cdn.quilljs.com/{{site.version}}/quill.snow.css" rel="stylesheet">
 
 <!-- Create the editor container -->
 <div id="editor">
@@ -22,31 +18,19 @@ The best way to get started is a simple example. Quill is initialized with a DOM
 </div>
 
 <!-- Include the Quill library -->
-<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
+<script src="https://cdn.quilljs.com/{{site.version}}/quill.js"></script>
 
 <!-- Initialize Quill editor -->
-<script>
+<script type="text/javascript">
   var quill = new Quill('#editor', {
-    modules: {
-      toolbar: '#toolbar'
-    }
+    theme: 'snow'
   });
 </script>
 ```
 
-Quill also supports a powerful [API](/docs/api/) for fine grain access and manipulation of the editor contents.
+And that's all there is to it!
 
-```html
-<script>
-  quill.on('text-change', function(delta, source) {
-    console.log('Editor contents have changed', delta);
-  });
-
-  quill.insertText(11, ' Bilbo');
-  console.log(quill.getText());   // Should output "Hello World Bilbo!\nSome initial bold text";
-</script>
-```
 
 ### Next Steps ###
 
-That's all you need to do to set up a simple Quill editor! But the power of Quill is its flexibility and extensibility. Check out the [Examples](/examples/) to see this in action. Or start interacting with Quill with its flexible [API](/docs/api/).
+The real magic of Quill comes in its flexibility and extensibility. You can get an idea of what's possible by playing around with all the demos throughout this site. For an indepth walkthrough, take a look at the [Customizing and Extending](/guides/customizing-and-extending/) guide.

@@ -61,7 +61,7 @@ The following keys are recognized:
 
 - Default: All formats
 
-- Whitelist of formats to allow in the editor. See [formats](/docs/formats/) for a complete list.
+- Whitelist of formats to allow in the editor. See [Formats](/docs/formats/) for a complete list.
 
 #### modules
 
@@ -81,4 +81,4 @@ The following keys are recognized:
 
 #### theme
 
-- Name of theme to use. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.
+- Name of theme to use. The builtin options are 'bubble' or 'snow'. An invalid or falsy value will load a default minimal theme. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.

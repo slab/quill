@@ -2,7 +2,6 @@
 layout: guide
 title: Working with Deltas
 permalink: /guides/working-with-deltas/
-stability: incomplete
 ---
 
 Deltas are a simple, yet expressive format that can be used to describe Quill's contents and changes. The format is essentially JSON, and is human readable, yet easily parsible by machines. Deltas can describe any Quill document, includes all text and formatting information, without the ambiguity and complexity of HTML.
