@@ -23,7 +23,7 @@ iframe {
   overflow: hidden;
 }
 
-#docs-container pre, #blog-container pre {
+#docs-container pre, #blog-container pre, #guide-container pre {
   background-color: #f8f8f8;
   border-color: #06c;
   border-radius: 0px;
@@ -384,7 +384,8 @@ footer li {
 }
 
 #playground-container {
-  margin: 40px 25px 75px;
+  margin-bottom: 75px;
+  margin-top: 25px;
 }
 
 #blog-container {
@@ -453,4 +454,21 @@ footer li {
   border: 1px solid #f0f0f0;
   border-radius: 4px;
   margin: 14px 0px 14px 28px;
+}
+
+#guide-container {
+  margin-top: 20px;
+  padding-bottom: 80px;
+}
+
+#guide-container h1 {
+  text-align: center;
+}
+#guide-container .edit-link {
+  display: block;
+  margin-bottom: 40px;
+  text-align: center;
+}
+#guide-container .cp_embed_iframe {
+  border-bottom: 1px solid rgb(60, 60, 62);
 }

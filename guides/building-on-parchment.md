@@ -1,6 +1,6 @@
 ---
 layout: guide
-title: Building with Parchment
+title: Building on Parchment
 permalink: /guides/building-with-parchment/
 stability: incomplete
 ---
