@@ -2,12 +2,11 @@
 layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
+stability: review
 ---
 <!-- head -->
 <link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
 <!-- head -->
-
-TODO: Review
 
 The Toolbar module allow users to easily format Quill's contents.
 

@@ -2,6 +2,7 @@
 layout: docs
 title: Snow Theme
 permalink: /docs/themes/snow/
+stability: incomplete
 ---
 
 <p>Clean, flat toolbar theme.</p>

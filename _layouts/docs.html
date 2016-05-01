@@ -15,6 +15,11 @@ layout: default
 
   <div class="row">
     <div id="docs-container" class="col-sm-9">
+      {% if page.stability == "review" %}
+      <div class="alert alert-warning">This page needs to be reviewed.</div>
+      {% elsif page.stability == "incomplete" %}
+      <div class="alert alert-warning">This page is incomplete.</div>
+      {% endif %}
       <h1 id="{{ page.title | handelize | downcase }}">{{ page.title }}</h1>
       <a class="edit-link" href="{{site.github}}/{{page.path}}" target="_blank" title="Edit on Github">Edit</a>
       {{ content }}

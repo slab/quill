@@ -2,6 +2,7 @@
 layout: docs
 title: Bubble Theme
 permalink: /docs/themes/bubble/
+stability: incomplete
 ---
 
 <p>Simple tooltip based theme.</p>
