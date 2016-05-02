@@ -7,6 +7,4 @@ stability: incomplete
 
 <p>Clean, flat toolbar theme.</p>
 {% include standalone/snow.html %}
-<p>
-  <a class="standalone-link" href="/standalone/snow">Standalone</a>
-</p>
+<a class="standalone-link" href="/standalone/snow">Standalone</a>

@@ -378,6 +378,7 @@ footer li {
 }
 #docs-container .standalone-link {
   display: block;
+  margin-bottom: 25px;
   max-width: 100%;
   text-align: right;
   width: 720px;

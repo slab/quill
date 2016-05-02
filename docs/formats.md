@@ -4,28 +4,40 @@ title: Formats
 permalink: /docs/formats/
 ---
 
-TODO: Review
+Quill supports a number of formats, both in UI controls and API calls.
 
-Quill currently supports a number of formats. Enabling a format:
+{% include standalone/full.html %}
 
-- \- Allows the Quill Editor to recognize the format
-- \- Allows API calls using the format
+<a class="standalone-link" href="/standalone/full">Standalone</a>
 
-Note that enabling a format is distinct from adding a control in the [toolbar](/docs/modules/toolbar/). By default all supported formats are enabled.
+By default all formats are enabled and allowed to exist within a Quill editor and can be configured with the [formats](/docs/configuration/#formats) option. This is separate from adding a control in the toolbar. For example, bolded content may be pasted into an editor that has no bold button in the toolbar.
+
+#### Inline
 
   - Background Color - `background`
   - Bold - `bold`
   - Color - `color`
   - Font - `font`
+  - Inline Code - `code`
   - Italic - `italic`
   - Link - `link`
   - Size - `size`
   - Strikethrough - `strike`
   - Superscript/Subscript - `script`
   - Underline - `underline`
+
+#### Block
+
+  - Blockquote - `blockquote`
   - Header - `header`
   - Indent - `indent`
   - List - `list`
   - Text Alignment - `align`
   - Text Direction - `direction`
+  - Code Block - `code-block`
+
+#### Embeds
+
+  - Formula - `formula`
   - Image - `image`
+  - Video - `video`

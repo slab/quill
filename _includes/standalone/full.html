@@ -1,0 +1,90 @@
+<!-- head -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/monokai-sublime.min.css">
+<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css">
+<style>
+  #editor-container {
+    height: 350px;
+  }
+  #standalone-container {
+    margin: 50px auto;
+    width: 720px;
+  }
+</style>
+<!-- head -->
+<div id="standalone-container">
+  <div id="toolbar-container">
+    <span class="ql-formats">
+      <select class="ql-font">
+        <option selected></option>
+        <option value="serif"></option>
+        <option value="monospace"></option>
+      </select>
+      <select class="ql-size">
+        <option value="small"></option>
+        <option selected></option>
+        <option value="large"></option>
+        <option value="huge"></option>
+      </select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-bold"></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-strike"></button>
+    </span>
+    <span class="ql-formats">
+      <select class="ql-color"></select>
+      <select class="ql-background"></select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-script" data-value="sub"></button>
+      <button class="ql-script" data-value="super"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-header" data-value="1"></button>
+      <button class="ql-header" data-value="2"></button>
+      <button class="ql-blockquote"></button>
+      <button class="ql-code-block"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-list" data-value="ordered"></button>
+      <button class="ql-list" data-value="bullet"></button>
+      <button class="ql-indent" data-value="-1"></button>
+      <button class="ql-indent" data-value="+1"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-direction" data-value="rtl"></button>
+      <select class="ql-align">
+        <option selected></option>
+        <option value="center"></option>
+        <option value="right"></option>
+        <option value="justify"></option>
+      </select>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-link"></button>
+      <button class="ql-formula"></button>
+      <button class="ql-image"></button>
+      <button class="ql-video"></button>
+    </span>
+    <span class="ql-formats">
+      <button class="ql-clean"></button>
+    </span>
+  </div>
+  <div id="editor-container"></div>
+</div>
+<!-- script -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
+<script>
+  var quill = new Quill('#editor-container', {
+    modules: {
+      toolbar: '#toolbar-container'
+    },
+    placeholder: 'Compose an epic...',
+    theme: 'snow'
+  });
+</script>
+<!-- script -->

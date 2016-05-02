@@ -14,7 +14,7 @@ layout: default
   </div>
 
   <div class="row">
-    <div id="docs-container" class="col-sm-9">
+    <div id="docs-container" class="col-sm-8">
       {% if page.stability == "review" %}
       <div class="alert alert-warning">This page needs to be reviewed.</div>
       {% elsif page.stability == "incomplete" %}
@@ -24,7 +24,7 @@ layout: default
       <a class="edit-link" href="{{site.github}}/{{page.path}}" target="_blank" title="Edit on Github">Edit</a>
       {{ content }}
     </div>
-    <div id="sidebar-container" class="col-sm-3">
+    <div id="sidebar-container" class="col-sm-3 col-sm-offset-1">
       <div class="sidebar-nav" data-spy="affix" data-offset-top="40">
         <ul class="nav">
           {% include sidebar.html navClass="nav" items=site.data.docs %}
