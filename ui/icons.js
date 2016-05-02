@@ -11,6 +11,10 @@ module.exports = {
   'clean'     : require('../assets/icons/clean.svg'),
   'code-block': require('../assets/icons/code.svg'),
   'color'     : require('../assets/icons/color.svg'),
+  'direction' : {
+    ''        : require('../assets/icons/direction-ltr.svg'),
+    'rtl'     : require('../assets/icons/direction-rtl.svg')
+  },
   'formula'   : require('../assets/icons/formula.svg'),
   'italic'    : require('../assets/icons/italic.svg'),
   'header': {
@@ -18,10 +22,18 @@ module.exports = {
     '2'       : require('../assets/icons/header-2.svg')
   },
   'image'     : require('../assets/icons/image.svg'),
+  'indent': {
+    '+1'      : require('../assets/icons/indent.svg'),
+    '-1'      : require('../assets/icons/outdent.svg')
+  },
   'link'      : require('../assets/icons/link.svg'),
   'list': {
     'ordered' : require('../assets/icons/list-ordered.svg'),
     'bullet'  : require('../assets/icons/list-bullet.svg')
+  },
+  'script': {
+    'sub'     : require('../assets/icons/subscript.svg'),
+    'super'   : require('../assets/icons/superscript.svg'),
   },
   'strike'    : require('../assets/icons/strike.svg'),
   'underline' : require('../assets/icons/underline.svg'),
