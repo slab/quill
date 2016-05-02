@@ -80,7 +80,7 @@ List.blotName = 'list';
 List.scope = Parchment.Scope.BLOCK_BLOT;
 List.tagName = ['OL', 'UL'];
 List.defaultChild = 'list-item';
-List.allowedChilren = [ListItem];
+List.allowedChildren = [ListItem];
 
 
 export { ListItem, List as default };
