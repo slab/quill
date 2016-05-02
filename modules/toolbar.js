@@ -25,6 +25,16 @@ class Toolbar extends Module {
     this.container.classList.toggle('ios', /iPhone|iPad/i.test(navigator.userAgent));
     this.controls = [];
     this.handlers = {
+      'indent': (value) => {
+        let range = this.quill.getSelection();
+        let formats = this.quill.getFormat(range);
+        let indent = parseInt(formats.indent || 0);
+        if (value === '+1') {
+          this.quill.format('indent', indent + 1);
+        } else if (value === '-1') {
+          this.quill.format('indent', indent - 1);
+        }
+      },
       'clean': () => {
         let range = this.quill.getSelection();
         if (range != null) {
