@@ -209,4 +209,10 @@ describe('List', function() {
       </ul>
     `);
   });
+
+  it('copy atttributes', function() {
+    let editor = this.initialize(Editor, '<p class="ql-align-center">Test</p>');
+    editor.formatLine(4, 1, { list: 'bullet' });
+    expect(this.container).toEqualHTML('<ul><li class="ql-align-center">Test</li></ul>');
+  });
 });

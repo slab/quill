@@ -49,6 +49,12 @@ class List extends Container {
     return undefined;
   }
 
+  format(name, value) {
+    if (this.children.length > 0) {
+      this.children.tail.format(name, value);
+    }
+  }
+
   formats() {
     // We don't inherit from FormatBlot
     let formats = {};
