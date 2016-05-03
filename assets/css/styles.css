@@ -36,10 +36,6 @@ pre code, pre {
   border: none;
 }
 
-ul {
-  list-style: none;
-}
-
 body.home {
   background-color: #fafafa;
 }
@@ -177,6 +173,9 @@ footer li {
 #sidebar-container > .sidebar-nav > ul.nav > li.active > a, #sidebar-container > .sidebar-nav > ul.nav > li.active > a:hover {
   border-left: 2px solid #06c;
   padding-left: 13px;
+}
+#sidebar-container ul {
+  list-style: none;
 }
 #sidebar-container ul.sidebar-nav > li > a:hover {
   border-left: 1px solid #06c;
@@ -350,7 +349,7 @@ footer li {
 #docs-container > h2, #docs-container > h3 {
   margin-top: 60px;
 }
-#docs-container > ol {
+#docs-container > ol, #docs-container > ul {
   list-style: none;
 }
 #docs-container > ol, #docs-container > ul {
