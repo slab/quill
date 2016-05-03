@@ -1,3 +1,8 @@
+#1.0.0-beta.0
+
+Please see the [Upgrading to 1.0](http://beta.quilljs.com/guides/upgrading-to-1-0/) guide.
+
+
 #0.20.1
 
 Patch release for everything prior to Parchment's integration into Quill.
