@@ -50,8 +50,10 @@ class BubbleTheme extends BaseTheme {
         this.quill.format('link', input.value);
         this.tooltip.hide();
         input.value = '';
+        evt.preventDefault();
       } else if (Keyboard.match(evt, 'escape')) {
         this.tooltip.classList.remove('ql-editing');
+        evt.preventDefault();
       }
     });
   }

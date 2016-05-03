@@ -18,7 +18,7 @@ class Keyboard extends Module {
     if (!!binding.metaKey !== metaKey && binding.metaKey !== null) return false;
     if (!!binding.shiftKey !== evt.shiftKey && binding.shiftKey !== null) return false;
     if (!!binding.altKey !== evt.altKey && binding.altKey !== null) return false;
-    return true;
+    return binding.key === (evt.which || evt.keyCode);
   }
 
   constructor(quill, options) {
@@ -164,9 +164,9 @@ function normalize(binding) {
   switch (typeof binding) {
     case 'string':
       if (Keyboard.keys[binding.toUpperCase()] != null) {
-        binding = clone(Keyboard.keys[binding.toUpperCase()], false);
+        binding = { key: Keyboard.keys[binding.toUpperCase()] };
       } else if (binding.length === 1) {
-        binding = { key: binding };
+        binding = { key: binding.toUpperCase().charCodeAt(0) };
       } else {
         return null;
       }
