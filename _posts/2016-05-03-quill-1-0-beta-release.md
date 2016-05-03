@@ -4,7 +4,11 @@ permalink: /blog/quill-1-0-beta-release/
 title: Quill 1.0 Beta Release
 ---
 
-Today Quill is ready for its first beta preview of 1.0. This is the biggest rewrite to Quill since its inception and enables many new possibilities not available in previous versions of Quill, nor any other editor.
+Today Quill is ready for its first beta preview of 1.0. This is the biggest rewrite to Quill since its inception and enables many new possibilities not available in previous versions of Quill, nor any other editor. The code is as always available on Github and through npm:
+
+```
+npm install quill@1.0.0-beta.0
+```
 
 The skeleton of a new documentation site is also being built out at [beta.quilljs.com](http://beta.quilljs.com). Whereas the current site focuses on being a referential resource, the new site will also be a guide to provide insight on approaching different customization goals. There is also an [interactive playground](http://beta.quilljs.com/playground/) to try out various configurations and explore the API.
 
