@@ -2,7 +2,7 @@
 
 Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Webpack](https://webpack.github.io/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Jekyll](http://jekyllrb.com/). [Karma](https://karma-runner.github.io/) and [Protractor](https://angular.github.io/protractor/) are used for testing.
 
-To develop Quill locally, you will want a copy of both Quill's codebase and its documentation site. The latter is included as a proper Node.js dependency, named [quill-docs](https://github.com/quilljs/quilljs.github.io), and contains many useful [standalone examples](https://github.com/quilljs/quilljs.github.io/tree/gh-pages-1/docs/standalone) to test changes in isolation. It may be useful to [`npm link`](https://docs.npmjs.com/cli/link) quill-docs to easily tweak the examples locally to test your changes.
+To develop Quill locally, you will want a copy of both Quill's codebase and its documentation site. The documentation site is the same as the one publicly available at quilljs.com but set up to use your local copy of Quill, instead of a CDN's. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quilljs.github.io/tree/gh-pages-1/docs/standalone). This is a packaged as a proper Node.js dependency named [quill-docs](https://github.com/quilljs/quilljs.github.io). It may be useful to [`npm link`](https://docs.npmjs.com/cli/link) quill-docs to allow easy tweaking of the examples themselves as well.
 
 
 ### Setup
