@@ -16,4 +16,5 @@ find .release/quill/examples -type f -exec sed -i "" 's/\<link rel\="icon".*\>/ 
 find .release/quill/examples -type f -exec sed -i "" 's/href="\/\//href="https:\/\//g' {} \;
 find .release/quill/examples -type f -exec sed -i "" 's/src="\/\//src="https:\/\//g' {} \;
 uglifyjs .release/quill/quill.js > .release/quill/quill.min.js
-tar -czf .release/quill.tar.gz .release/quill
+cd .release
+tar -czf quill.tar.gz quill
