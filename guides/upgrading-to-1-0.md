@@ -27,6 +27,8 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 
 - `registerModule` *renamed* - A new API [`register`](/docs/api/#register) is now used to registers all modules, themes and formats.
 
+- `require` *renamed* - Renamed to `import` for consistency with ES6.
+
 - `addContainer` *modified* - The [second parameter](/docs/api/#addcontainer) is changed to allow insertion before any container, not just the editor. Thus instead of an optional boolean, it now an optional HTMLElement.
 
 
