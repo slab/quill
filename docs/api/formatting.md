@@ -27,7 +27,7 @@ quill.format('align', 'right');
 
 ### formatLine
 
-Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. The user's selection may not be preserved.
+Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved.
 
 **Methods**
 
@@ -60,7 +60,7 @@ quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 
 ### formatText
 
-Formats text in the editor. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. The user's selection may not be preserved.
+Formats text in the editor. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved.
 
 **Methods**
 
