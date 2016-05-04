@@ -256,6 +256,12 @@ class Selection {
 
 
 function contains(parent, descendant) {
+  try {
+    // Firefox inserts inaccessible nodes around video elements
+    descendant.parentNode;
+  } catch (e) {
+    return false;
+  }
   // IE11 has bug with Text nodes
   // https://connect.microsoft.com/IE/feedback/details/780874/node-contains-is-incorrect
   if (descendant instanceof Text) {
