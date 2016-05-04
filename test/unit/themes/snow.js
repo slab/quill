@@ -50,5 +50,20 @@ describe('Snow', function() {
       expect(toolbar.container.querySelector('.ql-bold')).toBeTruthy();
       expect(toolbar.container.querySelector('.ql-italic')).toBeFalsy();
     });
+
+    it('custom handler, default container', function() {
+      let theme = new SnowTheme(this.quill, {
+        modules: {
+          toolbar: {
+            handlers: {
+              bold: function(value) {}
+            }
+          }
+        }
+      });
+      let toolbar = theme.addModule('toolbar');
+      expect(toolbar.container.querySelector('.ql-bold')).toBeTruthy();
+      expect(toolbar.container.querySelector('.ql-italic')).toBeTruthy();
+    });
   });
 });

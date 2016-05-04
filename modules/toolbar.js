@@ -1,3 +1,4 @@
+import extend from 'extend';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -8,7 +9,11 @@ let debug = logger('quill:toolbar');
 
 class Toolbar extends Module {
   constructor(quill, options) {
+    if (typeof options !== 'object' || options.constructor !== Object) {
+      options = { container: options };
+    }
     super(quill, options);
+    this.options.handlers = extend({}, Toolbar.DEFAULTS.handlers, options.handlers);
     this.container = this.options.container || this.options;
     if (typeof this.container === 'string') {
       this.container = document.querySelector(this.container);
@@ -24,29 +29,10 @@ class Toolbar extends Module {
     this.container.classList.add('ql-toolbar');
     this.container.classList.toggle('ios', /iPhone|iPad/i.test(navigator.userAgent));
     this.controls = [];
-    this.handlers = {
-      'indent': (value) => {
-        let range = this.quill.getSelection();
-        let formats = this.quill.getFormat(range);
-        let indent = parseInt(formats.indent || 0);
-        if (value === '+1') {
-          this.quill.format('indent', indent + 1);
-        } else if (value === '-1') {
-          this.quill.format('indent', indent - 1);
-        }
-      },
-      'clean': () => {
-        let range = this.quill.getSelection();
-        if (range != null) {
-          let startLength = this.quill.getLength();
-          this.quill.removeFormat(range);
-          let endLength = this.quill.getLength();
-          // account for embed removals
-          this.quill.setSelection(range.index, range.length - (startLength-endLength));
-        }
-        return true;
-      }
-    };
+    this.handlers = {};
+    Object.keys(this.options.handlers).forEach((format) => {
+      this.addHandler(format, this.options.handlers[format]);
+    });
     [].forEach.call(this.container.querySelectorAll('a, button, select'), (input) => {
       this.attach(input);
     });
@@ -55,6 +41,10 @@ class Toolbar extends Module {
       let [range, ] = this.quill.selection.getRange();  // quill.getSelection triggers update
       this.update(range);
     });
+  }
+
+  addHandler(format, handler) {
+    this.handlers[format] = handler.bind(this);
   }
 
   attach(input) {
@@ -157,6 +147,34 @@ function addSelect(container, format, values) {
     input.appendChild(option);
   });
   container.appendChild(input);
+}
+
+Toolbar.DEFAULTS = {
+  container: null,
+  handlers: {
+    clean: function(value) {
+      let range = this.quill.getSelection();
+      if (range != null) {
+        let startLength = this.quill.getLength();
+        this.quill.removeFormat(range);
+        let endLength = this.quill.getLength();
+        // account for embed removals
+        this.quill.setSelection(range.index, range.length - (startLength-endLength));
+      }
+      return true;
+    },
+    indent: function(value) {
+      let range = this.quill.getSelection();
+      let formats = this.quill.getFormat(range);
+      let indent = parseInt(formats.indent || 0);
+      if (value === '+1') {
+        this.quill.format('indent', indent + 1);
+      } else if (value === '-1') {
+        this.quill.format('indent', indent - 1);
+      }
+      return true;
+    }
+  }
 }
 
 
