@@ -41,6 +41,8 @@ class Selection {
       // TODO unclear if this has negative side effects
       this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
         try {
+          // Check crash condition in FF https://bugzilla.mozilla.org/show_bug.cgi?id=1270235
+          if (native.start.node.parentNode == null || native.end.node.parentNode == null) return;
           this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offset);
         } catch (ignored) {}
       });
