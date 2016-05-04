@@ -41,7 +41,7 @@ class Selection {
       // TODO unclear if this has negative side effects
       this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
         try {
-          this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offsetTop);
+          this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offset);
         } catch (ignored) {}
       });
     });
