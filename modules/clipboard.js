@@ -17,14 +17,10 @@ class Clipboard extends Module {
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
     this.container.setAttribute('tabindex', -1);
-    this.matchers = [
-      [Node.TEXT_NODE, matchText],
-      [Node.ELEMENT_NODE, matchNewline],
-      [Node.ELEMENT_NODE, matchBlot],
-      [Node.ELEMENT_NODE, matchSpacing],
-      [Node.ELEMENT_NODE, matchAttributor],
-      ['b, i', matchAliases]
-    ];
+    this.matchers = [];
+    this.options.matchers.forEach((pair) => {
+      this.addMatcher(...pair);
+    });
   }
 
   addMatcher(selector, matcher) {
@@ -125,6 +121,18 @@ class Clipboard extends Module {
     }
   }
 }
+Clipboard.DEFAULTS = {
+  matchers: [
+    [Node.TEXT_NODE, matchText],
+    [Node.ELEMENT_NODE, matchNewline],
+    [Node.ELEMENT_NODE, matchBlot],
+    [Node.ELEMENT_NODE, matchSpacing],
+    [Node.ELEMENT_NODE, matchAttributor],
+    ['b', matchAlias.bind(matchAlias, 'bold')],
+    ['i', matchAlias.bind(matchAlias, 'italic')]
+  ]
+};
+
 
 function computeStyle(node) {
   if (node.nodeType !== Node.ELEMENT_NODE) return {};
@@ -148,17 +156,9 @@ function isLine(node) {
   return ['block', 'list-item'].indexOf(style.display) > -1;
 }
 
-function matchAliases(node, delta) {
+function matchAlias(format, node, delta) {
   let formats = {};
-  switch(node.tagName) {
-    case 'B':
-      formats['bold'] = true;
-      break;
-    case 'I':
-      formats['italic'] = true;
-      break;
-    default: return delta;
-  }
+  formats[format] = true;
   return delta.compose(new Delta().retain(delta.length(), formats));
 }
 
