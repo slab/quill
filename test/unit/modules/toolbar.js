@@ -32,7 +32,7 @@ describe('Toolbar', function() {
       expect(this.container).toEqualHTML(`
         <span class="ql-formats">
           <button class="ql-bold"></button>
-          <button class="ql-header" data-value="2"></button>
+          <button class="ql-header" value="2"></button>
         </span>
       `);
     });
@@ -79,8 +79,8 @@ describe('Toolbar', function() {
           <button class="ql-strike"></button>
         </span>
         <span class="ql-formats">
-          <button class="ql-list" data-value="ordered"></button>
-          <button class="ql-list" data-value="bullet"></button>
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
           <select class="ql-align">
             <option selected="selected"></option>
             <option value="center"></option>
