@@ -2,7 +2,6 @@
 layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
-stability: review
 ---
 <!-- head -->
 <link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
@@ -17,56 +16,145 @@ The Toolbar module allow users to easily format Quill's contents.
   <div id="toolbar-editor" class="editor"></div>
 </div>
 
-Simply create a container and the module to the Quill editor.
+It can be configured with a custom container and handlers.
+
+```javascript
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: {
+      container: '#toolbar',  // Selector for toolbar container
+      handlers: {
+        'formula': customFormulaHandler
+      }
+    }
+  }
+});
+```
+
+Because the `container` option is so common, a top level shorthand is also allowed.
+
+```javascript
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: '#toolbar'   // Equivalent to { toolbar: { container: '#toolbar' }}
+  }
+});
+```
+
+
+## Container
+
+At the simplest level, toolbar controls can be specified by a simple array of format names.
+
+```javascript
+var toolbarOptions = ['bold', 'italic', 'underline', 'strike'];
+
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: toolbarOptions
+  }
+});
+```
+
+Controls can also be grouped by one level of nesting an array. This will wrap controls in a `<span>` with class name `ql-formats`, providing structure for themes to utilize. For example [Snow](/docs/themes/snow/) adds extra spacing between control groups.
+
+```javascript
+var toolbarOptions = [['bold', 'italic'], ['link', 'image']];
+```
+
+Buttons with custom values can be specified with an Object with the name of the format as its only key.
+
+```javascript
+var toolbarOptions = [{ 'size': '32px' }];
+```
+
+Dropdowns are similarly specified by an Object, but with an array of possible values. CSS is used to control the visual labels for dropdown options.
+
+```javascript
+var toolbarOptions = [
+  { size: ['10px', false, '16px', '32px' ]}
+];
+```
+
+Note [Themes](/docs/themes/) may also specify default values for dropdowns. For example, [Snow](/docs/themes/snow/) provides a default list of 35 colors for the `color` and `background` formats if left unspecified.
+
+```javascript
+var toolbarOptions = [
+  [{ size: ['small', false, 'large', 'huge'] }],
+  ['bold', 'italic', 'underline'],
+  ['color', 'background'],
+  [{ script: 'sub' }, { script: 'super' }]
+];
+
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: toolbarOptions
+  }
+});
+```
+
+Alternatively you can manually create a toolbar in HTML, and pass the DOM element or selector into Quill. The `ql-toolbar` class will be added to the toolbar container and Quill attach appropriate handlers to `<button>` and `<select>` elements with a class name in the form `ql-${format}`. Buttons element may optionally have a custom `value` attribute.
 
 ```html
 <!-- Create toolbar container -->
 <div id="toolbar">
   <!-- Add font size dropdown -->
   <select class="ql-size">
-    <option value="10px">Small</option>
-    <option value="13px" selected>Normal</option>
-    <option value="18px">Large</option>
-    <option value="32px">Huge</option>
+    <option value="small"></option>
+    <option selected></option>
+    <option value="large"></option>
+    <option value="huge"></option>
   </select>
   <!-- Add a bold button -->
   <button class="ql-bold"></button>
+  <!-- Add subscript and superscript buttons -->
+  <button class="ql-script" value="sub"></button>
+  <button class="ql-script" value="super"></button>
 </div>
 <div id="editor"></div>
 
-<!-- Initialize editor and toolbar -->
+<!-- Initialize editor with toolbar -->
 <script>
-  var quill = new Quill('#editor');
-  quill.addModule('toolbar', {
-    container: '#toolbar'     // Selector for toolbar container
+  var quill = new Quill('#editor', {
+    modules: {
+      tooblar: '#toolbar'
+    }
   });
 </script>
 ```
 
-The `ql-toolbar` class will be added to the toolbar container.
 
-A click handler will be added to any DOM element with the following classes:
+## Handlers
 
-- `ql-bold`
-- `ql-italic`
-- `ql-strike`
-- `ql-underline`
-- `ql-link`
+The toolbar controls by default applies and removes formatting, but you can also overwrite this with custom handlers, for example in order to show external UI.
 
-A change (DOM `change` event) handler will be added to any DOM element with the following classes:
+Handler functions will be bound to the toolbar (so using `this` will refer to the toolbar instance) and passed the `value` attribute of the input, if the corresponding format is inactive, and `false` otherwise. Returning `true` in the handler function will signal to the toolbar that the event is "handled" and prevent the default behavior.
 
-- `ql-background`
-- `ql-color`
-- `ql-font`
-- `ql-size`
+```javascript
+var toolbarOptions = {
+  handlers: {     // handlers object will be merged with default handlers object
+    'link': function(value) {
+      if (value) {
+        var href = prompt('Enter the URL');
+        this.quill.format('link', href);
+        return true;
+      }
+      // If value is false, user is trying to remove the link format
+      // Let the toolbar handle this case
+    }
+  }
+}
 
-The toolbar will also listen to cursor movements and will add an `ql-active` class to elements in the toolbar that corresponds to the format of the text the cursor is on.
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: toolbarOptions
+  }
+});
 
-The following classes are also recognized by the toolbar but largely used by [Themes](/docs/themes/) for styling:
-
-- `ql-format-button`
-- `ql-format-group`
-- `ql-format-separator`
+// Handlers can also be added post initialization
+var toolbar = quill.getModule('toolbar');
+toolbar.addHandler('image', showImageUI);
+```
 
 <!-- script -->
 <script src="{{site.cdn}}{{site.version}}/quill.js"></script>
