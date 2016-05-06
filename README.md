@@ -11,8 +11,8 @@ To get started, check out the [Quill Github Page](http://quilljs.com/) or jump s
 
 - [Demo](https://quilljs.com/examples/)
 - [Documentation](https://quilljs.com/)
-- [Contributing](https://github.com/quilljs/quill/blob/develop/.github/CONTRIBUTING.md)
-- [Local Development](https://github.com/quilljs/quill/blob/develop/.github/DEVELOPMENT.md)
+- [Contributing](https://github.com/quilljs/quill/blob/master/.github/CONTRIBUTING.md)
+- [Local Development](https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md)
 
 
 ## Quickstart
