@@ -65,8 +65,8 @@ permalink: /standalone/basic/
   <button class="ql-strike" title='Strikethrough'>Strike</button>
   <button class="ql-link" title='Link'>Link</button>
   <button class="ql-image" title='Image'>Image</button>
-  <button class="ql-list" title='Bullet' data-value="bullet">Bullet</button>
-  <button class="ql-list" title='List' data-value="ordered">List</button>
+  <button class="ql-list" title='Bullet' value="bullet">Bullet</button>
+  <button class="ql-list" title='List' value="ordered">List</button>
 </div>
 <div id="editor-container"></div>
 <!-- script -->

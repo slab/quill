@@ -36,6 +36,10 @@ pre code, pre {
   border: none;
 }
 
+*:not(pre) > code {
+  white-space: nowrap;
+}
+
 body.home {
   background-color: #fafafa;
 }
