@@ -65,14 +65,16 @@ var toolbarOptions = [['bold', 'italic'], ['link', 'image']];
 Buttons with custom values can be specified with an Object with the name of the format as its only key.
 
 ```javascript
-var toolbarOptions = [{ 'size': '32px' }];
+var toolbarOptions = [{ 'header': '3' }];
 ```
 
 Dropdowns are similarly specified by an Object, but with an array of possible values. CSS is used to control the visual labels for dropdown options.
 
 ```javascript
+// Note false, not 'normal', is the correct value
+// quill.format('size', false) removes the format, allowing default styling to work
 var toolbarOptions = [
-  { size: ['10px', false, '16px', '32px' ]}
+  { size: [ 'small', false, 'large', 'huge' ]}
 ];
 ```
 
@@ -101,6 +103,7 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
   <!-- Add font size dropdown -->
   <select class="ql-size">
     <option value="small"></option>
+    <!-- Note a missing, thus falsy value, is used to set the size back to default -->
     <option selected></option>
     <option value="large"></option>
     <option value="huge"></option>
