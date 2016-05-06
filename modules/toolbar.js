@@ -71,9 +71,9 @@ class Toolbar extends Module {
         if (input.selectedIndex < 0) return;
         value = input.options[input.selectedIndex].value || false;
       } else {
-        value = input.classList.contains('ql-active') ? false : input.dataset.value || true;
+        value = input.classList.contains('ql-active') ? false : input.value || true;
       }
-      if (this.handlers[format]) {
+      if (this.handlers[format] != null) {
         if (this.handlers[format](value)) return;
       }
       this.quill.format(format, value, Quill.sources.USER);
@@ -100,8 +100,8 @@ class Toolbar extends Module {
         } else {
           option.selected = true;
         }
-      } if (input.dataset.value) {
-        input.classList.toggle('ql-active', input.dataset.value == formats[format]);  // Intentional ==
+      } if (input.value) {
+        input.classList.toggle('ql-active', input.value == formats[format]);  // Intentional ==
       } else {
         input.classList.toggle('ql-active', formats[format] || false);
       }
@@ -115,7 +115,7 @@ function addButton(container, format, value) {
   let input = document.createElement('button');
   input.classList.add('ql-' + format);
   if (value != null) {
-    input.dataset.value = value;
+    input.value = value;
   }
   container.appendChild(input);
 }

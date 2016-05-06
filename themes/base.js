@@ -23,7 +23,7 @@ class BaseTheme extends Theme {
         if (typeof icons[name] === 'string') {
           button.innerHTML = icons[name];
         } else {
-          let value = button.dataset.value || '';
+          let value = button.value || '';
           if (value != null && icons[name][value]) {
             button.innerHTML = icons[name][value];
           }
