@@ -53,6 +53,16 @@ class Toolbar extends Module {
     });
     if (!format) return;
     format = format.slice('ql-'.length);
+    if (this.handlers[format] == null) {
+      if (this.quill.scroll.whitelist != null && this.quill.scroll.whitelist[format] == null) {
+        debug.warn('ignoring attaching to disabled format', format, input);
+        return;
+      }
+      if (Parchment.query(format) == null) {
+        debug.warn('ignoring attaching to nonexistent format', format, input);
+        return;
+      }
+    }
     let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
     input.addEventListener(eventName, () => {
       this.quill.focus();
