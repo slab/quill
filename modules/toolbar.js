@@ -33,7 +33,7 @@ class Toolbar extends Module {
     Object.keys(this.options.handlers).forEach((format) => {
       this.addHandler(format, this.options.handlers[format]);
     });
-    [].forEach.call(this.container.querySelectorAll('a, button, select'), (input) => {
+    [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
       this.attach(input);
     });
     this.quill.on(Quill.events.SELECTION_CHANGE, this.update, this);
