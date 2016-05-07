@@ -263,6 +263,16 @@ describe('Editor', function() {
       expect(this.container).toEqualHTML('<p><strong>01</strong></p>');
     });
 
+    it('discontinuous formats', function() {
+      let editor = this.initialize(Editor, '');
+      let delta = new Delta()
+        .insert('ab', { bold: true })
+        .insert('23\n45')
+        .insert('cd', { bold: true });
+      editor.applyDelta(delta);
+      expect(this.container).toEqualHTML('<p><strong>ab</strong>23</p><p>45<strong>cd</strong></p>');
+    });
+
     it('unformatted insert', function() {
       let editor = this.initialize(Editor, '<p><em>01</em></p>');
       editor.applyDelta(new Delta().retain(1).insert('|'));
