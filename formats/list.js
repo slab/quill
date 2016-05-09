@@ -57,9 +57,7 @@ class List extends Container {
 
   formats() {
     // We don't inherit from FormatBlot
-    let formats = {};
-    formats[this.statics.blotName] = this.statics.formats(this.domNode);
-    return formats;
+    return { [this.statics.blotName]: this.statics.formats(this.domNode) };
   }
 
   optimize() {

@@ -157,9 +157,7 @@ function isLine(node) {
 }
 
 function matchAlias(format, node, delta) {
-  let formats = {};
-  formats[format] = true;
-  return delta.compose(new Delta().retain(delta.length(), formats));
+  return delta.compose(new Delta().retain(delta.length(), { [format]: true }));
 }
 
 function matchAttributor(node, delta) {
@@ -194,8 +192,7 @@ function matchBlot(node, delta) {
       }
     }
   } else if (typeof match.formats === 'function') {
-    let formats = {};
-    formats[match.blotName] = match.formats(node);
+    let formats = { [match.blotName]: match.formats(node) };
     delta = delta.compose(new Delta().retain(delta.length(), formats));
   }
   return delta;
