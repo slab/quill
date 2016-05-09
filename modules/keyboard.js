@@ -60,10 +60,10 @@ class Keyboard extends Module {
       let range = this.quill.getSelection();
       if (range == null) return;    // implies we do not have focus
       let format = null;
-      let prevented = !bindings.every((tuple) => {
+      let prevented = bindings.some((tuple) => {
         let [key, context, handler] = tuple;
-        if (context.collapsed === true && range.length > 0) return true;
-        if (context.collapsed === false && range.length === 0) return true;
+        if (context.collapsed === true && range.length > 0) return false;
+        if (context.collapsed === false && range.length === 0) return false;
         if (context.format) {
           format = format || this.quill.getFormat(range);
           let formatsMatch = Object.keys(context.format).every(function(name) {
@@ -71,9 +71,9 @@ class Keyboard extends Module {
                    (context.format[name] === false && format[name] == null) ||
                    (equal(context.format[name], format[name]));
           });
-          if (!formatsMatch) return true;
+          if (!formatsMatch) return false;
         }
-        return handler.call(this, range);
+        return handler.call(this, range) !== true;
       });
       if (prevented) {
         evt.preventDefault();
