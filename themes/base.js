@@ -5,6 +5,14 @@ import icons from '../ui/icons';
 
 
 class BaseTheme extends Theme {
+  constructor(quill, options) {
+    super(quill, options);
+    if (this.options.modules.toolbar != null &&
+        this.options.modules.toolbar.constructor !== Object) {
+      this.options.modules.toolbar = { container: this.options.modules.toolbar };
+    }
+  }
+
   addModule(name) {
     let module = super.addModule(name);
     if (name === 'toolbar') {

@@ -9,19 +9,17 @@ let debug = logger('quill:toolbar');
 
 class Toolbar extends Module {
   constructor(quill, options) {
-    if (typeof options !== 'object' || options.constructor !== Object) {
-      options = { container: options };
-    }
+    options.handlers = extend({}, Toolbar.DEFAULTS.handlers, options.handlers);
     super(quill, options);
-    this.options.handlers = extend({}, Toolbar.DEFAULTS.handlers, options.handlers);
-    this.container = this.options.container || this.options;
-    if (typeof this.container === 'string') {
-      this.container = document.querySelector(this.container);
-    } else if (Array.isArray(this.container)) {
+    if (typeof this.options.container === 'string') {
+      this.container = document.querySelector(this.options.container);
+    } else if (Array.isArray(this.options.container)) {
       let container = document.createElement('div');
-      addControls(container, this.container);
+      addControls(container, this.options.container);
       quill.container.parentNode.insertBefore(container, quill.container);
       this.container = container;
+    } else {
+      this.container = this.options.container;
     }
     if (!(this.container instanceof HTMLElement)) {
       return debug.error('Container required for toolbar', this.options);

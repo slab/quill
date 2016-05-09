@@ -70,12 +70,6 @@ class SnowTheme extends BaseTheme {
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
     this.imageTooltip = this.addModule('image-tooltip');
     this.linkTooltip = this.addModule('link-tooltip');
-    toolbar.handlers['image'] = this.imageTooltip.show.bind(this.imageTooltip);
-    toolbar.handlers['link'] = (value) => {
-      if (!value) return false;
-      this.linkTooltip.open(this.quill.selection.savedRange);
-      return true;
-    }
   }
 }
 SnowTheme.DEFAULTS = {

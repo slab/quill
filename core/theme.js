@@ -8,7 +8,13 @@ let debug = logger('[quill:theme]');
 class Theme {
   constructor(quill, options) {
     this.quill = quill;
-    this.options = options;
+    this.options = extend({}, this.constructor.DEFAULTS, options);
+    this.options.modules = Object.keys(this.options.modules).reduce((modules, name) => {
+      let value = this.options.modules[name];
+      // allow new Quill('#editor', { modules: { myModule: true }});
+      modules[name] = value === true ? {} : value;
+      return modules;
+    }, {});
     this.modules = {};
     this.quill.once(Emitter.events.READY, this.init.bind(this));
   }
@@ -27,10 +33,6 @@ class Theme {
       return debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
     }
     let userOptions = this.options.modules[name] || {};
-    if (userOptions === true) {
-      // allow new Quill('#editor', { modules: { myModule: true }});
-      userOptions = {};
-    }
     if (typeof userOptions === 'object' && userOptions.constructor === Object) {
       let themeOptions = (this.constructor.DEFAULTS.modules || {})[name];
       userOptions = extend({}, moduleClass.DEFAULTS || {}, themeOptions, userOptions);
@@ -39,7 +41,9 @@ class Theme {
     return this.modules[name];
   }
 }
-Theme.DEFAULTS = {};
+Theme.DEFAULTS = {
+  modules: {}
+};
 Theme.themes = {
   'default': Theme
 };
