@@ -69,7 +69,12 @@ class Toolbar extends Module {
       let value;
       if (input.tagName === 'SELECT') {
         if (input.selectedIndex < 0) return;
-        value = input.options[input.selectedIndex].value || false;
+        let selected = input.options[input.selectedIndex];
+        if (selected.hasAttribute('selected')) {
+          value = false;
+        } else {
+          value = selected.value || false;
+        }
       } else {
         value = input.classList.contains('ql-active') ? false : input.value || true;
       }
