@@ -24,116 +24,43 @@ class Keyboard extends Module {
   constructor(quill, options) {
     super(quill, options);
     this.bindings = {};
-    this.addBinding({ key: 'B', metaKey: true }, this.onFormat.bind(this, 'bold'));
-    this.addBinding({ key: 'I', metaKey: true }, this.onFormat.bind(this, 'italic'));
-    this.addBinding({ key: 'U', metaKey: true }, this.onFormat.bind(this, 'underline'));
-    this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, this.onEnter.bind(this));
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDelete.bind(this, true));
-    this.addBinding({ key: Keyboard.keys.DELETE }, this.onDelete.bind(this, false));
-    // TODO implement
-    // this.addBinding({ key: Keyboard.keys.BACKSPACE }, this.onDeleteWord.bind(this, true));
-    // this.addBinding({ key: Keyboard.keys.DELETE }, this.onDeleteWord.bind(this, false));
-    this.addBinding({ key: Keyboard.keys.TAB, shiftKey: null }, this.onTab.bind(this));
     this.quill.root.addEventListener('keydown', (evt) => {
+      if (evt.defaultPrevented) return;
       let which = evt.which || evt.keyCode;
-      let handlers = (this.bindings[which] || []).reduce(function(handlers, binding) {
-        let [key, handler] = binding;
-        if (Keyboard.match(evt, key)) handlers.push(handler);
-        return handlers;
-      }, []);
-      if (handlers.length > 0) {
-        let range = this.quill.getSelection();
-        handlers.forEach((handler) => {
-          if (evt.defaultPrevented) return;
-          handler(range, evt);
-        });
+      let bindings = (this.bindings[which] || []).filter(function(tuple) {
+        return Keyboard.match(evt, tuple[0]);
+      });
+      if (bindings.length === 0) return;
+      let range = this.quill.getSelection();
+      let prevented = !bindings.every((tuple) => {
+        let [key, context, handler] = tuple;
+        return handler.call(this, range);
+      });
+      if (prevented) {
         evt.preventDefault();
       }
     });
   }
 
-  addBinding(binding, handler) {
+  addBinding(binding, context, handler) {
     binding = normalize(binding);
     if (binding == null) {
       return debug.warn('Attempted to add invalid keyboard binding', binding);
     }
+    if (typeof context === 'function') {
+      handler = context;
+      context = {};
+    }
     this.bindings[binding.key] = this.bindings[binding.key] || [];
-    this.bindings[binding.key].push([binding, handler]);
-  }
-
-  onDelete(backspace, range) {
-    if (range.length > 0) {
-      this.quill.deleteText(range, Quill.sources.USER);
-    } else if (!backspace) {
-      this.quill.deleteText(range.index, 1, Quill.sources.USER);
-    } else {
-      let [line, offset] = this.quill.scroll.descendant(Block, range.index);
-      let formats = this.quill.getFormat(range);
-      if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
-        if (formats['indent'] != null) {
-          line.format('indent', parseInt(formats['indent']) - 1, Quill.sources.USER);
-        } else {
-          line.format('list', false);
-        }
-      } else {
-        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
-        range = new Range(Math.max(0, range.index - 1));
-      }
-    }
-    this.quill.setSelection(range.index, Quill.sources.SILENT);
-  }
-
-  onEnter(range) {
-    let formats = this.quill.getFormat(range);
-    let lineFormats = Object.keys(formats).reduce(function(lineFormats, format) {
-      if (Parchment.query(format, Parchment.Scope.BLOCK)) {
-        lineFormats[format] = formats[format];
-      }
-      return lineFormats;
-    }, {});
-    let added = 1;
-    let delta = new Delta()
-      .retain(range.index)
-      .insert('\n', lineFormats);
-    delta.delete(range.length);
-    this.quill.updateContents(delta, Quill.sources.USER);
-    this.quill.setSelection(range.index + added, Quill.sources.SILENT);
-    Object.keys(formats).forEach((name) => {
-      if (lineFormats[name] == null) {
-        this.quill.format(name, formats[name]);
-      }
-    });
-    this.quill.selection.scrollIntoView();
-  }
-
-  onFormat(format, range) {
-    let formats = this.quill.getFormat(range);
-    this.quill.format(format, !formats[format], Quill.sources.USER);
-  }
-
-  onTab(range, evt) {
-    if (range.length === 0) {
-      let delta = new Delta().retain(range.index).insert('\t').delete(range.length);
-      this.quill.updateContents(delta, Quill.sources.USER);
-      this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-    } else {
-      let modifier = evt.shiftKey ? -1 : 1;
-      this.quill.scroll.descendants(Block, range.index, range.length).forEach(function(line) {
-        let format = line.formats();
-        let indent = parseInt(format['indent'] || 0);
-        line.format('indent', Math.max(0, indent + modifier));
-      });
-      this.quill.update(Quill.sources.USER);
-      this.quill.setSelection(range, Quill.sources.SILENT);
-    }
+    this.bindings[binding.key].push([binding, context, handler]);
   }
 
   removeAllBindings(binding, handler = null) {
     binding = normalize(binding);
     if (binding == null || this.bindings[binding.key] == null) return [];
     let removed = [];
-    this.bindings[binding.key] = this.bindings[binding.key].filter(function(target) {
-      let [key, callback] = target;
+    this.bindings[binding.key] = this.bindings[binding.key].filter(function(tuple) {
+      let [key, context, callback] = tuple;
       if (equal(key, binding) && (handler == null || callback === handler)) {
         removed.push(handler);
         return false;
