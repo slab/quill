@@ -18,8 +18,10 @@ class LinkTooltip extends Module {
     this.textbox.addEventListener('keydown', (evt) => {
       if (Keyboard.match(evt, 'enter')) {
         this.save();
+        evt.preventDefault();
       } else if (Keyboard.match(evt, 'escape')) {
         this.hide();
+        evt.preventDefault();
       }
     });
     this.container.querySelector('a.ql-action').addEventListener('click', () => {
