@@ -22,8 +22,9 @@ class SnowTheme extends BaseTheme {
 
   buildPickers(selects) {
     let pickers = selects.map((select) => {
+      let picker;
       if (select.classList.contains('ql-align')) {
-        return new IconPicker(select, icons.align);
+        picker = new IconPicker(select, icons.align);
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
         let format = select.classList.contains('ql-background') ? 'background' : 'color';
         if (select.querySelector('option') == null) {
@@ -38,10 +39,14 @@ class SnowTheme extends BaseTheme {
             select.appendChild(option);
           });
         }
-        return new ColorPicker(select, icons[format]);
+        picker = new ColorPicker(select, icons[format]);
       } else {
-        return new Picker(select);
+        picker = new Picker(select);
       }
+      picker.label.addEventListener('click', function() {
+        quill.focus();
+      });
+      return picker;
     });
     let update = function() {
       pickers.forEach(function(picker) {
