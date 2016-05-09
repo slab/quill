@@ -178,6 +178,15 @@ Toolbar.DEFAULTS = {
       }
       return true;
     },
+    direction: function(value) {
+      let align = this.quill.getFormat()['align'];
+      if (value === 'rtl' && align == null) {
+        this.quill.format('align', 'right');
+      } else if (!value && align === 'right') {
+        this.quill.format('align', false);
+      }
+      return false;
+    },
     indent: function(value) {
       let range = this.quill.getSelection();
       let formats = this.quill.getFormat(range);
