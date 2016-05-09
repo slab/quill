@@ -1,5 +1,6 @@
 import clone from 'clone';
 import equal from 'deep-equal';
+import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
@@ -23,7 +24,12 @@ class Keyboard extends Module {
 
   constructor(quill, options) {
     super(quill, options);
+    this.options.bindings = extend({}, Keyboard.DEFAULTS.bindings, options.bindings);
     this.bindings = {};
+    Object.keys(this.options.bindings).forEach((name) => {
+      let [key, context, handler] = this.options.bindings[name];
+      this.addBinding(key, context, handler);
+    });
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented) return;
       let which = evt.which || evt.keyCode;
@@ -32,8 +38,21 @@ class Keyboard extends Module {
       });
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
+      if (range == null) return;    // implies we do not have focus
+      let format = null;
       let prevented = !bindings.every((tuple) => {
         let [key, context, handler] = tuple;
+        if (context.collapsed === true && range.length > 0) return true;
+        if (context.collapsed === false && range.length === 0) return true;
+        if (context.format) {
+          format = format || this.quill.getFormat(range);
+          let formatsMatch = Object.keys(context.format).every(function(name) {
+            return (context.format[name] === true && format[name] != null) ||
+                   (context.format[name] === false && format[name] == null) ||
+                   (equal(context.format[name], format[name]));
+          });
+          if (!formatsMatch) return true;
+        }
         return handler.call(this, range);
       });
       if (prevented) {
@@ -54,25 +73,6 @@ class Keyboard extends Module {
     this.bindings[binding.key] = this.bindings[binding.key] || [];
     this.bindings[binding.key].push([binding, context, handler]);
   }
-
-  removeAllBindings(binding, handler = null) {
-    binding = normalize(binding);
-    if (binding == null || this.bindings[binding.key] == null) return [];
-    let removed = [];
-    this.bindings[binding.key] = this.bindings[binding.key].filter(function(tuple) {
-      let [key, context, callback] = tuple;
-      if (equal(key, binding) && (handler == null || callback === handler)) {
-        removed.push(handler);
-        return false;
-      }
-      return true;
-    });
-    return removed;
-  }
-
-  removeBinding(binding, handler) {
-    this.removeAllBindings(binding, handler);
-  }
 }
 
 Keyboard.keys = {
@@ -85,6 +85,55 @@ Keyboard.keys = {
   RIGHT: 39,
   DOWN: 40,
   DELETE: 46
+};
+
+Keyboard.DEFAULTS = {
+  bindings: {
+    'add bold'          : makeFormatHandler('bold', true),
+    'add italic'        : makeFormatHandler('italic', true),
+    'add underline'     : makeFormatHandler('underline', true),
+    'remove bold'       : makeFormatHandler('bold', false),
+    'remove italic'     : makeFormatHandler('italic', false),
+    'remove underline'  : makeFormatHandler('underline', false),
+    'indent'            : makeIndentHanlder(true),
+    'outdent'           : makeIndentHanlder(false),
+    'tab'               : [
+      { key: Keyboard.keys.TAB, shiftKey: null },
+      { collapsed: true },
+      function(range) {
+        this.quill.insertText(range.index, '\t', Quill.sources.USER);
+        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        return false;
+      }
+    ]
+  }
+};
+
+function makeFormatHandler(format, value) {
+  let key = { key: format[0].toUpperCase(), metaKey: true };
+  let context = {
+    format: { [format]: !value }
+  };
+  let handler = function(range) {
+    this.quill.format(format, value, Quill.sources.USER);
+    return false;
+  };
+  return [key, context, handler];
+}
+
+function makeIndentHanlder(indent) {
+  let handler = function(range) {
+    let modifier = indent ? 1 : -1;
+    this.quill.scroll.descendants(Block, range.index, range.length).forEach(function(line) {
+      let format = line.formats();
+      let level = parseInt(format['indent'] || 0);
+      line.format('indent', Math.max(0, level + modifier));
+    });
+    this.quill.update(Quill.sources.USER);
+    this.quill.setSelection(range, Quill.sources.SILENT);
+    return false;
+  };
+  return [{ key: Keyboard.keys.TAB, shiftKey: !indent }, { collapsed: false }, handler];
 }
 
 function normalize(binding) {
