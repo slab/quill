@@ -44,7 +44,7 @@ class Toolbar extends Module {
   }
 
   addHandler(format, handler) {
-    this.handlers[format] = handler.bind(this);
+    this.handlers[format] = handler;
   }
 
   attach(input) {
@@ -79,9 +79,10 @@ class Toolbar extends Module {
         value = input.classList.contains('ql-active') ? false : input.value || true;
       }
       if (this.handlers[format] != null) {
-        if (this.handlers[format](value)) return;
+        this.handlers[format].call(this, value);
+      } else {
+        this.quill.format(format, value, Quill.sources.USER);
       }
-      this.quill.format(format, value, Quill.sources.USER);
     });
     // TODO use weakmap
     this.controls.push([format, input]);
@@ -176,7 +177,6 @@ Toolbar.DEFAULTS = {
         // account for embed removals
         this.quill.setSelection(range.index, range.length - (startLength-endLength));
       }
-      return true;
     },
     direction: function(value) {
       let align = this.quill.getFormat()['align'];
@@ -185,7 +185,7 @@ Toolbar.DEFAULTS = {
       } else if (!value && align === 'right') {
         this.quill.format('align', false);
       }
-      return false;
+      this.quill.format('direction', value);
     },
     indent: function(value) {
       let range = this.quill.getSelection();
@@ -196,7 +196,6 @@ Toolbar.DEFAULTS = {
       } else if (value === '-1') {
         this.quill.format('indent', indent - 1);
       }
-      return true;
     }
   }
 }

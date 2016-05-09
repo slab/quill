@@ -86,7 +86,20 @@ SnowTheme.DEFAULTS = {
         ['bold', 'italic', 'underline', 'link'],
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['clean']
-      ]
+      ],
+      handlers: {
+        'image': function() {
+          this.quill.theme.imageTooltip.show();
+        },
+        'link': function(value) {
+          if (value) {
+            let savedRange = this.quill.selection.savedRange;
+            this.quill.theme.linkTooltip.open(savedRange);
+          } else {
+            this.quill.format('link', false);
+          }
+        },
+      }
     }
   }
 }
