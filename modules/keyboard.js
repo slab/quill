@@ -30,6 +30,26 @@ class Keyboard extends Module {
       let [key, context, handler] = this.options.bindings[name];
       this.addBinding(key, context, handler);
     });
+    this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, makeDeleteHanlder(true));
+    this.addBinding({ key: Keyboard.keys.DELETE }, makeDeleteHanlder(false));
+    this.listen();
+  }
+
+  addBinding(binding, context, handler) {
+    binding = normalize(binding);
+    if (binding == null) {
+      return debug.warn('Attempted to add invalid keyboard binding', binding);
+    }
+    if (typeof context === 'function') {
+      handler = context;
+      context = {};
+    }
+    this.bindings[binding.key] = this.bindings[binding.key] || [];
+    this.bindings[binding.key].push([binding, context, handler]);
+  }
+
+  listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented) return;
       let which = evt.which || evt.keyCode;
@@ -59,19 +79,6 @@ class Keyboard extends Module {
         evt.preventDefault();
       }
     });
-  }
-
-  addBinding(binding, context, handler) {
-    binding = normalize(binding);
-    if (binding == null) {
-      return debug.warn('Attempted to add invalid keyboard binding', binding);
-    }
-    if (typeof context === 'function') {
-      handler = context;
-      context = {};
-    }
-    this.bindings[binding.key] = this.bindings[binding.key] || [];
-    this.bindings[binding.key].push([binding, context, handler]);
   }
 }
 
@@ -108,6 +115,54 @@ Keyboard.DEFAULTS = {
     ]
   }
 };
+
+function handleEnter(range) {
+  let formats = this.quill.getFormat(range);
+  let lineFormats = Object.keys(formats).reduce(function(lineFormats, format) {
+    if (Parchment.query(format, Parchment.Scope.BLOCK)) {
+      lineFormats[format] = formats[format];
+    }
+    return lineFormats;
+  }, {});
+  let added = 1;
+  let delta = new Delta()
+    .retain(range.index)
+    .insert('\n', lineFormats);
+  delta.delete(range.length);
+  this.quill.updateContents(delta, Quill.sources.USER);
+  this.quill.setSelection(range.index + added, Quill.sources.SILENT);
+  Object.keys(formats).forEach((name) => {
+    if (lineFormats[name] == null) {
+      this.quill.format(name, formats[name]);
+    }
+  });
+  this.quill.selection.scrollIntoView();
+  return false;
+}
+
+function makeDeleteHanlder(isBackspace) {
+  return function(range) {
+    if (range.length > 0) {
+      this.quill.deleteText(range, Quill.sources.USER);
+    } else if (!isBackspace) {
+      this.quill.deleteText(range.index, 1, Quill.sources.USER);
+    } else {
+      let [line, offset] = this.quill.scroll.descendant(Block, range.index);
+      let formats = this.quill.getFormat(range);
+      if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
+        if (formats['indent'] != null) {
+          line.format('indent', parseInt(formats['indent']) - 1, Quill.sources.USER);
+        } else {
+          line.format('list', false);
+        }
+      } else {
+        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+        range = new Range(Math.max(0, range.index - 1));
+      }
+    }
+    this.quill.setSelection(range.index, Quill.sources.SILENT);
+  }
+}
 
 function makeFormatHandler(format, value) {
   let key = { key: format[0].toUpperCase(), metaKey: true };
