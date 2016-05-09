@@ -34,6 +34,15 @@ colorItemsPerRow = 7
   .ql-fill, .ql-stroke.ql-fill
     fill: inactiveColor
 
+  .ql-direction
+    svg:first-child
+      display: none
+  .ql-direction.ql-active
+    svg:first-child
+      display: inline
+    svg:last-child
+      display: none
+
   .ql-picker
     // background-color: yellow    // TODO remove
     color: inactiveColor

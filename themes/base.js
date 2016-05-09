@@ -20,7 +20,9 @@ class BaseTheme extends Theme {
         if (!name.startsWith('ql-')) return;
         name = name.slice('ql-'.length);
         if (icons[name] == null) return;
-        if (typeof icons[name] === 'string') {
+        if (name === 'direction') {
+          button.innerHTML = icons[name][''] + icons[name]['rtl'];
+        } else if (typeof icons[name] === 'string') {
           button.innerHTML = icons[name];
         } else {
           let value = button.value || '';
