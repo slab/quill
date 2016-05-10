@@ -1,3 +1,31 @@
+#1.0.0-beta.1
+
+Weekly beta preview release.
+
+### Breaking Changes
+
+- Toolbar only attaches to `<button>` and `<select>` elements
+- Toolbar uses button `value` attribute, instead of `data-value`
+- Toolbar handlers overwrite default handlers instead of possibly cascading
+- Deprecate keyboard `removeBinding` and `removeAllBindings`
+
+### Features
+
+- Expose default keyboard bindings in configuration
+- Add context listener to keyboard bindings
+
+### Bug Fixes
+
+- Error when cursor places next to video embed [#644](https://github.com/quilljs/quill/issues/644)
+- Selection removed when clicking on a menu button in the toolbar [#645](https://github.com/quilljs/quill/issues/645)
+- Editor looses focus in FF after typing two bold characters [#646](https://github.com/quilljs/quill/issues/646)
+- Get rid of resize boxes in code in IE11 [0ad636](https://github.com/quilljs/quill/commit/0ad6363c9fcd70c52ca667d39a393760eeb646b5)
+- Text direction icon should flip the arrow when pressed [#651](https://github.com/quilljs/quill/issues/651)
+- Not possible to combine direction:rtl with text-align:left [#652](https://github.com/quilljs/quill/issues/652)
+
+Thanks to [@benbro](https://github.com/benbro) for the bug reports for this release!
+
+
 #1.0.0-beta.0
 
 Please see the [Upgrading to 1.0](http://beta.quilljs.com/guides/upgrading-to-1-0/) guide.
