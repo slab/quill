@@ -11,7 +11,10 @@ class LinkTooltip extends Module {
     super(quill, options);
     this.container = this.quill.addContainer('ql-link-tooltip');
     this.container.innerHTML = this.options.template;
-    this.tooltip = new Tooltip(this.container, quill.theme.options.bounds);
+    this.tooltip = new Tooltip(this.container, {
+      bounds: quill.theme.options.bounds,
+      scroll: quill.root
+    });
     this.hide();
     this.preview = this.container.querySelector('a.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');

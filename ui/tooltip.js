@@ -1,17 +1,25 @@
 class Tooltip {
-  constructor(root, container) {
-    this.container = container;
+  constructor(root, containers = {}) {
+    this.containers = containers;
     this.root = root;
     this.root.classList.add('ql-tooltip');
+    if (this.containers.scroll instanceof HTMLElement) {
+      this.containers.scroll.addEventListener('scroll', () => {
+        this.root.style.marginTop = (-1*this.containers.scroll.scrollTop) + 'px';
+      });
+    }
   }
 
   position(reference, offset = 10) {
     let left = reference.left + reference.width/2 - this.root.offsetWidth/2;
     let top = reference.bottom + offset;
+    if (this.containers.scroll instanceof HTMLElement) {
+      top += this.containers.scroll.scrollTop;
+    }
     this.root.style.left = left + 'px';
     this.root.style.top = top + 'px';
-    if (!(this.container instanceof HTMLElement)) return;
-    let containerBounds = this.container.getBoundingClientRect();
+    if (!(this.containers.bounds instanceof HTMLElement)) return;
+    let containerBounds = this.containers.bounds.getBoundingClientRect();
     let rootBounds = this.root.getBoundingClientRect();
     let shift = 0;
     if (rootBounds.right > containerBounds.right) {

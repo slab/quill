@@ -60,7 +60,10 @@ class BubbleTheme extends BaseTheme {
 
   extendToolbar(toolbar) {
     let container = this.quill.addContainer('ql-tooltip', this.quill.root);
-    this.tooltip = new Tooltip(container, this.options.bounds);
+    this.tooltip = new Tooltip(container, {
+      bounds: this.options.bounds,
+      scroll: this.quill.root
+    });
     this.buildLinkEditor(toolbar);
     container.appendChild(toolbar.container);
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
