@@ -7,8 +7,8 @@ var desktop = {
     '47.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
   },
   'firefox': {
-    '44.0': ['Mac 10.11', 'Windows 10', 'Linux'],
-    '43.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
+    '46.0': ['Mac 10.11', 'Windows 10', 'Linux'],
+    '45.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
   },
   'safari': {
     '9.0': ['Mac 10.11'],
@@ -18,7 +18,7 @@ var desktop = {
     '11.0': ['Windows 8.1']
   },
   'microsoftedge': {
-    '20.10240': ['Windows 10']
+    '13.10586': ['Windows 10']
   }
 };
 
