@@ -1,4 +1,4 @@
-#1.0.0-beta.1
+# 1.0.0-beta.1
 
 Weekly beta preview release.
 
@@ -26,12 +26,12 @@ Weekly beta preview release.
 Thanks to [@benbro](https://github.com/benbro) for the bug reports for this release!
 
 
-#1.0.0-beta.0
+# 1.0.0-beta.0
 
 Please see the [Upgrading to 1.0](http://beta.quilljs.com/guides/upgrading-to-1-0/) guide.
 
 
-#0.20.1
+# 0.20.1
 
 Patch release for everything prior to Parchment's integration into Quill.
 
@@ -50,7 +50,7 @@ Patch release for everything prior to Parchment's integration into Quill.
 Thanks to [@devtimi](https://github.com/devtimi), [@emannes](https://github.com/emannes), [@ivan-i](https://github.com/ivan-i), [@magus](https://github.com/magus), [@Nick-The-Uncharted](https://github.com/Nick-The-Uncharted), [@rlivsey](https://github.com/rlivsey), [@thomsbg](https://github.com/thomsbg), [@wallylawless](https://github.com/wallylawless) for their bug reports and pull requests!
 
 
-#0.20.0
+# 0.20.0
 
 ### Breaking Changes
 - `getBounds` now returns `null` instead of throwing an error [#412](https://github.com/quilljs/quill/pull/412)
