@@ -3,6 +3,12 @@ var pkg = require('../package.json');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+var bannerPack = new webpack.BannerPlugin(
+  'Quill Editor v' + pkg.version + '\n' +
+  'https://quilljs.com/\n' +
+  'Copyright (c) 2014, Jason Chen\n' +
+  'Copyright (c) 2013, salesforce.com'
+, { entryOnly: true });
 var constantPack = new webpack.DefinePlugin({
   QUILL_VERSION: JSON.stringify(pkg.version)
 });
@@ -11,9 +17,9 @@ module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     'quill.js': ['./quill.js'],
-    'quill.css': './assets/core.styl',
-    'quill.bubble.css': './assets/bubble.styl',
-    'quill.snow.css': './assets/snow.styl',
+    'quill': './assets/core.styl',
+    'quill.bubble': './assets/bubble.styl',
+    'quill.snow': './assets/snow.styl',
     'unit.js': './test/unit.js'
   },
   output: {
@@ -56,7 +62,7 @@ module.exports = {
     },
     silent: true
   },
-  plugins: [ constantPack, new ExtractTextPlugin('[name]', { allChunks: true }) ],
+  plugins: [ bannerPack, constantPack, new ExtractTextPlugin('[name].css', { allChunks: true }) ],
   devtool: 'source-map',
   devServer: {
     hot: false,
