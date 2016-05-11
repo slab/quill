@@ -1,6 +1,16 @@
 import Parchment from 'parchment';
 
-let IndentClass = new Parchment.Attributor.Class('indent', 'ql-indent', {
+class IdentAttributor extends Parchment.Attributor.Class {
+  add(node, value) {
+    if (value === '+1' || value === '-1') {
+      let indent = parseInt(this.value(node) || 0);
+      value = value === '+1' ? (indent + 1) : (indent - 1);
+    }
+    return super.add(node, value);
+  }
+}
+
+let IndentClass = new IdentAttributor('indent', 'ql-indent', {
   scope: Parchment.Scope.BLOCK,
   whitelist: [1, 2, 3, 4, 5, 6, 7, 8]
 });
