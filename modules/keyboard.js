@@ -31,6 +31,7 @@ class Keyboard extends Module {
       this.addBinding(key, context, handler);
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
+    this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, altKey: null }, function() {});
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, makeDeleteHanlder(true));
     this.addBinding({ key: Keyboard.keys.DELETE }, makeDeleteHanlder(false));
     this.listen();
@@ -59,21 +60,43 @@ class Keyboard extends Module {
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
       if (range == null) return;    // implies we do not have focus
-      let format = null;
+      let [lineStart, offsetStart] = this.quill.scroll.line(range.index);
+      let [lineEnd, offsetEnd] = range.length === 0 ? [lineStart, lineEnd] : this.quill.scroll.line(range.index + range.length);
+      let [leafStart, leafOffsetStart] = lineStart.descendant(Parchment.Leaf, offsetStart);
+      let [leafEnd, leafOffsetEnd] = range.length === 0 ? [leafStart, leafOffsetStart] : lineEnd.descendant(Parchment.Leaf, offsetEnd);
+      let prefixText = leafStart instanceof Parchment.Text ? leafStart.value().slice(0, leafOffsetStart) : '';
+      let suffixText = leafEnd instanceof Parchment.Text ? leafEnd.value().slice(leafOffsetEnd) : '';
+      let curContext = {
+        collapsed: range.length === 0,
+        empty: range.length === 0 && lineStart.length() === 0,
+        format: this.quill.getFormat(range),
+        offset: offsetStart,
+        prefix: prefixText,
+        suffix: suffixText
+      };
       let prevented = bindings.some((tuple) => {
         let [key, context, handler] = tuple;
-        if (context.collapsed === true && range.length > 0) return false;
-        if (context.collapsed === false && range.length === 0) return false;
-        if (context.format) {
-          format = format || this.quill.getFormat(range);
-          let formatsMatch = Object.keys(context.format).every(function(name) {
-            return (context.format[name] === true && format[name] != null) ||
-                   (context.format[name] === false && format[name] == null) ||
-                   (equal(context.format[name], format[name]));
-          });
-          if (!formatsMatch) return false;
+        if (context.collapsed != null && context.collapsed !== curContext.collapsed) return false;
+        if (context.empty != null && context.empty !== curContext.empty) return false;
+        if (context.offset != null && context.offset !== curContext.offset) return false;
+        if (Array.isArray(context.format)) {
+          // any format is present
+          if (context.format.every(function(name) {
+            return curContext.format[name] == null;
+          })) {
+            return false;
+          }
+        } else if (typeof context.format === 'object') {
+          // all formats must match
+          if (!Object.keys(context.format).every(function(name) {
+            if (context.format[name] === true) return curContext.format[name] != null;
+            if (context.format[name] === false) return curContext.format[name] == null;
+            return equal(context.format[name], curContext.format[name]);
+          })) {
+            return false;
+          }
         }
-        return handler.call(this, range) !== true;
+        return handler.call(this, range, curContext) !== true;
       });
       if (prevented) {
         evt.preventDefault();
@@ -102,9 +125,38 @@ Keyboard.DEFAULTS = {
     'remove bold'       : makeFormatHandler('bold', false),
     'remove italic'     : makeFormatHandler('italic', false),
     'remove underline'  : makeFormatHandler('underline', false),
-    'indent'            : makeIndentHanlder(true),
-    'outdent'           : makeIndentHanlder(false),
-    'tab'               : [
+    'indent': [
+      // highlight tab or tab at beginning of list, indent or blockquote
+      { key: Keyboard.keys.TAB },
+      { format: ['blockquote', 'indent', 'list'] },
+      function(range, context) {
+        if (context.collapsed && context.offset !== 0) return true;
+        this.quill.format('indent', '+1');
+      }
+    ],
+    'outdent' : [
+      { key: Keyboard.keys.TAB, shiftKey: true },
+      { format: ['blockquote', 'indent', 'list'] },
+      // highlight tab or tab at beginning of list, indent or blockquote
+      function(range, context) {
+        if (context.collapsed && context.offset !== 0) return true;
+        this.quill.format('indent', '-1');
+      }
+    ],
+    'outdent backspace': [
+      { key: Keyboard.keys.BACKSPACE },
+      { collapsed: true, format: ['blockquote', 'indent', 'list'], offset: 0 },
+      function(range, context) {
+        if (context.format.indent != null) {
+          this.quill.format('indent', '-1');
+        } else if (context.format.blockquote != null) {
+          this.quill.format('blockquote', false);
+        } else if (context.format.list != null) {
+          this.quill.format('list', false);
+        }
+      }
+    ],
+    'tab' : [
       { key: Keyboard.keys.TAB, shiftKey: null },
       { collapsed: true },
       function(range) {
@@ -115,6 +167,7 @@ Keyboard.DEFAULTS = {
     ]
   }
 };
+
 
 function handleEnter(range) {
   let formats = this.quill.getFormat(range);
@@ -174,21 +227,6 @@ function makeFormatHandler(format, value) {
     return false;
   };
   return [key, context, handler];
-}
-
-function makeIndentHanlder(indent) {
-  let handler = function(range) {
-    let modifier = indent ? 1 : -1;
-    this.quill.scroll.descendants(Block, range.index, range.length).forEach(function(line) {
-      let format = line.formats();
-      let level = parseInt(format['indent'] || 0);
-      line.format('indent', Math.max(0, level + modifier));
-    });
-    this.quill.update(Quill.sources.USER);
-    this.quill.setSelection(range, Quill.sources.SILENT);
-    return false;
-  };
-  return [{ key: Keyboard.keys.TAB, shiftKey: !indent }, { collapsed: false }, handler];
 }
 
 function normalize(binding) {
