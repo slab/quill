@@ -6,7 +6,12 @@ class IdentAttributor extends Parchment.Attributor.Class {
       let indent = parseInt(this.value(node) || 0);
       value = value === '+1' ? (indent + 1) : (indent - 1);
     }
-    return super.add(node, value);
+    if (value === 0) {
+      this.remove(node);
+      return true;
+    } else {
+      return super.add(node, value);
+    }
   }
 }
 
