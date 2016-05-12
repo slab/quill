@@ -195,6 +195,16 @@ Keyboard.DEFAULTS = {
         this.quill.selection.scrollIntoView();
       }
     ],
+    'create list': [
+      { key: ' ' },
+      { collapsed: true, format: { list: false }, prefix: /^(1\.|-)$/ },
+      function(range, context) {
+        let length = context.prefix.length;
+        this.quill.scroll.deleteAt(range.index - length, length);
+        this.quill.formatLine(range.index - length, 1, 'list', length === 1 ? 'bullet' : 'ordered', Quill.sources.USER);
+        this.quill.setSelection(range.index - length, Quill.sources.SILENT);
+      }
+    ]
   }
 };
 
