@@ -32,8 +32,18 @@ class Keyboard extends Module {
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
     this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, altKey: null }, function() {});
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, makeDeleteHanlder(true));
-    this.addBinding({ key: Keyboard.keys.DELETE }, makeDeleteHanlder(false));
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^$/ }, function(range) {
+      if (range.index === 0) return;
+      this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+      this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
+    });
+    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^$/ }, function(range) {
+      if (range.index >= this.quill.getLength() - 1) return;
+      this.quill.deleteText(range.index, 1, Quill.sources.USER);
+      this.quill.setSelection(range.index, Quill.sources.SILENT);
+    });
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDelete);
+    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDelete);
     this.listen();
   }
 
@@ -60,17 +70,16 @@ class Keyboard extends Module {
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
       if (range == null) return;    // implies we do not have focus
-      let [lineStart, offsetStart] = this.quill.scroll.line(range.index);
-      let [lineEnd, offsetEnd] = range.length === 0 ? [lineStart, lineEnd] : this.quill.scroll.line(range.index + range.length);
-      let [leafStart, leafOffsetStart] = lineStart.descendant(Parchment.Leaf, offsetStart);
-      let [leafEnd, leafOffsetEnd] = range.length === 0 ? [leafStart, leafOffsetStart] : lineEnd.descendant(Parchment.Leaf, offsetEnd);
-      let prefixText = leafStart instanceof Parchment.Text ? leafStart.value().slice(0, leafOffsetStart) : '';
-      let suffixText = leafEnd instanceof Parchment.Text ? leafEnd.value().slice(leafOffsetEnd) : '';
+      let [line, offset] = this.quill.scroll.line(range.index);
+      let [leafStart, offsetStart] = this.quill.scroll.leaf(range.index);
+      let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.scroll.leaf(range.index + range.length);
+      let prefixText = leafStart instanceof Parchment.Text ? leafStart.value().slice(0, offsetStart) : '';
+      let suffixText = leafEnd instanceof Parchment.Text ? leafEnd.value().slice(offsetEnd) : '';
       let curContext = {
         collapsed: range.length === 0,
-        empty: range.length === 0 && lineStart.length() === 0,
+        empty: range.length === 0 && line.length() === 0,
         format: this.quill.getFormat(range),
-        offset: offsetStart,
+        offset: offset,
         prefix: prefixText,
         suffix: suffixText
       };
@@ -96,6 +105,8 @@ class Keyboard extends Module {
             return false;
           }
         }
+        if (context.prefix != null && !context.prefix.test(curContext.prefix)) return false;
+        if (context.suffix != null && !context.suffix.test(curContext.suffix)) return false;
         return handler.call(this, range, curContext) !== true;
       });
       if (prevented) {
@@ -131,7 +142,7 @@ Keyboard.DEFAULTS = {
       { format: ['blockquote', 'indent', 'list'] },
       function(range, context) {
         if (context.collapsed && context.offset !== 0) return true;
-        this.quill.format('indent', '+1');
+        this.quill.format('indent', '+1', Quill.sources.USER);
       }
     ],
     'outdent' : [
@@ -140,7 +151,7 @@ Keyboard.DEFAULTS = {
       // highlight tab or tab at beginning of list, indent or blockquote
       function(range, context) {
         if (context.collapsed && context.offset !== 0) return true;
-        this.quill.format('indent', '-1');
+        this.quill.format('indent', '-1', Quill.sources.USER);
       }
     ],
     'outdent backspace': [
@@ -148,11 +159,11 @@ Keyboard.DEFAULTS = {
       { collapsed: true, format: ['blockquote', 'indent', 'list'], offset: 0 },
       function(range, context) {
         if (context.format.indent != null) {
-          this.quill.format('indent', '-1');
+          this.quill.format('indent', '-1', Quill.sources.USER);
         } else if (context.format.blockquote != null) {
-          this.quill.format('blockquote', false);
+          this.quill.format('blockquote', false, Quill.sources.USER);
         } else if (context.format.list != null) {
-          this.quill.format('list', false);
+          this.quill.format('list', false, Quill.sources.USER);
         }
       }
     ],
@@ -186,35 +197,16 @@ function handleEnter(range) {
   this.quill.setSelection(range.index + added, Quill.sources.SILENT);
   Object.keys(formats).forEach((name) => {
     if (lineFormats[name] == null) {
-      this.quill.format(name, formats[name]);
+      this.quill.format(name, formats[name], Quill.sources.USER);
     }
   });
   this.quill.selection.scrollIntoView();
   return false;
 }
 
-function makeDeleteHanlder(isBackspace) {
-  return function(range) {
-    if (range.length > 0) {
-      this.quill.deleteText(range, Quill.sources.USER);
-    } else if (!isBackspace) {
-      this.quill.deleteText(range.index, 1, Quill.sources.USER);
-    } else {
-      let [line, offset] = this.quill.scroll.descendant(Block, range.index);
-      let formats = this.quill.getFormat(range);
-      if (line != null && offset === 0 && (formats['indent'] || formats['list'])) {
-        if (formats['indent'] != null) {
-          line.format('indent', parseInt(formats['indent']) - 1, Quill.sources.USER);
-        } else {
-          line.format('list', false);
-        }
-      } else {
-        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
-        range = new Range(Math.max(0, range.index - 1));
-      }
-    }
-    this.quill.setSelection(range.index, Quill.sources.SILENT);
-  }
+function handleDelete(range) {
+  this.quill.deleteText(range, Quill.sources.USER);
+  this.quill.setSelection(range.index, Quill.sources.SILENT);
 }
 
 function makeFormatHandler(format, value) {

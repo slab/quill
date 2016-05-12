@@ -79,13 +79,13 @@ class Selection {
   }
 
   getBounds(index, length = 0) {
-    let bounds, node, [leaf, offset] = findLeaf(this.scroll, index);
+    let bounds, node, [leaf, offset] = this.scroll.leaf(index);
     if (leaf == null) return null;
     [node, offset] = leaf.position(offset, true);
     let range = document.createRange();
     if (length > 0) {
       range.setStart(node, offset);
-      [leaf, offset] = findLeaf(this.scroll, index + length);
+      [leaf, offset] = this.scroll.leaf(index + length);
       if (leaf == null) return null;
       [node, offset] = leaf.position(offset, true);
       range.setEnd(node, offset);
@@ -229,7 +229,7 @@ class Selection {
       let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
       let args = [];
       indexes.forEach((index, i) => {
-        let node, [leaf, offset] = findLeaf(this.scroll, index);
+        let node, [leaf, offset] = this.scroll.leaf(index);
         [node, offset] = leaf.position(offset, i !== 0);
         args.push(node, offset);
       });
@@ -272,14 +272,5 @@ function contains(parent, descendant) {
   return parent.contains(descendant);
 }
 
-function findLeaf(blot, index) {
-  let path = blot.path(index);
-  if (path.length > 0) {
-    return path.pop();
-  } else {
-    return [null, -1]
-  }
-}
 
-
-export { findLeaf, Range, Selection as default };
+export { Range, Selection as default };

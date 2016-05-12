@@ -71,6 +71,10 @@ class Scroll extends Parchment.Scroll {
     super.insertBefore(blot, ref);
   }
 
+  leaf(index) {
+    return this.path(index).pop();
+  }
+
   line(index) {
     return this.descendant(isLine, index);
   }
