@@ -1,5 +1,5 @@
 import Delta from 'rich-text/lib/delta';
-import Selection, { Range, findLeaf } from '../../../core/selection';
+import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
 import Scroll from '../../../blots/scroll';
 
@@ -10,44 +10,6 @@ describe('Selection', function() {
       this.selection = this.initialize(Selection, html);
       this.selection.setRange(new Range(index));
     };
-  });
-
-  describe('findLeaf', function() {
-    it('text', function() {
-      let scroll = this.initialize(Scroll, '<p>Tests</p>');
-      let [leaf, offset] = findLeaf(scroll, 2);
-      expect(leaf.value()).toEqual('Tests');
-      expect(offset).toEqual(2);
-    });
-
-    it('precise', function() {
-      let scroll = this.initialize(Scroll, '<p><u>0</u><s>1</s><u>2</u><s>3</s><u>4</u></p>');
-      let [leaf, offset] = findLeaf(scroll, 3);
-      expect(leaf.value()).toEqual('2');
-      expect(offset).toEqual(1);
-    });
-
-    it('newline', function() {
-      let scroll = this.initialize(Scroll, '<p>0123</p><p>5678</p>');
-      let [leaf, offset] = findLeaf(scroll, 4);
-      expect(leaf.value()).toEqual('0123');
-      expect(offset).toEqual(4);
-    });
-
-    it('cursor', function() {
-      this.setup('<p><u>0</u>1<u>2</u></p>', 2);
-      this.selection.format('strike', true);
-      let [leaf, offset] = findLeaf(this.selection.scroll, 2);
-      expect(leaf instanceof Cursor).toBe(true);
-      expect(offset).toEqual(0);
-    });
-
-    it('beyond document', function() {
-      let scroll = this.initialize(Scroll, '<p>Test</p>');
-      let [leaf, offset] = findLeaf(scroll, 10);
-      expect(leaf).toEqual(null);
-      expect(offset).toEqual(-1);
-    });
   });
 
   describe('focus()', function() {

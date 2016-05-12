@@ -72,7 +72,7 @@ class Scroll extends Parchment.Scroll {
   }
 
   leaf(index) {
-    return this.path(index).pop();
+    return this.path(index).pop() || [null, -1];
   }
 
   line(index) {
