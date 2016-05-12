@@ -88,6 +88,9 @@ class LinkTooltip extends Module {
       preview = this.link.formats()['link'];
     } else {
       preview = this.quill.getText(range);
+      if (/^\S+@\S+\.\S+$/.test(preview)) {
+        preview = 'mailto:' + preview;
+      }
     }
     this.preview.textContent = this.textbox.value = preview;
     this.preview.setAttribute('href', preview);
