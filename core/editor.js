@@ -149,10 +149,13 @@ class Editor {
   removeFormat(index, length) {
     let text = this.getText(index, length);
     let [line, offset] = this.scroll.line(index + length);
-    let suffixLength = line.length() - offset - 1;
-    let suffix = line.delta().slice(offset, offset + suffixLength);
-    let contents = this.getContents(index, length + suffixLength + 1);
-    let diff = contents.diff(new Delta().insert(text).concat(suffix).insert('\n'));
+    let suffixLength = 0, suffix = new Delta();
+    if (line != null) {
+      suffixLength = line.length() - offset;
+      suffix = line.delta().slice(offset, offset + suffixLength - 1).insert('\n');
+    }
+    let contents = this.getContents(index, length + suffixLength);
+    let diff = contents.diff(new Delta().insert(text).concat(suffix));
     let delta = new Delta().retain(index).concat(diff);
     this.applyDelta(delta);
   }

@@ -218,7 +218,7 @@ describe('Editor', function() {
     it('partial line', function() {
       let editor = this.initialize(Editor, '<ul><li>01</li></ul><ol><li>34</li></ol>');
       editor.removeFormat(1, 3);
-      expect(this.container).toEqualHTML('<p>01</p><ol><li>34</li></ol>');
+      expect(this.container).toEqualHTML('<p>01</p><p>34</p>');
     });
 
     it('remove embed', function() {
@@ -239,7 +239,21 @@ describe('Editor', function() {
       editor.removeFormat(1, 7);
       expect(this.container).toEqualHTML(`
         <p>013</p>
-        <ol><li>567<strong><em>8</em>9</strong>0</li></ol>
+        <p>567<strong><em>8</em>9</strong>0</p>
+      `);
+    });
+
+    it('end of document', function() {
+      let editor = this.initialize(Editor, `
+        <ul>
+          <li>0123</li>
+          <li>5678</li>
+        </ol>
+      `);
+      editor.removeFormat(0, 12);
+      expect(this.container).toEqualHTML(`
+        <p>0123</p>
+        <p>5678</p>
       `);
     });
   });
