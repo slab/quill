@@ -10,6 +10,12 @@ Code.tagName = 'CODE';
 
 
 class CodeBlock extends Block {
+  static create(value) {
+    let domNode = super.create(value);
+    domNode.setAttribute('spellcheck', false);
+    return domNode;
+  }
+
   static formats(domNode) {
     return true;
   }
