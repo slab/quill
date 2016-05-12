@@ -27,8 +27,10 @@ class Keyboard extends Module {
     this.options.bindings = extend({}, Keyboard.DEFAULTS.bindings, options.bindings);
     this.bindings = {};
     Object.keys(this.options.bindings).forEach((name) => {
-      let [key, context, handler] = this.options.bindings[name];
-      this.addBinding(key, context, handler);
+      if (this.options.bindings[name]) {
+        let [key, context, handler] = this.options.bindings[name];
+        this.addBinding(key, context, handler);
+      }
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
     this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, altKey: null }, function() {});
