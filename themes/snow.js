@@ -43,9 +43,6 @@ class SnowTheme extends BaseTheme {
       } else {
         picker = new Picker(select);
       }
-      picker.label.addEventListener('click', function() {
-        quill.focus();
-      });
       return picker;
     });
     let update = function() {
