@@ -20,11 +20,19 @@ class HighlightCodeBlock extends CodeBlock {
     return domNode.dataset.language || HighlightCodeBlock.DEFAULT_LANGUAGE;
   }
 
+  format(name, value) {
+    if (name === this.statics.blotName && !value) {
+      this.domNode.textContent = this.domNode.textContent;
+      this.attach();
+    }
+    super.format(name, value);
+  }
+
   highlight() {
     if (this.cachedHTML !== this.domNode.innerHTML) {
       let text = this.domNode.textContent;
       if (text.trim().length > 0 || this.cachedHTML == null) {
-        this.domNode.textContent = this.domNode.textContent;
+        this.domNode.textContent = text;
         hljs.highlightBlock(this.domNode);
         this.attach();
       }
