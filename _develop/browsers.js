@@ -7,8 +7,8 @@ var desktop = {
     '47.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
   },
   'firefox': {
-    '46.0': ['Mac 10.11', 'Windows 10', 'Linux'],
-    '45.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
+    '45.0': ['Mac 10.11', 'Windows 10', 'Linux'],
+    '44.0': ['Mac 10.10', 'Windows 8.1', 'Linux']
   },
   'safari': {
     '9.0': ['Mac 10.11'],
