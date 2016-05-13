@@ -6,6 +6,8 @@ permalink: /docs/modules/clipboard/
 
 The Clipboard is handles copy, cut and paste between Quill and external applications. A set of defaults exist to provide sane interpretation of pasted content, with the ability for further customization through matchers.
 
+The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in [post-order](https://en.wikipedia.org/wiki/Tree_traversal#Post-order), building up a [Delta](/guides/working-with-deltas/) representation of all subtrees. At each descendant node, matcher functions are called in the order they were added with the DOM Node and Delta interpretation so far, allowing the matcher to return a modified Delta interpretation.
+
 Familiarity and comfort with [Deltas](https://github.com/ottypes/rich-text) is necessary in using matchers. See [Working with Deltas](/guides/working-with-deltas/) for a starter guide.
 
 
@@ -29,8 +31,6 @@ Adds a custom matcher to the Clipboard.
 
 **Examples**
 
-The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in [post-order](https://en.wikipedia.org/wiki/Tree_traversal#Post-order), building up a [Delta](/guides/working-with-deltas/) representation of all subtrees. At each descendant node, matcher functions are called in the order they were added with the DOM Node and Delta interpretation so far, allowing the matcher to return a modified Delta interpretation.
-
 ```javascript
 quill.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
   return new Delta().insert(node.data);
@@ -45,7 +45,7 @@ quill.clipboard.addMatcher('B', function(node, delta) {
 
 ## Configuration
 
-An of array matchers can be passed into Clipboard's configuration options.
+An of array matchers can be passed into Clipboard's configuration options. These will be appended after Quill's own default matchers.
 
 ```javascript
 var quill = new Quill('#editor', {
@@ -60,5 +60,5 @@ var quill = new Quill('#editor', {
 });
 ```
 
-Note this overwrites Quill's own default matchers.
+
 

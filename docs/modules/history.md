@@ -4,7 +4,7 @@ title: History Module
 permalink: /docs/modules/history/
 ---
 
-This History module is responsible for handling undo and redo for Quill. It can be configured with the following options:
+The History module is responsible for handling undo and redo for Quill. It can be configured with the following options:
 
 #### delay
 

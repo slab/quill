@@ -10,7 +10,7 @@ Quill supports a number of formats, both in UI controls and API calls.
 
 <a class="standalone-link" href="/standalone/full">Standalone</a>
 
-By default all formats are enabled and allowed to exist within a Quill editor and can be configured with the [formats](/docs/configuration/#formats) option. This is separate from adding a control in the toolbar. For example, bolded content may be pasted into an editor that has no bold button in the toolbar.
+By default all formats are enabled and allowed to exist within a Quill editor and can be configured with the [formats](/docs/configuration/#formats) option. This is separate from adding a control in the [toolbar](/docs/modules/toolbar/). For example, you can configure quill to allow bolded content to be pasted into an editor that has no bold button in the toolbar.
 
 #### Inline
 
