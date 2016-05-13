@@ -5,8 +5,9 @@ import Link from '../formats/link';
 class Video extends BlockEmbed {
   static create(value) {
     let node = super.create(value);
+    node.setAttribute('frameborder', '0');
+    node.setAttribute('allowfullscreen', true);
     node.setAttribute('src', this.sanitize(value));
-    node.setAttribute('controls', true);
     return node;
   }
 
@@ -25,16 +26,6 @@ class Video extends BlockEmbed {
     return domNode.getAttribute('src');
   }
 
-  constructor(domNode) {
-    super(domNode);
-    this.domNode.addEventListener('mouseenter', () => {
-      this.domNode.setAttribute('controls', true);
-    });
-    this.domNode.addEventListener('mouseleave', () => {
-      this.domNode.removeAttribute('controls');
-    });
-  }
-
   format(name, value) {
     if (name === 'height' || name === 'width') {
       if (value) {
@@ -48,7 +39,8 @@ class Video extends BlockEmbed {
   }
 }
 Video.blotName = 'video';
-Video.tagName = 'VIDEO';
+Video.className = 'ql-video';
+Video.tagName = 'IFRAME';
 
 
 export default Video;
