@@ -28,8 +28,8 @@ import { Code as InlineCode } from './formats/code';
 
 import ImageTooltip from './modules/image-tooltip';
 import LinkTooltip from './modules/link-tooltip';
+import Syntax, { CodeBlock, CodeToken } from './modules/syntax';
 import Toolbar from './modules/toolbar';
-import CodeHighlighter, { CodeBlock, CodeToken } from './modules/code-highlighter';
 
 import Icons from './ui/icons';
 import Picker from './ui/picker';
@@ -71,9 +71,9 @@ Quill.register({
   'formats/code-block/token': CodeToken,
   'formats/list/item': ListItem,
 
-  'modules/code-highlighter': CodeHighlighter,
   'modules/image-tooltip': ImageTooltip,
   'modules/link-tooltip': LinkTooltip,
+  'modules/syntax': Syntax,
   'modules/toolbar': Toolbar,
 
   'themes/bubble': BubbleTheme,

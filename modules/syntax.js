@@ -4,20 +4,20 @@ import Module from '../core/module';
 import CodeBlock from '../formats/code';
 
 
-class HighlightCodeBlock extends CodeBlock {
+class SyntaxCodeBlock extends CodeBlock {
   static create(value) {
     let domNode = super.create(value);
     if (typeof value === 'string') {
       domNode.dataset.language = value;
     } else {
-      domNode.dataset.language = HighlightCodeBlock.DEFAULT_LANGUAGE;
+      domNode.dataset.language = SyntaxCodeBlock.DEFAULT_LANGUAGE;
     }
     domNode.classList.add(domNode.dataset.language);
     return domNode;
   }
 
   static formats(domNode) {
-    return domNode.dataset.language || HighlightCodeBlock.DEFAULT_LANGUAGE;
+    return domNode.dataset.language || SyntaxCodeBlock.DEFAULT_LANGUAGE;
   }
 
   format(name, value) {
@@ -40,7 +40,7 @@ class HighlightCodeBlock extends CodeBlock {
     }
   }
 }
-HighlightCodeBlock.DEFAULT_LANGUAGE = 'javascript';
+SyntaxCodeBlock.DEFAULT_LANGUAGE = 'javascript';
 
 
 let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
@@ -48,7 +48,7 @@ let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
 });
 
 
-class CodeHighlighter extends Module {
+class Syntax extends Module {
   constructor(quill, options) {
     super(quill, options);
     let timer = null;
@@ -64,7 +64,7 @@ class CodeHighlighter extends Module {
 
   highlight() {
     let range = this.quill.getSelection();
-    this.quill.scroll.descendants(HighlightCodeBlock).forEach(function(code) {
+    this.quill.scroll.descendants(SyntaxCodeBlock).forEach(function(code) {
       code.highlight();
     });
     this.quill.update(Quill.sources.SILENT);
@@ -75,4 +75,4 @@ class CodeHighlighter extends Module {
 }
 
 
-export { HighlightCodeBlock as CodeBlock, CodeToken, CodeHighlighter as default};
+export { SyntaxCodeBlock as CodeBlock, CodeToken, Syntax as default};
