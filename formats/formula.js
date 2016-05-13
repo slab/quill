@@ -8,12 +8,15 @@ class Formula extends Embed {
       katex.render(value, node);
       node.dataset.value = value;
     }
-    node.setAttribute('contenteditable', false);
     return node;
   }
 
   static value(domNode) {
     return domNode.dataset.value;
+  }
+
+  index(node, offset) {
+    return 1;
   }
 }
 Formula.blotName = 'formula';
