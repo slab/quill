@@ -16,7 +16,7 @@ describe('Code', function() {
       .insert('0123').insert('\n', { 'code-block': true })
       .insert('5678').insert('\n', { 'code-block': true })
     );
-    expect(editor.scroll.domNode.innerHTML).toEqual('<pre spellcheck="false">0123</pre><pre>5678</pre>');
+    expect(editor.scroll.domNode.innerHTML).toEqual('<pre spellcheck="false">0123</pre><pre spellcheck="false">5678</pre>');
   });
 
   it('remove', function() {
