@@ -10,6 +10,9 @@ let debug = logger('quill:clipboard');
 
 class Clipboard extends Module {
   constructor(quill, options) {
+    if (options.matchers !== Clipboard.DEFAULTS.matchers) {
+      options.matchers = Clipboard.DEFAULTS.matchers.concat(options.matchers);
+    }
     super(quill, options);
     this.quill.root.addEventListener('copy', this.onCopy.bind(this));
     this.quill.root.addEventListener('cut', this.onCut.bind(this));
