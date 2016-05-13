@@ -26,10 +26,10 @@
       url: /docs/modules/history/
     - title: Keyboard
       url: /docs/modules/keyboard/
+    - title: Syntax
+      url: /docs/modules/syntax/
     - title: Toolbar
       url: /docs/modules/toolbar/
-    - title: Code Highlighter
-      url: /docs/modules/code-highlighter/
 - title: Themes
   url: /docs/themes/
   children:
