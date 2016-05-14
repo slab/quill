@@ -226,10 +226,12 @@ function matchText(node, delta) {
       return match.length < 1 && collapse ? ' ' : match;
     }
     text = text.replace(/\s\s+/g, replacer.bind(replacer, true));
-    if (node.previousSibling == null || isLine(node.previousSibling)) {
+    if ((node.previousSibling == null && isLine(node.parentNode)) ||
+        (node.previousSibling != null && isLine(node.previousSibling))) {
       text = text.replace(/^\s+/, replacer.bind(replacer, false));
     }
-    if (node.nextSibling == null || isLine(node.nextSibling)) {
+    if ((node.nextSibling == null && isLine(node.parentNode)) ||
+        (node.nextSibling != null && isLine(node.nextSibling))) {
       text = text.replace(/\s+$/, replacer.bind(replacer, false));
     }
   }

@@ -70,9 +70,11 @@ describe('Clipboard', function() {
     });
 
     it('whitespace', function() {
-      let html = '<div> 0 </div> <div> <div> 1 2 <span> 3 </span> 4 </div> </div>';
+      let html =
+        '<div> 0 </div> <div> <div> 1 2 <span> 3 </span> 4 </div> </div>' +
+        '<div><span>5 </span><span>6 </span><span> 7</span><span> 8</span></div>';
       let delta = this.clipboard.convert(html);
-      expect(delta).toEqual(new Delta().insert('0\n1 2 3 4'));
+      expect(delta).toEqual(new Delta().insert('0\n1 2  3  4\n5 6  7 8'));
     });
 
     it('inline whitespace', function() {
