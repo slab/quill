@@ -1,4 +1,5 @@
 import Parchment from 'parchment';
+import clone from 'clone';
 import equal from 'deep-equal';
 import BreakBlot from '../blots/break';
 import Emitter from './emitter';
@@ -23,16 +24,16 @@ class Selection {
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
-    ['keyup', 'mouseup', 'touchend', 'touchleave'].forEach((eventName) => {
+    ['keyup', 'mouseup', 'touchend', 'touchleave', 'focus', 'blur'].forEach((eventName) => {
       this.root.addEventListener(eventName, () => {
         // When range used to be a selection and user click within the selection,
         // the range now being a cursor has not updated yet without setTimeout
-        setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
+        setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       if (delta.length() > 0) {
-        this.update(Emitter.sources.SILENT);
+        setTimeout(this.update.bind(this, Emitter.sources.SILENT), 1);
       }
     });
     this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
@@ -251,7 +252,7 @@ class Selection {
         this.cursor.restore();
       }
       if (source === Emitter.sources.SILENT) return;
-      this.emitter.emit(Emitter.events.SELECTION_CHANGE, this.lastRange, source);
+      this.emitter.emit(Emitter.events.SELECTION_CHANGE, clone(this.lastRange), source);
     }
   }
 }

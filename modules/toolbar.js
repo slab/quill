@@ -170,29 +170,29 @@ Toolbar.DEFAULTS = {
       let range = this.quill.getSelection();
       if (range != null) {
         let startLength = this.quill.getLength();
-        this.quill.removeFormat(range);
+        this.quill.removeFormat(range, Quill.sources.USER);
         let endLength = this.quill.getLength();
         // account for embed removals
-        this.quill.setSelection(range.index, range.length - (startLength-endLength));
+        this.quill.setSelection(range.index, range.length - (startLength-endLength), Quill.sources.SILENT);
       }
     },
     direction: function(value) {
       let align = this.quill.getFormat()['align'];
       if (value === 'rtl' && align == null) {
-        this.quill.format('align', 'right');
+        this.quill.format('align', 'right', Quill.sources.USER);
       } else if (!value && align === 'right') {
-        this.quill.format('align', false);
+        this.quill.format('align', false, Quill.sources.USER);
       }
-      this.quill.format('direction', value);
+      this.quill.format('direction', value, Quill.sources.USER);
     },
     indent: function(value) {
       let range = this.quill.getSelection();
       let formats = this.quill.getFormat(range);
       let indent = parseInt(formats.indent || 0);
       if (value === '+1') {
-        this.quill.format('indent', indent + 1);
+        this.quill.format('indent', indent + 1, Quill.sources.USER);
       } else if (value === '-1') {
-        this.quill.format('indent', indent - 1);
+        this.quill.format('indent', indent - 1, Quill.sources.USER);
       }
     }
   }
