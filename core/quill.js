@@ -83,9 +83,9 @@ class Quill {
     if (options.debug) {
       Quill.debug(options.debug);
     }
-    this.root.classList.toggle('ql-empty', this.getLength() <= 1);
+    this.root.classList.toggle('ql-blank', this.editor.isBlank());
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
-      this.root.classList.toggle('ql-empty', this.getLength() <= 1);
+      this.root.classList.toggle('ql-blank', this.editor.isBlank());
     });
     this.emitter.emit(Emitter.events.READY);
   }

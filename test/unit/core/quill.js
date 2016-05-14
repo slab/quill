@@ -406,17 +406,19 @@ describe('Quill', function() {
       this.original = this.quill.getContents();
     });
 
-    it('editor has placeholder dataset', function() {
+    it('blank editor', function() {
       expect(this.quill.root.dataset.placeholder).toEqual('a great day to be a placeholder');
+      expect(this.quill.root.classList).toContain('ql-blank');
     });
 
-    it('editor has empty class', function() {
-      expect(this.quill.root.classList).toContain('ql-empty');
-    });
-
-    it('empty class should be removed', function() {
+    it('with text', function() {
       this.quill.setText('test');
-      expect(this.quill.root.classList).not.toContain('ql-empty');
+      expect(this.quill.root.classList).not.toContain('ql-blank');
+    });
+
+    it('formatted line', function() {
+      this.quill.formatLine(0, 1, 'list', 'ordered');
+      expect(this.quill.root.classList).not.toContain('ql-blank');
     });
   });
 });

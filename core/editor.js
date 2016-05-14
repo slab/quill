@@ -146,6 +146,13 @@ class Editor {
     this.formatText(index, text.length, formats, source);
   }
 
+  isBlank() {
+    if (this.scroll.children.length == 0) return true;
+    if (this.scroll.children.length > 1) return false;
+    let child = this.scroll.children.head;
+    return child.length() <= 1 && Object.keys(child.formats()).length == 0;
+  }
+
   removeFormat(index, length) {
     let text = this.getText(index, length);
     let [line, offset] = this.scroll.line(index + length);
