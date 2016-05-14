@@ -320,7 +320,7 @@ describe('Editor', function() {
     it('insert block embed', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert('\n').insert({ video: '#' }).insert('\n'));
-      expect(this.container).toEqualHTML('<p>01</p><video src="#" controls="true"></video><p>23</p>');
+      expect(this.container).toEqualHTML('<p>01</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>');
     });
 
     it('append formatted block embed', function() {
@@ -331,7 +331,7 @@ describe('Editor', function() {
         .retain(1, { align: 'right' })    // Valid delta where newline does not follow block embed
         .insert('\n')
       );
-      expect(this.container).toEqualHTML('<p>0123</p><video src="#" controls="true" class="ql-align-right"></video><p><br></p>');
+      expect(this.container).toEqualHTML('<p>0123</p><iframe src="#" class="ql-video ql-align-right" frameborder="0" allowfullscreen="true"></iframe><p><br></p>');
     });
 
     it('append', function() {
@@ -382,7 +382,7 @@ describe('Editor', function() {
     it('append block embed', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert({ video: '#' }).insert('\n'));
-      expect(this.container).toEqualHTML('<p>0123</p><video src="#" controls="true"></video>');
+      expect(this.container).toEqualHTML('<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>');
     });
   });
 
