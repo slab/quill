@@ -1,3 +1,34 @@
+# 1.0.0-beta.2
+
+Weekly beta preview release. Major emphasis on keyboard API and customization.
+
+### Breaking Changes
+
+- Rename code highlighter module to syntax
+- Clipboard matchers specified in configuration appends to instead of replaces default matchers
+- Change video embed to use `<iframe>` instead of `<video>` enabling Youtube/Vimeo links
+
+### Features
+
+- Add contextual keyboard listeners
+- Allow indent format to take +1/-1 in addition to target indent level
+- Shortcuts for creating ordered or bulleted lists
+- Autofill mailto for email links [#278](https://github.com/quilljs/quill/issues/278)
+- Enter does not continue header format [#540](https://github.com/quilljs/quill/issues/540)
+
+### Bug Fixes
+
+- Allow native handling of backspace [#473](https://github.com/quilljs/quill/issues/473) [#548](https://github.com/quilljs/quill/issues/548) [#565](https://github.com/quilljs/quill/issues/565)
+- removeFormat() removes last line block formats [#649](https://github.com/quilljs/quill/issues/649)
+- Fix text direction icon directon [#654](https://github.com/quilljs/quill/issues/654)
+- Fix text insertion into root scroll [#655](https://github.com/quilljs/quill/issues/655)
+- Fix focusing on placeholder text in FF [#656](https://github.com/quilljs/quill/issues/656)
+- Hide placeholder on formatted line [#657](https://github.com/quilljs/quill/issues/657)
+- Fix selection handling on focus and blur [#664](https://github.com/quilljs/quill/issues/664)
+
+Thanks to [@anovi](https://github.com/anovi), [@benbro](https://github.com/benbro), [@jbrowning](https://github.com/jbrowning), [@kei-ito](https://github.com/kei-ito), [@quentez](https://github.com/quentez), [@u9520107](https://github.com/u9520107) for their contributions to this release!
+
+
 # 1.0.0-beta.1
 
 Weekly beta preview release.
