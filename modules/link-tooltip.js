@@ -37,6 +37,7 @@ class LinkTooltip extends Module {
     this.container.querySelector('a.ql-remove').addEventListener('click', this.remove.bind(this));
     // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
     quill.on(Quill.events.SELECTION_CHANGE, (range) => {
+      if (range == null && document.activeElement == this.textbox) return;
       if (range != null && range.length === 0) {
         let offset;
         [this.link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
