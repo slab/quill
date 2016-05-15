@@ -115,6 +115,7 @@ class Quill {
 
   focus() {
     this.selection.focus();
+    this.selection.scrollIntoView();
   }
 
   format(name, value, source = Emitter.sources.API) {
@@ -236,6 +237,7 @@ class Quill {
   setSelection(index, length = 0, source = Emitter.sources.API) {
     [index, length, , source] = overload(index, length, source);
     this.selection.setRange(new Range(index, length), source);
+    this.selection.scrollIntoView();
   }
 
   setText(text, source = Emitter.sources.API) {
