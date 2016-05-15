@@ -209,19 +209,30 @@ Keyboard.DEFAULTS = {
 };
 
 
-function handleEnter(range) {
-  if (range.length > 0) {
-    this.quill.scroll.deleteAt(range.index, range.length);  // So we do not trigger text-change
-  }
-  this.quill.insertText(range.index, '\n', Quill.sources.USER);
-  this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-  this.quill.selection.scrollIntoView();
-}
-
 function handleDelete(range) {
   this.quill.deleteText(range, Quill.sources.USER);
   this.quill.setSelection(range.index, Quill.sources.SILENT);
   this.quill.selection.scrollIntoView();
+}
+
+function handleEnter(range, context) {
+  if (range.length > 0) {
+    this.quill.scroll.deleteAt(range.index, range.length);  // So we do not trigger text-change
+  }
+  let lineFormats = Object.keys(context.format).reduce(function(lineFormats, format) {
+    if (Parchment.query(format, Parchment.Scope.BLOCK) && !Array.isArray(format.context[format])) {
+      lineFormats[format] = format.context[format];
+    }
+    return lineFormats;
+  }, {});
+  this.quill.insertText(range.index, '\n', lineFormats, Quill.sources.USER);
+  this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+  this.quill.selection.scrollIntoView();
+  Object.keys(context.format).forEach((name) => {
+    if (lineFormats[name] == null && !Array.isArray(context.format[name])) {
+      this.quill.format(name, context.format[name], Quill.sources.USER);
+    }
+  });
 }
 
 function makeFormatHandler(format, value) {
