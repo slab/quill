@@ -18,23 +18,30 @@ class LinkTooltip extends Module {
     this.hide();
     this.preview = this.container.querySelector('a.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
-    this.textbox.addEventListener('keydown', (evt) => {
-      if (Keyboard.match(evt, 'enter')) {
+    this.textbox.addEventListener('keydown', (event) => {
+      if (Keyboard.match(event, 'enter')) {
         this.save();
-        evt.preventDefault();
-      } else if (Keyboard.match(evt, 'escape')) {
+        event.preventDefault();
+      } else if (Keyboard.match(event, 'escape')) {
         this.hide();
-        evt.preventDefault();
+        event.preventDefault();
       }
     });
-    this.container.querySelector('a.ql-action').addEventListener('click', () => {
-      if (this.container.classList.contains('ql-editing')) {
-        this.save();
-      } else {
-        this.edit();
-      }
+    ['mousedown', 'touchstart'].forEach((name) => {
+      this.container.querySelector('a.ql-action').addEventListener(name, (event) => {
+        if (this.container.classList.contains('ql-editing')) {
+          this.save();
+          event.preventDefault();
+        } else {
+          this.edit();
+          event.preventDefault();
+        }
+      });
+      this.container.querySelector('a.ql-remove').addEventListener(name, (event) => {
+        this.remove();
+        event.preventDefault();
+      });
     });
-    this.container.querySelector('a.ql-remove').addEventListener('click', this.remove.bind(this));
     // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
     quill.on(Quill.events.SELECTION_CHANGE, (range) => {
       if (range == null && document.activeElement == this.textbox) return;
@@ -75,8 +82,10 @@ class LinkTooltip extends Module {
 
   save() {
     let url = this.textbox.value;
+    let scrollTop = this.quill.root.scrollTop;
     this.quill.formatText(this.range, 'link', url, Quill.sources.USER);
     this.quill.setSelection(this.range, Quill.sources.SILENT);
+    this.quill.root.scrollTop = scrollTop;
     this.hide();
   }
 

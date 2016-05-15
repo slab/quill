@@ -8,12 +8,12 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    let expand = (event) => {
-      this.container.classList.toggle('ql-expanded');
-      event.preventDefault();   // prevent focus loss
-    };
-    this.label.addEventListener('mousedown', expand);
-    this.label.addEventListener('touchstart', expand);
+    ['mousedown', 'touchstart'].forEach((name) => {
+      this.label.addEventListener(name, (event) => {
+        this.container.classList.toggle('ql-expanded');
+        event.preventDefault();   // prevent focus loss
+      });
+    });
     this.select.addEventListener('change', this.update.bind(this));
   }
 
@@ -23,12 +23,12 @@ class Picker {
     if (option.hasAttribute('value')) {
       item.dataset.value = option.getAttribute('value');
     }
-    let selectItem = (e) => {
-      this.selectItem(item, true);
-      e.preventDefault();
-    };
-    item.addEventListener('mousedown', selectItem);
-    item.addEventListener('touchstart', selectItem);
+    ['mousedown', 'touchstart'].forEach((name) => {
+      item.addEventListener(name, (event) => {
+        this.selectItem(item, true);
+        event.preventDefault();
+      });
+    });
     return item;
   }
 

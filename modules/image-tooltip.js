@@ -13,15 +13,25 @@ class ImageTooltip extends Module {
     this.container.innerHTML = options.template;
     this.preview = this.container.querySelector('.ql-preview');
     this.textbox = this.container.querySelector('input[type=text]');
-    this.textbox.addEventListener('keydown', (evt) => {
-      if (Keyboard.match(evt, 'enter')) {
+    this.textbox.addEventListener('keydown', (event) => {
+      if (Keyboard.match(event, 'enter')) {
         this.save();
-      } else if (Keyboard.match(evt, 'escape')) {
+        event.preventDefault();
+      } else if (Keyboard.match(event, 'escape')) {
         this.hide();
+        event.preventDefault();
       }
     });
-    this.container.querySelector('a.ql-action').addEventListener('click', this.save.bind(this));
-    this.container.querySelector('a.ql-cancel').addEventListener('click', this.hide.bind(this));
+    ['mousedown', 'touchstart'].forEach((name) => {
+      this.container.querySelector('a.ql-action').addEventListener(name, (event) => {
+        this.save();
+        event.preventDefault();
+      });
+      this.container.querySelector('a.ql-cancel').addEventListener(name, (event) => {
+        this.hide();
+        event.preventDefault();
+      });
+    });
     this.textbox.addEventListener('input', this.update.bind(this));
   }
 

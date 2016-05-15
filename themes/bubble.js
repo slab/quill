@@ -41,19 +41,24 @@ class BubbleTheme extends BaseTheme {
       this.tooltip.root.classList.add('ql-editing');
       input.focus();
     };
-    close.addEventListener('click', () => {
-      this.tooltip.root.classList.remove('ql-editing');
+    ['mousedown', 'touchstart'].forEach((name) => {
+      close.addEventListener(name, (event) => {
+        this.tooltip.root.classList.remove('ql-editing');
+        event.preventDefault();
+      });
     });
-    input.addEventListener('keydown', (evt) => {
-      if (Keyboard.match(evt, 'enter')) {
+    input.addEventListener('keydown', (event) => {
+      if (Keyboard.match(event, 'enter')) {
+        let scrollTop = this.quill.root.scrollTop;
         this.quill.focus();
+        this.quill.root.scrollTop = scrollTop;
         this.quill.format('link', input.value);
         this.tooltip.hide();
         input.value = '';
-        evt.preventDefault();
-      } else if (Keyboard.match(evt, 'escape')) {
+        event.preventDefault();
+      } else if (Keyboard.match(event, 'escape')) {
         this.tooltip.classList.remove('ql-editing');
-        evt.preventDefault();
+        event.preventDefault();
       }
     });
   }
