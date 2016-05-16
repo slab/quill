@@ -54,6 +54,7 @@ class ImageTooltip extends Module {
     let index = range.index + range.length;
     this.quill.insertEmbed(index, ImageBlot.blotName, this.textbox.value, Quill.sources.USER);
     this.quill.setSelection(index + 1, Quill.sources.SILENT);
+    this.textbox.value = '';
     this.hide();
   }
 

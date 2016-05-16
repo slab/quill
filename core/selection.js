@@ -151,13 +151,14 @@ class Selection {
           offset = 0;
         } else if (node.childNodes.length === offset) {
           node = node.lastChild;
-          offset = node instanceof Text ? node.data.length : node.childNodes.length;
+          offset = node instanceof Text ? node.data.length : node.childNodes.length + 1;
         } else {
           break;
         }
       }
       position.node = node, position.offset = offset;
     });
+    debug.info('getNativeRange', range);
     return range;
   }
 

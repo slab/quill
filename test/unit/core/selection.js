@@ -203,6 +203,17 @@ describe('Selection', function() {
       expect(selection.hasFocus()).toBe(true);
     });
 
+    it('single embed', function() {
+      let selection = this.initialize(Selection,
+        `<p><img src="/assets/favicon.png"></p>`
+      );
+      let expected = new Range(1, 0);
+      selection.setRange(expected);
+      let [range, ] = selection.getRange();
+      expect(range).toEqual(expected);
+      expect(selection.hasFocus()).toBe(true);
+    });
+
     it('between embeds', function() {
       let selection = this.initialize(Selection, `
         <p>
