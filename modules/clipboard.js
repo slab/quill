@@ -30,11 +30,26 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
+  clean() {
+    let treeWalker = document.createTreeWalker(this.container, NodeFilter.SHOW_COMMENT);
+    let comments = [];
+    while(treeWalker.nextNode()) {
+      comments.push(treeWalker.currentNode);
+    }
+    comments.forEach(function(node) {
+      if (node != null && node.parentNode != null) {
+        node.parentNode.removeChild(node);
+      }
+    });
+    this.container.normalize();
+  }
+
   convert(html) {
     const DOM_KEY = '__ql-matcher';
     if (typeof html === 'string') {
       this.container.innerHTML = html;
     }
+    this.clean();
     this.matchers.forEach((pair) => {
       let [selector, matcher] = pair;
       if (typeof selector === 'string') {
@@ -210,8 +225,9 @@ function matchNewline(node, delta) {
 }
 
 function matchSpacing(node, delta) {
-  if (node.nextElementSibling != null &&
-      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.4 &&
+  if (isLine(node) &&
+      node.nextElementSibling != null &&
+      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.25 &&
       !deltaEndsWith(delta, '\n\n')) {
     delta.insert('\n');
   }
@@ -220,12 +236,17 @@ function matchSpacing(node, delta) {
 
 function matchText(node, delta) {
   let text = node.data;
+  // Word represents empty line with <o:p>&nbsp;</o:p>
+  if (node.parentNode.tagName === 'O:P') {
+    return delta.insert(text.trim());
+  }
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     function replacer(collapse, match) {
       match = match.replace(/[^\u00a0]/g, '');    // \u00a0 is nbsp;
       return match.length < 1 && collapse ? ' ' : match;
     }
-    text = text.replace(/\s\s+/g, replacer.bind(replacer, true));
+    text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
+    text = text.replace(/\s\s+/g, replacer.bind(replacer, true));  // collapse whitespace
     if ((node.previousSibling == null && isLine(node.parentNode)) ||
         (node.previousSibling != null && isLine(node.previousSibling))) {
       text = text.replace(/^\s+/, replacer.bind(replacer, false));
