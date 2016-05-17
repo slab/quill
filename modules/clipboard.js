@@ -51,7 +51,12 @@ class Clipboard extends Module {
   }
 
   clean() {
-    let treeWalker = document.createTreeWalker(this.container, NodeFilter.SHOW_COMMENT);
+    let treeWalker = document.createTreeWalker(
+      this.container,
+      NodeFilter.SHOW_COMMENT,
+      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
+      false
+    );
     let comments = [];
     while(treeWalker.nextNode()) {
       comments.push(treeWalker.currentNode);
