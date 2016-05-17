@@ -168,7 +168,15 @@ Toolbar.DEFAULTS = {
   handlers: {
     clean: function(value) {
       let range = this.quill.getSelection();
-      if (range != null) {
+      if (range == null) return;
+      if (range.length == 0) {
+        let formats = this.quill.getFormat();
+        Object.keys(formats).forEach((name) => {
+          if (Parchment.query(name, Parchment.Scope.INLINE) != null) {
+            this.quill.format(name, false);
+          }
+        });
+      } else {
         let startLength = this.quill.getLength();
         this.quill.removeFormat(range, Quill.sources.USER);
         let endLength = this.quill.getLength();
