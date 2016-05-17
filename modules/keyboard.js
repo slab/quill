@@ -175,8 +175,11 @@ Keyboard.DEFAULTS = {
     'outdent code-block': makeCodeBlockHandler(false),
     'tab': [
       { key: Keyboard.keys.TAB, shiftKey: null },
-      { collapsed: true },
-      function(range) {
+      {},
+      function(range, context) {
+        if (!context.collapsed) {
+          this.quill.scroll.deleteAt(range.index, range.length);
+        }
         this.quill.insertText(range.index, '\t', Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       }
