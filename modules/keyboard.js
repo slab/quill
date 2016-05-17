@@ -138,8 +138,8 @@ Keyboard.keys = {
 Keyboard.DEFAULTS = {
   bindings: {
     'bold'      : makeFormatHandler('bold'),
-    'italic'    : makeFormatHandler('italic', true),
-    'underline' : makeFormatHandler('underline', true),
+    'italic'    : makeFormatHandler('italic'),
+    'underline' : makeFormatHandler('underline'),
     'indent': [
       // highlight tab or tab at beginning of list, indent or blockquote
       { key: Keyboard.keys.TAB },
