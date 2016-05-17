@@ -48,6 +48,7 @@ class CodeBlock extends Block {
 }
 CodeBlock.blotName = 'code-block';
 CodeBlock.tagName = 'PRE';
+CodeBlock.TAB = '  ';
 
 
 export { Code, CodeBlock as default };

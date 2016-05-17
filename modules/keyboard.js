@@ -171,6 +171,8 @@ Keyboard.DEFAULTS = {
         }
       }
     ],
+    'indent code-block': makeCodeBlockHandler(true),
+    'outdent code-block': makeCodeBlockHandler(false),
     'tab': [
       { key: Keyboard.keys.TAB, shiftKey: null },
       { collapsed: true },
@@ -234,6 +236,34 @@ function handleEnter(range, context) {
       this.quill.format(name, context.format[name], Quill.sources.USER);
     }
   });
+}
+
+function makeCodeBlockHandler(indent) {
+  let handler = function(range) {
+    let tab = Parchment.query('code-block').TAB;
+    let lines = this.quill.scroll.lines(range.index, range.length);
+    let index = range.index, length = range.length;
+    lines.forEach(function(line, i) {
+      if (indent) {
+        line.insertAt(0, tab);
+        if (i === 0) {
+          index += tab.length;
+        } else {
+          length += tab.length;
+        }
+      } else if (line.domNode.textContent.startsWith(tab)) {
+        line.deleteAt(0, tab.length);
+        if (i === 0) {
+          index -= tab.length;
+        } else {
+          length -= tab.length;
+        }
+      }
+    });
+    this.quill.update(Quill.sources.USER);
+    this.quill.setSelection(index, length, Quill.sources.SILENT);
+  }
+  return [{ key: Keyboard.keys.TAB, shiftKey: !indent }, { format: {'code-block': true } }, handler];
 }
 
 function makeFormatHandler(format) {
