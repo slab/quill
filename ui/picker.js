@@ -79,12 +79,12 @@ class Picker {
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
       if (item.dataset.value) {
         this.label.dataset.value = item.dataset.value;
-      } else {
+      } else if (this.label.dataset.label) {
         delete this.label.dataset.value;
       }
       if (item.dataset.label) {
         this.label.dataset.label = item.dataset.label;
-      } else {
+      } else if (this.label.dataset.label) {
         delete this.label.dataset.label;
       }
       if (trigger) {
@@ -97,8 +97,8 @@ class Picker {
         }
       }
     } else {
-      delete this.label.dataset.value;
-      delete this.label.dataset.label;
+      if (this.label.dataset.value) delete this.label.dataset.value;
+      if (this.label.dataset.label) delete this.label.dataset.label;
     }
     this.close();
   }
