@@ -5,7 +5,27 @@ import logger from '../core/logger';
 import Module from '../core/module';
 import { BlockEmbed } from '../blots/block';
 
+import { AlignStyle } from '../formats/align';
+import { BackgroundStyle } from '../formats/background';
+import { ColorStyle } from '../formats/color';
+import { DirectionStyle } from '../formats/direction';
+import { FontStyle } from '../formats/font';
+import { SizeStyle } from '../formats/size';
+
 let debug = logger('quill:clipboard');
+
+
+const STYLE_ATTRIBUTORS = [
+  AlignStyle,
+  BackgroundStyle,
+  ColorStyle,
+  DirectionStyle,
+  FontStyle,
+  SizeStyle
+].reduce(function(memo, attr) {
+  memo[attr.keyName] = attr;
+  return memo;
+}, {});
 
 
 class Clipboard extends Module {
@@ -184,7 +204,7 @@ function matchAttributor(node, delta) {
   let styles = Parchment.Attributor.Style.keys(node);
   let formats = {};
   attributes.concat(classes).concat(styles).forEach((name) => {
-    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE);
+    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE) || STYLE_ATTRIBUTORS[name];
     if (attr != null) {
       formats[attr.attrName] = attr.value(node);
     }
