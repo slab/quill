@@ -42,9 +42,12 @@ class BubbleTheme extends BaseTheme {
       this.tooltip.position(this.quill.getBounds(range));
     });
     toolbar.handlers['link'] = (value) => {
-      if (!value) return false;
-      this.tooltip.root.classList.add('ql-editing');
-      input.focus();
+      if (!value) {
+        this.quill.format('link', false);
+      } else {
+        this.tooltip.root.classList.add('ql-editing');
+        input.focus();
+      }
     };
     ['mousedown', 'touchstart'].forEach((name) => {
       close.addEventListener(name, (event) => {
