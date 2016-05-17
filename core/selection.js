@@ -230,7 +230,9 @@ class Selection {
     if (range != null) {
       let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
       let args = [];
+      let scrollLength = this.scroll.length();
       indexes.forEach((index, i) => {
+        index = Math.min(scrollLength - 1, index);
         let node, [leaf, offset] = this.scroll.leaf(index);
         [node, offset] = leaf.position(offset, i !== 0);
         args.push(node, offset);
