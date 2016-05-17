@@ -166,6 +166,7 @@ Clipboard.DEFAULTS = {
     [Node.ELEMENT_NODE, matchBlot],
     [Node.ELEMENT_NODE, matchSpacing],
     [Node.ELEMENT_NODE, matchAttributor],
+    [Node.ELEMENT_NODE, matchStyles],
     ['b', matchAlias.bind(matchAlias, 'bold')],
     ['i', matchAlias.bind(matchAlias, 'italic')]
   ]
@@ -250,6 +251,20 @@ function matchSpacing(node, delta) {
       node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.25 &&
       !deltaEndsWith(delta, '\n\n')) {
     delta.insert('\n');
+  }
+  return delta;
+}
+
+function matchStyles(node, delta) {
+  let formats = {};
+  if (node.style.fontWeight && computeStyle(node).fontWeight === 'bold') {
+    formats.bold = true;
+  }
+  if (Object.keys(formats).length > 0) {
+    delta = delta.compose(new Delta().retain(delta.length(), formats));
+  }
+  if (parseFloat(node.style.textIndent || 0) > 0) {  // Could be 0.5in
+    delta = new Delta().insert('\t').concat(delta);
   }
   return delta;
 }
