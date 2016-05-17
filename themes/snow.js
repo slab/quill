@@ -78,6 +78,9 @@ class SnowTheme extends BaseTheme {
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
     this.imageTooltip = this.addModule('image-tooltip');
     this.linkTooltip = this.addModule('link-tooltip');
+    this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
+      toolbar.handlers['link'].call(toolbar, !context.format.link);
+    });
   }
 }
 SnowTheme.DEFAULTS = {
