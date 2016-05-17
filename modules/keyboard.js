@@ -11,14 +11,18 @@ import Block from '../blots/block';
 
 let debug = logger('quill:keyboard');
 
+const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
+
 
 class Keyboard extends Module {
   static match(evt, binding) {
     binding = normalize(binding);
-    let metaKey = /Mac/i.test(navigator.platform) ? evt.metaKey : evt.metaKey || evt.ctrlKey;
-    if (!!binding.metaKey !== metaKey && binding.metaKey !== null) return false;
-    if (!!binding.shiftKey !== evt.shiftKey && binding.shiftKey !== null) return false;
-    if (!!binding.altKey !== evt.altKey && binding.altKey !== null) return false;
+    if (!!binding.shortKey !== evt[SHORTKEY] && binding.shortKey !== null) return false;
+    if (['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(function(key) {
+      return (key != SHORTKEY && !!binding[key] !== evt[key] && binding[key] !== null);
+    })) {
+      return false;
+    }
     return binding.key === (evt.which || evt.keyCode);
   }
 
@@ -33,7 +37,7 @@ class Keyboard extends Module {
       }
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
-    this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, altKey: null }, function() {});
+    this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, ctrlKey: null, altKey: null }, function() {});
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^$/ }, function(range) {
       if (range.index === 0) return;
       this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
@@ -236,7 +240,7 @@ function handleEnter(range, context) {
 }
 
 function makeFormatHandler(format, value) {
-  let key = { key: format[0].toUpperCase(), metaKey: true };
+  let key = { key: format[0].toUpperCase(), shortKey: true };
   let context = {
     format: { [format]: !value }
   };

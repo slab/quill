@@ -42,7 +42,7 @@ class LinkTooltip extends Module {
         event.preventDefault();
       });
     });
-    // quill.keyboard.addBinding({ key: 'K', metaKey: true }, this.show.bind(this));
+    // quill.keyboard.addBinding({ key: 'K', shortKey: true }, this.show.bind(this));
     quill.on(Quill.events.SELECTION_CHANGE, (range) => {
       if (range == null && document.activeElement == this.textbox) return;
       if (range != null && range.length === 0) {

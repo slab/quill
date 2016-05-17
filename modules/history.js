@@ -17,8 +17,8 @@ class History extends Module {
         this.transform(delta);
       }
     });
-    this.quill.keyboard.addBinding({ key: 'Z', metaKey: true }, this.undo.bind(this));
-    this.quill.keyboard.addBinding({ key: 'Z', metaKey: true, shiftKey: true }, this.redo.bind(this));
+    this.quill.keyboard.addBinding({ key: 'Z', shortKey: true }, this.undo.bind(this));
+    this.quill.keyboard.addBinding({ key: 'Z', shortKey: true, shiftKey: true }, this.redo.bind(this));
   }
 
   change(source, dest) {
