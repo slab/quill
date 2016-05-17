@@ -131,7 +131,7 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
 
 The toolbar controls by default applies and removes formatting, but you can also overwrite this with custom handlers, for example in order to show external UI.
 
-Handler functions will be bound to the toolbar (so using `this` will refer to the toolbar instance) and passed the `value` attribute of the input if the corresponding format is inactive, and `false` otherwise. Adding a custom handler will prevent the default toolbar and theme behavior.
+Handler functions will be bound to the toolbar (so using `this` will refer to the toolbar instance) and passed the `value` attribute of the input if the corresponding format is inactive, and `false` otherwise. Adding a custom handler will overwrite the default toolbar and theme behavior.
 
 ```javascript
 var toolbarOptions = {
