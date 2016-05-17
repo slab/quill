@@ -137,12 +137,9 @@ Keyboard.keys = {
 
 Keyboard.DEFAULTS = {
   bindings: {
-    'add bold'          : makeFormatHandler('bold', true),
-    'add italic'        : makeFormatHandler('italic', true),
-    'add underline'     : makeFormatHandler('underline', true),
-    'remove bold'       : makeFormatHandler('bold', false),
-    'remove italic'     : makeFormatHandler('italic', false),
-    'remove underline'  : makeFormatHandler('underline', false),
+    'bold'      : makeFormatHandler('bold'),
+    'italic'    : makeFormatHandler('italic', true),
+    'underline' : makeFormatHandler('underline', true),
     'indent': [
       // highlight tab or tab at beginning of list, indent or blockquote
       { key: Keyboard.keys.TAB },
@@ -182,14 +179,14 @@ Keyboard.DEFAULTS = {
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       }
     ],
-    'enter list': [
+    'list empty enter': [
       { key: Keyboard.keys.ENTER },
       { collapsed: true, format: ['list'], empty: true },
       function(range) {
         this.quill.format('list', false);
       }
     ],
-    'enter header': [
+    'header enter': [
       { key: Keyboard.keys.ENTER },
       { collapsed: true, format: ['header'], suffix: /^$/ },
       function(range) {
@@ -199,7 +196,7 @@ Keyboard.DEFAULTS = {
         this.quill.selection.scrollIntoView();
       }
     ],
-    'create list': [
+    'list autofill': [
       { key: ' ' },
       { collapsed: true, format: { list: false }, prefix: /^(1\.|-)$/ },
       function(range, context) {
@@ -239,16 +236,12 @@ function handleEnter(range, context) {
   });
 }
 
-function makeFormatHandler(format, value) {
+function makeFormatHandler(format) {
   let key = { key: format[0].toUpperCase(), shortKey: true };
-  let context = {
-    format: { [format]: !value }
+  let handler = function(range, context) {
+    this.quill.format(format, !context.format[format], Quill.sources.USER);
   };
-  let handler = function(range) {
-    this.quill.format(format, value, Quill.sources.USER);
-    return false;
-  };
-  return [key, context, handler];
+  return [key, {}, handler];
 }
 
 function normalize(binding) {
