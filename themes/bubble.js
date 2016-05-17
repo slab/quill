@@ -36,6 +36,11 @@ class BubbleTheme extends BaseTheme {
         this.tooltip.hide();
       }
     });
+    this.quill.on(Emitter.events.SCROLL_OPTIMIZE, () => {
+      if (this.tooltip.root.classList.contains('ql-hidden')) return;
+      let range = this.quill.getSelection();
+      this.tooltip.position(this.quill.getBounds(range));
+    });
     toolbar.handlers['link'] = (value) => {
       if (!value) return false;
       this.tooltip.root.classList.add('ql-editing');
