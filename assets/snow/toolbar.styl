@@ -129,6 +129,12 @@ colorItemsPerRow = 7
     .ql-picker-item.ql-selected, .ql-picker-item:hover
       border-color: #000
 
+  .ql-picker.ql-header, .ql-picker.ql-font, .ql-picker.ql-size
+    .ql-picker-label[data-label]:not([data-label='']),
+    .ql-picker-item[data-label]:not([data-label=''])
+      &::before
+        content: attr(data-label)
+
   .ql-picker.ql-header
     width: 98px
     .ql-picker-label::before,
@@ -170,7 +176,7 @@ colorItemsPerRow = 7
   .ql-picker.ql-size
     width: 98px
     .ql-picker-label::before,
-    .ql-picker-options > span::before
+    .ql-picker-item::before
       content: 'Normal'
     .ql-picker-label[data-value=small]::before,
     .ql-picker-item[data-value=small]::before

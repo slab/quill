@@ -23,6 +23,9 @@ class Picker {
     if (option.hasAttribute('value')) {
       item.dataset.value = option.getAttribute('value');
     }
+    if (option.textContent) {
+      item.dataset.label = option.textContent;
+    }
     ['mousedown', 'touchstart'].forEach((name) => {
       item.addEventListener(name, (event) => {
         this.selectItem(item, true);
@@ -72,10 +75,18 @@ class Picker {
       selected.classList.remove('ql-selected');
     }
     if (item != null) {
-      let value = item.dataset.value;
       item.classList.add('ql-selected');
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      this.label.dataset.value = value || '';
+      if (item.dataset.value) {
+        this.label.dataset.value = item.dataset.value;
+      } else {
+        delete this.label.dataset.value;
+      }
+      if (item.dataset.label) {
+        this.label.dataset.label = item.dataset.label;
+      } else {
+        delete this.label.dataset.label;
+      }
       if (trigger) {
         if (typeof Event === 'function') {
           this.select.dispatchEvent(new Event('change'));
@@ -87,6 +98,7 @@ class Picker {
       }
     } else {
       delete this.label.dataset.value;
+      delete this.label.dataset.label;
     }
     this.close();
   }
