@@ -251,7 +251,7 @@ class Selection {
       this.savedRange = this.lastRange;
     }
     if (!equal(oldRange, this.lastRange)) {
-      if (nativeRange != null && nativeRange.native.collapsed && nativeRange.start.node !== this.cursor.textNode) {
+      if (!this.composing && nativeRange != null && nativeRange.native.collapsed && nativeRange.start.node !== this.cursor.textNode) {
         this.cursor.restore();
       }
       if (source === Emitter.sources.SILENT) return;

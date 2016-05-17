@@ -13,6 +13,13 @@ class Cursor extends Embed {
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
     this._length = 0;
+    this.composing = false;
+    this.selection.root.addEventListener('compositionstart', () => {
+      this.composing = true;
+    });
+    this.selection.root.addEventListener('compositionend', () => {
+      this.composing = false;
+    });
   }
 
   format(name, value) {
@@ -41,7 +48,7 @@ class Cursor extends Embed {
   }
 
   position(index) {
-    return [this.textNode, 1];
+    return [this.textNode, this.textNode.data.length];
   }
 
   remove() {
@@ -50,6 +57,7 @@ class Cursor extends Embed {
   }
 
   restore() {
+    if (this.composing) return;
     if (this.parent == null) return;
     let textNode = this.textNode;
     let range = this.selection.getNativeRange();
