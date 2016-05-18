@@ -45,6 +45,11 @@ class Picker {
         this.selectItem(item);
       }
     });
+/**/    	var expand = function expand(event) {//fast fix #665
+/**/	      event.preventDefault();            //to do: maybe need fix this.selectItem(); or other component 
+/**/	    };
+/**/	    options.addEventListener('mousedown', expand);
+/**/	    options.addEventListener('touchstart', expand);
     this.container.appendChild(options);
   }
 
