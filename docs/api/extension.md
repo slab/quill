@@ -175,14 +175,13 @@ Synchronously check editor for user updates and fires events, if changes have oc
 
 **Methods**
 
-- `update()`
-- `update(source)`
+- `update(source = 'user')`
 
 **Parameters**
 
 | Parameter | Type     | Description
 |-----------|----------|------------
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted. Defaults to `user`.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 

@@ -6,8 +6,7 @@ Format text at user's current selection. If the user's selection length is 0, i.
 
 **Methods**
 
-- `format(name, value)`
-- `format(name, value, source)`
+- `format(name, value, source = 'api')`
 
 **Parameters**
 
@@ -15,7 +14,7 @@ Format text at user's current selection. If the user's selection length is 0, i.
 |-----------|----------|------------
 | `name`    | _String_ | Name of format to apply.
 | `value`   | _String_ | Value of format to apply. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 
@@ -31,12 +30,9 @@ Formats all lines in given range. See [formats](/docs/formats/) for a list of av
 
 **Methods**
 
-- `formatLine(index, length)`
-- `formatLine(index, length, name, value)`
-- `formatLine(index, length, formats)`
-- `formatLine(index, length, source)`
-- `formatLine(index, length, name, value, source)`
-- `formatLine(index, length, formats, source)`
+- `formatLine(index, length, source = 'api')`
+- `formatLine(index, length, name, value, source = 'api')`
+- `formatLine(index, length, formats, source = 'api')`
 
 **Parameters**
 
@@ -46,7 +42,7 @@ Formats all lines in given range. See [formats](/docs/formats/) for a list of av
 | `length`  | _Number_ | Length of formatting range.
 | `name`    | _String_ | Name of format to apply to text.
 | `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 
@@ -64,12 +60,9 @@ Formats text in the editor. For line level formats, such as text alignment, targ
 
 **Methods**
 
-- `formatText(index)`
-- `formatText(index, length, name, value)`
-- `formatText(index, length, formats)`
-- `formatText(index, length, source)`
-- `formatText(index, length, name, value, source)`
-- `formatText(index, length, formats, source)`
+- `formatText(index, length, source = 'api')`
+- `formatText(index, length, name, value, source = 'api')`
+- `formatText(index, length, formats, source = 'api')`
 
 **Parameters**
 
@@ -79,7 +72,7 @@ Formats text in the editor. For line level formats, such as text alignment, targ
 | `length`  | _Number_ | Length of formatting range.
 | `name`    | _String_ | Name of format to apply to text.
 | `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 
@@ -99,13 +92,12 @@ quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 
 ### getFormat
 
-Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a value. If there are different values, an array with all values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor.
+Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a value. If there are different values, an array with all values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor. If called with no arguments, the user's current selection range will be used.
 
 **Methods**
 
 - `getFormat()`
-- `getFormat(index)`
-- `getFormat(index, length)`
+- `getFormat(index, length = 0)`
 
 **Parameters**
 
@@ -148,8 +140,7 @@ Removes all formatting and embeds within given range. Line formatting will be re
 
 **Methods**
 
-- `removeFormat(index, length)`
-- `removeFormat(index, length, source)`
+- `removeFormat(index, length, source = 'api')`
 
 **Parameters**
 
@@ -157,7 +148,7 @@ Removes all formatting and embeds within given range. Line formatting will be re
 |-----------|----------|------------
 | `index`   | _Number_ | Start index of range.
 | `length`  | _Number_ | Length of range.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 

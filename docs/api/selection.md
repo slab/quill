@@ -28,7 +28,7 @@ Retrieves the pixel position (relative to the editor container) and boundaries o
 | Parameter | Type     | Description
 |-----------|----------|------------
 | `index`   | _Number_ | Index position to measure selection bounds.
-| `length`  | _Number_ | Length of selection range. Defaults to 0 to represent cursor.
+| `length`  | _Number_ | Length of selection range. Defaults to collapsed cursor.
 
 **Returns**
 
@@ -54,7 +54,7 @@ Retrieves the user's selection range.
 
 | Parameter | Type      | Description
 |-----------|-----------|------------
-| `foucs`   | _Boolean_ | Whether to focus editor before checking selection. Defaults to false.
+| `foucs`   | _Boolean_ | Whether to focus editor before checking selection.
 
 **Returns**
 
@@ -102,10 +102,8 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 
 **Methods**
 
-- `setSelection(index, length)`
-- `setSelection(index, length, source)`
-- `setSelection(range)`
-- `setSelection(range, source)`
+- `setSelection(index, length, source = 'api')`
+- `setSelection(range, souce = 'api')`
 
 **Parameters**
 
@@ -114,7 +112,7 @@ Sets user selection to given range. Will also focus the editor. If `null`, will 
 | `index`   | _Number_ | Start index of selection range.
 | `length`  | _Number_ | Length of selection range.
 | `range`   | _Object_ | Object with **index** and **length** keys indicating the corresponding index where the selection starts and length of selection.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted. Defaults to `api`.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 
