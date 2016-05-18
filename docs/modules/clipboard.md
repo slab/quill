@@ -6,14 +6,14 @@ permalink: /docs/modules/clipboard/
 
 The Clipboard is handles copy, cut and paste between Quill and external applications. A set of defaults exist to provide sane interpretation of pasted content, with the ability for further customization through matchers.
 
-The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in [post-order](https://en.wikipedia.org/wiki/Tree_traversal#Post-order), building up a [Delta](/guides/working-with-deltas/) representation of all subtrees. At each descendant node, matcher functions are called in the order they were added with the DOM Node and Delta interpretation so far, allowing the matcher to return a modified Delta interpretation.
+The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in [post-order](https://en.wikipedia.org/wiki/Tree_traversal#Post-order), building up a [Delta](/guides/working-with-deltas/) representation of all subtrees. At each descendant node, matcher functions are called with the DOM Node and Delta interpretation so far, allowing the matcher to return a modified Delta interpretation.
 
 Familiarity and comfort with [Deltas](https://github.com/ottypes/rich-text) is necessary in using matchers. See [Working with Deltas](/guides/working-with-deltas/) for a starter guide.
 
 
 ### addMatcher
 
-Adds a custom matcher to the Clipboard.
+Adds a custom matcher to the Clipboard. Matchers using `nodeType` are called first, in the order they were added, followed by matchers using a CSS `selector`, also in the order they were added.
 
 **Methods**
 
