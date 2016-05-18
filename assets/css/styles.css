@@ -298,6 +298,7 @@ footer li {
 
 #docs-container {
   margin-top: 20px;
+  min-height: 480px;
   padding-bottom: 80px;
 }
 #docs-container .edit-link {
