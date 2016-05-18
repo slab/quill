@@ -226,8 +226,8 @@ function handleEnter(range, context) {
     this.quill.scroll.deleteAt(range.index, range.length);  // So we do not trigger text-change
   }
   let lineFormats = Object.keys(context.format).reduce(function(lineFormats, format) {
-    if (Parchment.query(format, Parchment.Scope.BLOCK) && !Array.isArray(format.context[format])) {
-      lineFormats[format] = format.context[format];
+    if (Parchment.query(format, Parchment.Scope.BLOCK) && !Array.isArray(context.format[format])) {
+      lineFormats[format] = context.format[format];
     }
     return lineFormats;
   }, {});
@@ -244,8 +244,14 @@ function handleEnter(range, context) {
 function makeCodeBlockHandler(indent) {
   let handler = function(range) {
     let tab = Parchment.query('code-block').TAB;
-    let lines = this.quill.scroll.lines(range.index, range.length);
     let index = range.index, length = range.length;
+    let lines = [];
+    if (range.length === 0) {
+      let [line, ] = this.quill.scroll.line(range.index);
+      lines.push(line);
+    } else {
+      lines = this.quill.scroll.lines(range.index, range.length);
+    }
     lines.forEach(function(line, i) {
       if (indent) {
         line.insertAt(0, tab);
