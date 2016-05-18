@@ -23,7 +23,8 @@ class Picker {
     if (option.hasAttribute('value')) {
       item.dataset.value = option.getAttribute('value');
     }
-    item.addEventListener('click', this.selectItem.bind(this, item, true));
+    item.addEventListener('mouseup', this.selectItem.bind(this, item, true));
+    item.addEventListener('touchend', this.selectItem.bind(this, item, true));
     return item;
   }
 
