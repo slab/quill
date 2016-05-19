@@ -28,12 +28,12 @@ class SyntaxCodeBlock extends CodeBlock {
     super.format(name, value);
   }
 
-  highlight() {
+  highlight(highlight) {
     if (this.cachedHTML !== this.domNode.innerHTML) {
       let text = this.domNode.textContent;
       if (text.trim().length > 0 || this.cachedHTML == null) {
         this.domNode.textContent = text;
-        hljs.highlightBlock(this.domNode);
+        highlight(this.domNode);
         this.attach();
       }
       this.cachedHTML = this.domNode.innerHTML;
@@ -51,6 +51,11 @@ let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
 class Syntax extends Module {
   constructor(quill, options) {
     super(quill, options);
+    if (typeof this.options.highlight !== 'function') {
+      throw new Error('Syntax module requires highlight.js. Please include the library on the page.');
+    }
+    Quill.register(CodeToken);
+    Quill.register(SyntaxCodeBlock, true);
     let timer = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
       if (timer != null) return;
@@ -64,8 +69,8 @@ class Syntax extends Module {
 
   highlight() {
     let range = this.quill.getSelection();
-    this.quill.scroll.descendants(SyntaxCodeBlock).forEach(function(code) {
-      code.highlight();
+    this.quill.scroll.descendants(SyntaxCodeBlock).forEach((code) => {
+      code.highlight(this.options.highlight);
     });
     this.quill.update(Quill.sources.SILENT);
     if (range != null) {
@@ -73,6 +78,9 @@ class Syntax extends Module {
     }
   }
 }
+Syntax.DEFAULTS = {
+  highlight: (window.hljs != null ? window.hljs.highlightBlock: null)
+};
 
 
 export { SyntaxCodeBlock as CodeBlock, CodeToken, Syntax as default};

@@ -71,6 +71,7 @@ class Quill {
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
+    this.theme.init();
     // Setting would truncate a newline at the end
     this.pasteHTML(0, `<div class='ql-editor' style="white-space: normal;">${html}</div>`);
     this.history.clear();
@@ -87,7 +88,6 @@ class Quill {
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       this.root.classList.toggle('ql-blank', this.editor.isBlank());
     });
-    this.emitter.emit(Emitter.events.READY);
   }
 
   addContainer(container, refNode = null) {

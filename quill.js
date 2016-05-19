@@ -24,11 +24,11 @@ import Formula from './formats/formula';
 import Image from './formats/image';
 import Video from './formats/video';
 
-import { Code as InlineCode } from './formats/code';
+import CodeBlock, { Code as InlineCode } from './formats/code';
 
 import ImageTooltip from './modules/image-tooltip';
 import LinkTooltip from './modules/link-tooltip';
-import Syntax, { CodeBlock, CodeToken } from './modules/syntax';
+import Syntax from './modules/syntax';
 import Toolbar from './modules/toolbar';
 
 import Icons from './ui/icons';
@@ -68,7 +68,6 @@ Quill.register({
   'formats/image': Image,
   'formats/video': Video,
 
-  'formats/code-block/token': CodeToken,
   'formats/list/item': ListItem,
 
   'modules/image-tooltip': ImageTooltip,

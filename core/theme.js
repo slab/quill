@@ -16,7 +16,6 @@ class Theme {
       return modules;
     }, {});
     this.modules = {};
-    this.quill.once(Emitter.events.READY, this.init.bind(this));
   }
 
   init() {
