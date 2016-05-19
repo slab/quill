@@ -1,7 +1,7 @@
 import Embed from '../blots/embed';
 
 
-class Formula extends Embed {
+class FormulaBlot extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
@@ -19,9 +19,17 @@ class Formula extends Embed {
     return 1;
   }
 }
-Formula.blotName = 'formula';
-Formula.className = 'ql-formula';
-Formula.tagName = 'SPAN';
+FormulaBlot.blotName = 'formula';
+FormulaBlot.className = 'ql-formula';
+FormulaBlot.tagName = 'SPAN';
 
 
-export default Formula;
+function Formula() {
+  if (window.katex == null) {
+    throw new Error('Formula module requires KaTeX.');
+  }
+  Quill.register(FormulaBlot);
+}
+
+
+export { FormulaBlot, Formula as default };
