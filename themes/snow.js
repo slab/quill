@@ -2,7 +2,9 @@ import Emitter from '../core/emitter';
 import BaseTheme from './base';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
+import ImageTooltip from '../ui/image-tooltip';
 import icons from '../ui/icons';
+import LinkTooltip from '../ui/link-tooltip';
 import Picker from '../ui/picker';
 
 
@@ -76,11 +78,15 @@ class SnowTheme extends BaseTheme {
     toolbar.container.classList.add('ql-snow');
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
-    this.imageTooltip = this.addModule('image-tooltip');
-    this.linkTooltip = this.addModule('link-tooltip');
-    this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
-      toolbar.handlers['link'].call(toolbar, !context.format.link);
-    });
+    if (toolbar.container.querySelector('.ql-image')) {
+      this.imageTooltip = new ImageTooltip(this.quill);
+    }
+    if (toolbar.container.querySelector('.ql-link')) {
+      this.linkTooltip = new LinkTooltip(this.quill);
+      this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
+        toolbar.handlers['link'].call(toolbar, !context.format.link);
+      });
+    }
   }
 }
 SnowTheme.DEFAULTS = {

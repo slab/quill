@@ -70,8 +70,6 @@ Quill.register({
   'formats/list/item': ListItem,
 
   'modules/formula': Formula,
-  'modules/image-tooltip': ImageTooltip,
-  'modules/link-tooltip': LinkTooltip,
   'modules/syntax': Syntax,
   'modules/toolbar': Toolbar,
 
@@ -82,7 +80,9 @@ Quill.register({
   'ui/picker': Picker,
   'ui/icon-picker': IconPicker,
   'ui/color-picker': ColorPicker,
-  'ui/tooltip': Tooltip
+  'ui/tooltip': Tooltip,
+  'ui/image-tooltip': ImageTooltip,
+  'ui/link-tooltip': LinkTooltip
 });
 
 
