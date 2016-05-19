@@ -106,6 +106,12 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert(' 01 \n 23 '));
     });
 
+    it('nested list', function() {
+      let delta = this.clipboard.convert('<ol><li>One</li><li class="ql-indent-1">Alpha</li></ol>');
+      expect(delta).toEqual(new Delta().insert('One\n', { list: 'ordered' })
+                                       .insert('Alpha\n', { list: 'ordered', indent: 1 }));
+    });
+
     it('embeds', function() {
       let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png">34</div>');
       expect(delta).toEqual(new Delta().insert('01').insert({ image: '/assets/favicon.png' }).insert('34'));
