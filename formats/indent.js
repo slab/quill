@@ -3,8 +3,8 @@ import Parchment from 'parchment';
 class IdentAttributor extends Parchment.Attributor.Class {
   add(node, value) {
     if (value === '+1' || value === '-1') {
-      let indent = parseInt(this.value(node) || 0);
-      value = value === '+1' ? (indent + 1) : (indent - 1);
+      let indent = this.value(node) || 0;
+      value = (value === '+1' ? (indent + 1) : (indent - 1));
     }
     if (value === 0) {
       this.remove(node);
@@ -12,6 +12,9 @@ class IdentAttributor extends Parchment.Attributor.Class {
     } else {
       return super.add(node, value);
     }
+  }
+  value(node){
+    return parseInt(super.value(node));
   }
 }
 
