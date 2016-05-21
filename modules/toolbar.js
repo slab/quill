@@ -64,7 +64,7 @@ class Toolbar extends Module {
       }
     }
     let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
-    input.addEventListener(eventName, () => {
+    input.addEventListener(eventName, (e) => {
       this.quill.focus();
       let value;
       if (input.tagName === 'SELECT') {
@@ -83,6 +83,7 @@ class Toolbar extends Module {
       } else {
         this.quill.format(format, value, Quill.sources.USER);
       }
+      e.preventDefault();
     });
     // TODO use weakmap
     this.controls.push([format, input]);
