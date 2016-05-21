@@ -25,12 +25,12 @@ class Selection {
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
     ['keyup', 'mouseup', 'touchend', 'touchleave', 'focus', 'blur'].forEach((eventName) => {
-      this.root.addEventListener(eventName, () => {
+      this.root.addEventListener(eventName, (e) => {
         // When range used to be a selection and user click within the selection,
         // the range now being a cursor has not updated yet without setTimeout
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
-      eventName.preventDefault();
+      e.preventDefault();
     });
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       if (delta.length() > 0) {
