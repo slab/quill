@@ -67,7 +67,7 @@ class SnowTheme extends BaseTheme {
       pickers.forEach(function(picker) {
         if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {
           picker.close();
-        }    
+        }
       });
       e.preventDefault();
     });
