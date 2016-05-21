@@ -30,6 +30,7 @@ class Selection {
         // the range now being a cursor has not updated yet without setTimeout
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
+      eventName.preventDefault();
     });
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       if (delta.length() > 0) {
