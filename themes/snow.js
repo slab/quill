@@ -63,7 +63,7 @@ class SnowTheme extends BaseTheme {
     };
     this.quill.on(Emitter.events.SELECTION_CHANGE, update)
               .on(Emitter.events.TEXT_CHANGE, update);
-    this.modules.toolbar.container.addEventListener('click', (e) => {
+    document.body.container.addEventListener('click', (e) => {
       pickers.forEach(function(picker) {
         if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {
           picker.close();
