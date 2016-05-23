@@ -119,6 +119,7 @@ Toolbar.DEFAULTS = {};
 
 function addButton(container, format, value) {
   let input = document.createElement('button');
+  input.setAttribute('type', 'button');
   input.classList.add('ql-' + format);
   if (value != null) {
     input.value = value;
