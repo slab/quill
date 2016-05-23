@@ -71,6 +71,7 @@ class SnowTheme extends BaseTheme {
           picker.close();
         }
       });
+      e.preventDefault();
     });
   }
 
