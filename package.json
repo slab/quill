@@ -64,7 +64,7 @@
     "ts-loader": "~0.8.2",
     "typescript": "^1.8.9",
     "uglify-js": "^2.6.2",
-    "webpack": "^1.12.15",
+    "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   },
   "license": "BSD-3-Clause",
