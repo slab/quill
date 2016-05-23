@@ -2,9 +2,10 @@
 
 The best way to contribute is to help others in the Quill community. This includes:
 
+- Reporting new [bugs](https://github.com/quilljs/quill/labels/bug) or adding details to existing ones
+- Reproducing [unconfirmed bugs](https://github.com/quilljs/quill/labels/needs%20reproduction)
+- Quick typo fix or documentation improvement [Pull Requests](#pull-requests)
 - Participating in [discussions](https://github.com/quilljs/quill/labels/discussion)
-- Reproducing and confirm [bugs](https://github.com/quilljs/quill/labels/triage)
-- Adding additional details to [bug reports](https://github.com/quilljs/quill/labels/bug)
 - Answering questions on [StackOverflow](http://stackoverflow.com/questions/tagged/quill)
 
 After becoming familiar with Quill and the codebase, likely through using Quill yourself and making some of the above contributions, you may choose to take on a bigger commitment by:
@@ -15,19 +16,24 @@ After becoming familiar with Quill and the codebase, likely through using Quill 
 - Supporting Quill in other ecosystems (Angular, React, etc)
 
 
-## Bug Reports
+## Questions
 
 If you have a question, it is best to ask on StackOverflow and tag with [quill](http://stackoverflow.com/questions/tagged/quill). This tag is monitored by Quill maintainers and community members.
 
+
+## Bug Reports
+
 Search through [Github Issues](https://github.com/quilljs/quill/issues) to see if the bug has already been reported. If so, please comment with any additional information.
 
-Bug reports must include:
+New bug reports must include:
 
 1. Detailed description of faulty behavior
 2. Steps for reproduction or failing test case
 3. Expected and actual behaviors
-4. Platforms (OS and browser combination) affected
+4. Platforms (OS **and** browser combination) affected
 5. Version of Quill
+
+Lacking reports it may be autoclosed with a link to these instructions.
 
 
 ## Feature Requests
@@ -37,10 +43,13 @@ Search through [Github Issues](https://github.com/quilljs/quill/labels/feature) 
 To open a new feature request, please include:
 
 1. A detailed description of the feature
-2. Your real world use case requiring the feature
-3. Considerations and behavior differences for other use cases that may benefit from the feature
+2. A quick background of where and how you are using Quill
+3. The use case that would be enabled or improved for your product, if the feature was implemented
+4. Considerations and behavior differences for other use cases that may benefit from the feature
 
-The more complete and compelling the request, the more likely it will be implemented. Garnering community support will help as well!
+Features are prioritized based on real world users and use cases, not theoretically useful additions for other unknown users. Lacking feature requests may be autoclosed with a link to this section.
+
+The more complete and compelling the request, the more likely it will ultimately be implemented. Garnering community support will help as well!
 
 
 ## Pull Requests
