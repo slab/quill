@@ -1,3 +1,32 @@
+# 1.0.0-beta.3
+
+Weekly beta preview release.
+
+### Breaking Changes
+
+- Keyboard was incorrectly using `metaKey` to refer to the control key on Windows. It now correctly refers to the Window key and `shortKey` has been added to refer the common platform specific modifier for hotkeys (metaKey for Mac, ctrlKey for Windows/Linux)
+- Formula is now a module, since it uses KaTeX
+
+
+### Features
+
+- Picker now uses text from original `<option>` if available
+- Tabbing inside code blocks inserts tab to each line
+
+
+### Bug Fixes
+
+- Enter preserves inline formats [#666](https://github.com/quilljs/quill/issues/666)
+- Fix resetting format button with no selection [#667](https://github.com/quilljs/quill/issues/667)
+- Fix paste interpretation from Word [#668](https://github.com/quilljs/quill/issues/668)
+- Focus scrolls to correct cursor position [#669](https://github.com/quilljs/quill/issues/669)
+- Fix deleting image on otherwise empty document [#670](https://github.com/quilljs/quill/issues/670)
+- Fix pasting ql-indent lines [#681](https://github.com/quilljs/quill/issues/681)
+
+Thanks to [@benbro](https://github.com/benbro), [@Cinamonas](https://github.com/Cinamonas)
+[@jasonmng](https://github.com/jasonmng), [@jonnolen](https://github.com/jonnolen), and [@LucVanPelt](https://github.com/LucVanPelt) for their contributions to this release.
+
+
 # 1.0.0-beta.2
 
 Weekly beta preview release. Major emphasis on keyboard API and customization.
