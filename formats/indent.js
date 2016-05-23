@@ -13,6 +13,7 @@ class IdentAttributor extends Parchment.Attributor.Class {
       return super.add(node, value);
     }
   }
+
   value(node){
     return parseInt(super.value(node));
   }

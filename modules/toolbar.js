@@ -107,7 +107,9 @@ class Toolbar extends Module {
           option.selected = true;
         }
       } if (input.value) {
-        input.classList.toggle('ql-active', input.value === formats[format]);
+        let active = input.value === formats[format] ||
+                     (formats[format] != null && input.value === formats[format].toString());
+        input.classList.toggle('ql-active', active);
       } else {
         input.classList.toggle('ql-active', formats[format] || false);
       }
