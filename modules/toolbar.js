@@ -83,6 +83,7 @@ class Toolbar extends Module {
       } else {
         this.quill.format(format, value, Quill.sources.USER);
       }
+        event.preventDefault();
     });
     // TODO use weakmap
     this.controls.push([format, input]);
