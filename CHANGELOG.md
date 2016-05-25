@@ -21,10 +21,13 @@ Weekly beta preview release.
 - Fix paste interpretation from Word [#668](https://github.com/quilljs/quill/issues/668)
 - Focus scrolls to correct cursor position [#669](https://github.com/quilljs/quill/issues/669)
 - Fix deleting image on otherwise empty document [#670](https://github.com/quilljs/quill/issues/670)
+- Fix bubble toolbar formatting [#679](https://github.com/quilljs/quill/issues/679)
 - Fix pasting ql-indent lines [#681](https://github.com/quilljs/quill/issues/681)
+- Fix getting into state with double underline tag [#695](https://github.com/quilljs/quill/issues/695)
+- Fix source type on delete [#697](https://github.com/quilljs/quill/issues/697)
+- Fix indent becoming NaN [#698](https://github.com/quilljs/quill/issues/698)
 
-Thanks to [@benbro](https://github.com/benbro), [@Cinamonas](https://github.com/Cinamonas)
-[@jasonmng](https://github.com/jasonmng), [@jonnolen](https://github.com/jonnolen), and [@LucVanPelt](https://github.com/LucVanPelt) for their contributions to this release.
+Thanks to [@benbro](https://github.com/benbro), [@Cinamonas](https://github.com/Cinamonas), [@emanuelbsilva](https://github.com/emanuelbsilva), [@jasonmng](https://github.com/jasonmng), [@jonnolen](https://github.com/jonnolen), [@LucVanPelt](https://github.com/LucVanPelt), [@sachinrekhi](https://github.com/sachinrekhi), [@sagacitysite](https://github.com/sagacitysite), [@WriterStat](https://github.com/WriterStat) for their contributions to this release.
 
 
 # 1.0.0-beta.2
