@@ -63,26 +63,29 @@ class Toolbar extends Module {
         return;
       }
     }
-    let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
-    input.addEventListener(eventName, () => {
-      this.quill.focus();
-      let value;
-      if (input.tagName === 'SELECT') {
-        if (input.selectedIndex < 0) return;
-        let selected = input.options[input.selectedIndex];
-        if (selected.hasAttribute('selected')) {
-          value = false;
+    let eventNames = input.tagName === 'SELECT' ? ['change'] : ['mousedown', 'touchstart'];
+    eventNames.forEach((eventName) => {
+      input.addEventListener(eventName, (e) => {
+        this.quill.focus();
+        let value;
+        if (input.tagName === 'SELECT') {
+          if (input.selectedIndex < 0) return;
+          let selected = input.options[input.selectedIndex];
+          if (selected.hasAttribute('selected')) {
+            value = false;
+          } else {
+            value = selected.value || false;
+          }
         } else {
-          value = selected.value || false;
+          value = input.classList.contains('ql-active') ? false : input.value || true;
+          e.preventDefault();
         }
-      } else {
-        value = input.classList.contains('ql-active') ? false : input.value || true;
-      }
-      if (this.handlers[format] != null) {
-        this.handlers[format].call(this, value);
-      } else {
-        this.quill.format(format, value, Quill.sources.USER);
-      }
+        if (this.handlers[format] != null) {
+          this.handlers[format].call(this, value);
+        } else {
+          this.quill.format(format, value, Quill.sources.USER);
+        }
+      });
     });
     // TODO use weakmap
     this.controls.push([format, input]);
