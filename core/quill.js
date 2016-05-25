@@ -40,7 +40,8 @@ class Quill {
         debug.warn(`Overwriting ${path} with`, target);
       }
       this.imports[path] = target;
-      if (path.startsWith('formats/')) {
+      if ((path.startsWith('blots/') || path.startsWith('formats/')) &&
+          target.blotName !== 'abstract') {
         Parchment.register(target);
       }
     }
