@@ -16,6 +16,7 @@ import './unit/formats/script';
 import './unit/formats/align';
 import './unit/formats/code';
 import './unit/formats/header';
+import './unit/formats/indent';
 import './unit/formats/list';
 
 import './unit/modules/clipboard';

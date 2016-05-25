@@ -14,8 +14,8 @@ class IdentAttributor extends Parchment.Attributor.Class {
     }
   }
 
-  value(node){
-    return parseInt(super.value(node));
+  value(node) {
+    return parseInt(super.value(node)) || undefined;  // Don't return NaN
   }
 }
 
