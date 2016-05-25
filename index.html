@@ -154,6 +154,7 @@ redirect_from: /latest/
   // Expose as global so people can easily try out the API
   var quill = window.quill = new Quill('#editor', {
     modules: {
+      'formula': true,
       'syntax': true,
       'toolbar': '#toolbar'
     },
