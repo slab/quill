@@ -1,78 +1,237 @@
 @font-face {
-  font-family: 'SofiaProBold';
-  src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot');
-  src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot?#iefix') format('embedded-opentype'),url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff2') format('woff2'),url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff') format('woff'),url('//cdn.quilljs.com/fonts/sofia-pro-bold.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'SofiaProRegular';
+  font-family: 'Sofia Pro';
   src: url('//cdn.quilljs.com/fonts/sofia-pro.eot');
-  src: url('//cdn.quilljs.com/fonts/sofia-pro.eot?#iefix') format('embedded-opentype'),url('//cdn.quilljs.com/fonts/sofia-pro.woff2') format('woff2'),url('//cdn.quilljs.com/fonts/sofia-pro.woff') format('woff'),url('//cdn.quilljs.com/fonts/sofia-pro.ttf') format('truetype');
+  src: url('//cdn.quilljs.com/fonts/sofia-pro.eot?#iefix') format('embedded-opentype'),
+       url('//cdn.quilljs.com/fonts/sofia-pro.woff2') format('woff2'),
+       url('//cdn.quilljs.com/fonts/sofia-pro.woff') format('woff'),
+       url('//cdn.quilljs.com/fonts/sofia-pro.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'Sailec-Light';
-  src: url('//cdn.quilljs.com/fonts/sailec-light.eot');src: url('//cdn.quilljs.com/fonts/sailec-light.eot?#iefix') format('embedded-opentype'),url('//cdn.quilljs.com/fonts/sailec-light.woff2') format('woff2'),url('//cdn.quilljs.com/fonts/sailec-light.woff') format('woff'),url('//cdn.quilljs.com/fonts/sailec-light.ttf') format('truetype');
+  font-family: 'Sofia Pro';
+  font-weight: bold;
+  src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot');
+  src: url('//cdn.quilljs.com/fonts/sofia-pro-bold.eot?#iefix') format('embedded-opentype'),
+       url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff2') format('woff2'),
+       url('//cdn.quilljs.com/fonts/sofia-pro-bold.woff') format('woff'),
+       url('//cdn.quilljs.com/fonts/sofia-pro-bold.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'Sailec-Regular';
-  src: url('//cdn.quilljs.com/fonts/sailec.eot');src: url('//cdn.quilljs.com/fonts/sailec.eot?#iefix') format('embedded-opentype'),url('//cdn.quilljs.com/fonts/sailec.woff2') format('woff2'),url('//cdn.quilljs.com/fonts/sailec.woff') format('woff'),url('//cdn.quilljs.com/fonts/sailec.ttf') format('truetype');
+  font-family: 'Sailec Light';
+  src: url('//cdn.quilljs.com/fonts/sailec-light.eot');
+  src: url('//cdn.quilljs.com/fonts/sailec-light.eot?#iefix') format('embedded-opentype'),
+       url('//cdn.quilljs.com/fonts/sailec-light.woff2') format('woff2'),
+       url('//cdn.quilljs.com/fonts/sailec-light.woff') format('woff'),
+       url('//cdn.quilljs.com/fonts/sailec-light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sailec Light';
+  font-weight: bold;
+  src: url('//cdn.quilljs.com/fonts/sailec.eot');
+  src: url('//cdn.quilljs.com/fonts/sailec.eot?#iefix') format('embedded-opentype'),
+       url('//cdn.quilljs.com/fonts/sailec.woff2') format('woff2'),
+       url('//cdn.quilljs.com/fonts/sailec.woff') format('woff'),
+       url('//cdn.quilljs.com/fonts/sailec.ttf') format('truetype');
+}
+
+@media (min-width: 1280px) {
+  .container {
+    width: 100%;
+  }
+}
+
+
+/*** Native ***/
+
+html {
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Sailec-Light', sans-serif;
-  font-style: normal;
-  font-weight: normal;
+  font-family: 'Sailec Light', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'SofiaProBold', sans-serif;
-  font-style: normal;
-  font-weight: normal;
+  font-family: 'Sofia Pro', sans-serif;
 }
 
 h1 {
+
 }
 
 h2 {
   text-transform: uppercase;
 }
 
-strong {
-  font-family: 'Sailec-Regular', sans-serif;
-  font-style: normal;
+a {
+  text-decoration: none;
 }
+a:hover {
+  color: inherit;
+}
+
+
+/*** Global ***/
 
 .action {
-  font-family: 'Sailec-Regular', sans-serif;
+  background-color: #f2d123;
+  color: #1d1e30;
+  font-family: 'Sofia Pro', sans-serif;
+  font-size: 14.5px;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
   text-transform: uppercase;
 }
+.action:hover {
+  color: #1d1e30;
+}
 
-header {
-  background-color: #f4f5f5;
-  text-transform: uppercase;
+.logo {
+  background-image: url(/assets/images/logo-light.png);
+  background-size: 180px 108px;
+  display: inline-block;
+  vertical-align: middle;
+  height: 108px;
+  width: 180px;
 }
 
 .container {
   max-width: 1200px;
 }
 
+
+/*** Header ***/
+
+header {
+  background-color: #1d1e30;
+  font-family: 'Sofia Pro', sans-serif;
+  font-size: 15.5px;
+  height: 160px;
+  padding-top: 21px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+header a {
+  color: #fff;
+}
+
+header .action {
+  padding: 16px 26px;
+}
+body:not(.home) header .logo {
+  background-size: 146px 88px;
+  height: 88px;
+  width: 146px;
+}
+
 .navbar-list {
+  color: #fff;
+  letter-spacing: 0.15rem;
   list-style: none;
+  margin-bottom: 0px;
+  margin-top: 10px;
 }
 
 .navbar-item {
-  float: left;
+  display: inline-block;
+  line-height: 88px;
+  margin-right: 40px;
+  padding: 10px;
 }
+.navbar-item.download {
+  margin-right: 0px;
+  position: absolute;
+  right: 0px;
+}
+
+
+/*** Footer ***/
 
 footer {
   background-color: #1d1e30;
   color: #fff;
+  height: 853px;
   text-align: center;
 }
 
 
+/*** Home ***/
+
+body.home header {
+  background-color: #f4f5f5;
+  color: #1d1e30;
+  height: 240px;
+  padding-top: 60px;
+}
+body.home header a {
+  color: #1d1e30;
+}
+body.home header .action {
+  background-color: transparent;
+  border: 3px solid #1d1e30;
+}
+body.home header .logo {
+  background-image: url(/assets/images/logo-dark.png);
+}
+body.home .navbar-item {
+  line-height: 108px;
+  margin-right: 30px;
+  padding: 10px 5px;
+}
+body.home .navbar-item.download {
+  margin-right: 0px;
+}
+
+
+#above-container {
+  background-color: #f4f5f5;
+}
+
+#users-container {
+  padding-bottom: 15px;
+  padding-top: 65px;
+  text-align: center;
+}
+#users-container h1 {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+#users-container ul {
+  font-size: 13px;
+  list-style: none;
+  text-transform: uppercase;
+}
+#users-container li {
+  display: inline-block;
+  height: 100px;
+  line-height: 100px;
+  margin: 0px 10px;
+  vertical-align: middle;
+  width: 150px;
+}
+#users-container li:first-child {
+  padding-top: 5px;
+}
 
 #laptop-container {
-  background-color: #f4f5f5;
+  background-color: #c8ccd2;
+  border: 2px solid #000;
+  border-bottom: 0px;
+  border-top-left-radius: 60px;
+  border-top-right-radius: 60px;
+  box-shadow: 0 0 40px 2px rgba(28, 31, 47, 0.1);
+  margin: 58px auto 0px;
+  width: 1100px;
+}
+
+#demo-container {
+  background-color: #fff;
+  border: 2px solid #000;
+  margin: 50px 50px 0px;
 }
 
 #demo-container .toolbar {
@@ -83,14 +242,57 @@ footer {
   height: 595px;
 }
 
+#detail-container {
+  background-color: #fff;
+  margin-top: -5px;
+  text-align: center;
+}
+
+#detail-container .action {
+  display: inline-block;
+  font-size: 18px;
+  letter-spacing: 0.25rem;
+  margin-bottom: 15px;
+  margin-top: 124px;
+  padding: 27px 50px;
+}
+#detail-container h1 {
+  font-family: "Sailec Light", sans-serif;
+  letter-spacing: 0.20rem;
+  font-size: 40px;
+}
 
 #features-container {
+  margin-top: 136px;
+}
 
+#features-container .feature {
+  padding: 25px;
+}
+
+#features-container h2 {
+  font-size: 28px;
+  font-weight: bold;
 }
 
 #features-container img {
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

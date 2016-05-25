@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/assets/css/styles.css">
     {% include analytics.html  %}
   </head>
-  <body>
+  <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
     {% include header.html %}
     {% assign heads = content | split: '<!-- head -->' %}
     {% for head in heads %}
