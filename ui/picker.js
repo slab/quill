@@ -79,7 +79,7 @@ class Picker {
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
       if (item.dataset.value) {
         this.label.dataset.value = item.dataset.value;
-      } else if (this.label.dataset.label) {
+      } else if (this.label.dataset.value) {
         delete this.label.dataset.value;
       }
       if (item.dataset.label) {
