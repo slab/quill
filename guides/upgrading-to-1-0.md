@@ -13,13 +13,13 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 
 ### API
 
-- `getHTML` *deprecated* - Previous versions of Quill required the usage of class names to identify lines `ql-line` and an `id` attribute to identify particular lines. This is no longer a requirement and a custom API call no longer adds any value on top of the DOM's existing innerHTML.
+- `getHTML` *removed* - Previous versions of Quill required the usage of class names to identify lines `ql-line` and an `id` attribute to identify particular lines. This is no longer a requirement and a custom API call no longer adds any value on top of the DOM's existing innerHTML.
 
-- `setHTML` *deprecated* - Quill, like many editors with a data layer on top of the DOM, does not allow arbitrary changes to the underlying HTML. Previously Quill would detect an illegal state and correct it, but this makes the naming setHTML disingenuous and the reasoning behind the correction is unintuitive. Most use cases of `setHTML` can be suitably met or improved (since cursor preservation is much better) with the new [`pasteHTML`](/docs/api/#pastehtml).
+- `setHTML` *removed* - Quill, like many editors with a data layer on top of the DOM, does not allow arbitrary changes to the underlying HTML. Previously Quill would detect an illegal state and correct it, but this makes the naming setHTML disingenuous and the reasoning behind the correction is unintuitive. Most use cases of `setHTML` can be suitably met or improved (since cursor preservation is much better) with the new [`pasteHTML`](/docs/api/#pastehtml).
 
-- `addModule` *deprecated* - Modules are now initialized based off of the initial Quill [configuration](/docs/configuration/), instead of having a separate function.
+- `addModule` *removed* - Modules are now initialized based off of the initial Quill [configuration](/docs/configuration/), instead of having a separate function.
 
-- `onModuleLoad` *deprecated* - Module loading is handled by Themes and similar behavior should be achieved by extending the theme.
+- `onModuleLoad` *removed* - Module loading is handled by Themes and similar behavior should be achieved by extending the theme.
 
 - `prepareFormat` *renamed* - A new API [`format`](/docs/api/#format) now provides formatting functionality for all selection states, including those previously covered by `prepareFormat`.
 
