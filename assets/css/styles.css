@@ -405,6 +405,7 @@ body.home .navbar-item.download {
   margin-top: 124px;
   padding: 27px 50px;
 }
+
 #detail-container h1 {
   font-family: "Sailec Light", sans-serif;
   letter-spacing: 0.20rem;
@@ -417,12 +418,34 @@ body.home .navbar-item.download {
 }
 
 #features-container .feature {
-  margin-bottom: 75px;
-  padding: 25px;
+  padding: 25px 25px 100px;
+}
+
+#features-container .feature.columns:last-child {
+  border-left: 1px solid #d9dce1;
 }
 
 #features-container .feature.row {
   margin-top: 85px;
+}
+
+#features-container #github-wrapper {
+  height: 60px;
+  margin: 0px auto;
+  position: relative;
+  text-align: center;
+  width: 320px;
+}
+
+#features-container #github-container {
+  background-color: #fff;
+  margin-left: 18px;
+  margin-top: -30px;
+}
+
+#features-container #github-wrapper + hr {
+  margin-top: 0px;
+  width: 85%;
 }
 
 .feature .details {
@@ -444,6 +467,7 @@ body.home .navbar-item.download {
   font-weight: bold;
   letter-spacing: 0.4rem;
   margin-bottom: 50px;
+  text-transform: uppercase;
 }
 
 .feature .details > span {
@@ -460,7 +484,6 @@ body:not(.home) .feature.row {
 
 body:not(.home) .feature h2 {
   margin-bottom: 40px;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
