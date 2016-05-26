@@ -8,10 +8,10 @@ import Blockquote from './formats/blockquote';
 import Header from './formats/header';
 import List, { ListItem } from './formats/list';
 
-import { BackgroundStyle as Background } from './formats/background';
-import { ColorStyle as Color } from './formats/color';
-import { FontClass as Font } from './formats/font';
-import { SizeClass as Size } from './formats/size';
+import { BackgroundClass, BackgroundStyle } from './formats/background';
+import { ColorClass, ColorStyle } from './formats/color';
+import { FontClass, FontStyle } from './formats/font';
+import { SizeClass, SizeStyle } from './formats/size';
 
 import Bold from './formats/bold';
 import Italic from './formats/italic';
@@ -42,14 +42,26 @@ import SnowTheme from './themes/snow';
 
 
 Quill.register({
+  'attributors/class/background': BackgroundClass,
+  'attributors/class/color': ColorClass,
+  'attributors/class/font': FontClass,
+  'attributors/class/size': SizeClass,
+  'attributors/style/background': BackgroundStyle,
+  'attributors/style/color': ColorStyle,
+  'attributors/style/font': FontStyle,
+  'attributors/style/size': SizeStyle
+}, true);
+
+
+Quill.register({
   'formats/align': Align,
   'formats/direction': Direction,
   'formats/indent': Indent,
 
-  'formats/background': Background,
-  'formats/color': Color,
-  'formats/font': Font,
-  'formats/size': Size,
+  'formats/background': BackgroundStyle,
+  'formats/color': ColorStyle,
+  'formats/font': FontClass,
+  'formats/size': SizeClass,
 
   'formats/blockquote': Blockquote,
   'formats/code-block': CodeBlock,
@@ -83,7 +95,7 @@ Quill.register({
   'ui/tooltip': Tooltip,
   'ui/image-tooltip': ImageTooltip,
   'ui/link-tooltip': LinkTooltip
-});
+}, true);
 
 
 module.exports = Quill;
