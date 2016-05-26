@@ -17,18 +17,18 @@ redirect_from: /latest/
     <ul>
       <li>Trusted by:</li>
       <li>
-        <a href="https://www.intuit.com" target="_blank">
-          <img src="/assets/images/users/intuit.png">
-        </a>
-      </li>
-      <li>
-        <a href="https://www.salesforce.com/" target="_blank">
+        <a href="https://www.salesforce.com" target="_blank">
           <img src="/assets/images/users/salesforce.png">
         </a>
       </li>
       <li>
         <a href="http://www.voxmedia.com/" target="_blank">
           <img src="/assets/images/users/voxmedia.png">
+        </a>
+      </li>
+      <li>
+        <a href="https://www.lever.co/" target="_blank">
+          <img src="/assets/images/users/lever.png">
         </a>
       </li>
     </ul>
@@ -166,6 +166,34 @@ redirect_from: /latest/
         'toolbar': '#toolbar'
       },
       theme: 'snow'
+    });
+
+    var users = [{
+      'Intuit': 'https://www.intuit.com/',
+      'LinkedIn': 'https://www.linkedin.com/',
+      'Salesforce': 'http://www.salesforce.com/'
+    }, {
+      'Asana': 'https://asana.com/',
+      'Gannett': 'http://www.gannett.com/',
+      'Hubspot': 'https://www.hubspot.com/',
+      'USA Today': 'http://www.usatoday.com/',
+      'Vox Media': 'http://www.voxmedia.com/'
+    }, {
+      'Buffer': 'https://buffer.com/',
+      'Front': 'https://frontapp.com/',
+      'Lever': 'https://www.lever.co/',
+      'Reedsy': 'https://reedsy.com/'
+    }];
+    // Show users randomly
+    $('#users-container a').each(function(i, link) {
+      var bucket = users[i];
+      var keys = Object.keys(bucket);
+      var name = keys[Math.floor(Math.random() * keys.length)];
+      $(link).attr({ href: bucket[name], title: name });
+      $('img', link).attr({
+        src: '/assets/images/users/' + (name.toLowerCase().replace(/\s/g, '')) + '.png',
+        alt: name
+      });
     });
 
     console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");

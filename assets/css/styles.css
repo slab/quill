@@ -258,11 +258,11 @@ footer .action.documentation {
 footer .users.row {
   background-image: url(/assets/images/footer.png);
   background-position-y: 45px;
-  background-repeat: repeat-x;
+  background-repeat: no-repeat;
   color: #494c59;
   height: 120px;
   margin: 100px auto 0px;
-  width: 540px;
+  width: 450px;
 }
 
 footer .users.row h3 {
