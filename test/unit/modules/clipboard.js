@@ -31,7 +31,7 @@ describe('Clipboard', function() {
       let text = this.quill.getText(2, 5);
       this.quill.clipboard.onCut(this.event);
       expect(this.event.clipboardData.setData).toHaveBeenCalledWith('text', text);
-      expect(this.quill.root).toEqualHTML('<h1 id="0178">01<em>7</em>8</h1>');
+      expect(this.quill.root).toEqualHTML('<h1>01<em>7</em>8</h1>');
       expect(this.quill.getSelection()).toEqual(new Range(2));
     });
 
@@ -40,7 +40,7 @@ describe('Clipboard', function() {
       this.event.clipboardData.types = ['text', 'application/json'];
       spyOn(this.event.clipboardData, 'getData').and.returnValue(jsonString);
       this.quill.clipboard.onPaste(this.event);
-      expect(this.quill.root).toEqualHTML('<h1 id="01-78">01<strong>|</strong><em>7</em>8</h1>');
+      expect(this.quill.root).toEqualHTML('<h1>01<strong>|</strong><em>7</em>8</h1>');
       expect(this.event.clipboardData.getData).toHaveBeenCalledWith('application/json');
       expect(this.quill.getSelection()).toEqual(new Range(3));
     });
@@ -51,7 +51,7 @@ describe('Clipboard', function() {
       this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
       this.quill.clipboard.onPaste(this.event);
       setTimeout(() => {
-        expect(this.quill.root).toEqualHTML('<h1 id="01-78">01<strong>|</strong><em>7</em>8</h1>');
+        expect(this.quill.root).toEqualHTML('<h1>01<strong>|</strong><em>7</em>8</h1>');
         expect(this.quill.getSelection()).toEqual(new Range(3));
         done();
       }, 2);

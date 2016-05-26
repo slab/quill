@@ -30,7 +30,7 @@ describe('Code', function() {
     let editor = this.initialize(Editor, '<pre>0123</pre>');
     editor.formatText(4, 1, { 'header': 1 });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123').insert('\n', { header: 1 }));
-    expect(editor.scroll.domNode).toEqualHTML('<h1 id="0123">0123</h1>');
+    expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
   });
 
   it('ignore formatAt', function() {

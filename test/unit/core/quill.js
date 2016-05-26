@@ -57,7 +57,7 @@ describe('Quill', function() {
     it('formatLine()', function() {
       this.quill.formatLine(1, 1, 'header', 2);
       let change = new Delta().retain(8).retain(1, { header: 2});
-      expect(this.quill.root).toEqualHTML('<h2 id="01234567">0123<em>45</em>67</h2>');
+      expect(this.quill.root).toEqualHTML('<h2>0123<em>45</em>67</h2>');
       expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
     });
 
@@ -178,7 +178,7 @@ describe('Quill', function() {
       quill.setContents(delta);
       expect(quill.getContents()).toEqual(delta);
       expect(quill.root).toEqualHTML(`
-        <h1 id="welcome">Welcome</h1>
+        <h1>Welcome</h1>
         <p>Hello</p>
         <p>World<strong>!</strong></p>
       `);

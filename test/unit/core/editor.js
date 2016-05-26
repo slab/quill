@@ -198,7 +198,7 @@ describe('Editor', function() {
     it('line', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.formatLine(1, 1, { header: 1 });
-      expect(editor.scroll.domNode).toEqualHTML('<h1 id="0123">0123</h1>');
+      expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
     });
   });
 
@@ -349,25 +349,25 @@ describe('Editor', function() {
     it('append text with newline', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert('5678').insert('\n', { header: 2 }));
-      expect(this.container).toEqualHTML('<p>0123</p><h2 id="5678">5678</h2>');
+      expect(this.container).toEqualHTML('<p>0123</p><h2>5678</h2>');
     });
 
     it('append non-isolated newline', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert('5678\n', { header: 2 }));
-      expect(this.container).toEqualHTML('<p>0123</p><h2 id="5678">5678</h2>');
+      expect(this.container).toEqualHTML('<p>0123</p><h2>5678</h2>');
     });
 
     it('eventual append', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert('ab\n', { header: 1 }).retain(3).insert('cd\n', { header: 2 }));
-      expect(this.container).toEqualHTML('<h1 id="01ab">01ab</h1><p>23</p><h2 id="cd">cd</h2>');
+      expect(this.container).toEqualHTML('<h1>01ab</h1><p>23</p><h2>cd</h2>');
     });
 
     it('append text, embed and newline', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(5).insert('5678').insert({ image: '/assets/favicon.png' }).insert('\n', { header: 2 }));
-      expect(this.container).toEqualHTML('<p>0123</p><h2 id="5678">5678<img src="/assets/favicon.png"></h2>');
+      expect(this.container).toEqualHTML('<p>0123</p><h2>5678<img src="/assets/favicon.png"></h2>');
     });
 
     it('append multiple lines', function() {
@@ -376,7 +376,7 @@ describe('Editor', function() {
         .insert('56').insert('\n', { header: 1 })
         .insert('89').insert('\n', { header: 2 })
       );
-      expect(this.container).toEqualHTML('<p>0123</p><h1 id="56">56</h1><h2 id="89">89</h2>');
+      expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
     });
 
     it('append block embed', function() {

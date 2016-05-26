@@ -36,8 +36,8 @@ describe('Block', function() {
   it('insert into formatted', function() {
     let scroll = this.initialize(Scroll, '<h1>Welcome</h1>');
     scroll.insertAt(3, 'l\n');
-    expect(scroll.domNode.firstChild.outerHTML).toEqualHTML('<h1 id="well">Well</h1>');
-    expect(scroll.domNode.childNodes[1].outerHTML).toEqualHTML('<h1 id="come">come</h1>');
+    expect(scroll.domNode.firstChild.outerHTML).toEqualHTML('<h1>Well</h1>');
+    expect(scroll.domNode.childNodes[1].outerHTML).toEqualHTML('<h1>come</h1>');
   });
 
   it('delete line contents', function() {
@@ -49,7 +49,7 @@ describe('Block', function() {
   it('join lines', function() {
     let scroll = this.initialize(Scroll, '<h1>Hello</h1><h2>World!</h2>');
     scroll.deleteAt(5, 1);
-    expect(scroll.domNode).toEqualHTML('<h1 id="helloworld">HelloWorld!</h1>');
+    expect(scroll.domNode).toEqualHTML('<h1>HelloWorld!</h1>');
   });
 
   it('join empty lines', function() {
@@ -67,6 +67,6 @@ describe('Block', function() {
   it('format newline', function() {
     let scroll = this.initialize(Scroll, '<h1>Hello</h1>');
     scroll.formatAt(5, 1, 'header', 2);
-    expect(scroll.domNode).toEqualHTML('<h2 id="hello">Hello</h2>');
+    expect(scroll.domNode).toEqualHTML('<h2>Hello</h2>');
   });
 });
