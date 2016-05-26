@@ -67,6 +67,7 @@ h2 {
 }
 
 a {
+  outline: none;
   text-decoration: none;
 }
 a:hover {
@@ -79,6 +80,7 @@ a:hover {
 .action {
   background-color: #f2d123;
   color: #1d1e30;
+  display: inline-block;
   font-family: 'Sofia Pro', sans-serif;
   font-size: 14.5px;
   font-weight: bold;
@@ -102,6 +104,48 @@ a:hover {
   max-width: 1200px;
 }
 
+.center {
+  text-align: center;
+}
+
+.github-button {
+  background-color: #1d1e30;
+  border: 3px solid #1d1e30;
+  display: inline-block;
+  font-family: 'Sofia Pro', sans-serif;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+}
+
+.github-action {
+  background-image: url(/assets/images/octocat.png);
+  background-position: 22px 10px;
+  background-repeat: no-repeat;
+  color: #fff;
+  display: inline-block;
+  float: left;
+  font-size: 16px;
+  line-height: 32px;
+  padding: 10px 22px 10px 68px;
+}
+.github-action:hover {
+  color: #fff;
+}
+
+.github-count {
+  background-color: #fff;
+  color: #1d1e30;
+  display: inline-block;
+  float: left;
+  font-size: 21px;
+  line-height: 32px;
+  padding: 10px 22px;
+}
+.github-count:hover {
+  color: #1d1e30;
+}
+
 
 /*** Header ***/
 
@@ -120,6 +164,7 @@ header a {
 }
 
 header .action {
+  display: inline;
   padding: 16px 26px;
 }
 body:not(.home) header .logo {
@@ -155,7 +200,52 @@ footer {
   background-color: #1d1e30;
   color: #fff;
   height: 853px;
+  padding-top: 135px;
   text-align: center;
+}
+
+footer h1 {
+  font-family: "Sailec Light", sans-serif;
+  font-size: 45px;
+  letter-spacing: 0.2rem;
+  margin-bottom: 66px;
+  margin-top: 66px;
+}
+
+footer .actions.row {
+  margin: auto;
+  width: 550px;
+}
+
+footer .action {
+  float: right;
+  font-size: 18px;
+  height: 80px;
+  line-height: 80px;
+  width: 260px;
+}
+
+footer .action.documentation {
+  background-color: #1d1e30;
+  border: 2px solid #f2d123;
+  color: #f2d123;
+  float: left;
+}
+
+footer .users.row {
+  background-image: url(/assets/images/footer.png);
+  background-position-y: 45px;
+  background-repeat: repeat-x;
+  color: #494c59;
+  height: 120px;
+  margin: 100px auto 0px;
+  width: 540px;
+}
+
+footer .users.row h3 {
+  font-size: 12px;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
 }
 
 
@@ -263,21 +353,52 @@ body.home .navbar-item.download {
 }
 
 #features-container {
-  margin-top: 136px;
+  margin-bottom: 80px;
+  margin-top: 115px;
 }
 
 #features-container .feature {
+  margin-bottom: 75px;
   padding: 25px;
-}
-
-#features-container h2 {
-  font-size: 28px;
-  font-weight: bold;
 }
 
 #features-container img {
 
 }
+
+#features-container .details {
+  padding: 20px 64px;
+}
+
+#features-container .details a {
+  color: #1d1e30;
+  display: block;
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  margin-top: 38px;
+  text-transform: uppercase;
+}
+
+#features-container .details h2 {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0.4rem;
+  margin-bottom: 50px;
+}
+
+#features-container .details span {
+  font-size: 16px;
+  letter-spacing: 0.1rem;
+  line-height: 200%;
+}
+
+#features-container .feature.row {
+  margin-top: 85px;
+}
+
+
 
 
 
