@@ -52,6 +52,7 @@ html {
 
 body {
   font-family: 'Sailec Light', sans-serif;
+  font-size: 18px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -59,19 +60,40 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-
+  font-size: 50px;
 }
 
 h2 {
-  text-transform: uppercase;
+  font-size: 30px;
 }
 
 a {
+  color: #1d1e30;
   outline: none;
   text-decoration: none;
 }
 a:hover {
-  color: inherit;
+  color: #1d1e30;
+}
+
+code {
+  font-size: 16px;
+}
+
+pre code {
+  background-color: #f9f9f9;
+  border: none;
+  box-shadow: 0 0 6px 2px rgba(28, 31, 47, 0.1);
+  padding: 32px;
+  white-space: pre-wrap;
+}
+
+*:not(pre) > code {
+  background-color: transparent;
+  border-color: #ff0000;
+  border-radius: 0px;
+  color: #ff0000;
+  padding: 0.2rem 1rem;
 }
 
 
@@ -79,16 +101,12 @@ a:hover {
 
 .action {
   background-color: #f2d123;
-  color: #1d1e30;
   display: inline-block;
   font-family: 'Sofia Pro', sans-serif;
   font-size: 14.5px;
   font-weight: bold;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
-}
-.action:hover {
-  color: #1d1e30;
 }
 
 .logo {
@@ -119,7 +137,7 @@ a:hover {
 }
 
 .github-action {
-  background-image: url(/assets/images/octocat.png);
+  background-image: url(/assets/images/octocat-light.png);
   background-position: 22px 10px;
   background-repeat: no-repeat;
   color: #fff;
@@ -135,15 +153,15 @@ a:hover {
 
 .github-count {
   background-color: #fff;
-  color: #1d1e30;
   display: inline-block;
   float: left;
   font-size: 21px;
   line-height: 32px;
   padding: 10px 22px;
 }
-.github-count:hover {
-  color: #1d1e30;
+
+.row > hr {
+  width: 90%;
 }
 
 
@@ -162,8 +180,12 @@ header {
 header a {
   color: #fff;
 }
+header a:hover {
+  color: #fff;
+}
 
 header .action {
+  color: #1d1e30;
   display: inline;
   padding: 16px 26px;
 }
@@ -200,6 +222,7 @@ footer {
   background-color: #1d1e30;
   color: #fff;
   height: 853px;
+  margin-top: 100px;
   padding-top: 135px;
   text-align: center;
 }
@@ -398,12 +421,15 @@ body.home .navbar-item.download {
   padding: 25px;
 }
 
-#features-container .details {
+#features-container .feature.row {
+  margin-top: 85px;
+}
+
+.feature .details {
   padding: 20px 64px;
 }
 
-#features-container .details a {
-  color: #1d1e30;
+.feature .details > a {
   display: block;
   font-family: "Sofia Pro", sans-serif;
   font-size: 15px;
@@ -413,27 +439,170 @@ body.home .navbar-item.download {
   text-transform: uppercase;
 }
 
-#features-container .details h2 {
+.feature .details > h2 {
   font-size: 28px;
   font-weight: bold;
   letter-spacing: 0.4rem;
   margin-bottom: 50px;
 }
 
-#features-container .details span {
+.feature .details > span {
   font-size: 16px;
   letter-spacing: 0.1rem;
   line-height: 200%;
 }
 
-#features-container .feature.row {
-  margin-top: 85px;
+
+/*** Docs ***/
+body:not(.home) .feature.row {
+  margin-top: 50px;
 }
 
+body:not(.home) .feature h2 {
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
+body:not(.home) .feature .github-button {
+  margin-top: 32px;
+}
 
+.edit-link {
+  background-image: url(/assets/images/octocat-dark.png);
+  background-position: right center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  float: right;
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  height: 32px;
+  letter-spacing: 0.1rem;
+  line-height: 32px;
+  padding-right: 45px;
+  text-decoration: underline;
+  text-transform: uppercase;
+}
 
+#sidebar-container {
+  font-family: "Sofia Pro", sans-serif;
+  font-size: 13px;
+  margin-top: 160px;
+  text-transform: uppercase;
+}
 
+#sidebar-container ul {
+  list-style: none;
+}
+#sidebar-container > ul {
+  list-style: none;
+}
+#sidebar-container > ul ul {
+  margin: 1rem 0px 0px 55px;
+}
+#sidebar-container > ul > li > a {
+  padding-left: 18px;
+  padding-top: 2px;
+}
+#sidebar-container > ul > li.active > a {
+  border-left: 3px solid #1d1e30;
+  padding-left: 15px;
+}
+#sidebar-container li.active > a {
+  color: #1d1e30;
+}
+#sidebar-container a {
+  color: #9a9dae;
+  display: block;
+}
+#sidebar-container a:hover {
+  color: #1d1e30;
+}
+
+#docs-container {
+  margin-bottom: 42px;
+  margin-top: 42px;
+}
+#docs-container .breadcrumb {
+  font-size: 15px;
+}
+#docs-container .breadcrumb span:first-child {
+  font-weight: bold;
+}
+#docs-container hr {
+  margin-left: -2%;
+  width: 104%;
+}
+#docs-container h1:first-of-type {
+  margin-bottom: 15px;
+  margin-top: 44px;
+}
+
+#content-container {
+  margin-bottom: 120px;
+  max-width: 800px;
+}
+
+#pagination-container {
+  max-width: 800px;
+}
+#pagination-container .prev,
+#pagination-container .next,
+#pagination-container .label,
+#pagination-container .arrow {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+}
+#pagination-container .prev,
+#pagination-container .prev .label,
+#pagination-container .prev .arrow {
+  float: left;
+}
+#pagination-container .next,
+#pagination-container .next .label,
+#pagination-container .next .arrow {
+  float: right;
+}
+#pagination-container .label {
+  font-weight: bold;
+}
+#pagination-container .arrow {
+  padding: 10px 20px;
+}
+#pagination-container .shaft {
+  background-color: #000;
+  border-bottom: 3px solid #fff;
+  border-top: 3px solid #fff;
+  display: inline-block;
+  float: left;
+  height: 10px;
+  width: 20px;
+}
+#pagination-container .tip {
+  display: inline-block;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid transparent;
+}
+#pagination-container .prev .tip {
+  float: left;
+  border-right: 10px solid #000;
+}
+#pagination-container .next .tip {
+  float: right;
+  border-left: 10px solid #000;
+}
+#pagination-container .prev:after {
+  content: "Previous";
+  font-size: 30px;
+  font-weight: bold;
+}
+#pagination-container .next:before {
+  content: "Next";
+  font-size: 30px;
+  font-weight: bold;
+}
 
 
 

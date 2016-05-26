@@ -45,6 +45,18 @@
         {{ section | strip }}
       {% endif %}
     {% endfor %}
+    <script type="text/javascript">
+    $(document).ready(function() {
+      var counts = $('.github-count');
+      if (counts.length > 0) {
+        $.getJSON('https://api.github.com/repos/quilljs/quill', function(data) {
+          if (data.stargazers_count) {
+            counts.text(data.stargazers_count.toLocaleString());
+          }
+        });
+      }
+    });
+    </script>
     </div>
   </body>
 </html>
