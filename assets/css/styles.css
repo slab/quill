@@ -280,6 +280,19 @@ body.home .navbar-item.download {
 #above-container {
   background-color: #f4f5f5;
 }
+#above-container.demo-active #laptop-container {
+  margin-bottom: 0px;
+  margin-top: -160px;
+}
+#above-container.demo-active #users-container h1 {
+
+}
+#above-container.demo-active #users-container h1 {
+
+}
+#above-container.demo-active #users-container ul {
+  visibility: hidden;
+}
 
 #users-container {
   padding-bottom: 15px;
@@ -314,27 +327,50 @@ body.home .navbar-item.download {
   border-top-left-radius: 60px;
   border-top-right-radius: 60px;
   box-shadow: 0 0 40px 2px rgba(28, 31, 47, 0.1);
-  margin: 58px auto 0px;
+  margin: 58px auto -220px;
   width: 1100px;
+}
+#camera-container {
+  margin: 20px auto;
+  width: 40px;
+  text-align: center;
+}
+
+#camera-container .camera {
+  border: 4px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
 }
 
 #demo-container {
   background-color: #fff;
   border: 2px solid #000;
-  margin: 50px 50px 0px;
+  margin: 0px 50px;
 }
 
-#demo-container .toolbar {
-
+#demo-container #toolbar {
+  border: none;
+  padding: 50px 150px;
+}
+#demo-container #toolbar .ql-header.ql-picker {
+  width: 108px;
 }
 
-#demo-container .editor {
+#demo-container #editor {
+  border: none;
   height: 595px;
+}
+#demo-container .ql-editor {
+  font-size: 18px;
+  overflow-y: hidden;
+  padding: 0px 150px;
 }
 
 #detail-container {
   background-color: #fff;
   margin-top: -5px;
+  position: relative;
   text-align: center;
 }
 
@@ -360,10 +396,6 @@ body.home .navbar-item.download {
 #features-container .feature {
   margin-bottom: 75px;
   padding: 25px;
-}
-
-#features-container img {
-
 }
 
 #features-container .details {
