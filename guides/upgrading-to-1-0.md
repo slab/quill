@@ -45,7 +45,7 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 - PasteManager has been renamed to [Clipboard](/docs/modules/clipboard/), and will provide custom copy and cut, as well paste, behavior.
 
 
-### Browers
+### Browsers
 
 - Quill now follows other major open source libraries in supporting the last two versions of major browser releases. Support for IE9 and IE10 have been dropped, and MS Edge has been added.
 
