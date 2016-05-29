@@ -2,6 +2,7 @@ import Emitter from '../core/emitter';
 import Keyboard from '../modules/keyboard';
 import BaseTheme from './base';
 import icons from '../ui/icons';
+import { Range } from '../core/selection';
 import Tooltip from '../ui/tooltip';
 
 
@@ -31,7 +32,16 @@ class BubbleTheme extends BaseTheme {
         this.tooltip.root.style.left = '0px';
         this.tooltip.root.style.width = '';
         this.tooltip.root.style.width = this.tooltip.root.offsetWidth + 'px';
-        this.tooltip.position(this.quill.getBounds(range));
+        let lines = this.quill.scroll.lines(range.index, range.length);
+        if (lines.length === 1) {
+          this.tooltip.position(this.quill.getBounds(range));
+        } else {
+          let lastLine = lines[lines.length - 1];
+          let index = lastLine.offset(this.quill.scroll);
+          let length = Math.min(lastLine.length() - 1, range.index + range.length - index);
+          let bounds = this.quill.getBounds(new Range(index, length));
+          this.tooltip.position(bounds);
+        }
       } else if (document.activeElement !== input) {
         this.tooltip.hide();
       }
