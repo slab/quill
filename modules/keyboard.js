@@ -187,8 +187,11 @@ Keyboard.DEFAULTS = {
     'list empty enter': [
       { key: Keyboard.keys.ENTER },
       { collapsed: true, format: ['list'], empty: true },
-      function(range) {
+      function(range, context) {
         this.quill.format('list', false);
+        if (context.format.indent) {
+          this.quill.format('indent', false);
+        }
       }
     ],
     'header enter': [
