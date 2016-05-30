@@ -24,7 +24,7 @@ class Selection {
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
-    ['keyup', 'mouseup', 'touchend', 'touchleave', 'focus', 'blur'].forEach((eventName) => {
+    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave', 'focus', 'blur'].forEach((eventName) => {
       this.root.addEventListener(eventName, () => {
         // When range used to be a selection and user click within the selection,
         // the range now being a cursor has not updated yet without setTimeout
