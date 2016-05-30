@@ -60,9 +60,7 @@ class SnowTheme extends BaseTheme {
     });
     let update = function() {
       pickers.forEach(function(picker) {
-        setTimeout(function() {       // We need to be after toolbar update handlers
-          picker.update();
-        }, 10);
+        picker.update();
       });
     };
     this.quill.on(Emitter.events.SELECTION_CHANGE, update)

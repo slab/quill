@@ -33,7 +33,7 @@ class Selection {
     });
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       if (delta.length() > 0) {
-        setTimeout(this.update.bind(this, Emitter.sources.SILENT), 1);
+        this.update(Emitter.sources.SILENT);
       }
     });
     this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
