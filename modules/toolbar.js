@@ -66,7 +66,6 @@ class Toolbar extends Module {
     let eventNames = input.tagName === 'SELECT' ? ['change'] : ['mousedown', 'touchstart'];
     eventNames.forEach((eventName) => {
       input.addEventListener(eventName, (e) => {
-        this.quill.focus();
         let value;
         if (input.tagName === 'SELECT') {
           if (input.selectedIndex < 0) return;
@@ -80,6 +79,7 @@ class Toolbar extends Module {
           value = input.classList.contains('ql-active') ? false : input.value || true;
           e.preventDefault();
         }
+        this.quill.focus();
         if (this.handlers[format] != null) {
           this.handlers[format].call(this, value);
         } else {

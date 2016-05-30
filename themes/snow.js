@@ -60,11 +60,13 @@ class SnowTheme extends BaseTheme {
     });
     let update = function() {
       pickers.forEach(function(picker) {
-        picker.update();
+        setTimeout(function() {       // We need to be after toolbar update handlers
+          picker.update();
+        }, 10);
       });
     };
     this.quill.on(Emitter.events.SELECTION_CHANGE, update)
-              .on(Emitter.events.TEXT_CHANGE, update);
+              .on(Emitter.events.SCROLL_OPTIMIZE, update);
     document.body.addEventListener('click', (e) => {
       pickers.forEach(function(picker) {
         if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {

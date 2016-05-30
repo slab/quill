@@ -106,7 +106,7 @@ class Picker {
   update() {
     let option;
     if (this.select.selectedIndex > -1) {
-      let item = this.container.querySelector('.ql-picker-options').children[this.select.selectedIndex]
+      let item = this.container.querySelector('.ql-picker-options').children[this.select.selectedIndex];
       option = this.select.options[this.select.selectedIndex];
       this.selectItem(item);
     } else {
