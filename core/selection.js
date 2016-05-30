@@ -43,8 +43,6 @@ class Selection {
       // TODO unclear if this has negative side effects
       this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
         try {
-          // Check crash condition in FF https://bugzilla.mozilla.org/show_bug.cgi?id=1270235
-          if (native.start.node.parentNode == null || native.end.node.parentNode == null) return;
           this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offset);
         } catch (ignored) {}
       });
@@ -205,6 +203,9 @@ class Selection {
 
   setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
+    if (startNode != null && (this.root.parentNode == null || startNode.parentNode == null || endNode.parentNode == null)) {
+      return;
+    }
     let selection = document.getSelection();
     if (selection == null) return;
     if (startNode != null) {
