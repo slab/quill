@@ -22,6 +22,11 @@ class Cursor extends Embed {
     });
   }
 
+  detach() {
+    // super.detach() will also clear domNode.__blot
+    if (this.parent != null) this.parent.children.remove(this);
+  }
+
   format(name, value) {
     if (this._length !== 0) {
       return super.format(name, value);
@@ -61,6 +66,10 @@ class Cursor extends Embed {
     if (this.parent == null) return;
     let textNode = this.textNode;
     let range = this.selection.getNativeRange();
+    // Link format will insert text outside of anchor tag
+    while (this.domNode.lastChild != null && this.domNode.lastChild !== this.textNode) {
+      this.domNode.parentNode.insertBefore(this.domNode.lastChild, this.domNode);
+    }
     if (this.textNode.data !== Cursor.CONTENTS) {
       let native = this.selection.getNativeRange();
       this.textNode.data = this.textNode.data.split(Cursor.CONTENTS).join('');
