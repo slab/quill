@@ -79,7 +79,14 @@ class Cursor extends Embed {
     }
     this.remove();
     if (range != null && range.start.node === textNode && range.end.node === textNode) {
-      this.selection.setNativeRange(textNode, Math.max(0, range.start.offset - 1), textNode, Math.max(0, range.end.offset - 1));
+      // optimize() might move the cursor after our restore
+      let [start, end] = [range.start.offset, range.end.offset].map(function(offset) {
+        return Math.max(0, Math.min(textNode.data.length, offset - 1));
+      });
+      setTimeout(() => {
+        // optimize() might move selection after us
+        this.selection.setNativeRange(textNode, start, textNode, end);
+      }, 1);
     }
   }
 

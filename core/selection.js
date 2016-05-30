@@ -39,6 +39,7 @@ class Selection {
     this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
       let native = this.getNativeRange();
       if (native == null) return;
+      if (native.start.node === this.cursor.textNode) return;  // cursor.restore() will handle
       // TODO unclear if this has negative side effects
       this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
         try {
