@@ -238,9 +238,10 @@ function handleEnter(range, context) {
   this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
   this.quill.selection.scrollIntoView();
   Object.keys(context.format).forEach((name) => {
-    if (lineFormats[name] == null && !Array.isArray(context.format[name])) {
-      this.quill.format(name, context.format[name], Quill.sources.USER);
-    }
+    if (lineFormats[name] != null) return;
+    if (Array.isArray(context.format[name])) return;
+    if (name === 'link') return;
+    this.quill.format(name, context.format[name], Quill.sources.USER);
   });
 }
 
