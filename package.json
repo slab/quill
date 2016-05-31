@@ -64,6 +64,9 @@
     "ts-loader": "~0.8.2",
     "typescript": "^1.8.9",
     "uglify-js": "^2.6.2",
+    "wdio-jasmine-framework": "^0.2.1",
+    "webdriver-manager": "^10.0.2",
+    "webdriverio": "^4.0.9",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   },
@@ -81,7 +84,8 @@
     "start": "npm run build; foreman start -f _develop/procfile",
     "test": "npm run build; karma start _develop/karma.config.js",
     "test:coverage": "webpack --config _develop/webpack.coverage.js; karma start _develop/karma.config.js --reporters coverage",
-    "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs"
+    "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
+    "webdriver:update": "webdriver-manager update"
   },
   "keywords": [
     "editor",
