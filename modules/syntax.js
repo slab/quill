@@ -20,12 +20,10 @@ class SyntaxCodeBlock extends CodeBlock {
     return domNode.dataset.language || SyntaxCodeBlock.DEFAULT_LANGUAGE;
   }
 
-  format(name, value) {
-    if (name === this.statics.blotName && !value) {
-      this.domNode.textContent = this.domNode.textContent;
-      this.attach();
-    }
-    super.format(name, value);
+  replaceWith(block) {
+    this.domNode.textContent = this.domNode.textContent;
+    this.attach();
+    super.replaceWith(block);
   }
 
   highlight(highlight) {
