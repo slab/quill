@@ -25,7 +25,6 @@ class Toolbar extends Module {
       return debug.error('Container required for toolbar', this.options);
     }
     this.container.classList.add('ql-toolbar');
-    this.container.classList.toggle('ios', /iPhone|iPad/i.test(navigator.userAgent));
     this.controls = [];
     this.handlers = {};
     Object.keys(this.options.handlers).forEach((format) => {
