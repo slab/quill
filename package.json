@@ -80,11 +80,11 @@
   },
   "scripts": {
     "build": "webpack --config _develop/webpack.config.js --devtool hidden-source-map; rm dist/quill; rm dist/quill.bubble; rm dist/quill.snow; rm dist/*.css.map",
-    "build:release": "./_develop/release.sh",
+    "build:release": "./_develop/scripts/release.sh",
     "start": "npm run build; foreman start -f _develop/procfile",
     "test": "npm run test:unit",
     "test:all": "npm run test:unit; npm run test:functional",
-    "test:functional": "wdio _develop/wdio.config.js",
+    "test:functional": "./_develop/scripts/webdriver.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
     "test:coverage": "webpack --config _develop/webpack.coverage.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
