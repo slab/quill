@@ -36,12 +36,7 @@ However some functionality can only be tested with webdriver. To set up or updat
 
     npm webdriver:update
 
-To run the tests, you must run the following running in separate terminal tabs in the background:
-
-    npm start
-    npm webdriver:start
-
-Then run the actual test suite:
+Once webdriver is installed, you can run the test suite with
 
     npm test:functional
 
