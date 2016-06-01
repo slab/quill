@@ -25,7 +25,10 @@ exports.config = {
   jasmineNodeOpts: {
     defaultTimeoutInterval: 10000,
     expectationResultHandler: function(passed, assertion) {
-
+      if (!passed) {
+        this.saveScreenshot('./wd-' + this.desiredCapabilities.browserName + '-error.png');
+        process.exit(1);
+      }
     }
   }
 }
