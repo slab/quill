@@ -19,8 +19,8 @@ var P2 = 'There now is your insular city of the Manhattoes, belted round by whar
 
 describe('compose an epic', function(done) {
   it('load', function() {
-    browser.url('/standalone/snow/');
-    expect(browser.getTitle()).toEqual('Snow Theme - Quill');
+    browser.url('/standalone/full/');
+    expect(browser.getTitle()).toEqual('Full Editor - Quill');
   });
 
   it('typing', function() {
@@ -115,7 +115,7 @@ describe('compose an epic', function(done) {
   });
 
   it('type preformatted', function() {
-    browser.keys('M').pause(200)
+    browser.keys('M').pause(200);
     browser.keys('oby Dick');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
       '<p><strong>Moby Dick</strong></p>',
@@ -144,8 +144,7 @@ describe('compose an epic', function(done) {
 
   it('line format', function() {
     browser.keys([KEYS.Left, KEYS.Up])
-           .click('.ql-header.ql-picker .ql-picker-label')
-           .click('.ql-header.ql-picker .ql-picker-item[data-value="1"]');
+           .click('.ql-toolbar .ql-header[value="1"]');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
       '<h1><strong>Moby Dick</strong></h1>',
       '<p><strong>' + CHAPTER + '</strong></p>',
