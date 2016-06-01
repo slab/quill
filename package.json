@@ -56,7 +56,6 @@
     "karma-jasmine": "~0.3.8",
     "karma-sauce-launcher": "~0.3.1",
     "lodash": "^4.10.0",
-    "protractor": "^3.2.2",
     "quill-docs": "quilljs/quilljs.github.io.git#1.0",
     "style-loader": "~0.13.1",
     "stylus": "~0.54.5",
