@@ -1,5 +1,5 @@
 ---
 layout: guide
 title: Building on Parchment
-permalink: /guides/building-with-parchment/
+permalink: /guides/building-on-parchment/
 ---
