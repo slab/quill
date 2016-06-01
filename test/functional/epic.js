@@ -115,6 +115,9 @@ describe('compose an epic', function(done) {
   });
 
   it('type preformatted', function() {
+    if (browser.desiredCapabilities.browserName === 'firefox') {
+      browser.click('.ql-editor .ql-cursor');
+    }
     browser.keys('M').pause(200);
     browser.keys('oby Dick');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
