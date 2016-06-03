@@ -235,9 +235,13 @@ class Quill {
     this.editor.applyDelta(delta);
   }
 
-  setSelection(index, length = 0, source = Emitter.sources.API) {
-    [index, length, , source] = overload(index, length, source);
-    this.selection.setRange(new Range(index, length), source);
+  setSelection(index, length, source) {
+    if (index == null) {
+      this.selection.setRange(null, length || Quill.sources.API);
+    } else {
+      [index, length, , source] = overload(index, length, source);
+      this.selection.setRange(new Range(index, length), source);
+    }
     this.selection.scrollIntoView();
   }
 
