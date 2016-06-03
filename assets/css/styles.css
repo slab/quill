@@ -110,8 +110,6 @@ pre code {
 }
 
 .logo {
-  background-image: url(/assets/images/logo-light.png);
-  background-size: 180px 108px;
   display: inline-block;
   vertical-align: middle;
   height: 108px;
@@ -137,18 +135,27 @@ pre code {
 }
 
 .github-action {
-  background-image: url(/assets/images/octocat-light.png);
-  background-position: 22px 10px;
-  background-repeat: no-repeat;
   color: #fff;
   display: inline-block;
   float: left;
   font-size: 16px;
   line-height: 32px;
-  padding: 10px 22px 10px 68px;
+  padding: 10px 22px;
 }
+
 .github-action:hover {
   color: #fff;
+}
+
+.github-action svg {
+  float: left;
+  height: 32px;
+  margin-right: 12px;
+  width: 32px;
+}
+
+.github-action path {
+  fill: #fff;
 }
 
 .github-count {
@@ -193,6 +200,10 @@ body:not(.home) header .logo {
   background-size: 146px 88px;
   height: 88px;
   width: 146px;
+}
+body:not(.home) header .logo circle,
+body:not(.home) header .logo path {
+  fill: #fff;
 }
 
 .navbar-list {
@@ -286,9 +297,6 @@ body.home header a {
 body.home header .action {
   background-color: transparent;
   border: 3px solid #1d1e30;
-}
-body.home header .logo {
-  background-image: url(/assets/images/logo-dark.png);
 }
 body.home .navbar-item {
   line-height: 108px;
@@ -492,9 +500,6 @@ body:not(.home) .feature .github-button {
 }
 
 .edit-link {
-  background-image: url(/assets/images/octocat-dark.png);
-  background-position: right center;
-  background-repeat: no-repeat;
   display: inline-block;
   float: right;
   font-family: "Sofia Pro", sans-serif;
@@ -506,6 +511,12 @@ body:not(.home) .feature .github-button {
   padding-right: 45px;
   text-decoration: underline;
   text-transform: uppercase;
+}
+.edit-link svg {
+  float: right;
+  height: 32px;
+  margin-left: 10px;
+  width: 32px;
 }
 
 #sidebar-container {
