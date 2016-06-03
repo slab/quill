@@ -235,6 +235,10 @@ class Quill {
     this.editor.applyDelta(delta);
   }
 
+  blur() {
+    this.setSelection(null);
+  }
+
   setSelection(index, length, source) {
     if (index == null) {
       this.selection.setRange(null, length || Quill.sources.API);
