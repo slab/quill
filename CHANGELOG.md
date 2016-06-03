@@ -1,3 +1,31 @@
+# 1.0.0-beta.4
+
+Weekly beta preview release.
+
+### Breaking Changes
+
+- Headers no longer generates id attribute [#700](https://github.com/quilljs/quill/issues/700)
+- Add Control+Y hotkey on Windows [#705](https://github.com/quilljs/quill/issues/705)
+- BlockEmbed Blots are now length 1 and represented in a Delta the same as an inline embed
+  - value() used to return object and newline, newline is now removed
+  - formats used to be attributed on the newline character, it is now attributed on the object
+
+### Features
+
+- Enter on empty and indented list removes indent [#707](https://github.com/quilljs/quill/issues/707)
+- Allow base64 images to be inserted via APIs [#721](https://github.com/quilljs/quill/issues/721)
+
+### Bug Fixes
+
+- Fix typing after clearing inline format [#703](https://github.com/quilljs/quill/issues/703)
+- Correctly position Bubble tooltip when selecting multiple lines [#706](https://github.com/quilljs/quill/issues/706)
+- Fix typing after link format [#708](https://github.com/quilljs/quill/issues/708)
+- Fix loss of selection on using link tooltip [#709](https://github.com/quilljs/quill/issues/709)
+- Fix `setSelection(null)` [#722](https://github.com/quilljs/quill/issues/722)
+
+Thank you [@benbro](https://github.com/benbro), [@brynjagr](https://github.com/brynjagr), and [@sachinrekhi](https://github.com/sachinrekhi) for contributions to this release.
+
+
 # 1.0.0-beta.3
 
 Weekly beta preview release.
@@ -7,12 +35,10 @@ Weekly beta preview release.
 - Keyboard was incorrectly using `metaKey` to refer to the control key on Windows. It now correctly refers to the Window key and `shortKey` has been added to refer the common platform specific modifier for hotkeys (metaKey for Mac, ctrlKey for Windows/Linux)
 - Formula is now a module, since it uses KaTeX
 
-
 ### Features
 
 - Picker now uses text from original `<option>` if available
 - Tabbing inside code blocks inserts tab to each line
-
 
 ### Bug Fixes
 
