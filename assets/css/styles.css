@@ -224,6 +224,30 @@ body:not(.home) header .logo path {
   position: absolute;
   right: 0px;
 }
+.navbar-item.download .action:hover {
+  background-color: #1d1e30;
+  border: 2px solid #fff;
+  color: #fff;
+}
+.navbar-link, .action-link {
+  position: relative;
+}
+.navbar-link:before, .action-link:before {
+  background-color: #000;
+  bottom: -18px;
+  content: "";
+  height: 3px;
+  left: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out 0s;
+  visibility: hidden;
+  width: 100%;
+}
+.navbar-link:hover:before, .action-link:hover:before {
+  transform: scaleX(1);
+  visibility: visible;
+}
 
 
 /*** Footer ***/
@@ -257,12 +281,20 @@ footer .action {
   line-height: 80px;
   width: 260px;
 }
+footer .action:hover {
+  /*background-color: ;*/
+}
 
 footer .action.documentation {
   background-color: #1d1e30;
   border: 2px solid #f2d123;
   color: #f2d123;
   float: left;
+}
+footer .action:hover {
+  background-color: #fff;
+  border: none;
+  color: #1d1e30;
 }
 
 footer .users.row {
@@ -408,6 +440,10 @@ body.home .navbar-item.download {
   margin-top: 124px;
   padding: 27px 50px;
 }
+#detail-container .action:hover {
+  background-color: #1d1e30;
+  color: #fff;
+}
 
 #detail-container h1 {
   font-family: "Sailec Light", sans-serif;
@@ -460,8 +496,8 @@ body.home .navbar-item.download {
   padding: 32px 64px;
 }
 
-.feature .details > a {
-  display: block;
+.feature .action-link {
+  display: inline-block;
   font-family: "Sofia Pro", sans-serif;
   font-size: 15px;
   font-weight: bold;
@@ -479,6 +515,7 @@ body.home .navbar-item.download {
 }
 
 .feature .details > span {
+  display: block;
   font-size: 16px;
   letter-spacing: 0.1rem;
   line-height: 200%;
@@ -497,6 +534,12 @@ body:not(.home) .feature h2 {
 
 body:not(.home) .feature .github-button {
   margin-top: 32px;
+}
+body:not(.home) .navbar-item.download .action:hover {
+  border: 3px solid #fff;
+}
+body:not(.home) .navbar-link:before {
+  background-color: #000;
 }
 
 .edit-link {
@@ -637,18 +680,3 @@ body:not(.home) .feature .github-button {
   font-size: 30px;
   font-weight: bold;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
