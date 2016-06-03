@@ -26,11 +26,11 @@
 @font-face {
   font-family: 'Sailec Light';
   font-weight: bold;
-  src: url('//cdn.quilljs.com/fonts/sailec.eot');
-  src: url('//cdn.quilljs.com/fonts/sailec.eot?#iefix') format('embedded-opentype'),
-       url('//cdn.quilljs.com/fonts/sailec.woff2') format('woff2'),
-       url('//cdn.quilljs.com/fonts/sailec.woff') format('woff'),
-       url('//cdn.quilljs.com/fonts/sailec.ttf') format('truetype');
+  src: url('//cdn.quilljs.com/fonts/sailec-bold.eot');
+  src: url('//cdn.quilljs.com/fonts/sailec-bold.eot?#iefix') format('embedded-opentype'),
+       url('//cdn.quilljs.com/fonts/sailec-bold.woff2') format('woff2'),
+       url('//cdn.quilljs.com/fonts/sailec-bold.woff') format('woff'),
+       url('//cdn.quilljs.com/fonts/sailec-bold.ttf') format('truetype');
 }
 
 @media (min-width: 1280px) {
