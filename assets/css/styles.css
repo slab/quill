@@ -111,9 +111,9 @@ pre code {
 
 .logo {
   display: inline-block;
+  height: 96px;
   vertical-align: middle;
-  height: 108px;
-  width: 180px;
+  width: 160px;
 }
 
 .container {
@@ -197,9 +197,8 @@ header .action {
   padding: 16px 26px;
 }
 body:not(.home) header .logo {
-  background-size: 146px 88px;
-  height: 88px;
-  width: 146px;
+  height: 90px;
+  width: 150px;
 }
 body:not(.home) header .logo circle,
 body:not(.home) header .logo path {
@@ -289,7 +288,7 @@ body.home header {
   background-color: #f4f5f5;
   color: #1d1e30;
   height: 240px;
-  padding-top: 60px;
+  padding-top: 42px;
 }
 body.home header a {
   color: #1d1e30;
@@ -297,11 +296,6 @@ body.home header a {
 body.home header .action {
   background-color: transparent;
   border: 3px solid #1d1e30;
-}
-body.home .navbar-item {
-  line-height: 108px;
-  margin-right: 30px;
-  padding: 10px 5px;
 }
 body.home .navbar-item.download {
   margin-right: 0px;
@@ -326,8 +320,8 @@ body.home .navbar-item.download {
 }
 
 #users-container {
-  padding-bottom: 15px;
-  padding-top: 65px;
+  padding-bottom: 8px;
+  padding-top: 8px;
   text-align: center;
 }
 #users-container h1 {
@@ -358,11 +352,11 @@ body.home .navbar-item.download {
   border-top-left-radius: 60px;
   border-top-right-radius: 60px;
   box-shadow: 0 0 40px 2px rgba(28, 31, 47, 0.1);
-  margin: 58px auto -220px;
+  margin: 22px auto -154px;
   width: 1100px;
 }
 #camera-container {
-  margin: 20px auto;
+  margin: 17px auto;
   width: 40px;
   text-align: center;
 }
@@ -378,11 +372,12 @@ body.home .navbar-item.download {
   background-color: #fff;
   border: 2px solid #000;
   margin: 0px 50px;
+  padding: 10px;
 }
 
 #demo-container #toolbar {
   border: none;
-  padding: 50px 150px;
+  padding: 44px 150px;
 }
 #demo-container #toolbar .ql-header.ql-picker {
   width: 108px;
@@ -390,12 +385,12 @@ body.home .navbar-item.download {
 
 #demo-container #editor {
   border: none;
-  height: 595px;
+  height: 395px;
 }
 #demo-container .ql-editor {
   font-size: 18px;
   overflow-y: hidden;
-  padding: 0px 150px;
+  padding: 0px 200px;
 }
 
 #detail-container {
@@ -422,7 +417,7 @@ body.home .navbar-item.download {
 
 #features-container {
   margin-bottom: 80px;
-  margin-top: 115px;
+  margin-top: 105px;
 }
 
 #features-container .feature {
@@ -434,7 +429,7 @@ body.home .navbar-item.download {
 }
 
 #features-container .feature.row {
-  margin-top: 85px;
+  margin-top: 100px;
 }
 
 #features-container #github-wrapper {
@@ -456,8 +451,13 @@ body.home .navbar-item.download {
   width: 85%;
 }
 
+.feature.six.columns img {
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
 .feature .details {
-  padding: 20px 64px;
+  padding: 32px 64px;
 }
 
 .feature .details > a {
@@ -508,7 +508,6 @@ body:not(.home) .feature .github-button {
   height: 32px;
   letter-spacing: 0.1rem;
   line-height: 32px;
-  padding-right: 45px;
   text-decoration: underline;
   text-transform: uppercase;
 }
@@ -516,6 +515,7 @@ body:not(.home) .feature .github-button {
   float: right;
   height: 32px;
   margin-left: 10px;
+  margin-right: 10px;
   width: 32px;
 }
 
