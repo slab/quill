@@ -15,14 +15,7 @@ class Link extends Inline {
   }
 
   static sanitize(url) {
-    let anchor = document.createElement('a');
-    anchor.href = url;
-    let protocol = anchor.href.slice(0, anchor.href.indexOf(':'));
-    if (['http', 'https', 'mailto'].indexOf(protocol) > -1) {
-      return url;
-    } else {
-      return this.SANITIZED_URL;
-    }
+    return sanitize(url, ['http', 'https', 'mailto']) ? url : this.SANITIZED_URL;
   }
 
   format(name, value) {
@@ -36,4 +29,12 @@ Link.tagName = 'A';
 Link.SANITIZED_URL = 'about:blank';
 
 
-export default Link;
+function sanitize(url, protocols) {
+  let anchor = document.createElement('a');
+  anchor.href = url;
+  let protocol = anchor.href.slice(0, anchor.href.indexOf(':'));
+  return protocols.indexOf(protocol) > -1;
+}
+
+
+export { Link as default, sanitize };

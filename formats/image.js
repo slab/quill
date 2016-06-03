@@ -1,5 +1,5 @@
 import Embed from '../blots/embed';
-import Link from '../formats/link';
+import Link, { sanitize } from '../formats/link';
 
 
 class Image extends Embed {
@@ -16,7 +16,7 @@ class Image extends Embed {
   }
 
   static sanitize(url) {
-    return Link.sanitize(url);
+    return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
   }
 
   static value(domNode) {
