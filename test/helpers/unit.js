@@ -69,7 +69,7 @@ function compareNodes(node1, node2, ignoredAttributes = []) {
       return `Expected tagName '${node1.tagName}' to equal '${node2.tagName}'`;
     }
     let [attr1, attr2] = [node1, node2].map(function(node) {
-      return [].reduce.call(node.attributes, function(attr, elem) {
+      return [].reduce.call(node.attributes || {}, function(attr, elem) {
         if (ignoredAttributes.indexOf(elem.name) < 0) {
           attr[elem.name] = elem.name === 'style' ? elem.value.trim() : elem.value;
         }
