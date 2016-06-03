@@ -17,30 +17,28 @@ class BlockEmbed extends Embed {
   }
 
   delta() {
-    return new Delta().insert(this.value(), this.formats()).insert('\n', this.attributes.values());
+    return new Delta().insert(this.value(), extend(this.formats(), this.attributes.values()));
   }
 
-  formatAt(index, length, format, value) {
-    if (index + length === this.length()) {
-      let attribute = Parchment.query(format, Parchment.Scope.ATTRIBUTE);
-      if (attribute != null) {
-        this.attributes.attribute(attribute, value);
-      }
-      if (length <= 1) return;
+  format(name, value) {
+    let attribute = Parchment.query(name, Parchment.Scope.BLOCK_ATTRIBUTE);
+    if (attribute != null) {
+      this.attributes.attribute(attribute, value);
     }
-    this.format(format, value);
+  }
+
+  formatAt(index, length, name, value) {
+    this.format(name, value);
   }
 
   insertAt(index, value, def) {
-    if (typeof value === 'string' && value.startsWith('\n')) {
-      let block = Parchment.create('block');
+    if (typeof value === 'string' && value.endsWith('\n')) {
+      let block = Parchment.create(Block.blotName);
       this.parent.insertBefore(block, index === 0 ? this : this.next);
-      block.insertAt(0, value.slice(1));
+      block.insertAt(0, value.slice(0, -1));
+    } else {
+      super.insertAt(index, value, def);
     }
-  }
-
-  length() {
-    return super.length() + NEWLINE_LENGTH;
   }
 }
 BlockEmbed.scope = Parchment.Scope.BLOCK_BLOT;

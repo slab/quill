@@ -30,7 +30,8 @@ class Scroll extends Parchment.Scroll {
     let [first, firstOffset] = this.line(index);
     let [last, lastOffset] = this.line(index + length);
     super.deleteAt(index, length);
-    if (last != null && first !== last && firstOffset > 0) {
+    if (last != null && first !== last && firstOffset > 0 &&
+        !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
       let lastChild = first.children.tail;
       last.moveChildren(first);
       last.remove();

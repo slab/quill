@@ -49,10 +49,8 @@ class Editor {
           let key = Object.keys(op.insert)[0];  // There should only be one key
           if (key != null) {
             this.scroll.insertAt(index, key, op.insert[key]);
-            // Block embeds themselves already represent newline
-            if (Parchment.query(key, Parchment.Scope.BLOCK) != null) {
-              consumeNextNewline = true;
-            }
+          } else {
+            return index;
           }
         }
       }

@@ -4,6 +4,7 @@ import './helpers/unit.js';
 
 import './unit/blots/scroll.js';
 import './unit/blots/block.js';
+import './unit/blots/block-embed.js';
 import './unit/blots/inline.js';
 
 import './unit/core/editor';

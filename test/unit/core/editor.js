@@ -317,9 +317,9 @@ describe('Editor', function() {
       expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
 
-    it('insert block embed', function() {
+    it('improper block embed insert', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
-      editor.applyDelta(new Delta().retain(2).insert('\n').insert({ video: '#' }).insert('\n'));
+      editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));
       expect(this.container).toEqualHTML('<p>01</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe><p>23</p>');
     });
 
@@ -327,9 +327,7 @@ describe('Editor', function() {
       let editor = this.initialize(Editor, '<p>0123</p><p><br></p>');
       editor.applyDelta(new Delta()
         .retain(5)
-        .insert({ video: '#' })
-        .retain(1, { align: 'right' })    // Valid delta where newline does not follow block embed
-        .insert('\n')
+        .insert({ video: '#' }, { align: 'right' })
       );
       expect(this.container).toEqualHTML('<p>0123</p><iframe src="#" class="ql-video ql-align-right" frameborder="0" allowfullscreen="true"></iframe><p><br></p>');
     });
@@ -377,12 +375,6 @@ describe('Editor', function() {
         .insert('89').insert('\n', { header: 2 })
       );
       expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
-    });
-
-    it('append block embed', function() {
-      let editor = this.initialize(Editor, '<p>0123</p>');
-      editor.applyDelta(new Delta().retain(5).insert({ video: '#' }).insert('\n'));
-      expect(this.container).toEqualHTML('<p>0123</p><iframe src="#" class="ql-video" frameborder="0" allowfullscreen="true"></iframe>');
     });
   });
 
