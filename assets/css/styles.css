@@ -539,10 +539,12 @@ body:not(.home) .feature .github-button {
   margin-top: 32px;
 }
 body:not(.home) .navbar-list .download-item .action:hover {
-  border: 3px solid #fff;
+  background-color: #fff;
+  border: none;
+  color: #1d1e30;
 }
 body:not(.home) .navbar-link:before {
-  background-color: #000;
+  background-color: #fff;
 }
 
 .edit-link {
@@ -684,6 +686,13 @@ body:not(.home) .navbar-link:before {
   font-weight: bold;
 }
 
+
+/*** Playground ***/
+
+#playground-container {
+  margin-bottom: 100px;
+  margin-top: 100px;
+}
 
 
 /*** Responsive Rules ***/
