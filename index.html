@@ -12,108 +12,112 @@ redirect_from: /latest/
 <!-- head -->
 
 <div id="above-container">
-  <div id="users-container">
-    <h1>Your powerful, open source editor.</h1>
-    <ul>
-      <li>Trusted by:</li>
-      <li>
-        <a href="https://www.salesforce.com" target="_blank">
-          <img src="/assets/images/users/salesforce.png">
-        </a>
-      </li>
-      <li>
-        <a href="http://www.voxmedia.com/" target="_blank">
-          <img src="/assets/images/users/voxmedia.png">
-        </a>
-      </li>
-      <li>
-        <a href="https://www.lever.co/" target="_blank">
-          <img src="/assets/images/users/lever.png">
-        </a>
-      </li>
-    </ul>
-  </div>
-
-  <div id="laptop-container">
-    <div id="camera-container">
-      <span class="camera"></span>
+  <div class="container">
+    <div id="users-container">
+      <h1>Your powerful, open source editor.</h1>
+      <ul>
+        <li>Trusted by:</li>
+        <li>
+          <a href="https://www.salesforce.com" target="_blank">
+            <img src="/assets/images/users/salesforce.png">
+          </a>
+        </li>
+        <li>
+          <a href="http://www.voxmedia.com/" target="_blank">
+            <img src="/assets/images/users/voxmedia.png">
+          </a>
+        </li>
+        <li>
+          <a href="https://www.lever.co/" target="_blank">
+            <img src="/assets/images/users/lever.png">
+          </a>
+        </li>
+      </ul>
     </div>
-    <div id="demo-container">
-      <div id="toolbar">
-        <span class="ql-formats">
-          <select class="ql-header">
-            <option value="1">Heading</option>
-            <option value="2">Subheading</option>
-            <option selected>Normal</option>
-          </select>
-          <select class="ql-font">
-            <option selected>Sans Serif</option>
-            <option value="serif">Serif</option>
-            <option value="monospace">Monospace</option>
-          </select>
-        </span>
-        <span class="ql-formats">
-          <button class="ql-bold"></button>
-          <button class="ql-italic"></button>
-          <button class="ql-underline"></button>
-        </span>
-        <span class="ql-formats">
-          <select class="ql-color"></select>
-          <select class="ql-background"></select>
-        </span>
-        <span class="ql-formats">
-          <button class="ql-list" value="ordered"></button>
-          <button class="ql-list" value="bullet"></button>
-          <select class="ql-align">
-            <option selected></option>
-            <option value="center"></option>
-            <option value="right"></option>
-            <option value="justify"></option>
-          </select>
-        </span>
-        <span class="ql-formats">
-          <button class="ql-link"></button>
-          <button class="ql-image"></button>
-          <button class="ql-code-block"></button>
-        </span>
-        <span class="ql-formats">
-          <button class="ql-clean"></button>
-        </span>
+
+    <div id="laptop-container">
+      <div id="camera-container">
+        <span class="camera"></span>
       </div>
-      <div id="editor">
-        <h1 class="ql-align-center">Quill Rich Text Editor</h1>
-        <p><br></p>
-        <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="http://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="http://quilljs.com/docs/api/">API</a> you can completely customize it to fulfill your needs.</p>
-        <p><br></p>
-        <iframe class="ql-video ql-align-center" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" width="560px" height="238px" allowfullscreen="true" frameborder="0"></iframe>
-        <p><br></p>
-        <p><br></p>
-        <h2 class="ql-align-center">Getting Started is Easy</h2>
-        <p><br></p>
-        <pre>// &lt;link href="https://cdn.quilljs.com/{{site.version}}/quill.snow.css" rel="stylesheet"&gt;</pre>
-        <pre>// &lt;script src="https://cdn.quilljs.com/{{site.version}}/quill.min.js" type="text/javascript"&gt;&lt;/script&gt;</pre>
-        <pre><br></pre>
-        <pre>var quill = new Quill('#editor', {</pre>
-        <pre>  modules: {</pre>
-        <pre>    toolbar: '#toolbar'</pre>
-        <pre>  },</pre>
-        <pre>  theme: 'snow'</pre>
-        <pre>});</pre>
-        <pre><br></pre>
-        <pre>// Open your browser's developer console to try out the API!</pre>
-        <p><br></p>
-        <p><br></p>
-        <p class="ql-align-center"><strong>Built with</strong></p>
-        <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span></p>
-        <p><br></p>
+      <div id="demo-container">
+        <div id="toolbar">
+          <span class="ql-formats">
+            <select class="ql-header">
+              <option value="1">Heading</option>
+              <option value="2">Subheading</option>
+              <option selected>Normal</option>
+            </select>
+            <select class="ql-font">
+              <option selected>Sans Serif</option>
+              <option value="serif">Serif</option>
+              <option value="monospace">Monospace</option>
+            </select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+          </span>
+          <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+            <select class="ql-align">
+              <option selected></option>
+              <option value="center"></option>
+              <option value="right"></option>
+              <option value="justify"></option>
+            </select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-link"></button>
+            <button class="ql-image"></button>
+            <button class="ql-code-block"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-clean"></button>
+          </span>
+        </div>
+        <div id="editor">
+          <h1 class="ql-align-center">Quill Rich Text Editor</h1>
+          <p><br></p>
+          <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="http://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="http://quilljs.com/docs/api/">API</a> you can completely customize it to fulfill your needs.</p>
+          <p><br></p>
+          <iframe class="ql-video ql-align-center" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" width="560px" height="238px" allowfullscreen="true" frameborder="0"></iframe>
+          <p><br></p>
+          <p><br></p>
+          <h2 class="ql-align-center">Getting Started is Easy</h2>
+          <p><br></p>
+          <pre>// &lt;link href="https://cdn.quilljs.com/{{site.version}}/quill.snow.css" rel="stylesheet"&gt;</pre>
+          <pre>// &lt;script src="https://cdn.quilljs.com/{{site.version}}/quill.min.js" type="text/javascript"&gt;&lt;/script&gt;</pre>
+          <pre><br></pre>
+          <pre>var quill = new Quill('#editor', {</pre>
+          <pre>  modules: {</pre>
+          <pre>    toolbar: '#toolbar'</pre>
+          <pre>  },</pre>
+          <pre>  theme: 'snow'</pre>
+          <pre>});</pre>
+          <pre><br></pre>
+          <pre>// Open your browser's developer console to try out the API!</pre>
+          <p><br></p>
+          <p><br></p>
+          <p class="ql-align-center"><strong>Built with</strong></p>
+          <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span></p>
+          <p><br></p>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <div id="detail-container">
-  <a class="action" href="/docs/download/">Download Now</a>
-  <h1>A cross browser rich text editor with an API</h1>
+  <div class="container">
+    <a class="action" href="/docs/download/">Download Now</a>
+    <h1>A cross browser rich text editor with an API</h1>
+  </div>
 </div>
 
 <div id="features-container">
@@ -132,7 +136,7 @@ redirect_from: /latest/
         <div class="details">
           <h2>Cross Platform</h2>
           <span>Works across all modern browsers on desktops, tablets and phones. I think we need another sentence for this section.</span>
-          <a class="action-link" href="/docs/">See the Chart</a>
+          <a class="action-link" href="//github.com/quilljs/quill/#readme">See the Chart</a>
         </div>
       </div>
     </div>
