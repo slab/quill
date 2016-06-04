@@ -695,6 +695,39 @@ body:not(.home) .navbar-link:before {
 }
 
 
+/*** Blog Container ***/
+
+#blog-container {
+  margin-top: 100px;
+  max-width: 800px;
+}
+#blog-container .post-meta {
+  margin-bottom: 50px;
+  text-align: center;
+}
+#blog-container .post-meta,
+#blog-container .post-meta a {
+  color: #939598;
+}
+#blog-container h1 {
+  font-size: 42px;
+  margin-bottom: 0px;
+  text-align: center;
+}
+#blog-container .post-item hr {
+  margin-bottom: 100px;
+  margin-top: 50px;
+}
+#blog-container p a {
+  text-decoration: underline;
+}
+#blog-container .more-link {
+  display: inline-block;
+  font-weight: bold;
+  margin-top: 50px;
+}
+
+
 /*** Responsive Rules ***/
 
 @media (min-width: 768px) {
