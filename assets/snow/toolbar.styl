@@ -62,13 +62,16 @@ colorItemsPerRow = 7
     padding-right: 2px
     position: relative
     width: 100%
+    &::before
+      display: inline-block
+      line-height: 22px
     svg
-      float: right
+      position: absolute
       height: 18px
-      margin-top: 2px
+      margin-top: -9px
+      right: 0
+      top: 50%
       width: 18px
-  .ql-picker-label::before
-    vertical-align: middle
   .ql-picker-options
     background-color: backgroundColor
     border: 1px solid transparent
@@ -103,7 +106,7 @@ colorItemsPerRow = 7
     .ql-picker-label
       padding: 2px 4px
       svg
-        margin-top: 0px
+        right: 4px
   .ql-icon-picker
     .ql-picker-options
       padding: 4px 0px
@@ -112,11 +115,11 @@ colorItemsPerRow = 7
       padding: 2px 4px
   .ql-color-picker.ql-expanded, .ql-icon-picker.ql-expanded
     .ql-picker-options
-      margin-top: -6px
+      margin-top: -7px
   .ql-color-picker
     .ql-picker-options
-      padding: inputPadding
-      width: (colorItemSize + 2*colorItemMargin) * colorItemsPerRow + 2*inputPadding + 2  // +2 for the border
+      padding: inputPaddingHeight inputPaddingWidth
+      width: (colorItemSize + 2*colorItemMargin) * colorItemsPerRow + 2*inputPaddingWidth + 2  // +2 for the border
     .ql-picker-item
       border: 1px solid transparent
       float: left

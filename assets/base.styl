@@ -3,8 +3,8 @@
 @import './core'
 
 controlHeight = 24px
-inputPadding = 5px
-iconPadding = 3px inputPadding
+inputPaddingWidth = 5px
+inputPaddingHeight = 3px
 
 .ql-hidden
   display: none
@@ -31,10 +31,11 @@ iconPadding = 3px inputPadding
     float: left
     height: controlHeight
     outline: none
-    padding: iconPadding
-    width: controlHeight
+    padding: inputPaddingHeight inputPaddingWidth
+    width: controlHeight + (inputPaddingWidth - inputPaddingHeight)*2
 
     svg
+      float: left
       height: 100%
 
   .ql-stroke
