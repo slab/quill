@@ -350,12 +350,6 @@ body.home .navbar-toggle span {
   margin-bottom: 0px;
   margin-top: -160px;
 }
-#above-container.demo-active #users-container h1 {
-
-}
-#above-container.demo-active #users-container h1 {
-
-}
 #above-container.demo-active #users-container ul {
   visibility: hidden;
 }
@@ -378,12 +372,11 @@ body.home .navbar-toggle span {
   display: inline-block;
   height: 100px;
   line-height: 100px;
-  margin: 0px 10px;
+  margin: 0px 15px;
   vertical-align: middle;
-  width: 150px;
 }
-#users-container li:first-child {
-  padding-top: 5px;
+#users-container li:not(:first-child) {
+  width: 150px;
 }
 
 #laptop-container {
@@ -503,7 +496,7 @@ body.home .navbar-toggle span {
 }
 
 .feature .details {
-  padding: 32px 64px;
+  padding: 32px 32px 32px 64px;
 }
 
 .feature .action-link {
