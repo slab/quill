@@ -33,7 +33,6 @@
        url('//cdn.quilljs.com/fonts/sailec-bold.ttf') format('truetype');
 }
 
-
 /*** Native ***/
 
 html {
@@ -68,6 +67,9 @@ a {
 }
 a:hover {
   color: #1d1e30;
+}
+strong {
+  font-weight: bold;
 }
 
 code {
@@ -524,8 +526,61 @@ body.home .navbar-toggle span {
   line-height: 200%;
 }
 
+/*** Home Demo ***/
+#demo-container .ql-editor,
+#demo-container .ql-toolbar {
+  font-family: 'Sailec Light', sans-serif;
+}
+#demo-container .ql-toolbar .ql-picker-label {
+  font-size: 15px;
+}
+#demo-container .ql-toolbar .ql-header .ql-picker-label {
+  font-family: 'Sofia Pro', sans-serif;
+  font-size: 16px;
+}
+#demo-container .ql-snow .ql-font.ql-picker {
+  width: 132px;
+}
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value=sofia]::before,
+#demo-container .ql-font-sofia {
+  font-family: 'Sofia Pro', sans-serif;
+}
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value=slabo]::before,
+#demo-container .ql-font-slabo {
+  font-family: 'Slabo 13px', sans-serif;
+}
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value=roboto]::before,
+#demo-container .ql-font-roboto {
+  font-family: 'Roboto Slab', serif;
+}
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value=inconsolata]::before,
+#demo-container .ql-font-inconsolata {
+  font-family: 'Inconsolata', monospace;
+}
+#demo-container .ql-snow .ql-font .ql-picker-item[data-value=ubuntu]::before,
+#demo-container .ql-font-ubuntu {
+  font-family: 'Ubuntu Mono', monospace;
+}
+
+/*  .ql-picker.ql-font
+    width: 108px
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Sans Serif'
+    .ql-picker-label[data-value=serif]::before,
+    .ql-picker-item[data-value=serif]::before
+      content: 'Serif'
+    .ql-picker-label[data-value=monospace]::before,
+    .ql-picker-item[data-value=monospace]::before
+      content: 'Monospace'
+    .ql-picker-item[data-value=serif]::before
+      font-family: Georgia, Times New Roman, serif;
+    .ql-picker-item[data-value=monospace]::before
+      font-family: Monaco, Courier New, monospace;
+*/
 
 /*** Docs ***/
+
 body:not(.home) .feature.row {
   margin-top: 50px;
 }
