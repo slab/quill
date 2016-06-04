@@ -30,20 +30,41 @@ layout: default
         {{ content }}
       </div>
       <div class="row" id="pagination-container">
-        <a class="prev">
-          <span class="label">Clipboard</span>
-          <span class="arrow">
-            <span class="tip"></span>
-            <span class="shaft"></span>
-          </span>
-        </a>
-        <a class="next">
-          <span class="label">Keyboard</span>
-          <span class="arrow">
-            <span class="tip"></span>
-            <span class="shaft"></span>
-          </span>
-        </a>
+      {% assign docs = "" | split: "" %}
+      {% for category in site.data.docs %}
+        {% assign docs = docs | push: category %}
+        {% if category.children != null %}
+          {% for child in category.children %}
+            {% unless child.url contains '#' %}
+              {% assign docs = docs | push: child %}
+            {% endunless %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% for doc in docs %}
+        {% if page.permalink == doc.url %}
+          {% assign next = docs[forloop.index] %}
+          {% unless forloop.first %}
+            <a class="prev" href="{{ prev.url }}">
+              <span class="label">{{ prev.title }}</span>
+              <span class="arrow">
+                <span class="tip"></span>
+                <span class="shaft"></span>
+              </span>
+            </a>
+          {% endunless %}
+          {% unless forloop.last %}
+            <a class="next" href="{{ next.url }}">
+              <span class="label">{{ next.title }}</span>
+              <span class="arrow">
+                <span class="tip"></span>
+                <span class="shaft"></span>
+              </span>
+            </a>
+          {% endunless %}
+        {% endif %}
+        {% assign prev = doc %}
+      {% endfor %}
       </div>
     </div>
   </div>
