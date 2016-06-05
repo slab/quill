@@ -49,6 +49,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Sofia Pro', sans-serif;
+  font-weight: normal;
 }
 
 h1 {
@@ -422,21 +423,10 @@ body.home .navbar-toggle span {
   margin: 0 50px;
   padding: 10px;
 }
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
 #demo-container #toolbar {
   border: none;
   opacity: 0;
   padding: 4.5% 15%;
-}
-#demo-container #toolbar .ql-header.ql-picker {
-  width: 108px;
 }
 #demo-container #editor {
   border: none;
@@ -559,6 +549,9 @@ body.home .navbar-toggle span {
 }
 #demo-container .ql-toolbar .ql-picker-label {
   font-size: 15px;
+}
+#demo-container .ql-snow .ql-header.ql-picker {
+  width: 115px;
 }
 #demo-container .ql-snow .ql-font.ql-picker {
   width: 132px;
@@ -831,8 +824,17 @@ body:not(.home) .navbar-link:before {
     font-size: 1rem;
     padding: 10px;
   }
-  #demo-container #toolbar {
+  #demo-container .ql-editor {
+    font-size: 1rem;
     padding: 10px;
+  }
+  #demo-container #toolbar .ql-font,
+  #demo-container #toolbar .ql-formats {
+    display: none;
+  }
+  #demo-container #toolbar .ql-formats:first-child,
+  #demo-container #toolbar .ql-formats:first-child + .ql-formats {
+    display: inline-block;
   }
   #detail-container .action {
     margin-top: 3em;
@@ -907,7 +909,7 @@ body:not(.home) .navbar-link:before {
     padding: 0 10%;
   }
   #demo-container #toolbar {
-    padding: 2.25% 5%;
+    padding: 2.25% 5% 5%;
   }
   .feature .details {
     padding: 1em;
