@@ -1,5 +1,5 @@
 ---
-layout: guide
+layout: docs
 title: Working with Deltas
 permalink: /guides/working-with-deltas/
 ---

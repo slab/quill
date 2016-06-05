@@ -68,8 +68,13 @@ a {
 a:hover {
   color: #1d1e30;
 }
+
 strong {
   font-weight: bold;
+}
+
+pre, code {
+  font-family: "Inconsolata", monospace;
 }
 
 code {

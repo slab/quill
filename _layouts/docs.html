@@ -1,18 +1,49 @@
 ---
 layout: default
 ---
+<!-- head -->
+<link href="https://fonts.googleapis.com/css?family=Inconsolata">
+<!-- head -->
+
+{% if page.permalink contains '/docs' %}
+  {% assign items = site.data.docs %}
+  {% assign category = "Documentation" %}
+{% else %}
+  {% assign category = "Guides" %}
+  {% assign items = site.data.guides %}
+{% endif %}
+
+{% assign flattenedItems = "" | split: "" %}
+{% assign parts = "" | split: "" %}
+{% for item in items %}
+  {% assign flattenedItems = flattenedItems | push: item %}
+  {% if item.children != null %}
+    {% for child in item.children %}
+      {% unless child.url contains '#' %}
+        {% assign flattenedItems = flattenedItems | push: child %}
+        {% if child.url == page.permalink %}
+          {% assign parts = parts | push: item.title | push: child.title %}
+        {% endif %}
+      {% endunless %}
+    {% endfor %}
+  {% endif %}
+  {% if item.url == page.permalink %}
+    {% assign parts = parts | push: item.title %}
+  {% endif %}
+{% endfor %}
+
 <div class="container">
   <div class="row">
     <div id="sidebar-container" class="three columns">
       <ul>
-        {% include sidebar.html navClass="nav" items=site.data.docs %}
+        {% include sidebar.html items=items %}
       </ul>
     </div>
     <div id="docs-container" class="nine columns">
       <div class="row">
         <span class="breadcrumb">
-          <span>Documentation:</span>
-          <span>Modules / History</span>
+          <span>{{ category }}:</span>
+          <span>{{ parts | join: ' / ' }}</span>
         </span>
         <a class="edit-link" href="{{site.github}}/{{page.path}}" target="_blank" title="Edit on Github">
           {% include svg/octocat.svg %}
@@ -30,20 +61,9 @@ layout: default
         {{ content }}
       </div>
       <div class="row" id="pagination-container">
-      {% assign docs = "" | split: "" %}
-      {% for category in site.data.docs %}
-        {% assign docs = docs | push: category %}
-        {% if category.children != null %}
-          {% for child in category.children %}
-            {% unless child.url contains '#' %}
-              {% assign docs = docs | push: child %}
-            {% endunless %}
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
-      {% for doc in docs %}
-        {% if page.permalink == doc.url %}
-          {% assign next = docs[forloop.index] %}
+      {% for item in flattenedItems %}
+        {% if page.permalink == item.url %}
+          {% assign next = flattenedItems[forloop.index] %}
           {% unless forloop.first %}
             <a class="prev" href="{{ prev.url }}">
               <span class="label">{{ prev.title }}</span>
@@ -63,7 +83,7 @@ layout: default
             </a>
           {% endunless %}
         {% endif %}
-        {% assign prev = doc %}
+        {% assign prev = item %}
       {% endfor %}
       </div>
     </div>

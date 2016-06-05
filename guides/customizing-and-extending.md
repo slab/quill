@@ -1,5 +1,5 @@
 ---
-layout: guide
+layout: docs
 title: Customizing and Extending
 permalink: /guides/customizing-and-extending/
 ---
