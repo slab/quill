@@ -119,7 +119,7 @@ redirect_from: /latest/
 <div id="detail-container">
   <div class="container">
     <a class="action" href="/docs/download/">Download Now</a>
-    <h1>An API First Editor for Rich Text</h1>
+    <h1>An API First Editor for Rich Content</h1>
   </div>
 </div>
 
@@ -215,6 +215,7 @@ redirect_from: /latest/
     console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
 
     loadFonts();
+    $('#editor, #toolbar').animate({ opacity: 1 }, 500);
   });
 
   function loadFonts() {

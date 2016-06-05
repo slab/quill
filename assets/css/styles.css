@@ -72,8 +72,10 @@ p {
   font-size: 1.5rem;
 }
 
-button {
+button, select {
+  height: inherit;
   margin: 0;
+  padding: 0;
 }
 
 strong {
@@ -186,11 +188,14 @@ header {
   background-color: #1d1e30;
   font-family: 'Sofia Pro', sans-serif;
   font-size: 1.25rem;
+  padding-bottom: 1.4em;
   padding-top: 1.4em;
   text-align: center;
   text-transform: uppercase;
 }
-
+header li {
+  margin-bottom: 0;
+}
 header a {
   color: #fff;
 }
@@ -236,22 +241,6 @@ body:not(.home) header .logo path {
 }
 .navbar-link, .action-link {
   position: relative;
-}
-.navbar-link:before, .action-link:before {
-  background-color: #000;
-  bottom: -18px;
-  content: "";
-  height: 3px;
-  left: 0;
-  position: absolute;
-  transform: scaleX(0);
-  transition: all 0.3s ease-in-out 0s;
-  visibility: hidden;
-  width: 100%;
-}
-.navbar-link:hover:before, .action-link:hover:before {
-  transform: scaleX(1);
-  visibility: visible;
 }
 .navbar-toggle {
   border: none;
@@ -398,6 +387,9 @@ body.home .navbar-toggle span {
 #users-container li:not(:first-child) {
   width: 10em;
 }
+#users-container img {
+  height: 100px;
+}
 
 #laptop-container {
   background-color: #c8ccd2;
@@ -430,8 +422,17 @@ body.home .navbar-toggle span {
   margin: 0 50px;
   padding: 10px;
 }
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
 #demo-container #toolbar {
   border: none;
+  opacity: 0;
   padding: 4.5% 15%;
 }
 #demo-container #toolbar .ql-header.ql-picker {
@@ -440,12 +441,14 @@ body.home .navbar-toggle span {
 #demo-container #editor {
   border: none;
   height: 395px;
+  opacity: 0;
 }
 #demo-container .ql-editor {
   font-size: 1.5rem;
   overflow-y: hidden;
   padding: 0 20%;
 }
+
 
 #detail-container {
   background-color: #fff;
@@ -556,10 +559,6 @@ body.home .navbar-toggle span {
 }
 #demo-container .ql-toolbar .ql-picker-label {
   font-size: 15px;
-}
-#demo-container .ql-toolbar .ql-header .ql-picker-label {
-  font-family: 'Sofia Pro', sans-serif;
-  font-size: 16px;
 }
 #demo-container .ql-snow .ql-font.ql-picker {
   width: 132px;
@@ -809,7 +808,7 @@ body:not(.home) .navbar-link:before {
     width: 8.5em;
   }
   #above-container {
-    padding-top: 0.5em;
+    padding-top: 0;
   }
   #users-container h1 {
     font-size: 2.5em;
@@ -826,7 +825,7 @@ body:not(.home) .navbar-link:before {
     display: block;
   }
   #users-container img {
-    width: 80px;
+    height: 55px;
   }
   #demo-container .ql-editor {
     font-size: 1rem;
@@ -922,6 +921,22 @@ body:not(.home) .navbar-link:before {
 @media (min-width: 768px) {
   .container {
     width: 90%;
+  }
+  .navbar-link:before, .action-link:before {
+    background-color: #000;
+    bottom: -18px;
+    content: "";
+    height: 3px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(0);
+    transition: all 0.3s ease-in-out 0s;
+    visibility: hidden;
+    width: 100%;
+  }
+  .navbar-link:hover:before, .action-link:hover:before {
+    transform: scaleX(1);
+    visibility: visible;
   }
 }
 
