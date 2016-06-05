@@ -35,6 +35,10 @@
 
 /*** Native ***/
 
+html {
+  font-size: 12px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -65,7 +69,7 @@ a:hover {
 }
 
 p {
-  font-size: 18px;
+  font-size: 1.5rem;
 }
 
 button {
@@ -115,9 +119,9 @@ pre code {
 
 .logo {
   display: inline-block;
-  height: 96px;
+  height: 6.3em;
   vertical-align: middle;
-  width: 160px;
+  width: 10.5em;
 }
 
 .container {
@@ -220,9 +224,6 @@ body:not(.home) header .logo path {
   line-height: 7.33rem;
   padding: 0.67em;
 }
-.navbar-list .navbar-item, .navbar-list .download-item {
-  display: none;
-}
 .navbar-list .download-item {
   margin-right: -2.5%;
   position: absolute;
@@ -254,6 +255,7 @@ body:not(.home) header .logo path {
 }
 .navbar-toggle {
   border: none;
+  display: none;
   padding: 0;
   position: absolute;
   right: 0;
@@ -329,6 +331,7 @@ footer .users.row {
   color: #494c59;
   height: 120px;
   margin: 4.5em auto 0;
+    width: 450px;
 }
 
 footer .users.row h3 {
@@ -424,11 +427,12 @@ body.home .navbar-toggle span {
 #demo-container {
   background-color: #fff;
   border: 2px solid #000;
+  margin: 0 50px;
   padding: 10px;
 }
-
 #demo-container #toolbar {
   border: none;
+  padding: 4.5% 15%;
 }
 #demo-container #toolbar .ql-header.ql-picker {
   width: 108px;
@@ -440,6 +444,7 @@ body.home .navbar-toggle span {
 #demo-container .ql-editor {
   font-size: 1.5rem;
   overflow-y: hidden;
+  padding: 0 20%;
 }
 
 #detail-container {
@@ -470,11 +475,8 @@ body.home .navbar-toggle span {
 }
 
 #features-container {
+  margin-bottom: 4.44em;
   margin-top: 5.83em;
-}
-
-#features-container hr {
-  display: none;
 }
 
 #features-container .feature {
@@ -483,11 +485,31 @@ body.home .navbar-toggle span {
 
 #features-container #github-wrapper {
   height: 3.33em;
+  margin: 0 auto;
+  position: relative;
   text-align: center;
+  width: 18em;
+}
+#features-container .feature.columns:last-child {
+  border-left: 1px solid #d9dce1;
+}
+#features-container .feature.row {
+  margin-top: 5.56em;
+}
+.feature.columns, .feature.row .columns {
+  width: 48%;
+}
+.feature.row {
+  display: block;
+}
+.feature .details {
+  padding: 1.7em 0 1.8em 3.5em;
 }
 
 #features-container #github-container {
   background-color: #fff;
+  margin-left: 1.8em;
+  margin-top: -1.67em
 }
 
 #features-container #github-wrapper + hr {
@@ -495,7 +517,7 @@ body.home .navbar-toggle span {
   width: 85%;
 }
 
-.feature.six.columns img {
+.feature.columns img {
   margin-left: 1.4em;
   margin-right: 1.4em;
 }
@@ -775,94 +797,131 @@ body:not(.home) .navbar-link:before {
 
 /*** Responsive Rules ***/
 
-@media (min-width: 320px) {
+@media (max-width: 767px) {
   html {
     font-size: 10px;
   }
-  #demo-container {
-    margin: 0px 22px;
+  body.home header {
+    padding-top: 1em;
+  }
+  .logo {
+    height: 5.3em;
+    width: 8.5em;
+  }
+  #above-container {
+    padding-top: 0.5em;
+  }
+  #users-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+    padding: 0 1.2em;
+  }
+  #users-container li:not(:first-child) {
+    width: 6em;
+  }
+  #users-container ul {
+    margin-bottom: 0;
+  }
+  #users-container ul li:first-child {
+    display: block;
+  }
+  #users-container img {
+    width: 80px;
+  }
+  #demo-container .ql-editor {
+    font-size: 1rem;
+    padding: 10px;
+  }
+  #demo-container #toolbar {
+    padding: 10px;
+  }
+  #detail-container .action {
+    margin-top: 3em;
+  }
+  #detail-container h1 {
+    font-size: 1.5em;
+    padding: 0 1em;
   }
   #features-container {
-    margin-bottom: 15em;
+    margin-bottom: 10em;
+    margin-top: 0;
+  }
+  #features-container hr {
+    display: none;
+  }
+  #features-container .feature {
+    padding: 1em;
+  }
+  #features-container .feature.columns:last-child {
+    border-left: none;
   }
   #features-container #github-wrapper {
-    bottom: -5em;
+    bottom: -7em;
     position: absolute;
     width: 23em;
     left: 50%;
     margin-left: -11.5em;
   }
+  #features-container .feature.row {
+    margin-top: 0;
+  }
+  .feature .details > h2 {
+    font-size: 1em;
+    margin-bottom: 0.75em;
+  }
+  .feature .action-link {
+    margin-top: 1em;
+  }
+  .feature.columns, .feature.row .columns {
+    width: 100%;
+  }
   .feature.row {
     display: flex;
     flex-direction: column-reverse;
   }
+  footer {
+    font-size: 1rem;
+    padding-top: 5em;
+  }
+  footer h1 {
+    font-size: 2.5rem;
+    padding: 0 1.3em;
+  }
   footer .users.row {
+    margin-top: 2.5em;
     width: 270px;
   }
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 12px;
+@media (max-width: 1023px) {
+  .navbar-toggle {
+    display: inline-block;
+    margin-right: 5%;
   }
-  .container {
-    width: 90%;
+  .navbar-list .navbar-item, .navbar-list .download-item {
+    display: none;
   }
-  #features-container {
-    margin-bottom: 4.44em;
+  #demo-container {
+    margin: 0px 22px;
   }
-  #features-container hr {
-    display: block;
+  #demo-container .ql-editor {
+    padding: 0 10%;
   }
-  #features-container .feature.columns:last-child {
-    border-left: 1px solid #d9dce1;
-  }
-  #features-container #github-wrapper {
-    bottom: inherit;
-    left: 0;
-    margin: 0 auto;
-    position: relative;
-    width: 18em;
-  }
-  #features-container #github-container {  /* covers part of hr */
-    margin-left: 1.8em;
-    margin-top: -1.67em
-  }
-  #features-container .feature.row {
-    margin-top: 5.56em;
-  }
-  .feature.columns, .feature.row .columns {
-    width: 48%;
-  }
-  .feature.row {
-    display: block;
+  #demo-container #toolbar {
+    padding: 2.25% 5%;
   }
   .feature .details {
-    padding: 1.7em 0 1.8em 3.5em;
+    padding: 1em;
   }
   .feature .details > span {
-    padding-right: 2em;
-  }
-  footer .users.row {
-    width: 450px;
+    line-height: 1.6;
+    padding-right: 0;
   }
 }
 
-@media (min-width: 1024px) {
-  .navbar-toggle {
-    display: none;
-  }
-  .navbar-list .navbar-item, .navbar-list .download-item {
-    display: inline-block;
-  }
-  #demo-container {
-    margin: 0 50px;
-  }
-  #demo-container #toolbar {
-    padding: 4.5% 15%;
-  }
-  #demo-container .ql-editor {
-    padding: 0 20%;
+@media (min-width: 768px) {
+  .container {
+    width: 90%;
   }
 }
 
