@@ -36,7 +36,7 @@
 /*** Native ***/
 
 html {
-  overflow-x: hidden;
+  font-size: 12px;
 }
 
 * {
@@ -45,7 +45,6 @@ html {
 
 body {
   font-family: 'Sailec Light', sans-serif;
-  font-size: 18px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -53,11 +52,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 50px;
+  font-size: 4.2rem;
 }
 
 h2 {
-  font-size: 30px;
+  font-size: 2.5rem;
 }
 
 a {
@@ -78,7 +77,7 @@ pre, code {
 }
 
 code {
-  font-size: 16px;
+  font-size: 1.33rem;
 }
 
 pre code {
@@ -104,7 +103,7 @@ pre code {
   background-color: #f2d123;
   display: inline-block;
   font-family: 'Sofia Pro', sans-serif;
-  font-size: 14.5px;
+  font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
@@ -139,7 +138,7 @@ pre code {
   color: #fff;
   display: inline-block;
   float: left;
-  font-size: 16px;
+  font-size: 1.33rem;
   line-height: 32px;
   padding: 10px 22px;
 }
@@ -163,7 +162,7 @@ pre code {
   background-color: #fff;
   display: inline-block;
   float: left;
-  font-size: 21px;
+  font-size: 1.75rem;
   line-height: 32px;
   padding: 10px 22px;
 }
@@ -178,9 +177,8 @@ pre code {
 header {
   background-color: #1d1e30;
   font-family: 'Sofia Pro', sans-serif;
-  font-size: 15.5px;
-  height: 160px;
-  padding-top: 21px;
+  font-size: 1.25rem;
+  padding-top: 1.4em;
   text-align: center;
   text-transform: uppercase;
 }
@@ -195,11 +193,10 @@ header a:hover {
 header .action {
   color: #1d1e30;
   display: inline;
-  padding: 16px;
+  padding: 1em;
 }
 body:not(.home) header .logo {
-  height: 90px;
-  width: 150px;
+  width: 10em;
 }
 body:not(.home) header .logo circle,
 body:not(.home) header .logo path {
@@ -210,14 +207,14 @@ body:not(.home) header .logo path {
   color: #fff;
   letter-spacing: 0.15rem;
   list-style: none;
-  margin-bottom: 0px;
-  margin-top: 10px;
+  margin-bottom: 0;
+  margin-top: 0.67em;
 }
 
 .navbar-list li {
   display: inline-block;
-  line-height: 88px;
-  padding: 10px;
+  line-height: 7.33rem;
+  padding: 0.67em;
 }
 .navbar-list .navbar-item, .navbar-list .download-item {
   display: none;
@@ -225,7 +222,7 @@ body:not(.home) header .logo path {
 .navbar-list .download-item {
   margin-right: -2.5%;
   position: absolute;
-  right: 0px;
+  right: 0;
 }
 .navbar-list .download-item .action:hover {
   background-color: #1d1e30;
@@ -253,60 +250,57 @@ body:not(.home) header .logo path {
 }
 .navbar-toggle {
   border: none;
-  padding: 0px;
+  padding: 0;
   position: absolute;
-  right: 0px;
-  top: 32px;
+  right: 0;
+  top: 2.1em;
 }
 .navbar-toggle span {
   background-color: #fff;
   display: block;
-  height: 4px;
-  margin: 8px;
-  width: 38px;
+  height: 0.27em;
+  margin: 0.53em;
+  width: 2.5em;
 }
 
 
 /*** Footer ***/
 
 footer {
+  font-size: 1.5rem;
   background-color: #1d1e30;
   color: #fff;
-  height: 853px;
-  margin-top: 100px;
-  padding-top: 135px;
+  margin-top: 5.5em;
+  padding-bottom: 5.5em;
+  padding-top: 7.5em;
   text-align: center;
 }
 
 footer h1 {
   font-family: "Sailec Light", sans-serif;
-  font-size: 45px;
+  font-size: 3.75rem;
   letter-spacing: 0.2rem;
-  margin-bottom: 66px;
-  margin-top: 66px;
+  margin-bottom: 3.67em;
+  margin-top: 3.67em;
 }
 
 footer .actions.row {
-  margin: auto;
-  width: 550px;
+  text-align: center;
 }
 
 footer .action {
-  float: right;
-  font-size: 18px;
-  height: 80px;
-  line-height: 80px;
-  width: 260px;
-}
-footer .action:hover {
-  /*background-color: ;*/
+  height: 4.44em;
+  line-height: 6.67rem;
+  margin-bottom: 1.4em;
+  margin-right: 1.4em;
+  vertical-align: middle;
+  width: 14.4em;
 }
 
 footer .action.documentation {
   background-color: #1d1e30;
   border: 2px solid #f2d123;
   color: #f2d123;
-  float: left;
 }
 footer .action:hover {
   background-color: #fff;
@@ -315,8 +309,7 @@ footer .action:hover {
 }
 
 footer .logo {
-  height: 107px;
-  width: 180px;
+  width: 10em;
 }
 
 footer .logo circle,
@@ -330,12 +323,11 @@ footer .users.row {
   background-repeat: no-repeat;
   color: #494c59;
   height: 120px;
-  margin: 100px auto 0px;
-  width: 450px;
+  margin: 5.55em auto 0;
 }
 
 footer .users.row h3 {
-  font-size: 12px;
+  font-size: 1rem;
   letter-spacing: 0.2rem;
   text-transform: uppercase;
 }
@@ -346,8 +338,7 @@ footer .users.row h3 {
 body.home header {
   background-color: #f4f5f5;
   color: #1d1e30;
-  height: 240px;
-  padding-top: 42px;
+  padding-top: 2.8em;
 }
 body.home header a {
   color: #1d1e30;
@@ -364,7 +355,7 @@ body.home .navbar-toggle span {
   background-color: #f4f5f5;
 }
 #above-container.demo-active #laptop-container {
-  margin-bottom: 0px;
+  margin-bottom: 0;
   margin-top: -160px;
 }
 #above-container.demo-active #users-container ul {
@@ -372,28 +363,31 @@ body.home .navbar-toggle span {
 }
 
 #users-container {
-  padding-bottom: 8px;
-  padding-top: 8px;
+  font-size: 1.25rem;
+  padding-bottom: 0.53em;
+  padding-top: 0.53em;
   text-align: center;
 }
 #users-container h1 {
-  font-size: 60px;
-  margin-bottom: 10px;
+  font-size: 5rem;
+  margin-bottom: 0.67em;
 }
 #users-container ul {
-  font-size: 13px;
   list-style: none;
   text-transform: uppercase;
 }
 #users-container li {
   display: inline-block;
-  height: 100px;
-  line-height: 100px;
-  margin: 0px 15px;
+  height: 100%;
+  line-height: 100%;
+  margin: 0 1em;
   vertical-align: middle;
 }
+#users-container li:first-child {
+  font-size: 1.08rem;
+}
 #users-container li:not(:first-child) {
-  width: 150px;
+  width: 10em;
 }
 
 #laptop-container {
@@ -403,8 +397,9 @@ body.home .navbar-toggle span {
   border-top-left-radius: 60px;
   border-top-right-radius: 60px;
   box-shadow: 0 0 40px 2px rgba(28, 31, 47, 0.1);
+  font-size: 1.5rem;
   margin-bottom: -154px;
-  margin-top: 22px;
+  margin-top: 1.22em;
   width: 100%;
 }
 #camera-container {
@@ -423,13 +418,12 @@ body.home .navbar-toggle span {
 #demo-container {
   background-color: #fff;
   border: 2px solid #000;
-  margin: 0px 50px;
   padding: 10px;
 }
 
 #demo-container #toolbar {
   border: none;
-  padding: 44px 150px;
+  padding: 4.5% 15%;
 }
 #demo-container #toolbar .ql-header.ql-picker {
   width: 108px;
@@ -440,13 +434,14 @@ body.home .navbar-toggle span {
   height: 395px;
 }
 #demo-container .ql-editor {
-  font-size: 18px;
+  font-size: 1.5rem;
   overflow-y: hidden;
-  padding: 0px 200px;
+  padding: 0px 20%;
 }
 
 #detail-container {
   background-color: #fff;
+  font-size: 1.5rem;
   margin-top: -5px;
   position: relative;
   text-align: center;
@@ -454,11 +449,11 @@ body.home .navbar-toggle span {
 
 #detail-container .action {
   display: inline-block;
-  font-size: 18px;
+  font-size: 1.5rem;
   letter-spacing: 0.25rem;
-  margin-bottom: 15px;
-  margin-top: 124px;
-  padding: 27px 50px;
+  margin-bottom: 0.83em;
+  margin-top: 6.89em;
+  padding: 1.5em 2.78px;
 }
 #detail-container .action:hover {
   background-color: #1d1e30;
@@ -468,16 +463,17 @@ body.home .navbar-toggle span {
 #detail-container h1 {
   font-family: "Sailec Light", sans-serif;
   letter-spacing: 0.20rem;
-  font-size: 40px;
+  font-size: 3.33rem;
 }
 
 #features-container {
-  margin-bottom: 80px;
-  margin-top: 105px;
+  font-size: 1.5rem;
+  margin-bottom: 4.44em;
+  margin-top: 5.83em;
 }
 
 #features-container .feature {
-  padding: 25px 25px 100px;
+  padding: 1.4em 1.4em 5.56em;
 }
 
 #features-container .feature.columns:last-child {
@@ -485,21 +481,21 @@ body.home .navbar-toggle span {
 }
 
 #features-container .feature.row {
-  margin-top: 100px;
+  margin-top: 5.56em;
 }
 
 #features-container #github-wrapper {
-  height: 60px;
-  margin: 0px auto;
+  height: 3.33em;
+  margin: 0 auto;
   position: relative;
   text-align: center;
-  width: 320px;
+  width: 17.78em;
 }
 
 #features-container #github-container {
   background-color: #fff;
-  margin-left: 18px;
-  margin-top: -30px;
+  margin-left: 1em;
+  margin-top: -1.67em;
 }
 
 #features-container #github-wrapper + hr {
@@ -508,35 +504,35 @@ body.home .navbar-toggle span {
 }
 
 .feature.six.columns img {
-  margin-left: 25px;
-  margin-right: 25px;
+  margin-left: 1.4em;
+  margin-right: 1.4em;
 }
 
 .feature .details {
-  padding: 32px 32px 32px 64px;
+  padding: 1.8em 1.2em 1.8em 3.5em;
 }
 
 .feature .action-link {
   display: inline-block;
   font-family: "Sofia Pro", sans-serif;
-  font-size: 15px;
+  font-size: 1.25rem;
   font-weight: bold;
   letter-spacing: 0.15rem;
-  margin-top: 38px;
+  margin-top: 2.5em;
   text-transform: uppercase;
 }
 
 .feature .details > h2 {
-  font-size: 28px;
+  font-size: 2.33rem;
   font-weight: bold;
   letter-spacing: 0.4rem;
-  margin-bottom: 50px;
+  margin-bottom: 1.8em;
   text-transform: uppercase;
 }
 
 .feature .details > span {
   display: block;
-  font-size: 16px;
+  font-size: 1.33rem;
   letter-spacing: 0.1rem;
   line-height: 200%;
 }
@@ -581,16 +577,15 @@ body.home .navbar-toggle span {
 /*** Docs ***/
 
 body:not(.home) .feature.row {
-  margin-top: 50px;
+  margin-top: 2.78em;
 }
 
 body:not(.home) .feature h2 {
-  margin-bottom: 40px;
-  white-space: nowrap;
+  margin-bottom: 2.22em;
 }
 
 body:not(.home) .feature .github-button {
-  margin-top: 32px;
+  margin-top: 1.78em;
 }
 body:not(.home) .navbar-list .download-item .action:hover {
   background-color: #fff;
@@ -605,26 +600,26 @@ body:not(.home) .navbar-link:before {
   display: inline-block;
   float: right;
   font-family: "Sofia Pro", sans-serif;
-  font-size: 13px;
+  font-size: 1.08rem;
   font-weight: bold;
-  height: 32px;
+  height: 2.5em;
   letter-spacing: 0.1rem;
-  line-height: 32px;
+  line-height: 2.5em;
   text-decoration: underline;
   text-transform: uppercase;
 }
 .edit-link svg {
   float: right;
-  height: 32px;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 32px;
+  height: 2.5em;
+  margin-left: 0.8em;
+  margin-right: 0.8em;
+  width: 2.5em;
 }
 
 #sidebar-container {
   font-family: "Sofia Pro", sans-serif;
-  font-size: 13px;
-  margin-top: 160px;
+  font-size: 1.08rem;
+  margin-top: 12em;
   text-transform: uppercase;
 }
 
@@ -635,15 +630,15 @@ body:not(.home) .navbar-link:before {
   list-style: none;
 }
 #sidebar-container > ul ul {
-  margin: 1rem 0px 0px 55px;
+  margin: 1rem 0 0 4.2em;
 }
 #sidebar-container > ul > li > a {
-  padding-left: 18px;
+  padding-left: 1.4em;
   padding-top: 2px;
 }
 #sidebar-container > ul > li.active > a {
   border-left: 3px solid #1d1e30;
-  padding-left: 15px;
+  padding-left: 1.15em;
 }
 #sidebar-container li.active > a {
   color: #1d1e30;
@@ -657,11 +652,11 @@ body:not(.home) .navbar-link:before {
 }
 
 #docs-container {
-  margin-bottom: 42px;
-  margin-top: 42px;
+  margin-bottom: 2.33em;
+  margin-top: 2.33em;
 }
 #docs-container .breadcrumb {
-  font-size: 15px;
+  font-size: 1.25rem;
 }
 #docs-container .breadcrumb span:first-child {
   font-weight: bold;
@@ -671,16 +666,17 @@ body:not(.home) .navbar-link:before {
   width: 104%;
 }
 #docs-container h1:first-of-type {
-  margin-bottom: 15px;
-  margin-top: 44px;
+  margin-bottom: 0.83em;
+  margin-top: 2.44em;
 }
 
 #content-container {
-  margin-bottom: 120px;
+  margin-bottom: 6.67em;
   max-width: 800px;
 }
 
 #pagination-container {
+  font-size: 2.5rem;
   max-width: 800px;
 }
 #pagination-container .prev,
@@ -688,8 +684,8 @@ body:not(.home) .navbar-link:before {
 #pagination-container .label,
 #pagination-container .arrow {
   display: inline-block;
-  height: 30px;
-  line-height: 30px;
+  height: 1em;
+  line-height: 1em;
 }
 #pagination-container .prev,
 #pagination-container .prev .label,
@@ -705,7 +701,7 @@ body:not(.home) .navbar-link:before {
   font-weight: bold;
 }
 #pagination-container .arrow {
-  padding: 10px 20px;
+  padding: 0.33em 0.67em;
 }
 #pagination-container .shaft {
   background-color: #000;
@@ -713,30 +709,28 @@ body:not(.home) .navbar-link:before {
   border-top: 3px solid #fff;
   display: inline-block;
   float: left;
-  height: 10px;
-  width: 20px;
+  height: 0.33em;
+  width: 0.66em;
 }
 #pagination-container .tip {
   display: inline-block;
-  border-bottom: 5px solid transparent;
-  border-top: 5px solid transparent;
+  border-bottom: 0.17em solid transparent;
+  border-top: 0.17em solid transparent;
 }
 #pagination-container .prev .tip {
   float: left;
-  border-right: 10px solid #000;
+  border-right: 0.33em solid #000;
 }
 #pagination-container .next .tip {
   float: right;
-  border-left: 10px solid #000;
+  border-left: 0.33em solid #000;
 }
 #pagination-container .prev:after {
   content: "Previous";
-  font-size: 30px;
   font-weight: bold;
 }
 #pagination-container .next:before {
   content: "Next";
-  font-size: 30px;
   font-weight: bold;
 }
 
@@ -744,19 +738,19 @@ body:not(.home) .navbar-link:before {
 /*** Playground ***/
 
 #playground-container {
-  margin-bottom: 100px;
-  margin-top: 100px;
+  margin-bottom: 5.5em;
+  margin-top: 5.5em;
 }
 
 
 /*** Blog Container ***/
 
 #blog-container {
-  margin-top: 100px;
+  margin-top: 5.5em;
   max-width: 800px;
 }
 #blog-container .post-meta {
-  margin-bottom: 50px;
+  margin-bottom: 2.78em;
   text-align: center;
 }
 #blog-container .post-meta,
@@ -764,13 +758,13 @@ body:not(.home) .navbar-link:before {
   color: #939598;
 }
 #blog-container h1 {
-  font-size: 42px;
-  margin-bottom: 0px;
+  font-size: 3.5rem;
+  margin-bottom: 0;
   text-align: center;
 }
 #blog-container .post-item hr {
-  margin-bottom: 100px;
-  margin-top: 50px;
+  margin-bottom: 5.5em;
+  margin-top: 2.78em;
 }
 #blog-container p a {
   text-decoration: underline;
@@ -778,15 +772,33 @@ body:not(.home) .navbar-link:before {
 #blog-container .more-link {
   display: inline-block;
   font-weight: bold;
-  margin-top: 50px;
+  margin-top: 2.78em;
 }
 
 
 /*** Responsive Rules ***/
 
+@media (min-width: 320px) {
+  #demo-container {
+    margin: 0px 22px;
+  }
+  #demo-container #toolbar {
+    padding: 4.5% 15%;
+  }
+  #demo-container .ql-editor {
+    padding: 0px 20%;
+  }
+  footer .users.row {
+    width: 270px;
+  }
+}
+
 @media (min-width: 768px) {
   .container {
     width: 90%;
+  }
+  footer .users.row {
+    width: 450px;
   }
 }
 
@@ -796,6 +808,15 @@ body:not(.home) .navbar-link:before {
   }
   .navbar-list .navbar-item, .navbar-list .download-item {
     display: inline-block;
+  }
+  #demo-container {
+    margin: 0px 50px;
+  }
+  #demo-container #toolbar {
+    padding: 4.5% 15%;
+  }
+  #demo-container .ql-editor {
+    padding: 0px 20%;
   }
 }
 
