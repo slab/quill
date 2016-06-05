@@ -35,10 +35,6 @@
 
 /*** Native ***/
 
-html {
-  font-size: 12px;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -66,6 +62,14 @@ a {
 }
 a:hover {
   color: #1d1e30;
+}
+
+p {
+  font-size: 18px;
+}
+
+button {
+  margin: 0;
 }
 
 strong {
@@ -164,7 +168,7 @@ pre code {
   float: left;
   font-size: 1.75rem;
   line-height: 32px;
-  padding: 10px 22px;
+  padding: 10px 30px;
 }
 
 .row > hr {
@@ -280,8 +284,8 @@ footer h1 {
   font-family: "Sailec Light", sans-serif;
   font-size: 3.75rem;
   letter-spacing: 0.2rem;
-  margin-bottom: 3.67em;
-  margin-top: 3.67em;
+  margin-bottom: 1.67em;
+  margin-top: 1.67em;
 }
 
 footer .actions.row {
@@ -289,12 +293,13 @@ footer .actions.row {
 }
 
 footer .action {
+  font-size: 1.5rem;
   height: 4.44em;
   line-height: 6.67rem;
   margin-bottom: 1.4em;
   margin-right: 1.4em;
   vertical-align: middle;
-  width: 14.4em;
+  width: 14.5em;
 }
 
 footer .action.documentation {
@@ -323,7 +328,7 @@ footer .users.row {
   background-repeat: no-repeat;
   color: #494c59;
   height: 120px;
-  margin: 5.55em auto 0;
+  margin: 4.5em auto 0;
 }
 
 footer .users.row h3 {
@@ -353,6 +358,7 @@ body.home .navbar-toggle span {
 
 #above-container {
   background-color: #f4f5f5;
+  padding-top: 5em;
 }
 #above-container.demo-active #laptop-container {
   margin-bottom: 0;
@@ -370,7 +376,7 @@ body.home .navbar-toggle span {
 }
 #users-container h1 {
   font-size: 5rem;
-  margin-bottom: 0.67em;
+  margin-bottom: 0.25em;
 }
 #users-container ul {
   list-style: none;
@@ -423,12 +429,10 @@ body.home .navbar-toggle span {
 
 #demo-container #toolbar {
   border: none;
-  padding: 4.5% 15%;
 }
 #demo-container #toolbar .ql-header.ql-picker {
   width: 108px;
 }
-
 #demo-container #editor {
   border: none;
   height: 395px;
@@ -436,7 +440,6 @@ body.home .navbar-toggle span {
 #demo-container .ql-editor {
   font-size: 1.5rem;
   overflow-y: hidden;
-  padding: 0px 20%;
 }
 
 #detail-container {
@@ -451,9 +454,9 @@ body.home .navbar-toggle span {
   display: inline-block;
   font-size: 1.5rem;
   letter-spacing: 0.25rem;
-  margin-bottom: 0.83em;
+  margin-bottom: 2em;
   margin-top: 6.89em;
-  padding: 1.5em 2.78px;
+  padding: 1.5em 2.78em;
 }
 #detail-container .action:hover {
   background-color: #1d1e30;
@@ -467,35 +470,24 @@ body.home .navbar-toggle span {
 }
 
 #features-container {
-  font-size: 1.5rem;
-  margin-bottom: 4.44em;
   margin-top: 5.83em;
+}
+
+#features-container hr {
+  display: none;
 }
 
 #features-container .feature {
   padding: 1.4em 1.4em 5.56em;
 }
 
-#features-container .feature.columns:last-child {
-  border-left: 1px solid #d9dce1;
-}
-
-#features-container .feature.row {
-  margin-top: 5.56em;
-}
-
 #features-container #github-wrapper {
   height: 3.33em;
-  margin: 0 auto;
-  position: relative;
   text-align: center;
-  width: 17.78em;
 }
 
 #features-container #github-container {
   background-color: #fff;
-  margin-left: 1em;
-  margin-top: -1.67em;
 }
 
 #features-container #github-wrapper + hr {
@@ -506,10 +498,6 @@ body.home .navbar-toggle span {
 .feature.six.columns img {
   margin-left: 1.4em;
   margin-right: 1.4em;
-}
-
-.feature .details {
-  padding: 1.8em 1.2em 1.8em 3.5em;
 }
 
 .feature .action-link {
@@ -535,6 +523,7 @@ body.home .navbar-toggle span {
   font-size: 1.33rem;
   letter-spacing: 0.1rem;
   line-height: 200%;
+  padding-right: 2em;
 }
 
 /*** Home Demo ***/
@@ -581,7 +570,7 @@ body:not(.home) .feature.row {
 }
 
 body:not(.home) .feature h2 {
-  margin-bottom: 2.22em;
+  margin-bottom: 1.5em;
 }
 
 body:not(.home) .feature .github-button {
@@ -611,8 +600,7 @@ body:not(.home) .navbar-link:before {
 .edit-link svg {
   float: right;
   height: 2.5em;
-  margin-left: 0.8em;
-  margin-right: 0.8em;
+  margin-left: 1em;
   width: 2.5em;
 }
 
@@ -625,6 +613,9 @@ body:not(.home) .navbar-link:before {
 
 #sidebar-container ul {
   list-style: none;
+}
+#sidebar-container li {
+  margin-bottom: 0.3em;
 }
 #sidebar-container > ul {
   list-style: none;
@@ -652,8 +643,8 @@ body:not(.home) .navbar-link:before {
 }
 
 #docs-container {
-  margin-bottom: 2.33em;
-  margin-top: 2.33em;
+  margin-bottom: 5em;
+  margin-top: 2.5em;
 }
 #docs-container .breadcrumb {
   font-size: 1.25rem;
@@ -666,8 +657,7 @@ body:not(.home) .navbar-link:before {
   width: 104%;
 }
 #docs-container h1:first-of-type {
-  margin-bottom: 0.83em;
-  margin-top: 2.44em;
+  margin-top: 0;
 }
 
 #content-container {
@@ -681,7 +671,6 @@ body:not(.home) .navbar-link:before {
 }
 #pagination-container .prev,
 #pagination-container .next,
-#pagination-container .label,
 #pagination-container .arrow {
   display: inline-block;
   height: 1em;
@@ -698,7 +687,10 @@ body:not(.home) .navbar-link:before {
   float: right;
 }
 #pagination-container .label {
-  font-weight: bold;
+  font-size: 1.25rem;
+  display: inline-block;
+  height: 2em;
+  line-height: 2em;
 }
 #pagination-container .arrow {
   padding: 0.33em 0.67em;
@@ -727,11 +719,13 @@ body:not(.home) .navbar-link:before {
 }
 #pagination-container .prev:after {
   content: "Previous";
-  font-weight: bold;
 }
 #pagination-container .next:before {
   content: "Next";
-  font-weight: bold;
+}
+#pagination-container .next:before,
+#pagination-container .prev:before {
+  font-family: "Sofia Pro", sans-serif;
 }
 
 
@@ -740,6 +734,9 @@ body:not(.home) .navbar-link:before {
 #playground-container {
   margin-bottom: 5.5em;
   margin-top: 5.5em;
+}
+#playground-container .codepen {
+  height: 500px;
 }
 
 
@@ -779,14 +776,25 @@ body:not(.home) .navbar-link:before {
 /*** Responsive Rules ***/
 
 @media (min-width: 320px) {
+  html {
+    font-size: 10px;
+  }
   #demo-container {
     margin: 0px 22px;
   }
-  #demo-container #toolbar {
-    padding: 4.5% 15%;
+  #features-container {
+    margin-bottom: 15em;
   }
-  #demo-container .ql-editor {
-    padding: 0px 20%;
+  #features-container #github-wrapper {
+    bottom: -5em;
+    position: absolute;
+    width: 23em;
+    left: 50%;
+    margin-left: -11.5em;
+  }
+  .feature.row {
+    display: flex;
+    flex-direction: column-reverse;
   }
   footer .users.row {
     width: 270px;
@@ -794,8 +802,46 @@ body:not(.home) .navbar-link:before {
 }
 
 @media (min-width: 768px) {
+  html {
+    font-size: 12px;
+  }
   .container {
     width: 90%;
+  }
+  #features-container {
+    margin-bottom: 4.44em;
+  }
+  #features-container hr {
+    display: block;
+  }
+  #features-container .feature.columns:last-child {
+    border-left: 1px solid #d9dce1;
+  }
+  #features-container #github-wrapper {
+    bottom: inherit;
+    left: 0;
+    margin: 0 auto;
+    position: relative;
+    width: 18em;
+  }
+  #features-container #github-container {  /* covers part of hr */
+    margin-left: 1.8em;
+    margin-top: -1.67em
+  }
+  #features-container .feature.row {
+    margin-top: 5.56em;
+  }
+  .feature.columns, .feature.row .columns {
+    width: 48%;
+  }
+  .feature.row {
+    display: block;
+  }
+  .feature .details {
+    padding: 1.7em 0 1.8em 3.5em;
+  }
+  .feature .details > span {
+    padding-right: 2em;
   }
   footer .users.row {
     width: 450px;
@@ -810,13 +856,13 @@ body:not(.home) .navbar-link:before {
     display: inline-block;
   }
   #demo-container {
-    margin: 0px 50px;
+    margin: 0 50px;
   }
   #demo-container #toolbar {
     padding: 4.5% 15%;
   }
   #demo-container .ql-editor {
-    padding: 0px 20%;
+    padding: 0 20%;
   }
 }
 
