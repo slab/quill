@@ -314,6 +314,16 @@ footer .action:hover {
   color: #1d1e30;
 }
 
+footer .logo {
+  height: 107px;
+  width: 180px;
+}
+
+footer .logo circle,
+footer .logo path {
+  fill: #fff;
+}
+
 footer .users.row {
   background-image: url(/assets/images/footer.png);
   background-position-y: 45px;
