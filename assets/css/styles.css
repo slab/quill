@@ -463,6 +463,7 @@ body.home .arrow .shaft {
 
 #users-container {
   font-size: 1.25rem;
+  left: 0;
   padding-bottom: 0.53em;
   padding-top: 5.53em;
   position: absolute;
@@ -549,7 +550,7 @@ body.home .arrow .shaft {
 #demo-container .ql-editor {
   font-size: 1.5rem;
   overflow-y: hidden;
-  padding: 0 20%;
+  padding: 0 17%;
 }
 
 #above-container.demo-active #users-container {
@@ -561,6 +562,10 @@ body.home .arrow .shaft {
 }
 #above-container.demo-active #users-container h2 {
   display: inline-block;
+}
+#above-container.demo-active #users-container ul {
+  transition: opacity 500ms linear 0s;
+  opacity: 0;
 }
 #above-container.demo-active #demo-container .ql-editor {
   overflow-y: auto;
@@ -676,7 +681,12 @@ body.home .arrow .shaft {
 }
 
 /*** Home Demo ***/
-#demo-container .ql-editor *,
+#demo-container .ql-editor h1,
+#demo-container .ql-editor h2,
+#demo-container .ql-editor h3,
+#demo-container .ql-editor h4,
+#demo-container .ql-editor h5,
+#demo-container .ql-editor h6,
 #demo-container .ql-editor,
 #demo-container .ql-toolbar {
   font-family: 'Sailec Light', sans-serif;
@@ -875,6 +885,35 @@ body:not(.home) .navbar-link:before {
 
 /*** Responsive Rules ***/
 
+@media (max-width: 1023px) {
+  .navbar-open {
+    display: inline-block;
+  }
+  .navbar-drop.active {
+    top: 0;
+    transition: top 1s ease-out 0s;
+  }
+  .navbar-list .navbar-item, .navbar-list .download-item {
+    display: none;
+  }
+  #demo-container {
+    margin: 0px 22px;
+  }
+  #demo-container .ql-editor {
+    padding: 0 10%;
+  }
+  #demo-container #toolbar {
+    padding: 2.25% 5% 0;
+  }
+  .feature .details {
+    padding: 1em;
+  }
+  .feature .details > span {
+    line-height: 1.6;
+    padding-right: 0;
+  }
+}
+
 @media (max-width: 767px) {
   html {
     font-size: 10px;
@@ -892,10 +931,26 @@ body:not(.home) .navbar-link:before {
   #above-container {
     padding-top: 0;
   }
+  #above-container > .container {
+    height: 545px;
+  }
+  #above-container.demo-active #users-container {
+    top: -25px;
+  }
+  #users-container {
+    padding-top: 2em;
+  }
+  #users-container .prev,
+  #users-container .next {
+    display: none;
+  }
   #users-container h1 {
-    font-size: 2.5em;
+    font-size: 2em;
     margin-bottom: 0.5em;
     padding: 0 1.2em;
+  }
+  #users-container h2 {
+    font-size: 3rem;
   }
   #users-container li:not(:first-child) {
     width: 6em;
@@ -909,13 +964,22 @@ body:not(.home) .navbar-link:before {
   #users-container img {
     height: 55px;
   }
+  #demo-container {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 11px;
+    margin-right: 11px;
+  }
+  #demo-container #editor {
+    height: 385px;
+  }
   #demo-container .ql-editor {
     font-size: 1rem;
     padding: 10px;
   }
   #demo-container .ql-editor {
     font-size: 1rem;
-    padding: 10px;
+    padding: 20px;
   }
   #demo-container #toolbar .ql-font,
   #demo-container #toolbar .ql-formats {
@@ -925,6 +989,10 @@ body:not(.home) .navbar-link:before {
   #demo-container #toolbar .ql-formats:first-child + .ql-formats {
     display: inline-block;
   }
+  #laptop-container {
+    bottom: -135px;
+    width: 90%;
+  }
   #detail-container .action {
     margin-top: 3em;
   }
@@ -933,8 +1001,8 @@ body:not(.home) .navbar-link:before {
     padding: 0 1em;
   }
   #features-container {
-    margin-bottom: 10em;
-    margin-top: 0;
+    margin-bottom: 6em;
+    padding-top: 0;
   }
   #features-container hr {
     display: none;
@@ -980,35 +1048,6 @@ body:not(.home) .navbar-link:before {
   footer .users.row {
     margin-top: 2.5em;
     width: 270px;
-  }
-}
-
-@media (max-width: 1023px) {
-  .navbar-open {
-    display: inline-block;
-  }
-  .navbar-drop.active {
-    top: 0;
-    transition: top 1s ease-out 0s;
-  }
-  .navbar-list .navbar-item, .navbar-list .download-item {
-    display: none;
-  }
-  #demo-container {
-    margin: 0px 22px;
-  }
-  #demo-container .ql-editor {
-    padding: 0 10%;
-  }
-  #demo-container #toolbar {
-    padding: 2.25% 5% 5%;
-  }
-  .feature .details {
-    padding: 1em;
-  }
-  .feature .details > span {
-    line-height: 1.6;
-    padding-right: 0;
   }
 }
 
