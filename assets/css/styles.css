@@ -290,13 +290,13 @@ body:not(.home) header .logo path {
 
 .navbar-drop {
   background-color: #1d1e30;
+  bottom: 100%;
   font-size: 2rem;
   letter-spacing: 0.15rem;
   list-style: none;
   padding: 5em 0 1em;
   position: absolute;
-  top: -100%;
-  transition: top 1s ease-out 0s;
+  transition: margin-bottom 1s ease-out 0s;
   width: 100%;
   z-index: 10;
 }
@@ -919,8 +919,8 @@ body:not(.home) .navbar-link:before {
     display: inline-block;
   }
   .navbar-drop.active {
-    top: 0;
-    transition: top 1s ease-out 0s;
+    margin-bottom: -25em;
+    transition: margin-bottom 1s ease-out 0s;
   }
   .navbar-list .navbar-item, .navbar-list .download-item {
     display: none;
