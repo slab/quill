@@ -95,3 +95,14 @@ layout: default
 
   {% include open-source.html %}
 </div>
+
+<!-- script -->
+<script type="text/javascript">
+$(document).ready(function() {
+  $('h1, h2, h3, h4', $('#docs-container')).each(function(i, h) {
+    if (!h.id) return;
+    $('<a class="anchor" href="#' + h.id + '"></a>').prependTo($(h));
+  });
+});
+</script>
+<!-- script -->
