@@ -1,5 +1,25 @@
 <header>
-  <nav class="container navbar">
+  <nav class="navbar-drop">
+    <button class="navbar-close"></button>
+    <ul>
+      <li class="navbar-item">
+        <a class="navbar-link" href="/docs/quickstart/">Documentation</a>
+      </li>
+      <li class="navbar-item">
+        <a class="navbar-link" href="/guides/why-quill/">Guides</a>
+      </li>
+      <li class="navbar-item">
+        <a class="navbar-link" href="/playground/">Playground</a>
+      </li>
+      <li class="navbar-item">
+        <a class="navbar-link" href="/blog/">Blog</a>
+      </li>
+      <li class="navbar-item">
+        {% include github.html darkClass=true %}
+      </li>
+    </ul>
+  </nav>
+  <nav class="container">
     <ul class="navbar-list">
       <li class="navbar-item">
         <a class="navbar-link" href="/docs/quickstart/">Documentation</a>
@@ -20,10 +40,10 @@
         <a class="action" href="/docs/download/">Download</a>
       </li>
     </ul>
-    <button class="navbar-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
   </nav>
+  <button class="navbar-open">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </header>

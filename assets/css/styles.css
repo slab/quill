@@ -178,6 +178,24 @@ pre code {
   padding: 10px 30px;
 }
 
+.github-button.dark-bg {
+  background-color: #fff;
+  border: 3px solid #fff;
+}
+
+.github-button.dark-bg .github-action {
+  color: #1d1e30;
+}
+
+.github-button.dark-bg .github-action path {
+  fill: #1d1e30;
+}
+
+.github-button.dark-bg .github-count {
+  background-color: #1d1e30;
+  color: #fff;
+}
+
 .row > hr {
   width: 90%;
 }
@@ -217,6 +235,32 @@ body:not(.home) header .logo path {
   fill: #fff;
 }
 
+.navbar-drop {
+  background-color: #1d1e30;
+  font-size: 2rem;
+  letter-spacing: 0.15rem;
+  list-style: none;
+  padding: 5em 0 1em;
+  position: absolute;
+  top: -100%;
+  transition: top 1s ease-out 0s;
+  width: 100%;
+  z-index: 10;
+}
+.navbar-drop .navbar-item {
+  height: 3em;
+  line-height: 3em;
+}
+.navbar-drop .navbar-item:last-child {
+  height: 6em;
+  line-height: 6em;
+}
+.navbar-drop .navbar-item a {
+  color: #fff;
+}
+.navbar-drop .github-button {
+  vertical-align: middle;
+}
 .navbar-list {
   color: #fff;
   letter-spacing: 0.15rem;
@@ -224,7 +268,6 @@ body:not(.home) header .logo path {
   margin-bottom: 0;
   margin-top: 0.67em;
 }
-
 .navbar-list li {
   display: inline-block;
   line-height: 7.33rem;
@@ -243,18 +286,26 @@ body:not(.home) header .logo path {
 .navbar-link, .action-link {
   position: relative;
 }
-.navbar-toggle {
+.navbar-open, .navbar-close {
   border: none;
-  display: none;
+  margin-right: 10%;
   padding: 0;
   position: absolute;
   right: 0;
-  top: 2.1em;
+  top: 8em;
 }
-.navbar-toggle span {
+.navbar-close {
+  background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAzNzEuMjMgMzcxLjIzIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzNzEuMjMgMzcxLjIzOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCI+Cjxwb2x5Z29uIHBvaW50cz0iMzcxLjIzLDIxLjIxMyAzNTAuMDE4LDAgMTg1LjYxNSwxNjQuNDAyIDIxLjIxMywwIDAsMjEuMjEzIDE2NC40MDIsMTg1LjYxNSAwLDM1MC4wMTggMjEuMjEzLDM3MS4yMyAgIDE4NS42MTUsMjA2LjgyOCAzNTAuMDE4LDM3MS4yMyAzNzEuMjMsMzUwLjAxOCAyMDYuODI4LDE4NS42MTUgIiBmaWxsPSIjRkZGRkZGIi8+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
+  height: 24px;
+  width: 24px;
+}
+.navbar-open {
+  display: none;
+}
+.navbar-open span {
   background-color: #fff;
   display: block;
-  height: 0.27em;
+  height: 3px;
   margin: 0.53em;
   width: 2.5em;
 }
@@ -345,7 +396,7 @@ body.home header .action {
   background-color: transparent;
   border: 3px solid #1d1e30;
 }
-body.home .navbar-toggle span {
+body.home .navbar-open span {
   background-color: #1d1e30;
 }
 
@@ -796,6 +847,9 @@ body:not(.home) .navbar-link:before {
   body.home header {
     padding-top: 1em;
   }
+  .navbar-open, .navbar-close {
+    top: 4.5em;
+  }
   .logo {
     height: 5.3em;
     width: 8.5em;
@@ -895,9 +949,12 @@ body:not(.home) .navbar-link:before {
 }
 
 @media (max-width: 1023px) {
-  .navbar-toggle {
+  .navbar-open {
     display: inline-block;
-    margin-right: 5%;
+  }
+  .navbar-drop.active {
+    top: 0;
+    transition: top 1s ease-out 0s;
   }
   .navbar-list .navbar-item, .navbar-list .download-item {
     display: none;
@@ -924,7 +981,7 @@ body:not(.home) .navbar-link:before {
   .container {
     width: 90%;
   }
-  .navbar-link:before, .action-link:before {
+  .navbar-list .navbar-link:before, .action-link:before {
     background-color: #000;
     bottom: -18px;
     content: "";
@@ -936,7 +993,7 @@ body:not(.home) .navbar-link:before {
     visibility: hidden;
     width: 100%;
   }
-  .navbar-link:hover:before, .action-link:hover:before {
+  .navbar-list .navbar-link:hover:before, .action-link:hover:before {
     transform: scaleX(1);
     visibility: visible;
   }

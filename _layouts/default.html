@@ -5,7 +5,7 @@
     {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
     {% include meta.html %}
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.css">
-    <link rel="stylesheet" hef="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
     {% assign sections = content | split: '<!-- head -->' %}
     {% for section in sections %}
@@ -47,6 +47,13 @@
     {% endfor %}
     <script type="text/javascript">
     $(document).ready(function() {
+      $('.navbar-open').click(function() {
+        $('.navbar-drop').addClass('active');
+      });
+      $('.navbar-close').click(function() {
+        $('.navbar-drop').removeClass('active');
+      });
+
       var counts = $('.github-count');
       if (counts.length > 0) {
         $.getJSON('https://api.github.com/search/repositories?q=quill+user:quilljs+repo:quill&sort=stars&order=desc', function(data) {
