@@ -14,6 +14,21 @@ redirect_from: /latest/
 <div id="above-container">
   <div class="container">
     <div id="users-container">
+      <h2>
+        <button class="prev">
+          <span class="arrow">
+            <span class="tip"></span>
+            <span class="shaft"></span>
+          </span>
+        </button>
+        Switch Examples
+        <button class="next">
+          <span class="arrow">
+            <span class="tip"></span>
+            <span class="shaft"></span>
+          </span>
+        </button>
+      </h2>
       <h1>Your powerful, open source editor.</h1>
       <ul>
         <li>Trusted by:</li>
@@ -210,6 +225,10 @@ redirect_from: /latest/
         src: '/assets/images/users/' + (name.toLowerCase().replace(/\s/g, '')) + '.png',
         alt: name
       });
+    });
+
+    $('#editor .ql-editor').focus(function() {
+      $('#above-container').addClass('demo-active');
     });
 
     console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
