@@ -60,6 +60,10 @@ h2 {
   font-size: 2.5rem;
 }
 
+li {
+  list-style: none;
+}
+
 a {
   color: #1d1e30;
   outline: none;
@@ -991,7 +995,6 @@ body:not(.home) .navbar-link:before {
   }
   #laptop-container {
     bottom: -135px;
-    width: 90%;
   }
   #detail-container .action {
     margin-top: 3em;
@@ -1048,6 +1051,11 @@ body:not(.home) .navbar-link:before {
   footer .users.row {
     margin-top: 2.5em;
     width: 270px;
+  }
+}
+@media (max-width: 400px) {
+  #laptop-container {
+    width: 90%;
   }
 }
 
