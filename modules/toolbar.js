@@ -82,6 +82,8 @@ class Toolbar extends Module {
         } else {
           this.quill.format(format, value, Quill.sources.USER);
         }
+        let [range, ] = this.quill.selection.getRange();
+        this.update(range);
       });
     });
     // TODO use weakmap
