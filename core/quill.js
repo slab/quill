@@ -101,6 +101,10 @@ class Quill {
     return container;
   }
 
+  blur() {
+    this.selection.setRange(null);
+  }
+
   deleteText(index, length, source) {
     [index, length, , source] = overload(index, length, source);
     this.editor.deleteText(index, length, source);
@@ -233,10 +237,6 @@ class Quill {
     }
     delta.delete(this.getLength());
     this.editor.applyDelta(delta);
-  }
-
-  blur() {
-    this.setSelection(null);
   }
 
   setSelection(index, length, source) {
