@@ -188,9 +188,9 @@ Keyboard.DEFAULTS = {
       { key: Keyboard.keys.ENTER },
       { collapsed: true, format: ['list'], empty: true },
       function(range, context) {
-        this.quill.format('list', false);
+        this.quill.format('list', false, Quill.sources.USER);
         if (context.format.indent) {
-          this.quill.format('indent', false);
+          this.quill.format('indent', false, Quill.sources.USER);
         }
       }
     ],
