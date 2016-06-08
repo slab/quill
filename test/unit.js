@@ -26,5 +26,7 @@ import './unit/modules/toolbar';
 
 import './unit/themes/snow';
 
+import './unit/ui/picker';
+
 
 export default Quill;
