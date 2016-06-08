@@ -71,6 +71,7 @@ class Picker {
 
   selectItem(item, trigger = false) {
     let selected = this.container.querySelector('.ql-selected');
+    if (item === selected) return this.close();
     if (selected != null) {
       selected.classList.remove('ql-selected');
     }
