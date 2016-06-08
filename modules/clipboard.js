@@ -167,6 +167,7 @@ class Clipboard extends Module {
 Clipboard.DEFAULTS = {
   matchers: [
     [Node.TEXT_NODE, matchText],
+    ['br', matchBreak],
     [Node.ELEMENT_NODE, matchNewline],
     [Node.ELEMENT_NODE, matchBlot],
     [Node.ELEMENT_NODE, matchSpacing],
@@ -238,6 +239,13 @@ function matchBlot(node, delta) {
   } else if (typeof match.formats === 'function') {
     let formats = { [match.blotName]: match.formats(node) };
     delta = delta.compose(new Delta().retain(delta.length(), formats));
+  }
+  return delta;
+}
+
+function matchBreak(node, delta) {
+  if (!deltaEndsWith(delta, '\n')) {
+    delta.insert('\n');
   }
   return delta;
 }

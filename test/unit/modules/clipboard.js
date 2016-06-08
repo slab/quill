@@ -95,6 +95,12 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('\u00a0\u00a01\u00a0\u00a0', { bold: true }));
     });
 
+    it('break', function() {
+      let html = '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';
+      let delta = this.clipboard.convert(html);
+      expect(delta).toEqual(new Delta().insert('0\n1\n2\n3\n\n4\n\n5'));
+    });
+
     it('alias', function() {
       let delta = this.clipboard.convert('<b>Bold</b><i>Italic</i>');
       expect(delta).toEqual(new Delta().insert('Bold', { bold: true }).insert('Italic', { italic: true }));
