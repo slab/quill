@@ -214,12 +214,12 @@ class Quill {
     return this.emitter.once.apply(this.emitter, arguments);
   }
 
-  pasteHTML(index, html) {
+  pasteHTML(index, html, source = Emitter.sources.API) {
     if (typeof index === 'string') {
-      this.setContents(this.clipboard.convert(index));
+      this.setContents(this.clipboard.convert(index), html);
     } else {
       let paste = this.clipboard.convert(html);
-      this.updateContents(new Delta().retain(index).concat(paste));
+      this.updateContents(new Delta().retain(index).concat(paste), source);
     }
   }
 
