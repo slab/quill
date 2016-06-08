@@ -50,6 +50,9 @@ class Toolbar extends Module {
     });
     if (!format) return;
     format = format.slice('ql-'.length);
+    if (input.tagName === 'BUTTON') {
+      input.setAttribute('type', 'button');
+    }
     if (this.handlers[format] == null) {
       if (this.quill.scroll.whitelist != null && this.quill.scroll.whitelist[format] == null) {
         debug.warn('ignoring attaching to disabled format', format, input);
