@@ -236,7 +236,7 @@ class Quill {
       delta.insert('\n');
     }
     delta.delete(this.getLength());
-    this.editor.applyDelta(delta);
+    this.editor.applyDelta(delta, source);
   }
 
   setSelection(index, length, source) {

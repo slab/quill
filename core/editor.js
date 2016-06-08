@@ -151,7 +151,7 @@ class Editor {
     return child.length() <= 1 && Object.keys(child.formats()).length == 0;
   }
 
-  removeFormat(index, length) {
+  removeFormat(index, length, source) {
     let text = this.getText(index, length);
     let [line, offset] = this.scroll.line(index + length);
     let suffixLength = 0, suffix = new Delta();
@@ -162,7 +162,7 @@ class Editor {
     let contents = this.getContents(index, length + suffixLength);
     let diff = contents.diff(new Delta().insert(text).concat(suffix));
     let delta = new Delta().retain(index).concat(diff);
-    this.applyDelta(delta);
+    this.applyDelta(delta, source);
   }
 
   update(source = Emitter.sources.USER) {
