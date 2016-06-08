@@ -488,5 +488,15 @@ describe('Selection', function() {
       expect(this.bounds.height).toBeApproximately(32, 1);
       expect(this.bounds.top).toBeApproximately(this.reference.top, 1);
     });
+
+    it('beyond document', function() {
+      let selection = this.initialize(Selection, '<p>0123</p>');
+      expect(() => {
+        this.bounds = selection.getBounds(10, 0);
+      }).not.toThrow();
+      expect(() => {
+        this.bounds = selection.getBounds(0, 10);
+      }).not.toThrow();
+    });
   });
 });

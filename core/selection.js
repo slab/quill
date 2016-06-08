@@ -79,6 +79,9 @@ class Selection {
   }
 
   getBounds(index, length = 0) {
+    let scrollLength = this.scroll.length();
+    index = Math.min(index, scrollLength - 1);
+    length = Math.min(index + length, scrollLength - 1) - index;
     let bounds, node, [leaf, offset] = this.scroll.leaf(index);
     if (leaf == null) return null;
     [node, offset] = leaf.position(offset, true);
@@ -192,6 +195,7 @@ class Selection {
   scrollIntoView(range = this.lastRange) {
     if (range == null) return;
     let bounds = this.getBounds(range.index, range.length);
+    if (bounds == null) return;
     if (this.root.offsetHeight < bounds.bottom) {
       let [line, offset] = this.scroll.line(range.index + range.length);
       this.root.scrollTop = line.domNode.offsetTop + line.domNode.offsetHeight;
