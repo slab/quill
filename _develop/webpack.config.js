@@ -55,7 +55,7 @@ module.exports = {
     ]
   },
   ts: {
-    configFileName: 'nonexistent.json',   // Parchment tsconfig wants to build tests, we don't
+    configFileName: 'tsconfig.json',
     compilerOptions: {
       target: 'es5',
       module: 'commonjs'
