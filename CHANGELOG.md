@@ -1,3 +1,22 @@
+# 1.0.0-beta.5
+
+Weekly beta preview release.
+
+### Features
+
+- Add blur() [#726](https://github.com/quilljs/quill/pull/726)
+
+### Bug Fixes
+
+- Fix null error [#728](https://github.com/quilljs/quill/issues/728)
+- Fix building with Node v6 [#732](https://github.com/quilljs/quill/issues/732)
+- Ensure button type for supplied buttons [#733](https://github.com/quilljs/quill/issues/733)
+- Fix line break pasting on Firefox [#735](https://github.com/quilljs/quill/issues/735)
+- Fix 'user' source on API calls [#739](https://github.com/quilljs/quill/issues/739)
+
+Thanks to [benbro](https://github.com/benbro), [lukechapman](https://github.com/lukechapman), [sachinrekhi](https://github.com/sachinrekhi), and [saw](https://github.com/saw) for their contributions to this release.
+
+
 # 1.0.0-beta.4
 
 Weekly beta preview release.
