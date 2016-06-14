@@ -78,20 +78,21 @@ var toolbarOptions = [
 ];
 ```
 
-Note [Themes](/docs/themes/) may also specify default values for dropdowns. For example, [Snow](/docs/themes/snow/) provides a default list of 35 colors for the `color` and `background` formats if left unspecified.
+Note [Themes](/docs/themes/) may also specify default values for dropdowns. For example, [Snow](/docs/themes/snow/) provides a default list of 35 colors for the `color` and `background` formats, if set to an empty array.
 
 ```javascript
 var toolbarOptions = [
   [{ size: ['small', false, 'large', 'huge'] }],
   ['bold', 'italic', 'underline'],
-  ['color', 'background'],
+  [{ color: [] }, { background: [] }],    // Snow theme fills in values
   [{ script: 'sub' }, { script: 'super' }]
 ];
 
 var quill = new Quill('#editor', {
   modules: {
     toolbar: toolbarOptions
-  }
+  },
+  theme: 'snow'
 });
 ```
 

@@ -157,8 +157,8 @@ Inserts content into editor at a given index from an HTML snippet. The snippet i
 
 **Methods**
 
-- `pasteHTML(html)`
-- `pasteHTML(index, html)`
+- `pasteHTML(html, source = 'api')`
+- `pasteHTML(index, html, source = 'api')`
 
 **Parameters**
 
@@ -166,6 +166,7 @@ Inserts content into editor at a given index from an HTML snippet. The snippet i
 |-----------|----------|------------
 | `index`   | _Number_ | Index where text should be inserted. If omitted, editor will be overwritten.
 | `html`    | _String_ | HTML to convert into content by [clipboard](/docs/modules/clipboard/) and inserted into editor.
+| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
 
 **Examples**
 
