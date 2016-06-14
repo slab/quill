@@ -1,5 +1,21 @@
 ## Selection
 
+
+### blur
+
+Removes focus from the editor.
+
+**Methods**
+
+- `blur()`
+
+**Examples**
+
+```javascript
+editor.blur();
+```
+
+
 ### focus
 
 Focuses the editor and restores its last range.

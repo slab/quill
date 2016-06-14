@@ -29,6 +29,7 @@ permalink: /docs/api/
 
 <h4>Selection</h4>
 
+- [blur](#blur)
 - [focus](#focus)
 - [getBounds](#getbounds)
 - [getSelection](#getselection)
