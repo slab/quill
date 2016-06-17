@@ -231,10 +231,6 @@ function matchBlot(node, delta) {
     if (value != null) {
       embed[match.blotName] = value;
       delta.insert(embed, match.formats(node));
-      if (match.prototype instanceof BlockEmbed) {
-        let newlineDelta = matchAttributor(node, new Delta().insert('\n'));
-        delta = delta.concat(newlineDelta);
-      }
     }
   } else if (typeof match.formats === 'function') {
     let formats = { [match.blotName]: match.formats(node) };

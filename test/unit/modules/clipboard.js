@@ -123,6 +123,11 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('01').insert({ image: '/assets/favicon.png' }).insert('34'));
     });
 
+    it('block embed', function() {
+      let delta = this.clipboard.convert('<p>01</p><iframe src="#"></iframe><p>34</p>');
+      expect(delta).toEqual(new Delta().insert('01\n').insert({ video: '#' }).insert('34'));
+    });
+
     it('custom matcher', function() {
       this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
         let index = 0;
