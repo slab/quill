@@ -112,6 +112,7 @@ describe('compose an epic', function(done) {
       '<p><br></p>',
       '<p>' + P2 + '</p>'
     ].join(''));
+    expect(browser.isExisting('.ql-toolbar .ql-bold.ql-active')).toBe(true);
   });
 
   it('type preformatted', function() {
@@ -127,13 +128,19 @@ describe('compose an epic', function(done) {
       '<p><br></p>',
       '<p>' + P2 + '</p>'
     ].join(''));
+    expect(browser.isExisting('.ql-toolbar .ql-bold.ql-active')).toBe(true);
+  });
+
+  it('toolbar active', function() {
+    browser.keys([KEYS.Right, KEYS.Shift])
+           .keys(Array(CHAPTER.length).fill(KEYS.Right))
+           .keys(KEYS.Null);
+    expect(browser.isExisting('.ql-toolbar .ql-bold.ql-active')).toBe(false);
   });
 
   it('hotkey format', function() {
-    browser.keys([KEYS.Right, KEYS.Shift])
-           .keys(Array(CHAPTER.length).fill(KEYS.Right))
-           .keys(KEYS.Null)
-           .keys([KEYS.Short, 'b', KEYS.Null]);
+    browser.keys([KEYS.Short, 'b', KEYS.Null]);
+    expect(browser.isExisting('.ql-toolbar .ql-bold.ql-active')).toBe(true);
     expect(browser.getHTML('.ql-editor', false)).toEqual([
       '<p><strong>Moby Dick</strong></p>',
       '<p><strong>' + CHAPTER + '</strong></p>',
@@ -155,5 +162,6 @@ describe('compose an epic', function(done) {
       '<p><br></p>',
       '<p>' + P2 + '</p>'
     ].join(''));
+    expect(browser.isExisting('.ql-toolbar .ql-header.ql-active[value="1"]')).toBe(true);
   });
 });
