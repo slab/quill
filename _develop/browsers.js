@@ -24,8 +24,8 @@ var desktop = {
 
 var mobile = {
   'iOS': {
-    '9.2': ['iPhone 6 Plus', 'Safari'],
-    '9.1': ['iPhone 6 Plus', 'Safari']
+    '9.3': ['iPhone 6 Plus', 'Safari'],
+    '9.2': ['iPhone 6 Plus', 'Safari']
   },
   'Android': {
     '5.1': ['Android Emulator', 'Browser'],
