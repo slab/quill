@@ -52,3 +52,8 @@ if (!Array.prototype.find) {
     return undefined;
   };
 }
+
+// Disable resizing in Firefox
+document.addEventListener("DOMContentLoaded", function() {
+  document.execCommand("enableObjectResizing", false, false);
+});
