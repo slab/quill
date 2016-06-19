@@ -42,14 +42,17 @@ class BubbleTheme extends BaseTheme {
           let bounds = this.quill.getBounds(new Range(index, length));
           this.tooltip.position(bounds);
         }
-      } else if (document.activeElement !== input) {
+      } else if (document.activeElement !== input && !!this.quill.hasFocus()) {
         this.tooltip.hide();
       }
     });
     this.quill.on(Emitter.events.SCROLL_OPTIMIZE, () => {
-      if (this.tooltip.root.classList.contains('ql-hidden')) return;
-      let range = this.quill.getSelection();
-      this.tooltip.position(this.quill.getBounds(range));
+      // Let selection be restored by toolbar handlers before repositioning
+      setTimeout(() => {
+        if (this.tooltip.root.classList.contains('ql-hidden')) return;
+        let range = this.quill.getSelection();
+        this.tooltip.position(this.quill.getBounds(range));
+      }, 1);
     });
     toolbar.handlers['link'] = (value) => {
       if (!value) {
