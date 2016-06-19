@@ -1,5 +1,6 @@
 import Parchment from 'parchment';
 import Embed from './embed';
+import Emitter from '../core/emitter';
 
 
 class Cursor extends Embed {
@@ -79,14 +80,12 @@ class Cursor extends Embed {
     }
     this.remove();
     if (range != null && range.start.node === textNode && range.end.node === textNode) {
-      // optimize() might move the cursor after our restore
-      let [start, end] = [range.start.offset, range.end.offset].map(function(offset) {
-        return Math.max(0, Math.min(textNode.data.length, offset - 1));
-      });
-      setTimeout(() => {
-        // optimize() might move selection after us
+      this.selection.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
+        let [start, end] = [range.start.offset, range.end.offset].map(function(offset) {
+          return Math.max(0, Math.min(textNode.data.length, offset - 1));
+        });
         this.selection.setNativeRange(textNode, start, textNode, end);
-      }, 1);
+      });
     }
   }
 

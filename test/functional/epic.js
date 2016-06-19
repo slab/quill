@@ -118,8 +118,7 @@ describe('compose an epic', function(done) {
     if (browser.desiredCapabilities.browserName === 'firefox') {
       browser.click('.ql-editor .ql-cursor');
     }
-    browser.keys('M').pause(200);
-    browser.keys('oby Dick');
+    browser.keys('Moby Dick');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
       '<p><strong>Moby Dick</strong></p>',
       '<p>' + CHAPTER + '</p>',
