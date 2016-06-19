@@ -2,7 +2,7 @@
 
 npm start &
 
-webdriver-manager start &
+webdriver-manager start 2> /dev/null &
 
 sleep 20s
 wdio _develop/wdio.config.js
