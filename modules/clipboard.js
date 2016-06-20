@@ -116,7 +116,8 @@ class Clipboard extends Module {
     if (range == null || range.length === 0 || e.defaultPrevented) return;
     let clipboard = e.clipboardData || window.clipboardData;
     clipboard.setData('text', this.quill.getText(range));
-    if (e.clipboardData) {  // IE11 does not let us set non-text data
+    // Only Chrome allows this shortcut, IE11 errors for trying
+    if (e.clipboardData) {
       clipboard.setData('application/json', JSON.stringify(this.quill.getContents(range)));
     }
     // e.preventDefault();
