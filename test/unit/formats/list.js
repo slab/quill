@@ -192,6 +192,12 @@ describe('List', function() {
     expect(this.container).toEqualHTML('<ol><li>0178</li></ol>');
   });
 
+  it('delete partial', function() {
+    let editor = this.initialize(Editor, '<p>0123</p><ul><li>5678</li></ul>');
+    editor.deleteText(2, 5);
+    expect(this.container).toEqualHTML('<p>0178</p>');
+  });
+
   it('nested list replacement', function() {
     let editor = this.initialize(Editor, `
       <ol>

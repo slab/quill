@@ -18,6 +18,14 @@ class ListItem extends Block {
     }
   }
 
+  remove() {
+    if (this.prev == null && this.next == null) {
+      this.parent.remove();
+    } else {
+      super.remove();
+    }
+  }
+
   replaceWith(name, value) {
     this.parent.isolate(this.offset(this.parent), this.length());
     if (name === List.blotName) {
