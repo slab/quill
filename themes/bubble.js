@@ -51,7 +51,9 @@ class BubbleTheme extends BaseTheme {
       setTimeout(() => {
         if (this.tooltip.root.classList.contains('ql-hidden')) return;
         let range = this.quill.getSelection();
-        this.tooltip.position(this.quill.getBounds(range));
+        if (range != null) {
+          this.tooltip.position(this.quill.getBounds(range));
+        }
       }, 1);
     });
     toolbar.handlers['link'] = (value) => {
@@ -93,6 +95,7 @@ class BubbleTheme extends BaseTheme {
     this.buildLinkEditor(toolbar);
     container.appendChild(toolbar.container);
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
+    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
     this.tooltip.hide();
   }
 }
