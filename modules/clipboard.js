@@ -119,7 +119,7 @@ class Clipboard extends Module {
     if (e.clipboardData) {  // IE11 does not let us set non-text data
       clipboard.setData('application/json', JSON.stringify(this.quill.getContents(range)));
     }
-    e.preventDefault();
+    // e.preventDefault();
   }
 
   onCut(e) {
