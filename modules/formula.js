@@ -8,6 +8,7 @@ class FormulaBlot extends Embed {
       katex.render(value, node);
       node.dataset.value = value;
     }
+    node.setAttribute('contenteditable', false);
     return node;
   }
 
