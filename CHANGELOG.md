@@ -1,3 +1,27 @@
+# 1.0.0-beta.6
+
+Weekly beta preview release.
+
+### Features
+
+- Pickers can now be used and is styled in Bubble theme
+
+### Bug Fixes
+
+- Fix editing within formula [#702](https://github.com/quilljs/quill/issues/702)
+- Fix adding new line when deleting across lists [#741](https://github.com/quilljs/quill/issues/741)
+- Fix placeholder when default block tag is changed [#743](https://github.com/quilljs/quill/issues/743)
+- Keep Bubble tooltip open on format [#744](https://github.com/quilljs/quill/issues/744)
+- Fix format loss when copying from Quill [#748](https://github.com/quilljs/quill/issues/748) [#750](https://github.com/quilljs/quill/issues/750)
+- Break long lines in Firefox [#751](https://github.com/quilljs/quill/issues/751)
+- Fix cursor position being off after formatting and typing quickly [#752](https://github.com/quilljs/quill/issues/752)
+- Remove image resizing handles on Firefox [#753](https://github.com/quilljs/quill/issues/753)
+- Fix removing blockquote on initialization [#754](https://github.com/quilljs/quill/issues/754)
+- Fix adding blank lines on initialization [#756](https://github.com/quilljs/quill/issues/756)
+
+Thank you [abejdaniels](https://github.com/abejdaniels), [benbro](https://github.com/benbro), [davelozier](https://github.com/davelozier), [fernandogmar](https://github.com/fernandogmar), [KameSama](https://github.com/KameSama), and [WriterStat](https://github.com/WriterStat) for contributions to this release.
+
+
 # 1.0.0-beta.5
 
 Weekly beta preview release.
