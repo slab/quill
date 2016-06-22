@@ -17,10 +17,11 @@ class Editor {
   }
 
   applyDelta(delta, source = Emitter.sources.API) {
+    this.updating = true;
     let consumeNextNewline = false;
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
-        this.scroll.deleteAt(index, op.delete);
+        this.deleteText(index, op.delete);
         return index;
       }
       let length = op.retain || op.insert.length || 1;
@@ -37,7 +38,7 @@ class Editor {
           if (index >= this.scroll.length() && !text.endsWith('\n')) {
             consumeNextNewline = true;
           }
-          this.scroll.insertAt(index, text);
+          this.insertText(index, text);
           let [line, offset] = this.scroll.line(index);
           let formats = extend({}, bubbleFormats(line));
           if (line instanceof Block) {
@@ -48,17 +49,16 @@ class Editor {
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
           if (key != null) {
-            this.scroll.insertAt(index, key, op.insert[key]);
+            this.insertEmbed(index, key, op.insert[key]);
           } else {
             return index;
           }
         }
       }
-      Object.keys(attributes).forEach((name) => {
-        this.scroll.formatAt(index, length, name, attributes[name]);
-      });
+      this.formatText(index, length, attributes);
       return index + length;
     }, 0);
+    this.updating = false;
     this.update(source);
   }
 
@@ -166,6 +166,7 @@ class Editor {
   }
 
   update(source = Emitter.sources.USER) {
+    if (this.updating) return;
     let oldDelta = this.delta;
     this.delta = this.getDelta();
     let change = oldDelta.diff(this.delta);
