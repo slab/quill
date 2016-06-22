@@ -261,7 +261,7 @@ class Selection {
         this.cursor.restore();
       }
       if (source === Emitter.sources.SILENT) return;
-      this.emitter.emit(Emitter.events.SELECTION_CHANGE, clone(this.lastRange), source);
+      this.emitter.emit(Emitter.events.SELECTION_CHANGE, clone(this.lastRange), oldRange, source);
     }
   }
 }
