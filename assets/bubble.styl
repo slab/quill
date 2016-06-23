@@ -1,3 +1,4 @@
+themeName = 'bubble'
 activeColor = #fff
 borderColor = #777
 backgroundColor = #444
@@ -5,17 +6,6 @@ inactiveColor = #ccc
 shadowColor = #ddd
 textColor = #fff
 
+@import './core'
 @import './base'
 @import './bubble/*'
-
-.ql-bubble
-  box-sizing: border-box
-
-  *
-    box-sizing: border-box
-
-  .ql-color-picker
-    svg
-      margin: 1px
-    .ql-picker-item.ql-selected, .ql-picker-item:hover
-      border-color: activeColor

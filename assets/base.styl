@@ -1,7 +1,5 @@
 // Styles shared between snow and bubble
 
-@import './core'
-
 controlHeight = 24px
 inputPaddingWidth = 5px
 inputPaddingHeight = 3px
@@ -11,29 +9,11 @@ colorItemSize = 16px
 colorItemsPerRow = 7
 
 
-.ql-hidden
-  display: none
-
-.ql-tooltip
-  position: absolute
-  a
-    cursor: pointer
-    text-decoration: none
-
-.ql-toolbar, .ql-formats
-  // clearfix
+.ql-{themeName}.ql-toolbar, .ql-{themeName} .ql-toolbar
   &:after
     clear: both
     content: ''
     display: table
-
-.ql-toolbar
-  *
-    box-sizing: border-box
-
-  .ql-formats
-    display: inline-block
-    vertical-align: middle
 
   button
     background: none
@@ -58,6 +38,31 @@ colorItemsPerRow = 7
       fill: activeColor
     .ql-stroke, .ql-stroke-mitter
       stroke: activeColor
+
+
+.ql-{themeName}
+  box-sizing: border-box
+  *
+    box-sizing: border-box
+
+  .ql-hidden
+    display: none
+
+  .ql-tooltip
+    position: absolute
+    a
+      cursor: pointer
+      text-decoration: none
+
+  .ql-formats
+    &:after
+      clear: both
+      content: ''
+      display: table
+    display: inline-block
+    vertical-align: middle
+
+  .ql-toolbar.{themeName}
 
   .ql-stroke
     fill: none
@@ -92,201 +97,200 @@ colorItemsPerRow = 7
     svg:first-child
       display: none
 
+  .ql-editor
+    h1
+      font-size: 2em
+    h2
+      font-size: 1.5em
+    h3
+      font-size: 1.17em
+    h4
+      font-size: 1em
+    h5
+      font-size: 0.83em
+    h6
+      font-size: 0.67em
+    pre
+      white-space: pre-wrap
+    a
+      text-decoration: underline
+    blockquote
+      border-left: 4px solid #ccc
+      margin-bottom: 5px
+      margin-top: 5px
+      padding-left: 16px
+    pre.hljs
+      overflow: visible
+    code, pre:not(.hljs)
+      background-color: #f0f0f0
+    code, pre
+      border-radius: 3px
+    code
+      font-size: 85%
+      padding-bottom: 2px
+      padding-top: 2px
+      &:before, &:after
+        content: "\00a0"
+        letter-spacing: -2px
+    *:not(pre) + pre, pre:first-of-type
+      margin-top: 5px
+      padding-top: 5px
+    pre
+      margin-bottom: 5px
+      padding: 0px 10px 5px
+    pre + pre
+      margin-top: -10px
+    img
+      max-width: 100%
 
-.ql-editor
-  h1
-    font-size: 2em
-  h2
-    font-size: 1.5em
-  h3
-    font-size: 1.17em
-  h4
-    font-size: 1em
-  h5
-    font-size: 0.83em
-  h6
-    font-size: 0.67em
-  pre
-    white-space: pre-wrap
-  a
-    text-decoration: underline
-  blockquote
-    border-left: 4px solid #ccc
-    margin-bottom: 5px
-    margin-top: 5px
-    padding-left: 16px
-  pre.hljs
-    overflow: visible
-  code, pre:not(.hljs)
-    background-color: #f0f0f0
-  code, pre
-    border-radius: 3px
-  code
-    font-size: 85%
-    padding-bottom: 2px
-    padding-top: 2px
-    &:before, &:after
-      content: "\00a0"
-      letter-spacing: -2px
-  *:not(pre) + pre, pre:first-of-type
-    margin-top: 5px
-    padding-top: 5px
-  pre
-    margin-bottom: 5px
-    padding: 0px 10px 5px
-  pre + pre
-    margin-top: -10px
-  img
-    max-width: 100%
-
-.ql-picker
-  color: inactiveColor
-  display: inline-block
-  float: left
-  font-size: 14px
-  font-weight: 500
-  height: controlHeight
-  position: relative
-  vertical-align: middle
-.ql-picker-label
-  cursor: pointer
-  display: inline-block
-  height: 100%
-  padding-left: 8px
-  padding-right: 2px
-  position: relative
-  width: 100%
-  &::before
+  .ql-picker
+    color: inactiveColor
     display: inline-block
-    line-height: 22px
-.ql-picker-options
-  background-color: backgroundColor
-  display: none
-  min-width: 100%
-  padding: 4px 8px
-  position: absolute
-  white-space: nowrap
-  .ql-picker-item
-    cursor: pointer
-    display: block
-    padding-bottom: 5px
-    padding-top: 5px
-.ql-picker.ql-expanded
-  .ql-picker-label
-    color: borderColor
-    z-index: 2
-    .ql-fill
-      fill: borderColor
-    .ql-stroke
-      stroke: borderColor
-  .ql-picker-options
-    display: block
-    margin-top: -1px
-    top: 100%
-    z-index: 1
-
-.ql-color-picker, .ql-icon-picker
-  width: controlHeight + 4
-  .ql-picker-label
-    padding: 2px 4px
-    svg
-      right: 4px
-.ql-icon-picker
-  .ql-picker-options
-    padding: 4px 0px
-  .ql-picker-item
-    height: controlHeight
-    padding: 2px 4px
-.ql-color-picker
-  .ql-picker-options
-    padding: inputPaddingHeight inputPaddingWidth
-    width: (colorItemSize + 2*colorItemMargin) * colorItemsPerRow + 2*inputPaddingWidth + 2  // +2 for the border
-  .ql-picker-item
-    border: 1px solid transparent
     float: left
-    height: colorItemSize
-    margin: colorItemMargin
-    padding: 0px
-    width: colorItemSize
-  .ql-picker-item.ql-primary-color
-    margin-bottom: toolbarPadding
-
-.ql-picker:not(.ql-color-picker):not(.ql-icon-picker)
-  svg
-    position: absolute
-    margin-top: -9px
-    right: 0
-    top: 50%
-    width: 18px
-
-.ql-picker.ql-header, .ql-picker.ql-font, .ql-picker.ql-size
-  .ql-picker-label[data-label]:not([data-label='']),
-  .ql-picker-item[data-label]:not([data-label=''])
+    font-size: 14px
+    font-weight: 500
+    height: controlHeight
+    position: relative
+    vertical-align: middle
+  .ql-picker-label
+    cursor: pointer
+    display: inline-block
+    height: 100%
+    padding-left: 8px
+    padding-right: 2px
+    position: relative
+    width: 100%
     &::before
-      content: attr(data-label)
+      display: inline-block
+      line-height: 22px
+  .ql-picker-options
+    background-color: backgroundColor
+    display: none
+    min-width: 100%
+    padding: 4px 8px
+    position: absolute
+    white-space: nowrap
+    .ql-picker-item
+      cursor: pointer
+      display: block
+      padding-bottom: 5px
+      padding-top: 5px
+  .ql-picker.ql-expanded
+    .ql-picker-label
+      color: borderColor
+      z-index: 2
+      .ql-fill
+        fill: borderColor
+      .ql-stroke
+        stroke: borderColor
+    .ql-picker-options
+      display: block
+      margin-top: -1px
+      top: 100%
+      z-index: 1
 
-.ql-picker.ql-header
-  width: 98px
-  .ql-picker-label::before,
-  .ql-picker-item::before
-    content: 'Normal'
-  for num in (1..6)
-    .ql-picker-label[data-value=\"{num}\"]::before,
-    .ql-picker-item[data-value=\"{num}\"]::before
-      content: 'Heading ' + num
-  .ql-picker-item[data-value="1"]::before
-    font-size: 2em
-  .ql-picker-item[data-value="2"]::before
-    font-size: 1.5em
-  .ql-picker-item[data-value="3"]::before
-    font-size: 1.17em
-  .ql-picker-item[data-value="4"]::before
-    font-size: 1em
-  .ql-picker-item[data-value="5"]::before
-    font-size: 0.83em
-  .ql-picker-item[data-value="6"]::before
-    font-size: 0.67em
+  .ql-color-picker, .ql-icon-picker
+    width: controlHeight + 4
+    .ql-picker-label
+      padding: 2px 4px
+      svg
+        right: 4px
+  .ql-icon-picker
+    .ql-picker-options
+      padding: 4px 0px
+    .ql-picker-item
+      height: controlHeight
+      padding: 2px 4px
+  .ql-color-picker
+    .ql-picker-options
+      padding: inputPaddingHeight inputPaddingWidth
+      width: (colorItemSize + 2*colorItemMargin) * colorItemsPerRow + 2*inputPaddingWidth + 2  // +2 for the border
+    .ql-picker-item
+      border: 1px solid transparent
+      float: left
+      height: colorItemSize
+      margin: colorItemMargin
+      padding: 0px
+      width: colorItemSize
+    .ql-picker-item.ql-primary-color
+      margin-bottom: toolbarPadding
 
-.ql-picker.ql-font
-  width: 108px
-  .ql-picker-label::before,
-  .ql-picker-item::before
-    content: 'Sans Serif'
-  .ql-picker-label[data-value=serif]::before,
-  .ql-picker-item[data-value=serif]::before
-    content: 'Serif'
-  .ql-picker-label[data-value=monospace]::before,
-  .ql-picker-item[data-value=monospace]::before
-    content: 'Monospace'
-  .ql-picker-item[data-value=serif]::before
-    font-family: Georgia, Times New Roman, serif;
-  .ql-picker-item[data-value=monospace]::before
-    font-family: Monaco, Courier New, monospace;
+  .ql-picker:not(.ql-color-picker):not(.ql-icon-picker)
+    svg
+      position: absolute
+      margin-top: -9px
+      right: 0
+      top: 50%
+      width: 18px
 
-.ql-picker.ql-size
-  width: 98px
-  .ql-picker-label::before,
-  .ql-picker-item::before
-    content: 'Normal'
-  .ql-picker-label[data-value=small]::before,
-  .ql-picker-item[data-value=small]::before
-    content: 'Small'
-  .ql-picker-label[data-value=large]::before,
-  .ql-picker-item[data-value=large]::before
-    content: 'Large'
-  .ql-picker-label[data-value=huge]::before,
-  .ql-picker-item[data-value=huge]::before
-    content: 'Huge'
-  .ql-picker-item[data-value=small]::before
-    font-size: 10px
-  .ql-picker-item[data-value=large]::before
-    font-size: 18px
-  .ql-picker-item[data-value=huge]::before
-    font-size: 32px
+  .ql-picker.ql-header, .ql-picker.ql-font, .ql-picker.ql-size
+    .ql-picker-label[data-label]:not([data-label='']),
+    .ql-picker-item[data-label]:not([data-label=''])
+      &::before
+        content: attr(data-label)
 
-.ql-color-picker.ql-background
-  .ql-picker-item
-    background-color: #fff;
-.ql-color-picker.ql-color
-  .ql-picker-item
-    background-color: #000;
+  .ql-picker.ql-header
+    width: 98px
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Normal'
+    for num in (1..6)
+      .ql-picker-label[data-value=\"{num}\"]::before,
+      .ql-picker-item[data-value=\"{num}\"]::before
+        content: 'Heading ' + num
+    .ql-picker-item[data-value="1"]::before
+      font-size: 2em
+    .ql-picker-item[data-value="2"]::before
+      font-size: 1.5em
+    .ql-picker-item[data-value="3"]::before
+      font-size: 1.17em
+    .ql-picker-item[data-value="4"]::before
+      font-size: 1em
+    .ql-picker-item[data-value="5"]::before
+      font-size: 0.83em
+    .ql-picker-item[data-value="6"]::before
+      font-size: 0.67em
+
+  .ql-picker.ql-font
+    width: 108px
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Sans Serif'
+    .ql-picker-label[data-value=serif]::before,
+    .ql-picker-item[data-value=serif]::before
+      content: 'Serif'
+    .ql-picker-label[data-value=monospace]::before,
+    .ql-picker-item[data-value=monospace]::before
+      content: 'Monospace'
+    .ql-picker-item[data-value=serif]::before
+      font-family: Georgia, Times New Roman, serif;
+    .ql-picker-item[data-value=monospace]::before
+      font-family: Monaco, Courier New, monospace;
+
+  .ql-picker.ql-size
+    width: 98px
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Normal'
+    .ql-picker-label[data-value=small]::before,
+    .ql-picker-item[data-value=small]::before
+      content: 'Small'
+    .ql-picker-label[data-value=large]::before,
+    .ql-picker-item[data-value=large]::before
+      content: 'Large'
+    .ql-picker-label[data-value=huge]::before,
+    .ql-picker-item[data-value=huge]::before
+      content: 'Huge'
+    .ql-picker-item[data-value=small]::before
+      font-size: 10px
+    .ql-picker-item[data-value=large]::before
+      font-size: 18px
+    .ql-picker-item[data-value=huge]::before
+      font-size: 32px
+
+  .ql-color-picker.ql-background
+    .ql-picker-item
+      background-color: #fff;
+  .ql-color-picker.ql-color
+    .ql-picker-item
+      background-color: #000;

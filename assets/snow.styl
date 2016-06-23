@@ -1,3 +1,4 @@
+themeName = 'snow'
 activeColor = #06c
 borderColor = #ccc
 backgroundColor = #fff
@@ -5,15 +6,13 @@ inactiveColor = #444
 shadowColor = #ddd
 textColor = #444
 
+@import './core'
 @import './base'
 @import './snow/*'
 
-.ql-container.ql-snow
-  box-sizing: border-box
-
+.ql-snow
   a
     color: activeColor
-  *
-    box-sizing: border-box
 
+.ql-container.ql-snow
   border: 1px solid borderColor
