@@ -31,8 +31,8 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
-    this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
-      if (delta.length() > 0) {
+    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
+      if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
         this.update(Emitter.sources.SILENT);
       }
     });
@@ -260,8 +260,11 @@ class Selection {
       if (!this.composing && nativeRange != null && nativeRange.native.collapsed && nativeRange.start.node !== this.cursor.textNode) {
         this.cursor.restore();
       }
-      if (source === Emitter.sources.SILENT) return;
-      this.emitter.emit(Emitter.events.SELECTION_CHANGE, clone(this.lastRange), oldRange, source);
+      let args = [Emitter.events.SELECTION_CHANGE, clone(this.lastRange), clone(oldRange), source];
+      this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);
+      if (source !== Emitter.sources.SILENT) {
+        this.emitter.emit(...args);
+      }
     }
   }
 }
