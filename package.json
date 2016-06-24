@@ -65,7 +65,7 @@
     "uglify-js": "^2.6.2",
     "wdio-jasmine-framework": "~0.2.1",
     "webdriver-manager": "^10.0.4",
-    "webdriverio": "^4.0.9",
+    "webdriverio": "^4.1.0",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   },
