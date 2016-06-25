@@ -34,8 +34,8 @@ class Scroll extends Parchment.Scroll {
         !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
       last.moveChildren(first);
       last.remove();
+      this.optimize();
     }
-    this.optimize();
   }
 
   formatAt(index, length, format, value) {
@@ -57,6 +57,7 @@ class Scroll extends Parchment.Scroll {
         let embed = Parchment.create(value, def);
         this.appendChild(embed);
       }
+      this.optimize();
     } else {
       super.insertAt(index, value, def);
     }
