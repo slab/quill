@@ -4,9 +4,7 @@
     <title>{{ page.title }}{% if page.path != "index.html" %} - Quill{% endif %}</title>
     {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
     {% include meta.html %}
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
     {% assign sections = content | split: '<!-- head -->' %}
     {% for section in sections %}
       {% assign mod = forloop.index | modulo: 2 %}
@@ -37,7 +35,7 @@
       {% endif %}
     {% endfor %}
     {% include footer.html %}
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     {% assign sections = content | split: '<!-- script -->' %}
     {% for section in sections %}
       {% assign mod = forloop.index | modulo: 2 %}
