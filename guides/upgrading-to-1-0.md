@@ -21,6 +21,8 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 
 - `onModuleLoad` *removed* - Module loading is handled by Themes and similar behavior should be achieved by extending the theme.
 
+- `destroy` *removed* - No longer necessary as Quill no longer keeps references to editor instances, allowing Javascript garbage collectors to work as expected.
+
 - `prepareFormat` *renamed* - A new API [`format`](/docs/api/#format) now provides formatting functionality for all selection states, including those previously covered by `prepareFormat`.
 
 - For consistency, all positions are now index and length based versus the start and end representation sometimes used by [`deleteText`](/docs/api/#deletetext), [`formatText`](/docs/api/#formattext), [`formatLine`](/docs/api/#formatline), and the Range object used by selection APIs such as on [`getSelection`](/docs/api/#getselection), [`setSelection`](/docs/api/#setselection), and the [`selection-change`](/docs/api/#selection-change) event.
