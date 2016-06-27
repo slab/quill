@@ -130,6 +130,22 @@ describe('History', function() {
       expect(this.quill.getContents()).toEqual(new Delta().insert('The foxes!\n'));
     });
 
+    it('transform preserve intention', function() {
+      let url = 'https://www.google.com/';
+      this.quill.history.options.userOnly = true;
+      this.quill.updateContents(new Delta().insert(url, { link: url }), Quill.sources.USER);
+      this.quill.history.lastRecorded = 0;
+      this.quill.updateContents(new Delta().delete(url.length).insert('Google', { link: url }), Quill.sources.API);
+      this.quill.history.lastRecorded = 0;
+      this.quill.updateContents(new Delta().retain(this.quill.getLength()-1).insert('!'), Quill.sources.USER);
+      this.quill.history.lastRecorded = 0;
+      expect(this.quill.getContents()).toEqual(new Delta().insert('Google', { link: url }).insert('The lazy fox!\n'));
+      this.quill.history.undo();
+      expect(this.quill.getContents()).toEqual(new Delta().insert('Google', { link: url }).insert('The lazy fox\n'));
+      this.quill.history.undo();
+      expect(this.quill.getContents()).toEqual(new Delta().insert('Google', { link: url }).insert('The lazy fox\n'));
+    });
+
     it('ignore remote changes', function() {
       this.quill.history.options.delay = 0;
       this.quill.history.options.userOnly = true;

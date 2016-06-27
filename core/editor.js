@@ -4,6 +4,7 @@ import Emitter from './emitter';
 import Parchment from 'parchment';
 import Block, { bubbleFormats } from '../blots/block';
 import clone from 'clone';
+import equal from 'deep-equal';
 import extend from 'extend';
 
 
@@ -11,7 +12,7 @@ class Editor {
   constructor(scroll, emitter) {
     this.scroll = scroll;
     this.emitter = emitter;
-    this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update, this);
+    this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update.bind(this, null));
     this.delta = this.getDelta();
     this.enable();
   }
@@ -21,7 +22,7 @@ class Editor {
     let consumeNextNewline = false;
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
-        this.deleteText(index, op.delete);
+        this.scroll.deleteAt(index, op.delete);
         return index;
       }
       let length = op.retain || op.insert.length || 1;
@@ -38,7 +39,7 @@ class Editor {
           if (index >= this.scroll.length() && !text.endsWith('\n')) {
             consumeNextNewline = true;
           }
-          this.insertText(index, text);
+          this.scroll.insertAt(index, text);
           let [line, offset] = this.scroll.line(index);
           let formats = extend({}, bubbleFormats(line));
           if (line instanceof Block) {
@@ -49,22 +50,24 @@ class Editor {
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
           if (key != null) {
-            this.insertEmbed(index, key, op.insert[key]);
+            this.scroll.insertAt(index, key, op.insert[key]);
           } else {
             return index;
           }
         }
       }
-      this.formatText(index, length, attributes);
+      Object.keys(attributes).forEach((name) => {
+        this.scroll.formatAt(index, length, name, attributes[name]);
+      });
       return index + length;
     }, 0);
     this.updating = false;
-    this.update(source);
+    this.update(delta, source);
   }
 
   deleteText(index, length, source = Emitter.sources.API) {
     this.scroll.deleteAt(index, length);
-    this.update(source);
+    this.update(new Delta().retain(index).delete(length), source);
   }
 
   enable(enabled = true) {
@@ -79,14 +82,14 @@ class Editor {
       });
     });
     this.scroll.optimize();
-    this.update(source);
+    this.update(new Delta().retain(index).retain(length, clone(formats)), source);
   }
 
   formatText(index, length, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
-    this.update(source);
+    this.update(new Delta().retain(index).retain(length, clone(formats)), source);
   }
 
   getContents(index, length) {
@@ -135,13 +138,16 @@ class Editor {
 
   insertEmbed(index, embed, value, source = Emitter.sources.API) {
     this.scroll.insertAt(index, embed, value);
-    this.update(source);
+    this.update(new Delta().retain(index).insert({ [embed]: value }), source);
   }
 
   insertText(index, text, formats = {}, source = Emitter.sources.API) {
     text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     this.scroll.insertAt(index, text);
-    this.formatText(index, text.length, formats, source);
+    Object.keys(formats).forEach((format) => {
+      this.scroll.formatAt(index, text.length, format, formats[format]);
+    });
+    this.update(new Delta().retain(index).insert(text, clone(formats)), source)
   }
 
   isBlank() {
@@ -165,11 +171,13 @@ class Editor {
     this.applyDelta(delta, source);
   }
 
-  update(source = Emitter.sources.USER) {
+  update(change, source = Emitter.sources.USER) {
     if (this.updating) return;
     let oldDelta = this.delta;
     this.delta = this.getDelta();
-    let change = oldDelta.diff(this.delta);
+    if (!change || !equal(oldDelta.compose(change), this.delta)) {
+      change = oldDelta.diff(this.delta);
+    }
     if (change.length() > 0) {
       let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
       this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);
