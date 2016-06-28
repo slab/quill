@@ -127,12 +127,14 @@ pre > code {
 
 .action {
   background-color: #f2d123;
+  border: 2px solid transparent;
   display: inline-block;
   font-family: 'Sofia Pro', sans-serif;
   font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
+  transition: background-color 100ms, border-color 100ms, color 100ms;
 }
 
 .logo {
@@ -238,6 +240,14 @@ pre > code {
 .arrow {
   padding: 0.33em 0.67em;
 }
+.prev:hover .arrow {
+  padding-left: .77em;
+  padding-right: .57em;
+}
+.next:hover .arrow {
+  padding-left: .57em;
+  padding-right: .77em;
+}
 .arrow .shaft {
   background-color: #000;
   border-bottom: 3px solid #fff;
@@ -287,6 +297,7 @@ header a:hover {
 }
 
 header .action {
+  border-width: 3px;
   color: #1d1e30;
   display: inline;
   padding: 1em;
@@ -344,7 +355,6 @@ body:not(.home) header .logo path {
 }
 .navbar-list .download-item .action:hover {
   background-color: #1d1e30;
-  border: 2px solid #fff;
   color: #fff;
 }
 .navbar-link, .action-link {
@@ -411,12 +421,12 @@ footer .action {
 
 footer .action.documentation {
   background-color: #1d1e30;
-  border: 2px solid #f2d123;
+  border-color: #f2d123;
   color: #f2d123;
 }
 footer .action:hover {
   background-color: #fff;
-  border: none;
+  border-color: transparent;
   color: #1d1e30;
 }
 
@@ -458,7 +468,7 @@ body.home header a {
 }
 body.home header .action {
   background-color: transparent;
-  border: 3px solid #1d1e30;
+  border-color: #1d1e30;
 }
 body.home .navbar-open span {
   background-color: #1d1e30;
@@ -532,6 +542,9 @@ body.home .arrow .shaft {
   font-size: 1.5rem;
   position: absolute;
   width: 100%;
+}
+#above-container:not(.demo-active) #laptop-container:hover {
+  bottom: -190px;
 }
 #camera-container {
   margin: 17px auto;
@@ -874,7 +887,7 @@ body:not(.home) .navbar-link:before {
   content: "Next";
 }
 #pagination-container .next:before,
-#pagination-container .prev:before {
+#pagination-container .prev:after {
   font-family: "Sofia Pro", sans-serif;
 }
 
@@ -1029,6 +1042,10 @@ body:not(.home) .navbar-link:before {
   #demo-container #toolbar .ql-formats:first-child + .ql-formats {
     display: inline-block;
   }
+
+  #above-container:not(.demo-active) #laptop-container:hover {
+    bottom: -130px;
+  }
   #laptop-container {
     bottom: -135px;
   }
@@ -1075,6 +1092,9 @@ body:not(.home) .navbar-link:before {
   .feature.row {
     display: flex;
     flex-direction: column-reverse;
+  }
+  #docs-container .edit-link {
+    display: none;
   }
   footer {
     font-size: 1rem;
