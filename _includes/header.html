@@ -21,19 +21,19 @@
   </nav>
   <nav class="container">
     <ul class="navbar-list">
-      <li class="navbar-item">
+      <li class="{% if page.url contains "/docs/" %}active {% endif %}navbar-item">
         <a class="navbar-link" href="/docs/quickstart/">Documentation</a>
       </li>
-      <li class="navbar-item">
+      <li class="{% if page.url contains "/guides/" %}active {% endif %}navbar-item">
         <a class="navbar-link" href="/guides/why-quill/">Guides</a>
       </li>
       <li class="logo-item">
         <a class="logo" href="/">{% include svg/logo.svg %}</a>
       </li>
-      <li class="navbar-item">
+      <li class="{% if page.url contains "/playground/" %}active {% endif %}navbar-item">
         <a class="navbar-link" href="/playground/">Playground</a>
       </li>
-      <li class="navbar-item">
+      <li class="{% if page.url contains "/blog/" %}active {% endif %}navbar-item">
         <a class="navbar-link" href="/blog/">Blog</a>
       </li>
       <li class="download-item">

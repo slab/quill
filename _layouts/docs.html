@@ -32,10 +32,11 @@ layout: default
   {% endif %}
 {% endfor %}
 
-<div class="container">
+<div id="docs-wrapper" class="container">
   <div class="row">
     <div id="sidebar-container" class="three columns">
-      <ul>
+      <button class="sidebar-button">Document Navigation</button>
+      <ul class="sidebar-list">
         {% include sidebar.html items=items %}
       </ul>
     </div>
@@ -102,6 +103,9 @@ $(document).ready(function() {
   $('h1, h2, h3, h4', $('#docs-container')).each(function(i, h) {
     if (!h.id) return;
     $('<a class="anchor" href="#' + h.id + '"></a>').prependTo($(h));
+  });
+  $('#sidebar-container .sidebar-button').click(function() {
+    $('#sidebar-container').toggleClass('active');
   });
 });
 </script>
