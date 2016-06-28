@@ -1,0 +1,5 @@
+<svg viewbox="0 0 18 18">
+  <path class="ql-fill" d="M14,16H4a1,1,0,0,1,0-2H14A1,1,0,0,1,14,16Z"/>
+  <path class="ql-fill" d="M14,4H4A1,1,0,0,1,4,2H14A1,1,0,0,1,14,4Z"/>
+  <rect class="ql-fill" x="3" y="6" width="12" height="6" rx="1" ry="1"/>
+</svg>

@@ -15,12 +15,18 @@ module.exports = {
     ''        : require('../assets/icons/direction-ltr.svg'),
     'rtl'     : require('../assets/icons/direction-rtl.svg')
   },
+  'float': {
+    'center'  : require('../assets/icons/float-center.svg'),
+    'full'    : require('../assets/icons/float-full.svg'),
+    'left'    : require('../assets/icons/float-left.svg'),
+    'right'   : require('../assets/icons/float-right.svg')
+  },
   'formula'   : require('../assets/icons/formula.svg'),
-  'italic'    : require('../assets/icons/italic.svg'),
   'header': {
     '1'       : require('../assets/icons/header.svg'),
     '2'       : require('../assets/icons/header-2.svg')
   },
+  'italic'    : require('../assets/icons/italic.svg'),
   'image'     : require('../assets/icons/image.svg'),
   'indent': {
     '+1'      : require('../assets/icons/indent.svg'),
