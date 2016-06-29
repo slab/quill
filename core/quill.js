@@ -57,6 +57,7 @@ class Quill {
       themeClass = Quill.import(`themes/${options.theme}`);
     }
     options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
+    options.bounds = typeof options.bounds === 'string' ? document.querySelector(options.bounds) : options.bounds;
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
