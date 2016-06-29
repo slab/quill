@@ -1076,8 +1076,14 @@ body:not(.home) .navbar-link:before {
     font-size: 1rem;
     padding: 20px;
   }
+  #bubble-container .editor {
+    height: 425px;
+  }
   #snow-container .editor {
     height: 385px;
+  }
+  #full-container .editor {
+    height: 308px;
   }
   #snow-container .toolbar .ql-font,
   #snow-container .toolbar .ql-formats {
