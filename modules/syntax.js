@@ -52,7 +52,7 @@ class Syntax extends Module {
     if (typeof this.options.highlight !== 'function') {
       throw new Error('Syntax module requires highlight.js. Please include the library on the page.');
     }
-    Quill.register(CodeToken);
+    Quill.register(CodeToken, true);
     Quill.register(SyntaxCodeBlock, true);
     let timer = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {

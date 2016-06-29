@@ -29,7 +29,7 @@ function Formula() {
   if (window.katex == null) {
     throw new Error('Formula module requires KaTeX.');
   }
-  Quill.register(FormulaBlot);
+  Quill.register(FormulaBlot, true);
 }
 
 
