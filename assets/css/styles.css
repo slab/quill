@@ -60,6 +60,14 @@ h2 {
   font-size: 2.5rem;
 }
 
+h3 {
+  font-size: 2.2rem;
+}
+
+h4 {
+  font-size: 2rem;
+}
+
 hr {
   border-top: 1px solid #d9dce1;
 }
@@ -106,20 +114,18 @@ code {
 }
 
 pre > code {
-  background-color: #f9f9f9;
+  background-color: #002b36;
   display: block;
   border: none;
   box-shadow: 0 0 6px 2px rgba(28, 31, 47, 0.1);
-  padding: 32px;
+  padding: 2em;
   white-space: pre-wrap;
 }
 
 *:not(pre) > code {
-  background-color: transparent;
-  border-color: #ff0000;
+  border: none;
   border-radius: 0px;
-  color: #ff0000;
-  padding: 0.2rem 1rem;
+  padding: 0.2rem 0.5rem;
 }
 
 
@@ -863,7 +869,7 @@ body:not(.home) .navbar-link:before {
   list-style: none;
 }
 #sidebar-container > ul ul {
-  margin: 1rem 0 0 4.2em;
+  margin: 0.5em 0 0.5em 4.2em;
 }
 #sidebar-container .sidebar-button {
   border: none;
@@ -919,6 +925,28 @@ body:not(.home) .navbar-link:before {
 #content-container {
   margin-bottom: 6.67em;
   max-width: 800px;
+}
+#content-container a {
+  color: #25408f;
+  text-decoration: underline;
+}
+#content-container h1,
+#content-container h2,
+#content-container h3,
+#content-container h4,
+#content-container h5,
+#content-container h6 {
+  margin-top: 2em;
+}
+#toolbar-toolbar {
+  margin-bottom: 2em;
+}
+#toolbar-editor {
+  display: none;
+}
+
+#content-container .ql-editor p {
+  font-size: 1em;
 }
 
 #pagination-container {

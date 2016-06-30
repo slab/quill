@@ -12,7 +12,7 @@ Quill allows several ways to customize it to suit your needs. This section is de
 Quill requires an container where the editor will be appended. You can either pass in a CSS selector or a DOM object.
 
 ```javascript
-var editor = new Quill('.editor');  // The first result of the selector will be used
+var editor = new Quill('.editor');  // First matching element will be used
 ```
 
 ```javascript
@@ -46,39 +46,29 @@ The following keys are recognized:
 
 #### bounds
 
-- Default: document.body
-
-- DOM Element that editor ui elements, such as tooltips, should be confined within. Currently only considers left and right boundaries.
+DOM Element that editor ui elements, such as tooltips, should be confined within. Currently only considers left and right boundaries.
 
 
 #### debug
 
-- Default: `false`
-
-- Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Debugging messages are disabled by default.
+Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Debugging messages are disabled by default.
 
 #### formats
 
-- Default: All formats
-
-- Whitelist of formats to allow in the editor. See [Formats](/docs/formats/) for a complete list.
+Whitelist of formats to allow in the editor. See [Formats](/docs/formats/) for a complete list.
 
 #### modules
 
-- Collection of modules to include and respective options. See [Modules](/docs/modules/) for more information.
+Collection of modules to include and respective options. See [Modules](/docs/modules/) for more information.
 
 #### placeholder
 
-- Default: ''
-
-- Placeholder text to show when editor is empty.
+Placeholder text to show when editor is empty.
 
 #### readOnly
 
-- Default: `false`
-
-- Whether to instantiate the editor to read-only mode.
+Whether to instantiate the editor to read-only mode.
 
 #### theme
 
-- Name of theme to use. The builtin options are 'bubble' or 'snow'. An invalid or falsy value will load a default minimal theme. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.
+Name of theme to use. The builtin options are "bubble" or "snow". An invalid or falsy value will load a default minimal theme. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.

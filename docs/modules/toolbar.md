@@ -36,7 +36,8 @@ Because the `container` option is so common, a top level shorthand is also allow
 ```javascript
 var quill = new Quill('#editor', {
   modules: {
-    toolbar: '#toolbar'   // Equivalent to { toolbar: { container: '#toolbar' }}
+    // Equivalent to { toolbar: { container: '#toolbar' }}
+    toolbar: '#toolbar'
   }
 });
 ```
@@ -72,7 +73,8 @@ Dropdowns are similarly specified by an Object, but with an array of possible va
 
 ```javascript
 // Note false, not 'normal', is the correct value
-// quill.format('size', false) removes the format, allowing default styling to work
+// quill.format('size', false) removes the format,
+// allowing default styling to work
 var toolbarOptions = [
   { size: [ 'small', false, 'large', 'huge' ]}
 ];
@@ -104,7 +106,7 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
   <!-- Add font size dropdown -->
   <select class="ql-size">
     <option value="small"></option>
-    <!-- Note a missing, thus falsy value, is used to set the size back to default -->
+    <!-- Note a missing, thus falsy value, is used to reset to default -->
     <option selected></option>
     <option value="large"></option>
     <option value="huge"></option>
@@ -136,7 +138,8 @@ Handler functions will be bound to the toolbar (so using `this` will refer to th
 
 ```javascript
 var toolbarOptions = {
-  handlers: {     // handlers object will be merged with default handlers object
+  handlers: {
+    // handlers object will be merged with default handlers object
     'link': function(value) {
       if (value) {
         var href = prompt('Enter the URL');
