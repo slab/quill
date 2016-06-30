@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Quill - A Rich Text WYSIWYG Editor with an API
+title: Quill - Your powerful, rich text editor
 description: Quill is a free, open source WYSIWYG editor built for the modern web. With its modular architecture and expressive API, it is completely customizable to fulfill any need.
 bodyClass: 'home'
 redirect_from: /latest/
@@ -30,7 +30,7 @@ redirect_from: /latest/
           </span>
         </button>
       </h2>
-      <h1>Your powerful, open source editor.</h1>
+      <h1>Your powerful, rich text editor.</h1>
       <ul>
         <li>Trusted by:</li>
         <li>
@@ -60,7 +60,7 @@ redirect_from: /latest/
       <div id="demo-container">
         <div id="carousel-container">
           <div id="bubble-container">
-            <div class="editor">This is Quill's minimal Bubble theme</div>
+            <div class="editor"></div>
           </div>
           <div id="snow-container">
             <div class="toolbar">
@@ -136,7 +136,7 @@ redirect_from: /latest/
             </div>
           </div>
           <div id="full-container">
-            <div class="editor">Here's Quill with all the formats.</div>
+            <div class="editor"></div>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ redirect_from: /latest/
 <div id="detail-container">
   <div class="container">
     <a class="action" href="/docs/download/">Download Now</a>
-    <h1>A Rich Text Editor Driven by API</h1>
+    <h1>An Open Source Editor Driven By API</h1>
   </div>
 </div>
 
@@ -158,7 +158,7 @@ redirect_from: /latest/
         <img src="/assets/images/features/developers.svg">
         <div class="details">
           <h2>Built for Developers</h2>
-          <span>Granular access to the editor's content and events through a simple API. Works consistently and deterministically with JSON as both input and output.</span>
+          <span>Granular access to the editor's content, changes and events through a simple API. Works consistently and deterministically with JSON as both input and output.</span>
           <a class="action-link" href="/docs/">View documentation</a>
         </div>
       </div>
@@ -166,7 +166,7 @@ redirect_from: /latest/
         <img src="/assets/images/features/cross-platform.svg">
         <div class="details">
           <h2>Cross Platform</h2>
-          <span>Supports all modern browsers on desktops, tablets and phones. The produced HTML and resulting behavior is consistent across platforms.</span>
+          <span>Supports all modern browsers on desktops, tablets and phones. Experience the same consistent behavior and produced HTML across platforms.</span>
           <a class="action-link" href="//github.com/quilljs/quill/#readme">See the Chart</a>
         </div>
       </div>
@@ -182,8 +182,8 @@ redirect_from: /latest/
 
     <div class="feature row">
       <div class="columns details">
-        <h2>Scale with You</h2>
-        <span>Used at small hackathons and by giant Fortune 500s alike. Start simple with the Quill core then easily customize or add your own extensions later if your product needs grow.</span>
+        <h2>Fits Like a Glove</h2>
+        <span>Used in small projects and giant Fortune 500s alike. Start simple with the Quill core then easily customize or add your own extensions later if your product needs grow.</span>
         <a class="action-link" href="/docs/">Learn More</a>
       </div>
       <img class="columns" src="/assets/images/features/scale.svg">
@@ -204,10 +204,15 @@ redirect_from: /latest/
 
     var bubbleEditor = new Quill('#bubble-container .editor', {
       bounds: '#bubble-container .editor',
+      modules: {
+        'formula': true,
+        'syntax': true
+      },
       theme: 'bubble'
     });
 
     var snowEditor = new Quill('#snow-container .editor', {
+      bounds: '#snow-container .editor',
       modules: {
         'formula': true,
         'syntax': true,
@@ -217,6 +222,7 @@ redirect_from: /latest/
     });
 
     var fullEditor = new Quill('#full-container .editor', {
+      bounds: '#full-container .editor',
       modules: {
         'formula': true,
         'syntax': true,
@@ -224,7 +230,7 @@ redirect_from: /latest/
           [{ 'font': [] }, { 'size': [] }],
           [ 'bold', 'italic', 'underline', 'strike' ],
           [{ 'color': [] }, { 'background': [] }],
-          [{ 'strike': 'super' }, { 'strike': 'sub' }],
+          [{ 'script': 'super' }, { 'script': 'sub' }],
           [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
           [{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '-1' }],
           [ 'direction', { 'align': [] }],
@@ -236,7 +242,10 @@ redirect_from: /latest/
     });
 
     var editors = [bubbleEditor, snowEditor, fullEditor];
-    switchEditor(1, snowEditor, true)
+    switchEditor(1, snowEditor, true);
+    var initialContent = snowEditor.getContents();
+    bubbleEditor.setContents(initialContent);
+    fullEditor.setContents(initialContent);
 
     $('.camera').click(function() {
       var index = $(this).index();

@@ -551,6 +551,9 @@ body.home .arrow .shaft {
 #above-container:not(.demo-active) #laptop-container:hover {
   bottom: -190px;
 }
+#above-container:not(.demo-active) .ql-editor {
+  overflow-y: hidden;
+}
 #camera-container {
   margin: 17px auto;
   text-align: center;
@@ -610,14 +613,11 @@ body.home .arrow .shaft {
   width: 33.33%;
 }
 #bubble-container .editor {
-  height: 590px;
+  height: 595px;
 }
 #snow-container .toolbar {
   border: none;
   padding: 4.5% 13%;
-}
-#snow-container .editor {
-  height: 470px;
 }
 #snow-container .toolbar {
   padding: 4.5% 13%;
@@ -627,7 +627,7 @@ body.home .arrow .shaft {
   height: 470px;
 }
 #full-container .editor {
-  height: 550px;
+  height: 530px;
 }
 #full-container .ql-toolbar {
   border-bottom: 1px solid #ccc;
@@ -848,8 +848,8 @@ body:not(.home) .navbar-link:before {
 
 #sidebar-container {
   font-family: "Sofia Pro", sans-serif;
-  font-size: 1.08rem;
-  margin-top: 12em;
+  font-size: 1.2rem;
+  margin-top: 11em;
   text-transform: uppercase;
 }
 
@@ -994,14 +994,26 @@ body:not(.home) .navbar-link:before {
   .navbar-list .navbar-item, .navbar-list .download-item {
     display: none;
   }
+  #users-container h1 {
+    font-size: 4rem;
+  }
   #laptop-container {
     padding: 0px 22px;
   }
   #snow-container .toolbar {
-    padding: 2.25% 5% 0;
+    padding: 2.25%;
+  }
+  #snow-container .ql-editor {
+    padding: 0 10%;
+  }
+  #bubble-container .editor {
+    height: 610px;
   }
   #snow-container .editor {
-    padding: 0 10%;
+    height: 515px;
+  }
+  #full-container .editor {
+    height: 540px;
   }
   .feature .details {
     padding: 1em;
@@ -1065,8 +1077,6 @@ body:not(.home) .navbar-link:before {
   #demo-container {
     padding-left: 0;
     padding-right: 0;
-    margin-left: 11px;
-    margin-right: 11px;
   }
   #demo-container .ql-editor {
     font-size: 1rem;
@@ -1077,13 +1087,13 @@ body:not(.home) .navbar-link:before {
     padding: 20px;
   }
   #bubble-container .editor {
-    height: 425px;
+    height: 430px;
   }
   #snow-container .editor {
     height: 385px;
   }
   #full-container .editor {
-    height: 308px;
+    height: 315px;
   }
   #snow-container .toolbar .ql-font,
   #snow-container .toolbar .ql-formats {
@@ -1173,12 +1183,11 @@ body:not(.home) .navbar-link:before {
     padding: 4em 9em 0;
     position: absolute;
     right: 0;
-    transition: max-height 1.5s ease-in-out 0s, background-color 500ms ease-in-out 0s;
+    transition: max-height 800ms ease-in-out 0s, background-color 500ms linear 0s;
   }
   #sidebar-container.active {
     background-color: #ececec;
     max-height: 100em;
-    transition: background-color 500ms ease-in-out 0s, max-height 1.5s ease-in-out 0s;
   }
   #sidebar-container .sidebar-button {
     display: block;
@@ -1245,6 +1254,9 @@ body:not(.home) .navbar-link:before {
   #docs-container h4:hover .anchor {
     display: inline-block;
   }
+}
+@media (min-width: 1024px) {
+
 }
 
 @media (min-width: 1200px) {
