@@ -1,3 +1,5 @@
+import extend from 'extend';
+import Delta from 'rich-text/lib/delta';
 import Emitter from '../core/emitter';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
@@ -26,10 +28,18 @@ const SIZES = [ 'small', false, 'large', 'huge' ];
 class BaseTheme extends Theme {
   constructor(quill, options) {
     super(quill, options);
-    if (this.options.modules.toolbar != null &&
-        this.options.modules.toolbar.constructor !== Object) {
-      this.options.modules.toolbar = { container: this.options.modules.toolbar };
+    this.options.modules.toolbar = this.options.modules.toolbar || {};
+    if (this.options.modules.toolbar.constructor !== Object) {
+      this.options.modules.toolbar = {
+        container: this.options.modules.toolbar,
+        handlers: {}
+      };
     }
+    this.options.modules.toolbar.handlers = extend({},
+      BaseTheme.DEFAULTS.modules.toolbar.handlers,
+      this.constructor.DEFAULTS.modules.toolbar.handlers || {},
+      this.options.modules.toolbar.handlers || {}
+    );
   }
 
   addModule(name) {
@@ -41,7 +51,7 @@ class BaseTheme extends Theme {
   }
 
   buildButtons(buttons) {
-    buttons.forEach(function(button) {
+    buttons.forEach((button) => {
       let className = button.getAttribute('class') || '';
       className.split(/\s+/).forEach((name) => {
         if (!name.startsWith('ql-')) return;
@@ -59,6 +69,13 @@ class BaseTheme extends Theme {
         }
       });
     });
+  }
+
+  buildImageUpload(button) {
+    let file = document.createElement('input');
+    file.setAttribute('type', 'file');
+    file.classList.add('ql-image');
+    button.parentNode.insertBefore(file, button.nextSibling);
   }
 
   buildPickers(selects) {
@@ -105,7 +122,42 @@ class BaseTheme extends Theme {
     });
   }
 }
-BaseTheme.DEFAULTS = {};
+BaseTheme.DEFAULTS = {
+  modules: {
+    toolbar: {
+      handlers: {
+        image: function(value) {
+          let fileInput = this.container.querySelector('input.ql-image[type=file]');
+          let quill = this.quill;
+          if (fileInput == null) {
+            fileInput = document.createElement('input');
+            fileInput.setAttribute('type', 'file');
+            fileInput.setAttribute('accept', 'image/*');
+            fileInput.classList.add('ql-image');
+            fileInput.addEventListener('change', function() {
+              if (this.files != null && this.files[0] != null) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                  let range = quill.getSelection(true);
+                  quill.updateContents(new Delta()
+                    .retain(range.index)
+                    .delete(range.length)
+                    .insert({ image: e.target.result })
+                  , Emitter.sources.USER);
+                  quill.setSelection(range.index + 1, Emitter.sources.SILENT);
+                  fileInput.value = "";
+                }
+                reader.readAsDataURL(this.files[0]);
+              }
+            });
+            this.container.appendChild(fileInput);
+          }
+          fileInput.click();
+        }
+      }
+    }
+  }
+};
 
 
 function fillSelect(select, values, defaultValue = false) {

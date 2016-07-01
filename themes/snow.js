@@ -1,6 +1,5 @@
 import Emitter from '../core/emitter';
 import BaseTheme from './base';
-import ImageTooltip from '../ui/image-tooltip';
 import LinkTooltip from '../ui/link-tooltip';
 import Picker from '../ui/picker';
 
@@ -15,9 +14,6 @@ class SnowTheme extends BaseTheme {
     toolbar.container.classList.add('ql-snow');
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
-    if (toolbar.container.querySelector('.ql-image')) {
-      this.imageTooltip = new ImageTooltip(this.quill);
-    }
     if (toolbar.container.querySelector('.ql-link')) {
       this.linkTooltip = new LinkTooltip(this.quill);
       this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
@@ -28,7 +24,7 @@ class SnowTheme extends BaseTheme {
 }
 SnowTheme.DEFAULTS = {
   modules: {
-    'toolbar': {
+    toolbar: {
       container: [
         [{ header: ['1', '2', '3', false] }],
         ['bold', 'italic', 'underline', 'link'],
@@ -36,10 +32,7 @@ SnowTheme.DEFAULTS = {
         ['clean']
       ],
       handlers: {
-        'image': function() {
-          this.quill.theme.imageTooltip.show();
-        },
-        'link': function(value) {
+        link: function(value) {
           if (value) {
             let savedRange = this.quill.selection.savedRange;
             this.quill.theme.linkTooltip.open(savedRange);

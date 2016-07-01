@@ -1,4 +1,5 @@
 import extend from 'extend';
+import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -85,11 +86,13 @@ class Toolbar extends Module {
         if (this.handlers[format] != null) {
           this.handlers[format].call(this, value);
         } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
-          this.quill.deleteText(range, Quill.sources.USER);
-          this.quill.insertEmbed(range.index, format, true, Quill.sources.USER);
+          this.quill.updateContents(new Delta()
+            .retain(range.index)
+            .delete(range.length)
+            .insert({ [format]: true })
+          , Quill.sources.USER);
           range = new Range(range.index + 1, 0);
           this.quill.setSelection(range, Quill.sources.SILENT);
-          this.quill.selection.scrollIntoView();
         } else {
           this.quill.format(format, value, Quill.sources.USER);
         }
