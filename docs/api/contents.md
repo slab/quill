@@ -1,20 +1,15 @@
 ## Content
+---
 
 ### deleteText
 
-Deletes text from the editor.
+Deletes text from the editor. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `deleteText(index, length, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `start`   | _Number_ | Start index of deletion.
-| `length`  | _Number_ | Length of deletion.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+deleteText(index: Number, length: Number, source: String = 'api')
+```
 
 **Examples**
 
@@ -22,25 +17,15 @@ Deletes text from the editor.
 quill.deleteText(6, 4);
 ```
 
-
 ### getContents
 
-Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/deltas/) object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/deltas/) object. `length` defaults to the length of the remaining document.
 
 **Methods**
 
-- `getContents(index = 0, length = remaining)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of retrieval.
-| `length`  | _Number_ | Length of content to retrieve. Defaults to the remaining document.
-
-**Returns**
-
-- _Delta_ contents of the editor.
+```javascript
+getContents(index: Number = 0, length: Number = remaining): Delta
+```
 
 **Examples**
 
@@ -48,18 +33,15 @@ Retrieves contents of the editor, with formatting data, represented by a [Delta]
 var delta = quill.getContents();
 ```
 
-
 ### getLength
 
 Retrieves the length of the editor contents.
 
 **Methods**
 
-- `getLength()`
-
-**Returns**
-
-- *Number* of characters in the editor.
+```javascript
+`getLength(): Number`
+```
 
 **Examples**
 
@@ -67,25 +49,15 @@ Retrieves the length of the editor contents.
 var length = quill.getLength();
 ```
 
-
 ### getText
 
-Retrieves the string contents of the editor.
+Retrieves the string contents of the editor. `length` defaults to the length of the remaining document.
 
 **Methods**
 
-- `getText(index = 0, length = remaining)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of text retrieval.
-| `length`  | _Number_ | Length of text to retrieve. Defaults to remaining document.
-
-**Returns**
-
-- *String* contents of the editor
+```javascript
+getText(index: Number = 0, length: Number = remaining): String
+```
 
 **Examples**
 
@@ -93,23 +65,15 @@ Retrieves the string contents of the editor.
 var text = quill.getText(0, 10);
 ```
 
-
 ### insertEmbed
 
-Insert embedded content into the editor.
+Insert embedded content into the editor. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `insertEmbed(index, type, value, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Index where content should be inserted.
-| `type`    | _String_ | Type of embed.
-| `value`   | _String_ | Value of embed.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+insertEmbed(index: Number, type: String, value: any, source: String = 'api')
+```
 
 **Examples**
 
@@ -117,27 +81,19 @@ Insert embedded content into the editor.
 quill.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
 ```
 
-
 ### insertText
 
-Inserts text into the editor. See [formats](/docs/formats/) for a list of available formats.
+Inserts text into the editor, optionally with a specified format or multiple [formats](/docs/formats/). [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `insertText(index, text, source = 'api')`
-- `insertText(index, text, name, value, source = 'api')`
-- `insertText(index, text, formats, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Index where text should be inserted.
-| `text`    | _String_ | Text to be inserted.
-| `name`    | _String_ | Name of format to apply to inserted text.
-| `value`   | _String_ | Value of format to apply to inserted text.
-| `formats` | _Object_ | Key/value pairs of formats to apply to inserted text.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+insertText(index: Number, text: String, source: String = 'api')
+insertText(index: Number, text: String, format: String, value: any,
+           source: String = 'api')
+insertText(index: Number, text: String, formats: { [String]: any },
+           source: String = 'api')
+```
 
 **Examples**
 
@@ -145,28 +101,21 @@ Inserts text into the editor. See [formats](/docs/formats/) for a list of availa
 quill.insertText(0, 'Hello', 'bold', true);
 
 quill.insertText(5, 'Quill', {
-  'italic': true,
-  'fore-color': '#ffff00'
+  'color': '#ffff00',
+  'italic': true
 });
 ```
 
-
 ### pasteHTML
 
-Inserts content into editor at a given index from an HTML snippet. The snippet is interpretted and cleaned by the [clipboard](/docs/modules/clipboard/) before being inserted into Quill. If no insertion index is provided, the editor will be overwritten.
+Inserts content into editor at a given index from an HTML snippet. The snippet is interpretted and cleaned by the [clipboard](/docs/modules/clipboard/) before being inserted into Quill. If no insertion index is provided, the entire editor contents will be overwritten. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `pasteHTML(html, source = 'api')`
-- `pasteHTML(index, html, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Index where text should be inserted. If omitted, editor will be overwritten.
-| `html`    | _String_ | HTML to convert into content by [clipboard](/docs/modules/clipboard/) and inserted into editor.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+pasteHTML(html: String, source: String = 'api')
+pasteHTML(index: Number, html: String, source: String = 'api')
+```
 
 **Examples**
 
@@ -178,20 +127,15 @@ quill.pasteHTML(5, '&nbsp;<b>World</b>');
 
 ```
 
-
 ### setContents
 
-Overwrites editor with given contents. Contents should end with a newline (see [Working with Deltas](/guides/working-with-deltas/)).
+Overwrites editor with given contents. Contents should end with a newline (see [Working with Deltas](/guides/working-with-deltas/)). [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `setContents(delta)`
-
-**Parameters**
-
-| Parameter | Type                     | Description
-|-----------|--------------------------|------------
-| `delta`   | [_Delta_](/docs/deltas/) | Delta editor should be set to.
+```javascript
+setContents(delta: Delta, source: String = 'api')
+```
 
 **Examples**
 
@@ -203,20 +147,15 @@ quill.setContents([
 ]);
 ```
 
-
 ### setText
 
-Sets contents of editor with given text. Note Quill documents must end with a newline so one will be added for you if omitted.
+Sets contents of editor with given text. Note Quill documents must end with a newline so one will be added for you if omitted.  [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `setText(text)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `text`    | _String_ | Text to set editor contents to.
+```javascript
+setText(text: String, source: String = 'api')
+```
 
 **Examples**
 
@@ -224,20 +163,31 @@ Sets contents of editor with given text. Note Quill documents must end with a ne
 quill.setText('Hello\n');
 ```
 
+### update
 
-### updateContents
-
-Applies Delta to editor contents.
+Synchronously check editor for user updates and fires events, if changes have occurred. Useful for collaborative use cases during conflict resolution requiring the latest up to date state. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `updateContents(delta)`
+```javascript
+update(source: String = 'user')
+```
 
-**Parameters**
+**Examples**
 
-| Parameter | Type                     | Description
-|-----------|--------------------------|------------
-| `delta`   | [_Delta_](/docs/deltas/) | Delta that will be applied.
+```javascript
+quill.update();
+```
+
+### updateContents
+
+Applies Delta to editor contents. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+
+**Methods**
+
+```javascript
+updateContents(delta: Delta, source: String = 'api')
+```
 
 **Examples**
 

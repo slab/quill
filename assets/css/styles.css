@@ -57,11 +57,11 @@ h1 {
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 h3 {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
 }
 
 h4 {
@@ -74,6 +74,10 @@ hr {
 
 li {
   list-style: none;
+}
+
+table {
+  text-align: left;
 }
 
 button {
@@ -128,6 +132,9 @@ pre > code {
   padding: 0.2rem 0.5rem;
 }
 
+h2 + hr {
+  margin-top: 0;
+}
 
 /*** Global ***/
 
@@ -826,7 +833,7 @@ body:not(.home) .feature .github-button {
 }
 body:not(.home) .navbar-list .download-item .action:hover {
   background-color: #fff;
-  border: none;
+  border-color: #fff;
   color: #1d1e30;
 }
 body:not(.home) .navbar-link:before {
@@ -908,18 +915,25 @@ body:not(.home) .navbar-link:before {
   margin-left: -24px;
   padding-left: 24px;
 }
+#docs-container h1:first-of-type {
+  margin-top: 0;
+}
+#docs-container hr {
+  margin-left: -2%;
+  width: 104%;
+}
+#docs-container li {
+  list-style: disc inside;
+}
 #docs-container .breadcrumb {
   font-size: 1.25rem;
 }
 #docs-container .breadcrumb span:first-child {
   font-weight: bold;
 }
-#docs-container hr {
-  margin-left: -2%;
-  width: 104%;
-}
-#docs-container h1:first-of-type {
-  margin-top: 0;
+#docs-container .table-of-contents li {
+  list-style: none;
+  margin-bottom: 0.5em;
 }
 
 #content-container {

@@ -46,14 +46,20 @@ The following keys are recognized:
 
 #### bounds
 
+Default: `document.body`
+
 DOM Element that editor ui elements, such as tooltips, should be confined within. Currently only considers left and right boundaries.
 
 
 #### debug
 
+Default: `false`
+
 Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Debugging messages are disabled by default.
 
 #### formats
+
+Default: All formats
 
 Whitelist of formats to allow in the editor. See [Formats](/docs/formats/) for a complete list.
 
@@ -63,9 +69,13 @@ Collection of modules to include and respective options. See [Modules](/docs/mod
 
 #### placeholder
 
+Default: None
+
 Placeholder text to show when editor is empty.
 
 #### readOnly
+
+Default: `false`
 
 Whether to instantiate the editor to read-only mode.
 

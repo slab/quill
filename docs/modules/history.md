@@ -36,6 +36,7 @@ var quill = new Quill('#editor', {
   modules: {
     history: {
       delay: 2000,
+      maxStack: 500,
       userOnly: true
     }
   },

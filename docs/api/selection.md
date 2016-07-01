@@ -1,5 +1,5 @@
 ## Selection
-
+---
 
 ### blur
 
@@ -7,7 +7,9 @@ Removes focus from the editor.
 
 **Methods**
 
-- `blur()`
+```javascript
+blur()
+```
 
 **Examples**
 
@@ -15,14 +17,15 @@ Removes focus from the editor.
 editor.blur();
 ```
 
-
 ### focus
 
 Focuses the editor and restores its last range.
 
 **Methods**
 
-- `focus()`
+```javascript
+focus()
+```
 
 **Examples**
 
@@ -30,51 +33,33 @@ Focuses the editor and restores its last range.
 editor.focus();
 ```
 
-
 ### getBounds
 
-Retrieves the pixel position (relative to the editor container) and boundaries of a selection at a given location. The actual selection need not be at that index. Useful for calculating where to place tooltips.
+Retrieves the pixel position (relative to the editor container) and dimensions of a selection at a given location. The user's current selection need not be at that index. Useful for calculating where to place tooltips.
 
 **Methods**
 
-- `getBounds(index, length = 0)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Index position to measure selection bounds.
-| `length`  | _Number_ | Length of selection range. Defaults to collapsed cursor.
-
-**Returns**
-
-- *Object* Object with keys `height`, `width`, `left`, and `top`.
+```javascript
+getBounds(index: Number, length: Number = 0):
+  { left: Number, top: Number, height: Number, width: Number }
+```
 
 **Examples**
 
 ```javascript
 quill.setText('Hello\nWorld\n');
-quill.getBounds(7);    // Returns { height: 15, width: 0, left: 27, top: 31 }
+quill.getBounds(7);  // Returns { height: 15, width: 0, left: 27, top: 31 }
 ```
-
 
 ### getSelection
 
-Retrieves the user's selection range.
+Retrieves the user's selection range, optionally to focus the editor first. Otherwise `null` may be returned if editor does not have focus.
 
 **Methods**
 
-- `getSelection(focus = false)`
-
-**Parameters**
-
-| Parameter | Type      | Description
-|-----------|-----------|------------
-| `foucs`   | _Boolean_ | Whether to focus editor before checking selection.
-
-**Returns**
-
-- *Range* with keys `index` and `length` representing user's selection range, or null if editor does not have focus.
+```javascript
+getSelection(focus = false): { index: Number, length: Number }
+```
 
 **Examples**
 
@@ -92,18 +77,15 @@ if (range) {
 }
 ```
 
-
 ### hasFocus
 
 Checks if editor has focus. Note focus on toolbar, tooltips, does not count as the editor.
 
 **Methods**
 
-- `hasFocus()`
-
-**Returns**
-
-- *Boolean* Whether editor has focus.
+```javascript
+hasFocus(): Boolean
+```
 
 **Examples**
 
@@ -111,24 +93,17 @@ Checks if editor has focus. Note focus on toolbar, tooltips, does not count as t
 quill.hasFocus();
 ```
 
-
 ### setSelection
 
-Sets user selection to given range. Will also focus the editor. If `null`, will blur the editor.
+Sets user selection to given range, which will also focus the editor. Providing `null` as the selection range will blur the editor. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `setSelection(index, length, source = 'api')`
-- `setSelection(range, souce = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of selection range.
-| `length`  | _Number_ | Length of selection range.
-| `range`   | _Object_ | Object with **index** and **length** keys indicating the corresponding index where the selection starts and length of selection.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+setSelection(index: Number, length: Number, source: String = 'api')
+setSelection(range: { index: Number, length: Number },
+             souce: String = 'api')
+```
 
 **Examples**
 
