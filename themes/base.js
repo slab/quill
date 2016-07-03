@@ -71,13 +71,6 @@ class BaseTheme extends Theme {
     });
   }
 
-  buildImageUpload(button) {
-    let file = document.createElement('input');
-    file.setAttribute('type', 'file');
-    file.classList.add('ql-image');
-    button.parentNode.insertBefore(file, button.nextSibling);
-  }
-
   buildPickers(selects) {
     let pickers = selects.map((select) => {
       let picker;
