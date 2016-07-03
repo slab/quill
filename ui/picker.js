@@ -66,12 +66,13 @@ class Picker {
   }
 
   close() {
+    console.trace();
     this.container.classList.remove('ql-expanded');
   }
 
   selectItem(item, trigger = false) {
     let selected = this.container.querySelector('.ql-selected');
-    if (item === selected) return this.close();
+    if (item === selected) return;
     if (selected != null) {
       selected.classList.remove('ql-selected');
     }
@@ -96,12 +97,12 @@ class Picker {
           event.initEvent('change', true, true);
           this.select.dispatchEvent(event);
         }
+        this.close();
       }
     } else {
       if (this.label.dataset.value) delete this.label.dataset.value;
       if (this.label.dataset.label) delete this.label.dataset.label;
     }
-    this.close();
   }
 
   update() {
