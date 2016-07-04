@@ -326,6 +326,12 @@ describe('Editor', function() {
       expect(this.container).toEqualHTML('<p><em><img src="/assets/favicon.png"></em>');
     });
 
+    it('old list', function() {
+      let editor = this.initialize(Editor, '');
+      editor.applyDelta(new Delta().insert('\n', { bullet: true }).insert('\n', { list: true }));
+      expect(this.container).toEqualHTML('<ul><li><br></li></ul><ol><li><br></li></ol><p><br></p>');
+    });
+
     it('improper block embed insert', function() {
       let editor = this.initialize(Editor, '<p>0123</p>');
       editor.applyDelta(new Delta().retain(2).insert({ video: '#' }));

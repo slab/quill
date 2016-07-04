@@ -26,7 +26,7 @@ class Editor {
         return index;
       }
       let length = op.retain || op.insert.length || 1;
-      let attributes = op.attributes || {};
+      let attributes = handleOldList(op.attributes || {});
       if (op.insert != null) {
         [op, attributes] = handleOldEmbed(op, attributes);
         if (typeof op.insert === 'string') {
@@ -215,6 +215,17 @@ function handleOldEmbed(op, attributes) {
     delete attributes['image'];
   }
   return [op, attributes];
+}
+
+function handleOldList(attributes) {
+  if (attributes['list'] === true) {
+    attributes = clone(attributes);
+    attributes['list'] = 'ordered';
+  } else if (attributes['bullet'] === true) {
+    attributes = clone(attributes);
+    attributes['list'] = 'bullet';
+  }
+  return attributes;
 }
 
 
