@@ -66,7 +66,6 @@ class Picker {
   }
 
   close() {
-    console.trace();
     this.container.classList.remove('ql-expanded');
   }
 
