@@ -136,6 +136,15 @@ describe('Editor', function() {
         <p><strong>23</strong></p>`
       );
     });
+
+    it('text removing formatting', function() {
+      let editor = this.initialize(Editor, '<p><s>01</s></p>');
+      editor.insertText(2, '23', { bold: false, strike: false });
+      expect(editor.getDelta()).toEqual(new Delta()
+        .insert('01', { strike: true })
+        .insert('23\n')
+      );
+    });
   });
 
   describe('delete', function() {

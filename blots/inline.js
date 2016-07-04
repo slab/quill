@@ -12,7 +12,9 @@ class Inline extends Parchment.Inline {
   formatAt(index, length, name, value) {
     if (Inline.compare(this.statics.blotName, name) < 0 && Parchment.query(name, Parchment.Scope.BLOT)) {
       let blot = this.isolate(index, length);
-      blot.wrap(name, value);
+      if (value) {
+        blot.wrap(name, value);
+      }
     } else {
       super.formatAt(index, length, name, value);
     }
