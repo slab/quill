@@ -85,6 +85,9 @@ class Clipboard extends Module {
     });
     let traverse = (node) => {  // Post-order
       return [].reduce.call(node.childNodes || [], (delta, childNode) => {
+        if (childNode.nodeType !== Node.ELEMENT_NODE && childNode.nodeType !== Node.TEXT_NODE) {
+          return delta;
+        }
         let childrenDelta = traverse(childNode);
         childrenDelta = this.matchers.reduce(function(childrenDelta, pair) {
           let [type, matcher] = pair;
@@ -227,13 +230,14 @@ function matchSpacing(node, delta) {
 
 function matchStyles(node, delta) {
   let formats = {};
-  if (node.style.fontWeight && computeStyle(node).fontWeight === 'bold') {
+  let style = node.style || {};
+  if (style && computeStyle(node).fontWeight === 'bold') {
     formats.bold = true;
   }
   if (Object.keys(formats).length > 0) {
     delta = delta.compose(new Delta().retain(delta.length(), formats));
   }
-  if (parseFloat(node.style.textIndent || 0) > 0) {  // Could be 0.5in
+  if (parseFloat(style.textIndent || 0) > 0) {  // Could be 0.5in
     delta = new Delta().insert('\t').concat(delta);
   }
   return delta;
