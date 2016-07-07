@@ -29,6 +29,14 @@ describe('Quill', function() {
       expect(quill.getContents()).toEqual(new Delta().insert('\n\n\n'));
       expect(quill.root).toEqualHTML('<p><br></p><p><br></p><p><br></p>');
     });
+
+    it('formatted ending', function() {
+      let quill = this.initialize(Quill, '<p class="ql-align-center">Test</p>');
+      expect(quill.getContents()).toEqual(
+        new Delta().insert('Test').insert('\n', { align: 'center' })
+      );
+      expect(quill.root).toEqualHTML('<p class="ql-align-center">Test</p>');
+    });
   });
 
   describe('api', function() {
