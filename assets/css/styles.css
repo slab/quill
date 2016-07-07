@@ -859,6 +859,13 @@ body:not(.home) .navbar-link:before {
   width: 2.5em;
 }
 
+#content-container .standalone-link {
+  float: right;
+  font-size: 1.3rem;
+  margin-top: 0.5em;
+  text-decoration: none;
+}
+
 #sidebar-container {
   font-family: "Sofia Pro", sans-serif;
   font-size: 1.2rem;
