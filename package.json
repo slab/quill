@@ -35,7 +35,7 @@
     "deep-equal": "~1.0.1",
     "eventemitter3": "~1.2.0",
     "extend": "~3.0.0",
-    "parchment": "1.0.0-beta.7",
+    "parchment": "1.0.0-beta.8",
     "rich-text": "~3.0.1"
   },
   "devDependencies": {
