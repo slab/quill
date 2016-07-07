@@ -34,8 +34,6 @@ class Clipboard extends Module {
       options.matchers = Clipboard.DEFAULTS.matchers.concat(options.matchers);
     }
     super(quill, options);
-    this.quill.root.addEventListener('copy', this.onCopy.bind(this));
-    this.quill.root.addEventListener('cut', this.onCut.bind(this));
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');
     this.container.setAttribute('contenteditable', true);
@@ -111,58 +109,20 @@ class Clipboard extends Module {
     return delta;
   }
 
-  onCopy(e) {
-    let range = this.quill.getSelection();
-    if (range == null || range.length === 0 || e.defaultPrevented) return;
-    let clipboard = e.clipboardData || window.clipboardData;
-    clipboard.setData('text', this.quill.getText(range));
-    // Only Chrome allows this shortcut, IE11 errors for trying
-    if (e.clipboardData) {
-      clipboard.setData('application/json', JSON.stringify(this.quill.getContents(range)));
-    }
-    // e.preventDefault();
-  }
-
-  onCut(e) {
-    if (e.defaultPrevented) return;
-    this.onCopy(e);
-    let range = this.quill.getSelection();
-    this.quill.deleteText(range, Quill.sources.USER);
-    this.quill.setSelection(range.index, Quill.sources.SILENT);
-  }
-
   onPaste(e) {
     if (e.defaultPrevented) return;
     let range = this.quill.getSelection();
     let clipboard = e.clipboardData || window.clipboardData;
     let delta = new Delta().retain(range.index).delete(range.length);
-    let done = (delta) => {
+    this.container.focus();
+    setTimeout(() => {
+      let html = this.container.innerHTML;
+      delta = delta.concat(this.convert());
       this.quill.updateContents(delta, Quill.sources.USER);
       // range.length contributes to delta.length()
       this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
       this.quill.selection.scrollIntoView();
-    };
-    let intercept = (delta, callback) => {
-      this.container.focus();
-      setTimeout(() => {
-        let html = this.container.innerHTML;
-        delta = delta.concat(this.convert());
-        callback(delta);
-      }, 1);
-    };
-    // Firefox types is an iterable, not array
-    // IE11 types can be null
-    if ([].indexOf.call(clipboard.types || [], 'application/json') > -1) {
-      try {
-        let pasteJSON = JSON.parse(clipboard.getData('application/json'));
-        done(delta.concat(pasteJSON));
-      } catch(err) {
-        intercept(delta, done);
-      }
-      e.preventDefault();
-    } else {
-      intercept(delta, done);
-    }
+    }, 1);
   }
 }
 Clipboard.DEFAULTS = {
