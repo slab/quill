@@ -2,6 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import DeltaOp from 'rich-text/lib/op';
 import Emitter from './emitter';
 import Parchment from 'parchment';
+import CodeBlock from '../formats/code';
 import Block, { bubbleFormats } from '../blots/block';
 import clone from 'clone';
 import equal from 'deep-equal';
@@ -77,8 +78,15 @@ class Editor {
   formatLine(index, length, formats = {}, source = Emitter.sources.API) {
     this.scroll.update();
     Object.keys(formats).forEach((format) => {
-      this.scroll.lines(index, Math.max(length, 1)).forEach(function(line) {
-        line.format(format, formats[format]);
+      let lines = this.scroll.lines(index, Math.max(length, 1));
+      lines.forEach((line, i) => {
+        if (!(line instanceof CodeBlock)) {
+          line.format(format, formats[format]);
+        } else {
+          let codeIndex = index - line.offset(this.scroll);
+          let codeLength = line.newlineIndex(codeIndex) - index + 1;
+          line.formatAt(codeIndex, codeLength, format, formats[format]);
+        }
       });
     });
     this.scroll.optimize();

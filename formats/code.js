@@ -2,6 +2,7 @@ import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
 import Inline from '../blots/inline';
+import TextBlot from '../blots/text';
 
 
 class Code extends Inline {}
@@ -21,24 +22,83 @@ class CodeBlock extends Block {
   }
 
   delta() {
-    let text = this.descendants(Parchment.Leaf).map(function(leaf) {
-      return leaf instanceof Parchment.Text ? leaf.value() : '';
-    }).join('');
-    return new Delta().insert(text).insert('\n', this.formats());
+    let text = this.domNode.textContent;
+    if (text.endsWith('\n')) {      // Should always be true
+      text = text.slice(0, -1);
+    }
+    return text.split('\n').reduce((delta, frag) => {
+      return delta.insert(frag).insert('\n', this.formats());
+    }, new Delta());
+  }
+
+  format(name, value) {
+    if (name === this.statics.blotName && value) return;
+    let [text, offset] = this.descendant(TextBlot, this.length() - 1);
+    if (text != null) {
+      text.deleteAt(text.length() - 1, 1);
+    }
+    super.format(name, value);
   }
 
   formatAt(index, length, name, value) {
-    if (Parchment.query(name, Parchment.Scope.BLOCK) || name === this.statics.blotName) {
-      super.formatAt(index, length, name, value);
+    if (length === 0) return;
+    if (Parchment.query(name, Parchment.Scope.BLOCK) == null ||
+        (name === this.statics.blotName && value === this.statics.formats(this.domNode))) {
+      return;
+    }
+    let nextNewline = this.newlineIndex(index);
+    if (nextNewline < 0 || nextNewline >= index + length) return;
+    let prevNewline = this.newlineIndex(index, true) + 1;
+    let isolateLength = nextNewline - prevNewline + 1;
+    let blot = this.isolate(prevNewline, isolateLength);
+    let next = blot.next;
+    blot.format(name, value);
+    if (next instanceof CodeBlock) {
+      next.formatAt(0, index - prevNewline + length - isolateLength, name, value);
+    }
+  }
+
+  insertAt(index, value, def) {
+    if (def != null) return;
+    let [text, offset] = this.descendant(TextBlot, index);
+    text.insertAt(offset, value);
+  }
+
+  length() {
+    return this.domNode.textContent.length;
+  }
+
+  newlineIndex(searchIndex, reverse = false) {
+    if (!reverse) {
+      let offset = this.domNode.textContent.slice(searchIndex).indexOf('\n');
+      return offset > -1 ? searchIndex + offset : -1;
+    } else {
+      return this.domNode.textContent.slice(0, searchIndex).lastIndexOf('\n');
+    }
+  }
+
+  optimize() {
+    if (!this.domNode.textContent.endsWith('\n')) {
+      this.appendChild(Parchment.create('text', '\n'));
+    }
+    super.optimize();
+    let next = this.next;
+    if (next != null && next.prev === this &&
+        next.statics.blotName === this.statics.blotName &&
+        this.statics.formats(this.domNode) === next.statics.formats(next.domNode)) {
+      next.optimize();
+      next.moveChildren(this);
+      next.remove();
     }
   }
 
   replace(target) {
     super.replace(target);
-    this.descendants(function(blot) {
-      return !(blot instanceof Parchment.Text);
-    }).forEach(function(blot) {
-      if (blot instanceof Parchment.Embed) {
+    [].slice.call(this.domNode.querySelectorAll('*')).forEach(function(node) {
+      let blot = Parchment.find(node);
+      if (blot == null) {
+        node.parentNode.removeChild(node);
+      } else if (blot instanceof Parchment.Embed) {
         blot.remove();
       } else {
         blot.unwrap();
