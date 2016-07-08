@@ -1,4 +1,4 @@
-# 1.0.0-beta.7
+# 1.0.0-beta.8
 
 Weekly beta preview release. The editor is almost ready for release candidacy but a couple cycles will be spent on the Snow and Bubble interfaces.
 
@@ -27,6 +27,11 @@ Image insertion is being reworked in the provided Snow and Bubble themes. The ol
 - Fix inializing document where last line is formatted [#786](https://github.com/quilljs/quill/issues/786)
 
 Thanks to [benbro](https://github.com/benbro), [bram2w](https://github.com/bram2w), [clemmy](https://github.com/clemmy), [DadaMonad](https://github.com/DadaMonad), [ersommer](https://github.com/ersommer), [michaeljosephrosenthal](https://github.com/michaeljosephrosenthal), [mmorearty](https://github.com/mmorearty), [mshamaiev-intel471](https://github.com/mshamaiev-intel471), and [sachinrekhi](https://github.com/sachinrekhi) for their contributions to this release.
+
+
+# 1.0.0-beta.7
+
+Became 1.0.0-beta.8 with a fix.
 
 
 # 1.0.0-beta.6
