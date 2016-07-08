@@ -1,3 +1,34 @@
+# 1.0.0-beta.7
+
+Weekly beta preview release. The editor is almost ready for release candidacy but a couple cycles will be spent on the Snow and Bubble interfaces.
+
+### Work in Progress
+
+Image insertion is being reworked in the provided Snow and Bubble themes. The old image-tooltip has been removed in favor of a simpler and native interaction. By default clicking the image icon on the toolbar will open the OS file picker to convert and that into a base64 image. This will allow for a more natural hook to upload to a remote server instead. Some changes to the link tooltip is also being made to accommodate formula and video insertion, currently only available through the API.
+
+### Breaking Changes
+
+- Image tooltip UI has been removed, see above
+- Code blocks now use a single `<pre>` tag, instead of one per line [#723](https://github.com/quilljs/quill/issues/723)
+
+### Bug Fixes
+
+- Fix multiline syntax highlighting [#723](https://github.com/quilljs/quill/issues/723)
+- Keep pickers open on api text-change [#734](https://github.com/quilljs/quill/issues/734)
+- Emit correct source for text-change [#760](https://github.com/quilljs/quill/issues/760)
+- Emit correct parameters in selection-change [#762](https://github.com/quilljs/quill/issues/762)
+- Fix error redoing line insertion [#767](https://github.com/quilljs/quill/issues/767)
+- Better emitted Deltas for text-change [#768](https://github.com/quilljs/quill/issues/768)
+- Better Array.prototype.find polyfill for IE11 [#776](https://github.com/quilljs/quill/issues/776)
+- Fix Parchment errors in replacing text [#779](https://github.com/quilljs/quill/issues/779) [#783](https://github.com/quilljs/quill/issues/783)
+- Fix align button active state [#780](https://github.com/quilljs/quill/issues/780)
+- Fix format text on falsy value [#782](https://github.com/quilljs/quill/issues/782)
+- Use native cut [#785](https://github.com/quilljs/quill/issues/785)
+- Fix inializing document where last line is formatted [#786](https://github.com/quilljs/quill/issues/786)
+
+Thanks to [benbro](https://github.com/benbro), [bram2w](https://github.com/bram2w), [clemmy](https://github.com/clemmy), [DadaMonad](https://github.com/DadaMonad), [ersommer](https://github.com/ersommer), [michaeljosephrosenthal](https://github.com/michaeljosephrosenthal), [mmorearty](https://github.com/mmorearty), [mshamaiev-intel471](https://github.com/mshamaiev-intel471), and [sachinrekhi](https://github.com/sachinrekhi) for their contributions to this release.
+
+
 # 1.0.0-beta.6
 
 Weekly beta preview release.
