@@ -231,7 +231,7 @@ function matchSpacing(node, delta) {
 function matchStyles(node, delta) {
   let formats = {};
   let style = node.style || {};
-  if (style && computeStyle(node).fontWeight === 'bold') {
+  if (style.fontWeight && computeStyle(node).fontWeight === 'bold') {
     formats.bold = true;
   }
   if (Object.keys(formats).length > 0) {
