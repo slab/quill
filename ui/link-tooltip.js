@@ -74,7 +74,6 @@ class LinkTooltip {
 
   remove() {
     this.quill.formatText(this.range, 'link', false, Quill.sources.USER);
-    this.quill.setSelection(this.range, Quill.sources.SILENT);
     this.hide();
   }
 
@@ -82,7 +81,6 @@ class LinkTooltip {
     let url = this.textbox.value;
     let scrollTop = this.quill.root.scrollTop;
     this.quill.formatText(this.range, 'link', url, Quill.sources.USER);
-    this.quill.setSelection(this.range, Quill.sources.SILENT);
     this.quill.root.scrollTop = scrollTop;
     this.hide();
   }

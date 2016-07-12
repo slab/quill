@@ -91,8 +91,6 @@ class Toolbar extends Module {
             .delete(range.length)
             .insert({ [format]: true })
           , Quill.sources.USER);
-          range = new Range(range.index + 1, 0);
-          this.quill.setSelection(range, Quill.sources.SILENT);
         } else {
           this.quill.format(format, value, Quill.sources.USER);
         }
@@ -197,11 +195,7 @@ Toolbar.DEFAULTS = {
           }
         });
       } else {
-        let startLength = this.quill.getLength();
         this.quill.removeFormat(range, Quill.sources.USER);
-        let endLength = this.quill.getLength();
-        // account for embed removals
-        this.quill.setSelection(range.index, range.length - (startLength-endLength), Quill.sources.SILENT);
       }
     },
     direction: function(value) {

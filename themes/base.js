@@ -137,7 +137,6 @@ BaseTheme.DEFAULTS = {
                     .delete(range.length)
                     .insert({ image: e.target.result })
                   , Emitter.sources.USER);
-                  quill.setSelection(range.index + 1, Emitter.sources.SILENT);
                   fileInput.value = "";
                 }
                 reader.readAsDataURL(this.files[0]);

@@ -13,8 +13,7 @@ let debug = logger('quill');
 
 
 class Quill {
-  static debug(limit) {
-    logger.level(limit);
+  static debug(limit) {3
   }
 
   static import(name) {
@@ -107,7 +106,11 @@ class Quill {
 
   deleteText(index, length, source) {
     [index, length, , source] = overload(index, length, source);
-    this.editor.deleteText(index, length, source);
+    let range = this.getSelection();
+    let change = this.editor.deleteText(index, length, source);
+    range = shiftRange(range, index, -1*length, source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   disable() {
@@ -125,27 +128,36 @@ class Quill {
 
   format(name, value, source = Emitter.sources.API) {
     let range = this.getSelection();
-    if (range == null) return;
+    let change = new Delta();
+    if (range == null) return change;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
-      this.formatLine(range, name, value, source);
+      change = this.formatLine(range, name, value, source);
     } else if (range.length === 0) {
-      return this.selection.format(name, value);
+      this.selection.format(name, value);
+      return change;
     } else {
-      this.formatText(range, name, value, source);
+      change = this.formatText(range, name, value, source);
     }
     this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   formatLine(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);
-    this.editor.formatLine(index, length, formats, source);
+    let range = this.getSelection();
+    let change = this.editor.formatLine(index, length, formats, source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   formatText(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);
-    this.editor.formatText(index, length, formats, source);
+    let range = this.getSelection();
+    let change = this.editor.formatText(index, length, formats, source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   getBounds(index, length = 0) {
@@ -193,13 +205,20 @@ class Quill {
   }
 
   insertEmbed(index, embed, value, source) {
-    this.editor.insertEmbed(index, embed, value, source);
+    let range = this.getSelection();
+    let change = this.editor.insertEmbed(index, embed, value, source);
+    range = shiftRange(range, change, source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   insertText(index, text, name, value, source) {
-    let formats;
+    let formats, range = this.getSelection();
     [index, , formats, source] = overload(index, 0, name, value, source);
-    this.editor.insertText(index, text, formats, source);
+    let change = this.editor.insertText(index, text, formats, source);
+    range = shiftRange(range, index, text.length, source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   off() {
@@ -216,16 +235,20 @@ class Quill {
 
   pasteHTML(index, html, source = Emitter.sources.API) {
     if (typeof index === 'string') {
-      this.setContents(this.clipboard.convert(index), html);
+      return this.setContents(this.clipboard.convert(index), html);
     } else {
       let paste = this.clipboard.convert(html);
-      this.updateContents(new Delta().retain(index).concat(paste), source);
+      return this.updateContents(new Delta().retain(index).concat(paste), source);
     }
   }
 
   removeFormat(index, length, source) {
+    let range = this.getSelection();
     [index, length, , source] = overload(index, length, source);
-    this.editor.removeFormat(index, length, source);
+    let change = this.editor.removeFormat(index, length, source);
+    range = shiftRange(range, index, change.length(), source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 
   setContents(delta, source = Emitter.sources.API) {
@@ -236,7 +259,7 @@ class Quill {
       delta.insert('\n');
     }
     delta.delete(this.getLength());
-    this.editor.applyDelta(delta, source);
+    return this.editor.applyDelta(delta, source);
   }
 
   setSelection(index, length, source) {
@@ -251,19 +274,24 @@ class Quill {
 
   setText(text, source = Emitter.sources.API) {
     let delta = new Delta().insert(text);
-    this.setContents(delta, source);
+    return this.setContents(delta, source);
   }
 
   update(source = Emitter.sources.USER) {
-    this.scroll.update(source);   // Will update selection before selection.update() does if text changes
+    let change = this.scroll.update(source);   // Will update selection before selection.update() does if text changes
     this.selection.update(source);
+    return change;
   }
 
   updateContents(delta, source = Emitter.sources.API) {
+    let range = this.getSelection();
     if (Array.isArray(delta)) {
       delta = new Delta(delta.slice());
     }
-    this.editor.applyDelta(delta, source);
+    let change = this.editor.applyDelta(delta, source);
+    range = shiftRange(range, change, source);
+    this.setSelection(range, Emitter.sources.SILENT);
+    return change;
   }
 }
 Quill.DEFAULTS = {
@@ -312,6 +340,27 @@ function overload(index, length, name, value, source) {
   // Handle optional source
   source = source || Emitter.sources.API;
   return [index, length, formats, source];
+}
+
+function shiftRange(range, index, length, source) {
+  if (range == null) return null;
+  let start, end;
+  if (index instanceof Delta) {
+    [start, end] = [range.index, range.index + range.length].map(function(pos) {
+      return index.transformPosition(pos, source === Emitter.sources.USER);
+    });
+  } else {
+    if (source === Emitter.sources.USER) index -= 1;
+    [start, end] = [range.index, range.index + range.length].map(function(pos) {
+      if (index > pos) return pos;
+      if (length >= 0) {
+        return pos + length;
+      } else {
+        return Math.max(index, pos + length);
+      }
+    });
+  }
+  return new Range(start, end - start);
 }
 
 

@@ -41,13 +41,11 @@ class Keyboard extends Module {
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^$/ }, function(range) {
       if (range.index === 0) return;
       this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
-      this.quill.setSelection(range.index - 1, Quill.sources.SILENT);
       this.quill.selection.scrollIntoView();
     });
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^$/ }, function(range) {
       if (range.index >= this.quill.getLength() - 1) return;
       this.quill.deleteText(range.index, 1, Quill.sources.USER);
-      this.quill.setSelection(range.index, Quill.sources.SILENT);
     });
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDelete);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDelete);
@@ -181,7 +179,6 @@ Keyboard.DEFAULTS = {
           this.quill.scroll.deleteAt(range.index, range.length);
         }
         this.quill.insertText(range.index, '\t', Quill.sources.USER);
-        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       }
     ],
     'list empty enter': [
@@ -235,7 +232,6 @@ function handleEnter(range, context) {
     return lineFormats;
   }, {});
   this.quill.insertText(range.index, '\n', lineFormats, Quill.sources.USER);
-  this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
   this.quill.selection.scrollIntoView();
   Object.keys(context.format).forEach((name) => {
     if (lineFormats[name] != null) return;

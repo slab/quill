@@ -63,12 +63,12 @@ class Editor {
       return index + length;
     }, 0);
     this.updating = false;
-    this.update(delta, source);
+    return this.update(delta, source);
   }
 
   deleteText(index, length, source = Emitter.sources.API) {
     this.scroll.deleteAt(index, length);
-    this.update(new Delta().retain(index).delete(length), source);
+    return this.update(new Delta().retain(index).delete(length), source);
   }
 
   enable(enabled = true) {
@@ -90,14 +90,14 @@ class Editor {
       });
     });
     this.scroll.optimize();
-    this.update(new Delta().retain(index).retain(length, clone(formats)), source);
+    return this.update(new Delta().retain(index).retain(length, clone(formats)), source);
   }
 
   formatText(index, length, formats = {}, source = Emitter.sources.API) {
     Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
-    this.update(new Delta().retain(index).retain(length, clone(formats)), source);
+    return this.update(new Delta().retain(index).retain(length, clone(formats)), source);
   }
 
   getContents(index, length) {
@@ -146,7 +146,7 @@ class Editor {
 
   insertEmbed(index, embed, value, source = Emitter.sources.API) {
     this.scroll.insertAt(index, embed, value);
-    this.update(new Delta().retain(index).insert({ [embed]: value }), source);
+    return this.update(new Delta().retain(index).insert({ [embed]: value }), source);
   }
 
   insertText(index, text, formats = {}, source = Emitter.sources.API) {
@@ -155,7 +155,7 @@ class Editor {
     Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, text.length, format, formats[format]);
     });
-    this.update(new Delta().retain(index).insert(text, clone(formats)), source)
+    return this.update(new Delta().retain(index).insert(text, clone(formats)), source)
   }
 
   isBlank() {
@@ -176,7 +176,7 @@ class Editor {
     let contents = this.getContents(index, length + suffixLength);
     let diff = contents.diff(new Delta().insert(text).concat(suffix));
     let delta = new Delta().retain(index).concat(diff);
-    this.applyDelta(delta, source);
+    return this.applyDelta(delta, source);
   }
 
   update(change, source = Emitter.sources.USER) {
@@ -193,6 +193,7 @@ class Editor {
         this.emitter.emit(...args);
       }
     }
+    return change;
   }
 }
 
