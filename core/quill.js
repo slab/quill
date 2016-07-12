@@ -246,7 +246,7 @@ class Quill {
     let range = this.getSelection();
     [index, length, , source] = overload(index, length, source);
     let change = this.editor.removeFormat(index, length, source);
-    range = shiftRange(range, index, change.length(), source);
+    range = shiftRange(range, change, source);
     this.setSelection(range, Emitter.sources.SILENT);
     return change;
   }
