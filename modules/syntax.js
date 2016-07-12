@@ -5,21 +5,6 @@ import CodeBlock from '../formats/code';
 
 
 class SyntaxCodeBlock extends CodeBlock {
-  static create(value) {
-    let domNode = super.create(value);
-    if (typeof value === 'string') {
-      domNode.dataset.language = value;
-    } else {
-      domNode.dataset.language = SyntaxCodeBlock.DEFAULT_LANGUAGE;
-    }
-    domNode.classList.add(domNode.dataset.language);
-    return domNode;
-  }
-
-  static formats(domNode) {
-    return domNode.dataset.language || SyntaxCodeBlock.DEFAULT_LANGUAGE;
-  }
-
   replaceWith(block) {
     this.domNode.textContent = this.domNode.textContent;
     this.attach();
@@ -30,15 +15,14 @@ class SyntaxCodeBlock extends CodeBlock {
     if (this.cachedHTML !== this.domNode.innerHTML) {
       let text = this.domNode.textContent;
       if (text.trim().length > 0 || this.cachedHTML == null) {
-        this.domNode.textContent = text;
-        highlight(this.domNode);
+        this.domNode.innerHTML = highlight(text);
         this.attach();
       }
       this.cachedHTML = this.domNode.innerHTML;
     }
   }
 }
-SyntaxCodeBlock.DEFAULT_LANGUAGE = 'javascript';
+SyntaxCodeBlock.className = 'ql-syntax';
 
 
 let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
@@ -50,7 +34,7 @@ class Syntax extends Module {
   constructor(quill, options) {
     super(quill, options);
     if (typeof this.options.highlight !== 'function') {
-      throw new Error('Syntax module requires highlight.js. Please include the library on the page.');
+      throw new Error('Syntax module requires highlight.js. Please include the library on the page before Quill.');
     }
     Quill.register(CodeToken, true);
     Quill.register(SyntaxCodeBlock, true);
@@ -77,7 +61,13 @@ class Syntax extends Module {
   }
 }
 Syntax.DEFAULTS = {
-  highlight: (window.hljs != null ? window.hljs.highlightBlock: null)
+  highlight: (function() {
+    if (window.hljs == null) return null;
+    return function(text) {
+      let result = window.hljs.highlightAuto(text);
+      return result.value;
+    }
+  })()
 };
 
 
