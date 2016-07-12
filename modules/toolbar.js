@@ -190,6 +190,7 @@ Toolbar.DEFAULTS = {
       if (range.length == 0) {
         let formats = this.quill.getFormat();
         Object.keys(formats).forEach((name) => {
+          // Clean functionality in existing apps only clean inline formats
           if (Parchment.query(name, Parchment.Scope.INLINE) != null) {
             this.quill.format(name, false);
           }
