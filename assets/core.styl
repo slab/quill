@@ -20,8 +20,8 @@ resets(arr)
   top: 50%
 .ql-clipboard
   p
-    margin: 0;
-    padding: 0;
+    margin: 0
+    padding: 0
 
 .ql-editor
   box-sizing: border-box
@@ -41,31 +41,29 @@ resets(arr)
     margin: 0
     padding: 0
     counter-reset: resets(1..MAX_INDENT)
-  ol
+  ol, ul
     padding-left: 20px
-  ul
-    padding-left: 8px
-    list-style: disc inside
-  ol > li
+  ol > li, ul > li
     list-style-type: none
+  ul > li::before
+    content: '\25CF'
+  li::before
+    display: inline-block
+    margin-right: 4px
+    text-align: right
+    white-space: nowrap
+    width: 15px
   ol
-    list-style-type: none
-    position: relative
     li
       counter-reset: resets(1..MAX_INDENT)
       counter-increment: unquote('list-' + num)
       &:before
         content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
-        margin-right: -16px
-        position: absolute
-        right: 100%
-        text-align: right
     for num in (1..MAX_INDENT)
       li.ql-indent-{num}
         counter-increment: unquote('list-' + num)
         &:before
           content: unquote('counter(list-' + num + ', ' + LIST_STYLE[num%3] + ')') '. '
-          margin-right: (-40*num - 16)px
       if (num < MAX_INDENT)
         li.ql-indent-{num}
           counter-reset: resets((num+1)..MAX_INDENT)
