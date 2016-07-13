@@ -79,10 +79,12 @@ class Block extends Parchment.Block {
         this.children.tail.insertAt(this.children.tail.length(), text);
       }
     }
-    if (lines.length > 0) {
-      let next = this.split(index + text.length, true);
-      next.insertAt(0, lines.join('\n'));
-    }
+    let block = this;
+    lines.reduce(function(index, line) {
+      block = block.split(index, true);
+      block.insertAt(0, line);
+      return line.length;
+    }, index + text.length);
   }
 
   insertBefore(blot, ref) {
