@@ -13,7 +13,8 @@ let debug = logger('quill');
 
 
 class Quill {
-  static debug(limit) {3
+  static debug(limit) {
+    logger.level(limit);
   }
 
   static import(name) {
