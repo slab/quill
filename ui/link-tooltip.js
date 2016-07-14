@@ -26,24 +26,22 @@ class LinkTooltip {
         event.preventDefault();
       }
     });
-    ['mousedown', 'touchstart'].forEach((name) => {
-      this.container.querySelector('a.ql-action').addEventListener(name, (event) => {
-        if (this.container.classList.contains('ql-editing')) {
-          this.save();
-          event.preventDefault();
-        } else {
-          this.edit();
-          event.preventDefault();
-        }
-      });
-      this.container.querySelector('a.ql-remove').addEventListener(name, (event) => {
-        this.remove();
+    this.container.querySelector('a.ql-action').addEventListener('click', (event) => {
+      if (this.container.classList.contains('ql-editing')) {
+        this.save();
         event.preventDefault();
-      });
+      } else {
+        this.edit();
+        event.preventDefault();
+      }
+    });
+    this.container.querySelector('a.ql-remove').addEventListener('click', (event) => {
+      this.remove();
+      event.preventDefault();
     });
     quill.on(Quill.events.SELECTION_CHANGE, (range) => {
-      if (range == null && document.activeElement == this.textbox) return;
-      if (range != null && range.length === 0) {
+      if (range == null) return;
+      if (range.length === 0) {
         let offset;
         [this.link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
         if (this.link != null) {
