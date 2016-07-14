@@ -80,8 +80,20 @@ class Scroll extends Parchment.Scroll {
     return this.descendant(isLine, index);
   }
 
-  lines(index, length) {
-    return this.descendants(isLine, index, length);
+  lines(index = 0, length = Number.MAX_VALUE) {
+    let getLines = (blot, index, length) => {
+      let lines = [], lengthLeft = length;
+      blot.children.forEachAt(index, length, function(child, index, length) {
+        if (isLine(child)) {
+          lines.push(child);
+        } else if (child instanceof Parchment.Container) {
+          lines = lines.concat(getLines(child, index, lengthLeft));
+        }
+        lengthLeft -= length;
+      });
+      return lines;
+    };
+    return getLines(this, index, length);
   }
 
   optimize(mutations = []) {
