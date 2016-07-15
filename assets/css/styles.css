@@ -93,6 +93,10 @@ footer li {
   width: 108px;
 }
 
+.home .ql-snow .ql-tooltip.ql-out-bottom {
+  visibility: visible;
+}
+
 .quill-wrapper {
   background-color: #fff;
   border-left: 1px solid #ccc;
