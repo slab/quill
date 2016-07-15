@@ -124,7 +124,7 @@ class Toolbar extends Module {
                      (formats[format] != null && input.value === formats[format].toString());
         input.classList.toggle('ql-active', active);
       } else {
-        input.classList.toggle('ql-active', formats[format] === true || false);
+        input.classList.toggle('ql-active', formats[format] === true || (format === 'link' && formats[format] != null));
       }
     });
   }

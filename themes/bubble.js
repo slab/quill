@@ -6,24 +6,46 @@ import { Range } from '../core/selection';
 import Tooltip from '../ui/tooltip';
 
 
+class BubbleTooltip extends Tooltip {
+  constructor(root, containers) {
+    super(root, containers);
+    this.root.innerHTML = [
+      '<span class="ql-tooltip-arrow"></span>',
+      '<div class="ql-link-editor">',
+        '<input type="text">',
+        '<a class="ql-close"></a>',
+      '</div>'
+    ].join('');
+    this.input = this.root.querySelector('input');
+    this.listen();
+  }
+
+  listen() {
+    ['mousedown', 'touchstart'].forEach((name) => {
+      this.root.querySelector('.ql-close').addEventListener(name, (event) => {
+        this.root.classList.remove('ql-editing');
+        event.preventDefault();
+      });
+    });
+  }
+
+  position(reference) {
+    let shift = super.position(reference);
+    if (shift === 0) return shift;
+    let arrow = this.root.querySelector('.ql-tooltip-arrow');
+    arrow.style.marginLeft = '';
+    arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
+  }
+}
+
+
 class BubbleTheme extends BaseTheme {
   constructor(quill, options) {
     super(quill, options);
     this.quill.container.classList.add('ql-bubble');
   }
 
-  buildLinkEditor(toolbar) {
-    let container = document.createElement('div');
-    container.classList.add('ql-link-editor');
-    let arrow = document.createElement('span');
-    arrow.classList.add('ql-tooltip-arrow');
-    let input = document.createElement('input');
-    input.setAttribute('type', 'text');
-    let close = document.createElement('a');
-    container.appendChild(input);
-    container.appendChild(close);
-    this.tooltip.root.appendChild(arrow);
-    this.tooltip.root.appendChild(container);
+  buildLinkEditor(input) {
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range != null && range.length > 0) {
         this.tooltip.root.classList.remove('ql-editing');
@@ -56,20 +78,6 @@ class BubbleTheme extends BaseTheme {
         }
       }, 1);
     });
-    toolbar.handlers['link'] = (value) => {
-      if (!value) {
-        this.quill.format('link', false);
-      } else {
-        this.tooltip.root.classList.add('ql-editing');
-        input.focus();
-      }
-    };
-    ['mousedown', 'touchstart'].forEach((name) => {
-      close.addEventListener(name, (event) => {
-        this.tooltip.root.classList.remove('ql-editing');
-        event.preventDefault();
-      });
-    });
     input.addEventListener('keydown', (event) => {
       if (Keyboard.match(event, 'enter')) {
         let scrollTop = this.quill.root.scrollTop;
@@ -80,7 +88,7 @@ class BubbleTheme extends BaseTheme {
         input.value = '';
         event.preventDefault();
       } else if (Keyboard.match(event, 'escape')) {
-        this.tooltip.classList.remove('ql-editing');
+        this.tooltip.root.classList.remove('ql-editing');
         event.preventDefault();
       }
     });
@@ -88,11 +96,11 @@ class BubbleTheme extends BaseTheme {
 
   extendToolbar(toolbar) {
     let container = this.quill.addContainer('ql-tooltip', this.quill.root);
-    this.tooltip = new Tooltip(container, {
+    this.tooltip = new BubbleTooltip(container, {
       bounds: this.options.bounds,
       scroll: this.quill.root
     });
-    this.buildLinkEditor(toolbar);
+    this.buildLinkEditor(container.querySelector('input'));
     container.appendChild(toolbar.container);
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
@@ -105,7 +113,18 @@ BubbleTheme.DEFAULTS = {
       container: [
         ['bold', 'italic', 'link'],
         [{ header: 1 }, { header: 2 }, 'blockquote']
-      ]
+      ],
+      handlers: {
+        link: function(value) {
+          if (!value) {
+            this.quill.format('link', false);
+          } else {
+            let tooltip = this.quill.theme.tooltip;
+            tooltip.root.classList.add('ql-editing');
+            tooltip.input.focus();
+          }
+        }
+      }
     }
   }
 }

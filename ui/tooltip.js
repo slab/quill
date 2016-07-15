@@ -31,12 +31,7 @@ class Tooltip {
       shift = containerBounds.left - rootBounds.left;
       this.root.style.left = (left + shift) + 'px';
     }
-    let arrow = this.root.querySelector('.ql-tooltip-arrow');
-    if (arrow == null) return;
-    arrow.style.marginLeft = '';
-    if (shift !== 0) {
-      arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
-    }
+    return shift;
   }
 
   show() {
