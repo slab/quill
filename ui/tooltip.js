@@ -10,10 +10,17 @@ class Tooltip {
     let offset = parseInt(window.getComputedStyle(this.root).marginTop);
     this.quill.root.addEventListener('scroll', () => {
       this.root.style.marginTop = (-1*this.quill.root.scrollTop) + offset + 'px';
+      this.checkBounds();
     });
     this.textbox = this.root.querySelector('input[type="text"]');
     this.listen();
     this.hide();
+  }
+
+  checkBounds() {
+    this.root.classList.toggle('ql-out-top', this.root.offsetTop <= 0);
+    this.root.classList.remove('ql-out-bottom');
+    this.root.classList.toggle('ql-out-bottom', this.root.offsetTop + this.root.offsetHeight >= this.quill.root.offsetHeight);
   }
 
   listen() {
@@ -44,6 +51,7 @@ class Tooltip {
       shift = containerBounds.left - rootBounds.left;
       this.root.style.left = (left + shift) + 'px';
     }
+    this.checkBounds();
     return shift;
   }
 
