@@ -52,6 +52,7 @@
       <button class="ql-link"></button>
       <button class="ql-image"></button>
       <button class="ql-video"></button>
+      <button class="ql-formula"></button>
     </span>
     <span class="ql-formats">
       <button class="ql-clean"></button>
@@ -66,6 +67,8 @@
 <script>
   var quill = new Quill('#editor-container', {
     modules: {
+      formula: true,
+      syntax: true,
       toolbar: '#toolbar-container'
     },
     placeholder: 'Compose an epic...',
