@@ -16,8 +16,8 @@ class SnowTheme extends BaseTheme {
     toolbar.container.classList.add('ql-snow');
     this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
+    this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
     if (toolbar.container.querySelector('.ql-link')) {
-      this.tooltip = new SnowTooltip(this.quill);
       this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
         toolbar.handlers['link'].call(toolbar, !context.format.link);
       });
@@ -34,14 +34,27 @@ SnowTheme.DEFAULTS = {
         ['clean']
       ],
       handlers: {
+        formula: function(value) {
+          this.quill.theme.tooltip.edit('formula');
+        },
         link: function(value) {
           if (value) {
-            let savedRange = this.quill.selection.savedRange;
-            this.quill.theme.tooltip.open(savedRange);
+            let range = this.quill.getSelection();
+            if (range == null || range.length == 0) return;
+            let preview = this.quill.getText(range);
+            if (/^\S+@\S+\.\S+$/.test(preview)) {
+              preview = 'mailto:' + preview;
+            }
+            let tooltip = this.quill.theme.tooltip;
+            tooltip.textbox.value = preview;
+            tooltip.edit('link');
           } else {
             this.quill.format('link', false);
           }
         },
+        video: function(value) {
+          this.quill.theme.tooltip.edit('video');
+        }
       }
     }
   }
@@ -51,95 +64,100 @@ SnowTheme.DEFAULTS = {
 class SnowTooltip extends Tooltip {
   constructor(quill, bounds) {
     super(quill, bounds);
-    this.tooltip = new Tooltip(this.container, {
-      bounds: quill.theme.options.bounds,
-      scroll: quill.root
-    });
-    this.hide();
-    this.preview = this.container.querySelector('a.ql-preview');
-    this.textbox = this.container.querySelector('input[type=text]');
-    this.textbox.addEventListener('keydown', (event) => {
-      if (Keyboard.match(event, 'enter')) {
+    this.preview = this.root.querySelector('a.ql-preview');
+  }
+
+  listen() {
+    super.listen();
+    this.root.querySelector('a.ql-action').addEventListener('click', (event) => {
+      if (this.root.classList.contains('ql-editing')) {
         this.save();
-        event.preventDefault();
-      } else if (Keyboard.match(event, 'escape')) {
-        this.hide();
-        event.preventDefault();
-      }
-    });
-    this.container.querySelector('a.ql-action').addEventListener('click', (event) => {
-      if (this.container.classList.contains('ql-editing')) {
-        this.save();
-        event.preventDefault();
       } else {
-        this.edit();
-        event.preventDefault();
+        this.edit('link');
       }
     });
-    this.container.querySelector('a.ql-remove').addEventListener('click', (event) => {
-      this.remove();
-      event.preventDefault();
+    this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
+      this.hide();
+      if (this.linkRange != null) {
+        this.quill.focus();
+        this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
+        delete this.linkRange;
+      }
     });
-    quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
+    this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range == null) return;
       if (range.length === 0) {
-        let offset;
-        [this.link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
-        if (this.link != null) {
-          this.range = new Range(range.index - offset, this.link.length());
-          return this.show();
+        let [link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
+        if (link != null) {
+          this.linkRange = new Range(range.index - offset, link.length());
+          let preview = LinkBlot.formats(link.domNode);
+          this.preview.textContent = preview;
+          this.preview.setAttribute('href', preview);
+          this.show();
+          this.position(this.quill.getBounds(this.linkRange));
+          return;
         }
       }
       this.hide();
     });
   }
 
-  edit() {
-    this.container.classList.add('ql-editing');
-    this.textbox.focus();
-    this.textbox.setSelectionRange(0, this.textbox.value.length);
+  edit(mode) {
+    super.edit();
+    switch(mode) {
+      case 'formula':
+        if (mode != 'formula') this.textbox.value = '';
+        this.textbox.setAttribute('placeholder', 'e = mc^2');
+        break;
+      case 'link':
+        this.textbox.setAttribute('placeholder', '');
+        this.textbox.setSelectionRange(0, this.textbox.value.length);
+        break;
+      case 'video':
+        if (mode != 'video') this.textbox.value = '';
+        this.textbox.setAttribute('placeholder', 'Video embed URL');
+        break;
+      default:
+        return this.hide();
+    }
+    this.root.dataset.mode = mode;
+    this.position(this.quill.getBounds(this.quill.selection.savedRange));
   }
 
-  open() {
-    this.range = new Range(this.quill.selection.savedRange.index, this.quill.selection.savedRange.length);
-    this.show();
-    this.edit();
-  }
-
-  hide() {
-    this.range = this.link = null;
-    this.tooltip.hide();
-  }
-
-  remove() {
-    this.quill.formatText(this.range, 'link', false, Emitter.sources.USER);
+  cancel() {
     this.hide();
   }
 
   save() {
-    let url = this.textbox.value;
-    let scrollTop = this.quill.root.scrollTop;
-    this.quill.formatText(this.range, 'link', url, Emitter.sources.USER);
-    this.quill.root.scrollTop = scrollTop;
-    this.hide();
-  }
-
-  show() {
-    this.container.classList.remove('ql-editing');
-    this.tooltip.show();
-    let preview, bounds;
-    let range = this.quill.selection.savedRange;
-    if (this.link != null) {
-      preview = this.link.formats()['link'];
-    } else {
-      preview = this.quill.getText(range);
-      if (/^\S+@\S+\.\S+$/.test(preview)) {
-        preview = 'mailto:' + preview;
-      }
+    switch(this.root.dataset.mode) {
+      case 'link':
+        let url = this.textbox.value;
+        let scrollTop = this.quill.root.scrollTop;
+        if (this.linkRange) {
+          this.quill.formatText(this.linkRange, 'link', url, Emitter.sources.USER);
+          delete this.linkRange;
+        } else {
+          this.quill.focus();
+          this.quill.format('link', url, Emitter.sources.USER);
+        }
+        this.quill.root.scrollTop = scrollTop;
+        break;
+      case 'formula':  // fallthrough
+      case 'video':
+        let range = this.quill.getSelection(true);
+        let index = range.index + range.length;
+        if (range != null) {
+          this.quill.insertEmbed(index, this.root.dataset.mode, this.textbox.value, Emitter.sources.USER);
+          if (this.root.dataset.mode === 'formula') {
+            this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
+          }
+          this.quill.setSelection(index + 2, Emitter.sources.USER);
+        }
+        break;
+      default:
     }
-    this.preview.textContent = this.textbox.value = preview;
-    this.preview.setAttribute('href', preview);
-    this.tooltip.position(this.quill.getBounds(this.range));
+    this.textbox.value = '';
+    this.hide();
   }
 }
 SnowTooltip.TEMPLATE = [
