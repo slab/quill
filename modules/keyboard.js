@@ -243,31 +243,34 @@ function handleEnter(range, context) {
 
 function makeCodeBlockHandler(indent) {
   let handler = function(range) {
-    let tab = Parchment.query('code-block').TAB;
+    let CodeBlock = Parchment.query('code-block');
     let index = range.index, length = range.length;
-    let lines = [];
-    if (range.length === 0) {
-      let [line, ] = this.quill.scroll.line(range.index);
-      lines.push(line);
-    } else {
-      lines = this.quill.scroll.lines(range.index, range.length);
-    }
-    lines.forEach(function(line, i) {
+    let [block, offset] = this.quill.scroll.descendant(CodeBlock, index);
+    if (block == null) return;
+    let scrollOffset = this.quill.scroll.offset(block);
+    let start = block.newlineIndex(offset, true) + 1;
+    let end = block.newlineIndex(scrollOffset + offset + length);
+    let lines = block.domNode.textContent.slice(start, end).split('\n');
+    offset = 0;
+    lines.forEach((line, i) => {
       if (indent) {
-        line.insertAt(0, tab);
+        block.insertAt(start + offset, CodeBlock.TAB);
+        offset += CodeBlock.TAB.length;
         if (i === 0) {
-          index += tab.length;
+          index += CodeBlock.TAB.length;
         } else {
-          length += tab.length;
+          length += CodeBlock.TAB.length;
         }
-      } else if (line.domNode.textContent.startsWith(tab)) {
-        line.deleteAt(0, tab.length);
+      } else if (line.startsWith(CodeBlock.TAB)) {
+        block.deleteAt(start + offset, CodeBlock.TAB.length);
+        offset -= CodeBlock.TAB.length;
         if (i === 0) {
-          index -= tab.length;
+          index -= CodeBlock.TAB.length;
         } else {
-          length -= tab.length;
+          length -= CodeBlock.TAB.length;
         }
       }
+      offset += line.length + 1;
     });
     this.quill.update(Quill.sources.USER);
     this.quill.setSelection(index, length, Quill.sources.SILENT);
