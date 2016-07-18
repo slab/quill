@@ -46,8 +46,7 @@ SnowTheme.DEFAULTS = {
               preview = 'mailto:' + preview;
             }
             let tooltip = this.quill.theme.tooltip;
-            tooltip.textbox.value = preview;
-            tooltip.edit('link');
+            tooltip.edit('link', preview);
           } else {
             this.quill.format('link', false);
           }
@@ -73,7 +72,7 @@ class SnowTooltip extends Tooltip {
       if (this.root.classList.contains('ql-editing')) {
         this.save();
       } else {
-        this.edit('link');
+        this.edit('link', this.preview.textContent);
       }
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {

@@ -40,24 +40,16 @@ class Tooltip {
     this.hide();
   }
 
-  edit(mode = 'link') {
+  edit(mode = 'link', preview = null) {
     this.root.classList.remove('ql-hidden');
     this.root.classList.add('ql-editing');
-    this.textbox.focus();
-    switch(mode) {
-      case 'formula':
-        if (this.root.dataset.mode != 'formula') this.textbox.value = '';
-        break;
-      case 'link':
-        this.textbox.setSelectionRange(0, this.textbox.value.length);
-        break;
-      case 'video':
-        if (this.root.dataset.mode != 'video') this.textbox.value = '';
-        break;
-      default:
-        return this.hide();
+    if (preview != null) {
+      this.textbox.value = preview;
+    } else if (mode !== this.root.dataset.mode) {
+      this.textbox.value = '';
     }
-    this.textbox.setAttribute('placeholder', this.textbox.dataset[mode]);
+    this.textbox.select();
+    this.textbox.setAttribute('placeholder', this.textbox.dataset[mode] || '');
     this.root.dataset.mode = mode;
     this.position(this.quill.getBounds(this.quill.selection.savedRange));
   }
