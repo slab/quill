@@ -31,6 +31,13 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
+    let scrollTop = this.root.scrollTop;
+    this.root.addEventListener('blur', () => {
+      scrollTop = this.root.scrollTop;
+    });
+    this.root.addEventListener('focus', () => {
+      this.root.scrollTop = scrollTop;
+    });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
         this.update(Emitter.sources.SILENT);
