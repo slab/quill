@@ -121,25 +121,24 @@ BaseTheme.DEFAULTS = {
       handlers: {
         image: function(value) {
           let fileInput = this.container.querySelector('input.ql-image[type=file]');
-          let quill = this.quill;
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
             fileInput.setAttribute('accept', 'image/*');
             fileInput.classList.add('ql-image');
-            fileInput.addEventListener('change', function() {
-              if (this.files != null && this.files[0] != null) {
+            fileInput.addEventListener('change', () => {
+              if (fileInput.files != null && fileInput.files[0] != null) {
                 let reader = new FileReader();
-                reader.onload = function(e) {
-                  let range = quill.getSelection(true);
-                  quill.updateContents(new Delta()
+                reader.onload = (e) => {
+                  let range = this.quill.getSelection(true);
+                  this.quill.updateContents(new Delta()
                     .retain(range.index)
                     .delete(range.length)
                     .insert({ image: e.target.result })
                   , Emitter.sources.USER);
                   fileInput.value = "";
                 }
-                reader.readAsDataURL(this.files[0]);
+                reader.readAsDataURL(fileInput.files[0]);
               }
             });
             this.container.appendChild(fileInput);
