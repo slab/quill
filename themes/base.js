@@ -40,6 +40,23 @@ class BaseTheme extends Theme {
       this.constructor.DEFAULTS.modules.toolbar.handlers || {},
       this.options.modules.toolbar.handlers || {}
     );
+    let listener = (e) => {
+      if (!document.body.contains(quill.root)) {
+        return document.body.removeEventListener('click', listener);
+      }
+      if (this.tooltip != null && !this.tooltip.root.contains(e.target) &&
+          document.activeElement !== this.tooltip.textbox) {
+        this.tooltip.hide();
+      }
+      if (this.pickers != null) {
+        this.pickers.forEach(function(picker) {
+          if (!picker.container.contains(e.target)) {
+            picker.close();
+          }
+        });
+      }
+    };
+    document.body.addEventListener('click', listener);
   }
 
   addModule(name) {
@@ -72,19 +89,18 @@ class BaseTheme extends Theme {
   }
 
   buildPickers(selects) {
-    let pickers = selects.map((select) => {
-      let picker;
+    this.pickers = selects.map((select) => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
           fillSelect(select, ALIGNS);
         }
-        picker = new IconPicker(select, icons.align);
+        return new IconPicker(select, icons.align);
       } else if (select.classList.contains('ql-background') || select.classList.contains('ql-color')) {
         let format = select.classList.contains('ql-background') ? 'background' : 'color';
         if (select.querySelector('option') == null) {
           fillSelect(select, COLORS, format === 'background' ? '#ffffff' : '#000000');
         }
-        picker = new ColorPicker(select, icons[format]);
+        return new ColorPicker(select, icons[format]);
       } else {
         if (select.querySelector('option') == null) {
           if (select.classList.contains('ql-font')) {
@@ -95,28 +111,16 @@ class BaseTheme extends Theme {
             fillSelect(select, SIZES);
           }
         }
-        picker = new Picker(select);
+        return new Picker(select);
       }
-      return picker;
     });
-    let update = function() {
-      pickers.forEach(function(picker) {
+    let update = () => {
+      this.pickers.forEach(function(picker) {
         picker.update();
       });
     };
     this.quill.on(Emitter.events.SELECTION_CHANGE, update)
               .on(Emitter.events.SCROLL_OPTIMIZE, update);
-    document.body.addEventListener('click', (e) => {
-      if (this.tooltip == null) return;
-      if (!this.tooltip.root.contains(e.target)) {
-        this.tooltip.hide();
-      }
-      pickers.forEach(function(picker) {
-        if (!picker.container.contains(e.target)) {
-          picker.close();
-        }
-      });
-    });
   }
 }
 BaseTheme.DEFAULTS = {
