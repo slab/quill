@@ -107,8 +107,12 @@ class BaseTheme extends Theme {
     this.quill.on(Emitter.events.SELECTION_CHANGE, update)
               .on(Emitter.events.SCROLL_OPTIMIZE, update);
     document.body.addEventListener('click', (e) => {
+      if (this.tooltip == null) return;
+      if (!this.tooltip.root.contains(e.target)) {
+        this.tooltip.hide();
+      }
       pickers.forEach(function(picker) {
-        if (!(e.target.compareDocumentPosition(picker.container) & Node.DOCUMENT_POSITION_CONTAINS)) {
+        if (!picker.container.contains(e.target)) {
           picker.close();
         }
       });
