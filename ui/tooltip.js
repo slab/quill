@@ -1,4 +1,5 @@
 import Keyboard from '../modules/keyboard';
+import Emitter from '../core/emitter';
 
 
 class Tooltip {
@@ -35,6 +36,36 @@ class Tooltip {
     });
   }
 
+  cancel() {
+    this.hide();
+  }
+
+  edit(mode = 'link') {
+    this.root.classList.remove('ql-hidden');
+    this.root.classList.add('ql-editing');
+    this.textbox.focus();
+    switch(mode) {
+      case 'formula':
+        if (this.root.dataset.mode != 'formula') this.textbox.value = '';
+        break;
+      case 'link':
+        this.textbox.setSelectionRange(0, this.textbox.value.length);
+        break;
+      case 'video':
+        if (this.root.dataset.mode != 'video') this.textbox.value = '';
+        break;
+      default:
+        return this.hide();
+    }
+    this.textbox.setAttribute('placeholder', this.textbox.dataset[mode]);
+    this.root.dataset.mode = mode;
+    this.position(this.quill.getBounds(this.quill.selection.savedRange));
+  }
+
+  hide() {
+    this.root.classList.add('ql-hidden');
+  }
+
   position(reference) {
     let left = reference.left + reference.width/2 - this.root.offsetWidth/2;
     let top = reference.bottom + this.quill.root.scrollTop;
@@ -55,27 +86,41 @@ class Tooltip {
     return shift;
   }
 
-  edit() {
-    this.root.classList.remove('ql-hidden');
-    this.root.classList.add('ql-editing');
-    this.textbox.focus();
-  }
-
   save() {
-
-  }
-
-  cancel() {
-
+    switch(this.root.dataset.mode) {
+      case 'link':
+        let url = this.textbox.value;
+        let scrollTop = this.quill.root.scrollTop;
+        if (this.linkRange) {
+          this.quill.formatText(this.linkRange, 'link', url, Emitter.sources.USER);
+          delete this.linkRange;
+        } else {
+          this.quill.focus();
+          this.quill.format('link', url, Emitter.sources.USER);
+        }
+        this.quill.root.scrollTop = scrollTop;
+        break;
+      case 'formula':  // fallthrough
+      case 'video':
+        let range = this.quill.getSelection(true);
+        let index = range.index + range.length;
+        if (range != null) {
+          this.quill.insertEmbed(index, this.root.dataset.mode, this.textbox.value, Emitter.sources.USER);
+          if (this.root.dataset.mode === 'formula') {
+            this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
+          }
+          this.quill.setSelection(index + 2, Emitter.sources.USER);
+        }
+        break;
+      default:
+    }
+    this.textbox.value = '';
+    this.hide();
   }
 
   show() {
     this.root.classList.remove('ql-editing');
     this.root.classList.remove('ql-hidden');
-  }
-
-  hide() {
-    this.root.classList.add('ql-hidden');
   }
 }
 

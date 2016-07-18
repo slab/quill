@@ -77,12 +77,12 @@ class SnowTooltip extends Tooltip {
       }
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
-      this.hide();
       if (this.linkRange != null) {
         this.quill.focus();
         this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
         delete this.linkRange;
       }
+      this.hide();
     });
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
       if (range == null) return;
@@ -101,68 +101,10 @@ class SnowTooltip extends Tooltip {
       this.hide();
     });
   }
-
-  edit(mode) {
-    super.edit();
-    switch(mode) {
-      case 'formula':
-        if (mode != 'formula') this.textbox.value = '';
-        this.textbox.setAttribute('placeholder', 'e = mc^2');
-        break;
-      case 'link':
-        this.textbox.setAttribute('placeholder', '');
-        this.textbox.setSelectionRange(0, this.textbox.value.length);
-        break;
-      case 'video':
-        if (mode != 'video') this.textbox.value = '';
-        this.textbox.setAttribute('placeholder', 'Video embed URL');
-        break;
-      default:
-        return this.hide();
-    }
-    this.root.dataset.mode = mode;
-    this.position(this.quill.getBounds(this.quill.selection.savedRange));
-  }
-
-  cancel() {
-    this.hide();
-  }
-
-  save() {
-    switch(this.root.dataset.mode) {
-      case 'link':
-        let url = this.textbox.value;
-        let scrollTop = this.quill.root.scrollTop;
-        if (this.linkRange) {
-          this.quill.formatText(this.linkRange, 'link', url, Emitter.sources.USER);
-          delete this.linkRange;
-        } else {
-          this.quill.focus();
-          this.quill.format('link', url, Emitter.sources.USER);
-        }
-        this.quill.root.scrollTop = scrollTop;
-        break;
-      case 'formula':  // fallthrough
-      case 'video':
-        let range = this.quill.getSelection(true);
-        let index = range.index + range.length;
-        if (range != null) {
-          this.quill.insertEmbed(index, this.root.dataset.mode, this.textbox.value, Emitter.sources.USER);
-          if (this.root.dataset.mode === 'formula') {
-            this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
-          }
-          this.quill.setSelection(index + 2, Emitter.sources.USER);
-        }
-        break;
-      default:
-    }
-    this.textbox.value = '';
-    this.hide();
-  }
 }
 SnowTooltip.TEMPLATE = [
   '<a class="ql-preview" target="_blank" href="about:blank"></a>',
-  '<input type="text">',
+  '<input type="text" data-formula-holder="e=mc^2" data-link-holder="quilljs.com" data-video-holder="Embed URL">',
   '<a class="ql-action"></a>',
   '<a class="ql-remove"></a>'
 ].join('');

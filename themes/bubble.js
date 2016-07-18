@@ -27,12 +27,18 @@ BubbleTheme.DEFAULTS = {
         [{ header: 1 }, { header: 2 }, 'blockquote']
       ],
       handlers: {
+        formula: function(value) {
+          this.quill.theme.tooltip.edit('formula');
+        },
         link: function(value) {
           if (!value) {
             this.quill.format('link', false);
           } else {
             this.quill.theme.tooltip.edit();
           }
+        },
+        video: function(value) {
+          this.quill.theme.tooltip.edit('video');
         }
       }
     }
@@ -97,20 +103,11 @@ class BubbleTooltip extends Tooltip {
     arrow.style.marginLeft = '';
     arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
   }
-
-  save() {
-    let scrollTop = this.quill.root.scrollTop;
-    this.quill.focus();
-    this.quill.root.scrollTop = scrollTop;
-    this.quill.format('link', this.textbox.value);
-    this.hide();
-    this.textbox.value = '';
-  }
 }
 BubbleTooltip.TEMPLATE = [
   '<span class="ql-tooltip-arrow"></span>',
-  '<div class="ql-link-editor">',
-    '<input type="text">',
+  '<div class="ql-tooltip-editor">',
+    '<input type="text" data-formula="e=mc^2" data-link="quilljs.com" data-video="Embed URL">',
     '<a class="ql-close"></a>',
   '</div>'
 ].join('');
