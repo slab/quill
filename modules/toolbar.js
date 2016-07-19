@@ -32,6 +32,9 @@ class Toolbar extends Module {
     Object.keys(this.options.handlers).forEach((format) => {
       this.addHandler(format, this.options.handlers[format]);
     });
+    this.container.addEventListener('mousedown', function(e) {
+      e.preventDefault();   // Prevent blur
+    });
     [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
       this.attach(input);
     });
@@ -69,37 +72,35 @@ class Toolbar extends Module {
         return;
       }
     }
-    let eventNames = input.tagName === 'SELECT' ? ['change'] : ['mousedown', 'touchstart'];
-    eventNames.forEach((eventName) => {
-      input.addEventListener(eventName, (e) => {
-        let value;
-        if (input.tagName === 'SELECT') {
-          if (input.selectedIndex < 0) return;
-          let selected = input.options[input.selectedIndex];
-          if (selected.hasAttribute('selected')) {
-            value = false;
-          } else {
-            value = selected.value || false;
-          }
+    let eventName = input.tagName === 'SELECT' ? 'change' : 'click';
+    input.addEventListener(eventName, (e) => {
+      let value;
+      if (input.tagName === 'SELECT') {
+        if (input.selectedIndex < 0) return;
+        let selected = input.options[input.selectedIndex];
+        if (selected.hasAttribute('selected')) {
+          value = false;
         } else {
-          value = input.classList.contains('ql-active') ? false : input.value || true;
-          e.preventDefault();
+          value = selected.value || false;
         }
-        this.quill.focus();
-        let [range, ] = this.quill.selection.getRange();
-        if (this.handlers[format] != null) {
-          this.handlers[format].call(this, value);
-        } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
-          this.quill.updateContents(new Delta()
-            .retain(range.index)
-            .delete(range.length)
-            .insert({ [format]: true })
-          , Quill.sources.USER);
-        } else {
-          this.quill.format(format, value, Quill.sources.USER);
-        }
-        this.update(range);
-      });
+      } else {
+        value = input.classList.contains('ql-active') ? false : input.value || true;
+        e.preventDefault();
+      }
+      this.quill.focus();
+      let [range, ] = this.quill.selection.getRange();
+      if (this.handlers[format] != null) {
+        this.handlers[format].call(this, value);
+      } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
+        this.quill.updateContents(new Delta()
+          .retain(range.index)
+          .delete(range.length)
+          .insert({ [format]: true })
+        , Quill.sources.USER);
+      } else {
+        this.quill.format(format, value, Quill.sources.USER);
+      }
+      this.update(range);
     });
     // TODO use weakmap
     this.controls.push([format, input]);

@@ -8,11 +8,8 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    ['mousedown', 'touchstart'].forEach((name) => {
-      this.label.addEventListener(name, (event) => {
-        this.container.classList.toggle('ql-expanded');
-        event.preventDefault();   // prevent focus loss
-      });
+    this.label.addEventListener('click', (event) => {
+      this.container.classList.toggle('ql-expanded');
     });
     this.select.addEventListener('change', this.update.bind(this));
   }
@@ -26,11 +23,8 @@ class Picker {
     if (option.textContent) {
       item.dataset.label = option.textContent;
     }
-    ['mousedown', 'touchstart'].forEach((name) => {
-      item.addEventListener(name, (event) => {
-        this.selectItem(item, true);
-        event.preventDefault();
-      });
+    item.addEventListener('click', (event) => {
+      this.selectItem(item, true);
     });
     return item;
   }

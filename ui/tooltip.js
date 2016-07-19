@@ -25,6 +25,9 @@ class Tooltip {
   }
 
   listen() {
+    this.root.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+    });
     this.textbox.addEventListener('keydown', (event) => {
       if (Keyboard.match(event, 'enter')) {
         this.save();
