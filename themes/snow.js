@@ -100,6 +100,13 @@ class SnowTooltip extends Tooltip {
       this.hide();
     });
   }
+
+  show() {
+    super.show();
+    if (this.root.dataset.mode) {
+      delete this.root.dataset.mode;
+    }
+  }
 }
 SnowTooltip.TEMPLATE = [
   '<a class="ql-preview" target="_blank" href="about:blank"></a>',
