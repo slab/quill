@@ -8,6 +8,6 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
-version: 1.0.0-beta.5
+version: 1.0.0-beta.9
 cdn: //cdn.quilljs.com/
 github: https://github.com/quilljs/quilljs.github.io/tree/1.0
