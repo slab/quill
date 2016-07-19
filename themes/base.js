@@ -45,7 +45,7 @@ class BaseTheme extends Theme {
         return document.body.removeEventListener('click', listener);
       }
       if (this.tooltip != null && !this.tooltip.root.contains(e.target) &&
-          document.activeElement !== this.tooltip.textbox) {
+          document.activeElement !== this.tooltip.textbox && !this.quill.hasFocus()) {
         this.tooltip.hide();
       }
       if (this.pickers != null) {
