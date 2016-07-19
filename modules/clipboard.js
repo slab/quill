@@ -107,7 +107,7 @@ class Clipboard extends Module {
     if (deltaEndsWith(delta, '\n') && delta.ops[delta.ops.length - 1].attributes == null) {
       delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
-    debug.info('convert', this.container.innerHTML, delta);
+    debug.log('convert', this.container.innerHTML, delta);
     this.container.innerHTML = '';
     return delta;
   }
@@ -219,11 +219,11 @@ function matchNewline(node, delta) {
 }
 
 function matchSpacing(node, delta) {
-  if (isLine(node) &&
-      node.nextElementSibling != null &&
-      node.nextElementSibling.offsetTop > node.offsetTop + node.offsetHeight*1.5 &&
-      !deltaEndsWith(delta, '\n\n')) {
-    delta.insert('\n');
+  if (isLine(node) && node.nextElementSibling != null && !deltaEndsWith(delta, '\n\n')) {
+    let nodeHeight = node.offsetHeight + parseFloat(computeStyle(node).marginTop) + parseFloat(computeStyle(node).marginBottom);
+    if (node.nextElementSibling.offsetTop > node.offsetTop + nodeHeight*1.5) {
+      delta.insert('\n');
+    }
   }
   return delta;
 }
