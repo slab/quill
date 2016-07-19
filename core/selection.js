@@ -212,7 +212,7 @@ class Selection {
     }
   }
 
-  setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset) {
+  setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
     if (startNode != null && (this.root.parentNode == null || startNode.parentNode == null || endNode.parentNode == null)) {
       return;
@@ -222,7 +222,7 @@ class Selection {
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();
       let nativeRange = this.getNativeRange();
-      if (nativeRange == null ||
+      if (nativeRange == null || force ||
           startNode !== nativeRange.start.node || startOffset !== nativeRange.start.offset ||
           endNode !== nativeRange.end.node || endOffset !== nativeRange.end.offset) {
         let range = document.createRange();
@@ -238,7 +238,11 @@ class Selection {
     }
   }
 
-  setRange(range, source = Emitter.sources.API) {
+  setRange(range, force = false, source = Emitter.sources.API) {
+    if (typeof force === 'string') {
+      source = force;
+      force = false;
+    }
     debug.info('setRange', range);
     if (range != null) {
       let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
@@ -250,7 +254,10 @@ class Selection {
         [node, offset] = leaf.position(offset, i !== 0);
         args.push(node, offset);
       });
-      this.setNativeRange(...args);
+      if (args.length < 2) {
+        args = args.concat(args);
+      }
+      this.setNativeRange(...args, force);
     } else {
       this.setNativeRange(null);
     }

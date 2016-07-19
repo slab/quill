@@ -148,7 +148,8 @@ class Quill {
     [index, length, formats, source] = overload(index, length, name, value, source);
     let range = this.getSelection();
     let change = this.editor.formatLine(index, length, formats, source);
-    this.setSelection(range, Emitter.sources.SILENT);
+    this.selection.setRange(range, true, Emitter.sources.SILENT);
+    this.selection.scrollIntoView();
     return change;
   }
 
@@ -157,7 +158,8 @@ class Quill {
     [index, length, formats, source] = overload(index, length, name, value, source);
     let range = this.getSelection();
     let change = this.editor.formatText(index, length, formats, source);
-    this.setSelection(range, Emitter.sources.SILENT);
+    this.selection.setRange(range, true, Emitter.sources.SILENT);
+    this.selection.scrollIntoView();
     return change;
   }
 
