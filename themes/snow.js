@@ -103,7 +103,7 @@ class SnowTooltip extends Tooltip {
 }
 SnowTooltip.TEMPLATE = [
   '<a class="ql-preview" target="_blank" href="about:blank"></a>',
-  '<input type="text" data-formula-holder="e=mc^2" data-link-holder="quilljs.com" data-video-holder="Embed URL">',
+  '<input type="text" data-formula="e=mc^2" data-link="quilljs.com" data-video="Embed URL">',
   '<a class="ql-action"></a>',
   '<a class="ql-remove"></a>'
 ].join('');
