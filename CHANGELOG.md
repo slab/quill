@@ -1,3 +1,29 @@
+# 1.0.0-beta.9
+
+Potentially the final beta before a release candidate, if no major issues are discovered.
+
+### Breaking Changes
+
+- No longer expose `ui/link-tooltip` through `import` as implementation is now Snow specific
+- Significant refactoring of `ui/tooltip`
+- Syntax module now autodetects language, instead of defaulting to Javascript
+
+### Features
+
+- Formula and video insertion UI added to Snow and Bubble themes
+
+### Bug Fixes
+
+- Fix toolbar active state after backspacing to previous line [#730](https://github.com/quilljs/quill/issues/730)
+- User selection is now preserved various API calls [#731](https://github.com/quilljs/quill/issues/731)
+- Fix long click on link-tooltip [#747](https://github.com/quilljs/quill/issues/747)
+- Fix ordered list and text-align right interaction [#784](https://github.com/quilljs/quill/issues/784)
+- Fix toggling code block off [#789](https://github.com/quilljs/quill/issues/789)
+- Scroll position is now automatically preserved between editor blur and focus
+
+Thank you [@benbro](https://github.com/benbro), [@KameSama](https://github.com/KameSama), and [@sachinrekhi](https://github.com/sachinrekhi) for contributions to this release!
+
+
 # 1.0.0-beta.8
 
 Weekly beta preview release. The editor is almost ready for release candidacy but a couple cycles will be spent on the Snow and Bubble interfaces.
