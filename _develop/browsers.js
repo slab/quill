@@ -7,7 +7,7 @@ var desktop = {
   'mac-safari-previous'     : ['Mac 10.10', 'safari', '8.0'],
 
   'windows-chrome-latest'   : ['Windows 10', 'chrome', '51.0'],
-  'windows-firefox-latest'  : ['Windows 10', 'firefox', '51.0'],
+  'windows-firefox-latest'  : ['Windows 10', 'firefox', '47.0'],
   'windows-edge-latest'     : ['Windows 10', 'edge', '13.10586'],
   'windows-ie-latest'       : ['Windows 8.1', 'internet explorer', '11.0'],
   'windows-chrome-previous' : ['Windows 8.1', 'chrome', '50.0'],
