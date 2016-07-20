@@ -113,11 +113,7 @@ class Selection {
         }
         var rect = range.getBoundingClientRect();
       } else {
-        if (leaf instanceof BreakBlot) {
-          var rect = leaf.parent.domNode.getBoundingClientRect();
-        } else {
-          var rect = leaf.domNode.getBoundingClientRect();
-        }
+        var rect = leaf.domNode.getBoundingClientRect();
         if (offset > 0) side = 'right';
       }
       bounds = {
