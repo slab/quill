@@ -73,6 +73,29 @@ footer li {
   margin-top: 10px;
 }
 
+.topbar-notice {
+  background-color: #337ab7;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+}
+.topbar-notice:active,
+.topbar-notice:hover,
+.topbar-notice:visited {
+  color: #fff;
+  text-decoration: none;
+}
+.topbar-notice a {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: underline;
+}
+body.home .topbar-notice {
+  display: none;
+}
+
 .github-button {
   height: 20px;
   margin: 15px 0px 0px 15px;
