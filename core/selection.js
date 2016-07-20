@@ -31,18 +31,13 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
-    let scrollTop = this.root.scrollTop;
+    let scrollTop;
     this.root.addEventListener('blur', () => {
       scrollTop = this.root.scrollTop;
     });
     this.root.addEventListener('focus', () => {
-      let oldTop = this.root.scrollTop;
+      if (scrollTop == null) return;
       this.root.scrollTop = scrollTop;
-      setTimeout(() => {
-        if (this.root.scrollTop === 0 && oldTop !== 0) {
-          this.root.scrollTop = scrollTop = oldTop;
-        }
-      }, 1);
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
