@@ -116,7 +116,11 @@ class Toolbar extends Module {
         if (formats[format] == null) {
           option = input.querySelector('option[selected]');
         } else if (!Array.isArray(formats[format])) {
-          option = input.querySelector(`option[value="${formats[format]}"]`);
+          let value = formats[format];
+          if (typeof value === 'string') {
+            value = value.replace(/\"/g, '&quot;');
+          }
+          option = input.querySelector(`option[value="${value}"]`);
         }
         if (option == null) {
           input.value = '';   // TODO make configurable?
