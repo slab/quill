@@ -1,6 +1,9 @@
 // Styles necessary for Quill
 
 LIST_STYLE = decimal lower-alpha lower-roman
+LIST_STYLE_WIDTH = 15px
+LIST_STYLE_MARGIN = 4px
+LIST_STYLE_OUTER_WIDTH = LIST_STYLE_MARGIN + LIST_STYLE_WIDTH
 MAX_INDENT = 8
 
 resets(arr)
@@ -50,10 +53,14 @@ resets(arr)
     content: '\25CF'
   li::before
     display: inline-block
-    margin-right: 4px
+    margin-left: -1*LIST_STYLE_OUTER_WIDTH
+    margin-right: LIST_STYLE_MARGIN
     text-align: right
     white-space: nowrap
-    width: 15px
+    width: LIST_STYLE_WIDTH
+  ol, ul
+    li
+      padding-left: LIST_STYLE_OUTER_WIDTH
   ol
     li
       counter-reset: resets(1..MAX_INDENT)
@@ -70,7 +77,9 @@ resets(arr)
           counter-reset: resets((num+1)..MAX_INDENT)
   for num in (1..MAX_INDENT)
     .ql-indent-{num}
-      padding-left: (40 * num)px
+      padding-left: (40*num)px
+    li.ql-indent-{num}
+      padding-left: (40*num + LIST_STYLE_OUTER_WIDTH)px
 
   .ql-video
     display: block
