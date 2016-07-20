@@ -8,10 +8,10 @@ var desktop = {
 
   'windows-chrome-latest'   : ['Windows 10', 'chrome', '51.0'],
   'windows-firefox-latest'  : ['Windows 10', 'firefox', '51.0'],
-  'windows-ie-latest'       : ['Windows 10', 'internet explorer', '51.0'],
+  'windows-edge-latest'     : ['Windows 10', 'edge', '13.10586'],
+  'windows-ie-latest'       : ['Windows 8.1', 'internet explorer', '11.0'],
   'windows-chrome-previous' : ['Windows 8.1', 'chrome', '50.0'],
-  'windows-firefox-previous': ['Windows 8.1', 'firefox', '51.0'],
-  'windows-edge-latest'     : ['Windows 8.1', 'chrome', '13.10586'],
+  'windows-firefox-previous': ['Windows 8.1', 'firefox', '46.0'],
 
   'linux-chrome-latest'     : ['Linux', 'chrome', '48.0'],
   'linux-firefox-latest'    : ['Linux', 'firefox', '45.0'],
