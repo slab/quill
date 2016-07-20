@@ -20,8 +20,8 @@ env:
     - CXX=g++-4.8 BROWSER=mac-safari-latest
     - CXX=g++-4.8 BROWSER=windows-chrome-latest
     - CXX=g++-4.8 BROWSER=windows-firefox-latest
-    - CXX=g++-4.8 BROWSER=windows-microsoftedge-latest
-    - CXX=g++-4.8 BROWSER=windows-internet-explorer-latest
+    - CXX=g++-4.8 BROWSER=windows-edge-latest
+    - CXX=g++-4.8 BROWSER=windows-ie-latest
     - CXX=g++-4.8 BROWSER=linux-chrome-latest
     - CXX=g++-4.8 BROWSER=linux-firefox-latest
     - CXX=g++-4.8 BROWSER=ios-latest
