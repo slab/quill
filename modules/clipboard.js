@@ -211,8 +211,7 @@ function matchBreak(node, delta) {
 }
 
 function matchNewline(node, delta) {
-  if (!isLine(node)) return delta;
-  if (computeStyle(node).whiteSpace.startsWith('pre') || !deltaEndsWith(delta, '\n')) {
+  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
     delta.insert('\n');
   }
   return delta;
