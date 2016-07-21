@@ -48,31 +48,11 @@ class Clipboard extends Module {
     this.matchers.push([selector, matcher]);
   }
 
-  clean() {
-    let treeWalker = document.createTreeWalker(
-      this.container,
-      NodeFilter.SHOW_COMMENT,
-      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false
-    );
-    let comments = [];
-    while(treeWalker.nextNode()) {
-      comments.push(treeWalker.currentNode);
-    }
-    comments.forEach(function(node) {
-      if (node != null && node.parentNode != null) {
-        node.parentNode.removeChild(node);
-      }
-    });
-    this.container.normalize();
-  }
-
   convert(html) {
     const DOM_KEY = '__ql-matcher';
     if (typeof html === 'string') {
       this.container.innerHTML = html;
     }
-    this.clean();
     let textMatchers = [], elementMatchers = [];
     this.matchers.forEach((pair) => {
       let [selector, matcher] = pair;
@@ -110,6 +90,8 @@ class Clipboard extends Module {
           }
           return delta.concat(childrenDelta);
         }, new Delta());
+      } else {
+        return new Delta();
       }
     };
     let delta = traverse(this.container);
