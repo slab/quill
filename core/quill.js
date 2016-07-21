@@ -292,8 +292,10 @@ class Quill {
       delta = new Delta(delta.slice());
     }
     let change = this.editor.applyDelta(delta, source);
-    range = shiftRange(range, change, source);
-    this.setSelection(range, Emitter.sources.SILENT);
+    if (range != null) {
+      range = shiftRange(range, change, source);
+      this.setSelection(range, Emitter.sources.SILENT);
+    }
     return change;
   }
 }
