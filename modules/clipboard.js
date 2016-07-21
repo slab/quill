@@ -73,34 +73,44 @@ class Clipboard extends Module {
       this.container.innerHTML = html;
     }
     this.clean();
+    let textMatchers = [], elementMatchers = [];
     this.matchers.forEach((pair) => {
       let [selector, matcher] = pair;
-      if (typeof selector === 'string') {
-        [].forEach.call(this.container.querySelectorAll(selector), (node) => {
-          // TODO use weakmap
-          node[DOM_KEY] = node[DOM_KEY] || [];
-          node[DOM_KEY].push(matcher);
-        });
+      switch (selector) {
+        case Node.TEXT_NODE:
+          textMatchers.push(matcher);
+          break;
+        case Node.ELEMENT_NODE:
+          elementMatchers.push(matcher);
+          break;
+        default:
+          [].forEach.call(this.container.querySelectorAll(selector), (node) => {
+            // TODO use weakmap
+            node[DOM_KEY] = node[DOM_KEY] || [];
+            node[DOM_KEY].push(matcher);
+          });
+          break;
       }
     });
     let traverse = (node) => {  // Post-order
-      return [].reduce.call(node.childNodes || [], (delta, childNode) => {
-        if (childNode.nodeType !== Node.ELEMENT_NODE && childNode.nodeType !== Node.TEXT_NODE) {
-          return delta;
-        }
-        let childrenDelta = traverse(childNode);
-        childrenDelta = this.matchers.reduce(function(childrenDelta, pair) {
-          let [type, matcher] = pair;
-          if (type === true || childNode.nodeType === type) {
-            childrenDelta = matcher(childNode, childrenDelta);
+      if (node.nodeType === node.TEXT_NODE) {
+        return textMatchers.reduce(function(delta, matcher) {
+          return matcher(node, delta);
+        }, new Delta());
+      } else if (node.nodeType === node.ELEMENT_NODE) {
+        return [].reduce.call(node.childNodes || [], (delta, childNode) => {
+          let childrenDelta = traverse(childNode);
+          if (childNode.nodeType === node.ELEMENT_NODE) {
+            childrenDelta = elementMatchers.reduce(function(childrenDelta, matcher) {
+              return matcher(childNode, childrenDelta);
+            }, childrenDelta);
+            childrenDelta = (childNode[DOM_KEY] || []).reduce(function(childrenDelta, matcher) {
+              return matcher(childNode, childrenDelta);
+            }, childrenDelta);
           }
-          return childrenDelta;
-        }, childrenDelta);
-        childrenDelta = (childNode[DOM_KEY] || []).reduce(function(childrenDelta, matcher) {
-          return matcher(childNode, childrenDelta);
-        }, childrenDelta);
-        return delta.concat(childrenDelta);
-      }, new Delta());
+          return delta.concat(childrenDelta);
+        }, new Delta());
+      }
     };
     let delta = traverse(this.container);
     // Remove trailing newline
