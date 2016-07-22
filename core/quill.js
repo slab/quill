@@ -355,9 +355,8 @@ function shiftRange(range, index, length, source) {
       return index.transformPosition(pos, source === Emitter.sources.USER);
     });
   } else {
-    if (source === Emitter.sources.USER) index -= 1;
     [start, end] = [range.index, range.index + range.length].map(function(pos) {
-      if (index > pos) return pos;
+      if (pos < index || (pos === index && source !== Emitter.sources.USER)) return pos;
       if (length >= 0) {
         return pos + length;
       } else {
