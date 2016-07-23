@@ -155,14 +155,16 @@ $(document).ready(function() {
   var sanitize = VideoBlot.sanitize;
   VideoBlot.sanitize = function(url) {
     url = sanitize(url);
-    var match;
-    if (match = url.match(/^(https)?:\/\/www\.youtube\.com\/watch.*v=(\w+)/)) {
-      return match[1] + '://www.youtube.com/embed/' + match[2] + '?showinfo=0';
-    } else if (match = url.match(/^(https)?:\/\/vimeo\.com\/(\d+)/)) {
-      return match[1] + '://player.vimeo.com/video/' + match[2] + '/';
-    } else {
-      return url;
+    var match = url.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
+                url.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
+    if (match) {
+      return match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
     }
+    match = url.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/);
+    if (match) {
+      return match[1] + '://player.vimeo.com/video/' + match[3] + '/';
+    }
+    return url;
   }
 
   // Expose as global so people can easily try out the API
