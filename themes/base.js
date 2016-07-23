@@ -205,33 +205,33 @@ class BaseTooltip extends Tooltip {
   }
 
   save() {
-    let url = this.textbox.value;
+    let value = this.textbox.value;
     switch(this.root.dataset.mode) {
       case 'link':
         let scrollTop = this.quill.root.scrollTop;
         if (this.linkRange) {
-          this.quill.formatText(this.linkRange, 'link', url, Emitter.sources.USER);
+          this.quill.formatText(this.linkRange, 'link', value, Emitter.sources.USER);
           delete this.linkRange;
         } else {
           this.quill.focus();
-          this.quill.format('link', url, Emitter.sources.USER);
+          this.quill.format('link', value, Emitter.sources.USER);
         }
         this.quill.root.scrollTop = scrollTop;
         break;
       case 'video':
-        let match = url.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
-                    url.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
+        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
+                    value.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
         if (match) {
-          this.textbox.value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
-        } else if (match = url.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {
-          this.textbox.value = match[1] + '://player.vimeo.com/video/' + match[3] + '/';
+          value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
+        } else if (match = value.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {
+          value = match[1] + '://player.vimeo.com/video/' + match[3] + '/';
         }
         // fallthrough
       case 'formula':
         let range = this.quill.getSelection(true);
         let index = range.index + range.length;
         if (range != null) {
-          this.quill.insertEmbed(index, this.root.dataset.mode, this.textbox.value, Emitter.sources.USER);
+          this.quill.insertEmbed(index, this.root.dataset.mode, value, Emitter.sources.USER);
           if (this.root.dataset.mode === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
           }
