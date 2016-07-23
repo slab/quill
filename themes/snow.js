@@ -1,9 +1,8 @@
 import Emitter from '../core/emitter';
-import BaseTheme from './base';
+import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
 import Picker from '../ui/picker';
 import { Range } from '../core/selection';
-import Tooltip from '../ui/tooltip';
 
 
 class SnowTheme extends BaseTheme {
@@ -54,7 +53,7 @@ SnowTheme.DEFAULTS = {
 }
 
 
-class SnowTooltip extends Tooltip {
+class SnowTooltip extends BaseTooltip {
   constructor(quill, bounds) {
     super(quill, bounds);
     this.preview = this.root.querySelector('a.ql-preview');

@@ -1,9 +1,8 @@
 import Emitter from '../core/emitter';
 import Keyboard from '../modules/keyboard';
-import BaseTheme from './base';
+import BaseTheme, { BaseTooltip } from './base';
 import icons from '../ui/icons';
 import { Range } from '../core/selection';
-import Tooltip from '../ui/tooltip';
 
 
 class BubbleTheme extends BaseTheme {
@@ -40,7 +39,7 @@ BubbleTheme.DEFAULTS = {
 }
 
 
-class BubbleTooltip extends Tooltip {
+class BubbleTooltip extends BaseTooltip {
   constructor(quill, bounds) {
     super(quill, bounds);
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
