@@ -151,22 +151,6 @@ var quill = new Quill('#editor', {
 <script src="{{ site.cdn }}{{ site.version }}/quill.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-  var VideoBlot = Quill.import('formats/video');
-  var sanitize = VideoBlot.sanitize;
-  VideoBlot.sanitize = function(url) {
-    url = sanitize(url);
-    var match = url.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
-                url.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
-    if (match) {
-      return match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
-    }
-    match = url.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/);
-    if (match) {
-      return match[1] + '://player.vimeo.com/video/' + match[3] + '/';
-    }
-    return url;
-  }
-
   // Expose as global so people can easily try out the API
   var quill = window.quill = new Quill('#editor', {
     modules: {
