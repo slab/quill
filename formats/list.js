@@ -7,7 +7,7 @@ import Container from '../blots/container';
 
 class ListItem extends Block {
   static formats(domNode) {
-    return domNode.tagName === ListItem.tagName ? undefined : super.formats(domNode);
+    return domNode.tagName === this.tagName ? undefined : super.formats(domNode);
   }
 
   format(name, value) {
@@ -28,7 +28,7 @@ class ListItem extends Block {
 
   replaceWith(name, value) {
     this.parent.isolate(this.offset(this.parent), this.length());
-    if (name === List.blotName) {
+    if (name === this.parent.statics.blotName) {
       this.parent.replaceWith(name, value);
       return this;
     } else {
