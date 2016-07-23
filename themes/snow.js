@@ -34,9 +34,6 @@ SnowTheme.DEFAULTS = {
         ['clean']
       ],
       handlers: {
-        formula: function(value) {
-          this.quill.theme.tooltip.edit('formula');
-        },
         link: function(value) {
           if (value) {
             let range = this.quill.getSelection();
@@ -50,9 +47,6 @@ SnowTheme.DEFAULTS = {
           } else {
             this.quill.format('link', false);
           }
-        },
-        video: function(value) {
-          this.quill.theme.tooltip.edit('video');
         }
       }
     }

@@ -27,18 +27,12 @@ BubbleTheme.DEFAULTS = {
         [{ header: 1 }, { header: 2 }, 'blockquote']
       ],
       handlers: {
-        formula: function(value) {
-          this.quill.theme.tooltip.edit('formula');
-        },
         link: function(value) {
           if (!value) {
             this.quill.format('link', false);
           } else {
             this.quill.theme.tooltip.edit();
           }
-        },
-        video: function(value) {
-          this.quill.theme.tooltip.edit('video');
         }
       }
     }

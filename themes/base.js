@@ -127,6 +127,9 @@ BaseTheme.DEFAULTS = {
   modules: {
     toolbar: {
       handlers: {
+        formula: function(value) {
+          this.quill.theme.tooltip.edit('formula');
+        },
         image: function(value) {
           let fileInput = this.container.querySelector('input.ql-image[type=file]');
           if (fileInput == null) {
@@ -152,6 +155,9 @@ BaseTheme.DEFAULTS = {
             this.container.appendChild(fileInput);
           }
           fileInput.click();
+        },
+        video: function(value) {
+          this.quill.theme.tooltip.edit('video');
         }
       }
     }
