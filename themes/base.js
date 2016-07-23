@@ -1,6 +1,7 @@
 import extend from 'extend';
 import Delta from 'rich-text/lib/delta';
 import Emitter from '../core/emitter';
+import Keyboard from '../modules/keyboard';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
@@ -204,9 +205,9 @@ class BaseTooltip extends Tooltip {
   }
 
   save() {
+    let url = this.textbox.value;
     switch(this.root.dataset.mode) {
       case 'link':
-        let url = this.textbox.value;
         let scrollTop = this.quill.root.scrollTop;
         if (this.linkRange) {
           this.quill.formatText(this.linkRange, 'link', url, Emitter.sources.USER);
@@ -217,8 +218,16 @@ class BaseTooltip extends Tooltip {
         }
         this.quill.root.scrollTop = scrollTop;
         break;
-      case 'formula':  // fallthrough
       case 'video':
+        let match = url.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
+                    url.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
+        if (match) {
+          this.textbox.value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
+        } else if (match = url.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {
+          this.textbox.value = match[1] + '://player.vimeo.com/video/' + match[3] + '/';
+        }
+        // fallthrough
+      case 'formula':
         let range = this.quill.getSelection(true);
         let index = range.index + range.length;
         if (range != null) {

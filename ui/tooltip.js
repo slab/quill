@@ -1,7 +1,3 @@
-import Keyboard from '../modules/keyboard';
-import Emitter from '../core/emitter';
-
-
 class Tooltip {
   constructor(quill, boundsContainer) {
     this.quill = quill;
