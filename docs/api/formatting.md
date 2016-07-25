@@ -92,7 +92,7 @@ quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 
 ### getFormat
 
-Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a value. If there are different values, an array with all values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor. If called with no arguments, the user's current selection range will be used.
+Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a truthy value. If there are different truthy values, an array with all truthy values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor. If called with no arguments, the user's current selection range will be used.
 
 **Methods**
 
