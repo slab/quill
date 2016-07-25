@@ -82,10 +82,18 @@ Note [Themes](/docs/themes/) may also specify default values for dropdowns. For 
 
 ```javascript
 var toolbarOptions = [
-  [{ size: ['small', false, 'large', 'huge'] }],
-  ['bold', 'italic', 'underline'],
-  [{ color: [] }, { background: [] }],    // Snow theme fills in values
-  [{ script: 'sub' }, { script: 'super' }]
+  [{ size: ['small', false, 'large', 'huge'] }], // Font size dropdown
+  [{ color: [] }, { background: [] }],           // Snow theme fills in values
+  [{'font': [] }],                               // Font family dropdown
+  ['bold', 'italic', 'underline', 'strike'],     // Span style buttons
+  [{'script': 'sub'}, {'script': 'super'}],      // Sub/superscript buttons
+  [{'header': 1}, {'header': 2}, 'blockquote', 'code-block'], // Buttons for H1, H2, and block formats
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // Snow theme fills in text for 'Heading 1' ... 'Normal' dropdown options
+  [{'list': 'ordered'}, {'list': 'bullet'}], // OL/UL buttons
+  [{'indent': '-1'}, {'indent': '+1'}],      // Indent/Unindent buttons
+  [{'direction': 'rtl'}, {'align': [] }],    // Direction/Alignment buttons
+  ['link', 'image', 'video'],                // Embeddable content buttons
+  ['clean']];                                // Clear formatting button
 ];
 
 var quill = new Quill('#editor', {
