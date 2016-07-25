@@ -57,6 +57,26 @@ class BaseTheme extends Theme {
       }
     };
     document.body.addEventListener('click', listener);
+    quill.root.addEventListener('drop', (e) => {
+      let files = e.dataTransfer.files;
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].type.indexOf('image/') === -1) { continue; }
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          let range = quill.getSelection(true);
+          this.quill.updateContents(new Delta()
+            .retain(range.index)
+            .delete(range.length)
+            .insert({ image: e.target.result })
+          , Emitter.sources.USER);
+        }
+        reader.readAsDataURL(files[i]);
+      }
+    }, false);
   }
 
   addModule(name) {
