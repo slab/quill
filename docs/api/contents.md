@@ -25,7 +25,7 @@ quill.deleteText(6, 4);
 
 ### getContents
 
-Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/deltas/) object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/guides/working-with-deltas/) object.
 
 **Methods**
 
@@ -191,7 +191,7 @@ Overwrites editor with given contents. Contents should end with a newline (see [
 
 | Parameter | Type                     | Description
 |-----------|--------------------------|------------
-| `delta`   | [_Delta_](/docs/deltas/) | Delta editor should be set to.
+| `delta`   | [_Delta_](/guides/working-with-deltas/) | Delta editor should be set to.
 
 **Examples**
 
@@ -237,7 +237,7 @@ Applies Delta to editor contents.
 
 | Parameter | Type                     | Description
 |-----------|--------------------------|------------
-| `delta`   | [_Delta_](/docs/deltas/) | Delta that will be applied.
+| `delta`   | [_Delta_](/guides/working-with-deltas/) | Delta that will be applied.
 
 **Examples**
 

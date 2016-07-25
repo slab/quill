@@ -102,8 +102,8 @@ Changes may occur through an API but as long as they originate from the user, th
 
 | Parameter  | Type                       | Description
 |------------|----------------------------|------------
-| `delta`    | [_Delta_](/docs/deltas/)   | Represention of change.
-| `oldDelta` | [_Delta_](/docs/deltas/)   | Represention of old document.
+| `delta`    | [_Delta_](/guides/working-with-deltas/)   | Represention of change.
+| `oldDelta` | [_Delta_](/guides/working-with-deltas/)   | Represention of old document.
 | `source`   | _String_                   | Source of change. Will be either `"user"` or `"api"`.
 
 **Examples**
