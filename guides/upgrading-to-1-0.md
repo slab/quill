@@ -47,6 +47,50 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 - PasteManager has been renamed to [Clipboard](/docs/modules/clipboard/), and will provide custom copy and cut, as well paste, behavior.
 
 
+### Deltas
+
+The default [Delta](/guides/working-with-deltas/) representation of some content has changed. In all cases the old format is still supported in methods using Deltas as in input, such as `setContents` and `updateContents`. But outputted Deltas, such as the ones reported by `text-change` and `getContents` will be in the new form. Since [Parchment](https://github.com/quilljs/parchment) now allows custom content and formats, it is possible to customize these Delta representations entirely.
+
+```javascript
+var newImage = {
+  insert: { image: 'url' }
+};
+var oldImage = {
+  insert: 1,
+  attributes: {
+    image: 'url'
+  }
+};
+
+var newOrderedList = {
+  insert: '\n',
+  attributes: {
+    list: 'ordered'
+  }
+};
+var oldOrderedList = {
+  insert: '\n',
+  attributes: {
+    list: true
+  }
+};
+
+var newBullettedList = {
+  insert: '\n',
+  attributes: {
+    list: 'bullet'
+  }
+};
+var oldBullettedList = {
+  insert: '\n',
+  attributes: {
+    bullet: true
+  }
+};
+
+```
+
+
 ### Browsers
 
 - Quill now follows other major open source libraries in supporting the last two versions of major browser releases. Support for IE9 and IE10 have been dropped, and MS Edge has been added.
