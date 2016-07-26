@@ -1,3 +1,4 @@
+import Quill from '../../../core/quill';
 import Toolbar, { addControls } from '../../../modules/toolbar';
 
 
@@ -93,6 +94,70 @@ describe('Toolbar', function() {
           <button type="button" class="ql-image"></button>
         </span>
       `);
+    });
+  });
+
+  describe('active', function() {
+    beforeEach(function() {
+      let container = this.initialize(HTMLElement, `
+        <p>0123</p>
+        <p><strong>5678</strong></p>
+        <p><a href="http://quilljs.com/">0123</a></p>
+        <p class="ql-align-center">5678</p>
+        <p><span class="ql-size-small">01</span><span class="ql-size-large">23</span></p>
+      `);
+      this.quill = new Quill(container, {
+        modules: {
+          toolbar: [
+            ['bold', 'link'],
+            [{ 'size': ['small', false, 'large'] }],
+            [{ 'align': '' }, { 'align': 'center' }]
+          ]
+        },
+        theme: 'snow'
+      });
+    });
+
+    it('toggle button', function() {
+      let boldButton = this.container.parentNode.querySelector('button.ql-bold');
+      this.quill.setSelection(7);
+      expect(boldButton.classList.contains('ql-active')).toBe(true);
+      this.quill.setSelection(2);
+      expect(boldButton.classList.contains('ql-active')).toBe(false);
+    });
+
+    it('link', function() {
+      let linkButton = this.container.parentNode.querySelector('button.ql-link');
+      this.quill.setSelection(12);
+      expect(linkButton.classList.contains('ql-active')).toBe(true);
+      this.quill.setSelection(2);
+      expect(linkButton.classList.contains('ql-active')).toBe(false);
+    });
+
+    it('dropdown', function() {
+      let sizeSelect = this.container.parentNode.querySelector('select.ql-size');
+      this.quill.setSelection(21);
+      expect(sizeSelect.selectedIndex).toEqual(0);
+      this.quill.setSelection(23);
+      expect(sizeSelect.selectedIndex).toEqual(2);
+      this.quill.setSelection(21, 2);
+      expect(sizeSelect.selectedIndex).toBeLessThan(0);
+      this.quill.setSelection(2);
+      expect(sizeSelect.selectedIndex).toEqual(1);
+    });
+
+    it('custom button', function() {
+      let centerButton = this.container.parentNode.querySelector('button.ql-align[value="center"]');
+      let leftButton = this.container.parentNode.querySelector('button.ql-align[value]');
+      this.quill.setSelection(17);
+      expect(centerButton.classList.contains('ql-active')).toBe(true);
+      expect(leftButton.classList.contains('ql-active')).toBe(false);
+      this.quill.setSelection(2);
+      expect(centerButton.classList.contains('ql-active')).toBe(false);
+      expect(leftButton.classList.contains('ql-active')).toBe(true);
+      this.quill.blur();
+      expect(centerButton.classList.contains('ql-active')).toBe(false);
+      expect(leftButton.classList.contains('ql-active')).toBe(false);
     });
   });
 });

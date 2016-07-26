@@ -84,7 +84,11 @@ class Toolbar extends Module {
           value = selected.value || false;
         }
       } else {
-        value = input.classList.contains('ql-active') ? false : input.value || true;
+        if (input.classList.contains('ql-active')) {
+          value = false;
+        } else {
+          value = input.value || !input.hasAttribute('value');
+        }
         e.preventDefault();
       }
       this.quill.focus();
@@ -112,7 +116,9 @@ class Toolbar extends Module {
       let [format, input] = pair;
       if (input.tagName === 'SELECT') {
         let option;
-        if (formats[format] == null) {
+        if (range == null) {
+          option = null;
+        } else if (formats[format] == null) {
           option = input.querySelector('option[selected]');
         } else if (!Array.isArray(formats[format])) {
           let value = formats[format];
@@ -127,12 +133,16 @@ class Toolbar extends Module {
         } else {
           option.selected = true;
         }
-      } if (input.value) {
-        let active = input.value === formats[format] ||
-                     (formats[format] != null && input.value === formats[format].toString());
-        input.classList.toggle('ql-active', active);
       } else {
-        input.classList.toggle('ql-active', formats[format] === true || (format === 'link' && formats[format] != null));
+        if (range == null) {
+          input.classList.remove('ql-active');
+        } else if (input.hasAttribute('value')) {
+          // both being null should match (default values)
+          // '1' should match with 1 (headers)
+          input.classList.toggle('ql-active', formats[format] == input.value || (formats[format] == null && !input.value));
+        } else {
+          input.classList.toggle('ql-active', formats[format] != null);
+        }
       }
     });
   }
