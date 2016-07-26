@@ -59,6 +59,15 @@ class BaseTheme extends Theme {
       }
     };
     document.body.addEventListener('click', listener);
+    quill.root.addEventListener('drop', (e) => {
+      let files = e.dataTransfer.files;
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].type.indexOf('image') !== 0) { continue; }
+        e.stopPropagation();
+        e.preventDefault();
+        insertImage(quill, files[i]);
+      }
+    }, false);
   }
 
   addModule(name) {
@@ -141,17 +150,8 @@ BaseTheme.DEFAULTS = {
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
               if (fileInput.files != null && fileInput.files[0] != null) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                  let range = this.quill.getSelection(true);
-                  this.quill.updateContents(new Delta()
-                    .retain(range.index)
-                    .delete(range.length)
-                    .insert({ image: e.target.result })
-                  , Emitter.sources.USER);
-                  fileInput.value = "";
-                }
-                reader.readAsDataURL(fileInput.files[0]);
+                insertImage(this.quill, fileInput.files[0]);
+                fileInput.value = "";
               }
             });
             this.container.appendChild(fileInput);
@@ -256,6 +256,19 @@ function fillSelect(select, values, defaultValue = false) {
     }
     select.appendChild(option);
   });
+}
+
+function insertImage(quill, image) {
+  let reader = new FileReader();
+  reader.onload = (e) => {
+    let range = quill.getSelection(true);
+    quill.updateContents(new Delta()
+      .retain(range.index)
+      .delete(range.length)
+      .insert({ image: e.target.result })
+    , Emitter.sources.USER);
+  }
+  reader.readAsDataURL(image);
 }
 
 
