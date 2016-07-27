@@ -22,22 +22,22 @@
 - title: Modules
   url: /docs/modules/
   children:
+    - title: Toolbar
+      url: /docs/modules/toolbar/
+    - title: Keyboard
+      url: /docs/modules/keyboard/
+    - title: History
+      url: /docs/modules/history/
     - title: Clipboard
       url: /docs/modules/clipboard/
     - title: Formula
       url: /docs/modules/formula/
-    - title: History
-      url: /docs/modules/history/
-    - title: Keyboard
-      url: /docs/modules/keyboard/
     - title: Syntax
       url: /docs/modules/syntax/
-    - title: Toolbar
-      url: /docs/modules/toolbar/
 - title: Themes
   url: /docs/themes/
   children:
-    - title: Bubble
-      url: /docs/themes/bubble/
     - title: Snow
       url: /docs/themes/snow/
+    - title: Bubble
+      url: /docs/themes/bubble/
