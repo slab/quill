@@ -79,14 +79,17 @@ class Editor {
     this.scroll.update();
     Object.keys(formats).forEach((format) => {
       let lines = this.scroll.lines(index, Math.max(length, 1));
+      let lengthRemaining = length;
       lines.forEach((line, i) => {
+        let lineLength = line.length();
         if (!(line instanceof CodeBlock)) {
           line.format(format, formats[format]);
         } else {
           let codeIndex = index - line.offset(this.scroll);
-          let codeLength = line.newlineIndex(codeIndex) - index + 1;
+          let codeLength = line.newlineIndex(codeIndex + lengthRemaining) - codeIndex + 1;
           line.formatAt(codeIndex, codeLength, format, formats[format]);
         }
+        lengthRemaining -= lineLength;
       });
     });
     this.scroll.optimize();
@@ -170,7 +173,11 @@ class Editor {
     let [line, offset] = this.scroll.line(index + length);
     let suffixLength = 0, suffix = new Delta();
     if (line != null) {
-      suffixLength = line.length() - offset;
+      if (!(line instanceof CodeBlock)) {
+        suffixLength = line.length() - offset;
+      } else {
+        suffixLength = line.newlineIndex(offset) - offset + 1;
+      }
       suffix = line.delta().slice(offset, offset + suffixLength - 1).insert('\n');
     }
     let contents = this.getContents(index, length + suffixLength);
