@@ -39,7 +39,6 @@
     "rich-text": "~3.0.1"
   },
   "devDependencies": {
-    "async": "^1.5.2",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.10.3",
