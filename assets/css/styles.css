@@ -369,12 +369,15 @@ footer li {
   display: none;
 }
 
-#docs-container #standalone-container {
+#docs-container .standalone-container {
   margin: 0px 0px 10px;
   max-width: 100%;
 }
-#docs-container #standalone-container .ql-bubble {
+#docs-container .standalone-container .ql-bubble {
   border: 1px solid #ccc;
+}
+#docs-container .standalone-container .ql-editor {
+  height: 350px;
 }
 #docs-container .standalone-link {
   display: block;
