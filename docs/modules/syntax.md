@@ -9,14 +9,14 @@ The Syntax Module enhances the Code Block format by automatically detecting and 
 In general, you may [configure](http://highlightjs.readthedocs.io/en/latest/api.html#configure-options) highlight.js as needed. However, Quill expects and requires the `useBR` option to be `false`.
 
 
-### Usage
+### Example
 
 ```html
 <!-- Include your favorite highlight.js stylesheet -->
-<link href="highlight.js/monokai-sublime.min.css">
+<link href="highlight.js/monokai-sublime.min.css" rel="stylesheet">
 
 <!-- Include the highlight.js library -->
-<script href="highlight.min.js" type="text/javascript"></script>
+<script href="highlight.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 hljs.configure({   // optionally configure hljs

@@ -24,6 +24,8 @@
   children:
     - title: Clipboard
       url: /docs/modules/clipboard/
+    - title: Formula
+      url: /docs/modules/formula/
     - title: History
       url: /docs/modules/history/
     - title: Keyboard
