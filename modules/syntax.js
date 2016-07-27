@@ -66,7 +66,7 @@ Syntax.DEFAULTS = {
     return function(text) {
       let result = window.hljs.highlightAuto(text);
       return result.value;
-    }
+    };
   })()
 };
 
