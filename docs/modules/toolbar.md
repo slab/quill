@@ -56,7 +56,7 @@ var quill = new Quill('#editor', {
 });
 ```
 
-Controls can also be grouped by one level of nesting an array. This will wrap controls in a `<span>` with class name `ql-formats`, providing structure for themes to utilize. For example [Snow](/docs/themes/snow/) adds extra spacing between control groups.
+Controls can also be grouped by one level of nesting an array. This will wrap controls in a `<span>` with class name `ql-formats`, providing structure for themes to utilize. For example [Snow](/docs/themes/#snow/) adds extra spacing between control groups.
 
 ```javascript
 var toolbarOptions = [['bold', 'italic'], ['link', 'image']];
@@ -78,7 +78,7 @@ var toolbarOptions = [
 ];
 ```
 
-Note [Themes](/docs/themes/) may also specify default values for dropdowns. For example, [Snow](/docs/themes/snow/) provides a default list of 35 colors for the `color` and `background` formats, if set to an empty array.
+Note [Themes](/docs/themes/) may also specify default values for dropdowns. For example, [Snow](/docs/themes/#snow/) provides a default list of 35 colors for the `color` and `background` formats, if set to an empty array.
 
 ```javascript
 var toolbarOptions = [

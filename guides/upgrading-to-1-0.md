@@ -38,7 +38,7 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 
 - Toolbars, when initialized with a custom HTML element, requires buttons to be actual HTMLButtonElements. Previously it allowed any element with an appropriate class name.
 
-- The [Snow](/docs/themes/snow/) toolbar no longer adds or uses `ql-format-separator` and renamed `ql-format-group` to `ql-formats`.
+- The [Snow](/docs/themes/#snow/) toolbar no longer adds or uses `ql-format-separator` and renamed `ql-format-group` to `ql-formats`.
 
 - The authorship and multi-cursor modules have been temporarily removed. Similar functionality will be re-added at a later time, either separately or in a bundled collaboration module.
 
@@ -106,7 +106,7 @@ var oldBullettedList = {
 
 - Improved ability to customize keyboard handlers.
 
-- A simple tooltip based theme called [Bubble](/docs/themes/bubble/) has been added.
+- A simple tooltip based theme called [Bubble](/docs/themes/#bubble/) has been added.
 
 - Toolbar icons now use SVGs instead of inline PNGs allowing freedom to resize icons while retaining clarity. CSS can now also be used to easily change the active state color instead of the default #06c blue.
 
@@ -116,7 +116,7 @@ var oldBullettedList = {
 
 - Ability to format with classes instead of inline styles.
 
-- Editable [syntax highlighted code](/docs/modules/code-highlighter/) block.
+- Editable [syntax highlighted code](/docs/modules/syntax/) block.
 
 - Several new [APIs](/docs/api/).
 
