@@ -219,8 +219,8 @@ class BaseTooltip extends Tooltip {
         this.quill.root.scrollTop = scrollTop;
         break;
       case 'video':
-        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
-                    value.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
+        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
+                    value.match(/^(https?):\/\/(www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
         if (match) {
           value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
         } else if (match = value.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {
