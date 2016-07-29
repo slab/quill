@@ -6,10 +6,41 @@ permalink: /docs/modules/keyboard/
 
 The Keyboard module enables custom behavior for keyboard events in particular contexts. Quill uses this to bind formatting hotkeys and prevent undesirable browser side effects.
 
+By default, Quill comes with several useful key bindings, for example indenting lists with tabs. You can add your own upon initization:
+
+```javascript
+var bindings = {
+  custom: [
+    { key: 'B', shiftKey: true },
+    function(range, context) {
+      // Handle shift+b
+    }
+  ],
+  tab: [
+    { key: 'tab' },
+    function() {     // This will overwrite the default binding also named 'tab'
+      // Handle tab
+    }
+  ]
+}
+
+var quill = new Quill('#editor', {
+  modules: {
+    keyboard: {
+      bindings: bindings
+    }
+  }
+});
+```
+
+Other bindings are essential to preventing dangerous browser defaults, such as the enter and backspace key. These cannot be overwritten, but your bindings specified in the configuration will run before Quill's and you may choose to not propogate, however this is not recommended.
+
+Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
+
 
 ### Key Bindings
 
-Keyboard handlers are bound to a particular key and key modifiers, such as `metaKey`, `ctrlKey`, `shiftKey` and `altKey`. In addition `shortKey` is a platform specific modifier equivalent to `metaKey` on a Mac and `ctrlKey` otherwise.
+Keyboard handlers are bound to a particular key and key modifiers: `metaKey`, `ctrlKey`, `shiftKey` and `altKey`. In addition, `shortKey` is a platform specific modifier equivalent to `metaKey` on a Mac and `ctrlKey` on Linux and Windows.
 
 Handlers will called with `this` bound to the keyboard instance and be passed the current selection range.
 
