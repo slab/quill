@@ -6,7 +6,7 @@ permalink: /guides/upgrading-to-1-0/
 
 Quill 1.0 introduces major changes aimed at greater ability to customize Quill. Interfaces stayed the same where possible and this guide helps bridge the gap otherwise.
 
-To realize the full benefits of 1.0, it is encouraged to take a fresh view of Quill 1.0 and revisit even basic topics on this documentation site.
+To realize the full benefits of 1.0, it is encouraged to take a fresh view of Quill 1.0 and revisit even basic topics on this documentation site. Often, you will find that even though you could do things the old way, there is a better new way.
 
 **Note: While Quill is in its beta and release candidate stages, this guide will be updated as needed.**
 
@@ -45,6 +45,10 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 - UndoManager has been renamed to [History](/docs/modules/history/).
 
 - PasteManager has been renamed to [Clipboard](/docs/modules/clipboard/), and will provide custom copy and cut, as well paste, behavior.
+
+- LinkTooltip has been moved to be theme specific. With the addition of [Bubble](/docs/themes/#bubble) and videos and [formulas](/docs/modules/formula/), it no longer made sense to open a separate tooltip for links as its own general UI element. The old tooltip behavior is still present in Snow, but is now specific to that theme.
+
+- ImageTooltip has been removed in favor of a simpler and more native flow. The image button now opens the OS file picker and the selected image file is inserted into the editor as a base64 image.
 
 
 ### Deltas
@@ -102,19 +106,21 @@ var oldBullettedList = {
 
 - Ability to add new formats and content, or modify existing ones with [Parchment](/guides/building-on-parchment/).
 
-- Improved ability to customize interpretation of pastes in Clipboard.
+- Added support for nested list, superscript, subscript, inline code, code block, header, blockquote, text direction, video and forumla support.
 
-- Improved ability to customize keyboard handlers.
+- Ability to format with classes instead of inline styles.
 
-- A simple tooltip based theme called [Bubble](/docs/themes/#bubble/) has been added.
+- New tooltip based theme called [Bubble](/docs/themes/#bubble/).
+
+- Improved [Toolbar](/docs/modules/toolbar/) initialization with format arrays and customization with custom values.
 
 - Toolbar icons now use SVGs instead of inline PNGs allowing freedom to resize icons while retaining clarity. CSS can now also be used to easily change the active state color instead of the default #06c blue.
 
+- Improved ability to customize interpretation of pastes in [Clipboard](/docs/modules/clipboard/).
+
+- Improved ability to customize [keyboard handlers](/docs/modules/keyboard/).
+
 - A placeholder configuration option.
-
-- Nested list, superscript, subscript, inline code, code block, header, blockquote, text direction, video and forumla support.
-
-- Ability to format with classes instead of inline styles.
 
 - Editable [syntax highlighted code](/docs/modules/syntax/) block.
 
