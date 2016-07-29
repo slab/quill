@@ -12,9 +12,6 @@ permalink: /docs/themes/
 
 Themes allow you to easily make your editor look good with minimal effort. Quill features two offically supported themes: [Snow](#snow) and [Bubble](#bubble).
 
-Themes primarily control the visual look of Quill through a CSS stylesheet, and slight tweaks can easily be made by overriding these rules.
-
-
 ### Usage
 
 ```html
@@ -29,6 +26,14 @@ var quill = new Quill('#editor', {
 </script>
 ```
 
+## Bubble
+
+Bubble is a simple tooltip based theme.
+
+<div class="standalone-container">
+  <div id="bubble-container"></div>
+</div>
+<a class="standalone-link" href="/standalone/bubble/">Standalone</a>
 
 ## Snow
 
@@ -40,14 +45,11 @@ Snow is a clean, flat toolbar theme.
 <a class="standalone-link" href="/standalone/snow/">Standalone</a>
 
 
-## Bubble
+### Customization
 
-Bubble is a simple tooltip based theme.
+Themes primarily control the visual look of Quill through its CSS stylesheet, and many changes can easily be made by overriding these rules. This is easiest to do, as with any other web application, by simply using your browser developer console to inspect the elements to view the rules affecting them.
 
-<div class="standalone-container">
-  <div id="bubble-container"></div>
-</div>
-<a class="standalone-link" href="/standalone/bubble/">Standalone</a>
+Many other customizations can be done through the respective modules. For example, the toolbar is perhaps the most visible user interface, but much of the customization is done through the [Toolbar module](/docs/modules/toolbar/).
 
 
 <!-- script -->

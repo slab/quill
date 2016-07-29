@@ -140,6 +140,33 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
 </script>
 ```
 
+Note by supplying your own HTML element, Quill searches for particular input elements, but your own inputs that has nothing to do with Quill can still be added and styled and coexist.
+
+```html
+<div id="toolbar">
+  <!-- Add buttons as you would before -->
+  <button class="ql-bold"></button>
+  <button class="ql-italic"></button>
+
+  <!-- But you can also add your own -->
+  <button id="custom-button"></button>
+</div>
+<div id="editor"></div>
+
+<script type="text/javascript">
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: '#toolbar'
+  }
+});
+
+var customButton = document.querySelector('#custom-button');
+customButton.addEventListener('click', function() {
+  console.log('Clicked!');
+});
+</script>
+```
+
 
 ## Handlers
 
