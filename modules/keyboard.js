@@ -38,7 +38,7 @@ class Keyboard extends Module {
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
     this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, ctrlKey: null, altKey: null }, function() {});
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^$/ }, function(range) {
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, function(range) {
       if (range.index === 0) return;
       this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
       this.quill.selection.scrollIntoView();
