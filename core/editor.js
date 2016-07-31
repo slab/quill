@@ -21,9 +21,11 @@ class Editor {
   applyDelta(delta, source = Emitter.sources.API) {
     this.updating = true;
     let consumeNextNewline = false;
+    let scrollLength = this.scroll.length();
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
+        scrollLength -= op.delete;
         return index;
       }
       let length = op.retain || op.insert.length || 1;
@@ -37,7 +39,7 @@ class Editor {
             consumeNextNewline = false;
             text = text.slice(0, -1);
           }
-          if (index >= this.scroll.length() && !text.endsWith('\n')) {
+          if (index >= scrollLength && !text.endsWith('\n')) {
             consumeNextNewline = true;
           }
           this.scroll.insertAt(index, text);
@@ -56,6 +58,7 @@ class Editor {
             return index;
           }
         }
+        scrollLength += length;
       }
       Object.keys(attributes).forEach((name) => {
         this.scroll.formatAt(index, length, name, attributes[name]);
