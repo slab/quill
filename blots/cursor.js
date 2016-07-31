@@ -25,7 +25,7 @@ class Cursor extends Embed {
 
   detach() {
     // super.detach() will also clear domNode.__blot
-    if (this.parent != null) this.parent.children.remove(this);
+    if (this.parent != null) this.parent.removeChild(this);
   }
 
   format(name, value) {

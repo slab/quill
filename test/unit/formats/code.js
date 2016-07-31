@@ -63,7 +63,9 @@ describe('Code', function() {
       <pre>2\n\n</pre>
       <pre>2\n\n</pre>
     `);
-    editor.scroll.optimize();
+    editor.scroll.lines().forEach(function(line) {
+      line.optimize();
+    })
     expect(editor.scroll.domNode).toEqualHTML(`
       <pre>0\n0\n</pre>
       <p><br></p>
@@ -92,7 +94,7 @@ describe('Code', function() {
       <pre>2</pre>
       <pre>3</pre>
     `);
-    editor.scroll.optimize();
+    editor.scroll.children.head.optimize();
     expect(editor.scroll.domNode).toEqualHTML(`
       <pre>0\n1\n2\n3\n</pre>
     `);
@@ -109,14 +111,14 @@ describe('Code', function() {
   });
 
   it('remove', function() {
-    let editor = this.initialize(Editor, '<pre>0123</pre>');
+    let editor = this.initialize(Editor, { html: '<pre>0123\n</pre>' });
     editor.formatText(4, 1, { 'code-block': false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
   it('replace', function() {
-    let editor = this.initialize(Editor, '<pre>0123</pre>');
+    let editor = this.initialize(Editor, { html: '<pre>0123\n</pre>' });
     editor.formatText(4, 1, { 'header': 1 });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123').insert('\n', { header: 1 }));
     expect(editor.scroll.domNode).toEqualHTML('<h1>0123</h1>');
