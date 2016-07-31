@@ -40,7 +40,8 @@ module.exports = {
       { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
       { test: /\.svg$/, loader: 'html?minimize=true' },
       {
-        test: /(?!node_modules)\/.*\.js$/,
+        test: /\.js$/,
+        exclude: [/node_modules/, /rich-text/],
         loader: 'babel',
         query: {
           presets: ['es2015']
