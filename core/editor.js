@@ -22,16 +22,15 @@ class Editor {
     this.updating = true;
     let consumeNextNewline = false;
     let scrollLength = this.scroll.length();
+    delta = normalizeDelta(delta);
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
-        scrollLength -= op.delete;
         return index;
       }
       let length = op.retain || op.insert.length || 1;
-      let attributes = handleOldList(op.attributes || {});
+      let attributes = op.attributes || {};
       if (op.insert != null) {
-        [op, attributes] = handleOldEmbed(op, attributes);
         if (typeof op.insert === 'string') {
           let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
           length = text.length;
@@ -224,27 +223,24 @@ function combineFormats(formats, combined) {
   }, {});
 }
 
-function handleOldEmbed(op, attributes) {
-  if (op.insert === 1) {
-    attributes = clone(attributes);
-    op = {
-      insert: { image: attributes.image },
-      attributes: attributes
-    };
-    delete attributes['image'];
-  }
-  return [op, attributes];
-}
-
-function handleOldList(attributes) {
-  if (attributes['list'] === true) {
-    attributes = clone(attributes);
-    attributes['list'] = 'ordered';
-  } else if (attributes['bullet'] === true) {
-    attributes = clone(attributes);
-    attributes['list'] = 'bullet';
-  }
-  return attributes;
+function normalizeDelta(delta) {
+  return delta.ops.reduce(function(delta, op) {
+    if (op.insert === 1) {
+      let attributes = clone(op.attributes);
+      delete attributes['image'];
+      return delta.insert({ image: op.attributes.image }, attributes);
+    }
+    if (op.attributes != null && (op.attributes.list || op.attributes.bullet)) {
+      op = clone(op);
+      if (op.attributes.list) {
+        op.attributes.list = 'ordered';
+      } else {
+        op.attributes.list = 'bullet';
+        delete op.attributes.bullet;
+      }
+    }
+    return delta.push(op);
+  }, new Delta());
 }
 
 
