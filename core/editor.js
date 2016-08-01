@@ -19,9 +19,9 @@ class Editor {
   }
 
   applyDelta(delta, source = Emitter.sources.API) {
-    this.updating = true;
     let consumeNextNewline = false;
     let scrollLength = this.scroll.length();
+    this.updating = true;
     delta = normalizeDelta(delta);
     delta.ops.reduce((index, op) => {
       if (typeof op.delete === 'number') {
@@ -32,8 +32,7 @@ class Editor {
       let attributes = op.attributes || {};
       if (op.insert != null) {
         if (typeof op.insert === 'string') {
-          let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-          length = text.length;
+          let text = op.insert;
           if (text.endsWith('\n') && consumeNextNewline) {
             consumeNextNewline = false;
             text = text.slice(0, -1);
@@ -238,6 +237,10 @@ function normalizeDelta(delta) {
         op.attributes.list = 'bullet';
         delete op.attributes.bullet;
       }
+    }
+    if (typeof op.insert === 'string') {
+      let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      return delta.insert(text, op.attributes);
     }
     return delta.push(op);
   }, new Delta());
