@@ -1,5 +1,5 @@
 import Embed from '../blots/embed';
-
+import Quill from '../core/quill';
 
 class FormulaBlot extends Embed {
   static create(value) {
