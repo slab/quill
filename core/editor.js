@@ -20,8 +20,9 @@ class Editor {
 
   applyDelta(delta, source = Emitter.sources.API) {
     let consumeNextNewline = false;
+    this.scroll.update();
     let scrollLength = this.scroll.length();
-    this.updating = true;
+    this.scroll.batch = true;
     delta = normalizeDelta(delta);
     delta.ops.reduce((index, op) => {
       let length = op.retain || op.delete || op.insert.length || 1;
@@ -66,7 +67,8 @@ class Editor {
       }
       return index + (op.retain || op.insert.length || 1);
     }, 0);
-    this.updating = false;
+    this.scroll.batch = false;
+    this.scroll.optimize();
     return this.update(delta, source);
   }
 
@@ -191,7 +193,6 @@ class Editor {
   }
 
   update(change, source = Emitter.sources.USER) {
-    if (this.updating) return;
     let oldDelta = this.delta;
     this.delta = this.getDelta();
     if (!change || !equal(oldDelta.compose(change), this.delta)) {

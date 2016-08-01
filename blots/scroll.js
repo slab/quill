@@ -97,6 +97,7 @@ class Scroll extends Parchment.Scroll {
   }
 
   optimize(mutations = []) {
+    if (this.batch === true) return;
     super.optimize(mutations);
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations);
@@ -108,6 +109,7 @@ class Scroll extends Parchment.Scroll {
   }
 
   update(mutations) {
+    if (this.batch === true) return;
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
       source = mutations;
