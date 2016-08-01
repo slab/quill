@@ -24,11 +24,7 @@ class Editor {
     this.updating = true;
     delta = normalizeDelta(delta);
     delta.ops.reduce((index, op) => {
-      if (typeof op.delete === 'number') {
-        this.scroll.deleteAt(index, op.delete);
-        return index;
-      }
-      let length = op.retain || op.insert.length || 1;
+      let length = op.retain || op.delete || op.insert.length || 1;
       let attributes = op.attributes || {};
       if (op.insert != null) {
         if (typeof op.insert === 'string') {
@@ -62,6 +58,13 @@ class Editor {
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
       return index + length;
+    }, 0);
+    delta.ops.reduce((index, op) => {
+      if (typeof op.delete === 'number') {
+        this.scroll.deleteAt(index, op.delete);
+        return index;
+      }
+      return index + (op.retain || op.insert.length || 1);
     }, 0);
     this.updating = false;
     return this.update(delta, source);
