@@ -65,7 +65,11 @@ class CodeBlock extends Block {
   }
 
   length() {
-    return this.domNode.textContent.length;
+    let length = this.domNode.textContent.length;
+    if (!this.domNode.textContent.endsWith('\n')) {
+      return length + 1;
+    }
+    return length;
   }
 
   newlineIndex(searchIndex, reverse = false) {
