@@ -11,6 +11,13 @@ class Image extends Embed {
     return node;
   }
 
+  static formats(domNode) {
+    let formats = {};
+    if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
+    if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
+    return formats;
+  }
+
   static match(url) {
     return /\.(jpe?g|gif|png)$/.test(url);
   }
@@ -21,6 +28,18 @@ class Image extends Embed {
 
   static value(domNode) {
     return domNode.getAttribute('src');
+  }
+
+  format(name, value) {
+    if (name === 'height' || name === 'width') {
+      if (value) {
+        this.domNode.setAttribute(name, value);
+      } else {
+        this.domNode.removeAttribute(name);
+      }
+    } else {
+      super.format(name, value);
+    }
   }
 }
 Image.blotName = 'image';
