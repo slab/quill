@@ -47,11 +47,8 @@ class Editor {
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
-          if (key != null) {
-            this.scroll.insertAt(index, key, op.insert[key]);
-          } else {
-            return index;
-          }
+          if (key == null) return index;
+          this.scroll.insertAt(index, key, op.insert[key]);
         }
         scrollLength += length;
       }
