@@ -30,9 +30,6 @@ const STYLE_ATTRIBUTORS = [
 
 class Clipboard extends Module {
   constructor(quill, options) {
-    if (options.matchers !== Clipboard.DEFAULTS.matchers) {
-      options.matchers = Clipboard.DEFAULTS.matchers.concat(options.matchers);
-    }
     super(quill, options);
     this.quill.root.addEventListener('paste', this.onPaste.bind(this));
     this.container = this.quill.addContainer('ql-clipboard');

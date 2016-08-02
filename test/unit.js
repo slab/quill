@@ -24,8 +24,6 @@ import './unit/modules/clipboard';
 import './unit/modules/history';
 import './unit/modules/toolbar';
 
-import './unit/themes/snow';
-
 import './unit/ui/picker';
 
 

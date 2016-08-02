@@ -11,15 +11,14 @@ let debug = logger('quill:toolbar');
 
 class Toolbar extends Module {
   constructor(quill, options) {
-    options.handlers = extend({}, Toolbar.DEFAULTS.handlers, options.handlers);
     super(quill, options);
-    if (typeof this.options.container === 'string') {
-      this.container = document.querySelector(this.options.container);
-    } else if (Array.isArray(this.options.container)) {
+    if (Array.isArray(this.options.container)) {
       let container = document.createElement('div');
       addControls(container, this.options.container);
       quill.container.parentNode.insertBefore(container, quill.container);
       this.container = container;
+    } else if (typeof this.options.container === 'string') {
+      this.container = document.querySelector(this.options.container);
     } else {
       this.container = this.options.container;
     }

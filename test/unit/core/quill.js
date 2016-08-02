@@ -1,6 +1,8 @@
 import Delta from 'rich-text/lib/delta';
-import Quill, { overload } from '../../../core/quill';
+import Quill, { expandConfig, overload } from '../../../core/quill';
+import Theme from '../../../core/theme';
 import Emitter from '../../../core/emitter';
+import Toolbar from '../../../modules/toolbar';
 import { Range } from '../../../core/selection';
 
 
@@ -248,6 +250,134 @@ describe('Quill', function() {
       let quill = this.initialize(Quill, '<p>Test</p>');
       quill.setText('\r\n');
       expect(quill.root).toEqualHTML('<p><br></p>');
+    });
+  });
+
+  describe('expandConfig', function() {
+    it('user overwrite quill', function() {
+      let config = expandConfig('#test-container', {
+        placeholder: 'Test',
+        readOnly: true
+      });
+      expect(config.placeholder).toEqual('Test')
+      expect(config.readOnly).toEqual(true);
+    });
+
+    it('convert css selectors', function() {
+      let config = expandConfig('#test-container', {
+        bounds: '#test-container'
+      });
+      expect(config.bounds).toEqual(document.querySelector('#test-container'));
+      expect(config.container).toEqual(document.querySelector('#test-container'));
+    });
+
+    it('convert module true to {}', function() {
+      let oldModules = Theme.DEFAULTS.modules;
+      Theme.DEFAULTS.modules = {
+        formula: true
+      };
+      let config = expandConfig('#test-container', {
+        modules: {
+          syntax: true
+        }
+      });
+      expect(config.modules.formula).toEqual({});
+      expect(config.modules.syntax).toEqual({ highlight: null });
+      Theme.DEFAULTS.modules = oldModules;
+    });
+
+    it('quill < module < theme < user', function() {
+      let oldTheme = Theme.DEFAULTS.modules;
+      let oldToolbar = Toolbar.DEFAULTS;
+      Toolbar.DEFAULTS = {
+        option: 2,
+        module: true
+      };
+      Theme.DEFAULTS.modules = {
+        toolbar: {
+          option: 1,
+          theme: true
+        }
+      };
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: {
+            option: 0,
+            user: true
+          }
+        }
+      });
+      expect(config.modules.toolbar).toEqual({
+        option: 0,
+        module: true,
+        theme: true,
+        user: true
+      });
+      Theme.DEFAULTS.modules = oldTheme;
+      Toolbar.DEFAULTS = oldToolbar;
+    });
+
+    it('toolbar default', function() {
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: true
+        }
+      });
+      expect(config.modules.toolbar).toEqual(Toolbar.DEFAULTS);
+    });
+
+    it('toolbar selector', function() {
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: {
+            container: '#test-container'
+          }
+        }
+      });
+      expect(config.modules.toolbar).toEqual({
+        container: '#test-container',
+        handlers: Toolbar.DEFAULTS.handlers
+      });
+    });
+
+    it('toolbar container shorthand', function() {
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: document.querySelector('#test-container')
+        }
+      });
+      expect(config.modules.toolbar).toEqual({
+        container: document.querySelector('#test-container'),
+        handlers: Toolbar.DEFAULTS.handlers
+      });
+    });
+
+    it('toolbar format array', function() {
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: ['bold']
+        }
+      });
+      expect(config.modules.toolbar).toEqual({
+        container: ['bold'],
+        handlers: Toolbar.DEFAULTS.handlers
+      });
+    });
+
+    it('toolbar custom handler, default container', function() {
+      let handler = function(value) {};
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: {
+            handlers: {
+              bold: handler
+            }
+          }
+        }
+      });
+      expect(config.modules.toolbar.container).toEqual(null);
+      expect(config.modules.toolbar.handlers.bold).toEqual(handler);
+      expect(config.modules.toolbar.handlers.clean).toEqual(Toolbar.DEFAULTS.handlers.clean);
     });
   });
 

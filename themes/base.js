@@ -30,18 +30,6 @@ const SIZES = [ 'small', false, 'large', 'huge' ];
 class BaseTheme extends Theme {
   constructor(quill, options) {
     super(quill, options);
-    this.options.modules.toolbar = this.options.modules.toolbar || {};
-    if (this.options.modules.toolbar.constructor !== Object) {
-      this.options.modules.toolbar = {
-        container: this.options.modules.toolbar,
-        handlers: {}
-      };
-    }
-    this.options.modules.toolbar.handlers = extend({},
-      BaseTheme.DEFAULTS.modules.toolbar.handlers,
-      this.constructor.DEFAULTS.modules.toolbar.handlers || {},
-      this.options.modules.toolbar.handlers || {}
-    );
     let listener = (e) => {
       if (!document.body.contains(quill.root)) {
         return document.body.removeEventListener('click', listener);
@@ -125,7 +113,7 @@ class BaseTheme extends Theme {
               .on(Emitter.events.SCROLL_OPTIMIZE, update);
   }
 }
-BaseTheme.DEFAULTS = {
+BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
@@ -164,7 +152,7 @@ BaseTheme.DEFAULTS = {
       }
     }
   }
-};
+});
 
 
 class BaseTooltip extends Tooltip {
