@@ -57,6 +57,9 @@ class Quill {
       themeClass = Quill.import(`themes/${options.theme}`);
     }
     options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
+    if (options.debug) {
+      Quill.debug(options.debug);
+    }
     options.bounds = typeof options.bounds === 'string' ? document.querySelector(options.bounds) : options.bounds;
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
@@ -81,9 +84,6 @@ class Quill {
     }
     if (options.placeholder) {
       this.root.dataset.placeholder = options.placeholder;
-    }
-    if (options.debug) {
-      Quill.debug(options.debug);
     }
     this.root.classList.toggle('ql-blank', this.editor.isBlank());
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
