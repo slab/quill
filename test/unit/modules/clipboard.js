@@ -91,8 +91,12 @@ describe('Clipboard', function() {
     });
 
     it('embeds', function() {
-      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png">34</div>');
-      expect(delta).toEqual(new Delta().insert('01').insert({ image: '/assets/favicon.png' }).insert('34'));
+      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png" height="200px" width="300px">34</div>');
+      let expected = new Delta()
+        .insert('01')
+        .insert({ image: '/assets/favicon.png' }, { height: '200px', width: '300px' })
+        .insert('34');
+      expect(delta).toEqual(expected);
     });
 
     it('block embed', function() {
