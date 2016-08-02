@@ -95,10 +95,12 @@ class Toolbar extends Module {
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
       } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
+        value = prompt(`Enter ${format}`);
+        if (!value) return;
         this.quill.updateContents(new Delta()
           .retain(range.index)
           .delete(range.length)
-          .insert({ [format]: true })
+          .insert({ [format]: value })
         , Quill.sources.USER);
       } else {
         this.quill.format(format, value, Quill.sources.USER);
@@ -224,6 +226,12 @@ Toolbar.DEFAULTS = {
         this.quill.format('align', false, Quill.sources.USER);
       }
       this.quill.format('direction', value, Quill.sources.USER);
+    },
+    link: function(value) {
+      if (value === true) {
+        value = prompt('Enter link URL:');
+      }
+      this.quill.format('link', value, Quill.sources.USER);
     },
     indent: function(value) {
       let range = this.quill.getSelection();
