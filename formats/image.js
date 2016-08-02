@@ -19,7 +19,7 @@ class Image extends Embed {
   }
 
   static match(url) {
-    return /\.(jpe?g|gif|png)$/.test(url);
+    return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
   }
 
   static sanitize(url) {
