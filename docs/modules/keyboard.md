@@ -6,23 +6,26 @@ permalink: /docs/modules/keyboard/
 
 The Keyboard module enables custom behavior for keyboard events in particular contexts. Quill uses this to bind formatting hotkeys and prevent undesirable browser side effects.
 
+### Configuration
+
 By default, Quill comes with several useful key bindings, for example indenting lists with tabs. You can add your own upon initization:
 
 ```javascript
 var bindings = {
-  custom: [
-    { key: 'B', shiftKey: true },
-    function(range, context) {
+  custom: {
+    key: 'B',
+    shiftKey: true,
+    handler: function(range, context) {
       // Handle shift+b
     }
-  ],
-  tab: [
-    { key: 'tab' },
-    function() {     // This will overwrite the default binding also named 'tab'
+  },
+  tab: {
+    key: 'tab',
+    handler: function() {     // This will overwrite the default binding also named 'tab'
       // Handle tab
     }
-  ]
-}
+  }
+};
 
 var quill = new Quill('#editor', {
   modules: {
@@ -48,9 +51,19 @@ Handlers will called with `this` bound to the keyboard instance and be passed th
 quill.keyboard.addBinding({ key: 'B', shortKey: true }, function(range, context) {
   this.quill.formatText(range, 'bold', true);
 });
+
+// addBinding may also be called with one parameter,
+// in the same form as in initialization
+quill.keyboard.addBinding({
+  key: 'B',
+  shortKey: true,
+  handler: function(range, context) {
+
+  }
+});
 ```
 
-If a modifier key is not, it is assumed to mean that modifier is not active. You may also pass `null` to mean any value for the modifier.
+If a modifier key is `false`, it is assumed to mean that modifier is not active. You may also pass `null` to mean any value for the modifier.
 
 ```js
 // Only b with no modifier will trigger
@@ -64,15 +77,18 @@ quill.keyboard.addBinding({ key: 'B', shiftKey: null }, handler);
 
 ```
 
-Multiple handlers may be bound to the same key, in which case the handlers are called synchronously, in the order they were bound. By default, a handler stops propagating to the next handler, unless it explicitly returns `true`.
+Multiple handlers may be bound to the same key and modifier combination. Handlers will be called synchronously, in the order they were bound. By default, a handler stops propagating to the next handler, unless it explicitly returns `true`.
+
 
 ```js
-quill.keyboard.addBinding({ key: Keyboard.keys.ENTER }, function(range) {
-  // I will normally prevent handlers of the enter key
+quill.keyboard.addBinding({ key: 'tab' }, function(range) {
+  // I will normally prevent handlers of the tab key
   // Return true to let later handlers be called
   return true;
 });
 ```
+
+Note: Since Quill's default handlers are added at initialization, the only way to prevent them is to add yours in the [configuration](#configuration).
 
 
 ### Context
