@@ -32,8 +32,7 @@ class Keyboard extends Module {
     this.bindings = {};
     Object.keys(this.options.bindings).forEach((name) => {
       if (this.options.bindings[name]) {
-        let [key, context, handler] = this.options.bindings[name];
-        this.addBinding(key, context, handler);
+        this.addBinding(this.options.bindings[name]);
       }
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
@@ -52,25 +51,28 @@ class Keyboard extends Module {
     this.listen();
   }
 
-  addBinding(binding, context, handler) {
-    binding = normalize(binding);
-    if (binding == null) {
+  addBinding(key, context = {}, handler = {}) {
+    let binding = normalize(key);
+    if (binding == null || binding.key == null) {
       return debug.warn('Attempted to add invalid keyboard binding', binding);
     }
     if (typeof context === 'function') {
-      handler = context;
-      context = {};
+      context = { handler: context };
     }
+    if (typeof handler === 'function') {
+      handler = { handler: handler };
+    }
+    binding = extend(binding, context, handler);
     this.bindings[binding.key] = this.bindings[binding.key] || [];
-    this.bindings[binding.key].push([binding, context, handler]);
+    this.bindings[binding.key].push(binding);
   }
 
   listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented) return;
       let which = evt.which || evt.keyCode;
-      let bindings = (this.bindings[which] || []).filter(function(tuple) {
-        return Keyboard.match(evt, tuple[0]);
+      let bindings = (this.bindings[which] || []).filter(function(binding) {
+        return Keyboard.match(evt, binding);
       });
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
@@ -88,31 +90,30 @@ class Keyboard extends Module {
         prefix: prefixText,
         suffix: suffixText
       };
-      let prevented = bindings.some((tuple) => {
-        let [key, context, handler] = tuple;
-        if (context.collapsed != null && context.collapsed !== curContext.collapsed) return false;
-        if (context.empty != null && context.empty !== curContext.empty) return false;
-        if (context.offset != null && context.offset !== curContext.offset) return false;
-        if (Array.isArray(context.format)) {
+      let prevented = bindings.some((binding) => {
+        if (binding.collapsed != null && binding.collapsed !== curContext.collapsed) return false;
+        if (binding.empty != null && binding.empty !== curContext.empty) return false;
+        if (binding.offset != null && binding.offset !== curContext.offset) return false;
+        if (Array.isArray(binding.format)) {
           // any format is present
-          if (context.format.every(function(name) {
+          if (binding.format.every(function(name) {
             return curContext.format[name] == null;
           })) {
             return false;
           }
-        } else if (typeof context.format === 'object') {
+        } else if (typeof binding.format === 'object') {
           // all formats must match
-          if (!Object.keys(context.format).every(function(name) {
-            if (context.format[name] === true) return curContext.format[name] != null;
-            if (context.format[name] === false) return curContext.format[name] == null;
-            return equal(context.format[name], curContext.format[name]);
+          if (!Object.keys(binding.format).every(function(name) {
+            if (binding.format[name] === true) return curContext.format[name] != null;
+            if (binding.format[name] === false) return curContext.format[name] == null;
+            return equal(binding.format[name], curContext.format[name]);
           })) {
             return false;
           }
         }
-        if (context.prefix != null && !context.prefix.test(curContext.prefix)) return false;
-        if (context.suffix != null && !context.suffix.test(curContext.suffix)) return false;
-        return handler.call(this, range, curContext) !== true;
+        if (binding.prefix != null && !binding.prefix.test(curContext.prefix)) return false;
+        if (binding.suffix != null && !binding.suffix.test(curContext.suffix)) return false;
+        return binding.handler.call(this, range, curContext) !== true;
       });
       if (prevented) {
         evt.preventDefault();
@@ -138,28 +139,31 @@ Keyboard.DEFAULTS = {
     'bold'      : makeFormatHandler('bold'),
     'italic'    : makeFormatHandler('italic'),
     'underline' : makeFormatHandler('underline'),
-    'indent': [
+    'indent': {
       // highlight tab or tab at beginning of list, indent or blockquote
-      { key: Keyboard.keys.TAB },
-      { format: ['blockquote', 'indent', 'list'] },
-      function(range, context) {
+      key: Keyboard.keys.TAB,
+      format: ['blockquote', 'indent', 'list'],
+      handler: function(range, context) {
         if (context.collapsed && context.offset !== 0) return true;
         this.quill.format('indent', '+1', Quill.sources.USER);
       }
-    ],
-    'outdent': [
-      { key: Keyboard.keys.TAB, shiftKey: true },
-      { format: ['blockquote', 'indent', 'list'] },
+    },
+    'outdent': {
+      key: Keyboard.keys.TAB,
+      shiftKey: true,
+      format: ['blockquote', 'indent', 'list'],
       // highlight tab or tab at beginning of list, indent or blockquote
-      function(range, context) {
+      handler: function(range, context) {
         if (context.collapsed && context.offset !== 0) return true;
         this.quill.format('indent', '-1', Quill.sources.USER);
       }
-    ],
-    'outdent backspace': [
-      { key: Keyboard.keys.BACKSPACE },
-      { collapsed: true, format: ['blockquote', 'indent', 'list'], offset: 0 },
-      function(range, context) {
+    },
+    'outdent backspace': {
+      key: Keyboard.keys.BACKSPACE,
+      collapsed: true,
+      format: ['blockquote', 'indent', 'list'],
+      offset: 0,
+      handler: function(range, context) {
         if (context.format.indent != null) {
           this.quill.format('indent', '-1', Quill.sources.USER);
         } else if (context.format.blockquote != null) {
@@ -168,49 +172,55 @@ Keyboard.DEFAULTS = {
           this.quill.format('list', false, Quill.sources.USER);
         }
       }
-    ],
+    },
     'indent code-block': makeCodeBlockHandler(true),
     'outdent code-block': makeCodeBlockHandler(false),
-    'tab': [
-      { key: Keyboard.keys.TAB, shiftKey: null },
-      {},
-      function(range, context) {
+    'tab': {
+      key: Keyboard.keys.TAB,
+      shiftKey: null,
+      handler: function(range, context) {
         if (!context.collapsed) {
           this.quill.scroll.deleteAt(range.index, range.length);
         }
         this.quill.insertText(range.index, '\t', Quill.sources.USER);
       }
-    ],
-    'list empty enter': [
-      { key: Keyboard.keys.ENTER },
-      { collapsed: true, format: ['list'], empty: true },
-      function(range, context) {
+    },
+    'list empty enter': {
+      key: Keyboard.keys.ENTER,
+      collapsed: true,
+      format: ['list'],
+      empty: true,
+      handler: function(range, context) {
         this.quill.format('list', false, Quill.sources.USER);
         if (context.format.indent) {
           this.quill.format('indent', false, Quill.sources.USER);
         }
       }
-    ],
-    'header enter': [
-      { key: Keyboard.keys.ENTER },
-      { collapsed: true, format: ['header'], suffix: /^$/ },
-      function(range) {
+    },
+    'header enter': {
+      key: Keyboard.keys.ENTER,
+      collapsed: true,
+      format: ['header'],
+      suffix: /^$/,
+      handler: function(range) {
         this.quill.scroll.insertAt(range.index, '\n');
         this.quill.formatText(range.index + 1, 1, 'header', false, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
         this.quill.selection.scrollIntoView();
       }
-    ],
-    'list autofill': [
-      { key: ' ' },
-      { collapsed: true, format: { list: false }, prefix: /^(1\.|-)$/ },
-      function(range, context) {
+    },
+    'list autofill': {
+      key: ' ',
+      collapsed: true,
+      format: { list: false },
+      prefix: /^(1\.|-)$/,
+      handler: function(range, context) {
         let length = context.prefix.length;
         this.quill.scroll.deleteAt(range.index - length, length);
         this.quill.formatLine(range.index - length, 1, 'list', length === 1 ? 'bullet' : 'ordered', Quill.sources.USER);
         this.quill.setSelection(range.index - length, Quill.sources.SILENT);
       }
-    ]
+    }
   }
 };
 
@@ -242,48 +252,54 @@ function handleEnter(range, context) {
 }
 
 function makeCodeBlockHandler(indent) {
-  let handler = function(range) {
-    let CodeBlock = Parchment.query('code-block');
-    let index = range.index, length = range.length;
-    let [block, offset] = this.quill.scroll.descendant(CodeBlock, index);
-    if (block == null) return;
-    let scrollOffset = this.quill.scroll.offset(block);
-    let start = block.newlineIndex(offset, true) + 1;
-    let end = block.newlineIndex(scrollOffset + offset + length);
-    let lines = block.domNode.textContent.slice(start, end).split('\n');
-    offset = 0;
-    lines.forEach((line, i) => {
-      if (indent) {
-        block.insertAt(start + offset, CodeBlock.TAB);
-        offset += CodeBlock.TAB.length;
-        if (i === 0) {
-          index += CodeBlock.TAB.length;
-        } else {
-          length += CodeBlock.TAB.length;
+  return {
+    key: Keyboard.keys.TAB,
+    shiftKey: !indent,
+    format: {'code-block': true },
+    handler: function(range) {
+      let CodeBlock = Parchment.query('code-block');
+      let index = range.index, length = range.length;
+      let [block, offset] = this.quill.scroll.descendant(CodeBlock, index);
+      if (block == null) return;
+      let scrollOffset = this.quill.scroll.offset(block);
+      let start = block.newlineIndex(offset, true) + 1;
+      let end = block.newlineIndex(scrollOffset + offset + length);
+      let lines = block.domNode.textContent.slice(start, end).split('\n');
+      offset = 0;
+      lines.forEach((line, i) => {
+        if (indent) {
+          block.insertAt(start + offset, CodeBlock.TAB);
+          offset += CodeBlock.TAB.length;
+          if (i === 0) {
+            index += CodeBlock.TAB.length;
+          } else {
+            length += CodeBlock.TAB.length;
+          }
+        } else if (line.startsWith(CodeBlock.TAB)) {
+          block.deleteAt(start + offset, CodeBlock.TAB.length);
+          offset -= CodeBlock.TAB.length;
+          if (i === 0) {
+            index -= CodeBlock.TAB.length;
+          } else {
+            length -= CodeBlock.TAB.length;
+          }
         }
-      } else if (line.startsWith(CodeBlock.TAB)) {
-        block.deleteAt(start + offset, CodeBlock.TAB.length);
-        offset -= CodeBlock.TAB.length;
-        if (i === 0) {
-          index -= CodeBlock.TAB.length;
-        } else {
-          length -= CodeBlock.TAB.length;
-        }
-      }
-      offset += line.length + 1;
-    });
-    this.quill.update(Quill.sources.USER);
-    this.quill.setSelection(index, length, Quill.sources.SILENT);
-  }
-  return [{ key: Keyboard.keys.TAB, shiftKey: !indent }, { format: {'code-block': true } }, handler];
+        offset += line.length + 1;
+      });
+      this.quill.update(Quill.sources.USER);
+      this.quill.setSelection(index, length, Quill.sources.SILENT);
+    }
+  };
 }
 
 function makeFormatHandler(format) {
-  let key = { key: format[0].toUpperCase(), shortKey: true };
-  let handler = function(range, context) {
-    this.quill.format(format, !context.format[format], Quill.sources.USER);
+  return {
+    key: format[0].toUpperCase(),
+    shortKey: true,
+    handler: function(range, context) {
+      this.quill.format(format, !context.format[format], Quill.sources.USER);
+    }
   };
-  return [key, {}, handler];
 }
 
 function normalize(binding) {
