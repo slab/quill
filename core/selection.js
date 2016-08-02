@@ -31,13 +31,15 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
-    let scrollTop;
+    let scrollTop, bodyTop;
     this.root.addEventListener('blur', () => {
       scrollTop = this.root.scrollTop;
+      bodyTop = document.body.scrollTop;
     });
-    this.root.addEventListener('focus', () => {
+    this.root.addEventListener('focus', (event) => {
       if (scrollTop == null) return;
       this.root.scrollTop = scrollTop;
+      document.body.scrollTop = bodyTop;
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
@@ -60,7 +62,9 @@ class Selection {
 
   focus() {
     if (this.hasFocus()) return;
+    let bodyTop = document.body.scrollTop;
     this.root.focus();
+    document.body.scrollTop = bodyTop;
     this.setRange(this.savedRange);
   }
 
