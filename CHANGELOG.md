@@ -1,3 +1,33 @@
+# 1.0.0-beta.10
+
+Lots of bug fixes and performance improvements.
+
+### Breaking Changes
+
+- Keyboard handler format in initial [configuration](beta.quilljs.com/docs/modules/keyboard/) has changed. `addBinding` is overloaded to be backwards compatible.
+
+### Bug Fixes
+
+- Preserve last bullet on paste [#696](https://github.com/quilljs/quill/issues/696)
+- Fix getBounds calculation for lists [#765](https://github.com/quilljs/quill/issues/765)
+- Escape quotes in font value [#769](https://github.com/quilljs/quill/issues/769)
+- Fix spacing calculation on paste [#797](https://github.com/quilljs/quill/issues/797)
+- Fix Snow tooltip label [#798](https://github.com/quilljs/quill/issues/798)
+- Fix link tooltip showing up on long click [#799](https://github.com/quilljs/quill/issues/799)
+- Fix entering code block in IE and Firefox [#803](https://github.com/quilljs/quill/issues/803)
+- Fix opening image dialog on Firefox [#805](https://github.com/quilljs/quill/issues/805)
+- Fix focus loss on updateContents [#809](https://github.com/quilljs/quill/issues/809)
+- Reset toolbar of blur [#810](https://github.com/quilljs/quill/issues/810)
+- Fix cursor position calculation on delete [#811](https://github.com/quilljs/quill/issues/811)
+- Fix highlighting across different alignment values [#815](https://github.com/quilljs/quill/issues/815)
+- Allow default active button [#816](https://github.com/quilljs/quill/issues/816)
+- Fix deleting last character of formatted text on Firefox [#824](https://github.com/quilljs/quill/issues/824)
+- Fix Youtube regex [#826](https://github.com/quilljs/quill/pull/826)
+- Fix missing imports when Quill not global [#836](https://github.com/quilljs/quill/pull/836)
+
+Thanks to [benbro](https://github.com/benbro), [clemmy](https://github.com/clemmy), [crisbeto](https://github.com/crisbeto), [cutteroid](https://github.com/cutteroid), [jackmu95](https://github.com/jackmu95), [kylebragger](https://github.com/kylebragger), [sachinrekhi](https://github.com/sachinrekhi), [stalniy](https://github.com/stalniy), and [tOgg1](https://github.com/tOgg1) for their contributions to this release.
+
+
 # 1.0.0-beta.9
 
 Potentially the final beta before a release candidate, if no major issues are discovered.
