@@ -1,3 +1,16 @@
+# 1.0.0-beta.11
+
+Fixed some regressive bugs from previous release.
+
+### Bug Fixes
+
+- Fix activating more than one format before typing [#841](https://github.com/quilljs/quill/issues/841)
+- Run default matchers before before user defined ones [#843](https://github.com/quilljs/quill/issues/843)
+- Fix merging theme configurations [#844](https://github.com/quilljs/quill/issues/844), [#845](845)
+
+Thanks [benbro](https://github.com/benbro), [jackmu95](https://github.com/jackmu95), and [george-norris-salesforce](https://github.com/george-norris-salesforce) for the bug reports.
+
+
 # 1.0.0-beta.10
 
 Lots of bug fixes and performance improvements.
