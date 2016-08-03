@@ -391,6 +391,40 @@ footer li {
   margin-bottom: 75px;
   margin-top: 25px;
 }
+#playground-container iframe {
+  overflow: hidden;
+  width: 100%;
+}
+
+#gallery-container .selected-pen {
+  display: none;
+}
+#gallery-container a {
+  border: 2px solid #000;
+  display: inline-block;
+  margin-bottom: 25px;
+  position: relative;
+}
+#gallery-container .pen-label {
+  background-color: #000;
+  bottom: 0;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  opacity: 0.5;
+  padding: 15px;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+#gallery-container a:hover .pen-label {
+  opacity: 0.75;
+  padding-bottom: 18px;
+  padding-top: 18px;
+}
+#gallery-container img {
+  width: 100%;
+}
 
 #blog-container {
   max-width: 720px;
