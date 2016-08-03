@@ -3,6 +3,7 @@ import Quill, { expandConfig, overload } from '../../../core/quill';
 import Theme from '../../../core/theme';
 import Emitter from '../../../core/emitter';
 import Toolbar from '../../../modules/toolbar';
+import Snow from '../../../themes/snow';
 import { Range } from '../../../core/selection';
 
 
@@ -284,6 +285,17 @@ describe('Quill', function() {
       expect(config.modules.formula).toEqual({});
       expect(config.modules.syntax).toEqual({ highlight: null });
       Theme.DEFAULTS.modules = oldModules;
+    });
+
+    it('theme defaults', function() {
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: true,
+        },
+        theme: 'snow'
+      });
+      expect(config.theme).toEqual(Snow);
+      expect(config.modules.toolbar.handlers.image).toEqual(Snow.DEFAULTS.modules.toolbar.handlers.image);
     });
 
     it('quill < module < theme < user', function() {

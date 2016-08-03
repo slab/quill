@@ -332,7 +332,7 @@ function expandConfig(container, userConfig) {
       throw new Error(`Invalid theme ${userConfig.theme}. Did you register it?`);
     }
   }
-  let themeConfig = extend(true, {}, Theme.DEFAULTS);
+  let themeConfig = extend(true, {}, userConfig.theme.DEFAULTS);
   [themeConfig, userConfig].forEach(function(config) {
     config.modules = config.modules || {};
     Object.keys(config.modules).forEach(function(module) {
