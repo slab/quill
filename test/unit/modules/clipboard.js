@@ -91,10 +91,10 @@ describe('Clipboard', function() {
     });
 
     it('embeds', function() {
-      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png" height="200px" width="300px">34</div>');
+      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png" height="200" width="300">34</div>');
       let expected = new Delta()
         .insert('01')
-        .insert({ image: '/assets/favicon.png' }, { height: '200px', width: '300px' })
+        .insert({ image: '/assets/favicon.png' }, { height: '200', width: '300' })
         .insert('34');
       expect(delta).toEqual(expected);
     });
