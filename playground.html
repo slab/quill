@@ -20,7 +20,7 @@ pens:
   <div class="row" id="gallery-container">
   {% for pen in page.pens %}
     <div class="col-sm-4{% if forloop.last %} selected-pen{% endif %}">
-      <a target="_blank" href="http://codepen.io/quill/pen/{{pen.slug}}">
+      <a href="/playground/#{{ pen.title | slugify }}" title="{{ pen.title }}" data-id="{{pen.slug}}">
         <img src="https://codepen.io/quill/pen/{{pen.slug}}/image/small.png">
         <span class="pen-label">{{pen.title}}</span>
       </a>
@@ -32,14 +32,23 @@ pens:
 <script type="text/javascript">
 $(document).ready(function() {
   $('#gallery-container a').click(function(e) {
+    switchSelected(this);
+  });
+  if (window.location.hash) {
+    var anchor = $('#gallery-container a[href="/playground/' + window.location.hash + '"]');
+    if (anchor.length > 0) {
+      switchSelected(anchor);
+    }
+  }
+
+  function switchSelected(a) {
     $('#gallery-container .selected-pen').removeClass('selected-pen');
-    $(this).parent().addClass('selected-pen');
-    var slug = this.href.split('/').slice(-1)[0];
+    $(a).parent().addClass('selected-pen');
+    var slug = $(a).attr('data-id');
     var src = $('#playground-container iframe').attr('src').split('/');
     src.splice(-2, 1, slug);
     $('#playground-container iframe').attr('src', src.join('/'));
-    e.preventDefault();
-  });
+  }
 });
 </script>
 <!-- script -->
