@@ -6,40 +6,6 @@ permalink: /docs/modules/keyboard/
 
 The Keyboard module enables custom behavior for keyboard events in particular contexts. Quill uses this to bind formatting hotkeys and prevent undesirable browser side effects.
 
-### Configuration
-
-By default, Quill comes with several useful key bindings, for example indenting lists with tabs. You can add your own upon initization:
-
-```javascript
-var bindings = {
-  custom: {
-    key: 'B',
-    shiftKey: true,
-    handler: function(range, context) {
-      // Handle shift+b
-    }
-  },
-  tab: {
-    key: 'tab',
-    handler: function() {     // This will overwrite the default binding also named 'tab'
-      // Handle tab
-    }
-  }
-};
-
-var quill = new Quill('#editor', {
-  modules: {
-    keyboard: {
-      bindings: bindings
-    }
-  }
-});
-```
-
-Other bindings are essential to preventing dangerous browser defaults, such as the enter and backspace key. These cannot be overwritten, but your bindings specified in the configuration will run before Quill's and you may choose to not propogate, however this is not recommended.
-
-Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
-
 
 ### Key Bindings
 
@@ -177,10 +143,44 @@ quill.keyboard.addBinding({ key: ' ' }, {
 });
 ```
 
-
 #### suffix
 
 The same as [`prefix`](#prefix) except matching text immediately following the user's selection's end position.
+
+
+### Configuration
+
+By default, Quill comes with several useful key bindings, for example indenting lists with tabs. You can add your own upon initization.
+
+```javascript
+var bindings = {
+  tab: {
+    key: 'tab',
+    handler: function() {    // This will overwrite the default binding also named 'tab'
+      // Handle tab
+    }
+  },
+  custom: {                               // There is no default binding named 'custom',
+    key: 'B',                             // so this binding will be added,
+    shiftKey: true,                       // without overwriting anything
+    handler: function(range, context) {
+      // Handle shift+b
+    }
+  }
+};
+
+var quill = new Quill('#editor', {
+  modules: {
+    keyboard: {
+      bindings: bindings
+    }
+  }
+});
+```
+
+Other bindings are essential to preventing dangerous browser defaults, such as the enter and backspace key. These cannot be overwritten, but your bindings specified in the configuration will run before Quill's and you may choose to not propogate, however this is not recommended.
+
+Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
 
 
 ### Peformance
