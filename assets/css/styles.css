@@ -396,6 +396,9 @@ footer li {
   width: 100%;
 }
 
+#gallery-container {
+  margin-bottom: 75px;
+}
 #gallery-container .selected-pen {
   display: none;
 }
