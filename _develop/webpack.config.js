@@ -17,7 +17,8 @@ module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     'quill.js': ['./quill.js'],
-    'quill': './assets/core.styl',
+    'quill.core.js': ['./core.js'],
+    'quill.core': './assets/core.styl',
     'quill.bubble': './assets/bubble.styl',
     'quill.snow': './assets/snow.styl',
     'unit.js': './test/unit.js'
