@@ -52,14 +52,21 @@ Instantiate a new Quill object with a css selector for the div that should becom
 - [npm](https://www.npmjs.com/package/quill) - `npm install quill`
 - tar - https://github.com/quilljs/quill/releases
 
+
 ### CDN
 
 ```html
-<link href="//cdn.quilljs.com/0.19.10/quill.css" rel="stylesheet">
-<link href="//cdn.quilljs.com/0.19.10/quill.snow.css" rel="stylesheet">
-<link href="//cdn.quilljs.com/0.19.10/quill.bubble.css" rel="stylesheet">
-<script src="//cdn.quilljs.com/0.19.10/quill.js" type="text/javascript"></script>
-<script src="//cdn.quilljs.com/0.19.10/quill.min.js" type="text/javascript"></script>
+<!-- Main Quill library -->
+<script src="//cdn.quilljs.com/1.0.0-beta.11/quill.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0-beta.11/quill.min.js" type="text/javascript"></script>
+
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/1.0.0-beta.11/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.0.0-beta.11/quill.bubble.css" rel="stylesheet">
+
+<!-- Minimal build with essentials only -->
+<link href="//cdn.quilljs.com/1.0.0-beta.11/quill.core.css" rel="stylesheet">
+<script src="//cdn.quilljs.com/1.0.0-beta.11/quill.core.js" type="text/javascript"></script>
   ```
 
 
