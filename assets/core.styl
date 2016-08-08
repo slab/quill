@@ -53,11 +53,12 @@ resets(arr)
     content: '\25CF'
   li::before
     display: inline-block
-    margin-left: -1*LIST_STYLE_OUTER_WIDTH
     margin-right: LIST_STYLE_MARGIN
     text-align: right
     white-space: nowrap
     width: LIST_STYLE_WIDTH
+  li:not(.ql-direction-rtl)::before
+    margin-left: -1*LIST_STYLE_OUTER_WIDTH
   ol, ul
     li
       padding-left: LIST_STYLE_OUTER_WIDTH
@@ -76,10 +77,14 @@ resets(arr)
         li.ql-indent-{num}
           counter-reset: resets((num+1)..MAX_INDENT)
   for num in (1..MAX_INDENT)
-    .ql-indent-{num}
+    .ql-indent-{num}:not(.ql-direction-rtl)
       padding-left: (40*num)px
-    li.ql-indent-{num}
+    li.ql-indent-{num}:not(.ql-direction-rtl)
       padding-left: (40*num + LIST_STYLE_OUTER_WIDTH)px
+    .ql-indent-{num}.ql-direction-rtl.ql-align-right
+      padding-right: (40*num)px
+    li.ql-indent-{num}.ql-direction-rtl.ql-align-right
+      padding-right: (40*num + LIST_STYLE_OUTER_WIDTH)px
 
   .ql-video
     display: block
