@@ -26,12 +26,8 @@ BubbleTheme.DEFAULTS = {
         [{ header: 1 }, { header: 2 }, 'blockquote']
       ],
       handlers: {
-        link: function(value) {
-          if (!value) {
-            this.quill.format('link', false);
-          } else {
-            this.quill.theme.tooltip.edit();
-          }
+        link: function() {
+          this.quill.theme.tooltip.edit();
         }
       }
     }
@@ -84,6 +80,12 @@ class BubbleTooltip extends BaseTooltip {
 
   cancel() {
     this.show();
+  }
+
+  edit(mode = 'link', preview = null) {
+    let format = this.quill.getFormat();
+    preview = (preview === null && format.link) ? format.link : preview;
+    super.edit(mode, preview);
   }
 
   position(reference) {
