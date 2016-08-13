@@ -72,13 +72,15 @@ class SnowTooltip extends BaseTooltip {
       } else {
         this.edit('link', this.preview.textContent);
       }
+      event.preventDefault();
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
       if (this.linkRange != null) {
-        this.quill.focus();
+        this.restoreFocus();
         this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
         delete this.linkRange;
       }
+      event.preventDefault();
       this.hide();
     });
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {

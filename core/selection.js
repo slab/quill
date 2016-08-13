@@ -31,16 +31,6 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
-    let scrollTop, bodyTop;
-    this.root.addEventListener('blur', () => {
-      scrollTop = this.root.scrollTop;
-      bodyTop = document.body.scrollTop;
-    });
-    this.root.addEventListener('focus', (event) => {
-      if (scrollTop == null) return;
-      this.root.scrollTop = scrollTop;
-      document.body.scrollTop = bodyTop;
-    });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
         this.update(Emitter.sources.SILENT);
