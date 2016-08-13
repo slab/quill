@@ -305,7 +305,7 @@ Quill.DEFAULTS = {
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
-Quill.version = QUILL_VERSION;
+Quill.version = typeof(QUILL_VERSION) === 'undefined' ? 'dev' : QUILL_VERSION;
 
 Quill.imports = {
   'delta'       : Delta,
