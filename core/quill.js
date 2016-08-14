@@ -56,7 +56,6 @@ class Quill {
     if (options.debug) {
       Quill.debug(options.debug);
     }
-    options.bounds = typeof options.bounds === 'string' ? document.querySelector(options.bounds) : options.bounds;
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
