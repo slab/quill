@@ -33,7 +33,7 @@ quill.off('text-change', handler);
 
 ### on
 
-Adds event handler.
+Adds event handler. See [text-change](#text-change) or [selection-change](#selection-change) for more details on the events themselves.
 
 **Methods**
 
@@ -61,7 +61,7 @@ quill.on('text-change', function() {
 
 ### once
 
-Adds handler for one emission of an event.
+Adds handler for one emission of an event. See [text-change](#text-change) or [selection-change](#selection-change) for more details on the events themselves.
 
 **Methods**
 
