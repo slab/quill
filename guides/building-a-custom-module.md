@@ -1,9 +1,8 @@
 ---
-layout: post
-permalink: /blog/building-a-custom-module/
+layout: guide
+title: Building a Custom Module
+permalink: /guides/building-a-custom-module/
 ---
-
-*Note: An updated guide for 1.0 and ES6 is available [here](/guides/building-a-custom-module/).*
 
 Quill's core strength as an editor is its rich API and powerful customization capabilities. One of the best ways to customize Quill is with a module. A module is a simple way to augment Quill's functionality. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.
 
@@ -18,15 +17,14 @@ At its core a word counter simply counts the number of words in the editor and d
 Let's jump straight in with a complete example!
 
 <!-- more -->
-
-<div data-height="406" data-theme-id="23270" data-slug-hash="qkniF" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="379" data-theme-id="23269" data-slug-hash="bZkWKA" data-default-tab="js" data-embed-version="2" class="codepen"><pre><code>
 // Implement and register module
-Quill.registerModule('counter', function(quill, options) {
+Quill.register('modules/counter', function(quill, options) {
   var container = document.querySelector('#counter');
   quill.on('text-change', function() {
     var text = quill.getText();
-    // There are a couple issues with counting
-    // this way but we'll fix this later
+    // There are a couple issues with counting words
+    // this way but we'll fix these later
     container.innerHTML = text.split(/\s+/).length;
   });
 });
@@ -45,8 +43,8 @@ That's all it takes to add a custom module to Quill! A function can be [register
 
 Modules are passed an options object that can be used to fine tune the desired behavior. We can use this to accept a selector for the counter container instead of a hard-coded string. Let's also customize the counter to either count words or characters:
 
-<div data-height="466" data-theme-id="23270" data-slug-hash="eKIBb" data-default-tab="js" class='codepen'><pre><code>
-Quill.registerModule('counter', function(quill, options) {
+<div data-height="430" data-theme-id="23269" data-slug-hash="OXqmEp" data-default-tab="js" data-embed-version="2" class="codepen"><pre><code>
+Quill.register('modules/counter', function(quill, options) {
   var container = document.querySelector(options.container);
   quill.on('text-change', function() {
     var text = quill.getText();
@@ -70,9 +68,9 @@ var quill = new Quill('#editor', {
 
 ### Constructors
 
-Since any function can be registered as a Quill module, we could have implemented our counter as a constructor. This allows us to access and utilize the module directly.
+Since any function can be registered as a Quill module, we could have implemented our counter as an ES5 constructor or ES6 class. This allows us to access and utilize the module directly.
 
-<div data-height="666" data-theme-id="23270" data-slug-hash="zCIur" data-default-tab="js" class='codepen'><pre><code>
+<div data-height="688" data-theme-id="23269" data-slug-hash="BzbRVR" data-default-tab="js" data-embed-version="2" class="codepen"><pre><code>
 var Counter = function(quill, options) {
   this.quill = quill;
   this.options = options;
@@ -93,13 +91,18 @@ Counter.prototype.calculate = function() {
   }
 };
 
-Quill.registerModule('counter', Counter);
+Quill.register('modules/counter', Counter);
 
-var quill = new Quill('#editor');
-var counter = quill.addModule('counter', {
-  container: '#counter',
-  unit: 'word'
+var quill = new Quill('#editor', {
+  modules: {
+    counter: {
+      container: '#counter',
+      unit: 'word'
+    }
+  }
 });
+
+var counter = quill.getModule('counter');
 
 // We can now access calculate() directly
 console.log(counter.calculate(), 'words');
@@ -107,43 +110,48 @@ console.log(counter.calculate(), 'words');
 
 ### Wrapping It All Up
 
-Now let's polish off the module and fix a few pesky bugs.
+Now let's polish off the module in ES6 and fix a few pesky bugs.
 
-<div data-height="766" data-theme-id="23270" data-slug-hash="wxtvI" data-default-tab="js" class='codepen'><pre><code>
-var Counter = function(quill, options) {
-  this.quill = quill;
-  this.options = options;
-  this.container = document.querySelector(options.container);
-  quill.on('text-change', this.update.bind(this));
-  this.update();  // Account for initial contents
-};
-
-Counter.prototype.calculate = function() {
-  var text = this.quill.getText();
-  if (this.options.unit === 'word') {
-    text = text.trim();
-    // Splitting empty text returns a non-empty array
-    return text.length > 0 ? text.split(/\s+/).length : 0;
-  } else {
-    return text.length;
+<div data-height="772" data-theme-id="23269" data-slug-hash="wWOdXZ" data-default-tab="js" data-embed-version="2" class="codepen"><pre><code>
+class Counter {
+  constructor(quill, options) {
+    this.quill = quill;
+    this.options = options;
+    this.container = document.querySelector(options.container);
+    quill.on('text-change', this.update.bind(this));
+    this.update();  // Account for initial contents
   }
-};
 
-Counter.prototype.update = function() {
-  var length = this.calculate();
-  var label = this.options.unit;
-  if (length !== 1) {
-    label += 's';
+  calculate() {
+    let text = this.quill.getText();
+    if (this.options.unit === 'word') {
+      text = text.trim();
+      // Splitting empty text returns a non-empty array
+      return text.length > 0 ? text.split(/\s+/).length : 0;
+    } else {
+      return text.length;
+    }
   }
-  this.container.innerHTML = length + ' ' + label;
+
+  update() {
+    var length = this.calculate();
+    var label = this.options.unit;
+    if (length !== 1) {
+      label += 's';
+    }
+    this.container.innerHTML = length + ' ' + label;
+  }
 }
 
-Quill.registerModule('counter', Counter);
+Quill.register('modules/counter', Counter);
 
-var quill = new Quill('#editor');
-var counter = quill.addModule('counter', {
-  container: '#counter',
-  unit: 'word'
+var quill = new Quill('#editor', {
+  modules: {
+    counter: {
+      container: '#counter',
+      unit: 'word'
+    }
+  }
 });
 </code></pre></div>
 
