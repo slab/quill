@@ -1,10 +1,10 @@
 - title: Why Quill
   url: /guides/why-quill/
-- title: Customizing and Extending
-  url: /guides/customizing-and-extending/
-- title: Upgrading to 1.0
-  url: /guides/upgrading-to-1-0/
+- title: How to Customize Quill
+  url: /guides/how-to-customize-quill/
+- title: Cloning Medium with Parchment
+  url: /guides/cloning-medium-with-parchment/
 - title: Working with Deltas
   url: /guides/working-with-deltas/
-- title: Building on Parchment
-  url: /guides/building-on-parchment/
+- title: Upgrading to 1.0
+  url: /guides/upgrading-to-1-0/

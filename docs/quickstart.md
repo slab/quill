@@ -34,4 +34,4 @@ And that's all there is to it!
 
 ### Next Steps ###
 
-The real magic of Quill comes in its flexibility and extensibility. You can get an idea of what's possible by playing around with all the demos throughout this site. For an indepth walkthrough, take a look at the [Customizing and Extending](/guides/customizing-and-extending/) guide.
+The real magic of Quill comes in its flexibility and extensibility. You can get an idea of what is possible by playing around with the demos throughout this site or head straight to the [Interactive Playground](/playground/). For an in-depth walkthrough, take a look at [How to Customize Quill](/guides/how-to-customize-quill/).
