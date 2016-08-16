@@ -50,14 +50,14 @@ A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modu
 
 Nevertheless, staying true to Quill modular design, you can still drastically change the way undo and redo&mdash;or any other core functionality&mdash;works by implementing your own undo manager to replace the History module. As long as you implement the same API interface, Quill will happily use your replacement module. This is most easily done by inheriting from the existing module, and overwriting the methods you want to change. Take a look at the [modules](/docs/modules/) documentation for a very simple example of overwriting the core [Clipboard](/docs/modules/clipboard/) module.
 
-Finally, you may want to add functionality not provided by existing modules. In this case, it may be convenient to organize this as a Quill module, which the [Building A Custom Module](/building-a-custom-module/) guide covers. Of course, it is certainly valid to just keep this separate from Quill and just in your application code.
+Finally, you may want to add functionality not provided by existing modules. In this case, it may be convenient to organize this as a Quill module, which the [Building A Custom Module](/guides/building-a-custom-module/) guide covers. Of course, it is certainly valid to just keep this separate from Quill and just in your application code.
 
 
 ### Document Contents and Formatting
 
 Quill allows modification and extension of the contents and formats that it understands through its document model [Parchment](https://github.com/quilljs/parchment/). Content and formats are represented in Parchment as either Blots or Attributors, which roughly correspond to Nodes or Attributes in the DOM.
 
-Quill use classes, instead of inline style attributes, when possible, but both are implemented for you to pick and choose. A live example of this is implemented as a [Playground snippet](playground/#class-vs-inline-style).
+Quill use classes, instead of inline style attributes, when possible, but both are implemented for you to pick and choose. A live example of this is implemented as a [Playground snippet](/playground/#class-vs-inline-style).
 
 ```js
 var ColorClass = Quill.import('attributors/class/color');

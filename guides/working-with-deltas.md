@@ -25,12 +25,12 @@ The Delta format is almost entirely self-explanatory&mdash;the example below des
 
 As its name would imply, describing content is actually a special case for Deltas. The above example is more specifically instructions to insert a bolded string "Gandalf", an unformatted string " the ", followed by the string "Grey" colored #ccc. When Deltas are used to describe content, it can be thought of as the content that would be created if the Delta was applied to an empty document.
 
-Since Deltas are a data format, there is no inherent meaning to the values of `attribute` keypairs. For example, there is nothing in the Delta format that dictates color value must be in hex&mdash;this is a choice that Quill makes, and can be modified if desired with [Parchment](/guides/building-on-parchment/).
+Since Deltas are a data format, there is no inherent meaning to the values of `attribute` keypairs. For example, there is nothing in the Delta format that dictates color value must be in hex&mdash;this is a choice that Quill makes, and can be modified if desired with [Parchment](https://github.com/quilljs/parchment/).
 
 
 ### Embeds
 
-For non-text content such as images or formulas, the insert key can be an object. The object should have one key, which will be used to determine its type. This is the `blotName` if you are building custom content with [Parchment](/guides/building-on-parchment/). Like text, embeds can still have an `attributes` key to describe formatting to be applied to the embed. All embeds have a length of one.
+For non-text content such as images or formulas, the insert key can be an object. The object should have one key, which will be used to determine its type. This is the `blotName` if you are building custom content with [Parchment](https://github.com/quilljs/parchment/). Like text, embeds can still have an `attributes` key to describe formatting to be applied to the embed. All embeds have a length of one.
 
 ```javascript
 {
