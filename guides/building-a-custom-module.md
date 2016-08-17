@@ -4,7 +4,9 @@ title: Building a Custom Module
 permalink: /guides/building-a-custom-module/
 ---
 
-Quill's core strength as an editor is its rich API and powerful customization capabilities. One of the best ways to customize Quill is with a module. A module is a simple way to augment Quill's functionality. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.
+Quill's core strength as an editor is its rich API and powerful customization capabilities. As you implement functionality on top of Quill's API, it may be convenient to organize this as a module. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.
+
+*Note: Internally modules is how much of Quill's functionality is organized. You can overwrite these default [modules](/docs/modules/) by implementing your own and registering it with the same name.*
 
 ### Counting Words
 
@@ -110,7 +112,7 @@ console.log(counter.calculate(), 'words');
 
 ### Wrapping It All Up
 
-Now let's polish off the module in ES6 and fix a few pesky bugs.
+Now let's polish off the module in ES6 and fix a few pesky bugs. That's all there is to it!
 
 <div data-height="772" data-theme-id="23269" data-slug-hash="wWOdXZ" data-default-tab="js" data-embed-version="2" class="codepen"><pre><code>
 class Counter {
@@ -154,8 +156,6 @@ var quill = new Quill('#editor', {
   }
 });
 </code></pre></div>
-
-That's all there is to it! Stay tuned for more guides on common types of modules you can build.
 
 <!-- script -->
 <script src="//codepen.io/assets/embed/ei.js" type="text/javascript"></script>
