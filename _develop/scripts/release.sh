@@ -6,7 +6,7 @@ mkdir .release
 mkdir .release/quill
 
 npm run build
-cp dist/quill.css dist/quill.bubble.css dist/quill.snow.css dist/quill.js .release/quill/
+cp dist/quill.core.css dist/quill.bubble.css dist/quill.snow.css dist/quill.js dist/quill.core.js .release/quill/
 uglifyjs .release/quill/quill.js > .release/quill/quill.min.js
 
 cd .release
