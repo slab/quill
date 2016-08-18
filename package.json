@@ -1,6 +1,6 @@
 {
   "name": "quill",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-rc.0",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
@@ -36,7 +36,7 @@
     "deep-equal": "~1.0.1",
     "eventemitter3": "~1.2.0",
     "extend": "~3.0.0",
-    "parchment": "1.0.0-beta.11",
+    "parchment": "1.0.0-rc.0",
     "rich-text": "~3.0.2"
   },
   "devDependencies": {
