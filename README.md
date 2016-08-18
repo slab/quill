@@ -21,7 +21,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ```html
 <!-- Include Quill stylesheet -->
-<link href="http://cdn.quilljs.com/1.0.0-beta.2/quill.snow.css" rel="stylesheet">
+<link href="http://cdn.quilljs.com/1.0.0-rc.0/quill.snow.css" rel="stylesheet">
 
 <!-- Create the toolbar container -->
 <div id="toolbar">
@@ -35,7 +35,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </div>
 
 <!-- Include the Quill library -->
-<script src="http://cdn.quilljs.com/1.0.0-beta.2/quill.js"></script>
+<script src="http://cdn.quilljs.com/1.0.0-rc.0/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
@@ -57,16 +57,16 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ```html
 <!-- Main Quill library -->
-<script src="//cdn.quilljs.com/1.0.0-beta.11/quill.js" type="text/javascript"></script>
-<script src="//cdn.quilljs.com/1.0.0-beta.11/quill.min.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0-rc.0/quill.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0-rc.0/quill.min.js" type="text/javascript"></script>
 
 <!-- Theme included stylesheets -->
-<link href="//cdn.quilljs.com/1.0.0-beta.11/quill.snow.css" rel="stylesheet">
-<link href="//cdn.quilljs.com/1.0.0-beta.11/quill.bubble.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.0.0-rc.0/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.0.0-rc.0/quill.bubble.css" rel="stylesheet">
 
 <!-- Minimal build with essentials only -->
-<link href="//cdn.quilljs.com/1.0.0-beta.11/quill.core.css" rel="stylesheet">
-<script src="//cdn.quilljs.com/1.0.0-beta.11/quill.core.js" type="text/javascript"></script>
+<link href="//cdn.quilljs.com/1.0.0-rc.0/quill.core.css" rel="stylesheet">
+<script src="//cdn.quilljs.com/1.0.0-rc.0/quill.core.js" type="text/javascript"></script>
   ```
 
 
@@ -75,7 +75,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 Get help or stay up to date.
 
 - [Contribute](https://github.com/quilljs/quill/blob/develop/.github/CONTRIBUTING.md) on [Issues](https://github.com/quilljs/quill/issues)
-- Follow [@quilljs](https://twitter.com/quilljs) on Twitter
+- Follow [@jhchen](https://twitter.com/jhchen) and [@quilljs](https://twitter.com/quilljs) on Twitter
 - Ask questions on [Stack Overflow](http://stackoverflow.com/questions/tagged/quill)
 - If privacy is required, email support@quilljs.com
 
