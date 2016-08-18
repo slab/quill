@@ -152,19 +152,44 @@ The same as [`prefix`](#prefix) except matching text immediately following the u
 
 By default, Quill comes with several useful key bindings, for example indenting lists with tabs. You can add your own upon initization.
 
+Some bindings are essential to preventing dangerous browser defaults, such as the enter and backspace key, so Quill implements bindings to handle these. You cannot remove these to revert to native browser behaviors. However since bindings specified in the configuration will run before Quill's defaults, you can handle special cases and propogate to Quill's otherwise.
+
+Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
+
 ```javascript
 var bindings = {
+  // This will overwrite the default binding also named 'tab'
   tab: {
     key: 'tab',
-    handler: function() {    // This will overwrite the default binding also named 'tab'
+    handler: function() {
       // Handle tab
     }
   },
-  custom: {                               // There is no default binding named 'custom',
-    key: 'B',                             // so this binding will be added,
-    shiftKey: true,                       // without overwriting anything
+
+  // There is no default binding named 'custom'
+  // so this will be added without overwriting anything
+  custom: {
+    key: 'B',
+    shiftKey: true,
     handler: function(range, context) {
       // Handle shift+b
+    }
+  },
+
+  list: {
+    key: 'backspace',
+    context: {
+      format: ['list']
+    },
+    handler: function(range, context) {
+      if (context.offset === 0) {
+        // When backspace on the first character of a list,
+        // remove the list instead
+        this.quill.format('list', false, Quill.sources.USER);
+      } else {
+        // Otherwise propogate to Quill's default
+        return true;
+      }
     }
   }
 };
@@ -178,9 +203,7 @@ var quill = new Quill('#editor', {
 });
 ```
 
-Other bindings are essential to preventing dangerous browser defaults, such as the enter and backspace key. These cannot be overwritten, but your bindings specified in the configuration will run before Quill's and you may choose to not propogate, however this is not recommended.
 
-Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
 
 
 ### Peformance
