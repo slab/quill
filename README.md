@@ -4,12 +4,12 @@
 
 Quill is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and open sourced by [Salesforce.com](http://www.salesforce.com).
 
-To get started, check out the [Quill Github Page](http://quilljs.com/) or jump straight into the [demo](http://quilljs.com/examples/).
+To get started, check out the [Quill website](http://quilljs.com/) for documentation, guides, and live demos!
 
 
 ## Useful Links
 
-- [Demo](https://quilljs.com/examples/)
+- [Demo](https://quilljs.com/)
 - [Documentation](https://quilljs.com/)
 - [Contributing](https://github.com/quilljs/quill/blob/master/.github/CONTRIBUTING.md)
 - [Local Development](https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md)
@@ -45,6 +45,8 @@ Instantiate a new Quill object with a css selector for the div that should becom
   });
 </script>
 ```
+
+Take a look at the [Quill website](https://quilljs.com/) for more documentation, guides and live demos!
 
 
 ## Download
