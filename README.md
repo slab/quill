@@ -66,7 +66,7 @@ Take a look at the [Quill website](https://quilljs.com/) for more documentation,
 <link href="//cdn.quilljs.com/1.0.0-rc.0/quill.snow.css" rel="stylesheet">
 <link href="//cdn.quilljs.com/1.0.0-rc.0/quill.bubble.css" rel="stylesheet">
 
-<!-- Minimal build with essentials only -->
+<!-- Core build with no theme, formatting, non-essential modules -->
 <link href="//cdn.quilljs.com/1.0.0-rc.0/quill.core.css" rel="stylesheet">
 <script src="//cdn.quilljs.com/1.0.0-rc.0/quill.core.js" type="text/javascript"></script>
   ```
