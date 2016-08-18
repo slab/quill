@@ -303,27 +303,20 @@ function makeFormatHandler(format) {
 }
 
 function normalize(binding) {
-  switch (typeof binding) {
-    case 'string':
-      if (Keyboard.keys[binding.toUpperCase()] != null) {
-        binding = { key: Keyboard.keys[binding.toUpperCase()] };
-      } else if (binding.length === 1) {
-        binding = { key: binding.toUpperCase().charCodeAt(0) };
-      } else {
-        return null;
-      }
-      break;
-    case 'number':
-      binding = { key: binding };
-      break;
-    case 'object':
-      binding = clone(binding, false);
-      break;
-    default:
-      return null;
+  if (typeof binding === 'string' || typeof binding === 'number') {
+    return normalize({ key: binding });
+  }
+  if (typeof binding === 'object') {
+    binding = clone(binding, false);
   }
   if (typeof binding.key === 'string') {
-    binding.key = binding.key.toUpperCase().charCodeAt(0);
+    if (Keyboard.keys[binding.key.toUpperCase()] != null) {
+      binding.key = Keyboard.keys[binding.key.toUpperCase()];
+    } else if (binding.key.length === 1) {
+      binding.key = binding.key.toUpperCase().charCodeAt(0);
+    } else {
+      return null;
+    }
   }
   return binding;
 }
