@@ -1,3 +1,56 @@
+# 1.0.0-rc.0
+
+Take a look at [Quill 1.0 Release Candidate](https://quilljs.com/blog/quill-1-0-release-candidate-released/) for more details.
+
+### Updates
+
+- Going forward the minimal stylesheet build will be named quill.core.css, instead of quill.css
+
+### Bug Fixes
+
+- Fix identifying ordered and bulletd lists [#846](https://github.com/quilljs/quill/issues/846) [#847](https://github.com/quilljs/quill/issues/847)
+- Fix bullet interaction with text direction [#848](https://github.com/quilljs/quill/issues/848)
+
+A huge thank you to all contributors to through the beta! Special thanks goes to [@benbro](https://github.com/benbro) and [@sachinrekhi](https://github.com/sachinrekhi) who together submitted submitted almost 50 Issues and Pull Requests!
+
+- [@abejdaniels](https://github.com/abejdaniels)
+- [@anovi](https://github.com/anovi)
+- [@benbro](https://github.com/benbro)
+- [@bram2w](https://github.com/bram2w)
+- [@brynjagr](https://github.com/brynjagr)
+- [@CapTec](https://github.com/CapTec)
+- [@Cinamonas](https://github.com/Cinamonas)
+- [@clemmy](https://github.com/clemmy)
+- [@crisbeto](https://github.com/crisbeto)
+- [@cutteroid](https://github.com/cutteroid)
+- [@DadaMonad](https://github.com/DadaMonad)
+- [@davelozier](https://github.com/davelozier)
+- [@emanuelbsilva](https://github.com/emanuelbsilva)
+- [@ersommer](https://github.com/ersommer)
+- [@fernandogmar](https://github.com/fernandogmar)
+- [@george-norris-salesforce](https://github.com/george-norris-salesforce)
+- [@jackmu95](https://github.com/jackmu95)
+- [@jasonmng](https://github.com/jasonmng)
+- [@jbrowning](https://github.com/jbrowning)
+- [@jonnolen](https://github.com/jonnolen)
+- [@KameSama](https://github.com/KameSama)
+- [@kei-ito](https://github.com/kei-ito)
+- [@kylebragger](https://github.com/kylebragger)
+- [@LucVanPelt](https://github.com/LucVanPelt)
+- [@lukechapman](https://github.com/lukechapman)
+- [@micimize](https://github.com/micimize)
+- [@mmorearty](https://github.com/mmorearty)
+- [@mshamaiev-intel471](https://github.com/mshamaiev-intel471)
+- [@quentez](https://github.com/quentez)
+- [@sachinrekhi](https://github.com/sachinrekhi)
+- [@sagacitysite](https://github.com/sagacitysite)
+- [@saw](https://github.com/saw)
+- [@stalniy](https://github.com/stalniy)
+- [@tOgg1](https://github.com/tOgg1)
+- [@u9520107](https://github.com/u9520107)
+- [@WriterStat](https://github.com/WriterStat)
+
+
 # 1.0.0-beta.11
 
 Fixed some regressive bugs from previous release.
