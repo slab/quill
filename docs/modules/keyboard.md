@@ -152,7 +152,7 @@ The same as [`prefix`](#prefix) except matching text immediately following the u
 
 By default, Quill comes with several useful key bindings, for example indenting lists with tabs. You can add your own upon initization.
 
-Some bindings are essential to preventing dangerous browser defaults, such as the enter and backspace keys. You cannot remove these bindings to revert to native browser behaviors. However since bindings specified in the configuration will run before Quill's defaults, you can handle special cases and propogate to Quill's otherwise.
+Some bindings are essential to preventing dangerous browser defaults, such as the enter and backspace keys. You cannot remove these bindings to revert to native browser behaviors. However since bindings specified in the configuration will run before Quill's defaults, you can handle special cases and propagate to Quill's otherwise.
 
 Adding a binding with `quill.keyboard.addBinding` will not run before Quill's because the defaults bindings will have been added by that point.
 
