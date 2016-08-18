@@ -52,7 +52,7 @@ Quill.register(BoldBlot);
 Quill.register(ItalicBlot);
 ```
 
-Let's get rid of our dummy button handler and hook up the bold and italic buttons to Quill's `format()`. We will hardcode `true` to always add formatting for simplicity. In your application, you will can use `getFormat()` to get the current formatting over a arbitrary range to decide whether to add or remove a format. The [Toolbar](/docs/toolbar/) module implements this for Quill, and we will not reimplement it here.
+Let's get rid of our dummy button handler and hook up the bold and italic buttons to Quill's `format()`. We will hardcode `true` to always add formatting for simplicity. In your application, you will can use `getFormat()` to get the current formatting over a arbitrary range to decide whether to add or remove a format. The [Toolbar](/docs/modules/toolbar/) module implements this for Quill, and we will not reimplement it here.
 
 <div data-height="400" data-theme-id="23269" data-slug-hash="VjRovy" data-default-tab="result" data-embed-version="2" class="codepen"></div>
 

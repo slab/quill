@@ -104,7 +104,7 @@ var oldBullettedList = {
 
 ### Improvements
 
-- Ability to add new formats and content, or modify existing ones with [Parchment](/guides/building-on-parchment/).
+- Ability to add new formats and content, or modify existing ones with [Parchment](https://github.com/quilljs/parchment/).
 
 - Added support for nested list, superscript, subscript, inline code, code block, header, blockquote, text direction, video and forumla support.
 
