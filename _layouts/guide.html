@@ -16,9 +16,6 @@ layout: default
 
   <div class="row">
     <div id="guide-container" class="col-sm-8">
-      {% if page.stability == "incomplete" %}
-      <div class="alert alert-warning">This page is incomplete.</div>
-      {% endif %}
       <h1 id="{{ page.title | handelize | downcase }}">{{ page.title }}</h1>
       <a class="edit-link" href="{{site.github}}/{{page.path}}" target="_blank" title="Edit on Github">Edit on Github</a>
       {{ content }}
