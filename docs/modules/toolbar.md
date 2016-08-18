@@ -134,7 +134,7 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
 <script>
   var quill = new Quill('#editor', {
     modules: {
-      tooblar: '#toolbar'
+      toolbar: '#toolbar'
     }
   });
 </script>
