@@ -123,7 +123,7 @@ class Quill {
   }
 
   format(name, value, source = Emitter.sources.API) {
-    let range = this.getSelection();
+    let range = this.getSelection(true);
     let change = new Delta();
     if (range == null) return change;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
