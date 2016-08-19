@@ -26,7 +26,7 @@ As always our CDN is also available:
 <script src="//cdn.quilljs.com/1.0.0-rc.0/quill.min.js" type="text/javascript"></script>
 ```
 
-If you are just joining from the 0.20.1 or older, take a look at the updated [Upgrading to 1.0 Guide](/guides/upgrading-to-1-0/).
+If you are just joining from the 0.20.1 or older, take a look at the updated [Upgrading to 1.0 Guide](/guides/upgrading-to-1-0/). If you prefer to stay with 0.20, the [documentation](/0.20/) will remain available.
 
 
 ### Many New Formats
