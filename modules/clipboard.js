@@ -23,7 +23,8 @@ const CLIPBOARD_CONFIG = [
   [Node.ELEMENT_NODE, matchAttributor],
   [Node.ELEMENT_NODE, matchStyles],
   ['b', matchAlias.bind(matchAlias, 'bold')],
-  ['i', matchAlias.bind(matchAlias, 'italic')]
+  ['i', matchAlias.bind(matchAlias, 'italic')],
+  ['style', matchIgnore]
 ];
 
 const STYLE_ATTRIBUTORS = [
@@ -210,6 +211,10 @@ function matchBreak(node, delta) {
     delta.insert('\n');
   }
   return delta;
+}
+
+function matchIgnore(node, delta) {
+  return new Delta();
 }
 
 function matchNewline(node, delta) {
