@@ -115,21 +115,29 @@ class Clipboard extends Module {
   onPaste(e) {
     if (e.defaultPrevented) return;
     let range = this.quill.getSelection();
-    let clipboard = e.clipboardData || window.clipboardData;
     let delta = new Delta().retain(range.index).delete(range.length);
-    let scrollTop = this.quill.root.scrollTop;
-    let bodyTop = document.body.scrollTop;
-    this.container.focus();
-    setTimeout(() => {
-      let html = this.container.innerHTML;
+    let types = e.clipboardData.types;
+    if ((types instanceof DOMStringList && types.contains("text/html")) ||
+        (types.indexOf && types.indexOf('text/html') !== -1)) {
+      this.container.innerHTML = e.clipboardData.getData('text/html');
+      paste.call(this);
+      e.preventDefault();
+    } else {
+      let scrollTop = this.quill.root.scrollTop;
+      let bodyTop = document.body.scrollTop;
+      this.container.focus();
+      setTimeout(() => {
+        paste.call(this);
+        document.body.scrollTop = bodyTop;
+        this.quill.selection.scrollIntoView();
+      }, 1);
+    }
+    function paste() {
       delta = delta.concat(this.convert());
       this.quill.updateContents(delta, Quill.sources.USER);
       // range.length contributes to delta.length()
       this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
-      this.quill.root.scrollTop = scrollTop;
-      document.body.scrollTop = bodyTop;
-      this.quill.selection.scrollIntoView();
-    }, 1);
+    }
   }
 }
 Clipboard.DEFAULTS = {
