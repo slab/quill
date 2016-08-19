@@ -12,25 +12,26 @@ Quill comes ready to use in several convenient forms.
 A globally distributed and available CDN is provided, backed by [Amazon Cloudfront](https://aws.amazon.com/cloudfront/).
 
 ```html
-<!-- Main library -->
-<script src="https://cdn.quilljs.com/{{site.version}}/quill.js"></script>
-<script src="https://cdn.quilljs.com/{{site.version}}/quill.min.js"></script>
+<!-- Main Quill library -->
+<script src="//cdn.quilljs.com/{{site.version}}/quill.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/{{site.version}}/quill.min.js" type="text/javascript"></script>
 
-<!-- Themes -->
-<link href="https://cdn.quilljs.com/{{site.version}}/quill.snow.css">
-<link href="https://cdn.quilljs.com/{{site.version}}/quill.bubble.css">
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/{{site.version}}/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/{{site.version}}/quill.bubble.css" rel="stylesheet">
 
-<!-- Minimal styles -->
-<link href="https://cdn.quilljs.com/{{site.version}}/quill.css">
+<!-- Core build with no theme, formatting, non-essential modules -->
+<link href="//cdn.quilljs.com/{{site.version}}/quill.core.css" rel="stylesheet">
+<script src="//cdn.quilljs.com/{{site.version}}/quill.core.js" type="text/javascript"></script>
 ```
 
 
 ### NPM
 
-Add Quill as an [NPM](//www.npmjs.org/) dependency and add it your own build workflow, or use the included built options. Compile stylesheets are also included in `dist/` folder.
+Add Quill as an [NPM](//www.npmjs.org/) dependency and add it your own build workflow, or use the included built options. Compiled stylesheets are also included in `dist/` folder.
 
 ```bash
-npm install quill
+npm install quill@1.0.0-rc.0
 ```
 
 

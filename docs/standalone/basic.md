@@ -4,7 +4,7 @@ title: Basic Example
 permalink: /standalone/basic/
 ---
 <!-- head -->
-<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.css">
+<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.core.css">
 <style>
   body {
     padding: 25px;
