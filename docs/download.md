@@ -31,7 +31,7 @@ A globally distributed and available CDN is provided, backed by [Amazon Cloudfro
 Add Quill as an [NPM](//www.npmjs.org/) dependency and add it your own build workflow, or use the included built options. Compiled stylesheets are also included in `dist/` folder.
 
 ```bash
-npm install quill@1.0.0-rc.0
+npm install quill@{{site.version}}
 ```
 
 
