@@ -196,7 +196,7 @@ function matchBlot(node, delta) {
     let value = match.value(node);
     if (value != null) {
       embed[match.blotName] = value;
-      delta.insert(embed, match.formats(node));
+      delta = new Delta().insert(embed, match.formats(node));
     }
   } else if (typeof match.formats === 'function') {
     let formats = { [match.blotName]: match.formats(node) };
