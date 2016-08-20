@@ -19,8 +19,10 @@ The Formula Module adds beautifully rendered formulas into Quill documents, powe
 <script type="text/javascript">
 var quill = new Quill('#editor', {
   modules: {
-    formula: true   // Include formula module
-  }
+    formula: true,          // Include formula module
+    toolbar: [['formula']]  // Include button in toolbar
+  },
+  theme: 'snow'
 });
 </script>
 ```

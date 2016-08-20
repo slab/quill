@@ -25,8 +25,10 @@ hljs.configure({   // optionally configure hljs
 
 var quill = new Quill('#editor', {
   modules: {
-    syntax: true   // Include syntax module
-  }
+    syntax: true,              // Include syntax module
+    toolbar: [['code-block']]  // Include button in toolbar
+  },
+  theme: 'snow'
 });
 </script>
 ```
