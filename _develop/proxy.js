@@ -12,10 +12,6 @@ var ports = {
 var server = http.createServer(function(req, res) {
   if (/\/\d+\.\d+\.\d+/.test(req.url) || req.url.startsWith('/karma/base/dist')) {
     var target = 'http://localhost:' + ports.webpack + '/' + req.url.split('/').pop();
-    // We don't run minification on local dev server
-    if (req.url.endsWith('min.js')) {
-      target = target.slice(0, -6) + 'js';
-    }
     proxy.web(req, res, {
       ignorePath: true,
       target: target
