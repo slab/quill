@@ -89,14 +89,16 @@ quill.once('text-change', function() {
 
 ### Text Change
 
-Emitted when the contents of Quill have changed. Details of the change, along with the source of the change are provided. The source will be `"user"` if it originates from the users. For example:
+Emitted when the contents of Quill have changed. Details of the change, along with the source of the change are provided. The source disambiguates whether the local user caused the change. For example:
 
 - \- User types into the editor
 - \- User formats text using the toolbar
 - \- User uses a hotkey to undo
 - \- User uses OS spelling correction
 
-Changes may occur through an API but as long as they originate from the user, the provided source will still be `"user"`. For example, when a user clicks on the toolbar, technically the toolbar module calls a Quill API to effect the change. But source is still `"user"` since the origin of the change was the user's click.
+Changes may occur through an API but as long as they originate from the user, the provided source should still be `"user"`. For example, when a user clicks on the toolbar, technically the toolbar module calls a Quill API to effect the change. But source is still `"user"` since the origin of the change was the user's click.
+
+APIs causing text to change may also be called with a `"silent"` source, in which case `text-change` will not be emitted. This is not recommended as it will likely break the undo stack and other functions that rely on a full record of text changes.
 
 **Callback Parameters**
 
@@ -121,9 +123,9 @@ quill.on('text-change', function(delta, oldDelta, source) {
 
 ### Selection Change
 
-Emitted when a user or API causes the selection to change, with a range representing the selection boundaries. A null range indicates selection loss (usually caused by loss of focus from the editor).
+Emitted when a user or API causes the selection to change, with a range representing the selection boundaries. A null range indicates selection loss (usually caused by loss of focus from the editor). You can also use this event as a focus change event by just checking if the emitted range is null or not.
 
-You can also use this event as a focus change event by just checking if the emitted range is null or not.
+APIs causing the selection to change may also be called with a `"silent"` source, in which case `selection-change` will not be emitted. This is useful if `selection-change` is a side effect. For example, typing causes the selection to change but would be very noisy to also emit a `selection-change` event on every character.
 
 **Callback Parameters**
 
@@ -146,6 +148,29 @@ quill.on('selection-change', function(range, oldRange, source) {
     }
   } else {
     console.log('Cursor not in the editor');
+  }
+});
+```
+
+### Editor Change
+
+Emitted when either `text-change` or `selection-change` would be emitted, even when the source is `"silent"`. The first parameter is the event name, either `text-change` or `selection-change`, followed by the arguments normally passed to those respective handlers.
+
+**Callback Parameters**
+
+| Parameter      | Type     | Description
+|----------------|----------|------------
+| `eventName`    | _String_ | Either `text-change` or `selection-change`
+| `...arguments` | _Array_  | Arguments normally passed to those respective handlers
+
+**Examples**
+
+```javascript
+quill.on('editor-change', function(eventName, ...arguments) {
+  if (eventName === 'text-change') {
+    // arguments[0] will be delta
+  } else if (eventName === 'selection-change') {
+    // arguments[0] will be old range
   }
 });
 ```

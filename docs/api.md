@@ -44,6 +44,7 @@ permalink: /docs/api/
 - [once](#once)
 - [selection-change](#selectionchange)
 - [text-change](#textchange)
+- [editor-change](#editorchange)
 
 
 <h4>Extension</h4>
