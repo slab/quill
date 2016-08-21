@@ -42,7 +42,8 @@ class PlainClipboard extends Clipboard {
 
 Quill.register('modules/clipboard', PlainClipboard, true);
 
-var quill = new Quill('#editor');   // Will be created with instance of PlainClipboard
+// Will be created with instance of PlainClipboard
+var quill = new Quill('#editor');
 ```
 
 *Note: This particular example was selected to show what is possible. It is often easier to just use an API or configuration the existing module exposes. In this example, the existing Clipboard's [addMatcher](/docs/modules/clipboard/#addmatcher) API is suitable for most paste customization scenarios.*

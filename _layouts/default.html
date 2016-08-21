@@ -4,8 +4,7 @@
     <title>{{ page.title }}{% if page.path != "index.html" %} - Quill{% endif %}</title>
     {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
     {% include meta.html %}
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
     {% assign sections = content | split: '<!-- head -->' %}
     {% for section in sections %}
       {% assign mod = forloop.index | modulo: 2 %}
@@ -17,7 +16,7 @@
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
-    {% include navbar.html %}
+    {% include header.html %}
     {% assign heads = content | split: '<!-- head -->' %}
     {% for head in heads %}
       {% if forloop.last != true %}
@@ -35,28 +34,8 @@
         {% endfor %}
       {% endif %}
     {% endfor %}
-    <footer>
-      <div class="container">
-        <ul>
-          <li><iframe src="//ghbtns.com/github-btn.html?user=quilljs&amp;repo=quill&amp;type=watch&amp;count=true" title="Star on GitHub" width="100" height="20"></iframe></li>
-          <li>
-            {% if page.url contains '/blog/' and page.url != '/blog/' %}
-            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com{{ page.url }}" data-text="{{ page.title }}" data-via="quilljs">Tweet</a>
-            {% else %}
-            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://quilljs.com" data-text="{{ site.name }}" data-via="quilljs">Tweet</a>
-            {% endif %}
-          </li>
-        </ul>
-        <div>
-          Quill is open source under
-          <a title="BSD" href="https://github.com/quilljs/quill#license">BSD</a>.
-          The latest version is currently
-          <a title="Version {{ site.version }}" href="https://github.com/quilljs/quill/releases/tag/v{{site.version}}">v{{site.version}}</a>
-        </div>
-      </div>
-    </footer>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    {% include footer.html %}
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     {% assign sections = content | split: '<!-- script -->' %}
     {% for section in sections %}
       {% assign mod = forloop.index | modulo: 2 %}
@@ -64,6 +43,25 @@
         {{ section | strip }}
       {% endif %}
     {% endfor %}
-    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+      $('.navbar-open').click(function() {
+        $('.navbar-drop').addClass('active');
+      });
+      $('.navbar-close').click(function() {
+        $('.navbar-drop').removeClass('active');
+      });
+
+      var counts = $('.github-count');
+      if (counts.length > 0) {
+        $.getJSON('https://api.github.com/search/repositories?q=quill+user:quilljs+repo:quill&sort=stars&order=desc', function(data) {
+          if (data.items && data.items[0].full_name === 'quilljs/quill') {
+            counts.text(data.items[0].stargazers_count.toLocaleString());
+          }
+        });
+      }
+    });
+    </script>
+    </div>
   </body>
 </html>

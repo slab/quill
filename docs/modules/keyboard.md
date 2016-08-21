@@ -14,7 +14,10 @@ Keyboard handlers are bound to a particular key and key modifiers: `metaKey`, `c
 Handlers will called with `this` bound to the keyboard instance and be passed the current selection range.
 
 ```js
-quill.keyboard.addBinding({ key: 'B', shortKey: true }, function(range, context) {
+quill.keyboard.addBinding({
+  key: 'B',
+  shortKey: true
+}, function(range, context) {
   this.quill.formatText(range, 'bold', true);
 });
 
@@ -105,7 +108,7 @@ When an Array, handler will be called if *any* of the specified formats are acti
 var context = {
   format: {
     list: true,       // must be on a list, but can be any value
-    script: 'super',  // must be exactly superscript, subscript will not suffice
+    script: 'super',  // must be exactly 'super', 'sub' will not suffice
     link: false       // cannot be in any link
   }
 };
@@ -128,8 +131,8 @@ quill.keyboard.addBinding({ key: ' ' }, {
   format: { list: false },  // ...on an line that's not already a list
   prefix: /^-$/,            // ...following a '-' character
   offset: 1,                // ...at the 1st position of the line,
-                            // otherwise handler would trigger if the user typed
-                            // hyphen space in the middle of a sentence
+                            // otherwise handler would trigger if the user
+                            // typed hyphen+space mid sentence
 }, function(range, context) {
   // the space character is consumed by this handler
   // so we only need to delete the hyphen

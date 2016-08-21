@@ -1,20 +1,15 @@
 ## Formatting
+---
 
 ### format
 
-Format text at user's current selection. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting.
+Format text at user's current selection. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `format(name, value, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `name`    | _String_ | Name of format to apply.
-| `value`   | _String_ | Value of format to apply. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+format(name: String, value: any, source: String = 'api')
+```
 
 **Examples**
 
@@ -23,26 +18,19 @@ quill.format('color', 'red');
 quill.format('align', 'right');
 ```
 
-
 ### formatLine
 
-Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved.
+Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `formatLine(index, length, source = 'api')`
-- `formatLine(index, length, name, value, source = 'api')`
-- `formatLine(index, length, formats, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of formatting range.
-| `length`  | _Number_ | Length of formatting range.
-| `name`    | _String_ | Name of format to apply to text.
-| `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+formatLine(index: Number, length: Number, source: String = 'api')
+formatLine(index: Number, length: Number, format: String, value: any,
+           source: String = 'api')
+formatLine(index: Number, length: Number, formats: { [String]: any },
+           source: String = 'api')
+```
 
 **Examples**
 
@@ -53,26 +41,19 @@ quill.formatLine(1, 2, 'align', 'right');   // right aligns the first line
 quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 ```
 
-
 ### formatText
 
-Formats text in the editor. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved.
+Formats text in the editor. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `formatText(index, length, source = 'api')`
-- `formatText(index, length, name, value, source = 'api')`
-- `formatText(index, length, formats, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of formatting range.
-| `length`  | _Number_ | Length of formatting range.
-| `name`    | _String_ | Name of format to apply to text.
-| `value`   | _String_ | Value of format to apply to text. A falsy value will remove the format.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+formatText(index: Number, length: Number, source: String = 'api')
+formatText(index: Number, length: Number, format: String, value: any,
+           source: String = 'api')
+formatText(index: Number, length: Number, formats: { [String]: any },
+           source: String = 'api')
+```
 
 **Examples**
 
@@ -89,26 +70,16 @@ quill.formatText(0, 5, {                   // unbolds 'hello' and set its color 
 quill.formatText(5, 1, 'align', 'right');  // right aligns the 'hello' line
 ```
 
-
 ### getFormat
 
 Retrieves common formatting of the text in the given range. For a format to be reported, all text within the range must have a truthy value. If there are different truthy values, an array with all truthy values will be reported. If no range is supplied, the user's current selection range is used. May be used to show which formats have been set on the cursor. If called with no arguments, the user's current selection range will be used.
 
 **Methods**
 
-- `getFormat()`
-- `getFormat(index, length = 0)`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of retrieval.
-| `length`  | _Number_ | Length of range.
-
-**Returns**
-
-- _Object_ Formats common to the range.
+```javascript
+getFormat(range: Range = current): { [String]: any }
+getFormat(index: Number, length: Number = 0): { [String]: any }
+```
 
 **Examples**
 
@@ -126,29 +97,23 @@ quill.getFormat(0, 3);   // { color: ['red', 'blue'] }
 quill.setSelection(3);
 quill.getFormat();       // { italic: true, color: 'blue' }
 
-quill.format('underline', true);
-quill.getFormat();       // { italic: true, color: 'blue', underline: 'true' }
+quill.format('strike', true);
+quill.getFormat();       // { italic: true, color: 'blue', strike: true }
 
 quill.formatLine(0, 1, 'align', 'right');
-quill.getFormat();       // { italic: true, color: 'blue', underline: 'true', align: 'right' }
+quill.getFormat();       // { italic: true, color: 'blue', strike: true,
+                         //   align: 'right' }
 ```
-
 
 ### removeFormat
 
-Removes all formatting and embeds within given range. Line formatting will be removed if the end of the line is included in the range. The user's selection may not be preserved.
+Removes all formatting and embeds within given range. Line formatting will be removed if the end of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
-- `removeFormat(index, length, source = 'api')`
-
-**Parameters**
-
-| Parameter | Type     | Description
-|-----------|----------|------------
-| `index`   | _Number_ | Start index of range.
-| `length`  | _Number_ | Length of range.
-| `source`  | _String_ | [Source](/docs/api/#text-change) to be emitted.
+```javascript
+removeFormat(index: Number, length: Number, source: String = 'api')
+```
 
 **Examples**
 

@@ -1,5 +1,5 @@
 ---
-layout: guide
+layout: docs
 title: How to Customize Quill
 permalink: /guides/how-to-customize-quill/
 ---

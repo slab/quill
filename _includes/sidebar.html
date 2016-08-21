@@ -2,7 +2,7 @@
 <li{% if page.url contains parent.url %} class="active"{% endif %}>
   <a href="{{ parent.url }}">{{ parent.title }}</a>
   {% if parent.children != null %}
-  <ul {% if navClass != null %}class="nav"{% endif %}>
+  <ul>
     {% for child in parent.children %}
     <li{% if page.url contains child.url %} class="active"{% endif %}>
       <a href="{{ child.url }}">{{ child.title }}</a>

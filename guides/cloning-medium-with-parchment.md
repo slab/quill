@@ -1,5 +1,5 @@
 ---
-layout: guide
+layout: docs
 title: Cloning Medium with Parchment
 permalink: /guides/cloning-medium-with-parchment/
 ---

@@ -1,5 +1,5 @@
 ---
-layout: guide
+layout: docs
 title: Building a Custom Module
 permalink: /guides/building-a-custom-module/
 ---

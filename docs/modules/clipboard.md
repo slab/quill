@@ -13,21 +13,14 @@ Familiarity and comfort with [Deltas](https://github.com/ottypes/rich-text) is n
 
 ### addMatcher
 
-Adds a custom matcher to the Clipboard. Matchers using `nodeType` are called first, in the order they were added, followed by matchers using a CSS `selector`, also in the order they were added.
+Adds a custom matcher to the Clipboard. Matchers using `nodeType` are called first, in the order they were added, followed by matchers using a CSS `selector`, also in the order they were added. [`nodeType`](https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType) may be `Node.ELEMENT_NODE` or `Node.TEXT_NODE`.
 
 **Methods**
 
-- `addMatcher(selector, matcher)`
-- `addMatcher(nodeType, matcher)`
-
-
-**Parameters**
-
-| Parameter  | Type       | Description
-|------------|------------|------------
-| `selector` | _String_   | CSS selector
-| `nodeType` | _Number_   | [nodeType](https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType) Can be `Node.ELEMENT_NODE` or `Node.TEXT_NODE`
-| `matcher`  | _Function_ | Function with signature `function(node: Node, delta: Delta): Delta`
+```javascript
+addMatcher(String: selector, (Node: node, Delta: delta) => Delta)
+addMatcher(Number: nodeType, (Node: node, Delta: delta) => Delta)
+```
 
 **Examples**
 

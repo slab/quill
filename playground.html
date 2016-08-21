@@ -15,6 +15,7 @@ pens:
 
 <div class="container">
   <div id="playground-container">
+   <h1>Interactive Playground</h1>
     <iframe src="//codepen.io/anon/embed/{{page.pens.last.slug}}/?height=500&amp;editable=true&amp;embed-version=2&amp;theme-id=23269&amp;default-tab=js%2Cresult&amp;user=anon" scrolling="no" frameborder="0" height="500" allowfullscreen="true"></iframe>
   </div>
   <div class="row" id="gallery-container">
@@ -27,6 +28,8 @@ pens:
     </div>
   {% endfor %}
   </div>
+
+  {% include open-source.html %}
 </div>
 <!-- script -->
 <script type="text/javascript">
