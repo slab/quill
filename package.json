@@ -77,7 +77,7 @@
     "url": "https://github.com/quilljs/quill/issues"
   },
   "scripts": {
-    "build": "webpack --config _develop/webpack.config.js; rm dist/quill.bubble dist/quill.snow dist/quill.core;",
+    "build": "webpack --config _develop/webpack.config.js; rm dist/quill.bubble.js dist/quill.snow.js;",
     "build:release": "./_develop/scripts/release.sh",
     "start": "npm run build; foreman start -f _develop/procfile",
     "test": "npm run test:unit",
