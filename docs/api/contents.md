@@ -145,8 +145,8 @@ Inserts text into the editor. See [formats](/docs/formats/) for a list of availa
 quill.insertText(0, 'Hello', 'bold', true);
 
 quill.insertText(5, 'Quill', {
-  'italic': true,
-  'fore-color': '#ffff00'
+  'color': '#ffff00',
+  'italic': true
 });
 ```
 
