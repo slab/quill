@@ -84,7 +84,7 @@
     "test:all": "npm run test:unit; npm run test:functional",
     "test:functional": "./_develop/scripts/webdriver.sh",
     "test:unit": "npm run build; karma start _develop/karma.config.js",
-    "test:coverage": "webpack --config _develop/webpack.coverage.js; karma start _develop/karma.config.js --reporters coverage",
+    "test:coverage": "webpack --coverage --config _develop/webpack.config.js; karma start _develop/karma.config.js --reporters coverage",
     "travis": "karma start _develop/karma.config.js --reporters dots,saucelabs",
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update"
