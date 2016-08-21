@@ -13,6 +13,7 @@ var constantPack = new webpack.DefinePlugin({
   QUILL_VERSION: JSON.stringify(pkg.version)
 });
 
+
 module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
@@ -64,8 +65,11 @@ module.exports = {
     },
     silent: true
   },
-  plugins: [ bannerPack, constantPack, new ExtractTextPlugin('[name].css', { allChunks: true }) ],
-  devtool: 'source-map',
+  plugins: [
+    bannerPack,
+    constantPack,
+    new ExtractTextPlugin('[name].css', { allChunks: true })
+  ],
   devServer: {
     hot: false,
     port: process.env.npm_package_config_ports_webpack,
@@ -81,3 +85,14 @@ module.exports = {
     }
   }
 };
+
+if (process.argv.indexOf('--minimize') !== -1) {
+  module.exports.entry = {
+    'quill.min.js': './quill.js'
+  };
+  module.exports.plugins.push(
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin()
+  );
+  module.exports.devtool = 'source-map';
+}
