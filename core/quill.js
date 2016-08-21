@@ -202,7 +202,7 @@ class Quill {
     return this.selection.hasFocus();
   }
 
-  insertEmbed(index, embed, value, source) {
+  insertEmbed(index, embed, value, source = Quill.sources.API) {
     let range = this.getSelection();
     let change = this.editor.insertEmbed(index, embed, value, source);
     range = shiftRange(range, change, source);
