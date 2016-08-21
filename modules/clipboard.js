@@ -3,7 +3,6 @@ import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import { BlockEmbed } from '../blots/block';
 
 import { AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
@@ -124,7 +123,6 @@ class Clipboard extends Module {
       paste.call(this);
       e.preventDefault();
     } else {
-      let scrollTop = this.quill.root.scrollTop;
       let bodyTop = document.body.scrollTop;
       this.container.focus();
       setTimeout(() => {

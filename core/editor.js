@@ -120,7 +120,7 @@ class Editor {
     let lines = [], leaves = [];
     if (length === 0) {
       this.scroll.path(index).forEach(function(path) {
-        let [blot, offset] = path;
+        let [blot, ] = path;
         if (blot instanceof Block) {
           lines.push(blot);
         } else if (blot instanceof Parchment.Leaf) {

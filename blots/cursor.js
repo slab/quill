@@ -73,7 +73,6 @@ class Cursor extends Embed {
       this.domNode.parentNode.insertBefore(this.domNode.lastChild, this.domNode);
     }
     if (this.textNode.data !== Cursor.CONTENTS) {
-      let native = this.selection.getNativeRange();
       this.textNode.data = this.textNode.data.split(Cursor.CONTENTS).join('');
       this.parent.insertBefore(Parchment.create(this.textNode), this);
       this.textNode = document.createTextNode(Cursor.CONTENTS);

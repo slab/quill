@@ -1,11 +1,7 @@
 import Parchment from 'parchment';
 import Emitter from '../core/emitter';
-import logger from '../core/logger';
 import Block, { BlockEmbed } from './block';
 import Container from './container';
-
-
-let debug = logger('quill:scroll');
 
 
 function isLine(blot) {
@@ -27,10 +23,10 @@ class Scroll extends Parchment.Scroll {
   }
 
   deleteAt(index, length) {
-    let [first, firstOffset] = this.line(index);
-    let [last, lastOffset] = this.line(index + length);
+    let [first, offset] = this.line(index);
+    let [last, ] = this.line(index + length);
     super.deleteAt(index, length);
-    if (last != null && first !== last && firstOffset > 0 &&
+    if (last != null && first !== last && offset > 0 &&
         !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
       last.moveChildren(first);
       last.remove();

@@ -4,7 +4,6 @@ import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import { Range } from '../core/selection';
 
 let debug = logger('quill:toolbar');
 

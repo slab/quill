@@ -109,7 +109,11 @@ if (process.argv.indexOf('--minimize') !== -1) {
   };
   module.exports.plugins.push(
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
   );
   module.exports.devtool = 'source-map';
 }
