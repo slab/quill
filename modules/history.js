@@ -9,8 +9,8 @@ class History extends Module {
     this.lastRecorded = 0;
     this.ignoreChange = false;
     this.clear();
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta, oldDelta, source) => {
-      if (this.ignoreChange) return;
+    this.quill.on(Quill.events.EDITOR_CHANGE, (eventName, delta, oldDelta, source) => {
+      if (eventName !== Quill.events.TEXT_CHANGE || this.ignoreChange) return;
       if (!this.options.userOnly || source === Quill.sources.USER) {
         this.record(delta, oldDelta);
       } else {
