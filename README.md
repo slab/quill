@@ -10,7 +10,9 @@ To get started, check out the [Quill website](http://quilljs.com/) for documenta
 ## Useful Links
 
 - [Demo](https://quilljs.com/)
-- [Documentation](https://quilljs.com/)
+- [Documentation](https://quilljs.com/docs/)
+- [How-to Guides](https://quilljs.com/guides/)
+- [Interactive Playground](https://quilljs.com/playground/)
 - [Contributing](https://github.com/quilljs/quill/blob/master/.github/CONTRIBUTING.md)
 - [Local Development](https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md)
 
