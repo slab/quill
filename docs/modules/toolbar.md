@@ -200,8 +200,8 @@ toolbar.addHandler('image', showImageUI);
 ```
 
 <!-- script -->
-<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
-<script>
+<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script type="text/javascript">
   var quill = new Quill('#toolbar-editor', {
     modules: {
       toolbar: { container: '#toolbar-toolbar' }

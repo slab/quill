@@ -55,8 +55,8 @@ Many other customizations can be done through the respective modules. For exampl
 <!-- script -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
-<script>
+<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script type="text/javascript">
   var snowQuill = new Quill('#snow-container', {
     placeholder: 'Compose an epic...',
     modules: {
