@@ -189,11 +189,31 @@ class Editor {
     return this.applyDelta(delta, source);
   }
 
-  update(change, source = Emitter.sources.USER) {
+  update(change, source = Emitter.sources.USER, mutations = []) {
     let oldDelta = this.delta;
-    this.delta = this.getDelta();
-    if (!change || !equal(oldDelta.compose(change), this.delta)) {
-      change = oldDelta.diff(this.delta);
+    if (mutations.length === 1 &&
+        mutations[0].type === 'characterData' &&
+        Parchment.find(mutations[0].target)) {
+      // Optimization for character changes
+      let textBlot = Parchment.find(mutations[0].target);
+      let formats = bubbleFormats(textBlot);
+      let index = textBlot.offset(this.scroll);
+      let oldText = new Delta().insert(mutations[0].oldValue);
+      let newText = new Delta().insert(textBlot.value());
+      let diffDelta = new Delta().retain(index).concat(oldText.diff(newText));
+      change = diffDelta.ops.reduce(function(delta, op) {
+        if (op.insert) {
+          return delta.insert(op.insert, formats);
+        } else {
+          return delta.push(op);
+        }
+      }, new Delta());
+      this.delta = oldDelta.compose(change);
+    } else {
+      this.delta = this.getDelta();
+      if (!change || !equal(oldDelta.compose(change), this.delta)) {
+        change = oldDelta.diff(this.delta);
+      }
     }
     if (change.length() > 0) {
       let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
