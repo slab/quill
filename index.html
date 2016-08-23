@@ -6,8 +6,8 @@ bodyClass: 'home'
 redirect_from: /latest/
 ---
 <!-- head -->
-<link href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css" rel="stylesheet">
-<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/monokai-sublime.min.css" rel="stylesheet">
+<link href="{{site.katex}}/katex.min.css" rel="stylesheet">
+<link href="{{site.highlightjs}}/styles/monokai-sublime.min.css" rel="stylesheet">
 <link href="{{ site.cdn }}{{ site.version }}/quill.bubble.css" rel="stylesheet">
 <link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
 <!-- head -->
@@ -189,8 +189,8 @@ var quill = new Quill('#editor', {
 </div>
 
 <!-- script -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js" type="text/javascript"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js" type="text/javascript"></script>
+<script src="{{site.katex}}/katex.min.js" type="text/javascript"></script>
+<script src="{{site.highlightjs}}/highlight.min.js" type="text/javascript"></script>
 <script src="{{ site.cdn }}{{ site.version }}/{{ site.quill }}" type="text/javascript"></script>
 <script type="text/javascript">
 (function() {
