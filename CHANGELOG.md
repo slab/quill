@@ -1,3 +1,23 @@
+# 1.0.0-rc.1
+
+A few bug fixes and performance improvements.
+
+### Features
+
+- Source maps now available from CDN for minified build
+
+### Bug Fixes
+
+- Fix scroll interaction between two Quill editors [#855](https://github.com/quilljs/quill/issues/855)
+- Fix scroll on paste [#856](https://github.com/quilljs/quill/issues/856)
+- Fix native iOS tooltip formatting [#862](https://github.com/quilljs/quill/issues/862)
+- Remove comments from pasting from Word [#872](https://github.com/quilljs/quill/issues/872)
+- Fix indent at all supported indent levels [#873](https://github.com/quilljs/quill/issues/873)
+- Fix indent interaction with text direction [#874](https://github.com/quilljs/quill/issues/874)
+
+Thank you [@benbro](https://github.com/benbro), [@fernandogmar](https://github.com/fernandogmar), [@sachinrekhi](https://github.com/sachinrekhi), [@sferoze](https://github.com/sferoze), and [@stalniy](https://github.com/stalniy) for contributions to this release!
+
+
 # 1.0.0-rc.0
 
 Take a look at [Quill 1.0 Release Candidate](https://quilljs.com/blog/quill-1-0-release-candidate-released/) for more details.
