@@ -11,7 +11,7 @@ cp dist/quill.core.css dist/quill.bubble.css dist/quill.snow.css dist/quill.js d
 
 cd .release
 
-printf "cdn: .\nversion: ." > jekyll.yml
+printf "cdn: .\nversion: .\nquill: quill.js" > jekyll.yml
 jekyll build -s ../node_modules/quill-docs -d _site --config ../node_modules/quill-docs/_config.yml,jekyll.yml
 
 mkdir quill/examples
