@@ -3,6 +3,7 @@ import DeltaOp from 'rich-text/lib/op';
 import Emitter from './emitter';
 import Parchment from 'parchment';
 import CodeBlock from '../formats/code';
+import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import clone from 'clone';
 import equal from 'deep-equal';
@@ -198,7 +199,8 @@ class Editor {
       let textBlot = Parchment.find(mutations[0].target);
       let formats = bubbleFormats(textBlot);
       let index = textBlot.offset(this.scroll);
-      let oldText = new Delta().insert(mutations[0].oldValue);
+      let oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
+      let oldText = new Delta().insert(oldValue);
       let newText = new Delta().insert(textBlot.value());
       let diffDelta = new Delta().retain(index).concat(oldText.diff(newText));
       change = diffDelta.ops.reduce(function(delta, op) {
