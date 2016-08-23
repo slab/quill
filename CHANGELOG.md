@@ -1,3 +1,16 @@
+# 1.0.0-rc.2
+
+A few bug fixes, including one significant [one](https://github.com/quilljs/quill/issues/883)
+
+### Bug Fixes
+
+- Fix icon picker rendering in MS Edge [#877](https://github.com/quilljs/quill/issues/877)
+- Add back minified build to release [#881](https://github.com/quilljs/quill/issues/881)
+- Fix optimized change calculation with preformatted text [#883](https://github.com/quilljs/quill/issues/883)
+
+Thanks to [benbro](https://github.com/benbro), [cutteroid](https://github.com/cutteroid), and [CapTec](https://github.com/CapTec) for their contributions to this release.
+
+
 # 1.0.0-rc.1
 
 A few bug fixes and performance improvements.
