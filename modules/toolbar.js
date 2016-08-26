@@ -140,7 +140,8 @@ class Toolbar extends Module {
           // both being null should match (default values)
           // '1' should match with 1 (headers)
           let isActive = formats[format] === input.getAttribute('value') ||
-                         (formats[format] != null && formats[format].toString() === input.getAttribute('value'));
+                         (formats[format] != null && formats[format].toString() === input.getAttribute('value')) ||
+                         (formats[format] == null && !input.getAttribute('value'));
           input.classList.toggle('ql-active', isActive);
         } else {
           input.classList.toggle('ql-active', formats[format] != null);
