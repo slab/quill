@@ -183,13 +183,13 @@ class BaseTooltip extends Tooltip {
     this.root.classList.add('ql-editing');
     if (preview != null) {
       this.textbox.value = preview;
-    } else if (mode !== this.root.dataset.mode) {
+    } else if (mode !== this.root.getAttribute('data-mode')) {
       this.textbox.value = '';
     }
     this.position(this.quill.getBounds(this.quill.selection.savedRange));
     this.textbox.select();
-    this.textbox.setAttribute('placeholder', this.textbox.dataset[mode] || '');
-    this.root.dataset.mode = mode;
+    this.textbox.setAttribute('placeholder', this.textbox.getAttribute(`data-${mode}`) || '');
+    this.root.setAttribute('data-mode', mode);
   }
 
   restoreFocus() {
@@ -200,7 +200,7 @@ class BaseTooltip extends Tooltip {
 
   save() {
     let value = this.textbox.value;
-    switch(this.root.dataset.mode) {
+    switch(this.root.getAttribute('data-mode')) {
       case 'link':
         let scrollTop = this.quill.root.scrollTop;
         if (this.linkRange) {
@@ -225,8 +225,8 @@ class BaseTooltip extends Tooltip {
         let range = this.quill.getSelection(true);
         let index = range.index + range.length;
         if (range != null) {
-          this.quill.insertEmbed(index, this.root.dataset.mode, value, Emitter.sources.USER);
-          if (this.root.dataset.mode === 'formula') {
+          this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, Emitter.sources.USER);
+          if (this.root.getAttribute('data-mode') === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
           }
           this.quill.setSelection(index + 2, Emitter.sources.USER);

@@ -78,7 +78,7 @@ class Quill {
       this.disable();
     }
     if (options.placeholder) {
-      this.root.dataset.placeholder = options.placeholder;
+      this.root.setAttribute('data-placeholder', options.placeholder);
     }
     this.root.classList.toggle('ql-blank', this.editor.isBlank());
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {

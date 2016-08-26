@@ -103,9 +103,7 @@ class SnowTooltip extends BaseTooltip {
 
   show() {
     super.show();
-    if (this.root.dataset.mode) {
-      delete this.root.dataset.mode;
-    }
+    this.root.removeAttribute('data-mode');
   }
 }
 SnowTooltip.TEMPLATE = [
