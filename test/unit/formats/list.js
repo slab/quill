@@ -189,13 +189,13 @@ describe('List', function() {
       <p>5678</p>`
     );
     editor.deleteText(2, 5);
-    expect(this.container).toEqualHTML('<ol><li>0178</li></ol>');
+    expect(this.container).toEqualHTML('<p>0178</p>');
   });
 
   it('delete partial', function() {
     let editor = this.initialize(Editor, '<p>0123</p><ul><li>5678</li></ul>');
     editor.deleteText(2, 5);
-    expect(this.container).toEqualHTML('<p>0178</p>');
+    expect(this.container).toEqualHTML('<ul><li>0178</li></ul>');
   });
 
   it('nested list replacement', function() {

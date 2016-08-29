@@ -120,15 +120,15 @@ describe('Code', function() {
   it('delete merge before', function() {
     let editor = this.initialize(Editor, { html: '<h1>0123</h1><pre>4567\n</pre>' });
     editor.deleteText(4, 1);
-    expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { header: 1 }));
-    expect(editor.scroll.domNode).toEqualHTML('<h1>01234567\n</h1>');
+    expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { 'code-block': true }));
+    expect(editor.scroll.domNode).toEqualHTML('<pre>01234567\n</pre>');
   });
 
   it('delete merge after', function() {
     let editor = this.initialize(Editor, { html: '<pre>0123\n</pre><h1>4567</h1>' });
     editor.deleteText(4, 1);
-    expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { 'code-block': true }));
-    expect(editor.scroll.domNode).toEqualHTML('<pre>01234567\n</pre>');
+    expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { header: 1 }));
+    expect(editor.scroll.domNode).toEqualHTML('<h1>01234567</h1>');
   });
 
   it('replace', function() {

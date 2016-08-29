@@ -23,7 +23,7 @@ describe('Clipboard', function() {
       this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
       this.quill.clipboard.onPaste(this.event);
       setTimeout(() => {
-        expect(this.quill.root).toEqualHTML('<h1>01<strong>|</strong><em>7</em>8</h1>');
+        expect(this.quill.root).toEqualHTML('<p>01<strong>|</strong><em>7</em>8</p>');
         expect(this.quill.getSelection()).toEqual(new Range(3));
         done();
       }, 2);

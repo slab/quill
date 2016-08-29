@@ -32,8 +32,8 @@ class Scroll extends Parchment.Scroll {
       if (last instanceof CodeBlock) {
         last.deleteAt(last.length() - 1, 1);
       }
-      last.moveChildren(first);
-      last.remove();
+      first.moveChildren(last, last.children.head);
+      first.remove();
     }
     this.optimize();
   }
