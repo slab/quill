@@ -123,7 +123,7 @@ class Toolbar extends Module {
         } else if (!Array.isArray(formats[format])) {
           let value = formats[format];
           if (typeof value === 'string') {
-            value = value.replace(/\"/g, '&quot;');
+            value = value.replace(/\"/g, '\\"');
           }
           option = input.querySelector(`option[value="${value}"]`);
         }
