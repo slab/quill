@@ -116,9 +116,9 @@ class Clipboard extends Module {
     if (e.defaultPrevented) return;
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index).delete(range.length);
-    let types = e.clipboardData.types;
+    let types = e.clipboardData ? e.clipboardData.types : null;
     if ((types instanceof DOMStringList && types.contains("text/html")) ||
-        (types.indexOf && types.indexOf('text/html') !== -1)) {
+        (types && types.indexOf && types.indexOf('text/html') !== -1)) {
       this.container.innerHTML = e.clipboardData.getData('text/html');
       paste.call(this);
       e.preventDefault();
