@@ -2,6 +2,7 @@ import Parchment from 'parchment';
 import Emitter from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Container from './container';
+import CodeBlock from '../formats/code';
 
 
 function isLine(blot) {
@@ -28,15 +29,19 @@ class Scroll extends Parchment.Scroll {
     super.deleteAt(index, length);
     if (last != null && first !== last && offset > 0 &&
         !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
+      if (last instanceof CodeBlock) {
+        last.deleteAt(last.length() - 1, 1);
+      }
       last.moveChildren(first);
       last.remove();
-      this.optimize();
     }
+    this.optimize();
   }
 
   formatAt(index, length, format, value) {
     if (this.whitelist != null && !this.whitelist[format]) return;
     super.formatAt(index, length, format, value);
+    this.optimize();
   }
 
   insertAt(index, value, def) {
@@ -53,10 +58,10 @@ class Scroll extends Parchment.Scroll {
         let embed = Parchment.create(value, def);
         this.appendChild(embed);
       }
-      this.optimize();
     } else {
       super.insertAt(index, value, def);
     }
+    this.optimize();
   }
 
   insertBefore(blot, ref) {
