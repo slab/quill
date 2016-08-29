@@ -27,7 +27,6 @@ class Keyboard extends Module {
 
   constructor(quill, options) {
     super(quill, options);
-    this.options.bindings = extend({}, Keyboard.DEFAULTS.bindings, options.bindings);
     this.bindings = {};
     Object.keys(this.options.bindings).forEach((name) => {
       if (this.options.bindings[name]) {
