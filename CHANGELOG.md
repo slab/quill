@@ -1,3 +1,19 @@
+# 1.0.0-rc.3
+
+A few bug fixes, one with with possibly significant implications. See the [issue #889](https://github.com/quilljs/quill/issues/889) and [commit fix](https://github.com/quilljs/quill/commit/be24c62a6234818548658fcb5e1935a0c07b4eb7) for more details.
+
+### Bug Fixes
+
+- Fix indenting beyond first level with toolbar [#882](https://github.com/quilljs/quill/issues/882)
+- Fix toolbar font/size display on Safari [#884](https://github.com/quilljs/quill/issues/884)
+- Fix pasting from Gmail from on different browser [#886](https://github.com/quilljs/quill/issues/886)
+- Fix undo/redo consistency [#889](https://github.com/quilljs/quill/issues/889)
+- Fix null error when selecting all on Firefox [#891](https://github.com/quilljs/quill/issues/891)
+- Fix merging keyboard options twice [#897](https://github.com/quilljs/quill/issues/897)
+
+Thank you [@benbro](https://github.com/benbro), [@cgilboy](https://github.com/cgilboy), [@cutteroid](https://github.com/cutteroid), and [@routman](https://github.com/routman) for contributions to this release!
+
+
 # 1.0.0-rc.2
 
 A few bug fixes, including one significant [one](https://github.com/quilljs/quill/issues/883)
