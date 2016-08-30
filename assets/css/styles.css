@@ -1220,12 +1220,9 @@ body:not(.home) .navbar-link:before {
     height: 495px;
   }
   #snow-wrapper .toolbar .ql-font,
-  #snow-wrapper .toolbar .ql-formats {
+  #snow-wrapper .toolbar .ql-formats:nth-child(3),
+  #snow-wrapper .toolbar .ql-formats:nth-child(5) {
     display: none;
-  }
-  #snow-wrapper .toolbar .ql-formats:first-child,
-  #snow-wrapper .toolbar .ql-formats:first-child + .ql-formats {
-    display: inline-block;
   }
 
   #above-container:not(.demo-active) #laptop-container:hover {
@@ -1294,6 +1291,10 @@ body:not(.home) .navbar-link:before {
 @media (max-width: 550px) {
   #bubble-wrapper, #snow-wrapper, #full-wrapper {
     height: 475px;
+  }
+  #snow-wrapper .toolbar .ql-formats:nth-child(4),
+  #snow-wrapper .toolbar .ql-formats:nth-child(6) {
+    display: none;
   }
   #docs-wrapper {
     position: inherit;
