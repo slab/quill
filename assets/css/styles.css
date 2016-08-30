@@ -138,21 +138,6 @@ h2 + hr {
 
 /*** Global ***/
 
-.announcement {
-  background-color: #337ab7;
-  color: #fff;
-  display: block;
-  font-size: 18px;
-  padding: 10px;
-  text-align: center;
-}
-.announcement:active,
-.announcement:hover,
-.announcement:visited {
-  color: #fff;
-  text-decoration: none;
-}
-
 .action {
   background-color: #f2d123;
   border: 2px solid transparent;
@@ -336,6 +321,32 @@ body:not(.home) header .logo {
 body:not(.home) header .logo circle,
 body:not(.home) header .logo path {
   fill: #fff;
+}
+
+.announcement {
+  background-color: #337ab7;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+}
+.announcement:active,
+.announcement:hover,
+.announcement:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+.new-blog::after {
+  background-color: #f2d123;
+  border-radius: 6px;
+  content: "new";
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 5px;
+  padding: 1px 6px 1px 7px;
+  text-transform: uppercase;
 }
 
 .navbar-drop {
