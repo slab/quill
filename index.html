@@ -296,8 +296,15 @@ redirect_from: /latest/
       });
     });
 
-    $('#demo-container .ql-editor').one('focus', function() {
+    $('#demo-container .ql-editor').one('touchstart', function(event) {
       $('#above-container').addClass('demo-active');
+      event.preventDefault();
+    });
+
+    $('#demo-container .ql-editor').one('focus', function(event) {
+      if (!$('#above-container').hasClass('demo-active')) {
+        $('#above-container').addClass('demo-active');
+      }
     });
 
     console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
