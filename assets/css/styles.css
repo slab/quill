@@ -1173,8 +1173,10 @@ body:not(.home) .navbar-link:before {
   #users-container {
     padding-top: 2em;
   }
-  #users-container .prev,
-  #users-container .next {
+  #users-container .tip {
+    font-size: 1.8em;
+  }
+  #users-container .shaft {
     display: none;
   }
   #users-container h1 {
