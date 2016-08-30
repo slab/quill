@@ -341,6 +341,7 @@ body:not(.home) header .logo path {
 .new-blog::after {
   background-color: #f2d123;
   border-radius: 6px;
+  color: #1d1e30;
   content: "new";
   font-size: 0.8rem;
   font-weight: bold;
@@ -385,7 +386,6 @@ body:not(.home) header .logo path {
 .navbar-list li {
   display: inline-block;
   line-height: 7.33rem;
-  padding: 0.67em;
 }
 .navbar-list .navbar-item.active .navbar-link:before {
   transform: scaleX(1);
@@ -622,6 +622,12 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
   overflow: hidden;
   width: 100%;
 }
+#demo-container h1 {
+  font-size: 3rem;
+}
+#demo-container h2 {
+  font-size: 2rem;
+}
 #above-container.demo-active #demo-container,
 #demo-container:hover {
   opacity: 1;
@@ -641,42 +647,50 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 #demo-container .ql-snow {
   border: none;
 }
-#bubble-container .ql-editor {
-  padding: 10% 10% 0;
+#demo-container .ql-snow a:hover,
+#demo-container .ql-snow a:active {
+  color: #06c;
 }
-#snow-container {
+#bubble-wrapper .ql-editor {
+  padding: 10% 10% 25px;
+}
+#snow-wrapper {
   padding: 10px 20px 0;
 }
-#snow-container .ql-editor {
-  padding: 0 17%;
+#snow-wrapper .ql-editor {
+  padding: 0 17% 25px;
 }
-#snow-container, #bubble-container, #full-container {
+#snow-container,
+#full-container,
+#bubble-container {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+#snow-container .editor,
+#full-container .editor,
+#full-container .editor {
+  flex: 2;
+  overflow: hidden;
+}
+#bubble-wrapper, #snow-wrapper, #full-wrapper {
   display: inline-block;
   float: left;
+  height: 595px;
   width: 33.33%;
 }
-#bubble-container .editor {
-  height: 595px;
-}
-#snow-container .toolbar {
+#snow-wrapper .toolbar {
   border: none;
   padding: 4.5% 13%;
 }
-#snow-container .toolbar {
-  padding: 4.5% 13%;
-}
-#snow-container .editor {
+#snow-wrapper .editor {
   border: none;
-  height: 470px;
 }
-#full-container .editor {
-  height: 530px;
-}
-#full-container .ql-toolbar {
+#full-wrapper .ql-toolbar {
   border-bottom: 1px solid #ccc;
 }
-#full-container .ql-editor {
-  padding: 5% 8% 0;
+#full-wrapper .ql-editor {
+  padding: 5% 8% 25px;
 }
 
 #above-container.demo-active #users-container {
@@ -731,7 +745,6 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 
 #features-container {
   background-color: #fff;
-  padding-bottom: 4.44em;
   padding-top: 5.83em;
   position: relative;
   z-index: 10;
@@ -758,7 +771,6 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
   width: 48%;
 }
 .feature.row {
->>>>>>> redesign
   display: block;
 }
 .feature .details {
@@ -1117,20 +1129,11 @@ body:not(.home) .navbar-link:before {
   #laptop-container {
     padding: 0px 22px;
   }
-  #snow-container .toolbar {
+  #snow-wrapper .toolbar {
     padding: 2.25%;
   }
-  #snow-container .ql-editor {
+  #snow-wrapper .ql-editor {
     padding: 0 10%;
-  }
-  #bubble-container .editor {
-    height: 610px;
-  }
-  #snow-container .editor {
-    height: 515px;
-  }
-  #full-container .editor {
-    height: 540px;
   }
   .feature .details {
     padding: 1em;
@@ -1148,6 +1151,9 @@ body:not(.home) .navbar-link:before {
   body.home header {
     padding-top: 1em;
   }
+  .announcement {
+    display: none;
+  }
   .navbar-open, .navbar-close {
     top: 4.5em;
   }
@@ -1159,7 +1165,7 @@ body:not(.home) .navbar-link:before {
     padding-top: 0;
   }
   #above-container > .container {
-    height: 545px;
+    height: 575px;
   }
   #above-container.demo-active #users-container {
     top: -25px;
@@ -1203,21 +1209,20 @@ body:not(.home) .navbar-link:before {
     font-size: 1rem;
     padding: 20px;
   }
-  #bubble-container .editor {
-    height: 430px;
+  .demo-active #bubble-wrapper,
+  .demo-active #snow-wrapper,
+  .demo-active #full-wrapper {
+    height: 455px;
   }
-  #snow-container .editor {
-    height: 385px;
+  #bubble-wrapper, #snow-wrapper, #full-wrapper {
+    height: 495px;
   }
-  #full-container .editor {
-    height: 315px;
-  }
-  #snow-container .toolbar .ql-font,
-  #snow-container .toolbar .ql-formats {
+  #snow-wrapper .toolbar .ql-font,
+  #snow-wrapper .toolbar .ql-formats {
     display: none;
   }
-  #snow-container .toolbar .ql-formats:first-child,
-  #snow-container .toolbar .ql-formats:first-child + .ql-formats {
+  #snow-wrapper .toolbar .ql-formats:first-child,
+  #snow-wrapper .toolbar .ql-formats:first-child + .ql-formats {
     display: inline-block;
   }
 
@@ -1285,6 +1290,9 @@ body:not(.home) .navbar-link:before {
   }
 }
 @media (max-width: 550px) {
+  #bubble-wrapper, #snow-wrapper, #full-wrapper {
+    height: 475px;
+  }
   #docs-wrapper {
     position: inherit;
   }
@@ -1373,7 +1381,9 @@ body:not(.home) .navbar-link:before {
   }
 }
 @media (min-width: 1024px) {
-
+  .navbar-list li {
+    margin-right: 2.5%;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -1381,6 +1391,6 @@ body:not(.home) .navbar-link:before {
     padding: 16px 26px;
   }
   .navbar-list li {
-    margin-right: 2.5%;
+    margin-right: 3.5%;
   }
 }
