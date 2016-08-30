@@ -8,6 +8,14 @@ permalink: /docs/themes/
 <link rel="stylesheet" href="{{site.highlightjs}}/styles/monokai-sublime.min.css">
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.snow.css">
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.bubble.css">
+<style>
+  #bubble-container .ql-editor {
+    border: 1px solid #ccc;
+  }
+  .standalone-container .ql-editor {
+    height: 350px;
+  }
+</style>
 <!-- head -->
 
 Themes allow you to easily make your editor look good with minimal effort. Quill features two offically supported themes: [Snow](#snow) and [Bubble](#bubble).

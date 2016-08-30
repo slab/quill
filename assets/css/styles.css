@@ -660,16 +660,16 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 #snow-wrapper .ql-editor {
   padding: 0 17% 25px;
 }
-#snow-container,
-#full-container,
-#bubble-container {
+#demo-container #snow-container,
+#demo-container #full-container,
+#demo-container #bubble-container {
   display: flex;
   flex-flow: column;
   height: 100%;
 }
-#snow-container .editor,
-#full-container .editor,
-#full-container .editor {
+#demo-container #snow-container .editor,
+#demo-container #full-container .editor,
+#demo-container #bubble-container .editor {
   flex: 2;
   overflow: hidden;
 }
