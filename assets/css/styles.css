@@ -138,6 +138,21 @@ h2 + hr {
 
 /*** Global ***/
 
+.announcement {
+  background-color: #337ab7;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+}
+.announcement:active,
+.announcement:hover,
+.announcement:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
 .action {
   background-color: #f2d123;
   border: 2px solid transparent;
