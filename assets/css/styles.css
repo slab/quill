@@ -337,6 +337,10 @@ body:not(.home) header .logo path {
   color: #fff;
   text-decoration: none;
 }
+.announcement + header .navbar-open,
+.announcement + header .navbar-close {
+  top: 12em;
+}
 
 .new-blog::after {
   background-color: #f2d123;
@@ -456,8 +460,7 @@ footer .action {
   font-size: 1.5rem;
   height: 4.44em;
   line-height: 6.67rem;
-  margin-bottom: 1.4em;
-  margin-right: 1.4em;
+  margin: 1.4em;
   vertical-align: middle;
   width: 14.5em;
 }
@@ -1127,6 +1130,10 @@ body:not(.home) .navbar-link:before {
 @media (max-width: 1023px) {
   .navbar-open {
     display: inline-block;
+    top: 5.5em;
+  }
+  .navbar-close {
+    top: 6em;
   }
   .navbar-drop.active {
     margin-bottom: -25em;
@@ -1184,6 +1191,12 @@ body:not(.home) .navbar-link:before {
   }
   #users-container {
     padding-top: 2em;
+  }
+  #users-container .prev {
+    padding-right: 0;
+  }
+  #users-container .next {
+    padding-left: 0;
   }
   #users-container .tip {
     font-size: 1.8em;
@@ -1308,6 +1321,9 @@ body:not(.home) .navbar-link:before {
   #snow-wrapper .toolbar .ql-formats:nth-child(6) {
     display: none;
   }
+  #features-container {
+    margin-bottom: 10em;
+  }
   #docs-wrapper {
     position: inherit;
   }
@@ -1320,9 +1336,10 @@ body:not(.home) .navbar-link:before {
     margin-top: 0;
     max-height: 8em;
     overflow: hidden;
-    padding: 4em 9em 0;
+    padding: 2em 0 0;
     position: absolute;
     right: 0;
+    text-align: center;
     transition: max-height 800ms ease-in-out 0s, background-color 500ms linear 0s;
   }
   #sidebar-container.active {
@@ -1330,8 +1347,9 @@ body:not(.home) .navbar-link:before {
     max-height: 100em;
   }
   #sidebar-container .sidebar-button {
-    display: block;
-    padding: 0;
+    display: inline-block;
+    padding: 2em;
+    width: 100%;
   }
   #sidebar-container .sidebar-list {
     font-size: 2rem;
@@ -1340,6 +1358,10 @@ body:not(.home) .navbar-link:before {
   }
   #sidebar-container .sidebar-list ul {
     display: none;
+  }
+  #pagination-container .prev,
+  #pagination-container .next {
+    margin-bottom: 1em;
   }
 }
 @media (max-width: 400px) {
