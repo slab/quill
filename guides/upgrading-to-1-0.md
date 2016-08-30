@@ -8,8 +8,6 @@ Quill 1.0 introduces major changes aimed at greater ability to customize Quill. 
 
 To realize the full benefits of 1.0, it is encouraged to take a fresh view of Quill 1.0 and revisit even basic topics on this documentation site. Often, you will find that even though you could do things the old way, there is a better new way.
 
-**Note: While Quill is in its beta and release candidate stages, this guide will be updated as needed.**
-
 
 ### API
 

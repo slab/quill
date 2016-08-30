@@ -628,6 +628,12 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 #demo-container h2 {
   font-size: 2rem;
 }
+#demo-container blockquote {
+  font-size: 1.5rem;
+}
+#demo-container .ql-size-large {
+  font-size: 24px;
+}
 #above-container.demo-active #demo-container,
 #demo-container:hover {
   opacity: 1;
@@ -877,6 +883,9 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 #demo-container .ql-snow .ql-font.ql-picker {
   width: 132px;
 }
+#demo-container .ql-snow .ql-picker.ql-font .ql-picker-label:not([data-label])::before {
+  content: 'Sailec Light';
+}
 #demo-container .ql-snow .ql-font .ql-picker-item[data-value=sofia]::before,
 #demo-container .ql-font-sofia {
   font-family: 'Sofia Pro', sans-serif;
@@ -955,6 +964,9 @@ body:not(.home) .navbar-link:before {
 
 #sidebar-container ul {
   list-style: none;
+}
+#sidebar-container .sidebar-list > li {
+  margin-bottom: 0.5em;
 }
 #sidebar-container li {
   margin-bottom: 0.3em;
