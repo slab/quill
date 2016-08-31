@@ -1,3 +1,8 @@
+# 1.0.0-rc.4
+
+Fix one important bug https://github.com/quilljs/quill/commit/fdd920250c05403ed9e5d6d86826a00167ba0b09
+
+
 # 1.0.0-rc.3
 
 A few bug fixes, one with with possibly significant implications. See the [issue #889](https://github.com/quilljs/quill/issues/889) and [commit fix](https://github.com/quilljs/quill/commit/be24c62a6234818548658fcb5e1935a0c07b4eb7) for more details.

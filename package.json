@@ -1,6 +1,6 @@
 {
   "name": "quill",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.4",
   "description": "Cross browser rich text editor",
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "http://quilljs.com",
