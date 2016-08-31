@@ -1115,8 +1115,18 @@ body:not(.home) .navbar-link:before {
   margin-bottom: 5.5em;
   margin-top: 2.78em;
 }
-#blog-container p a {
+#blog-container p a,
+#blog-container li a {
+  color: #25408f;
   text-decoration: underline;
+}
+#blog-container img {
+  display: block;
+  margin: auto;
+}
+#blog-container ul li {
+  list-style: disc;
+  margin-left: 2em;
 }
 #blog-container .more-link {
   display: inline-block;
