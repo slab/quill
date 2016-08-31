@@ -1,6 +1,7 @@
 import Parchment from 'parchment';
 import Emitter from '../core/emitter';
 import Block, { BlockEmbed } from './block';
+import Break from './break';
 import Container from './container';
 import CodeBlock from '../formats/code';
 
@@ -32,7 +33,8 @@ class Scroll extends Parchment.Scroll {
       if (last instanceof CodeBlock) {
         last.deleteAt(last.length() - 1, 1);
       }
-      first.moveChildren(last, last.children.head);
+      let ref = last.children.head instanceof Break ? null : last.children.head;
+      first.moveChildren(last, ref);
       first.remove();
     }
     this.optimize();

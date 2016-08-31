@@ -52,6 +52,12 @@ describe('Block', function() {
     expect(scroll.domNode).toEqualHTML('<h2>HelloWorld!</h2>');
   });
 
+  it('join line with empty', function() {
+    let scroll = this.initialize(Scroll, '<p>Hello<strong>World</strong></p><p><br></p>');
+    scroll.deleteAt(10, 1);
+    expect(scroll.domNode).toEqualHTML('<p>Hello<strong>World</strong></p>');
+  });
+
   it('join empty lines', function() {
     let scroll = this.initialize(Scroll, '<h1><br></h1><p><br></p>');
     scroll.deleteAt(1, 1);
