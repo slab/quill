@@ -173,14 +173,23 @@ Keyboard.DEFAULTS = {
     },
     'indent code-block': makeCodeBlockHandler(true),
     'outdent code-block': makeCodeBlockHandler(false),
+    'remove tab': {
+      key: Keyboard.keys.TAB,
+      shiftKey: true,
+      collapsed: true,
+      prefix: /\t$/,
+      handler: function(range, context) {
+        this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
+      }
+    },
     'tab': {
       key: Keyboard.keys.TAB,
-      shiftKey: null,
       handler: function(range, context) {
         if (!context.collapsed) {
           this.quill.scroll.deleteAt(range.index, range.length);
         }
         this.quill.insertText(range.index, '\t', Quill.sources.USER);
+        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       }
     },
     'list empty enter': {
