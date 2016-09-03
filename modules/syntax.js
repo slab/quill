@@ -50,6 +50,7 @@ class Syntax extends Module {
   }
 
   highlight() {
+    if (this.quill.selection.composing) return;
     let range = this.quill.getSelection();
     this.quill.scroll.descendants(SyntaxCodeBlock).forEach((code) => {
       code.highlight(this.options.highlight);
