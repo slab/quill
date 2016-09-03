@@ -7,6 +7,8 @@ permalink: /docs/api/
 <h4>Content</h4>
 
 - [deleteText](#deletetext)
+- [disable](#disable)
+- [enable](#enable)
 - [getContents](#getcontents)
 - [getLength](#getlength)
 - [getText](#gettext)
@@ -52,8 +54,6 @@ permalink: /docs/api/
 - [debug](#debug)
 - [import](#import)
 - [register](#register)
-- [disable](#disable)
-- [enable](#enable)
 - [addContainer](#addcontainer)
 - [getModule](#getmodule)
 - [update](#update)

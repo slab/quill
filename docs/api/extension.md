@@ -139,33 +139,6 @@ Retrieves a module that has been added to the editor.
 ```javascript
 var toolbar = quill.getModule('toolbar');
 ```
-
-
-### disable
-
-Shorthand for [`enable(false)`](#enable).
-
-
-### enable
-
-Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls.
-
-**Methods**
-
-- `enable()`
-- `enable(value)`
-
-**Parameters**
-
-| Parameter | Type      | Description
-|-----------|-----------|------------
-| `value`   | _Boolean_ | Whether to enable or disable user input.
-
-**Examples**
-
-```javascript
-quill.enable();
-quill.enable(false);   // Disables user input
 ```
 
 
