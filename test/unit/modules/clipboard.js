@@ -104,6 +104,11 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('01\n').insert({ video: '#' }).insert('34'));
     });
 
+    it('attributor and style match', function() {
+      let delta = this.clipboard.convert('<p style="direction:rtl;">Test</p>');
+      expect(delta).toEqual(new Delta().insert('Test\n', { direction: 'rtl' }));
+    });
+
     it('custom matcher', function() {
       this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
         let index = 0;

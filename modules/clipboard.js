@@ -166,8 +166,13 @@ function matchAttributor(node, delta) {
   let styles = Parchment.Attributor.Style.keys(node);
   let formats = {};
   attributes.concat(classes).concat(styles).forEach((name) => {
-    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE) || STYLE_ATTRIBUTORS[name];
+    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE);
     if (attr != null) {
+      formats[attr.attrName] = attr.value(node);
+      if (formats[attr.attrName]) return;
+    }
+    if (STYLE_ATTRIBUTORS[name] != null) {
+      attr = STYLE_ATTRIBUTORS[name];
       formats[attr.attrName] = attr.value(node);
     }
   });
