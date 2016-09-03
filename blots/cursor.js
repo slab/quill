@@ -14,13 +14,6 @@ class Cursor extends Embed {
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
     this._length = 0;
-    this.composing = false;
-    this.selection.root.addEventListener('compositionstart', () => {
-      this.composing = true;
-    });
-    this.selection.root.addEventListener('compositionend', () => {
-      this.composing = false;
-    });
   }
 
   detach() {
@@ -64,7 +57,7 @@ class Cursor extends Embed {
   }
 
   restore() {
-    if (this.composing) return;
+    if (this.selection.composing) return;
     if (this.parent == null) return;
     let textNode = this.textNode;
     let range = this.selection.getNativeRange();
