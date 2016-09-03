@@ -51,7 +51,7 @@ var delta = quill.getContents();
 
 ### getLength
 
-Retrieves the length of the editor contents.
+Retrieves the length of the editor contents. Note even when Quill is empty, there is still a blank line represented by '\n', so `getLength` will return 1.
 
 **Methods**
 
@@ -70,7 +70,7 @@ var length = quill.getLength();
 
 ### getText
 
-Retrieves the string contents of the editor.
+Retrieves the string contents of the editor. Note even when Quill is empty, there is still a blank line in the editor, so `getText` will return '\n'.
 
 **Methods**
 
