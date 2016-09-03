@@ -17,6 +17,27 @@ deleteText(index: Number, length: Number, source: String = 'api')
 quill.deleteText(6, 4);
 ```
 
+### disable
+
+Shorthand for [`enable(false)`](#enable).
+
+### enable
+
+Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls.
+
+**Methods**
+
+```javascript
+enable(enabled: boolean = true)
+```
+
+**Examples**
+
+```javascript
+quill.enable();
+quill.enable(false);   // Disables user input
+```
+
 ### getContents
 
 Retrieves contents of the editor, with formatting data, represented by a [Delta](/guides/working-with-deltas/) object.

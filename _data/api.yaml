@@ -1,5 +1,7 @@
 - Content:
   - deleteText
+  - disable
+  - enable
   - getContents
   - getLength
   - getText
@@ -33,7 +35,5 @@
   - debug
   - import
   - register
-  - disable
-  - enable
   - addContainer
   - getModule
