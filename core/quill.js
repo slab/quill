@@ -110,11 +110,14 @@ class Quill {
   }
 
   disable() {
-    this.editor.enable(false);
+    this.enable(false);
   }
 
   enable(enabled = true) {
     this.editor.enable(enabled);
+    if (!enabled) {
+      this.blur();
+    }
   }
 
   focus() {
