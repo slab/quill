@@ -221,4 +221,33 @@ describe('List', function() {
     editor.formatLine(4, 1, { list: 'bullet' });
     expect(this.container).toEqualHTML('<ul><li class="ql-align-center">Test</li></ul>');
   });
+
+  it('insert block embed', function() {
+    let editor = this.initialize(Editor, '<ol><li>Test</li></ol>');
+    editor.insertEmbed(2, 'video', 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0');
+    expect(this.container).toEqualHTML(`
+      <ol><li>Te</li></ol>
+      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
+      <ol><li>st</li></ol>
+    `);
+  });
+
+  it('insert block embed at beginning', function() {
+    let editor = this.initialize(Editor, '<ol><li>Test</li></ol>');
+    editor.insertEmbed(0, 'video', 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0');
+    expect(this.container).toEqualHTML(`
+      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
+      <ol><li>Test</li></ol>
+    `);
+  });
+
+  it('insert block embed at end', function() {
+    let editor = this.initialize(Editor, '<ol><li>Test</li></ol>');
+    editor.insertEmbed(4, 'video', 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0');
+    expect(this.container).toEqualHTML(`
+      <ol><li>Test</li></ol>
+      <iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0"></iframe>
+      <ol><li><br></li></ol>
+    `);
+  });
 });
