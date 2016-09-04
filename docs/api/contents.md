@@ -48,7 +48,7 @@ Set ability for user to edit, via input devices like the mouse or keyboard. Does
 ```javascript
 quill.enable();
 quill.enable(false);   // Disables user input
-
+```
 
 ### getContents
 
