@@ -1128,6 +1128,10 @@ body:not(.home) .navbar-link:before {
   list-style: disc;
   margin-left: 2em;
 }
+#blog-container ol li {
+  list-style: decimal;
+  margin-left: 2em;
+}
 #blog-container .more-link {
   display: inline-block;
   font-weight: bold;
