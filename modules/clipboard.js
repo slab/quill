@@ -116,7 +116,6 @@ class Clipboard extends Module {
     if (e.defaultPrevented) return;
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index).delete(range.length);
-    let types = e.clipboardData ? e.clipboardData.types : null;
     let bodyTop = document.body.scrollTop;
     this.container.focus();
     setTimeout(() => {
