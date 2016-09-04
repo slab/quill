@@ -909,6 +909,12 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 #demo-container .ql-font-ubuntu {
   font-family: 'Ubuntu Mono', monospace;
 }
+#demo-container .ql-editor {
+  font-size: 1.5em;
+}
+#demo-container .ql-editor li {
+  margin-bottom: 0;
+}
 
 /*** Docs ***/
 
