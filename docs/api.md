@@ -2,6 +2,12 @@
 layout: docs
 title: API
 permalink: /docs/api/
+redirect_from:
+  - /docs/api/events/
+  - /docs/api/manipulation/
+  - /docs/editor/
+  - /docs/editor/api/
+  - /docs/events/
 ---
 
 <h4>Content</h4>

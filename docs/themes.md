@@ -2,6 +2,9 @@
 layout: docs
 title: Themes
 permalink: /docs/themes/
+redirect_from:
+  - /docs/themes/bubble/
+  - /docs/themes/snow/
 ---
 <!-- head -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">

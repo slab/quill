@@ -2,6 +2,8 @@
 layout: docs
 title: Configuration
 permalink: /docs/configuration/
+redirect_from:
+  - /docs/editor/configuration/
 ---
 
 Quill allows several ways to customize it to suit your needs. This section is dedicated to tweaking existing functionality. See the [Modules](/docs/modules/) section for adding new functionality and the [Themes](/docs/themes/) section for styling.
