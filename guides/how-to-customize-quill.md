@@ -2,6 +2,8 @@
 layout: docs
 title: How to Customize Quill
 permalink: /guides/how-to-customize-quill/
+redirect_from:
+  - /guides/customizing-and-extending/
 ---
 
 Quill was designed with customization and extension in mind. This is achieved by implementing a small editor core exposed by a granular, well defined [API](/docs/api/). The core is augmented by [modules](/docs/modules), using the same [APIs](/docs/api/) you have access to.

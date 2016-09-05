@@ -2,6 +2,9 @@
 layout: docs
 title: Modules
 permalink: /docs/modules/
+redirect_from:
+  - /docs/modules/authorship/
+  - /docs/modules/multi-cursors/
 ---
 
 Modules allow Quill's behavior and functionality to customized. Several officially supported modules are available to pick and choose from, some with additional configuration options and APIs. Refer to their respective documentation pages for more details.

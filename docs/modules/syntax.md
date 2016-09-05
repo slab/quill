@@ -2,6 +2,8 @@
 layout: docs
 title: Syntax Highlighter Module
 permalink: /docs/modules/syntax/
+redirect_from:
+  - /docs/modules/code-highlighter/
 ---
 
 The Syntax Module enhances the Code Block format by automatically detecting and applying syntax highlighting. The excellent [highlight.js](https://highlightjs.org/) library is used as a dependency to parse and tokenize code blocks.

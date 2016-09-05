@@ -1,6 +1,9 @@
 ---
 layout: docs
 title: Working with Deltas
+redirect_from:
+  - /docs/deltas/
+  - /docs/api/deltas/
 permalink: /guides/working-with-deltas/
 ---
 
