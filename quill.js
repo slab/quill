@@ -19,7 +19,7 @@ import Link from './formats/link';
 import Script from './formats/script';
 import Strike from './formats/strike';
 import Underline from './formats/underline';
-
+import Table from './formats/table';
 import Image from './formats/image';
 import Video from './formats/video';
 
@@ -72,6 +72,7 @@ Quill.register({
   'formats/code-block': CodeBlock,
   'formats/header': Header,
   'formats/list': List,
+  'formats/table': Table,
 
   'formats/bold': Bold,
   'formats/code': InlineCode,
