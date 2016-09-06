@@ -14,7 +14,7 @@ blur()
 **Examples**
 
 ```javascript
-editor.blur();
+quill.blur();
 ```
 
 ### focus
@@ -30,7 +30,7 @@ focus()
 **Examples**
 
 ```javascript
-editor.focus();
+quill.focus();
 ```
 
 ### getBounds

@@ -61,7 +61,7 @@ Retrieves the length of the editor contents. Note even when Quill is empty, ther
 **Methods**
 
 ```javascript
-`getLength(): Number`
+getLength(): Number
 ```
 
 **Examples**
