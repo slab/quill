@@ -122,7 +122,5 @@ enable(value: Boolean = true)
 ```javascript
 quill.enable();
 quill.enable(false);   // Disables user input
-=======
->>>>>>> master
 ```
 
