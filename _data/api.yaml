@@ -28,8 +28,8 @@
 - Events:
   - text-change
   - selection-change
-  - off
-  - on
+  - "off"
+  - "on"
   - once
 - Extension:
   - debug
