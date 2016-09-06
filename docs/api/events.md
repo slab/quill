@@ -76,11 +76,11 @@ handler(name: String, ...args)
 **Examples**
 
 ```javascript
-quill.on('editor-change', function(eventName, ...arguments) {
+quill.on('editor-change', function(eventName, ...args) {
   if (eventName === 'text-change') {
-    // arguments[0] will be delta
+    // args[0] will be delta
   } else if (eventName === 'selection-change') {
-    // arguments[0] will be old range
+    // args[0] will be old range
   }
 });
 ```
