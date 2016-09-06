@@ -100,7 +100,6 @@ getModule(name: String): any
 ```javascript
 var toolbar = quill.getModule('toolbar');
 ```
-<<<<<<< HEAD
 
 
 ### disable
