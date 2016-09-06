@@ -27,7 +27,7 @@ Editable [Syntax Highlighted Code](/docs/modules/syntax/) blocks can now seamles
 
 ![Syntax Highlighted Code](/assets/images/blog/syntax.png)
 
-Beautifully rendered [LaTeX formulas](/docs/modules/formulas/) can be inserted to your contents.
+Beautifully rendered [LaTeX formulas](/docs/modules/formula/) can be inserted to your contents.
 
 ![Formula](/assets/images/blog/formula.png)
 
