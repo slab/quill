@@ -1,3 +1,8 @@
+# 1.0.0
+
+Quill 1.0 is released! Read the [official announcement](https://quilljs.com/blog/announcing-quill-1-0/).
+
+
 # 1.0.0-rc.4
 
 Fix one important bug [fdd920](https://github.com/quilljs/quill/commit/fdd920250c05403ed9e5d6d86826a00167ba0b09)
