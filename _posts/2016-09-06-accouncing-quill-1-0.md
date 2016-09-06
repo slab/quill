@@ -9,7 +9,7 @@ Quill 1.0 has arrived. It was just two years ago that Quill made its public debu
 
 **Quill is designed as an easy to use editor, to support content creation across the web.** It is built on top of consistent and predictable constructs, exposed through a powerful [API](/docs/api/). With coverage across both ends of the complexity spectrum, Quill aims to be the defacto rich text editor for the web.
 
-In the 108 releases, Quill has iterated relentlessly towards this goal. It has stabilized its API, moved essential internal implementations into customizable modules, and exposed its document model for users to define and add entirely new formats and content.
+In the 111 releases, Quill has iterated relentlessly towards this goal. It has stabilized its API, moved essential internal implementations into customizable modules, and exposed its document model for users to define and add entirely new formats and content.
 
 1. [New Features](/blog/announcing-quill-1-0/#new-features)
 2. [Parchment](/blog/announcing-quill-1-0/#parchment)
