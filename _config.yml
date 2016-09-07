@@ -8,7 +8,7 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
-version: 1.0.2
+version: 1.0.3
 cdn: //cdn.quilljs.com/
 github: https://github.com/quilljs/quilljs.github.io/tree/master
 quill: quill.min.js
