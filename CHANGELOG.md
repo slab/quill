@@ -1,3 +1,11 @@
+# 1.0.1
+
+- Fix building quill.core.js [docs #11](https://github.com/quilljs/quilljs.github.io/issues/11)
+- Fix regression of [#793](https://github.com/quilljs/quill/issues/793)
+
+Thanks to [@eamodio](https://github.com/eamodio) and [@neandrake](https://github.com/neandrake) for their contributions to this release.
+
+
 # 1.0.0
 
 Quill 1.0 is released! Read the [official announcement](https://quilljs.com/blog/announcing-quill-1-0/).
