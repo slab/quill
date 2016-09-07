@@ -17,17 +17,15 @@ var constantPack = new webpack.DefinePlugin({
 module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
-    'quill': ['./quill.js'],
-    'quill.core': [
-      './core.js',
-      './assets/core.styl'
-    ],
+    'quill.js': ['./quill.js'],
+    'quill.core.js': ['./core.js'],
+    'quill.core': './assets/core.styl',
     'quill.bubble': './assets/bubble.styl',
     'quill.snow': './assets/snow.styl',
-    'unit': './test/unit.js'
+    'unit.js': './test/unit.js'
   },
   output: {
-    filename: '[name].js',
+    filename: '[name]',
     library: 'Quill',
     libraryTarget: 'umd',
     path: 'dist/'
