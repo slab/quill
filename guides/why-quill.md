@@ -5,7 +5,7 @@ permalink: /guides/why-quill/
 redirect_from: /guides/
 ---
 
-Content creation has been at the core to the web since its beginning. The `<textarea>` provides a native and essential solution to almost any web applicaiton. But at some point you may need to add formatting to text input. This is where rich text editors come in. There are many solutions to choose from, but Quill brings a few modern ideas to consider.
+Content creation has been at the core to the web since its beginning. The `<textarea>` provides a native and essential solution to almost any web application. But at some point you may need to add formatting to text input. This is where rich text editors come in. There are many solutions to choose from, but Quill brings a few modern ideas to consider.
 
 
 ### API Driven Design
