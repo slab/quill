@@ -1,4 +1,4 @@
-# 1.0.1
+# 1.0.2
 
 - Fix building quill.core.js [docs #11](https://github.com/quilljs/quilljs.github.io/issues/11)
 - Fix regression of [#793](https://github.com/quilljs/quill/issues/793)
