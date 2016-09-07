@@ -1,3 +1,10 @@
+# 1.0.3
+
+- Fix [#928](https://github.com/quilljs/quill/issues/928)
+
+Thank you [@scottmessinger] for the bug report.
+
+
 # 1.0.2
 
 - Fix building quill.core.js [docs #11](https://github.com/quilljs/quilljs.github.io/issues/11)
