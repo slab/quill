@@ -36,7 +36,7 @@
     "deep-equal": "~1.0.1",
     "eventemitter3": "~1.2.0",
     "extend": "~3.0.0",
-    "parchment": "1.0.0-rc.2",
+    "parchment": "1.0.0",
     "rich-text": "~3.0.2"
   },
   "devDependencies": {
@@ -44,12 +44,12 @@
     "babel-loader": "^6.2.5",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
     "babel-preset-es2015": "^6.14.0",
-    "css-loader": "~0.24.0",
+    "css-loader": "~0.25.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-loader": "~0.4.3",
     "http-proxy": "^1.14.0",
     "istanbul-instrumenter-loader": "~0.2.0",
-    "jasmine-core": "^2.4.1",
+    "jasmine-core": "^2.5.0",
     "karma": "^1.2.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
@@ -64,9 +64,9 @@
     "typescript": "^1.8.10",
     "wdio-jasmine-framework": "~0.2.5",
     "webdriver-manager": "^10.2.3",
-    "webdriverio": "^4.2.8",
+    "webdriverio": "^4.2.11",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.15.0"
+    "webpack-dev-server": "^1.15.1"
   },
   "license": "BSD-3-Clause",
   "repository": {
