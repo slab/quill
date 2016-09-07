@@ -105,7 +105,7 @@ if (process.argv.indexOf('--coverage') !== -1) {
 
 if (process.argv.indexOf('--minimize') !== -1) {
   module.exports.entry = {
-    'quill.min': './quill.js'
+    'quill.min.js': './quill.js'
   };
   module.exports.plugins.push(
     new webpack.optimize.DedupePlugin(),
