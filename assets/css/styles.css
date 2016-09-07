@@ -1030,9 +1030,6 @@ body:not(.home) .navbar-link:before {
   margin-left: -2%;
   width: 104%;
 }
-#docs-container li {
-  list-style: disc inside;
-}
 #docs-container .breadcrumb {
   font-size: 1.25rem;
 }
@@ -1047,6 +1044,9 @@ body:not(.home) .navbar-link:before {
 #content-container {
   margin-bottom: 6.67em;
   max-width: 800px;
+}
+#content-container > ul > li {
+  list-style: disc inside;
 }
 #content-container a {
   color: #25408f;
