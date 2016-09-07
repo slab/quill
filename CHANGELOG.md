@@ -2,7 +2,7 @@
 
 - Fix [#928](https://github.com/quilljs/quill/issues/928)
 
-Thank you [@scottmessinger] for the bug report.
+Thank you [@scottmessinger](https://github.com/scottmessinger) for the bug report.
 
 
 # 1.0.2
