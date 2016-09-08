@@ -1045,6 +1045,9 @@ body:not(.home) .navbar-link:before {
 #content-container > ul > li {
   list-style: disc inside;
 }
+#content-container > ol > li {
+  list-style: decimal inside;
+}
 #content-container a {
   color: #25408f;
   text-decoration: underline;
