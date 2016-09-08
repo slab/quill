@@ -27,7 +27,7 @@ module.exports = function(config) {
     browsers: ['Chrome'],
 
     client: {
-      useIframe: false
+      useIframe: true
     },
 
     coverageReporter: {
@@ -57,7 +57,7 @@ module.exports = function(config) {
     config.browserDisconnectTolerance = 3;
     config.browserNoActivityTimeout = 60000;
     config.captureTimeout = 120000;
-    if (['ios-latest', 'android-latest', 'ie-lastest'].indexOf(process.env.BROWSER) > -1) {
+    if (['ios-latest', 'android-latest', 'ie-lastest', 'safari-latest', 'safari-previous'].indexOf(process.env.BROWSER) > -1) {
       config.client.useIframe = true;
     }
   }
