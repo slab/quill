@@ -1146,6 +1146,7 @@ body:not(.home) .navbar-link:before {
 @media (max-width: 1023px) {
   .navbar-open {
     display: inline-block;
+    top: 5.5em;
   }
   .navbar-close {
     top: 4.5em;
