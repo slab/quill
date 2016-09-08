@@ -1425,7 +1425,8 @@ body:not(.home) .navbar-link:before {
     transform: scaleX(1);
     visibility: visible;
   }
-  .announcement + header .navbar-open {
+  .announcement + header .navbar-open,
+  .announcement + header .navbar-close {
     top: 12em;
   }
   #docs-container h1:hover .anchor,
