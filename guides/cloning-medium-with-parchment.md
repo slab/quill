@@ -6,6 +6,13 @@ redirect_from:
   - /docs/parchment/
   - /guides/building-on-parchment/
 ---
+<!-- head -->
+<style>
+.codepen {
+  height: 408px;
+}
+</style>
+<!-- head -->
 
 To provide a consistent editing experience, you need consistent both data and predictable behaviors. The DOM is unfortunately lacking on both of these to be a high quality data store. The solution for modern editors is to maintain its own document model to represent its contents. [Parchment](https://github.com/quilljs/parchment/) is that solution for Quill. It is organized in its own codebase with its own API layer. Through Parchment, you can customize the content and formats Quill recognizes, or add entirely new ones.
 
