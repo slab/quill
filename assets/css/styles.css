@@ -337,10 +337,6 @@ body:not(.home) header .logo path {
   color: #fff;
   text-decoration: none;
 }
-.announcement + header .navbar-open,
-.announcement + header .navbar-close {
-  top: 12em;
-}
 
 .new-blog::after {
   background-color: #f2d123;
@@ -413,7 +409,7 @@ body:not(.home) header .logo path {
   padding: 0;
   position: absolute;
   right: 0;
-  top: 8em;
+  top: 7.5em;
 }
 .navbar-close {
   background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAzNzEuMjMgMzcxLjIzIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzNzEuMjMgMzcxLjIzOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCI+Cjxwb2x5Z29uIHBvaW50cz0iMzcxLjIzLDIxLjIxMyAzNTAuMDE4LDAgMTg1LjYxNSwxNjQuNDAyIDIxLjIxMywwIDAsMjEuMjEzIDE2NC40MDIsMTg1LjYxNSAwLDM1MC4wMTggMjEuMjEzLDM3MS4yMyAgIDE4NS42MTUsMjA2LjgyOCAzNTAuMDE4LDM3MS4yMyAzNzEuMjMsMzUwLjAxOCAyMDYuODI4LDE4NS42MTUgIiBmaWxsPSIjRkZGRkZGIi8+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
@@ -1150,10 +1146,9 @@ body:not(.home) .navbar-link:before {
 @media (max-width: 1023px) {
   .navbar-open {
     display: inline-block;
-    top: 5.5em;
   }
   .navbar-close {
-    top: 6em;
+    top: 4.5em;
   }
   .navbar-drop.active {
     margin-bottom: -25em;
@@ -1194,7 +1189,7 @@ body:not(.home) .navbar-link:before {
     display: none;
   }
   .navbar-open, .navbar-close {
-    top: 4.5em;
+    top: 3.5em;
   }
   .logo {
     height: 5.3em;
@@ -1429,6 +1424,9 @@ body:not(.home) .navbar-link:before {
   .navbar-list .navbar-link:hover:before, .action-link:hover:before {
     transform: scaleX(1);
     visibility: visible;
+  }
+  .announcement + header .navbar-open {
+    top: 12em;
   }
   #docs-container h1:hover .anchor,
   #docs-container h2:hover .anchor,
