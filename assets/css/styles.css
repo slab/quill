@@ -124,6 +124,7 @@ pre > code {
   box-shadow: 0 0 6px 2px rgba(28, 31, 47, 0.1);
   padding: 2em;
   white-space: pre-wrap;
+  overflow-x: auto;
 }
 
 *:not(pre) > code {
