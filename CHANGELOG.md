@@ -220,7 +220,7 @@ Image insertion is being reworked in the provided Snow and Bubble themes. The ol
 - Fix align button active state [#780](https://github.com/quilljs/quill/issues/780)
 - Fix format text on falsy value [#782](https://github.com/quilljs/quill/issues/782)
 - Use native cut [#785](https://github.com/quilljs/quill/issues/785)
-- Fix inializing document where last line is formatted [#786](https://github.com/quilljs/quill/issues/786)
+- Fix initializing document where last line is formatted [#786](https://github.com/quilljs/quill/issues/786)
 
 Thanks to [benbro](https://github.com/benbro), [bram2w](https://github.com/bram2w), [clemmy](https://github.com/clemmy), [DadaMonad](https://github.com/DadaMonad), [ersommer](https://github.com/ersommer), [michaeljosephrosenthal](https://github.com/michaeljosephrosenthal), [mmorearty](https://github.com/mmorearty), [mshamaiev-intel471](https://github.com/mshamaiev-intel471), and [sachinrekhi](https://github.com/sachinrekhi) for their contributions to this release.
 
@@ -353,7 +353,7 @@ Weekly beta preview release. Major emphasis on keyboard API and customization.
 
 - Allow native handling of backspace [#473](https://github.com/quilljs/quill/issues/473) [#548](https://github.com/quilljs/quill/issues/548) [#565](https://github.com/quilljs/quill/issues/565)
 - removeFormat() removes last line block formats [#649](https://github.com/quilljs/quill/issues/649)
-- Fix text direction icon directon [#654](https://github.com/quilljs/quill/issues/654)
+- Fix text direction icon direction [#654](https://github.com/quilljs/quill/issues/654)
 - Fix text insertion into root scroll [#655](https://github.com/quilljs/quill/issues/655)
 - Fix focusing on placeholder text in FF [#656](https://github.com/quilljs/quill/issues/656)
 - Hide placeholder on formatted line [#657](https://github.com/quilljs/quill/issues/657)
