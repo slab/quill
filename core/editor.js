@@ -26,7 +26,7 @@ class Editor {
     this.scroll.batch = true;
     delta = normalizeDelta(delta);
     delta.ops.reduce((index, op) => {
-      let length = op.retain || op.delete || op.insert.length || 1;
+      let length = op.retain || op.delete || (op.insert && op.insert.length) || 1;
       let attributes = op.attributes || {};
       if (op.insert != null) {
         if (typeof op.insert === 'string') {
