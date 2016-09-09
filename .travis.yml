@@ -17,7 +17,6 @@ env:
   matrix:
     - CXX=g++-4.8 BROWSER=mac-chrome-latest
     - CXX=g++-4.8 BROWSER=mac-firefox-latest
-    - CXX=g++-4.8 BROWSER=mac-safari-latest
     - CXX=g++-4.8 BROWSER=windows-chrome-latest
     - CXX=g++-4.8 BROWSER=windows-firefox-latest
     - CXX=g++-4.8 BROWSER=windows-edge-latest
