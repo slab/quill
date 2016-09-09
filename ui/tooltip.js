@@ -29,17 +29,21 @@ class Tooltip {
     this.root.style.top = top + 'px';
     let containerBounds = this.boundsContainer.getBoundingClientRect();
     let rootBounds = this.root.getBoundingClientRect();
-    let shift = 0;
+    let horizontalShift = 0;
     if (rootBounds.right > containerBounds.right) {
-      shift = containerBounds.right - rootBounds.right;
-      this.root.style.left = (left + shift) + 'px';
+      horizontalShift = containerBounds.right - rootBounds.right;
+      this.root.style.left = (left + horizontalShift) + 'px';
     }
     if (rootBounds.left < containerBounds.left) {
-      shift = containerBounds.left - rootBounds.left;
-      this.root.style.left = (left + shift) + 'px';
+      horizontalShift = containerBounds.left - rootBounds.left;
+      this.root.style.left = (left + horizontalShift) + 'px';
+    }
+    if (rootBounds.bottom > containerBounds.bottom) {
+      let verticalShift = containerBounds.bottom - rootBounds.bottom - this.root.offsetHeight;
+      this.root.style.top = (top + verticalShift) + 'px';
     }
     this.checkBounds();
-    return shift;
+    return horizontalShift;
   }
 
   show() {
