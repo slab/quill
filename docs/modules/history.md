@@ -6,6 +6,8 @@ permalink: /docs/modules/history/
 
 The History module is responsible for handling undo and redo for Quill. It can be configured with the following options:
 
+## Configuration
+
 #### delay
 
 - Default: `1000`
@@ -43,3 +45,9 @@ var quill = new Quill('#editor', {
   theme: 'snow'
 });
 ```
+
+## Methods
+
+#### clear
+
+Clears the history stack.
