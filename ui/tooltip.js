@@ -1,7 +1,7 @@
 class Tooltip {
   constructor(quill, boundsContainer) {
     this.quill = quill;
-    this.boundsContainer = boundsContainer;
+    this.boundsContainer = boundsContainer || document.body;
     this.root = quill.addContainer('ql-tooltip');
     this.root.innerHTML = this.constructor.TEMPLATE;
     let offset = parseInt(window.getComputedStyle(this.root).marginTop);
