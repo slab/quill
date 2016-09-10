@@ -1,4 +1,0 @@
-branches:
-  only:
-    - master
-    - develop
