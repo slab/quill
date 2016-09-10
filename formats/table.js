@@ -9,7 +9,7 @@ class Table extends BlockEmbed {
       node.appendChild(tr);
       row.forEach(cell => {
         let td = document.createElement('TD');
-        td.innerText = cell;
+        td.textContent = cell;
         tr.appendChild(td);
       })
     })
@@ -25,7 +25,7 @@ class Table extends BlockEmbed {
       for (let i = 0; i < rows.length; i++) {
         ret[i] = [];
         for (let j = 0; j < rows[i].cells.length; j++) {
-          ret[i].push(rows[i].cells[j].innerText);
+          ret[i].push(rows[i].cells[j].textContent);
         }
       }
     }
