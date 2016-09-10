@@ -1,0 +1,447 @@
+@media (min-width: 768px) {
+  #sidebar-dropdown {
+    display: none;
+  }
+  #sidebar-container {
+    display: block !important;
+  }
+}
+
+
+body {
+  color: #444;
+}
+
+code {
+  background-color: #f8f8f8;
+  border: 1px solid #d2d2d2;
+  color: inherit;
+}
+
+iframe {
+  border: none;
+  overflow: hidden;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border-color: #06c;
+  border-radius: 0px;
+  border-style: solid;
+  border-width: 0px 0px 0px 4px;
+  padding: 10px 14px;
+}
+
+pre code {
+  border: none;
+}
+
+ul {
+  list-style: none;
+}
+
+body.home {
+  background-color: #fafafa;
+}
+
+footer {
+  border-top: 1px solid #e8e8e8;
+  color: #8a8a8a;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  text-align: center;
+}
+
+footer a, footer a:hover {
+  color: #8a8a8a;
+  text-decoration: underline;
+}
+
+footer li {
+  display: inline-block;
+  padding: 5px;
+}
+
+.footnotes {
+  font-style: italic;
+  margin-top: 50px;
+}
+.footnotes::before {
+  content: 'Notes';
+}
+.footnotes ol {
+  margin-top: 10px;
+}
+
+.version-warning {
+  background-color: #337ab7;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+}
+.version-warning:active,
+.version-warning:hover,
+.version-warning:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+.github-button {
+  height: 20px;
+  margin: 15px 0px 0px 15px;
+  width: 100px;
+}
+
+.quill-wrapper {
+  background-color: #fff;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  box-shadow: 0px 0px 10px #ccc;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 600px;
+  min-width: 320px;
+  width: 100%;
+}
+.toolbar {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+.editor, .toolbar {
+  visibility: hidden;
+}
+.editor.ql-container, .toolbar.ql-toolbar {
+  visibility: visible;
+}
+
+#navigation-container {
+  background-color: #222;
+  border-radius: 0px;
+  margin-bottom: 20px;
+}
+#navigation-container .navbar-brand {
+  font-size: 24px;
+}
+#navigation-container .navbar-brand > img {
+  display: inline;
+  margin-top: -8px;
+}
+#navigation-container .icon-bar {
+  background-color: #fff;
+}
+#navigation-container .new-blog::after {
+  background-color: #c13928;
+  border-radius: 6px;
+  content: "1";
+  float: right;
+  font-size: 8px;
+  font-weight: bold;
+  height: 12px;
+  line-height: 12px;
+  text-align: center;
+  width: 12px;
+}
+#navigation-container a {
+  color: #fff;
+}
+#navigation-container .nav > li.active > a,
+#navigation-container .nav > li > a:hover,
+#navigation-container .nav > li > a:focus {
+  background-color: #333;
+}
+
+#sidebar-container {
+  display: none;
+  margin-top: 20px;
+}
+#sidebar-container a {
+  color: #999;
+  font-weight: 500;
+}
+#sidebar-container a:hover {
+  background-color: #fff;
+  color: #06c;
+}
+#sidebar-container > .sidebar-nav {
+  top: 20px;
+}
+#sidebar-container > .sidebar-nav > ul.nav > li.active > a, #sidebar-container > .sidebar-nav > ul.nav > li.active > a:hover {
+  border-left: 2px solid #06c;
+  padding-left: 13px;
+}
+#sidebar-container ul.sidebar-nav > li > a:hover {
+  border-left: 1px solid #06c;
+  padding-left: 14px;
+}
+#sidebar-container li.active > a {
+  color: #06c;
+}
+#sidebar-container > .sidebar-nav > ul.nav > li > a {
+  padding: 2px 0px 2px 15px;
+}
+#sidebar-container > .sidebar-nav > ul.nav ul.nav > li > a {
+  padding: 2px 0px 2px 30px;
+}
+
+#sidebar-dropdown {
+  margin-bottom: 40px;
+}
+#sidebar-dropdown a {
+  color: #999;
+  text-decoration: none;
+}
+#sidebar-dropdown a:hover {
+  background-color: #f5f5f5;
+}
+#sidebar-dropdown ul {
+  padding-left: 0px;
+}
+#sidebar-dropdown li.active > a {
+  background-color: inherit;
+  color: #06c;
+  font-weight: 700;
+}
+#sidebar-dropdown ul.dropdown-menu > li > a {
+  font-size: 16px;
+  padding: 5px 20px;
+}
+#sidebar-dropdown ul.dropdown-menu > li > ul > li > a {
+  display: block;
+  padding: 5px 20px 5px 40px;
+}
+
+#demo-container {
+  background-color: #fafafa;
+  border-bottom: 1px solid #ccc;
+  margin-top: -20px;
+  overflow-y: hidden;
+  padding-top: 40px;
+}
+#demo-container .quill-wrapper {
+  width: 66%;
+  max-width: none;
+}
+#demo-container #editor {
+  height: 400px;
+  -webkit-transition: height 500ms ease-out;
+  -moz-transition: height 500ms ease-out;
+  transition: height 500ms ease-out;
+}
+#demo-container #editor.focus {
+  height: 448px;
+  -webkit-transition: height 800ms ease-out;
+  -moz-transition: height 800ms ease-out;
+  transition: height 800ms ease-out;
+}
+#demo-container .tooltip.left {
+  margin-left: -10px;
+}
+#demo-container .tooltip-arrow {
+  border-left-color: #222;
+}
+#demo-container .tooltip-inner {
+  background-color: #222;
+  font-size: 16px;
+  padding: 5px 15px;
+}
+
+#features-container {
+  background-color: inherit;
+  font-size: 16px;
+  margin-bottom: 50px;
+  margin-top: 20px;
+  text-align: center;
+}
+#features-container hr {
+  border-color: #e8e8e8;
+}
+#features-container img {
+  margin: 0px auto 10px;
+}
+#features-container p {
+  margin-left: 25px;
+  margin-right: 25px;
+}
+#features-container + .half-rule, #users-container + .half-rule {
+  width: 35%;
+}
+
+#users-container {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+#users-container h3 {
+  margin-bottom: 25px;
+}
+#users-container img {
+  margin: auto;
+  width: 150px;
+}
+
+#download-container {
+  margin-bottom: 75px;
+  margin-top: 75px;
+}
+#download-container .btn-lg {
+  border: 1px solid #06c;
+  color: #06c;
+  margin-top: 10px;
+}
+#download-container .btn-lg:hover {
+  background-color: #06c;
+  color: #fff;
+}
+
+#docs-container {
+  margin-top: 20px;
+  padding-bottom: 80px;
+}
+#docs-container pre, #docs-container table, #docs-container ul {
+  margin-left: 20px;
+}
+#docs-container table {
+  margin-bottom: 10px;
+}
+#docs-container table thead {
+  display: none;
+}
+#docs-container table td {
+  padding-right: 12px;
+  vertical-align: top;
+}
+#docs-container ul code, #docs-container table code {
+  background-color: #fff;
+  border: none;
+  padding: 0px;
+}
+#docs-container h1 {
+  font-size: 32px;
+  margin-top: 0px;
+}
+#docs-container h2 {
+  font-size: 24px
+}
+#docs-container h3 {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+#docs-container h4 {
+  margin-top: 20px;
+}
+#docs-container h2, #docs-container h3 {
+  margin-top: 60px;
+}
+#docs-container ol {
+  list-style: none;
+}
+#docs-container ol, #docs-container ul {
+  padding: 0px;
+}
+#docs-container p > strong {
+  text-decoration: underline;
+}
+#docs-container .quill-wrapper {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  margin: 20px 0px 25px;
+}
+
+#docs-container #toolbar-editor {
+  display: none;
+}
+#docs-container #authorship-editor {
+  height: 120px;
+}
+#docs-container #multi-cursor-editor {
+  height: 150px;
+}
+
+#examples-container pre {
+  margin-left: 0px;
+}
+#examples-container .quill-wrapper {
+  margin: 15px 0px;
+}
+#examples-container #basic-toolbar {
+  padding: 5px 15px;
+}
+#examples-container #basic-toolbar button {
+  font-size: 12px;
+  height: 20px;
+}
+#examples-container #basic-toolbar, #examples-container #full-toolbar {
+  border-bottom: 1px solid #ccc;
+}
+#examples-container #basic-editor, #examples-container #full-editor {
+  height: 250px;
+}
+
+#blog-container {
+  max-width: 720px;
+}
+
+#blog-container pre {
+  margin: 25px 0px;
+}
+
+#blog-container .post-list {
+  margin-bottom: 100px;
+}
+
+#blog-container .post-item h1 a, #blog-container .post-meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#blog-container .post-item h1 {
+  font-size: 26px;
+}
+
+#blog-container .post-item h3 {
+  font-size: 18px;
+}
+
+#blog-container .post-item hr {
+  margin-bottom: 40px;
+  width: 40%;
+}
+
+#blog-container .post-item .more-link {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+#blog-container .post-meta {
+  color: #999;
+  margin-bottom: 10px;
+}
+
+#blog-container .post {
+  font-size: 16px;
+  margin-bottom: 100px;
+}
+
+#blog-container .post h1, #blog-container .post .post-meta {
+  text-align: center;
+}
+
+#blog-container .post .post-meta {
+  margin-bottom: 25px;
+}
+
+#blog-container .post h3 {
+  margin-bottom: 15px;
+  margin-top: 30px;
+}
+
+#blog-container .post .cp_embed_iframe {
+  margin: 10px 0px;
+}
+
+#blog-container .road-1-theme-preview {
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+  margin: 14px 0px 14px 28px;
+}
