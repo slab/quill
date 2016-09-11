@@ -11,11 +11,13 @@ The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in
 Familiarity and comfort with [Deltas](https://github.com/ottypes/rich-text) is necessary in using matchers. See [Working with Deltas](/guides/working-with-deltas/) for a starter guide.
 
 
-## Methods
+## API
 
 #### addMatcher
 
 Adds a custom matcher to the Clipboard. Matchers using `nodeType` are called first, in the order they were added, followed by matchers using a CSS `selector`, also in the order they were added. [`nodeType`](https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType) may be `Node.ELEMENT_NODE` or `Node.TEXT_NODE`.
+
+**Methods**
 
 ```javascript
 addMatcher(String: selector, (Node: node, Delta: delta) => Delta)
