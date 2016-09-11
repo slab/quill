@@ -138,12 +138,6 @@ describe('Selection', function() {
       expect(range.length).toEqual(4);
     });
 
-    it('no focus', function() {
-      let selection = this.initialize(Selection, '');
-      let [range, ] = selection.getRange();
-      expect(range).toEqual(null);
-    });
-
     it('wrong input', function() {
       let container = this.initialize(HTMLElement, `
         <textarea>Test</textarea>
