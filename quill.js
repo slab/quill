@@ -1,7 +1,7 @@
 import Quill from './core';
 
-import { AlignClass, AlignStyle } from './formats/align';
-import { DirectionClass, DirectionStyle } from './formats/direction';
+import { AlignAttribute, AlignClass, AlignStyle } from './formats/align';
+import { DirectionAttribute, DirectionClass, DirectionStyle } from './formats/direction';
 import { IndentClass as Indent } from './formats/indent';
 
 import Blockquote from './formats/blockquote';
@@ -40,6 +40,8 @@ import SnowTheme from './themes/snow';
 
 
 Quill.register({
+  'attributors/attribute/direction': DirectionAttribute,
+
   'attributors/class/align': AlignClass,
   'attributors/class/background': BackgroundClass,
   'attributors/class/color': ColorClass,

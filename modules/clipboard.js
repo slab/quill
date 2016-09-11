@@ -4,10 +4,10 @@ import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
 
-import { AlignStyle } from '../formats/align';
+import { AlignAttribute, AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
 import { ColorStyle } from '../formats/color';
-import { DirectionStyle } from '../formats/direction';
+import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
 import { SizeStyle } from '../formats/size';
 
@@ -25,6 +25,14 @@ const CLIPBOARD_CONFIG = [
   ['i', matchAlias.bind(matchAlias, 'italic')],
   ['style', matchIgnore]
 ];
+
+const ATTRIBUTE_ATTRIBUTORS = [
+  AlignAttribute,
+  DirectionAttribute
+].reduce(function(memo, attr) {
+  memo[attr.keyName] = attr;
+  return memo;
+}, {});
 
 const STYLE_ATTRIBUTORS = [
   AlignStyle,
@@ -169,6 +177,10 @@ function matchAttributor(node, delta) {
     if (attr != null) {
       formats[attr.attrName] = attr.value(node);
       if (formats[attr.attrName]) return;
+    }
+    if (ATTRIBUTE_ATTRIBUTORS[name] != null) {
+      attr = ATTRIBUTE_ATTRIBUTORS[name];
+      formats[attr.attrName] = attr.value(node);
     }
     if (STYLE_ATTRIBUTORS[name] != null) {
       attr = STYLE_ATTRIBUTORS[name];
