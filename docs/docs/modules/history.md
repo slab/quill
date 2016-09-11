@@ -46,8 +46,54 @@ var quill = new Quill('#editor', {
 });
 ```
 
-## Methods
+## API
 
 #### clear
 
 Clears the history stack.
+
+**Methods**
+
+```js
+clear()
+```
+
+**Examples**
+
+```js
+quill.history.clear();
+```
+
+
+#### undo
+
+Undo last change.
+
+**Methods**
+
+```js
+undo()
+```
+
+**Examples**
+
+```js
+quill.history.undo();
+```
+
+
+#### redo
+
+If last change was an undo, redo this undo. Otherwise does nothing.
+
+**Methods**
+
+```js
+redo()
+```
+
+**Examples**
+
+```js
+quill.history.redo();
+```
