@@ -66,7 +66,7 @@ getSelection(focus = false): { index: Number, length: Number }
 ```javascript
 var range = quill.getSelection();
 if (range) {
-  if (range.index == range.length) {
+  if (range.length == 0) {
     console.log('User cursor is at index', range.index);
   } else {
     var text = quill.getText(range.index, range.length);
