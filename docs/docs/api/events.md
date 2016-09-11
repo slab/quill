@@ -51,10 +51,10 @@ handler(range: { index: Number, length: Number },
 ```javascript
 quill.on('selection-change', function(range, oldRange, source) {
   if (range) {
-    if (range.start == range.end) {
-      console.log('User cursor is on', range.start);
+    if (range.length == 0) {
+      console.log('User cursor is on', range.index);
     } else {
-      var text = quill.getText(range.start, range.end);
+      var text = quill.getText(range.index, range.length);
       console.log('User has highlighted', text);
     }
   } else {
