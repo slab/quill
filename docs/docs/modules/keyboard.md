@@ -207,8 +207,6 @@ var quill = new Quill('#editor', {
 ```
 
 
-
-
 ### Peformance
 
 Like DOM events, Quill key bindings are blocking calls on every match, so it is a bad idea to have a very expensive handler for a very common key binding. Apply the same performance best practices as you would when attaching to common blocking DOM events, like `scroll` or `mousemove`.
