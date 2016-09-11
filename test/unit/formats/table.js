@@ -14,12 +14,14 @@ describe('Table', function() {
     );
     expect(this.container).toEqualHTML(`
       <table>
+      <tbody>
       <tr>
       <td>a</td><td>b</td><td>c</td>
       </tr>
       <tr>
       <td>d</td><td>e</td><td>f</td>
       </tr>
+      </tbody>
       </table>
       <p>0123</p>
     `);

@@ -4,15 +4,17 @@ import {BlockEmbed} from '../blots/block';
 class Table extends BlockEmbed {
   static create(value) {
     let node = super.create(value);
+    let tbody = document.createElement('TBODY');
     value.forEach(row => {
       var tr = document.createElement('TR');
-      node.appendChild(tr);
+      tbody.appendChild(tr);
       row.forEach(cell => {
         let td = document.createElement('TD');
         td.textContent = cell;
         tr.appendChild(td);
       })
     })
+    node.appendChild(tbody);
     return node;
   }
 
