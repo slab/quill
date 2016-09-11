@@ -170,7 +170,6 @@ class Selection {
   }
 
   getRange() {
-    if (!this.hasFocus()) return [null, null];
     let range = this.getNativeRange();
     if (range == null) return [null, null];
     let positions = [[range.start.node, range.start.offset]];
