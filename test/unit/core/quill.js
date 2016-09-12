@@ -361,6 +361,16 @@ describe('Quill', function() {
       expect(config.modules.toolbar).toEqual(Toolbar.DEFAULTS);
     });
 
+    it('toolbar disabled', function() {
+      let config = expandConfig('#test-container', {
+        modules: {
+          toolbar: false
+        },
+        theme: 'snow'
+      });
+      expect(config.modules.toolbar).toBe(undefined);
+    });
+
     it('toolbar selector', function() {
       let config = expandConfig('#test-container', {
         modules: {
