@@ -1,5 +1,4 @@
 ## Events
----
 
 ### text-change
 

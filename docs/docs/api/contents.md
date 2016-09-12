@@ -1,5 +1,4 @@
 ## Content
----
 
 ### deleteText
 

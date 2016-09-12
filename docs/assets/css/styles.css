@@ -1042,15 +1042,40 @@ body:not(.home) .navbar-link:before {
   margin-bottom: 6.67em;
   max-width: 800px;
 }
+#content-container > blockquote:before {
+  color: #d9dce1;
+  content: '\201C';
+  display: inline;
+  float: left;
+  font-size: 4em;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+}
+#content-container > blockquote {
+  font-style: italic;
+  padding: 1em;
+}
+#content-container > blockquote > p:last-child {
+  margin-bottom: 0;
+}
+#content-container > ul,
+#content-container > ol {
+  padding-left: 2em;
+}
 #content-container > ul > li {
-  list-style: disc inside;
+  list-style: disc;
 }
 #content-container > ol > li {
-  list-style: decimal inside;
+  list-style: decimal;
 }
 #content-container a {
   color: #25408f;
   text-decoration: underline;
+}
+#content-container h2:after {
+  border-bottom: 1px solid #d9dce1;
+  content: " ";
+  display: block;
 }
 #content-container h1,
 #content-container h2,
