@@ -326,7 +326,7 @@ function expandConfig(container, userConfig) {
       history: true
     }
   }, userConfig);
-  if (userConfig.theme == null || userConfig.theme === Quill.DEFAULTS.theme) {
+  if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
     userConfig.theme = Theme;
   } else {
     userConfig.theme = Quill.import(`themes/${userConfig.theme}`);

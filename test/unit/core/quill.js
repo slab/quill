@@ -287,15 +287,38 @@ describe('Quill', function() {
       Theme.DEFAULTS.modules = oldModules;
     });
 
-    it('theme defaults', function() {
-      let config = expandConfig('#test-container', {
-        modules: {
-          toolbar: true,
-        },
-        theme: 'snow'
-      });
-      expect(config.theme).toEqual(Snow);
-      expect(config.modules.toolbar.handlers.image).toEqual(Snow.DEFAULTS.modules.toolbar.handlers.image);
+    describe('theme defaults', function() {
+        it('for Snow', function() {
+            let config = expandConfig('#test-container', {
+                modules: {
+                    toolbar: true,
+                },
+                theme: 'snow'
+            });
+            expect(config.theme).toEqual(Snow);
+            expect(config.modules.toolbar.handlers.image).toEqual(Snow.DEFAULTS.modules.toolbar.handlers.image);
+        });
+
+        it('for false', function() {
+            let config = expandConfig('#test-container', {
+                theme: false
+            });
+            expect(config.theme).toEqual(Theme);
+        });
+
+        it('for undefined', function() {
+            let config = expandConfig('#test-container', {
+                theme: undefined
+            });
+            expect(config.theme).toEqual(Theme);
+        });
+
+        it('for null', function() {
+            let config = expandConfig('#test-container', {
+                theme: null
+            });
+            expect(config.theme).toEqual(Theme);
+        });
     });
 
     it('quill < module < theme < user', function() {
