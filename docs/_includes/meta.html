@@ -2,6 +2,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="language" content="english">
 <meta name="viewport" content="width=device-width">
+{% if page.description %}
+<meta name="description" content="{{ page.description }}">
+{% else %}
+<meta name="description" content="{{ site.description }}">
+{% endif %}
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@quilljs">
 {% if page.path != "index.html" %}
