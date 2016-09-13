@@ -106,7 +106,7 @@ quill.getFormat();       // { italic: true, color: 'blue', strike: true,
 
 ### removeFormat
 
-Removes all formatting and embeds within given range. Line formatting will be removed if the end of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Removes all formatting and embeds within given range. Line formatting will be removed if any part of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
