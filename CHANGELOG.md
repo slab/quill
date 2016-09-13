@@ -1,3 +1,199 @@
+# 1.0.3
+
+- Fix [#928](https://github.com/quilljs/quill/issues/928)
+
+Thank you [@scottmessinger](https://github.com/scottmessinger) for the bug report.
+
+
+# 1.0.2
+
+- Fix building quill.core.js [docs #11](https://github.com/quilljs/quilljs.github.io/issues/11)
+- Fix regression of [#793](https://github.com/quilljs/quill/issues/793)
+
+Thanks to [@eamodio](https://github.com/eamodio) and [@neandrake](https://github.com/neandrake) for their contributions to this release.
+
+
+# 1.0.0
+
+Quill 1.0 is released! Read the [official announcement](https://quilljs.com/blog/announcing-quill-1-0/).
+
+
+# 1.0.0-rc.4
+
+Fix one important bug [fdd920](https://github.com/quilljs/quill/commit/fdd920250c05403ed9e5d6d86826a00167ba0b09)
+
+
+# 1.0.0-rc.3
+
+A few bug fixes, one with with possibly significant implications. See the [issue #889](https://github.com/quilljs/quill/issues/889) and [commit fix](https://github.com/quilljs/quill/commit/be24c62a6234818548658fcb5e1935a0c07b4eb7) for more details.
+
+### Bug Fixes
+
+- Fix indenting beyond first level with toolbar [#882](https://github.com/quilljs/quill/issues/882)
+- Fix toolbar font/size display on Safari [#884](https://github.com/quilljs/quill/issues/884)
+- Fix pasting from Gmail from on different browser [#886](https://github.com/quilljs/quill/issues/886)
+- Fix undo/redo consistency [#889](https://github.com/quilljs/quill/issues/889)
+- Fix null error when selecting all on Firefox [#891](https://github.com/quilljs/quill/issues/891)
+- Fix merging keyboard options twice [#897](https://github.com/quilljs/quill/issues/897)
+
+Thank you [@benbro](https://github.com/benbro), [@cgilboy](https://github.com/cgilboy), [@cutteroid](https://github.com/cutteroid), and [@routman](https://github.com/routman) for contributions to this release!
+
+
+# 1.0.0-rc.2
+
+A few bug fixes, including one significant [one](https://github.com/quilljs/quill/issues/883)
+
+### Bug Fixes
+
+- Fix icon picker rendering in MS Edge [#877](https://github.com/quilljs/quill/issues/877)
+- Add back minified build to release [#881](https://github.com/quilljs/quill/issues/881)
+- Fix optimized change calculation with preformatted text [#883](https://github.com/quilljs/quill/issues/883)
+
+Thanks to [benbro](https://github.com/benbro), [cutteroid](https://github.com/cutteroid), and [CapTec](https://github.com/CapTec) for their contributions to this release.
+
+
+# 1.0.0-rc.1
+
+A few bug fixes and performance improvements.
+
+### Features
+
+- Source maps now available from CDN for minified build
+
+### Bug Fixes
+
+- Fix scroll interaction between two Quill editors [#855](https://github.com/quilljs/quill/issues/855)
+- Fix scroll on paste [#856](https://github.com/quilljs/quill/issues/856)
+- Fix native iOS tooltip formatting [#862](https://github.com/quilljs/quill/issues/862)
+- Remove comments from pasting from Word [#872](https://github.com/quilljs/quill/issues/872)
+- Fix indent at all supported indent levels [#873](https://github.com/quilljs/quill/issues/873)
+- Fix indent interaction with text direction [#874](https://github.com/quilljs/quill/issues/874)
+
+Thank you [@benbro](https://github.com/benbro), [@fernandogmar](https://github.com/fernandogmar), [@sachinrekhi](https://github.com/sachinrekhi), [@sferoze](https://github.com/sferoze), and [@stalniy](https://github.com/stalniy) for contributions to this release!
+
+
+# 1.0.0-rc.0
+
+Take a look at [Quill 1.0 Release Candidate](https://quilljs.com/blog/quill-1-0-release-candidate-released/) for more details.
+
+### Updates
+
+- Going forward the minimal stylesheet build will be named quill.core.css, instead of quill.css
+
+### Bug Fixes
+
+- Fix identifying ordered and bulletd lists [#846](https://github.com/quilljs/quill/issues/846) [#847](https://github.com/quilljs/quill/issues/847)
+- Fix bullet interaction with text direction [#848](https://github.com/quilljs/quill/issues/848)
+
+A huge thank you to all contributors to through the beta! Special thanks goes to [@benbro](https://github.com/benbro) and [@sachinrekhi](https://github.com/sachinrekhi) who together submitted submitted almost 50 Issues and Pull Requests!
+
+- [@abejdaniels](https://github.com/abejdaniels)
+- [@anovi](https://github.com/anovi)
+- [@benbro](https://github.com/benbro)
+- [@bram2w](https://github.com/bram2w)
+- [@brynjagr](https://github.com/brynjagr)
+- [@CapTec](https://github.com/CapTec)
+- [@Cinamonas](https://github.com/Cinamonas)
+- [@clemmy](https://github.com/clemmy)
+- [@crisbeto](https://github.com/crisbeto)
+- [@cutteroid](https://github.com/cutteroid)
+- [@DadaMonad](https://github.com/DadaMonad)
+- [@davelozier](https://github.com/davelozier)
+- [@emanuelbsilva](https://github.com/emanuelbsilva)
+- [@ersommer](https://github.com/ersommer)
+- [@fernandogmar](https://github.com/fernandogmar)
+- [@george-norris-salesforce](https://github.com/george-norris-salesforce)
+- [@jackmu95](https://github.com/jackmu95)
+- [@jasonmng](https://github.com/jasonmng)
+- [@jbrowning](https://github.com/jbrowning)
+- [@jonnolen](https://github.com/jonnolen)
+- [@KameSama](https://github.com/KameSama)
+- [@kei-ito](https://github.com/kei-ito)
+- [@kylebragger](https://github.com/kylebragger)
+- [@LucVanPelt](https://github.com/LucVanPelt)
+- [@lukechapman](https://github.com/lukechapman)
+- [@micimize](https://github.com/micimize)
+- [@mmorearty](https://github.com/mmorearty)
+- [@mshamaiev-intel471](https://github.com/mshamaiev-intel471)
+- [@quentez](https://github.com/quentez)
+- [@sachinrekhi](https://github.com/sachinrekhi)
+- [@sagacitysite](https://github.com/sagacitysite)
+- [@saw](https://github.com/saw)
+- [@stalniy](https://github.com/stalniy)
+- [@tOgg1](https://github.com/tOgg1)
+- [@u9520107](https://github.com/u9520107)
+- [@WriterStat](https://github.com/WriterStat)
+
+
+# 1.0.0-beta.11
+
+Fixed some regressive bugs from previous release.
+
+### Bug Fixes
+
+- Fix activating more than one format before typing [#841](https://github.com/quilljs/quill/issues/841)
+- Run default matchers before before user defined ones [#843](https://github.com/quilljs/quill/issues/843)
+- Fix merging theme configurations [#844](https://github.com/quilljs/quill/issues/844), [#845](845)
+
+Thanks [benbro](https://github.com/benbro), [jackmu95](https://github.com/jackmu95), and [george-norris-salesforce](https://github.com/george-norris-salesforce) for the bug reports.
+
+
+# 1.0.0-beta.10
+
+Lots of bug fixes and performance improvements.
+
+### Breaking Changes
+
+- Keyboard handler format in initial [configuration](beta.quilljs.com/docs/modules/keyboard/) has changed. `addBinding` is overloaded to be backwards compatible.
+
+### Bug Fixes
+
+- Preserve last bullet on paste [#696](https://github.com/quilljs/quill/issues/696)
+- Fix getBounds calculation for lists [#765](https://github.com/quilljs/quill/issues/765)
+- Escape quotes in font value [#769](https://github.com/quilljs/quill/issues/769)
+- Fix spacing calculation on paste [#797](https://github.com/quilljs/quill/issues/797)
+- Fix Snow tooltip label [#798](https://github.com/quilljs/quill/issues/798)
+- Fix link tooltip showing up on long click [#799](https://github.com/quilljs/quill/issues/799)
+- Fix entering code block in IE and Firefox [#803](https://github.com/quilljs/quill/issues/803)
+- Fix opening image dialog on Firefox [#805](https://github.com/quilljs/quill/issues/805)
+- Fix focus loss on updateContents [#809](https://github.com/quilljs/quill/issues/809)
+- Reset toolbar of blur [#810](https://github.com/quilljs/quill/issues/810)
+- Fix cursor position calculation on delete [#811](https://github.com/quilljs/quill/issues/811)
+- Fix highlighting across different alignment values [#815](https://github.com/quilljs/quill/issues/815)
+- Allow default active button [#816](https://github.com/quilljs/quill/issues/816)
+- Fix deleting last character of formatted text on Firefox [#824](https://github.com/quilljs/quill/issues/824)
+- Fix Youtube regex [#826](https://github.com/quilljs/quill/pull/826)
+- Fix missing imports when Quill not global [#836](https://github.com/quilljs/quill/pull/836)
+
+Thanks to [benbro](https://github.com/benbro), [clemmy](https://github.com/clemmy), [crisbeto](https://github.com/crisbeto), [cutteroid](https://github.com/cutteroid), [jackmu95](https://github.com/jackmu95), [kylebragger](https://github.com/kylebragger), [sachinrekhi](https://github.com/sachinrekhi), [stalniy](https://github.com/stalniy), and [tOgg1](https://github.com/tOgg1) for their contributions to this release.
+
+
+# 1.0.0-beta.9
+
+Potentially the final beta before a release candidate, if no major issues are discovered.
+
+### Breaking Changes
+
+- No longer expose `ui/link-tooltip` through `import` as implementation is now Snow specific
+- Significant refactoring of `ui/tooltip`
+- Syntax module now autodetects language, instead of defaulting to Javascript
+
+### Features
+
+- Formula and video insertion UI added to Snow and Bubble themes
+
+### Bug Fixes
+
+- Fix toolbar active state after backspacing to previous line [#730](https://github.com/quilljs/quill/issues/730)
+- User selection is now preserved various API calls [#731](https://github.com/quilljs/quill/issues/731)
+- Fix long click on link-tooltip [#747](https://github.com/quilljs/quill/issues/747)
+- Fix ordered list and text-align right interaction [#784](https://github.com/quilljs/quill/issues/784)
+- Fix toggling code block off [#789](https://github.com/quilljs/quill/issues/789)
+- Scroll position is now automatically preserved between editor blur and focus
+
+Thank you [@benbro](https://github.com/benbro), [@KameSama](https://github.com/KameSama), and [@sachinrekhi](https://github.com/sachinrekhi) for contributions to this release!
+
+
 # 1.0.0-beta.8
 
 Weekly beta preview release. The editor is almost ready for release candidacy but a couple cycles will be spent on the Snow and Bubble interfaces.
@@ -24,7 +220,7 @@ Image insertion is being reworked in the provided Snow and Bubble themes. The ol
 - Fix align button active state [#780](https://github.com/quilljs/quill/issues/780)
 - Fix format text on falsy value [#782](https://github.com/quilljs/quill/issues/782)
 - Use native cut [#785](https://github.com/quilljs/quill/issues/785)
-- Fix inializing document where last line is formatted [#786](https://github.com/quilljs/quill/issues/786)
+- Fix initializing document where last line is formatted [#786](https://github.com/quilljs/quill/issues/786)
 
 Thanks to [benbro](https://github.com/benbro), [bram2w](https://github.com/bram2w), [clemmy](https://github.com/clemmy), [DadaMonad](https://github.com/DadaMonad), [ersommer](https://github.com/ersommer), [michaeljosephrosenthal](https://github.com/michaeljosephrosenthal), [mmorearty](https://github.com/mmorearty), [mshamaiev-intel471](https://github.com/mshamaiev-intel471), and [sachinrekhi](https://github.com/sachinrekhi) for their contributions to this release.
 
@@ -157,7 +353,7 @@ Weekly beta preview release. Major emphasis on keyboard API and customization.
 
 - Allow native handling of backspace [#473](https://github.com/quilljs/quill/issues/473) [#548](https://github.com/quilljs/quill/issues/548) [#565](https://github.com/quilljs/quill/issues/565)
 - removeFormat() removes last line block formats [#649](https://github.com/quilljs/quill/issues/649)
-- Fix text direction icon directon [#654](https://github.com/quilljs/quill/issues/654)
+- Fix text direction icon direction [#654](https://github.com/quilljs/quill/issues/654)
 - Fix text insertion into root scroll [#655](https://github.com/quilljs/quill/issues/655)
 - Fix focusing on placeholder text in FF [#656](https://github.com/quilljs/quill/issues/656)
 - Hide placeholder on formatted line [#657](https://github.com/quilljs/quill/issues/657)

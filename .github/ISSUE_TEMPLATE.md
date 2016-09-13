@@ -6,10 +6,14 @@
 2. Step Two
 3. Step Three
 
-**Expected behavior**: [expected]
+**Expected behavior**:
 
-**Actual behavior**: [actual]
+**Actual behavior**:
 
-**Platforms**: [ex. Chrome 48 on Mac 10.11]
+**Platforms**:
 
-**Version**: [version]
+Include browser, operating system and respective versions
+
+**Version**:
+
+Run `Quill.version` to find out

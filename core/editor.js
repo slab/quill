@@ -3,6 +3,7 @@ import DeltaOp from 'rich-text/lib/op';
 import Emitter from './emitter';
 import Parchment from 'parchment';
 import CodeBlock from '../formats/code';
+import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
 import clone from 'clone';
 import equal from 'deep-equal';
@@ -19,25 +20,22 @@ class Editor {
   }
 
   applyDelta(delta, source = Emitter.sources.API) {
-    this.updating = true;
     let consumeNextNewline = false;
+    this.scroll.update();
+    let scrollLength = this.scroll.length();
+    this.scroll.batch = true;
+    delta = normalizeDelta(delta);
     delta.ops.reduce((index, op) => {
-      if (typeof op.delete === 'number') {
-        this.scroll.deleteAt(index, op.delete);
-        return index;
-      }
-      let length = op.retain || op.insert.length || 1;
-      let attributes = handleOldList(op.attributes || {});
+      let length = op.retain || op.delete || op.insert.length || 1;
+      let attributes = op.attributes || {};
       if (op.insert != null) {
-        [op, attributes] = handleOldEmbed(op, attributes);
         if (typeof op.insert === 'string') {
-          let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-          length = text.length;
+          let text = op.insert;
           if (text.endsWith('\n') && consumeNextNewline) {
             consumeNextNewline = false;
             text = text.slice(0, -1);
           }
-          if (index >= this.scroll.length() && !text.endsWith('\n')) {
+          if (index >= scrollLength && !text.endsWith('\n')) {
             consumeNextNewline = true;
           }
           this.scroll.insertAt(index, text);
@@ -50,19 +48,25 @@ class Editor {
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
-          if (key != null) {
-            this.scroll.insertAt(index, key, op.insert[key]);
-          } else {
-            return index;
-          }
+          if (key == null) return index;
+          this.scroll.insertAt(index, key, op.insert[key]);
         }
+        scrollLength += length;
       }
       Object.keys(attributes).forEach((name) => {
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
       return index + length;
     }, 0);
-    this.updating = false;
+    delta.ops.reduce((index, op) => {
+      if (typeof op.delete === 'number') {
+        this.scroll.deleteAt(index, op.delete);
+        return index;
+      }
+      return index + (op.retain || op.insert.length || 1);
+    }, 0);
+    this.scroll.batch = false;
+    this.scroll.optimize();
     return this.update(delta, source);
   }
 
@@ -79,14 +83,17 @@ class Editor {
     this.scroll.update();
     Object.keys(formats).forEach((format) => {
       let lines = this.scroll.lines(index, Math.max(length, 1));
+      let lengthRemaining = length;
       lines.forEach((line, i) => {
+        let lineLength = line.length();
         if (!(line instanceof CodeBlock)) {
           line.format(format, formats[format]);
         } else {
           let codeIndex = index - line.offset(this.scroll);
-          let codeLength = line.newlineIndex(codeIndex) - index + 1;
+          let codeLength = line.newlineIndex(codeIndex + lengthRemaining) - codeIndex + 1;
           line.formatAt(codeIndex, codeLength, format, formats[format]);
         }
+        lengthRemaining -= lineLength;
       });
     });
     this.scroll.optimize();
@@ -114,7 +121,7 @@ class Editor {
     let lines = [], leaves = [];
     if (length === 0) {
       this.scroll.path(index).forEach(function(path) {
-        let [blot, offset] = path;
+        let [blot, ] = path;
         if (blot instanceof Block) {
           lines.push(blot);
         } else if (blot instanceof Parchment.Leaf) {
@@ -170,7 +177,11 @@ class Editor {
     let [line, offset] = this.scroll.line(index + length);
     let suffixLength = 0, suffix = new Delta();
     if (line != null) {
-      suffixLength = line.length() - offset;
+      if (!(line instanceof CodeBlock)) {
+        suffixLength = line.length() - offset;
+      } else {
+        suffixLength = line.newlineIndex(offset) - offset + 1;
+      }
       suffix = line.delta().slice(offset, offset + suffixLength - 1).insert('\n');
     }
     let contents = this.getContents(index, length + suffixLength);
@@ -179,12 +190,32 @@ class Editor {
     return this.applyDelta(delta, source);
   }
 
-  update(change, source = Emitter.sources.USER) {
-    if (this.updating) return;
+  update(change, source = Emitter.sources.USER, mutations = []) {
     let oldDelta = this.delta;
-    this.delta = this.getDelta();
-    if (!change || !equal(oldDelta.compose(change), this.delta)) {
-      change = oldDelta.diff(this.delta);
+    if (mutations.length === 1 &&
+        mutations[0].type === 'characterData' &&
+        Parchment.find(mutations[0].target)) {
+      // Optimization for character changes
+      let textBlot = Parchment.find(mutations[0].target);
+      let formats = bubbleFormats(textBlot);
+      let index = textBlot.offset(this.scroll);
+      let oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
+      let oldText = new Delta().insert(oldValue);
+      let newText = new Delta().insert(textBlot.value());
+      let diffDelta = new Delta().retain(index).concat(oldText.diff(newText));
+      change = diffDelta.ops.reduce(function(delta, op) {
+        if (op.insert) {
+          return delta.insert(op.insert, formats);
+        } else {
+          return delta.push(op);
+        }
+      }, new Delta());
+      this.delta = oldDelta.compose(change);
+    } else {
+      this.delta = this.getDelta();
+      if (!change || !equal(oldDelta.compose(change), this.delta)) {
+        change = oldDelta.diff(this.delta);
+      }
     }
     if (change.length() > 0) {
       let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
@@ -214,27 +245,28 @@ function combineFormats(formats, combined) {
   }, {});
 }
 
-function handleOldEmbed(op, attributes) {
-  if (op.insert === 1) {
-    attributes = clone(attributes);
-    op = {
-      insert: { image: attributes.image },
-      attributes: attributes
-    };
-    delete attributes['image'];
-  }
-  return [op, attributes];
-}
-
-function handleOldList(attributes) {
-  if (attributes['list'] === true) {
-    attributes = clone(attributes);
-    attributes['list'] = 'ordered';
-  } else if (attributes['bullet'] === true) {
-    attributes = clone(attributes);
-    attributes['list'] = 'bullet';
-  }
-  return attributes;
+function normalizeDelta(delta) {
+  return delta.ops.reduce(function(delta, op) {
+    if (op.insert === 1) {
+      let attributes = clone(op.attributes);
+      delete attributes['image'];
+      return delta.insert({ image: op.attributes.image }, attributes);
+    }
+    if (op.attributes != null && (op.attributes.list === true || op.attributes.bullet === true)) {
+      op = clone(op);
+      if (op.attributes.list) {
+        op.attributes.list = 'ordered';
+      } else {
+        op.attributes.list = 'bullet';
+        delete op.attributes.bullet;
+      }
+    }
+    if (typeof op.insert === 'string') {
+      let text = op.insert.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      return delta.insert(text, op.attributes);
+    }
+    return delta.push(op);
+  }, new Delta());
 }
 
 

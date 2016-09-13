@@ -68,6 +68,16 @@ class List extends Container {
     return { [this.statics.blotName]: this.statics.formats(this.domNode) };
   }
 
+  insertBefore(blot, ref) {
+    if (blot instanceof ListItem) {
+      super.insertBefore(blot, ref);
+    } else {
+      let index = ref == null ? this.length() : ref.offset(this);
+      let after = this.split(index);
+      after.parent.insertBefore(blot, after);
+    }
+  }
+
   optimize() {
     super.optimize();
     let next = this.next;

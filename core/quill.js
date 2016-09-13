@@ -48,16 +48,14 @@ class Quill {
   }
 
   constructor(container, options = {}) {
-    this.container = typeof container === 'string' ? document.querySelector(container) : container;
+    options = expandConfig(container, options);
+    this.container = options.container;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
-    let themeClass = Theme;
-    if (options.theme != null && options.theme !== Quill.DEFAULTS.theme) {
-      themeClass = Quill.import(`themes/${options.theme}`);
+    if (options.debug) {
+      Quill.debug(options.debug);
     }
-    options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
-    options.bounds = typeof options.bounds === 'string' ? document.querySelector(options.bounds) : options.bounds;
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
@@ -69,7 +67,7 @@ class Quill {
     });
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.theme = new themeClass(this, options);
+    this.theme = new options.theme(this, options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
@@ -80,10 +78,7 @@ class Quill {
       this.disable();
     }
     if (options.placeholder) {
-      this.root.dataset.placeholder = options.placeholder;
-    }
-    if (options.debug) {
-      Quill.debug(options.debug);
+      this.root.setAttribute('data-placeholder', options.placeholder);
     }
     this.root.classList.toggle('ql-blank', this.editor.isBlank());
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
@@ -115,11 +110,14 @@ class Quill {
   }
 
   disable() {
-    this.editor.enable(false);
+    this.enable(false);
   }
 
   enable(enabled = true) {
     this.editor.enable(enabled);
+    if (!enabled) {
+      this.blur();
+    }
   }
 
   focus() {
@@ -128,7 +126,7 @@ class Quill {
   }
 
   format(name, value, source = Emitter.sources.API) {
-    let range = this.getSelection();
+    let range = this.getSelection(true);
     let change = new Delta();
     if (range == null) return change;
     if (Parchment.query(name, Parchment.Scope.BLOCK)) {
@@ -207,7 +205,7 @@ class Quill {
     return this.selection.hasFocus();
   }
 
-  insertEmbed(index, embed, value, source) {
+  insertEmbed(index, embed, value, source = Quill.sources.API) {
     let range = this.getSelection();
     let change = this.editor.insertEmbed(index, embed, value, source);
     range = shiftRange(range, change, source);
@@ -300,7 +298,7 @@ class Quill {
   }
 }
 Quill.DEFAULTS = {
-  bounds: document.body,
+  bounds: null,
   formats: null,
   modules: {},
   placeholder: '',
@@ -309,7 +307,7 @@ Quill.DEFAULTS = {
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
-Quill.version = QUILL_VERSION;
+Quill.version = typeof(QUILL_VERSION) === 'undefined' ? 'dev' : QUILL_VERSION;
 
 Quill.imports = {
   'delta'       : Delta,
@@ -318,6 +316,64 @@ Quill.imports = {
   'core/theme'  : Theme
 };
 
+
+function expandConfig(container, userConfig) {
+  userConfig = extend(true, {
+    container: container,
+    modules: {
+      clipboard: true,
+      keyboard: true,
+      history: true
+    }
+  }, userConfig);
+  if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
+    userConfig.theme = Theme;
+  } else {
+    userConfig.theme = Quill.import(`themes/${userConfig.theme}`);
+    if (userConfig.theme == null) {
+      throw new Error(`Invalid theme ${userConfig.theme}. Did you register it?`);
+    }
+  }
+  let themeConfig = extend(true, {}, userConfig.theme.DEFAULTS);
+  [themeConfig, userConfig].forEach(function(config) {
+    config.modules = config.modules || {};
+    Object.keys(config.modules).forEach(function(module) {
+      if (config.modules[module] === true) {
+        config.modules[module] = {};
+      }
+    });
+  });
+  let moduleNames = Object.keys(themeConfig.modules).concat(Object.keys(userConfig.modules));
+  let moduleConfig = moduleNames.reduce(function(config, name) {
+    let moduleClass = Quill.import(`modules/${name}`);
+    if (moduleClass == null) {
+      debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
+    } else {
+      config[name] = moduleClass.DEFAULTS || {};
+    }
+    return config;
+  }, {});
+  // Special case toolbar shorthand
+  if (userConfig.modules != null && userConfig.modules.toolbar &&
+      userConfig.modules.toolbar.constructor !== Object) {
+    userConfig.modules.toolbar = {
+      container: userConfig.modules.toolbar
+    };
+  }
+  userConfig = extend(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
+  ['bounds', 'container'].forEach(function(key) {
+    if (typeof userConfig[key] === 'string') {
+      userConfig[key] = document.querySelector(userConfig[key]);
+    }
+  });
+  userConfig.modules = Object.keys(userConfig.modules).reduce(function(config, name) {
+    if (userConfig.modules[name]) {
+      config[name] = userConfig.modules[name];
+    }
+    return config;
+  }, {});
+  return userConfig;
+}
 
 function overload(index, length, name, value, source) {
   let formats = {};
@@ -368,4 +424,4 @@ function shiftRange(range, index, length, source) {
 }
 
 
-export { overload, Quill as default };
+export { expandConfig, overload, Quill as default };

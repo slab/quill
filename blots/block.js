@@ -46,14 +46,27 @@ BlockEmbed.scope = Parchment.Scope.BLOCK_BLOT;
 
 
 class Block extends Parchment.Block {
+  constructor(domNode) {
+    super(domNode);
+    this.cache = {};
+  }
+
   delta() {
-    return this.descendants(Parchment.Leaf).reduce((delta, leaf) => {
-      if (leaf.length() === 0) {
-        return delta;
-      } else {
-        return delta.insert(leaf.value(), bubbleFormats(leaf));
-      }
-    }, new Delta()).insert('\n', bubbleFormats(this));
+    if (this.cache.delta == null) {
+      this.cache.delta = this.descendants(Parchment.Leaf).reduce((delta, leaf) => {
+        if (leaf.length() === 0) {
+          return delta;
+        } else {
+          return delta.insert(leaf.value(), bubbleFormats(leaf));
+        }
+      }, new Delta()).insert('\n', bubbleFormats(this));
+    }
+    return this.cache.delta;
+  }
+
+  deleteAt(index, length) {
+    super.deleteAt(index, length);
+    this.cache = {};
   }
 
   formatAt(index, length, name, value) {
@@ -65,6 +78,7 @@ class Block extends Parchment.Block {
     } else {
       super.formatAt(index, Math.min(length, this.length() - index - 1), name, value);
     }
+    this.cache = {};
   }
 
   insertAt(index, value, def) {
@@ -78,6 +92,7 @@ class Block extends Parchment.Block {
       } else {
         this.children.tail.insertAt(this.children.tail.length(), text);
       }
+      this.cache = {};
     }
     let block = this;
     lines.reduce(function(index, line) {
@@ -93,14 +108,33 @@ class Block extends Parchment.Block {
     if (head instanceof Break) {
       head.remove();
     }
+    this.cache = {};
   }
 
   length() {
-    return super.length() + NEWLINE_LENGTH;
+    if (this.cache.length == null) {
+      this.cache.length = super.length() + NEWLINE_LENGTH;
+    }
+    return this.cache.length;
+  }
+
+  moveChildren(target, ref) {
+    super.moveChildren(target, ref);
+    this.cache = {};
+  }
+
+  optimize() {
+    super.optimize();
+    this.cache = {};
   }
 
   path(index) {
     return super.path(index, true);
+  }
+
+  removeChild(child) {
+    super.removeChild(child);
+    this.cache = {};
   }
 
   split(index, force = false) {
@@ -114,7 +148,9 @@ class Block extends Parchment.Block {
         return clone;
       }
     } else {
-      return super.split(index, force);
+      let next = super.split(index, force);
+      this.cache = {};
+      return next;
     }
   }
 }

@@ -9,4 +9,15 @@ describe('Picker', function() {
     expect(this.container.querySelector('.ql-picker-item.ql-selected').outerHTML).toEqualHTML('<span class="ql-picker-item ql-selected" data-label="0"></span>');
     expect(this.container.querySelector('.ql-picker-item:not(.ql-selected)').outerHTML).toEqualHTML('<span class="ql-picker-item" data-value="1" data-label="1"></span>');
   });
+
+  it('escape charcters', function() {
+    let select = document.createElement('select');
+    let option = document.createElement('option');
+    this.container.appendChild(select);
+    select.appendChild(option);
+    let value = '"Helvetica Neue", \'Helvetica\', sans-serif';
+    option.value = value;
+    value = value.replace(/\"/g, '\\"');
+    expect(select.querySelector(`option[value="${value}"]`)).toEqual(option);
+  });
 });

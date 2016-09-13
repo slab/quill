@@ -391,6 +391,12 @@ describe('Editor', function() {
       );
       expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
     });
+
+    it('code', function() {
+      let editor = this.initialize(Editor, { html: '<p>0</p><pre>1\n23\n</pre><p><br></p>' });
+      editor.applyDelta(new Delta().delete(4).retain(1).delete(2));
+      expect(editor.scroll.domNode.innerHTML).toEqual('<p>2</p>');
+    });
   });
 
   describe('getFormat()', function() {

@@ -33,7 +33,7 @@ class CodeBlock extends Block {
 
   format(name, value) {
     if (name === this.statics.blotName && value) return;
-    let [text, offset] = this.descendant(TextBlot, this.length() - 1);
+    let [text, ] = this.descendant(TextBlot, this.length() - 1);
     if (text != null) {
       text.deleteAt(text.length() - 1, 1);
     }
@@ -65,7 +65,11 @@ class CodeBlock extends Block {
   }
 
   length() {
-    return this.domNode.textContent.length;
+    let length = this.domNode.textContent.length;
+    if (!this.domNode.textContent.endsWith('\n')) {
+      return length + 1;
+    }
+    return length;
   }
 
   newlineIndex(searchIndex, reverse = false) {

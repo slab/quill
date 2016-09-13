@@ -30,18 +30,6 @@ const SIZES = [ 'small', false, 'large', 'huge' ];
 class BaseTheme extends Theme {
   constructor(quill, options) {
     super(quill, options);
-    this.options.modules.toolbar = this.options.modules.toolbar || {};
-    if (this.options.modules.toolbar.constructor !== Object) {
-      this.options.modules.toolbar = {
-        container: this.options.modules.toolbar,
-        handlers: {}
-      };
-    }
-    this.options.modules.toolbar.handlers = extend({},
-      BaseTheme.DEFAULTS.modules.toolbar.handlers,
-      this.constructor.DEFAULTS.modules.toolbar.handlers || {},
-      this.options.modules.toolbar.handlers || {}
-    );
     let listener = (e) => {
       if (!document.body.contains(quill.root)) {
         return document.body.removeEventListener('click', listener);
@@ -125,7 +113,7 @@ class BaseTheme extends Theme {
               .on(Emitter.events.SCROLL_OPTIMIZE, update);
   }
 }
-BaseTheme.DEFAULTS = {
+BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
@@ -164,7 +152,7 @@ BaseTheme.DEFAULTS = {
       }
     }
   }
-};
+});
 
 
 class BaseTooltip extends Tooltip {
@@ -195,32 +183,38 @@ class BaseTooltip extends Tooltip {
     this.root.classList.add('ql-editing');
     if (preview != null) {
       this.textbox.value = preview;
-    } else if (mode !== this.root.dataset.mode) {
+    } else if (mode !== this.root.getAttribute('data-mode')) {
       this.textbox.value = '';
     }
-    this.textbox.select();
-    this.textbox.setAttribute('placeholder', this.textbox.dataset[mode] || '');
-    this.root.dataset.mode = mode;
     this.position(this.quill.getBounds(this.quill.selection.savedRange));
+    this.textbox.select();
+    this.textbox.setAttribute('placeholder', this.textbox.getAttribute(`data-${mode}`) || '');
+    this.root.setAttribute('data-mode', mode);
+  }
+
+  restoreFocus() {
+    let scrollTop = this.quill.root.scrollTop;
+    this.quill.focus();
+    this.quill.root.scrollTop = scrollTop;
   }
 
   save() {
     let value = this.textbox.value;
-    switch(this.root.dataset.mode) {
+    switch(this.root.getAttribute('data-mode')) {
       case 'link':
         let scrollTop = this.quill.root.scrollTop;
         if (this.linkRange) {
           this.quill.formatText(this.linkRange, 'link', value, Emitter.sources.USER);
           delete this.linkRange;
         } else {
-          this.quill.focus();
+          this.restoreFocus();
           this.quill.format('link', value, Emitter.sources.USER);
         }
         this.quill.root.scrollTop = scrollTop;
         break;
       case 'video':
-        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=(\w+)/) ||
-                    value.match(/^(https?):\/\/(www\.)?youtu\.be\/(\w+)/);
+        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
+                    value.match(/^(https?):\/\/(www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
         if (match) {
           value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
         } else if (match = value.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {
@@ -231,8 +225,8 @@ class BaseTooltip extends Tooltip {
         let range = this.quill.getSelection(true);
         let index = range.index + range.length;
         if (range != null) {
-          this.quill.insertEmbed(index, this.root.dataset.mode, value, Emitter.sources.USER);
-          if (this.root.dataset.mode === 'formula') {
+          this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, Emitter.sources.USER);
+          if (this.root.getAttribute('data-mode') === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
           }
           this.quill.setSelection(index + 2, Emitter.sources.USER);

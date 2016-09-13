@@ -18,10 +18,10 @@ class Picker {
     let item = document.createElement('span');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
-      item.dataset.value = option.getAttribute('value');
+      item.setAttribute('data-value', option.getAttribute('value'));
     }
     if (option.textContent) {
-      item.dataset.label = option.textContent;
+      item.setAttribute('data-label', option.textContent);
     }
     item.addEventListener('click', (event) => {
       this.selectItem(item, true);
@@ -72,15 +72,15 @@ class Picker {
     if (item != null) {
       item.classList.add('ql-selected');
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      if (item.dataset.value) {
-        this.label.dataset.value = item.dataset.value;
-      } else if (this.label.dataset.value) {
-        delete this.label.dataset.value;
+      if (item.hasAttribute('data-value')) {
+        this.label.setAttribute('data-value', item.getAttribute('data-value'));
+      } else {
+        this.label.removeAttribute('data-value');
       }
-      if (item.dataset.label) {
-        this.label.dataset.label = item.dataset.label;
-      } else if (this.label.dataset.label) {
-        delete this.label.dataset.label;
+      if (item.hasAttribute('data-label')) {
+        this.label.setAttribute('data-label', item.getAttribute('data-label'));
+      } else {
+        this.label.removeAttribute('data-label');
       }
       if (trigger) {
         if (typeof Event === 'function') {
@@ -93,8 +93,8 @@ class Picker {
         this.close();
       }
     } else {
-      if (this.label.dataset.value) delete this.label.dataset.value;
-      if (this.label.dataset.label) delete this.label.dataset.label;
+      this.label.removeAttribute('data-value');
+      this.label.removeAttribute('data-label');
     }
   }
 

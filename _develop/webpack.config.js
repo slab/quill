@@ -13,11 +13,13 @@ var constantPack = new webpack.DefinePlugin({
   QUILL_VERSION: JSON.stringify(pkg.version)
 });
 
+
 module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     'quill.js': ['./quill.js'],
-    'quill': './assets/core.styl',
+    'quill.core.js': ['./core.js'],
+    'quill.core': './assets/core.styl',
     'quill.bubble': './assets/bubble.styl',
     'quill.snow': './assets/snow.styl',
     'unit.js': './test/unit.js'
@@ -40,7 +42,8 @@ module.exports = {
       { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
       { test: /\.svg$/, loader: 'html?minimize=true' },
       {
-        test: /(?!node_modules)\/.*\.js$/,
+        test: /\.js$/,
+        exclude: [/node_modules/, /rich-text/],
         loader: 'babel',
         query: {
           presets: ['es2015']
@@ -62,8 +65,11 @@ module.exports = {
     },
     silent: true
   },
-  plugins: [ bannerPack, constantPack, new ExtractTextPlugin('[name].css', { allChunks: true }) ],
-  devtool: 'source-map',
+  plugins: [
+    bannerPack,
+    constantPack,
+    new ExtractTextPlugin('[name].css', { allChunks: true })
+  ],
   devServer: {
     hot: false,
     port: process.env.npm_package_config_ports_webpack,
@@ -79,3 +85,35 @@ module.exports = {
     }
   }
 };
+
+if (process.argv.indexOf('--coverage') !== -1) {
+  module.exports.module.postLoaders = [{
+    test: /\.js$/,
+    loader: 'istanbul-instrumenter',
+    exclude: [
+      path.resolve(__dirname, '..', 'node_modules'),
+      path.resolve(__dirname, '..', 'test'),
+      path.resolve(__dirname, '..', 'core/polyfill.js'),
+      path.resolve(__dirname, '..', 'core.js'),
+      path.resolve(__dirname, '..', 'quill.js')
+    ]
+  }];
+  module.exports.module.loaders[3].query = {
+    plugins: ['transform-es2015-modules-commonjs']
+  };
+}
+
+if (process.argv.indexOf('--minimize') !== -1) {
+  module.exports.entry = {
+    'quill.min.js': './quill.js'
+  };
+  module.exports.plugins.push(
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
+  );
+  module.exports.devtool = 'source-map';
+}

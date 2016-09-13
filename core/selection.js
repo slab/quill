@@ -20,7 +20,14 @@ class Selection {
   constructor(scroll, emitter) {
     this.emitter = emitter;
     this.scroll = scroll;
+    this.composing = false;
     this.root = this.scroll.domNode;
+    this.root.addEventListener('compositionstart', () => {
+      this.composing = true;
+    });
+    this.root.addEventListener('compositionend', () => {
+      this.composing = false;
+    });
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
@@ -30,14 +37,6 @@ class Selection {
         // the range now being a cursor has not updated yet without setTimeout
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
-    });
-    let scrollTop;
-    this.root.addEventListener('blur', () => {
-      scrollTop = this.root.scrollTop;
-    });
-    this.root.addEventListener('focus', () => {
-      if (scrollTop == null) return;
-      this.root.scrollTop = scrollTop;
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
@@ -60,7 +59,9 @@ class Selection {
 
   focus() {
     if (this.hasFocus()) return;
+    let bodyTop = document.body.scrollTop;
     this.root.focus();
+    document.body.scrollTop = bodyTop;
     this.setRange(this.savedRange);
   }
 
@@ -169,7 +170,6 @@ class Selection {
   }
 
   getRange() {
-    if (!this.hasFocus()) return [null, null];
     let range = this.getNativeRange();
     if (range == null) return [null, null];
     let positions = [[range.start.node, range.start.offset]];
@@ -201,10 +201,10 @@ class Selection {
     let bounds = this.getBounds(range.index, range.length);
     if (bounds == null) return;
     if (this.root.offsetHeight < bounds.bottom) {
-      let [line, offset] = this.scroll.line(range.index + range.length);
+      let [line, ] = this.scroll.line(Math.min(range.index + range.length, this.scroll.length()-1));
       this.root.scrollTop = line.domNode.offsetTop + line.domNode.offsetHeight - this.root.offsetHeight;
     } else if (bounds.top < 0) {
-      let [line, offset] = this.scroll.line(range.index);
+      let [line, ] = this.scroll.line(Math.min(range.index, this.scroll.length()-1));
       this.root.scrollTop = line.domNode.offsetTop;
     }
   }

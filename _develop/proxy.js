@@ -11,9 +11,10 @@ var ports = {
 
 var server = http.createServer(function(req, res) {
   if (/\/\d+\.\d+\.\d+/.test(req.url) || req.url.startsWith('/karma/base/dist')) {
+    var target = 'http://localhost:' + ports.webpack + '/' + req.url.split('/').pop();
     proxy.web(req, res, {
       ignorePath: true,
-      target: 'http://localhost:' + ports.webpack + '/' + req.url.split('/').pop()
+      target: target
     });
   } else if (req.url.startsWith('/karma') || req.url === '/assets/favicon.png') {
     proxy.web(req, res, { ignorePath: false, target: { port: ports.karma } });

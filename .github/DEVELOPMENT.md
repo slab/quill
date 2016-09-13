@@ -2,7 +2,7 @@
 
 Quill's source is in [ES6](http://www.ecma-international.org/ecma-262/6.0/index.html) and utilizes [Webpack](https://webpack.github.io/) to organize its files. The documentation site (hosted at [quilljs.com](https://quilljs.com/)) is built with [Jekyll](http://jekyllrb.com/). [Karma](https://karma-runner.github.io/) and [Protractor](https://angular.github.io/protractor/) are used for testing.
 
-To develop Quill locally, you will want a copy of both Quill's codebase and its documentation site. The documentation site is the same as the one publicly available at quilljs.com but set up to use your local copy of Quill, instead of a CDN's. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quilljs.github.io/tree/gh-pages-1/docs/standalone). This is a packaged as a proper Node.js dependency named [quill-docs](https://github.com/quilljs/quilljs.github.io). It may be useful to [`npm link`](https://docs.npmjs.com/cli/link) quill-docs to allow easy tweaking of the examples themselves as well.
+To develop Quill locally, you will want a copy of Quill's codebase, with the build pipeline and documentation site running locally. The documentation site lives in `doc/` but will use your local build instead of the CDN that the public site uses. This allows you to test changes on a local copy of all of the quilljs.com demos, such as the [standalone examples](https://github.com/quilljs/quill/docs/docs/standalone).
 
 
 ### Setup
@@ -19,7 +19,7 @@ You can now try out the unit test suite by running:
 
 Karma also provides a local server so you can just visit a url from any browser to run the test suite, instead of launching one from the command line. Webpack also provides a server to dynamically build and serve the latest copy of the source code. Jekyll does the same for the documentation site.
 
-With three independent servers, it is useful to have a proxy to as a front end single point of access to jekyll, karma and webpack. The documentation site is normally set up to fetch Quill from Quill's CDN, but the proxy will serve a local copy from webpack dev server instead.
+With three independent servers, it is useful to have a proxy to as a front end single point of access to jekyll, karma and webpack. The documentation site is normally set up to fetch Quill from Quill's CDN, but the local proxy will serve a local build from webpack dev server instead.
 
 All four services can be run with a single command thanks to [foreman](http://ddollar.github.io/foreman/):
 

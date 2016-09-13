@@ -49,7 +49,13 @@ describe('Block', function() {
   it('join lines', function() {
     let scroll = this.initialize(Scroll, '<h1>Hello</h1><h2>World!</h2>');
     scroll.deleteAt(5, 1);
-    expect(scroll.domNode).toEqualHTML('<h1>HelloWorld!</h1>');
+    expect(scroll.domNode).toEqualHTML('<h2>HelloWorld!</h2>');
+  });
+
+  it('join line with empty', function() {
+    let scroll = this.initialize(Scroll, '<p>Hello<strong>World</strong></p><p><br></p>');
+    scroll.deleteAt(10, 1);
+    expect(scroll.domNode).toEqualHTML('<p>Hello<strong>World</strong></p>');
   });
 
   it('join empty lines', function() {

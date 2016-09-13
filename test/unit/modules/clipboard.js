@@ -23,7 +23,7 @@ describe('Clipboard', function() {
       this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
       this.quill.clipboard.onPaste(this.event);
       setTimeout(() => {
-        expect(this.quill.root).toEqualHTML('<h1>01<strong>|</strong><em>7</em>8</h1>');
+        expect(this.quill.root).toEqualHTML('<p>01<strong>|</strong><em>7</em>8</p>');
         expect(this.quill.getSelection()).toEqual(new Range(3));
         done();
       }, 2);
@@ -91,13 +91,22 @@ describe('Clipboard', function() {
     });
 
     it('embeds', function() {
-      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png">34</div>');
-      expect(delta).toEqual(new Delta().insert('01').insert({ image: '/assets/favicon.png' }).insert('34'));
+      let delta = this.clipboard.convert('<div>01<img src="/assets/favicon.png" height="200" width="300">34</div>');
+      let expected = new Delta()
+        .insert('01')
+        .insert({ image: '/assets/favicon.png' }, { height: '200', width: '300' })
+        .insert('34');
+      expect(delta).toEqual(expected);
     });
 
     it('block embed', function() {
       let delta = this.clipboard.convert('<p>01</p><iframe src="#"></iframe><p>34</p>');
       expect(delta).toEqual(new Delta().insert('01\n').insert({ video: '#' }).insert('34'));
+    });
+
+    it('attributor and style match', function() {
+      let delta = this.clipboard.convert('<p style="direction:rtl;">Test</p>');
+      expect(delta).toEqual(new Delta().insert('Test\n', { direction: 'rtl' }));
     });
 
     it('custom matcher', function() {

@@ -1,3 +1,4 @@
+import extend from 'extend';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
@@ -5,8 +6,18 @@ import Picker from '../ui/picker';
 import { Range } from '../core/selection';
 
 
+const TOOLBAR_CONFIG = [
+  [{ header: ['1', '2', '3', false] }],
+  ['bold', 'italic', 'underline', 'link'],
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  ['clean']
+];
+
 class SnowTheme extends BaseTheme {
   constructor(quill, options) {
+    if (options.modules.toolbar != null && options.modules.toolbar.container == null) {
+      options.modules.toolbar.container = TOOLBAR_CONFIG;
+    }
     super(quill, options);
     this.quill.container.classList.add('ql-snow');
   }
@@ -23,15 +34,9 @@ class SnowTheme extends BaseTheme {
     }
   }
 }
-SnowTheme.DEFAULTS = {
+SnowTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
   modules: {
     toolbar: {
-      container: [
-        [{ header: ['1', '2', '3', false] }],
-        ['bold', 'italic', 'underline', 'link'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['clean']
-      ],
       handlers: {
         link: function(value) {
           if (value) {
@@ -50,7 +55,7 @@ SnowTheme.DEFAULTS = {
       }
     }
   }
-}
+});
 
 
 class SnowTooltip extends BaseTooltip {
@@ -67,13 +72,15 @@ class SnowTooltip extends BaseTooltip {
       } else {
         this.edit('link', this.preview.textContent);
       }
+      event.preventDefault();
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
       if (this.linkRange != null) {
-        this.quill.focus();
+        this.restoreFocus();
         this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
         delete this.linkRange;
       }
+      event.preventDefault();
       this.hide();
     });
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
@@ -96,9 +103,7 @@ class SnowTooltip extends BaseTooltip {
 
   show() {
     super.show();
-    if (this.root.dataset.mode) {
-      delete this.root.dataset.mode;
-    }
+    this.root.removeAttribute('data-mode');
   }
 }
 SnowTooltip.TEMPLATE = [

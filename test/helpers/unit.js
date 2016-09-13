@@ -12,6 +12,11 @@ div.id = 'test-container';
 document.body.appendChild(div);
 
 
+window.onerror = function(msg) {
+  return (msg === 'Script error.');
+};
+
+
 beforeEach(function() {
   jasmine.addMatchers({
     toEqualHTML: function() {

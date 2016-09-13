@@ -1,4 +1,4 @@
-jekyll:   jekyll serve -s ../node_modules/quill-docs -d ../node_modules/quill-docs/_site --port $npm_package_config_ports_jekyll -w --config ../node_modules/quill-docs/_config.yml,jekyll.yml
+jekyll:   jekyll serve -s ../docs -d ../docs/_site --port $npm_package_config_ports_jekyll -w --config ../docs/_config.yml,jekyll.yml
 karma:    karma start karma.config.js --no-single-run --no-browsers
 webpack:  webpack-dev-server --config webpack.config.js
 proxy:    node proxy.js

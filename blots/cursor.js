@@ -14,18 +14,11 @@ class Cursor extends Embed {
     this.textNode = document.createTextNode(Cursor.CONTENTS);
     this.domNode.appendChild(this.textNode);
     this._length = 0;
-    this.composing = false;
-    this.selection.root.addEventListener('compositionstart', () => {
-      this.composing = true;
-    });
-    this.selection.root.addEventListener('compositionend', () => {
-      this.composing = false;
-    });
   }
 
   detach() {
     // super.detach() will also clear domNode.__blot
-    if (this.parent != null) this.parent.children.remove(this);
+    if (this.parent != null) this.parent.removeChild(this);
   }
 
   format(name, value) {
@@ -33,15 +26,16 @@ class Cursor extends Embed {
       return super.format(name, value);
     }
     let target = this, index = 0;
-    this._length = Cursor.CONTENTS.length;
     while (target != null && target.statics.scope !== Parchment.Scope.BLOCK_BLOT) {
       index += target.offset(target.parent);
       target = target.parent;
     }
     if (target != null) {
+      this._length = Cursor.CONTENTS.length;
+      target.optimize();
       target.formatAt(index, Cursor.CONTENTS.length, name, value);
+      this._length = 0;
     }
-    this._length = 0;
   }
 
   index(node, offset) {
@@ -63,7 +57,7 @@ class Cursor extends Embed {
   }
 
   restore() {
-    if (this.composing) return;
+    if (this.selection.composing) return;
     if (this.parent == null) return;
     let textNode = this.textNode;
     let range = this.selection.getNativeRange();
@@ -72,7 +66,6 @@ class Cursor extends Embed {
       this.domNode.parentNode.insertBefore(this.domNode.lastChild, this.domNode);
     }
     if (this.textNode.data !== Cursor.CONTENTS) {
-      let native = this.selection.getNativeRange();
       this.textNode.data = this.textNode.data.split(Cursor.CONTENTS).join('');
       this.parent.insertBefore(Parchment.create(this.textNode), this);
       this.textNode = document.createTextNode(Cursor.CONTENTS);

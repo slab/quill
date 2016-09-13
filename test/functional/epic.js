@@ -104,8 +104,9 @@ describe('compose an epic', function(done) {
 
   it('preformat', function() {
     browser.click('.ql-toolbar .ql-bold');
+    browser.click('.ql-toolbar .ql-italic');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<p><strong><span class="ql-cursor">\uFEFF</span></strong></p>',
+      '<p><strong><em><span class="ql-cursor">\uFEFF</span></em></strong></p>',
       '<p>' + CHAPTER + '</p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
@@ -121,7 +122,7 @@ describe('compose an epic', function(done) {
     }
     browser.keys('Moby Dick');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<p><strong>Moby Dick</strong></p>',
+      '<p><strong><em>Moby Dick</em></strong></p>',
       '<p>' + CHAPTER + '</p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
@@ -142,7 +143,7 @@ describe('compose an epic', function(done) {
     browser.keys([KEYS.Short, 'b', KEYS.Null]);
     expect(browser.isExisting('.ql-toolbar .ql-bold.ql-active')).toBe(true);
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<p><strong>Moby Dick</strong></p>',
+      '<p><strong><em>Moby Dick</em></strong></p>',
       '<p><strong>' + CHAPTER + '</strong></p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
@@ -155,7 +156,7 @@ describe('compose an epic', function(done) {
     browser.keys([KEYS.Left, KEYS.Up])
            .click('.ql-toolbar .ql-header[value="1"]');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<h1><strong>Moby Dick</strong></h1>',
+      '<h1><strong><em>Moby Dick</em></strong></h1>',
       '<p><strong>' + CHAPTER + '</strong></p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
