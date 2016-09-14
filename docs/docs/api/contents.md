@@ -128,7 +128,7 @@ quill.insertText(5, 'Quill', {
 
 ### pasteHTML
 
-Inserts content into editor at a given index from an HTML snippet. The snippet is interpretted and cleaned by the [clipboard](/docs/modules/clipboard/) before being inserted into Quill. If no insertion index is provided, the entire editor contents will be overwritten. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Inserts content into editor at a given index from an HTML snippet. The snippet is interpreted and cleaned by the [clipboard](/docs/modules/clipboard/) before being inserted into Quill. If no insertion index is provided, the entire editor contents will be overwritten. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
