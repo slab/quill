@@ -125,7 +125,21 @@ class Toolbar extends Module {
           if (typeof value === 'string') {
             value = value.replace(/\"/g, '\\"');
           }
-          option = input.querySelector(`option[value="${value}"]`);
+          [].forEach.call(input.querySelectorAll('option'), (tempOption) => {
+            let optionValue = tempOption.value;
+            if (input.classList.contains('ql-color')) {
+              optionValue = optionValue.toLowerCase();
+              if (optionValue.startsWith('rgb')) {
+                optionValue = optionValue.replace(/^[^\d]+/, '').replace(/[^\d]+$/, '');
+                optionValue = '#' + optionValue.split(',').map(function(component) {
+                  return ('00' + parseInt(component).toString(16)).slice(-2);
+                }).join('');
+              }
+            }
+            if (optionValue === value) {
+              option = tempOption;
+            }
+          });
         }
         if (option == null) {
           input.value = '';   // TODO make configurable?
