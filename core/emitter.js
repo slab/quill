@@ -22,6 +22,7 @@ Emitter.events = {
   SCROLL_OPTIMIZE      : 'scroll-optimize',
   SCROLL_UPDATE        : 'scroll-update',
   SELECTION_CHANGE     : 'selection-change',
+  STATE_CHANGE         : 'state-change',
   TEXT_CHANGE          : 'text-change'
 };
 Emitter.sources = {
