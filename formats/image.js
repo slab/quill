@@ -1,6 +1,12 @@
 import Embed from '../blots/embed';
 import Link, { sanitize } from '../formats/link';
 
+const attributes = [
+  'alt',
+  'height',
+  'width'
+];
+
 
 class Image extends Embed {
   static create(value) {
@@ -13,8 +19,9 @@ class Image extends Embed {
 
   static formats(domNode) {
     let formats = {};
-    if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
-    if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
+    attributes.forEach((attribute) => {
+      if (domNode.hasAttribute(attribute)) formats[attribute] = domNode.getAttribute(attribute);
+    });
     return formats;
   }
 
@@ -31,7 +38,7 @@ class Image extends Embed {
   }
 
   format(name, value) {
-    if (name === 'height' || name === 'width') {
+    if (attributes.indexOf(name) !== -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
       } else {
