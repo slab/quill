@@ -27,7 +27,7 @@ class BubbleTheme extends BaseTheme {
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
   }
 }
-BubbleTheme.DEFAULTS = extend(true, {}, BaseTooltip.DEFAULTS, {
+BubbleTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
