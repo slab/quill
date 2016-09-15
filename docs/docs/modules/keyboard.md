@@ -163,7 +163,7 @@ Adding a binding with `quill.keyboard.addBinding` will not run before Quill's be
 var bindings = {
   // This will overwrite the default binding also named 'tab'
   tab: {
-    key: 'tab',
+    key: 9,
     handler: function() {
       // Handle tab
     }
