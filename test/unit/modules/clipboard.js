@@ -19,6 +19,20 @@ describe('Clipboard', function() {
         done();
       }, 2);
     });
+
+    it('selection-change', function(done) {
+      let handler = {
+        change: function() {}
+      };
+      spyOn(handler, 'change')
+      this.quill.on('selection-change', handler.change);
+      this.quill.clipboard.container.innerHTML = '0';
+      this.quill.clipboard.onPaste({});
+      setTimeout(function() {
+        expect(handler.change).not.toHaveBeenCalled();
+        done();
+      }, 2);
+    });
   });
 
   describe('convert', function() {
