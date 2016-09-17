@@ -31,7 +31,7 @@ class Image extends Embed {
   }
 
   static sanitize(url) {
-    return sanitize(url, ['http', 'https', 'data']) ? url : '//:0';
+    return sanitize(url, ['http', 'https', 'data', 'blob']) ? url : '//:0';
   }
 
   static value(domNode) {
