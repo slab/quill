@@ -72,7 +72,8 @@ class Quill {
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
     this.theme.init();
-    this.pasteHTML(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    this.setContents(contents);
     this.history.clear();
     if (options.readOnly) {
       this.disable();
@@ -98,6 +99,15 @@ class Quill {
 
   blur() {
     this.selection.setRange(null);
+  }
+
+  dangerouslyPasteHTML(index, html, source = Emitter.sources.API) {
+    if (typeof index === 'string') {
+      return this.setContents(this.clipboard.convert(index), html);
+    } else {
+      let paste = this.clipboard.convert(html);
+      return this.updateContents(new Delta().retain(index).concat(paste), source);
+    }
   }
 
   deleteText(index, length, source) {
@@ -234,13 +244,8 @@ class Quill {
     return this.emitter.once.apply(this.emitter, arguments);
   }
 
-  pasteHTML(index, html, source = Emitter.sources.API) {
-    if (typeof index === 'string') {
-      return this.setContents(this.clipboard.convert(index), html);
-    } else {
-      let paste = this.clipboard.convert(html);
-      return this.updateContents(new Delta().retain(index).concat(paste), source);
-    }
+  pasteHTML(index, html, source) {
+    this.dangerouslyPasteHTML(index, html, source);
   }
 
   removeFormat(index, length, source) {
