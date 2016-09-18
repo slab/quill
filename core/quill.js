@@ -101,15 +101,6 @@ class Quill {
     this.selection.setRange(null);
   }
 
-  dangerouslyPasteHTML(index, html, source = Emitter.sources.API) {
-    if (typeof index === 'string') {
-      return this.setContents(this.clipboard.convert(index), html);
-    } else {
-      let paste = this.clipboard.convert(html);
-      return this.updateContents(new Delta().retain(index).concat(paste), source);
-    }
-  }
-
   deleteText(index, length, source) {
     [index, length, , source] = overload(index, length, source);
     let range = this.getSelection();
@@ -245,7 +236,7 @@ class Quill {
   }
 
   pasteHTML(index, html, source) {
-    this.dangerouslyPasteHTML(index, html, source);
+    this.clipboard.dangerouslyPasteHTML(index, html, source);
   }
 
   removeFormat(index, length, source) {
