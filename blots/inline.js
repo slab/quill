@@ -29,6 +29,16 @@ class Inline extends Parchment.Inline {
       super.formatAt(index, length, name, value);
     }
   }
+
+  optimize() {
+    super.optimize();
+    let ref = this.parent.parent;
+    if (this.parent instanceof Inline && Inline.compare(this.statics.blotName, this.parent.statics.blotName) > 0) {
+      let parent = this.parent.isolate(this.offset(), this.length());
+      this.moveChildren(parent);
+      parent.wrap(this);
+    }
+  }
 }
 Inline.allowedChildren = [Inline, Embed, Text];
 // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
