@@ -66,8 +66,11 @@ class Clipboard extends Module {
 
   convert(html) {
     const DOM_KEY = '__ql-matcher';
+    let container = this.container;
     if (typeof html === 'string') {
-      this.container.innerHTML = html;
+      let parser = new DOMParser();
+      let doc = parser.parseFromString(html, "text/html");
+      container = doc.body;
     }
     let textMatchers = [], elementMatchers = [];
     this.matchers.forEach((pair) => {
@@ -80,7 +83,7 @@ class Clipboard extends Module {
           elementMatchers.push(matcher);
           break;
         default:
-          [].forEach.call(this.container.querySelectorAll(selector), (node) => {
+          [].forEach.call(container.querySelectorAll(selector), (node) => {
             // TODO use weakmap
             node[DOM_KEY] = node[DOM_KEY] || [];
             node[DOM_KEY].push(matcher);
@@ -110,17 +113,17 @@ class Clipboard extends Module {
         return new Delta();
       }
     };
-    let delta = traverse(this.container);
+    let delta = traverse(container);
     // Remove trailing newline
     if (deltaEndsWith(delta, '\n') && delta.ops[delta.ops.length - 1].attributes == null) {
       delta = delta.compose(new Delta().retain(delta.length() - 1).delete(1));
     }
-    debug.log('convert', this.container.innerHTML, delta);
-    this.container.innerHTML = '';
+    debug.log('convert', container.innerHTML, delta);
+    container.innerHTML = '';
     return delta;
   }
 
-  dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
+  pasteHTML(index, html, source = Quill.sources.API) {
     if (typeof index === 'string') {
       return this.quill.setContents(this.convert(index), html);
     } else {

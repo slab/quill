@@ -236,7 +236,7 @@ class Quill {
   }
 
   pasteHTML(index, html, source) {
-    this.clipboard.dangerouslyPasteHTML(index, html, source);
+    this.clipboard.pasteHTML(index, html, source);
   }
 
   removeFormat(index, length, source) {
