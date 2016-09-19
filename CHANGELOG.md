@@ -1,3 +1,14 @@
+# 1.0.4
+
+- Fix bubble theme defaults [#963](https://github.com/quilljs/quill/issues/963)
+- Fix browsers modifying inline nesting order [#971](https://github.com/quilljs/quill/issues/971)
+- Do not fire selection-change event on paste [#974](https://github.com/quilljs/quill/issues/974)
+- Support alt attribute in images [#975](https://github.com/quilljs/quill/issues/975)
+- Deprecate `pasteHTML` for removal in Quill 2.0 [#981](https://github.com/quilljs/quill/issues/981)
+
+Thank you [jackmu95](https://github.com/jackmu95), [kristeehan](https://github.com/kristeehan), [ruffle1986](https://github.com/ruffle1986), [sergop321](https://github.com/sergop321), [sferoze](https://github.com/sferoze), and [sijad](https://github.com/sijad) for contributions to this release.
+
+
 # 1.0.3
 
 - Fix [#928](https://github.com/quilljs/quill/issues/928)
