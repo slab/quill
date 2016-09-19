@@ -37,6 +37,28 @@ quill.clipboard.addMatcher('B', function(node, delta) {
 });
 ```
 
+### dangerouslyPasteHTML
+
+Inserts content represented by HTML snippet into editor at a given index. The snippet is interpretted by Clipboard [matchers](#addMatcher), which may not produce the exactly input HTML. If no insertion index is provided, the entire editor contents will be overwritten. The [source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+
+Improper handling of HTML can lead to [cross site scripting (XSS)](https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)) and failure to sanitize properly is both notoriously error-prone and a leading cause of web vulnerabilities. This method follows React's example and is aptly named to ensure the developer has taken the necessary precautions.
+
+**Methods**
+
+```javascript
+dangerouslyPasteHTML(html: String, source: String = 'api')
+dangerouslyPasteHTML(index: Number, html: String, source: String = 'api')
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello!');
+
+quill.dangerouslyPasteHTML(5, '&nbsp;<b>World</b>');
+// Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>';
+```
+
 
 ## Configuration
 

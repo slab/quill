@@ -128,24 +128,9 @@ quill.insertText(5, 'Quill', {
 
 ### pasteHTML
 
-Inserts content into editor at a given index from an HTML snippet. The snippet is interpretted and cleaned by the [clipboard](/docs/modules/clipboard/) before being inserted into Quill. If no insertion index is provided, the entire editor contents will be overwritten. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+***Deprecated***
 
-**Methods**
-
-```javascript
-pasteHTML(html: String, source: String = 'api')
-pasteHTML(index: Number, html: String, source: String = 'api')
-```
-
-**Examples**
-
-```javascript
-quill.setText('Hello!');
-
-quill.pasteHTML(5, '&nbsp;<b>World</b>');
-// Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>';
-
-```
+This API has been moved into [Clipboard](/docs/modules/clipboard/#dangerouslypastehtml) and renamed. It will be removed as a top level API in 2.0.
 
 ### setContents
 
