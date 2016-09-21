@@ -11,7 +11,7 @@ Quill allows several ways to customize it to suit your needs. This section is de
 
 ### Container
 
-Quill requires an container where the editor will be appended. You can either pass in a CSS selector or a DOM object.
+Quill requires a container where the editor will be appended. You can pass in either a CSS selector or a DOM object.
 
 ```javascript
 var editor = new Quill('.editor');  // First matching element will be used
@@ -50,7 +50,8 @@ The following keys are recognized:
 
 Default: `document.body`
 
-DOM Element that editor ui elements, such as tooltips, should be confined within. Currently only considers left and right boundaries.
+DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should be confined. 
+Currently, it only considers left and right boundaries.
 
 
 #### debug
