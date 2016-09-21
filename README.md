@@ -48,7 +48,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
-Take a look at the [Quill website](https://quilljs.com/) for more documentation, guides and [live demos](https://quilljs.com/playground/)!
+Take a look at the [Quill website](https://quilljs.com/) for more documentation, guides and [live playground](https://quilljs.com/playground/)!
 
 
 ## Download
