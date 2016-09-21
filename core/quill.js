@@ -67,6 +67,7 @@ class Quill {
     });
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
+    this.imageHandler = options.imageHandler;
     this.theme = new options.theme(this, options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
@@ -300,7 +301,12 @@ Quill.DEFAULTS = {
   modules: {},
   placeholder: '',
   readOnly: false,
-  theme: 'default'
+  theme: 'default',
+  imageHandler(image, callback) {
+    let reader = new FileReader();
+    reader.onload = e => callback(e.target.result);
+    reader.readAsDataURL(image);
+  }
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
