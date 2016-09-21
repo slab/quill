@@ -11,6 +11,8 @@ pens:
     slug: jAvpQL
   - title: Form Submit
     slug: kXRjQJ
+  - title: Snow Toolbar Tooltips
+    slug: ozYEro
   - title: Quill Playground
     slug: KzZqZx
 ---
@@ -22,7 +24,7 @@ pens:
   </div>
   <div class="row" id="gallery-container">
   {% for pen in page.pens %}
-    <div class="four columns{% if forloop.last %} selected-pen{% endif %}">
+    <div class="three columns{% if forloop.last %} selected-pen{% endif %}">
       <a href="/playground/#{{ pen.title | slugify }}" title="{{ pen.title }}" data-id="{{pen.slug}}">
         <img src="https://codepen.io/quill/pen/{{pen.slug}}/image/small.png">
         <span class="pen-label">{{pen.title}}</span>
