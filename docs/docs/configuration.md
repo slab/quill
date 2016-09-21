@@ -50,8 +50,7 @@ The following keys are recognized:
 
 Default: `document.body`
 
-DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should be confined. 
-Currently, it only considers left and right boundaries.
+DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
 
 
 #### debug
