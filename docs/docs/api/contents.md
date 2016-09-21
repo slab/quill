@@ -71,7 +71,9 @@ var length = quill.getLength();
 
 ### getText
 
-Retrieves the string contents of the editor. `length` defaults to the length of the remaining document. Note even when Quill is empty, there is still a blank line in the editor, so `getText` will return '\n'.
+Retrieves the string contents of the editor. Non-string content are omitted, so the returned string's length may be shorter than the editor's as returned by [`getLength`](#getlength). Note even when Quill is empty, there is still a blank line in the editor, so in these cases `getText` will return '\n'.
+
+The `length` parameter defaults to the length of the remaining document.
 
 **Methods**
 
