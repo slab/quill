@@ -11,6 +11,13 @@ import Theme from './theme';
 
 let debug = logger('quill');
 
+const A11Y_ATTRIBUTE_MAP = {
+  ariaDescribedBy: 'aria-describedby',
+  ariaLabeledBy: 'aria-labeledby',
+  ariaLabel: 'aria-label',
+  role: 'role',
+};
+
 
 class Quill {
   static debug(limit) {
@@ -81,6 +88,17 @@ class Quill {
     if (options.placeholder) {
       this.root.setAttribute('data-placeholder', options.placeholder);
     }
+
+    Object.keys(A11Y_ATTRIBUTE_MAP).forEach(opt => {
+      const attributeValue = options[opt];
+      if (! attributeValue) {
+        return;
+      }
+
+      const attributeName = A11Y_ATTRIBUTE_MAP[opt];
+      this.root.setAttribute(attributeName, attributeValue);
+    })
+
     this.root.classList.toggle('ql-blank', this.editor.isBlank());
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
       this.root.classList.toggle('ql-blank', this.editor.isBlank());

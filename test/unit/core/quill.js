@@ -604,4 +604,25 @@ describe('Quill', function() {
       expect(this.quill.root.classList).not.toContain('ql-blank');
     });
   });
+
+  describe('accessibility', function () {
+    beforeEach(function () {
+      this.initialize(HTMLElement, '<div><p></p></div>');
+      this.quill = new Quill(this.container.firstChild, {
+        ariaLabel: 'this is a text editor',
+        ariaDescribedBy: 'describer',
+        ariaLabeledBy: 'labeler',
+        role: 'textbox',
+      });
+    });
+
+    it('accessibility attributes', function () {
+      const {root} = this.quill;
+
+      expect(root.getAttribute('aria-label')).toEqual('this is a text editor');
+      expect(root.getAttribute('aria-labeledby')).toEqual('labeler');
+      expect(root.getAttribute('aria-describedby')).toEqual('describer');
+      expect(root.getAttribute('role')).toEqual('textbox');
+    });
+  });
 });
