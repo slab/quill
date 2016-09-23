@@ -58,7 +58,7 @@ class History extends Module {
       undo: undoDelta
     });
     if (this.stack.undo.length > this.options.maxStack) {
-      this.stack.undo.unshift();
+      this.stack.undo.shift();
     }
   }
 
