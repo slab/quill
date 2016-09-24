@@ -123,7 +123,7 @@ class Clipboard extends Module {
     return delta;
   }
 
-  pasteHTML(index, html, source = Quill.sources.API) {
+  dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
     if (typeof index === 'string') {
       return this.quill.setContents(this.convert(index), html);
     } else {
