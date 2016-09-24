@@ -30,9 +30,6 @@ class Toolbar extends Module {
     Object.keys(this.options.handlers).forEach((format) => {
       this.addHandler(format, this.options.handlers[format]);
     });
-    this.container.addEventListener('mousedown', function(e) {
-      e.preventDefault();   // Prevent blur
-    });
     [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
       this.attach(input);
     });
