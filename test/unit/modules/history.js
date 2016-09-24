@@ -67,6 +67,17 @@ describe('History', function() {
       this.original = this.quill.getContents();
     });
 
+    it('limits undo stack size', function () {
+      let quill = new Quill(this.container.firstChild, {
+        modules: {
+          history: {delay: 0, maxStack: 2}
+        }
+      });
+
+      ['A', 'B', 'C'].forEach(text => quill.insertText(0, text));
+      expect(quill.history.stack.undo.length).toEqual(2);
+    });
+
     it('user change', function() {
       this.quill.root.firstChild.innerHTML = 'The lazy foxes';
       this.quill.update();
