@@ -46,4 +46,21 @@ describe('Table', function() {
     `);
   });
 
+  it('inits properly', function() {
+    let editor = this.initialize(Editor, '<p>0123</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123\n')
+      .insert({'table': [['x']]})
+    );
+  });
+
+  it('delete', function() {
+    let editor = this.initialize(Editor, '<p>0123</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+     editor.deleteText(5, 1);
+     expect(this.container).toEqualHTML(`
+      <p>0123</p>
+    `);
+
+  })
+
 });
