@@ -39,10 +39,12 @@ import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
 
 
+
+
 Quill.register({
   'attributors/attribute/direction': DirectionAttribute,
 
-  'attributors/class/align': AlignClass,
+  // 'attributors/class/align': AlignClass,
   'attributors/class/background': BackgroundClass,
   'attributors/class/color': ColorClass,
   'attributors/class/direction': DirectionClass,

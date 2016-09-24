@@ -27,5 +27,23 @@ describe('Table', function() {
     `);
   });
 
+  it('add one row table', function() {
+    let editor = this.initialize(Editor, '<p>0123</p>');
+    editor.insertEmbed(0, 'table', [['a','b', 'c']]);
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert({'table': [['a','b','c']]})
+      .insert('0123\n')
+    );
+    expect(this.container).toEqualHTML(`
+      <table>
+      <tbody>
+      <tr>
+      <td>a</td><td>b</td><td>c</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>0123</p>
+    `);
+  });
 
 });
