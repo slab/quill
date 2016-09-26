@@ -55,7 +55,7 @@ dangerouslyPasteHTML(index: Number, html: String, source: String = 'api')
 ```javascript
 quill.setText('Hello!');
 
-quill.dangerouslyPasteHTML(5, '&nbsp;<b>World</b>');
+quill.clipboard.dangerouslyPasteHTML(5, '&nbsp;<b>World</b>');
 // Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>';
 ```
 
