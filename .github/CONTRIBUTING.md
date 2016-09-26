@@ -43,9 +43,9 @@ Search through [Github Issues](https://github.com/quilljs/quill/labels/feature) 
 To open a new feature request, please include:
 
 1. A detailed description of the feature
-2. A quick background of where and how you are using Quill
-3. The use case that would be enabled or improved for your product, if the feature was implemented
-4. Considerations and behavior differences for other use cases that may benefit from the feature
+2. Why this feature belongs in Quill core, instead of your own application logic
+3. Background of where and how you are using Quill
+4. The use case that would be enabled or improved for your product, if the feature was implemented
 
 Features are prioritized based on real world users and use cases, not theoretically useful additions for other unknown users. Lacking feature requests may be autoclosed with a link to this section.
 
