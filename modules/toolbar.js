@@ -12,10 +12,14 @@ class Toolbar extends Module {
   constructor(quill, options) {
     super(quill, options);
     if (Array.isArray(this.options.container)) {
-      let container = document.createElement('div');
-      addControls(container, this.options.container);
-      quill.container.parentNode.insertBefore(container, quill.container);
-      this.container = container;
+      // prevent creating duplicate toolbar
+      if (quill.container.previousSibling && quill.container.previousSibling.classList.contains('ql-toolbar')) {
+        this.container = quill.container.previousSibling;
+      } else {
+        this.container = document.createElement('div');
+        quill.container.parentNode.insertBefore(this.container, quill.container);
+      }
+      addControls(this.container, this.options.container);
     } else if (typeof this.options.container === 'string') {
       this.container = document.querySelector(this.options.container);
       addControls(this.container, this.options.controls);
@@ -163,6 +167,9 @@ function addButton(container, format, value) {
 }
 
 function addControls(container, groups) {
+  while(container.hasChildNodes()) {
+    container.removeChild(container.firstChild);
+  }
   if (!Array.isArray(groups[0])) {
     groups = [groups];
   }
