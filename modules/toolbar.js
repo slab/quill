@@ -18,8 +18,10 @@ class Toolbar extends Module {
       this.container = container;
     } else if (typeof this.options.container === 'string') {
       this.container = document.querySelector(this.options.container);
+      addControls(this.container, this.options.controls);
     } else {
       this.container = this.options.container;
+      addControls(this.container, this.options.controls);
     }
     if (!(this.container instanceof HTMLElement)) {
       return debug.error('Container required for toolbar', this.options);
