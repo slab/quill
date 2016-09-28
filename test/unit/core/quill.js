@@ -214,6 +214,12 @@ describe('Quill', function() {
       quill.setContents(new Delta().insert('0123'));
       expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
     });
+
+    it('no trailing newline and retain', function() {
+      let quill = this.initialize(Quill, '<h1>Welcome</h1>');
+      quill.setContents(new Delta().insert('0123').retain(1));
+      expect(quill.getContents()).toEqual(new Delta().insert('0123W\n'));
+    });
   });
 
   describe('setText()', function() {
