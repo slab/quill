@@ -87,19 +87,8 @@ module.exports = {
 };
 
 if (process.argv.indexOf('--coverage') !== -1) {
-  module.exports.module.postLoaders = [{
-    test: /\.js$/,
-    loader: 'istanbul-instrumenter',
-    exclude: [
-      path.resolve(__dirname, '..', 'node_modules'),
-      path.resolve(__dirname, '..', 'test'),
-      path.resolve(__dirname, '..', 'core/polyfill.js'),
-      path.resolve(__dirname, '..', 'core.js'),
-      path.resolve(__dirname, '..', 'quill.js')
-    ]
-  }];
   module.exports.module.loaders[3].query = {
-    plugins: ['transform-es2015-modules-commonjs']
+    plugins: ['istanbul', 'transform-es2015-modules-commonjs']
   };
 }
 
