@@ -1,3 +1,15 @@
+# 1.0.5
+
+Documentation clarifications and bug fixes.
+
+- Fix attaching toolbar to `<select>` without themes [#997](https://github.com/quilljs/quill/issues/997)
+- Link `code` icon to `code-block` [#998](https://github.com/quilljs/quill/issues/998)
+- Fix undo stack when at size limit [#1001](https://github.com/quilljs/quill/pull/1001)
+- Fix bug where `formatLine` did not ignore inline formats [8a7190](https://github.com/quilljs/parchment/commit/8a71905b2dd02d003edb02a15fdc727b26914e49)
+
+Thanks to [@dropfen](https://github.com/dropfen), [@evansolomon](https://github.com/evansolomon), [@hallaathrad](https://github.com/hallaathrad), [@janyksteenbeek](https://github.com/janyksteenbeek), [@jackmu95](https://github.com/jackmu95), [@marktron](https://github.com/marktron), [@mcat-ee](https://github.com/mcat-ee), [@unhammer](https://github.com/unhammer), and [@zeke](https://github.com/zeke) for contributions to this release!
+
+
 # 1.0.4
 
 - Fix bubble theme defaults [#963](https://github.com/quilljs/quill/issues/963)
