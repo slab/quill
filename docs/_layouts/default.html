@@ -15,9 +15,6 @@
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
-    {% if page.bodyClass != null %}
-    <a class="announcement" href="/blog/announcing-quill-1-0/">Yeaaah! <strong>Quill 1.0</strong> is officially released! <strong>Click</strong> to read the release announcement.</a>
-    {% endif %}
     {% include header.html %}
     {% assign heads = content | split: '<!-- head -->' %}
     {% for head in heads %}

@@ -1174,10 +1174,6 @@ body:not(.home) .navbar-link:before {
 @media (max-width: 1023px) {
   .navbar-open {
     display: inline-block;
-    top: 5.5em;
-  }
-  .navbar-close {
-    top: 4.5em;
   }
   .navbar-drop.active {
     margin-bottom: -25em;
@@ -1218,7 +1214,7 @@ body:not(.home) .navbar-link:before {
     display: none;
   }
   .navbar-open, .navbar-close {
-    top: 3.5em;
+    top: 4em;
   }
   .logo {
     height: 5.3em;
