@@ -15,6 +15,7 @@ class Editor {
     this.scroll = scroll;
     this.emitter = emitter;
     this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update.bind(this, null));
+    this.emitter.on(Emitter.events.STATE_CHANGE, (enabled) => this.enable(enabled));
     this.delta = this.getDelta();
     this.enable();
   }

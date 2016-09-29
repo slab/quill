@@ -42,6 +42,13 @@ class Toolbar extends Module {
       let [range, ] = this.quill.selection.getRange();  // quill.getSelection triggers update
       this.update(range);
     });
+    this.quill.on(Quill.events.STATE_CHANGE, (enabled) => {
+      if (enabled) {
+        this.container.classList.remove('ql-toolbar-disabled');
+      } else {
+        this.container.classList.add('ql-toolbar-disabled');
+      }
+    });
   }
 
   addHandler(format, handler) {

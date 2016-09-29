@@ -115,7 +115,8 @@ class Quill {
   }
 
   enable(enabled = true) {
-    this.editor.enable(enabled);
+    const args = [enabled, Emitter.sources.API];
+    this.emitter.emit(Emitter.events.STATE_CHANGE, ...args);
     if (!enabled) {
       this.blur();
     }
