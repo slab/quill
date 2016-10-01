@@ -2,12 +2,12 @@
 
 ### deleteText
 
-Deletes text from the editor. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Deletes text from the editor, returing a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
 ```javascript
-deleteText(index: Number, length: Number, source: String = 'api')
+deleteText(index: Number, length: Number, source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -89,12 +89,12 @@ var text = quill.getText(0, 10);
 
 ### insertEmbed
 
-Insert embedded content into the editor. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Insert embedded content into the editor, returing a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
 ```javascript
-insertEmbed(index: Number, type: String, value: any, source: String = 'api')
+insertEmbed(index: Number, type: String, value: any, source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -105,16 +105,16 @@ quill.insertEmbed(10, 'image', 'http://quilljs.com/images/cloud.png');
 
 ### insertText
 
-Inserts text into the editor, optionally with a specified format or multiple [formats](/docs/formats/). [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Inserts text into the editor, optionally with a specified format or multiple [formats](/docs/formats/). Returns a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
 ```javascript
-insertText(index: Number, text: String, source: String = 'api')
+insertText(index: Number, text: String, source: String = 'api'): Delta
 insertText(index: Number, text: String, format: String, value: any,
-           source: String = 'api')
+           source: String = 'api'): Delta
 insertText(index: Number, text: String, formats: { [String]: any },
-           source: String = 'api')
+           source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -136,12 +136,12 @@ This API has been moved into [Clipboard](/docs/modules/clipboard/#dangerouslypas
 
 ### setContents
 
-Overwrites editor with given contents. Contents should end with a newline (see [Working with Deltas](/guides/working-with-deltas/)). [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Overwrites editor with given contents. Contents should end with a newline (see [Working with Deltas](/guides/working-with-deltas/)). Returns a Delta representing the change. This will be the same as the Delta passed in, if given Delta had no invalid operations. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
 ```javascript
-setContents(delta: Delta, source: String = 'api')
+setContents(delta: Delta, source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -156,12 +156,12 @@ quill.setContents([
 
 ### setText
 
-Sets contents of editor with given text. Note Quill documents must end with a newline so one will be added for you if omitted.  [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Sets contents of editor with given text, returing a [Delta](/guides/working-with-deltas/) representing the change. Note Quill documents must end with a newline so one will be added for you if omitted.  [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
 ```javascript
-setText(text: String, source: String = 'api')
+setText(text: String, source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -188,12 +188,12 @@ quill.update();
 
 ### updateContents
 
-Applies Delta to editor contents. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Applies Delta to editor contents, returing a [Delta](/guides/working-with-deltas/) representing the change. These Deltas will be the same if the Delta passed in had no invalid operations. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 
 ```javascript
-updateContents(delta: Delta, source: String = 'api')
+updateContents(delta: Delta, source: String = 'api'): Delta
 ```
 
 **Examples**
