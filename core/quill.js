@@ -116,6 +116,7 @@ class Quill {
 
   enable(enabled = true) {
     this.editor.enable(enabled);
+    this.container.classList.toggle('ql-disabled', !enabled);
     if (!enabled) {
       this.blur();
     }
