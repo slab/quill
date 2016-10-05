@@ -39,7 +39,7 @@ quill.enable(false);   // Disables user input
 
 ### getContents
 
-Retrieves contents of the editor, with formatting data, represented by a [Delta](/guides/working-with-deltas/) object.
+Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/delta/) object.
 
 **Methods**
 
@@ -136,7 +136,7 @@ This API has been moved into [Clipboard](/docs/modules/clipboard/#dangerouslypas
 
 ### setContents
 
-Overwrites editor with given contents. Contents should end with a newline (see [Working with Deltas](/guides/working-with-deltas/)). [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Overwrites editor with given contents. Contents should end with a [newline](/docs/delta/#line-formatting). [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
 
 **Methods**
 

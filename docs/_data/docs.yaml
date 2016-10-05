@@ -19,6 +19,8 @@
       url: /docs/api/#events
     - title: Extension
       url: /docs/api/#extension
+- title: Delta
+  url: /docs/delta/
 - title: Modules
   url: /docs/modules/
   children:

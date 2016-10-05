@@ -1,32 +1,34 @@
 ---
 layout: docs
-title: Working with Deltas
+title: Delta
+permalink: /docs/delta/
 redirect_from:
-  - /docs/deltas/
   - /docs/api/deltas/
-permalink: /guides/working-with-deltas/
+  - /guides/working-with-deltas/
 ---
 
 Deltas are a simple, yet expressive format that can be used to describe Quill's contents and changes. The format is essentially JSON, and is human readable, yet easily parsible by machines. Deltas can describe any Quill document, includes all text and formatting information, without the ambiguity and complexity of HTML.
 
-Deltas are implemented as a separate standalone library called [rich-text](https://github.com/ottypes/rich-text/), and can be used even outside of Quill. It is suitable for [Operational Tranform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications.
+Don't be confused by its name Delta&mdash;Deltas represents both documents and changes to documents. If you think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
+
+Deltas are implemented as a separate [standalone library](https://github.com/quilljs/delta/), allowing its use outside of Quill. It is suitable for [Operational Tranform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications.
 
 
-## Content
+## Document
 
-The Delta format is almost entirely self-explanatory&mdash;the example below describes the string "Gandalf the Grey" where "Gandalf" is bolded and "Grey" is colored #ccc.
+The Delta format is almost entirely self-explanatory&mdash;the example below describes the string "Gandalf the Grey" where "Gandalf" is bolded and "Grey" is colored #cccccc.
 
 ```javascript
 {
   ops: [
     { insert: 'Gandalf', attributes: { bold: true } },
     { insert: ' the ' },
-    { insert: 'Grey', attributes: { color: '#ccc' } }
+    { insert: 'Grey', attributes: { color: '#cccccc' } }
   ]
 }
 ```
 
-As its name would imply, describing content is actually a special case for Deltas. The above example is more specifically instructions to insert a bolded string "Gandalf", an unformatted string " the ", followed by the string "Grey" colored #ccc. When Deltas are used to describe content, it can be thought of as the content that would be created if the Delta was applied to an empty document.
+As its name would imply, describing content is actually a special case for Deltas. The above example is more specifically instructions to insert a bolded string "Gandalf", an unformatted string " the ", followed by the string "Grey" colored #cccccc. When Deltas are used to describe content, it can be thought of as the content that would be created if the Delta was applied to an empty document.
 
 Since Deltas are a data format, there is no inherent meaning to the values of `attribute` keypairs. For example, there is nothing in the Delta format that dictates color value must be in hex&mdash;this is a choice that Quill makes, and can be modified if desired with [Parchment](https://github.com/quilljs/parchment/).
 
@@ -99,7 +101,7 @@ Starting with the above "Gandalf the Grey" example:
 //   ops: [
 //     { insert: 'Gandalf', attributes: { bold: true } },
 //     { insert: ' the ' },
-//     { insert: 'Grey', attributes: { color: '#ccc' } }
+//     { insert: 'Grey', attributes: { color: '#cccccc' } }
 //   ]
 // }
 
