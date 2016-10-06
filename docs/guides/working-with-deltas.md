@@ -106,7 +106,7 @@ Starting with the above "Gandalf the Grey" example:
 {
   ops: [
     // Unbold and italicize "Gandalf"
-    { retain: 7, attriubtes: { bold: null, italic: true } },
+    { retain: 7, attributes: { bold: null, italic: true } },
 
     // Keep " the " as is
     { retain: 5 },
