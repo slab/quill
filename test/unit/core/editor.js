@@ -305,7 +305,7 @@ describe('Editor', function() {
     it('insert at format boundary', function() {
       let editor = this.initialize(Editor, '<p><em>0</em><u>1</u></p>');
       editor.applyDelta(new Delta().retain(1).insert('|', { strike: true }));
-      expect(this.container).toEqualHTML('<p><em>0</em><s>|</s><u>1</u></p>');
+      expect(this.container).toEqualHTML('<p><em>0</em><del>|</del><u>1</u></p>');
     });
 
     it('unformatted newline', function() {
