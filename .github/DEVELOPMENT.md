@@ -15,7 +15,7 @@ The local development environment requires both Node.js and Ruby, along with the
 
 You can now try out the unit test suite by running:
 
-    npm test:unit
+    npm run test:unit
 
 Karma also provides a local server so you can just visit a url from any browser to run the test suite, instead of launching one from the command line. Webpack also provides a server to dynamically build and serve the latest copy of the source code. Jekyll does the same for the documentation site.
 
@@ -30,7 +30,7 @@ All four services can be run with a single command thanks to [foreman](http://dd
 
 While Quill features an extensive javascript test suite, which you can run with:
 
-    npm test:unit
+    npm run test:unit
 
 However some functionality can only be tested with webdriver. To set up or update webdriver run:
 
@@ -38,7 +38,7 @@ However some functionality can only be tested with webdriver. To set up or updat
 
 Once webdriver is installed, you can run the test suite with
 
-    npm test:functional
+    npm run test:functional
 
 
 ### Workflow
