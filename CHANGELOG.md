@@ -1,4 +1,4 @@
-# 1.0.5
+# 1.0.6
 
 Documentation clarifications and bug fixes.
 
@@ -8,6 +8,11 @@ Documentation clarifications and bug fixes.
 - Fix bug where `formatLine` did not ignore inline formats [8a7190](https://github.com/quilljs/parchment/commit/8a71905b2dd02d003edb02a15fdc727b26914e49)
 
 Thanks to [@dropfen](https://github.com/dropfen), [@evansolomon](https://github.com/evansolomon), [@hallaathrad](https://github.com/hallaathrad), [@janyksteenbeek](https://github.com/janyksteenbeek), [@jackmu95](https://github.com/jackmu95), [@marktron](https://github.com/marktron), [@mcat-ee](https://github.com/mcat-ee), [@unhammer](https://github.com/unhammer), and [@zeke](https://github.com/zeke) for contributions to this release!
+
+
+# 1.0.5
+
+Became 1.0.6 with a build/deploy fix.
 
 
 # 1.0.4
