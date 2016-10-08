@@ -377,12 +377,14 @@ function modify(source, index, shift, modifier) {
   }
   let range = this.getSelection();
   change = modifier();
-  if (shift === null) {
-    range = shiftRange(range, index, change, source);
-  } else if (shift !== 0) {
-    range = shiftRange(range, index, shift, source);
+  if (range != null) {
+    if (shift === null) {
+      range = shiftRange(range, index, change, source);
+    } else if (shift !== 0) {
+      range = shiftRange(range, index, shift, source);
+    }
+    this.setSelection(range, Emitter.sources.SILENT);
   }
-  this.setSelection(range, Emitter.sources.SILENT);
   return change;
 }
 
