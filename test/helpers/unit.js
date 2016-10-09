@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from '../../core/editor';
 import Emitter from '../../core/emitter';
 import Selection from '../../core/selection';

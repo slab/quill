@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 import CodeBlock from '../../../formats/code';
 

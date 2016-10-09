@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';

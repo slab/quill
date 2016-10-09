@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Quill from '../../../core';
 import { getLastChangeIndex } from '../../../modules/history';
 

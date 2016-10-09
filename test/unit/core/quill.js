@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Quill, { expandConfig, overload } from '../../../core/quill';
 import Theme from '../../../core/theme';
 import Emitter from '../../../core/emitter';
