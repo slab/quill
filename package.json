@@ -59,7 +59,7 @@
     "style-loader": "~0.13.1",
     "stylus": "~0.54.5",
     "stylus-loader": "^2.3.1",
-    "ts-loader": "~0.8.2",
+    "ts-loader": "~0.9.0",
     "typescript": "^2.0.3",
     "wdio-jasmine-framework": "~0.2.6",
     "webdriver-manager": "^10.2.3",
