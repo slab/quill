@@ -85,7 +85,7 @@ class Keyboard extends Module {
       });
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
-      if (range == null) return;    // implies we do not have focus
+      if (range == null || !this.quill.hasFocus()) return;
       let [line, offset] = this.quill.scroll.line(range.index);
       let [leafStart, offsetStart] = this.quill.scroll.leaf(range.index);
       let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.quill.scroll.leaf(range.index + range.length);
