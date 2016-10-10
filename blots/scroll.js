@@ -80,6 +80,9 @@ class Scroll extends Parchment.Scroll {
   }
 
   line(index) {
+    if (index === this.length()) {
+      return this.line(index - 1);
+    }
     return this.descendant(isLine, index);
   }
 
