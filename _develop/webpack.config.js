@@ -32,17 +32,14 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'parchment': path.resolve(__dirname, '../node_modules/parchment')
+      'parchment': path.resolve(__dirname, '../node_modules/parchment/src/parchment')
     },
     extensions: ['', '.js', '.styl', '.ts']
   },
   module: {
     loaders: [{
       loader: 'ts',
-      test: /\.ts$/,
-      include: [
-        path.resolve(__dirname, '../node_modules/parchment')
-      ]
+      test: /\.ts$/
     }, {
       loader: ExtractTextPlugin.extract('style', 'css!stylus'),
       test: /\.styl$/,
