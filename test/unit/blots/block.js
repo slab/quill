@@ -75,4 +75,11 @@ describe('Block', function() {
     scroll.formatAt(5, 1, 'header', 2);
     expect(scroll.domNode).toEqualHTML('<h2>Hello</h2>');
   });
+
+  it('remove unnecessary break', function() {
+    let scroll = this.initialize(Scroll, '<p>Test</p>');
+    scroll.children.head.domNode.appendChild(document.createElement('br'));
+    scroll.update();
+    expect(scroll.domNode).toEqualHTML('<p>Test</p>');
+  });
 });
