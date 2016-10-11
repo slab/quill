@@ -37,7 +37,7 @@
     "eventemitter3": "~2.0.1",
     "extend": "~3.0.0",
     "parchment": "1.0.1",
-    "quill-delta": "3.1.0"
+    "quill-delta": "github:quilljs/delta"
   },
   "devDependencies": {
     "babel-core": "^6.16.0",
