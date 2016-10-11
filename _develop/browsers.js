@@ -1,17 +1,17 @@
 var desktop = {
   'mac-chrome-latest'       : ['Mac 10.11', 'chrome', '53.0'],
-  'mac-firefox-latest'      : ['Mac 10.11', 'firefox', '49.0'],
+  'mac-firefox-latest'      : ['Mac 10.11', 'firefox', '48.0'],
   'mac-safari-latest'       : ['Mac 10.11', 'safari', '9.0'],
   'mac-chrome-previous'     : ['Mac 10.10', 'chrome', '52.0'],
-  'mac-firefox-previous'    : ['Mac 10.10', 'firefox', '48.0'],
+  'mac-firefox-previous'    : ['Mac 10.10', 'firefox', '47.0'],
   'mac-safari-previous'     : ['Mac 10.10', 'safari', '8.0'],
 
   'windows-chrome-latest'   : ['Windows 10', 'chrome', '53.0'],
-  'windows-firefox-latest'  : ['Windows 10', 'firefox', '49.0'],
+  'windows-firefox-latest'  : ['Windows 10', 'firefox', '48.0'],
   'windows-edge-latest'     : ['Windows 10', 'microsoftedge', '13.10586'],
   'windows-ie-latest'       : ['Windows 8.1', 'internet explorer', '11.0'],
   'windows-chrome-previous' : ['Windows 8.1', 'chrome', '52.0'],
-  'windows-firefox-previous': ['Windows 8.1', 'firefox', '48.0'],
+  'windows-firefox-previous': ['Windows 8.1', 'firefox', '47.0'],
 
   'linux-chrome-latest'     : ['Linux', 'chrome', '48.0'],
   'linux-firefox-latest'    : ['Linux', 'firefox', '45.0'],
