@@ -67,23 +67,23 @@ class Quill {
     });
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
-      if (type === Emitter.events.TEXT_CHANGE) {
-        this.root.classList.toggle('ql-blank', this.editor.isBlank());
-      }
-    });
     this.theme = new options.theme(this, options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
     this.theme.init();
+    if (options.placeholder) {
+      this.root.dataset.placeholder = options.placeholder;
+    }
+    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
+      if (type === Emitter.events.TEXT_CHANGE) {
+        this.root.classList.toggle('ql-blank', this.editor.isBlank());
+      }
+    });
     this.pasteHTML(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
     this.history.clear();
     if (options.readOnly) {
       this.disable();
-    }
-    if (options.placeholder) {
-      this.root.dataset.placeholder = options.placeholder;
     }
   }
 
