@@ -130,7 +130,7 @@ class Clipboard extends Module {
   }
 
   onPaste(e) {
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || !this.quill.isEnabled()) return;
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index).delete(range.length);
     let bodyTop = document.body.scrollTop;
