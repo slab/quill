@@ -48,13 +48,13 @@ class Quill {
   }
 
   constructor(container, options = {}) {
-    options = expandConfig(container, options);
-    this.container = options.container;
+    this.options = expandConfig(container, options);
+    this.container = this.options.container;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
-    if (options.debug) {
-      Quill.debug(options.debug);
+    if (this.options.debug) {
+      Quill.debug(this.options.debug);
     }
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
@@ -63,11 +63,11 @@ class Quill {
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
-      whitelist: options.formats
+      whitelist: this.options.formats
     });
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.theme = new options.theme(this, options);
+    this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
@@ -75,11 +75,11 @@ class Quill {
     let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
     this.setContents(contents);
     this.history.clear();
-    if (options.readOnly) {
+    if (this.options.readOnly) {
       this.disable();
     }
-    if (options.placeholder) {
-      this.root.setAttribute('data-placeholder', options.placeholder);
+    if (this.options.placeholder) {
+      this.root.setAttribute('data-placeholder', this.options.placeholder);
     }
     this.root.classList.toggle('ql-blank', this.editor.isBlank());
     this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
@@ -126,7 +126,7 @@ class Quill {
   }
 
   format(name, value, source = Emitter.sources.API) {
-    if (!this.isEnabled() && source === Emitter.sources.USER) {
+    if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
       return new Delta();
     }
     let range = this.getSelection(true);
@@ -246,7 +246,7 @@ class Quill {
   }
 
   setContents(delta, source = Emitter.sources.API) {
-    if (!this.isEnabled() && source === Emitter.sources.USER) {
+    if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
       return new Delta();
     }
     delta = new Delta(delta).slice();
@@ -281,7 +281,7 @@ class Quill {
   }
 
   updateContents(delta, source = Emitter.sources.API) {
-    if (!this.isEnabled() && source === Emitter.sources.USER) {
+    if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
       return new Delta();
     }
     let range = this.getSelection();
@@ -302,6 +302,7 @@ Quill.DEFAULTS = {
   modules: {},
   placeholder: '',
   readOnly: false,
+  strict: true,
   theme: 'default'
 };
 Quill.events = Emitter.events;
@@ -376,7 +377,7 @@ function expandConfig(container, userConfig) {
 
 function modify(source, index, shift, modifier) {
   let change = new Delta();
-  if (!this.isEnabled() && source === Emitter.sources.USER) {
+  if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
     return new Delta();
   }
   let range = this.getSelection();
