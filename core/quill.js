@@ -61,17 +61,17 @@ class Quill {
     this.container.innerHTML = '';
     this.root = this.addContainer('ql-editor');
     this.emitter = new Emitter();
-    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
-      if (type === Emitter.events.TEXT_CHANGE) {
-        this.root.classList.toggle('ql-blank', this.editor.isBlank());
-      }
-    });
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
       whitelist: options.formats
     });
     this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
+    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
+      if (type === Emitter.events.TEXT_CHANGE) {
+        this.root.classList.toggle('ql-blank', this.editor.isBlank());
+      }
+    });
     this.theme = new options.theme(this, options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
