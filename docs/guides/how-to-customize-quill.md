@@ -37,7 +37,7 @@ Quill is designed with a modular architecture composed of a small editing core, 
 
 Like Quill's core itself, many [modules](/docs/modules/) expose additional configuration options and APIs. Before deciding to replace a module, take a look at its documentation. Often your desired customization is already implemented as a configuration or API call.
 
-Otherwies, if you would like to drastically change functionality an existing module already covers, you can simply not include it&mdash;or explicitly exclude it when a theme includes it by default&mdash;and implement the functionality to your liking external to Quill, using the same [API](/docs/api/) the default module uses.
+Otherwise, if you would like to drastically change functionality an existing module already covers, you can simply not include it&mdash;or explicitly exclude it when a theme includes it by default&mdash;and implement the functionality to your liking external to Quill, using the same [API](/docs/api/) the default module uses.
 
 ```js
 var quill = new Quill('#editor', {

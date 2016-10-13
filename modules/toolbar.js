@@ -1,5 +1,5 @@
 import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -29,9 +29,6 @@ class Toolbar extends Module {
     this.handlers = {};
     Object.keys(this.options.handlers).forEach((format) => {
       this.addHandler(format, this.options.handlers[format]);
-    });
-    this.container.addEventListener('mousedown', function(e) {
-      e.preventDefault();   // Prevent blur
     });
     [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
       this.attach(input);

@@ -9,7 +9,9 @@ The Keyboard module enables custom behavior for keyboard events in particular co
 
 ### Key Bindings
 
-Keyboard handlers are bound to a particular key and key modifiers: `metaKey`, `ctrlKey`, `shiftKey` and `altKey`. In addition, `shortKey` is a platform specific modifier equivalent to `metaKey` on a Mac and `ctrlKey` on Linux and Windows.
+Keyboard handlers are bound to a particular key and key modifiers. The `key` is the JavaScript event key code, but string shorthands are allowed for alphanumeric keys and some common keys.
+
+Key modifiers include: `metaKey`, `ctrlKey`, `shiftKey` and `altKey`. In addition, `shortKey` is a platform specific modifier equivalent to `metaKey` on a Mac and `ctrlKey` on Linux and Windows.
 
 Handlers will called with `this` bound to the keyboard instance and be passed the current selection range.
 
@@ -163,7 +165,7 @@ Adding a binding with `quill.keyboard.addBinding` will not run before Quill's be
 var bindings = {
   // This will overwrite the default binding also named 'tab'
   tab: {
-    key: 'tab',
+    key: 9,
     handler: function() {
       // Handle tab
     }

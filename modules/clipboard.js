@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -120,13 +120,23 @@ class Clipboard extends Module {
     return delta;
   }
 
+  dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
+    if (typeof index === 'string') {
+      return this.quill.setContents(this.convert(index), html);
+    } else {
+      let paste = this.convert(html);
+      return this.quill.updateContents(new Delta().retain(index).concat(paste), source);
+    }
+  }
+
   onPaste(e) {
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || !this.quill.isEnabled()) return;
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index).delete(range.length);
     let bodyTop = document.body.scrollTop;
     this.container.focus();
     setTimeout(() => {
+      this.quill.selection.update(Quill.sources.SILENT);
       delta = delta.concat(this.convert());
       this.quill.updateContents(delta, Quill.sources.USER);
       // range.length contributes to delta.length()

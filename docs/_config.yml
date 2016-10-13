@@ -9,9 +9,10 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
-version: 1.0.3
+version: 1.0.6
 cdn: //cdn.quilljs.com/
 github: https://github.com/quilljs/quill/tree/develop/docs
 quill: quill.min.js
 highlightjs: //cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0
 katex: //cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0
+url: https://quilljs.com

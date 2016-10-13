@@ -45,7 +45,7 @@ Registers a module, theme, or format(s), making them available to be added to an
 
 ```javascript
 Quill.register(path: String, def: any, supressWarning: Boolean = false)
-Quill.register(defs: { [String]: any }, : supressWarning: Boolean = false)
+Quill.register(defs: { [String]: any }, supressWarning: Boolean = false)
 ```
 
 **Examples**

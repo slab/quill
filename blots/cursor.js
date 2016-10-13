@@ -1,5 +1,6 @@
 import Parchment from 'parchment';
 import Embed from './embed';
+import TextBlot from './text';
 import Emitter from '../core/emitter';
 
 
@@ -61,25 +62,35 @@ class Cursor extends Embed {
     if (this.parent == null) return;
     let textNode = this.textNode;
     let range = this.selection.getNativeRange();
+    let restoreText, start, end;
+    if (range != null && range.start.node === textNode && range.end.node === textNode) {
+      [restoreText, start, end] = [textNode, range.start.offset, range.end.offset];
+    }
     // Link format will insert text outside of anchor tag
     while (this.domNode.lastChild != null && this.domNode.lastChild !== this.textNode) {
       this.domNode.parentNode.insertBefore(this.domNode.lastChild, this.domNode);
     }
     if (this.textNode.data !== Cursor.CONTENTS) {
-      this.textNode.data = this.textNode.data.split(Cursor.CONTENTS).join('');
-      this.parent.insertBefore(Parchment.create(this.textNode), this);
-      this.textNode = document.createTextNode(Cursor.CONTENTS);
-      this.domNode.appendChild(this.textNode);
+      let text = this.textNode.data.split(Cursor.CONTENTS).join('');
+      if (this.next instanceof TextBlot) {
+        restoreText = this.next.domNode;
+        this.next.insertAt(0, text);
+        this.textNode.data = Cursor.CONTENTS;
+      } else {
+        this.textNode.data = text;
+        this.parent.insertBefore(Parchment.create(this.textNode), this);
+        this.textNode = document.createTextNode(Cursor.CONTENTS);
+        this.domNode.appendChild(this.textNode);
+      }
     }
     this.remove();
-    if (range != null && range.start.node === textNode && range.end.node === textNode) {
-      this.selection.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
-        let [start, end] = [range.start.offset, range.end.offset].map(function(offset) {
-          return Math.max(0, Math.min(textNode.data.length, offset - 1));
-        });
-        this.selection.setNativeRange(textNode, start, textNode, end);
+    if (start == null) return;
+    this.selection.emitter.once(Emitter.events.SCROLL_OPTIMIZE, () => {
+      [start, end] = [start, end].map(function(offset) {
+        return Math.max(0, Math.min(restoreText.data.length, offset - 1));
       });
-    }
+      this.selection.setNativeRange(restoreText, start, restoreText, end);
+    });
   }
 
   update(mutations) {

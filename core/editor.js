@@ -1,5 +1,5 @@
-import Delta from 'rich-text/lib/delta';
-import DeltaOp from 'rich-text/lib/op';
+import Delta from 'quill-delta';
+import DeltaOp from 'quill-delta/lib/op';
 import Emitter from './emitter';
 import Parchment from 'parchment';
 import CodeBlock from '../formats/code';

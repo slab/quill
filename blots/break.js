@@ -9,6 +9,8 @@ class Break extends Embed {
   insertInto(parent, ref) {
     if (parent.children.length === 0) {
       super.insertInto(parent, ref);
+    } else {
+      this.remove();
     }
   }
 

@@ -1,8 +1,8 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
-import DeltaOp from 'rich-text/lib/op';
+import Delta from 'quill-delta';
+import DeltaOp from 'quill-delta/lib/op';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -85,7 +85,7 @@ class Keyboard extends Module {
       });
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
-      if (range == null) return;    // implies we do not have focus
+      if (range == null || !this.quill.hasFocus()) return;
       let [line, offset] = this.quill.scroll.line(range.index);
       let [leafStart, offsetStart] = this.quill.scroll.leaf(range.index);
       let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.quill.scroll.leaf(range.index + range.length);

@@ -2,12 +2,12 @@
 
 ### format
 
-Format text at user's current selection. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Format text at user's current selection, returing a [Delta](/guides/working-with-deltas/) representing the change. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
 ```javascript
-format(name: String, value: any, source: String = 'api')
+format(name: String, value: any, source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -19,16 +19,16 @@ quill.format('align', 'right');
 
 ### formatLine
 
-Formats all lines in given range. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Formats all lines in given range, returing a [Delta](/guides/working-with-deltas/) representing the change. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
 ```javascript
-formatLine(index: Number, length: Number, source: String = 'api')
+formatLine(index: Number, length: Number, source: String = 'api'): Delta
 formatLine(index: Number, length: Number, format: String, value: any,
-           source: String = 'api')
+           source: String = 'api'): Delta
 formatLine(index: Number, length: Number, formats: { [String]: any },
-           source: String = 'api')
+           source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -42,16 +42,16 @@ quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 
 ### formatText
 
-Formats text in the editor. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Formats text in the editor, returing a [Delta](/guides/working-with-deltas/) representing the change. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
 ```javascript
-formatText(index: Number, length: Number, source: String = 'api')
+formatText(index: Number, length: Number, source: String = 'api'): Delta
 formatText(index: Number, length: Number, format: String, value: any,
-           source: String = 'api')
+           source: String = 'api'): Delta
 formatText(index: Number, length: Number, formats: { [String]: any },
-           source: String = 'api')
+           source: String = 'api'): Delta
 ```
 
 **Examples**
@@ -106,12 +106,12 @@ quill.getFormat();       // { italic: true, color: 'blue', strike: true,
 
 ### removeFormat
 
-Removes all formatting and embeds within given range. Line formatting will be removed if any part of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+Removes all formatting and embeds within given range, returing a [Delta](/guides/working-with-deltas/) representing the change. Line formatting will be removed if any part of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
 ```javascript
-removeFormat(index: Number, length: Number, source: String = 'api')
+removeFormat(index: Number, length: Number, source: String = 'api'): Delta
 ```
 
 **Examples**
