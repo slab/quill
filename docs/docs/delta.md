@@ -11,7 +11,7 @@ Deltas are a simple, yet expressive format that can be used to describe Quill's 
 
 Don't be confused by its name Delta&mdash;Deltas represents both documents and changes to documents. If you think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
 
-Deltas are implemented as a separate [standalone library](https://github.com/ottypes/rich-text/), allowing its use outside of Quill. It is suitable for [Operational Tranform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications.
+Deltas are implemented as a separate [standalone library](https://github.com/quilljs/delta/), allowing its use outside of Quill. It is suitable for [Operational Tranform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications.
 
 
 ## Document
