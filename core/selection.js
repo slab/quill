@@ -1,7 +1,6 @@
 import Parchment from 'parchment';
 import clone from 'clone';
 import equal from 'deep-equal';
-import BreakBlot from '../blots/break';
 import Emitter from './emitter';
 import logger from './logger';
 
@@ -104,6 +103,7 @@ class Selection {
       bounds = range.getBoundingClientRect();
     } else {
       let side = 'left';
+      let rect;
       if (node instanceof Text) {
         if (offset < node.data.length) {
           range.setStart(node, offset);
@@ -113,9 +113,9 @@ class Selection {
           range.setEnd(node, offset);
           side = 'right';
         }
-        var rect = range.getBoundingClientRect();
+        rect = range.getBoundingClientRect();
       } else {
-        var rect = leaf.domNode.getBoundingClientRect();
+        rect = leaf.domNode.getBoundingClientRect();
         if (offset > 0) side = 'right';
       }
       bounds = {

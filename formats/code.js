@@ -17,7 +17,7 @@ class CodeBlock extends Block {
     return domNode;
   }
 
-  static formats(domNode) {
+  static formats() {
     return true;
   }
 

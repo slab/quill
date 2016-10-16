@@ -1,4 +1,3 @@
-import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 
 

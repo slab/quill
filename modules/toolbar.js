@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
@@ -202,7 +201,7 @@ function addSelect(container, format, values) {
 Toolbar.DEFAULTS = {
   container: null,
   handlers: {
-    clean: function(value) {
+    clean: function() {
       let range = this.quill.getSelection();
       if (range == null) return;
       if (range.length == 0) {

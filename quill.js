@@ -1,6 +1,6 @@
 import Quill from './core';
 
-import { AlignAttribute, AlignClass, AlignStyle } from './formats/align';
+import { AlignClass, AlignStyle } from './formats/align';
 import { DirectionAttribute, DirectionClass, DirectionStyle } from './formats/direction';
 import { IndentClass as Indent } from './formats/indent';
 

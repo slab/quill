@@ -117,10 +117,10 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
   modules: {
     toolbar: {
       handlers: {
-        formula: function(value) {
+        formula: function() {
           this.quill.theme.tooltip.edit('formula');
         },
-        image: function(value) {
+        image: function() {
           let fileInput = this.container.querySelector('input.ql-image[type=file]');
           if (fileInput == null) {
             fileInput = document.createElement('input');
@@ -146,7 +146,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           }
           fileInput.click();
         },
-        video: function(value) {
+        video: function() {
           this.quill.theme.tooltip.edit('video');
         }
       }
@@ -201,7 +201,7 @@ class BaseTooltip extends Tooltip {
   save() {
     let value = this.textbox.value;
     switch(this.root.getAttribute('data-mode')) {
-      case 'link':
+      case 'link': {
         let scrollTop = this.quill.root.scrollTop;
         if (this.linkRange) {
           this.quill.formatText(this.linkRange, 'link', value, Emitter.sources.USER);
@@ -212,16 +212,17 @@ class BaseTooltip extends Tooltip {
         }
         this.quill.root.scrollTop = scrollTop;
         break;
-      case 'video':
+      }
+      case 'video': {
         let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
                     value.match(/^(https?):\/\/(www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
         if (match) {
           value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
-        } else if (match = value.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {
+        } else if (match = value.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {  // eslint-disable-line no-cond-assign
           value = match[1] + '://player.vimeo.com/video/' + match[3] + '/';
         }
-        // fallthrough
-      case 'formula':
+      } // eslint-disable-next-line no-fallthrough
+      case 'formula': {
         let range = this.quill.getSelection(true);
         let index = range.index + range.length;
         if (range != null) {
@@ -232,6 +233,7 @@ class BaseTooltip extends Tooltip {
           this.quill.setSelection(index + 2, Emitter.sources.USER);
         }
         break;
+      }
       default:
     }
     this.textbox.value = '';

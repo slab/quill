@@ -2,7 +2,7 @@ import Embed from './embed';
 
 
 class Break extends Embed {
-  static value(domNode) {
+  static value() {
     return undefined;
   }
 

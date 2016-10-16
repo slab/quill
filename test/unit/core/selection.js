@@ -1,7 +1,5 @@
-import Delta from 'quill-delta';
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
-import Scroll from '../../../blots/scroll';
 
 
 describe('Selection', function() {

@@ -227,7 +227,7 @@ function matchBreak(node, delta) {
   return delta;
 }
 
-function matchIgnore(node, delta) {
+function matchIgnore() {
   return new Delta();
 }
 
@@ -270,10 +270,11 @@ function matchText(node, delta) {
     return delta.insert(text.trim());
   }
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
-    function replacer(collapse, match) {
+    // eslint-disable-next-line func-style
+    let replacer = function(collapse, match) {
       match = match.replace(/[^\u00a0]/g, '');    // \u00a0 is nbsp;
       return match.length < 1 && collapse ? ' ' : match;
-    }
+    };
     text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
     text = text.replace(/\s\s+/g, replacer.bind(replacer, true));  // collapse whitespace
     if ((node.previousSibling == null && isLine(node.parentNode)) ||

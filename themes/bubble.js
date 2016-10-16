@@ -1,8 +1,6 @@
 import extend from 'extend';
 import Emitter from '../core/emitter';
-import Keyboard from '../modules/keyboard';
 import BaseTheme, { BaseTooltip } from './base';
-import icons from '../ui/icons';
 import { Range } from '../core/selection';
 
 
@@ -73,7 +71,7 @@ class BubbleTooltip extends BaseTooltip {
 
   listen() {
     super.listen();
-    this.root.querySelector('.ql-close').addEventListener('click', (event) => {
+    this.root.querySelector('.ql-close').addEventListener('click', () => {
       this.root.classList.remove('ql-editing');
     });
     this.quill.on(Emitter.events.SCROLL_OPTIMIZE, () => {

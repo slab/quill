@@ -1,4 +1,3 @@
-import Delta from 'quill-delta';
 import Editor from '../../core/editor';
 import Emitter from '../../core/emitter';
 import Selection from '../../core/selection';
@@ -56,8 +55,8 @@ function compareHTML(actual, expected, ignoreClassId) {
   }
   let message = compareNodes(div1, div2, ignoredAttributes)
   if (message != null) {
-    console.error(div1.innerHTML);
-    console.error(div2.innerHTML);
+    console.error(div1.innerHTML);  // eslint-disable-line no-console
+    console.error(div2.innerHTML);  // eslint-disable-line no-console
     return { pass: false, message: message };
   } else {
     return { pass: true, message: 'HTMLs equal' };
@@ -65,7 +64,6 @@ function compareHTML(actual, expected, ignoreClassId) {
 }
 
 function compareNodes(node1, node2, ignoredAttributes = []) {
-  let attr1, attr2, message, ref;
   if (node1.nodeType !== node2.nodeType) {
     return `Expected nodeType '${node1.nodeType}' to equal '${node2.nodeType}'`;
   }

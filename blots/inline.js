@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Embed from './embed';
 import Text from './text';
 import Parchment from 'parchment';
@@ -32,8 +31,8 @@ class Inline extends Parchment.Inline {
 
   optimize() {
     super.optimize();
-    let ref = this.parent.parent;
-    if (this.parent instanceof Inline && Inline.compare(this.statics.blotName, this.parent.statics.blotName) > 0) {
+    if (this.parent instanceof Inline &&
+        Inline.compare(this.statics.blotName, this.parent.statics.blotName) > 0) {
       let parent = this.parent.isolate(this.offset(), this.length());
       this.moveChildren(parent);
       parent.wrap(this);

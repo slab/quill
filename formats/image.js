@@ -1,5 +1,5 @@
 import Embed from '../blots/embed';
-import Link, { sanitize } from '../formats/link';
+import { sanitize } from '../formats/link';
 
 const ATTRIBUTES = [
   'alt',

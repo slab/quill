@@ -309,6 +309,7 @@ Quill.DEFAULTS = {
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
+// eslint-disable-next-line no-undef
 Quill.version = typeof(QUILL_VERSION) === 'undefined' ? 'dev' : QUILL_VERSION;
 
 Quill.imports = {

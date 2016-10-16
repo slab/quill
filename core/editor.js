@@ -84,7 +84,7 @@ class Editor {
     Object.keys(formats).forEach((format) => {
       let lines = this.scroll.lines(index, Math.max(length, 1));
       let lengthRemaining = length;
-      lines.forEach((line, i) => {
+      lines.forEach((line) => {
         let lineLength = line.length();
         if (!(line instanceof CodeBlock)) {
           line.format(format, formats[format]);

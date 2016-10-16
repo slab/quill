@@ -70,11 +70,12 @@ describe('History', function() {
     it('limits undo stack size', function () {
       let quill = new Quill(this.container.firstChild, {
         modules: {
-          history: {delay: 0, maxStack: 2}
+          history: { delay: 0, maxStack: 2 }
         }
       });
-
-      ['A', 'B', 'C'].forEach(text => quill.insertText(0, text));
+      ['A', 'B', 'C'].forEach(function(text) {
+        quill.insertText(0, text)
+      });
       expect(quill.history.stack.undo.length).toEqual(2);
     });
 

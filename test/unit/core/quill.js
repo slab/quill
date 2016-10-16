@@ -410,7 +410,7 @@ describe('Quill', function() {
     });
 
     it('toolbar custom handler, default container', function() {
-      let handler = function(value) {};
+      let handler = function() {};  // eslint-disable-line func-style
       let config = expandConfig('#test-container', {
         modules: {
           toolbar: {

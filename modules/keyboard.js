@@ -1,13 +1,11 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
-import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
-import Block from '../blots/block';
 
 let debug = logger('quill:keyboard');
 
@@ -189,7 +187,7 @@ Keyboard.DEFAULTS = {
       shiftKey: true,
       collapsed: true,
       prefix: /\t$/,
-      handler: function(range, context) {
+      handler: function(range) {
         this.quill.deleteText(range.index - 1, 1, Quill.sources.USER);
       }
     },

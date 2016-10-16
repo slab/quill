@@ -5,7 +5,7 @@ import Emitter from '../core/emitter';
 
 
 class Cursor extends Embed {
-  static value(domNode) {
+  static value() {
     return undefined;
   }
 
@@ -48,7 +48,7 @@ class Cursor extends Embed {
     return this._length;
   }
 
-  position(index) {
+  position() {
     return [this.textNode, this.textNode.data.length];
   }
 
