@@ -13,6 +13,20 @@ var constantPack = new webpack.DefinePlugin({
   QUILL_VERSION: JSON.stringify(pkg.version)
 });
 
+var source = [
+  'quill.js',
+  'core.js',
+  'blots',
+  'core',
+  'formats',
+  'modules',
+  'test',
+  'themes',
+  'ui'
+].map(function(file) {
+  return path.resolve(__dirname, '..', file);
+});
+
 
 module.exports = {
   context: path.resolve(__dirname, '..'),
@@ -37,6 +51,11 @@ module.exports = {
     extensions: ['', '.js', '.styl', '.ts']
   },
   module: {
+    preLoaders: [{
+      loader: 'eslint',
+      test: /\.js$/,
+      include: source
+    }],
     loaders: [{
       loader: 'ts',
       test: /\.ts$/
@@ -58,17 +77,7 @@ module.exports = {
     }, {
       loader: 'babel',
       test: /\.js$/,
-      include: [
-        path.resolve(__dirname, '../quill.js'),
-        path.resolve(__dirname, '../core.js'),
-        path.resolve(__dirname, '../blots'),
-        path.resolve(__dirname, '../core'),
-        path.resolve(__dirname, '../formats'),
-        path.resolve(__dirname, '../modules'),
-        path.resolve(__dirname, '../test'),
-        path.resolve(__dirname, '../themes'),
-        path.resolve(__dirname, '../ui')
-      ],
+      include: source,
       query: {
         presets: ['es2015']
         // plugins: ['transform-es2015-modules-commonjs']
