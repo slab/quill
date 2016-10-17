@@ -8,6 +8,9 @@ Quill 1.0 introduces major changes aimed at greater ability to customize Quill. 
 
 To realize the full benefits of 1.0, it is encouraged to take a fresh view of Quill 1.0 and revisit even basic topics on this documentation site. Often, you will find that even though you could do things the old way, there is a better new way.
 
+### Configuration
+
+- `styles` *removed* - Previous versions of Quill allowed overrides for CSS to be provided in the configuration options. Instead you should use external CSS directly.
 
 ### API
 
@@ -92,6 +95,27 @@ var oldBullettedList = {
 
 ```
 
+### Formats
+
+Previous versions of Quill allowed customization of formats in dropdown selectors in the toolbar by using `value` attributes. That is, `<select class="ql-size"><option value="10px">10</option>[...]</select>` worked to provide custom size options. This is no longer supported. To restore this functionality, you can use the following:
+
+```js
+var Parchment = Quill.import('parchment');
+var FontStyle = new Parchment.Attributor.Style('size', 'font-size', { scope: Parchment.Scope.INLINE });
+Quill.register(FontStyle, true);
+var quill = new Quill(...);
+```
+
+To allow use of fonts other than "serif" and "monospace":
+
+```js
+var FontStyle = Quill.import('formats/font');
+FontStyle.whitelist = ["sans-serif", "serif", "monospace"]; // specify fonts here
+Quill.register(FontStyle, true);
+var quill = new Quill(...);
+```
+
+For further information, see [Content and Formatting](/guides/how-to-customize-quill/#content-and-formatting).
 
 ### Browsers
 
