@@ -38,6 +38,10 @@ class Keyboard extends Module {
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^$/ }, handleDelete);
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
+    if (/Trident/i.test(navigator.userAgent)) {
+      this.addBinding({ key: Keyboard.keys.BACKSPACE, shortKey: true }, handleBackspace);
+      this.addBinding({ key: Keyboard.keys.DELETE, shortKey: true }, handleDelete);
+    }
     this.listen();
   }
 
