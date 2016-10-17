@@ -1,3 +1,26 @@
+# 1.1.0
+
+### Additions
+
+Quill has always allowed API calls, even when the editor is in readOnly mode. All API calls also took a `source` parameter to indicate the origin of the change. For example, a click handler in the toolbar would call `formatText` with `source` set to `"user"`. When the editor is in readOnly mode, it would make sense for user initiated actions to be ignored. For example the user cannot focus or type into the editor. However because API calls are allowed, the user could still modify the editor contents [#909](https://github.com/quilljs/quill/issues/909). The natural fix is to ignore user initiated actions, even if it came through an API call, when the editor is in readOnly mode.
+
+However, the documentation never stated API calls with `source` set to `"user"` would be ignored sometimes, so this would be a breaking change under semver. Some could argue this is a bug fix and would only warrant a patch version bump, but this seems disingenuous for this particular case. The fact that almost no one took advantage of the `source` beyond default values is irrelevant under the eyes of semver.
+
+So a `strict` configuration option has been added. It is true by default so the above behavior is unchanged, and [#909](https://github.com/quilljs/quill/issues/909) is unfixed. Changing this to `false`, will use new behavior of ignoring user initiated changes on a disabled editor, even if through an API call.
+
+### Fixes
+
+- Fix undo when preformatted text inserted before plain text [#1019](https://github.com/quilljs/quill/issues/1019)
+- Add focus indicator on toolbar buttons [#1020](https://github.com/quilljs/quill/issues/1020)
+- Do not steal focus on API calls [#1029](https://github.com/quilljs/quill/issues/1029)
+- Disable paste when Quill is disabled [#1038](https://github.com/quilljs/quill/issues/1038)
+- Fix blank detection [#1043](https://github.com/quilljs/quill/issues/1043)
+- Enable yarn [#1041](https://github.com/quilljs/quill/issues/1041)
+- Documentation fixes [#1026](https://github.com/quilljs/quill/pull/1026), [#1027](https://github.com/quilljs/quill/pull/1027), [#1032](https://github.com/quilljs/quill/pull/1032)
+
+Thank you [@benbro](https://github.com/benbro), [@cutteroid](https://github.com/cutteroid), [@evansolomon](https://github.com/evansolomon), [@felipeochoa](https://github.com/felipeochoa), [jackmu95](https://github.com/jackmu95), [@joedynamite](https://github.com/joedynamite), [@lance13c](https://github.com/lance13c), [@leebenson](https://github.com/leebenson), [@maartenvanvliet](https://github.com/maartenvanvliet), [@sarbbottam](https://github.com/sarbbottam), [@viljark](https://github.com/viljark), [@w00fz](https://github.com/w00fz) for their contributions to this release.
+
+
 # 1.0.6
 
 Documentation clarifications and bug fixes.
