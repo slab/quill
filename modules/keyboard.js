@@ -34,27 +34,10 @@ class Keyboard extends Module {
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
     this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, ctrlKey: null, altKey: null }, function() {});
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, function(range, context) {
-      if (range.index === 0) return;
-      let [line, ] = this.quill.scroll.line(range.index);
-      let formats = {};
-      if (context.offset === 0) {
-        let curFormats = line.formats();
-        let prevFormats = this.quill.getFormat(range.index-1, 1);
-        formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
-      }
-      this.quill.deleteText(range.index-1, 1, Quill.sources.USER);
-      if (Object.keys(formats).length > 0) {
-        this.quill.formatLine(range.index-1, 1, formats, Quill.sources.USER);
-      }
-      this.quill.selection.scrollIntoView();
-    });
-    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^$/ }, function(range) {
-      if (range.index >= this.quill.getLength() - 1) return;
-      this.quill.deleteText(range.index, 1, Quill.sources.USER);
-    });
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDelete);
-    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDelete);
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
+    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^$/ }, handleDelete);
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
+    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
     this.listen();
   }
 
@@ -241,7 +224,28 @@ Keyboard.DEFAULTS = {
 };
 
 
+function handleBackspace(range, context) {
+  if (range.index === 0) return;
+  let [line, ] = this.quill.scroll.line(range.index);
+  let formats = {};
+  if (context.offset === 0) {
+    let curFormats = line.formats();
+    let prevFormats = this.quill.getFormat(range.index-1, 1);
+    formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+  }
+  this.quill.deleteText(range.index-1, 1, Quill.sources.USER);
+  if (Object.keys(formats).length > 0) {
+    this.quill.formatLine(range.index-1, 1, formats, Quill.sources.USER);
+  }
+  this.quill.selection.scrollIntoView();
+}
+
 function handleDelete(range) {
+  if (range.index >= this.quill.getLength() - 1) return;
+  this.quill.deleteText(range.index, 1, Quill.sources.USER);
+}
+
+function handleDeleteRange(range) {
   this.quill.deleteText(range, Quill.sources.USER);
   this.quill.setSelection(range.index, Quill.sources.SILENT);
   this.quill.selection.scrollIntoView();
