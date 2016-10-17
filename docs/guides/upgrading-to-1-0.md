@@ -10,7 +10,7 @@ To realize the full benefits of 1.0, it is encouraged to take a fresh view of Qu
 
 ### Configuration
 
-- `styles` *removed* - Previous versions of Quill allowed overrides for CSS to be provided in the configuration options. Instead you should use external CSS directly.
+- `styles` *removed* - Previous versions of Quill allowed custom CSS to be injected through `<style>` additions. This option has been removed due to [Content Security Policy](https://developers.google.com/web/fundamentals/security/csp/). Instead you should use external CSS directly.
 
 ### API
 
@@ -95,27 +95,9 @@ var oldBullettedList = {
 
 ```
 
-### Formats
+### Defaults
 
-Previous versions of Quill allowed customization of formats in dropdown selectors in the toolbar by using `value` attributes. That is, `<select class="ql-size"><option value="10px">10</option>[...]</select>` worked to provide custom size options. This is no longer supported. To restore this functionality, you can use the following:
-
-```js
-var Parchment = Quill.import('parchment');
-var FontStyle = new Parchment.Attributor.Style('size', 'font-size', { scope: Parchment.Scope.INLINE });
-Quill.register(FontStyle, true);
-var quill = new Quill(...);
-```
-
-To allow use of fonts other than "serif" and "monospace":
-
-```js
-var FontStyle = Quill.import('formats/font');
-FontStyle.whitelist = ["sans-serif", "serif", "monospace"]; // specify fonts here
-Quill.register(FontStyle, true);
-var quill = new Quill(...);
-```
-
-For further information, see [Content and Formatting](/guides/how-to-customize-quill/#content-and-formatting).
+- Quill previously used inline styles to implement font family and size. A class implementation is now default. To revert this, see [Content and Formatting](/guides/how-to-customize-quill/#content-and-formatting).
 
 ### Browsers
 
