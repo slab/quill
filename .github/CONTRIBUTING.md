@@ -11,7 +11,7 @@ The best way to contribute is to help others in the Quill community. This includ
 After becoming familiar with Quill and the codebase, likely through using Quill yourself and making some of the above contributions, you may choose to take on a bigger commitment by:
 
 - Helping fix [bugs](https://github.com/quilljs/quill/labels/bug)
-- Implementing new [features](https://github.com/quilljs/quill/labels/feature). The [easy](https://github.com/quilljs/quill/labels/easy) label is great for getting started with Quill or contributing to open source.
+- Implementing new [features](https://github.com/quilljs/quill/labels/feature)
 - Publishing guides, tutorials, and examples
 - Supporting Quill in other ecosystems (Angular, React, etc)
 
