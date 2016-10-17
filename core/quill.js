@@ -79,7 +79,6 @@ class Quill {
         this.root.classList.toggle('ql-blank', this.editor.isBlank());
       }
     });
-    this.pasteHTML(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
     this.history.clear();
     if (this.options.readOnly) {
       this.disable();
