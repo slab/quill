@@ -52,7 +52,6 @@ Default: `document.body`
 
 DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
 
-
 #### debug
 
 Default: `false`
@@ -80,6 +79,12 @@ Placeholder text to show when editor is empty.
 Default: `false`
 
 Whether to instantiate the editor to read-only mode.
+
+#### strict
+
+Default: `true`
+
+Some improvements and modifications, under a strict interpretation of semver, would warrant a major version bump. To prevent small changes from inflating Quill's version number, they are disabled by this `strict` flag. Specific changes can be found in the [Changelog](https://github.com/quilljs/quill/blob/master/CHANGELOG.md) and searching for "strict".
 
 #### theme
 
