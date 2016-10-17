@@ -84,7 +84,7 @@ Whether to instantiate the editor to read-only mode.
 
 Default: `true`
 
-Some improvements and modifications, under a strict interpretation of semver, would warrant a major version bump. To prevent small changes from inflating Quill's version number, they are disabled by this `strict` flag. Specific changes can be found in the [Changelog](https://github.com/quilljs/quill/blob/master/CHANGELOG.md) and searching for "strict".
+Some improvements and modifications, under a strict interpretation of semver, would warrant a major version bump. To prevent small changes from inflating Quill's version number, they are disabled by this `strict` flag. Specific changes can be found in the [Changelog](https://github.com/quilljs/quill/blob/master/CHANGELOG.md) and searching for "strict". Setting this to `false` opts into potential future improvements.
 
 #### theme
 
