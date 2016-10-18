@@ -102,7 +102,7 @@ function endsWithNewlineChange(delta) {
 }
 
 function getLastChangeIndex(delta) {
-  let deleteLength = delta.ops.reduce(function(length, op) {
+  let deleteLength = delta.reduce(function(length, op) {
     length += (op.delete || 0);
     return length;
   }, 0);

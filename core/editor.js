@@ -25,7 +25,7 @@ class Editor {
     let scrollLength = this.scroll.length();
     this.scroll.batch = true;
     delta = normalizeDelta(delta);
-    delta.ops.reduce((index, op) => {
+    delta.reduce((index, op) => {
       let length = op.retain || op.delete || op.insert.length || 1;
       let attributes = op.attributes || {};
       if (op.insert != null) {
@@ -58,7 +58,7 @@ class Editor {
       });
       return index + length;
     }, 0);
-    delta.ops.reduce((index, op) => {
+    delta.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
         return index;
@@ -146,8 +146,10 @@ class Editor {
   }
 
   getText(index, length) {
-    return this.getContents(index, length).ops.map(function(op) {
-      return (typeof op.insert === 'string') ? op.insert : '';
+    return this.getContents(index, length).filter(function(op) {
+      return typeof op.insert === 'string';
+    }).map(function(op) {
+      return op.insert;
     }).join('');
   }
 
@@ -203,7 +205,7 @@ class Editor {
       let oldText = new Delta().insert(oldValue);
       let newText = new Delta().insert(textBlot.value());
       let diffDelta = new Delta().retain(index).concat(oldText.diff(newText));
-      change = diffDelta.ops.reduce(function(delta, op) {
+      change = diffDelta.reduce(function(delta, op) {
         if (op.insert) {
           return delta.insert(op.insert, formats);
         } else {
@@ -246,7 +248,7 @@ function combineFormats(formats, combined) {
 }
 
 function normalizeDelta(delta) {
-  return delta.ops.reduce(function(delta, op) {
+  return delta.reduce(function(delta, op) {
     if (op.insert === 1) {
       let attributes = clone(op.attributes);
       delete attributes['image'];
