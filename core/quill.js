@@ -65,8 +65,8 @@ class Quill {
       emitter: this.emitter,
       whitelist: this.options.formats
     });
-    this.editor = new Editor(this.scroll, this.emitter);
     this.selection = new Selection(this.scroll, this.emitter);
+    this.editor = new Editor(this.scroll, this.emitter, this.selection);
     this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');

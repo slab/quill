@@ -11,8 +11,9 @@ import extend from 'extend';
 
 
 class Editor {
-  constructor(scroll, emitter) {
+  constructor(scroll, emitter, selection) {
     this.scroll = scroll;
+    this.selection = selection;
     this.emitter = emitter;
     this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update.bind(this, null));
     this.delta = this.getDelta();
@@ -194,6 +195,8 @@ class Editor {
 
   update(change, source = Emitter.sources.USER, mutations = []) {
     let oldDelta = this.delta;
+    let range = this.selection.lastRange;
+    let index = range && range.length === 0 ? range.index : undefined;
     if (mutations.length === 1 &&
         mutations[0].type === 'characterData' &&
         Parchment.find(mutations[0].target)) {
@@ -204,7 +207,7 @@ class Editor {
       let oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
       let oldText = new Delta().insert(oldValue);
       let newText = new Delta().insert(textBlot.value());
-      let diffDelta = new Delta().retain(index).concat(oldText.diff(newText));
+      let diffDelta = new Delta().retain(index).concat(oldText.diff(newText, index));
       change = diffDelta.reduce(function(delta, op) {
         if (op.insert) {
           return delta.insert(op.insert, formats);
@@ -216,7 +219,7 @@ class Editor {
     } else {
       this.delta = this.getDelta();
       if (!change || !equal(oldDelta.compose(change), this.delta)) {
-        change = oldDelta.diff(this.delta);
+        change = oldDelta.diff(this.delta, index);
       }
     }
     if (change.length() > 0) {

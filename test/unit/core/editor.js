@@ -444,25 +444,42 @@ describe('Editor', function() {
   });
 
   describe('events', function() {
-    beforeEach(function() {
-      this.editor = this.initialize(Editor, '<p>0123</p>');
-      this.editor.update();
-      spyOn(this.editor.emitter, 'emit').and.callThrough();
-    });
-
     it('api text insert', function() {
-      let old = this.editor.getDelta();
-      this.editor.insertText(2, '!');
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.update();
+      spyOn(editor.emitter, 'emit').and.callThrough();
+      let old = editor.getDelta();
+      editor.insertText(2, '!');
       let delta = new Delta().retain(2).insert('!');
-      expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.API);
+      expect(editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.API);
     });
 
     it('user text insert', function(done) {
-      let old = this.editor.getDelta();
+      let editor = this.initialize(Editor, '<p>0123</p>');
+      editor.update();
+      spyOn(editor.emitter, 'emit').and.callThrough();
+      let old = editor.getDelta();
       this.container.firstChild.firstChild.data = '01!23';
       let delta = new Delta().retain(2).insert('!');
       setTimeout(() => {
-        expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER);
+        expect(editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER);
+        done();
+      }, 1);
+    });
+
+    it('insert same character', function(done) {
+      let [editor, selection] = this.initialize([Editor, Selection], '<p>aaaa</p>');
+      selection.setRange(new Range(2, 0));
+      editor.update();
+      spyOn(editor.emitter, 'emit').and.callThrough();
+      let old = editor.getDelta();
+      let textNode = this.container.firstChild.firstChild
+      textNode.data = 'aaaaa';
+      selection.setNativeRange(textNode.data, 3);
+      let delta = new Delta().retain(2).insert('a');
+      setTimeout(() => {
+        let args = editor.emitter.emit.calls.mostRecent().args;
+        expect(args).toEqual([Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER]);
         done();
       }, 1);
     });
