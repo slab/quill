@@ -715,6 +715,7 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 }
 #above-container.demo-active #demo-container .ql-editor {
   overflow-y: auto;
+  padding-bottom: 55px;
 }
 #above-container.demo-active #laptop-container {
   transition: bottom 500ms ease-in-out 0s;
