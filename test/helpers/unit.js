@@ -110,9 +110,9 @@ function initialize(klass, html, container = this.container) {
   let emitter = new Emitter();
   let scroll = new Scroll(container, { emitter: emitter });
   if (klass === Scroll) return scroll;
-  let selection = new Selection(scroll, emitter);
-  let editor = new Editor(scroll, emitter, selection);
-  if (klass === Selection) return selection;
-  if (klass === Editor) return editor;
-  if (klass[0] === Editor && klass[1] === Selection) return [editor, selection];
+  if (klass === Editor) return new Editor(scroll);
+  if (klass === Selection) return new Selection(scroll, emitter);
+  if (klass[0] === Editor && klass[1] === Selection) {
+    return [new Editor(scroll), new Selection(scroll, emitter)];
+  }
 }

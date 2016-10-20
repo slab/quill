@@ -65,8 +65,8 @@ class Quill {
       emitter: this.emitter,
       whitelist: this.options.formats
     });
+    this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.editor = new Editor(this.scroll, this.emitter, this.selection);
     this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
@@ -76,6 +76,13 @@ class Quill {
       if (type === Emitter.events.TEXT_CHANGE) {
         this.root.classList.toggle('ql-blank', this.editor.isBlank());
       }
+    });
+    this.emitter.on(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
+      let range = this.selection.lastRange;
+      let index = range && range.length === 0 ? range.index : undefined;
+      modify.call(this, () => {
+        return this.editor.update(null, mutations, index);
+      }, source);
     });
     let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
     this.setContents(contents);
@@ -104,9 +111,9 @@ class Quill {
 
   deleteText(index, length, source) {
     [index, length, , source] = overload(index, length, source);
-    return modify.call(this, source, index, -1*length, () => {
-      return this.editor.deleteText(index, length, source);
-    });
+    return modify.call(this, () => {
+      return this.editor.deleteText(index, length);
+    }, source, index, -1*length);
   }
 
   disable() {
@@ -114,7 +121,7 @@ class Quill {
   }
 
   enable(enabled = true) {
-    this.editor.enable(enabled);
+    this.scroll.enable(enabled);
     this.container.classList.toggle('ql-disabled', !enabled);
     if (!enabled) {
       this.blur();
@@ -127,38 +134,38 @@ class Quill {
   }
 
   format(name, value, source = Emitter.sources.API) {
-    if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
-      return new Delta();
-    }
-    let range = this.getSelection(true);
-    let change = new Delta();
-    if (range == null) return change;
-    if (Parchment.query(name, Parchment.Scope.BLOCK)) {
-      change = this.formatLine(range, name, value, source);
-    } else if (range.length === 0) {
-      this.selection.format(name, value);
+    return modify.call(this, () => {
+      let range = this.getSelection(true);
+      let change = new Delta();
+      if (range == null) {
+        return change;
+      } else if (Parchment.query(name, Parchment.Scope.BLOCK)) {
+        change = this.editor.formatLine(range.index, range.length, { [name]: value });
+      } else if (range.length === 0) {
+        this.selection.format(name, value);
+        return change;
+      } else {
+        change = this.editor.formatText(range.index, range.length, { [name]: value });
+      }
+      this.setSelection(range, Emitter.sources.SILENT);
       return change;
-    } else {
-      change = this.formatText(range, name, value, source);
-    }
-    this.setSelection(range, Emitter.sources.SILENT);
-    return change;
+    }, source);
   }
 
   formatLine(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);
-    return modify.call(this, source, index, 0, () => {
-      return this.editor.formatLine(index, length, formats, source);
-    });
+    return modify.call(this, () => {
+      return this.editor.formatLine(index, length, formats);
+    }, source, index, 0);
   }
 
   formatText(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);
-    return modify.call(this, source, index, 0, () => {
-      return this.editor.formatText(index, length, formats, source);
-    });
+    return modify.call(this, () => {
+      return this.editor.formatText(index, length, formats);
+    }, source, index, 0);
   }
 
   getBounds(index, length = 0) {
@@ -206,17 +213,17 @@ class Quill {
   }
 
   insertEmbed(index, embed, value, source = Quill.sources.API) {
-    return modify.call(this, source, index, null, () => {
-      return this.editor.insertEmbed(index, embed, value, source);
-    });
+    return modify.call(this, () => {
+      return this.editor.insertEmbed(index, embed, value);
+    }, source, index);
   }
 
   insertText(index, text, name, value, source) {
     let formats;
     [index, , formats, source] = overload(index, 0, name, value, source);
-    return modify.call(this, source, index, text.length, () => {
-      return this.editor.insertText(index, text, formats, source);
-    });
+    return modify.call(this, () => {
+      return this.editor.insertText(index, text, formats);
+    }, source, index, text.length);
   }
 
   isEnabled() {
@@ -241,23 +248,22 @@ class Quill {
 
   removeFormat(index, length, source) {
     [index, length, , source] = overload(index, length, source);
-    return modify.call(this, source, index, null, () => {
-      return this.editor.removeFormat(index, length, source);
-    });
+    return modify.call(this, () => {
+      return this.editor.removeFormat(index, length);
+    }, source, index);
   }
 
   setContents(delta, source = Emitter.sources.API) {
-    if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
-      return new Delta();
-    }
-    delta = new Delta(delta).slice();
-    let lastOp = delta.ops[delta.ops.length - 1];
-    // Quill contents must always end with newline
-    if (lastOp == null || lastOp.insert[lastOp.insert.length-1] !== '\n') {
-      delta.insert('\n');
-    }
-    delta.delete(this.getLength());
-    return this.editor.applyDelta(delta, source);
+    return modify.call(this, () => {
+      delta = new Delta(delta).slice();
+      let lastOp = delta.ops[delta.ops.length - 1];
+      // Quill contents must always end with newline
+      if (lastOp == null || lastOp.insert[lastOp.insert.length-1] !== '\n') {
+        delta.insert('\n');
+      }
+      delta.delete(this.getLength());
+      return this.editor.applyDelta(delta);
+    }, source);
   }
 
   setSelection(index, length, source) {
@@ -282,19 +288,12 @@ class Quill {
   }
 
   updateContents(delta, source = Emitter.sources.API) {
-    if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
-      return new Delta();
-    }
-    let range = this.getSelection();
-    if (Array.isArray(delta)) {
-      delta = new Delta(delta.slice());
-    }
-    let change = this.editor.applyDelta(delta, source);
-    if (range != null) {
-      range = shiftRange(range, change, source);
-      this.setSelection(range, Emitter.sources.SILENT);
-    }
-    return change;
+    return modify.call(this, () => {
+      if (Array.isArray(delta)) {
+        delta = new Delta(delta.slice());
+      }
+      return this.editor.applyDelta(delta, source);
+    }, source, true);
   }
 }
 Quill.DEFAULTS = {
@@ -377,20 +376,30 @@ function expandConfig(container, userConfig) {
   return userConfig;
 }
 
-function modify(source, index, shift, modifier) {
-  let change = new Delta();
+// Handle selection preservation and TEXT_CHANGE emission
+// common to modification APIs
+function modify(modifier, source, index, shift) {
   if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
     return new Delta();
   }
-  let range = this.getSelection();
-  change = modifier();
+  let range = index == null ? null : this.getSelection();
+  let oldDelta = this.editor.delta;
+  let change = modifier();
   if (range != null) {
-    if (shift === null) {
-      range = shiftRange(range, index, change, source);
+    if (index === true) index = range.index;
+    if (shift == null) {
+      range = shiftRange(range, change, source);
     } else if (shift !== 0) {
       range = shiftRange(range, index, shift, source);
     }
     this.setSelection(range, Emitter.sources.SILENT);
+  }
+  if (change.length() > 0) {
+    let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
+    this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);
+    if (source !== Emitter.sources.SILENT) {
+      this.emitter.emit(...args);
+    }
   }
   return change;
 }

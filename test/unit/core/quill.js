@@ -154,6 +154,49 @@ describe('Quill', function() {
     });
   });
 
+  describe('events', function() {
+    beforeEach(function() {
+      this.quill = this.initialize(Quill, '<p>0123</p>');
+      this.quill.update();
+      spyOn(this.quill.emitter, 'emit').and.callThrough();
+      this.oldDelta = this.quill.getContents();
+    });
+
+    it('api text insert', function() {
+      this.quill.insertText(2, '!');
+      let delta = new Delta().retain(2).insert('!');
+      expect(this.quill.emitter.emit)
+        .toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('user text insert', function(done) {
+      this.container.firstChild.firstChild.firstChild.data = '01!23';
+      let delta = new Delta().retain(2).insert('!');
+      setTimeout(() => {
+        expect(this.quill.emitter.emit)
+          .toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, this.oldDelta, Emitter.sources.USER);
+        done();
+      }, 1);
+    });
+
+    it('insert same character', function(done) {
+      this.quill.setText('aaaa\n');
+      this.quill.setSelection(2);
+      this.quill.update();
+      let old = this.quill.getContents();
+      let textNode = this.container.firstChild.firstChild.firstChild;
+      textNode.data = 'aaaaa';
+      this.quill.selection.setNativeRange(textNode.data, 3);
+      // this.quill.selection.update(Emitter.sources.SILENT);
+      let delta = new Delta().retain(2).insert('a');
+      setTimeout(() => {
+        let args = this.quill.emitter.emit.calls.mostRecent().args;
+        expect(args).toEqual([Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER]);
+        done();
+      }, 1);
+    });
+  });
+
   describe('setContents()', function() {
     it('empty', function() {
       let quill = this.initialize(Quill, '');
