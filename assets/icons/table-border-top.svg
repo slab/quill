@@ -11,7 +11,7 @@
     <rect height="2" transform="translate(12 18) rotate(-90)" width="2" x="14" y="2"></rect>
     <rect height="2" transform="translate(9 21) rotate(-90)" width="2" x="14" y="5"></rect>
   </g>
-  <line class="ql-stroke-mitter" x1="16" x2="2" y1="3" y2="3"></line>
+  <line class="ql-stroke-miter" x1="16" x2="2" y1="3" y2="3"></line>
   <g class="ql-fill ql-transparent">
     <rect height="2" transform="translate(24 30) rotate(-180)" width="2" x="11" y="14"></rect>
     <rect height="2" transform="translate(18 30) rotate(-180)" width="2" x="8" y="14"></rect>
