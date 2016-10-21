@@ -1,3 +1,18 @@
+# 1.1.1
+
+### Bug fixes
+
+- TEXT_CHANGE events now use cursor position to inform change location [#746](https://github.com/quilljs/quill/issues/746)
+- Fix inconsistent cursor reporting between browsers [#1007](https://github.com/quilljs/quill/issues/1007)
+- Fix tooltip overflow in docs [#1060](https://github.com/quilljs/quill/issues/1060)
+- Fix naming [#1063](https://github.com/quilljs/quill/pull/1063)
+- Fix Medium example [#1064](https://github.com/quilljs/quill/issues/1064)
+
+Thanks to [@artaommahe](https://github.com/artaommahe), [@benbro](https://github.com/benbro), [@fuffalist](https://github.com/fuffalist), [@sachinrekhi](https://github.com/sachinrekhi), [@sergop321](https://github.com/sergop321), and [@tlg](https://github.com/tlg) for contributions to this release!
+
+Special thanks to [@DadaMonad](https://github.com/DadaMonad) for contributions on [fast-diff](https://github.com/jhchen/fast-diff) that enabled the [#746](https://github.com/quilljs/quill/issues/746) fix.
+
+
 # 1.1.0
 
 ### Additions
