@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-- TEXT_CHANGE events now use cursor position to inform change location [#746](https://github.com/quilljs/quill/issues/746)
+- TEXT_CHANGE event now use cursor position to inform change location [#746](https://github.com/quilljs/quill/issues/746)
 - Fix inconsistent cursor reporting between browsers [#1007](https://github.com/quilljs/quill/issues/1007)
 - Fix tooltip overflow in docs [#1060](https://github.com/quilljs/quill/issues/1060)
 - Fix naming [#1063](https://github.com/quilljs/quill/pull/1063)
