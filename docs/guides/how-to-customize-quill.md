@@ -33,7 +33,7 @@ From there you can implement and attach your own UI elements like custom dropdow
 
 ### Modules
 
-Quill is designed with a modular architecture composed of a small editing core, surrounded by modules that augment its functionality. Some of this functionality is quite integral to editing, such as the [History](/docs/modules/history/) module, which manages undo and redo. Because all modules use the same [API](/docs/api/) exposed to the developer publicly, easy interchange of even core modules is possible, when necessary.
+Quill is designed with a modular architecture composed of a small editing core, surrounded by modules that augment its functionality. Some of this functionality is quite integral to editing, such as the [History](/docs/modules/history/) module, which manages undo and redo. Because all modules use the same public [API](/docs/api/) exposed to the developer, even interchanging core modules is possible, when necessary.
 
 Like Quill's core itself, many [modules](/docs/modules/) expose additional configuration options and APIs. Before deciding to replace a module, take a look at its documentation. Often your desired customization is already implemented as a configuration or API call.
 
