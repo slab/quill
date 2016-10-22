@@ -48,7 +48,7 @@ var quill = new Quill('#editor', {
 });
 ```
 
-A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modules/keyboard/), and [History](/docs/modules/history/)&mdash;need to be included as core functionality depend on the APIs they provide. For example, undo and redo is basic editor functionality, yet the native browser behavior handling this is inconsistent and unpredictable. The History module bridges the gap by implementing its own undo manager and exposing `undo()` and `redo()` as APIs.
+A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modules/keyboard/), and [History](/docs/modules/history/)&mdash;need to be included as core functionality depend on the APIs they provide. For example, even though undo and redo is basic, expected, editor functionality, the native browser behavior handling of this is inconsistent and unpredictable. The History module bridges the gap by implementing its own undo manager and exposing `undo()` and `redo()` as APIs.
 
 Nevertheless, staying true to Quill modular design, you can still drastically change the way undo and redo&mdash;or any other core functionality&mdash;works by implementing your own undo manager to replace the History module. As long as you implement the same API interface, Quill will happily use your replacement module. This is most easily done by inheriting from the existing module, and overwriting the methods you want to change. Take a look at the [modules](/docs/modules/) documentation for a very simple example of overwriting the core [Clipboard](/docs/modules/clipboard/) module.
 
