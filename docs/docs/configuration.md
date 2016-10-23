@@ -54,9 +54,9 @@ DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should b
 
 #### debug
 
-Default: `false`
+Default: `warn`
 
-Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Debugging messages are disabled by default.
+Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Only warning and error messages are enabled by default.
 
 #### formats
 
