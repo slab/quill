@@ -258,14 +258,16 @@ class Quill {
 
   setContents(delta, source = Emitter.sources.API) {
     return modify.call(this, () => {
-      delta = new Delta(delta).slice();
-      let lastOp = delta.ops[delta.ops.length - 1];
-      // Quill contents must always end with newline
-      if (lastOp == null || lastOp.insert[lastOp.insert.length-1] !== '\n') {
-        delta.insert('\n');
+      let length = this.getLength();
+      let deleted = this.editor.deleteText(0, length);
+      let applied = this.editor.applyDelta(delta);
+      let lastOp = applied.ops[applied.ops.length - 1];
+      if (lastOp != null && lastOp.insert[lastOp.insert.length-1] === '\n') {
+        this.editor.deleteText(this.getLength() - 1, 1);
+        applied.delete(1);
       }
-      delta.delete(this.getLength());
-      return this.editor.applyDelta(delta);
+      let ret = deleted.compose(applied);
+      return ret;
     }, source);
   }
 

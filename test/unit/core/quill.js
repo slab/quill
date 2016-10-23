@@ -257,6 +257,14 @@ describe('Quill', function() {
       quill.setContents(new Delta().insert('0123'));
       expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
     });
+
+    it('inline formatting', function() {
+      let quill = this.initialize(Quill, '<p><strong>Bold</strong></p><p>Not bold</p>');
+      let contents = quill.getContents();
+      let delta = quill.setContents(contents);
+      expect(quill.getContents()).toEqual(contents);
+      expect(delta).toEqual(contents.delete(contents.length()));
+    });
   });
 
   describe('setText()', function() {
