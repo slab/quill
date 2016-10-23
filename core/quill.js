@@ -259,6 +259,7 @@ class Quill {
 
   setContents(delta, source = Emitter.sources.API) {
     return modify.call(this, () => {
+      delta = new Delta(delta);
       let length = this.getLength();
       let deleted = this.editor.deleteText(0, length);
       let applied = this.editor.applyDelta(delta);
@@ -295,9 +296,7 @@ class Quill {
 
   updateContents(delta, source = Emitter.sources.API) {
     return modify.call(this, () => {
-      if (Array.isArray(delta)) {
-        delta = new Delta(delta.slice());
-      }
+      delta = new Delta(delta);
       return this.editor.applyDelta(delta, source);
     }, source, true);
   }
