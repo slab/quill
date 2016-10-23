@@ -123,7 +123,7 @@ var content = [
 
 But if the answer is yes, then we violate the canonical constraint since any permutation of characters having an align attribute would represent the same content.
 
-So we cannot just naively get rid of the newline character. We also have to either get rid of line attributes, or expand them to fill every character on the line. But what if we removed the _newline_ from it:
+So we cannot just naively get rid of the newline character. We also have to either get rid of line attributes, or expand them to fill all characters on the line. But what if we removed the _newline_ from it:
 
 ```javascript
 var content = [
@@ -294,9 +294,9 @@ var change = [
 ]
 ```
 
-Since every character is described, explicit indexes and lengths are no longer necessary. This makes indexes out of order and overlapping ranges impossible to express.
+Since every character is described, explicit indexes and lengths are no longer necessary. This makes overlapping ranges and out-of-order indexes impossible to express.
 
-Therefore, we can make the easy optimization to merge adjacent equal Operations, re-introducing _length_. And since the last Operation is a `retain` we can simply drop it, for it simply instructs to "do nothing to the rest of the document".
+Therefore, we can make the easy optimization to merge adjacent equal Operations, re-introducing _length_. If the last Operation is a `retain` we can simply drop it, for it simply instructs to "do nothing to the rest of the document".
 
 ```javascript
 var change = [
@@ -314,7 +314,7 @@ var change = [
 ]
 ```
 
-We now have have a Delta that is very close to the current standard format.
+We now have a Delta that is very close to the current standard format.
 
 #### Ops
 
