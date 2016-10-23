@@ -15,7 +15,7 @@ In general, common customizations are handled in [configurations](#configuration
 
 Quill favors Code over Configuration&trade;, but for very common needs, especially where the equivalent code would be lengthy or complex, Quill provides [configuration](/docs/configuration/) options. This would be a good first place too look to determine if you even need to implement any custom functionality.
 
-Two of the most powerful options is `modules` and `theme`. You can drastically change or expand what Quill can and does do by simply or removing individual [modules](/docs/modules/) or using a different [theme](/docs/themes/).
+Two of the most powerful options is `modules` and `theme`. You can drastically change or expand what Quill can and does do by simply adding or removing individual [modules](/docs/modules/) or using a different [theme](/docs/themes/).
 
 
 ### Themes
@@ -33,7 +33,7 @@ From there you can implement and attach your own UI elements like custom dropdow
 
 ### Modules
 
-Quill is designed with a modular architecture composed of a small editing core, surrounded by modules that augment its functionality. Some of this functionality is quite integral to editing, such as the [History](/docs/modules/history/) module, which manages undo and redo. Because all modules use the same [API](/docs/api/) exposed to the developer publicly, easy interchange of even core modules is possible, when necessary.
+Quill is designed with a modular architecture composed of a small editing core, surrounded by modules that augment its functionality. Some of this functionality is quite integral to editing, such as the [History](/docs/modules/history/) module, which manages undo and redo. Because all modules use the same public [API](/docs/api/) exposed to the developer, even interchanging core modules is possible, when necessary.
 
 Like Quill's core itself, many [modules](/docs/modules/) expose additional configuration options and APIs. Before deciding to replace a module, take a look at its documentation. Often your desired customization is already implemented as a configuration or API call.
 
@@ -48,7 +48,7 @@ var quill = new Quill('#editor', {
 });
 ```
 
-A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modules/keyboard/), and [History](/docs/modules/history/)&mdash;need to be included as core functionality depend on the APIs they provide. For example, undo and redo is basic editor functionality, yet the native browser behavior handling this is inconsistent and unpredictable. The History module bridges the gap by implementing its own undo manager and exposing `undo()` and `redo()` as APIs.
+A few modules&mdash;[Clipboard](/docs/modules/clipboard/), [Keyboard](/docs/modules/keyboard/), and [History](/docs/modules/history/)&mdash;need to be included as core functionality depend on the APIs they provide. For example, even though undo and redo is basic, expected, editor functionality, the native browser behavior handling of this is inconsistent and unpredictable. The History module bridges the gap by implementing its own undo manager and exposing `undo()` and `redo()` as APIs.
 
 Nevertheless, staying true to Quill modular design, you can still drastically change the way undo and redo&mdash;or any other core functionality&mdash;works by implementing your own undo manager to replace the History module. As long as you implement the same API interface, Quill will happily use your replacement module. This is most easily done by inheriting from the existing module, and overwriting the methods you want to change. Take a look at the [modules](/docs/modules/) documentation for a very simple example of overwriting the core [Clipboard](/docs/modules/clipboard/) module.
 
