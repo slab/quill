@@ -27,7 +27,7 @@ var content = [
 ];
 ```
 
-If we want to add italics, underline, and other formats; we can add this to the main object, but it is cleaner to separate `text` from all of this so we organize formatting under one field, which we will name `attributes`.
+We can add italics, underline, and other formats to the main object if we want to; but it is cleaner to separate `text` from all of this so we organize formatting under one field, which we will name `attributes`.
 
 ```javascript
 var content = [
