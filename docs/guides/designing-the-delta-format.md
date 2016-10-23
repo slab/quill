@@ -16,7 +16,7 @@ If you are looking for a reference on *what* Deltas are, the [Delta documentatio
 
 ## Plain Text
 
-Let's start at the basics with just plain text. There already is an ubiquitous format to store plain text: the string. Now if we want to build upon this and describe formatted text, such as when a range is bold, we need to add additional information.
+Let's start at the basics with just plain text. There already is a ubiquitous format to store plain text: the string. Now if we want to build upon this and describe formatted text, such as when a range is bold, we need to add additional information.
 
 Arrays are the only other ordered data type available, so we use an array of objects. This also allows us to leverage JSON for compatibility with a breadth of tools.
 
@@ -95,7 +95,7 @@ This unambiguous predictability makes Deltas easier to work with, both because y
 
 ## Line Formatting
 
-Line formats affect the contents of an entire line, so they present an interesting challenge for our compact and canonical constraints. This is a seemingly reasonable way to represent centered text:
+Line formats affect the contents of an entire line, so they present an interesting challenge for our compact and canonical constraints. A seemingly reasonable way to represent centered text would be the following:
 
 ```javascript
 var content = [
@@ -123,7 +123,7 @@ var content = [
 
 But if the answer is yes, then we violate the canonical constraint since any permutation of characters having an align attribute would represent the same content.
 
-So we cannot just naively get rid of the newline character. We also have to either get rid of line attributes, or expand them to fill all characters on the line. But what if we removed the _newline_ from it:
+So we cannot just naively get rid of the newline character. We also have to either get rid of line attributes, or expand them to fill all characters on the line. But what if we removed the **newline** from it:
 
 ```javascript
 var content = [
@@ -135,7 +135,7 @@ var content = [
 
 It is not clear if our resulting line is aligned center or right. We could delete both or have some ordering rule to favor one over the other, but our Delta is becoming more complex and harder to work with on this path.
 
-This problem begs for atomicity, and we find this in the _newline_ character itself. But we have an off by one problem in that if we have _n_ lines, we only have _n-1_ newline characters.
+This problem begs for atomicity, and we find this in the *newline* character itself. But we have an off by one problem in that if we have **n** lines, we only have **n-1** newline characters.
 
 To solve this, Quill "adds" a newline to all documents and always ends Deltas with "\n".
 
@@ -215,7 +215,7 @@ Now that Deltas may be describing changes to a non-empty document, `{ insert: "H
 
 #### Format
 
-Similar to deletes, we need to specify the range of text to format along with the format change itself. Formatting exists in the `attributes` object, so a simple solution is to provide an additional `attributes` object to merge with the existing one. This merge is shallow to keep things simple. We have not found an use case that is compelling enough to require a deep merge and warrants the added complexity.
+Similar to deletes, we need to specify the range of text to format, along with the format change itself. Formatting exists in the `attributes` object, so a simple solution is to provide an additional `attributes` object to merge with the existing one. This merge is shallow to keep things simple. We have not found an use case that is compelling enough to require a deep merge and warrants the added complexity.
 
 ```javascript
 var delta = [{
@@ -229,9 +229,9 @@ var delta = [{
 }];
 ```
 
-The exceptional case is when we want to remove formatting. We will use `null` for this purpose, so `{ bold: null }` would mean remove the bold format. We could have specified any falsy value, but there may be legitimate use cases for an attribute value to be `0` or an empty string (i.e. `'  '`).
+The special case is when we want to remove formatting. We will use `null` for this purpose, so `{ bold: null }` would mean remove the bold format. We could have specified any falsy value, but there may be legitimate use cases for an attribute value to be `0` or an empty string (i.e. `'  '`).
 
-**Note:** We now have to be careful with indexes at the application layer. As mentioned earlier, Deltas do not ascribe any inherent meaning to any the `attributes`' key-value pairs, nor any embed types or values. Deltas do not know an image does not have duration, text does not have alternative texts, and videos cannot be bolded. The following is a _legal_ Delta that might have been the result of applying other _legal_ Deltas, by an application not being careful of format ranges.
+**Note:** We now have to be careful with indexes at the application layer. As mentioned earlier, Deltas do not ascribe any inherent meaning to any the `attributes`' key-value pairs, nor any embed types or values. Deltas do not know an image does not have duration, text does not have alternative texts, and videos cannot be bolded. The following is a **legal** Delta that might have been the result of applying other **legal** Deltas, by an application not being careful of format ranges.
 
 ```javascript
 var delta = [{
@@ -258,7 +258,7 @@ var delta = [{
 
 #### Pitfalls
 
-First, we should be clear that an index must refer to its value in the document **before** any Operations are applied. Otherwise, a later Operation may delete a previous insert, unformat a previous format, etc., which would violate compactness.
+First, we should be clear that an index must refer to its position in the document **before** any Operations are applied. Otherwise, a later Operation may delete a previous insert, unformat a previous format, etc., which would violate compactness.
 
 Operations must also be strictly ordered to satisfy our canonical constraint. Ordering by index, then length, and then type is one valid way this can be accomplished.
 
