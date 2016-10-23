@@ -229,7 +229,7 @@ var delta = [{
 }];
 ```
 
-The special case is when we want to remove formatting. We will use `null` for this purpose, so `{ bold: null }` would mean remove the bold format. We could have specified any falsy value, but there may be legitimate use cases for an attribute value to be `0` or an empty string (i.e. `'  '`).
+The special case is when we want to remove formatting. We will use `null` for this purpose, so `{ bold: null }` would mean remove the bold format. We could have specified any falsy value, but there may be legitimate use cases for an attribute value to be `0` or the empty string.
 
 **Note:** We now have to be careful with indexes at the application layer. As mentioned earlier, Deltas do not ascribe any inherent meaning to any the `attributes`' key-value pairs, nor any embed types or values. Deltas do not know an image does not have duration, text does not have alternative texts, and videos cannot be bolded. The following is a **legal** Delta that might have been the result of applying other **legal** Deltas, by an application not being careful of format ranges.
 
