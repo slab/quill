@@ -2,12 +2,12 @@
 
 ### debug
 
-Static method enabling logging messages at a given level: `'error'`, `'warn'`, `'log'`, or `'info'`.
+Static method enabling logging messages at a given level: `'error'`, `'warn'`, `'log'`, or `'info'`. Passing `true` is equivalent to passing `'log'`. Passing `false` disables all messages.
 
 **Methods**
 
 ```javascript
-Quill.debug(level: String)
+Quill.debug(level: String | Boolean)
 ```
 
 **Examples**

@@ -14,6 +14,9 @@ let debug = logger('quill');
 
 class Quill {
   static debug(limit) {
+    if (limit === true) {
+      limit = 'log';
+    }
     logger.level(limit);
   }
 
