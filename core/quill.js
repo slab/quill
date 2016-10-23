@@ -63,6 +63,7 @@ class Quill {
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
     this.root = this.addContainer('ql-editor');
+    this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
