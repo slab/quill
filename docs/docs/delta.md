@@ -115,11 +115,11 @@ Starting with the above "Gandalf the Grey" example:
     // Keep " the " as is
     { retain: 5 },
 
-    // Delete "Grey"
-    { delete: 4 },
-
     // Insert "White" formatted with color #fff
-    { insert: "White", attributes: { color: '#fff' } }
+    { insert: "White", attributes: { color: '#fff' } },
+
+    // Delete "Grey"
+    { delete: 4 }
   ]
 }
 ```
