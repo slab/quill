@@ -123,7 +123,9 @@ var content = [
 
 But if the answer is yes, then we violate the canonical constraint since any permutation of characters having an align attribute would represent the same content.
 
-So we cannot just naively get rid of the newline character. We also have to either get rid of line attributes, or expand them to fill all characters on the line. But what if we removed the **newline** from it:
+So we cannot just naively get rid of the newline character. We also have to either get rid of line attributes, or expand them to fill all characters on the line.
+
+What if we removed the newline from the following?
 
 ```javascript
 var content = [
@@ -135,7 +137,7 @@ var content = [
 
 It is not clear if our resulting line is aligned center or right. We could delete both or have some ordering rule to favor one over the other, but our Delta is becoming more complex and harder to work with on this path.
 
-This problem begs for atomicity, and we find this in the *newline* character itself. But we have an off by one problem in that if we have **n** lines, we only have **n-1** newline characters.
+This problem begs for atomicity, and we find this in the *newline* character itself. But we have an off by one problem in that if we have *n* lines, we only have *n-1* newline characters.
 
 To solve this, Quill "adds" a newline to all documents and always ends Deltas with "\n".
 
@@ -189,7 +191,7 @@ As the name Delta implies, our format can describe changes to documents, as well
 
 #### Delete
 
-To describe deleting text, we need to know where and how many characters to delete. To delete embeds, there needs not be any special treatment, other than to understand the length of an embed. If it is anything other than one, we would then need to specify what happens when only part of an embed is deleted. There is currently no such specification, so regardless of how many pixels make up an image, how many minutes long a video is, or how many slides are in a deck; embeds are all of length _one_.
+To describe deleting text, we need to know where and how many characters to delete. To delete embeds, there needs not be any special treatment, other than to understand the length of an embed. If it is anything other than one, we would then need to specify what happens when only part of an embed is deleted. There is currently no such specification, so regardless of how many pixels make up an image, how many minutes long a video is, or how many slides are in a deck; embeds are all of length **one**.
 
 One reasonable way to describe a deletion is to explicitly store its index and length.
 
@@ -231,7 +233,7 @@ var delta = [{
 
 The special case is when we want to remove formatting. We will use `null` for this purpose, so `{ bold: null }` would mean remove the bold format. We could have specified any falsy value, but there may be legitimate use cases for an attribute value to be `0` or the empty string.
 
-**Note:** We now have to be careful with indexes at the application layer. As mentioned earlier, Deltas do not ascribe any inherent meaning to any the `attributes`' key-value pairs, nor any embed types or values. Deltas do not know an image does not have duration, text does not have alternative texts, and videos cannot be bolded. The following is a **legal** Delta that might have been the result of applying other **legal** Deltas, by an application not being careful of format ranges.
+**Note:** We now have to be careful with indexes at the application layer. As mentioned earlier, Deltas do not ascribe any inherent meaning to any the `attributes`' key-value pairs, nor any embed types or values. Deltas do not know an image does not have duration, text does not have alternative texts, and videos cannot be bolded. The following is a *legal* Delta that might have been the result of applying other *legal* Deltas, by an application not being careful of format ranges.
 
 ```javascript
 var delta = [{
@@ -296,7 +298,7 @@ var change = [
 
 Since every character is described, explicit indexes and lengths are no longer necessary. This makes overlapping ranges and out-of-order indexes impossible to express.
 
-Therefore, we can make the easy optimization to merge adjacent equal Operations, re-introducing _length_. If the last Operation is a `retain` we can simply drop it, for it simply instructs to "do nothing to the rest of the document".
+Therefore, we can make the easy optimization to merge adjacent equal Operations, re-introducing *length*. If the last Operation is a `retain` we can simply drop it, for it simply instructs to "do nothing to the rest of the document".
 
 ```javascript
 var change = [
