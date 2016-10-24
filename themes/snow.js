@@ -95,6 +95,8 @@ class SnowTooltip extends BaseTooltip {
           this.position(this.quill.getBounds(this.linkRange));
           return;
         }
+      } else {
+        delete this.linkRange;
       }
       this.hide();
     });
