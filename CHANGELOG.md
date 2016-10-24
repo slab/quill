@@ -1,10 +1,18 @@
+# 1.1.3
+
+- Update quill-delta [delta#2](https://github.com/quilljs/delta/issues/2)
+- Fix link creation [#1073](https://github.com/quilljs/quill/issues/1073)
+
+Thanks to [@eamodio](https://github.com/eamodio) and [@metsavir](https://github.com/metsavir) for contributions to this release!
+
+
 # 1.1.2
 
 - Fix setContents on already formatted text [#1065](https://github.com/quilljs/quill/issues/1065)
 - Fix regression [#1067](https://github.com/quilljs/quill/issues/1067)
 - Improve documentation [#1069](https://github.com/quilljs/quill/pull/1069) [#1070](https://github.com/quilljs/quill/pull/1070)
 
-Thank you [benbro](https://github.com/benbro), [derickruiz](https://github.com/derickruiz), [eamodio](https://github.com/eamodio), [hallaathrad](https://github.com/hallaathrad), and [philly385](https://github.com/philly385) for your contributions to this release.
+Thank you [@benbro](https://github.com/benbro), [@derickruiz](https://github.com/derickruiz), [@eamodio](https://github.com/eamodio), [@hallaathrad](https://github.com/hallaathrad), and [@philly385](https://github.com/philly385) for your contributions to this release.
 
 
 # 1.1.1
