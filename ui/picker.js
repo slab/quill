@@ -8,7 +8,7 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    this.label.addEventListener('click', (event) => {
+    this.label.addEventListener('click', () => {
       this.container.classList.toggle('ql-expanded');
     });
     this.select.addEventListener('change', this.update.bind(this));
@@ -23,7 +23,7 @@ class Picker {
     if (option.textContent) {
       item.setAttribute('data-label', option.textContent);
     }
-    item.addEventListener('click', (event) => {
+    item.addEventListener('click', () => {
       this.selectItem(item, true);
     });
     return item;

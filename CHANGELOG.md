@@ -1,3 +1,86 @@
+# 1.1.3
+
+- Update quill-delta [delta#2](https://github.com/quilljs/delta/issues/2)
+- Fix link creation [#1073](https://github.com/quilljs/quill/issues/1073)
+
+Thanks to [@eamodio](https://github.com/eamodio) and [@metsavir](https://github.com/metsavir) for contributions to this release!
+
+
+# 1.1.2
+
+- Fix setContents on already formatted text [#1065](https://github.com/quilljs/quill/issues/1065)
+- Fix regression [#1067](https://github.com/quilljs/quill/issues/1067)
+- Improve documentation [#1069](https://github.com/quilljs/quill/pull/1069) [#1070](https://github.com/quilljs/quill/pull/1070)
+
+Thank you [@benbro](https://github.com/benbro), [@derickruiz](https://github.com/derickruiz), [@eamodio](https://github.com/eamodio), [@hallaathrad](https://github.com/hallaathrad), and [@philly385](https://github.com/philly385) for your contributions to this release.
+
+
+# 1.1.1
+
+### Bug fixes
+
+- TEXT_CHANGE event now use cursor position to inform change location [#746](https://github.com/quilljs/quill/issues/746)
+- Fix inconsistent cursor reporting between browsers [#1007](https://github.com/quilljs/quill/issues/1007)
+- Fix tooltip overflow in docs [#1060](https://github.com/quilljs/quill/issues/1060)
+- Fix naming [#1063](https://github.com/quilljs/quill/pull/1063)
+- Fix Medium example [#1064](https://github.com/quilljs/quill/issues/1064)
+
+Thanks to [@artaommahe](https://github.com/artaommahe), [@benbro](https://github.com/benbro), [@fuffalist](https://github.com/fuffalist), [@sachinrekhi](https://github.com/sachinrekhi), [@sergop321](https://github.com/sergop321), and [@tlg](https://github.com/tlg) for contributions to this release!
+
+Special thanks to [@DadaMonad](https://github.com/DadaMonad) for contributions on [fast-diff](https://github.com/jhchen/fast-diff) that enabled the [#746](https://github.com/quilljs/quill/issues/746) fix.
+
+
+# 1.1.0
+
+### Additions
+
+Quill has always allowed API calls, even when the editor is in readOnly mode. All API calls also took a `source` parameter to indicate the origin of the change. For example, a click handler in the toolbar would call `formatText` with `source` set to `"user"`. When the editor is in readOnly mode, it would make sense for user initiated actions to be ignored. For example the user cannot focus or type into the editor. However because API calls are allowed, the user could still modify the editor contents [#909](https://github.com/quilljs/quill/issues/909). The natural fix is to ignore user initiated actions, even if it came through an API call, when the editor is in readOnly mode.
+
+However, the documentation never stated API calls with `source` set to `"user"` would be ignored sometimes, so this would be a breaking change under semver. Some could argue this is a bug fix and would only warrant a patch version bump, but this seems disingenuous for this particular case. The fact that almost no one took advantage of the `source` beyond default values is irrelevant under the eyes of semver.
+
+So a `strict` configuration option has been added. It is true by default so the above behavior is unchanged, and [#909](https://github.com/quilljs/quill/issues/909) is unfixed. Changing this to `false`, will use new behavior of ignoring user initiated changes on a disabled editor, even if through an API call.
+
+### Fixes
+
+- Fix undo when preformatted text inserted before plain text [#1019](https://github.com/quilljs/quill/issues/1019)
+- Add focus indicator on toolbar buttons [#1020](https://github.com/quilljs/quill/issues/1020)
+- Do not steal focus on API calls [#1029](https://github.com/quilljs/quill/issues/1029)
+- Disable paste when Quill is disabled [#1038](https://github.com/quilljs/quill/issues/1038)
+- Fix blank detection [#1043](https://github.com/quilljs/quill/issues/1043)
+- Enable yarn [#1041](https://github.com/quilljs/quill/issues/1041)
+- Documentation fixes [#1026](https://github.com/quilljs/quill/pull/1026), [#1027](https://github.com/quilljs/quill/pull/1027), [#1032](https://github.com/quilljs/quill/pull/1032)
+
+Thank you [@benbro](https://github.com/benbro), [@cutteroid](https://github.com/cutteroid), [@evansolomon](https://github.com/evansolomon), [@felipeochoa](https://github.com/felipeochoa), [jackmu95](https://github.com/jackmu95), [@joedynamite](https://github.com/joedynamite), [@lance13c](https://github.com/lance13c), [@leebenson](https://github.com/leebenson), [@maartenvanvliet](https://github.com/maartenvanvliet), [@sarbbottam](https://github.com/sarbbottam), [@viljark](https://github.com/viljark), [@w00fz](https://github.com/w00fz) for their contributions to this release.
+
+
+# 1.0.6
+
+Documentation clarifications and bug fixes.
+
+- Fix attaching toolbar to `<select>` without themes [#997](https://github.com/quilljs/quill/issues/997)
+- Link `code` icon to `code-block` [#998](https://github.com/quilljs/quill/issues/998)
+- Fix undo stack when at size limit [#1001](https://github.com/quilljs/quill/pull/1001)
+- Fix bug where `formatLine` did not ignore inline formats [8a7190](https://github.com/quilljs/parchment/commit/8a71905b2dd02d003edb02a15fdc727b26914e49)
+
+Thanks to [@dropfen](https://github.com/dropfen), [@evansolomon](https://github.com/evansolomon), [@hallaathrad](https://github.com/hallaathrad), [@janyksteenbeek](https://github.com/janyksteenbeek), [@jackmu95](https://github.com/jackmu95), [@marktron](https://github.com/marktron), [@mcat-ee](https://github.com/mcat-ee), [@unhammer](https://github.com/unhammer), and [@zeke](https://github.com/zeke) for contributions to this release!
+
+
+# 1.0.5
+
+Became 1.0.6 with a build/deploy fix.
+
+
+# 1.0.4
+
+- Fix bubble theme defaults [#963](https://github.com/quilljs/quill/issues/963)
+- Fix browsers modifying inline nesting order [#971](https://github.com/quilljs/quill/issues/971)
+- Do not fire selection-change event on paste [#974](https://github.com/quilljs/quill/issues/974)
+- Support alt attribute in images [#975](https://github.com/quilljs/quill/issues/975)
+- Deprecate `pasteHTML` for removal in Quill 2.0 [#981](https://github.com/quilljs/quill/issues/981)
+
+Thank you [jackmu95](https://github.com/jackmu95), [kristeehan](https://github.com/kristeehan), [ruffle1986](https://github.com/ruffle1986), [sergop321](https://github.com/sergop321), [sferoze](https://github.com/sferoze), and [sijad](https://github.com/sijad) for contributions to this release.
+
+
 # 1.0.3
 
 - Fix [#928](https://github.com/quilljs/quill/issues/928)

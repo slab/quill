@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
 import Inline from '../blots/inline';
@@ -17,7 +17,7 @@ class CodeBlock extends Block {
     return domNode;
   }
 
-  static formats(domNode) {
+  static formats() {
     return true;
   }
 

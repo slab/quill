@@ -22,6 +22,7 @@ class Scroll extends Parchment.Scroll {
       }, {});
     }
     this.optimize();
+    this.enable();
   }
 
   deleteAt(index, length) {
@@ -38,6 +39,10 @@ class Scroll extends Parchment.Scroll {
       first.remove();
     }
     this.optimize();
+  }
+
+  enable(enabled = true) {
+    this.domNode.setAttribute('contenteditable', enabled);
   }
 
   formatAt(index, length, format, value) {
@@ -80,6 +85,9 @@ class Scroll extends Parchment.Scroll {
   }
 
   line(index) {
+    if (index === this.length()) {
+      return this.line(index - 1);
+    }
     return this.descendant(isLine, index);
   }
 

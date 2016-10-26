@@ -1,11 +1,11 @@
 import Inline from '../blots/inline';
 
 class Bold extends Inline {
-  static create(value) {
+  static create() {
     return super.create();
   }
 
-  static formats(domNode) {
+  static formats() {
     return true;
   }
 

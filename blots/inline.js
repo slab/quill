@@ -1,4 +1,3 @@
-import extend from 'extend';
 import Embed from './embed';
 import Text from './text';
 import Parchment from 'parchment';
@@ -27,6 +26,16 @@ class Inline extends Parchment.Inline {
       }
     } else {
       super.formatAt(index, length, name, value);
+    }
+  }
+
+  optimize() {
+    super.optimize();
+    if (this.parent instanceof Inline &&
+        Inline.compare(this.statics.blotName, this.parent.statics.blotName) > 0) {
+      let parent = this.parent.isolate(this.offset(), this.length());
+      this.moveChildren(parent);
+      parent.wrap(this);
     }
   }
 }

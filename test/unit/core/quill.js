@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Quill, { expandConfig, overload } from '../../../core/quill';
 import Theme from '../../../core/theme';
 import Emitter from '../../../core/emitter';
@@ -154,6 +154,49 @@ describe('Quill', function() {
     });
   });
 
+  describe('events', function() {
+    beforeEach(function() {
+      this.quill = this.initialize(Quill, '<p>0123</p>');
+      this.quill.update();
+      spyOn(this.quill.emitter, 'emit').and.callThrough();
+      this.oldDelta = this.quill.getContents();
+    });
+
+    it('api text insert', function() {
+      this.quill.insertText(2, '!');
+      let delta = new Delta().retain(2).insert('!');
+      expect(this.quill.emitter.emit)
+        .toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, this.oldDelta, Emitter.sources.API);
+    });
+
+    it('user text insert', function(done) {
+      this.container.firstChild.firstChild.firstChild.data = '01!23';
+      let delta = new Delta().retain(2).insert('!');
+      setTimeout(() => {
+        expect(this.quill.emitter.emit)
+          .toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, this.oldDelta, Emitter.sources.USER);
+        done();
+      }, 1);
+    });
+
+    it('insert same character', function(done) {
+      this.quill.setText('aaaa\n');
+      this.quill.setSelection(2);
+      this.quill.update();
+      let old = this.quill.getContents();
+      let textNode = this.container.firstChild.firstChild.firstChild;
+      textNode.data = 'aaaaa';
+      this.quill.selection.setNativeRange(textNode.data, 3);
+      // this.quill.selection.update(Emitter.sources.SILENT);
+      let delta = new Delta().retain(2).insert('a');
+      setTimeout(() => {
+        let args = this.quill.emitter.emit.calls.mostRecent().args;
+        expect(args).toEqual([Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER]);
+        done();
+      }, 1);
+    });
+  });
+
   describe('setContents()', function() {
     it('empty', function() {
       let quill = this.initialize(Quill, '');
@@ -213,6 +256,14 @@ describe('Quill', function() {
       let quill = this.initialize(Quill, '<h1>Welcome</h1>');
       quill.setContents(new Delta().insert('0123'));
       expect(quill.getContents()).toEqual(new Delta().insert('0123\n'));
+    });
+
+    it('inline formatting', function() {
+      let quill = this.initialize(Quill, '<p><strong>Bold</strong></p><p>Not bold</p>');
+      let contents = quill.getContents();
+      let delta = quill.setContents(contents);
+      expect(quill.getContents()).toEqual(contents);
+      expect(delta).toEqual(contents.delete(contents.length()));
     });
   });
 
@@ -410,7 +461,7 @@ describe('Quill', function() {
     });
 
     it('toolbar custom handler, default container', function() {
-      let handler = function(value) {};
+      let handler = function() {};  // eslint-disable-line func-style
       let config = expandConfig('#test-container', {
         modules: {
           toolbar: {

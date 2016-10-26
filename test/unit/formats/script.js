@@ -1,4 +1,3 @@
-import Delta from 'rich-text/lib/delta';
 import Editor from '../../../core/editor';
 
 

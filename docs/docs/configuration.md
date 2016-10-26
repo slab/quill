@@ -11,7 +11,7 @@ Quill allows several ways to customize it to suit your needs. This section is de
 
 ### Container
 
-Quill requires an container where the editor will be appended. You can either pass in a CSS selector or a DOM object.
+Quill requires a container where the editor will be appended. You can pass in either a CSS selector or a DOM object.
 
 ```javascript
 var editor = new Quill('.editor');  // First matching element will be used
@@ -50,14 +50,13 @@ The following keys are recognized:
 
 Default: `document.body`
 
-DOM Element that editor ui elements, such as tooltips, should be confined within. Currently only considers left and right boundaries.
-
+DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
 
 #### debug
 
-Default: `false`
+Default: `warn`
 
-Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Debugging messages are disabled by default.
+Shortcut for [debug](/docs/api/#debug). Note `debug` is a static method and will affect other instances of Quill editors on the page. Only warning and error messages are enabled by default.
 
 #### formats
 
@@ -80,6 +79,12 @@ Placeholder text to show when editor is empty.
 Default: `false`
 
 Whether to instantiate the editor to read-only mode.
+
+#### strict
+
+Default: `true`
+
+Some improvements and modifications, under a strict interpretation of semver, would warrant a major version bump. To prevent small changes from inflating Quill's version number, they are disabled by this `strict` flag. Specific changes can be found in the [Changelog](https://github.com/quilljs/quill/blob/master/CHANGELOG.md) and searching for "strict". Setting this to `false` opts into potential future improvements.
 
 #### theme
 

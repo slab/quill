@@ -2,7 +2,6 @@ import extend from 'extend';
 import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
-import Picker from '../ui/picker';
 import { Range } from '../core/selection';
 
 
@@ -96,6 +95,8 @@ class SnowTooltip extends BaseTooltip {
           this.position(this.quill.getBounds(this.linkRange));
           return;
         }
+      } else {
+        delete this.linkRange;
       }
       this.hide();
     });

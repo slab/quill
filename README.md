@@ -23,7 +23,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 
 ```html
 <!-- Include Quill stylesheet -->
-<link href="http://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
 
 <!-- Create the toolbar container -->
 <div id="toolbar">
@@ -37,7 +37,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </div>
 
 <!-- Include the Quill library -->
-<script src="http://cdn.quilljs.com/1.0.0/quill.js"></script>
+<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
 
 <!-- Initialize Quill editor -->
 <script>
@@ -48,7 +48,7 @@ Instantiate a new Quill object with a css selector for the div that should becom
 </script>
 ```
 
-Take a look at the [Quill website](https://quilljs.com/) for more documentation, guides and live demos!
+Take a look at the [Quill website](https://quilljs.com/) for more documentation, guides and [live playground](https://quilljs.com/playground/)!
 
 
 ## Download

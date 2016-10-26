@@ -715,6 +715,7 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 }
 #above-container.demo-active #demo-container .ql-editor {
   overflow-y: auto;
+  padding-bottom: 55px;
 }
 #above-container.demo-active #laptop-container {
   transition: bottom 500ms ease-in-out 0s;
@@ -794,7 +795,6 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 }
 
 #gallery-container {
-  display: none;
   margin-bottom: 75px;
 }
 #gallery-container .selected-pen {
@@ -1175,10 +1175,6 @@ body:not(.home) .navbar-link:before {
 @media (max-width: 1023px) {
   .navbar-open {
     display: inline-block;
-    top: 5.5em;
-  }
-  .navbar-close {
-    top: 4.5em;
   }
   .navbar-drop.active {
     margin-bottom: -25em;
@@ -1219,7 +1215,7 @@ body:not(.home) .navbar-link:before {
     display: none;
   }
   .navbar-open, .navbar-close {
-    top: 3.5em;
+    top: 4em;
   }
   .logo {
     height: 5.3em;

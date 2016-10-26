@@ -13,6 +13,20 @@ var constantPack = new webpack.DefinePlugin({
   QUILL_VERSION: JSON.stringify(pkg.version)
 });
 
+var source = [
+  'quill.js',
+  'core.js',
+  'blots',
+  'core',
+  'formats',
+  'modules',
+  'test',
+  'themes',
+  'ui'
+].map(function(file) {
+  return path.resolve(__dirname, '..', file);
+});
+
 
 module.exports = {
   context: path.resolve(__dirname, '..'),
@@ -32,25 +46,43 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'parchment': path.resolve(__dirname, '..', 'node_modules/parchment/src/parchment')
+      'parchment': path.resolve(__dirname, '../node_modules/parchment/src/parchment')
     },
     extensions: ['', '.js', '.styl', '.ts']
   },
   module: {
-    loaders: [
-      { test: /parchment\/src\/.*\.ts$/, loader: 'ts' },
-      { test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css!stylus') },
-      { test: /\.svg$/, loader: 'html?minimize=true' },
-      {
-        test: /\.js$/,
-        exclude: [/node_modules/, /rich-text/],
-        loader: 'babel',
-        query: {
-          presets: ['es2015']
-          // plugins: ['transform-es2015-modules-commonjs']
-        }
+    preLoaders: [{
+      loader: 'eslint',
+      test: /\.js$/,
+      include: source
+    }],
+    loaders: [{
+      loader: 'ts',
+      test: /\.ts$/
+    }, {
+      loader: ExtractTextPlugin.extract('style', 'css!stylus'),
+      test: /\.styl$/,
+      include: [
+        path.resolve(__dirname, '../assets')
+      ]
+    }, {
+      loader: 'html',
+      test: /\.svg$/,
+      include: [
+        path.resolve(__dirname, '../assets/icons')
+      ],
+      query: {
+        minimize: true
       }
-    ],
+    }, {
+      loader: 'babel',
+      test: /\.js$/,
+      include: source,
+      query: {
+        presets: ['es2015']
+        // plugins: ['transform-es2015-modules-commonjs']
+      }
+    }],
     noParse: [
       /\/node_modules\/clone\/clone\.js$/,
       /\/node_modules\/eventemitter3\/index\.js$/,
@@ -87,19 +119,8 @@ module.exports = {
 };
 
 if (process.argv.indexOf('--coverage') !== -1) {
-  module.exports.module.postLoaders = [{
-    test: /\.js$/,
-    loader: 'istanbul-instrumenter',
-    exclude: [
-      path.resolve(__dirname, '..', 'node_modules'),
-      path.resolve(__dirname, '..', 'test'),
-      path.resolve(__dirname, '..', 'core/polyfill.js'),
-      path.resolve(__dirname, '..', 'core.js'),
-      path.resolve(__dirname, '..', 'quill.js')
-    ]
-  }];
   module.exports.module.loaders[3].query = {
-    plugins: ['transform-es2015-modules-commonjs']
+    plugins: ['istanbul', 'transform-es2015-modules-commonjs']
   };
 }
 

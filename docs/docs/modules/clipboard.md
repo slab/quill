@@ -4,11 +4,11 @@ title: Clipboard Module
 permalink: /docs/modules/clipboard/
 ---
 
-The Clipboard is handles copy, cut and paste between Quill and external applications. A set of defaults exist to provide sane interpretation of pasted content, with the ability for further customization through matchers.
+The Clipboard handles copy, cut and paste between Quill and external applications. A set of defaults exist to provide sane interpretation of pasted content, with the ability for further customization through matchers.
 
-The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in [post-order](https://en.wikipedia.org/wiki/Tree_traversal#Post-order), building up a [Delta](/guides/working-with-deltas/) representation of all subtrees. At each descendant node, matcher functions are called with the DOM Node and Delta interpretation so far, allowing the matcher to return a modified Delta interpretation.
+The Clipboard interprets pasted HTML by traversing the corresponding DOM tree in [post-order](https://en.wikipedia.org/wiki/Tree_traversal#Post-order), building up a [Delta](/docs/delta/) representation of all subtrees. At each descendant node, matcher functions are called with the DOM Node and Delta interpretation so far, allowing the matcher to return a modified Delta interpretation.
 
-Familiarity and comfort with [Deltas](https://github.com/ottypes/rich-text) is necessary in using matchers. See [Working with Deltas](/guides/working-with-deltas/) for a starter guide.
+Familiarity and comfort with [Deltas](/docs/delta/) is necessary in order to effectively use matchers.
 
 
 ## API
@@ -35,6 +35,28 @@ quill.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
 quill.clipboard.addMatcher('B', function(node, delta) {
   return delta.compose(new Delta().retain(delta.length(), { bold: true }));
 });
+```
+
+### dangerouslyPasteHTML
+
+Inserts content represented by HTML snippet into editor at a given index. The snippet is interpreted by Clipboard [matchers](#addMatcher), which may not produce the exactly input HTML. If no insertion index is provided, the entire editor contents will be overwritten. The [source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
+
+Improper handling of HTML can lead to [cross site scripting (XSS)](https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)) and failure to sanitize properly is both notoriously error-prone and a leading cause of web vulnerabilities. This method follows React's example and is aptly named to ensure the developer has taken the necessary precautions.
+
+**Methods**
+
+```javascript
+dangerouslyPasteHTML(html: String, source: String = 'api')
+dangerouslyPasteHTML(index: Number, html: String, source: String = 'api')
+```
+
+**Examples**
+
+```javascript
+quill.setText('Hello!');
+
+quill.clipboard.dangerouslyPasteHTML(5, '&nbsp;<b>World</b>');
+// Editor is now '<p>Hello&nbsp;<strong>World</strong>!</p>';
 ```
 
 

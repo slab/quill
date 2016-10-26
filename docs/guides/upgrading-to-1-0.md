@@ -8,6 +8,9 @@ Quill 1.0 introduces major changes aimed at greater ability to customize Quill. 
 
 To realize the full benefits of 1.0, it is encouraged to take a fresh view of Quill 1.0 and revisit even basic topics on this documentation site. Often, you will find that even though you could do things the old way, there is a better new way.
 
+### Configuration
+
+- `styles` *removed* - Previous versions of Quill allowed custom CSS to be injected through `<style>` additions. This option has been removed due to [Content Security Policy](https://developers.google.com/web/fundamentals/security/csp/). Instead you should use external CSS directly.
 
 ### API
 
@@ -92,6 +95,9 @@ var oldBullettedList = {
 
 ```
 
+### Defaults
+
+- Quill previously used inline styles to implement font family and size. A class implementation is now default. To revert this, see [Content and Formatting](/guides/how-to-customize-quill/#content-and-formatting).
 
 ### Browsers
 

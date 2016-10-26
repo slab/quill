@@ -1,5 +1,3 @@
-import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';

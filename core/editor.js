@@ -1,6 +1,5 @@
-import Delta from 'rich-text/lib/delta';
-import DeltaOp from 'rich-text/lib/op';
-import Emitter from './emitter';
+import Delta from 'quill-delta';
+import DeltaOp from 'quill-delta/lib/op';
 import Parchment from 'parchment';
 import CodeBlock from '../formats/code';
 import CursorBlot from '../blots/cursor';
@@ -11,21 +10,18 @@ import extend from 'extend';
 
 
 class Editor {
-  constructor(scroll, emitter) {
+  constructor(scroll) {
     this.scroll = scroll;
-    this.emitter = emitter;
-    this.emitter.on(Emitter.events.SCROLL_UPDATE, this.update.bind(this, null));
     this.delta = this.getDelta();
-    this.enable();
   }
 
-  applyDelta(delta, source = Emitter.sources.API) {
+  applyDelta(delta) {
     let consumeNextNewline = false;
     this.scroll.update();
     let scrollLength = this.scroll.length();
     this.scroll.batch = true;
     delta = normalizeDelta(delta);
-    delta.ops.reduce((index, op) => {
+    delta.reduce((index, op) => {
       let length = op.retain || op.delete || op.insert.length || 1;
       let attributes = op.attributes || {};
       if (op.insert != null) {
@@ -58,7 +54,7 @@ class Editor {
       });
       return index + length;
     }, 0);
-    delta.ops.reduce((index, op) => {
+    delta.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
         return index;
@@ -67,24 +63,20 @@ class Editor {
     }, 0);
     this.scroll.batch = false;
     this.scroll.optimize();
-    return this.update(delta, source);
+    return this.update(delta);
   }
 
-  deleteText(index, length, source = Emitter.sources.API) {
+  deleteText(index, length) {
     this.scroll.deleteAt(index, length);
-    return this.update(new Delta().retain(index).delete(length), source);
+    return this.update(new Delta().retain(index).delete(length));
   }
 
-  enable(enabled = true) {
-    this.scroll.domNode.setAttribute('contenteditable', enabled);
-  }
-
-  formatLine(index, length, formats = {}, source = Emitter.sources.API) {
+  formatLine(index, length, formats = {}) {
     this.scroll.update();
     Object.keys(formats).forEach((format) => {
       let lines = this.scroll.lines(index, Math.max(length, 1));
       let lengthRemaining = length;
-      lines.forEach((line, i) => {
+      lines.forEach((line) => {
         let lineLength = line.length();
         if (!(line instanceof CodeBlock)) {
           line.format(format, formats[format]);
@@ -97,14 +89,14 @@ class Editor {
       });
     });
     this.scroll.optimize();
-    return this.update(new Delta().retain(index).retain(length, clone(formats)), source);
+    return this.update(new Delta().retain(index).retain(length, clone(formats)));
   }
 
-  formatText(index, length, formats = {}, source = Emitter.sources.API) {
+  formatText(index, length, formats = {}) {
     Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, length, format, formats[format]);
     });
-    return this.update(new Delta().retain(index).retain(length, clone(formats)), source);
+    return this.update(new Delta().retain(index).retain(length, clone(formats)));
   }
 
   getContents(index, length) {
@@ -146,23 +138,25 @@ class Editor {
   }
 
   getText(index, length) {
-    return this.getContents(index, length).ops.map(function(op) {
-      return (typeof op.insert === 'string') ? op.insert : '';
+    return this.getContents(index, length).filter(function(op) {
+      return typeof op.insert === 'string';
+    }).map(function(op) {
+      return op.insert;
     }).join('');
   }
 
-  insertEmbed(index, embed, value, source = Emitter.sources.API) {
+  insertEmbed(index, embed, value) {
     this.scroll.insertAt(index, embed, value);
-    return this.update(new Delta().retain(index).insert({ [embed]: value }), source);
+    return this.update(new Delta().retain(index).insert({ [embed]: value }));
   }
 
-  insertText(index, text, formats = {}, source = Emitter.sources.API) {
+  insertText(index, text, formats = {}) {
     text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     this.scroll.insertAt(index, text);
     Object.keys(formats).forEach((format) => {
       this.scroll.formatAt(index, text.length, format, formats[format]);
     });
-    return this.update(new Delta().retain(index).insert(text, clone(formats)), source)
+    return this.update(new Delta().retain(index).insert(text, clone(formats)));
   }
 
   isBlank() {
@@ -172,7 +166,7 @@ class Editor {
     return child.length() <= 1 && Object.keys(child.formats()).length == 0;
   }
 
-  removeFormat(index, length, source) {
+  removeFormat(index, length) {
     let text = this.getText(index, length);
     let [line, offset] = this.scroll.line(index + length);
     let suffixLength = 0, suffix = new Delta();
@@ -187,10 +181,10 @@ class Editor {
     let contents = this.getContents(index, length + suffixLength);
     let diff = contents.diff(new Delta().insert(text).concat(suffix));
     let delta = new Delta().retain(index).concat(diff);
-    return this.applyDelta(delta, source);
+    return this.applyDelta(delta);
   }
 
-  update(change, source = Emitter.sources.USER, mutations = []) {
+  update(change, mutations = [], cursorIndex = undefined) {
     let oldDelta = this.delta;
     if (mutations.length === 1 &&
         mutations[0].type === 'characterData' &&
@@ -202,8 +196,8 @@ class Editor {
       let oldValue = mutations[0].oldValue.replace(CursorBlot.CONTENTS, '');
       let oldText = new Delta().insert(oldValue);
       let newText = new Delta().insert(textBlot.value());
-      let diffDelta = new Delta().retain(index).concat(oldText.diff(newText));
-      change = diffDelta.ops.reduce(function(delta, op) {
+      let diffDelta = new Delta().retain(index).concat(oldText.diff(newText, cursorIndex));
+      change = diffDelta.reduce(function(delta, op) {
         if (op.insert) {
           return delta.insert(op.insert, formats);
         } else {
@@ -214,14 +208,7 @@ class Editor {
     } else {
       this.delta = this.getDelta();
       if (!change || !equal(oldDelta.compose(change), this.delta)) {
-        change = oldDelta.diff(this.delta);
-      }
-    }
-    if (change.length() > 0) {
-      let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
-      this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);
-      if (source !== Emitter.sources.SILENT) {
-        this.emitter.emit(...args);
+        change = oldDelta.diff(this.delta, cursorIndex);
       }
     }
     return change;
@@ -246,7 +233,7 @@ function combineFormats(formats, combined) {
 }
 
 function normalizeDelta(delta) {
-  return delta.ops.reduce(function(delta, op) {
+  return delta.reduce(function(delta, op) {
     if (op.insert === 1) {
       let attributes = clone(op.attributes);
       delete attributes['image'];

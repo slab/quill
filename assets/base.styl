@@ -22,7 +22,6 @@ colorItemsPerRow = 7
     display: inline-block
     float: left
     height: controlHeight
-    outline: none
     padding: inputPaddingHeight inputPaddingWidth
     width: controlHeight + (inputPaddingWidth - inputPaddingHeight)*2
 
@@ -39,7 +38,7 @@ colorItemsPerRow = 7
     color: activeColor
     .ql-fill, .ql-stroke.ql-fill
       fill: activeColor
-    .ql-stroke, .ql-stroke-mitter
+    .ql-stroke, .ql-stroke-miter
       stroke: activeColor
 
 
@@ -67,18 +66,16 @@ colorItemsPerRow = 7
     display: inline-block
     vertical-align: middle
 
-  .ql-toolbar.{themeName}
-
   .ql-stroke
     fill: none
     stroke: inactiveColor
     stroke-linecap: round
     stroke-linejoin: round
     stroke-width: 2
-  .ql-stroke-mitter
+  .ql-stroke-miter
     fill: none
     stroke: inactiveColor
-    stroke-mitterlimit: 10
+    stroke-miterlimit: 10
     stroke-width: 2
 
   .ql-fill, .ql-stroke.ql-fill
@@ -214,8 +211,6 @@ colorItemsPerRow = 7
       margin: colorItemMargin
       padding: 0px
       width: colorItemSize
-    .ql-picker-item.ql-primary-color
-      margin-bottom: toolbarPadding
 
   .ql-picker:not(.ql-color-picker):not(.ql-icon-picker)
     svg

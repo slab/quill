@@ -1,4 +1,3 @@
-import Parchment from 'parchment';
 import Scroll from '../../../blots/scroll';
 
 

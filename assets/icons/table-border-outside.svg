@@ -16,7 +16,7 @@
     <rect height="2" width="2" x="5" y="14"></rect>
     <rect height="2" width="2" x="8" y="14"></rect>
   </g>
-  <rect class="ql-stroke-mitter" height="12" width="12" x="3" y="3"></rect>
+  <rect class="ql-stroke-miter" height="12" width="12" x="3" y="3"></rect>
   <g class="ql-fill ql-transparent">
     <rect height="2" width="2" x="14" y="14"></rect>
     <rect height="2" width="2" x="11" y="14"></rect>
