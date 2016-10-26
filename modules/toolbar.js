@@ -121,21 +121,19 @@ class Toolbar extends Module {
           if (typeof value === 'string') {
             value = value.replace(/\"/g, '\\"');
           }
-          [].forEach.call(input.querySelectorAll('option'), (tempOption) => {
-            let optionValue = tempOption.value;
-            if (input.classList.contains('ql-color')) {
-              optionValue = optionValue.toLowerCase();
-              if (optionValue.startsWith('rgb')) {
-                optionValue = optionValue.replace(/^[^\d]+/, '').replace(/[^\d]+$/, '');
-                optionValue = '#' + optionValue.split(',').map(function(component) {
-                  return ('00' + parseInt(component).toString(16)).slice(-2);
-                }).join('');
+          option = input.querySelector(`option[value="${value}"]`);
+          if (option == null && /^#[0-9A-F]{6}$/i.test(value)) {
+            option = input.querySelector(`option[value="${value.toUpperCase()}"]`);
+            if (option == null) {
+              let hex = value.slice(1);
+              let bigint = parseInt(hex, 16);
+              let rgb = [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+              option = input.querySelector(`option[value="rgb(${rgb.join()})"]`);
+              if (option == null) {
+                option = input.querySelector(`option[value="rgb(${rgb.join(', ')})"]`);
               }
             }
-            if (optionValue === value) {
-              option = tempOption;
-            }
-          });
+          }
         }
         if (option == null) {
           input.value = '';   // TODO make configurable?
