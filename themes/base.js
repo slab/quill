@@ -129,7 +129,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
               if (fileInput.files != null && fileInput.files[0] != null) {
-                this.quill.imageHandler(fileInput.files[0], (result) => {
+                this.quill.options.imageHandler(fileInput.files[0], (result) => {
                   let range = this.quill.getSelection(true);
                   this.quill.updateContents(new Delta()
                     .retain(range.index)

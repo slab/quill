@@ -71,7 +71,6 @@ class Quill {
     });
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.imageHandler = options.imageHandler;
     this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
@@ -309,12 +308,7 @@ Quill.DEFAULTS = {
   placeholder: '',
   readOnly: false,
   strict: true,
-  theme: 'default',
-  imageHandler(image, callback) {
-    let reader = new FileReader();
-    reader.onload = e => callback(e.target.result);
-    reader.readAsDataURL(image);
-  }
+  theme: 'default'
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
@@ -336,6 +330,11 @@ function expandConfig(container, userConfig) {
       clipboard: true,
       keyboard: true,
       history: true
+    },
+    imageHandler(image, callback) {
+      let reader = new FileReader();
+      reader.onload = (e) => callback(e.target.result);
+      reader.readAsDataURL(image);
     }
   }, userConfig);
   if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
