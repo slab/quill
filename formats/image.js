@@ -1,5 +1,11 @@
 import Embed from '../blots/embed';
-import Link, { sanitize } from '../formats/link';
+import { sanitize } from '../formats/link';
+
+const ATTRIBUTES = [
+  'alt',
+  'height',
+  'width'
+];
 
 
 class Image extends Embed {
@@ -12,10 +18,12 @@ class Image extends Embed {
   }
 
   static formats(domNode) {
-    let formats = {};
-    if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
-    if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
-    return formats;
+    return ATTRIBUTES.reduce(function(formats, attribute) {
+      if (domNode.hasAttribute(attribute)) {
+        formats[attribute] = domNode.getAttribute(attribute);
+      }
+      return formats;
+    }, {});
   }
 
   static match(url) {
@@ -31,7 +39,7 @@ class Image extends Embed {
   }
 
   format(name, value) {
-    if (name === 'height' || name === 'width') {
+    if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
       } else {

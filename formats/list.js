@@ -1,5 +1,3 @@
-import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
@@ -66,6 +64,16 @@ class List extends Container {
   formats() {
     // We don't inherit from FormatBlot
     return { [this.statics.blotName]: this.statics.formats(this.domNode) };
+  }
+
+  insertBefore(blot, ref) {
+    if (blot instanceof ListItem) {
+      super.insertBefore(blot, ref);
+    } else {
+      let index = ref == null ? this.length() : ref.offset(this);
+      let after = this.split(index);
+      after.parent.insertBefore(blot, after);
+    }
   }
 
   optimize() {

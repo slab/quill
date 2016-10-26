@@ -1,7 +1,9 @@
 import Parchment from 'parchment';
 import Emitter from '../core/emitter';
 import Block, { BlockEmbed } from './block';
+import Break from './break';
 import Container from './container';
+import CodeBlock from '../formats/code';
 
 
 function isLine(blot) {
@@ -20,6 +22,7 @@ class Scroll extends Parchment.Scroll {
       }, {});
     }
     this.optimize();
+    this.enable();
   }
 
   deleteAt(index, length) {
@@ -28,15 +31,24 @@ class Scroll extends Parchment.Scroll {
     super.deleteAt(index, length);
     if (last != null && first !== last && offset > 0 &&
         !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
-      last.moveChildren(first);
-      last.remove();
-      this.optimize();
+      if (last instanceof CodeBlock) {
+        last.deleteAt(last.length() - 1, 1);
+      }
+      let ref = last.children.head instanceof Break ? null : last.children.head;
+      first.moveChildren(last, ref);
+      first.remove();
     }
+    this.optimize();
+  }
+
+  enable(enabled = true) {
+    this.domNode.setAttribute('contenteditable', enabled);
   }
 
   formatAt(index, length, format, value) {
     if (this.whitelist != null && !this.whitelist[format]) return;
     super.formatAt(index, length, format, value);
+    this.optimize();
   }
 
   insertAt(index, value, def) {
@@ -53,10 +65,10 @@ class Scroll extends Parchment.Scroll {
         let embed = Parchment.create(value, def);
         this.appendChild(embed);
       }
-      this.optimize();
     } else {
       super.insertAt(index, value, def);
     }
+    this.optimize();
   }
 
   insertBefore(blot, ref) {
@@ -73,6 +85,9 @@ class Scroll extends Parchment.Scroll {
   }
 
   line(index) {
+    if (index === this.length()) {
+      return this.line(index - 1);
+    }
     return this.descendant(isLine, index);
   }
 

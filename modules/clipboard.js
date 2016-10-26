@@ -1,13 +1,13 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
 import Module from '../core/module';
 
-import { AlignStyle } from '../formats/align';
+import { AlignAttribute, AlignStyle } from '../formats/align';
 import { BackgroundStyle } from '../formats/background';
 import { ColorStyle } from '../formats/color';
-import { DirectionStyle } from '../formats/direction';
+import { DirectionAttribute, DirectionStyle } from '../formats/direction';
 import { FontStyle } from '../formats/font';
 import { SizeStyle } from '../formats/size';
 
@@ -25,6 +25,14 @@ const CLIPBOARD_CONFIG = [
   ['i', matchAlias.bind(matchAlias, 'italic')],
   ['style', matchIgnore]
 ];
+
+const ATTRIBUTE_ATTRIBUTORS = [
+  AlignAttribute,
+  DirectionAttribute
+].reduce(function(memo, attr) {
+  memo[attr.keyName] = attr;
+  return memo;
+}, {});
 
 const STYLE_ATTRIBUTORS = [
   AlignStyle,
@@ -112,31 +120,30 @@ class Clipboard extends Module {
     return delta;
   }
 
+  dangerouslyPasteHTML(index, html, source = Quill.sources.API) {
+    if (typeof index === 'string') {
+      return this.quill.setContents(this.convert(index), html);
+    } else {
+      let paste = this.convert(html);
+      return this.quill.updateContents(new Delta().retain(index).concat(paste), source);
+    }
+  }
+
   onPaste(e) {
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || !this.quill.isEnabled()) return;
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index).delete(range.length);
-    let types = e.clipboardData.types;
-    if ((types instanceof DOMStringList && types.contains("text/html")) ||
-        (types.indexOf && types.indexOf('text/html') !== -1)) {
-      this.container.innerHTML = e.clipboardData.getData('text/html');
-      paste.call(this);
-      e.preventDefault();
-    } else {
-      let bodyTop = document.body.scrollTop;
-      this.container.focus();
-      setTimeout(() => {
-        paste.call(this);
-        document.body.scrollTop = bodyTop;
-        this.quill.selection.scrollIntoView();
-      }, 1);
-    }
-    function paste() {
+    let bodyTop = document.body.scrollTop;
+    this.container.focus();
+    setTimeout(() => {
+      this.quill.selection.update(Quill.sources.SILENT);
       delta = delta.concat(this.convert());
       this.quill.updateContents(delta, Quill.sources.USER);
       // range.length contributes to delta.length()
       this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
-    }
+      document.body.scrollTop = bodyTop;
+      this.quill.selection.scrollIntoView();
+    }, 1);
   }
 }
 Clipboard.DEFAULTS = {
@@ -176,8 +183,17 @@ function matchAttributor(node, delta) {
   let styles = Parchment.Attributor.Style.keys(node);
   let formats = {};
   attributes.concat(classes).concat(styles).forEach((name) => {
-    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE) || STYLE_ATTRIBUTORS[name];
+    let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE);
     if (attr != null) {
+      formats[attr.attrName] = attr.value(node);
+      if (formats[attr.attrName]) return;
+    }
+    if (ATTRIBUTE_ATTRIBUTORS[name] != null) {
+      attr = ATTRIBUTE_ATTRIBUTORS[name];
+      formats[attr.attrName] = attr.value(node);
+    }
+    if (STYLE_ATTRIBUTORS[name] != null) {
+      attr = STYLE_ATTRIBUTORS[name];
       formats[attr.attrName] = attr.value(node);
     }
   });
@@ -211,7 +227,7 @@ function matchBreak(node, delta) {
   return delta;
 }
 
-function matchIgnore(node, delta) {
+function matchIgnore() {
   return new Delta();
 }
 
@@ -254,10 +270,11 @@ function matchText(node, delta) {
     return delta.insert(text.trim());
   }
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
-    function replacer(collapse, match) {
+    // eslint-disable-next-line func-style
+    let replacer = function(collapse, match) {
       match = match.replace(/[^\u00a0]/g, '');    // \u00a0 is nbsp;
       return match.length < 1 && collapse ? ' ' : match;
-    }
+    };
     text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
     text = text.replace(/\s\s+/g, replacer.bind(replacer, true));  // collapse whitespace
     if ((node.previousSibling == null && isLine(node.parentNode)) ||

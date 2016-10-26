@@ -1,5 +1,4 @@
-import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
 import logger from '../core/logger';
@@ -29,9 +28,6 @@ class Toolbar extends Module {
     this.handlers = {};
     Object.keys(this.options.handlers).forEach((format) => {
       this.addHandler(format, this.options.handlers[format]);
-    });
-    this.container.addEventListener('mousedown', function(e) {
-      e.preventDefault();   // Prevent blur
     });
     [].forEach.call(this.container.querySelectorAll('button, select'), (input) => {
       this.attach(input);
@@ -123,7 +119,7 @@ class Toolbar extends Module {
         } else if (!Array.isArray(formats[format])) {
           let value = formats[format];
           if (typeof value === 'string') {
-            value = value.replace(/\"/g, '&quot;');
+            value = value.replace(/\"/g, '\\"');
           }
           option = input.querySelector(`option[value="${value}"]`);
         }
@@ -139,7 +135,10 @@ class Toolbar extends Module {
         } else if (input.hasAttribute('value')) {
           // both being null should match (default values)
           // '1' should match with 1 (headers)
-          input.classList.toggle('ql-active', formats[format] == input.value || (formats[format] == null && !input.value));
+          let isActive = formats[format] === input.getAttribute('value') ||
+                         (formats[format] != null && formats[format].toString() === input.getAttribute('value')) ||
+                         (formats[format] == null && !input.getAttribute('value'));
+          input.classList.toggle('ql-active', isActive);
         } else {
           input.classList.toggle('ql-active', formats[format] != null);
         }
@@ -202,7 +201,7 @@ function addSelect(container, format, values) {
 Toolbar.DEFAULTS = {
   container: null,
   handlers: {
-    clean: function(value) {
+    clean: function() {
       let range = this.quill.getSelection();
       if (range == null) return;
       if (range.length == 0) {

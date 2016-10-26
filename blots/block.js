@@ -1,5 +1,5 @@
 import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Break from './break';
 import Embed from './embed';

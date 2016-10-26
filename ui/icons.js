@@ -9,6 +9,7 @@ module.exports = {
   'blockquote': require('../assets/icons/blockquote.svg'),
   'bold'      : require('../assets/icons/bold.svg'),
   'clean'     : require('../assets/icons/clean.svg'),
+  'code'      : require('../assets/icons/code.svg'),
   'code-block': require('../assets/icons/code.svg'),
   'color'     : require('../assets/icons/color.svg'),
   'direction' : {

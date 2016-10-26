@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 import CodeBlock from '../../../formats/code';
 
@@ -115,6 +115,20 @@ describe('Code', function() {
     editor.formatText(4, 1, { 'code-block': false });
     expect(editor.getDelta()).toEqual(new Delta().insert('0123\n'));
     expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
+  });
+
+  it('delete merge before', function() {
+    let editor = this.initialize(Editor, { html: '<h1>0123</h1><pre>4567\n</pre>' });
+    editor.deleteText(4, 1);
+    expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { 'code-block': true }));
+    expect(editor.scroll.domNode).toEqualHTML('<pre>01234567\n</pre>');
+  });
+
+  it('delete merge after', function() {
+    let editor = this.initialize(Editor, { html: '<pre>0123\n</pre><h1>4567</h1>' });
+    editor.deleteText(4, 1);
+    expect(editor.getDelta()).toEqual(new Delta().insert('01234567').insert('\n', { header: 1 }));
+    expect(editor.scroll.domNode).toEqualHTML('<h1>01234567</h1>');
   });
 
   it('replace', function() {

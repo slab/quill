@@ -1,0 +1,21 @@
+// Initialize editor with custom theme and modules
+var fullEditor = new Quill('#full-editor', {
+  modules: {
+    'toolbar': { container: '#full-toolbar' },
+  },
+  theme: 'snow'
+});
+
+// Update basic editor's content with ours
+fullEditor.on('text-change', function(delta, oldDelta, source) {
+  if (source === 'user') {
+    basicEditor.updateContents(delta);
+  }
+});
+
+// Update our content with basic editor's
+basicEditor.on('text-change', function(delta, oldDelta, source) {
+  if (source === 'user') {
+    fullEditor.updateContents(delta);
+  }
+});

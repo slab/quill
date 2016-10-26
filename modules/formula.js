@@ -6,18 +6,18 @@ class FormulaBlot extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
-      katex.render(value, node);
-      node.dataset.value = value;
+      window.katex.render(value, node);
+      node.setAttribute('data-value', value);
     }
     node.setAttribute('contenteditable', false);
     return node;
   }
 
   static value(domNode) {
-    return domNode.dataset.value;
+    return domNode.getAttribute('data-value');
   }
 
-  index(node, offset) {
+  index() {
     return 1;
   }
 }

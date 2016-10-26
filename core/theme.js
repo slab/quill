@@ -1,7 +1,3 @@
-import extend from 'extend';
-import Emitter from './emitter';
-
-
 class Theme {
   constructor(quill, options) {
     this.quill = quill;

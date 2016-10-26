@@ -1,7 +1,5 @@
-import Delta from 'rich-text/lib/delta';
 import Selection, { Range } from '../../../core/selection';
 import Cursor from '../../../blots/cursor';
-import Scroll from '../../../blots/scroll';
 
 
 describe('Selection', function() {
@@ -136,12 +134,6 @@ describe('Selection', function() {
       let [range, ] = selection.getRange();
       expect(range.index).toEqual(3);
       expect(range.length).toEqual(4);
-    });
-
-    it('no focus', function() {
-      let selection = this.initialize(Selection, '');
-      let [range, ] = selection.getRange();
-      expect(range).toEqual(null);
     });
 
     it('wrong input', function() {
@@ -470,7 +462,7 @@ describe('Selection', function() {
       let selection = this.initialize(Selection, '<p><span class="ql-size-large">0000</span></p>', this.div);
       let span = this.div.querySelector('span');
       if (/Trident/i.test(navigator.userAgent)) {
-        span.style.lineHeight = '21px';
+        span.style.lineHeight = '27px';
       }
       this.bounds = selection.getBounds(2);
       expect(this.bounds.left).toBeApproximately(this.reference.left + span.offsetWidth / 2, 1);

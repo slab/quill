@@ -1,7 +1,6 @@
 import Parchment from 'parchment';
 import clone from 'clone';
 import equal from 'deep-equal';
-import BreakBlot from '../blots/break';
 import Emitter from './emitter';
 import logger from './logger';
 
@@ -20,7 +19,14 @@ class Selection {
   constructor(scroll, emitter) {
     this.emitter = emitter;
     this.scroll = scroll;
+    this.composing = false;
     this.root = this.scroll.domNode;
+    this.root.addEventListener('compositionstart', () => {
+      this.composing = true;
+    });
+    this.root.addEventListener('compositionend', () => {
+      this.composing = false;
+    });
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
@@ -97,6 +103,7 @@ class Selection {
       bounds = range.getBoundingClientRect();
     } else {
       let side = 'left';
+      let rect;
       if (node instanceof Text) {
         if (offset < node.data.length) {
           range.setStart(node, offset);
@@ -106,9 +113,9 @@ class Selection {
           range.setEnd(node, offset);
           side = 'right';
         }
-        var rect = range.getBoundingClientRect();
+        rect = range.getBoundingClientRect();
       } else {
-        var rect = leaf.domNode.getBoundingClientRect();
+        rect = leaf.domNode.getBoundingClientRect();
         if (offset > 0) side = 'right';
       }
       bounds = {
@@ -163,7 +170,6 @@ class Selection {
   }
 
   getRange() {
-    if (!this.hasFocus()) return [null, null];
     let range = this.getNativeRange();
     if (range == null) return [null, null];
     let positions = [[range.start.node, range.start.offset]];
@@ -195,10 +201,10 @@ class Selection {
     let bounds = this.getBounds(range.index, range.length);
     if (bounds == null) return;
     if (this.root.offsetHeight < bounds.bottom) {
-      let [line, ] = this.scroll.line(range.index + range.length);
+      let [line, ] = this.scroll.line(Math.min(range.index + range.length, this.scroll.length()-1));
       this.root.scrollTop = line.domNode.offsetTop + line.domNode.offsetHeight - this.root.offsetHeight;
     } else if (bounds.top < 0) {
-      let [line, ] = this.scroll.line(range.index);
+      let [line, ] = this.scroll.line(Math.min(range.index, this.scroll.length()-1));
       this.root.scrollTop = line.domNode.offsetTop;
     }
   }

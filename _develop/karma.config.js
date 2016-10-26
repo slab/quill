@@ -57,7 +57,8 @@ module.exports = function(config) {
     config.browserDisconnectTolerance = 3;
     config.browserNoActivityTimeout = 60000;
     config.captureTimeout = 120000;
-    if (process.env.BROWSER === 'ios-latest' || process.env.BROWSER === 'android-latest') {
+    // MS Edge does not work in an iframe
+    if (['ios-latest', 'android-latest'].indexOf(process.env.BROWSER) > -1) {
       config.client.useIframe = true;
     }
   }

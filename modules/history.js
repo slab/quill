@@ -58,7 +58,7 @@ class History extends Module {
       undo: undoDelta
     });
     if (this.stack.undo.length > this.options.maxStack) {
-      this.stack.undo.unshift();
+      this.stack.undo.shift();
     }
   }
 
@@ -102,7 +102,7 @@ function endsWithNewlineChange(delta) {
 }
 
 function getLastChangeIndex(delta) {
-  let deleteLength = delta.ops.reduce(function(length, op) {
+  let deleteLength = delta.reduce(function(length, op) {
     length += (op.delete || 0);
     return length;
   }, 0);
