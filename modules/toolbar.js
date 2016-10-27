@@ -123,16 +123,16 @@ class Toolbar extends Module {
           }
           option = input.querySelector(`option[value="${value}"]`);
           if (option == null && /^#[0-9A-F]{6}$/i.test(value)) {
-            option = input.querySelector(`option[value="${value.toUpperCase()}"]`);
-            if (option == null) {
-              let hex = value.slice(1);
-              let bigint = parseInt(hex, 16);
-              let rgb = [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-              option = input.querySelector(`option[value="rgb(${rgb.join()})"]`);
+            let hex = value.slice(1);
+            let bigint = parseInt(hex, 16);
+            let rgb = [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+
+            let colorValues = [value.toUpperCase(), `rgb(${rgb.join()})`, `rgb(${rgb.join(', ')})`];
+            colorValues.forEach((colorValue) => {
               if (option == null) {
-                option = input.querySelector(`option[value="rgb(${rgb.join(', ')})"]`);
+                option = input.querySelector(`option[value="${colorValue}"]`);
               }
-            }
+            });
           }
         }
         if (option == null) {
