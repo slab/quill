@@ -887,23 +887,33 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
   content: 'Sailec Light';
 }
 #demo-container .ql-snow .ql-font .ql-picker-item[data-value=sofia]::before,
+#demo-container .ql-snow .ql-font .ql-picker-label[data-value=sofia]:not([data-label])::before,
 #demo-container .ql-font-sofia {
+  content: 'Sofia Pro';
   font-family: 'Sofia Pro', sans-serif;
 }
 #demo-container .ql-snow .ql-font .ql-picker-item[data-value=slabo]::before,
+#demo-container .ql-snow .ql-font .ql-picker-label[data-value=slabo]:not([data-label])::before,
 #demo-container .ql-font-slabo {
+  content: 'Slabo 13px';
   font-family: 'Slabo 13px', sans-serif;
 }
 #demo-container .ql-snow .ql-font .ql-picker-item[data-value=roboto]::before,
+#demo-container .ql-snow .ql-font .ql-picker-label[data-value=roboto]:not([data-label])::before,
 #demo-container .ql-font-roboto {
+  content: 'Roboto Slab';
   font-family: 'Roboto Slab', serif;
 }
 #demo-container .ql-snow .ql-font .ql-picker-item[data-value=inconsolata]::before,
+#demo-container .ql-snow .ql-font .ql-picker-label[data-value=inconsolata]:not([data-label])::before,
 #demo-container .ql-font-inconsolata {
+  content: 'Inconsolata';
   font-family: 'Inconsolata', monospace;
 }
 #demo-container .ql-snow .ql-font .ql-picker-item[data-value=ubuntu]::before,
+#demo-container .ql-snow .ql-font .ql-picker-label[data-value=ubuntu]:not([data-label])::before,
 #demo-container .ql-font-ubuntu {
+  content: 'Ubuntu Mono';
   font-family: 'Ubuntu Mono', monospace;
 }
 #demo-container .ql-editor {

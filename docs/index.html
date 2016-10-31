@@ -204,8 +204,9 @@ var quill = new Quill('#editor', {
 <script type="text/javascript">
 (function() {
   $(document).ready(function() {
+    var fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
     var Font = Quill.import('formats/font');
-    Font.whitelist = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
+    Font.whitelist = fonts;
     Quill.register(Font, true);
 
     var bubbleEditor = new Quill('#bubble-container .editor', {
@@ -233,7 +234,7 @@ var quill = new Quill('#editor', {
         'formula': true,
         'syntax': true,
         'toolbar': [
-          [{ 'font': [] }, { 'size': [] }],
+          [{ 'font': fonts }, { 'size': [] }],
           [ 'bold', 'italic', 'underline', 'strike' ],
           [{ 'color': [] }, { 'background': [] }],
           [{ 'script': 'super' }, { 'script': 'sub' }],
