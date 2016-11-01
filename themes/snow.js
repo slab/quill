@@ -3,6 +3,7 @@ import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
 import { Range } from '../core/selection';
+import icons from '../ui/icons';
 
 
 const TOOLBAR_CONFIG = [
@@ -23,8 +24,8 @@ class SnowTheme extends BaseTheme {
 
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
-    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
-    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), icons);
+    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), icons);
     this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
     if (toolbar.container.querySelector('.ql-link')) {
       this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
