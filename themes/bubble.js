@@ -93,9 +93,9 @@ class BubbleTooltip extends BaseTooltip {
 
   position(reference) {
     let shift = super.position(reference);
-    if (shift === 0) return shift;
     let arrow = this.root.querySelector('.ql-tooltip-arrow');
     arrow.style.marginLeft = '';
+    if (shift === 0) return shift;
     arrow.style.marginLeft = (-1*shift - arrow.offsetWidth/2) + 'px';
   }
 }
