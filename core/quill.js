@@ -264,7 +264,7 @@ class Quill {
       let deleted = this.editor.deleteText(0, length);
       let applied = this.editor.applyDelta(delta);
       let lastOp = applied.ops[applied.ops.length - 1];
-      if (lastOp != null && lastOp.insert[lastOp.insert.length-1] === '\n') {
+      if (lastOp != null && typeof(lastOp.insert) === 'string' && lastOp.insert[lastOp.insert.length-1] === '\n') {
         this.editor.deleteText(this.getLength() - 1, 1);
         applied.delete(1);
       }
