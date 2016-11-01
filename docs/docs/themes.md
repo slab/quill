@@ -29,8 +29,8 @@ Themes allow you to easily make your editor look good with minimal effort. Quill
 <!-- Add the theme's stylesheet -->
 <link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.bubble.css">
 
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.js"></script>
-<script type="text/javascript">
+<script src="{{site.cdn}}{{site.version}}/quill.js"></script>
+<script>
 var quill = new Quill('#editor', {
   theme: 'bubble'   // Specify theme in configuration
 });
@@ -64,10 +64,10 @@ Many other customizations can be done through the respective modules. For exampl
 
 
 <!-- script -->
-<script type="text/javascript" src="{{site.katex}}/katex.min.js"></script>
-<script type="text/javascript" src="{{site.highlightjs}}/highlight.min.js"></script>
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
-<script type="text/javascript">
+<script src="{{site.katex}}/katex.min.js"></script>
+<script src="{{site.highlightjs}}/highlight.min.js"></script>
+<script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script>
   var snowQuill = new Quill('#snow-container', {
     placeholder: 'Compose an epic...',
     modules: {

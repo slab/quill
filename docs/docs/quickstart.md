@@ -22,7 +22,7 @@ The best way to get started is try a simple example. Quill is initialized with a
 <script src="https://cdn.quilljs.com/{{site.version}}/quill.js"></script>
 
 <!-- Initialize Quill editor -->
-<script type="text/javascript">
+<script>
   var quill = new Quill('#editor', {
     theme: 'snow'
   });
