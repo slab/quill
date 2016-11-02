@@ -59,7 +59,9 @@ Finally, you may want to add functionality not provided by existing modules. In 
 
 Quill allows modification and extension of the contents and formats that it understands through its document model [Parchment](https://github.com/quilljs/parchment/). Content and formats are represented in Parchment as either Blots or Attributors, which roughly correspond to Nodes or Attributes in the DOM.
 
-Quill use classes, instead of inline style attributes, when possible, but both are implemented for you to pick and choose. A live example of this is implemented as a [Playground snippet](/playground/#class-vs-inline-style).
+#### Class vs Inline
+
+Quill uses classes, instead of inline style attributes, when possible, but both are implemented for you to pick and choose. A live example of this is implemented as a [Playground snippet](/playground/#class-vs-inline-style).
 
 ```js
 var ColorClass = Quill.import('attributors/class/color');
@@ -76,6 +78,31 @@ var quill = new Quill('#editor', {
 });
 ```
 
+#### Customizing Attributors
+
+In addition to choosing the particular Attributor, you can also customize existing ones. Here is an example of the font whitelist to add additional fonts.
+
+```js
+var FontAttributor = Quill.import('attributors/class/font');
+FontAttributor.whitelist = [
+  'sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'
+];
+Quill.register(FontAttributor, true);
+```
+
+Note you still need to add styling for these classes into your CSS files.
+
+```html
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<style>
+.ql-font-roboto {
+  font-family: 'Roboto', sans-serif;
+}
+</style>
+```
+
+#### Customizing Blots
+
 Formats represented by Blots can also be customized. Here is how you would change the DOM Node used to represent bold formatting.
 
 ```js
@@ -91,6 +118,8 @@ var quill = new Quill('#editor', {
   theme: 'snow'
 });
 ```
+
+#### Extending Blots
 
 You can also extend existing formats. Here is a quick ES6 implementation of a list item that does not permit formatting its contents. Code blocks are implemented in exactly this way.
 
