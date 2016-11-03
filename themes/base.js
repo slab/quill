@@ -25,6 +25,11 @@ const HEADERS = [ '1', '2', '3', false ];
 
 const SIZES = [ 'small', false, 'large', 'huge' ];
 
+const IMAGE_MIME_TYPES = [
+  'image/bmp', 'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml',
+  'image/tiff', 'image/x-icon'
+];
+
 
 class BaseTheme extends Theme {
   constructor(quill, options) {
@@ -124,7 +129,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml');
+            fileInput.setAttribute('accept', IMAGE_MIME_TYPES.join());
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
               if (fileInput.files != null && fileInput.files[0] != null) {
