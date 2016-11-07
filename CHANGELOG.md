@@ -1,3 +1,12 @@
+# 1.1.4
+
+- Remove unnecessary type attribute in documentation [#1087](https://github.com/quilljs/quill/pull/1087)
+- Fix chrome 52+ input file label open slow [#1090](https://github.com/quilljs/quill/pull/1090)
+- Only query the last op's insertion string if it's actually an insert [#1095](https://github.com/quilljs/quill/pull/1095)
+
+Thank you [@jleen](https://github.com/jleen), [@kaelig](https://github.com/kaelig), and [@YouHan26](https://github.com/YouHan26) for your contributions to this release.
+
+
 # 1.1.3
 
 - Update quill-delta [delta#2](https://github.com/quilljs/delta/issues/2)
