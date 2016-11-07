@@ -1,6 +1,13 @@
 #!/bin/bash
 
-VERSION="1.1.4"
+VERSION="$1"
+
+if [ -z "$VERSION" ]; then
+  echo "Version required."
+  exit
+else
+  echo "Releasing $VERSION"
+fi
 
 rm -r .release
 rm -r dist
