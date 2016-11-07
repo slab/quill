@@ -1,4 +1,4 @@
-# 1.1.4
+# 1.1.5
 
 - Remove unnecessary type attribute in documentation [#1087](https://github.com/quilljs/quill/pull/1087)
 - Fix chrome 52+ input file label open slow [#1090](https://github.com/quilljs/quill/pull/1090)
