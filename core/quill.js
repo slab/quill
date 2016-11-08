@@ -86,7 +86,7 @@ class Quill {
       let index = range && range.length === 0 ? range.index : undefined;
       modify.call(this, () => {
         return this.editor.update(null, mutations, index);
-      }, source);
+      }, source, true);
     });
     let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
     this.setContents(contents);
@@ -396,6 +396,10 @@ function modify(modifier, source, index, shift) {
       range = shiftRange(range, change, source);
     } else if (shift !== 0) {
       range = shiftRange(range, index, shift, source);
+    }
+    if (range.index === 0 && range.length === 0) {
+      // Fixes cursor render bug in Chrome for code-block and checklist
+      this.setSelection(null, Emitter.sources.SILENT);
     }
     this.setSelection(range, Emitter.sources.SILENT);
   }

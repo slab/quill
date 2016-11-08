@@ -204,7 +204,7 @@ Keyboard.DEFAULTS = {
       key: Keyboard.keys.ENTER,
       collapsed: true,
       format: { list: 'checked' },
-      handler: function(range, context) {
+      handler: function(range) {
         this.quill.scroll.insertAt(range.index, '\n');
         let [line, ] = this.quill.scroll.line(range.index + 1);
         line.format('list', 'unchecked');
