@@ -200,6 +200,19 @@ Keyboard.DEFAULTS = {
         }
       }
     },
+    'checklist enter': {
+      key: Keyboard.keys.ENTER,
+      collapsed: true,
+      format: { list: 'checked' },
+      handler: function(range, context) {
+        this.quill.scroll.insertAt(range.index, '\n');
+        let [line, ] = this.quill.scroll.line(range.index + 1);
+        line.format('list', 'unchecked');
+        this.quill.update(Quill.sources.USER);
+        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        this.quill.selection.scrollIntoView();
+      }
+    },
     'header enter': {
       key: Keyboard.keys.ENTER,
       collapsed: true,
