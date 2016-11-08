@@ -22,6 +22,33 @@ describe('List', function() {
     `);
   });
 
+  it('add checklist', function() {
+    let editor = this.initialize(Editor, `
+      <p>0123</p>
+      <p>5678</p>
+      <p>0123</p>
+    `);
+    editor.scroll.domNode.classList.add('ql-editor');
+    editor.formatText(4, 1, { list: 'checked' });
+    editor.formatText(9, 1, { list: 'unchecked' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123')
+      .insert('\n', { list: 'checked' })
+      .insert('5678')
+      .insert('\n', { list: 'unchecked' })
+      .insert('0123\n')
+    );
+    expect(this.container).toEqualHTML(`
+      <ul data-checked="true">
+        <li>0123</li>
+      </ul>
+      <ul data-checked="false">
+        <li>5678</li>
+      </ul>
+      <p>0123</p>
+    `);
+  });
+
   it('remove', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>

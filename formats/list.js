@@ -41,17 +41,23 @@ ListItem.tagName = 'LI';
 
 class List extends Container {
   static create(value) {
-    if (value === 'ordered') {
-      value = 'OL';
-    } else if (value === 'bullet') {
-      value = 'UL';
+    let tagName = value === 'ordered' ? 'OL' : 'UL';
+    let node = super.create(tagName);
+    if (value === 'checked' || value === 'unchecked') {
+      node.setAttribute('data-checked', value === 'checked');
     }
-    return super.create(value);
+    return node;
   }
 
   static formats(domNode) {
     if (domNode.tagName === 'OL') return 'ordered';
-    if (domNode.tagName === 'UL') return 'bullet';
+    if (domNode.tagName === 'UL') {
+      if (domNode.hasAttribute('data-checked')) {
+        return domNode.getAttribute('data-checked') === 'true' ? 'checked' : 'unchecked';
+      } else {
+        return 'bullet';
+      }
+    }
     return undefined;
   }
 
@@ -81,7 +87,8 @@ class List extends Container {
     let next = this.next;
     if (next != null && next.prev === this &&
         next.statics.blotName === this.statics.blotName &&
-        next.domNode.tagName === this.domNode.tagName) {
+        next.domNode.tagName === this.domNode.tagName &&
+        next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
       next.moveChildren(this);
       next.remove();
     }
