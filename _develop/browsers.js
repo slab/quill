@@ -22,7 +22,7 @@ var desktop = {
 
 var mobile = {
   'ios-latest'        : ['iPhone 7 Plus', 'iOS', '10.0', 'Safari'],
-  'ios-previous'      : ['iPhone 7 Plus', 'iOS', '9.3', 'Safari'],
+  'ios-previous'      : ['iPhone 6 Plus', 'iOS', '9.3', 'Safari'],
 
   'android-latest'    : ['Android Emulator', 'Android', '5.1', 'Browser'],
   'android-previous'  : ['Android Emulator', 'Android', '5.0', 'Browser']
@@ -38,10 +38,11 @@ Object.keys(desktop).forEach(function(key) {
 });
 
 Object.keys(mobile).forEach(function(key) {
+  var appiumVersion = key.startsWith('ios') ? '1.6.1' : '1.5.3';
   module.exports[key] = {
     base: 'SauceLabs',
     browserName: mobile[key][3],
-    appiumVersion: '1.6.1',
+    appiumVersion: appiumVersion,
     deviceName: mobile[key][0],
     deviceOrientation: 'portrait',
     platformVersion: mobile[key][2],
