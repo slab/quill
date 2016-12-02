@@ -384,7 +384,7 @@ function expandConfig(container, userConfig) {
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
 function modify(modifier, source, index, shift) {
-  if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
+  if (this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
     return new Delta();
   }
   let range = index == null ? null : this.getSelection();
