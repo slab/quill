@@ -213,7 +213,7 @@ class BaseTooltip extends Tooltip {
         break;
       }
       case 'video': {
-        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
+        let match = value.match(/^(https?):\/\/(www\.|m\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
                     value.match(/^(https?):\/\/(www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
         if (match) {
           value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
