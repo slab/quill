@@ -1,3 +1,17 @@
+# 1.1.6
+
+### Features
+
+Checklists [#759](https://github.com/quilljs/quill/issues/759) support has been added to the API. UI and relevant interactions are still forthcoming.
+
+### Bug Fixes
+
+- Fix bug that allowed edits in readOnly mode [#1151](https://github.com/quilljs/quill/issues/1151)
+- Fix max call stack bug on large paste [#1123](https://github.com/quilljs/quill/issues/1123)
+
+Thank you [@jgmediadesign](https://github.com/jgmediadesign) and [@julienbmobile](https://github.com/julienbmobile) for contributions to this release!
+
+
 # 1.1.5
 
 - Remove unnecessary type attribute in documentation [#1087](https://github.com/quilljs/quill/pull/1087)
