@@ -80,7 +80,6 @@ module.exports = {
       include: source,
       query: {
         presets: ['es2015']
-        // plugins: ['transform-es2015-modules-commonjs']
       }
     }],
     noParse: [
@@ -122,6 +121,12 @@ module.exports = {
 if (process.argv.indexOf('--coverage') !== -1) {
   module.exports.module.loaders[3].query = {
     plugins: ['istanbul', 'transform-es2015-modules-commonjs']
+  };
+}
+
+if (process.argv.indexOf('--dev') !== -1) {
+  module.exports.module.loaders[3].query = {
+    plugins: ['transform-es2015-modules-commonjs']
   };
 }
 
