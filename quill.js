@@ -38,9 +38,6 @@ import Tooltip from './ui/tooltip';
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
 
-
-
-
 Quill.register({
   'attributors/attribute/direction': DirectionAttribute,
 

@@ -1,15 +1,14 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
-import Table from '../../../formats/table';
 
 
 describe('Table', function() {
   it('add', function() {
     let editor = this.initialize(Editor, `<p>0123</p>`
     );
-    editor.insertEmbed(0, 'table', [['a','b','c'],['d','e','f']]);
+    editor.insertEmbed(0, 'table', [['a', 'b', 'c'], ['d', 'e', 'f']]);
     expect(editor.getDelta()).toEqual(new Delta()
-      .insert({'table':[['a','b','c'],['d','e','f']]})
+      .insert({'table':[['a', 'b', 'c'], ['d', 'e', 'f']]})
       .insert('0123\n')
     );
     expect(this.container).toEqualHTML(`
@@ -29,9 +28,9 @@ describe('Table', function() {
 
   it('add one row table', function() {
     let editor = this.initialize(Editor, '<p>0123</p>');
-    editor.insertEmbed(0, 'table', [['a','b', 'c']]);
+    editor.insertEmbed(0, 'table', [['a', 'b', 'c']]);
     expect(editor.getDelta()).toEqual(new Delta()
-      .insert({'table': [['a','b','c']]})
+      .insert({'table': [['a', 'b', 'c']]})
       .insert('0123\n')
     );
     expect(this.container).toEqualHTML(`
