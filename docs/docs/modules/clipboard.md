@@ -62,7 +62,7 @@ quill.clipboard.dangerouslyPasteHTML(5, '&nbsp;<b>World</b>');
 
 ## Configuration
 
-An of array matchers can be passed into Clipboard's configuration options. These will be appended after Quill's own default matchers.
+An array of matchers can be passed into Clipboard's configuration options. These will be appended after Quill's own default matchers.
 
 ```javascript
 var quill = new Quill('#editor', {
