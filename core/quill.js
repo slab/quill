@@ -86,7 +86,7 @@ class Quill {
       let index = range && range.length === 0 ? range.index : undefined;
       modify.call(this, () => {
         return this.editor.update(null, mutations, index);
-      }, source, true);
+      }, source);
     });
     let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
     this.setContents(contents);
