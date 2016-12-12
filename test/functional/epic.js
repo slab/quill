@@ -17,7 +17,7 @@ var P1 = 'Call me Ishmael. Some years ago—never mind how long precisely-having
 var P2 = 'There now is your insular city of the Manhattoes, belted round by wharves as Indian isles by coral reefs—commerce surrounds it with her surf. Right and left, the streets take you waterward. Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by breezes, which a few hours previous were out of sight of land. Look at the crowds of water-gazers there.'
 
 
-describe('compose an epic', function(done) {
+describe('compose an epic', function() {
   it('load', function() {
     browser.url('/standalone/full/');
     expect(browser.getTitle()).toEqual('Full Editor - Quill');
