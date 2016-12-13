@@ -795,6 +795,9 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 }
 
 #gallery-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
   margin-bottom: 75px;
 }
 #gallery-container .selected-pen {
@@ -825,6 +828,10 @@ a.home .ql-snow .ql-tooltip.ql-out-bottom {
 }
 #gallery-container img {
   width: 100%;
+}
+#gallery-container > div {
+  margin-bottom: 15px;
+  margin-left: 0;
 }
 
 #features-container #github-wrapper + hr {
