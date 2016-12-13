@@ -307,6 +307,7 @@ Quill.DEFAULTS = {
   modules: {},
   placeholder: '',
   readOnly: false,
+  scrollingContainer: null,
   strict: true,
   theme: 'default'
 };
@@ -367,7 +368,7 @@ function expandConfig(container, userConfig) {
     };
   }
   userConfig = extend(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
-  ['bounds', 'container'].forEach(function(key) {
+  ['bounds', 'container', 'scrollingContainer'].forEach(function(key) {
     if (typeof userConfig[key] === 'string') {
       userConfig[key] = document.querySelector(userConfig[key]);
     }
