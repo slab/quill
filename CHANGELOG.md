@@ -1,3 +1,15 @@
+# 1.1.7
+
+- Fix dropdown values reverting to default [#901](https://github.com/quilljs/quill/issues/901)
+- Add config to prevent scroll jumping on paste [#1082](https://github.com/quilljs/quill/issues/1082)
+- Prevent scrolling on API source calls [#1152](https://github.com/quilljs/quill/issues/1152)
+- Fix tsconfig build error [#1165](https://github.com/quilljs/quill/issues/1165)
+- Fix delete and formatting interaction in Firefox [#1171](https://github.com/quilljs/quill/issues/1171)
+- Fix cursor jump on formatting in middle of text [#1176](https://github.com/quilljs/quill/issues/1176)
+
+Thanks to [@cutteroid](https://github.com/cutteroid), [@houxg](https://github.com/houxg), [@jasongisstl](https://github.com/jasongisstl), [@nikparo](https://github.com/nikparo), [@sbevels](https://github.com/sbevels), and [sferoze](https://github.com/sferoze) for your contributions to this release.
+
+
 # 1.1.6
 
 ### Features
