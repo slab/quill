@@ -391,7 +391,7 @@ function modify(modifier, source, index, shift) {
   let range = index == null ? null : this.getSelection();
   let oldDelta = this.editor.delta;
   let change = modifier();
-  if (range != null) {
+  if (range != null && source === Emitter.sources.USER) {
     if (index === true) index = range.index;
     if (shift == null) {
       range = shiftRange(range, change, source);
