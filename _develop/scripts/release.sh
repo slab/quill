@@ -33,14 +33,14 @@ find quill/examples -type f -exec sed -i "" 's/src="\/\//src="https:\/\//g' {} \
 
 tar -czf quill.tar.gz quill
 
-aws s3 cp quill/quill.js s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/javascript; charset=utf-8"
-aws s3 cp quill/quill.min.js s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/javascript; charset=utf-8"
-aws s3 cp quill/quill.core.js s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/javascript; charset=utf-8"
-aws s3 cp quill/quill.bubble.css s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "text/css; charset=utf-8"
-aws s3 cp quill/quill.core.css s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "text/css; charset=utf-8"
-aws s3 cp quill/quill.snow.css s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "text/css; charset=utf-8"
-aws s3 cp quill/quill.min.js.map s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/json; charset=utf-8"
-aws s3 sync s3://cdn.quilljs.com/$VERSION/ s3://cdn.quilljs.com/latest/
+aws s3 cp quill/quill.js s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/javascript; charset=utf-8" --profile quill
+aws s3 cp quill/quill.min.js s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/javascript; charset=utf-8" --profile quill
+aws s3 cp quill/quill.core.js s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/javascript; charset=utf-8" --profile quill
+aws s3 cp quill/quill.bubble.css s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "text/css; charset=utf-8" --profile quill
+aws s3 cp quill/quill.core.css s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "text/css; charset=utf-8" --profile quill
+aws s3 cp quill/quill.snow.css s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "text/css; charset=utf-8" --profile quill
+aws s3 cp quill/quill.min.js.map s3://cdn.quilljs.com/$VERSION/ --cache-control max-age=604800 --content-type "application/json; charset=utf-8" --profile quill
+aws s3 sync s3://cdn.quilljs.com/$VERSION/ s3://cdn.quilljs.com/latest/ --profile quill
 
 cd ..
 git tag v$VERSION -m "Version $VERSION"
