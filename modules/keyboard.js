@@ -340,6 +340,8 @@ function makeFormatHandler(format) {
     key: format[0].toUpperCase(),
     shortKey: true,
     handler: function(range, context) {
+      const isFormatEnabled = (Array.isArray(this.quill.formats) && this.quill.formats.indexOf(format) !== -1);
+      if (!isFormatEnabled) return false;
       this.quill.format(format, !context.format[format], Quill.sources.USER);
     }
   };
