@@ -112,7 +112,9 @@ class Toolbar extends Module {
       let [format, input] = pair;
       if (input.tagName === 'SELECT') {
         let option;
-        if (range == null || formats[format] == null) {
+        if (range == null) {
+          option = null;
+        } else if (formats[format] == null) {
           option = input.querySelector('option[selected]');
         } else if (!Array.isArray(formats[format])) {
           let value = formats[format];
