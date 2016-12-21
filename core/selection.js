@@ -65,6 +65,7 @@ class Selection {
   }
 
   format(format, value) {
+    if (this.scroll.whitelist != null && !this.scroll.whitelist[format]) return;
     this.scroll.update();
     let nativeRange = this.getNativeRange();
     if (nativeRange == null || !nativeRange.native.collapsed || Parchment.query(format, Parchment.Scope.BLOCK)) return;
