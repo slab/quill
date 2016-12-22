@@ -41,8 +41,8 @@ class TextMarking extends Module {
     }
 
     mark(markId = String.UUID(), range = this.quill.selection.savedRange) {
-        if (!range) { 
-            return 
+        if (!range) {
+            return
         }
 
         let curSelection = this.quill.getSelection(),
