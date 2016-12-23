@@ -56,7 +56,7 @@ describe('Quill', function() {
       expect(this.quill.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, change, this.oldDelta, Emitter.sources.API);
     });
 
-    it('format', function() {
+    it('format()', function() {
       this.quill.setSelection(3, 2);
       this.quill.format('bold', true);
       let change = new Delta().retain(3).retain(2, { bold: true });
