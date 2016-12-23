@@ -52,11 +52,11 @@ colorItemsPerRow = 7
 
   .ql-hidden
     display: none
-  .ql-out-bottom, .ql-out-top
-    visibility: hidden
 
   .ql-tooltip
     position: absolute
+    &:not(.ql-hidden)
+      z-index: 999
     a
       cursor: pointer
       text-decoration: none
