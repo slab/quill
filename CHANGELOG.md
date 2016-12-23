@@ -1,3 +1,14 @@
+# 1.1.8
+
+- Support pasting italics from Google Docs [#1185](https://github.com/quilljs/quill/issues/1185)
+- Fix setting dropdown picker back to default [#1191](https://github.com/quilljs/quill/issues/1191)
+- Fix code-block formatting on empty first line in Firefox [#1195](https://github.com/quilljs/quill/issues/1195)
+- Prevent formatting via keyboard shortcuts when not whitelisted [#1197](https://github.com/quilljs/quill/issues/1197)
+- Fix select-all copy and overwrite paste in Firefox [#1202](https://github.com/quilljs/quill/issues/1202)
+
+Thank you [@adfaure](https://github.com/adfaure), [@berndschimmer](https://github.com/berndschimmer), [@CoenWarmer](https://github.com/CoenWarmer), [@montlebalm](https://github.com/montlebalm), and [@TraceyYau](https://github.com/TraceyYau) for contributions to this release!
+
+
 # 1.1.7
 
 - Fix dropdown values reverting to default [#901](https://github.com/quilljs/quill/issues/901)
