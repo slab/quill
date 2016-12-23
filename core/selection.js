@@ -188,6 +188,7 @@ class Selection {
       }
     });
     let start = Math.min(...indexes), end = Math.max(...indexes);
+    end = Math.min(end, this.scroll.length() - 1);
     return [new Range(start, end-start), range];
   }
 
