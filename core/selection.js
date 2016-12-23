@@ -217,10 +217,10 @@ class Selection {
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();
-      let nativeRange = this.getNativeRange();
-      if (nativeRange == null || force ||
-          startNode !== nativeRange.start.node || startOffset !== nativeRange.start.offset ||
-          endNode !== nativeRange.end.node || endOffset !== nativeRange.end.offset) {
+      let native = (this.getNativeRange() || {}).native;
+      if (native == null || force ||
+          startNode !== native.startContainer || startOffset !== native.startOffset ||
+          endNode !== native.endContainer || endOffset !== native.endOffset) {
         let range = document.createRange();
         range.setStart(startNode, startOffset);
         range.setEnd(endNode, endOffset);

@@ -401,10 +401,6 @@ function modify(modifier, source, index, shift) {
     } else if (shift !== 0) {
       range = shiftRange(range, index, shift, source);
     }
-    if (range.index === 0 && range.length === 0) {
-      // Fixes cursor render bug in Chrome for code-block and checklist
-      this.setSelection(null, Emitter.sources.SILENT);
-    }
     this.setSelection(range, Emitter.sources.SILENT);
   }
   if (change.length() > 0) {
