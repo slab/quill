@@ -58,9 +58,7 @@ class Selection {
 
   focus() {
     if (this.hasFocus()) return;
-    let bodyTop = document.body.scrollTop;
     this.root.focus();
-    document.body.scrollTop = bodyTop;
     this.setRange(this.savedRange);
   }
 

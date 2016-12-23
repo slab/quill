@@ -53,6 +53,7 @@ class Quill {
   constructor(container, options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
+    this.scrollingContainer = this.options.scrollingContainer || document.body;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
@@ -133,7 +134,9 @@ class Quill {
   }
 
   focus() {
+    let scrollTop = this.scrollingContainer.scrollTop;
     this.selection.focus();
+    this.scrollingContainer.scrollTop = scrollTop;
     this.selection.scrollIntoView();
   }
 
