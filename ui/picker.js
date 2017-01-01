@@ -8,7 +8,7 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    this.label.addEventListener('click', () => {
+    this.label.addEventListener('mousedown', () => {
       this.container.classList.toggle('ql-expanded');
     });
     this.select.addEventListener('change', this.update.bind(this));
