@@ -85,7 +85,7 @@ class SnowTooltip extends BaseTooltip {
     });
     this.quill.on(Emitter.events.SELECTION_CHANGE, (range, oldRange, source) => {
       if (range == null) return;
-      if (range.length === 0 && source === Quill.sources.USER) {
+      if (range.length === 0 && source === Emitter.sources.USER) {
         let [link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
         if (link != null) {
           this.linkRange = new Range(range.index - offset, link.length());

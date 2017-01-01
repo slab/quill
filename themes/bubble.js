@@ -48,7 +48,7 @@ class BubbleTooltip extends BaseTooltip {
     super(quill, bounds);
     this.quill.on(Emitter.events.EDITOR_CHANGE, (type, range, oldRange, source) => {
       if (type !== Emitter.events.SELECTION_CHANGE) return;
-      if (range != null && range.length > 0 && source === Quill.sources.USER) {
+      if (range != null && range.length > 0 && source === Emitter.sources.USER) {
         this.show();
         // Lock our width so we will expand beyond our offsetParent boundaries
         this.root.style.left = '0px';
