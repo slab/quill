@@ -199,11 +199,11 @@ function matchAttributor(node, delta) {
     }
     if (ATTRIBUTE_ATTRIBUTORS[name] != null) {
       attr = ATTRIBUTE_ATTRIBUTORS[name];
-      formats[attr.attrName] = attr.value(node);
+      formats[attr.attrName] = attr.value(node) || undefined;
     }
     if (STYLE_ATTRIBUTORS[name] != null) {
       attr = STYLE_ATTRIBUTORS[name];
-      formats[attr.attrName] = attr.value(node);
+      formats[attr.attrName] = attr.value(node) || undefined;
     }
   });
   if (Object.keys(formats).length > 0) {
