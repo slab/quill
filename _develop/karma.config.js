@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var browsers = require('./browsers');
 var sauce = require('./sauce');
 
