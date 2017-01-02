@@ -57,9 +57,12 @@ colorItemsPerRow = 7
 
   .ql-tooltip
     position: absolute
+    transform: translateY(10px)
     a
       cursor: pointer
       text-decoration: none
+  .ql-tooltip.ql-flip
+    transform: translateY(-10px)
 
   .ql-formats
     &:after

@@ -5,9 +5,7 @@ arrowWidth = 6px
     background-color: backgroundColor
     border-radius: 25px
     color: textColor
-    margin-top: 10px
   .ql-tooltip-arrow
-    border-bottom: arrowWidth solid backgroundColor
     border-left: arrowWidth solid transparent
     border-right: arrowWidth solid transparent
     content: " "
@@ -15,7 +13,12 @@ arrowWidth = 6px
     left: 50%
     margin-left: -1 * arrowWidth
     position: absolute
+  .ql-tooltip:not(.ql-flip) .ql-tooltip-arrow
+    border-bottom: arrowWidth solid backgroundColor
     top: -1 * arrowWidth
+  .ql-tooltip.ql-flip .ql-tooltip-arrow
+    border-top: arrowWidth solid backgroundColor
+    bottom: -1 * arrowWidth
 
   .ql-tooltip.ql-editing
     .ql-tooltip-editor
