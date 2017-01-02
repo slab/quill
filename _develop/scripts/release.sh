@@ -45,3 +45,4 @@ aws s3 sync s3://cdn.quilljs.com/$VERSION/ s3://cdn.quilljs.com/latest/ --profil
 cd ..
 git tag v$VERSION -m "Version $VERSION"
 git push origin v$VERSION
+git push origin master
