@@ -1,3 +1,14 @@
+# 1.1.9
+
+- Flip tooltips when vertically out of bounds [#851](https://github.com/quilljs/quill/issues/851)
+- Fix IE11 autolinking and control backspace [#1028](https://github.com/quilljs/quill/issues/1028)
+- Only show tooltip when user initiates selection change [#1193](https://github.com/quilljs/quill/issues/1193)
+- Fix bug needing to click twice on align [#1220](https://github.com/quilljs/quill/issues/1220)
+- Fix cut + pasting videos [#1222](https://github.com/quilljs/quill/issues/1222)
+
+Thanks to [@amitguptagwl](https://github.com/amitguptagwl), [@antonlabunets](https://github.com/antonlabunets), [@benbro](https://github.com/benbro), [@eamodio](https://github.com/eamodio) and [@ygrishajev](https://github.com/ygrishajev) for your contributions to this release.
+
+
 # 1.1.8
 
 - Support pasting italics from Google Docs [#1185](https://github.com/quilljs/quill/issues/1185)
