@@ -15,7 +15,7 @@ class Link extends Inline {
   }
 
   static sanitize(url) {
-    return sanitize(url, ['http', 'https', 'mailto', 'tel']) ? url : this.SANITIZED_URL;
+    return sanitize(url, ['https', 'http', 'mailto', 'tel']) ? url : this.SANITIZED_URL;
   }
 
   format(name, value) {
