@@ -38,7 +38,7 @@ Object.keys(desktop).forEach(function(key) {
 });
 
 Object.keys(mobile).forEach(function(key) {
-  var appiumVersion = key.startsWith('ios') ? '1.6.1' : '1.5.3';
+  var appiumVersion = key.startsWith('ios') ? '1.6.3' : '1.5.3';
   module.exports[key] = {
     base: 'SauceLabs',
     browserName: mobile[key][3],
