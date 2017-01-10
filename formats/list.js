@@ -61,6 +61,19 @@ class List extends Container {
     return undefined;
   }
 
+  constructor(domNode) {
+    super(domNode)
+    domNode.addEventListener('click', (e) => {
+      let format = this.statics.formats(domNode);
+      if (e.target.parentNode !== domNode) return;
+      if (format === 'checked') {
+        this.format('list', 'unchecked');
+      } else if(format === 'unchecked') {
+        this.format('list', 'checked');
+      }
+    });
+  }
+
   format(name, value) {
     if (this.children.length > 0) {
       this.children.tail.format(name, value);

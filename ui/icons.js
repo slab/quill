@@ -37,7 +37,7 @@ module.exports = {
   'list': {
     'ordered' : require('../assets/icons/list-ordered.svg'),
     'bullet'  : require('../assets/icons/list-bullet.svg'),
-    'unchecked' : require('../assets/icons/list-check.svg')
+    'check'   : require('../assets/icons/list-check.svg')
   },
   'script': {
     'sub'     : require('../assets/icons/subscript.svg'),

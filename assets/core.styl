@@ -55,10 +55,13 @@ resets(arr)
     list-style-type: none
   ul > li::before
     content: '\25CF'
-  ul[data-checked=true] > li::before,
-  ul[data-checked=false] > li::before
-    color: #777
-    cursor: pointer
+  ul[data-checked=true],
+  ul[data-checked=false]
+    pointer-events: none
+    > li::before
+      color: #777
+      cursor: pointer
+      pointer-events: all
   ul[data-checked=true] > li::before
     content: '\2611'
   ul[data-checked=false] > li::before
