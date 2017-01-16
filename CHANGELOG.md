@@ -1,3 +1,13 @@
+# 1.1.10
+
+- Preserve user selection on API changes [#1152](https://github.com/quilljs/quill/issues/1152)
+- Fix backspacing into emojis [#1230](https://github.com/quilljs/quill/issues/1230)
+- Fix ability to type after emptying line in IE/Firefox [#1254](https://github.com/quilljs/quill/issues/1254)
+- Fix whitelisting block formats [#1256](https://github.com/quilljs/quill/issues/1256)
+
+Thank you [@benbro](https://github.com/benbro), [@haugstrup](https://github.com/haugstrup), [@peterweck](https://github.com/peterweck) and [@sbevels](https://github.com/sbevels) for contributions to this release!
+
+
 # 1.1.9
 
 - Flip tooltips when vertically out of bounds [#851](https://github.com/quilljs/quill/issues/851)
