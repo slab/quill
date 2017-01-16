@@ -220,7 +220,7 @@ class Selection {
       if (!this.hasFocus()) this.root.focus();
 
       let range = this.getNativeRange();
-      let native = range.native;
+      let native = (range || {}).native;
       if (range == null || force ||
           startNode !== native.startContainer ||
           startOffset !== native.startOffset ||
