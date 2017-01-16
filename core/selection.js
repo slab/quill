@@ -269,8 +269,9 @@ class Selection {
   }
 
   update(source = Emitter.sources.USER) {
-    let nativeRange, oldRange = this.lastRange;
-    [this.lastRange, nativeRange] = this.getRange();
+    let oldRange = this.lastRange;
+    let [lastRange, nativeRange] = this.getRange();
+    this.lastRange = lastRange;
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;
     }
