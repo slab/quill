@@ -218,11 +218,18 @@ class Selection {
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();
-      let native = (this.getNativeRange() || {}).native;
-      if (native == null || force ||
-          startNode !== native.startContainer || startOffset !== native.startOffset ||
-          endNode !== native.endContainer || endOffset !== native.endOffset) {
-        let range = document.createRange();
+
+      let range = this.getNativeRange();
+      let native = range.native;
+      if (range == null || force ||
+          startNode !== native.startContainer ||
+          startOffset !== native.startOffset ||
+          endNode !== native.endContainer ||
+          endOffset !== native.endOffset ||
+          (range.start.node.tagName === 'BR' && startNode !== range.start.node) ||
+          (range.end.node.tagName === 'BR' && endNode !== range.end.node)) {
+
+        range = document.createRange();
         range.setStart(startNode, startOffset);
         range.setEnd(endNode, endOffset);
         selection.removeAllRanges();
