@@ -297,6 +297,9 @@ function handleEnter(range, context) {
     return lineFormats;
   }, {});
   this.quill.insertText(range.index, '\n', lineFormats, Quill.sources.USER);
+  // Earlier scroll.deleteAt might have messed up our selection,
+  // so insertText's built in selection preservation is not reliable
+  this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
   this.quill.selection.scrollIntoView();
   Object.keys(context.format).forEach((name) => {
     if (lineFormats[name] != null) return;
