@@ -62,14 +62,15 @@ class List extends Container {
   }
 
   constructor(domNode) {
-    super(domNode)
+    super(domNode);
     domNode.addEventListener('click', (e) => {
-      let format = this.statics.formats(domNode);
       if (e.target.parentNode !== domNode) return;
+      let format = this.statics.formats(domNode);
+      let blot = Parchment.find(e.target);
       if (format === 'checked') {
-        this.format('list', 'unchecked');
+        blot.format('list', 'unchecked');
       } else if(format === 'unchecked') {
-        this.format('list', 'checked');
+        blot.format('list', 'checked');
       }
     });
   }
