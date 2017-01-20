@@ -33,6 +33,7 @@
   - once
 - Extension:
   - debug
+  - find-experimental
   - import
   - register
   - addContainer

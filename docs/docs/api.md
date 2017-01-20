@@ -16,7 +16,7 @@ redirect_from:
   {% for category in hash %}
   <h4>{{ category[0] }}</h4>
   <ul>
-  {% for api in category[1] %}<li><a href="#{{ api | downcase }}">{{ api }}</a></li>{% endfor %}
+  {% for api in category[1] %}<li><a href="#{{ api | downcase }}">{{ api | remove: "-experimental" }}</a></li>{% endfor %}
   </ul>
   {% endfor %}
 </nav>
