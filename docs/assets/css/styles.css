@@ -966,6 +966,61 @@ body:not(.home) .navbar-link:before {
   width: 2.5em;
 }
 
+.experimental {
+  background-color: #f2d123;
+  border-radius: 6px;
+  color: #1d1e30;
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-top: 4px;
+  padding: 1px 6px 1px 7px;
+  position: relative;
+  text-transform: uppercase;
+  vertical-align: top;
+}
+.experimental:hover::before, .experimental:hover::after {
+  visibility: visible;
+}
+.experimental::before, .experimental::after {
+  top: 0;
+  left: 0;
+  margin-left: 100%;
+  position: absolute;
+  transition: visibility 0s ease .2s;
+  visibility: hidden;
+}
+.experimental::before {
+  border-right: 6px solid #444;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  content: " ";
+  height: 0;
+  margin-left: calc(100% + 5px);
+  margin-top: -6px;
+  top: 50%;
+  width: 0;
+}
+.experimental::after {
+  background-color: #444;
+  border-radius: 5px;
+  color: #fff;
+  content: "Semantic Versioning does not apply to experimental APIs";
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1em;
+  margin-left: calc(100% + 11px);
+  margin-top: -2px;
+  overflow: hidden;
+  padding: 7px 10px 5px;
+  text-decoration: none;
+  text-transform: none;
+  z-index: 1;
+  white-space: nowrap;
+}
+
 #content-container .standalone-link {
   float: right;
   font-size: 1.3rem;
