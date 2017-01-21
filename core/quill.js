@@ -201,8 +201,28 @@ class Quill {
     }
   }
 
+  getIndex(blot) {
+    return blot.offset(this.scroll);
+  }
+
   getLength() {
     return this.scroll.length();
+  }
+
+  getLeaf(index) {
+    return this.scroll.leaf(index);
+  }
+
+  getLine(index) {
+    return this.scroll.line(index);
+  }
+
+  getLines(index = 0, length = Number.MAX_VALUE) {
+    if (typeof index !== 'number') {
+      return this.scroll.lines(index.index, index.length);
+    } else {
+      return this.scroll.lines(index, length);
+    }
   }
 
   getModule(name) {

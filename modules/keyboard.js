@@ -73,9 +73,9 @@ class Keyboard extends Module {
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
-      let [line, offset] = this.quill.scroll.line(range.index);
-      let [leafStart, offsetStart] = this.quill.scroll.leaf(range.index);
-      let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.quill.scroll.leaf(range.index + range.length);
+      let [line, offset] = this.quill.getLine(range.index);
+      let [leafStart, offsetStart] = this.quill.getLeaf(range.index);
+      let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.quill.getLeaf(range.index + range.length);
       let prefixText = leafStart instanceof Parchment.Text ? leafStart.value().slice(0, offsetStart) : '';
       let suffixText = leafEnd instanceof Parchment.Text ? leafEnd.value().slice(offsetEnd) : '';
       let curContext = {
@@ -208,7 +208,7 @@ Keyboard.DEFAULTS = {
       format: { list: 'checked' },
       handler: function(range) {
         this.quill.scroll.insertAt(range.index, '\n');
-        let [line, ] = this.quill.scroll.line(range.index + 1);
+        let [line, ] = this.quill.getLine(range.index + 1);
         line.format('list', 'unchecked');
         this.quill.update(Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
@@ -257,7 +257,7 @@ Keyboard.DEFAULTS = {
 
 function handleBackspace(range, context) {
   if (range.index === 0) return;
-  let [line, ] = this.quill.scroll.line(range.index);
+  let [line, ] = this.quill.getLine(range.index);
   let formats = {};
   if (context.offset === 0) {
     let curFormats = line.formats();
@@ -319,9 +319,9 @@ function makeCodeBlockHandler(indent) {
       let index = range.index, length = range.length;
       let [block, offset] = this.quill.scroll.descendant(CodeBlock, index);
       if (block == null) return;
-      let scrollOffset = this.quill.scroll.offset(block);
+      let scrollIndex = this.quill.getIndex(block);
       let start = block.newlineIndex(offset, true) + 1;
-      let end = block.newlineIndex(scrollOffset + offset + length);
+      let end = block.newlineIndex(scrollIndex + offset + length);
       let lines = block.domNode.textContent.slice(start, end).split('\n');
       offset = 0;
       lines.forEach((line, i) => {
