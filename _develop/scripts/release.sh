@@ -46,3 +46,5 @@ cd ..
 git tag v$VERSION -m "Version $VERSION"
 git push origin v$VERSION
 git push origin master
+
+npm publish
