@@ -1,37 +1,5 @@
 ## Selection
 
-### blur
-
-Removes focus from the editor.
-
-**Methods**
-
-```javascript
-blur()
-```
-
-**Examples**
-
-```javascript
-quill.blur();
-```
-
-### focus
-
-Focuses the editor and restores its last range.
-
-**Methods**
-
-```javascript
-focus()
-```
-
-**Examples**
-
-```javascript
-quill.focus();
-```
-
 ### getBounds
 
 Retrieves the pixel position (relative to the editor container) and dimensions of a selection at a given location. The user's current selection need not be at that index. Useful for calculating where to place tooltips.
@@ -74,22 +42,6 @@ if (range) {
 } else {
   console.log('User cursor is not in editor');
 }
-```
-
-### hasFocus
-
-Checks if editor has focus. Note focus on toolbar, tooltips, does not count as the editor.
-
-**Methods**
-
-```javascript
-hasFocus(): Boolean
-```
-
-**Examples**
-
-```javascript
-quill.hasFocus();
 ```
 
 ### setSelection

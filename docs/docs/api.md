@@ -10,9 +10,9 @@ redirect_from:
   - /docs/events/
 ---
 
-<div class="row table-of-contents">
+<div class="table-of-contents">
 {% for hash in site.data.api %}
-<nav class="four columns">
+<nav>
   {% for category in hash %}
   <h4>{{ category[0] }}</h4>
   <ul>
@@ -26,5 +26,7 @@ redirect_from:
 {% include_relative api/contents.md %}
 {% include_relative api/formatting.md %}
 {% include_relative api/selection.md %}
+{% include_relative api/editor.md %}
 {% include_relative api/events.md %}
+{% include_relative api/model.md %}
 {% include_relative api/extension.md %}

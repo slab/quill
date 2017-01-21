@@ -16,27 +16,6 @@ deleteText(index: Number, length: Number, source: String = 'api'): Delta
 quill.deleteText(6, 4);
 ```
 
-### disable
-
-Shorthand for [`enable(false)`](#enable).
-
-### enable
-
-Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent".
-
-**Methods**
-
-```javascript
-enable(enabled: boolean = true)
-```
-
-**Examples**
-
-```javascript
-quill.enable();
-quill.enable(false);   // Disables user input
-```
-
 ### getContents
 
 Retrieves contents of the editor, with formatting data, represented by a [Delta](/docs/delta/) object.
@@ -168,22 +147,6 @@ setText(text: String, source: String = 'api'): Delta
 
 ```javascript
 quill.setText('Hello\n');
-```
-
-### update
-
-Synchronously check editor for user updates and fires events, if changes have occurred. Useful for collaborative use cases during conflict resolution requiring the latest up to date state. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
-
-**Methods**
-
-```javascript
-update(source: String = 'user')
-```
-
-**Examples**
-
-```javascript
-quill.update();
 ```
 
 ### updateContents
