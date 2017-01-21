@@ -1,3 +1,12 @@
+# 1.2.0
+
+Add concept of experimental APIs: they are APIs meant to try out support for use cases we would like to address, but gives flexibility to find the right API interface. As such they are not covered by Semantic Versioning. Several are added to start things off: `find`, `getIndex`, `getLeaf`, `getLine`, `getLines`.
+
+- Merge disabling list keyboard shortcut when list format is disabled [#1257](https://github.com/quilljs/quill/pull/1257)
+
+Thanks to [@haugstrup](https://github.com/haugstrup) for your contributions to this release.
+
+
 # 1.1.10
 
 - Preserve user selection on API changes [#1152](https://github.com/quilljs/quill/issues/1152)
