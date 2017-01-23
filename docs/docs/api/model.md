@@ -1,6 +1,6 @@
 ## Model
 
-### find <span class="experimental">experimental</span>
+### find <span class="experimental">experimental</span> {#find-experimental}
 
 Static method returning the Quill or [Blot](https://github.com/quilljs/parchment) instance for the given DOM node. In the latter case, passing in true for the `bubble` parameter will search up the given DOM's ancestors until it finds a corresponding [Blot](https://github.com/quilljs/parchment).
 
@@ -22,7 +22,7 @@ var linkNode = document.querySelector('#container a');
 var linkBlot = Quill.find(linkNode);
 ```
 
-### getIndex <span class="experimental">experimental</span>
+### getIndex <span class="experimental">experimental</span> {#getindex-experimental}
 
 Returns the distance between the beginning of document to the occurance of the given [Blot](https://github.com/quilljs/parchment).
 
@@ -39,7 +39,7 @@ let [line, offset] = quill.getLine(10);
 let index = quill.getIndex(line);   // index + offset should == 10
 ```
 
-### getLeaf <span class="experimental">experimental</span>
+### getLeaf <span class="experimental">experimental</span> {#getleaf-experimental}
 
 Returns the leaf [Blot](https://github.com/quilljs/parchment) at the specified index within the document.
 
@@ -60,7 +60,7 @@ let [leaf, offset] = quill.getLeaf(7);
 // offset should be 1, since the returned leaf started at index 6
 ```
 
-### getLine <span class="experimental">experimental</span>
+### getLine <span class="experimental">experimental</span> {#getline-experimental}
 
 Returns the line [Blot](https://github.com/quilljs/parchment) at the specified index within the document.
 
@@ -81,7 +81,7 @@ let [line, offset] = quill.getLine(7);
 // offset should be 1, since the returned line started at index 6
 ```
 
-### getLines <span class="experimental">experimental</span>
+### getLines <span class="experimental">experimental</span> {#getlines-experimental}
 
 Returns the lines contained within the specified location.
 
