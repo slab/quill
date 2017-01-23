@@ -142,7 +142,7 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
 </script>
 ```
 
-Note by supplying your own HTML element, Quill searches for particular input elements, but your own inputs that has nothing to do with Quill can still be added and styled and coexist.
+Note by supplying your own HTML element, Quill searches for particular input elements, but your own inputs that have nothing to do with Quill can still be added and styled and coexist.
 
 ```html
 <div id="toolbar">
