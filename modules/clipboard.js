@@ -284,7 +284,14 @@ function matchText(node, delta) {
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     // eslint-disable-next-line func-style
     let replacer = function(collapse, match) {
-      match = match.replace(/[^\u00a0]/g, '');    // \u00a0 is nbsp;
+      if (collapse) {
+        // we do not want to eliminate "intentional" whitespace (non-breaking spaces), but we do want to
+        // collapse all other types of white space. However, nbsp is included in the regex whitespace
+        // char set (\s), so in order to exclude it we must specifically choose these whitespace chars
+        match = match.replace(/( \f|\n|\r|\t|\v){2,}/g, ' ');
+      } else {
+        match = match.replace(/[^\u00a0]/g, '');    // \u00a0 is nbsp;
+      }
       return match.length < 1 && collapse ? ' ' : match;
     };
     text = text.replace(/\r\n/g, ' ').replace(/\n/g, ' ');
