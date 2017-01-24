@@ -13,7 +13,7 @@ Keyboard handlers are bound to a particular key and key modifiers. The `key` is 
 
 Key modifiers include: `metaKey`, `ctrlKey`, `shiftKey` and `altKey`. In addition, `shortKey` is a platform specific modifier equivalent to `metaKey` on a Mac and `ctrlKey` on Linux and Windows.
 
-Handlers will called with `this` bound to the keyboard instance and be passed the current selection range.
+Handlers will be called with `this` bound to the keyboard instance and be passed the current selection range.
 
 ```js
 quill.keyboard.addBinding({
