@@ -222,6 +222,7 @@ class BaseTooltip extends Tooltip {
         }
       } // eslint-disable-next-line no-fallthrough
       case 'formula': {
+        if (!value) break;
         let range = this.quill.getSelection(true);
         let index = range.index + range.length;
         if (range != null) {
