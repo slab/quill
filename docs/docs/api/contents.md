@@ -2,7 +2,7 @@
 
 ### deleteText
 
-Deletes text from the editor, returing a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Deletes text from the editor, returning a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
