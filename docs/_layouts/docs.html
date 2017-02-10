@@ -3,6 +3,7 @@ layout: default
 ---
 <!-- head -->
 <link href="https://fonts.googleapis.com/css?family=Inconsolata">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css">
 <!-- head -->
 
 {% if page.permalink contains '/docs' %}
@@ -37,6 +38,7 @@ layout: default
     <div id="sidebar-container" class="three columns">
       <button class="sidebar-button">Document Navigation</button>
       <ul class="sidebar-list">
+        <li class="search-item"><input type="text"></li>
         {% include sidebar.html items=items %}
       </ul>
     </div>
@@ -98,6 +100,7 @@ layout: default
 </div>
 
 <!-- script -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
   $('h1, h2, h3, h4', $('#docs-container')).each(function(i, h) {
@@ -106,6 +109,12 @@ $(document).ready(function() {
   });
   $('#sidebar-container .sidebar-button').click(function() {
     $('#sidebar-container').toggleClass('active');
+  });
+  docsearch({
+    apiKey: '281facf513620e95600126795a00ab6c',
+    indexName: 'quilljs',
+    inputSelector: '.search-item input',
+    debug: false
   });
 });
 </script>
