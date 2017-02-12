@@ -8,7 +8,7 @@ redirect_from:
 
 Quill was designed with customization and extension in mind. This is achieved by implementing a small editor core exposed by a granular, well defined [API](/docs/api/). The core is augmented by [modules](/docs/modules), using the same [APIs](/docs/api/) you have access to.
 
-In general, common customizations are handled in [configurations](#configurations/), user interfaces by [Themes](#themes) and CSS, functionality by [modules](#modules), and editor contents by [Parchment](#document-contents-and-formatting).
+In general, common customizations are handled in [configurations](#configurations/), user interfaces by [Themes](#themes) and CSS, functionality by [modules](#modules), and editor contents by [Parchment](#content-and-formatting).
 
 
 ### Configurations
