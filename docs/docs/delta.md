@@ -9,7 +9,7 @@ redirect_from:
 
 Deltas are a simple, yet expressive format that can be used to describe Quill's contents and changes. The format is essentially JSON, and is human readable, yet easily parsible by machines. Deltas can describe any Quill document, includes all text and formatting information, without the ambiguity and complexity of HTML.
 
-Don't be confused by its name Delta&mdash;Deltas represents both documents and changes to documents. If you think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
+Don't be confused by its name Delta&mdash;Deltas represents both documents and changes to documents. You should think of Deltas as the instructions from going from one document to another, the way Deltas represent a document is by expressing the instructions starting from an empty document.
 
 Deltas are implemented as a separate [standalone library](https://github.com/quilljs/delta/), allowing its use outside of Quill. It is suitable for [Operational Transform](https://en.wikipedia.org/wiki/Operational_transformation) and can be used in realtime, Google Docs like applications. For a more in depth explanation behind Deltas, see [Designing the Delta Format](/guides/designing-the-delta-format/).
 
