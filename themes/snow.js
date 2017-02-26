@@ -76,8 +76,9 @@ class SnowTooltip extends BaseTooltip {
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
       if (this.linkRange != null) {
+        let range = this.linkRange;
         this.restoreFocus();
-        this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
+        this.quill.formatText(range, 'link', false, Emitter.sources.USER);
         delete this.linkRange;
       }
       event.preventDefault();
