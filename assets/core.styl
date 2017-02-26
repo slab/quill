@@ -20,6 +20,9 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
+  .ql-editor
+    ul[data-checked] > li::before
+      pointer-events: none
 
 .ql-clipboard
   left: -100000px
