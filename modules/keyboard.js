@@ -46,6 +46,7 @@ class Keyboard extends Module {
     this.addBinding({ key: Keyboard.keys.DELETE }, { ctrlKey: true }, function() {});
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
+    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { empty: true, shortKey: true }, handleBackspace);
     this.listen();
   }
 
@@ -259,7 +260,7 @@ Keyboard.DEFAULTS = {
 
 
 function handleBackspace(range, context) {
-  if (range.index === 0) return;
+  if (range.index === 0 || this.quill.getLength() <= 1) return;
   let [line, ] = this.quill.getLine(range.index);
   let formats = {};
   if (context.offset === 0) {
