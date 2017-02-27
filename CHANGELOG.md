@@ -1,3 +1,12 @@
+# 1.2.1
+
+- Fix link removal on Snow theme [#1259](https://github.com/quilljs/quill/issues/1259)
+- Fix CMD+backspace on empty editor [#1319](https://github.com/quilljs/quill/issues/1319)
+- Fix disabled checklist behavior [#1312](https://github.com/quilljs/quill/issues/1312)
+
+Thank you [@danielschwartz](https://github.com/@danielschwartz), [@JedWatson](https://github.com/@JedWatson), [@montlebalm](https://github.com/@montlebalm), and [@simi](https://github.com/@simi) for contributions to this release!
+
+
 # 1.2.0
 
 Add concept of experimental APIs: they are APIs meant to try out support for use cases we would like to address, but gives flexibility to find the right API interface. As such they are not covered by Semantic Versioning. Several are added to start things off: `find`, `getIndex`, `getLeaf`, `getLine`, `getLines`.
