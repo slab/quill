@@ -42,8 +42,8 @@ class Keyboard extends Module {
       this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
       this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
     }
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { ctrlKey: true }, function() {});
-    this.addBinding({ key: Keyboard.keys.DELETE }, { ctrlKey: true }, function() {});
+    // this.addBinding({ key: Keyboard.keys.BACKSPACE }, { ctrlKey: true }, function() {});
+    // this.addBinding({ key: Keyboard.keys.DELETE }, { ctrlKey: true }, function() {});
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { empty: true, shortKey: true }, handleBackspace);
