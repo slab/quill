@@ -1,3 +1,10 @@
+# 1.2.2
+
+- Fix backspace/delete on Windows/Ubuntu [#1334](https://github.com/quilljs/quill/issues/1334)
+
+Thanks to [@dinusuresh](https://github.com/dinusuresh) for your contributions to this release.
+
+
 # 1.2.1
 
 - Fix link removal on Snow theme [#1259](https://github.com/quilljs/quill/issues/1259)
