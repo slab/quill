@@ -40,6 +40,14 @@ describe('Quill', function() {
       );
       expect(quill.root).toEqualHTML('<p class="ql-align-center">Test</p>');
     });
+
+    it('non-formatted before formatted', function() {
+      let quill = this.initialize(Quill, '0123<h2>Test</h2>');
+      expect(quill.getContents()).toEqual(
+        new Delta().insert('0123\nTest').insert('\n', { header: 2 })
+      );
+      expect(quill.root).toEqualHTML('<p>0123</p><h2>Test</h2>');
+    });
   });
 
   describe('api', function() {
