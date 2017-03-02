@@ -48,6 +48,14 @@ describe('Quill', function() {
       );
       expect(quill.root).toEqualHTML('<p>0123</p><h2>Test</h2>');
     });
+
+    it('inline before block', function() {
+      let quill = this.initialize(Quill, '<em>0123</em><h2>Test</h2>');
+      expect(quill.getContents()).toEqual(
+        new Delta().insert('0123', { italic: true }).insert('\nTest').insert('\n', { header: 2 })
+      );
+      expect(quill.root).toEqualHTML('<p><em>0123</em></p><h2>Test</h2>');
+    });
   });
 
   describe('api', function() {

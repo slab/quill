@@ -242,7 +242,7 @@ function matchIgnore() {
 }
 
 function matchNewline(node, delta) {
-  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
+  if ((isLine(node) || node.nextSibling !== null && isLine(node.nextSibling)) && !deltaEndsWith(delta, '\n')) {
     delta.insert('\n');
   }
   return delta;
