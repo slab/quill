@@ -32,7 +32,7 @@
     }
   },
   "dependencies": {
-    "clone": "~2.1.0",
+    "clone": "~2.1.1",
     "deep-equal": "~1.0.1",
     "eventemitter3": "~2.0.2",
     "extend": "~3.0.0",
