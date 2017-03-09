@@ -10,17 +10,8 @@ cache:
 addons:
   sauce_connect:
     username: "quill"
-    access_key: "adc0c0cf-221b-46f1-81b9-a4429b722c2e"
+  jwt:
+    secure: "dMtG5IegpgaLnmxvWEnQdfD9GsJSSgYxuHe7yKXuFjLt5MbkDRtxssMXxfLGihisIeCExAzi5wmTKIcQ9sy+HtmE1jJ5s+vGvtNL3NKS2yPZNq+aiXpjlxW5stXQQuFSREi1dfC9oe0InuPkgW3BTs+kV/iLS8ih1+FyegKPwX4="
 env:
   matrix:
     - BROWSER=mac-chrome-latest
-    - BROWSER=mac-firefox-latest
-    - BROWSER=mac-safari-latest
-    - BROWSER=windows-chrome-latest
-    - BROWSER=windows-firefox-latest
-    - BROWSER=windows-edge-latest
-    - BROWSER=windows-ie-latest
-    - BROWSER=linux-chrome-latest
-    - BROWSER=linux-firefox-latest
-    - BROWSER=ios-latest
-    - BROWSER=android-latest
