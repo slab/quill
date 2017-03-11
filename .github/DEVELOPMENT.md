@@ -34,7 +34,7 @@ While Quill features an extensive javascript test suite, which you can run with:
 
 However some functionality can only be tested with webdriver. To set up or update webdriver run:
 
-    npm webdriver:update
+    npm run webdriver:update
 
 Once webdriver is installed, you can run the test suite with
 

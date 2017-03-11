@@ -76,16 +76,17 @@ class SnowTooltip extends BaseTooltip {
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
       if (this.linkRange != null) {
+        let range = this.linkRange;
         this.restoreFocus();
-        this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
+        this.quill.formatText(range, 'link', false, Emitter.sources.USER);
         delete this.linkRange;
       }
       event.preventDefault();
       this.hide();
     });
-    this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
+    this.quill.on(Emitter.events.SELECTION_CHANGE, (range, oldRange, source) => {
       if (range == null) return;
-      if (range.length === 0) {
+      if (range.length === 0 && source === Emitter.sources.USER) {
         let [link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
         if (link != null) {
           this.linkRange = new Range(range.index - offset, link.length());

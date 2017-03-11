@@ -20,6 +20,9 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
+  .ql-editor
+    ul[data-checked] > li::before
+      pointer-events: none
 
 .ql-clipboard
   left: -100000px
@@ -54,7 +57,18 @@ resets(arr)
   ol > li, ul > li
     list-style-type: none
   ul > li::before
-    content: '\25CF'
+    content: '\2022'
+  ul[data-checked=true],
+  ul[data-checked=false]
+    pointer-events: none
+    > li::before
+      color: #777
+      cursor: pointer
+      pointer-events: all
+  ul[data-checked=true] > li::before
+    content: '\2611'
+  ul[data-checked=false] > li::before
+    content: '\2610'
   li::before
     display: inline-block
     margin-right: LIST_STYLE_MARGIN

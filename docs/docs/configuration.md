@@ -50,7 +50,7 @@ The following keys are recognized:
 
 Default: `document.body`
 
-DOM Element within which the editor's ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
+DOM Element, or a CSS selector for a DOM Element, within which the editor's ui elements (i.e. tooltips, etc.) should be confined. Currently, it only considers left and right boundaries.
 
 #### debug
 
@@ -79,6 +79,12 @@ Placeholder text to show when editor is empty.
 Default: `false`
 
 Whether to instantiate the editor to read-only mode.
+
+#### scrollingContainer
+
+Default: `null`
+
+Specifies which container has the scrollbars (i.e. `overflow-y: auto`), if changed with CSS from the default `ql-editor`. Necessary to fix scroll jumping bugs when Quill is set to [auto grow](/playground/#autogrow) its height, and another ancestor container is responsible from the scrolling.
 
 #### strict
 

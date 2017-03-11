@@ -13,6 +13,10 @@ pens:
     slug: kXRjQJ
   - title: Snow Toolbar Tooltips
     slug: ozYEro
+  - title: Autogrow Height
+    slug: dOqrVm
+  - title: Custom Fonts
+    slug: gLBYam
   - title: Quill Playground
     slug: KzZqZx
 ---
@@ -22,9 +26,9 @@ pens:
    <h1>Interactive Playground</h1>
     <iframe src="//codepen.io/anon/embed/{{page.pens.last.slug}}/?height=500&amp;editable=true&amp;embed-version=2&amp;theme-id=23269&amp;default-tab=js%2Cresult&amp;user=anon" scrolling="no" frameborder="0" height="500" allowfullscreen="true"></iframe>
   </div>
-  <div class="row" id="gallery-container">
+  <div id="gallery-container">
   {% for pen in page.pens %}
-    <div class="three columns{% if forloop.last %} selected-pen{% endif %}">
+    <div class="four columns{% if forloop.last %} selected-pen{% endif %}">
       <a href="/playground/#{{ pen.title | slugify }}" title="{{ pen.title }}" data-id="{{pen.slug}}">
         <img src="https://codepen.io/quill/pen/{{pen.slug}}/image/small.png">
         <span class="pen-label">{{pen.title}}</span>

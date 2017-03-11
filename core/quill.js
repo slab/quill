@@ -20,6 +20,10 @@ class Quill {
     logger.level(limit);
   }
 
+  static find(node) {
+    return node.__quill || Parchment.find(node);
+  }
+
   static import(name) {
     if (this.imports[name] == null) {
       debug.error(`Cannot import ${name}. Are you sure it was registered?`);
@@ -53,6 +57,7 @@ class Quill {
   constructor(container, options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
+    this.scrollingContainer = this.options.scrollingContainer || document.body;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
@@ -62,6 +67,7 @@ class Quill {
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
+    this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
     this.emitter = new Emitter();
@@ -127,13 +133,12 @@ class Quill {
   enable(enabled = true) {
     this.scroll.enable(enabled);
     this.container.classList.toggle('ql-disabled', !enabled);
-    if (!enabled) {
-      this.blur();
-    }
   }
 
   focus() {
+    let scrollTop = this.scrollingContainer.scrollTop;
     this.selection.focus();
+    this.scrollingContainer.scrollTop = scrollTop;
     this.selection.scrollIntoView();
   }
 
@@ -193,8 +198,28 @@ class Quill {
     }
   }
 
+  getIndex(blot) {
+    return blot.offset(this.scroll);
+  }
+
   getLength() {
     return this.scroll.length();
+  }
+
+  getLeaf(index) {
+    return this.scroll.leaf(index);
+  }
+
+  getLine(index) {
+    return this.scroll.line(index);
+  }
+
+  getLines(index = 0, length = Number.MAX_VALUE) {
+    if (typeof index !== 'number') {
+      return this.scroll.lines(index.index, index.length);
+    } else {
+      return this.scroll.lines(index, length);
+    }
   }
 
   getModule(name) {
@@ -280,7 +305,9 @@ class Quill {
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(index, length), source);
     }
-    this.selection.scrollIntoView();
+    if (source !== Emitter.sources.SILENT) {
+      this.selection.scrollIntoView();
+    }
   }
 
   setText(text, source = Emitter.sources.API) {
@@ -307,6 +334,7 @@ Quill.DEFAULTS = {
   modules: {},
   placeholder: '',
   readOnly: false,
+  scrollingContainer: null,
   strict: true,
   theme: 'default'
 };
@@ -367,7 +395,7 @@ function expandConfig(container, userConfig) {
     };
   }
   userConfig = extend(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
-  ['bounds', 'container'].forEach(function(key) {
+  ['bounds', 'container', 'scrollingContainer'].forEach(function(key) {
     if (typeof userConfig[key] === 'string') {
       userConfig[key] = document.querySelector(userConfig[key]);
     }
@@ -384,7 +412,7 @@ function expandConfig(container, userConfig) {
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
 function modify(modifier, source, index, shift) {
-  if (!this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
+  if (this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
     return new Delta();
   }
   let range = index == null ? null : this.getSelection();

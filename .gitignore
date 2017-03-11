@@ -3,5 +3,6 @@
 /node_modules
 /selenium
 /docs/_site
+*.d.ts
 *.log
 

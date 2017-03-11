@@ -74,6 +74,7 @@ class Editor {
   formatLine(index, length, formats = {}) {
     this.scroll.update();
     Object.keys(formats).forEach((format) => {
+      if (this.scroll.whitelist != null && !this.scroll.whitelist[format]) return;
       let lines = this.scroll.lines(index, Math.max(length, 1));
       let lengthRemaining = length;
       lines.forEach((line) => {

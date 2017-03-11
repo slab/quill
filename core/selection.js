@@ -58,13 +58,12 @@ class Selection {
 
   focus() {
     if (this.hasFocus()) return;
-    let bodyTop = document.body.scrollTop;
     this.root.focus();
-    document.body.scrollTop = bodyTop;
     this.setRange(this.savedRange);
   }
 
   format(format, value) {
+    if (this.scroll.whitelist != null && !this.scroll.whitelist[format]) return;
     this.scroll.update();
     let nativeRange = this.getNativeRange();
     if (nativeRange == null || !nativeRange.native.collapsed || Parchment.query(format, Parchment.Scope.BLOCK)) return;
@@ -189,6 +188,7 @@ class Selection {
       }
     });
     let start = Math.min(...indexes), end = Math.max(...indexes);
+    end = Math.min(end, this.scroll.length() - 1);
     return [new Range(start, end-start), range];
   }
 
@@ -218,10 +218,21 @@ class Selection {
     if (selection == null) return;
     if (startNode != null) {
       if (!this.hasFocus()) this.root.focus();
-      let nativeRange = this.getNativeRange();
-      if (nativeRange == null || force ||
-          startNode !== nativeRange.start.node || startOffset !== nativeRange.start.offset ||
-          endNode !== nativeRange.end.node || endOffset !== nativeRange.end.offset) {
+      let native = (this.getNativeRange() || {}).native;
+      if (native == null || force ||
+          startNode !== native.startContainer ||
+          startOffset !== native.startOffset ||
+          endNode !== native.endContainer ||
+          endOffset !== native.endOffset) {
+
+        if (startNode.tagName == "BR") {
+          startOffset = [].indexOf.call(startNode.parentNode.childNodes, startNode);
+          startNode = startNode.parentNode;
+        }
+        if (endNode.tagName == "BR") {
+          endOffset = [].indexOf.call(endNode.parentNode.childNodes, endNode);
+          endNode = endNode.parentNode;
+        }
         let range = document.createRange();
         range.setStart(startNode, startOffset);
         range.setEnd(endNode, endOffset);
@@ -262,8 +273,9 @@ class Selection {
   }
 
   update(source = Emitter.sources.USER) {
-    let nativeRange, oldRange = this.lastRange;
-    [this.lastRange, nativeRange] = this.getRange();
+    let oldRange = this.lastRange;
+    let [lastRange, nativeRange] = this.getRange();
+    this.lastRange = lastRange;
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;
     }

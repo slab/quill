@@ -8,7 +8,7 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    this.label.addEventListener('click', () => {
+    this.label.addEventListener('mousedown', () => {
       this.container.classList.toggle('ql-expanded');
     });
     this.select.addEventListener('change', this.update.bind(this));
@@ -69,32 +69,28 @@ class Picker {
     if (selected != null) {
       selected.classList.remove('ql-selected');
     }
-    if (item != null) {
-      item.classList.add('ql-selected');
-      this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      if (item.hasAttribute('data-value')) {
-        this.label.setAttribute('data-value', item.getAttribute('data-value'));
-      } else {
-        this.label.removeAttribute('data-value');
-      }
-      if (item.hasAttribute('data-label')) {
-        this.label.setAttribute('data-label', item.getAttribute('data-label'));
-      } else {
-        this.label.removeAttribute('data-label');
-      }
-      if (trigger) {
-        if (typeof Event === 'function') {
-          this.select.dispatchEvent(new Event('change'));
-        } else if (typeof Event === 'object') {     // IE11
-          let event = document.createEvent('Event');
-          event.initEvent('change', true, true);
-          this.select.dispatchEvent(event);
-        }
-        this.close();
-      }
+    if (item == null) return;
+    item.classList.add('ql-selected');
+    this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
+    if (item.hasAttribute('data-value')) {
+      this.label.setAttribute('data-value', item.getAttribute('data-value'));
     } else {
       this.label.removeAttribute('data-value');
+    }
+    if (item.hasAttribute('data-label')) {
+      this.label.setAttribute('data-label', item.getAttribute('data-label'));
+    } else {
       this.label.removeAttribute('data-label');
+    }
+    if (trigger) {
+      if (typeof Event === 'function') {
+        this.select.dispatchEvent(new Event('change'));
+      } else if (typeof Event === 'object') {     // IE11
+        let event = document.createEvent('Event');
+        event.initEvent('change', true, true);
+        this.select.dispatchEvent(event);
+      }
+      this.close();
     }
   }
 

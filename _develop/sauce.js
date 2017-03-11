@@ -7,12 +7,14 @@ var options = {
 };
 
 if (process.env.TRAVIS) {
-  options.build = process.env.TRAVIS_BUILD_ID;
-  options.tunnel = process.env.TRAVIS_JOB_NUMBER;
+  module.exports = {
+    build: process.env.TRAVIS_BUILD_ID,
+    tunnel: process.env.TRAVIS_JOB_NUMBER
+  };
 } else {
   var id = _.random(16*16*16*16).toString(16);
-  options.build = os.hostname() + '-' + id;
-  options.tunnel = os.hostname() + '-tunnel-' + id;
+  module.exports = {
+    build: os.hostname() + '-' + id,
+    tunnel: os.hostname() + '-tunnel-' + id
+  };
 }
-
-module.exports = options;
