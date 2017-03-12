@@ -9,6 +9,7 @@ module.exports = function(config) {
     port: process.env.npm_package_config_ports_karma,
 
     files: [
+      { pattern: 'http://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js' },
       { pattern: 'dist/quill.snow.css', nocache: true },
       { pattern: 'dist/unit.js', nocache: true },
       { pattern: 'dist/*.map', included: false, served: true, nocache: true },
