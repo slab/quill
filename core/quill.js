@@ -50,6 +50,8 @@ class Quill {
       if ((path.startsWith('blots/') || path.startsWith('formats/')) &&
           target.blotName !== 'abstract') {
         Parchment.register(target);
+      } else if (path.startsWith('modules') && typeof target.register === 'function') {
+        target.register();
       }
     }
   }

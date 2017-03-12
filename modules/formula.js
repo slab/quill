@@ -26,11 +26,13 @@ FormulaBlot.className = 'ql-formula';
 FormulaBlot.tagName = 'SPAN';
 
 
-function Formula() {
-  if (window.katex == null) {
-    throw new Error('Formula module requires KaTeX.');
+class Formula {
+  static register() {
+    if (window.katex == null) {
+      throw new Error('Formula module requires KaTeX.');
+    }
+    Quill.register(FormulaBlot, true);
   }
-  Quill.register(FormulaBlot, true);
 }
 
 

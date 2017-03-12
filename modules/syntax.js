@@ -31,13 +31,16 @@ let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
 
 
 class Syntax extends Module {
+  static register() {
+    Quill.register(CodeToken, true);
+    Quill.register(SyntaxCodeBlock, true);
+  }
+
   constructor(quill, options) {
     super(quill, options);
     if (typeof this.options.highlight !== 'function') {
       throw new Error('Syntax module requires highlight.js. Please include the library on the page before Quill.');
     }
-    Quill.register(CodeToken, true);
-    Quill.register(SyntaxCodeBlock, true);
     let timer = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
       if (timer != null) return;
