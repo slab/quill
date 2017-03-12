@@ -61,6 +61,8 @@ resets(arr)
   ul[data-checked=true],
   ul[data-checked=false]
     pointer-events: none
+    > li *
+      pointer-events: all
     > li::before
       color: #777
       cursor: pointer
