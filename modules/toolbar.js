@@ -48,7 +48,7 @@ class Toolbar extends Module {
   }
 
   attach(input) {
-    let format = [].find.call(input.classList, (className) => {
+    let format = [].slice.call(input.classList).find((className) => {
       return className.indexOf('ql-') === 0;
     });
     if (!format) return;
