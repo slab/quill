@@ -15,7 +15,9 @@ const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 class Keyboard extends Module {
   static match(evt, binding) {
     binding = normalize(binding);
-    if (!!binding.shortKey !== evt[SHORTKEY] && binding.shortKey !== null) return false;
+    if (binding.shortKey != null && !!binding.shortKey !== evt[SHORTKEY] && !!binding[SHORTKEY] !== evt[SHORTKEY]) {
+      return false;
+    }
     if (['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(function(key) {
       return (key != SHORTKEY && !!binding[key] !== evt[key] && binding[key] !== null);
     })) {
