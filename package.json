@@ -6,6 +6,7 @@
   "homepage": "http://quilljs.com",
   "main": "dist/quill.js",
   "files": [
+    "_develop",
     "assets",
     "blots",
     "core",
