@@ -59,7 +59,6 @@ class Quill {
   constructor(container, options = {}) {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
-    this.scrollingContainer = this.options.scrollingContainer || document.body;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
@@ -72,9 +71,11 @@ class Quill {
     this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
+    this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
+      scrollingContainer: this.scrollingContainer,
       whitelist: this.options.formats
     });
     this.editor = new Editor(this.scroll);
@@ -180,11 +181,21 @@ class Quill {
   }
 
   getBounds(index, length = 0) {
+    let bounds;
     if (typeof index === 'number') {
-      return this.selection.getBounds(index, length);
+      bounds = this.selection.getBounds(index, length);
     } else {
-      return this.selection.getBounds(index.index, index.length);
+      bounds = this.selection.getBounds(index.index, index.length);
     }
+    let containerBounds = this.container.getBoundingClientRect();
+    return {
+      bottom: bounds.bottom - containerBounds.top,
+      height: bounds.height,
+      left: bounds.left - containerBounds.left,
+      right: bounds.right - containerBounds.left,
+      top: bounds.top - containerBounds.top,
+      width: bounds.width
+    };
   }
 
   getContents(index = 0, length = this.getLength() - index) {

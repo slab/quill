@@ -89,7 +89,7 @@ class Selection {
     let scrollLength = this.scroll.length();
     index = Math.min(index, scrollLength - 1);
     length = Math.min(index + length, scrollLength - 1) - index;
-    let bounds, node, [leaf, offset] = this.scroll.leaf(index);
+    let node, [leaf, offset] = this.scroll.leaf(index);
     if (leaf == null) return null;
     [node, offset] = leaf.position(offset, true);
     let range = document.createRange();
@@ -99,7 +99,7 @@ class Selection {
       if (leaf == null) return null;
       [node, offset] = leaf.position(offset, true);
       range.setEnd(node, offset);
-      bounds = range.getBoundingClientRect();
+      return range.getBoundingClientRect();
     } else {
       let side = 'left';
       let rect;
@@ -117,22 +117,15 @@ class Selection {
         rect = leaf.domNode.getBoundingClientRect();
         if (offset > 0) side = 'right';
       }
-      bounds = {
+      return {
+        bottom: rect.top + rect.height,
         height: rect.height,
         left: rect[side],
-        width: 0,
-        top: rect.top
+        right: rect[side],
+        top: rect.top,
+        width: 0
       };
     }
-    let containerBounds = this.root.parentNode.getBoundingClientRect();
-    return {
-      left: bounds.left - containerBounds.left,
-      right: bounds.left + bounds.width - containerBounds.left,
-      top: bounds.top - containerBounds.top,
-      bottom: bounds.top + bounds.height - containerBounds.top,
-      height: bounds.height,
-      width: bounds.width
-    };
   }
 
   getNativeRange() {
@@ -200,12 +193,19 @@ class Selection {
     if (range == null) return;
     let bounds = this.getBounds(range.index, range.length);
     if (bounds == null) return;
-    if (this.root.offsetHeight < bounds.bottom) {
-      let [line, ] = this.scroll.line(Math.min(range.index + range.length, this.scroll.length()-1));
-      this.root.scrollTop = line.domNode.offsetTop + line.domNode.offsetHeight - this.root.offsetHeight;
-    } else if (bounds.top < 0) {
-      let [line, ] = this.scroll.line(Math.min(range.index, this.scroll.length()-1));
-      this.root.scrollTop = line.domNode.offsetTop;
+    let limit = this.scroll.length()-1;
+    let [first, ] = this.scroll.line(Math.min(range.index, limit));
+    let last = first;
+    if (range.length > 0) {
+      [last, ] = this.scroll.line(Math.min(range.index + range.length, limit));
+    }
+    if (first == null || last == null) return;
+    let scroller = this.scroll.scrollingContainer;
+    let scrollBounds = scroller.getBoundingClientRect();
+    if (bounds.top < scrollBounds.top) {
+      scroller.scrollTop -= (scrollBounds.top - bounds.top);
+    } else if (bounds.bottom > scrollBounds.bottom) {
+      scroller.scrollTop += (bounds.bottom - scrollBounds.bottom);
     }
   }
 

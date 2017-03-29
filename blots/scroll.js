@@ -15,6 +15,7 @@ class Scroll extends Parchment.Scroll {
   constructor(domNode, config) {
     super(domNode);
     this.emitter = config.emitter;
+    this.scrollingContainer = config.scrollingContainer;
     if (Array.isArray(config.whitelist)) {
       this.whitelist = config.whitelist.reduce(function(whitelist, format) {
         whitelist[format] = true;
