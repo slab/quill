@@ -1,3 +1,12 @@
+# 1.2.3
+
+- Fix scrolling when appending new lines [#1276](https://github.com/quilljs/quill/issues/1276) [#1361](https://github.com/quilljs/quill/issues/1361)
+- Fix binding to explicit shortcut key [#1365](https://github.com/quilljs/quill/issues/1365)
+- Merge clone update [#1359](https://github.com/quilljs/quill/pull/1359)
+
+Thank you [@artaommahe](https://github.com/artaommahe), [@c-w](https://github.com/c-w), [@EladBet](https://github.com/EladBet), [@emenoh](https://github.com/emenoh), and [@montlebalm](https://github.com/montlebalm) for contributions to this release!
+
+
 # 1.2.2
 
 - Fix backspace/delete on Windows/Ubuntu [#1334](https://github.com/quilljs/quill/issues/1334)
