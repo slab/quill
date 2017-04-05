@@ -22,6 +22,7 @@ import Underline from './formats/underline';
 
 import Image from './formats/image';
 import Video from './formats/video';
+import Tweet from './formats/tweet';
 
 import CodeBlock, { Code as InlineCode } from './formats/code';
 
@@ -37,7 +38,7 @@ import Tooltip from './ui/tooltip';
 
 import BubbleTheme from './themes/bubble';
 import SnowTheme from './themes/snow';
-
+import CucoTheme from './themes/cuco';
 
 Quill.register({
   'attributors/attribute/direction': DirectionAttribute,
@@ -83,6 +84,7 @@ Quill.register({
 
   'formats/image': Image,
   'formats/video': Video,
+  'formats/tweet': Tweet,
 
   'formats/list/item': ListItem,
 
@@ -92,6 +94,7 @@ Quill.register({
 
   'themes/bubble': BubbleTheme,
   'themes/snow': SnowTheme,
+  'themes/cuco': CucoTheme,
 
   'ui/icons': Icons,
   'ui/picker': Picker,

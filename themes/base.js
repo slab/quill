@@ -145,6 +145,9 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           }
           fileInput.click();
         },
+        tweet: function() {
+          this.quill.theme.tooltip.edit('tweet');
+        },
         video: function() {
           this.quill.theme.tooltip.edit('video');
         }
@@ -231,6 +234,19 @@ class BaseTooltip extends Tooltip {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
           }
           this.quill.setSelection(index + 2, Emitter.sources.USER);
+        }
+        break;
+      }
+      case 'tweet': {
+        const valueBoolean = Boolean(value);
+        if (!valueBoolean) break;
+        const match = value.match(/^(https?):\/\/(www\.)?twitter\.com\/([A-Za-z0-9_]{1,15})\/status\/([0-9]+)/);
+        if (match) {
+          value = match[4];
+          const range = this.quill.getSelection(true);
+          this.quill.insertText(range.index, '\n', Emitter.sources.USER);
+          this.quill.insertEmbed(range.index + 1, 'tweet', value, Emitter.sources.USER);
+          this.quill.setSelection(range.index + 2, Emitter.sources.SILENT);
         }
         break;
       }

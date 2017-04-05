@@ -39,6 +39,7 @@ module.exports = function(env) {
       'quill.core': './assets/core.styl',
       'quill.bubble': './assets/bubble.styl',
       'quill.snow': './assets/snow.styl',
+      'quill.cuco': './assets/cuco.styl',
       'unit.js': './test/unit.js'
     },
     output: {
