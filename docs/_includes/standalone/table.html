@@ -1,0 +1,107 @@
+
+
+  <!-- Include the Quill snow theme -->
+  <link href="https://cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet">
+
+  <!-- Include the Quill extended toolbar CSS -->
+  <link href="{{site.cdn}}{{site.version}}/quill.table.css" rel="stylesheet">
+
+  <script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+
+
+  <body>
+    <!-- Create the toolbar container -->
+    <div id="toolbar"></div>
+
+    <!-- Create the editor container -->
+    <div id="editor"></div>
+
+    <!-- Initialize Quill editor -->
+    <script>
+      let quill = new Quill('#editor', {
+        modules: {
+          toolbar: {},
+          table_handler: {}
+        },
+        theme: 'snow'
+      });
+
+      // TableHandler module
+      let TableHandler = quill.getModule('table_handler');
+
+      // Adding random IDs for clipboard table - is parsing always sequential?
+      let table_id = TableHandler.randomId();
+      let row_id = TableHandler.randomId();
+      quill.clipboard.addMatcher('TABLE', function(node, delta) {
+        console.log(node)
+        table_id = TableHandler.randomId();
+        return delta;
+      });
+      quill.clipboard.addMatcher('TR', function(node, delta) {
+        console.log(node)
+        row_id = TableHandler.randomId();
+        return delta;
+      });
+      quill.clipboard.addMatcher('TD', function(node, delta) {
+        console.log(node)
+        let cell_id = TableHandler.randomId();
+        return delta.compose(new Delta().retain(delta.length(), { td: table_id+'|'+row_id+'|'+cell_id }));
+      });
+
+      let delta = {"ops":[
+      {"insert":"tables:\n"},
+      {"insert":"000"},{"insert":"\n","attributes":{"td":"t0|r0|c0|background:yellow"}},
+      {"insert":"000 twice"},{"insert":"\n","attributes":{"td":"t0|r0|c0"}},
+
+      {"insert":"100"},{"insert":"\n","attributes":{"td":"t1|r0|c0"}},
+      {"insert":"110"},{"insert":"\n","attributes":{"td":"t1|r1|c0"}},
+      {"insert":"111"},{"insert":"\n","attributes":{"td":"t1|r1|c1"}},
+      {"insert":"111"},{"insert":"\n","attributes":{"td":"t1|r1|c1"}},
+      ]}
+
+      quill.setContents(delta);
+
+    </script>
+    <br><br>
+    <div style="float: left; width: 48%;">
+      <p>CURRENT DELTA: <a href='#' onclick="quill.setContents(JSON.parse(document.getElementById('output_delta').value));">reload</a></p>
+      <textarea id='output_delta' style='width:100%; height:200px; padding: 3px;'></textarea>
+    </div>
+    <div style="float: right; width: 48%;">
+      <p>CURRENT HTML: <a href='#' onclick="quill.clipboard.dangerouslyPasteHTML(document.getElementById('output_html').value);">reload</a></p>
+      <textarea id='output_html' style='width:100%; height:200px; padding: 3px;'></textarea>
+    </div>
+    <div style="clear: both"></div>
+    <div style="float: left; width: 48%;">
+      <p><a href='#' onclick="quill.setContents(JSON.parse(document.getElementById('input_delta').value));">LOAD DELTA: </a></p>
+      <textarea id='input_delta' style='width:100%; height:200px; padding: 3px;'></textarea>
+    </div>
+    <div style="float: right; width: 48%;">
+      <p><a href='#' onclick="quill.clipboard.dangerouslyPasteHTML(document.getElementById('input_html').value);">dangerously PASTE HTML:</a></p>
+      <textarea id='input_html' style='width:100%; height:200px; padding: 3px;'></textarea>
+    </div>
+    <div style="clear: both"></div>
+
+    <script>
+      setInterval( function() { document.getElementById("output_delta").value=JSON.stringify(quill.editor.getDelta()) }, 500);
+      setInterval( function() { document.getElementById("output_html").value=quill.root.innerHTML }, 500);
+    </script>
+
+    <p>SAVED interesting testing deltas:</p>
+
+    <script>let container_test = {"ops":[{"insert":"Hello World!\nbla"},{"insert":"\n","attributes":{"contain":"CONTAIN"}},{"insert":"Hello World!"},{"insert":"\n","attributes":{"td":"first-cell|undefined|undefined"}},{"insert":"sadf"},{"insert":"\n","attributes":{"td":"second-cell|undefined|undefined"}},{"insert":"bla"},{"insert":"\n","attributes":{"contain":"CONTAIN"}},{"insert":"table left"},{"insert":"\n","attributes":{"td":"4udxtmrh7fk|o8gczyfgqni|c76kors0qeg","contain":"CONTAIN"}},{"insert":"table right"},{"insert":"\n","attributes":{"td":"4udxtmrh7fk|o8gczyfgqni|6jyp3g0cj7h","contain":"CONTAIN"}},{"insert":"sadfds"},{"insert":"\n","attributes":{"contain":"CONTAIN"}}]}</script>
+    <a href='#' onclick="quill.setContents(container_test);">load pure container</a><br/>
+
+    <script>let table_cells = {"ops":[
+      {"insert":"tables:\n"},
+      {"insert":"000"},{"insert":"\n","attributes":{"td":"t0|r0|c0"}},
+      {"insert":"000 twice"},{"insert":"\n","attributes":{"td":"t0|r0|c0"}},
+
+      {"insert":"100"},{"insert":"\n","attributes":{"td":"t1|r0|c0"}},
+      {"insert":"110"},{"insert":"\n","attributes":{"td":"t1|r1|c0"}},
+      {"insert":"111"},{"insert":"\n","attributes":{"td":"t1|r1|c1"}},
+      {"insert":"111"},{"insert":"\n","attributes":{"td":"t1|r1|c1"}},
+      ]}</script>
+    <a href='#' onclick="quill.setContents(table_cells);">load table cells</a><br/>
+
+  </body>

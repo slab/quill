@@ -89,7 +89,7 @@ class Toolbar extends Module {
       let [range, ] = this.quill.selection.getRange();
       if (this.handlers[format] != null) {
         this.handlers[format].call(this, value);
-      } else if (Parchment.query(format).prototype instanceof Parchment.Embed) {
+      } else if (Parchment.query(format).prototype instanceof Parchment.Embed && Parchment.query(format).blotName != 'table' && Parchment.query(format).blotName != 'embed_table') {
         value = prompt(`Enter ${format}`);
         if (!value) return;
         this.quill.updateContents(new Delta()

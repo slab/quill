@@ -47,5 +47,6 @@ A standard development workflow involves:
 
 1. `npm start` - to run development services
 2. [localhost:9000/standalone/snow](http://localhost:9000/standalone/snow/) - to interactively develop and test an isolated example
+  - there are more examples e.g. [localhost:9000/standalone/table](http://localhost:9000/standalone/table/)
 3. [localhost:9000/karma/debug.html](http://localhost:9000/karma/debug.html) - to run unit tests
 4. If everything is working, run the webdriver tests.

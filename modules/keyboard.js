@@ -272,6 +272,7 @@ Keyboard.DEFAULTS = {
 
 
 function handleBackspace(range, context) {
+  if (handleTables(range, this.quill)) return true; // handle tables
   if (range.index === 0 || this.quill.getLength() <= 1) return;
   let [line, ] = this.quill.getLine(range.index);
   let formats = {};
@@ -290,6 +291,7 @@ function handleBackspace(range, context) {
 }
 
 function handleDelete(range, context) {
+  if (handleTables(range, this.quill)) return true; // handle tables
   // Check for astral symbols
   let length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix) ? 2 : 1;
   if (range.index >= this.quill.getLength() - length) return;
@@ -297,6 +299,7 @@ function handleDelete(range, context) {
 }
 
 function handleDeleteRange(range) {
+  if (handleTables(range, this.quill)) return true; // handle tables
   this.quill.deleteText(range, Quill.sources.USER);
   this.quill.setSelection(range.index, Quill.sources.SILENT);
   this.quill.selection.scrollIntoView();
@@ -399,5 +402,11 @@ function normalize(binding) {
   return binding;
 }
 
+function handleTables(range, quill) {
+  let [line, ] = quill.getLine(range.index);
+  // debugger; // eslint-disable-line
+  if (line && line.parent && line.parent.domNode && line.parent.domNode.nodeName === "TD") return true;
+  return false;
+}
 
 export { Keyboard as default, SHORTKEY };
