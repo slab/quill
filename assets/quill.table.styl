@@ -1,0 +1,122 @@
+#editor .ql-editor {
+  height: 300px;
+}
+
+#editor x-contain, contain {
+  background: #ffbb88;
+  display: block;
+}
+
+#editor table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#editor table td {
+  border: 1px solid black;
+  padding: 5px;
+  height: 25px;
+}
+
+button.ql-table::after { content: "TABLE"; }
+.ql-picker.ql-table .ql-picker-label::before { content: "TABLE"; }
+button.ql-contain::after { content: "WRAP"; }
+button.ql-table[value="append-row"]::after { content: "ROWS+"; }
+button.ql-table[value="append-col"]::after { content: "COLS+"; }
+
+.ql-table,
+.ql-contain {
+  width: auto !important;
+  margin-right: -15px;
+}
+
+.ql-picker.ql-table {
+  margin-right: -15px;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.ql-picker.ql-table svg {
+  display: none;
+}
+
+.ql-picker.ql-table .ql-picker-label {
+  padding: 0px 3px;
+}
+
+.ql-picker.ql-table .ql-picker-options {
+  width: 190px;
+}
+
+.ql-picker.ql-table .ql-picker-item {
+  display: block;
+  float: left;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  padding: 0px;
+  margin: 1px;
+}
+
+.ql-picker.ql-table .ql-picker-item {
+  background: lightgrey;
+}
+
+.ql-picker-item:nth-child(5):before {
+  clear: both;
+  display: block;
+  content: "";
+  width: 100%;
+}
+
+.ql-picker-item[data-value=newtable_1_1]:before { content: "1x1"; }
+.ql-picker-item[data-value=newtable_1_2]:before { content: "1x2"; }
+.ql-picker-item[data-value=newtable_1_3]:before { content: "1x3"; }
+.ql-picker-item[data-value=newtable_1_4]:before { content: "1x4"; }
+.ql-picker-item[data-value=newtable_1_5]:before { content: "1x5"; }
+.ql-picker-item[data-value=newtable_2_1]:before { content: "2x1"; }
+.ql-picker-item[data-value=newtable_2_2]:before { content: "2x2"; }
+.ql-picker-item[data-value=newtable_2_3]:before { content: "2x3"; }
+.ql-picker-item[data-value=newtable_2_4]:before { content: "2x4"; }
+.ql-picker-item[data-value=newtable_2_5]:before { content: "2x5"; }
+.ql-picker-item[data-value=newtable_3_1]:before { content: "3x1"; }
+.ql-picker-item[data-value=newtable_3_2]:before { content: "3x2"; }
+.ql-picker-item[data-value=newtable_3_3]:before { content: "3x3"; }
+.ql-picker-item[data-value=newtable_3_4]:before { content: "3x4"; }
+.ql-picker-item[data-value=newtable_3_5]:before { content: "3x5"; }
+.ql-picker-item[data-value=newtable_4_1]:before { content: "4x1"; }
+.ql-picker-item[data-value=newtable_4_2]:before { content: "4x2"; }
+.ql-picker-item[data-value=newtable_4_3]:before { content: "4x3"; }
+.ql-picker-item[data-value=newtable_4_4]:before { content: "4x4"; }
+.ql-picker-item[data-value=newtable_4_5]:before { content: "4x5"; }
+.ql-picker-item[data-value=newtable_5_1]:before { content: "5x1"; }
+.ql-picker-item[data-value=newtable_5_2]:before { content: "5x2"; }
+.ql-picker-item[data-value=newtable_5_3]:before { content: "5x3"; }
+.ql-picker-item[data-value=newtable_5_4]:before { content: "5x4"; }
+.ql-picker-item[data-value=newtable_5_5]:before { content: "5x5"; }
+.ql-picker-item[data-value=newtable_6_1]:before { content: "6x1"; }
+.ql-picker-item[data-value=newtable_6_2]:before { content: "6x2"; }
+.ql-picker-item[data-value=newtable_6_3]:before { content: "6x3"; }
+.ql-picker-item[data-value=newtable_6_4]:before { content: "6x4"; }
+.ql-picker-item[data-value=newtable_6_5]:before { content: "6x5"; }
+.ql-picker-item[data-value=newtable_7_1]:before { content: "7x1"; }
+.ql-picker-item[data-value=newtable_7_2]:before { content: "7x2"; }
+.ql-picker-item[data-value=newtable_7_3]:before { content: "7x3"; }
+.ql-picker-item[data-value=newtable_7_4]:before { content: "7x4"; }
+.ql-picker-item[data-value=newtable_7_5]:before { content: "7x5"; }
+.ql-picker-item[data-value=newtable_8_1]:before { content: "8x1"; }
+.ql-picker-item[data-value=newtable_8_2]:before { content: "8x2"; }
+.ql-picker-item[data-value=newtable_8_3]:before { content: "8x3"; }
+.ql-picker-item[data-value=newtable_8_4]:before { content: "8x4"; }
+.ql-picker-item[data-value=newtable_8_5]:before { content: "8x5"; }
+.ql-picker-item[data-value=newtable_9_1]:before { content: "9x1"; }
+.ql-picker-item[data-value=newtable_9_2]:before { content: "9x2"; }
+.ql-picker-item[data-value=newtable_9_3]:before { content: "9x3"; }
+.ql-picker-item[data-value=newtable_9_4]:before { content: "9x4"; }
+.ql-picker-item[data-value=newtable_9_5]:before { content: "9x5"; }
+.ql-picker-item[data-value=newtable_10_1]:before { content: "10x1"; }
+.ql-picker-item[data-value=newtable_10_2]:before { content: "10x2"; }
+.ql-picker-item[data-value=newtable_10_3]:before { content: "10x3"; }
+.ql-picker-item[data-value=newtable_10_4]:before { content: "10x4"; }
+.ql-picker-item[data-value=newtable_10_5]:before { content: "10x5"; }
