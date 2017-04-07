@@ -40,7 +40,8 @@ module.exports = function(env) {
       'quill.bubble': './assets/bubble.styl',
       'quill.snow': './assets/snow.styl',
       'quill.table': './assets/quill.table.styl',
-      'unit.js': './test/unit.js'
+      'unit.js': './test/unit.js',
+      'quill.table.load.js': './quill.table.load.js'
     },
     output: {
       filename: '[name]',

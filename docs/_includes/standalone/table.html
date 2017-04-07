@@ -6,6 +6,7 @@
   <!-- Include the Quill extended toolbar CSS -->
   <link href="{{site.cdn}}{{site.version}}/quill.table.css" rel="stylesheet">
 
+  <script type="text/javascript" src="{{site.cdn}}{{site.version}}/quill.table.load.js"></script>
   <script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
 
 
@@ -83,7 +84,7 @@
     <div style="clear: both"></div>
 
     <script>
-      setInterval( function() { document.getElementById("output_delta").value=JSON.stringify(quill.editor.getDelta()) }, 500);
+      setInterval( function() { document.getElementById("output_delta").value=myStringify(quill.editor.getDelta(), {maxLength: 80, indent: 2}) }, 500);
       setInterval( function() { document.getElementById("output_html").value=quill.root.innerHTML }, 500);
     </script>
 
