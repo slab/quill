@@ -14,7 +14,7 @@ The Formula Module adds beautifully rendered formulas into Quill documents, powe
 <link href="katex.css" rel="stylesheet">
 
 <!-- Include KaTeX library -->
-<script href="katex.js" type="text/javascript"></script>
+<script src="katex.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 var quill = new Quill('#editor', {
