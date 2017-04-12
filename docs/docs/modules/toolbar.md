@@ -155,7 +155,7 @@ Note by supplying your own HTML element, Quill searches for particular input ele
 </div>
 <div id="editor"></div>
 
-<script type="text/javascript">
+<script>
 var quill = new Quill('#editor', {
   modules: {
     toolbar: '#toolbar'
@@ -203,8 +203,8 @@ toolbar.addHandler('image', showImageUI);
 ```
 
 <!-- script -->
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
-<script type="text/javascript">
+<script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script>
   var quill = new Quill('#toolbar-editor', {
     modules: {
       toolbar: { container: '#toolbar-toolbar' }

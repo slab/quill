@@ -135,5 +135,5 @@ Play around Quill and take a look at how its content and changes look. Open your
 
 
 <!-- script -->
-<script src="//codepen.io/assets/embed/ei.js" type="text/javascript"></script>
+<script src="//codepen.io/assets/embed/ei.js"></script>
 <!-- script -->

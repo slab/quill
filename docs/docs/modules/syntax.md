@@ -18,9 +18,9 @@ In general, you may [configure](http://highlightjs.readthedocs.io/en/latest/api.
 <link href="highlight.js/monokai-sublime.min.css" rel="stylesheet">
 
 <!-- Include the highlight.js library -->
-<script href="highlight.js" type="text/javascript"></script>
+<script href="highlight.js"></script>
 
-<script type="text/javascript">
+<script>
 hljs.configure({   // optionally configure hljs
   languages: ['javascript', 'ruby', 'python']
 });
