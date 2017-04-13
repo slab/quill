@@ -40,6 +40,10 @@ describe('Quill', function() {
       );
       expect(quill.root).toEqualHTML('<p class="ql-align-center">Test</p>');
     });
+    it('nested props', function() {
+      let quill = this.initialize(Quill, '<p><span style="color: #000;">black <span style="color: #F00;">red</span> black</span></p>');
+      expect(quill.root).toEqualHTML('<p><span style="color: rgb(0, 0, 0);">black </span><span style="color: rgb(255, 0, 0);">red</span><span style="color: rgb(0, 0, 0);"> black</span></p>');
+    });
   });
 
   describe('api', function() {

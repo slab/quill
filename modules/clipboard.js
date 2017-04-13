@@ -183,7 +183,7 @@ function traverse(node, elementMatchers, textMatchers) {  // Post-order
 
 
 function matchAlias(format, node, delta) {
-  return delta.compose(new Delta().retain(delta.length(), { [format]: true }));
+  return delta.compose(new Delta().retain(delta.length(), { [format]: true }, true));
 }
 
 function matchAttributor(node, delta) {
@@ -207,7 +207,7 @@ function matchAttributor(node, delta) {
     }
   });
   if (Object.keys(formats).length > 0) {
-    delta = delta.compose(new Delta().retain(delta.length(), formats));
+    delta = delta.compose(new Delta().retain(delta.length(), formats, true));
   }
   return delta;
 }
@@ -224,7 +224,7 @@ function matchBlot(node, delta) {
     }
   } else if (typeof match.formats === 'function') {
     let formats = { [match.blotName]: match.formats(node) };
-    delta = delta.compose(new Delta().retain(delta.length(), formats));
+    delta = delta.compose(new Delta().retain(delta.length(), formats, true));
   }
   return delta;
 }
@@ -267,7 +267,7 @@ function matchStyles(node, delta) {
     formats.bold = true;
   }
   if (Object.keys(formats).length > 0) {
-    delta = delta.compose(new Delta().retain(delta.length(), formats));
+    delta = delta.compose(new Delta().retain(delta.length(), formats, true));
   }
   if (parseFloat(style.textIndent || 0) > 0) {  // Could be 0.5in
     delta = new Delta().insert('\t').concat(delta);
