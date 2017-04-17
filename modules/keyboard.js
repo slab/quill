@@ -41,8 +41,6 @@ class Keyboard extends Module {
       this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
       this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
     }
-    // this.addBinding({ key: Keyboard.keys.BACKSPACE }, { ctrlKey: true }, function() {});
-    // this.addBinding({ key: Keyboard.keys.DELETE }, { ctrlKey: true }, function() {});
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { empty: true, shortKey: true }, handleBackspace);
@@ -159,6 +157,10 @@ Keyboard.DEFAULTS = {
     'outdent backspace': {
       key: Keyboard.keys.BACKSPACE,
       collapsed: true,
+      shiftKey: null,
+      metaKey: null,
+      ctrlKey: null,
+      altKey: null,
       format: ['blockquote', 'indent', 'list'],
       offset: 0,
       handler: function(range, context) {
