@@ -18,6 +18,7 @@ const DOM_KEY = '__ql-matcher';
 
 const CLIPBOARD_CONFIG = [
   [Node.TEXT_NODE, matchText],
+  [Node.TEXT_NODE, matchNewlineText],
   ['br', matchBreak],
   [Node.ELEMENT_NODE, matchNewline],
   [Node.ELEMENT_NODE, matchBlot],
@@ -241,7 +242,14 @@ function matchIgnore() {
 }
 
 function matchNewline(node, delta) {
-  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
+  if ((isLine(node) || node.nextSibling !== null && isLine(node.nextSibling)) && !deltaEndsWith(delta, '\n')) {
+    delta.insert('\n');
+  }
+  return delta;
+}
+
+function matchNewlineText(node, delta) {
+  if (node.nextSibling !== null && isLine(node.nextSibling) && node.data.trim().length && !deltaEndsWith(delta, '\n')) {
     delta.insert('\n');
   }
   return delta;
