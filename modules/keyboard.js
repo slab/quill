@@ -279,10 +279,13 @@ function handleBackspace(range, context) {
   if (range.index === 0 || this.quill.getLength() <= 1) return;
   let [line, ] = this.quill.getLine(range.index);
   let formats = {};
-  if (context.offset === 0 && line.prev != null && line.prev.length() > 1) {
-    let curFormats = line.formats();
-    let prevFormats = this.quill.getFormat(range.index-1, 1);
-    formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+  if (context.offset === 0) {
+    let [prev, ] = this.quill.getLine(range.index - 1);
+    if (prev != null && prev.length() > 1) {
+      let curFormats = line.formats();
+      let prevFormats = this.quill.getFormat(range.index-1, 1);
+      formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+    }
   }
   // Check for astral symbols
   let length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
@@ -297,7 +300,21 @@ function handleDelete(range, context) {
   // Check for astral symbols
   let length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix) ? 2 : 1;
   if (range.index >= this.quill.getLength() - length) return;
+  let formats = {}, nextLength = 0;
+  let [line, ] = this.quill.getLine(range.index);
+  if (context.offset >= line.length() - 1) {
+    let [next, ] = this.quill.getLine(range.index + 1);
+    if (next) {
+      let curFormats = line.formats();
+      let nextFormats = this.quill.getFormat(range.index, 1);
+      formats = DeltaOp.attributes.diff(curFormats, nextFormats) || {};
+      nextLength = next.length();
+    }
+  }
   this.quill.deleteText(range.index, length, Quill.sources.USER);
+  if (Object.keys(formats).length > 0) {
+    this.quill.formatLine(range.index + nextLength - 1, length, formats, Quill.sources.USER);
+  }
 }
 
 function handleDeleteRange(range) {
