@@ -45,5 +45,6 @@ module.exports = {
   },
   'strike'    : require('../assets/icons/strike.svg'),
   'underline' : require('../assets/icons/underline.svg'),
-  'video'     : require('../assets/icons/video.svg')
+  'video'     : require('../assets/icons/video.svg'),
+  'tweet'     : require('../assets/icons/tweet.svg')
 };
