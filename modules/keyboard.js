@@ -43,7 +43,9 @@ class Keyboard extends Module {
     }
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { empty: true, shortKey: true }, handleBackspace);
+    this.addBinding({ key: Keyboard.keys.BACKSPACE, altKey: null, ctrlKey: null, metaKey: null, shiftKey: null },
+                    { collapsed: true, offset: 0 },
+                    handleBackspace);
     this.listen();
   }
 
