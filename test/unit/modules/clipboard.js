@@ -127,6 +127,11 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('Test\n', { direction: 'rtl' }));
     });
 
+    it('nested styles', function() {
+      let delta = this.clipboard.convert('<span style="color: red;"><span style="color: blue;">Test</span></span>');
+      expect(delta).toEqual(new Delta().insert('Test', { color: 'blue' }));
+    })
+
     it('custom matcher', function() {
       this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {
         let index = 0;

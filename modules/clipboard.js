@@ -1,3 +1,4 @@
+import extend from 'extend';
 import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
@@ -138,6 +139,22 @@ Clipboard.DEFAULTS = {
 };
 
 
+function applyFormat(delta, format, value) {
+  if (typeof format === 'object') {
+    return Object.keys(format).reduce(function(delta, key) {
+      return applyFormat(delta, key, format[key]);
+    }, delta);
+  } else {
+    return delta.reduce(function(delta, op) {
+      if (op.attributes && op.attributes[format]) {
+        return delta.push(op);
+      } else {
+        return delta.insert(op.insert, extend({}, {[format]: value}, op.attributes));
+      }
+    }, new Delta());
+  }
+}
+
 function computeStyle(node) {
   if (node.nodeType !== Node.ELEMENT_NODE) return {};
   const DOM_KEY = '__ql-computed-style';
@@ -185,7 +202,7 @@ function traverse(node, elementMatchers, textMatchers) {  // Post-order
 
 
 function matchAlias(format, node, delta) {
-  return delta.compose(new Delta().retain(delta.length(), { [format]: true }));
+  return applyFormat(delta, format, true);
 }
 
 function matchAttributor(node, delta) {
@@ -209,7 +226,7 @@ function matchAttributor(node, delta) {
     }
   });
   if (Object.keys(formats).length > 0) {
-    delta = delta.compose(new Delta().retain(delta.length(), formats));
+    delta = applyFormat(delta, formats);
   }
   return delta;
 }
@@ -225,8 +242,7 @@ function matchBlot(node, delta) {
       delta = new Delta().insert(embed, match.formats(node));
     }
   } else if (typeof match.formats === 'function') {
-    let formats = { [match.blotName]: match.formats(node) };
-    delta = delta.compose(new Delta().retain(delta.length(), formats));
+    delta = applyFormat(delta, match.blotName, match.formats(node));
   }
   return delta;
 }
@@ -287,7 +303,7 @@ function matchStyles(node, delta) {
     formats.bold = true;
   }
   if (Object.keys(formats).length > 0) {
-    delta = delta.compose(new Delta().retain(delta.length(), formats));
+    delta = applyFormat(delta, formats);
   }
   if (parseFloat(style.textIndent || 0) > 0) {  // Could be 0.5in
     delta = new Delta().insert('\t').concat(delta);
