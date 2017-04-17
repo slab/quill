@@ -18,12 +18,14 @@ const DOM_KEY = '__ql-matcher';
 
 const CLIPBOARD_CONFIG = [
   [Node.TEXT_NODE, matchText],
+  [Node.TEXT_NODE, matchNewline],
   ['br', matchBreak],
   [Node.ELEMENT_NODE, matchNewline],
   [Node.ELEMENT_NODE, matchBlot],
   [Node.ELEMENT_NODE, matchSpacing],
   [Node.ELEMENT_NODE, matchAttributor],
   [Node.ELEMENT_NODE, matchStyles],
+  ['li', matchIndent],
   ['b', matchAlias.bind(matchAlias, 'bold')],
   ['i', matchAlias.bind(matchAlias, 'italic')],
   ['style', matchIgnore]
@@ -69,7 +71,7 @@ class Clipboard extends Module {
 
   convert(html) {
     if (typeof html === 'string') {
-      this.container.innerHTML = html;
+      this.container.innerHTML = html.replace(/\>\r?\n +\</g, '><'); // Remove spaces between tags
     }
     let [elementMatchers, textMatchers] = this.prepareMatching();
     let delta = traverse(this.container, elementMatchers, textMatchers);
@@ -240,9 +242,27 @@ function matchIgnore() {
   return new Delta();
 }
 
+function matchIndent(node, delta) {
+  let match = Parchment.query(node);
+  if (match == null || match.blotName !== 'list-item' || !deltaEndsWith(delta, '\n')) {
+    return delta;
+  }
+  let indent = -1, parent = node.parentNode;
+  while (!parent.classList.contains('ql-clipboard')) {
+    if ((Parchment.query(parent) || {}).blotName === 'list') {
+      indent += 1;
+    }
+    parent = parent.parentNode;
+  }
+  if (indent <= 0) return delta;
+  return delta.compose(new Delta().retain(delta.length() - 1).retain(1, { indent: indent}));
+}
+
 function matchNewline(node, delta) {
-  if (isLine(node) && !deltaEndsWith(delta, '\n')) {
-    delta.insert('\n');
+  if (!deltaEndsWith(delta, '\n')) {
+    if (isLine(node) || (delta.length() > 0 && node.nextSibling && isLine(node.nextSibling))) {
+      delta.insert('\n');
+    }
   }
   return delta;
 }

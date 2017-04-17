@@ -48,7 +48,7 @@ describe('Clipboard', function() {
 
     it('whitespace', function() {
       let html =
-        '<div> 0 </div> <div> <div> 1 2 <span> 3 </span> 4 </div> </div>' +
+        '<div> 0 </div><div> <div> 1 2 <span> 3 </span> 4 </div> </div>' +
         '<div><span>5 </span><span>6 </span><span> 7</span><span> 8</span></div>';
       let delta = this.clipboard.convert(html);
       expect(delta).toEqual(new Delta().insert('0\n1 2  3  4\n5 6  7 8'));
@@ -78,6 +78,11 @@ describe('Clipboard', function() {
       expect(delta).toEqual(new Delta().insert('0\n1\n2\n3\n\n4\n\n5'));
     });
 
+    it('mixed inline and block', function() {
+      let delta = this.clipboard.convert('<div>One<div>Two</div></div>');
+      expect(delta).toEqual(new Delta().insert('One\nTwo'));
+    });
+
     it('alias', function() {
       let delta = this.clipboard.convert('<b>Bold</b><i>Italic</i>');
       expect(delta).toEqual(new Delta().insert('Bold', { bold: true }).insert('Italic', { italic: true }));
@@ -93,6 +98,14 @@ describe('Clipboard', function() {
       let delta = this.clipboard.convert('<ol><li>One</li><li class="ql-indent-1">Alpha</li></ol>');
       expect(delta).toEqual(new Delta().insert('One\n', { list: 'ordered' })
                                        .insert('Alpha\n', { list: 'ordered', indent: 1 }));
+    });
+
+    it('html nested list', function() {
+      let delta = this.clipboard.convert('<ol><li>One<ol><li>Alpha</li><li>Beta</li></ol></li></ol>');
+      expect(delta).toEqual(new Delta().insert('One\nAlpha', { list: 'ordered' })
+                                       .insert('\n', { list: 'ordered', indent: 1 })
+                                       .insert('Beta', { list: 'ordered' })
+                                       .insert('\n', { list: 'ordered', indent: 1 }));
     });
 
     it('embeds', function() {
