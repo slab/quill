@@ -61,7 +61,7 @@ describe('Clipboard', function() {
     });
 
     it('intentional whitespace', function() {
-      let html = '0&nbsp;<strong>1</strong>&nbsp;2';
+      let html = '<span>0&nbsp;<strong>1</strong>&nbsp;2</span>';
       let delta = this.clipboard.convert(html);
       expect(delta).toEqual(new Delta().insert('0\u00a0').insert('1', { bold: true }).insert('\u00a02'));
     });

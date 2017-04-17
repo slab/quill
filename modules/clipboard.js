@@ -281,6 +281,9 @@ function matchText(node, delta) {
   if (node.parentNode.tagName === 'O:P') {
     return delta.insert(text.trim());
   }
+  if (text.trim().length === 0 && node.parentNode.classList.contains('ql-clipboard')) {
+    return delta;
+  }
   if (!computeStyle(node.parentNode).whiteSpace.startsWith('pre')) {
     // eslint-disable-next-line func-style
     let replacer = function(collapse, match) {
