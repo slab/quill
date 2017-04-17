@@ -43,6 +43,7 @@ class Selection {
       }
     });
     this.emitter.on(Emitter.events.SCROLL_BEFORE_UPDATE, () => {
+      if (!this.hasFocus()) return;
       let native = this.getNativeRange();
       if (native == null) return;
       if (native.start.node === this.cursor.textNode) return;  // cursor.restore() will handle
