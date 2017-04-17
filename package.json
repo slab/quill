@@ -52,6 +52,7 @@
     "html-loader": "~0.4.5",
     "http-proxy": "^1.16.2",
     "jasmine-core": "^2.5.2",
+    "json-stringify-pretty-compact": "~1.0.3",
     "karma": "^1.5.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
