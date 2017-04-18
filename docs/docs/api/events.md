@@ -13,6 +13,8 @@ Changes may occur through an API but as long as they originate from the user, th
 
 APIs causing text to change may also be called with a `"silent"` source, in which case `text-change` will not be emitted. This is not recommended as it will likely break the undo stack and other functions that rely on a full record of text changes.
 
+Changes to text may cause changes to the selection (ex. typing advances the cursor), however during the `text-change` handler, the selection is not yet up updated, and native browser behavior may place it in an inconsistent state. Use [`selection-change`](#selection-change) or [`editor-change`](#editor-change) for reliable selection updates.
+
 **Callback Signature**
 
 ```javascript
