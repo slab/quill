@@ -47,7 +47,7 @@ SnowTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
               preview = 'mailto:' + preview;
             } else if (/^\.?\/[^(\s|\.)]*$/.test(preview)) {
               preview = preview; // likely relative link
-            } else if (/^\S+(\.)\S+[^.]$/.test(preview) && !(/^https?:\/\//.test(preview)) {
+            } else if (/^\S+(\.)\S+[^.]$/.test(preview) && !(/^https?:\/\//.test(preview))) {
               preview = 'https://' + preview; // likely url
             } else {
               preview = 'https://';
