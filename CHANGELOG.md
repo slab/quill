@@ -1,3 +1,18 @@
+# 1.2.4
+
+- Fix pasting nested list [#906](https://github.com/quilljs/quill/issues/906)
+- Fix delete key interaction at end of list [#1277](https://github.com/quilljs/quill/issues/1277)
+- Fix pasting whitespace prefix [#1244](https://github.com/quilljs/quill/issues/1244)
+- Fix file dialog open speed [#1265](https://github.com/quilljs/quill/issues/1265)
+- Fix backspace with at beginning of list interaction with meta keys [#1307](https://github.com/quilljs/quill/issues/1307)
+- Fix pasting nested styles [#1333](https://github.com/quilljs/quill/issues/1333)
+- Fix backspacing into an empty line should keep own formats [#1339](https://github.com/quilljs/quill/issues/1339)
+- Fix IE11 autolinking interaction [#1390](https://github.com/quilljs/quill/issues/1390)
+- Fix persistent focus interaction with tabbing away [#1404](https://github.com/quilljs/quill/issues/1404)
+
+Thanks to [@bigggge](https://github.com/bigggge), [@CoenWarmer](https://github.com/CoenWarmer), [@cutteroid](https://github.com/cutteroid), [@jay-cox](https://github.com/jay-cox), [@kiewic](https://github.com/kiewic), [@kloots](https://github.com/kloots), [@MichaelTontchev](https://github.com/MichaelTontchev), [@montlebalm](https://github.com/montlebalm), [@RichardNeill](https://github.com/RichardNeill), and [@vasconita](https://github.com/vasconita) for your contributions to this release.
+
+
 # 1.2.3
 
 - Fix scrolling when appending new lines [#1276](https://github.com/quilljs/quill/issues/1276) [#1361](https://github.com/quilljs/quill/issues/1361)
