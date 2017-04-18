@@ -6,6 +6,8 @@
   url: /guides/adding-quill-to-your-build-pipeline/
 - title: Building a Custom Module
   url: /guides/building-a-custom-module/
+- title: Customizing Built-In Formats
+  url: /guides/customizing-built-in-formats
 - title: Cloning Medium with Parchment
   url: /guides/cloning-medium-with-parchment/
 - title: Designing the Delta Format
