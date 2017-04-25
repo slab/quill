@@ -224,8 +224,8 @@ class BaseTooltip extends Tooltip {
       case 'formula': {
         if (!value) break;
         let range = this.quill.getSelection(true);
-        let index = range.index + range.length;
         if (range != null) {
+          let index = range.index + range.length;
           this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, Emitter.sources.USER);
           if (this.root.getAttribute('data-mode') === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
