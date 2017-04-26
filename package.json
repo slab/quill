@@ -39,6 +39,10 @@
     "parchment": "1.0.9",
     "quill-delta": "3.5.0"
   },
+  "browser": "src/quill.coffee",
+  "browserify": {
+    "transform": ["coffeeify"]
+  },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
