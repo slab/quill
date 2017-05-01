@@ -20,7 +20,7 @@ class Keyboard extends Module {
     })) {
       return false;
     }
-    return binding.key === (evt.which || evt.keyCode);
+    return binding.key === evt.key;
   }
 
   constructor(quill, options) {
@@ -31,19 +31,19 @@ class Keyboard extends Module {
         this.addBinding(this.options.bindings[name]);
       }
     });
-    this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
-    this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, ctrlKey: null, altKey: null }, function() {});
+    this.addBinding({ key: "Enter", shiftKey: null }, handleEnter);
+    this.addBinding({ key: "Enter", metaKey: null, ctrlKey: null, altKey: null }, function() {});
     if (/Firefox/i.test(navigator.userAgent)) {
       // Need to handle delete and backspace for Firefox in the general case #1171
-      this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true }, handleBackspace);
-      this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true }, handleDelete);
+      this.addBinding({ key: "Backspace" }, { collapsed: true }, handleBackspace);
+      this.addBinding({ key: "Delete" }, { collapsed: true }, handleDelete);
     } else {
-      this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
-      this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
+      this.addBinding({ key: "Backspace" }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
+      this.addBinding({ key: "Delete" }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
     }
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
-    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
-    this.addBinding({ key: Keyboard.keys.BACKSPACE, altKey: null, ctrlKey: null, metaKey: null, shiftKey: null },
+    this.addBinding({ key: "Backspace" }, { collapsed: false }, handleDeleteRange);
+    this.addBinding({ key: "Delete" }, { collapsed: false }, handleDeleteRange);
+    this.addBinding({ key: "Backspace", altKey: null, ctrlKey: null, metaKey: null, shiftKey: null },
                     { collapsed: true, offset: 0 },
                     handleBackspace);
     this.listen();
@@ -68,8 +68,8 @@ class Keyboard extends Module {
   listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented) return;
-      let which = evt.which || evt.keyCode;
-      let bindings = (this.bindings[which] || []).filter(function(binding) {
+      let key = evt.key;
+      let bindings = (this.bindings[key] || []).filter(function(binding) {
         return Keyboard.match(evt, binding);
       });
       if (bindings.length === 0) return;
@@ -120,18 +120,6 @@ class Keyboard extends Module {
   }
 }
 
-Keyboard.keys = {
-  BACKSPACE: 8,
-  TAB: 9,
-  ENTER: 13,
-  ESCAPE: 27,
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  DELETE: 46
-};
-
 Keyboard.DEFAULTS = {
   bindings: {
     'bold'      : makeFormatHandler('bold'),
@@ -139,7 +127,7 @@ Keyboard.DEFAULTS = {
     'underline' : makeFormatHandler('underline'),
     'indent': {
       // highlight tab or tab at beginning of list, indent or blockquote
-      key: Keyboard.keys.TAB,
+      key: "Tab",
       format: ['blockquote', 'indent', 'list'],
       handler: function(range, context) {
         if (context.collapsed && context.offset !== 0) return true;
@@ -147,7 +135,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'outdent': {
-      key: Keyboard.keys.TAB,
+      key: "Tab",
       shiftKey: true,
       format: ['blockquote', 'indent', 'list'],
       // highlight tab or tab at beginning of list, indent or blockquote
@@ -157,7 +145,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'outdent backspace': {
-      key: Keyboard.keys.BACKSPACE,
+      key: "Backspace",
       collapsed: true,
       shiftKey: null,
       metaKey: null,
@@ -178,7 +166,7 @@ Keyboard.DEFAULTS = {
     'indent code-block': makeCodeBlockHandler(true),
     'outdent code-block': makeCodeBlockHandler(false),
     'remove tab': {
-      key: Keyboard.keys.TAB,
+      key: "Tab",
       shiftKey: true,
       collapsed: true,
       prefix: /\t$/,
@@ -187,7 +175,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'tab': {
-      key: Keyboard.keys.TAB,
+      key: "Tab",
       handler: function(range, context) {
         if (!context.collapsed) {
           this.quill.scroll.deleteAt(range.index, range.length);
@@ -197,7 +185,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'list empty enter': {
-      key: Keyboard.keys.ENTER,
+      key: "Enter",
       collapsed: true,
       format: ['list'],
       empty: true,
@@ -209,7 +197,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'checklist enter': {
-      key: Keyboard.keys.ENTER,
+      key: "Enter",
       collapsed: true,
       format: { list: 'checked' },
       handler: function(range) {
@@ -222,7 +210,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'header enter': {
-      key: Keyboard.keys.ENTER,
+      key: "Enter",
       collapsed: true,
       format: ['header'],
       suffix: /^$/,
@@ -261,7 +249,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'code exit': {
-      key: Keyboard.keys.ENTER,
+      key: "Enter",
       collapsed: true,
       format: ['code-block'],
       prefix: /\n\n$/,
@@ -348,7 +336,7 @@ function handleEnter(range, context) {
 
 function makeCodeBlockHandler(indent) {
   return {
-    key: Keyboard.keys.TAB,
+    key: "Tab",
     shiftKey: !indent,
     format: {'code-block': true },
     handler: function(range) {
@@ -389,7 +377,7 @@ function makeCodeBlockHandler(indent) {
 
 function makeFormatHandler(format) {
   return {
-    key: format[0].toUpperCase(),
+    key: format[0].toLowerCase(),
     shortKey: true,
     handler: function(range, context) {
       this.quill.format(format, !context.format[format], Quill.sources.USER);
@@ -398,21 +386,10 @@ function makeFormatHandler(format) {
 }
 
 function normalize(binding) {
-  if (typeof binding === 'string' || typeof binding === 'number') {
+  if (typeof binding !== 'object') {
     return normalize({ key: binding });
   }
-  if (typeof binding === 'object') {
-    binding = clone(binding, false);
-  }
-  if (typeof binding.key === 'string') {
-    if (Keyboard.keys[binding.key.toUpperCase()] != null) {
-      binding.key = Keyboard.keys[binding.key.toUpperCase()];
-    } else if (binding.key.length === 1) {
-      binding.key = binding.key.toUpperCase().charCodeAt(0);
-    } else {
-      return null;
-    }
-  }
+  binding = clone(binding, false);
   if (binding.shortKey) {
     binding[SHORTKEY] = binding.shortKey;
     delete binding.shortKey;

@@ -8,60 +8,60 @@ describe('Keyboard', function() {
         key: 'a'
       };
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
         altKey: false
       }, binding)).toBe(true);
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
-        shiftKey: true,
+        key: 'A',
+        shiftKey: false,
         metaKey: false,
         ctrlKey: false,
-        altKey: false
+        altKey: true
       }, binding)).toBe(false);
     });
 
     it('simple modifier', function() {
       let binding = {
-        key: 'a',
-        shiftKey: true
+        key: 'A',
+        altKey: true
       };
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
         altKey: false
       }, binding)).toBe(false);
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
-        shiftKey: true,
+        key: 'A',
+        shiftKey: false,
         metaKey: false,
         ctrlKey: false,
-        altKey: false
+        altKey: true
       }, binding)).toBe(true);
     });
 
     it('optional modifier', function() {
       let binding = {
         key: 'a',
-        shiftKey: null
+        altKey: null
       };
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
         altKey: false
       }, binding)).toBe(true);
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
-        shiftKey: true,
+        key: 'a',
+        shiftKey: false,
         metaKey: false,
         ctrlKey: false,
-        altKey: false
+        altKey: true
       }, binding)).toBe(true);
     });
 
@@ -71,14 +71,14 @@ describe('Keyboard', function() {
         shortKey: true
       };
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
         altKey: false
       }, binding)).toBe(false);
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
@@ -93,14 +93,14 @@ describe('Keyboard', function() {
         [SHORTKEY]: true
       };
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
         altKey: false
       }, binding)).toBe(false);
       expect(Keyboard.match({
-        keyCode: 'A'.charCodeAt(0),
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
