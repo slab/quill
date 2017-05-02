@@ -106,7 +106,7 @@ Note you still need to add styling for these classes into your CSS files.
 Formats represented by Blots can also be customized. Here is how you would change the DOM Node used to represent bold formatting.
 
 ```js
-var Bold = Quill.import('blots/bold');
+var Bold = Quill.import('formats/bold');
 Bold.tagName = 'B';   // Quill uses <strong> by default
 Quill.register(Bold, true);
 
