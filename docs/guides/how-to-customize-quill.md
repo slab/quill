@@ -124,7 +124,7 @@ var quill = new Quill('#editor', {
 You can also extend existing formats. Here is a quick ES6 implementation of a list item that does not permit formatting its contents. Code blocks are implemented in exactly this way.
 
 ```js
-var ListItem = Quill.import('blots/list/item');
+var ListItem = Quill.import('formats/list/item');
 
 class PlainListItem extends ListItem {
   formatAt(index, length, name, value) {
