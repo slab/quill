@@ -106,7 +106,7 @@ Note you still need to add styling for these classes into your CSS files.
 Formats represented by Blots can also be customized. Here is how you would change the DOM Node used to represent bold formatting.
 
 ```js
-var Bold = Quill.import('blots/bold');
+var Bold = Quill.import('formats/bold');
 Bold.tagName = 'B';   // Quill uses <strong> by default
 Quill.register(Bold, true);
 
@@ -124,7 +124,7 @@ var quill = new Quill('#editor', {
 You can also extend existing formats. Here is a quick ES6 implementation of a list item that does not permit formatting its contents. Code blocks are implemented in exactly this way.
 
 ```js
-var ListItem = Quill.import('blots/list/item');
+var ListItem = Quill.import('formats/list/item');
 
 class PlainListItem extends ListItem {
   formatAt(index, length, name, value) {
