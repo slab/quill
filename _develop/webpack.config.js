@@ -123,7 +123,8 @@ module.exports = function(env) {
       contentBase: path.resolve(__dirname, '../dist'),
       hot: false,
       port: process.env.npm_package_config_ports_webpack,
-      stats: 'minimal'
+      stats: 'minimal',
+      disableHostCheck: true
     }
   };
 
