@@ -134,14 +134,23 @@ class Selection {
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
-    let range = this.nativeToRange(nativeRange);
+    let range = this.normalizeNative(nativeRange);
     debug.info('getNativeRange', range);
     return range;
   }
 
   getRange() {
-    let range = this.getNativeRange();
-    if (range == null) return [null, null];
+    let normalized = this.getNativeRange();
+    if (normalized == null) return [null, null];
+    let range = this.normalizedToRange(normalized);
+    return [range, normalized];
+  }
+
+  hasFocus() {
+    return document.activeElement === this.root;
+  }
+
+  normalizedToRange(range) {
     let positions = [[range.start.node, range.start.offset]];
     if (!range.native.collapsed) {
       positions.push([range.end.node, range.end.offset]);
@@ -160,14 +169,10 @@ class Selection {
     });
     let start = Math.min(...indexes), end = Math.max(...indexes);
     end = Math.min(end, this.scroll.length() - 1);
-    return [new Range(start, end-start), range];
+    return new Range(start, end-start);
   }
 
-  hasFocus() {
-    return document.activeElement === this.root;
-  }
-
-  nativeToRange(nativeRange) {
+  normalizeNative(nativeRange) {
     if (!contains(this.root, nativeRange.startContainer) ||
         (!nativeRange.collapsed && !contains(this.root, nativeRange.endContainer))) {
       return null;
