@@ -134,30 +134,7 @@ class Selection {
     if (selection == null || selection.rangeCount <= 0) return null;
     let nativeRange = selection.getRangeAt(0);
     if (nativeRange == null) return null;
-    if (!contains(this.root, nativeRange.startContainer) ||
-        (!nativeRange.collapsed && !contains(this.root, nativeRange.endContainer))) {
-      return null;
-    }
-    let range = {
-      start: { node: nativeRange.startContainer, offset: nativeRange.startOffset },
-      end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },
-      native: nativeRange
-    };
-    [range.start, range.end].forEach(function(position) {
-      let node = position.node, offset = position.offset;
-      while (!(node instanceof Text) && node.childNodes.length > 0) {
-        if (node.childNodes.length > offset) {
-          node = node.childNodes[offset];
-          offset = 0;
-        } else if (node.childNodes.length === offset) {
-          node = node.lastChild;
-          offset = node instanceof Text ? node.data.length : node.childNodes.length + 1;
-        } else {
-          break;
-        }
-      }
-      position.node = node, position.offset = offset;
-    });
+    let range = this.nativeToRange(nativeRange);
     debug.info('getNativeRange', range);
     return range;
   }
@@ -188,6 +165,50 @@ class Selection {
 
   hasFocus() {
     return document.activeElement === this.root;
+  }
+
+  nativeToRange(nativeRange) {
+    if (!contains(this.root, nativeRange.startContainer) ||
+        (!nativeRange.collapsed && !contains(this.root, nativeRange.endContainer))) {
+      return null;
+    }
+    let range = {
+      start: { node: nativeRange.startContainer, offset: nativeRange.startOffset },
+      end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },
+      native: nativeRange
+    };
+    [range.start, range.end].forEach(function(position) {
+      let node = position.node, offset = position.offset;
+      while (!(node instanceof Text) && node.childNodes.length > 0) {
+        if (node.childNodes.length > offset) {
+          node = node.childNodes[offset];
+          offset = 0;
+        } else if (node.childNodes.length === offset) {
+          node = node.lastChild;
+          offset = node instanceof Text ? node.data.length : node.childNodes.length + 1;
+        } else {
+          break;
+        }
+      }
+      position.node = node, position.offset = offset;
+    });
+    return range;
+  }
+
+  rangeToNative(range) {
+    let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
+    let args = [];
+    let scrollLength = this.scroll.length();
+    indexes.forEach((index, i) => {
+      index = Math.min(scrollLength - 1, index);
+      let node, [leaf, offset] = this.scroll.leaf(index);
+      [node, offset] = leaf.position(offset, i !== 0);
+      args.push(node, offset);
+    });
+    if (args.length < 2) {
+      args = args.concat(args);
+    }
+    return args;
   }
 
   scrollIntoView(range = this.lastRange) {
@@ -254,18 +275,7 @@ class Selection {
     }
     debug.info('setRange', range);
     if (range != null) {
-      let indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
-      let args = [];
-      let scrollLength = this.scroll.length();
-      indexes.forEach((index, i) => {
-        index = Math.min(scrollLength - 1, index);
-        let node, [leaf, offset] = this.scroll.leaf(index);
-        [node, offset] = leaf.position(offset, i !== 0);
-        args.push(node, offset);
-      });
-      if (args.length < 2) {
-        args = args.concat(args);
-      }
+      let args = this.rangeToNative(range);
       this.setNativeRange(...args, force);
     } else {
       this.setNativeRange(null);
