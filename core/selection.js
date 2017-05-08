@@ -167,8 +167,8 @@ class Selection {
         return index + blot.index(node, offset);
       }
     });
-    let start = Math.min(...indexes), end = Math.max(...indexes);
-    end = Math.min(end, this.scroll.length() - 1);
+    let end = Math.min(Math.max(...indexes), this.scroll.length() - 1);
+    let start = Math.min(end, ...indexes);
     return new Range(start, end-start);
   }
 
