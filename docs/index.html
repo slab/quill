@@ -310,10 +310,13 @@ var quill = new Quill('#editor', {
       }
     });
 
-    console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
-
     loadFonts();
     $('#carousel-container').animate({ opacity: 1 }, 500);
+
+    setTimeout(function() {
+      console.clear();
+      console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
+    }, 2500);
   });
 
   function loadFonts() {
