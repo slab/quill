@@ -163,13 +163,14 @@ updateContents(delta: Delta, source: String = 'api'): Delta
 
 ```javascript
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
-quill.updateContents({
-  ops: [
-    { retain: 6 },        // Keep 'Hello '
-    { delete: 5 },        // 'World' is deleted
-    { insert: 'Quill' },  // Insert 'Quill'
-    { retain: 1, attributes: { bold: true } }    // Apply bold to exclamation mark
-  ]
+quill.updateContents(new Delta()
+  .retain(6)                  // Keep 'Hello '
+  .delete(5)                  // 'World' is deleted
+  .insert('Quill')
+  .retain(1, { bold: true })  // Apply bold to exclamation mark
 });
-// Editor should now be [{ insert: 'Hello Quill' }, { insert: '!', attributes: { bold: true} }]
+// Editor should now be [
+//  { insert: 'Hello Quill' },
+//  { insert: '!', attributes: { bold: true} }
+// ]
 ```
