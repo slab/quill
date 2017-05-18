@@ -22,6 +22,8 @@ class Scroll extends Parchment.Scroll {
         return whitelist;
       }, {});
     }
+    // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
+    this.domNode.addEventListener('DOMNodeInserted', function() {});
     this.optimize();
     this.enable();
   }
