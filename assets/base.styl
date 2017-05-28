@@ -44,6 +44,15 @@ colorItemsPerRow = 7
     .ql-stroke, .ql-stroke-miter
       stroke: activeColor
 
+// Fix for iOS not losing hover on touch
+@media (pointer: coarse)
+  .ql-{themeName}.ql-toolbar, .ql-{themeName} .ql-toolbar
+    button:hover:not(.ql-active)
+      color: inactiveColor
+      .ql-fill, .ql-stroke.ql-fill
+        fill: inactiveColor
+      .ql-stroke, .ql-stroke-miter
+        stroke: inactiveColor
 
 .ql-{themeName}
   box-sizing: border-box
