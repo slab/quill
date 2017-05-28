@@ -216,11 +216,12 @@ function matchAttributor(node, delta) {
       formats[attr.attrName] = attr.value(node);
       if (formats[attr.attrName]) return;
     }
-    if (ATTRIBUTE_ATTRIBUTORS[name] != null) {
-      attr = ATTRIBUTE_ATTRIBUTORS[name];
+    attr = ATTRIBUTE_ATTRIBUTORS[name];
+    if (attr != null && attr.attrName === name) {
       formats[attr.attrName] = attr.value(node) || undefined;
     }
-    if (STYLE_ATTRIBUTORS[name] != null) {
+    attr = STYLE_ATTRIBUTORS[name]
+    if (attr != null && attr.attrName === name) {
       attr = STYLE_ATTRIBUTORS[name];
       formats[attr.attrName] = attr.value(node) || undefined;
     }
