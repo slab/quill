@@ -483,11 +483,11 @@ function shiftRange(range, index, length, source) {
   let start, end;
   if (index instanceof Delta) {
     [start, end] = [range.index, range.index + range.length].map(function(pos) {
-      return index.transformPosition(pos, source === Emitter.sources.USER);
+      return index.transformPosition(pos, source !== Emitter.sources.USER);
     });
   } else {
     [start, end] = [range.index, range.index + range.length].map(function(pos) {
-      if (pos < index || (pos === index && source !== Emitter.sources.USER)) return pos;
+      if (pos < index || (pos === index && source === Emitter.sources.USER)) return pos;
       if (length >= 0) {
         return pos + length;
       } else {
