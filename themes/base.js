@@ -108,8 +108,7 @@ class BaseTheme extends Theme {
         picker.update();
       });
     };
-    this.quill.on(Emitter.events.SELECTION_CHANGE, update)
-              .on(Emitter.events.SCROLL_OPTIMIZE, update);
+    this.quill.on(Emitter.events.EDITOR_CHANGE, update);
   }
 }
 BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
