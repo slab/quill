@@ -1,3 +1,16 @@
+# 1.2.5
+
+- Fix cursor shifting to be exclusive of user cursor [#1367](https://github.com/quilljs/quill/issues/1367)
+- Fix iOS hover state on toolbar [#1388](https://github.com/quilljs/quill/issues/1388)
+- Fix `getText()` for Bangla [#1427](https://github.com/quilljs/quill/issues/1427)
+- Fix Korean character composition in Safari [#1437](https://github.com/quilljs/quill/issues/1437)
+- Fix pasting HTML handling special class names [#1445](https://github.com/quilljs/quill/issues/1445)
+- Fix paste or initializing with font-weight [#1456](https://github.com/quilljs/quill/issues/1456)
+- Fix updating active picker logic [#1468](https://github.com/quilljs/quill/issues/1468)
+
+Thanks to [@aliciawood](https://github.com/aliciawood), [@benbro](https://github.com/benbro), [@denis-aes](https://github.com/denis-aes), [@despreju](https://github.com/despreju), [@GlenKPeterson](https://github.com/GlenKPeterson), [@haugstrup](https://github.com/haugstrup), [@jziggas](https://github.com/jziggas), [@RobAley](https://github.com/RobAley), [@sheley1998](https://github.com/sheley1998), [@silverprize](https://github.com/silverprize), and [@yairy](https://github.com/yairy) for contributions to this release!
+
+
 # 1.2.4
 
 - Fix pasting nested list [#906](https://github.com/quilljs/quill/issues/906)
