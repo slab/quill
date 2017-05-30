@@ -156,7 +156,7 @@ Try setting some text to H1, and in your console, run `quill.getContents()`. You
 
 Now let's implement our first leaf Blot. While our previous Blot examples contribute formatting and implement `format()`, leaf Blots contribute content and implement `value()`. Leaf Blots can either be Text or Embed Blots, so our section divider will be an Embed. Once created, Embed Blots' value is immutable, requiring deletion and reinsertion to change the content at that location.
 
-Our methodology is similar to before, except we inherit from an BlockEmbed. Embed also exists under `blots/embed`, but is meant for inline level blots. We want the block level implementation instead for dividers.
+Our methodology is similar to before, except we inherit from a BlockEmbed. Embed also exists under `blots/embed`, but is meant for inline level blots. We want the block level implementation instead for dividers.
 
 ```js
 let BlockEmbed = Quill.import('blots/block/embed');
