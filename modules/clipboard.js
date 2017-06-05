@@ -99,7 +99,6 @@ class Clipboard extends Module {
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index);
     let scrollTop = this.quill.scrollingContainer.scrollTop;
-    this.container.focus();
     setTimeout(() => {
       this.quill.selection.update(Quill.sources.SILENT);
       delta = delta.concat(this.convert()).delete(range.length);
