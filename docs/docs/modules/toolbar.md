@@ -3,18 +3,23 @@ layout: docs
 title: Toolbar Module
 permalink: /docs/modules/toolbar/
 ---
+
+```html
 <!-- head -->
 <link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
 <!-- head -->
+```
 
 The Toolbar module allow users to easily format Quill's contents.
 
+```html
 <div class="quill-wrapper">
   <div id="toolbar-toolbar" class="toolbar">
   {% include full-toolbar.html %}
   </div>
   <div id="toolbar-editor" class="editor"></div>
 </div>
+```
 
 It can be configured with a custom container and handlers.
 
@@ -22,7 +27,7 @@ It can be configured with a custom container and handlers.
 var quill = new Quill('#editor', {
   modules: {
     toolbar: {
-      container: '#toolbar',  // Selector for toolbar container
+      container: '#toolbar',  // Selector for toolbar container or DOM element
       handlers: {
         'formula': customFormulaHandler
       }
@@ -202,6 +207,7 @@ var toolbar = quill.getModule('toolbar');
 toolbar.addHandler('image', showImageUI);
 ```
 
+```html
 <!-- script -->
 <script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
 <script>
@@ -213,3 +219,4 @@ toolbar.addHandler('image', showImageUI);
   });
 </script>
 <!-- script -->
+```
