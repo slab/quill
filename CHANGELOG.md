@@ -1,3 +1,13 @@
+# 1.2.6
+
+- Disable Grammarly by default [#574](https://github.com/quilljs/quill/issues/574)
+- Fix RTL list spacing [#1485](https://github.com/quilljs/quill/pull/1485)
+- Add support for mobile Youtube links [#1489](https://github.com/quilljs/quill/pull/1489)
+
+Thank you [@amitm02](https://github.com/amitm02), [@benbro](https://github.com/benbro)
+[@nickbaum](https://github.com/nickbaum), [@stalniy](https://github.com/stalniy) and [@ygrishajev](https://github.com/ygrishajev) for your contributions to this release.
+
+
 # 1.2.5
 
 - Fix cursor shifting to be exclusive of user cursor [#1367](https://github.com/quilljs/quill/issues/1367)
