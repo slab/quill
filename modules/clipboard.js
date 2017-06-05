@@ -61,6 +61,7 @@ class Clipboard extends Module {
     this.container.setAttribute('contenteditable', true);
     this.container.setAttribute('tabindex', -1);
     this.matchers = [];
+    this.prePasteHandler = this.options.prePasteHandler;
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach((pair) => {
       this.addMatcher(...pair);
     });
@@ -95,6 +96,7 @@ class Clipboard extends Module {
   }
 
   onPaste(e) {
+    if (this.prePasteHandler) this.prePasteHandler(e);
     if (e.defaultPrevented || !this.quill.isEnabled()) return;
     let range = this.quill.getSelection();
     let delta = new Delta().retain(range.index);
