@@ -27,6 +27,7 @@ import './unit/modules/keyboard';
 import './unit/modules/toolbar';
 
 import './unit/ui/picker';
+import './unit/theme/base/tooltip';
 
 
 export default Quill;
