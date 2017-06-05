@@ -49,9 +49,22 @@ class Selection {
       if (native.start.node === this.cursor.textNode) return;  // cursor.restore() will handle
       // TODO unclear if this has negative side effects
       this.emitter.once(Emitter.events.SCROLL_UPDATE, () => {
-        try {
-          this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offset);
-        } catch (ignored) {}
+        setTimeout(function() {
+          // Only call setNativeRange() in response to a mutation if
+          // the editor has focus, otherwise setNativeRange() will re-focus
+          // the editor which can prevent users from being able to navigate
+          // away from the editor using the Tab key. (For more, see issue #1404.)
+          // Check for focus using setTimeout() to ensure document.activeElement
+          // accurately reflects the currently focused node. For example:
+          // if a mutation occurs as a result of a blur event listener,
+          // document.activeElement will still report the focused element
+          // as being this.root, even though the editor has lost focus.
+          if (this.hasFocus()) {
+            try {
+              this.setNativeRange(native.start.node, native.start.offset, native.end.node, native.end.offset);
+            } catch (ignored) {}
+          }
+        }.bind(this), 0);
       });
     });
     this.update(Emitter.sources.SILENT);
