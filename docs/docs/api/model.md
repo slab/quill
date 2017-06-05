@@ -67,7 +67,7 @@ Returns the line [Blot](https://github.com/quilljs/parchment) at the specified i
 **Methods**
 
 ```javascript
-getLine(index: Number): Blot
+getLine(index: Number): [Blot, Number]
 ```
 
 

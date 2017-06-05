@@ -35,10 +35,10 @@
   - once
 - Model:
   - find-experimental
-  - getIndex-experimental
-  - getLeaf-experimental
-  - getLine-experimental
-  - getLines-experimental
+  - getindex-experimental
+  - getleaf-experimental
+  - getline-experimental
+  - getlines-experimental
 - Extension:
   - debug
   - import
