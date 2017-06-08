@@ -27,6 +27,7 @@ import CodeBlock, { Code as InlineCode } from './formats/code';
 
 import Formula from './modules/formula';
 import Syntax from './modules/syntax';
+import TextMarking from './modules/text-marking';
 import Toolbar from './modules/toolbar';
 
 import Icons from './ui/icons';
@@ -88,6 +89,7 @@ Quill.register({
 
   'modules/formula': Formula,
   'modules/syntax': Syntax,
+  'modules/text-marking': TextMarking,
   'modules/toolbar': Toolbar,
 
   'themes/bubble': BubbleTheme,
