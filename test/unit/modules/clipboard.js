@@ -33,6 +33,24 @@ describe('Clipboard', function() {
         done();
       }, 2);
     });
+
+    it('can prevent default with pre paste handler', function(done) {
+      this.quill.clipboard.container.innerHTML = '<strong>|</strong>';
+      this.quill.clipboard.prePasteHandler = function(e) {
+        e.preventDefault();
+      }
+      this.quill.clipboard.onPaste({
+        defaultPrevented: false,
+        preventDefault: function() {
+          this.defaultPrevented = true;
+        }
+      });
+      setTimeout(() => {
+        expect(this.quill.root).toEqualHTML('<h1>0123</h1><p>5<em>67</em>8</p>');
+        expect(this.quill.getSelection()).toEqual(new Range(2, 5));
+        done();
+      }, 2);
+    });
   });
 
   describe('convert', function() {
