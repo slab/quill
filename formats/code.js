@@ -96,6 +96,18 @@ class CodeBlock extends Block {
     }
   }
 
+  optimize() {
+    super.optimize();
+    let next = this.next;
+    if (next != null && next.prev === this &&
+        next.statics.blotName === this.statics.blotName &&
+        next.domNode.tagName === this.domNode.tagName) {
+      this.appendChild(Parchment.create('text', '\n'))
+      next.moveChildren(this);
+      next.remove();
+    }
+  }
+
   replace(target) {
     super.replace(target);
     [].slice.call(this.domNode.querySelectorAll('*')).forEach(function(node) {
