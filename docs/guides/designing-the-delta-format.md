@@ -56,7 +56,7 @@ To solve this, we add the constraint that Deltas must be compact. With this cons
 
 We have not assigned any meaning to `bold`, just that it describes some formatting for text. We could very well have used different names, such as `weighted` or `strong`, or used a different range of possible values, such as a numerical or descriptive range of weights. An example can be found in CSS, where most of these ambiguities are at play. If we saw bolded text on a page, we cannot predict if its rule set is `font-weight: bold` or `font-weight: 700`. This makes the task of parsing CSS to discern its meaning, much more complex.
 
-We do not define the set of possible attributes, nor their meanings, but we do add an additional contraint that Deltas must be canonical. If two Deltas are equal, the content they represent must be equal, and there cannot be two unequal Deltas that represent the same content. Programmatically, this allows you to simply deep compare two Deltas to determine if the content they represent is equal.
+We do not define the set of possible attributes, nor their meanings, but we do add an additional constraint that Deltas must be canonical. If two Deltas are equal, the content they represent must be equal, and there cannot be two unequal Deltas that represent the same content. Programmatically, this allows you to simply deep compare two Deltas to determine if the content they represent is equal.
 
 So if we had the following, the only conclusion we can draw is `a` is different from `b`, but not what `a` or `b` means.
 
