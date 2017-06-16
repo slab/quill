@@ -30,12 +30,15 @@ class Selection {
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
     this.lastRange = this.savedRange = new Range(0, 0);
-    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave', 'focus', 'blur'].forEach((eventName) => {
-      this.root.addEventListener(eventName, () => {
-        // When range used to be a selection and user click within the selection,
-        // the range now being a cursor has not updated yet without setTimeout
-        setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
-      });
+    ['keyup', 'mouseup', 'mouseleave', 'touchend', 'touchleave', 'focus', 'blur', 'selectionchange'].forEach((eventName) => {
+      let element = this.root;
+
+      // selectionchange is a global event, thus bind it to the document instead of this.root
+      if (eventName === 'selectionchange') {
+        element = document;
+      }
+
+      this.handleDOMEvent(element, eventName);
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
@@ -55,6 +58,20 @@ class Selection {
       });
     });
     this.update(Emitter.sources.SILENT);
+  }
+
+  handleDOMEvent(element, eventName) {
+    element.addEventListener(eventName, (event) => {
+
+      // only handle selectionchange if it happened within the editor
+      if (eventName === 'selectionchange' && event.target.activeElement !== this.root) {
+        return;
+      }
+
+      // When range used to be a selection and user click within the selection,
+      // the range now being a cursor has not updated yet without setTimeout
+      setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
+    });
   }
 
   focus() {
