@@ -96,8 +96,8 @@ class List extends Container {
     }
   }
 
-  optimize() {
-    super.optimize();
+  optimize(context) {
+    super.optimize(context);
     let next = this.next;
     if (next != null && next.prev === this &&
         next.statics.blotName === this.statics.blotName &&

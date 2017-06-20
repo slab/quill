@@ -9,8 +9,8 @@ class Bold extends Inline {
     return true;
   }
 
-  optimize() {
-    super.optimize();
+  optimize(context) {
+    super.optimize(context);
     if (this.domNode.tagName !== this.statics.tagName[0]) {
       this.replaceWith(this.statics.blotName);
     }
