@@ -1,25 +1,20 @@
-import Embed from '../blots/embed';
+import { InlineEmbed } from '../blots/embed';
 import Quill from '../core/quill';
 import Module from '../core/module';
 
 
-class FormulaBlot extends Embed {
+class FormulaBlot extends InlineEmbed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
       window.katex.render(value, node);
       node.setAttribute('data-value', value);
     }
-    node.setAttribute('contenteditable', false);
     return node;
   }
 
   static value(domNode) {
     return domNode.getAttribute('data-value');
-  }
-
-  index() {
-    return 1;
   }
 }
 FormulaBlot.blotName = 'formula';

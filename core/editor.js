@@ -22,7 +22,7 @@ class Editor {
     let consumeNextNewline = false;
     this.scroll.update();
     let scrollLength = this.scroll.length();
-    this.scroll.batch = true;
+    this.scroll.batchStart();
     delta = normalizeDelta(delta);
     delta.reduce((index, op) => {
       let length = op.retain || op.delete || op.insert.length || 1;
@@ -64,8 +64,7 @@ class Editor {
       }
       return index + (op.retain || op.insert.length || 1);
     }, 0);
-    this.scroll.batch = false;
-    this.scroll.optimize();
+    this.scroll.batchEnd();
     return this.update(delta);
   }
 

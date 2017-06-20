@@ -29,8 +29,8 @@ class Inline extends Parchment.Inline {
     }
   }
 
-  optimize() {
-    super.optimize();
+  optimize(context) {
+    super.optimize(context);
     if (this.parent instanceof Inline &&
         Inline.compare(this.statics.blotName, this.parent.statics.blotName) > 0) {
       let parent = this.parent.isolate(this.offset(), this.length());
