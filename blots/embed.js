@@ -1,4 +1,7 @@
 import Parchment from 'parchment';
+import TextBlot from './text';
+
+const GUARD_TEXT = "\uFEFF";
 
 
 class Embed extends Parchment.Embed { }
@@ -12,8 +15,8 @@ class InlineEmbed extends Embed {
     [].slice.call(this.domNode.childNodes).forEach(function(childNode) {
       wrapper.appendChild(childNode);
     });
-    this.leftGuard = document.createTextNode("\uFEFF");
-    this.rightGuard = document.createTextNode("\uFEFF");
+    this.leftGuard = document.createTextNode(GUARD_TEXT);
+    this.rightGuard = document.createTextNode(GUARD_TEXT);
     this.domNode.appendChild(this.leftGuard);
     this.domNode.appendChild(wrapper);
     this.domNode.appendChild(this.rightGuard);
@@ -23,6 +26,38 @@ class InlineEmbed extends Embed {
     if (node === this.leftGuard) return 0;
     if (node === this.rightGuard) return 1;
     return super.index(node, offset);
+  }
+
+  restore(node) {
+    let text, textNode;
+    if (node === this.leftGuard) {
+      text = this.leftGuard.data.split(GUARD_TEXT).join('');
+      if (this.prev instanceof TextBlot) {
+        this.prev.insertAt(this.prev.length(), text);
+      } else {
+        textNode = document.createTextNode(text);
+        this.parent.insertBefore(Parchment.create(textNode), this);
+      }
+      this.leftGuard.data = GUARD_TEXT;
+    } else if (node === this.rightGuard) {
+      text = this.rightGuard.data.split(GUARD_TEXT).join('');
+      if (this.next instanceof TextBlot) {
+        this.next.insertAt(0, text);
+      } else {
+        textNode = document.createTextNode(text);
+        this.parent.insertBefore(Parchment.create(textNode), this.next);
+      }
+      this.rightGuard.data = GUARD_TEXT;
+    }
+  }
+
+  update(mutations) {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'characterData' &&
+          (mutation.target === this.leftGuard || mutation.target === this.rightGuard)) {
+        this.restore(mutation.target);
+      }
+    });
   }
 }
 
