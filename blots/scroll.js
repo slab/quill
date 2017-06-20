@@ -27,6 +27,15 @@ class Scroll extends Parchment.Scroll {
     this.enable();
   }
 
+  batchStart() {
+    this.batch = true;
+  }
+
+  batchEnd() {
+    this.batch = false;
+    this.optimize();
+  }
+
   deleteAt(index, length) {
     let [first, offset] = this.line(index);
     let [last, ] = this.line(index + length);
