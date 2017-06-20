@@ -29,33 +29,51 @@ class InlineEmbed extends Embed {
   }
 
   restore(node) {
-    let text, textNode;
+    let range, text, textNode;
     if (node === this.leftGuard) {
       text = this.leftGuard.data.split(GUARD_TEXT).join('');
       if (this.prev instanceof TextBlot) {
         this.prev.insertAt(this.prev.length(), text);
+        range = {
+          startNode: this.prev.domNode,
+          startOffset: this.prev.domNode.data.length
+        };
       } else {
         textNode = document.createTextNode(text);
         this.parent.insertBefore(Parchment.create(textNode), this);
+        range = {
+          startNode: textNode,
+          startOffset: text.length
+        };
       }
       this.leftGuard.data = GUARD_TEXT;
     } else if (node === this.rightGuard) {
       text = this.rightGuard.data.split(GUARD_TEXT).join('');
       if (this.next instanceof TextBlot) {
         this.next.insertAt(0, text);
+        range = {
+          startNode: this.next.domNode,
+          startOffset: text.length
+        }
       } else {
         textNode = document.createTextNode(text);
         this.parent.insertBefore(Parchment.create(textNode), this.next);
+        range = {
+          startNode: textNode,
+          startOffset: text.length
+        };
       }
       this.rightGuard.data = GUARD_TEXT;
     }
+    return range;
   }
 
-  update(mutations) {
+  update(mutations, context) {
     mutations.forEach((mutation) => {
       if (mutation.type === 'characterData' &&
           (mutation.target === this.leftGuard || mutation.target === this.rightGuard)) {
-        this.restore(mutation.target);
+        let range = this.restore(mutation.target);
+        if (range) context.range = range;
       }
     });
   }

@@ -76,7 +76,6 @@ class Quill {
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
-      scrollingContainer: this.scrollingContainer,
       whitelist: this.options.formats
     });
     this.editor = new Editor(this.scroll);

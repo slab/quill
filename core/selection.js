@@ -69,6 +69,12 @@ class Selection {
         } catch (ignored) {}
       });
     });
+    this.emitter.on(Emitter.events.SCROLL_OPTIMIZE, (mutations, context) => {
+      if (context.range) {
+        const { startNode, startOffset, endNode, endOffset } = context.range;
+        this.setNativeRange(startNode, startOffset, endNode, endOffset);
+      }
+    });
     this.update(Emitter.sources.SILENT);
   }
 
