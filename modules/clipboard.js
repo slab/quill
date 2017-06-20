@@ -107,7 +107,7 @@ class Clipboard extends Module {
       // range.length contributes to delta.length()
       this.quill.setSelection(delta.length() - range.length, Quill.sources.SILENT);
       this.quill.scrollingContainer.scrollTop = scrollTop;
-      this.quill.selection.scrollIntoView();
+      this.quill.focus();
     }, 1);
   }
 

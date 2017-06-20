@@ -143,7 +143,7 @@ class Quill {
     let scrollTop = this.scrollingContainer.scrollTop;
     this.selection.focus();
     this.scrollingContainer.scrollTop = scrollTop;
-    this.selection.scrollIntoView();
+    this.selection.scrollIntoView(this.scrollingContainer);
   }
 
   format(name, value, source = Emitter.sources.API) {
@@ -318,9 +318,9 @@ class Quill {
     } else {
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(index, length), source);
-    }
-    if (source !== Emitter.sources.SILENT) {
-      this.selection.scrollIntoView();
+      if (source !== Emitter.sources.SILENT) {
+        this.selection.scrollIntoView(this.scrollingContainer);
+      }
     }
   }
 

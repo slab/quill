@@ -216,7 +216,8 @@ class Selection {
     return args;
   }
 
-  scrollIntoView(range = this.lastRange) {
+  scrollIntoView(scrollingContainer) {
+    let range = this.lastRange;
     if (range == null) return;
     let bounds = this.getBounds(range.index, range.length);
     if (bounds == null) return;
@@ -227,12 +228,11 @@ class Selection {
       [last, ] = this.scroll.line(Math.min(range.index + range.length, limit));
     }
     if (first == null || last == null) return;
-    let scroller = this.scroll.scrollingContainer;
-    let scrollBounds = scroller.getBoundingClientRect();
+    let scrollBounds = scrollingContainer.getBoundingClientRect();
     if (bounds.top < scrollBounds.top) {
-      scroller.scrollTop -= (scrollBounds.top - bounds.top);
+      scrollingContainer.scrollTop -= (scrollBounds.top - bounds.top);
     } else if (bounds.bottom > scrollBounds.bottom) {
-      scroller.scrollTop += (bounds.bottom - scrollBounds.bottom);
+      scrollingContainer.scrollTop += (bounds.bottom - scrollBounds.bottom);
     }
   }
 
