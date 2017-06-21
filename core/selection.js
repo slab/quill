@@ -1,4 +1,5 @@
 import Parchment from 'parchment';
+import { InlineEmbed } from '../blots/embed';
 import clone from 'clone';
 import equal from 'deep-equal';
 import Emitter from './emitter';
@@ -37,6 +38,20 @@ class Selection {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 100);
       });
     });
+    this.root.addEventListener('click', (e) => {
+      const blot = Parchment.find(e.target, true);
+      if (blot instanceof Parchment.Embed) {
+        blot.domNode.classList.add('ql-embed-selected');
+        const range = new Range(blot.offset(scroll), blot.length());
+        this.setRange(range, Emitter.sources.USER);
+        e.stopPropagation();
+      } else {
+        const selectedNode = document.querySelector('.ql-embed-selected');
+        if (selectedNode) {
+          selectedNode.classList.remove('ql-embed-selected');
+        }
+      }
+    });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
         this.update(Emitter.sources.SILENT);
@@ -54,7 +69,34 @@ class Selection {
         } catch (ignored) {}
       });
     });
+    this.emitter.on(Emitter.events.SCROLL_OPTIMIZE, (mutations, context) => {
+      if (context.range) {
+        const { startNode, startOffset, endNode, endOffset } = context.range;
+        this.setNativeRange(startNode, startOffset, endNode, endOffset);
+      }
+    });
     this.update(Emitter.sources.SILENT);
+  }
+
+  fixInlineEmbed(native) {
+    if (native == null) return;
+    const [start, end] = [native.start, native.end].map(function(pos) {
+      const blot = Parchment.find(pos.node, true);
+      if (blot instanceof InlineEmbed) {
+        let node, offset;
+        if (pos.node === blot.leftGuard && pos.offset === 1) {
+          [node, offset] = blot.position(blot.length());
+          return { node, offset };
+        } else if (pos.node === blot.rightGuard && pos.offset === 0) {
+          [node, offset] = blot.position(0);
+          return { node, offset };
+        }
+      }
+      return pos;
+    });
+    if (native.start !== start || native.end !== end) {
+      this.setNativeRange(start.node, start.offset, end.node, end.offset);
+    }
   }
 
   focus() {
@@ -216,7 +258,8 @@ class Selection {
     return args;
   }
 
-  scrollIntoView(range = this.lastRange) {
+  scrollIntoView(scrollingContainer) {
+    let range = this.lastRange;
     if (range == null) return;
     let bounds = this.getBounds(range.index, range.length);
     if (bounds == null) return;
@@ -227,12 +270,11 @@ class Selection {
       [last, ] = this.scroll.line(Math.min(range.index + range.length, limit));
     }
     if (first == null || last == null) return;
-    let scroller = this.scroll.scrollingContainer;
-    let scrollBounds = scroller.getBoundingClientRect();
+    let scrollBounds = scrollingContainer.getBoundingClientRect();
     if (bounds.top < scrollBounds.top) {
-      scroller.scrollTop -= (scrollBounds.top - bounds.top);
+      scrollingContainer.scrollTop -= (scrollBounds.top - bounds.top);
     } else if (bounds.bottom > scrollBounds.bottom) {
-      scroller.scrollTop += (bounds.bottom - scrollBounds.bottom);
+      scrollingContainer.scrollTop += (bounds.bottom - scrollBounds.bottom);
     }
   }
 
@@ -291,6 +333,7 @@ class Selection {
   update(source = Emitter.sources.USER) {
     let oldRange = this.lastRange;
     let [lastRange, nativeRange] = this.getRange();
+    this.fixInlineEmbed(nativeRange);
     this.lastRange = lastRange;
     if (this.lastRange != null) {
       this.savedRange = this.lastRange;

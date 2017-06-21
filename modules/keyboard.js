@@ -218,7 +218,7 @@ Keyboard.DEFAULTS = {
         line.format('list', 'unchecked');
         this.quill.update(Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.selection.scrollIntoView();
+        this.quill.focus();
       }
     },
     'header enter': {
@@ -230,7 +230,7 @@ Keyboard.DEFAULTS = {
         this.quill.scroll.insertAt(range.index, '\n');
         this.quill.formatText(range.index + 1, 1, 'header', false, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.selection.scrollIntoView();
+        this.quill.focus();
       }
     },
     'list autofill': {
@@ -293,7 +293,7 @@ function handleBackspace(range, context) {
   if (Object.keys(formats).length > 0) {
     this.quill.formatLine(range.index-length, length, formats, Quill.sources.USER);
   }
-  this.quill.selection.scrollIntoView();
+  this.quill.focus();
 }
 
 function handleDelete(range, context) {
@@ -320,7 +320,7 @@ function handleDelete(range, context) {
 function handleDeleteRange(range) {
   this.quill.deleteText(range, Quill.sources.USER);
   this.quill.setSelection(range.index, Quill.sources.SILENT);
-  this.quill.selection.scrollIntoView();
+  this.quill.focus();
 }
 
 function handleEnter(range, context) {
@@ -337,7 +337,7 @@ function handleEnter(range, context) {
   // Earlier scroll.deleteAt might have messed up our selection,
   // so insertText's built in selection preservation is not reliable
   this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-  this.quill.selection.scrollIntoView();
+  this.quill.focus();
   Object.keys(context.format).forEach((name) => {
     if (lineFormats[name] != null) return;
     if (Array.isArray(context.format[name])) return;

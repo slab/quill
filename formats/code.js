@@ -81,16 +81,16 @@ class CodeBlock extends Block {
     }
   }
 
-  optimize() {
+  optimize(context) {
     if (!this.domNode.textContent.endsWith('\n')) {
       this.appendChild(Parchment.create('text', '\n'));
     }
-    super.optimize();
+    super.optimize(context);
     let next = this.next;
     if (next != null && next.prev === this &&
         next.statics.blotName === this.statics.blotName &&
         this.statics.formats(this.domNode) === next.statics.formats(next.domNode)) {
-      next.optimize();
+      next.optimize(context);
       next.moveChildren(this);
       next.remove();
     }

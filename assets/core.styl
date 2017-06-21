@@ -75,15 +75,18 @@ resets(arr)
     display: inline-block
     white-space: nowrap
     width: LIST_STYLE_WIDTH
-    text-align: right
-    margin-right: LIST_STYLE_MARGIN
+  li:not(.ql-direction-rtl)::before
     margin-left: -1*LIST_STYLE_OUTER_WIDTH
+    margin-right: LIST_STYLE_MARGIN
+    text-align: right
   li.ql-direction-rtl::before
-    text-align: left
     margin-left: LIST_STYLE_MARGIN
+    margin-right: -1*LIST_STYLE_OUTER_WIDTH
   ol, ul
-    li
+    li:not(.ql-direction-rtl)
       padding-left: LIST_STYLE_OUTER_WIDTH
+    li.ql-direction-rtl
+      padding-right: LIST_STYLE_OUTER_WIDTH
   ol
     li
       counter-reset: resets(1..MAX_INDENT)
@@ -168,6 +171,10 @@ resets(arr)
     text-align: justify
   .ql-align-right
     text-align: right
+
+  .ql-embed-selected
+    border: 1px solid #777
+    user-select: none
 
 .ql-editor.ql-blank::before
   color: rgba(0,0,0,0.6)

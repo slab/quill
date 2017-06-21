@@ -15,7 +15,6 @@ class Scroll extends Parchment.Scroll {
   constructor(domNode, config) {
     super(domNode);
     this.emitter = config.emitter;
-    this.scrollingContainer = config.scrollingContainer;
     if (Array.isArray(config.whitelist)) {
       this.whitelist = config.whitelist.reduce(function(whitelist, format) {
         whitelist[format] = true;
@@ -26,6 +25,15 @@ class Scroll extends Parchment.Scroll {
     this.domNode.addEventListener('DOMNodeInserted', function() {});
     this.optimize();
     this.enable();
+  }
+
+  batchStart() {
+    this.batch = true;
+  }
+
+  batchEnd() {
+    this.batch = false;
+    this.optimize();
   }
 
   deleteAt(index, length) {
@@ -110,11 +118,11 @@ class Scroll extends Parchment.Scroll {
     return getLines(this, index, length);
   }
 
-  optimize(mutations = []) {
+  optimize(mutations = [], context = {}) {
     if (this.batch === true) return;
-    super.optimize(mutations);
+    super.optimize(mutations, context);
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations);
+      this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations, context);
     }
   }
 
