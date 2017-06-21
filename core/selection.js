@@ -258,7 +258,7 @@ class Selection {
     return args;
   }
 
-  scrollIntoView(scrollingContainer) {}
+  scrollIntoView() {}
   //   let range = this.lastRange;
   //   if (range == null) return;
   //   let bounds = this.getBounds(range.index, range.length);
