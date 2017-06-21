@@ -258,25 +258,25 @@ class Selection {
     return args;
   }
 
-  scrollIntoView(scrollingContainer) {
-    let range = this.lastRange;
-    if (range == null) return;
-    let bounds = this.getBounds(range.index, range.length);
-    if (bounds == null) return;
-    let limit = this.scroll.length()-1;
-    let [first, ] = this.scroll.line(Math.min(range.index, limit));
-    let last = first;
-    if (range.length > 0) {
-      [last, ] = this.scroll.line(Math.min(range.index + range.length, limit));
-    }
-    if (first == null || last == null) return;
-    let scrollBounds = scrollingContainer.getBoundingClientRect();
-    // if (bounds.top < scrollBounds.top) {
-    //   scrollingContainer.scrollTop -= (scrollBounds.top - bounds.top);
-    // } else if (bounds.bottom > scrollBounds.bottom) {
-    //   scrollingContainer.scrollTop += (bounds.bottom - scrollBounds.bottom);
-    // }
-  }
+  scrollIntoView(scrollingContainer) {}
+  //   let range = this.lastRange;
+  //   if (range == null) return;
+  //   let bounds = this.getBounds(range.index, range.length);
+  //   if (bounds == null) return;
+  //   let limit = this.scroll.length()-1;
+  //   let [first, ] = this.scroll.line(Math.min(range.index, limit));
+  //   let last = first;
+  //   if (range.length > 0) {
+  //     [last, ] = this.scroll.line(Math.min(range.index + range.length, limit));
+  //   }
+  //   if (first == null || last == null) return;
+  //   let scrollBounds = scrollingContainer.getBoundingClientRect();
+  //   if (bounds.top < scrollBounds.top) {
+  //     scrollingContainer.scrollTop -= (scrollBounds.top - bounds.top);
+  //   } else if (bounds.bottom > scrollBounds.bottom) {
+  //     scrollingContainer.scrollTop += (bounds.bottom - scrollBounds.bottom);
+  //   }
+  // }
 
   setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
     debug.info('setNativeRange', startNode, startOffset, endNode, endOffset);
