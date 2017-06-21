@@ -33,6 +33,11 @@ describe('BaseTooltip', function() {
       expect(this.container.querySelector('.ql-video').src).toContain('https://www.youtube.com/embed/QHH3iSeDBLo');
     });
 
+    it('uses https as default youtube video url protocol', function() {
+      insertVideo(this.tooltip, 'youtube.com/watch?v=QHH3iSeDBLo');
+      expect(this.container.querySelector('.ql-video').src).toContain('https://www.youtube.com/embed/QHH3iSeDBLo');
+    });
+
     it('converts vimeo video url to embedded', function() {
       insertVideo(this.tooltip, 'http://vimeo.com/47762693');
       expect(this.container.querySelector('.ql-video').src).toContain('http://player.vimeo.com/video/47762693/');
@@ -45,6 +50,11 @@ describe('BaseTooltip', function() {
 
     it('preserves vimeo video url protocol', function() {
       insertVideo(this.tooltip, 'https://www.vimeo.com/47762693');
+      expect(this.container.querySelector('.ql-video').src).toContain('https://player.vimeo.com/video/47762693/');
+    });
+
+    it('uses https as default vimeo video url protocol', function() {
+      insertVideo(this.tooltip, 'vimeo.com/47762693');
       expect(this.container.querySelector('.ql-video').src).toContain('https://player.vimeo.com/video/47762693/');
     });
 
