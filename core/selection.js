@@ -271,11 +271,11 @@ class Selection {
     }
     if (first == null || last == null) return;
     let scrollBounds = scrollingContainer.getBoundingClientRect();
-    if (bounds.top < scrollBounds.top) {
-      scrollingContainer.scrollTop -= (scrollBounds.top - bounds.top);
-    } else if (bounds.bottom > scrollBounds.bottom) {
-      scrollingContainer.scrollTop += (bounds.bottom - scrollBounds.bottom);
-    }
+    // if (bounds.top < scrollBounds.top) {
+    //   scrollingContainer.scrollTop -= (scrollBounds.top - bounds.top);
+    // } else if (bounds.bottom > scrollBounds.bottom) {
+    //   scrollingContainer.scrollTop += (bounds.bottom - scrollBounds.bottom);
+    // }
   }
 
   setNativeRange(startNode, startOffset, endNode = startNode, endOffset = startOffset, force = false) {
