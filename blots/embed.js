@@ -29,14 +29,15 @@ class InlineEmbed extends Embed {
   }
 
   restore(node) {
-    let range, text, textNode;
+    let range, textNode;
+    let text = node.data.split(GUARD_TEXT).join('');
     if (node === this.leftGuard) {
-      text = this.leftGuard.data.split(GUARD_TEXT).join('');
       if (this.prev instanceof TextBlot) {
-        this.prev.insertAt(this.prev.length(), text);
+        let prevLength = this.prev.length();
+        this.prev.insertAt(prevLength, text);
         range = {
           startNode: this.prev.domNode,
-          startOffset: this.prev.domNode.data.length
+          startOffset: prevLength + text.length
         };
       } else {
         textNode = document.createTextNode(text);
@@ -46,9 +47,7 @@ class InlineEmbed extends Embed {
           startOffset: text.length
         };
       }
-      this.leftGuard.data = GUARD_TEXT;
     } else if (node === this.rightGuard) {
-      text = this.rightGuard.data.split(GUARD_TEXT).join('');
       if (this.next instanceof TextBlot) {
         this.next.insertAt(0, text);
         range = {
@@ -63,8 +62,8 @@ class InlineEmbed extends Embed {
           startOffset: text.length
         };
       }
-      this.rightGuard.data = GUARD_TEXT;
     }
+    node.data = GUARD_TEXT;
     return range;
   }
 
