@@ -255,9 +255,12 @@ Keyboard.DEFAULTS = {
           default:
             value = 'ordered';
         }
-        this.quill.scroll.deleteAt(range.index - length, length);
+        this.quill.insertText(range.index, ' ', Quill.sources.SILENT);
+        this.quill.history.cutoff();
+        this.quill.scroll.deleteAt(range.index - length, length + 1);
         this.quill.formatLine(range.index - length, 1, 'list', value, Quill.sources.USER);
         this.quill.setSelection(range.index - length, Quill.sources.SILENT);
+        this.quill.history.cutoff();
       }
     },
     'code exit': {
