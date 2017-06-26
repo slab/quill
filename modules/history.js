@@ -40,6 +40,10 @@ class History extends Module {
     this.stack = { undo: [], redo: [] };
   }
 
+  cutoff() {
+    this.lastRecorded = 0;
+  }
+
   record(changeDelta, oldDelta) {
     if (changeDelta.ops.length === 0) return;
     this.stack.redo = [];
