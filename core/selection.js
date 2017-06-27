@@ -40,16 +40,15 @@ class Selection {
     });
     this.root.addEventListener('click', (e) => {
       const blot = Parchment.find(e.target, true);
+      const selectedNode = document.querySelector('.ql-embed-selected');
+      if (selectedNode) {
+        selectedNode.classList.remove('ql-embed-selected');
+      }
       if (blot instanceof Parchment.Embed) {
         blot.domNode.classList.add('ql-embed-selected');
         const range = new Range(blot.offset(scroll), blot.length());
         this.setRange(range, Emitter.sources.USER);
         e.stopPropagation();
-      } else {
-        const selectedNode = document.querySelector('.ql-embed-selected');
-        if (selectedNode) {
-          selectedNode.classList.remove('ql-embed-selected');
-        }
       }
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
