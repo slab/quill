@@ -81,7 +81,7 @@
   "scripts": {
     "build": "webpack --config _develop/webpack.config.js; rm dist/quill.core dist/quill.bubble dist/quill.snow;",
     "build:release": "./_develop/scripts/release.sh",
-    "start": "npm run build; foreman start -f _develop/procfile",
+    "start": "npm run build; bundle exec foreman start -f _develop/procfile",
     "test": "npm run test:unit",
     "test:all": "npm run test:unit; npm run test:functional",
     "test:functional": "./_develop/scripts/webdriver.sh",
