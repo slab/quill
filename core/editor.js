@@ -4,6 +4,7 @@ import Parchment from 'parchment';
 import CodeBlock from '../formats/code';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
+import Break from '../blots/break';
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
@@ -166,7 +167,7 @@ class Editor {
     if (this.scroll.children.length == 0) return true;
     if (this.scroll.children.length > 1) return false;
     let child = this.scroll.children.head;
-    return child.length() <= 1 && Object.keys(child.formats()).length == 0;
+    return child.length() <= 1 && child instanceof Break;
   }
 
   removeFormat(index, length) {
