@@ -332,7 +332,7 @@ describe('Quill', function() {
         }
       });
       expect(config.modules.formula).toEqual({});
-      expect(config.modules.syntax).toEqual({ highlight: null });
+      expect(config.modules.syntax).toEqual({ highlight: null, interval: 1000 });
       Theme.DEFAULTS.modules = oldModules;
     });
 

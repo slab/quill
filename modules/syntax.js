@@ -47,7 +47,7 @@ class Syntax extends Module {
       timer = setTimeout(() => {
         this.highlight();
         timer = null;
-      }, options.interval);
+      }, this.options.interval);
     });
     this.highlight();
   }
