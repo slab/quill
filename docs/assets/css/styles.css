@@ -924,6 +924,9 @@ body.home .arrow .shaft {
 #demo-container .ql-editor li {
   margin-bottom: 0;
 }
+#demo-container .ql-editor pre {
+  font-size: 0.8em;
+}
 
 /*** Docs ***/
 
