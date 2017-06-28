@@ -43,17 +43,18 @@ class Syntax extends Module {
     }
     let timer = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
-      if (timer != null) return;
+      clearTimeout(timer);
       timer = setTimeout(() => {
         this.highlight();
         timer = null;
-      }, 100);
+      }, options.interval);
     });
     this.highlight();
   }
 
   highlight() {
     if (this.quill.selection.composing) return;
+    this.quill.update(Quill.sources.USER);
     let range = this.quill.getSelection();
     this.quill.scroll.descendants(SyntaxCodeBlock).forEach((code) => {
       code.highlight(this.options.highlight);
@@ -71,7 +72,8 @@ Syntax.DEFAULTS = {
       let result = window.hljs.highlightAuto(text);
       return result.value;
     };
-  })()
+  })(),
+  interval: 1000
 };
 
 
