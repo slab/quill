@@ -1,6 +1,7 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
+import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
@@ -255,12 +256,16 @@ Keyboard.DEFAULTS = {
           default:
             value = 'ordered';
         }
-        this.quill.insertText(range.index, ' ', Quill.sources.SILENT);
+        this.quill.insertText(range.index, ' ', Quill.sources.USER);
         this.quill.history.cutoff();
-        this.quill.scroll.deleteAt(range.index - length, length + 1);
-        this.quill.formatLine(range.index - length, 1, 'list', value, Quill.sources.USER);
+        let [line, offset] = this.quill.getLine(range.index + 1);
+        let delta = new Delta().retain(range.index + 1 - offset)
+                               .delete(length + 1)
+                               .retain(line.length() - 1 - offset)
+                               .retain(1, { list: value });
+        this.quill.updateContents(delta, Quill.sources.USER);
+        this.quill.history.cutoff();
         this.quill.setSelection(range.index - length, Quill.sources.SILENT);
-        this.quill.history.cutoff();
       }
     },
     'code exit': {
