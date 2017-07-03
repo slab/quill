@@ -194,11 +194,13 @@ Keyboard.DEFAULTS = {
     },
     'tab': {
       key: Keyboard.keys.TAB,
-      handler: function(range, context) {
-        if (!context.collapsed) {
-          this.quill.scroll.deleteAt(range.index, range.length);
-        }
-        this.quill.insertText(range.index, '\t', Quill.sources.USER);
+      handler: function(range) {
+        this.quill.history.cutoff();
+        let delta = new Delta().retain(range.index)
+                               .delete(range.length)
+                               .insert('\t');
+        this.quill.updateContents(delta, Quill.sources.USER);
+        this.quill.history.cutoff();
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       }
     },
@@ -219,12 +221,14 @@ Keyboard.DEFAULTS = {
       collapsed: true,
       format: { list: 'checked' },
       handler: function(range) {
-        this.quill.scroll.insertAt(range.index, '\n');
-        let [line, ] = this.quill.getLine(range.index + 1);
-        line.format('list', 'unchecked');
-        this.quill.update(Quill.sources.USER);
+        let [line, offset] = this.quill.getLine(range.index);
+        let delta = new Delta().retain(range.index)
+                               .insert('\n', { list: 'checked' })
+                               .retain(line.length() - offset - 1)
+                               .retain(1, { list: 'unchecked' });
+        this.quill.updateContents(delta, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.focus();
+        this.quill.scrollIntoView();
       }
     },
     'header enter': {
@@ -232,11 +236,15 @@ Keyboard.DEFAULTS = {
       collapsed: true,
       format: ['header'],
       suffix: /^$/,
-      handler: function(range) {
-        this.quill.scroll.insertAt(range.index, '\n');
-        this.quill.formatText(range.index + 1, 1, 'header', false, Quill.sources.USER);
+      handler: function(range, context) {
+        let [line, offset] = this.quill.getLine(range.index);
+        let delta = new Delta().retain(range.index)
+                               .insert('\n', { header: context.format.header })
+                               .retain(line.length() - offset - 1)
+                               .retain(1, { header: null });
+        this.quill.updateContents(delta, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.focus();
+        this.quill.scrollIntoView();
       }
     },
     'list autofill': {
