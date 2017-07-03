@@ -142,7 +142,7 @@ class Quill {
     let scrollTop = this.scrollingContainer.scrollTop;
     this.selection.focus();
     this.scrollingContainer.scrollTop = scrollTop;
-    this.selection.scrollIntoView(this.scrollingContainer);
+    this.scrollIntoView();
   }
 
   format(name, value, source = Emitter.sources.API) {
@@ -293,6 +293,10 @@ class Quill {
     return modify.call(this, () => {
       return this.editor.removeFormat(index, length);
     }, source, index);
+  }
+
+  scrollIntoView() {
+    this.selection.scrollIntoView(this.scrollingContainer);
   }
 
   setContents(delta, source = Emitter.sources.API) {

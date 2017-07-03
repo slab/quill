@@ -28,6 +28,11 @@ class Keyboard extends Module {
     super(quill, options);
     this.bindings = {};
     Object.keys(this.options.bindings).forEach((name) => {
+      if (name === 'list autofill' &&
+          quill.scroll.whitelist != null &&
+          !quill.scroll.whitelist['list']) {
+        return;
+      }
       if (this.options.bindings[name]) {
         this.addBinding(this.options.bindings[name]);
       }
@@ -240,7 +245,6 @@ Keyboard.DEFAULTS = {
       format: { list: false },
       prefix: /^\s*?(1\.|-|\[ ?\]|\[x\])$/,
       handler: function(range, context) {
-        if (this.quill.scroll.whitelist != null && !this.quill.scroll.whitelist['list']) return true;
         let length = context.prefix.length;
         let value;
         switch (context.prefix.trim()) {
