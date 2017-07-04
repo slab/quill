@@ -61,8 +61,8 @@ Take a look at the [Quill website](https://quilljs.com/) for more documentation,
 
 ```html
 <!-- Main Quill library -->
-<script src="//cdn.quilljs.com/1.0.0/quill.js" type="text/javascript"></script>
-<script src="//cdn.quilljs.com/1.0.0/quill.min.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0/quill.js"></script>
+<script src="//cdn.quilljs.com/1.0.0/quill.min.js"></script>
 
 <!-- Theme included stylesheets -->
 <link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
@@ -70,7 +70,7 @@ Take a look at the [Quill website](https://quilljs.com/) for more documentation,
 
 <!-- Core build with no theme, formatting, non-essential modules -->
 <link href="//cdn.quilljs.com/1.0.0/quill.core.css" rel="stylesheet">
-<script src="//cdn.quilljs.com/1.0.0/quill.core.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0/quill.core.js"></script>
   ```
 
 
