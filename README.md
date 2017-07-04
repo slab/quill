@@ -54,6 +54,7 @@ Take a look at the [Quill website](https://quilljs.com/) for more documentation,
 ## Download
 
 - [npm](https://www.npmjs.com/package/quill) - `npm install quill`
+  - If you're using commonjs-style modules, you can simply write `var Quill = require("quill")`
 - tar - https://github.com/quilljs/quill/releases
 
 
