@@ -45,6 +45,12 @@ SnowTheme.DEFAULTS = extend(true, {}, BaseTheme.DEFAULTS, {
             let preview = this.quill.getText(range);
             if (/^\S+@\S+\.\S+$/.test(preview) && preview.indexOf('mailto:') !== 0) {
               preview = 'mailto:' + preview;
+            } else if (/^\.?\/[^(\s|\.)]*$/.test(preview)) {
+              preview = preview; // likely relative link
+            } else if (/^\S+(\.)\S+[^.]$/.test(preview) && !(/^https?:\/\//.test(preview))) {
+              preview = 'https://' + preview; // likely url
+            } else {
+              preview = 'https://';
             }
             let tooltip = this.quill.theme.tooltip;
             tooltip.edit('link', preview);
