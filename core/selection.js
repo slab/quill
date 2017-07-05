@@ -45,7 +45,7 @@ class Selection {
       }
     });
     this.emitter.listenDOM('selectionchange', document, () => {
-      setTimeout(this.update.bind(this, Emitter.sources.USER), 0);
+      setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {

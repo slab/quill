@@ -24,7 +24,7 @@ describe('Clipboard', function() {
       let handler = {
         change: function() {}
       };
-      spyOn(handler, 'change')
+      spyOn(handler, 'change');
       this.quill.on('selection-change', handler.change);
       this.quill.clipboard.container.innerHTML = '0';
       this.quill.clipboard.onPaste({});
