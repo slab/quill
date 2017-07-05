@@ -7,7 +7,7 @@ const EVENTS = ['selectionchange'];
 
 EVENTS.forEach(function(eventName) {
   document.addEventListener(eventName, (...args) => {
-    document.querySelectorAll('.ql-container').forEach((node) => {
+    [].slice.call(document.querySelectorAll('.ql-container')).forEach((node) => {
       // TODO use WeakMap
       if (node.__quill && node.__quill.emitter) {
         node.__quill.emitter.handleDOM(...args);
