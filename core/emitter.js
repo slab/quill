@@ -28,10 +28,10 @@ class Emitter extends EventEmitter {
     super.emit.apply(this, arguments);
   }
 
-  handleDOM(...args) {
+  handleDOM(event, ...args) {
     (this.listeners[event.type] || []).forEach(function({ node, handler }) {
       if (event.target === node) {
-        handler(...args);
+        handler(event, ...args);
       }
     });
   }
