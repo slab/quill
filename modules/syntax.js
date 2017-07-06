@@ -12,13 +12,14 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 
   highlight(highlight) {
-    if (this.cachedHTML !== this.domNode.innerHTML) {
-      let text = this.domNode.textContent;
-      if (text.trim().length > 0 || this.cachedHTML == null) {
+    let text = this.domNode.textContent;
+    if (this.cachedText !== text) {
+      if (text.trim().length > 0 || this.cachedText == null) {
         this.domNode.innerHTML = highlight(text);
+        this.domNode.normalize();
         this.attach();
       }
-      this.cachedHTML = this.domNode.innerHTML;
+      this.cachedText = text;
     }
   }
 }
