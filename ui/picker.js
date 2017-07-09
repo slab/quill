@@ -43,7 +43,7 @@ class Picker {
     [].slice.call(this.select.options).forEach((option) => {
       let item = this.buildItem(option);
       options.appendChild(item);
-      if (option.hasAttribute('selected')) {
+      if (option.selected === true) {
         this.selectItem(item);
       }
     });
