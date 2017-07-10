@@ -86,7 +86,7 @@ This canonicalization applies to both keys and values, `text` and `attributes`. 
 
 - Uses six character hex values to represent colors and not RGB
 - There is only one way to represent a newline which is with `\n`, not `\r` or `\r\n`
-- `text: "Hello  World"` unambiguously means there are precisely two spaces between "Hello" and "World"
+- <code>text: "Hello&nbsp;&nbsp;World"</code> unambiguously means there are precisely two spaces between "Hello" and "World"
 
 Some of these choices may be customized by the user, but the canonical constraint in Deltas dictate that the choice must be unique.
 
@@ -217,7 +217,7 @@ Now that Deltas may be describing changes to a non-empty document, `{ insert: "H
 
 #### Format
 
-Similar to deletes, we need to specify the range of text to format, along with the format change itself. Formatting exists in the `attributes` object, so a simple solution is to provide an additional `attributes` object to merge with the existing one. This merge is shallow to keep things simple. We have not found an use case that is compelling enough to require a deep merge and warrants the added complexity.
+Similar to deletes, we need to specify the range of text to format, along with the format change itself. Formatting exists in the `attributes` object, so a simple solution is to provide an additional `attributes` object to merge with the existing one. This merge is shallow to keep things simple. We have not found a use case that is compelling enough to require a deep merge and warrants the added complexity.
 
 ```javascript
 var delta = [{
