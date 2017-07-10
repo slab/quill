@@ -13,6 +13,9 @@ if (elem.classList.contains('test-class')) {
 
 if (!String.prototype.startsWith) {
   String.prototype.startsWith = function(searchString, position){
+    if (searchString == null) {
+      return false;
+    }
     position = position || 0;
     return this.substr(position, searchString.length) === searchString;
   };
