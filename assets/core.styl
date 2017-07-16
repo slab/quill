@@ -91,9 +91,9 @@ resets(arr)
   ol
     li
       counter-reset: resets(1..MAX_INDENT)
-      counter-increment: unquote('list-' + num)
+      counter-increment: unquote('list-0')
       &:before
-        content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
+        content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
     for num in (1..MAX_INDENT)
       li.ql-indent-{num}
         counter-increment: unquote('list-' + num)
