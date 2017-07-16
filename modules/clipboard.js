@@ -61,8 +61,9 @@ class Clipboard extends Module {
     this.container.setAttribute('contenteditable', true);
     this.container.setAttribute('tabindex', -1);
     this.matchers = [];
-    CLIPBOARD_CONFIG.concat(this.options.matchers).forEach((pair) => {
-      this.addMatcher(...pair);
+    CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(([selector, matcher]) => {
+      if (!options.matchVisual && matcher === matchSpacing) return;
+      this.addMatcher(selector, matcher);
     });
   }
 
@@ -135,7 +136,8 @@ class Clipboard extends Module {
   }
 }
 Clipboard.DEFAULTS = {
-  matchers: []
+  matchers: [],
+  matchVisual: true
 };
 
 
