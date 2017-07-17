@@ -1,3 +1,22 @@
+# 1.3.0
+
+Add `matchVisual` [configuration](https://quilljs.com/docs/modules/clipboard/#configuration) to Clipboard.
+
+- Use DOM API to determine selected `<select>` option [#1576](https://github.com/quilljs/quill/pull/1576)
+- Add `:focus` styles to toolbbar [#1540](https://github.com/quilljs/quill/issues/1540)
+- Allow users to undo automatic keyboard completions [#1538](https://github.com/quilljs/quill/issues/1538)
+- Use github-pages gem to make development environment consistent [#1536](https://github.com/quilljs/quill/issues/1536) [#1544](https://github.com/quilljs/quill/pull/1544)
+- Fix composing Chinese with preformatting [#1514](https://github.com/quilljs/quill/issues/1514)
+- Fix example clipboard module in docs [#1502](https://github.com/quilljs/quill/issues/1502)
+- Fix list layout in RTL mode [#1498](https://github.com/quilljs/quill/issues/1498)
+- Clarify documentation for scrollingContainer [#1496](https://github.com/quilljs/quill/issues/1496)
+- Add `tel` to default link whitelist [#1436](https://github.com/quilljs/quill/pull/1436)
+- Fix cursor interaction with custom contenteditable=false embeds [#1172](https://github.com/quilljs/quill/issues/1172) [#1181](https://github.com/quilljs/quill/issues/1181)
+- Fix rendered cursor in Chrome when interacting with scrollbar [#1114](https://github.com/quilljs/quill/issues/1114)
+
+Thanks to [@alexkrolick](https://github.com/alexkrolick), [@amitm02](https://github.com/amitm02), [@Christilut](https://github.com/Christilut), [@danielschwartz](https://github.com/danielschwartz), [@emanuelbsilva](https://github.com/emanuelbsilva), [@ersommer](https://github.com/ersommer), [@fiurrr](https://github.com/fiurrr), [@jackmu95](https://github.com/jackmu95), [@jmzhang](https://github.com/jmzhang), [@mdpye](https://github.com/mdpye), [@ralrom](https://github.com/ralrom), [@sferoze](https://github.com/sferoze), [@simon-at-fugu](https://github.com/simon-at-fugu), and [@yogadzx](https://github.com/yogadzx) for contributions to this release!
+
+
 # 1.2.6
 
 - Disable Grammarly by default [#574](https://github.com/quilljs/quill/issues/574)
