@@ -5,7 +5,7 @@ import Block, { BlockEmbed } from './blots/block';
 import Break from './blots/break';
 import Container from './blots/container';
 import Cursor from './blots/cursor';
-import Embed from './blots/embed';
+import Embed, { InlineEmbed } from './blots/embed';
 import Inline from './blots/inline';
 import Scroll from './blots/scroll';
 import TextBlot from './blots/text';
@@ -22,6 +22,7 @@ Quill.register({
   'blots/cursor'       : Cursor,
   'blots/embed'        : Embed,
   'blots/inline'       : Inline,
+  'blots/inline/embed' : InlineEmbed,
   'blots/scroll'       : Scroll,
   'blots/text'         : TextBlot,
 
