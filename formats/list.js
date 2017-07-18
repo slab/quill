@@ -106,6 +106,24 @@ class List extends Container {
       next.moveChildren(this);
       next.remove();
     }
+    const validAttributes = ['size', 'font', 'background'];
+    if (this.children.length == 1) {
+      const child = this.children.head;
+      const attributes = child.attributes.attributes;
+      for (let key in attributes) {
+        if (validAttributes.indexOf(key) !== -1) {
+          this.attributes.attributes[key] = attributes[key];
+        }
+      }
+      console.log(this);
+    } else {
+      validAttributes.forEach((attribute) => {
+        if (Object.prototype.hasOwnProperty.call(this.attributes, attribute)) {
+          delete this.attributes.attributes[attribute];
+        }
+      });
+      console.log(this);
+    }
   }
 
   replace(target) {
