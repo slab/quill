@@ -169,13 +169,11 @@ Keyboard.DEFAULTS = {
       metaKey: null,
       ctrlKey: null,
       altKey: null,
-      format: ['blockquote', 'indent', 'list'],
+      format: ['indent', 'list'],
       offset: 0,
       handler: function(range, context) {
         if (context.format.indent != null) {
           this.quill.format('indent', '-1', Quill.sources.USER);
-        } else if (context.format.blockquote != null) {
-          this.quill.format('blockquote', false, Quill.sources.USER);
         } else if (context.format.list != null) {
           this.quill.format('list', false, Quill.sources.USER);
         }
