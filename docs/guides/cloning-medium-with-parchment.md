@@ -304,7 +304,7 @@ TweetBlot.className = 'tweet';
 
 ### Final Polish
 
-We began with just a bunch of buttons and a Quill core that just understands plaintext. With Parchment, we able able to add bold, italic, links, blockquotes, headers, section dividers, images, videos, and even Tweets. All of this comes while maintaining a predictable and consistent document, allowing us to use Quill's powerful [APIs](/docs/api/) with these new formats and content.
+We began with just a bunch of buttons and a Quill core that just understands plaintext. With Parchment, we are able to add bold, italic, links, blockquotes, headers, section dividers, images, videos, and even Tweets. All of this comes while maintaining a predictable and consistent document, allowing us to use Quill's powerful [APIs](/docs/api/) with these new formats and content.
 
 Let's add some final polish to finish off our demo. It won't compare to Medium's UI, but we'll try to get close.
 
