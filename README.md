@@ -1,20 +1,40 @@
-# [Quill Rich Text Editor](http://quilljs.com/) [![Build Status](https://travis-ci.org/quilljs/quill.svg?branch=master)](http://travis-ci.org/quilljs/quill)
-
-[![Test Status](https://cdn.quilljs.com/badge.svg?v=2)](https://saucelabs.com/u/quill)
+<h1 align="center">
+  <a href="http://quilljs.com/" title="Quill">Quill Rich Text Editor</a>
+</h1>
+<p align="center">
+  <a href="http://quilljs.com/" title="Quill"><img alt="Quill Logo" src="https://quilljs.com/assets/images/logo.svg" width="180"></a>
+</p>
+<p align="center">
+  <a title="Quickstart" href="#quickstart"><strong>Quickstart</strong></a>
+  &#x2022;
+  <a title="Documentation" href="https://quilljs.com/docs/"><strong>Documentation</strong></a>
+  &#x2022;
+  <a title="Development" href="https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md"><strong>Development</strong></a>
+  &#x2022;
+  <a title="Contributing" href="https://github.com/quilljs/quill/blob/master/.github/CONTRIBUTING.md"><strong>Contributing</strong></a>
+  &#x2022;
+  <a title="Interactive Playground" href="https://quilljs.com/playground/"><strong>Interactive Playground</strong></a>
+</p>
+<p align="center">
+  <a href="https://travis-ci.org/quilljs/quill" title="Build Status">
+    <img src="https://travis-ci.org/quilljs/quill.svg?branch=master" alt="Build Status">
+  </a>
+  <a href="https://npmjs.com/package/quill" title="Version">
+    <img src="https://img.shields.io/npm/v/quill.svg" alt="Version">
+  </a>
+  <a href="https://npmjs.com/package/quill" title="Downloads">
+    <img src="https://img.shields.io/npm/dm/quill.svg" alt="Downloads">
+  </a>
+</p>
+<p align="center">
+  <a href="https://saucelabs.com/u/quill" title="Test Status">
+    <img src="https://cdn.quilljs.com/badge.svg?v=2" alt="Test Status">
+  </a>
+</p>
 
 Quill is a modern rich text editor built for compatibility and extensibility. It was created by [Jason Chen](https://twitter.com/jhchen) and [Byron Milligan](https://twitter.com/byronmilligan) and open sourced by [Salesforce.com](http://www.salesforce.com).
 
 To get started, check out the [Quill website](http://quilljs.com/) for documentation, guides, and live demos!
-
-
-## Useful Links
-
-- [Demo](https://quilljs.com/)
-- [Documentation](https://quilljs.com/docs/)
-- [How-to Guides](https://quilljs.com/guides/)
-- [Interactive Playground](https://quilljs.com/playground/)
-- [Contributing](https://github.com/quilljs/quill/blob/master/.github/CONTRIBUTING.md)
-- [Local Development](https://github.com/quilljs/quill/blob/master/.github/DEVELOPMENT.md)
 
 
 ## Quickstart
@@ -61,8 +81,8 @@ Take a look at the [Quill website](https://quilljs.com/) for more documentation,
 
 ```html
 <!-- Main Quill library -->
-<script src="//cdn.quilljs.com/1.0.0/quill.js" type="text/javascript"></script>
-<script src="//cdn.quilljs.com/1.0.0/quill.min.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0/quill.js"></script>
+<script src="//cdn.quilljs.com/1.0.0/quill.min.js"></script>
 
 <!-- Theme included stylesheets -->
 <link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
@@ -70,7 +90,7 @@ Take a look at the [Quill website](https://quilljs.com/) for more documentation,
 
 <!-- Core build with no theme, formatting, non-essential modules -->
 <link href="//cdn.quilljs.com/1.0.0/quill.core.css" rel="stylesheet">
-<script src="//cdn.quilljs.com/1.0.0/quill.core.js" type="text/javascript"></script>
+<script src="//cdn.quilljs.com/1.0.0/quill.core.js"></script>
   ```
 
 

@@ -29,10 +29,13 @@ colorItemsPerRow = 7
       float: left
       height: 100%
 
+    &:active:hover
+      outline: none
+
   input.ql-image[type=file]
     display: none
 
-  button:hover, button.ql-active,
+  button:hover, button:focus, button.ql-active,
   .ql-picker-label:hover, .ql-picker-label.ql-active,
   .ql-picker-item:hover, .ql-picker-item.ql-selected
     color: activeColor
@@ -41,6 +44,15 @@ colorItemsPerRow = 7
     .ql-stroke, .ql-stroke-miter
       stroke: activeColor
 
+// Fix for iOS not losing hover on touch
+@media (pointer: coarse)
+  .ql-{themeName}.ql-toolbar, .ql-{themeName} .ql-toolbar
+    button:hover:not(.ql-active)
+      color: inactiveColor
+      .ql-fill, .ql-stroke.ql-fill
+        fill: inactiveColor
+      .ql-stroke, .ql-stroke-miter
+        stroke: inactiveColor
 
 .ql-{themeName}
   box-sizing: border-box
@@ -54,9 +66,12 @@ colorItemsPerRow = 7
 
   .ql-tooltip
     position: absolute
+    transform: translateY(10px)
     a
       cursor: pointer
       text-decoration: none
+  .ql-tooltip.ql-flip
+    transform: translateY(-10px)
 
   .ql-formats
     &:after
@@ -129,11 +144,7 @@ colorItemsPerRow = 7
       padding: 5px 10px
     code
       font-size: 85%
-      padding-bottom: 2px
-      padding-top: 2px
-      &:before, &:after
-        content: "\00a0"
-        letter-spacing: -2px
+      padding: 2px 4px
     pre.ql-syntax
       background-color: #23241f
       color: #f8f8f2;

@@ -24,7 +24,7 @@ describe('Clipboard', function() {
       let handler = {
         change: function() {}
       };
-      spyOn(handler, 'change')
+      spyOn(handler, 'change');
       this.quill.on('selection-change', handler.change);
       this.quill.clipboard.container.innerHTML = '0';
       this.quill.clipboard.onPaste({});
@@ -48,7 +48,7 @@ describe('Clipboard', function() {
 
     it('whitespace', function() {
       let html =
-        '<div> 0 </div> <div> <div> 1 2 <span> 3 </span> 4 </div> </div>' +
+        '<div> 0 </div><div> <div> 1 2 <span> 3 </span> 4 </div> </div>' +
         '<div><span>5 </span><span>6 </span><span> 7</span><span> 8</span></div>';
       let delta = this.clipboard.convert(html);
       expect(delta).toEqual(new Delta().insert('0\n1 2  3  4\n5 6  7 8'));
@@ -61,7 +61,7 @@ describe('Clipboard', function() {
     });
 
     it('intentional whitespace', function() {
-      let html = '0&nbsp;<strong>1</strong>&nbsp;2';
+      let html = '<span>0&nbsp;<strong>1</strong>&nbsp;2</span>';
       let delta = this.clipboard.convert(html);
       expect(delta).toEqual(new Delta().insert('0\u00a0').insert('1', { bold: true }).insert('\u00a02'));
     });
@@ -76,6 +76,11 @@ describe('Clipboard', function() {
       let html = '<div>0<br>1</div><div>2<br></div><div>3</div><div><br>4</div><div><br></div><div>5</div>';
       let delta = this.clipboard.convert(html);
       expect(delta).toEqual(new Delta().insert('0\n1\n2\n3\n\n4\n\n5'));
+    });
+
+    it('mixed inline and block', function() {
+      let delta = this.clipboard.convert('<div>One<div>Two</div></div>');
+      expect(delta).toEqual(new Delta().insert('One\nTwo'));
     });
 
     it('alias', function() {
@@ -93,6 +98,14 @@ describe('Clipboard', function() {
       let delta = this.clipboard.convert('<ol><li>One</li><li class="ql-indent-1">Alpha</li></ol>');
       expect(delta).toEqual(new Delta().insert('One\n', { list: 'ordered' })
                                        .insert('Alpha\n', { list: 'ordered', indent: 1 }));
+    });
+
+    it('html nested list', function() {
+      let delta = this.clipboard.convert('<ol><li>One<ol><li>Alpha</li><li>Beta</li></ol></li></ol>');
+      expect(delta).toEqual(new Delta().insert('One\nAlpha', { list: 'ordered' })
+                                       .insert('\n', { list: 'ordered', indent: 1 })
+                                       .insert('Beta', { list: 'ordered' })
+                                       .insert('\n', { list: 'ordered', indent: 1 }));
     });
 
     it('embeds', function() {
@@ -113,6 +126,11 @@ describe('Clipboard', function() {
       let delta = this.clipboard.convert('<p style="direction:rtl;">Test</p>');
       expect(delta).toEqual(new Delta().insert('Test\n', { direction: 'rtl' }));
     });
+
+    it('nested styles', function() {
+      let delta = this.clipboard.convert('<span style="color: red;"><span style="color: blue;">Test</span></span>');
+      expect(delta).toEqual(new Delta().insert('Test', { color: 'blue' }));
+    })
 
     it('custom matcher', function() {
       this.clipboard.addMatcher(Node.TEXT_NODE, function(node, delta) {

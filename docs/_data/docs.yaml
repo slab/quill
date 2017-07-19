@@ -15,8 +15,12 @@
       url: /docs/api/#formatting
     - title: Selection
       url: /docs/api/#selection
+    - title: Editor
+      url: /docs/api/#editor
     - title: Events
       url: /docs/api/#events
+    - title: Model
+      url: /docs/api/#model
     - title: Extension
       url: /docs/api/#extension
 - title: Delta

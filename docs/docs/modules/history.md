@@ -65,6 +65,23 @@ quill.history.clear();
 ```
 
 
+#### cutoff <span class="experimental">experimental</span> {#cutoff-experimental}
+
+Normally changes made in short succession (configured by `delay`) are merged as a single change, so that triggering an undo will undo multiple changes. Using `cutoff()` will reset the merger window so that a changes before and after `cutoff()` is called will not be merged.
+
+**Methods**
+
+```js
+cutoff()
+```
+
+**Examples**
+
+```js
+quill.history.cutoff();
+```
+
+
 #### undo
 
 Undo last change.

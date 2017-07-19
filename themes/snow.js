@@ -3,6 +3,7 @@ import Emitter from '../core/emitter';
 import BaseTheme, { BaseTooltip } from './base';
 import LinkBlot from '../formats/link';
 import { Range } from '../core/selection';
+import icons from '../ui/icons';
 
 
 const TOOLBAR_CONFIG = [
@@ -23,8 +24,8 @@ class SnowTheme extends BaseTheme {
 
   extendToolbar(toolbar) {
     toolbar.container.classList.add('ql-snow');
-    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')));
-    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')));
+    this.buildButtons([].slice.call(toolbar.container.querySelectorAll('button')), icons);
+    this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), icons);
     this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
     if (toolbar.container.querySelector('.ql-link')) {
       this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
@@ -75,16 +76,17 @@ class SnowTooltip extends BaseTooltip {
     });
     this.root.querySelector('a.ql-remove').addEventListener('click', (event) => {
       if (this.linkRange != null) {
+        let range = this.linkRange;
         this.restoreFocus();
-        this.quill.formatText(this.linkRange, 'link', false, Emitter.sources.USER);
+        this.quill.formatText(range, 'link', false, Emitter.sources.USER);
         delete this.linkRange;
       }
       event.preventDefault();
       this.hide();
     });
-    this.quill.on(Emitter.events.SELECTION_CHANGE, (range) => {
+    this.quill.on(Emitter.events.SELECTION_CHANGE, (range, oldRange, source) => {
       if (range == null) return;
-      if (range.length === 0) {
+      if (range.length === 0 && source === Emitter.sources.USER) {
         let [link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
         if (link != null) {
           this.linkRange = new Range(range.index - offset, link.length());
@@ -109,7 +111,7 @@ class SnowTooltip extends BaseTooltip {
 }
 SnowTooltip.TEMPLATE = [
   '<a class="ql-preview" target="_blank" href="about:blank"></a>',
-  '<input type="text" data-formula="e=mc^2" data-link="quilljs.com" data-video="Embed URL">',
+  '<input type="text" data-formula="e=mc^2" data-link="https://quilljs.com" data-video="Embed URL">',
   '<a class="ql-action"></a>',
   '<a class="ql-remove"></a>'
 ].join('');

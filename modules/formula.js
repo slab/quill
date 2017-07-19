@@ -1,24 +1,20 @@
-import Embed from '../blots/embed';
+import { InlineEmbed } from '../blots/embed';
 import Quill from '../core/quill';
+import Module from '../core/module';
 
 
-class FormulaBlot extends Embed {
+class FormulaBlot extends InlineEmbed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
       window.katex.render(value, node);
       node.setAttribute('data-value', value);
     }
-    node.setAttribute('contenteditable', false);
     return node;
   }
 
   static value(domNode) {
     return domNode.getAttribute('data-value');
-  }
-
-  index() {
-    return 1;
   }
 }
 FormulaBlot.blotName = 'formula';
@@ -26,11 +22,17 @@ FormulaBlot.className = 'ql-formula';
 FormulaBlot.tagName = 'SPAN';
 
 
-function Formula() {
-  if (window.katex == null) {
-    throw new Error('Formula module requires KaTeX.');
+class Formula extends Module {
+  static register() {
+    Quill.register(FormulaBlot, true);
   }
-  Quill.register(FormulaBlot, true);
+
+  constructor() {
+    super();
+    if (window.katex == null) {
+      throw new Error('Formula module requires KaTeX.');
+    }
+  }
 }
 
 

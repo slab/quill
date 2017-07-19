@@ -2,7 +2,7 @@
 
 ### deleteText
 
-Deletes text from the editor, returing a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Deletes text from the editor, returning a [Delta](/guides/working-with-deltas/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
@@ -14,27 +14,6 @@ deleteText(index: Number, length: Number, source: String = 'api'): Delta
 
 ```javascript
 quill.deleteText(6, 4);
-```
-
-### disable
-
-Shorthand for [`enable(false)`](#enable).
-
-### enable
-
-Set ability for user to edit, via input devices like the mouse or keyboard. Does not affect capabilities of API calls, when the `source` is `"api"` or `"silent".
-
-**Methods**
-
-```javascript
-enable(enabled: boolean = true)
-```
-
-**Examples**
-
-```javascript
-quill.enable();
-quill.enable(false);   // Disables user input
 ```
 
 ### getContents
@@ -170,22 +149,6 @@ setText(text: String, source: String = 'api'): Delta
 quill.setText('Hello\n');
 ```
 
-### update
-
-Synchronously check editor for user updates and fires events, if changes have occurred. Useful for collaborative use cases during conflict resolution requiring the latest up to date state. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`.
-
-**Methods**
-
-```javascript
-update(source: String = 'user')
-```
-
-**Examples**
-
-```javascript
-quill.update();
-```
-
 ### updateContents
 
 Applies Delta to editor contents, returing a [Delta](/guides/working-with-deltas/) representing the change. These Deltas will be the same if the Delta passed in had no invalid operations. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
@@ -200,13 +163,14 @@ updateContents(delta: Delta, source: String = 'api'): Delta
 
 ```javascript
 // Assuming editor currently contains [{ insert: 'Hello World!' }]
-quill.updateContents({
-  ops: [
-    { retain: 6 },        // Keep 'Hello '
-    { delete: 5 },        // 'World' is deleted
-    { insert: 'Quill' },  // Insert 'Quill'
-    { retain: 1, attributes: { bold: true } }    // Apply bold to exclamation mark
-  ]
+quill.updateContents(new Delta()
+  .retain(6)                  // Keep 'Hello '
+  .delete(5)                  // 'World' is deleted
+  .insert('Quill')
+  .retain(1, { bold: true })  // Apply bold to exclamation mark
 });
-// Editor should now be [{ insert: 'Hello Quill' }, { insert: '!', attributes: { bold: true} }]
+// Editor should now be [
+//  { insert: 'Hello Quill' },
+//  { insert: '!', attributes: { bold: true} }
+// ]
 ```

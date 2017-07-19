@@ -76,7 +76,7 @@ quill.formatText(0, 4, 'italic', true);
 // quill.formatText(0, 4, 'myitalic', true);
 ```
 
-Let's get rid of our dummy button handler and hook up the bold and italic buttons to Quill's [`format()`](/docs/api/#format). We will hardcode `true` to always add formatting for simplicity. In your application, you will can use [`getFormat()`](/docs/api/#getformat) to retrieve the current formatting over a arbitrary range to decide whether to add or remove a format. The [Toolbar](/docs/modules/toolbar/) module implements this for Quill, and we will not reimplement it here.
+Let's get rid of our dummy button handler and hook up the bold and italic buttons to Quill's [`format()`](/docs/api/#format). We will hardcode `true` to always add formatting for simplicity. In your application, you can use [`getFormat()`](/docs/api/#getformat) to retrieve the current formatting over a arbitrary range to decide whether to add or remove a format. The [Toolbar](/docs/modules/toolbar/) module implements this for Quill, and we will not reimplement it here.
 
 Open your developer console and try out Quill's [APIs](/docs/api/) on your new bold and italic formats! Make sure to set the context to the correct CodePen iframe to be able to access the `quill` variable in the demo.
 
@@ -156,7 +156,7 @@ Try setting some text to H1, and in your console, run `quill.getContents()`. You
 
 Now let's implement our first leaf Blot. While our previous Blot examples contribute formatting and implement `format()`, leaf Blots contribute content and implement `value()`. Leaf Blots can either be Text or Embed Blots, so our section divider will be an Embed. Once created, Embed Blots' value is immutable, requiring deletion and reinsertion to change the content at that location.
 
-Our methodology is similar to before, except we inherit from an BlockEmbed. Embed also exists under `blots/embed`, but is meant for inline level blots. We want the block level implementation instead for dividers.
+Our methodology is similar to before, except we inherit from a BlockEmbed. Embed also exists under `blots/embed`, but is meant for inline level blots. We want the block level implementation instead for dividers.
 
 ```js
 let BlockEmbed = Quill.import('blots/block/embed');

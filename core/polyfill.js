@@ -55,7 +55,9 @@ if (!Array.prototype.find) {
   });
 }
 
-// Disable resizing in Firefox
 document.addEventListener("DOMContentLoaded", function() {
+  // Disable resizing in Firefox
   document.execCommand("enableObjectResizing", false, false);
+  // Disable automatic linkifying in IE11
+  document.execCommand("autoUrlDetect", false, false);
 });

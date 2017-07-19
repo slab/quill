@@ -21,8 +21,19 @@ class Scroll extends Parchment.Scroll {
         return whitelist;
       }, {});
     }
+    // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
+    this.domNode.addEventListener('DOMNodeInserted', function() {});
     this.optimize();
     this.enable();
+  }
+
+  batchStart() {
+    this.batch = true;
+  }
+
+  batchEnd() {
+    this.batch = false;
+    this.optimize();
   }
 
   deleteAt(index, length) {
@@ -107,11 +118,11 @@ class Scroll extends Parchment.Scroll {
     return getLines(this, index, length);
   }
 
-  optimize(mutations = []) {
+  optimize(mutations = [], context = {}) {
     if (this.batch === true) return;
-    super.optimize(mutations);
+    super.optimize(mutations, context);
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations);
+      this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations, context);
     }
   }
 

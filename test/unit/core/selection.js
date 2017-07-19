@@ -354,7 +354,6 @@ describe('Selection', function() {
       this.container.classList.add('ql-editor');
       this.container.style.fontFamily = 'monospace';
       this.container.style.lineHeight = /Trident/i.test(navigator.userAgent) ? '18px' : 'initial';
-      this.container.style.position = 'relative';
       this.initialize(HTMLElement, '<div></div><div>&nbsp;</div>');
       this.div = this.container.firstChild;
       this.div.style.border = '1px solid #777';
@@ -367,12 +366,13 @@ describe('Selection', function() {
       this.initialize(HTMLElement, '<p><span>0</span></p>', this.div);
       let span = this.div.firstChild.firstChild;
       span.style.display = 'inline-block';    // IE11 needs this to respect line height
+      let bounds = span.getBoundingClientRect();
       this.reference = {
-        height: span.offsetHeight,
-        left: span.offsetLeft,
+        height: bounds.height,
+        left: bounds.left,
         lineHeight: span.parentNode.offsetHeight,
-        width: span.offsetWidth,
-        top: span.offsetTop,
+        width: bounds.width,
+        top: bounds.top
       };
       this.initialize(HTMLElement, '', this.div);
     });

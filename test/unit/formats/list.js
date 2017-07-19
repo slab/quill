@@ -22,6 +22,33 @@ describe('List', function() {
     `);
   });
 
+  it('checklist', function() {
+    let editor = this.initialize(Editor, `
+      <p>0123</p>
+      <p>5678</p>
+      <p>0123</p>
+    `);
+    editor.scroll.domNode.classList.add('ql-editor');
+    editor.formatText(4, 1, { list: 'checked' });
+    editor.formatText(9, 1, { list: 'unchecked' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123')
+      .insert('\n', { list: 'checked' })
+      .insert('5678')
+      .insert('\n', { list: 'unchecked' })
+      .insert('0123\n')
+    );
+    expect(this.container).toEqualHTML(`
+      <ul data-checked="true">
+        <li>0123</li>
+      </ul>
+      <ul data-checked="false">
+        <li>5678</li>
+      </ul>
+      <p>0123</p>
+    `);
+  });
+
   it('remove', function() {
     let editor = this.initialize(Editor, `
       <p>0123</p>
@@ -53,6 +80,22 @@ describe('List', function() {
       <p>0123</p>
       <ul><li>5678</li></ul>
       <p>0123</p>
+    `);
+  });
+
+  it('replace checklist with bullet', function() {
+    let editor = this.initialize(Editor, `
+      <ul data-checked="true">
+        <li>0123</li>
+      </ul>
+    `);
+    editor.formatText(4, 1, { list: 'bullet' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123')
+      .insert('\n', { list: 'bullet' })
+    );
+    expect(this.container).toEqualHTML(`
+      <ul><li>0123</li></ul>
     `);
   });
 
@@ -134,6 +177,30 @@ describe('List', function() {
     );
   });
 
+  it('merge checklist', function() {
+    let editor = this.initialize(Editor, `
+      <ul data-checked="true"><li>0123</li></ul>
+      <p>5678</p>
+      <ul data-checked="true"><li>0123</li></ul>
+    `);
+    editor.formatText(9, 1, { list: 'checked' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123')
+      .insert('\n', { list: 'checked' })
+      .insert('5678')
+      .insert('\n', { list: 'checked' })
+      .insert('0123')
+      .insert('\n', { list: 'checked' })
+    );
+    expect(this.container).toEqualHTML(`
+      <ul data-checked="true">
+        <li>0123</li>
+        <li>5678</li>
+        <li>0123</li>
+      </ul>`
+    );
+  });
+
   it('replace split', function() {
     let editor = this.initialize(Editor, `
       <ol>
@@ -155,6 +222,30 @@ describe('List', function() {
       <ol><li>0123</li></ol>
       <ul><li>5678</li></ul>
       <ol><li>0123</li></ol>`
+    );
+  });
+
+  it('split checklist', function() {
+    let editor = this.initialize(Editor, `
+      <ul>
+        <li>0123</li>
+        <li>5678</li>
+        <li>0123</li>
+      </ul>`
+    );
+    editor.formatText(9, 1,  { list: 'unchecked' });
+    expect(editor.getDelta()).toEqual(new Delta()
+      .insert('0123')
+      .insert('\n', { list: 'bullet' })
+      .insert('5678')
+      .insert('\n', { list: 'unchecked' })
+      .insert('0123')
+      .insert('\n', { list: 'bullet' })
+    );
+    expect(this.container).toEqualHTML(`
+      <ul><li>0123</li></ul>
+      <ul data-checked="false"><li>5678</li></ul>
+      <ul><li>0123</li></ul>`
     );
   });
 

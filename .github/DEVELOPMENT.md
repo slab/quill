@@ -7,10 +7,12 @@ To develop Quill locally, you will want a copy of Quill's codebase, with the bui
 
 ### Setup
 
-The local development environment requires both Node.js and Ruby, along with their respective package managers. RVM and NVM are good solutions for installing and keeping Node.js and Ruby up to date. After installing Node.js, npm, Ruby, and RubyGems:
+The local development environment requires both Node.js and Ruby, along with their respective package managers. RVM and NVM are good solutions for installing and keeping Node.js and Ruby up to date. Mac users may need to also `xcode-select --install` to build nokogiri.
+
+After installing Node.js, npm, Ruby, and bundler:
 
     npm install
-    gem install foreman jekyll kramdown rouge jekyll-sitemap jekyll-redirect-from jekyll-feed
+    bundle install
     npm run build
 
 You can now try out the unit test suite by running:
@@ -34,7 +36,7 @@ While Quill features an extensive javascript test suite, which you can run with:
 
 However some functionality can only be tested with webdriver. To set up or update webdriver run:
 
-    npm webdriver:update
+    npm run webdriver:update
 
 Once webdriver is installed, you can run the test suite with
 

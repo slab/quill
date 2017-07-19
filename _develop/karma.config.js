@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var browsers = require('./browsers');
 var sauce = require('./sauce');
 
@@ -50,7 +49,9 @@ module.exports = function(config) {
     },
     customLaunchers: browsers
   });
+
   if (process.env.TRAVIS) {
+    config.sauceLabs.startConnect = false;
     config.transports = ['polling'];
     config.browsers = [process.env.BROWSER];
     config.browserDisconnectTimeout = 10000;
@@ -58,7 +59,9 @@ module.exports = function(config) {
     config.browserNoActivityTimeout = 60000;
     config.captureTimeout = 120000;
     // MS Edge does not work in an iframe
-    if (['ios-latest', 'android-latest'].indexOf(process.env.BROWSER) > -1) {
+    if (process.env.BROWSER.indexOf('ios') > -1 ||
+        process.env.BROWSER.indexOf('android') > -1 ||
+        process.env.BROWSER.indexOf('firefox') > -1) {
       config.client.useIframe = true;
     }
   }

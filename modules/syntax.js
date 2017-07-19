@@ -12,13 +12,14 @@ class SyntaxCodeBlock extends CodeBlock {
   }
 
   highlight(highlight) {
-    if (this.cachedHTML !== this.domNode.innerHTML) {
-      let text = this.domNode.textContent;
-      if (text.trim().length > 0 || this.cachedHTML == null) {
+    let text = this.domNode.textContent;
+    if (this.cachedText !== text) {
+      if (text.trim().length > 0 || this.cachedText == null) {
         this.domNode.innerHTML = highlight(text);
+        this.domNode.normalize();
         this.attach();
       }
-      this.cachedHTML = this.domNode.innerHTML;
+      this.cachedText = text;
     }
   }
 }
@@ -31,26 +32,30 @@ let CodeToken = new Parchment.Attributor.Class('token', 'hljs', {
 
 
 class Syntax extends Module {
+  static register() {
+    Quill.register(CodeToken, true);
+    Quill.register(SyntaxCodeBlock, true);
+  }
+
   constructor(quill, options) {
     super(quill, options);
     if (typeof this.options.highlight !== 'function') {
       throw new Error('Syntax module requires highlight.js. Please include the library on the page before Quill.');
     }
-    Quill.register(CodeToken, true);
-    Quill.register(SyntaxCodeBlock, true);
     let timer = null;
     this.quill.on(Quill.events.SCROLL_OPTIMIZE, () => {
-      if (timer != null) return;
+      clearTimeout(timer);
       timer = setTimeout(() => {
         this.highlight();
         timer = null;
-      }, 100);
+      }, this.options.interval);
     });
     this.highlight();
   }
 
   highlight() {
     if (this.quill.selection.composing) return;
+    this.quill.update(Quill.sources.USER);
     let range = this.quill.getSelection();
     this.quill.scroll.descendants(SyntaxCodeBlock).forEach((code) => {
       code.highlight(this.options.highlight);
@@ -68,7 +73,8 @@ Syntax.DEFAULTS = {
       let result = window.hljs.highlightAuto(text);
       return result.value;
     };
-  })()
+  })(),
+  interval: 1000
 };
 
 
