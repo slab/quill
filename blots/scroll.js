@@ -1,11 +1,9 @@
 import Parchment from 'parchment';
 import Emitter from '../core/emitter';
-import logger from '../core/logger';
 import Block, { BlockEmbed } from './block';
+import Break from './break';
 import Container from './container';
-
-
-let debug = logger('quill:scroll');
+import CodeBlock from '../formats/code';
 
 
 function isLine(blot) {
@@ -23,24 +21,45 @@ class Scroll extends Parchment.Scroll {
         return whitelist;
       }, {});
     }
+    // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
+    this.domNode.addEventListener('DOMNodeInserted', function() {});
+    this.optimize();
+    this.enable();
+  }
+
+  batchStart() {
+    this.batch = true;
+  }
+
+  batchEnd() {
+    this.batch = false;
     this.optimize();
   }
 
   deleteAt(index, length) {
-    let [first, firstOffset] = this.line(index);
-    let [last, lastOffset] = this.line(index + length);
+    let [first, offset] = this.line(index);
+    let [last, ] = this.line(index + length);
     super.deleteAt(index, length);
-    if (last != null && first !== last && firstOffset > 0 &&
+    if (last != null && first !== last && offset > 0 &&
         !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
-      last.moveChildren(first);
-      last.remove();
-      this.optimize();
+      if (last instanceof CodeBlock) {
+        last.deleteAt(last.length() - 1, 1);
+      }
+      let ref = last.children.head instanceof Break ? null : last.children.head;
+      first.moveChildren(last, ref);
+      first.remove();
     }
+    this.optimize();
+  }
+
+  enable(enabled = true) {
+    this.domNode.setAttribute('contenteditable', enabled);
   }
 
   formatAt(index, length, format, value) {
     if (this.whitelist != null && !this.whitelist[format]) return;
     super.formatAt(index, length, format, value);
+    this.optimize();
   }
 
   insertAt(index, value, def) {
@@ -57,10 +76,10 @@ class Scroll extends Parchment.Scroll {
         let embed = Parchment.create(value, def);
         this.appendChild(embed);
       }
-      this.optimize();
     } else {
       super.insertAt(index, value, def);
     }
+    this.optimize();
   }
 
   insertBefore(blot, ref) {
@@ -77,6 +96,9 @@ class Scroll extends Parchment.Scroll {
   }
 
   line(index) {
+    if (index === this.length()) {
+      return this.line(index - 1);
+    }
     return this.descendant(isLine, index);
   }
 
@@ -96,10 +118,11 @@ class Scroll extends Parchment.Scroll {
     return getLines(this, index, length);
   }
 
-  optimize(mutations = []) {
-    super.optimize(mutations);
+  optimize(mutations = [], context = {}) {
+    if (this.batch === true) return;
+    super.optimize(mutations, context);
     if (mutations.length > 0) {
-      this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations);
+      this.emitter.emit(Emitter.events.SCROLL_OPTIMIZE, mutations, context);
     }
   }
 
@@ -108,6 +131,7 @@ class Scroll extends Parchment.Scroll {
   }
 
   update(mutations) {
+    if (this.batch === true) return;
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
       source = mutations;

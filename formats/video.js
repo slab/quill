@@ -1,6 +1,11 @@
 import { BlockEmbed } from '../blots/block';
 import Link from '../formats/link';
 
+const ATTRIBUTES = [
+  'height',
+  'width'
+];
+
 
 class Video extends BlockEmbed {
   static create(value) {
@@ -12,10 +17,12 @@ class Video extends BlockEmbed {
   }
 
   static formats(domNode) {
-    let formats = {};
-    if (domNode.hasAttribute('height')) formats['height'] = domNode.getAttribute('height');
-    if (domNode.hasAttribute('width')) formats['width'] = domNode.getAttribute('width');
-    return formats;
+    return ATTRIBUTES.reduce(function(formats, attribute) {
+      if (domNode.hasAttribute(attribute)) {
+        formats[attribute] = domNode.getAttribute(attribute);
+      }
+      return formats;
+    }, {});
   }
 
   static sanitize(url) {
@@ -27,7 +34,7 @@ class Video extends BlockEmbed {
   }
 
   format(name, value) {
-    if (name === 'height' || name === 'width') {
+    if (ATTRIBUTES.indexOf(name) > -1) {
       if (value) {
         this.domNode.setAttribute(name, value);
       } else {

@@ -9,6 +9,7 @@ module.exports = {
   'blockquote': require('../assets/icons/blockquote.svg'),
   'bold'      : require('../assets/icons/bold.svg'),
   'clean'     : require('../assets/icons/clean.svg'),
+  'code'      : require('../assets/icons/code.svg'),
   'code-block': require('../assets/icons/code.svg'),
   'color'     : require('../assets/icons/color.svg'),
   'direction' : {
@@ -35,7 +36,8 @@ module.exports = {
   'link'      : require('../assets/icons/link.svg'),
   'list': {
     'ordered' : require('../assets/icons/list-ordered.svg'),
-    'bullet'  : require('../assets/icons/list-bullet.svg')
+    'bullet'  : require('../assets/icons/list-bullet.svg'),
+    'check'   : require('../assets/icons/list-check.svg')
   },
   'script': {
     'sub'     : require('../assets/icons/subscript.svg'),

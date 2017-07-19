@@ -17,7 +17,7 @@ var P1 = 'Call me Ishmael. Some years ago—never mind how long precisely-having
 var P2 = 'There now is your insular city of the Manhattoes, belted round by wharves as Indian isles by coral reefs—commerce surrounds it with her surf. Right and left, the streets take you waterward. Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by breezes, which a few hours previous were out of sight of land. Look at the crowds of water-gazers there.'
 
 
-describe('compose an epic', function(done) {
+describe('compose an epic', function() {
   it('load', function() {
     browser.url('/standalone/full/');
     expect(browser.getTitle()).toEqual('Full Editor - Quill');
@@ -104,8 +104,9 @@ describe('compose an epic', function(done) {
 
   it('preformat', function() {
     browser.click('.ql-toolbar .ql-bold');
+    browser.click('.ql-toolbar .ql-italic');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<p><strong><span class="ql-cursor">\uFEFF</span></strong></p>',
+      '<p><strong><em><span class="ql-cursor">\uFEFF</span></em></strong></p>',
       '<p>' + CHAPTER + '</p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
@@ -121,7 +122,7 @@ describe('compose an epic', function(done) {
     }
     browser.keys('Moby Dick');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<p><strong>Moby Dick</strong></p>',
+      '<p><strong><em>Moby Dick</em></strong></p>',
       '<p>' + CHAPTER + '</p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
@@ -142,7 +143,7 @@ describe('compose an epic', function(done) {
     browser.keys([KEYS.Short, 'b', KEYS.Null]);
     expect(browser.isExisting('.ql-toolbar .ql-bold.ql-active')).toBe(true);
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<p><strong>Moby Dick</strong></p>',
+      '<p><strong><em>Moby Dick</em></strong></p>',
       '<p><strong>' + CHAPTER + '</strong></p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',
@@ -155,7 +156,7 @@ describe('compose an epic', function(done) {
     browser.keys([KEYS.Left, KEYS.Up])
            .click('.ql-toolbar .ql-header[value="1"]');
     expect(browser.getHTML('.ql-editor', false)).toEqual([
-      '<h1><strong>Moby Dick</strong></h1>',
+      '<h1><strong><em>Moby Dick</em></strong></h1>',
       '<p><strong>' + CHAPTER + '</strong></p>',
       '<p><br></p>',
       '<p>\t' + P1 + '</p>',

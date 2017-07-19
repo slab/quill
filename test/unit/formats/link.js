@@ -1,4 +1,4 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
 import Link from '../../../formats/link';
 
@@ -17,7 +17,7 @@ describe('Link', function() {
 
   it('add invalid', function() {
     let editor = this.initialize(Editor, '<p>0123</p>');
-    editor.formatText(1, 2, { link:  'javascript:alert(0);' });
+    editor.formatText(1, 2, { link: 'javascript:alert(0);' });  // eslint-disable-line no-script-url
     expect(editor.getDelta()).toEqual(new Delta()
       .insert('0')
       .insert('12', { link: Link.SANITIZED_URL })

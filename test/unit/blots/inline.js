@@ -12,4 +12,19 @@ describe('Inline', function() {
       '<p><strong><em>H</em></strong>e<strong><em>l</em></strong>lo World!</p>'
     );
   });
+
+  it('reorder', function() {
+    let scroll = this.initialize(Scroll, '<p>0<strong>12</strong>3</p>');
+    let p = scroll.domNode.firstChild;
+    let em = document.createElement('em');
+    [].slice.call(p.childNodes).forEach(function(node) {
+      em.appendChild(node);
+    });
+    p.appendChild(em);
+    expect(scroll.domNode).toEqualHTML('<p><em>0<strong>12</strong>3</em></p>');
+    scroll.update();
+    expect(scroll.domNode).toEqualHTML(
+      '<p><em>0</em><strong><em>12</em></strong><em>3</em></p>'
+    );
+  });
 });

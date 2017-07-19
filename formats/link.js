@@ -15,7 +15,7 @@ class Link extends Inline {
   }
 
   static sanitize(url) {
-    return sanitize(url, ['http', 'https', 'mailto']) ? url : this.SANITIZED_URL;
+    return sanitize(url, this.PROTOCOL_WHITELIST) ? url : this.SANITIZED_URL;
   }
 
   format(name, value) {
@@ -27,6 +27,7 @@ class Link extends Inline {
 Link.blotName = 'link';
 Link.tagName = 'A';
 Link.SANITIZED_URL = 'about:blank';
+Link.PROTOCOL_WHITELIST = ['http', 'https', 'mailto', 'tel'];
 
 
 function sanitize(url, protocols) {

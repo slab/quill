@@ -1,11 +1,19 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
 import Inline from '../blots/inline';
 import TextBlot from '../blots/text';
 
 
-class Code extends Inline {}
+class Code extends Inline {
+  insertBefore(blot, ref) {
+    if (blot instanceof TextBlot) {
+      super.insertBefore(blot, ref);
+    } else if (blot instanceof Inline) {
+      blot.moveChildren(this, ref);
+    } // ignore embeds
+  }
+}
 Code.blotName = 'code';
 Code.tagName = 'CODE';
 
@@ -17,7 +25,7 @@ class CodeBlock extends Block {
     return domNode;
   }
 
-  static formats(domNode) {
+  static formats() {
     return true;
   }
 
@@ -33,7 +41,7 @@ class CodeBlock extends Block {
 
   format(name, value) {
     if (name === this.statics.blotName && value) return;
-    let [text, offset] = this.descendant(TextBlot, this.length() - 1);
+    let [text, ] = this.descendant(TextBlot, this.length() - 1);
     if (text != null) {
       text.deleteAt(text.length() - 1, 1);
     }
@@ -65,7 +73,11 @@ class CodeBlock extends Block {
   }
 
   length() {
-    return this.domNode.textContent.length;
+    let length = this.domNode.textContent.length;
+    if (!this.domNode.textContent.endsWith('\n')) {
+      return length + 1;
+    }
+    return length;
   }
 
   newlineIndex(searchIndex, reverse = false) {
@@ -77,16 +89,16 @@ class CodeBlock extends Block {
     }
   }
 
-  optimize() {
+  optimize(context) {
     if (!this.domNode.textContent.endsWith('\n')) {
       this.appendChild(Parchment.create('text', '\n'));
     }
-    super.optimize();
+    super.optimize(context);
     let next = this.next;
     if (next != null && next.prev === this &&
         next.statics.blotName === this.statics.blotName &&
         this.statics.formats(this.domNode) === next.statics.formats(next.domNode)) {
-      next.optimize();
+      next.optimize(context);
       next.moveChildren(this);
       next.remove();
     }

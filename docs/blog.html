@@ -1,0 +1,26 @@
+---
+layout: blog
+title: Blog
+permalink: /blog/
+---
+
+{% for post in site.posts %}
+  {% unless post.draft %}
+  <div class="post-item">
+    <h1><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h1>
+    <div class="post-meta">
+      <time>{{ post.date | date_to_string }}</time>
+      <span> - <a href="https://twitter.com/jhchen" title="Jason Chen">Jason Chen</a></span>
+    </div>
+    {% if post.content contains '<!-- more -->' %}
+      {{ post.content | split: '<!-- more -->' | first }}
+      <a class="more-link" title="Read more" href="{{ post.url }}">Read more</a>
+    {% else %}
+      {{ post.content  }}
+    {% endif %}
+    {% if forloop.last == false %}
+    <hr>
+    {% endif %}
+  </div>
+  {% endunless %}
+{% endfor %}
