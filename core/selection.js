@@ -51,8 +51,20 @@ class Selection {
         e.stopPropagation();
       }
     });
+    let mouseCount = 0;
+    this.emitter.listenDOM('mousedown', document.body, () => {
+      mouseCount += 1;
+    });
+    this.emitter.listenDOM('mouseup', document.body, () => {
+      mouseCount -= 1;
+      if (mouseCount === 0) {
+        this.update(Emitter.sources.USER);
+      }
+    });
     this.emitter.listenDOM('selectionchange', document, () => {
-      setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
+      if (mouseCount === 0) {
+        setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
+      }
     });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {

@@ -3,7 +3,7 @@ import logger from './logger';
 
 let debug = logger('quill:events');
 
-const EVENTS = ['selectionchange'];
+const EVENTS = ['selectionchange', 'mousedown', 'mouseup'];
 
 EVENTS.forEach(function(eventName) {
   document.addEventListener(eventName, (...args) => {
@@ -15,6 +15,7 @@ EVENTS.forEach(function(eventName) {
     });
   });
 });
+
 
 class Emitter extends EventEmitter {
   constructor() {
@@ -30,7 +31,7 @@ class Emitter extends EventEmitter {
 
   handleDOM(event, ...args) {
     (this.listeners[event.type] || []).forEach(function({ node, handler }) {
-      if (event.target === node) {
+      if (event.target === node || node.contains(event.target)) {
         handler(event, ...args);
       }
     });
