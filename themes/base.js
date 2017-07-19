@@ -7,7 +7,6 @@ import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
-import icons from '../ui/icons';
 
 
 const ALIGNS = [ false, 'center', 'right', 'justify' ];
@@ -57,7 +56,7 @@ class BaseTheme extends Theme {
     return module;
   }
 
-  buildButtons(buttons) {
+  buildButtons(buttons, icons) {
     buttons.forEach((button) => {
       let className = button.getAttribute('class') || '';
       className.split(/\s+/).forEach((name) => {
@@ -78,7 +77,7 @@ class BaseTheme extends Theme {
     });
   }
 
-  buildPickers(selects) {
+  buildPickers(selects, icons) {
     this.pickers = selects.map((select) => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
@@ -109,8 +108,7 @@ class BaseTheme extends Theme {
         picker.update();
       });
     };
-    this.quill.on(Emitter.events.SELECTION_CHANGE, update)
-              .on(Emitter.events.SCROLL_OPTIMIZE, update);
+    this.quill.on(Emitter.events.EDITOR_CHANGE, update);
   }
 }
 BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
@@ -125,7 +123,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute('accept', 'image/*');
+            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
               if (fileInput.files != null && fileInput.files[0] != null) {
@@ -191,9 +189,9 @@ class BaseTooltip extends Tooltip {
   }
 
   restoreFocus() {
-    let scrollTop = this.quill.root.scrollTop;
+    let scrollTop = this.quill.scrollingContainer.scrollTop;
     this.quill.focus();
-    this.quill.root.scrollTop = scrollTop;
+    this.quill.scrollingContainer.scrollTop = scrollTop;
   }
 
   save() {
@@ -212,18 +210,13 @@ class BaseTooltip extends Tooltip {
         break;
       }
       case 'video': {
-        let match = value.match(/^(https?):\/\/(www\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
-                    value.match(/^(https?):\/\/(www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
-        if (match) {
-          value = match[1] + '://www.youtube.com/embed/' + match[3] + '?showinfo=0';
-        } else if (match = value.match(/^(https?):\/\/(www\.)?vimeo\.com\/(\d+)/)) {  // eslint-disable-line no-cond-assign
-          value = match[1] + '://player.vimeo.com/video/' + match[3] + '/';
-        }
+        value = extractVideoUrl(value);
       } // eslint-disable-next-line no-fallthrough
       case 'formula': {
+        if (!value) break;
         let range = this.quill.getSelection(true);
-        let index = range.index + range.length;
         if (range != null) {
+          let index = range.index + range.length;
           this.quill.insertEmbed(index, this.root.getAttribute('data-mode'), value, Emitter.sources.USER);
           if (this.root.getAttribute('data-mode') === 'formula') {
             this.quill.insertText(index + 1, ' ', Emitter.sources.USER);
@@ -239,6 +232,18 @@ class BaseTooltip extends Tooltip {
   }
 }
 
+
+function extractVideoUrl(url) {
+  let match = url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/) ||
+              url.match(/^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtu\.be\/([a-zA-Z0-9_-]+)/);
+  if (match) {
+    return (match[1] || 'https') + '://www.youtube.com/embed/' + match[2] + '?showinfo=0';
+  }
+  if (match = url.match(/^(?:(https?):\/\/)?(?:www\.)?vimeo\.com\/(\d+)/)) {  // eslint-disable-line no-cond-assign
+    return (match[1] || 'https') + '://player.vimeo.com/video/' + match[2] + '/';
+  }
+  return url;
+}
 
 function fillSelect(select, values, defaultValue = false) {
   values.forEach(function(value) {

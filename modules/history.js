@@ -33,12 +33,15 @@ class History extends Module {
     this.ignoreChange = false;
     let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index);
-    this.quill.selection.scrollIntoView();
     this.stack[dest].push(delta);
   }
 
   clear() {
     this.stack = { undo: [], redo: [] };
+  }
+
+  cutoff() {
+    this.lastRecorded = 0;
   }
 
   record(changeDelta, oldDelta) {

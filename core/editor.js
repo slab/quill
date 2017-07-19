@@ -4,9 +4,13 @@ import Parchment from 'parchment';
 import CodeBlock from '../formats/code';
 import CursorBlot from '../blots/cursor';
 import Block, { bubbleFormats } from '../blots/block';
+import Break from '../blots/break';
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
+
+
+const ASCII = /^[ -~]*$/;
 
 
 class Editor {
@@ -19,7 +23,7 @@ class Editor {
     let consumeNextNewline = false;
     this.scroll.update();
     let scrollLength = this.scroll.length();
-    this.scroll.batch = true;
+    this.scroll.batchStart();
     delta = normalizeDelta(delta);
     delta.reduce((index, op) => {
       let length = op.retain || op.delete || op.insert.length || 1;
@@ -61,8 +65,7 @@ class Editor {
       }
       return index + (op.retain || op.insert.length || 1);
     }, 0);
-    this.scroll.batch = false;
-    this.scroll.optimize();
+    this.scroll.batchEnd();
     return this.update(delta);
   }
 
@@ -74,6 +77,7 @@ class Editor {
   formatLine(index, length, formats = {}) {
     this.scroll.update();
     Object.keys(formats).forEach((format) => {
+      if (this.scroll.whitelist != null && !this.scroll.whitelist[format]) return;
       let lines = this.scroll.lines(index, Math.max(length, 1));
       let lengthRemaining = length;
       lines.forEach((line) => {
@@ -163,7 +167,7 @@ class Editor {
     if (this.scroll.children.length == 0) return true;
     if (this.scroll.children.length > 1) return false;
     let child = this.scroll.children.head;
-    return child.length() <= 1 && Object.keys(child.formats()).length == 0;
+    return child.length() <= 1 && child instanceof Break;
   }
 
   removeFormat(index, length) {
@@ -188,6 +192,7 @@ class Editor {
     let oldDelta = this.delta;
     if (mutations.length === 1 &&
         mutations[0].type === 'characterData' &&
+        mutations[0].target.data.match(ASCII) &&
         Parchment.find(mutations[0].target)) {
       // Optimization for character changes
       let textBlot = Parchment.find(mutations[0].target);

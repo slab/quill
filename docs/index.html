@@ -33,18 +33,18 @@ redirect_from: /latest/
       <ul>
         <li>Trusted by:</li>
         <li>
-          <a href="https://www.salesforce.com" target="_blank">
-            <img src="/assets/images/users/salesforce.png">
+          <a href="https://www.linkedin.com/" target="_blank">
+            <img src="/assets/images/users/linkedin.png">
+          </a>
+        </li>
+        <li>
+          <a href="https://slack.com/" target="_blank">
+            <img src="/assets/images/users/slack.png">
           </a>
         </li>
         <li>
           <a href="http://www.voxmedia.com/" target="_blank">
             <img src="/assets/images/users/voxmedia.png">
-          </a>
-        </li>
-        <li>
-          <a href="https://www.lever.co/" target="_blank">
-            <img src="/assets/images/users/lever.png">
           </a>
         </li>
       </ul>
@@ -119,22 +119,22 @@ redirect_from: /latest/
                 <p><br></p>
                 <h2 class="ql-align-center">Getting Started is Easy</h2>
                 <p><br></p>
-                <pre>// &lt;link href="https://cdn.quilljs.com/{{site.version}}/quill.snow.css" rel="stylesheet"&gt;
-// &lt;script src="https://cdn.quilljs.com/{{site.version}}/quill.min.js" type="text/javascript"&gt;&lt;/script&gt;
+                <pre class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet"&gt;</span>
+<span class="hljs-comment">// &lt;script src="https://cdn.quilljs.com/1.2.6/quill.min.js"&gt;&lt;/script&gt;</span>
 
-var quill = new Quill('#editor', {
+<span class="hljs-keyword">var</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>, {
   modules: {
-    toolbar: '#toolbar'
+    toolbar: <span class="hljs-string">'#toolbar'</span>
   },
-  theme: 'snow'
+  theme: <span class="hljs-string">'snow'</span>
 });
 
-// Open your browser's developer console to try out the API!
+<span class="hljs-comment">// Open your browser's developer console to try out the API!</span>
 </pre>
                 <p><br></p>
                 <p><br></p>
                 <p class="ql-align-center"><strong>Built with</strong></p>
-                <p class="ql-align-center">&nbsp;<span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span>&nbsp;</p>
+                <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span></p>
                 <p><br></p>
               </div>
             </div>
@@ -204,8 +204,9 @@ var quill = new Quill('#editor', {
 <script type="text/javascript">
 (function() {
   $(document).ready(function() {
+    var fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
     var Font = Quill.import('formats/font');
-    Font.whitelist = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
+    Font.whitelist = fonts;
     Quill.register(Font, true);
 
     var bubbleEditor = new Quill('#bubble-container .editor', {
@@ -233,7 +234,7 @@ var quill = new Quill('#editor', {
         'formula': true,
         'syntax': true,
         'toolbar': [
-          [{ 'font': [] }, { 'size': [] }],
+          [{ 'font': fonts }, { 'size': [] }],
           [ 'bold', 'italic', 'underline', 'strike' ],
           [{ 'color': [] }, { 'background': [] }],
           [{ 'script': 'super' }, { 'script': 'sub' }],
@@ -271,18 +272,20 @@ var quill = new Quill('#editor', {
     var users = [{
       'Intuit': 'https://www.intuit.com/',
       'LinkedIn': 'https://www.linkedin.com/',
-      'Salesforce': 'http://www.salesforce.com/'
+      'Microsoft': 'https://www.microsoft.com/',
+      'Salesforce': 'http://www.salesforce.com/',
     }, {
       'Asana': 'https://asana.com/',
       'Gannett': 'http://www.gannett.com/',
       'Hubspot': 'https://www.hubspot.com/',
+      'Slack': 'https://slack.com/',
       'USA Today': 'http://www.usatoday.com/',
-      'Vox Media': 'http://www.voxmedia.com/'
     }, {
       'Buffer': 'https://buffer.com/',
       'Front': 'https://frontapp.com/',
       'Lever': 'https://www.lever.co/',
-      'Reedsy': 'https://reedsy.com/'
+      'Reedsy': 'https://reedsy.com/',
+      'Vox Media': 'http://www.voxmedia.com/'
     }];
     // Show users randomly
     $('#users-container a').each(function(i, link) {
@@ -307,10 +310,13 @@ var quill = new Quill('#editor', {
       }
     });
 
-    console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
-
     loadFonts();
     $('#carousel-container').animate({ opacity: 1 }, 500);
+
+    setTimeout(function() {
+      console.clear();
+      console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
+    }, 2500);
   });
 
   function loadFonts() {

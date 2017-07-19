@@ -39,7 +39,9 @@ class PlainClipboard extends Clipboard {
     if (typeof html === 'string') {
       this.container.innerHTML = html;
     }
-    return new Delta().insert(this.container.innerText);
+    let text = this.container.innerText;
+    this.container.innerHTML = '';
+    return new Delta().insert(text);
   }
 }
 

@@ -111,7 +111,7 @@ var quill = new Quill('#editor', {
 });
 ```
 
-Alternatively you can manually create a toolbar in HTML, and pass the DOM element or selector into Quill. The `ql-toolbar` class will be added to the toolbar container and Quill attach appropriate handlers to `<button>` and `<select>` elements with a class name in the form `ql-${format}`. Buttons element may optionally have a custom `value` attribute.
+For use cases requiring even more customization, you can manually create a toolbar in HTML, and pass the DOM element or selector into Quill. The `ql-toolbar` class will be added to the toolbar container and Quill attach appropriate handlers to `<button>` and `<select>` elements with a class name in the form `ql-${format}`. Buttons element may optionally have a custom `value` attribute.
 
 ```html
 <!-- Create toolbar container -->
@@ -142,7 +142,7 @@ Alternatively you can manually create a toolbar in HTML, and pass the DOM elemen
 </script>
 ```
 
-Note by supplying your own HTML element, Quill searches for particular input elements, but your own inputs that has nothing to do with Quill can still be added and styled and coexist.
+Note by supplying your own HTML element, Quill searches for particular input elements, but your own inputs that have nothing to do with Quill can still be added and styled and coexist.
 
 ```html
 <div id="toolbar">
@@ -155,7 +155,7 @@ Note by supplying your own HTML element, Quill searches for particular input ele
 </div>
 <div id="editor"></div>
 
-<script type="text/javascript">
+<script>
 var quill = new Quill('#editor', {
   modules: {
     toolbar: '#toolbar'
@@ -203,8 +203,8 @@ toolbar.addHandler('image', showImageUI);
 ```
 
 <!-- script -->
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
-<script type="text/javascript">
+<script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script>
   var quill = new Quill('#toolbar-editor', {
     modules: {
       toolbar: { container: '#toolbar-toolbar' }

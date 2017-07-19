@@ -123,8 +123,8 @@ class Block extends Parchment.Block {
     this.cache = {};
   }
 
-  optimize() {
-    super.optimize();
+  optimize(context) {
+    super.optimize(context);
     this.cache = {};
   }
 

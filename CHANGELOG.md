@@ -1,3 +1,161 @@
+# 1.3.0
+
+Add `matchVisual` [configuration](https://quilljs.com/docs/modules/clipboard/#configuration) to Clipboard.
+
+- Use DOM API to determine selected `<select>` option [#1576](https://github.com/quilljs/quill/pull/1576)
+- Add `:focus` styles to toolbbar [#1540](https://github.com/quilljs/quill/issues/1540)
+- Allow users to undo automatic keyboard completions [#1538](https://github.com/quilljs/quill/issues/1538)
+- Use github-pages gem to make development environment consistent [#1536](https://github.com/quilljs/quill/issues/1536) [#1544](https://github.com/quilljs/quill/pull/1544)
+- Fix composing Chinese with preformatting [#1514](https://github.com/quilljs/quill/issues/1514)
+- Fix example clipboard module in docs [#1502](https://github.com/quilljs/quill/issues/1502)
+- Fix list layout in RTL mode [#1498](https://github.com/quilljs/quill/issues/1498)
+- Clarify documentation for scrollingContainer [#1496](https://github.com/quilljs/quill/issues/1496)
+- Add `tel` to default link whitelist [#1436](https://github.com/quilljs/quill/pull/1436)
+- Fix cursor interaction with custom contenteditable=false embeds [#1172](https://github.com/quilljs/quill/issues/1172) [#1181](https://github.com/quilljs/quill/issues/1181)
+- Fix rendered cursor in Chrome when interacting with scrollbar [#1114](https://github.com/quilljs/quill/issues/1114)
+
+Thanks to [@alexkrolick](https://github.com/alexkrolick), [@amitm02](https://github.com/amitm02), [@Christilut](https://github.com/Christilut), [@danielschwartz](https://github.com/danielschwartz), [@emanuelbsilva](https://github.com/emanuelbsilva), [@ersommer](https://github.com/ersommer), [@fiurrr](https://github.com/fiurrr), [@jackmu95](https://github.com/jackmu95), [@jmzhang](https://github.com/jmzhang), [@mdpye](https://github.com/mdpye), [@ralrom](https://github.com/ralrom), [@sferoze](https://github.com/sferoze), [@simon-at-fugu](https://github.com/simon-at-fugu), and [@yogadzx](https://github.com/yogadzx) for contributions to this release!
+
+
+# 1.2.6
+
+- Disable Grammarly by default [#574](https://github.com/quilljs/quill/issues/574)
+- Fix RTL list spacing [#1485](https://github.com/quilljs/quill/pull/1485)
+- Add support for mobile Youtube links [#1489](https://github.com/quilljs/quill/pull/1489)
+
+Thank you [@amitm02](https://github.com/amitm02), [@benbro](https://github.com/benbro)
+[@nickbaum](https://github.com/nickbaum), [@stalniy](https://github.com/stalniy) and [@ygrishajev](https://github.com/ygrishajev) for your contributions to this release.
+
+
+# 1.2.5
+
+- Fix cursor shifting to be exclusive of user cursor [#1367](https://github.com/quilljs/quill/issues/1367)
+- Fix iOS hover state on toolbar [#1388](https://github.com/quilljs/quill/issues/1388)
+- Fix `getText()` for Bangla [#1427](https://github.com/quilljs/quill/issues/1427)
+- Fix Korean character composition in Safari [#1437](https://github.com/quilljs/quill/issues/1437)
+- Fix pasting HTML handling special class names [#1445](https://github.com/quilljs/quill/issues/1445)
+- Fix paste or initializing with font-weight [#1456](https://github.com/quilljs/quill/issues/1456)
+- Fix updating active picker logic [#1468](https://github.com/quilljs/quill/issues/1468)
+
+Thanks to [@aliciawood](https://github.com/aliciawood), [@benbro](https://github.com/benbro), [@denis-aes](https://github.com/denis-aes), [@despreju](https://github.com/despreju), [@GlenKPeterson](https://github.com/GlenKPeterson), [@haugstrup](https://github.com/haugstrup), [@jziggas](https://github.com/jziggas), [@RobAley](https://github.com/RobAley), [@sheley1998](https://github.com/sheley1998), [@silverprize](https://github.com/silverprize), and [@yairy](https://github.com/yairy) for contributions to this release!
+
+
+# 1.2.4
+
+- Fix pasting nested list [#906](https://github.com/quilljs/quill/issues/906)
+- Fix delete key interaction at end of list [#1277](https://github.com/quilljs/quill/issues/1277)
+- Fix pasting whitespace prefix [#1244](https://github.com/quilljs/quill/issues/1244)
+- Fix file dialog open speed [#1265](https://github.com/quilljs/quill/issues/1265)
+- Fix backspace with at beginning of list interaction with meta keys [#1307](https://github.com/quilljs/quill/issues/1307)
+- Fix pasting nested styles [#1333](https://github.com/quilljs/quill/issues/1333)
+- Fix backspacing into an empty line should keep own formats [#1339](https://github.com/quilljs/quill/issues/1339)
+- Fix IE11 autolinking interaction [#1390](https://github.com/quilljs/quill/issues/1390)
+- Fix persistent focus interaction with tabbing away [#1404](https://github.com/quilljs/quill/issues/1404)
+
+Thanks to [@bigggge](https://github.com/bigggge), [@CoenWarmer](https://github.com/CoenWarmer), [@cutteroid](https://github.com/cutteroid), [@jay-cox](https://github.com/jay-cox), [@kiewic](https://github.com/kiewic), [@kloots](https://github.com/kloots), [@MichaelTontchev](https://github.com/MichaelTontchev), [@montlebalm](https://github.com/montlebalm), [@RichardNeill](https://github.com/RichardNeill), and [@vasconita](https://github.com/vasconita) for your contributions to this release.
+
+
+# 1.2.3
+
+- Fix scrolling when appending new lines [#1276](https://github.com/quilljs/quill/issues/1276) [#1361](https://github.com/quilljs/quill/issues/1361)
+- Fix binding to explicit shortcut key [#1365](https://github.com/quilljs/quill/issues/1365)
+- Merge clone update [#1359](https://github.com/quilljs/quill/pull/1359)
+
+Thank you [@artaommahe](https://github.com/artaommahe), [@c-w](https://github.com/c-w), [@EladBet](https://github.com/EladBet), [@emenoh](https://github.com/emenoh), and [@montlebalm](https://github.com/montlebalm) for contributions to this release!
+
+
+# 1.2.2
+
+- Fix backspace/delete on Windows/Ubuntu [#1334](https://github.com/quilljs/quill/issues/1334)
+
+Thanks to [@dinusuresh](https://github.com/dinusuresh) for your contributions to this release.
+
+
+# 1.2.1
+
+- Fix link removal on Snow theme [#1259](https://github.com/quilljs/quill/issues/1259)
+- Fix CMD+backspace on empty editor [#1319](https://github.com/quilljs/quill/issues/1319)
+- Fix disabled checklist behavior [#1312](https://github.com/quilljs/quill/issues/1312)
+
+Thank you [@danielschwartz](https://github.com/@danielschwartz), [@JedWatson](https://github.com/@JedWatson), [@montlebalm](https://github.com/@montlebalm), and [@simi](https://github.com/@simi) for contributions to this release!
+
+
+# 1.2.0
+
+Add concept of experimental APIs: they are APIs meant to try out support for use cases we would like to address, but gives flexibility to find the right API interface. As such they are not covered by Semantic Versioning. Several are added to start things off: `find`, `getIndex`, `getLeaf`, `getLine`, `getLines`.
+
+- Merge disabling list keyboard shortcut when list format is disabled [#1257](https://github.com/quilljs/quill/pull/1257)
+
+Thanks to [@haugstrup](https://github.com/haugstrup) for your contributions to this release.
+
+
+# 1.1.10
+
+- Preserve user selection on API changes [#1152](https://github.com/quilljs/quill/issues/1152)
+- Fix backspacing into emojis [#1230](https://github.com/quilljs/quill/issues/1230)
+- Fix ability to type after emptying line in IE/Firefox [#1254](https://github.com/quilljs/quill/issues/1254)
+- Fix whitelisting block formats [#1256](https://github.com/quilljs/quill/issues/1256)
+
+Thank you [@benbro](https://github.com/benbro), [@haugstrup](https://github.com/haugstrup), [@peterweck](https://github.com/peterweck) and [@sbevels](https://github.com/sbevels) for contributions to this release!
+
+
+# 1.1.9
+
+- Flip tooltips when vertically out of bounds [#851](https://github.com/quilljs/quill/issues/851)
+- Fix IE11 autolinking and control backspace [#1028](https://github.com/quilljs/quill/issues/1028)
+- Only show tooltip when user initiates selection change [#1193](https://github.com/quilljs/quill/issues/1193)
+- Fix bug needing to click twice on align [#1220](https://github.com/quilljs/quill/issues/1220)
+- Fix cut + pasting videos [#1222](https://github.com/quilljs/quill/issues/1222)
+
+Thanks to [@amitguptagwl](https://github.com/amitguptagwl), [@antonlabunets](https://github.com/antonlabunets), [@benbro](https://github.com/benbro), [@eamodio](https://github.com/eamodio) and [@ygrishajev](https://github.com/ygrishajev) for your contributions to this release.
+
+
+# 1.1.8
+
+- Support pasting italics from Google Docs [#1185](https://github.com/quilljs/quill/issues/1185)
+- Fix setting dropdown picker back to default [#1191](https://github.com/quilljs/quill/issues/1191)
+- Fix code-block formatting on empty first line in Firefox [#1195](https://github.com/quilljs/quill/issues/1195)
+- Prevent formatting via keyboard shortcuts when not whitelisted [#1197](https://github.com/quilljs/quill/issues/1197)
+- Fix select-all copy and overwrite paste in Firefox [#1202](https://github.com/quilljs/quill/issues/1202)
+
+Thank you [@adfaure](https://github.com/adfaure), [@berndschimmer](https://github.com/berndschimmer), [@CoenWarmer](https://github.com/CoenWarmer), [@montlebalm](https://github.com/montlebalm), and [@TraceyYau](https://github.com/TraceyYau) for contributions to this release!
+
+
+# 1.1.7
+
+- Fix dropdown values reverting to default [#901](https://github.com/quilljs/quill/issues/901)
+- Add config to prevent scroll jumping on paste [#1082](https://github.com/quilljs/quill/issues/1082)
+- Prevent scrolling on API source calls [#1152](https://github.com/quilljs/quill/issues/1152)
+- Fix tsconfig build error [#1165](https://github.com/quilljs/quill/issues/1165)
+- Fix delete and formatting interaction in Firefox [#1171](https://github.com/quilljs/quill/issues/1171)
+- Fix cursor jump on formatting in middle of text [#1176](https://github.com/quilljs/quill/issues/1176)
+
+Thanks to [@cutteroid](https://github.com/cutteroid), [@houxg](https://github.com/houxg), [@jasongisstl](https://github.com/jasongisstl), [@nikparo](https://github.com/nikparo), [@sbevels](https://github.com/sbevels), and [sferoze](https://github.com/sferoze) for your contributions to this release.
+
+
+# 1.1.6
+
+### Features
+
+Checklists [#759](https://github.com/quilljs/quill/issues/759) support has been added to the API. UI and relevant interactions are still forthcoming.
+
+### Bug Fixes
+
+- Fix bug that allowed edits in readOnly mode [#1151](https://github.com/quilljs/quill/issues/1151)
+- Fix max call stack bug on large paste [#1123](https://github.com/quilljs/quill/issues/1123)
+
+Thank you [@jgmediadesign](https://github.com/jgmediadesign) and [@julienbmobile](https://github.com/julienbmobile) for contributions to this release!
+
+
+# 1.1.5
+
+- Remove unnecessary type attribute in documentation [#1087](https://github.com/quilljs/quill/pull/1087)
+- Fix chrome 52+ input file label open slow [#1090](https://github.com/quilljs/quill/pull/1090)
+- Only query the last op's insertion string if it's actually an insert [#1095](https://github.com/quilljs/quill/pull/1095)
+
+Thank you [@jleen](https://github.com/jleen), [@kaelig](https://github.com/kaelig), and [@YouHan26](https://github.com/YouHan26) for your contributions to this release.
+
+
 # 1.1.3
 
 - Update quill-delta [delta#2](https://github.com/quilljs/delta/issues/2)

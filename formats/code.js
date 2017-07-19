@@ -5,7 +5,15 @@ import Inline from '../blots/inline';
 import TextBlot from '../blots/text';
 
 
-class Code extends Inline {}
+class Code extends Inline {
+  insertBefore(blot, ref) {
+    if (blot instanceof TextBlot) {
+      super.insertBefore(blot, ref);
+    } else if (blot instanceof Inline) {
+      blot.moveChildren(this, ref);
+    } // ignore embeds
+  }
+}
 Code.blotName = 'code';
 Code.tagName = 'CODE';
 
@@ -81,16 +89,16 @@ class CodeBlock extends Block {
     }
   }
 
-  optimize() {
+  optimize(context) {
     if (!this.domNode.textContent.endsWith('\n')) {
       this.appendChild(Parchment.create('text', '\n'));
     }
-    super.optimize();
+    super.optimize(context);
     let next = this.next;
     if (next != null && next.prev === this &&
         next.statics.blotName === this.statics.blotName &&
         this.statics.formats(this.domNode) === next.statics.formats(next.domNode)) {
-      next.optimize();
+      next.optimize(context);
       next.moveChildren(this);
       next.remove();
     }

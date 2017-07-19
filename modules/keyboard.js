@@ -1,6 +1,7 @@
 import clone from 'clone';
 import equal from 'deep-equal';
 import extend from 'extend';
+import Delta from 'quill-delta';
 import DeltaOp from 'quill-delta/lib/op';
 import Parchment from 'parchment';
 import Quill from '../core/quill';
@@ -15,9 +16,8 @@ const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 class Keyboard extends Module {
   static match(evt, binding) {
     binding = normalize(binding);
-    if (!!binding.shortKey !== evt[SHORTKEY] && binding.shortKey !== null) return false;
     if (['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(function(key) {
-      return (key != SHORTKEY && !!binding[key] !== evt[key] && binding[key] !== null);
+      return (!!binding[key] !== evt[key] && binding[key] !== null);
     })) {
       return false;
     }
@@ -28,20 +28,30 @@ class Keyboard extends Module {
     super(quill, options);
     this.bindings = {};
     Object.keys(this.options.bindings).forEach((name) => {
+      if (name === 'list autofill' &&
+          quill.scroll.whitelist != null &&
+          !quill.scroll.whitelist['list']) {
+        return;
+      }
       if (this.options.bindings[name]) {
         this.addBinding(this.options.bindings[name]);
       }
     });
     this.addBinding({ key: Keyboard.keys.ENTER, shiftKey: null }, handleEnter);
     this.addBinding({ key: Keyboard.keys.ENTER, metaKey: null, ctrlKey: null, altKey: null }, function() {});
-    this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
-    this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^$/ }, handleDelete);
+    if (/Firefox/i.test(navigator.userAgent)) {
+      // Need to handle delete and backspace for Firefox in the general case #1171
+      this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true }, handleBackspace);
+      this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true }, handleDelete);
+    } else {
+      this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
+      this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
+    }
     this.addBinding({ key: Keyboard.keys.BACKSPACE }, { collapsed: false }, handleDeleteRange);
     this.addBinding({ key: Keyboard.keys.DELETE }, { collapsed: false }, handleDeleteRange);
-    if (/Trident/i.test(navigator.userAgent)) {
-      this.addBinding({ key: Keyboard.keys.BACKSPACE, shortKey: true }, handleBackspace);
-      this.addBinding({ key: Keyboard.keys.DELETE, shortKey: true }, handleDelete);
-    }
+    this.addBinding({ key: Keyboard.keys.BACKSPACE, altKey: null, ctrlKey: null, metaKey: null, shiftKey: null },
+                    { collapsed: true, offset: 0 },
+                    handleBackspace);
     this.listen();
   }
 
@@ -71,9 +81,9 @@ class Keyboard extends Module {
       if (bindings.length === 0) return;
       let range = this.quill.getSelection();
       if (range == null || !this.quill.hasFocus()) return;
-      let [line, offset] = this.quill.scroll.line(range.index);
-      let [leafStart, offsetStart] = this.quill.scroll.leaf(range.index);
-      let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.quill.scroll.leaf(range.index + range.length);
+      let [line, offset] = this.quill.getLine(range.index);
+      let [leafStart, offsetStart] = this.quill.getLeaf(range.index);
+      let [leafEnd, offsetEnd] = range.length === 0 ? [leafStart, offsetStart] : this.quill.getLeaf(range.index + range.length);
       let prefixText = leafStart instanceof Parchment.Text ? leafStart.value().slice(0, offsetStart) : '';
       let suffixText = leafEnd instanceof Parchment.Text ? leafEnd.value().slice(offsetEnd) : '';
       let curContext = {
@@ -155,13 +165,15 @@ Keyboard.DEFAULTS = {
     'outdent backspace': {
       key: Keyboard.keys.BACKSPACE,
       collapsed: true,
-      format: ['blockquote', 'indent', 'list'],
+      shiftKey: null,
+      metaKey: null,
+      ctrlKey: null,
+      altKey: null,
+      format: ['indent', 'list'],
       offset: 0,
       handler: function(range, context) {
         if (context.format.indent != null) {
           this.quill.format('indent', '-1', Quill.sources.USER);
-        } else if (context.format.blockquote != null) {
-          this.quill.format('blockquote', false, Quill.sources.USER);
         } else if (context.format.list != null) {
           this.quill.format('list', false, Quill.sources.USER);
         }
@@ -180,11 +192,13 @@ Keyboard.DEFAULTS = {
     },
     'tab': {
       key: Keyboard.keys.TAB,
-      handler: function(range, context) {
-        if (!context.collapsed) {
-          this.quill.scroll.deleteAt(range.index, range.length);
-        }
-        this.quill.insertText(range.index, '\t', Quill.sources.USER);
+      handler: function(range) {
+        this.quill.history.cutoff();
+        let delta = new Delta().retain(range.index)
+                               .delete(range.length)
+                               .insert('\t');
+        this.quill.updateContents(delta, Quill.sources.USER);
+        this.quill.history.cutoff();
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
       }
     },
@@ -200,28 +214,79 @@ Keyboard.DEFAULTS = {
         }
       }
     },
+    'checklist enter': {
+      key: Keyboard.keys.ENTER,
+      collapsed: true,
+      format: { list: 'checked' },
+      handler: function(range) {
+        let [line, offset] = this.quill.getLine(range.index);
+        let delta = new Delta().retain(range.index)
+                               .insert('\n', { list: 'checked' })
+                               .retain(line.length() - offset - 1)
+                               .retain(1, { list: 'unchecked' });
+        this.quill.updateContents(delta, Quill.sources.USER);
+        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        this.quill.scrollIntoView();
+      }
+    },
     'header enter': {
       key: Keyboard.keys.ENTER,
       collapsed: true,
       format: ['header'],
       suffix: /^$/,
-      handler: function(range) {
-        this.quill.scroll.insertAt(range.index, '\n');
-        this.quill.formatText(range.index + 1, 1, 'header', false, Quill.sources.USER);
+      handler: function(range, context) {
+        let [line, offset] = this.quill.getLine(range.index);
+        let delta = new Delta().retain(range.index)
+                               .insert('\n', { header: context.format.header })
+                               .retain(line.length() - offset - 1)
+                               .retain(1, { header: null });
+        this.quill.updateContents(delta, Quill.sources.USER);
         this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        this.quill.selection.scrollIntoView();
+        this.quill.scrollIntoView();
       }
     },
     'list autofill': {
       key: ' ',
       collapsed: true,
       format: { list: false },
-      prefix: /^(1\.|-)$/,
+      prefix: /^\s*?(1\.|-|\[ ?\]|\[x\])$/,
       handler: function(range, context) {
         let length = context.prefix.length;
-        this.quill.scroll.deleteAt(range.index - length, length);
-        this.quill.formatLine(range.index - length, 1, 'list', length === 1 ? 'bullet' : 'ordered', Quill.sources.USER);
+        let value;
+        switch (context.prefix.trim()) {
+          case '[]': case '[ ]':
+            value = 'unchecked';
+            break;
+          case '[x]':
+            value = 'checked';
+            break;
+          case '-':
+            value = 'bullet';
+            break;
+          default:
+            value = 'ordered';
+        }
+        this.quill.insertText(range.index, ' ', Quill.sources.USER);
+        this.quill.history.cutoff();
+        let [line, offset] = this.quill.getLine(range.index + 1);
+        let delta = new Delta().retain(range.index + 1 - offset)
+                               .delete(length + 1)
+                               .retain(line.length() - 1 - offset)
+                               .retain(1, { list: value });
+        this.quill.updateContents(delta, Quill.sources.USER);
+        this.quill.history.cutoff();
         this.quill.setSelection(range.index - length, Quill.sources.SILENT);
+      }
+    },
+    'code exit': {
+      key: Keyboard.keys.ENTER,
+      collapsed: true,
+      format: ['code-block'],
+      prefix: /\n\n$/,
+      suffix: /^\s+$/,
+      handler: function(range) {
+        this.quill.format('code-block', false, Quill.sources.USER);
+        this.quill.deleteText(range.index - 2, 1, Quill.sources.USER);
       }
     }
   }
@@ -229,30 +294,61 @@ Keyboard.DEFAULTS = {
 
 
 function handleBackspace(range, context) {
-  if (range.index === 0) return;
-  let [line, ] = this.quill.scroll.line(range.index);
+  if (range.index === 0 || this.quill.getLength() <= 1) return;
+  let [line, ] = this.quill.getLine(range.index);
   let formats = {};
   if (context.offset === 0) {
-    let curFormats = line.formats();
-    let prevFormats = this.quill.getFormat(range.index-1, 1);
-    formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+    let [prev, ] = this.quill.getLine(range.index - 1);
+    if (prev != null && prev.length() > 1) {
+      let curFormats = line.formats();
+      let prevFormats = this.quill.getFormat(range.index-1, 1);
+      formats = DeltaOp.attributes.diff(curFormats, prevFormats) || {};
+    }
   }
-  this.quill.deleteText(range.index-1, 1, Quill.sources.USER);
+  // Check for astral symbols
+  let length = /[\uD800-\uDBFF][\uDC00-\uDFFF]$/.test(context.prefix) ? 2 : 1;
+  this.quill.deleteText(range.index-length, length, Quill.sources.USER);
   if (Object.keys(formats).length > 0) {
-    this.quill.formatLine(range.index-1, 1, formats, Quill.sources.USER);
+    this.quill.formatLine(range.index-length, length, formats, Quill.sources.USER);
   }
-  this.quill.selection.scrollIntoView();
+  this.quill.focus();
 }
 
-function handleDelete(range) {
-  if (range.index >= this.quill.getLength() - 1) return;
-  this.quill.deleteText(range.index, 1, Quill.sources.USER);
+function handleDelete(range, context) {
+  // Check for astral symbols
+  let length = /^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(context.suffix) ? 2 : 1;
+  if (range.index >= this.quill.getLength() - length) return;
+  let formats = {}, nextLength = 0;
+  let [line, ] = this.quill.getLine(range.index);
+  if (context.offset >= line.length() - 1) {
+    let [next, ] = this.quill.getLine(range.index + 1);
+    if (next) {
+      let curFormats = line.formats();
+      let nextFormats = this.quill.getFormat(range.index, 1);
+      formats = DeltaOp.attributes.diff(curFormats, nextFormats) || {};
+      nextLength = next.length();
+    }
+  }
+  this.quill.deleteText(range.index, length, Quill.sources.USER);
+  if (Object.keys(formats).length > 0) {
+    this.quill.formatLine(range.index + nextLength - 1, length, formats, Quill.sources.USER);
+  }
 }
 
 function handleDeleteRange(range) {
+  let lines = this.quill.getLines(range);
+  let formats = {};
+  if (lines.length > 1) {
+    let firstFormats = lines[0].formats();
+    let lastFormats = lines[lines.length - 1].formats();
+    formats = DeltaOp.attributes.diff(lastFormats, firstFormats) || {};
+  }
   this.quill.deleteText(range, Quill.sources.USER);
+  if (Object.keys(formats).length > 0) {
+    this.quill.formatLine(range.index, 1, formats, Quill.sources.USER);
+  }
   this.quill.setSelection(range.index, Quill.sources.SILENT);
-  this.quill.selection.scrollIntoView();
+  this.quill.focus();
 }
 
 function handleEnter(range, context) {
@@ -266,7 +362,10 @@ function handleEnter(range, context) {
     return lineFormats;
   }, {});
   this.quill.insertText(range.index, '\n', lineFormats, Quill.sources.USER);
-  this.quill.selection.scrollIntoView();
+  // Earlier scroll.deleteAt might have messed up our selection,
+  // so insertText's built in selection preservation is not reliable
+  this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+  this.quill.focus();
   Object.keys(context.format).forEach((name) => {
     if (lineFormats[name] != null) return;
     if (Array.isArray(context.format[name])) return;
@@ -285,9 +384,9 @@ function makeCodeBlockHandler(indent) {
       let index = range.index, length = range.length;
       let [block, offset] = this.quill.scroll.descendant(CodeBlock, index);
       if (block == null) return;
-      let scrollOffset = this.quill.scroll.offset(block);
+      let scrollIndex = this.quill.getIndex(block);
       let start = block.newlineIndex(offset, true) + 1;
-      let end = block.newlineIndex(scrollOffset + offset + length);
+      let end = block.newlineIndex(scrollIndex + offset + length);
       let lines = block.domNode.textContent.slice(start, end).split('\n');
       offset = 0;
       lines.forEach((line, i) => {
@@ -342,8 +441,12 @@ function normalize(binding) {
       return null;
     }
   }
+  if (binding.shortKey) {
+    binding[SHORTKEY] = binding.shortKey;
+    delete binding.shortKey;
+  }
   return binding;
 }
 
 
-export default Keyboard;
+export { Keyboard as default, SHORTKEY };

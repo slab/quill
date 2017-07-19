@@ -70,7 +70,7 @@ permalink: /standalone/basic/
 </div>
 <div id="editor-container"></div>
 <!-- script -->
-<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
 <script>
   var quill = new Quill('#editor-container', {
     debug: 'info',

@@ -20,6 +20,9 @@ resets(arr)
 .ql-container.ql-disabled
   .ql-tooltip
     visibility: hidden
+  .ql-editor
+    ul[data-checked] > li::before
+      pointer-events: none
 
 .ql-clipboard
   left: -100000px
@@ -33,7 +36,6 @@ resets(arr)
 
 .ql-editor
   box-sizing: border-box
-  cursor: text
   line-height: 1.42
   height: 100%
   outline: none
@@ -44,6 +46,8 @@ resets(arr)
   text-align: left
   white-space: pre-wrap
   word-wrap: break-word
+  > *
+    cursor: text
 
   p, ol, ul, pre, blockquote, h1, h2, h3, h4, h5, h6
     margin: 0
@@ -54,24 +58,42 @@ resets(arr)
   ol > li, ul > li
     list-style-type: none
   ul > li::before
-    content: '\25CF'
+    content: '\2022'
+  ul[data-checked=true],
+  ul[data-checked=false]
+    pointer-events: none
+    > li *
+      pointer-events: all
+    > li::before
+      color: #777
+      cursor: pointer
+      pointer-events: all
+  ul[data-checked=true] > li::before
+    content: '\2611'
+  ul[data-checked=false] > li::before
+    content: '\2610'
   li::before
     display: inline-block
-    margin-right: LIST_STYLE_MARGIN
-    text-align: right
     white-space: nowrap
     width: LIST_STYLE_WIDTH
   li:not(.ql-direction-rtl)::before
     margin-left: -1*LIST_STYLE_OUTER_WIDTH
+    margin-right: LIST_STYLE_MARGIN
+    text-align: right
+  li.ql-direction-rtl::before
+    margin-left: LIST_STYLE_MARGIN
+    margin-right: -1*LIST_STYLE_OUTER_WIDTH
   ol, ul
-    li
+    li:not(.ql-direction-rtl)
       padding-left: LIST_STYLE_OUTER_WIDTH
+    li.ql-direction-rtl
+      padding-right: LIST_STYLE_OUTER_WIDTH
   ol
     li
       counter-reset: resets(1..MAX_INDENT)
-      counter-increment: unquote('list-' + num)
+      counter-increment: unquote('list-0')
       &:before
-        content: unquote('counter(list-' + num + ', ' + LIST_STYLE[0] + ')') '. '
+        content: unquote('counter(list-0, ' + LIST_STYLE[0] + ')') '. '
     for num in (1..MAX_INDENT)
       li.ql-indent-{num}
         counter-increment: unquote('list-' + num)
@@ -150,6 +172,10 @@ resets(arr)
     text-align: justify
   .ql-align-right
     text-align: right
+
+  .ql-embed-selected
+    border: 1px solid #777
+    user-select: none
 
 .ql-editor.ql-blank::before
   color: rgba(0,0,0,0.6)

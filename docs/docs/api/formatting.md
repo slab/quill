@@ -2,7 +2,7 @@
 
 ### format
 
-Format text at user's current selection, returing a [Delta](/guides/working-with-deltas/) representing the change. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Format text at user's current selection, returning a [Delta](/guides/working-with-deltas/) representing the change. If the user's selection length is 0, i.e. it is a cursor, the format will be set active, so the next character the user types will have that formatting. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
@@ -19,7 +19,7 @@ quill.format('align', 'right');
 
 ### formatLine
 
-Formats all lines in given range, returing a [Delta](/guides/working-with-deltas/) representing the change. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Formats all lines in given range, returning a [Delta](/guides/working-with-deltas/) representing the change. See [formats](/docs/formats/) for a list of available formats. Has no effect when called with inline formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
@@ -42,7 +42,7 @@ quill.formatLine(4, 4, 'align', 'center');  // center aligns both lines
 
 ### formatText
 
-Formats text in the editor, returing a [Delta](/guides/working-with-deltas/) representing the change. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Formats text in the editor, returning a [Delta](/guides/working-with-deltas/) representing the change. For line level formats, such as text alignment, target the newline character or use the [`formatLine`](#formatline) helper. See [formats](/docs/formats/) for a list of available formats. To remove formatting, pass `false` for the value argument. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 
@@ -106,7 +106,7 @@ quill.getFormat();       // { italic: true, color: 'blue', strike: true,
 
 ### removeFormat
 
-Removes all formatting and embeds within given range, returing a [Delta](/guides/working-with-deltas/) representing the change. Line formatting will be removed if any part of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
+Removes all formatting and embeds within given range, returning a [Delta](/guides/working-with-deltas/) representing the change. Line formatting will be removed if any part of the line is included in the range. The user's selection may not be preserved. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.
 
 **Methods**
 

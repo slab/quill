@@ -1,22 +1,28 @@
 language: node_js
-node_js: '6'
+node_js: '7'
 script:
   - npm run build
-  - npm run travis
+  - travis_retry npm run travis
 sudo: false
+dist: trusty
 cache:
   directories:
     - node_modules
+addons:
+  sauce_connect:
+    username: "quill"
+  jwt:
+    secure: "AAqywYhvkaoJyqLvtcm+urFZsL4Z6q+0WIbN9oFwGaS02bP2trJkRQmI0+TwK6Spsvn0t1idAORuLM6I5ABdJ6+pe3AMTIIGL06dyQQj5r1cRKPCrOpySjZe4L18XYb6PvcyibI0ZLo8szptGeBYDXqOzMlNLy2a+JR+USqsQoU="
 env:
   matrix:
-    - CXX=g++-4.8 BROWSER=mac-chrome-latest
-    - CXX=g++-4.8 BROWSER=mac-firefox-latest
-    - CXX=g++-4.8 BROWSER=mac-safari-latest
-    - CXX=g++-4.8 BROWSER=windows-chrome-latest
-    - CXX=g++-4.8 BROWSER=windows-firefox-latest
-    - CXX=g++-4.8 BROWSER=windows-edge-latest
-    - CXX=g++-4.8 BROWSER=windows-ie-latest
-    - CXX=g++-4.8 BROWSER=linux-chrome-latest
-    - CXX=g++-4.8 BROWSER=linux-firefox-latest
-    - CXX=g++-4.8 BROWSER=ios-latest
-    - CXX=g++-4.8 BROWSER=android-latest
+    - BROWSER=mac-chrome-latest
+    - BROWSER=mac-firefox-latest
+    - BROWSER=mac-safari-latest
+    - BROWSER=windows-chrome-latest
+    - BROWSER=windows-firefox-latest
+    - BROWSER=windows-edge-latest
+    - BROWSER=windows-ie-latest
+    - BROWSER=linux-chrome-latest
+    - BROWSER=linux-firefox-latest
+    - BROWSER=ios-latest
+    - BROWSER=android-latest
