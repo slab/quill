@@ -2,13 +2,15 @@ import Embed from './embed';
 
 
 class Break extends Embed {
-  static value(domNode) {
+  static value() {
     return undefined;
   }
 
   insertInto(parent, ref) {
     if (parent.children.length === 0) {
       super.insertInto(parent, ref);
+    } else {
+      this.remove();
     }
   }
 

@@ -1,5 +1,5 @@
 import './polyfill';
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from './editor';
 import Emitter from './emitter';
 import Module from './module';
@@ -14,7 +14,14 @@ let debug = logger('quill');
 
 class Quill {
   static debug(limit) {
+    if (limit === true) {
+      limit = 'log';
+    }
     logger.level(limit);
+  }
+
+  static find(node) {
+    return node.__quill || Parchment.find(node);
   }
 
   static import(name) {
@@ -43,52 +50,62 @@ class Quill {
       if ((path.startsWith('blots/') || path.startsWith('formats/')) &&
           target.blotName !== 'abstract') {
         Parchment.register(target);
+      } else if (path.startsWith('modules') && typeof target.register === 'function') {
+        target.register();
       }
     }
   }
 
   constructor(container, options = {}) {
-    this.container = typeof container === 'string' ? document.querySelector(container) : container;
+    this.options = expandConfig(container, options);
+    this.container = this.options.container;
     if (this.container == null) {
       return debug.error('Invalid Quill container', container);
     }
-    let themeClass = Theme;
-    if (options.theme != null && options.theme !== Quill.DEFAULTS.theme) {
-      themeClass = Quill.import(`themes/${options.theme}`);
+    if (this.options.debug) {
+      Quill.debug(this.options.debug);
     }
-    options = extend(true, {}, Quill.DEFAULTS, themeClass.DEFAULTS, options);
-    options.bounds = typeof options.bounds === 'string' ? document.querySelector(options.bounds) : options.bounds;
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
     this.container.innerHTML = '';
+    this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
+    this.root.classList.add('ql-blank');
+    this.root.setAttribute('data-gramm', false);
+    this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
-      whitelist: options.formats
+      whitelist: this.options.formats
     });
-    this.editor = new Editor(this.scroll, this.emitter);
+    this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
-    this.theme = new themeClass(this, options);
+    this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
     this.theme.init();
-    this.pasteHTML(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
+      if (type === Emitter.events.TEXT_CHANGE) {
+        this.root.classList.toggle('ql-blank', this.editor.isBlank());
+      }
+    });
+    this.emitter.on(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
+      let range = this.selection.lastRange;
+      let index = range && range.length === 0 ? range.index : undefined;
+      modify.call(this, () => {
+        return this.editor.update(null, mutations, index);
+      }, source);
+    });
+    let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    this.setContents(contents);
     this.history.clear();
-    if (options.readOnly) {
+    if (this.options.placeholder) {
+      this.root.setAttribute('data-placeholder', this.options.placeholder);
+    }
+    if (this.options.readOnly) {
       this.disable();
     }
-    if (options.placeholder) {
-      this.root.dataset.placeholder = options.placeholder;
-    }
-    if (options.debug) {
-      Quill.debug(options.debug);
-    }
-    this.root.classList.toggle('ql-blank', this.editor.isBlank());
-    this.emitter.on(Emitter.events.TEXT_CHANGE, (delta) => {
-      this.root.classList.toggle('ql-blank', this.editor.isBlank());
-    });
   }
 
   addContainer(container, refNode = null) {
@@ -107,68 +124,78 @@ class Quill {
 
   deleteText(index, length, source) {
     [index, length, , source] = overload(index, length, source);
-    let range = this.getSelection();
-    let change = this.editor.deleteText(index, length, source);
-    range = shiftRange(range, index, -1*length, source);
-    this.setSelection(range, Emitter.sources.SILENT);
-    return change;
+    return modify.call(this, () => {
+      return this.editor.deleteText(index, length);
+    }, source, index, -1*length);
   }
 
   disable() {
-    this.editor.enable(false);
+    this.enable(false);
   }
 
   enable(enabled = true) {
-    this.editor.enable(enabled);
+    this.scroll.enable(enabled);
+    this.container.classList.toggle('ql-disabled', !enabled);
   }
 
   focus() {
+    let scrollTop = this.scrollingContainer.scrollTop;
     this.selection.focus();
-    this.selection.scrollIntoView();
+    this.scrollingContainer.scrollTop = scrollTop;
+    this.scrollIntoView();
   }
 
   format(name, value, source = Emitter.sources.API) {
-    let range = this.getSelection();
-    let change = new Delta();
-    if (range == null) return change;
-    if (Parchment.query(name, Parchment.Scope.BLOCK)) {
-      change = this.formatLine(range, name, value, source);
-    } else if (range.length === 0) {
-      this.selection.format(name, value);
+    return modify.call(this, () => {
+      let range = this.getSelection(true);
+      let change = new Delta();
+      if (range == null) {
+        return change;
+      } else if (Parchment.query(name, Parchment.Scope.BLOCK)) {
+        change = this.editor.formatLine(range.index, range.length, { [name]: value });
+      } else if (range.length === 0) {
+        this.selection.format(name, value);
+        return change;
+      } else {
+        change = this.editor.formatText(range.index, range.length, { [name]: value });
+      }
+      this.setSelection(range, Emitter.sources.SILENT);
       return change;
-    } else {
-      change = this.formatText(range, name, value, source);
-    }
-    this.setSelection(range, Emitter.sources.SILENT);
-    return change;
+    }, source);
   }
 
   formatLine(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);
-    let range = this.getSelection();
-    let change = this.editor.formatLine(index, length, formats, source);
-    this.selection.setRange(range, true, Emitter.sources.SILENT);
-    this.selection.scrollIntoView();
-    return change;
+    return modify.call(this, () => {
+      return this.editor.formatLine(index, length, formats);
+    }, source, index, 0);
   }
 
   formatText(index, length, name, value, source) {
     let formats;
     [index, length, formats, source] = overload(index, length, name, value, source);
-    let range = this.getSelection();
-    let change = this.editor.formatText(index, length, formats, source);
-    this.selection.setRange(range, true, Emitter.sources.SILENT);
-    this.selection.scrollIntoView();
-    return change;
+    return modify.call(this, () => {
+      return this.editor.formatText(index, length, formats);
+    }, source, index, 0);
   }
 
   getBounds(index, length = 0) {
+    let bounds;
     if (typeof index === 'number') {
-      return this.selection.getBounds(index, length);
+      bounds = this.selection.getBounds(index, length);
     } else {
-      return this.selection.getBounds(index.index, index.length);
+      bounds = this.selection.getBounds(index.index, index.length);
     }
+    let containerBounds = this.container.getBoundingClientRect();
+    return {
+      bottom: bounds.bottom - containerBounds.top,
+      height: bounds.height,
+      left: bounds.left - containerBounds.left,
+      right: bounds.right - containerBounds.left,
+      top: bounds.top - containerBounds.top,
+      width: bounds.width
+    };
   }
 
   getContents(index = 0, length = this.getLength() - index) {
@@ -184,8 +211,28 @@ class Quill {
     }
   }
 
+  getIndex(blot) {
+    return blot.offset(this.scroll);
+  }
+
   getLength() {
     return this.scroll.length();
+  }
+
+  getLeaf(index) {
+    return this.scroll.leaf(index);
+  }
+
+  getLine(index) {
+    return this.scroll.line(index);
+  }
+
+  getLines(index = 0, length = Number.MAX_VALUE) {
+    if (typeof index !== 'number') {
+      return this.scroll.lines(index.index, index.length);
+    } else {
+      return this.scroll.lines(index, length);
+    }
   }
 
   getModule(name) {
@@ -207,21 +254,22 @@ class Quill {
     return this.selection.hasFocus();
   }
 
-  insertEmbed(index, embed, value, source) {
-    let range = this.getSelection();
-    let change = this.editor.insertEmbed(index, embed, value, source);
-    range = shiftRange(range, change, source);
-    this.setSelection(range, Emitter.sources.SILENT);
-    return change;
+  insertEmbed(index, embed, value, source = Quill.sources.API) {
+    return modify.call(this, () => {
+      return this.editor.insertEmbed(index, embed, value);
+    }, source, index);
   }
 
   insertText(index, text, name, value, source) {
-    let formats, range = this.getSelection();
+    let formats;
     [index, , formats, source] = overload(index, 0, name, value, source);
-    let change = this.editor.insertText(index, text, formats, source);
-    range = shiftRange(range, index, text.length, source);
-    this.setSelection(range, Emitter.sources.SILENT);
-    return change;
+    return modify.call(this, () => {
+      return this.editor.insertText(index, text, formats);
+    }, source, index, text.length);
+  }
+
+  isEnabled() {
+    return !this.container.classList.contains('ql-disabled');
   }
 
   off() {
@@ -236,33 +284,35 @@ class Quill {
     return this.emitter.once.apply(this.emitter, arguments);
   }
 
-  pasteHTML(index, html, source = Emitter.sources.API) {
-    if (typeof index === 'string') {
-      return this.setContents(this.clipboard.convert(index), html);
-    } else {
-      let paste = this.clipboard.convert(html);
-      return this.updateContents(new Delta().retain(index).concat(paste), source);
-    }
+  pasteHTML(index, html, source) {
+    this.clipboard.dangerouslyPasteHTML(index, html, source);
   }
 
   removeFormat(index, length, source) {
-    let range = this.getSelection();
     [index, length, , source] = overload(index, length, source);
-    let change = this.editor.removeFormat(index, length, source);
-    range = shiftRange(range, change, source);
-    this.setSelection(range, Emitter.sources.SILENT);
-    return change;
+    return modify.call(this, () => {
+      return this.editor.removeFormat(index, length);
+    }, source, index);
+  }
+
+  scrollIntoView() {
+    this.selection.scrollIntoView(this.scrollingContainer);
   }
 
   setContents(delta, source = Emitter.sources.API) {
-    delta = new Delta(delta).slice();
-    let lastOp = delta.ops[delta.ops.length - 1];
-    // Quill contents must always end with newline
-    if (lastOp == null || lastOp.insert[lastOp.insert.length-1] !== '\n') {
-      delta.insert('\n');
-    }
-    delta.delete(this.getLength());
-    return this.editor.applyDelta(delta, source);
+    return modify.call(this, () => {
+      delta = new Delta(delta);
+      let length = this.getLength();
+      let deleted = this.editor.deleteText(0, length);
+      let applied = this.editor.applyDelta(delta);
+      let lastOp = applied.ops[applied.ops.length - 1];
+      if (lastOp != null && typeof(lastOp.insert) === 'string' && lastOp.insert[lastOp.insert.length-1] === '\n') {
+        this.editor.deleteText(this.getLength() - 1, 1);
+        applied.delete(1);
+      }
+      let ret = deleted.compose(applied);
+      return ret;
+    }, source);
   }
 
   setSelection(index, length, source) {
@@ -271,8 +321,10 @@ class Quill {
     } else {
       [index, length, , source] = overload(index, length, source);
       this.selection.setRange(new Range(index, length), source);
+      if (source !== Emitter.sources.SILENT) {
+        this.selection.scrollIntoView(this.scrollingContainer);
+      }
     }
-    this.selection.scrollIntoView();
   }
 
   setText(text, source = Emitter.sources.API) {
@@ -287,29 +339,26 @@ class Quill {
   }
 
   updateContents(delta, source = Emitter.sources.API) {
-    let range = this.getSelection();
-    if (Array.isArray(delta)) {
-      delta = new Delta(delta.slice());
-    }
-    let change = this.editor.applyDelta(delta, source);
-    if (range != null) {
-      range = shiftRange(range, change, source);
-      this.setSelection(range, Emitter.sources.SILENT);
-    }
-    return change;
+    return modify.call(this, () => {
+      delta = new Delta(delta);
+      return this.editor.applyDelta(delta, source);
+    }, source, true);
   }
 }
 Quill.DEFAULTS = {
-  bounds: document.body,
+  bounds: null,
   formats: null,
   modules: {},
   placeholder: '',
   readOnly: false,
+  scrollingContainer: null,
+  strict: true,
   theme: 'default'
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
-Quill.version = QUILL_VERSION;
+// eslint-disable-next-line no-undef
+Quill.version = typeof(QUILL_VERSION) === 'undefined' ? 'dev' : QUILL_VERSION;
 
 Quill.imports = {
   'delta'       : Delta,
@@ -318,6 +367,92 @@ Quill.imports = {
   'core/theme'  : Theme
 };
 
+
+function expandConfig(container, userConfig) {
+  userConfig = extend(true, {
+    container: container,
+    modules: {
+      clipboard: true,
+      keyboard: true,
+      history: true
+    }
+  }, userConfig);
+  if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
+    userConfig.theme = Theme;
+  } else {
+    userConfig.theme = Quill.import(`themes/${userConfig.theme}`);
+    if (userConfig.theme == null) {
+      throw new Error(`Invalid theme ${userConfig.theme}. Did you register it?`);
+    }
+  }
+  let themeConfig = extend(true, {}, userConfig.theme.DEFAULTS);
+  [themeConfig, userConfig].forEach(function(config) {
+    config.modules = config.modules || {};
+    Object.keys(config.modules).forEach(function(module) {
+      if (config.modules[module] === true) {
+        config.modules[module] = {};
+      }
+    });
+  });
+  let moduleNames = Object.keys(themeConfig.modules).concat(Object.keys(userConfig.modules));
+  let moduleConfig = moduleNames.reduce(function(config, name) {
+    let moduleClass = Quill.import(`modules/${name}`);
+    if (moduleClass == null) {
+      debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
+    } else {
+      config[name] = moduleClass.DEFAULTS || {};
+    }
+    return config;
+  }, {});
+  // Special case toolbar shorthand
+  if (userConfig.modules != null && userConfig.modules.toolbar &&
+      userConfig.modules.toolbar.constructor !== Object) {
+    userConfig.modules.toolbar = {
+      container: userConfig.modules.toolbar
+    };
+  }
+  userConfig = extend(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
+  ['bounds', 'container', 'scrollingContainer'].forEach(function(key) {
+    if (typeof userConfig[key] === 'string') {
+      userConfig[key] = document.querySelector(userConfig[key]);
+    }
+  });
+  userConfig.modules = Object.keys(userConfig.modules).reduce(function(config, name) {
+    if (userConfig.modules[name]) {
+      config[name] = userConfig.modules[name];
+    }
+    return config;
+  }, {});
+  return userConfig;
+}
+
+// Handle selection preservation and TEXT_CHANGE emission
+// common to modification APIs
+function modify(modifier, source, index, shift) {
+  if (this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
+    return new Delta();
+  }
+  let range = index == null ? null : this.getSelection();
+  let oldDelta = this.editor.delta;
+  let change = modifier();
+  if (range != null) {
+    if (index === true) index = range.index;
+    if (shift == null) {
+      range = shiftRange(range, change, source);
+    } else if (shift !== 0) {
+      range = shiftRange(range, index, shift, source);
+    }
+    this.setSelection(range, Emitter.sources.SILENT);
+  }
+  if (change.length() > 0) {
+    let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
+    this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);
+    if (source !== Emitter.sources.SILENT) {
+      this.emitter.emit(...args);
+    }
+  }
+  return change;
+}
 
 function overload(index, length, name, value, source) {
   let formats = {};
@@ -352,11 +487,11 @@ function shiftRange(range, index, length, source) {
   let start, end;
   if (index instanceof Delta) {
     [start, end] = [range.index, range.index + range.length].map(function(pos) {
-      return index.transformPosition(pos, source === Emitter.sources.USER);
+      return index.transformPosition(pos, source !== Emitter.sources.USER);
     });
   } else {
     [start, end] = [range.index, range.index + range.length].map(function(pos) {
-      if (pos < index || (pos === index && source !== Emitter.sources.USER)) return pos;
+      if (pos < index || (pos === index && source === Emitter.sources.USER)) return pos;
       if (length >= 0) {
         return pos + length;
       } else {
@@ -368,4 +503,4 @@ function shiftRange(range, index, length, source) {
 }
 
 
-export { overload, Quill as default };
+export { expandConfig, overload, Quill as default };

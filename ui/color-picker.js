@@ -20,7 +20,7 @@ class ColorPicker extends Picker {
   selectItem(item, trigger) {
     super.selectItem(item, trigger);
     let colorLabel = this.label.querySelector('.ql-color-label');
-    let value = item ? item.dataset.value || '' : '';
+    let value = item ? item.getAttribute('data-value') || '' : '';
     if (colorLabel) {
       if (colorLabel.tagName === 'line') {
         colorLabel.style.stroke = value;

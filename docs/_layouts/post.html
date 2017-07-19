@@ -1,0 +1,14 @@
+---
+layout: default
+---
+
+<div id="blog-container" class="container">
+  <div class="post">
+    <h1>{{ page.title }}</h1>
+    <div class="post-meta">
+      <time>{{ page.date | date_to_string }}</time>
+      <span> - <a href="https://twitter.com/jhchen" title="Jason Chen">Jason Chen</a></span>
+    </div>
+    {{ content }}
+  </div>
+</div>

@@ -3,7 +3,7 @@ let level = 'warn';
 
 function debug(method, ...args) {
   if (levels.indexOf(method) <= levels.indexOf(level)) {
-    console[method].apply(console, args);
+    console[method](...args);  // eslint-disable-line no-console
   }
 }
 

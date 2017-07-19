@@ -1,6 +1,5 @@
-import Delta from 'rich-text/lib/delta';
+import Delta from 'quill-delta';
 import Editor from '../../../core/editor';
-import Emitter from '../../../core/emitter';
 import Selection, { Range } from '../../../core/selection';
 
 
@@ -391,6 +390,12 @@ describe('Editor', function() {
       );
       expect(this.container).toEqualHTML('<p>0123</p><h1>56</h1><h2>89</h2>');
     });
+
+    it('code', function() {
+      let editor = this.initialize(Editor, { html: '<p>0</p><pre>1\n23\n</pre><p><br></p>' });
+      editor.applyDelta(new Delta().delete(4).retain(1).delete(2));
+      expect(editor.scroll.domNode.innerHTML).toEqual('<p>2</p>');
+    });
   });
 
   describe('getFormat()', function() {
@@ -434,31 +439,6 @@ describe('Editor', function() {
         <h1 class="ql-align-center"><em>34</em></h1>
       `);
       expect(editor.getFormat(1, 3)).toEqual({ italic: true, header: 1, align: ['right', 'center'] });
-    });
-  });
-
-  describe('events', function() {
-    beforeEach(function() {
-      this.editor = this.initialize(Editor, '<p>0123</p>');
-      this.editor.update();
-      spyOn(this.editor.emitter, 'emit').and.callThrough();
-    });
-
-    it('api text insert', function() {
-      let old = this.editor.getDelta();
-      this.editor.insertText(2, '!');
-      let delta = new Delta().retain(2).insert('!');
-      expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.API);
-    });
-
-    it('user text insert', function(done) {
-      let old = this.editor.getDelta();
-      this.container.firstChild.firstChild.data = '01!23';
-      let delta = new Delta().retain(2).insert('!');
-      setTimeout(() => {
-        expect(this.editor.emitter.emit).toHaveBeenCalledWith(Emitter.events.TEXT_CHANGE, delta, old, Emitter.sources.USER);
-        done();
-      }, 1);
     });
   });
 });

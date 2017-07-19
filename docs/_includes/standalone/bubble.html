@@ -1,0 +1,24 @@
+<!-- head -->
+<link rel="stylesheet" href="{{site.cdn}}{{site.version}}/quill.bubble.css">
+<style>
+  .standalone-container {
+    margin: 50px auto;
+    max-width: 720px;
+  }
+  #bubble-container {
+    height: 350px;
+  }
+</style>
+<!-- head -->
+<div class="standalone-container">
+  <div id="bubble-container"></div>
+</div>
+<!-- script -->
+<script type="text/javascript" src="{{site.cdn}}{{site.version}}/{{site.quill}}"></script>
+<script type="text/javascript">
+  var quill = new Quill('#bubble-container', {
+    placeholder: 'Compose an epic...',
+    theme: 'bubble'
+  });
+</script>
+<!-- script -->

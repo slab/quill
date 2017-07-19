@@ -1,0 +1,352 @@
+---
+layout: default
+title: Quill - Your powerful, rich text editor
+bodyClass: 'home'
+redirect_from: /latest/
+---
+<!-- head -->
+<link href="{{site.katex}}/katex.min.css" rel="stylesheet">
+<link href="{{site.highlightjs}}/styles/monokai-sublime.min.css" rel="stylesheet">
+<link href="{{ site.cdn }}{{ site.version }}/quill.bubble.css" rel="stylesheet">
+<link href="{{ site.cdn }}{{ site.version }}/quill.snow.css" rel="stylesheet">
+<!-- head -->
+
+<div id="above-container">
+  <div class="container">
+    <div id="users-container">
+      <h2>
+        <button class="prev">
+          <span class="arrow">
+            <span class="tip"></span>
+            <span class="shaft"></span>
+          </span>
+        </button>
+        Switch Examples
+        <button class="next">
+          <span class="arrow">
+            <span class="tip"></span>
+            <span class="shaft"></span>
+          </span>
+        </button>
+      </h2>
+      <h1>Your powerful, rich text editor.</h1>
+      <ul>
+        <li>Trusted by:</li>
+        <li>
+          <a href="https://www.linkedin.com/" target="_blank">
+            <img src="/assets/images/users/linkedin.png">
+          </a>
+        </li>
+        <li>
+          <a href="https://slack.com/" target="_blank">
+            <img src="/assets/images/users/slack.png">
+          </a>
+        </li>
+        <li>
+          <a href="http://www.voxmedia.com/" target="_blank">
+            <img src="/assets/images/users/voxmedia.png">
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div id="laptop-container">
+      <div id="camera-container">
+        <span class="camera"></span>
+        <span class="camera active"></span>
+        <span class="camera"></span>
+      </div>
+      <div id="demo-container">
+        <div id="carousel-container">
+          <div id="bubble-wrapper">
+            <div id="bubble-container">
+              <div class="editor"></div>
+            </div>
+          </div>
+          <div id="snow-wrapper">
+            <div id="snow-container">
+              <div class="toolbar">
+                <span class="ql-formats">
+                  <select class="ql-header">
+                    <option value="1">Heading</option>
+                    <option value="2">Subheading</option>
+                    <option selected>Normal</option>
+                  </select>
+                  <select class="ql-font">
+                    <option selected>Sailec Light</option>
+                    <option value="sofia">Sofia Pro</option>
+                    <option value="slabo">Slabo 27px</option>
+                    <option value="roboto">Roboto Slab</option>
+                    <option value="inconsolata">Inconsolata</option>
+                    <option value="ubuntu">Ubuntu Mono</option>
+                  </select>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-bold"></button>
+                  <button class="ql-italic"></button>
+                  <button class="ql-underline"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-list" value="ordered"></button>
+                  <button class="ql-list" value="bullet"></button>
+                  <select class="ql-align">
+                    <option selected></option>
+                    <option value="center"></option>
+                    <option value="right"></option>
+                    <option value="justify"></option>
+                  </select>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-link"></button>
+                  <button class="ql-image"></button>
+                  <button class="ql-video"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-formula"></button>
+                  <button class="ql-code-block"></button>
+                </span>
+                <span class="ql-formats">
+                  <button class="ql-clean"></button>
+                </span>
+              </div>
+              <div class="editor">
+                <h1 class="ql-align-center">Quill Rich Text Editor</h1>
+                <p><br></p>
+                <p>Quill is a free, <a href="https://github.com/quilljs/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="http://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="http://quilljs.com/docs/api/">API</a>, it is completely customizable to fit any need.</p>
+                <p><br></p>
+                <iframe class="ql-video ql-align-center" src="https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0" width="560" height="238" allowfullscreen="true" frameborder="0"></iframe>
+                <p><br></p>
+                <p><br></p>
+                <h2 class="ql-align-center">Getting Started is Easy</h2>
+                <p><br></p>
+                <pre class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet"&gt;</span>
+<span class="hljs-comment">// &lt;script src="https://cdn.quilljs.com/1.2.6/quill.min.js"&gt;&lt;/script&gt;</span>
+
+<span class="hljs-keyword">var</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>, {
+  modules: {
+    toolbar: <span class="hljs-string">'#toolbar'</span>
+  },
+  theme: <span class="hljs-string">'snow'</span>
+});
+
+<span class="hljs-comment">// Open your browser's developer console to try out the API!</span>
+</pre>
+                <p><br></p>
+                <p><br></p>
+                <p class="ql-align-center"><strong>Built with</strong></p>
+                <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \sqrt[3]{x^2})^2 = 1"></span></p>
+                <p><br></p>
+              </div>
+            </div>
+          </div>
+          <div id="full-wrapper">
+            <div id="full-container">
+              <div class="editor"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="detail-container">
+  <div class="container">
+    <a class="action" href="/docs/download/">Download Now</a>
+    <h1>An API Driven Rich Text Editor</h1>
+  </div>
+</div>
+
+<div id="features-container">
+  <div class="container">
+    <div class="row">
+      <div class="feature columns">
+        <img src="/assets/images/features/developers.svg">
+        <div class="details">
+          <h2>Built for Developers</h2>
+          <span>Granular access to the editor's content, changes and events through a simple API. Works consistently and deterministically with JSON as both input and output.</span>
+          <a class="action-link" href="/docs/">View documentation</a>
+        </div>
+      </div>
+      <div class="feature columns">
+        <img src="/assets/images/features/cross-platform.svg">
+        <div class="details">
+          <h2>Cross Platform</h2>
+          <span>Supports all modern browsers on desktops, tablets and phones. Experience the same consistent behavior and produced HTML across platforms.</span>
+          <a class="action-link" href="//github.com/quilljs/quill/#readme">See the Chart</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="github-wrapper">
+      <div id="github-container">
+        {% include github.html %}
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="feature row">
+      <div class="columns details">
+        <h2>Fits Like a Glove</h2>
+        <span>Used in small projects and giant Fortune 500s alike. Start simple with the Quill core then easily customize or add your own extensions later if your product needs grow.</span>
+        <a class="action-link" href="/docs/">Learn More</a>
+      </div>
+      <img class="columns" src="/assets/images/features/scale.svg">
+    </div>
+  </div>
+</div>
+
+<!-- script -->
+<script src="{{site.katex}}/katex.min.js" type="text/javascript"></script>
+<script src="{{site.highlightjs}}/highlight.min.js" type="text/javascript"></script>
+<script src="{{ site.cdn }}{{ site.version }}/{{ site.quill }}" type="text/javascript"></script>
+<script type="text/javascript">
+(function() {
+  $(document).ready(function() {
+    var fonts = ['sofia', 'slabo', 'roboto', 'inconsolata', 'ubuntu'];
+    var Font = Quill.import('formats/font');
+    Font.whitelist = fonts;
+    Quill.register(Font, true);
+
+    var bubbleEditor = new Quill('#bubble-container .editor', {
+      bounds: '#bubble-container .editor',
+      modules: {
+        'formula': true,
+        'syntax': true
+      },
+      theme: 'bubble'
+    });
+
+    var snowEditor = new Quill('#snow-container .editor', {
+      bounds: '#snow-container .editor',
+      modules: {
+        'formula': true,
+        'syntax': true,
+        'toolbar': '#snow-container .toolbar'
+      },
+      theme: 'snow'
+    });
+
+    var fullEditor = new Quill('#full-container .editor', {
+      bounds: '#full-container .editor',
+      modules: {
+        'formula': true,
+        'syntax': true,
+        'toolbar': [
+          [{ 'font': fonts }, { 'size': [] }],
+          [ 'bold', 'italic', 'underline', 'strike' ],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'script': 'super' }, { 'script': 'sub' }],
+          [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
+          [{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
+          [ 'direction', { 'align': [] }],
+          [ 'link', 'image', 'video', 'formula' ],
+          [ 'clean' ]
+        ],
+      },
+      theme: 'snow'
+    });
+
+    var editors = [bubbleEditor, snowEditor, fullEditor];
+    switchEditor(1, snowEditor, true);
+    var initialContent = snowEditor.getContents();
+    bubbleEditor.setContents(initialContent);
+    fullEditor.setContents(initialContent);
+
+    $('.camera').click(function() {
+      var index = $(this).index();
+      $('#above-container').addClass('demo-active');
+      switchEditor(index, editors[index]);
+    });
+
+    $('#above-container .prev').click(function() {
+      var index = editors.indexOf(window.quill) - 1;
+      switchEditor(index, editors[index]);
+    });
+    $('#above-container .next').click(function() {
+      var index = editors.indexOf(window.quill) + 1;
+      switchEditor(index, editors[index]);
+    });
+
+    var users = [{
+      'Intuit': 'https://www.intuit.com/',
+      'LinkedIn': 'https://www.linkedin.com/',
+      'Microsoft': 'https://www.microsoft.com/',
+      'Salesforce': 'http://www.salesforce.com/',
+    }, {
+      'Asana': 'https://asana.com/',
+      'Gannett': 'http://www.gannett.com/',
+      'Hubspot': 'https://www.hubspot.com/',
+      'Slack': 'https://slack.com/',
+      'USA Today': 'http://www.usatoday.com/',
+    }, {
+      'Buffer': 'https://buffer.com/',
+      'Front': 'https://frontapp.com/',
+      'Lever': 'https://www.lever.co/',
+      'Reedsy': 'https://reedsy.com/',
+      'Vox Media': 'http://www.voxmedia.com/'
+    }];
+    // Show users randomly
+    $('#users-container a').each(function(i, link) {
+      var bucket = users[i];
+      var keys = Object.keys(bucket);
+      var name = keys[Math.floor(Math.random() * keys.length)];
+      $(link).attr({ href: bucket[name], title: name });
+      $('img', link).attr({
+        src: '/assets/images/users/' + (name.toLowerCase().replace(/\s/g, '')) + '.png',
+        alt: name
+      });
+    });
+
+    $('#demo-container .ql-editor').one('touchstart', function(event) {
+      $('#above-container').addClass('demo-active');
+      event.preventDefault();
+    });
+
+    $('#demo-container .ql-editor').one('focus', function(event) {
+      if (!$('#above-container').hasClass('demo-active')) {
+        $('#above-container').addClass('demo-active');
+      }
+    });
+
+    loadFonts();
+    $('#carousel-container').animate({ opacity: 1 }, 500);
+
+    setTimeout(function() {
+      console.clear();
+      console.log("Welcome to Quill!\n\nThe editor on this page is available via `quill`. Give the API a try:\n\n\tquill.formatText(11, 4, 'bold', true);\n\nVisit the API documenation page to learn more: http://quilljs.com/docs/api/\n");
+    }, 2500);
+  });
+
+  function loadFonts() {
+    window.WebFontConfig = {
+      google: { families: [ 'Inconsolata::latin', 'Ubuntu+Mono::latin', 'Slabo+27px::latin', 'Roboto+Slab::latin' ] }
+    };
+    (function() {
+      var wf = document.createElement('script');
+      wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+    })();
+  }
+
+  function switchEditor(i, editor, skip) {
+    // Expose as global so people can easily try out the API
+    window.quill = editor;
+    if (!skip) console.info('window.quill is now bound to', editor);
+
+    $('.camera').removeClass('active');
+    $('.camera:eq(' + i + ')').addClass('active');
+
+    $('.prev, .next').css('visibility', 'visible');
+    if (i === 0) $('.prev').css('visibility', 'hidden');
+    if (i === 2) $('.next').css('visibility', 'hidden');
+
+    $('#carousel-container').css('margin-left', (i*-100) + '%');
+  }
+})();
+</script>
+<!-- script -->

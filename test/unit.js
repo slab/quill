@@ -19,14 +19,15 @@ import './unit/formats/code';
 import './unit/formats/header';
 import './unit/formats/indent';
 import './unit/formats/list';
+import './unit/formats/bold';
 
 import './unit/modules/clipboard';
 import './unit/modules/history';
+import './unit/modules/keyboard';
 import './unit/modules/toolbar';
 
-import './unit/themes/snow';
-
 import './unit/ui/picker';
+import './unit/theme/base/tooltip';
 
 
 export default Quill;

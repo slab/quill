@@ -1,0 +1,47 @@
+- Content:
+  - deleteText
+  - getContents
+  - getLength
+  - getText
+  - insertEmbed
+  - insertText
+  - pasteHTML
+  - setContents
+  - setText
+  - updateContents
+- Formatting:
+  - format
+  - formatLine
+  - formatText
+  - getFormat
+  - removeFormat
+- Selection:
+  - getBounds
+  - getSelection
+  - setSelection
+- Editor:
+  - blur
+  - focus
+  - disable
+  - enable
+  - hasFocus
+  - update
+- Events:
+  - text-change
+  - selection-change
+  - editor-change
+  - "off"
+  - "on"
+  - once
+- Model:
+  - find-experimental
+  - getindex-experimental
+  - getleaf-experimental
+  - getline-experimental
+  - getlines-experimental
+- Extension:
+  - debug
+  - import
+  - register
+  - addContainer
+  - getModule

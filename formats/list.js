@@ -1,5 +1,3 @@
-import extend from 'extend';
-import Delta from 'rich-text/lib/delta';
 import Parchment from 'parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
@@ -43,18 +41,38 @@ ListItem.tagName = 'LI';
 
 class List extends Container {
   static create(value) {
-    if (value === 'ordered') {
-      value = 'OL';
-    } else if (value === 'bullet') {
-      value = 'UL';
+    let tagName = value === 'ordered' ? 'OL' : 'UL';
+    let node = super.create(tagName);
+    if (value === 'checked' || value === 'unchecked') {
+      node.setAttribute('data-checked', value === 'checked');
     }
-    return super.create(value);
+    return node;
   }
 
   static formats(domNode) {
     if (domNode.tagName === 'OL') return 'ordered';
-    if (domNode.tagName === 'UL') return 'bullet';
+    if (domNode.tagName === 'UL') {
+      if (domNode.hasAttribute('data-checked')) {
+        return domNode.getAttribute('data-checked') === 'true' ? 'checked' : 'unchecked';
+      } else {
+        return 'bullet';
+      }
+    }
     return undefined;
+  }
+
+  constructor(domNode) {
+    super(domNode);
+    domNode.addEventListener('click', (e) => {
+      if (e.target.parentNode !== domNode) return;
+      let format = this.statics.formats(domNode);
+      let blot = Parchment.find(e.target);
+      if (format === 'checked') {
+        blot.format('list', 'unchecked');
+      } else if(format === 'unchecked') {
+        blot.format('list', 'checked');
+      }
+    });
   }
 
   format(name, value) {
@@ -68,12 +86,23 @@ class List extends Container {
     return { [this.statics.blotName]: this.statics.formats(this.domNode) };
   }
 
-  optimize() {
-    super.optimize();
+  insertBefore(blot, ref) {
+    if (blot instanceof ListItem) {
+      super.insertBefore(blot, ref);
+    } else {
+      let index = ref == null ? this.length() : ref.offset(this);
+      let after = this.split(index);
+      after.parent.insertBefore(blot, after);
+    }
+  }
+
+  optimize(context) {
+    super.optimize(context);
     let next = this.next;
     if (next != null && next.prev === this &&
         next.statics.blotName === this.statics.blotName &&
-        next.domNode.tagName === this.domNode.tagName) {
+        next.domNode.tagName === this.domNode.tagName &&
+        next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
       next.moveChildren(this);
       next.remove();
     }

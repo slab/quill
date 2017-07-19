@@ -8,7 +8,7 @@ class Picker {
     this.buildPicker();
     this.select.style.display = 'none';
     this.select.parentNode.insertBefore(this.container, this.select);
-    this.label.addEventListener('click', (event) => {
+    this.label.addEventListener('mousedown', () => {
       this.container.classList.toggle('ql-expanded');
     });
     this.select.addEventListener('change', this.update.bind(this));
@@ -18,12 +18,12 @@ class Picker {
     let item = document.createElement('span');
     item.classList.add('ql-picker-item');
     if (option.hasAttribute('value')) {
-      item.dataset.value = option.getAttribute('value');
+      item.setAttribute('data-value', option.getAttribute('value'));
     }
     if (option.textContent) {
-      item.dataset.label = option.textContent;
+      item.setAttribute('data-label', option.textContent);
     }
-    item.addEventListener('click', (event) => {
+    item.addEventListener('click', () => {
       this.selectItem(item, true);
     });
     return item;
@@ -43,7 +43,7 @@ class Picker {
     [].slice.call(this.select.options).forEach((option) => {
       let item = this.buildItem(option);
       options.appendChild(item);
-      if (option.hasAttribute('selected')) {
+      if (option.selected === true) {
         this.selectItem(item);
       }
     });
@@ -69,32 +69,28 @@ class Picker {
     if (selected != null) {
       selected.classList.remove('ql-selected');
     }
-    if (item != null) {
-      item.classList.add('ql-selected');
-      this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      if (item.dataset.value) {
-        this.label.dataset.value = item.dataset.value;
-      } else if (this.label.dataset.value) {
-        delete this.label.dataset.value;
-      }
-      if (item.dataset.label) {
-        this.label.dataset.label = item.dataset.label;
-      } else if (this.label.dataset.label) {
-        delete this.label.dataset.label;
-      }
-      if (trigger) {
-        if (typeof Event === 'function') {
-          this.select.dispatchEvent(new Event('change'));
-        } else if (typeof Event === 'object') {     // IE11
-          let event = document.createEvent('Event');
-          event.initEvent('change', true, true);
-          this.select.dispatchEvent(event);
-        }
-        this.close();
-      }
+    if (item == null) return;
+    item.classList.add('ql-selected');
+    this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
+    if (item.hasAttribute('data-value')) {
+      this.label.setAttribute('data-value', item.getAttribute('data-value'));
     } else {
-      if (this.label.dataset.value) delete this.label.dataset.value;
-      if (this.label.dataset.label) delete this.label.dataset.label;
+      this.label.removeAttribute('data-value');
+    }
+    if (item.hasAttribute('data-label')) {
+      this.label.setAttribute('data-label', item.getAttribute('data-label'));
+    } else {
+      this.label.removeAttribute('data-label');
+    }
+    if (trigger) {
+      if (typeof Event === 'function') {
+        this.select.dispatchEvent(new Event('change'));
+      } else if (typeof Event === 'object') {     // IE11
+        let event = document.createEvent('Event');
+        event.initEvent('change', true, true);
+        this.select.dispatchEvent(event);
+      }
+      this.close();
     }
   }
 

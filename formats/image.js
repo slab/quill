@@ -1,5 +1,11 @@
 import Embed from '../blots/embed';
-import Link, { sanitize } from '../formats/link';
+import { sanitize } from '../formats/link';
+
+const ATTRIBUTES = [
+  'alt',
+  'height',
+  'width'
+];
 
 
 class Image extends Embed {
@@ -11,8 +17,17 @@ class Image extends Embed {
     return node;
   }
 
+  static formats(domNode) {
+    return ATTRIBUTES.reduce(function(formats, attribute) {
+      if (domNode.hasAttribute(attribute)) {
+        formats[attribute] = domNode.getAttribute(attribute);
+      }
+      return formats;
+    }, {});
+  }
+
   static match(url) {
-    return /\.(jpe?g|gif|png)$/.test(url);
+    return /\.(jpe?g|gif|png)$/.test(url) || /^data:image\/.+;base64/.test(url);
   }
 
   static sanitize(url) {
@@ -21,6 +36,18 @@ class Image extends Embed {
 
   static value(domNode) {
     return domNode.getAttribute('src');
+  }
+
+  format(name, value) {
+    if (ATTRIBUTES.indexOf(name) > -1) {
+      if (value) {
+        this.domNode.setAttribute(name, value);
+      } else {
+        this.domNode.removeAttribute(name);
+      }
+    } else {
+      super.format(name, value);
+    }
   }
 }
 Image.blotName = 'image';

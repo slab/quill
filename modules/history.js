@@ -9,8 +9,8 @@ class History extends Module {
     this.lastRecorded = 0;
     this.ignoreChange = false;
     this.clear();
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta, oldDelta, source) => {
-      if (this.ignoreChange) return;
+    this.quill.on(Quill.events.EDITOR_CHANGE, (eventName, delta, oldDelta, source) => {
+      if (eventName !== Quill.events.TEXT_CHANGE || this.ignoreChange) return;
       if (!this.options.userOnly || source === Quill.sources.USER) {
         this.record(delta, oldDelta);
       } else {
@@ -33,12 +33,15 @@ class History extends Module {
     this.ignoreChange = false;
     let index = getLastChangeIndex(delta[source]);
     this.quill.setSelection(index);
-    this.quill.selection.scrollIntoView();
     this.stack[dest].push(delta);
   }
 
   clear() {
     this.stack = { undo: [], redo: [] };
+  }
+
+  cutoff() {
+    this.lastRecorded = 0;
   }
 
   record(changeDelta, oldDelta) {
@@ -58,7 +61,7 @@ class History extends Module {
       undo: undoDelta
     });
     if (this.stack.undo.length > this.options.maxStack) {
-      this.stack.undo.unshift();
+      this.stack.undo.shift();
     }
   }
 
@@ -102,7 +105,7 @@ function endsWithNewlineChange(delta) {
 }
 
 function getLastChangeIndex(delta) {
-  let deleteLength = delta.ops.reduce(function(length, op) {
+  let deleteLength = delta.reduce(function(length, op) {
     length += (op.delete || 0);
     return length;
   }, 0);
