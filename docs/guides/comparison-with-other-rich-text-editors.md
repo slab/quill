@@ -8,13 +8,13 @@ permalink: /guides/comparison-with-other-rich-text-editors/
 
 CKEditor and TinyMCE are both very widely used, having been around for over a decade. Quill introduces several new ideas that separate it from these traditional editors:
 
-- Treat `contenteditable` as an input, not a complete editor or API. Browsers never fully agreed on or specified the complete scope of `contenteditable`. Left to their own interpretations, each ended with different implementations that featured their own quirks and a proliferation of bugs, earning `contenteditable` deserved notoriety. It is still possible today crash an entire browser, using `contenteditable` APIs.
+- It treats `contenteditable` as an input, not a complete editor or API. Browsers never fully agreed on or specified the complete scope of `contenteditable`. Left to their own interpretations, each ended with different implementations that featured their own quirks and a proliferation of bugs, earning `contenteditable` deserved notoriety. It is still possible today to crash an entire browser using `contenteditable` APIs.
 
-- Offer a substantive API on top of the DOM. Most of CKEditor and TinyMCE's APIs offer little more than syntactic sugar on top of existing DOM APIs. Quill maintains internal document model and does not rely on the DOM as the source of truth, allow it to offer far more powerful and relevant APIs for text editing.
+- It offers a substantive API on top of the DOM. Most of CKEditor and TinyMCE's APIs offer little more than syntactic sugar on top of existing DOM APIs. Quill maintains an internal document model and does not rely on the DOM as the source of truth, allowing it to offer far more powerful and relevant APIs for text editing.
 
-- Allow customization and new additions of formats and content. Quill considers the web as a target output, not just paper. Therefore, in additional to supporting traditional formats commonly found in word processors, like bold, italics and lists, Quill allows the definition of entirely new formats and content it has not imagined. Quill's users have already added customizations to embed slide decks, interactive checklists, and 3D models.
+- It allows customization and new additions of formats and content. Quill considers the web as a target output, not just paper. Therefore, in additional to supporting traditional formats commonly found in word processors (like bold, italics and lists), Quill allows the definition of entirely new formats and content not previously imagined. Quill's users have already added customizations to embed slide decks, interactive checklists and 3D models.
 
-CKEditor and TinyMCE are different editors but are both so different from Quill in the same ways that the nuances between them are not distinct and so are compared together. Nevertheless, CKEditor or TinyMCE might be a better choice if:
+Although different between them, CKEditor and TinyMCE are compared together because they differ from Quill in similar ways. Nevertheless, CKEditor or TinyMCE might be a better choice if:
 
 - You need to support very old browsers. Quill follows the policy of many other Javascript libraries of supporting the latest two versions of each major browser.
 
