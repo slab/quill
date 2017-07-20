@@ -48,7 +48,7 @@
     "css-loader": "~0.28.4",
     "eslint": "^4.0.0",
     "eslint-loader": "^1.8.0",
-    "extract-text-webpack-plugin": "^2.1.2",
+    "extract-text-webpack-plugin": "^3.0.0",
     "html-loader": "~0.4.5",
     "http-proxy": "^1.16.2",
     "jasmine-core": "^2.6.4",
@@ -67,7 +67,7 @@
     "wdio-spec-reporter": "~0.1.0",
     "webdriver-manager": "^12.0.6",
     "webdriverio": "^4.8.0",
-    "webpack": "^2.6.1",
+    "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.0"
   },
   "license": "BSD-3-Clause",
