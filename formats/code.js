@@ -5,15 +5,7 @@ import Inline from '../blots/inline';
 import TextBlot from '../blots/text';
 
 
-class Code extends Inline {
-  insertBefore(blot, ref) {
-    if (blot instanceof TextBlot || blot.statics.blotName === Inline.blotName) {
-      super.insertBefore(blot, ref);
-    } else if (blot instanceof Inline) {
-      blot.moveChildren(this, ref);
-    } // ignore embeds
-  }
-}
+class Code extends Inline {}
 Code.blotName = 'code';
 Code.tagName = 'CODE';
 
