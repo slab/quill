@@ -136,7 +136,7 @@ class PlainListItem extends ListItem {
   }
 }
 
-Quill.register(ListItem, true);
+Quill.register(PlainListItem, true);
 
 // Initialize as you would normally
 var quill = new Quill('#editor', {
