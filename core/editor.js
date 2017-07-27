@@ -166,8 +166,10 @@ class Editor {
   isBlank() {
     if (this.scroll.children.length == 0) return true;
     if (this.scroll.children.length > 1) return false;
-    let child = this.scroll.children.head;
-    return child.length() <= 1 && child instanceof Break;
+    let block = this.scroll.children.head;
+    if (block.statics.blotName !== Block.blotName) return false;
+    if (block.children.length > 1) return false;
+    return block.children.head instanceof Break;
   }
 
   removeFormat(index, length) {
