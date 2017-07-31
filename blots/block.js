@@ -2,7 +2,6 @@ import extend from 'extend';
 import Delta from 'quill-delta';
 import Parchment from 'parchment';
 import Break from './break';
-import Embed from './embed';
 import Inline from './inline';
 import TextBlot from './text';
 
@@ -10,7 +9,7 @@ import TextBlot from './text';
 const NEWLINE_LENGTH = 1;
 
 
-class BlockEmbed extends Embed {
+class BlockEmbed extends Parchment.Embed {
   attach() {
     super.attach();
     this.attributes = new Parchment.Attributor.Store(this.domNode);
@@ -157,7 +156,7 @@ class Block extends Parchment.Block {
 Block.blotName = 'block';
 Block.tagName = 'P';
 Block.defaultChild = 'break';
-Block.allowedChildren = [Inline, Embed, TextBlot];
+Block.allowedChildren = [Inline, Parchment.Embed, TextBlot];
 
 
 function bubbleFormats(blot, formats = {}) {

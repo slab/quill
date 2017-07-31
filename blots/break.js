@@ -1,7 +1,7 @@
-import Embed from './embed';
+import Parchment from 'parchment';
 
 
-class Break extends Embed {
+class Break extends Parchment.Embed {
   static value() {
     return undefined;
   }

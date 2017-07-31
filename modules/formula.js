@@ -1,9 +1,9 @@
-import { InlineEmbed } from '../blots/embed';
+import Embed from '../blots/embed';
 import Quill from '../core/quill';
 import Module from '../core/module';
 
 
-class FormulaBlot extends InlineEmbed {
+class FormulaBlot extends Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {

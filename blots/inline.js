@@ -1,4 +1,3 @@
-import Embed from './embed';
 import Text from './text';
 import Parchment from 'parchment';
 
@@ -39,7 +38,7 @@ class Inline extends Parchment.Inline {
     }
   }
 }
-Inline.allowedChildren = [Inline, Embed, Text];
+Inline.allowedChildren = [Inline, Parchment.Embed, Text];
 // Lower index means deeper in the DOM tree, since not found (-1) is for embeds
 Inline.order = [
   'cursor', 'inline',   // Must be lower
