@@ -78,17 +78,3 @@ var quill = new Quill('#editor', {
   }
 });
 ```
-
-### matchVisual
-
-Quill by default does not have padding or margin for each line, whereas some websites or sources where a paste will come from will. By default Quill will try to match this spacing visually by adding an extra line to compensate for the missing margin/padding. This option disables this behavior.
-
-```javascript
-var quill = new Quill('#editor', {
-  modules: {
-    clipboard: {
-      matchVisual: false
-    }
-  }
-});
-```

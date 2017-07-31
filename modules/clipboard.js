@@ -23,7 +23,6 @@ const CLIPBOARD_CONFIG = [
   ['br', matchBreak],
   [Node.ELEMENT_NODE, matchNewline],
   [Node.ELEMENT_NODE, matchBlot],
-  [Node.ELEMENT_NODE, matchSpacing],
   [Node.ELEMENT_NODE, matchAttributor],
   [Node.ELEMENT_NODE, matchStyles],
   ['li', matchIndent],
@@ -62,7 +61,6 @@ class Clipboard extends Module {
     this.container.setAttribute('tabindex', -1);
     this.matchers = [];
     CLIPBOARD_CONFIG.concat(this.options.matchers).forEach(([selector, matcher]) => {
-      if (!options.matchVisual && matcher === matchSpacing) return;
       this.addMatcher(selector, matcher);
     });
   }
@@ -137,7 +135,7 @@ class Clipboard extends Module {
 }
 Clipboard.DEFAULTS = {
   matchers: [],
-  matchVisual: true
+  matchVisual: false
 };
 
 
@@ -286,16 +284,6 @@ function matchNewline(node, delta) {
   return delta;
 }
 
-function matchSpacing(node, delta) {
-  if (isLine(node) && node.nextElementSibling != null && !deltaEndsWith(delta, '\n\n')) {
-    let nodeHeight = node.offsetHeight + parseFloat(computeStyle(node).marginTop) + parseFloat(computeStyle(node).marginBottom);
-    if (node.nextElementSibling.offsetTop > node.offsetTop + nodeHeight*1.5) {
-      delta.insert('\n');
-    }
-  }
-  return delta;
-}
-
 function matchStyles(node, delta) {
   let formats = {};
   let style = node.style || {};
@@ -345,4 +333,4 @@ function matchText(node, delta) {
 }
 
 
-export { Clipboard as default, matchAttributor, matchBlot, matchNewline, matchSpacing, matchText };
+export { Clipboard as default, matchAttributor, matchBlot, matchNewline, matchText };
