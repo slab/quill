@@ -86,12 +86,6 @@ Default: `null`
 
 DOM Element or a CSS selector for a DOM Element, specifying which container has the scrollbars (i.e. `overflow-y: auto`), if is has been changed from the default `ql-editor` with custom CSS. Necessary to fix scroll jumping bugs when Quill is set to [auto grow](/playground/#autogrow) its height, and another ancestor container is responsible from the scrolling.
 
-#### strict
-
-Default: `true`
-
-Some improvements and modifications, under a strict interpretation of semver, would warrant a major version bump. To prevent small changes from inflating Quill's version number, they are disabled by this `strict` flag. Specific changes can be found in the [Changelog](https://github.com/quilljs/quill/blob/master/CHANGELOG.md) and searching for "strict". Setting this to `false` opts into potential future improvements.
-
 #### theme
 
 Name of theme to use. The builtin options are "bubble" or "snow". An invalid or falsy value will load a default minimal theme. Note the theme's specific stylesheet still needs to be included manually. See [Themes](/docs/themes/) for more information.
