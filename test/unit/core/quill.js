@@ -120,16 +120,6 @@ describe('Quill', function() {
       expect(this.quill.getSelection()).toEqual(range);
     });
 
-    it('pasteHTML(html)', function() {
-      this.quill.pasteHTML('<i>ab</i><b>cd</b>');
-      expect(this.quill.root).toEqualHTML('<p><em>ab</em><strong>cd</strong></p>');
-    });
-
-    it('pasteHTML(index, html)', function() {
-      this.quill.pasteHTML(2, '<b>ab</b>');
-      expect(this.quill.root).toEqualHTML('<p>01<strong>ab</strong>23<em>45</em>67</p>');
-    });
-
     it('removeFormat()', function() {
       this.quill.removeFormat(5, 1);
       let change = new Delta().retain(5).retain(1, { italic: null });

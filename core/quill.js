@@ -284,10 +284,6 @@ class Quill {
     return this.emitter.once.apply(this.emitter, arguments);
   }
 
-  pasteHTML(index, html, source) {
-    this.clipboard.dangerouslyPasteHTML(index, html, source);
-  }
-
   removeFormat(index, length, source) {
     [index, length, , source] = overload(index, length, source);
     return modify.call(this, () => {

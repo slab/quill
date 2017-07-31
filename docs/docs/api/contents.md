@@ -107,12 +107,6 @@ quill.insertText(5, 'Quill', {
 });
 ```
 
-### pasteHTML
-
-***Deprecated***
-
-This API has been moved into [Clipboard](/docs/modules/clipboard/#dangerouslypastehtml) and renamed. It will be removed as a top level API in 2.0.
-
 ### setContents
 
 Overwrites editor with given contents. Contents should end with a [newline](/docs/delta/#line-formatting). Returns a Delta representing the change. This will be the same as the Delta passed in, if given Delta had no invalid operations. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.

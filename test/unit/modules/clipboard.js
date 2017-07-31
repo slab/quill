@@ -33,6 +33,16 @@ describe('Clipboard', function() {
         done();
       }, 2);
     });
+
+    it('dangerouslyPasteHTML(html)', function() {
+      this.quill.clipboard.dangerouslyPasteHTML('<i>ab</i><b>cd</b>');
+      expect(this.quill.root).toEqualHTML('<p><em>ab</em><strong>cd</strong></p>');
+    });
+
+    it('dangerouslyPasteHTML(index, html)', function() {
+      this.quill.clipboard.dangerouslyPasteHTML(2, '<b>ab</b>');
+      expect(this.quill.root).toEqualHTML('<h1>01<strong>ab</strong>23</h1><p>5<em>67</em>8</p>');
+    });
   });
 
   describe('convert', function() {
