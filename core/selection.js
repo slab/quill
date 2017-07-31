@@ -1,5 +1,5 @@
 import Parchment from 'parchment';
-import { InlineEmbed } from '../blots/embed';
+import Embed from '../blots/embed';
 import clone from 'clone';
 import equal from 'deep-equal';
 import Emitter from './emitter';
@@ -96,7 +96,7 @@ class Selection {
     if (native == null) return;
     const [start, end] = [native.start, native.end].map(function(pos) {
       const blot = Parchment.find(pos.node, true);
-      if (blot instanceof InlineEmbed) {
+      if (blot instanceof Embed) {
         let node, offset;
         if (pos.node === blot.leftGuard && pos.offset === 1) {
           [node, offset] = blot.position(blot.length());

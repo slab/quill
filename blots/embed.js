@@ -4,10 +4,7 @@ import TextBlot from './text';
 const GUARD_TEXT = "\uFEFF";
 
 
-class Embed extends Parchment.Embed { }
-
-
-class InlineEmbed extends Embed {
+class Embed extends Parchment.Embed {
   constructor(node) {
     super(node);
     const wrapper = document.createElement('span');
@@ -79,4 +76,4 @@ class InlineEmbed extends Embed {
 }
 
 
-export { Embed as default, InlineEmbed };
+export default Embed;
