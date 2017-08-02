@@ -1,7 +1,6 @@
 import extend from 'extend';
 import Delta from 'quill-delta';
 import Emitter from '../core/emitter';
-import Keyboard from '../modules/keyboard';
 import Theme from '../core/theme';
 import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
@@ -162,10 +161,10 @@ class BaseTooltip extends Tooltip {
 
   listen() {
     this.textbox.addEventListener('keydown', (event) => {
-      if (Keyboard.match(event, 'enter')) {
+      if (event.key === 'Enter') {
         this.save();
         event.preventDefault();
-      } else if (Keyboard.match(event, 'escape')) {
+      } else if (event.key === 'Escape') {
         this.cancel();
         event.preventDefault();
       }

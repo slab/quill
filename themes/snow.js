@@ -28,7 +28,7 @@ class SnowTheme extends BaseTheme {
     this.buildPickers([].slice.call(toolbar.container.querySelectorAll('select')), icons);
     this.tooltip = new SnowTooltip(this.quill, this.options.bounds);
     if (toolbar.container.querySelector('.ql-link')) {
-      this.quill.keyboard.addBinding({ key: 'K', shortKey: true }, function(range, context) {
+      this.quill.keyboard.addBinding({ key: 'k', shortKey: true }, function(range, context) {
         toolbar.handlers['link'].call(toolbar, !context.format.link);
       });
     }

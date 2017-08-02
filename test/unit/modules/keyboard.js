@@ -1,12 +1,12 @@
-import Keyboard, { SHORTKEY } from '../../../modules/keyboard';
+import Keyboard, { SHORTKEY, normalize } from '../../../modules/keyboard';
 
 
 describe('Keyboard', function() {
   describe('match', function() {
     it('no modifiers', function() {
-      let binding = {
+      let binding = normalize({
         key: 'a'
-      };
+      });
       expect(Keyboard.match({
         key: 'a',
         shiftKey: false,
@@ -24,10 +24,10 @@ describe('Keyboard', function() {
     });
 
     it('simple modifier', function() {
-      let binding = {
-        key: 'A',
+      let binding = normalize({
+        key: 'a',
         altKey: true
-      };
+      });
       expect(Keyboard.match({
         key: 'a',
         shiftKey: false,
@@ -36,7 +36,7 @@ describe('Keyboard', function() {
         altKey: false
       }, binding)).toBe(false);
       expect(Keyboard.match({
-        key: 'A',
+        key: 'a',
         shiftKey: false,
         metaKey: false,
         ctrlKey: false,
@@ -45,10 +45,10 @@ describe('Keyboard', function() {
     });
 
     it('optional modifier', function() {
-      let binding = {
+      let binding = normalize({
         key: 'a',
         altKey: null
-      };
+      });
       expect(Keyboard.match({
         key: 'a',
         shiftKey: false,
@@ -66,10 +66,10 @@ describe('Keyboard', function() {
     });
 
     it('shortkey modifier', function() {
-      let binding = {
+      let binding = normalize({
         key: 'a',
         shortKey: true
-      };
+      });
       expect(Keyboard.match({
         key: 'a',
         shiftKey: false,
@@ -88,10 +88,10 @@ describe('Keyboard', function() {
     });
 
     it('native shortkey modifier', function() {
-      let binding = {
+      let binding = normalize({
         key: 'a',
         [SHORTKEY]: true
-      };
+      });
       expect(Keyboard.match({
         key: 'a',
         shiftKey: false,

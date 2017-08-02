@@ -17,10 +17,10 @@ class History extends Module {
         this.transform(delta);
       }
     });
-    this.quill.keyboard.addBinding({ key: 'Z', shortKey: true }, this.undo.bind(this));
-    this.quill.keyboard.addBinding({ key: 'Z', shortKey: true, shiftKey: true }, this.redo.bind(this));
+    this.quill.keyboard.addBinding({ key: 'z', shortKey: true }, this.undo.bind(this));
+    this.quill.keyboard.addBinding({ key: 'z', shortKey: true, shiftKey: true }, this.redo.bind(this));
     if (/Win/i.test(navigator.platform)) {
-      this.quill.keyboard.addBinding({ key: 'Y', shortKey: true }, this.redo.bind(this));
+      this.quill.keyboard.addBinding({ key: 'y', shortKey: true }, this.redo.bind(this));
     }
   }
 

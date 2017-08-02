@@ -15,7 +15,6 @@ const SHORTKEY = /Mac/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
 class Keyboard extends Module {
   static match(evt, binding) {
-    binding = normalize(binding);
     if (['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].some(function(key) {
       return (!!binding[key] !== evt[key] && binding[key] !== null);
     })) {
@@ -57,8 +56,9 @@ class Keyboard extends Module {
 
   addBinding(key, context = {}, handler = {}) {
     let binding = normalize(key);
-    if (binding == null || binding.key == null) {
-      return debug.warn('Attempted to add invalid keyboard binding', binding);
+    if (binding == null) {
+      debug.warn('Attempted to add invalid keyboard binding', binding);
+      return;
     }
     if (typeof context === 'function') {
       context = { handler: context };
@@ -74,8 +74,7 @@ class Keyboard extends Module {
   listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented) return;
-      let key = evt.key;
-      let bindings = (this.bindings[key] || []).filter(function(binding) {
+      let bindings = (this.bindings[evt.key] || []).filter(function(binding) {
         return Keyboard.match(evt, binding);
       });
       if (bindings.length === 0) return;
@@ -405,7 +404,7 @@ function makeCodeBlockHandler(indent) {
 
 function makeFormatHandler(format) {
   return {
-    key: format[0].toLowerCase(),
+    key: format[0],
     shortKey: true,
     handler: function(range, context) {
       this.quill.format(format, !context.format[format], Quill.sources.USER);
@@ -414,10 +413,13 @@ function makeFormatHandler(format) {
 }
 
 function normalize(binding) {
-  if (typeof binding !== 'object') {
-    return normalize({ key: binding });
+  if (typeof binding === 'string') {
+    binding = { key: binding };
+  } else if (typeof binding === 'object') {
+    binding = clone(binding, false);
+  } else {
+    return null;
   }
-  binding = clone(binding, false);
   if (binding.shortKey) {
     binding[SHORTKEY] = binding.shortKey;
     delete binding.shortKey;
@@ -426,4 +428,4 @@ function normalize(binding) {
 }
 
 
-export { Keyboard as default, SHORTKEY };
+export { Keyboard as default, SHORTKEY, normalize };
