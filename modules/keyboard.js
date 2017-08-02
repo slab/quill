@@ -37,19 +37,19 @@ class Keyboard extends Module {
         this.addBinding(this.options.bindings[name]);
       }
     });
-    this.addBinding({ key: "Enter", shiftKey: null }, handleEnter);
-    this.addBinding({ key: "Enter", metaKey: null, ctrlKey: null, altKey: null }, function() {});
+    this.addBinding({ key: 'Enter', shiftKey: null }, handleEnter);
+    this.addBinding({ key: 'Enter', metaKey: null, ctrlKey: null, altKey: null }, function() {});
     if (/Firefox/i.test(navigator.userAgent)) {
       // Need to handle delete and backspace for Firefox in the general case #1171
-      this.addBinding({ key: "Backspace" }, { collapsed: true }, handleBackspace);
-      this.addBinding({ key: "Delete" }, { collapsed: true }, handleDelete);
+      this.addBinding({ key: 'Backspace' }, { collapsed: true }, handleBackspace);
+      this.addBinding({ key: 'Delete' }, { collapsed: true }, handleDelete);
     } else {
-      this.addBinding({ key: "Backspace" }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
-      this.addBinding({ key: "Delete" }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
+      this.addBinding({ key: 'Backspace' }, { collapsed: true, prefix: /^.?$/ }, handleBackspace);
+      this.addBinding({ key: 'Delete' }, { collapsed: true, suffix: /^.?$/ }, handleDelete);
     }
-    this.addBinding({ key: "Backspace" }, { collapsed: false }, handleDeleteRange);
-    this.addBinding({ key: "Delete" }, { collapsed: false }, handleDeleteRange);
-    this.addBinding({ key: "Backspace", altKey: null, ctrlKey: null, metaKey: null, shiftKey: null },
+    this.addBinding({ key: 'Backspace' }, { collapsed: false }, handleDeleteRange);
+    this.addBinding({ key: 'Delete' }, { collapsed: false }, handleDeleteRange);
+    this.addBinding({ key: 'Backspace', altKey: null, ctrlKey: null, metaKey: null, shiftKey: null },
                     { collapsed: true, offset: 0 },
                     handleBackspace);
     this.listen();
@@ -133,7 +133,7 @@ Keyboard.DEFAULTS = {
     'underline' : makeFormatHandler('underline'),
     'indent': {
       // highlight tab or tab at beginning of list, indent or blockquote
-      key: "Tab",
+      key: 'Tab',
       format: ['blockquote', 'indent', 'list'],
       handler: function(range, context) {
         if (context.collapsed && context.offset !== 0) return true;
@@ -141,7 +141,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'outdent': {
-      key: "Tab",
+      key: 'Tab',
       shiftKey: true,
       format: ['blockquote', 'indent', 'list'],
       // highlight tab or tab at beginning of list, indent or blockquote
@@ -151,7 +151,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'outdent backspace': {
-      key: "Backspace",
+      key: 'Backspace',
       collapsed: true,
       shiftKey: null,
       metaKey: null,
@@ -170,7 +170,7 @@ Keyboard.DEFAULTS = {
     'indent code-block': makeCodeBlockHandler(true),
     'outdent code-block': makeCodeBlockHandler(false),
     'remove tab': {
-      key: "Tab",
+      key: 'Tab',
       shiftKey: true,
       collapsed: true,
       prefix: /\t$/,
@@ -191,7 +191,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'list empty enter': {
-      key: "Enter",
+      key: 'Enter',
       collapsed: true,
       format: ['list'],
       empty: true,
@@ -203,7 +203,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'checklist enter': {
-      key: "Enter",
+      key: 'Enter',
       collapsed: true,
       format: { list: 'checked' },
       handler: function(range) {
@@ -218,7 +218,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'header enter': {
-      key: "Enter",
+      key: 'Enter',
       collapsed: true,
       format: ['header'],
       suffix: /^$/,
@@ -267,7 +267,7 @@ Keyboard.DEFAULTS = {
       }
     },
     'code exit': {
-      key: "Enter",
+      key: 'Enter',
       collapsed: true,
       format: ['code-block'],
       prefix: /\n\n$/,
@@ -364,7 +364,7 @@ function handleEnter(range, context) {
 
 function makeCodeBlockHandler(indent) {
   return {
-    key: "Tab",
+    key: 'Tab',
     shiftKey: !indent,
     format: {'code-block': true },
     handler: function(range) {
