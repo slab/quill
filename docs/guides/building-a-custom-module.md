@@ -6,13 +6,13 @@ permalink: /guides/building-a-custom-module/
 
 Quill's core strength as an editor is its rich API and powerful customization capabilities. As you implement functionality on top of Quill's API, it may be convenient to organize this as a module. For the purpose of this guide, we will walk through one way to build a word counter module, a commonly found feature in many word processors.
 
-*Note: Internally modules is how much of Quill's functionality is organized. You can overwrite these default [modules](/docs/modules/) by implementing your own and registering it with the same name.*
+*Note: Internally modules are how much of Quill's functionality is organized. You can overwrite these default [modules](/docs/modules/) by implementing your own and registering it with the same name.*
 
 ### Counting Words
 
 At its core a word counter simply counts the number of words in the editor and displays this value in some UI. Thus we need to:
 
-1. Listen on text changes in Quill.
+1. Listen for text changes in Quill.
 1. Count the number of words.
 1. Display this value.
 
