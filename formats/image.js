@@ -1,4 +1,4 @@
-import Embed from '../blots/embed';
+import Parchment from 'parchment';
 import { sanitize } from '../formats/link';
 
 const ATTRIBUTES = [
@@ -8,7 +8,7 @@ const ATTRIBUTES = [
 ];
 
 
-class Image extends Embed {
+class Image extends Parchment.Embed {
   static create(value) {
     let node = super.create(value);
     if (typeof value === 'string') {
