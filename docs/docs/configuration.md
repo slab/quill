@@ -86,6 +86,8 @@ Default: `null`
 
 DOM Element or a CSS selector for a DOM Element, specifying which container has the scrollbars (i.e. `overflow-y: auto`), if is has been changed from the default `ql-editor` with custom CSS. Necessary to fix scroll jumping bugs when Quill is set to [auto grow](/playground/#autogrow) its height, and another ancestor container is responsible from the scrolling.
 
+*Note: Some browsers will still jump when this value is `body`. Use a separate child `div` to avoid this.*
+
 #### strict
 
 Default: `true`
