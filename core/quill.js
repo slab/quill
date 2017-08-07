@@ -67,6 +67,8 @@ class Quill {
     }
     let html = this.container.innerHTML.trim();
     this.container.classList.add('ql-container');
+    $( this.container ).wrap( "<div class='quillContainer' style='overflow: hidden;margin:20px' ui-widget-content></div>" );
+
     this.container.innerHTML = '';
     this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
@@ -105,6 +107,40 @@ class Quill {
     }
     if (this.options.readOnly) {
       this.disable();
+    }
+    /*New option for toolbar scrolling*/
+    if (this.options.toolbarScroll){
+      $('.ql-toolbar').click(function(){
+            clickaction(this.scrollLeft); 
+        });
+         function clickaction(positionleft){
+             if ($('.ql-toolbar').css("overflow") == 'visible') {
+                if (getClassLength() == 0)
+                    $('.ql-toolbar').css("overflow", "scroll");
+            } else {
+                $('.ql-toolbar').css("overflow", "visible");
+                $(".ql-toolbar").css("position","relative");
+                $(".ql-toolbar").css("left",-positionleft+'px');
+
+                $("body").unbind("click");
+                $("body").bind("click", function(e) {
+                    var length = getClassLength();
+                    if (length == 0) {
+                        $(".ql-toolbar").css("position","initial");
+                        $(".ql-toolbar").css("left","initial");
+                        $("body").unbind("click");
+                        $('.ql-toolbar').css("overflow", "scroll");
+                    }
+                });
+            }
+         }
+        function getClassLength() {
+            var length = 0;
+            $('.ql-picker').each(function(index) {
+                length = length + $(this).hasClass('ql-expanded');
+            });
+            return length;
+        }
     }
   }
 
