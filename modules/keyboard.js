@@ -237,7 +237,7 @@ Keyboard.DEFAULTS = {
       handler: function(range, context) {
         let [line, offset] = this.quill.getLine(range.index);
         let delta = new Delta().retain(range.index)
-                               .insert('\n', { header: context.format.header })
+                               .insert('\n', context.format)
                                .retain(line.length() - offset - 1)
                                .retain(1, { header: null });
         this.quill.updateContents(delta, Quill.sources.USER);
