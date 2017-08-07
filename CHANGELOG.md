@@ -1,3 +1,11 @@
+# 1.3.1
+
+- Fix placeholder when emptying text [#1594](https://github.com/quilljs/quill/issues/1594)
+- Fix inserting newline after header [#1616](https://github.com/quilljs/quill/issues/1616)
+
+Thank you [@Natim](https://github.com/Natim) and [@stephenLYao](https://github.com/stephenLYao) for your contributions to this release.
+
+
 # 1.3.0
 
 Add `matchVisual` [configuration](https://quilljs.com/docs/modules/clipboard/#configuration) to Clipboard.
