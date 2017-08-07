@@ -4,7 +4,7 @@ title: Adding Quill to Your Build Pipeline
 permalink: /guides/adding-quill-to-your-build-pipeline/
 ---
 
-Each version of Quill is built and ready to use on a variety of including [NPM](https://www.npmjs.com/package/quill) or its [CDN](/docs/download/). However there may be use cases where you would like to build Quill from source, as part of your application's build pipeline. If this desire has not occurred to you, don't sweat it! Using pre-built versions is the easiest way to use Quill.
+Each version of Quill is built and ready to use from a variety of sources, including [NPM](https://www.npmjs.com/package/quill) or its [CDN](/docs/download/). However there may be use cases where you would like to build Quill from source, as part of your application's build pipeline. If this desire has not occurred to you, don't sweat it! Using pre-built versions is the easiest way to use Quill.
 
 Quill is built using [Webpack](https://webpack.js.org/concepts/) and this guide is mostly targeted towards Webpack users. However some principles may translate to other build environments.
 
