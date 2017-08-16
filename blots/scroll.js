@@ -42,9 +42,6 @@ class Scroll extends Parchment.Scroll {
     super.deleteAt(index, length);
     if (last != null && first !== last && offset > 0 &&
         !(first instanceof BlockEmbed) && !(last instanceof BlockEmbed)) {
-      if (last instanceof CodeBlock) {
-        last.deleteAt(last.length() - 1, 1);
-      }
       let ref = last.children.head instanceof Break ? null : last.children.head;
       first.moveChildren(last, ref);
       first.remove();

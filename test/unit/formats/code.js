@@ -117,6 +117,13 @@ describe('Code', function() {
     expect(editor.scroll.domNode).toEqualHTML('<p>0123</p>');
   });
 
+  it('delete last', function() {
+    let editor = this.initialize(Editor, { html: '<p>0123</p><pre>\n</pre><p>5678</p>' });
+    editor.deleteText(4, 1);
+    expect(editor.getDelta()).toEqual(new Delta().insert('0123').insert('\n', { 'code-block': true }).insert('5678\n'));
+    expect(editor.scroll.domNode).toEqualHTML('<pre>0123</pre><p>5678</p>');
+  });
+
   it('delete merge before', function() {
     let editor = this.initialize(Editor, { html: '<h1>0123</h1><pre>4567\n</pre>' });
     editor.deleteText(4, 1);
