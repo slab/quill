@@ -375,6 +375,11 @@ function expandConfig(container, userConfig) {
       clipboard: true,
       keyboard: true,
       history: true
+    },
+    imageHandler(image, callback) {
+      let reader = new FileReader();
+      reader.onload = (e) => callback(e.target.result);
+      reader.readAsDataURL(image);
     }
   }, userConfig);
   if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
