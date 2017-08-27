@@ -110,16 +110,18 @@ class Selection {
   }
 
   handleEmbedSelection() {
-    this.root.addEventListener('click', (e) => {
-      const blot = Parchment.find(e.target, true);
+    this.emitter.on(Emitter.events.SELECTION_CHANGE, () => {
       const selectedNode = document.querySelector('.ql-embed-selected');
       if (selectedNode) {
         selectedNode.classList.remove('ql-embed-selected');
       }
+    });
+    this.root.addEventListener('click', (e) => {
+      const blot = Parchment.find(e.target, true);
       if (blot instanceof Parchment.Embed) {
-        blot.domNode.classList.add('ql-embed-selected');
         const range = new Range(blot.offset(scroll), blot.length());
         this.setRange(range, Emitter.sources.USER);
+        blot.domNode.classList.add('ql-embed-selected');
       }
     });
   }
