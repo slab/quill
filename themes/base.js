@@ -135,6 +135,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
                     .delete(range.length)
                     .insert({ image: e.target.result })
                   , Emitter.sources.USER);
+                  this.quill.setSelection(range.index + 1, Emitter.sources.SILENT);
                   fileInput.value = "";
                 }
                 reader.readAsDataURL(fileInput.files[0]);
