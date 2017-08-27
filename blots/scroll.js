@@ -3,7 +3,6 @@ import Emitter from '../core/emitter';
 import Block, { BlockEmbed } from './block';
 import Break from './break';
 import Container from './container';
-import CodeBlock from '../formats/code';
 
 
 function isLine(blot) {

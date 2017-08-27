@@ -48,7 +48,6 @@ class Selection {
         blot.domNode.classList.add('ql-embed-selected');
         const range = new Range(blot.offset(scroll), blot.length());
         this.setRange(range, Emitter.sources.USER);
-        e.stopPropagation();
       }
     });
     let mouseCount = 0;
