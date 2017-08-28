@@ -21,6 +21,7 @@ class Selection {
     this.emitter = emitter;
     this.scroll = scroll;
     this.composing = false;
+    this.mouseDown = false;
     this.root = this.scroll.domNode;
     this.cursor = Parchment.create('cursor', this);
     // savedRange is last non-null range
@@ -28,6 +29,11 @@ class Selection {
     this.handleComposition();
     this.handleDragging();
     this.handleEmbedSelection();
+    this.emitter.listenDOM('selectionchange', document, () => {
+      if (!this.mouseDown) {
+        setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
+      }
+    });
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type, delta) => {
       if (type === Emitter.events.TEXT_CHANGE && delta.length() > 0) {
         this.update(Emitter.sources.SILENT);
@@ -92,18 +98,12 @@ class Selection {
   }
 
   handleDragging() {
-    this.isMouseDown = false;
     this.emitter.listenDOM('mousedown', document.body, () => {
-      this.isMouseDown = true;
+      this.mouseDown = true;
     });
     this.emitter.listenDOM('mouseup', document.body, () => {
-      this.isMouseDown = false;
+      this.mouseDown = false;
       this.update(Emitter.sources.USER);
-    });
-    this.emitter.listenDOM('selectionchange', document, () => {
-      if (!this.isMouseDown) {
-        setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
-      }
     });
   }
 
