@@ -92,18 +92,16 @@ class Selection {
   }
 
   handleDragging() {
-    let mouseCount = 0;
+    this.isMouseDown = false;
     this.emitter.listenDOM('mousedown', document.body, () => {
-      mouseCount += 1;
+      this.isMouseDown = true;
     });
     this.emitter.listenDOM('mouseup', document.body, () => {
-      mouseCount -= 1;
-      if (mouseCount === 0) {
-        this.update(Emitter.sources.USER);
-      }
+      this.isMouseDown = false;
+      this.update(Emitter.sources.USER);
     });
     this.emitter.listenDOM('selectionchange', document, () => {
-      if (mouseCount === 0) {
+      if (!this.isMouseDown) {
         setTimeout(this.update.bind(this, Emitter.sources.USER), 1);
       }
     });
