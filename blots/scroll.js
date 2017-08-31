@@ -42,8 +42,10 @@ class Scroll extends Parchment.Scroll {
     super.deleteAt(index, length);
     if (last != null && first !== last && offset > 0) {
       if (first instanceof BlockEmbed || last instanceof BlockEmbed) {
-        // Cannot merge Block Embeds
-      } else if (first instanceof CodeBlock) {
+        this.optimize();
+        return;
+      }
+      if (first instanceof CodeBlock) {
         let newlineIndex = first.newlineIndex(first.length(), true);
         if (newlineIndex > -1) {
           first = first.split(newlineIndex + 1);
