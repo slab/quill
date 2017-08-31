@@ -74,6 +74,7 @@ class Clipboard extends Module {
   convert(html) {
     if (typeof html === 'string') {
       this.container.innerHTML = html.replace(/\>\r?\n +\</g, '><'); // Remove spaces between tags
+      return this.convert();
     }
     let [elementMatchers, textMatchers] = this.prepareMatching();
     let delta = traverse(this.container, elementMatchers, textMatchers);
